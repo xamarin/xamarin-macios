@@ -25,7 +25,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.That (handle, Is.Not.EqualTo (IntPtr.Zero), "dlopen");
 			var err = Dlfcn.dlclose (handle);
 			var expected = 0;
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 			if (Runtime.Arch == Arch.DEVICE && TestRuntime.CheckXcodeVersion (7, 0) && !TestRuntime.CheckXcodeVersion (10, 0)) {
 				// Apple is doing some funky stuff with dlopen... this condition is to track if this change during betas
 				expected = -1;

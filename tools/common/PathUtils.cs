@@ -3,10 +3,8 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Xamarin.Utils
-{
-	public static class PathUtils
-	{
+namespace Xamarin.Utils {
+	public static class PathUtils {
 		static bool IsSeparator (char c)
 		{
 			return c == Path.DirectorySeparatorChar || c == Path.AltDirectorySeparatorChar || c == Path.VolumeSeparatorChar;
@@ -15,6 +13,20 @@ namespace Xamarin.Utils
 		static char ToOrdinalIgnoreCase (char c)
 		{
 			return (((uint) c - 'a') <= ((uint) 'z' - 'a')) ? (char) (c - 0x20) : c;
+		}
+
+		public static string EnsureTrailingSlash (this string path)
+		{
+			if (path is null)
+				return null;
+
+			if (path.Length == 0)
+				return Path.DirectorySeparatorChar.ToString ();
+
+			if (path [path.Length - 1] != Path.DirectorySeparatorChar)
+				path += Path.DirectorySeparatorChar;
+
+			return path;
 		}
 
 		[DllImport ("/usr/lib/libc.dylib")]
@@ -56,10 +68,10 @@ namespace Xamarin.Utils
 			int index = 0;
 
 			while (index < absolute.Length) {
-				if (ToOrdinalIgnoreCase (absolute[index]) != ToOrdinalIgnoreCase (baseDirectory[index]))
+				if (ToOrdinalIgnoreCase (absolute [index]) != ToOrdinalIgnoreCase (baseDirectory [index]))
 					break;
 
-				if (IsSeparator (absolute[index])) {
+				if (IsSeparator (absolute [index])) {
 					baseDirectoryStartIndex = index;
 					absoluteStartIndex = index + 1;
 					separators++;
@@ -68,7 +80,7 @@ namespace Xamarin.Utils
 				index++;
 
 				if (index >= baseDirectory.Length) {
-					if (index >= absolute.Length || IsSeparator (absolute[index])) {
+					if (index >= absolute.Length || IsSeparator (absolute [index])) {
 						baseDirectoryStartIndex = index;
 						absoluteStartIndex = index + 1;
 						separators++;
@@ -83,14 +95,14 @@ namespace Xamarin.Utils
 			if (absoluteStartIndex >= absolute.Length)
 				return ".";
 
-			if (index >= absolute.Length && IsSeparator (baseDirectory[index])) {
+			if (index >= absolute.Length && IsSeparator (baseDirectory [index])) {
 				absoluteStartIndex = index + 1;
 				baseDirectoryStartIndex = index;
 			}
 
 			int parentDirCount = 0;
 			while (baseDirectoryStartIndex < baseDirectory.Length) {
-				if (IsSeparator (baseDirectory[baseDirectoryStartIndex]))
+				if (IsSeparator (baseDirectory [baseDirectoryStartIndex]))
 					parentDirCount++;
 				baseDirectoryStartIndex++;
 			}
@@ -100,13 +112,13 @@ namespace Xamarin.Utils
 			index = 0;
 
 			for (int i = 0; i < parentDirCount; i++) {
-				result[index++] = '.';
-				result[index++] = '.';
-				result[index++] = Path.DirectorySeparatorChar;
+				result [index++] = '.';
+				result [index++] = '.';
+				result [index++] = Path.DirectorySeparatorChar;
 			}
 
 			while (absoluteStartIndex < absolute.Length)
-				result[index++] = absolute[absoluteStartIndex++];
+				result [index++] = absolute [absoluteStartIndex++];
 
 			return new string (result);
 		}
@@ -133,7 +145,7 @@ namespace Xamarin.Utils
 		}
 
 		[DllImport ("/usr/lib/libSystem.dylib", SetLastError = true)]
-		static extern int readlink (string path, [Out] byte[] buffer, IntPtr len);
+		static extern int readlink (string path, [Out] byte [] buffer, IntPtr len);
 
 		public static string GetSymlinkTarget (string path)
 		{
@@ -187,8 +199,20 @@ namespace Xamarin.Utils
 			public ulong st_qspare_2;
 		}
 
-		[DllImport ("/usr/lib/libSystem.dylib", EntryPoint = "lstat$INODE64", SetLastError = true)]
-		static extern int lstat (string path, out stat buf);
+		[DllImport ("/usr/lib/libc.dylib", EntryPoint = "lstat$INODE64", SetLastError = true)]
+		static extern int lstat_x64 (string file_name, out stat buf);
+
+		[DllImport ("/usr/lib/libc.dylib", EntryPoint = "lstat", SetLastError = true)]
+		static extern int lstat_arm64 (string file_name, out stat buf);
+
+		static int lstat (string path, out stat buf)
+		{
+			if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64) {
+				return lstat_arm64 (path, out buf);
+			} else {
+				return lstat_x64 (path, out buf);
+			}
+		}
 
 		public static bool IsSymlink (string file)
 		{
@@ -199,6 +223,30 @@ namespace Xamarin.Utils
 			const int S_IFLNK = 40960;
 			return (buf.st_mode & S_IFLNK) == S_IFLNK;
 		}
+
+		public static bool IsSymlinkOrContainsSymlinks (string directoryOrFile)
+		{
+			if (IsSymlink (directoryOrFile))
+				return true;
+
+			if (!Directory.Exists (directoryOrFile))
+				return false;
+
+			foreach (var entry in Directory.EnumerateFileSystemEntries (directoryOrFile)) {
+				if (IsSymlinkOrContainsSymlinks (entry))
+					return true;
+			}
+
+			return false;
+		}
+
+		// Replace any windows-style slashes with mac-style slashes.
+		public static string ConvertToMacPath (string path)
+		{
+			if (string.IsNullOrEmpty (path))
+				return path;
+
+			return path.Replace ('\\', '/');
+		}
 	}
 }
-

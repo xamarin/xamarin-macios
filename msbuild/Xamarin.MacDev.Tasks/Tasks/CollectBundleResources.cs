@@ -1,11 +1,9 @@
-﻿using System;
+using System;
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class CollectBundleResources : CollectBundleResourcesTaskBase, ICancelableTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class CollectBundleResources : CollectBundleResourcesTaskBase, ICancelableTask {
 		public override bool Execute ()
 		{
 			try {
@@ -26,7 +24,7 @@ namespace Xamarin.MacDev.Tasks
 		public void Cancel ()
 		{
 			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿namespace MonoTouchFixtures
+namespace MonoTouchFixtures
 
 open System
 open Foundation

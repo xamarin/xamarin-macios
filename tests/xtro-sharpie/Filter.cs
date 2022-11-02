@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Extrospection {
 
@@ -85,7 +85,7 @@ namespace Extrospection {
 			case "TWAIN":
 			case "Virtualization":
 			case "vmnet":
-				// other non-supported frameworks
+			// other non-supported frameworks
 			case "GSS": // iOS and macOS
 			case "vecLib": // all
 				return true;

@@ -1,12 +1,9 @@
-﻿#if !__WATCHOS__
-using System;
+#if !__WATCHOS__
 using System.Collections.Generic;
 using System.Threading;
-using CoreFoundation;
+
 using Foundation;
 using Network;
-using ObjCRuntime;
-using Security;
 
 using NUnit.Framework;
 
@@ -119,18 +116,22 @@ namespace MonoTouchFixtures.Network
 				record.Add (key, key);
 			}
 			// apply and ensure that we do get all the keys
+#if !NET
 			var keyCount = 0;
 			record.Apply ((k, r, v) => {
 				keyCount++;
 				Assert.IsTrue (keys.Contains (k), k);
 			});
+#endif
 			var keyCount2 = 0;
 			record.Apply ((k, r, v) => {
 				keyCount2++;
 				Assert.IsTrue (keys.Contains (k), k);
 				return true;
 			});
+#if !NET
 			Assert.AreEqual (keys.Count, keyCount, "keycount");
+#endif
 			Assert.AreEqual (keys.Count, keyCount2, "keycount2");
 		}
 

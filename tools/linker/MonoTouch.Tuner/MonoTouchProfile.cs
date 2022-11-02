@@ -8,17 +8,10 @@ namespace MonoTouch.Tuner {
 
 		protected override bool IsProduct (string assemblyName)
 		{
-			switch (assemblyName) {
-			case "MonoTouch.Dialog-1":
-			case "MonoTouch.NUnitLite":
-			case "Xamarin.iOS": // The Xamarin.iOS.dll implementation assembly for Mac Catalyst.
-				return true;
-			default:
-				return assemblyName == product_assembly;
-			}
+			return assemblyName == product_assembly;
 		}
 
-		public override string ProductAssembly { 
+		public override string ProductAssembly {
 			get { return product_assembly; }
 		}
 

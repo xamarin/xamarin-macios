@@ -24,11 +24,26 @@ using OS_nw_protocol_options=System.IntPtr;
 using OS_nw_endpoint=System.IntPtr;
 using OS_nw_parameters=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#else
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+	[Watch (6,0)]
+#endif
 	public class NWFramerMessage : NWProtocolMetadata {
-		internal NWFramerMessage (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWFramerMessage (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_framer_protocol_create_message (OS_nw_protocol_definition definition);
@@ -38,8 +53,8 @@ namespace Network {
 		// https://github.com/xamarin/xamarin-macios/pull/7256#discussion_r337066971
 		public static NWFramerMessage Create (NWProtocolDefinition protocolDefinition)
 		{
-			if (protocolDefinition == null)
-				throw new ArgumentNullException (nameof (protocolDefinition));
+			if (protocolDefinition is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (protocolDefinition));
 			return new NWFramerMessage (nw_framer_protocol_create_message (protocolDefinition.Handle), owns: true);
 		}
 
@@ -53,7 +68,7 @@ namespace Network {
 		{
 			// get and call, this is internal and we are trying to do all the magic in the call
 			var del = BlockLiteral.GetTarget<Action<IntPtr>> (block);
-			if (del != null) {
+			if (del is not null) {
 				del (data);
 			}
 		}
@@ -62,8 +77,8 @@ namespace Network {
 		public void SetData (string key, byte[] value)
 		{
 			// the method takes a callback to cleanup the data, but we do not need that since we are managed
-			if (key == null)
-				throw new ArgumentNullException (nameof (key));
+			if (key is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 
 			// pin the handle so that is not collected,  let our callback release it
 			var pinned = GCHandle.Alloc (value, GCHandleType.Pinned);
@@ -91,7 +106,7 @@ namespace Network {
 		{
 			// get and call, this is internal and we are trying to do all the magic in the call
 			var del = BlockLiteral.GetTarget<Func<IntPtr, bool>> (block);
-			if (del != null) {
+			if (del is not null) {
 				return del (data);
 			}
 			return false;
@@ -137,7 +152,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_framer_message_copy_object_value (OS_nw_protocol_metadata message, string key);
 
-		public T GetObject<T> (string key) where T : NSObject
+		public T? GetObject<T> (string key) where T : NSObject
 			=> Runtime.GetNSObject<T> (nw_framer_message_copy_object_value (GetCheckedHandle (), key), owns: true);
 	}
 

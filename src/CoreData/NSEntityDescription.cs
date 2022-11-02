@@ -15,8 +15,14 @@ namespace CoreData
 {
 	public partial class NSEntityDescription
 	{
-#if !NET
-		[iOS (9,0), Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
 #endif
 		public NSObject[][] UniquenessConstraints {
 			get { return NSArray.FromArrayOfArray (_UniquenessConstraints); }

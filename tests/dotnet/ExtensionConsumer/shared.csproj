@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+
+		<ApplicationTitle>ExtensionConsumer</ApplicationTitle>
+		<ApplicationId>com.xamarin.extensionconsumer</ApplicationId>
+		<ApplicationVersion>3.14</ApplicationVersion>
+	</PropertyGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\ExtensionProject\$(_PlatformName)\ExtensionProject.csproj">
+			<IsAppExtension>true</IsAppExtension>
+		</ProjectReference>
+	</ItemGroup>
+</Project>

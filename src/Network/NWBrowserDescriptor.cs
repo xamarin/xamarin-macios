@@ -17,12 +17,27 @@ using CoreFoundation;
 
 using OS_nw_browse_descriptor=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#else
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+	[Watch (6,0)]
+#endif
 	public class NWBrowserDescriptor: NativeObject {
 
-		internal NWBrowserDescriptor (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWBrowserDescriptor (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_browse_descriptor nw_browse_descriptor_create_bonjour_service (string type, string? domain);
@@ -30,8 +45,8 @@ namespace Network {
 		public static NWBrowserDescriptor CreateBonjourService (string type, string? domain)
 		{
 			// domain can be null, type CANNOT	
-			if (type == null)
-				throw new ArgumentNullException (nameof (type));
+			if (type is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (type));
 
 			return new NWBrowserDescriptor (nw_browse_descriptor_create_bonjour_service (type, domain), owns: true);
 		}

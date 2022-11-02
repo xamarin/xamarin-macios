@@ -10,7 +10,6 @@
 #if !__WATCHOS__
 
 using System;
-using System.Drawing;
 using System.IO;
 using System.Threading;
 using CoreGraphics;
@@ -19,6 +18,7 @@ using AVFoundation;
 using CoreMedia;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AVFoundation {
 	
@@ -96,7 +96,7 @@ namespace MonoTouchFixtures.AVFoundation {
 		{
 			// This test deadlocks on Mountain Lion (but works on Lion)
 			// https://gist.github.com/rolfbjarne/1190d97af79e554c298f2c133dfd8e87
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			handled = false;
 			mre = new ManualResetEvent (false);

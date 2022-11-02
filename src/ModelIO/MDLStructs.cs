@@ -9,38 +9,54 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using Foundation;
 using CoreFoundation;
 using CoreGraphics;
 using Metal;
 using ObjCRuntime;
-using Vector2 = global::OpenTK.Vector2;
+#if NET
+using Vector3 = global::System.Numerics.Vector3;
+using Vector4 = global::System.Numerics.Vector4;
+using VectorInt4 = global::CoreGraphics.NVector4i;
+#else
 using Vector3 = global::OpenTK.Vector3;
 using Vector4 = global::OpenTK.Vector4;
-using Vector4i = global::OpenTK.Vector4i;
 using VectorInt4 = global::OpenTK.Vector4i;
-using Matrix2 = global::OpenTK.Matrix2;
-using Matrix3 = global::OpenTK.Matrix3;
-using Matrix4 = global::OpenTK.Matrix4;
-using Quaternion = global::OpenTK.Quaternion;
-using MathHelper = global::OpenTK.MathHelper;
+#endif
 
 #nullable enable
 
 namespace ModelIO {
 
 #if !COREBUILD
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public static class MDLVertexFormatExtensions {
 		
-#if !NET
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
 #endif
 		[DllImport (Constants.MetalKitLibrary)]
 		static extern /* MTLVertexFormat */ nuint MTKMetalVertexFormatFromModelIO (/* MTLVertexFormat */ nuint vertexFormat);
 
-#if !NET
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
 #endif
 		public static MTLVertexFormat ToMetalVertexFormat (this MDLVertexFormat vertexFormat)
 		{
@@ -50,7 +66,13 @@ namespace ModelIO {
 	}
 #endif
 
-	[StructLayout(LayoutKind.Sequential)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
 	public struct MDLAxisAlignedBoundingBox {
 		public Vector3 MaxBounds;
 		public Vector3 MinBounds;
@@ -63,7 +85,7 @@ namespace ModelIO {
 
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[Obsolete ("Use 'MDLVoxelIndexExtent2' instead.")]
 	[StructLayout(LayoutKind.Sequential)]
 	public struct MDLVoxelIndexExtent {
@@ -76,8 +98,14 @@ namespace ModelIO {
 	}
 #endif
 
-	[StructLayout(LayoutKind.Sequential)]
-#if XAMCORE_4_0
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
+#if NET
 	public struct MDLVoxelIndexExtent {
 #else
 	public struct MDLVoxelIndexExtent2 {
@@ -85,7 +113,7 @@ namespace ModelIO {
 		public VectorInt4 MinimumExtent { get; private set; }
 		public VectorInt4 MaximumExtent { get; private set; }
 
-#if XAMCORE_4_0
+#if NET
 		public MDLVoxelIndexExtent (VectorInt4 minimumExtent, VectorInt4 maximumExtent)
 #else
 		public MDLVoxelIndexExtent2 (VectorInt4 minimumExtent, VectorInt4 maximumExtent)

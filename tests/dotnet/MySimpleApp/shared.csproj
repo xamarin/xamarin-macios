@@ -8,8 +8,9 @@
 		<ApplicationVersion>3.14</ApplicationVersion>
 	</PropertyGroup>
 
+	<Import Project="../../common/shared-dotnet.csproj" />
+
 	<ItemGroup>
 		<Compile Include="../*.cs" />
-		<None Include="Info.plist" />
 	</ItemGroup>
 </Project>

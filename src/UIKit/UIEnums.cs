@@ -101,7 +101,7 @@ namespace UIKit {
 	} 
 
 	// NSUInteger -> UIControl.h
-	[Native]
+	[Native ("UIControlEvents")]
 	[Flags]
 	[NoWatch]
 	public enum UIControlEvent : ulong {
@@ -615,7 +615,11 @@ namespace UIKit {
 	// note: __TVOS_PROHIBITED -> because it uses NSLineBreakMode (but we need this because we don't expose the later)
 	//
 	// NSInteger -> UIStringDrawing.h
+#if __MACCATALYST__
+	[Native (ConvertToNative = "UITextAlignmentExtensions.ToNative", ConvertToManaged = "UITextAlignmentExtensions.ToManaged")]
+#else
 	[Native]
+#endif
 	public enum UITextAlignment : long {
 		Left,
 		Center,
@@ -666,7 +670,7 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UITableViewCell.h
-	[Native]
+	[Native ("UITableViewCellAccessoryType")]
 	[NoWatch]
 	public enum UITableViewCellAccessory : long {
 		None,                
@@ -679,7 +683,7 @@ namespace UIKit {
 	}
 
 	// NSUInteger -> UITableViewCell.h
-	[Native]
+	[Native ("UITableViewCellStateMask")]
 	[Flags]
 	[NoWatch]
 	public enum UITableViewCellState : ulong {
@@ -760,7 +764,7 @@ namespace UIKit {
 	}
 
 	// NSUInteger -> UIApplication.h
-	[Native]
+	[Native ("UIDataDetectorTypes")]
 	[Flags]
 	[NoTV][NoWatch]
 	public enum UIDataDetectorType : ulong {
@@ -1006,10 +1010,6 @@ namespace UIKit {
 		PreferredFramesPerSecond30 = 7 << 24,
 	}
 
-#if !WATCH
-	delegate void UIPrintInteractionCompletionHandler (UIPrintInteractionController printInteractionController, bool completed, NSError error);
-#endif
-
 	// untyped (and unamed) enum -> UIPrintError.h
 	// note: it looks unused by any API
 	[NoTV][NoWatch]
@@ -1150,12 +1150,10 @@ namespace UIKit {
 		Forward, Backward, Right, Left, Up, Down
 	}
 	
-#if !XAMCORE_4_0
+#if !NET
 	// NSInteger -> UITextInput.h
-	// Not hard deprecating now but until XAMCORE_4_0 happens or we can
-	// properly fix all the API using this.
+	// Use Foundation.NSWritingDirection in .NET.
 	// see: https://github.com/xamarin/xamarin-macios/issues/6573
-	// [Obsolete ("Use NSWritingDirection in Foundation instead.")]
 	[Native]
 	[NoWatch]
 	public enum UITextWritingDirection : long {
@@ -1230,7 +1228,11 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIImage.h
+#if __MACCATALYST__
+	[Native (ConvertToNative = "UIImageResizingModeExtensions.ToNative", ConvertToManaged = "UIImageResizingModeExtensions.ToManaged")]
+#else
 	[Native]
+#endif
 	public enum UIImageResizingMode : long {
 		Tile, Stretch
 	}
@@ -1905,7 +1907,7 @@ namespace UIKit {
 		Next
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoTV]
 #else
 	// Xcode 8.2 beta 1 added __TVOS_PROHIBITED but we need to keep it for binary compatibility
@@ -2328,6 +2330,8 @@ namespace UIKit {
 	public enum UIMenuOptions : ulong {
 		DisplayInline = 1uL << 0,
 		Destructive = 1uL << 1,
+		[iOS (15,0), TV (15,0), NoWatch, MacCatalyst (15,0)]
+		SingleSelection = 1uL << 5,
 	}
 
 	[NoWatch, NoTV, iOS (13, 0)]
@@ -2435,6 +2439,9 @@ namespace UIKit {
 		Alignment,
 		[Field ("UIMenuToolbar")]
 		Toolbar,
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("UIMenuSidebar")]
+		Sidebar,
 		[Field ("UIMenuFullscreen")]
 		Fullscreen,
 		[Field ("UIMenuMinimizeAndZoom")]
@@ -2586,7 +2593,7 @@ namespace UIKit {
 
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[iOS (13,4), NoWatch, TV (13,4)]
-	[Native]
+	[Native ("UIKeyboardHIDUsage")]
 	public enum UIKeyboardHidUsage : long {
 		KeyboardErrorRollOver = 1,
 		KeyboardPostFail = 2,
@@ -2939,6 +2946,30 @@ namespace UIKit {
 		ProbableWebSearch,
 		[Field ("UIPasteboardDetectionPatternNumber")]
 		Number,
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("UIPasteboardDetectionPatternLink")]
+		Link,
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("UIPasteboardDetectionPatternPhoneNumber")]
+		PhoneNumber,
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("UIPasteboardDetectionPatternEmailAddress")]
+		EmailAddress,
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("UIPasteboardDetectionPatternPostalAddress")]
+		PostalAddress,
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("UIPasteboardDetectionPatternCalendarEvent")]
+		CalendarEvent,
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("UIPasteboardDetectionPatternShipmentTrackingNumber")]
+		ShipmentTrackingNumber,
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("UIPasteboardDetectionPatternFlightNumber")]
+		FlightNumber,
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("UIPasteboardDetectionPatternMoneyAmount")]
+		MoneyAmount,
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -3017,5 +3048,117 @@ namespace UIKit {
 	public enum UIGuidedAccessRestrictionState : long {
 		Allow,
 		Deny,
+	}
+
+	[TV (15,0), iOS (15,0), NoWatch, MacCatalyst (15,0)]
+	public enum UIActionIdentifier {
+		[DefaultEnumValue]
+		[Field (null)]
+		None = -1,
+
+		[Field ("UIActionPaste")]
+		Paste,
+
+		[Field ("UIActionPasteAndMatchStyle")]
+		PasteAndMatchStyle,
+
+		[Field ("UIActionPasteAndGo")]
+		PasteAndGo,
+
+		[Field ("UIActionPasteAndSearch")]
+		PasteAndSearch,
+	}
+
+	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum UIBandSelectionInteractionState : long {
+		Possible = 0,
+		Began,
+		Selecting,
+		Ended,
+	}
+
+	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum UIBehavioralStyle : ulong {
+		Automatic = 0,
+		Pad,
+		Mac,
+	}
+
+	[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum UIButtonConfigurationSize : long {
+		Medium,
+		Small,
+		Mini,
+		Large,
+	}
+
+	[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum UIButtonConfigurationTitleAlignment : long {
+		Automatic,
+		Leading,
+		Center,
+		Trailing,
+	}
+
+	[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum UIButtonConfigurationCornerStyle : long {
+		Fixed = -1,
+		Dynamic,
+		Small,
+		Medium,
+		Large,
+		Capsule,
+	}
+
+	[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum UIButtonConfigurationMacIdiomStyle : long {
+		Automatic,
+		Bordered,
+		Borderless,
+		BorderlessTinted,
+	}
+
+	[NoTV, NoWatch, iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum UIFocusGroupPriority : long {
+		Ignored = 0,
+		PreviouslyFocused = 1000,
+		Prioritized = 2000,
+		CurrentlyFocused = Int64.MaxValue,
+	}
+
+	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum UIFocusHaloEffectPosition : long {
+		Automatic = 0,
+		Outside,
+		Inside,
+	}
+
+	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	public enum UISheetPresentationControllerDetentIdentifier {
+		[DefaultEnumValue]
+		[Field (null)]
+		Unknown = -1,
+
+		[Field ("UISheetPresentationControllerDetentIdentifierMedium")]
+		Medium,
+
+		[Field ("UISheetPresentationControllerDetentIdentifierLarge")]
+		Large,
+	}
+
+	[NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum UIWindowScenePresentationStyle : ulong {
+		Automatic,
+		Standard,
+		Prominent,
 	}
 }

@@ -1,4 +1,0 @@
-# deprecated in iOS 10, does not respond to selector (intro)
-!missing-selector! AVAssetDownloadTask::destinationURL not bound
-## Unavailable
-!missing-field! AVCaptureSessionPresetiFrame960x540 not bound

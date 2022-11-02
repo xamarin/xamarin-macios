@@ -1,4 +1,4 @@
-﻿//
+//
 // SecureTransport Unit Tests
 //
 // Authors:
@@ -20,6 +20,7 @@ using AppKit;
 using UIKit;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Security {
 
@@ -34,7 +35,7 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void StreamDefaults ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			using (var ssl = new SslContext (SslProtocolSide.Client, SslConnectionType.Stream)) {
 				Assert.That (ssl.BufferedReadSize, Is.EqualTo ((nint) 0), "BufferedReadSize");
@@ -48,7 +49,9 @@ namespace MonoTouchFixtures.Security {
 					Assert.That (ssl.MinProtocol, Is.EqualTo (SslProtocol.Tls_1_0), "MinProtocol");
 				else
 					Assert.That (ssl.MinProtocol, Is.EqualTo (SslProtocol.Ssl_3_0), "MinProtocol");
+#if !NET
 				Assert.That (ssl.NegotiatedCipher, Is.EqualTo (SslCipherSuite.SSL_NULL_WITH_NULL_NULL), "NegotiatedCipher");
+#endif
 				Assert.That (ssl.NegotiatedProtocol, Is.EqualTo (SslProtocol.Unknown), "NegotiatedProtocol");
 
 				Assert.That (ssl.PeerDomainName, Is.Empty, "PeerDomainName");
@@ -103,10 +106,10 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void DatagramDefaults ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 #if __MACOS__
-			nint dsize = TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10) ? 1327 : 1387;
+			nint dsize = TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 10) ? 1327 : 1387;
 #else
 			nint dsize = TestRuntime.CheckXcodeVersion (6, 0) ? 1327 : 1387;
 #endif
@@ -118,7 +121,9 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (ssl.MaxDatagramRecordSize, Is.EqualTo ((nint) 1400), "MaxDatagramRecordSize");
 				Assert.That (ssl.MaxProtocol, Is.EqualTo (SslProtocol.Dtls_1_0), "MaxProtocol");
 				Assert.That (ssl.MinProtocol, Is.EqualTo (SslProtocol.Dtls_1_0), "MinProtocol");
+#if !NET
 				Assert.That (ssl.NegotiatedCipher, Is.EqualTo (SslCipherSuite.SSL_NULL_WITH_NULL_NULL), "NegotiatedCipher");
+#endif
 				Assert.That (ssl.NegotiatedProtocol, Is.EqualTo (SslProtocol.Unknown), "NegotiatedProtocol");
 				Assert.Null (ssl.PeerId, "PeerId");
 				Assert.That (ssl.SessionState, Is.EqualTo (SslSessionState.Idle), "SessionState");
@@ -136,13 +141,11 @@ namespace MonoTouchFixtures.Security {
 			}
 		}
 
+#if !NET
 		[Test]
-#if NET
-		[Ignore ("Fails on ARM64 due to: https://github.com/xamarin/xamarin-macios/issues/11498)")]
-#endif
 		public void SslSupportedCiphers ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			int ssl_client_ciphers = -1;
 			using (var client = new SslContext (SslProtocolSide.Client, SslConnectionType.Stream)) {
@@ -174,13 +177,14 @@ namespace MonoTouchFixtures.Security {
 			}
 			Assert.That (ssl_client_ciphers, Is.EqualTo (ssl_server_ciphers), "same");
 		}
+#endif
 
 #if !__WATCHOS__
 		// This test uses sockets (TcpClient), which doesn't work on watchOS.
 		[Test]
 		public void Tls12 ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			var client = new TcpClient ("google.ca", 443);
 			using (NetworkStream ns = client.GetStream ())
@@ -203,7 +207,9 @@ namespace MonoTouchFixtures.Security {
 
 				// FIXME: iOS 8 beta 1 bug ?!? the state is not updated (maybe delayed?) but the code still works
 				//Assert.That (ssl.SessionState, Is.EqualTo (SslSessionState.Connected), "Connected");
+#if !NET
 				Assert.That (ssl.NegotiatedCipher, Is.Not.EqualTo (SslCipherSuite.SSL_NULL_WITH_NULL_NULL), "NegotiatedCipher");
+#endif
 				Assert.That (ssl.NegotiatedProtocol, Is.EqualTo (SslProtocol.Tls_1_2), "NegotiatedProtocol");
 
 				nint processed;
@@ -220,7 +226,8 @@ namespace MonoTouchFixtures.Security {
 
 				string s = Encoding.UTF8.GetString (data, 0, (int) processed);
 				// The result apparently depends on where you are: I get a 302, the bots get a 200.
-				Assert.That (s, Does.StartWith ("HTTP/1.0 302 Found").Or.StartWith ("HTTP/1.0 200 OK"), "response");
+				// Also sometimes it fails with 502 Bad Gateway on the bots
+				Assert.That (s, Does.StartWith ("HTTP/1.0 302 Found").Or.StartWith ("HTTP/1.0 200 OK").Or.StartWith ("HTTP/1.0 502 Bad Gateway"), "response");
 			}
 		}
 #endif // !__WATCHOS__

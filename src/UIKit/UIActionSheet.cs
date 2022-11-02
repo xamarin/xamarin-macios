@@ -18,7 +18,7 @@ using Foundation;
 namespace UIKit {
 	public partial class UIActionSheet : IEnumerable {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use overload with a IUIActionSheetDelegate parameter")]
 		public UIActionSheet (string title, UIActionSheetDelegate del, string cancelTitle, string destroy, params string [] other)
 			: this (title, del as IUIActionSheetDelegate, cancelTitle, destroy, other)
@@ -47,7 +47,7 @@ namespace UIKit {
 				CancelButtonIndex = AddButton (cancelTitle);
 		}
 		
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use overload with a IUIActionSheetDelegate parameter")]
 		public UIActionSheet (string title, UIActionSheetDelegate del)
 			: this (title, del as IUIActionSheetDelegate, null, null, (string) null)

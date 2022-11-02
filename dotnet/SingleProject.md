@@ -10,16 +10,23 @@ For our Apple platforms this means we're mapping the following MSBuild
 properties to Info.plist keys (this mapping will only take place if the
 Info.plist in the project doesn't already contain entries for these keys):
 
-| MSBuild Property    | Info.plist key             | Notes                                     |
-| --------------------|----------------------------|-------------------------------------------|
-| ApplicationId       | CFBundleIdentifier         |                                           |
-| ApplicationTitle    | CFBundleDisplayName        |                                           |
-| ApplicationVersion  | CFBundleVersion            |                                           |
-| AppleShortVersion   | CFBundleShortVersionString | Defaults to ApplicationVersion when blank |
+| MSBuild Property          | Info.plist key             | Notes                                     |
+| --------------------------|----------------------------|-------------------------------------------|
+| ApplicationId             | CFBundleIdentifier         |                                           |
+| ApplicationTitle          | CFBundleDisplayName        |                                           |
+| ApplicationVersion        | CFBundleVersion            |                                           |
+| ApplicationDisplayVersion | CFBundleShortVersionString | Defaults to ApplicationVersion when blank |
 
 This is only enabled if the `GenerateApplicationManifest` is set to `true`
 (which is the default for `.NET 6`, and not for "legacy"
 Xamarin.iOS/Xamarin.Mac)
+
+Additionally, `$(ApplicationDisplayVersion)` will overwrite the value for `$(Version)`,
+so the following properties will be set with the same value:
+
+* `$(AssemblyVersion)`
+* `$(FileVersion)`
+* `$(InformationalVersion)`
 
 Ref: [Issue #10473][2]
 

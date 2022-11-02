@@ -79,7 +79,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="$(RootTestsDirectory)\bindings-framework-test\bindings-framework-test-mac.csproj">
+    <ProjectReference Include="$(RootTestsDirectory)\bindings-framework-test\macOS\bindings-framework-test.csproj">
       <Project>{E40B0B77-3467-4891-9117-7AF8F248E306}</Project>
       <Name>bindings-framework-test-mac</Name>
     </ProjectReference>

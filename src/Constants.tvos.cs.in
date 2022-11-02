@@ -6,7 +6,7 @@ namespace ObjCRuntime {
 
 		// TVOS 9.0
 		public const string AccelerateImageLibrary = "/System/Library/Frameworks/Accelerate.framework/Frameworks/vImage.framework/vImage";
-#if !XAMCORE_4_0
+#if !NET
 		public const string PassKitLibrary = "/System/Library/Frameworks/PassKit.framework/PassKit";
 #endif
 		public const string QuartzLibrary = "/System/Library/Frameworks/QuartzCore.framework/QuartzCore";

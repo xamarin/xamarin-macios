@@ -1,0 +1,5 @@
+## not exposed in any API - w/duplicate values ?!?
+!missing-enum! AudioChannelCoordinateIndex not bound
+
+## bound as an inner type of the AudioTimeStamp struct
+!missing-enum! AudioTimeStampFlags not bound

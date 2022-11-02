@@ -13,7 +13,7 @@ namespace ObjCRuntime {
 		public const string AccelerateImageLibrary = "/System/Library/Frameworks/Accelerate.framework/Frameworks/vImage.framework/vImage";
 
 		// WatchOS 4.0
-#if !XAMCORE_4_0
+#if !NET
 		public const string VisionLibrary = "/System/Library/Frameworks/Vision.framework/Vision";
 #endif
 	}

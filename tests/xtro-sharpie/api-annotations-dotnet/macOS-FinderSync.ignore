@@ -1,0 +1,2 @@
+# This depends on https://github.com/xamarin/xamarin-macios/pull/2315 being merged
+!missing-protocol-member! FIFinderSync::makeListenerEndpointForServiceName:itemURL:andReturnError: not found

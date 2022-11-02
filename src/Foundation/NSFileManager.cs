@@ -29,6 +29,7 @@
 using ObjCRuntime;
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 namespace Foundation {
 
@@ -46,6 +47,12 @@ namespace Foundation {
 	}
 #endif
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class NSFileAttributes {
 		public bool? AppendOnly { get; set; }
 		public bool? Busy { get; set; }
@@ -285,6 +292,12 @@ namespace Foundation {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class NSFileSystemAttributes {
 		NSDictionary dict;
 		
@@ -322,7 +335,7 @@ namespace Foundation {
 		}
 		
 	}		
-	
+
 	public partial class NSFileManager {
 
 		[DllImport (Constants.FoundationLibrary)]

@@ -21,13 +21,27 @@ using nw_advertise_descriptor_t=System.IntPtr;
 using OS_nw_advertise_descriptor=System.IntPtr;
 using OS_nw_txt_record=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 
 namespace Network {
 
-
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#else
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+	[Watch (6,0)]
+#endif
 	public class NWTxtRecord : NativeObject {
-		internal NWTxtRecord (IntPtr handle, bool owns) : base (handle, owns) { }
+		[Preserve (Conditional = true)]
+		internal NWTxtRecord (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern IntPtr nw_txt_record_create_with_bytes (byte *txtBytes, nuint len);
@@ -83,7 +97,7 @@ namespace Network {
 		}
 		
 		public bool Add (string key, string value)
-			=> Add (key, value == null ? null : Encoding.UTF8.GetBytes (value));
+			=> Add (key, value is null ? null : Encoding.UTF8.GetBytes (value));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern byte nw_txt_record_remove_key (IntPtr handle, string key);
@@ -106,7 +120,7 @@ namespace Network {
 
 		public bool Equals (NWTxtRecord other)
 		{
-			if (other == null)
+			if (other is null)
 				return false;
 			return nw_txt_record_is_equal (GetCheckedHandle (), other.GetCheckedHandle ());
 		}
@@ -118,7 +132,7 @@ namespace Network {
 		delegate bool nw_txt_record_apply_t (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen);
 		unsafe static nw_txt_record_apply_t static_ApplyHandler = TrampolineApplyHandler;
 
-#if XAMCORE_4_0
+#if NET
 		public delegate bool NWTxtRecordApplyDelegate (string key, NWTxtRecordFindKey result, ReadOnlySpan<byte> value);
 #else
 		public delegate void NWTxtRecordApplyDelegate (string key, NWTxtRecordFindKey rersult, ReadOnlySpan<byte> value);
@@ -128,16 +142,16 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (nw_txt_record_apply_t))]
 		unsafe static bool TrampolineApplyHandler (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen)
 		{
-#if XAMCORE_4_0
+#if NET
 			var del = BlockLiteral.GetTarget<NWTxtRecordApplyDelegate> (block);
 #else
 			var del = BlockLiteral.GetTarget<MulticastDelegate> (block);
 #endif
-			if (del == null)
+			if (del is null)
 				return false;
 
 			var mValue = new ReadOnlySpan<byte> ((void*)value, (int)valueLen);
-#if XAMCORE_4_0
+#if NET
 			return del (key, found, mValue);
 #else
 			if (del is NWTxtRecordApplyDelegate apply) {
@@ -151,14 +165,14 @@ namespace Network {
 #endif
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the overload that takes an NWTxtRecordApplyDelegate2 instead.")]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool Apply (NWTxtRecordApplyDelegate handler)
 		{
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ApplyHandler, handler);
@@ -169,12 +183,12 @@ namespace Network {
 			}
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool Apply (NWTxtRecordApplyDelegate2 handler)
 		{
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ApplyHandler, handler);
@@ -199,7 +213,7 @@ namespace Network {
 		unsafe static void TrampolineAccessKeyHandler (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen)
 		{
 			var del = BlockLiteral.GetTarget<NWTxtRecordGetValueDelegete> (block);
-			if (del != null) {
+			if (del is not null) {
 				ReadOnlySpan<byte> mValue;
 				if (found == NWTxtRecordFindKey.NonEmptyValue)
 					mValue = new ReadOnlySpan<byte>((void*)value, (int)valueLen);
@@ -212,8 +226,8 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool GetValue (string key, NWTxtRecordGetValueDelegete handler)
 		{
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_AccessKeyHandler, handler);
@@ -237,7 +251,7 @@ namespace Network {
 		unsafe static void TrampolineRawBytesHandler (IntPtr block, IntPtr value, nuint valueLen)
 		{
 			var del = BlockLiteral.GetTarget<NWTxtRecordGetRawByteDelegate> (block);
-			if (del != null) {
+			if (del is not null) {
 				var mValue = new ReadOnlySpan<byte>((void*)value, (int)valueLen);
 				del (mValue);
 			}
@@ -246,8 +260,8 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool GetRawBytes (NWTxtRecordGetRawByteDelegate handler)
 		{
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_RawBytesHandler, handler);

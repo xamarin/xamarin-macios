@@ -12,6 +12,8 @@
 using System;
 using Foundation;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVAssetResourceLoadingDataRequest {
 		public override string ToString ()

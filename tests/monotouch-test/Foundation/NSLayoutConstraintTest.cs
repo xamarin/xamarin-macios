@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSLayoutConstraint
 //
 // Authors:
@@ -11,6 +11,7 @@ using UIKit;
 using Foundation;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Foundation {
 
@@ -22,7 +23,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void FromVisualFormat ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (var testViewController = new TestViewController ()) {
 				var constraints = NSLayoutConstraint.FromVisualFormat ("V:|[topLayoutGuide]-[firstLabel]-[secondLabel]",

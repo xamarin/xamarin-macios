@@ -27,26 +27,44 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
+#if NET
+using CFIndex = System.IntPtr;
+#else
 using CFIndex = System.nint;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreFoundation {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CFWriteStream : CFStream {
-		internal CFWriteStream (IntPtr handle)
-			: base (handle)
+		[Preserve (Conditional = true)]
+		internal CFWriteStream (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFErrorRef */ IntPtr CFWriteStreamCopyError (/* CFWriteStreamRef */ IntPtr stream);
 
-		public override CFException GetError ()
+		public override CFException? GetError ()
 		{
 			var error = CFWriteStreamCopyError (Handle);
 			if (error == IntPtr.Zero)
@@ -93,16 +111,16 @@ namespace CoreFoundation {
 
 		public int Write (byte[] buffer)
 		{
-			if (buffer == null)
-				throw new ArgumentNullException ("buffer");
+			if (buffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
 			return Write (buffer, 0, buffer.Length);
 		}
 
 		public unsafe int Write (byte[] buffer, nint offset, nint count)
 		{
-			if (buffer == null)
-				throw new ArgumentNullException ("buffer");
-			CheckHandle ();
+			if (buffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
+			GetCheckedHandle ();
 			if (offset < 0)
 				throw new ArgumentException ();
 			if (count < 1)
@@ -116,35 +134,35 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern /* Boolean */ bool CFWriteStreamSetClient (/* CFWriteStreamRef */ IntPtr stream, /* CFOptionFlags */ nint streamEvents,
-			/* CFWriteStreamClientCallBack */ CFStreamCallback clientCB, /* CFStreamClientContext* */ IntPtr clientContext);
+			/* CFWriteStreamClientCallBack */ CFStreamCallback? clientCB, /* CFStreamClientContext* */ IntPtr clientContext);
 
-		protected override bool DoSetClient (CFStreamCallback callback, CFIndex eventTypes,
+		protected override bool DoSetClient (CFStreamCallback? callback, CFIndex eventTypes,
 		                                     IntPtr context)
 		{
-			return CFWriteStreamSetClient (Handle, eventTypes, callback, context);
+			return CFWriteStreamSetClient (Handle, (nint) eventTypes, callback, context);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static void CFWriteStreamScheduleWithRunLoop (/* CFWriteStreamRef */ IntPtr stream, /* CFRunLoopRef */ IntPtr runLoop, /* CFStringRef */ IntPtr runLoopMode);
 
-		protected override void ScheduleWithRunLoop (CFRunLoop loop, NSString mode)
+		protected override void ScheduleWithRunLoop (CFRunLoop loop, NSString? mode)
 		{
-			if (loop == null)
-				throw new ArgumentNullException ("loop");
-			if (mode == null)
-				throw new ArgumentNullException ("mode");
+			if (loop is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (loop));
+			if (mode is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 			CFWriteStreamScheduleWithRunLoop (Handle, loop.Handle, mode.Handle);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static void CFWriteStreamUnscheduleFromRunLoop (/* CFWriteStreamRef */ IntPtr stream, /* CFRunLoopRef */ IntPtr runLoop, /* CFStringRef */ IntPtr runLoopMode);
 
-		protected override void UnscheduleFromRunLoop (CFRunLoop loop, NSString mode)
+		protected override void UnscheduleFromRunLoop (CFRunLoop loop, NSString? mode)
 		{
-			if (loop == null)
-				throw new ArgumentNullException ("loop");
-			if (mode == null)
-				throw new ArgumentNullException ("mode");
+			if (loop is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (loop));
+			if (mode is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 			CFWriteStreamUnscheduleFromRunLoop (Handle, loop.Handle, mode.Handle);
 		}
 
@@ -153,8 +171,8 @@ namespace CoreFoundation {
 
 		protected override IntPtr DoGetProperty (NSString name)
 		{
-			if (name == null)
-				throw new ArgumentNullException ("name");
+			if (name is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 			return CFWriteStreamSetProperty (Handle, name.Handle);
 		}
 
@@ -162,12 +180,11 @@ namespace CoreFoundation {
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFWriteStreamSetProperty (/* CFWriteStreamRef */ IntPtr stream, /* CFStringRef */ IntPtr propertyName, /* CFTypeRef */ IntPtr value);
 
-		protected override bool DoSetProperty (NSString name, INativeObject value)
+		protected override bool DoSetProperty (NSString name, INativeObject? value)
 		{
-			if (name == null)
-				throw new ArgumentNullException ("name");
-			return CFWriteStreamSetProperty (Handle, name.Handle, value == null ? IntPtr.Zero : value.Handle);
+			if (name is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
+			return CFWriteStreamSetProperty (Handle, name.Handle, value.GetHandle ());
 		}
 	}
 }
-

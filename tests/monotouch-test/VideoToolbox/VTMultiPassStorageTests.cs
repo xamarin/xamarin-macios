@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for VTMultiPassStorage
 //
 // Authors:
@@ -19,6 +19,7 @@ using AVFoundation;
 using CoreFoundation;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.VideoToolbox {
 
@@ -29,9 +30,9 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[Test]
 		public void MultiPassStorageCreateTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 10, 2, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.TVOS, 10, 2, throwIfOtherPlatform: false);
 
 			using (var storage = VTMultiPassStorage.Create ()){
 				Assert.IsNotNull (storage, "Storage should not be null");
@@ -41,9 +42,9 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[Test]
 		public void MultiPassStorageCloseTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 10, 2, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.TVOS, 10, 2, throwIfOtherPlatform: false);
 
 			using (var storage = VTMultiPassStorage.Create ()){
 				var result = storage.Close ();

@@ -10,6 +10,7 @@
 using System;
 using Foundation;
 using CoreGraphics;
+using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreGraphics {
@@ -18,6 +19,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 	[Preserve (AllMembers = true)]
 	public class PDFArrayTest {
 		
+#if !NET
 		[Test]
 		public void InvalidHandle ()
 		{
@@ -55,5 +57,6 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.False (array.GetString (0, out str), "GetString");
 			Assert.Null (str, "string");
 		}
+#endif // !NET
 	}
 }

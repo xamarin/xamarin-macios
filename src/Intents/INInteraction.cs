@@ -1,4 +1,4 @@
-﻿//
+//
 // INInteraction.cs
 //
 // Authors:

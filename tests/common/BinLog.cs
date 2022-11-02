@@ -1,14 +1,17 @@
+#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 using Microsoft.Build.Framework;
+using Microsoft.Build.Logging;
 using Microsoft.Build.Logging.StructuredLogger;
 
 #nullable enable
 
-namespace Xamarin.Tests
-{
+namespace Xamarin.Tests {
 	public class BuildLogEvent {
 		public BuildLogEventType Type;
 
@@ -29,30 +32,65 @@ namespace Xamarin.Tests
 		Error,
 	}
 
+	public class TargetExecutionResult {
+		public string TargetName;
+		public bool Skipped;
+		public TargetSkipReason SkipReason;
+
+		public TargetExecutionResult (string targetName, bool skipped, TargetSkipReason skipReason)
+		{
+			TargetName = targetName;
+			Skipped = skipped;
+			SkipReason = skipReason;
+		}
+	}
+
 	public class BinLog {
+
+		public static IEnumerable<TargetExecutionResult> GetAllTargets (string path)
+		{
+			var buildEvents = ReadBuildEvents (path).ToArray ();
+			var targetsStarted = buildEvents.OfType<TargetStartedEventArgs> ();
+			foreach (var target in targetsStarted) {
+				var id = target.BuildEventContext.TargetId;
+				if (id == -1)
+					throw new InvalidOperationException ($"Target '{target.TargetName}' started but no id?");
+				var eventsForTarget = buildEvents.Where (v => v.BuildEventContext?.TargetId == id);
+				var skippedEvent = eventsForTarget.OfType<TargetSkippedEventArgs> ().FirstOrDefault ();
+				var skipReason = (skippedEvent as TargetSkippedEventArgs2)?.SkipReason ?? TargetSkipReason.None;
+				yield return new TargetExecutionResult (target.TargetName, skippedEvent != null, skipReason);
+			}
+		}
+
+		public static IEnumerable<BuildEventArgs> ReadBuildEvents (string path)
+		{
+			var reader = new BinLogReader ();
+			foreach (var record in reader.ReadRecords (path)) {
+				if (record is null)
+					continue;
+
+				if (record.Args is null)
+					continue;
+
+				yield return record.Args;
+			}
+		}
 
 		// Returns a diagnostic build log as an enumeration of lines
 		public static IEnumerable<string> PrintToLines (string path)
 		{
-			var reader = new BinLogReader ();
 			var eols = new char [] { '\n', '\r' };
-			foreach (var record in reader.ReadRecords (path)) {
-				if (record == null)
-					continue;
-				var args = record.Args;
-				if (args == null)
-					continue;
-
+			foreach (var args in ReadBuildEvents (path)) {
 				if (args.Message == null)
 					continue;
 
 				if (args is ProjectStartedEventArgs psea) {
 					if (psea.Properties != null) {
 						yield return "Initial Properties";
-						var dict =  psea.Properties as IDictionary<string, string>;
+						var dict = psea.Properties as IDictionary<string, string>;
 						if (dict == null) {
 							yield return $"Unknown property dictionary type: {psea.Properties.GetType ().FullName}";
-						} else { 
+						} else {
 							foreach (var prop in dict.OrderBy (v => v.Key))
 								yield return $"{prop.Key} = {prop.Value}";
 						}
@@ -100,6 +138,11 @@ namespace Xamarin.Tests
 		public static IEnumerable<BuildLogEvent> GetBuildLogWarnings (string path)
 		{
 			return GetBuildMessages (path).Where (v => v.Type == BuildLogEventType.Warning);
+		}
+
+		public static IEnumerable<BuildLogEvent> GetBuildLogErrors (string path)
+		{
+			return GetBuildMessages (path).Where (v => v.Type == BuildLogEventType.Error);
 		}
 
 		public static IEnumerable<BuildLogEvent> GetBuildMessages (string path)

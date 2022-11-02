@@ -102,6 +102,7 @@ namespace Xamarin.Linker.Steps {
 				// look if this method is an override to existing _marked_ methods
 				if (!AreMarked (bases)) {
 					method.IsVirtual = false;
+					method.IsFinal = false; // since it's not virtual anymore
 #if DEBUG
 					Console.WriteLine ("Devirtualize {0} ({1})", method, ++devirtualize);
 #endif

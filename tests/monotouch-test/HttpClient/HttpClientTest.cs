@@ -1,4 +1,4 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 using System;
 using System.Net.Http;
 using System.Reflection;
@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Foundation;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 
 namespace MonoTouchFixtures.HttpClientTests
@@ -93,7 +94,7 @@ namespace MonoTouchFixtures.HttpClientTests
 		[TestCase (typeof (NSUrlSessionHandler), 9)]
 		public void EnsureModifiabilityPostSend (Type handlerType, int macOSMinVersion)
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, macOSMinVersion, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, macOSMinVersion, throwIfOtherPlatform: false);
 
 			var wrapper = HandlerWrapper.GetWrapper (handlerType);
 			using (var client = new HttpClient (wrapper.Handler))
@@ -117,4 +118,3 @@ namespace MonoTouchFixtures.HttpClientTests
 	}
 }
 #endif
-

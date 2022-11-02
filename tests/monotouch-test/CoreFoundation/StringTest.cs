@@ -31,5 +31,16 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			Assert.Throws<ArgumentNullException> (delegate { new CFString (null); }, "null");
 		}
+
+		[Test]
+		public void Index ()
+		{
+			var str = "Ab🤔日ㅁ名";
+			using var nativeStr = new CFString (str);
+			var array = str.ToCharArray ();
+			for (int i = 0; i < array.Length; i++) {
+				Assert.AreEqual (str[i], nativeStr[i], $"{str[i]} != {nativeStr[i]}");
+			}
+		}
 	}
 }

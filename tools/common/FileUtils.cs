@@ -55,5 +55,25 @@ namespace Xamarin.Utils {
 				}
 			} while (true);
 		}
+
+		// Returns true if the target file was updated, false if the target file was already up-to-date.
+		public static bool UpdateFile (string targetFile, Action<string> createOutput)
+		{
+			var tmpFile = Path.GetTempFileName ();
+			try {
+				createOutput (tmpFile);
+				if (File.Exists (targetFile) && FileUtils.CompareFiles (tmpFile, targetFile)) {
+					// File is up-to-date
+					return false;
+				} else {
+					Directory.CreateDirectory (Path.GetDirectoryName (targetFile));
+					File.Copy (tmpFile, targetFile, true);
+					return true;
+				}
+			} finally {
+				File.Delete (tmpFile);
+			}
+
+		}
 	}
 }

@@ -1,13 +1,19 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
-	[TestFixture]
+	[TestFixture (true)]
+	[TestFixture (false)]
 	public class GeneratePlistTaskTests_watchOS_WatchKitApp : GeneratePlistTaskTests_watchOS
 	{
-		public override void ConfigureTask ()
+		public GeneratePlistTaskTests_watchOS_WatchKitApp (bool isDotNet)
+			: base (isDotNet)
 		{
-			base.ConfigureTask ();
+		}
+
+		protected override void ConfigureTask (bool isDotNet)
+		{
+			base.ConfigureTask (isDotNet);
 			Task.IsWatchApp = true;
 		}
 
@@ -17,4 +23,3 @@ namespace Xamarin.iOS.Tasks
 		}
 	}
 }
-

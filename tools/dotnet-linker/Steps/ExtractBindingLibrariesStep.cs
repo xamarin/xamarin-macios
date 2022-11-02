@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+
+using Xamarin.Utils;
 
 namespace Xamarin.Linker {
 
@@ -56,22 +59,50 @@ namespace Xamarin.Linker {
 			}
 			Configuration.WriteOutputForMSBuild ("_BindingLibraryFrameworks", frameworks);
 
-			// Tell MSBuild about any additional linker flags we found
-			var linkerFlags = new List<MSBuildItem> ();
+			var frameworksToPublish = new List<MSBuildItem> ();
 			foreach (var asm in Configuration.Target.Assemblies) {
-				if (asm.LinkerFlags == null)
-					continue;
-				foreach (var arg in asm.LinkerFlags) {
+				var fwks = new HashSet<string> ();
+				fwks.UnionWith (asm.Frameworks);
+				fwks.UnionWith (asm.WeakFrameworks);
+
+				// Only keep frameworks that point to a location on disk
+				fwks.RemoveWhere (v => !v.EndsWith (".framework", StringComparison.Ordinal));
+
+				foreach (var fwk in fwks) {
+					if (!Configuration.Application.VerifyDynamicFramework (fwk))
+						continue;
+
+					// Store a relative path if possible, it makes things easier with XVS.
+					var fwkDirectory = fwk;
+					if (Path.IsPathRooted (fwkDirectory))
+						fwkDirectory = Path.GetRelativePath (Environment.CurrentDirectory, PathUtils.ResolveSymbolicLinks (fwkDirectory));
+
+					var executable = Path.Combine (fwkDirectory, Path.GetFileNameWithoutExtension (fwkDirectory));
+
+					var item = new MSBuildItem {
+						Include = executable,
+					};
+					frameworksToPublish.Add (item);
+				}
+			}
+			Configuration.WriteOutputForMSBuild ("_FrameworkToPublish", frameworksToPublish);
+
+			var dynamicLibraryToPublish = new List<MSBuildItem> ();
+			foreach (var asm in Configuration.Target.Assemblies) {
+				foreach (var arg in asm.LinkWith) {
+					if (!arg.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase))
+						continue;
+
 					var item = new MSBuildItem {
 						Include = arg,
 						Metadata = new Dictionary<string, string> {
-							{ "Assembly", asm.Identity },
+							{ "RelativePath", Path.Combine (Configuration.RelativeAppBundlePath, Configuration.Application.RelativeDylibPublishPath, Path.GetFileName (arg)) },
 						},
 					};
-					linkerFlags.Add (item);
+					dynamicLibraryToPublish.Add (item);
 				}
 			}
-			Configuration.WriteOutputForMSBuild ("_BindingLibraryLinkerFlags", linkerFlags);
+			Configuration.WriteOutputForMSBuild ("_DynamicLibraryToPublish", dynamicLibraryToPublish);
 		}
 	}
 }

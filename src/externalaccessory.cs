@@ -12,6 +12,10 @@ using ObjCRuntime;
 using UIKit;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ExternalAccessory {
 
 	[Mac (10, 13)][TV (10,0)]
@@ -124,7 +128,7 @@ namespace ExternalAccessory {
 	[DisableDefaultCtor]
 	interface EASession {
 		[Export ("initWithAccessory:forProtocol:")]
-		IntPtr Constructor (EAAccessory accessory, string protocol);
+		NativeHandle Constructor (EAAccessory accessory, string protocol);
 
 		[NullAllowed]
 		[Export ("accessory")]
@@ -180,17 +184,18 @@ namespace ExternalAccessory {
 #else
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(EAWiFiUnconfiguredAccessoryBrowserDelegate)})]
 #endif
-#if XAMCORE_4_0
+#if NET
 	// There's a designated initializer, which leads to think that the default ctor
 	// should not be used (documentation says nothing).
 	[DisableDefaultCtor]
 #endif
 	interface EAWiFiUnconfiguredAccessoryBrowser {
 
+		[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 		[NoTV]
 		[Export ("initWithDelegate:queue:")]
 		[DesignatedInitializer] // according to header comment (but not in attributes)
-		IntPtr Constructor ([NullAllowed] IEAWiFiUnconfiguredAccessoryBrowserDelegate accessoryBrowserDelegate, [NullAllowed] DispatchQueue queue);
+		NativeHandle Constructor ([NullAllowed] IEAWiFiUnconfiguredAccessoryBrowserDelegate accessoryBrowserDelegate, [NullAllowed] DispatchQueue queue);
 
 		[NoTV] // no member is available
 		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
@@ -204,15 +209,18 @@ namespace ExternalAccessory {
 		[Export ("unconfiguredAccessories", ArgumentSemantic.Copy)]
 		NSSet UnconfiguredAccessories { get; }
 
+		[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 		[NoTV]
 		[Export ("startSearchingForUnconfiguredAccessoriesMatchingPredicate:")]
 		void StartSearchingForUnconfiguredAccessories ([NullAllowed] NSPredicate predicate);
 
+		[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 		[NoTV]
 		[Export ("stopSearchingForUnconfiguredAccessories")]
 		void StopSearchingForUnconfiguredAccessories ();
 
 #if !MONOMAC
+		[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 		[NoTV]
 		[Export ("configureAccessory:withConfigurationUIOnViewController:")]
 		void ConfigureAccessory (EAWiFiUnconfiguredAccessory accessory, UIViewController viewController);

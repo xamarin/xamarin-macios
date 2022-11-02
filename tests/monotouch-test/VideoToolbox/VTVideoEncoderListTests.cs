@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for VTVideoEncoderList
 //
 // Authors:
@@ -17,6 +17,8 @@ using CoreMedia;
 using ObjCRuntime;
 using NUnit.Framework;
 
+using Xamarin.Utils;
+
 namespace MonoTouchFixtures.VideoToolbox {
 
 	[TestFixture]
@@ -26,9 +28,9 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[Test]
 		public void VideoEncoderListTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 10, 2, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.TVOS, 10, 2, throwIfOtherPlatform: false);
 
 			var encoders = VTVideoEncoder.GetEncoderList ();
 			Assert.NotNull (encoders, "VTVideoEncoder.GetEncoderList () Should Not be null");

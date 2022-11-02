@@ -30,6 +30,10 @@ using AppKit;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ScriptingBridge {
 	
 	
@@ -37,10 +41,10 @@ namespace ScriptingBridge {
 	interface SBObject : NSCoding {
 
 		[Export ("initWithProperties:")]
-		IntPtr Constructor (NSDictionary properties);
+		NativeHandle Constructor (NSDictionary properties);
 
 		[Export ("initWithData:")]
-		IntPtr Constructor (NSObject data);
+		NativeHandle Constructor (NSObject data);
 
 		[Export ("get")]
 		NSObject Get { get; }
@@ -55,7 +59,7 @@ namespace ScriptingBridge {
 	[DisableDefaultCtor] // *** -[SBElementArray init]: should never be used.
 	interface SBElementArray {
 		[Export ("initWithCapacity:")]
-		IntPtr Constructor (nuint capacity);
+		NativeHandle Constructor (nuint capacity);
 
 		[Export ("objectWithName:")]
 		NSObject ObjectWithName (string name);
@@ -104,13 +108,13 @@ namespace ScriptingBridge {
 	[DisableDefaultCtor] // An uncaught exception was raised: *** -[SBApplication init]: should never be used.
 	interface SBApplication : NSCoding {
 		[Export ("initWithURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Export ("initWithProcessIdentifier:")]
-		IntPtr Constructor (int /* pid_t = int */ pid);
+		NativeHandle Constructor (int /* pid_t = int */ pid);
 
 		[Export ("initWithBundleIdentifier:")]
-		IntPtr Constructor (string ident);
+		NativeHandle Constructor (string ident);
 
 		[Internal]
 		[Static]
@@ -157,7 +161,7 @@ namespace ScriptingBridge {
 	[Model]
 	[Protocol]
 	interface SBApplicationDelegate {
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 		[Export ("eventDidFail:withError:"), DelegateName ("SBApplicationError"), DefaultValue (null)]
 		//NSObject EventDidFailwithError (const AppleEvent event, NSError error);

@@ -239,6 +239,9 @@ namespace Introspection {
 				// generated code uses CoreMIDI correctly
 				libname = "CoreMIDI";
 				break;
+			case "Phase":
+				libname = "PHASE";
+				break;
 			default:
 				if (requiresFullPath && (Path.GetDirectoryName (libname).Length == 0))
 					ReportError ("[FAIL] Library '{0}' is specified without a path", libname);

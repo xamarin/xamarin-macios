@@ -1,4 +1,4 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 
 using System;
 using Foundation;
@@ -46,7 +46,7 @@ namespace MonoTouchFixtures.Metal {
 			encoder = null;
 		}
 
-#if XAMCORE_4_0
+#if NET
 		[Test]
 		public void SetBuffers ()
 		{

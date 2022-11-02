@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for ARSkeleton3D
 //
 // Authors:
@@ -16,8 +16,13 @@ using ARKit;
 using Foundation;
 using NUnit.Framework;
 using ObjCRuntime;
+using Xamarin.Utils;
 
+#if NET
+using Matrix4 = global::CoreGraphics.NMatrix4;
+#else
 using Matrix4 = global::OpenTK.NMatrix4;
+#endif
 
 namespace MonoTouchFixtures.ARKit {
 
@@ -77,7 +82,7 @@ namespace MonoTouchFixtures.ARKit {
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);
 			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
-			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 		}
 
 		[Test]

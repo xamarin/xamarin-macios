@@ -30,10 +30,8 @@ using System.Runtime.InteropServices;
 
 using Foundation;
 
-namespace ObjCRuntime
-{
-	class Stret
-	{
+namespace ObjCRuntime {
+	class Stret {
 		static bool IsHomogeneousAggregateSmallEnough_Armv7k (Type t, int members)
 		{
 			// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5516-L5519
@@ -138,10 +136,11 @@ namespace ObjCRuntime
 					case "System.UInt32":
 					case "System.Int32":
 					case "System.IntPtr":
+					case "System.UIntPtr":
 					case "System.nuint":
-					case "System.uint":
+					case "System.nint":
 						return false;
-					// floating-point types are stret
+						// floating-point types are stret
 					}
 				}
 			}
@@ -226,6 +225,24 @@ namespace ObjCRuntime
 			if (type.IsNested)
 				return false;
 
+#if NET
+			if (type.Namespace == "ObjCRuntime") {
+				switch (type.Name) {
+				case "NativeHandle":
+					type_size = is_64_bits ? 8 : 4;
+					return true;
+				}
+				return false;
+			} else if (type.Namespace == "System.Runtime.InteropServices") {
+				switch (type.Name) {
+				case "NFloat":
+					type_size = is_64_bits ? 8 : 4;
+					return true;
+				}
+				return false;
+			}
+#endif
+
 			if (type.Namespace != "System")
 				return false;
 
@@ -251,7 +268,10 @@ namespace ObjCRuntime
 				type_size = 8;
 				return true;
 			case "IntPtr":
+			case "UIntPtr":
+#if !NET
 			case "nfloat":
+#endif
 			case "nuint":
 			case "nint":
 				type_size = is_64_bits ? 8 : 4;

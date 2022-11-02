@@ -26,6 +26,8 @@ SOFTWARE.
 
  */
 
+#if !NET
+
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
@@ -48,6 +50,12 @@ namespace SceneKit
     /// <summary>
     /// Represents a 4x4 Matrix
     /// </summary>
+#if NET
+    [SupportedOSPlatform ("ios")]
+    [SupportedOSPlatform ("maccatalyst")]
+    [SupportedOSPlatform ("macos")]
+    [SupportedOSPlatform ("tvos")]
+#endif
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     [Advice ("This is a row major matrix representation.")]
@@ -130,10 +138,10 @@ namespace SceneKit
 #if !WATCH
 		public SCNMatrix4 (CoreAnimation.CATransform3D transform)
 		{
-			Row0 = new SCNVector4 ((pfloat)transform.m11, (pfloat)transform.m12, (pfloat)transform.m13, (pfloat)transform.m14);
-			Row1 = new SCNVector4 ((pfloat)transform.m21, (pfloat)transform.m22, (pfloat)transform.m23, (pfloat)transform.m24);
-			Row2 = new SCNVector4 ((pfloat)transform.m31, (pfloat)transform.m32, (pfloat)transform.m33, (pfloat)transform.m34);
-			Row3 = new SCNVector4 ((pfloat)transform.m41, (pfloat)transform.m42, (pfloat)transform.m43, (pfloat)transform.m44);
+			Row0 = new SCNVector4 ((pfloat) transform.M11, (pfloat) transform.M12, (pfloat) transform.M13, (pfloat) transform.M14);
+			Row1 = new SCNVector4 ((pfloat) transform.M21, (pfloat) transform.M22, (pfloat) transform.M23, (pfloat) transform.M24);
+			Row2 = new SCNVector4 ((pfloat) transform.M31, (pfloat) transform.M32, (pfloat) transform.M33, (pfloat) transform.M34);
+			Row3 = new SCNVector4 ((pfloat) transform.M41, (pfloat) transform.M42, (pfloat) transform.M43, (pfloat) transform.M44);
 		}
 #endif
 	
@@ -166,6 +174,12 @@ namespace SceneKit
         public SCNVector4 Column0
         {
             get { return new SCNVector4(Row0.X, Row1.X, Row2.X, Row3.X); }
+            set {
+                M11 = value.X;
+                M21 = value.Y;
+                M31 = value.Z;
+                M41 = value.W;
+            }
         }
 
         /// <summary>
@@ -174,6 +188,12 @@ namespace SceneKit
         public SCNVector4 Column1
         {
             get { return new SCNVector4(Row0.Y, Row1.Y, Row2.Y, Row3.Y); }
+            set {
+                M12 = value.X;
+                M22 = value.Y;
+                M32 = value.Z;
+                M42 = value.W;
+            }
         }
 
         /// <summary>
@@ -182,6 +202,12 @@ namespace SceneKit
         public SCNVector4 Column2
         {
             get { return new SCNVector4(Row0.Z, Row1.Z, Row2.Z, Row3.Z); }
+            set {
+                M13 = value.X;
+                M23 = value.Y;
+                M33 = value.Z;
+                M43 = value.W;
+            }
         }
 
         /// <summary>
@@ -190,6 +216,12 @@ namespace SceneKit
         public SCNVector4 Column3
         {
             get { return new SCNVector4(Row0.W, Row1.W, Row2.W, Row3.W); }
+            set {
+                M14 = value.X;
+                M24 = value.Y;
+                M34 = value.Z;
+                M44 = value.W;
+            }
         }
 
         /// <summary>
@@ -303,6 +335,29 @@ namespace SceneKit
         #endregion
 
         #region Static
+
+        #region CreateFromColumns
+
+        public static SCNMatrix4 CreateFromColumns (SCNVector4 column0, SCNVector4 column1, SCNVector4 column2, SCNVector4 column3)
+        {
+            var result = new SCNMatrix4 ();
+            result.Column0 = column0;
+            result.Column1 = column1;
+            result.Column2 = column2;
+            result.Column3 = column3;
+            return result;
+        }
+
+        public static void CreateFromColumns (SCNVector4 column0, SCNVector4 column1, SCNVector4 column2, SCNVector4 column3, out SCNMatrix4 result)
+        {
+            result = new SCNMatrix4 ();
+            result.Column0 = column0;
+            result.Column1 = column1;
+            result.Column2 = column2;
+            result.Column3 = column3;
+        }
+
+        #endregion
         
         #region CreateFromAxisAngle
         
@@ -1172,3 +1227,6 @@ namespace SceneKit
 #endif
     }
 }
+
+#endif // !NET
+

@@ -6,12 +6,12 @@
 //
 // Copyright 2015 Xamarin, Inc.
 
-
+#if !NET
 using System;
 
 namespace Foundation {
 
-#if !XAMCORE_4_0 && MONOMAC
+#if MONOMAC
 	public partial class NSError {
 
 		// removed in Xcode 11 GM
@@ -42,7 +42,7 @@ namespace Foundation {
 	}
 #endif
 
-#if !XAMCORE_4_0 && !WATCH
+#if !WATCH
 	public partial class NSUserActivity {
 
 		[Obsolete ("Use the constructor that allows you to set an activity type.")]
@@ -53,3 +53,5 @@ namespace Foundation {
 	}
 #endif
 }
+
+#endif // !NET

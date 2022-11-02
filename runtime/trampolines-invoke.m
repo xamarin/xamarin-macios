@@ -440,6 +440,13 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 						arg_ptrs [i + mofs] = &arg_frame [frameofs];
 						LOGZ (" argument %i is IntPtr: %p\n", i + 1, id_arg);
 						break;
+#if DOTNET
+					} else if (xamarin_is_class_nativehandle (p_klass)) {
+						arg_frame [ofs] = id_arg;
+						arg_ptrs [i + mofs] = &arg_frame [frameofs];
+						LOGZ (" argument %i is NativeHandle: %p\n", i + 1, id_arg);
+						break;
+#endif
 					} else if (!id_arg) {
 						arg_ptrs [i + mofs] = NULL;
 						break;
@@ -540,7 +547,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	
 	// invoke
 	MonoObject *retval;
-	MonoObject *ctorval;
+	MonoObject *ctorval __attribute__((unused));
 	if (is_ctor) {
 		/* 
 		 * Some Objective-C classes overwrite retain, release,

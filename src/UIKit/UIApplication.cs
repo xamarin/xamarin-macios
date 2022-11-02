@@ -10,11 +10,16 @@
 //
 
 using System;
+using System.ComponentModel;
 using System.Threading;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
 using CoreFoundation;
 using Foundation;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 #nullable enable
 
@@ -44,8 +49,15 @@ namespace UIKit {
 #if !WATCH
 		// We link with __Internal here so that this function is interposable from third-party native libraries.
 		// See: https://github.com/xamarin/MicrosoftInTune/issues/3 for an example.
-		[DllImport (/*Constants.UIKitLibrary*/ "__Internal")]
-		extern static int UIApplicationMain (int argc, /* char[]* */ string []? argv, /* NSString* */ IntPtr principalClassName, /* NSString* */ IntPtr delegateClassName);
+		[DllImport ("__Internal")]
+		extern static int xamarin_UIApplicationMain (int argc, /* char[]* */ string []? argv, /* NSString* */ IntPtr principalClassName, /* NSString* */ IntPtr delegateClassName, out IntPtr gchandle);
+
+		static int UIApplicationMain (int argc, /* char[]* */ string []? argv, /* NSString* */ IntPtr principalClassName, /* NSString* */ IntPtr delegateClassName)
+		{
+			var rv = xamarin_UIApplicationMain (argc, argv, principalClassName, delegateClassName, out var gchandle);
+			Runtime.ThrowException (gchandle);
+			return rv;
+		}
 #endif
 
 		// called from NSExtension.Initialize (so other, future stuff, can be added if needed)
@@ -61,6 +73,7 @@ namespace UIKit {
 		
 #if !WATCH
 		[Obsolete ("Use the overload with 'Type' instead of 'String' parameters for type safety.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static void Main (string []? args, string? principalClassName, string? delegateClassName)
 		{
 			var p = CFString.CreateNative (principalClassName);
@@ -73,8 +86,8 @@ namespace UIKit {
 		
 		public static void Main (string []? args, Type? principalClass, Type? delegateClass)
 		{
-			var p = principalClass == null ? IntPtr.Zero : CFString.CreateNative (new Class (principalClass).Name);
-			var d = delegateClass == null ? IntPtr.Zero : CFString.CreateNative (new Class (delegateClass).Name);
+			var p = principalClass is null ? NativeHandle.Zero : CFString.CreateNative (new Class (principalClass).Name);
+			var d = delegateClass is null ? NativeHandle.Zero : CFString.CreateNative (new Class (delegateClass).Name);
 			Initialize ();
 			UIApplicationMain (args?.Length ?? 0, args, p, d);
 			CFString.ReleaseNative (d);

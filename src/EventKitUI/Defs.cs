@@ -7,6 +7,8 @@
 // Copyright 2011-2015 Xamarin Inc.
 //
 
+#nullable enable
+
 using ObjCRuntime;
 
 namespace EventKitUI {

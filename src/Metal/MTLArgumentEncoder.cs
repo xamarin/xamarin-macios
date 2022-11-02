@@ -9,12 +9,12 @@ namespace Metal {
 
 
 	public static partial class MTLArgumentEncoder_Extensions {
-#if XAMCORE_4_0
+#if NET
 		public static void SetBuffers (this IMTLArgumentEncoder encoder, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)
 		{
-			if (buffers == null)
+			if (buffers is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffers));
-			if (offsets == null)
+			if (offsets is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (offsets));
 
 			var bufferPtrArray = buffers.Length <= 1024 ? stackalloc IntPtr[buffers.Length] : new IntPtr [buffers.Length];
@@ -29,7 +29,7 @@ namespace Metal {
 					encoder.SetBuffers ((IntPtr) buffersPtr, (IntPtr) offsetsPtr, range);
 				}
 			}
-			GC.KeepAlive (buffers)
+			GC.KeepAlive (buffers);
 		}
 #else 
 		public unsafe static void SetBuffers (this IMTLArgumentEncoder This, IMTLBuffer [] buffers, nint [] offsets, Foundation.NSRange range)

@@ -26,9 +26,18 @@ using System;
 using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
+
+#nullable enable
 
 namespace AVFoundation {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVPixelAspectRatio {
 		public nint /* NSInteger */ HorizontalSpacing;
@@ -60,9 +69,9 @@ namespace AVFoundation {
 			return (int) HorizontalSpacing ^ (int) VerticalSpacing;
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
-			if (other is AVPixelAspectRatio){
+			if (other is AVPixelAspectRatio) {
 				var o = (AVPixelAspectRatio) other;
 				return o.HorizontalSpacing == HorizontalSpacing && o.VerticalSpacing == VerticalSpacing;
 			}

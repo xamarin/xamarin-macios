@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 
 using NotificationCenter;
@@ -34,4 +34,3 @@ namespace TodayExtensionTest
 		}
 	}
 }
-

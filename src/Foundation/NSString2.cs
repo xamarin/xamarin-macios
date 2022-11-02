@@ -27,6 +27,8 @@ using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace Foundation {
 
 	public partial class NSString : IComparable<NSString> {
@@ -38,18 +40,22 @@ namespace Foundation {
 
 		public NSData Encode (NSStringEncoding enc, bool allowLossyConversion = false)
 		{
+#if NET
+			return new NSData (Messaging.NativeHandle_objc_msgSend_NativeHandle_bool (Handle, Selector.GetHandle (selDataUsingEncodingAllow), (IntPtr) (int) enc, allowLossyConversion));
+#else
 #if MONOMAC
 			return new NSData (Messaging.IntPtr_objc_msgSend_IntPtr_bool (Handle, selDataUsingEncodingAllowHandle, (IntPtr) (int) enc, allowLossyConversion));
 #else
 			return new NSData (Messaging.IntPtr_objc_msgSend_IntPtr_bool (Handle, Selector.GetHandle (selDataUsingEncodingAllow), (IntPtr) (int) enc, allowLossyConversion));
 #endif
+#endif
 		}
 
-		public static NSString FromData (NSData data, NSStringEncoding encoding)
+		public static NSString? FromData (NSData data, NSStringEncoding encoding)
 		{
-			if (data == null) 
-				throw new ArgumentNullException ("data");
-			NSString ret = null;
+			if (data is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
+			NSString? ret = null;
 			try { 
 				ret = new NSString (data, encoding);
 			} catch (Exception) {
@@ -58,8 +64,11 @@ namespace Foundation {
 			return ret;
 		}
 
-		public int CompareTo (NSString other)
+		public int CompareTo (NSString? other)
 		{
+			// `compare:` behavior is undefined if `nil` is provided, so we need to handle that case.
+			if (other is null)
+				return -1;
 			return (int)Compare (other);
 		}
 
@@ -69,7 +78,7 @@ namespace Foundation {
 			}
 		}
 
-#if !XAMCORE_4_0 && !MONOMAC
+#if !NET && !MONOMAC
 		[Obsolete ("Use 'GetLocalizedUserNotificationString' that takes 'NSString' to preserve localization.")]
 		public static string GetLocalizedUserNotificationString (string key, params NSObject[] arguments) {
 			return GetLocalizedUserNotificationString ((NSString) key, arguments);

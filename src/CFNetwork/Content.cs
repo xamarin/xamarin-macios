@@ -26,6 +26,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#if !NET
+
 using System;
 using System.IO;
 using System.Net;
@@ -108,7 +111,7 @@ namespace CFNetwork {
 			if (pos < 0)
 				return;
 
-			value = value.Substring (pos+1).Trim ();
+			value = value.Substring (pos + 1).Trim ();
 			if (value.StartsWith ("charset=", StringComparison.Ordinal)) {
 				var charset = value.Substring (8);
 				Headers.ContentEncoding.Add (charset);
@@ -140,3 +143,4 @@ namespace CFNetwork {
 		#endregion
 	}
 }
+#endif // !NET

@@ -1,4 +1,4 @@
-﻿namespace monotouchtestWatchKitExtension
+namespace monotouchtestWatchKitExtension
 
 open System
 open System.Collections

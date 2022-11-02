@@ -15,7 +15,7 @@ using CoreFoundation;
 
 namespace SpriteKit {
 
-#if !XAMCORE_4_0
+#if !NET
 	[Obsolete ("Use 'SKActionTimingFunction2' instead.")]
 	public delegate void SKActionTimingFunction (float /* float, not CGFloat */ time);
 #endif
@@ -27,7 +27,7 @@ namespace SpriteKit {
 			return SKAction.ResizeTo (size.Width, size.Height, duration);
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'TimingFunction2' instead.")]
 		public virtual SKActionTimingFunction? TimingFunction { get; set; }
 #endif

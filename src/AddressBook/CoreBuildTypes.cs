@@ -10,19 +10,20 @@
 //
 // Authors: miguel de icaza
 //
+
+#nullable enable
+
 #if COREBUILD
+using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 using System;
 namespace AddressBook {
-	public class ABAddressBook : INativeObject {
-		public IntPtr Handle { get; set; }
+	public class ABAddressBook : NativeObject {
 	}
-	public class ABRecord : INativeObject {
-		public IntPtr Handle { get; set; }
+	public class ABRecord : NativeObject {
 	}
 	public class ABPerson : ABRecord {
 	}
 }
 #endif
-

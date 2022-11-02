@@ -7,6 +7,8 @@
 // Copyright (c) Microsoft Corporation.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -14,14 +16,14 @@ using ObjCRuntime;
 namespace Vision {
 	public partial class VNRecognizedPointsObservation {
 
-		public T [] GetAvailableKeys<T> () where T : Enum
+		public T []? GetAvailableKeys<T> () where T : Enum
 		{
 			var type = typeof (T);
 			if (!(type == typeof (VNHumanBodyPoseObservationJointName) || type == typeof (VNHumanHandPoseObservationJointName)))
 				throw new InvalidOperationException ($"Only '{nameof (VNHumanBodyPoseObservationJointName)}' and '{nameof (VNHumanHandPoseObservationJointName)}' are supported.");
 
 			NSString[] keys = AvailableKeys;
-			if (keys == null)
+			if (keys is null)
 				return null;
 
 			if (keys.Length == 0)
@@ -34,14 +36,14 @@ namespace Vision {
 			return null;
 		}
 
-		public T [] GetAvailableGroupKeys<T> () where T : Enum
+		public T []? GetAvailableGroupKeys<T> () where T : Enum
 		{
 			var type = typeof (T);
 			if (!(type == typeof (VNHumanBodyPoseObservationJointsGroupName) || type == typeof (VNHumanHandPoseObservationJointsGroupName)))
 				throw new InvalidOperationException ($"Only '{nameof (VNHumanBodyPoseObservationJointsGroupName)}' and '{nameof (VNHumanHandPoseObservationJointsGroupName)}' are supported.");
 
 			NSString[] keys = AvailableGroupKeys;
-			if (keys == null)
+			if (keys is null)
 				return null;
 
 			if (keys.Length == 0)

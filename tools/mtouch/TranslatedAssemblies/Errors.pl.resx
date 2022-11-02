@@ -742,10 +742,10 @@
 		<value>Nie można połączyć ze strukturą {0} (przywoływaną przez odwołanie modułu w {1}), ponieważ nie jest ona dostępna na bieżącej platformie ({2}).</value>
 	</data>
   <data name="MX0183" xml:space="preserve">
-        <value>Nie można zmapować wersji systemu iOS {0} na wersję systemu MacOS w przypadku aplikacji Mac Catalyst</value>
+        <value>Nie można zmapować wersji aplikacji Mac Catalyst {0} na odpowiadającą jej wersję systemu macOS. Prawidłowe wersje systemu Mac Catalyst: {1}</value>
     </data>
   <data name="MX0184" xml:space="preserve">
-        <value>Nie można zmapować wersji systemu macOS {0} na odpowiadającą jej wersję systemu iOS w przypadku aplikacji Mac Catalyst</value>
+        <value>Nie można zmapować wersji systemu macOS {0} na odpowiadającą jej wersję aplikacji Mac Catalyst. Prawidłowe wersje systemu macOS: {1}</value>
     </data>
   <data name="MX0185" xml:space="preserve">
 		<value>Opcja "{0}" nie może przyjmować wartości "{1}" podczas korzystania z repozytorium CoreCLR.</value>
@@ -813,6 +813,9 @@
   <data name="MT1305" xml:space="preserve">
 		<value>Biblioteka powiązań „{0}” zawiera strukturę użytkownika ({0}), ale osadzone struktury użytkownika wymagają systemu iOS 8.0 (wersja platformy docelowej wdrożenia to {1}). W pliku Info.plist ustaw wersję platformy docelowej wdrożenia co najmniej 8.0.
 		</value>
+	</data>
+  <data name="MX1306" xml:space="preserve">
+		<value>Nie można zdekompresować pliku "{0}". Przejrzyj dziennik kompilacji, aby uzyskać więcej informacji z poziomu polecenia natywnego "unzip".</value>
 	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>W odwołaniach brakuje wymaganego zestawu „Xamarin.Mac.dll”
@@ -1229,6 +1232,9 @@
 		<value>Odnaleziono nieprawidłowy atrybut BindAsAttribute w elemencie „{0}”: nie można odnaleźć podstawowego typu wyliczeniowego {1}. Zarejestruj raport o usterce w witrynie https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
 	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>Rejestrator odnalazł nieprawidłowy typ „{0}” w sygnaturze dla metody „{1}”: interfejs musi mieć atrybut protokołu określający jego typ otoki.
 		</value>
@@ -1513,6 +1519,9 @@
 		<value>Rejestrator nie może obliczyć sygnatury bloku dla delegata typu {0} w metodzie {1}, ponieważ nie może znaleźć metody Invoke typu delegata.
 		</value>
 	</data>
+  <data name="MT4186" xml:space="preserve">
+		<value>Rejestrator znalazł nieoptymalny typ „{0}“: typ nie ma konstruktora, który przyjmuje dwa argumenty (ObjCRuntime.NativeHandle, bool). Znaleziono jednak konstruktor, który przyjmuje dwa argumenty (System.IntPtr, bool) i zostanie użyty zamiast niego. Zdecydowanie zaleca się zmianę podpisu konstruktora (System.IntPtr, bool) na (ObjCRuntime.NativeHandle, bool).</value>
+	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Brak kompilatora „{0}”. Zainstaluj składnik „Command-Line Tools” środowiska Xcode
 		</value>
@@ -1696,6 +1705,11 @@
 		<value>Narzędziu xcrun nie udało się znaleźć wyniku podczas wyszukiwania narzędzia „{0}” (plik „{1}” nie istnieje). Sprawdź dziennik kompilacji, aby uzyskać szczegółowe informacje.
 		</value>
 	</data>
+  <!-- The linker says custom linker steps can't use error codes between 1000 and 6000, so we use >= 7000 -->
+  <data name="MX7000" xml:space="preserve">
+		<value>Wystąpił błąd podczas wykonywania niestandardowych kroków konsolidatora. Aby uzyskać więcej informacji, przejrzyj dziennik kompilacji.</value>
+	</data>
+  <!-- 8XXX are for errors that occur at runtime -->
   <data name="MT8018" xml:space="preserve">
 		<value>Wewnętrzny błąd spójności. Zarejestruj raport o usterce w witrynie https://github.com/xamarin/xamarin-macios/issues/new.
 		</value>
@@ -1725,5 +1739,15 @@
 	</data>
   <data name="MX8040" xml:space="preserve">
 		<value>Nieprawidłowe kodowanie typu dla parametru.</value>
+	</data>
+  <data name="MX8041" xml:space="preserve">
+		<value>Nie można utworzyć wystąpienia typu {0}.</value>
+	</data>
+  <data name="MX8042" xml:space="preserve">
+		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<comment>
+			0: name of function
+			1: exception info
+		</comment>
 	</data>
 </root>

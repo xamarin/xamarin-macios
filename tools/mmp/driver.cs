@@ -75,7 +75,6 @@ namespace Xamarin.Bundler {
 		static bool generate_plist;
 		static bool no_executable;
 		static bool embed_mono = true;
-		static List<string> link_flags;
 		static string machine_config_path = null;
 		static bool bypass_linking_checks = false;
 
@@ -84,7 +83,7 @@ namespace Xamarin.Bundler {
 		static string macos_dir;
 		static string resources_dir;
 		static string mmp_dir;
-		
+
 		static string AppPath { get { return Path.Combine (macos_dir, app_name); } }
 
 		static string icon;
@@ -94,7 +93,8 @@ namespace Xamarin.Bundler {
 		static bool frameworks_copied_to_bundle_dir;    // Have we copied any frameworks to Foo.app/Contents/Frameworks?
 		static bool dylibs_copied_to_bundle_dir => native_libraries_copied_in.Count > 0;
 
-		static void ShowHelp (OptionSet os) {
+		static void ShowHelp (OptionSet os)
+		{
 			Console.WriteLine ("mmp - Xamarin.Mac Packer");
 			Console.WriteLine ("Copyright 2010 Novell Inc.");
 			Console.WriteLine ("Copyright 2011-2016 Xamarin Inc.");
@@ -130,7 +130,7 @@ namespace Xamarin.Bundler {
 		{
 			throw new InvalidOperationException ("Arch32Directory when not Mobile or Full?");
 		}
-		
+
 		public static string GetArch64Directory (Application app)
 		{
 			if (IsUnifiedMobile)
@@ -139,7 +139,7 @@ namespace Xamarin.Bundler {
 				return Path.Combine (GetFrameworkLibDirectory (app), "x86_64", "full");
 			throw new InvalidOperationException ("Arch64Directory when not Mobile or Full?");
 		}
-					
+
 		public static bool EnableDebug {
 			get { return App.EnableDebug; }
 		}
@@ -153,15 +153,15 @@ namespace Xamarin.Bundler {
 				{ "n|name=", "Specify the application name", v => app_name = v },
 				{ "s|sgen:", "Use the SGen Garbage Collector",
 					v => {
-						if (!ParseBool (v, "sgen")) 
+						if (!ParseBool (v, "sgen"))
 							ErrorHelper.Warning (43, Errors.MX0043);
 					},
 					true // do not show the option anymore
 				},
-				{ "boehm:", "Enable the Boehm garbage collector", 
+				{ "boehm:", "Enable the Boehm garbage collector",
 					v => {
 						if (ParseBool (v, "boehm"))
-							ErrorHelper.Warning (43, Errors.MX0043); }, 
+							ErrorHelper.Warning (43, Errors.MX0043); },
 					true // do not show the option anymore
 				},
 				{ "new-refcount:", "Enable new refcounting logic",
@@ -196,11 +196,7 @@ namespace Xamarin.Bundler {
 				},
 				{ "link_flags=", "Specifies additional arguments to the native linker.",
 					v => {
-						if (!StringUtils.TryParseArguments (v, out var lf, out var ex))
-							throw ErrorHelper.CreateError (26, ex, Errors.MX0026, $"-link_flags={v}", ex.Message);
-						if (link_flags == null)
-							link_flags = new List<string> ();
-						link_flags.AddRange (lf);
+						App.ParseCustomLinkFlags (v, "link_flags");
 					}
 				},
 				{ "ignore-native-library=", "Add a native library to be ignored during assembly scanning and packaging",
@@ -260,9 +256,9 @@ namespace Xamarin.Bundler {
 				// With newer Mono builds, the system assemblies passed to us by msbuild are
 				// no longer safe to copy into the bundle. They are stripped "fake" BCL
 				// copies. So we redirect to the "real" ones. Thanks TargetFrameworkDirectories :(
-				Regex monoAPIRegex = new Regex("lib/mono/.*-api/", RegexOptions.IgnoreCase);
-				Regex monoAPIFacadesRegex = new Regex("lib/mono/.*-api/Facades/", RegexOptions.IgnoreCase);
-				FixReferences (x => monoAPIRegex.IsMatch (x) && !monoAPIFacadesRegex.IsMatch (x), x => x.Replace(monoAPIRegex.Match(x).Value, "lib/mono/4.5/"));
+				Regex monoAPIRegex = new Regex ("lib/mono/.*-api/", RegexOptions.IgnoreCase);
+				Regex monoAPIFacadesRegex = new Regex ("lib/mono/.*-api/Facades/", RegexOptions.IgnoreCase);
+				FixReferences (x => monoAPIRegex.IsMatch (x) && !monoAPIFacadesRegex.IsMatch (x), x => x.Replace (monoAPIRegex.Match (x).Value, "lib/mono/4.5/"));
 			}
 
 			if (App.Registrar == RegistrarMode.PartialStatic && App.LinkMode != LinkMode.None)
@@ -493,7 +489,7 @@ namespace Xamarin.Bundler {
 				root_assembly = unprocessed [0];
 				if (!File.Exists (root_assembly))
 					throw new ProductException (7, true, Errors.MX0007, root_assembly);
-				
+
 				string root_wo_ext = Path.GetFileNameWithoutExtension (root_assembly);
 				if (Profile.IsSdkAssembly (root_wo_ext) || Profile.IsProductAssembly (root_wo_ext))
 					throw new ProductException (3, true, Errors.MX0003, root_wo_ext);
@@ -512,7 +508,7 @@ namespace Xamarin.Bundler {
 
 				if (string.IsNullOrEmpty (app_name))
 					app_name = root_wo_ext;
-			
+
 				if (string.IsNullOrEmpty (output_dir))
 					output_dir = Environment.CurrentDirectory;
 			}
@@ -563,12 +559,11 @@ namespace Xamarin.Bundler {
 					List<MethodDefinition> methods;
 					if (native_libs.TryGetValue (kvp.Key, out methods)) {
 						if (methods == null) {
-							methods = new List<MethodDefinition> (); 
+							methods = new List<MethodDefinition> ();
 							native_libs [kvp.Key] = methods;
 						}
 						methods.AddRange (kvp.Value);
-					}
-					else {
+					} else {
 						native_libs.Add (kvp.Key, kvp.Value);
 					}
 				}
@@ -588,7 +583,7 @@ namespace Xamarin.Bundler {
 			// MDK check
 			Compile ();
 			Watch ("Compile", 1);
-			
+
 			if (generate_plist)
 				GeneratePList ();
 
@@ -637,8 +632,7 @@ namespace Xamarin.Bundler {
 				if (Application.UpdateFile (src, temp_dest))
 					LipoLibrary (name, temp_dest);
 				Application.UpdateFile (temp_dest, dest);
-			}
-			else {
+			} else {
 				// we can directly update the dest
 				Application.UpdateFile (src, dest);
 			}
@@ -673,26 +667,28 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		static void GeneratePList () {
+		static void GeneratePList ()
+		{
 			var sr = new StreamReader (typeof (Driver).Assembly.GetManifestResourceStream (App.Embeddinator ? "Info-framework.plist.tmpl" : "Info.plist.tmpl"));
 			var all = sr.ReadToEnd ();
 			var icon_str = (icon != null) ? "\t<key>CFBundleIconFile</key>\n\t<string>" + icon + "</string>\n\t" : "";
 			var path = Path.Combine (App.Embeddinator ? resources_dir : contents_dir, "Info.plist");
-			using (var sw = new StreamWriter (path)){
+			using (var sw = new StreamWriter (path)) {
 				sw.WriteLine (
 					all.Replace ("@BUNDLEDISPLAYNAME@", app_name).
 					Replace ("@EXECUTABLE@", app_name).
-					Replace ("@BUNDLEID@", string.Format ("org.mono.bundler.{0}", app_name)).  
+					Replace ("@BUNDLEID@", string.Format ("org.mono.bundler.{0}", app_name)).
 					Replace ("@BUNDLEICON@", icon_str).
 					Replace ("@BUNDLENAME@", app_name).
 					Replace ("@ASSEMBLY@", App.References.Where (e => Path.GetExtension (e) == ".exe").FirstOrDefault ()));
 			}
-		}	
+		}
 
 
 		// the 'codesign' is provided with OSX, not with Xcode (no need to use xcrun)
 		// note: by default the monodevelop addin does the signing (not mmp)
-		static void CodeSign () {
+		static void CodeSign ()
+		{
 			RunCommand ("codesign", String.Format ("-v -s \"{0}\" \"{1}\"", certificate_name, App.AppDirectory));
 		}
 
@@ -717,8 +713,7 @@ namespace Xamarin.Bundler {
 					return path;
 				else
 					return Marshal.PtrToStringAuto (buffer);
-			}
-			finally {
+			} finally {
 				if (buffer != IntPtr.Zero)
 					Marshal.FreeHGlobal (buffer);
 			}
@@ -740,7 +735,7 @@ namespace Xamarin.Bundler {
 				args.Add ("-F");
 				args.Add (path);
 			}
-		
+
 			if (weak)
 				BuildTarget.WeakFrameworks.Add (name);
 			else
@@ -790,6 +785,11 @@ namespace Xamarin.Bundler {
 
 			CheckSystemMonoVersion ();
 
+			if (App.RequiresPInvokeWrappers) {
+				var state = BuildTarget.LinkerOptions.MarshalNativeExceptionsState;
+				state.End ();
+			}
+
 			if (App.Registrar == RegistrarMode.Static) {
 				registrarPath = Path.Combine (App.Cache.Location, "registrar.m");
 				var registrarH = Path.Combine (App.Cache.Location, "registrar.h");
@@ -812,7 +812,7 @@ namespace Xamarin.Bundler {
 				throw new ProductException (5203, true, Errors.MM5203, libxammac);
 
 			try {
-				List <string> compiledExecutables = new List <string> ();
+				List<string> compiledExecutables = new List<string> ();
 				foreach (var abi in App.Abis) {
 					var abiDir = Path.Combine (App.Cache.Location, "main", abi.AsArchString ());
 
@@ -823,7 +823,7 @@ namespace Xamarin.Bundler {
 					var main = Path.Combine (abiDir, $"main.m");
 					BuildTarget.GenerateMain (ApplePlatform.MacOSX, abi, main, null);
 
-					var args = new List <string> ();
+					var args = new List<string> ();
 					if (App.EnableDebug)
 						args.Add ("-g");
 					if (App.Embeddinator) {
@@ -845,7 +845,7 @@ namespace Xamarin.Bundler {
 						args.Add ("-std=c++14");
 
 					bool appendedObjc = false;
-					var sourceFiles = new List <string> ();
+					var sourceFiles = new List<string> ();
 					foreach (var assembly in BuildTarget.Assemblies) {
 						if (assembly.LinkWith != null) {
 							foreach (var linkWith in assembly.LinkWith) {
@@ -947,7 +947,7 @@ namespace Xamarin.Bundler {
 					var outputPath = Path.Combine (abiDir, Path.GetFileName (AppPath));
 					compiledExecutables.Add (outputPath);
 					args.Add (outputPath);
-					
+
 					args.AddRange (cflags);
 					if (embed_mono) {
 						string libmono = Path.Combine (libdir, "libmonosgen-2.0.a");
@@ -997,8 +997,8 @@ namespace Xamarin.Bundler {
 						args.Add (registrarPath);
 					args.Add ("-fno-caret-diagnostics");
 					args.Add ("-fno-diagnostics-fixit-info");
-					if (link_flags != null)
-						args.AddRange (link_flags);
+					if (App.CustomLinkFlags is not null)
+						args.AddRange (App.CustomLinkFlags);
 					if (!string.IsNullOrEmpty (DeveloperDirectory)) {
 						var sysRootSDKVersion = new Version (App.SdkVersion.Major, App.SdkVersion.Minor); // Sys Root SDKs do not have X.Y.Z, just X.Y 
 						args.Add ("-isysroot");
@@ -1007,7 +1007,6 @@ namespace Xamarin.Bundler {
 
 					if (App.RequiresPInvokeWrappers) {
 						var state = BuildTarget.LinkerOptions.MarshalNativeExceptionsState;
-						state.End ();
 						args.Add (state.SourcePath);
 					}
 
@@ -1075,7 +1074,7 @@ namespace Xamarin.Bundler {
 				throw new AggregateException (exceptions);
 		}
 
-		static IDictionary<string,List<MethodDefinition>> Link ()
+		static IDictionary<string, List<MethodDefinition>> Link ()
 		{
 			var cache = (Dictionary<string, AssemblyDefinition>) BuildTarget.Resolver.ResolverCache;
 			AssemblyResolver resolver;
@@ -1086,7 +1085,7 @@ namespace Xamarin.Bundler {
 				} else {
 					resolver = new Mono.Linker.AssemblyResolver ();
 				}
-			} else { 
+			} else {
 				resolver = new MonoMacAssemblyResolver (BuildTarget.Resolver);
 			}
 
@@ -1096,15 +1095,14 @@ namespace Xamarin.Bundler {
 			var options = new LinkerOptions {
 				MainAssembly = BuildTarget.Resolver.GetAssembly (App.References [App.References.Count - 1]),
 				OutputDirectory = mmp_dir,
-				LinkSymbols = App.EnableDebug,
+				LinkSymbols = App.PackageManagedDebugSymbols,
 				LinkMode = App.LinkMode,
 				Resolver = resolver,
 				SkippedAssemblies = App.LinkSkipped,
 				I18nAssemblies = App.I18n,
 				ExtraDefinitions = App.Definitions,
 				RuntimeOptions = App.RuntimeOptions,
-				MarshalNativeExceptionsState = !App.RequiresPInvokeWrappers ? null : new PInvokeWrapperGenerator ()
-				{
+				MarshalNativeExceptionsState = !App.RequiresPInvokeWrappers ? null : new PInvokeWrapperGenerator () {
 					App = App,
 					SourcePath = Path.Combine (App.Cache.Location, "pinvokes.m"),
 					HeaderPath = Path.Combine (App.Cache.Location, "pinvokes.h"),
@@ -1189,7 +1187,7 @@ namespace Xamarin.Bundler {
 					if (lib.StartsWith (Path.GetDirectoryName (MonoPrefix), StringComparison.Ordinal)) {
 						string libname = Path.GetFileName (lib);
 						string real_lib = GetRealPath (lib);
-						string real_libname	= Path.GetFileName (real_lib);
+						string real_libname = Path.GetFileName (real_lib);
 						// if a symlink was specified then re-create it inside the .app
 						if (libname != real_libname)
 							CreateSymLink (mmp_dir, real_libname, libname);
@@ -1227,31 +1225,31 @@ namespace Xamarin.Bundler {
 
 			// well known libraries we do not bundle or warn about
 			switch (shortendName.ToLowerInvariant ()) {
-			case "xammac":	// we have a p/invoke to this library in Runtime.mac.cs, for users that don't bundle with mmp.
-			case "__internal":	// mono runtime
-			case "kernel32":	// windows specific
-			case "gdi32":		// windows specific
-			case "ole32":		// windows specific
-			case "user32":		// windows specific
-			case "advapi32":	// windows specific
-			case "crypt32":		// windows specific
-			case "msvcrt":		// windows specific
-			case "iphlpapi":	// windows specific
-			case "winmm":		// windows specific
-			case "winspool":	// windows specific
-			case "c":		// system provided
+			case "xammac":  // we have a p/invoke to this library in Runtime.mac.cs, for users that don't bundle with mmp.
+			case "__internal":  // mono runtime
+			case "kernel32":    // windows specific
+			case "gdi32":       // windows specific
+			case "ole32":       // windows specific
+			case "user32":      // windows specific
+			case "advapi32":    // windows specific
+			case "crypt32":     // windows specific
+			case "msvcrt":      // windows specific
+			case "iphlpapi":    // windows specific
+			case "winmm":       // windows specific
+			case "winspool":    // windows specific
+			case "c":       // system provided
 			case "objc":            // system provided
-			case "objc.a":		// found in swift core libraries
-			case "system.b":	// found in swift core libraries
-			case "system":		// system provided, libSystem.dylib -> CommonCrypto
-			case "x11":		// msvcrt pulled in
-			case "winspool.drv":	// msvcrt pulled in
-			case "cups":		// msvcrt pulled in
-			case "fam.so.0":	// msvcrt pulled in
-			case "gamin-1.so.0":	// msvcrt pulled in
-			case "asound.so.2":	// msvcrt pulled in
+			case "objc.a":      // found in swift core libraries
+			case "system.b":    // found in swift core libraries
+			case "system":      // system provided, libSystem.dylib -> CommonCrypto
+			case "x11":     // msvcrt pulled in
+			case "winspool.drv":    // msvcrt pulled in
+			case "cups":        // msvcrt pulled in
+			case "fam.so.0":    // msvcrt pulled in
+			case "gamin-1.so.0":    // msvcrt pulled in
+			case "asound.so.2": // msvcrt pulled in
 			case "oleaut32": // referenced by System.Runtime.InteropServices.Marshal._[S|G]etErrorInfo
-			case "system.native":	// handled by CopyMonoNative()
+			case "system.native":   // handled by CopyMonoNative()
 			case "system.security.cryptography.native.apple": // same
 			case "system.net.security.native": // same
 				return true;
@@ -1328,8 +1326,7 @@ namespace Xamarin.Bundler {
 
 			if (GetRealPath (dest) == real_src) {
 				Console.WriteLine ("Dependency {0} was already at destination, skipping.", Path.GetFileName (real_src));
-			}
-			else {
+			} else {
 				// install_name_tool gets angry if you copy in a read only native library
 				CopyFileAndRemoveReadOnly (real_src, dest);
 			}
@@ -1381,7 +1378,7 @@ namespace Xamarin.Bundler {
 
 			var prefix = new [] { dest };
 			var suffix = new [] { "-output", dest };
-			List <string> archArgs = new List <string> ();
+			List<string> archArgs = new List<string> ();
 			foreach (var abi in App.Abis) {
 				archArgs.Add ("-extract_family");
 				archArgs.Add (abi.ToString ().ToLowerInvariant ());
@@ -1400,7 +1397,8 @@ namespace Xamarin.Bundler {
 		}
 
 		/* Currently we clobber any existing files, perhaps we should error and have a -force flag */
-		static void CreateDirectoriesIfNeeded () {
+		static void CreateDirectoriesIfNeeded ()
+		{
 			if (App.Embeddinator) {
 				App.AppDirectory = Path.Combine (output_dir, app_name + ".framework");
 				contents_dir = Path.Combine (App.AppDirectory, "Versions", "A");
@@ -1442,20 +1440,20 @@ namespace Xamarin.Bundler {
 			PathUtils.CreateSymlink (file, target);
 		}
 
-		static void CreateDirectoryIfNeeded (string dir) {
+		static void CreateDirectoryIfNeeded (string dir)
+		{
 			if (!Directory.Exists (dir))
 				Directory.CreateDirectory (dir);
 		}
 
-		static void CopyConfiguration () {
+		static void CopyConfiguration ()
+		{
 			if (IsUnifiedMobile) {
 				CopyResourceFile ("config_mobile", "config");
-			}
-			else {
+			} else {
 				if (IsUnifiedFullXamMacFramework) {
 					CopyResourceFile ("machine.4_5.config", "machine.config");
-				}
-				else {
+				} else {
 					string machine_config = Path.Combine (MonoDirectory, "etc", "mono", "4.5", "machine.config");
 
 					if (!File.Exists (machine_config))
@@ -1474,8 +1472,7 @@ namespace Xamarin.Bundler {
 				CreateDirectoryIfNeeded (machineConfigDestDir);
 				if (machine_config_path == String.Empty) {
 					File.WriteAllLines (machineConfigDestFile, new string [] { "<?xml version=\"1.0\" encoding=\"utf-8\"?>", "<configuration>", "</configuration>" });
-				}
-				else {
+				} else {
 					if (!File.Exists (machine_config_path))
 						throw new ProductException (97, true, Errors.MM0097, machine_config_path);
 					File.Copy (machine_config_path, machineConfigDestFile);
@@ -1483,7 +1480,8 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		static void CopyResourceFile (string streamName, string outputFileName) {
+		static void CopyResourceFile (string streamName, string outputFileName)
+		{
 			var sr = new StreamReader (typeof (Driver).Assembly.GetManifestResourceStream (streamName));
 			var all = sr.ReadToEnd ();
 			var config = Path.Combine (mmp_dir, outputFileName);
@@ -1513,7 +1511,8 @@ namespace Xamarin.Bundler {
 				resolved_assemblies.Add (Path.Combine (fx_dir, "I18N.West.dll"));
 		}
 
-		static void CopyFileAndRemoveReadOnly (string src, string dest) {
+		static void CopyFileAndRemoveReadOnly (string src, string dest)
+		{
 			File.Copy (src, dest, true);
 
 			FileAttributes attrs = File.GetAttributes (dest);
@@ -1521,7 +1520,8 @@ namespace Xamarin.Bundler {
 				File.SetAttributes (dest, attrs & ~FileAttributes.ReadOnly);
 		}
 
-		static void CopyAssemblies () {
+		static void CopyAssemblies ()
+		{
 			foreach (string asm in resolved_assemblies) {
 				var configfile = string.Format ("{0}.config", asm);
 				string filename = Path.GetFileName (asm);
@@ -1547,13 +1547,15 @@ namespace Xamarin.Bundler {
 				assembly.CopySatellitesToDirectory (mmp_dir);
 		}
 
-		static void CopyResources () {
+		static void CopyResources ()
+		{
 			foreach (string res in resources) {
 				File.Copy (res, Path.Combine (resources_dir, Path.GetFileName (res)), true);
 			}
 		}
 
-		static void GatherAssemblies () {
+		static void GatherAssemblies ()
+		{
 			foreach (string asm in App.References) {
 				AssemblyDefinition assembly = AddAssemblyPathToResolver (asm);
 				ProcessAssemblyReferences (assembly);
@@ -1562,7 +1564,8 @@ namespace Xamarin.Bundler {
 				throw new AggregateException (BuildTarget.Resolver.Exceptions);
 		}
 
-		static void ProcessAssemblyReferences (AssemblyDefinition assembly) {
+		static void ProcessAssemblyReferences (AssemblyDefinition assembly)
+		{
 			if (assembly == null)
 				return;
 
@@ -1570,7 +1573,7 @@ namespace Xamarin.Bundler {
 
 			if (resolved_assemblies.Contains (fqname))
 				return;
-			
+
 			Target.PrintAssemblyReferences (assembly);
 
 			var asm = BuildTarget.AddAssembly (assembly);
@@ -1631,11 +1634,11 @@ namespace Xamarin.Bundler {
 			var abi = Driver.App.Abi;
 			var arch = abi.AsArchString ();
 			switch (abi) {
-				case Abi.x86_64:
-				case Abi.ARM64:
-					return Path.Combine (Driver.GetFrameworkLibDirectory (Driver.App), "64bits", flavor, name + ".dll");
-				default:
-					throw new ProductException (5205, true, Errors.MM5205, arch);
+			case Abi.x86_64:
+			case Abi.ARM64:
+				return Path.Combine (Driver.GetFrameworkLibDirectory (Driver.App), "64bits", flavor, name + ".dll");
+			default:
+				throw new ProductException (5205, true, Errors.MM5205, arch);
 			}
 		}
 	}

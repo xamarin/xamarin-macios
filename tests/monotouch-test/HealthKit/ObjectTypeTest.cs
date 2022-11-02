@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for HKObjectType
 //
 // Authors:
@@ -27,7 +27,11 @@ namespace MonoTouchFixtures.HealthKit {
 		{
 			TestRuntime.AssertXcodeVersion (6, 0);
 
+#if NET
+			using (var t = HKObjectType.WorkoutType) {
+#else
 			using (var t = HKObjectType.GetWorkoutType ()) {
+#endif
 				Assert.That (t.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 			}
 		}

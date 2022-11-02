@@ -1,4 +1,4 @@
-﻿using AppKit;
+using AppKit;
 
 namespace ImmutableCollection_Test {
 	static class MainClass {

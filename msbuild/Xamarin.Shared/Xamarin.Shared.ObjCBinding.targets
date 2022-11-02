@@ -52,18 +52,12 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 	>
 
 		<ReadLinesFromFile File="$(_GeneratedSourcesFileList)" >
-			<Output TaskParameter="Lines" ItemName="GeneratedSources" />
+			<Output TaskParameter="Lines" ItemName="Compile" />
 		</ReadLinesFromFile>
 
-		<CreateItem Include="@(ObjcBindingCoreSource)">
-			<Output TaskParameter="Include" ItemName="Compile" />
-		</CreateItem>
-
-		<CreateItem Include="@(GeneratedSources)">
-			<Output TaskParameter="Include" ItemName="Compile" />
-		</CreateItem>
-
 		<ItemGroup>
+			<Compile Include="@(ObjcBindingCoreSource)" />
+
 			<EmbeddedResource Include="@(ObjcBindingNativeLibrary)">
 				<Type>Non-Resx</Type>
 				<WithCulture>false</WithCulture>

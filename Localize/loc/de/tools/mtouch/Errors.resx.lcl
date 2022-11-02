@@ -2197,6 +2197,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";MT4124_I" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Ungültig {0} auf '{1}' gefunden. Bitte reichen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new ein]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";MT4125" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The registrar found an invalid type '{0}' in signature for method '{1}': The interface must have a Protocol attribute specifying its wrapper type.]D;]A;		]]></Val>
@@ -2742,6 +2751,15 @@
           <Val><![CDATA[The registrar can't compute the block signature for the delegate of type {0} in the method {1} because it couldn't find the Invoke method of the delegate type.]D;]A;		]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Der Registrar kann die Blocksignatur für den Delegaten des Typs "{0}" in der Methode "{1}" nicht berechnen, weil die Invoke-Methode des Delegattyps nicht gefunden wurde.]D;]A;		]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MT4186" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The registrar found a non-optimal type `{0}`: the type does not have a constructor that takes two (ObjCRuntime.NativeHandle, bool) arguments. However, a constructor that takes two (System.IntPtr, bool) arguments was found (and will be used instead). It's highly recommended to change the signature of the (System.IntPtr, bool) constructor to be (ObjCRuntime.NativeHandle, bool).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Die Registrierungsstelle hat einen nicht optimalen Typ "{0}" gefunden: Der Typ verfügt nicht über einen Konstruktor, der zwei Argumente (ObjCRuntime.NativeHandle, bool) akzeptiert. Es wurde jedoch ein Konstruktor gefunden, der zwei Argumente (System.IntPtr, bool) akzeptiert (und stattdessen verwendet wird). Es wird dringend empfohlen, die Signatur des (System.IntPtr, bool)-Konstruktors in (ObjCRuntime.NativeHandle, bool) zu ändern.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -3306,19 +3324,25 @@
       </Item>
       <Item ItemId=";MX0183" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Could not map the iOS version {0} to a macOS version for Mac Catalyst]]></Val>
+          <Val><![CDATA[Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Die IOS-Version {0} konnte keiner macOS-Version für Mac Catalyst zugeordnet werden.]]></Val>
+            <Val><![CDATA[Die Mac Catalyst-Version {0} konnte keiner entsprechenden macOS-Version zugeordnet werden. Gültige Mac Catalyst-Versionen sind: {1}]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Could not map the iOS version {0} to a macOS version for Mac Catalyst]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";MX0184" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst]]></Val>
+          <Val><![CDATA[Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Die macOS-Version {0} konnte keiner entsprechenden macOS-Version für Mac Catalyst zugeordnet werden.]]></Val>
+            <Val><![CDATA[Die macOS-Version {0} konnte keiner entsprechenden Mac Catalyst-Version zugeordnet werden. Gültige macOS-Versionen sind: {1}]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -3336,6 +3360,15 @@
           <Val><![CDATA[Could not copy the assembly '{0}' to '{1}': {2}]D;]A;		]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Die Assembly "{0}" konnte nicht in "{1}" kopiert werden: {2}]D;]A;		]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX1306" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not decompress the file '{0}'. Please review the build log for more information from the native 'unzip' command.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Die Datei „{0}“ konnte nicht dekomprimiert werden. Überprüfen Sie das Buildprotokoll auf weitere Informationen aus dem nativen Befehl „unzip“.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -3556,6 +3589,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";MX7000" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occured while executing the custom linker steps. Please review the build log for more information.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Fehler beim Ausführen der Benutzerdefinierten Linkerschritte. Weitere Informationen finden Sie im Buildprotokoll.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";MX8037" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Don't know how to marshal the parameter of type {0} for parameter {1} in call to {2}]]></Val>
@@ -3588,6 +3630,24 @@
           <Val><![CDATA[Invalid type encoding for parameter.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Ungültiger Typ der Codierung für Parameter.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8041" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to create an instance of the type {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Es kann keine Instanz des Typs {0}erstellt werden.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8042" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An exception occurred while trying to invoke the function {0}: {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Ausnahme beim Aufrufen der Funktion {0}: {1}.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

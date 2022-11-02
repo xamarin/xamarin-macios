@@ -30,6 +30,7 @@ using Foundation;
 using CoreGraphics;
 using CoreFoundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -45,7 +46,13 @@ namespace CoreImage {
 	public enum CIFilterMode {
 		Nearest, Linear
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CISamplerOptions {
 		public CISamplerOptions () {}
 
@@ -60,7 +67,11 @@ namespace CoreImage {
 
 			if (AffineMatrix.HasValue){
 				var a = AffineMatrix.Value;
+#if NET
+				using (var array = NSArray.FromObjects (a.A, a.B, a.C, a.D, a.Tx, a.Ty))
+#else
 				using (var array = NSArray.FromObjects (a.xx, a.yx, a.xy, a.yy, a.x0, a.y0))
+#endif
 					ret.SetObject (array, CISampler.AffineMatrix);
 			}
 			if (WrapMode.HasValue){
@@ -71,12 +82,12 @@ namespace CoreImage {
 				var k = FilterMode.Value == CIFilterMode.Nearest ? CISampler.FilterNearest : CISampler.FilterLinear;
 				ret.SetObject (k, CISampler.FilterMode);
 			}
-			if (ColorSpace != null)
+			if (ColorSpace is not null)
 				ret.LowlevelSetObject (ColorSpace.Handle, CISampler.ColorSpace.Handle);
 			return ret;
 		}
 	}
-	
+
 	public partial class CISampler {
 #if !XAMCORE_3_0 && MONOMAC
 		[Obsolete ("This default constructor does not provide a valid instance")]
@@ -84,7 +95,7 @@ namespace CoreImage {
 #endif
 		public CISampler FromImage (CIImage sourceImage, CISamplerOptions? options)
 		{
-			if (options == null)
+			if (options is null)
 				return FromImage (sourceImage);
 			return FromImage (sourceImage, options.ToDictionary ());
 		}

@@ -1,2 +1,0 @@
-## New required members on existing protocols
-!incorrect-protocol-member! MTLRenderCommandEncoder::setVertexAmplificationCount:viewMappings: is REQUIRED and should be abstract

@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CNContactStore
 //
 // Authors:
@@ -9,7 +9,6 @@
 
 #if !__TVOS__
 
-using System;
 using Contacts;
 using Foundation;
 using ObjCRuntime;
@@ -59,8 +58,7 @@ namespace MonoTouchFixtures.Contacts {
 			using (var store = new CNContactStore ()) {
 				var contact = store.GetUnifiedContact (identifier, fetchKeys, out error);
 				// it's in the default simulator build
-#if !MONOMAC
-				if (Runtime.Arch == Arch.SIMULATOR) {
+				if (TestRuntime.IsSimulatorOrDesktop) {
 					// it fails on some bots (watchOS 4.2 on jenkins) so we cannot assume it always work
 					if (error != null)
 						return;
@@ -69,7 +67,6 @@ namespace MonoTouchFixtures.Contacts {
 					Assert.True (contact.AreKeysAvailable (CNContactOptions.None), "AreKeysAvailable-2");
 					Assert.True (contact.AreKeysAvailable (fetchKeys), "AreKeysAvailable-3");
 				}
-#endif
 			}
 		}
 	}

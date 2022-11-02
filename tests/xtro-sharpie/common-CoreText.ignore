@@ -111,7 +111,6 @@
 !missing-pinvoke! CTFontManagerCopyAvailablePostScriptNames is not bound
 !missing-pinvoke! CTFrameGetTypeID is not bound
 !missing-pinvoke! CTFramesetterGetTypeID is not bound
-!missing-pinvoke! CTGetCoreTextVersion is not bound
 !missing-pinvoke! CTGlyphInfoGetTypeID is not bound
 !missing-pinvoke! CTLineGetTypeID is not bound
 !missing-pinvoke! CTParagraphStyleGetTypeID is not bound
@@ -131,9 +130,6 @@
 !missing-pinvoke! CTRunGetTypeID is not bound
 !missing-pinvoke! CTTextTabGetTypeID is not bound
 !missing-pinvoke! CTTypesetterGetTypeID is not bound
-
-## Manually bound field
-!missing-field! kCTCharacterShapeAttributeName not bound
 
 ## part of an unnamed enum inside CTStringAttributes.h
 !extra-enum-value! Managed value 2 for CTWritingDirection.Override not found in native headers

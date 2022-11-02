@@ -6,8 +6,10 @@ using ObjCRuntime;
 
 namespace PassKit {
 
+#if !NET
 	// untyped enum -> PKError.h
 	// This never seemed to be deprecatd, yet in iOS8 it's obsoleted
+	// this enum does not show up in the headers anymore
 	[Obsoleted (PlatformName.iOS, 8, 0)]
 	[NoMac]
 	public enum PKErrorCode {
@@ -16,6 +18,7 @@ namespace PassKit {
 		NotEntitled,
 		PermissionDenied, // new in iOS7
 	}
+#endif
 
 	// NSInteger -> PKPass.h
 	[Mac (11,0)]
@@ -152,10 +155,19 @@ namespace PassKit {
 		InStore,
 		[iOS (10,2)]
 		Donate,
-		[iOS (12,0)]
-		Book,
+#if NET
 		[iOS (12,0)]
 		Checkout,
+		[iOS (12,0)]
+		Book,
+#else
+		[iOS (12,0)]
+		[Obsolete ("Use 'Book2'.")]
+		Book,
+		[iOS (12,0)]
+		[Obsolete ("Use 'Checkout2'.")]
+		Checkout,
+#endif // !NET
 		[iOS (12,0)]
 		Subscribe,
 		[iOS (14,0)]
@@ -174,6 +186,14 @@ namespace PassKit {
 		Contribute = 14,
 		[iOS (14,0)]
 		Tip = 15,
+		[Mac (12,0), iOS (15,0), Watch (8,0)]
+		Continue = 16,
+#if !NET
+		[iOS (12,0)]
+		Book2 = Checkout,
+		[iOS (12,0)]
+		Checkout2 = Book,
+#endif // !NET
 	}
 
 	[Mac (11,0)]
@@ -221,7 +241,8 @@ namespace PassKit {
 		Debit,
 		Credit,
 		Prepaid,
-		Store
+		Store,
+		EMoney,
 	}
 
 	[Mac (11,0)]
@@ -252,6 +273,8 @@ namespace PassKit {
 		ShippingContactInvalid = 1,
 		BillingContactInvalid,
 		ShippingAddressUnserviceable,
+		CouponCodeInvalid,
+		CouponCodeExpired,
 	}
 
 	[iOS (12,0)]

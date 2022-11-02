@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for HKCdaDocumentSample
 //
 // Authors:
@@ -11,6 +11,8 @@
 using System;
 
 using Foundation;
+using ObjCRuntime;
+
 using HealthKit;
 using UIKit;
 using NUnit.Framework;
@@ -36,13 +38,17 @@ namespace MonoTouchFixtures.HealthKit {
 					}
 				};
 #if __MACCATALYST__
-				var throwsException = false;
+				var throwsException = TestRuntime.CheckXcodeVersion (12, 0);
 #else
 				var throwsException = TestRuntime.CheckXcodeVersion (11, 0);
 #endif
 
 				if (throwsException) {
+#if NET
+					var ex = Assert.Throws<ObjCException> (action, "Exception");
+#else
 					var ex = Assert.Throws<MonoTouchException> (action, "Exception");
+#endif
 					Assert.That (ex.Message, Does.Match ("startDate.*and endDate.*exceed the maximum allowed duration for this sample type"), "Exception Message");
 				} else {
 					action ();

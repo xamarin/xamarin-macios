@@ -1,7 +1,6 @@
 #if !TVOS
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
@@ -9,22 +8,29 @@ using ObjCRuntime;
 
 namespace Metal {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	// add some extension methods to make the API of the protocol nicer
 	public static class MTLIntersectionFunctionTableExtensions {
 
 #if NET
-		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("macos11.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[Mac (11,0), iOS (14,0), NoTV]
+		[Mac (11,0)]
+		[iOS (14,0)]
+		[NoTV]
 #endif
 		public static void SetBuffers (this IMTLIntersectionFunctionTable table, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)
 		{
-			if (buffers == null)
+			if (buffers is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffers));
-			if (offsets == null)
+			if (offsets is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (offsets));
 
 			var bufferPtrArray = buffers.Length <= 1024 ? stackalloc IntPtr[buffers.Length] : new IntPtr [buffers.Length];

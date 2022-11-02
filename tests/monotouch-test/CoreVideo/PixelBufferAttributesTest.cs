@@ -1,4 +1,4 @@
-﻿// Unit tests for CVPixelBufferAttributes
+// Unit tests for CVPixelBufferAttributes
 //
 // Authors:
 //	Sebastien Pouliot <sebastien@xamarin.com>

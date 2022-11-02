@@ -78,7 +78,7 @@ namespace LinkAll {
 
 			string name = (typeof (BuiltInConverter).GetCustomAttributes (false) [0] as TypeConverterAttribute).ConverterTypeName;
 #if NET
-			var typename = "System.ComponentModel.BooleanConverter, System.ComponentModel.TypeConverter, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+			var typename = $"System.ComponentModel.BooleanConverter, System.ComponentModel.TypeConverter, Version={typeof (int).Assembly.GetName ().Version}, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 #else
 			var typename = "System.ComponentModel.BooleanConverter, System, Version=2.0.5.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e";
 #endif

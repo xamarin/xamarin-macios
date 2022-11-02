@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for GKNoiseMap
 //
 // Authors:
@@ -11,11 +11,17 @@
 #if !__WATCHOS__
 
 using System;
-using OpenTK;
 using NUnit.Framework;
 
 using Foundation;
 using GameplayKit;
+
+#if NET
+using Vector2d = global::CoreGraphics.NVector2d;
+using Vector2i = global::CoreGraphics.NVector2i;
+#else
+using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.GamePlayKit {
 	[TestFixture]

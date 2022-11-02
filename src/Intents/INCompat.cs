@@ -8,7 +8,7 @@ using ObjCRuntime;
 
 namespace Intents {
 
-#if !XAMCORE_4_0
+#if !NET
 	public partial class INRideDriver {
 
 		[Obsolete ("This constructor does not create a valid instance of the type")]

@@ -7,7 +7,7 @@
 // Copyright 2012 Xamarin Inc. All rights reserved.
 //
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !__MACOS__
 
 using System;
 using System.Collections.Generic;

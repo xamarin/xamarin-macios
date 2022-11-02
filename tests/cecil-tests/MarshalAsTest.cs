@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 using NUnit.Framework;
 
@@ -14,18 +15,17 @@ namespace Cecil.Tests {
 
 	[TestFixture]
 	public class MarshalAsTest {
-		[TestCaseSource (typeof (Helper), "PlatformAssemblies")]
+		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
 		public void TestAssembly (string assemblyPath)
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
-			if (assembly == null)
-				Assert.Ignore ($"{assemblyPath} could not be found (might be disabled in build)");
-
 			var failedMethods = new List<string> ();
 			List<string>? failures = null;
 			var checkedTypes = new List<TypeReference> ();
 			foreach (var m in Helper.FilterMethods (assembly!, (m) => m.HasPInvokeInfo)) {
 				failures = null;
+				checkedTypes.Clear ();
 				if (!CheckMarshalAs (checkedTypes, m, ref failures)) {
 					failedMethods.Add ($"Found {failures!.Count} issues with {m.FullName}:\n\t{string.Join ("\n\t", failures)}");
 				}
@@ -83,7 +83,15 @@ namespace Cecil.Tests {
 			var rv = true;
 
 			var type = tr.Resolve ();
+
+			// System.Runtime.InteropServices.NFloat is in a custom assembly in .NET 6, so add a special case.
+			if (type is null && tr.FullName == "System.Runtime.InteropServices.NFloat")
+				return true;
+
 			if (type.IsEnum)
+				return true;
+
+			if ((type.Attributes & TypeAttributes.ExplicitLayout) == TypeAttributes.ExplicitLayout)
 				return true;
 
 			foreach (var field in type.Fields) {
@@ -100,7 +108,7 @@ namespace Cecil.Tests {
 
 		static string GetTypeName (TypeReference type)
 		{
-			return type.Name.ToLower ();
+			return type.Resolve ().FullName;
 		}
 
 		static bool IsDelegate (TypeReference tr)

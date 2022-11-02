@@ -1,9 +1,7 @@
-﻿using Xamarin.Messaging.Build.Client;
+using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks
-{
-	public class CreateAssetPack : CreateAssetPackTaskBase
-	{
+namespace Xamarin.iOS.Tasks {
+	public class CreateAssetPack : CreateAssetPackTaskBase {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())
@@ -15,10 +13,9 @@ namespace Xamarin.iOS.Tasks
 		public override void Cancel ()
 		{
 			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 
 			base.Cancel ();
 		}
 	}
 }
-

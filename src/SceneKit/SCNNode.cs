@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using CoreAnimation;
 #endif
 using Foundation;
+using ObjCRuntime;
 
 #nullable enable
 
@@ -29,7 +30,7 @@ namespace SceneKit
 
 		public void AddNodes (params SCNNode [] nodes)
 		{
-			if (nodes == null)
+			if (nodes is null)
 				return;
 			foreach (var n in nodes)
 				AddChildNode (n);
@@ -49,7 +50,7 @@ namespace SceneKit
 #if !WATCH
 		public void AddAnimation (CAAnimation animation, string? key)
 		{
-			if (key == null) {
+			if (key is null) {
 				((ISCNAnimatable) this).AddAnimation (animation, (NSString?) null);
 			} else {
 				using (var s = new NSString (key))
@@ -115,7 +116,7 @@ namespace SceneKit
 			return isPaused;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		// SCNNodePredicate is defined as:
 		// 	delegate bool SCNNodePredicate (SCNNode node, out bool stop);
 		// but the actual objective-c definition of the block is

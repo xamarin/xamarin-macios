@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
@@ -83,6 +83,7 @@ namespace Xamarin.Tests
 		[TestCase (Profile.macOSMobile)]
 		public void PublicSymbols (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var paths = new HashSet<string> ();
 			if (Configuration.include_device)
 				paths.UnionWith (Directory.GetFileSystemEntries (Configuration.GetSdkPath (profile, true), "*.a", SearchOption.AllDirectories));
@@ -136,6 +137,9 @@ namespace Xamarin.Tests
 				"___destroy_helper_block_",
 				// compiler-generated helper methods
 				"___os_log_helper_",
+				// Brotli compression symbols
+				"_kBrotli",
+				"__kBrotli",
 			};
 
 			paths.RemoveWhere ((v) => {
@@ -203,4 +207,3 @@ namespace Xamarin.Tests
 		}
 	}
 }
-

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Collections.Generic;
 
 using Mono.Cecil;
@@ -7,10 +7,8 @@ using Microsoft.Build.Framework;
 
 #nullable enable
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class UnpackLibraryResources : UnpackLibraryResourcesTaskBase, ITaskCallback, ICancelableTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class UnpackLibraryResources : UnpackLibraryResourcesTaskBase, ITaskCallback, ICancelableTask {
 		public override bool Execute ()
 		{
 			bool result;
@@ -30,7 +28,7 @@ namespace Xamarin.MacDev.Tasks
 				}
 			} else {
 				result = base.Execute ();
-			}	
+			}
 
 			return result;
 		}
@@ -38,7 +36,7 @@ namespace Xamarin.MacDev.Tasks
 		public void Cancel ()
 		{
 			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 
 		public bool ShouldCopyToBuildServer (ITaskItem item)
@@ -76,4 +74,3 @@ namespace Xamarin.MacDev.Tasks
 		}
 	}
 }
-

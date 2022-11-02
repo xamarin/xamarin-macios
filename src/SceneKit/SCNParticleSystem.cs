@@ -12,11 +12,18 @@ using System.Collections;
 using System.Collections.Generic;
 
 using Foundation;
+using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace SceneKit
 {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class SCNPropertyControllers {
 		NSMutableDictionary? mutDict;
 		internal NSDictionary dict;
@@ -36,7 +43,7 @@ namespace SceneKit
 
 		internal void Set (NSString key, SCNParticlePropertyController? value)
 		{
-			if (mutDict == null){
+			if (mutDict is null){
 				mutDict = new NSMutableDictionary (dict);
 				dict = mutDict;
 			}
@@ -170,13 +177,13 @@ namespace SceneKit
 		}
 		
 	}
-	
+
 	public partial class SCNParticleSystem
 	{
 		public SCNPropertyControllers? PropertyControllers {
 			get {
 				var weak = WeakPropertyControllers;
-				if (weak == null)
+				if (weak is null)
 					return null;
 				return new SCNPropertyControllers (weak);
 			}

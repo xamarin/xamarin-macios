@@ -1,0 +1,2 @@
+# untyped enum but used as a NSInteger in the API, forcing us to use [Native]
+!unknown-native-enum! TWRequestMethod bound

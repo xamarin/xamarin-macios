@@ -12,12 +12,10 @@ using AVFoundation;
 using CoreML;
 using Foundation;
 using ObjCRuntime;
-
-// TODO: Remove when CoreMedia is enabled on watchOS
-#if WATCH
-using CMTimeRange = Foundation.NSObject;
-#else
 using CoreMedia;
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace SoundAnalysis {
@@ -33,6 +31,14 @@ namespace SoundAnalysis {
 		InvalidFile,
 	}
 
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum SNTimeDurationConstraintType : long
+	{
+		Enumerated = 1,
+		Range = 2,
+	}
+
 	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -40,7 +46,7 @@ namespace SoundAnalysis {
 
 		[DesignatedInitializer]
 		[Export ("initWithFormat:")]
-		IntPtr Constructor (AVAudioFormat format);
+		NativeHandle Constructor (AVAudioFormat format);
 
 		[Export ("addRequest:withObserver:error:")]
 		bool AddRequest (ISNRequest request, ISNResultsObserving observer, [NullAllowed] out NSError error);
@@ -67,7 +73,7 @@ namespace SoundAnalysis {
 
 		[DesignatedInitializer]
 		[Export ("initWithURL:error:")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] out NSError error);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] out NSError error);
 
 		[Export ("addRequest:withObserver:error:")]
 		bool AddRequest (ISNRequest request, ISNResultsObserving observer, [NullAllowed] out NSError error);
@@ -111,6 +117,11 @@ namespace SoundAnalysis {
 
 		[Export ("timeRange")]
 		CMTimeRange TimeRange { get; }
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("classificationForIdentifier:")]
+		[return: NullAllowed]
+		SNClassification GetClassification (string identifier);
 	}
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
@@ -122,7 +133,23 @@ namespace SoundAnalysis {
 		double OverlapFactor { get; set; }
 
 		[Export ("initWithMLModel:error:")]
-		IntPtr Constructor (MLModel mlModel, [NullAllowed] out NSError error);
+		NativeHandle Constructor (MLModel mlModel, [NullAllowed] out NSError error);
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("initWithClassifierIdentifier:error:")]
+		NativeHandle Constructor (string classifierIdentifier, [NullAllowed] out NSError error);
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("knownClassifications", ArgumentSemantic.Copy)]
+		string[] KnownClassifications { get; }
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("windowDuration", ArgumentSemantic.Assign)]
+		CMTime WindowDuration { get; set; }
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("windowDurationConstraint", ArgumentSemantic.Strong)]
+		SNTimeDurationConstraint WindowDurationConstraint { get; }
 	}
 
 	interface ISNRequest {}
@@ -152,5 +179,37 @@ namespace SoundAnalysis {
 
 		[Export ("requestDidComplete:")]
 		void DidComplete (ISNRequest request);
+	}
+
+	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+	enum SNClassifierIdentifier {
+		[Field ("SNClassifierIdentifierVersion1")]
+		Version1,
+	}
+
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SNTimeDurationConstraint /* privately conforms to NSCoding, NSCopying, and NSSecureCoding */
+	{
+		[Export ("initWithEnumeratedDurations:")]
+		NativeHandle Constructor ([BindAs (typeof (CMTime[]))] NSValue[] enumeratedDurations);
+
+		[Export ("initWithDurationRange:")]
+		NativeHandle Constructor (CMTimeRange durationRange);
+
+		[Export ("type", ArgumentSemantic.Assign)]
+		SNTimeDurationConstraintType Type { get; }
+
+#if NET
+		[BindAs (typeof (CMTime[]))]
+#else
+		[return: BindAs (typeof (CMTime[]))]
+#endif
+		[Export ("enumeratedDurations", ArgumentSemantic.Strong)]
+		NSValue[] EnumeratedDurations { get; }
+
+		[Export ("durationRange", ArgumentSemantic.Assign)]
+		CMTimeRange DurationRange { get; }
 	}
 }

@@ -20,7 +20,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if !XAMCORE_4_0 && WATCH // This empty partial class was accidentally included in our watchOS bindings.
+#nullable enable
+
+#if !NET && WATCH // This empty partial class was accidentally included in our watchOS bindings.
 namespace AVFoundation {
 	public partial class AVAssetImageGenerator {
 	}

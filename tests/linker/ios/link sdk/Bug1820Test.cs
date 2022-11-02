@@ -5,6 +5,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using Foundation;
+using ObjCRuntime;
 using NUnit.Framework;
 
 namespace LinkSdk.Serialization {

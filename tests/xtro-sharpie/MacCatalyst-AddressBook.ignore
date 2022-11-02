@@ -1,3 +1,0 @@
-## not directly used (as a type) by API but we need it for the generator
-## to support ABAddressBookErrorDomain and Libraries.AddressBookLibrary
-!unknown-native-enum! ABAddressBookError bound

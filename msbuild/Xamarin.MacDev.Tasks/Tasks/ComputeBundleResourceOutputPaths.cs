@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class ComputeBundleResourceOutputPaths : ComputeBundleResourceOutputPathsTaskBase, ITaskCallback, ICancelableTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class ComputeBundleResourceOutputPaths : ComputeBundleResourceOutputPathsTaskBase, ITaskCallback, ICancelableTask {
 		public override bool Execute ()
 		{
 			if (!ShouldExecuteRemotely ())
@@ -28,7 +26,7 @@ namespace Xamarin.MacDev.Tasks
 		public void Cancel ()
 		{
 			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 
 		void RemoveDuplicates ()

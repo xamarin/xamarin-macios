@@ -18,7 +18,7 @@ namespace SafariServices {
 	// NSInteger -> SSReadingList.h
 	[NoMac][iOS (7,0)]
 	[MacCatalyst (14,0)]
-	[Native]
+	[Native ("SSReadingListErrorCode")]
 	[ErrorDomain ("SSReadingListErrorDomain")]
 	public enum SSReadingListError : long {
 		UrlSchemeNotAllowed = 1
@@ -68,7 +68,7 @@ namespace SafariServices {
 		CanceledLogin = 1,
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[Obsolete ("Enum not used by any API.")]
 	[NoiOS]
 	[Mac (10,12,4)]

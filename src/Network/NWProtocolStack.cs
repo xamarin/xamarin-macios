@@ -21,20 +21,38 @@ using nw_service_class_t=System.IntPtr;
 using nw_protocol_stack_t=System.IntPtr;
 using nw_protocol_options_t=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
+#if NET
+	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#else
+	[TV (12,0)]
+	[Mac (10,14)]
+	[iOS (12,0)]
 	[Watch (6,0)]
+#endif
 	public class NWProtocolStack : NativeObject {
-		public NWProtocolStack (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+#if NET
+		internal NWProtocolStack (NativeHandle handle, bool owns) : base (handle, owns) {}
+#else
+		public NWProtocolStack (NativeHandle handle, bool owns) : base (handle, owns) {}
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_protocol_stack_prepend_application_protocol (nw_protocol_stack_t stack, nw_protocol_options_t options);
 
 		public void PrependApplicationProtocol (NWProtocolOptions options)
 		{
-			if (options == null)
-				throw new ArgumentNullException (nameof (options));
+			if (options is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
 			nw_protocol_stack_prepend_application_protocol (GetCheckedHandle (), options.Handle);
 		}
 
@@ -53,20 +71,20 @@ namespace Network {
 		static void TrampolineIterateHandler (IntPtr block, IntPtr options)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWProtocolOptions>> (block);
-			if (del != null) {
+			if (del is not null) {
 				using (var tempOptions = new NWProtocolOptions (options, owns: false)) 
 				using (var definition = tempOptions.ProtocolDefinition) {
 					NWProtocolOptions? castedOptions = null;
 
-					if (definition.Equals (NWProtocolDefinition.TcpDefinition)) {
+					if (definition.Equals (NWProtocolDefinition.CreateTcpDefinition ())) {
 						castedOptions = new NWProtocolTcpOptions (options, owns: false);
-					} else if (definition.Equals (NWProtocolDefinition.UdpDefinition)) {
+					} else if (definition.Equals (NWProtocolDefinition.CreateUdpDefinition ())) {
 						castedOptions = new NWProtocolUdpOptions (options, owns: false);
-					} else if (definition.Equals (NWProtocolDefinition.TlsDefinition)) {
+					} else if (definition.Equals (NWProtocolDefinition.CreateTlsDefinition ())) {
 						castedOptions = new NWProtocolTlsOptions (options, owns: false);
-					} else if (definition.Equals (NWProtocolDefinition.IPDefinition)) {
+					} else if (definition.Equals (NWProtocolDefinition.CreateIPDefinition ())) {
 						castedOptions = new NWProtocolIPOptions (options, owns: false);
-					} else if (definition.Equals (NWProtocolDefinition.WebSocketDefinition)) {
+					} else if (definition.Equals (NWProtocolDefinition.CreateWebSocketDefinition ())) {
 						castedOptions = new NWWebSocketOptions (options, owns: false);
 					} 
 
@@ -107,13 +125,13 @@ namespace Network {
 
 				using (var definition = tempOptions.ProtocolDefinition) {
 					NWProtocolOptions? castedOptions = null;
-					if (definition.Equals (NWProtocolDefinition.TcpDefinition)) {
+					if (definition.Equals (NWProtocolDefinition.CreateTcpDefinition ())) {
 						castedOptions = new NWProtocolTcpOptions (pHandle, owns: true);
 					}
-					if (definition.Equals (NWProtocolDefinition.UdpDefinition)) {
+					if (definition.Equals (NWProtocolDefinition.CreateUdpDefinition ())) {
 						castedOptions = new NWProtocolUdpOptions (pHandle, owns: true);
 					} 
-					if (castedOptions == null) {
+					if (castedOptions is null) {
 						return tempOptions;
 					} else {
 						tempOptions.Dispose ();
@@ -127,7 +145,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_protocol_stack_copy_internet_protocol (nw_protocol_stack_t stack);
 
-#if XAMCORE_4_0 
+#if NET
 		public NWProtocolIPOptions? InternetProtocol {
 #else
 		public NWProtocolOptions? InternetProtocol {

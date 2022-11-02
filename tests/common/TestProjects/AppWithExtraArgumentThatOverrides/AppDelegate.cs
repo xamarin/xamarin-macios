@@ -1,4 +1,4 @@
-﻿using Foundation;
+using Foundation;
 using UIKit;
 
 namespace AppWithExtraArgumentThatOverrides
@@ -56,4 +56,3 @@ namespace AppWithExtraArgumentThatOverrides
 		}
 	}
 }
-

@@ -26,8 +26,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -42,7 +45,15 @@ namespace CoreGraphics {
 		MaxYEdge,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+	public static class CGRectExtensions {
+#else
 	public static class RectangleFExtensions {
+#endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern /* CGFloat */ nfloat CGRectGetMinX (CGRect rect);
@@ -151,4 +162,3 @@ namespace CoreGraphics {
 		}
 	}
 }
-

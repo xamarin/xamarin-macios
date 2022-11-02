@@ -1,0 +1,38 @@
+﻿<!--
+***********************************************************************************************
+Xamarin.iOS.AppExtension.Common.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+  created a backup copy.  Incorrect changes to this file will make it
+  impossible to load or build your projects from the command-line or the IDE.
+
+This file imports the version- and platform-specific targets for the project importing
+this file. This file also defines targets to produce an error if the specified targets
+file does not exist, but the project is built anyway (command-line or IDE build).
+
+Copyright (C) 2014-2016 Xamarin. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<IsAppExtension>True</IsAppExtension>
+		<IsWatchExtension>False</IsWatchExtension>
+	</PropertyGroup>
+
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Common.targets" />
+
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.AppExtension.Common.props" />
+
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets" 
+			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
+	
+	<!-- Override GetTargetPath, Build, and Rebuild -->
+	<Target Name="GetBundleTargetPath" DependsOnTargets="_GenerateBundleName;$(GetTargetPathDependsOn)" Outputs="@(_AppExtensionBundlePath)" />
+	<Target Name="Build"   Condition="'$(_InvalidConfigurationWarning)' != 'true'" DependsOnTargets="_GenerateBundleName;$(BuildDependsOn)" Outputs="@(_AppExtensionBundlePath)" />
+	<Target Name="Rebuild" Condition="'$(_InvalidConfigurationWarning)' != 'true'" DependsOnTargets="_GenerateBundleName;$(RebuildDependsOn)" Outputs="@(_AppExtensionBundlePath)" />
+
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
+			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
+
+</Project>

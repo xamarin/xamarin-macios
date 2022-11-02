@@ -74,4 +74,3 @@ namespace MonoTouchFixtures.CoreWlan {
 	}
 }
 #endif
-

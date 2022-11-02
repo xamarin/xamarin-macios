@@ -21,10 +21,10 @@ namespace SceneKit
 	{
 		public static SCNPhysicsShape Create (SCNPhysicsShape [] shapes, SCNMatrix4 [] transforms)
 		{
-			if (shapes == null)
+			if (shapes is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (shapes));
 
-			if (transforms == null)
+			if (transforms is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (transforms));
 
 			var t = new NSValue [transforms.Length];
@@ -34,14 +34,14 @@ namespace SceneKit
 			return Create (shapes, t);
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'Create' method that takes a 'SCNMatrix4 []'.")]
 		public static SCNPhysicsShape Create (SCNPhysicsShape [] shapes, SCNVector3 [] transforms)
 		{
-			if (shapes == null)
+			if (shapes is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (shapes));
 
-			if (transforms == null)
+			if (transforms is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (transforms));
 
 			var t = new NSValue [transforms.Length];
@@ -89,15 +89,22 @@ namespace SceneKit
 		public SCNPhysicsShapeOptions? Options {
 			get {
 				var o = _Options;
-				if (o == null)
+				if (o is null)
 					return null;
 				return new SCNPhysicsShapeOptions (o);
 			}
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	public class SCNPhysicsShapeOptions
 	{
 		public SCNPhysicsShapeType? ShapeType { get; set; }
@@ -109,7 +116,7 @@ namespace SceneKit
 		internal SCNPhysicsShapeOptions (NSDictionary source)
 		{
 			var ret = source [SCNPhysicsShapeOptionsKeys.Type] as NSString;
-			if (ret != null){
+			if (ret is not null){
 				if (ret == SCNPhysicsShapeOptionsTypes.BoundingBox)
 					ShapeType = SCNPhysicsShapeType.BoundingBox;
 				else if (ret == SCNPhysicsShapeOptionsTypes.ConcavePolyhedron)
@@ -118,10 +125,10 @@ namespace SceneKit
 					ShapeType = SCNPhysicsShapeType.ConvexHull;
 			}
 			var bret = source [SCNPhysicsShapeOptionsKeys.KeepAsCompound] as NSNumber;
-			if (bret != null)
+			if (bret is not null)
 				KeepAsCompound = bret.Int32Value != 0;
 			var nret = source [SCNPhysicsShapeOptionsKeys.Scale] as NSValue;
-			if (nret != null)
+			if (nret is not null)
 				Scale = nret.Vector3Value;
 		}
 		

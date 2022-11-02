@@ -7,11 +7,11 @@
 	<key>CFBundleDisplayName</key>
 	<string>MyShareExtension</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.your-company.MyMasterDetailApp.MyShareExtension</string>
+	<string>com.xamarin.MyMasterDetailApp.MyShareExtension</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>com.your-company.MyShareExtension</string>
+	<string>com.xamarin.MyShareExtension</string>
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>

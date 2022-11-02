@@ -9,7 +9,11 @@
 
 using System;
 using System.Runtime.InteropServices;
+#if NET
+using Vector2 = global::System.Numerics.Vector2;
+#else
 using Vector2 = global::OpenTK.Vector2;
+#endif
 
 #nullable enable
 
@@ -18,9 +22,9 @@ namespace ARKit {
 
 		public unsafe Vector2 [] JointLandmarks {
 			get {
-				var count = (int)JointCount;
+				var count = (int) JointCount;
 				var rv = new Vector2 [count];
-				var ptr = (Vector2 *) RawJointLandmarks;
+				var ptr = (Vector2*) RawJointLandmarks;
 				for (int i = 0; i < count; i++)
 					rv [i] = *ptr++;
 				return rv;

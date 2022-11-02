@@ -1,8 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <_PlatformName>watchOS</_PlatformName>
-  </PropertyGroup>
-
-  <Import Project="../microsoft.sdk.csproj" />
-</Project>

@@ -1,4 +1,4 @@
-﻿#region --- License ---
+#region --- License ---
 /*
 Copyright (c) 2006 - 2008 The Open Toolkit library.
 
@@ -25,6 +25,7 @@ SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
+#if !NET
 namespace OpenTK
 {
     /// <summary>Represents a 4D vector using four int32 numbers.</summary>
@@ -517,3 +518,4 @@ namespace OpenTK
         #endregion
     }
 }
+#endif // !NET

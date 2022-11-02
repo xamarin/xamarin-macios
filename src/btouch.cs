@@ -42,27 +42,32 @@ using Foundation;
 using Xamarin.Bundler;
 using Xamarin.Utils;
 
-public class BindingTouch {
+public class BindingTouch : IDisposable {
 	TargetFramework? target_framework;
 	public PlatformName CurrentPlatform;
 	public bool BindThirdPartyLibrary = true;
 	public bool skipSystemDrawing;
-	public string outfile;
+	public string? outfile;
 
-	string baselibdll;
-	string attributedll;
+#if !NET
+	const string DefaultCompiler = "/Library/Frameworks/Mono.framework/Versions/Current/bin/csc";
+#endif
+	string compiler = string.Empty;
+	string []? compile_command = null;
+	string? baselibdll;
+	string? attributedll;
 
 	List<string> libs = new List<string> ();
 	List<string> references = new List<string> ();
 
-	public MetadataLoadContext universe;
+	public MetadataLoadContext? universe;
 	public TypeManager TypeManager = new TypeManager ();
-	public Frameworks Frameworks;
-	public AttributeManager AttributeManager;
-
+	public Frameworks? Frameworks;
+	public AttributeManager? AttributeManager;
+	bool disposedValue;
 	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
 	internal Dictionary<System.Type, Type> IKVMTypeLookup {
-		get { return ikvm_type_lookup;  }
+		get { return ikvm_type_lookup; }
 	}
 
 	public TargetFramework TargetFramework {
@@ -73,7 +78,7 @@ public class BindingTouch {
 		get { return "bgen"; }
 	}
 
-	bool IsDotNet {
+	internal bool IsDotNet {
 		get { return TargetFramework.IsDotNet; }
 	}
 
@@ -81,10 +86,10 @@ public class BindingTouch {
 	{
 		Console.WriteLine ("{0} - Mono Objective-C API binder", ToolName);
 		Console.WriteLine ("Usage is:\n {0} [options] apifile1.cs [--api=apifile2.cs [--api=apifile3.cs]] [-s=core1.cs [-s=core2.cs]] [core1.cs [core2.cs]] [-x=extra1.cs [-x=extra2.cs]]", ToolName);
-		
+
 		os.WriteOptionDescriptions (Console.Out);
 	}
-	
+
 	public static int Main (string [] args)
 	{
 		try {
@@ -98,7 +103,10 @@ public class BindingTouch {
 	string GetAttributeLibraryPath ()
 	{
 		if (!string.IsNullOrEmpty (attributedll))
-			return attributedll;
+			return attributedll!;
+
+		if (IsDotNet)
+			return Path.Combine (GetSDKRoot (), "lib", "Xamarin.Apple.BindingAttributes.dll");
 
 		switch (CurrentPlatform) {
 		case PlatformName.iOS:
@@ -195,7 +203,7 @@ public class BindingTouch {
 
 	static int Main2 (string [] args)
 	{
-		var touch = new BindingTouch ();
+		using var touch = new BindingTouch ();
 		return touch.Main3 (args);
 	}
 
@@ -221,7 +229,7 @@ public class BindingTouch {
 		var defines = new List<string> ();
 		string? generate_file_list = null;
 		bool process_enums = false;
-		string compiler = "/Library/Frameworks/Mono.framework/Versions/Current/bin/csc";
+		bool noNFloatUsing = false;
 
 		ErrorHelper.ClearWarningLevels ();
 
@@ -239,6 +247,12 @@ public class BindingTouch {
 			{ "r|reference=", "Adds a reference", v => references.Add (v) },
 			{ "lib=", "Adds the directory to the search path for the compiler", v => libs.Add (v) },
 			{ "compiler=", "Sets the compiler to use (Obsolete) ", v => compiler = v, true },
+			{ "compile-command=", "Sets the command to execute the C# compiler (this be an executable + arguments).", v =>
+				{
+					if (!StringUtils.TryParseArguments (v, out compile_command, out var ex))
+						throw ErrorHelper.CreateError (27, "--compile-command", ex);
+				}
+			},
 			{ "sdk=", "Sets the .NET SDK to use (Obsolete)", v => {}, true },
 			{ "new-style", "Build for Unified (Obsolete).", v => { Console.WriteLine ("The --new-style option is obsolete and ignored."); }, true},
 			{ "d=", "Defines a symbol", v => defines.Add (v) },
@@ -263,13 +277,13 @@ public class BindingTouch {
 				(path, id) => {
 					if (path == null || path.Length == 0)
 						throw new Exception ("-link-with=FILE,ID requires a filename.");
-					
+
 					if (id == null || id.Length == 0)
 						id = Path.GetFileName (path);
-					
+
 					if (linkwith.Contains (id))
 						throw new Exception ("-link-with=FILE,ID cannot assign the same resource id to multiple libraries.");
-					
+
 					resources.Add (string.Format ("-res:{0},{1}", path, id));
 					linkwith.Add (id);
 				}
@@ -303,12 +317,16 @@ public class BindingTouch {
 					}
 				}
 			},
+			{ "no-nfloat-using:", "If a global using alias directive for 'nfloat = System.Runtime.InteropServices.NFloat' should automatically be created.", (v) => {
+					noNFloatUsing = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v);
+				}
+			},
 			new Mono.Options.ResponseFileSource (),
 		};
 
 		try {
 			sources = os.Parse (args);
-		} catch (Exception e){
+		} catch (Exception e) {
 			Console.Error.WriteLine ("{0}: {1}", ToolName, e.Message);
 			Console.Error.WriteLine ("see {0} --help for more information", ToolName);
 			return 1;
@@ -371,8 +389,10 @@ public class BindingTouch {
 					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "mobile", "Xamarin.Mac.dll");
 				else if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full || target_framework == TargetFramework.Xamarin_Mac_4_5_System)
 					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "full", "Xamarin.Mac.dll");
+				else if (target_framework == TargetFramework.DotNet_macOS)
+					baselibdll = Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.Mac", "Xamarin.Mac.dll");
 				else
-					throw ErrorHelper.CreateError (1053, target_framework); 
+					throw ErrorHelper.CreateError (1053, target_framework);
 			}
 			if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 				skipSystemDrawing = true;
@@ -384,11 +404,11 @@ public class BindingTouch {
 				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/4.5", references);
 			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
 				skipSystemDrawing = false;
-				ReferenceFixer.FixSDKReferences ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5", references, forceSystemDrawing : true);
-			} else if (target_framework == TargetFramework.DotNet_5_0_macOS) {
+				ReferenceFixer.FixSDKReferences ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5", references, forceSystemDrawing: true);
+			} else if (target_framework == TargetFramework.DotNet_macOS) {
 				skipSystemDrawing = false;
 			} else {
-				throw ErrorHelper.CreateError (1053, target_framework); 
+				throw ErrorHelper.CreateError (1053, target_framework);
 			}
 
 			break;
@@ -438,6 +458,9 @@ public class BindingTouch {
 			cargs.Add ("-r:" + baselibdll);
 			foreach (var def in defines)
 				cargs.Add ("-define:" + def);
+#if NET
+			cargs.Add ("-define:NET");
+#endif
 			cargs.AddRange (paths);
 			if (nostdlib) {
 				cargs.Add ("-nostdlib");
@@ -448,8 +471,15 @@ public class BindingTouch {
 			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
 				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
-			if (Driver.RunCommand (compiler, cargs, null, out var compile_output, true, Driver.Verbosity) != 0)
-				throw ErrorHelper.CreateError (2, $"{compiler} {StringUtils.FormatArguments (cargs)}\n{compile_output}".Replace ("\n", "\n\t"));
+#if NET
+			var tmpusing = Path.Combine (tmpdir, "GlobalUsings.g.cs");
+			if (!noNFloatUsing) {
+				File.WriteAllText (tmpusing, "global using nfloat = global::System.Runtime.InteropServices.NFloat;\n");
+				cargs.Add (tmpusing);
+			}
+#endif
+
+			Compile (cargs, 2);
 
 			universe = new MetadataLoadContext (
 				new SearchPathsAssemblyResolver (
@@ -464,7 +494,7 @@ public class BindingTouch {
 			} catch (Exception e) {
 				if (Driver.Verbosity > 0)
 					Console.WriteLine (e);
-				
+
 				Console.Error.WriteLine ("Error loading API definition from {0}", tmpass);
 				return 1;
 			}
@@ -472,7 +502,7 @@ public class BindingTouch {
 			Assembly baselib;
 			try {
 				baselib = universe.LoadFromAssemblyPath (baselibdll);
-			} catch (Exception e){
+			} catch (Exception e) {
 				if (Driver.Verbosity > 0)
 					Console.WriteLine (e);
 
@@ -518,13 +548,13 @@ public class BindingTouch {
 			}
 
 			var types = new List<Type> ();
-			var  strong_dictionaries = new List<Type> ();
-			foreach (var t in api.GetTypes ()){
+			var strong_dictionaries = new List<Type> ();
+			foreach (var t in api.GetTypes ()) {
 				if ((process_enums && t.IsEnum) ||
-				    AttributeManager.HasAttribute<BaseTypeAttribute> (t) ||
-				    AttributeManager.HasAttribute<ProtocolAttribute> (t) ||
-				    AttributeManager.HasAttribute<StaticAttribute> (t) ||
-				    AttributeManager.HasAttribute<PartialAttribute> (t))
+					AttributeManager.HasAttribute<BaseTypeAttribute> (t) ||
+					AttributeManager.HasAttribute<ProtocolAttribute> (t) ||
+					AttributeManager.HasAttribute<StaticAttribute> (t) ||
+					AttributeManager.HasAttribute<PartialAttribute> (t))
 					types.Add (t);
 				if (AttributeManager.HasAttribute<StrongDictionaryAttribute> (t))
 					strong_dictionaries.Add (t);
@@ -536,7 +566,7 @@ public class BindingTouch {
 				skipSystemDrawing
 			);
 
-			var g = new Generator (this, nsManager, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()){
+			var g = new Generator (this, nsManager, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()) {
 				BaseDir = basedir != null ? basedir : tmpdir,
 				ZeroCopyStrings = zero_copy,
 				InlineSelectors = inline_selectors ?? (CurrentPlatform != PlatformName.MacOSX),
@@ -544,8 +574,8 @@ public class BindingTouch {
 
 			g.Go ();
 
-			if (generate_file_list != null){
-				using (var f = File.CreateText (generate_file_list)){
+			if (generate_file_list != null) {
+				using (var f = File.CreateText (generate_file_list)) {
 					foreach (var x in g.GeneratedFiles.OrderBy ((v) => v))
 						f.WriteLine (x);
 				}
@@ -559,6 +589,9 @@ public class BindingTouch {
 			cargs.Add ("-out:" + outfile);
 			foreach (var def in defines)
 				cargs.Add ("-define:" + def);
+#if NET
+			cargs.Add ("-define:NET");
+#endif
 			cargs.AddRange (g.GeneratedFiles);
 			cargs.AddRange (core_sources);
 			cargs.AddRange (extra_sources);
@@ -572,31 +605,71 @@ public class BindingTouch {
 			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
 				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
-			if (Driver.RunCommand (compiler, cargs, null, out var generated_compile_output, true, Driver.Verbosity) != 0)
-				throw ErrorHelper.CreateError (1000, $"{compiler} {StringUtils.FormatArguments (cargs)}\n{generated_compile_output}".Replace ("\n", "\n\t"));
+#if NET
+			if (!noNFloatUsing)
+				cargs.Add (tmpusing);
+#endif
+
+			Compile (cargs, 1000);
 		} finally {
 			if (delete_temp)
 				Directory.Delete (tmpdir, true);
 		}
 		return 0;
 	}
-	
+
+	void Compile (List<string> arguments, int errorCode)
+	{
+		if (compile_command is null || compile_command.Length == 0) {
+#if !NET
+			if (string.IsNullOrEmpty (compiler))
+				compiler = DefaultCompiler;
+#endif
+			if (string.IsNullOrEmpty (compiler))
+				throw ErrorHelper.CreateError (28);
+			compile_command = new string [] { compiler };
+		}
+
+		for (var i = 1; i < compile_command.Length; i++) {
+			arguments.Insert (i - 1, compile_command [i]);
+		}
+
+		if (Driver.RunCommand (compile_command [0], arguments, null, out var compile_output, true, Driver.Verbosity) != 0)
+			throw ErrorHelper.CreateError (errorCode, $"{compiler} {StringUtils.FormatArguments (arguments)}\n{compile_output}".Replace ("\n", "\n\t"));
+	}
 
 	static string GetWorkDir ()
 	{
-		while (true){
-			string p = Path.Combine (Path.GetTempPath(), Path.GetRandomFileName());
+		while (true) {
+			string p = Path.Combine (Path.GetTempPath (), Path.GetRandomFileName ());
 			if (Directory.Exists (p))
 				continue;
-			
+
 			var di = Directory.CreateDirectory (p);
 			return di.FullName;
 		}
 	}
+
+	protected virtual void Dispose (bool disposing)
+	{
+		if (!disposedValue) {
+			if (disposing) {
+				universe?.Dispose ();
+				universe = null;
+			}
+
+			disposedValue = true;
+		}
+	}
+
+	public void Dispose ()
+	{
+		Dispose (disposing: true);
+		GC.SuppressFinalize (this);
+	}
 }
 
-static class ReferenceFixer
-{
+static class ReferenceFixer {
 	public static void FixSDKReferences (string sdkRoot, string sdk_offset, List<string> references) => FixSDKReferences (Path.Combine (sdkRoot, sdk_offset), references);
 
 	public static void FixSDKReferences (string sdk_path, List<string> references, bool forceSystemDrawing = false)
@@ -629,12 +702,11 @@ static class ReferenceFixer
 	}
 }
 
-class SearchPathsAssemblyResolver : MetadataAssemblyResolver
-{
-	readonly string[] libraryPaths;
-	readonly string[] references;
+class SearchPathsAssemblyResolver : MetadataAssemblyResolver {
+	readonly string [] libraryPaths;
+	readonly string [] references;
 
-	public SearchPathsAssemblyResolver (string[] libraryPaths, string[] references)
+	public SearchPathsAssemblyResolver (string [] libraryPaths, string [] references)
 	{
 		this.libraryPaths = libraryPaths;
 		this.references = references;

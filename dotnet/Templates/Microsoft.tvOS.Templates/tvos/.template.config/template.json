@@ -1,10 +1,10 @@
 ﻿{
   "$schema": "http://json.schemastore.org/template",
   "author": "Microsoft",
-  "classifications": [ "tvOS" ],
+  "classifications": [ "tvOS", "Mobile" ],
   "identity": "Microsoft.tvOS.tvOSApp",
   "name": "tvOS Application",
-  "description": "A project for creating an tvOS application",
+  "description": "A project for creating a .NET tvOS application",
   "shortName": "tvos",
   "tags": {
     "language": "C#",
@@ -31,7 +31,7 @@
     },
     "minOSVersion": {
       "type": "parameter",
-      "description": "Overrides MinimumOSVersion in the Info.plist",
+      "description": "Overrides SupportedOSPlatformVersion in the project file",
       "replaces": "minOSVersion",
       "datatype": "string",
       "defaultValue": "11.2"

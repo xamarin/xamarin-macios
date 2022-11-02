@@ -2,6 +2,22 @@
 
 ## size-comparison
 
+To install the latest `appcompare` tool do:
+
+```bash
+$ dotnet tool install --global appcompare
+```
+
+You can update it to the latest version by running:
+
+```bash
+$ dotnet tool update --global appcompare
+```
+
+The current directory might point to a different and incompatible dotnet
+SDK, resulting in an error. However running the command from a different
+location (outside the repo) should work.
+
 ### Easier Analysis
 
 If you want to read/compare the IL inside the assemblies you need to disable IL stripping.
@@ -16,11 +32,4 @@ Add this option inside the `Release|iPhone` configuration of `size-comparison/My
 
 * net6
 
-**IL stripping is not yet available** so there's nothing to disable right now.
-
-If you want to compare (trimmed) size you can manually call `mono-cil-strip`
-on each assembly inside the app bundle.
-
-`make strip-dotnet` will remove the IL from the dotnet app version.
-However this is done after the code signature so it will not be possible
-to deploy and execute the app afterward. Use for binary analysis only!
+Build with `/p:EnableAssemblyILStripping=false` set. The `MtouchExtraArgs` legacy option is also honored. 

@@ -1,0 +1,2 @@
+!deprecated-attribute-missing! CLGeocoder::geocodeAddressDictionary:completionHandler: missing a [Deprecated] attribute
+!deprecated-attribute-missing! CLPlacemark::addressDictionary missing a [Deprecated] attribute

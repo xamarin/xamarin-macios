@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CB[ATT]Error enums
 //
 // Authors:
@@ -8,8 +8,6 @@
 //
 
 #if !__WATCHOS__
-
-using System;
 
 using Foundation;
 using CoreBluetooth;

@@ -1,4 +1,4 @@
-﻿// Copyright 2017 Xamarin Inc.
+// Copyright 2017 Xamarin Inc.
 
 using System;
 using System.Collections.Generic;
@@ -15,8 +15,7 @@ using MonoTouch.Tuner;
 
 using Xamarin.Bundler;
 
-namespace Xamarin.Linker.Steps
-{
+namespace Xamarin.Linker.Steps {
 #if NET
 	public class PreserveSmartEnumConversionsHandler : ExceptionalMarkHandler
 #else

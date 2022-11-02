@@ -1,4 +1,4 @@
-﻿//
+//
 // CoreSpotlight enums
 //
 // Authors:
@@ -15,7 +15,6 @@ namespace CoreSpotlight {
 	// NSInteger -> CNContact.h
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0), Mac (10,11)]
-	[Mac (10,13)]
 	[Native]
 	[ErrorDomain ("CSIndexErrorDomain")]
 	public enum CSIndexErrorCode : long {

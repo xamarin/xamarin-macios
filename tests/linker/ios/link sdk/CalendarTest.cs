@@ -10,9 +10,6 @@ namespace LinkSdk.Calendars {
 	[TestFixture]
 	// we want the tests to be available because we use the linker
 	[Preserve (AllMembers = true)]
-#if NET && __MACCATALYST__
-	[Ignore ("No globalization data yet for Mac Catalyst - https://github.com/xamarin/xamarin-macios/issues/11392")]
-#endif
 	public class CalendarTest {
 
 		// application must *NOT* be build with I18N.MidEast and I18N.Other (Thai)

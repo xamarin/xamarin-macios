@@ -46,11 +46,11 @@ namespace MonoTouch.Tuner {
 			// no code to remove in interfaces, skip processing
 			if (type.IsInterface)
 				return;
-			
+
 			// [MonoTouch.]ObjCRuntime.Runtime.RegisterEntryAssembly is needed only for the simulator 
 			// and does not have to be preserved on devices
 			if (product) {
-				if (Device && type.Is (Namespaces.ObjCRuntime, "Runtime")) {
+				if (LinkContext.Target.App.Optimizations.RemoveDynamicRegistrar == true && type.Is (Namespaces.ObjCRuntime, "Runtime")) {
 					foreach (var m in type.Methods) {
 						if (m.Name == "RegisterEntryAssembly") {
 							ProcessMethod (m);

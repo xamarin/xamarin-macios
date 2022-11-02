@@ -18,17 +18,22 @@ namespace PerfTest {
 		static readonly NSString short_accent = new NSString ("Sébastien");
 		static readonly NSString short_unicode = new NSString ("ЉЩщӃ");
 		static readonly NSString short_emoji = new NSString ("I'm 😃 it works!");
+		static readonly NSString stackalloc_limit = new NSString (new string ('@', 128));
+		static readonly NSString allochglobal = new NSString (new string ('#', 129));
 		static readonly NSString long_string = new NSString (new string ('!', 4096));
 
 		string s;
 
 		public IEnumerable<object[]> Handles ()
 		{
+			yield return new object [] { "nil", IntPtr.Zero };
 			yield return new object [] { "empty", empty.Handle };
 			yield return new object [] { "short_7bits", short_7bits.Handle };
 			yield return new object [] { "short_accent", short_accent.Handle };
 			yield return new object [] { "short_unicode", short_unicode.Handle };
 			yield return new object [] { "short_emoji", short_emoji.Handle };
+			yield return new object [] { "stackalloc_limit", stackalloc_limit.Handle };
+			yield return new object [] { "allochglobal", allochglobal.Handle };
 			yield return new object [] { "long_string", long_string.Handle };
 		}
 
@@ -89,5 +94,62 @@ namespace PerfTest {
 			var p = CFString.CreateNative (value);
 			CFString.ReleaseNative (p);
 		}
-    }
+
+		public IEnumerable<object []> ArraysOfStrings ()
+		{
+			yield return new object [] { "null", null };
+			yield return new object [] { "empty", new NSArray () };
+			yield return new object [] { "one",  NSArray.FromStrings ("1") };
+			yield return new object [] { "few", NSArray.FromStrings ("Bonjour", "Québec", "汉语 漢語", "I'm feeling 🤪 tonight.") };
+			yield return new object [] { "small_mutable", new NSMutableArray<NSString> (new NSString ("Québec"), new NSString ("汉语 漢語")) };
+			var lot = new NSMutableArray ();
+			for (int i = 0; i < 255; i++) // used to fit under the stackalloc limit of the new implementation
+				lot.Add (new NSString (new string ('!', i) ));
+			yield return new object [] { "lot_mutable", lot };
+			var large = new NSMutableArray ();
+			for (int i = 0; i < 4096; i++)
+				large.Add (new NSString (new string ('#', i) ));
+			yield return new object [] { "large_mutable", large };
+		}
+
+		/*
+		 * Measure time required to create a managed `string[]` array from a native one using `CFArray.StringArrayFromHandle`
+		 */
+		[Benchmark]
+		[ArgumentsSource (nameof (ArraysOfStrings))]
+		public void CFArray_StringArrayFromHandle (string name, NSArray value)
+		{
+			CFArray.StringArrayFromHandle (value.GetHandle ());
+		}
+
+		/*
+		 * Measure time required to create a managed `string[]` array from a native one using `CFArray.StringArrayFromHandle`
+		 */
+		[Benchmark]
+		[ArgumentsSource (nameof (ArraysOfStrings))]
+		public void NSArray_StringArrayFromHandle (string name, NSArray value)
+		{
+			NSArray.StringArrayFromHandle (value.GetHandle ());
+		}
+
+		/*
+		 * Measure time required to create a managed `NSObject[]` array from a native one using `CFArray.ArrayFromHandle`
+		 */
+		[Benchmark]
+		[ArgumentsSource (nameof (ArraysOfStrings))]
+		public void CFArray_ArrayFromHandle (string name, NSArray value)
+		{
+			CFArray.ArrayFromHandle<NSString> (value.GetHandle ());
+		}
+
+		/*
+		 * Measure time required to create a managed `NSObject[]` array from a native one using `CFArray.ArrayFromHandle`
+		 */
+		[Benchmark]
+		[ArgumentsSource (nameof (ArraysOfStrings))]
+		public void NSArray_ArrayFromHandle (string name, NSArray value)
+		{
+			NSArray.ArrayFromHandle<NSString> (value.GetHandle ());
+		}
+	}
 }

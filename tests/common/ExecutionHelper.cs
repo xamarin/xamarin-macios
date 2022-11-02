@@ -8,18 +8,17 @@ using System.Text.RegularExpressions;
 using NUnit.Framework;
 using Xamarin.Utils;
 
-namespace Xamarin.Tests
-{
-	class XBuild
-	{
+#nullable disable // until we get around to fixing this file
+
+namespace Xamarin.Tests {
+	class XBuild {
 		public static string ToolPath {
-			get
-			{
+			get {
 				return Configuration.XIBuildPath;
 			}
 		}
 
-		public static string BuildXM (string project, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null, string targets = "Clean,Build")
+		public static string BuildXM (string project, string configuration = "Debug", string platform = "x86", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null, string targets = "Clean,Build")
 		{
 			return Build (project, ApplePlatform.MacOSX, configuration, platform, verbosity, timeout, arguments, targets);
 		}

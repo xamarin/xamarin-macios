@@ -1,4 +1,4 @@
-﻿//
+//
 // UserNotificationsUI bindings
 //
 // Authors:
@@ -111,4 +111,3 @@ namespace UserNotificationsUI {
 		void SetNotificationActions (UNNotificationAction[] actions);
 	}
 }
-

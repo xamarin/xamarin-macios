@@ -32,7 +32,7 @@ using System.IO;
 using System.Net;
 using System.Runtime.ExceptionServices;
 
-#if XAMCORE_4_0
+#if NET
 using CFNetwork;
 using CoreFoundation;
 #else

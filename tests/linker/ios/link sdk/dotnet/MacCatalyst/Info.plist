@@ -6,7 +6,5 @@
 		<string>LinkSdkTest</string>
 		<key>CFBundleIdentifier</key>
 		<string>com.xamarin.linksdk</string>
-		<key>LSMinimumSystemVersion</key>
-		<string>10.15</string>
 	</dict>
 </plist>

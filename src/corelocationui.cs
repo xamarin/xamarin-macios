@@ -5,6 +5,10 @@ using UIKit;
 
 using System;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreLocationUI {
 
 	[NoTV, NoMac, NoWatch, iOS (15,0), MacCatalyst (15,0)]
@@ -32,7 +36,7 @@ namespace CoreLocationUI {
 
 		[Export ("initWithFrame:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Export ("icon", ArgumentSemantic.Assign)]
 		CLLocationButtonIcon Icon { get; set; }

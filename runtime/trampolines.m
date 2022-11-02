@@ -117,9 +117,62 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 				if (*exception_gchandle != INVALID_GCHANDLE) {
 					returnValue = NULL;
 				} else {
-					xamarin_framework_peer_lock ();
+					//
+					// This waypoint (lock+unlock) is needed so that we can reliably call retainCount in the
+					// toggleref callback (by making sure the toggle ref callback sees the retain).
+					//
+					// The race is between the following actions (given a managed object Z):
+					//
+					// a1) Thread A reads retainCount = 1 for Z
+					// a2) Thread A stops the world, and runs a GC (potentially collecting Z)
+					// b1) Thread B retains Z
+					// b2) Thread B exits the last frame that has a reference to the managed peer for Z
+					//
+					// Possible execution orders:
+					//
+					//   1) a1-a2-*: all such orders are safe, because Z will be referenced somewhere on thread B's stack during the GC
+					//   2) b1-*: safe; thread A will see the retained object
+					//   3) a1-b1-a2-b2: safe; because Z will be referenced somewhere on thread B's stack during the GC
+					//   4) a1-b1-b2-a2: unsafe; thread A will read retainCount = 1, and think no managed code has a reference to the object, thus collect it.
+					//
+					// Order 4 would look like this:
+					//
+					//   * Thread A reads retainCount = 1 for Z
+					//   * Thread B retains Z
+					//   * Thread B exits the last frame that has a reference to the managed peer for Z
+					//   * Thread A stops the world, and runs a GC (potentially collecting Z)
+					//
+					// Solution: lock/unlock the framework peer lock here. This looks
+					// weird (since nothing happens inside the lock), but it works:
+					//
+					//   * Thread A starts a GC, locks the framework peer lock, and starts
+					//     calling toggleref callbacks.
+					//   * Thread A fetches the handle (H) for object Z in a toggleref
+					//     callback.
+					//   * Thread B calls retain for object Z
+					//   * Thread B tries to lock the framework peer lock, and blocks (before returning up the stack)
+					//   * Thread A finishes processing all toggleref callbacks, runs
+					//     the GC, and won't free Z because it's referenced somewhere on B's stack.
+					//
+					// Q) Why not just unlock after calling retain, to avoid the strange-
+					//    looking empty lock?
+					// A) Because calling retain on an object might end up calling
+					//    our xamarin_retain_trampoline method, which calls managed code, which might want to run a GC,
+					//    which won't happen if we have the framework peer lock locked here.
+					//    1) Thread T calls retain on a native object.
+					//    2) Thread T calls xamarin_retain_trampoline, which executes managed code,
+					//       which blocks on the GC (by trying to allocate memory for instance).
+					//       that's supposed to happen on another thread U.
+					//    3) Thread U runs the GC, and tries to lock the framework peer lock, and
+					//       deadlocks because thread T already has the framework peer lock.
+					//
+					//    This is https://github.com/xamarin/xamarin-macios/issues/13066
+					//
+					// See also comment in xamarin_release_managed_ref
+
+					xamarin_framework_peer_waypoint ();
+
 					[i retain];
-					xamarin_framework_peer_unlock ();
 					if (!retain)
 						[i autorelease];
 
@@ -128,6 +181,25 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 				}
 			} else if (xamarin_is_class_inativeobject (r_klass)) {
 				returnValue = xamarin_get_handle_for_inativeobject (retval, exception_gchandle);
+				if (*exception_gchandle != INVALID_GCHANDLE)
+					return returnValue;
+				if (returnValue != NULL) {
+					if (retain) {
+						xamarin_retain_nativeobject (retval, exception_gchandle);
+						if (*exception_gchandle != INVALID_GCHANDLE)
+							return returnValue;
+					} else {
+						// This will try to retain the object if and only if it's an NSObject -
+						// in which case we known it's 'id' here and we can call autorelease on it.
+						bool retained = xamarin_attempt_retain_nsobject (retval, exception_gchandle);
+						if (*exception_gchandle != INVALID_GCHANDLE)
+							return returnValue;
+						if (retained) {
+							id i = (id) returnValue;
+							[i autorelease];
+						}
+					}
+				}
 			} else {
 				xamarin_assertion_message ("Don't know how to marshal a return value of type '%s.%s'. Please file a bug with a test case at https://github.com/xamarin/xamarin-macios/issues/new\n", mono_class_get_namespace (r_klass), mono_class_get_name (r_klass)); 
 			}
@@ -353,7 +425,6 @@ skip_nested_brace (const char *type)
 		case '}':
 			return type++;
 		default:
-			type++;
 			break;
 		}
 	}
@@ -659,7 +730,7 @@ xamarin_release_trampoline (id self, SEL sel)
 
 	pthread_mutex_unlock (&refcount_mutex);
 
-	/* Invoke the real retain method */
+	/* Invoke the real release method */
 	xamarin_invoke_objc_method_implementation (self, sel, (IMP) xamarin_release_trampoline);
 
 	if (detach)
@@ -781,9 +852,9 @@ xamarin_set_gchandle_trampoline (id self, SEL sel, GCHandle gc_handle, enum Xama
 	
 	pthread_mutex_lock (&gchandle_hash_lock);
 	if (gchandle_hash == NULL) {
-		CFDictionaryValueCallBacks value_callbacks;
+		CFDictionaryValueCallBacks value_callbacks = { 0 };
 		value_callbacks.release = release_gchandle_dictionary_entry;
-		gchandle_hash = CFDictionaryCreateMutable (kCFAllocatorDefault, 0, NULL, NULL);
+		gchandle_hash = CFDictionaryCreateMutable (kCFAllocatorDefault, 0, NULL, &value_callbacks);
 	}
 	if (gc_handle == INVALID_GCHANDLE) {
 		CFDictionaryRemoveValue (gchandle_hash, self);
@@ -1456,11 +1527,23 @@ xamarin_get_nsnumber_converter (MonoClass *managedType, MonoMethod *method, bool
 		func = to_managed ? (void *) xamarin_nsnumber_to_double : (void *) xamarin_double_to_nsnumber;
 	} else if (!strcmp (fullname, "System.Boolean")) {
 		func = to_managed ? (void *) xamarin_nsnumber_to_bool : (void *) xamarin_bool_to_nsnumber;
+#if DOTNET
+	} else if (!strcmp (fullname, "System.IntPtr")) {
+#else
 	} else if (!strcmp (fullname, "System.nint")) {
+#endif
 		func = to_managed ? (void *) xamarin_nsnumber_to_nint : (void *) xamarin_nint_to_nsnumber;
+#if DOTNET
+	} else if (!strcmp (fullname, "System.UIntPtr")) {
+#else
 	} else if (!strcmp (fullname, "System.nuint")) {
+#endif
 		func = to_managed ? (void *) xamarin_nsnumber_to_nuint : (void *) xamarin_nuint_to_nsnumber;
+#if DOTNET
+	} else if (!strcmp (fullname, "System.Runtime.InteropServices.NFloat")) {
+#else
 	} else if (!strcmp (fullname, "System.nfloat")) {
+#endif
 		func = to_managed ? (void *) xamarin_nsnumber_to_nfloat : (void *) xamarin_nfloat_to_nsnumber;
 	} else if (mono_class_is_enum (managedType)) {
 		MonoType *baseType = mono_class_enum_basetype (managedType);

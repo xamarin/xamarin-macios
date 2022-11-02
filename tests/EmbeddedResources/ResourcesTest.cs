@@ -41,7 +41,6 @@ namespace EmbeddedResources {
 			var manager = new ResourceManager ("EmbeddedResources.Welcome", typeof(ResourcesTest).Assembly);
 #endif
 
-#if !(NET && __MACCATALYST__) // https://github.com/xamarin/xamarin-macios/issues/11392
 			Assert.AreEqual ("Welcome", manager.GetString ("String1", new CultureInfo ("en")), "en");
 			Assert.AreEqual ("G'day", manager.GetString ("String1", new CultureInfo ("en-AU")), "en-AU");
 			Assert.AreEqual ("Willkommen", manager.GetString ("String1", new CultureInfo ("de")), "de");
@@ -49,7 +48,6 @@ namespace EmbeddedResources {
 			Assert.AreEqual ("Bienvenido", manager.GetString ("String1", new CultureInfo ("es")), "es");
 			Assert.AreEqual ("Bienvenido", manager.GetString ("String1", new CultureInfo ("es-AR")), "es-AR");
 			Assert.AreEqual ("Bienvenido", manager.GetString ("String1", new CultureInfo ("es-ES")), "es-ES");
-#endif
 		}
 	}
 }

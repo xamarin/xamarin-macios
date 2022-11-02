@@ -1,4 +1,4 @@
-﻿//
+//
 // UIGraphicsRenderer* Unit Tests
 //
 // Authors:
@@ -12,6 +12,7 @@
 using System;
 using Foundation;
 using UIKit;
+using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {

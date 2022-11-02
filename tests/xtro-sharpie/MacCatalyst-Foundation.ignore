@@ -1,4 +1,0 @@
-## NSPortMessage is not available (and is being rejected if used on iOS)
-## but this protocol member expose that type... we cannot remove the 
-## protocol itself since it's subclassed
-!missing-protocol-member! NSPortDelegate::handlePortMessage: not found

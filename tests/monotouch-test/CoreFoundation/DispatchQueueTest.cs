@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for DispatchQueue
 //
 // Authors:
@@ -18,8 +18,7 @@ using AppKit;
 using UIKit;
 #endif
 using NUnit.Framework;
-using System.Drawing;
-using System.Threading;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreFoundation
 {
@@ -88,8 +87,8 @@ namespace MonoTouchFixtures.CoreFoundation
 		[Test]
 		public void DispatchSync ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			using (var queue = new DispatchQueue ("DispatchSync")) {
 				var called = false;
@@ -107,8 +106,8 @@ namespace MonoTouchFixtures.CoreFoundation
 		[Test]
 		public void DispatchBarrierSync ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			using (var queue = new DispatchQueue ("DispatchBarrierSync")) {
 				var called = false;
@@ -126,8 +125,8 @@ namespace MonoTouchFixtures.CoreFoundation
 		[Test]
 		public void DispatchAsync ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			using (var queue = new DispatchQueue ("DispatchAsync")) {
 				var called = false;
@@ -148,8 +147,8 @@ namespace MonoTouchFixtures.CoreFoundation
 		[Test]
 		public void DispatchBarrierAsync ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			using (var queue = new DispatchQueue ("DispatchBarrierAsync")) {
 				var called = false;

@@ -1,4 +1,4 @@
-#if !XAMCORE_4_0 && !__MACCATALYST__
+#if !NET && !__MACCATALYST__
 
 using System;
 using ObjCRuntime;

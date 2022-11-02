@@ -60,4 +60,3 @@ namespace Xamarin {
 		}
 	}
 }
-

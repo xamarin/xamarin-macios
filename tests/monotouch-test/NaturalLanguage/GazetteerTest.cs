@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NLGazetteer
 //
 // Copyright 2019 Microsoft Corp. All rights reserved.

@@ -26,19 +26,21 @@ using ObjCRuntime;
 using AudioToolbox;
 using System;
 
+#nullable enable
+
 namespace AVFoundation {
 #if !WATCH
 	public partial class AVAudioPlayer {
 
-		public static AVAudioPlayer FromUrl (NSUrl url, out NSError error)
+		public static AVAudioPlayer? FromUrl (NSUrl url, out NSError? error)
 		{
 			unsafe {
 				IntPtr errhandle;
 				IntPtr ptrtohandle = (IntPtr) (&errhandle);
 
 				var ap = new AVAudioPlayer (url, ptrtohandle);
-				if (ap.Handle == IntPtr.Zero){
-					error = (NSError) Runtime.GetNSObject (errhandle);
+				if (ap.Handle == IntPtr.Zero) {
+					error = Runtime.GetNSObject<NSError> (errhandle);
 					return null;
 				} else
 					error = null;
@@ -46,7 +48,7 @@ namespace AVFoundation {
 			}
 		}
 
-		public static AVAudioPlayer FromUrl (NSUrl url)
+		public static AVAudioPlayer? FromUrl (NSUrl url)
 		{
 			unsafe {
 				var ap = new AVAudioPlayer (url, IntPtr.Zero);
@@ -57,15 +59,15 @@ namespace AVFoundation {
 			}
 		}
 
-		public static AVAudioPlayer FromData (NSData data, out NSError error)
+		public static AVAudioPlayer? FromData (NSData data, out NSError? error)
 		{
 			unsafe {
 				IntPtr errhandle;
 				IntPtr ptrtohandle = (IntPtr) (&errhandle);
 
 				var ap = new AVAudioPlayer (data, ptrtohandle);
-				if (ap.Handle == IntPtr.Zero){
-					error = (NSError) Runtime.GetNSObject (errhandle);
+				if (ap.Handle == IntPtr.Zero) {
+					error = Runtime.GetNSObject<NSError> (errhandle);
 					return null;
 				} else
 					error = null;
@@ -73,7 +75,7 @@ namespace AVFoundation {
 			}
 		}
 
-		public static AVAudioPlayer FromData (NSData data)
+		public static AVAudioPlayer? FromData (NSData data)
 		{
 			unsafe {
 				var ap = new AVAudioPlayer (data, IntPtr.Zero);

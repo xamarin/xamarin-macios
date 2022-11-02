@@ -148,7 +148,11 @@ namespace MonoTouchFixtures.Foundation {
 			using (var fc = new NSFileCoordinator ()) {
 				NSError err;
 				fileop = false;
+#if NET
+				fc.CoordinateBatch (new NSUrl[] { url }, NSFileCoordinatorReadingOptions.WithoutChanges, new NSUrl[] { url }, NSFileCoordinatorWritingOptions.ForDeleting, out err, Action);
+#else
 				fc.CoordinateBatc (new NSUrl[] { url }, NSFileCoordinatorReadingOptions.WithoutChanges, new NSUrl[] { url }, NSFileCoordinatorWritingOptions.ForDeleting, out err, Action);
+#endif
 				Assert.True (fileop, "fileop/sync");
 				Assert.Null (err, "NSError");
 			}
@@ -162,7 +166,11 @@ namespace MonoTouchFixtures.Foundation {
 				NSError err;
 				// NULL is not documented by Apple but it crash the app with:
 				// NSFileCoordinator: A surprising server error was signaled. Details: Connection invalid
+#if NET
+				Assert.Throws<ArgumentNullException> (() => fc.CoordinateBatch (new NSUrl[] { url }, NSFileCoordinatorReadingOptions.WithoutChanges, new NSUrl[] { url }, NSFileCoordinatorWritingOptions.ForDeleting, out err, null));
+#else
 				Assert.Throws<ArgumentNullException> (() => fc.CoordinateBatc (new NSUrl[] { url }, NSFileCoordinatorReadingOptions.WithoutChanges, new NSUrl[] { url }, NSFileCoordinatorWritingOptions.ForDeleting, out err, null));
+#endif
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-﻿//
+//
 // UserNotifications bindings
 //
 // Authors:
@@ -171,10 +171,29 @@ namespace UserNotifications {
 	[Native]
 	public enum UNNotificationInterruptionLevel : long
 	{
-		Active,
-		Critical,
+#if XAMCORE_5_0
 		Passive,
+		Active,
 		TimeSensitive,
+		Critical,
+#else
+		[Obsolete ("Use 'Active2'.")]
+		Active,
+		[Obsolete ("Use 'Critical2'.")]
+		Critical,
+		[Obsolete ("Use 'Passive2'.")]
+		Passive,
+		[Obsolete ("Use 'TimeSensitive2'.")]
+		TimeSensitive,
+#endif // XAMCORE_5_0
+
+		// Additional enum values to fix reordering - to be at the end of the enum
+#if !XAMCORE_5_0
+		Active2 = Critical,
+		Critical2 = TimeSensitive,
+		Passive2 = Active,
+		TimeSensitive2 = Passive,
+#endif // !XAMCORE_5_0
 	}
 
 	[iOS (10, 0)]
@@ -569,7 +588,7 @@ namespace UserNotifications {
 		[Wrap ("!IsDefaultAction && !IsDismissAction")]
 		bool IsCustomAction { get; }
 
-		[iOS (13,0), TV (13,0), NoWatch, NoMac]
+		[iOS (13,0), NoWatch, NoMac]
 		[NullAllowed, Export ("targetScene")]
 		UIScene TargetScene { get; }
 	}
@@ -684,6 +703,11 @@ namespace UserNotifications {
 		[Export ("defaultSound")]
 		UNNotificationSound Default { get; }
 
+		[NoWatch, NoTV, NoMacCatalyst, NoMac, iOS (15,2)]
+		[Static]
+		[Export ("defaultRingtoneSound", ArgumentSemantic.Copy)]
+		UNNotificationSound DefaultRingtoneSound { get; }
+
 		[Unavailable (PlatformName.WatchOS)]
 		[Static]
 		[Export ("soundNamed:")]
@@ -698,6 +722,11 @@ namespace UserNotifications {
 		[Static]
 		[Export ("defaultCriticalSoundWithAudioVolume:")]
 		UNNotificationSound GetDefaultCriticalSound (float volume);
+
+		[NoWatch, NoTV, NoMacCatalyst, NoMac, iOS (15,2)]
+		[Static]
+		[Export ("ringtoneSoundNamed:")]
+		UNNotificationSound GetRingtoneSound (string name);
 
 		[NoWatch, iOS (12,0)]
 		[Static]
@@ -774,6 +803,7 @@ namespace UserNotifications {
 	[iOS (10, 0)]
 	[Watch (3, 0)]
 	[NoMac]
+	[NoMacCatalyst]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (UNNotificationTrigger))]
 	[DisableDefaultCtor] // as per doc, use supplied method (CreateTrigger)

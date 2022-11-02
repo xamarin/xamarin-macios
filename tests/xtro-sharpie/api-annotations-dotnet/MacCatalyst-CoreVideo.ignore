@@ -1,0 +1,3 @@
+# ignored as with macOS
+
+!missing-pinvoke! CVImageBufferCreateColorSpaceFromAttachments is not bound

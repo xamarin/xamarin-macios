@@ -104,7 +104,7 @@ namespace PdfKit {
 		Underline = 4
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoiOS]
 #elif IOS
 	[Obsolete (Constants.UnavailableOniOS)]
@@ -157,7 +157,9 @@ namespace PdfKit {
 		TextFieldArea  = 1 << 5,
 		IconArea       = 1 << 6,
 		PopupArea      = 1 << 7,
-		ImageArea      = 1 << 8
+		ImageArea      = 1 << 8,
+		[iOS (15,0), MacCatalyst (15,0), Mac (12,0)]
+		AnyArea = Int64.MaxValue,
 	}
 
 	[Mac (10,13)]

@@ -60,6 +60,9 @@ namespace Xamarin.Tests
 			get {
 				return output;
 			}
+			set {
+				output = value;
+			}
 		}
 
 		public int Execute (IList<string> arguments)

@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for UISearchControllerTest
 //
 // Authors:
@@ -16,6 +16,7 @@ using Foundation;
 using UIKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 	[TestFixture]
@@ -25,7 +26,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void InitWithNibNameTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			UISearchController ctrl = new UISearchController (null, null);
 			Assert.NotNull (ctrl, "UISearchController ctor(String, NSBundle)");

@@ -45,9 +45,18 @@ namespace MonoTouchFixtures.UIKit {
 				} else {
 					Assert.IsNull (tf.SelectedTextRange, "SelectedTextRange");
 				}
-				if (TestRuntime.CheckXcodeVersion (11, 0)) {
+				if (TestRuntime.CheckXcodeVersion (13, 0)) {
+#if !__TVOS__ 
+					if (TestRuntime.CheckXcodeVersion (13, 2))
+						Assert.That (tf.TypingAttributes, Is.Not.Empty, "default 13.2");
+					else
+						Assert.That (tf.TypingAttributes, Is.Empty, "default 13.0");
+#else
+					Assert.That (tf.TypingAttributes, Is.Not.Empty, "default 13.0");
+#endif
+				} else if (TestRuntime.CheckXcodeVersion (11, 0)) {
 					if (TestRuntime.CheckXcodeVersion (11, 4))
-						Assert.That (tf.TypingAttributes, Is.Not.Empty, "default"); // iOS 13.4 returns contents
+						Assert.That (tf.TypingAttributes, Is.Not.Empty, "default 11.4"); // iOS 13.4 returns contents
 					else
 						Assert.That (tf.TypingAttributes, Is.Empty, "default");
 				} else {
@@ -55,13 +64,23 @@ namespace MonoTouchFixtures.UIKit {
 				}
 				// ^ calling TypingAttributes does not crash like UITextView does, it simply returns null
 				tf.TypingAttributes = new NSDictionary ();
-				if (TestRuntime.CheckXcodeVersion (11, 0)) {
+				if (TestRuntime.CheckXcodeVersion (13, 0)) {
+#if !__TVOS__
+					if (TestRuntime.CheckXcodeVersion (13, 2))
+						Assert.That (tf.TypingAttributes, Is.Not.Empty, "empty 13.2");
+					else
+						Assert.That (tf.TypingAttributes, Is.Empty, "empty 13.0");
+#else
+					Assert.That (tf.TypingAttributes, Is.Not.Empty, "empty 13.0");
+#endif
+
+				} else if (TestRuntime.CheckXcodeVersion (11, 0)) {
 					if (TestRuntime.CheckXcodeVersion (11, 4))
-						Assert.That (tf.TypingAttributes, Is.Not.Empty, "not empty"); // iOS 13.4 returns contents
+						Assert.That (tf.TypingAttributes, Is.Not.Empty, "not empty 11.4"); // iOS 13.4 returns contents
 					else
 						Assert.That (tf.TypingAttributes, Is.Empty, "empty");
 				} else {
-					Assert.IsNull (tf.TypingAttributes, "empty");
+					Assert.IsNull (tf.TypingAttributes, "empty not xcode 11");
 				}
 				// and it stays null, even if assigned, since there's not selection
 			}
@@ -97,6 +116,16 @@ namespace MonoTouchFixtures.UIKit {
 			// that's even more confusing since they all fails for respondToSelector tests but works in real life
 			using (UITextField tf = new UITextField ()) {
 				// this is just to show we can get and set those values (even if respondToSelector returns NO)
+#if NET
+				tf.SetAutocapitalizationType (tf.GetAutocapitalizationType ());
+				tf.SetAutocorrectionType (tf.GetAutocorrectionType ());
+				tf.SetEnablesReturnKeyAutomatically (tf.GetEnablesReturnKeyAutomatically ());
+				tf.SetKeyboardAppearance (tf.GetKeyboardAppearance ());
+				tf.SetKeyboardType (tf.GetKeyboardType ());
+				tf.SetReturnKeyType (tf.GetReturnKeyType ());
+				tf.SetSecureTextEntry (tf.GetSecureTextEntry ());
+				tf.SetSpellCheckingType (tf.GetSpellCheckingType ());
+#else
 				tf.AutocapitalizationType = tf.AutocapitalizationType;
 				tf.AutocorrectionType = tf.AutocorrectionType;
 				tf.EnablesReturnKeyAutomatically = tf.EnablesReturnKeyAutomatically;
@@ -105,6 +134,7 @@ namespace MonoTouchFixtures.UIKit {
 				tf.ReturnKeyType = tf.ReturnKeyType;
 				tf.SecureTextEntry = tf.SecureTextEntry;
 				tf.SpellCheckingType = tf.SpellCheckingType;
+#endif
 			}
 		}
 	}

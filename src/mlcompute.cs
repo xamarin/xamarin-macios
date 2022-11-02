@@ -92,9 +92,15 @@ namespace MLCompute {
 	enum MLCDataType {
 		Invalid = 0,
 		Float32 = 1,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		Float16 = 3,
 		Boolean = 4,
 		Int64 = 5,
-		Int32 = 7,
+		Inot32 = 7,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		Int8 = 8,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		UInt8 = 9,
 		// Count, // must be last, not available in swift
 	}
 
@@ -104,6 +110,8 @@ namespace MLCompute {
 		Cpu = 0,
 		Gpu = 1,
 		Any = 2,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		Ane  = 3, // Apple neural engine
 		// Count, // must be last, not available in swift
 	}
 
@@ -116,6 +124,8 @@ namespace MLCompute {
 		Synchronous = 0x2,
 		Profiling = 0x4,
 		ForwardForInference = 0x8,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		PerLayerProfiling = 0x10,
 	}
 
 	[iOS (14,0)][TV (14,0)][Mac (11,0)]
@@ -229,6 +239,14 @@ namespace MLCompute {
 		LogSoftmax = 1,
 	}
 
+	[iOS (15,0), TV (15,0), Mac (12,0), NoWatch, MacCatalyst (15,0)]
+	public enum MLCGradientClippingType {
+		Value = 0,
+		Norm = 1,
+		GlobalNorm = 2,
+	}
+
+
 	[iOS (14,0)][TV (14,0)][Mac (11,0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
@@ -286,6 +304,10 @@ namespace MLCompute {
 		[Static]
 		[Export ("supportsDataType:onDevice:")]
 		bool SupportsDataType (MLCDataType dataType, MLCDeviceType device);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("deviceType")]
+		MLCDeviceType DeviceType { get; }
 	}
 
 	[iOS (14,0)][TV (14,0)][Mac (11,0)]
@@ -442,6 +464,18 @@ namespace MLCompute {
 
 		[Export ("regularizationType")]
 		MLCRegularizationType RegularizationType { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("gradientClippingType")]
+		MLCGradientClippingType GradientClippingType { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("maximumClippingNorm")]
+		float MaximumClippingNorm { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("customGlobalNorm")]
+		float CustomGlobalNorm { get; }
 	}
 
 	[iOS (14,0)][TV (14,0)][Mac (11,0)]
@@ -478,6 +512,23 @@ namespace MLCompute {
 		[Static]
 		[Export ("descriptorWithLearningRate:gradientRescale:appliesGradientClipping:gradientClipMax:gradientClipMin:regularizationType:regularizationScale:")]
 		MLCOptimizerDescriptor Create (float learningRate, float gradientRescale, bool appliesGradientClipping, float gradientClipMax, float gradientClipMin, MLCRegularizationType regularizationType, float regularizationScale);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Static]
+		[Export ("descriptorWithLearningRate:gradientRescale:appliesGradientClipping:gradientClippingType:gradientClipMax:gradientClipMin:maximumClippingNorm:customGlobalNorm:regularizationType:regularizationScale:")]
+		MLCOptimizerDescriptor Create (float learningRate, float gradientRescale, bool appliesGradientClipping, MLCGradientClippingType gradientClippingType, float gradientClipMax, float gradientClipMin, float maximumClippingNorm, float customGlobalNorm, MLCRegularizationType regularizationType, float regularizationScale);
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Export ("gradientClippingType")]
+		MLCGradientClippingType GradientClippingType { get; }
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Export ("maximumClippingNorm")]
+		float MaximumClippingNorm { get; }
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Export ("customGlobalNorm")]
+		float CustomGlobalNorm { get; }
 	}
 
 	[iOS (14,0)][TV (14,0)][Mac (11,0)]
@@ -498,6 +549,10 @@ namespace MLCompute {
 		[Export ("timeStep")]
 		nuint TimeStep { get; }
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("usesAMSGrad")]
+		bool UsesAmsGrad { get; }
+
 		[Static]
 		[Export ("optimizerWithDescriptor:")]
 		MLCAdamOptimizer Create (MLCOptimizerDescriptor optimizerDescriptor);
@@ -505,6 +560,11 @@ namespace MLCompute {
 		[Static]
 		[Export ("optimizerWithDescriptor:beta1:beta2:epsilon:timeStep:")]
 		MLCAdamOptimizer Create (MLCOptimizerDescriptor optimizerDescriptor, float beta1, float beta2, float epsilon, nuint timeStep);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Static]
+		[Export ("optimizerWithDescriptor:beta1:beta2:epsilon:usesAMSGrad:timeStep:")]
+		MLCAdamOptimizer Create (MLCOptimizerDescriptor optimizerDescriptor, float beta1, float beta2, float epsilon, bool usesAmsGrad, nuint timeStep);
 	}
 
 	[iOS (14,0)][TV (14,0)][Mac (11,0)]
@@ -538,11 +598,21 @@ namespace MLCompute {
 		[return: NullAllowed]
 		MLCDevice GetDevice (IMTLDevice[] gpus);
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Static]
+		[Export ("aneDevice")]
+		[return: NullAllowed]
+		MLCDevice GetAneDevice ();
+
 		[iOS (14,2)][TV (14,2)]
 		[Static]
 		[Export ("deviceWithType:selectsMultipleComputeDevices:")]
 		[return: NullAllowed]
 		MLCDevice GetDevice (MLCDeviceType type, bool selectsMultipleComputeDevices);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("actualDeviceType")]
+		MLCDeviceType ActualDeviceType { get; }
 	}
 
 	[iOS (14,0)][TV (14,0)][Mac (11,0)]
@@ -569,7 +639,7 @@ namespace MLCompute {
 		[Export ("optimizerData", ArgumentSemantic.Copy)]
 		MLCTensorData[] OptimizerData {
 			get;
-#if !XAMCORE_4_0
+#if !NET
 			[NotImplemented]
 			set;
 #endif
@@ -673,6 +743,31 @@ namespace MLCompute {
 
 		[Export ("bindOptimizerData:deviceData:")]
 		bool BindOptimizer (MLCTensorData[] data, [NullAllowed] MLCTensorOptimizerDeviceData[] deviceData);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("tensorByQuantizingToType:scale:bias:")]
+		[return: NullAllowed]
+		MLCTensor CreateByQuantizing (MLCDataType type, float scale, nint bias);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("tensorByDequantizingToType:scale:bias:")]
+		[return: NullAllowed]
+		MLCTensor CreateByDequantizing (MLCDataType type, MLCTensor scale, MLCTensor bias);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("tensorByQuantizingToType:scale:bias:axis:")]
+		[return: NullAllowed]
+		MLCTensor CreateByQuantizing (MLCDataType type, MLCTensor scale, MLCTensor bias, nint axis);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("tensorByDequantizingToType:scale:bias:axis:")]
+		[return: NullAllowed]
+		MLCTensor CreateByDequantizing (MLCDataType type, MLCTensor scale, MLCTensor bias, nint axis);
+
+		[Static]
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("tensorWithShape:randomInitializerType:dataType:")]
+		MLCTensor Create ([BindAs (typeof (nint[]))] NSNumber[] shape, MLCRandomInitializerType randomInitializerType, MLCDataType dataType);
 	}
 
 	[iOS (14,0)][TV (14,0)][Mac (11,0)]
@@ -2282,4 +2377,49 @@ namespace MLCompute {
 		[Export ("layer")]
 		MLCSelectionLayer Create ();
 	}
+
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLCPlatform {
+		
+		[Static]
+		[Export ("setRNGSeedTo:")]
+		void SetRngSeed ([BindAs (typeof (nuint))] NSNumber seed);
+
+		[return: BindAs (typeof (nuint)), NullAllowed]
+		[Static]
+		[Export ("getRNGseed")]
+		NSNumber GetRngSeed ();
+	}
+
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (MLCOptimizer))]
+	[DisableDefaultCtor]
+	interface MLCAdamWOptimizer : NSCopying
+	{
+		[Export ("beta1")]
+		float Beta1 { get; }
+
+		[Export ("beta2")]
+		float Beta2 { get; }
+
+		[Export ("epsilon")]
+		float Epsilon { get; }
+
+		[Export ("usesAMSGrad")]
+		bool UsesAmsGrad { get; }
+
+		[Export ("timeStep")]
+		nuint TimeStep { get; }
+
+		[Static]
+		[Export ("optimizerWithDescriptor:")]
+		MLCAdamWOptimizer GetOptimizer (MLCOptimizerDescriptor optimizerDescriptor);
+
+		[Static]
+		[Export ("optimizerWithDescriptor:beta1:beta2:epsilon:usesAMSGrad:timeStep:")]
+		MLCAdamWOptimizer GetOptimizer (MLCOptimizerDescriptor optimizerDescriptor, float beta1, float beta2, float epsilon, bool usesAmsGrad, nuint timeStep);
+	}
+
 }

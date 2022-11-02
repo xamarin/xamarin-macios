@@ -27,6 +27,10 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 
+#nullable enable
+#pragma warning disable CS3021 // Type or member does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute
+
+#if !NET
 namespace OpenTK
 {
 
@@ -354,3 +358,4 @@ namespace OpenTK
         #endregion BitConverter
     }
 }
+#endif // !NET

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,8 +10,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.Jenkins.TestTasks {
-	class NUnitExecuteTask : RunTestTask
-	{
+	class NUnitExecuteTask : RunTestTask {
 		public string TestLibrary;
 		public string TestExecutable;
 		public bool ProduceHtmlReport = true;
@@ -143,7 +142,7 @@ namespace Xharness.Jenkins.TestTasks {
 				args.Add (Path.GetFullPath (TestLibrary));
 				if (IsNUnit3) {
 					args.Add ("-result=" + xmlLog + ";format=nunit2");
-					args.Add ("--labels=All");
+					args.Add ("--labels=After");
 					if (InProcess)
 						args.Add ("--inprocess");
 				} else {

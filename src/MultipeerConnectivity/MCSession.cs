@@ -7,6 +7,8 @@
 // Copyright 2013-2014 Xamarin Inc.
 //
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 
@@ -20,7 +22,7 @@ namespace MultipeerConnectivity {
 		public MCSession (MCPeerID myPeerID, SecIdentity identity, MCEncryptionPreference encryptionPreference)
 			: base (NSObjectFlag.Empty)
 		{
-			if (identity == null) {
+			if (identity is null) {
 				Handle = Init (myPeerID, null, encryptionPreference);
 			} else {
 				using (var a = NSArray.FromNSObjects (identity))
@@ -31,11 +33,11 @@ namespace MultipeerConnectivity {
 		public MCSession (MCPeerID myPeerID, SecIdentity identity, SecCertificate[] certificates, MCEncryptionPreference encryptionPreference)
 			: base (NSObjectFlag.Empty)
 		{
-			if (identity == null) {
-				if (certificates == null)
+			if (identity is null) {
+				if (certificates is null)
 					Handle = Init (myPeerID, null, encryptionPreference);
 				else
-					throw new ArgumentNullException ("identity");
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (identity));
 			} else {
 				using (var certs = NSArray.FromNativeObjects (certificates))
 					Handle = Init (myPeerID, certs, encryptionPreference);

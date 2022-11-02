@@ -1,6 +1,9 @@
 //
 // CoreMotion's extra methods
 //
+
+#nullable enable
+
 using Foundation;
 using System;
 

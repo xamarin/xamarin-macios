@@ -11,7 +11,7 @@ namespace CoreTelephony {
 		Mach = 2,
 	}
 
-	[Obsoleted (PlatformName.iOS, 14,0, message: Constants.UseCallKitInstead)]
+	[NoMacCatalyst]
 	[iOS (9,0)]
 	[Native]
 	public enum CTCellularDataRestrictedState : ulong {
@@ -20,7 +20,7 @@ namespace CoreTelephony {
 		NotRestricted,
 	}
 
-	[Obsoleted (PlatformName.iOS, 14,0, message: Constants.UseCallKitInstead)]
+	[NoMacCatalyst]
 	[iOS (12,0)]
 	[Native]
 	public enum CTCellularPlanProvisioningAddPlanResult : long {

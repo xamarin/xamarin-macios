@@ -41,7 +41,7 @@ namespace CoreImage {
 		}
 
 		public CIVector (nfloat [] values) :
-			this (values, values == null ? 0 : values.Length)
+			this (values, values?.Length ?? 0)
 		{
 		}
 
@@ -49,7 +49,7 @@ namespace CoreImage {
 		[Export ("initWithValues:count:")]
 		public unsafe CIVector (nfloat [] values, nint count) : base (NSObjectFlag.Empty)
 		{
-			if (values == null)
+			if (values is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (count > values.Length)
 				throw new ArgumentOutOfRangeException (nameof (count));
@@ -57,9 +57,9 @@ namespace CoreImage {
 			fixed (nfloat *ptr = values) {
 				var handle = IntPtr.Zero;
 				if (IsDirectBinding) {
-					handle = Messaging.IntPtr_objc_msgSend_IntPtr_nint (Handle, Selector.GetHandle ("initWithValues:count:"), (IntPtr) ptr, count);
+					handle = Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (Handle, Selector.GetHandle ("initWithValues:count:"), (IntPtr) ptr, (IntPtr) count);
 				} else {
-					handle = Messaging.IntPtr_objc_msgSendSuper_IntPtr_nint (SuperHandle, Selector.GetHandle ("initWithValues:count:"), (IntPtr) ptr, count);
+					handle = Messaging.IntPtr_objc_msgSendSuper_IntPtr_IntPtr (SuperHandle, Selector.GetHandle ("initWithValues:count:"), (IntPtr) ptr, (IntPtr) count);
 				}
 				InitializeHandle (handle, "initWithValues:count:");
 			}
@@ -67,7 +67,7 @@ namespace CoreImage {
 
 		public unsafe static CIVector FromValues (nfloat [] values)
 		{
-			if (values == null)
+			if (values is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			fixed (nfloat *ptr = values)
 				return _FromValues ((IntPtr) ptr, values.Length);

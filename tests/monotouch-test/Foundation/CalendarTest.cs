@@ -2,12 +2,15 @@ using System;
 using Foundation;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 using RectangleF=CoreGraphics.CGRect;
 using SizeF=CoreGraphics.CGSize;
 using PointF=CoreGraphics.CGPoint;
 
-#if MONOMAC
+#if NET
+using PlatformException=ObjCRuntime.ObjCException;
+#elif MONOMAC
 using PlatformException = Foundation.ObjCException;
 #else
 using PlatformException = Foundation.MonoTouchException;
@@ -23,17 +26,23 @@ namespace MonoTouchFixtures.Foundation {
 		public void DateComponentsTest ()
 		{
 			var cal = new NSCalendar (NSCalendarType.Gregorian);
-			var now = DateTime.Now;
+			var now = DateTime.UtcNow;
 			NSDateComponents comps;
 
+			cal.TimeZone = NSTimeZone.FromName ("UTC");
 			comps = cal.Components (NSCalendarUnit.Year | NSCalendarUnit.Month | NSCalendarUnit.Day, (NSDate) now);
 			Assert.AreEqual ((nint) now.Year, comps.Year, "a year");
 			Assert.AreEqual ((nint) now.Month, comps.Month, "a month");
 			Assert.AreEqual ((nint) now.Day, comps.Day, "a day");
 
-			var dayCompare = now.ToUniversalTime ();
+			var dayCompare = now;
+#if !NET
 			comps = cal.Components (NSCalendarUnit.Hour, (NSDate) dayCompare.AddHours (-1), (NSDate) dayCompare, NSDateComponentsWrappingBehavior.None);
 			Assert.AreEqual ((nint) 1, comps.Hour, "b hour");
+#endif
+
+			comps = cal.Components (NSCalendarUnit.Hour, (NSDate) dayCompare.AddHours (-1), (NSDate) dayCompare, NSCalendarOptions.None);
+			Assert.AreEqual ((nint) 1, comps.Hour, "c hour");
 		}
 
 		[Test]
@@ -47,8 +56,14 @@ namespace MonoTouchFixtures.Foundation {
 			comps.Day = 2;
 			comps.TimeZone = NSTimeZone.FromAbbreviation ("UTC");
 			cal.TimeZone = comps.TimeZone;
+
+#if !NET
 			date = cal.DateByAddingComponents (comps, now, NSDateComponentsWrappingBehavior.None);
 			Assert.AreEqual (now.SecondsSinceReferenceDate + 3600 * 24 * 2, date.SecondsSinceReferenceDate, "a");
+#endif
+
+			date = cal.DateByAddingComponents (comps, now, NSCalendarOptions.None);
+			Assert.AreEqual (now.SecondsSinceReferenceDate + 3600 * 24 * 2, date.SecondsSinceReferenceDate, "b");
 		}
 
 		[Test]
@@ -89,7 +104,7 @@ namespace MonoTouchFixtures.Foundation {
 				case NSCalendarType.IslamicTabular:
 				case NSCalendarType.IslamicUmmAlQura:
 #if __MACOS__
-					if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10))
+					if (!TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 10))
 						continue;
 #else
 					if (!TestRuntime.CheckXcodeVersion (6, 0))
@@ -219,7 +234,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void TestAddingByComponents ()
 		{
 			RequiresIos8 ();
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			NSDate now = NSDate.Now;
 			NSDate oneDayFromNow = NSCalendar.CurrentCalendar.DateByAddingUnit (NSCalendarUnit.Day, 1, now, NSCalendarOptions.None);
@@ -227,11 +242,15 @@ namespace MonoTouchFixtures.Foundation {
 
 			var todayDayNumber = NSCalendar.CurrentCalendar.GetComponentFromDate (NSCalendarUnit.Day, NSDate.Now);
 			NSDate todayPlusADay = NSCalendar.CurrentCalendar.DateBySettingUnit (NSCalendarUnit.Day, todayDayNumber + 1, now, NSCalendarOptions.None);
-			if (todayPlusADay == null) {
+			if (todayPlusADay is null) { // Work on the last day of a month
 				var todayMonthNumber = NSCalendar.CurrentCalendar.GetComponentFromDate (NSCalendarUnit.Month, now);
 				todayPlusADay = NSCalendar.CurrentCalendar.DateBySettingUnit (NSCalendarUnit.Month, todayMonthNumber + 1, now, NSCalendarOptions.None);
 			}
-			Assert.IsTrue (NSCalendar.CurrentCalendar.IsEqualToUnitGranularity (Tomorrow, todayPlusADay, NSCalendarUnit.Day | NSCalendarUnit.Month), "DateBySettingUnit - One day from now should be tomorrow");
+			if (todayPlusADay is null) { // Work on the last day of a year
+				var todayYearNumber = NSCalendar.CurrentCalendar.GetComponentFromDate (NSCalendarUnit.Year, now);
+				todayPlusADay = NSCalendar.CurrentCalendar.DateBySettingUnit (NSCalendarUnit.Year, todayYearNumber + 1, now, NSCalendarOptions.None);
+			}
+			Assert.IsTrue (NSCalendar.CurrentCalendar.IsEqualToUnitGranularity (Tomorrow, todayPlusADay, NSCalendarUnit.Day | NSCalendarUnit.Month | NSCalendarUnit.Year), "DateBySettingUnit - One day from now should be tomorrow");
 		}
 
 		[Test]
@@ -420,9 +439,10 @@ namespace MonoTouchFixtures.Foundation {
 		public void TestOrdinality (int year, int month, int day, NSCalendarUnit smaller, NSCalendarUnit larger, int expected)
 		{
 			var cal = new NSCalendar (NSCalendarType.Gregorian);
-			var date = new DateTime (year, month, day, 0, 0, 0, DateTimeKind.Local);
-			var ordinality = cal.Ordinality (smaller, larger, (NSDate) date);
-			Assert.AreEqual (ordinality, (nuint) expected);
+			var date = new DateTime (year, month, day, 0, 0, 0, DateTimeKind.Utc);
+			var dt = (NSDate) date;
+			cal.TimeZone = NSTimeZone.FromName ("Europe/Madrid");
+			Assert.AreEqual ((nuint) expected, cal.Ordinality (smaller, larger, dt), $"Ordinality");
 		}
 
 		[TestCase (2010, 1, 11, NSCalendarUnit.Day, 86400.0)]

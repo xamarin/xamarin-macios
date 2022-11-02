@@ -150,9 +150,26 @@ namespace GLKit {
 		
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("tvos12.0")]
+	[UnsupportedOSPlatform ("macos10.14")]
+	[UnsupportedOSPlatform ("ios12.0")]
+#if TVOS
+	[Obsolete ("Starting with tvos12.0 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+	[Obsolete ("Starting with macos10.14 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios12.0 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
+#endif
 	public class GLKTextureOperations : DictionaryContainer {
 		public GLKTextureOperations () : base (new NSMutableDictionary ()) {}
 
@@ -194,7 +211,24 @@ namespace GLKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos12.0")]
+		[UnsupportedOSPlatform ("macos10.14")]
+		[UnsupportedOSPlatform ("ios12.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos12.0 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.14 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios12.0 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[iOS (7,0)]
+#endif
 		public bool? SRGB {
 			get {
 				return GetBoolValue (GLKTextureLoader.SRGB);

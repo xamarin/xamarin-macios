@@ -2197,6 +2197,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";MT4124_I" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{1}' üzerinde geçersiz {0} bulundu. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";MT4125" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The registrar found an invalid type '{0}' in signature for method '{1}': The interface must have a Protocol attribute specifying its wrapper type.]D;]A;		]]></Val>
@@ -2742,6 +2751,15 @@
           <Val><![CDATA[The registrar can't compute the block signature for the delegate of type {0} in the method {1} because it couldn't find the Invoke method of the delegate type.]D;]A;		]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Kaydedici, temsilci türünün Invoke metodunu bulamadığından {1} metodunda {0} türü temsilcisinin blok imzasını hesaplayamıyor.]D;]A;		]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MT4186" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The registrar found a non-optimal type `{0}`: the type does not have a constructor that takes two (ObjCRuntime.NativeHandle, bool) arguments. However, a constructor that takes two (System.IntPtr, bool) arguments was found (and will be used instead). It's highly recommended to change the signature of the (System.IntPtr, bool) constructor to be (ObjCRuntime.NativeHandle, bool).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Kaydedici uygun olmayan '{0}' türü buldu: Türün iki (ObjCRuntime.NativeHandle, bool) bağımsız değişkeni alan bir oluşturucusu yok. Ancak, iki (System.IntPtr, bool) bağımsız değişkeni alan bir oluşturucu bulundu (ve bunun yerine kullanılacak). (System.IntPtr, bool) oluşturucusunun imzasını (ObjCRuntime.NativeHandle, bool) olarak değiştirmeniz kesinlikle önerilir.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -3306,19 +3324,25 @@
       </Item>
       <Item ItemId=";MX0183" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Could not map the iOS version {0} to a macOS version for Mac Catalyst]]></Val>
+          <Val><![CDATA[Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[{0} iOS sürümü Mac Catalyst için macOS sürümüne eşlenemedi]]></Val>
+            <Val><![CDATA[Mac Catalyst {0} sürümü karşılık gelen bir macOS sürümüne eşlenemedi. Geçerli Mac Catalyst sürümleri şunlardır: {1}]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Could not map the iOS version {0} to a macOS version for Mac Catalyst]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";MX0184" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst]]></Val>
+          <Val><![CDATA[Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[{0} macOS sürümü Mac Catalyst için karşılık gelen iOS sürümüne eşlenemedi]]></Val>
+            <Val><![CDATA[macOS {0} sürümü karşılık gelen bir Mac Catalyst sürümüne eşlenemedi. Geçerli macOS sürümleri şunlardır: {1}]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -3336,6 +3360,15 @@
           <Val><![CDATA[Could not copy the assembly '{0}' to '{1}': {2}]D;]A;		]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA['{0}' bütünleştirilmiş kodu '{1}' konumuna kopyalanamadı: {2}]D;]A;		]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX1306" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not decompress the file '{0}'. Please review the build log for more information from the native 'unzip' command.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{0}' dosyası açılamadı. Yerel 'unzip' komutundan daha fazla bilgi için lütfen derleme günlüğünü gözden geçirin.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -3556,6 +3589,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";MX7000" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occured while executing the custom linker steps. Please review the build log for more information.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Özel bağlayıcı adımları yürütülürken bir hata oluştu. Daha fazla bilgi için lütfen derleme günlüğünü gözden geçirin.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";MX8037" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Don't know how to marshal the parameter of type {0} for parameter {1} in call to {2}]]></Val>
@@ -3588,6 +3630,24 @@
           <Val><![CDATA[Invalid type encoding for parameter.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Parametrenin tür kodlaması geçersiz.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8041" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to create an instance of the type {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} türünde örnek oluşturulamıyor.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8042" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An exception occurred while trying to invoke the function {0}: {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} işlevi çağrılmaya çalışılırken özel durum oluştu: {1}.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

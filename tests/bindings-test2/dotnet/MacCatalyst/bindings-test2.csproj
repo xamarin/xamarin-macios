@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-maccatalyst</TargetFramework>
-    <NativeLibName>maccatalyst-fat</NativeLibName>
-    <PlatformName>MacCatalyst</PlatformName>
-    <RootTestsDirectory>..\..\..</RootTestsDirectory>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-maccatalyst</TargetFramework>
   </PropertyGroup>
-  <Import Project="..\shared.targets" />
+
+  <!-- Imports of the form '../shared.csproj' will be processed by xharness -->
+  <Import Project="../shared.csproj" />
+
   <ItemGroup>
-    <PackageReference Include="NUnitLite" Version="3.12.0" />
-    <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\MacCatalyst\bindings-test.csproj" />
+    <!-- this empty item group is here for xharness -->
   </ItemGroup>
 </Project>

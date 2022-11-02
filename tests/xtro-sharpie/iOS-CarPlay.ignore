@@ -4,10 +4,6 @@
 !incorrect-protocol-member! CPListTemplateItem::isEnabled is REQUIRED and should be abstract
 !incorrect-protocol-member! CPListTemplateItem::setEnabled: is REQUIRED and should be abstract
 
-# introduced iOS 14, deprecated iOS 14
-!missing-selector! CPListItem::showsExplicitLabel not bound
-!missing-selector! CPListItem::setShowsExplicitLabel: not bound
-
 # Removed in iOS 14
 !unknown-field! CPMaximumListItemImageSize bound
 

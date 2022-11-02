@@ -8,7 +8,7 @@
 //
 //
 
-#if IOS || TVOS
+#if !__WATCHOS__
 
 using System;
 using System.Runtime.InteropServices;
@@ -18,42 +18,29 @@ using CoreFoundation;
 using Foundation;
 using Metal;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace CoreVideo {
 
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos12.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[iOS (8,0)]
-	public class CVMetalTexture : INativeObject, IDisposable {
-
-		internal IntPtr handle;
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		~CVMetalTexture ()
+	[Mac (12,0)]
+	[MacCatalyst (15,0)]
+#endif
+	public class CVMetalTexture : NativeObject {
+		[Preserve (Conditional = true)]
+		internal CVMetalTexture (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected
-		virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
-
-		internal CVMetalTexture (IntPtr handle)
-		{
-			this.handle = handle;
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -69,15 +56,15 @@ namespace CoreVideo {
 			/* float[2] */ IntPtr lowerLeft, /* float[2] */ IntPtr lowerRight, /* float[2] */ IntPtr upperRight, 
 			/* float[2] */ IntPtr upperLeft);
 
-		public IMTLTexture Texture {
+		public IMTLTexture? Texture {
 			get {
-				return Runtime.GetINativeObject<IMTLTexture> (CVMetalTextureGetTexture (handle), owns: false);
+				return Runtime.GetINativeObject<IMTLTexture> (CVMetalTextureGetTexture (Handle), owns: false);
 			}
 		}
 			
 		public bool IsFlipped {
 			get {
-				return CVMetalTextureIsFlipped (handle);
+				return CVMetalTextureIsFlipped (Handle);
 			}
 		}
 
@@ -90,7 +77,7 @@ namespace CoreVideo {
 
 			unsafe {
 				fixed (float *ll = &lowerLeft[0], lr = &lowerRight [0], ur = &upperRight [0], ul = &upperLeft[0]){
-					CVMetalTextureGetCleanTexCoords (handle, (IntPtr) ll, (IntPtr) lr, (IntPtr) ur, (IntPtr) ul);
+					CVMetalTextureGetCleanTexCoords (Handle, (IntPtr) ll, (IntPtr) lr, (IntPtr) ur, (IntPtr) ul);
 				}
 			}
 		}
@@ -98,4 +85,3 @@ namespace CoreVideo {
 }
 
 #endif // IOS || TVOS
-

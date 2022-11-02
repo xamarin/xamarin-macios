@@ -9,6 +9,7 @@
 #if MONOMAC
 
 using System;
+using ObjCRuntime;
 
 namespace Foundation
 {

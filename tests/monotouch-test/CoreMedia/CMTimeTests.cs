@@ -17,6 +17,7 @@ using AppKit;
 using UIKit;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreMedia {
 	
@@ -101,7 +102,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		public void MultiplyByRatio ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 1);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			var t = new CMTime (1000, 1);
 			t = CMTime.Multiply (t, 20, 10);

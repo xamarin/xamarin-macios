@@ -7,13 +7,15 @@
 // Copyright 2012-2014, Xamarin Inc.
 //
 
+#nullable enable
+
 using ObjCRuntime;
 using Foundation;
 using System;
 
 namespace EventKit {
 
-#if !XAMCORE_4_0
+#if !NET
 
 	partial class EKRecurrenceRule {
 		public EKDay FirstDayOfTheWeek {
@@ -38,17 +40,17 @@ namespace EventKit {
 		}
 	}
 
-#endif // !XAMCORE_4_0
+#endif // !NET
 
 	partial class EKAlarm {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the static methods FromDate or FromTimeInterval to create alarms")]
 		public EKAlarm () {}
 #endif
 	}
 
 	partial class EKReminder {
-#if !XAMCORE_4_0
+#if !NET
 		// https://github.com/xamarin/maccore/issues/1832
 		[Obsolete ("Use 'Create' instead.")]
 		public EKReminder () {}

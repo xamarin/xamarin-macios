@@ -1,4 +1,4 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 #nullable enable
 
 using System;

@@ -1,4 +1,4 @@
-﻿// Copyright 2017 Microsoft Inc. All rights reserved.
+// Copyright 2017 Microsoft Inc. All rights reserved.
 
 #if !__WATCHOS__
 
@@ -23,13 +23,14 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 		[OneTimeSetUp]
 		public void Metal ()
 		{
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 			TestRuntime.AssertXcodeVersion (7, 0);
 
 			if (Runtime.Arch == Arch.SIMULATOR)
 				Assert.Inconclusive ("Metal Performance Shaders is not supported in the simulator");
 #else
 			TestRuntime.AssertXcodeVersion (9, 0);
+			TestRuntime.AssertNotVirtualMachine ();
 #endif
 
 			device = MTLDevice.SystemDefault;

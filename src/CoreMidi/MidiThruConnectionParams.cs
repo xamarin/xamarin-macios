@@ -1,4 +1,4 @@
-﻿// 
+// 
 // MidiThruConnectionParams.cs: A C# wrapper around MidiThruConnectionParamsStruct
 //
 // Authors: Alex Soto (alex.soto@xamarin.com)
@@ -6,8 +6,11 @@
 // Copyright 2016 Xamarin Inc.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -37,6 +40,11 @@ namespace CoreMidi {
 		FourteenBitNRpn = 5
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MidiTransform {
 		public MidiTransformType Transform;
@@ -49,6 +57,11 @@ namespace CoreMidi {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public unsafe struct MidiValueMap {
 		byte[] map_value;
@@ -57,8 +70,8 @@ namespace CoreMidi {
 				return map_value ?? (map_value = new byte [128]);
 			}
 			set {
-				if (value == null)
-					throw new ArgumentNullException (nameof (value));
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				if (value.Length != 128)
 					throw new ArgumentOutOfRangeException (nameof (value), "The length of the Value array must be 128");
 				map_value = value;
@@ -66,6 +79,11 @@ namespace CoreMidi {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MidiControlTransform {
 		public MidiTransformControlType ControlType;
@@ -87,6 +105,11 @@ namespace CoreMidi {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MidiThruConnectionEndpoint {
 		public MidiEndpointRef EndpointRef;
@@ -104,13 +127,13 @@ namespace CoreMidi {
 		public uint Version;
 		public uint NumSources;
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 8)]
-		public MidiThruConnectionEndpoint[] Sources;
+		public MidiThruConnectionEndpoint[]? Sources;
 		public uint NumDestinations;
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 8)]
-		public MidiThruConnectionEndpoint[] Destinations;
+		public MidiThruConnectionEndpoint[]? Destinations;
 
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 16)]
-		public byte[] ChannelMap;
+		public byte[]? ChannelMap;
 		public byte LowVelocity;
 		public byte HighVelocity;
 		public byte LowNote;
@@ -140,6 +163,11 @@ namespace CoreMidi {
 	}
 
 #if !COREBUILD
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class MidiThruConnectionParams {
 		MidiThruConnectionParamsStruct connectionParams;
 
@@ -152,7 +180,7 @@ namespace CoreMidi {
 			MIDIThruConnectionParamsInitialize (out connectionParams);
 		}
 
-		public MidiThruConnectionEndpoint[] Sources {
+		public MidiThruConnectionEndpoint[]? Sources {
 			get { return connectionParams.Sources; }
 			set {
 				if (value?.Length > 8)
@@ -161,7 +189,7 @@ namespace CoreMidi {
 			}
 		}
 
-		public MidiThruConnectionEndpoint[] Destinations {
+		public MidiThruConnectionEndpoint[]? Destinations {
 			get { return connectionParams.Destinations; }
 			set {
 				if (value?.Length > 8)
@@ -170,7 +198,7 @@ namespace CoreMidi {
 			}
 		}
 
-		public byte[] ChannelMap {
+		public byte[]? ChannelMap {
 			get { return connectionParams.ChannelMap; }
 			set {
 				if (value?.Length > 16)
@@ -254,13 +282,13 @@ namespace CoreMidi {
 			set { connectionParams.FilterOutAllControls = value ? (byte)1 : (byte)0; }
 		}
 
-		public MidiControlTransform[] Controls { get; set; }
-		public MidiValueMap[] Maps { get; set; }
+		public MidiControlTransform[]? Controls { get; set; }
+		public MidiValueMap[]? Maps { get; set; }
 
 		internal void ReadStruct (NSData data)
 		{
 			IntPtr buffer = data.Bytes;
-			connectionParams = (MidiThruConnectionParamsStruct) Marshal.PtrToStructure (buffer, typeof (MidiThruConnectionParamsStruct));
+			connectionParams = (MidiThruConnectionParamsStruct) Marshal.PtrToStructure (buffer, typeof (MidiThruConnectionParamsStruct))!;
 
 			// Put ourselves at the end of the static struct in case we need to fetch the dynamic part of the struct
 			IntPtr bufferEnd = IntPtr.Add (buffer, Marshal.SizeOf (typeof (MidiThruConnectionParamsStruct)));
@@ -293,32 +321,32 @@ namespace CoreMidi {
 
 		internal NSData WriteStruct ()
 		{
-			if (Sources?.Length > 0) {
+			if (Sources?.Length > 0 && connectionParams.Sources is not null) {
 				connectionParams.NumSources = (uint)Sources.Length;
 				for (int i = 0; i < Sources.Length; i++)
 					connectionParams.Sources[i] = Sources[i];
 			}
 
-			if (Destinations?.Length > 0) {
+			if (Destinations?.Length > 0 && connectionParams.Destinations is not null) {
 				connectionParams.NumDestinations = (uint)Destinations.Length;
 				for (int i = 0; i < Destinations.Length; i++)
 					connectionParams.Destinations[i] = Destinations[i];
 			}
 
-			if (ChannelMap?.Length > 0) {
+			if (ChannelMap?.Length > 0 && connectionParams.ChannelMap is not null) {
 				for (int i = 0; i < ChannelMap.Length; i++)
 					connectionParams.ChannelMap[i] = ChannelMap[i];
 			}
 
-			connectionParams.NumControlTransforms = Controls != null ? (ushort) Controls.Length : (ushort) 0;
-			connectionParams.NumMaps = Maps != null ? (ushort) Maps.Length : (ushort) 0;
+			connectionParams.NumControlTransforms = Controls is not null ? (ushort) Controls.Length : (ushort) 0;
+			connectionParams.NumMaps = Maps is not null ? (ushort) Maps.Length : (ushort) 0;
 
 			var paramsSize = Marshal.SizeOf (typeof (MidiThruConnectionParamsStruct));
 			var controlsSize = Marshal.SizeOf (typeof (MidiControlTransform));
 			// Get the full size of the struct, static + dynamic parts
 			var fullSize = paramsSize +
-				(Controls == null ? 0 : controlsSize * Controls.Length) +
-				(Maps == null ? 0 : 128 * Maps.Length);
+				(Controls is null ? 0 : controlsSize * Controls.Length) +
+				(Maps is null ? 0 : 128 * Maps.Length);
 			var buffer = Marshal.AllocHGlobal (fullSize);
 			var bufferEnd = IntPtr.Add (buffer, Marshal.SizeOf (typeof (MidiThruConnectionParamsStruct)));
 
@@ -328,7 +356,7 @@ namespace CoreMidi {
 
 				if (connectionParams.NumControlTransforms > 0) {
 					unsafe {
-						fixed (void* arrAddr = &Controls[0])
+						fixed (void* arrAddr = &Controls![0])
 							Buffer.MemoryCopy (arrAddr, (void*) bufferEnd, controlsSize * connectionParams.NumControlTransforms, controlsSize * connectionParams.NumControlTransforms);
 					}
 				}
@@ -338,7 +366,7 @@ namespace CoreMidi {
 					bufferEnd = IntPtr.Add (bufferEnd, controlsSize * connectionParams.NumControlTransforms);
 					unsafe {
 						for (int i = 0; i < connectionParams.NumMaps; i++) {
-							fixed (void* arrAddr = &Maps[i].Value [0])
+							fixed (void* arrAddr = &Maps![i].Value [0])
 								Buffer.MemoryCopy (arrAddr, (void*) bufferEnd, 128, 128);
 							bufferEnd += 128;
 						}
@@ -356,4 +384,3 @@ namespace CoreMidi {
 	}
 #endif // !COREBUILD
 }
-

@@ -1,11 +1,9 @@
-﻿using ILLink.Tasks;
+using ILLink.Tasks;
 using Microsoft.Build.Tasks;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks 
-{
-	public class ILLink : ILLinkBase
-	{
+namespace Xamarin.iOS.Tasks {
+	public class ILLink : ILLinkBase {
 		public override bool Execute ()
 		{
 			if (this.ShouldExecuteRemotely (SessionId))
@@ -17,7 +15,7 @@ namespace Xamarin.iOS.Tasks
 		public override void Cancel ()
 		{
 			if (this.ShouldExecuteRemotely (SessionId))
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 			else
 				base.Cancel ();
 		}

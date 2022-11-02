@@ -18,12 +18,30 @@ using CoreFoundation;
 
 using OS_nw_protocol_definition=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
+#if NET
+	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#else
+	[TV (12,0)]
+	[Mac (10,14)]
+	[iOS (12,0)]
 	[Watch (6,0)]
+#endif
 	public class NWProtocolDefinition : NativeObject {
-		public NWProtocolDefinition (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+#if NET
+		internal NWProtocolDefinition (NativeHandle handle, bool owns) : base (handle, owns) {}
+#else
+		public NWProtocolDefinition (NativeHandle handle, bool owns) : base (handle, owns) {}
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -31,7 +49,7 @@ namespace Network {
 
 		public bool Equals (object other)
 		{
-			if (other == null)
+			if (other is null)
 				return false;
 			if (!(other is NWProtocolDefinition otherDefinition))
 				return false;
@@ -41,7 +59,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_ip_definition ();
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'CreateIPDefinition' method instead.")]
 		public static NWProtocolDefinition IPDefinition => new NWProtocolDefinition (nw_protocol_copy_ip_definition (), owns: true);
 #endif
@@ -51,7 +69,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_tcp_definition ();
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'CreateTcpDefinition' method instead.")]
 		public static NWProtocolDefinition TcpDefinition => new NWProtocolDefinition (nw_protocol_copy_tcp_definition (), owns: true);
 #endif
@@ -61,7 +79,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_udp_definition ();
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'CreateUdpDefinition' method instead.")]
 		public static NWProtocolDefinition UdpDefinition => new NWProtocolDefinition (nw_protocol_copy_udp_definition (), owns: true);
 #endif
@@ -71,27 +89,56 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_tls_definition ();
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'CreateTlsDefinition' method instead.")]
 		public static NWProtocolDefinition TlsDefinition => new NWProtocolDefinition (nw_protocol_copy_tls_definition (), owns: true);
 #endif
 
 		public static NWProtocolDefinition CreateTlsDefinition () => new NWProtocolDefinition (nw_protocol_copy_tls_definition (), owns: true);
 
-		[TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_ws_definition ();
 
-#if !XAMCORE_4_0
+#if !NET
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 		[Obsolete ("Use 'CreateWebSocketDefinition' method instead.")]
-		[TV (13,0), Mac (10,15), iOS (13,0)]
 		public static NWProtocolDefinition WebSocketDefinition => new NWProtocolDefinition (nw_protocol_copy_ws_definition (), owns: true);
 #endif
 
-		[TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		public static NWProtocolDefinition CreateWebSocketDefinition () => new NWProtocolDefinition (nw_protocol_copy_ws_definition (), owns: true);
 
-		[TV (13,0), Mac (10,15)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe OS_nw_protocol_definition nw_framer_create_definition (string identifier, NWFramerCreateFlags flags, ref BlockLiteral start_handler);
 		delegate NWFramerStartResult nw_framer_create_definition_t (IntPtr block, IntPtr framer);
@@ -102,14 +149,23 @@ namespace Network {
 		{
 			// get and call, this is internal and we are trying to do all the magic in the call
 			var del = BlockLiteral.GetTarget<Func<NWFramer,NWFramerStartResult>> (block);
-			if (del != null) {
+			if (del is not null) {
 				var nwFramer = new NWFramer (framer, owns: true);
 				return del (nwFramer);
 			}
 			return NWFramerStartResult.Unknown;
 		}
 
-		[TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static NWProtocolDefinition CreateFramerDefinition (string identifier, NWFramerCreateFlags flags, Func<NWFramer, NWFramerStartResult> startCallback)
 		{
@@ -121,5 +177,34 @@ namespace Network {
 				block_handler.CleanupBlock ();
 			}
 		} 
+		
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_protocol_definition nw_protocol_copy_quic_definition ();
+
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		public static NWProtocolDefinition CreateQuicDefinition () => new NWProtocolDefinition (nw_protocol_copy_quic_definition (), owns: true);
 	}
 }

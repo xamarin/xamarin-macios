@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net6.0-watchos</TargetFramework>
-    <NativeLibName>watchos-fat</NativeLibName>
-  </PropertyGroup>
-  <Import Project="..\shared.targets" />
-</Project>

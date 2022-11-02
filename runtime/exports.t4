@@ -459,7 +459,7 @@
 			"const char *", "base_dir",
 			"const char *", "config_file_name"
 		) {
-			XamarinRuntime = RuntimeMode.MonoVM,
+			Mode = DotNetMode.OnlyLegacy,
 		},
 
 		#endregion

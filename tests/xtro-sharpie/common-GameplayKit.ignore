@@ -1,4 +1,4 @@
-## Fixed in XAMCORE_4_0
+## Fixed in .NET
 !incorrect-protocol-member! GKGameModelPlayer::playerId is REQUIRED and should be abstract
 
 ## no generator support for FastEnumeration - https://bugzilla.xamarin.com/show_bug.cgi?id=4391
@@ -8,4 +8,3 @@
 
 ## unsorted
 
-!unknown-type! GKHybridStrategist bound

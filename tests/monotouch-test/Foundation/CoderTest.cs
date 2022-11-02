@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSCoder
 //
 // Authors:
@@ -8,8 +8,6 @@
 //
 
 using System;
-using System.IO;
-using System.Net;
 using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;

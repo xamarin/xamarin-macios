@@ -1,4 +1,4 @@
-﻿//
+//
 // MDLAssert Unit Tests
 //
 // Authors:
@@ -20,8 +20,15 @@ using MultipeerConnectivity;
 #endif
 using ModelIO;
 using ObjCRuntime;
-using OpenTK;
 using NUnit.Framework;
+
+#if NET
+using System.Numerics;
+using Vector4i = global::CoreGraphics.NVector4i;
+using Vector3d = global::CoreGraphics.NVector3d;
+#else
+using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.ModelIO
 {
@@ -48,13 +55,21 @@ namespace MonoTouchFixtures.ModelIO
 				using (var obj = new MDLVoxelArray (data, box, 1.0f)) {
 					Asserts.AreEqual (box, obj.BoundingBox, "BoundingBox");
 
+#if NET
+					var extents = new MDLVoxelIndexExtent (
+#else
 					var extents = new MDLVoxelIndexExtent2 (
+#endif
 						new Vector4i (1, 2, 3, 4),
 						new Vector4i (5, 6, 7, 8));
 					var voxels = obj.GetVoxels (extents);
 					Assert.IsNull (voxels, "GetVoxels");
 
+#if NET
+					extents = obj.VoxelIndexExtent;
+#else
 					extents = obj.VoxelIndexExtent2;
+#endif
 					Assert.That (extents.MaximumExtent.X, Is.EqualTo (-1).Or.EqualTo (0), "MaxX");
 					Assert.That (extents.MaximumExtent.Y, Is.EqualTo (-1).Or.EqualTo (0), "MaxY");
 					Assert.That (extents.MaximumExtent.Z, Is.EqualTo (-1).Or.EqualTo (0), "MaxZ");

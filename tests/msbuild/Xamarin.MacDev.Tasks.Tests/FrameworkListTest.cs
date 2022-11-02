@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -8,7 +8,7 @@ using NUnit.Framework;
 using Xamarin.Tests;
 using System.Linq;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture]
 	public class FrameworkListTests
@@ -20,6 +20,8 @@ namespace Xamarin.iOS.Tasks
 		[TestCase ("Xamarin.Mac-Mobile-FrameworkList.xml.in")]
 		public void CheckFrameworkListFile (string frameworkListFile)
 		{
+			Configuration.AssertLegacyXamarinAvailable ();
+
 			var fameworkListFileParts = frameworkListFile.Split ('-');
 			string frameworkName = fameworkListFileParts[0];
 			switch (frameworkName) {
@@ -88,7 +90,7 @@ namespace Xamarin.iOS.Tasks
 		List<AssemblyInfo> ScanFrameworkListXml (string frameworkListFile, bool isMac)
 		{
 			var assemblies = new List<AssemblyInfo> ();
-			var path = Path.GetFullPath (Path.Combine (Configuration.SourceRoot, "msbuild", isMac ? "Xamarin.Mac.Tasks" : "Xamarin.iOS.Tasks.Core", frameworkListFile));
+			var path = Path.GetFullPath (Path.Combine (Configuration.SourceRoot, "msbuild", isMac ? "Xamarin.Mac.Tasks" : "Xamarin.iOS.Tasks", frameworkListFile));
 			using (var reader = XmlReader.Create (path)) {
 				while (reader.Read ()) {
 					if (reader.IsStartElement ()) {

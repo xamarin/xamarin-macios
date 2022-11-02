@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -14,13 +15,14 @@ namespace AppKit {
 			_RegisterClassForSupplementaryView (viewClass == null ? IntPtr.Zero : Class.GetHandle (viewClass), kind, identifier);
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Mac (10, 11)]
 		[Obsolete ("Use 'GetLayoutAttributes' instead.")]
 		public virtual NSCollectionViewLayoutAttributes GetLayoutAttributest (string kind, NSIndexPath indexPath)
 		{
 			return GetLayoutAttributes (kind, indexPath);
 		}
-#endif
+#endif // !NET
 	}
 }
+#endif // !__MACCATALYST__

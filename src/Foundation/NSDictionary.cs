@@ -26,6 +26,10 @@ using System.Collections;
 using System.Collections.Generic;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
 
 	public partial class NSDictionary : NSObject, IDictionary, IDictionary<NSObject, NSObject> {
@@ -37,7 +41,7 @@ namespace Foundation {
 		{
 		}
 
-		internal NSDictionary (IntPtr handle, bool alloced) : base (handle, alloced)
+		internal NSDictionary (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
 		

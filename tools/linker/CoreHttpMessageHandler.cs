@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2017 Xamarin Inc. All rights reserved.
+// Copyright 2015-2017 Xamarin Inc. All rights reserved.
 
 using System;
 using System.Linq;
@@ -22,7 +22,7 @@ using ObjCRuntime;
 namespace Xamarin.Linker.Steps {
 
 	public class CoreHttpMessageHandler : ExceptionalSubStep {
-		
+
 		public CoreHttpMessageHandler ()
 		{
 		}

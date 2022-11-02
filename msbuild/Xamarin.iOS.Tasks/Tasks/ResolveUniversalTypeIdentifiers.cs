@@ -1,4 +1,4 @@
-﻿using Microsoft.Build.Framework;
+using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Newtonsoft.Json;
 using System;
@@ -26,7 +26,7 @@ namespace Xamarin.iOS.Tasks {
 				LogTaskProperty ("ProjectDir", ProjectDir);
 				LogTaskProperty ("SessionId", SessionId);
 
-				var connection = BuildConnection.GetAsync (SessionId, BuildEngine4).Result;
+				var connection = BuildConnection.GetAsync (BuildEngine4).Result;
 				var buildClient = connection.Client as BuildClient;
 
 				if (!connection.IsConnected || buildClient == null) {

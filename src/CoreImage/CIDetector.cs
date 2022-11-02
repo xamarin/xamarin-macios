@@ -51,7 +51,7 @@ namespace CoreImage {
 		public static CIDetector? CreateFaceDetector (CIContext context, bool highAccuracy, float minFeatureSize)
 		{
 			// MinFeatureSize exists only in iOS6+, before this the field is null (and would throw if used)
-			if (MinFeatureSize == null)
+			if (MinFeatureSize is null)
 				return CreateFaceDetector (context, highAccuracy);
 
 			// TypeFace is the only detector supported now
@@ -74,26 +74,26 @@ namespace CoreImage {
 
 		public static CIDetector? CreateFaceDetector (CIContext context, CIDetectorOptions detectorOptions)
 		{
-			using (var options = detectorOptions == null ? null : detectorOptions.ToDictionary ())
+			using (var options = detectorOptions?.ToDictionary ())
 				return FromType (TypeFace, context, options);
 		}
 
 		public static CIDetector? CreateRectangleDetector (CIContext context, CIDetectorOptions detectorOptions)
 		{
-			using (var options = detectorOptions == null ? null : detectorOptions.ToDictionary ())
+			using (var options = detectorOptions?.ToDictionary ())
 				return FromType (TypeRectangle, context, options);
 		}
 
 		
 		public static CIDetector? CreateQRDetector (CIContext context, CIDetectorOptions detectorOptions)
 		{
-			using (var options = detectorOptions == null ? null : detectorOptions.ToDictionary ())
+			using (var options = detectorOptions?.ToDictionary ())
 				return FromType (TypeQRCode, context, options);
 		}
 
 		public static CIDetector? CreateTextDetector (CIContext context, CIDetectorOptions detectorOptions)
 		{
-			using (var options = detectorOptions == null ? null : detectorOptions.ToDictionary ())
+			using (var options = detectorOptions?.ToDictionary ())
 				return FromType (TypeText, context, options);
 		}
 

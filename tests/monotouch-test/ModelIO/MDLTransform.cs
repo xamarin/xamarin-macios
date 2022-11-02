@@ -1,4 +1,4 @@
-﻿//
+//
 // MDLTransform Unit Tests
 //
 // Authors:
@@ -10,6 +10,8 @@
 #if !__WATCHOS__
 
 using System;
+
+using CoreGraphics;
 using Foundation;
 #if !MONOMAC
 using UIKit;
@@ -19,12 +21,21 @@ using MultipeerConnectivity;
 #endif
 using ModelIO;
 using ObjCRuntime;
-using OpenTK;
 
+#if NET
+using System.Numerics;
+using Matrix4 = global::System.Numerics.Matrix4x4;
+using MatrixFloat2x2 = global::CoreGraphics.NMatrix2;
+using MatrixFloat3x3 = global::CoreGraphics.NMatrix3;
+using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
+using VectorFloat3 =   global::CoreGraphics.NVector3;
+#else
+using OpenTK;
 using MatrixFloat2x2 = global::OpenTK.NMatrix2;
 using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 using VectorFloat3 = global::OpenTK.NVector3;
+#endif
 
 using Bindings.Test;
 using NUnit.Framework;
@@ -40,39 +51,16 @@ namespace MonoTouchFixtures.ModelIO {
 		{
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
-
-			if (
-#if !MONOMAC
-				Runtime.Arch == Arch.SIMULATOR && 
-#endif
-				IntPtr.Size == 4) {
-				// There's a bug in the i386 version of objc_msgSend where it doesn't preserve SIMD arguments
-				// when resizing the cache of method selectors for a type. So here we call all selectors we can
-				// find, so that the subsequent tests don't end up producing any cache resize (radar #21630410).
-				object dummy;
-				using (var obj = new MDLTransform (Matrix4.Identity)) {
-					dummy = obj.Matrix;
-					dummy = obj.MaximumTime;
-					dummy = obj.MinimumTime;
-					dummy = obj.Rotation;
-					obj.GetRotation (0);
-					dummy = obj.Scale;
-					obj.GetScale (0);
-					obj.SetIdentity ();
-					obj.SetLocalTransform (Matrix4.Identity);
-					obj.SetRotation (Vector3.Zero, 0);
-					obj.SetScale (Vector3.Zero, 0);
-					obj.SetTranslation (Vector3.Zero, 0);
-					dummy = obj.Translation;
-					obj.GetTranslation (0);
-				}
-			}
 		}
 
 		[Test]
 		public void Ctors ()
 		{
+#if NET
+			var id = NMatrix4.Identity;
+#else
 			Matrix4 id = Matrix4.Identity;
+#endif
 			var V3 = new Vector3 (1, 2, 3);
 
 			using (var obj = new MDLTransform (id)) {
@@ -118,11 +106,20 @@ namespace MonoTouchFixtures.ModelIO {
 				Asserts.AreEqual (V3, obj.Rotation, "Rotation 2");
 			}
 
+#if NET
+			var m4 = new NMatrix4 (
+				4, 0, 0, 2,
+				0, 3, 0, 3,
+				0, 0, 2, 4,
+				0, 0, 0, 1);
+#else
 			var m4 = new Matrix4 (
 				4, 0, 0, 0,
 				0, 3, 0, 0,
 				0, 0, 2, 0,
 				2, 3, 4, 1);
+#endif
+
 			using (var obj = new MDLTransform (m4)) {
 				Asserts.AreEqual (Vector3.Zero, obj.Rotation, "Rotation 3");
 				Asserts.AreEqual (new Vector3 (4, 3, 2), obj.Scale, "Scale 3");
@@ -130,6 +127,7 @@ namespace MonoTouchFixtures.ModelIO {
 				Asserts.AreEqual (m4, obj.Matrix, 0.0001f, "Matrix 3");
 			}
 
+#if !NET
 			var m4x4 = new MatrixFloat4x4 (
 				4, 0, 0, 2,
 				0, 3, 0, 3,
@@ -139,15 +137,24 @@ namespace MonoTouchFixtures.ModelIO {
 				Asserts.AreEqual (Vector3.Zero, obj.Rotation, "Rotation 4");
 				Asserts.AreEqual (new Vector3 (4, 3, 2), obj.Scale, "Scale 4");
 				Asserts.AreEqual (new Vector3 (2, 3, 4), obj.Translation, "Translation 4");
+#if NET
+				Asserts.AreEqual (m4x4, obj.Matrix, 0.0001f, "Matrix4x4 4");
+#else
 				Asserts.AreEqual (m4x4, obj.GetMatrix4x4 (), 0.0001f, "Matrix4x4 4");
+#endif
 				Asserts.AreEqual (m4x4, CFunctions.GetMatrixFloat4x4 (obj, "matrix"), 0.0001f, "Matrix4x4-native 4");
 			}
+#endif
 		}
 			
 		[Test]
 		public void ScaleAtTimeTest ()
 		{
+#if NET
+			var matrix = NMatrix4.Identity;
+#else
 			var matrix = Matrix4.Identity;
+#endif
 			var V3 = new Vector3 (1, 2, 3);
 
 			using (var obj = new MDLTransform (matrix)) {
@@ -159,7 +166,11 @@ namespace MonoTouchFixtures.ModelIO {
 		[Test]
 		public void TranslationAtTimeTest ()
 		{
+#if NET
+			var matrix = NMatrix4.Identity;
+#else
 			var matrix = Matrix4.Identity;
+#endif
 			var V3 = new Vector3 (1, 2, 3);
 
 			using (var obj = new MDLTransform (matrix)) {
@@ -171,7 +182,11 @@ namespace MonoTouchFixtures.ModelIO {
 		[Test]
 		public void RotationAtTimeTest ()
 		{
+#if NET
+			var matrix = NMatrix4.Identity;
+#else
 			var matrix = Matrix4.Identity;
+#endif
 			var V3 = new Vector3 (1, 2, 3);
 
 			using (var obj = new MDLTransform (matrix)) {
@@ -183,7 +198,11 @@ namespace MonoTouchFixtures.ModelIO {
 		[Test]
 		public void GetRotationMatrixTest ()
 		{
+#if NET
+			var matrix = NMatrix4.Identity;
+#else
 			var matrix = Matrix4.Identity;
+#endif
 			var V3 = new Vector3 (1, 0, 0);
 
 			using (var obj = new MDLTransform (matrix)) {
@@ -194,8 +213,12 @@ namespace MonoTouchFixtures.ModelIO {
 					0, (float) Math.Sin (1.0f), (float) Math.Cos(1.0f), 0,
 					0, 0, 0, 1
 				);
+#if NET
+				Asserts.AreEqual (expected, obj.GetRotationMatrix (0), 0.00001f, "GetRotationMatrix");
+#else
 				Asserts.AreEqual ((Matrix4) MatrixFloat4x4.Transpose (expected), obj.GetRotationMatrix (0), 0.00001f, "GetRotationMatrix");
 				Asserts.AreEqual (expected, obj.GetRotationMatrix4x4 (0), 0.00001f, "GetRotationMatrix4x4");
+#endif
 				Asserts.AreEqual (expected, CFunctions.MDLTransform_GetRotationMatrix (obj, 0), 0.00001f, "GetRotationMatrix4x4 native");
 			}
 		}

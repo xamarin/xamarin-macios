@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,10 +7,8 @@ using Xamarin.Messaging.Build.Client;
 using System.Security;
 using System.Reactive.Linq;
 
-namespace Microsoft.Build.Tasks
-{
-	public class Exec : ExecBase, ITaskCallback
-	{
+namespace Microsoft.Build.Tasks {
+	public class Exec : ExecBase, ITaskCallback {
 		public string ServerPassword { get; set; }
 
 		public override bool Execute ()
@@ -34,7 +32,7 @@ namespace Microsoft.Build.Tasks
 		{
 			try {
 				var client = BuildConnection
-					.GetAsync (SessionId, BuildEngine4)
+					.GetAsync (BuildEngine4)
 					.Result
 					.Client;
 				var sshCommands = client
@@ -61,7 +59,7 @@ namespace Microsoft.Build.Tasks
 		public override void Cancel ()
 		{
 			if (this.ShouldExecuteRemotely (SessionId))
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 
 			base.Cancel ();
 		}

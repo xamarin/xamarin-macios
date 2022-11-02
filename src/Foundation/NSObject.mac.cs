@@ -26,17 +26,11 @@
 
 using System;
 using System.Reflection;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 
 namespace Foundation {
-	public partial class NSObject : INativeObject
-#if !COREBUILD
-		, IDisposable
-#endif
-		{
+	public partial class NSObject {
 #if !COREBUILD
 
 		// note: the linker will remove the unrequired `dlopen` calls
@@ -48,7 +42,9 @@ namespace Foundation {
 		static IntPtr ct = Dlfcn.dlopen (Constants.CoreTextLibrary, 1);
 		static IntPtr wl = Dlfcn.dlopen (Constants.WebKitLibrary, 1);
 		static IntPtr zl = Dlfcn.dlopen (Constants.QuartzLibrary, 1);
+#if !NET
 		static IntPtr ql = Dlfcn.dlopen (Constants.QTKitLibrary, 1);
+#endif
 		static IntPtr cl = Dlfcn.dlopen (Constants.CoreLocationLibrary, 1);
 		static IntPtr ll = Dlfcn.dlopen (Constants.SecurityLibrary, 1);
 		static IntPtr zc = Dlfcn.dlopen (Constants.QuartzComposerLibrary, 1);
@@ -102,6 +98,7 @@ namespace Foundation {
 		static IntPtr ios = Dlfcn.dlopen (Constants.IOSurfaceLibrary, 1);
 		static IntPtr ex = Dlfcn.dlopen (Constants.ExternalAccessoryLibrary, 1);
 		static IntPtr ms = Dlfcn.dlopen (Constants.MetalPerformanceShadersLibrary, 1);
+		static IntPtr msg = Dlfcn.dlopen (Constants.MetalPerformanceShadersGraphLibrary, 1);
 		static IntPtr bc = Dlfcn.dlopen (Constants.BusinessChatLibrary, 1);
 		static IntPtr ad = Dlfcn.dlopen (Constants.AdSupportLibrary, 1);
 		static IntPtr nl = Dlfcn.dlopen (Constants.NaturalLanguageLibrary, 1);
@@ -109,7 +106,7 @@ namespace Foundation {
 		static IntPtr un = Dlfcn.dlopen (Constants.UserNotificationsLibrary, 1);
 		static IntPtr il  = Dlfcn.dlopen (Constants.iTunesLibraryLibrary, 1);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms.")]
 		public static readonly Assembly MonoMacAssembly = typeof (NSObject).Assembly;
 #endif

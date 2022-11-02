@@ -1,0 +1,11 @@
+!missing-pinvoke! CMAudioDeviceClockCreate is not bound
+!missing-pinvoke! CMAudioDeviceClockCreateFromAudioDeviceID is not bound
+!missing-pinvoke! CMAudioDeviceClockGetAudioDevice is not bound
+!missing-pinvoke! CMAudioDeviceClockSetAudioDeviceID is not bound
+!missing-pinvoke! CMAudioDeviceClockSetAudioDeviceUID is not bound
+
+# as per headers: API_AVAILABLE(ios(9.0))
+!missing-field! kCMSampleBufferLensStabilizationInfo_Active not bound
+!missing-field! kCMSampleBufferLensStabilizationInfo_Off not bound
+!missing-field! kCMSampleBufferLensStabilizationInfo_OutOfRange not bound
+!missing-field! kCMSampleBufferLensStabilizationInfo_Unavailable not bound

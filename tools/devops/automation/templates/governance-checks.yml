@@ -1,8 +1,13 @@
+parameters:
+
+- name: isPR
+  type: boolean
+
 steps:
 
-- checkout: self
-- checkout: maccore
-  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+- template: ./common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
 
 - task: CredScan@3
   displayName: "Run CredScan"

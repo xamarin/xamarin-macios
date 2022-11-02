@@ -1,4 +1,4 @@
-﻿//
+//
 // MDLTexture Unit Tests
 //
 // Authors:
@@ -16,8 +16,14 @@ using MultipeerConnectivity;
 #endif
 using ModelIO;
 using ObjCRuntime;
-using OpenTK;
 using NUnit.Framework;
+
+#if NET
+using System.Numerics;
+using Vector2i = global::CoreGraphics.NVector2i;
+#else
+using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.ModelIO {
 
@@ -29,32 +35,6 @@ namespace MonoTouchFixtures.ModelIO {
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (7, 0);
-
-			if (
-#if !MONOMAC
-				Runtime.Arch == Arch.SIMULATOR && 
-#endif
-				IntPtr.Size == 4) {
-				// There's a bug in the i386 version of objc_msgSend where it doesn't preserve SIMD arguments
-				// when resizing the cache of method selectors for a type. So here we call all selectors we can
-				// find, so that the subsequent tests don't end up producing any cache resize (radar #21630410).
-				object dummy;
-				using (var obj = new MDLTexture (null, true, null, Vector2i.Zero, 12, 2, MDLTextureChannelEncoding.Float16, false)) {
-					dummy = obj.ChannelCount;
-					dummy = obj.ChannelEncoding;
-					dummy = obj.Dimensions;
-					dummy = obj.IsCube;
-					dummy = obj.MipLevelCount;
-					dummy = obj.Name;
-					dummy = obj.RowStride;
-					obj.GetTexelDataWithBottomLeftOrigin ();
-					obj.GetTexelDataWithBottomLeftOrigin (1, false);
-					obj.GetTexelDataWithTopLeftOrigin ();
-					obj.GetTexelDataWithTopLeftOrigin (1, false);
-				}
-				using (var obj = new MDLTexture ()) {
-				}
-			}
 		}
 
 		[Test]

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 
 using Foundation;
@@ -14,7 +14,7 @@ namespace MyTabbedApplication
 
 		public SecondViewController (IntPtr handle) : base (handle)
 		{
-			this.Title = NSBundle.MainBundle.LocalizedString ("Second", "Second");
+			this.Title = NSBundle.MainBundle.GetLocalizedString ("Second", "Second");
 			this.TabBarItem.Image = UIImage.FromBundle ("second");
 		}
 
@@ -58,4 +58,3 @@ namespace MyTabbedApplication
 		#endregion
 	}
 }
-

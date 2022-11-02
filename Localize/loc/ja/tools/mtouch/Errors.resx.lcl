@@ -2197,6 +2197,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";MT4124_I" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{1}' に無効な {0} が見つかりました。https://github.com/xamarin/xamarin-macios/issues/new にバグ報告をお寄せください]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";MT4125" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The registrar found an invalid type '{0}' in signature for method '{1}': The interface must have a Protocol attribute specifying its wrapper type.]D;]A;		]]></Val>
@@ -2742,6 +2751,15 @@
           <Val><![CDATA[The registrar can't compute the block signature for the delegate of type {0} in the method {1} because it couldn't find the Invoke method of the delegate type.]D;]A;		]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[デリゲート型の Invoke メソッドが見つからなかったため、レジストラーでは、メソッド {1} の型 {0} のデリゲートについてブロック シグネチャを計算できません。]D;]A;		]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MT4186" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The registrar found a non-optimal type `{0}`: the type does not have a constructor that takes two (ObjCRuntime.NativeHandle, bool) arguments. However, a constructor that takes two (System.IntPtr, bool) arguments was found (and will be used instead). It's highly recommended to change the signature of the (System.IntPtr, bool) constructor to be (ObjCRuntime.NativeHandle, bool).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[レジストラーで最適でない型 '{0}' が見つかりました。この型には、2 つの (ObjCRuntime.NativeHandle, bool) 引数を受け取るコンストラクターがありません。ただし、2 つの (System.IntPtr, bool) 引数を受け取るコンストラクターが見つかりました (代わりに使用されます)。(System.IntPtr, bool) コンストラクターの署名を (ObjCRuntime.NativeHandle, bool) に変更することを強くお勧めします。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -3306,19 +3324,25 @@
       </Item>
       <Item ItemId=";MX0183" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Could not map the iOS version {0} to a macOS version for Mac Catalyst]]></Val>
+          <Val><![CDATA[Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[iOS バージョン {0} を Mac Catalyst の macOS バージョンにマップできません]]></Val>
+            <Val><![CDATA[Mac Catalyst のバージョン {0} を対応する macOS バージョンにマップできませんでした。有効な Mac Catalyst のバージョンは次のとおりです: {1}]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Could not map the iOS version {0} to a macOS version for Mac Catalyst]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";MX0184" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst]]></Val>
+          <Val><![CDATA[Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[macOS バージョン {0} を Mac Catalyst の対応する iOS バージョンにマップできません]]></Val>
+            <Val><![CDATA[macOS バージョン {0} を対応する Mac Catalyst のバージョンにマップできませんでした。有効な macOS バージョンは次のとおりです: {1}]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -3336,6 +3360,15 @@
           <Val><![CDATA[Could not copy the assembly '{0}' to '{1}': {2}]D;]A;		]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[アセンブリ '{0}' を '{1}' にコピーできませんでした: {2}]D;]A;		]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX1306" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not decompress the file '{0}'. Please review the build log for more information from the native 'unzip' command.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ファイル '{0}' を展開できませんでした。ビルド ログを参照して、ネイティブの 'unzip' コマンドからの詳細情報をご確認ください。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -3556,6 +3589,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";MX7000" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occured while executing the custom linker steps. Please review the build log for more information.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[カスタム リンカー ステップの実行中にエラーが発生しました。詳細については、ビルド ログを確認してください。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";MX8037" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Don't know how to marshal the parameter of type {0} for parameter {1} in call to {2}]]></Val>
@@ -3588,6 +3630,24 @@
           <Val><![CDATA[Invalid type encoding for parameter.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[パラメーターのタイプ エンコードが無効です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8041" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to create an instance of the type {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[型 {0} のインスタンスを作成できません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8042" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An exception occurred while trying to invoke the function {0}: {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[関数 {0} の呼び出し中に例外が発生しました: {1}。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

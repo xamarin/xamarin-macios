@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CATextLayerTests
 //
 // Authors:
@@ -30,12 +30,20 @@ namespace MonoTouchFixtures.CoreAnimation {
 			};
 
 			Assert.AreEqual (CATextLayerTruncationMode.Middle, textLayer.TextTruncationMode, "TextTruncationMode");
+#if !NET
 			Assert.AreEqual (textLayer.TruncationMode, (string) textLayer.TextTruncationMode.GetConstant (), "TruncationMode");
+#endif
 
+#if NET
+			textLayer.TextTruncationMode = CATextLayerTruncationMode.End;
+#else
 			textLayer.TruncationMode = CATextLayer.TruncantionEnd;
+#endif
 			Assert.AreEqual (CATextLayerTruncationMode.End, textLayer.TextTruncationMode, "TextTruncationMode 2");
 
+#if !NET
 			Assert.Throws<ArgumentNullException> (() => textLayer.TruncationMode = null);
+#endif
 		}
 
 		[Test]
@@ -47,12 +55,20 @@ namespace MonoTouchFixtures.CoreAnimation {
 			};
 
 			Assert.AreEqual (CATextLayerAlignmentMode.Justified, textLayer.TextAlignmentMode, "TextAlignmentMode");
+#if !NET
 			Assert.AreEqual (textLayer.AlignmentMode, (string) textLayer.TextAlignmentMode.GetConstant (), "AlignmentMode");
+#endif
 
+#if NET
+			textLayer.TextAlignmentMode = CATextLayerAlignmentMode.Natural;
+#else
 			textLayer.AlignmentMode = CATextLayer.AlignmentNatural;
+#endif
 			Assert.AreEqual (CATextLayerAlignmentMode.Natural, textLayer.TextAlignmentMode, "TextAlignmentMode 2");
 
+#if !NET
 			Assert.Throws<ArgumentNullException> (() => textLayer.AlignmentMode = null);
+#endif
 		}
 	}
 }

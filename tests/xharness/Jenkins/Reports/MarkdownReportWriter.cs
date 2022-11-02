@@ -27,8 +27,8 @@ namespace Xharness.Jenkins.Reports {
 						writer.Write ($": {test.ExecutionResult}");
 						if (!string.IsNullOrEmpty (test.FailureMessage))
 							writer.Write ($" ({test.FailureMessage})");
-						if (test.KnownFailure.HasValue)
-							writer.Write ($" Known issue: [{test.KnownFailure.Value.HumanMessage}]({test.KnownFailure.Value.IssueLink})");
+						if (test.KnownFailure is not null)
+							writer.Write ($" Known issue: [{test.KnownFailure.HumanMessage}]({test.KnownFailure.IssueLink})");
 						writer.WriteLine ();
 					}
 					continue;

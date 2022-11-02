@@ -14,7 +14,7 @@ build: bin/Debug/sampletester.dll
 
 run-tests: bin/Debug/sampletester.dll
 	$(Q) rm -f .failed-stamp
-	$(Q) $(TOP)/tools/nunit3-console-3.11.1 $(WHERE_CONDITION) $(abspath $(CURDIR)/bin/Debug/sampletester.dll) "--result=$(abspath $(CURDIR)/$(TEST_RESULT).xml)" $${TEST_FIXTURE:+"$$TEST_FIXTURE"} --labels=All --inprocess || touch $(CURDIR)/.failed-stamp
+	$(Q) $(TOP)/tools/nunit3-console-3.11.1 $(WHERE_CONDITION) $(abspath $(CURDIR)/bin/Debug/sampletester.dll) "--result=$(abspath $(CURDIR)/$(TEST_RESULT).xml)" $${TEST_FIXTURE:+"$$TEST_FIXTURE"} --labels=After --inprocess || touch $(CURDIR)/.failed-stamp
 	$(Q) xsltproc HtmlReport.xslt "$(TEST_RESULT).xml" > "$(TEST_RESULT).html"
 	$(Q) $(CP) "$(TEST_RESULT).html" index.html
 	@[[ ! -e .failed-stamp ]]

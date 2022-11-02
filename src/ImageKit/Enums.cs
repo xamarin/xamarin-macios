@@ -26,6 +26,9 @@
 //
 // Enums.cs: Enums for ImageKit
 //
+
+#nullable enable
+
 using System;
 
 using ObjCRuntime;

@@ -9,7 +9,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-
+using CoreFoundation;
 using Foundation;
 using ModelIO;
 using ObjCRuntime;
@@ -88,6 +88,7 @@ namespace Metal {
 		InvalidResource = 9,
 		Memoryless = 10,
 		DeviceRemoved = 11,
+		StackOverflow = 12,
 	}
 
 	[Native]
@@ -450,11 +451,13 @@ namespace Metal {
 		FileNotFound,
 	}
 
+#if !NET // this enum/error was removed from the headers a few years ago (the macOS 10.12 SDK has it, the 10.13 SDK doesn't)
 	[Native]
 	[ErrorDomain ("MTLRenderPipelineErrorDomain")]
 	public enum MTLRenderPipelineError : ulong {
 		Internal = 1, Unsupported, InvalidInput
 	}
+#endif
 
 	[Native]
 	public enum MTLCompareFunction : ulong {
@@ -540,7 +543,7 @@ namespace Metal {
 		ShaderRead      = 0x0001,
 		ShaderWrite     = 0x0002,
 		RenderTarget    = 0x0004,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("This option is unavailable.")]
 		Blit            = 0x0008,
 #endif
@@ -682,6 +685,16 @@ namespace Metal {
 		[Mac (10,14), iOS (12,0), TV (12,0)] RenderPipeline = 78,
 		[Mac (11,0), iOS (13,0), TV (13,0)] ComputePipeline = 79,
 		[Mac (10,14), iOS (12,0), TV (12,0)] IndirectCommandBuffer = 80,
+		
+		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch] Long = 81,
+		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch] Long2 = 82,
+		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch] Long3 = 83,
+		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch] Long4 = 84,
+		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch] ULong = 85,
+		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch] ULong2 = 86,
+		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch] ULong3 = 87,
+		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch] ULong4 = 88,
+		
 		[Mac (11,0), iOS (14,0), NoTV] VisibleFunctionTable = 115,
 		[Mac (11,0), iOS (14,0), NoTV] IntersectionFunctionTable = 116,
 		[Mac (11,0), iOS (14,0), NoTV] PrimitiveAccelerationStructure = 117,
@@ -730,50 +743,58 @@ namespace Metal {
 		iOS_GPUFamily2_v1 = 1,
 		iOS_GPUFamily2_v2 = 3,
 		iOS_GPUFamily3_v1 = 4,
-		[iOS (10,0), NoTV, NoWatch, NoMac]
+		[iOS (10,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily1_v3 = 5,
-		[iOS (10,0), NoTV, NoWatch, NoMac]
+		[iOS (10,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily2_v3 = 6,
-		[iOS (10,0), NoTV, NoWatch, NoMac]
+		[iOS (10,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily3_v2 = 7,
-		[iOS (11,0), NoTV, NoWatch, NoMac]
+		[iOS (11,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily1_v4 = 8,
-		[iOS (11,0), NoTV, NoWatch, NoMac]
+		[iOS (11,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily2_v4 = 9,
-		[iOS (11,0), NoTV, NoWatch, NoMac]
+		[iOS (11,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily3_v3 = 10,
-		[iOS (11,0), NoTV, NoWatch, NoMac]
+		[iOS (11,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily4_v1 = 11,
 
-		[iOS (12,0), NoTV, NoWatch, NoMac]
+		[iOS (12,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily1_v5 = 12,
-		[iOS (12,0), NoTV, NoWatch, NoMac]
+		[iOS (12,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily2_v5 = 13,
-		[iOS (12,0), NoTV, NoWatch, NoMac]
+		[iOS (12,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily3_v4 = 14,
-		[iOS (12,0), NoTV, NoWatch, NoMac]
+		[iOS (12,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily4_v2 = 15,
-		[iOS (12,0), NoTV, NoWatch, NoMac]
+		[iOS (12,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily5_v1 = 16,
 
-		[Mac (10,11), NoiOS, NoTV, NoWatch]
+		[Mac (10,11), NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		macOS_GPUFamily1_v1 = 10000,
 		
+#if !NET
 		[Mac (10, 11)]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message :"Use 'macOS, GPUFamily1, v1' instead.")]
+		[Obsolete ("Use 'macOS_GPUFamily1_v1' instead.")]
 		OSX_GPUFamily1_v1 = macOS_GPUFamily1_v1,
+#endif
 		
 		[Mac (10,13), NoiOS, NoTV, NoWatch]
 		macOS_GPUFamily1_v2 = 10001,
+
+#if !NET
 		[Mac (10, 12)]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message :"Use 'macOS, GPUFamily1, v2' instead.")]
+		[Obsolete ("Use 'macOS_GPUFamily1_v2' instead.")]
 		OSX_GPUFamily1_v2 = macOS_GPUFamily1_v2,
+#endif
 		
 		[Mac (10,13), NoiOS, NoTV, NoWatch]
 		macOS_ReadWriteTextureTier2 = 10002,
+
+#if !NET
 		[Mac (10, 12)]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message :"Use 'macOS, ReadWriteTextureTier2' instead.")]
+		[Obsolete ("Use 'macOS_ReadWriteTextureTier2' instead.")]
 		OSX_ReadWriteTextureTier2 = macOS_ReadWriteTextureTier2,
+#endif
 		
 		[Mac (10,13), NoiOS, NoTV, NoWatch]
 		macOS_GPUFamily1_v3 = 10003,
@@ -784,8 +805,14 @@ namespace Metal {
 		[Mac (10,14), NoiOS, NoTV, NoWatch]
 		macOS_GPUFamily2_v1 = 10005,
 
+#if !NET
 		[TV (9,0)]
+		[Obsolete ("Use 'tvOS_GPUFamily1_v1' instead.")]
 		TVOS_GPUFamily1_v1 = 30000,
+#endif
+
+		[TV (9,0)]
+		tvOS_GPUFamily1_v1 = 30000,
 
 		[NoiOS, TV (10,0), NoWatch, NoMac]
 		tvOS_GPUFamily1_v2 = 30001,
@@ -805,7 +832,7 @@ namespace Metal {
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
 	public enum MTLLanguageVersion : ulong {
-		[NoMac]
+		[NoMac][NoMacCatalyst]
 		v1_0 = (1 << 16),
 		v1_1 = (1 << 16) + 1,
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
@@ -818,6 +845,8 @@ namespace Metal {
 		v2_2 = (2 << 16) + 2,
 		[Mac (11,0), iOS (14,0), TV (14,0), NoWatch]
 		v2_3 = (2 << 16) + 3,
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), NoWatch]
+		v2_4 = (2uL << 16) + 4,
 	}
 
 	[iOS (9,0)][Mac (10,11)]
@@ -854,7 +883,7 @@ namespace Metal {
 		Sample0, Min, Max
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[NoTV]
 #endif
 	[Mac (10,12), iOS (14,0)]
@@ -1001,7 +1030,9 @@ namespace Metal {
 	[Native]
 	public enum MTLRenderStages : ulong {
 		Vertex = (1 << 0),
-		Fragment = (1 << 1)
+		Fragment = (1 << 1),
+		[iOS (15,0), TV (15,0), NoWatch, Mac (12,0), MacCatalyst (15,0)]
+		Tile = (1uL << 2),
 	}
 
 	[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
@@ -1252,6 +1283,8 @@ namespace Metal {
 		None = 0x0,
 		Refit = (1uL << 0),
 		PreferFastBuild = (1uL << 1),
+		[iOS (15,0), MacCatalyst (15,0), Mac (12,0), NoWatch]
+		ExtendedLimits = (1uL << 2),
 	}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
@@ -1326,6 +1359,12 @@ namespace Metal {
 		Instancing = (1uL << 0),
 		TriangleData = (1uL << 1),
 		WorldSpaceData = (1uL << 2),
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoWatch]
+		InstanceMotion = (1uL << 3),
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoWatch]
+		PrimitiveMotion = (1uL << 4),
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoWatch]
+		ExtendedLimits = (1uL << 5),
 	}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
@@ -1343,5 +1382,27 @@ namespace Metal {
 		Green = 3,
 		Blue = 4,
 		Alpha = 5,
+	}
+	
+	[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV, NoWatch]
+	public enum MTLMotionBorderMode : uint  {
+		Clamp = 0,
+		Vanish = 1,
+	}
+
+	[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV, NoWatch]
+	[Native]
+	public enum MTLAccelerationStructureInstanceDescriptorType : ulong {
+		Default = 0,
+		UserID = 1,
+		Motion = 2,
+	}
+
+	[NoMac, iOS (15,0), NoMacCatalyst, NoTV, NoWatch]
+	[Native]
+	public enum MTLTextureCompressionType : long
+	{
+		Lossless = 0,
+		Lossy = 1,
 	}
 }

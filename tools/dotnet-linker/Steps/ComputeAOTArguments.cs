@@ -56,4 +56,3 @@ namespace Xamarin.Linker {
 		}
 	}
 }
-

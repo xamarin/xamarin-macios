@@ -9,6 +9,7 @@ using Foundation;
 using UIKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 	
@@ -35,7 +36,7 @@ namespace MonoTouchFixtures.UIKit {
 				b.SetTitleColor (null, UIControlState.Normal);
 				var hasTitleColor = true;
 #if __IOS__
-				if (!TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0))
+				if (!TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 0))
 					hasTitleColor = false;
 #endif
 				if (hasTitleColor)

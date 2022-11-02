@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for UITableViewController
 //
 // Authors:

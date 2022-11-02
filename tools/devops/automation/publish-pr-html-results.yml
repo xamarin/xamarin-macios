@@ -11,14 +11,38 @@ resources:
     checkoutOptions:
       submodules: false  # no need
 
+  - repository: templates
+    type: github
+    name: xamarin/yaml-templates
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: sdk-insertions
+    type: github
+    name: xamarin/sdk-insertions
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: maccore
+    type: github
+    name: xamarin/maccore
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: release-scripts
+    type: github
+    name: xamarin/release-scripts
+    ref: refs/heads/only_codesign
+    endpoint: xamarin
+
   - repository: macios.ci
     type: github
     name: xamarin/macios.ci
     ref: refs/heads/main # get main and create the branch from main
     endpoint: xamarin
 
-   # we need all stages to be completed, else we do not have the test results, this trigger is just for CI, because we have
-   # but because we have device issues, and it needs to be gree to trigger, we will deal with it later
+  # we need all stages to be completed, else we do not have the test results, this trigger is just for CI, because we have
+  # but because we have device issues, and it needs to be gree to trigger, we will deal with it later
   pipelines:
   - pipeline: macios
     source: xamarin-macios

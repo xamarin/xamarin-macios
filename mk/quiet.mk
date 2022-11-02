@@ -34,6 +34,7 @@ Q_XBUILD=$(if $(V),,@echo "XBUILD  $(@F)";)
 Q_TT=   $(if $(V),,@echo "TT       $(@F)";)
 Q_BUILD=$(if $(V),,@echo "BUILD    $(@F)";)
 Q_CURL=$(if $(V),,@echo "CURL     $(@F)";)
+Q_ZIP=$(if $(V),,@echo "ZIP      $(@F)";)
 
 Q_DOTNET_BUILD=$(if $(V),,@echo "CSC      [dotnet] $(@F)";)
 Q_DOTNET_GEN  =$(if $(V),,@echo "GEN      [dotnet] $(@F)";)
@@ -69,20 +70,24 @@ XBUILD_VERBOSITY=/nologo /verbosity:quiet
 XBUILD_VERBOSITY_QUIET=/nologo /verbosity:quiet
 MMP_VERBOSITY=-q
 MTOUCH_VERBOSITY=-q
-MDTOOL_VERBOSITY=
 DOTNET_PACK_VERBOSITY=--verbosity:quiet --nologo
 DOTNET_BUILD_VERBOSITY=--verbosity quiet --nologo -consoleLoggerParameters:NoSummary
+DOTNET_WORKLOAD_VERBOSITY=--verbosity quiet
 NUGET_VERBOSITY=-verbosity quiet
+INSTALLER_VERBOSITY=
+ZIP_VERBOSITY=--quiet
 else
 # CI build
 XBUILD_VERBOSITY=/nologo /verbosity:normal
 XBUILD_VERBOSITY_QUIET=/nologo /verbosity:quiet
 MMP_VERBOSITY=-vvvv
 MTOUCH_VERBOSITY=-vvvv
-MDTOOL_VERBOSITY=-v -v -v -v
 DOTNET_PACK_VERBOSITY=
 DOTNET_BUILD_VERBOSITY=
+DOTNET_WORKLOAD_VERBOSITY=
 NUGET_VERBOSITY=
+INSTALLER_VERBOSITY=
+ZIP_VERBOSITY=
 endif
 else
 # verbose build
@@ -90,10 +95,12 @@ XBUILD_VERBOSITY=/verbosity:diagnostic
 XBUILD_VERBOSITY_QUIET=/verbosity:diagnostic
 MMP_VERBOSITY=-vvvv
 MTOUCH_VERBOSITY=-vvvv
-MDTOOL_VERBOSITY=-v -v -v -v
 DOTNET_PACK_VERBOSITY=--verbosity:detailed
 DOTNET_BUILD_VERBOSITY=--verbosity detailed
+DOTNET_WORKLOAD_VERBOSITY=--verbosity diagnostic
 NUGET_VERBOSITY=-verbosity detailed
+INSTALLER_VERBOSITY=-verbose -dumplog
+ZIP_VERBOSITY=--verbose
 endif
 MSBUILD_VERBOSITY=$(XBUILD_VERBOSITY)
 MSBUILD_VERBOSITY_QUIET=$(XBUILD_VERBOSITY_QUIET)

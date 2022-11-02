@@ -16,22 +16,20 @@
 //
 // Copyright 2015 Xamarin Inc. All rights reserved.
 
+#if !NET
 using System;
 using System.Text;
 
-namespace ObjCRuntime
-{
+namespace ObjCRuntime {
 	[Flags]
-	public enum PlatformArchitecture : byte
-	{
+	public enum PlatformArchitecture : byte {
 		None = 0x00,
 		Arch32 = 0x01,
 		Arch64 = 0x02,
 		All = 0xff
 	}
 
-	public enum PlatformName : byte
-	{
+	public enum PlatformName : byte {
 		None,
 		MacOSX,
 		iOS,
@@ -42,8 +40,7 @@ namespace ObjCRuntime
 		UIKitForMac = MacCatalyst, // temporary
 	}
 
-	public enum AvailabilityKind
-	{
+	public enum AvailabilityKind {
 		Introduced,
 		Deprecated,
 		Obsoleted,
@@ -64,8 +61,7 @@ namespace ObjCRuntime
 		AttributeTargets.Struct,
 		AllowMultiple = true
 	)]
-	public abstract class AvailabilityBaseAttribute : Attribute
-	{
+	public abstract class AvailabilityBaseAttribute : Attribute {
 		public AvailabilityKind AvailabilityKind { get; private set; }
 		public PlatformName Platform { get; private set; }
 		public Version Version { get; private set; }
@@ -93,81 +89,8 @@ namespace ObjCRuntime
 		public override string ToString ()
 		{
 			var builder = new StringBuilder ();
-#if NET && BGENERATOR
-			switch (AvailabilityKind) {
-			case AvailabilityKind.Introduced:
-				builder.Append ("[SupportedOSPlatform (\"");
-				break;
-			case AvailabilityKind.Obsoleted:
-				switch (Platform) {
-				case PlatformName.iOS:
-					builder.AppendLine ("#if __IOS__");
-					break;
-				case PlatformName.TvOS:
-					builder.AppendLine ("#if __TVOS__");
-					break;
-				case PlatformName.WatchOS:
-					builder.AppendLine ("#if __WATCHOS__");
-					break;
-				case PlatformName.MacOSX:
-					builder.AppendLine ("#if __MACOS__");
-					break;
-				case PlatformName.MacCatalyst:
-					builder.AppendLine ("#if __MACCATALYST__");
-					break;
-				default:
-					throw new NotSupportedException ($"Unknown platform: {Platform}");
-				}
-				builder.Append ("[Obsolete (\"Starting with ");
-				break;
-			case AvailabilityKind.Deprecated:
-			case AvailabilityKind.Unavailable:
-				builder.Append ("[UnsupportedOSPlatform (\"");
-				break;
-			}
-
-			switch (Platform) {
-			case PlatformName.iOS:
-				builder.Append ("ios");
-				break;
-			case PlatformName.TvOS:
-				builder.Append ("tvos");
-				break;
-			case PlatformName.WatchOS:
-				builder.Append ("watchos");
-				break;
-			case PlatformName.MacOSX:
-				builder.Append ("macos"); // no 'x'
-				break;
-			case PlatformName.MacCatalyst:
-				builder.Append ("maccatalyst");
-				break;
-			default:
-				throw new NotSupportedException ($"Unknown platform: {Platform}");
-			}
-
-			if (Version != null)
-				builder.Append (Version.ToString (Version.Build >= 0 ? 3 : 2));
-
-			switch (AvailabilityKind) {
-			case AvailabilityKind.Obsoleted:
-				if (!String.IsNullOrEmpty (Message))
-					builder.Append (' ').Append (Message);
-				else
-					builder.Append ('.'); // intro check messages to they end with a '.'
-				// TODO add a URL (wiki?) and DiagnosticId (one per platform?) for documentation
-				builder.AppendLine ("\", DiagnosticId = \"BI1234\", UrlFormat = \"https://github.com/xamarin/xamarin-macios/wiki/Obsolete\")]");
-				builder.Append ("#endif");
-				break;
-			case AvailabilityKind.Introduced:
-			case AvailabilityKind.Deprecated:
-			case AvailabilityKind.Unavailable:
-				builder.Append ("\")]");
-				break;
-			}
-#else
 			builder.AppendFormat ("[{0} ({1}.{2}", AvailabilityKind, nameof (PlatformName), Platform);
-			
+
 			if (Version != null) {
 				builder.AppendFormat (", {0},{1}", Version.Major, Version.Minor);
 				if (Version.Build >= 0)
@@ -181,13 +104,11 @@ namespace ObjCRuntime
 				builder.AppendFormat (", message: \"{0}\"", Message.Replace ("\"", "\"\""));
 
 			builder.Append (")]");
-#endif
 			return builder.ToString ();
 		}
 	}
 
-	public class IntroducedAttribute : AvailabilityBaseAttribute
-	{
+	public class IntroducedAttribute : AvailabilityBaseAttribute {
 		public IntroducedAttribute (PlatformName platform,
 			PlatformArchitecture architecture = PlatformArchitecture.None,
 			string message = null)
@@ -214,8 +135,7 @@ namespace ObjCRuntime
 		}
 	}
 
-	public sealed class DeprecatedAttribute : AvailabilityBaseAttribute
-	{
+	public sealed class DeprecatedAttribute : AvailabilityBaseAttribute {
 		public DeprecatedAttribute (PlatformName platform,
 			PlatformArchitecture architecture = PlatformArchitecture.None,
 			string message = null)
@@ -242,8 +162,7 @@ namespace ObjCRuntime
 		}
 	}
 
-	public sealed class ObsoletedAttribute : AvailabilityBaseAttribute
-	{
+	public sealed class ObsoletedAttribute : AvailabilityBaseAttribute {
 		public ObsoletedAttribute (PlatformName platform,
 			PlatformArchitecture architecture = PlatformArchitecture.None,
 			string message = null)
@@ -270,8 +189,7 @@ namespace ObjCRuntime
 		}
 	}
 
-	public class UnavailableAttribute : AvailabilityBaseAttribute
-	{
+	public class UnavailableAttribute : AvailabilityBaseAttribute {
 		public UnavailableAttribute (PlatformName platform,
 			PlatformArchitecture architecture = PlatformArchitecture.All,
 			string message = null)
@@ -281,66 +199,55 @@ namespace ObjCRuntime
 		}
 	}
 
-	public sealed class TVAttribute : IntroducedAttribute
-	{
+	public sealed class TVAttribute : IntroducedAttribute {
 		public TVAttribute (byte major, byte minor)
-			: base (PlatformName.TvOS, (int)major, (int)minor)
+			: base (PlatformName.TvOS, (int) major, (int) minor)
 		{
 		}
 
-#if !XAMCORE_4_0
 		[Obsolete ("Use the overload that takes '(major, minor)', since tvOS is always 64-bit.")]
 		public TVAttribute (byte major, byte minor, bool onlyOn64 = false)
-			: base (PlatformName.TvOS, (int)major, (int)minor, onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All)
+			: base (PlatformName.TvOS, (int) major, (int) minor, onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All)
 		{
 		}
-#endif
 
 		public TVAttribute (byte major, byte minor, byte subminor)
-			: base (PlatformName.TvOS, (int)major, (int)minor, subminor)
+			: base (PlatformName.TvOS, (int) major, (int) minor, subminor)
 		{
 		}
 
-#if !XAMCORE_4_0
 		[Obsolete ("Use the overload that takes '(major, minor, subminor)', since tvOS is always 64-bit.")]
 		public TVAttribute (byte major, byte minor, byte subminor, bool onlyOn64)
-			: base (PlatformName.TvOS, (int)major, (int)minor, (int)subminor, onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All)
+			: base (PlatformName.TvOS, (int) major, (int) minor, (int) subminor, onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All)
 		{
 		}
-#endif
 	}
-	
-	public sealed class WatchAttribute : IntroducedAttribute
-	{
+
+	public sealed class WatchAttribute : IntroducedAttribute {
 		public WatchAttribute (byte major, byte minor)
-			: base (PlatformName.WatchOS, (int)major, (int)minor)
+			: base (PlatformName.WatchOS, (int) major, (int) minor)
 		{
 		}
 
-#if !XAMCORE_4_0
 		[Obsolete ("Use the overload that takes '(major, minor)', since watchOS is never 64-bit.")] // not yet at least
 		public WatchAttribute (byte major, byte minor, bool onlyOn64 = false)
-			: base (PlatformName.WatchOS, (int)major, (int)minor, onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All)
+			: base (PlatformName.WatchOS, (int) major, (int) minor, onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All)
 		{
 		}
-#endif
 
 		public WatchAttribute (byte major, byte minor, byte subminor)
-			: base (PlatformName.WatchOS, (int)major, (int)minor, subminor)
+			: base (PlatformName.WatchOS, (int) major, (int) minor, subminor)
 		{
 		}
 
-#if !XAMCORE_4_0
 		[Obsolete ("Use the overload that takes '(major, minor)', since watchOS is never 64-bit.")] // not yet at least
 		public WatchAttribute (byte major, byte minor, byte subminor, bool onlyOn64)
-			: base (PlatformName.WatchOS, (int)major, (int)minor, (int)subminor, onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All)
+			: base (PlatformName.WatchOS, (int) major, (int) minor, (int) subminor, onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All)
 		{
 		}
-#endif
 	}
 
-	public sealed class MacCatalystAttribute : IntroducedAttribute
-	{
+	public sealed class MacCatalystAttribute : IntroducedAttribute {
 		public MacCatalystAttribute (byte major, byte minor)
 			: base (PlatformName.MacCatalyst, (int) major, (int) minor)
 		{
@@ -352,40 +259,35 @@ namespace ObjCRuntime
 		}
 	}
 
-	public sealed class NoMacAttribute : UnavailableAttribute
-	{
+	public sealed class NoMacAttribute : UnavailableAttribute {
 		public NoMacAttribute ()
 			: base (PlatformName.MacOSX)
 		{
 		}
 	}
 
-	public sealed class NoiOSAttribute : UnavailableAttribute
-	{
+	public sealed class NoiOSAttribute : UnavailableAttribute {
 		public NoiOSAttribute ()
 			: base (PlatformName.iOS)
 		{
 		}
 	}
 
-	public sealed class NoWatchAttribute : UnavailableAttribute
-	{
+	public sealed class NoWatchAttribute : UnavailableAttribute {
 		public NoWatchAttribute ()
 			: base (PlatformName.WatchOS)
 		{
 		}
 	}
 
-	public sealed class NoTVAttribute : UnavailableAttribute
-	{
+	public sealed class NoTVAttribute : UnavailableAttribute {
 		public NoTVAttribute ()
 			: base (PlatformName.TvOS)
 		{
 		}
 	}
 
-	public sealed class NoMacCatalystAttribute : UnavailableAttribute
-	{
+	public sealed class NoMacCatalystAttribute : UnavailableAttribute {
 		public NoMacCatalystAttribute ()
 			: base (PlatformName.MacCatalyst)
 		{
@@ -393,3 +295,4 @@ namespace ObjCRuntime
 	}
 }
 
+#endif // !NET

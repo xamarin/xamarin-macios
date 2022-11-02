@@ -8,6 +8,7 @@ using AppKit;
 using UIKit;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Foundation
 {
@@ -21,7 +22,7 @@ namespace MonoTouchFixtures.Foundation
 		void RequiresIos8 ()
 		{
 			TestRuntime.AssertXcodeVersion (6, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			if (dateComponentsFormatter == null)
 				dateComponentsFormatter = new NSDateComponentsFormatter ();

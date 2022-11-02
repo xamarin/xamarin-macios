@@ -12,6 +12,7 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreFoundation {
 	
@@ -55,12 +56,12 @@ namespace MonoTouchFixtures.CoreFoundation {
 			using (CFUrl url = CFUrl.FromFile ("/")) {
 				string value = "file://localhost/";
 #if __IOS__
-				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0))
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 0))
 					value = "file:///";
 #elif __WATCHOS__ || __TVOS__
 				value = "file:///";
 #elif __MACOS__
-				if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9))
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 9))
 					value = "file:///";
 #endif
 

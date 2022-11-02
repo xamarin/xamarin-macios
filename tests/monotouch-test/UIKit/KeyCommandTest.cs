@@ -1,4 +1,4 @@
-﻿#if __IOS__
+#if __IOS__
 
 using System;
 

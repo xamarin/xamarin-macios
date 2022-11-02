@@ -7,12 +7,18 @@
 // Copyright (c) Microsoft Corporation.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
 using System.ComponentModel;
 
-#if !XAMCORE_4_0
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
+#if !NET
 namespace CarPlay {
 	[Register (SkipRegistration = true)]
 	[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
@@ -26,11 +32,11 @@ namespace CarPlay {
 
 		protected CPEntity (NSObjectFlag t) => throw new NotSupportedException ();
 
-		protected internal CPEntity (IntPtr handle) => throw new NotSupportedException ();
+		protected internal CPEntity (NativeHandle handle) : base (handle) => throw new NotSupportedException ();
 
 		public virtual void EncodeTo (NSCoder encoder) => throw new NotSupportedException ();
 
-		public override IntPtr ClassHandle => throw new NotSupportedException ();
+		public override NativeHandle ClassHandle => throw new NotSupportedException ();
 	}
 }
 #endif

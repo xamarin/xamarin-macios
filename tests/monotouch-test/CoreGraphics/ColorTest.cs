@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CGColor
 //
 // Authors:
@@ -8,7 +8,6 @@
 //
 
 using System;
-using System.IO;
 using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
@@ -124,4 +123,3 @@ namespace MonoTouchFixtures.CoreGraphics {
 		}
 	}
 }
-

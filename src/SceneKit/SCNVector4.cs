@@ -1,4 +1,4 @@
-﻿#region --- License ---
+#region --- License ---
 /*
  * Copyright 2014 Xamarin Inc, All Rights Reserved
  
@@ -27,14 +27,27 @@ SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
+using System.Runtime.Versioning;
 
+#if NET
+using Vector2 = global::System.Numerics.Vector2;
+using Vector3 = global::System.Numerics.Vector3;
+using Vector4 = global::System.Numerics.Vector4;
+using MathHelper = global::CoreGraphics.MathHelper;
+#else
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
 using Vector4 = global::OpenTK.Vector4;
 using Quaternion = global::OpenTK.Quaternion;
 using MathHelper = global::OpenTK.MathHelper;
+#endif
+
 #if MONOMAC
+#if NET
+using pfloat = System.Runtime.InteropServices.NFloat;
+#else
 using pfloat = System.nfloat;
+#endif
 #else
 using pfloat = System.Single;
 #endif
@@ -47,6 +60,12 @@ namespace SceneKit
     /// <remarks>
     /// The Vector4 structure is suitable for interoperation with unmanaged code requiring four consecutive floats.
     /// </remarks>
+#if NET
+    [SupportedOSPlatform ("ios")]
+    [SupportedOSPlatform ("maccatalyst")]
+    [SupportedOSPlatform ("macos")]
+    [SupportedOSPlatform ("tvos")]
+#endif
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public struct SCNVector4 : IEquatable<SCNVector4>
@@ -232,7 +251,7 @@ namespace SceneKit
             get
             {
                 return (pfloat)(1.0f / MathHelper.InverseSqrtFast(X * X + Y * Y + Z * Z + W * W));
-            }
+     	    }
         }
 
         #endregion
@@ -282,7 +301,7 @@ namespace SceneKit
         public void NormalizeFast()
         {
             pfloat scale = (pfloat)(MathHelper.InverseSqrtFast(X * X + Y * Y + Z * Z + W * W));
-            X *= scale;
+     	    X *= scale;
             Y *= scale;
             Z *= scale;
             W *= scale;
@@ -712,7 +731,7 @@ namespace SceneKit
         public static void NormalizeFast(ref SCNVector4 vec, out SCNVector4 result)
         {
             pfloat scale = (pfloat)(MathHelper.InverseSqrtFast(vec.X * vec.X + vec.Y * vec.Y + vec.Z * vec.Z + vec.W * vec.W));
-            result.X = vec.X * scale;
+     	    result.X = vec.X * scale;
             result.Y = vec.Y * scale;
             result.Z = vec.Z * scale;
             result.W = vec.W * scale;
@@ -824,25 +843,50 @@ namespace SceneKit
         #region Transform
 
         /// <summary>Transform a Vector by the given Matrix</summary>
-        /// <param name="vec">The vector to transform</param>
+#if NET
+        /// <param name="vec">The column vector to transform</param>
+#else
+        /// <param name="vec">The row vector to transform</param>
+#endif
         /// <param name="mat">The desired transformation</param>
         /// <returns>The transformed vector</returns>
         public static SCNVector4 Transform(SCNVector4 vec, SCNMatrix4 mat)
         {
-            SCNVector4 result;
-            result.X = SCNVector4.Dot(vec, mat.Column0);
-            result.Y = SCNVector4.Dot(vec, mat.Column1);
-            result.Z = SCNVector4.Dot(vec, mat.Column2);
-            result.W = SCNVector4.Dot(vec, mat.Column3);
+            Transform(ref vec, ref mat, out var result);
             return result;
         }
 
-        /// <summary>Transform a Vector by the given Matrix</summary>
-        /// <param name="vec">The vector to transform</param>
+        /// <summary>Transform a Vector by the given Matrix.</summary>
+#if NET
+        /// <param name="vec">The column vector to transform</param>
+#else
+        /// <param name="vec">The row vector to transform</param>
+#endif
         /// <param name="mat">The desired transformation</param>
         /// <param name="result">The transformed vector</param>
         public static void Transform(ref SCNVector4 vec, ref SCNMatrix4 mat, out SCNVector4 result)
         {
+#if NET
+            result.X = vec.X * mat.Column0.X +
+                       vec.Y * mat.Column1.X +
+                       vec.Z * mat.Column2.X +
+                       vec.W * mat.Column3.X;
+
+            result.Y = vec.X * mat.Column0.Y +
+                       vec.Y * mat.Column1.Y +
+                       vec.Z * mat.Column2.Y +
+                       vec.W * mat.Column3.Y;
+
+            result.Z = vec.X * mat.Column0.Z +
+                       vec.Y * mat.Column1.Z +
+                       vec.Z * mat.Column2.Z +
+                       vec.W * mat.Column3.Z;
+
+            result.W = vec.X * mat.Column0.W +
+                       vec.Y * mat.Column1.W +
+                       vec.Z * mat.Column2.W +
+                       vec.W * mat.Column3.W;
+#else
             result.X = vec.X * mat.Row0.X +
                        vec.Y * mat.Row1.X +
                        vec.Z * mat.Row2.X +
@@ -862,6 +906,7 @@ namespace SceneKit
                        vec.Y * mat.Row1.W +
                        vec.Z * mat.Row2.W +
                        vec.W * mat.Row3.W;
+#endif
         }
 
         #endregion
@@ -1098,7 +1143,5 @@ namespace SceneKit
 	{
 		return new Vector4 ((float)source.X, (float)source.Y, (float)source.Z, (float)source.W);
 	}
-
-		
     }
 }

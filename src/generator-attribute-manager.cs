@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+#if !NET
+using ObjCRuntime;
 using PlatformName = ObjCRuntime.PlatformName;
+#endif
 
-public class AttributeManager
-{
+public class AttributeManager {
 	public BindingTouch BindingTouch;
 	TypeManager TypeManager { get { return BindingTouch.TypeManager; } }
 
@@ -109,28 +111,59 @@ public class AttributeManager
 			return typeof (ObjCRuntime.BindingImplAttribute);
 		case "ObjCRuntime.BindingImplOptions":
 			return typeof (ObjCRuntime.BindingImplOptions);
+#if NET
+		case "DeprecatedAttribute":
+			return typeof (DeprecatedAttribute);
+#else
 		case "ObjCRuntime.DeprecatedAttribute":
 			return typeof (ObjCRuntime.DeprecatedAttribute);
+#endif
+#if NET
+		case "IntroducedAttribute":
+			return typeof (IntroducedAttribute);
+#else
 		case "ObjCRuntime.IntroducedAttribute":
 			return typeof (ObjCRuntime.IntroducedAttribute);
+#endif
 		case "ObjCRuntime.NativeAttribute":
 			return typeof (ObjCRuntime.NativeAttribute);
+		case "ObjCRuntime.NativeNameAttribute":
+			return typeof (ObjCRuntime.NativeNameAttribute);
+#if NET
+		case "ObsoletedAttribute":
+			return typeof (ObsoletedAttribute);
+#else
 		case "ObjCRuntime.ObsoletedAttribute":
 			return typeof (ObjCRuntime.ObsoletedAttribute);
+#endif
+#if !NET
 		case "ObjCRuntime.PlatformArchitecture":
 			return typeof (ObjCRuntime.PlatformArchitecture);
+#endif
+#if NET
+		case "PlatformName":
+			return typeof (PlatformName);
+#else
 		case "ObjCRuntime.PlatformName":
 			return typeof (ObjCRuntime.PlatformName);
+#endif
 		case "ObjCRuntime.RequiresSuperAttribute":
 			return typeof (ObjCRuntime.RequiresSuperAttribute);
+#if NET
+		case "UnavailableAttribute":
+			return typeof (UnavailableAttribute);
+#else
 		case "ObjCRuntime.UnavailableAttribute":
 			return typeof (ObjCRuntime.UnavailableAttribute);
+#endif
 		case "OptionalImplementationAttribute":
 			return typeof (OptionalImplementationAttribute);
 		case "OverrideAttribute":
 			return typeof (OverrideAttribute);
 		case "PostGetAttribute":
 			return typeof (PostGetAttribute);
+		case "PrologueSnippetAttribute":
+			return typeof (PrologueSnippetAttribute);
 		case "PostSnippetAttribute":
 			return typeof (PostSnippetAttribute);
 		case "PreSnippetAttribute":
@@ -247,7 +280,7 @@ public class AttributeManager
 
 	static IEnumerable<System.Attribute> ConvertOldAttributes (CustomAttributeData attribute)
 	{
- 		switch (attribute.GetAttributeType ().Namespace) {
+		switch (attribute.GetAttributeType ().Namespace) {
 		case null: // Root namespace such as PlatformAvailabilityShadow.cs
 		case "MonoTouch.ObjCRuntime":
 		case "ObjCRuntime":
@@ -293,7 +326,10 @@ public class AttributeManager
 		case "SupportedOSPlatformAttribute":
 			var sarg = attribute.ConstructorArguments [0].Value as string;
 			(var sp, var sv) = ParseOSPlatformAttribute (sarg);
-			return AttributeFactory.CreateNewIntroducedAttribute (sp, sv.Major, sv.Minor).Yield ();
+			if (sv is null)
+				return AttributeFactory.CreateNewUnspecifiedIntroducedAttribute (sp).Yield ();
+			else
+				return AttributeFactory.CreateNewIntroducedAttribute (sp, sv.Major, sv.Minor).Yield ();
 		case "UnsupportedOSPlatformAttribute":
 			var uarg = attribute.ConstructorArguments [0].Value as string;
 			(var up, var uv) = ParseOSPlatformAttribute (uarg);
@@ -347,7 +383,7 @@ public class AttributeManager
 	}
 #endif
 
-	IEnumerable<T> CreateAttributeInstance <T> (CustomAttributeData attribute, ICustomAttributeProvider provider) where T : System.Attribute
+	IEnumerable<T> CreateAttributeInstance<T> (CustomAttributeData attribute, ICustomAttributeProvider provider) where T : System.Attribute
 	{
 		var convertedAttributes = ConvertOldAttributes (attribute);
 		if (convertedAttributes.Any ())
@@ -445,6 +481,7 @@ public class AttributeManager
 			switch (attributes [i].GetAttributeType ().FullName) {
 			case "System.Runtime.CompilerServices.NullableAttribute":
 			case "System.Runtime.CompilerServices.NullableContextAttribute":
+			case "System.Runtime.CompilerServices.NativeIntegerAttribute":
 				continue;
 			}
 
@@ -470,17 +507,13 @@ public class AttributeManager
 	{
 		if (provider == null)
 			return null;
-		var member = provider as MemberInfo;
-		if (member != null)
+		if (provider is MemberInfo member)
 			return member.GetCustomAttributesData ();
-		var assembly = provider as Assembly;
-		if (assembly != null)
+		if (provider is Assembly assembly)
 			return assembly.GetCustomAttributesData ();
-		var pinfo = provider as ParameterInfo;
-		if (pinfo != null)
+		if (provider is ParameterInfo pinfo)
 			return pinfo.GetCustomAttributesData ();
-		var module = provider as Module;
-		if (module != null)
+		if (provider is Module module)
 			return module.GetCustomAttributesData ();
 		throw new BindingException (1051, true, provider.GetType ().FullName);
 	}
@@ -553,8 +586,7 @@ public class AttributeManager
 	}
 }
 
-public static class AttributeConversionManager
-{
+public static class AttributeConversionManager {
 	public static System.Attribute ConvertPlatformAttribute (CustomAttributeData attribute, PlatformName platform)
 	{
 		var constructorArguments = new object [attribute.ConstructorArguments.Count];
@@ -564,7 +596,7 @@ public static class AttributeConversionManager
 		Func<string> createErrorMessage = () => {
 			var b = new System.Text.StringBuilder (" Types { ");
 			for (int i = 0; i < constructorArguments.Length; ++i)
-				b.Append (constructorArguments[i].GetType ().ToString () + " ");
+				b.Append (constructorArguments [i].GetType ().ToString () + " ");
 			b.Append ("}");
 			return b.ToString ();
 		};
@@ -577,20 +609,31 @@ public static class AttributeConversionManager
 		switch (attribute.ConstructorArguments.Count) {
 		case 2:
 			if (constructorArguments [0].GetType () == typeof (byte) &&
-			    constructorArguments [1].GetType () == typeof (byte)) {
+				constructorArguments [1].GetType () == typeof (byte)) {
+#if NET
+				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], null };
+				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (string) };
+#else
 				ctorValues = new object [] { (byte)platform, (int)(byte)constructorArguments [0], (int)(byte)constructorArguments [1], (byte)0xff, null };
 				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
+#endif
 				break;
 			}
 			throw new NotImplementedException (unknownFormatError ());
 		case 3:
 			if (constructorArguments [0].GetType () == typeof (byte) &&
-			    constructorArguments [1].GetType () == typeof (byte) &&
-			    constructorArguments [2].GetType () == typeof (byte)) {
+				constructorArguments [1].GetType () == typeof (byte) &&
+				constructorArguments [2].GetType () == typeof (byte)) {
+#if NET
+				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], (int) (byte) constructorArguments [2], null };
+				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (int), typeof (string) };
+#else
 				ctorValues = new object [] { (byte) platform, (int)(byte)constructorArguments [0], (int)(byte)constructorArguments [1], (int)(byte)constructorArguments [2], (byte) 0xff, null };
 				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
+#endif
 				break;
 			}
+#if !NET
 			if (constructorArguments [0].GetType () == typeof (byte) &&
 			    constructorArguments [1].GetType () == typeof (byte) &&
 			    constructorArguments [2].GetType () == typeof (bool)) {
@@ -599,7 +642,9 @@ public static class AttributeConversionManager
 				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
 				break;
 			}
+#endif
 			throw new NotImplementedException (unknownFormatError ());
+#if !NET
 		case 4:
 			if (constructorArguments [0].GetType () == typeof (byte) &&
 			    constructorArguments [1].GetType () == typeof (byte) &&
@@ -620,6 +665,7 @@ public static class AttributeConversionManager
 			}
 
 			throw new NotImplementedException (unknownFormatError ());
+#endif
 		default:
 			throw new NotImplementedException ($"Unknown count {attribute.ConstructorArguments.Count} {createErrorMessage ()}");
 		}
@@ -627,8 +673,7 @@ public static class AttributeConversionManager
 		return AttributeFactory.CreateNewAttribute (AttributeFactory.IntroducedAttributeType, ctorTypes, ctorValues);
 	}
 
-	struct ParsedAvailabilityInfo
-	{
+	struct ParsedAvailabilityInfo {
 		public PlatformName Platform;
 		public int Major;
 		public int Minor;
@@ -671,8 +716,7 @@ public static class AttributeConversionManager
 			throw new NotImplementedException ($"Unknown version format \"{enumName}\" in DetermineOldAvailabilityVersion. Are there two values | togeather?");
 
 		string [] enumParts = enumName.Split (new char [] { '_' });
-		switch (enumParts.Count ())
-		{
+		switch (enumParts.Count ()) {
 		case 1:
 			if (enumName == "None")
 				return new ParsedAvailabilityInfo (PlatformName.None);
@@ -705,7 +749,7 @@ public static class AttributeConversionManager
 	{
 		string message = null;
 		if (attribute.NamedArguments.Any (x => x.MemberName == "Message"))
-			message = (string)attribute.NamedArguments.First (x => x.MemberName == "Message").TypedValue.Value;
+			message = (string) attribute.NamedArguments.First (x => x.MemberName == "Message").TypedValue.Value;
 
 		foreach (var arg in attribute.NamedArguments) {
 			switch (arg.MemberName) {
@@ -739,15 +783,16 @@ public static class AttributeConversionManager
 }
 
 
-static class AttributeFactory
-{
-	public static System.Type PlatformEnum = typeof (TypeManager).Assembly.GetType ("ObjCRuntime.PlatformName");
-	public static System.Type PlatformArch = typeof (TypeManager).Assembly.GetType ("ObjCRuntime.PlatformArchitecture");
+static class AttributeFactory {
+	public static System.Type PlatformEnum = typeof (PlatformName);
+#if !NET
+	public static System.Type PlatformArch = typeof (PlatformArchitecture);
+#endif
 
-	public static System.Type IntroducedAttributeType = typeof (TypeManager).Assembly.GetType ("ObjCRuntime.IntroducedAttribute");
-	public static System.Type UnavailableAttributeType = typeof (TypeManager).Assembly.GetType ("ObjCRuntime.UnavailableAttribute");
-	public static System.Type ObsoletedAttributeType = typeof (TypeManager).Assembly.GetType ("ObjCRuntime.ObsoletedAttribute");
-	public static System.Type DeprecatedAttributeType = typeof (TypeManager).Assembly.GetType ("ObjCRuntime.DeprecatedAttribute");
+	public static System.Type IntroducedAttributeType = typeof (IntroducedAttribute);
+	public static System.Type UnavailableAttributeType = typeof (UnavailableAttribute);
+	public static System.Type ObsoletedAttributeType = typeof (ObsoletedAttribute);
+	public static System.Type DeprecatedAttributeType = typeof (DeprecatedAttribute);
 
 	public static System.Attribute CreateNewAttribute (System.Type attribType, System.Type [] ctorTypes, object [] ctorValues)
 	{
@@ -758,46 +803,71 @@ static class AttributeFactory
 		return (System.Attribute) ctor.Invoke (ctorValues);
 	}
 
-	static Attribute CreateMajorMinorAttribute (System.Type type, PlatformName platform, int major, int minor, byte arch, string message)
+	static Attribute CreateMajorMinorAttribute (System.Type type, PlatformName platform, int major, int minor, string message)
 	{
-		var ctorValues = new object [] { (byte)platform, major, minor, arch, message };
+#if NET
+		var ctorValues = new object [] { (byte) platform, major, minor, message };
+		var ctorTypes = new System.Type [] { PlatformEnum, typeof (int), typeof (int), typeof (string) };
+#else
+		var ctorValues = new object [] { (byte)platform, major, minor, (byte) 0xff, message };
 		var ctorTypes = new System.Type [] { PlatformEnum, typeof (int), typeof (int), PlatformArch, typeof (string) };
+#endif
 		return CreateNewAttribute (type, ctorTypes, ctorValues);
 	}
 
-	public static System.Attribute CreateNewIntroducedAttribute (PlatformName platform, int major, int minor, byte arch = 0xff, string message = null)
+	static Attribute CreateUnspecifiedAttribute (System.Type type, PlatformName platform, string message)
 	{
-		return CreateMajorMinorAttribute (IntroducedAttributeType, platform, major, minor, arch, message);
-	}
-
-	public static System.Attribute CreateObsoletedAttribute (PlatformName platform, int major, int minor, byte arch = 0xff, string message = null)
-	{
-		return CreateMajorMinorAttribute (ObsoletedAttributeType, platform, major, minor, arch, message);
-	}
-
-	public static System.Attribute CreateDeprecatedAttribute (PlatformName platform, int major, int minor, byte arch = 0xff, string message = null)
-	{
-		return CreateMajorMinorAttribute (DeprecatedAttributeType, platform, major, minor, arch, message);
-	}
-
-	public static System.Attribute CreateUnavailableAttribute (PlatformName platformName, byte arch = 0xff, string message = null)
-	{
-		var ctorValues = new object [] { (byte)platformName, arch, message };
+#if NET
+		var ctorValues = new object [] { (byte) platform, message };
+		var ctorTypes = new System.Type [] { PlatformEnum, typeof (string) };
+#else
+		var ctorValues = new object [] { (byte)platform, (byte) 0xff, message };
 		var ctorTypes = new System.Type [] { PlatformEnum, PlatformArch, typeof (string) };
+#endif
+		return CreateNewAttribute (type, ctorTypes, ctorValues);
+	}
+
+	public static System.Attribute CreateNewIntroducedAttribute (PlatformName platform, int major, int minor, string message = null)
+	{
+		return CreateMajorMinorAttribute (IntroducedAttributeType, platform, major, minor, message);
+	}
+
+	public static System.Attribute CreateNewUnspecifiedIntroducedAttribute (PlatformName platform, string message = null)
+	{
+		return CreateUnspecifiedAttribute (IntroducedAttributeType, platform, message);
+	}
+
+	public static System.Attribute CreateObsoletedAttribute (PlatformName platform, int major, int minor, string message = null)
+	{
+		return CreateMajorMinorAttribute (ObsoletedAttributeType, platform, major, minor, message);
+	}
+
+	public static System.Attribute CreateDeprecatedAttribute (PlatformName platform, int major, int minor, string message = null)
+	{
+		return CreateMajorMinorAttribute (DeprecatedAttributeType, platform, major, minor, message);
+	}
+
+	public static System.Attribute CreateUnavailableAttribute (PlatformName platformName, string message = null)
+	{
+#if NET
+		var ctorValues = new object [] { (byte) platformName, message };
+		var ctorTypes = new System.Type [] { PlatformEnum, typeof (string) };
+#else
+		var ctorValues = new object [] { (byte)platformName, (byte) 0xff, message };
+		var ctorTypes = new System.Type [] { PlatformEnum, PlatformArch, typeof (string) };
+#endif
 		return CreateNewAttribute (UnavailableAttributeType, ctorTypes, ctorValues);
 	}
 }
 
-public static class EnumerableExtensions
-{
+public static class EnumerableExtensions {
 	public static IEnumerable<T> Yield<T> (this T item)
 	{
 		yield return item;
 	}
 }
 
-public static class CustomAttributeDataExtensions
-{
+public static class CustomAttributeDataExtensions {
 #if !NET
 	static Type roCustomAttributeDataType;
 	static PropertyInfo attributeTypeProperty;

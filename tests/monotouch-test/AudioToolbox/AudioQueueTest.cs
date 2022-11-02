@@ -9,10 +9,8 @@
 
 #if !__WATCHOS__
 
-using System;
 using System.Collections.Generic;
 using Foundation;
-using AVFoundation;
 using AudioToolbox;
 using NUnit.Framework;
 

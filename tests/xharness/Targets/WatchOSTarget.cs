@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -7,8 +7,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.Targets {
-	public class WatchOSTarget : iOSTarget
-	{
+	public class WatchOSTarget : iOSTarget {
 		public string AppName { get; private set; }
 		public string ExtensionName { get; private set; }
 
@@ -31,7 +30,7 @@ namespace Xharness.Targets {
 		public override string DotNetSdk => "Microsoft.watchOS.Sdk";
 		public override string RuntimeIdentifier => throw new NotImplementedException ();
 		public override DevicePlatform ApplePlatform => DevicePlatform.watchOS;
-		public override string TargetFramework => "net6.0-watchos";
+		public override string TargetFramework => DotNetTfm + "-watchos";
 		public override string TargetFrameworkForNuGet => "xamarinwatch10";
 
 		void CreateWatchOSAppProject ()
@@ -56,7 +55,7 @@ namespace Xharness.Targets {
 			info_plist.SetPListStringValue ("WKCompanionAppBundleIdentifier", BundleIdentifier);
 			info_plist.SetPListStringValue ("CFBundleName", Name);
 			info_plist.SetMinimumOSVersion (GetMinimumOSVersion (info_plist.GetMinimumOSVersion ()));
-			info_plist.Save(target_info_plist, Harness);
+			info_plist.Save (target_info_plist, Harness);
 		}
 
 		void CreateWatchOSContainerProject ()
@@ -185,7 +184,7 @@ namespace Xharness.Targets {
 				return IsFSharp ? "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.ObjCBinding.FSharp.targets" : "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.ObjCBinding.CSharp.targets";
 			}
 		}
-			
+
 		void CreateWatchOSLibraryProject ()
 		{
 			var csproj = inputProject;

@@ -1,11 +1,17 @@
-﻿using System.IO;
+using System.IO;
 
 using NUnit.Framework;
+
+using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
 using System.Linq;
 
-namespace Xamarin.iOS.Tasks
+using Xamarin.MacDev.Tasks;
+using Xamarin.Tests;
+using Xamarin.Utils;
+
+namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture]
 	public abstract class GeneratePlistTaskTests_Core : TestBase
@@ -24,33 +30,48 @@ namespace Xamarin.iOS.Tasks
 			get; set;
 		}
 
-		protected CompileAppManifestTaskCore Task {
+		protected CompileAppManifest Task {
 			get; set;
 		}
 
-		public virtual void ConfigureTask ()
+		protected bool IsDotNet { get; private set; }
+
+		protected abstract ApplePlatform Platform { get; }
+
+		protected GeneratePlistTaskTests_Core (bool isDotNet)
+		{
+			IsDotNet = isDotNet;
+		}
+
+		protected virtual void ConfigureTask (bool isDotNet)
 		{
 			Task = CreateTask<CompileAppManifest> ();
 
+			Task.ApplicationId = identifier;
 			Task.AppBundleName = appBundleName;
-			Task.AppManifestBundleDirectory = Path.Combine (Cache.CreateTemporaryDirectory (), "AppBundlePath");
+			Task.CompiledAppManifest = new TaskItem (Path.Combine (Cache.CreateTemporaryDirectory (), "AppBundlePath", "Info.plist"));
 			Task.AssemblyName = assemblyName;
-			Task.AppManifest = CreateTempFile ("foo.plist");
-			Task.BundleIdentifier = bundleIdentifier;
-			Task.MinimumOSVersion = string.Empty;
+			Task.AppManifest = new TaskItem (CreateTempFile ("foo.plist"));
 			Task.SdkPlatform = "iPhoneSimulator";
+			Task.SdkVersion = "10.0";
 
 			Plist = new PDictionary ();
 			Plist ["CFBundleDisplayName"] = displayName;
-			Plist ["CFBundleIdentifier"] = identifier;
-			Plist.Save (Task.AppManifest);
+			Plist ["CFBundleIdentifier"] = bundleIdentifier;
+			Plist.Save (Task.AppManifest.ItemSpec);
 		}
 
 		public override void Setup ()
 		{
 			base.Setup ();
 
-			ConfigureTask ();
+			if (IsDotNet) {
+				Configuration.AssertDotNetAvailable ();
+			} else {
+				Configuration.AssertLegacyXamarinAvailable ();
+			}
+
+			ConfigureTask (IsDotNet);
 
 			Task.Execute ();
 			CompiledPlist = PDictionary.FromFile (Task.CompiledAppManifest.ItemSpec);
@@ -60,15 +81,16 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void PlistMissing ()
 		{
-			File.Delete (Task.AppManifest);
-			Assert.IsFalse (Task.Execute (), "#1");
+			File.Delete (Task.AppManifest.ItemSpec);
+			Assert.IsTrue (Task.Execute (), "#1");
+			Assert.That (Task.CompiledAppManifest.ItemSpec, Does.Exist, "#2");
 		}
 
 		[Test]
 		public void NormalPlist ()
 		{
 			Assert.IsTrue (Task.Execute (), "#1");
-			Assert.IsNotNull (Task.CompiledAppManifest, "#2");
+			Assert.IsNotNull (Task.CompiledAppManifest?.ItemSpec, "#2");
 			Assert.IsTrue (File.Exists (Task.CompiledAppManifest.ItemSpec), "#3");
 		}
 
@@ -76,7 +98,7 @@ namespace Xamarin.iOS.Tasks
 		public void MissingBundleIdentifier ()
 		{
 			Plist.Remove ("CFBundleIdentifier");
-			Plist.Save (Task.AppManifest);
+			Plist.Save (Task.AppManifest.ItemSpec);
 			Assert.IsTrue (Task.Execute (), "#1");
 		}
 
@@ -84,15 +106,19 @@ namespace Xamarin.iOS.Tasks
 		public void MissingDisplayName ()
 		{
 			Plist.Remove ("CFBundleDisplayName");
-			Plist.Save (Task.AppManifest);
+			Plist.Save (Task.AppManifest.ItemSpec);
 			Assert.IsTrue (Task.Execute (), "#1");
 		}
 
 		[Test]
 		public virtual void XamarinVersion ()
 		{
-			Assert.That (CompiledPlist.ContainsKey ("com.xamarin.ios"), "#1");
-			Assert.That (CompiledPlist.Get<PDictionary> ("com.xamarin.ios").GetString ("Version").Value, Is.Not.Null.Or.Empty, "#2");
+			var keyName = "com.xamarin.ios";
+			if (IsDotNet) {
+				keyName = "com.microsoft." + Platform.AsString ().ToLowerInvariant ();
+			}
+			Assert.That (CompiledPlist.ContainsKey (keyName), "#1");
+			Assert.That (CompiledPlist.Get<PDictionary> (keyName).GetString ("Version").Value, Is.Not.Null.Or.Empty, "#2");
 		}
 		#endregion
 
@@ -211,4 +237,3 @@ namespace Xamarin.iOS.Tasks
 		#endregion
 	}
 }
-

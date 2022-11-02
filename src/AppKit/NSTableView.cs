@@ -24,6 +24,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if !__MACCATALYST__
+
 using System;
 
 using Foundation;
@@ -33,7 +35,7 @@ namespace AppKit {
 	public partial class NSTableView {
 		public NSTableViewSource Source {
 			get {
-				var d = WeakDelegate as NSTableViewSource; 
+				var d = WeakDelegate as NSTableViewSource;
 				if (d != null)
 					return d;
 				return null;
@@ -56,3 +58,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

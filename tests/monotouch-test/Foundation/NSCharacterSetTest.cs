@@ -1,5 +1,3 @@
-using System;
-using System.Drawing;
 using Foundation;
 #if MONOMAC
 using AppKit;
@@ -50,4 +48,3 @@ namespace MonoTouchFixtures.Foundation
 		}
 	}
 }
-

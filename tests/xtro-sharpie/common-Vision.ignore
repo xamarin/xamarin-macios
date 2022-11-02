@@ -41,6 +41,8 @@
 !unknown-native-enum! VNDetectTrajectoriesRequestRevision bound
 !unknown-native-enum! VNGenerateOpticalFlowRequestRevision bound
 !unknown-native-enum! VNStatefulRequestRevision bound
+!unknown-native-enum! VNDetectDocumentSegmentationRequestRevision bound
+!unknown-native-enum! VNGeneratePersonSegmentationRequestRevision bound
 
 ## VNRequest is an abstract class so this will be bound in subclasses
 ## matching the return type to the above defined custom enums 
@@ -53,42 +55,7 @@
 !missing-selector! VNRequest::init not bound
 
 # Not really needed anymore, this old(?) unbound APIs got replaced
-!missing-field! VNVideoProcessingOptionFrameCadence not bound
-!missing-field! VNVideoProcessingOptionTimeInterval not bound
 
 # API introduced and deprecated at the same time in Xcode 12
-!missing-field! VNBodyLandmarkKeyLeftAnkle not bound
-!missing-field! VNBodyLandmarkKeyLeftEar not bound
-!missing-field! VNBodyLandmarkKeyLeftElbow not bound
-!missing-field! VNBodyLandmarkKeyLeftEye not bound
-!missing-field! VNBodyLandmarkKeyLeftHip not bound
-!missing-field! VNBodyLandmarkKeyLeftKnee not bound
-!missing-field! VNBodyLandmarkKeyLeftShoulder not bound
-!missing-field! VNBodyLandmarkKeyLeftWrist not bound
-!missing-field! VNBodyLandmarkKeyNeck not bound
-!missing-field! VNBodyLandmarkKeyNose not bound
-!missing-field! VNBodyLandmarkKeyRightAnkle not bound
-!missing-field! VNBodyLandmarkKeyRightEar not bound
-!missing-field! VNBodyLandmarkKeyRightElbow not bound
-!missing-field! VNBodyLandmarkKeyRightEye not bound
-!missing-field! VNBodyLandmarkKeyRightHip not bound
-!missing-field! VNBodyLandmarkKeyRightKnee not bound
-!missing-field! VNBodyLandmarkKeyRightShoulder not bound
-!missing-field! VNBodyLandmarkKeyRightWrist not bound
-!missing-field! VNBodyLandmarkKeyRoot not bound
-!missing-field! VNBodyLandmarkRegionKeyFace not bound
-!missing-field! VNBodyLandmarkRegionKeyLeftArm not bound
-!missing-field! VNBodyLandmarkRegionKeyLeftLeg not bound
-!missing-field! VNBodyLandmarkRegionKeyRightArm not bound
-!missing-field! VNBodyLandmarkRegionKeyRightLeg not bound
-!missing-field! VNBodyLandmarkRegionKeyTorso not bound
-!missing-selector! +VNPoint::distanceBetweenPoint:point: not bound
-!missing-selector! VNDetectContoursRequest::detectDarkOnLight not bound
-!missing-selector! VNDetectContoursRequest::setDetectDarkOnLight: not bound
-!missing-selector! VNDetectTrajectoriesRequest::maximumObjectSize not bound
-!missing-selector! VNDetectTrajectoriesRequest::minimumObjectSize not bound
-!missing-selector! VNDetectTrajectoriesRequest::setMaximumObjectSize: not bound
-!missing-selector! VNDetectTrajectoriesRequest::setMinimumObjectSize: not bound
-!missing-selector! VNStatefulRequest::requestFrameAnalysisSpacing not bound
-!missing-selector! VNVideoProcessor::addRequest:withProcessingOptions:error: not bound
-!missing-selector! VNVideoProcessor::analyzeWithTimeRange:error: not bound
+
+# Existing enums with name changes relevant only to Swift

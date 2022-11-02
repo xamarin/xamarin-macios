@@ -1,3 +1,4 @@
+#if !NET
 using System;
 using PlatformArchitecture = ObjCRuntime.PlatformArchitecture;
 using PlatformName = ObjCRuntime.PlatformName;
@@ -14,13 +15,11 @@ sealed class MacAttribute : ObjCRuntime.IntroducedAttribute
 	{
 	}
 
-#if !XAMCORE_4_0
 	[Obsolete ("Use the overload that takes '(major, minor)', since macOS is always 64-bit.")]
 	public MacAttribute (byte major, byte minor, bool onlyOn64 = false)
 		: base (PlatformName.MacOSX, (int)major, (int)minor, onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All)
 	{
 	}
-#endif
 	
 	/* This variant can _not_ exist as the AttributeConversionManager.ConvertPlatformAttribute sees PlatformArchitecture as a byte
 	   and byte,byte,byte already exists below
@@ -35,13 +34,11 @@ sealed class MacAttribute : ObjCRuntime.IntroducedAttribute
 	{
 	}
 
-#if !XAMCORE_4_0
 	[Obsolete ("Use the overload that takes '(major, minor, subminor)', since macOS is always 64-bit.")]
 	public MacAttribute (byte major, byte minor, byte subminor, bool onlyOn64)
 		: base (PlatformName.MacOSX, (int)major, (int)minor, (int)subminor, onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All)
 	{
 	}
-#endif
 
 	public MacAttribute (byte major, byte minor, byte subminor, PlatformArchitecture arch)
 		: base (PlatformName.MacOSX, (int)major, (int)minor, (int)subminor, arch)
@@ -58,26 +55,22 @@ sealed class iOSAttribute : ObjCRuntime.IntroducedAttribute
 	{
 	}
 
-#if !XAMCORE_4_0
 	[Obsolete ("Use the overload that takes '(major, minor)', since iOS is always 64-bit.")]
 	public iOSAttribute (byte major, byte minor, bool onlyOn64 = false)
 		: base (PlatformName.iOS, (int)major, (int)minor, onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All)
 	{
 	}
-#endif
 
 	public iOSAttribute (byte major, byte minor, byte subminor)
 		: base (PlatformName.iOS, (int)major, (int)minor, subminor)
 	{
 	}
 
-#if !XAMCORE_4_0
 	[Obsolete ("Use the overload that takes '(major, minor, subminor)', since iOS is always 64-bit.")]
 	public iOSAttribute (byte major, byte minor, byte subminor, bool onlyOn64)
 		: base (PlatformName.iOS, (int)major, (int)minor, (int)subminor, onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All)
 	{
 	}
-#endif
 }
 
 #if COREBUILD
@@ -175,3 +168,4 @@ public class AvailabilityAttribute : Attribute
 	}
 }
 #endif
+#endif // !NET

@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-using CoreFoundation;
 using Foundation;
 
 namespace MonoTouchFixtures.Foundation {
@@ -133,4 +132,3 @@ namespace MonoTouchFixtures.Foundation {
 #endif // !__WATCHOS__
 	}
 }
-

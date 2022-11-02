@@ -1,5 +1,7 @@
 // Copyright 2015 Xamarin Inc.
 
+#nullable enable
+
 using System;
 
 using StoreKit;
@@ -10,7 +12,7 @@ namespace StoreKit {
 
 #if !XAMCORE_3_0
 
-		[Obsolete ("Use FromProduct (SKProduct) instead.")]
+		[Obsolete ("Use CreateFrom (SKProduct) instead.")]
 		public static SKPayment PaymentWithProduct (SKProduct product)
 		{
 			return CreateFrom (product);
@@ -18,7 +20,7 @@ namespace StoreKit {
 
 #if !MONOMAC
 
-		[Obsolete ("Use FromProductIdentifier (string) instead.")]
+		[Obsolete ("Use CreateFrom (string) instead.")]
 		public static SKPayment PaymentWithProduct (string identifier)
 		{
 			return CreateFrom (identifier);

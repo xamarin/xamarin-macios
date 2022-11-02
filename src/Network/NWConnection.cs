@@ -18,6 +18,10 @@ using nw_endpoint_t=System.IntPtr;
 using nw_parameters_t=System.IntPtr;
 using nw_establishment_report_t=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
 	//
@@ -41,20 +45,34 @@ namespace Network {
 	//
 	public delegate void NWConnectionReceiveReadOnlySpanCompletion (ReadOnlySpan<byte> data, NWContentContext? context, bool isComplete, NWError? error);
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
+#if NET
+	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#else
+	[TV (12,0)]
+	[Mac (10,14)]
+	[iOS (12,0)]
 	[Watch (6,0)]
+#endif
 	public class NWConnection : NativeObject {
-		public NWConnection (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+#if NET
+		internal NWConnection (NativeHandle handle, bool owns) : base (handle, owns) {}
+#else
+		public NWConnection (NativeHandle handle, bool owns) : base (handle, owns) {}
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern nw_connection_t nw_connection_create (nw_endpoint_t endpoint, nw_parameters_t parameters);
 
 		public NWConnection (NWEndpoint endpoint, NWParameters parameters)
 		{
-			if (endpoint == null)
-				throw new ArgumentNullException (nameof (endpoint));
-			if (parameters == null)
-				throw new ArgumentNullException (nameof (parameters));
+			if (endpoint is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
+			if (parameters is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 			InitializeHandle (nw_connection_create (endpoint.Handle, parameters.Handle));
 		}
 
@@ -89,7 +107,7 @@ namespace Network {
 		static void Trampoline_StateChangeCallback (IntPtr block, NWConnectionState state, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWConnectionState,NWError?>> (block);
-			if (del != null) {
+			if (del is not null) {
 				NWError? err = error != IntPtr.Zero ? new NWError (error, owns: false) : null;
 				del (state, err);
 			}
@@ -101,7 +119,7 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe void SetStateChangeHandler (Action<NWConnectionState,NWError?> stateHandler)
 		{
-			if (stateHandler == null) {
+			if (stateHandler is null) {
 				nw_connection_set_state_changed_handler (GetCheckedHandle (), null);
 				return;
 			}
@@ -126,7 +144,7 @@ namespace Network {
 		static void TrampolineBooleanChangeHandler (IntPtr block, bool value)
 		{
 			var del = BlockLiteral.GetTarget<Action<bool>> (block);
-			if (del != null)
+			if (del is not null)
 			        del (value);
 		}
 
@@ -136,7 +154,7 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe void SetBooleanChangeHandler (Action<bool> callback)
 		{
-			if (callback == null) {
+			if (callback is null) {
 				nw_connection_set_viability_changed_handler (GetCheckedHandle (), null);
 				return;
 			}
@@ -160,7 +178,7 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe void SetBetterPathAvailableHandler (Action<bool> callback)
 		{
-			if (callback == null) {
+			if (callback is null) {
 				nw_connection_set_better_path_available_handler (GetCheckedHandle (), null);
 				return;
 			}
@@ -185,7 +203,7 @@ namespace Network {
 		static void TrampolinePathChanged (IntPtr block, IntPtr path)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWPath>> (block);
-			if (del != null) {
+			if (del is not null) {
 				var x = new NWPath (path, owns: false);
 				del (x);
 			}
@@ -212,8 +230,8 @@ namespace Network {
 
 		public void SetQueue (DispatchQueue queue)
 		{
-			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
+			if (queue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 			nw_connection_set_queue (GetCheckedHandle (), queue.Handle);
 		}
 
@@ -256,7 +274,7 @@ namespace Network {
 		static void TrampolineReceiveCompletion (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, bool isComplete, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<NWConnectionReceiveCompletion> (block);
-			if (del != null) {
+			if (del is not null) {
 				DispatchData? dispatchData = null, dataCopy = null;
 				IntPtr bufferAddress = IntPtr.Zero;
 				nuint bufferSize = 0;
@@ -272,7 +290,7 @@ namespace Network {
 				     isComplete,
 				     error == IntPtr.Zero ? null : new NWError (error, owns: false));
 
-				if (dispatchData != null) {
+				if (dispatchData is not null) {
 					dataCopy?.Dispose ();
 					dispatchData?.Dispose ();
 				}
@@ -283,7 +301,7 @@ namespace Network {
 		static void TrampolineReceiveCompletionData (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, bool isComplete, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<NWConnectionReceiveDispatchDataCompletion> (block);
-			if (del != null) {
+			if (del is not null) {
 				DispatchData? dispatchData = null;
 				IntPtr bufferAddress = IntPtr.Zero;
 
@@ -295,7 +313,7 @@ namespace Network {
 				     isComplete,
 				     error == IntPtr.Zero ? null : new NWError (error, owns: false));
 
-				if (dispatchData != null)
+				if (dispatchData is not null)
 					dispatchData.Dispose ();
 			}
 		}
@@ -304,7 +322,7 @@ namespace Network {
 		static void TrampolineReceiveCompletionReadOnlyData (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, bool isComplete, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<NWConnectionReceiveReadOnlySpanCompletion> (block);
-			if (del != null) {
+			if (del is not null) {
 				var dispatchData = (dispatchDataPtr != IntPtr.Zero) ? new DispatchData (dispatchDataPtr, owns: false) : null;
 
 				var spanData = new ReadOnlySpan<byte> (dispatchData?.ToArray () ?? Array.Empty<byte>());
@@ -313,7 +331,7 @@ namespace Network {
 					isComplete,
 					error == IntPtr.Zero ? null : new NWError (error, owns: false));
 
-				if (dispatchData != null) {
+				if (dispatchData is not null) {
 					dispatchData.Dispose ();
 				}
 			}
@@ -325,8 +343,8 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void Receive (uint minimumIncompleteLength, uint maximumLength, NWConnectionReceiveCompletion callback)
 		{
-			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+			if (callback is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
@@ -340,8 +358,8 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void ReceiveData (uint minimumIncompleteLength, uint maximumLength, NWConnectionReceiveDispatchDataCompletion callback)
 		{
-			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+			if (callback is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
@@ -356,8 +374,8 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void ReceiveReadOnlyData (uint minimumIncompleteLength, uint maximumLength, NWConnectionReceiveReadOnlySpanCompletion callback)
 		{
-			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+			if (callback is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchReadnOnlyData, callback);
@@ -375,8 +393,8 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void ReceiveMessage (NWConnectionReceiveCompletion callback)
 		{
-			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+			if (callback is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
@@ -391,8 +409,8 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void ReceiveMessageData (NWConnectionReceiveDispatchDataCompletion callback)
 		{
-			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+			if (callback is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
@@ -407,8 +425,8 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void ReceiveMessageReadOnlyData (NWConnectionReceiveReadOnlySpanCompletion callback)
 		{
-			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+			if (callback is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchReadnOnlyData, callback);
@@ -427,7 +445,7 @@ namespace Network {
 		static void TrampolineSendCompletion (IntPtr block, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWError?>> (block);
-			if (del != null) {
+			if (del is not null) {
 				var err = error == IntPtr.Zero ? null : new NWError (error, owns: false);
 				del (err);
 				err?.Dispose ();
@@ -458,7 +476,7 @@ namespace Network {
 		public void Send (byte [] buffer, NWContentContext context, bool isComplete, Action<NWError?> callback)
 		{
 			DispatchData? d = null;
-			if (buffer != null)
+			if (buffer is not null)
 				d = DispatchData.FromByteBuffer (buffer);
 
 			Send (d, context, isComplete, callback);
@@ -467,7 +485,7 @@ namespace Network {
 		public void Send (byte [] buffer, int start, int length, NWContentContext context, bool isComplete, Action<NWError?> callback)
 		{
 			DispatchData? d = null;
-			if (buffer != null)
+			if (buffer is not null)
 				d = DispatchData.FromByteBuffer (buffer, start, length);
 
 			Send (d, context, isComplete, callback);
@@ -476,10 +494,10 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void Send (DispatchData? buffer, NWContentContext context, bool isComplete, Action<NWError?> callback)
 		{
-			if (context == null)
-				throw new ArgumentNullException (nameof (context));
-			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+			if (context is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
+			if (callback is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			unsafe {
 				BlockLiteral block_handler = new BlockLiteral ();
@@ -496,8 +514,8 @@ namespace Network {
 
 		public unsafe void SendIdempotent (DispatchData? buffer, NWContentContext context, bool isComplete)
 		{
-			if (context == null)
-				throw new ArgumentNullException (nameof (context));
+			if (context is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 
 			LowLevelSend (GetCheckedHandle (), buffer, context.Handle, isComplete, (void *) NWConnectionConstants._SendIdempotentContent);
 		}
@@ -505,7 +523,7 @@ namespace Network {
 		public void SendIdempotent (byte [] buffer, NWContentContext context, bool isComplete)
 		{
 			DispatchData? d = null;
-			if (buffer != null)
+			if (buffer is not null)
 				d = DispatchData.FromByteBuffer (buffer);
 
 			SendIdempotent (d, context, isComplete);
@@ -533,8 +551,8 @@ namespace Network {
 
 		public NWProtocolMetadata? GetProtocolMetadata (NWProtocolDefinition definition)
 		{
-			if (definition == null)
-				throw new ArgumentNullException (nameof (definition));
+			if (definition is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (definition));
 
 			var x = nw_connection_copy_protocol_metadata (GetCheckedHandle (), definition.Handle);
 			if (x == IntPtr.Zero)
@@ -542,10 +560,10 @@ namespace Network {
 			return new NWProtocolMetadata (x, owns: true);
 		}
 
-		public T GetProtocolMetadata<T> (NWProtocolDefinition definition) where T : NWProtocolMetadata
+		public T? GetProtocolMetadata<T> (NWProtocolDefinition definition) where T : NWProtocolMetadata
 		{
-			if (definition == null)
-				throw new ArgumentNullException (nameof (definition));
+			if (definition is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (definition));
 
 			var x = nw_connection_copy_protocol_metadata (GetCheckedHandle (), definition.Handle);
 			return Runtime.GetINativeObject<T> (x, owns: true);
@@ -564,7 +582,16 @@ namespace Network {
 			BlockLiteral.SimpleCall (method, (arg)=> nw_connection_batch (GetCheckedHandle (), arg));
 		}
 
-		[TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_connection_access_establishment_report (IntPtr connection, IntPtr queue, ref BlockLiteral access_block);
 
@@ -575,21 +602,30 @@ namespace Network {
 		static void TrampolineGetEstablishmentReportHandler (IntPtr block, nw_establishment_report_t report)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWEstablishmentReport>> (block);
-			if (del != null) {
+			if (del is not null) {
 				// the ownerthip of the object is for the caller
 				var nwReport = new NWEstablishmentReport (report, owns: true);
 				del (nwReport);
 			}
 		}
 
-		[TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void GetEstablishmentReport (DispatchQueue queue, Action<NWEstablishmentReport> handler)
 		{
-			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+			if (queue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_GetEstablishmentReportHandler, handler);

@@ -26,6 +26,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -34,9 +37,20 @@ using Foundation;
 using CoreFoundation;
 using CoreGraphics;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreText {
 
 #region Typesetter Values
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTTypesetterOptions {
 
 		public CTTypesetterOptions ()
@@ -46,14 +60,25 @@ namespace CoreText {
 
 		public CTTypesetterOptions (NSDictionary dictionary)
 		{
-			if (dictionary == null)
-				throw new ArgumentNullException ("dictionary");
+			if (dictionary is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dictionary));
 			Dictionary = dictionary;
 		}
 
 		public NSDictionary Dictionary {get; private set;}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios6.0")]
+#if IOS
+		[Obsolete ("Starting with ios6.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 6, 0)]
+#endif
 		public bool DisableBidiProcessing {
 			get {
 				return CFDictionary.GetBooleanValue (Dictionary.Handle, 
@@ -72,7 +97,17 @@ namespace CoreText {
 			set {Adapter.SetValue (Dictionary, CTTypesetterOptionKey.ForceEmbeddingLevel, value);}
 		}
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+#if NET
+		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[Watch (5,0)]
+		[TV (12,0)]
+		[Mac (10,14)]
+		[iOS (12,0)]
+#endif
 		public bool AllowUnboundedLayout {
 			get => CFDictionary.GetBooleanValue (Dictionary.Handle, CTTypesetterOptionKey.AllowUnboundedLayout.Handle);
 			set {
@@ -81,79 +116,52 @@ namespace CoreText {
 			}
 		}
 	}
+
+	static class CTTypesetterOptionsExtensions {
+		public static IntPtr GetHandle (this CTTypesetterOptions? self)
+		{
+			if (self is null)
+				return IntPtr.Zero;
+			return self.Dictionary.GetHandle ();
+		}
+	}
 #endregion
 
-	public class CTTypesetter : INativeObject, IDisposable {
-		internal IntPtr handle;
-
-		internal CTTypesetter (IntPtr handle, bool owns)
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class CTTypesetter : NativeObject {
+		[Preserve (Conditional = true)]
+		internal CTTypesetter (NativeHandle handle, bool owns)
+			: base (handle, owns, verify: true)
 		{
-			if (handle == IntPtr.Zero)
-				throw ConstructorError.ArgumentNull (this, "handle");
-
-			this.handle = handle;
-			if (!owns)
-				CFObject.CFRetain (handle);
-		}
-		
-		public IntPtr Handle {
-			get {return handle;}
-		}
-
-		~CTTypesetter ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
 		}
 
 #region Typesetter Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTTypesetterCreateWithAttributedString (IntPtr @string);
 		public CTTypesetter (NSAttributedString value)
+			: base (CTTypesetterCreateWithAttributedString (Runtime.ThrowOnNull (value, nameof (value)).Handle), true, true)
 		{
-			if (value == null)
-				throw ConstructorError.ArgumentNull (this, "value");
-
-			handle = CTTypesetterCreateWithAttributedString (value.Handle);
-
-			if (handle == IntPtr.Zero)
-				throw ConstructorError.Unknown (this);
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTTypesetterCreateWithAttributedStringAndOptions (IntPtr @string, IntPtr options);
-		public CTTypesetter (NSAttributedString value, CTTypesetterOptions options)
+		public CTTypesetter (NSAttributedString value, CTTypesetterOptions? options)
+			: base (CTTypesetterCreateWithAttributedStringAndOptions (Runtime.ThrowOnNull (value, nameof (value)).Handle, options.GetHandle ()), true, true)
 		{
-			if (value == null)
-				throw ConstructorError.ArgumentNull (this, "value");
-
-			handle = CTTypesetterCreateWithAttributedStringAndOptions (value.Handle,
-					options == null ? IntPtr.Zero : options.Dictionary.Handle);
-
-			if (handle == IntPtr.Zero)
-				throw ConstructorError.Unknown (this);
 		}
 #endregion
 
 #region Typeset Line Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTTypesetterCreateLineWithOffset (IntPtr typesetter, NSRange stringRange, double offset);
-		public CTLine GetLine (NSRange stringRange, double offset)
+		public CTLine? GetLine (NSRange stringRange, double offset)
 		{
-			var h = CTTypesetterCreateLineWithOffset (handle, stringRange, offset);
+			var h = CTTypesetterCreateLineWithOffset (Handle, stringRange, offset);
 
 			if (h == IntPtr.Zero)
 				return null;
@@ -163,9 +171,9 @@ namespace CoreText {
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTTypesetterCreateLine (IntPtr typesetter, NSRange stringRange);
-		public CTLine GetLine (NSRange stringRange)
+		public CTLine? GetLine (NSRange stringRange)
 		{
-			var h = CTTypesetterCreateLine (handle, stringRange);
+			var h = CTTypesetterCreateLine (Handle, stringRange);
 
 			if (h == IntPtr.Zero)
 				return null;
@@ -179,30 +187,29 @@ namespace CoreText {
 		static extern nint CTTypesetterSuggestLineBreakWithOffset (IntPtr typesetter, nint startIndex, double width, double offset);
 		public nint SuggestLineBreak (int startIndex, double width, double offset)
 		{
-			return CTTypesetterSuggestLineBreakWithOffset (handle, startIndex, width, offset);
+			return CTTypesetterSuggestLineBreakWithOffset (Handle, startIndex, width, offset);
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern nint CTTypesetterSuggestLineBreak (IntPtr typesetter, nint startIndex, double width);
 		public nint SuggestLineBreak (int startIndex, double width)
 		{
-			return CTTypesetterSuggestLineBreak (handle, startIndex, width);
+			return CTTypesetterSuggestLineBreak (Handle, startIndex, width);
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern nint CTTypesetterSuggestClusterBreakWithOffset (IntPtr typesetter, nint startIndex, double width, double offset);
 		public nint SuggestClusterBreak (int startIndex, double width, double offset)
 		{
-			return CTTypesetterSuggestClusterBreakWithOffset (handle, startIndex, width, offset);
+			return CTTypesetterSuggestClusterBreakWithOffset (Handle, startIndex, width, offset);
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern nint CTTypesetterSuggestClusterBreak (IntPtr typesetter, nint startIndex, double width);
 		public nint SuggestClusterBreak (int startIndex, double width)
 		{
-			return CTTypesetterSuggestClusterBreak (handle, startIndex, width);
+			return CTTypesetterSuggestClusterBreak (Handle, startIndex, width);
 		}
 #endregion
 	}
 }
-

@@ -1,11 +1,11 @@
-﻿using System.IO;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
 using Xamarin.Tests;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	public class ExtensionTestBase : TestBase {
 		public ExtensionTestBase () { }

@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
@@ -34,6 +35,8 @@ using AppKit;
 using UIKit;
 #endif
 using Foundation;
+using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Introspection
 {
@@ -727,7 +730,7 @@ namespace Introspection
 			"Writeln",
 			"Xattr",
 #endif
-#if !XAMCORE_4_0
+#if !NET
 			"Actionfrom",
 			"Asal", // Typo, should be 'Basal', fixed in 'HKInsulinDeliveryReason'
 			"Attributefor",
@@ -768,8 +771,13 @@ namespace Introspection
 				return false;
 			if (mi.GetCustomAttributes<ObsoleteAttribute> (true).Any ())
 				return true;
+#if NET
+			if (mi.GetCustomAttributes<UnsupportedOSPlatformAttribute> (true).Any ((v) => v.TryParse (out ApplePlatform? platform, out var _) && platform == PlatformInfo.Host.Name))
+				return true;
+#else
 			if (mi.GetCustomAttributes<ObsoletedAttribute> (true).Any ())
 				return true;
+#endif
 			return IsObsolete (mi.DeclaringType);
 		}
 
@@ -887,8 +895,10 @@ namespace Introspection
 				message = ((AdviceAttribute)attribute).Message;
 			if (attribute is ObsoleteAttribute)
 				message = ((ObsoleteAttribute)attribute).Message;
+#if !NET
 			if (attribute is AvailabilityBaseAttribute)
 				message = ((AvailabilityBaseAttribute)attribute).Message;
+#endif
 
 			return message;
 		}
@@ -1001,7 +1011,7 @@ namespace Introspection
 			case Constants.CoreImageLibrary:
 				break;
 			default:
-				if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 11, 0)) {
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 11, 0)) {
 					// on macOS 11.0 the frameworks binary files are not present (cache) but can be loaded
 					if (!Directory.Exists (Path.GetDirectoryName (lib)))
 						return false;
@@ -1027,21 +1037,26 @@ namespace Introspection
 			return false;
 		}
 
+		protected void AssertMatchingOSVersionAndSdkVersion ()
+		{
+			var sdk = new Version (Constants.SdkVersion);
+#if MONOMAC
+			if (!NSProcessInfo.ProcessInfo.IsOperatingSystemAtLeastVersion (new NSOperatingSystemVersion (sdk.Major, sdk.Minor, sdk.Build == -1 ? 0 : sdk.Build)))
+#elif __WATCHOS__
+			if (!WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))
+#else
+			if (!UIDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))
+#endif
+				Assert.Ignore ($"This test only executes using the latest OS version ({sdk.Major}.{sdk.Minor})");
+		}
+
 		[Test]
 		public void ConstantsCheck ()
 		{
 			// The constants are file paths for frameworks / dylibs
 			// unless the latest OS is used there's likely to be missing ones
 			// so we run this test only on the latest supported (matching SDK) OS
-			var sdk = new Version (Constants.SdkVersion);
-#if MONOMAC
-			if (!PlatformHelper.CheckSystemVersion (sdk.Major, sdk.Minor))
-#elif __WATCHOS__
-			if (!WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))
-#else
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))
-#endif
-				Assert.Ignore ($"Constants only verified using the latest OS version ({sdk.Major}.{sdk.Minor})");
+			AssertMatchingOSVersionAndSdkVersion ();
 
 			var c = typeof (Constants);
 			foreach (var fi in c.GetFields ()) {
@@ -1053,7 +1068,7 @@ namespace Introspection
 				case "SdkVersion":
 					Assert.True (Version.TryParse (s, out _), fi.Name);
 					break;
-#if !XAMCORE_4_0
+#if !NET
 #if __TVOS__
 				case "PassKitLibrary": // not part of tvOS
 					break;
@@ -1064,17 +1079,19 @@ namespace Introspection
 #endif
 #if !__MACOS__
 				case "ChipLibrary":
+				case "ThreadNetworkLibrary":
 				case "MediaSetupLibrary":
 				case "MLComputeLibrary":
 					// Xcode 12 beta 2 does not ship these framework/headers for the simulators
-					if (Runtime.Arch == Arch.DEVICE)
+					if (TestRuntime.IsDevice)
 						Assert.True (CheckLibrary (s), fi.Name);
 					break;
 #endif
 #if __TVOS__
 				case "MetalPerformanceShadersLibrary":
+				case "MetalPerformanceShadersGraphLibrary":
 					// not supported in tvOS (12.1) simulator so load fails
-					if (Runtime.Arch == Arch.SIMULATOR)
+					if (TestRuntime.IsSimulatorOrDesktop)
 						break;
 					goto default;
 #endif
@@ -1086,7 +1103,7 @@ namespace Introspection
 							if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
 								continue;
 							// Phone works unless Xcode 12 on simulator
-							if ((Runtime.Arch == Arch.SIMULATOR) && TestRuntime.CheckXcodeVersion (12, 0))
+							if (TestRuntime.IsSimulatorOrDesktop && TestRuntime.CheckXcodeVersion (12, 0))
 								continue;
 						}
 #endif

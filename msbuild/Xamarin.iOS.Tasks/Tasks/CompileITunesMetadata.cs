@@ -1,10 +1,8 @@
-﻿using Microsoft.Build.Framework;
+using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks
-{
-	public class CompileITunesMetadata : CompileITunesMetadataTaskBase, ICancelableTask
-	{
+namespace Xamarin.iOS.Tasks {
+	public class CompileITunesMetadata : CompileITunesMetadataTaskBase, ICancelableTask {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())
@@ -16,7 +14,7 @@ namespace Xamarin.iOS.Tasks
 		public void Cancel ()
 		{
 			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

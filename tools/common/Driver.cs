@@ -59,7 +59,7 @@ namespace Xamarin.Bundler {
 		}
 
 		// Returns true if the process should exit (with a 0 exit code; failures are propagated using exceptions)
-		static bool ParseOptions (Application app, Mono.Options.OptionSet options, string[] args, ref Action action)
+		static bool ParseOptions (Application app, Mono.Options.OptionSet options, string [] args, ref Action action)
 		{
 			Action a = Action.None; // Need a temporary local variable, since anonymous functions can't write directly to ref/out arguments.
 
@@ -115,8 +115,7 @@ namespace Xamarin.Bundler {
 			options.Add ("linkskip=", "Skip linking of the specified assembly.", v => app.LinkSkipped.Add (v));
 			options.Add ("i18n=", "List of i18n assemblies to copy to the output directory, separated by commas (none, all, cjk, mideast, other, rare and/or west).", v => app.ParseI18nAssemblies (v));
 			options.Add ("xml=", "Provide an extra XML definition file to the linker.", v => app.Definitions.Add (v));
-			options.Add ("warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v =>
-			{
+			options.Add ("warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v => {
 				try {
 					if (!string.IsNullOrEmpty (v)) {
 						foreach (var code in v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
@@ -128,8 +127,7 @@ namespace Xamarin.Bundler {
 					throw ErrorHelper.CreateError (26, ex, Errors.MX0026, "--warnaserror", ex.Message);
 				}
 			});
-			options.Add ("nowarn:", "An optional comma-separated list of warning codes to ignore (if no warnings are specified all warnings are ignored).", v =>
-			{
+			options.Add ("nowarn:", "An optional comma-separated list of warning codes to ignore (if no warnings are specified all warnings are ignored).", v => {
 				try {
 					if (!string.IsNullOrEmpty (v)) {
 						foreach (var code in v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
@@ -223,13 +221,13 @@ namespace Xamarin.Bundler {
 			options.Add ("http-message-handler=", "Specify the default HTTP message handler for HttpClient.", v => { app.HttpMessageHandler = v; });
 			options.Add ("tls-provider=", "Specify the default TLS provider.", v => { app.TlsProvider = v; });
 			options.Add ("setenv=", "Set the environment variable in the application on startup.", v => {
-					int eq = v.IndexOf ('=');
-					if (eq <= 0)
-						throw ErrorHelper.CreateError (2, Errors.MT0002, v);
-					var name = v.Substring (0, eq);
-					var value = v.Substring (eq + 1);
-					app.EnvironmentVariables.Add (name, value);
-				}
+				int eq = v.IndexOf ('=');
+				if (eq <= 0)
+					throw ErrorHelper.CreateError (2, Errors.MT0002, v);
+				var name = v.Substring (0, eq);
+				var value = v.Substring (eq + 1);
+				app.EnvironmentVariables.Add (name, value);
+			}
 			);
 			options.Add ("registrar:", "Specify the registrar to use (dynamic, static or default (dynamic in the simulator, static on device)).", v => {
 				app.ParseRegistrar (v);
@@ -249,6 +247,13 @@ namespace Xamarin.Bundler {
 					throw new InvalidOperationException ($"Invalid XamarinRuntime '{v}'");
 				app.XamarinRuntime = rv;
 			}, true /* hidden - this is only for build-time --runregistrar support */);
+
+			options.Add ("rid=", "The runtime identifier we're building for", v => {
+				app.RuntimeIdentifier = v;
+			}, true /* hidden - this is only for build-time --runregistrar support */);
+			options.Add ("require-pinvoke-wrappers:", v => {
+				app.RequiresPInvokeWrappers = ParseBool (v, "--require-pinvoke-wrappers");
+			});
 
 
 			// Keep the ResponseFileSource option at the end.
@@ -314,7 +319,7 @@ namespace Xamarin.Bundler {
 		static int GetDefaultVerbosity ()
 		{
 			var v = 0;
-			var fn = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), $".{NAME}-verbosity");
+			var fn = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), $".{NAME}-verbosity");
 			if (File.Exists (fn)) {
 				v = (int) new FileInfo (fn).Length;
 				if (v == 0)
@@ -351,8 +356,6 @@ namespace Xamarin.Bundler {
 			else
 				Console.WriteLine (format);
 		}
-
-		public const bool IsXAMCORE_4_0 = false;
 
 		public static bool IsDotNet {
 			get { return TargetFramework.IsDotNet; }
@@ -409,7 +412,7 @@ namespace Xamarin.Bundler {
 					throw ErrorHelper.CreateError (143, Errors.MM0143 /* Projects using the Classic API are not supported anymore. Please migrate the project to the Unified API. */);
 
 				if (targetFramework == TargetFramework.Net_2_0
-					|| targetFramework == TargetFramework.Net_3_0
+					|| targetFramework == TargetFramework.Net_3_0
 					|| targetFramework == TargetFramework.Net_3_5
 					|| targetFramework == TargetFramework.Net_4_0
 					|| targetFramework == TargetFramework.Net_4_5) {
@@ -519,7 +522,7 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static void WriteIfDifferent (string path, byte[] contents, bool use_stamp = false)
+		public static void WriteIfDifferent (string path, byte [] contents, bool use_stamp = false)
 		{
 			var tmp = path + ".tmp";
 
@@ -914,15 +917,15 @@ namespace Xamarin.Bundler {
 		{
 			switch (app.Platform) {
 			case ApplePlatform.iOS:
-				return "Xamarin.iOS";
+				return IsDotNet ? "Microsoft.iOS" : "Xamarin.iOS";
 			case ApplePlatform.WatchOS:
-				return "Xamarin.WatchOS";
+				return IsDotNet ? "Microsoft.watchOS" : "Xamarin.WatchOS";
 			case ApplePlatform.TVOS:
-				return "Xamarin.TVOS";
+				return IsDotNet ? "Microsoft.tvOS" : "Xamarin.TVOS";
 			case ApplePlatform.MacOSX:
-				return "Xamarin.Mac";
+				return IsDotNet ? "Microsoft.macOS" : "Xamarin.Mac";
 			case ApplePlatform.MacCatalyst:
-				return "Xamarin.MacCatalyst";
+				return IsDotNet ? "Microsoft.MacCatalyst" : "Xamarin.MacCatalyst";
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
 			}
@@ -1145,7 +1148,7 @@ namespace Xamarin.Bundler {
 			return ret == 0;
 		}
 
-		public static void RunXcodeTool (Application app, string tool, params string[] arguments)
+		public static void RunXcodeTool (Application app, string tool, params string [] arguments)
 		{
 			RunXcodeTool (app, tool, (IList<string>) arguments);
 		}

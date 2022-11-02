@@ -459,5 +459,3 @@ namespace Bindings.Test {
 	}
 	interface IProtocolWithBlockProperties { }
 }
-
-

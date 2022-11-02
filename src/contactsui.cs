@@ -1,4 +1,4 @@
-﻿//
+//
 // Contacts bindings
 //
 // Authors:
@@ -16,17 +16,23 @@ using CoreGraphics;
 using AppKit;
 #else
 using UIKit;
+using NSView = UIKit.UIView;
+using NSRectEdge = Foundation.NSObject;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace ContactsUI {
 
 #if !MONOMAC
-	[iOS (9,0)]
+	[iOS (9,0)][NoMac]
 	[BaseType (typeof (UIViewController))]
 	interface CNContactPickerViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[NullAllowed] // TODO: Maybe we can Strongify this puppy
 		[Export ("displayedPropertyKeys")]
@@ -52,6 +58,7 @@ namespace ContactsUI {
 	interface ICNContactPickerDelegate {}
 
 #if MONOMAC
+	[NoiOS][NoMacCatalyst][NoTV]
 	[Mac (10,11)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
@@ -70,6 +77,7 @@ namespace ContactsUI {
 		void DidClose (CNContactPicker picker);
 	}
 #else
+	[NoMac]
 	[iOS (9,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -92,88 +100,97 @@ namespace ContactsUI {
 	}
 #endif // MONOMAC
 
-#if MONOMAC
 	[Mac (10,11)]
-	[BaseType (typeof(NSViewController))]
-	interface CNContactViewController
-	{
-		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
-
-		[Static]
-		[Export ("descriptorForRequiredKeys")]
-		ICNKeyDescriptor DescriptorForRequiredKeys { get; }
-
-		[NullAllowed, Export ("contact", ArgumentSemantic.Copy)]
-		CNContact Contact { get; set; }
-	}
-#else
 	[iOS (9,0)]
+#if MONOMAC
+	[BaseType (typeof (NSViewController))]
+#else
 	[BaseType (typeof (UIViewController))]
+#endif
 	interface CNContactViewController {
 		[Export ("initWithNibName:bundle:")]
+#if !MONOMAC
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+#endif
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Static]
 		[Export ("descriptorForRequiredKeys")]
 		ICNKeyDescriptor DescriptorForRequiredKeys { get; }
 
+#if MONOMAC
+		[NullAllowed, Export ("contact", ArgumentSemantic.Copy)]
+		CNContact Contact { get; [NoiOS]set; }
+#else
+		[Export ("contact", ArgumentSemantic.Strong)]
+		CNContact Contact { get; }
+#endif
+
+		[NoMac]
 		[Static]
 		[Export ("viewControllerForContact:")]
 		CNContactViewController FromContact (CNContact contact);
 
+		[NoMac]
 		[Static]
 		[Export ("viewControllerForUnknownContact:")]
 		CNContactViewController FromUnknownContact (CNContact contact);
 
+		[NoMac]
 		[Static]
 		[Export ("viewControllerForNewContact:")]
 		CNContactViewController FromNewContact ([NullAllowed] CNContact contact);
 
-		[Export ("contact", ArgumentSemantic.Strong)]
-		CNContact Contact { get; }
-
+		[NoMac]
 		[NullAllowed] // TODO: Maybe we can Strongify this puppy
 		[Export ("displayedPropertyKeys")]
 		NSString [] DisplayedPropertyKeys { get; set; }
 
+		[NoMac]
 		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
 		ICNContactViewControllerDelegate Delegate { get; set; }
 
+		[NoMac]
 		[NullAllowed]
 		[Export ("contactStore", ArgumentSemantic.Strong)]
 		CNContactStore ContactStore { get; set; }
 
+		[NoMac]
 		[NullAllowed]
 		[Export ("parentGroup", ArgumentSemantic.Strong)]
 		CNGroup ParentGroup { get; set; }
 
+		[NoMac]
 		[NullAllowed]
 		[Export ("parentContainer", ArgumentSemantic.Strong)]
 		CNContainer ParentContainer { get; set; }
 
+		[NoMac]
 		[NullAllowed]
 		[Export ("alternateName")]
 		string AlternateName { get; set; }
 
+		[NoMac]
 		[NullAllowed]
 		[Export ("message")]
 		string Message { get; set; }
 
+		[NoMac]
 		[Export ("allowsEditing", ArgumentSemantic.Assign)]
 		bool AllowsEditing { get; set; }
 
+		[NoMac]
 		[Export ("allowsActions", ArgumentSemantic.Assign)]
 		bool AllowsActions { get; set; }
 
+		[NoMac]
 		[Export ("shouldShowLinkedContacts", ArgumentSemantic.Assign)]
 		bool ShouldShowLinkedContacts { get; set; }
 
+		[NoMac]
 		[Export ("highlightPropertyWithKey:identifier:")] //TODO: Maybe we can mNullallowedake a strongly type version
 		void HighlightProperty (NSString key, [NullAllowed] string identifier);
 	}
-#endif
 
 	interface ICNContactViewControllerDelegate {}
 
@@ -190,8 +207,8 @@ namespace ContactsUI {
 		void DidComplete (CNContactViewController viewController, [NullAllowed] CNContact contact);
 	}
 
-#if MONOMAC
 	[Mac (10,11)]
+	[NoiOS][NoTV][NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface CNContactPicker
 	{
@@ -208,6 +225,4 @@ namespace ContactsUI {
 		[Export ("close")]
 		void Close ();
 	}
-#endif // MONOMAC
 }
-

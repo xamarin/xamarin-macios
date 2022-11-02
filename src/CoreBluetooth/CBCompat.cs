@@ -1,4 +1,4 @@
-#if !XAMCORE_4_0
+#if !NET
 using ObjCRuntime;
 using Foundation;
 using System;
@@ -45,4 +45,4 @@ namespace CoreBluetooth {
 
 #endif
 }
-#endif
+#endif // !NET

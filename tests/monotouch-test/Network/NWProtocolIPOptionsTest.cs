@@ -1,9 +1,8 @@
 #if !__WATCHOS__
-using System;
 using System.Threading;
+
 using Foundation;
 using Network;
-using ObjCRuntime;
 using CoreFoundation;
 
 using NUnit.Framework;
@@ -52,7 +51,11 @@ namespace MonoTouchFixtures.Network {
 				stack = parameters.ProtocolStack;
 				using (var ipOptions = stack.InternetProtocol) {
 					if (ipOptions != null) {
+#if NET
+						ipOptions.SetVersion (NWIPVersion.Version4);
+#else
 						ipOptions.IPSetVersion (NWIPVersion.Version4);
+#endif
 						stack.PrependApplicationProtocol (ipOptions);
 					}
 				}
@@ -97,6 +100,13 @@ namespace MonoTouchFixtures.Network {
 
 		[Test]
 		public void SetIPLocalAddressPreference () => Assert.DoesNotThrow (() => options.SetIPLocalAddressPreference (NWIPLocalAddressPreference.Temporary));
+
+		[Test]
+		public void DisableMulticastLoopbackTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13,0);
+			Assert.DoesNotThrow (() => options.DisableMulticastLoopback (false));
+		}
 	}
 }
 #endif

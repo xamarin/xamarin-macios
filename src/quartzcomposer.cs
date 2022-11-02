@@ -32,6 +32,10 @@ using CoreAnimation;
 using CoreImage;
 using CoreVideo;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace QuartzComposer {
 
 	[Deprecated (PlatformName.MacOSX, 10,15)]
@@ -184,10 +188,10 @@ namespace QuartzComposer {
 		QCCompositionLayer Create (QCComposition composition);
 
 		[Export ("initWithFile:")]
-		IntPtr Constructor (string path);
+		NativeHandle Constructor (string path);
 
 		[Export ("initWithComposition:")]
-		IntPtr Constructor (QCComposition composition);
+		NativeHandle Constructor (QCComposition composition);
 
 		[Export ("composition")]
 		QCComposition Composition { get; }

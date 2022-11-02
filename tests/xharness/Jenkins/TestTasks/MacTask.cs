@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 
 namespace Xharness.Jenkins.TestTasks {
-	abstract class MacTask : RunTestTask
-	{
+	abstract class MacTask : RunTestTask {
 		public MacTask (Jenkins jenkins, BuildToolTask build_task, IMlaunchProcessManager processManager)
 			: base (jenkins, build_task, processManager)
 		{
@@ -21,7 +20,7 @@ namespace Xharness.Jenkins.TestTasks {
 				case TestPlatform.Mac_System:
 					return "Mac System";
 				case TestPlatform.MacCatalyst:
-					return "Mac Catalyst";
+					return "Mac Catalyst [dotnet]";
 				default:
 					throw new NotImplementedException (Platform.ToString ());
 				}

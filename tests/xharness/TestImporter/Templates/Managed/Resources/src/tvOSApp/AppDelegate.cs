@@ -1,4 +1,4 @@
-﻿using Foundation;
+using Foundation;
 using UIKit;
 
 namespace BCLTests {
@@ -24,4 +24,3 @@ namespace BCLTests {
 		}
 	}
 }
-

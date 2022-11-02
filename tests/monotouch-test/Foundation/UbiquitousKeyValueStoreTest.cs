@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSUbiquitousKeyValueStore
 //
 // Authors:
@@ -7,13 +7,9 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-using System;
-using System.Reflection;
 using Foundation;
 using ObjCRuntime;
 using NUnit.Framework;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MonoTouchFixtures.Foundation {
 
@@ -36,6 +32,10 @@ namespace MonoTouchFixtures.Foundation {
 						if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (12,0))
 							Assert.Null (store [key], "key 1");
 						else
+#elif __MACCATALYST__ || __MACOS__
+						if (TestRuntime.CheckXcodeVersion (13, 0))
+							Assert.Null (store [key], "key 1");
+						else
 #endif
 						Assert.AreEqual (value, store [key], "key 1");
 
@@ -43,6 +43,10 @@ namespace MonoTouchFixtures.Foundation {
 #if __TVOS__
 						// broken on appletv devices running tvOS 14, test will fail when fixed
 						if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (12,0))
+							Assert.Null (store [(string) key], "key 2");
+						else
+#elif __MACCATALYST__ || __MACOS__
+						if (TestRuntime.CheckXcodeVersion (13, 0))
 							Assert.Null (store [(string) key], "key 2");
 						else
 #endif

@@ -1,10 +1,8 @@
-﻿using System;
+using System;
 using System.Text;
-using System.Runtime.InteropServices;
 
 using Foundation;
 using CoreFoundation;
-using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreFoundation {

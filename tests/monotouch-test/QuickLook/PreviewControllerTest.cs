@@ -17,6 +17,7 @@ using UIKit;
 using QuickLook;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.QuickLook {
 	
@@ -31,9 +32,9 @@ namespace MonoTouchFixtures.QuickLook {
 				Assert.Null (pc.CurrentPreviewItem, "CurrentPreviewItem");
 				nint index = 0;
 #if !__MACCATALYST__
-				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 10, 0))
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 10, 0))
 					index = nint.MaxValue;
-				else if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 1))
+				else if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 1))
 					index = -1;
 #endif
 				Assert.That (pc.CurrentPreviewItemIndex, Is.EqualTo (index), "CurrentPreviewItemIndex");

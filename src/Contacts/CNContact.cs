@@ -1,4 +1,4 @@
-﻿//
+//
 // CNContact.cs: Implements some nicer methods for CNContact
 //
 // Authors:
@@ -6,6 +6,8 @@
 //
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
+
+#nullable enable
 
 using System;
 using Foundation;
@@ -100,4 +102,3 @@ namespace Contacts {
 		}
 	}
 }
-

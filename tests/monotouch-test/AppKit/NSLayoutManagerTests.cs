@@ -33,20 +33,32 @@ namespace Xamarin.Mac.Tests
 		[Test]
 		public void NSLayoutManager_DrawBackgroundForGlyphRange ()
 		{
+#if NET
+
+#else
 			manager.DrawBackgroundForGlyphRange (new NSRange (0, 4), new CGPoint (10, 10));
+#endif
 		}
 
 		[Test]
 		public void NSLayoutManager_DrawGlyphsForGlyphRange ()
 		{
+#if NET
+			manager.DrawGlyphs (new NSRange (0, 4), new CGPoint (10, 10));
+#else
 			manager.DrawGlyphsForGlyphRange (new NSRange (0, 4), new CGPoint (10, 10));
+#endif
 		}
 
 		[Test]
 		public void NSLayoutManager_CharacterRangeForGlyphRange ()
 		{
 			NSRange pnt;
+#if NET
+			NSRange range = manager.GetCharacterRange (new NSRange (0, 4), out pnt);
+#else
 			NSRange range = manager.CharacterRangeForGlyphRange (new NSRange (0, 4), out pnt);
+#endif
 			Assert.IsNotNull (range);
 		}
 
@@ -54,7 +66,11 @@ namespace Xamarin.Mac.Tests
 		public void NSLayoutManager_GlyphRangeForCharacterRange ()
 		{
 			NSRange pnt;
+#if NET
+			NSRange range = manager.GetGlyphRange (new NSRange (0, 4), out pnt);
+#else
 			NSRange range = manager.GlyphRangeForCharacterRange (new NSRange (0, 4), out pnt);
+#endif
 			Assert.IsNotNull (range);
 		}
 	}

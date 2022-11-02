@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for MPSImageBatch
 //
 // Authors:
@@ -31,6 +31,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		{
 			TestRuntime.AssertDevice ();
 			TestRuntime.AssertXcodeVersion (10, 0);
+			TestRuntime.AssertNotVirtualMachine ();
 
 			device = MTLDevice.SystemDefault;
 			// some older hardware won't have a default

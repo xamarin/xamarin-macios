@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CFNotificationCenter
 //
 // Authors:
@@ -8,7 +8,6 @@
 //
 
 using System;
-using System.Net;
 
 using Foundation;
 using CoreFoundation;
@@ -144,4 +143,3 @@ namespace MonoTouchFixtures.CoreFoundation
 		}
 	}
 }
-

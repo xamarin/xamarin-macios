@@ -6,7 +6,7 @@ if test -z "$XAM_TOP"; then
     exit 1
 fi
 
-cd $XAM_TOP
+cd "$XAM_TOP"
 
 DOTNET_NUPKG_DIR=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET_NUPKG_DIR | grep "^DOTNET_NUPKG_DIR=" | sed -e 's/^DOTNET_NUPKG_DIR=//')
 
@@ -15,8 +15,9 @@ rm -f ../package/*.nupkg
 cp -c "$DOTNET_NUPKG_DIR"/*.nupkg ../package/
 cp -c "$DOTNET_NUPKG_DIR"/vs-workload.props ../package/
 cp -c "$DOTNET_NUPKG_DIR"/SignList.xml ../package/
+cp -c "$DOTNET_NUPKG_DIR"/SignList.targets ../package/
 
 DOTNET_PKG_DIR=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET_PKG_DIR | grep "^DOTNET_PKG_DIR=" | sed -e 's/^DOTNET_PKG_DIR=//')
 make -C dotnet package -j
 cp -c "$DOTNET_PKG_DIR"/*.pkg ../package/
-cp -c "$DOTNET_PKG_DIR"/*.msi ../package/
+cp -c "$DOTNET_PKG_DIR"/*.msi ../package/ || true

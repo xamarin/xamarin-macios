@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-watchos</TargetFramework>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-watchos</TargetFramework>
     <RuntimeIdentifier>watchos-x86</RuntimeIdentifier>
     <IsWatchOSApp>true</IsWatchOSApp>
   </PropertyGroup>

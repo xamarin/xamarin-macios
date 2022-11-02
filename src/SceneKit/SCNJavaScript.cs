@@ -19,8 +19,15 @@ using JavaScriptCore;
 
 namespace SceneKit
 {
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	public static class SCNJavaScript
 	{
 		[DllImport (Constants.SceneKitLibrary)]
@@ -28,7 +35,7 @@ namespace SceneKit
 
 		public static void ExportModule (JSContext context)
 		{
-			if (context == null)
+			if (context is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 
 			SCNExportJavaScriptModule (context.Handle);

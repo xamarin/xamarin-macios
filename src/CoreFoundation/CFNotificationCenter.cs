@@ -11,6 +11,8 @@
 // can be created, so this optimized for that.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using CFNotificationCenterRef=global::System.IntPtr;
@@ -18,6 +20,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 using System.Collections.Generic;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreFoundation {
 
@@ -37,63 +43,48 @@ namespace CoreFoundation {
 	// This is needed because the API itself is not great.
 	//
 	public class CFNotificationObserverToken {
-		internal CFNotificationObserverToken () {}
+		internal CFNotificationObserverToken (string stringName)
+		{
+			this.stringName = stringName;
+		}
 
 		internal IntPtr centerHandle;
 		internal IntPtr nameHandle;
 		internal IntPtr observedObject;
 		internal string stringName;
-		internal Action<string,NSDictionary> listener;
+		internal Action<string,NSDictionary?>? listener;
 	}
 			
 	
-	public class CFNotificationCenter : INativeObject, IDisposable {
-		internal IntPtr handle;
-		
+	public class CFNotificationCenter : NativeObject {
 		// If this becomes public for some reason, and more than three instances are created, you should revisit the lookup code
-		internal CFNotificationCenter (CFNotificationCenterRef handle) : this (handle, false)
+		[Preserve (Conditional = true)]
+		internal CFNotificationCenter (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
 		}
 
-		// If this becomes public for some reason, and more than three instances are created, you should revisit the lookup code
-		internal CFNotificationCenter (CFNotificationCenterRef handle, bool ownsHandle)
-		{
-			if (!ownsHandle)
-				CFObject.CFRetain (handle);
-			this.handle = handle;
-		}
-
-		~CFNotificationCenter ()
-		{
-			Dispose (false);
-		}
-
-		public IntPtr Handle {
-			get {
-				return handle;
-			}
-		}
-
-		static CFNotificationCenter darwinnc, localnc;
+		static CFNotificationCenter? darwinnc;
+		static CFNotificationCenter? localnc;
 		
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static CFNotificationCenterRef CFNotificationCenterGetDarwinNotifyCenter ();
 			
 		static public CFNotificationCenter Darwin {
 			get {
-				return darwinnc ?? (darwinnc = new CFNotificationCenter (CFNotificationCenterGetDarwinNotifyCenter ()));
+				return darwinnc ?? (darwinnc = new CFNotificationCenter (CFNotificationCenterGetDarwinNotifyCenter (), false));
 			}
 		}
 
 #if MONOMAC
-		static CFNotificationCenter distributednc;
+		static CFNotificationCenter? distributednc;
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static CFNotificationCenterRef CFNotificationCenterGetDistributedCenter ();
 
 		static public CFNotificationCenter Distributed {
 			get {
-				return distributednc ?? (distributednc = new CFNotificationCenter (CFNotificationCenterGetDistributedCenter ()));
+				return distributednc ?? (distributednc = new CFNotificationCenter (CFNotificationCenterGetDistributedCenter (), false));
 			}
 		}
 #endif
@@ -103,41 +94,25 @@ namespace CoreFoundation {
 
 		static public CFNotificationCenter Local {
 			get {
-				return localnc ?? (localnc = new CFNotificationCenter (CFNotificationCenterGetLocalCenter ()));
-			}
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
+				return localnc ?? (localnc = new CFNotificationCenter (CFNotificationCenterGetLocalCenter (), false));
 			}
 		}
 
 		Dictionary<string,List<CFNotificationObserverToken>> listeners = new Dictionary<string,List<CFNotificationObserverToken>> ();
 		const string NullNotificationName = "NullNotificationName";
-		public CFNotificationObserverToken AddObserver (string name, INativeObject objectToObserve, Action<string,NSDictionary> notificationHandler,
+		public CFNotificationObserverToken AddObserver (string name, INativeObject objectToObserve, Action<string,NSDictionary?> notificationHandler,
 								CFNotificationSuspensionBehavior suspensionBehavior = CFNotificationSuspensionBehavior.DeliverImmediately)
 		{
-			if (darwinnc != null && darwinnc.Handle == Handle){
-				if (name == null)
-					throw new ArgumentNullException ("name", "When using the Darwin Notification Center, the value passed must not be null");
+			if (darwinnc is not null && darwinnc.Handle == Handle && name is null){
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name), "When using the Darwin Notification Center, the value passed must not be null");
 			}
 
-			var strHandle = name == null ? IntPtr.Zero : NSString.CreateNative (name);
+			var strHandle = CFString.CreateNative (name);
 			name = name ?? NullNotificationName;
-			var token = new CFNotificationObserverToken () {
-				stringName = name,
-				centerHandle = handle,
+			var token = new CFNotificationObserverToken (name) {
+				centerHandle = Handle,
 				nameHandle = strHandle,
-				observedObject = objectToObserve == null ? IntPtr.Zero : objectToObserve.Handle,
+				observedObject = objectToObserve.GetHandle (),
 				listener = notificationHandler
 			};
 
@@ -147,12 +122,12 @@ namespace CoreFoundation {
 			// callback, as we expect the notification callback to be a more common operation
 			// than the AddObserver operation
 			//
-			List<CFNotificationObserverToken> listenersForName;
+			List<CFNotificationObserverToken>? listenersForName;
 			lock (listeners){
 				if (!listeners.TryGetValue (name, out listenersForName)){
 					listenersForName = new List<CFNotificationObserverToken> (1);
-					CFNotificationCenterAddObserver (center: handle,
-									 observer: handle,
+					CFNotificationCenterAddObserver (center: Handle,
+									 observer: Handle,
 									 callback: NotificationCallback,
 									 name: strHandle,
 									 obj: token.observedObject,
@@ -165,26 +140,26 @@ namespace CoreFoundation {
 			return token;
 		}
 
-		void notification (string name, NSDictionary userInfo)
+		void notification (string? name, NSDictionary? userInfo)
 		{
-			List<CFNotificationObserverToken> listenersForName;
-			List<CFNotificationObserverToken> nullNotificationListeners;
+			List<CFNotificationObserverToken>? listenersForName;
+			List<CFNotificationObserverToken>? nullNotificationListeners;
 			bool hasName;
 			bool hasNullNotifications;
 			lock (listeners){
-				hasName = listeners.TryGetValue (name, out listenersForName);
+				hasName = listeners.TryGetValue (name!, out listenersForName);
 				hasNullNotifications = listeners.TryGetValue (NullNotificationName, out nullNotificationListeners);
 			}
 
 			// We can iterate over this list, even if the callbacks add or remove observers, because we make copies
 			// on add/remove
 			if (hasName) {
-				foreach (var observer in listenersForName)
-					observer.listener (name, userInfo);
+				foreach (var observer in listenersForName!)
+					observer.listener! (name!, userInfo);
 			}
 			if (hasNullNotifications) {
-				foreach (var observer in nullNotificationListeners)
-					observer.listener (name, userInfo);
+				foreach (var observer in nullNotificationListeners!)
+					observer.listener! (name!, userInfo);
 			}
 		}
 
@@ -195,61 +170,61 @@ namespace CoreFoundation {
 		{
 			CFNotificationCenter center;
 
-			if (darwinnc != null && centerPtr == darwinnc.Handle)
+			if (darwinnc is not null && centerPtr == darwinnc.Handle)
 				center = darwinnc;
-			else if (localnc != null && centerPtr == localnc.Handle)
+			else if (localnc is not null && centerPtr == localnc.Handle)
 				center = localnc;
 #if MONOMAC
-			else if (distributednc != null && centerPtr == distributednc.Handle)
+			else if (distributednc is not null && centerPtr == distributednc.Handle)
 				center = distributednc;
 #endif
 			else
 				return;
 
-			center.notification (CFString.FromHandle (name), userInfo == IntPtr.Zero ? null : Runtime.GetNSObject<NSDictionary> (userInfo));
+			center.notification (CFString.FromHandle (name), Runtime.GetNSObject<NSDictionary> (userInfo));
 		}
 
-		public void PostNotification(string notification, INativeObject objectToObserve, NSDictionary userInfo = null, bool deliverImmediately = false, bool postOnAllSessions = false) 
+		public void PostNotification (string notification, INativeObject objectToObserve, NSDictionary? userInfo = null, bool deliverImmediately = false, bool postOnAllSessions = false)
 		{
 			// The name of the notification to post.This value must not be NULL.
-			if (notification == null)
-				throw new ArgumentNullException (nameof (notification));
+			if (notification is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (notification));
 
-			var strHandle = NSString.CreateNative (notification);
+			var strHandle = CFString.CreateNative (notification);
 			CFNotificationCenterPostNotificationWithOptions (
-				center: handle,
+				center: Handle,
 				name: strHandle,
-				obj: objectToObserve == null ? IntPtr.Zero : objectToObserve.Handle,
-				userInfo: userInfo == null ? IntPtr.Zero : userInfo.Handle,
+				obj: objectToObserve.GetHandle (),
+				userInfo: userInfo.GetHandle (),
 				options: (deliverImmediately ? 1 : 0) | (postOnAllSessions ? 2 : 0));
-			NSString.ReleaseNative (strHandle);
+			CFString.ReleaseNative (strHandle);
 		}
 
 		public void RemoveObserver (CFNotificationObserverToken token)
 		{
-			if (token == null)
-				throw new ArgumentNullException ("token");
+			if (token is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (token));
 			if (token.nameHandle == IntPtr.Zero && token.stringName != NullNotificationName)
-				throw new ObjectDisposedException ("token");
-			if (token.centerHandle != handle)
-				throw new ArgumentException ("token", "This token belongs to a different notification center");
+				throw new ObjectDisposedException (nameof (token));
+			if (token.centerHandle != Handle)
+				throw new ArgumentException (nameof (token), "This token belongs to a different notification center");
 			lock (listeners){
 				var list = listeners [token.stringName];
-				List<CFNotificationObserverToken> newList = null;
+				List<CFNotificationObserverToken>? newList = null;
 				foreach (var e in list){
 					if (e == token)
 						continue;
-					if (newList == null)
+					if (newList is null)
 						newList = new List<CFNotificationObserverToken> ();
 					newList.Add (e);
 				}
-				if (newList != null){
+				if (newList is not null){
 					listeners [token.stringName] = newList;
 					return;
 				} else
 					listeners.Remove (token.stringName);
 			}
-			CFNotificationCenterRemoveObserver (handle, this.Handle, name: token.nameHandle, obj: token.observedObject);
+			CFNotificationCenterRemoveObserver (Handle, this.Handle, name: token.nameHandle, obj: token.observedObject);
 			NSString.ReleaseNative (token.nameHandle);
 			token.nameHandle = IntPtr.Zero;
 		}

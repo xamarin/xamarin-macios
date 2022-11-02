@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 
 using Foundation;
@@ -89,6 +89,89 @@ namespace Xamarin.BindingTests
 			{
 				return new Action<int> ((v) => {
 					Assert.AreEqual (42, v, "RequiredReturnValue");
+				});
+			}
+		}
+
+		[Test]
+		public void DerivedClassBlockCallback ()
+		{
+			using (var obj = new BlockCallbackTester ()) {
+				DerivedBlockCallbackClass.Answer = 42;
+				obj.TestObject = new DerivedBlockCallbackClass ();
+				obj.CallOptionalCallback ();
+				// obj.CallRequiredCallback ();
+				ObjCBlockTester.TestClass = new Class (typeof (DerivedBlockCallbackClass));
+				ObjCBlockTester.CallRequiredStaticCallback ();
+				ObjCBlockTester.CallOptionalStaticCallback ();
+				DerivedBlockCallbackClass.Answer = 2;
+			}
+		}
+
+		abstract class BaseBlockCallbackClass : NSObject, IObjCProtocolBlockTest
+		{
+			public abstract void RequiredCallback (Action<int> completionHandler);
+			public abstract Action<int> RequiredReturnValue ();
+		}
+
+		class DerivedBlockCallbackClass : BaseBlockCallbackClass
+		{
+			public static int Answer = 42;
+			public override void RequiredCallback (Action<int> completionHandler)
+			{
+				completionHandler (Answer);
+			}
+
+			[Export ("optionalCallback:")]
+			public void OptionalCallback (Action<int> completionHandler)
+			{
+				Console.WriteLine ("OptionalCallback");
+				completionHandler (Answer);
+			}
+
+			[Export ("requiredStaticCallback:")]
+			public static void RequiredStaticCallback (Action<int> completionHandler)
+			{
+				completionHandler (Answer);
+			}
+
+			[Export ("optionalStaticCallback:")]
+			public static void OptionalStaticCallback (Action<int> completionHandler)
+			{
+				Console.WriteLine ("OptionalStaticCallback");
+				completionHandler (Answer);
+			}
+
+			public override Action<int> RequiredReturnValue ()
+			{
+				return new Action<int> ((v) => {
+					Assert.AreEqual (Answer, v, "RequiredReturnValue");
+				});
+			}
+
+			[Export ("optionalReturnValue")]
+			public Action<int> OptionalReturnValue ()
+			{
+				return new Action<int> ((v) => {
+				Console.WriteLine ("OptionalReturnValue");
+					Assert.AreEqual (Answer, v, "RequiredReturnValue");
+				});
+			}
+
+			[Export ("requiredStaticReturnValue")]
+			public static Action<int> RequiredStaticReturnValue ()
+			{
+				return new Action<int> ((v) => {
+					Assert.AreEqual (Answer, v, "RequiredReturnValue");
+				});
+			}
+
+			[Export ("optionalStaticReturnValue")]
+			public static Action<int> OptionalStaticReturnValue ()
+			{
+				return new Action<int> ((v) => {
+				Console.WriteLine ("OptionalStaticReturnValue");
+					Assert.AreEqual (Answer, v, "RequiredReturnValue");
 				});
 			}
 		}

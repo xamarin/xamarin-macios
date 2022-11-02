@@ -8,8 +8,6 @@
     <string>com.xamarin.monotouch-test</string>
     <key>CFBundleName</key>
     <string>MonoTouchTest</string>
-    <key>MinimumOSVersion</key>
-    <string>10.0</string>
     <key>NSAppTransportSecurity</key>
     <dict>
       <key>NSAllowsArbitraryLoads</key>

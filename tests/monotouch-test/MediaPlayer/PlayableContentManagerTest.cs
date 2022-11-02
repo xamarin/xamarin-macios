@@ -7,7 +7,7 @@
 // Copyright 2013 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if !__TVOS__ && !__WATCHOS__ && !MONOMAC && !NET
 
 using System;
 using Foundation;
@@ -15,6 +15,7 @@ using MediaPlayer;
 using UIKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MediaPlayer {
 
@@ -41,7 +42,7 @@ namespace MonoTouchFixtures.MediaPlayer {
 		[Test]
 		public void Shared ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 1, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 1, throwIfOtherPlatform: false);
 
 			MPPlayableContentManager shared = MPPlayableContentManager.Shared;
 			Assert.Null (shared.DataSource, "DataSource");

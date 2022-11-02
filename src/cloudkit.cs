@@ -6,6 +6,10 @@ using CoreLocation;
 using Contacts;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CloudKit {
 
 	[Watch (3,0)]
@@ -15,7 +19,7 @@ namespace CloudKit {
 	interface CKAsset : NSCoding, NSSecureCoding, CKRecordValue {
 
 		[Export ("initWithFileURL:")]
-		IntPtr Constructor (NSUrl fileUrl);
+		NativeHandle Constructor (NSUrl fileUrl);
 
 		[Export ("fileURL", ArgumentSemantic.Copy)]
 		[NullAllowed]
@@ -132,16 +136,16 @@ namespace CloudKit {
 	interface CKShare
 	{
 		[Export ("initWithRootRecord:")]
-		IntPtr Constructor (CKRecord rootRecord);
+		NativeHandle Constructor (CKRecord rootRecord);
 
 		[Export ("initWithRootRecord:shareID:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CKRecord rootRecord, CKRecordID shareID);
+		NativeHandle Constructor (CKRecord rootRecord, CKRecordID shareID);
 
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("initWithRecordZoneID:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CKRecordZoneID recordZoneId);
+		NativeHandle Constructor (CKRecordZoneID recordZoneId);
 
 		[Export ("publicPermission", ArgumentSemantic.Assign)]
 		CKShareParticipantPermission PublicPermission { get; set; }
@@ -401,7 +405,7 @@ namespace CloudKit {
 	[iOS (8,0), Mac (10,10)]
 	[BaseType (typeof (CKOperation))]
 	[DisableDefaultCtor]
-#if XAMCORE_4_0 || WATCH
+#if NET || WATCH
 	[Abstract] // as per docs
 #endif
 	interface CKDatabaseOperation {
@@ -410,6 +414,8 @@ namespace CloudKit {
 		CKDatabase Database { get; set; }
 	}
 
+#if !NET
+	// This type is no longer in the headers.
 	[NoWatch]
 	[NoTV]
 	[Obsoleted (PlatformName.iOS, 14, 0, message : "Use 'CKDiscoverAllUserIdentitiesOperation' instead.")]
@@ -423,10 +429,11 @@ namespace CloudKit {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 	}
 
+	// This type is no longer in the headers.
 	[Obsoleted (PlatformName.iOS, 14, 0, message : "Use 'CKUserIdentity' instead.")]
 	[Deprecated (PlatformName.iOS, 10, 0, message : "Use 'CKUserIdentity' instead.")]
 	[Obsoleted (PlatformName.MacOSX, 10, 16, message : "Use 'CKUserIdentity' instead.")]
@@ -439,12 +446,13 @@ namespace CloudKit {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[NullAllowed]
 		[Export ("userRecordID", ArgumentSemantic.Copy)]
 		CKRecordID UserRecordId { get; }
 	}
+#endif // !NET
 
 	// CKError.h Fields
 	[Watch (3,0)]
@@ -488,10 +496,10 @@ namespace CloudKit {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("initWithPreviousServerChangeToken:")]
-		IntPtr Constructor ([NullAllowed] CKServerChangeToken previousServerChangeToken);
+		NativeHandle Constructor ([NullAllowed] CKServerChangeToken previousServerChangeToken);
 
 		[NullAllowed] // by default this property is null
 		[Export ("previousServerChangeToken", ArgumentSemantic.Copy)]
@@ -531,6 +539,7 @@ namespace CloudKit {
 	delegate void CKFetchRecordChangesHandler (CKServerChangeToken serverChangeToken, NSData clientChangeTokenData, NSError operationError);
 
 	[Deprecated (PlatformName.iOS, 10, 0, message : "Use 'CKFetchRecordZoneChangesOperation' instead.")]
+	[Deprecated (PlatformName.TvOS, 10, 0, message : "Use 'CKFetchRecordZoneChangesOperation' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'CKFetchRecordZoneChangesOperation' instead.")]
 	[iOS (8,0), Mac (10,10)]
 	[NoWatch]
@@ -540,10 +549,10 @@ namespace CloudKit {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("initWithRecordZoneID:previousServerChangeToken:")]
-		IntPtr Constructor (CKRecordZoneID recordZoneID, [NullAllowed] CKServerChangeToken previousServerChangeToken);
+		NativeHandle Constructor (CKRecordZoneID recordZoneID, [NullAllowed] CKServerChangeToken previousServerChangeToken);
 
 		[NullAllowed] // by default this property is null
 		[Export ("recordZoneID", ArgumentSemantic.Copy)]
@@ -603,18 +612,18 @@ namespace CloudKit {
 	{
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use the overload with the 'NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration>' parameter instead.")]
 		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use the overload with the 'NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration>' parameter instead.")]
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload with the 'NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration>' parameter instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use the overload with the 'NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration>' parameter instead.")]
 		[Export ("initWithRecordZoneIDs:optionsByRecordZoneID:")]
-		IntPtr Constructor (CKRecordZoneID[] recordZoneIDs, [NullAllowed] NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesOptions> optionsByRecordZoneID);
+		NativeHandle Constructor (CKRecordZoneID[] recordZoneIDs, [NullAllowed] NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesOptions> optionsByRecordZoneID);
 
 		[iOS (12,0), Watch (5,0), TV (12,0), Mac (10,14)]
 		[Export ("initWithRecordZoneIDs:configurationsByRecordZoneID:")]
-		IntPtr Constructor (CKRecordZoneID[] recordZoneIDs, [NullAllowed] NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration> configurationsByRecordZoneID);
+		NativeHandle Constructor (CKRecordZoneID[] recordZoneIDs, [NullAllowed] NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration> configurationsByRecordZoneID);
 
 		[NullAllowed]
 		[Export ("recordZoneIDs", ArgumentSemantic.Copy)]
@@ -705,7 +714,7 @@ namespace CloudKit {
 	interface CKFetchRecordsOperation {
 
 		[Export ("initWithRecordIDs:")]
-		IntPtr Constructor (CKRecordID [] recordIds);
+		NativeHandle Constructor (CKRecordID [] recordIds);
 
 		[NullAllowed] // by default this property is null
 		[Export ("recordIDs", ArgumentSemantic.Copy)]
@@ -757,7 +766,7 @@ namespace CloudKit {
 	interface CKFetchRecordZonesOperation {
 
 		[Export ("initWithRecordZoneIDs:")]
-		IntPtr Constructor (CKRecordZoneID [] zoneIds);
+		NativeHandle Constructor (CKRecordZoneID [] zoneIds);
 
 		[NullAllowed] // by default this property is null
 		[Export ("recordZoneIDs", ArgumentSemantic.Copy)]
@@ -795,10 +804,10 @@ namespace CloudKit {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("initWithSubscriptionIDs:")]
-		IntPtr Constructor (string [] subscriptionIds);
+		NativeHandle Constructor (string [] subscriptionIds);
 
 		[NullAllowed] // by default this property is null
 		[Export ("subscriptionIDs", ArgumentSemantic.Copy)]
@@ -822,14 +831,14 @@ namespace CloudKit {
 	}
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10)]
-#if XAMCORE_4_0 || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
+#if NET || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
 	[DisableDefaultCtor]
 #endif
 	[BaseType (typeof (NSSortDescriptor))]
 	interface CKLocationSortDescriptor : NSSecureCoding {
 		[DesignatedInitializer]
 		[Export ("initWithKey:relativeLocation:")]
-		IntPtr Constructor (string key, CLLocation relativeLocation);
+		NativeHandle Constructor (string key, CLLocation relativeLocation);
 
 		[Export ("relativeLocation", ArgumentSemantic.Copy)]
 		CLLocation RelativeLocation { get; }
@@ -850,7 +859,7 @@ namespace CloudKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithNotificationIDsToMarkRead:")]
-		IntPtr Constructor (CKNotificationID [] notificationIds);
+		NativeHandle Constructor (CKNotificationID [] notificationIds);
 
 		[NullAllowed]
 		[Export ("notificationIDs", ArgumentSemantic.Copy)]
@@ -878,7 +887,7 @@ namespace CloudKit {
 	interface CKModifyBadgeOperation {
 
 		[Export ("initWithBadgeValue:")]
-		IntPtr Constructor (nuint badgeValue);
+		NativeHandle Constructor (nuint badgeValue);
 
 		[Export ("badgeValue", ArgumentSemantic.UnsafeUnretained)]
 		nuint BadgeValue { get; set; }
@@ -910,7 +919,7 @@ namespace CloudKit {
 	interface CKModifyRecordsOperation {
 
 		[Export ("initWithRecordsToSave:recordIDsToDelete:")]
-		IntPtr Constructor ([NullAllowed] CKRecord [] recordsToSave, [NullAllowed] CKRecordID [] recordsToDelete);
+		NativeHandle Constructor ([NullAllowed] CKRecord [] recordsToSave, [NullAllowed] CKRecordID [] recordsToDelete);
 
 		[NullAllowed] // by default this property is null
 		[Export ("recordsToSave", ArgumentSemantic.Copy)]
@@ -987,7 +996,7 @@ namespace CloudKit {
 	interface CKModifyRecordZonesOperation {
 
 		[Export ("initWithRecordZonesToSave:recordZoneIDsToDelete:")]
-		IntPtr Constructor ([NullAllowed] CKRecordZone [] recordZonesToSave, [NullAllowed] CKRecordZoneID [] recordZoneIdsToDelete);
+		NativeHandle Constructor ([NullAllowed] CKRecordZone [] recordZonesToSave, [NullAllowed] CKRecordZoneID [] recordZoneIdsToDelete);
 
 		[NullAllowed] // by default this property is null
 		[Export ("recordZonesToSave", ArgumentSemantic.Copy)]
@@ -1032,10 +1041,10 @@ namespace CloudKit {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("initWithSubscriptionsToSave:subscriptionIDsToDelete:")]
-		IntPtr Constructor ([NullAllowed] CKSubscription [] subscriptionsToSave, [NullAllowed] string [] subscriptionIdsToDelete);
+		NativeHandle Constructor ([NullAllowed] CKSubscription [] subscriptionsToSave, [NullAllowed] string [] subscriptionIdsToDelete);
 
 		[NullAllowed] // by default this property is null
 		[Export ("subscriptionsToSave", ArgumentSemantic.Copy)]
@@ -1074,7 +1083,7 @@ namespace CloudKit {
 	[iOS (8,0), Mac (10,10)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: CKNotification is not meant for direct instantiation
 	[BaseType (typeof (NSObject))]
-#if XAMCORE_4_0 || WATCH
+#if NET || WATCH
 	[Abstract] // as per doc
 #endif
 	interface CKNotification : NSSecureCoding {
@@ -1173,7 +1182,7 @@ namespace CloudKit {
 		CKQueryNotificationReason QueryNotificationReason { get; }
 
 		[NullAllowed, Export ("recordFields", ArgumentSemantic.Copy)]
-#if XAMCORE_4_0
+#if XAMCORE_5_0 // delayed until next time due to #13704.
 		NSDictionary<NSString, NSObject> RecordFields { get; }
 #else
 		NSDictionary RecordFields { get; }
@@ -1237,7 +1246,7 @@ namespace CloudKit {
 	[iOS (8,0), Mac (10,10)]
 	[BaseType (typeof (NSOperation))]
 	[DisableDefaultCtor]
-#if XAMCORE_4_0 || WATCH
+#if NET || WATCH
 	[Abstract] // as per docs
 #endif
 	interface CKOperation {
@@ -1245,7 +1254,7 @@ namespace CloudKit {
 		[Protected] // since it should (and will) be `abstract`
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		// Apple removed, without deprecation, this property in iOS 9.3 SDK
 		// [Mac (10,11), iOS (9,0)]
@@ -1345,7 +1354,7 @@ namespace CloudKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithRecordType:predicate:")]
-		IntPtr Constructor (string recordType, NSPredicate predicate);
+		NativeHandle Constructor (string recordType, NSPredicate predicate);
 
 		[Export ("recordType")]
 		string RecordType { get; }
@@ -1373,10 +1382,10 @@ namespace CloudKit {
 		IntPtr _MaximumResults { get; set; }
 
 		[Export ("initWithQuery:")]
-		IntPtr Constructor (CKQuery query);
+		NativeHandle Constructor (CKQuery query);
 
 		[Export ("initWithCursor:")]
-		IntPtr Constructor (CKQueryCursor cursor);
+		NativeHandle Constructor (CKQueryCursor cursor);
 
 		[NullAllowed] // by default this property is null
 		[Export ("query", ArgumentSemantic.Copy)]
@@ -1458,13 +1467,13 @@ namespace CloudKit {
 		NSString NameZoneWideShare { get; }
 
 		[Export ("initWithRecordType:")]
-		IntPtr Constructor (string recordType);
+		NativeHandle Constructor (string recordType);
 
 		[Export ("initWithRecordType:recordID:")]
-		IntPtr Constructor (string recordType, CKRecordID recordId);
+		NativeHandle Constructor (string recordType, CKRecordID recordId);
 
 		[Export ("initWithRecordType:zoneID:")]
-		IntPtr Constructor (string recordType, CKRecordZoneID zoneId);
+		NativeHandle Constructor (string recordType, CKRecordZoneID zoneId);
 
 		[Export ("recordType")]
 		string RecordType { get; }
@@ -1537,11 +1546,11 @@ namespace CloudKit {
 	interface CKRecordID : NSSecureCoding, NSCopying {
 
 		[Export ("initWithRecordName:")]
-		IntPtr Constructor (string recordName);
+		NativeHandle Constructor (string recordName);
 
 		[DesignatedInitializer]
 		[Export ("initWithRecordName:zoneID:")]
-		IntPtr Constructor (string recordName, CKRecordZoneID zoneId);
+		NativeHandle Constructor (string recordName, CKRecordZoneID zoneId);
 
 		[Export ("recordName", ArgumentSemantic.Retain)]
 		string RecordName { get; }
@@ -1552,7 +1561,7 @@ namespace CloudKit {
 
 	[iOS (8,0), Mac (10,10)]
 	[Watch (3,0)]
-#if XAMCORE_4_0 || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
+#if NET || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
 	[DisableDefaultCtor]
 #endif
 	[BaseType (typeof (NSObject))]
@@ -1562,10 +1571,10 @@ namespace CloudKit {
 		NSString DefaultName { get; }
 
 		[Export ("initWithZoneName:")]
-		IntPtr Constructor (string zoneName);
+		NativeHandle Constructor (string zoneName);
 
 		[Export ("initWithZoneID:")]
-		IntPtr Constructor (CKRecordZoneID zoneId);
+		NativeHandle Constructor (CKRecordZoneID zoneId);
 
 		[Export ("zoneID", ArgumentSemantic.Retain)]
 		CKRecordZoneID ZoneId { get; }
@@ -1590,7 +1599,7 @@ namespace CloudKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithZoneName:ownerName:")]
-		IntPtr Constructor (string zoneName, string ownerName);
+		NativeHandle Constructor (string zoneName, string ownerName);
 
 		[Export ("zoneName", ArgumentSemantic.Retain)]
 		string ZoneName { get; }
@@ -1607,10 +1616,10 @@ namespace CloudKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithRecordID:action:")]
-		IntPtr Constructor (CKRecordID recordId, CKReferenceAction action);
+		NativeHandle Constructor (CKRecordID recordId, CKReferenceAction action);
 
 		[Export ("initWithRecord:action:")]
-		IntPtr Constructor (CKRecord record, CKReferenceAction action);
+		NativeHandle Constructor (CKRecord record, CKReferenceAction action);
 
 		[Export ("referenceAction", ArgumentSemantic.Assign)]
 		CKReferenceAction ReferenceAction { get; }
@@ -1626,11 +1635,11 @@ namespace CloudKit {
 	interface CKQuerySubscription : NSSecureCoding, NSCopying
 	{
 		[Export ("initWithRecordType:predicate:options:")]
-		IntPtr Constructor (string recordType, NSPredicate predicate, CKQuerySubscriptionOptions querySubscriptionOptions);
+		NativeHandle Constructor (string recordType, NSPredicate predicate, CKQuerySubscriptionOptions querySubscriptionOptions);
 
 		[Export ("initWithRecordType:predicate:subscriptionID:options:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string recordType, NSPredicate predicate, string subscriptionID, CKQuerySubscriptionOptions querySubscriptionOptions);
+		NativeHandle Constructor (string recordType, NSPredicate predicate, string subscriptionID, CKQuerySubscriptionOptions querySubscriptionOptions);
 
 		[Export ("recordType")]
 		string RecordType { get; }
@@ -1652,11 +1661,11 @@ namespace CloudKit {
 	interface CKRecordZoneSubscription : NSSecureCoding, NSCopying
 	{
 		[Export ("initWithZoneID:")]
-		IntPtr Constructor (CKRecordZoneID zoneID);
+		NativeHandle Constructor (CKRecordZoneID zoneID);
 
 		[Export ("initWithZoneID:subscriptionID:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CKRecordZoneID zoneID, string subscriptionID);
+		NativeHandle Constructor (CKRecordZoneID zoneID, string subscriptionID);
 
 		[Export ("zoneID", ArgumentSemantic.Copy)]
 		// we need the setter since it was bound in the base type
@@ -1673,7 +1682,7 @@ namespace CloudKit {
 	{
 		[Export ("initWithSubscriptionID:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string subscriptionID);
+		NativeHandle Constructor (string subscriptionID);
 
 		[NullAllowed, Export ("recordType")]
 		string RecordType { get; set; }
@@ -1685,17 +1694,21 @@ namespace CloudKit {
 	[BaseType (typeof (NSObject))]
 	interface CKSubscription : NSSecureCoding, NSCopying {
 
+#if !NET
+		// This constructor does not exist in the headers (anymore?)
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKQuerySubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKQuerySubscription'.")]
 		[Export ("initWithRecordType:predicate:options:")]
-		IntPtr Constructor (string recordType, NSPredicate predicate, CKSubscriptionOptions subscriptionOptions);
+		NativeHandle Constructor (string recordType, NSPredicate predicate, CKSubscriptionOptions subscriptionOptions);
 
+		// This constructor does not exist in the headers (anymore?)
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKQuerySubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKQuerySubscription'.")]
 		[Export ("initWithRecordType:predicate:subscriptionID:options:")]
-		IntPtr Constructor (string recordType, NSPredicate predicate, string subscriptionId, CKSubscriptionOptions subscriptionOptions);
+		NativeHandle Constructor (string recordType, NSPredicate predicate, string subscriptionId, CKSubscriptionOptions subscriptionOptions);
+#endif
 
 		[Export ("subscriptionID")]
 		string SubscriptionId { get; }
@@ -1835,10 +1848,10 @@ namespace CloudKit {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("initWithAPIToken:")]
-		IntPtr Constructor (string token);
+		NativeHandle Constructor (string token);
 
 		[NullAllowed]
 		[Export ("APIToken")]
@@ -1856,10 +1869,10 @@ namespace CloudKit {
 	{
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("initWithUserIdentityLookupInfos:")]
-		IntPtr Constructor (CKUserIdentityLookupInfo[] userIdentityLookupInfos);
+		NativeHandle Constructor (CKUserIdentityLookupInfo[] userIdentityLookupInfos);
 
 		[Export ("userIdentityLookupInfos", ArgumentSemantic.Copy)]
 		CKUserIdentityLookupInfo[] UserIdentityLookupInfos { get; set; }
@@ -1878,7 +1891,7 @@ namespace CloudKit {
 	{
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[NullAllowed, Export ("userIdentityDiscoveredBlock", ArgumentSemantic.Copy)]
 		Action<CKUserIdentity> Discovered { get; set; }
@@ -1897,10 +1910,10 @@ namespace CloudKit {
 	{
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("initWithUserIdentityLookupInfos:")]
-		IntPtr Constructor (CKUserIdentityLookupInfo[] userIdentityLookupInfos);
+		NativeHandle Constructor (CKUserIdentityLookupInfo[] userIdentityLookupInfos);
 
 		[NullAllowed]
 		[Export ("userIdentityLookupInfos", ArgumentSemantic.Copy)]
@@ -1933,10 +1946,10 @@ namespace CloudKit {
 	{
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("initWithShareMetadatas:")]
-		IntPtr Constructor (CKShareMetadata[] shareMetadatas);
+		NativeHandle Constructor (CKShareMetadata[] shareMetadatas);
 
 		[Export ("shareMetadatas", ArgumentSemantic.Copy)]
 		[NullAllowed]
@@ -1959,10 +1972,10 @@ namespace CloudKit {
 	{
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("initWithShareURLs:")]
-		IntPtr Constructor (NSUrl[] shareUrls);
+		NativeHandle Constructor (NSUrl[] shareUrls);
 
 		[NullAllowed]
 		[Export ("shareURLs", ArgumentSemantic.Copy)]
@@ -1991,10 +2004,10 @@ namespace CloudKit {
 	{
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("initWithPreviousServerChangeToken:")]
-		IntPtr Constructor ([NullAllowed] CKServerChangeToken previousServerChangeToken);
+		NativeHandle Constructor ([NullAllowed] CKServerChangeToken previousServerChangeToken);
 
 		[NullAllowed, Export ("previousServerChangeToken", ArgumentSemantic.Copy)]
 		CKServerChangeToken PreviousServerChangeToken { get; set; }

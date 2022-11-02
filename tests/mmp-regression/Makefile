@@ -4,11 +4,17 @@ include $(TOP)/Make.config
 
 MMP=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/bin/mmp
 
-export MD_APPLE_SDK_ROOT:=$(abspath $(XCODE_DEVELOPER_ROOT)/../..)
+ifdef TESTS_USE_SYSTEM
+export TargetFrameworkFallbackSearchPaths=/Library/Frameworks/Mono.framework/External/xbuild-frameworks
+export MSBuildExtensionsPathFallbackPathsOverride=/Library/Frameworks/Mono.framework/External/xbuild
+export XamarinMacFrameworkRoot=/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
+export XAMMAC_FRAMEWORK_PATH=/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
+else
 export TargetFrameworkFallbackSearchPaths=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
 export MSBuildExtensionsPathFallbackPathsOverride=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 export XAMMAC_FRAMEWORK_PATH=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR))
+endif
 
 ALL_TESTS = \
 	custom-bundle-name \

@@ -1,4 +1,6 @@
-﻿using ObjCRuntime;
+#nullable enable
+
+using ObjCRuntime;
 using Foundation;
 using System;
 using System.Collections;

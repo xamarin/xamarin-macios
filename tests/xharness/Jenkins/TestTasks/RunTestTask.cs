@@ -8,8 +8,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Xharness.Jenkins.TestTasks {
-	internal abstract class RunTestTask : AppleTestTask, IRunTestTask
-	{
+	internal abstract class RunTestTask : AppleTestTask, IRunTestTask {
 		protected RunTest runTest;
 		public IMlaunchProcessManager ProcessManager => runTest.ProcessManager;
 		public IBuildToolTask BuildTask => runTest.BuildTask;
@@ -61,6 +60,10 @@ namespace Xharness.Jenkins.TestTasks {
 
 		public override TestExecutingResult ExecutionResult {
 			get {
+				// If we're ignored, then build result doesn't matter.
+				if (base.ExecutionResult == TestExecutingResult.Ignored)
+					return TestExecutingResult.Ignored;
+
 				// When building, the result is the build result.
 				if ((runTest.BuildResult & (TestExecutingResult.InProgress | TestExecutingResult.Waiting)) != 0)
 					return runTest.BuildResult & ~TestExecutingResult.InProgressMask | TestExecutingResult.Building;
@@ -91,7 +94,7 @@ namespace Xharness.Jenkins.TestTasks {
 		}
 
 		protected Task ExecuteProcessAsync (string filename, List<string> arguments)
-		{ 
+		{
 			return ExecuteProcessAsync (null, filename, arguments);
 		}
 

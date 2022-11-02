@@ -1,4 +1,4 @@
-﻿using Foundation;
+using Foundation;
 using UIKit;
 
 namespace ManagedContainer
@@ -39,4 +39,3 @@ namespace ManagedContainer
 		}
 	}
 }
-

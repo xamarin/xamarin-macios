@@ -1,7 +1,0 @@
-## OSX-only enums (removed in XAMCORE_3_0)
-!unknown-native-enum! AVPlayerViewControlsStyle bound
-
-## extra error values are fine and helps sharing code across platforms
-!extra-enum-value! Managed value -1100 for AVKitError.ContentRatingUnknown not found in native headers
-!extra-enum-value! Managed value -1101 for AVKitError.ContentDisallowedByPasscode not found in native headers
-!extra-enum-value! Managed value -1102 for AVKitError.ContentDisallowedByProfile not found in native headers

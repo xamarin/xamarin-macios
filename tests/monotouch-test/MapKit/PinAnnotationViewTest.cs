@@ -21,6 +21,7 @@ using AppKit;
 using UIKit;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MapKit {
 	
@@ -30,7 +31,7 @@ namespace MonoTouchFixtures.MapKit {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
 		
 		[Test]
@@ -41,10 +42,10 @@ namespace MonoTouchFixtures.MapKit {
 				Assert.AreSame (a, av.Annotation, "Annotation");
 
 #if !MONOMAC
-				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0)) // Crashes with EXC_BAD_ACCESS (SIGABRT) if < iOS 7.0
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 0)) // Crashes with EXC_BAD_ACCESS (SIGABRT) if < iOS 7.0
 					Assert.False (av.AnimatesDrop, "AnimatesDrop");
 
-				if (!TestRuntime.CheckSystemVersion (PlatformName.iOS, 9, 0))
+				if (!TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 9, 0))
 					return;
 #endif
 
@@ -60,7 +61,7 @@ namespace MonoTouchFixtures.MapKit {
 		{
 #if !MONOMAC
 			// Crashes with EXC_BAD_ACCESS (SIGABRT) if < iOS 7.0
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 #endif
 
 			var frame = new CGRect (10, 10, 100, 100);
@@ -74,13 +75,13 @@ namespace MonoTouchFixtures.MapKit {
 				
 				Assert.That (av.PinColor, Is.EqualTo (MKPinAnnotationColor.Red), "PinColor");
 #if MONOMAC
-				if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 12)) {
-					Assert.That (av.PinTintColor, Is.EqualTo (NSColor.SystemRedColor), "PinTintColor");
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 12)) {
+					Assert.That (av.PinTintColor, Is.EqualTo (NSColor.SystemRed), "PinTintColor");
 				} else {
 					Assert.Null (av.PinTintColor, "PinTintColor"); // differs from the other init call
 				}
 #else
-				bool not_null = TestRuntime.CheckSystemVersion (PlatformName.iOS, 10, 0);
+				bool not_null = TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 10, 0);
 				if (not_null)
 					Assert.NotNull (av.PinTintColor, "PinTintColor");
 				else

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
@@ -55,9 +55,10 @@ namespace Xamarin.MMP.Tests
 				projects.Item1.ItemGroup = NativeReferenceTests.CreateSingleNativeRef (frameworkPath, "Framework");
 
 				BindingProjectTests.SetupAndBuildLinkedTestProjects (projects.Item1, projects.Item2, tmpDir, useProjectReference, false);
-			
-				AssertNoResourceWithName (tmpDir, projects.Item1.ProjectName, "Foo");
-				AssertFileInBundle (tmpDir, type, "Frameworks/Foo.framework/Foo", assertIsSymLink: true);
+
+				var frameworkName = Path.GetFileNameWithoutExtension (frameworkPath);
+				AssertNoResourceWithName (tmpDir, projects.Item1.ProjectName, frameworkName);
+				AssertFileInBundle (tmpDir, type, $"Frameworks/{frameworkName}.framework/{frameworkName}", assertIsSymLink: true);
 			});
 		}
 
@@ -70,8 +71,7 @@ namespace Xamarin.MMP.Tests
 
 				projects.Item1.LinkWithName = "SimpleClassDylib.dylib";
 
-				var buildResult = BindingProjectTests.SetupAndBuildBindingProject (projects.Item1, false, shouldFail: true);
-				buildResult.Messages.AssertError (7068, "Can't create a binding resource package unless there are native references in the binding project.\n        ");
+				BindingProjectTests.SetupAndBuildBindingProject (projects.Item1, false);
 			});
 		}
 

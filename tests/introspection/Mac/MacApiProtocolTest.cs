@@ -19,14 +19,23 @@ using Xamarin.Tests;
 namespace Introspection {
 
 	[TestFixture]
-	public class MonoMacFixtures : ApiProtocolTest {
+	public class MacApiProtocolTest : ApiProtocolTest {
 
 		protected override bool Skip (Type type)
 		{
+#if !NET
+			switch (type.Namespace) {
+			case "Chip":
+				// The Chip framework is not stable, it's been added and removed and added and removed a few times already, so just skip verifying the entire framework.
+				// This is legacy Xamarin only, because we removed the framework for .NET.
+				return true;
+			}
+#endif
+
 			switch (type.Name) {
-#if !XAMCORE_4_0
+#if !NET
 			case "NSDraggingInfo":
-				return true; // Incorrectly bound (BaseType on protocol), will be fixed for XAMCORE_4_0.
+				return true; // Incorrectly bound (BaseType on protocol), will be fixed for .NET.
 #endif
 			// special cases wrt sandboxing
 			case "NSRemoteOpenPanel":
@@ -34,14 +43,12 @@ namespace Introspection {
 				return true;
 			case "AVCaptureSynchronizedDataCollection":
 			case "AVCaptureSynchronizedData":
-			case "MPSImageLaplacianPyramid":
-			case "MPSImageLaplacianPyramidSubtract":
-			case "MPSImageLaplacianPyramidAdd":
-			case "MPSCnnYoloLossNode":
 			case "CXProvider":
 				return TestRuntime.IsVM; // skip only on vms
+#if !NET // NSMenuView does not exist in .NET
 			case "NSMenuView": // not longer supported
 				return true;
+#endif // !NET
 			default:
 				return base.Skip (type);
 			}
@@ -116,6 +123,18 @@ namespace Introspection {
 				case "CXCallUpdate": // Conformance not in headers
 				case "CXProviderConfiguration": // Conformance not in headers
 					return true;
+				// xcode 13 / macOS 12
+				case "OSLogEntry":
+				case "OSLogEntryActivity":
+				case "OSLogEntryBoundary":
+				case "OSLogEntryLog":
+				case "OSLogEntrySignpost":
+				case "OSLogMessageComponent":
+				case "NSImageSymbolConfiguration":
+				case "NSMergePolicy":
+				case "MEComposeSession":
+				case "MEComposeContext":
+					return true;
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
 					if (!Mac.CheckSystemVersion (10, 11) && (type == typeof(CIFilter) || type.IsSubclassOf (typeof(CIFilter))))
@@ -144,6 +163,15 @@ namespace Introspection {
 				// Xcode 12.5
 				case "CXCall": // Conformance not in headers
 					return true;
+				// xcode 13 / macOS 12
+				case "PHCloudIdentifier":
+				case "NSMergePolicy":
+				case "NSEntityMapping":
+				case "NSMappingModel":
+				case "NSPropertyMapping":
+				case "HMAccessoryOwnershipToken":
+				case "MEComposeSession":
+					return true;
 				}
 				break;
 			case "NSMutableCopying":
@@ -159,6 +187,10 @@ namespace Introspection {
 				case "EKRecurrenceRule": // Not declared in header file
 				case "EKReminder": // Not declared in header file
 				case "INPerson": // Not declared in header file
+					return true;
+				// xcode 13 / macOS 12
+				case "NSMergePolicy":
+				case "UNNotificationSettings":
 					return true;
 				}
 				break;
@@ -208,6 +240,17 @@ namespace Introspection {
 				case "CXCallUpdate": // Conformance not in headers
 				case "CXProviderConfiguration": // Conformance not in headers
 					return true;
+				// xcode 13 / macOS 12
+				case "OSLogEntry":
+				case "OSLogEntryActivity":
+				case "OSLogEntryBoundary":
+				case "OSLogEntryLog":
+				case "OSLogEntrySignpost":
+				case "OSLogMessageComponent":
+				case "NSImageSymbolConfiguration":
+				case "NSMergePolicy":
+				case "MEComposeContext":
+					return true;
 				}
 				break;
 			case "NSWindowRestoration":
@@ -243,7 +286,7 @@ namespace Introspection {
 				if (type.Name == "NSTextView")
 					return true;
 				break;
-#if !XAMCORE_4_0
+#if !NET
 			case "NSDraggingInfo":
 				return true; // We have to keep the type to maintain backwards compatibility.
 #endif

@@ -90,37 +90,36 @@ namespace LinkAll.Attributes {
 		}
 
 		[Test]
-		public void Class_LookupFullName ()
-		{
-			var klass = Type.GetType ("ObjCRuntime.Class, " + AssemblyName);
-			Assert.NotNull (klass, "Class");
-			// only required (and preserved) for debug builds
-			var method = klass.GetMethod ("LookupFullName", BindingFlags.NonPublic | BindingFlags.Static);
-			// note: since iOS/runtime unification this is being called by ObjCRuntime.Runtime.LookupManagedTypeName
-			// and will never be removed (even on Release builds)
-			Assert.NotNull (method, "LookupFullName");
-		}
-
-		[Test]
 		public void Runtime_RegisterEntryAssembly ()
 		{
 #if NET
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("https://github.com/xamarin/xamarin-macios/issues/10457");
+			TestRuntime.AssertSimulator ("https://github.com/xamarin/xamarin-macios/issues/10457");
 #endif
 
 			var klass = Type.GetType ("ObjCRuntime.Runtime, " + AssemblyName);
 			Assert.NotNull (klass, "Runtime");
 			// RegisterEntryAssembly is only needed for the simulator (not on devices) so it's only preserved for sim builds
 			var method = klass.GetMethod ("RegisterEntryAssembly", BindingFlags.NonPublic | BindingFlags.Static, null, new [] { typeof (Assembly) }, null);
-			Assert.That (method == null, Is.EqualTo (Runtime.Arch == Arch.DEVICE), "RegisterEntryAssembly");
+#if __MACOS__
+			var expectedNull = true;
+#else
+			var expectedNull = TestRuntime.IsDevice;
+#endif
+			Assert.That (method == null, Is.EqualTo (expectedNull), "RegisterEntryAssembly");
 		}
 
 		[Test]
 		public void MonoTouchException_Unconditional ()
 		{
-			var klass = Type.GetType ("Foundation.MonoTouchException, " + AssemblyName);
-			Assert.NotNull (klass, "MonoTouchException");
+#if NET
+			const string klassName = "ObjCRuntime.ObjCException";
+#elif __MACOS__
+			const string klassName = "Foundation.ObjCException";
+#else
+			const string klassName = "Foundation.MonoTouchException";
+#endif
+			var klass = Type.GetType (klassName +", " + AssemblyName);
+			Assert.NotNull (klass, klassName);
 		}
 
 		[Test]

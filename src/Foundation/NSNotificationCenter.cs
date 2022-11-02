@@ -26,6 +26,7 @@ using ObjCRuntime;
 using Foundation;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 
 namespace Foundation {
 
@@ -125,6 +126,12 @@ namespace Foundation {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class NSNotificationEventArgs : EventArgs {
 		public NSNotification Notification { get; private set; }
 		public NSNotificationEventArgs (NSNotification notification)

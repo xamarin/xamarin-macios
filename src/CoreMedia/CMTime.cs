@@ -6,6 +6,9 @@
 // Copyright 2010-2011 Novell Inc
 // Copyright 2012-2014 Xamarin Inc. All rights reserved.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using CoreFoundation;
@@ -14,7 +17,14 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (6,0)]
+#endif
 	[StructLayout(LayoutKind.Sequential)]
 	public partial struct CMTime {
 		// CMTimeFlags -> uint32_t -> CMTime.h
@@ -177,18 +187,20 @@ namespace CoreMedia {
 			return comp >= 0;
 		}
 		
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
-			if (!(obj is CMTime))
-				return false;
-			
-			CMTime other = (CMTime) obj;
-			return other == this;
+			if (obj is CMTime time)
+				return CMTimeCompare (this, time) == 0;
+			return false;
 		}
 		
 		public override int GetHashCode ()
 		{
+#if NET
+			return HashCode.Combine (Value, TimeScale, TimeFlags, TimeEpoch);
+#else
 			return Value.GetHashCode () ^ TimeScale.GetHashCode () ^ TimeFlags.GetHashCode () ^ TimeEpoch.GetHashCode ();
+#endif
 		}
 		
 		[DllImport(Constants.CoreMediaLibrary)]
@@ -223,12 +235,27 @@ namespace CoreMedia {
 			return CMTimeMultiplyByFloat64 (time, multiplier);
 		}
 
-		[iOS (7,1)][Mac (10,10)]
-		[DllImport(Constants.CoreMediaLibrary)]
+#if NET
+		[SupportedOSPlatform ("ios7.1")]
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
+		[iOS (7,1)]
+		[Mac (10,10)]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMTime CMTimeMultiplyByRatio (CMTime time, /* int32_t */ int multiplier, /* int32_t */ int divisor);
 
+#if NET
+		[SupportedOSPlatform ("ios7.1")]
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7,1)]
 		[Mac (10, 10)]
+#endif
 		public static CMTime Multiply (CMTime time, int multiplier, int divisor)
 		{
 			return CMTimeMultiplyByRatio (time, multiplier, divisor);
@@ -295,21 +322,39 @@ namespace CoreMedia {
 			return CMTimeMinimum (time1, time2);
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
+#if NET
+		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[TV (12,0)]
+		[Mac (10,14)]
+		[iOS (12,0)]
+#endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMTime CMTimeFoldIntoRange (CMTime time, CMTimeRange foldRange);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
+#if NET
+		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[TV (12,0)]
+		[Mac (10,14)]
+		[iOS (12,0)]
+#endif
 		public static CMTime Fold (CMTime time, CMTimeRange foldRange)
 		{
 			return CMTimeFoldIntoRange (time, foldRange);
 		}
 
 		// FIXME: generated will need some changes to emit [Field] in partial struct (not class)
-		public readonly static NSString ValueKey;
-		public readonly static NSString ScaleKey;
-		public readonly static NSString EpochKey;
-		public readonly static NSString FlagsKey;
+		public readonly static NSString? ValueKey;
+		public readonly static NSString? ScaleKey;
+		public readonly static NSString? EpochKey;
+		public readonly static NSString? FlagsKey;
 		
 		static CMTime ()
 		{
@@ -331,13 +376,13 @@ namespace CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CFStringRef */ IntPtr CMTimeCopyDescription (/* CFAllocatorRef */ IntPtr allocator, CMTime time);
 
-		public string Description {
+		public string? Description {
 			get {
 				return CFString.FromHandle (CMTimeCopyDescription (IntPtr.Zero, this));
 			}
 		}
 		
-		public override string ToString ()
+		public override string? ToString ()
 		{
 			return Description;
 		}
@@ -347,8 +392,8 @@ namespace CoreMedia {
 
 		public static CMTime FromDictionary (NSDictionary dict)
 		{
-			if (dict == null)
-				throw new ArgumentNullException ("dict");
+			if (dict is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dict));
 			return CMTimeMakeFromDictionary (dict.Handle);
 		}
 #endif // !COREBUILD

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // SKFieldNode.cs: SKFieldNode class
 //
 // Authors:
@@ -25,4 +25,3 @@ namespace SpriteKit {
 	}
 #endif
 }
-

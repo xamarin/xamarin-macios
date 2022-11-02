@@ -70,10 +70,6 @@ namespace LinkAll.Serialization.DataContract {
 		[Test]
 		public void Flags ()
 		{
-#if NET
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("https://github.com/dotnet/runtime/issues/47114");
-#endif
 			var t1 = new TestClass (SomeTypes.Audio | SomeTypes.Image);
 			var st = ToXml (t1);
 			var t2 = FromXml<TestClass> (st);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,8 +6,9 @@ using System.Xml;
 using NUnit.Framework;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
-namespace Xamarin.iOS.Tasks {
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
 	public class NativeReferencesTests : ProjectTest {
@@ -19,6 +20,9 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void BasicTest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var mtouchPaths = SetupProjectPaths ("MyTabbedApplication");
 
 			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
@@ -43,6 +47,9 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void WithIncrementalBuilds ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+	
 			if (Platform.Contains ("Simulator"))
 				return; // incremental builds on the simulator doesn't make much sense.
 
@@ -67,4 +74,3 @@ namespace Xamarin.iOS.Tasks {
 		}
 	}
 }
-

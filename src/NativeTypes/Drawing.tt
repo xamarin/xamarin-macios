@@ -44,7 +44,7 @@ namespace CoreGraphics
 	}) {
 #>
 	[Serializable]
-	public struct <#= type.Name #> : IEquatable<<#= type.Name #>>
+	public partial struct <#= type.Name #> : IEquatable<<#= type.Name #>>
 	{
 		public static readonly <#= type.Name #> Empty;
 
@@ -204,6 +204,7 @@ namespace CoreGraphics
 		}
 <# } #>
 
+#if !NET
 		public override int GetHashCode ()
 		{
 			var hash = 23;
@@ -211,6 +212,7 @@ namespace CoreGraphics
 			hash = hash * 31 + <#= type.Y_Height #>.GetHashCode ();
 			return hash;
 		}
+#endif
 
 		public void Deconstruct (out nfloat <#= type.X_Width #>, out nfloat <#= type.Y_Height #>)
 		{
@@ -244,6 +246,7 @@ namespace CoreGraphics
 		}
 
 <# } #>
+#if !NET
 		public override string ToString ()
 		{
 			return String.Format ("{{<#= ucfirst (type.X_Width) #>={0}, <#= ucfirst (type.Y_Height) #>={1}}}",
@@ -251,12 +254,13 @@ namespace CoreGraphics
 				<#= type.Y_Height #>.ToString (CultureInfo.CurrentCulture)
 			);
 		}
+#endif
 	}
 
 <# } #>
 
 	[Serializable]
-	public struct CGRect : IEquatable<CGRect>
+	public partial struct CGRect : IEquatable<CGRect>
 	{
 		[Field ("CGRectZero", "CoreGraphics")] // unused but helps xtro
 		public static readonly CGRect Empty;
@@ -558,6 +562,7 @@ namespace CoreGraphics
 				height == rect.height;
 		}
 
+#if !NET
 		public override int GetHashCode ()
 		{
 			var hash = 23;
@@ -573,6 +578,7 @@ namespace CoreGraphics
 			return String.Format ("{{X={0},Y={1},Width={2},Height={3}}}",
 				x, y, width, height);
 		}
+#endif
 
 		public void Deconstruct (out nfloat x, out nfloat y, out nfloat width, out nfloat height)
 		{

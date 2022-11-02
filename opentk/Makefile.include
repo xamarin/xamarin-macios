@@ -30,7 +30,7 @@ $(MAC_BUILD_DIR)/mobile-64/OpenTK.dll: $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/mo
 		$(MAC_BOOTSTRAP_DEFINES),COREBUILD \
 		$(XAMMAC) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
-		@$(BUILD_DIR)/mac-defines.rsp \
+		@$(BUILD_DIR)/macos-defines.rsp \
 		$(MAC_OPENTK_SOURCES)
 
 $(MAC_BUILD_DIR)/full-64/OpenTK.dll: $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/full-64/Xamarin.Mac.dll
@@ -39,7 +39,7 @@ $(MAC_BUILD_DIR)/full-64/OpenTK.dll: $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/full
 		$(MAC_BOOTSTRAP_DEFINES),COREBUILD \
 		$(XAMMAC) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
-		@$(BUILD_DIR)/mac-defines.rsp \
+		@$(BUILD_DIR)/macos-defines.rsp \
 		$(MAC_OPENTK_FULL_SOURCES)
 
 $(MAC_BUILD_DIR)/net_4_5/OpenTK.dll: $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/full-64/Xamarin.Mac.dll
@@ -49,7 +49,7 @@ $(MAC_BUILD_DIR)/net_4_5/OpenTK.dll: $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/full
 		$(MAC_BOOTSTRAP_DEFINES),COREBUILD \
 		 $(XAMMAC) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
-		@$(BUILD_DIR)/mac-defines.rsp \
+		@$(BUILD_DIR)/macos-defines.rsp \
 		$(MAC_OPENTK_NET_4_5_SOURCES)
 
 $(MAC_BUILD_DIR)/net_4_5-reference/OpenTK.dll: $(MAC_BUILD_DIR)/net_4_5/OpenTK.dll

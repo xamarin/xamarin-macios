@@ -1,4 +1,4 @@
-﻿//
+//
 // GKPolygonObstacle.cs: Implements some nicer methods for GKPolygonObstacle
 //
 // Authors:
@@ -7,10 +7,16 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
+#if NET
+using Vector2 = global::System.Numerics.Vector2;
+#else
 using Vector2 = global::OpenTK.Vector2;
+#endif
 using System.Runtime.InteropServices;
 
 namespace GameplayKit {
@@ -18,8 +24,8 @@ namespace GameplayKit {
 
 		public static GKPolygonObstacle FromPoints (Vector2 [] points)
 		{
-			if (points == null)
-				throw new ArgumentNullException ("points");
+			if (points is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 			
 			var size = Marshal.SizeOf (typeof (Vector2));
 			var length = points.Length * size;
@@ -41,8 +47,8 @@ namespace GameplayKit {
 
 		static unsafe IntPtr GetPointer (Vector2[] points)
 		{
-			if (points == null)
-				throw new ArgumentNullException ("points");
+			if (points is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
 			if (ctor_pointer != IntPtr.Zero) {
 				// This can occur of a previous call to the base ctor threw an exception

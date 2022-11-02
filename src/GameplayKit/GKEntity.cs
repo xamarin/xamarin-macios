@@ -1,4 +1,4 @@
-﻿//
+//
 // GKEntity.cs: Implements some nicer methods for GKEntity
 //
 // Authors:
@@ -6,6 +6,8 @@
 //
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
+
+#nullable enable
 
 using System;
 using Foundation;
@@ -19,7 +21,7 @@ namespace GameplayKit {
 			RemoveComponent (GKState.GetClass (componentType, "componentType"));
 		}
 
-		public GKComponent GetComponent (Type componentType)
+		public GKComponent? GetComponent (Type componentType)
 		{
 			return GetComponent (GKState.GetClass (componentType, "componentType"));
 		}

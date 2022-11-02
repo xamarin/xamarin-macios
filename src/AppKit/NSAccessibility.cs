@@ -6,6 +6,7 @@
 //
 // Copyright 2016 Xamarin Inc. (http://xamarin.com)
 
+#if !__MACCATALYST__
 
 using System;
 using System.Collections.Generic;
@@ -16,16 +17,21 @@ using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
-namespace AppKit
-{
-	[Mac (10,10)] // protocol added in 10.10
-	public partial interface INSAccessibility {}
+namespace AppKit {
+	public partial interface INSAccessibility { }
 
-	[Mac (10,9)] // but the field/notifications are in 10.9
-	public partial class NSAccessibility
-	{
+#if NET
+	[SupportedOSPlatform ("macos10.9")]
+#else
+	[Mac (10, 9)] // but the field/notifications are in 10.9
+#endif
+	public partial class NSAccessibility {
 #if !COREBUILD
-		[Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[Mac (10, 10)]
+#endif
 		[DllImport (Constants.AppKitLibrary)]
 		static extern CGRect NSAccessibilityFrameInView (NSView parentView, CGRect frame);
 
@@ -34,7 +40,11 @@ namespace AppKit
 			return NSAccessibilityFrameInView (parentView, frame);
 		}
 
-		[Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+#else
+		[Mac (10, 10)]
+#endif
 		[DllImport (Constants.AppKitLibrary)]
 		static extern CGPoint NSAccessibilityPointInView (NSView parentView, CGPoint point);
 
@@ -147,7 +157,7 @@ namespace AppKit
 		[DllImport (Constants.AppKitLibrary)]
 		static extern IntPtr NSAccessibilityUnignoredChildren (IntPtr originalChildren);
 
-		public static NSObject[] GetUnignoredChildren (NSArray originalChildren)
+		public static NSObject [] GetUnignoredChildren (NSArray originalChildren)
 		{
 			if (originalChildren == null)
 				throw new ArgumentNullException ("originalChildren");
@@ -160,7 +170,7 @@ namespace AppKit
 		[DllImport (Constants.AppKitLibrary)]
 		static extern IntPtr NSAccessibilityUnignoredChildrenForOnlyChild (IntPtr originalChild);
 
-		public static NSObject[] GetUnignoredChildren (NSObject originalChild)
+		public static NSObject [] GetUnignoredChildren (NSObject originalChild)
 		{
 			if (originalChild == null)
 				throw new ArgumentNullException ("originalChild");
@@ -181,3 +191,4 @@ namespace AppKit
 #endif
 	}
 }
+#endif // !__MACCATALYST__

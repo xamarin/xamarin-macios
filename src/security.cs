@@ -35,13 +35,15 @@ namespace Security {
 			
 		[Field ("kSecPolicyAppleIPsec")]
 		NSString AppleIPsec { get; }
-#if MONOMAC
+
+		[NoiOS][NoWatch][NoTV][NoMacCatalyst]
 		[Field ("kSecPolicyApplePKINITClient")]
 		NSString ApplePKINITClient { get; }
 			
+		[NoiOS][NoWatch][NoTV][NoMacCatalyst]
 		[Field ("kSecPolicyApplePKINITServer")]
 		NSString ApplePKINITServer { get; }
-#endif	
+
 		[Field ("kSecPolicyAppleCodeSigning")]
 		NSString AppleCodeSigning { get; }
 
@@ -733,11 +735,10 @@ namespace Security {
 		[Field ("kSecUseOperationPrompt")]
 		IntPtr UseOperationPrompt { get; }
 
-#if !MONOMAC // Don't break compat API
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
+		[iOS (8, 0), Deprecated (PlatformName.iOS, 9, 0)]
+		[Mac (10, 10), Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Field ("kSecUseNoAuthenticationUI")]
 		IntPtr UseNoAuthenticationUI { get; }
-#endif
 
 		[iOS (9,0)][Mac (10,11)]
 		[Field ("kSecUseAuthenticationUI")]
@@ -1104,9 +1105,8 @@ namespace Security {
 		NSData SharedInfo { get; set; }
 	}
 
-#if IOS || MONOMAC
 	[iOS (8,0)][NoTV][NoWatch]
-	[Mac (11,0)]
+	[Mac (11,0)][MacCatalyst (13,1)]
 	[Internal][Static]
 	interface SecSharedCredentialKeys {
 		[Field ("kSecAttrServer")]
@@ -1136,8 +1136,6 @@ namespace Security {
 
 		int Port { get; set; }
 	}
-
-#endif
 
 	delegate void SecProtocolVerifyComplete (bool complete);
 

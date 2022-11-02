@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.IO;
 using NUnit.Framework;
 
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture]
 	public class PropertyListEditorTaskTests : TestBase

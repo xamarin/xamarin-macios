@@ -1,4 +1,4 @@
-﻿//
+//
 // mtouch.cs: A tool to generate the necessary code to boot a Mono
 // application on the iPhone
 //
@@ -66,8 +66,7 @@ public enum OutputFormat {
 	Xml,
 }
 
-namespace Xamarin.Bundler
-{
+namespace Xamarin.Bundler {
 	public partial class Driver {
 		internal const string NAME = "mtouch";
 
@@ -316,7 +315,7 @@ namespace Xamarin.Bundler
 				return false;
 
 			//Custom gcc flags requires us to build template.m
-			if (app.UserGccFlags?.Count > 0)
+			if (app.CustomLinkFlags?.Count > 0)
 				return false;
 
 			// Setting environment variables is done in the generated main.m, so we can't symlink in this case.
@@ -362,8 +361,7 @@ namespace Xamarin.Bundler
 				args = l.ToArray ();
 			}
 
-			Action<Action> SetAction = (Action value) =>
-			{
+			Action<Action> SetAction = (Action value) => {
 				switch (action) {
 				case Action.None:
 					action = value;
@@ -388,7 +386,7 @@ namespace Xamarin.Bundler
 			var os = new OptionSet () {
 			{ "dot:", "Generate a dot file to visualize the build tree.", v => dotfile = v ?? string.Empty },
 			{ "aot=", "Arguments to the static compiler",
-				v => app.AotArguments = v + (v.EndsWith (",", StringComparison.Ordinal) ? String.Empty : ",") + app.AotArguments
+				v => app.AotArguments.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
 			},
 			{ "aot-options=", "Non AOT arguments to the static compiler",
 				v => {
@@ -424,11 +422,7 @@ namespace Xamarin.Bundler
 			{ "r|ref=", "Add an assembly to the resolver [DEPRECATED, use --reference instead]", v => app.References.Add (v), true /* Hide: this option is deprecated in favor of the shared --reference option instead */ },
 			{ "gcc_flags=", "Set flags to be passed along to gcc at link time", v =>
 				{
-					if (!StringUtils.TryParseArguments (v, out var gcc_flags, out var ex))
-						throw ErrorHelper.CreateError (26, ex, Errors.MX0026, "-gcc-flags=" + v, ex.Message);
-					if (app.UserGccFlags == null)
-						app.UserGccFlags = new List<string> ();
-					app.UserGccFlags.AddRange (gcc_flags);
+					app.ParseCustomLinkFlags (v, "gcc_flags");
 				}
 			},
 			{ "framework=", "Link with the specified framework. This can either be a system framework (like 'UIKit'), or it can be a path to a custom framework ('/path/to/My.framework'). In the latter case the entire 'My.framework' directory is copied into the app as well.", (v) => app.Frameworks.Add (v) },
@@ -482,7 +476,7 @@ namespace Xamarin.Bundler
 			{ "argument=", "Launch the app with this command line argument. This must be specified multiple times for multiple arguments [DEPRECATED]", v => { }, true },
 			{ "sgen:", "Enable the SGen garbage collector",
 					v => {
-						if (!ParseBool (v, "sgen")) 
+						if (!ParseBool (v, "sgen"))
 							ErrorHelper.Warning (43, Errors.MX0043);
 					},
 					true // do not show the option anymore
@@ -490,7 +484,7 @@ namespace Xamarin.Bundler
 			{ "boehm:", "Enable the Boehm garbage collector",
 					v => {
 						if (ParseBool (v, "boehm"))
-							ErrorHelper.Warning (43, Errors.MX0043); }, 
+							ErrorHelper.Warning (43, Errors.MX0043); },
 					true // do not show the option anymore
 				},
 			{ "new-refcount:", "Enable new refcounting logic",
@@ -600,14 +594,14 @@ namespace Xamarin.Bundler
 			return app;
 		}
 
-		static int Main2 (string[] args)
+		static int Main2 (string [] args)
 		{
 			Action action;
 			var app = ParseArguments (args, out action);
 
 			if (app == null)
 				return 0;
-			
+
 			// Allow a few actions, since these seem to always work no matter the Xcode version.
 			var accept_any_xcode_version = action == Action.ListDevices || action == Action.ListCrashReports || action == Action.ListApps || action == Action.LogDev;
 			ValidateXcode (app, accept_any_xcode_version, false);
@@ -717,15 +711,13 @@ namespace Xamarin.Bundler
 
 		static void RedirectStream (StreamReader @in, StreamWriter @out)
 		{
-			new Thread (() =>
-			{
+			new Thread (() => {
 				string line;
 				while ((line = @in.ReadLine ()) != null) {
 					@out.WriteLine (line);
 					@out.Flush ();
 				}
-			})
-			{ IsBackground = true }.Start ();
+			}) { IsBackground = true }.Start ();
 		}
 
 		static string GetMlaunchPath (Application app)
@@ -790,6 +782,14 @@ namespace Xamarin.Bundler
 			// The default is gcc, but if we can't find gcc,
 			// we try again with clang.
 			//
+
+			switch (app.Platform) {
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				if (Driver.XcodeVersion.Major >= 14)
+					app.EnableCxx = true;
+				break;
+			}
 
 			if (string.IsNullOrEmpty (app.Compiler)) {
 				// by default we use `gcc` before iOS7 SDK, falling back to `clang`. Otherwise we go directly to `clang`

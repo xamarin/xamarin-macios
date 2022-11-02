@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if !__MACCATALYST__
+
 using System;
 
 namespace AppKit {
@@ -31,5 +33,6 @@ namespace AppKit {
 			}
 		}
 	}
-	
+
 }
+#endif // !__MACCATALYST__

@@ -1,4 +1,4 @@
-﻿//
+//
 // AppDelegate.cs
 //
 // Author: Jeffrey Stedfast <jestedfa@microsoft.com>
@@ -79,4 +79,3 @@ namespace Bug60536
 		}
 	}
 }
-

@@ -16,6 +16,7 @@
     <DefineConstants></DefineConstants>
     <LangVersion>latest</LangVersion>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -67,6 +68,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Stub.cs" />
+    <Compile Include="..\..\..\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\common\mac\MacMain.cs">
       <Link>MacMain.cs</Link>
     </Compile>

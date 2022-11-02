@@ -6,6 +6,8 @@
 //
 // Copyright 2013,2015 Xamarin Inc.
 
+#nullable enable
+
 using System;
 
 using ObjCRuntime;
@@ -15,7 +17,7 @@ namespace GameController {
 
 	public partial class GCController {
 
-#if !XAMCORE_4_0
+#if !NET
 		// In an undefined enum (GCController.h).
 		// the API will use the new enum in XAMCORE_3_0 so the constant is not helpful anymore
 		public const int PlayerIndexUnset = -1;

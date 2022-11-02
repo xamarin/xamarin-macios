@@ -27,10 +27,21 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[Register ("NSMutableDictionary", SkipRegistration = true)]
 	public sealed partial class NSMutableDictionary<TKey,TValue> : NSMutableDictionary, IDictionary<TKey, TValue> 
 		where TKey : class, INativeObject 
@@ -46,7 +57,7 @@ namespace Foundation {
 		{
 		}
 
-		internal NSMutableDictionary (IntPtr handle)
+		internal NSMutableDictionary (NativeHandle handle)
 			: base (handle)
 		{
 		}
@@ -225,7 +236,7 @@ namespace Foundation {
 				return GenericFromObjectsAndKeysInternal (no, nk);
 		}
 
-#if XAMCORE_4_0
+#if NET
 		public static NSMutableDictionary<TKey, TValue> FromObjectsAndKeys (TValue [] objects, TKey [] keys)
 #else
 		[Obsolete ("'TKey' and 'TValue' are inversed and won't work unless both types are identical. Use the generic overload that takes a count parameter instead.")]

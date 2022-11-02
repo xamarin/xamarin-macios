@@ -23,6 +23,7 @@ using AppKit;
 using UIKit;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Security {
 
@@ -41,7 +42,7 @@ namespace MonoTouchFixtures.Security {
 		static X509Certificate2 _c;
 		static X509Certificate2 c {
 			get {
-				TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false); // System.Security.Cryptography.CryptographicException : Input data cannot be coded as a valid certificate.
+				TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false); // System.Security.Cryptography.CryptographicException : Input data cannot be coded as a valid certificate.
 				if (_c == null)
 					_c = new X509Certificate2 (ImportExportTest.farscape_pfx, "farscape");
 				return _c;
@@ -50,9 +51,9 @@ namespace MonoTouchFixtures.Security {
 
 		public static void DeleteKeysWithLabel (string label)
 		{
-			var query = new SecRecord (SecKind.Key) {
-				Label = label,
-			};
+			var query = RecordTest.CreateSecRecord (SecKind.Key,
+				label: label
+			);
 			SecStatusCode code;
 			do {
 				// For some reason each call to SecKeyChain will only remove a single key, so do a loop.
@@ -117,7 +118,7 @@ namespace MonoTouchFixtures.Security {
 			var label = $"KeyTest.RoundtripRSAMinPKCS1-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
 
 			try {
-				using (var record = new SecRecord (SecKind.Key)) {
+				using (var record = RecordTest.CreateSecRecord (SecKind.Key)) {
 					record.KeyType = SecKeyType.RSA;
 					record.KeySizeInBits = MinRsaKeySize; // it's not a performance test :)
 					record.Label = label;
@@ -130,7 +131,7 @@ namespace MonoTouchFixtures.Security {
 						Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Encrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "public/IsAlgorithmSupported/Encrypt");
 
 #if MONOMAC
-						Assert.That (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), Is.EqualTo (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 13)), "public/IsAlgorithmSupported/Decrypt");
+						Assert.That (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), Is.EqualTo (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 13)), "public/IsAlgorithmSupported/Decrypt");
 
 						using (var pub = public_key.GetPublicKey ()) {
 							// macOS behaviour is not consistent - but the test main goal is to check we get a key
@@ -185,7 +186,7 @@ namespace MonoTouchFixtures.Security {
 					public_key.Dispose ();
 					var expectedResult = SecStatusCode.Success;
 #if __MACOS__
-					if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 8))
+					if (!TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 8))
 						expectedResult = SecStatusCode.InvalidData;
 #endif
 					Assert.That (private_key.Decrypt (SecPadding.PKCS1, cipher, out result), Is.EqualTo (expectedResult), "Decrypt");
@@ -207,7 +208,7 @@ namespace MonoTouchFixtures.Security {
 			var label = $"KeyTest.EncryptTooLarge-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
 
 			try {
-				using (var record = new SecRecord (SecKind.Key)) {
+				using (var record = RecordTest.CreateSecRecord (SecKind.Key)) {
 					record.KeyType = SecKeyType.RSA;
 					record.KeySizeInBits = MinRsaKeySize; // it's not a performance test :)
 					record.Label = label;
@@ -220,9 +221,9 @@ namespace MonoTouchFixtures.Security {
 					var expectedStatus = SecStatusCode.Param;
 
 #if __MACOS__
-					if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 8))
+					if (!TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 8))
 						expectedStatus = SecStatusCode.Success;
-					else if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 12))
+					else if (!TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 12))
 						expectedStatus = SecStatusCode.OutputLengthError;
 #endif
 					Assert.That (rv, Is.EqualTo (expectedStatus), "Encrypt");
@@ -244,7 +245,7 @@ namespace MonoTouchFixtures.Security {
 			var label = $"KeyTest.RoundtripRSA1024OAEP-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
 
 			try {
-				using (var record = new SecRecord (SecKind.Key)) {
+				using (var record = RecordTest.CreateSecRecord (SecKind.Key)) {
 					record.KeyType = SecKeyType.RSA;
 					record.KeySizeInBits = 1024; // it's not a performance test :)
 					record.Label = label;
@@ -257,7 +258,7 @@ namespace MonoTouchFixtures.Security {
 						Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Encrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), "public/IsAlgorithmSupported/Encrypt");
 						// I would have expect false
 #if MONOMAC
-						Assert.That (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), Is.EqualTo (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 13)), "public/IsAlgorithmSupported/Decrypt");
+						Assert.That (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), Is.EqualTo (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 13)), "public/IsAlgorithmSupported/Decrypt");
 #else
 						Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), "public/IsAlgorithmSupported/Decrypt");
 #endif
@@ -273,7 +274,7 @@ namespace MonoTouchFixtures.Security {
 					Assert.That (private_key.Decrypt (SecPadding.OAEP, cipher, out result), Is.EqualTo (SecStatusCode.Success), "Decrypt");
 					var expectEmpty = false;
 #if __MACOS__
-					if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 12))
+					if (!TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 12))
 						expectEmpty = true;
 #endif
 					if (expectEmpty) {
@@ -298,7 +299,7 @@ namespace MonoTouchFixtures.Security {
 			var label = $"KeyTest.SignVerifyRSAMinPKCS1SHA1-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
 
 			try {
-				using (var record = new SecRecord (SecKind.Key)) {
+				using (var record = RecordTest.CreateSecRecord (SecKind.Key)) {
 					record.KeyType = SecKeyType.RSA;
 					record.KeySizeInBits = MinRsaKeySize; // it's not a performance test :)
 					record.Label = label;
@@ -327,14 +328,14 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void SignVerifyECSHA1 ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			SecKey private_key;
 			SecKey public_key;
 			var label = $"KeyTest.SignVerifyECSHA1-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
 
 			try {
-				using (var record = new SecRecord (SecKind.Key)) {
+				using (var record = RecordTest.CreateSecRecord (SecKind.Key)) {
 					record.KeyType = SecKeyType.EC;
 					record.KeySizeInBits = 256; // it's not a performance test :)
 					record.Label = label;
@@ -370,7 +371,7 @@ namespace MonoTouchFixtures.Security {
 			var label = $"KeyTest.GenerateKeyPairTooLargeRSA-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
 
 			try {
-				using (var record = new SecRecord (SecKind.Key)) {
+				using (var record = RecordTest.CreateSecRecord (SecKind.Key)) {
 					record.KeyType = SecKeyType.RSA;
 					// maximum documented as 2048, .NET maximum is 16384
 					record.KeySizeInBits = 16384;
@@ -436,7 +437,7 @@ namespace MonoTouchFixtures.Security {
 			var label = $"KeyTest.BenchmarkNative4096-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
 
 			try {
-				using (var record = new SecRecord (SecKind.Key)) {
+				using (var record = RecordTest.CreateSecRecord (SecKind.Key)) {
 					record.KeyType = SecKeyType.RSA;
 					record.KeySizeInBits = 4096;
 					record.Label = label;

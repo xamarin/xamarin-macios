@@ -33,22 +33,39 @@ using CoreGraphics;
 using CoreFoundation;
 using ModelIO;
 
-using Vector2 = global::OpenTK.Vector2;
+#if NET
+using Vector3 = global::System.Numerics.Vector3;
+using Vector4 = global::System.Numerics.Vector4;
+using Matrix3 = global::CoreGraphics.RMatrix3;
+using Matrix4 = global::System.Numerics.Matrix4x4;
+#else
 using Vector3 = global::OpenTK.Vector3;
 using Vector4 = global::OpenTK.Vector4;
-using Matrix2 = global::OpenTK.Matrix2;
 using Matrix3 = global::OpenTK.Matrix3;
 using Matrix4 = global::OpenTK.Matrix4;
-using Quaternion = global::OpenTK.Quaternion;
-using MathHelper = global::OpenTK.MathHelper;
+#endif // NET 
 
 #if MONOMAC
+#if NET
+using pfloat = System.Runtime.InteropServices.NFloat;
+#else
 using pfloat = System.nfloat;
+#endif
 using AppKit;
+using EAGLSharegroup = Foundation.NSObject;
+using EAGLContext = Foundation.NSObject;
+using UIView = AppKit.NSView;
+using UIImage = AppKit.NSImage;
+using UIViewController = AppKit.NSViewController;
 #else
 using OpenGLES;
 using UIKit;
 using pfloat = System.Single;
+using NSOpenGLContext = Foundation.NSObject;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace GLKit {
@@ -263,7 +280,7 @@ namespace GLKit {
 	interface GLKMesh
 	{
 		[Export ("initWithMesh:error:")]
-		IntPtr Constructor (MDLMesh mesh, out NSError error);
+		NativeHandle Constructor (MDLMesh mesh, out NSError error);
 
 		// generator does not like `out []` -> https://trello.com/c/sZYNalbB/524-generator-support-out
 		[Internal] // there's another, manual, public API exposed
@@ -495,13 +512,13 @@ namespace GLKit {
 		[return: NullAllowed]
 		GLKTextureInfo FromName (string name, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary<NSString, NSNumber> options, out NSError outError);
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithShareContext:")]
-		IntPtr Constructor (NSOpenGLContext context);
-#else
+		NativeHandle Constructor (NSOpenGLContext context);
+
+		[NoMac]
 		[Export ("initWithSharegroup:")]
-		IntPtr Constructor (EAGLSharegroup sharegroup);
-#endif
+		NativeHandle Constructor (EAGLSharegroup sharegroup);
 
 		[Export ("textureWithContentsOfFile:options:queue:completionHandler:")]
 		[Async]
@@ -546,9 +563,7 @@ namespace GLKit {
 		[Field ("GLKTextureLoaderOriginBottomLeft")]
 		NSString OriginBottomLeft { get; }
 		
-#if XAMCORE_4_0 // Unavailable in macOS
-		[NoMac]
-#endif
+		[Mac (10,14)]
 		[Field ("GLKTextureLoaderGrayscaleAsAlpha")]
 		NSString GrayscaleAsAlpha { get; }
 
@@ -566,13 +581,13 @@ namespace GLKit {
 		NSString GLErrorKey { get; }
 	}
 
-#if !MONOMAC
+	[NoMac]
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (UIView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof (GLKViewDelegate)})]
 	interface GLKView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set;  }
@@ -607,7 +622,7 @@ namespace GLKit {
 		bool EnableSetNeedsDisplay { get; set;  }
 
 		[Export ("initWithFrame:context:")]
-		IntPtr Constructor (CGRect frame, EAGLContext context);
+		NativeHandle Constructor (CGRect frame, EAGLContext context);
 
 		[Export ("bindDrawable")]
 		void BindDrawable ();
@@ -622,6 +637,7 @@ namespace GLKit {
 		void DeleteDrawable ();
 	}
 
+	[NoMac]
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (NSObject))]
@@ -633,13 +649,14 @@ namespace GLKit {
 		void DrawInRect (GLKView view, CGRect rect);
 	}
 
+	[NoMac]
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (UIViewController))]
 	interface GLKViewController : GLKViewDelegate {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("preferredFramesPerSecond")]
 		nint PreferredFramesPerSecond { get; set;  }
@@ -683,6 +700,7 @@ namespace GLKit {
 		void Update ();
 	}
 
+	[NoMac]
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (NSObject))]
@@ -696,5 +714,4 @@ namespace GLKit {
 		[Export ("glkViewController:willPause:")]
 		void WillPause (GLKViewController controller, bool pause);
 	}
-#endif
 }

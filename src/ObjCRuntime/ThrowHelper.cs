@@ -29,6 +29,24 @@ namespace ObjCRuntime {
 		}
 
 		[DoesNotReturn]
+		public static void ThrowArgumentNullException (string argumentName, string message)
+		{
+			throw new ArgumentNullException (argumentName, message);
+		}
+
+		[DoesNotReturn]
+		public static void ThrowArgumentOutOfRangeException (string argumentName, string message)
+		{
+			throw new ArgumentOutOfRangeException (argumentName, message);
+		}
+
+		[DoesNotReturn]
+		public static void ThrowArgumentOutOfRangeException (string argumentName, object actualValue, string message)
+		{
+			throw new ArgumentOutOfRangeException (argumentName, actualValue, message);
+		}
+
+		[DoesNotReturn]
 		public static void ThrowObjectDisposedException (object o)
 		{
 			throw new ObjectDisposedException (o.GetType ().ToString ());

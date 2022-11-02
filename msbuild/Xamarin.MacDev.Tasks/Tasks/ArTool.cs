@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class ArTool : ArToolTaskBase, ITaskCallback
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class ArTool : ArToolTaskBase, ITaskCallback {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())
@@ -24,7 +22,7 @@ namespace Xamarin.MacDev.Tasks
 		public override void Cancel ()
 		{
 			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 
 			base.Cancel ();
 		}

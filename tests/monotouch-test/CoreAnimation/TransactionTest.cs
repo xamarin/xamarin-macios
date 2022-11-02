@@ -9,7 +9,6 @@
 
 #if !__WATCHOS__
 
-using System;
 using CoreAnimation;
 using Foundation;
 using NUnit.Framework;

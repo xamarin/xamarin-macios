@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CTParagraphStyle
 //
 // Authors:
@@ -13,6 +13,7 @@ using System.Linq;
 
 using Foundation;
 using CoreText;
+using ObjCRuntime;
 
 namespace MonoTouchFixtures.CoreText {
 

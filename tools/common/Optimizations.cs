@@ -5,10 +5,8 @@ using System.Text;
 
 using Xamarin.Utils;
 
-namespace Xamarin.Bundler
-{
-	public class Optimizations
-	{
+namespace Xamarin.Bundler {
+	public class Optimizations {
 		static string [] opt_names =
 		{
 			"remove-uithread-checks",
@@ -30,8 +28,8 @@ namespace Xamarin.Bundler
 			"experimental-xforms-product-type",
 			"force-rejected-types-removal",
 		};
-		
-		static ApplePlatform [][] valid_platforms = new ApplePlatform [][] {
+
+		static ApplePlatform [] [] valid_platforms = new ApplePlatform [] [] {
 			/* Opt.RemoveUIThreadChecks               */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.WatchOS, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
 			/* Opt.DeadCodeElimination                */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.WatchOS, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
 			/* Opt.InlineIsDirectBinding              */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.WatchOS, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
@@ -52,8 +50,7 @@ namespace Xamarin.Bundler
 			/* Opt.ForceRejectedTypesRemoval          */ new ApplePlatform [] { ApplePlatform.iOS,                       ApplePlatform.WatchOS, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
 		};
 
-		enum Opt
-		{
+		enum Opt {
 			RemoveUIThreadChecks,
 			DeadCodeElimination,
 			InlineIsDirectBinding,
@@ -117,7 +114,7 @@ namespace Xamarin.Bundler
 			get { return values [(int) Opt.RemoveDynamicRegistrar]; }
 			set { values [(int) Opt.RemoveDynamicRegistrar] = value; }
 		}
-		
+
 		public bool? TrimArchitectures {
 			get { return values [(int) Opt.TrimArchitectures]; }
 			set { values [(int) Opt.TrimArchitectures] = value; }
@@ -171,6 +168,14 @@ namespace Xamarin.Bundler
 				if (!values [i].HasValue)
 					continue;
 
+				// The remove-dynamic-registrar optimization is a bit if a special case on macOS:
+				// it only works in very specific circumstances, so we don't add it to valid_platforms.
+				// This means it won't be listed in --help, and it won't be enabled if all optimizations
+				// are enabled. Yet we still might want to enable it manually, and this condition
+				// allows us to manually pass --optimize=remove-dynamic-registrar and enable it that way.
+				if (app.Platform == ApplePlatform.MacOSX && (Opt) i == Opt.RemoveDynamicRegistrar)
+					continue;
+
 				// check if the optimization is valid for the current platform
 				var valid = valid_platforms [i];
 				if (Array.IndexOf (valid, app.Platform) < 0) {
@@ -182,7 +187,7 @@ namespace Xamarin.Bundler
 				switch ((Opt) i) {
 				case Opt.StaticBlockToDelegateLookup:
 					if (app.Registrar != RegistrarMode.Static) {
-						messages.Add (ErrorHelper.CreateWarning (2003, Errors.MT2003,  (values [i].Value ? "" : "-"), opt_names [i]));
+						messages.Add (ErrorHelper.CreateWarning (2003, Errors.MT2003, (values [i].Value ? "" : "-"), opt_names [i]));
 						values [i] = false;
 						continue;
 					}
@@ -192,13 +197,13 @@ namespace Xamarin.Bundler
 				case Opt.RegisterProtocols:
 				case Opt.RemoveDynamicRegistrar:
 					if (app.Registrar != RegistrarMode.Static) {
-						messages.Add (ErrorHelper.CreateWarning (2003, Errors.MT2003, (values[i].Value ? "" : "-"), opt_names[i]));
+						messages.Add (ErrorHelper.CreateWarning (2003, Errors.MT2003, (values [i].Value ? "" : "-"), opt_names [i]));
 						values [i] = false;
 						continue;
 					}
 					goto default; // also requires the linker
 				default:
-					if (app.LinkMode == LinkMode.None) {
+					if (!app.AreAnyAssembliesTrimmed) {
 						messages.Add (ErrorHelper.CreateWarning (2003, Errors.MT2003_B, (values [i].Value ? "" : "-"), opt_names [i]));
 						values [i] = false;
 					}
@@ -267,7 +272,7 @@ namespace Xamarin.Bundler
 				} else if (StaticBlockToDelegateLookup != true) {
 					// Can't remove the dynamic registrar unless also generating static lookup of block-to-delegates in the static registrar.
 					RemoveDynamicRegistrar = false;
-				} else if (app.Registrar != RegistrarMode.Static || app.LinkMode == LinkMode.None) {
+				} else if (app.Registrar != RegistrarMode.Static || !app.AreAnyAssembliesTrimmed) {
 					// Both the linker and the static registrar are also required
 					RemoveDynamicRegistrar = false;
 				} else {

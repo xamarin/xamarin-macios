@@ -13,31 +13,18 @@ namespace AVKit {
 		Inline,
 		Floating,
 		Minimal,
-		Default = Inline 
+		Default = Inline
 	}
 #endif
 
-#if MONOMAC
-	[Mac (10,10)]
-	[Native]
-	public enum AVCaptureViewControlsStyle : long {
-		Inline,
-		Floating,
-		InlineDeviceSelection,
-		Default = Inline,
-	}
-
-	[Mac (10,9)]
-	[Native]
-	public enum AVPlayerViewTrimResult : long {
-		OKButton,
-		CancelButton
-	}
+	// The version of the AVError.h header file in the tvOS SDK is much newer than in the iOS SDKs,
+	// (copyright 2016 vs 2019), so this is reflecting the tvOS SDK.
+	[iOS (9, 0)]
+	[TV (13, 0)]
+#if NET
+	[NoMac]
+	[NoWatch]
 #endif
-
-#if !MONOMAC || !XAMCORE_4_0
-	[iOS (9,0)]
-	[TV (13,0)]
 	[Native]
 	[ErrorDomain ("AVKitErrorDomain")]
 	public enum AVKitError : long {
@@ -48,10 +35,11 @@ namespace AVKit {
 		ContentDisallowedByPasscode = -1101,
 		ContentDisallowedByProfile = -1102,
 	}
-#endif
 
-	[NoWatch, NoTV, NoMac]
-	[iOS (13,0)]
+	[NoWatch]
+	[NoTV]
+	[NoMac]
+	[iOS (13, 0)]
 	[Native]
 	public enum AVAudioSessionRouteSelection : long {
 		None = 0,
@@ -59,8 +47,10 @@ namespace AVKit {
 		External = 2,
 	}
 
-	[NoiOS, NoWatch, NoTV]
-	[Mac (10,15)]
+	[NoiOS]
+	[NoWatch]
+	[NoTV]
+	[Mac (10, 15)]
 	[Native]
 	public enum AVRoutePickerViewButtonState : long {
 		Normal,
@@ -69,4 +59,4 @@ namespace AVKit {
 		ActiveHighlighted,
 	}
 
-}	
+}

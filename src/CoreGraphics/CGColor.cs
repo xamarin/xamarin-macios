@@ -25,148 +25,182 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
-
-#if !COREBUILD
 using CoreFoundation;
 using Foundation;
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace CoreGraphics {
 
-	// CGColor.h
-	public class CGColor : INativeObject
-#if !COREBUILD
-			, IDisposable
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 #endif
+	// CGColor.h
+	public class CGColor : NativeObject
 	{
 #if !COREBUILD
-		internal IntPtr handle;
-		
-		~CGColor ()
+#if !NET
+		public CGColor (NativeHandle handle)
+			: base (handle, false)
 		{
-			Dispose (false);
 		}
-
-		//
-		// Never call from this class, so we need to take a ref
-		//
-		public CGColor (IntPtr handle)
-		{
-			this.handle = handle;
-			CGColorRetain (handle);
-		}
+#endif
 
 		[Preserve (Conditional=true)]
-		internal CGColor (IntPtr handle, bool owns)
+		internal CGColor (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			if (!owns)
-				CGColorRetain (handle);
-
-			this.handle = handle;
 		}
 
-		public void Dispose ()
+		protected internal override void Retain ()
 		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
+			CGColorRetain (GetCheckedHandle ());
 		}
 
-		public IntPtr Handle {
-			get { return handle; }
+		protected internal override void Release ()
+		{
+			CGColorRelease (GetCheckedHandle ());
 		}
 
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorRef */ IntPtr CGColorCreate (/* CGColorSpaceRef */ IntPtr space, /* CGFloat */ nfloat [] components);
 
-		public CGColor (CGColorSpace colorspace, nfloat [] components)
+		static IntPtr Create (CGColorSpace colorspace, nfloat [] components)
 		{
-			if (components == null)
+			if (components is null)
 				global::ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (components));
 			var colorspace_handle = colorspace.GetNonNullHandle (nameof (colorspace));
-			
-			handle = CGColorCreate (colorspace_handle, components);
+
+			return CGColorCreate (colorspace_handle, components);
+		}
+
+		public CGColor (CGColorSpace colorspace, nfloat [] components)
+			: base (Create (colorspace, components), true)
+		{
 		}
 
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorRef */ IntPtr CGColorCreateGenericGray (/* CGFloat */ nfloat gray, /* CGFloat */ nfloat alpha);
 
 		public CGColor (nfloat gray, nfloat alpha)
+			: base (CGColorCreateGenericGray (gray, alpha), true)
 		{
-			handle = CGColorCreateGenericGray (gray, alpha);
 		}
 
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorRef */ IntPtr CGColorCreateGenericRGB (/* CGFloat */ nfloat red, /* CGFloat */ nfloat green, /* CGFloat */ nfloat blue, /* CGFloat */ nfloat alpha);
 
 		public CGColor (nfloat red, nfloat green, nfloat blue, nfloat alpha)
+			: base (CGColorCreateGenericRGB (red, green, blue, alpha), true)
 		{
-			handle = CGColorCreateGenericRGB (red, green, blue, alpha);
 		}
 
 		public CGColor (nfloat red, nfloat green, nfloat blue)
+			: base (CGColorCreateGenericRGB (red, green, blue, 1.0f), true)
 		{
-			handle = CGColorCreateGenericRGB (red, green, blue, 1.0f);
 		}
 
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorRef */ IntPtr CGColorGetConstantColor (/* CFStringRef */ IntPtr colorName);
 
-		public CGColor (string name)
+		static IntPtr Create (string name)
 		{
-			if (name == null)
-				throw new ArgumentNullException ("name");
-			
-			using (var s = new CFString (name)){
-				handle = CGColorGetConstantColor (s.Handle);
+			if (name is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
+
+			var nameHandle = CFString.CreateNative (name);
+			try {
+				var handle = CGColorGetConstantColor (nameHandle);
 				if (handle == IntPtr.Zero)
-					throw new ArgumentException ("name");
+					throw new ArgumentException (nameof (name));
 				CGColorRetain (handle);
+				return handle;
+			} finally {
+				CFString.ReleaseNative (nameHandle);
 			}
+
 		}
 
-		[iOS (14,0)][TV (14,0)][Watch (7,0)]
-		[MacCatalyst (14,0)]
-		public CGColor (CGConstantColor color)
+		public CGColor (string name)
+			: base (Create (name), true)
+		{
+		}
+
+		static IntPtr Create (CGConstantColor color)
 		{
 			var constant = color.GetConstant ();
-			if (constant == null)
-				throw new ArgumentNullException (nameof (color));
-			handle = CGColorGetConstantColor (constant.Handle);
+			if (constant is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (color));
+			var handle = CGColorGetConstantColor (constant.Handle);
 			if (handle == IntPtr.Zero)
 				throw new ArgumentException (nameof (color));
 			CGColorRetain (handle);
+			return handle;
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Watch (7,0)]
+		[MacCatalyst (14,0)]
+#endif
+		public CGColor (CGConstantColor color)
+			: base (Create (color), true)
+		{
 		}
 
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorRef */ IntPtr CGColorCreateWithPattern (/* CGColorSpaceRef */ IntPtr space, /* CGPatternRef */ IntPtr pattern, /* const CGFloat[] */ nfloat [] components);
 
-		public CGColor (CGColorSpace colorspace, CGPattern pattern, nfloat [] components)
+		static IntPtr Create (CGColorSpace colorspace, CGPattern pattern, nfloat [] components)
 		{
-			if (components == null)
+			if (components is null)
 				global::ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (components));
 			var colorspace_handle = colorspace.GetNonNullHandle (nameof (colorspace));
 			var pattern_handle = pattern.GetNonNullHandle (nameof (pattern));
 
-			handle = CGColorCreateWithPattern (colorspace_handle, pattern_handle, components);
+			var handle = CGColorCreateWithPattern (colorspace_handle, pattern_handle, components);
 			if (handle == IntPtr.Zero)
 				throw new ArgumentException ();
+			return handle;
+		}
+
+		public CGColor (CGColorSpace colorspace, CGPattern pattern, nfloat [] components)
+			: base (Create (colorspace, pattern, components), true)
+		{
 		}
 
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorRef */ IntPtr CGColorCreateCopyWithAlpha (/* CGColorRef */ IntPtr color, nfloat alpha);
 
-		public CGColor (CGColor source, nfloat alpha)
+		static IntPtr Create (CGColor source, nfloat alpha)
 		{
-			if (source == null)
-				throw new ArgumentNullException ("source");
-			if (source.handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("source");
-			
-			handle = CGColorCreateCopyWithAlpha (source.handle, alpha);
+			if (source is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
+			return CGColorCreateCopyWithAlpha (source.GetCheckedHandle (), alpha);
+		}
+
+		public CGColor (CGColor source, nfloat alpha)
+			: base (Create (source, alpha), true)
+		{
 		}
 
 		[DllImport(Constants.CoreGraphicsLibrary)]
@@ -175,26 +209,33 @@ namespace CoreGraphics {
 
 		public static bool operator == (CGColor color1, CGColor color2)
 		{
-			return Object.Equals (color1, color2);
+			if (color1 is null)
+				return color2 is null;
+			return color1.Equals (color2);
 		}
 
 		public static bool operator != (CGColor color1, CGColor color2)
 		{
-			return !Object.Equals (color1, color2);
+			if (color1 is null)
+				return color2 is not null;
+			return !color1.Equals (color2);
 		}
 
 		public override int GetHashCode ()
 		{
-			return handle.GetHashCode ();
+			// looks weird but it's valid
+			// using the Handle property would not be since there's a special function for equality
+			// see Remarks in https://docs.microsoft.com/en-us/dotnet/api/system.object.gethashcode?view=net-6.0
+			return 0;
 		}
 
-		public override bool Equals (object o)
+		public override bool Equals (object? o)
 		{
-			CGColor other = o as CGColor;
-			if (other == null)
+			var other = o as CGColor;
+			if (other is null)
 				return false;
 
-			return CGColorEqualToColor (this.handle, other.handle);
+			return CGColorEqualToColor (this.Handle, other.Handle);
 		}
 
 		[DllImport(Constants.CoreGraphicsLibrary)]
@@ -202,7 +243,7 @@ namespace CoreGraphics {
 
 		public nint NumberOfComponents {
 			get {
-				return CGColorGetNumberOfComponents (handle);
+				return CGColorGetNumberOfComponents (Handle);
 			}
 		}
 
@@ -214,7 +255,7 @@ namespace CoreGraphics {
 				int n = (int) NumberOfComponents;
 				nfloat [] result = new nfloat [n];
 				unsafe {
-					nfloat *cptr = CGColorGetComponents (handle);
+					nfloat *cptr = CGColorGetComponents (Handle);
 
 					for (int i = 0; i < n; i++){
 						result [i] = cptr [i];
@@ -229,27 +270,27 @@ namespace CoreGraphics {
 
 		public nfloat Alpha {
 			get {
-				return CGColorGetAlpha (handle);
+				return CGColorGetAlpha (Handle);
 			}
 		}
 		
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CGColorGetColorSpace (/* CGColorRef */ IntPtr color);
 
-		public CGColorSpace ColorSpace {
+		public CGColorSpace? ColorSpace {
 			get {
-				var ptr = CGColorGetColorSpace (handle);
+				var ptr = CGColorGetColorSpace (Handle);
 				return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, false);
 			}
 		}
 		
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static /* CGPatternRef */ IntPtr CGColorGetPattern (/* CGColorRef */ IntPtr color);
-		public CGPattern Pattern {
+		public CGPattern? Pattern {
 			get {
-				var h = CGColorGetPattern (handle);
+				var h = CGColorGetPattern (Handle);
 				// return `null`, not an invalid instance, if there's no pattern
-				return h == IntPtr.Zero ? null : new CGPattern (h);
+				return h == IntPtr.Zero ? null : new CGPattern (h, false);
 			}
 		}
 
@@ -258,85 +299,160 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGColorRelease (/* CGColorRef */ IntPtr color);
-		
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CGColorRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
 
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern /* CGColorRef __nullable */ IntPtr CGColorCreateCopyByMatchingToColorSpace (
 			/* __nullable CGColorSpaceRef* */ IntPtr space, CGColorRenderingIntent intent,
 			/* CGColorRef __nullable */ IntPtr color, /* __nullable CFDictionaryRef */ IntPtr options);
 
-		[iOS (9,0)][Mac (10,11)]
-		static public CGColor CreateByMatchingToColorSpace (CGColorSpace space, CGColorRenderingIntent intent,
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
+#endif
+		static public CGColor? CreateByMatchingToColorSpace (CGColorSpace space, CGColorRenderingIntent intent,
 			CGColor color, NSDictionary options)
 		{
-			var h = CGColorCreateCopyByMatchingToColorSpace (space == null ? IntPtr.Zero : space.Handle, intent,
-				color == null ? IntPtr.Zero : color.Handle, options == null ? IntPtr.Zero : options.Handle);
+			var h = CGColorCreateCopyByMatchingToColorSpace (space.GetHandle (), intent, color.GetHandle (), options.GetHandle ());
 			return h == IntPtr.Zero ? null : new CGColor (h, owns: true);
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern /* CGColorRef* */ IntPtr CGColorCreateSRGB (nfloat red, nfloat green, nfloat blue, nfloat alpha);
 
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
-		static public CGColor CreateSrgb (nfloat red, nfloat green, nfloat blue, nfloat alpha)
+#endif
+		static public CGColor? CreateSrgb (nfloat red, nfloat green, nfloat blue, nfloat alpha)
 		{
 			var h = CGColorCreateSRGB (red, green, blue, alpha);
 			return h == IntPtr.Zero ? null : new CGColor (h, owns: true);
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern /* CGColorRef* */ IntPtr CGColorCreateGenericGrayGamma2_2 (nfloat gray, nfloat alpha);
 
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
-		static public CGColor CreateGenericGrayGamma2_2 (nfloat gray, nfloat alpha)
+#endif
+		static public CGColor? CreateGenericGrayGamma2_2 (nfloat gray, nfloat alpha)
 		{
 			var h = CGColorCreateGenericGrayGamma2_2 (gray, alpha);
 			return h == IntPtr.Zero ? null : new CGColor (h, owns: true);
 		}
 
-		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+#else
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Watch (7,0)]
+		[Mac (11,0)]
 		[MacCatalyst (14,0)]
-		[DllImport(Constants.CoreGraphicsLibrary)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern /* CGColorRef */ IntPtr CGColorCreateGenericCMYK (nfloat cyan, nfloat magenta, nfloat yellow, nfloat black, nfloat alpha);
 
-		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+#else
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Watch (7,0)]
+		[Mac (11,0)]
 		[MacCatalyst (14,0)]
-		static public CGColor CreateCmyk (nfloat cyan, nfloat magenta, nfloat yellow, nfloat black, nfloat alpha)
+#endif
+		static public CGColor? CreateCmyk (nfloat cyan, nfloat magenta, nfloat yellow, nfloat black, nfloat alpha)
 		{
 			var h = CGColorCreateGenericCMYK (cyan, magenta, yellow, black, alpha);
 			return h == IntPtr.Zero ? null : new CGColor (h, owns: true);
 		}
 
-		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+#else
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Watch (7,0)]
+		[Mac (11,0)]
 		[MacCatalyst (14,0)]
+#endif
 		[DllImport (Constants.AccessibilityLibrary)]
 		static extern /* NSString */ IntPtr AXNameFromColor (/* CGColorRef */ IntPtr color);
 
-		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+#else
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Watch (7,0)]
+		[Mac (11,0)]
 		[MacCatalyst (14,0)]
-		public string AXName => CFString.FromHandle (AXNameFromColor (handle));
+#endif
+		public string? AXName => CFString.FromHandle (AXNameFromColor (Handle));
 
 
 #endif // !COREBUILD

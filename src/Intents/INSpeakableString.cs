@@ -1,4 +1,4 @@
-﻿﻿//
+//
 // INSpeakableString.cs
 //
 // Authors:
@@ -17,11 +17,11 @@ namespace Intents {
 			: base (NSObjectFlag.Empty)
 		{
 #if IOS
-			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
+			if (SystemVersion.CheckiOS (11, 0))
 #elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
+			if (SystemVersion.CheckwatchOS (4, 0))
 #elif MONOMAC
-			if (PlatformHelper.CheckSystemVersion (10, 13))
+			if (SystemVersion.CheckmacOS (10, 13))
 #endif
 				InitializeHandle (InitWithVocabularyIdentifier (identifier, spokenPhrase, pronunciationHint));
 #if !TVOS

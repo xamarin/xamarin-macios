@@ -13,9 +13,6 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
-using Vector3 = global::OpenTK.Vector3;
-using Vector4 = global::OpenTK.Vector4;
-
 #nullable enable
 
 namespace SceneKit {
@@ -283,8 +280,10 @@ namespace SceneKit {
 		None,
 		Multisampling2X,
 		Multisampling4X,
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
+		[NoiOS][NoTV]
 		Multisampling8X,
+		[NoiOS][NoTV]
 		Multisampling16X,
 #endif
 	}
@@ -363,11 +362,14 @@ namespace SceneKit {
 	{
 		Metal,
 #if !MONOMAC
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[Unavailable (PlatformName.MacCatalyst)][NoMac]
 		OpenGLES2,
 #else
+		[NoiOS][NoTV][NoMacCatalyst]
 		OpenGLLegacy,
+		[NoiOS][NoTV][NoMacCatalyst]
 		OpenGLCore32,
+		[NoiOS][NoTV][NoMacCatalyst]
 		OpenGLCore41
 #endif
 	}

@@ -1,4 +1,4 @@
-﻿// Copyright 2013 Xamarin Inc. All rights reserved.
+// Copyright 2013 Xamarin Inc. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -11,8 +11,7 @@ using Mono.Cecil;
 using Xamarin.Utils;
 
 namespace Xamarin.Bundler {
-	public class AotInfo
-	{
+	public class AotInfo {
 		public AOTTask Task;
 		public LinkTask LinkTask;
 		public List<string> BitcodeFiles = new List<string> (); // .bc files produced by the AOT compiler
@@ -21,8 +20,7 @@ namespace Xamarin.Bundler {
 		public List<string> ObjectFiles = new List<string> (); // .o files produced by the AOT compiler
 	}
 
-	public partial class Assembly
-	{
+	public partial class Assembly {
 		public bool BundleInContainerApp;
 
 		public Dictionary<Abi, AotInfo> AotInfos = new Dictionary<Abi, AotInfo> ();
@@ -85,39 +83,6 @@ namespace Xamarin.Bundler {
 		public void ComputeDependencyMap (List<Exception> exceptions)
 		{
 			ComputeDependencies (exceptions);
-		}
-
-		public void CopyDebugSymbolsToDirectory (string directory)
-		{
-			string mdb_src = FullPath + ".mdb";
-			if (File.Exists (mdb_src)) {
-				string mdb_target = Path.Combine (directory, FileName + ".mdb");
-				Application.UpdateFile (mdb_src, mdb_target);
-			}
-
-			var spdb = Path.ChangeExtension (FullPath, "pdb");
-			if (File.Exists (spdb))
-				Application.UpdateFile (spdb, Path.Combine (directory, Path.ChangeExtension (FileName, "pdb")), true);
-		}
-		
-		public void CopyMSymToDirectory (string directory)
-		{
-			string msym_src = FullPath + ".aotid.msym";
-			var dirInfo = new DirectoryInfo (msym_src);
-			if (!dirInfo.Exists) // got no aot data
-				return;
-			var subdirs = dirInfo.GetDirectories();
-			foreach (var subdir in subdirs) {
-				var destPath = Path.Combine (directory, subdir.Name.ToUpperInvariant ());
-				var destInfo = new DirectoryInfo (destPath);
-				if (!destInfo.Exists)
-					Directory.CreateDirectory (destPath);
-				var files = subdir.GetFiles ();
-				foreach (FileInfo file in files) {
-					string temppath = Path.Combine (destPath, file.Name);
-					file.CopyTo(temppath, true);
-				}
-			}
 		}
 
 		// this will copy (and optionally strip) the assembly and almost all the related files:
@@ -217,8 +182,7 @@ namespace Xamarin.Bundler {
 
 			var aotCompiler = Driver.GetAotCompiler (App, abi, Target.Is64Build);
 			var aotArgs = App.GetAotArguments (assembly_path, abi, build_dir, asm_output ?? other_output, llvm_aot_ofile, data);
-			var task = new AOTTask
-			{
+			var task = new AOTTask {
 				Assembly = this,
 				AssemblyName = assembly_path,
 				AddBitcodeMarkerSection = BuildTarget != AssemblyBuildTarget.StaticObject && App.EnableMarkerOnlyBitCode,

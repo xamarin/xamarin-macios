@@ -1,4 +1,4 @@
-﻿//
+//
 // INCarAirCirculationModeResolutionResult.cs
 //
 // Authors:
@@ -18,9 +18,9 @@ namespace Intents {
 		public static INCarSignalOptionsResolutionResult GetSuccess (INCarSignalOptions resolvedValue)
 		{
 #if IOS
-			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
+			if (SystemVersion.CheckiOS (11, 0))
 #elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
+			if (SystemVersion.CheckwatchOS (4, 0))
 #endif
 				return SuccessWithResolvedCarSignalOptions (resolvedValue);
 			else
@@ -30,9 +30,9 @@ namespace Intents {
 		public static INCarSignalOptionsResolutionResult GetConfirmationRequired (INCarSignalOptions valueToConfirm)
 		{
 #if IOS
-			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
+			if (SystemVersion.CheckiOS (11, 0))
 #elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
+			if (SystemVersion.CheckwatchOS (4, 0))
 #endif
 				return ConfirmationRequiredWithCarSignalOptionsToConfirm (valueToConfirm);
 			else

@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for SCNNode
 //
 // Authors:
@@ -20,6 +20,7 @@ using AppKit;
 using UIKit;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.SceneKit {
 
@@ -30,8 +31,8 @@ namespace MonoTouchFixtures.SceneKit {
 		[Test]
 		public void AddAnimation ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			using (var a = CAAnimation.CreateAnimation ())
 			using (var n = SCNNode.Create ()) {

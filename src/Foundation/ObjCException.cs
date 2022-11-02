@@ -21,11 +21,20 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if MONOMAC
+#if MONOMAC || NET
 
 using System;
+using System.Text;
 
+using Foundation;
+
+#nullable enable
+
+#if NET
+namespace ObjCRuntime {
+#else
 namespace Foundation {
+#endif
 	public class ObjCException : Exception {
 		NSException native_exc;
 
@@ -39,30 +48,54 @@ namespace Foundation {
 			native_exc = exc;
 		}
 
-		public NSException NSException {
+		public NSException? NSException {
 			get {
 				return native_exc;
 			}
 		}
 
-		public string Reason {
+		public string? Reason {
 			get {
-				return native_exc.Reason;
+				return native_exc?.Reason;
 			}
 		}
 
-		public string Name {
+		public string? Name {
 			get {
-				return native_exc.Name;
+				return native_exc?.Name;
 			}
 		}
 
 		public override string Message {
 			get {
-				return string.Format ("{0}: {1}", Name, Reason);
+				var sb = new StringBuilder ("Objective-C exception thrown.  Name: ").Append (Name);
+				sb.Append (" Reason: ").AppendLine (Reason);
+				AppendNativeStackTrace (sb);
+				return sb.ToString ();
 			}
+		}
+
+		void AppendNativeStackTrace (StringBuilder sb)
+		{
+			if (native_exc?.CallStackSymbols?.Length > 0) {
+				sb.AppendLine ("Native stack trace:");
+				foreach (var symbol in native_exc.CallStackSymbols)
+					sb.Append ('\t').AppendLine (symbol);
+			}
+		}
+
+		public override string ToString ()
+		{
+			var msg = base.ToString ();
+			if (native_exc is null)
+				return msg;
+
+			var sb = new StringBuilder (msg);
+			sb.AppendLine ();
+			AppendNativeStackTrace (sb);
+			return sb.ToString ();
 		}
 	}
 }
 
-#endif // MONOMAC
+#endif // MONOMAC || NET

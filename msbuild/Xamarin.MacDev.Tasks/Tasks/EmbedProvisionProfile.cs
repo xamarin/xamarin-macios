@@ -1,9 +1,7 @@
-﻿using Xamarin.Messaging.Build.Client;
+using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class EmbedProvisionProfile : EmbedProvisionProfileTaskBase
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class EmbedProvisionProfile : EmbedProvisionProfileTaskBase {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())

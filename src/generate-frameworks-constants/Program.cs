@@ -37,6 +37,11 @@ namespace GenerateFrameworksConstants {
 			var frameworks = Frameworks.GetFrameworks (platform, false).Values.Where (v => !v.Unavailable);
 			var sb = new StringBuilder ();
 
+#if NET
+			sb.AppendLine ("#if NET");
+#else
+			sb.AppendLine ("#if !NET");
+#endif
 			sb.AppendLine ("namespace ObjCRuntime {");
 			sb.AppendLine ("\tpublic static partial class Constants {");
 			foreach (var grouped in frameworks.GroupBy (v => v.Version)) {
@@ -47,10 +52,14 @@ namespace GenerateFrameworksConstants {
 			}
 			sb.AppendLine ("\t}");
 			sb.AppendLine ("}");
+#if NET
+			sb.AppendLine ("#endif // NET");
+#else
+			sb.AppendLine ("#endif // !NET");
+#endif
 
 			File.WriteAllText (output, sb.ToString ());
 			return 0;
 		}
 	}
 }
-

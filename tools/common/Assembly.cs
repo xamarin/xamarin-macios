@@ -14,8 +14,7 @@ using Xamarin.Utils;
 
 namespace Xamarin.Bundler {
 
-	struct NativeReferenceMetadata
-	{
+	struct NativeReferenceMetadata {
 		public bool ForceLoad;
 		public string Frameworks;
 		public string WeakFrameworks;
@@ -46,8 +45,7 @@ namespace Xamarin.Bundler {
 		}
 	}
 
-	public partial class Assembly
-	{
+	public partial class Assembly {
 		public AssemblyBuildTarget BuildTarget;
 		public string BuildTargetName;
 		public bool IsCodeShared;
@@ -125,7 +123,7 @@ namespace Xamarin.Bundler {
 		}
 
 		public void LoadSymbols ()
-		{	
+		{
 			if (symbols_loaded.HasValue)
 				return;
 
@@ -136,8 +134,7 @@ namespace Xamarin.Bundler {
 					AssemblyDefinition.MainModule.ReadSymbols ();
 					symbols_loaded = true;
 				}
-			}
-			catch {
+			} catch {
 				// do not let stale file crash us
 				Driver.Log (3, "Invalid debugging symbols for {0} ignored", FullPath);
 			}
@@ -161,6 +158,15 @@ namespace Xamarin.Bundler {
 				return;
 
 			string resourceBundlePath = Path.ChangeExtension (FullPath, ".resources");
+			if (!Directory.Exists (resourceBundlePath)) {
+				var zipPath = resourceBundlePath + ".zip";
+				if (File.Exists (zipPath)) {
+					var path = Path.Combine (App.Cache.Location, Path.GetFileName (resourceBundlePath));
+					if (Driver.RunCommand ("/usr/bin/unzip", "-u", "-o", "-d", path, zipPath) != 0)
+						throw ErrorHelper.CreateError (1306, Errors.MX1306 /* Could not decompress the file '{0}'. Please review the build log for more information from the native 'unzip' command. */, zipPath);
+					resourceBundlePath = path;
+				}
+			}
 			string manifestPath = Path.Combine (resourceBundlePath, "manifest");
 			if (File.Exists (manifestPath)) {
 				foreach (NativeReferenceMetadata metadata in ReadManifest (manifestPath)) {
@@ -204,7 +210,7 @@ namespace Xamarin.Bundler {
 
 		}
 
-		IEnumerable <NativeReferenceMetadata> ReadManifest (string manifestPath)
+		IEnumerable<NativeReferenceMetadata> ReadManifest (string manifestPath)
 		{
 			XmlDocument document = new XmlDocument ();
 			document.LoadWithoutNetworkAccess (manifestPath);
@@ -408,43 +414,43 @@ namespace Xamarin.Bundler {
 
 			var cargs = attr.ConstructorArguments;
 			switch (cargs.Count) {
-			case 3: 
-				linkWith = new LinkWithAttribute ((string) cargs [0].Value, (LinkTarget) cargs [1].Value, (string) cargs [2].Value); 
+			case 3:
+				linkWith = new LinkWithAttribute ((string) cargs [0].Value, (LinkTarget) cargs [1].Value, (string) cargs [2].Value);
 				break;
 			case 2:
-				linkWith = new LinkWithAttribute ((string) cargs [0].Value, (LinkTarget) cargs [1].Value); 
+				linkWith = new LinkWithAttribute ((string) cargs [0].Value, (LinkTarget) cargs [1].Value);
 				break;
 			case 0:
 				linkWith = new LinkWithAttribute ();
 				break;
-			default: 
-			case 1: 
-				linkWith = new LinkWithAttribute ((string) cargs [0].Value); 
+			default:
+			case 1:
+				linkWith = new LinkWithAttribute ((string) cargs [0].Value);
 				break;
 			}
 
 			foreach (var property in attr.Properties) {
 				switch (property.Name) {
-				case "NeedsGccExceptionHandling": 
-					linkWith.NeedsGccExceptionHandling = (bool) property.Argument.Value; 
+				case "NeedsGccExceptionHandling":
+					linkWith.NeedsGccExceptionHandling = (bool) property.Argument.Value;
 					break;
-				case "WeakFrameworks": 
-					linkWith.WeakFrameworks = (string) property.Argument.Value; 
+				case "WeakFrameworks":
+					linkWith.WeakFrameworks = (string) property.Argument.Value;
 					break;
-				case "Frameworks": 
-					linkWith.Frameworks = (string) property.Argument.Value; 
+				case "Frameworks":
+					linkWith.Frameworks = (string) property.Argument.Value;
 					break;
-				case "LinkerFlags": 
-					linkWith.LinkerFlags = (string) property.Argument.Value; 
+				case "LinkerFlags":
+					linkWith.LinkerFlags = (string) property.Argument.Value;
 					break;
-				case "LinkTarget": 
-					linkWith.LinkTarget = (LinkTarget) property.Argument.Value; 
+				case "LinkTarget":
+					linkWith.LinkTarget = (LinkTarget) property.Argument.Value;
 					break;
-				case "ForceLoad": 
-					linkWith.ForceLoad = (bool) property.Argument.Value; 
+				case "ForceLoad":
+					linkWith.ForceLoad = (bool) property.Argument.Value;
 					break;
-				case "IsCxx": 
-					linkWith.IsCxx = (bool) property.Argument.Value; 
+				case "IsCxx":
+					linkWith.IsCxx = (bool) property.Argument.Value;
 					break;
 				case "SmartLink":
 					linkWith.SmartLink = (bool) property.Argument.Value;
@@ -452,11 +458,11 @@ namespace Xamarin.Bundler {
 				case "Dlsym":
 					linkWith.Dlsym = (DlsymOption) property.Argument.Value;
 					break;
-				default: 
+				default:
 					break;
 				}
 			}
-			
+
 			return linkWith;
 		}
 
@@ -486,14 +492,14 @@ namespace Xamarin.Bundler {
 
 		public string GetCompressionLinkingFlag ()
 		{
-			switch(App.Platform) {
+			switch (App.Platform) {
 			case ApplePlatform.MacOSX:
 				if (App.DeploymentTarget >= new Version (10, 11, 0))
 					return "-lcompression";
 				return "-weak-lcompression";
 			case ApplePlatform.iOS:
 			case ApplePlatform.MacCatalyst:
-				if (App.DeploymentTarget >= new Version (9,0))
+				if (App.DeploymentTarget >= new Version (9, 0))
 					return "-lcompression";
 				return "-weak-lcompression";
 			case ApplePlatform.TVOS:
@@ -509,12 +515,12 @@ namespace Xamarin.Bundler {
 			foreach (var m in AssemblyDefinition.Modules) {
 				if (!m.HasModuleReferences)
 					continue;
-				
+
 				foreach (var mr in m.ModuleReferences) {
 					string name = mr.Name;
 					if (string.IsNullOrEmpty (name))
 						continue; // obfuscated assemblies.
-					
+
 					string file = Path.GetFileNameWithoutExtension (name);
 
 					if (App.IsSimulatorBuild && !App.IsFrameworkAvailableInSimulator (file)) {
@@ -768,8 +774,7 @@ namespace Xamarin.Bundler {
 		}
 	}
 
-	public sealed class NormalizedStringComparer : IEqualityComparer<string>
-	{
+	public sealed class NormalizedStringComparer : IEqualityComparer<string> {
 		public static readonly NormalizedStringComparer OrdinalIgnoreCase = new NormalizedStringComparer (StringComparer.OrdinalIgnoreCase);
 
 		StringComparer comparer;
@@ -796,8 +801,7 @@ namespace Xamarin.Bundler {
 		}
 	}
 
-	public class AssemblyCollection : IEnumerable<Assembly>
-	{
+	public class AssemblyCollection : IEnumerable<Assembly> {
 		Dictionary<string, Assembly> HashedAssemblies = new Dictionary<string, Assembly> (NormalizedStringComparer.OrdinalIgnoreCase);
 
 		public void Add (Assembly assembly)
@@ -881,7 +885,7 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-#region Interface implementations
+		#region Interface implementations
 		IEnumerator IEnumerable.GetEnumerator ()
 		{
 			return GetEnumerator ();
@@ -892,6 +896,6 @@ namespace Xamarin.Bundler {
 			return HashedAssemblies.Values.GetEnumerator ();
 		}
 
-#endregion
+		#endregion
 	}
 }

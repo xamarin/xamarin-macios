@@ -27,11 +27,16 @@
 //
 
 using System;
+using System.Runtime.InteropServices;
 using ObjCRuntime;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace Foundation {
 	public abstract partial class NSUrlProtocol : NSObject {
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		[Obsolete ("Use the overload that takes an 'INSUrlProtocolClient' instead.")]
 		public NSUrlProtocol (NSUrlRequest request, NSCachedUrlResponse cachedResponse, NSUrlProtocolClient client)
@@ -42,9 +47,9 @@ namespace Foundation {
 			if (client == null)
 				throw new ArgumentNullException ("client");
 			if (IsDirectBinding) {
-				InitializeHandle (global::ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr (this.Handle, selInitWithRequest_CachedResponse_Client_Handle, request.Handle, cachedResponse == null ? IntPtr.Zero : cachedResponse.Handle, client.Handle), "initWithRequest:cachedResponse:client:");
+				InitializeHandle (IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr (this.Handle, selInitWithRequest_CachedResponse_Client_Handle, request.Handle, cachedResponse == null ? IntPtr.Zero : cachedResponse.Handle, client.Handle), "initWithRequest:cachedResponse:client:");
 			} else {
-				InitializeHandle (global::ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr_IntPtr_IntPtr (this.SuperHandle, selInitWithRequest_CachedResponse_Client_Handle, request.Handle, cachedResponse == null ? IntPtr.Zero : cachedResponse.Handle, client.Handle), "initWithRequest:cachedResponse:client:");
+				InitializeHandle (IntPtr_objc_msgSendSuper_IntPtr_IntPtr_IntPtr (this.SuperHandle, selInitWithRequest_CachedResponse_Client_Handle, request.Handle, cachedResponse == null ? IntPtr.Zero : cachedResponse.Handle, client.Handle), "initWithRequest:cachedResponse:client:");
 			}
 		}
 
@@ -60,6 +65,12 @@ namespace Foundation {
 				return Runtime.GetNSObject (client.Handle);
 			}
 		}
+
+		[DllImport (Constants.ObjectiveCLibrary, EntryPoint = "objc_msgSend")]
+		static extern IntPtr IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr (NativeHandle receiver, NativeHandle selector, NativeHandle arg0, NativeHandle arg1, NativeHandle arg2);
+
+		[DllImport (Constants.ObjectiveCLibrary, EntryPoint = "objc_msgSendSuper")]
+		static extern IntPtr IntPtr_objc_msgSendSuper_IntPtr_IntPtr_IntPtr (NativeHandle receiver, NativeHandle selector, NativeHandle arg0, NativeHandle arg1, NativeHandle arg2);
 #endif
 	}
 }

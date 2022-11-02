@@ -41,6 +41,10 @@ namespace MonoTouchFixtures {
 		//
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
 		{
+#if __MACCATALYST__
+			// Debug spew to track down https://github.com/xamarin/maccore/issues/2414
+			Console.WriteLine ("AppDelegate.FinishedLaunching");
+#endif
 			// create a new window instance based on the screen size
 			window = new UIWindow (UIScreen.MainScreen.Bounds);
 			runner = new TouchRunner (window);
@@ -58,6 +62,14 @@ namespace MonoTouchFixtures {
 			// required for the background tasks tests, we can only register the tasks in this method
 			BGTaskSchedulerTest.RegisterTestTasks ();
 			return true;
+		}
+
+		static void Main (string[] args)
+		{
+			// Make sure we have at least one reference to the bindings project so that mcs doesn't strip the reference to it.
+			GC.KeepAlive (typeof(Bindings.Test.UltimateMachine));
+
+			UIApplication.Main (args, null, typeof (AppDelegate));
 		}
 
 		public static void PresentModalViewController (UIViewController vc, double duration)

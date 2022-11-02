@@ -9,7 +9,6 @@
 
 #if !__WATCHOS__
 
-using System;
 using Foundation;
 #if MONOMAC
 using AppKit;

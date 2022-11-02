@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -14,13 +14,12 @@ namespace Cecil.Tests {
 	[TestFixture]
 	public class Test {
 
-		[TestCaseSource (typeof(Helper), "PlatformAssemblies")]
+		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblies))]
 		// ref: https://github.com/xamarin/xamarin-macios/pull/7760
 		public void IdentifyBackingFieldAssignation (string assemblyPath)
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
-			if (assembly == null)
-				Assert.Ignore ($"{assemblyPath} could not be found (might be disabled in build)");
 			// look inside all .cctor (static constructor) inside `assemblyName`
 			foreach (var m in Helper.FilterMethods (assembly!, (m) => m.IsStatic && m.IsConstructor)) {
 				foreach (var ins in m.Body.Instructions) {
@@ -51,15 +50,12 @@ namespace Cecil.Tests {
 			}
 		}
 
-		[TestCaseSource (typeof (Helper), "PlatformAssemblies")]
+		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblies))]
 		// ref: https://github.com/xamarin/xamarin-macios/issues/8249
 		public void EnsureUIThreadOnInit (string assemblyPath)
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
-			if (assembly == null) {
-				Assert.Ignore ($"{assemblyPath} could not be found (might be disabled in build)");
-				return; // just to help nullability
-			}
 
 			// `CNContactsUserDefaults` is `[ThreadSafe (false)]` and part of iOS and macOS
 			var t = assembly.MainModule.GetType ("Contacts.CNContactsUserDefaults");
@@ -89,17 +85,14 @@ namespace Cecil.Tests {
 			}
 		}
 
-		[TestCaseSource (typeof (Helper), "PlatformAssemblies")]
+		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
 		public void NoSystemConsoleReference (string assemblyPath)
 		{
 			if (Path.GetFileName (assemblyPath) == "Xamarin.Mac.dll")
 				Assert.Ignore ("Xamarin.Mac has a workaround for Sierra bug w/NSLog");
 
 			var assembly = Helper.GetAssembly (assemblyPath);
-			if (assembly == null) {
-				Assert.Ignore ($"{assemblyPath} could not be found (might be disabled in build)");
-				return; // just to help nullability
-			}
 			// this has a quite noticeable impact on (small) app size
 			if (assembly.MainModule.TryGetTypeReference ("System.Console", out var _))
 				Assert.Fail ($"{assemblyPath} has a reference to `System.Console`. Please use `Runtime.NSLog` inside the platform assemblies");
@@ -135,14 +128,11 @@ namespace Cecil.Tests {
 			"wvsprintfa", "wvsprintfw"
 		};
 
-		[TestCaseSource (typeof (Helper), "PlatformAssemblies")]
+		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
 		public void NoBannedApi (string assemblyPath)
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
-			if (assembly == null) {
-				Assert.Ignore ($"{assemblyPath} could not be found (might be disabled in build)");
-				return; // just to help nullability
-			}
 			List<string> found = new List<string> ();
 			foreach (var m in Helper.FilterMethods (assembly!, (m) => m.IsPInvokeImpl)) {
 				var symbol = m.PInvokeInfo.EntryPoint;
@@ -164,29 +154,32 @@ namespace Cecil.Tests {
 			MacCatalyst,
 		}
 
-		[TestCaseSource (typeof (Helper), "PlatformAssemblies")]
+		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
 		// ref: https://github.com/xamarin/xamarin-macios/issues/4835
 		public void Unavailable (string assemblyPath)
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
-			if (assembly == null) {
-				Assert.Ignore ($"{assemblyPath} could not be found (might be disabled in build)");
-				return; // just to help nullability
-			}
 
 			var platform = PlatformName.None;
 			switch (assembly.Name.Name) {
 			case "Xamarin.Mac":
+			case "Microsoft.macOS":
 				platform = PlatformName.MacOSX;
 				break;
 			case "Xamarin.iOS":
+			case "Microsoft.iOS":
 				platform = PlatformName.iOS;
 				break;
 			case "Xamarin.WatchOS":
 				platform = PlatformName.WatchOS;
 				break;
 			case "Xamarin.TVOS":
+			case "Microsoft.tvOS":
 				platform = PlatformName.TvOS;
+				break;
+			case "Microsoft.MacCatalyst":
+				platform = PlatformName.MacCatalyst;
 				break;
 			}
 			Assert.That (platform, Is.Not.EqualTo (PlatformName.None), "None");

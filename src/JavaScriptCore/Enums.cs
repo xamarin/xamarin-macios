@@ -8,6 +8,8 @@
 
 using System;
 
+using ObjCRuntime;
+
 namespace JavaScriptCore {
 	// untyped enum -> JSValueRef.h
 	public enum JSType {

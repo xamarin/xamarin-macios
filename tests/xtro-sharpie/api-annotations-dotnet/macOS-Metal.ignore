@@ -1,0 +1,4 @@
+## [Notification] in protocol - https://bugzilla.xamarin.com/show_bug.cgi?id=59342
+!missing-field! MTLDeviceRemovalRequestedNotification not bound
+!missing-field! MTLDeviceWasAddedNotification not bound
+!missing-field! MTLDeviceWasRemovedNotification not bound

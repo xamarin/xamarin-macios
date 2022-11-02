@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Xharness.TestImporter.Xamarin {
@@ -75,7 +75,8 @@ namespace Xharness.TestImporter.Xamarin {
 			return File.Exists (hintPath) ? hintPath : null;
 		}
 
-		public string GetTestingFrameworkDllPath (string assembly, Platform platform) {
+		public string GetTestingFrameworkDllPath (string assembly, Platform platform)
+		{
 			var downloadPath = GetAssembliesRootLocation (platform);
 			switch (platform) {
 			case Platform.iOS:
@@ -94,7 +95,7 @@ namespace Xharness.TestImporter.Xamarin {
 					return Path.Combine (downloadPath, "mac-bcl", platformPathMatch [platform], "tests", assembly).Replace ('/', '\\');
 			}
 			return "";
-		} 
+		}
 
 	}
 }

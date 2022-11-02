@@ -181,6 +181,10 @@ monoobject_dict_free_value (CFAllocatorRef allocator, const void *value)
  *       (NSObjectFlagsInFinalizerQueue), which we fetch in managed code in
  *       the Flags getter.
  *
+ *    Note: we call ObjectiveCMarshal.CreateReferenceTrackingHandle for all
+ *    NSObjects, not only toggled ones, because we need point 5) below to
+ *    happen for all NSObjects, not just toggled ones.
+ *
  * 4) The CoreCLR GC will invoke a callback we installed when calling
  *    ObjectiveCMarshal.Initialize to check if that toggled managed object can
  *    be collected or not. This callback is executed during the GC, which
@@ -194,7 +198,7 @@ monoobject_dict_free_value (CFAllocatorRef allocator, const void *value)
  *    to let us know, and we'll set the corresponding flag in the flags
  *
  * 6) Finally, the GCHandle we got in step 3) is freed when the managed peer
- *    is freed.
+ *    is freed and removed from our object map.
  *
  * Caveat: we don't support the server GC (because it uses multiple threads,
  * and thus may call xamarin_coreclr_reference_tracking_begin_end_callback
@@ -292,26 +296,32 @@ xamarin_coreclr_reference_tracking_is_referenced_callback (void* ptr)
 	int rv = 0;
 	struct TrackedObjectInfo *info = (struct TrackedObjectInfo *) ptr;
 	enum NSObjectFlags flags = info->flags;
+	bool isRegisteredToggleRef = (flags & NSObjectFlagsRegisteredToggleRef) == NSObjectFlagsRegisteredToggleRef;
 	id handle = info->handle;
-	MonoToggleRefStatus res;
+	MonoToggleRefStatus res = (MonoToggleRefStatus) 0;
 
-	res = xamarin_gc_toggleref_callback (flags, handle, NULL, NULL);
+	if (isRegisteredToggleRef) {
+		res = xamarin_gc_toggleref_callback (flags, handle, NULL, NULL);
 
-	switch (res) {
-	case MONO_TOGGLE_REF_DROP:
-		// There's no equivalent to DROP in CoreCLR, so just treat it as weak.
-	case MONO_TOGGLE_REF_WEAK:
+		switch (res) {
+		case MONO_TOGGLE_REF_DROP:
+			// There's no equivalent to DROP in CoreCLR, so just treat it as weak.
+		case MONO_TOGGLE_REF_WEAK:
+			rv = 0;
+			break;
+		case MONO_TOGGLE_REF_STRONG:
+			rv = 1;
+			break;
+		default:
+			LOG_CORECLR (stderr, "%s (%p -> handle: %p flags: %i): INVALID toggle ref value: %i\n", __func__, ptr, handle, flags, res);
+			break;
+		}
+	} else {
+		// If this isn't a toggle ref, it's effectively a weak gchandle
 		rv = 0;
-		break;
-	case MONO_TOGGLE_REF_STRONG:
-		rv = 1;
-		break;
-	default:
-		LOG_CORECLR (stderr, "%s (%p -> handle: %p flags: %i): INVALID toggle ref value: %i\n", __func__, ptr, handle, flags, res);
-		break;
 	}
 
-	LOG_CORECLR (stderr, "%s (%p -> handle: %p flags: %i) => %i (res: %i)\n", __func__, ptr, handle, flags, rv, res);
+	LOG_CORECLR (stderr, "%s (%p -> handle: %p flags: %i) => %i (res: %i) isRegisteredToggleRef: %i\n", __func__, ptr, handle, flags, rv, res, isRegisteredToggleRef);
 
 	return rv;
 }
@@ -455,8 +465,12 @@ xamarin_bridge_compute_properties (int inputCount, const char **inputKeys, const
 
 	// Copy the input properties
 	for (int i = 0; i < inputCount; i++) {
-		(*outputKeys) [i + runtimeConfigCount] = strdup (inputKeys [i]);
-		(*outputValues) [i + runtimeConfigCount] = strdup (inputValues [i]);
+		if (inputKeys [i] != NULL && inputValues [i] != NULL) {
+			(*outputKeys) [i + runtimeConfigCount] = strdup (inputKeys [i]);
+			(*outputValues) [i + runtimeConfigCount] = strdup (inputValues [i]);
+		} else {
+			NSLog (@PRODUCT ": No name/value specified for runtime property %s=%s", inputKeys [i], inputValues [i]);
+		}
 	}
 
 	if (buf != NULL)
@@ -626,11 +640,12 @@ xamarin_mono_object_release_at_process_exit (MonoObject *mobj)
 MonoAssembly *
 mono_assembly_open (const char * filename, MonoImageOpenStatus * status)
 {
-	assert (status == NULL);
-
 	MonoAssembly *rv = xamarin_find_assembly (filename);
 
 	LOG_CORECLR (stderr, "mono_assembly_open (%s, %p) => MonoObject=%p GCHandle=%p\n", filename, status, rv, rv->gchandle);
+
+	if (status != NULL)
+		*status = rv == NULL ? MONO_IMAGE_ERROR_ERRNO : MONO_IMAGE_OK;
 
 	return rv;
 }
@@ -728,6 +743,12 @@ mono_jit_exec (MonoDomain * domain, MonoAssembly * assembly, int argc, const cha
 	unsigned int exitCode = 0;
 
 	char *assemblyPath = xamarin_bridge_get_assembly_location (assembly->gchandle);
+
+	if (argc > 0) {
+		// The first argument is to the native executable, which we don't want to pass on to native code.
+		argc--;
+		argv = &argv [1];
+	}
 
 	LOG_CORECLR (stderr, "mono_jit_exec (%p, %p, %i, %p) => EXECUTING %s\n", domain, assembly, argc, argv, assemblyPath);
 	for (int i = 0; i < argc; i++) {
@@ -866,7 +887,7 @@ MonoException *
 mono_get_exception_out_of_memory ()
 {
 	MonoException *rv = xamarin_bridge_create_exception (XamarinExceptionTypes_System_OutOfMemoryException, NULL);
-	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, entrypoint, rv);
+	LOG_CORECLR (stderr, "%s () => %p\n", __func__, rv);
 	return rv;
 }
 
@@ -1084,6 +1105,12 @@ bool
 xamarin_is_class_inativeobject (MonoClass *cls)
 {
 	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_ObjCRuntime_INativeObject);
+}
+
+bool
+xamarin_is_class_nativehandle (MonoClass *cls)
+{
+	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_ObjCRuntime_NativeHandle);
 }
 
 bool

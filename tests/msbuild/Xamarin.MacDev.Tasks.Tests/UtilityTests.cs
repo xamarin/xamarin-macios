@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -10,7 +10,7 @@ using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Utils;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture]
 	public class UtilityTests

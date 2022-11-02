@@ -1,4 +1,4 @@
-﻿//
+//
 // GKComponentSystem.cs: Implements some nicer methods for GKComponentSystem
 //
 // Authors:
@@ -6,6 +6,8 @@
 //
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
+
+#nullable enable
 
 using System;
 using Foundation;
@@ -19,7 +21,7 @@ namespace GameplayKit {
 		{
 		}
 
-		public Type ComponentType { 
+		public Type? ComponentType { 
 			get { return Class.Lookup (ComponentClass); }
 		}
 

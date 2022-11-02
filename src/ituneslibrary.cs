@@ -26,6 +26,10 @@ using AppKit;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace iTunesLibrary {
 
 	[Mac (10,14)]
@@ -377,11 +381,11 @@ namespace iTunesLibrary {
 		ITLibrary GetLibrary (string requestedAPIVersion, ITLibInitOptions options, [NullAllowed] out NSError error);
 
 		[Export ("initWithAPIVersion:error:")]
-		IntPtr Constructor (string requestedAPIVersion, [NullAllowed] out NSError error);
+		NativeHandle Constructor (string requestedAPIVersion, [NullAllowed] out NSError error);
 
 		[DesignatedInitializer]
 		[Export ("initWithAPIVersion:options:error:")]
-		IntPtr Constructor (string requestedAPIVersion, ITLibInitOptions options, [NullAllowed] out NSError error);
+		NativeHandle Constructor (string requestedAPIVersion, ITLibInitOptions options, [NullAllowed] out NSError error);
 
 		[Export ("artworkForMediaFile:")]
 		[return: NullAllowed]

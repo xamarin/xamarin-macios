@@ -113,7 +113,7 @@ namespace Registrar {
 			return this;
 		}
 
-		public AutoIndentStringBuilder AppendFormat (string format, params object[] args)
+		public AutoIndentStringBuilder AppendFormat (string format, params object [] args)
 		{
 			Output (string.Format (format, args));
 			return this;
@@ -134,7 +134,7 @@ namespace Registrar {
 			return this;
 		}
 
-		public AutoIndentStringBuilder AppendLine (string format, params object[] args)
+		public AutoIndentStringBuilder AppendLine (string format, params object [] args)
 		{
 			Output (string.Format (format, args));
 			sb.AppendLine ();
@@ -147,12 +147,12 @@ namespace Registrar {
 			return Append (value);
 		}
 
-		public AutoIndentStringBuilder Write (string format, params object[] args)
+		public AutoIndentStringBuilder Write (string format, params object [] args)
 		{
 			return AppendFormat (format, args);
 		}
 
-		public AutoIndentStringBuilder WriteLine (string format, params object[] args)
+		public AutoIndentStringBuilder WriteLine (string format, params object [] args)
 		{
 			return AppendLine (format, args);
 		}
@@ -211,8 +211,9 @@ namespace Registrar {
 		}
 	}
 
-	class StaticRegistrar : Registrar
-	{
+	class StaticRegistrar : Registrar {
+		static string NFloatTypeName { get => Driver.IsDotNet ? "System.Runtime.InteropServices.NFloat" : "System.nfloat"; }
+
 		Dictionary<ICustomAttribute, MethodDefinition> protocol_member_method_map;
 
 		public Dictionary<ICustomAttribute, MethodDefinition> ProtocolMemberMethodMap {
@@ -239,14 +240,14 @@ namespace Registrar {
 				return true;
 			if (a == null ^ b == null)
 				return false;
-			
+
 			if (a.Count != b.Length)
 				return false;
-			
+
 			for (var i = 0; i < b.Length; i++)
 				if (!TypeMatch (a [i].ParameterType, b [i]))
 					return false;
-			
+
 			return true;
 		}
 
@@ -330,7 +331,7 @@ namespace Registrar {
 		{
 			if (type == null)
 				return;
-			
+
 			if (type.BaseType != null)
 				CollectInterfaces (ref ifaces, type.BaseType.Resolve ());
 
@@ -581,7 +582,7 @@ namespace Registrar {
 		PlatformResolver resolver;
 		PlatformResolver Resolver { get { return resolver ?? Target.Resolver; } }
 
-		readonly Version MacOSTenTwelveVersion = new Version (10,12);
+		readonly Version MacOSTenTwelveVersion = new Version (10, 12);
 
 		public Xamarin.Tuner.DerivedLinkContext LinkContext {
 			get {
@@ -704,12 +705,12 @@ namespace Registrar {
 			}
 		}
 
-		protected override void ReportError (int code, string message, params object[] args)
+		protected override void ReportError (int code, string message, params object [] args)
 		{
 			throw ErrorHelper.CreateError (code, message, args);
 		}
-		
-		protected override void ReportWarning (int code, string message, params object[] args)
+
+		protected override void ReportWarning (int code, string message, params object [] args)
 		{
 			ErrorHelper.Show (ErrorHelper.CreateWarning (code, message, args));
 		}
@@ -717,33 +718,34 @@ namespace Registrar {
 		public static int GetValueTypeSize (TypeDefinition type, bool is_64_bits)
 		{
 			switch (type.FullName) {
-				case "System.Char": return 2;
-				case "System.Boolean":
-				case "System.SByte":
-				case "System.Byte": return 1;
-				case "System.Int16":
-				case "System.UInt16": return 2;
-				case "System.Single":
-				case "System.Int32":
-				case "System.UInt32": return 4;
-				case "System.Double":
-				case "System.Int64": 
-				case "System.UInt64": return 8;
-				case "System.IntPtr":
-				case "System.nfloat":
-				case "System.nuint":
-				case "System.nint": return is_64_bits ? 8 : 4;
-				default:
-					int size = 0;
-					foreach (FieldDefinition field in type.Fields) {
-						if (field.IsStatic)
-							continue;
-						int s = GetValueTypeSize (field.FieldType.Resolve (), is_64_bits);
-						if (s == -1)
-							return -1;
-						size += s;
-					}
-					return size;
+			case "System.Char": return 2;
+			case "System.Boolean":
+			case "System.SByte":
+			case "System.Byte": return 1;
+			case "System.Int16":
+			case "System.UInt16": return 2;
+			case "System.Single":
+			case "System.Int32":
+			case "System.UInt32": return 4;
+			case "System.Double":
+			case "System.Int64":
+			case "System.UInt64": return 8;
+			case "System.IntPtr":
+			case "System.nuint":
+			case "System.nint": return is_64_bits ? 8 : 4;
+			default:
+				if (type.FullName == NFloatTypeName)
+					return is_64_bits ? 8 : 4;
+				int size = 0;
+				foreach (FieldDefinition field in type.Fields) {
+					if (field.IsStatic)
+						continue;
+					int s = GetValueTypeSize (field.FieldType.Resolve (), is_64_bits);
+					if (s == -1)
+						return -1;
+					size += s;
+				}
+				return size;
 			}
 		}
 
@@ -769,15 +771,15 @@ namespace Registrar {
 
 		protected override bool IsSimulatorOrDesktop {
 			get {
-				return App.Platform == ApplePlatform.MacOSX || App.IsSimulatorBuild;
+				return App.Platform == ApplePlatform.MacOSX || App.IsSimulatorBuild;
 			}
 		}
-			
+
 		protected override bool Is64Bits {
 			get {
 				if (IsSingleAssembly)
 					return App.Is64Build;
-				
+
 				// Target can be null when mmp is run for multiple assemblies
 				return Target != null ? Target.Is64Build : App.Is64Build;
 			}
@@ -789,7 +791,7 @@ namespace Registrar {
 			}
 		}
 
-		protected override Exception CreateExceptionImpl (int code, bool error, Exception innerException, MethodDefinition method, string message, params object[] args)
+		protected override Exception CreateExceptionImpl (int code, bool error, Exception innerException, MethodDefinition method, string message, params object [] args)
 		{
 			return ErrorHelper.Create (App, code, error, innerException, method, message, args);
 		}
@@ -798,7 +800,7 @@ namespace Registrar {
 		{
 			return ErrorHelper.Create (App, code, error, innerException, type, message, args);
 		}
-		
+
 		protected override bool ContainsPlatformReference (AssemblyDefinition assembly)
 		{
 			if (assembly.Name.Name == PlatformAssembly)
@@ -941,7 +943,7 @@ namespace Registrar {
 		{
 			return method.IsStatic;
 		}
-		
+
 		protected override bool IsStatic (PropertyDefinition property)
 		{
 			if (property.GetMethod != null)
@@ -979,7 +981,7 @@ namespace Registrar {
 		{
 			if (system_void != null)
 				return system_void;
-			
+
 			// find corlib
 			var corlib_name = Driver.CorlibName;
 			AssemblyDefinition corlib = null;
@@ -1102,7 +1104,7 @@ namespace Registrar {
 			return type.Resolve ()?.IsAbstract == true;
 		}
 
-		protected override TypeReference[] GetInterfaces (TypeReference type)
+		protected override TypeReference [] GetInterfaces (TypeReference type)
 		{
 			var td = type.Resolve ();
 			if (!td.HasInterfaces || td.Interfaces.Count == 0)
@@ -1117,7 +1119,7 @@ namespace Registrar {
 		{
 			if (LinkContext == null)
 				return null;
-			
+
 			if (LinkContext.ProtocolImplementations.TryGetValue (type.Resolve (), out var linkedAwayInterfaces) != true)
 				return null;
 
@@ -1142,7 +1144,7 @@ namespace Registrar {
 
 			if (a == null ^ b == null)
 				return false;
-			
+
 			return TypeMatch (a, b);
 		}
 
@@ -1242,7 +1244,7 @@ namespace Registrar {
 			return GetEnumUnderlyingType (type);
 		}
 
-		protected override TypeReference[] GetParameters (MethodDefinition method)
+		protected override TypeReference [] GetParameters (MethodDefinition method)
 		{
 			if (!method.HasParameters || method.Parameters.Count == 0)
 				return null;
@@ -1389,7 +1391,7 @@ namespace Registrar {
 					break;
 				case "FormalSince":
 					Version version;
-					if (!Version.TryParse ((string)prop.Argument.Value, out version))
+					if (!Version.TryParse ((string) prop.Argument.Value, out version))
 						throw ErrorHelper.CreateError (4147, Errors.MT4147, "ProtocolAttribute", type.FullName);
 					rv.FormalSinceVersion = version;
 					break;
@@ -1491,41 +1493,41 @@ namespace Registrar {
 				foreach (var prop in ca.Properties) {
 					switch (prop.Name) {
 					case "IsRequired":
-						rv.IsRequired = (bool)prop.Argument.Value;
+						rv.IsRequired = (bool) prop.Argument.Value;
 						break;
 					case "IsProperty":
-						rv.IsProperty = (bool)prop.Argument.Value;
+						rv.IsProperty = (bool) prop.Argument.Value;
 						break;
 					case "IsStatic":
-						rv.IsStatic = (bool)prop.Argument.Value;
+						rv.IsStatic = (bool) prop.Argument.Value;
 						break;
 					case "Name":
-						rv.Name = (string)prop.Argument.Value;
+						rv.Name = (string) prop.Argument.Value;
 						break;
 					case "Selector":
-						rv.Selector = (string)prop.Argument.Value;
+						rv.Selector = (string) prop.Argument.Value;
 						break;
 					case "ReturnType":
-						rv.ReturnType = (TypeReference)prop.Argument.Value;
+						rv.ReturnType = (TypeReference) prop.Argument.Value;
 						break;
 					case "ReturnTypeDelegateProxy":
 						rv.ReturnTypeDelegateProxy = (TypeReference) prop.Argument.Value;
 						break;
 					case "ParameterType":
 						if (prop.Argument.Value != null) {
-							var arr = (CustomAttributeArgument[])prop.Argument.Value;
-							rv.ParameterType = new TypeReference[arr.Length];
+							var arr = (CustomAttributeArgument []) prop.Argument.Value;
+							rv.ParameterType = new TypeReference [arr.Length];
 							for (int i = 0; i < arr.Length; i++) {
-								rv.ParameterType [i] = (TypeReference)arr [i].Value;
+								rv.ParameterType [i] = (TypeReference) arr [i].Value;
 							}
 						}
 						break;
 					case "ParameterByRef":
 						if (prop.Argument.Value != null) {
-							var arr = (CustomAttributeArgument[])prop.Argument.Value;
-							rv.ParameterByRef = new bool[arr.Length];
+							var arr = (CustomAttributeArgument []) prop.Argument.Value;
+							rv.ParameterByRef = new bool [arr.Length];
 							for (int i = 0; i < arr.Length; i++) {
-								rv.ParameterByRef [i] = (bool)arr [i].Value;
+								rv.ParameterByRef [i] = (bool) arr [i].Value;
 							}
 						}
 						break;
@@ -1539,19 +1541,19 @@ namespace Registrar {
 						}
 						break;
 					case "IsVariadic":
-						rv.IsVariadic = (bool)prop.Argument.Value;
+						rv.IsVariadic = (bool) prop.Argument.Value;
 						break;
 					case "PropertyType":
-						rv.PropertyType = (TypeReference)prop.Argument.Value;
+						rv.PropertyType = (TypeReference) prop.Argument.Value;
 						break;
 					case "GetterSelector":
-						rv.GetterSelector = (string)prop.Argument.Value;
+						rv.GetterSelector = (string) prop.Argument.Value;
 						break;
 					case "SetterSelector":
-						rv.SetterSelector = (string)prop.Argument.Value;
+						rv.SetterSelector = (string) prop.Argument.Value;
 						break;
 					case "ArgumentSemantic":
-						rv.ArgumentSemantic = (ArgumentSemantic)prop.Argument.Value;
+						rv.ArgumentSemantic = (ArgumentSemantic) prop.Argument.Value;
 						break;
 					}
 				}
@@ -1559,211 +1561,257 @@ namespace Registrar {
 			}
 		}
 
-		void CollectAvailabilityAttributes (IEnumerable<ICustomAttribute> attributes, ref List<AvailabilityBaseAttribute> list)
+#if !NET
+		PlatformName AsPlatformName (ApplePlatform platform)
 		{
-			PlatformName currentPlatform;
+			switch (platform) {
+			case ApplePlatform.iOS:
+				return global::ObjCRuntime.PlatformName.iOS;
+			case ApplePlatform.TVOS:
+				return global::ObjCRuntime.PlatformName.TvOS;
+			case ApplePlatform.WatchOS:
+				return global::ObjCRuntime.PlatformName.WatchOS;
+			case ApplePlatform.MacOSX:
+				return global::ObjCRuntime.PlatformName.MacOSX;
+			case ApplePlatform.MacCatalyst:
+				return global::ObjCRuntime.PlatformName.MacCatalyst;
+			default:
+				throw ErrorHelper.CreateError (99, Errors.MX0099, $"unknown platform: {platform}");
+			}
+		}
+
+		bool GetLegacyAvailabilityAttribute (ICustomAttribute ca, ApplePlatform platform, out Version sdkVersion, out string message)
+		{
+			var caType = ca.AttributeType;
+			var currentPlatform = AsPlatformName (platform);
+			AvailabilityKind kind;
+			PlatformName platformName = global::ObjCRuntime.PlatformName.None;
+			PlatformArchitecture architecture = PlatformArchitecture.All;
+			int majorVersion = 0, minorVersion = 0, subminorVersion = 0;
+			bool shorthand = false;
+
+			sdkVersion = null;
+			message = null;
+
+			switch (caType.Name) {
+			case "MacAttribute":
+				shorthand = true;
+				platformName = global::ObjCRuntime.PlatformName.MacOSX;
+				goto case "IntroducedAttribute";
+			case "iOSAttribute":
+				shorthand = true;
+				platformName = global::ObjCRuntime.PlatformName.iOS;
+				goto case "IntroducedAttribute";
+			case "IntroducedAttribute":
+				kind = AvailabilityKind.Introduced;
+				break;
+			default:
+				return false;
+			}
+
+			switch (ca.ConstructorArguments.Count) {
+			case 2:
+				if (!shorthand)
+					throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+				majorVersion = (byte) ca.ConstructorArguments [0].Value;
+				minorVersion = (byte) ca.ConstructorArguments [1].Value;
+				break;
+			case 3:
+				if (!shorthand) {
+					platformName = (PlatformName) ca.ConstructorArguments [0].Value;
+					architecture = (PlatformArchitecture) ca.ConstructorArguments [1].Value;
+					message = (string) ca.ConstructorArguments [2].Value;
+				} else {
+					majorVersion = (byte) ca.ConstructorArguments [0].Value;
+					minorVersion = (byte) ca.ConstructorArguments [1].Value;
+					if (ca.ConstructorArguments [2].Type.Name == "Boolean") {
+						var onlyOn64 = (bool) ca.ConstructorArguments [2].Value;
+						architecture = onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All;
+					} else if (ca.ConstructorArguments [2].Type.Name == "Byte") {
+						minorVersion = (byte) ca.ConstructorArguments [2].Value;
+					} else {
+						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+					}
+				}
+				break;
+			case 4:
+				if (!shorthand)
+					throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+
+				majorVersion = (byte) ca.ConstructorArguments [0].Value;
+				minorVersion = (byte) ca.ConstructorArguments [1].Value;
+				minorVersion = (byte) ca.ConstructorArguments [2].Value;
+				if (ca.ConstructorArguments [3].Type.Name == "Boolean") {
+					var onlyOn64 = (bool) ca.ConstructorArguments [3].Value;
+					architecture = onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All;
+				} else if (ca.ConstructorArguments [3].Type.Name == "PlatformArchitecture") {
+					architecture = (PlatformArchitecture) (byte) ca.ConstructorArguments [3].Value;
+				} else {
+					throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+				}
+				break;
+			case 5:
+				platformName = (PlatformName) ca.ConstructorArguments [0].Value;
+				majorVersion = (int) ca.ConstructorArguments [1].Value;
+				minorVersion = (int) ca.ConstructorArguments [2].Value;
+				architecture = (PlatformArchitecture) ca.ConstructorArguments [3].Value;
+				message = (string) ca.ConstructorArguments [4].Value;
+				break;
+			case 6:
+				platformName = (PlatformName) ca.ConstructorArguments [0].Value;
+				majorVersion = (int) ca.ConstructorArguments [1].Value;
+				minorVersion = (int) ca.ConstructorArguments [2].Value;
+				subminorVersion = (int) ca.ConstructorArguments [3].Value;
+				architecture = (PlatformArchitecture) ca.ConstructorArguments [4].Value;
+				message = (string) ca.ConstructorArguments [5].Value;
+				break;
+			default:
+				throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+			}
+
+			if (platformName != currentPlatform)
+				return false;
+
+			sdkVersion = new Version (majorVersion, minorVersion, subminorVersion);
+			switch (kind) {
+			case AvailabilityKind.Introduced:
+				if (shorthand) {
+					sdkVersion = new Version (majorVersion, minorVersion, subminorVersion);
+				} else {
+					switch (ca.ConstructorArguments.Count) {
+					case 5:
+						sdkVersion = new Version (majorVersion, minorVersion);
+						break;
+					case 6:
+						sdkVersion = new Version (majorVersion, minorVersion, subminorVersion);
+						break;
+					default:
+						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+					}
+				}
+				break;
+			default:
+				throw ErrorHelper.CreateError (4163, Errors.MT4163_A, kind);
+			}
+
+			return true;
+		}
+#endif // !NET
+
+#if NET
+		bool GetDotNetAvailabilityAttribute (ICustomAttribute ca, ApplePlatform currentPlatform, out Version sdkVersion, out string message)
+		{
+			var caType = ca.AttributeType;
+
+			sdkVersion = null;
+			message = null;
+
+			string supportedPlatformAndVersion;
+			switch (ca.ConstructorArguments.Count) {
+			case 1:
+				supportedPlatformAndVersion = (string) ca.ConstructorArguments [0].Value;
+				break;
+			default:
+				throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+			}
+
+			if (!OSPlatformAttributeExtensions.TryParse (supportedPlatformAndVersion, out ApplePlatform? platformName, out sdkVersion))
+				return false;
+
+			if (platformName != currentPlatform)
+				return false;
+
+			return true;
+		}
+#endif // NET
+
+		bool CollectAvailabilityAttributes (IEnumerable<ICustomAttribute> attributes, out Version sdkVersion, out string message)
+		{
+			sdkVersion = null;
+			message = null;
+
+			ApplePlatform currentPlatform;
 			switch (App.Platform) {
 			case ApplePlatform.iOS:
-				currentPlatform = global::ObjCRuntime.PlatformName.iOS;
+				currentPlatform = ApplePlatform.iOS;
 				break;
 			case ApplePlatform.TVOS:
-				currentPlatform = global::ObjCRuntime.PlatformName.TvOS;
+				currentPlatform = ApplePlatform.TVOS;
 				break;
 			case ApplePlatform.WatchOS:
-				currentPlatform = global::ObjCRuntime.PlatformName.WatchOS;
+				currentPlatform = ApplePlatform.WatchOS;
 				break;
 			case ApplePlatform.MacOSX:
-				currentPlatform = global::ObjCRuntime.PlatformName.MacOSX;
+				currentPlatform = ApplePlatform.MacOSX;
 				break;
 			case ApplePlatform.MacCatalyst:
-				currentPlatform = global::ObjCRuntime.PlatformName.MacCatalyst;
+				currentPlatform = ApplePlatform.MacCatalyst;
 				break;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
 			}
 
-			foreach (var ca in attributes) {
-				var caType = ca.AttributeType;
-				if (caType.Namespace != ObjCRuntime && !string.IsNullOrEmpty (caType.Namespace))
-					continue;
-				
-				AvailabilityKind kind;
-				PlatformName platformName = global::ObjCRuntime.PlatformName.None;
-				PlatformArchitecture architecture = PlatformArchitecture.All;
-				string message = null;
-				int majorVersion = 0, minorVersion = 0, subminorVersion = 0;
-				bool shorthand = false;
+			ApplePlatform [] platforms;
 
-				switch (caType.Name) {
-				case "MacAttribute":
-					shorthand = true;
-					platformName = global::ObjCRuntime.PlatformName.MacOSX;
-					goto case "IntroducedAttribute";
-				case "iOSAttribute":
-					shorthand = true;
-					platformName = global::ObjCRuntime.PlatformName.iOS;
-					goto case "IntroducedAttribute";
-				case "IntroducedAttribute":
-					kind = AvailabilityKind.Introduced;
-					break;
-				case "DeprecatedAttribute":
-					kind = AvailabilityKind.Deprecated;
-					break;
-				case "ObsoletedAttribute":
-					kind = AvailabilityKind.Obsoleted;
-					break;
-				case "UnavailableAttribute":
-					kind = AvailabilityKind.Unavailable;
-					break;
-				default:
-					continue;
-				}
+#if !NET
+			if (currentPlatform == ApplePlatform.MacCatalyst) {
+				// Fall back to any iOS attributes if we can't find something for Mac Catalyst
+				platforms = new ApplePlatform [] {
+					currentPlatform,
+					ApplePlatform.iOS,
+				};
 
-				switch (ca.ConstructorArguments.Count) {
-				case 2:
-					if (!shorthand)
-						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-					majorVersion = (byte) ca.ConstructorArguments [0].Value;
-					minorVersion = (byte) ca.ConstructorArguments [1].Value;
-					break;
-				case 3:
-					if (!shorthand) {
-						platformName = (PlatformName) ca.ConstructorArguments [0].Value;
-						architecture = (PlatformArchitecture) ca.ConstructorArguments [1].Value;
-						message = (string) ca.ConstructorArguments [2].Value;
-					} else {
-						majorVersion = (byte) ca.ConstructorArguments [0].Value;
-						minorVersion = (byte) ca.ConstructorArguments [1].Value;
-						if (ca.ConstructorArguments [2].Type.Name == "Boolean") {
-							var onlyOn64 = (bool) ca.ConstructorArguments [2].Value;
-							architecture = onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All;
-						} else if (ca.ConstructorArguments [2].Type.Name == "Byte") {
-							minorVersion = (byte) ca.ConstructorArguments [2].Value;
-						} else {
-							throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-						}
-					}
-					break;
-				case 4:
-					if (!shorthand)
-						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-
-					majorVersion = (byte) ca.ConstructorArguments [0].Value;
-					minorVersion = (byte) ca.ConstructorArguments [1].Value;
-					minorVersion = (byte) ca.ConstructorArguments [2].Value;
-					if (ca.ConstructorArguments [3].Type.Name == "Boolean") {
-						var onlyOn64 = (bool) ca.ConstructorArguments [3].Value;
-						architecture = onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All;
-					} else if (ca.ConstructorArguments [3].Type.Name == "PlatformArchitecture") {
-						architecture = (PlatformArchitecture) (byte) ca.ConstructorArguments [3].Value;
-					} else {
-						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-					}
-					break;
-				case 5:
-					platformName = (PlatformName) ca.ConstructorArguments [0].Value;
-					majorVersion = (int) ca.ConstructorArguments [1].Value;
-					minorVersion = (int) ca.ConstructorArguments [2].Value;
-					architecture = (PlatformArchitecture) ca.ConstructorArguments [3].Value;
-					message = (string) ca.ConstructorArguments [4].Value;
-					break;
-				case 6:
-					platformName = (PlatformName) ca.ConstructorArguments [0].Value;
-					majorVersion = (int) ca.ConstructorArguments [1].Value;
-					minorVersion = (int) ca.ConstructorArguments [2].Value;
-					subminorVersion = (int) ca.ConstructorArguments [3].Value;
-					architecture = (PlatformArchitecture) ca.ConstructorArguments [4].Value;
-					message = (string) ca.ConstructorArguments [5].Value;
-					break;
-				default:
-					throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-				}
-
-				if (platformName != currentPlatform)
-					continue;
-
-				AvailabilityBaseAttribute rv;
-				switch (kind) {
-				case AvailabilityKind.Introduced:
-					if (shorthand) {
-						rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
-					} else {
-						switch (ca.ConstructorArguments.Count) {
-						case 3:
-							rv = new IntroducedAttribute (platformName, architecture, message);
-							break;
-						case 5:
-							rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, architecture, message);
-							break;
-						case 6:
-							rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
-							break;
-						default:
-							throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-						}
-					}
-					break;
-				case AvailabilityKind.Deprecated:
-					switch (ca.ConstructorArguments.Count) {
-					case 3:
-						rv = new DeprecatedAttribute (platformName, architecture, message);
-						break;
-					case 5:
-						rv = new DeprecatedAttribute (platformName, majorVersion, minorVersion, architecture, message);
-						break;
-					case 6:
-						rv = new DeprecatedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
-						break;
-					default:
-						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-					}
-					break;
-				case AvailabilityKind.Obsoleted:
-					switch (ca.ConstructorArguments.Count) {
-					case 3:
-						rv = new ObsoletedAttribute (platformName, architecture, message);
-						break;
-					case 5:
-						rv = new ObsoletedAttribute (platformName, majorVersion, minorVersion, architecture, message);
-						break;
-					case 6:
-						rv = new ObsoletedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
-						break;
-					default:
-						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-					}
-					break;
-				case AvailabilityKind.Unavailable:
-					rv = new UnavailableAttribute (platformName, architecture, message);
-					break;
-				default:
-					throw ErrorHelper.CreateError (4163, Errors.MT4163_A, kind);
-				}
-
-				if (list == null)
-					list = new List<AvailabilityBaseAttribute> ();
-				list.Add (rv);
+			} else {
+				platforms = new ApplePlatform [] {
+					currentPlatform,
+				};
 			}
+#else
+			platforms = new ApplePlatform [] {
+				currentPlatform,
+			};
+#endif
+
+			foreach (var platform in platforms) {
+				foreach (var ca in attributes) {
+					var caType = ca.AttributeType;
+#if NET
+					if (!caType.Is ("System.Runtime.Versioning", "SupportedOSPlatformAttribute"))
+						continue;
+					if (GetDotNetAvailabilityAttribute (ca, platform, out sdkVersion, out message))
+						return true;
+#else
+					if (caType.Namespace != ObjCRuntime && !string.IsNullOrEmpty (caType.Namespace))
+						continue;
+					if (GetLegacyAvailabilityAttribute (ca, platform, out sdkVersion, out message))
+						return true;
+#endif
+				}
+			}
+
+			return false;
 		}
 
-		protected override List<AvailabilityBaseAttribute> GetAvailabilityAttributes (TypeReference obj)
+		protected override Version GetSdkIntroducedVersion (TypeReference obj, out string message)
 		{
 			TypeDefinition td = obj.Resolve ();
-			List<AvailabilityBaseAttribute> rv = null;
 
-			if (td == null)
+			message = null;
+
+			if (td is null)
 				return null;
-			
-			if (td.HasCustomAttributes)
-				CollectAvailabilityAttributes (td.CustomAttributes, ref rv);
-			
-			if (AvailabilityAnnotations != null) {
-				object attribObjects;
-				if (AvailabilityAnnotations.TryGetValue (td, out attribObjects))
-					CollectAvailabilityAttributes ((IEnumerable<ICustomAttribute>) attribObjects, ref rv);
+
+			if (td.HasCustomAttributes) {
+				if (CollectAvailabilityAttributes (td.CustomAttributes, out var sdkVersion, out message))
+					return sdkVersion;
 			}
 
-			return rv;
+			if (AvailabilityAnnotations is not null && AvailabilityAnnotations.TryGetValue (td, out var attribObjects)) {
+				if (CollectAvailabilityAttributes ((IEnumerable<ICustomAttribute>) attribObjects, out var sdkVersion, out message))
+					return sdkVersion;
+			}
+
+			return null;
 		}
 
 		protected override Version GetSDKVersion ()
@@ -1796,7 +1844,7 @@ namespace Registrar {
 			var attributes = GetCustomAttributes (type.Resolve (), ObjCRuntime, "AdoptsAttribute");
 			if (attributes == null || !attributes.Any ())
 				return null;
-			
+
 			var rv = new List<AdoptsAttribute> ();
 			foreach (var ca in attributes) {
 				var attrib = new AdoptsAttribute ();
@@ -1811,6 +1859,28 @@ namespace Registrar {
 			}
 
 			return rv;
+		}
+
+		NativeNameAttribute GetNativeNameAttribute (TypeReference type)
+		{
+			if (!TryGetAttribute ((ICustomAttributeProvider) type, ObjCRuntime, "NativeNameAttribute", out var attrib))
+				return null;
+
+			return CreateNativeNameAttribute (attrib, type);
+		}
+
+		static NativeNameAttribute CreateNativeNameAttribute (ICustomAttribute attrib, TypeReference type)
+		{
+			if (attrib.HasFields)
+				throw ErrorHelper.CreateError (4124, Errors.MT4124_I, "NativeNameAttribute", type.FullName);
+
+			switch (attrib.ConstructorArguments.Count) {
+			case 1:
+				var t1 = (string) attrib.ConstructorArguments [0].Value;
+				return new NativeNameAttribute (t1);
+			default:
+				throw ErrorHelper.CreateError (4124, Errors.MT4124_I, "NativeNameAttribute", type.FullName);
+			}
 		}
 
 		protected override BindAsAttribute GetBindAsAttribute (PropertyDefinition property)
@@ -1935,7 +2005,7 @@ namespace Registrar {
 			}
 			return null;
 		}
-		
+
 		PropertyDefinition GetBasePropertyInTypeHierarchy (PropertyDefinition property)
 		{
 			if (!IsOverride (property))
@@ -1946,30 +2016,30 @@ namespace Registrar {
 				PropertyDefinition base_property = TryMatchProperty (@base.Resolve (), property);
 				if (base_property != null)
 					return GetBasePropertyInTypeHierarchy (base_property) ?? base_property;
-				
+
 				@base = GetBaseType (@base);
 			}
 
 			return property;
 		}
-		
+
 		static PropertyDefinition TryMatchProperty (TypeDefinition type, PropertyDefinition property)
 		{
 			if (!type.HasProperties)
 				return null;
-			
+
 			foreach (PropertyDefinition candidate in type.Properties)
 				if (PropertyMatch (candidate, property))
 					return candidate;
-			
+
 			return null;
 		}
-		
+
 		static bool PropertyMatch (PropertyDefinition candidate, PropertyDefinition property)
 		{
 			if (candidate.Name != property.Name)
 				return false;
-			
+
 			if (candidate.GetMethod != null) {
 				if (property.GetMethod == null)
 					return false;
@@ -1978,7 +2048,7 @@ namespace Registrar {
 			} else if (property.GetMethod != null) {
 				return false;
 			}
-			
+
 			if (candidate.SetMethod != null) {
 				if (property.SetMethod == null)
 					return false;
@@ -1987,10 +2057,10 @@ namespace Registrar {
 			} else if (property.SetMethod != null) {
 				return false;
 			}
-			
+
 			return true;
 		}
-		
+
 		MethodDefinition GetBaseMethodInTypeHierarchy (MethodDefinition method)
 		{
 			if (!IsOverride (method))
@@ -2001,22 +2071,22 @@ namespace Registrar {
 				MethodDefinition base_method = TryMatchMethod (@base.Resolve (), method);
 				if (base_method != null)
 					return GetBaseMethodInTypeHierarchy (base_method) ?? base_method;
-				
+
 				@base = GetBaseType (@base);
 			}
-			
+
 			return method;
 		}
-		
+
 		static MethodDefinition TryMatchMethod (TypeDefinition type, MethodDefinition method)
 		{
 			if (!type.HasMethods)
 				return null;
-			
+
 			foreach (MethodDefinition candidate in type.Methods)
 				if (MethodMatch (candidate, method))
 					return candidate;
-			
+
 			return null;
 		}
 
@@ -2029,7 +2099,7 @@ namespace Registrar {
 		AutoIndentStringBuilder interfaces; // public objective-c @interface declarations
 		AutoIndentStringBuilder nslog_start = new AutoIndentStringBuilder ();
 		AutoIndentStringBuilder nslog_end = new AutoIndentStringBuilder ();
-		
+
 		AutoIndentStringBuilder comment = new AutoIndentStringBuilder ();
 		AutoIndentStringBuilder copyback = new AutoIndentStringBuilder ();
 		AutoIndentStringBuilder invoke = new AutoIndentStringBuilder ();
@@ -2038,7 +2108,7 @@ namespace Registrar {
 		AutoIndentStringBuilder cleanup = new AutoIndentStringBuilder ();
 		AutoIndentStringBuilder body = new AutoIndentStringBuilder ();
 		AutoIndentStringBuilder body_setup = new AutoIndentStringBuilder ();
-		
+
 		HashSet<string> trampoline_names = new HashSet<string> ();
 		HashSet<string> namespaces = new HashSet<string> ();
 		HashSet<string> structures = new HashSet<string> ();
@@ -2047,7 +2117,7 @@ namespace Registrar {
 
 		AutoIndentStringBuilder full_token_references = new AutoIndentStringBuilder ();
 		uint full_token_reference_count;
-		List<string> registered_assemblies = new List<string> ();
+		List<(AssemblyDefinition Assembly, string Name)> registered_assemblies = new List<(AssemblyDefinition Assembly, string Name)> ();
 
 		bool IsPlatformType (TypeReference type)
 		{
@@ -2068,7 +2138,7 @@ namespace Registrar {
 
 			if (aname != PlatformAssembly)
 				return false;
-				
+
 			return Driver.GetFrameworks (App).ContainsKey (type.Namespace);
 		}
 
@@ -2077,7 +2147,7 @@ namespace Registrar {
 			return tr.Module == null;
 		}
 
-		void CheckNamespace (ObjCType objctype,  List<Exception> exceptions)
+		void CheckNamespace (ObjCType objctype, List<Exception> exceptions)
 		{
 			CheckNamespace (objctype.Type, exceptions);
 		}
@@ -2096,7 +2166,7 @@ namespace Registrar {
 					if (reported_frameworks == null)
 						reported_frameworks = new HashSet<string> ();
 					if (!reported_frameworks.Contains (framework.Name)) {
-						exceptions.Add (ErrorHelper.CreateError (4134, 
+						exceptions.Add (ErrorHelper.CreateError (4134,
 							App.Platform == ApplePlatform.MacOSX ? Errors.MM4134 : Errors.MT4134,
 							framework.Name, App.SdkVersion, framework.Version, App.PlatformName));
 						reported_frameworks.Add (framework.Name);
@@ -2115,7 +2185,7 @@ namespace Registrar {
 
 			if (namespaces.Contains (ns))
 				return;
-			
+
 			namespaces.Add (ns);
 
 			if (App.IsSimulatorBuild && !App.IsFrameworkAvailableInSimulator (ns)) {
@@ -2142,9 +2212,11 @@ namespace Registrar {
 					}
 				}
 				goto default;
+#if !NET
 			case "Chip":
 				h = "<CHIP/CHIP.h>";
 				break;
+#endif
 			case "GLKit":
 				// This prevents this warning:
 				//     /Applications/Xcode83.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/OpenGL.framework/Headers/gl.h:5:2: warning: gl.h and gl3.h are both
@@ -2165,6 +2237,9 @@ namespace Registrar {
 			case "QuickLookUI":
 				h = "<Quartz/Quartz.h>";
 				break;
+			case "Phase":
+				h = "<PHASE/PHASE.h>";
+				break;
 			case "PdfKit":
 				h = App.Platform == ApplePlatform.MacOSX ? "<Quartz/Quartz.h>" : "<PDFKit/PDFKit.h>";
 				break;
@@ -2180,7 +2255,7 @@ namespace Registrar {
 					break;
 				}
 				return;
-			case "CoreMidi":	
+			case "CoreMidi":
 				h = "<CoreMIDI/CoreMIDI.h>";
 				break;
 			case "CoreTelephony":
@@ -2204,10 +2279,12 @@ namespace Registrar {
 					}
 				}
 				goto default;
+#if !NET
 			case "QTKit":
 				if (App.Platform == ApplePlatform.MacOSX && App.SdkVersion >= MacOSTenTwelveVersion)
 					return; // 10.12 removed the header files for QTKit
 				goto default;
+#endif
 			case "IOSurface": // There is no IOSurface.h
 				h = "<IOSurface/IOSurfaceObjC.h>";
 				break;
@@ -2215,6 +2292,7 @@ namespace Registrar {
 				header.WriteLine ("#import <CoreImage/CoreImage.h>");
 				header.WriteLine ("#import <CoreImage/CIFilterBuiltins.h>");
 				return;
+#if !NET
 			case "iAd":
 				if (App.SdkVersion.Major >= 13) {
 					// most of the framework has been obliterated from the headers
@@ -2227,31 +2305,36 @@ namespace Registrar {
 					return;
 				}
 				goto default;
+#endif
+			case "ThreadNetwork":
+				h = "<ThreadNetwork/THClient.h>";
+				break;
 			default:
 				h = string.Format ("<{0}/{0}.h>", ns);
 				break;
 			}
 			header.WriteLine ("#import {0}", h);
 		}
-		
+
 		string CheckStructure (TypeDefinition structure, string descriptiveMethodName, MemberReference inMember)
 		{
 			string n;
 			StringBuilder name = new StringBuilder ();
 			var body = new AutoIndentStringBuilder (1);
 			int size = 0;
-			
+
 			ProcessStructure (name, body, structure, ref size, descriptiveMethodName, structure, inMember);
-			
+
 			n = "struct trampoline_struct_" + name.ToString ();
 			if (!structures.Contains (n)) {
 				structures.Add (n);
+				declarations.WriteLine ($"// {structure.FullName} (+other structs with same layout)");
 				declarations.WriteLine ("{0} {{\n{1}}};", n, body.ToString ());
 			}
-			
+
 			return n;
 		}
-		
+
 		void ProcessStructure (StringBuilder name, AutoIndentStringBuilder body, TypeDefinition structure, ref int size, string descriptiveMethodName, TypeDefinition root_structure, MemberReference inMember)
 		{
 			switch (structure.FullName) {
@@ -2300,9 +2383,10 @@ namespace Registrar {
 				size += 8;
 				break;
 			case "System.IntPtr":
+			case "System.UIntPtr":
 				name.Append ('p');
 				body.AppendLine ("void *v{0};", size);
-				size += 4; // for now at least...
+				size += Is64Bits ? 8 : 4;
 				break;
 			default:
 				bool found = false;
@@ -2310,7 +2394,7 @@ namespace Registrar {
 					if (field.IsStatic)
 						continue;
 					var fieldType = field.FieldType.Resolve ();
-					if (fieldType == null) 
+					if (fieldType == null)
 						throw ErrorHelper.CreateError (App, 4111, inMember, Errors.MT4111, structure.FullName, descriptiveMethodName);
 					if (!fieldType.IsValueType)
 						throw ErrorHelper.CreateError (App, 4161, inMember, Errors.MT4161, root_structure.FullName, field.Name, fieldType.FullName);
@@ -2325,7 +2409,7 @@ namespace Registrar {
 
 		string GetUniqueTrampolineName (string suggestion)
 		{
-			char []fixup = suggestion.ToCharArray ();
+			char [] fixup = suggestion.ToCharArray ();
 			for (int i = 0; i < fixup.Length; i++) {
 				char c = fixup [i];
 				if (c >= 'a' && c <= 'z')
@@ -2337,7 +2421,7 @@ namespace Registrar {
 				fixup [i] = '_';
 			}
 			suggestion = new string (fixup);
-			
+
 			if (trampoline_names.Contains (suggestion)) {
 				string tmp;
 				int counter = 0;
@@ -2346,9 +2430,9 @@ namespace Registrar {
 				} while (trampoline_names.Contains (tmp));
 				suggestion = tmp;
 			}
-			
+
 			trampoline_names.Add (suggestion);
-			
+
 			return suggestion;
 		}
 
@@ -2422,6 +2506,7 @@ namespace Registrar {
 			case "System.Drawing.PointF": return App.Platform == ApplePlatform.MacOSX ? "NSPoint" : "CGPoint";
 			case "System.Drawing.SizeF": return App.Platform == ApplePlatform.MacOSX ? "NSSize" : "CGSize";
 			case "System.String": return "NSString *";
+			case "System.UIntPtr":
 			case "System.IntPtr": return "void *";
 			case "System.SByte": return "signed char";
 			case "System.Byte": return "unsigned char";
@@ -2442,14 +2527,16 @@ namespace Registrar {
 			case "System.nuint":
 				CheckNamespace ("Foundation", exceptions);
 				return "NSUInteger";
-			case "System.nfloat":
-				CheckNamespace ("CoreGraphics", exceptions);
-				return "CGFloat";
 			case "System.DateTime":
 				throw ErrorHelper.CreateError (4102, Errors.MT4102, "System.DateTime", "Foundation.NSDate", descriptiveMethodName);
 			case "ObjCRuntime.Selector": return "SEL";
 			case "ObjCRuntime.Class": return "Class";
+			case "ObjCRuntime.NativeHandle": return "void *";
 			default:
+				if (type.FullName == NFloatTypeName) {
+					CheckNamespace ("CoreGraphics", exceptions);
+					return "CGFloat";
+				}
 				TypeDefinition td = ResolveType (type);
 				if (IsNSObject (td)) {
 					if (!IsPlatformType (td))
@@ -2477,7 +2564,7 @@ namespace Registrar {
 				} else if (td.IsValueType) {
 					if (IsPlatformType (td)) {
 						CheckNamespace (td, exceptions);
-						return td.Name;
+						return GetNativeName (td);
 					}
 					return CheckStructure (td, descriptiveMethodName, inMethod);
 				} else {
@@ -2485,7 +2572,16 @@ namespace Registrar {
 				}
 			}
 		}
-		
+
+		string GetNativeName (TypeDefinition type)
+		{
+			var attrib = GetNativeNameAttribute (type);
+			if (attrib is null)
+				return type.Name;
+
+			return attrib.NativeName;
+		}
+
 		string GetPrintfFormatSpecifier (TypeDefinition type, out bool unknown)
 		{
 			unknown = false;
@@ -2501,12 +2597,13 @@ namespace Registrar {
 				case "System.UInt32": return "u";
 				case "System.Int64": return "lld";
 				case "System.UInt64": return "llu";
-				case "System.nint":	return "zd";
+				case "System.nint": return "zd";
 				case "System.nuint": return "tu";
-				case "System.nfloat":
 				case "System.Single":
 				case "System.Double": return "f";
 				default:
+					if (type.FullName == NFloatTypeName)
+						return "f";
 					unknown = true;
 					return "p";
 				}
@@ -2641,7 +2738,9 @@ namespace Registrar {
 			return ns == nsToMatch;
 		}
 
+#if !NET
 		static bool IsQTKitType (ObjCType type) => IsTypeCore (type, "QTKit");
+#endif
 		static bool IsMapKitType (ObjCType type) => IsTypeCore (type, "MapKit");
 		static bool IsIntentsType (ObjCType type) => IsTypeCore (type, "Intents");
 		static bool IsExternalAccessoryType (ObjCType type) => IsTypeCore (type, "ExternalAccessory");
@@ -2652,14 +2751,12 @@ namespace Registrar {
 			return App.IsFrameworkAvailableInSimulator (ns);
 		}
 
-		class ProtocolInfo
-		{
+		class ProtocolInfo {
 			public uint TokenReference;
 			public ObjCType Protocol;
 		}
 
-		class SkippedType
-		{
+		class SkippedType {
 			public TypeReference Skipped;
 			public ObjCType Actual;
 			public uint SkippedTokenReference;
@@ -2669,7 +2766,7 @@ namespace Registrar {
 		protected override void OnSkipType (TypeReference type, ObjCType registered_type)
 		{
 			base.OnSkipType (type, registered_type);
-			skipped_types.Add (new SkippedType { Skipped = type, Actual = registered_type } );
+			skipped_types.Add (new SkippedType { Skipped = type, Actual = registered_type });
 		}
 
 		void Specialize (AutoIndentStringBuilder sb)
@@ -2685,7 +2782,7 @@ namespace Registrar {
 			var protocols = new List<ProtocolInfo> ();
 
 			var i = 0;
-			
+
 			bool needs_protocol_map = false;
 			// Check if we need the protocol map.
 			// We don't need it if the linker removed the method ObjCRuntime.Runtime.GetProtocolForType,
@@ -2715,15 +2812,19 @@ namespace Registrar {
 						continue; // Some types are not supported in the simulator.
 					}
 				} else {
+#if !NET
 					if (IsQTKitType (@class) && App.SdkVersion >= MacOSTenTwelveVersion)
 						continue; // QTKit header was removed in 10.12 SDK
+#endif
 				}
-				
+
+#if !NET
 				// Xcode 11 removed WatchKit for iOS!
 				if (IsTypeCore (@class, "WatchKit") && App.Platform == Xamarin.Utils.ApplePlatform.iOS) {
 					exceptions.Add (ErrorHelper.CreateWarning (4178, $"The class '{@class.Type.FullName}' will not be registered because the WatchKit framework has been removed from the iOS SDK."));
 					continue;
 				}
+#endif
 
 				if (@class.IsFakeProtocol)
 					continue;
@@ -2733,9 +2834,9 @@ namespace Registrar {
 
 			if (string.IsNullOrEmpty (single_assembly)) {
 				foreach (var assembly in GetAssemblies ())
-					registered_assemblies.Add (GetAssemblyName (assembly));
+					registered_assemblies.Add (new (assembly, GetAssemblyName (assembly)));
 			} else {
-				registered_assemblies.Add (single_assembly);
+				registered_assemblies.Add (new (GetAssemblies ().Single (v => GetAssemblyName (v) == single_assembly), single_assembly));
 			}
 
 			foreach (var @class in allTypes) {
@@ -2754,9 +2855,9 @@ namespace Registrar {
 
 					CheckNamespace (@class, exceptions);
 					token_ref = CreateTokenReference (@class.Type, TokenType.TypeDef);
-					map.AppendLine ("{{ NULL, 0x{1:X} /* #{3} '{0}' => '{2}' */, (MTTypeFlags) ({4}) /* {5} */ }},", 
+					map.AppendLine ("{{ NULL, 0x{1:X} /* #{3} '{0}' => '{2}' */, (MTTypeFlags) ({4}) /* {5} */ }},",
 									@class.ExportedName,
-									CreateTokenReference (@class.Type, TokenType.TypeDef), 
+									CreateTokenReference (@class.Type, TokenType.TypeDef),
 									GetAssemblyQualifiedName (@class.Type), map_entries,
 									(int) flags, flags);
 					map_dict [@class] = map_entries++;
@@ -2765,7 +2866,7 @@ namespace Registrar {
 
 					if (@class.Type.Resolve ().Module.Assembly.Name.Name == PlatformAssembly) {
 						// we don't need to use the static ref to prevent the linker from removing (otherwise unreferenced) code for monotouch.dll types.
-						use_dynamic = true; 
+						use_dynamic = true;
 						// be smarter: we don't need to use dynamic refs for types available in the lowest version (target deployment) we building for.
 						// We do need to use dynamic class lookup when the following conditions are all true:
 						// * The class is not available in the target deployment version.
@@ -2812,7 +2913,7 @@ namespace Registrar {
 				CheckNamespace (@class, exceptions);
 				if (@class.BaseType != null)
 					CheckNamespace (@class.BaseType, exceptions);
-					
+
 				var class_name = EncodeNonAsciiCharacters (@class.ExportedName);
 				var is_protocol = @class.IsProtocol;
 
@@ -2824,7 +2925,7 @@ namespace Registrar {
 				} else {
 					iface = interfaces;
 				}
-				
+
 				if (@class.IsCategory) {
 					var exportedName = EncodeNonAsciiCharacters (@class.BaseType.ExportedName);
 					iface.Write ("@interface {0} ({1})", exportedName, @class.CategoryName);
@@ -3001,7 +3102,7 @@ namespace Registrar {
 						foreach (var method in @class.Methods) {
 							if (skip.Contains (method))
 								continue;
-							
+
 							try {
 								Specialize (sb, method, exceptions);
 							} catch (Exception ex) {
@@ -3034,22 +3135,24 @@ namespace Registrar {
 				map.AppendLine ();
 			}
 
-			map.AppendLine ("static const char *__xamarin_registration_assemblies []= {");
+			map.AppendLine ("static const MTAssembly __xamarin_registration_assemblies [] = {");
 			int count = 0;
 			foreach (var assembly in registered_assemblies) {
 				count++;
 				if (count > 1)
 					map.AppendLine (", ");
-				map.Append ("\"");
-				map.Append (assembly);
-				map.Append ("\"");
+				map.Append ("{ \"");
+				map.Append (assembly.Name);
+				map.Append ("\", \"");
+				map.Append (assembly.Assembly.MainModule.Mvid.ToString ());
+				map.Append ("\" }");
 			}
 			map.AppendLine ();
 			map.AppendLine ("};");
 			map.AppendLine ();
 
 			if (full_token_reference_count > 0) {
-				map.AppendLine ("static const struct MTFullTokenReference __xamarin_token_references [] = {");
+				map.AppendLine ("static const MTFullTokenReference __xamarin_token_references [] = {");
 				map.AppendLine (full_token_references);
 				map.AppendLine ("};");
 				map.AppendLine ();
@@ -3117,7 +3220,7 @@ namespace Registrar {
 			ErrorHelper.ThrowIfErrors (exceptions);
 		}
 
-		static bool HasIntPtrBoolCtor (TypeDefinition type)
+		bool HasIntPtrBoolCtor (TypeDefinition type, List<Exception> exceptions)
 		{
 			if (!type.HasMethods)
 				return false;
@@ -3126,10 +3229,21 @@ namespace Registrar {
 					continue;
 				if (method.Parameters.Count != 2)
 					continue;
-				if (!method.Parameters [0].ParameterType.Is ("System", "IntPtr"))
+				if (!method.Parameters [1].ParameterType.Is ("System", "Boolean"))
 					continue;
-				if (method.Parameters [1].ParameterType.Is ("System", "Boolean"))
-					return true;
+				if (Driver.IsDotNet) {
+					if (method.Parameters [0].ParameterType.Is ("System", "IntPtr")) {
+						// The registrar found a non-optimal type `{0}`: the type does not have a constructor that takes two (ObjCRuntime.NativeHandle, bool) arguments. However, a constructor that takes two (System.IntPtr, bool) arguments was found (and will be used instead). It's highly recommended to change the signature of the (System.IntPtr, bool) constructor to be (ObjCRuntime.NativeHandle, bool).
+						exceptions.Add (ErrorHelper.CreateWarning (App, 4186, method, Errors.MT4186, type.FullName));
+						return true;
+					}
+					if (!method.Parameters [0].ParameterType.Is ("ObjCRuntime", "NativeHandle"))
+						continue;
+				} else {
+					if (!method.Parameters [0].ParameterType.Is ("System", "IntPtr"))
+						continue;
+				}
+				return true;
 			}
 			return false;
 		}
@@ -3225,6 +3339,25 @@ namespace Registrar {
 				return;
 			}
 
+			var customConformsToProtocol = method.Selector == "conformsToProtocol:" && method.Method.DeclaringType.Is ("Foundation", "NSObject") && method.Method.Name == "InvokeConformsToProtocol" && method.Parameters.Length == 1;
+			if (customConformsToProtocol) {
+				if (Driver.IsDotNet) {
+					customConformsToProtocol &= method.Parameters [0].Is ("ObjCRuntime", "NativeHandle");
+				} else {
+					customConformsToProtocol &= method.Parameters [0].Is ("System", "IntPtr");
+				}
+				if (customConformsToProtocol) {
+					sb.AppendLine ("-(BOOL) conformsToProtocol: (void *) protocol");
+					sb.AppendLine ("{");
+					sb.AppendLine ("GCHandle exception_gchandle;");
+					sb.AppendLine ("BOOL rv = xamarin_invoke_conforms_to_protocol (self, (Protocol *) protocol, &exception_gchandle);");
+					sb.AppendLine ("xamarin_process_managed_exception_gchandle (exception_gchandle);");
+					sb.AppendLine ("return rv;");
+					sb.AppendLine ("}");
+					return;
+				}
+			}
+
 			var rettype = string.Empty;
 			var returntype = method.ReturnType;
 			var isStatic = method.IsStatic;
@@ -3286,7 +3419,7 @@ namespace Registrar {
 			body_setup.Clear ();
 			setup_return.Clear ();
 			cleanup.Clear ();
-			
+
 			counter++;
 
 			body.WriteLine ("{");
@@ -3318,7 +3451,7 @@ namespace Registrar {
 				comment.AppendLine (")");
 				comment.AppendLine ("// ArgumentSemantic: {0} IsStatic: {1} Selector: '{2}' Signature: '{3}'", method.ArgumentSemantic, method.IsStatic, method.Selector, method.Signature);
 			}
-		
+
 			// a couple of debug printfs
 			if (trace) {
 				StringBuilder args = new StringBuilder ();
@@ -3329,7 +3462,7 @@ namespace Registrar {
 					if (isRef)
 						type = type.GetElementType ();
 					var td = type.Resolve ();
-					
+
 					nslog_start.AppendFormat (", {0}: ", method.Method.Parameters [i].Name);
 					args.Append (", ");
 					switch (type.FullName) {
@@ -3339,7 +3472,7 @@ namespace Registrar {
 							nslog_start.Append ("%p : %@");
 							args.AppendFormat ("p{0}, p{0} ? {1} (*p{0}) : @\"NULL\"", i, rectFunc);
 						} else {
-							nslog_start.Append ("%@"); 
+							nslog_start.Append ("%@");
 							args.AppendFormat ("{1} (p{0})", i, rectFunc);
 						}
 						break;
@@ -3349,7 +3482,7 @@ namespace Registrar {
 							nslog_start.Append ("%p: %@");
 							args.AppendFormat ("p{0}, p{0} ? {1} (*p{0}) : @\"NULL\"", i, pointFunc);
 						} else {
-							nslog_start.Append ("%@"); 
+							nslog_start.Append ("%@");
 							args.AppendFormat ("{1} (p{0})", i, pointFunc);
 						}
 						break;
@@ -3369,7 +3502,7 @@ namespace Registrar {
 						break;
 					}
 				}
-				
+
 				string ret_arg = string.Empty;
 				nslog_end.Append (nslog_start.ToString ());
 				if (!isVoid) {
@@ -3385,7 +3518,7 @@ namespace Registrar {
 				nslog_end.Append (args.ToString ());
 				nslog_end.Append (ret_arg);
 				nslog_end.AppendLine (");");
-				
+
 				nslog_start.Append (") START\", self, NSStringFromSelector (_cmd)");
 				nslog_start.Append (args.ToString ());
 				nslog_start.AppendLine (");");
@@ -3422,7 +3555,7 @@ namespace Registrar {
 				} else if (isRef) {
 					type = GetElementType (type);
 					td = type.Resolve ();
-					original_objctype = ToObjCParameterType (type, descriptiveMethodName, exceptions,  method.Method);
+					original_objctype = ToObjCParameterType (type, descriptiveMethodName, exceptions, method.Method);
 					objctype = ToObjCParameterType (type, descriptiveMethodName, exceptions, method.Method) + "*";
 				} else if (td.IsEnum) {
 					type = GetEnumUnderlyingType (td);
@@ -3553,7 +3686,7 @@ namespace Registrar {
 					break;
 				default:
 					if (isArray || isByRefArray) {
-						var elementType = ((ArrayType)type).ElementType;
+						var elementType = ((ArrayType) type).ElementType;
 
 						body_setup.AppendLine ("MonoArray *marr{0} = NULL;", i);
 						body_setup.AppendLine ("NSArray *arr{0} = NULL;", i);
@@ -3599,7 +3732,7 @@ namespace Registrar {
 							}
 
 							// verify that the type has a ctor with two parameters
-							if (!HasIntPtrBoolCtor (nativeObjType))
+							if (!HasIntPtrBoolCtor (nativeObjType, exceptions))
 								throw ErrorHelper.CreateError (4103, Errors.MT4103, nativeObjType.FullName, descriptiveMethodName);
 
 							body_setup.AppendLine ("MonoType *paramtype{0} = NULL;", i);
@@ -3723,7 +3856,7 @@ namespace Registrar {
 						}
 
 						// verify that the type has a ctor with two parameters
-						if (!HasIntPtrBoolCtor (nativeObjType))
+						if (!HasIntPtrBoolCtor (nativeObjType, exceptions))
 							throw ErrorHelper.CreateError (4103, Errors.MT4103, nativeObjType.FullName, descriptiveMethodName);
 
 						if (!td.IsInterface) {
@@ -3810,7 +3943,7 @@ namespace Registrar {
 					break;
 				}
 			}
-			
+
 			// the actual invoke
 			if (isCtor) {
 				body_setup.AppendLine ("MonoClass *declaring_type = NULL;");
@@ -3886,9 +4019,8 @@ namespace Registrar {
 					if (retain)
 						setup_return.AppendLine ("[res retain];");
 					setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
-					setup_return.AppendLine ("xamarin_framework_peer_lock ();");
+					setup_return.AppendLine ("xamarin_framework_peer_waypoint ();");
 					setup_return.AppendLine ("mt_dummy_use (retval);");
-					setup_return.AppendLine ("xamarin_framework_peer_unlock ();");
 				} else {
 					setup_return.AppendLine ("if (!retval) {");
 					setup_return.AppendLine ("res = NULL;");
@@ -3897,9 +4029,8 @@ namespace Registrar {
 					if (IsNSObject (type)) {
 						setup_return.AppendLine ("id retobj;");
 						setup_return.AppendLine ("retobj = xamarin_get_nsobject_handle (retval);");
-						setup_return.AppendLine ("xamarin_framework_peer_lock ();");
+						setup_return.AppendLine ("xamarin_framework_peer_waypoint ();");
 						setup_return.AppendLine ("[retobj retain];");
-						setup_return.AppendLine ("xamarin_framework_peer_unlock ();");
 						if (!retain)
 							setup_return.AppendLine ("[retobj autorelease];");
 						setup_return.AppendLine ("mt_dummy_use (retval);");
@@ -3914,13 +4045,26 @@ namespace Registrar {
 						setup_return.AppendLine ("{0} retobj;", rettype);
 						setup_return.AppendLine ("retobj = xamarin_get_handle_for_inativeobject ((MonoObject *) retval, &exception_gchandle);");
 						setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
-						setup_return.AppendLine ("xamarin_framework_peer_lock ();");
-						setup_return.AppendLine ("[retobj retain];");
-						setup_return.AppendLine ("xamarin_framework_peer_unlock ();");
-						if (!retain)
+						setup_return.AppendLine ("xamarin_framework_peer_waypoint ();");
+						setup_return.AppendLine ("if (retobj != NULL) {");
+						if (retain) {
+							setup_return.AppendLine ("xamarin_retain_nativeobject (retval, &exception_gchandle);");
+							setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
+						} else {
+							// If xamarin_attempt_retain_nsobject returns true, the input is an NSObject, so it's safe to call the 'autorelease' selector on it.
+							// We don't retain retval if it's not an NSObject, because we'd have to immediately release it,
+							// and that serves no purpose.
+							setup_return.AppendLine ("bool retained = xamarin_attempt_retain_nsobject (retval, &exception_gchandle);");
+							setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
+							setup_return.AppendLine ("if (retained) {");
 							setup_return.AppendLine ("[retobj autorelease];");
+							setup_return.AppendLine ("}");
+						}
 						setup_return.AppendLine ("mt_dummy_use (retval);");
 						setup_return.AppendLine ("res = retobj;");
+						setup_return.AppendLine ("} else {");
+						setup_return.AppendLine ("res = NULL;");
+						setup_return.AppendLine ("}");
 					} else if (type.FullName == "System.String") {
 						// This should always be an NSString and never char*
 						setup_return.AppendLine ("res = xamarin_string_to_nsstring ((MonoString *) retval, {0});", retain ? "true" : "false");
@@ -3978,7 +4122,7 @@ namespace Registrar {
 			body_setup.WriteLine ("void *arg_ptrs [{0}];", num_arg);
 			if (!isStatic || isInstanceCategory)
 				body.WriteLine ("MonoObject *mthis = NULL;");
-			
+
 			if (isCtor) {
 				body.WriteLine ("bool has_nsobject = xamarin_has_nsobject (self, &exception_gchandle);");
 				body.WriteLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
@@ -4024,7 +4168,7 @@ namespace Registrar {
 			} else {
 				cleanup.AppendLine ("xamarin_mono_object_release (&managed_method);");
 			}
-			
+
 			body.WriteLine ("}");
 
 			if (!isStatic && !isInstanceCategory && !isCtor) {
@@ -4039,7 +4183,7 @@ namespace Registrar {
 			body.AppendLine (invoke);
 			body.AppendLine (copyback);
 			body.AppendLine (setup_return);
-			
+
 			if (trace)
 				body.AppendLine (nslog_end);
 
@@ -4089,7 +4233,7 @@ namespace Registrar {
 				if (merge_bodies)
 					bodies [b] = b;
 				b.Name = "native_to_managed_trampoline_" + bodies.Count.ToString ();
-				
+
 				if (merge_bodies) {
 					methods.Append ("static ");
 					methods.Append (rettype).Append (" ").Append (b.Name).Append (" (id self, SEL _cmd, MonoMethod **managed_method_ptr");
@@ -4143,7 +4287,7 @@ namespace Registrar {
 					}
 					if (method.IsVariadic)
 						sb.Append (", ...");
-				
+
 					sb.Write (")) objc_msgSendSuper) (&super, @selector (");
 					sb.Write (method.Selector);
 					sb.Write (")");
@@ -4190,7 +4334,7 @@ namespace Registrar {
 			}
 
 			// Might be an implementation of an optional protocol member.
-			var allProtocols = obj_method.DeclaringType.AllProtocols;
+			var allProtocols = obj_method.DeclaringType.AllProtocolsInHierarchy;
 			if (allProtocols != null) {
 				string selector = null;
 
@@ -4218,7 +4362,7 @@ namespace Registrar {
 			MethodDefinition last = null;
 			while (method != last) {
 				last = method;
-				var createMethod = GetBlockProxyAttributeMethod (method, parameter) ;
+				var createMethod = GetBlockProxyAttributeMethod (method, parameter);
 				if (createMethod != null)
 					return createMethod;
 
@@ -4237,7 +4381,7 @@ namespace Registrar {
 			}
 
 			// Might be an implementation of an optional protocol member.
-			var allProtocols = obj_method.DeclaringType.AllProtocols;
+			var allProtocols = obj_method.DeclaringType.AllProtocolsInHierarchy;
 			if (allProtocols != null) {
 				string selector = null;
 
@@ -4261,7 +4405,7 @@ namespace Registrar {
 								continue;
 							if (!TypeMatch (pMethod.ReturnType, method.ReturnType))
 								continue;
-							if (ParametersMatch (method.Parameters, pMethod.Parameters))
+							if (!ParametersMatch (method.Parameters, pMethod.Parameters))
 								continue;
 
 							MethodDefinition extensionMethod = pMethod.Method;
@@ -4310,8 +4454,21 @@ namespace Registrar {
 
 			if (!method.HasCustomAttributes)
 				return false;
-			
-			var t = method.DeclaringType;
+
+			var type = method.DeclaringType;
+			while (type is not null && (object) type != (object) type.BaseType) {
+				if (MapProtocolMember (type, method, out extensionMethod))
+					return true;
+
+				type = type.BaseType?.Resolve ();
+			}
+
+			return false;
+		}
+
+		public bool MapProtocolMember (TypeDefinition t, MethodDefinition method, out MethodDefinition extensionMethod)
+		{
+			extensionMethod = null;
 
 			if (!t.HasInterfaces)
 				return false;
@@ -4389,13 +4546,16 @@ namespace Registrar {
 			case "System.UInt32": return "xamarin_uint_to_nsnumber";
 			case "System.Int64": return "xamarin_long_to_nsnumber";
 			case "System.UInt64": return "xamarin_ulong_to_nsnumber";
+			case "System.IntPtr":
 			case "System.nint": return "xamarin_nint_to_nsnumber";
+			case "System.UIntPtr":
 			case "System.nuint": return "xamarin_nuint_to_nsnumber";
 			case "System.Single": return "xamarin_float_to_nsnumber";
 			case "System.Double": return "xamarin_double_to_nsnumber";
-			case "System.nfloat": return "xamarin_nfloat_to_nsnumber";
 			case "System.Boolean": return "xamarin_bool_to_nsnumber";
 			default:
+				if (typeName == NFloatTypeName)
+					return "xamarin_nfloat_to_nsnumber";
 				if (IsEnum (managedType))
 					return GetManagedToNSNumberFunc (GetEnumUnderlyingType (managedType), inputType, outputType, descriptiveMethodName);
 				throw ErrorHelper.CreateError (99, Errors.MX0099, $"can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}");
@@ -4414,13 +4574,18 @@ namespace Registrar {
 			case "System.UInt32": nativeType = "uint32_t"; return "xamarin_nsnumber_to_uint";
 			case "System.Int64": nativeType = "int64_t"; return "xamarin_nsnumber_to_long";
 			case "System.UInt64": nativeType = "uint64_t"; return "xamarin_nsnumber_to_ulong";
+			case "System.IntPtr":
 			case "System.nint": nativeType = "NSInteger"; return "xamarin_nsnumber_to_nint";
+			case "System.UIntPtr":
 			case "System.nuint": nativeType = "NSUInteger"; return "xamarin_nsnumber_to_nuint";
 			case "System.Single": nativeType = "float"; return "xamarin_nsnumber_to_float";
 			case "System.Double": nativeType = "double"; return "xamarin_nsnumber_to_double";
-			case "System.nfloat": nativeType = "CGFloat"; return "xamarin_nsnumber_to_nfloat";
 			case "System.Boolean": nativeType = "BOOL"; return "xamarin_nsnumber_to_bool";
 			default:
+				if (typeName == NFloatTypeName) {
+					nativeType = "CGFloat";
+					return "xamarin_nsnumber_to_nfloat";
+				}
 				if (IsEnum (managedType))
 					return GetNSNumberToManagedFunc (GetEnumUnderlyingType (managedType), inputType, outputType, descriptiveMethodName, out nativeType);
 				throw ErrorHelper.CreateError (99, Errors.MX0099, $"can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}");
@@ -4694,7 +4859,13 @@ namespace Registrar {
 			default:
 				throw ErrorHelper.CreateError (99, Errors.MX0099, $"unsupported tokentype ({member.MetadataToken.TokenType}) for {member.FullName}");
 			}
-			full_token_references.AppendFormat ("\t\t{{ /* #{3} = 0x{4:X} */ \"{0}\", 0x{1:X}, 0x{2:X} }},\n", GetAssemblyName (member.Module.Assembly), member.Module.MetadataToken.ToUInt32 (), member.MetadataToken.ToUInt32 (), full_token_reference_count, rv);
+			var assemblyIndex = registered_assemblies.FindIndex (v => v.Assembly == member.Module.Assembly);
+			var assemblyName = registered_assemblies [assemblyIndex].Name;
+			var moduleToken = member.Module.MetadataToken.ToUInt32 ();
+			var moduleName = member.Module.Name;
+			var memberToken = member.MetadataToken.ToUInt32 ();
+			var memberName = member.FullName;
+			full_token_references.Append ($"\t\t{{ /* #{full_token_reference_count} = 0x{rv:X} */ {assemblyIndex} /* {assemblyName} */, 0x{moduleToken:X} /* {moduleName} */, 0x{memberToken:X} /* {memberName} */ }},\n");
 			return rv;
 		}
 
@@ -4726,7 +4897,7 @@ namespace Registrar {
 
 			/* The assembly must be a registered one, and only within the first 128 assemblies */
 			var assembly_name = GetAssemblyName (member.Module.Assembly);
-			var index = registered_assemblies.IndexOf (assembly_name);
+			var index = registered_assemblies.FindIndex (v => v.Name == assembly_name);
 			if (index < 0 || index > 127)
 				return CreateFullTokenReference (member);
 
@@ -4743,7 +4914,7 @@ namespace Registrar {
 
 		public void GeneratePInvokeWrappersEnd ()
 		{
-			header = null;	
+			header = null;
 			declarations = null;
 			methods = null;
 			interfaces = null;
@@ -4792,16 +4963,18 @@ namespace Registrar {
 			for (int i = 0; i < method.Parameters.Count; i++) {
 				if (i > 0)
 					signature.Append (", ");
-				signature.Append (ToObjCParameterType (method.Parameters[i].ParameterType, descriptiveMethodName, exceptions, method));
+				signature.Append (ToObjCParameterType (method.Parameters [i].ParameterType, descriptiveMethodName, exceptions, method));
 			}
 			signature.Append (")");
 
 			string wrapperName;
 			if (!signatures.TryGetValue (signature.ToString (), out wrapperName)) {
-				var name = "xamarin_pinvoke_wrapper_" + method.Name;
+				var methodName = method.Name.Replace ('<', '_').Replace ('>', '_').Replace ('|', '_');
+				var baseName = "xamarin_pinvoke_wrapper_" + methodName;
+				var name = baseName;
 				var counter = 0;
 				while (names.Contains (name)) {
-					name = "xamarin_pinvoke_wrapper_" + method.Name + (++counter).ToString ();
+					name = baseName + (++counter).ToString ();
 				}
 				names.Add (name);
 				signatures [signature.ToString ()] = wrapperName = name;
@@ -4818,7 +4991,7 @@ namespace Registrar {
 				for (int i = first_parameter; i < method.Parameters.Count; i++) {
 					if (i > first_parameter)
 						sb.Write (", ");
-					sb.Write (ToObjCParameterType (method.Parameters[i].ParameterType, descriptiveMethodName, exceptions, method));
+					sb.Write (ToObjCParameterType (method.Parameters [i].ParameterType, descriptiveMethodName, exceptions, method));
 					sb.Write (" ");
 					sb.Write (GetParamName (method, i));
 				}
@@ -4830,7 +5003,7 @@ namespace Registrar {
 				for (int i = first_parameter; i < method.Parameters.Count; i++) {
 					if (i > first_parameter)
 						sb.Write (", ");
-					sb.Write (ToObjCParameterType (method.Parameters[i].ParameterType, descriptiveMethodName, exceptions, method));
+					sb.Write (ToObjCParameterType (method.Parameters [i].ParameterType, descriptiveMethodName, exceptions, method));
 					sb.Write (" ");
 					sb.Write (GetParamName (method, i));
 				}
@@ -4838,7 +5011,7 @@ namespace Registrar {
 				sb.WriteLine ("{");
 				if (is_stret) {
 					sb.StringBuilder.AppendLine ("#if defined (__arm64__)");
-					sb.WriteLine ("xamarin_process_managed_exception (xamarin_create_system_entry_point_not_found_exception (\"{0}\"));", pinfo.EntryPoint);
+					sb.WriteLine ("xamarin_process_managed_exception ((MonoObject *) xamarin_create_system_entry_point_not_found_exception (\"{0}\"));", pinfo.EntryPoint);
 					sb.StringBuilder.AppendLine ("#else");
 				}
 				sb.WriteLine ("@try {");
@@ -4942,11 +5115,7 @@ namespace Registrar {
 			}
 
 			header.WriteLine ("#include <stdarg.h>");
-			if (SupportsModernObjectiveC) {
-				methods.WriteLine ("#include <xamarin/xamarin.h>");
-			} else {
-				header.WriteLine ("#include <xamarin/xamarin.h>");
-			}
+			methods.WriteLine ("#include <xamarin/xamarin.h>");
 			header.WriteLine ("#include <objc/objc.h>");
 			header.WriteLine ("#include <objc/runtime.h>");
 			header.WriteLine ("#include <objc/message.h>");
@@ -4956,7 +5125,7 @@ namespace Registrar {
 
 			if (App.Embeddinator)
 				methods.WriteLine ("void xamarin_embeddinator_initialize ();");
-			
+
 			Specialize (sb);
 
 			methods.WriteLine ();
@@ -5011,18 +5180,15 @@ namespace Registrar {
 		public Version FormalSinceVersion { get; set; }
 	}
 
-	class BlockProxyAttribute : Attribute
-	{
+	class BlockProxyAttribute : Attribute {
 		public TypeDefinition Type { get; set; }
 	}
 
-	class DelegateProxyAttribute : Attribute
-	{
+	class DelegateProxyAttribute : Attribute {
 		public TypeDefinition DelegateType { get; set; }
 	}
 
-	class BindAsAttribute : Attribute
-	{
+	class BindAsAttribute : Attribute {
 		public BindAsAttribute (TypeReference type)
 		{
 			this.Type = type;
@@ -5033,7 +5199,7 @@ namespace Registrar {
 	}
 
 	public sealed class ProtocolMemberAttribute : Attribute {
-		public ProtocolMemberAttribute () {}
+		public ProtocolMemberAttribute () { }
 
 		public bool IsRequired { get; set; }
 		public bool IsProperty { get; set; }
@@ -5042,8 +5208,8 @@ namespace Registrar {
 		public string Selector { get; set; }
 		public TypeReference ReturnType { get; set; }
 		public TypeReference ReturnTypeDelegateProxy { get; set; }
-		public TypeReference[] ParameterType { get; set; }
-		public bool[] ParameterByRef { get; set; }
+		public TypeReference [] ParameterType { get; set; }
+		public bool [] ParameterByRef { get; set; }
 		public TypeReference [] ParameterBlockProxy { get; set; }
 		public bool IsVariadic { get; set; }
 
@@ -5066,12 +5232,14 @@ namespace Registrar {
 	}
 
 	class RegisterAttribute : Attribute {
-		public RegisterAttribute () {}
-		public RegisterAttribute (string name) {
+		public RegisterAttribute () { }
+		public RegisterAttribute (string name)
+		{
 			this.Name = name;
 		}
 
-		public RegisterAttribute (string name, bool isWrapper) {
+		public RegisterAttribute (string name, bool isWrapper)
+		{
 			this.Name = name;
 			this.IsWrapper = isWrapper;
 		}
@@ -5081,14 +5249,12 @@ namespace Registrar {
 		public bool SkipRegistration { get; set; }
 	}
 
-	class AdoptsAttribute : Attribute
-	{
+	class AdoptsAttribute : Attribute {
 		public string ProtocolType { get; set; }
 	}
 
 	[Flags]
-	internal enum MTTypeFlags : uint
-	{
+	internal enum MTTypeFlags : uint {
 		None = 0,
 		CustomType = 1,
 		UserType = 2,

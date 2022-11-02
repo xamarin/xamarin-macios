@@ -19,7 +19,7 @@ namespace StoreKit {
 	// untyped enum and not used in API - so it _could_ be an `int`
 	// OTOH it's meant to be used with NSError.Code which is an NSInteger/nint
 	// StoreKit.framework/Headers/SKError.h
-	[Native]
+	[Native ("SKErrorCode")]
 	[ErrorDomain ("SKErrorDomain")]
 	public enum SKError : long {
 		Unknown,
@@ -33,7 +33,7 @@ namespace StoreKit {
 		CloudServiceNetworkConnectionFailed,
 		// iOS 10.3
 		CloudServiceRevoked,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'SKError.CloudServiceRevoked' instead.")]
 		Revoked = CloudServiceRevoked,
 #endif
@@ -63,7 +63,6 @@ namespace StoreKit {
 		Waiting, Active, Paused, Finished, Failed, Cancelled
 	}
 
-#if !MONOMAC || !XAMCORE_4_0
 	[Watch (7,0)]
 	[iOS (9,3)]
 	[Native]
@@ -84,9 +83,6 @@ namespace StoreKit {
 		MusicCatalogSubscriptionEligible = 1 << 1,
 		AddToCloudMusicLibrary = 1 << 8
 	}
-#endif
-
-#if !XAMCORE_4_0
 
 	[iOS (11,0)][TV (11,0)][Mac (11,0)][NoWatch]
 	[Native]
@@ -95,7 +91,7 @@ namespace StoreKit {
 		Show,
 		Hide,
 	}
-#endif
+
 	[Watch (6, 2), iOS (11,2), TV (11,2), Mac (10,13,2)]
 	[Native]
 	public enum SKProductPeriodUnit : ulong {
@@ -114,7 +110,8 @@ namespace StoreKit {
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
-	[Native, Advice ("This API is not available when using UIKit on macOS.")]
+	[MacCatalyst (14,0)]
+	[Native]
 	public enum SKOverlayPosition : long {
 		SKOverlayPositionBottom = 0,
 		Raised = 1,

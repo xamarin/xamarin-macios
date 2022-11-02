@@ -13,17 +13,33 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
+#nullable enable
+
 namespace CoreMedia {
 
 	// CMSync.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (6,0)]
+#endif
 	public class CMClock : CMClockOrTimebase
 	{
-		public CMClock (IntPtr handle) : base (handle)
+#if !NET
+		public CMClock (NativeHandle handle) : base (handle)
 		{
 		}
+#endif
 
-		internal CMClock (IntPtr handle, bool owns) 
+		[Preserve (Conditional = true)]
+		internal CMClock (NativeHandle handle, bool owns) 
 			: base (handle, owns)
 		{
 		}
@@ -49,15 +65,22 @@ namespace CoreMedia {
 
 #if !MONOMAC
 		// CMAudioClock.h
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[Mac (10,10)]
+#endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMClockError CMAudioClockCreate (/* CFAllocatorRef */ IntPtr allocator, /* CMClockRef* */ out IntPtr clockOut);
 
-		public static CMClock CreateAudioClock (out CMClockError clockError)
+		public static CMClock? CreateAudioClock (out CMClockError clockError)
 		{
 			IntPtr ptr;
 			clockError = CMAudioClockCreate (IntPtr.Zero, out ptr);
-			return clockError == CMClockError.None ? new CMClock (ptr) : null;
+			return clockError == CMClockError.None ? new CMClock (ptr, true) : null;
 		}
 #endif
 
@@ -75,8 +98,8 @@ namespace CoreMedia {
 
 		public bool MightDrift (CMClock otherClock)
 		{
-			if (otherClock == null)
-				throw new ArgumentNullException ("otherClock");
+			if (otherClock is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (otherClock));
 
 			return CMClockMightDrift (Handle, otherClock.Handle);
 		}
@@ -97,50 +120,195 @@ namespace CoreMedia {
 #endif // !COREBUILD
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (6,0)]
+#endif
 	public class CMTimebase : CMClockOrTimebase
 	{
-		public CMTimebase (IntPtr handle)
+#if !NET
+		public CMTimebase (NativeHandle handle)
 			: base (handle)
 		{
 		}
+#endif
 
-		private CMTimebase (IntPtr handle, bool owns) 
+		[Preserve (Conditional = true)]
+		private CMTimebase (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
 #if !COREBUILD
 
-		[DllImport(Constants.CoreMediaLibrary)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("tvos9.0")]
+		[UnsupportedOSPlatform ("macos10.10")]
+		[UnsupportedOSPlatform ("ios8.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios8.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Deprecated (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
+		[Deprecated (PlatformName.WatchOS, 6, 0)]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMTimebaseError CMTimebaseCreateWithMasterClock (/* CFAllocatorRef */ IntPtr allocator, /* CMClockRef */ IntPtr masterClock, /* CMTimebaseRef* */ out IntPtr timebaseOut);
 
-		public CMTimebase (CMClock masterClock)
+		static IntPtr Create (CMClock masterClock)
 		{
-			if (masterClock == null)
-				throw new ArgumentNullException ("masterClock");
+			if (masterClock is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (masterClock));
 
-			var error = CMTimebaseCreateWithMasterClock (IntPtr.Zero, masterClock.Handle, out handle);
+			var error = CMTimebaseCreateWithMasterClock (IntPtr.Zero, masterClock.Handle, out var handle);
 			if (error != CMTimebaseError.None)
-				throw new ArgumentException (error.ToString ());
-
-			CFObject.CFRetain (Handle);
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (error.ToString ());
+			return handle;
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		public CMTimebase (CMClock masterClock)
+			: base (Create (masterClock), true)
+		{
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("tvos9.0")]
+		[UnsupportedOSPlatform ("macos10.10")]
+		[UnsupportedOSPlatform ("ios8.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios8.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Deprecated (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
+		[Deprecated (PlatformName.WatchOS, 6, 0)]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMTimebaseError CMTimebaseCreateWithMasterTimebase (/* CFAllocatorRef */ IntPtr allocator, /* CMTimebaseRef */ IntPtr masterTimebase, /* CMTimebaseRef* */ out IntPtr timebaseOut);
 
-		public CMTimebase (CMTimebase masterTimebase)
+		static IntPtr Create (CMTimebase masterTimebase)
 		{
-			if (masterTimebase == null)
-				throw new ArgumentNullException ("masterTimebase");
+			if (masterTimebase is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (masterTimebase));
 
-			var error = CMTimebaseCreateWithMasterTimebase (IntPtr.Zero, masterTimebase.Handle, out handle);
+			var error = CMTimebaseCreateWithMasterTimebase (IntPtr.Zero, masterTimebase.Handle, out var handle);
 			if (error != CMTimebaseError.None)
-				throw new ArgumentException (error.ToString ());
-
-			CFObject.CFRetain (Handle);
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (error.ToString ());
+			return handle;
 		}
 
+		public CMTimebase (CMTimebase masterTimebase)
+			: base (Create (masterTimebase), true)
+		{
+		}
+		
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern CMTimebaseError CMTimebaseCreateWithSourceClock (/* [NullAllowed] CFAllocatorRef */ IntPtr allocator, /* CMClock */ IntPtr sourceClock, /* CMTimebase */ out IntPtr  timebaseOut);
+
+		static IntPtr Create (CFAllocator? allocator, CMClock sourceClock)
+		{
+			if (sourceClock is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sourceClock));
+
+			var error = CMTimebaseCreateWithSourceClock (allocator.GetHandle (), sourceClock.Handle, out var handle);
+			if (error != CMTimebaseError.None)
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (error.ToString ());
+			return handle;
+		}
+
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		public CMTimebase (CFAllocator? allocator, CMClock sourceClock)
+			: base (Create (allocator, sourceClock), true)
+		{
+		}
+
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern CMTimebaseError CMTimebaseCreateWithSourceTimebase (/* [NullAllowed] CFAllocatorRef */ IntPtr allocator, /* CMTimebase */ IntPtr sourceTimebase, /* CMTimebase */ out IntPtr timebaseOut);
+
+		static IntPtr Create (CFAllocator? allocator, CMTimebase sourceTimebase)
+		{
+			if (sourceTimebase is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sourceTimebase));
+
+			var error = CMTimebaseCreateWithSourceTimebase (allocator.GetHandle (), sourceTimebase.Handle, out var handle);
+			if (error != CMTimebaseError.None)
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (error.ToString ());
+			return handle;
+		}
+
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		public CMTimebase (CFAllocator? allocator, CMTimebase sourceTimebase)
+			: base (Create (allocator, sourceTimebase), true)
+		{
+		}
 
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* Float64 */ double CMTimebaseGetEffectiveRate (/* CMTimebaseRef */ IntPtr timebase);
@@ -164,7 +332,7 @@ namespace CoreMedia {
 			set {
 				var error = CMTimebaseSetRate (Handle, value);
 				if (error != CMTimebaseError.None)
-					throw new ArgumentException (error.ToString ());				
+					ObjCRuntime.ThrowHelper.ThrowArgumentException (error.ToString ());
 			}
 		} 
 
@@ -181,19 +349,47 @@ namespace CoreMedia {
 			set {
 				var error = CMTimebaseSetTime (Handle, value);
 				if (error != CMTimebaseError.None)
-					throw new ArgumentException (error.ToString ());
+					ObjCRuntime.ThrowHelper.ThrowArgumentException (error.ToString ());
 			}
 		}
 
 #if !WATCH
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("ios9.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 9,0)]
 		[Deprecated (PlatformName.MacOSX, 10,11)]
-		[DllImport(Constants.CoreMediaLibrary)]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CMTimebaseRef */ IntPtr CMTimebaseGetMasterTimebase (/* CMTimebaseRef */ IntPtr timebase);
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("ios9.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.11 use 'CopyMasterTimebase' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios9.0 use 'CopyMasterTimebase' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'CopyMasterTimebase' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'CopyMasterTimebase' instead.")]
-		public CMTimebase GetMasterTimebase ()
+#endif
+		public CMTimebase? GetMasterTimebase ()
 		{
 			var ptr = CMTimebaseGetMasterTimebase (Handle);
 			if (ptr == IntPtr.Zero)
@@ -202,14 +398,42 @@ namespace CoreMedia {
 			return new CMTimebase (ptr, false);			
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("ios9.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 9,0)]
 		[Deprecated (PlatformName.MacOSX, 10,11)]
-		[DllImport(Constants.CoreMediaLibrary)]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CMClockRef */ IntPtr CMTimebaseGetMasterClock (/* CMTimebaseRef */ IntPtr timebase);
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("ios9.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.11 use 'CopyMasterClock' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios9.0 use 'CopyMasterClock' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'CopyMasterClock' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'CopyMasterClock' instead.")]
-		public CMClock GetMasterClock ()
+#endif
+		public CMClock? GetMasterClock ()
 		{
 			var ptr = CMTimebaseGetMasterClock (Handle);
 			if (ptr == IntPtr.Zero)
@@ -218,14 +442,42 @@ namespace CoreMedia {
 			return new CMClock (ptr, false);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("ios9.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 9,0)]
 		[Deprecated (PlatformName.MacOSX, 10,11)]
-		[DllImport(Constants.CoreMediaLibrary)]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CMClockOrTimebaseRef */ IntPtr CMTimebaseGetMaster (/* CMTimebaseRef */ IntPtr timebase);
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("ios9.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.11 use 'CopyMaster' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios9.0 use 'CopyMaster' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'CopyMaster' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'CopyMaster' instead.")]
-		public CMClockOrTimebase GetMaster ()
+#endif
+		public CMClockOrTimebase? GetMaster ()
 		{
 			var ptr = CMTimebaseGetMaster (Handle);
 			if (ptr == IntPtr.Zero)
@@ -234,14 +486,42 @@ namespace CoreMedia {
 			return new CMClockOrTimebase (ptr, false);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("ios9.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 9,0)]
 		[Deprecated (PlatformName.MacOSX, 10,11)]
-		[DllImport(Constants.CoreMediaLibrary)]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CMClockRef */ IntPtr CMTimebaseGetUltimateMasterClock (/* CMTimebaseRef */ IntPtr timebase);
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("ios9.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.11 use 'CopyUltimateMasterClock' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios9.0 use 'CopyUltimateMasterClock' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'CopyUltimateMasterClock' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'CopyUltimateMasterClock' instead.")]
-		public CMClock GetUltimateMasterClock ()
+#endif
+		public CMClock? GetUltimateMasterClock ()
 		{
 			var ptr  = CMTimebaseGetUltimateMasterClock (Handle);
 			if (ptr == IntPtr.Zero)
@@ -288,7 +568,7 @@ namespace CoreMedia {
 
 		public CMTimebaseError NotificationBarrier ()
 		{
-			return CMTimebaseNotificationBarrier (handle);
+			return CMTimebaseNotificationBarrier (Handle);
 		}
 
 		public const double VeryLongTimeInterval = 256.0 * 365.0 * 24.0 * 60.0 * 60.0;
@@ -299,10 +579,10 @@ namespace CoreMedia {
 
 		public CMTimebaseError AddTimer (NSTimer timer, NSRunLoop runloop)
 		{
-			if (timer == null)
-				throw new ArgumentNullException ("timer");
-			if (runloop == null)
-				throw new ArgumentNullException ("runloop");
+			if (timer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (timer));
+			if (runloop is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (runloop));
 
 			// NSRunloop and CFRunloop[Ref] are NOT toll free bridged types
 			using (var cf = runloop.GetCFRunLoop ())
@@ -314,8 +594,8 @@ namespace CoreMedia {
 
 		public CMTimebaseError RemoveTimer (NSTimer timer)
 		{
-			if (timer == null)
-				throw new ArgumentNullException ("timer");
+			if (timer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (timer));
 
 			return CMTimebaseRemoveTimer (Handle, timer.Handle);
 		}
@@ -325,8 +605,8 @@ namespace CoreMedia {
 
 		public CMTimebaseError SetTimerNextFireTime (NSTimer timer, CMTime fireTime)
 		{
-			if (timer == null)
-				throw new ArgumentNullException ("timer");
+			if (timer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (timer));
 
 			return CMTimebaseSetTimerNextFireTime (Handle, timer.Handle, fireTime, 0);
 		}
@@ -336,60 +616,138 @@ namespace CoreMedia {
 
 		public CMTimebaseError SetTimerToFireImmediately (NSTimer timer)
 		{
-			if (timer == null)
-				throw new ArgumentNullException ("timer");
+			if (timer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (timer));
 
 			return CMTimebaseSetTimerToFireImmediately (Handle, timer.Handle);
 		}
 
-		[TV (13,0), Mac (10,15), iOS (13,0)]
-		[DllImport(Constants.CoreMediaLibrary)]
+#if NET
+		[SupportedOSPlatform ("tvos9.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos9.0")]
+		[UnsupportedOSPlatform ("macos10.10")]
+		[UnsupportedOSPlatform ("ios8.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios8.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[TV (9,0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
+		[Deprecated (PlatformName.WatchOS, 6, 0)]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMTimebaseError CMTimebaseSetMasterTimebase (/* CMTimebaseRef* */ IntPtr timebase, /* CMTimebaseRef* */ IntPtr newMasterTimebase);
 
-		[TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos9.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos9.0")]
+		[UnsupportedOSPlatform ("macos10.10")]
+		[UnsupportedOSPlatform ("ios8.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios8.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[TV (9,0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
+		[Deprecated (PlatformName.WatchOS, 6, 0)]
+#endif
 		public CMTimebaseError SetMasterTimebase (CMTimebase newMasterTimebase)
 		{
-			if (newMasterTimebase == null)
-				throw new ArgumentNullException (nameof (newMasterTimebase));
+			if (newMasterTimebase is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (newMasterTimebase));
 
 			return CMTimebaseSetMasterTimebase (Handle, newMasterTimebase.Handle);
 		}
 
-		[TV (13,0), Mac (10,15), iOS (13,0)]
-		[DllImport(Constants.CoreMediaLibrary)]
+#if NET
+		[SupportedOSPlatform ("tvos9.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos9.0")]
+		[UnsupportedOSPlatform ("macos10.10")]
+		[UnsupportedOSPlatform ("ios8.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios8.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[TV (9,0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
+		[Deprecated (PlatformName.WatchOS, 6, 0)]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMTimebaseError CMTimebaseSetMasterClock (/* CMTimebaseRef* */ IntPtr timebase, /* CMClockRef* */ IntPtr newMasterClock);
 
-		[TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos9.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos9.0")]
+		[UnsupportedOSPlatform ("macos10.10")]
+		[UnsupportedOSPlatform ("ios8.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios8.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[TV (9,0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
+		[Deprecated (PlatformName.WatchOS, 6, 0)]
+#endif
 		public CMTimebaseError SetMasterClock (CMClock newMasterClock)
 		{
-			if (newMasterClock == null)
-				throw new ArgumentNullException (nameof (newMasterClock));
+			if (newMasterClock is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (newMasterClock));
 
 			return CMTimebaseSetMasterClock (Handle, newMasterClock.Handle);
 		}
 #endif
 
 #if !COREBUILD
-#if MONOMAC // CheckVersion
-		const int GetMethodDeprecatedMajor = 10;
-		const int GetMethodDeprecatedMinor = 11;
-#elif IOS
-		const int GetMethodDeprecatedMajor = 9;
-		const int GetMethodDeprecatedMinor = 0;
-#endif
-
 		bool IsDeprecated ()
 		{
 #if __MACCATALYST__
 			return true;
-#elif IOS || MONOMAC
-			return PlatformHelper.CheckSystemVersion (GetMethodDeprecatedMajor, GetMethodDeprecatedMinor);
+#elif IOS
+			return SystemVersion.CheckiOS (9, 0);
+#elif MONOMAC
+			return SystemVersion.CheckmacOS (10, 11);
 #elif TVOS || WATCH
 			return true;
 #endif
 		}
 
-		public CMTimebase CopyMasterTimebase ()
+		public CMTimebase? CopyMasterTimebase ()
 		{
 			IntPtr ptr = IntPtr.Zero;
 			bool deprecated = IsDeprecated ();
@@ -406,7 +764,7 @@ namespace CoreMedia {
 			return new CMTimebase (ptr, deprecated);
 		}
 
-		public CMClock CopyMasterClock ()
+		public CMClock? CopyMasterClock ()
 		{
 			IntPtr ptr = IntPtr.Zero;
 			bool deprecated = IsDeprecated ();
@@ -423,7 +781,7 @@ namespace CoreMedia {
 			return new CMClock (ptr, deprecated);
 		}
 
-		public CMClockOrTimebase CopyMaster ()
+		public CMClockOrTimebase? CopyMaster ()
 		{
 			IntPtr ptr = IntPtr.Zero;
 			bool deprecated = IsDeprecated ();
@@ -440,7 +798,7 @@ namespace CoreMedia {
 			return new CMClockOrTimebase (ptr, deprecated);
 		}
 
-		public CMClock CopyUltimateMasterClock ()
+		public CMClock? CopyUltimateMasterClock ()
 		{
 			IntPtr ptr = IntPtr.Zero;
 			bool deprecated = IsDeprecated ();
@@ -457,20 +815,111 @@ namespace CoreMedia {
 			return new CMClock (ptr, deprecated);
 		}
 
-		[iOS (9,0)][Mac (10,11)]
-		[DllImport(Constants.CoreMediaLibrary)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("tvos9.0")]
+		[UnsupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("ios9.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos9.0 use 'CMTimebaseGetMasterTimebase' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.11 use 'CMTimebaseGetMasterTimebase' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios9.0 use 'CMTimebaseGetMasterTimebase' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
+		[NoMacCatalyst]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'CMTimebaseGetMasterTimebase' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'CMTimebaseGetMasterTimebase' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'CMTimebaseGetMasterTimebase' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'CMTimebaseGetMasterTimebase' instead.")]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
 		static extern unsafe /* CMTimebaseRef */ IntPtr  CMTimebaseCopyMasterTimebase (/* CMTimebaseRef */ IntPtr timebase);
 
-		[iOS (9,0)][Mac (10,11)]
-		[DllImport(Constants.CoreMediaLibrary)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("tvos9.0")]
+		[UnsupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("ios9.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos9.0 use 'CMTimebaseGetMasterClock' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.11 use 'CMTimebaseGetMasterClock' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios9.0 use 'CMTimebaseGetMasterClock' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'CMTimebaseGetMasterClock' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'CMTimebaseGetMasterClock' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'CMTimebaseGetMasterClock' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'CMTimebaseGetMasterClock' instead.")]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
 		static extern unsafe /* CMClockRef */ IntPtr  CMTimebaseCopyMasterClock (/* CMTimebaseRef */ IntPtr timebase);
 
-		[iOS (9,0)][Mac (10,11)]
-		[DllImport(Constants.CoreMediaLibrary)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("tvos9.0")]
+		[UnsupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("ios9.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos9.0 use 'CMTimebaseGetMaster' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.11 use 'CMTimebaseGetMaster' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios9.0 use 'CMTimebaseGetMaster' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
+		[NoMacCatalyst]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'CMTimebaseGetMaster' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'CMTimebaseGetMaster' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'CMTimebaseGetMaster' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'CMTimebaseGetMaster' instead.")]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
 		static extern unsafe IntPtr /* void* */ CMTimebaseCopyMaster (/* CMTimebaseRef */ IntPtr timebase);
 
-		[iOS (9,0)][Mac (10,11)]
-		[DllImport(Constants.CoreMediaLibrary)]
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("tvos9.0")]
+		[UnsupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("ios9.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos9.0 use 'CMTimebaseGetUltimateMasterClock' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.11 use 'CMTimebaseGetUltimateMasterClock' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios9.0 use 'CMTimebaseGetUltimateMasterClock' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[iOS (9,0)]
+		[Mac (10,11)]
+		[NoMacCatalyst]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'CMTimebaseGetUltimateMasterClock' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'CMTimebaseGetUltimateMasterClock' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'CMTimebaseGetUltimateMasterClock' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'CMTimebaseGetUltimateMasterClock' instead.")]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
 		static extern unsafe /* CMClockRef */ IntPtr CMTimebaseCopyUltimateMasterClock (/* CMTimebaseRef */ IntPtr timebase);
 #endif
 		//
@@ -483,49 +932,27 @@ namespace CoreMedia {
 #endif // !COREBUILD
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (6,0)]
-	public class CMClockOrTimebase : IDisposable, INativeObject
+#endif
+	public class CMClockOrTimebase : NativeObject
 	{
-		internal IntPtr handle;
-
-		internal CMClockOrTimebase ()
+#if !NET
+		public CMClockOrTimebase (NativeHandle handle)
+			: base (handle, false)
 		{
 		}
+#endif
 
-		public CMClockOrTimebase (IntPtr handle) : this (handle, false)
+		[Preserve (Conditional = true)]
+		internal CMClockOrTimebase (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-		}
-
-		internal CMClockOrTimebase (IntPtr handle, bool owns)
-		{
-			this.handle = handle;
-			if (!owns)
-				CFObject.CFRetain (handle);
-		}
-
-		~CMClockOrTimebase ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (Handle != IntPtr.Zero){
-				CFObject.CFRelease (Handle);
-				handle = IntPtr.Zero;
-			}
-		}
-
-		public IntPtr Handle { 
-			get {
-				return handle;
-			}
 		}
 
 #if !COREBUILD
@@ -534,7 +961,7 @@ namespace CoreMedia {
 
 		public CMTime Time { 
 			get {
-				return CMSyncGetTime (handle);
+				return CMSyncGetTime (Handle);
 			}
 		}
 
@@ -543,11 +970,11 @@ namespace CoreMedia {
 
 		public static double GetRelativeRate (CMClockOrTimebase clockOrTimebaseA, CMClockOrTimebase clockOrTimebaseB)
 		{
-			if (clockOrTimebaseA == null)
-				throw new ArgumentNullException ("clockOrTimebaseA");
+			if (clockOrTimebaseA is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (clockOrTimebaseA));
 
-			if (clockOrTimebaseB == null)
-				throw new ArgumentNullException ("clockOrTimebaseB");
+			if (clockOrTimebaseB is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (clockOrTimebaseB));
 
 			return CMSyncGetRelativeRate (clockOrTimebaseA.Handle, clockOrTimebaseB.Handle);
 		}
@@ -562,13 +989,13 @@ namespace CoreMedia {
 
 		public static CMSyncError GetRelativeRateAndAnchorTime (CMClockOrTimebase clockOrTimebaseA, CMClockOrTimebase clockOrTimebaseB,  out double relativeRate, out CMTime timeA, out CMTime timeB)
 		{
-			if (clockOrTimebaseA == null)
-				throw new ArgumentNullException ("clockOrTimebaseA");
+			if (clockOrTimebaseA is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (clockOrTimebaseA));
 
-			if (clockOrTimebaseB == null)
-				throw new ArgumentNullException ("clockOrTimebaseB");
+			if (clockOrTimebaseB is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (clockOrTimebaseB));
 
-			return CMSyncGetRelativeRateAndAnchorTime (clockOrTimebaseA.Handle, clockOrTimebaseB.handle, out relativeRate, out timeA, out timeB);
+			return CMSyncGetRelativeRateAndAnchorTime (clockOrTimebaseA.Handle, clockOrTimebaseB.Handle, out relativeRate, out timeA, out timeB);
 		}
 
 		[DllImport(Constants.CoreMediaLibrary)]
@@ -576,10 +1003,10 @@ namespace CoreMedia {
 
 		public static CMTime ConvertTime (CMTime time, CMClockOrTimebase from, CMClockOrTimebase to)
 		{
-			if (from == null)
-				throw new ArgumentNullException ("from");
-			if (to == null)
-				throw new ArgumentNullException ("to");
+			if (from is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (from));
+			if (to is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (to));
 
 			return CMSyncConvertTime (time, from.Handle, to.Handle);
 		}
@@ -590,14 +1017,153 @@ namespace CoreMedia {
 
 		public static bool MightDrift (CMClockOrTimebase clockOrTimebaseA, CMClockOrTimebase clockOrTimebaseB)
 		{
-			if (clockOrTimebaseA == null)
-				throw new ArgumentNullException ("clockOrTimebaseA");
+			if (clockOrTimebaseA is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (clockOrTimebaseA));
 
-			if (clockOrTimebaseB == null)
-				throw new ArgumentNullException ("clockOrTimebaseB");
+			if (clockOrTimebaseB is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (clockOrTimebaseB));
 
 			return CMSyncMightDrift (clockOrTimebaseA.Handle, clockOrTimebaseB.Handle);
 		}
+
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern /* CMTimebase */ IntPtr CMTimebaseCopySourceTimebase (/* CMTimebase */ IntPtr timebase);
+
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern int CMTimebaseSetSourceTimebase (/* CMTimebase */ IntPtr timebase, /* CMTimebase */ IntPtr newSourceTimebase);
+
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		public CMTimebase? SourceTimebase  {
+			get {
+				var source = CMTimebaseCopySourceTimebase  (Handle);
+				return Runtime.GetINativeObject<CMTimebase> (source, true); 
+			}
+			set {
+				CMTimebaseSetSourceTimebase (Handle, value.GetHandle ());
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern /* CMClock */ IntPtr CMTimebaseCopySourceClock (/* CMTimebase */ IntPtr timebase);
+
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern int CMTimebaseSetSourceClock (/* CMTimebase */ IntPtr timebase, /* CMClock */ IntPtr newSourceClock);
+
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		public CMClock? SourceClock {
+			get {
+				var clock = CMTimebaseCopySourceClock (Handle);
+				return Runtime.GetINativeObject<CMClock> (clock, true);
+			}
+			set {
+				CMTimebaseSetSourceClock (Handle, value.GetHandle());
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern /* CMClock */ IntPtr CMTimebaseCopyUltimateSourceClock (/* CMTimebase */ IntPtr timebase);
+
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		public CMClock? UltimateSourceClock  {
+			get {
+				var clock = CMTimebaseCopyUltimateSourceClock (Handle);
+				return Runtime.GetINativeObject<CMClock> (clock, true);
+			}
+		}
+
 #endif // !COREBUILD
 	}
 }

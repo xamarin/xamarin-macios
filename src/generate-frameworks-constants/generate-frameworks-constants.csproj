@@ -8,6 +8,8 @@
     <RootNamespace>generateframeworksconstants</RootNamespace>
     <AssemblyName>generate-frameworks-constants</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <OutputPath>bin\$(Configuration)</OutputPath>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|anycpu' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,6 +27,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ExternalConsole>true</ExternalConsole>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'DotNet' ">
+    <DefineConstants>$(DefineConstants);NET</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

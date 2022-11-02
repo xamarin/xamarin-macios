@@ -18,11 +18,26 @@ using CoreFoundation;
 
 using OS_nw_ws_request=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#else
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+	[Watch (6,0)]
+#endif
 	public class NWWebSocketRequest : NativeObject {
-		internal NWWebSocketRequest (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWWebSocketRequest (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -35,7 +50,7 @@ namespace Network {
 		static void TrampolineEnumerateHeaderHandler (IntPtr block, string header, string value)
 		{
 			var del = BlockLiteral.GetTarget<Action<string, string>> (block);
-			if (del != null) {
+			if (del is not null) {
 				del (header, value);
 			}
 		}
@@ -43,8 +58,8 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateAdditionalHeaders (Action<string, string> handler)
 		{
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_EnumerateHeaderHandler, handler);
@@ -66,7 +81,7 @@ namespace Network {
 		static void TrampolineEnumerateSubprotocolHandler (IntPtr block, string subprotocol)
 		{
 			var del = BlockLiteral.GetTarget<Action<string>> (block);
-			if (del != null) {
+			if (del is not null) {
 				del (subprotocol);
 			}
 		}
@@ -74,8 +89,8 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateSubprotocols (Action<string> handler)
 		{
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_EnumerateSubprotocolHandler, handler);

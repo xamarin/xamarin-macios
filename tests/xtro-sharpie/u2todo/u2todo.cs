@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.IO;
 using Extrospection;
 
 class Program {
-	static void Main (string[] args)
+	static void Main (string [] args)
 	{
 		var dir = args.Length == 0 ? "." : args [0];
 		foreach (var file in Directory.GetFiles (dir, "*.unclassified")) {
@@ -17,7 +17,7 @@ class Program {
 			var todo = Path.ChangeExtension (file, ".todo");
 			if (File.Exists (todo)) {
 				Console.WriteLine ($"Appending {file} to {todo}");
-				var content = "## appended from unclassified file" + Environment.NewLine + File.ReadAllText (file);
+				var content = File.ReadAllText (file);
 				File.AppendAllText (todo, content);
 				File.Delete (file);
 			} else {

@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -23,5 +25,5 @@ namespace CoreFoundation {
 			PPC      = 0x00000012,
 			PPC64    = 0x01000000 | PPC,
 		}
-    }
+	}
 }

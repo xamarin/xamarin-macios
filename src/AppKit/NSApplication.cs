@@ -21,7 +21,11 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#if !__MACCATALYST__
+
 using System;
+using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -33,7 +37,10 @@ namespace AppKit {
 	public partial class NSApplication : NSResponder {
 		public static bool CheckForIllegalCrossThreadCalls = true;
 		public static bool CheckForEventAndDelegateMismatches = true;
+
+#if !NET
 		public static bool IgnoreMissingAssembliesDuringRegistration = false;
+#endif
 
 		private static Thread mainThread;
 
@@ -59,7 +66,7 @@ namespace AppKit {
 			// and call NSApplicationMain externally prior to this Init, so only
 			// initialize the context if it hasn't been set externally. Alternatively,
 			// AppKitSynchronizationContext could be made public.
-			if(SynchronizationContext.Current == null)
+			if (SynchronizationContext.Current == null)
 				SynchronizationContext.SetSynchronizationContext (new AppKitSynchronizationContext ());
 
 			// Establish the main thread at the time of Init to support hosts
@@ -99,7 +106,7 @@ namespace AppKit {
 		public static void Main (string [] args)
 		{
 			// Switch to an AppKitSynchronizationContext if Main is invoked
-			if(SynchronizationContext.Current == null || !typeof(AppKitSynchronizationContext).IsAssignableFrom(SynchronizationContext.Current.GetType()))
+			if (SynchronizationContext.Current == null || !typeof (AppKitSynchronizationContext).IsAssignableFrom (SynchronizationContext.Current.GetType ()))
 				SynchronizationContext.SetSynchronizationContext (new AppKitSynchronizationContext ());
 
 			// Init where this is set the first time is generally paired
@@ -109,41 +116,44 @@ namespace AppKit {
 			NSApplicationMain (args.Length, args);
 		}
 
-		public static void EnsureUIThread()
+		public static void EnsureUIThread ()
 		{
 			if (NSApplication.CheckForIllegalCrossThreadCalls && NSApplication.mainThread != Thread.CurrentThread)
-				throw new AppKitThreadAccessException();
+				throw new AppKitThreadAccessException ();
 		}
 
 		public static void EnsureEventAndDelegateAreNotMismatched (object del, Type expectedType)
 		{
 			if (NSApplication.CheckForEventAndDelegateMismatches && !(expectedType.IsAssignableFrom (del.GetType ())))
-				throw new InvalidOperationException (string.Format("Event registration is overwriting existing delegate. Either just use events or your own delegate: {0} {1}", del.GetType (), expectedType));
+				throw new InvalidOperationException (string.Format ("Event registration is overwriting existing delegate. Either just use events or your own delegate: {0} {1}", del.GetType (), expectedType));
 		}
 
 		public static void EnsureDelegateAssignIsNotOverwritingInternalDelegate (object currentDelegateValue, object newDelegateValue, Type internalDelegateType)
 		{
 			if (NSApplication.CheckForEventAndDelegateMismatches && currentDelegateValue != null && newDelegateValue != null
-				&& currentDelegateValue.GetType().IsAssignableFrom (internalDelegateType)
-				&& !newDelegateValue.GetType().IsAssignableFrom (internalDelegateType))
-				throw new InvalidOperationException (string.Format("Event registration is overwriting existing delegate. Either just use events or your own delegate: {0} {1}", newDelegateValue.GetType(), internalDelegateType));
+				&& currentDelegateValue.GetType ().IsAssignableFrom (internalDelegateType)
+				&& !newDelegateValue.GetType ().IsAssignableFrom (internalDelegateType))
+				throw new InvalidOperationException (string.Format ("Event registration is overwriting existing delegate. Either just use events or your own delegate: {0} {1}", newDelegateValue.GetType (), internalDelegateType));
 		}
 
 		public void DiscardEvents (NSEventMask mask, NSEvent lastEvent)
 		{
-			DiscardEvents ((nuint)(ulong) mask, lastEvent);
+			DiscardEvents ((nuint) (ulong) mask, lastEvent);
 		}
 
+#if !NET
 		[Obsolete ("This method does nothing.")]
 		public static void RestoreWindow (string identifier, Foundation.NSCoder state, NSWindowCompletionHandler onCompletion)
 		{
 		}
+#endif
 
 		// note: if needed override the protected Get|Set methods
-		public NSApplicationActivationPolicy ActivationPolicy { 
+		public NSApplicationActivationPolicy ActivationPolicy {
 			get { return GetActivationPolicy (); }
 			// ignore return value (bool)
 			set { SetActivationPolicy (value); }
 		}
 	}
 }
+#endif // !__MACCATALYST__

@@ -52,4 +52,3 @@ public class SceneDelegate : UIResponder, IUIWindowSceneDelegate {
 		// to restore the scene back to its current state.
 	}
 }
-

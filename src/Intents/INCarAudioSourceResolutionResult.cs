@@ -1,4 +1,4 @@
-﻿//
+//
 // INCarAudioSourceResolutionResult.cs
 //
 // Authors:
@@ -20,7 +20,7 @@ namespace Intents {
 #if __WATCHOS__
 			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
 #elif __IOS__
-			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
+			if (SystemVersion.CheckiOS (11, 0))
 				return SuccessWithResolvedCarAudioSource (resolvedValue);
 			else
 				return SuccessWithResolvedValue (resolvedValue);
@@ -32,7 +32,7 @@ namespace Intents {
 #if __WATCHOS__
 			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
 #elif __IOS__
-			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
+			if (SystemVersion.CheckiOS (11, 0))
 				return ConfirmationRequiredWithCarAudioSourceToConfirm (valueToConfirm);
 			else
 				return ConfirmationRequiredWithValueToConfirm (valueToConfirm);

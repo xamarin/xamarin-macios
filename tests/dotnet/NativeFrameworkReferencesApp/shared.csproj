@@ -8,6 +8,8 @@
 		<ApplicationVersion>1.0</ApplicationVersion>
 	</PropertyGroup>
 
+	<Import Project="../../common/shared-dotnet.csproj" />
+
 	<ItemGroup>
 		<NativeReference Include="..\..\..\test-libraries\.libs\$(FatName)\XTest.framework" Kind="Framework" />
 		<NativeReference Include="..\..\..\test-libraries\.libs\$(FatName)\XStaticArTest.framework" Kind="Framework" CopyToAppBundle="false" />
@@ -16,8 +18,5 @@
 
 	<ItemGroup>
 		<Compile Include="../*.cs" />
-		<None Include="../Info.plist">
-			<Link>Info.plist</Link>
-		</None>
 	</ItemGroup>
 </Project>

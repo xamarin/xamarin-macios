@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -53,20 +53,30 @@ namespace Xharness.Jenkins {
 
 			var exec = new MacExecuteTask (jenkins, build, processManager, crashReportSnapshotFactory) {
 				Ignored = ignored,
-				BCLTest = project.IsBclTest (),
+				BCLTest = project.Label == TestLabel.Bcl,
 				TestName = project.Name,
 				IsUnitTest = true,
 			};
 			return testVariationsFactory.CreateTestVariations (new [] { exec }, (buildTask, test, candidates) =>
-				new MacExecuteTask (jenkins, buildTask, processManager, crashReportSnapshotFactory) { IsUnitTest = true } );
+				new MacExecuteTask (jenkins, buildTask, processManager, crashReportSnapshotFactory) { IsUnitTest = true });
 		}
 
 		public IEnumerator<RunTestTask> GetEnumerator ()
 		{
 
 			foreach (var project in jenkins.Harness.MacTestProjects) {
-				bool ignored = !jenkins.IncludeMac;
-				if (!jenkins.IncludeMmpTest && project.Path.Contains ("mmptest"))
+				bool ignored = false;
+
+				if (project.TestPlatform == TestPlatform.MacCatalyst) {
+					ignored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.MacCatalyst);
+				} else {
+					ignored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac);
+				}
+
+				if (project.Ignore == true)
+					ignored = true;
+
+				if (!jenkins.TestSelection.IsEnabled (TestLabel.Mmp) && project.Path.Contains ("mmptest"))
 					ignored = true;
 
 				if (!jenkins.IsIncluded (project))

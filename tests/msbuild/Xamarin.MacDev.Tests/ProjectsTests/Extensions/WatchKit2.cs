@@ -1,9 +1,12 @@
-﻿using System;
+using System;
 using System.IO;
 
 using NUnit.Framework;
 
-namespace Xamarin.iOS.Tasks {
+using Xamarin.Tests;
+using Xamarin.Utils;
+
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
 	public class WatchKit2 : ExtensionTestBase {
@@ -15,17 +18,10 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void BasicTest () 
 		{
-			if (!Xamarin.Tests.Configuration.include_watchos)
-				Assert.Ignore ("WatchOS is not enabled");
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
 
 			BuildExtension ("MyWatchApp2", "MyWatchKit2Extension");
-
-			if (Platform == "iPhone") {
-				// make sure the dSYMs exist
-				var appexDsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatchKit2Extension.appex.dSYM"));
-
-				Assert.IsTrue (Directory.Exists (appexDsymDir), "MyWatchKit2Extension dSYMs not found");
-			}
 		}
 
 		public override string TargetFrameworkIdentifier {
@@ -35,4 +31,3 @@ namespace Xamarin.iOS.Tasks {
 		}
 	}
 }
-

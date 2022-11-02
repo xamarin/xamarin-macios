@@ -7,6 +7,7 @@
 // Copyright 2010, Novell, Inc.
 // Copyright 2011-2014 Xamarin Inc. All rights reserved.
 //
+#if !NET
 using ObjCRuntime;
 using Foundation;
 using System;
@@ -36,3 +37,4 @@ namespace iAd {
 		void RequestAttributionDetails (Action<NSDictionary, NSError> completionHandler);
 	}
 }
+#endif // !NET

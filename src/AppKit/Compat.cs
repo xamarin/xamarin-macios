@@ -1,3 +1,4 @@
+#if !NET
 using System;
 using System.ComponentModel;
 
@@ -6,11 +7,11 @@ using ObjCRuntime;
 
 namespace AppKit {
 	partial class NSMutableParagraphStyle {
-#if !XAMCORE_4_0
+
 		[Obsolete ("Use the 'TextBlocks' property instead.", false)]
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-		public virtual void SetTextBlocks (NSTextBlock[] array)
+		public virtual void SetTextBlocks (NSTextBlock [] array)
 		{
 			if (array == null)
 				throw new ArgumentNullException (nameof (array));
@@ -26,7 +27,7 @@ namespace AppKit {
 		[Obsolete ("Use the 'TextLists' property instead.", false)]
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-		public virtual void SetTextLists (NSTextList[] array)
+		public virtual void SetTextLists (NSTextList [] array)
 		{
 			if (array == null)
 				throw new ArgumentNullException (nameof (array));
@@ -38,15 +39,12 @@ namespace AppKit {
 			}
 			nsa_array.Dispose ();
 		}
-#endif
 	}
 
-#if !XAMCORE_4_0
-	public static class NSFileTypeForHFSTypeCode
-	{
+	public static class NSFileTypeForHFSTypeCode {
 		public static readonly string ComputerIcon = "root";
 		public static readonly string DesktopIcon = "desk";
 		public static readonly string FinderIcon = "FNDR";
 	}
-#endif
 }
+#endif // !NET

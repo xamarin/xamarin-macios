@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
 namespace Xharness.Jenkins.TestTasks {

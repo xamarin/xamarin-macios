@@ -24,6 +24,10 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<!-- This must be set before importing Microsoft.CSharp.targets -->
 		<!-- See Xamarin.iOS.AppExtension.CSharp.targets for a detailed explanation of this variable -->
 		<CopyNuGetImplementations Condition="'$(CopyNuGetImplementations)' == ''">true</CopyNuGetImplementations>
+
+		<!-- Enable nuget package conflict resolution -->
+		<!-- This must be set before importing Microsoft.CSharp.targets -->
+		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" Condition="'$(UsingAppleNETSdk)' != 'true'" />

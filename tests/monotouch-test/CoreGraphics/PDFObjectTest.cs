@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CGPDFObject
 //
 // Authors:
@@ -10,6 +10,7 @@
 using System;
 using Foundation;
 using CoreGraphics;
+using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreGraphics {
@@ -18,6 +19,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 	[Preserve (AllMembers = true)]
 	public class PDFObjectTest {
 
+#if !NET
 		[Test]
 		public void Zero ()
 		{
@@ -43,5 +45,6 @@ namespace MonoTouchFixtures.CoreGraphics {
 
 			Assert.False (po.TryGetName (out s), "name");
 		}
+#endif // !NET
 	}
 }

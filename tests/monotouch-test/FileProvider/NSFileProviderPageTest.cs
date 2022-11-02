@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSFileProviderPage
 //
 // Authors:
@@ -8,7 +8,7 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if __IOS__
+#if __IOS__ && !__MACCATALYST__
 
 using System;
 using FileProvider;

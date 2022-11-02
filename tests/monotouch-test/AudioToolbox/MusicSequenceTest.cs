@@ -1,4 +1,4 @@
-﻿//
+//
 // MusicSequence unit Tests
 //
 // Authors:

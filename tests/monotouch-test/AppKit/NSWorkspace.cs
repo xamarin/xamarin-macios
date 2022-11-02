@@ -56,7 +56,11 @@ namespace Xamarin.Mac.Tests
 			Assert.That (FourCC ((int) HfsTypeCode.GenericPreferencesIcon), Is.EqualTo ("pref"), "pref");
 			Assert.That (FourCC ((int) HfsTypeCode.GenericQueryDocumentIcon), Is.EqualTo ("qery"), "qery");
 			Assert.That (FourCC ((int) HfsTypeCode.GenericRamDiskIcon), Is.EqualTo ("ramd"), "ramd");
+#if NET
+			Assert.That (FourCC ((int) HfsTypeCode.GenericSharedLibraryIcon), Is.EqualTo ("shlb"), "shlb");
+#else
 			Assert.That (FourCC ((int) HfsTypeCode.GenericSharedLibaryIcon), Is.EqualTo ("shlb"), "shlb");
+#endif
 			Assert.That (FourCC ((int) HfsTypeCode.GenericStationeryIcon), Is.EqualTo ("sdoc"), "sdoc");
 			Assert.That (FourCC ((int) HfsTypeCode.GenericSuitcaseIcon), Is.EqualTo ("suit"), "suit");
 			Assert.That (FourCC ((int) HfsTypeCode.GenericUrlIcon), Is.EqualTo ("gurl"), "gurl");

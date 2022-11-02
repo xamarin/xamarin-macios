@@ -8,64 +8,52 @@
  *    Miguel de Icaza
  */
 
-#if MONOMAC
+#nullable enable
+
+#if MONOMAC || __MACCATALYST__
 
 using System;
 using System.Runtime.InteropServices;
-#if !NO_SYSTEM_DRAWING
-using System.Drawing;
-#endif
+
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
-	public sealed class CGEventSource : IDisposable, INativeObject {
-		IntPtr handle;
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
+#else
+	[MacCatalyst (15,0)]
+#endif
+	public sealed class CGEventSource : NativeObject {
+#if !NET
+		public CGEventSource (NativeHandle handle)
+			: base (handle, false)
+		{
+		}
+#endif
 
-#region Lifecycle
-		public CGEventSource (IntPtr handle) : this (handle, false)
+		[Preserve (Conditional = true)]
+#if NET
+		internal CGEventSource (NativeHandle handle, bool owns)
+#else
+		public CGEventSource (NativeHandle handle, bool owns)
+#endif
+			: base (handle, owns)
 		{
 		}
 
-		public CGEventSource (IntPtr handle, bool ownsHandle)
-		{
-			if (!ownsHandle)
-				CFObject.CFRetain (handle);
-			this.handle = handle;
-		}
-
-		~CGEventSource ()
-		{
-			Dispose (false);
-		}
-
-		public IntPtr Handle {
-			get {
-				return handle;
-			}
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
-#endregion
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static IntPtr CGEventSourceCreate (CGEventSourceStateID stateID);
 	
 		public CGEventSource (CGEventSourceStateID stateID)
+			: base (CGEventSourceCreate (stateID), true)
 		{
-			handle = CGEventSourceCreate (stateID);
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
@@ -76,10 +64,10 @@ namespace CoreGraphics {
 
 		public int KeyboardType  {
 			get {
-				return CGEventSourceGetKeyboardType (handle);
+				return CGEventSourceGetKeyboardType (Handle);
 			}
 			set {
-				CGEventSourceSetKeyboardType (handle, value);
+				CGEventSourceSetKeyboardType (Handle, value);
 			}
 		}
 
@@ -88,7 +76,7 @@ namespace CoreGraphics {
 		
 		public CGEventSourceStateID StateID {
 			get {
-				return CGEventSourceGetSourceStateID (handle);
+				return CGEventSourceGetSourceStateID (Handle);
 			}
 		}
 
@@ -101,10 +89,10 @@ namespace CoreGraphics {
 		
 		public double PixelsPerLine {
 			get {
-				return CGEventSourceGetPixelsPerLine (handle);
+				return CGEventSourceGetPixelsPerLine (Handle);
 			}
 			set {
-				CGEventSourceSetPixelsPerLine (handle, value);
+				CGEventSourceSetPixelsPerLine (Handle, value);
 			}
 		}
 
@@ -133,10 +121,10 @@ namespace CoreGraphics {
 
 		public long UserData {
 			get {
-				return CGEventSourceGetUserData (handle);
+				return CGEventSourceGetUserData (Handle);
 			}
 			set {
-				CGEventSourceSetUserData (handle, value);
+				CGEventSourceSetUserData (Handle, value);
 			}
 		}
 
@@ -146,7 +134,7 @@ namespace CoreGraphics {
 
 		public void SetLocalEventsFilterDuringSupressionState (CGEventFilterMask filter, CGEventSuppressionState state)
 		{
-			CGEventSourceSetLocalEventsFilterDuringSuppressionState (handle, filter, state);
+			CGEventSourceSetLocalEventsFilterDuringSuppressionState (Handle, filter, state);
 		}
 		
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
@@ -154,7 +142,7 @@ namespace CoreGraphics {
 
 		public CGEventFilterMask GetLocalEventsFilterDuringSupressionState (CGEventSuppressionState state)
 		{
-			return CGEventSourceGetLocalEventsFilterDuringSuppressionState (handle, state);
+			return CGEventSourceGetLocalEventsFilterDuringSuppressionState (Handle, state);
 		}
 		
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
@@ -165,10 +153,10 @@ namespace CoreGraphics {
 
 		public double LocalEventsSupressionInterval {
 			get {
-				return CGEventSourceGetLocalEventsSuppressionInterval (handle);
+				return CGEventSourceGetLocalEventsSuppressionInterval (Handle);
 			}
 			set {
-				CGEventSourceSetLocalEventsSuppressionInterval (handle, value);
+				CGEventSourceSetLocalEventsSuppressionInterval (Handle, value);
 			}
 		}
 		

@@ -4,9 +4,3 @@
 !missing-selector! SFSafariExtensionState::isEnabled not bound
 !missing-type! SFSafariExtensionManager not bound
 !missing-type! SFSafariExtensionState not bound
-
-# xcode 12 - no doc, might be best located in unbound types
-!missing-field! SFExtensionMessageKey not bound
-
-## it's present but it's unused and the [Obsolete] attribute skips it (so it's reported)
-!missing-enum! SFSafariServicesVersion not bound

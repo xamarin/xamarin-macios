@@ -25,4 +25,3 @@ namespace Test
 	public partial interface Derived : First, Second {
 	}
 }
-

@@ -35,7 +35,14 @@ using ObjCRuntime;
 namespace CoreVideo {
 
 	// CVBase.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (4,0)]
+#endif
 	public struct CVTime {
 
 		public /* int64_t */ long TimeValue;
@@ -58,7 +65,7 @@ namespace CoreVideo {
 		}
 #endif
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (!(other is CVTime))
 				return false;

@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Xml;
 
 namespace Xharness {
 	public static class XmlDocumentExtensions {
 
-		public static void Save (this XmlDocument doc, string path, IHarness harness) => 
+		public static void Save (this XmlDocument doc, string path, IHarness harness) =>
 			doc.Save (path, (level, message) => harness.Log (level, message));
 
 		public static void Save (this XmlDocument doc, string path, Action<int, string> log)

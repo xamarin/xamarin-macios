@@ -1,4 +1,4 @@
-﻿//
+//
 // The rule reports
 //
 // !extra-null-allowed!
@@ -112,6 +112,10 @@ namespace Extrospection {
 
 			// don't process methods (or types) that are unavailable for the current platform
 			if (!decl.IsAvailable () || !(decl.DeclContext as Decl).IsAvailable ())
+				return;
+
+			// don't process deprecated methods (or types)
+			if (decl.IsDeprecated () || (decl.DeclContext as Decl).IsDeprecated ())
 				return;
 
 			var method = GetMethod (decl);

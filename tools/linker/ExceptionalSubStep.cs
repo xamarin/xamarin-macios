@@ -1,4 +1,4 @@
-﻿// Copyright 2016 Xamarin Inc.
+// Copyright 2016 Xamarin Inc.
 
 using System;
 using Mono.Cecil;
@@ -32,7 +32,7 @@ namespace Xamarin.Linker {
 		}
 
 		protected LinkerConfiguration Configuration {
-			get { return LinkerConfiguration.GetInstance (Context);  }
+			get { return LinkerConfiguration.GetInstance (Context); }
 		}
 
 		protected Profile Profile {

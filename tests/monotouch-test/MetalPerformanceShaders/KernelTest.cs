@@ -1,4 +1,4 @@
-﻿// Copyright 2015 Xamarin Inc. All rights reserved.
+// Copyright 2015 Xamarin Inc. All rights reserved.
 
 #if !__WATCHOS__
 
@@ -22,7 +22,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		[OneTimeSetUp]
 		public void Metal ()
 		{
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 			TestRuntime.AssertXcodeVersion (7, 0);
 
 			if (Runtime.Arch == Arch.SIMULATOR)

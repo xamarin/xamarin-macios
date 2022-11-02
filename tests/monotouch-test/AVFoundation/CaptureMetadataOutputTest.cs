@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for AVMetadataObject
 //
 // Authors:
@@ -10,16 +10,13 @@
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
 using System;
-using System.Drawing;
-using System.IO;
 using System.Reflection;
-using System.Threading;
 using CoreGraphics;
 using Foundation;
 using AVFoundation;
-using CoreMedia;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AVFoundation {
 
@@ -38,7 +35,7 @@ namespace MonoTouchFixtures.AVFoundation {
 				Assert.AreEqual (0, obj.WeakAvailableMetadataObjectTypes.Length, "WeakAvailableMetadataObjectTypes#");
 				Assert.IsNotNull (obj.WeakMetadataObjectTypes, "WeakMetadataObjectTypes");
 				Assert.AreEqual (0, obj.WeakMetadataObjectTypes.Length, "WeakMetadataObjectTypes#");
-				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false))
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false))
 					Assert.AreEqual (new CGRect (0, 0, 1, 1), obj.RectOfInterest, "RectOfInterest");
 
 #if !__MACCATALYST__ // https://github.com/xamarin/maccore/issues/2345
@@ -94,15 +91,12 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void MetadataObjectTypesTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-
-			if (Runtime.Arch != Arch.DEVICE)
-				Assert.Ignore ("This test only runs on device (requires camera access)");
-
-			TestRuntime.RequestCameraPermission (AVMediaType.Video, true);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertDevice ("This test only runs on device (requires camera access)");
+			TestRuntime.RequestCameraPermission (AVMediaTypes.Video.GetConstant (), true);
 
 			using (var captureSession = new AVCaptureSession ()) {
-				using (var videoDevice = AVCaptureDevice.DefaultDeviceWithMediaType (AVMediaType.Video)) {
+				using (var videoDevice = AVCaptureDevice.GetDefaultDevice (AVMediaTypes.Video.GetConstant ())) {
 
 					NSError error;
 					using (var videoInput = new AVCaptureDeviceInput (videoDevice, out error)) {
@@ -125,7 +119,7 @@ namespace MonoTouchFixtures.AVFoundation {
 									if (!TestRuntime.CheckXcodeVersion (11, 0))
 										continue;
 									// xcode 12 beta 1 on device
-									if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (12, 0))
+									if (TestRuntime.IsDevice && TestRuntime.CheckXcodeVersion (12, 0))
 										continue;
 									break;
 								}

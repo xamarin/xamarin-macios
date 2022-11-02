@@ -35,7 +35,7 @@ $CP -p ../mk/quiet.mk $DIR/mk
 $CP -p ../mk/mono.mk "$DIR/mk"
 
 # Files to make the unit tests run
-$CP -p dotnet/global.json $DIR/tests/global.json
+$CP -p ../global.json $DIR
 $CP -p ../NuGet.config $DIR
 $CP -p test.config $DIR/tests
 

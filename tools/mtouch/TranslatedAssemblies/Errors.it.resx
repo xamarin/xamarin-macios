@@ -742,10 +742,10 @@
 		<value>Non collegato con il framework {0} (riferimento del modulo in {1}) poiché non è disponibile nella piattaforma corrente ({2}).</value>
 	</data>
   <data name="MX0183" xml:space="preserve">
-        <value>Non è stato possibile eseguire il mapping della versione iOS {0} alla versione di macOS per Mac Catalyst</value>
+        <value>Non è stato possibile eseguire il mapping della versione Mac Catalyst{0} sulla versione macOS corrispondente. Le versioni di Mac Catalyst valide sono: {1}</value>
     </data>
   <data name="MX0184" xml:space="preserve">
-        <value>Non è stato possibile eseguire il mapping della versione di macOS {0} a una versione di iOS corrispondente per Mac Catalyst</value>
+        <value>Non è stato possibile eseguire il mapping della versione macOS {0} sulla versione Mac Catalyst corrispondente. Le versioni di macOS valide sono: {1}</value>
     </data>
   <data name="MX0185" xml:space="preserve">
 		<value>Quando si usa CoreCLR, l'opzione '{0}' non può accettare il valore '{1}'.</value>
@@ -813,6 +813,9 @@
   <data name="MT1305" xml:space="preserve">
 		<value>La libreria di binding '{0}' contiene un framework utente ({0}), ma i framework utente incorporati richiedono iOS 8.0 (la destinazione di distribuzione è {1}). Impostare la destinazione di distribuzione su almeno 8.0 nel file Info.plist.
 		</value>
+	</data>
+  <data name="MX1306" xml:space="preserve">
+		<value>Non è stato possibile decomprimere il framework '{0}'. Per altre informazioni restituite dal comando 'unzip' nativo, esaminare il log di compilazione.</value>
 	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>L'assembly obbligatorio 'Xamarin.Mac.dll' non è presente nei riferimenti
@@ -1229,6 +1232,9 @@
 		<value>L'attributo BindAsAttribute trovato in '{0}' non è valido: non è stato possibile trovare un tipo enumerazione sottostante di {1}. Caricare un report sui bug all'indirizzo https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
 	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>Il registrar ha trovato un tipo non valido '{0}' nella firma per il metodo '{1}': L'interfaccia deve includere un attributo Protocol che ne specifica il tipo di wrapper.
 		</value>
@@ -1513,6 +1519,9 @@
 		<value>Il registrar non può calcolare la firma del blocco per il delegato di tipo {0} nel metodo {1} perché non è riuscito a trovare il metodo Invoke del tipo delegato.
 		</value>
 	</data>
+  <data name="MT4186" xml:space="preserve">
+		<value>Il registrar ha trovato un tipo non ottimale '{0}': il tipo non dispone di un costruttore che accetta due argomenti (ObjCRuntime.NativeHandle, bool). Tuttavia, è stato trovato un costruttore che accetta due argomenti (System.IntPtr, bool) e verrà utilizzato. È consigliabile modificare la firma del costruttore (System.IntPtr, bool) in (ObjCRuntime.NativeHandle, bool).</value>
+	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Manca il compilatore '{0}'. Installare il componente 'Strumenti da riga di comando' di Xcode
 		</value>
@@ -1696,6 +1705,11 @@
 		<value>Lo strumento xcrun non è riuscito a trovare alcun risultato durante la ricerca dello strumento '{0}' (il file '{1}' non esiste). Per dettagli, vedere il log di compilazione.
 		</value>
 	</data>
+  <!-- The linker says custom linker steps can't use error codes between 1000 and 6000, so we use >= 7000 -->
+  <data name="MX7000" xml:space="preserve">
+		<value>Errore durante l'esecuzione dei passaggi del linker personalizzato. Per altre informazioni, vedere il log di compilazione.</value>
+	</data>
+  <!-- 8XXX are for errors that occur at runtime -->
   <data name="MT8018" xml:space="preserve">
 		<value>Errore di coerenza interno. Caricare un report sui bug all'indirizzo https://github.com/xamarin/xamarin-macios/issues/new.
 		</value>
@@ -1725,5 +1739,15 @@
 	</data>
   <data name="MX8040" xml:space="preserve">
 		<value>Tipo di codifica non valido per il parametro.</value>
+	</data>
+  <data name="MX8041" xml:space="preserve">
+		<value>Impossibile creare un'istanza del tipo di {0}.</value>
+	</data>
+  <data name="MX8042" xml:space="preserve">
+		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<comment>
+			0: name of function
+			1: exception info
+		</comment>
 	</data>
 </root>

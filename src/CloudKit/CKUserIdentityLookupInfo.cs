@@ -1,13 +1,13 @@
+#nullable enable
+
 using ObjCRuntime;
 using Foundation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace CloudKit
-{
-	public partial class CKUserIdentityLookupInfo
-	{
+namespace CloudKit {
+	public partial class CKUserIdentityLookupInfo {
 		// extra parameter to get a unique signature for a string argument
 		CKUserIdentityLookupInfo (string id, int type)
 		{
@@ -18,14 +18,14 @@ namespace CloudKit
 		public static CKUserIdentityLookupInfo FromEmail (string email)
 		{
 			if (string.IsNullOrEmpty (email))
-				throw new ArgumentNullException (nameof (email));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (email));
 			return new CKUserIdentityLookupInfo (email, 0);
 		}
 
 		public static CKUserIdentityLookupInfo FromPhoneNumber (string phoneNumber)
 		{
 			if (string.IsNullOrEmpty (phoneNumber))
-				throw new ArgumentNullException (nameof (phoneNumber));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (phoneNumber));
 			return new CKUserIdentityLookupInfo (phoneNumber, 1);
 		}
 	}
