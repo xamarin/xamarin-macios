@@ -604,13 +604,18 @@ namespace MonoTests.System.Net.Http
 			bool callbackWasExecuted = false;
 			bool done = false;
 			Exception ex = null;
+			Exception ex2 = null;
 			HttpResponseMessage result = null;
 
 			var handler = new NSUrlSessionHandler {
 				ServerCertificateCustomValidationCallback = (sender, certificate, chain, errors) => {
 					callbackWasExecuted = true;
-					Assert.IsNotNull (certificate);
-					Assert.AreEqual (SslPolicyErrors.None, errors);
+					try {
+						Assert.IsNotNull (certificate);
+						Assert.AreEqual (SslPolicyErrors.None, errors);
+					} catch (Exception e) {
+						ex2 = e;
+					}
 					return false;
 				}
 			};
@@ -635,6 +640,7 @@ namespace MonoTests.System.Net.Http
 				Assert.IsInstanceOf (typeof (HttpRequestException), ex, "Exception type");
 				Assert.IsNotNull (ex.InnerException, "InnerException");
 				Assert.IsInstanceOf (typeof (WebException), ex.InnerException, "InnerException type");
+				Assert.IsNull (ex2, "Callback asserts");
 			}
 		}
 #endif
