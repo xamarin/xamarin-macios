@@ -72,8 +72,8 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 		Inputs="$(_NativeWatchApp)"
 		Outputs="$(_NativeExecutable);$(_AppBundlePath)_WatchKitStub\WK">
 
-		<PropertyGroup>
-			<!-- Remove any arm64e slices -->
+		<PropertyGroup Condition="'$(_SdkIsSimulator)' != 'true'">
+			<!-- Remove any arm64e slices when building for device -->
 			<WKDittoArchitectures Condition="'$(WKDittoArchitectures)' == ''">--arch arm64_32 --arch arm64 --arch armv7k</WKDittoArchitectures>
 		</PropertyGroup>
 
