@@ -65,7 +65,7 @@ namespace AudioToolbox {
 			return GetAvailable<AudioClassDescription> (AudioFormatProperty.Encoders, format);
 		}
 
-		unsafe static T []? GetAvailable<T> (AudioFormatProperty prop, AudioFormatType format) where T: unmanaged
+		unsafe static T []? GetAvailable<T> (AudioFormatProperty prop, AudioFormatType format) where T : unmanaged
 		{
 			uint size;
 			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (prop, sizeof (AudioFormatType), ref format, out size) != 0)
@@ -77,7 +77,7 @@ namespace AudioToolbox {
 				if (res != 0)
 					return null;
 			}
-			
+
 
 			Array.Resize (ref data, (int) size / sizeof (T));
 			return data;

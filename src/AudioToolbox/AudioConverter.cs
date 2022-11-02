@@ -643,7 +643,7 @@ namespace AudioToolbox {
 			return GetArray<AudioValueRange> (prop, sizeof (AudioValueRange));
 		}
 
-		unsafe T []? GetArray<T> (AudioConverterPropertyID prop, int elementSize) where T: unmanaged
+		unsafe T []? GetArray<T> (AudioConverterPropertyID prop, int elementSize) where T : unmanaged
 		{
 			int size;
 			bool writable;
