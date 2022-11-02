@@ -9837,7 +9837,7 @@ namespace Foundation
 		[Export ("allBundles")][Static]
 		NSArray _InternalAllBundles { get; }
 
-		[Obsolete ("Use the 'allBundles' property instead.")]
+		[Obsolete ("Use the 'AllBundles' property instead.")]
 		[Wrap ("_InternalAllBundles")][Static]
 		NSBundle [] _AllBundles { get; }
 
