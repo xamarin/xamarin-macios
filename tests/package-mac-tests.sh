@@ -44,7 +44,7 @@ for dep in "${TEST_SUITE_DEPENDENCIES[@]}"; do
 	if test -n "$INCLUDE_MAC"; then
 		make -C "$dep"/dotnet/macOS build
 	fi
-	if tets -n "$INCLUDE_MACCATALYST"; then
+	if test -n "$INCLUDE_MACCATALYST"; then
 		make -C "$dep"/dotnet/MacCatalyst build
 	fi
 done

@@ -129,7 +129,7 @@ SHARED_RESX = $(TOP)/tools/mtouch/Errors.resx
 SHARED_DESIGNER_CS = $(BUILD_DIR)/common/Errors.Designer.cs
 
 $(SHARED_DESIGNER_CS): $(SHARED_RESX)
-	./generate-errors.csharp > $(SHARED_DESIGNER_CS)
+	$(Q_GEN) ./generate-errors.csharp > $(SHARED_DESIGNER_CS)
 
 #
 # Xamarin.iOS

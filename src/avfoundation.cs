@@ -1832,8 +1832,14 @@ namespace AVFoundation {
 		[Protocolize]
 		AVAudioRecorderDelegate Delegate { get; set;  }
 	
-		[Export ("currentTime")]
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'CurrentTime' property instead.")]
+		[Wrap ("CurrentTime", IsVirtual = true)]
 		double currentTime { get; }
+#endif
+
+		[Export ("currentTime")]
+		double CurrentTime { get; }
 	
 		[Export ("meteringEnabled")]
 		bool MeteringEnabled { [Bind ("isMeteringEnabled")] get; set;  }
