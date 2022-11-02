@@ -871,9 +871,16 @@ namespace Photos
 		[Export ("indexOfObject:inRange:")]
 		nint IndexOf (NSObject id, NSRange range);
 
-		[Export ("firstObject")]
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'FirstObject' property instead.")]
+		[Wrap ("FirstObject", IsVirtual = true)]
 		[NullAllowed]
 		NSObject firstObject { get; }
+#endif
+
+		[Export ("firstObject")]
+		[NullAllowed]
+		NSObject FirstObject { get; }
 
 		[Export ("lastObject")]
 		[NullAllowed]
