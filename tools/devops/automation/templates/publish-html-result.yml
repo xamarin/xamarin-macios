@@ -32,13 +32,11 @@ steps:
 - download: macios 
 
 - pwsh: |
+    Import-Module $Env:BUILD_SOURCESDIRECTORY\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
     $configFile = Join-Path $(PIPELINE.WORKSPACE) "macios" "build-configuration" "configuration.json"
-    if (-not (Test-Path -Path $configFile -PathType Leaf)) {
-      Write-Host "Configuration file is missing!"
-      exit 1
-    }
-    Get-Content $configFile | Write-Host
-    $config = Get-Content $configFile | ConvertFrom-Json
+    $config = Import-BuildConfiguration -ConfigFile $configFile
+    $config | Write-Host
+
     # export variables to be present in the othe steps
     Write-Host "##vso[task.setvariable variable=BuildReason;isOutput=true]$($config.BuildReason)"
     Write-Host "##vso[task.setvariable variable=BuildSourceBranchName;isOutput=true]$($config.BuildSourceBranchName)"
