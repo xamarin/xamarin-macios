@@ -4,6 +4,8 @@
 
 #if !__WATCHOS__
 
+using System.Runtime.InteropServices;
+
 using NUnit.Framework;
 
 using Foundation;
