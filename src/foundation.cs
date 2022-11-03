@@ -9832,8 +9832,21 @@ namespace Foundation
 		[Export ("bundleWithIdentifier:")][Static]
 		NSBundle FromIdentifier (string str);
 
+#if !XAMCORE_5_0
+		[Internal]
 		[Export ("allBundles")][Static]
+		NSArray _InternalAllBundles { get; }
+
+		[Obsolete ("Use the 'AllBundles' property instead.")]
+		[Wrap ("_InternalAllBundles")][Static]
 		NSBundle [] _AllBundles { get; }
+
+		[Wrap ("_InternalAllBundles")][Static]
+		NSBundle [] AllBundles { get; }
+#else
+		[Export ("allBundles")][Static]
+		NSBundle [] AllBundles { get; }
+#endif
 
 		[Export ("allFrameworks")][Static]
 		NSBundle [] AllFrameworks { get; }
