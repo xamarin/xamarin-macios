@@ -3537,7 +3537,7 @@ public partial class Generator : IMemberGatherer {
 		foreach (var platform in new [] { PlatformName.MacCatalyst, PlatformName.TvOS }) {
 			if (!PlatformMarkedUnavailable (platform, memberAvailability) &&
 				!PlatformHasIntroduced (platform, memberAvailability)) {
-				foreach (var attr in memberAvailability.Where (v => v.Platform == PlatformName.iOS).ToList()) {
+				foreach (var attr in memberAvailability.Where (v => v.Platform == PlatformName.iOS).ToList ()) {
 					var newAttribute = CloneFromOtherPlatform (attr, platform);
 					if (IsValidToCopyTo (memberAvailability, newAttribute, allowIntroducedOnUnavailable: true)) {
 						memberAvailability.Add (newAttribute);
@@ -3567,7 +3567,7 @@ public partial class Generator : IMemberGatherer {
 			var droppedPlatforms = new HashSet<PlatformName> ();
 
 			// Walk all members and look for introduced that are nonsense for our containing class's platform
-			foreach (var introduced in memberAvailability.Where (a => a.AvailabilityKind == AvailabilityKind.Introduced || a.AvailabilityKind == AvailabilityKind.Deprecated).ToList()) {
+			foreach (var introduced in memberAvailability.Where (a => a.AvailabilityKind == AvailabilityKind.Introduced || a.AvailabilityKind == AvailabilityKind.Deprecated).ToList ()) {
 				// Hack - WebKit namespace has two distinct implementations with different types
 				// It can not be hacked in IsInSupportedFramework as AddUnlistedAvailability 
 				// will add iOS implied to the mac version and so on. So hard code it here...

@@ -248,19 +248,17 @@ namespace CloudKit {
 		PublicUser = 4,
 	}
 
-	[NoTV, NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[NoTV, NoWatch, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[Native, Flags]
-	public enum CKSharingParticipantAccessOption : ulong
-	{
+	public enum CKSharingParticipantAccessOption : ulong {
 		AnyoneWithLink = 1uL << 0,
 		SpecifiedRecipientsOnly = 1uL << 1,
 		Any = AnyoneWithLink | SpecifiedRecipientsOnly,
 	}
 
-	[NoTV, NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[NoTV, NoWatch, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[Native, Flags]
-	public enum CKSharingParticipantPermissionOption : ulong
-	{
+	public enum CKSharingParticipantPermissionOption : ulong {
 		ReadOnly = 1uL << 0,
 		ReadWrite = 1uL << 1,
 		Any = ReadOnly | ReadWrite,

@@ -164,7 +164,7 @@ namespace xsiminstaller {
 						wc.DownloadFile (uri, tmpfile);
 					} catch (Exception ex) {
 						File.Delete (tmpfile); // Make sure there are no downloaded remnants
-						// 403 means 404
+											   // 403 means 404
 						if (ex is WebException we && (we.Response as HttpWebResponse)?.StatusCode == HttpStatusCode.Forbidden) {
 							Console.WriteLine ($"Failed to download {url}: Not found"); // Apple's servers return a 403 if the file doesn't exist, which can be quite confusing, so show a better error.
 						} else {
@@ -439,7 +439,7 @@ namespace xsiminstaller {
 		}
 
 		[return: NotNullIfNotNull ("value")]
-		static string? Replace ( string? value, Dictionary<string, string> replacements)
+		static string? Replace (string? value, Dictionary<string, string> replacements)
 		{
 			if (value is null)
 				return null;
