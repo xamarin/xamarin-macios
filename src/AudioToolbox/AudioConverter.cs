@@ -650,6 +650,9 @@ namespace AudioToolbox {
 			if (AudioConverterGetPropertyInfo (Handle, prop, out size, out writable) != AudioConverterError.None)
 				return null;
 
+			if (size == 0)
+				return Array.Empty<T> ();
+
 			var data = new T [size / elementSize];
 
 			fixed (T* ptr = data) {
