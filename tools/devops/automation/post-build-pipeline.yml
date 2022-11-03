@@ -76,3 +76,4 @@ jobs:
       targetPath: $(Build.ArtifactStagingDirectory)\post-build-binlogs
       artifactName: post-build-binlogs
     condition: succeededOrFailed()
+    continueOnError: true

@@ -894,8 +894,14 @@ namespace MapKit {
 		[Protocolize]
 		MKReverseGeocoderDelegate Delegate { get; set; }
 	
-		[Export ("coordinate")]
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Coordinate' property instead.")]
+		[Wrap ("Coordinate", IsVirtual = true)]
 		CLLocationCoordinate2D coordinate { get; }
+#endif
+
+		[Export ("coordinate")]
+		CLLocationCoordinate2D Coordinate { get; }
 	
 		[Export ("start")]
 		void Start ();
