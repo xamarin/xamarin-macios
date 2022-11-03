@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Collections.Generic;
+using System.Threading;
 using Foundation;
 using AudioToolbox;
 using AudioUnit;
@@ -116,6 +117,80 @@ namespace MonoTouchFixtures.AudioToolbox {
 			
 			resources.MachLookUpGlobalName = null;
 			Assert.IsNull (resources.MachLookUpGlobalName, "Value was no set to null.");
+		}
+
+		[Test]
+		public void TestConfigurationInfo ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+			var resources = new ResourceUsageInfo ();
+			resources.IOKitUserClient = new string[] { "CustomUserClient1" };
+			resources.MachLookUpGlobalName = new string[] { "MachServiceName1" };
+			resources.NetworkClient = false;
+			resources.TemporaryExceptionReadWrite = false;
+
+			var componentInfo = new AudioComponentInfo ();
+			componentInfo.Type = AudioTypeOutput.Generic.ToString ();
+			componentInfo.Subtype =  "XMPL";
+			componentInfo.Name = "XMPL";
+			componentInfo.Version = 1;
+			componentInfo.ResourceUsage = resources;
+			using var component = AudioComponent.FindComponent (AudioTypeOutput.Generic);
+			Assert.IsNotNull (component);
+			// assert the property and break
+			var configInfo = component.GetConfigurationInfo ();
+			Assert.IsNotNull (configInfo);
+		}
+
+		[Test]
+		public void TestValidation ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+			var resources = new ResourceUsageInfo ();
+			resources.IOKitUserClient = new string[] { "CustomUserClient1" };
+			resources.MachLookUpGlobalName = new string[] { "MachServiceName1" };
+			resources.NetworkClient = false;
+			resources.TemporaryExceptionReadWrite = false;
+
+			var componentInfo = new AudioComponentInfo ();
+			componentInfo.Type = AudioTypeOutput.Generic.ToString ();
+			componentInfo.Subtype =  "XMPL";
+			componentInfo.Name = "XMPL";
+			componentInfo.Version = 1;
+			componentInfo.ResourceUsage = resources;
+			using var component = AudioComponent.FindComponent (AudioTypeOutput.Generic);
+			Assert.IsNotNull (component);
+			// validate and break
+			var validation = component.Validate(null);
+			Assert.Contains (validation,
+				new List<AudioComponentValidationResult> () {AudioComponentValidationResult.Unknown, AudioComponentValidationResult.Passed}, "validation");
+		}
+
+		[Test]
+		public void TestValidationAsync ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+			var resources = new ResourceUsageInfo ();
+			resources.IOKitUserClient = new string[] { "CustomUserClient1" };
+			resources.MachLookUpGlobalName = new string[] { "MachServiceName1" };
+			resources.NetworkClient = false;
+			resources.TemporaryExceptionReadWrite = false;
+
+			var componentInfo = new AudioComponentInfo ();
+			componentInfo.Type = AudioTypeOutput.Generic.ToString ();
+			componentInfo.Subtype =  "XMPL";
+			componentInfo.Name = "XMPL";
+			componentInfo.Version = 1;
+			componentInfo.ResourceUsage = resources;
+			using var component = AudioComponent.FindComponent (AudioTypeOutput.Generic);
+			Assert.IsNotNull (component);
+
+			var cbEvent = new AutoResetEvent(false);
+			Action<AudioComponentValidationResult, NSDictionary?> cb = (AudioComponentValidationResult _, NSDictionary? _) => {
+				cbEvent.Set ();
+			};
+			component.ValidateAsync(cb);
+			Assert.True (cbEvent.WaitOne (20000), "Cb was not called.");
 		}
 	}
 }

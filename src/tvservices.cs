@@ -110,6 +110,7 @@ namespace TVServices {
 		NSString DidChangeNotification { get; }
 	}
 
+	[Deprecated (PlatformName.TvOS, 16, 0, message: "Use runs-as-current-user-with-user-independent-keychain entitlement instead.")]
 	[TV (13,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor] // Name property can't be null
@@ -307,23 +308,32 @@ namespace TVServices {
 	[BaseType (typeof (NSObject))]
 	interface TVUserManager {
 
+		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use runs-as-current-user-with-user-independent-keychain entitlement instead.")]
 		[NullAllowed, Export ("currentUserIdentifier")]
 		string CurrentUserIdentifier { get; }
 
+		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use runs-as-current-user-with-user-independent-keychain entitlement instead.")]
 		[Export ("userIdentifiersForCurrentProfile", ArgumentSemantic.Copy)]
 		string[] UserIdentifiersForCurrentProfile { get; set; }
 
+		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use runs-as-current-user-with-user-independent-keychain entitlement instead.")]
 		[Async]
 		[Export ("presentProfilePreferencePanelWithCurrentSettings:availableProfiles:completion:")]
 		void PresentProfilePreferencePanel (NSDictionary<NSString, TVAppProfileDescriptor> currentSettings, TVAppProfileDescriptor[] availableProfiles, Action<NSDictionary<NSString, TVAppProfileDescriptor>> completion);
 
+		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use runs-as-current-user-with-user-independent-keychain entitlement instead.")]
 		[Async]
 		[Export ("shouldStorePreferenceForCurrentUserToProfile:completion:")]
 		void ShouldStorePreferenceForCurrentUser (TVAppProfileDescriptor profile, Action<bool> completion);
 
+		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use runs-as-current-user-with-user-independent-keychain entitlement instead.")]
 		[Notification]
 		[Field ("TVUserManagerCurrentUserIdentifierDidChangeNotification")]
 		NSString CurrentUserIdentifierDidChangeNotification { get; }
+
+		[TV (16, 0)]
+		[Export ("shouldStorePreferencesForCurrentUser")]
+		bool ShouldStorePreferencesForCurrentUser { get; }
 	}
 
 	[TV (13,0)]

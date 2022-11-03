@@ -48,11 +48,8 @@ namespace AddressBook {
 	[SupportedOSPlatform ("maccatalyst14.0")]
 	[UnsupportedOSPlatform ("maccatalyst14.0")]
 	[UnsupportedOSPlatform ("ios9.0")]
-#if __MACCATALYST__
-	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
+	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
 #else
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -86,9 +83,7 @@ namespace AddressBook {
 #if NET
 	[UnsupportedOSPlatform ("ios9.0")]
 	[UnsupportedOSPlatform ("maccatalyst")]
-#if IOS
-	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
 #else
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 #endif

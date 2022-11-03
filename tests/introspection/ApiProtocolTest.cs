@@ -53,6 +53,12 @@ namespace Introspection {
 				// Unfortunately I couldn't find any documentation related to determining exactly which
 				// hardware capability these need (or how to detect them), so just ignore them.
 				return true;
+			case "CLKComplicationWidgetMigrator":
+				// Not present in the simulator, is a migration class
+				return true;
+			// was removed by apple and is a compat class.
+			case "HMMatterRequestHandler":
+				return true;
 			default:
 				return SkipDueToAttribute (type);
 			}
@@ -143,6 +149,23 @@ namespace Introspection {
 				case "SNTimeDurationConstraint": // Conformance not in headers
 				// Xcode 13.3
 				case "HMAccessorySetupPayload": // Conformance not in headers
+					return true;
+				// Xcode 14
+				case "CLKComplicationIntentWidgetMigrationConfiguration":
+				case "CLKComplicationStaticWidgetMigrationConfiguration":
+				case "CLKComplicationWidgetMigrationConfiguration":
+				case "HKElectrocardiogramVoltageMeasurement":
+				case "AVPlayerInterstitialEvent":
+				case "HKWorkoutActivity":
+				case "HKContactsPrescription":
+				case "HKGlassesPrescription":
+				case "HKVisionPrescription":
+				case "PKAutomaticReloadPaymentRequest":
+				case "PKAutomaticReloadPaymentSummaryItem":
+				case "PKPaymentOrderDetails":
+				case "PKPaymentTokenContext":
+				case "PKRecurringPaymentRequest":
+				case "PKShareablePassMetadataPreview":
 					return true;
 				}
 				break;
@@ -283,6 +306,23 @@ namespace Introspection {
 				case "HMAccessorySetupRequest": // Conformance not in headers
 				case "HMAccessorySetupResult": // Conformance not in headers
 					return true;
+				// Xcode 14 beta 2
+				case "CLKComplicationIntentWidgetMigrationConfiguration":
+				case "CLKComplicationStaticWidgetMigrationConfiguration":
+				case "CLKComplicationWidgetMigrationConfiguration":
+				case "PHPickerConfiguration":
+				case "PHAssetChangeRequest":
+				case "PHAssetCreationRequest":
+				case "NSUserActivity":
+				case "UIDictationPhrase":
+				case "HKWorkoutActivity":
+				case "PKAutomaticReloadPaymentRequest":
+				case "PKAutomaticReloadPaymentSummaryItem":
+				case "PKPaymentOrderDetails":
+				case "PKPaymentTokenContext":
+				case "PKRecurringPaymentRequest":
+				case "PKShareablePassMetadataPreview":
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -412,11 +452,29 @@ namespace Introspection {
 				case "QLPreviewReply": // conformance not in headers
 				case "QLPreviewReplyAttachment": // conformance not in headers
 				case "SNTimeDurationConstraint": // Conformance not in headers
+				case "NSInflectionRule": 
 				// Xcode 13.3
 				case "SRWristDetection": // Conformance not in headers
 				case "HMAccessorySetupPayload": // Conformance not in headers
 				case "HMAccessorySetupRequest": // Conformance not in headers
 				case "HMAccessorySetupResult": // Conformance not in headers
+					return true;
+				// Xcode 14
+				case "CLKComplicationIntentWidgetMigrationConfiguration":
+				case "CLKComplicationStaticWidgetMigrationConfiguration":
+				case "CLKComplicationWidgetMigrationConfiguration":
+				case "PHPickerConfiguration":
+				case "PHAssetChangeRequest":
+				case "PHAssetCreationRequest":
+				case "NSUserActivity":
+				case "UIDictationPhrase":
+				case "HKWorkoutActivity":
+				case "PKAutomaticReloadPaymentRequest":
+				case "PKAutomaticReloadPaymentSummaryItem":
+				case "PKPaymentOrderDetails":
+				case "PKPaymentTokenContext":
+				case "PKRecurringPaymentRequest":
+				case "PKShareablePassMetadataPreview":
 					return true;
 				}
 				break;
@@ -503,6 +561,10 @@ namespace Introspection {
 #endif
 			case "NSExtensionRequestHandling":
 				if (type.Name == "HMChipServiceRequestHandler") // Apple removed this class
+					return true;
+				break;
+			case "QLPreviewItem":
+				if (type.Name == "NSUrl")
 					return true;
 				break;
 			}

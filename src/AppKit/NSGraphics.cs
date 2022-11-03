@@ -211,9 +211,7 @@ namespace AppKit {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.11")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.11 not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.11", "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
 #endif
@@ -223,9 +221,7 @@ namespace AppKit {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.11")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.11 not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.11", "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
 #endif

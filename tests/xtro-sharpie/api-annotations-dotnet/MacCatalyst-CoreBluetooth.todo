@@ -1,0 +1,3 @@
+!missing-enum-value! CBError native value CBErrorLeGattExceededBackgroundNotificationLimit = 17 not bound
+!missing-enum-value! CBError native value CBErrorLeGattNearBackgroundNotificationLimit = 18 not bound
+!missing-field! CBCentralManagerOptionDeviceAccessForMedia not bound

@@ -74,6 +74,8 @@ namespace Network {
 		Address = 1,
 		Host = 2,
 		BonjourService = 3,
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		Url = 4,
 	}
 
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
@@ -282,5 +284,12 @@ namespace Network {
 	public enum NWParametersAttribution {
 		Developer = 1,
 		User = 2,
+	}
+
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	public enum NWQuicStreamType {
+		Unknown = 0,
+		Bidirectional = 1,
+		Unidirectional = 2,
 	}
 }
