@@ -144,7 +144,7 @@ stages:
         runTests: ${{ and(parameters.runTests, ne(variables['Build.Reason'], 'Schedule'))}}
         runDeviceTests: ${{ and(parameters.runDeviceTests, ne(variables['Build.Reason'], 'Schedule')) }}
         keyringPass: $(pass--lab--mac--builder--keychain)
-        gitHubToken: ${{ variables['GitHub.Token'] }}
+        gitHubToken: $(Github.Token)
         xqaCertPass: $(xqa--certificates--password)
         enableDotnet: ${{ parameters.enableDotnet }}
         skipESRP: ${{ parameters.skipESRP }}
@@ -174,7 +174,7 @@ stages:
           isPR: ${{ parameters.isPR }}
           vsdropsPrefix: ${{ variables.vsdropsPrefix }}
           keyringPass: $(pass--lab--mac--builder--keychain)
-          gitHubToken: ${{ variables['GitHub.Token'] }}
+          gitHubToken: $(Github.Token)
           xqaCertPass: $(xqa--certificates--password)
           enableDotnet: ${{ parameters.enableDotnet }}
           pool: ${{ parameters.pool }}
@@ -203,7 +203,7 @@ stages:
     makeTarget: 'jenkins'
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
     keyringPass: $(pass--lab--mac--builder--keychain)
-    gitHubToken: ${{ variables['GitHub.Token'] }}
+    gitHubToken: $(Github.Token)
     xqaCertPass: $(xqa--certificates--password)
     enableDotnet: ${{ parameters.enableDotnet }}
     condition: ${{ parameters.runTests }}
@@ -227,7 +227,7 @@ stages:
           makeTarget: ${{ config.makeTarget }} 
           vsdropsPrefix: ${{ variables.vsdropsPrefix }}
           keyringPass: $(pass-XamarinQA-bot-login) 
-          gitHubToken: ${{ variables['GitHub.Token'] }}
+          gitHubToken: $(Github.Token)
           xqaCertPass: $(xqa--certificates--password)
           enableDotnet: ${{ parameters.enableDotnet }}
           condition: ${{ parameters.runDeviceTests }}
@@ -273,7 +273,7 @@ stages:
       extraBotDemands: ['xismoke-32']
       vsdropsPrefix: ${{ variables.vsdropsPrefix }}
       keyringPass: $(pass--lab--mac--builder--keychain)
-      gitHubToken: ${{ variables['GitHub.Token'] }}
+      gitHubToken: $(Github.Token)
       xqaCertPass: $(xqa--certificates--password)
       enableDotnet: ${{ parameters.enableDotnet }}
 
