@@ -1,6 +1,7 @@
 TOP = ../..
 
 include $(TOP)/Make.config
+include $(TOP)/mk/colors.mk
 
 ifdef SKIP_NEW_APIS #Requires https://github.com/mono/mono/commit/4c6a463678f3f0bfa599caeb66de72c7217fa95d
 NEW_REGEX = "-n:.?"
@@ -415,17 +416,31 @@ APIDIFF_URLS=$(APIDIFF_REFERENCES_iOS) $(APIDIFF_REFERENCES_Mac) $(foreach platf
 APIDIFF_UNIQUE_URLS=$(sort $(APIDIFF_URLS))
 APIDIFF_UNIQUE_HASHES=$(foreach url,$(APIDIFF_UNIQUE_URLS),$(word 5,$(subst /, ,$(url))))
 
+AUTH_TOKEN_GITHUB_COM_FILE=$(HOME)/.config/AUTH_TOKEN_GITHUB_COM
+ifeq ($(AUTH_TOKEN_GITHUB_COM),)
+ifeq ($(AUTH_TOKEN_GITHUB_COM_FILE),$(shell ls -1 $(AUTH_TOKEN_GITHUB_COM_FILE 2>/dev/null)))
+AUTH_TOKEN_GITHUB_COM:=$(shell cat $(AUTH_TOKEN_GITHUB_COM_FILE))
+endif
+endif
+
+check-token:
+	@if test -z "$(AUTH_TOKEN_GITHUB_COM)"; then echo "$(COLOR_RED)Can't download API references because the environment variable $(COLOR_BLUE)AUTH_TOKEN_GITHUB_COM$(COLOR_RED) isn't set. Please see the README.md file for more information.$(COLOR_CLEAR)"; exit 1; fi
+
+.PHONY: check-token
+
 define DownloadBundle
 BUNDLE_ZIP_$(1)=$(APIDIFF_DIR)/bundle-$(1).zip
 BUNDLE_ZIP_$(1)_URL=$(shell echo $(APIDIFF_UNIQUE_URLS) | tr ' ' '\n' | grep '/$(1)/')
 $$(BUNDLE_ZIP_$(1)):
+	$(Q) mkdir -p $$(dir $$@)
 	@# download to a temporary filename so interrupted downloads won't prevent re-downloads.
 	@echo "Downloading $$(BUNDLE_ZIP_$(1)_URL)..."
 	$$(Q) if test -f ~/Library/Caches/xamarin-macios/$$(notdir $$@); then \
 		echo "Found a cached version of $$(notdir $$@) in ~/Library/Caches/xamarin-macios/$$(notdir $$@)."; \
 		$$(CP) ~/Library/Caches/xamarin-macios/$$(notdir $$@) $$@.tmp; \
 	else \
-		curl -f -L $$(if $$(V),-v,-s) "$$(BUNDLE_ZIP_$(1)_URL)" --output $$@.tmp; \
+		$(MAKE) check-token || exit 1; \
+		$(CURL_RETRY) -H "Authorization: token $(AUTH_TOKEN_GITHUB_COM)" "$$(BUNDLE_ZIP_$(1)_URL)" --output $$@.tmp; \
 		if [[ "x$$$$MACIOS_CACHE_DOWNLOADS" != "x" ]]; then \
 			mkdir -p ~/Library/Caches/xamarin-macios/; \
 			$$(CP) $$@.tmp ~/Library/Caches/xamarin-macios/"$$(notdir $$@)"; \
