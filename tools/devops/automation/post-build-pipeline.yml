@@ -83,13 +83,11 @@ jobs:
   - ${{ each platform in parameters.allDotnetPlatforms }}:
     - powershell: |
         $platform = "${{ platform.platform }}"
-        Write-Host "Processing $($platform)..."
         & dotnet build -v:n -t:PushManifestToBuildAssetRegistry `
           -p:BarManifestOutputPath=$(Agent.BuildDirectory)\macios\AssetManifests\$($platform) `
           -p:BuildAssetRegistryToken=$(MaestroAccessToken) `
           $(Build.SourcesDirectory)\dotnet\package\Microsoft.$($platform).Ref\package.csproj `
           -bl:$(Build.ArtifactStagingDirectory)\post-build-binlogs\push-bar-manifest-$($platform).binlog
-        Write-Host "Bar build id for $($platform): $Env:BARBuildId"
       displayName: 'Push ${{ platform.platform}} manifests to build asset registry'
       condition: and(succeeded(), ne(variables['configuration.${{ platform.conditionVariable }}'],''))
       # We can't use the global.json located in the root of our repo, because makes it required to use the exact .NET version we're referencing in our eng/Versions.Details.xml file.
