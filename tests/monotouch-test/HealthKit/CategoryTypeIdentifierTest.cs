@@ -14,8 +14,12 @@ using System.Collections.Generic;
 
 using Foundation;
 using HealthKit;
-using UIKit;
 using NUnit.Framework;
+#if MONOMAC
+using AppKit;
+#else
+using UIKit;
+#endif
 
 namespace MonoTouchFixtures.HealthKit {
 
@@ -26,7 +30,11 @@ namespace MonoTouchFixtures.HealthKit {
 		[Test]
 		public void EnumValues_22351 ()
 		{
+#if MONOMAC
+			TestRuntime.AssertXcodeVersion (14, 0);
+#else
 			TestRuntime.AssertXcodeVersion (6, 0);
+#endif
 
 			var failures = new List<string> ();
 
@@ -112,6 +120,13 @@ namespace MonoTouchFixtures.HealthKit {
 				case HKCategoryTypeIdentifier.PregnancyTestResult:
 				case HKCategoryTypeIdentifier.ProgesteroneTestResult:
 					if (!TestRuntime.CheckXcodeVersion (13, 0))
+						continue;
+					break;
+				case HKCategoryTypeIdentifier.InfrequentMenstrualCycles:
+				case HKCategoryTypeIdentifier.IrregularMenstrualCycles:
+				case HKCategoryTypeIdentifier.PersistentIntermenstrualBleeding:
+				case HKCategoryTypeIdentifier.ProlongedMenstrualPeriods:
+					if (!TestRuntime.CheckXcodeVersion (14, 1))
 						continue;
 					break;
 				default:

@@ -1,9 +1,6 @@
 ## does not exists in iOS (or watchOS) as a type - but some API refers to it (messy)
 !unknown-type! NSPortMessage bound
 
-## type was not marked as unavailable before Xcode9
-!unknown-type! NSUbiquitousKeyValueStore bound
-
 ## removed in Xcode 12
 !unknown-field! NSNetServicesErrorDomain bound
 

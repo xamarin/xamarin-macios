@@ -95,14 +95,13 @@ namespace CoreText {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.8")]
 		[UnsupportedOSPlatform ("ios6.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.8 use 'MaximumLineSpacing' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios6.0 use 'MaximumLineSpacing' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.8", "Use 'MaximumLineSpacing' instead.")]
+		[ObsoletedOSPlatform ("ios6.0", "Use 'MaximumLineSpacing' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'MaximumLineSpacing' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'MaximumLineSpacing' instead.")]
+		[Deprecated (PlatformName.TvOS, 16, 0, message : "Use 'MaximumLineSpacing' instead.")]
+		[Deprecated (PlatformName.WatchOS, 9, 0, message : "Use 'MaximumLineSpacing' instead.")]
 #endif
 		LineSpacing             = 10,
 		ParagraphSpacing        = 11,

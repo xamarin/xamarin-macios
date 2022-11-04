@@ -27,25 +27,4 @@
 						And ('$(ImplicitUsings)' == 'true' Or '$(ImplicitUsings)' == 'enable')
 						And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '@TARGET_FRAMEWORK_VERSION@'))">@GLOBAL_USINGS@
 	</ItemGroup>
-
-	<!--
-		Add a 'global using nfloat = System.Runtime.InteropServices.NFloat' to ease migration from Xamarin.
-		This is not grouped with the other usings, because those are not enabled by default (ImplicitUsings is empty by default, but set in our templates).
-		However, the main target for this using is upgraded projects, which won't have ImplicitUsings set to anything, so we
-		use a different condition (NoNFloatUsing) to disable if desired.
-		Note: we only add this if compiling using C# 10 or later.
-	-->
-	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@'
-						 And '$(Language)' == 'C#'
-						 And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '@TARGET_FRAMEWORK_VERSION@'))
-						 And '$(NoNFloatUsing)' != 'true'
-						 And ('$(LangVersion)' == ''
-							Or '$(LangVersion)' == 'preview'
-							Or '$(LangVersion)' == 'latest'
-							Or '$(LangVersion)' == 'latestMajor'
-							Or '$(LangVersion)' == 'default'
-							Or $([MSBuild]::VersionGreaterThanOrEquals('$(LangVersion)','10.0'))
-							)">
-		<Using Include="System.Runtime.InteropServices.NFloat" Platform="@PLATFORM@" Alias="nfloat" />
-	</ItemGroup>
 </Project>

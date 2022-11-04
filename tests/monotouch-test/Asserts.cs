@@ -124,6 +124,14 @@ public static class Asserts
 		Assert.AreEqual (expected.W, actual.W, $"{message} (W) expected: {expected} actual: {actual}");
 	}
 
+	public static void AreEqual (float expectedX, float expectedY, float expectedZ, float expectedW, Vector4 actual, string message)
+	{
+		Assert.AreEqual (expectedX, actual.X, $"{message} (X) expected: {new Vector4 (expectedX, expectedY, expectedZ, expectedW)} actual: {actual}");
+		Assert.AreEqual (expectedY, actual.Y, $"{message} (Y) expected: {new Vector4 (expectedX, expectedY, expectedZ, expectedW)} actual: {actual}");
+		Assert.AreEqual (expectedZ, actual.Z, $"{message} (Z) expected: {new Vector4 (expectedX, expectedY, expectedZ, expectedW)} actual: {actual}");
+		Assert.AreEqual (expectedW, actual.W, $"{message} (W) expected: {new Vector4 (expectedX, expectedY, expectedZ, expectedW)} actual: {actual}");
+	}
+
 	public static void AreEqual (Vector4 expected, Vector4 actual, float delta, string message)
 	{
 		Assert.AreEqual (expected.X, actual.X, delta, $"{message} (X) expected: {expected} actual: {actual}");

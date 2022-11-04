@@ -45,13 +45,9 @@ namespace MobileCoreServices {
 		[UnsupportedOSPlatform ("tvos14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos14.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos11.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios14.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 #else
 		[iOS (8,0)]
 		[Mac (10,10)]
@@ -68,13 +64,9 @@ namespace MobileCoreServices {
 		[UnsupportedOSPlatform ("tvos14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos14.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos11.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios14.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 #else
 		[iOS (8,0)]
 		[Mac (10,10)]
@@ -91,13 +83,9 @@ namespace MobileCoreServices {
 		[UnsupportedOSPlatform ("tvos14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos14.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos11.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios14.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 #else
 		[iOS (8,0)]
 		[Mac (10,10)]
@@ -121,13 +109,9 @@ namespace MobileCoreServices {
 		[UnsupportedOSPlatform ("tvos14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos14.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos11.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios14.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 #else
 		[iOS (8,0)]
 		[Mac (10,10)]
@@ -186,13 +170,9 @@ namespace MobileCoreServices {
 		[UnsupportedOSPlatform ("tvos14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos14.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos11.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios14.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 #else
 		[iOS (8,0)]
 		[Mac (10,10)]
@@ -208,13 +188,9 @@ namespace MobileCoreServices {
 		[UnsupportedOSPlatform ("tvos14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos14.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos11.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios14.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 #else
 		[iOS (8,0)]
 		[Mac (10,10)]
@@ -329,13 +305,9 @@ namespace MobileCoreServices {
 		[UnsupportedOSPlatform ("tvos14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos14.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos11.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios14.0 use the 'UniformTypeIdentifiers.UTType' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 #else
 		[iOS (12,0)]
 		[TV (12,0)]

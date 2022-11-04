@@ -1,6 +1,0 @@
-# Types removed in 10.10
-
-# It's named `CWErr` in the header file 
-
-# removed in Xcode 12 - marked as deprecated in bindings
-

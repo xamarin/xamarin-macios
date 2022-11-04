@@ -35,6 +35,7 @@ using UIColor=AppKit.NSColor;
 using UIScene=AppKit.NSColor;
 using UIControl = AppKit.NSControl;
 using UIBarButtonItem = Foundation.NSObject;
+using UIViewController = AppKit.NSViewController;
 #else
 using NSAppearance = Foundation.NSObject;
 #endif
@@ -54,6 +55,7 @@ using UIControl = Foundation.NSObject;
 using MKTileOverlayPath = Foundation.NSObject;
 using UIBarButtonItem = Foundation.NSObject;
 using MKCircle = Foundation.NSObject;
+using UIViewController = Foundation.NSObject;
 #endif
 #if TVOS
 using CNPostalAddress = Foundation.NSObject;
@@ -296,6 +298,14 @@ namespace MapKit {
 		[NullAllowed] // by default this property is null
 		[iOS (7,0), Export ("arrivalDate", ArgumentSemantic.Copy)]
 		NSDate ArrivalDate { get; set; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
+		[Export ("tollPreference", ArgumentSemantic.Assign)]
+		MKDirectionsRoutePreference TollPreference { get; set; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
+		[Export ("highwayPreference", ArgumentSemantic.Assign)]
+		MKDirectionsRoutePreference HighwayPreference { get; set; }
 	}
 #endif // !WATCH
 
@@ -431,6 +441,14 @@ namespace MapKit {
 	
 		[Export ("mapType")]
 		MKMapType MapType { get; set; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
+		[Export ("preferredConfiguration", ArgumentSemantic.Copy)]
+		MKMapConfiguration PreferredConfiguration { get; set; }
+
+		[NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+		[Export ("selectableMapFeatures", ArgumentSemantic.Assign)]
+		MKMapFeatureOptions SelectableMapFeatures { get; set; }
 	
 		[Export ("region")]
 		MKCoordinateRegion Region { get; set; }
@@ -752,6 +770,14 @@ namespace MapKit {
 		[Export ("mapView:didDeselectAnnotationView:"), EventArgs ("MKAnnotationView")]
 		void DidDeselectAnnotationView (MKMapView mapView, MKAnnotationView view);
 
+		[NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+		[Export ("mapView:didSelectAnnotation:"), EventArgs ("MKAnnotation")]
+		void DidSelectAnnotation (MKMapView mapView, IMKAnnotation annotation);
+
+		[NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+		[Export ("mapView:didDeselectAnnotation:"), EventArgs ("MKAnnotation")]
+		void DidDeselectAnnotation (MKMapView mapView, IMKAnnotation annotation);
+
 		[Export ("mapViewWillStartLocatingUser:")]
 		void WillStartLocatingUser (MKMapView mapView);
 
@@ -792,9 +818,10 @@ namespace MapKit {
 	[TV (9,2)]
 	[Mac (10,9)]
 	[NoWatch]
-	[Deprecated (PlatformName.MacOSX, 12, 0)]
-	[Deprecated (PlatformName.iOS, 15, 0)]
-	[Deprecated (PlatformName.TvOS, 15, 0)]	
+	[Deprecated (PlatformName.MacOSX, 13,0, message: "Use MKMarkerAnnotationView instead.")]
+	[Deprecated (PlatformName.iOS, 16,0, message: "Use MKMarkerAnnotationView instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 16,0, message: "Use MKMarkerAnnotationView instead.")]
+	[Deprecated (PlatformName.TvOS, 16,0, message: "Use MKMarkerAnnotationView instead.")]	
 	interface MKPinAnnotationView {
 		[Export ("initWithFrame:")]
 		NativeHandle Constructor (CGRect frame);
@@ -894,8 +921,14 @@ namespace MapKit {
 		[Protocolize]
 		MKReverseGeocoderDelegate Delegate { get; set; }
 	
-		[Export ("coordinate")]
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Coordinate' property instead.")]
+		[Wrap ("Coordinate", IsVirtual = true)]
 		CLLocationCoordinate2D coordinate { get; }
+#endif
+
+		[Export ("coordinate")]
+		CLLocationCoordinate2D Coordinate { get; }
 	
 		[Export ("start")]
 		void Start ();
@@ -1435,6 +1468,14 @@ namespace MapKit {
 
 		[Export ("steps")]
 		MKRouteStep [] Steps { get; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
+		[Export ("hasTolls")]
+		bool HasTolls { get; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
+		[Export ("hasHighways")]
+		bool HasHighways { get; }
 	}
 
 	[NoWatch]
@@ -1532,6 +1573,11 @@ namespace MapKit {
 		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
 		[Export ("centerCoordinateDistance")]
 		double CenterCoordinateDistance { get; set; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
+		[Static]
+		[Export ("cameraLookingAtMapItem:forViewSize:allowPitch:")]
+		MKMapCamera CameraLookingAt (MKMapItem mapItem, CGSize viewSize, bool allowPitch);
 	}
 
 	[NoWatch]
@@ -1747,6 +1793,10 @@ namespace MapKit {
 
 		[Export ("contentScaleFactor")]
 		nfloat ContentScaleFactor { get; }
+
+		[NoMac, iOS (16,0), NoMacCatalyst, NoWatch, TV (16,0)]
+		[Export ("blendMode", ArgumentSemantic.Assign)]
+		CGBlendMode BlendMode { get; set; }
 	}
 
 	[NoWatch]
@@ -2292,4 +2342,261 @@ namespace MapKit {
 		MKMapView MapView { get; set; }
 	}
 
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
+	[BaseType (typeof (MKMapConfiguration))]
+	[DesignatedDefaultCtor]
+	interface MKHybridMapConfiguration
+	{
+		[Export ("initWithElevationStyle:")]
+		NativeHandle Constructor (MKMapElevationStyle elevationStyle);
+
+		[NullAllowed, Export ("pointOfInterestFilter", ArgumentSemantic.Copy)]
+		MKPointOfInterestFilter PointOfInterestFilter { get; set; }
+
+		[Export ("showsTraffic")]
+		bool ShowsTraffic { get; set; }
+	}
+
+	[NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MKIconStyle
+	{
+		[Export ("backgroundColor")]
+		UIColor BackgroundColor { get; }
+
+		[Export ("image")]
+		UIImage Image { get; }
+	}
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
+	[BaseType (typeof (MKMapConfiguration))]
+	[DesignatedDefaultCtor]
+	interface MKImageryMapConfiguration
+	{
+		[Export ("initWithElevationStyle:")]
+		NativeHandle Constructor (MKMapElevationStyle elevationStyle);
+	}
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MKLookAroundScene : NSCopying { }
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MKLookAroundSceneRequest
+	{
+		[Export ("initWithCoordinate:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (CLLocationCoordinate2D coordinate);
+
+		[Export ("initWithMapItem:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (MKMapItem mapItem);
+
+		[Export ("coordinate")]
+		CLLocationCoordinate2D Coordinate { get; }
+
+		[NullAllowed, Export ("mapItem")]
+		MKMapItem MapItem { get; }
+
+		[Export ("isCancelled")]
+		bool IsCancelled { get; }
+
+		[Export ("isLoading")]
+		bool IsLoading { get; }
+
+		[Async]
+		[Export ("getSceneWithCompletionHandler:")]
+		void GetScene (Action<MKLookAroundScene, NSError> completionHandler);
+
+		[Export ("cancel")]
+		void Cancel ();
+	}
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MKLookAroundSnapshot
+	{
+		[Export ("image")]
+		UIImage Image { get; }
+	}
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[BaseType (typeof (NSObject))]
+	interface MKLookAroundSnapshotOptions
+	{
+		[NullAllowed, Export ("pointOfInterestFilter", ArgumentSemantic.Copy)]
+		MKPointOfInterestFilter PointOfInterestFilter { get; set; }
+
+		[Export ("size", ArgumentSemantic.Assign)]
+		CGSize Size { get; set; }
+
+		[NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+		[Export ("traitCollection", ArgumentSemantic.Copy)]
+		UITraitCollection TraitCollection { get; set; }
+	}
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MKLookAroundSnapshotter
+	{
+		[Export ("initWithScene:options:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (MKLookAroundScene scene, MKLookAroundSnapshotOptions options);
+
+		[Async]
+		[Export ("getSnapshotWithCompletionHandler:")]
+		void GetSnapshot (Action<MKLookAroundSnapshot, NSError> completionHandler);
+
+		[Export ("cancel")]
+		void Cancel ();
+
+		[Export ("isLoading")]
+		bool IsLoading { get; }
+	}
+
+	interface IMKLookAroundViewControllerDelegate { }
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+#if NET
+	[Protocol, Model]
+#else
+	[Protocol, Model (AutoGeneratedName = true)]
+#endif
+	[BaseType (typeof (NSObject))]
+	interface MKLookAroundViewControllerDelegate
+	{
+		[Export ("lookAroundViewControllerWillUpdateScene:")]
+		void WillUpdateScene (MKLookAroundViewController viewController);
+
+		[Export ("lookAroundViewControllerDidUpdateScene:")]
+		void DidUpdateScene (MKLookAroundViewController viewController);
+
+		[Export ("lookAroundViewControllerWillPresentFullScreen:")]
+		void WillPresentFullScreen (MKLookAroundViewController viewController);
+
+		[Export ("lookAroundViewControllerDidPresentFullScreen:")]
+		void DidPresentFullScreen (MKLookAroundViewController viewController);
+
+		[Export ("lookAroundViewControllerWillDismissFullScreen:")]
+		void WillDismissFullScreen (MKLookAroundViewController viewController);
+
+		[Export ("lookAroundViewControllerDidDismissFullScreen:")]
+		void DidDismissFullScreen (MKLookAroundViewController viewController);
+	}
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[BaseType (typeof (UIViewController))]
+	interface MKLookAroundViewController : NSSecureCoding, NSCoding
+	{
+		[Export ("initWithScene:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (MKLookAroundScene scene);
+
+		[Export ("initWithNibName:bundle:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle nibBundle);
+
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		IMKLookAroundViewControllerDelegate Delegate { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
+
+		[NullAllowed, Export ("scene", ArgumentSemantic.Copy)]
+		MKLookAroundScene Scene { get; set; }
+
+		[Export ("navigationEnabled")]
+		bool NavigationEnabled { [Bind ("isNavigationEnabled")] get; set; }
+
+		[Export ("showsRoadLabels")]
+		bool ShowsRoadLabels { get; set; }
+
+		[NullAllowed, Export ("pointOfInterestFilter", ArgumentSemantic.Copy)]
+		MKPointOfInterestFilter PointOfInterestFilter { get; set; }
+
+		[Export ("badgePosition", ArgumentSemantic.Assign)]
+		MKLookAroundBadgePosition BadgePosition { get; set; }
+	}
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MKMapConfiguration : NSSecureCoding, NSCopying
+	{
+		[Export ("elevationStyle", ArgumentSemantic.Assign)]
+		MKMapElevationStyle ElevationStyle { get; set; }
+	}
+
+	[NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MKMapFeatureAnnotation : MKAnnotation
+	{
+		[Export ("featureType")]
+		MKMapFeatureType FeatureType { get; }
+
+		[NullAllowed, Export ("iconStyle")]
+		MKIconStyle IconStyle { get; }
+
+		[BindAs (typeof (MKPointOfInterestCategory))]
+		[NullAllowed, Export ("pointOfInterestCategory")]
+		NSString PointOfInterestCategory { get; }
+	}
+
+	[NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MKMapItemRequest
+	{
+		[Export ("initWithMapFeatureAnnotation:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (MKMapFeatureAnnotation mapFeatureAnnotation);
+
+		[Async]
+		[Export ("getMapItemWithCompletionHandler:")]
+		void GetMapItem (Action<MKMapItem, NSError> completionHandler);
+
+		[Export ("cancel")]
+		void Cancel ();
+
+		[Export ("featureAnnotation")]
+		MKMapFeatureAnnotation FeatureAnnotation { get; }
+
+		[Export ("isCancelled")]
+		bool IsCancelled { get; }
+
+		[Export ("isLoading")]
+		bool IsLoading { get; }
+	}
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
+	[BaseType (typeof (MKMapConfiguration))]
+	[DesignatedDefaultCtor]
+	interface MKStandardMapConfiguration
+	{
+		[Export ("initWithElevationStyle:")]
+		NativeHandle Constructor (MKMapElevationStyle elevationStyle);
+
+		[Export ("initWithElevationStyle:emphasisStyle:")]
+		NativeHandle Constructor (MKMapElevationStyle elevationStyle, MKStandardMapEmphasisStyle emphasisStyle);
+
+		[Export ("initWithEmphasisStyle:")]
+		NativeHandle Constructor (MKStandardMapEmphasisStyle emphasisStyle);
+
+		[Export ("emphasisStyle", ArgumentSemantic.Assign)]
+		MKStandardMapEmphasisStyle EmphasisStyle { get; set; }
+
+		[NullAllowed, Export ("pointOfInterestFilter", ArgumentSemantic.Copy)]
+		MKPointOfInterestFilter PointOfInterestFilter { get; set; }
+
+		[Export ("showsTraffic")]
+		bool ShowsTraffic { get; set; }
+	}
 }

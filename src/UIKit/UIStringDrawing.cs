@@ -13,9 +13,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGPoint, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0", "Use NSString.DrawString(CGPoint, UIStringAttributes) instead.")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGPoint, UIStringAttributes) instead.")]
@@ -30,9 +28,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0", "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
@@ -47,9 +43,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0", "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
@@ -64,9 +58,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0", "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
@@ -81,9 +73,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0", "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
@@ -98,9 +88,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0", "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
@@ -115,9 +103,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0 use NSString.DrawString(CGRect, UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0", "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
@@ -132,9 +118,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0 use NSString.GetSizeUsingAttributes(UIStringAttributes) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0", "Use NSString.GetSizeUsingAttributes(UIStringAttributes) instead.")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.GetSizeUsingAttributes(UIStringAttributes) instead.")]
@@ -149,9 +133,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0 use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0", "Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.")]
@@ -166,9 +148,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0 use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0", "Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.")]
@@ -183,9 +163,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0 use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0", "Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.")]
@@ -200,9 +178,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0)]

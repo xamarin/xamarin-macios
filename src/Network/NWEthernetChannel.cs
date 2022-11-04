@@ -21,6 +21,8 @@ using CoreFoundation;
 using OS_nw_ethernet_channel=System.IntPtr;
 using OS_nw_interface=System.IntPtr;
 using OS_dispatch_data=System.IntPtr;
+using OS_nw_parameters=System.IntPtr;
+
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -45,9 +47,6 @@ namespace Network {
 	[UnsupportedOSPlatform ("tvos")]
 	[UnsupportedOSPlatform ("ios")]
 #else
-	[NoWatch]
-	[NoTV]
-	[NoiOS]
 	[Mac (10,15)]
 #endif
 	public class NWEthernetChannel : NativeObject {
@@ -75,6 +74,27 @@ namespace Network {
 
 			InitializeHandle (nw_ethernet_channel_create (ethernetType, networkInterface.Handle));
 		}
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[Mac (13,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_ethernet_channel nw_ethernet_channel_create_with_parameters (ushort ether_type, OS_nw_interface @interface, OS_nw_parameters parameters);
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[Mac (13,0)]
+#endif
+		public NWEthernetChannel (ushort ethernetType, NWInterface networkInterface, NWParameters parameters) =>
+			InitializeHandle (nw_ethernet_channel_create_with_parameters (ethernetType, 
+						networkInterface.GetNonNullHandle (nameof (networkInterface)), parameters.GetNonNullHandle (nameof (parameters))));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_ethernet_channel_start (OS_nw_ethernet_channel ethernet_channel);
@@ -202,6 +222,25 @@ namespace Network {
 				}
 			}
 		}	
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[Mac (13,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern uint nw_ethernet_channel_get_maximum_payload_size (OS_nw_ethernet_channel ethernet_channel);
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[Mac (13,0)]
+#endif
+		public uint MaximumPayloadSize  => nw_ethernet_channel_get_maximum_payload_size (GetCheckedHandle ());
 	}
 }
 #endif
