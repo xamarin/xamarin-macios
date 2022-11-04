@@ -23,7 +23,7 @@ steps:
     path: $(Build.SourcesDirectory)/artifacts
 
 - pwsh: |
-    $packagePrefix = "https://bosstoragemirror.blob.core.windows.net/wrench/$Env:VIRTUAL_PATH/package"
+    $packagePrefix = "https://dl.internalx.com/wrench/$Env:VIRTUAL_PATH/package"
     $files =  Get-ChildItem -Path "$(Build.SourcesDirectory)\artifacts\package" -File -Force -Name
     $manifestFile = "$(Build.SourcesDirectory)\artifacts\package\manifest"
     foreach ($f in $files) {
