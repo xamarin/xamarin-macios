@@ -150,9 +150,7 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst15.0")]
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.7")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.7 use the Service Management framework or the launchd-launched helper tool instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.7", "Use the Service Management framework or the launchd-launched helper tool instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,7)]
 #endif
@@ -172,9 +170,7 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst15.0")]
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.7")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.7 use the Service Management framework or the launchd-launched helper tool instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.7", "Use the Service Management framework or the launchd-launched helper tool instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,7)]
 #endif

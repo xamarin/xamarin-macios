@@ -233,9 +233,7 @@ namespace Security {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.14 use 'GetKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.14", "Use 'GetKey' instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'GetKey' instead.")]
 #endif
@@ -266,11 +264,8 @@ namespace Security {
 		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos12.0")]
 		[UnsupportedOSPlatform ("ios12.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos12.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios12.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos12.0")]
+		[ObsoletedOSPlatform ("ios12.0")]
 #else
 		[iOS (10,3)]
 		[TV (10,3)]
@@ -288,11 +283,8 @@ namespace Security {
 		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos12.0")]
 		[UnsupportedOSPlatform ("ios12.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos12.0 use 'GetKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios12.0 use 'GetKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos12.0", "Use 'GetKey' instead.")]
+		[ObsoletedOSPlatform ("ios12.0", "Use 'GetKey' instead.")]
 #else
 		[iOS (10,3)]
 		[TV (10,3)]
@@ -465,9 +457,7 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos10.13")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.13 use 'GetSerialNumber' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.13", "Use 'GetSerialNumber' instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'GetSerialNumber' instead.")]
 #endif
@@ -483,13 +473,9 @@ namespace Security {
 		[UnsupportedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("ios11.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.13 use 'GetSerialNumber' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos11.0 use 'GetSerialNumber' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios11.0 use 'GetSerialNumber' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.13", "Use 'GetSerialNumber' instead.")]
+		[ObsoletedOSPlatform ("tvos11.0", "Use 'GetSerialNumber' instead.")]
+		[ObsoletedOSPlatform ("ios11.0", "Use 'GetSerialNumber' instead.")]
 #else
 		[iOS (10,3)]
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'GetSerialNumber' instead.")]
@@ -508,13 +494,9 @@ namespace Security {
 		[UnsupportedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("ios11.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.13 use 'GetSerialNumber(out NSError)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos11.0 use 'GetSerialNumber(out NSError)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios11.0 use 'GetSerialNumber(out NSError)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.13", "Use 'GetSerialNumber(out NSError)' instead.")]
+		[ObsoletedOSPlatform ("tvos11.0", "Use 'GetSerialNumber(out NSError)' instead.")]
+		[ObsoletedOSPlatform ("ios11.0", "Use 'GetSerialNumber(out NSError)' instead.")]
 #else
 		[iOS (10,3)]
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'GetSerialNumber(out NSError)' instead.")]
@@ -664,15 +646,10 @@ namespace Security {
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos12.0 use 'SecKeyCreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 use 'SecKeyCreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos15.0 use 'SecKeyCreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 use 'SecKeyCreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos12.0", "Use 'SecKeyCreateRandomKey' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'SecKeyCreateRandomKey' instead.")]
+		[ObsoletedOSPlatform ("tvos15.0", "Use 'SecKeyCreateRandomKey' instead.")]
+		[ObsoletedOSPlatform ("ios15.0", "Use 'SecKeyCreateRandomKey' instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'SecKeyCreateRandomKey' instead.")]
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'SecKeyCreateRandomKey' instead.")]
@@ -694,15 +671,10 @@ namespace Security {
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos12.0 use 'CreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 use 'CreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos15.0 use 'CreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 use 'CreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos12.0", "Use 'CreateRandomKey' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'CreateRandomKey' instead.")]
+		[ObsoletedOSPlatform ("tvos15.0", "Use 'CreateRandomKey' instead.")]
+		[ObsoletedOSPlatform ("ios15.0", "Use 'CreateRandomKey' instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CreateRandomKey' instead.")]
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CreateRandomKey' instead.")]
@@ -784,13 +756,9 @@ namespace Security {
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 use 'SecKeyCreateSignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos15.0 use 'SecKeyCreateSignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 use 'SecKeyCreateSignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'SecKeyCreateSignature' instead.")]
+		[ObsoletedOSPlatform ("tvos15.0", "Use 'SecKeyCreateSignature' instead.")]
+		[ObsoletedOSPlatform ("ios15.0", "Use 'SecKeyCreateSignature' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'SecKeyCreateSignature' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'SecKeyCreateSignature' instead.")]
@@ -808,13 +776,9 @@ namespace Security {
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 use 'CreateSignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos15.0 use 'CreateSignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 use 'CreateSignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'CreateSignature' instead.")]
+		[ObsoletedOSPlatform ("tvos15.0", "Use 'CreateSignature' instead.")]
+		[ObsoletedOSPlatform ("ios15.0", "Use 'CreateSignature' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CreateSignature' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'CreateSignature' instead.")]
@@ -858,13 +822,9 @@ namespace Security {
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 use 'SecKeyVerifySignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos15.0 use 'SecKeyVerifySignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 use 'SecKeyVerifySignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'SecKeyVerifySignature' instead.")]
+		[ObsoletedOSPlatform ("tvos15.0", "Use 'SecKeyVerifySignature' instead.")]
+		[ObsoletedOSPlatform ("ios15.0", "Use 'SecKeyVerifySignature' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'SecKeyVerifySignature' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'SecKeyVerifySignature' instead.")]
@@ -882,13 +842,9 @@ namespace Security {
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 use 'VerifySignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos15.0 use 'VerifySignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 use 'VerifySignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'VerifySignature' instead.")]
+		[ObsoletedOSPlatform ("tvos15.0", "Use 'VerifySignature' instead.")]
+		[ObsoletedOSPlatform ("ios15.0", "Use 'VerifySignature' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'VerifySignature' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'VerifySignature' instead.")]
@@ -927,13 +883,9 @@ namespace Security {
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos15.0 use 'SecKeyCreateEncryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 use 'SecKeyCreateEncryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 use 'SecKeyCreateEncryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", "Use 'SecKeyCreateEncryptedData' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'SecKeyCreateEncryptedData' instead.")]
+		[ObsoletedOSPlatform ("ios15.0", "Use 'SecKeyCreateEncryptedData' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'SecKeyCreateEncryptedData' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'SecKeyCreateEncryptedData' instead.")]
@@ -951,13 +903,9 @@ namespace Security {
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos15.0 use 'CreateEncryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 use 'CreateEncryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 use 'CreateEncryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", "Use 'CreateEncryptedData' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'CreateEncryptedData' instead.")]
+		[ObsoletedOSPlatform ("ios15.0", "Use 'CreateEncryptedData' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CreateEncryptedData' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CreateEncryptedData' instead.")]
@@ -998,13 +946,9 @@ namespace Security {
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos15.0 use 'SecKeyCreateDecryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 use 'SecKeyCreateDecryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 use 'SecKeyCreateDecryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", "Use 'SecKeyCreateDecryptedData' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'SecKeyCreateDecryptedData' instead.")]
+		[ObsoletedOSPlatform ("ios15.0", "Use 'SecKeyCreateDecryptedData' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'SecKeyCreateDecryptedData' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'SecKeyCreateDecryptedData' instead.")]
@@ -1022,13 +966,9 @@ namespace Security {
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos15.0 use 'CreateDecryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 use 'CreateDecryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 use 'CreateDecryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", "Use 'CreateDecryptedData' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'CreateDecryptedData' instead.")]
+		[ObsoletedOSPlatform ("ios15.0", "Use 'CreateDecryptedData' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CreateDecryptedData' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CreateDecryptedData' instead.")]

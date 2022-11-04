@@ -112,6 +112,10 @@ namespace Extrospection {
 					if (AttributeHelpers.IsOSPlatformAttribute (ca, Platform))
 						return false;
 					break;
+				case "ObsoletedOSPlatformAttribute":
+					if (AttributeHelpers.IsOSPlatformAttribute (ca, Platform))
+						return false;
+					break;
 				}
 			}
 			return true;

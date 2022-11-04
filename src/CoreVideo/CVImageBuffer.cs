@@ -105,9 +105,7 @@ namespace CoreVideo {
 		[UnsupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.4")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.4.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.4")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 4)]
 		[Unavailable (PlatformName.iOS)]

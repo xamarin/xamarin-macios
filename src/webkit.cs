@@ -708,23 +708,59 @@ namespace WebKit {
 		[Export ("cookie", ArgumentSemantic.Copy)]
 		string Cookie { get; set;  }
 
-		[Export ("body", ArgumentSemantic.Retain)]
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Body' property instead.")]
+		[Wrap ("Body", IsVirtual = true)]
 		DomHtmlElement body { get; set;  }
+#endif
+
+		[Export ("body", ArgumentSemantic.Retain)]
+		DomHtmlElement Body { get; set;  }
+
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Images' property instead.")]
+		[Wrap ("Images", IsVirtual = true)]
+		DomHtmlCollection images { get;  }
+#endif
 
 		[Export ("images", ArgumentSemantic.Retain)]
-		DomHtmlCollection images { get;  }
+		DomHtmlCollection Images { get;  }
+
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Applets' property instead.")]
+		[Wrap ("Applets", IsVirtual = true)]
+		DomHtmlCollection applets { get;  }
+#endif
 
 		[Export ("applets", ArgumentSemantic.Retain)]
-		DomHtmlCollection applets { get;  }
+		DomHtmlCollection Applets { get;  }
+
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Links' property instead.")]
+		[Wrap ("Links", IsVirtual = true)]
+		DomHtmlCollection links { get;  }
+#endif
 
 		[Export ("links", ArgumentSemantic.Retain)]
-		DomHtmlCollection links { get;  }
+		DomHtmlCollection Links { get;  }
+
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Forms' property instead.")]
+		[Wrap ("Forms", IsVirtual = true)]
+		DomHtmlCollection forms { get;  }
+#endif
 
 		[Export ("forms", ArgumentSemantic.Retain)]
-		DomHtmlCollection forms { get;  }
+		DomHtmlCollection Forms { get;  }
+
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'Anchors' property instead.")]
+		[Wrap ("Anchors", IsVirtual = true)]
+		DomHtmlCollection anchors { get;  }
+#endif
 
 		[Export ("anchors", ArgumentSemantic.Retain)]
-		DomHtmlCollection anchors { get;  }
+		DomHtmlCollection Anchors { get;  }
 
 		[Export ("lastModified", ArgumentSemantic.Copy)]
 		string LastModified { get;  }

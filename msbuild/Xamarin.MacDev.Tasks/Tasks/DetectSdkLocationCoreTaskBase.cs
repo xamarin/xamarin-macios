@@ -65,6 +65,11 @@ namespace Xamarin.MacDev.Tasks {
 			get; set;
 		}
 
+		[Output]
+		public string XcodeVersion {
+			get; set;
+		}
+
 		#endregion Outputs
 
 		protected IAppleSdk CurrentSdk {
@@ -187,6 +192,8 @@ namespace Xamarin.MacDev.Tasks {
 			if (EnsureAppleSdkRoot ())
 				EnsureSdkPath ();
 			EnsureXamarinSdkRoot ();
+
+			XcodeVersion = AppleSdkSettings.XcodeVersion.ToString ();
 
 			return !Log.HasLoggedErrors;
 		}

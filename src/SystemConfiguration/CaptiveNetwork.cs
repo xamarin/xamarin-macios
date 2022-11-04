@@ -64,9 +64,7 @@ namespace SystemConfiguration {
 
 #if NET
 		[UnsupportedOSPlatform ("ios14.0")]
-#if IOS
-		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios14.0")]
 #else
 		[Deprecated (PlatformName.iOS, 14,0)]
 #endif
@@ -77,9 +75,7 @@ namespace SystemConfiguration {
 #if NET
 		[UnsupportedOSPlatform ("ios14.0")]
 		[UnsupportedOSPlatform ("maccatalyst14.0")]
-#if IOS
-		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios14.0")]
 #else
 		[Deprecated (PlatformName.iOS, 14,0)]
 #endif
@@ -109,9 +105,7 @@ namespace SystemConfiguration {
 		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios14.0")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#if IOS
-		[Obsolete ("Starting with ios14.0 use 'NEHotspotNetwork.FetchCurrent' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios14.0", "Use 'NEHotspotNetwork.FetchCurrent' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'NEHotspotNetwork.FetchCurrent' instead.")]
 #endif
@@ -132,9 +126,7 @@ namespace SystemConfiguration {
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios9.0")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#if IOS
-		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios9.0")]
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 #endif
@@ -146,9 +138,7 @@ namespace SystemConfiguration {
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios9.0")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#if IOS
-		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios9.0")]
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 #endif
@@ -160,9 +150,7 @@ namespace SystemConfiguration {
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios9.0")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#if IOS
-		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios9.0")]
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 #endif
@@ -177,9 +165,7 @@ namespace SystemConfiguration {
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios9.0")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#if IOS
-		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios9.0")]
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 #endif
@@ -194,9 +180,7 @@ namespace SystemConfiguration {
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios9.0")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#if IOS
-		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios9.0")]
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 #endif
@@ -208,9 +192,7 @@ namespace SystemConfiguration {
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios9.0")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#if IOS
-		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios9.0")]
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 #endif

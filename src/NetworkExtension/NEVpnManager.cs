@@ -22,6 +22,7 @@ namespace NetworkExtension {
 		[SupportedOSPlatform ("macos10.11")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,11)]
 #endif

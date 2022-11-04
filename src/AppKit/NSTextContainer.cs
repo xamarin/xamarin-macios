@@ -40,9 +40,7 @@ namespace AppKit {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.11")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.11 use NSTextContainer.FromSize instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.11", "Use NSTextContainer.FromSize instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use NSTextContainer.FromSize instead.")]
 #endif

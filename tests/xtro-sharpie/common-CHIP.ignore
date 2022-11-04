@@ -1,22 +1,62 @@
-!missing-field! CHIPVersionNumber not bound
-!missing-field! CHIPVersionString not bound
-!missing-field! CHIPSizeThreadExtendedPanId not bound
-!missing-field! CHIPSizeThreadMasterKey not bound
-!missing-field! CHIPSizeThreadNetworkName not bound
-!missing-field! CHIPSizeThreadPSKc not bound
-
-# These ChipDeviceController sharedController now fails submission tests
-# And the type was stubbed away as it was not usable
-!missing-selector! +CHIPDeviceController::sharedController not bound
-!missing-selector! CHIPDeviceController::getConnectedDevice:queue:completionHandler: not bound
-!missing-selector! CHIPDeviceController::getControllerNodeId not bound
-!missing-selector! CHIPDeviceController::isDevicePaired:error: not bound
-!missing-selector! CHIPDeviceController::isRunning not bound
-!missing-selector! CHIPDeviceController::pairDevice:address:port:discriminator:setupPINCode:error: not bound
-!missing-selector! CHIPDeviceController::setListenPort: not bound
-!missing-selector! CHIPDeviceController::setPairingDelegate:queue: not bound
-!missing-selector! CHIPDeviceController::shutdown not bound
-!missing-selector! CHIPDeviceController::startup:vendorId:nocSigner: not bound
-!missing-selector! CHIPDeviceController::stopDevicePairing:error: not bound
-!missing-selector! CHIPDeviceController::unpairDevice:error: not bound
-!missing-selector! CHIPDeviceController::updateDevice:fabricId: not bound
+!unknown-field! CHIPErrorDomain bound
+!unknown-protocol! CHIPDevicePairingDelegate bound
+!unknown-protocol! CHIPKeypair bound
+!unknown-protocol! CHIPPersistentStorageDelegate bound
+!unknown-type! CHIPAccountLogin bound
+!unknown-type! CHIPAdministratorCommissioning bound
+!unknown-type! CHIPApplicationBasic bound
+!unknown-type! CHIPApplicationLauncher bound
+!unknown-type! CHIPAudioOutput bound
+!unknown-type! CHIPBarrierControl bound
+!unknown-type! CHIPBasic bound
+!unknown-type! CHIPBinaryInputBasic bound
+!unknown-type! CHIPBinding bound
+!unknown-type! CHIPBridgedDeviceBasic bound
+!unknown-type! CHIPCluster bound
+!unknown-type! CHIPColorControl bound
+!unknown-type! CHIPDescriptor bound
+!unknown-type! CHIPDevice bound
+!unknown-type! CHIPDeviceController bound
+!unknown-type! CHIPDiagnosticLogs bound
+!unknown-type! CHIPDoorLock bound
+!unknown-type! CHIPElectricalMeasurement bound
+!unknown-type! CHIPEthernetNetworkDiagnostics bound
+!unknown-type! CHIPFixedLabel bound
+!unknown-type! CHIPFlowMeasurement bound
+!unknown-type! CHIPGeneralCommissioning bound
+!unknown-type! CHIPGeneralDiagnostics bound
+!unknown-type! CHIPGroupKeyManagement bound
+!unknown-type! CHIPGroups bound
+!unknown-type! CHIPIdentify bound
+!unknown-type! CHIPKeypadInput bound
+!unknown-type! CHIPLevelControl bound
+!unknown-type! CHIPLowPower bound
+!unknown-type! CHIPManualSetupPayloadParser bound
+!unknown-type! CHIPMediaInput bound
+!unknown-type! CHIPMediaPlayback bound
+!unknown-type! CHIPNetworkCommissioning bound
+!unknown-type! CHIPOccupancySensing bound
+!unknown-type! CHIPOnboardingPayloadParser bound
+!unknown-type! CHIPOnOff bound
+!unknown-type! CHIPOnOffSwitchConfiguration bound
+!unknown-type! CHIPOperationalCredentials bound
+!unknown-type! CHIPOptionalQRCodeInfo bound
+!unknown-type! CHIPOtaSoftwareUpdateProvider bound
+!unknown-type! CHIPPressureMeasurement bound
+!unknown-type! CHIPPumpConfigurationAndControl bound
+!unknown-type! CHIPQRCodeSetupPayloadParser bound
+!unknown-type! CHIPRelativeHumidityMeasurement bound
+!unknown-type! CHIPScenes bound
+!unknown-type! CHIPSetupPayload bound
+!unknown-type! CHIPSoftwareDiagnostics bound
+!unknown-type! CHIPSwitch bound
+!unknown-type! CHIPTargetNavigator bound
+!unknown-type! CHIPTemperatureMeasurement bound
+!unknown-type! CHIPTestCluster bound
+!unknown-type! CHIPThermostat bound
+!unknown-type! CHIPThermostatUserInterfaceConfiguration bound
+!unknown-type! CHIPThreadNetworkDiagnostics bound
+!unknown-type! CHIPThreadOperationalDataset bound
+!unknown-type! CHIPWakeOnLan bound
+!unknown-type! CHIPWiFiNetworkDiagnostics bound
+!unknown-type! CHIPWindowCovering bound

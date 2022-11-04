@@ -21,7 +21,9 @@ namespace MetalPerformanceShadersGraph
 
 		public static MPSGraphTensorData Create (params MPSImage[] imageBatch)
 		{
-			return new MPSGraphTensorData (NSArray<MPSImage>.FromNSObjects (imageBatch));
+			if (imageBatch is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBatch));
+			return new MPSGraphTensorData (NSArray<MPSImage>.FromNSObjects (imageBatch)!);
 		}
 
 		public void Read (Span<float> values)

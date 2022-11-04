@@ -726,8 +726,14 @@ namespace ImageKit {
 		[Protocolize]
 		IKImageEditPanelDataSource DataSource { get; set; }
 
-		[Export ("filterArray")]
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'FilterArray' property instead.")]
+		[Wrap ("FilterArray", IsVirtual = true)]
 		NSArray filterArray { get;  }
+#endif
+
+		[Export ("filterArray")]
+		NSArray FilterArray { get;  }
 
 		[Export ("reloadData")]
 		void ReloadData ();
@@ -1068,8 +1074,14 @@ namespace ImageKit {
 		[Export ("sharedSlideshow")]
 		IKSlideshow SharedSlideshow { get; }
 
-		[Export ("autoPlayDelay")]
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'AutoPlayDelay' property instead.")]
+		[Wrap ("AutoPlayDelay", IsVirtual = true)]
 		double autoPlayDelay { get; set; }
+#endif
+
+		[Export ("autoPlayDelay")]
+		double AutoPlayDelay { get; set; }
 
 		[Export ("runSlideshowWithDataSource:inMode:options:")]
 		void RunSlideshow ([Protocolize] IKSlideshowDataSource dataSource, string slideshowMode, NSDictionary slideshowOptions);
