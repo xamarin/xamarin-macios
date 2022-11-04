@@ -160,6 +160,10 @@ namespace Introspection {
 			// Xcode 12.2 Beta 1 does not ship this but it is available in Xcode 12.0...
 			case "HKMetadataKeyBarometricPressure":
 				return true;
+#if __WATCHOS__
+			case "AVCaptureLensPositionCurrent": // looks like this was bound by mistake in watchOS
+				return true;
+#endif
 			default:
 				return false;
 			}

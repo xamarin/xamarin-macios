@@ -200,6 +200,8 @@ namespace CoreLocation {
 	        nint Level { get; }
     }
 
+	delegate void RequestHistoricalLocationsCompletionHandler (CLLocation [] locations, [NullAllowed] NSError error);
+
 	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (CLLocationManagerDelegate)})]
 	partial interface CLLocationManager {
 		[Wrap ("WeakDelegate")]
@@ -474,6 +476,9 @@ namespace CoreLocation {
 		[Export ("stopMonitoringLocationPushes")]
 		void StopMonitoringLocationPushes ();
 
+		[Watch (9,1), NoTV, NoMac, NoiOS, NoMacCatalyst]
+		[Export ("requestHistoricalLocationsWithPurposeKey:sampleCount:completionHandler:")]
+		void RequestHistoricalLocations (string purposeKey, nint sampleCount, RequestHistoricalLocationsCompletionHandler handler);
 	}
 	
 	[BaseType (typeof (NSObject))]

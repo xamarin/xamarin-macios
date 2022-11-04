@@ -14,6 +14,7 @@ namespace Xamarin.Linker {
 		public const string AppKit = nameof (AppKit);
 		public const string AVFoundation = nameof (AVFoundation);
 		public const string AVKit = nameof (AVKit);
+		public const string AVRouting = nameof (AVRouting);
 #if !NET
 		public const string Chip = nameof (Chip);
 #endif
@@ -38,6 +39,7 @@ namespace Xamarin.Linker {
 		public const string GameKit = nameof (GameKit);
 		public const string GameplayKit = nameof (GameplayKit);
 		public const string GLKit = nameof (GLKit);
+		public const string HealthKit = nameof (HealthKit);
 		public const string ImageCaptureCore = nameof (ImageCaptureCore);
 		public const string ImageKit = nameof (ImageKit);
 		public const string InputMethodKit = nameof (InputMethodKit);

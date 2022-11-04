@@ -70,6 +70,9 @@ namespace Introspection {
 			// e.g. picking better types like `bool` instead of `NSNumber'
 			default:
  				return false;
+			case "CIConvertLabToRGB":
+			case "CIConvertRGBtoLab":
+				return true;
 			}
 		}
 
@@ -550,6 +553,15 @@ namespace Introspection {
 						case "outputImageMPS":
 						case "outputImageMPS:":
 						case "outputImageNonMPS:":
+							// no doc for argument
+							continue;
+						}
+						break;
+					case "CIAreaLogarithmicHistogram":
+						switch (key) {
+						case "outputImageNonMPS":
+						case "outputData":
+						case "outputImageMPS":
 							// no doc for argument
 							continue;
 						}

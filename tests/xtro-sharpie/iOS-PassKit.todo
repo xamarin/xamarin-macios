@@ -1,0 +1,1 @@
+!incorrect-protocol-member! PKAddSecureElementPassViewControllerDelegate::addSecureElementPassViewController:didFinishAddingSecureElementPass:error: is OPTIONAL and should NOT be abstract

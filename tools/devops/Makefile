@@ -52,7 +52,7 @@ all check: check-sh check-yaml
 
 check-sh:
 	$(Q) if ! type shellcheck >/dev/null; then echo "shellcheck is not installed. Install it like this: 'brew install shellcheck'"; exit 1; fi
-	$(Q) shellcheck *.sh
+	$(Q) shellcheck $(shell find . -name '*.sh')
 
 check-yml check-yaml:
 	$(Q) if ! type yamllint >/dev/null; then echo "yamllint is not installed. Install it like this: 'brew install yamllint'"; exit 1; fi

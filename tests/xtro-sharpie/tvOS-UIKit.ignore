@@ -329,15 +329,13 @@
 !missing-null-allowed! 'UIKit.UIWindow UIKit.UITouch::get_Window()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIWindow UIKit.UIView::get_Window()' is missing an [NullAllowed] on return type
 
-## not available on tvOS (iOS 14+ only)
-!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceInsetGrouped = 2 not bound
-!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceSidebar = 3 not bound
-!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceSidebarPlain = 4 not bound
-
 ## Enums not needed on tvOS
 !missing-enum! UIListSeparatorVisibility not bound
 !missing-enum! UIPrintRenderingQuality not bound
 !missing-enum! UIBehavioralStyle not bound
+!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceInsetGrouped = 2 not bound
+!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceSidebar = 3 not bound
+!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceSidebarPlain = 4 not bound
 !missing-selector! UIButton::setTintColor: not bound
 !missing-selector! UIButton::tintColor not bound
 !missing-selector! UIImageView::setTintColor: not bound
@@ -468,3 +466,24 @@
 !extra-enum-value! Managed value 45 for UIViewAutoresizing.FlexibleMargins not found in native headers
 !extra-enum-value! Managed value 63 for UIViewAutoresizing.All not found in native headers
 !extra-null-allowed! 'System.Void UIKit.UIScrollViewDelegate::WillEndDragging(UIKit.UIScrollView,CoreGraphics.CGPoint,CoreGraphics.CGPoint&)' has a extraneous [NullAllowed] on parameter #2
+!incorrect-protocol-member! UISearchSuggestion::representedObject is REQUIRED and should be abstract
+!incorrect-protocol-member! UISearchSuggestion::setRepresentedObject: is REQUIRED and should be abstract
+!extra-enum-value! Managed value 2 for UIActivityIndicatorViewStyle.Gray is available for the current platform while the value in the native header is not
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::canReorderItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::didReorderHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::setCanReorderItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::setDidReorderHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::setWillReorderHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::willReorderHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setShouldCollapseItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setShouldExpandItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setSnapshotForExpandingParentItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setWillCollapseItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setWillExpandItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::shouldCollapseItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::shouldExpandItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::snapshotForExpandingParentItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willCollapseItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willExpandItemHandler not bound
+!missing-selector! NSDiffableDataSourceSectionTransaction::difference not bound
+!missing-selector! NSDiffableDataSourceTransaction::difference not bound

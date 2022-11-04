@@ -59,6 +59,13 @@ namespace Introspection {
 						default:
 							return false;
 					}
+				case "SWHighlight":
+					switch (property.Name) {
+						case "MetadataTypeIdentifier":
+							return TestRuntime.IsSimulatorOrDesktop;
+						default:
+							return false;
+					}
 			}
 			return SkipDueToAttribute (property);
 		}
@@ -199,7 +206,7 @@ namespace Introspection {
 				if (p.PropertyType.FullName != NSStringType)
 					continue;
 
-				if (p.GetCustomAttribute<ObsoleteAttribute> () != null)
+				if (MemberHasObsolete (p))
 					continue;
 
 				string name;
