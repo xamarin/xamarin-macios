@@ -70,55 +70,6 @@ namespace GameKit {
 	interface UINavigationController {}
 	interface UIWindow {}
 #endif
-	
-
-	[NoMac]
-	[NoWatch]
-	[NoTV]
-	[MacCatalyst (14,0)]
-	[BaseType (typeof (NSObject))]
-	[Model]
-	[Protocol]
-	interface GKPeerPickerControllerDelegate {
-		[Export ("peerPickerController:didSelectConnectionType:")]
-		void ConnectionTypeSelected (GKPeerPickerController picker, GKPeerPickerConnectionType type);
-
-		[Export ("peerPickerController:sessionForConnectionType:")]
-		GKSession GetSession (GKPeerPickerController picker, GKPeerPickerConnectionType forType);
-
-		[Export ("peerPickerController:didConnectPeer:toSession:")]
-		void PeerConnected (GKPeerPickerController picker, string peerId, GKSession toSession);
-
-		[Export ("peerPickerControllerDidCancel:")]
-		void ControllerCancelled (GKPeerPickerController picker);
-	}
-
-	[NoMac]
-	[NoWatch]
-	[NoTV]
-	[MacCatalyst (14,0)]
-	[BaseType (typeof (NSObject))]
-	[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'MCBrowserViewController' from the 'MultipeerConnectivity' framework instead.")]
-	interface GKPeerPickerController {
-		[Export ("connectionTypesMask", ArgumentSemantic.Assign)]
-		GKPeerPickerConnectionType ConnectionTypesMask { get; set; }
-
-		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
-		NSObject WeakDelegate { get; set; }
-
-		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		GKPeerPickerControllerDelegate Delegate { get; set; }
-
-		[Export ("show")]
-		void Show ();
-
-		[Export ("dismiss")]
-		void Dismiss ();
-
-		[Export ("visible")]
-		bool Visible { [Bind ("isVisible")] get; }
-	}
 
 	[NoMac]
 	[NoWatch] // only exposed thru GKVoiceChatService (not in 3.0)
@@ -531,6 +482,10 @@ namespace GameKit {
 	[BaseType (typeof(NSObject))]
 	interface GKBasePlayer
 	{
+		[Deprecated (PlatformName.iOS, 16, 0, message: "Use the GKPlayer.TeamPlayerId property to identify a player instead.")]
+		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use the GKPlayer.TeamPlayerId property to identify a player instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use the GKPlayer.TeamPlayerId property to identify a player instead.")]
+		[Deprecated (PlatformName.MacOSX, 13, 0, message: "Use the GKPlayer.TeamPlayerId property to identify a player instead.")]
 		[NullAllowed, Export ("playerID", ArgumentSemantic.Retain)]
 		string PlayerID { get; }
 
@@ -923,6 +878,7 @@ namespace GameKit {
 		[iOS (8,0), Mac (10,10)]
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Async]
 		[Export ("loadFriendPlayersWithCompletionHandler:")]
 		void LoadFriendPlayers ([NullAllowed] Action<GKPlayer [], NSError> completionHandler);
@@ -2036,6 +1992,7 @@ namespace GameKit {
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'EndMatchInTurn (NSData, GKLeaderboardScore[], NSObject[], Action<NSError>)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'EndMatchInTurn (NSData, GKLeaderboardScore[], NSObject[], Action<NSError>)' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'EndMatchInTurn (NSData, GKLeaderboardScore[], NSObject[], Action<NSError>)' instead.")]
 		[iOS (7,0)][Mac (10,10)]
 		[Export ("endMatchInTurnWithMatchData:scores:achievements:completionHandler:")]
 		[Async]

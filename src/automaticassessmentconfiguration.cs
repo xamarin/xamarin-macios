@@ -23,7 +23,8 @@ namespace AutomaticAssessmentConfiguration {
 	[MacCatalyst (14,0)]
 	[Native]
 	public enum AEAssessmentErrorCode : long {
-		Unknown = 1
+		Unknown = 1,
+		UnsupportedPlatform = 2,
 	}
 
 	[iOS (14, 0)]

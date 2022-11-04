@@ -23,7 +23,6 @@
 !missing-field! kCGWindowOwnerPID not bound
 !missing-field! kCGWindowSharingState not bound
 !missing-field! kCGWindowStoreType not bound
-!missing-field! kCGWindowWorkspace not bound
 !missing-pinvoke! CGAcquireDisplayFadeReservation is not bound
 !missing-pinvoke! CGAssociateMouseAndMouseCursorPosition is not bound
 !missing-pinvoke! CGBeginDisplayConfiguration is not bound
@@ -31,26 +30,17 @@
 !missing-pinvoke! CGCompleteDisplayConfiguration is not bound
 !missing-pinvoke! CGConfigureDisplayFadeEffect is not bound
 !missing-pinvoke! CGConfigureDisplayMirrorOfDisplay is not bound
-!missing-pinvoke! CGConfigureDisplayMode is not bound
 !missing-pinvoke! CGConfigureDisplayOrigin is not bound
 !missing-pinvoke! CGConfigureDisplayStereoOperation is not bound
 !missing-pinvoke! CGConfigureDisplayWithDisplayMode is not bound
-!missing-pinvoke! CGCursorIsDrawnInFramebuffer is not bound
-!missing-pinvoke! CGCursorIsVisible is not bound
 !missing-pinvoke! CGDirectDisplayCopyCurrentMetalDevice is not bound
-!missing-pinvoke! CGDisplayAvailableModes is not bound
-!missing-pinvoke! CGDisplayBestModeForParameters is not bound
-!missing-pinvoke! CGDisplayBestModeForParametersAndRefreshRate is not bound
 !missing-pinvoke! CGDisplayCopyAllDisplayModes is not bound
 !missing-pinvoke! CGDisplayCopyColorSpace is not bound
 !missing-pinvoke! CGDisplayCopyDisplayMode is not bound
 !missing-pinvoke! CGDisplayCreateImage is not bound
 !missing-pinvoke! CGDisplayCreateImageForRect is not bound
-!missing-pinvoke! CGDisplayCurrentMode is not bound
 !missing-pinvoke! CGDisplayFade is not bound
-!missing-pinvoke! CGDisplayFadeOperationInProgress is not bound
 !missing-pinvoke! CGDisplayGetDrawingContext is not bound
-!missing-pinvoke! CGDisplayIOServicePort is not bound
 !missing-pinvoke! CGDisplayIsActive is not bound
 !missing-pinvoke! CGDisplayIsAlwaysInMirrorSet is not bound
 !missing-pinvoke! CGDisplayIsAsleep is not bound
@@ -61,7 +51,6 @@
 !missing-pinvoke! CGDisplayIsOnline is not bound
 !missing-pinvoke! CGDisplayIsStereo is not bound
 !missing-pinvoke! CGDisplayMirrorsDisplay is not bound
-!missing-pinvoke! CGDisplayModeCopyPixelEncoding is not bound
 !missing-pinvoke! CGDisplayModeGetHeight is not bound
 !missing-pinvoke! CGDisplayModeGetIODisplayModeID is not bound
 !missing-pinvoke! CGDisplayModeGetIOFlags is not bound
@@ -92,11 +81,9 @@
 !missing-pinvoke! CGDisplayStreamUpdateGetMovedRectsDelta is not bound
 !missing-pinvoke! CGDisplayStreamUpdateGetRects is not bound
 !missing-pinvoke! CGDisplayStreamUpdateGetTypeID is not bound
-!missing-pinvoke! CGDisplaySwitchToMode is not bound
 !missing-pinvoke! CGDisplayUnitNumber is not bound
 !missing-pinvoke! CGDisplayUsesOpenGLAcceleration is not bound
 !missing-pinvoke! CGDisplayVendorNumber is not bound
-!missing-pinvoke! CGEnableEventStateCombining is not bound
 !missing-pinvoke! CGEventCreateScrollWheelEvent2 is not bound
 !missing-pinvoke! CGEventGetTypeID is not bound
 !missing-pinvoke! CGEventPostToPid is not bound
@@ -112,36 +99,22 @@
 !missing-pinvoke! CGGetDisplaysWithRect is not bound
 !missing-pinvoke! CGGetLastMouseDelta is not bound
 !missing-pinvoke! CGGetOnlineDisplayList is not bound
-!missing-pinvoke! CGInhibitLocalEvents is not bound
 !missing-pinvoke! CGPSConverterAbort is not bound
 !missing-pinvoke! CGPSConverterConvert is not bound
 !missing-pinvoke! CGPSConverterCreate is not bound
 !missing-pinvoke! CGPSConverterGetTypeID is not bound
 !missing-pinvoke! CGPSConverterIsConverting is not bound
-!missing-pinvoke! CGPostKeyboardEvent is not bound
-!missing-pinvoke! CGPostMouseEvent is not bound
-!missing-pinvoke! CGPostScrollWheelEvent is not bound
 !missing-pinvoke! CGPreflightScreenCaptureAccess is not bound
-!missing-pinvoke! CGRegisterScreenRefreshCallback is not bound
 !missing-pinvoke! CGReleaseDisplayFadeReservation is not bound
-!missing-pinvoke! CGReleaseScreenRefreshRects is not bound
 !missing-pinvoke! CGRequestScreenCaptureAccess is not bound
 !missing-pinvoke! CGRestorePermanentDisplayConfiguration is not bound
-!missing-pinvoke! CGScreenRegisterMoveCallback is not bound
-!missing-pinvoke! CGScreenUnregisterMoveCallback is not bound
 !missing-pinvoke! CGSessionCopyCurrentDictionary is not bound
 !missing-pinvoke! CGSetDisplayTransferByByteTable is not bound
 !missing-pinvoke! CGSetDisplayTransferByTable is not bound
-!missing-pinvoke! CGSetLocalEventsFilterDuringSuppressionState is not bound
-!missing-pinvoke! CGSetLocalEventsSuppressionInterval is not bound
-!missing-pinvoke! CGUnregisterScreenRefreshCallback is not bound
-!missing-pinvoke! CGWaitForScreenRefreshRects is not bound
-!missing-pinvoke! CGWaitForScreenUpdateRects is not bound
 !missing-pinvoke! CGWarpMouseCursorPosition is not bound
 !missing-pinvoke! CGWindowLevelForKey is not bound
 !missing-pinvoke! CGWindowListCopyWindowInfo is not bound
 !missing-pinvoke! CGWindowListCreate is not bound
 !missing-pinvoke! CGWindowListCreateDescriptionFromArray is not bound
 !missing-pinvoke! CGWindowListCreateImageFromArray is not bound
-!missing-pinvoke! CGWindowServerCFMachPort is not bound
 !missing-pinvoke! CGWindowServerCreateServerPort is not bound

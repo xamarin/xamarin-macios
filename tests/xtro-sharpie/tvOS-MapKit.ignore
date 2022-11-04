@@ -2,3 +2,16 @@
 !missing-pinvoke! MKRoadWidthAtZoomScale is not bound
 !missing-protocol-conformance! MKUserLocation should conform to MKAnnotation
 !missing-protocol-member! MKOverlay::coordinate not found
+
+## Marked as unavailable on tvOS
+!missing-enum-value! MKUserTrackingMode native value MKUserTrackingModeFollowWithHeading = 2 not bound
+
+## soft deprecation
+!deprecated-attribute-missing! MKMapView::mapType missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapView::setMapType: missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapView::pointOfInterestFilter missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapView::setPointOfInterestFilter: missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapView::showsBuildings missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapView::setShowsBuildings: missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapView::showsTraffic missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapView::setShowsTraffic: missing a [Deprecated] attribute

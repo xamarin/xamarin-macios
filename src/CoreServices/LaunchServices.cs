@@ -52,6 +52,12 @@ namespace CoreServices
 	public enum LSResult
 	{
 		Success = 0,
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+#else
+		[Mac (13,0)]
+#endif
+		MalformedLocErr = -10400,
 		AppInTrash = -10660,
 		ExecutableIncorrectFormat = -10661,
 		AttributeNotFound = -10662,
@@ -289,9 +295,7 @@ namespace CoreServices
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.15")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.15.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.15")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,15)]
 #endif
@@ -301,9 +305,7 @@ namespace CoreServices
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.15")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.15 use 'GetApplicationUrlsForUrl' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.15", "Use 'GetApplicationUrlsForUrl' instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'GetApplicationUrlsForUrl' instead.")]
 #endif
@@ -320,9 +322,7 @@ namespace CoreServices
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.15")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.15.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.15")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,15)]
 #endif
@@ -332,9 +332,7 @@ namespace CoreServices
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.15")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.15 use 'GetDefaultApplicationUrlForUrl' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.15", "Use 'GetDefaultApplicationUrlForUrl' instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'GetDefaultApplicationUrlForUrl' instead.")]
 #endif

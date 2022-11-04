@@ -23,9 +23,7 @@ namespace MediaPlayer {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios11.3")]
-#if IOS
-		[Obsolete ("Starting with ios11.3 use 'MPVolumeView' to present volume controls.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios11.3", "Use 'MPVolumeView' to present volume controls.")]
 #else
 		[Deprecated (PlatformName.iOS, 11,3, message: "Use 'MPVolumeView' to present volume controls.")]
 #endif
@@ -36,9 +34,7 @@ namespace MediaPlayer {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios11.3")]
-#if IOS
-		[Obsolete ("Starting with ios11.3 use 'MPVolumeView' to present volume controls.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios11.3", "Use 'MPVolumeView' to present volume controls.")]
 #else
 		[Deprecated (PlatformName.iOS, 11,3, message: "Use 'MPVolumeView' to present volume controls.")]
 #endif
@@ -50,9 +46,7 @@ namespace MediaPlayer {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios11.3")]
-#if IOS
-		[Obsolete ("Starting with ios11.3 use 'MPVolumeView' to present volume controls.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios11.3", "Use 'MPVolumeView' to present volume controls.")]
 #else
 		[Deprecated (PlatformName.iOS, 11,3, message: "Use 'MPVolumeView' to present volume controls.")]
 #endif
