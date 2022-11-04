@@ -60,7 +60,7 @@ namespace UIKit {
 			MarkDirty ();
 		}
 
-		public UIBarButtonItem (UIBarButtonSystemItem systemItem) : this (systemItem, null, null)
+		public UIBarButtonItem (UIBarButtonSystemItem systemItem) : this (systemItem: systemItem, target: null, action: null)
 		{
 		}
 

@@ -6,7 +6,7 @@ IFS=$'\n\t '
 env | sort
 
 make global.json
-make -C builds dotnet
+make -C builds dotnet CUSTOM_DOTNET_RUNTIME_INSTALL=1
 
 var=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable VARIABLE=DOTNET)
 DOTNET=${var#*=}
@@ -29,6 +29,7 @@ mkdir -p "$DOTNET_NUPKG_DIR"
 ls -R "$BUILD_SOURCESDIRECTORY/artifacts/not-signed-package"
 cp "$BUILD_SOURCESDIRECTORY/artifacts/not-signed-package/"*.nupkg "$DOTNET_NUPKG_DIR"
 cp "$BUILD_SOURCESDIRECTORY/artifacts/not-signed-package/"*.pkg "$DOTNET_NUPKG_DIR"
+cp "$BUILD_SOURCESDIRECTORY/artifacts/not-signed-package/"*.zip "$DOTNET_NUPKG_DIR"
 ls -R "$DOTNET_NUPKG_DIR"
 
 NUGET_SOURCES=$(grep https://pkgs.dev.azure.com ./NuGet.config | sed -e 's/.*value="//'  -e 's/".*//')
@@ -43,6 +44,13 @@ for platform in $DOTNET_PLATFORMS; do
   CURRENT=$(echo "$platform" | tr "[:upper:]" "[:lower:]")
   PLATFORMS+=("$CURRENT")
 done
+
+for platform in $DOTNET_PLATFORMS; do
+  unzip -l "$DOTNET_NUPKG_DIR"/Microsoft."$platform".Bundle.*.zip
+  unzip "$DOTNET_NUPKG_DIR"/Microsoft."$platform".Bundle.*.zip -d tmpdir
+  rsync -av tmpdir/dotnet/sdk-manifests/* "$BUILD_SOURCESDIRECTORY"/xamarin-macios/builds/downloads/dotnet-*/sdk-manifests/
+done
+find "$BUILD_SOURCESDIRECTORY"/xamarin-macios/builds/downloads/dotnet-*
 
 $DOTNET workload install --from-rollback-file "$ROLLBACK_PATH" --source "$DOTNET_NUPKG_DIR" "${SOURCES[@]}" --verbosity diag "${PLATFORMS[@]}"
 

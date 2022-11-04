@@ -312,7 +312,6 @@
 !missing-selector! ARPlaneAnchor::center not bound
 !missing-selector! ARPlaneAnchor::classification not bound
 !missing-selector! ARPlaneAnchor::classificationStatus not bound
-!missing-selector! ARPlaneAnchor::extent not bound
 !missing-selector! ARPlaneAnchor::geometry not bound
 !missing-selector! ARPlaneGeometry::boundaryVertexCount not bound
 !missing-selector! ARPlaneGeometry::boundaryVertices not bound

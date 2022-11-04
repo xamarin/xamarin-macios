@@ -71,7 +71,8 @@ DOTNET_REFERENCES = \
 	/r:$(DOTNET_BCL_DIR)/System.Runtime.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Runtime.CompilerServices.Unsafe.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Runtime.Extensions.dll \
-	/r:$(DOTNET_SYSTEM_RUNTIME_INTEROPSERVICES_REF_ASSEMBLY_DIR)/System.Runtime.InteropServices.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Runtime.InteropServices.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Security.Cryptography.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Security.Cryptography.X509Certificates.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Text.RegularExpressions.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Threading.dll \
@@ -86,8 +87,6 @@ DOTNET_COMPILER=$(DOTNET_BUILD_DIR)/compiler
 DOTNET_GENERATOR_FLAGS=$(GENERATOR_FLAGS) -compiler=$(abspath $(DOTNET_COMPILER)) --lib=$(DOTNET_BCL_DIR) -attributelib:$(DOTNET_BINDING_ATTRIBUTES) $(DOTNET_REFERENCES)
 DOTNET_GENERATOR=$(DOTNET_BUILD_DIR)/bgen/bgen
 DOTNET_BINDING_ATTRIBUTES=$(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll
-
-include $(TOP)/opentk/Makefile.include
 
 #
 # Specific warnings that we want reported as errors by generator
@@ -111,8 +110,8 @@ IOS_WARNINGS_THAT_YOU_SHOULD_FIX=108
 # this is due to deprecated APIs used in the generated code.
 WARNINGS_TO_IGNORE=BI1234
 
-include ./OpenGLES/Makefile-1.0.include
 include ./Makefile.generator
+include ./opentk.mk
 
 include ./generator-diff.mk
 
@@ -129,7 +128,7 @@ SHARED_RESX = $(TOP)/tools/mtouch/Errors.resx
 SHARED_DESIGNER_CS = $(BUILD_DIR)/common/Errors.Designer.cs
 
 $(SHARED_DESIGNER_CS): $(SHARED_RESX)
-	./generate-errors.csharp > $(SHARED_DESIGNER_CS)
+	$(Q_GEN) ./generate-errors.csharp > $(SHARED_DESIGNER_CS)
 
 #
 # Xamarin.iOS

@@ -71,9 +71,16 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 	<Target Name="_CompileToNative" DependsOnTargets="$(_CompileToNativeDependsOn)"
 		Inputs="$(_NativeWatchApp)"
 		Outputs="$(_NativeExecutable);$(_AppBundlePath)_WatchKitStub\WK">
+
+		<PropertyGroup Condition="'$(_SdkIsSimulator)' != 'true'">
+			<!-- Remove any arm64e slices when building for device -->
+			<WKDittoArchitectures Condition="'$(WKDittoArchitectures)' == ''">--arch arm64_32 --arch arm64 --arch armv7k</WKDittoArchitectures>
+		</PropertyGroup>
+
 		<Ditto
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)'"
+			AdditionalArguments="$(WKDittoArchitectures)"
 			ToolExe="$(DittoExe)"
 			ToolPath="$(DittoPath)"
 			Source="$(_NativeWatchApp)"
@@ -85,6 +92,7 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 		<Ditto
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)'"
+			AdditionalArguments="$(WKDittoArchitectures)"
 			ToolExe="$(DittoExe)"
 			ToolPath="$(DittoPath)"
 			Source="$(_NativeWatchApp)"

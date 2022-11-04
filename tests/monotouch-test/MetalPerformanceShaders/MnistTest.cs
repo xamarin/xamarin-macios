@@ -37,6 +37,11 @@ namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 			if (Runtime.Arch == Arch.SIMULATOR)
 				Assert.Inconclusive ("Metal Performance Shaders Graph is not supported in the tvOS simulator");
 #endif
+#if __IOS__ && !__MACCATALYST__
+
+			if (TestRuntime.CheckXcodeVersion (14, 0))
+				TestRuntime.AssertNotSimulator ("Fails with 'Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -[MTLSimHeap protectionOptions]: unrecognized selector sent to instance 0x600002a09090' - note that we don't call this selector.");
+#endif
 			TestRuntime.IgnoreInCI ("This test seems to make bots keel over and die.");
 
 			var device = MTLDevice.SystemDefault;

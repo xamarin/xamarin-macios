@@ -28,7 +28,6 @@ using NSRulerMarker=System.Object;
 using NSRulerView=System.Object;
 using NSTextAttachmentCell=System.Object;
 using NSTextBlock=System.Object;
-using NSTextList=System.Object;
 using NSTextTableBlock=System.Object;
 using NSTextTabType=System.Object;
 using NSTextStorageEditedFlags=System.Object;
@@ -1697,7 +1696,7 @@ namespace UIKit {
 		NSTextTableBlock [] TextBlocks { get; [NotImplemented] set; }
 #endif
 
-		[NoiOS, NoTV, NoWatch]
+		[iOS (16,0), TV (16,0), NoWatch, MacCatalyst (16,0)]
 		[Export ("textLists")]
 		NSTextList[] TextLists { get; [NotImplemented] set; }
 
@@ -1816,7 +1815,7 @@ namespace UIKit {
 		NSTextTableBlock [] TextBlocks { get; set; }
 #endif
 
-		[NoiOS, NoTV, NoWatch]
+		[iOS (16,0), TV (16,0), NoWatch, MacCatalyst (16,0)]
 		[NoMacCatalyst]
 		[Override]
 		[Export ("textLists")]
@@ -1898,6 +1897,16 @@ namespace UIKit {
 
 		[Export ("visualDescription")]
 		string VisualDescription { get; }
+
+		[Watch (9,0), TV (16,0), iOS (16,0), MacCatalyst (16,0), Mac (13,0)]
+		[Static]
+		[Export ("horizontalGroupWithLayoutSize:repeatingSubitem:count:")]
+		NSCollectionLayoutGroup GetHorizontalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem repeatingSubitem, nint count);
+
+		[Watch (9,0), TV (16,0), iOS (16,0), MacCatalyst (16,0), Mac (13,0)]
+		[Static]
+		[Export ("verticalGroupWithLayoutSize:repeatingSubitem:count:")]
+		NSCollectionLayoutGroup GetVerticalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem repeatingSubitem, nint count);
 	}
 
 	[NoWatch, TV (13,0), iOS (13,0)]
@@ -1931,6 +1940,10 @@ namespace UIKit {
 		[Export ("boundarySupplementaryItems", ArgumentSemantic.Copy)]
 		NSCollectionLayoutBoundarySupplementaryItem [] BoundarySupplementaryItems { get; set; }
 
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.TvOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
+		[Deprecated (PlatformName.WatchOS, 9, 0)]
 		[Export ("supplementariesFollowContentInsets")]
 		bool SupplementariesFollowContentInsets { get; set; }
 
@@ -1953,6 +1966,10 @@ namespace UIKit {
 		[Static]
 		[Export ("orthogonalLayoutSectionForMediaItems")]
 		NSCollectionLayoutSection GetOrthogonalLayoutSectionForMediaItems ();
+
+		[Watch (9, 0), TV (16, 0), iOS (16, 0), NoMac]
+		[Export ("supplementaryContentInsetsReference", ArgumentSemantic.Assign)]
+		UIContentInsetsReference SupplementaryContentInsetsReference { get; set; }
 	}
 
 	[NoWatch, TV (13,0), iOS (13,0)]
@@ -2048,12 +2065,12 @@ namespace UIKit {
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint Center { get; set; }
+		new CGPoint Center { get; set; }
 
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Abstract]
 		[Export ("bounds")]
-		CGRect Bounds { get; }
+		new CGRect Bounds { get; }
 
 		[NoMac]
 		[Abstract]
@@ -2380,7 +2397,7 @@ namespace UIKit {
 		string Identifier { get; set; }
 	}
 
-	[NoWatch]
+	[Watch (9,0)]
 	[Introduced (PlatformName.iOS)]
 	[TV (9,0)]
 	[Mac (10,11)]
@@ -2389,6 +2406,7 @@ namespace UIKit {
 	[Protocol]
 	[BaseType (typeof (NSObject))]
 	partial interface NSTextAttachmentContainer {
+		[NoWatch]
 		[Abstract]
 		[Export ("imageForBounds:textContainer:characterIndex:")]
 		[return: NullAllowed]
@@ -2398,6 +2416,7 @@ namespace UIKit {
 		Image GetImageForBounds (CGRect bounds, [NullAllowed] NSTextContainer textContainer, nuint characterIndex);
 #endif
 
+		[NoWatch]
 		[Abstract]
 		[Export ("attachmentBoundsForTextContainer:proposedLineFragment:glyphPosition:characterIndex:")]
 		CGRect GetAttachmentBounds ([NullAllowed] NSTextContainer textContainer, CGRect proposedLineFragment, CGPoint glyphPosition, nuint characterIndex);
@@ -2481,19 +2500,22 @@ namespace UIKit {
 		bool UsesTextAttachmentView { get; }
 	}
 
-	[TV (15,0), NoWatch, Mac (12,0), iOS (15,0)]
+	[TV (15,0), Watch (9,0), Mac (12,0), iOS (15,0)]
 	[Protocol]
 	interface NSTextAttachmentLayout {
 
+		[NoWatch]
 		[Abstract]
 		[Export ("imageForBounds:attributes:location:textContainer:")]
 		[return: NullAllowed]
 		Image GetImageForBounds (CGRect bounds, NSDictionary<NSString, NSObject> attributes, INSTextLocation location, [NullAllowed] NSTextContainer textContainer);
 
+		[NoWatch]
 		[Abstract]
 		[Export ("attachmentBoundsForAttributes:location:textContainer:proposedLineFragment:position:")]
 		CGRect GetAttachmentBounds (NSDictionary<NSString, NSObject> attributes, INSTextLocation location, [NullAllowed] NSTextContainer textContainer, CGRect proposedLineFragment, CGPoint position);
 
+		[NoWatch]
 		[Abstract]
 		[Export ("viewProviderForParentView:location:textContainer:")]
 		[return: NullAllowed]
@@ -3416,6 +3438,18 @@ namespace UIKit {
 
 		[NullAllowed, Export ("elementRange", ArgumentSemantic.Strong)]
 		NSTextRange ElementRange { get; set; }
+
+		[TV (16, 0), NoWatch, Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
+		[Export ("childElements", ArgumentSemantic.Copy)]
+		NSTextElement[] ChildElements { get; }
+
+		[TV (16, 0), NoWatch, Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
+		[NullAllowed, Export ("parentElement", ArgumentSemantic.Weak)]
+		NSTextElement ParentElement { get; }
+
+		[TV (16, 0), NoWatch, Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
+		[Export ("isRepresentedElement")]
+		bool IsRepresentedElement { get; }
 	}
 
 	[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -3929,6 +3963,85 @@ namespace UIKit {
 		void PerformEditingTransaction (NSTextStorage textStorage, Action transaction);
 	}
 
+	[NoWatch, TV (16,0), iOS (16,0), MacCatalyst (16,0)]
+	enum NSTextListMarkerFormats
+	{
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerBox")]
+		Box,
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerCheck")]
+		Check,
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerCircle")]
+		Circle,
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerDiamond")]
+		Diamond,
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerDisc")]
+		Disc,
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerHyphen")]
+		Hyphen,
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerSquare")]
+		Square,
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerLowercaseHexadecimal")]
+		LowercaseHexadecimal,
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerUppercaseHexadecimal")]
+		UppercaseHexadecimal,
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerOctal")]
+		Octal,
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerLowercaseAlpha")]
+		LowercaseAlpha,
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerUppercaseAlpha")]
+		UppercaseAlpha,
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerLowercaseLatin")]
+		LowercaseLatin,
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerUppercaseLatin")]
+		UppercaseLatin,
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerLowercaseRoman")]
+		LowercaseRoman,
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerUppercaseRoman")]
+		UppercaseRoman,
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerDecimal")]
+		Decimal,
+	}
+
+	[NoWatch, TV (16,0), iOS (16,0), MacCatalyst (16,0)]
+	[Flags]
+	[Native]
+	public enum NSTextListOptions : ulong {
+		PrependEnclosingMarker = 1,
+	}
+
 	[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSTextContentManager))]
 	interface NSTextContentStorage : NSTextStorageObserving
@@ -3961,6 +4074,96 @@ namespace UIKit {
 		[Export ("adjustedRangeFromRange:forEditingTextSelection:")]
 		[return: NullAllowed]
 		NSTextRange GetAdjustedRange (NSTextRange textRange, bool forEditingTextSelection);
+	}
+
+	[TV (9,0), NoWatch, Mac (10,0), iOS (7,0), MacCatalyst (13,0)]
+	[BaseType (typeof (NSObject))]
+	interface NSTextList : NSCoding, NSCopying, NSSecureCoding {
+		[Export ("initWithMarkerFormat:options:")]
+#if NET
+		NativeHandle Constructor ([BindAs (typeof (NSTextListMarkerFormats))] NSString format, NSTextListOptions mask);
+#else
+		NativeHandle Constructor (string format, NSTextListOptions mask);
+#endif
+
+#if !NET
+		[Wrap ("this (format.GetConstant(), mask)")]
+		NativeHandle Constructor (NSTextListMarkerFormats format, NSTextListOptions mask);
+#endif
+
+#if NET
+		[BindAs (typeof (NSTextListMarkerFormats))] 
+#endif
+		[Export ("markerFormat")]
+#if NET
+		NSString MarkerFormat { get; }
+#else
+		string MarkerFormat { get; }
+#endif
+
+		[TV (16,0), NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("initWithMarkerFormat:options:startingItemNumber:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (string markerFormat, NSTextListOptions options, nint startingItemNumber);
+
+		[Export ("listOptions")]
+		NSTextListOptions ListOptions { get; }
+
+		[Export ("markerForItemNumber:")]
+		string GetMarker (nint itemNum);
+
+		//Detected properties
+		[Export ("startingItemNumber")]
+		nint StartingItemNumber { get; set; }
+
+		[TV (16, 0), NoWatch, Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
+		[Export ("ordered")]
+		bool Ordered { [Bind ("isOrdered")] get; }
+
+	}
+
+	[TV (16,0), NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[BaseType (typeof (NSTextParagraph))]
+	interface NSTextListElement
+	{
+		[Export ("initWithAttributedString:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor ([NullAllowed] NSAttributedString attributedString);
+
+		[Export ("initWithTextContentManager:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor ([NullAllowed] NSTextContentManager textContentManager);
+
+		[Export ("initWithParentElement:textList:contents:markerAttributes:childElements:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor ([NullAllowed] NSTextListElement parent, NSTextList textList, [NullAllowed] NSAttributedString contents, [NullAllowed] NSDictionary markerAttributes, [NullAllowed] NSTextListElement[] children);
+
+		[Static]
+		[Export ("textListElementWithContents:markerAttributes:textList:childElements:")]
+		NSTextListElement Create (NSAttributedString contents, [NullAllowed] NSDictionary markerAttributes, NSTextList textList, [NullAllowed] NSTextListElement[] children);
+
+		[Static]
+		[Export ("textListElementWithChildElements:textList:nestingLevel:")]
+		[return: NullAllowed]
+		NSTextListElement Create (NSTextListElement[] children, NSTextList textList, nint nestingLevel);
+
+		[Export ("textList", ArgumentSemantic.Strong)]
+		NSTextList TextList { get; }
+
+		[NullAllowed, Export ("contents", ArgumentSemantic.Strong)]
+		NSAttributedString Contents { get; }
+
+		[NullAllowed, Export ("markerAttributes", ArgumentSemantic.Strong)]
+		NSDictionary WeakMarkerAttributes { get; }
+
+		[Export ("attributedString", ArgumentSemantic.Strong)]
+		NSAttributedString AttributedString { get; }
+
+		[Export ("childElements", ArgumentSemantic.Copy)]
+		NSTextListElement[] ChildElements { get; }
+
+		[NullAllowed, Export ("parentElement", ArgumentSemantic.Weak)]
+		NSTextListElement ParentElement { get; }
 	}
 
 }

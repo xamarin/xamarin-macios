@@ -3,10 +3,10 @@
 # the yaml takes care of that.
 export WORKSPACE="$BUILD_ARTIFACTSTAGINGDIRECTORY"
 echo "GH PR: $PR_ID"
-cd $XAM_TOP
+cd "$XAM_TOP"
 
 if [[ $PR_ID ]]; then
-    git fetch --no-tags --progress https://github.com/xamarin/xamarin-macios +refs/pull/$PR_ID/*:refs/remotes/origin/pr/$PR_ID/*
+    git fetch --no-tags --progress https://github.com/xamarin/xamarin-macios "+refs/pull/$PR_ID/*:refs/remotes/origin/pr/$PR_ID/*"
 
     # Compute the correct base hash to use for comparison by getting the merge base between the target branch and the commit we're building.
     if MERGE_BASE=$(git merge-base "$SYSTEM_PULLREQUEST_SOURCECOMMITID" "refs/remotes/origin/$SYSTEM_PULLREQUEST_TARGETBRANCH"); then

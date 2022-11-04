@@ -272,10 +272,29 @@ namespace Cecil.Tests {
 				return true;
 			}
 			// Generator Bug - Protocol inline with different attribute bug
-			if (member.StartsWith ("SceneKit.SCNLayer") ||
-				member.StartsWith ("AVFoundation.AVAudioSession")) {
+			var inlineProtocols = new List<string> {
+				"SceneKit.SCNLayer",
+				"AVFoundation.AVAudioSession",
+				"MediaPlayer.MPMoviePlayerController",
+				"AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialAssertion",
+				"AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialRegistration",
+				"AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor",
+				"GameController.GCRacingWheel.get_HandlerQueue",
+				"GameController.GCRacingWheel.set_HandlerQueue",
+				"GameController.GCRacingWheel.get_VendorName",
+				"GameController.GCRacingWheel.get_ProductCategory",
+				"GameController.GCRacingWheel.get_PhysicalInputProfile",
+				"GameController.GCGearShifterElement.get_Aliases",
+				"GameController.GCGearShifterElement.get_LocalizedName",
+				"GameController.GCGearShifterElement.get_SfSymbolsName",
+				"GameController.GCRacingWheelInput",
+				"GameController.GCSteeringWheelElemen",
+			};
+
+			if (inlineProtocols.Any ((p) => member.StartsWith (p))) {
 				return true;
 			}
+
 			switch (member) {
 			case "GameplayKit.GKHybridStrategist.get_GameModel":
 			case "GameplayKit.GKHybridStrategist.get_RandomSource":
@@ -300,6 +319,7 @@ namespace Cecil.Tests {
 			case "AVFoundation.AVAssetDownloadDelegate.DidFinishCollectingMetrics":
 			case "AVFoundation.AVAssetDownloadDelegate.TaskIsWaitingForConnectivity":
 			case "AVFoundation.AVAssetDownloadDelegate.WillBeginDelayedRequest":
+			case "AVFoundation.AVAssetDownloadDelegate.DidCreateTask":
 			case "ARKit.ARQuickLookPreviewItem.get_PreviewItemTitle":
 			case "ARKit.ARQuickLookPreviewItem.get_PreviewItemUrl":
 			case "Intents.INPerson.get_AlternativeSpeakableMatches":
@@ -322,6 +342,10 @@ namespace Cecil.Tests {
 			case "CoreWlan.CWNetwork.Copy":
 			case "CoreWlan.CWNetworkProfile.Copy":
 			case "CoreWlan.CWNetworkProfile.MutableCopy":
+			case "MapKit.MKMapFeatureAnnotation.SetCoordinate":
+			case "MapKit.MKMapFeatureAnnotation.get_Coordinate":
+			case "MapKit.MKMapFeatureAnnotation.get_Subtitle":
+			case "MapKit.MKMapFeatureAnnotation.get_Title":
 				return true;
 			}
 			// Generator Bug/Limitation - Related to ^, Wrapper protocol get/set with attributes

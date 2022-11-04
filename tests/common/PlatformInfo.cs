@@ -216,11 +216,11 @@ namespace Xamarin.Tests
 				if (platform != attributePlatform)
 					continue;
 
-				if (attr is UnsupportedOSPlatformAttribute) {
+				// At this point we can't ascertain that the API is available, only that it's unavailable,
+				// so only return in that case. We need to check the SupportedOSPlatform attributes
+				// to see if the API is available.
+				if (attr is UnsupportedOSPlatformAttribute || attr is ObsoletedOSPlatformAttribute) {
 					var isUnsupported = version is not null && targetPlatform.Version >= version;
-					// At this point we can't ascertain that the API is available, only that it's unavailable,
-					// so only return in that case. We need to check the SupportedOSPlatform attributes
-					// to see if the API is available.
 					if (isUnsupported)
 						return false;
 				}

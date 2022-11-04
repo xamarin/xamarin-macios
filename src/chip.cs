@@ -12,6 +12,11 @@ using NativeHandle = System.IntPtr;
 
 namespace Chip {
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum ChipOnboardingPayloadType : ulong {
@@ -21,6 +26,11 @@ namespace Chip {
 		Admin,
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum ChipPairingStatus : ulong {
@@ -29,6 +39,11 @@ namespace Chip {
 		UnknownStatus,
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[ErrorDomain ("CHIPErrorDomain")]
 	[Native]
@@ -46,6 +61,11 @@ namespace Chip {
 		UnsupportedAttribute = 10,
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[Flags]
 	[Native]
@@ -57,6 +77,11 @@ namespace Chip {
 		AllMask = SoftAP | Ble | OnNetwork,
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum ChipCommissioningFlow : ulong {
@@ -65,6 +90,12 @@ namespace Chip {
 		Custom = 2,
 		Invalid = 3,
 	}
+
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum ChipOptionalQRCodeInfoType : ulong {
@@ -73,7 +104,11 @@ namespace Chip {
 		Int32,
 	}
 
-
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject), Name="CHIPDevice")]
 	[DisableDefaultCtor]
@@ -90,6 +125,11 @@ namespace Chip {
 		bool IsActive { get; }
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject), Name="CHIPCluster")]
 	[DisableDefaultCtor]
@@ -111,9 +151,19 @@ namespace Chip {
 #endif
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	delegate void ChipResponseHandler ([NullAllowed] NSError error, [NullAllowed] NSDictionary data);
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPApplicationBasic")]
 	[DisableDefaultCtor]
@@ -181,6 +231,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPBarrierControl")]
 	[DisableDefaultCtor]
@@ -230,6 +285,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPBasic")]
 	[DisableDefaultCtor]
@@ -355,6 +415,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPBinding")]
 	[DisableDefaultCtor]
@@ -412,6 +477,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPColorControl")]
 	[DisableDefaultCtor]
@@ -820,6 +890,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPDescriptor")]
 	[DisableDefaultCtor]
@@ -861,6 +936,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 	[BaseType (typeof(ChipCluster), Name="CHIPDiagnosticLogs")]
 	[DisableDefaultCtor]
@@ -874,6 +954,11 @@ namespace Chip {
 		void RetrieveLogsRequest (byte intent, byte requestedProtocol, NSData transferFileDesignator, ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPDoorLock")]
 	[DisableDefaultCtor]
@@ -1011,6 +1096,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPGroupKeyManagement")]
 	[DisableDefaultCtor]
@@ -1044,6 +1134,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPGroups")]
 	[DisableDefaultCtor]
@@ -1097,6 +1192,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPIdentify")]
 	[DisableDefaultCtor]
@@ -1138,6 +1238,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPLevelControl")]
 	[DisableDefaultCtor]
@@ -1207,6 +1312,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPNetworkCommissioning")]
 	[DisableDefaultCtor]
@@ -1273,6 +1383,11 @@ namespace Chip {
 		void ReadAttributeFeatureMap (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 	[BaseType (typeof(ChipCluster), Name="CHIPOtaSoftwareUpdateProvider")]
 	[DisableDefaultCtor]
@@ -1299,6 +1414,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 	[BaseType (typeof(ChipCluster), Name="CHIPOccupancySensing")]
 	[DisableDefaultCtor]
@@ -1333,6 +1453,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPOnOff")]
 	[DisableDefaultCtor]
@@ -1437,6 +1562,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 	[BaseType (typeof(ChipCluster), Name="CHIPOnOffSwitchConfiguration")]
 	[DisableDefaultCtor]
@@ -1463,6 +1593,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPOperationalCredentials")]
 	[DisableDefaultCtor]
@@ -1565,6 +1700,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 	[BaseType (typeof(ChipCluster), Name="CHIPPressureMeasurement")]
 	[DisableDefaultCtor]
@@ -1599,6 +1739,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision(ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPPumpConfigurationAndControl")]
 	[DisableDefaultCtor]
@@ -1664,6 +1809,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPScenes")]
 	[DisableDefaultCtor]
@@ -1749,6 +1899,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPSwitch")]
 	[DisableDefaultCtor]
@@ -1790,6 +1945,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPTemperatureMeasurement")]
 	[DisableDefaultCtor]
@@ -1835,6 +1995,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPThermostat")]
 	[DisableDefaultCtor]
@@ -2004,6 +2169,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject), Name="CHIPOnboardingPayloadParser")]
 	[DisableDefaultCtor]
@@ -2017,6 +2187,11 @@ namespace Chip {
 
 	interface IChipDevicePairingDelegate {}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 #if NET
 	[Protocol, Model]
@@ -2041,6 +2216,11 @@ namespace Chip {
 
 	interface IChipKeypair {}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 #if NET
 	[Protocol, Model]
@@ -2063,6 +2243,11 @@ namespace Chip {
 		IntPtr /* SecKeyRef _Nullable */ GetPubKeyRef ();
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject), Name="CHIPManualSetupPayloadParser")]
 	[DisableDefaultCtor]
@@ -2078,6 +2263,11 @@ namespace Chip {
 
 	interface IChipPersistentStorageDelegate {}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 #if NET
 	[Protocol, Model]
@@ -2101,6 +2291,11 @@ namespace Chip {
 		void DeleteValue (string key);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject), Name="CHIPOptionalQRCodeInfo")]
 	[DisableDefaultCtor]
@@ -2119,6 +2314,11 @@ namespace Chip {
 		string StringValue { get; set; }
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject), Name="CHIPSetupPayload")]
 	[DisableDefaultCtor]
@@ -2153,6 +2353,11 @@ namespace Chip {
 		ChipOptionalQRCodeInfo[] GetAllOptionalVendorData ([NullAllowed] out NSError error);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 	[BaseType (typeof(NSObject), Name="CHIPThreadOperationalDataset")]
 	[DisableDefaultCtor]
@@ -2188,6 +2393,11 @@ namespace Chip {
 		NSData GetAsData ();
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject), Name="CHIPQRCodeSetupPayloadParser")]
 	[DisableDefaultCtor]
@@ -2201,6 +2411,11 @@ namespace Chip {
 		ChipSetupPayload PopulatePayload ([NullAllowed] out NSError error);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPAccountLogin")]
 	[DisableDefaultCtor]
@@ -2234,6 +2449,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 	[BaseType (typeof(ChipCluster), Name="CHIPAdministratorCommissioning")]
 	[DisableDefaultCtor]
@@ -2262,6 +2482,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPApplicationLauncher")]
 	[DisableDefaultCtor]
@@ -2305,6 +2530,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPAudioOutput")]
 	[DisableDefaultCtor]
@@ -2347,6 +2577,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPBinaryInputBasic")]
 	[DisableDefaultCtor]
@@ -2432,6 +2667,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPBridgedDeviceBasic")]
 	[DisableDefaultCtor]
@@ -2517,6 +2757,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 	[BaseType (typeof (ChipCluster), Name="CHIPContentLauncher")]
 	[DisableDefaultCtor]
@@ -2547,6 +2792,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 	[BaseType (typeof(ChipCluster), Name="CHIPElectricalMeasurement")]
 	[DisableDefaultCtor]
@@ -2605,6 +2855,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPEthernetNetworkDiagnostics")]
 	[DisableDefaultCtor]
@@ -2654,6 +2909,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPFixedLabel")]
 	[DisableDefaultCtor]
@@ -2683,6 +2943,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 	[BaseType (typeof(ChipCluster), Name="CHIPFlowMeasurement")]
 	[DisableDefaultCtor]
@@ -2709,6 +2974,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPGeneralDiagnostics")]
 	[DisableDefaultCtor]
@@ -2742,6 +3012,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPKeypadInput")]
 	[DisableDefaultCtor]
@@ -2771,6 +3046,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPMediaInput")]
 	[DisableDefaultCtor]
@@ -2821,6 +3101,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPMediaPlayback")]
 	[DisableDefaultCtor]
@@ -2899,6 +3184,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPRelativeHumidityMeasurement")]
 	[DisableDefaultCtor]
@@ -2944,6 +3234,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPSoftwareDiagnostics")]
 	[DisableDefaultCtor]
@@ -2977,6 +3272,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPTargetNavigator")]
 	[DisableDefaultCtor]
@@ -3010,6 +3310,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 	[BaseType (typeof (ChipCluster), Name="CHIPThermostatUserInterfaceConfiguration")]
 	[DisableDefaultCtor]
@@ -3048,6 +3353,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPTvChannel")]
 	[DisableDefaultCtor]
@@ -3097,6 +3407,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 	[BaseType (typeof(ChipCluster), Name="CHIPThreadNetworkDiagnostics")]
 	[DisableDefaultCtor]
@@ -3355,6 +3670,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPWakeOnLan")]
 	[DisableDefaultCtor]
@@ -3384,6 +3704,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 	[BaseType (typeof(ChipCluster), Name="CHIPWiFiNetworkDiagnostics")]
 	[DisableDefaultCtor]
@@ -3422,6 +3747,11 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
+	[Obsoleted (PlatformName.iOS, 16,0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPWindowCovering")]
 	[DisableDefaultCtor]

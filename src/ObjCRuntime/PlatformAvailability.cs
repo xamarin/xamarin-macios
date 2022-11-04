@@ -290,9 +290,7 @@ namespace ObjCRuntime
 		// Deprecated in OSX 10.8 - but no good alternative is (yet) available
 #if NET
 		[UnsupportedOSPlatform ("macos10.8")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.8.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.8")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 8)]
 #endif

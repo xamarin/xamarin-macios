@@ -58,6 +58,15 @@ namespace AudioUnit {
 		[iOS (7, 0)]
 #endif
 		MIDIProcessor = 0x61756d69, // 'aumi'
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[iOS (16, 0), Mac (13, 0), TV (16, 0), MacCatalyst (16, 0)]
+#endif
+		SpeechSynthesize = 0x61757370, // ausp
 
 #if !MONOMAC
 #if NET
@@ -151,11 +160,8 @@ namespace AudioUnit {
 		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos13.0 use 'AudioTypeConverter.NewTimePitch' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios13.0 use 'AudioTypeConverter.NewTimePitch' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'AudioTypeConverter.NewTimePitch' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'AudioTypeConverter.NewTimePitch' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
@@ -177,9 +183,7 @@ namespace AudioUnit {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#if IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Obsoleted (PlatformName.iOS, 7, 0)]
 #endif
@@ -213,11 +217,8 @@ namespace AudioUnit {
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("macos")]
-#if TVOS
-		[Obsolete ("Starting with tvos13.0 use 'AudioTypeEffect.GraphicEQ' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios13.0 use 'AudioTypeEffect.GraphicEQ' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'AudioTypeEffect.GraphicEQ' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'AudioTypeEffect.GraphicEQ' instead.")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Unavailable (PlatformName.MacCatalyst)]
@@ -252,9 +253,7 @@ namespace AudioUnit {
 		[UnsupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.10")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.10 use 'Spacial' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.10", "Use 'Spacial' instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'Spacial' instead.")]
 #endif
@@ -266,9 +265,7 @@ namespace AudioUnit {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-#if IOS
-		[Obsolete ("Starting with ios8.0 use 'Spacial' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios8.0", "Use 'Spacial' instead.")]
 #endif
 		Embedded3D = 0x3364656d, // '3dem'
 #endif

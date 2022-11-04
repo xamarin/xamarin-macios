@@ -1,0 +1,18 @@
+!deprecated-attribute-missing! SKDownload missing a [Deprecated] attribute
+!deprecated-attribute-missing! SKDownload::contentIdentifier missing a [Deprecated] attribute
+!deprecated-attribute-missing! SKDownload::contentURL missing a [Deprecated] attribute
+!deprecated-attribute-missing! SKDownload::contentVersion missing a [Deprecated] attribute
+!deprecated-attribute-missing! SKDownload::error missing a [Deprecated] attribute
+!deprecated-attribute-missing! SKDownload::expectedContentLength missing a [Deprecated] attribute
+!deprecated-attribute-missing! SKDownload::progress missing a [Deprecated] attribute
+!deprecated-attribute-missing! SKDownload::state missing a [Deprecated] attribute
+!deprecated-attribute-missing! SKDownload::timeRemaining missing a [Deprecated] attribute
+!deprecated-attribute-missing! SKDownload::transaction missing a [Deprecated] attribute
+!deprecated-attribute-missing! SKPaymentQueue::cancelDownloads: missing a [Deprecated] attribute
+!deprecated-attribute-missing! SKPaymentQueue::pauseDownloads: missing a [Deprecated] attribute
+!deprecated-attribute-missing! SKPaymentQueue::resumeDownloads: missing a [Deprecated] attribute
+!deprecated-attribute-missing! SKPaymentQueue::startDownloads: missing a [Deprecated] attribute
+!deprecated-attribute-missing! SKPaymentTransaction::downloads missing a [Deprecated] attribute
+!deprecated-attribute-missing! SKPaymentTransactionObserver::paymentQueue:updatedDownloads: missing a [Deprecated] attribute
+!missing-selector! SKOverlayAppConfiguration::setAdImpression: not bound
+!missing-selector! SKStoreProductViewController::loadProductWithParameters:impression:completionBlock: not bound
