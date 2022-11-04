@@ -6192,7 +6192,13 @@ namespace UIKit {
 		nfloat CapHeight { get; }
 
 		[Export ("xHeight")]
+		nfloat XHeight { get; }
+
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'XHeight' property instead.")]
+		[Wrap ("XHeight", IsVirtual = true)]
 		nfloat xHeight { get; }
+#endif
 
 		[Export ("lineHeight")]
 		nfloat LineHeight { get; }
