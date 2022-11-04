@@ -8,7 +8,7 @@ using CoreGraphics;
 
 namespace CoreAnimation {
 	public partial class CAKeyFrameAnimation {
-		public T[] GetValuesAs <T> () where T : class, INativeObject
+		public T [] GetValuesAs<T> () where T : class, INativeObject
 		{
 			return NSArray.FromArrayNative<T> (_Values);
 		}
@@ -39,7 +39,7 @@ namespace CoreAnimation {
 				else if (value == CAAnimation.AnimationCubicPaced)
 					result = CAAnimation.AnimationCubicPaced;
 				else
-					result = (NSString)value;
+					result = (NSString) value;
 
 				_CalculationMode = result;
 			}

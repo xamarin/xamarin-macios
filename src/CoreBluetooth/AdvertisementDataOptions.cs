@@ -45,10 +45,9 @@ namespace CoreBluetooth {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[Watch (4,0)]
+	[Watch (4, 0)]
 #endif
-	public class StartAdvertisingOptions : DictionaryContainer
-	{
+	public class StartAdvertisingOptions : DictionaryContainer {
 #if !COREBUILD
 		public StartAdvertisingOptions ()
 			: base (new NSMutableDictionary ())
@@ -69,7 +68,7 @@ namespace CoreBluetooth {
 			}
 		}
 
-		public CBUUID[]? ServicesUUID {
+		public CBUUID []? ServicesUUID {
 			get {
 				return GetArray<CBUUID> (CBAdvertisement.DataServiceUUIDsKey);
 			}

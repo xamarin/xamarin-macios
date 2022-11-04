@@ -30,7 +30,7 @@
 
 using System;
 
-using Foundation; 
+using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 using CoreFoundation;
@@ -53,7 +53,7 @@ namespace CoreAnimation {
 				_AttributedString = value.GetHandle ();
 			}
 		}
-		
+
 		public void SetFont (string fontName)
 		{
 			if (fontName is null)
@@ -61,7 +61,7 @@ namespace CoreAnimation {
 			using (var nss = new NSString (fontName))
 				_Font = nss.Handle;
 		}
-		
+
 		public void SetFont (CGFont font)
 		{
 			if (font is null)
@@ -100,7 +100,7 @@ namespace CoreAnimation {
 #else
 				return null;
 #endif
-			} 
+			}
 
 			// Allows CTFont, CGFont, string and in OSX NSFont settings
 			set {
@@ -112,22 +112,22 @@ namespace CoreAnimation {
 				}
 #endif
 				var ct = value as CTFont;
-				if (ct is not null){
+				if (ct is not null) {
 					_Font = ct.Handle;
 					return;
 				}
 				var cg = value as CGFont;
-				if (cg is not null){
+				if (cg is not null) {
 					_Font = cg.Handle;
 					return;
 				}
 				var nss = value as NSString;
-				if (nss is not null){
+				if (nss is not null) {
 					_Font = nss.Handle;
 					return;
 				}
 				var str = value as string;
-				if (str is not null){
+				if (str is not null) {
 					nss = new NSString (str);
 					_Font = nss.Handle;
 				}

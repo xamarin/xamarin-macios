@@ -45,7 +45,7 @@ namespace CoreAnimation {
 		_CAAnimationDelegate EnsureCAAnimationDelegate ()
 		{
 			var del = Delegate;
-			if (del is null || (!(del is _CAAnimationDelegate))){
+			if (del is null || (!(del is _CAAnimationDelegate))) {
 				del = new _CAAnimationDelegate ();
 				Delegate = del;
 			}
@@ -54,7 +54,7 @@ namespace CoreAnimation {
 
 #pragma warning disable 672
 		[Register]
-		sealed class _CAAnimationDelegate : CAAnimationDelegate { 
+		sealed class _CAAnimationDelegate : CAAnimationDelegate {
 			public _CAAnimationDelegate () { IsDirectBinding = false; }
 
 			internal EventHandler? animationStarted;
@@ -62,7 +62,7 @@ namespace CoreAnimation {
 			public override void AnimationStarted (CAAnimation? anim)
 			{
 				var handler = animationStarted;
-				if (handler is not null){
+				if (handler is not null) {
 					handler (anim, EventArgs.Empty);
 				}
 			}
@@ -72,7 +72,7 @@ namespace CoreAnimation {
 			public override void AnimationStopped (CAAnimation? anim, bool finished)
 			{
 				var handler = animationStopped;
-				if (handler is not null){
+				if (handler is not null) {
 					var args = new CAAnimationStateEventArgs (finished);
 					handler (anim, args);
 				}
@@ -116,7 +116,7 @@ namespace CoreAnimation {
 		}
 
 		[Obsolete ("Empty stub (not a public API).")]
-		public static NSString[]? BehaviorTypes { get; }
+		public static NSString []? BehaviorTypes { get; }
 	}
 
 	public partial class CAMetalLayer {
