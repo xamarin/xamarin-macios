@@ -69,11 +69,8 @@ namespace Security {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.14")]
 		[UnsupportedOSPlatform ("ios12.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.14 use 'AfterFirstUnlock' or a better suited option instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios12.0 use 'AfterFirstUnlock' or a better suited option instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.14", "Use 'AfterFirstUnlock' or a better suited option instead.")]
+		[ObsoletedOSPlatform ("ios12.0", "Use 'AfterFirstUnlock' or a better suited option instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'AfterFirstUnlock' or a better suited option instead.")]
 		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'AfterFirstUnlock' or a better suited option instead.")]
@@ -88,11 +85,8 @@ namespace Security {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.14")]
 		[UnsupportedOSPlatform ("ios12.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.14 use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios12.0 use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.14", "Use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.")]
+		[ObsoletedOSPlatform ("ios12.0", "Use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.")]
 		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.")]
@@ -1014,9 +1008,7 @@ namespace Security {
 		[UnsupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios9.0")]
-#if IOS
-		[Obsolete ("Starting with ios9.0 use 'AuthenticationUI' property instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios9.0", "Use 'AuthenticationUI' property instead.")]
 #else
 		[iOS (8, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'AuthenticationUI' property instead.")]

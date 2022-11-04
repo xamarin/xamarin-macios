@@ -77,6 +77,7 @@ namespace Introspection {
 				break;
 			case "DeviceCheck": // Only available on device
 			case "MLCompute": // Only available on device
+			case "PushToTalk":
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
@@ -196,6 +197,7 @@ namespace Introspection {
 			case "INStartAudioCallIntent":
 			case "INStartPhotoPlaybackIntent":
 			case "INStartWorkoutIntent":
+			case "CLKComplicationWidgetMigrator": // Only available on device
 				return true;
 #endif
 			// iOS 11 Beta 1
@@ -249,11 +251,20 @@ namespace Introspection {
 					return true;
 				break;
 #endif
-			case "HMAccessorySetupManager":
-				// Selector fails submission test in Xcode 14.0 timeframe
-				return true;
 			}
 			return base.Skip (type);
+		}
+
+		protected override bool SkipCheckShouldReExposeBaseCtor (Type type)
+		{
+			switch (type.Name) {
+			case "SWRemoveParticipantAlertController":
+				return true;
+			default:
+				return false;
+			}
+
+			return base.SkipCheckShouldReExposeBaseCtor (type);
 		}
 
 		static List<NSObject> do_not_dispose = new List<NSObject> ();
@@ -399,6 +410,10 @@ namespace Introspection {
 			// crash with xcode 12 GM
 			case "CSLocalizedString":
 				if (TestRuntime.CheckXcodeVersion (12, 0))
+					return;
+				break;
+			case "IOSurface": // crash with Xcode 14 beta 1
+				if (TestRuntime.CheckXcodeVersion (14, 0))
 					return;
 				break;
 			default:

@@ -42,6 +42,71 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_browse_descriptor nw_browse_descriptor_create_bonjour_service (string type, string? domain);
 
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_browse_descriptor nw_browse_descriptor_create_application_service (string application_service_name);
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		public static NWBrowserDescriptor CreateApplicationServiceName (string applicationServiceName)
+		{
+			if (applicationServiceName is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationServiceName));
+
+			return new NWBrowserDescriptor (nw_browse_descriptor_create_application_service (applicationServiceName), owns: true);
+		}
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern IntPtr nw_browse_descriptor_get_application_service_name (OS_nw_browse_descriptor descriptor);
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		public string? ApplicationServiceName {
+			get {
+				var appNamePtr = nw_browse_descriptor_get_application_service_name (GetCheckedHandle ());
+				return Marshal.PtrToStringAnsi (appNamePtr);
+			}
+		}
+
 		public static NWBrowserDescriptor CreateBonjourService (string type, string? domain)
 		{
 			// domain can be null, type CANNOT	

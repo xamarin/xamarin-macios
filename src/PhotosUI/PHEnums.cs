@@ -57,8 +57,9 @@ namespace PhotosUI {
 		Undefined,
 	}
 
-	[NoWatch, NoTV, NoMac]
+	[NoWatch, NoTV]
 	[iOS (14,0)]
+	[Mac (13,0)]
 	[Native]
 	public enum PHPickerConfigurationAssetRepresentationMode : long
 	{

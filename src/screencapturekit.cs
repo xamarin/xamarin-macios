@@ -41,6 +41,9 @@ namespace ScreenCaptureKit {
 		NoDisplayList = -3814,
 		NoCaptureSource = -3815,
 		RemovingStream = -3816,
+		UserStopped = -3817,
+		FailedToStartAudioCapture = -3818,
+		FailedToStopAudioCapture = -3819,
 	}
 
 	[NoiOS, NoTV, NoWatch, Mac (12,3), NoMacCatalyst]
@@ -58,6 +61,8 @@ namespace ScreenCaptureKit {
 	[Native]
 	enum SCStreamOutputType : long {
 		Screen,
+		[Mac (13,0)]
+		Audio,
 	}
 
 	[NoiOS, NoTV, NoWatch, Mac (12,3), NoMacCatalyst]
@@ -244,6 +249,22 @@ namespace ScreenCaptureKit {
 		[Advice ("Use the constants inside 'CGColorSpaceNames' class.")]
 		[Export ("colorSpaceName", ArgumentSemantic.Assign)]
 		NSString WeakColorSpaceName { get; set; }
+
+		[Mac (13, 0)]
+		[Export ("capturesAudio")]
+		bool CapturesAudio { get; set; }
+
+		[Mac (13, 0)]
+		[Export ("sampleRate")]
+		nint SampleRate { get; set; }
+
+		[Mac (13, 0)]
+		[Export ("channelCount")]
+		nint ChannelCount { get; set; }
+
+		[Mac (13, 0)]
+		[Export ("excludesCurrentProcessAudio")]
+		bool ExcludesCurrentProcessAudio { get; set; }
 	}
 
 	[NoiOS, NoTV, NoWatch, Mac (12,3), NoMacCatalyst]
@@ -275,6 +296,10 @@ namespace ScreenCaptureKit {
 		// No Async even on Swift and it makes sense, these are callback APIs.
 		[Export ("stopCaptureWithCompletionHandler:")]
 		void StopCapture ([NullAllowed] Action<NSError> completionHandler);
+
+		[Mac (13, 0)]
+		[Export ("synchronizationClock")]
+		CMClock SynchronizationClock { [return: NullAllowed] get; }
 	}
 
 	interface ISCStreamDelegate {}

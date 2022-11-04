@@ -30,6 +30,7 @@
 		<NativeLibName>macos-fat</NativeLibName>
 		<SupportedOSPlatformVersion Condition="'$(SupportedOSPlatformVersion)' == ''">10.14</SupportedOSPlatformVersion>
 		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\macos-defines-dotnet.rsp</CompilerResponseFile>
+		<RuntimeIdentifiers Condition="'$(Configuration)' == 'Release' And '$(SingleArchReleaseBuild)' == 'true'">osx-x64</RuntimeIdentifiers>
 	</PropertyGroup>
 
 	<!-- Logic for Mac Catalyst -->
@@ -38,6 +39,7 @@
 		<NativeLibName>maccatalyst-fat</NativeLibName>
 		<SupportedOSPlatformVersion Condition="'$(SupportedOSPlatformVersion)' == ''">13.3</SupportedOSPlatformVersion>
 		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\maccatalyst-defines-dotnet.rsp</CompilerResponseFile>
+		<RuntimeIdentifiers Condition="'$(Configuration)' == 'Release' And '$(SingleArchReleaseBuild)' == 'true'">maccatalyst-x64</RuntimeIdentifiers>
 	</PropertyGroup>
 
 	<!-- Logic for all test suites -->

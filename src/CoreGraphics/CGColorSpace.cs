@@ -490,13 +490,9 @@ namespace CoreGraphics {
 		[UnsupportedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("ios11.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.13 use 'CreateIDCCData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos11.0 use 'CreateIDCCData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios11.0 use 'CreateIDCCData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.13", "Use 'CreateIDCCData' instead.")]
+		[ObsoletedOSPlatform ("tvos11.0", "Use 'CreateIDCCData' instead.")]
+		[ObsoletedOSPlatform ("ios11.0", "Use 'CreateIDCCData' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CreateIDCCData' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CreateIDCCData' instead.")]
@@ -528,13 +524,9 @@ namespace CoreGraphics {
 		[UnsupportedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("ios11.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.13 use 'CreateIDCCData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos11.0 use 'CreateIDCCData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios11.0 use 'CreateIDCCData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.13", "Use 'CreateIDCCData' instead.")]
+		[ObsoletedOSPlatform ("tvos11.0", "Use 'CreateIDCCData' instead.")]
+		[ObsoletedOSPlatform ("ios11.0", "Use 'CreateIDCCData' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CreateIDCCData' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CreateIDCCData' instead.")]
@@ -612,13 +604,9 @@ namespace CoreGraphics {
 		[UnsupportedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("ios11.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.13 use 'GetICCData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos11.0 use 'GetICCData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios11.0 use 'GetICCData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.13", "Use 'GetICCData' instead.")]
+		[ObsoletedOSPlatform ("tvos11.0", "Use 'GetICCData' instead.")]
+		[ObsoletedOSPlatform ("ios11.0", "Use 'GetICCData' instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'GetICCData' instead." )]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'GetICCData' instead." )]
@@ -636,13 +624,9 @@ namespace CoreGraphics {
 		[UnsupportedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("ios11.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.13 use 'GetICCData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos11.0 use 'GetICCData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios11.0 use 'GetICCData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.13", "Use 'GetICCData' instead.")]
+		[ObsoletedOSPlatform ("tvos11.0", "Use 'GetICCData' instead.")]
+		[ObsoletedOSPlatform ("ios11.0", "Use 'GetICCData' instead.")]
 #else
 		[iOS (7,0)] // note: pre-release docs/headers says iOS6 and later, available on OSX since 10.5
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'GetICCData' instead." )]
@@ -835,13 +819,9 @@ namespace CoreGraphics {
 		[UnsupportedOSPlatform ("macos10.15.4")]
 		[UnsupportedOSPlatform ("tvos13.4")]
 		[UnsupportedOSPlatform ("ios13.4")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.15.4.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos13.4.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios13.4.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.15.4")]
+		[ObsoletedOSPlatform ("tvos13.4")]
+		[ObsoletedOSPlatform ("ios13.4")]
 #else
 		[Mac (10,15)]
 		[iOS (13,0)]
@@ -864,13 +844,9 @@ namespace CoreGraphics {
 		[UnsupportedOSPlatform ("macos10.15.4")]
 		[UnsupportedOSPlatform ("tvos13.4")]
 		[UnsupportedOSPlatform ("ios13.4")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.15.4.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos13.4.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios13.4.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.15.4")]
+		[ObsoletedOSPlatform ("tvos13.4")]
+		[ObsoletedOSPlatform ("ios13.4")]
 #else
 		[Mac (10,15)]
 		[iOS (13,0)]
@@ -1037,6 +1013,35 @@ namespace CoreGraphics {
 		[MacCatalyst (14,0)]
 #endif
 		public CGColorSpace? CreateExtendedLinearized () => Runtime.GetINativeObject<CGColorSpace> (CGColorSpaceCreateExtendedLinearized (Handle), owns: true);
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[iOS (16,0)]
+		[TV (16,0)]
+		[Mac (13,0)]
+		[MacCatalyst (16,0)]
+		[Watch (9,0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern IntPtr CGColorSpaceCreateCopyWithStandardRange (/* CGColorSpaceRef */ IntPtr s);
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[iOS (16,0)]
+		[TV (16,0)]
+		[Mac (13,0)]
+		[MacCatalyst (16,0)]
+		[Watch (9,0)]
+#endif
+		public CGColorSpace? CreateCopyWithStandardRange () => Runtime.GetINativeObject<CGColorSpace> (CGColorSpaceCreateCopyWithStandardRange (Handle), owns: true);
 
 #if NET
 		[SupportedOSPlatform ("macos12.0")]

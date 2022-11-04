@@ -90,6 +90,18 @@ namespace CoreSpotlight {
 		[Export ("deleteAllSearchableItemsWithCompletionHandler:")]
 		[Async]
 		void DeleteAll ([NullAllowed] Action<NSError> completionHandler);
+
+		// from interface CSExternalProvider (CSSearchableIndex)
+
+		[Async (ResultTypeName="CSSearchableIndexBundleDataResult")]
+		[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[Export ("provideDataForBundle:identifier:type:completionHandler:")]
+		void ProvideData (string bundle, string identifier, string type, Action<NSData, NSError> completionHandler);
+
+		[Async (ResultTypeName="CSSearchableIndexBundleDataResult")]
+		[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[Export ("fetchDataForBundleIdentifier:itemIdentifier:contentType:completionHandler:")]
+		void FetchData (string bundleIdentifier, string itemIdentifier, UTType contentType, Action<NSData, NSError> completionHandler);
 	}
 
 	delegate void CSSearchableIndexFetchHandler (NSData clientState, NSError error);
@@ -181,6 +193,10 @@ namespace CoreSpotlight {
 
 		[Export ("attributeSet", ArgumentSemantic.Strong)]
 		CSSearchableItemAttributeSet AttributeSet { get; set; }
+
+		[NoTV, iOS (16,0), MacCatalyst (16,0), Mac (13,0), NoWatch]
+		[Export ("compareByRank:")]
+		NSComparisonResult CompareByRank (CSSearchableItem other);
 	}
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
@@ -1074,6 +1090,11 @@ namespace CoreSpotlight {
 		[Export ("initWithQueryString:attributes:")]
 		NativeHandle Constructor (string queryString, [NullAllowed] string[] attributes);
 
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("initWithQueryString:queryContext:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (string queryString, [NullAllowed] CSSearchQueryContext queryContext);
+
 		[Export ("cancelled")]
 		bool Cancelled { [Bind ("isCancelled")] get; }
 
@@ -1103,6 +1124,108 @@ namespace CoreSpotlight {
 	{
 		[Export ("updateAttributes:forFileAtURL:error:")]
 		bool Update (CSSearchableItemAttributeSet attributes, NSUrl contentUrl, [NullAllowed] out NSError error);
+	}
+
+	[NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[BaseType (typeof (CSSearchQuery))]
+	[DisableDefaultCtor]
+	interface CSUserQuery
+	{
+		[Export ("initWithUserQueryString:userQueryContext:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor ([NullAllowed] string userQueryString, [NullAllowed] CSUserQueryContext userQueryContext);
+
+		[Export ("foundSuggestionCount")]
+		nint FoundSuggestionCount { get; }
+
+		[NullAllowed, Export ("foundSuggestionsHandler", ArgumentSemantic.Copy)]
+		Action<NSArray<CSSuggestion>> FoundSuggestionsHandler { get; set; }
+
+		[Export ("start")]
+		void Start ();
+
+		[Export ("cancel")]
+		void Cancel ();
+	}
+
+	[NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[BaseType (typeof (CSSearchQueryContext))]
+	[DisableDefaultCtor]
+	interface CSUserQueryContext
+	{
+		[Static]
+		[Export ("userQueryContext")]
+		CSUserQueryContext UserQueryContext { get; }
+
+		[Static]
+		[Export ("userQueryContextWithCurrentSuggestion:")]
+		CSUserQueryContext Create ([NullAllowed] CSSuggestion currentSuggestion);
+
+		[Export ("maxSuggestionCount")]
+		nint MaxSuggestionCount { get; set; }
+
+		[Export ("enableRankedResults")]
+		bool EnableRankedResults { get; set; }
+
+		[Export ("maxResultCount")]
+		nint MaxResultCount { get; set; }
+	}
+
+
+	[NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CSSuggestion : NSSecureCoding, NSCopying
+	{
+
+		[Field ("CSSuggestionHighlightAttributeName")]
+		NSString HighlightAttributeName { get; }
+
+		[Export ("localizedAttributedSuggestion")]
+		NSAttributedString LocalizedAttributedSuggestion { get; }
+
+		[Export ("suggestionKind")]
+		CSSuggestionKind SuggestionKind { get; }
+
+		[Export ("compare:")]
+		NSComparisonResult Compare (CSSuggestion other);
+
+		[Export ("compareByRank:")]
+		NSComparisonResult CompareByRank (CSSuggestion other);
+	}
+
+	[NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[BaseType (typeof (NSObject))]
+	interface CSSearchQueryContext : NSSecureCoding, NSCopying
+	{
+		[Export ("fetchAttributes", ArgumentSemantic.Strong)]
+		string[] FetchAttributes { get; set; }
+
+		[Export ("filterQueries", ArgumentSemantic.Copy)]
+		string[] FilterQueries { get; set; }
+
+		[NullAllowed, Export ("keyboardLanguage", ArgumentSemantic.Strong)]
+		string KeyboardLanguage { get; set; }
+
+		[Export ("sourceOptions", ArgumentSemantic.Assign)]
+		CSSearchQuerySourceOptions SourceOptions { get; set; }
+	}
+
+	[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[Native]
+	public enum CSSearchQuerySourceOptions : long
+	{
+		Default = 0,
+		AllowMail = 1L << 0,
+	}
+
+	[NoTV, Mac (10,13), iOS (16,0), MacCatalyst (16,0)]
+	[Native]
+	public enum CSSuggestionKind : long
+	{
+		None,
+		Custom,
+		Default,
 	}
 
 }
