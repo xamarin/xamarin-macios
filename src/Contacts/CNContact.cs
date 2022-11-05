@@ -16,7 +16,7 @@ using ObjCRuntime;
 namespace Contacts {
 
 	public partial class CNContact {
-		
+
 		public virtual bool IsKeyAvailable (CNContactOptions options)
 		{
 			var key = ContactOptionsToNSString (options);
