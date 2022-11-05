@@ -45,7 +45,7 @@ using NativeHandle = System.IntPtr;
 namespace CoreAnimation {
 
 	partial class CAAnimation {
-		[DllImport (Constants.QuartzLibrary, EntryPoint="CACurrentMediaTime")]
+		[DllImport (Constants.QuartzLibrary, EntryPoint = "CACurrentMediaTime")]
 		public extern static /* CFTimeInterval */ double CurrentMediaTime ();
 	}
 
@@ -58,7 +58,7 @@ namespace CoreAnimation {
 		{
 			return new CGColor (p, false);
 		}
-		
+
 		public CGColor [] Colors {
 			get {
 				return NSArray.ArrayFromHandle<CGColor> (_Colors, CreateColor);
@@ -73,8 +73,8 @@ namespace CoreAnimation {
 				var ptrs = new NativeHandle [value.Length];
 				for (int i = 0; i < ptrs.Length; i++)
 					ptrs [i] = value [i].Handle;
-				
-				using (NSArray array = NSArray.FromIntPtrs (ptrs)){
+
+				using (NSArray array = NSArray.FromIntPtrs (ptrs)) {
 					_Colors = array.Handle;
 				}
 			}
