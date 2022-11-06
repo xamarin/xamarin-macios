@@ -8,6 +8,7 @@
 	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.DetectSigningIdentity" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.PrepareAppBundle" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.UnpackFrameworks" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
+	<UsingTask TaskName="Xamarin.iOS.Tasks.Windows.Unzip" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	
 	<Import Project="Xamarin.iOS.HotRestart.props" />
 
@@ -86,7 +87,34 @@
 		</Touch>
 	</Target>
 
-	<Target Name="_CollectHotRestartFrameworks" >
+	<!-- Also include frameworks from packages -->
+	<Target Name="_CollectHotRestartFrameworksFromPackages"
+		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true' And '$(UnpackHotRestartFrameworks)' == 'true'" >
+
+		<ItemGroup>
+			<_PackageResourcesDirs Include="@(AssembliesWithFrameworks -> '%(RootDir)%(Directory)%(FileName).resources')"
+				Condition="Exists('%(RootDir)%(Directory)%(FileName).resources')" />
+			<_PackageResourcesZips Include="@(AssembliesWithFrameworks -> '%(RootDir)%(Directory)%(FileName).resources.zip')"
+				Condition="Exists('%(RootDir)%(Directory)%(FileName).resources.zip')" />
+		</ItemGroup>
+
+		<Unzip ZipFilePath="@(_PackageResourcesZips)"
+			ExtractionPath="$(HotRestartPackageResourcesDir)%(NuGetPackageId)\%(NuGetPackageVersion)"
+			Condition="'@(_PackageResourcesZips)' != '' And !Exists('$(HotRestartPackageResourcesDir)%(NuGetPackageId)\%(NuGetPackageVersion)')" />
+
+		<ItemGroup Condition="'@(_PackageResourcesZips)' != ''">
+			<_PackageResourcesDirs Include="@(_PackageResourcesZips -> '$(HotRestartPackageResourcesDir)%(NuGetPackageId)\%(NuGetPackageVersion)')" />
+		</ItemGroup>
+
+		<ItemGroup Condition="'@(_PackageResourcesDirs)' != ''">
+			<_PackageResourcesFrameworkFiles Include="%(_PackageResourcesDirs.Identity)\*.framework\*" />
+			<_PackageResourcesFrameworkFiles Include="%(_PackageResourcesDirs.Identity)\**\*.xcframework\ios-arm64\*.framework\*" />
+			<_HotRestartFrameworksFromPackages Include="@(_PackageResourcesFrameworkFiles -> '%(RootDir)%(Directory)')" KeepDuplicates="false" />
+			<_HotRestartFrameworks Include="@(_HotRestartFrameworksFromPackages)" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_CollectHotRestartFrameworks">
 		<ItemGroup>
 			<_HotRestartFrameworks Include="@(None -> '%(RootDir)%(Directory)')" Condition="$([System.String]::new('%(Directory)').EndsWith('.framework\'))" KeepDuplicates="false" />
 			<_HotRestartFrameworks Include="@(_UnpackedFramework);@(NativeReference)" KeepDuplicates="false" />

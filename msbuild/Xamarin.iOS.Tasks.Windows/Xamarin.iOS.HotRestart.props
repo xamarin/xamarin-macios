@@ -12,6 +12,8 @@
 		<HotRestartContentStampDir>$(HotRestartSignedAppOutputDir)$(_AppBundleName).stamp\</HotRestartContentStampDir>
 		<HotRestartIPAPath>$(HotRestartSignedAppOutputDir)$(_AppBundleName).ipa</HotRestartIPAPath>
 
+		<HotRestartPackageResourcesDir>$(TEMP)\Xamarin\HotRestart\Resources\</HotRestartPackageResourcesDir>
+
 		<UnpackHotRestartFrameworks Condition="'$(UnpackHotRestartFrameworks)' == ''">true</UnpackHotRestartFrameworks>
 
 		<_IsHotRestartDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)HOTRESTART($|;)'))</_IsHotRestartDefined>
