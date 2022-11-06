@@ -156,7 +156,7 @@ steps:
   condition: ${{ parameters.clearProvisionatorCache }}
 
 # Use the provisionator to install the test dependencies. Those have been generated in the 'Generate Provisionator csx file' step.
-- task: xamops.azdevex.provisionator-task.provisionator@1
+- task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Xamarin.iOS'
   inputs:
     provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests-provisioning.csx
@@ -171,7 +171,7 @@ steps:
     make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ mac-tests-provisioning.csx
   displayName: 'Generate Provisionator csx file for Mac'
 
-- task: xamops.azdevex.provisionator-task.provisionator@1
+- task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Xamarin.Mac'
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/mac-tests-provisioning.csx
