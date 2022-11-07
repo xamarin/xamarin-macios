@@ -51,6 +51,10 @@ dotnet format whitespace --folder "$SRC_DIR/src/Chip/"
 dotnet format whitespace --folder "$SRC_DIR/src/ClockKit/"
 dotnet format whitespace --folder "$SRC_DIR/src/CloudKit/"
 dotnet format whitespace --folder "$SRC_DIR/src/Compression/"
+dotnet format whitespace --folder "$SRC_DIR/src/Contacts/"
+dotnet format whitespace --folder "$SRC_DIR/src/CoreAnimation/"
+dotnet format whitespace --folder "$SRC_DIR/src/CoreBluetooth/"
+dotnet format whitespace --folder "$SRC_DIR/src/CoreData/"
 
 # dotnet format "$SRC_DIR/[...]"
 # add more projects here...
