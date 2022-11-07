@@ -1808,7 +1808,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
 		</UnpackLibraryResources>
 		<ItemGroup>
-			<FileWrites Include="$(_StampDirectory)*.stamp" />
+			<FileWrites Include="@(_UnpackLibraryResourceItems->'$(_StampDirectory)%(StampFile)')" />
 		</ItemGroup>
 	</Target>
 
