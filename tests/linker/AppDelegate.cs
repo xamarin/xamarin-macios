@@ -11,6 +11,7 @@ public partial class AppDelegate
 	{
 		return new Assembly [] {
 			Assembly.GetExecutingAssembly (),
+			typeof (BundledResources.ResourcesTest).Assembly,
 		};
 	}
 }

@@ -225,6 +225,7 @@
     </Compile>
     <Compile Include="SceneKit\SCNVector3Test.cs" />
     <Compile Include="SceneKit\SCNVector4Test.cs" />
+    <Compile Include="..\..\common\AppDelegate.cs" />
   </ItemGroup>
   <Import Project="$(RootTestsDirectory)\ComputeRegistrarConstant.targets" />
   <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
