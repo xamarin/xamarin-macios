@@ -2,10 +2,8 @@ using System;
 using System.IO;
 using System.IO.Compression;
 
-namespace Xamarin.iOS.Tasks.Windows
-{
-	internal static class Zip
-	{
+namespace Xamarin.iOS.Tasks.Windows {
+	internal static class Zip {
 		internal static void Extract (string sourceFileName, string destinationPath)
 		{
 			// We use a temp dir because the extraction dir should not exist for the ZipFile API to work
@@ -38,51 +36,46 @@ namespace Xamarin.iOS.Tasks.Windows
 			}
 		}
 
-		private static void ExtractWithSymlinksToDirectory(string sourceFileName, string destinationDirectoryName)
+		private static void ExtractWithSymlinksToDirectory (string sourceFileName, string destinationDirectoryName)
 		{
 			// Do the normal extraction first
-			using var source = ZipFile.OpenRead(sourceFileName);
-			source.ExtractToDirectory(destinationDirectoryName);
+			using var source = ZipFile.OpenRead (sourceFileName);
+			source.ExtractToDirectory (destinationDirectoryName);
 
 			// Read all the symbolic links contained in the zip
-			var links = ReadSymbolicLinks(source, destinationDirectoryName).ToList();
-			
+			var links = ReadSymbolicLinks (source, destinationDirectoryName).ToList ();
+
 			// Pass 1 - Delete the fake link files
-			foreach (var link in links)
-			{
-				File.Delete(link.Key);
+			foreach (var link in links) {
+				File.Delete (link.Key);
 			}
-			
+
 			// Pass 2 - Create directory symbolic links
-			foreach (var link in links)
-			{
+			foreach (var link in links) {
 				// Initially, we will assume all links are directory links because there's no way to tell otherwise.
-				Directory.CreateSymbolicLink(link.Key, link.Value);
+				Directory.CreateSymbolicLink (link.Key, link.Value);
 			}
-			
+
 			// Pass 3 - Create file symbolic links
-			foreach (var link in links)
-			{
+			foreach (var link in links) {
 				// If the target directory doesn't exist, then we'll delete the link and recreate it as a file link.
-				if (!Directory.Exists(Path.Combine(link.Key, "..", link.Value)))
-				{
-					Directory.Delete(link.Key);
-					File.CreateSymbolicLink(link.Key, link.Value);
+				if (!Directory.Exists (Path.Combine (link.Key, "..", link.Value))) {
+					Directory.Delete (link.Key);
+					File.CreateSymbolicLink (link.Key, link.Value);
 				}
 			}
 		}
 
-		private static IEnumerable<KeyValuePair<string, string>> ReadSymbolicLinks(ZipArchive archive, string baseDirectory = ".")
+		private static IEnumerable<KeyValuePair<string, string>> ReadSymbolicLinks (ZipArchive archive, string baseDirectory = ".")
 		{
-			foreach (var entry in archive.Entries.Where(IsSymbolicLink))
-			{
-				var path = Path.Combine(baseDirectory, entry.FullName.Replace('/', Path.DirectorySeparatorChar));
-				
-				using var stream = entry.Open();
-				using var reader = new StreamReader(stream);
-				var link = reader.ReadToEnd().Replace('/', Path.DirectorySeparatorChar);
-				
-				yield return new KeyValuePair<string, string>(path, link);
+			foreach (var entry in archive.Entries.Where (IsSymbolicLink)) {
+				var path = Path.Combine (baseDirectory, entry.FullName.Replace ('/', Path.DirectorySeparatorChar));
+
+				using var stream = entry.Open ();
+				using var reader = new StreamReader (stream);
+				var link = reader.ReadToEnd ().Replace ('/', Path.DirectorySeparatorChar);
+
+				yield return new KeyValuePair<string, string> (path, link);
 			}
 		}
 
@@ -91,7 +84,7 @@ namespace Xamarin.iOS.Tasks.Windows
 		// https://github.com/dotnet/runtime/blob/main/src/libraries/Common/src/Interop/Unix/System.Native/Interop.Stat.cs
 		private const int S_IFMT = 0xF000;
 		private const int S_IFLNK = 0xA000;
-		
-		private static bool IsSymbolicLink(ZipArchiveEntry entry) => ((entry.ExternalAttributes >> 16) & S_IFMT) == S_IFLNK;
+
+		private static bool IsSymbolicLink (ZipArchiveEntry entry) => ((entry.ExternalAttributes >> 16) & S_IFMT) == S_IFLNK;
 	}
 }
