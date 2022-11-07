@@ -50,9 +50,9 @@ namespace Xamarin.iOS.Tasks.Windows {
 				// No links, so exit
 				return;
 			}
-			
+
 			// Defensive test, in case the ZipArchive class gets built-in support for symlinks in the future
-			if (new FileInfo(links[0].Key).LinkTarget != null) {
+			if (new FileInfo (links [0].Key).LinkTarget != null) {
 				// A link was already created on disk as a symbolic link, so exit
 				return;
 			}
