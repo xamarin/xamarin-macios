@@ -35,3 +35,7 @@ variables:
   value: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=367&view=agents'
 - name: CIBuild
   value: true
+- name: azureStorage
+  value: 'bosstoragemirror'
+- name: azureContainer
+  value: 'wrench'

@@ -10,6 +10,11 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: azureStorage
+  type: string
+
+- name: azureContainer
+  type: string
 
 jobs:
 - job: configure
@@ -138,6 +143,8 @@ jobs:
     parameters:
       enableDotnet: ${{ parameters.enableDotnet }}
       sbomFilter: '*.nupkg;*.pkg;*.msi'
+      azureStorage: ${{ parameters.azureStorage }}
+      azureContainer: ${{ parameters.azureContainer }}
 
 # Job that runs on a vm that downloads the artifacts information and adds a github comment pointing to the results of the build.
 - job: artifacts_github_comment
