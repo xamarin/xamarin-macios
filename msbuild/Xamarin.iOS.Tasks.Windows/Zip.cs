@@ -9,7 +9,7 @@ namespace Xamarin.iOS.Tasks.Windows {
 			// We use a temp dir because the extraction dir should not exist for the ZipFile API to work
 			var tempExtractionPath = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ().Substring (0, 4));
 
-			ZipFile.ExtractToDirectory (sourceFileName, tempExtractionPath);
+			ZipFile.ExtractWithSymlinksToDirectory (sourceFileName, tempExtractionPath);
 
 			CopyDirectory (tempExtractionPath, destinationPath);
 

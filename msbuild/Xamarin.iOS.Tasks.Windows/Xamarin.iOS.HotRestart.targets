@@ -127,6 +127,7 @@
 		<_CollectHotRestartDynamicFrameworksDependsOn>
 			_CollectHotRestartFrameworkAssemblies;
 			_UnpackHotRestartFrameworkAssemblies;
+			_CollectHotRestartFrameworksFromPackages;
 			_CollectHotRestartFrameworks;
 		</_CollectHotRestartDynamicFrameworksDependsOn>
 	</PropertyGroup>
