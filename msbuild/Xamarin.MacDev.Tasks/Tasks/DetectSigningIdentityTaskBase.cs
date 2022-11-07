@@ -422,8 +422,12 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			if (profiles.Count == 0) {
-				foreach (var f in failures)
-					Log.LogMessage (MessageImportance.Low, "{0}", f);
+				if (failures.Count > 0) {
+					foreach (var f in failures)
+						Log.LogMessage (MessageImportance.Low, "{0}", f);
+				} else {
+					Log.LogMessage (MessageImportance.Low, "Failed to find any provisioning profiles, but no specific failure message was reported");
+				}
 
 				Log.LogError (MSBStrings.E0131, AppBundleName, PlatformName);
 				return null;
