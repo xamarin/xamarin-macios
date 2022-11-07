@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 
 namespace Xamarin.iOS.Tasks.Windows {
 	internal static class Zip {
