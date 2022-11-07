@@ -11486,6 +11486,7 @@ namespace AVFoundation {
 #if !XAMCORE_5_0
 		[iOS (8,0), NoMac]
 		[Obsolete ("Use the 'VideoHDRSupportedVideoHDREnabled' property instead.")]
+		[Wrap ("VideoHDRSupportedVideoHDREnabled", IsVirtual = true)]
 		bool videoHDRSupportedVideoHDREnabled { [Bind ("isVideoHDRSupported")] get; }
 #endif
 
