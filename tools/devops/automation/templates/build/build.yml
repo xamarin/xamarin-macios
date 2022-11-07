@@ -201,7 +201,7 @@ steps:
     echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
   name: resetDependencies
-  dispayName: 'Reset dependencies'
+  displayName: 'Reset dependencies'
   timeoutInMinutes: 10
 
 # We'll need these profiles to build the hot restart prebuilt app during the build
