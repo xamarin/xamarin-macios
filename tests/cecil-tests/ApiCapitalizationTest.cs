@@ -45,17 +45,6 @@ namespace Cecil.Tests {
 			if (type == null)
 				return false;
 
-			
-			//method.Name == "get_path_radio_type" || method.Name== "dlclose"
-			//if (type.Name == "UTType") {
-			//	var r = from f in type.CustomAttributes
-			//			select f.AttributeType.Name;
-			//	Console.WriteLine ("attrs: ");
-			//	foreach(var i in r) {
-			//		Console.WriteLine (i);
-			//	}
-			//}
-
 			if (type.HasCustomAttributes && type.CustomAttributes.Where ((m) => m.AttributeType.Name == "ObsoleteAttribute" || m.AttributeType.Name == "AdviceAttribute").Any ()) {
 				return true;
 			}
@@ -68,26 +57,6 @@ namespace Cecil.Tests {
 		{
 			if (property == null)
 				return false;
-
-			//if (property.Name == "k3dObject") {
-			//	Console.WriteLine ("reach!");
-			//	if (t.HasCustomAttributes) {
-			//		Console.WriteLine ("problematic attrs: ");
-			//		foreach (var i in t.CustomAttributes) {
-			//			Console.WriteLine (i.AttributeType.Name);
-			//		}
-			//		Console.WriteLine ("end");
-			//	}
-			//}
-
-			//if (property.Name == "eUbiquitousContainerIdentifierKey" || property.Name == "k3dObject") {
-			//	var r = from f in property.CustomAttributes
-			//			select f.AttributeType.Name;
-			//	Console.WriteLine ("attrs: ");
-			//	foreach (var i in r) {
-			//		Console.WriteLine (i);
-			//	}
-			//}
 
 			if (property.HasCustomAttributes && property.CustomAttributes.Where ((p) => p.AttributeType.Name == "ObsoleteAttribute").Any()) {
 				return true;
