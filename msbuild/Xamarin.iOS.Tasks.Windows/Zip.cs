@@ -46,9 +46,6 @@ namespace Xamarin.iOS.Tasks.Windows {
 
 			// Read all the symbolic links contained in the zip
 			var links = ReadSymbolicLinks (source, destinationDirectoryName).ToList ();
-
-			// Read all the symbolic links contained in the zip
-			var links = ReadSymbolicLinks (source, destinationDirectoryName).ToList ();
 			if (links.Count == 0) {
 				// No links, so exit
 				return;
