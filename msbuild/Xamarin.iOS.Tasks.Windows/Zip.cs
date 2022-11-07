@@ -47,6 +47,19 @@ namespace Xamarin.iOS.Tasks.Windows {
 			// Read all the symbolic links contained in the zip
 			var links = ReadSymbolicLinks (source, destinationDirectoryName).ToList ();
 
+			// Read all the symbolic links contained in the zip
+			var links = ReadSymbolicLinks (source, destinationDirectoryName).ToList ();
+			if (links.Count == 0) {
+				// No links, so exit
+				return;
+			}
+			
+			// Defensive test, in case the ZipArchive class gets built-in support for symlinks in the future
+			if (new FileInfo(links[0].Key).LinkTarget != null) {
+				// A link was already created on disk as a symbolic link, so exit
+				return;
+			}
+
 			// Pass 1 - Delete the fake link files
 			foreach (var link in links) {
 				File.Delete (link.Key);
