@@ -167,6 +167,15 @@ partial class TestRuntime
 			NUnit.Framework.Assert.Ignore (message);
 #endif
 	}
+
+	public static void AssertNotARM64Desktop (string message = "This test does not run on an ARM64 desktop.")
+	{
+#if __MACOS__ || __MACCATALYST__
+		if (IsARM64)
+			NUnit.Framework.Assert.Ignore (message);
+#endif
+	}
+
 	public static void AssertIfSimulatorThenARM64 ()
 	{
 #if !__MACOS__ && !__MACCATALYST__
