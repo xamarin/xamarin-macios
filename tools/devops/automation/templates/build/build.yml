@@ -200,7 +200,7 @@ steps:
     set -ex
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
   name: resetDependencies
-  dispayName: 'Reset dependencies'
+  displayName: 'Reset dependencies'
   timeoutInMinutes: 10
 
 # We'll need these profiles to build the hot restart prebuilt app during the build
