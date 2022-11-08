@@ -55,7 +55,7 @@ jobs:
     clean: true
     persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 
-  - checkout: templates
+  - checkout: yaml-templates
     clean: true
 
   - checkout: release-scripts
@@ -91,7 +91,7 @@ jobs:
       displayName: 'Move pkg ${{ pkg.name }} to its final destination'
       condition: ne('', variables['${{ pkg.conditionVariable }}'])
 
-  - template: generate-workspace-info.yml@templates
+  - template: generate-workspace-info.yml@yaml-templates
     parameters:
       GitHubToken: $(GitHub.Token)
       ArtifactDirectory: $(Build.SourcesDirectory)/package-internal

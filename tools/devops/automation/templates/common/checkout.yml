@@ -40,7 +40,7 @@ steps:
   clean: true
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 
-- checkout: templates
+- checkout: yaml-templates
   clean: true
 
 - checkout: release-scripts
