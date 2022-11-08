@@ -13,7 +13,7 @@ parameters:
   default: self
 
 - name: commit
-  type string
+  type: string
   default: HEAD
 
 - name: condition
