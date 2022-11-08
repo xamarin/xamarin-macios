@@ -420,6 +420,12 @@ verify-sorted-resx:
 	fi
 
 ifdef INCLUDE_XAMARIN_LEGACY
+ifdef INCLUDE_IOS
+PACKAGE_INTROSPECTION_DEPENDENCIES=1
+endif
+endif
+
+ifdef PACKAGE_INTROSPECTION_DEPENDENCIES
 package-introspection-dependencies.zip: simlauncher32-sgen simlauncher64-sgen
 	$(Q) mkdir -p $@.tmpdir
 	$(Q) $(CP) -a simlauncher*-sgen*  $@.tmpdir
