@@ -1805,6 +1805,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ReferencedLibraries="@(_UnpackLibraryResourceItems)">
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
 		</UnpackLibraryResources>
+		<Touch
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Files="@(_UnpackLibraryResourceItems->'$(_StampDirectory)%(StampFile)')"
+			AlwaysCreate="True"
+		/>
 		<ItemGroup>
 			<FileWrites Include="@(_UnpackLibraryResourceItems->'$(_StampDirectory)%(StampFile)')" />
 		</ItemGroup>
