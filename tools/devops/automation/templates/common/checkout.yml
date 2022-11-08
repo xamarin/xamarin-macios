@@ -14,7 +14,7 @@ parameters:
   default: HEAD
 
 steps:
-- template: sdk-unified/steps/checkout/v1.yml@templates
+- template: sdk-unified/steps/checkout/v1.yml@yaml-templates
   parameters:
     resource: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
