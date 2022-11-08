@@ -48,6 +48,7 @@ steps:
 
 - checkout: maccore
   clean: true
+  fetchDepth: 0
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 
 - checkout: yaml-templates
@@ -58,8 +59,6 @@ steps:
 
 - pwsh: |
     # maccore is special, we use fetch there in some bash scripts, but VSTS uses https.. and some pools don't like the above.. :/
-    ls ..
-    git pull origin
     git remote remove origin
     git remote add origin https://$(GitHub.Token)@github.com/xamarin/maccore.git
     git remote # don't add -v else we see the pat
