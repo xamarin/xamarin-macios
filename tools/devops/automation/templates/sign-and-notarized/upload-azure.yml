@@ -16,7 +16,7 @@ parameters:
 steps:
 # Do not use the templates/common/checkout.yaml for this job else the azure upload tool will fail because 
 # it cannot find the correct branch to be used. 
-- template:  sdk-unified/steps/checkout/v1.yml@templates
+- template:  sdk-unified/steps/checkout/v1.yml@yaml-templates
   parameters:
     clean: true
     persistCredentials: true

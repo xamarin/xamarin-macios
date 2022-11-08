@@ -6,7 +6,7 @@ parameters:
   type: boolean
 
 steps:
-- template: sdk-unified/steps/checkout/v1.yml@templates
+- template: sdk-unified/steps/checkout/v1.yml@yaml-templates
   parameters:
     clean: true
     submodules: recursive
