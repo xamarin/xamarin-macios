@@ -20,7 +20,7 @@ namespace Contacts {
 				return GetUnifiedContact (identifier, array, out error);
 		}
 
-		public CNContact[]? GetUnifiedContacts<T> (NSPredicate predicate, T [] keys, out NSError? error)
+		public CNContact []? GetUnifiedContacts<T> (NSPredicate predicate, T [] keys, out NSError? error)
 			where T : INSObjectProtocol, INSSecureCoding, INSCopying
 		{
 			using (var array = NSArray.From<T> (keys))
@@ -35,6 +35,6 @@ namespace Contacts {
 				return GetUnifiedMeContact (array, out error);
 		}
 #endif
-		
+
 	}
 }
