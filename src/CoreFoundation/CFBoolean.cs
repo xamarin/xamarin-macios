@@ -56,7 +56,7 @@ namespace CoreFoundation {
 		{
 		}
 
-		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFBooleanGetTypeID")]
+		[DllImport (Constants.CoreFoundationLibrary, EntryPoint = "CFBooleanGetTypeID")]
 		public extern static /* CFTypeID */ nint GetTypeID ();
 
 		public static implicit operator bool (CFBoolean value)

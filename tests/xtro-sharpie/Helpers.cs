@@ -9,8 +9,7 @@ using Clang.Ast;
 
 namespace Extrospection {
 
-	public enum Platforms
-	{
+	public enum Platforms {
 		macOS,
 		iOS,
 		watchOS,
@@ -61,8 +60,7 @@ namespace Extrospection {
 		}
 
 		// Clang.Ast.AvailabilityAttr.Platform.Name
-		public static string ClangPlatformName
-		{
+		public static string ClangPlatformName {
 			get {
 				switch (Helpers.Platform) {
 				case Platforms.macOS:
@@ -140,7 +138,7 @@ namespace Extrospection {
 						result = category.ClassInterface.IsAvailable (Platform);
 				}
 			}
-				
+
 			// but right now most frameworks consider tvOS, watchOS, and catalyst like iOS unless 
 			// decorated otherwise so we must check again if we do not get a definitve answer
 			if ((result == null) && ((Platform == Platforms.tvOS) || (Platform == Platforms.watchOS) || (Platform == Platforms.MacCatalyst)))
@@ -265,7 +263,7 @@ namespace Extrospection {
 		{
 			if (self == null)
 				return null;
-			
+
 			var sb = new StringBuilder ();
 			if (self.IsClassMethod)
 				sb.Append ('+');
@@ -438,7 +436,7 @@ namespace Extrospection {
 			var fxh = header_file.IndexOf (".framework/Headers/", StringComparison.Ordinal);
 			if (fxh <= 0)
 				return null;
-			
+
 			var start = header_file.LastIndexOf ('/', fxh) + 1;
 			return MapFramework (header_file.Substring (start, fxh - start));
 		}

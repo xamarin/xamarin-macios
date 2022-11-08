@@ -16,9 +16,11 @@ parameters:
 steps:
 # Do not use the templates/common/checkout.yaml for this job else the azure upload tool will fail because 
 # it cannot find the correct branch to be used. 
-- checkout: self
-  persistCredentials: true
-  path: s/xamarin-macios
+- template:  sdk-unified/steps/checkout/v1.yml@yaml-templates
+  parameters:
+    clean: true
+    persistCredentials: true
+    path: s/xamarin-macios
 
 # Download the Html Report that was added by the tests job.
 - task: DownloadPipelineArtifact@2
@@ -29,7 +31,7 @@ steps:
     path: $(Build.SourcesDirectory)/artifacts
 
 - pwsh: |
-    $packagePrefix = "https://bosstoragemirror.blob.core.windows.net/$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/package"
+    $packagePrefix = "https://dl.internalx.com/$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/package"
     $files =  Get-ChildItem -Path "$(Build.SourcesDirectory)\artifacts\package" -File -Force -Name
     $manifestFile = "$(Build.SourcesDirectory)\artifacts\package\manifest"
     foreach ($f in $files) {
@@ -43,7 +45,7 @@ steps:
   displayName: "Build manifest"
 
 # Important needed for the next step
-- template: generate-workspace-info.yml@templates
+- template: generate-workspace-info.yml@yaml-templates
   parameters:
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
