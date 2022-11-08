@@ -41,7 +41,7 @@ steps:
   parameters:
     keyringPass: ${{ parameters.keyringPass }}
 
-- template: install-certificates.yml@templates
+- template: install-certificates.yml@yaml-templates
   parameters:
     DeveloperIdApplication: $(developer-id-application)
     DeveloperIdInstaller: $(developer-id-installer)

@@ -11,7 +11,7 @@ resources:
     checkoutOptions:
       submodules: false  # no need
 
-  - repository: templates
+  - repository: yaml-templates
     type: github
     name: xamarin/yaml-templates
     ref: refs/heads/main

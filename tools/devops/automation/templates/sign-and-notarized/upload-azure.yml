@@ -43,7 +43,7 @@ steps:
   displayName: "Build manifest"
 
 # Important needed for the next step
-- template: generate-workspace-info.yml@templates
+- template: generate-workspace-info.yml@yaml-templates
   parameters:
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/package-internal

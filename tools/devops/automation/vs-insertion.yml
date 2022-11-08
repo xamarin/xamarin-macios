@@ -9,7 +9,7 @@ resources:
     checkoutOptions:
       submodules: false  # no need
 
-  - repository: templates
+  - repository: yaml-templates
     type: github
     name: xamarin/yaml-templates
     ref: refs/heads/main
@@ -59,7 +59,7 @@ jobs:
   - group: Xamarin-Secrets
   pool: VSEng-ReleasePool-1ES
   steps:
-  - template: vs-insertion/jobs/create_insert_drop/v1.yml@templates
+  - template: vs-insertion/jobs/create_insert_drop/v1.yml@yaml-templates
     parameters:
       symbolArtifactName: nuget-signed
       symbolConversionFilters: '*mlaunch.app*'

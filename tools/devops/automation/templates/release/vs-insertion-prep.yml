@@ -18,14 +18,14 @@ stages:
 
   jobs:
   # Check - "xamarin-macios (Prepare Release Sign NuGets)"
-  - template: sign-artifacts/jobs/v2.yml@templates
+  - template: sign-artifacts/jobs/v2.yml@yaml-templates
     parameters:
       artifactName: dotnet-signed
       signType: Real
       usePipelineArtifactTasks: true
 
   # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
-  - template: nuget-msi-convert/job/v3.yml@templates
+  - template: nuget-msi-convert/job/v3.yml@yaml-templates
     parameters:
       yamlResourceName: templates
       dependsOn: signing
@@ -115,7 +115,7 @@ stages:
 
 # Check - "xamarin-macios (VS Insertion Wait For Approval)"
 # Check - "xamarin-macios (VS Insertion Create VS Drop and Open PR)"
-- template: vs-insertion/stage/v1.yml@templates
+- template: vs-insertion/stage/v1.yml@yaml-templates
   parameters:
     dependsOn: prepare_release
     symbolArtifactName: nuget-signed
