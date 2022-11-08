@@ -22,7 +22,12 @@ namespace LinkSdk {
 #if __WATCHOS__
 			Assert.Ignore ("WatchOS doesn't support BSD sockets, which our network stack currently requires.");
 #endif
-			LoadCategories ().Wait ();
+			try {
+				LoadCategories ().GetAwaiter ().GetResult ();
+			} catch (HttpRequestException hre) {
+				TestRuntime.IgnoreInCIIfForbidden (hre); // Ignore any 403 errors.
+				throw;
+			}
 		}
 	}
 }
