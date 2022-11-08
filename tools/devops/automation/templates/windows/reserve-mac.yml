@@ -5,8 +5,10 @@ parameters:
   default: "VSEng-VSMac-Xamarin-Shared"
 
 steps:
-- checkout: self
-  path: s/xamarin-macios
+- template:  sdk-unified/steps/checkout/v1.yml@templates
+  parameters:
+    clean: true
+    path: s/xamarin-macios
 
 - checkout: maccore
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail

@@ -14,10 +14,11 @@ parameters:
 steps:
 
 # DO NOT USE THE checkout.yml template. The reason is that the template changes the hash which results in a problem with the artifacts scripts
-- checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
-  clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
-  submodules: recursive
-  path: s/xamarin-macios
+- template:  sdk-unified/steps/checkout/v1.yml@templates
+  parameters:
+    clean: true
+    submodules: recursive
+    path: s/xamarin-macios
 
 - checkout: maccore
   clean: true
