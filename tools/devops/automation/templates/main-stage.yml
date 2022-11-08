@@ -38,7 +38,7 @@ parameters:
   
 - name: enableDotnet
   type: boolean
-  default: true
+  default: false
 
 - name: enableAPIDiff
   type: boolean

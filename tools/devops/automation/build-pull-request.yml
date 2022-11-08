@@ -49,7 +49,7 @@ parameters:
 - name: enableDotnet
   displayName: Build Dotnet 
   type: boolean
-  default: true
+  default: false
 
 - name: enableAPIDiff
   displayName: Enable API diff generation

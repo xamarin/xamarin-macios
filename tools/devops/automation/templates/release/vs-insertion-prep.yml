@@ -1,7 +1,7 @@
 parameters:
 - name: enableDotnet
   type: boolean
-  default: true
+  default: false
 
 - name: dependsOn
   type: object 

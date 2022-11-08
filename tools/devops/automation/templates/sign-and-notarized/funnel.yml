@@ -5,7 +5,7 @@ parameters:
 
 - name: enableDotnet
   type: boolean
-  default: true
+  default: false
 
 - name: isPR
   type: boolean
