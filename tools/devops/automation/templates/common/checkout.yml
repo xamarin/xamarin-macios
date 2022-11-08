@@ -58,8 +58,10 @@ steps:
 
 - pwsh: |
     # maccore is special, we use fetch there in some bash scripts, but VSTS uses https.. and some pools don't like the above.. :/
-    cd $(System.DefaultWorkingDirectory)/maccore
+    ls ..
+    git pull origin
     git remote remove origin
     git remote add origin https://$(GitHub.Token)@github.com/xamarin/maccore.git
     git remote # don't add -v else we see the pat
   displayName: 'Clean git mess from VSTS'
+  workingDirectory: $(System.DefaultWorkingDirectory)/maccore
