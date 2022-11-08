@@ -180,7 +180,7 @@ git-clean-all:
 	@git submodule foreach -q --recursive 'git clean -xffdq && git reset --hard -q'
 	@for dir in $(DEPENDENCY_DIRECTORIES); do if test -d $(CURDIR)/$$dir; then echo "Cleaning $$dir" && cd $(CURDIR)/$$dir && git clean -xffdq && git reset --hard -q && git submodule foreach -q --recursive 'git clean -xffdq'; else echo "Skipped  $$dir (does not exist)"; fi; done
 
-	@if [ -n "$(ENABLE_XAMARIN)" ] || [ -n "$(ENABLE_DOTNET)"]; then \
+	@if [ -n "$(ENABLE_XAMARIN)" ] || [ -n "$(ENABLE_DOTNET)"] || [ -n "$(INCLUDE_XAMARIN_LEGACY)"]; then \
 		CONFIGURE_FLAGS=""; \
 		if [ -n "$(ENABLE_XAMARIN)" ]; then \
 			echo "Xamarin-specific build has been re-enabled"; \
@@ -190,7 +190,11 @@ git-clean-all:
 			echo "Dotnet-specific build has been re-enabled"; \
 			CONFIGURE_FLAGS="$$CONFIGURE_FLAGS --enable-dotnet"; \
 		fi; \
-		./configure "$$CONFIGURE_FLAGS"; \
+		if [ -n "$(INCLUDE_XAMARIN_LEGACY)" ]; then \
+			echo "Legacy Xamarin build has been re-enabled"; \
+			CONFIGURE_FLAGS="$$CONFIGURE_FLAGS --enable-legacy-xamarin"; \
+		fi; \
+		./configure $$CONFIGURE_FLAGS; \
 		$(MAKE) reset; \
 		echo "Done"; \
 	else \
