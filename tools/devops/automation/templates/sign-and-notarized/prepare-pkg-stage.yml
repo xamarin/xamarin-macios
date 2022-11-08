@@ -42,6 +42,9 @@ jobs:
 
   steps:
   - template: ../common/configure.yml
+    parameters:
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
 
 - ${{ each pkg in parameters.packages }}:
   - job: ${{ pkg.job }}

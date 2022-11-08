@@ -60,6 +60,8 @@ jobs:
   steps:
   - template: ../common/configure.yml
     parameters: 
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
       uploadArtifacts: true
       enableDotnet: ${{ parameters.enableDotnet }}
 
