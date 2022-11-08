@@ -58,7 +58,6 @@ steps:
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/package  # ideally, we would use a variable for this
-    outputStorageUri: Parameters.outputStorageUri
     outputStorageContainerSasToken: PackageSasToken
 
 - task: AzureFileCopy@3
@@ -70,7 +69,6 @@ steps:
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: jenkins/$(Build.SourceBranchName)/$(Build.SourceVersion)
-    outputStorageUri: Parameters.outputStorageUri
     outputStorageContainerSasToken: PackageSasToken
 
 - task: AzureFileCopy@3
@@ -82,7 +80,6 @@ steps:
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: jenkins/$(Build.SourceBranchName)/latest
-    outputStorageUri: Parameters.outputStorageUri
     outputStorageContainerSasToken: PackageSasToken
 
 - task: AzureFileCopy@3
@@ -94,7 +91,6 @@ steps:
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: jenkins/$(Build.SourceVersion)
-    outputStorageUri: Parameters.outputStorageUri
     outputStorageContainerSasToken: PackageSasToken
 
 - pwsh: |
@@ -135,8 +131,9 @@ steps:
 
     Dir "$(Build.SourcesDirectory)\\artifacts\\package"
 
-    # $Env:STORAGE_URI/ ends with a /, annoying
-    $pkgsVirtualUrl = "$Env:STORAGE_URI" +"$(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/package"
+    # the azure step sets the env variable, but it points to the wrong url since it uses the one in bosstorage, we
+    # need to use the dl version.
+    $pkgsVirtualUrl =  "https://dl.internalx.com/$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/package"
     Write-Host "Urls is $pkgsVirtualUrl"
 
     $pkgsPath = "$(Build.SourcesDirectory)\artifacts\package"
@@ -246,7 +243,8 @@ steps:
     BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
     ACCESSTOKEN: $(System.AccessToken)
-    STORAGE_URI: $(Parameters.outputStorageUri)
+    AZURE_CONTAINER: ${{ parameters.azureContainer }}
+    VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
     ${{ if eq(parameters.enableDotnet, true) }}:
       ENABLE_DOTNET: "True"
   displayName: 'Set GithubStatus'
