@@ -23,6 +23,14 @@ parameters:
   type: boolean
   default: false
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 - name: buildSteps 
   type: stepList 
   default: []
@@ -36,6 +44,8 @@ steps:
 - template: ../common/checkout.yml
   parameters:
     isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
 
 - template: ../common/setup.yml
   parameters:

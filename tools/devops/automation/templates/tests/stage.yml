@@ -76,6 +76,14 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 - name: XcodeChannel
   type: string
 
@@ -139,6 +147,8 @@ stages:
       - template: build.yml
         parameters:
           isPR: ${{ parameters.isPR }} 
+          repositoryAlias: ${{ parameters.repositoryAlias }}
+          commit: ${{ parameters.commit }}
           label: ${{ label }}
           testsLabels: '${{ parameters.testsLabels }},run-${{ label }}-tests'
           statusContext: '${{ parameters.statusContext }} - ${{ label }}'
@@ -176,6 +186,8 @@ stages:
     - template: publish-html.yml
       parameters:
         isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
         simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
         statusContext: ${{ parameters.statusContext }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
@@ -201,6 +213,8 @@ stages:
     - template: ../common/checkout.yml
       parameters:
         isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
 
     - pwsh: |
         Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1

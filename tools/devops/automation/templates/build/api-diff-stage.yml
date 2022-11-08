@@ -24,6 +24,14 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 - name: xcodeChannel
   type: string
 
@@ -91,6 +99,8 @@ jobs:
   - template: api-diff-build-and-detect.yml
     parameters:
       isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
       keyringPass: ${{ parameters.keyringPass }}
       gitHubToken: ${{ parameters.gitHubToken }}
@@ -116,3 +126,5 @@ jobs:
   - template: api-diff-process-results.yml
     parameters:
       isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}

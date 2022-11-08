@@ -15,11 +15,21 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 steps:
 
 - template: ../common/checkout.yml
   parameters:
     isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
 
 - template: agent-cleanser/v1.yml@yaml-templates # Uninstalls mono, Xamarin.Mac (if installed) plus cleanses the Provisionator Xcode cache and kills processes at the end
   parameters:
