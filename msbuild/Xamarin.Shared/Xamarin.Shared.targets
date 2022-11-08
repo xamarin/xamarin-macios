@@ -1788,7 +1788,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</PropertyGroup>
 		<ItemGroup>
 			<_UnpackLibraryResourceItems Include="@(ReferencePath);@(ReferenceDependencyPaths)">
-				<StampFile>%(Identity).stamp</StampFile>
+				<StampFile>%(FileName).stamp</StampFile>
 			</_UnpackLibraryResourceItems>
 		</ItemGroup>
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_StampDirectory)" />
