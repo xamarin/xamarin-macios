@@ -28,8 +28,7 @@ using Xamarin.Tests;
 namespace Introspection {
 
 	[TestFixture]
-	public class MacCoreImageFiltersTest : ApiCoreImageFiltersTest
-	{
+	public class MacCoreImageFiltersTest : ApiCoreImageFiltersTest {
 		protected override bool Skip (string nativeName)
 		{
 			switch (nativeName) {

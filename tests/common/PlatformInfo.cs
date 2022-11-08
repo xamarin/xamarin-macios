@@ -21,10 +21,8 @@ using UIKit;
 
 using Xamarin.Utils;
 
-namespace Xamarin.Tests 
-{
-	public sealed class PlatformInfo
-	{
+namespace Xamarin.Tests {
+	public sealed class PlatformInfo {
 		static PlatformInfo GetHostPlatformInfo ()
 		{
 			string name;
@@ -40,8 +38,8 @@ namespace Xamarin.Tests
 			version = WatchKit.WKInterfaceDevice.CurrentDevice.SystemVersion;
 #elif MONOMAC || __MACOS__
 			using (var plist = NSDictionary.FromFile ("/System/Library/CoreServices/SystemVersion.plist")) {
-				name = (NSString)plist ["ProductName"];
-				version = (NSString)plist ["ProductVersion"];
+				name = (NSString) plist ["ProductName"];
+				version = (NSString) plist ["ProductVersion"];
 			}
 #else
 #error Unknown platform
@@ -133,8 +131,7 @@ namespace Xamarin.Tests
 		}
 	}
 
-	public static class AvailabilityExtensions
-	{
+	public static class AvailabilityExtensions {
 		public static bool IsAvailableOnHostPlatform (this ICustomAttributeProvider attributeProvider)
 		{
 			return attributeProvider.IsAvailable (PlatformInfo.Host);
