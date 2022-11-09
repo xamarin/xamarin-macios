@@ -159,10 +159,7 @@ stages:
 
 - ${{ if eq(parameters.runGovernanceTests, true) }}:
   - stage: governance_checks
-    ${{ if ne(parameters.stageDisplayNamePrefix, '') }}:
-      displayName: '${{ parameters.stageDisplayNamePrefix }} - Governance Checks'
-    ${{ else }}:
-      displayName: 'Governance Checks'
+    displayName: '${{ parameters.stageDisplayNamePrefix }}Governance Checks'
     dependsOn: []
     jobs:
     - job: governance
@@ -187,10 +184,7 @@ stages:
 
 - ${{ if parameters.isPR }}:
   - stage: clean
-    ${{ if ne(parameters.stageDisplayNamePrefix, '') }}:
-      displayName: '${{ parameters.stageDisplayNamePrefix }} - Clean up'
-    ${{ else }}:
-      displayName: 'Clean up'
+    displayName: '${{ parameters.stageDisplayNamePrefix }}Clean up'
     dependsOn: []
     jobs:
     - job:
@@ -202,10 +196,7 @@ stages:
 
 
 - stage: build_packages
-  ${{ if ne(parameters.stageDisplayNamePrefix, '') }}:
-    displayName: '${{ parameters.stageDisplayNamePrefix }} - Build'
-  ${{ else }}:
-    displayName: 'Build'
+  displayName: '${{ parameters.stageDisplayNamePrefix }}Build'
   dependsOn: []
   jobs:
   - template: ./build/build-stage.yml
@@ -224,10 +215,7 @@ stages:
 
 - ${{ each pkg_obj in parameters.packages }}:
   - stage: ${{ pkg_obj.job }}
-    ${{ if ne(parameters.stageDisplayNamePrefix, '') }}:
-      displayName: '${{ parameters.stageDisplayNamePrefix }} - ${{ pkg_obj.displayName }}'
-    ${{ else }}:
-      displayName: ${{ pkg_obj.displayName }}
+    displayName: '${{ parameters.stageDisplayNamePrefix }}${{ pkg_obj.displayName }}'
     dependsOn:
     - build_packages
     jobs:
@@ -242,10 +230,7 @@ stages:
 
 - ${{ if eq(parameters.enableDotnet, true) }}:
   - stage: sign_notarize_dotnet
-    ${{ if ne(parameters.stageDisplayNamePrefix, '') }}:
-      displayName: '${{ parameters.stageDisplayNamePrefix }} - Sign & Notarize Dotnet'
-    ${{ else }}:
-      displayName: 'Sign & Notarize Dotnet'
+    displayName: '${{ parameters.stageDisplayNamePrefix }}Sign & Notarize Dotnet'
     dependsOn:
     - build_packages
     jobs:
@@ -263,10 +248,7 @@ stages:
       isPR: ${{ parameters.isPR }}
 
 - stage: funnel
-  ${{ if ne(parameters.stageDisplayNamePrefix, '') }}:
-    displayName: '${{ parameters.stageDisplayNamePrefix }} - Collect signed artifacts'
-  ${{ else }}:
-    displayName: 'Collect signed artifacts'
+  displayName: '${{ parameters.stageDisplayNamePrefix }}Collect signed artifacts'
   dependsOn:
   - build_packages
   - ${{ if eq(parameters.enableDotnet, true) }}:
@@ -286,10 +268,7 @@ stages:
 
 - ${{ if eq(parameters.enableAPIDiff, true) }}:
   - stage: generate_api_diff
-    ${{ if ne(parameters.stageDisplayNamePrefix, '') }}:
-      displayName: '${{ parameters.stageDisplayNamePrefix }} - API diff'
-    ${{ else }}:
-      displayName: 'API diff'
+    displayName: '${{ parameters.stageDisplayNamePrefix }}API diff'
     dependsOn: []
     jobs:
     - template: ./build/api-diff-stage.yml
@@ -313,10 +292,7 @@ stages:
     simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
     testPrefix: 'simulator_'
     stageName: 'simulator_tests'
-    ${{ if ne(parameters.stageDisplayNamePrefix, '') }}:
-      displayName: '${{ parameter.stageDisplayNamePrefix }} - Simulator tests'
-    ${{ else }}:
-      displayName: 'Simulator tests'
+    displayName: '${{ parameter.stageDisplayNamePrefix }}Simulator tests'
     testPool: '' # use the default
     useXamarinStorage: false
     testsLabels: '--label=skip-all-tests,run-ios-64-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests'
@@ -339,10 +315,7 @@ stages:
           isPR: ${{ parameters.isPR }}
           testPrefix: ${{ config.testPrefix }} 
           stageName: ${{ config.stageName }} 
-          ${{ if ne(parameters.stageDisplayNamePrefix, '') }}:
-            displayName: '${{ parameters.stageDisplayNamePrefix }} - ${{ config.displayName }}'
-          ${{ else }}:
-            displayName: ${{ config.displayName }}
+          displayName: '${{ parameters.stageDisplayNamePrefix }}${{ config.displayName }}'
           testPool: ${{ config.testPool }} 
           useXamarinStorage: ${{ config.useXamarinStorage }} 
           testsLabels: ${{ config.testsLabels }} 
@@ -363,10 +336,7 @@ stages:
       parameters:
         isPR: ${{ parameters.isPR }}
         stageName: ${{ config.stageName }}
-        ${{ if ne(parameters.stageDisplayNamePrefix, '') }}:
-          displayName: ' ${{ parameters.stageDisplayNamePrefix }} - ${{ config.displayName }}'
-        ${{ else }}:
-          displayName: ${{ config.displayName }}
+        displayName: ' ${{ parameters.stageDisplayNamePrefix }}${{ config.displayName }}'
         macPool: ${{ config.macPool }}
         useImage: ${{ config.useImage }}
         statusContext: ${{ config.statusContext }}
@@ -379,10 +349,7 @@ stages:
     parameters:
       isPR: ${{ parameters.isPR }}
       stageName: windows_integration
-      ${{ if ne(parameters.stageDisplayNamePrefix, '') }}:
-        displayName: 'Windows Integration Tests'
-      ${{ else }:
-        displayName: 'Windows Integration Tests'
+      displayName: '${{ parameters.stageDisplayNamePrefix }}Windows Integration Tests'
       pool: 'VSEng-Xamarin-Mac-Devices' # currently ignored until the VS team provides a real one
       statusContext: 'Windows Integration Tests'
 
