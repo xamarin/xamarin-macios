@@ -21,7 +21,7 @@ steps:
   parameters:
     isPR: ${{ parameters.isPR }}
 
-- template: agent-cleanser/v1.yml@templates   # Uninstalls mono, Xamarin.Mac (if installed) plus cleanses the Provisionator Xcode cache and kills processes at the end
+- template: agent-cleanser/v1.yml@yaml-templates # Uninstalls mono, Xamarin.Mac (if installed) plus cleanses the Provisionator Xcode cache and kills processes at the end
   parameters:
     CleanseProcesses: true
 
@@ -148,7 +148,7 @@ steps:
     make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ mac-tests-provisioning.csx
   displayName: 'Generate Provisionator csx file'
 
-- task: xamops.azdevex.provisionator-task.provisionator@1
+- task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Products & Frameworks'
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/mac-tests-provisioning.csx

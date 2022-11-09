@@ -3,10 +3,8 @@ using System.IO;
 using System.Reflection;
 using NUnit.Framework;
 
-namespace Xamarin.Tests
-{
-	public enum MonoNativeLinkMode
-	{
+namespace Xamarin.Tests {
+	public enum MonoNativeLinkMode {
 		None,
 		Static,
 		Dynamic,
@@ -14,15 +12,13 @@ namespace Xamarin.Tests
 		Symlink,
 	}
 
-	public enum MonoNativeFlavor
-	{
+	public enum MonoNativeFlavor {
 		None,
 		Compat,
 		Unified,
 	}
 
-	public static class MonoNativeConfig
-	{
+	public static class MonoNativeConfig {
 		public static MonoNativeLinkMode LinkMode {
 			get {
 #if MONO_NATIVE_STATIC
