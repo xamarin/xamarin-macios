@@ -56,10 +56,9 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CGGradient : NativeObject
-	{
+	public class CGGradient : NativeObject {
 #if !COREBUILD
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGGradient (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -81,9 +80,9 @@ namespace CoreGraphics {
 			CGGradientRelease (GetCheckedHandle ());
 		}
 
-		[DllImport(Constants.CoreGraphicsLibrary)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGGradientRef __nullable */ IntPtr CGGradientCreateWithColorComponents (
-			/* CGColorSpaceRef __nullable */ IntPtr colorspace, /* const CGFloat* __nullable */ nfloat []? components, 
+			/* CGColorSpaceRef __nullable */ IntPtr colorspace, /* const CGFloat* __nullable */ nfloat []? components,
 			/* const CGFloat* __nullable */ nfloat []? locations, /* size_t */ nint count);
 
 		static IntPtr Create (CGColorSpace colorspace, nfloat [] components, nfloat []? locations)
@@ -120,9 +119,9 @@ namespace CoreGraphics {
 		{
 		}
 
-		[DllImport(Constants.CoreGraphicsLibrary)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGGradientRef __nullable */ IntPtr CGGradientCreateWithColors (
-			/* CGColorSpaceRef __nullable */ IntPtr space, /* CFArrayRef __nullable */ IntPtr colors, 
+			/* CGColorSpaceRef __nullable */ IntPtr space, /* CFArrayRef __nullable */ IntPtr colors,
 			/* const CGFloat* __nullable */ nfloat []? locations);
 
 		static IntPtr Create (CGColorSpace? colorspace, CGColor [] colors, nfloat []? locations)

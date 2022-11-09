@@ -41,7 +41,7 @@ steps:
   parameters:
     keyringPass: ${{ parameters.keyringPass }}
 
-- template: install-certificates.yml@templates
+- template: install-certificates.yml@yaml-templates
   parameters:
     DeveloperIdApplication: $(developer-id-application)
     DeveloperIdInstaller: $(developer-id-installer)
@@ -70,7 +70,7 @@ steps:
     make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops build-provisioning.csx
   displayName: 'Generate provisionator files.'
 
-- task: xamops.azdevex.provisionator-task.provisionator@1
+- task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Products & Frameworks'
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/build-provisioning.csx
