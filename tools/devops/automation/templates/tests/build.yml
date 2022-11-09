@@ -70,7 +70,6 @@ steps:
 # 3. Cancel the pipeline and do not execute any of the following steps.
 - pwsh: | 
     Import-Module ./MaciosCI.psd1
-
     $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
 
     if ( -not (Test-HDFreeSpace -Size 20)) {
