@@ -364,7 +364,7 @@ if test -n "$ENABLE_API_DIFF"; then
 	# Calculate apidiff references according to the temporary build
 	echo "    ${BLUE}Updating apidiff references...${CLEAR}"
 	rm -rf "$APIDIFF_RESULTS_DIR" "$APIDIFF_TMP_DIR"
-	if ! make update-refs -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$APIDIFF_TMP_DIR" OUTPUT_DIR="$APIDIFF_RESULTS_DIR" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build" 2>&1 | sed 's/^/        /'; then
+	if ! make update-refs -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$APIDIFF_TMP_DIR" OUTPUT_DIR="$APIDIFF_RESULTS_DIR" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build" COMPARE_CURRENT_TFM=1 2>&1 | sed 's/^/        /'; then
 		EC=${PIPESTATUS[0]}
 		report_error_line "${RED}Failed to update apidiff references${CLEAR}"
 		exit "$EC"
@@ -373,7 +373,7 @@ if test -n "$ENABLE_API_DIFF"; then
 	# Now compare the current build against those references
 	echo "    ${BLUE}Running apidiff...${CLEAR}"
 	APIDIFF_FILE=$APIDIFF_RESULTS_DIR/api-diff.html
-	if ! make all-local -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$APIDIFF_TMP_DIR" OUTPUT_DIR="$APIDIFF_RESULTS_DIR" SKIP_XAMARIN_VS_DOTNET=1 SKIP_IOS_VS_MACCATALYST=1 2>&1 | sed 's/^/        /'; then
+	if ! make all-local -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$APIDIFF_TMP_DIR" OUTPUT_DIR="$APIDIFF_RESULTS_DIR" SKIP_XAMARIN_VS_DOTNET=1 SKIP_IOS_VS_MACCATALYST=1 COMPARE_CURRENT_TFM=1 2>&1 | sed 's/^/        /'; then
 		EC=${PIPESTATUS[0]}
 		report_error_line "${RED}Failed to run apidiff${CLEAR}"
 		exit "$EC"
@@ -381,7 +381,7 @@ if test -n "$ENABLE_API_DIFF"; then
 
 	# Now create the markdowns with these references
 	echo "    ${BLUE}Creating markdowns...${CLEAR}"
-	if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$APIDIFF_TMP_DIR" OUTPUT_DIR="$APIDIFF_RESULTS_DIR" 2>&1 | sed 's/^/        /'; then
+	if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$APIDIFF_TMP_DIR" OUTPUT_DIR="$APIDIFF_RESULTS_DIR" COMPARE_CURRENT_TFM=1 2>&1 | sed 's/^/        /'; then
 		EC=${PIPESTATUS[0]}
 		report_error_line "${RED}Failed to create markdowns${CLEAR}"
 		exit "$EC"
