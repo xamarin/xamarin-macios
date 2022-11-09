@@ -292,7 +292,7 @@ stages:
     simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
     testPrefix: 'simulator_'
     stageName: 'simulator_tests'
-    displayName: '${{ parameter.stageDisplayNamePrefix }}Simulator tests'
+    displayName: '${{ parameters.stageDisplayNamePrefix }}Simulator tests'
     testPool: '' # use the default
     useXamarinStorage: false
     testsLabels: '--label=skip-all-tests,run-ios-64-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests'
