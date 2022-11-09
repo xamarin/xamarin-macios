@@ -21,7 +21,7 @@ namespace Xamarin.iOS.Tasks.Windows {
 			Directory.Delete (tempExtractionPath, recursive: true);
 		}
 
-		private static void CopyDirectory (string source, string destination)
+		static void CopyDirectory (string source, string destination)
 		{
 			var sourceDirectoryInfo = new DirectoryInfo (source);
 
