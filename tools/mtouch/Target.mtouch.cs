@@ -1257,11 +1257,12 @@ namespace Xamarin.Bundler {
 			List<string> registration_methods = new List<string> ();
 
 			// The static registrar.
+			RunRegistrarTask run_registrar_task = null;
 			if (App.Registrar == RegistrarMode.Static) {
 				var registrar_m = Path.Combine (ArchDirectory, "registrar.m");
 				var registrar_h = Path.Combine (ArchDirectory, "registrar.h");
 
-				var run_registrar_task = new RunRegistrarTask {
+				run_registrar_task = new RunRegistrarTask {
 					Target = this,
 					RegistrarCodePath = registrar_m,
 					RegistrarHeaderPath = registrar_h,
@@ -1343,6 +1344,8 @@ namespace Xamarin.Bundler {
 					MainM = main_m,
 					RegistrationMethods = registration_methods,
 				};
+				if (run_registrar_task is not null)
+					generate_main_task.AddDependency (run_registrar_task);
 				var main_o = Path.Combine (App.Cache.Location, arch, "main.o");
 				var main_task = new CompileMainTask {
 					Target = this,
