@@ -362,10 +362,7 @@ stages:
       isPR: ${{ parameters.isPR }}
       testPrefix: 'iOS32b'
       stageName: 'ios32b_device'
-      ${{ if ne(parameters.stageDisplayNamePrefix, '') }}:
-        displayName: '${{ parameters.stageDisplayNamePrefix }} - iOS32b Device Tests'
-      ${{ else }}:
-        displayName: 'iOS32b Device Tests'
+      displayName: '${{ parameters.stageDisplayNamePrefix }}iOS32b Device Tests'
       testPool: 'VSEng-Xamarin-QA'
       useXamarinStorage: false
       testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
@@ -380,10 +377,7 @@ stages:
 - ${{ if eq(parameters.runSamples, true) }}:
   # TODO: Not the real step
   - stage: sample_testing
-    ${{ if ne(parameters.stageDisplayNamePrefix, '') }}:
-      displayName: '${{ stageDisplayNamePrefix }} - Sample testing'
-    ${{ else }}:
-      displayName: 'Sample testing'
+    displayName: '${{ stageDisplayNamePrefix }}Sample testing'
     dependsOn:
     - build_packages
     condition: and(succeeded(), contains (stageDependencies.build_packages.build.outputs['configuration.RunSampleTests'], 'True'))
