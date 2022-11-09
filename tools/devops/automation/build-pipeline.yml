@@ -132,7 +132,7 @@ resources:
     checkoutOptions:
       submodules: true
 
-  - repository: templates
+  - repository: yaml-templates
     type: github
     name: xamarin/yaml-templates
     ref: refs/heads/main
@@ -187,7 +187,7 @@ trigger:
 stages:
 - template: templates/main-stage.yml
   parameters:
-    xcodeChannel: Beta
+    xcodeChannel: Stable
     isPR: false
     provisionatorChannel: ${{ parameters.provisionatorChannel }}
     pool: ${{ parameters.pool }}

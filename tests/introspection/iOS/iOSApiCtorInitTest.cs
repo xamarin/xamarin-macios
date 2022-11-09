@@ -109,7 +109,7 @@ namespace Introspection {
 			// shows an alert on the device (if no email address is configured)
 			case "MFMailComposeViewController":
 				return true;
-				
+
 #if !__TVOS__
 			// PassKit is not available on iPads
 			case "PKPassLibrary":
@@ -121,7 +121,7 @@ namespace Introspection {
 			// we now have an "empty" obsolete ctor
 			case "UIFont":
 				return true;
-			
+
 			case "NSUrlSessionConfiguration":
 			case "NSUrlSession":
 				// This crashes when arc frees this object at the end of the scope:
@@ -219,7 +219,7 @@ namespace Introspection {
 			case "INGetAvailableRestaurantReservationBookingDefaultsIntentResponse": // Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Unable to initialize 'INGetAvailableRestaurantReservationBookingDefaultsIntentResponse'. Please make sure that your intent definition file is valid.
 			case "INGetAvailableRestaurantReservationBookingsIntentResponse": // Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Unable to initialize 'INGetAvailableRestaurantReservationBookingsIntentResponse'. Please make sure that your intent definition file is valid.
 			case "INGetRestaurantGuestIntentResponse": // Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Unable to initialize 'INGetRestaurantGuestIntentResponse'. Please make sure that your intent definition file is valid.
-				return TestRuntime.CheckXcodeVersion (10,0);
+				return TestRuntime.CheckXcodeVersion (10, 0);
 			case "CMMovementDisorderManager": // Not available in simulator, added info to radar://41110708 
 #if __WATCHOS__
 				// Doesn't exist in the simulator; aborts on device if the required entitlement isn't available.
@@ -282,7 +282,7 @@ namespace Introspection {
 			// fails under iOS5 with NSInvalidArgumentException Reason: -[__NSCFDictionary removeObjectForKey:]: attempt to remove nil key
 			case "NSBundle":
 			case "NSUrlConnection": // crash too (only on iOS5)
-			// iOS8 beta 5 -> SIGABRT (only on devices)
+									// iOS8 beta 5 -> SIGABRT (only on devices)
 			case "CABTMidiCentralViewController":
 			case "CABTMidiLocalPeripheralViewController":
 				do_not_dispose.Add (obj);
@@ -346,7 +346,7 @@ namespace Introspection {
 				case "CICode128BarcodeGenerator":
 				case "CIPdf417BarcodeGenerator":
 				case "CIQRCodeGenerator":
-					if (TestRuntime.CheckXcodeVersion (10,0))
+					if (TestRuntime.CheckXcodeVersion (10, 0))
 						return;
 					break;
 				}

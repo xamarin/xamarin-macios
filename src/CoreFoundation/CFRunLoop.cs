@@ -188,7 +188,7 @@ namespace CoreFoundation {
 #if NET
 		[UnmanagedCallersOnly]
 #else
-		[MonoPInvokeCallback (typeof(ScheduleCallback))]
+		[MonoPInvokeCallback (typeof (ScheduleCallback))]
 #endif
 		static void Schedule (IntPtr info, IntPtr runLoop, IntPtr mode)
 		{
@@ -209,7 +209,7 @@ namespace CoreFoundation {
 #if NET
 		[UnmanagedCallersOnly]
 #else
-		[MonoPInvokeCallback (typeof(CancelCallback))]
+		[MonoPInvokeCallback (typeof (CancelCallback))]
 #endif
 		static void Cancel (IntPtr info, IntPtr runLoop, IntPtr mode)
 		{
@@ -230,7 +230,7 @@ namespace CoreFoundation {
 #if NET
 		[UnmanagedCallersOnly]
 #else
-		[MonoPInvokeCallback (typeof(PerformCallback))]
+		[MonoPInvokeCallback (typeof (PerformCallback))]
 #endif
 		static void Perform (IntPtr info)
 		{
@@ -254,8 +254,7 @@ namespace CoreFoundation {
 	}
 #endif
 
-	public partial class CFRunLoop : NativeObject
-	{
+	public partial class CFRunLoop : NativeObject {
 #if !COREBUILD
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFRunLoopRef */ IntPtr CFRunLoopGetCurrent ();
@@ -268,7 +267,7 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFRunLoopRef */ IntPtr CFRunLoopGetMain ();
-		
+
 		static public CFRunLoop Main {
 			get {
 				return new CFRunLoop (CFRunLoopGetMain (), false);
@@ -310,8 +309,8 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static CFRunLoopExitReason /* SInt32 */ CFRunLoopRunInMode (/* CFStringRef */ IntPtr mode, 
-			/* CFTimeInterval */ double seconds, 
+		extern static CFRunLoopExitReason /* SInt32 */ CFRunLoopRunInMode (/* CFStringRef */ IntPtr mode,
+			/* CFTimeInterval */ double seconds,
 			/* Boolean */ [MarshalAs (UnmanagedType.I1)] bool returnAfterSourceHandled);
 
 		public CFRunLoopExitReason RunInMode (NSString mode, double seconds, bool returnAfterSourceHandled)

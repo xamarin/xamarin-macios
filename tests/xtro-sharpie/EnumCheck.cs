@@ -13,8 +13,8 @@ namespace Extrospection {
 			public EnumConstantDecl Decl;
 		}
 
-		Dictionary<string,TypeDefinition> enums = new Dictionary<string, TypeDefinition> (StringComparer.InvariantCultureIgnoreCase);
-		Dictionary<string,TypeDefinition> obsoleted_enums = new Dictionary<string,TypeDefinition> ();
+		Dictionary<string, TypeDefinition> enums = new Dictionary<string, TypeDefinition> (StringComparer.InvariantCultureIgnoreCase);
+		Dictionary<string, TypeDefinition> obsoleted_enums = new Dictionary<string, TypeDefinition> ();
 		Dictionary<object, ManagedValue> managed_values = new Dictionary<object, ManagedValue> ();
 		Dictionary<object, (string Name, EnumConstantDecl Decl)> native_values = new Dictionary<object, (string Name, EnumConstantDecl Decl)> ();
 
@@ -23,7 +23,7 @@ namespace Extrospection {
 			// exclude non enum and nested enums, e.g. bunch of Selector enums in CTFont
 			if (!type.IsEnum || type.IsNested)
 				return;
-			
+
 			var name = type.Name;
 
 			// exclude obsolete enums, presumably we already know there's something wrong with them if they've been obsoleted.
@@ -71,7 +71,7 @@ namespace Extrospection {
 			var framework = Helpers.GetFramework (decl);
 			if (framework == null)
 				return;
-			
+
 			var mname = Helpers.GetManagedName (name);
 
 			// If our enum is obsoleted, then don't process it.
@@ -322,7 +322,7 @@ namespace Extrospection {
 		{
 			if (!type.HasCustomAttributes)
 				return false;
-			
+
 			foreach (var ca in type.CustomAttributes) {
 				if (ca.Constructor.DeclaringType.Name == "NativeAttribute")
 					return true;

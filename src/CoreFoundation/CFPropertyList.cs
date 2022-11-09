@@ -19,16 +19,14 @@ using Foundation;
 using NativeHandle = System.IntPtr;
 #endif
 
-namespace CoreFoundation
-{
+namespace CoreFoundation {
 #if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CFPropertyList : NativeObject
-	{
+	public class CFPropertyList : NativeObject {
 		static nint CFDataTypeID = CFData.GetTypeID ();
 		static nint CFStringTypeID = CFString.GetTypeID ();
 		static nint CFArrayTypeID = CFArray.GetTypeID ();

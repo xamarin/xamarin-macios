@@ -22,7 +22,7 @@ namespace Introspection {
 	[TestFixture]
 	// we want the tests to be available because we use the linker
 	[Preserve (AllMembers = true)]
-	public class iOSCoreImageFiltersTest : ApiCoreImageFiltersTest  {
+	public class iOSCoreImageFiltersTest : ApiCoreImageFiltersTest {
 
 		protected override bool Skip (Type type)
 		{

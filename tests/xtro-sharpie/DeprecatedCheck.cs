@@ -5,10 +5,8 @@ using Clang;
 using Clang.Ast;
 using Mono.Cecil;
 
-namespace Extrospection
-{
-	public class DeprecatedCheck : BaseVisitor
-	{
+namespace Extrospection {
+	public class DeprecatedCheck : BaseVisitor {
 		Dictionary<string, VersionTuple> ObjCDeprecatedItems = new Dictionary<string, VersionTuple> ();
 		Dictionary<string, VersionTuple> ObjCDeprecatedSelectors = new Dictionary<string, VersionTuple> ();
 		Dictionary<string, VersionTuple> PlainCDeprecatedFunctions = new Dictionary<string, VersionTuple> ();
@@ -50,7 +48,7 @@ namespace Extrospection
 		void ProcessObjcEntry (string objcClassName, VersionTuple objcVersion)
 		{
 			TypeDefinition managedType = ManagedTypes.FirstOrDefault (x => Helpers.GetName (x) == objcClassName && x.IsPublic);
-			if (managedType != null) {					
+			if (managedType != null) {
 				var framework = Helpers.GetFramework (managedType);
 				if (framework != null)
 					ProcessItem (managedType, Helpers.GetName (managedType), objcVersion, framework);
@@ -61,7 +59,7 @@ namespace Extrospection
 		{
 			var class_method = fullname [0] == '+';
 			var n = fullname.IndexOf ("::");
-			string objcClassName = fullname.Substring (class_method ? 1: 0, n);
+			string objcClassName = fullname.Substring (class_method ? 1 : 0, n);
 			string selector = fullname.Substring (n + 2);
 
 			TypeDefinition managedType = ManagedTypes.FirstOrDefault (x => Helpers.GetName (x) == objcClassName);
@@ -114,7 +112,7 @@ namespace Extrospection
 
 			// Don't version check us when Apple does __attribute__((availability(macos, introduced=10.0, deprecated=100000)));
 			// #define __API_TO_BE_DEPRECATED 100000
-			if (objcVersion.Major == 100000) 
+			if (objcVersion.Major == 100000)
 				return;
 
 			// Some APIs have both a [Deprecated] and [Obsoleted]. Bias towards [Obsoleted].
@@ -151,7 +149,7 @@ namespace Extrospection
 				// `(anonymous)` has a null name
 				var name = decl.Name;
 				if (name is not null)
-					ObjCDeprecatedItems[name] = version;
+					ObjCDeprecatedItems [name] = version;
 			}
 		}
 
