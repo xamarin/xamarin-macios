@@ -115,11 +115,12 @@ namespace Xamarin.iOS.Tasks {
 				break;
 			}
 		}
-
+		
 		void ValidateWatchApp (string path, string mainBundleIdentifier, string mainShortVersionString, string mainVersion)
 		{
 			var name = Path.GetFileNameWithoutExtension (path);
 			var info = Path.Combine (path, "Info.plist");
+			var isSingleProject = false;
 			if (!File.Exists (info)) {
 				Log.LogError (7014, path, MSBStrings.E7014, name);
 				return;
@@ -162,26 +163,32 @@ namespace Xamarin.iOS.Tasks {
 				Log.LogError (7019, info, MSBStrings.E7019, name, wkCompanionAppBundleIdentifier, mainBundleIdentifier);
 
 			PBoolean watchKitApp;
-			if (!plist.TryGetValue ("WKWatchKitApp", out watchKitApp) || !watchKitApp.Value)
-				Log.LogError (7020, info, MSBStrings.E7020, name);
+			if (plist.TryGetValue ("WKWatchKitApp", out watchKitApp)) {
+				if (!watchKitApp.Value)
+					Log.LogError (7020, info, MSBStrings.E7020, name);
+			} else {
+				isSingleProject = true;
+			}
 
 			if (plist.ContainsKey ("LSRequiresIPhoneOS"))
 				Log.LogError (7021, info, MSBStrings.E7021, name);
 
 			var pluginsDir = Path.Combine (path, "PlugIns");
-			if (!Directory.Exists (pluginsDir)) {
+			if (!Directory.Exists (pluginsDir) && !isSingleProject) {
 				Log.LogError (7022, path, MSBStrings.E7022, name);
 				return;
 			}
 
-			int count = 0;
-			foreach (var plugin in Directory.EnumerateDirectories (pluginsDir, "*.appex")) {
-				ValidateWatchExtension (plugin, bundleIdentifier, shortVersionString, version);
-				count++;
-			}
+			if (!isSingleProject) {
+				int count = 0;
+				foreach (var plugin in Directory.EnumerateDirectories (pluginsDir, "*.appex")) {
+					ValidateWatchExtension (plugin, bundleIdentifier, shortVersionString, version);
+					count++;
+				}
 
-			if (count == 0)
-				Log.LogError (7022, pluginsDir, MSBStrings.E7022_A, name);
+				if (count == 0)
+					Log.LogError (7022, pluginsDir, MSBStrings.E7022_A, name);
+			}
 		}
 
 		void ValidateWatchExtension (string path, string watchAppBundleIdentifier, string mainShortVersionString, string mainVersion)
