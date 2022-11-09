@@ -38,8 +38,7 @@ using Xamarin.Utils;
 using NativeHandle = System.IntPtr;
 #endif
 
-partial class TestRuntime
-{
+partial class TestRuntime {
 
 	[DllImport (Constants.CoreFoundationLibrary)]
 	public extern static nint CFGetRetainCount (IntPtr handle);
@@ -204,7 +203,7 @@ partial class TestRuntime
 			NUnit.Framework.Assert.Ignore (message);
 	}
 
-	public static bool IsVM => 
+	public static bool IsVM =>
 		!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("VM_VENDOR"));
 
 	public static void AssertNotVirtualMachine ()
@@ -219,7 +218,7 @@ partial class TestRuntime
 
 	public static bool IsVSTS =>
 		!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_BUILDID"));  // Env var set by vsts
-																																									 //
+																					   //
 	public static void AssertNotVSTS ()
 	{
 		if (IsVSTS)
@@ -544,7 +543,7 @@ partial class TestRuntime
 #elif __TVOS__
 				return ChecktvOSSystemVersion (13, 4);
 #elif __IOS__
-				return CheckiOSSystemVersion(13, 5);
+				return CheckiOSSystemVersion (13, 5);
 #elif MONOMAC
 				return CheckMacSystemVersion (10, 15, 5);
 #else
@@ -556,7 +555,7 @@ partial class TestRuntime
 #elif __TVOS__
 				return ChecktvOSSystemVersion (13, 4);
 #elif __IOS__
-				return CheckiOSSystemVersion(13, 6);
+				return CheckiOSSystemVersion (13, 6);
 #elif MONOMAC
 				return CheckMacSystemVersion (10, 15, 6);
 #else
@@ -1139,8 +1138,7 @@ partial class TestRuntime
 			if (IgnoreTestThatRequiresSystemPermissions ())
 				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to access the camera.");
 
-			AVCaptureDevice.RequestAccessForMediaType (mediaTypeToken, (accessGranted) =>
-			{
+			AVCaptureDevice.RequestAccessForMediaType (mediaTypeToken, (accessGranted) => {
 				Console.WriteLine ("Camera permission {0}", accessGranted ? "granted" : "denied");
 			});
 		}
@@ -1237,8 +1235,7 @@ partial class TestRuntime
 			if (IgnoreTestThatRequiresSystemPermissions ())
 				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to access the microphone.");
 
-			AVAudioSession.SharedInstance ().RequestRecordPermission ((bool granted) =>
-			{
+			AVAudioSession.SharedInstance ().RequestRecordPermission ((bool granted) => {
 				Console.WriteLine ("Microphone permission {0}", granted ? "granted" : "denied");
 			});
 		}
@@ -1266,8 +1263,7 @@ partial class TestRuntime
 			if (IgnoreTestThatRequiresSystemPermissions ())
 				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to access the media library.");
 
-			MPMediaLibrary.RequestAuthorization ((access) =>
-			{
+			MPMediaLibrary.RequestAuthorization ((access) => {
 				Console.WriteLine ("Media library permission: {0}", access);
 			});
 		}
@@ -1330,7 +1326,7 @@ partial class TestRuntime
 		return color.CGColor;
 #endif
 	}
-	
+
 	public static byte GetFlags (NSObject obj)
 	{
 #if NET
@@ -1381,7 +1377,7 @@ partial class TestRuntime
 		IgnoreInCIfHttpStatusCodes (status, HttpStatusCode.BadGateway, HttpStatusCode.GatewayTimeout, HttpStatusCode.ServiceUnavailable);
 	}
 
-	public static void IgnoreInCIfHttpStatusCodes (HttpStatusCode status, params HttpStatusCode[] statusesToIgnore)
+	public static void IgnoreInCIfHttpStatusCodes (HttpStatusCode status, params HttpStatusCode [] statusesToIgnore)
 	{
 		if (Array.IndexOf (statusesToIgnore, status) < 0)
 			return;
@@ -1389,7 +1385,7 @@ partial class TestRuntime
 		IgnoreInCI ($"Ignored due to http status code '{status}'");
 	}
 
-	public static void IgnoreInCIfHttpStatusCodes (Exception ex, params HttpStatusCode[] statusesToIgnore)
+	public static void IgnoreInCIfHttpStatusCodes (Exception ex, params HttpStatusCode [] statusesToIgnore)
 	{
 		if (!TryGetHttpStatusCode (ex, out var status))
 			return;

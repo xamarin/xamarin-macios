@@ -38,20 +38,20 @@ using Foundation;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Introspection
-{
-	public abstract class ApiTypoTest : ApiBaseTest
-	{
+namespace Introspection {
+	public abstract class ApiTypoTest : ApiBaseTest {
 		protected ApiTypoTest ()
 		{
 			ContinueOnFailure = true;
 		}
 
-		public virtual bool Skip (Type baseType, string typo) {
+		public virtual bool Skip (Type baseType, string typo)
+		{
 			return SkipAllowed (baseType.Name, null, typo);
 		}
 
-		public virtual bool Skip (MemberInfo methodName, string typo) {
+		public virtual bool Skip (MemberInfo methodName, string typo)
+		{
 			return SkipAllowed (methodName.DeclaringType.Name, methodName.Name, typo);
 		}
 
@@ -819,7 +819,7 @@ namespace Introspection
 
 					string txt = NameCleaner (t.Name);
 					var typo = GetCachedTypo (txt);
-					if (typo.Length > 0 ) {
+					if (typo.Length > 0) {
 						if (!Skip (t, typo)) {
 							ReportError ("Typo in TYPE: {0} - {1} ", t.Name, typo);
 							totalErrors++;
@@ -833,7 +833,7 @@ namespace Introspection
 
 						if (IsObsolete (f))
 							continue;
-						
+
 						txt = NameCleaner (f.Name);
 						typo = GetCachedTypo (txt);
 						if (typo.Length > 0) {
@@ -851,7 +851,7 @@ namespace Introspection
 
 						if (IsObsolete (m))
 							continue;
-						
+
 						txt = NameCleaner (m.Name);
 						typo = GetCachedTypo (txt);
 						if (typo.Length > 0) {
@@ -887,9 +887,9 @@ namespace Introspection
 		{
 			string message = null;
 			if (attribute is AdviceAttribute)
-				message = ((AdviceAttribute)attribute).Message;
+				message = ((AdviceAttribute) attribute).Message;
 			if (attribute is ObsoleteAttribute)
-				message = ((ObsoleteAttribute)attribute).Message;
+				message = ((ObsoleteAttribute) attribute).Message;
 #if !NET
 			if (attribute is AvailabilityBaseAttribute)
 				message = ((AvailabilityBaseAttribute)attribute).Message;

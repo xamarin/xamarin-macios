@@ -51,21 +51,21 @@ namespace Introspection {
 		protected virtual bool Skip (PropertyInfo property)
 		{
 			switch (property.DeclaringType.Name) {
-				case "AVPlayerInterstitialEventObserver":
-					switch (property.Name) { // deprecated
-						case "CurrentEventDidChangeNotification":
-						case "EventsDidChangeNotification":
-							return true;
-						default:
-							return false;
-					}
-				case "SWHighlight":
-					switch (property.Name) {
-						case "MetadataTypeIdentifier":
-							return TestRuntime.IsSimulatorOrDesktop;
-						default:
-							return false;
-					}
+			case "AVPlayerInterstitialEventObserver":
+				switch (property.Name) { // deprecated
+				case "CurrentEventDidChangeNotification":
+				case "EventsDidChangeNotification":
+					return true;
+				default:
+					return false;
+				}
+			case "SWHighlight":
+				switch (property.Name) {
+				case "MetadataTypeIdentifier":
+					return TestRuntime.IsSimulatorOrDesktop;
+				default:
+					return false;
+				}
 			}
 			return SkipDueToAttribute (property);
 		}
@@ -101,7 +101,7 @@ namespace Introspection {
 
 			if (Skip (p))
 				return true;
-			
+
 			try {
 				// if it return nulls then it could be a typo...
 				// or something not available in the executing version of iOS
@@ -109,8 +109,7 @@ namespace Introspection {
 				if (!result)
 					name = p.DeclaringType.FullName + "." + p.Name;
 				return result;
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				Console.WriteLine ("[FAIL] Exception on '{0}' : {1}", p, e);
 				name = p.DeclaringType.FullName + "." + p.Name;
 				return false;
@@ -153,7 +152,7 @@ namespace Introspection {
 			foreach (var p in AllProperties ()) {
 				if (p.PropertyType.FullName != NSStringType)
 					continue;
-				
+
 				var f = p.GetCustomAttribute<FieldAttribute> ();
 				if (f == null)
 					continue;
@@ -194,7 +193,7 @@ namespace Introspection {
 			}
 			Assert.AreEqual (0, Errors, "{0} errors found in {1} fields validated: {2}", Errors, n, string.Join (", ", failed_fields));
 		}
-		
+
 		[Test]
 		public void NonNullNSStringFields ()
 		{
@@ -245,7 +244,7 @@ namespace Introspection {
 #if __IOS__
 					switch (name) {
 					case "CPMaximumListItemImageSize":
-						if (TestRuntime.CheckXcodeVersion (12,0))
+						if (TestRuntime.CheckXcodeVersion (12, 0))
 							continue;
 						break;
 					}

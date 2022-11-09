@@ -72,13 +72,13 @@ namespace Introspection {
 			}
 
 			switch (p.Name) {
-			case "AutoConfigurationHTTPResponseKey":		// kCFProxyAutoConfigurationHTTPResponseKey
-			case "CFNetworkProxiesProxyAutoConfigJavaScript":	// kCFNetworkProxiesProxyAutoConfigJavaScript
+			case "AutoConfigurationHTTPResponseKey":        // kCFProxyAutoConfigurationHTTPResponseKey
+			case "CFNetworkProxiesProxyAutoConfigJavaScript":   // kCFNetworkProxiesProxyAutoConfigJavaScript
 				return true;
 
 			// defined in Apple PDF (online) but not in the HTML documentation
 			// but also inside CLError.h from iOS 5.1 SDK...
-			case "ErrorUserInfoAlternateRegionKey":			// kCLErrorUserInfoAlternateRegionKey
+			case "ErrorUserInfoAlternateRegionKey":         // kCLErrorUserInfoAlternateRegionKey
 				return true;
 
 			// ImageIO: documented since iOS 4.3 but null in iOS5 (works on iOS 6.1)

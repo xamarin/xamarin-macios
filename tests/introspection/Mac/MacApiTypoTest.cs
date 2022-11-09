@@ -5,12 +5,10 @@ using Foundation;
 using ObjCRuntime;
 using AppKit;
 
-namespace Introspection
-{
+namespace Introspection {
 
 	[TestFixture]
-	public class MacApiTypoTest : ApiTypoTest
-	{
+	public class MacApiTypoTest : ApiTypoTest {
 		NSSpellChecker checker;
 
 		public override void TypoTest ()
@@ -28,7 +26,7 @@ namespace Introspection
 			var typoRange = checker.CheckSpelling (txt, 0, "en_US", false, 0, out wordCount);
 			if (typoRange.Length == 0)
 				return String.Empty;
-			return txt.Substring ((int)typoRange.Location, (int)typoRange.Length);
+			return txt.Substring ((int) typoRange.Location, (int) typoRange.Length);
 		}
 
 #if !NET
