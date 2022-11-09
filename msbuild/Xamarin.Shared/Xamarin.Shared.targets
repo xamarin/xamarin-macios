@@ -1619,6 +1619,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		DependsOnTargets="$(_GenerateBindingsDependsOn)"
 		Condition="'$(IsBindingProject)' == 'true' And '$(DesignTimeBuild)' != 'true'">
 
+		<Warning Condition="'$(IsMacEnabled)' != 'true'" Text="It's currently not supported to build a binding project from Windows unless a connection to a Mac is available." />
+
 		<ItemGroup>
 			<BTouchReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
 		</ItemGroup>
