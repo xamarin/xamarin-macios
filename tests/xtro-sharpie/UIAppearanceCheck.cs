@@ -21,7 +21,7 @@ namespace Extrospection {
 
 		static HashSet<TypeDefinition> appearance_types = new HashSet<TypeDefinition> ();
 		static HashSet<MethodDefinition> appearance_methods = new HashSet<MethodDefinition> ();
-		static Dictionary<string,MethodDefinition> methods = new Dictionary<string,MethodDefinition> ();
+		static Dictionary<string, MethodDefinition> methods = new Dictionary<string, MethodDefinition> ();
 
 		static MethodDefinition GetMethod (ObjCMethodDecl decl)
 		{
@@ -110,7 +110,7 @@ namespace Extrospection {
 				}
 			}
 
- 			Log.On (framework).Add ($"!missing-ui-appearance-support! {method.GetName ()} is missing [Appearance]");
+			Log.On (framework).Add ($"!missing-ui-appearance-support! {method.GetName ()} is missing [Appearance]");
 		}
 
 		public override void End ()

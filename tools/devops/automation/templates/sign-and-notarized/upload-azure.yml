@@ -16,9 +16,11 @@ parameters:
 steps:
 # Do not use the templates/common/checkout.yaml for this job else the azure upload tool will fail because 
 # it cannot find the correct branch to be used. 
-- checkout: self
-  persistCredentials: true
-  path: s/xamarin-macios
+- template:  sdk-unified/steps/checkout/v1.yml@yaml-templates
+  parameters:
+    clean: true
+    persistCredentials: true
+    path: s/xamarin-macios
 
 # Download the Html Report that was added by the tests job.
 - task: DownloadPipelineArtifact@2
@@ -29,7 +31,7 @@ steps:
     path: $(Build.SourcesDirectory)/artifacts
 
 - pwsh: |
-    $packagePrefix = "https://bosstoragemirror.blob.core.windows.net/$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/package"
+    $packagePrefix = "https://dl.internalx.com/$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/package"
     $files =  Get-ChildItem -Path "$(Build.SourcesDirectory)\artifacts\package" -File -Force -Name
     $manifestFile = "$(Build.SourcesDirectory)\artifacts\package\manifest"
     foreach ($f in $files) {
@@ -43,7 +45,7 @@ steps:
   displayName: "Build manifest"
 
 # Important needed for the next step
-- template: generate-workspace-info.yml@templates
+- template: generate-workspace-info.yml@yaml-templates
   parameters:
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
@@ -58,7 +60,6 @@ steps:
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/package  # ideally, we would use a variable for this
-    outputStorageUri: Parameters.outputStorageUri
     outputStorageContainerSasToken: PackageSasToken
 
 - task: AzureFileCopy@3
@@ -70,7 +71,6 @@ steps:
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: jenkins/$(Build.SourceBranchName)/$(Build.SourceVersion)
-    outputStorageUri: Parameters.outputStorageUri
     outputStorageContainerSasToken: PackageSasToken
 
 - task: AzureFileCopy@3
@@ -82,7 +82,6 @@ steps:
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: jenkins/$(Build.SourceBranchName)/latest
-    outputStorageUri: Parameters.outputStorageUri
     outputStorageContainerSasToken: PackageSasToken
 
 - task: AzureFileCopy@3
@@ -94,7 +93,6 @@ steps:
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: jenkins/$(Build.SourceVersion)
-    outputStorageUri: Parameters.outputStorageUri
     outputStorageContainerSasToken: PackageSasToken
 
 - pwsh: |
@@ -135,8 +133,9 @@ steps:
 
     Dir "$(Build.SourcesDirectory)\\artifacts\\package"
 
-    # $Env:STORAGE_URI/ ends with a /, annoying
-    $pkgsVirtualUrl = "$Env:STORAGE_URI" +"$(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/package"
+    # the azure step sets the env variable, but it points to the wrong url since it uses the one in bosstorage, we
+    # need to use the dl version.
+    $pkgsVirtualUrl =  "https://dl.internalx.com/$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/package"
     Write-Host "Urls is $pkgsVirtualUrl"
 
     $pkgsPath = "$(Build.SourcesDirectory)\artifacts\package"
@@ -246,7 +245,8 @@ steps:
     BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
     ACCESSTOKEN: $(System.AccessToken)
-    STORAGE_URI: $(Parameters.outputStorageUri)
+    AZURE_CONTAINER: ${{ parameters.azureContainer }}
+    VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
     ${{ if eq(parameters.enableDotnet, true) }}:
       ENABLE_DOTNET: "True"
   displayName: 'Set GithubStatus'
