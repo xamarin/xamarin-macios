@@ -115,7 +115,7 @@ namespace Xamarin.iOS.Tasks {
 				break;
 			}
 		}
-		
+
 		void ValidateWatchApp (string path, string mainBundleIdentifier, string mainShortVersionString, string mainVersion)
 		{
 			var name = Path.GetFileNameWithoutExtension (path);
