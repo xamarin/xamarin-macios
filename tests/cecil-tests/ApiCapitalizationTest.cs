@@ -83,6 +83,7 @@ namespace Cecil.Tests {
 			["MPMusicPlayerController"] = new HashSet<string> () { "iPodMusicPlayer" },
 			["ABPersonPhoneLabel"] = new HashSet<string> () { "iPhone" },
 			["CNLabelPhoneNumberKey"] = new HashSet<string> () { "iPhone"},
+			["NSPersistentStoreCoordinator"] = new HashSet<string> () { "eUbiquitousContainerIdentifierKey" },
 			["AVMetadata"] = new HashSet<string> () { "iTunesMetadataKeyAccountKind",
 			"iTunesMetadataKeyAcknowledgement",
 			"iTunesMetadataKeyAlbum",
