@@ -145,7 +145,7 @@ namespace CoreFoundation {
 			/* CFReadStreamClientCallBack */ CFStreamCallback? clientCB, /* CFStreamClientContext* */ IntPtr clientContext);
 
 		protected override bool DoSetClient (CFStreamCallback? callback, CFIndex eventTypes,
-		                                     IntPtr context)
+											 IntPtr context)
 		{
 			return CFReadStreamSetClient (Handle, (nint) eventTypes, callback, context);
 		}
@@ -153,14 +153,14 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFIndex */ nint CFReadStreamRead (/* CFReadStreamRef */ IntPtr handle, /* UInt8* */ IntPtr buffer, /* CFIndex */ nint count);
 
-		public nint Read (byte[] buffer)
+		public nint Read (byte [] buffer)
 		{
 			if (buffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
 			return Read (buffer, 0, buffer.Length);
 		}
 
-		public unsafe nint Read (byte[] buffer, int offset, int count)
+		public unsafe nint Read (byte [] buffer, int offset, int count)
 		{
 			if (buffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));

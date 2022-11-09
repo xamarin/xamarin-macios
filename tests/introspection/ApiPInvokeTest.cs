@@ -21,8 +21,7 @@ using NUnit.Framework;
 using ObjCRuntime;
 using Foundation;
 
-namespace Introspection
-{
+namespace Introspection {
 	[Preserve (AllMembers = true)]
 	public abstract class ApiPInvokeTest : ApiBaseTest {
 		IEnumerable pinvokeQuery;
@@ -33,14 +32,14 @@ namespace Introspection
 			LogProgress = false;
 
 			pinvokeQuery = from type in Assembly.GetTypes ()
-					where !Skip (type)
-				from mi in type.GetMethods (
-					BindingFlags.NonPublic |
-					BindingFlags.Public |
-					BindingFlags.Static)
-				let attr = mi.GetCustomAttribute<DllImportAttribute> ()
-					where attr != null && !Skip (mi)
-				select mi;
+						   where !Skip (type)
+						   from mi in type.GetMethods (
+							   BindingFlags.NonPublic |
+							   BindingFlags.Public |
+							   BindingFlags.Static)
+						   let attr = mi.GetCustomAttribute<DllImportAttribute> ()
+						   where attr != null && !Skip (mi)
+						   select mi;
 		}
 
 		protected virtual bool Skip (Type type)
@@ -340,8 +339,7 @@ namespace Introspection
 		[DllImport (Constants.libcLibrary)]
 		static extern int dladdr (IntPtr addr, out Dl_info info);
 
-		struct Dl_info
-		{
+		struct Dl_info {
 			internal IntPtr dli_fname; /* Pathname of shared object */
 			internal IntPtr dli_fbase; /* Base address of shared object */
 			internal IntPtr dli_sname; /* Name of nearest symbol */
