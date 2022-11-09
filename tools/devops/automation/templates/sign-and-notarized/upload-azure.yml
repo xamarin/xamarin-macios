@@ -129,7 +129,11 @@ steps:
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\MaciosCI.psd1
-    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
+    $uri = $(Build.Repository.Uri)
+    $orgRepo = $uri.Replace("https://github.com/", "")
+    $org, $repo = $orgRepo -split "/",2
+
+    $statuses = New-GitHubStatusesObject -Org $org -Repo $repo -Token $(GitHub.Token)
 
     Dir "$(Build.SourcesDirectory)\\artifacts\\package"
 
