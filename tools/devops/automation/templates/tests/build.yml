@@ -190,6 +190,10 @@ steps:
   displayName: Create legacy iOS/Mac SDK symlinks
 
 - bash: |
+    DEVELOPER_DIR=/Applications/Xcode_14.1.0.app xcrun simctl runtime list -v
+  displayName: 'List simulators'
+
+- bash: |
     set -x
     set -e
     $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators --ignore-shellcheck --ignore-yamllint
