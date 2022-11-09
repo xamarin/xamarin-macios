@@ -194,6 +194,15 @@ steps:
   displayName: "Configure build"
   timeoutInMinutes: 5
 
+# Make sure we have the right maccore hash checked out before we try to add
+# the provisioning profiles.
+- bash: |
+    set -ex
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
+  name: resetDependencies
+  displayName: 'Reset dependencies'
+  timeoutInMinutes: 10
+
 # We'll need these profiles to build the hot restart prebuilt app during the build
 # (it's built for device, and thus needs a certificate available so that the app can be signed).
 # We do this again before running the tests further below.
@@ -220,7 +229,6 @@ steps:
     set -x
     set -e
     echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
     MAKE_FLAGS=""
 
     if [[ "$SYSTEM_DEBUG" == "true" ]]; then
