@@ -74,11 +74,7 @@ steps:
       $converted = $inputContents + "`n`nUnable to convert markdown: $_`n`n"
     }
 
-    $uri = $(Build.Repository.Uri)
-    $orgRepo = $uri.Replace("https://github.com/", "")
-    $org, $repo = $orgRepo -split "/",2
-
-    $githubComments = New-GitHubCommentsObject -Org $org -Repo $repo -Token $Env:GITHUB_TOKEN -Hash $Env:GIT_HASH
+    $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $Env:GITHUB_TOKEN -Hash $Env:GIT_HASH
     $result = $githubComments.NewCommentFromMessage("", "", $converted)
   displayName: 'Publish GitHub comment for change detection'
   timeoutInMinutes: 10

@@ -29,11 +29,8 @@ steps:
 # if something goes wrong before we successfully complete the tests (in which case we delete the file).
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $uri = $(Build.Repository.Uri)
-    $orgRepo = $uri.Replace("https://github.com/", "")
-    $org, $repo = $orgRepo -split "/",2
 
-    $statuses = New-GitHubStatusesObject -Org $org -Repo $repo -Token $(GitHub.Token)
+    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
 
     Set-Content -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -Value "Tests on macOS ${{ parameters.statusContext }} failed for unknown reasons."
     $statuses.SetStatus("pending", "Tests on macOS ${{ parameters.statusContext }} have started.", "${{ parameters.statusContext }}")
@@ -198,11 +195,8 @@ steps:
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $uri = $(Build.Repository.Uri)
-    $orgRepo = $uri.Replace("https://github.com/", "")
-    $org, $repo = $orgRepo -split "/",2
 
-    $statuses = New-GitHubStatusesObject -Org $org -Repo $repo -Token $(GitHub.Token)
+    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
 
     Write-Host "Found tests"
     $testsPath = "$(Build.SourcesDirectory)/artifacts/mac-test-package/tests"
@@ -269,11 +263,9 @@ steps:
 # Make sure to report any errors
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $uri = $(Build.Repository.Uri)
-    $orgRepo = $uri.Replace("https://github.com/", "")
-    $org, $repo = $orgRepo -split "/",2
 
-    $githubComments = New-GitHubCommentsObject -Org $org -Repo $repo -Token $(GitHub.Token) -Hash $Env:GIT_HASH
+    $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:GIT_HASH
+    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
     $statuses = New-GitHubStatusesObject -Org $org -Repo $repo -Token $(GitHub.Token)
     
     if (Test-Path -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -PathType Leaf)  {

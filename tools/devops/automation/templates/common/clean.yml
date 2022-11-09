@@ -19,11 +19,7 @@ steps:
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
 
-    $uri = $(Build.Repository.Uri)
-    $orgRepo = $uri.Replace("https://github.com/", "")
-    $org, $repo = $orgRepo -split "/",2
-
-    $comments = New-GitHubCommentsObject -Org $org -Repo $repo -Token $(GitHub.Token)
+    $comments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
     $ciComment = "${{ parameters.commentToHide }}"
 
     $prId = "$(Build.SourceBranch)".Replace("refs/pull/", "").Replace("/merge", "")

@@ -72,11 +72,7 @@ steps:
           $emoji = ":fire:"
         }
 
-        $uri = $(Build.Repository.Uri)
-        $orgRepo = $uri.Replace("https://github.com/", "")
-        $org, $repo = $orgRepo -split "/",2
-
-        $gihubComments = New-GitHubCommentsObject -Org $org -Repo $repo -Token $Env:GITHUB_TOKEN -Hash $Env:GIT_HASH -Debug
+        $gihubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $Env:GITHUB_TOKEN -Hash $Env:GIT_HASH -Debug
         $result = $gihubComments.NewCommentFromObject("Test results", $emoji, $parallelResults)
       } catch {
         New-GitHubComment -Header "Failed to compute test summaries on $Env:CONTEXT" -Emoji ":fire:" -Description "Failed to compute test summaries: $_."

@@ -41,11 +41,8 @@ steps:
 - pwsh: |
     Import-Module .\\MaciosCI.psd1
     # calcualte the repo we are using, rather than using a parameter, we can use the URI from github, for example: https://github.com/xamarin/sdk-insertions
-    $uri = $(Build.Repository.Uri)
-    $orgRepo = $uri.Replace("https://github.com/", "")
-    $org, $repo = $orgRepo -split "/",2
 
-    $statuses = New-GitHubStatusesObject -Org $org -Repo $repo -Token "${{ parameters.githubToken }}"
+    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token "${{ parameters.githubToken }}"
     $statuses.SetStatus("${{ parameters.status }}", "${{ parameters.description }}", "${{ parameters.context }}", "${{ parameters.targetUrl }}")
   displayName: ${{ parameters.displayName }}
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
