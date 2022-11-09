@@ -115,8 +115,7 @@ steps:
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-brew-packages.csx
     provisioning_extra_args: '-vvvv'
-  env:
-    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+    github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 30
   enabled: true
 
@@ -129,8 +128,7 @@ steps:
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/build-provisioning.csx
     provisioning_extra_args: '-vvvv'
-  env:
-    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+    github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
 
 # Use the env variables that were set by the label parsing in the configure step
