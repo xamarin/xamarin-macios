@@ -63,7 +63,7 @@ namespace Introspection {
 			Errors++;
 		}
 
-		protected void AddErrorLine (string format, params object[] parameters)
+		protected void AddErrorLine (string format, params object [] parameters)
 		{
 			AddErrorLine (string.Format (format, parameters));
 		}
@@ -74,7 +74,7 @@ namespace Introspection {
 		/// <value>
 		/// <c>true</c> if continue on failure; otherwise, <c>false</c>.
 		/// </value>
-		public bool ContinueOnFailure { 
+		public bool ContinueOnFailure {
 			get { return continueOnFailure.Value; }
 			set { continueOnFailure.Value = value; }
 		}
@@ -123,7 +123,7 @@ namespace Introspection {
 			}
 		}
 
-		protected void AssertIfErrors (string s, params object[] parameters)
+		protected void AssertIfErrors (string s, params object [] parameters)
 		{
 			if (Errors == 0)
 				return;
@@ -135,7 +135,7 @@ namespace Introspection {
 			}
 			Assert.Fail (msg);
 		}
-			
+
 		static protected Type NSObjectType = typeof (NSObject);
 
 		protected virtual bool Skip (Attribute attribute)
@@ -149,8 +149,8 @@ namespace Introspection {
 				return false;
 
 			return !member.IsAvailableOnHostPlatform () ||
-				          SkipDueToAttribute (member.DeclaringType) ||
-				          SkipDueToAttributeInProperty (member);
+						  SkipDueToAttribute (member.DeclaringType) ||
+						  SkipDueToAttributeInProperty (member);
 		}
 
 		// We need to check Availability info on PropertyInfo attributes too
@@ -165,13 +165,13 @@ namespace Introspection {
 			var m = member as MethodInfo;
 
 			if (m == null || // Skip anything that is not a method
-			    !m.Attributes.HasFlag (MethodAttributes.SpecialName)) // We want properties with SpecialName Attribute
+				!m.Attributes.HasFlag (MethodAttributes.SpecialName)) // We want properties with SpecialName Attribute
 				return false;
 
 			// FIXME: In the future we could cache this to reduce memory requirements
 			var property = m.DeclaringType
-			                .GetProperties ()
-			                .SingleOrDefault (p => p.GetGetMethod () == m || p.GetSetMethod () == m);
+							.GetProperties ()
+							.SingleOrDefault (p => p.GetGetMethod () == m || p.GetSetMethod () == m);
 			return property != null && SkipDueToAttribute (property);
 		}
 
@@ -196,7 +196,7 @@ namespace Introspection {
 		public bool MemberHasObsolete (MemberInfo member)
 		{
 #if NET
-			return member.GetCustomAttributes<ObsoletedOSPlatformAttribute> (false).Any();
+			return member.GetCustomAttributes<ObsoletedOSPlatformAttribute> (false).Any ();
 #else
 			return member.GetCustomAttribute<ObsoleteAttribute> () != null;
 #endif
@@ -258,7 +258,7 @@ namespace Introspection {
 				break;
 			}
 
-			return Path.Combine (prefix, libname + ".framework", libname); 
+			return Path.Combine (prefix, libname + ".framework", libname);
 		}
 	}
 }

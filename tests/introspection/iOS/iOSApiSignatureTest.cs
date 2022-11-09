@@ -17,7 +17,7 @@ using Foundation;
 using UIKit;
 
 namespace Introspection {
-	
+
 	[TestFixture]
 	// we want the tests to be available because we use the linker
 	[Preserve (AllMembers = true)]

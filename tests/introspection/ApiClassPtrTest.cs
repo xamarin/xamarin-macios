@@ -44,10 +44,10 @@ namespace Introspection {
 
 		Type GetExtendedType (Type extensionType)
 		{
-			var method = 
+			var method =
 				(from m in extensionType.GetMethods (BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-				where m.IsDefined (typeof (ExtensionAttribute), false)
-				select m).FirstOrDefault();
+				 where m.IsDefined (typeof (ExtensionAttribute), false)
+				 select m).FirstOrDefault ();
 
 			if (method != null) {
 				var paramType = method.GetParameters () [0].ParameterType;
@@ -55,12 +55,11 @@ namespace Introspection {
 					return typeof (NSString);
 				else
 					return paramType;
-			}
-			else
+			} else
 				return null;
 		}
 
-		IntPtr GetClassPtrFromRegister (Type t) 
+		IntPtr GetClassPtrFromRegister (Type t)
 		{
 			var attribs = t.GetCustomAttributes (typeof (RegisterAttribute), true);
 			if (attribs.Length > 0) {
@@ -82,10 +81,10 @@ namespace Introspection {
 
 				if (Skip (t))
 					continue;
-				
+
 				FieldInfo fi = t.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
 				if (fi == null)
-					continue;			
+					continue;
 				IntPtr class_ptr = (IntPtr) (NativeHandle) fi.GetValue (null);
 				IntPtr register_class_ptr = GetClassPtrFromRegister (t);
 
@@ -96,7 +95,7 @@ namespace Introspection {
 		[Test]
 		public void VerifyClassPtrCategories ()
 		{
-			foreach (Type t in Assembly.GetTypes().Where (t => t.IsClass && t.IsSealed && t.IsAbstract)) {
+			foreach (Type t in Assembly.GetTypes ().Where (t => t.IsClass && t.IsSealed && t.IsAbstract)) {
 				if (Skip (t))
 					continue;
 
