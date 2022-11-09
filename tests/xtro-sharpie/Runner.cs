@@ -8,7 +8,7 @@ using Mono.Cecil;
 using Clang.Ast;
 
 namespace Extrospection {
-	
+
 	public class Runner {
 
 		public Runner ()
@@ -161,7 +161,7 @@ namespace Extrospection {
 
 	// debug
 	class ListNative : BaseVisitor {
-		
+
 		public override void VisitDecl (Decl decl)
 		{
 			if (decl is FunctionDecl) {

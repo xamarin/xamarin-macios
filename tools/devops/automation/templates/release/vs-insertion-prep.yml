@@ -27,7 +27,7 @@ stages:
   # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
   - template: nuget-msi-convert/job/v3.yml@yaml-templates
     parameters:
-      yamlResourceName: templates
+      yamlResourceName: yaml-templates
       dependsOn: signing
       artifactName: nuget-signed
       propsArtifactName: dotnet-signed

@@ -249,8 +249,8 @@ stages:
   - template: ./sign-and-notarized/funnel.yml
     parameters:
       isPR: ${{ parameters.isPR }}
-      azureStorage: ${{ variables.azureStorage }}
-      azureContainer: ${{ variables.azureContainer }}
+      azureStorage:  variables['azureStorage']
+      azureContainer: variables['azureContainer']
       packages: # flatten the pkgs for the parameter
       - ${{ each pkg_obj in parameters.packages }}:
         - ${{ each pkg in pkg_obj.packages }}:

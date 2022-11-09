@@ -25,7 +25,7 @@ namespace Extrospection {
 
 	public class FieldCheck : BaseVisitor {
 
-		Dictionary<string,MemberReference> fields = new Dictionary<string, MemberReference> ();
+		Dictionary<string, MemberReference> fields = new Dictionary<string, MemberReference> ();
 
 		public override void VisitManagedType (TypeDefinition type)
 		{

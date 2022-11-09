@@ -5,10 +5,8 @@ using Clang;
 using Clang.Ast;
 using Mono.Cecil;
 
-namespace Extrospection
-{
-	public static class AttributeHelpers
-	{
+namespace Extrospection {
+	public static class AttributeHelpers {
 		static bool Skip (ICustomAttributeProvider item)
 		{
 			// Before accessing CustomAttributes we must query HasCustomAttributes
@@ -50,7 +48,7 @@ namespace Extrospection
 		static bool HasMatchingPlatformAttribute (string expectedAttributeName, CustomAttribute attribute, Platforms platform)
 		{
 			if (attribute.Constructor.DeclaringType.Name == expectedAttributeName) {
-				byte attrPlatform = (byte)attribute.ConstructorArguments[0].Value;
+				byte attrPlatform = (byte) attribute.ConstructorArguments [0].Value;
 				if (attrPlatform == Helpers.GetPlatformManagedValue (platform))
 					return true;
 			}
@@ -88,10 +86,10 @@ namespace Extrospection
 				version = null;
 				return true;
 			case 5:
-				version = new Version ((int)attribute.ConstructorArguments[1].Value, (int)attribute.ConstructorArguments[2].Value);
+				version = new Version ((int) attribute.ConstructorArguments [1].Value, (int) attribute.ConstructorArguments [2].Value);
 				return true;
 			case 6:
-				version = new Version ((int)attribute.ConstructorArguments[1].Value, (int)attribute.ConstructorArguments[2].Value, (int)attribute.ConstructorArguments[3].Value);
+				version = new Version ((int) attribute.ConstructorArguments [1].Value, (int) attribute.ConstructorArguments [2].Value, (int) attribute.ConstructorArguments [3].Value);
 				return true;
 			default:
 				throw new InvalidOperationException ($"GetPlatformVersion with unexpected number of arguments {attribute.ConstructorArguments.Count} {attribute.Constructor.DeclaringType.Name}");
@@ -137,7 +135,7 @@ namespace Extrospection
 						return true;
 
 					// The only related platforms for .NET is iOS for Mac Catalyst
-					if (Helpers.Platform == Platforms.MacCatalyst && 
+					if (Helpers.Platform == Platforms.MacCatalyst &&
 							(AttributeHelpers.HasObsoletedOSPlatform (attribute, Platforms.iOS) ||
 							 AttributeHelpers.HasUnsupportedOSPlatform (attribute, Platforms.iOS)))
 						return true;
@@ -165,18 +163,18 @@ namespace Extrospection
 			return false;
 		}
 
-		static Platforms[] GetRelatedPlatforms ()
+		static Platforms [] GetRelatedPlatforms ()
 		{
 			// TV and Watch also implictly accept iOS
 			switch (Helpers.Platform) {
 			case Platforms.macOS:
-				return new Platforms[] { Platforms.macOS };
+				return new Platforms [] { Platforms.macOS };
 			case Platforms.iOS:
-				return new Platforms[] { Platforms.iOS };
+				return new Platforms [] { Platforms.iOS };
 			case Platforms.tvOS:
-				return new Platforms[] { Platforms.iOS, Platforms.tvOS };
+				return new Platforms [] { Platforms.iOS, Platforms.tvOS };
 			case Platforms.watchOS:
-				return new Platforms[] { Platforms.iOS, Platforms.watchOS };
+				return new Platforms [] { Platforms.iOS, Platforms.watchOS };
 			case Platforms.MacCatalyst:
 				return new Platforms [] { Platforms.iOS, Platforms.MacCatalyst };
 			default:
