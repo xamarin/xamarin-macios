@@ -11,7 +11,11 @@ namespace Xamarin.iOS.Tasks.Windows {
 			// We use a temp dir because the extraction dir should not exist for the ZipFile API to work
 			var tempExtractionPath = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ().Substring (0, 4));
 
+#if NET6_0_OR_GREATER
 			ExtractWithSymlinksToDirectory (sourceFileName, tempExtractionPath);
+#else
+			ZipFile.ExtractToDirectory (sourceFileName, tempExtractionPath);
+#endif
 
 			CopyDirectory (tempExtractionPath, destinationPath);
 
@@ -38,6 +42,7 @@ namespace Xamarin.iOS.Tasks.Windows {
 			}
 		}
 
+#if NET6_0_OR_GREATER
 		private static void ExtractWithSymlinksToDirectory (string sourceFileName, string destinationDirectoryName)
 		{
 			// Do the normal extraction first
@@ -98,5 +103,6 @@ namespace Xamarin.iOS.Tasks.Windows {
 		private const int S_IFLNK = 0xA000;
 
 		private static bool IsSymbolicLink (ZipArchiveEntry entry) => ((entry.ExternalAttributes >> 16) & S_IFMT) == S_IFLNK;
+#endif
 	}
 }
