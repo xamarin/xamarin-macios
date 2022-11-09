@@ -98,6 +98,7 @@
 				Condition="Exists('%(RootDir)%(Directory)%(FileName).resources.zip')" />
 		</ItemGroup>
 
+		<!-- TODO: Handle symlinks in zip files -->
 		<Unzip ZipFilePath="@(_PackageResourcesZips)"
 			ExtractionPath="$(HotRestartPackageResourcesDir)%(NuGetPackageId)\%(NuGetPackageVersion)"
 			Condition="'@(_PackageResourcesZips)' != '' And !Exists('$(HotRestartPackageResourcesDir)%(NuGetPackageId)\%(NuGetPackageVersion)')" />
