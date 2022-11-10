@@ -27,6 +27,10 @@ namespace ObjCRuntime {
 		
 #if !NET
 <# foreach (var d in delegates) { #>
+<#
+		if (d.OnlyCoreCLR)
+			continue;
+#>
 		internal delegate <#= d.ReturnType.MType #> <#= d.SimpleEntryPoint #>_delegate (<#= d.MArgumentSignature #>);
 <# } #>
 #endif // !NET
