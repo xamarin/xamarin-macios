@@ -89,6 +89,7 @@ stages:
 
     - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
       parameters:
+        yamlResourceName: yaml-templates
         githubToken: $(GitHub.Token)
         githubContext: $(NupkgCommitStatusName)
         blobName: $(NupkgCommitStatusName)
@@ -97,6 +98,7 @@ stages:
 
     - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
       parameters:
+        yamlResourceName: yaml-templates
         githubToken: $(GitHub.Token)
         githubContext: $(VSDropCommitStatusName)
         blobName: $(VSDropCommitStatusName)
@@ -110,6 +112,7 @@ stages:
 
     - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
       parameters:
+        yamlResourceName: yaml-templates
         githubToken: $(GitHub.Token)
         githubContext: $(MultiTargetVSDropCommitStatusName)
         blobName: $(MultiTargetVSDropCommitStatusName)
