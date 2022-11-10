@@ -51,7 +51,7 @@ jobs:
     - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
 
     # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
-    - template: azure-devops-pools/agent-pool-selector.yml@templates
+    - template: azure-devops-pools/agent-pool-selector.yml@yaml-templates
       parameters:
         agentPoolPR: $(PRBuildPool)
         agentPoolPRUrl: $(PRBuildPoolUrl)

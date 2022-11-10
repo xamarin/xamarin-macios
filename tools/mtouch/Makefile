@@ -59,7 +59,6 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-framework CoreLocation			\
 	-framework CoreText			\
 	-framework ExternalAccessory		\
-	-framework GameKit				\
 	-framework MapKit			\
 	-framework MediaPlayer			\
 	-framework MessageUI			\
@@ -173,7 +172,14 @@ SIMLAUNCHER_FRAMEWORKS =  \
 						\
 	-weak_framework CoreLocationUI \
 	-weak_framework OSLog \
+						\
+	-weak_framework AVRouting \
+	-weak_framework BackgroundAssets \
+	-weak_framework SharedWithYou \
+	-weak_framework SharedWithYouCore \
 
+SIMLAUNCHER64_FRAMEWORKS =  \
+	-framework GameKit				\
 # keep the above list of weak_framework
 # 1. grouped by iOS versions;
 # 2. sorted and
@@ -187,6 +193,7 @@ SIMLAUNCHER_FRAMEWORKS =  \
 # note 5: Metal* seems to be supported as of some Xcode 7 beta (b2 didn't, but the final release does)
 # note 6: Xcode 11 beta 1 shipped without WatchKit.
 # note 7: Xcode 11 beta 3 documented that shipping without WatchKit was done on purpose (in the release notes).
+# note 8: Xcode 14 beta 2 removed GameKit for 32-bit iOS
 
 define SimlauncherTemplate
 
@@ -198,7 +205,7 @@ simlauncher$(3)-sgen: simlauncher.mm $(TOP)/runtime/.libs/iphonesimulator/libxam
 		$(foreach u,$(UNREFERENCED_SYMBOLS),-u $u)  \
 		$(TOP)/runtime/.libs/iphonesimulator/libapp.a \
 		-Wl,-w \
-		-lz -liconv $(TOP)/runtime/.libs/iphonesimulator/libxamarin-debug.a simlauncher.mm $(SIMLAUNCHER_FRAMEWORKS) $(SIMULATOR$(2)_OBJC_CFLAGS) -o $$@
+		-lz -liconv $(TOP)/runtime/.libs/iphonesimulator/libxamarin-debug.a simlauncher.mm $(SIMLAUNCHER_FRAMEWORKS) $(SIMLAUNCHER$(3)_FRAMEWORKS) $(SIMULATOR$(2)_OBJC_CFLAGS) -o $$@
 	$(Q) xcrun otool -L $$@ > $$@.frameworks
 endef
 
@@ -237,7 +244,7 @@ define RunRegistrar
 	$$(Q) touch $$(basename $$@).m $$(basename $$@).h
 
 .libs/Microsoft.$(9).registrar.$(10)%m .libs/Microsoft.$(9).registrar.$(10)%h: $(TOP)/src/build/dotnet/$(1)/$(3)/Microsoft.$(9).dll $(LOCAL_MTOUCH) | .libs
-	$$(Q_GEN) $$(LOCAL_MTOUCH_COMMAND) --xamarin-framework-directory=$$(IOS_DESTDIR)/$$(MONOTOUCH_PREFIX) $$(MTOUCH_VERBOSITY) --runregistrar:$$(abspath $$(basename $$@).m) --sdkroot $$(XCODE_DEVELOPER_ROOT) --sdk $(4) $$< --registrar:static --target-framework .NETCoreApp,Version=$(subst net,,$(DOTNET_TFM)),Profile=$(1) --abi $(2) -r:$(DOTNET_BCL_DIR)/System.Runtime.dll -r:$(DOTNET_SYSTEM_RUNTIME_INTEROPSERVICES_REF_ASSEMBLY_DIR)/System.Runtime.InteropServices.dll --rid $(10)
+	$$(Q_GEN) $$(LOCAL_MTOUCH_COMMAND) --xamarin-framework-directory=$$(IOS_DESTDIR)/$$(MONOTOUCH_PREFIX) $$(MTOUCH_VERBOSITY) --runregistrar:$$(abspath $$(basename $$@).m) --sdkroot $$(XCODE_DEVELOPER_ROOT) --sdk $(4) $$< --registrar:static --target-framework .NETCoreApp,Version=$(subst net,,$(DOTNET_TFM)),Profile=$(1) --abi $(2) -r:$(DOTNET_BCL_DIR)/System.Runtime.dll -r:$(DOTNET_BCL_DIR)/System.Runtime.InteropServices.dll --rid $(10)
 	$$(Q) touch $$(basename $$@).m $$(basename $$@).h
 
 %.registrar.$(1).$(2).a: %.registrar.$(1).$(2).m %.registrar.$(1).$(2).h

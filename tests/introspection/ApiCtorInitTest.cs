@@ -132,6 +132,8 @@ namespace Introspection {
 				// Causes a crash later. Filed as radar://18440271.
 				// Apple said they won't fix this ('init' isn't a designated initializer)
 				return true;
+			case "HMMatterRequestHandler": // got removed and the current API throws an exception at run time.
+				return true;
 			}
 
 #if !NET
@@ -172,7 +174,7 @@ namespace Introspection {
 			if (obj.ToString () == null)
 				ReportError ("{0} : ToString", instance_type_name);
 		}
-		
+
 		bool GetIsDirectBinding (NSObject obj)
 		{
 			int flags = TestRuntime.GetFlags (obj);
@@ -244,8 +246,7 @@ namespace Introspection {
 		{
 			if (member == null)
 				return false;
-			var ca = member.GetCustomAttribute<ObsoleteAttribute> ();
-			return ca != null || base.SkipDueToAttribute (member);
+			return MemberHasObsolete (member) || base.SkipDueToAttribute (member);
 		}
 
 		[Test]
@@ -254,11 +255,11 @@ namespace Introspection {
 			Errors = 0;
 			ErrorData.Clear ();
 			int n = 0;
-			
+
 			foreach (Type t in Assembly.GetTypes ()) {
 				if (t.IsAbstract || !NSObjectType.IsAssignableFrom (t))
 					continue;
-				
+
 				if (Skip (t))
 					continue;
 
@@ -271,10 +272,10 @@ namespace Introspection {
 						Console.WriteLine ("[WARNING] {0} was skipped because it had no default constructor", t);
 					continue;
 				}
-				
+
 				instance_type_name = t.FullName;
 				if (LogProgress)
-						Console.WriteLine ("{0}. {1}", n, instance_type_name);
+					Console.WriteLine ("{0}. {1}", n, instance_type_name);
 
 				NSObject obj = null;
 				try {
@@ -284,8 +285,7 @@ namespace Introspection {
 					CheckIsDirectBinding (obj);
 					CheckNSObjectProtocol (obj);
 					Dispose (obj, t);
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					// Objective-C exception thrown
 					if (!ContinueOnFailure)
 						throw;
@@ -310,6 +310,10 @@ namespace Introspection {
 			int n = 0;
 
 			foreach (Type t in Assembly.GetTypes ()) {
+
+				if (SkipCheckShouldReExposeBaseCtor (t))
+					continue;
+
 				// we only care for NSObject subclasses that we expose publicly
 				if (!t.IsPublic || !NSObjectType.IsAssignableFrom (t))
 					continue;
@@ -355,7 +359,7 @@ namespace Introspection {
 					return true;
 				break;
 			case "MPSMatrixMultiplication":
-				// marked as NS_UNAVAILABLE - Use the above initialization method instead.
+			// marked as NS_UNAVAILABLE - Use the above initialization method instead.
 			case "MPSImageHistogram":
 				// Could not initialize an instance of the type 'MetalPerformanceShaders.MPSImageHistogram': the native 'initWithDevice:' method returned nil.
 				// make sense: there's a `initWithDevice:histogramInfo:` DI
@@ -604,12 +608,11 @@ namespace Introspection {
 					return true;
 			}
 
-			// Add Skipped types here
-			//switch (type.Namespace) {
-			//case "":
-			//	return true;
-			//}
+			return SkipDueToAttribute (type);
+		}
 
+		protected virtual bool SkipCheckShouldReExposeBaseCtor (Type type)
+		{
 			return SkipDueToAttribute (type);
 		}
 

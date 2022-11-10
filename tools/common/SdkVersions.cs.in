@@ -123,6 +123,7 @@ namespace Xamarin {
 	sealed class ProductConstants {
 		public string Version;
 		public string Revision;
+		public const string Hash = "@PRODUCT_HASH@";
 
 #if BUNDLER
 		public readonly static ProductConstants iOS = new ProductConstants {

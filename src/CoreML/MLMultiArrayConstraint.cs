@@ -15,7 +15,7 @@ using ObjCRuntime;
 
 namespace CoreML {
 	public partial class MLMultiArrayConstraint {
-		public nint[] Shape {
+		public nint [] Shape {
 			get {
 				return MLMultiArray.ConvertArray (_Shape);
 			}

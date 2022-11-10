@@ -504,6 +504,12 @@ namespace CoreServices
 		static extern void FSEventStreamScheduleWithRunLoop (IntPtr handle,
 			IntPtr runLoop, IntPtr runLoopMode);
 
+#if NET
+		[Obsolete ("Starting with macOS13.0 use 'SetDispatchQueue' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[UnsupportedOSPlatform ("macos13.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 13,0, message: "Use 'SetDispatchQueue' instead.")]
+#endif
 		public void ScheduleWithRunLoop (CFRunLoop runLoop, NSString runLoopMode)
 		{
 			FSEventStreamScheduleWithRunLoop (GetCheckedHandle (), runLoop.Handle, runLoopMode.Handle);
@@ -528,6 +534,12 @@ namespace CoreServices
 		static extern void FSEventStreamUnscheduleFromRunLoop (IntPtr handle,
 			IntPtr runLoop, IntPtr runLoopMode);
 
+#if NET
+		[Obsolete ("Starting with macOS13.0 use 'SetDispatchQueue' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[UnsupportedOSPlatform ("macos13.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 13,0, message: "Use 'SetDispatchQueue' instead.")]
+#endif
 		public void UnscheduleFromRunLoop (CFRunLoop runLoop, NSString runLoopMode)
 		{
 			FSEventStreamScheduleWithRunLoop (GetCheckedHandle (), runLoop.Handle, runLoopMode.Handle);

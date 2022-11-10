@@ -31,7 +31,7 @@ namespace CoreFoundation {
 		{
 		}
 #endif
-		
+
 		[Preserve (Conditional = true)]
 #if NET
 		internal CFMutableString (NativeHandle handle, bool owns)
@@ -71,7 +71,7 @@ namespace CoreFoundation {
 			Handle = CFStringCreateMutableCopy (IntPtr.Zero, maxLength, theString.GetHandle ());
 		}
 
-		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
+		[DllImport (Constants.CoreFoundationLibrary, CharSet = CharSet.Unicode)]
 		static extern void CFStringAppendCharacters (/* CFMutableStringRef* */ IntPtr theString, string chars, nint numChars);
 
 		public void Append (string @string)

@@ -123,7 +123,7 @@ namespace CoreFoundation {
 		IntPtr address;
 
 		public CFSocketSignature (AddressFamily family, SocketType type,
-		                          ProtocolType proto, CFSocketAddress address)
+								  ProtocolType proto, CFSocketAddress address)
 		{
 			this.protocolFamily = AddressFamilyToInt (family);
 			this.socketType = SocketTypeToInt (type);
@@ -207,7 +207,7 @@ namespace CoreFoundation {
 			}
 		}
 
-		static byte[] CreateData (IPEndPoint endpoint)
+		static byte [] CreateData (IPEndPoint endpoint)
 		{
 			if (endpoint is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
@@ -216,16 +216,16 @@ namespace CoreFoundation {
 				var buffer = new byte [16];
 				buffer [0] = 16;
 				buffer [1] = 2; // AF_INET
-				buffer [2] = (byte)(endpoint.Port >> 8);
-				buffer [3] = (byte)(endpoint.Port & 0xff);
+				buffer [2] = (byte) (endpoint.Port >> 8);
+				buffer [3] = (byte) (endpoint.Port & 0xff);
 				Buffer.BlockCopy (endpoint.Address.GetAddressBytes (), 0, buffer, 4, 4);
 				return buffer;
 			} else if (endpoint.AddressFamily == AddressFamily.InterNetworkV6) {
 				var buffer = new byte [28];
 				buffer [0] = 32;
 				buffer [1] = 30; // AF_INET6
-				buffer [2] = (byte)(endpoint.Port >> 8);
-				buffer [3] = (byte)(endpoint.Port & 0xff);
+				buffer [2] = (byte) (endpoint.Port >> 8);
+				buffer [3] = (byte) (endpoint.Port & 0xff);
 				Buffer.BlockCopy (endpoint.Address.GetAddressBytes (), 0, buffer, 8, 16);
 				return buffer;
 			} else {
@@ -235,8 +235,7 @@ namespace CoreFoundation {
 	}
 
 	[StructLayout (LayoutKind.Sequential)]
-	struct CFSocketContext
-	{
+	struct CFSocketContext {
 		nint Version; // CFIndex
 		public /* void*/ IntPtr Info;
 #if NET
@@ -329,7 +328,7 @@ namespace CoreFoundation {
 
 		delegate void CFSocketCallBack (IntPtr s, nuint type, IntPtr address, IntPtr data, IntPtr info);
 
-		[MonoPInvokeCallback (typeof(CFSocketCallBack))]
+		[MonoPInvokeCallback (typeof (CFSocketCallBack))]
 		static void OnCallback (IntPtr s, nuint type, IntPtr address, IntPtr data, IntPtr info)
 		{
 			var socket = GCHandle.FromIntPtr (info).Target as CFSocket;
@@ -348,7 +347,7 @@ namespace CoreFoundation {
 				else {
 					// Note that we read a 32bit value even if CFSocketError is a nint:
 					// 'or a pointer to an SInt32 error code if the connect failed.'
-					result = (CFSocketError)Marshal.ReadInt32 (data);
+					result = (CFSocketError) Marshal.ReadInt32 (data);
 				}
 				socket.OnConnect (new CFSocketConnectEventArgs (result));
 			} else if (cbType == CFSocketCallBackType.DataCallBack && socket.DataEvent != null) {
@@ -369,13 +368,13 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		unsafe extern static IntPtr CFSocketCreate (IntPtr allocator, int /*SInt32*/ family, int /*SInt32*/ type, int /*SInt32*/ proto,
-		                                     nuint /*CFOptionFlags*/ callBackTypes,
-		                                     CFSocketCallBack callout, CFSocketContext* ctx);
+											 nuint /*CFOptionFlags*/ callBackTypes,
+											 CFSocketCallBack callout, CFSocketContext* ctx);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		unsafe extern static IntPtr CFSocketCreateWithNative (IntPtr allocator, CFSocketNativeHandle sock,
-                                                       nuint /*CFOptionFlags*/ callBackTypes,
-		                                               CFSocketCallBack callout, CFSocketContext* ctx);
+													   nuint /*CFOptionFlags*/ callBackTypes,
+													   CFSocketCallBack callout, CFSocketContext* ctx);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static IntPtr CFSocketCreateRunLoopSource (IntPtr allocator, IntPtr socket, nint order);
@@ -456,13 +455,13 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		unsafe extern static IntPtr CFSocketCreateConnectedToSocketSignature (IntPtr allocator, ref CFSocketSignature signature,
-		                                                               nuint /*CFOptionFlags*/ callBackTypes,
-		                                                               CFSocketCallBack callout,
-		                                                               CFSocketContext* context, double timeout);
+																	   nuint /*CFOptionFlags*/ callBackTypes,
+																	   CFSocketCallBack callout,
+																	   CFSocketContext* context, double timeout);
 
 		public static CFSocket CreateConnectedToSocketSignature (AddressFamily family, SocketType type,
-		                                                         ProtocolType proto, IPEndPoint endpoint,
-		                                                         double timeout)
+																 ProtocolType proto, IPEndPoint endpoint,
+																 double timeout)
 		{
 			using (var address = new CFSocketAddress (endpoint)) {
 				var sig = new CFSocketSignature (family, type, proto, address);
@@ -555,7 +554,7 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static nint CFSocketSendData (IntPtr handle, IntPtr address, IntPtr data, double timeout);
 
-		public void SendData (byte[] data, double timeout)
+		public void SendData (byte [] data, double timeout)
 		{
 			using (var buffer = new CFDataBuffer (data)) {
 				var error = (CFSocketError) (long) CFSocketSendData (Handle, IntPtr.Zero, buffer.Handle, timeout);
@@ -633,12 +632,12 @@ namespace CoreFoundation {
 				private set;
 			}
 
-			public byte[] Data {
+			public byte [] Data {
 				get;
 				private set;
 			}
 
-			public CFSocketDataEventArgs (IPEndPoint remote, byte[] data)
+			public CFSocketDataEventArgs (IPEndPoint remote, byte [] data)
 			{
 				this.RemoteEndPoint = remote;
 				this.Data = data;
@@ -652,7 +651,7 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		public class CFSocketReadEventArgs : EventArgs {
-			public CFSocketReadEventArgs () {}
+			public CFSocketReadEventArgs () { }
 		}
 
 #if NET
@@ -662,7 +661,7 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		public class CFSocketWriteEventArgs : EventArgs {
-			public CFSocketWriteEventArgs () {}
+			public CFSocketWriteEventArgs () { }
 		}
 
 		public event EventHandler<CFSocketAcceptEventArgs>? AcceptEvent;

@@ -3,7 +3,7 @@ TOP = ..
 include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
 
-DOTNET_MANIFESTS_PATH=$(DOTNET_DIR)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)
+DOTNET_MANIFESTS_PATH=$(DOTNET_DIR)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)
 DOTNET_PACKS_PATH=$(DOTNET_DIR)/packs
 DOTNET_TEMPLATE_PACKS_PATH=$(DOTNET_DIR)/template-packs
 TMP_PKG_DIR=_pkg
@@ -12,6 +12,7 @@ DOTNET_PLATFORMS_UPPERCASE:=$(shell echo $(DOTNET_PLATFORMS) | tr a-z A-Z)
 
 # Create variables prefixed with the correctly cased platform name from the upper-cased platform name. This makes some of the next sections somewhat simpler.
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_NUGET_VERSION_NO_METADATA:=$($(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval NET6_$(platform)_NUGET_VERSION_NO_METADATA:=$(NET6_$(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
 
 DOTNET_iOS_GLOBAL_USINGS=CoreGraphics Foundation UIKit
 DOTNET_tvOS_GLOBAL_USINGS=CoreGraphics Foundation UIKit
@@ -30,6 +31,7 @@ $(1)_NUGET_TARGETS = \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.Versions.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.targets \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.DefaultItems.targets \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.MultiTarget.targets \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.Publish.targets \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.TargetFrameworkInference.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.props \
@@ -76,6 +78,14 @@ DIRECTORIES += \
 $(DIRECTORIES):
 	$(Q) mkdir -p $@
 
+ifneq ($(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT),$(DOTNET_MANIFEST_VERSION_BAND))
+.stamp-cp-mono-workload: $(TOP)/Make.config
+	mkdir -p $(DOTNET_MANIFESTS_PATH)
+	$(CP) -r $(DOTNET_MANIFESTS_PATH)/../$(DOTNET_MANIFEST_VERSION_BAND)/* $(DOTNET_MANIFESTS_PATH)/
+	$(Q) touch $@
+TARGETS += .stamp-cp-mono-workload
+endif
+
 CURRENT_HASH_LONG:=$(shell git log -1 --pretty=%H)
 
 $(DOTNET_DESTDIR)/Microsoft.%: Microsoft.% | $(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/data $(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/Sdk $(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets $(DOTNET_DESTDIR)/Microsoft.$(platform).Templates) \
@@ -98,13 +108,15 @@ targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.templa
 		-e "s/@CURRENT_BRANCH@/$$(CURRENT_BRANCH_SED_ESCAPED)/g" \
 		-e "s/@CURRENT_HASH_LONG@/$$(CURRENT_HASH_LONG)/g" \
 		-e 's*@VALID_RUNTIME_IDENTIFIERS@*$(foreach rid,$(3),\n\t\t<_XamarinValidRuntimeIdentifier Include="$(rid)" Platform="$(1)" />)*' \
+		-e 's/@DOTNET_TFM@/$(DOTNET_TFM)/g' \
+		-e 's/@RUNTIME_PACK_RUNTIME_IDENTIFIERS@/$(4)/g' \
 		$$< > $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
 Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.Versions.props: targets/Microsoft.$1.Sdk.Versions.props
 	$$(Q) $$(CP) $$< $$@
 endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call VersionsTemplate,$(platform),$(shell echo $(platform) | tr a-z A-Z),$(DOTNET_$(shell echo $(platform) | tr a-z A-Z)_RUNTIME_IDENTIFIERS))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call VersionsTemplate,$(platform),$(shell echo $(platform) | tr a-z A-Z),$(DOTNET_$(shell echo $(platform) | tr a-z A-Z)_RUNTIME_IDENTIFIERS),$(shell echo $(DOTNET_$(shell echo $(platform) | tr a-z A-Z)_RUNTIME_IDENTIFIERS) | tr ' ' ';'))))
 
 version-props: $(foreach platform,$(DOTNET_PLATFORMS),targets/Microsoft.$(platform).Sdk.Versions.props)
 
@@ -134,8 +146,6 @@ Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.ImplicitNamespaceImports.props: target
 		-e "s/@TARGET_FRAMEWORK_VERSION@/$(subst net,,$(DOTNET_TFM))/g" \
 		-e "s/@GLOBAL_USINGS@/$(2)/g" \
 		$$< > $$@
-x:: Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.ImplicitNamespaceImports.props
-	cat Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.ImplicitNamespaceImports.props
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call ImplicitNamespaceImports,$(platform),$(foreach using,$(DOTNET_$(platform)_GLOBAL_USINGS),\n\t\t<Using Include=\"$(using)\" Platform=\"$(platform)\" \/>))))
 
@@ -147,14 +157,25 @@ Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props: $(
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call SupportedTargetPlatforms,$(platform))))
 
-define WorkloadTargets
-Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: targets/WorkloadManifest.$(1).template.json Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index Makefile
-	$$(Q) rm -f $$@.tmp
+define SharedAfterTargetsTemplate
+Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.MultiTarget.targets: targets/Xamarin.Shared.Sdk.MultiTarget.template.targets Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index
 	$$(Q_GEN) sed \
-		-e "s/@VERSION@/$3/g" \
-		-e "s/@BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION@/$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)/g" \
-		-e "s/@PLATFORM_LOWERCASE@/$2/g" \
-		-e "s/@PLATFORM@/$1/g" \
+		-e "s/@NET6_NUGET_VERSION_NO_METADATA@/$2/g" \
+		$$< > $$@.tmp
+	$$(Q) mv $$@.tmp $$@
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call SharedAfterTargetsTemplate,$(platform),$(NET6_$(platform)_NUGET_VERSION_NO_METADATA))))
+
+define WorkloadTargets
+Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index Makefile generate-workloadmanifest-json.csharp
+	$$(Q) mkdir -p Workloads/Microsoft.NET.Sdk.$(1)/
+	$$(Q) rm -f $$@.tmp
+	$$(Q_GEN) ./generate-workloadmanifest-json.csharp "$(1)" "$(3)" "$(4)" "$$(DOTNET_$(5)_RUNTIME_IDENTIFIERS)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)"
+	$$(Q) mv $$@.tmp $$@
+
+Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets: Workloads/WorkloadManifest.$(1).template.targets Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index
+	$$(Q_GEN) sed \
+		-e "s/@NUGET_VERSION_NO_METADATA@/$3/g" \
 		$$< > $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
@@ -162,19 +183,30 @@ Workloads/Microsoft.NET.Sdk.$(1)/LICENSE: $(TOP)/LICENSE
 	$$(Q) $(CP) $$< $$@
 
 WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json
+WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets
 WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/LICENSE
 
 LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json
+LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets
 LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/LICENSE
 endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA),$(NET6_$(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr a-z A-Z))))
+
+# We use a different versioning for stable releases (which is determined by the NUGET_PRERELEASE_IDENTIFIER variable being empty):
+# We reset the commit distance (to the commits since NUGET_PRERELEASE_IDENTIFIER changed - which must have changed for a branch to become a stable branch)
+# We use the commit distance as the third number in the version, instead of the fourth.
+ifeq ($(NUGET_PRERELEASE_IDENTIFIER),)
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_MSI_VERSION:=$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_OS_VERSION).$(NUGET_STABLE_COMMIT_DISTANCE).0))
+else
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_MSI_VERSION:=$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_OS_VERSION).0.$($(shell echo $(platform) | tr a-z A-Z)_NUGET_COMMIT_DISTANCE)))
+endif
 
 $(DOTNET_NUPKG_DIR)/vs-workload.props: Makefile generate-vs-workload.csharp
 	$(Q) rm -f $@.tmp
 	$(Q_GEN) ./generate-vs-workload.csharp \
-		$(foreach platform,$(DOTNET_PLATFORMS),--platform $(platform) $($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_OS_VERSION).0.$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_COMMIT_DISTANCE)) \
+		$(foreach platform,$(DOTNET_PLATFORMS),--platform $(platform) $($(platform)_MSI_VERSION)) \
 		$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),--windows-platform $(platform)) \
-		$(foreach platform,$(DOTNET_PLATFORMS),--shorten $($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_VERSION_NO_METADATA)=$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_OS_VERSION).0.$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_COMMIT_DISTANCE)) \
+		$(foreach platform,$(DOTNET_PLATFORMS),--shorten $($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_VERSION_NO_METADATA)=$($(platform)_MSI_VERSION)) \
 		--shorten Microsoft.MacCatalyst.Runtime.maccatalyst=Microsoft.MacCatalyst.Runtime \
 		--shorten Microsoft.NET.Sdk.MacCatalyst.Manifest=Microsoft.MacCatalyst.Manifest \
 		--shorten Microsoft.tvOS.Runtime.tvossimulator=Microsoft.tvOS.Runtime \
@@ -191,6 +223,7 @@ $(DOTNET_NUPKG_DIR)/SignList.targets: Workloads/SignList.targets
 TEMPLATED_FILES = \
 	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.Versions.props) \
 	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.SupportedTargetPlatforms.props) \
+	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Xamarin.Shared.Sdk.MultiTarget.targets) \
 
 nupkgs/$(IOS_WINDOWS_NUGET).%.nupkg: CURRENT_VERSION_NO_METADATA=$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA)
 nupkgs/$(IOS_WINDOWS_NUGET).%.nupkg: CURRENT_VERSION_FULL=$(IOS_WINDOWS_NUGET_VERSION_FULL)
@@ -217,12 +250,12 @@ nupkgs/$(1).$(2).nupkg: $(3) $(WORKLOAD_TARGETS) package/$(1)/package.csproj $(w
 endef
 
 # Create the NuGet packaging targets. It's amazing what make allows you to do...
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Sdk,$($(platform)_NUGET_VERSION_NO_METADATA),$($(platform)_NUGET_TARGETS),,$(DOTNET_MANIFEST_VERSION_BAND))))
-$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CreateWindowsNuGetTemplate,Microsoft.$(platform).Windows.Sdk,$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA),$($(platform)_WINDOWS_NUGET_TARGETS),,$(DOTNET_MANIFEST_VERSION_BAND))))
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Ref,$($(platform)_NUGET_VERSION_NO_METADATA),,,$(DOTNET_MANIFEST_VERSION_BAND))))
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Templates,$($(platform)_NUGET_VERSION_NO_METADATA),,,$(DOTNET_MANIFEST_VERSION_BAND))))
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.NET.Sdk.$(platform),$($(platform)_NUGET_VERSION_NO_METADATA),,.Manifest-$(MANIFEST_VERSION_BAND),$(MANIFEST_VERSION_BAND))))
-$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Runtime.$(rid),$($(platform)_NUGET_VERSION_NO_METADATA),,,$(DOTNET_MANIFEST_VERSION_BAND)))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Sdk,$($(platform)_NUGET_VERSION_NO_METADATA),$($(platform)_NUGET_TARGETS),,$(DOTNET_VERSION_BAND))))
+$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CreateWindowsNuGetTemplate,Microsoft.$(platform).Windows.Sdk,$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA),$($(platform)_WINDOWS_NUGET_TARGETS),,$(DOTNET_VERSION_BAND))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Ref,$($(platform)_NUGET_VERSION_NO_METADATA),,,$(DOTNET_VERSION_BAND))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Templates,$($(platform)_NUGET_VERSION_NO_METADATA),,,$(DOTNET_VERSION_BAND))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.NET.Sdk.$(platform),$($(platform)_NUGET_VERSION_NO_METADATA),,.Manifest-$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT),$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Runtime.$(rid),$($(platform)_NUGET_VERSION_NO_METADATA),,,$(DOTNET_VERSION_BAND)))))
 
 # Copy the nuget from the temporary directory into the final directory
 $(DOTNET_NUPKG_DIR)/%.nupkg: nupkgs/%.nupkg | $(DOTNET_NUPKG_DIR)
@@ -244,7 +277,7 @@ SDK_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Sdk.$($(1)_NUGET_VERSION_NO_M
 SDK_PACKS += $$(SDK_PACKS_$(1))
 TEMPLATE_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Templates.$($(1)_NUGET_VERSION_NO_METADATA).nupkg
 TEMPLATE_PACKS += $$(TEMPLATE_PACKS_$(1))
-WORKLOAD_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$(subst Microsoft.,Microsoft.NET.Sdk.,$($(1)_NUGET)).Manifest-$(MANIFEST_VERSION_BAND).$($(1)_NUGET_VERSION_NO_METADATA).nupkg
+WORKLOAD_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$(subst Microsoft.,Microsoft.NET.Sdk.,$($(1)_NUGET)).Manifest-$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT).$($(1)_NUGET_VERSION_NO_METADATA).nupkg
 WORKLOAD_PACKS += $$(WORKLOAD_PACKS_$(1))
 pack-$(shell echo $(1) | tr A-Z a-z): $$(RUNTIME_PACKS_$(1)) $$(REF_PACKS_$(1)) $$(SDK_PACKS_$(1)) $$(TEMPLATE_PACKS_$(1)) $$(WORKLOAD_PACKS_$(1))
 endef
@@ -296,8 +329,8 @@ define CreatePackage
 $(TMP_PKG_DIR)/Microsoft.$1.Workload.$2.pkg: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile | $(TMP_PKG_DIR)
 	$$(Q) rm -f $$@
 	$$(Q) rm -rf tmpdir/Microsoft.NET.Sdk.$1.$2/
-	$$(Q) mkdir -p tmpdir/Microsoft.NET.Sdk.$1.$2/usr/local/share/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/
-	$$(Q) $$(CP) -r Workloads/Microsoft.NET.Sdk.$1 tmpdir/Microsoft.NET.Sdk.$1.$2/usr/local/share/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/
+	$$(Q) mkdir -p tmpdir/Microsoft.NET.Sdk.$1.$2/usr/local/share/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/
+	$$(Q) $$(CP) -r Workloads/Microsoft.NET.Sdk.$1 tmpdir/Microsoft.NET.Sdk.$1.$2/usr/local/share/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/microsoft.net.sdk.$3
 	$$(Q_GEN) pkgbuild --quiet --version '$2' --root tmpdir/Microsoft.NET.Sdk.$1.$2 --component-plist PackageInfo.plist  --install-location / --identifier com.microsoft.net.$3.workload.pkg $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
@@ -350,11 +383,11 @@ PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg
 
 $(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACKS_$(4)) $(SDK_PACKs_$(4)) $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -rf $$@ $$@.tmpdir $$@.tmp
-	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/template-packs
-	$$(Q) $(CP) -r Workloads/Microsoft.NET.Sdk.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/
+	$$(Q) $(CP) -r Workloads/Microsoft.NET.Sdk.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/microsoft.net.sdk.$3
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Sdk $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk/$2
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Ref $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref/$2
 	$$(Q) $(CP) $(TEMPLATE_PACKS_$(4)) $$@.tmpdir/dotnet/template-packs/$(subst +$(NUGET_BUILD_METADATA),,$(notdir $(TEMPLATE_PACKS_$(4))))
@@ -378,12 +411,12 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreatePackage,$(platform),$
 define CreateWindowsBundle
 $(TMP_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $($(1)_WINDOWS_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACKS_$(4)) $(SDK_PACKS_$(4)) $(SDK_PACKS_$(4)_WINDOWS) $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -rf $$@ $$@.tmpdir $$@.tmp
-	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Windows.Sdk
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/template-packs
-	$$(Q) $(CP) -r Workloads/Microsoft.NET.Sdk.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/
+	$$(Q) $(CP) -r Workloads/Microsoft.NET.Sdk.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/microsoft.net.sdk.$3
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Sdk $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk/$2
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Windows.Sdk $$@.tmpdir/dotnet/packs/Microsoft.$1.Windows.Sdk/$2
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Ref $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref/$2

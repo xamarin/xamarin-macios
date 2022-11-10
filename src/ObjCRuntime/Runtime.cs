@@ -55,6 +55,7 @@ namespace ObjCRuntime {
 
 #pragma warning disable 649 // Field 'X' is never assigned to, and will always have its default value
 		internal unsafe struct MTRegistrationMap {
+			public IntPtr product_hash;
 			public MTAssembly *assemblies;
 			public MTClassMap *map;
 			public MTFullTokenReference *full_token_references;

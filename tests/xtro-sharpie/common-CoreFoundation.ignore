@@ -1,6 +1,9 @@
 ## we already expose the NSURLFileProtection* constants
 !missing-field! kCFURLVolumeSupportsFileProtectionKey not bound
 
+## variable argument and string manipulation more easily done in C#
+!missing-pinvoke! CFStringCreateStringWithValidatedFormat is not bound
+!missing-pinvoke! CFStringCreateStringWithValidatedFormatAndArguments is not bound
 
 
 ## unsorted

@@ -876,6 +876,15 @@ namespace AudioUnit {
 		Ended = 1,
 	}
 
+	[iOS (16, 0), TV (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
+	public enum AudioUnitEventType : uint {
+		ParameterValueChange = 0,
+		BeginParameterChangeGesture = 1,
+		EndParameterChangeGesture = 2,
+		PropertyChange = 3,
+	}
+
+
 	public enum AudioUnitSubType : uint {
 		AUConverter = 0x636F6E76, // 'conv'
 		Varispeed = 0x76617269, // 'vari'

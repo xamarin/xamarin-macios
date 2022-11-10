@@ -229,6 +229,10 @@ namespace MetricKit {
 		[NoWatch, NoTV, NoMac, iOS (15,2), MacCatalyst (15,2)]
 		[Export ("histogrammedOptimizedTimeToFirstDraw", ArgumentSemantic.Strong)]
 		MXHistogram<NSUnitDuration> HistogrammedOptimizedTimeToFirstDraw { get; }
+
+		[NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+		[Export ("histogrammedExtendedLaunch", ArgumentSemantic.Strong)]
+		MXHistogram<NSUnitDuration> HistogrammedExtendedLaunch { get; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
@@ -422,6 +426,16 @@ namespace MetricKit {
 		[Internal]
 		[Export ("makeLogHandleWithCategory:")]
 		IntPtr /* os_log_t */ _MakeLogHandle (NSString category);
+
+		[NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+		[Static]
+		[Export ("extendLaunchMeasurementForTaskID:error:")]
+		bool ExtendLaunchMeasurement (string taskId, [NullAllowed] out NSError error);
+
+		[NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+		[Static]
+		[Export ("finishExtendedLaunchMeasurementForTaskID:error:")]
+		bool FinishExtendedLaunchMeasurement (string taskId, [NullAllowed] out NSError error);
 	}
 
 	interface IMXMetricManagerSubscriber { }
@@ -610,6 +624,19 @@ namespace MetricKit {
 		NSDictionary DictionaryRepresentation { get; }
 	}
 
+	// @interface MXAppLaunchDiagnostic : MXDiagnostic
+	[NoMac, iOS (16,0), Mac (16,0), NoWatch, NoTV]
+	[BaseType (typeof (MXDiagnostic))]
+	[DisableDefaultCtor]
+	interface MXAppLaunchDiagnostic
+	{
+		[Export ("callStackTree", ArgumentSemantic.Strong)]
+		MXCallStackTree CallStackTree { get; }
+
+		[Export ("launchDuration", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitDuration> LaunchDuration { get; }
+	}
+
 	[NoWatch, NoTV, Mac (12,0)]
 	[iOS (14,0)]
 	[MacCatalyst (14,0)]
@@ -625,6 +652,10 @@ namespace MetricKit {
 
 		[NullAllowed, Export ("hangDiagnostics", ArgumentSemantic.Strong)]
 		MXHangDiagnostic[] HangDiagnostics { get; }
+
+		[NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+		[NullAllowed, Export ("appLaunchDiagnostics", ArgumentSemantic.Strong)]
+		MXAppLaunchDiagnostic[] AppLaunchDiagnostics { get; }
 
 		[NullAllowed, Export ("crashDiagnostics", ArgumentSemantic.Strong)]
 		MXCrashDiagnostic[] CrashDiagnostics { get; }

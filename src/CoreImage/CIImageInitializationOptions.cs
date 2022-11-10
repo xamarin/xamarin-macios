@@ -37,8 +37,7 @@ using CoreGraphics;
 
 namespace CoreImage {
 
-	public partial class CIImageInitializationOptions
-	{
+	public partial class CIImageInitializationOptions {
 #if !COREBUILD
 		public CGColorSpace? ColorSpace {
 			get {
@@ -59,8 +58,7 @@ namespace CoreImage {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	// Keeping 'CIImageInitializationOptionsWithMetadata' to avoid breaking change
-	public class CIImageInitializationOptionsWithMetadata : CIImageInitializationOptions
-	{
+	public class CIImageInitializationOptionsWithMetadata : CIImageInitializationOptions {
 #if !COREBUILD
 		public CIImageInitializationOptionsWithMetadata ()
 		{

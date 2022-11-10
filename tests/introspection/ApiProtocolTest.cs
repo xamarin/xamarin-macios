@@ -53,6 +53,12 @@ namespace Introspection {
 				// Unfortunately I couldn't find any documentation related to determining exactly which
 				// hardware capability these need (or how to detect them), so just ignore them.
 				return true;
+			case "CLKComplicationWidgetMigrator":
+				// Not present in the simulator, is a migration class
+				return true;
+			// was removed by apple and is a compat class.
+			case "HMMatterRequestHandler":
+				return true;
 			default:
 				return SkipDueToAttribute (type);
 			}
@@ -98,7 +104,7 @@ namespace Introspection {
 				case "MLMultiArrayConstraint":
 				case "VSSubscription":
 					return true; // skip
-				// xcode 10
+								 // xcode 10
 				case "VSAccountMetadata":
 				case "VSAccountMetadataRequest":
 				case "VSAccountProviderResponse":
@@ -129,9 +135,9 @@ namespace Introspection {
 				case "PKShippingMethod":
 				case "PKSuicaPassProperties": // Conformance not in headers
 				case "PKTransitPassProperties": // Conformance not in headers
-				// Xcode 12.2
+												// Xcode 12.2
 				case "VSAccountApplicationProvider": // Conformance not in headers
-				// Xcode 12.5
+													 // Xcode 12.5
 				case "HMCharacteristicMetadata":
 				case "HMAccessoryCategory":
 					return true;
@@ -141,8 +147,25 @@ namespace Introspection {
 				case "PKRecurringPaymentSummaryItem":
 				case "PKStoredValuePassProperties":
 				case "SNTimeDurationConstraint": // Conformance not in headers
-				// Xcode 13.3
+												 // Xcode 13.3
 				case "HMAccessorySetupPayload": // Conformance not in headers
+					return true;
+				// Xcode 14
+				case "CLKComplicationIntentWidgetMigrationConfiguration":
+				case "CLKComplicationStaticWidgetMigrationConfiguration":
+				case "CLKComplicationWidgetMigrationConfiguration":
+				case "HKElectrocardiogramVoltageMeasurement":
+				case "AVPlayerInterstitialEvent":
+				case "HKWorkoutActivity":
+				case "HKContactsPrescription":
+				case "HKGlassesPrescription":
+				case "HKVisionPrescription":
+				case "PKAutomaticReloadPaymentRequest":
+				case "PKAutomaticReloadPaymentSummaryItem":
+				case "PKPaymentOrderDetails":
+				case "PKPaymentTokenContext":
+				case "PKRecurringPaymentRequest":
+				case "PKShareablePassMetadataPreview":
 					return true;
 				}
 				break;
@@ -151,7 +174,7 @@ namespace Introspection {
 				// iOS 10 : test throw because of generic usage
 				case "NSMeasurement`1":
 					return true; // skip
-				// Xcode 10
+								 // Xcode 10
 				case "UNNotificationCategory":
 				case "UNNotificationSound":
 				// Xcode 11 - Conformance not in headers
@@ -277,18 +300,35 @@ namespace Introspection {
 				case "QLPreviewReply": // conformance not in headers
 				case "QLPreviewReplyAttachment": // conformance not in headers
 				case "SNTimeDurationConstraint": // Conformance not in headers
-				// Xcode 13.3
+												 // Xcode 13.3
 				case "SRWristDetection": // Conformance not in headers
 				case "HMAccessorySetupPayload": // Conformance not in headers
 				case "HMAccessorySetupRequest": // Conformance not in headers
 				case "HMAccessorySetupResult": // Conformance not in headers
+					return true;
+				// Xcode 14 beta 2
+				case "CLKComplicationIntentWidgetMigrationConfiguration":
+				case "CLKComplicationStaticWidgetMigrationConfiguration":
+				case "CLKComplicationWidgetMigrationConfiguration":
+				case "PHPickerConfiguration":
+				case "PHAssetChangeRequest":
+				case "PHAssetCreationRequest":
+				case "NSUserActivity":
+				case "UIDictationPhrase":
+				case "HKWorkoutActivity":
+				case "PKAutomaticReloadPaymentRequest":
+				case "PKAutomaticReloadPaymentSummaryItem":
+				case "PKPaymentOrderDetails":
+				case "PKPaymentTokenContext":
+				case "PKRecurringPaymentRequest":
+				case "PKShareablePassMetadataPreview":
 					return true;
 				}
 				break;
 			case "NSSecureCoding":
 				switch (type.Name) {
 				case "NSMergeConflict": // undocumented
-				// only documented to support NSCopying (and OSX side only does that)
+										// only documented to support NSCopying (and OSX side only does that)
 				case "NSUrlSessionTask":
 				case "NSUrlSessionDataTask":
 				case "NSUrlSessionUploadTask":
@@ -300,7 +340,7 @@ namespace Introspection {
 				case "NSParagraphStyle": //17770106
 				case "NSMutableParagraphStyle": //17770106
 					return true; // skip
-				// iOS9 / 10.11
+								 // iOS9 / 10.11
 				case "CNSaveRequest":
 				case "NSPersonNameComponentsFormatter":
 				case "GKCloudPlayer":
@@ -308,7 +348,7 @@ namespace Introspection {
 				// iOS 10 : test throw because of generic usage
 				case "NSMeasurement`1":
 					return true; // skip
-				// xcode 9
+								 // xcode 9
 				case "NSConstraintConflict": // Conformance not in headers
 				case "VSSubscription":
 				// iOS 11.3 / macOS 10.13.4
@@ -389,7 +429,7 @@ namespace Introspection {
 				case "PKShareablePassMetadata":
 				// Xcode 12.2
 				case "VSAccountApplicationProvider": // Conformance not in headers
-				// Xcode 12.3
+													 // Xcode 12.3
 				case "ARAppClipCodeAnchor": // Conformance comes from the base type, ARAppClipCodeAnchor conforms to NSSecureCoding but SupportsSecureCoding returned false.
 				case "GCDirectionalGamepad":
 				case "GCExtendedGamepadSnapshot":
@@ -412,11 +452,29 @@ namespace Introspection {
 				case "QLPreviewReply": // conformance not in headers
 				case "QLPreviewReplyAttachment": // conformance not in headers
 				case "SNTimeDurationConstraint": // Conformance not in headers
+				case "NSInflectionRule":
 				// Xcode 13.3
 				case "SRWristDetection": // Conformance not in headers
 				case "HMAccessorySetupPayload": // Conformance not in headers
 				case "HMAccessorySetupRequest": // Conformance not in headers
 				case "HMAccessorySetupResult": // Conformance not in headers
+					return true;
+				// Xcode 14
+				case "CLKComplicationIntentWidgetMigrationConfiguration":
+				case "CLKComplicationStaticWidgetMigrationConfiguration":
+				case "CLKComplicationWidgetMigrationConfiguration":
+				case "PHPickerConfiguration":
+				case "PHAssetChangeRequest":
+				case "PHAssetCreationRequest":
+				case "NSUserActivity":
+				case "UIDictationPhrase":
+				case "HKWorkoutActivity":
+				case "PKAutomaticReloadPaymentRequest":
+				case "PKAutomaticReloadPaymentSummaryItem":
+				case "PKPaymentOrderDetails":
+				case "PKPaymentTokenContext":
+				case "PKRecurringPaymentRequest":
+				case "PKShareablePassMetadataPreview":
 					return true;
 				}
 				break;
@@ -437,7 +495,7 @@ namespace Introspection {
 			case "NSProgressReporting":
 				switch (type.Name) {
 				case "NSOperationQueue":
-					if (!TestRuntime.CheckXcodeVersion (11,0))
+					if (!TestRuntime.CheckXcodeVersion (11, 0))
 						return true;
 					break;
 				default:
@@ -469,7 +527,7 @@ namespace Introspection {
 				}
 				break;
 			case "SCNTechniqueSupport":
-				if (!TestRuntime.CheckXcodeVersion (11,0))
+				if (!TestRuntime.CheckXcodeVersion (11, 0))
 					return false;
 				switch (type.Name) {
 				case "SCNLight":
@@ -482,7 +540,7 @@ namespace Introspection {
 				case "VNFaceLandmarks2D":
 				case "VNFaceLandmarkRegion":
 				case "VNFaceLandmarkRegion2D":
-					if (!TestRuntime.CheckXcodeVersion (11,0))
+					if (!TestRuntime.CheckXcodeVersion (11, 0))
 						return true;
 					break;
 				case "VNRecognizedText":
@@ -505,11 +563,15 @@ namespace Introspection {
 				if (type.Name == "HMChipServiceRequestHandler") // Apple removed this class
 					return true;
 				break;
+			case "QLPreviewItem":
+				if (type.Name == "NSUrl")
+					return true;
+				break;
 			}
 			return false;
 		}
 
-		void CheckProtocol (string protocolName, Action<Type,IntPtr,bool> action)
+		void CheckProtocol (string protocolName, Action<Type, IntPtr, bool> action)
 		{
 			IntPtr protocol = Runtime.GetProtocol (protocolName);
 			Assert.AreNotEqual (protocol, IntPtr.Zero, protocolName);
@@ -535,7 +597,8 @@ namespace Introspection {
 		{
 			Errors = 0;
 			var list = new List<string> ();
-			CheckProtocol ("NSCoding", delegate (Type type, IntPtr klass, bool result) {
+			CheckProtocol ("NSCoding", delegate (Type type, IntPtr klass, bool result)
+			{
 				// `type` conforms to (native) NSCoding so...
 				if (result) {
 					// the type should implements INSCoding
@@ -554,7 +617,8 @@ namespace Introspection {
 		{
 			Errors = 0;
 			var list = new List<string> ();
-			CheckProtocol ("NSSecureCoding", delegate (Type type, IntPtr klass, bool result) {
+			CheckProtocol ("NSSecureCoding", delegate (Type type, IntPtr klass, bool result)
+			{
 				if (result) {
 					// the type should implements INSSecureCoding
 					if (!typeof (INSSecureCoding).IsAssignableFrom (type)) {
@@ -579,14 +643,15 @@ namespace Introspection {
 		public virtual void SupportsSecureCoding ()
 		{
 			Errors = 0;
-			CheckProtocol ("NSSecureCoding", delegate (Type type, IntPtr klass, bool result) {
+			CheckProtocol ("NSSecureCoding", delegate (Type type, IntPtr klass, bool result)
+			{
 				bool supports = SupportsSecureCoding (type);
 				if (result) {
 					// check that +supportsSecureCoding returns YES
 					if (!supports) {
 #if __IOS__
 						// broken in xcode 12 beta 1 simulator (only)
-						if (TestRuntime.IsSimulatorOrDesktop && TestRuntime.CheckXcodeVersion (12,0)) {
+						if (TestRuntime.IsSimulatorOrDesktop && TestRuntime.CheckXcodeVersion (12, 0)) {
 							switch (type.Name) {
 							case "ARFaceGeometry":
 							case "ARPlaneGeometry":
@@ -628,7 +693,8 @@ namespace Introspection {
 		{
 			Errors = 0;
 			var list = new List<string> ();
-			CheckProtocol ("NSCopying", delegate (Type type, IntPtr klass, bool result) {
+			CheckProtocol ("NSCopying", delegate (Type type, IntPtr klass, bool result)
+			{
 				// `type` conforms to (native) NSCopying so...
 				if (result) {
 					// the type should implements INSCopying
@@ -646,7 +712,8 @@ namespace Introspection {
 		{
 			Errors = 0;
 			var list = new List<string> ();
-			CheckProtocol ("NSMutableCopying", delegate (Type type, IntPtr klass, bool result) {
+			CheckProtocol ("NSMutableCopying", delegate (Type type, IntPtr klass, bool result)
+			{
 				// `type` conforms to (native) NSMutableCopying so...
 				if (result) {
 					// the type should implements INSMutableCopying
@@ -687,7 +754,7 @@ namespace Introspection {
 					case "SCNGeometryTessellator":
 					case "SKRenderer":
 						// was not possible in iOS 11.4 (current minimum) simulator
-						if (!TestRuntime.CheckXcodeVersion (12,0)) {
+						if (!TestRuntime.CheckXcodeVersion (12, 0)) {
 							if (TestRuntime.IsSimulatorOrDesktop)
 								continue;
 						}

@@ -34,6 +34,7 @@
 !missing-field! kCVPixelFormatPlanes not bound
 !missing-field! kCVPixelFormatQDCompatibility not bound
 !missing-field! kCVPixelFormatVerticalSubsampling not bound
+!missing-field! kCVPixelFormatContainsSenselArray not bound
 
 !missing-field! kCVZeroTime not bound
 !missing-pinvoke! CVPixelBufferRelease is not bound
