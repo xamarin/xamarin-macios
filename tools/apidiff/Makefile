@@ -139,6 +139,7 @@ $(APIDIFF_DIR)/temp/dotnet/%.xml: $(DOTNET_DESTDIR)/%.dll $(MONO_API_INFO)
 define DotNetComputeDiff
 $(OUTPUT_DIR)/diff/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1)%html $(OUTPUT_DIR)/diff/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1)%md: $(APIDIFF_DIR)/temp/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1)%xml $(APIDIFF_DIR)/references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM_REFERENCE_$(1))/Microsoft.$(1).xml $(MONO_API_HTML)
 	$$(Q) mkdir -p $$(dir $$@)
+	$$(Q) echo "Comparing $$(abspath $(APIDIFF_DIR)/references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM_REFERENCE_$(1))/Microsoft.$(1).xml) -> $$(abspath $(APIDIFF_DIR)/temp/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).xml)"
 	$$(QF_GEN) $(MONO_API_HTML_EXEC) $(NEW_REGEX) $(ADD_REGEX) $$(abspath $(APIDIFF_DIR)/references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM_REFERENCE_$(1))/Microsoft.$(1).xml) $$(abspath $(APIDIFF_DIR)/temp/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).xml) $(APIDIFF_IGNORE) --html "$$(abspath $$(basename $$@).html)" --markdown "$$(abspath $$(basename $$@).md)"
 	$$(Q) touch $$@
 endef
@@ -519,12 +520,14 @@ $(APIDIFF_DIR)/updated-references/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURREN
 define DotNetGenerateReferenceXml
 $(APIDIFF_DIR)/references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM_REFERENCE_$(1))/Microsoft.$(1).xml: $(UNZIP_DIR_DOTNET_$(1))/Microsoft.$(1).Ref/ref/$(DOTNET_TFM_REFERENCE_$(1))/Microsoft.$(1).dll  $(MONO_API_INFO)
 	$$(Q) mkdir -p $$(dir $$@)
+	$$(Q) echo "Generating references for $$(abspath $$<) into $$(abspath $$@)"
 	$$(QF_GEN) $(MONO_API_INFO_EXEC) $$(abspath $$<) -o $$(abspath $$@)
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DotNetGenerateReferenceXml,$(platform))))
 
 $(APIDIFF_DIR)/updated-references/dotnet/%.xml: $(DOTNET_DESTDIR)/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/dotnet/$*)
+	$(Q) echo "Computing updated reference for $(abspath $<) into $(abspath $(APIDIFF_DIR)/references/dotnet/$*.xml)"
 	$(QF_GEN) $(MONO_API_INFO_EXEC) $(abspath $<) -o $(abspath $(APIDIFF_DIR)/references/dotnet/$*.xml)
 
 update-tvos-refs: $(TVOS_REFS)

@@ -361,9 +361,14 @@ if test -n "$ENABLE_API_DIFF"; then
 	#
 	echo "💪 ${BLUE}Computing API diff vs ${WHITE}${BASE_HASH}${BLUE}${CLEAR} 💪"
 
+	# Clear out the results directories
+	rm -rf "$APIDIFF_RESULTS_DIR" "$APIDIFF_TMP_DIR"
+
+	# Compute a diff and store it to make it easier to diagnose issues later
+	git diff HEAD..4da68c36baacafeb625923d7694b5cb123807f25 > "$APIDIFF_RESULTS_DIR/changes.diff" || true
+
 	# Calculate apidiff references according to the temporary build
 	echo "    ${BLUE}Updating apidiff references...${CLEAR}"
-	rm -rf "$APIDIFF_RESULTS_DIR" "$APIDIFF_TMP_DIR"
 	if ! make update-refs -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$APIDIFF_TMP_DIR" OUTPUT_DIR="$APIDIFF_RESULTS_DIR" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build" COMPARE_CURRENT_TFM=1 2>&1 | sed 's/^/        /'; then
 		EC=${PIPESTATUS[0]}
 		report_error_line "${RED}Failed to update apidiff references${CLEAR}"
