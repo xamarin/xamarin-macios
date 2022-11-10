@@ -372,26 +372,6 @@ namespace Foundation
 		[iOS (7,0)]
 		[Wrap ("this (data, options.GetDictionary (), out resultDocumentAttributes, ref error)")]
 		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
-
-		[NoMac]
-		[iOS (7,0)]
-		[Export ("dataFromRange:documentAttributes:error:")]
-		NSData GetDataFromRange (NSRange range, NSDictionary attributes, ref NSError error);
-
-		[NoMac]
-		[iOS (7,0)]
-		[Wrap ("GetDataFromRange (range, documentAttributes.GetDictionary ()!, ref error)")]
-		NSData GetDataFromRange (NSRange range, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error);
-
-		[NoMac]
-		[iOS (7,0)]
-		[Export ("fileWrapperFromRange:documentAttributes:error:")]
-		NSFileWrapper GetFileWrapperFromRange (NSRange range, NSDictionary attributes, ref NSError error);
-
-		[NoMac]
-		[iOS (7,0)]
-		[Wrap ("GetFileWrapperFromRange (range, documentAttributes.GetDictionary ()!, ref error)")]
-		NSFileWrapper GetFileWrapperFromRange (NSRange range, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error);
 #endif
 		
 		[Export ("initWithString:attributes:")]
@@ -518,22 +498,57 @@ namespace Foundation
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("itemNumberInTextList:atIndex:")]
 		nint GetItemNumber (NSTextList textList, nuint index);
+#endif
 
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
+#if !(MONOMAC || XAMCORE_5_0)
+		[Sealed]
+#endif
+		[return: NullAllowed]
 		[Export ("dataFromRange:documentAttributes:error:")]
-		NSData GetData (NSRange range, [NullAllowed] NSDictionary options, out NSError error);
+		NSData GetData (NSRange range, NSDictionary options, out NSError error);
 
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Wrap ("this.GetData (range, options.GetDictionary (), out error)")]
+		[return: NullAllowed]
+		[Wrap ("this.GetData (range, options.GetDictionary ()!, out error)")]
 		NSData GetData (NSRange range, NSAttributedStringDocumentAttributes options, out NSError error);
 
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Export ("fileWrapperFromRange:documentAttributes:error:")]
-		NSFileWrapper GetFileWrapper (NSRange range, [NullAllowed] NSDictionary options, out NSError error);
+#if !(MONOMAC || XAMCORE_5_0)
+		[return: NullAllowed]
+		[Obsolete ("Use 'GetData' instead.")]
+		[Export ("dataFromRange:documentAttributes:error:")]
+		NSData GetDataFromRange (NSRange range, NSDictionary attributes, ref NSError error);
+#endif
 
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Wrap ("this.GetFileWrapper (range, options.GetDictionary (), out error)")]
+#if !(MONOMAC || XAMCORE_5_0)
+		[return: NullAllowed]
+		[Obsolete ("Use 'GetData' instead.")]
+		[Wrap ("GetDataFromRange (range, documentAttributes.GetDictionary ()!, ref error)")]
+		NSData GetDataFromRange (NSRange range, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error);
+#endif
+
+#if !(MONOMAC || XAMCORE_5_0)
+		[Sealed]
+#endif
+		[return: NullAllowed]
+		[Export ("fileWrapperFromRange:documentAttributes:error:")]
+		NSFileWrapper GetFileWrapper (NSRange range, NSDictionary options, out NSError error);
+
+#if !(MONOMAC || XAMCORE_5_0)
+		[return: NullAllowed]
+		[Obsolete ("Use 'GetFileWrapper' instead.")]
+		[Export ("fileWrapperFromRange:documentAttributes:error:")]
+		NSFileWrapper GetFileWrapperFromRange (NSRange range, NSDictionary attributes, ref NSError error);
+#endif
+
+		[return: NullAllowed]
+		[Wrap ("this.GetFileWrapper (range, options.GetDictionary ()!, out error)")]
 		NSFileWrapper GetFileWrapper (NSRange range, NSAttributedStringDocumentAttributes options, out NSError error);
+
+#if !(MONOMAC || XAMCORE_5_0)
+		[return: NullAllowed]
+		[Obsolete ("Use 'GetFileWrapper' instead.")]
+		[Wrap ("GetFileWrapperFromRange (range, documentAttributes.GetDictionary ()!, ref error)")]
+		NSFileWrapper GetFileWrapperFromRange (NSRange range, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error);
+#endif
 
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("RTFFromRange:documentAttributes:")]
@@ -566,7 +581,7 @@ namespace Foundation
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Wrap ("this.GetDocFormat (range, options.GetDictionary ())")]
 		NSData GetDocFormat (NSRange range, NSAttributedStringDocumentAttributes options);
-#else
+
 		[NoMac]
 		[Export ("drawWithRect:options:context:")]
 		void DrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSStringDrawingContext context);
@@ -574,7 +589,6 @@ namespace Foundation
 		[NoMac]
 		[Export ("boundingRectWithSize:options:context:")]
 		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSStringDrawingContext context);
-#endif
 
 		[MacCatalyst (13, 1)][TV (9, 0)][Mac (10, 0)][iOS (6, 0)]
 		[Export ("size")]
