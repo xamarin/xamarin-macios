@@ -54,18 +54,18 @@ namespace CoreImage {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public class CISamplerOptions {
-		public CISamplerOptions () {}
+		public CISamplerOptions () { }
 
 		public CGAffineTransform? AffineMatrix { get; set; }
 		public CIWrapMode? WrapMode { get; set; }
 		public CIFilterMode? FilterMode { get; set; }
 		public CGColorSpace? ColorSpace { get; set; }
-		
+
 		internal NSDictionary ToDictionary ()
 		{
 			var ret = new NSMutableDictionary ();
 
-			if (AffineMatrix.HasValue){
+			if (AffineMatrix.HasValue) {
 				var a = AffineMatrix.Value;
 #if NET
 				using (var array = NSArray.FromObjects (a.A, a.B, a.C, a.D, a.Tx, a.Ty))
@@ -74,11 +74,11 @@ namespace CoreImage {
 #endif
 					ret.SetObject (array, CISampler.AffineMatrix);
 			}
-			if (WrapMode.HasValue){
+			if (WrapMode.HasValue) {
 				var k = WrapMode.Value == CIWrapMode.Black ? CISampler.WrapBlack : CISampler.FilterNearest;
 				ret.SetObject (k, CISampler.WrapMode);
 			}
-			if (FilterMode.HasValue){
+			if (FilterMode.HasValue) {
 				var k = FilterMode.Value == CIFilterMode.Nearest ? CISampler.FilterNearest : CISampler.FilterLinear;
 				ret.SetObject (k, CISampler.FilterMode);
 			}

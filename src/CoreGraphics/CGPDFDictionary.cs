@@ -67,7 +67,7 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* size_t */ nint CGPDFDictionaryGetCount (/* CGPDFDictionaryRef */ IntPtr dict);
-		
+
 		public int Count {
 			get {
 				return (int) CGPDFDictionaryGetCount (Handle);
@@ -171,7 +171,7 @@ namespace CoreGraphics {
 #else
 		// CGPDFDictionaryApplierFunction
 		delegate void ApplierFunction (/* const char* */ IntPtr key, /* CGPDFObjectRef */ IntPtr value, /* void* */ IntPtr info);
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGPDFDictionaryApplyFunction (/* CGPDFDictionaryRef */ IntPtr dic, ApplierFunction function, /* void* */ IntPtr info);
 

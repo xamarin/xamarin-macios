@@ -37,7 +37,7 @@ namespace Extrospection {
 					if (!string.IsNullOrEmpty (methodDefinition)) {
 						var argumentSemantic = Helpers.ArgumentSemantic.Assign; // Default
 						if (ca.ConstructorArguments.Count > 1) {
-							argumentSemantic = (Helpers.ArgumentSemantic)ca.ConstructorArguments [1].Value;
+							argumentSemantic = (Helpers.ArgumentSemantic) ca.ConstructorArguments [1].Value;
 							if (!qualified_properties.TryGetValue (methodDefinition, out var list))
 								qualified_properties [methodDefinition] = list = new List<Tuple<MethodDefinition, Helpers.ArgumentSemantic>> ();
 							list.Add (new Tuple<MethodDefinition, Helpers.ArgumentSemantic> (method, argumentSemantic));
@@ -98,7 +98,7 @@ namespace Extrospection {
 				return;
 
 			// don't process deprecated methods (or types)
-			if (decl.IsDeprecated () || (decl.DeclContext as Decl).IsDeprecated ())
+			if (decl.IsDeprecated () || (decl.DeclContext as Decl).IsDeprecated ())
 				return;
 
 			var framework = Helpers.GetFramework (decl);

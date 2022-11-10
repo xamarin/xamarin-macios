@@ -115,7 +115,7 @@ namespace Extrospection {
 				return;
 
 			// don't process deprecated methods (or types)
-			if (decl.IsDeprecated () || (decl.DeclContext as Decl).IsDeprecated ())
+			if (decl.IsDeprecated () || (decl.DeclContext as Decl).IsDeprecated ())
 				return;
 
 			var method = GetMethod (decl);
@@ -171,11 +171,11 @@ namespace Extrospection {
 				switch (nullability) {
 				case NullabilityKind.NonNull:
 					if (parameter_nullable == Null.Annotated)
-						Log.On (framework).Add ($"!extra-null-allowed! '{method.FullName}' has a extraneous [NullAllowed] on parameter #{i-1}");
+						Log.On (framework).Add ($"!extra-null-allowed! '{method.FullName}' has a extraneous [NullAllowed] on parameter #{i - 1}");
 					break;
 				case NullabilityKind.Nullable:
 					if (parameter_nullable != Null.Annotated)
-						Log.On (framework).Add ($"!missing-null-allowed! '{method.FullName}' is missing an [NullAllowed] on parameter #{i-1}");
+						Log.On (framework).Add ($"!missing-null-allowed! '{method.FullName}' is missing an [NullAllowed] on parameter #{i - 1}");
 					break;
 				case NullabilityKind.Unspecified:
 					break;

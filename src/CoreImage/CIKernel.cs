@@ -15,12 +15,12 @@ using CoreGraphics;
 #nullable enable
 
 namespace CoreImage {
-	
+
 	// This Api is also available on iOS 9 according to headers but depends on CIFilter.Apply methods 
 	// which are only available on Mac. Filled a radar:22524785 and Apple replied that setROISelector: 
 	// is Mac Only https://trello.com/c/kpksFWto
 
-	#if MONOMAC 
+#if MONOMAC
 	public delegate CGRect CIKernelRoiHandler (int samplerIndex, CGRect destRect, NSObject userInfo);
 
 	public partial class CIKernel {
@@ -45,5 +45,5 @@ namespace CoreImage {
 			return roiHandler (samplerIndex, destRect, userInfo);
 		}
 	}
-	#endif
+#endif
 }
