@@ -154,7 +154,7 @@ namespace MonoTouchFixtures.Security {
 			Assert.Null (rec.MatchItemList, "MatchItemList");
 
 			using (var data = new NSData ()) {
-				rec.MatchIssuers = new NSData[] { data };
+				rec.MatchIssuers = new NSData [] { data };
 				Assert.AreSame (rec.MatchIssuers [0], data, "MatchIssuers [0]");
 			}
 
@@ -346,7 +346,7 @@ namespace MonoTouchFixtures.Security {
 				account: username.ToLower ()
 			);
 			SecStatusCode code;
-			var record = SecKeyChain.QueryAsRecord(searchRecord, out code);
+			var record = SecKeyChain.QueryAsRecord (searchRecord, out code);
 			if (code == SecStatusCode.Success && record != null)
 				password = NSString.FromData (record.ValueData, NSStringEncoding.UTF8);
 			return password;

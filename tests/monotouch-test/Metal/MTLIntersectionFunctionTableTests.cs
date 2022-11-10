@@ -7,7 +7,7 @@ using Metal;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Metal {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class MTLIntersectionFunctionTableTests {
@@ -20,9 +20,9 @@ namespace MonoTouchFixtures.Metal {
 
 		[SetUp]
 		public void SetUp ()
-		{ 
+		{
 
-			TestRuntime.AssertXcodeVersion (12,0);
+			TestRuntime.AssertXcodeVersion (12, 0);
 
 			device = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
@@ -39,7 +39,7 @@ namespace MonoTouchFixtures.Metal {
 			function = library.CreateFunction (library.FunctionNames [0]);
 			pipelineState = device.CreateComputePipelineState (function, MTLPipelineOption.ArgumentInfo, out MTLComputePipelineReflection reflection, out NSError error);
 
-			if (error != null) { 
+			if (error != null) {
 				Assert.Inconclusive ($"Could not create pipeline {error}");
 			}
 			descriptor = MTLIntersectionFunctionTableDescriptor.Create ();
@@ -64,7 +64,7 @@ namespace MonoTouchFixtures.Metal {
 			}, "Null buffers should throw.");
 
 			Assert.Throws<ArgumentNullException> (() => {
-				functionTable.SetBuffers (new IMTLBuffer [0] , null, new NSRange ());
+				functionTable.SetBuffers (new IMTLBuffer [0], null, new NSRange ());
 			}, "Null offsets should throw.");
 
 			// assert we do not crash or throw, we are testing the extension method

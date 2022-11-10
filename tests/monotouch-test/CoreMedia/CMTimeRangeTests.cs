@@ -12,12 +12,10 @@ using Foundation;
 using CoreMedia;
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.CoreMedia
-{
+namespace MonoTouchFixtures.CoreMedia {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CMTimeRangeTests
-	{
+	public class CMTimeRangeTests {
 		[Test]
 		public void InvalidRangeFieldTest ()
 		{

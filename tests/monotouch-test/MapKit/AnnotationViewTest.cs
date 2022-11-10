@@ -21,18 +21,18 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MapKit {
-	
+
 #if !XAMCORE_3_0
 	class AnnotationViewPoker : MKAnnotationView {
-		
+
 		static FieldInfo bkAnnotation;
-		
+
 		static AnnotationViewPoker ()
 		{
 			var t = typeof (MKAnnotationView);
 			bkAnnotation = t.GetField ("__mt_Annotation_var", BindingFlags.Instance | BindingFlags.NonPublic);
 		}
-		
+
 		public static bool NewRefcountEnabled ()
 		{
 			return NSObject.IsNewRefcountEnabled ();
@@ -41,7 +41,7 @@ namespace MonoTouchFixtures.MapKit {
 		public AnnotationViewPoker (IMKAnnotation annotation) : base (annotation, "reuse")
 		{
 		}
-		
+
 		public NSObject AnnotationBackingField {
 			get {
 				return (NSObject) bkAnnotation.GetValue (this);
@@ -53,7 +53,7 @@ namespace MonoTouchFixtures.MapKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AnnotationViewTest {
-		
+
 		[SetUp]
 		public void Setup ()
 		{

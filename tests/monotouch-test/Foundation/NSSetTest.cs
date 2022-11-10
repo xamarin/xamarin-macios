@@ -8,10 +8,9 @@ namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSSetTest
-	{
+	public class NSSetTest {
 		[Test]
-		public void SetCtors()
+		public void SetCtors ()
 		{
 			// The NSSet (params object [] args)
 			var s = new NSSet (1);
@@ -42,7 +41,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			var objs = new NSObject [5];
 			for (int i = 0; i < objs.Length; i++)
-				objs [i] = new NSNumber (i*100);
+				objs [i] = new NSNumber (i * 100);
 
 			sum = new NSSet (objs) + one + two;
 			Assert.AreEqual (sum.Count, (nuint) 11);

@@ -11,7 +11,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[SetUp]
 		public void SetUp ()
 		{
-			TestRuntime.AssertXcodeVersion (8,0);
+			TestRuntime.AssertXcodeVersion (8, 0);
 		}
 
 		[Test]
