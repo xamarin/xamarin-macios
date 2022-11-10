@@ -10,6 +10,14 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 stages:
 - stage: prepare_release
   displayName: Prepare Release

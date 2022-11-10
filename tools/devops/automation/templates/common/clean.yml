@@ -9,12 +9,22 @@ parameters:
   type: boolean
   default: true
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 steps:
 
 - ${{ if parameters.checkoutCode }}:
   - template: checkout.yml
     parameters:
       isPR: false # always use the latests version of the script
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1

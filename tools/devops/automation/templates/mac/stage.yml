@@ -31,6 +31,14 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
@@ -53,6 +61,8 @@ stages:
     steps:
     - template: ../common/configure.yml
       parameters: 
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
         uploadArtifacts: false
         enableDotnet: ${{ parameters.enableDotnet }}
 
@@ -79,5 +89,7 @@ stages:
     - template: build.yml
       parameters:
         isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
         statusContext: ${{ parameters.statusContext }}
         keyringPass: ${{ parameters.keyringPass }} 

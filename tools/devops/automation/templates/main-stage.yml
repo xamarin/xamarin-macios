@@ -55,6 +55,14 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 - name: xcodeChannel
   type: string
 
@@ -170,6 +178,8 @@ stages:
       - template: governance-checks.yml
         parameters:
           isPR: ${{ parameters.isPR }}
+          repositoryAlias: ${{ parameters.repositoryAlias }}
+          commit: ${{ parameters.commit }}
 
     - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
       - job: translations
@@ -180,6 +190,8 @@ stages:
         - template: loc-translations.yml
           parameters:
             isPR: ${{ parameters.isPR }}
+            repositoryAlias: ${{ parameters.repositoryAlias }}
+            commit: ${{ parameters.commit }}
 
 
 - ${{ if parameters.isPR }}:
@@ -203,6 +215,8 @@ stages:
     parameters:
       xcodeChannel: ${{ parameters.xcodeChannel }}
       isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
       vsdropsPrefix: ${{ variables.vsdropsPrefix }}
       runTests: ${{ and(parameters.runTests, ne(variables['Build.Reason'], 'Schedule'))}}
       runDeviceTests: ${{ and(parameters.runDeviceTests, ne(variables['Build.Reason'], 'Schedule')) }}
@@ -222,6 +236,8 @@ stages:
     - template: ./sign-and-notarized/prepare-pkg-stage.yml
       parameters:
         isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
         signingSetupSteps: ${{ parameters.signingSetupSteps }}
         keyringPass: $(pass--lab--mac--builder--keychain)
         enableDotnet: ${{ parameters.enableDotnet }}
@@ -237,6 +253,8 @@ stages:
     - template: ./sign-and-notarized/dotnet-signing.yml
       parameters:
         isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
 
 # .NET Release Prep and VS Insertion Stages, only execute them when the build comes from an official branch and is not a schedule build from OneLoc
 # setting the stage at this level makes the graph of the UI look better, else the lines overlap and is not clear.
@@ -246,6 +264,8 @@ stages:
       dependsOn:
       - sign_notarize_dotnet
       isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
 
 - stage: funnel
   displayName: '${{ parameters.stageDisplayNamePrefix }}Collect signed artifacts'
@@ -259,6 +279,8 @@ stages:
   - template: ./sign-and-notarized/funnel.yml
     parameters:
       isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
       azureStorage:  ${{ parameters.azureStorage }}
       azureContainer: ${{ parameters.azureContainer }}
       packages: # flatten the pkgs for the parameter
@@ -275,6 +297,8 @@ stages:
       parameters:
         xcodeChannel: ${{ parameters.xcodeChannel }}
         isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
         vsdropsPrefix: ${{ variables.vsdropsPrefix }}
         keyringPass: $(pass--lab--mac--builder--keychain)
         gitHubToken: $(Github.Token)
@@ -289,6 +313,8 @@ stages:
   parameters:
     xcodeChannel: ${{ parameters.xcodeChannel }}
     isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
     simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
     testPrefix: 'simulator_'
     stageName: 'simulator_tests'
@@ -313,6 +339,8 @@ stages:
         parameters:
           xcodeChannel: ${{ parameters.xcodeChannel }}
           isPR: ${{ parameters.isPR }}
+          repositoryAlias: ${{ parameters.repositoryAlias }}
+          commit: ${{ parameters.commit }}
           testPrefix: ${{ config.testPrefix }} 
           stageName: ${{ config.stageName }} 
           displayName: '${{ parameters.stageDisplayNamePrefix }}${{ config.displayName }}'
@@ -335,6 +363,8 @@ stages:
     - template: ./mac/stage.yml
       parameters:
         isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
         stageName: ${{ config.stageName }}
         displayName: ' ${{ parameters.stageDisplayNamePrefix }}${{ config.displayName }}'
         macPool: ${{ config.macPool }}
@@ -348,6 +378,8 @@ stages:
   - template: ./windows/stage.yml
     parameters:
       isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
       stageName: windows_integration
       displayName: '${{ parameters.stageDisplayNamePrefix }}Windows Integration Tests'
       pool: 'VSEng-Xamarin-Mac-Devices' # currently ignored until the VS team provides a real one
@@ -360,6 +392,8 @@ stages:
   - template: ./tests/stage.yml
     parameters:
       isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
       testPrefix: 'iOS32b'
       stageName: 'ios32b_device'
       displayName: '${{ parameters.stageDisplayNamePrefix }}iOS32b Device Tests'
