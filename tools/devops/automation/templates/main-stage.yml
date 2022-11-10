@@ -145,6 +145,12 @@ parameters:
     }
   ]
 
+- name: azureStorage
+  type: string
+
+- name: azureContainer
+  type: string
+
 stages:
 
 - ${{ if eq(parameters.runGovernanceTests, true) }}:
@@ -249,8 +255,8 @@ stages:
   - template: ./sign-and-notarized/funnel.yml
     parameters:
       isPR: ${{ parameters.isPR }}
-      azureStorage:  variables['azureStorage']
-      azureContainer: variables['azureContainer']
+      azureStorage:  ${{ parameters.azureStorage }}
+      azureContainer: ${{ parameters.azureContainer }}
       packages: # flatten the pkgs for the parameter
       - ${{ each pkg_obj in parameters.packages }}:
         - ${{ each pkg in pkg_obj.packages }}:
