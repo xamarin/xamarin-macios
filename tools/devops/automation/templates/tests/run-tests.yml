@@ -237,7 +237,7 @@ steps:
     $testAttempt = [int]"$(System.JobAttempt)"
     $testResult = New-TestResults -Path $testResultsPath -Status "$(runTests.TESTS_JOBSTATUS)" -Context "${{ parameters.statusContext }}" -Attempt $testAttempt
 
-    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
+    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
     $statuses.SetStatus($testResult.GetStatus())
   displayName: "Set tests status."
   continueOnError: true

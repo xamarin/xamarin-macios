@@ -184,6 +184,25 @@ function New-GitHubStatusesObject {
     return [GitHubStatuses]::new($Org, $Repo, $Token)
 }
 
+function New-GitHubStatusesObjectFromUrl {
+    param (
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Url,
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Token
+    )
+
+    $orgRepo = $Url.Replace("https://github.com/", "")
+    $org, $repo = $orgRepo -split "/",2
+
+    return [GitHubStatuses]::new($org, $repo, $Token)
+}
+
+
 class GitHubComment {
     [string] $Id
     [string] $Author
@@ -564,6 +583,32 @@ function New-GitHubCommentsObject {
         return [GitHubComments]::new($Org, $Repo, $Token)
     }
 }
+
+<# 
+    .SYNOPSIS
+        Creates a new GitHubComments object from a repo url so that can be used to create comments for the build.
+#>
+function New-GitHubCommentsObjectFromUrl {
+    param (
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Url,
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Token,
+
+        [string]
+        $Hash
+
+    )
+    Write-Debug "New-GitHubCommentsObjectFromUrl ('$Url', '$Token', '$Hash')"
+    $orgRepo = $Url.Replace("https://github.com/", "")
+    $org, $repo = $orgRepo -split "/",2
+    return New-GitHubCommentsObject -Org $org -Repo $repo -Token $Token -Hash $Hash
+}
+
 
 <#
     .SYNOPSIS
@@ -1003,4 +1048,6 @@ Export-ModuleMember -Function Convert-Markdown
 
 # new future API that uses objects.
 Export-ModuleMember -Function New-GitHubCommentsObject
+Export-ModuleMember -Function New-GitHubCommentsObjectFromUrl
 Export-ModuleMember -Function New-GitHubStatusesObject
+Export-ModuleMember -Function New-GitHubStatusesObjectFromUrl
