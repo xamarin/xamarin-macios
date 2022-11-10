@@ -193,7 +193,7 @@
 		new XDelegate ("GCHandle->MonoObject *", "IntPtr", "xamarin_get_nsobject_with_type",
 			"id", "IntPtr", "obj",
 			"GCHandle->MonoReflectionType *", "IntPtr", "type",
-			"int32_t *", "out bool", "created"
+			"int32_t *", "bool*", "created"
 		) {
 			WrappedManagedFunction = "GetNSObjectWithType",
 			OnlyDynamicUsage = false,
@@ -227,7 +227,7 @@
 			"SEL", "IntPtr", "sel",
 			"bool", "bool", "is_static",
 			"id", "IntPtr", "obj",
-			"GCHandle *", "ref IntPtr", "mthis",
+			"GCHandle *", "IntPtr*", "mthis",
 			"MethodDescription *", "IntPtr", "desc"
 		) {
 			WrappedManagedFunction = "GetMethodAndObjectForSelector",
@@ -237,7 +237,7 @@
 		new XDelegate ("GCHandle", "IntPtr", "xamarin_create_product_exception_for_error",
 			"int", "int", "code",
 			"GCHandle", "IntPtr", "inner_exception_gchandle",
-			"const char *", "string", "message"
+			"const char *", "IntPtr", "message"
 		) {
 			WrappedManagedFunction = "CreateProductException",
 			OnlyDynamicUsage = false,
@@ -878,6 +878,24 @@
 			}
 		}
 
+		public string UnmanagedDelegateCast {
+			get {
+				var builder = new StringBuilder ();
+				builder.Append ("(delegate* unmanaged<");
+
+				foreach (var arg in Arguments) {
+					builder.Append (arg.MType);
+					builder.Append (", ");
+				}
+				if (ExceptionHandling)
+					builder.Append ("IntPtr*, ");
+				builder.Append (ReturnType.MType);
+
+				builder.Append (">)");
+				return builder.ToString ();
+			}
+		}
+
 		public string AlignEntryPoint {
 			get {
 				return new string (' ', Delegates.MaxEntryPointLength - EntryPoint.Length);
@@ -949,7 +967,7 @@
 				} else {
 					if (Arguments.Count > 0)
 						builder.Append (", ");
-					builder.Append ("out IntPtr exception_gchandle");
+					builder.Append ("IntPtr* exception_gchandle");
 				}
 			}
 
