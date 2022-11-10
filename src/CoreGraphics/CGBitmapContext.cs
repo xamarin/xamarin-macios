@@ -51,8 +51,8 @@ namespace CoreGraphics {
 #if !COREBUILD
 		// If allocated, this points to the byte array buffer that is passed.
 		GCHandle buffer;
-		
-		[Preserve (Conditional=true)]
+
+		[Preserve (Conditional = true)]
 		internal CGBitmapContext (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
@@ -61,7 +61,7 @@ namespace CoreGraphics {
 		// CGImageAlphaInfo -> uint32_t -> CGImage.h
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static IntPtr CGBitmapContextCreate (/* void* */ IntPtr data, /* size_t */ nint width, /* size_t */ nint height, /* size_t */ nint bitsPerComponent, 
+		extern static IntPtr CGBitmapContextCreate (/* void* */ IntPtr data, /* size_t */ nint width, /* size_t */ nint height, /* size_t */ nint bitsPerComponent,
 			/* size_t */ nint bytesPerRow, /* CGColorSpaceRef */ IntPtr colorSpace, /* CGBitmapInfo = uint32_t */ uint bitmapInfo);
 
 		public CGBitmapContext (IntPtr data, nint width, nint height, nint bitsPerComponent, nint bytesPerRow, CGColorSpace? colorSpace, CGImageAlphaInfo bitmapInfo)
@@ -75,7 +75,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static IntPtr CGBitmapContextCreate (/* void* */ byte []? data, /* size_t */ nint width, /* size_t */ nint height, /* size_t */ nint bitsPerComponent, 
+		extern static IntPtr CGBitmapContextCreate (/* void* */ byte []? data, /* size_t */ nint width, /* size_t */ nint height, /* size_t */ nint bitsPerComponent,
 			/* size_t */ nint bytesPerRow, /* CGColorSpaceRef */ IntPtr colorSpace, /* CGBitmapInfo = uint32_t */ uint bitmapInfo);
 
 		static IntPtr Create (byte []? data, nint width, nint height, nint bitsPerComponent, nint bytesPerRow, CGColorSpace? colorSpace, CGImageAlphaInfo bitmapInfo, out GCHandle buffer)
@@ -112,47 +112,47 @@ namespace CoreGraphics {
 				buffer.Free ();
 			base.Dispose (disposing);
 		}
-			
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* void* */ IntPtr CGBitmapContextGetData (/* CGContextRef */ IntPtr context);
 
 		public IntPtr Data {
-			get {return CGBitmapContextGetData (Handle);}
+			get { return CGBitmapContextGetData (Handle); }
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* size_t */ nint CGBitmapContextGetWidth (/* CGContextRef */ IntPtr context);
 
 		public nint Width {
-			get {return CGBitmapContextGetWidth (Handle);}
+			get { return CGBitmapContextGetWidth (Handle); }
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* size_t */ nint CGBitmapContextGetHeight (/* CGContextRef */ IntPtr context);
 
 		public nint Height {
-			get {return CGBitmapContextGetHeight (Handle);}
+			get { return CGBitmapContextGetHeight (Handle); }
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* size_t */ nint CGBitmapContextGetBitsPerComponent (/* CGContextRef */ IntPtr context);
 
 		public nint BitsPerComponent {
-			get {return CGBitmapContextGetBitsPerComponent (Handle);}
+			get { return CGBitmapContextGetBitsPerComponent (Handle); }
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* size_t */ nint CGBitmapContextGetBitsPerPixel (/* CGContextRef */ IntPtr context);
 
 		public nint BitsPerPixel {
-			get {return (nint) CGBitmapContextGetBitsPerPixel (Handle);}
+			get { return (nint) CGBitmapContextGetBitsPerPixel (Handle); }
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* size_t */ nint CGBitmapContextGetBytesPerRow (/* CGContextRef */ IntPtr context);
 
 		public nint BytesPerRow {
-			get {return CGBitmapContextGetBytesPerRow (Handle);}
+			get { return CGBitmapContextGetBytesPerRow (Handle); }
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -169,14 +169,14 @@ namespace CoreGraphics {
 		extern static CGImageAlphaInfo CGBitmapContextGetAlphaInfo (/* CGContextRef */ IntPtr context);
 
 		public CGImageAlphaInfo AlphaInfo {
-			get {return CGBitmapContextGetAlphaInfo (Handle);}
+			get { return CGBitmapContextGetAlphaInfo (Handle); }
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGBitmapInfo */ uint CGBitmapContextGetBitmapInfo (/* CGContextRef */ IntPtr context);
 
 		public CGBitmapFlags BitmapInfo {
-			get {return (CGBitmapFlags) CGBitmapContextGetBitmapInfo (Handle);}
+			get { return (CGBitmapFlags) CGBitmapContextGetBitmapInfo (Handle); }
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]

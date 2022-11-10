@@ -15,7 +15,6 @@
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
 
   <ItemGroup>
-    <PackageReference Include="NUnitLite" Version="3.12.0" />
     <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\$(_PlatformName)\bindings-test.csproj" />
   </ItemGroup>
 

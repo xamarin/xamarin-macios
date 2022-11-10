@@ -22,8 +22,8 @@ namespace Extrospection {
 
 	public class DesignatedInitializerCheck : BaseVisitor {
 
-		static Dictionary<string,TypeDefinition> types = new Dictionary<string,TypeDefinition> ();
-		static Dictionary<string,MethodDefinition> methods = new Dictionary<string,MethodDefinition> ();
+		static Dictionary<string, TypeDefinition> types = new Dictionary<string, TypeDefinition> ();
+		static Dictionary<string, MethodDefinition> methods = new Dictionary<string, MethodDefinition> ();
 
 		static TypeDefinition GetType (ObjCInterfaceDecl decl)
 		{
@@ -43,7 +43,7 @@ namespace Extrospection {
 			var key = method.GetName ();
 			if (key == null)
 				return;
-			
+
 			// we still have one case to fix with duplicate selectors :|
 			if (!methods.ContainsKey (key))
 				methods.Add (key, method);

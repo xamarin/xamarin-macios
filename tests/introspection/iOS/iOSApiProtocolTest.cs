@@ -41,6 +41,7 @@ namespace Introspection {
 			case "MediaSetup":
 			case "Phase":
 			case "ThreadNetwork":
+			case "PushToTalk":
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
@@ -86,6 +87,7 @@ namespace Introspection {
 			case "CAMetalLayer":
 			case "MTLFunctionConstantValues":
 			case "MTLHeapDescriptor":
+			case "SWCollaborationActionHandler":
 				// Symbol not available in simulator - but works on BigSur (others might too)
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
@@ -121,10 +123,19 @@ namespace Introspection {
 			case "PHAssetCollectionChangeRequest": // subclass of PHChangeRequest
 			case "PHAssetCreationRequest": // subclass of PHAssetChangeRequest
 			case "PHCollectionListChangeRequest": // subclass of PHChangeRequest
-				if (!TestRuntime.CheckXcodeVersion (11,0))
+				if (!TestRuntime.CheckXcodeVersion (11, 0))
 					return true;
 				break;
+			case "SWHighlightEvent":
+				return TestRuntime.IsSimulatorOrDesktop;
+
 #endif
+			case "UILayoutGuideAspectFitting":
+			case "UISceneWindowingBehaviors":
+				// Symbol not available in simulator - but works on BigSur (others might too)
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
 			}
 
 			return base.Skip (type);
@@ -162,8 +173,8 @@ namespace Introspection {
 					return true;
 				break;
 #endif
-				// special case: the Delegate property is id<A,B> so we made A subclass B in managed
-				// but this test see the conformance is not correct
+			// special case: the Delegate property is id<A,B> so we made A subclass B in managed
+			// but this test see the conformance is not correct
 			case "UIImagePickerControllerDelegate":
 			case "UIVideoEditorControllerDelegate":
 				if (protocolName == "UINavigationControllerDelegate")
@@ -185,11 +196,11 @@ namespace Introspection {
 			case "ARImageAnchor":
 				// both type and protocol were added in iOS 11.3 but the conformance, for that type, started with iOS 12.0
 				if (protocolName == "ARTrackable")
-					return !TestRuntime.CheckXcodeVersion (10,0);
+					return !TestRuntime.CheckXcodeVersion (10, 0);
 				break;
 			case "PHLivePhoto":
 				if (protocolName == "NSItemProviderReading")
-					return !TestRuntime.CheckXcodeVersion (12,0);
+					return !TestRuntime.CheckXcodeVersion (12, 0);
 				break;
 #if __MACCATALYST__
 			case "BCChatButton":
@@ -273,7 +284,7 @@ namespace Introspection {
 				case "NSConstraintConflict": // Conformance not in headers
 				case "NSQueryGenerationToken": // Conformance not in headers
 				case "NSPersistentHistoryToken": // Conformance not in headers
- 				case "ARCamera":
+				case "ARCamera":
 				case "HMPresenceEvent":
 				case "HMMutablePresenceEvent":
 				case "HMSignificantTimeEvent":
@@ -461,6 +472,10 @@ namespace Introspection {
 				case "SRTextInputSession": // conformance not in headers
 				case "UISheetPresentationControllerDetent": // Conformance not in headers
 				case "UIWindowSceneActivationConfiguration": // Conformance not in headers
+					return true;
+				// Xcode 14
+				case "VSUserAccount": // Conformance not in headers
+				case "PKInk":
 					return true;
 				}
 				break;
@@ -710,6 +725,10 @@ namespace Introspection {
 				case "UISheetPresentationControllerDetent": // conformance not in headers
 				case "CAConstraintLayoutManager": // Not declared in header file
 					return true;
+				// Xcode 14
+				case "VSUserAccount": // Conformance not in headers
+				case "PKInk":
+					return true;
 				}
 				break;
 			case "NSCopying":
@@ -720,7 +739,7 @@ namespace Introspection {
 				case "MPMediaItemCollection":
 				case "MPMediaEntity":
 					return true; // skip
-				// iOS9
+								 // iOS9
 				case "ACAccount":
 				case "HKCategorySample":
 				case "HKCorrelation":
@@ -808,7 +827,7 @@ namespace Introspection {
 				case "INRestaurantGuest":
 				case "INPerson":
 				case "HMCharacteristicEvent": // Selectors not available on 32 bit
-				// iOS 13 beta 1 (to be reviewed)
+											  // iOS 13 beta 1 (to be reviewed)
 				case "UIKeyCommand":
 					return true;
 #if __MACCATALYST__
@@ -887,10 +906,10 @@ namespace Introspection {
 				case "SKShapeNode":
 				case "SKVideoNode":
 				case "SKSpriteNode":
-					return !TestRuntime.CheckXcodeVersion (8,0);
+					return !TestRuntime.CheckXcodeVersion (8, 0);
 				case "SCNNode":
 				case "SCNReferenceNode":
-					return !TestRuntime.CheckXcodeVersion (9,0);
+					return !TestRuntime.CheckXcodeVersion (9, 0);
 				}
 				break;
 
@@ -953,7 +972,7 @@ namespace Introspection {
 				case "MKOverlayPathView":
 				case "MKPolygonView":
 				case "MKPolylineView":
-					return !TestRuntime.CheckXcodeVersion (7,0);
+					return !TestRuntime.CheckXcodeVersion (7, 0);
 				}
 				break;
 
@@ -1010,7 +1029,7 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (8, 0);
 				case "SCNNode":
 				case "SCNReferenceNode":
-					return !TestRuntime.CheckXcodeVersion (9,0);
+					return !TestRuntime.CheckXcodeVersion (9, 0);
 				}
 				break;
 
@@ -1048,7 +1067,7 @@ namespace Introspection {
 			case "CAAction":
 				switch (type.Name) {
 				case "NSNull":
-					return !TestRuntime.CheckXcodeVersion (8,0);
+					return !TestRuntime.CheckXcodeVersion (8, 0);
 				}
 				break;
 #if !__WATCHOS__

@@ -14,8 +14,7 @@ using Foundation;
 
 namespace Contacts {
 	// Strong typed Keys to enum
-	public enum CNSocialProfileOption
-	{
+	public enum CNSocialProfileOption {
 		UrlString,
 		Username,
 		UserIdentifier,
@@ -23,8 +22,7 @@ namespace Contacts {
 	}
 
 	// Strong typed Keys to enum
-	public enum CNSocialProfileServiceOption
-	{
+	public enum CNSocialProfileServiceOption {
 		Facebook,
 		Flickr,
 		LinkedIn,

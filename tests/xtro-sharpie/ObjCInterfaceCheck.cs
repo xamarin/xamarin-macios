@@ -28,16 +28,16 @@ namespace Extrospection {
 					if (ca.HasConstructorArguments) {
 						rname = (ca.ConstructorArguments [0].Value as string);
 						if (ca.ConstructorArguments.Count > 1)
-							wrapper = (bool)ca.ConstructorArguments [1].Value;
+							wrapper = (bool) ca.ConstructorArguments [1].Value;
 					}
 					if (ca.HasProperties) {
 						foreach (var arg in ca.Properties) {
 							switch (arg.Name) {
 							case "Wrapper":
-								wrapper = (bool)arg.Argument.Value;
+								wrapper = (bool) arg.Argument.Value;
 								break;
 							case "SkipRegistration":
-								skip = (bool)arg.Argument.Value;
+								skip = (bool) arg.Argument.Value;
 								break;
 							}
 						}

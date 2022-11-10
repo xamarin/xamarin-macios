@@ -37,6 +37,7 @@ namespace Xamarin.Tests {
 				var fn = Path.GetFileName (v!);
 
 				switch (fn) {
+				case "libclrgc.dylib":
 				case "libclrjit.dylib":
 				case "libcoreclr.dylib":
 				case "libdbgshim.dylib":
@@ -48,6 +49,7 @@ namespace Xamarin.Tests {
 				case "libmono-component-debugger.dylib":
 				case "libmono-component-diagnostics_tracing.dylib":
 				case "libmono-component-hot_reload.dylib":
+				case "libmono-component-marshal-ilgen.dylib":
 				case "libmonosgen-2.0.dylib":
 					return platform != ApplePlatform.MacOSX;
 				case "libSystem.Native.dylib":

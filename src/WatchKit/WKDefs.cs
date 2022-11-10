@@ -88,6 +88,10 @@ namespace WatchKit {
 		NavigationRightTurn,
 		[Watch (7,0)]
 		NavigationGenericManeuver,
+		[Watch (9,0)]
+		UnderwaterDepthPrompt,
+    	[Watch (9,0)]
+		UnderwaterDepthCriticalPrompt,
 	}
 
 	[NoiOS]
@@ -222,6 +226,8 @@ namespace WatchKit {
 	public enum WKWaterResistanceRating : long {
 		Ipx7,
 		Wr50,
+		[Watch (9,0)]
+		WR100,
 	}
 
 	[Watch (4,0)][NoiOS]
@@ -256,5 +262,13 @@ namespace WatchKit {
 		Unplugged,
 		Charging,
 		Full,
+	}
+
+	[Watch (9,0), NoiOS]
+	[Native]
+	enum WKExtendedRuntimeSessionAutoLaunchAuthorizationStatus : long {
+		Unknown, 
+		Inactive,
+		Active,
 	}
 }
