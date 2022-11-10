@@ -76,6 +76,10 @@ dotnet format whitespace --folder "$SRC_DIR/src/CoreML"
 dotnet format whitespace --folder "$SRC_DIR/src/CoreMedia"
 dotnet format whitespace --folder "$SRC_DIR/src/CoreMidi"
 dotnet format whitespace --folder "$SRC_DIR/src/CoreMotion"
+dotnet format whitespace --folder "$SRC_DIR/src/CoreServices"
+dotnet format whitespace --folder "$SRC_DIR/src/CoreTelephony"
+dotnet format whitespace --folder "$SRC_DIR/src/CoreText"
+dotnet format whitespace --folder "$SRC_DIR/src/CoreVideo"
 
 # dotnet format "$SRC_DIR/[...]"
 # add more projects here...

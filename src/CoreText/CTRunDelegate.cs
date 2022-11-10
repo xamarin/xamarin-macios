@@ -42,7 +42,7 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreText {
 
-#region Run Delegate Callbacks
+	#region Run Delegate Callbacks
 	delegate void CTRunDelegateDeallocateCallback (IntPtr refCon);
 	delegate nfloat CTRunDelegateGetCallback (IntPtr refCon);
 
@@ -54,7 +54,7 @@ namespace CoreText {
 		public CTRunDelegateGetCallback getDescent;
 		public CTRunDelegateGetCallback getWidth;
 	}
-#endregion
+	#endregion
 
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -201,7 +201,7 @@ namespace CoreText {
 		{
 		}
 
-#region RunDelegate Creation
+		#region RunDelegate Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTRunDelegateCreate (ref CTRunDelegateCallbacks callbacks, IntPtr refCon);
 
@@ -218,9 +218,9 @@ namespace CoreText {
 			: base (Create (operations), true)
 		{
 		}
-#endregion
+		#endregion
 
-#region Run Delegate Access
+		#region Run Delegate Access
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTRunDelegateGetRefCon (IntPtr runDelegate);
 
@@ -229,6 +229,6 @@ namespace CoreText {
 				return CTRunDelegateOperations.GetOperations (CTRunDelegateGetRefCon (Handle));
 			}
 		}
-#endregion
+		#endregion
 	}
 }
