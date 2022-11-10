@@ -13,7 +13,7 @@ namespace CoreWlan {
 		public CWChannel []? SupportedWlanChannels {
 			get {
 				NSSet? channels = _SupportedWlanChannels;
-				return channels?.ToArray<CWChannel> (); ;
+				return channels?.ToArray<CWChannel> ();
 			}
 		}
 
