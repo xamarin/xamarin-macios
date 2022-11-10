@@ -44,7 +44,7 @@ export HTML_NO_BREAKING_CHANGES_MESSAGE=No breaking changes
 export MARKDOWN_BREAKING_CHANGES_MESSAGE=:heavy_exclamation_mark: Breaking changes :heavy_exclamation_mark:
 export MARKDOWN_NO_BREAKING_CHANGES_MESSAGE=No breaking changes
 
-ifdef ($(COMPARE_CURRENT_TFM),1)
+ifeq ($(COMPARE_CURRENT_TFM),1)
 DOTNET_TFM_REFERENCE_iOS=$(DOTNET_TFM)
 DOTNET_TFM_REFERENCE_tvOS=$(DOTNET_TFM)
 DOTNET_TFM_REFERENCE_macOS=$(DOTNET_TFM)
