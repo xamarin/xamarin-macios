@@ -13,11 +13,21 @@ parameters:
 - name: azureContainer
   type: string
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 steps:
 # Do not use the templates/common/checkout.yaml for this job else the azure upload tool will fail because 
 # it cannot find the correct branch to be used. 
 - template:  sdk-unified/steps/checkout/v1.yml@yaml-templates
   parameters:
+    resource: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
     clean: true
     persistCredentials: true
     path: s/xamarin-macios
