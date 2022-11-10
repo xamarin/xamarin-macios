@@ -32,6 +32,9 @@ steps:
     persistCredentials: true
     path: s/xamarin-macios
 
+- checkout: yaml-templates
+  clean: true
+
 # Download the Html Report that was added by the tests job.
 - task: DownloadPipelineArtifact@2
   displayName: Download packages
@@ -138,7 +141,7 @@ steps:
   continueOnError: true
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
 
     Dir "$(Build.SourcesDirectory)\\artifacts\\package"
