@@ -63,6 +63,7 @@ dotnet format whitespace --folder "$SRC_DIR/src/CoreAnimation/"
 dotnet format whitespace --folder "$SRC_DIR/src/CoreBluetooth/"
 dotnet format whitespace --folder "$SRC_DIR/src/CoreData/"
 dotnet format whitespace --folder "$SRC_DIR/src/CoreFoundation/"
+dotnet format whitespace --folder "$SRC_DIR/src/CoreGraphics/"
 
 # dotnet format "$SRC_DIR/[...]"
 # add more projects here...
