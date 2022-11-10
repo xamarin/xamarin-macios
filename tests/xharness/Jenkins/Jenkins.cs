@@ -261,7 +261,7 @@ namespace Xharness.Jenkins {
 				var allLines = output.ToString ().Split ('\n');
 				// First line contains headers
 				var headers = allLines [0].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-				var processes = new List<string[]> (allLines.Length);
+				var processes = new List<string []> (allLines.Length);
 				processes.Add (headers);
 				for (var p = 1; p < allLines.Length; p++) {
 					var line = allLines [p].Trim ();
