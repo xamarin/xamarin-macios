@@ -169,6 +169,8 @@ stages:
   - stage: governance_checks
     displayName: '${{ parameters.stageDisplayNamePrefix }}Governance Checks'
     dependsOn: []
+    variables:
+      Codeql.SkipTaskAutoInjection: true
     jobs:
     - job: governance
       displayName: 'Governance Checks'
@@ -198,6 +200,8 @@ stages:
   - stage: clean
     displayName: '${{ parameters.stageDisplayNamePrefix }}Clean up'
     dependsOn: []
+    variables:
+      Codeql.SkipTaskAutoInjection: true
     jobs:
     - job:
       displayName: 'Clean comments'
@@ -232,6 +236,8 @@ stages:
     displayName: '${{ parameters.stageDisplayNamePrefix }}${{ pkg_obj.displayName }}'
     dependsOn:
     - build_packages
+    variables:
+      Codeql.SkipTaskAutoInjection: true
     jobs:
     - template: ./sign-and-notarized/prepare-pkg-stage.yml
       parameters:
@@ -249,6 +255,8 @@ stages:
     displayName: '${{ parameters.stageDisplayNamePrefix }}Sign & Notarize Dotnet'
     dependsOn:
     - build_packages
+    variables:
+      Codeql.SkipTaskAutoInjection: true
     jobs:
     - template: ./sign-and-notarized/dotnet-signing.yml
       parameters:
@@ -275,6 +283,8 @@ stages:
     - sign_notarize_dotnet
   - ${{ each pkg_obj in parameters.packages }}:
     - ${{ pkg_obj.job }}
+  variables:
+    Codeql.SkipTaskAutoInjection: true
   jobs:
   - template: ./sign-and-notarized/funnel.yml
     parameters:
@@ -292,6 +302,8 @@ stages:
   - stage: generate_api_diff
     displayName: '${{ parameters.stageDisplayNamePrefix }}API diff'
     dependsOn: []
+    variables:
+      Codeql.SkipTaskAutoInjection: true
     jobs:
     - template: ./build/api-diff-stage.yml
       parameters:
@@ -415,6 +427,8 @@ stages:
     dependsOn:
     - build_packages
     condition: and(succeeded(), contains (stageDependencies.build_packages.build.outputs['configuration.RunSampleTests'], 'True'))
+    variables:
+      Codeql.SkipTaskAutoInjection: true
     jobs:
     - job: sample_testing
       pool:

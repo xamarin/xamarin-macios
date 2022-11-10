@@ -92,6 +92,8 @@ stages:
   displayName: ${{ parameters.displayName }}
   dependsOn:
   - build_packages
+  variables:
+    Codeql.SkipTaskAutoInjection: true
   # we need to have the pkgs built and the device sets to be ran, that is decided via the labels or type of build during the build_packages stage
   condition: and(succeeded(), ${{ parameters.condition }})
 

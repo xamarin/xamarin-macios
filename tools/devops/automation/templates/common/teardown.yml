@@ -30,3 +30,6 @@ steps:
 - template: mac-agent-logs.yml
   parameters:
     outputPath: agent-logs.log
+
+- task: CodeQL3000Finalize@0
+  displayName: Finalize CodeQL
