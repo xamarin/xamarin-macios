@@ -20,7 +20,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		[OneTimeSetUp]
 		public void Metal ()
 		{
-			TestRuntime.AssertXcodeVersion (9,0);
+			TestRuntime.AssertXcodeVersion (9, 0);
 
 #if !MONOMAC && !__MACCATALYST__
 			if (Runtime.Arch == Arch.SIMULATOR)

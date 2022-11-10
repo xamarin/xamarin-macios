@@ -18,11 +18,11 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AddressBook {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PersonTest {
-		
+
 		[SetUp]
 		public void Setup ()
 		{
@@ -45,7 +45,7 @@ namespace MonoTouchFixtures.AddressBook {
 				return;
 			}
 
-			var p = people[0];
+			var p = people [0];
 
 			var all = p.GetAllAddresses ();
 			var mutable = all.ToMutableMultiValue ();
@@ -59,7 +59,7 @@ namespace MonoTouchFixtures.AddressBook {
 			addr.Zip = "78972";
 			multi.Value = addr;
 			p.SetAddresses (mutable);
-			
+
 			Assert.IsTrue (ab.HasUnsavedChanges);
 			ab.Save ();
 		}

@@ -21,7 +21,7 @@ using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NSFileManagerTest {
@@ -48,15 +48,14 @@ namespace MonoTouchFixtures.Foundation {
 			NSFileManager fm = new NSFileManager ();
 			if (TestRuntime.CheckXcodeVersion (4, 5) && fm.UbiquityIdentityToken == null) {
 				// UbiquityIdentityToken is a fast way to check if iCloud is enabled
-				Assert.Pass ("not iCloud enabled"); 
+				Assert.Pass ("not iCloud enabled");
 			}
 
 			NSUrl c = null;
 			Exception e = null;
 			ManualResetEvent evt = new ManualResetEvent (false);
 
-			new Thread (() =>
-			{
+			new Thread (() => {
 				try {
 					// From Apple's documentaiton:
 					// Important: Do not call this method from your app’s main thread. Because this method might take a nontrivial amount of time to set up 
@@ -67,8 +66,7 @@ namespace MonoTouchFixtures.Foundation {
 				} finally {
 					evt.Set ();
 				}
-			})
-			{
+			}) {
 				IsBackground = true,
 			}.Start ();
 
@@ -89,7 +87,7 @@ namespace MonoTouchFixtures.Foundation {
 		}
 		//GetSkipBackupAttribute doesn't exist on Mac
 #if !MONOMAC
-		
+
 		[Test]
 		public void GetSkipBackupAttribute ()
 		{
@@ -98,9 +96,9 @@ namespace MonoTouchFixtures.Foundation {
 			string filename = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), $"DoNotBackupMe-NSFileManager-{Process.GetCurrentProcess ().Id}");
 			try {
 				File.WriteAllText (filename, "not worth a bit");
-				
+
 				Assert.False (NSFileManager.GetSkipBackupAttribute (filename), "DoNotBackupMe-0");
-		
+
 				NSFileManager.SetSkipBackupAttribute (filename, true);
 
 				NSError error;
@@ -110,8 +108,7 @@ namespace MonoTouchFixtures.Foundation {
 				error = NSFileManager.SetSkipBackupAttribute (filename, false);
 				Assert.False (NSFileManager.GetSkipBackupAttribute (filename), "DoNotBackupMe-2");
 				Assert.Null (error, "error-2");
-			}
-			finally {
+			} finally {
 				// otherwise the attribute won't reset even if the file is overwritten
 				File.Delete (filename);
 			}
@@ -138,8 +135,7 @@ namespace MonoTouchFixtures.Foundation {
 					File.WriteAllText (Path.Combine (path, "myfile.txt"), "woohoo");
 					Assert.That (path, Is.EqualTo (Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments)), "GetFolderPath");
 				}
-			}
-			finally {
+			} finally {
 				File.Delete (file);
 			}
 		}
@@ -153,13 +149,11 @@ namespace MonoTouchFixtures.Foundation {
 			try {
 				File.WriteAllText (Path.Combine (path, "myfile.txt"), "woohoo");
 				Assert.That (path, Is.EqualTo (Environment.GetFolderPath (Environment.SpecialFolder.Resources)), "GetFolderPath");
-			}
-			catch (UnauthorizedAccessException) {
+			} catch (UnauthorizedAccessException) {
 				// DocumentDirectory cannot be written to on tvOS
 				if (!TestRuntime.IsTVOS)
 					throw;
-			}
-			finally {
+			} finally {
 				File.Delete (file);
 			}
 		}

@@ -13,11 +13,11 @@ using CoreData;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreData {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AttributeDescription {
-		
+
 		[Test]
 		public void WeakFramework ()
 		{
@@ -43,7 +43,7 @@ namespace MonoTouchFixtures.CoreData {
 				Assert.IsNull (ad.RenamingIdentifier, "An unset RenamingIdentifier should be null.");
 				ad.RenamingIdentifier = "Foo";
 				Assert.AreEqual ("Foo", ad.RenamingIdentifier,
-				                 "RenamingIndentifier was not corrently set.");
+								 "RenamingIndentifier was not corrently set.");
 			}
 		}
 	}

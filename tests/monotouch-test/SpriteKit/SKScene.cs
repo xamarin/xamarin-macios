@@ -9,12 +9,10 @@ using CoreAnimation;
 using CoreGraphics;
 using SpriteKit;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class SKSceneTests
-	{
+	public class SKSceneTests {
 		[SetUp]
 		public void SetUp ()
 		{
@@ -42,8 +40,7 @@ namespace Xamarin.Mac.Tests
 			Assert.IsNotNull (c);
 		}
 
-		class MyScene : SKScene
-		{
+		class MyScene : SKScene {
 			public MyScene (CGSize size) : base (size)
 			{
 			}

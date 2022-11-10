@@ -6,12 +6,10 @@ using AppKit;
 using Foundation;
 using ObjCRuntime;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSControlTests
-	{
+	public class NSControlTests {
 		[Test]
 		public void NSControlShouldChangeControlSize ()
 		{
@@ -23,7 +21,7 @@ namespace Xamarin.Mac.Tests
 			Assert.IsFalse (size == control.ControlSize);
 			Assert.IsTrue (control.ControlSize == NSControlSize.Mini);
 		}
-			
+
 		[Test]
 		public void NSControlShouldChangeHighlighted ()
 		{

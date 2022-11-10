@@ -15,13 +15,11 @@ using ObjCRuntime;
 using NUnit.Framework;
 using Xamarin.Utils;
 
-namespace MonoTouchFixtures.CoreFoundation
-{
+namespace MonoTouchFixtures.CoreFoundation {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class DispatchBlockTest
-	{
+	public class DispatchBlockTest {
 		[SetUp]
 		public void SetUp ()
 		{

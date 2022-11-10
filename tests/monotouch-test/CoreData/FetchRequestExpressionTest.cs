@@ -3,13 +3,11 @@ using Foundation;
 using CoreData;
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.CoreData
-{
+namespace MonoTouchFixtures.CoreData {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class FetchRequestExpressionTest
-	{
+	public class FetchRequestExpressionTest {
 
 		[Test]
 		public void WeakFramework ()
