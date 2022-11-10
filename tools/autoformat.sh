@@ -34,6 +34,7 @@ dotnet format whitespace "$SRC_DIR/tests/xtro-sharpie/u2ignore/u2ignore.csproj"
 dotnet format whitespace "$SRC_DIR/tests/xtro-sharpie/u2todo/u2todo.csproj"
 dotnet format whitespace "$SRC_DIR/tests/xtro-sharpie/xtro-report/xtro-report.csproj"
 dotnet format whitespace "$SRC_DIR/tests/xtro-sharpie/xtro-sanity/xtro-sanity.csproj"
+dotnet format whitespace --folder "$SRC_DIR/tests/xtro-sharpie"
 
 dotnet format whitespace --folder "$SRC_DIR/src/Accelerate"
 dotnet format whitespace --folder "$SRC_DIR/src/Accessibility"
@@ -62,6 +63,7 @@ dotnet format whitespace --folder "$SRC_DIR/src/CoreAnimation/"
 dotnet format whitespace --folder "$SRC_DIR/src/CoreBluetooth/"
 dotnet format whitespace --folder "$SRC_DIR/src/CoreData/"
 dotnet format whitespace --folder "$SRC_DIR/src/CoreFoundation/"
+dotnet format whitespace --folder "$SRC_DIR/src/CoreGraphics/"
 
 # dotnet format "$SRC_DIR/[...]"
 # add more projects here...

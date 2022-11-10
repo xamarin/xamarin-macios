@@ -6,8 +6,8 @@ using Mono.Options;
 namespace Extrospection {
 
 	// this is used to be executed from a custom 64bits mono
-	class MainClass	{
-		
+	class MainClass {
+
 		static int Main (string [] arguments)
 		{
 			var outputDirectory = string.Empty;
@@ -27,8 +27,7 @@ namespace Extrospection {
 					assemblies.Add (args [i]);
 				new Runner ().Execute (args [0], assemblies, outputDirectory);
 				return 0;
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				Console.WriteLine (e);
 				return 1;
 			}
