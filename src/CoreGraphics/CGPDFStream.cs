@@ -68,7 +68,7 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGPDFDictionaryRef */ IntPtr CGPDFStreamGetDictionary (/* CGPDFStreamRef */ IntPtr stream);
-		
+
 		public CGPDFDictionary Dictionary {
 			get {
 				return new CGPDFDictionary (CGPDFStreamGetDictionary (Handle));
