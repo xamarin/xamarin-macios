@@ -164,8 +164,6 @@ variables:
   value: 'MicroBuild Signing Task (DevDiv)'
 - name: Codeql.Enabled  # do not add the the shared variables.yml because it will force other pipelines
   value: false  # it is a slow process, do not enable on pipelines
-- name: Codeql.DoNotStartTimes
-  value: "Mon;Tue;Wed;Thu;" # skip duing most of the week yet perfor the scan on Fridays + Weekend
 
 trigger:
   branches:
