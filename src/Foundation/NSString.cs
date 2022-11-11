@@ -71,13 +71,13 @@ namespace Foundation {
 		static NativeHandle CreateWithCharacters (NativeHandle handle, string str, int offset, int length, bool autorelease = false)
 		{
 			unsafe {
-				fixed (char *ptrFirstChar = str) {
+				fixed (char* ptrFirstChar = str) {
 					var ptrStart = (IntPtr) (ptrFirstChar + offset);
-	#if MONOMAC
+#if MONOMAC
 					handle = Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (handle, selInitWithCharactersLengthHandle, ptrStart, (IntPtr) length);
-	#else
+#else
 					handle = Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (handle, Selector.GetHandle (selInitWithCharactersLength), ptrStart, (IntPtr) length);
-	#endif
+#endif
 
 					if (autorelease)
 						NSObject.DangerousAutorelease (handle);
@@ -131,15 +131,17 @@ namespace Foundation {
 		{
 			NSObject.DangerousRelease (handle);
 		}
-	
-		public NSString (string str) {
+
+		public NSString (string str)
+		{
 			if (str == null)
 				throw new ArgumentNullException ("str");
 
 			Handle = CreateWithCharacters (Handle, str, 0, str.Length);
 		}
 
-		public NSString (string value, int start, int length) {
+		public NSString (string value, int start, int length)
+		{
 			if (value == null)
 				throw new ArgumentNullException (nameof (value));
 
@@ -151,7 +153,7 @@ namespace Foundation {
 
 			Handle = CreateWithCharacters (Handle, value, start, length);
 		}
-	
+
 		public override string ToString ()
 		{
 			return FromHandle (Handle);
@@ -214,7 +216,7 @@ namespace Foundation {
 		{
 			return Equals (a, b);
 		}
-		
+
 		public static bool operator != (NSString a, NSString b)
 		{
 			return !Equals (a, b);
@@ -245,46 +247,46 @@ namespace Foundation {
 		extern static IntPtr xamarin_localized_string_format_8 (IntPtr fmt, IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5, IntPtr arg6, IntPtr arg7, IntPtr arg8);
 		[DllImport ("__Internal")]
 		extern static IntPtr xamarin_localized_string_format_9 (IntPtr fmt, IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5, IntPtr arg6, IntPtr arg7, IntPtr arg8, IntPtr arg9);
-		
+
 		public static NSString LocalizedFormat (string format, params object [] args)
 		{
 			using (var ns = new NSString (format))
 				return LocalizedFormat (ns, args);
 		}
-		
+
 		public static NSString LocalizedFormat (NSString format, params object [] args)
 		{
 			int argc = args.Length;
 			var nso = new NSObject [argc];
 			for (int i = 0; i < argc; i++)
 				nso [i] = NSObject.FromObject (args [i]);
-				
+
 			return LocalizedFormat (format, nso);
 		}
-		       
+
 		public static NSString LocalizedFormat (NSString format, NSObject [] args)
 		{
-			switch (args.Length){
+			switch (args.Length) {
 			case 0:
 				return new NSString (xamarin_localized_string_format (format.Handle));
 			case 1:
-				return new NSString (xamarin_localized_string_format_1 (format.Handle, args[0].Handle));
+				return new NSString (xamarin_localized_string_format_1 (format.Handle, args [0].Handle));
 			case 2:
-				return new NSString (xamarin_localized_string_format_2 (format.Handle, args[0].Handle, args[1].Handle));
+				return new NSString (xamarin_localized_string_format_2 (format.Handle, args [0].Handle, args [1].Handle));
 			case 3:
-				return new NSString (xamarin_localized_string_format_3 (format.Handle, args[0].Handle, args[1].Handle, args[2].Handle));
+				return new NSString (xamarin_localized_string_format_3 (format.Handle, args [0].Handle, args [1].Handle, args [2].Handle));
 			case 4:
-				return new NSString (xamarin_localized_string_format_4 (format.Handle, args[0].Handle, args[1].Handle, args[2].Handle, args[3].Handle));
+				return new NSString (xamarin_localized_string_format_4 (format.Handle, args [0].Handle, args [1].Handle, args [2].Handle, args [3].Handle));
 			case 5:
-				return new NSString (xamarin_localized_string_format_5 (format.Handle, args[0].Handle, args[1].Handle, args[2].Handle, args[3].Handle, args[4].Handle));
+				return new NSString (xamarin_localized_string_format_5 (format.Handle, args [0].Handle, args [1].Handle, args [2].Handle, args [3].Handle, args [4].Handle));
 			case 6:
-				return new NSString (xamarin_localized_string_format_6 (format.Handle, args[0].Handle, args[1].Handle, args[2].Handle, args[3].Handle, args[4].Handle, args[5].Handle));
+				return new NSString (xamarin_localized_string_format_6 (format.Handle, args [0].Handle, args [1].Handle, args [2].Handle, args [3].Handle, args [4].Handle, args [5].Handle));
 			case 7:
-				return new NSString (xamarin_localized_string_format_7 (format.Handle, args[0].Handle, args[1].Handle, args[2].Handle, args[3].Handle, args[4].Handle, args[5].Handle, args[6].Handle));
+				return new NSString (xamarin_localized_string_format_7 (format.Handle, args [0].Handle, args [1].Handle, args [2].Handle, args [3].Handle, args [4].Handle, args [5].Handle, args [6].Handle));
 			case 8:
-				return new NSString (xamarin_localized_string_format_8 (format.Handle, args[0].Handle, args[1].Handle, args[2].Handle, args[3].Handle, args[4].Handle, args[5].Handle, args[6].Handle, args[7].Handle));
+				return new NSString (xamarin_localized_string_format_8 (format.Handle, args [0].Handle, args [1].Handle, args [2].Handle, args [3].Handle, args [4].Handle, args [5].Handle, args [6].Handle, args [7].Handle));
 			case 9:
-				return new NSString (xamarin_localized_string_format_9 (format.Handle, args[0].Handle, args[1].Handle, args[2].Handle, args[3].Handle, args[4].Handle, args[5].Handle, args[6].Handle, args[7].Handle, args[8].Handle));
+				return new NSString (xamarin_localized_string_format_9 (format.Handle, args [0].Handle, args [1].Handle, args [2].Handle, args [3].Handle, args [4].Handle, args [5].Handle, args [6].Handle, args [7].Handle, args [8].Handle));
 			default:
 				throw new Exception ("Unsupported number of arguments, maximum number is 9");
 			}
@@ -294,7 +296,7 @@ namespace Foundation {
 		{
 			return TransliterateString (transform.GetConstant (), reverse);
 		}
-		
+
 		public override int GetHashCode ()
 		{
 			return base.GetHashCode ();

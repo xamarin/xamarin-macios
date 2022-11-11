@@ -80,6 +80,13 @@ dotnet format whitespace --folder "$SRC_DIR/src/CoreServices"
 dotnet format whitespace --folder "$SRC_DIR/src/CoreTelephony"
 dotnet format whitespace --folder "$SRC_DIR/src/CoreText"
 dotnet format whitespace --folder "$SRC_DIR/src/CoreVideo"
+dotnet format whitespace --folder "$SRC_DIR/src/CoreWlan"
+dotnet format whitespace --folder "$SRC_DIR/src/EventKit"
+dotnet format whitespace --folder "$SRC_DIR/src/EventKitUI"
+dotnet format whitespace --folder "$SRC_DIR/src/ExternalAccessory"
+dotnet format whitespace --folder "$SRC_DIR/src/FileProvider"
+dotnet format whitespace --folder "$SRC_DIR/src/FinderSync"
+dotnet format whitespace --folder "$SRC_DIR/src/Foundation"
 
 # dotnet format "$SRC_DIR/[...]"
 # add more projects here...
