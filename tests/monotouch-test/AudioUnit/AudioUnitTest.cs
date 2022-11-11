@@ -11,12 +11,10 @@ using AudioUnit;
 using AudioToolbox;
 using ObjCRuntime;
 
-namespace MonoTouchFixtures.AudioUnit
-{
+namespace MonoTouchFixtures.AudioUnit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AudioUnitTest
-	{
+	public class AudioUnitTest {
 		[Test]
 		public void DisposeMethodTest ()
 		{
@@ -58,7 +56,7 @@ namespace MonoTouchFixtures.AudioUnit
 
 		[Test]
 		public void CopyIconTest ()
-		{ 
+		{
 			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
 			AudioComponentDescription cd = new AudioComponentDescription () {
 				ComponentType = AudioComponentType.Output,
@@ -78,7 +76,7 @@ namespace MonoTouchFixtures.AudioUnit
 				ComponentManufacturer = AudioComponentManufacturerType.Apple
 			};
 			AudioComponent component = AudioComponent.FindComponent (ref cd);
-			Assert.DoesNotThrow ( () => {
+			Assert.DoesNotThrow (() => {
 				var icon = component.CopyIcon (); // ensuring that the manual binding does not throw, we do not care about the result
 			});
 		}

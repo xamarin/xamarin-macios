@@ -19,7 +19,7 @@ using Security;
 #if MONOMAC
 using AppKit;
 #if NET
-using PlatformException=ObjCRuntime.ObjCException;
+using PlatformException = ObjCRuntime.ObjCException;
 #else
 using PlatformException = Foundation.ObjCException;
 #endif
@@ -27,35 +27,35 @@ using UIView = AppKit.NSView;
 #else
 using UIKit;
 #if NET
-using PlatformException=ObjCRuntime.ObjCException;
+using PlatformException = ObjCRuntime.ObjCException;
 #else
-using PlatformException=Foundation.MonoTouchException;
+using PlatformException = Foundation.MonoTouchException;
 #endif
 #endif
 using NUnit.Framework;
 using Xamarin.Utils;
 
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
 
 #if !NET
 using NativeHandle = System.IntPtr;
 #endif
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NSObjectTest {
-		
+
 		bool GetIsDirectBinding (NSObject obj)
 		{
 			var flags = TestRuntime.GetFlags (obj);
 			return (flags & 4) == 4;
 		}
-		
+
 		class MyObject : NSObject {
-			
+
 			public bool GetIsDirectBinding ()
 			{
 				return this.IsDirectBinding;
@@ -119,13 +119,13 @@ namespace MonoTouchFixtures.Foundation {
 		public void FromObject_NativeTypes ()
 		{
 			// to avoid issues like https://github.com/mono/xwt/commit/9b110e848030d5f6a0319212fd21bac02efad2c1
-			using (var nativeint = (NSNumber) NSObject.FromObject ((nint)(-42))) {
+			using (var nativeint = (NSNumber) NSObject.FromObject ((nint) (-42))) {
 				Assert.That (nativeint.Int32Value, Is.EqualTo (-42), "nint");
 			}
-			using (var nativeuint = (NSNumber) NSObject.FromObject ((nuint)42)) {
+			using (var nativeuint = (NSNumber) NSObject.FromObject ((nuint) 42)) {
 				Assert.That (nativeuint.UInt32Value, Is.EqualTo (42), "nuint");
 			}
-			using (var nativefloat = (NSNumber) NSObject.FromObject ((nfloat)3.14)) {
+			using (var nativefloat = (NSNumber) NSObject.FromObject ((nfloat) 3.14)) {
 				Assert.That (nativefloat.FloatValue, Is.EqualTo (3.14f), "nfloat");
 			}
 		}
@@ -134,10 +134,9 @@ namespace MonoTouchFixtures.Foundation {
 		public void ValueForInvalidKeyTest ()
 		{
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=13243
-			Assert.Throws<PlatformException> (() =>
-			{
+			Assert.Throws<PlatformException> (() => {
 				using (var str = new NSString ("test")) {
-					str.ValueForKey(str);
+					str.ValueForKey (str);
 				}
 			});
 		}
@@ -204,19 +203,19 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			using (var o1 = new NSObject ())
 			using (var o2 = new NSObject ()) {
-				Assert.False (o1.Equals ((object)null), "Equals(object) null");
-				Assert.False (o1.Equals ((object)o2), "Equals(object) 1-2");
-				Assert.False (o2.Equals ((object)o1), "Equals(object) 2-1");
+				Assert.False (o1.Equals ((object) null), "Equals(object) null");
+				Assert.False (o1.Equals ((object) o2), "Equals(object) 1-2");
+				Assert.False (o2.Equals ((object) o1), "Equals(object) 2-1");
 
 				Assert.False (o1.Equals (3), "Equals(object) 1-3");
 
-				Assert.False (o1.Equals ((NSObject)null), "Equals(NSObject) null");
-				Assert.False (o1.Equals ((NSObject)o2), "Equals(NSObject) 1-2");
-				Assert.False (o2.Equals ((NSObject)o1), "Equals(NSObject) 2-1");
+				Assert.False (o1.Equals ((NSObject) null), "Equals(NSObject) null");
+				Assert.False (o1.Equals ((NSObject) o2), "Equals(NSObject) 1-2");
+				Assert.False (o2.Equals ((NSObject) o1), "Equals(NSObject) 2-1");
 
 				// on a more positive note...
-				Assert.True (o1.Equals ((object)o1), "Equals(object) 1-1");
-				Assert.True (o2.Equals ((NSObject)o2), "Equals(NSObject) 2-2");
+				Assert.True (o1.Equals ((object) o1), "Equals(object) 1-1");
+				Assert.True (o2.Equals ((NSObject) o2), "Equals(NSObject) 2-2");
 			}
 		}
 

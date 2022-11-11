@@ -8,12 +8,10 @@ using AudioUnit;
 using AVFoundation;
 using AUUnit = AudioUnit.AudioUnit;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AVPlayerLayerTests
-	{
+	public class AVPlayerLayerTests {
 		[Test]
 		public void AVPlayerLayer_VideoGravity ()
 		{

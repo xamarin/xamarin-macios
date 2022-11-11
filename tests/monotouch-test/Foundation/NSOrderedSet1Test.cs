@@ -82,14 +82,14 @@ namespace MonoTouchFixtures.Foundation {
 			var oSet = new NSOrderedSet<NSString> (str1, str2, str3);
 
 			Assert.AreEqual ((nint) 3, oSet.Count, "NSOrderedSet1Test Count");
-			Assert.AreSame (str2, oSet[1], "NSOrderedSet1Test IndexOf");
+			Assert.AreSame (str2, oSet [1], "NSOrderedSet1Test IndexOf");
 		}
 
 		[Test]
 		public void ToArrayTest ()
 		{
-			var str = (NSString)"Test";
-			var oSet = new NSOrderedSet<NSString> (str); 
+			var str = (NSString) "Test";
+			var oSet = new NSOrderedSet<NSString> (str);
 			var arr = oSet.ToArray ();
 
 			Assert.AreEqual (1, arr.Length, "NSOrderedSet1Test ToArray Length");
