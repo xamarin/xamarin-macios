@@ -11,12 +11,12 @@ using ObjCRuntime;
 using NUnit.Framework;
 using Xamarin.Utils;
 
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PopoverControllerTest {
@@ -27,7 +27,7 @@ namespace MonoTouchFixtures.UIKit {
 				return;
 
 			bool ios8 = TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
-			
+
 			using (var vc = new UIViewController ())
 			using (var pc = new UIPopoverController (vc)) {
 				Assert.That (pc.ContentViewController, Is.SameAs (vc), "ContentViewController");
@@ -45,9 +45,9 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Pad)
 				Assert.Inconclusive ("Requires iPad");
-			
+
 			TestRuntime.AssertNotDevice ("ObjectiveC exception crash on devices - bug #3980");
-			
+
 			using (var vc = new UIViewController ())
 			using (var bbi = new UIBarButtonItem (UIBarButtonSystemItem.Action))
 			using (var pc = new UIPopoverController (vc)) {
@@ -71,7 +71,7 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Pad)
 				return;
-			
+
 			using (var vc = new UIViewController ())
 			using (var bbi = new UIBarButtonItem (UIBarButtonSystemItem.Action))
 			using (var pc = new UIPopoverController (vc)) {
@@ -89,7 +89,7 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.Inconclusive ("Requires iPad");
 
 			TestRuntime.AssertNotDevice ("ObjectiveC exception crash on devices - bug #3980");
-			
+
 			using (var vc = new UIViewController ())
 			using (var bbi = new UIBarButtonItem (UIBarButtonSystemItem.Action))
 			using (var pc = new UIPopoverController (vc)) {
@@ -103,18 +103,18 @@ namespace MonoTouchFixtures.UIKit {
 				// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -[UIPopoverController presentPopoverFromRect:inView:permittedArrowDirections:animated:]: Popovers cannot be presented from a view which does not have a window.
 			}
 		}
-		
+
 		// note: not complete (won't work) - but enough for testing the property
 		// full sample at http://stackoverflow.com/a/9312939/220643
 		class MyPopoverBackgroundView : UIPopoverBackgroundView {
 		}
-		
+
 		[Test]
 		public void PopoverBackgroundViewType ()
 		{
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Pad)
 				return;
-			
+
 			using (var vc = new UIViewController ())
 			using (var pc = new UIPopoverController (vc)) {
 				Assert.Null (pc.PopoverBackgroundViewType, "PopoverBackgroundViewType");

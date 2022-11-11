@@ -42,16 +42,16 @@ namespace Foundation {
 		static NSDictionary ignore;
 
 		public NSAttributedString (NSUrl url, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error)
-		: this (url, documentAttributes, out ignore, ref error) {}
+		: this (url, documentAttributes, out ignore, ref error) { }
 
 		public NSAttributedString (NSData data, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error)
-		: this (data, documentAttributes, out ignore, ref error) {}
+		: this (data, documentAttributes, out ignore, ref error) { }
 
 		public NSAttributedString (NSUrl url, ref NSError error)
-		: this (url, (NSDictionary) null, out ignore, ref error) {}
+		: this (url, (NSDictionary) null, out ignore, ref error) { }
 
 		public NSAttributedString (NSData data, ref NSError error)
-		: this (data, (NSDictionary) null, out ignore, ref error) {}
+		: this (data, (NSDictionary) null, out ignore, ref error) { }
 
 #if IOS // not TVOS or WATCH
 		// use the best selector based on the OS version
@@ -69,11 +69,11 @@ namespace Foundation {
 
 	}
 #endif
-	
+
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
 #if !MONOMAC && !COREBUILD
-		public NSAttributedStringDocumentAttributes () : base (new NSMutableDictionary ()) {}
-		public NSAttributedStringDocumentAttributes (NSDictionary dictionary) : base (dictionary) {}
+		public NSAttributedStringDocumentAttributes () : base (new NSMutableDictionary ()) { }
+		public NSAttributedStringDocumentAttributes (NSDictionary dictionary) : base (dictionary) { }
 
 		public NSStringEncoding? StringEncoding {
 			get {
@@ -87,7 +87,7 @@ namespace Foundation {
 				SetNumberValue (UIStringAttributeKey.NSCharacterEncodingDocumentAttribute, (int?) value);
 			}
 		}
-		
+
 		public NSString WeakDocumentType {
 			get {
 				return GetNSStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute);
@@ -96,7 +96,7 @@ namespace Foundation {
 				SetStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute, value);
 			}
 		}
-		
+
 		public NSDocumentType DocumentType {
 			get {
 				var s = GetNSStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute);
@@ -112,7 +112,7 @@ namespace Foundation {
 			}
 
 			set {
-				switch (value){
+				switch (value) {
 				case NSDocumentType.PlainText:
 					SetStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute, UIStringAttributeKey.NSPlainTextDocumentType);
 					break;
@@ -162,7 +162,7 @@ namespace Foundation {
 					Dictionary [UIStringAttributeKey.NSPaperMarginDocumentAttribute] = NSValue.FromUIEdgeInsets (value.Value);
 			}
 		}
-		
+
 		public CGSize? ViewSize {
 			get {
 				NSObject value;

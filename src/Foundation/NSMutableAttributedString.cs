@@ -49,10 +49,10 @@ namespace Foundation {
 		{
 			if (attributes == null)
 				throw new ArgumentNullException ("attributes");
-			
+
 			LowLevelSetAttributes (attributes.Handle, range);
 		}
-		
+
 		public void SetAttributes (CTStringAttributes attrs, NSRange range)
 		{
 			SetAttributes (attrs == null ? null : attrs.Dictionary, range);
@@ -66,7 +66,7 @@ namespace Foundation {
 		public void Append (NSAttributedString first, params object [] rest)
 		{
 			Append (first);
-			foreach (var obj in rest){
+			foreach (var obj in rest) {
 				if (obj is NSAttributedString)
 					Append ((NSAttributedString) obj);
 				else if (obj is string)

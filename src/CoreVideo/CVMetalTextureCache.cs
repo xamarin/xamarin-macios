@@ -28,10 +28,10 @@ namespace CoreVideo {
 	public partial class CVMetalTextureCache : NativeObject {
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static int /* CVReturn = int32_t */ CVMetalTextureCacheCreate (
-			/* CFAllocatorRef __nullable */ IntPtr allocator, 
+			/* CFAllocatorRef __nullable */ IntPtr allocator,
 			/* CFDictionaryRef __nullable */ IntPtr cacheAttributes,
-			/* id<MTLDevice> __nonnull */ IntPtr metalDevice, 
-			/* CFDictionaryRef __nullable */ IntPtr textureAttributes, 
+			/* id<MTLDevice> __nonnull */ IntPtr metalDevice,
+			/* CFDictionaryRef __nullable */ IntPtr textureAttributes,
 			/* CVMetalTextureCacheRef __nullable * __nonnull */ out IntPtr cacheOut);
 
 		[Preserve (Conditional = true)]
@@ -67,10 +67,10 @@ namespace CoreVideo {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (metalDevice));
 			IntPtr handle;
 			if (CVMetalTextureCacheCreate (IntPtr.Zero,
-						       IntPtr.Zero, /* change one day to support cache attributes */
-						       metalDevice.Handle,
-						       IntPtr.Zero, /* change one day to support texture attribuets */
-						       out handle) == 0)
+							   IntPtr.Zero, /* change one day to support cache attributes */
+							   metalDevice.Handle,
+							   IntPtr.Zero, /* change one day to support texture attribuets */
+							   out handle) == 0)
 				return new CVMetalTextureCache (handle, true);
 			return null;
 		}
@@ -105,18 +105,18 @@ namespace CoreVideo {
 		{
 			if (imageBuffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBuffer));
-			
+
 			IntPtr texture;
 			errorCode = CVMetalTextureCacheCreateTextureFromImage (
-				allocator:    IntPtr.Zero,
+				allocator: IntPtr.Zero,
 				textureCache: Handle, /* textureCache dict, one day we might add it */
-				sourceImage:  imageBuffer.Handle,
-				textureAttr:  IntPtr.Zero,
-				format:       (nuint) (ulong) format,
-				width:        width,
-				height:       height,
-				planeIndex:   planeIndex,
-				textureOut:   out texture);
+				sourceImage: imageBuffer.Handle,
+				textureAttr: IntPtr.Zero,
+				format: (nuint) (ulong) format,
+				width: width,
+				height: height,
+				planeIndex: planeIndex,
+				textureOut: out texture);
 			if (errorCode != 0)
 				return null;
 			return new CVMetalTexture (texture, true);
@@ -130,14 +130,14 @@ namespace CoreVideo {
 		{
 			CVMetalTextureCacheFlush (Handle, flags);
 		}
-			
+
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVReturn CVMetalTextureCacheCreateTextureFromImage (
 			/* CFAllocatorRef __nullable */ IntPtr allocator,
 			/* CVMetalTextureCacheRef __nonnull */ IntPtr textureCache,
 			/* CVImageBufferRef __nonnull */ IntPtr sourceImage,
 			/* CFDictionaryRef __nullable */ IntPtr textureAttr,
-			/* MTLPixelFormat */ nuint format,	// MTLPixelFormat is nuint [Native] which will always be 64bits on managed code
+			/* MTLPixelFormat */ nuint format,  // MTLPixelFormat is nuint [Native] which will always be 64bits on managed code
 			/* size_t */ nint width,
 			/* size_t */ nint height,
 			/* size_t */ nint planeIndex,

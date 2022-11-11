@@ -42,7 +42,7 @@ namespace Foundation {
 		IntPtr InitNSThread (NSObject target, Selector selector, NSObject argument)
 		{
 			if (target == null)
-				throw new ArgumentNullException ("target");	
+				throw new ArgumentNullException ("target");
 			if (selector == null)
 				throw new ArgumentNullException ("selector");
 

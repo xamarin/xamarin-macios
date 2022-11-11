@@ -24,11 +24,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 	static class AssociatedObjects {
 		public enum AssociationPolicy { // uintptr_t
-			Assign			= 0,
-			RetainNonAtomic	= 1,
-			CopyNonAtomic	= 3,
-			Retain			= 0x301,
-			Copy			= 0x303,
+			Assign = 0,
+			RetainNonAtomic = 1,
+			CopyNonAtomic = 3,
+			Retain = 0x301,
+			Copy = 0x303,
 		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
@@ -66,8 +66,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Runtime.ConnectMethod (typeof (ConnectMethodClass).GetMethod ("Method"), new Selector ("method"));
 		}
 
-		class ConnectMethodClass : NSObject { 
-			public void Method () {	}
+		class ConnectMethodClass : NSObject {
+			public void Method () { }
 		}
 
 		[Test]
@@ -179,10 +179,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 			var notifierHandle = IntPtr.Zero;
 
-//			bool isDeallocated = false;
+			//			bool isDeallocated = false;
 			Action deallocated = () => {
 				//Console.WriteLine ("Final release!");
-//				isDeallocated = true;
+				//				isDeallocated = true;
 			};
 
 			ManualResetEvent isCollected = new ManualResetEvent (false);
@@ -232,7 +232,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			NSRunLoop.Main.RunUntil (NSDate.Now.AddSeconds (0.1));
 			// Don't verify cleanup, it's not consistent.
 			// And in any case it's not what this test is about.
-//			Assert.IsTrue (isDeallocated, "released");
+			//			Assert.IsTrue (isDeallocated, "released");
 
 			return true;
 		}
@@ -241,7 +241,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Action collected;
 			Action notified;
 
-			public Notifier (Action collected, Action notified) 
+			public Notifier (Action collected, Action notified)
 			{
 				this.collected = collected;
 				this.notified = notified;
@@ -260,7 +260,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		class Level1 : NSObject {} // we need two levels of subclassing, since the XI will override 'release' on the first one, and we need to override it as well.
+		class Level1 : NSObject { } // we need two levels of subclassing, since the XI will override 'release' on the first one, and we need to override it as well.
 		class ReleaseNotifier : Level1 {
 			Action deallocated;
 			bool enabled;
@@ -304,11 +304,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			NSDictionary dict = null;
 
 			var thread = new Thread (() => {
-				dict = new NSMutableDictionary();
-				dict["Hello"] = new NSString(@"World");
-				dict["Bye"] = new NSString(@"Bye");
-			})
-			{ 
+				dict = new NSMutableDictionary ();
+				dict ["Hello"] = new NSString (@"World");
+				dict ["Bye"] = new NSString (@"Bye");
+			}) {
 				IsBackground = true
 			};
 			thread.Start ();
@@ -326,17 +325,17 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 				while (broken == 0 && watch.ElapsedMilliseconds < 10000) {
 					// try getting using Systen.String key
-					string hello = getter1("Hello");
+					string hello = getter1 ("Hello");
 					if (hello == null)
 						broken = 1;
 
-					string bye = getter1("Bye");
+					string bye = getter1 ("Bye");
 					if (bye == null)
 						broken = 2;
 
 					// try getting using NSString key
-					string nHello = getter2(new NSString(@"Hello"));
-					string nBye = getter2(new NSString(@"Bye"));
+					string nHello = getter2 (new NSString (@"Hello"));
+					string nBye = getter2 (new NSString (@"Bye"));
 
 					if (nHello == null)
 						broken = 3;
@@ -361,7 +360,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			if (!Runtime.DynamicRegistrationSupported)
 				Assert.Ignore ("This test requires support for dynamic registration.");
-			
+
 			var minfo = typeof (RuntimeTest).GetMethod ("ConnectMethod");
 			Assert.Throws<ArgumentNullException> (() => Runtime.ConnectMethod (null, new Selector ("")), "1");
 			Assert.Throws<ArgumentNullException> (() => Runtime.ConnectMethod (minfo, null), "2");
@@ -379,7 +378,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			if (!Runtime.DynamicRegistrationSupported)
 				Assert.Ignore ("This test requires support for dynamic registration.");
-			
+
 			if (connectMethod1Done)
 				Assert.Ignore ("This is a one-shot test. Restart to run again.");
 			connectMethod1Done = true;
@@ -396,7 +395,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			if (!Runtime.DynamicRegistrationSupported)
 				Assert.Ignore ("This test requires support for dynamic registration.");
-			
+
 			if (connectMethod2Done)
 				Assert.Ignore ("This is a one-shot test. Restart to run again.");
 			connectMethod2Done = true;
@@ -421,7 +420,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			if (!Runtime.DynamicRegistrationSupported)
 				Assert.Ignore ("This test requires support for dynamic registration.");
-			
+
 			if (connectMethod3Done)
 				Assert.Ignore ("This is a one-shot test. Restart to run again.");
 			connectMethod3Done = true;
@@ -439,7 +438,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		class A : NSObject {
-			public void Test() {
+			public void Test ()
+			{
 				Console.WriteLine ("Tested!");
 			}
 		}
@@ -748,7 +748,7 @@ Additional information:
 				Assert.Fail ("This method should never be called.");
 			}
 #endif
-		} 
+		}
 
 		[Test]
 		public void GetINativeObject_ForcedType ()
@@ -779,8 +779,7 @@ Additional information:
 			var handles = new GCHandle [counter];
 			var pointers = new IntPtr [counter];
 
-			var t = new Thread (() =>
-			{
+			var t = new Thread (() => {
 				for (var i = 0; i < counter; i++) {
 					var obj = new NSFileManager ();
 					// do not toggle
@@ -795,8 +794,7 @@ Additional information:
 			t.Start ();
 			Assert.IsTrue (t.Join (TimeSpan.FromSeconds (10)), "Background thread completion");
 
-			var checkForCollectedManagedObjects = new Func<bool> (() =>
-			{
+			var checkForCollectedManagedObjects = new Func<bool> (() => {
 				GC.Collect ();
 				GC.WaitForPendingFinalizers ();
 				for (var i = 0; i < counter; i++) {
@@ -831,8 +829,7 @@ Additional information:
 			var del = new NSFileManagerDelegate ();
 			var counter = 100;
 			var handles = new GCHandle [counter];
-			var t = new Thread (() =>
-			{
+			var t = new Thread (() => {
 				for (var i = 0; i < counter; i++) {
 					var obj = new NSFileManager ();
 					obj.Delegate = del; // toggle
@@ -846,8 +843,7 @@ Additional information:
 			t.Start ();
 			Assert.IsTrue (t.Join (TimeSpan.FromSeconds (10)), "Background thread completion");
 
-			TestRuntime.RunAsync (TimeSpan.FromSeconds (2), () => { }, () =>
-			{
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (2), () => { }, () => {
 				// Iterate over the runloop a bit to make sure we're just not collecting because objects are queued on for things to happen on the main thread
 				GC.Collect ();
 				GC.WaitForPendingFinalizers ();
@@ -917,7 +913,7 @@ Additional information:
 		}
 
 		class IntPtrConstructor : NSObject {
-			IntPtrConstructor (IntPtr handle) : base (handle) {}
+			IntPtrConstructor (IntPtr handle) : base (handle) { }
 
 			internal static IntPtr New ()
 			{
