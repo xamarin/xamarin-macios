@@ -3,12 +3,10 @@ using AppKit;
 using Foundation;
 using NUnit.Framework;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSLayoutConstraintTest
-	{
+	public class NSLayoutConstraintTest {
 		[Test]
 		public void FromVisualFormat ()
 		{
@@ -44,8 +42,7 @@ namespace Xamarin.Mac.Tests
 		}
 	}
 
-	public class TestView : NSView
-	{
+	public class TestView : NSView {
 		public NSTextView FirstLabel { get; private set; }
 
 		public NSTextView SecondLabel { get; private set; }

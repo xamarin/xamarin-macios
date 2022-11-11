@@ -57,9 +57,9 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			using (var ip = NSIndexPath.Create (3, 14, 15)) {
 				Assert.AreEqual ((nint) 3, ip.Length, "Length");
-				Assert.AreEqual ((nuint)3, ip.IndexAtPosition (0), "[0]");
-				Assert.AreEqual ((nuint)14, ip.IndexAtPosition (1), "[0]");
-				Assert.AreEqual ((nuint)15, ip.IndexAtPosition (2), "[0]");
+				Assert.AreEqual ((nuint) 3, ip.IndexAtPosition (0), "[0]");
+				Assert.AreEqual ((nuint) 14, ip.IndexAtPosition (1), "[0]");
+				Assert.AreEqual ((nuint) 15, ip.IndexAtPosition (2), "[0]");
 			}
 		}
 
@@ -83,10 +83,10 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void CreateTest ()
 		{
-			Assert.Throws<ArgumentNullException> (() => NSIndexPath.Create ((int[])null), "ANE 1");
-			Assert.Throws<ArgumentNullException> (() => NSIndexPath.Create ((uint[])null), "ANE 2");
-			Assert.Throws<ArgumentNullException> (() => NSIndexPath.Create ((nint[])null), "ANE 3");
-			Assert.Throws<ArgumentNullException> (() => NSIndexPath.Create ((nuint[])null), "ANE 4");
+			Assert.Throws<ArgumentNullException> (() => NSIndexPath.Create ((int []) null), "ANE 1");
+			Assert.Throws<ArgumentNullException> (() => NSIndexPath.Create ((uint []) null), "ANE 2");
+			Assert.Throws<ArgumentNullException> (() => NSIndexPath.Create ((nint []) null), "ANE 3");
+			Assert.Throws<ArgumentNullException> (() => NSIndexPath.Create ((nuint []) null), "ANE 4");
 
 			using (var ip = NSIndexPath.Create (1, 2, 3, 4)) {
 				Assert.AreEqual ((nint) 4, ip.Length, "Length");

@@ -36,7 +36,7 @@ namespace MonoTouchFixtures.Metal {
 				functions.Functions = null; // we are testing if the property works, so setting to null does test the selector
 			}, "Setter");
 			Assert.DoesNotThrow (() => {
-				var f = functions.Functions; 
+				var f = functions.Functions;
 			}, "Getter");
 		}
 

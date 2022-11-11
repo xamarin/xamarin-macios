@@ -5,11 +5,11 @@ using Metal;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Metal {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class MTLRasterizationRateLayerDescriptorTest {
-		
+
 		MTLRasterizationRateLayerDescriptor descriptor = null;
 
 		[SetUp]

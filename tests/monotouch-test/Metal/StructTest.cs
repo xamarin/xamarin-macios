@@ -9,11 +9,11 @@ using Metal;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Metal {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class StructTest {
-		
+
 		[Test]
 		public void MTLQuadTessellationFactorsHalfStructSize ()
 		{

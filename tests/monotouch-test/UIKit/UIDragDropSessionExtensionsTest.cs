@@ -25,7 +25,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void LoadObjectsTest ()
 		{
-			if (!TestRuntime.CheckXcodeVersion (9,0))
+			if (!TestRuntime.CheckXcodeVersion (9, 0))
 				Assert.Ignore ("Ignoring tests: Requires iOS11+");
 
 			var test = new DropSession ();

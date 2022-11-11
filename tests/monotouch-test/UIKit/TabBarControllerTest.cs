@@ -20,7 +20,7 @@ namespace MonoTouchFixtures.UIKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class TabBarControllerTest {
-		
+
 		void CheckDefault (UITabBarController c)
 		{
 #if !__TVOS__
@@ -33,7 +33,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.NotNull (c.TabBar, "TabBar");
 			Assert.Null (c.ViewControllers, "ViewControllers");
 		}
-		
+
 		[Test]
 		public void Ctor_Defaults ()
 		{

@@ -46,8 +46,7 @@ namespace MonoTouchFixtures.CoreImage {
 			}
 		}
 
-		class MyFilter : CIFilter
-		{
+		class MyFilter : CIFilter {
 			public int Input { get; set; }
 		}
 
@@ -60,7 +59,7 @@ namespace MonoTouchFixtures.CoreImage {
 			MyFilter filter = new MyFilter ();
 			Assert.NotNull (filter);
 			filter.Input = 10;
-			Assert.AreEqual(10, filter.Input);
+			Assert.AreEqual (10, filter.Input);
 		}
 
 #if !NET
