@@ -68,7 +68,7 @@ namespace Foundation {
 		public new TKey this [nint idx] {
 			get {
 				var ret = _GetObject (idx);
-				return Runtime.GetINativeObject <TKey> (ret, false);
+				return Runtime.GetINativeObject<TKey> (ret, false);
 			}
 
 			set {
@@ -82,7 +82,7 @@ namespace Foundation {
 		public NSSet<TKey> AsSet ()
 		{
 			var ret = _AsSet ();
-			return Runtime.GetINativeObject <NSSet<TKey>> (ret, false);
+			return Runtime.GetINativeObject<NSSet<TKey>> (ret, false);
 		}
 
 		public void Insert (TKey obj, nint atIndex)
@@ -145,7 +145,7 @@ namespace Foundation {
 			_RemoveObject (obj.Handle);
 		}
 
-		public void RemoveObjects (params TKey[] objects)
+		public void RemoveObjects (params TKey [] objects)
 		{
 			if (objects == null)
 				throw new ArgumentNullException (nameof (objects));
