@@ -21,10 +21,6 @@
       <Uri>https://github.com/dotnet/emsdk</Uri>
       <Sha>77c2667993976295017e2759f075550bcf606fc1</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.net7.Manifest-7.0.100" Version="7.0.0-rtm.22476.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
-      <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>6b7d1f47eaaa3f64c95e6f825c9e57debd4c0f31</Sha>
-    </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
     <Dependency Name="Microsoft.DotNet.Build.Tasks.Feed" Version="6.0.0-beta.21212.6">
