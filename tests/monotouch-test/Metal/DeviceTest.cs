@@ -14,15 +14,15 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace MonoTouchFixtures.Metal {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class DeviceTest {
-		
+
 		[Test]
 		public void System ()
 		{
-			TestRuntime.AssertXcodeVersion (6,0);
+			TestRuntime.AssertXcodeVersion (6, 0);
 
 			var d = MTLDevice.SystemDefault;
 			// some older hardware won't have a default

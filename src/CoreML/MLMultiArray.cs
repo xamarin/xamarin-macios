@@ -15,7 +15,7 @@ using ObjCRuntime;
 
 namespace CoreML {
 	public partial class MLMultiArray {
-		static NSNumber[] ConvertArray (nint[] value)
+		static NSNumber [] ConvertArray (nint [] value)
 		{
 			if (value is null)
 				return Array.Empty<NSNumber> ();
@@ -24,7 +24,7 @@ namespace CoreML {
 		}
 
 		// NSArray<NSNumber> => nint[]
-		internal static nint[] ConvertArray (IntPtr handle)
+		internal static nint [] ConvertArray (IntPtr handle)
 		{
 			return NSArray.ArrayFromHandle<nint> (handle, (v) => (nint) Messaging.IntPtr_objc_msgSend (v, Selector.GetHandle ("integerValue")));
 		}
@@ -44,7 +44,7 @@ namespace CoreML {
 			set { SetObject (value, idx); }
 		}
 
-		public NSNumber this [params nint[] indices] {
+		public NSNumber this [params nint [] indices] {
 			get { return GetObject (indices); }
 			set { SetObject (value, indices); }
 		}
@@ -54,25 +54,25 @@ namespace CoreML {
 			set { SetObject (value, key); }
 		}
 
-		public NSNumber GetObject (params nint[] indices)
+		public NSNumber GetObject (params nint [] indices)
 		{
 			using (var arr = NSArray.FromNSObjects<nint> (NSNumber.FromNInt, indices))
 				return GetObjectInternal (arr.GetHandle ());
 		}
 
-		public void SetObject (NSNumber obj, params nint[] indices)
+		public void SetObject (NSNumber obj, params nint [] indices)
 		{
 			using (var arr = NSArray.FromNSObjects<nint> (NSNumber.FromNInt, indices))
 				SetObjectInternal (obj, arr.GetHandle ());
 		}
 
-		public nint[] Shape {
+		public nint [] Shape {
 			get {
 				return ConvertArray (_Shape);
 			}
 		}
 
-		public nint[] Strides {
+		public nint [] Strides {
 			get {
 				return ConvertArray (_Strides);
 			}

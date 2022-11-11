@@ -16,7 +16,7 @@ namespace MonoTouchFixtures.WebKit {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertXcodeVersion (11,0);
+			TestRuntime.AssertXcodeVersion (11, 0);
 		}
 
 		[Test]

@@ -43,7 +43,7 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreText {
 
-#region Typesetter Values
+	#region Typesetter Values
 
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -65,7 +65,7 @@ namespace CoreText {
 			Dictionary = dictionary;
 		}
 
-		public NSDictionary Dictionary {get; private set;}
+		public NSDictionary Dictionary { get; private set; }
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -79,7 +79,7 @@ namespace CoreText {
 #endif
 		public bool DisableBidiProcessing {
 			get {
-				return CFDictionary.GetBooleanValue (Dictionary.Handle, 
+				return CFDictionary.GetBooleanValue (Dictionary.Handle,
 						CTTypesetterOptionKey.DisableBidiProcessing.Handle);
 			}
 			set {
@@ -91,8 +91,8 @@ namespace CoreText {
 
 		// The documentation says this is an NSNumber (not exactly which type), so 'int' is as good as anything else.
 		public int? ForceEmbeddingLevel {
-			get {return Adapter.GetInt32Value (Dictionary, CTTypesetterOptionKey.ForceEmbeddingLevel);}
-			set {Adapter.SetValue (Dictionary, CTTypesetterOptionKey.ForceEmbeddingLevel, value);}
+			get { return Adapter.GetInt32Value (Dictionary, CTTypesetterOptionKey.ForceEmbeddingLevel); }
+			set { Adapter.SetValue (Dictionary, CTTypesetterOptionKey.ForceEmbeddingLevel, value); }
 		}
 
 #if NET
@@ -101,10 +101,10 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (5,0)]
-		[TV (12,0)]
-		[Mac (10,14)]
-		[iOS (12,0)]
+		[Watch (5, 0)]
+		[TV (12, 0)]
+		[Mac (10, 14)]
+		[iOS (12, 0)]
 #endif
 		public bool AllowUnboundedLayout {
 			get => CFDictionary.GetBooleanValue (Dictionary.Handle, CTTypesetterOptionKey.AllowUnboundedLayout.Handle);
@@ -123,7 +123,7 @@ namespace CoreText {
 			return self.Dictionary.GetHandle ();
 		}
 	}
-#endregion
+	#endregion
 
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -138,7 +138,7 @@ namespace CoreText {
 		{
 		}
 
-#region Typesetter Creation
+		#region Typesetter Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTTypesetterCreateWithAttributedString (IntPtr @string);
 		public CTTypesetter (NSAttributedString value)
@@ -152,9 +152,9 @@ namespace CoreText {
 			: base (CTTypesetterCreateWithAttributedStringAndOptions (Runtime.ThrowOnNull (value, nameof (value)).Handle, options.GetHandle ()), true, true)
 		{
 		}
-#endregion
+		#endregion
 
-#region Typeset Line Creation
+		#region Typeset Line Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTTypesetterCreateLineWithOffset (IntPtr typesetter, NSRange stringRange, double offset);
 		public CTLine? GetLine (NSRange stringRange, double offset)
@@ -178,9 +178,9 @@ namespace CoreText {
 
 			return new CTLine (h, true);
 		}
-#endregion
+		#endregion
 
-#region Typeset Line Breaking
+		#region Typeset Line Breaking
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern nint CTTypesetterSuggestLineBreakWithOffset (IntPtr typesetter, nint startIndex, double width, double offset);
 		public nint SuggestLineBreak (int startIndex, double width, double offset)
@@ -208,6 +208,6 @@ namespace CoreText {
 		{
 			return CTTypesetterSuggestClusterBreak (Handle, startIndex, width);
 		}
-#endregion
+		#endregion
 	}
 }

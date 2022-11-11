@@ -790,13 +790,16 @@ namespace Xamarin.Bundler {
 				state.End ();
 			}
 
+			string initialization_method = null;
 			if (App.Registrar == RegistrarMode.Static) {
 				registrarPath = Path.Combine (App.Cache.Location, "registrar.m");
 				var registrarH = Path.Combine (App.Cache.Location, "registrar.h");
-				BuildTarget.StaticRegistrar.Generate (BuildTarget.Resolver.ResolverCache.Values, registrarH, registrarPath);
+				BuildTarget.StaticRegistrar.Generate (BuildTarget.Resolver.ResolverCache.Values, registrarH, registrarPath, out initialization_method);
 
 				var platform_assembly = BuildTarget.Resolver.ResolverCache.First ((v) => v.Value.Name.Name == BuildTarget.StaticRegistrar.PlatformAssembly).Value;
 				Frameworks.Gather (App, platform_assembly, BuildTarget.Frameworks, BuildTarget.WeakFrameworks);
+			} else if (App.Registrar == RegistrarMode.PartialStatic) {
+				initialization_method = BuildTarget.StaticRegistrar.GetInitializationMethodName ("Xamarin.Mac");
 			}
 
 			var str_cflags = RunPkgConfig ("--cflags");
@@ -821,7 +824,10 @@ namespace Xamarin.Bundler {
 						Directory.Delete (abiDir, true);
 
 					var main = Path.Combine (abiDir, $"main.m");
-					BuildTarget.GenerateMain (ApplePlatform.MacOSX, abi, main, null);
+					var registration_methods = new List<string> ();
+					if (!string.IsNullOrEmpty (initialization_method))
+						registration_methods.Add (initialization_method);
+					BuildTarget.GenerateMain (ApplePlatform.MacOSX, abi, main, registration_methods);
 
 					var args = new List<string> ();
 					if (App.EnableDebug)

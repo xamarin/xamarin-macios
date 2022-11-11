@@ -6,12 +6,10 @@ using AppKit;
 using ObjCRuntime;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSPathControlTests
-	{
+	public class NSPathControlTests {
 		[Test]
 		public void NSPathControlShouldSetEditable ()
 		{
@@ -31,7 +29,7 @@ namespace Xamarin.Mac.Tests
 
 			var control = new NSPathControl ();
 			var allowedTypes = control.AllowedTypes;
-			control.AllowedTypes = new [] { (NSString)"exe", (NSString)"jpg" };
+			control.AllowedTypes = new [] { (NSString) "exe", (NSString) "jpg" };
 
 			Assert.IsTrue (control.AllowedTypes != allowedTypes, "NSPathControlShouldSetAllowedTypes - Failed to change AllowedTypes property");
 		}

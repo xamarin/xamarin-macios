@@ -17,7 +17,7 @@ using NUnit.Framework;
 using System.Threading;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	// we want the test to be availble if we use the linker
 	[Preserve (AllMembers = true)]
@@ -116,8 +116,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.IsTrue (didRun, "didRun");
 		}
 
-		class FinalizerNotifier
-		{
+		class FinalizerNotifier {
 			public Action Action;
 			public FinalizerNotifier (Action action)
 			{

@@ -17,21 +17,21 @@ namespace MonoTouchFixtures.Metal {
 
 		[SetUp]
 		public void SetUp ()
-		{ 
+		{
 			TestRuntime.AssertXcodeVersion (12, 0);
 			descriptor = new MTLCounterSampleBufferDescriptor ();
 		}
 
 		[TearDown]
 		public void TearDown ()
-		{ 
+		{
 			descriptor?.Dispose ();
 			descriptor = null;
 		}
 
 		[Test]
 		public void CounterSetTest ()
-		{ 
+		{
 			Assert.DoesNotThrow (() => {
 				descriptor.CounterSet = null; // we are testing if the property works, so setting to null does test the selector
 			}, "Setter");

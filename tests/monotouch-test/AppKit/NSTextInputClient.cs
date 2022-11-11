@@ -6,12 +6,10 @@ using AppKit;
 using CoreGraphics;
 using Foundation;
 
-namespace apitest
-{
+namespace apitest {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSTextInputClient
-	{
+	public class NSTextInputClient {
 		NSTextView textView;
 
 		[SetUp]
@@ -31,7 +29,7 @@ namespace apitest
 		[Test]
 		public void NSTextInputClient_ShouldInsertText ()
 		{
-			textView.InsertText ((NSString)"Test", new NSRange (5, 4));
+			textView.InsertText ((NSString) "Test", new NSRange (5, 4));
 
 			Assert.AreEqual (textView.Value, "This Test new string", "NSTextInputClient_ShouldInsertText - Failed to insert text");
 		}
@@ -39,7 +37,7 @@ namespace apitest
 		[Test]
 		public void NSTextInputClient_ShouldMarkText ()
 		{
-			textView.SetMarkedText ((NSString)"Testing", new NSRange (0, 10), new NSRange (5, 4));
+			textView.SetMarkedText ((NSString) "Testing", new NSRange (0, 10), new NSRange (5, 4));
 
 			Assert.IsTrue (textView.HasMarkedText, "NSTextInputClient_ShouldMarkText - Failed to mark text");
 			Assert.AreEqual (textView.MarkedRange, new NSRange (5, 7));
@@ -56,7 +54,7 @@ namespace apitest
 		[Test]
 		public void NSTextInputClient_ShouldUnmarkText ()
 		{
-			textView.SetMarkedText ((NSString)"Testing", new NSRange (0, 10), new NSRange (5, 4));
+			textView.SetMarkedText ((NSString) "Testing", new NSRange (0, 10), new NSRange (5, 4));
 
 			Assert.IsTrue (textView.HasMarkedText, "NSTextInputClient_ShouldUnMarkText - Failed to mark text");
 

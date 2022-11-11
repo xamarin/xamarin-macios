@@ -28,9 +28,9 @@ namespace MonoTouchFixtures.CoreBluetooth {
 
 			// crash at dispose time in beta 4 (and 5)
 			// the type is undocumented but I think it's should be abstract (not user creatable)
-//			using (var p = new CBPeer ()) {
-//				Assert.NotNull (p);
-//			}
+			//			using (var p = new CBPeer ()) {
+			//				Assert.NotNull (p);
+			//			}
 		}
 	}
 }

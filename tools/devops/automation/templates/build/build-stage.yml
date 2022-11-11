@@ -36,6 +36,14 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 - name: xcodeChannel
   type: string
 
@@ -52,6 +60,8 @@ jobs:
   steps:
   - template: ../common/configure.yml
     parameters: 
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
       uploadArtifacts: true
       enableDotnet: ${{ parameters.enableDotnet }}
 
@@ -133,6 +143,8 @@ jobs:
   - template: build-pkgs.yml
     parameters:
       isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
       runTests: ${{ parameters.runTests }}
       runDeviceTests: ${{ parameters.runDeviceTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}

@@ -3,8 +3,7 @@ using System.Threading.Tasks;
 using CloudKit;
 using ObjCRuntime;
 
-namespace Foundation 
-{
+namespace Foundation {
 #if MONOMAC || IOS
 	public partial class NSItemProvider
 	{

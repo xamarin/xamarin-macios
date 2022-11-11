@@ -40,8 +40,7 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void TestCreateNullDomain ()
 		{
-			using (var newDescriptor = NWBrowserDescriptor.CreateBonjourService (type))
-			{
+			using (var newDescriptor = NWBrowserDescriptor.CreateBonjourService (type)) {
 				Assert.AreEqual (type, descriptor.BonjourType, "service type");
 				Assert.IsNull (newDescriptor.BonjourDomain);
 			}
@@ -60,8 +59,8 @@ namespace MonoTouchFixtures.Network {
 			Assert.Throws<ArgumentNullException> (() => {
 				using var appServiceDescriptor = NWBrowserDescriptor.CreateApplicationServiceName (null);
 			}, "App service is null");
-			
-			var appName = "myService"; 
+
+			var appName = "myService";
 			using var appServiceDescriptor = NWBrowserDescriptor.CreateApplicationServiceName (appName);
 			Assert.AreEqual (appName, appServiceDescriptor.ApplicationServiceName);
 		}

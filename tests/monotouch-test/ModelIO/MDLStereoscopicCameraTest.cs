@@ -37,13 +37,11 @@ using VectorFloat3 = global::OpenTK.NVector3;
 using Bindings.Test;
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.ModelIO
-{
+namespace MonoTouchFixtures.ModelIO {
 	[TestFixture]
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
-	public class MDLStereoscopicCameraTest
-	{
+	public class MDLStereoscopicCameraTest {
 		[OneTimeSetUp]
 		public void Setup ()
 		{
