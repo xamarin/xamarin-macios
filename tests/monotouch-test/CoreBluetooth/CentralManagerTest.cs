@@ -22,7 +22,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreBluetooth {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CBCentralManagerTest {
@@ -42,11 +42,11 @@ namespace MonoTouchFixtures.CoreBluetooth {
 			}
 
 #if !XAMCORE_3_0 && !NET
-			public override void RetrievedPeripherals (CBCentralManager central, CBPeripheral[] peripherals)
+			public override void RetrievedPeripherals (CBCentralManager central, CBPeripheral [] peripherals)
 			{
 			}
 
-			public override void RetrievedConnectedPeripherals (CBCentralManager central, CBPeripheral[] peripherals)
+			public override void RetrievedConnectedPeripherals (CBCentralManager central, CBPeripheral [] peripherals)
 			{
 			}
 #endif // !XAMCORE_3_0 && !NET
@@ -71,7 +71,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 
 		CBCentralManager mgr;
 		ManagerDelegate mgrDelegate;
-		CBUUID heartRateMonitorUUID; 
+		CBUUID heartRateMonitorUUID;
 
 		[SetUp]
 		public void SetUp ()
@@ -96,7 +96,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 			mgrDelegate?.Dispose ();  // make sure that our delegate does not get messages after the mgr was disposed
 			mgr?.Dispose ();
 		}
-			
+
 		[Test]
 		public void Constructors ()
 		{
@@ -107,7 +107,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 		[Test]
 		public void ScanForPeripherals ()
 		{
-			mgr.ScanForPeripherals ((CBUUID[])null, (NSDictionary)null);
+			mgr.ScanForPeripherals ((CBUUID []) null, (NSDictionary) null);
 		}
 
 		[Test]

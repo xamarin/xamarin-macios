@@ -102,6 +102,7 @@ namespace Xamarin.Bundler {
 		public Target Target;
 		public string RegistrarCodePath;
 		public string RegistrarHeaderPath;
+		public List<string> RegistrationMethods;
 
 		public override IEnumerable<string> Inputs {
 			get {
@@ -119,7 +120,8 @@ namespace Xamarin.Bundler {
 
 		protected override void Execute ()
 		{
-			Target.StaticRegistrar.Generate (Target.Assemblies.Select ((a) => a.AssemblyDefinition), RegistrarHeaderPath, RegistrarCodePath);
+			Target.StaticRegistrar.Generate (Target.Assemblies.Select ((a) => a.AssemblyDefinition), RegistrarHeaderPath, RegistrarCodePath, out var initialization_name);
+			RegistrationMethods.Add (initialization_name);
 		}
 	}
 

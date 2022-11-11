@@ -31,12 +31,10 @@ using VectorFloat3 = global::OpenTK.NVector3;
 using Bindings.Test;
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.GamePlayKit
-{
+namespace MonoTouchFixtures.GamePlayKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class GKAgent3DTest
-	{
+	public class GKAgent3DTest {
 		[SetUp]
 		public void Setup ()
 		{
@@ -73,7 +71,7 @@ namespace MonoTouchFixtures.GamePlayKit
 #endif
 				var mat3x3 = new MatrixFloat3x3 (1, 2, 3,
 												 4, 5, 6,
-												 7, 8, 9);;
+												 7, 8, 9); ;
 
 #if !NET
 				obj.Rotation = mat;

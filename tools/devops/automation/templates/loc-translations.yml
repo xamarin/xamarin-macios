@@ -3,10 +3,20 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 steps:
 
 - template: sdk-unified/steps/checkout/v1.yml@yaml-templates
   parameters:
+    resource: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
     clean: true
     submodules: recursive
     path: s/xamarin-macios

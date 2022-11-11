@@ -42,7 +42,7 @@ namespace Foundation {
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct NSDecimal
-#if !COREBUILD 
+#if !COREBUILD
 		: IEquatable<NSDecimal>
 #endif
 	{
@@ -56,63 +56,63 @@ namespace Foundation {
 		static extern nint NSDecimalCompare (ref NSDecimal left, ref NSDecimal right);
 		public static NSComparisonResult Compare (ref NSDecimal left, ref NSDecimal right)
 		{
-			return (NSComparisonResult)(long)NSDecimalCompare (ref left, ref right);
+			return (NSComparisonResult) (long) NSDecimalCompare (ref left, ref right);
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
 		static extern void NSDecimalRound (out NSDecimal result, ref NSDecimal number, nint scale, nuint mode);
 		public static void Round (out NSDecimal result, ref NSDecimal number, nint scale, NSRoundingMode mode)
 		{
-			NSDecimalRound (out result, ref number, scale, (nuint)(ulong)mode);
+			NSDecimalRound (out result, ref number, scale, (nuint) (ulong) mode);
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
 		static extern nuint NSDecimalNormalize (ref NSDecimal number1, ref NSDecimal number2);
 		public static NSCalculationError Normalize (ref NSDecimal number1, ref NSDecimal number2)
 		{
-			return (NSCalculationError)(ulong)NSDecimalNormalize (ref number1, ref number2);
+			return (NSCalculationError) (ulong) NSDecimalNormalize (ref number1, ref number2);
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
 		static extern nuint NSDecimalAdd (out NSDecimal result, ref NSDecimal left, ref NSDecimal right, nuint mode);
 		public static NSCalculationError Add (out NSDecimal result, ref NSDecimal left, ref NSDecimal right, NSRoundingMode mode)
 		{
-			return (NSCalculationError)(ulong)NSDecimalAdd (out result, ref left, ref right, (nuint)(ulong)mode);
+			return (NSCalculationError) (ulong) NSDecimalAdd (out result, ref left, ref right, (nuint) (ulong) mode);
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
 		static extern nuint NSDecimalSubtract (out NSDecimal result, ref NSDecimal left, ref NSDecimal right, nuint mode);
 		public static NSCalculationError Subtract (out NSDecimal result, ref NSDecimal left, ref NSDecimal right, NSRoundingMode mode)
 		{
-			return (NSCalculationError)(ulong)NSDecimalSubtract (out result, ref left, ref right, (nuint)(ulong)mode);
+			return (NSCalculationError) (ulong) NSDecimalSubtract (out result, ref left, ref right, (nuint) (ulong) mode);
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
 		static extern nuint NSDecimalMultiply (out NSDecimal result, ref NSDecimal left, ref NSDecimal right, nuint mode);
 		public static NSCalculationError Multiply (out NSDecimal result, ref NSDecimal left, ref NSDecimal right, NSRoundingMode mode)
 		{
-			return (NSCalculationError)(ulong)NSDecimalMultiply (out result, ref left, ref right, (nuint)(ulong)mode);
+			return (NSCalculationError) (ulong) NSDecimalMultiply (out result, ref left, ref right, (nuint) (ulong) mode);
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
 		static extern nuint NSDecimalDivide (out NSDecimal result, ref NSDecimal left, ref NSDecimal right, nuint mode);
 		public static NSCalculationError Divide (out NSDecimal result, ref NSDecimal left, ref NSDecimal right, NSRoundingMode mode)
 		{
-			return (NSCalculationError)(ulong)NSDecimalDivide (out result, ref left, ref right, (nuint)(ulong)mode);
+			return (NSCalculationError) (ulong) NSDecimalDivide (out result, ref left, ref right, (nuint) (ulong) mode);
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
 		static extern nuint NSDecimalPower (out NSDecimal result, ref NSDecimal number, nint power, nuint mode);
 		public static NSCalculationError Power (out NSDecimal result, ref NSDecimal number, nint power, NSRoundingMode mode)
 		{
-			return (NSCalculationError)(ulong)NSDecimalPower (out result, ref number, power, (nuint)(ulong)mode);
+			return (NSCalculationError) (ulong) NSDecimalPower (out result, ref number, power, (nuint) (ulong) mode);
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
 		static extern nuint NSDecimalMultiplyByPowerOf10 (out NSDecimal result, ref NSDecimal number, short power10, nuint mode);
 		public static NSCalculationError MultiplyByPowerOf10 (out NSDecimal result, ref NSDecimal number, short power10, NSRoundingMode mode)
 		{
-			return (NSCalculationError)(ulong)NSDecimalMultiplyByPowerOf10 (out result, ref number, power10, (nuint)(ulong)mode);
+			return (NSCalculationError) (ulong) NSDecimalMultiplyByPowerOf10 (out result, ref number, power10, (nuint) (ulong) mode);
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
@@ -164,7 +164,7 @@ namespace Foundation {
 		{
 			return Compare (ref left, ref right) != NSComparisonResult.Same;
 		}
-			
+
 		public static implicit operator NSDecimal (int value)
 		{
 			using var number = new NSNumber (value);
@@ -222,7 +222,7 @@ namespace Foundation {
 		{
 			return obj is NSDecimal other && this == other;
 		}
-		
+
 		public override int GetHashCode ()
 		{
 			// this is heavy weight :( but it's the only way to follow .NET rule where:

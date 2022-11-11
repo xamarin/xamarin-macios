@@ -5,13 +5,11 @@ using CloudKit;
 using ObjCRuntime;
 using Xamarin.Utils;
 
-namespace MonoTouchFixtures.CloudKit
-{
+namespace MonoTouchFixtures.CloudKit {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CKFetchNotificationChangesOperationTest
-	{
+	public class CKFetchNotificationChangesOperationTest {
 		CKServerChangeToken token = null;
 		CKFetchNotificationChangesOperation op = null;
 
@@ -32,14 +30,14 @@ namespace MonoTouchFixtures.CloudKit
 		[Test]
 		public void TestNotificationChangedSetter ()
 		{
-			op.NotificationChanged = (obj) => { Console.WriteLine ("Notification");};
+			op.NotificationChanged = (obj) => { Console.WriteLine ("Notification"); };
 			Assert.NotNull (op.NotificationChanged);
 		}
 
 		[Test]
 		public void TestCompletedSetter ()
 		{
-			op.Completed = (arg1, arg2) => { Console.WriteLine ("Completed");};
+			op.Completed = (arg1, arg2) => { Console.WriteLine ("Completed"); };
 			Assert.NotNull (op.Completed);
 		}
 

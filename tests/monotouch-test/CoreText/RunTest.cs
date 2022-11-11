@@ -90,7 +90,7 @@ namespace MonoTouchFixtures.CoreText {
 		[Test]
 		public void GetBaseAdvancesAndOrigins ()
 		{
-			TestRuntime.AssertXcodeVersion (11,0);
+			TestRuntime.AssertXcodeVersion (11, 0);
 
 			using (var attributedString = new NSAttributedString ("Hello world."))
 			using (var line = new CTLine (attributedString)) {

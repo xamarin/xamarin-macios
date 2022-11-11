@@ -18,11 +18,11 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class HttpCookieTest {
-		
+
 		// https://bugzilla.xamarin.com/show_bug.cgi?id=3603
 		[Test]
 		public void NSDictionaryCtor ()
@@ -31,15 +31,15 @@ namespace MonoTouchFixtures.Foundation {
 				props.Add (NSHttpCookie.KeyOriginUrl, new NSString ("http://yodawg.com"));
 				props.Add (NSHttpCookie.KeyName, new NSString ("iherd"));
 				props.Add (NSHttpCookie.KeyValue, new NSString ("ulikecookies"));
-				
+
 				// an invalid NSDictionary returns null from Objective-C but that
 				// results in an 'empty' instance inside MonoTouch
 				Assert.Throws<Exception> (() => new NSHttpCookie (props), "ctor");
-	
+
 				props.Add (NSHttpCookie.KeyPath, new NSString ("/"));
 				using (var cookie = new NSHttpCookie (props)) {
 					Assert.That (cookie.Handle, Is.Not.EqualTo (IntPtr.Zero), "ctor");
-					
+
 					Assert.That (cookie.Domain, Is.EqualTo ("yodawg.com"), "Domain");
 					Assert.That (cookie.Name, Is.EqualTo ("iherd"), "Name");
 					Assert.That (cookie.Value, Is.EqualTo ("ulikecookies"), "Value");
@@ -47,7 +47,7 @@ namespace MonoTouchFixtures.Foundation {
 				}
 			}
 		}
-		
+
 		[Test]
 		public void CookieFromProperties ()
 		{
@@ -55,14 +55,14 @@ namespace MonoTouchFixtures.Foundation {
 				props.Add (NSHttpCookie.KeyOriginUrl, new NSString ("http://yodawg.com"));
 				props.Add (NSHttpCookie.KeyName, new NSString ("iherd"));
 				props.Add (NSHttpCookie.KeyValue, new NSString ("ulikecookies"));
-				
+
 				var cookie = NSHttpCookie.CookieFromProperties (props);
 				Assert.Null (cookie, "missing path");
-	
+
 				props.Add (NSHttpCookie.KeyPath, new NSString ("/"));
 				using (cookie = NSHttpCookie.CookieFromProperties (props)) {
 					Assert.NotNull (cookie, "w/path");
-		
+
 					Assert.That (cookie.Domain, Is.EqualTo ("yodawg.com"), "Domain");
 					Assert.That (cookie.Name, Is.EqualTo ("iherd"), "Name");
 					Assert.That (cookie.Value, Is.EqualTo ("ulikecookies"), "Value");
@@ -70,7 +70,7 @@ namespace MonoTouchFixtures.Foundation {
 				}
 			}
 		}
-		
+
 		[Test]
 		public void NiceTwoCtor ()
 		{
@@ -81,7 +81,7 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.That (cookie.Domain, Is.EqualTo ("*"), "Domain");
 			}
 		}
-		
+
 		[Test]
 		public void NiceThreeCtor ()
 		{
@@ -135,7 +135,7 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.That (cookie.Version, Is.EqualTo ((nuint) 0), "Version");
 			}
 		}
-		
+
 		[Test]
 		public void DotNetInteropMax ()
 		{

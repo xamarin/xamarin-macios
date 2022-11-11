@@ -27,7 +27,7 @@ namespace MonoTouchFixtures.Network {
 		public void SetUp ()
 		{
 			descriptor = NWBrowserDescriptor.CreateBonjourService (type, domain);
-			using (var parameters = new NWParameters { IncludePeerToPeer = true})
+			using (var parameters = new NWParameters { IncludePeerToPeer = true })
 				browser = new NWBrowser (descriptor);
 			browser.SetDispatchQueue (DispatchQueue.DefaultGlobalQueue);
 		}
@@ -63,7 +63,8 @@ namespace MonoTouchFixtures.Network {
 		}
 
 		[Test]
-		public void TestStartNoQ () {
+		public void TestStartNoQ ()
+		{
 			using (var newBrowser = new NWBrowser (descriptor))
 				Assert.Throws<InvalidOperationException> (() => newBrowser.Start ());
 		}

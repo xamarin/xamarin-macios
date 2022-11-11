@@ -26,7 +26,7 @@
 using System;
 using ObjCRuntime;
 
-namespace Foundation  {
+namespace Foundation {
 
 	[Native]
 	public enum NSStringEncoding : ulong {
@@ -84,15 +84,15 @@ namespace Foundation  {
 	[NoiOS][NoTV][NoMacCatalyst]
 	public enum NSBundleExecutableArchitecture {
 #endif
-		I386   = 0x00000007,
-		PPC    = 0x00000012,
+		I386 = 0x00000007,
+		PPC = 0x00000012,
 		X86_64 = 0x01000007,
-		PPC64  = 0x01000012,
-		[Mac (11,0)]
+		PPC64 = 0x01000012,
+		[Mac (11, 0)]
 #if !XAMCORE_3_0
-		[Watch (7,0), TV (14,0), iOS (14,0)]
+		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 #endif
-		ARM64  = 0x0100000c,
+		ARM64 = 0x0100000c,
 	}
 #endif
 
@@ -120,7 +120,7 @@ namespace Foundation  {
 	public enum NSUrlCacheStoragePolicy : ulong {
 		Allowed, AllowedInMemoryOnly, NotAllowed
 	}
-	
+
 	[Native]
 	public enum NSStreamStatus : ulong {
 		NotOpen = 0,
@@ -176,7 +176,7 @@ namespace Foundation  {
 	public enum NSNetServicesStatus : long {
 		UnknownError = -72000,
 		CollisionError = -72001,
-		NotFoundError	= -72002,
+		NotFoundError = -72002,
 		ActivityInProgress = -72003,
 		BadArgumentError = -72004,
 		CancelledError = -72005,
@@ -197,14 +197,17 @@ namespace Foundation  {
 		None,
 		Short,
 		Medium,
-		Long, 
+		Long,
 		Full
 	}
 
 	[Native]
 	public enum NSDateFormatterBehavior : ulong {
 		Default = 0,
-		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
+		[NoiOS]
+		[NoTV]
+		[NoWatch]
+		[NoMacCatalyst]
 		Mode_10_0 = 1000,
 		Mode_10_4 = 1040,
 	}
@@ -217,7 +220,7 @@ namespace Foundation  {
 	[Flags]
 	[Native]
 	public enum NSCalendarUnit : ulong {
-		Era = 2, 
+		Era = 2,
 		Year = 4,
 		Month = 8,
 		Day = 16,
@@ -244,7 +247,7 @@ namespace Foundation  {
 	[Flags]
 	[Native]
 	public enum NSDataReadingOptions : ulong {
-		Mapped =   1 << 0,
+		Mapped = 1 << 0,
 		Uncached = 1 << 1,
 #if !NET
 		[Obsolete ("This option is unavailable.")]
@@ -258,19 +261,19 @@ namespace Foundation  {
 	public enum NSDataWritingOptions : ulong {
 		Atomic = 1,
 
-		WithoutOverwriting  = 2,
-		[Mac (11,0)]
+		WithoutOverwriting = 2,
+		[Mac (11, 0)]
 		FileProtectionNone = 0x10000000,
-		[Mac (11,0)]
+		[Mac (11, 0)]
 		FileProtectionComplete = 0x20000000,
-		[Mac (11,0)]
+		[Mac (11, 0)]
 		FileProtectionMask = 0xf0000000,
-		[Mac (11,0)]
+		[Mac (11, 0)]
 		FileProtectionCompleteUnlessOpen = 0x30000000,
-		[Mac (11,0)]
+		[Mac (11, 0)]
 		FileProtectionCompleteUntilFirstUserAuthentication = 0x40000000,
 	}
-	
+
 	public delegate void NSSetEnumerator (NSObject obj, ref bool stop);
 
 	[Native]
@@ -300,14 +303,14 @@ namespace Foundation  {
 
 	[Native]
 	public enum NSExpressionType : ulong {
-		ConstantValue = 0, 
-		EvaluatedObject, 
-		Variable, 
-		KeyPath, 
+		ConstantValue = 0,
+		EvaluatedObject,
+		Variable,
+		KeyPath,
 		Function,
-		UnionSet, 
-		IntersectSet, 
-		MinusSet, 
+		UnionSet,
+		IntersectSet,
+		MinusSet,
 		Subquery = 13,
 		NSAggregate,
 		AnyKey = 15,
@@ -317,7 +320,7 @@ namespace Foundation  {
 
 	public enum NSCocoaError : int {
 		None,
-			
+
 		FileNoSuchFile = 4,
 		FileLocking = 255,
 		FileReadUnknown = 256,
@@ -356,8 +359,8 @@ namespace Foundation  {
 		FileErrorMaximum = 1023,
 		ValidationErrorMinimum = 1024,
 		ValidationErrorMaximum = 2047,
-		ExecutableErrorMinimum  = 3584,
-		ExecutableErrorMaximum  = 3839,
+		ExecutableErrorMinimum = 3584,
+		ExecutableErrorMaximum = 3839,
 		FormattingErrorMinimum = 2048,
 		FormattingErrorMaximum = 2559,
 
@@ -366,26 +369,26 @@ namespace Foundation  {
 		PropertyListReadStream = 3842,
 		PropertyListWriteStream = 3851,
 		PropertyListWriteInvalid = 3852,
-		PropertyListErrorMinimum  = 3840,
-		PropertyListErrorMaximum  = 4095,
+		PropertyListErrorMinimum = 3840,
+		PropertyListErrorMaximum = 4095,
 
-		XpcConnectionInterrupted  = 4097,
-		XpcConnectionInvalid  = 4099,
-		XpcConnectionReplyInvalid  = 4101,
+		XpcConnectionInterrupted = 4097,
+		XpcConnectionInvalid = 4099,
+		XpcConnectionReplyInvalid = 4101,
 		XpcConnectionCodeSigningRequirementFailure = 4102,
-		XpcConnectionErrorMinimum  = 4096,
-		XpcConnectionErrorMaximum  = 4224,
+		XpcConnectionErrorMinimum = 4096,
+		XpcConnectionErrorMaximum = 4224,
 
 		UbiquitousFileUnavailable = 4353,
 		UbiquitousFileNotUploadedDueToQuota = 4354,
-		UbiquitousFileUbiquityServerNotAvailable  = 4355,
-		UbiquitousFileErrorMinimum  = 4352,
-		UbiquitousFileErrorMaximum  = 4607,
+		UbiquitousFileUbiquityServerNotAvailable = 4355,
+		UbiquitousFileErrorMinimum = 4352,
+		UbiquitousFileErrorMaximum = 4607,
 
-		UserActivityHandoffFailedError = 4608,	
+		UserActivityHandoffFailedError = 4608,
 		UserActivityConnectionUnavailableError = 4609,
 		UserActivityRemoteApplicationTimedOutError = 4610,
-		UserActivityHandoffUserInfoTooLargeError = 4611, 
+		UserActivityHandoffUserInfoTooLargeError = 4611,
 
 		UserActivityErrorMinimum = 4608,
 		UserActivityErrorMaximum = 4863,
@@ -417,73 +420,73 @@ namespace Foundation  {
 		CompressionErrorMinimum = 5376,
 		CompressionErrorMaximum = 5503,
 	}
-	
+
 	// note: Make sure names are identical/consistent with CFNetworkErrors.*
 	// they share the same values but there's more entries in CFNetworkErrors
 	// so anything new probably already exists over there
 	public enum NSUrlError : int {
-		Unknown = 			-1,
+		Unknown = -1,
 
 		BackgroundSessionRequiresSharedContainer = -995,
 		BackgroundSessionInUseByAnotherProcess = -996,
 		BackgroundSessionWasDisconnected = -997,
 
-		Cancelled = 			-999,
-		BadURL = 				-1000,
-		TimedOut = 			-1001,
-		UnsupportedURL = 			-1002,
-		CannotFindHost = 			-1003,
-		CannotConnectToHost = 		-1004,
-		NetworkConnectionLost = 		-1005,
-		DNSLookupFailed = 		-1006,
-		HTTPTooManyRedirects = 		-1007,
-		ResourceUnavailable = 		-1008,
-		NotConnectedToInternet = 		-1009,
-		RedirectToNonExistentLocation = 	-1010,
-		BadServerResponse = 		-1011,
-		UserCancelledAuthentication = 	-1012,
-		UserAuthenticationRequired = 	-1013,
-		ZeroByteResource = 		-1014,
-		CannotDecodeRawData =             -1015,
-		CannotDecodeContentData =         -1016,
-		CannotParseResponse =             -1017,
+		Cancelled = -999,
+		BadURL = -1000,
+		TimedOut = -1001,
+		UnsupportedURL = -1002,
+		CannotFindHost = -1003,
+		CannotConnectToHost = -1004,
+		NetworkConnectionLost = -1005,
+		DNSLookupFailed = -1006,
+		HTTPTooManyRedirects = -1007,
+		ResourceUnavailable = -1008,
+		NotConnectedToInternet = -1009,
+		RedirectToNonExistentLocation = -1010,
+		BadServerResponse = -1011,
+		UserCancelledAuthentication = -1012,
+		UserAuthenticationRequired = -1013,
+		ZeroByteResource = -1014,
+		CannotDecodeRawData = -1015,
+		CannotDecodeContentData = -1016,
+		CannotParseResponse = -1017,
 		InternationalRoamingOff = -1018,
 		CallIsActive = -1019,
 		DataNotAllowed = -1020,
 		RequestBodyStreamExhausted = -1021,
 		AppTransportSecurityRequiresSecureConnection = -1022,
 
-		FileDoesNotExist = 		-1100,
-		FileIsDirectory = 		-1101,
-		NoPermissionsToReadFile = 	-1102,
-		DataLengthExceedsMaximum =	-1103,
-		FileOutsideSafeArea = 	-1104,
+		FileDoesNotExist = -1100,
+		FileIsDirectory = -1101,
+		NoPermissionsToReadFile = -1102,
+		DataLengthExceedsMaximum = -1103,
+		FileOutsideSafeArea = -1104,
 
-		SecureConnectionFailed = 		-1200,
-		ServerCertificateHasBadDate = 	-1201,
-		ServerCertificateUntrusted = 	-1202,
+		SecureConnectionFailed = -1200,
+		ServerCertificateHasBadDate = -1201,
+		ServerCertificateUntrusted = -1202,
 		ServerCertificateHasUnknownRoot = -1203,
-		ServerCertificateNotYetValid = 	-1204,
-		ClientCertificateRejected = 	-1205,
+		ServerCertificateNotYetValid = -1204,
+		ClientCertificateRejected = -1205,
 		ClientCertificateRequired = -1206,
 
-		CannotLoadFromNetwork = 		-2000,
+		CannotLoadFromNetwork = -2000,
 
 		// Download and file I/O errors
-		CannotCreateFile = 		-3000,
-		CannotOpenFile = 			-3001,
-		CannotCloseFile = 		-3002,
-		CannotWriteToFile = 		-3003,
-		CannotRemoveFile = 		-3004,
-		CannotMoveFile = 			-3005,
+		CannotCreateFile = -3000,
+		CannotOpenFile = -3001,
+		CannotCloseFile = -3002,
+		CannotWriteToFile = -3003,
+		CannotRemoveFile = -3004,
+		CannotMoveFile = -3005,
 		DownloadDecodingFailedMidStream = -3006,
-		DownloadDecodingFailedToComplete =-3007,
+		DownloadDecodingFailedToComplete = -3007,
 	}
 
 	[Flags]
 	[Native]
 	public enum NSKeyValueObservingOptions : ulong {
-		New = 1, Old = 2, OldNew = 3, Initial = 4, Prior = 8, 
+		New = 1, Old = 2, OldNew = 3, Initial = 4, Prior = 8,
 	}
 
 	[Native]
@@ -502,7 +505,7 @@ namespace Foundation  {
 		SortConcurrent = 1,
 		Reverse = 2
 	}
-	
+
 	[Flags]
 	[Native]
 	public enum NSStreamEvent : ulong {
@@ -513,7 +516,7 @@ namespace Foundation  {
 		ErrorOccurred = 1 << 3,
 		EndEncountered = 1 << 4
 	}
-	
+
 	[Native]
 	public enum NSComparisonPredicateModifier : ulong {
 		Direct,
@@ -542,25 +545,25 @@ namespace Foundation  {
 	[Flags]
 	[Native]
 	public enum NSComparisonPredicateOptions : ulong {
-		None                 = 0x00,
-		CaseInsensitive      = 1<<0,
-		DiacriticInsensitive = 1<<1,
-		Normalized           = 1<<2
-	}	
-	
+		None = 0x00,
+		CaseInsensitive = 1 << 0,
+		DiacriticInsensitive = 1 << 1,
+		Normalized = 1 << 2
+	}
+
 	[Native]
 	public enum NSCompoundPredicateType : ulong {
 		Not,
 		And,
 		Or
-	}	
+	}
 
 	[Flags]
 	[Native]
 	public enum NSVolumeEnumerationOptions : ulong {
-		None                     = 0,
+		None = 0,
 		// skip                  = 1 << 0,
-		SkipHiddenVolumes        = 1 << 1,
+		SkipHiddenVolumes = 1 << 1,
 		ProduceFileReferenceUrls = 1 << 2,
 	}
 
@@ -569,23 +572,23 @@ namespace Foundation  {
 	public enum NSDirectoryEnumerationOptions : ulong {
 #if !NET
 		[Obsolete ("Use 'None' instead.")]
-		SkipsNone                    = 0,
+		SkipsNone = 0,
 #endif
-		None                         = 0,
+		None = 0,
 		SkipsSubdirectoryDescendants = 1 << 0,
-		SkipsPackageDescendants      = 1 << 1,
-		SkipsHiddenFiles             = 1 << 2,
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		SkipsPackageDescendants = 1 << 1,
+		SkipsHiddenFiles = 1 << 2,
+		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		IncludesDirectoriesPostOrder = 1 << 3,
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-		ProducesRelativePathUrls     = 1 << 4,
+		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		ProducesRelativePathUrls = 1 << 4,
 	}
 
 	[Flags]
 	[Native]
 	public enum NSFileManagerItemReplacementOptions : ulong {
-		None                      = 0,
-		UsingNewMetadataOnly      = 1 << 0,
+		None = 0,
+		UsingNewMetadataOnly = 1 << 0,
 		WithoutDeletingBackupItem = 1 << 1,
 	}
 
@@ -613,7 +616,9 @@ namespace Foundation  {
 		PrinterDescriptionDirectory = 20,
 		SharedPublicDirectory = 21,
 		PreferencePanesDirectory = 22,
-		[NoWatch][NoiOS][NoTV]
+		[NoWatch]
+		[NoiOS]
+		[NoTV]
 		ApplicationScriptsDirectory = 23,
 		ItemReplacementDirectory = 99,
 		AllApplicationsDirectory = 100,
@@ -625,12 +630,12 @@ namespace Foundation  {
 	[Flags]
 	[Native]
 	public enum NSSearchPathDomain : ulong {
-		None    = 0,
-		User    = 1 << 0,
-		Local   = 1 << 1,
+		None = 0,
+		User = 1 << 0,
+		Local = 1 << 1,
 		Network = 1 << 2,
-		System  = 1 << 3,
-		All     = 0x0ffff,
+		System = 1 << 3,
+		All = 0x0ffff,
 	}
 
 	[Native]
@@ -642,21 +647,27 @@ namespace Foundation  {
 	public enum NSCalculationError : ulong {
 		None, PrecisionLoss, Underflow, Overflow, DivideByZero
 	}
-	
+
 	[Flags]
 	[Native]
 	public enum NSStringDrawingOptions : ulong {
 		UsesLineFragmentOrigin = (1 << 0),
 		UsesFontLeading = (1 << 1),
-		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
-		[Deprecated (PlatformName.MacOSX, 10,11)]
+		[NoiOS]
+		[NoTV]
+		[NoWatch]
+		[NoMacCatalyst]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		DisableScreenFontSubstitution = (1 << 2),
 		UsesDeviceMetrics = (1 << 3),
-		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
-		[Deprecated (PlatformName.MacOSX, 10,11)]
+		[NoiOS]
+		[NoTV]
+		[NoWatch]
+		[NoMacCatalyst]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		OneShot = (1 << 4),
 		TruncatesLastVisibleLine = (1 << 5)
-	}		
+	}
 
 	[Native]
 	public enum NSNumberFormatterStyle : ulong {
@@ -666,20 +677,23 @@ namespace Foundation  {
 		Percent = 3,
 		Scientific = 4,
 		SpellOut = 5,
-		[Mac (10,11)]
+		[Mac (10, 11)]
 		OrdinalStyle = 6,
-		[Mac (10,11)]
+		[Mac (10, 11)]
 		CurrencyIsoCodeStyle = 8,
-		[Mac (10,11)]
+		[Mac (10, 11)]
 		CurrencyPluralStyle = 9,
-		[Mac (10,11)]
+		[Mac (10, 11)]
 		CurrencyAccountingStyle = 10,
 	}
 
 	[Native]
 	public enum NSNumberFormatterBehavior : ulong {
 		Default = 0,
-		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
+		[NoiOS]
+		[NoTV]
+		[NoWatch]
+		[NoMacCatalyst]
 		Version_10_0 = 1000,
 		Version_10_4 = 1040
 	}
@@ -726,7 +740,8 @@ namespace Foundation  {
 		ForMoving = 2,
 		ForMerging = 4,
 		ForReplacing = 8,
-		[iOS (8,0)][Mac (10,10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 		ContentIndependentMetadataOnly = 16,
 	}
 
@@ -751,9 +766,9 @@ namespace Foundation  {
 		MutableContainers = 1,
 		MutableLeaves = 2,
 		FragmentsAllowed = 4,
-		[Mac (12,0), iOS (15,0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
+		[Mac (12, 0), iOS (15, 0), TV (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
 		Json5Allowed = 8,
-		[Mac (12,0), iOS (15,0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
+		[Mac (12, 0), iOS (15, 0), TV (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
 		TopLevelDictionaryAssumed = 16,
 #if !NET
 		[Obsolete ("Use 'FragmentsAllowed. instead.")]
@@ -765,11 +780,11 @@ namespace Foundation  {
 	[Native]
 	public enum NSJsonWritingOptions : ulong {
 		PrettyPrinted = 1,
-		[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Mac (10, 13), iOS (11, 0), TV (11, 0), Watch (4, 0)]
 		SortedKeys = (1 << 1),
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		FragmentsAllowed = (1 << 2),
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		WithoutEscapingSlashes = (1 << 3),
 	}
 
@@ -780,32 +795,32 @@ namespace Foundation  {
 
 	[Flags]
 	public enum NSAlignmentOptions : long {
-		MinXInward   = 1 << 0,
-		MinYInward   = 1 << 1,
-		MaxXInward   = 1 << 2,
-		MaxYInward   = 1 << 3,
-		WidthInward  = 1 << 4,
+		MinXInward = 1 << 0,
+		MinYInward = 1 << 1,
+		MaxXInward = 1 << 2,
+		MaxYInward = 1 << 3,
+		WidthInward = 1 << 4,
 		HeightInward = 1 << 5,
 
-		MinXOutward   = 1 << 8,
-		MinYOutward   = 1 << 9,
-		MaxXOutward   = 1 << 10,
-		MaxYOutward   = 1 << 11,
-		WidthOutward  = 1 << 12,
+		MinXOutward = 1 << 8,
+		MinYOutward = 1 << 9,
+		MaxXOutward = 1 << 10,
+		MaxYOutward = 1 << 11,
+		WidthOutward = 1 << 12,
 		HeightOutward = 1 << 13,
 
-		MinXNearest   = 1 << 16,
-		MinYNearest   = 1 << 17,
-		MaxXNearest   = 1 << 18,
-		MaxYNearest   = 1 << 19,
-		WidthNearest  = 1 << 20,
+		MinXNearest = 1 << 16,
+		MinYNearest = 1 << 17,
+		MaxXNearest = 1 << 18,
+		MaxYNearest = 1 << 19,
+		WidthNearest = 1 << 20,
 		HeightNearest = 1 << 21,
 
-		RectFlipped   = unchecked ((long)(1UL << 63)),
+		RectFlipped = unchecked((long) (1UL << 63)),
 
-		AllEdgesInward = MinXInward|MaxXInward|MinYInward|MaxYInward,
-		AllEdgesOutward = MinXOutward|MaxXOutward|MinYOutward|MaxYOutward,
-		AllEdgesNearest = MinXNearest|MaxXNearest|MinYNearest|MaxYNearest,
+		AllEdgesInward = MinXInward | MaxXInward | MinYInward | MaxYInward,
+		AllEdgesOutward = MinXOutward | MaxXOutward | MinYOutward | MaxYOutward,
+		AllEdgesNearest = MinXNearest | MaxXNearest | MinYNearest | MaxYNearest,
 	}
 
 	[Flags]
@@ -835,18 +850,18 @@ namespace Foundation  {
 	// to use this one only.
 	[Native]
 	public enum NSUnderlineStyle : long {
-		None	= 0x00,
-		Single	= 0x01,
+		None = 0x00,
+		Single = 0x01,
 		[iOS (7, 0)]
-		Thick	= 0x02,
+		Thick = 0x02,
 		[iOS (7, 0)]
-		Double	= 0x09,
-		PatternSolid 		= 0x0000,
-		PatternDot 			= 0x0100,
-		PatternDash 		= 0x0200,
-		PatternDashDot 		= 0x0300,
-		PatternDashDotDot 	= 0x0400,
-		ByWord 				= 0x8000
+		Double = 0x09,
+		PatternSolid = 0x0000,
+		PatternDot = 0x0100,
+		PatternDash = 0x0200,
+		PatternDashDot = 0x0300,
+		PatternDashDotDot = 0x0400,
+		ByWord = 0x8000
 	}
 #endif
 
@@ -862,17 +877,17 @@ namespace Foundation  {
 	[Flags]
 	[Native]
 	public enum NSByteCountFormatterUnits : ulong {
-		UseDefault      = 0,
-		UseBytes        = 1 << 0,
-		UseKB           = 1 << 1,
-		UseMB           = 1 << 2,
-		UseGB           = 1 << 3,
-		UseTB           = 1 << 4,
-		UsePB           = 1 << 5,
-		UseEB           = 1 << 6,
-		UseZB           = 1 << 7,
-		UseYBOrHigher   = 0x0FF << 8,
-		UseAll          = 0x0FFFF
+		UseDefault = 0,
+		UseBytes = 1 << 0,
+		UseKB = 1 << 1,
+		UseMB = 1 << 2,
+		UseGB = 1 << 3,
+		UseTB = 1 << 4,
+		UsePB = 1 << 5,
+		UseEB = 1 << 6,
+		UseZB = 1 << 7,
+		UseYBOrHigher = 0x0FF << 8,
+		UseAll = 0x0FFFF
 	}
 
 	[Native]
@@ -890,7 +905,7 @@ namespace Foundation  {
 		WithSecurityScope = 1 << 11,
 		[NoiOS, NoTV, NoWatch]
 		SecurityScopeAllowOnlyReadAccess = 1 << 12,
-		[Mac (12,0), iOS (15,0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
+		[Mac (12, 0), iOS (15, 0), TV (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
 		CreationWithoutImplicitSecurityScope = 1 << 29,
 	}
 
@@ -901,13 +916,13 @@ namespace Foundation  {
 		WithoutMounting = 1 << 9,
 		[NoiOS, NoTV, NoWatch]
 		WithSecurityScope = 1 << 10,
-		[Mac (12,0), iOS (15,0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
+		[Mac (12, 0), iOS (15, 0), TV (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
 		WithoutImplicitStartAccessing = 1 << 15,
 	}
 
 	[Native]
 	public enum NSLigatureType : long {
-		None, Default, All 
+		None, Default, All
 	}
 
 #if !NET
@@ -951,25 +966,31 @@ namespace Foundation  {
 		[iOS (7, 0)]
 		MatchLast = 1 << 13,
 	}
-	
+
 	[Native]
 	public enum NSUrlRequestNetworkServiceType : ulong {
 		Default,
-		[Deprecated (PlatformName.MacOSX, 10, 15, message : "Use 'PushKit' framework instead.")]
-		[Deprecated (PlatformName.iOS, 13, 0, message : "Use 'PushKit' framework instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message : "Use 'PushKit' framework instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message : "Use 'PushKit' framework instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'PushKit' framework instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'PushKit' framework instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'PushKit' framework instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'PushKit' framework instead.")]
 		VoIP,
 		Video,
 		Background,
 		Voice,
-		[Mac (10,14)][iOS (12,0)][Watch (5,0)][TV (12,0)]
+		[Mac (10, 14)]
+		[iOS (12, 0)]
+		[Watch (5, 0)]
+		[TV (12, 0)]
 		ResponsiveData = 6,
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		AVStreaming = 8,
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		ResponsiveAV = 9,
-		[Mac (10,12)][iOS (10,0)][Watch (3,0)][TV (10,0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
 		CallSignaling = 11,
 	}
 
@@ -980,7 +1001,7 @@ namespace Foundation  {
 		Stable = 1 << 4
 	}
 
-	[iOS (7,0)]
+	[iOS (7, 0)]
 	[Flags]
 	[Native]
 	public enum NSDataBase64DecodingOptions : ulong {
@@ -988,7 +1009,7 @@ namespace Foundation  {
 		IgnoreUnknownCharacters = 1
 	}
 
-	[iOS (7,0)]
+	[iOS (7, 0)]
 	[Flags]
 	[Native]
 	public enum NSDataBase64EncodingOptions : ulong {
@@ -1000,7 +1021,8 @@ namespace Foundation  {
 	}
 
 #if !XAMCORE_3_0
-	[iOS (7,0)][Deprecated (PlatformName.iOS, 9, 0, message: "Use 'NSWritingDirectionFormatType'.")]
+	[iOS (7, 0)]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'NSWritingDirectionFormatType'.")]
 	[Flags]
 	[Native]
 	public enum NSTextWritingDirection : long {
@@ -1023,7 +1045,7 @@ namespace Foundation  {
 		Canceling = 2,
 		Completed = 3
 	}
-	
+
 	[Native]
 	public enum NSUrlSessionResponseDisposition : long {
 		Cancel = 0,
@@ -1036,7 +1058,7 @@ namespace Foundation  {
 	public enum NSUrlErrorCancelledReason : long {
 		UserForceQuitApplication,
 		BackgroundUpdatesDisabled,
-		InsufficientSystemResources			
+		InsufficientSystemResources
 	}
 
 	[Flags]
@@ -1064,8 +1086,8 @@ namespace Foundation  {
 		ShortGeneric
 	}
 
-	[iOS (8,0)]
-	[Mac (10,10)]
+	[iOS (8, 0)]
+	[Mac (10, 10)]
 	[Native]
 	public enum NSItemProviderErrorCode : long {
 		Unknown = -1,
@@ -1084,7 +1106,10 @@ namespace Foundation  {
 		Short,
 		Full,
 		SpellOut,
-		[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
+		[iOS (10, 0)]
+		[TV (10, 0)]
+		[Watch (3, 0)]
+		[Mac (10, 12)]
 		Brief,
 	}
 
@@ -1144,8 +1169,8 @@ namespace Foundation  {
 		Long
 	}
 
-	[iOS (8,0)]
-	[Mac (10,10)]
+	[iOS (8, 0)]
+	[Mac (10, 10)]
 	[Native]
 	public enum NSMassFormatterUnit : long {
 		Gram = 11,
@@ -1155,8 +1180,8 @@ namespace Foundation  {
 		Stone = (6 << 8) + 3
 	}
 
-	[iOS (8,0)]
-	[Mac (10,10)]
+	[iOS (8, 0)]
+	[Mac (10, 10)]
 	[Native]
 	public enum NSLengthFormatterUnit : long {
 		Millimeter = 8,
@@ -1169,8 +1194,8 @@ namespace Foundation  {
 		Mile = (5 << 8) + 4
 	}
 
-	[iOS (8,0)]
-	[Mac (10,10)]
+	[iOS (8, 0)]
+	[Mac (10, 10)]
 	[Native]
 	public enum NSQualityOfService : long {
 		UserInteractive = 33,
@@ -1180,10 +1205,10 @@ namespace Foundation  {
 		Default = -1
 	}
 
-	[Mac (10,10,3)]
-	[Watch (4,0)]
-	[TV (11,0)]
-	[iOS (11,0)]
+	[Mac (10, 10, 3)]
+	[Watch (4, 0)]
+	[TV (11, 0)]
+	[iOS (11, 0)]
 	[Native]
 	public enum NSProcessInfoThermalState : long {
 		Nominal, Fair, Serious, Critical
@@ -1197,18 +1222,18 @@ namespace Foundation  {
 	// NSTextCheckingResult.h:typedef NS_OPTIONS(uint64_t, NSTextCheckingType)
 	[Flags]
 	public enum NSTextCheckingType : ulong {
-		Orthography   = 1 << 0,
-		Spelling      = 1 << 1,
-		Grammar       = 1 << 2,
-		Date          = 1 << 3,
-		Address       = 1 << 4,
-		Link          = 1 << 5,
-		Quote         = 1 << 6,
-		Dash          = 1 << 7,
-		Replacement   = 1 << 8,
-		Correction    = 1 << 9,
-		RegularExpression  = 1 << 10,
-		PhoneNumber        = 1 << 11,
+		Orthography = 1 << 0,
+		Spelling = 1 << 1,
+		Grammar = 1 << 2,
+		Date = 1 << 3,
+		Address = 1 << 4,
+		Link = 1 << 5,
+		Quote = 1 << 6,
+		Dash = 1 << 7,
+		Replacement = 1 << 8,
+		Correction = 1 << 9,
+		RegularExpression = 1 << 10,
+		PhoneNumber = 1 << 11,
 		TransitInformation = 1 << 12,
 	}
 
@@ -1222,47 +1247,45 @@ namespace Foundation  {
 	[Native]
 	[Flags]
 	public enum NSRegularExpressionOptions : ulong {
-		CaseInsensitive             = 1 << 0,
-		AllowCommentsAndWhitespace  = 1 << 1,
-		IgnoreMetacharacters        = 1 << 2,
-		DotMatchesLineSeparators    = 1 << 3,
-		AnchorsMatchLines           = 1 << 4,
-		UseUnixLineSeparators       = 1 << 5,
-		UseUnicodeWordBoundaries    = 1 << 6
+		CaseInsensitive = 1 << 0,
+		AllowCommentsAndWhitespace = 1 << 1,
+		IgnoreMetacharacters = 1 << 2,
+		DotMatchesLineSeparators = 1 << 3,
+		AnchorsMatchLines = 1 << 4,
+		UseUnixLineSeparators = 1 << 5,
+		UseUnicodeWordBoundaries = 1 << 6
 	}
 
 	[Native]
 	[Flags]
 	public enum NSMatchingOptions : ulong {
-		ReportProgress         = 1 << 0,
-		ReportCompletion       = 1 << 1,
-		Anchored               = 1 << 2,
-		WithTransparentBounds  = 1 << 3,
+		ReportProgress = 1 << 0,
+		ReportCompletion = 1 << 1,
+		Anchored = 1 << 2,
+		WithTransparentBounds = 1 << 3,
 		WithoutAnchoringBounds = 1 << 4
 	}
 
 	[Native]
 	[Flags]
 	public enum NSMatchingFlags : ulong {
-		Progress               = 1 << 0,
-		Completed              = 1 << 1,
-		HitEnd                 = 1 << 2,
-		RequiredEnd            = 1 << 3,
-		InternalError          = 1 << 4
+		Progress = 1 << 0,
+		Completed = 1 << 1,
+		HitEnd = 1 << 2,
+		RequiredEnd = 1 << 3,
+		InternalError = 1 << 4
 	}
 
-	[Mac(10,11),iOS (9,0)]
+	[Mac (10, 11), iOS (9, 0)]
 	[Native]
 	[Flags]
-	public enum NSPersonNameComponentsFormatterOptions : ulong
-	{
+	public enum NSPersonNameComponentsFormatterOptions : ulong {
 		Phonetic = (1 << 1)
 	}
 
-	[Mac(10,11),iOS (9,0)]
+	[Mac (10, 11), iOS (9, 0)]
 	[Native]
-	public enum NSPersonNameComponentsFormatterStyle : long
-	{
+	public enum NSPersonNameComponentsFormatterStyle : long {
 		Default = 0,
 		Short,
 		Medium,
@@ -1270,14 +1293,18 @@ namespace Foundation  {
 		Abbreviated
 	}
 
-	[iOS (9,0)][Mac (10,11)]
+	[iOS (9, 0)]
+	[Mac (10, 11)]
 	[Native]
 	public enum NSDecodingFailurePolicy : long {
 		RaiseException,
 		SetErrorAndReturn
 	}
 
-	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
+	[Watch (3, 0)]
+	[Mac (10, 12)]
 	[Native]
 	[Flags]
 	public enum NSIso8601DateFormatOptions : ulong {
@@ -1291,14 +1318,17 @@ namespace Foundation  {
 		DashSeparatorInDate = 1 << 8,
 		ColonSeparatorInTime = 1 << 9,
 		ColonSeparatorInTimeZone = 1 << 10,
-		[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Mac (10, 13), iOS (11, 0), TV (11, 0), Watch (4, 0)]
 		FractionalSeconds = 1 << 11,
 		FullDate = Year | Month | Day | DashSeparatorInDate,
 		FullTime = Time | ColonSeparatorInTime | TimeZone | ColonSeparatorInTimeZone,
 		InternetDateTime = FullDate | FullTime,
 	}
 
-	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[Watch (3, 0)]
+	[TV (10, 0)]
+	[Mac (10, 12)]
+	[iOS (10, 0)]
 	[Native]
 	public enum NSUrlSessionTaskMetricsResourceFetchType : long {
 		Unknown,
@@ -1307,7 +1337,10 @@ namespace Foundation  {
 		LocalCache
 	}
 
-	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[Watch (3, 0)]
+	[TV (10, 0)]
+	[Mac (10, 12)]
+	[iOS (10, 0)]
 	[Native]
 	[Flags]
 	public enum NSMeasurementFormatterUnitOptions : ulong {

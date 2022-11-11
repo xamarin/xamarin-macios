@@ -30,14 +30,12 @@ using Vector3d = global::CoreGraphics.NVector3d;
 using OpenTK;
 #endif
 
-namespace MonoTouchFixtures.ModelIO
-{
+namespace MonoTouchFixtures.ModelIO {
 
 	[TestFixture]
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
-	public class MDLVoxelArrayTest
-	{
+	public class MDLVoxelArrayTest {
 		[OneTimeSetUp]
 		public void Setup ()
 		{

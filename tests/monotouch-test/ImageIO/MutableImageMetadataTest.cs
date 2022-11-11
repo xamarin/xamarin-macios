@@ -53,7 +53,7 @@ namespace MonoTouchFixtures.ImageIO {
 
 				Assert.True (meta.SetValue (null, path, false), "SetValue");
 
-				Assert.True (meta.SetValueMatchingImageProperty (CGImageProperties.ExifDictionary, CGImageProperties.ExifDateTimeOriginal, (NSDate)DateTime.Now), "SetValueMatchingImageProperty");
+				Assert.True (meta.SetValueMatchingImageProperty (CGImageProperties.ExifDictionary, CGImageProperties.ExifDateTimeOriginal, (NSDate) DateTime.Now), "SetValueMatchingImageProperty");
 			}
 		}
 	}

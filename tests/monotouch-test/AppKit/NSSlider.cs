@@ -7,14 +7,12 @@ using ObjCRuntime;
 using Foundation;
 using Xamarin.Utils;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSSliderTests
-	{
+	public class NSSliderTests {
 		[Test]
-		public void NSSlider_VertialTests()
+		public void NSSlider_VertialTests ()
 		{
 			TestRuntime.AssertXcodeVersion (8, 0);
 

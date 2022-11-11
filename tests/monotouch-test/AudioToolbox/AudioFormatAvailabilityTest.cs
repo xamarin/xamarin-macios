@@ -17,8 +17,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AudioFormatAvailabilityTest
-	{
+	public class AudioFormatAvailabilityTest {
 		[Test]
 		public void GetDecoders ()
 		{

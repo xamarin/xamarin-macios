@@ -9,7 +9,7 @@ using NUnit.Framework.Internal;
 using MonoTouchFixtures.BackgroundTasks;
 
 namespace MonoTouchFixtures {
-	
+
 	// The UIApplicationDelegate for the application. This class is responsible for launching the 
 	// User Interface of the application, as well as listening (and optionally responding) to 
 	// application events from iOS.
@@ -25,8 +25,7 @@ namespace MonoTouchFixtures {
 			try {
 				runner.OpenWriter ("Magic Tap");
 				runner.Run (runner.LoadedTest as TestSuite);
-			}
-			finally {
+			} finally {
 				runner.CloseWriter ();
 			}
 			return true;
@@ -51,9 +50,9 @@ namespace MonoTouchFixtures {
 
 			// tests can be inside the main assembly
 			runner.Add (Assembly.GetExecutingAssembly ());
-			runner.Add (typeof(EmbeddedResources.ResourcesTest).Assembly);
-			runner.Add (typeof(Xamarin.BindingTests.ProtocolTest).Assembly);
-			
+			runner.Add (typeof (EmbeddedResources.ResourcesTest).Assembly);
+			runner.Add (typeof (Xamarin.BindingTests.ProtocolTest).Assembly);
+
 			window.RootViewController = new UINavigationController (runner.GetViewController ());
 			// make the window visible
 			window.MakeKeyAndVisible ();
@@ -64,10 +63,10 @@ namespace MonoTouchFixtures {
 			return true;
 		}
 
-		static void Main (string[] args)
+		static void Main (string [] args)
 		{
 			// Make sure we have at least one reference to the bindings project so that mcs doesn't strip the reference to it.
-			GC.KeepAlive (typeof(Bindings.Test.UltimateMachine));
+			GC.KeepAlive (typeof (Bindings.Test.UltimateMachine));
 
 			UIApplication.Main (args, null, typeof (AppDelegate));
 		}

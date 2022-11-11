@@ -12,7 +12,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MapKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ShapeTest {
@@ -21,7 +21,7 @@ namespace MonoTouchFixtures.MapKit {
 		{
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
-		
+
 		// used for types that inherits from MKShape
 		static public void CheckShape (MKShape shape)
 		{
