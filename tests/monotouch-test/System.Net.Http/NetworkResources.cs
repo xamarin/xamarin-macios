@@ -2,11 +2,9 @@ using System;
 using System.Net;
 using Foundation;
 
-namespace MonoTests.System.Net.Http
-{
+namespace MonoTests.System.Net.Http {
 	[Preserve (AllMembers = true)]
-	public static class NetworkResources
-	{
+	public static class NetworkResources {
 		public static readonly string MicrosoftUrl = "https://www.microsoft.com";
 		public static readonly Uri MicrosoftUri = new Uri (MicrosoftUrl);
 		public static readonly string MicrosoftHttpUrl = "http://www.microsoft.com";
@@ -59,7 +57,7 @@ namespace MonoTests.System.Net.Http
 			public static string GetAbsoluteRedirectUrl (int count) => $"https://httpbin.org/absolute-redirect/{count}";
 			public static string GetRedirectUrl (int count) => $"https://httpbin.org/redirect/{count}";
 			public static string GetRelativeRedirectUrl (int count) => $"https://httpbin.org/relative-redirect/{count}";
-			public static string GetStatusCodeUrl (HttpStatusCode status) => $"http://httpbin.org/status/{(int)status}";
+			public static string GetStatusCodeUrl (HttpStatusCode status) => $"http://httpbin.org/status/{(int) status}";
 			public static string GetSetCookieUrl (string cookie, string value) => $"https://httpbin.org/cookies/set?{cookie}={value}";
 
 		}

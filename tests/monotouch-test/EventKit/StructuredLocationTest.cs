@@ -16,11 +16,10 @@ using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.EventKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class StructureLocationTest
-	{
+	public class StructureLocationTest {
 		[Test]
 		public void DefaultValues ()
 		{

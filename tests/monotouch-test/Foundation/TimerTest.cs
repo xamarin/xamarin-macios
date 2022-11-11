@@ -25,7 +25,8 @@ namespace MonoTouchFixtures.Foundation {
 
 			NSTimer timer = null;
 
-			using (timer = NSTimer.CreateRepeatingTimer (0.1f, delegate {
+			using (timer = NSTimer.CreateRepeatingTimer (0.1f, delegate
+			{
 				// This is the real test - not a timer test, but properly preserving VFP registers.
 				// When bug #17793 manifests, this method is only called once instead of repeatedly.
 				Func (0, 0, 0, 0, 0, 0, 0);
@@ -39,8 +40,7 @@ namespace MonoTouchFixtures.Foundation {
 					Console.WriteLine ("Thread timer added");
 					NSRunLoop.Current.RunUntil (NSRunLoopMode.Default, NSDate.Now.AddSeconds (5));
 					Console.WriteLine ("Thread ended");
-				})
-				{
+				}) {
 					IsBackground = true,
 				};
 				thread.Start ();
@@ -59,7 +59,8 @@ namespace MonoTouchFixtures.Foundation {
 
 			NSTimer timer = null;
 
-			using (timer = NSTimer.CreateRepeatingTimer (0.1f, delegate {
+			using (timer = NSTimer.CreateRepeatingTimer (0.1f, delegate
+			{
 				if (evt.Signal ())
 					timer.Invalidate ();
 			})) {
@@ -67,8 +68,7 @@ namespace MonoTouchFixtures.Foundation {
 				var thread = new Thread (() => {
 					NSRunLoop.Current.AddTimer (timer, NSRunLoopMode.Default);
 					NSRunLoop.Current.RunUntil (NSRunLoopMode.Default, NSDate.Now.AddSeconds (5));
-				})
-				{
+				}) {
 					IsBackground = true,
 				};
 				thread.Start ();
@@ -98,8 +98,7 @@ namespace MonoTouchFixtures.Foundation {
 				var thread = new Thread (() => {
 					NSRunLoop.Current.AddTimer (timer, NSRunLoopMode.Default);
 					NSRunLoop.Current.RunUntil (NSRunLoopMode.Default, NSDate.Now.AddSeconds (5));
-				})
-				{
+				}) {
 					IsBackground = true,
 				};
 				thread.Start ();
