@@ -362,7 +362,7 @@ if test -n "$ENABLE_API_DIFF"; then
 	echo "💪 ${BLUE}Computing API diff vs ${WHITE}${BASE_HASH}${BLUE}${CLEAR} 💪"
 
 	# Compute the TFM of the previous hash
-	PREVIOUS_DOTNET_TFM=$(make -C "$OUTPUT_SRC_DIR/tools/devops" print-variable VARIABLE=DOTNET_TFM)
+	PREVIOUS_DOTNET_TFM=$(make -C "$OUTPUT_SRC_DIR/xamarin-macios/tools/devops" print-variable VARIABLE=DOTNET_TFM)
 	PREVIOUS_DOTNET_TFM=${PREVIOUS_DOTNET_TFM#*=}
 
 	# Calculate apidiff references according to the temporary build
