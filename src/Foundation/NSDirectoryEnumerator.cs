@@ -19,7 +19,7 @@ namespace Foundation {
 			current = NextObject ();
 			return current != null;
 		}
-		
+
 		void IEnumerator.Reset ()
 		{
 			throw new InvalidOperationException ();

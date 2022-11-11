@@ -42,7 +42,7 @@ namespace Foundation {
 				throw new ArgumentNullException ("key");
 
 			unsafe {
-				fixed (byte *p = &buffer[0]){
+				fixed (byte* p = &buffer [0]) {
 					EncodeBlock ((IntPtr) p, buffer.Length, key);
 				}
 			}
@@ -61,11 +61,11 @@ namespace Foundation {
 			if (count < 0)
 				throw new ArgumentException ("count < 0");
 
-                        if (offset > buffer.Length - count)
-                                throw new ArgumentException ("Reading would overrun buffer");
-			
+			if (offset > buffer.Length - count)
+				throw new ArgumentException ("Reading would overrun buffer");
+
 			unsafe {
-				fixed (byte *p = &buffer[0]){
+				fixed (byte* p = &buffer [0]) {
 					EncodeBlock ((IntPtr) p, buffer.Length, key);
 				}
 			}
@@ -77,10 +77,10 @@ namespace Foundation {
 			IntPtr ret = DecodeBytes (key, out len);
 			if (ret == IntPtr.Zero)
 				return null;
-			
+
 			byte [] retarray = new byte [(int) len];
 			Marshal.Copy (ret, retarray, 0, (int) len);
-			
+
 			return retarray;
 		}
 
@@ -90,16 +90,16 @@ namespace Foundation {
 			IntPtr ret = DecodeBytes (out len);
 			if (ret == IntPtr.Zero)
 				return null;
-			
+
 			byte [] retarray = new byte [(int) len];
 			Marshal.Copy (ret, retarray, 0, (int) len);
-			
+
 			return retarray;
 		}
 
 		public bool TryDecode (string key, out bool result)
 		{
-			if (ContainsKey (key)){
+			if (ContainsKey (key)) {
 				result = DecodeBool (key);
 				return true;
 			}
@@ -109,7 +109,7 @@ namespace Foundation {
 
 		public bool TryDecode (string key, out double result)
 		{
-			if (ContainsKey (key)){
+			if (ContainsKey (key)) {
 				result = DecodeDouble (key);
 				return true;
 			}
@@ -119,7 +119,7 @@ namespace Foundation {
 
 		public bool TryDecode (string key, out float result)
 		{
-			if (ContainsKey (key)){
+			if (ContainsKey (key)) {
 				result = DecodeFloat (key);
 				return true;
 			}
@@ -129,7 +129,7 @@ namespace Foundation {
 
 		public bool TryDecode (string key, out int result)
 		{
-			if (ContainsKey (key)){
+			if (ContainsKey (key)) {
 				result = DecodeInt (key);
 				return true;
 			}
@@ -139,7 +139,7 @@ namespace Foundation {
 
 		public bool TryDecode (string key, out long result)
 		{
-			if (ContainsKey (key)){
+			if (ContainsKey (key)) {
 				result = DecodeLong (key);
 				return true;
 			}
@@ -149,7 +149,7 @@ namespace Foundation {
 
 		public bool TryDecode (string key, out nint result)
 		{
-			if (ContainsKey (key)){
+			if (ContainsKey (key)) {
 				result = DecodeNInt (key);
 				return true;
 			}
@@ -159,7 +159,7 @@ namespace Foundation {
 
 		public bool TryDecode (string key, out NSObject result)
 		{
-			if (ContainsKey (key)){
+			if (ContainsKey (key)) {
 				result = DecodeObject (key);
 				return true;
 			}
@@ -169,7 +169,7 @@ namespace Foundation {
 
 		public bool TryDecode (string key, out byte [] result)
 		{
-			if (ContainsKey (key)){
+			if (ContainsKey (key)) {
 				result = DecodeBytes (key);
 				return true;
 			}
@@ -183,8 +183,8 @@ namespace Foundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
-		[Mac (10,11)]
+		[iOS (9, 0)]
+		[Mac (10, 11)]
 #endif
 		public NSObject DecodeTopLevelObject (Type type, string key, out NSError error)
 		{
@@ -199,16 +199,16 @@ namespace Foundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
-		[Mac (10,11)]
+		[iOS (9, 0)]
+		[Mac (10, 11)]
 #endif
-		public NSObject DecodeTopLevelObject (Type[] types, string key, out NSError error)
+		public NSObject DecodeTopLevelObject (Type [] types, string key, out NSError error)
 		{
 			NSSet<Class> typeSet = null;
 			if (types != null) {
 				var classes = new Class [types.Length];
 				for (int i = 0; i < types.Length; i++)
-					classes [i] =  new Class (types [i]);
+					classes [i] = new Class (types [i]);
 				typeSet = new NSSet<Class> (classes);
 			}
 			return DecodeTopLevelObject (typeSet, key, out error);
