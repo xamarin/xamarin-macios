@@ -11,33 +11,46 @@ using NUnit.Framework;
 using Mono.Cecil;
 using Xamarin.Tests;
 using Xamarin.Utils;
+using System.Configuration.Assemblies;
+
 #nullable enable
 
 namespace Cecil.Tests {
 	[TestFixture]
 	public class ApiCapitalizationTest {
 
-		bool IsMethodObsolete (MethodDefinition method)
-		{
-			if (method == null)
-				return false;
-			
-			//method.Name == "get_path_radio_type" || method.Name== "dlclose"
-			//if (method.Name == "eUbiquitousContainerIdentifierKey") {
-			//	var r = from f in method.CustomAttributes
-			//			select f.AttributeType.Name;
-			//	Console.WriteLine ("attrs: ");
-			//	foreach(var i in r) {
-			//		Console.WriteLine (i);
-			//	}
-			//}
+		Dictionary<string, (AssemblyDefinition Assembly, HashSet<String> MethodCache)> dllCache = new Dictionary<string, (AssemblyDefinition Assembly, HashSet<String> MethodCache)> ();
 
-			if (method.HasCustomAttributes && method.CustomAttributes.Where ((m) => m.AttributeType.Name == "ObsoleteAttribute").Any ()) {
-				return true;
+
+		[OneTimeSetUp]
+		public void SetUp ()
+		{ 
+			foreach (string assemblyPath in Helper.NetPlatformAssemblies) {
+				HashSet<String> methodCache = new HashSet<String> ();
+				var assembly = Helper.GetAssembly (assemblyPath);
+				var publicTypes = assembly.MainModule.Types.Where ((t) => t.IsPublic && !IsTypeObsolete (t));
+				foreach (var type in publicTypes) {
+					var typeName = type.Name;
+					var c = from m in type.Methods
+								//where m.HasCustomAttributes && m.CustomAttributes.Where ((mtd) => mtd.AttributeType.Name == "DllImportAttribute").Any ()
+							where m.IsPInvokeImpl || m.HasPInvokeInfo || m.IsInternalCall || !m.IsPublic
+							select m.Name;
+					
+					if (c is not null) {
+						foreach (var i in c) {
+							//methodCache.Add ($"{typeName}.{i}");
+							//Console.WriteLine ("method name: ", i);
+						}
+					}
+				}
+				dllCache.Add (assemblyPath, (Assembly: assembly, MethodCache: methodCache));
 			}
+		}
 
-
-			return false;
+		[OneTimeTearDown]
+		public void TearDown ()
+		{
+			dllCache.Clear ();
 		}
 
 		bool IsTypeObsolete (TypeDefinition type)
@@ -46,6 +59,28 @@ namespace Cecil.Tests {
 				return false;
 
 			if (type.HasCustomAttributes && type.CustomAttributes.Where ((m) => m.AttributeType.Name == "ObsoleteAttribute" || m.AttributeType.Name == "AdviceAttribute").Any ()) {
+				return true;
+			}
+
+
+			return false;
+		}
+
+
+		bool IsMethodObsolete (MethodDefinition method)
+		{
+			if (method == null)
+				return false;
+
+			//if(method.Name == "dlsym") {
+			//	foreach(var i in method.CustomAttributes) {
+			//		Console.WriteLine (i.AttributeType);
+			//	}
+			//	//Console.WriteLine(method.CustomAttributes.A)
+			//}
+
+			if (method.HasCustomAttributes && method.CustomAttributes.Where ((m) => m.AttributeType.Name == "ObsoleteAttribute").Any ()) {
+				//Console.WriteLine ("method: " + method.Name);
 				return true;
 			}
 
@@ -66,14 +101,29 @@ namespace Cecil.Tests {
 		}
 
 
-		bool IsException (MethodDefinition m)
+		bool IsException (string assemblyPath, TypeDefinition t, MethodDefinition m)
 		{ 
 
 			if (m == null)
 				return false;
 
+			//if(m.Name == "inputs") {
+			//	Console.WriteLine ("dlsym attrs: ");
+			//	foreach (var attr in m.CustomAttributes) {
+			//		Console.WriteLine (attr.AttributeType);
+			//	}
+			//}
+
 			if (m.IsRemoveOn || m.IsAddOn || m.IsConstructor || m.IsSpecialName || IsMethodObsolete (m) || m.IsFamilyOrAssembly || m.IsPInvokeImpl || m.HasPInvokeInfo || m.IsCompilerControlled)
 				return true;
+
+
+
+			var set = dllCache [assemblyPath].MethodCache;
+			if (set.Contains ($"{t.Name}.{m.Name}")) {
+				return true;
+			}
+
 
 			return false;
 		}
@@ -152,7 +202,6 @@ namespace Cecil.Tests {
 			return Char.IsUpper (m [0]);
 		}
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
 		[Test]
 		public void PropertiesCapitalizationTest (string assemblyPath)
@@ -168,7 +217,6 @@ namespace Cecil.Tests {
 			CapitalizationTest (assemblyPath, selectLambda);
 		}
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
 		[Test]
 		public void MethodsCapitalizationTest (string assemblyPath)
@@ -176,14 +224,13 @@ namespace Cecil.Tests {
 			Func<TypeDefinition, IEnumerable<string>> selectLambda = (type) => {
 				var typeName = type.Name;
 				var c = from m in type.Methods
-						where m.IsPublic && !IsException (m) && !Skip (type.Name, m.Name, allowedMethods)
+						where m.IsPublic && !IsException (assemblyPath, type, m) && !Skip (type.Name, m.Name, allowedMethods)
 						select m.Name;
 				return c;
 			};
 			CapitalizationTest (assemblyPath, selectLambda);
 		}
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
 		[Test]
 		public void EventsCapitalizationTest (string assemblyPath)
@@ -198,7 +245,6 @@ namespace Cecil.Tests {
 			CapitalizationTest (assemblyPath, selectLambda);
 		}
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
 		[Test]
 		public void FieldsCapitalizationTest (string assemblyPath)
@@ -217,7 +263,9 @@ namespace Cecil.Tests {
 
 		public void CapitalizationTest (string assemblyPath, Func<TypeDefinition, IEnumerable<string>> selectLambda)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath);
+			var assemblyPathName = dllCache [assemblyPath];
+			var assembly = assemblyPathName.Assembly;
+		
 			if (assembly is null) {
 				Assert.Ignore ($"{assemblyPath} could not be found (might be disabled in build)");
 				return;
