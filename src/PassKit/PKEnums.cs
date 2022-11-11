@@ -189,10 +189,12 @@ namespace PassKit {
 		[Mac (12,0), iOS (15,0), Watch (8,0)]
 		Continue = 16,
 #if !NET
+#pragma warning disable 0618 // warning CS0618: 'PKPaymentButtonType.[field]' is obsolete: 'Use '[replacement]'.'
 		[iOS (12,0)]
 		Book2 = Checkout,
 		[iOS (12,0)]
 		Checkout2 = Book,
+#pragma warning restore
 #endif // !NET
 	}
 
