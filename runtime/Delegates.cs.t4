@@ -72,7 +72,7 @@ namespace ObjCRuntime {
 			} catch (Exception ex) {
 				var handle = GCHandle.Alloc (ex, GCHandleType.Normal);
 				*exception_gchandle = GCHandle.ToIntPtr (handle);
-<# if (d.SimpleEntryPoint == "get_nsobject_with_type") { #>				*created = false;
+<# if (d.SimpleEntryPoint == "get_nsobject_with_type") { #>				*created = 0;
 <# } #>
 <# if (d.ReturnType.MType != "void") { #>				return default (<#= d.ReturnType.MType #>);
 <# } #>
