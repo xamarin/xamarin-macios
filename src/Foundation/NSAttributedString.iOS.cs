@@ -74,8 +74,8 @@ namespace Foundation {
 
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
 #if !MONOMAC && !COREBUILD
-		public NSAttributedStringDocumentAttributes () : base (new NSMutableDictionary ()) {}
-		public NSAttributedStringDocumentAttributes (NSDictionary? dictionary) : base (dictionary) {}
+		public NSAttributedStringDocumentAttributes () : base (new NSMutableDictionary ()) { }
+		public NSAttributedStringDocumentAttributes (NSDictionary? dictionary) : base (dictionary) { }
 
 		public NSStringEncoding? StringEncoding {
 			get {
