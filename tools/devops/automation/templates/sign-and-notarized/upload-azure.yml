@@ -32,6 +32,11 @@ steps:
     persistCredentials: true
     path: s/xamarin-macios
 
+# checkout an extra repo to ensure that we have the same tree structure in the working directory in all pipelines.
+# if you delete this checkout the unified pipeline will have issues.
+- checkout: yaml-templates
+  clean: true
+
 # Download the Html Report that was added by the tests job.
 - task: DownloadPipelineArtifact@2
   displayName: Download packages
@@ -112,7 +117,7 @@ steps:
         Write-Host "Build task not found at $execPath!"
     }
 
-    $maciosPath="$Env:BUILD_SOURCESDIRECTORY"
+    $maciosPath="$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios"
 
     Write-Host "Exect path is $execPath"
     Write-Host "Macios path is $maciosPath"
@@ -138,7 +143,7 @@ steps:
   continueOnError: true
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
 
     Dir "$(Build.SourcesDirectory)\\artifacts\\package"
