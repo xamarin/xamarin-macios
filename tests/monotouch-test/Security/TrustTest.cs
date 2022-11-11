@@ -29,7 +29,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Security {
-	
+
 	[TestFixture]
 	// we want the test to be availble if we use the linker
 	[Preserve (AllMembers = true)]
@@ -302,7 +302,7 @@ namespace MonoTouchFixtures.Security {
 					Assert.That (CFGetRetainCount (key.Handle), Is.GreaterThanOrEqualTo ((nint) 1), "RetainCount(key)");
 				}
 			}
-			if (TestRuntime.CheckXcodeVersion (10,0)) {
+			if (TestRuntime.CheckXcodeVersion (10, 0)) {
 				Assert.False (trust.Evaluate (out var error), "Evaluate");
 				Assert.NotNull (error, "error");
 			}
@@ -452,7 +452,7 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void Timestamps ()
 		{
-			TestRuntime.AssertXcodeVersion (10,1); // old API exposed publicly
+			TestRuntime.AssertXcodeVersion (10, 1); // old API exposed publicly
 
 			X509Certificate2Collection certs = new X509Certificate2Collection ();
 			certs.Add (new X509Certificate2 (CertificateTest.mail_google_com));

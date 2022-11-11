@@ -17,7 +17,7 @@ namespace MonoTouchFixtures {
 		public void FunctionNames ()
 		{
 			TestRuntime.AssertDevice ();
-			
+
 			Collect ();
 			bool aot = symbols [1].Contains ("MonoTouchFixtures_Symbols_Collect");
 			bool llvmonly = symbols [1].Contains ("mono_llvmonly_runtime_invoke"); // LLVM inlines the Collect function, so 'Collect' doesn't show up in the stack trace :/
@@ -44,17 +44,17 @@ namespace MonoTouchFixtures {
 			this.symbols = new string [size];
 			for (int i = 0; i < size; i++) {
 				this.symbols [i] = Marshal.PtrToStringAuto (Marshal.ReadIntPtr (symbols, i * IntPtr.Size));
-//				Console.WriteLine (" #{0}: {1}", i, this.symbols [i]);
+				//				Console.WriteLine (" #{0}: {1}", i, this.symbols [i]);
 			}
 
 			free (symbols);
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		static extern int backtrace (IntPtr[] array, int size);
+		static extern int backtrace (IntPtr [] array, int size);
 
 		[DllImport (Constants.libcLibrary)]
-		static extern IntPtr backtrace_symbols (IntPtr[] array, int size);
+		static extern IntPtr backtrace_symbols (IntPtr [] array, int size);
 
 		[DllImport (Constants.libcLibrary)]
 		static extern void free (IntPtr ptr);

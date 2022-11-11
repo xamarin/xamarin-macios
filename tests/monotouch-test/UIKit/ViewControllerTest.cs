@@ -24,7 +24,7 @@ namespace MonoTouchFixtures.UIKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ViewControllerTest {
-		
+
 #if !__TVOS__
 		[Test]
 		public void Bug3489 ()
@@ -34,7 +34,7 @@ namespace MonoTouchFixtures.UIKit {
 			using (UIViewController c = new UIViewController ()) {
 				a.PresentModalViewController (b, true);
 				b.PresentModalViewController (c, true);
-				
+
 				b.DismissModalViewController (true);
 				a.DismissModalViewController (true); //error
 			}
@@ -49,8 +49,7 @@ namespace MonoTouchFixtures.UIKit {
 			using (UIViewController b = new UIViewController ())
 			using (UIViewController c = new UIViewController ())
 			using (UIViewController wb = new UINavigationController (b))
-			using (UIViewController wc = new UINavigationController (c))
-			{
+			using (UIViewController wc = new UINavigationController (c)) {
 				a.PresentModalViewController (wb, true);
 				b.PresentModalViewController (wc, true);
 
@@ -66,8 +65,7 @@ namespace MonoTouchFixtures.UIKit {
 			using (UIViewController b = new UIViewController ())
 			using (UIViewController c = new UIViewController ())
 			using (UIViewController wb = new UINavigationController (b))
-			using (UIViewController wc = new UINavigationController (c))
-			{
+			using (UIViewController wc = new UINavigationController (c)) {
 				// interesting [PreSnippet] for the linker (wrt backing field elimitation)
 				a.PresentViewController (wb, true, null);
 				b.PresentViewController (wc, true, null);
@@ -76,7 +74,7 @@ namespace MonoTouchFixtures.UIKit {
 				c.DismissViewController (true, null);
 			}
 		}
-				
+
 		[Test]
 		public void NSAction_Null ()
 		{

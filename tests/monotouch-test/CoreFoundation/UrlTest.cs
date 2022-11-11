@@ -15,11 +15,11 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreFoundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CFUrlTest {
-		
+
 		[Test]
 		public void FromFile_Null ()
 		{
@@ -46,7 +46,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void RetainCountFromUrl ()
 		{
 			using (var url = CFUrl.FromUrlString ("http://xamarin.com", null)) {
-				Assert.That(TestRuntime.CFGetRetainCount (url.Handle), Is.EqualTo ((nint) 1), "RetainCount");
+				Assert.That (TestRuntime.CFGetRetainCount (url.Handle), Is.EqualTo ((nint) 1), "RetainCount");
 			}
 		}
 

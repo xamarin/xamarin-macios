@@ -6,13 +6,12 @@ using CoreFoundation;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreFoundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class DispatchDataTest
-	{
+	public class DispatchDataTest {
 		string testString;
-		byte[] testData;
+		byte [] testData;
 
 		[SetUp]
 		public void SetUp ()

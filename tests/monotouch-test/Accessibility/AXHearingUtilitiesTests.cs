@@ -23,7 +23,7 @@ namespace MonoTouchFixtures.Accessibility {
 		{
 			TestRuntime.AssertXcodeVersion (13, 0);
 		}
-		
+
 		[Test]
 		public void GetHearingDeviceEar ()
 		{
@@ -39,7 +39,7 @@ namespace MonoTouchFixtures.Accessibility {
 		[Test]
 		public void GetHearingDevicePairedUuids ()
 		{
-			NSUuid[] emptyArray = new NSUuid[0]; 
+			NSUuid [] emptyArray = new NSUuid [0];
 			Assert.That (AXHearingUtilities.GetMFiHearingDevicePairedUuids (), Is.EqualTo (emptyArray), "GetHearingDevicePairedUuids");
 		}
 	}

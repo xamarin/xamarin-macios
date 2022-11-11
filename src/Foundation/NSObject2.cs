@@ -64,8 +64,8 @@ namespace Foundation {
 #else
 	public class NSObjectFlag {
 		public static readonly NSObjectFlag Empty;
-		
-		NSObjectFlag () {}
+
+		NSObjectFlag () { }
 	}
 #endif
 
@@ -150,9 +150,9 @@ namespace Foundation {
 			public IntPtr ClassHandle;
 		}
 
-		bool disposed { 
-			get { return ((flags & Flags.Disposed) == Flags.Disposed); } 
-			set { flags = value ? (flags | Flags.Disposed) : (flags & ~Flags.Disposed);	}
+		bool disposed {
+			get { return ((flags & Flags.Disposed) == Flags.Disposed); }
+			set { flags = value ? (flags | Flags.Disposed) : (flags & ~Flags.Disposed); }
 		}
 
 		bool HasManagedRef {
@@ -160,9 +160,9 @@ namespace Foundation {
 			set { flags = value ? (flags | Flags.HasManagedRef) : (flags & ~Flags.HasManagedRef); }
 		}
 
-		internal bool IsRegisteredToggleRef { 
-			get { return ((flags & Flags.RegisteredToggleRef) == Flags.RegisteredToggleRef); } 
-			set { flags = value ? (flags | Flags.RegisteredToggleRef) : (flags & ~Flags.RegisteredToggleRef);	}
+		internal bool IsRegisteredToggleRef {
+			get { return ((flags & Flags.RegisteredToggleRef) == Flags.RegisteredToggleRef); }
+			set { flags = value ? (flags | Flags.RegisteredToggleRef) : (flags & ~Flags.RegisteredToggleRef); }
 		}
 
 		protected internal bool IsDirectBinding {
@@ -187,11 +187,12 @@ namespace Foundation {
 		}
 
 		[Export ("init")]
-		public NSObject () {
+		public NSObject ()
+		{
 			bool alloced = AllocIfNeeded ();
 			InitializeObject (alloced);
 		}
-		
+
 		// This is just here as a constructor chain that can will
 		// only do Init at the most derived class.
 		public NSObject (NSObjectFlag x)
@@ -199,7 +200,7 @@ namespace Foundation {
 			bool alloced = AllocIfNeeded ();
 			InitializeObject (alloced);
 		}
-		
+
 #if NET
 		protected internal NSObject (NativeHandle handle)
 #else
@@ -208,7 +209,7 @@ namespace Foundation {
 			: this (handle, false)
 		{
 		}
-		
+
 #if NET
 		protected NSObject (NativeHandle handle, bool alloced)
 #else
@@ -218,12 +219,14 @@ namespace Foundation {
 			this.handle = handle;
 			InitializeObject (alloced);
 		}
-		
-		~NSObject () {
+
+		~NSObject ()
+		{
 			Dispose (false);
 		}
-		
-		public void Dispose () {
+
+		public void Dispose ()
+		{
 			Dispose (true);
 			GC.SuppressFinalize (this);
 		}
@@ -311,10 +314,11 @@ namespace Foundation {
 		-The new refcounting is enabled; and
 		-The class is not a custom type - it must wrap a framework class.
 		*/
-		protected void MarkDirty () {
+		protected void MarkDirty ()
+		{
 			MarkDirty (false);
 		}
-			
+
 		internal void MarkDirty (bool allowCustomTypes)
 		{
 			if (IsRegisteredToggleRef)
@@ -322,12 +326,13 @@ namespace Foundation {
 
 			if (!allowCustomTypes && IsCustomType)
 				return;
-			
+
 			IsRegisteredToggleRef = true;
 			RegisterToggleReference (this, Handle, allowCustomTypes);
 		}
 
-		private void InitializeObject (bool alloced) {
+		private void InitializeObject (bool alloced)
+		{
 			if (alloced && handle == NativeHandle.Zero && Class.ThrowOnInitFailure) {
 				if (ClassHandle == NativeHandle.Zero)
 					throw new Exception ($"Could not create an native instance of the type '{GetType ().FullName}': the native class hasn't been loaded.\n{Constants.SetThrowOnInitFailureToFalse}.");
@@ -393,7 +398,7 @@ namespace Foundation {
 		static bool IsProtocol (Type type, IntPtr protocol)
 		{
 			while (type != typeof (NSObject) && type != null) {
-				var attrs = type.GetCustomAttributes (typeof(ProtocolAttribute), false);
+				var attrs = type.GetCustomAttributes (typeof (ProtocolAttribute), false);
 				var protocolAttribute = (ProtocolAttribute) (attrs.Length > 0 ? attrs [0] : null);
 				if (protocolAttribute != null && !protocolAttribute.IsInformal) {
 					string name;
@@ -401,7 +406,7 @@ namespace Foundation {
 					if (!string.IsNullOrEmpty (protocolAttribute.Name)) {
 						name = protocolAttribute.Name;
 					} else {
-						attrs = type.GetCustomAttributes (typeof(RegisterAttribute), false);
+						attrs = type.GetCustomAttributes (typeof (RegisterAttribute), false);
 						var registerAttribute = (RegisterAttribute) (attrs.Length > 0 ? attrs [0] : null);
 						if (registerAttribute != null && !string.IsNullOrEmpty (registerAttribute.Name)) {
 							name = registerAttribute.Name;
@@ -440,7 +445,7 @@ namespace Foundation {
 				if (is_third_party) {
 					// Third-party bindings might lie about IsDirectBinding (see bug #14772),
 					// so don't trust any 'true' values unless we're in monotouch.dll.
-					var attribs = this.GetType ().GetCustomAttributes (typeof(RegisterAttribute), false);
+					var attribs = this.GetType ().GetCustomAttributes (typeof (RegisterAttribute), false);
 					if (attribs != null && attribs.Length == 1)
 						is_wrapper = ((RegisterAttribute) attribs [0]).IsWrapper;
 				}
@@ -462,7 +467,7 @@ namespace Foundation {
 
 			if (does)
 				return true;
-			
+
 			if (!Runtime.DynamicRegistrationSupported)
 				return false;
 
@@ -495,7 +500,7 @@ namespace Foundation {
 		bool DynamicConformsToProtocol (NativeHandle protocol)
 		{
 			object [] adoptedProtocols = GetType ().GetCustomAttributes (typeof (AdoptsAttribute), true);
-			foreach (AdoptsAttribute adopts in adoptedProtocols){
+			foreach (AdoptsAttribute adopts in adoptedProtocols) {
 				if (adopts.ProtocolHandle == protocol)
 					return true;
 			}
@@ -542,7 +547,7 @@ namespace Foundation {
 			Messaging.void_objc_msgSend (handle, Selector.GetHandle (Selector.Retain));
 #endif
 		}
-			
+
 		internal static void DangerousAutorelease (NativeHandle handle)
 		{
 #if MONOMAC
@@ -582,16 +587,16 @@ namespace Foundation {
 				return GetSuper ();
 			}
 		}
-		
+
 		public NativeHandle Handle {
 			get { return handle; }
 			set {
 				if (handle == value)
 					return;
-				
+
 				if (handle != IntPtr.Zero)
 					Runtime.UnregisterNSObject (handle);
-				
+
 				handle = value;
 
 #if NET
@@ -628,8 +633,9 @@ namespace Foundation {
 
 			this.Handle = handle;
 		}
-		
-		private bool AllocIfNeeded () {
+
+		private bool AllocIfNeeded ()
+		{
 			if (handle == NativeHandle.Zero) {
 #if MONOMAC
 				handle = Messaging.IntPtr_objc_msgSend (Class.GetHandle (this.GetType ()), Selector.AllocHandle);
@@ -640,37 +646,41 @@ namespace Foundation {
 			}
 			return false;
 		}
-		
+
 #if !XAMCORE_3_0
-		private IntPtr GetObjCIvar (string name) {
+		private IntPtr GetObjCIvar (string name)
+		{
 			IntPtr native;
-			
+
 			object_getInstanceVariable (handle, name, out native);
-			
+
 			return native;
 		}
-		
+
 		[Obsolete ("Do not use; this API does not properly retain/release existing/new values, so leaks and/or crashes may occur.")]
-		public NSObject GetNativeField (string name) {
+		public NSObject GetNativeField (string name)
+		{
 			IntPtr field = GetObjCIvar (name);
-			
+
 			if (field == IntPtr.Zero)
 				return null;
 			return Runtime.GetNSObject (field);
 		}
-		
-		private void SetObjCIvar (string name, IntPtr value) {
+
+		private void SetObjCIvar (string name, IntPtr value)
+		{
 			object_setInstanceVariable (handle, name, value);
 		}
-		
+
 		[Obsolete ("Do not use; this API does not properly retain/release existing/new values, so leaks and/or crashes may occur.")]
-		public void SetNativeField (string name, NSObject value) {
+		public void SetNativeField (string name, NSObject value)
+		{
 			if (value == null)
 				SetObjCIvar (name, IntPtr.Zero);
 			else
 				SetObjCIvar (name, value.Handle);
 		}
-		
+
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		extern static void object_getInstanceVariable (IntPtr obj, string name, out IntPtr val);
 
@@ -690,17 +700,17 @@ namespace Foundation {
 #endif
 #endif
 		}
-		
+
 		public void BeginInvokeOnMainThread (Selector sel, NSObject obj)
 		{
 			InvokeOnMainThread (sel, obj, false);
 		}
-		
+
 		public void InvokeOnMainThread (Selector sel, NSObject obj)
 		{
 			InvokeOnMainThread (sel, obj, true);
 		}
-		
+
 		public void BeginInvokeOnMainThread (Action action)
 		{
 			var d = new NSAsyncActionDispatcher (action);
@@ -712,8 +722,8 @@ namespace Foundation {
 			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle, 
 		                                                        NSDispatcher.Selector.Handle, d.Handle, false);
 #else
-			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), 
-			                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, false);
+			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
+															Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, false);
 #endif
 #endif
 		}
@@ -730,11 +740,11 @@ namespace Foundation {
 		                                                        NSDispatcher.Selector.Handle, d.Handle, false);
 #else
 			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
-			                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, false);
+															Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, false);
 #endif
 #endif
 		}
-		
+
 		public void InvokeOnMainThread (Action action)
 		{
 			using (var d = new NSActionDispatcher (action)) {
@@ -746,12 +756,12 @@ namespace Foundation {
 				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle, 
 		                                                                NSDispatcher.Selector.Handle, d.Handle, true);
 #else
-				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), 
-				                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, true);
+				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
+																Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, true);
 #endif
 #endif
 			}
-		}		
+		}
 
 		internal void InvokeOnMainThread (System.Threading.SendOrPostCallback cb, object state)
 		{
@@ -765,7 +775,7 @@ namespace Foundation {
 			                                                        NSDispatcher.Selector.Handle, d.Handle, true);
 #else
 				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
-				                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, true);
+																Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, true);
 #endif
 #endif
 			}
@@ -778,8 +788,8 @@ namespace Foundation {
 			var t = obj.GetType ();
 			if (t == typeof (NSObject) || t.IsSubclassOf (typeof (NSObject)))
 				return (NSObject) obj;
-			
-			switch (Type.GetTypeCode (t)){
+
+			switch (Type.GetTypeCode (t)) {
 			case TypeCode.Boolean:
 				return new NSNumber ((bool) obj);
 			case TypeCode.Char:
@@ -892,7 +902,7 @@ namespace Foundation {
 			var o = obj as NSObject;
 			if (o == null)
 				return false;
-				
+
 			bool isDirectBinding = IsDirectBinding;
 			// is only one is a direct binding then both cannot be equals
 			if (isDirectBinding != o.IsDirectBinding)
@@ -929,11 +939,12 @@ namespace Foundation {
 			handle = NativeHandle.Zero;
 		}
 
-		protected virtual void Dispose (bool disposing) {
+		protected virtual void Dispose (bool disposing)
+		{
 			if (disposed)
 				return;
 			disposed = true;
-			
+
 			if (handle != NativeHandle.Zero) {
 				if (disposing) {
 					ReleaseManagedRef ();
@@ -954,25 +965,26 @@ namespace Foundation {
 		}
 
 		[Register ("__NSObject_Disposer")]
-		[Preserve (AllMembers=true)]
+		[Preserve (AllMembers = true)]
 		internal class NSObject_Disposer : NSObject {
-			static readonly List <NSObject> drainList1 = new List<NSObject> ();
-			static readonly List <NSObject> drainList2 = new List<NSObject> ();
-			static List <NSObject> handles = drainList1;
+			static readonly List<NSObject> drainList1 = new List<NSObject> ();
+			static readonly List<NSObject> drainList2 = new List<NSObject> ();
+			static List<NSObject> handles = drainList1;
 
 			static readonly IntPtr class_ptr = Class.GetHandle ("__NSObject_Disposer");
 #if MONOMAC
 			static readonly IntPtr drainHandle = Selector.GetHandle ("drain:");
 #endif
-			
+
 			static readonly object lock_obj = new object ();
-			
+
 			private NSObject_Disposer ()
 			{
 				// Disable default ctor, there should be no instances of this class.
 			}
-			
-			static internal void Add (NSObject handle) {
+
+			static internal void Add (NSObject handle)
+			{
 				bool call_drain;
 				lock (lock_obj) {
 					handles.Add (handle);
@@ -990,11 +1002,12 @@ namespace Foundation {
 #endif
 #endif
 			}
-			
+
 			[Export ("drain:")]
-			static  void Drain (NSObject ctx) {
+			static void Drain (NSObject ctx)
+			{
 				List<NSObject> drainList;
-				
+
 				lock (lock_obj) {
 					drainList = handles;
 					if (handles == drainList1)
@@ -1002,23 +1015,23 @@ namespace Foundation {
 					else
 						handles = drainList1;
 				}
-				
+
 				foreach (NSObject x in drainList)
 					x.ReleaseManagedRef ();
-				drainList.Clear();
+				drainList.Clear ();
 			}
 		}
-			
+
 		[Register ("__XamarinObjectObserver")]
 		class Observer : NSObject {
 			WeakReference obj;
 			Action<NSObservedChange> cback;
 			NSString key;
-			
+
 			public Observer (NSObject obj, NSString key, Action<NSObservedChange> observer)
 			{
 				if (observer == null)
-					throw new ArgumentNullException (nameof(observer));
+					throw new ArgumentNullException (nameof (observer));
 
 				this.obj = new WeakReference (obj);
 				this.key = key;
@@ -1052,7 +1065,7 @@ namespace Foundation {
 				base.Dispose (disposing);
 			}
 		}
-		
+
 		public IDisposable AddObserver (string key, NSKeyValueObservingOptions options, Action<NSObservedChange> observer)
 		{
 			return AddObserver (new NSString (key), options, observer);
@@ -1084,11 +1097,9 @@ namespace Foundation {
 			// using the parameterized Thread.Start to avoid capturing
 			// the 'action' parameter (it'll needlessly create an extra
 			// object).
-			new System.Threading.Thread ((v) =>
-			{
+			new System.Threading.Thread ((v) => {
 				((Action) v) ();
-			})
-			{
+			}) {
 				IsBackground = true,
 			}.Start (action);
 		}
@@ -1134,13 +1145,13 @@ namespace Foundation {
 			}
 		}
 
-		public bool IsPrior { 
+		public bool IsPrior {
 			get {
 				var n = dict [NSObject.ChangeNotificationIsPriorKey] as NSNumber;
 				if (n == null)
 					return false;
 				return n.BoolValue;
-			}  
+			}
 		}
 	}
 #endif

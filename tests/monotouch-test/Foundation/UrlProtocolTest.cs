@@ -25,7 +25,7 @@ using Xamarin.Utils;
 
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class UrlProtocolTest {
@@ -34,16 +34,15 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			Class c = new Class (typeof (CustomProtocol));
 			bool res;
-			
+
 			res = NSUrlProtocol.RegisterClass (c);
-			
+
 			Assert.That (res, "#1");
-			
+
 			NSUrlProtocol.UnregisterClass (c);
 		}
 
-		class CustomProtocol : NSUrlProtocol
-		{
+		class CustomProtocol : NSUrlProtocol {
 		}
 
 		// API disabled - see comments in src/foundation.cs

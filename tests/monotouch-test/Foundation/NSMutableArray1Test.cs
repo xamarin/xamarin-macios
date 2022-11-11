@@ -87,7 +87,7 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.AreSame (v3, arr [2], "[2]");
 			}
 
-			using (var arr = new NSMutableArray<NSString>()) {
+			using (var arr = new NSMutableArray<NSString> ()) {
 				Assert.DoesNotThrow (() => arr.Insert (v1, 0), "Insert into empty array");
 			}
 		}
@@ -121,7 +121,7 @@ namespace MonoTouchFixtures.Foundation {
 			var v3 = (NSString) "3";
 
 			using (var arr = new NSMutableArray<NSString> ()) {
-				Assert.Throws<ArgumentNullException> (() => arr.AddObjects ((NSString[]) null), "AddObjects ANE 1");
+				Assert.Throws<ArgumentNullException> (() => arr.AddObjects ((NSString []) null), "AddObjects ANE 1");
 				Assert.AreEqual ((nuint) 0, arr.Count, "Count 1");
 
 				Assert.Throws<ArgumentNullException> (() => arr.AddObjects (new NSString [] { null }), "AddObjects ANE 2");
@@ -150,7 +150,7 @@ namespace MonoTouchFixtures.Foundation {
 				iset.Add (1);
 				iset.Add (2);
 
-				Assert.Throws<ArgumentNullException> (() => arr.InsertObjects ((NSString[]) null, iset), "InsertObjects ANE 1");
+				Assert.Throws<ArgumentNullException> (() => arr.InsertObjects ((NSString []) null, iset), "InsertObjects ANE 1");
 				Assert.AreEqual ((nuint) 2, arr.Count, "Count 1");
 
 				Assert.Throws<ArgumentNullException> (() => arr.InsertObjects (new NSString [] { null, null }, iset), "InsertObjects ANE 2");

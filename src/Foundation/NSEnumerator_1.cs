@@ -37,8 +37,7 @@ using NativeHandle = System.IntPtr;
 namespace Foundation {
 	[Register ("NSEnumerator", SkipRegistration = true)]
 	public sealed class NSEnumerator<TKey> : NSEnumerator
-		where TKey : class, INativeObject
-	{
+		where TKey : class, INativeObject {
 #if !NET
 		public NSEnumerator ()
 		{

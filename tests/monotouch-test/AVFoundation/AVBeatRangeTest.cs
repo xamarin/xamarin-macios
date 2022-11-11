@@ -16,7 +16,7 @@ namespace MonoTouchFixtures.AVFoundation {
 			var range = new AVBeatRange (start, length);
 
 			Assert.AreEqual (start, range.Start, "Wrong Start value.");
-			Assert.AreEqual (length, range.Length, "Wrong Length value."); 
+			Assert.AreEqual (length, range.Length, "Wrong Length value.");
 		}
 
 		[Test]
@@ -41,7 +41,7 @@ namespace MonoTouchFixtures.AVFoundation {
 			Assert.False (range1.Equals (range2), "range1.Equals (range2)");
 			Assert.True (range1 != range2, "range1 != range2");
 		}
-		
+
 		[Test]
 		public void AreEqualDiffType ()
 		{

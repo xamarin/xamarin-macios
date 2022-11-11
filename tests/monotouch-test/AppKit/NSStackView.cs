@@ -6,11 +6,9 @@ using AppKit;
 using ObjCRuntime;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[Preserve (AllMembers = true)]
-	public class NSStackViewTests
-	{
+	public class NSStackViewTests {
 		NSStackView view;
 		NSView first;
 		NSView second;
@@ -45,7 +43,8 @@ namespace Xamarin.Mac.Tests
 
 		[Test]
 		public void NSStackViewShouldAddView ()
-		{view.AddView (new NSView (), NSStackViewGravity.Bottom);
+		{
+			view.AddView (new NSView (), NSStackViewGravity.Bottom);
 
 			Assert.IsTrue (view.Views.Length == 1, "NSStackViewShouldAddView - Failed to add view - length was 0");
 		}
@@ -130,14 +129,14 @@ namespace Xamarin.Mac.Tests
 			Assert.IsFalse (view.HasEqualSpacing == hasEqualSpacing, "NSStackViewShouldChangeHasEqualSpacing - Failed to change HasEqualSpacing property");
 		}
 
-//		[Test]
-//		public void NSStackViewShouldSetDelegate ()
-//		{
-//			var view = new NSStackView ();
-//			view.Delegate = new NSStackViewDelegate ();
-//
-//			Assert.IsNotNull (view.Delegate, "NSStackViewShouldSetDelegate - Delegate property returned null");
-//		}
+		//		[Test]
+		//		public void NSStackViewShouldSetDelegate ()
+		//		{
+		//			var view = new NSStackView ();
+		//			view.Delegate = new NSStackViewDelegate ();
+		//
+		//			Assert.IsNotNull (view.Delegate, "NSStackViewShouldSetDelegate - Delegate property returned null");
+		//		}
 
 		[Test]
 		public void NSStackViewShouldChangeClippingResistance ()
@@ -168,7 +167,7 @@ namespace Xamarin.Mac.Tests
 			var customSpacing = view.CustomSpacingAfterView (first);
 			view.SetCustomSpacing (10, first);
 
-			Assert.IsFalse (view.CustomSpacingAfterView (first) == customSpacing, 
+			Assert.IsFalse (view.CustomSpacingAfterView (first) == customSpacing,
 				"NSStackViewShouldChangeCustomSpacing - Failed to set CustomSpacing");
 		}
 

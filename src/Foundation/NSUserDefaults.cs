@@ -3,7 +3,7 @@ using ObjCRuntime;
 
 namespace Foundation {
 
-	public enum  NSUserDefaultsType {
+	public enum NSUserDefaultsType {
 		UserName,
 		SuiteName
 	}
@@ -33,7 +33,7 @@ namespace Foundation {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public NSUserDefaults (string name, NSUserDefaultsType type)
 		{
@@ -55,7 +55,7 @@ namespace Foundation {
 			NSString str = new NSString (value);
 
 			SetObjectForKey (str, defaultName);
-			
+
 			str.Dispose ();
 		}
 

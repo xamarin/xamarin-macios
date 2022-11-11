@@ -103,7 +103,7 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.That (config.TimeoutIntervalForResource, Is.GreaterThan (0), "timeoutIntervalForResource");
 			config.TimeoutIntervalForResource = config.TimeoutIntervalForResource; // setTimeoutIntervalForResource:
 
-			var max = TestRuntime.CheckXcodeVersion (8,0) ? SslProtocol.Unknown : SslProtocol.Tls_1_2; // Unknown also means default
+			var max = TestRuntime.CheckXcodeVersion (8, 0) ? SslProtocol.Unknown : SslProtocol.Tls_1_2; // Unknown also means default
 			Assert.That (config.TLSMaximumSupportedProtocol, Is.EqualTo (max), "TLSMaximumSupportedProtocol");
 			config.TLSMaximumSupportedProtocol = config.TLSMaximumSupportedProtocol; // setTLSMaximumSupportedProtocol:
 

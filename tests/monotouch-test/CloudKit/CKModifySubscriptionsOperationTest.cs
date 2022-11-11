@@ -6,13 +6,11 @@ using CloudKit;
 using ObjCRuntime;
 using Xamarin.Utils;
 
-namespace MonoTouchFixtures.CloudKit
-{
+namespace MonoTouchFixtures.CloudKit {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CKModifySubscriptionsOperationTest
-	{
+	public class CKModifySubscriptionsOperationTest {
 		CKModifySubscriptionsOperation op = null;
 
 		[SetUp]
@@ -32,7 +30,7 @@ namespace MonoTouchFixtures.CloudKit
 		[Test]
 		public void TestCompletedSetter ()
 		{
-			op.Completed = (saved, deleted, e) => { Console.WriteLine ("Completed");};
+			op.Completed = (saved, deleted, e) => { Console.WriteLine ("Completed"); };
 			Assert.NotNull (op.Completed);
 		}
 	}
