@@ -117,7 +117,7 @@ steps:
         Write-Host "Build task not found at $execPath!"
     }
 
-    $maciosPath="$Env:BUILD_SOURCESDIRECTORY"
+    $maciosPath="$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios"
 
     Write-Host "Exect path is $execPath"
     Write-Host "Macios path is $maciosPath"
