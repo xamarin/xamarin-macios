@@ -59,5 +59,5 @@ namespace MonoTouchFixtures.AVFoundation {
 	}
 #endif // __MACOS__ || !NET
 }
-	
+
 #endif // !__WATCHOS__

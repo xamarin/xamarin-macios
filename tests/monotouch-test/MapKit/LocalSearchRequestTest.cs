@@ -18,7 +18,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MapKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class LocalSearchRequestTest {
@@ -38,7 +38,7 @@ namespace MonoTouchFixtures.MapKit {
 				Assert.That (lsr.Region.Span.LongitudeDelta, Is.EqualTo (0.0d), "LongitudeDelta");
 
 				lsr.NaturalLanguageQuery = "restaurants";
-				lsr.Region = new MKCoordinateRegion (new CLLocationCoordinate2D (47,-71), new MKCoordinateSpan (1,1));
+				lsr.Region = new MKCoordinateRegion (new CLLocationCoordinate2D (47, -71), new MKCoordinateSpan (1, 1));
 
 				// NaturalLanguageQuery is nullable, Region is not (value-type)
 				lsr.NaturalLanguageQuery = null;

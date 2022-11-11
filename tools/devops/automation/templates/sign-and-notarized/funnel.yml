@@ -10,6 +10,20 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+
+- name: azureStorage
+  type: string
+
+- name: azureContainer
+  type: string
 
 jobs:
 - job: configure
@@ -23,6 +37,9 @@ jobs:
 
   steps:
   - template: ../common/configure.yml
+    parameters:
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
 
 - job: funnel_job
   dependsOn:
@@ -41,16 +58,19 @@ jobs:
   steps:
 
   # DO NOT USE THE checkout.yml template. The reason is that the template changes the hash which results in a problem with the artifacts scripts
-  - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
-    clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
-    submodules: recursive
-    path: s/xamarin-macios
+  - template: sdk-unified/steps/checkout/v1.yml@yaml-templates
+    parameters:
+      resource: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
+      clean: true
+      submodules: recursive
+      path: s/xamarin-macios
 
   - checkout: maccore
     clean: true
     persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 
-  - checkout: templates
+  - checkout: yaml-templates
     clean: true
 
   - checkout: release-scripts
@@ -86,7 +106,7 @@ jobs:
       displayName: 'Move pkg ${{ pkg.name }} to its final destination'
       condition: ne('', variables['${{ pkg.conditionVariable }}'])
 
-  - template: generate-workspace-info.yml@templates
+  - template: generate-workspace-info.yml@yaml-templates
     parameters:
       GitHubToken: $(GitHub.Token)
       ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
@@ -138,6 +158,8 @@ jobs:
     parameters:
       enableDotnet: ${{ parameters.enableDotnet }}
       sbomFilter: '*.nupkg;*.pkg;*.msi'
+      azureStorage: ${{ parameters.azureStorage }}
+      azureContainer: ${{ parameters.azureContainer }}
 
 # Job that runs on a vm that downloads the artifacts information and adds a github comment pointing to the results of the build.
 - job: artifacts_github_comment
@@ -159,3 +181,5 @@ jobs:
   - template: artifact-github-comment.yml
     parameters:
       isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}

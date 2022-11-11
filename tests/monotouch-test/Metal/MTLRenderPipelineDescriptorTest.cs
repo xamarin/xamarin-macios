@@ -80,7 +80,7 @@ namespace MonoTouchFixtures.Metal {
 
 		[Test]
 		public void ResetTest ()
-			=> Assert.DoesNotThrow (() => descriptor.Reset());
+			=> Assert.DoesNotThrow (() => descriptor.Reset ());
 
 		[Test]
 		public void ColorAttachments ()

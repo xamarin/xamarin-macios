@@ -69,7 +69,7 @@ namespace CoreGraphics {
 			Type = (CGPathElementType) t;
 			Point1 = Point2 = Point3 = CGPoint.Empty;
 		}
-		
+
 		// Set for MoveToPoint, AddLineToPoint, AddQuadCurveToPoint, AddCurveToPoint
 		public CGPoint Point1;
 
@@ -103,7 +103,7 @@ namespace CoreGraphics {
 			: base (CGPathCreateMutableCopyByTransformingPath (Runtime.ThrowOnNull (reference, nameof (reference)).Handle, ref transform), true)
 		{
 		}
-	
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGMutablePathRef */ IntPtr CGPathCreateMutableCopy (/* CGPathRef */ IntPtr path);
 
@@ -119,12 +119,12 @@ namespace CoreGraphics {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGPath (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
-	
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGPathRelease (/* CGPathRef */ IntPtr path);
 
@@ -175,9 +175,9 @@ namespace CoreGraphics {
 
 			return CGPathEqualToPath (this.Handle, other.Handle);
 		}
-       
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static void CGPathMoveToPoint (/* CGMutablePathRef */ IntPtr path, CGAffineTransform *m, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y);
+		unsafe extern static void CGPathMoveToPoint (/* CGMutablePathRef */ IntPtr path, CGAffineTransform* m, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y);
 
 		public unsafe void MoveToPoint (nfloat x, nfloat y)
 		{
@@ -188,7 +188,7 @@ namespace CoreGraphics {
 		{
 			CGPathMoveToPoint (Handle, null, point.X, point.Y);
 		}
-		
+
 		public unsafe void MoveToPoint (CGAffineTransform transform, nfloat x, nfloat y)
 		{
 			CGPathMoveToPoint (Handle, &transform, x, y);
@@ -198,9 +198,9 @@ namespace CoreGraphics {
 		{
 			CGPathMoveToPoint (Handle, &transform, point.X, point.Y);
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static void CGPathAddLineToPoint (/* CGMutablePathRef */ IntPtr path, CGAffineTransform *m, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y);
+		unsafe extern static void CGPathAddLineToPoint (/* CGMutablePathRef */ IntPtr path, CGAffineTransform* m, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y);
 
 		public unsafe void AddLineToPoint (nfloat x, nfloat y)
 		{
@@ -221,9 +221,9 @@ namespace CoreGraphics {
 		{
 			CGPathAddLineToPoint (Handle, &transform, point.X, point.Y);
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static void CGPathAddQuadCurveToPoint (/* CGMutablePathRef */ IntPtr path, CGAffineTransform *m, /* CGFloat */ nfloat cpx, /* CGFloat */ nfloat cpy, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y);
+		unsafe extern static void CGPathAddQuadCurveToPoint (/* CGMutablePathRef */ IntPtr path, CGAffineTransform* m, /* CGFloat */ nfloat cpx, /* CGFloat */ nfloat cpy, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y);
 
 		public unsafe void AddQuadCurveToPoint (nfloat cpx, nfloat cpy, nfloat x, nfloat y)
 		{
@@ -236,7 +236,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static void CGPathAddCurveToPoint (/* CGMutablePathRef */ IntPtr path, CGAffineTransform *m, /* CGFloat */ nfloat cp1x, /* CGFloat */ nfloat cp1y, /* CGFloat */ nfloat cp2x, /* CGFloat */ nfloat cp2y, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y);
+		unsafe extern static void CGPathAddCurveToPoint (/* CGMutablePathRef */ IntPtr path, CGAffineTransform* m, /* CGFloat */ nfloat cp1x, /* CGFloat */ nfloat cp1y, /* CGFloat */ nfloat cp2x, /* CGFloat */ nfloat cp2y, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y);
 
 		public unsafe void AddCurveToPoint (CGAffineTransform transform, nfloat cp1x, nfloat cp1y, nfloat cp2x, nfloat cp2y, nfloat x, nfloat y)
 		{
@@ -252,12 +252,12 @@ namespace CoreGraphics {
 		{
 			CGPathAddCurveToPoint (Handle, null, cp1x, cp1y, cp2x, cp2y, x, y);
 		}
-			
+
 		public unsafe void AddCurveToPoint (CGPoint cp1, CGPoint cp2, CGPoint point)
 		{
 			CGPathAddCurveToPoint (Handle, null, cp1.X, cp1.Y, cp2.X, cp2.Y, point.X, point.Y);
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGPathCloseSubpath (/* CGMutablePathRef */ IntPtr path);
 
@@ -265,9 +265,9 @@ namespace CoreGraphics {
 		{
 			CGPathCloseSubpath (Handle);
 		}
-			
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static void CGPathAddRect (/* CGMutablePathRef */ IntPtr path, CGAffineTransform *m, CGRect rect);
+		unsafe extern static void CGPathAddRect (/* CGMutablePathRef */ IntPtr path, CGAffineTransform* m, CGRect rect);
 
 		public unsafe void AddRect (CGAffineTransform transform, CGRect rect)
 		{
@@ -280,7 +280,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static void CGPathAddRects (/* CGMutablePathRef */ IntPtr path, CGAffineTransform *m, CGRect [] rects, /* size_t */ nint count);
+		unsafe extern static void CGPathAddRects (/* CGMutablePathRef */ IntPtr path, CGAffineTransform* m, CGRect [] rects, /* size_t */ nint count);
 
 		public unsafe void AddRects (CGAffineTransform m, CGRect [] rects)
 		{
@@ -297,7 +297,7 @@ namespace CoreGraphics {
 				throw new ArgumentException (nameof (count));
 			CGPathAddRects (Handle, &m, rects, count);
 		}
-		
+
 		public unsafe void AddRects (CGRect [] rects)
 		{
 			if (rects is null)
@@ -315,7 +315,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static void CGPathAddLines (/* CGMutablePathRef */ IntPtr path, CGAffineTransform *m, CGPoint [] points, /* size_t */ nint count);
+		unsafe extern static void CGPathAddLines (/* CGMutablePathRef */ IntPtr path, CGAffineTransform* m, CGPoint [] points, /* size_t */ nint count);
 
 		public unsafe void AddLines (CGAffineTransform m, CGPoint [] points)
 		{
@@ -350,46 +350,46 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static void CGPathAddEllipseInRect (/* CGMutablePathRef */ IntPtr path, CGAffineTransform *m, CGRect rect);
+		unsafe extern static void CGPathAddEllipseInRect (/* CGMutablePathRef */ IntPtr path, CGAffineTransform* m, CGRect rect);
 
 		public unsafe void AddEllipseInRect (CGAffineTransform m, CGRect rect)
 		{
 			CGPathAddEllipseInRect (Handle, &m, rect);
 		}
-		
+
 		public unsafe void AddEllipseInRect (CGRect rect)
 		{
 			CGPathAddEllipseInRect (Handle, null, rect);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static void CGPathAddArc (/* CGMutablePathRef */ IntPtr path, CGAffineTransform *m, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y, /* CGFloat */ nfloat radius, /* CGFloat */ nfloat startAngle, /* CGFloat */ nfloat endAngle, [MarshalAs (UnmanagedType.I1)] bool clockwise);
+		unsafe extern static void CGPathAddArc (/* CGMutablePathRef */ IntPtr path, CGAffineTransform* m, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y, /* CGFloat */ nfloat radius, /* CGFloat */ nfloat startAngle, /* CGFloat */ nfloat endAngle, [MarshalAs (UnmanagedType.I1)] bool clockwise);
 
 		public unsafe void AddArc (CGAffineTransform m, nfloat x, nfloat y, nfloat radius, nfloat startAngle, nfloat endAngle, bool clockwise)
 		{
 			CGPathAddArc (Handle, &m, x, y, radius, startAngle, endAngle, clockwise);
 		}
-		
+
 		public unsafe void AddArc (nfloat x, nfloat y, nfloat radius, nfloat startAngle, nfloat endAngle, bool clockwise)
 		{
 			CGPathAddArc (Handle, null, x, y, radius, startAngle, endAngle, clockwise);
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static void CGPathAddArcToPoint (/* CGMutablePathRef */ IntPtr path, CGAffineTransform *m, /* CGFloat */ nfloat x1, /* CGFloat */ nfloat y1, /* CGFloat */ nfloat x2, /* CGFloat */ nfloat y2, /* CGFloat */ nfloat radius);
+		unsafe extern static void CGPathAddArcToPoint (/* CGMutablePathRef */ IntPtr path, CGAffineTransform* m, /* CGFloat */ nfloat x1, /* CGFloat */ nfloat y1, /* CGFloat */ nfloat x2, /* CGFloat */ nfloat y2, /* CGFloat */ nfloat radius);
 
 		public unsafe void AddArcToPoint (CGAffineTransform m, nfloat x1, nfloat y1, nfloat x2, nfloat y2, nfloat radius)
 		{
 			CGPathAddArcToPoint (Handle, &m, x1, y1, x2, y2, radius);
 		}
-		
+
 		public unsafe void AddArcToPoint (nfloat x1, nfloat y1, nfloat x2, nfloat y2, nfloat radius)
 		{
 			CGPathAddArcToPoint (Handle, null, x1, y1, x2, y2, radius);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static void CGPathAddRelativeArc (/* CGMutablePathRef */ IntPtr path, CGAffineTransform *m, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y, /* CGFloat */ nfloat radius, /* CGFloat */ nfloat startAngle, /* CGFloat */ nfloat delta);
+		unsafe extern static void CGPathAddRelativeArc (/* CGMutablePathRef */ IntPtr path, CGAffineTransform* m, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y, /* CGFloat */ nfloat radius, /* CGFloat */ nfloat startAngle, /* CGFloat */ nfloat delta);
 
 		public unsafe void AddRelativeArc (CGAffineTransform m, nfloat x, nfloat y, nfloat radius, nfloat startAngle, nfloat delta)
 		{
@@ -402,7 +402,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static void CGPathAddPath (/* CGMutablePathRef */ IntPtr path1, CGAffineTransform *m, /* CGMutablePathRef */ IntPtr path2);
+		unsafe extern static void CGPathAddPath (/* CGMutablePathRef */ IntPtr path1, CGAffineTransform* m, /* CGMutablePathRef */ IntPtr path2);
 
 		public unsafe void AddPath (CGAffineTransform t, CGPath path2)
 		{
@@ -410,7 +410,7 @@ namespace CoreGraphics {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path2));
 			CGPathAddPath (Handle, &t, path2.Handle);
 		}
-		
+
 		public unsafe void AddPath (CGPath path2)
 		{
 			if (path2 is null)
@@ -427,7 +427,7 @@ namespace CoreGraphics {
 				return CGPathIsEmpty (Handle);
 			}
 		}
-			
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPathIsRect (/* CGPathRef */ IntPtr path, out CGRect rect);
@@ -436,9 +436,9 @@ namespace CoreGraphics {
 		{
 			return CGPathIsRect (Handle, out rect);
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static CGPoint CGPathGetCurrentPoint(/* CGPathRef */ IntPtr path);
+		extern static CGPoint CGPathGetCurrentPoint (/* CGPathRef */ IntPtr path);
 
 		public CGPoint CurrentPoint {
 			get {
@@ -463,16 +463,16 @@ namespace CoreGraphics {
 				return CGPathGetPathBoundingBox (Handle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		unsafe extern static bool CGPathContainsPoint(IntPtr path, CGAffineTransform *m, CGPoint point, [MarshalAs (UnmanagedType.I1)] bool eoFill);
+		unsafe extern static bool CGPathContainsPoint (IntPtr path, CGAffineTransform* m, CGPoint point, [MarshalAs (UnmanagedType.I1)] bool eoFill);
 
 		public unsafe bool ContainsPoint (CGAffineTransform m, CGPoint point, bool eoFill)
 		{
 			return CGPathContainsPoint (Handle, &m, point, eoFill);
 		}
-		
+
 		public unsafe bool ContainsPoint (CGPoint point, bool eoFill)
 		{
 			return CGPathContainsPoint (Handle, null, point, eoFill);
@@ -483,7 +483,7 @@ namespace CoreGraphics {
 		delegate void CGPathApplierFunction (/* void* */ IntPtr info, /* const CGPathElement* */ IntPtr element);
 #if NET
 		[UnmanagedCallersOnly]
-#else		
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (CGPathApplierFunction))]
 #endif
@@ -492,7 +492,7 @@ namespace CoreGraphics {
 		{
 			GCHandle gch = GCHandle.FromIntPtr (info);
 			// note: CGPathElementType is an untyped enum, always 32bits
-			CGPathElement element = new CGPathElement (Marshal.ReadInt32(element_ptr, 0));
+			CGPathElement element = new CGPathElement (Marshal.ReadInt32 (element_ptr, 0));
 			var func = gch.Target as ApplierFunction;
 			if (func is null)
 				return;
@@ -500,7 +500,7 @@ namespace CoreGraphics {
 			IntPtr ptr = Marshal.ReadIntPtr (element_ptr, IntPtr.Size);
 			int ptsize = Marshal.SizeOf (typeof (CGPoint));
 
-			switch (element.Type){
+			switch (element.Type) {
 			case CGPathElementType.CloseSubpath:
 				break;
 
@@ -511,13 +511,13 @@ namespace CoreGraphics {
 
 			case CGPathElementType.AddQuadCurveToPoint:
 				element.Point1 = Marshal.PtrToStructure<CGPoint> (ptr)!;
-				element.Point2 = Marshal.PtrToStructure<CGPoint> (((IntPtr) (((long)ptr) + ptsize)))!;
+				element.Point2 = Marshal.PtrToStructure<CGPoint> (((IntPtr) (((long) ptr) + ptsize)))!;
 				break;
 
 			case CGPathElementType.AddCurveToPoint:
 				element.Point1 = Marshal.PtrToStructure<CGPoint> (ptr)!;
-				element.Point2 = Marshal.PtrToStructure<CGPoint> (((IntPtr) (((long)ptr) + ptsize)))!;
-				element.Point3 = Marshal.PtrToStructure<CGPoint> (((IntPtr) (((long)ptr) + (2*ptsize))))!;
+				element.Point2 = Marshal.PtrToStructure<CGPoint> (((IntPtr) (((long) ptr) + ptsize)))!;
+				element.Point3 = Marshal.PtrToStructure<CGPoint> (((IntPtr) (((long) ptr) + (2 * ptsize))))!;
 				break;
 			}
 
@@ -551,14 +551,14 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos13.0")]
 		[SupportedOSPlatform ("tvos16.0")]
 #else
-		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0), Watch (9,0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr CGPathCreateCopyByNormalizing (IntPtr path, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
 
 		public CGPath? CreateByNormalizing (bool evenOddFillRule)
 		{
-			return Runtime.GetINativeObject<CGPath>(CGPathCreateCopyByNormalizing (Handle, evenOddFillRule), owns: true);
+			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyByNormalizing (Handle, evenOddFillRule), owns: true);
 		}
 
 #if NET
@@ -567,14 +567,14 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos13.0")]
 		[SupportedOSPlatform ("tvos16.0")]
 #else
-		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0), Watch (9,0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr CGPathCreateCopyByUnioningPath (IntPtr path, IntPtr maskPath, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
 
 		public CGPath? CreateByUnioningPath (CGPath? maskPath, bool evenOddFillRule)
-		{			
-			return Runtime.GetINativeObject<CGPath>(CGPathCreateCopyByUnioningPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
+		{
+			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyByUnioningPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
 		}
 
 #if NET
@@ -583,14 +583,14 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos13.0")]
 		[SupportedOSPlatform ("tvos16.0")]
 #else
-		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0), Watch (9,0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr CGPathCreateCopyByIntersectingPath (IntPtr path, IntPtr maskPath, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
 
 		public CGPath? CreateByIntersectingPath (CGPath? maskPath, bool evenOddFillRule)
 		{
-			return Runtime.GetINativeObject<CGPath>(CGPathCreateCopyByIntersectingPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
+			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyByIntersectingPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
 		}
 
 #if NET
@@ -599,14 +599,14 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos13.0")]
 		[SupportedOSPlatform ("tvos16.0")]
 #else
-		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0), Watch (9,0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr CGPathCreateCopyBySubtractingPath (IntPtr path, IntPtr maskPath, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
 
 		public CGPath? CreateBySubtractingPath (CGPath? maskPath, bool evenOddFillRule)
 		{
-			return Runtime.GetINativeObject<CGPath>(CGPathCreateCopyBySubtractingPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
+			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyBySubtractingPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
 		}
 
 #if NET
@@ -615,14 +615,14 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos13.0")]
 		[SupportedOSPlatform ("tvos16.0")]
 #else
-		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0), Watch (9,0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr CGPathCreateCopyBySymmetricDifferenceOfPath (IntPtr path, IntPtr maskPath, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
 
 		public CGPath? CreateBySymmetricDifferenceOfPath (CGPath? maskPath, bool evenOddFillRule)
 		{
-			return Runtime.GetINativeObject<CGPath>(CGPathCreateCopyBySymmetricDifferenceOfPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
+			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyBySymmetricDifferenceOfPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
 		}
 
 #if NET
@@ -631,14 +631,14 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos13.0")]
 		[SupportedOSPlatform ("tvos16.0")]
 #else
-		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0), Watch (9,0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr CGPathCreateCopyOfLineBySubtractingPath (IntPtr path, IntPtr maskPath, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
 
 		public CGPath? CreateLineBySubtractingPath (CGPath? maskPath, bool evenOddFillRule)
 		{
-			return Runtime.GetINativeObject<CGPath>(CGPathCreateCopyOfLineBySubtractingPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
+			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyOfLineBySubtractingPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
 		}
 
 #if NET
@@ -647,14 +647,14 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos13.0")]
 		[SupportedOSPlatform ("tvos16.0")]
 #else
-		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0), Watch (9,0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr CGPathCreateCopyOfLineByIntersectingPath (IntPtr path, IntPtr maskPath, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
 
 		public CGPath? CreateLineByIntersectingPath (CGPath? maskPath, bool evenOddFillRule)
 		{
-			return Runtime.GetINativeObject<CGPath>(CGPathCreateCopyOfLineByIntersectingPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
+			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyOfLineByIntersectingPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
 		}
 
 #if NET
@@ -663,12 +663,12 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos13.0")]
 		[SupportedOSPlatform ("tvos16.0")]
 #else
-		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0), Watch (9,0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern unsafe /* CFArrayRef __nullable */ IntPtr CGPathCreateSeparateComponents (IntPtr path, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
 
-		public CGPath[] GetSeparateComponents (bool evenOddFillRule)
+		public CGPath [] GetSeparateComponents (bool evenOddFillRule)
 		{
 			var cfArrayRef = CGPathCreateSeparateComponents (Handle, evenOddFillRule);
 			if (cfArrayRef == IntPtr.Zero)
@@ -682,14 +682,14 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos13.0")]
 		[SupportedOSPlatform ("tvos16.0")]
 #else
-		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0), Watch (9,0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr CGPathCreateCopyByFlattening (IntPtr path, nfloat flatteningThreshold);
 
 		public CGPath? CreateByFlattening (nfloat flatteningThreshold)
 		{
-			return Runtime.GetINativeObject<CGPath>(CGPathCreateCopyByFlattening (Handle, flatteningThreshold), owns: true);
+			return Runtime.GetINativeObject<CGPath> (CGPathCreateCopyByFlattening (Handle, flatteningThreshold), owns: true);
 		}
 
 #if NET
@@ -698,7 +698,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos13.0")]
 		[SupportedOSPlatform ("tvos16.0")]
 #else
-		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0), Watch (9,0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -719,8 +719,8 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern unsafe static IntPtr CGPathCreateCopyByDashingPath (
-			/* CGPathRef */ IntPtr path, 
-			/* const CGAffineTransform * */ CGAffineTransform *transform, 
+			/* CGPathRef */ IntPtr path,
+			/* const CGAffineTransform * */ CGAffineTransform* transform,
 			/* CGFloat */ nfloat phase,
 			/* CGFloat */ nfloat [] lengths,
 			/* size_t */ nint count);
@@ -752,7 +752,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static IntPtr CGPathCreateCopyByStrokingPath (/* CGPathRef */ IntPtr path, CGAffineTransform *transform, nfloat lineWidth, CGLineCap lineCap, CGLineJoin lineJoin, /* CGFloat */ nfloat miterLimit);
+		unsafe extern static IntPtr CGPathCreateCopyByStrokingPath (/* CGPathRef */ IntPtr path, CGAffineTransform* transform, nfloat lineWidth, CGLineCap lineCap, CGLineJoin lineJoin, /* CGFloat */ nfloat miterLimit);
 
 		public unsafe CGPath CopyByStrokingPath (CGAffineTransform transform, nfloat lineWidth, CGLineCap lineCap, CGLineJoin lineJoin, nfloat miterLimit)
 		{
@@ -773,7 +773,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static IntPtr CGPathCreateWithEllipseInRect (CGRect boundingRect, CGAffineTransform *transform);
+		unsafe extern static IntPtr CGPathCreateWithEllipseInRect (CGRect boundingRect, CGAffineTransform* transform);
 
 		static public unsafe CGPath EllipseFromRect (CGRect boundingRect, CGAffineTransform transform)
 		{
@@ -786,7 +786,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static IntPtr CGPathCreateWithRect (CGRect boundingRect, CGAffineTransform *transform);
+		unsafe extern static IntPtr CGPathCreateWithRect (CGRect boundingRect, CGAffineTransform* transform);
 
 		static public unsafe CGPath FromRect (CGRect rectangle, CGAffineTransform transform)
 		{
@@ -799,9 +799,9 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static /* CGPathRef */ IntPtr CGPathCreateWithRoundedRect (CGRect rect, /* CGFloat */ nfloat cornerWidth, /* CGFloat */ nfloat cornerHeight, CGAffineTransform *transform);
+		unsafe extern static /* CGPathRef */ IntPtr CGPathCreateWithRoundedRect (CGRect rect, /* CGFloat */ nfloat cornerWidth, /* CGFloat */ nfloat cornerHeight, CGAffineTransform* transform);
 
-		static unsafe CGPath _FromRoundedRect (CGRect rectangle, nfloat cornerWidth, nfloat cornerHeight, CGAffineTransform *transform)
+		static unsafe CGPath _FromRoundedRect (CGRect rectangle, nfloat cornerWidth, nfloat cornerHeight, CGAffineTransform* transform)
 		{
 			if ((cornerWidth < 0) || (2 * cornerWidth > rectangle.Width))
 				throw new ArgumentException (nameof (cornerWidth));
@@ -816,8 +816,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[Mac (10,9)]
-		[iOS (7,0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 #endif
 		static unsafe public CGPath FromRoundedRect (CGRect rectangle, nfloat cornerWidth, nfloat cornerHeight)
 		{
@@ -830,8 +830,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[Mac (10,9)]
-		[iOS (7,0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 #endif
 		static public unsafe CGPath FromRoundedRect (CGRect rectangle, nfloat cornerWidth, nfloat cornerHeight, CGAffineTransform transform)
 		{
@@ -839,7 +839,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static void CGPathAddRoundedRect (/* CGMutablePathRef */ IntPtr path, CGAffineTransform *transform, CGRect rect, /* CGFloat */ nfloat cornerWidth, /* CGFloat */ nfloat cornerHeight);
+		unsafe extern static void CGPathAddRoundedRect (/* CGMutablePathRef */ IntPtr path, CGAffineTransform* transform, CGRect rect, /* CGFloat */ nfloat cornerWidth, /* CGFloat */ nfloat cornerHeight);
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
@@ -847,8 +847,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[Mac (10,9)]
-		[iOS (7,0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 #endif
 		public unsafe void AddRoundedRect (CGAffineTransform transform, CGRect rect, nfloat cornerWidth, nfloat cornerHeight)
 		{
@@ -861,8 +861,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[Mac (10,9)]
-		[iOS (7,0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 #endif
 		public unsafe void AddRoundedRect (CGRect rect, nfloat cornerWidth, nfloat cornerHeight)
 		{

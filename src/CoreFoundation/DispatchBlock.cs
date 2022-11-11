@@ -193,7 +193,7 @@ namespace CoreFoundation {
 				return null;
 
 			unsafe {
-				var handle = (BlockLiteral *) (IntPtr) block.GetCheckedHandle ();
+				var handle = (BlockLiteral*) (IntPtr) block.GetCheckedHandle ();
 				var del = handle->GetDelegateForBlock<DispatchBlockCallback> ();
 				return new Action (() => del ((IntPtr) block.GetCheckedHandle ()));
 			}
@@ -211,7 +211,7 @@ namespace CoreFoundation {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal static unsafe void Invoke (Action codeToRun, Action<IntPtr> invoker)
 		{
-			BlockLiteral *block_ptr;
+			BlockLiteral* block_ptr;
 			BlockLiteral block;
 			block = new BlockLiteral ();
 			block_ptr = &block;

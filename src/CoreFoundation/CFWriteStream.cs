@@ -109,14 +109,14 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern nint CFWriteStreamWrite (IntPtr handle, IntPtr buffer, nint count);
 
-		public int Write (byte[] buffer)
+		public int Write (byte [] buffer)
 		{
 			if (buffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
 			return Write (buffer, 0, buffer.Length);
 		}
 
-		public unsafe int Write (byte[] buffer, nint offset, nint count)
+		public unsafe int Write (byte [] buffer, nint offset, nint count)
 		{
 			if (buffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
@@ -137,7 +137,7 @@ namespace CoreFoundation {
 			/* CFWriteStreamClientCallBack */ CFStreamCallback? clientCB, /* CFStreamClientContext* */ IntPtr clientContext);
 
 		protected override bool DoSetClient (CFStreamCallback? callback, CFIndex eventTypes,
-		                                     IntPtr context)
+											 IntPtr context)
 		{
 			return CFWriteStreamSetClient (Handle, (nint) eventTypes, callback, context);
 		}

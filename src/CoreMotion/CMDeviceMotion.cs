@@ -16,7 +16,7 @@ namespace CoreMotion {
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[Mac (10,15)]
+	[Mac (10, 15)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CMCalibratedMagneticField {

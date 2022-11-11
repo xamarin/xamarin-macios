@@ -14,11 +14,11 @@ using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class OperationQueueTest {
-		
+
 		[Test]
 		public void Add_NSAction_Null ()
 		{

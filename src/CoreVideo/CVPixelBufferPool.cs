@@ -31,20 +31,19 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[Watch (4,0)]
+	[Watch (4, 0)]
 #endif
-	public partial class CVPixelBufferPool : NativeObject
-	{
+	public partial class CVPixelBufferPool : NativeObject {
 #if !COREBUILD
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CVPixelBufferPool (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
-	
+
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static void CVPixelBufferPoolRelease (/* CVPixelBufferPoolRef __nullable */ IntPtr handle);
-		
+
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CVPixelBufferPoolRef __nullable */ IntPtr CVPixelBufferPoolRetain (
 			/* CVPixelBufferPoolRef __nullable */ IntPtr handle);
@@ -161,8 +160,8 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
-		[Mac (10,11)]
+		[iOS (9, 0)]
+		[Mac (10, 11)]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		static extern void CVPixelBufferPoolFlush (/* CVPixelBufferPoolRef __nonnull */ IntPtr pool,
@@ -174,8 +173,8 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
-		[Mac (10,11)]
+		[iOS (9, 0)]
+		[Mac (10, 11)]
 #endif
 		public void Flush (CVPixelBufferPoolFlushFlags options)
 		{

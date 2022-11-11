@@ -6,17 +6,14 @@ using Mono.Cecil;
 
 using Clang.Ast;
 
-namespace Extrospection
-{
+namespace Extrospection {
 
-	class SimdCheck : BaseVisitor
-	{
+	class SimdCheck : BaseVisitor {
 		bool very_strict = false;
 		bool strict = false;
 
 		// A dictionary of native type -> managed type mapping.
-		class NativeSimdInfo
-		{
+		class NativeSimdInfo {
 			public string Managed;
 			public string InvalidManaged;
 		}
@@ -93,8 +90,7 @@ namespace Extrospection
 			}
 		}
 
-		class ManagedSimdInfo
-		{
+		class ManagedSimdInfo {
 			public MethodDefinition Method;
 			public bool ContainsInvalidMappingForSimd;
 		}
@@ -144,7 +140,8 @@ namespace Extrospection
 				}
 			} else {
 				managed_methods [key] = new ManagedSimdInfo {
-					Method = method, ContainsInvalidMappingForSimd = invalid_simd_type
+					Method = method,
+					ContainsInvalidMappingForSimd = invalid_simd_type
 				};
 			}
 		}
@@ -218,10 +215,10 @@ namespace Extrospection
 				var framework = Helpers.GetFramework (decl);
 				Log.On (framework).Add ($"!unknown-simd-type! Could not detect that {typeName} is a Simd type, but its name contains 'simd'. Something needs fixing in SimdCheck.cs");
 			}
-			
+
 			if (rv)
 				simd_type = typeName;
-			
+
 			return rv;
 		}
 
@@ -268,7 +265,7 @@ namespace Extrospection
 			const string _Nullable = " _Nullable";
 			if (native_name.EndsWith (_Nullable, StringComparison.Ordinal))
 				return Undecorate (native_name.Substring (0, native_name.Length - _Nullable.Length));
-			
+
 			const string _star = " *";
 			if (native_name.EndsWith (_star, StringComparison.Ordinal))
 				return Undecorate (native_name.Substring (0, native_name.Length - _star.Length));
@@ -404,7 +401,7 @@ namespace Extrospection
 
 			if (requires_marshal_directive)
 				CheckMarshalDirective (method, simd_type);
-			
+
 			// We have a potentially broken managed method. This needs fixing/investigation.
 			Log.On (framework).Add ($"!unknown-simd-type-in-signature! {method}: the native signature has a simd type ({simd_type}), while the corresponding managed method is using an incorrect (non-simd) type.");
 		}

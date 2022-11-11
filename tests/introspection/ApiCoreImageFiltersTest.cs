@@ -69,7 +69,7 @@ namespace Introspection {
 			// uncomment calls to `GenerateBinding` to use introspection code to generate the skeleton binding code and complete it
 			// e.g. picking better types like `bool` instead of `NSNumber'
 			default:
- 				return false;
+				return false;
 			case "CIConvertLabToRGB":
 			case "CIConvertRGBtoLab":
 				return true;
@@ -118,7 +118,7 @@ namespace Introspection {
 
 				// we need to skip the filters that are not supported by the executing version of iOS
 				if (Skip (t))
-					continue; 
+					continue;
 
 				var ctor = t.GetConstructor (Type.EmptyTypes);
 				if ((ctor == null) || ctor.IsAbstract)
@@ -157,7 +157,7 @@ namespace Introspection {
 
 			writer.WriteLine ("[CoreImageFilter]");
 
-			if (!attributes.TryGetValue ((NSString)"CIAttributeFilterAvailable_iOS", out value)) {
+			if (!attributes.TryGetValue ((NSString) "CIAttributeFilterAvailable_iOS", out value)) {
 				writer.WriteLine ("[NoiOS]");
 			} else {
 				var v = value.ToString ();
@@ -170,7 +170,7 @@ namespace Introspection {
 					writer.WriteLine ("[iOS ({0},{1})]", ios.Major, ios.Minor);
 			}
 
-			if (!attributes.TryGetValue ((NSString)"CIAttributeFilterAvailable_Mac", out value)) {
+			if (!attributes.TryGetValue ((NSString) "CIAttributeFilterAvailable_Mac", out value)) {
 				writer.WriteLine ("[NoMac]");
 			} else {
 				try {
@@ -178,14 +178,13 @@ namespace Introspection {
 					// we only document availability for 10.7+
 					if (mac.Minor > 6)
 						writer.WriteLine ("[Mac ({0},{1})]", mac.Major, mac.Minor);
-				}
-				catch (FormatException) {
+				} catch (FormatException) {
 					// 10.? is not a valid version - we'll assume it was added a long time ago (in a galaxy far away)
 					writer.WriteLine ("// incorrect version string for OSX: '{0}' Double-check documentation", value);
 				}
 			}
 			writer.WriteLine ("[BaseType (typeof (CIFilter))]");
-			var fname = attributes [(NSString)"CIAttributeFilterName"].ToString ();
+			var fname = attributes [(NSString) "CIAttributeFilterName"].ToString ();
 			writer.WriteLine ("interface {0} {{", fname);
 			foreach (var k in attributes.Keys) {
 				var key = k.ToString ();
@@ -196,7 +195,7 @@ namespace Introspection {
 				if (key == "inputImage")
 					continue;
 #endif
-				
+
 				writer.WriteLine ();
 				var dict = attributes [k] as NSDictionary;
 				var type = dict [(NSString) "CIAttributeClass"];
