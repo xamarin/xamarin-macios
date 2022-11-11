@@ -32,6 +32,8 @@ steps:
     persistCredentials: true
     path: s/xamarin-macios
 
+# checkout an extra repo to ensure that we have the same tree structure in the working directory in all pipelines.
+# if you delete this checkout the unified pipeline will have issues.
 - checkout: yaml-templates
   clean: true
 
