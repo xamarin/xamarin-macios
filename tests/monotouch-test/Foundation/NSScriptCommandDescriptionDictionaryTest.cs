@@ -17,7 +17,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void TestAddNullArgument ()
 		{
-			var arg = new NSScriptCommandArgumentDescription () { AppleEventCode="frgt", Type="text", Name="Foo"};
+			var arg = new NSScriptCommandArgumentDescription () { AppleEventCode = "frgt", Type = "text", Name = "Foo" };
 			var desc = new NSScriptCommandDescriptionDictionary ();
 			// no exception should happen
 			desc.Add (arg);
@@ -33,8 +33,8 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void TestAddArgument ()
 		{
-			var arg = new NSScriptCommandArgumentDescription () { AppleEventCode="frgt", Type="text", Name="Foo"};
-			var desc = new NSScriptCommandDescriptionDictionary () {Arguments = new NSMutableDictionary ()};
+			var arg = new NSScriptCommandArgumentDescription () { AppleEventCode = "frgt", Type = "text", Name = "Foo" };
+			var desc = new NSScriptCommandDescriptionDictionary () { Arguments = new NSMutableDictionary () };
 			// no exception should happen
 			desc.Add (arg);
 			using (var argKey = new NSString ("Arguments"))
@@ -49,7 +49,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void TestRemoveNoArguments ()
 		{
-			var arg = new NSScriptCommandArgumentDescription () { AppleEventCode="frgt", Type="text", Name="Foo"};
+			var arg = new NSScriptCommandArgumentDescription () { AppleEventCode = "frgt", Type = "text", Name = "Foo" };
 			var desc = new NSScriptCommandDescriptionDictionary ();
 			// no exception should happen
 			Assert.IsFalse (desc.Remove (arg));
@@ -58,8 +58,8 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void TestRemoveMissingArgument ()
 		{
-			var arg = new NSScriptCommandArgumentDescription () { AppleEventCode="frgt", Type="text", Name="Foo"};
-			var desc = new NSScriptCommandDescriptionDictionary () {Arguments = new NSMutableDictionary ()};
+			var arg = new NSScriptCommandArgumentDescription () { AppleEventCode = "frgt", Type = "text", Name = "Foo" };
+			var desc = new NSScriptCommandDescriptionDictionary () { Arguments = new NSMutableDictionary () };
 			// no exception should happen
 			Assert.IsFalse (desc.Remove (arg));
 		}
@@ -67,8 +67,8 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void RemoveArgument ()
 		{
-			var arg = new NSScriptCommandArgumentDescription () { AppleEventCode="frgt", Type="text", Name="Foo"};
-			var desc = new NSScriptCommandDescriptionDictionary () {Arguments = new NSMutableDictionary ()};
+			var arg = new NSScriptCommandArgumentDescription () { AppleEventCode = "frgt", Type = "text", Name = "Foo" };
+			var desc = new NSScriptCommandDescriptionDictionary () { Arguments = new NSMutableDictionary () };
 			// no exception should happen
 			desc.Add (arg);
 			using (var argKey = new NSString ("Arguments"))

@@ -36,7 +36,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void CreateDataTaskAsync ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			
+
 			NSUrlSession session = NSUrlSession.SharedSession;
 			var url = new NSUrl ("https://www.microsoft.com");
 			var tmpfile = Path.GetTempFileName ();
@@ -83,7 +83,7 @@ namespace MonoTouchFixtures.Foundation {
 					uploadRequest.HttpMethod = "POST";
 					await session.CreateUploadTaskAsync (uploadRequest, file_url);
 				} catch /* (Exception ex) */ {
-//					Console.WriteLine ("Ex: {0}", ex);
+					//					Console.WriteLine ("Ex: {0}", ex);
 				} finally {
 					completed = true;
 				}
@@ -96,7 +96,7 @@ namespace MonoTouchFixtures.Foundation {
 					uploadRequest.HttpMethod = "POST";
 					await session.CreateUploadTaskAsync (uploadRequest, file_data);
 				} catch /* (Exception ex) */ {
-//					Console.WriteLine ("Ex: {0}", ex);
+					//					Console.WriteLine ("Ex: {0}", ex);
 				} finally {
 					completed = true;
 				}
@@ -107,7 +107,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void DownloadDataAsync ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			
+
 			bool completed = false;
 			int failed_iteration = -1;
 			Exception ex = null;
@@ -145,7 +145,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
-			
+
 			// in iOS9 those selectors do not respond - but they do work (forwarded to __NSURLSessionLocal type ?)
 			// * delegateQueue, sessionDescription, setSessionDescription:, delegate
 			var session = NSUrlSession.SharedSession;
@@ -153,7 +153,7 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.NotNull (session.DelegateQueue, "delegateQueue");
 			Assert.Null (session.SessionDescription, "sessionDescription");
 			session.SessionDescription = "descriptive label";
-			Assert.That ((string)session.SessionDescription, Is.EqualTo ("descriptive label"), "setSessionDescription:");
+			Assert.That ((string) session.SessionDescription, Is.EqualTo ("descriptive label"), "setSessionDescription:");
 			session.SessionDescription = null; // the session instance is global, so revert value to to make sure the test can be re-run successfully.
 		}
 	}

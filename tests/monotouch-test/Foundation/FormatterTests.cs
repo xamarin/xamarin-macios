@@ -10,11 +10,10 @@ using UIKit;
 using NUnit.Framework;
 using Xamarin.Utils;
 
-namespace MonoTouchFixtures.Foundation
-{
+namespace MonoTouchFixtures.Foundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class FormatterTests	{
+	public class FormatterTests {
 
 		NSDateComponentsFormatter dateComponentsFormatter;
 		NSEnergyFormatter energyFormatter;
@@ -36,10 +35,8 @@ namespace MonoTouchFixtures.Foundation
 			Assert.IsTrue (formattedString.Length > 0, testName + " length");
 		}
 
-		public NSDateComponents NowComponents
-		{
-			get
-			{
+		public NSDateComponents NowComponents {
+			get {
 				return NSCalendar.CurrentCalendar.Components (NSCalendarUnit.Era | NSCalendarUnit.Day | NSCalendarUnit.Month | NSCalendarUnit.Year | NSCalendarUnit.WeekOfMonth, NSDate.Now);
 			}
 		}
@@ -182,7 +179,7 @@ namespace MonoTouchFixtures.Foundation
 			NSEnergyFormatterUnit unit;
 			string formattedString = energyFormatter.UnitStringFromJoules (2.0, out unit);
 			TestFormattedString (formattedString, "UnitStringFromJoules");
-			Assert.IsTrue ((int)unit > 0); // We got some value from the API
+			Assert.IsTrue ((int) unit > 0); // We got some value from the API
 		}
 
 		[Test]
@@ -215,4 +212,4 @@ namespace MonoTouchFixtures.Foundation
 		#endregion
 	}
 }
-	
+

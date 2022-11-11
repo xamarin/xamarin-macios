@@ -14,11 +14,10 @@ using AudioToolbox;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AudioToolbox {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AudioFormatTest
-	{
+	public class AudioFormatTest {
 		[Test]
 		public void GetFirstPlayableFormat ()
 		{
@@ -26,7 +25,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 			AudioStreamBasicDescription.GetFormatInfo (ref asbd);
 
 			var ofl = asbd.GetOutputFormatList ();
-			
+
 			Assert.IsNotNull (AudioFormat.GetFirstPlayableFormat (ofl));
 		}
 	}

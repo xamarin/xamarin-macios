@@ -6,12 +6,10 @@ using Foundation;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures
-{
+namespace MonoTouchFixtures {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public partial class ConfigTest
-	{
+	public partial class ConfigTest {
 		[Test]
 		public void Existence ()
 		{

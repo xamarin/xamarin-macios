@@ -58,8 +58,7 @@ namespace MonoTouchFixtures.JavascriptCore {
 		void CallMeBack (JSValue callbackFunc);
 	}
 
-	class MyJavaExporter : NSObject, IMyJavaExporter
-	{
+	class MyJavaExporter : NSObject, IMyJavaExporter {
 		public bool MyFuncCalled;
 		public void MyFunc ()
 		{
