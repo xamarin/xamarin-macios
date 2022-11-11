@@ -44,11 +44,11 @@ export HTML_NO_BREAKING_CHANGES_MESSAGE=No breaking changes
 export MARKDOWN_BREAKING_CHANGES_MESSAGE=:heavy_exclamation_mark: Breaking changes :heavy_exclamation_mark:
 export MARKDOWN_NO_BREAKING_CHANGES_MESSAGE=No breaking changes
 
-# Change the below to net7.0 once we have reference assemblies from net7.0 (i.e. once net7.0 goes stable).
-DOTNET_TFM_REFERENCE_iOS=net6.0
-DOTNET_TFM_REFERENCE_tvOS=net6.0
-DOTNET_TFM_REFERENCE_macOS=net6.0
-DOTNET_TFM_REFERENCE_MacCatalyst=net6.0
+# Change the below to net8.0 once we have reference assemblies from net8.0 (i.e. once net8.0 goes stable).
+DOTNET_TFM_REFERENCE_iOS=net7.0
+DOTNET_TFM_REFERENCE_tvOS=net7.0
+DOTNET_TFM_REFERENCE_macOS=net7.0
+DOTNET_TFM_REFERENCE_MacCatalyst=net7.0
 
 # I18N are excluded - but otherwise if should be like ../../builds/Makefile + what XI adds
 # in the order to the api-diff.html merged file
