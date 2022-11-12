@@ -14,7 +14,7 @@ namespace MonoTouchFixtures.Network {
 		[SetUp]
 		public void SetUp ()
 		{
-			TestRuntime.AssertXcodeVersion (10,0);
+			TestRuntime.AssertXcodeVersion (10, 0);
 		}
 
 		[Test]
@@ -70,7 +70,7 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void Quic ()
 		{
-			TestRuntime.AssertXcodeVersion (13,0);
+			TestRuntime.AssertXcodeVersion (13, 0);
 #if NET
 			using (var m = new NWIPMetadata ()) {
 				Assert.That (m.EcnFlag, Is.EqualTo (NWIPEcnFlag.NonEct), "IPMetadataEcnFlag");

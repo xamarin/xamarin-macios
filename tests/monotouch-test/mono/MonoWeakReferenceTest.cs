@@ -63,8 +63,10 @@ namespace MonoTouchFixtures {
 			//Finalizable.debug = true;
 			var t = new Test ();
 
-			FinalizerHelpers.PerformNoPinAction (delegate () {
-				FinalizerHelpers.PerformNoPinAction (delegate () {
+			FinalizerHelpers.PerformNoPinAction (delegate ()
+			{
+				FinalizerHelpers.PerformNoPinAction (delegate ()
+				{
 					t.Obj = new Finalizable ();
 					t.Obj2 = new Finalizable ();
 					t.Obj3 = new Finalizable ();
@@ -88,7 +90,8 @@ namespace MonoTouchFixtures {
 					new OneField ();
 
 				Exception ex = null;
-				FinalizerHelpers.PerformNoPinAction (delegate () {
+				FinalizerHelpers.PerformNoPinAction (delegate ()
+				{
 					try {
 						// This must be done on a separate thread so that the 'Test.retain' value doesn't
 						// show up on the main thread's stack as a temporary value in registers the

@@ -33,14 +33,12 @@ using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 using Bindings.Test;
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.ModelIO
-{
+namespace MonoTouchFixtures.ModelIO {
 
 	[TestFixture]
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
-	public class MDLTransformComponentTest
-	{
+	public class MDLTransformComponentTest {
 		[OneTimeSetUp]
 		public void Setup ()
 		{
@@ -142,7 +140,7 @@ namespace MonoTouchFixtures.ModelIO
 #else
 				Asserts.AreEqual (MatrixFloat4x4.Identity, component.GetLocalTransform4x4 (0), "Initial identity 4x4");
 #endif
-				Asserts.AreEqual (MatrixFloat4x4.Identity, CFunctions.MDLTransformComponent_GetLocalTransform  (component, 0), "Initial identity native");
+				Asserts.AreEqual (MatrixFloat4x4.Identity, CFunctions.MDLTransformComponent_GetLocalTransform (component, 0), "Initial identity native");
 
 				// translate the transform somewhere
 				obj.SetTranslation (new Vector3 (2, 2, 2), 0);

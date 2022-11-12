@@ -9,11 +9,22 @@ parameters:
   type: string 
   default: 'sim' # always sim, but use a param to move in the future if needed
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+
 steps:
 
 - template: ./common/checkout.yml
   parameters:
     isPR: ${{ eq(parameters.reason, "pr") }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
 
 - checkout: macios.ci 
   clean: true

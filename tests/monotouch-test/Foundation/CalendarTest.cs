@@ -4,12 +4,12 @@ using ObjCRuntime;
 using NUnit.Framework;
 using Xamarin.Utils;
 
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
 
 #if NET
-using PlatformException=ObjCRuntime.ObjCException;
+using PlatformException = ObjCRuntime.ObjCException;
 #elif MONOMAC
 using PlatformException = Foundation.ObjCException;
 #else
@@ -17,11 +17,11 @@ using PlatformException = Foundation.MonoTouchException;
 #endif
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CalendarTest {
-		
+
 		[Test]
 		public void DateComponentsTest ()
 		{
@@ -87,11 +87,11 @@ namespace MonoTouchFixtures.Foundation {
 			TestRuntime.AssertXcodeVersion (6, 0);
 		}
 
-		public NSDate Yesterday  { get { return NSDate.FromTimeIntervalSinceNow (-60 * 60 * 24); } }
-		public NSDate Tomorrow  { get {	return NSDate.FromTimeIntervalSinceNow (60 * 60 * 24); } }
+		public NSDate Yesterday { get { return NSDate.FromTimeIntervalSinceNow (-60 * 60 * 24); } }
+		public NSDate Tomorrow { get { return NSDate.FromTimeIntervalSinceNow (60 * 60 * 24); } }
 		public NSDate NowPlusTenSeconds { get { return NSDate.FromTimeIntervalSinceNow (10); } }
 		public NSDate NowPlusOneHour { get { return NSDate.FromTimeIntervalSinceNow (60 * 60); } }
-		public NSDate NowMinusTenSeconds  { get { return NSDate.FromTimeIntervalSinceNow (-10); } }
+		public NSDate NowMinusTenSeconds { get { return NSDate.FromTimeIntervalSinceNow (-10); } }
 
 
 		[Test]
@@ -99,7 +99,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			RequiresIos8 ();
 
-			foreach (NSCalendarType t in Enum.GetValues(typeof(NSCalendarType))) {
+			foreach (NSCalendarType t in Enum.GetValues (typeof (NSCalendarType))) {
 				switch (t) {
 				case NSCalendarType.IslamicTabular:
 				case NSCalendarType.IslamicUmmAlQura:
@@ -113,7 +113,7 @@ namespace MonoTouchFixtures.Foundation {
 					break;
 				}
 				NSCalendar c = new NSCalendar (t);
-				Assert.IsNotNull (c.Identifier, "Can't find identifier: " + t.ToString());
+				Assert.IsNotNull (c.Identifier, "Can't find identifier: " + t.ToString ());
 			}
 		}
 
@@ -213,7 +213,7 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.Inconclusive ("Same time zone, change Asia/Bangkok");
 
 			NSDateComponents components = NSCalendar.CurrentCalendar.ComponentsInTimeZone (otherZone, NSDate.Now);
-			Assert.IsTrue (components.Hour != NSCalendar.CurrentCalendar.Components(NSCalendarUnit.Hour, NSDate.Now).Hour, "Different time zones should have different hours");
+			Assert.IsTrue (components.Hour != NSCalendar.CurrentCalendar.Components (NSCalendarUnit.Hour, NSDate.Now).Hour, "Different time zones should have different hours");
 		}
 
 		[Test]
@@ -224,7 +224,7 @@ namespace MonoTouchFixtures.Foundation {
 			NSDateComponents todayComponent = NSCalendar.CurrentCalendar.Components (NSCalendarUnit.Day, NSDate.Now);
 			bool futureMatch = NSCalendar.CurrentCalendar.Matches (NowPlusTenSeconds, todayComponent);
 			bool pastMatch = NSCalendar.CurrentCalendar.Matches (NowMinusTenSeconds, todayComponent);
-			if (futureMatch ^ pastMatch)	// While unlikley, if you run it within 10 seconds of a day boundry, we can get inconclusive results. Better this than a random failure
+			if (futureMatch ^ pastMatch)    // While unlikley, if you run it within 10 seconds of a day boundry, we can get inconclusive results. Better this than a random failure
 				Assert.Inconclusive ("Test was run with 10 seconds of a day switchover (unlikely) or malfunctioned.");
 
 			Assert.IsTrue (futureMatch && pastMatch, "10 seconds on both side of us should both be on same day or Inconclusive");
@@ -360,11 +360,10 @@ namespace MonoTouchFixtures.Foundation {
 			NSDateComponents nextYearComponent = NSCalendar.CurrentCalendar.Components (NSCalendarUnit.Day | NSCalendarUnit.Month | NSCalendarUnit.Year, NSDate.Now);
 			nextYearComponent.Year++;
 			bool delegateHit = false;
-			NSCalendar.CurrentCalendar.EnumerateDatesStartingAfterDate(NSDate.Now, nextYearComponent, NSCalendarOptions.MatchNextTime, (NSDate d, bool exactMatch, ref bool stop) => 
-				{
-					delegateHit = true;
-					stop = true;
-				});
+			NSCalendar.CurrentCalendar.EnumerateDatesStartingAfterDate (NSDate.Now, nextYearComponent, NSCalendarOptions.MatchNextTime, (NSDate d, bool exactMatch, ref bool stop) => {
+				delegateHit = true;
+				stop = true;
+			});
 			Assert.IsTrue (delegateHit, "EnumerateDatesStartingAfterDate delegate called");
 		}
 
@@ -388,7 +387,7 @@ namespace MonoTouchFixtures.Foundation {
 			RequiresIos8 ();
 
 			NSDateComponents nextYearComponent = new NSDateComponents ();
-			Assert.Throws<PlatformException> (() => 
+			Assert.Throws<PlatformException> (() =>
 				NSCalendar.CurrentCalendar.FindNextDateAfterDateMatching (NSDate.Now, nextYearComponent, NSCalendarOptions.None));
 
 			Assert.Throws<PlatformException> (() =>

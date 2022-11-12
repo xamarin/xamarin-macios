@@ -8,12 +8,10 @@ using Foundation;
 using CoreAnimation;
 using SceneKit;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class SCNWorldTests
-	{
+	public class SCNWorldTests {
 		[SetUp]
 		public void SetUp ()
 		{
@@ -27,8 +25,7 @@ namespace Xamarin.Mac.Tests
 		{
 			Asserts.EnsureYosemite ();
 
-			if (IntPtr.Size == 8)
-			{
+			if (IntPtr.Size == 8) {
 				Assert.IsNotNull (SCNPhysicsTestKeys.BackfaceCullingKey);
 			}
 		}

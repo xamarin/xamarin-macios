@@ -17,14 +17,12 @@ using OpenTK;
 
 #nullable enable
 
-namespace MonoTouchFixtures.Phase
-{
+namespace MonoTouchFixtures.Phase {
 
 	[TestFixture]
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
-	public class PhaseEnvelopeSegmentTest
-	{
+	public class PhaseEnvelopeSegmentTest {
 
 		[SetUp]
 		public void Setup ()
@@ -37,12 +35,12 @@ namespace MonoTouchFixtures.Phase
 		[Test]
 		public void ConstructorTest ()
 		{
-			var endPoint = new Vector2d (1,2);
+			var endPoint = new Vector2d (1, 2);
 			using (var segment = new PhaseEnvelopeSegment (endPoint, PhaseCurveType.Cubed)) {
 				Assert.AreEqual (endPoint, segment.EndPoint);
 				var newEndPoint = new Vector2d (2, 1);
 				segment.EndPoint = newEndPoint;
-				Assert.AreEqual (newEndPoint, segment.EndPoint);	
+				Assert.AreEqual (newEndPoint, segment.EndPoint);
 			}
 		}
 

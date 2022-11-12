@@ -109,7 +109,7 @@ namespace MonoTouchFixtures.Contacts {
 
 				contact.JobTitle = "title";
 				Assert.AreEqual ("title", contact.JobTitle, "JobTitle");
-			
+
 				contact.MiddleName = "middleName";
 				Assert.AreEqual ("middleName", contact.MiddleName, "MiddleName");
 
@@ -146,7 +146,7 @@ namespace MonoTouchFixtures.Contacts {
 
 				contact.PhoneticMiddleName = "phoneticMiddleName";
 				Assert.AreEqual ("phoneticMiddleName", contact.PhoneticMiddleName, "PhoneticMiddleName");
-			
+
 				contact.PostalAddresses = new CNLabeledValue<CNPostalAddress> [] {
 					new CNLabeledValue<CNPostalAddress> ("label", new CNMutablePostalAddress ()
 						{

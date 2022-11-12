@@ -100,7 +100,7 @@ namespace CoreImage {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[Mac (10,12)]
+		[Mac (10, 12)]
 #endif
 		public bool? PriorityRequestLow {
 			get {
@@ -126,7 +126,7 @@ namespace CoreImage {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public bool? OutputPremultiplied {
 			get {
@@ -143,8 +143,8 @@ namespace CoreImage {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (10,0)]
-		[Mac (10,12)]
+		[iOS (10, 0)]
+		[Mac (10, 12)]
 #endif
 		public bool? CacheIntermediates {
 			get {
@@ -161,9 +161,9 @@ namespace CoreImage {
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (13,0)]
-		[TV (13,0)]
-		[Mac (10,15)]
+		[iOS (13, 0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
 #endif
 		public bool? AllowLowPower {
 			get {
@@ -180,9 +180,9 @@ namespace CoreImage {
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (14,0)]
-		[TV (14,0)]
-		[Mac (11,0)]
+		[iOS (14, 0)]
+		[TV (14, 0)]
+		[Mac (11, 0)]
 #endif
 		public string? Name {
 			get {
@@ -202,7 +202,7 @@ namespace CoreImage {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (8,0)]
+		[iOS (8, 0)]
 #endif
 		public CIContext (CIContextOptions options) :
 			this (options?.Dictionary)
@@ -213,7 +213,7 @@ namespace CoreImage {
 		{
 			return FromContext (ctx, options?.Dictionary);
 		}
-		
+
 		public static CIContext FromContext (CGContext ctx)
 		{
 			return FromContext (ctx, (NSDictionary?) null);
@@ -255,7 +255,7 @@ namespace CoreImage {
 		{
 			return FromOptions (options?.Dictionary);
 		}
-		
+
 		public CGImage? CreateCGImage (CIImage image, CGRect fromRect, CIFormat ciImageFormat, CGColorSpace? colorSpace)
 		{
 			return CreateCGImage (image, fromRect, CIImage.CIFormatToInt (ciImageFormat), colorSpace);

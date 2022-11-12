@@ -25,7 +25,8 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void FromCapacity ()
 		{
-			Assert.Throws <ArgumentOutOfRangeException> (delegate {
+			Assert.Throws<ArgumentOutOfRangeException> (delegate
+			{
 				NSMutableData.FromCapacity (-1);
 			}, "negative");
 			using (var empty = NSMutableData.FromCapacity (0)) {
@@ -36,7 +37,8 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void FromLength ()
 		{
-			Assert.Throws <ArgumentOutOfRangeException> (delegate {
+			Assert.Throws<ArgumentOutOfRangeException> (delegate
+			{
 				NSMutableData.FromLength (-1);
 			}, "negative");
 			using (var empty = NSMutableData.FromLength (0)) {
@@ -48,14 +50,15 @@ namespace MonoTouchFixtures.Foundation {
 		public void Constructor ()
 		{
 			// the bound constructor is for capacity (not length)
-			TestDelegate check_capacity = delegate {
-				uint capacity = (uint)Int32.MaxValue + 2;
+			TestDelegate check_capacity = delegate
+			{
+				uint capacity = (uint) Int32.MaxValue + 2;
 				Console.WriteLine ("Trying to allocate {0} bytes, this may cause malloc errors", capacity);
 				new NSMutableData (capacity).Dispose ();
 			};
 
 			if (IntPtr.Size == 4) {
-				Assert.Throws <ArgumentOutOfRangeException> (check_capacity, "negative");
+				Assert.Throws<ArgumentOutOfRangeException> (check_capacity, "negative");
 			} else {
 				// this can either fail with an Exception due to not enough memory to allocate 2GB (typical on device), or it can succeed (usually in the sim).
 				try {

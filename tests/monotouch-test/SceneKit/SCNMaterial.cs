@@ -7,12 +7,10 @@ using AppKit;
 using Foundation;
 using SceneKit;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class SCNMaterialTests
-	{
+	public class SCNMaterialTests {
 		[SetUp]
 		public void SetUp ()
 		{
