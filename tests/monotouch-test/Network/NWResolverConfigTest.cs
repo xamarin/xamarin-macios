@@ -12,11 +12,11 @@ namespace MonoTouchFixtures.Network {
 	public class NWResolverConfigTest {
 
 		NWEndpoint? endpoint;
-		
+
 		[SetUp]
 		public void SetUp ()
 		{
-			TestRuntime.AssertXcodeVersion (13,0);
+			TestRuntime.AssertXcodeVersion (13, 0);
 			endpoint = NWEndpoint.Create ("https://microsoft.com");
 		}
 
@@ -39,8 +39,8 @@ namespace MonoTouchFixtures.Network {
 		{
 			using var secondEndpoint = NWEndpoint.Create ("https://github.com");
 			using var resolver = new NWResolverConfig (endpoint, NWResolverConfigEndpointType.Https);
-			
-			Assert.DoesNotThrow(() => resolver.AddServerAddress (secondEndpoint));
+
+			Assert.DoesNotThrow (() => resolver.AddServerAddress (secondEndpoint));
 		}
 	}
 }

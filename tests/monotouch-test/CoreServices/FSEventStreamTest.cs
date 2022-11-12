@@ -120,7 +120,7 @@ namespace MonoTouchFixtures.CoreServices {
 				_rootPath = rootPath;
 				_createFlags = createFlags;
 
-				_directoriesToCreate = (int)Math.Sqrt(maxFilesToCreate);
+				_directoriesToCreate = (int) Math.Sqrt (maxFilesToCreate);
 				_filesPerDirectoryToCreate = _directoriesToCreate;
 			}
 
@@ -147,7 +147,7 @@ namespace MonoTouchFixtures.CoreServices {
 					if (_exceptions.Count > 1)
 						throw new AggregateException (_exceptions);
 					else
-						throw _exceptions[0];
+						throw _exceptions [0];
 				}
 
 				Assert.IsEmpty (_createdDirectories);
@@ -158,7 +158,7 @@ namespace MonoTouchFixtures.CoreServices {
 				_createdThenRemovedFiles.Sort ();
 				CollectionAssert.AreEqual (_createdThenRemovedFiles, _removedFiles);
 
-				Console.WriteLine(
+				Console.WriteLine (
 					"Observed {0} files created and then removed (flags: {1})",
 					_createdThenRemovedFiles.Count,
 					_createFlags);
@@ -200,7 +200,8 @@ namespace MonoTouchFixtures.CoreServices {
 				}
 			}
 
-			protected override void OnEvents (FSEvent[] events) {
+			protected override void OnEvents (FSEvent [] events)
+			{
 				try {
 					lock (_monitor) {
 						foreach (var evnt in events)

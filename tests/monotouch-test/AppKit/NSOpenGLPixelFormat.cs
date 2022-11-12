@@ -54,7 +54,7 @@ namespace Xamarin.Mac.Tests {
 				24,
 				NSOpenGLPixelFormatAttribute.OpenGLProfile
 			};
-			Assert.Throws <ArgumentException> (() => { NSOpenGLPixelFormat pixelFormat = new NSOpenGLPixelFormat (missingValue); });
+			Assert.Throws<ArgumentException> (() => { NSOpenGLPixelFormat pixelFormat = new NSOpenGLPixelFormat (missingValue); });
 		}
 
 		[Test]
@@ -69,7 +69,7 @@ namespace Xamarin.Mac.Tests {
 				0
 			};
 
-			Assert.Throws <ArgumentException> (() => { NSOpenGLPixelFormat pixelFormat = new NSOpenGLPixelFormat (_attribs); });
+			Assert.Throws<ArgumentException> (() => { NSOpenGLPixelFormat pixelFormat = new NSOpenGLPixelFormat (_attribs); });
 		}
 	}
 }

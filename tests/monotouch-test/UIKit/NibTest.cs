@@ -22,7 +22,7 @@ namespace MonoTouchFixtures.UIKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NibTest {
-		
+
 		[Test]
 		public void FromName_DoesNotExists ()
 		{

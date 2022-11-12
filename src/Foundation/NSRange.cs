@@ -36,7 +36,7 @@ namespace Foundation {
 		public nint Length;
 
 		public static readonly nint NotFound = nint.MaxValue;
-		
+
 		public NSRange (nint start, nint len)
 		{
 			Location = start;
@@ -47,12 +47,12 @@ namespace Foundation {
 		{
 			return HashCode.Combine (Location, Length);
 		}
-		
+
 		public override bool Equals (object obj)
 		{
 			return obj is NSRange other && Equals (other);
 		}
-		
+
 		public bool Equals (NSRange other)
 		{
 			return Location == other.Location && Length == other.Length;

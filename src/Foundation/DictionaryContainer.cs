@@ -55,8 +55,7 @@ namespace Foundation {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public abstract class DictionaryContainer
-	{
+	public abstract class DictionaryContainer {
 #if !COREBUILD
 		protected DictionaryContainer ()
 		{
@@ -67,10 +66,10 @@ namespace Foundation {
 		{
 			Dictionary = dictionary ?? new NSMutableDictionary ();
 		}
-		
+
 		public NSDictionary Dictionary { get; private set; }
 
-		protected T[]? GetArray<T> (NSString key) where T : NSObject
+		protected T []? GetArray<T> (NSString key) where T : NSObject
 		{
 			if (key is null)
 				throw new ArgumentNullException (nameof (key));
@@ -79,7 +78,7 @@ namespace Foundation {
 			return NSArray.ArrayFromHandle<T> (value);
 		}
 
-		protected T[]? GetArray<T> (NSString key, Func<NativeHandle, T> creator)
+		protected T []? GetArray<T> (NSString key, Func<NativeHandle, T> creator)
 		{
 			if (key is null)
 				throw new ArgumentNullException (nameof (key));
@@ -204,7 +203,7 @@ namespace Foundation {
 			return Runtime.GetINativeObject<T> (Dictionary.LowlevelObjectForKey (key.Handle), false);
 		}
 
-		protected string[]? GetStringArrayValue (NSString key)
+		protected string []? GetStringArrayValue (NSString key)
 		{
 			if (key is null)
 				throw new ArgumentNullException (nameof (key));
@@ -222,8 +221,8 @@ namespace Foundation {
 			Dictionary.TryGetValue (key, out value);
 			return value as NSDictionary;
 		}
-		
-		protected NSDictionary <TKey, TValue>? GetNSDictionary <TKey, TValue> (NSString key)
+
+		protected NSDictionary<TKey, TValue>? GetNSDictionary<TKey, TValue> (NSString key)
 			where TKey : class, INativeObject
 			where TValue : class, INativeObject
 		{
@@ -232,7 +231,7 @@ namespace Foundation {
 
 			NSObject value;
 			Dictionary.TryGetValue (key, out value);
-			return value as NSDictionary <TKey, TValue>;
+			return value as NSDictionary<TKey, TValue>;
 		}
 
 		protected T? GetStrongDictionary<T> (NSString key) where T : DictionaryContainer
@@ -243,8 +242,8 @@ namespace Foundation {
 			var dict = GetNSDictionary (key);
 			if (dict is null)
 				return null;
-			return (T?) Activator.CreateInstance (typeof(T),
-				new object[] { dict }
+			return (T?) Activator.CreateInstance (typeof (T),
+				new object [] { dict }
 			);
 		}
 
@@ -266,7 +265,7 @@ namespace Foundation {
 			NSObject value;
 			if (!Dictionary.TryGetValue (key, out value))
 				return null;
-			
+
 			return CFString.FromHandle (value.Handle);
 		}
 
@@ -337,13 +336,13 @@ namespace Foundation {
 			return !removeEntry;
 		}
 
-		protected void SetArrayValue (NSString key, NSNumber[]? values)
+		protected void SetArrayValue (NSString key, NSNumber []? values)
 		{
 			if (NullCheckAndRemoveKey (key, values is null))
 				Dictionary [key] = NSArray.FromNSObjects (values);
 		}
 
-		protected void SetArrayValue<T> (NSString key, T[]? values)
+		protected void SetArrayValue<T> (NSString key, T []? values)
 		{
 			if (NullCheckAndRemoveKey (key, values is null)) {
 				var nsValues = new NSObject [values!.Length];
@@ -353,13 +352,13 @@ namespace Foundation {
 			}
 		}
 
-		protected void SetArrayValue (NSString key, string[]? values)
+		protected void SetArrayValue (NSString key, string []? values)
 		{
 			if (NullCheckAndRemoveKey (key, values is null))
 				Dictionary [key] = NSArray.FromStrings (values);
 		}
 
-		protected void SetArrayValue (NSString key, INativeObject[]? values)
+		protected void SetArrayValue (NSString key, INativeObject []? values)
 		{
 			if (NullCheckAndRemoveKey (key, values is null))
 				CFMutableDictionary.SetValue (Dictionary.Handle, key.Handle, CFArray.FromNativeObjects (values!).Handle);
@@ -380,43 +379,43 @@ namespace Foundation {
 		protected void SetNumberValue (NSString key, int? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
-				Dictionary [key] = new NSNumber (value!.Value);				
+				Dictionary [key] = new NSNumber (value!.Value);
 		}
 
 		protected void SetNumberValue (NSString key, uint? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
-				Dictionary [key] = new NSNumber (value!.Value);				
+				Dictionary [key] = new NSNumber (value!.Value);
 		}
 
 		protected void SetNumberValue (NSString key, nint? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
-				Dictionary [key] = new NSNumber (value!.Value);	
+				Dictionary [key] = new NSNumber (value!.Value);
 		}
 
 		protected void SetNumberValue (NSString key, nuint? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
-				Dictionary [key] = new NSNumber (value!.Value);	
+				Dictionary [key] = new NSNumber (value!.Value);
 		}
 
 		protected void SetNumberValue (NSString key, long? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
-				Dictionary [key] = new NSNumber (value!.Value);				
+				Dictionary [key] = new NSNumber (value!.Value);
 		}
 
 		protected void SetNumberValue (NSString key, float? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
-				Dictionary [key] = new NSNumber (value!.Value);				
+				Dictionary [key] = new NSNumber (value!.Value);
 		}
 
 		protected void SetNumberValue (NSString key, double? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
-				Dictionary [key] = new NSNumber (value!.Value);				
+				Dictionary [key] = new NSNumber (value!.Value);
 		}
 
 		#endregion

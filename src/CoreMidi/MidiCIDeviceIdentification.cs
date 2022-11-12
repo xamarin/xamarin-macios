@@ -17,21 +17,21 @@ namespace CoreMidi {
 #else
 	[NoWatch]
 	[NoTV]
-	[Mac (10,14)]
-	[iOS (12,0)]
+	[Mac (10, 14)]
+	[iOS (12, 0)]
 #endif
 	[NativeName ("MIDICIDeviceIdentification")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MidiCIDeviceIdentification {
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 3)]
-		public byte[] Manufacturer;
+		public byte [] Manufacturer;
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 2)]
-		public byte[] Family;
+		public byte [] Family;
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 2)]
-		public byte[] ModelNumber;
+		public byte [] ModelNumber;
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 4)]
-		public byte[] RevisionLevel;
+		public byte [] RevisionLevel;
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 5)]
-		public byte[] Reserved;
+		public byte [] Reserved;
 	}
 }

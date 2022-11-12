@@ -27,8 +27,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			// A thread running the GC.
 			var done = new ManualResetEvent (false);
-			var gcThread = new Thread (() =>
-			{
+			var gcThread = new Thread (() => {
 				while (!done.WaitOne (0)) {
 					Thread.Sleep (100);
 					GC.Collect ();
@@ -39,8 +38,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			gcThread.Start ();
 
 			// A thread calling retain/release on an object
-			var rrThread = new Thread (() =>
-			{
+			var rrThread = new Thread (() => {
 				var obj = new CustomObject ();
 				while (!done.WaitOne (0)) {
 					obj.DangerousRetain ();
@@ -52,8 +50,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			rrThread.Start ();
 
 			// A thread that calls a method returning a custom object
-			var itThread = new Thread (() =>
-			{
+			var itThread = new Thread (() => {
 				var obj = new CustomObject ();
 				while (!done.WaitOne (0)) {
 					Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("getObject"));

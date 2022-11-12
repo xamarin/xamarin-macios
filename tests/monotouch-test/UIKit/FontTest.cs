@@ -13,11 +13,11 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class FontTest {
-		
+
 		void AssertNotBrokenFontWithSize ()
 		{
 #if __MACCATALYST__ || __MACOS__

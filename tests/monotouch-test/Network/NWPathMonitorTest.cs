@@ -9,12 +9,10 @@ using Foundation;
 using NUnit.Framework;
 
 
-namespace monotouchtest.Network
-{
+namespace monotouchtest.Network {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NWPathMonitorTest
-	{
+	public class NWPathMonitorTest {
 
 		NWPathMonitor monitor;
 
@@ -33,13 +31,10 @@ namespace monotouchtest.Network
 			NWPath finalPath = null;
 			bool isPathUpdated = false;
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
-			{
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
 
-				monitor.SnapshotHandler = ( (path) =>
-				{
-					if (path != null)
-					{
+				monitor.SnapshotHandler = ((path) => {
+					if (path != null) {
 						finalPath = monitor.CurrentPath;
 						isPathUpdated = true;
 					}
@@ -64,13 +59,10 @@ namespace monotouchtest.Network
 			bool isNewPathSet = false;
 			var cbEvent = new AutoResetEvent (false);
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
-			{
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
 
-				monitor.SnapshotHandler = ( (path) =>
-				{
-					if (path != null)
-					{
+				monitor.SnapshotHandler = ((path) => {
+					if (path != null) {
 						oldPath = monitor.CurrentPath;
 						isOldPathSet = true;
 						cbEvent.Set ();
@@ -84,13 +76,10 @@ namespace monotouchtest.Network
 			}, () => isOldPathSet);
 
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
-			{
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
 				cbEvent.WaitOne ();
-				monitor.SnapshotHandler = ( (path) =>
-				{
-					if (path != null)
-					{
+				monitor.SnapshotHandler = ((path) => {
+					if (path != null) {
 						newPath = monitor.CurrentPath;
 						isNewPathSet = true;
 					}

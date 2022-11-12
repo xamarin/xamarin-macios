@@ -18,7 +18,7 @@ using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.GameplayKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class GKStateTests {
@@ -33,7 +33,7 @@ namespace MonoTouchFixtures.GameplayKit {
 		public void IsValidNextState ()
 		{
 			var chaseState = new ValidState ();
-			var isValid = chaseState.IsValidNextState (typeof(InvalidState));
+			var isValid = chaseState.IsValidNextState (typeof (InvalidState));
 			Assert.IsFalse (isValid, "Type");
 
 			var invalid = new InvalidState ();

@@ -31,8 +31,7 @@ namespace MonoTouchFixtures.VideoToolbox {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class VTPixelRotationSessionTests
-	{
+	public class VTPixelRotationSessionTests {
 		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (14, 0);
 
@@ -49,10 +48,10 @@ namespace MonoTouchFixtures.VideoToolbox {
 			using var session = VTPixelRotationSession.Create ();
 			using var sourcePixelBuffer = new CVPixelBuffer (640, 480, CVPixelFormatType.CV420YpCbCr8BiPlanarFullRange);
 			using var destinationPixelBuffer = new CVPixelBuffer (480, 640, CVPixelFormatType.CV420YpCbCr8BiPlanarFullRange);
-			
+
 			var result = session.SetProperty (VTPixelRotationPropertyKeys.Rotation, VTRotation.ClockwiseNinety.GetConstant ());
 			Assert.AreEqual (result, VTStatus.Ok, "SetProperty");
-			
+
 			result = session.RotateImage (sourcePixelBuffer, destinationPixelBuffer);
 			Assert.AreEqual (result, VTStatus.Ok, "RotateImage");
 		}

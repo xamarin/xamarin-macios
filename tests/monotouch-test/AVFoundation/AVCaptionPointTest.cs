@@ -7,7 +7,7 @@ using ObjCRuntime;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AVFoundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AVCaptionPointTest {
@@ -15,9 +15,9 @@ namespace MonoTouchFixtures.AVFoundation {
 		[SetUp]
 		public void SetUp ()
 		{
-			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 12,0);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 12, 0);
 		}
-		
+
 		[TestCase]
 		public void CreateTest ()
 		{

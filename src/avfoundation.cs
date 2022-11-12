@@ -4240,8 +4240,21 @@ namespace AVFoundation {
 		[Export ("shouldOptimizeForNetworkUse")]
 		bool ShouldOptimizeForNetworkUse { get; set;  }
 
+#if !XAMCORE_5_0
+		[Internal]
 		[Export ("inputs")]
-		AVAssetWriterInput [] inputs { get;  }  // TODO: Should have been Inputs
+		NSArray InternalInputs { get; }
+
+		[Obsolete ("Use the 'Inputs' property instead.")]
+		[Wrap ("InternalInputs", IsVirtual = true)]
+		AVAssetWriterInput [] inputs { get;  }
+
+		[Wrap ("InternalInputs", IsVirtual = true)]
+		AVAssetWriterInput [] Inputs { get;  }
+#else
+		[Export ("Inputs")]
+		AVAssetWriterInput [] Inputs { get;  }
+#endif
 
 		[Export ("availableMediaTypes")]
 		NSString [] AvailableMediaTypes { get; }

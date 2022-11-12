@@ -17,7 +17,7 @@ using PassKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.PassKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PassLibraryTest {
@@ -49,9 +49,9 @@ namespace MonoTouchFixtures.PassKit {
 				Assert.False (UIApplication.SharedApplication.OpenUrl (url), "OpenUrl");
 #endif
 			}
-			
+
 			Assert.Null (library.GetPass (String.Empty, String.Empty), "GetPass");
-			
+
 			using (var pass = PassTest.GetBoardingPass ()) {
 				Assert.False (library.Contains (pass), "Contains");
 				Assert.False (library.Replace (pass), "Replace");
@@ -59,7 +59,7 @@ namespace MonoTouchFixtures.PassKit {
 			}
 		}
 #endif
-		
+
 		[Test]
 		public void Fields ()
 		{
