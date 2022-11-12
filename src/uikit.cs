@@ -23956,11 +23956,35 @@ namespace UIKit {
 		[Field ("UIConfigurationColorTransformerGrayscale")]
 		IntPtr _Grayscale { get; }
 
+#if !XAMCORE_5_0
+		[Internal]
+		[Field ("UIConfigurationColorTransformerPreferredTint")]
+		IntPtr _InternalPreferredTint { get; }
+
+		[Obsolete ("Use the '_PreferredTint' property instead.")]
+		[Wrap ("_InternalPreferredTint")]
 		[Field ("UIConfigurationColorTransformerPreferredTint")]
 		IntPtr _PreferredTint { get; }
+#else
+		[Internal]
+		[Field ("UIConfigurationColorTransformerPreferredTint")]
+		IntPtr _PreferredTint { get; }
+#endif
 
+#if !XAMCORE_5_0
+		[Internal]
+		[Field ("UIConfigurationColorTransformerMonochromeTint")]
+		IntPtr _InternalMonochromeTint { get; }
+
+		[Obsolete ("Use the '_MonochromeTint' property instead.")]
+		[Wrap ("_InternalMonochromeTint")]
 		[Field ("UIConfigurationColorTransformerMonochromeTint")]
 		IntPtr _MonochromeTint { get; }
+#else
+		[Internal]
+		[Field ("UIConfigurationColorTransformerMonochromeTint")]
+		IntPtr _MonochromeTint { get; }
+#endif
 	}
 
 	[TV (14,0), NoWatch, iOS (16,0), MacCatalyst (16,0)]
