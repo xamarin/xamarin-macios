@@ -7,11 +7,9 @@ using AppKit;
 using ObjCRuntime;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[Preserve (AllMembers = true)]
-	public class NSSplitViewControllerTests
-	{
+	public class NSSplitViewControllerTests {
 		NSSplitViewController controller;
 
 		[SetUp]

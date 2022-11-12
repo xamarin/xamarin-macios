@@ -7,11 +7,9 @@ using ObjCRuntime;
 using Foundation;
 using Xamarin.Utils;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[Preserve (AllMembers = true)]
-	public class NSSearchFieldTests
-	{
+	public class NSSearchFieldTests {
 		[Test]
 		public void NSSearchFieldShouldSetSearchMenuTemplate ()
 		{

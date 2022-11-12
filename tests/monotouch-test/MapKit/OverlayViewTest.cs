@@ -13,18 +13,18 @@ using MapKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MapKit {
-	
+
 #if !XAMCORE_3_0
 	class OverlayViewPoker : MKOverlayView {
-		
+
 		static FieldInfo bkOverlay;
-		
+
 		static OverlayViewPoker ()
 		{
 			var t = typeof (MKOverlayView);
 			bkOverlay = t.GetField ("__mt_Overlay_var", BindingFlags.Instance | BindingFlags.NonPublic);
 		}
-		
+
 		public static bool NewRefcountEnabled ()
 		{
 			return NSObject.IsNewRefcountEnabled ();
@@ -45,7 +45,7 @@ namespace MonoTouchFixtures.MapKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class OverlayViewTest {
-		
+
 		[Test]
 		public void InitWithFrame ()
 		{
@@ -62,7 +62,7 @@ namespace MonoTouchFixtures.MapKit {
 		{
 			if (OverlayViewPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-			
+
 			using (var c = new MKCircle ())
 			using (var ov = new OverlayViewPoker (c)) {
 				Assert.AreSame (c, ov.Overlay, "1a");

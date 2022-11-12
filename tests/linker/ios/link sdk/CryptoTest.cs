@@ -31,7 +31,7 @@ namespace LinkSdk {
 			// located inside System.Core.dll - IOW the linker needs to be aware of this
 			Aes aes = Aes.Create ();
 			Assert.NotNull (aes, "Aes");
-#if NET7_0
+#if NET7_0_OR_GREATER
 			const string prefix = "System.Security.Cryptography, ";
 #elif NET
 			const string prefix = "System.Security.Cryptography.Algorithms, ";

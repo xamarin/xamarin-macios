@@ -29,7 +29,7 @@ namespace MonoTouchFixtures.SpriteKit {
 			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
-			var pts = new[] {
+			var pts = new [] {
 				new CGPoint (0, 0),
 				new CGPoint (320, 568)
 			};
@@ -61,7 +61,7 @@ namespace MonoTouchFixtures.SpriteKit {
 			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
-			var pts = new[] {
+			var pts = new [] {
 				new CGPoint (0, 0),
 				new CGPoint (320, 568)
 			};

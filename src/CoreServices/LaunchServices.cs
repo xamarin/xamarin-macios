@@ -91,7 +91,7 @@ namespace CoreServices
 #endif
 	public static class LaunchServices
 	{
-		#region Locating an Application
+#region Locating an Application
 
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
@@ -201,9 +201,9 @@ namespace CoreServices
 			);
 		}
 
-		#endregion
+#endregion
 
-		#region Opening Items
+#region Opening Items
 
 		[DllImport (Constants.CoreServicesLibrary)]
 		unsafe static extern LSResult LSOpenCFURLRef (IntPtr inUrl, void **outLaunchedUrl);
@@ -227,9 +227,9 @@ namespace CoreServices
 			return result;
 		}
 
-		#endregion
+#endregion
 
-		#region Registering an Application
+#region Registering an Application
 
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern LSResult LSRegisterURL (IntPtr inUrl, byte inUpdate);
@@ -242,9 +242,9 @@ namespace CoreServices
 			return LSRegisterURL (url.Handle, (byte)(update ? 1 : 0));
 		}
 
-		#endregion
+#endregion
 
-		#region Working with Role Handlers
+#region Working with Role Handlers
 
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyAllRoleHandlersForContentType (IntPtr inContentType, LSRoles inRole);
@@ -362,7 +362,7 @@ namespace CoreServices
 			);
 		}
 
-		#endregion
+#endregion
 	}
 }
 

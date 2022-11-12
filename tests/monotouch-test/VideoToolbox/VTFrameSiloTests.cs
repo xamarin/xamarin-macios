@@ -25,8 +25,7 @@ namespace MonoTouchFixtures.VideoToolbox {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class VTFrameSiloTests
-	{
+	public class VTFrameSiloTests {
 		[Test]
 		public void FrameSiloCreateTest ()
 		{
@@ -34,7 +33,7 @@ namespace MonoTouchFixtures.VideoToolbox {
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 			TestRuntime.AssertSystemVersion (ApplePlatform.TVOS, 10, 2, throwIfOtherPlatform: false);
 
-			using (var silo = VTFrameSilo.Create ()){
+			using (var silo = VTFrameSilo.Create ()) {
 				Assert.IsNotNull (silo, "Silo should not be null");
 			}
 		}
@@ -46,7 +45,7 @@ namespace MonoTouchFixtures.VideoToolbox {
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 			TestRuntime.AssertSystemVersion (ApplePlatform.TVOS, 10, 2, throwIfOtherPlatform: false);
 
-			using (var silo = VTFrameSilo.Create ()){
+			using (var silo = VTFrameSilo.Create ()) {
 				var result = silo.SetTimeRangesForNextPass (new CMTimeRange [0]);
 				Assert.IsTrue (result == VTStatus.FrameSiloInvalidTimeRange, "SetTimeRangesForNextPass");
 			}
@@ -59,7 +58,7 @@ namespace MonoTouchFixtures.VideoToolbox {
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 			TestRuntime.AssertSystemVersion (ApplePlatform.TVOS, 10, 2, throwIfOtherPlatform: false);
 
-			using (var silo = VTFrameSilo.Create ()){
+			using (var silo = VTFrameSilo.Create ()) {
 
 				var result = silo.ForEach ((arg) => {
 					return VTStatus.Ok;

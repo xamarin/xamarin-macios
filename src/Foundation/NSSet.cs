@@ -49,7 +49,7 @@ namespace Foundation {
 		public NSSet (params string [] strings) : this (NSArray.FromStrings (strings))
 		{
 		}
-		
+
 		public T [] ToArray<T> () where T : class, INativeObject
 		{
 			IntPtr nsarr = _AllObjects ();
@@ -62,23 +62,23 @@ namespace Foundation {
 				return Runtime.GetNSObject<NSSet> (_SetWithArray (a.Handle));
 		}
 
-#region IEnumerable<T>
+		#region IEnumerable<T>
 		public IEnumerator<NSObject> GetEnumerator ()
 		{
 			var enumerator = _GetEnumerator ();
 			NSObject obj;
-			
+
 			while ((obj = enumerator.NextObject ()) != null)
 				yield return obj as NSObject;
 		}
-#endregion
+		#endregion
 
-#region IEnumerable
+		#region IEnumerable
 		IEnumerator IEnumerable.GetEnumerator ()
 		{
 			return ((IEnumerable<NSObject>) this).GetEnumerator ();
 		}
-#endregion
+		#endregion
 
 		public static NSSet operator + (NSSet first, NSSet second)
 		{
