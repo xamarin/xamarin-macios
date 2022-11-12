@@ -10,6 +10,15 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+
 - name: azureStorage
   type: string
 
@@ -28,6 +37,9 @@ jobs:
 
   steps:
   - template: ../common/configure.yml
+    parameters:
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
 
 - job: funnel_job
   dependsOn:
@@ -48,6 +60,8 @@ jobs:
   # DO NOT USE THE checkout.yml template. The reason is that the template changes the hash which results in a problem with the artifacts scripts
   - template: sdk-unified/steps/checkout/v1.yml@yaml-templates
     parameters:
+      resource: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
       clean: true
       submodules: recursive
       path: s/xamarin-macios
@@ -167,3 +181,5 @@ jobs:
   - template: artifact-github-comment.yml
     parameters:
       isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}

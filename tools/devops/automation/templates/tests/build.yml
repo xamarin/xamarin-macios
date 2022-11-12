@@ -53,11 +53,21 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 steps:
 
 - template: ../common/checkout.yml
   parameters:
     isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
 
 - template: ../common/setup.yml
   parameters:
@@ -70,7 +80,7 @@ steps:
 # 3. Cancel the pipeline and do not execute any of the following steps.
 - pwsh: | 
     Import-Module ./MaciosCI.psd1
-    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
+    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
 
     if ( -not (Test-HDFreeSpace -Size 20)) {
       $statuses.SetStatus("error", "Not enough free space in the host.", "${{ parameters.statusContext }}")
@@ -161,8 +171,7 @@ steps:
   inputs:
     provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests-provisioning.csx
     provisioning_extra_args: '-vvvv'
-  env:
-    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+    github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
 
 - bash: |
@@ -175,8 +184,7 @@ steps:
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/mac-tests-provisioning.csx
     provisioning_extra_args: '-vvvv'
-  env:
-    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+    github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
 
 - bash: |

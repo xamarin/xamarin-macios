@@ -20,7 +20,7 @@ using UIKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreText {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class FontTest {
@@ -28,7 +28,7 @@ namespace MonoTouchFixtures.CoreText {
 		[Test]
 		public void CTFontCreateWithNameAndOptions ()
 		{
-			TestRuntime.AssertXcodeVersion (5,0);
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			using (var font = new CTFont ("HoeflerText-Regular", 10, CTFontOptions.Default)) {
 				Assert.That (font.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
@@ -38,7 +38,7 @@ namespace MonoTouchFixtures.CoreText {
 		[Test]
 		public void CTFontCreateWithFontDescriptorAndOptions ()
 		{
-			TestRuntime.AssertXcodeVersion (5,0);
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			CTFontDescriptorAttributes fda = new CTFontDescriptorAttributes () {
 				FamilyName = "Courier",
@@ -54,7 +54,7 @@ namespace MonoTouchFixtures.CoreText {
 		[Test]
 		public void GetCascadeList ()
 		{
-			TestRuntime.AssertXcodeVersion (5,0);
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			using (var font = new CTFont ("HoeflerText-Regular", 10, CTFontOptions.Default)) {
 				Assert.NotNull (font.GetDefaultCascadeList (null), "null");
@@ -86,7 +86,7 @@ namespace MonoTouchFixtures.CoreText {
 		{
 			using (var font = CGFont.CreateWithFontName ("AppleColorEmoji"))
 			using (var ctfont = font.ToCTFont ((nfloat) 10.0)) {
-				ushort[] gid = new ushort [2];
+				ushort [] gid = new ushort [2];
 				Assert.True (ctfont.GetGlyphsForCharacters ("\ud83d\ude00".ToCharArray (), gid), "GetGlyphsForCharacters");
 				Assert.That (gid [0], Is.Not.EqualTo (0), "0");
 				Assert.That (gid [1], Is.EqualTo (0), "1");

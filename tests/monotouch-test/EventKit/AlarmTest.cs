@@ -18,11 +18,11 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.EventKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AlarmTest {
-		
+
 		[Test]
 		public void NullAllowedTest ()
 		{

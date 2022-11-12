@@ -27,7 +27,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			if (indirect == IntPtr.Zero)
 				return CGRect.Empty;
 			unsafe {
-				nfloat *ptr = (nfloat *) indirect;
+				nfloat* ptr = (nfloat*) indirect;
 				return new CGRect (ptr [0], ptr [1], ptr [2], ptr [3]);
 			}
 		}

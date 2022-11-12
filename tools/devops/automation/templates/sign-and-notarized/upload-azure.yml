@@ -13,14 +13,29 @@ parameters:
 - name: azureContainer
   type: string
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 steps:
 # Do not use the templates/common/checkout.yaml for this job else the azure upload tool will fail because 
 # it cannot find the correct branch to be used. 
 - template:  sdk-unified/steps/checkout/v1.yml@yaml-templates
   parameters:
+    resource: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
     clean: true
     persistCredentials: true
     path: s/xamarin-macios
+
+# checkout an extra repo to ensure that we have the same tree structure in the working directory in all pipelines.
+# if you delete this checkout the unified pipeline will have issues.
+- checkout: yaml-templates
+  clean: true
 
 # Download the Html Report that was added by the tests job.
 - task: DownloadPipelineArtifact@2
@@ -102,7 +117,7 @@ steps:
         Write-Host "Build task not found at $execPath!"
     }
 
-    $maciosPath="$Env:BUILD_SOURCESDIRECTORY"
+    $maciosPath="$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios"
 
     Write-Host "Exect path is $execPath"
     Write-Host "Macios path is $maciosPath"
@@ -128,8 +143,8 @@ steps:
   continueOnError: true
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\MaciosCI.psd1
-    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
 
     Dir "$(Build.SourcesDirectory)\\artifacts\\package"
 

@@ -6,12 +6,10 @@ using AppKit;
 using ObjCRuntime;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSAppearanceTests
-	{
+	public class NSAppearanceTests {
 		[Test]
 		public void NSAppearanceShouldLoadAppearanceNamed ()
 		{

@@ -25,7 +25,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CaptiveNetworkTest {
-		
+
 #if !MONOMAC // Fields are not on Mac
 		[Test]
 		public void Fields ()
@@ -62,7 +62,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 			Assert.Throws<ArgumentNullException> (() => CaptiveNetwork.TryCopyCurrentNetworkInfo (null, out dict));
 #endif
 		}
-		
+
 		[Test]
 		public void TryCopyCurrentNetworkInfo ()
 		{
@@ -132,7 +132,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 			Assert.False (CaptiveNetwork.MarkPortalOnline ("xamxam"));
 #endif
 		}
-		
+
 		[Test]
 		public void MarkPortalOffline_Null ()
 		{
@@ -158,7 +158,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 			Assert.False (CaptiveNetwork.MarkPortalOffline ("xamxam"));
 #endif
 		}
-		
+
 		[Test]
 		public void SetSupportedSSIDs_Null ()
 		{

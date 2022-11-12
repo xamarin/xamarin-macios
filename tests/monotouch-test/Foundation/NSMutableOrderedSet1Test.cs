@@ -90,8 +90,8 @@ namespace MonoTouchFixtures.Foundation {
 			var oSet = new NSMutableOrderedSet<NSString> (str1, str2, str3);
 
 			Assert.AreEqual ((nint) 3, oSet.Count, "NSOrderedSet1Test Count");
-			Assert.AreSame (str2, oSet[1], "NSOrderedSet1Test IndexOf");
-			Assert.Throws<ArgumentNullException> (()=> oSet[1] = null);
+			Assert.AreSame (str2, oSet [1], "NSOrderedSet1Test IndexOf");
+			Assert.Throws<ArgumentNullException> (() => oSet [1] = null);
 		}
 
 		[Test]
@@ -177,15 +177,15 @@ namespace MonoTouchFixtures.Foundation {
 			var str3 = (NSString) "3";
 			var str4 = (NSString) "4";
 			var oSet = new NSMutableOrderedSet<NSString> (str4);
-			oSet.InsertObjects (new[] {str1, str2, str3}, NSIndexSet.FromNSRange (new NSRange (0, 3)));
+			oSet.InsertObjects (new [] { str1, str2, str3 }, NSIndexSet.FromNSRange (new NSRange (0, 3)));
 
 			Assert.AreEqual ((nint) 4, oSet.Count, "InsertObjectsTest Count");
 			Assert.IsTrue (oSet.Contains (str1), "InsertObjectsTest Contains 1");
 			Assert.IsTrue (oSet.Contains (str2), "InsertObjectsTest Contains 2");
 			Assert.IsTrue (oSet.Contains (str3), "InsertObjectsTest Contains 3");
 			Assert.IsTrue (oSet.Contains (str4), "InsertObjectsTest Contains 4");
-			Assert.AreSame (str1, oSet[0], "InsertObjectsTest 1 == 1");
-			Assert.AreSame (str4, oSet[3], "InsertObjectsTest 4 == 4");
+			Assert.AreSame (str1, oSet [0], "InsertObjectsTest 1 == 1");
+			Assert.AreSame (str4, oSet [3], "InsertObjectsTest 4 == 4");
 		}
 
 		[Test]
@@ -198,12 +198,12 @@ namespace MonoTouchFixtures.Foundation {
 
 			var oSet = new NSMutableOrderedSet<NSString> (str1, str2);
 			Assert.AreEqual ((nint) 2, oSet.Count, "ReplaceObjectsTest Count");
-			Assert.AreSame (str1, oSet[0], "ReplaceObjectsTest 1 == 1");
-			Assert.AreSame (str2, oSet[1], "ReplaceObjectsTest 2 == 2");
+			Assert.AreSame (str1, oSet [0], "ReplaceObjectsTest 1 == 1");
+			Assert.AreSame (str2, oSet [1], "ReplaceObjectsTest 2 == 2");
 
 			oSet.ReplaceObjects (NSIndexSet.FromNSRange (new NSRange (0, 2)), str3, str4);
-			Assert.AreSame (str3, oSet[0], "ReplaceObjectsTest 3 == 3");
-			Assert.AreSame (str4, oSet[1], "ReplaceObjectsTest 4 == 4");
+			Assert.AreSame (str3, oSet [0], "ReplaceObjectsTest 3 == 3");
+			Assert.AreSame (str4, oSet [1], "ReplaceObjectsTest 4 == 4");
 		}
 
 		[Test]

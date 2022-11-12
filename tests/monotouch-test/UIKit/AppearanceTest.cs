@@ -205,7 +205,7 @@ namespace MonoTouchFixtures.UIKit {
 			}
 		}
 
-		class CustomLabel : UILabel {}
+		class CustomLabel : UILabel { }
 	}
 }
 

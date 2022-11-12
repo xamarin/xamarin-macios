@@ -8,19 +8,19 @@ using Metal;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Metal {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class MTLAttributeTest {
 		MTLAttribute attr = null;
-		
+
 		[SetUp]
 		public void SetUp ()
 		{
 			TestRuntime.AssertXcodeVersion (8, 0);
 			attr = new MTLAttribute ();
 		}
-		
+
 		[TearDown]
 		public void TearDown ()
 		{

@@ -27,12 +27,12 @@ namespace MonoTouchFixtures.Metal {
 		public void TearDown ()
 		{
 			descriptor?.Dispose ();
-			descriptor = null; 
+			descriptor = null;
 		}
 
 		[Test]
 		public void SampleBufferTest ()
-		{ 
+		{
 			// we want to make sure we do not crash because intro fails 
 			Assert.DoesNotThrow (() => {
 				descriptor.SampleBuffer = null; // we are testing if the property works, so setting to null does test the selector
@@ -44,12 +44,12 @@ namespace MonoTouchFixtures.Metal {
 
 		[Test]
 		public void StartOfEncoderSampleIndexTest ()
-		{ 
+		{
 			nuint newIndex = 10;
 			nuint objIndex = 0;
 			// we want to make sure we do not crash because intro fails 
 			Assert.DoesNotThrow (() => {
-				descriptor.StartOfEncoderSampleIndex = newIndex ; 
+				descriptor.StartOfEncoderSampleIndex = newIndex;
 			}, "Setter");
 			Assert.DoesNotThrow (() => {
 				objIndex = descriptor.StartOfEncoderSampleIndex;
@@ -59,12 +59,12 @@ namespace MonoTouchFixtures.Metal {
 
 		[Test]
 		public void EndOfEncoderSampleIndexTest ()
-		{ 
+		{
 			nuint newIndex = 10;
 			nuint objIndex = 0;
 			// we want to make sure we do not crash because intro fails 
 			Assert.DoesNotThrow (() => {
-				descriptor.EndOfEncoderSampleIndex = newIndex ; 
+				descriptor.EndOfEncoderSampleIndex = newIndex;
 			}, "Setter");
 			Assert.DoesNotThrow (() => {
 				objIndex = descriptor.EndOfEncoderSampleIndex;

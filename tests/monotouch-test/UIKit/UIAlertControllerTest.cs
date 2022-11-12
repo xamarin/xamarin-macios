@@ -22,12 +22,12 @@ namespace MonoTouchFixtures.UIKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class UIAlertControllerTest {
-		
+
 		[Test]
 		public void InitWithNibNameTest ()
 		{
 			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
-			
+
 			UIAlertController ctrl = new UIAlertController (null, null);
 			Assert.NotNull (ctrl, "UIAlertController ctor(String, NSBundle)");
 
