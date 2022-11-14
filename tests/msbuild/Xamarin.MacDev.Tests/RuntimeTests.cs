@@ -7,11 +7,9 @@ using NUnit.Framework;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	[TestFixture]
-	public class RuntimeTests
-	{
+	public class RuntimeTests {
 		[Test]
 		public void AssemblyRegistration ()
 		{

@@ -7,11 +7,9 @@ using Xamarin.iOS.Tasks;
 
 using Xamarin.Tests;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
-	public class DetectSdkLocationsTaskTests : TestBase
-	{
+	public class DetectSdkLocationsTaskTests : TestBase {
 		[Test]
 		public void InvalidXamarinSdkRoot ()
 		{

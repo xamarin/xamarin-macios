@@ -6,9 +6,8 @@ using Xamarin.Utils;
 namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
-	public class ActionTests : ExtensionTestBase
-	{
-		public ActionTests (string platform) : base (platform)      
+	public class ActionTests : ExtensionTestBase {
+		public ActionTests (string platform) : base (platform)
 		{
 		}
 
