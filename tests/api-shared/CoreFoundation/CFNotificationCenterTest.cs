@@ -8,6 +8,7 @@
 //
 
 using System;
+using System.Threading;
 
 using Foundation;
 using CoreFoundation;
@@ -77,16 +78,19 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void TestNullNameAndObserver ()
 		{
 			var d = CFNotificationCenter.Local;
-			bool mornNotification = false;
+			var mornNotification = new ManualResetEvent (false);
 
-			var token = d.AddObserver (null, null, (n, i) => mornNotification = n == "MornNotification");
+			var token = d.AddObserver (null, null, (n, i) => {
+				if (n == "MornNotification")
+					mornNotification.Set ();
+			});
 
 			// When not listening for a specific name nor observing an specific object
 			// we will get all notifications posted to NSNotificationCenter/Local CFNotificationCenter
 			NSNotificationCenter.DefaultCenter.PostNotificationName ("MornNotification", null);
 
 			d.RemoveObserver (token);
-			Assert.IsTrue (mornNotification);
+			Assert.IsTrue (mornNotification.WaitOne (TimeSpan.FromSeconds (10)), "Didn't get a notification after waiting 10 seconds.");
 		}
 
 		[Test]
