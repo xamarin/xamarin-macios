@@ -1592,6 +1592,9 @@ namespace CarPlay {
 
 		[Field ("CPMaximumNumberOfGridImages")]
 		nuint MaximumNumberOfGridImages { get; }
+
+		[NullAllowed, Export ("text")]
+		new string Text { get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
@@ -1655,6 +1658,9 @@ namespace CarPlay {
 
 		[Field ("CPMaximumMessageItemImageSize")]
 		CGSize MaximumMessageItemImageSize { get; }
+
+		[NullAllowed, Export ("text")]
+		new string Text { get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
