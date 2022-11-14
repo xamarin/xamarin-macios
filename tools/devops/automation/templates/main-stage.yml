@@ -176,11 +176,7 @@ stages:
 - ${{ if eq(parameters.runGovernanceTests, true) }}:
   - stage: governance_checks
     displayName: '${{ parameters.stageDisplayNamePrefix }}Governance Checks'
-    ${{ if ne(parameters.dependsOn, '')}}:
-      dependsOn:
-      - ${{ parameters.dependsOn }}
-    ${{ else }}:
-      dependsOn: []
+    dependsOn: ''
     ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
       condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
     jobs:
