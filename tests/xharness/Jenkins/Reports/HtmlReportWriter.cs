@@ -470,7 +470,7 @@ namespace Xharness.Jenkins.Reports {
 								}
 								if (!exists) {
 									// Don't try to parse files that don't exist
-								} else if (log.Description == LogType.TestLog.ToString () || log.Description == LogType.ExecutionLog.ToString ()) {
+								} else if (log.Description == LogType.TestLog.ToString () || log.Description == LogType.ExecutionLog.ToString () || log.Description == LogType.XmlLog.ToString ()) {
 									string summary;
 									List<string> fails;
 									try {
@@ -484,11 +484,13 @@ namespace Xharness.Jenkins.Reports {
 													if (line == null)
 														continue;
 													// Skip any timestamps if the file is timestamped
-													if (log.Timestamp)
-														if (line.Length > "HH:mm:ss.fffffff".Length)
-															line = line.Substring ("HH:mm:ss.fffffff".Length).Trim ();
-														else if (line.Length == "HH:mm:ss.fffffff".Length)
+													if (log.Timestamp) {
+														const string timestampPrefix = "[HH:mm:ss.fffffff] "; // https://github.com/dotnet/xharness/blob/f0bd6d29fe9a19c623cd1361ac5f7b161c6c9074/src/Microsoft.DotNet.XHarness.Common/Logging/Log.cs#L27
+														if (line.Length > timestampPrefix.Length)
+															line = line.Substring (timestampPrefix.Length).Trim ();
+														else if (line.Length == timestampPrefix.Length)
 															line = "";
+													}
 													if (line.StartsWith ("Tests run:", StringComparison.Ordinal)) {
 														summary = line;
 													} else if (line.StartsWith ("[FAIL]", StringComparison.Ordinal)) {
