@@ -10,10 +10,8 @@ using Xamarin.MacDev;
 
 #nullable enable
 
-namespace Xamarin.MacDev.Tasks
-{
-	class CustomCompileEntitlements : CompileEntitlements
-	{
+namespace Xamarin.MacDev.Tasks {
+	class CustomCompileEntitlements : CompileEntitlements {
 		protected override MobileProvision? GetMobileProvision (MobileProvisionPlatform platform, string uuid)
 		{
 			if (File.Exists (ProvisioningProfile))
@@ -24,8 +22,7 @@ namespace Xamarin.MacDev.Tasks
 	}
 
 	[TestFixture]
-	public class CompileEntitlementsTaskTests : TestBase
-	{
+	public class CompileEntitlementsTaskTests : TestBase {
 		CustomCompileEntitlements CreateEntitlementsTask (out string compiledEntitlements)
 		{
 			var task = CreateTask<CustomCompileEntitlements> ();
@@ -73,7 +70,7 @@ namespace Xamarin.MacDev.Tasks
 			if (value is not null)
 				dict ["Value"] = value;
 
-			var customEntitlements = new TaskItem[] {
+			var customEntitlements = new TaskItem [] {
 				new TaskItem ("com.xamarin.custom.entitlement", dict)
 			};
 			var task = CreateEntitlementsTask (out var compiledEntitlements);
@@ -93,7 +90,7 @@ namespace Xamarin.MacDev.Tasks
 				{ "Type", "String" },
 				{ "Value", value },
 			};
-			var customEntitlements = new TaskItem[] {
+			var customEntitlements = new TaskItem [] {
 				new TaskItem ("com.xamarin.custom.entitlement", dict)
 			};
 			var task = CreateEntitlementsTask (out var compiledEntitlements);
@@ -134,14 +131,14 @@ namespace Xamarin.MacDev.Tasks
 				{ "Value", $"A;B;C{separator}D{separator}E" },
 				{ "ArraySeparator", separator },
 			};
-			var customEntitlements = new TaskItem[] {
+			var customEntitlements = new TaskItem [] {
 				new TaskItem ("com.xamarin.custom.entitlement", dict)
 			};
-			var task = CreateEntitlementsTask(out var compiledEntitlements);
+			var task = CreateEntitlementsTask (out var compiledEntitlements);
 			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=maccatalyst";
 			task.CustomEntitlements = customEntitlements;
-			ExecuteTask(task);
-			var compiled = PDictionary.FromFile(compiledEntitlements);
+			ExecuteTask (task);
+			var compiled = PDictionary.FromFile (compiledEntitlements);
 			var array = compiled.GetArray ("com.xamarin.custom.entitlement");
 			Assert.NotNull (array, "array");
 			Assert.AreEqual (new string [] { "A;B;C", "D", "E" }, array.ToStringArray (), "array contents");
@@ -160,28 +157,28 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void AllowJit_True ()
 		{
-			var customEntitlements = new TaskItem[] {
+			var customEntitlements = new TaskItem [] {
 				new TaskItem ("com.apple.security.cs.allow-jit", new Dictionary<string, string> { {  "Type", "Boolean" }, { "Value", "true" } }),
 			};
 			var task = CreateEntitlementsTask (out var compiledEntitlements);
 			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=maccatalyst";
 			task.CustomEntitlements = customEntitlements;
 			ExecuteTask (task);
-			var compiled = PDictionary.FromFile(compiledEntitlements);
+			var compiled = PDictionary.FromFile (compiledEntitlements);
 			Assert.IsTrue (compiled.ContainsKey (EntitlementKeys.AllowExecutionOfJitCode), "#1");
-			Assert.IsTrue (compiled.Get<PBoolean>(EntitlementKeys.AllowExecutionOfJitCode).Value, "#2");
+			Assert.IsTrue (compiled.Get<PBoolean> (EntitlementKeys.AllowExecutionOfJitCode).Value, "#2");
 		}
 
 		[Test]
 		public void AllowJit_False ()
 		{
-			var customEntitlements = new TaskItem[] {
+			var customEntitlements = new TaskItem [] {
 				new TaskItem ("com.apple.security.cs.allow-jit", new Dictionary<string, string> { {  "Type", "Boolean" }, { "Value", "false" } }),
 			};
-			var task = CreateEntitlementsTask(out var compiledEntitlements);
+			var task = CreateEntitlementsTask (out var compiledEntitlements);
 			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=maccatalyst";
 			task.CustomEntitlements = customEntitlements;
-			ExecuteTask(task);
+			ExecuteTask (task);
 			var compiled = PDictionary.FromFile (compiledEntitlements);
 			Assert.IsTrue (compiled.ContainsKey (EntitlementKeys.AllowExecutionOfJitCode), "#1");
 			Assert.IsFalse (compiled.Get<PBoolean> (EntitlementKeys.AllowExecutionOfJitCode).Value, "#2");
@@ -190,14 +187,14 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void AllowJit_None ()
 		{
-			var customEntitlements = new TaskItem[] {
+			var customEntitlements = new TaskItem [] {
 				new TaskItem ("com.apple.security.cs.allow-jit", new Dictionary<string, string> { {  "Type", "Remove" } }),
 			};
-			var task = CreateEntitlementsTask(out var compiledEntitlements);
+			var task = CreateEntitlementsTask (out var compiledEntitlements);
 			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=maccatalyst";
 			task.CustomEntitlements = customEntitlements;
-			ExecuteTask(task);
-			var compiled = PDictionary.FromFile(compiledEntitlements);
+			ExecuteTask (task);
+			var compiled = PDictionary.FromFile (compiledEntitlements);
 			Assert.IsFalse (compiled.ContainsKey (EntitlementKeys.AllowExecutionOfJitCode), "#1");
 		}
 

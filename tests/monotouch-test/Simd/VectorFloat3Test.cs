@@ -15,12 +15,10 @@ using VectorFloat3 = global::OpenTK.NVector3;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.Simd
-{
+namespace MonoTouchFixtures.Simd {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class VectorFloat3Test
-	{
+	public class VectorFloat3Test {
 		[Test]
 		public void ElementConstructor ()
 		{

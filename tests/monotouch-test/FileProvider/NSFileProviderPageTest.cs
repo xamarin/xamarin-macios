@@ -26,7 +26,7 @@ namespace MonoTouchFixtures.FileProvider {
 		{
 			// The FileProvider's NSData constants are only available running on device.
 			TestRuntime.AssertDevice ();
-			TestRuntime.AssertXcodeVersion (9,0);
+			TestRuntime.AssertXcodeVersion (9, 0);
 
 			Assert.IsNotNull (NSFileProviderPage.InitialPageSortedByDate, "InitialPageSortedByDate should not be null");
 			Assert.IsNotNull (NSFileProviderPage.InitialPageSortedByName, "InitialPageSortedByName should not be null");

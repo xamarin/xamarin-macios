@@ -35,7 +35,7 @@ namespace CoreGraphics {
 		extern static /* CGPDFContentStreamRef */ IntPtr CGPDFContentStreamCreateWithPage (/* CGPDFPageRef */ IntPtr page);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGPDFContentStreamRef */ IntPtr CGPDFContentStreamCreateWithStream (/* CGPDFStreamRef */ IntPtr stream, 
+		extern static /* CGPDFContentStreamRef */ IntPtr CGPDFContentStreamCreateWithStream (/* CGPDFStreamRef */ IntPtr stream,
 			/* CGPDFDictionaryRef */ IntPtr streamResources, /* CGPDFContentStreamRef */ IntPtr parent);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -51,7 +51,7 @@ namespace CoreGraphics {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGPDFContentStream (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -88,7 +88,7 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CFArrayRef */ IntPtr CGPDFContentStreamGetStreams (/* CGPDFContentStreamRef */ IntPtr cs);
 
-		public CGPDFStream?[]? GetStreams ()
+		public CGPDFStream? []? GetStreams ()
 		{
 			var rv = CGPDFContentStreamGetStreams (Handle);
 			return CFArray.ArrayFromHandleFunc (rv, (handle) => new CGPDFStream (handle));

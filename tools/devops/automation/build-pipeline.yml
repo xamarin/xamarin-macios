@@ -132,7 +132,7 @@ resources:
     checkoutOptions:
       submodules: true
 
-  - repository: templates
+  - repository: yaml-templates
     type: github
     name: xamarin/yaml-templates
     ref: refs/heads/main
@@ -187,7 +187,7 @@ trigger:
 stages:
 - template: templates/main-stage.yml
   parameters:
-    xcodeChannel: Beta
+    xcodeChannel: Stable
     isPR: false
     provisionatorChannel: ${{ parameters.provisionatorChannel }}
     pool: ${{ parameters.pool }}
@@ -205,6 +205,8 @@ stages:
       simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
     deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
     macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
+    azureStorage: ${{ variables['azureStorage'] }}
+    azureContainer: ${{ variables['azureContainer'] }}
     signingSetupSteps:
     - template: ./templates/sign-and-notarized/setup.yml
       parameters:

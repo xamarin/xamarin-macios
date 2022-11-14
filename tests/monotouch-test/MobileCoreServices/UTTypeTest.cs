@@ -15,11 +15,11 @@ using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MobileCoreServices {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class UTTypeTest {
-		
+
 		[Test]
 		public void NSStringConstants ()
 		{
@@ -158,9 +158,9 @@ namespace MonoTouchFixtures.MobileCoreServices {
 			// so just skip this test for the simulator.
 			TestRuntime.AssertIfSimulatorThenARM64 ();
 
-			string[] extensions = new [] { ".html", ".css", ".jpg", ".js", ".otf" };
+			string [] extensions = new [] { ".html", ".css", ".jpg", ".js", ".otf" };
 			// random failure reported in #36708 (on some iPad2 only)
-			for (int i=0; i < 100; i++) {
+			for (int i = 0; i < 100; i++) {
 				foreach (var ext in extensions) {
 					var result = UTType.CreatePreferredIdentifier (UTType.TagClassMIMEType, ext, null);
 					Assert.NotNull (result, ext + i.ToString ());

@@ -37,10 +37,10 @@ using ObjCRuntime;
 namespace CoreFoundation {
 
 	class CFDataBuffer : IDisposable {
-		byte[] buffer;
+		byte [] buffer;
 		CFData? data;
 
-		public unsafe CFDataBuffer (byte[] buffer)
+		public unsafe CFDataBuffer (byte [] buffer)
 		{
 			this.buffer = buffer;
 
@@ -72,7 +72,7 @@ namespace CoreFoundation {
 			get { return data.GetHandle (); }
 		}
 
-		public byte[] Data {
+		public byte [] Data {
 			get { return buffer; }
 		}
 

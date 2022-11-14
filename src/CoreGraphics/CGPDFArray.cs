@@ -66,7 +66,7 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* size_t */ nint CGPDFArrayGetCount (/* CGPDFArrayRef */ IntPtr array);
-		
+
 		public nint Count {
 			get {
 				return CGPDFArrayGetCount (Handle);

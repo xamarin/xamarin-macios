@@ -69,7 +69,7 @@ namespace CoreGraphics {
 		None,
 		Low,
 		High,
-		Medium,		       /* Yes, in this order, since Medium was added in 4 */
+		Medium,            /* Yes, in this order, since Medium was added in 4 */
 	}
 
 	// untyped enum -> CGContext.h
@@ -105,8 +105,8 @@ namespace CoreGraphics {
 		PlusLighter,
 	}
 
-	[Mac (10,15)]
-	[iOS (13,0)]
+	[Mac (10, 15)]
+	[iOS (13, 0)]
 	public enum CGPdfTagType /* int32_t */ {
 		Document = 100,
 		Part,
@@ -172,24 +172,27 @@ namespace CoreGraphics {
 		Stream,
 	};
 
-	[iOS(11,0), Mac(10,13)]
+	[iOS (11, 0), Mac (10, 13)]
 	public enum CGPDFAccessPermissions : uint {
-		AllowsLowQualityPrinting    = (1 << 0),
-		AllowsHighQualityPrinting   = (1 << 1),
-		AllowsDocumentChanges       = (1 << 2),
-		AllowsDocumentAssembly      = (1 << 3),
-		AllowsContentCopying        = (1 << 4),
-		AllowsContentAccessibility  = (1 << 5),
-		AllowsCommenting            = (1 << 6),
-		AllowsFormFieldEntry        = (1 << 7),
+		AllowsLowQualityPrinting = (1 << 0),
+		AllowsHighQualityPrinting = (1 << 1),
+		AllowsDocumentChanges = (1 << 2),
+		AllowsDocumentAssembly = (1 << 3),
+		AllowsContentCopying = (1 << 4),
+		AllowsContentAccessibility = (1 << 5),
+		AllowsCommenting = (1 << 6),
+		AllowsFormFieldEntry = (1 << 7),
 	}
 
 #if !NET
 	// uint32_t enum -> CGColorConverter.h
 	// this enum does not exist in the headers anymore
-	[TV (9,2)][Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]
-	[iOS (9,3)][Obsoleted (PlatformName.iOS, 10,0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]
-	[NoWatch][NoMac]
+	[TV (9, 2)]
+	[Obsoleted (PlatformName.TvOS, 10, 0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]
+	[iOS (9, 3)]
+	[Obsoleted (PlatformName.iOS, 10, 0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]
+	[NoWatch]
+	[NoMac]
 	public enum CGColorConverterTransformType : uint {
 		FromSpace,
 		ToSpace,
@@ -198,7 +201,10 @@ namespace CoreGraphics {
 #endif
 
 	// uint32_t enum -> CGColorConversionInfo.h
-	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
+	[Watch (3, 0)]
+	[Mac (10, 12)]
 	public enum CGColorConversionInfoTransformType : uint {
 		FromSpace = 0,
 		ToSpace,

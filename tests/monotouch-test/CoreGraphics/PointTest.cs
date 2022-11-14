@@ -20,7 +20,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void ToStringTest ()
 		{
-			var point = new CGPoint ((nfloat)1, (nfloat)2);
+			var point = new CGPoint ((nfloat) 1, (nfloat) 2);
 #if NET
 			Assert.AreEqual ("{1, 2}", point.ToString (), "ToString");
 #else

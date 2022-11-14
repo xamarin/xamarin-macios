@@ -52,13 +52,11 @@ namespace MonoTouchFixtures.SafariServices {
 
 				try {
 					throw new NSErrorException (error);
-				}
-				catch (NSErrorException ns) {
+				} catch (NSErrorException ns) {
 					Assert.That (ns.Error.Code, Is.EqualTo (error.Code), "Code");
 					Assert.That (ns.Error.Domain, Is.EqualTo (error.Domain), "Domain");
 					Assert.That (ns.Message, Is.EqualTo (error.Description), "Message");
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					Assert.Fail (e.ToString ());
 				}
 			}

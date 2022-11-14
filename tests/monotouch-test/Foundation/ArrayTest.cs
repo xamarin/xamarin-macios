@@ -19,19 +19,19 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NSArrayTest {
-		
+
 		[Test]
 		public void FromStrings_Null ()
 		{
-			Assert.Throws <ArgumentNullException> (() => NSArray.FromStrings (null), "null");
+			Assert.Throws<ArgumentNullException> (() => NSArray.FromStrings (null), "null");
 
 			using (var a = NSArray.FromStrings (new string [1])) {
 				Assert.That (a.Count, Is.EqualTo ((nuint) 1), "null item");
-				Assert.IsNull (a.GetItem <NSString> (0), "0");
+				Assert.IsNull (a.GetItem<NSString> (0), "0");
 			}
 		}
 
@@ -57,7 +57,7 @@ namespace MonoTouchFixtures.Foundation {
 			return (NSComparisonResult) (long) ((nint) obj2.Handle - (nint) obj1.Handle);
 #endif
 		}
-		
+
 		[Test]
 		public void Sort ()
 		{
@@ -75,15 +75,15 @@ namespace MonoTouchFixtures.Foundation {
 			}
 			Assert.That (comparator_count, Is.GreaterThanOrEqualTo (2), "2+");
 		}
-		
+
 		int evaluator_count;
-		
+
 		bool Evaluator (NSObject evaluatedObject, NSDictionary bindings)
 		{
 			evaluator_count++;
 			return (evaluatedObject is NSMutableArray);
 		}
-		
+
 		[Test]
 		public void Filter ()
 		{

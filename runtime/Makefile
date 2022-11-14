@@ -64,6 +64,9 @@ bindings-generated.m: bindings-generator.exe
 app-main.m watchextension-main.m tvextension-main.m: extension-main.m
 	$(Q_LN) ln -fs $< $@
 
+product.h: product.in.h Makefile
+	$(Q) sed -e 's/@PRODUCT_HASH@/$(CURRENT_HASH_LONG)/' $< > $@.tmp
+	$(Q) mv $@.tmp $@
 #
 # MonoTouch defines (used for all MonoTouch platforms: iOS, WatchOS and TVOS)
 #

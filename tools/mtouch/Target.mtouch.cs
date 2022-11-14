@@ -1257,14 +1257,16 @@ namespace Xamarin.Bundler {
 			List<string> registration_methods = new List<string> ();
 
 			// The static registrar.
+			RunRegistrarTask run_registrar_task = null;
 			if (App.Registrar == RegistrarMode.Static) {
 				var registrar_m = Path.Combine (ArchDirectory, "registrar.m");
 				var registrar_h = Path.Combine (ArchDirectory, "registrar.h");
 
-				var run_registrar_task = new RunRegistrarTask {
+				run_registrar_task = new RunRegistrarTask {
 					Target = this,
 					RegistrarCodePath = registrar_m,
 					RegistrarHeaderPath = registrar_h,
+					RegistrationMethods = registration_methods,
 				};
 
 				foreach (var abi in GetArchitectures (AssemblyBuildTarget.StaticObject)) {
@@ -1298,33 +1300,30 @@ namespace Xamarin.Bundler {
 
 					LinkWithTaskOutput (registrar_task);
 				}
-
-				registration_methods.Add ("xamarin_create_classes");
 			}
 
 			if (App.Registrar == RegistrarMode.Dynamic && App.LinkMode == LinkMode.None) {
 				string method;
 				string library;
+				string libraryName;
 				switch (App.Platform) {
 				case ApplePlatform.iOS:
-					method = "xamarin_create_classes_Xamarin_iOS";
-					library = "Xamarin.iOS.registrar.a";
+					libraryName = "Xamarin.iOS";
 					break;
 				case ApplePlatform.WatchOS:
-					method = "xamarin_create_classes_Xamarin_WatchOS";
-					library = "Xamarin.WatchOS.registrar.a";
+					libraryName = "Xamarin.WatchOS";
 					break;
 				case ApplePlatform.TVOS:
-					method = "xamarin_create_classes_Xamarin_TVOS";
-					library = "Xamarin.TVOS.registrar.a";
+					libraryName = "Xamarin.TVOS";
 					break;
 				case ApplePlatform.MacCatalyst:
-					method = "xamarin_create_classes_Xamarin_MacCatalyst";
-					library = "Xamarin.MacCatalyst.registrar.a";
+					libraryName = "Xamarin.MacCatalyst";
 					break;
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
 				}
+				method = StaticRegistrar.GetInitializationMethodName (libraryName);
+				library = libraryName + ".registrar.a";
 
 				var lib = Path.Combine (Driver.GetProductSdkLibDirectory (App), library);
 				if (File.Exists (lib)) {
@@ -1345,6 +1344,8 @@ namespace Xamarin.Bundler {
 					MainM = main_m,
 					RegistrationMethods = registration_methods,
 				};
+				if (run_registrar_task is not null)
+					generate_main_task.AddDependency (run_registrar_task);
 				var main_o = Path.Combine (App.Cache.Location, arch, "main.o");
 				var main_task = new CompileMainTask {
 					Target = this,

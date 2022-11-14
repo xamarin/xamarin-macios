@@ -14,7 +14,7 @@ namespace MonoTouchFixtures.AVFoundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AudioRecorderTest {
-		NSObject[] Values = new NSObject[]
+		NSObject [] Values = new NSObject []
 		{
 			NSNumber.FromFloat ((float)44100), //Sample Rate
 			NSNumber.FromInt32 ((int)AudioFormatType.AppleLossless), //AVFormat
@@ -22,7 +22,7 @@ namespace MonoTouchFixtures.AVFoundation {
 			NSNumber.FromInt32 ((int)AVAudioQuality.Min)
 		};
 
-		NSObject[] Keys = new NSObject[]
+		NSObject [] Keys = new NSObject []
 		{
 			AVAudioSettings.AVSampleRateKey,
 			AVAudioSettings.AVFormatIDKey,
@@ -34,7 +34,7 @@ namespace MonoTouchFixtures.AVFoundation {
 		{
 			TestRuntime.RequestMicrophonePermission ();
 
-			var url =  NSUrl.FromFilename ("/dev/null");
+			var url = NSUrl.FromFilename ("/dev/null");
 			NSError error;
 			var audioSettings = new AudioSettings (NSDictionary.FromObjectsAndKeys (Values, Keys));
 
@@ -48,7 +48,7 @@ namespace MonoTouchFixtures.AVFoundation {
 		{
 			TestRuntime.RequestMicrophonePermission ();
 
-			var url =  NSUrl.FromFilename ("/dev/fake.wav");
+			var url = NSUrl.FromFilename ("/dev/fake.wav");
 			NSError error;
 			var audioSettings = new AudioSettings (NSDictionary.FromObjectsAndKeys (Values, Keys));
 			using (var recorder = AVAudioRecorder.Create (url, audioSettings, out error)) {

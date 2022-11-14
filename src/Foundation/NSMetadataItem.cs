@@ -96,8 +96,8 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (8,0)]
-		[Mac (10,9)]
+		[iOS (8, 0)]
+		[Mac (10, 9)]
 #endif
 		public NSString? ContentType {
 			get {
@@ -111,10 +111,10 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (8,0)]
-		[Mac (10,9)]
+		[iOS (8, 0)]
+		[Mac (10, 9)]
 #endif
-		public NSString?[]? ContentTypeTree {
+		public NSString? []? ContentTypeTree {
 			get {
 				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.ContentTypeTreeKey)))
 					return NSArray.FromArray<NSString> (a);
@@ -155,8 +155,8 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
-		[Mac (10,9)]
+		[iOS (7, 0)]
+		[Mac (10, 9)]
 #endif
 #if NET
 		public NSItemDownloadingStatus UbiquitousItemDownloadingStatus {
@@ -244,8 +244,8 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
-		[Mac (10,9)]
+		[iOS (7, 0)]
+		[Mac (10, 9)]
 #endif
 		public NSError? UbiquitousItemDownloadingError {
 			get {
@@ -259,8 +259,8 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
-		[Mac (10,9)]
+		[iOS (7, 0)]
+		[Mac (10, 9)]
 #endif
 		public NSError? UbiquitousItemUploadingError {
 			get {
@@ -274,8 +274,8 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (8,0)]
-		[Mac (10,10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 #endif
 #if NET
 		public bool? UbiquitousItemDownloadRequested {
@@ -297,8 +297,8 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (8,0)]
-		[Mac (10,10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 #endif
 #if NET
 		public bool? UbiquitousItemIsExternalDocument {
@@ -320,8 +320,8 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (8,0)]
-		[Mac (10,9)]
+		[iOS (8, 0)]
+		[Mac (10, 9)]
 #endif
 		public NSString? UbiquitousItemContainerDisplayName {
 			get {
@@ -335,8 +335,8 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (8,0)]
-		[Mac (10,9)]
+		[iOS (8, 0)]
+		[Mac (10, 9)]
 #endif
 		public NSUrl? UbiquitousItemUrlInLocalContainer {
 			get {

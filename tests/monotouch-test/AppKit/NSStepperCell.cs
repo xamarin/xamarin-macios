@@ -5,12 +5,10 @@ using NUnit.Framework;
 using AppKit;
 using Foundation;
 
-namespace apitest
-{
+namespace apitest {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSStepperCellTests
-	{
+	public class NSStepperCellTests {
 		NSStepperCell cell;
 
 		[SetUp]
