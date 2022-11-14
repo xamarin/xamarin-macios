@@ -25,5 +25,7 @@ namespace Microsoft.Build.Tasks {
 
 			return result;
 		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
 	}
 }
