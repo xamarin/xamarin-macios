@@ -12,8 +12,8 @@ namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
 	public class NativeReferencesTests : ProjectTest {
-		
-		public NativeReferencesTests (string platform) : base (platform)      
+
+		public NativeReferencesTests (string platform) : base (platform)
 		{
 		}
 
@@ -49,7 +49,7 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
 			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
-	
+
 			if (Platform.Contains ("Simulator"))
 				return; // incremental builds on the simulator doesn't make much sense.
 
