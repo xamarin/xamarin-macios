@@ -3917,8 +3917,8 @@ namespace Registrar {
 						if (isRef) {
 							if (isOut) {
 								// Do nothing
-							} else if (td.IsInterface && TryCreateTokenReference (td, TokenType.TypeDef, out var iface_ref, out _) && TryCreateTokenReference (nativeObjType, TokenType.TypeDef, out var objctype_ref, out _)) {
-								setup_call_stack.AppendLine ("inobj{0} = xamarin_get_inative_object_static (*p{0}, false, 0x{1:X} /* {2} */, 0x{3:X} /* {4} */, &exception_gchandle);", i, iface_ref, td.FullName, objctype_ref, nativeObjType.FullName);
+							} else if (td.IsInterface && tdTokenRef != INVALID_TOKEN_REF && nativeObjectTypeTokenRef != INVALID_TOKEN_REF) {
+								setup_call_stack.AppendLine ("inobj{0} = xamarin_get_inative_object_static (*p{0}, false, 0x{1:X} /* {2} */, 0x{3:X} /* {4} */, &exception_gchandle);", i, tdTokenRef, td.FullName, nativeObjectTypeTokenRef, nativeObjType.FullName);
 								setup_call_stack.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
 							} else {
 								body_setup.AppendLine ("MonoReflectionType *reflectiontype{0} = NULL;", i);
