@@ -1,6 +1,5 @@
 using System;
 
-namespace ExampleBinding
-{
+namespace ExampleBinding {
 	%CODE%
 }

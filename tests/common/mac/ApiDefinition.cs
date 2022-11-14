@@ -5,8 +5,7 @@ using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 
-namespace ExampleBinding
-{
+namespace ExampleBinding {
 	// The first step to creating a binding is to add your native library ("libNativeLibrary.a")
 	// to the project by right-clicking (or Control-clicking) the folder containing this source
 	// file and clicking "Add files..." and then simply select the native library (or libraries)
