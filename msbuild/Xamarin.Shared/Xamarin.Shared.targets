@@ -1789,12 +1789,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 				<StampFile>%(FileName).stamp</StampFile>
 			</_UnpackLibraryResourceItems>
 		</ItemGroup>
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_StampDirectory)" />
 	</Target>
 
 	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="ResolveReferences;_CollectBundleResources;_PrepareUnpackLibraryResources"
 		Inputs="@(_UnpackLibraryResourceItems)"
 		Outputs="@(_UnpackLibraryResourceItems->'$(_StampDirectory)%(StampFile)')">
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_StampDirectory)" />
 		<UnpackLibraryResources
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
