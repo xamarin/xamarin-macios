@@ -6,11 +6,9 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Logging;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 
-	public class TestEngine : IBuildEngine, IBuildEngine2, IBuildEngine3, IBuildEngine4
-	{
+	public class TestEngine : IBuildEngine, IBuildEngine2, IBuildEngine3, IBuildEngine4 {
 		public Logger Logger {
 			get; set;
 		}
@@ -61,7 +59,7 @@ namespace Xamarin.MacDev.Tasks
 			get { return true; }
 		}
 		public int LineNumberOfTaskNode {
-			get {return 0;}
+			get { return 0; }
 		}
 		public string ProjectFileOfTaskNode {
 			get { return ""; }
