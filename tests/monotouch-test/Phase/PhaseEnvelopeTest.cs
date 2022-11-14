@@ -17,14 +17,12 @@ using OpenTK;
 
 #nullable enable
 
-namespace MonoTouchFixtures.Phase
-{
+namespace MonoTouchFixtures.Phase {
 
 	[TestFixture]
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
-	public class PhaseEnvelopeTest
-	{
+	public class PhaseEnvelopeTest {
 
 		[SetUp]
 		public void Setup ()
@@ -37,8 +35,8 @@ namespace MonoTouchFixtures.Phase
 		[Test]
 		public void ConstructorTest ()
 		{
-			var start = new Vector2d (1,2);
-			using (var envelope = new PhaseEnvelope (start, new PhaseEnvelopeSegment [] {})) {
+			var start = new Vector2d (1, 2);
+			using (var envelope = new PhaseEnvelope (start, new PhaseEnvelopeSegment [] { })) {
 				// assert we do get the start vector
 				Assert.AreEqual (start, envelope.StartPoint);
 			}

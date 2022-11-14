@@ -21,7 +21,7 @@ using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreGraphics {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class GradientTest {
@@ -31,7 +31,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			TestRuntime.GetCGColor (UIColor.Clear),
 			TestRuntime.GetCGColor (UIColor.Blue),
 		};
-		
+
 		[Test]
 		public void Colorspace_Null ()
 		{
@@ -41,12 +41,12 @@ namespace MonoTouchFixtures.CoreGraphics {
 			using (var g = new CGGradient (null, array, new nfloat [3] { 0f, 1f, 0.5f })) {
 				Assert.That (g.Handle, Is.Not.EqualTo (IntPtr.Zero), "null,CGColor[],float[]");
 			}
-			
+
 			using (var g = new CGGradient (null, array, new nfloat [3] { 0f, 1f, 0.5f })) {
 				Assert.That (g.Handle, Is.Not.EqualTo (IntPtr.Zero), "null,CGColor[],float[]");
 			}
 		}
-		
+
 		static CGColorSpace [] spaces = {
 			CGColorSpace.CreateDeviceGray (),
 			CGColorSpace.CreateDeviceRGB (),
@@ -65,10 +65,10 @@ namespace MonoTouchFixtures.CoreGraphics {
 			}
 		}
 
-		[DllImport(Constants.CoreGraphicsLibrary)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGGradientRef */ IntPtr CGGradientCreateWithColorComponents (/* CGColorSpaceRef */ IntPtr colorspace, /* CGFloat[] */ nfloat [] components, /* CGFloat[] */ nfloat [] locations, /* size_t */ nint count);
 
-		[DllImport(Constants.CoreGraphicsLibrary)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGGradientRef */ IntPtr CGGradientCreateWithColors (/* CGColorSpaceRef */ IntPtr space, /* CFArrayRef */ IntPtr colors, /* CGFloat[] */ nfloat [] locations);
 
 		[Test]

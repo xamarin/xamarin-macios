@@ -44,8 +44,7 @@ namespace Foundation {
 #endif
 	[Register ("NSSet", SkipRegistration = true)]
 	public sealed class NSSet<TKey> : NSSet, IEnumerable<TKey>
-		where TKey : class, INativeObject
-	{
+		where TKey : class, INativeObject {
 		public NSSet ()
 		{
 		}
@@ -95,7 +94,7 @@ namespace Foundation {
 		{
 			if (obj == null)
 				throw new ArgumentNullException (nameof (obj));
-			
+
 			return _Contains (obj.Handle);
 		}
 
@@ -124,18 +123,18 @@ namespace Foundation {
 			return new NSSet<TKey> (copy);
 		}
 
-#region IEnumerable<TKey>
+		#region IEnumerable<TKey>
 		IEnumerator<TKey> IEnumerable<TKey>.GetEnumerator ()
 		{
 			return new NSFastEnumerator<TKey> (this);
 		}
-#endregion
+		#endregion
 
-#region IEnumerable implementation
+		#region IEnumerable implementation
 		IEnumerator IEnumerable.GetEnumerator ()
 		{
 			return new NSFastEnumerator<TKey> (this);
 		}
-#endregion
+		#endregion
 	}
 }

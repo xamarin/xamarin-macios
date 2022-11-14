@@ -5,13 +5,11 @@ using CloudKit;
 using ObjCRuntime;
 using Xamarin.Utils;
 
-namespace MonoTouchFixtures.CloudKit
-{
+namespace MonoTouchFixtures.CloudKit {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CKFetchRecordZonesOperationTest
-	{
+	public class CKFetchRecordZonesOperationTest {
 		CKRecordZoneID [] zoneIDs = new CKRecordZoneID [0];
 		CKFetchRecordZonesOperation op = null;
 
@@ -32,7 +30,7 @@ namespace MonoTouchFixtures.CloudKit
 		[Test]
 		public void TestCompletedSetter ()
 		{
-			op.Completed = (idDict, e) => { Console.WriteLine ("Completed");};
+			op.Completed = (idDict, e) => { Console.WriteLine ("Completed"); };
 			Assert.NotNull (op.Completed);
 		}
 	}

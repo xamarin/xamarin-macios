@@ -13,11 +13,11 @@ using UIKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ControlTest {
-		
+
 		[Test]
 		public void InitWithFrame ()
 		{
@@ -26,7 +26,7 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.That (c.Frame, Is.EqualTo (frame), "Frame");
 			}
 		}
-		
+
 		[Test]
 		public void CancelTrackingTest ()
 		{
@@ -41,8 +41,9 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			const int items = 100;
 			var handles = new GCHandle [items];
-			var handler = new EventHandler (delegate(object sender, EventArgs e) {
-				
+			var handler = new EventHandler (delegate (object sender, EventArgs e)
+			{
+
 			});
 			for (int i = 0; i < items; i++) {
 				var ctrl = new UIControl ();

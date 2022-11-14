@@ -7,6 +7,14 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 jobs:
 - job: configure
   displayName: 'Configure build'
@@ -15,6 +23,9 @@ jobs:
 
   steps:
   - template: ../common/configure.yml
+    parameters:
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
 
 - job: sign_notarize_dotnet
   dependsOn:
@@ -31,6 +42,8 @@ jobs:
   - template: setup.yml
     parameters:
       isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
 
   - task: DownloadPipelineArtifact@2
     displayName: Download not notarized build
@@ -117,6 +130,8 @@ jobs:
   - template: publish-nugets.yml
     parameters:
       isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
 
   # always upload no matter what, since if we are not signing we need the artifact in the pipeline
   - task: PublishPipelineArtifact@1

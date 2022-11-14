@@ -28,7 +28,7 @@ namespace MonoTouchFixtures.NaturalLanguage {
 
 				switch (v) {
 				case NLLanguage.Kazakh:
-					if (!TestRuntime.CheckXcodeVersion (14,0))
+					if (!TestRuntime.CheckXcodeVersion (14, 0))
 						continue;
 					break;
 				}

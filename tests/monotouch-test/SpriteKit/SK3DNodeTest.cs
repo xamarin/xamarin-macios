@@ -38,7 +38,7 @@ namespace MonoTouchFixtures.SpriteKit {
 				Assert.Ignore ("This doesn't seem to work properly in the iOS 9+ or macOS 10.11+");
 
 			// SK3Node loads SCNRenderer dynamically, so make sure it's actually loaded.
-			GC.KeepAlive (Class.GetHandle (typeof(SCNRenderer)));
+			GC.KeepAlive (Class.GetHandle (typeof (SCNRenderer)));
 
 			using (var node = new SK3DNode ()) {
 				var v = node.ProjectPoint (new Vector3 (1, 2, 3));

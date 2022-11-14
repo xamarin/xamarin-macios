@@ -20,11 +20,11 @@ using MonoTests.System.Net.Http;
 
 
 namespace MonoTouchFixtures.CoreFoundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ProxyTest {
-		
+
 		[Test]
 		public void Fields ()
 		{
@@ -36,8 +36,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				Assert.That (Dlfcn.dlsym (lib, "kCFProxyAutoConfigurationHTTPResponseKey"), Is.EqualTo (IntPtr.Zero), "kCFProxyAutoConfigurationHTTPResponseKey");
 				// http://developer.apple.com/library/ios/documentation/CoreFoundation/Reference/CFProxySupport/Reference/reference.html#//apple_ref/doc/c_ref/kCFNetworkProxiesProxyAutoConfigJavaScript
 				Assert.That (Dlfcn.dlsym (lib, "kCFNetworkProxiesProxyAutoConfigJavaScript"), Is.EqualTo (IntPtr.Zero), "kCFNetworkProxiesProxyAutoConfigJavaScript");
-			}
-			finally {
+			} finally {
 				Dlfcn.dlclose (lib);
 			}
 		}
@@ -174,7 +173,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 
 			var script = File.ReadAllText (pacPath);
 			var targetUri = NetworkResources.XamarinUri;
-			
+
 			Exception ex;
 			bool foundProxies;
 			// similar to the other tests, but we want to ensure that the async/await API works

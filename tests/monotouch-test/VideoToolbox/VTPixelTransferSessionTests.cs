@@ -31,8 +31,7 @@ namespace MonoTouchFixtures.VideoToolbox {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class VTPixelTransferSessionTests
-	{
+	public class VTPixelTransferSessionTests {
 		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (14, 0);
 

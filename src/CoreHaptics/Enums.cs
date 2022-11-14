@@ -99,7 +99,7 @@ namespace CoreHaptics {
 		AudioCustom,
 	}
 
-	[Mac (10,15), iOS (13,0), TV (14, 0)]
+	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
 	[Native]
 	public enum CHHapticErrorCode : long {
 		EngineNotRunning = -4805,
@@ -128,24 +128,26 @@ namespace CoreHaptics {
 		MemoryError = -4899,
 	}
 
-	[Mac (10,15), iOS (13,0), TV (14, 0)]
+	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
 	[Native]
 	public enum CHHapticEngineFinishedAction : long {
 		StopEngine = 1,
 		LeaveEngineRunning = 2,
 	}
 
-	[Mac (10,15), iOS (13,0), TV (14, 0)]
+	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
 	[Native]
 	public enum CHHapticEngineStoppedReason : long {
 		AudioSessionInterrupt = 1,
 		ApplicationSuspended = 2,
 		IdleTimeout = 3,
 		NotifyWhenFinished = 4,
-		[iOS (14,0)][NoMac]
+		[iOS (14, 0)]
+		[NoMac]
 		EngineDestroyed = 5,
-		[iOS (14,0)][NoMac]
+		[iOS (14, 0)]
+		[NoMac]
 		GameControllerDisconnect = 6,
 		SystemError = -1,
 	}
-} 
+}
