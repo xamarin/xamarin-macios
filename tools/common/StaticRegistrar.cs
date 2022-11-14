@@ -3969,7 +3969,7 @@ namespace Registrar {
 								var creatorMethod = GetBlockWrapperCreator (method, i);
 								if (creatorMethod is null) {
 									exceptions.Add (ErrorHelper.CreateWarning (App, 4174, method.Method, Errors.MT4174, method.DescriptiveMethodName, i + 1));
-								} else if (TryCreateTokenReference (creatorMethod, TokenType.Method, out var creator_method_token_ref, out _)) { 
+								} else if (TryCreateTokenReference (creatorMethod, TokenType.Method, out var creator_method_token_ref, out _)) {
 									token = $"0x{creator_method_token_ref:X} /* {creatorMethod.FullName} */ ";
 								}
 							}
@@ -4131,7 +4131,7 @@ namespace Registrar {
 							var delegateProxyType = GetDelegateProxyType (method);
 							if (delegateProxyType is null) {
 								exceptions.Add (ErrorHelper.CreateWarning (App, 4176, method.Method, "Unable to locate the delegate to block conversion type for the return value of the method {0}.", method.DescriptiveMethodName));
-							} else if (TryCreateTokenReference (delegateProxyType, TokenType.TypeDef, out var delegate_proxy_type_token_ref, out _)) { 
+							} else if (TryCreateTokenReference (delegateProxyType, TokenType.TypeDef, out var delegate_proxy_type_token_ref, out _)) {
 								token = $"0x{delegate_proxy_type_token_ref:X} /* {delegateProxyType.FullName} */ ";
 							}
 						}
