@@ -53,7 +53,7 @@ namespace Foundation {
 		{
 			Debug.WriteLine ("Warning: you created an NSError without specifying a domain");
 		}
-		
+
 		public static NSError FromDomain (NSString domain, nint code)
 		{
 			return FromDomain (domain, code, null);

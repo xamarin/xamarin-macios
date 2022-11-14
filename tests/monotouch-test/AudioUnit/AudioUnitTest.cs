@@ -4,6 +4,8 @@
 
 #if !__WATCHOS__
 
+using System.Runtime.InteropServices;
+
 using NUnit.Framework;
 
 using Foundation;
@@ -79,6 +81,14 @@ namespace MonoTouchFixtures.AudioUnit {
 			Assert.DoesNotThrow (() => {
 				var icon = component.CopyIcon (); // ensuring that the manual binding does not throw, we do not care about the result
 			});
+		}
+
+		[Test]
+		public unsafe void TestSizeOf ()
+		{
+			Assert.AreEqual (sizeof (AudioFormat), Marshal.SizeOf (typeof (AudioFormat)));
+			Assert.AreEqual (sizeof (AudioValueRange), Marshal.SizeOf (typeof (AudioValueRange)));
+			Assert.AreEqual (sizeof (AudioClassDescription), Marshal.SizeOf (typeof (AudioClassDescription)));
 		}
 	}
 }

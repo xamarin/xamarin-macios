@@ -16,17 +16,17 @@ namespace Foundation {
 
 	public partial class NSUrlConnection {
 		const string selSendSynchronousRequestReturningResponseError = "sendSynchronousRequest:returningResponse:error:";
-		
+
 		public unsafe static NSData SendSynchronousRequest (NSUrlRequest request, out NSUrlResponse response, out NSError error)
 		{
 			IntPtr responseStorage = IntPtr.Zero;
 			IntPtr errorStorage = IntPtr.Zero;
 
-			void *resp = &responseStorage;
-			void *errp = &errorStorage;
+			void* resp = &responseStorage;
+			void* errp = &errorStorage;
 			IntPtr rhandle = (IntPtr) resp;
 			IntPtr ehandle = (IntPtr) errp;
-			
+
 #if NET
 			var res = Messaging.NativeHandle_objc_msgSend_NativeHandle_NativeHandle_NativeHandle (
 #else
@@ -47,7 +47,7 @@ namespace Foundation {
 				error = (NSError) Runtime.GetNSObject (errorStorage);
 			else
 				error = null;
-			
+
 			return (NSData) Runtime.GetNSObject (res);
 		}
 	}
