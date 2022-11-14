@@ -12,7 +12,7 @@ using Xamarin.Utils;
 namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
 	public class ReadAppManifestTaskTests : TestBase {
-		ReadAppManifest CreateTask (ApplePlatform platform = ApplePlatform.iOS,  Action<PDictionary>? createDictionary = null)
+		ReadAppManifest CreateTask (ApplePlatform platform = ApplePlatform.iOS, Action<PDictionary>? createDictionary = null)
 		{
 			var tmpdir = Cache.CreateTemporaryDirectory ();
 

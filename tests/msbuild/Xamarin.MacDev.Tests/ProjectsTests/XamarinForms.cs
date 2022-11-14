@@ -4,12 +4,10 @@ using NUnit.Framework;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
-	public class XamarinForms : ProjectTest
-	{
+	public class XamarinForms : ProjectTest {
 		public XamarinForms (string platform) : base (platform)
 		{
 		}
