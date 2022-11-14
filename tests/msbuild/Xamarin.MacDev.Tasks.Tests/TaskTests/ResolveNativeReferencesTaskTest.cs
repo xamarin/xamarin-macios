@@ -17,11 +17,11 @@ namespace Xamarin.MacDev.Tasks.Tests {
 		[TestCase ("watchOS", null, "arm64_32", "watchos-arm64_32_armv7k/Universal.framework/Universal")]
 		[TestCase ("watchOS", "simulator", "x86_64", "watchos-arm64_x86_64-simulator/Universal.framework/Universal")] // subset
 		[TestCase ("macOS", null, "x86_64", "macos-arm64_x86_64/Universal.framework/Universal")] // subset
-		// multiple arch request (all must be present)
+																								 // multiple arch request (all must be present)
 		[TestCase ("macOS", null, "x86_64, arm64", "macos-arm64_x86_64/Universal.framework/Universal")]
 		// failure to resolve requested architecture
 		[TestCase ("iOS", "simulator", "i386, x86_64", "")] // i386 not available
-		// failure to resolve mismatched variant
+															// failure to resolve mismatched variant
 		[TestCase ("macOS", "maccatalyst", "x86_64", "")] // maccatalyst not available on macOS (it's on iOS)
 		public void Xcode12_x (string platform, string variant, string architecture, string expected)
 		{

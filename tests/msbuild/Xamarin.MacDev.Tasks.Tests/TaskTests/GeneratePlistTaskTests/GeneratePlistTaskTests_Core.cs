@@ -11,11 +11,9 @@ using Xamarin.MacDev.Tasks;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
-	public abstract class GeneratePlistTaskTests_Core : TestBase
-	{
+	public abstract class GeneratePlistTaskTests_Core : TestBase {
 		protected const string appBundleName = "BundleName";
 		protected const string assemblyName = "AssemblyName";
 		protected const string bundleIdentifier = "DefaultIdentifier";
