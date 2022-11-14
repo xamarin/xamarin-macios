@@ -12,6 +12,7 @@ using Mono.Cecil;
 using Xamarin.Tests;
 using Xamarin.Utils;
 using System.Configuration.Assemblies;
+using MethodAttributes = Mono.Cecil.MethodAttributes;
 
 #nullable enable
 
@@ -29,20 +30,15 @@ namespace Cecil.Tests {
 				HashSet<String> methodCache = new HashSet<String> ();
 				var assembly = Helper.GetAssembly (assemblyPath);
 				var publicTypes = assembly.MainModule.Types.Where ((t) => t.IsPublic && !IsTypeObsolete (t));
-				foreach (var type in publicTypes) {
-					var typeName = type.Name;
-					var c = from m in type.Methods
-								//where m.HasCustomAttributes && m.CustomAttributes.Where ((mtd) => mtd.AttributeType.Name == "DllImportAttribute").Any ()
-							where m.IsPInvokeImpl || m.HasPInvokeInfo || m.IsInternalCall || !m.IsPublic
-							select m.Name;
-					
-					if (c is not null) {
-						foreach (var i in c) {
-							//methodCache.Add ($"{typeName}.{i}");
-							//Console.WriteLine ("method name: ", i);
-						}
-					}
+				var pinvokes = AllPInvokes (assembly);
+				var res = from item in pinvokes
+						  where item.Name.Contains ("dl")
+						  select item.PInvokeInfo.EntryPoint;
+						  //select item.Name;
+				foreach (var go in res) {
+					methodCache.Add (go);
 				}
+
 				dllCache.Add (assemblyPath, (Assembly: assembly, MethodCache: methodCache));
 			}
 		}
@@ -72,8 +68,8 @@ namespace Cecil.Tests {
 			if (method == null)
 				return false;
 
-			//if(method.Name == "dlsym") {
-			//	foreach(var i in method.CustomAttributes) {
+			//if (method.Name == "dlsym") {
+			//	foreach (var i in method.CustomAttributes) {
 			//		Console.WriteLine (i.AttributeType);
 			//	}
 			//	//Console.WriteLine(method.CustomAttributes.A)
@@ -107,12 +103,12 @@ namespace Cecil.Tests {
 			if (m == null)
 				return false;
 
-			//if(m.Name == "inputs") {
-			//	Console.WriteLine ("dlsym attrs: ");
-			//	foreach (var attr in m.CustomAttributes) {
-			//		Console.WriteLine (attr.AttributeType);
-			//	}
-			//}
+			if (m.Name == "inputs") {
+				Console.WriteLine ("dlsym attrs: ");
+				foreach (var attr in m.CustomAttributes) {
+					Console.WriteLine (attr.AttributeType);
+				}
+			}
 
 			if (m.IsRemoveOn || m.IsAddOn || m.IsConstructor || m.IsSpecialName || IsMethodObsolete (m) || m.IsFamilyOrAssembly || m.IsPInvokeImpl || m.HasPInvokeInfo || m.IsCompilerControlled)
 				return true;
@@ -120,7 +116,10 @@ namespace Cecil.Tests {
 
 
 			var set = dllCache [assemblyPath].MethodCache;
-			if (set.Contains ($"{t.Name}.{m.Name}")) {
+			//if (set.Contains ($"{t.Name}.{m.Name}")) {
+			//	return true;
+			//}
+			if (set.Contains($"{m.Name}")) {
 				return true;
 			}
 
@@ -263,32 +262,45 @@ namespace Cecil.Tests {
 
 		public void CapitalizationTest (string assemblyPath, Func<TypeDefinition, IEnumerable<string>> selectLambda)
 		{
-			var assemblyPathName = dllCache [assemblyPath];
-			var assembly = assemblyPathName.Assembly;
+
+
+			//var assemblyPathName = dllCache [assemblyPath];
+			//var assembly = assemblyPathName.Assembly;
 		
-			if (assembly is null) {
-				Assert.Ignore ($"{assemblyPath} could not be found (might be disabled in build)");
-				return;
-			}
+			//if (assembly is null) {
+			//	Assert.Ignore ($"{assemblyPath} could not be found (might be disabled in build)");
+			//	return;
+			//}
 
-			var typeDict = new Dictionary<string, string> ();
+			if (dllCache.TryGetValue (assemblyPath, out var cache)) {
+				var typeDict = new Dictionary<string, string> ();
 
-			var publicTypes = assembly.MainModule.Types.Where ((t) => t.IsPublic && !IsTypeObsolete(t));
+				var publicTypes = cache.Assembly.MainModule.Types.Where ((t) => t.IsPublic && !IsTypeObsolete (t));
 
-			foreach (var type in publicTypes) {
-				var err = selectLambda (type);
-				if (err is not null && err.Any ()) {
-					if (typeDict.ContainsKey ($"Type: {type.Name}")) {
-						typeDict [$"Type: {type.Name}"] += string.Join ("; ", err);
-					} else {
-						typeDict.Add ($"Type: {type.Name}", string.Join ("; ", err));
+				foreach (var type in publicTypes) {
+					var err = selectLambda (type);
+					if (err is not null && err.Any ()) {
+						if (typeDict.ContainsKey ($"Type: {type.Name}")) {
+							typeDict [$"Type: {type.Name}"] += string.Join ("; ", err);
+						} else {
+							typeDict.Add ($"Type: {type.Name}", string.Join ("; ", err));
+						}
 					}
 				}
+
+				if (typeDict is not null) {
+					Assert.AreEqual (0, typeDict.Count (), $"Capitalization Issues Found: {string.Join (Environment.NewLine, typeDict)}");
+				}
+			} else {
+				Assert.Ignore ($"{assemblyPath} could not be found (might be disabled in build)");
 			}
 
-			if (typeDict is not null) {
-				Assert.AreEqual (0, typeDict.Count (), $"Capitalization Issues Found: {string.Join (Environment.NewLine, typeDict)}");
-			}
+		}
+
+		IEnumerable<MethodDefinition> AllPInvokes (AssemblyDefinition assembly)
+		{
+			return Helper.FilterMethods (assembly, method =>
+				(method.Attributes & MethodAttributes.PInvokeImpl) != 0);
 		}
 
 	}
