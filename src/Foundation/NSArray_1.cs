@@ -33,11 +33,11 @@ namespace Foundation {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	[Register (SkipRegistration = true)]
-	public sealed partial class NSArray<TKey> : NSArray, IEnumerable<TKey> 
+	public sealed partial class NSArray<TKey> : NSArray, IEnumerable<TKey>
 		where TKey : class, INativeObject {
 
 		public NSArray ()
-		{			
+		{
 		}
 
 		public NSArray (NSCoder coder) : base (coder)
@@ -68,7 +68,7 @@ namespace Foundation {
 			for (nint i = 0; i < count; i++) {
 				var item = items [i];
 				IntPtr h = item == null ? NSNull.Null.Handle : item.Handle;
-				Marshal.WriteIntPtr (buf, (int)(i * IntPtr.Size), h);
+				Marshal.WriteIntPtr (buf, (int) (i * IntPtr.Size), h);
 			}
 			IntPtr ret = NSArray.FromObjects (buf, count);
 			var arr = Runtime.GetNSObject<NSArray<TKey>> (ret);
@@ -92,11 +92,11 @@ namespace Foundation {
 
 		public TKey this [nint idx] {
 			get {
-				return GetItem<TKey> ((nuint)idx);
+				return GetItem<TKey> ((nuint) idx);
 			}
 		}
 
-		public new TKey[] ToArray ()
+		public new TKey [] ToArray ()
 		{
 			return base.ToArray<TKey> ();
 		}

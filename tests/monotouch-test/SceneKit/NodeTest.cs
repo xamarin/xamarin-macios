@@ -48,7 +48,7 @@ namespace MonoTouchFixtures.SceneKit {
 		[Test]
 		public void AddAnimation_Overload ()
 		{
-			TestRuntime.AssertXcodeVersion (9,0);
+			TestRuntime.AssertXcodeVersion (9, 0);
 
 			using (var ca = CAAnimation.CreateAnimation ())
 			using (var a = SCNAnimation.FromCAAnimation (ca))

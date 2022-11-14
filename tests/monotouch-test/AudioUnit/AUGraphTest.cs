@@ -17,11 +17,10 @@ using AudioUnit;
 using ObjCRuntime;
 
 namespace MonoTouchFixtures.AudioUnit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AUGraphTest
-	{
+	public class AUGraphTest {
 		[Test]
 		public void BasicOperations ()
 		{

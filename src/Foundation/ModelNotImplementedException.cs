@@ -24,10 +24,10 @@ using System;
 
 namespace Foundation {
 	public class ModelNotImplementedException : Exception {
-		public ModelNotImplementedException () {}
+		public ModelNotImplementedException () { }
 	}
 
 	public class You_Should_Not_Call_base_In_This_Method : Exception {
-		public You_Should_Not_Call_base_In_This_Method () {}
+		public You_Should_Not_Call_base_In_This_Method () { }
 	}
 }

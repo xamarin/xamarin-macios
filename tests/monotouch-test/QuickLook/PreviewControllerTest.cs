@@ -20,11 +20,11 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.QuickLook {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PreviewControllerTest {
-		
+
 		[Test]
 		public void Defaults ()
 		{
@@ -38,10 +38,10 @@ namespace MonoTouchFixtures.QuickLook {
 					index = -1;
 #endif
 				Assert.That (pc.CurrentPreviewItemIndex, Is.EqualTo (index), "CurrentPreviewItemIndex");
-				
+
 				Assert.Null (pc.Delegate, "Delegate");
 				Assert.Null (pc.WeakDelegate, "WeakDelegate");
-				
+
 				Assert.Null (pc.DataSource, "DataSource");
 				Assert.Null (pc.WeakDataSource, "WeakDataSource");
 
@@ -54,16 +54,19 @@ namespace MonoTouchFixtures.QuickLook {
 		public void DelegateEvents ()
 		{
 			using (QLPreviewController pc = new QLPreviewController ()) {
-					pc.ShouldOpenUrl += delegate (QLPreviewController controller, NSUrl url, IQLPreviewItem item) { 
-					return false; 
+				pc.ShouldOpenUrl += delegate (QLPreviewController controller, NSUrl url, IQLPreviewItem item)
+				{
+					return false;
 				};
-				pc.FrameForPreviewItem += delegate {
+				pc.FrameForPreviewItem += delegate
+				{
 					return new CGRect (1, 2, 3, 4);
 				};
-				pc.TransitionImageForPreviewItem += delegate {
+				pc.TransitionImageForPreviewItem += delegate
+				{
 					return new UIImage ();
 				};
-				
+
 				Assert.NotNull (pc.Delegate, "Delegate");
 				Assert.NotNull (pc.WeakDelegate, "WeakDelegate");
 			}

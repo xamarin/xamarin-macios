@@ -17,14 +17,14 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MapKit {
-	
+
 #if !XAMCORE_3_0
 	class MapViewPoker : MKMapView {
 
 		static FieldInfo bkAnnotations;
 		static FieldInfo bkSelectedAnnotations;
 		static FieldInfo bkOverlays;
-		
+
 		static MapViewPoker ()
 		{
 			var t = typeof (MKMapView);
@@ -32,21 +32,21 @@ namespace MonoTouchFixtures.MapKit {
 			bkSelectedAnnotations = t.GetField ("__mt_SelectedAnnotations_var", BindingFlags.Instance | BindingFlags.NonPublic);
 			bkOverlays = t.GetField ("__mt_Overlays_var", BindingFlags.Instance | BindingFlags.NonPublic);
 		}
-		
+
 		public MapViewPoker ()
 		{
 		}
-		
+
 		// if created (and even if unused) iOS will call it back later (retain)
 		public MapViewPoker (IntPtr p) : base (p)
 		{
 		}
-		
+
 		public static bool NewRefcountEnabled ()
 		{
 			return NSObject.IsNewRefcountEnabled ();
 		}
-		
+
 		public NSObject [] AnnotationsBackingField {
 			get {
 				return (NSObject []) bkAnnotations.GetValue (this);
@@ -75,7 +75,7 @@ namespace MonoTouchFixtures.MapKit {
 		{
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
-		
+
 		[Test]
 		public void InitWithFrame ()
 		{
@@ -91,14 +91,14 @@ namespace MonoTouchFixtures.MapKit {
 		{
 			if (MapViewPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-			
-			using (var a = new MKCircle ()) 	// MKAnnotation is abstract
-			using (var o1 = new MKPolygon ())	// it must export 'coordinate' or this will fail
+
+			using (var a = new MKCircle ())     // MKAnnotation is abstract
+			using (var o1 = new MKPolygon ())   // it must export 'coordinate' or this will fail
 			using (var o2 = new MKPolyline ())
 			using (var mv = new MapViewPoker ()) {
 				Assert.Null (mv.AnnotationsBackingField, "1a");
 				Assert.That (mv.Annotations, Is.Empty, "1b");
-				
+
 				mv.AddAnnotation (a);
 				Assert.AreSame (a, mv.AnnotationsBackingField [0], "2a");
 				Assert.AreSame (a, mv.Annotations [0], "2b");
@@ -115,12 +115,12 @@ namespace MonoTouchFixtures.MapKit {
 				Assert.That (mv.AnnotationsBackingField, Is.Empty, "5a");
 				Assert.That (mv.Annotations, Is.Empty, "5b");
 
-				mv.AddAnnotations (new IMKAnnotation[] { o1, o2 });
+				mv.AddAnnotations (new IMKAnnotation [] { o1, o2 });
 				// don't assume ordering
 				Assert.That (mv.AnnotationsBackingField.Length, Is.EqualTo (2), "6a");
 				Assert.That (mv.Annotations.Length, Is.EqualTo (2), "6b");
 
-				mv.RemoveAnnotations (new IMKAnnotation[] { o2, o1 });
+				mv.RemoveAnnotations (new IMKAnnotation [] { o2, o1 });
 				Assert.That (mv.AnnotationsBackingField, Is.Empty, "7a");
 				Assert.That (mv.Annotations, Is.Empty, "7b");
 			}
@@ -141,9 +141,9 @@ namespace MonoTouchFixtures.MapKit {
 				Assert.Inconclusive ("This test is not deterministic on iOS7 DP4.");
 			}
 #endif
-			
-			using (var a = new MKCircle ()) 	// MKAnnotation is abstract
-			using (var o1 = new MKPolygon ())	// it must export 'coordinate' or this will fail
+
+			using (var a = new MKCircle ())     // MKAnnotation is abstract
+			using (var o1 = new MKPolygon ())   // it must export 'coordinate' or this will fail
 			using (var o2 = new MKPolyline ())
 			using (var mv = new MapViewPoker ()) {
 				Assert.Null (mv.SelectedAnnotationsBackingField, "1a");
@@ -157,7 +157,7 @@ namespace MonoTouchFixtures.MapKit {
 				Assert.Null (mv.AnnotationsBackingField, "3a");
 				Assert.That (mv.Annotations, Is.Empty, "3b");
 
-				mv.SelectedAnnotations = new IMKAnnotation[] { o1, o2 };
+				mv.SelectedAnnotations = new IMKAnnotation [] { o1, o2 };
 				// note: when assigning the property only the first item is selected (by design)
 				// so we're not exactly backing up correctly (we still hold 'o2')
 				// OTOH we do not want to recursively [PostGet] the same property (unless handled by the generator)
@@ -177,7 +177,7 @@ namespace MonoTouchFixtures.MapKit {
 			if (MapViewPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
 
-			using (var o1 = new MKPolygon ())	// it must export 'boundingMapRect' or this will fail
+			using (var o1 = new MKPolygon ())   // it must export 'boundingMapRect' or this will fail
 			using (var o2 = new MKPolyline ())
 			using (var mv = new MapViewPoker ()) {
 				var overlays = new IMKOverlay [] { o1, o2 };
@@ -220,7 +220,7 @@ namespace MonoTouchFixtures.MapKit {
 #endif // !XAMCORE_3_0
 
 		[Test]
-		public void Overlays () 
+		public void Overlays ()
 		{
 			using (var polygon = new MKPolygon ())
 			using (var polyline = new MKPolyline ())
@@ -232,7 +232,7 @@ namespace MonoTouchFixtures.MapKit {
 				mv.RemoveOverlay (polygon);
 				Assert.That (mv.Overlays, Is.Empty, "2");
 
-				IMKOverlay[] list = { polygon, polyline, circle };
+				IMKOverlay [] list = { polygon, polyline, circle };
 				mv.AddOverlays (list);
 				Assert.That (mv.Overlays.Length, Is.EqualTo (3), "3");
 				mv.RemoveOverlays (list);
@@ -241,7 +241,7 @@ namespace MonoTouchFixtures.MapKit {
 		}
 
 		[Test]
-		public void Overlays7 () 
+		public void Overlays7 ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
@@ -258,7 +258,7 @@ namespace MonoTouchFixtures.MapKit {
 				mv.RemoveOverlay (polygon);
 				Assert.That (mv.Overlays, Is.Empty, "2");
 
-				IMKOverlay[] list = { polygon, polyline, circle, tile };
+				IMKOverlay [] list = { polygon, polyline, circle, tile };
 				mv.AddOverlays (list, MKOverlayLevel.AboveRoads);
 				Assert.That (mv.Overlays.Length, Is.EqualTo (4), "3");
 				mv.RemoveOverlays (list);

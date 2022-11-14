@@ -32,7 +32,7 @@ namespace CoreMidi {
 		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
 		public virtual void SetProperty (NSData inquiry, byte channel, MidiCIPropertyResponseHandler handler)
 			=> throw new NotSupportedException ();
-	} 
+	}
 #endif
 
 #if !MONOMAC && !__MACCATALYST__

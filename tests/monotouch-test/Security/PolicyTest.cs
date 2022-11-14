@@ -23,7 +23,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Security {
-	
+
 	[TestFixture]
 	// we want the test to be availble if we use the linker
 	[Preserve (AllMembers = true)]
@@ -152,7 +152,7 @@ namespace MonoTouchFixtures.Security {
 			// CreatePolicy (SecPolicyIdentifier.AppleEAP);
 			CreatePolicy (SecPolicyIdentifier.AppleIPsec);
 			CreatePolicy (SecPolicyIdentifier.AppleCodeSigning);
-			var oid = TestRuntime.CheckXcodeVersion (8, 0) ? "1.2.840.113635.100.1.61" : null; 
+			var oid = TestRuntime.CheckXcodeVersion (8, 0) ? "1.2.840.113635.100.1.61" : null;
 			CreatePolicy (SecPolicyIdentifier.AppleIDValidation, (NSString) oid);
 			// invalid handle ? not yet supported ?!?
 			// CreatePolicy (SecPolicyIdentifier.AppleTimeStamping);
@@ -171,7 +171,8 @@ namespace MonoTouchFixtures.Security {
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			using (var oid = new NSString ("1.2.3.4")) {
-				Assert.Throws<ArgumentException> (delegate {
+				Assert.Throws<ArgumentException> (delegate
+				{
 					SecPolicy.CreatePolicy (oid, null);
 				});
 			}

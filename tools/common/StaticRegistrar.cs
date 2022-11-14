@@ -2785,7 +2785,16 @@ namespace Registrar {
 			skipped_types.Add (new SkippedType { Skipped = type, Actual = registered_type });
 		}
 
-		void Specialize (AutoIndentStringBuilder sb)
+		public string GetInitializationMethodName (string single_assembly)
+		{
+			if (!string.IsNullOrEmpty (single_assembly)) {
+				return "xamarin_create_classes_" + single_assembly.Replace ('.', '_').Replace ('-', '_');
+			} else {
+				return "xamarin_create_classes";
+			}
+		}
+
+		void Specialize (AutoIndentStringBuilder sb, out string initialization_method)
 		{
 			List<Exception> exceptions = new List<Exception> ();
 			List<ObjCMember> skip = new List<ObjCMember> ();
@@ -2809,11 +2818,9 @@ namespace Registrar {
 			}
 
 			map.AppendLine ("static MTClassMap __xamarin_class_map [] = {");
-			if (string.IsNullOrEmpty (single_assembly)) {
-				map_init.AppendLine ("void xamarin_create_classes () {");
-			} else {
-				map_init.AppendLine ("void xamarin_create_classes_{0} () {{", single_assembly.Replace ('.', '_').Replace ('-', '_'));
-			}
+
+			initialization_method = GetInitializationMethodName (single_assembly);
+			map_init.AppendLine ($"void {initialization_method} () {{");
 
 			// Select the types that needs to be registered.
 			var allTypes = new List<ObjCType> ();
@@ -3208,6 +3215,7 @@ namespace Registrar {
 				map.AppendLine ("};");
 			}
 			map.AppendLine ("static struct MTRegistrationMap __xamarin_registration_map = {");
+			map.AppendLine ($"\"{Xamarin.ProductConstants.Hash}\",");
 			map.AppendLine ("__xamarin_registration_assemblies,");
 			map.AppendLine ("__xamarin_class_map,");
 			map.AppendLine (full_token_reference_count == 0 ? "NULL," : "__xamarin_token_references,");
@@ -5079,18 +5087,18 @@ namespace Registrar {
 			pinfo.EntryPoint = wrapperName;
 		}
 
-		public void GenerateSingleAssembly (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly)
+		public void GenerateSingleAssembly (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly, out string initialization_method)
 		{
 			single_assembly = assembly;
-			Generate (resolver, assemblies, header_path, source_path);
+			Generate (resolver, assemblies, header_path, source_path, out initialization_method);
 		}
 
-		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path)
+		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method)
 		{
-			Generate (null, assemblies, header_path, source_path);
+			Generate (null, assemblies, header_path, source_path, out initialization_method);
 		}
 
-		public void Generate (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path)
+		public void Generate (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method)
 		{
 			this.resolver = resolver;
 
@@ -5104,10 +5112,10 @@ namespace Registrar {
 				RegisterAssembly (assembly);
 			}
 
-			Generate (header_path, source_path);
+			Generate (header_path, source_path, out initialization_method);
 		}
 
-		void Generate (string header_path, string source_path)
+		void Generate (string header_path, string source_path, out string initialization_method)
 		{
 			var sb = new AutoIndentStringBuilder ();
 			header = new AutoIndentStringBuilder ();
@@ -5142,7 +5150,7 @@ namespace Registrar {
 			if (App.Embeddinator)
 				methods.WriteLine ("void xamarin_embeddinator_initialize ();");
 
-			Specialize (sb);
+			Specialize (sb, out initialization_method);
 
 			methods.WriteLine ();
 			methods.AppendLine ();

@@ -46,7 +46,7 @@ namespace Foundation {
 		{
 			return Runtime.GetNSObject<NSDictionary> (LowLevelGetAttributes (location, out effectiveRange));
 		}
-		
+
 #if NET
 		public IntPtr LowLevelGetAttributes (nint location, out NSRange effectiveRange)
 		{
@@ -72,7 +72,7 @@ namespace Foundation {
 		public CTStringAttributes GetCoreTextAttributes (nint location, out NSRange longestEffectiveRange, NSRange rangeLimit)
 		{
 			var attr = GetAttributes (location, out longestEffectiveRange, rangeLimit);
-			return attr == null ? null : new CTStringAttributes (attr);			
+			return attr == null ? null : new CTStringAttributes (attr);
 		}
 
 		public NSAttributedString Substring (nint start, nint len)
@@ -95,7 +95,7 @@ namespace Foundation {
 		public UIStringAttributes GetUIKitAttributes (nint location, out NSRange longestEffectiveRange, NSRange rangeLimit)
 		{
 			var attr = GetAttributes (location, out longestEffectiveRange, rangeLimit);
-			return attr == null ? null : new UIStringAttributes (attr);			
+			return attr == null ? null : new UIStringAttributes (attr);
 		}
 
 		static internal NSDictionary ToDictionary (
@@ -114,44 +114,44 @@ namespace Foundation {
 						  NSUnderlineStyle strikethroughStyle)
 		{
 			var attr = new UIStringAttributes ();
-			if (font != null){
+			if (font != null) {
 				attr.Font = font;
 			}
-			if (foregroundColor != null){
+			if (foregroundColor != null) {
 				attr.ForegroundColor = foregroundColor;
 			}
-			if (backgroundColor != null){
+			if (backgroundColor != null) {
 				attr.BackgroundColor = backgroundColor;
 			}
-			if (strokeColor != null){
+			if (strokeColor != null) {
 				attr.StrokeColor = strokeColor;
 			}
-			if (paragraphStyle != null){
+			if (paragraphStyle != null) {
 				attr.ParagraphStyle = paragraphStyle;
 			}
-			if (ligature != NSLigatureType.Default){
+			if (ligature != NSLigatureType.Default) {
 				attr.Ligature = ligature;
 			}
-			if (kerning != 0){
+			if (kerning != 0) {
 				attr.KerningAdjustment = kerning;
 			}
-			if (underlineStyle != NSUnderlineStyle.None){
+			if (underlineStyle != NSUnderlineStyle.None) {
 				attr.UnderlineStyle = underlineStyle;
 			}
 #if !WATCH
-			if (shadow != null){
+			if (shadow != null) {
 				attr.Shadow = shadow;
 			}
 #endif
-			if (strokeWidth != 0){
+			if (strokeWidth != 0) {
 				attr.StrokeWidth = strokeWidth;
 			}
-			if (strikethroughStyle != NSUnderlineStyle.None){
+			if (strikethroughStyle != NSUnderlineStyle.None) {
 				attr.StrikethroughStyle = strikethroughStyle;
 			}
 			var dict = attr.Dictionary;
 			return dict.Count == 0 ? null : dict;
-		}				
+		}
 
 		public NSAttributedString (string str,
 					   UIFont font = null,
@@ -186,6 +186,6 @@ namespace Foundation {
 			return (null as NSAttributedString).FromTextAttachment (attachment);
 		}
 #endif
-#endif						      
+#endif
 	}
 }

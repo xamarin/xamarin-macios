@@ -19,10 +19,10 @@ namespace MonoTouchFixtures.CoreMedia {
 
 		string FourCC (int value)
 		{
-			return new string (new char [] { 
-				(char) (byte) (value >> 24), 
-				(char) (byte) (value >> 16), 
-				(char) (byte) (value >> 8), 
+			return new string (new char [] {
+				(char) (byte) (value >> 24),
+				(char) (byte) (value >> 16),
+				(char) (byte) (value >> 8),
 				(char) (byte) value });
 		}
 

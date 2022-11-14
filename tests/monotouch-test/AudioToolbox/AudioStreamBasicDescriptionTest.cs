@@ -14,11 +14,10 @@ using AudioToolbox;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AudioToolbox {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AudioStreamBasicDescriptionTest
-	{
+	public class AudioStreamBasicDescriptionTest {
 		[Test]
 		public void CreateLinearPCM ()
 		{
