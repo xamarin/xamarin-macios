@@ -176,11 +176,7 @@ stages:
 - ${{ if eq(parameters.runGovernanceTests, true) }}:
   - stage: governance_checks
     displayName: '${{ parameters.stageDisplayNamePrefix }}Governance Checks'
-    ${{ if ne(parameters.dependsOn, '')}}:
-      dependsOn:
-      - ${{ parameters.dependsOn }}
-    ${{ else }}:
-      dependsOn: []
+    dependsOn: ${{ parameters.dependsOn }}
     ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
       condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
     jobs:
@@ -223,11 +219,7 @@ stages:
 
 - stage: build_packages
   displayName: '${{ parameters.stageDisplayNamePrefix }}Build'
-  ${{ if ne(parameters.dependsOn, '')}}:
-    dependsOn:
-    - ${{ parameters.dependsOn }}
-  ${{ else }}:
-    dependsOn: []
+  dependsOn: ${{ parameters.dependsOn }}
   ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
     condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
   jobs:
@@ -311,11 +303,7 @@ stages:
 - ${{ if eq(parameters.enableAPIDiff, true) }}:
   - stage: generate_api_diff
     displayName: '${{ parameters.stageDisplayNamePrefix }}API diff'
-    ${{ if ne(parameters.dependsOn, '')}}:
-      dependsOn:
-      - ${{ parameters.dependsOn }}
-    ${{ else }}:
-      dependsOn: []
+    dependsOn: ${{ parameters.dependsOn }}
     ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
       condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
     jobs:
