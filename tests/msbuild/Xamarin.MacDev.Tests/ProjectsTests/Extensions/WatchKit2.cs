@@ -11,12 +11,12 @@ namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhoneSimulator")]
 	public class WatchKit2 : ExtensionTestBase {
 
-		public WatchKit2 (string platform) : base(platform)
+		public WatchKit2 (string platform) : base (platform)
 		{
 		}
 
 		[Test]
-		public void BasicTest () 
+		public void BasicTest ()
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
 			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET

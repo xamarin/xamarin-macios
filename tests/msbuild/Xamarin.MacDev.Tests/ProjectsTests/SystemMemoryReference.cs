@@ -12,8 +12,8 @@ namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
 	public class SystemMemoryReferenceTests : ProjectTest {
-		
-		public SystemMemoryReferenceTests (string platform) : base (platform)      
+
+		public SystemMemoryReferenceTests (string platform) : base (platform)
 		{
 		}
 
