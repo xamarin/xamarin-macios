@@ -111,7 +111,7 @@
 			<_PackageResourcesFrameworkFiles Include="%(_PackageResourcesDirs.Identity)\*.framework\*" />
 			<_PackageResourcesFrameworkFiles Include="%(_PackageResourcesDirs.Identity)\**\*.xcframework\ios-arm64\*.framework\*" />
 			<_HotRestartFrameworksFromPackages Include="@(_PackageResourcesFrameworkFiles -> '%(RootDir)%(Directory)')" KeepDuplicates="false" />
-			<_HotRestartFrameworks Include="@(_HotRestartFrameworksFromPackages)" />
+			<_HotRestartFrameworks Include="@(_HotRestartFrameworksFromPackages -> TrimEnd('\'))" />
 		</ItemGroup>
 	</Target>
 
