@@ -6,12 +6,10 @@ using NUnit.Framework;
 
 using Xamarin.MacDev.Tasks;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
-	public class ParseBundlerArgumentsTests : TestBase
-	{
-		class CustomParseBundlerArguments : ParseBundlerArgumentsTaskBase {}
+	public class ParseBundlerArgumentsTests : TestBase {
+		class CustomParseBundlerArguments : ParseBundlerArgumentsTaskBase { }
 
 		[Test]
 		public void NoExtraArgs ()

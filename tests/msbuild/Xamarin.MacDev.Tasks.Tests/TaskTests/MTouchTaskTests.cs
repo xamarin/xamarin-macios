@@ -10,10 +10,8 @@ using NUnit.Framework;
 using Xamarin.iOS.Tasks;
 using Xamarin.MacDev;
 
-namespace Xamarin.MacDev.Tasks
-{
-	class CustomMTouchTask : MTouch
-	{
+namespace Xamarin.MacDev.Tasks {
+	class CustomMTouchTask : MTouch {
 		public CustomMTouchTask ()
 		{
 			Architectures = "Default";
@@ -26,7 +24,7 @@ namespace Xamarin.MacDev.Tasks
 			SdkIsSimulator = true;
 			UseLlvm = false;
 			UseThumb = false;
-			AppExtensionReferences = new Microsoft.Build.Framework.ITaskItem[] { };
+			AppExtensionReferences = new Microsoft.Build.Framework.ITaskItem [] { };
 		}
 
 		public string ResponseFile = "";
@@ -47,8 +45,7 @@ namespace Xamarin.MacDev.Tasks
 	}
 
 	[TestFixture]
-	public class MTouchTaskTests : TestBase
-	{
+	public class MTouchTaskTests : TestBase {
 		CustomMTouchTask Task {
 			get; set;
 		}
@@ -141,7 +138,7 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void StandardCommandline_WithBitcodeEnabled_iOS ()
 		{
-			MTouchEnableBitcode("Xamarin.iOS");
+			MTouchEnableBitcode ("Xamarin.iOS");
 
 			var ex = Assert.Throws<InvalidOperationException> (() => Task.GenerateCommandLineCommands (), "Exception");
 			Assert.AreEqual ("Bitcode is currently not supported on iOS.", ex.Message, "Message");
@@ -150,7 +147,7 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void StandardCommandline_WithBitcodeEnabled_watchOS ()
 		{
-			MTouchEnableBitcode("Xamarin.WatchOS");
+			MTouchEnableBitcode ("Xamarin.WatchOS");
 
 			var args = Task.GenerateCommandLineCommands ();
 			Assert.IsTrue (Task.ResponseFile.Contains ("--bitcode=full"));
@@ -159,7 +156,7 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void StandardCommandline_WithBitcodeEnabled_tvOS ()
 		{
-			MTouchEnableBitcode("Xamarin.TVOS");
+			MTouchEnableBitcode ("Xamarin.TVOS");
 
 			var args = Task.GenerateCommandLineCommands ();
 			Assert.IsTrue (Task.ResponseFile.Contains ("--bitcode=asmonly"));
@@ -211,14 +208,14 @@ namespace Xamarin.MacDev.Tasks
 		}
 
 		[Test]
-		public void ReferenceFrameworkFileResolution_WhenReceivedReferencePathExists()
+		public void ReferenceFrameworkFileResolution_WhenReceivedReferencePathExists ()
 		{
-			using (var sdk = new TempSdk()) {
+			using (var sdk = new TempSdk ()) {
 				Task.TargetFrameworkMoniker = "MonoTouch,v1.0";
 
 				var expectedPath = Path.Combine (Cache.CreateTemporaryDirectory (), "tmpfile");
 
-				Task.References = new[] { new TaskItem (expectedPath, new Dictionary<string, string> { { "FrameworkFile", "true" } }) };
+				Task.References = new [] { new TaskItem (expectedPath, new Dictionary<string, string> { { "FrameworkFile", "true" } }) };
 
 				var args = Task.GenerateCommandLineCommands ();
 
@@ -237,16 +234,16 @@ namespace Xamarin.MacDev.Tasks
 			Assert.IsTrue (args.Contains ($"@{Task.ResponseFilePath}"), "#@response-file");
 		}
 
-		[TestCase("Xamarin.iOS,v1.0", "Xamarin.iOS")]
-		public void ReferenceFrameworkFileResolution_WhenFacadeFileExists(string targetFrameworkMoniker, string frameworkDir)
+		[TestCase ("Xamarin.iOS,v1.0", "Xamarin.iOS")]
+		public void ReferenceFrameworkFileResolution_WhenFacadeFileExists (string targetFrameworkMoniker, string frameworkDir)
 		{
-			using (var sdk = new TempSdk()) {
+			using (var sdk = new TempSdk ()) {
 				Task.TargetFrameworkMoniker = targetFrameworkMoniker;
 				var expectedPath = Path.Combine (Sdks.XamIOS.LibDir, "mono", frameworkDir, "Facades", "System.Collections.dll");
 				Directory.CreateDirectory (Path.GetDirectoryName (expectedPath));
 				File.WriteAllText (expectedPath, "");
 
-				Task.References = new[] { new TaskItem ("System.Collections.dll", new Dictionary<string, string> { { "FrameworkFile", "true" } }) };
+				Task.References = new [] { new TaskItem ("System.Collections.dll", new Dictionary<string, string> { { "FrameworkFile", "true" } }) };
 
 				var args = Task.GenerateCommandLineCommands ();
 
@@ -254,7 +251,7 @@ namespace Xamarin.MacDev.Tasks
 					// In Windows, the path slashes are escaped.
 					expectedPath = expectedPath.Replace ("\\", "\\\\");
 
-				Assert.IsTrue (Task.ResponseFile.Contains (expectedPath), string.Format(
+				Assert.IsTrue (Task.ResponseFile.Contains (expectedPath), string.Format (
 					@"Failed to resolve facade assembly to the Sdk path.
 	Expected path:{0}
 
@@ -262,16 +259,16 @@ namespace Xamarin.MacDev.Tasks
 			}
 		}
 
-		[TestCase("Xamarin.iOS,v1.0", "Xamarin.iOS")]
-		public void ReferenceFrameworkFileResolution_WhenFrameworkFileExists(string targetFrameworkMoniker, string frameworkDir)
+		[TestCase ("Xamarin.iOS,v1.0", "Xamarin.iOS")]
+		public void ReferenceFrameworkFileResolution_WhenFrameworkFileExists (string targetFrameworkMoniker, string frameworkDir)
 		{
-			using (var sdk = new TempSdk()) {
+			using (var sdk = new TempSdk ()) {
 				Task.TargetFrameworkMoniker = targetFrameworkMoniker;
 				var expectedPath = Path.Combine (Sdks.XamIOS.LibDir, "mono", frameworkDir, "System.Collections.dll");
 				Directory.CreateDirectory (Path.GetDirectoryName (expectedPath));
 				File.WriteAllText (expectedPath, "");
 
-				Task.References = new[] { new TaskItem ("System.Collections.dll", new Dictionary<string, string> { { "FrameworkFile", "true" } }) };
+				Task.References = new [] { new TaskItem ("System.Collections.dll", new Dictionary<string, string> { { "FrameworkFile", "true" } }) };
 
 				var args = Task.GenerateCommandLineCommands ();
 
@@ -279,7 +276,7 @@ namespace Xamarin.MacDev.Tasks
 					// In Windows, the path slashes are escaped.
 					expectedPath = expectedPath.Replace ("\\", "\\\\");
 
-				Assert.IsTrue (Task.ResponseFile.Contains (expectedPath), string.Format(
+				Assert.IsTrue (Task.ResponseFile.Contains (expectedPath), string.Format (
 					@"Failed to resolve facade assembly to the Sdk path.
 	Expected path:{0}
 
@@ -287,13 +284,13 @@ namespace Xamarin.MacDev.Tasks
 			}
 		}
 
-		[TestCase("Xamarin.iOS,v1.0", "Xamarin.iOS")]
-		public void ReferenceFrameworkFileResolution_WhenResolutionFails(string targetFrameworkMoniker, string frameworkDir)
+		[TestCase ("Xamarin.iOS,v1.0", "Xamarin.iOS")]
+		public void ReferenceFrameworkFileResolution_WhenResolutionFails (string targetFrameworkMoniker, string frameworkDir)
 		{
-			using (var sdk = new TempSdk()) {
+			using (var sdk = new TempSdk ()) {
 				Task.TargetFrameworkMoniker = targetFrameworkMoniker;
 
-				Task.References = new[] { new TaskItem ("/usr/foo/System.Collections.dll", new Dictionary<string, string> { { "FrameworkFile", "true" } }) };
+				Task.References = new [] { new TaskItem ("/usr/foo/System.Collections.dll", new Dictionary<string, string> { { "FrameworkFile", "true" } }) };
 
 				var args = Task.GenerateCommandLineCommands ();
 
@@ -349,8 +346,7 @@ namespace Xamarin.MacDev.Tasks
 			Assert.That (items.Count (), Is.EqualTo (3), "framework files");
 		}
 
-		class TempSdk : IDisposable
-		{
+		class TempSdk : IDisposable {
 			MonoTouchSdk sdk;
 
 			public TempSdk ()
