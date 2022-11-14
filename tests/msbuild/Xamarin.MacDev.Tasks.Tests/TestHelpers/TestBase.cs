@@ -7,10 +7,8 @@ using NUnit.Framework;
 
 using Xamarin.Tests;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class TestBase
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class TestBase {
 		TestEngine engine;
 		public TestEngine Engine {
 			get {
@@ -80,7 +78,7 @@ namespace Xamarin.MacDev.Tasks
 		protected string CreateTempFile (string path)
 		{
 			path = Path.Combine (Cache.CreateTemporaryDirectory ("msbuild-tests"), path);
-			using (new FileStream (path, FileMode.CreateNew)) {}
+			using (new FileStream (path, FileMode.CreateNew)) { }
 			return path;
 		}
 	}

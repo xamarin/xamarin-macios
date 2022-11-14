@@ -9,19 +9,17 @@ using Xamarin.Utils;
 
 using NUnit.Framework;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
-	public class CoreMLCompiler : ProjectTest
-	{
+	public class CoreMLCompiler : ProjectTest {
 		public CoreMLCompiler (string platform) : base (platform)
 		{
 		}
 
 		void AssertCompiledModelExists (string modelName)
 		{
-			var expected = new string[] { "coremldata.bin", "model.espresso.net", "model.espresso.shape", "model.espresso.weights", "model/coremldata.bin", "neural_network_optionals/coremldata.bin" };
+			var expected = new string [] { "coremldata.bin", "model.espresso.net", "model.espresso.shape", "model.espresso.weights", "model/coremldata.bin", "neural_network_optionals/coremldata.bin" };
 			var mlmodelc = Path.Combine (AppBundlePath, modelName + ".mlmodelc");
 
 			Assert.IsTrue (Directory.Exists (mlmodelc));

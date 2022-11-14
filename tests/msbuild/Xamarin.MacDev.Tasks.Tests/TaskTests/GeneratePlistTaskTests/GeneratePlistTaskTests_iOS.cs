@@ -5,12 +5,10 @@ using Xamarin.MacDev;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture (true)]
 	[TestFixture (false)]
-	public class GeneratePlistTaskTests_iOS : GeneratePlistTaskTests_Core
-	{
+	public class GeneratePlistTaskTests_iOS : GeneratePlistTaskTests_Core {
 		protected override ApplePlatform Platform => ApplePlatform.iOS;
 
 		public GeneratePlistTaskTests_iOS (bool isDotNet)
