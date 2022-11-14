@@ -4,12 +4,10 @@ using System.IO;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
-	public class BindingProject : TestBase
-	{
+	public class BindingProject : TestBase {
 		public BindingProject (string platform)
 			: base (platform)
 		{
