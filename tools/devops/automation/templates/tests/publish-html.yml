@@ -82,7 +82,7 @@ steps:
           $emoji = ":fire:"
         }
 
-        $gihubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $Env:GITHUB_TOKEN -Hash $Env:GIT_HASH -Debug
+        $gihubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $Env:GITHUB_TOKEN -Hash $Env:COMMENT_HASH -Debug
         $result = $gihubComments.NewCommentFromObject("Test results", $emoji, $parallelResults)
       } catch {
         New-GitHubComment -Header "Failed to compute test summaries on $Env:CONTEXT" -Emoji ":fire:" -Description "Failed to compute test summaries: $_."
@@ -96,6 +96,10 @@ steps:
     TESTS_JOBSTATUS: $(TESTS_JOBSTATUS) # set by the runTests step
     TESTS_SUMMARY: $(TEST_SUMMARY_PATH)
     ACCESSTOKEN: $(System.AccessToken)
+    ${{ if eq(parameters.repositoryAlias, 'self') }}:
+      COMMENT_HASH: $(GIT_HASH)
+    ${{ else }}:
+      COMMENT_HASH: $(Build.SourceVersion)
   displayName: 'Add summaries'
   condition: always()
   timeoutInMinutes: 15

@@ -4,11 +4,9 @@ using NUnit.Framework;
 
 using Xamarin.MacDev.Tasks;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
-	public class GetBundleNameTaskTests : TestBase
-	{
+	public class GetBundleNameTaskTests : TestBase {
 		[Test]
 		public void GetBundleName_MissingName ()
 		{

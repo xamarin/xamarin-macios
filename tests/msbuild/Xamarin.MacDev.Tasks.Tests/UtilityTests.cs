@@ -10,11 +10,9 @@ using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
-	public class UtilityTests
-	{
+	public class UtilityTests {
 		[Test]
 		public void TestAbsoluteToRelativePath ()
 		{
