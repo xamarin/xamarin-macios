@@ -36,5 +36,5 @@ namespace IOSurface {
 		CopybackInnerCache = 5 << 8,
 	};
 
-	
+
 }
