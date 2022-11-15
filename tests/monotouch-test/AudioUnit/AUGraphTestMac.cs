@@ -8,12 +8,10 @@ using AudioUnit;
 using AudioToolbox;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AUGraphTests
-	{
+	public class AUGraphTests {
 		int graphRenderCallbackCount = 0;
 		int mixerRenderCallbackCount = 0;
 		AUGraph graph;
@@ -26,7 +24,7 @@ namespace Xamarin.Mac.Tests
 			AudioComponentDescription mixerDescription = new AudioComponentDescription ();
 			mixerDescription.ComponentType = AudioComponentType.Mixer;
 #if NET
-			mixerDescription.ComponentSubType = (AudioUnitSubType)AudioTypeMixer.MultiChannel;
+			mixerDescription.ComponentSubType = (AudioUnitSubType) AudioTypeMixer.MultiChannel;
 #else
 			mixerDescription.ComponentSubType = (int)AudioTypeMixer.MultiChannel;
 #endif
@@ -37,7 +35,7 @@ namespace Xamarin.Mac.Tests
 			AudioComponentDescription outputDesciption = new AudioComponentDescription ();
 			outputDesciption.ComponentType = AudioComponentType.Output;
 #if NET
-			outputDesciption.ComponentSubType = (AudioUnitSubType)AudioTypeOutput.System;
+			outputDesciption.ComponentSubType = (AudioUnitSubType) AudioTypeOutput.System;
 #else
 			outputDesciption.ComponentSubType = (int)AudioTypeOutput.System;
 #endif
@@ -71,7 +69,7 @@ namespace Xamarin.Mac.Tests
 			//graph.RenderCallback += HandleRenderCallback;
 
 			AudioUnitStatus status = mMixer.SetRenderCallback (MixerRenderCallback);
-			Assert.AreEqual (AudioUnitStatus.OK, status );
+			Assert.AreEqual (AudioUnitStatus.OK, status);
 
 			WaitOnGraphAndMixerCallbacks ();
 		}
@@ -101,8 +99,7 @@ namespace Xamarin.Mac.Tests
 					Thread.Sleep (10);
 				}
 				Assert.Fail ("Did not see events after 1 second");
-			}
-			finally {
+			} finally {
 				graph.Stop ();
 			}
 		}

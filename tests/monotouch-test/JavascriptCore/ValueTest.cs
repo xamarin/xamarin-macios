@@ -79,7 +79,7 @@ namespace MonoTouchFixtures.JavascriptCore {
 		[Test]
 		public void CreatePromise ()
 		{
-			TestRuntime.AssertXcodeVersion (11,0);
+			TestRuntime.AssertXcodeVersion (11, 0);
 
 			using (var c = new JSContext ()) {
 				bool called = false;
@@ -97,7 +97,7 @@ namespace MonoTouchFixtures.JavascriptCore {
 		[Test]
 		public void ToArray ()
 		{
-			TestRuntime.AssertXcodeVersion (11,0);
+			TestRuntime.AssertXcodeVersion (11, 0);
 
 			using var context = new JSContext ();
 			using var array = NSArray.FromStrings ("a", "b");

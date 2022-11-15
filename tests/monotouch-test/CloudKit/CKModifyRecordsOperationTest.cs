@@ -5,13 +5,11 @@ using CloudKit;
 using ObjCRuntime;
 using Xamarin.Utils;
 
-namespace MonoTouchFixtures.CloudKit
-{
+namespace MonoTouchFixtures.CloudKit {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CKModifyRecordsOperationTest
-	{
+	public class CKModifyRecordsOperationTest {
 		CKModifyRecordsOperation op = null;
 
 		[SetUp]
@@ -31,21 +29,21 @@ namespace MonoTouchFixtures.CloudKit
 		[Test]
 		public void PerRecordProgressSetter ()
 		{
-			op.PerRecordProgress = (record, p) => { Console.WriteLine ("Progress");};
+			op.PerRecordProgress = (record, p) => { Console.WriteLine ("Progress"); };
 			Assert.NotNull (op.PerRecordProgress);
 		}
-		
+
 		[Test]
 		public void PerRecordCompletionSetter ()
 		{
-			op.PerRecordCompletion = (record, e) => { Console.WriteLine ("Notification");};
+			op.PerRecordCompletion = (record, e) => { Console.WriteLine ("Notification"); };
 			Assert.NotNull (op.PerRecordCompletion);
 		}
 
 		[Test]
 		public void TestCompletedSetter ()
 		{
-			op.Completed = (saved, deleted, e) => { Console.WriteLine ("Completed");};
+			op.Completed = (saved, deleted, e) => { Console.WriteLine ("Completed"); };
 			Assert.NotNull (op.Completed);
 		}
 

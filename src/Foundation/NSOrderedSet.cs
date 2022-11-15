@@ -56,7 +56,7 @@ namespace Foundation {
 				return GetObject (idx);
 			}
 		}
-		
+
 		public T [] ToArray<T> () where T : class, INativeObject
 		{
 			IntPtr nsarr = _ToArray ();
@@ -73,7 +73,7 @@ namespace Foundation {
 		{
 			var enumerator = _GetEnumerator ();
 			NSObject obj;
-			
+
 			while ((obj = enumerator.NextObject ()) != null)
 				yield return obj as NSObject;
 		}
@@ -82,7 +82,7 @@ namespace Foundation {
 		{
 			var enumerator = _GetEnumerator ();
 			NSObject obj;
-			
+
 			while ((obj = enumerator.NextObject ()) != null)
 				yield return obj;
 		}
@@ -165,7 +165,7 @@ namespace Foundation {
 		{
 			return (int) GetNativeHash ();
 		}
-		
+
 		public bool Contains (object obj)
 		{
 			return Contains (NSObject.FromObject (obj));
@@ -184,7 +184,7 @@ namespace Foundation {
 		public NSMutableOrderedSet (params string [] strings) : this (NSArray.FromStrings (strings))
 		{
 		}
-		
+
 		public new NSObject this [nint idx] {
 			get {
 				return GetObject (idx);

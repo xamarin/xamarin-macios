@@ -38,14 +38,12 @@ using Bindings.Test;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.ModelIO
-{
+namespace MonoTouchFixtures.ModelIO {
 
 	[TestFixture]
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
-	public class MDCameraTest
-	{
+	public class MDCameraTest {
 		[OneTimeSetUp]
 		public void Setup ()
 		{

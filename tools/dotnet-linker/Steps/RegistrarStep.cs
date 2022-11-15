@@ -23,7 +23,7 @@ namespace Xamarin.Linker {
 				break;
 			case RegistrarMode.PartialStatic:
 				// The method name is created in StaticRegistrar.Specialize.
-				var method = "xamarin_create_classes_" + Path.GetFileNameWithoutExtension (Configuration.PlatformAssembly.Replace ('.', '_').Replace ('-', '_'));
+				var method = Configuration.Target.StaticRegistrar.GetInitializationMethodName (Configuration.PlatformAssembly);
 				Configuration.RegistrationMethods.Add (method);
 				Configuration.CompilerFlags.AddLinkWith (Configuration.PartialStaticRegistrarLibrary);
 				break;
@@ -36,7 +36,7 @@ namespace Xamarin.Linker {
 					if (Annotations.GetAction (assembly) != Mono.Linker.AssemblyAction.Delete)
 						bundled_assemblies.Add (assembly);
 				}
-				Configuration.Target.StaticRegistrar.Generate (bundled_assemblies, header, code);
+				Configuration.Target.StaticRegistrar.Generate (bundled_assemblies, header, code, out var initialization_method);
 
 				var items = new List<MSBuildItem> ();
 				foreach (var abi in Configuration.Abis) {
@@ -50,7 +50,7 @@ namespace Xamarin.Linker {
 				}
 
 				Configuration.WriteOutputForMSBuild ("_RegistrarFile", items);
-				Configuration.RegistrationMethods.Add ("xamarin_create_classes");
+				Configuration.RegistrationMethods.Add (initialization_method);
 				break;
 			case RegistrarMode.Default: // We should have resolved 'Default' to an actual mode by now.
 			default:

@@ -15,11 +15,11 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[Watch (6,0)]
+	[Watch (6, 0)]
 #endif
 	public static class CMAttachmentBearer {
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CFDictionaryRef */ IntPtr CMCopyDictionaryOfAttachments (/* CFAllocatorRef */ IntPtr allocator, /* CMAttachmentBearerRef */ IntPtr target,
 			/* CMAttachmentMode */ CMAttachmentMode attachmentMode);
 
@@ -48,10 +48,10 @@ namespace CoreMedia {
 			return Runtime.GetNSObject<NSDictionary<TKey, TValue>> (attachments, true);
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CFTypeRef */ IntPtr CMGetAttachment (/* CMAttachmentBearerRef */ IntPtr target, /* CFStringRef */ IntPtr key,
 			/* CMAttachmentMode */ out CMAttachmentMode attachmentModeOut);
-		public static T? GetAttachment<T> (this ICMAttachmentBearer target, string key, out CMAttachmentMode attachmentModeOut) where T: class, INativeObject
+		public static T? GetAttachment<T> (this ICMAttachmentBearer target, string key, out CMAttachmentMode attachmentModeOut) where T : class, INativeObject
 		{
 			if (target is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (target));
@@ -65,13 +65,13 @@ namespace CoreMedia {
 			return default (T);
 		}
 #if !WATCH
-		public static T? GetAttachment<T> (this ICMAttachmentBearer target, CMSampleBufferAttachmentKey key, out CMAttachmentMode attachmentModeOut) where T: class, INativeObject
+		public static T? GetAttachment<T> (this ICMAttachmentBearer target, CMSampleBufferAttachmentKey key, out CMAttachmentMode attachmentModeOut) where T : class, INativeObject
 		{
 			return GetAttachment<T> (target, key.GetConstant (), out attachmentModeOut);
 		}
 #endif
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static void CMPropagateAttachments (/* CMAttachmentBearerRef */ IntPtr source, /* CMAttachmentBearerRef */ IntPtr destination);
 		public static void PropagateAttachments (this ICMAttachmentBearer source, ICMAttachmentBearer destination)
 		{
@@ -82,8 +82,8 @@ namespace CoreMedia {
 			CMPropagateAttachments (source.Handle, destination.Handle);
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
-		extern static void CMRemoveAllAttachments (/*CMAttachmentBearerRef*/ IntPtr target );
+		[DllImport (Constants.CoreMediaLibrary)]
+		extern static void CMRemoveAllAttachments (/*CMAttachmentBearerRef*/ IntPtr target);
 		public static void RemoveAllAttachments (this ICMAttachmentBearer target)
 		{
 			if (target is null)
@@ -91,8 +91,8 @@ namespace CoreMedia {
 			CMRemoveAllAttachments (target.Handle);
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
-		extern static void CMRemoveAttachment(/* CMAttachmentBearerRef */ IntPtr target, /* CFStringRef */ IntPtr key);
+		[DllImport (Constants.CoreMediaLibrary)]
+		extern static void CMRemoveAttachment (/* CMAttachmentBearerRef */ IntPtr target, /* CFStringRef */ IntPtr key);
 		public static void RemoveAttachment (this ICMAttachmentBearer target, string key)
 		{
 			if (target is null)
@@ -104,7 +104,7 @@ namespace CoreMedia {
 			CFString.ReleaseNative (nsKey);
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static void CMSetAttachment (/* CMAttachmentBearerRef */ IntPtr target, /* CFStringRef */ IntPtr key, /* CFTypeRef */ IntPtr value,
 			/* CMAttachmentMode */ CMAttachmentMode attachmentMode);
 		public static void SetAttachment (this ICMAttachmentBearer target, string key, INativeObject value, CMAttachmentMode attachmentMode)
@@ -120,9 +120,9 @@ namespace CoreMedia {
 			CFString.ReleaseNative (nsKey);
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static void CMSetAttachments (/* CMAttachmentBearerRef */ IntPtr target, /* CFDictionaryRef */ IntPtr theAttachments,
-			/* CMAttachmentMode */ CMAttachmentMode attachmentMode );
+			/* CMAttachmentMode */ CMAttachmentMode attachmentMode);
 		public static void SetAttachments (this ICMAttachmentBearer target, NSDictionary theAttachments, CMAttachmentMode attachmentMode)
 		{
 			if (target is null)

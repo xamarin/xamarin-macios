@@ -59,129 +59,129 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios16.0")]
 		[SupportedOSPlatform ("maccatalyst16.0")]
 #else
-		[iOS (16,0), TV (16,0), MacCatalyst (16,0), Mac (13,0), Watch (9,0)]
+		[iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Mac (13, 0), Watch (9, 0)]
 #endif
 		PreventAutoDownload = 1 << 1,
-		PreferSystemFont      = 1 << 2,
+		PreferSystemFont = 1 << 2,
 #if !NET
 		[Obsolete ("This API is not available on this platform.")]
-		IncludeDisabled       = 1 << 7,
+		IncludeDisabled = 1 << 7,
 #endif
 	}
 
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFont.h
 	public enum CTFontUIFontType : uint {
-		None                         = unchecked ((uint)(-1)),
-		User                         =  0,
-		UserFixedPitch               =  1,
-		System                       =  2,
-		EmphasizedSystem             =  3,
-		SmallSystem                  =  4,
-		SmallEmphasizedSystem        =  5,
-		MiniSystem                   =  6,
-		MiniEmphasizedSystem         =  7,
-		Views                        =  8,
-		Application                  =  9,
-		Label                        = 10,
-		MenuTitle                    = 11,
-		MenuItem                     = 12,
-		MenuItemMark                 = 13,
-		MenuItemCmdKey               = 14,
-		WindowTitle                  = 15,
-		PushButton                   = 16,
-		UtilityWindowTitle           = 17,
-		AlertHeader                  = 18,
-		SystemDetail                 = 19,
-		EmphasizedSystemDetail       = 20,
-		Toolbar                      = 21,
-		SmallToolbar                 = 22,
-		Message                      = 23,
-		Palette                      = 24,
-		ToolTip                      = 25,
-		ControlContent               = 26,
+		None = unchecked((uint) (-1)),
+		User = 0,
+		UserFixedPitch = 1,
+		System = 2,
+		EmphasizedSystem = 3,
+		SmallSystem = 4,
+		SmallEmphasizedSystem = 5,
+		MiniSystem = 6,
+		MiniEmphasizedSystem = 7,
+		Views = 8,
+		Application = 9,
+		Label = 10,
+		MenuTitle = 11,
+		MenuItem = 12,
+		MenuItemMark = 13,
+		MenuItemCmdKey = 14,
+		WindowTitle = 15,
+		PushButton = 16,
+		UtilityWindowTitle = 17,
+		AlertHeader = 18,
+		SystemDetail = 19,
+		EmphasizedSystemDetail = 20,
+		Toolbar = 21,
+		SmallToolbar = 22,
+		Message = 23,
+		Palette = 24,
+		ToolTip = 25,
+		ControlContent = 26,
 	}
 
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFont.h
 	public enum CTFontTable : uint {
-		BaselineBASE               = 0x42415345,  // 'BASE'
-		ColorBitmapData            = 0x43424454,  // 'CBDT'
-		ColorBitmapLocationData    = 0x43424c43,  // 'CBLC'
-		PostscriptFontProgram      = 0x43464620,  // 'CFF '
-		CompactFontFormat2         = 0x43464632,  // 'CFF2'
-		ColorTable                 = 0x434f4c52,  // 'COLR'
-		ColorPaletteTable          = 0x4350414c,  // 'CPAL'
-		DigitalSignature           = 0x44534947,  // 'DSIG'
-		EmbeddedBitmap             = 0x45424454,  // 'EBDT'
-		EmbeddedBitmapLocation     = 0x45424c43,  // 'EBLC'
-		EmbeddedBitmapScaling      = 0x45425343,  // 'EBSC'
-		GlyphDefinition            = 0x47444546,  // 'GDEF'
-		GlyphPositioning           = 0x47504f53,  // 'GPOS'
-		GlyphSubstitution          = 0x47535542,  // 'GSUB'
-		HorizontalMetricsVariations= 0x48564152,  // 'HVAR'
-		JustificationJSTF          = 0x4a535446,  // 'JSTF'
-		LinearThreshold            = 0x4c545348,  // 'LTSH'
-		MathLayoutData             = 0x4d415448,  // 'MATH'
-		Merge                      = 0x4d455247,  // 'MERG'
-		MetricsVariations          = 0x4d564152,  // 'MVAR'
-		WindowsSpecificMetrics     = 0x4f532f32,  // 'OS2 '
-		Pcl5Data                   = 0x50434c54,  // 'PCLT'
-		VerticalDeviceMetrics      = 0x56444d58,  // 'VDMX'
-		StyleAttributes            = 0x53544154,  // 'STAT'
-		ScalableVectorGraphics     = 0x53564720,  // 'SVG '
-		VerticalOrigin             = 0x564f5247,  // 'VORG'
-		VerticalMetricsVariations  = 0x56564152,  // 'VVAR'
-		GlyphReference             = 0x5a617066,  // 'Zapf'
-		AccentAttachment           = 0x61636e74,  // 'Acnt'
-		AnchorPoints               = 0x616e6b72,  // 'ankr'
-		AxisVariation              = 0x61766172,  // 'Avar'
-		BitmapData                 = 0x62646174,  // 'Bdat'
-		BitmapFontHeader           = 0x62686564,  // 'Bhed'
-		BitmapLocation             = 0x626c6f63,  // 'Bloc'
-		BaselineBsln               = 0x62736c6e,  // 'Bsln'
-		CharacterToGlyphMapping    = 0x636d6170,  // 'Cmap'
+		BaselineBASE = 0x42415345,  // 'BASE'
+		ColorBitmapData = 0x43424454,  // 'CBDT'
+		ColorBitmapLocationData = 0x43424c43,  // 'CBLC'
+		PostscriptFontProgram = 0x43464620,  // 'CFF '
+		CompactFontFormat2 = 0x43464632,  // 'CFF2'
+		ColorTable = 0x434f4c52,  // 'COLR'
+		ColorPaletteTable = 0x4350414c,  // 'CPAL'
+		DigitalSignature = 0x44534947,  // 'DSIG'
+		EmbeddedBitmap = 0x45424454,  // 'EBDT'
+		EmbeddedBitmapLocation = 0x45424c43,  // 'EBLC'
+		EmbeddedBitmapScaling = 0x45425343,  // 'EBSC'
+		GlyphDefinition = 0x47444546,  // 'GDEF'
+		GlyphPositioning = 0x47504f53,  // 'GPOS'
+		GlyphSubstitution = 0x47535542,  // 'GSUB'
+		HorizontalMetricsVariations = 0x48564152,  // 'HVAR'
+		JustificationJSTF = 0x4a535446,  // 'JSTF'
+		LinearThreshold = 0x4c545348,  // 'LTSH'
+		MathLayoutData = 0x4d415448,  // 'MATH'
+		Merge = 0x4d455247,  // 'MERG'
+		MetricsVariations = 0x4d564152,  // 'MVAR'
+		WindowsSpecificMetrics = 0x4f532f32,  // 'OS2 '
+		Pcl5Data = 0x50434c54,  // 'PCLT'
+		VerticalDeviceMetrics = 0x56444d58,  // 'VDMX'
+		StyleAttributes = 0x53544154,  // 'STAT'
+		ScalableVectorGraphics = 0x53564720,  // 'SVG '
+		VerticalOrigin = 0x564f5247,  // 'VORG'
+		VerticalMetricsVariations = 0x56564152,  // 'VVAR'
+		GlyphReference = 0x5a617066,  // 'Zapf'
+		AccentAttachment = 0x61636e74,  // 'Acnt'
+		AnchorPoints = 0x616e6b72,  // 'ankr'
+		AxisVariation = 0x61766172,  // 'Avar'
+		BitmapData = 0x62646174,  // 'Bdat'
+		BitmapFontHeader = 0x62686564,  // 'Bhed'
+		BitmapLocation = 0x626c6f63,  // 'Bloc'
+		BaselineBsln = 0x62736c6e,  // 'Bsln'
+		CharacterToGlyphMapping = 0x636d6170,  // 'Cmap'
 		ControlValueTableVariation = 0x63766172,  // 'Cvar'
-		ControlValueTable          = 0x63767420,  // 'Cvt '
-		FontDescriptor             = 0x66647363,  // 'Fdsc'
-		LayoutFeature              = 0x66656174,  // 'Feat'
-		FontMetrics                = 0x666d7478,  // 'Fmtx'
-		FondAndNfntData            = 0x666f6e64,  // 'fond'
-		FontProgram                = 0x6670676d,  // 'Fpgm'
-		FontVariation              = 0x66766172,  // 'Fvar'
-		GridFitting                = 0x67617370,  // 'Gasp'
-		GlyphData                  = 0x676c7966,  // 'Glyf'
-		GlyphVariation             = 0x67766172,  // 'Gvar'
-		HorizontalDeviceMetrics    = 0x68646d78,  // 'Hdmx'
-		FontHeader                 = 0x68656164,  // 'Head'
-		HorizontalHeader           = 0x68686561,  // 'Hhea'
-		HorizontalMetrics          = 0x686d7478,  // 'Hmtx'
-		HorizontalStyle            = 0x68737479,  // 'Hsty'
-		JustificationJust          = 0x6a757374,  // 'Just'
-		Kerning                    = 0x6b65726e,  // 'Kern'
-		ExtendedKerning            = 0x6b657278,  // 'Kerx'
-		LigatureCaret              = 0x6c636172,  // 'Lcar'
-		IndexToLocation            = 0x6c6f6361,  // 'Loca'
-		LanguageTags               = 0x6c746167,  // 'ltag'
-		MaximumProfile             = 0x6d617870,  // 'Maxp'
-		Metadata                   = 0x6d657461,  // 'meta'
-		Morph                      = 0x6d6f7274,  // 'Mort'
-		ExtendedMorph              = 0x6d6f7278,  // 'Morx'
-		Name                       = 0x6e616d65,  // 'Name'
-		OpticalBounds              = 0x6f706264,  // 'Opbd'
-		PostScriptInformation      = 0x706f7374,  // 'Post'
-		ControlValueTableProgram   = 0x70726570,  // 'Prep'
-		Properties                 = 0x70726f70,  // 'Prop'
-		SBitmapData                = 0x73626974,  // 'sbit'
-		SExtendedBitmapData        = 0x73626978,  // 'sbix'
-		Tracking                   = 0x7472616b,  // 'Trak'
-		VerticalHeader             = 0x76686561,  // 'Vhea'
-		VerticalMetrics            = 0x766d7478,  // 'Vmtx'
-		CrossReference             = 0x78726566,  // 'xref'
+		ControlValueTable = 0x63767420,  // 'Cvt '
+		FontDescriptor = 0x66647363,  // 'Fdsc'
+		LayoutFeature = 0x66656174,  // 'Feat'
+		FontMetrics = 0x666d7478,  // 'Fmtx'
+		FondAndNfntData = 0x666f6e64,  // 'fond'
+		FontProgram = 0x6670676d,  // 'Fpgm'
+		FontVariation = 0x66766172,  // 'Fvar'
+		GridFitting = 0x67617370,  // 'Gasp'
+		GlyphData = 0x676c7966,  // 'Glyf'
+		GlyphVariation = 0x67766172,  // 'Gvar'
+		HorizontalDeviceMetrics = 0x68646d78,  // 'Hdmx'
+		FontHeader = 0x68656164,  // 'Head'
+		HorizontalHeader = 0x68686561,  // 'Hhea'
+		HorizontalMetrics = 0x686d7478,  // 'Hmtx'
+		HorizontalStyle = 0x68737479,  // 'Hsty'
+		JustificationJust = 0x6a757374,  // 'Just'
+		Kerning = 0x6b65726e,  // 'Kern'
+		ExtendedKerning = 0x6b657278,  // 'Kerx'
+		LigatureCaret = 0x6c636172,  // 'Lcar'
+		IndexToLocation = 0x6c6f6361,  // 'Loca'
+		LanguageTags = 0x6c746167,  // 'ltag'
+		MaximumProfile = 0x6d617870,  // 'Maxp'
+		Metadata = 0x6d657461,  // 'meta'
+		Morph = 0x6d6f7274,  // 'Mort'
+		ExtendedMorph = 0x6d6f7278,  // 'Morx'
+		Name = 0x6e616d65,  // 'Name'
+		OpticalBounds = 0x6f706264,  // 'Opbd'
+		PostScriptInformation = 0x706f7374,  // 'Post'
+		ControlValueTableProgram = 0x70726570,  // 'Prep'
+		Properties = 0x70726f70,  // 'Prop'
+		SBitmapData = 0x73626974,  // 'sbit'
+		SExtendedBitmapData = 0x73626978,  // 'sbix'
+		Tracking = 0x7472616b,  // 'Trak'
+		VerticalHeader = 0x76686561,  // 'Vhea'
+		VerticalMetrics = 0x766d7478,  // 'Vmtx'
+		CrossReference = 0x78726566,  // 'xref'
 	}
 
 	[Flags]
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFont.h
 	public enum CTFontTableOptions : uint {
-		None              = 0,
+		None = 0,
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
@@ -195,15 +195,14 @@ namespace CoreText {
 		[Deprecated (PlatformName.TvOS, 16, 0)]
 		[Deprecated (PlatformName.WatchOS, 9, 0)]
 #endif
-		ExcludeSynthetic  = (1 << 0),
+		ExcludeSynthetic = (1 << 0),
 	}
 
 	// anonymous and typeless native enum - /System/Library/Frameworks/CoreText.framework/Headers/SFNTLayoutTypes.h
-	public enum FontFeatureGroup
-	{
-		AllTypographicFeatures   = 0,
-		Ligatures                = 1,
-		CursiveConnection        = 2,
+	public enum FontFeatureGroup {
+		AllTypographicFeatures = 0,
+		Ligatures = 1,
+		CursiveConnection = 2,
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -217,41 +216,41 @@ namespace CoreText {
 		[Deprecated (PlatformName.iOS, 6, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
 #endif
-		LetterCase               = 3,
-		VerticalSubstitution     = 4,
-		LinguisticRearrangement  = 5,
-		NumberSpacing            = 6,
-		SmartSwash               = 8,
-		Diacritics               = 9,
-		VerticalPosition         = 10,
-		Fractions                = 11,
-		OverlappingCharacters    = 13,
-		TypographicExtras        = 14,
-		MathematicalExtras       = 15,
-		OrnamentSets             = 16,
-		CharacterAlternatives    = 17,
-		DesignComplexity         = 18,
-		StyleOptions             = 19,
-		CharacterShape           = 20,
-		NumberCase               = 21,
-		TextSpacing              = 22,
-		Transliteration          = 23,
-		Annotation               = 24,
-		KanaSpacing              = 25,
-		IdeographicSpacing       = 26,
-		UnicodeDecomposition     = 27,
-		RubyKana                 = 28,
-		CJKSymbolAlternatives    = 29,
-		IdeographicAlternatives  = 30,
+		LetterCase = 3,
+		VerticalSubstitution = 4,
+		LinguisticRearrangement = 5,
+		NumberSpacing = 6,
+		SmartSwash = 8,
+		Diacritics = 9,
+		VerticalPosition = 10,
+		Fractions = 11,
+		OverlappingCharacters = 13,
+		TypographicExtras = 14,
+		MathematicalExtras = 15,
+		OrnamentSets = 16,
+		CharacterAlternatives = 17,
+		DesignComplexity = 18,
+		StyleOptions = 19,
+		CharacterShape = 20,
+		NumberCase = 21,
+		TextSpacing = 22,
+		Transliteration = 23,
+		Annotation = 24,
+		KanaSpacing = 25,
+		IdeographicSpacing = 26,
+		UnicodeDecomposition = 27,
+		RubyKana = 28,
+		CJKSymbolAlternatives = 29,
+		IdeographicAlternatives = 30,
 		CJKVerticalRomanPlacement = 31,
-		ItalicCJKRoman           = 32,
-		CaseSensitiveLayout      = 33,
-		AlternateKana            = 34,
-		StylisticAlternatives    = 35,
-		ContextualAlternates     = 36,
-		LowerCase                = 37,
-		UpperCase                = 38,
-		CJKRomanSpacing          = 103
+		ItalicCJKRoman = 32,
+		CaseSensitiveLayout = 33,
+		AlternateKana = 34,
+		StylisticAlternatives = 35,
+		ContextualAlternates = 36,
+		LowerCase = 37,
+		UpperCase = 38,
+		CJKRomanSpacing = 103
 	}
 
 #if NET
@@ -274,11 +273,11 @@ namespace CoreText {
 			Dictionary = dictionary;
 		}
 
-		public NSDictionary Dictionary {get; private set;}
+		public NSDictionary Dictionary { get; private set; }
 
 		public string? Name {
-			get {return Adapter.GetStringValue (Dictionary, CTFontFeatureKey.Name);}
-			set {Adapter.SetValue (Dictionary, CTFontFeatureKey.Name, value);}
+			get { return Adapter.GetStringValue (Dictionary, CTFontFeatureKey.Name); }
+			set { Adapter.SetValue (Dictionary, CTFontFeatureKey.Name, value); }
 		}
 
 		public FontFeatureGroup FeatureGroup {
@@ -289,12 +288,12 @@ namespace CoreText {
 
 		public bool Exclusive {
 			get {
-				return CFDictionary.GetBooleanValue (Dictionary.Handle, 
+				return CFDictionary.GetBooleanValue (Dictionary.Handle,
 						CTFontFeatureKey.Exclusive.Handle);
 			}
 			set {
-				CFMutableDictionary.SetValue (Dictionary.Handle, 
-						CTFontFeatureKey.Exclusive.Handle, 
+				CFMutableDictionary.SetValue (Dictionary.Handle,
+						CTFontFeatureKey.Exclusive.Handle,
 						value);
 			}
 		}
@@ -422,7 +421,7 @@ namespace CoreText {
 			}
 		}
 
-		public NSDictionary Dictionary {get; private set;}
+		public NSDictionary Dictionary { get; private set; }
 
 		protected int FeatureWeak {
 			get {
@@ -431,17 +430,17 @@ namespace CoreText {
 		}
 
 		public string? Name {
-			get {return Adapter.GetStringValue (Dictionary, CTFontFeatureSelectorKey.Name);}
-			set {Adapter.SetValue (Dictionary, CTFontFeatureSelectorKey.Name, value);}
+			get { return Adapter.GetStringValue (Dictionary, CTFontFeatureSelectorKey.Name); }
+			set { Adapter.SetValue (Dictionary, CTFontFeatureSelectorKey.Name, value); }
 		}
 
 		public bool Default {
 			get {
-				return CFDictionary.GetBooleanValue (Dictionary.Handle, 
+				return CFDictionary.GetBooleanValue (Dictionary.Handle,
 						CTFontFeatureSelectorKey.Default.Handle);
 			}
 			set {
-				CFMutableDictionary.SetValue (Dictionary.Handle, 
+				CFMutableDictionary.SetValue (Dictionary.Handle,
 						CTFontFeatureSelectorKey.Default.Handle,
 						value);
 			}
@@ -449,11 +448,11 @@ namespace CoreText {
 
 		public bool Setting {
 			get {
-				return CFDictionary.GetBooleanValue (Dictionary.Handle, 
+				return CFDictionary.GetBooleanValue (Dictionary.Handle,
 						CTFontFeatureSelectorKey.Setting.Handle);
 			}
 			set {
-				CFMutableDictionary.SetValue (Dictionary.Handle, 
+				CFMutableDictionary.SetValue (Dictionary.Handle,
 						CTFontFeatureSelectorKey.Setting.Handle,
 						value);
 			}
@@ -466,12 +465,10 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureAllTypographicFeatures : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			AllTypeFeaturesOn    = 0,
-			AllTypeFeaturesOff   = 1
+	public class CTFontFeatureAllTypographicFeatures : CTFontFeatureSelectors {
+		public enum Selector {
+			AllTypeFeaturesOn = 0,
+			AllTypeFeaturesOff = 1
 		}
 
 		public CTFontFeatureAllTypographicFeatures (NSDictionary dictionary)
@@ -492,28 +489,26 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureLigatures : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			RequiredLigaturesOn  = 0,
+	public class CTFontFeatureLigatures : CTFontFeatureSelectors {
+		public enum Selector {
+			RequiredLigaturesOn = 0,
 			RequiredLigaturesOff = 1,
-			CommonLigaturesOn    = 2,
-			CommonLigaturesOff   = 3,
-			RareLigaturesOn      = 4,
-			RareLigaturesOff     = 5,
-			LogosOn              = 6,
-			LogosOff             = 7,
-			RebusPicturesOn      = 8,
-			RebusPicturesOff     = 9,
+			CommonLigaturesOn = 2,
+			CommonLigaturesOff = 3,
+			RareLigaturesOn = 4,
+			RareLigaturesOff = 5,
+			LogosOn = 6,
+			LogosOff = 7,
+			RebusPicturesOn = 8,
+			RebusPicturesOff = 9,
 			DiphthongLigaturesOn = 10,
 			DiphthongLigaturesOff = 11,
-			SquaredLigaturesOn   = 12,
-			SquaredLigaturesOff  = 13,
+			SquaredLigaturesOn = 12,
+			SquaredLigaturesOff = 13,
 			AbbrevSquaredLigaturesOn = 14,
 			AbbrevSquaredLigaturesOff = 15,
-			SymbolLigaturesOn    = 16,
-			SymbolLigaturesOff   = 17,
+			SymbolLigaturesOn = 16,
+			SymbolLigaturesOff = 17,
 			ContextualLigaturesOn = 18,
 			ContextualLigaturesOff = 19,
 			HistoricalLigaturesOn = 20,
@@ -545,17 +540,15 @@ namespace CoreText {
 	[Deprecated (PlatformName.iOS, 6, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 7)]
 #endif
-	public class CTFontFeatureLetterCase : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			UpperAndLowerCase    = 0,
-			AllCaps              = 1,
-			AllLowerCase         = 2,
-			SmallCaps            = 3,
-			InitialCaps          = 4,
+	public class CTFontFeatureLetterCase : CTFontFeatureSelectors {
+		public enum Selector {
+			UpperAndLowerCase = 0,
+			AllCaps = 1,
+			AllLowerCase = 2,
+			SmallCaps = 3,
+			InitialCaps = 4,
 			InitialCapsAndSmallCaps = 5
-  		}
+		}
 
 		public CTFontFeatureLetterCase (NSDictionary dictionary)
 			: base (dictionary)
@@ -575,14 +568,12 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureCursiveConnection : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-  			Unconnected          = 0,
-			PartiallyConnected   = 1,
-			Cursive              = 2
-  		}
+	public class CTFontFeatureCursiveConnection : CTFontFeatureSelectors {
+		public enum Selector {
+			Unconnected = 0,
+			PartiallyConnected = 1,
+			Cursive = 2
+		}
 
 		public CTFontFeatureCursiveConnection (NSDictionary dictionary)
 			: base (dictionary)
@@ -602,13 +593,11 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureVerticalSubstitutionConnection : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
+	public class CTFontFeatureVerticalSubstitutionConnection : CTFontFeatureSelectors {
+		public enum Selector {
 			SubstituteVerticalFormsOn = 0,
 			SubstituteVerticalFormsOff = 1
-  		}
+		}
 
 		public CTFontFeatureVerticalSubstitutionConnection (NSDictionary dictionary)
 			: base (dictionary)
@@ -628,10 +617,8 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureLinguisticRearrangementConnection : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
+	public class CTFontFeatureLinguisticRearrangementConnection : CTFontFeatureSelectors {
+		public enum Selector {
 			LinguisticRearrangementOn = 0,
 			LinguisticRearrangementOff = 1
 		}
@@ -654,15 +641,13 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureNumberSpacing : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-  			MonospacedNumbers    = 0,
-			ProportionalNumbers  = 1,
-			ThirdWidthNumbers    = 2,
-			QuarterWidthNumbers  = 3
-  		}
+	public class CTFontFeatureNumberSpacing : CTFontFeatureSelectors {
+		public enum Selector {
+			MonospacedNumbers = 0,
+			ProportionalNumbers = 1,
+			ThirdWidthNumbers = 2,
+			QuarterWidthNumbers = 3
+		}
 
 		public CTFontFeatureNumberSpacing (NSDictionary dictionary)
 			: base (dictionary)
@@ -682,20 +667,18 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureSmartSwash : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
+	public class CTFontFeatureSmartSwash : CTFontFeatureSelectors {
+		public enum Selector {
 			WordInitialSwashesOn = 0,
 			WordInitialSwashesOff = 1,
- 			WordFinalSwashesOn   = 2,
-			WordFinalSwashesOff  = 3,
+			WordFinalSwashesOn = 2,
+			WordFinalSwashesOff = 3,
 			LineInitialSwashesOn = 4,
 			LineInitialSwashesOff = 5,
-			LineFinalSwashesOn   = 6,
-			LineFinalSwashesOff  = 7,
-			NonFinalSwashesOn    = 8,
-			NonFinalSwashesOff   = 9
+			LineFinalSwashesOn = 6,
+			LineFinalSwashesOff = 7,
+			NonFinalSwashesOn = 8,
+			NonFinalSwashesOff = 9
 		}
 
 		public CTFontFeatureSmartSwash (NSDictionary dictionary)
@@ -705,7 +688,7 @@ namespace CoreText {
 
 		public Selector Feature {
 			get {
-					return (Selector) FeatureWeak;
+				return (Selector) FeatureWeak;
 			}
 		}
 	}
@@ -716,13 +699,11 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureDiacritics : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			ShowDiacritics       = 0,
-			HideDiacritics       = 1,
-			DecomposeDiacritics  = 2
+	public class CTFontFeatureDiacritics : CTFontFeatureSelectors {
+		public enum Selector {
+			ShowDiacritics = 0,
+			HideDiacritics = 1,
+			DecomposeDiacritics = 2
 		}
 
 		public CTFontFeatureDiacritics (NSDictionary dictionary)
@@ -743,15 +724,13 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureVerticalPosition : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			NormalPosition       = 0,
-			Superiors            = 1,
-			Inferiors            = 2,
-			Ordinals             = 3,
-			ScientificInferiors  = 4
+	public class CTFontFeatureVerticalPosition : CTFontFeatureSelectors {
+		public enum Selector {
+			NormalPosition = 0,
+			Superiors = 1,
+			Inferiors = 2,
+			Ordinals = 3,
+			ScientificInferiors = 4
 		}
 
 		public CTFontFeatureVerticalPosition (NSDictionary dictionary)
@@ -772,13 +751,11 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureFractions : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			NoFractions          = 0,
-			VerticalFractions    = 1,
-			DiagonalFractions    = 2			
+	public class CTFontFeatureFractions : CTFontFeatureSelectors {
+		public enum Selector {
+			NoFractions = 0,
+			VerticalFractions = 1,
+			DiagonalFractions = 2
 		}
 
 		public CTFontFeatureFractions (NSDictionary dictionary)
@@ -799,13 +776,11 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureOverlappingCharacters : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			PreventOverlapOn     = 0,
-			PreventOverlapOff    = 1
-  		}
+	public class CTFontFeatureOverlappingCharacters : CTFontFeatureSelectors {
+		public enum Selector {
+			PreventOverlapOn = 0,
+			PreventOverlapOff = 1
+		}
 
 		public CTFontFeatureOverlappingCharacters (NSDictionary dictionary)
 			: base (dictionary)
@@ -825,21 +800,19 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureTypographicExtras : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			HyphensToEmDashOn    = 0,
-			HyphensToEmDashOff   = 1,
-			HyphenToEnDashOn     = 2,
-			HyphenToEnDashOff    = 3,
-			SlashedZeroOn        = 4,
-			SlashedZeroOff       = 5,
-			FormInterrobangOn    = 6,
-			FormInterrobangOff   = 7,
-			SmartQuotesOn        = 8,
-			SmartQuotesOff       = 9,
-			PeriodsToEllipsisOn  = 10,
+	public class CTFontFeatureTypographicExtras : CTFontFeatureSelectors {
+		public enum Selector {
+			HyphensToEmDashOn = 0,
+			HyphensToEmDashOff = 1,
+			HyphenToEnDashOn = 2,
+			HyphenToEnDashOff = 3,
+			SlashedZeroOn = 4,
+			SlashedZeroOff = 5,
+			FormInterrobangOn = 6,
+			FormInterrobangOff = 7,
+			SmartQuotesOn = 8,
+			SmartQuotesOff = 9,
+			PeriodsToEllipsisOn = 10,
 			PeriodsToEllipsisOff = 11
 		}
 
@@ -861,21 +834,19 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureMathematicalExtras : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			HyphenToMinusOn      = 0,
-			HyphenToMinusOff     = 1,
+	public class CTFontFeatureMathematicalExtras : CTFontFeatureSelectors {
+		public enum Selector {
+			HyphenToMinusOn = 0,
+			HyphenToMinusOff = 1,
 			AsteriskToMultiplyOn = 2,
 			AsteriskToMultiplyOff = 3,
-			SlashToDivideOn      = 4,
-			SlashToDivideOff     = 5,
+			SlashToDivideOn = 4,
+			SlashToDivideOff = 5,
 			InequalityLigaturesOn = 6,
 			InequalityLigaturesOff = 7,
-			ExponentsOn          = 8,
-			ExponentsOff         = 9,
-			MathematicalGreekOn  = 10,
+			ExponentsOn = 8,
+			ExponentsOff = 9,
+			MathematicalGreekOn = 10,
 			MathematicalGreekOff = 11
 		}
 
@@ -897,17 +868,15 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureOrnamentSets : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			NoOrnaments          = 0,
-			Dingbats             = 1,
-			PiCharacters         = 2,
-			Fleurons             = 3,
-			DecorativeBorders    = 4,
+	public class CTFontFeatureOrnamentSets : CTFontFeatureSelectors {
+		public enum Selector {
+			NoOrnaments = 0,
+			Dingbats = 1,
+			PiCharacters = 2,
+			Fleurons = 3,
+			DecorativeBorders = 4,
 			InternationalSymbols = 5,
-			MathSymbols          = 6
+			MathSymbols = 6
 		}
 
 		public CTFontFeatureOrnamentSets (NSDictionary dictionary)
@@ -928,11 +897,9 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureCharacterAlternatives : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			NoAlternates          = 0,
+	public class CTFontFeatureCharacterAlternatives : CTFontFeatureSelectors {
+		public enum Selector {
+			NoAlternates = 0,
 		}
 
 		public CTFontFeatureCharacterAlternatives (NSDictionary dictionary)
@@ -953,15 +920,13 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureDesignComplexity : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			DesignLevel1         = 0,
-			DesignLevel2         = 1,
-			DesignLevel3         = 2,
-			DesignLevel4         = 3,
-			DesignLevel5         = 4
+	public class CTFontFeatureDesignComplexity : CTFontFeatureSelectors {
+		public enum Selector {
+			DesignLevel1 = 0,
+			DesignLevel2 = 1,
+			DesignLevel3 = 2,
+			DesignLevel4 = 3,
+			DesignLevel5 = 4
 		}
 
 		public CTFontFeatureDesignComplexity (NSDictionary dictionary)
@@ -982,16 +947,14 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureStyleOptions : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			NoStyleOptions       = 0,
-			DisplayText          = 1,
-			EngravedText         = 2,
-			IlluminatedCaps      = 3,
-			TitlingCaps          = 4,
-			TallCaps             = 5
+	public class CTFontFeatureStyleOptions : CTFontFeatureSelectors {
+		public enum Selector {
+			NoStyleOptions = 0,
+			DisplayText = 1,
+			EngravedText = 2,
+			IlluminatedCaps = 3,
+			TitlingCaps = 4,
+			TallCaps = 5
 		}
 
 		public CTFontFeatureStyleOptions (NSDictionary dictionary)
@@ -1012,24 +975,22 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureCharacterShape : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
+	public class CTFontFeatureCharacterShape : CTFontFeatureSelectors {
+		public enum Selector {
 			TraditionalCharacters = 0,
 			SimplifiedCharacters = 1,
-			JIS1978Characters    = 2,
-			JIS1983Characters    = 3,
-			JIS1990Characters    = 4,
-			TraditionalAltOne    = 5,
-			TraditionalAltTwo    = 6,
-			TraditionalAltThree  = 7,
-			TraditionalAltFour   = 8,
-			TraditionalAltFive   = 9,
-			ExpertCharacters     = 10,
-			JIS2004Characters    = 11,
-			HojoCharacters       = 12,
-			NLCCharacters        = 13,
+			JIS1978Characters = 2,
+			JIS1983Characters = 3,
+			JIS1990Characters = 4,
+			TraditionalAltOne = 5,
+			TraditionalAltTwo = 6,
+			TraditionalAltThree = 7,
+			TraditionalAltFour = 8,
+			TraditionalAltFive = 9,
+			ExpertCharacters = 10,
+			JIS2004Characters = 11,
+			HojoCharacters = 12,
+			NLCCharacters = 13,
 			TraditionalNamesCharacters = 14
 		}
 
@@ -1051,13 +1012,11 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureNumberCase : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			LowerCaseNumbers     = 0,
-			UpperCaseNumbers     = 1
-  		}
+	public class CTFontFeatureNumberCase : CTFontFeatureSelectors {
+		public enum Selector {
+			LowerCaseNumbers = 0,
+			UpperCaseNumbers = 1
+		}
 
 		public CTFontFeatureNumberCase (NSDictionary dictionary)
 			: base (dictionary)
@@ -1077,17 +1036,15 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureTextSpacing : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			ProportionalText     = 0,
-			MonospacedText       = 1,
-			HalfWidthText        = 2,
-			ThirdWidthText       = 3,
-			QuarterWidthText     = 4,
-			AltProportionalText  = 5,
-			AltHalfWidthText     = 6
+	public class CTFontFeatureTextSpacing : CTFontFeatureSelectors {
+		public enum Selector {
+			ProportionalText = 0,
+			MonospacedText = 1,
+			HalfWidthText = 2,
+			ThirdWidthText = 3,
+			QuarterWidthText = 4,
+			AltProportionalText = 5,
+			AltHalfWidthText = 6
 		}
 
 		public CTFontFeatureTextSpacing (NSDictionary dictionary)
@@ -1108,19 +1065,17 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureTransliteration : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			NoTransliteration    = 0,
-			HanjaToHangul        = 1,
-			HiraganaToKatakana   = 2,
-			KatakanaToHiragana   = 3,
-			KanaToRomanization   = 4,
+	public class CTFontFeatureTransliteration : CTFontFeatureSelectors {
+		public enum Selector {
+			NoTransliteration = 0,
+			HanjaToHangul = 1,
+			HiraganaToKatakana = 2,
+			KatakanaToHiragana = 3,
+			KanaToRomanization = 4,
 			RomanizationToHiragana = 5,
 			RomanizationToKatakana = 6,
-			HanjaToHangulAltOne  = 7,
-			HanjaToHangulAltTwo  = 8,
+			HanjaToHangulAltOne = 7,
+			HanjaToHangulAltTwo = 8,
 			HanjaToHangulAltThree = 9
 		}
 
@@ -1142,19 +1097,17 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureAnnotation : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			NoAnnotation         = 0,
-			BoxAnnotation        = 1,
+	public class CTFontFeatureAnnotation : CTFontFeatureSelectors {
+		public enum Selector {
+			NoAnnotation = 0,
+			BoxAnnotation = 1,
 			RoundedBoxAnnotation = 2,
-			CircleAnnotation     = 3,
+			CircleAnnotation = 3,
 			InvertedCircleAnnotation = 4,
 			ParenthesisAnnotation = 5,
-			PeriodAnnotation     = 6,
+			PeriodAnnotation = 6,
 			RomanNumeralAnnotation = 7,
-			DiamondAnnotation    = 8,
+			DiamondAnnotation = 8,
 			InvertedBoxAnnotation = 9,
 			InvertedRoundedBoxAnnotation = 10
 		}
@@ -1177,12 +1130,10 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureKanaSpacing : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			FullWidthKana        = 0,
-			ProportionalKana     = 1
+	public class CTFontFeatureKanaSpacing : CTFontFeatureSelectors {
+		public enum Selector {
+			FullWidthKana = 0,
+			ProportionalKana = 1
 		}
 
 		public CTFontFeatureKanaSpacing (NSDictionary dictionary)
@@ -1203,13 +1154,11 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureIdeographicSpacing : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			FullWidthIdeographs  = 0,
+	public class CTFontFeatureIdeographicSpacing : CTFontFeatureSelectors {
+		public enum Selector {
+			FullWidthIdeographs = 0,
 			ProportionalIdeographs = 1,
-			HalfWidthIdeographs  = 2
+			HalfWidthIdeographs = 2
 		}
 
 		public CTFontFeatureIdeographicSpacing (NSDictionary dictionary)
@@ -1230,10 +1179,8 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureUnicodeDecomposition : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
+	public class CTFontFeatureUnicodeDecomposition : CTFontFeatureSelectors {
+		public enum Selector {
 			CanonicalCompositionOn = 0,
 			CanonicalCompositionOff = 1,
 			CompatibilityCompositionOn = 2,
@@ -1260,10 +1207,8 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureRubyKana : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
+	public class CTFontFeatureRubyKana : CTFontFeatureSelectors {
+		public enum Selector {
 #if NET
 			[UnsupportedOSPlatform ("macos10.8")]
 			[UnsupportedOSPlatform ("ios5.1")]
@@ -1275,7 +1220,7 @@ namespace CoreText {
 			[Deprecated (PlatformName.iOS, 5, 1)]
 			[Deprecated (PlatformName.MacOSX, 10, 8)]
 #endif
-			NoRubyKana           = 0,
+			NoRubyKana = 0,
 #if NET
 			[UnsupportedOSPlatform ("macos10.8")]
 			[UnsupportedOSPlatform ("ios5.1")]
@@ -1287,9 +1232,9 @@ namespace CoreText {
 			[Deprecated (PlatformName.iOS, 5, 1)]
 			[Deprecated (PlatformName.MacOSX, 10, 8)]
 #endif
-			RubyKana             = 1,
-			RubyKanaOn           = 2,
-			RubyKanaOff          = 3
+			RubyKana = 1,
+			RubyKanaOn = 2,
+			RubyKanaOff = 3
 		}
 
 		public CTFontFeatureRubyKana (NSDictionary dictionary)
@@ -1310,17 +1255,15 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureCJKSymbolAlternatives : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
+	public class CTFontFeatureCJKSymbolAlternatives : CTFontFeatureSelectors {
+		public enum Selector {
 			NoCJKSymbolAlternatives = 0,
-			CJKSymbolAltOne      = 1,
-			CJKSymbolAltTwo      = 2,
-			CJKSymbolAltThree    = 3,
-			CJKSymbolAltFour     = 4,
-			CJKSymbolAltFive     = 5
-  		}
+			CJKSymbolAltOne = 1,
+			CJKSymbolAltTwo = 2,
+			CJKSymbolAltThree = 3,
+			CJKSymbolAltFour = 4,
+			CJKSymbolAltFive = 5
+		}
 
 		public CTFontFeatureCJKSymbolAlternatives (NSDictionary dictionary)
 			: base (dictionary)
@@ -1340,17 +1283,15 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureIdeographicAlternatives : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
+	public class CTFontFeatureIdeographicAlternatives : CTFontFeatureSelectors {
+		public enum Selector {
 			NoIdeographicAlternatives = 0,
-			IdeographicAltOne    = 1,
-			IdeographicAltTwo    = 2,
-			IdeographicAltThree  = 3,
-			IdeographicAltFour   = 4,
-			IdeographicAltFive   = 5
-  		}
+			IdeographicAltOne = 1,
+			IdeographicAltTwo = 2,
+			IdeographicAltThree = 3,
+			IdeographicAltFour = 4,
+			IdeographicAltFive = 5
+		}
 
 		public CTFontFeatureIdeographicAlternatives (NSDictionary dictionary)
 			: base (dictionary)
@@ -1370,13 +1311,11 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureCJKVerticalRomanPlacement : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
+	public class CTFontFeatureCJKVerticalRomanPlacement : CTFontFeatureSelectors {
+		public enum Selector {
 			CJKVerticalRomanCentered = 0,
 			CJKVerticalRomanHBaseline = 1
-  		}
+		}
 
 		public CTFontFeatureCJKVerticalRomanPlacement (NSDictionary dictionary)
 			: base (dictionary)
@@ -1396,10 +1335,8 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureItalicCJKRoman : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
+	public class CTFontFeatureItalicCJKRoman : CTFontFeatureSelectors {
+		public enum Selector {
 #if NET
 			[UnsupportedOSPlatform ("macos10.8")]
 			[UnsupportedOSPlatform ("ios5.1")]
@@ -1411,7 +1348,7 @@ namespace CoreText {
 			[Deprecated (PlatformName.iOS, 5, 1)]
 			[Deprecated (PlatformName.MacOSX, 10, 8)]
 #endif
-			NoCJKItalicRoman     = 0,
+			NoCJKItalicRoman = 0,
 #if NET
 			[UnsupportedOSPlatform ("macos10.8")]
 			[UnsupportedOSPlatform ("ios5.1")]
@@ -1423,9 +1360,9 @@ namespace CoreText {
 			[Deprecated (PlatformName.iOS, 5, 1)]
 			[Deprecated (PlatformName.MacOSX, 10, 8)]
 #endif
-			CJKItalicRoman       = 1,
-			CJKItalicRomanOn     = 2,
-			CJKItalicRomanOff    = 3
+			CJKItalicRoman = 1,
+			CJKItalicRomanOn = 2,
+			CJKItalicRomanOff = 3
 		}
 
 		public CTFontFeatureItalicCJKRoman (NSDictionary dictionary)
@@ -1446,10 +1383,8 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureCaseSensitiveLayout : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
+	public class CTFontFeatureCaseSensitiveLayout : CTFontFeatureSelectors {
+		public enum Selector {
 			CaseSensitiveLayoutOn = 0,
 			CaseSensitiveLayoutOff = 1,
 			CaseSensitiveSpacingOn = 2,
@@ -1474,13 +1409,11 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureAlternateKana : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
+	public class CTFontFeatureAlternateKana : CTFontFeatureSelectors {
+		public enum Selector {
 			AlternateHorizKanaOn = 0,
 			AlternateHorizKanaOff = 1,
-			AlternateVertKanaOn  = 2,
+			AlternateVertKanaOn = 2,
 			AlternateVertKanaOff = 3
 		}
 
@@ -1502,31 +1435,29 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureStylisticAlternatives : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
+	public class CTFontFeatureStylisticAlternatives : CTFontFeatureSelectors {
+		public enum Selector {
 			NoStylisticAlternates = 0,
-			StylisticAltOneOn    = 2,
-			StylisticAltOneOff   = 3,
-			StylisticAltTwoOn    = 4,
-			StylisticAltTwoOff   = 5,
-			StylisticAltThreeOn  = 6,
+			StylisticAltOneOn = 2,
+			StylisticAltOneOff = 3,
+			StylisticAltTwoOn = 4,
+			StylisticAltTwoOff = 5,
+			StylisticAltThreeOn = 6,
 			StylisticAltThreeOff = 7,
-			StylisticAltFourOn   = 8,
-			StylisticAltFourOff  = 9,
-			StylisticAltFiveOn   = 10,
-			StylisticAltFiveOff  = 11,
-			StylisticAltSixOn    = 12,
-			StylisticAltSixOff   = 13,
-			StylisticAltSevenOn  = 14,
+			StylisticAltFourOn = 8,
+			StylisticAltFourOff = 9,
+			StylisticAltFiveOn = 10,
+			StylisticAltFiveOff = 11,
+			StylisticAltSixOn = 12,
+			StylisticAltSixOff = 13,
+			StylisticAltSevenOn = 14,
 			StylisticAltSevenOff = 15,
-			StylisticAltEightOn  = 16,
+			StylisticAltEightOn = 16,
 			StylisticAltEightOff = 17,
-			StylisticAltNineOn   = 18,
-			StylisticAltNineOff  = 19,
-			StylisticAltTenOn    = 20,
-			StylisticAltTenOff   = 21,
+			StylisticAltNineOn = 18,
+			StylisticAltNineOff = 19,
+			StylisticAltTenOn = 20,
+			StylisticAltTenOff = 21,
 			StylisticAltElevenOn = 22,
 			StylisticAltElevenOff = 23,
 			StylisticAltTwelveOn = 24,
@@ -1567,14 +1498,12 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureContextualAlternates : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
+	public class CTFontFeatureContextualAlternates : CTFontFeatureSelectors {
+		public enum Selector {
 			ContextualAlternatesOn = 0,
 			ContextualAlternatesOff = 1,
-			SwashAlternatesOn    = 2,
-			SwashAlternatesOff   = 3,
+			SwashAlternatesOn = 2,
+			SwashAlternatesOff = 3,
 			ContextualSwashAlternatesOn = 4,
 			ContextualSwashAlternatesOff = 5
 		}
@@ -1597,13 +1526,11 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureLowerCase : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			DefaultLowerCase     = 0,
-			LowerCaseSmallCaps   = 1,
-			LowerCasePetiteCaps  = 2
+	public class CTFontFeatureLowerCase : CTFontFeatureSelectors {
+		public enum Selector {
+			DefaultLowerCase = 0,
+			LowerCaseSmallCaps = 1,
+			LowerCasePetiteCaps = 2
 		}
 
 		public CTFontFeatureLowerCase (NSDictionary dictionary)
@@ -1624,13 +1551,11 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureUpperCase : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			DefaultUpperCase     = 0,
-			UpperCaseSmallCaps   = 1,
-			UpperCasePetiteCaps  = 2
+	public class CTFontFeatureUpperCase : CTFontFeatureSelectors {
+		public enum Selector {
+			DefaultUpperCase = 0,
+			UpperCaseSmallCaps = 1,
+			UpperCasePetiteCaps = 2
 		}
 
 		public CTFontFeatureUpperCase (NSDictionary dictionary)
@@ -1651,14 +1576,12 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontFeatureCJKRomanSpacing : CTFontFeatureSelectors
-	{
-		public enum Selector
-		{
-			HalfWidthCJKRoman    = 0,
+	public class CTFontFeatureCJKRomanSpacing : CTFontFeatureSelectors {
+		public enum Selector {
+			HalfWidthCJKRoman = 0,
 			ProportionalCJKRoman = 1,
-			DefaultCJKRoman      = 2,
-			FullWidthCJKRoman    = 3
+			DefaultCJKRoman = 2,
+			FullWidthCJKRoman = 3
 		}
 
 		public CTFontFeatureCJKRomanSpacing (NSDictionary dictionary)
@@ -1688,7 +1611,7 @@ namespace CoreText {
 			Dictionary = dictionary;
 		}
 
-		public NSDictionary Dictionary {get; private set;}
+		public NSDictionary Dictionary { get; private set; }
 
 		public FontFeatureGroup FeatureGroup {
 			get {
@@ -1723,31 +1646,31 @@ namespace CoreText {
 			Dictionary = dictionary;
 		}
 
-		public NSDictionary Dictionary {get; private set;}
+		public NSDictionary Dictionary { get; private set; }
 
 		public NSNumber Identifier {
-			get {return (NSNumber) Dictionary [CTFontVariationAxisKey.Identifier];}
-			set {Adapter.SetValue (Dictionary, CTFontVariationAxisKey.Identifier, value);}
+			get { return (NSNumber) Dictionary [CTFontVariationAxisKey.Identifier]; }
+			set { Adapter.SetValue (Dictionary, CTFontVariationAxisKey.Identifier, value); }
 		}
 
 		public NSNumber MinimumValue {
-			get {return (NSNumber) Dictionary [CTFontVariationAxisKey.MinimumValue];}
-			set {Adapter.SetValue (Dictionary, CTFontVariationAxisKey.MinimumValue, value);}
+			get { return (NSNumber) Dictionary [CTFontVariationAxisKey.MinimumValue]; }
+			set { Adapter.SetValue (Dictionary, CTFontVariationAxisKey.MinimumValue, value); }
 		}
 
 		public NSNumber MaximumValue {
-			get {return (NSNumber) Dictionary [CTFontVariationAxisKey.MaximumValue];}
-			set {Adapter.SetValue (Dictionary, CTFontVariationAxisKey.MaximumValue, value);}
+			get { return (NSNumber) Dictionary [CTFontVariationAxisKey.MaximumValue]; }
+			set { Adapter.SetValue (Dictionary, CTFontVariationAxisKey.MaximumValue, value); }
 		}
 
 		public NSNumber DefaultValue {
-			get {return (NSNumber) Dictionary [CTFontVariationAxisKey.DefaultValue];}
-			set {Adapter.SetValue (Dictionary, CTFontVariationAxisKey.DefaultValue, value);}
+			get { return (NSNumber) Dictionary [CTFontVariationAxisKey.DefaultValue]; }
+			set { Adapter.SetValue (Dictionary, CTFontVariationAxisKey.DefaultValue, value); }
 		}
 
 		public string? Name {
-			get {return Adapter.GetStringValue (Dictionary, CTFontVariationAxisKey.Name);}
-			set {Adapter.SetValue (Dictionary, CTFontVariationAxisKey.Name, value);}
+			get { return Adapter.GetStringValue (Dictionary, CTFontVariationAxisKey.Name); }
+			set { Adapter.SetValue (Dictionary, CTFontVariationAxisKey.Name, value); }
 		}
 
 #if NET
@@ -1756,10 +1679,10 @@ namespace CoreText {
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (11,0)]
-		[Mac (10,13)]
-		[Watch (4,0)]
-		[TV (11,0)]
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[Watch (4, 0)]
+		[TV (11, 0)]
 #endif
 		public bool? Hidden {
 			get { return Adapter.GetBoolValue (Dictionary, CTFontVariationAxisKey.Hidden); }
@@ -1787,7 +1710,7 @@ namespace CoreText {
 			Dictionary = dictionary;
 		}
 
-		public NSDictionary Dictionary {get; private set;}
+		public NSDictionary Dictionary { get; private set; }
 	}
 
 	public partial class CTFont : NativeObject {
@@ -1797,7 +1720,7 @@ namespace CoreText {
 		{
 		}
 
-#region Font Creation
+		#region Font Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateWithName (IntPtr name, nfloat size, IntPtr matrix);
 
@@ -1815,7 +1738,7 @@ namespace CoreText {
 		}
 
 		public CTFont (string name, nfloat size)
-			: base (Create (name,  size), true)
+			: base (Create (name, size), true)
 		{
 		}
 
@@ -1882,7 +1805,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+		[iOS (7, 0)] // documented as 3.2 but it's wrong (see unit tests)
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateWithNameAndOptions (IntPtr name, nfloat size, IntPtr matrix, nuint options);
@@ -1908,7 +1831,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+		[iOS (7, 0)] // documented as 3.2 but it's wrong (see unit tests)
 #endif
 		public CTFont (string name, nfloat size, CTFontOptions options)
 			: base (Create (name, size, options), true)
@@ -1921,7 +1844,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+		[iOS (7, 0)] // documented as 3.2 but it's wrong (see unit tests)
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateWithNameAndOptions (IntPtr name, nfloat size, ref CGAffineTransform matrix, nuint options);
@@ -1947,7 +1870,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+		[iOS (7, 0)] // documented as 3.2 but it's wrong (see unit tests)
 #endif
 		public CTFont (string name, nfloat size, ref CGAffineTransform matrix, CTFontOptions options)
 			: base (Create (name, size, ref matrix, options), true)
@@ -1960,7 +1883,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+		[iOS (7, 0)] // documented as 3.2 but it's wrong (see unit tests)
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateWithFontDescriptorAndOptions (IntPtr descriptor, nfloat size, IntPtr matrix, nuint options);
@@ -1981,7 +1904,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+		[iOS (7, 0)] // documented as 3.2 but it's wrong (see unit tests)
 #endif
 		public CTFont (CTFontDescriptor descriptor, nfloat size, CTFontOptions options)
 			: base (Create (descriptor, size, options), true)
@@ -1994,7 +1917,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+		[iOS (7, 0)] // documented as 3.2 but it's wrong (see unit tests)
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateWithFontDescriptorAndOptions (IntPtr descriptor, nfloat size, ref CGAffineTransform matrix, nuint options);
@@ -2015,7 +1938,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+		[iOS (7, 0)] // documented as 3.2 but it's wrong (see unit tests)
 #endif
 		public CTFont (CTFontDescriptor descriptor, nfloat size, CTFontOptions options, ref CGAffineTransform matrix)
 			: base (Create (descriptor, size, options, ref matrix), true)
@@ -2024,7 +1947,7 @@ namespace CoreText {
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CTFontRef __nonnull */ IntPtr CTFontCreateWithGraphicsFont (
-			/* CGFontRef __nonnull */ IntPtr cgfontRef, nfloat size, 
+			/* CGFontRef __nonnull */ IntPtr cgfontRef, nfloat size,
 			/* const CGAffineTransform * __nullable */ ref CGAffineTransform affine,
 			/* CTFontDescriptorRef __nullable */ IntPtr attrs);
 
@@ -2038,9 +1961,9 @@ namespace CoreText {
 			return handle;
 		}
 
-		[DllImport (Constants.CoreTextLibrary, EntryPoint="CTFontCreateWithGraphicsFont")]
+		[DllImport (Constants.CoreTextLibrary, EntryPoint = "CTFontCreateWithGraphicsFont")]
 		static extern IntPtr CTFontCreateWithGraphicsFont2 (IntPtr cgfontRef, nfloat size, IntPtr affine, IntPtr attrs);
-		
+
 		public CTFont (CGFont font, nfloat size, CGAffineTransform transform, CTFontDescriptor descriptor)
 			: base (Create (font, size, transform, descriptor), true)
 		{
@@ -2075,7 +1998,7 @@ namespace CoreText {
 			: base (Create (font, size, transform), true)
 		{
 		}
-		
+
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateUIFontForLanguage (CTFontUIFontType uiType, nfloat size, IntPtr language);
 
@@ -2164,16 +2087,16 @@ namespace CoreText {
 			}
 		}
 
-#endregion
+		#endregion
 
-#region Font Cascading
+		#region Font Cascading
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CTFontRef __nonnull */ IntPtr CTFontCreateForString (
 			/* CTFontRef __nonnull */ IntPtr currentFont,
 			/* CFStringRef __nonnull */ IntPtr @string,
 			NSRange range);
-		
+
 		public CTFont? ForString (string value, NSRange range)
 		{
 			if (value is null)
@@ -2192,10 +2115,10 @@ namespace CoreText {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (13,0)]
-		[Mac (10,15)]
-		[TV (13,0)]
-		[Watch (6,0)]
+		[iOS (13, 0)]
+		[Mac (10, 15)]
+		[TV (13, 0)]
+		[Watch (6, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CTFontRef */ IntPtr CTFontCreateForStringWithLanguage (
@@ -2210,10 +2133,10 @@ namespace CoreText {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (13,0)]
-		[Mac (10,15)]
-		[TV (13,0)]
-		[Watch (6,0)]
+		[iOS (13, 0)]
+		[Mac (10, 15)]
+		[TV (13, 0)]
+		[Watch (6, 0)]
 #endif
 		public CTFont? ForString (string value, NSRange range, string? language)
 		{
@@ -2224,21 +2147,20 @@ namespace CoreText {
 			var l = CFString.CreateNative (language);
 			try {
 				return CreateFont (CTFontCreateForStringWithLanguage (Handle, v, range, l));
-			}
-			finally {
+			} finally {
 				CFString.ReleaseNative (l);
 				CFString.ReleaseNative (v);
 			}
 		}
 
-#endregion
+		#endregion
 
-#region Font Accessors
+		#region Font Accessors
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CTFontDescriptorRef __nonnull */ IntPtr CTFontCopyFontDescriptor (
 			/* CTFontRef __nonnull */ IntPtr font);
-		
+
 		public CTFontDescriptor GetFontDescriptor ()
 		{
 			var h = CTFontCopyFontDescriptor (Handle);
@@ -2248,7 +2170,7 @@ namespace CoreText {
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CFTypeRef __nullable */ IntPtr CTFontCopyAttribute (/* CTFontRef __nonnull */ IntPtr font,
 			/* CFStringRef __nonnull */ IntPtr attribute);
-		
+
 		public NSObject? GetAttribute (NSString attribute)
 		{
 			if (attribute is null)
@@ -2259,20 +2181,20 @@ namespace CoreText {
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern nfloat CTFontGetSize (IntPtr font);
 		public nfloat Size {
-			get {return CTFontGetSize (Handle);}
+			get { return CTFontGetSize (Handle); }
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern CGAffineTransform CTFontGetMatrix (/* CTFontRef __nonnull */ IntPtr font);
 
 		public CGAffineTransform Matrix {
-			get {return CTFontGetMatrix (Handle);}
+			get { return CTFontGetMatrix (Handle); }
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern CTFontSymbolicTraits CTFontGetSymbolicTraits (IntPtr font);
 		public CTFontSymbolicTraits SymbolicTraits {
-			get {return CTFontGetSymbolicTraits (Handle);}
+			get { return CTFontGetSymbolicTraits (Handle); }
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
@@ -2285,9 +2207,9 @@ namespace CoreText {
 			return new CTFontTraits (d);
 		}
 
-#endregion
+		#endregion
 
-#region Font Names
+		#region Font Names
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCopyPostScriptName (IntPtr font);
 		public string? PostScriptName {
@@ -2297,7 +2219,7 @@ namespace CoreText {
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CFStringRef __nonnull */ IntPtr CTFontCopyFamilyName (
 			/* CTFontRef __nonnull */ IntPtr font);
-		
+
 		public string? FamilyName {
 			get { return CFString.FromHandle (CTFontCopyFamilyName (Handle), releaseHandle: true); }
 		}
@@ -2305,7 +2227,7 @@ namespace CoreText {
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CFStringRef __nonnull */ IntPtr CTFontCopyFullName (
 			/* CTFontRef __nonnull */ IntPtr font);
-		
+
 		public string? FullName {
 			get { return CFString.FromHandle (CTFontCopyFullName (Handle), releaseHandle: true); }
 		}
@@ -2313,7 +2235,7 @@ namespace CoreText {
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CFStringRef __nonnull */ IntPtr CTFontCopyDisplayName (
 			/* CTFontRef __nonnull */ IntPtr font);
-		
+
 		public string? DisplayName {
 			get { return CFString.FromHandle (CTFontCopyDisplayName (Handle), releaseHandle: true); }
 		}
@@ -2340,13 +2262,13 @@ namespace CoreText {
 			actualLanguage = CFString.FromHandle (actual, releaseHandle: true);
 			return ret;
 		}
-#endregion
+		#endregion
 
-#region Font Encoding
+		#region Font Encoding
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CFCharacterSetRef __nonnull */ IntPtr CTFontCopyCharacterSet (
 			/* CTFontRef __nonnull */ IntPtr font);
-		
+
 		public NSCharacterSet? CharacterSet {
 			get {
 				return Runtime.GetNSObject<NSCharacterSet> (CTFontCopyCharacterSet (Handle), true);
@@ -2356,12 +2278,12 @@ namespace CoreText {
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern uint CTFontGetStringEncoding (IntPtr font);
 		public uint StringEncoding {
-			get {return CTFontGetStringEncoding (Handle);}
+			get { return CTFontGetStringEncoding (Handle); }
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCopySupportedLanguages (IntPtr font);
-		public string?[] GetSupportedLanguages ()
+		public string? [] GetSupportedLanguages ()
 		{
 			var cfArrayRef = CTFontCopySupportedLanguages (Handle);
 			if (cfArrayRef == IntPtr.Zero)
@@ -2371,18 +2293,18 @@ namespace CoreText {
 
 		[DllImport (Constants.CoreTextLibrary, CharSet = CharSet.Unicode)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool CTFontGetGlyphsForCharacters (IntPtr font, char[] characters, CGGlyph[] glyphs, nint count);
+		static extern bool CTFontGetGlyphsForCharacters (IntPtr font, char [] characters, CGGlyph [] glyphs, nint count);
 
-		public bool GetGlyphsForCharacters (char[] characters, CGGlyph[] glyphs, nint count)
+		public bool GetGlyphsForCharacters (char [] characters, CGGlyph [] glyphs, nint count)
 		{
 			AssertCount (count);
 			AssertLength ("characters", characters, count);
-			AssertLength ("glyphs",     characters, count);
+			AssertLength ("glyphs", characters, count);
 
 			return CTFontGetGlyphsForCharacters (Handle, characters, glyphs, count);
 		}
 
-		public bool GetGlyphsForCharacters (char[] characters, CGGlyph[] glyphs)
+		public bool GetGlyphsForCharacters (char [] characters, CGGlyph [] glyphs)
 		{
 			return GetGlyphsForCharacters (characters, glyphs, Math.Min (characters.Length, glyphs.Length));
 		}
@@ -2393,10 +2315,10 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (7,0)]
-		[TV (14,0)]
-		[Mac (11,0)]
-		[iOS (14,0)]
+		[Watch (7, 0)]
+		[TV (14, 0)]
+		[Mac (11, 0)]
+		[iOS (14, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern unsafe /* CFStringRef _Nullable */ IntPtr CTFontCopyNameForGlyph (/* CTFontRef */ IntPtr font, CGGlyph glyph);
@@ -2407,10 +2329,10 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (7,0)]
-		[TV (14,0)]
-		[Mac (11,0)]
-		[iOS (14,0)]
+		[Watch (7, 0)]
+		[TV (14, 0)]
+		[Mac (11, 0)]
+		[iOS (14, 0)]
 #endif
 		public string? GetGlyphName (CGGlyph glyph)
 		{
@@ -2423,12 +2345,12 @@ namespace CoreText {
 				throw new ArgumentOutOfRangeException (nameof (count), "cannot be negative");
 		}
 
-		static void AssertLength<T>(string name, T[]? array, nint count)
+		static void AssertLength<T> (string name, T []? array, nint count)
 		{
 			AssertLength (name, array, count, false);
 		}
 
-		static void AssertLength<T>(string name, T[]? array, nint count, bool canBeNull)
+		static void AssertLength<T> (string name, T []? array, nint count, bool canBeNull)
 		{
 			if (canBeNull && array is null)
 				return;
@@ -2437,9 +2359,9 @@ namespace CoreText {
 			if (array.Length < count)
 				throw new ArgumentException (string.Format ("{0}.Length cannot be < count", name), name);
 		}
-#endregion
+		#endregion
 
-#region Font Metrics
+		#region Font Metrics
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern nfloat CTFontGetAscent (/* CTFontRef __nonnull */ IntPtr font);
 
@@ -2511,9 +2433,9 @@ namespace CoreText {
 		public nfloat XHeightMetric {
 			get { return CTFontGetXHeight (Handle); }
 		}
-#endregion
+		#endregion
 
-#region Font Glyphs
+		#region Font Glyphs
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern CGGlyph CTFontGetGlyphWithName (/* CTFontRef __nonnull */ IntPtr font,
 			/* CFStringRef __nonnull */ IntPtr glyphName);
@@ -2531,29 +2453,29 @@ namespace CoreText {
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern CGRect CTFontGetBoundingRectsForGlyphs (IntPtr font, CTFontOrientation orientation, [In] CGGlyph[] glyphs, [Out] CGRect[]? boundingRects, nint count);
-		public CGRect GetBoundingRects (CTFontOrientation orientation, CGGlyph[] glyphs, CGRect[]? boundingRects, nint count)
+		static extern CGRect CTFontGetBoundingRectsForGlyphs (IntPtr font, CTFontOrientation orientation, [In] CGGlyph [] glyphs, [Out] CGRect []? boundingRects, nint count);
+		public CGRect GetBoundingRects (CTFontOrientation orientation, CGGlyph [] glyphs, CGRect []? boundingRects, nint count)
 		{
 			AssertCount (count);
-			AssertLength ("glyphs",         glyphs, count);
-			AssertLength ("boundingRects",  boundingRects, count, true);
+			AssertLength ("glyphs", glyphs, count);
+			AssertLength ("boundingRects", boundingRects, count, true);
 
 			return CTFontGetBoundingRectsForGlyphs (Handle, orientation, glyphs, boundingRects, count);
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern CGRect CTFontGetOpticalBoundsForGlyphs (IntPtr font, [In] CGGlyph[] glyphs, [Out] CGRect[] boundingRects, nint count, nuint options);
+		static extern CGRect CTFontGetOpticalBoundsForGlyphs (IntPtr font, [In] CGGlyph [] glyphs, [Out] CGRect [] boundingRects, nint count, nuint options);
 
-		public CGRect GetOpticalBounds (CGGlyph[] glyphs, CGRect[] boundingRects, nint count, CTFontOptions options = 0)
+		public CGRect GetOpticalBounds (CGGlyph [] glyphs, CGRect [] boundingRects, nint count, CTFontOptions options = 0)
 		{
 			AssertCount (count);
-			AssertLength ("glyphs",         glyphs, count);
-			AssertLength ("boundingRects",  boundingRects, count, true);
+			AssertLength ("glyphs", glyphs, count);
+			AssertLength ("boundingRects", boundingRects, count, true);
 
 			return CTFontGetOpticalBoundsForGlyphs (Handle, glyphs, boundingRects, count, (nuint) (ulong) options);
 		}
 
-		public CGRect GetBoundingRects (CTFontOrientation orientation, CGGlyph[] glyphs)
+		public CGRect GetBoundingRects (CTFontOrientation orientation, CGGlyph [] glyphs)
 		{
 			if (glyphs is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (glyphs));
@@ -2561,17 +2483,17 @@ namespace CoreText {
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern double CTFontGetAdvancesForGlyphs (IntPtr font, CTFontOrientation orientation, [In] CGGlyph[] glyphs, [Out] CGSize[]? advances, nint count);
-		public double GetAdvancesForGlyphs (CTFontOrientation orientation, CGGlyph[] glyphs, CGSize[]? advances, nint count)
+		static extern double CTFontGetAdvancesForGlyphs (IntPtr font, CTFontOrientation orientation, [In] CGGlyph [] glyphs, [Out] CGSize []? advances, nint count);
+		public double GetAdvancesForGlyphs (CTFontOrientation orientation, CGGlyph [] glyphs, CGSize []? advances, nint count)
 		{
 			AssertCount (count);
-			AssertLength ("glyphs",   glyphs, count);
+			AssertLength ("glyphs", glyphs, count);
 			AssertLength ("advances", advances, count, true);
 
 			return CTFontGetAdvancesForGlyphs (Handle, orientation, glyphs, advances, count);
 		}
 
-		public double GetAdvancesForGlyphs (CTFontOrientation orientation, CGGlyph[] glyphs)
+		public double GetAdvancesForGlyphs (CTFontOrientation orientation, CGGlyph [] glyphs)
 		{
 			if (glyphs is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (glyphs));
@@ -2579,11 +2501,11 @@ namespace CoreText {
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern void CTFontGetVerticalTranslationsForGlyphs (IntPtr font, [In] CGGlyph[] glyphs, [Out] CGSize[] translations, nint count);
-		public void GetVerticalTranslationsForGlyphs (CGGlyph[] glyphs, CGSize[] translations, nint count)
+		static extern void CTFontGetVerticalTranslationsForGlyphs (IntPtr font, [In] CGGlyph [] glyphs, [Out] CGSize [] translations, nint count);
+		public void GetVerticalTranslationsForGlyphs (CGGlyph [] glyphs, CGSize [] translations, nint count)
 		{
 			AssertCount (count);
-			AssertLength ("glyphs",       glyphs, count);
+			AssertLength ("glyphs", glyphs, count);
 			AssertLength ("translations", translations, count);
 
 			CTFontGetVerticalTranslationsForGlyphs (Handle, glyphs, translations, count);
@@ -2637,12 +2559,12 @@ namespace CoreText {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (positions));
 			return CTFontGetLigatureCaretPositions (Handle, glyph, positions, positions.Length);
 		}
-#endregion
+		#endregion
 
-#region Font Variations
+		#region Font Variations
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCopyVariationAxes (IntPtr font);
-		public CTFontVariationAxes[] GetVariationAxes ()
+		public CTFontVariationAxes [] GetVariationAxes ()
 		{
 			var cfArrayRef = CTFontCopyVariationAxes (Handle);
 			if (cfArrayRef == IntPtr.Zero)
@@ -2660,15 +2582,15 @@ namespace CoreText {
 				return null;
 			return new CTFontVariation (Runtime.GetNSObject<NSDictionary> (cfDictionaryRef)!);
 		}
-#endregion
+		#endregion
 
-#region Font Features
+		#region Font Features
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CFArrayRef __nullable */ IntPtr CTFontCopyFeatures (
 			/* CTFontRef __nonnull */ IntPtr font);
 
 		// Always returns only default features
-		public CTFontFeatures[] GetFeatures ()
+		public CTFontFeatures [] GetFeatures ()
 		{
 			var cfArrayRef = CTFontCopyFeatures (Handle);
 			if (cfArrayRef == IntPtr.Zero)
@@ -2681,7 +2603,7 @@ namespace CoreText {
 		static extern /* CFArrayRef __nullable */ IntPtr CTFontCopyFeatureSettings (
 			/* CTFontRef __nonnull */ IntPtr font);
 
-		public CTFontFeatureSettings[] GetFeatureSettings ()
+		public CTFontFeatureSettings [] GetFeatureSettings ()
 		{
 			var cfArrayRef = CTFontCopyFeatureSettings (Handle);
 			if (cfArrayRef == IntPtr.Zero)
@@ -2689,9 +2611,9 @@ namespace CoreText {
 			return NSArray.ArrayFromHandle (cfArrayRef,
 					d => new CTFontFeatureSettings (Runtime.GetNSObject<NSDictionary> (d)!), true);
 		}
-#endregion
+		#endregion
 
-#region Font Conversion
+		#region Font Conversion
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCopyGraphicsFont (IntPtr font, IntPtr attributes);
 		public CGFont? ToCGFont (CTFontDescriptor? attributes)
@@ -2706,20 +2628,20 @@ namespace CoreText {
 		{
 			return ToCGFont (null);
 		}
-#endregion
+		#endregion
 
-#region Font Tables
+		#region Font Tables
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CFArrayRef __nullable */ IntPtr CTFontCopyAvailableTables (
 			/* CTFontRef __nonnull */ IntPtr font, CTFontTableOptions options);
-		
-		public CTFontTable[] GetAvailableTables (CTFontTableOptions options)
+
+		public CTFontTable [] GetAvailableTables (CTFontTableOptions options)
 		{
 			var cfArrayRef = CTFontCopyAvailableTables (Handle, options);
 			if (cfArrayRef == IntPtr.Zero)
 				return Array.Empty<CTFontTable> ();
 			return NSArray.ArrayFromHandle (cfArrayRef, v => {
-					return (CTFontTable) (uint) (IntPtr) v;
+				return (CTFontTable) (uint) (IntPtr) v;
 			}, true);
 		}
 
@@ -2730,9 +2652,9 @@ namespace CoreText {
 			var cfDataRef = CTFontCopyTable (Handle, table, options);
 			return Runtime.GetNSObject<NSData> (cfDataRef, true);
 		}
-#endregion
+		#endregion
 
-#region
+		#region
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static /* CFArrayRef __nullable */ IntPtr CTFontCopyDefaultCascadeListForLanguages (
 			/* CTFontRef __nonnull */ IntPtr font, /* CFArrayRef __nullable */ IntPtr languagePrefList);
@@ -2746,13 +2668,13 @@ namespace CoreText {
 			}
 		}
 
-#endregion
+		#endregion
 		public override string? ToString ()
 		{
 			return FullName;
 		}
 
-		[DllImport (Constants.CoreTextLibrary, EntryPoint="CTFontGetTypeID")]
+		[DllImport (Constants.CoreTextLibrary, EntryPoint = "CTFontGetTypeID")]
 		public extern static nint GetTypeID ();
 	}
 }

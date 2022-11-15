@@ -43,18 +43,18 @@ namespace Foundation {
 		{
 			return DisplayNameForKey (_Identifier, value);
 		}
-		
+
 		public string LanguageCode {
 			get {
 				return (string) (NSString) ObjectForKey (_LanguageCode);
 			}
 		}
-		
+
 		public string GetLanguageCodeDisplayName (string value)
 		{
 			return DisplayNameForKey (_LanguageCode, value);
 		}
-		
+
 		public string CountryCode {
 			get {
 				return (string) (NSString) ObjectForKey (_CountryCode);
@@ -65,70 +65,70 @@ namespace Foundation {
 		{
 			return DisplayNameForKey (_CountryCode, value);
 		}
-		
+
 		public string ScriptCode {
 			get {
 				return (string) (NSString) ObjectForKey (_ScriptCode);
 			}
 		}
-		
+
 		public string VariantCode {
 			get {
 				return (string) (NSString) ObjectForKey (_VariantCode);
 			}
 		}
-		
+
 		public NSCharacterSet ExemplarCharacterSet {
 			get {
 				return ObjectForKey (_ExemplarCharacterSet) as NSCharacterSet;
 			}
 		}
-		
+
 		public NSCalendar Calendar {
 			get {
 				return ObjectForKey (_Calendar) as NSCalendar;
 			}
 		}
-		
+
 		public string CollationIdentifier {
 			get {
 				return (string) (NSString) ObjectForKey (_CollationIdentifier);
 			}
 		}
-		
+
 		public bool UsesMetricSystem {
 			get {
 				return ((NSNumber) ObjectForKey (_UsesMetricSystem)).Int32Value != 0;
 			}
 		}
-		
+
 		public string MeasurementSystem {
 			get {
 				return (string) (NSString) ObjectForKey (_MeasurementSystem);
 			}
 		}
-		
+
 		public string DecimalSeparator {
 			get {
-				return  (string) (NSString) ObjectForKey (_DecimalSeparator);
+				return (string) (NSString) ObjectForKey (_DecimalSeparator);
 			}
 		}
-		
+
 		public string GroupingSeparator {
 			get {
-				return  (string) (NSString) ObjectForKey (_GroupingSeparator);
+				return (string) (NSString) ObjectForKey (_GroupingSeparator);
 			}
 		}
-		
+
 		public string CurrencySymbol {
 			get {
-				return  (string) (NSString) ObjectForKey (_CurrencySymbol);
+				return (string) (NSString) ObjectForKey (_CurrencySymbol);
 			}
 		}
-		
+
 		public string CurrencyCode {
 			get {
-				return  (string) (NSString) ObjectForKey (_CurrencyCode);
+				return (string) (NSString) ObjectForKey (_CurrencyCode);
 			}
 		}
 
@@ -136,31 +136,31 @@ namespace Foundation {
 		{
 			return DisplayNameForKey (_CurrencyCode, value);
 		}
-		
+
 		public string CollatorIdentifier {
 			get {
-				return  (string) (NSString) ObjectForKey (_CollatorIdentifier);
+				return (string) (NSString) ObjectForKey (_CollatorIdentifier);
 			}
 		}
-		
+
 		public string QuotationBeginDelimiterKey {
 			get {
-				return  (string) (NSString) ObjectForKey (_QuotationBeginDelimiterKey);
+				return (string) (NSString) ObjectForKey (_QuotationBeginDelimiterKey);
 			}
 		}
-		
+
 		public string QuotationEndDelimiterKey {
 			get {
 				return (string) (NSString) ObjectForKey (_QuotationEndDelimiterKey);
 			}
 		}
-		
+
 		public string AlternateQuotationBeginDelimiterKey {
 			get {
 				return (string) (NSString) ObjectForKey (_AlternateQuotationBeginDelimiterKey);
 			}
 		}
-		
+
 		public string AlternateQuotationEndDelimiterKey {
 			get {
 				return (string) (NSString) ObjectForKey (_AlternateQuotationEndDelimiterKey);
