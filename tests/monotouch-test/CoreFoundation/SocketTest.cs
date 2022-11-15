@@ -27,7 +27,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CFSocketTest {
-		static readonly byte[] dataToSend = { 0, 1, 2, 3 };
+		static readonly byte [] dataToSend = { 0, 1, 2, 3 };
 
 		[Test]
 		public void RetainCount ()
@@ -81,8 +81,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			var gchandles = new Tuple<GCHandle, GCHandle> [socketCount];
 			var mainLoop = CFRunLoop.Current;
 			Exception ex = null;
-			var thread = new Thread ((v) =>
-			{
+			var thread = new Thread ((v) => {
 				try {
 					for (var i = 0; i < socketCount; i++) {
 						var received = new ManualResetEvent (false);
