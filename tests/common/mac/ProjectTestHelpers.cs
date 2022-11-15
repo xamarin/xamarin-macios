@@ -239,7 +239,7 @@ namespace Xamarin.MMP.Tests
 
 		static string ProjectTextReplacement (UnifiedTestConfig config, string text)
 		{
-			 text = text.Replace ("%CODE%", config.CSProjConfig)
+			text = text.Replace ("REPLACE_CODE_REPLACE", config.CSProjConfig)
 					   .Replace ("%REFERENCES%", config.References)
 					   .Replace ("%REFERENCES_BEFORE_PLATFORM%", config.ReferencesBeforePlatform)
 					   .Replace ("%NAME%", config.AssemblyName ?? Path.GetFileNameWithoutExtension (config.ProjectName))
@@ -304,8 +304,8 @@ namespace Xamarin.MMP.Tests
 		public static string GenerateBindingLibraryProject (UnifiedTestConfig config)
 		{
 			string sourceDir = FindSourceDirectory ();
-			CopyFileWithSubstitutions (Path.Combine (sourceDir, "ApiDefinition.cs"), Path.Combine (config.TmpDir, "ApiDefinition.cs"), text => text.Replace ("%CODE%", config.APIDefinitionConfig));
-			CopyFileWithSubstitutions (Path.Combine (sourceDir, "StructsAndEnums.cs"), Path.Combine (config.TmpDir, "StructsAndEnums.cs"), text => text.Replace ("%CODE%", config.StructsAndEnumsConfig));
+			CopyFileWithSubstitutions (Path.Combine (sourceDir, "ApiDefinition.cs"), Path.Combine (config.TmpDir, "ApiDefinition.cs"), text => text.Replace ("REPLACE_CODE_REPLACE", config.APIDefinitionConfig));
+			CopyFileWithSubstitutions (Path.Combine (sourceDir, "StructsAndEnums.cs"), Path.Combine (config.TmpDir, "StructsAndEnums.cs"), text => text.Replace ("REPLACE_CODE_REPLACE", config.StructsAndEnumsConfig));
 
 			string linkWithName = null;
 			if (config.LinkWithName != null) {
@@ -331,7 +331,7 @@ namespace Xamarin.MMP.Tests
 			string projectSuffix = config.FSharp ? ".fsproj" : ".csproj";
 
 			CopyFileWithSubstitutions (Path.Combine (sourceDir, sourceFileName), Path.Combine (config.TmpDir, sourceFileName), text => {
-				return text.Replace ("%CODE%", config.TestCode);
+				return text.Replace ("REPLACE_CODE_REPLACE", config.TestCode);
 			});
 
 			return CopyFileWithSubstitutions (Path.Combine (sourceDir, config.ProjectName + projectSuffix), Path.Combine (config.TmpDir, config.ProjectName + projectSuffix), text => {
@@ -474,7 +474,7 @@ module main =
     [<EntryPoint>]
     let main args =
         NSApplication.Init ()
-        %CODE%
+        REPLACE_CODE_REPLACE
         0";
 
 			const string MainTemplate = @"
@@ -490,12 +490,12 @@ namespace TestCase
 		static void Main (string[] args)
 		{
 			NSApplication.Init ();
-			%CODE%
+			REPLACE_CODE_REPLACE
 		}
 	}
 }";
 			string currentTemplate = fsharp ? FSharpMainTemplate : MainTemplate;
-			string testCase = currentTemplate.Replace ("%CODE%", content).Replace ("%DECL%", decl);
+			string testCase = currentTemplate.Replace ("REPLACE_CODE_REPLACE", content).Replace ("%DECL%", decl);
 			using (StreamWriter s = new StreamWriter (location))
 				s.Write(testCase);
 		}
