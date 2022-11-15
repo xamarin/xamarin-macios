@@ -196,11 +196,11 @@ report: report/index.html
 endif
 
 ifdef ENABLE_DOTNET
-dotnet-report/index.html: xtro-report/bin/Debug/xtro-report.exe .stamp-dotnet-classify
+report-dotnet/index.html: xtro-report/bin/Debug/xtro-report.exe .stamp-dotnet-classify
 	rm -rf report-dotnet
 	$(MONO) xtro-report/bin/Debug/xtro-report.exe $(DOTNET_ANNOTATIONS_DIR) report-dotnet
 
-dotnet-report: dotnet-report/index.html
+dotnet-report: report-dotnet/index.html
 endif
 
 report-short:
