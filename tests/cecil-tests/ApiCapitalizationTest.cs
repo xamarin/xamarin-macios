@@ -20,32 +20,23 @@ namespace Cecil.Tests {
 	[TestFixture]
 	public class ApiCapitalizationTest {
 
-		Dictionary<string, (AssemblyDefinition Assembly, HashSet<String> MethodCache)> dllCache = new Dictionary<string, (AssemblyDefinition Assembly, HashSet<String> MethodCache)> ();
+		Dictionary<string, AssemblyDefinition> assemblyCache = new Dictionary<string, AssemblyDefinition> ();
 
 
 		[OneTimeSetUp]
 		public void SetUp ()
 		{ 
 			foreach (string assemblyPath in Helper.NetPlatformAssemblies) {
-				HashSet<String> methodCache = new HashSet<String> ();
+				
 				var assembly = Helper.GetAssembly (assemblyPath);
-				var pinvokes = AllPInvokes (assembly);
-				var res = from item in pinvokes
-						  where item.Name.Contains ("dl")
-						  select item.PInvokeInfo.EntryPoint;
-						  //select item.Name;
-				foreach (var go in res) {
-					methodCache.Add (go);
-				}
-
-				dllCache.Add (assemblyPath, (Assembly: assembly, MethodCache: methodCache));
+				assemblyCache.Add (assemblyPath, assembly);
 			}
 		}
 
 		[OneTimeTearDown]
 		public void TearDown ()
 		{
-			dllCache.Clear ();
+			assemblyCache.Clear ();
 		}
 
 		bool IsTypeObsolete (TypeDefinition type)
@@ -95,15 +86,6 @@ namespace Cecil.Tests {
 
 			if (m.IsRemoveOn || m.IsAddOn || m.IsConstructor || m.IsSpecialName || IsMethodObsolete (m) || m.IsFamilyOrAssembly || m.IsPInvokeImpl)
 				return true;
-
-			var set = dllCache [assemblyPath].MethodCache;
-			//if (set.Contains ($"{t.Name}.{m.Name}")) {
-			//	return true;
-			//}
-			if (set.Contains($"{m.Name}")) {
-				return true;
-			}
-
 
 			return false;
 		}
@@ -169,6 +151,7 @@ namespace Cecil.Tests {
 
 
 		Dictionary<string, HashSet<string>> allowedMethods = new Dictionary<string, HashSet<string>> () {
+			["Dlfcn"] = new HashSet<string> () { "dlopen", "dlerror", "dlsym" }
 		};
 
 		public bool IsSkip(string type, string memberName, Dictionary<string, HashSet<string>> allowed)
@@ -239,10 +222,10 @@ namespace Cecil.Tests {
 		public void CapitalizationTest (string assemblyPath, Func<TypeDefinition, IEnumerable<string>> selectLambda)
 		{
 
-			if (dllCache.TryGetValue (assemblyPath, out var cache)) {
+			if (assemblyCache.TryGetValue (assemblyPath, out var cache)) {
 				var typeDict = new Dictionary<string, string> ();
 
-				var publicTypes = cache.Assembly.MainModule.Types.Where ((t) => t.IsPublic && !IsTypeObsolete (t));
+				var publicTypes = cache.MainModule.Types.Where ((t) => t.IsPublic && !IsTypeObsolete (t));
 
 				foreach (var type in publicTypes) {
 					var err = selectLambda (type);
