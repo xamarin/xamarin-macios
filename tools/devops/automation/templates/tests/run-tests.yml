@@ -193,6 +193,9 @@ steps:
     rm -f tests/test.config || true
     make -C tests test.config || true
     cat tests/test.config || true
+    rm -f tests/test-system.config || true
+    make -C tests test-system.config || true
+    cat tests/test-system.config || true
 
     make -C builds download -j
     make -C builds .stamp-mono-ios-sdk-destdir -j
