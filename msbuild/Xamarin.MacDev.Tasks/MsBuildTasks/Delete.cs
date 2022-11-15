@@ -29,5 +29,7 @@ namespace Microsoft.Build.Tasks {
 		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
 
 		public bool ShouldCreateOutputFile (ITaskItem item) => false;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 	}
 }
