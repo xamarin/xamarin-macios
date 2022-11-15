@@ -113,11 +113,21 @@ partial class TestRuntime
 		return new Version (major, minor, build);
 	}
 
+	static bool? is_in_ci;
+	public static bool IsInCI {
+		get {
+			if (!is_in_ci.HasValue) {
+				var in_ci = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
+				in_ci |= !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")); // set by Azure DevOps
+				is_in_ci = in_ci;
+			}
+			return is_in_ci.Value;
+		}
+	}
+
 	public static void IgnoreInCI (string message)
 	{
-		var in_ci = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
-		in_ci |= !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")); // set by Azure DevOps
-		if (!in_ci) {
+		if (!IsInCI) {
 			Console.WriteLine ($"Not ignoring test ('{message}'), because not running in CI. BUILD_REVISION={Environment.GetEnvironmentVariable ("BUILD_REVISION")} BUILD_SOURCEVERSION={Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")}");
 			return;
 		}
