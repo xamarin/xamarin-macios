@@ -10,6 +10,7 @@
 #nullable enable
 
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using ObjCRuntime;
@@ -223,6 +224,7 @@ namespace Network {
 		[MacCatalyst (15,0)]
 #endif
 		[Obsolete ("Use the 'GetPathRadioType' property instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public NWInterfaceRadioType get_path_radio_type (uint pathIndex)
 			=> nw_data_transfer_report_get_path_radio_type (GetCheckedHandle (), pathIndex);
 #endif
