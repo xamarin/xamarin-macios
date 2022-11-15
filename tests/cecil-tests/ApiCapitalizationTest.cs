@@ -70,7 +70,7 @@ namespace Cecil.Tests {
 			if (property == null)
 				return false;
 
-			if (property.HasCustomAttributes && property.CustomAttributes.Where ((p) => p.AttributeType.Name == "ObsoleteAttribute").Any()) {
+			if (property.HasCustomAttributes && property.CustomAttributes.Where ((p) => p.AttributeType.Name == "ObsoleteAttribute" || p.AttributeType.Name == "ObsoletedOSPlatformAttribute").Any()) {
 				return true;
 			}
 
