@@ -1782,7 +1782,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target Name="_PrepareUnpackLibraryResources">
 		<PropertyGroup>
-			<_StampDirectory>$(IntermediateOutputPath)resourcestamps</_StampDirectory>
+			<_StampDirectory>$(IntermediateOutputPath)resourcestamps\</_StampDirectory>
 		</PropertyGroup>
 		<ItemGroup>
 			<_UnpackLibraryResourceItems Include="@(ReferencePath);@(ReferenceDependencyPaths)">
