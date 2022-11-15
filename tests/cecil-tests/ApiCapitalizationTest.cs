@@ -29,7 +29,6 @@ namespace Cecil.Tests {
 			foreach (string assemblyPath in Helper.NetPlatformAssemblies) {
 				HashSet<String> methodCache = new HashSet<String> ();
 				var assembly = Helper.GetAssembly (assemblyPath);
-				var publicTypes = assembly.MainModule.Types.Where ((t) => t.IsPublic && !IsTypeObsolete (t));
 				var pinvokes = AllPInvokes (assembly);
 				var res = from item in pinvokes
 						  where item.Name.Contains ("dl")
@@ -54,10 +53,9 @@ namespace Cecil.Tests {
 			if (type == null)
 				return false;
 
-			if (type.HasCustomAttributes && type.CustomAttributes.Where ((m) => m.AttributeType.Name == "ObsoleteAttribute" || m.AttributeType.Name == "AdviceAttribute").Any ()) {
+			if (type.HasCustomAttributes && type.CustomAttributes.Where ((t) => t.AttributeType.Name == "ObsoleteAttribute" || t.AttributeType.Name == "AdviceAttribute").Any ()) {
 				return true;
 			}
-
 
 			return false;
 		}
@@ -68,15 +66,7 @@ namespace Cecil.Tests {
 			if (method == null)
 				return false;
 
-			//if (method.Name == "dlsym") {
-			//	foreach (var i in method.CustomAttributes) {
-			//		Console.WriteLine (i.AttributeType);
-			//	}
-			//	//Console.WriteLine(method.CustomAttributes.A)
-			//}
-
 			if (method.HasCustomAttributes && method.CustomAttributes.Where ((m) => m.AttributeType.Name == "ObsoleteAttribute").Any ()) {
-				//Console.WriteLine ("method: " + method.Name);
 				return true;
 			}
 
@@ -97,23 +87,14 @@ namespace Cecil.Tests {
 		}
 
 
-		bool IsException (string assemblyPath, TypeDefinition t, MethodDefinition m)
+		bool IsException (string assemblyPath, MethodDefinition m)
 		{ 
 
 			if (m == null)
 				return false;
 
-			if (m.Name == "inputs") {
-				Console.WriteLine ("dlsym attrs: ");
-				foreach (var attr in m.CustomAttributes) {
-					Console.WriteLine (attr.AttributeType);
-				}
-			}
-
-			if (m.IsRemoveOn || m.IsAddOn || m.IsConstructor || m.IsSpecialName || IsMethodObsolete (m) || m.IsFamilyOrAssembly || m.IsPInvokeImpl || m.HasPInvokeInfo || m.IsCompilerControlled)
+			if (m.IsRemoveOn || m.IsAddOn || m.IsConstructor || m.IsSpecialName || IsMethodObsolete (m) || m.IsFamilyOrAssembly || m.IsPInvokeImpl)
 				return true;
-
-
 
 			var set = dllCache [assemblyPath].MethodCache;
 			//if (set.Contains ($"{t.Name}.{m.Name}")) {
@@ -190,15 +171,15 @@ namespace Cecil.Tests {
 		Dictionary<string, HashSet<string>> allowedMethods = new Dictionary<string, HashSet<string>> () {
 		};
 
-		public bool Skip (string type, string m, Dictionary<string, HashSet<string>> allowed)
+		public bool IsSkip(string type, string memberName, Dictionary<string, HashSet<string>> allowed)
 		{
-			if (allowed.ContainsKey (type)) {
-				if (allowed [type].Contains (m)) {
+			if (allowed.TryGetValue (type, out var result)) {
+				if (allowed [type].TryGetValue(memberName, out var skipped)) {
 					return true;
 				}
 			}
 
-			return Char.IsUpper (m [0]);
+			return Char.IsUpper (memberName [0]);
 		}
 
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
@@ -209,7 +190,7 @@ namespace Cecil.Tests {
 				var typeName = type.Name;
 				var c = type.Properties
 						.Where (p => p.GetMethod?.IsPublic == true || p.SetMethod?.IsPublic == true)
-						.Where (p => !Skip (type.Name, p.Name, allowedProperties) && !IsPropertyObsolete (p, type) && !p.IsSpecialName)
+						.Where (p => !IsSkip(type.Name, p.Name, allowedProperties) && !IsPropertyObsolete (p, type) && !p.IsSpecialName)
 						.Select (p => p.Name);
 				return c;
 			};
@@ -221,9 +202,8 @@ namespace Cecil.Tests {
 		public void MethodsCapitalizationTest (string assemblyPath)
 		{
 			Func<TypeDefinition, IEnumerable<string>> selectLambda = (type) => {
-				var typeName = type.Name;
 				var c = from m in type.Methods
-						where m.IsPublic && !IsException (assemblyPath, type, m) && !Skip (type.Name, m.Name, allowedMethods)
+						where m.IsPublic && !IsSkip (type.Name, m.Name, allowedMethods) && !IsException (assemblyPath, m) 
 						select m.Name;
 				return c;
 			};
@@ -235,7 +215,6 @@ namespace Cecil.Tests {
 		public void EventsCapitalizationTest (string assemblyPath)
 		{
 			Func<TypeDefinition, IEnumerable<string>> selectLambda = (type) => {
-				var typeName = type.Name;
 				var c = from e in type.Events
 						where !(Char.IsUpper (e.Name [0]))
 						select e.Name;
@@ -249,11 +228,8 @@ namespace Cecil.Tests {
 		public void FieldsCapitalizationTest (string assemblyPath)
 		{
 			Func<TypeDefinition, IEnumerable<string>> selectLambda = (type) => {
-
-				var typeName = type.Name;
 				var c = from f in type.Fields
-						where f.IsPublic && !Skip (type.Name, f.Name, allowedFields)
-						where f.IsFamilyOrAssembly
+						where f.IsPublic && f.IsFamilyOrAssembly && !IsSkip(type.Name, f.Name, allowedFields)
 						select f.Name;
 				return c;
 			};
@@ -263,15 +239,6 @@ namespace Cecil.Tests {
 		public void CapitalizationTest (string assemblyPath, Func<TypeDefinition, IEnumerable<string>> selectLambda)
 		{
 
-
-			//var assemblyPathName = dllCache [assemblyPath];
-			//var assembly = assemblyPathName.Assembly;
-		
-			//if (assembly is null) {
-			//	Assert.Ignore ($"{assemblyPath} could not be found (might be disabled in build)");
-			//	return;
-			//}
-
 			if (dllCache.TryGetValue (assemblyPath, out var cache)) {
 				var typeDict = new Dictionary<string, string> ();
 
@@ -280,7 +247,7 @@ namespace Cecil.Tests {
 				foreach (var type in publicTypes) {
 					var err = selectLambda (type);
 					if (err is not null && err.Any ()) {
-						if (typeDict.ContainsKey ($"Type: {type.Name}")) {
+						if(typeDict.TryGetValue($"Type: {type.Name}", out var errMembers)) {
 							typeDict [$"Type: {type.Name}"] += string.Join ("; ", err);
 						} else {
 							typeDict.Add ($"Type: {type.Name}", string.Join ("; ", err));
