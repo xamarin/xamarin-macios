@@ -14,7 +14,7 @@ namespace MonoTouchFixtures.UIKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NavigationBarTest {
-		
+
 		[Test]
 		public void InitWithFrame ()
 		{
@@ -23,7 +23,7 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.That (nb.Frame, Is.EqualTo (frame), "Frame");
 			}
 		}
-		
+
 		[Test]
 		public void BackgroundImage ()
 		{

@@ -21,18 +21,16 @@ using CoreText;
 using NUnit.Framework;
 using System.Drawing;
 
-namespace MonoTouchFixtures.CoreText
-{
+namespace MonoTouchFixtures.CoreText {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CTLineTests
-	{
+	public class CTLineTests {
 		[Test]
 		public void EnumerateCaretOffsets ()
 		{
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("Requires iOS9+ or macOS 10.11+");
-			
+
 			var sa = new CTStringAttributes ();
 			sa.ForegroundColor = TestRuntime.GetCGColor (UIColor.Blue);
 			sa.Font = new CTFont ("Georgia-BoldItalic", 24);

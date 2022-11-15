@@ -18,11 +18,10 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AudioToolbox {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class SystemSoundTest
-	{
+	public class SystemSoundTest {
 		[Test]
 		public void FromFile ()
 		{
@@ -34,9 +33,10 @@ namespace MonoTouchFixtures.AudioToolbox {
 				var completed = false;
 				const int timeout = 10;
 
-				Assert.AreEqual (AudioServicesError.None, ss.AddSystemSoundCompletion (delegate {
+				Assert.AreEqual (AudioServicesError.None, ss.AddSystemSoundCompletion (delegate
+				{
 					completed = true;
-					}));
+				}));
 
 				ss.PlaySystemSound ();
 				Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => { }, () => completed), "PlaySystemSound");
@@ -69,7 +69,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 
 				completed = false;
 				Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () =>
-					ss.PlaySystemSound (() => {	completed = true; }
+					ss.PlaySystemSound (() => { completed = true; }
 				), () => completed), "TestCallbackPlaySystem");
 			}
 		}

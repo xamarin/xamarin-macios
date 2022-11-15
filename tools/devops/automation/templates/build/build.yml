@@ -23,6 +23,14 @@ parameters:
   type: boolean
   default: false
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 - name: buildSteps 
   type: stepList 
   default: []
@@ -36,12 +44,14 @@ steps:
 - template: ../common/checkout.yml
   parameters:
     isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
 
 - template: ../common/setup.yml
   parameters:
     keyringPass: ${{ parameters.keyringPass }}
 
-- template: install-certificates.yml@templates
+- template: install-certificates.yml@yaml-templates
   parameters:
     DeveloperIdApplication: $(developer-id-application)
     DeveloperIdInstaller: $(developer-id-installer)
@@ -60,8 +70,7 @@ steps:
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-brew-packages.csx
     provisioning_extra_args: '-vvvv'
-  env:
-    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+    github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 30
   enabled: true
   continueOnError: true # brew installation can be temperamental, and things usually work even if the installation fail.
@@ -75,8 +84,7 @@ steps:
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/build-provisioning.csx
     provisioning_extra_args: '-vvvv'
-  env:
-    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+    github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
 
 # Use the env variables that were set by the label parsing in the configure step
@@ -194,6 +202,15 @@ steps:
   displayName: "Configure build"
   timeoutInMinutes: 5
 
+# Make sure we have the right maccore hash checked out before we try to add
+# the provisioning profiles.
+- bash: |
+    set -ex
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
+  name: resetDependencies
+  displayName: 'Reset dependencies'
+  timeoutInMinutes: 10
+
 # We'll need these profiles to build the hot restart prebuilt app during the build
 # (it's built for device, and thus needs a certificate available so that the app can be signed).
 # We do this again before running the tests further below.
@@ -220,7 +237,6 @@ steps:
     set -x
     set -e
     echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
     MAKE_FLAGS=""
 
     if [[ "$SYSTEM_DEBUG" == "true" ]]; then
@@ -250,11 +266,15 @@ steps:
 # to write a comment.
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-
-    $githubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token) -Hash $Env:GIT_HASH
+    $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
     $githubComments.NewCommentFromMessage("Build failed", ":fire:", "Build failed for the job '$(System.JobDisplayName)'")
   condition: failed()
   displayName: 'Report build failure'
+  env:
+    ${{ if eq(parameters.repositoryAlias, 'self') }}:
+      COMMENT_HASH: $(GIT_HASH)
+    ${{ else }}:
+      COMMENT_HASH: $(Build.SourceVersion)
 
 # Upload any crash reports that occurred during the build. This is helpful if we want to file issues about dotnet/csc crashing during the build.
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/collect-and-upload-crash-reports.sh

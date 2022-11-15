@@ -21,11 +21,11 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AVFoundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AVAssetImageGeneratorTest {
-		
+
 		[Test]
 		public void Defaults ()
 		{
@@ -104,7 +104,7 @@ namespace MonoTouchFixtures.AVFoundation {
 				using (NSUrl video_url = NSUrl.FromFilename (video_asset_path))
 				using (AVAsset video_asset = AVAsset.FromUrl (video_url))
 				using (AVAssetImageGenerator aig = new AVAssetImageGenerator (video_asset)) {
-					NSValue[] values = new NSValue[] { NSValue.FromCMTime (CMTime.Zero) };
+					NSValue [] values = new NSValue [] { NSValue.FromCMTime (CMTime.Zero) };
 					aig.GenerateCGImagesAsynchronously (values, handler);
 					mre.WaitOne ();
 				}
@@ -117,7 +117,7 @@ namespace MonoTouchFixtures.AVFoundation {
 			Assert.True (handled, "handled");
 		}
 
-		void handler (CMTime requestedTime, IntPtr imageRef, CMTime actualTime, AVAssetImageGeneratorResult result, NSError error) 
+		void handler (CMTime requestedTime, IntPtr imageRef, CMTime actualTime, AVAssetImageGeneratorResult result, NSError error)
 		{
 			handled = true;
 			mre.Set ();

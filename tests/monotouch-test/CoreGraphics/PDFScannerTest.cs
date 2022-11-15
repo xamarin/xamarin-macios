@@ -27,7 +27,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 #if NET
 		[UnmanagedCallersOnly]
 #else
-		[MonoPInvokeCallback (typeof (Action<IntPtr,IntPtr>))]
+		[MonoPInvokeCallback (typeof (Action<IntPtr, IntPtr>))]
 #endif
 		static void BT (IntPtr reserved, IntPtr info)
 		{
@@ -44,7 +44,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 #if NET
 		[UnmanagedCallersOnly]
 #else
-		[MonoPInvokeCallback (typeof (Action<IntPtr,IntPtr>))]
+		[MonoPInvokeCallback (typeof (Action<IntPtr, IntPtr>))]
 #endif
 		static void Do (IntPtr reserved, IntPtr info)
 		{

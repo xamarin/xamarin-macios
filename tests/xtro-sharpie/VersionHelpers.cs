@@ -2,18 +2,16 @@ using System;
 using Clang;
 using static Extrospection.Helpers;
 
-namespace Extrospection
-{
-	public static class VersionHelpers
-	{
+namespace Extrospection {
+	public static class VersionHelpers {
 		public static Version Convert (VersionTuple version)
 		{
 			uint major = version.Major;
 			uint minor = version.Minor.HasValue ? version.Minor.Value : 0;
 			if (version.Subminor.HasValue)
-				return new Version ((int)major, (int)minor, (int)version.Subminor.Value);
+				return new Version ((int) major, (int) minor, (int) version.Subminor.Value);
 			else
-				return new Version ((int)major, (int)minor);
+				return new Version ((int) major, (int) minor);
 		}
 
 		public static bool VersionTooOldToCare (VersionTuple version)

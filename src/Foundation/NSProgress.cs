@@ -12,7 +12,7 @@ namespace Foundation {
 		}
 
 		public nint? Throughput {
-			get { return _Throughput?.NIntValue; } 
+			get { return _Throughput?.NIntValue; }
 			set { _Throughput = value != null ? new NSNumber (value.Value) : null; }
 		}
 

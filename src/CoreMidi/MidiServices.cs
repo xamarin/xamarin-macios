@@ -161,9 +161,9 @@ namespace CoreMidi {
 	[SupportedOSPlatform ("macos")]
 #endif
 	public class MidiObject
- #if !COREBUILD
+#if !COREBUILD
 	: IDisposable
-  #endif
+#endif
 	{
 #if !COREBUILD
 		internal const MidiObjectRef InvalidRef = 0;
@@ -271,7 +271,7 @@ namespace CoreMidi {
 			kMIDIPropertyUserPatchNameFile = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyUserPatchNameFile");
 			kMIDIPropertyNameConfigurationDictionary = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyNameConfigurationDictionary");
 		}
-	
+
 		public MidiObjectRef Handle {
 			get { return handle; }
 		}
@@ -279,7 +279,7 @@ namespace CoreMidi {
 		internal MidiObjectRef MidiHandle {
 			get { return handle; }
 		}
-		
+
 		internal MidiObject ()
 		{
 			owns = true;
@@ -310,7 +310,7 @@ namespace CoreMidi {
 		{
 			IntPtr val;
 			int code;
-			
+
 			code = MIDIObjectGetDictionaryProperty (handle, property, out val);
 			if (code == 0) {
 				var dict = Runtime.GetNSObject (val) as NSDictionary;
@@ -330,12 +330,12 @@ namespace CoreMidi {
 
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIObjectGetDataProperty (MidiObjectRef obj, IntPtr str, out IntPtr data);
-		
+
 		public NSData? GetData (IntPtr property)
 		{
 			IntPtr val;
 			int code;
-			
+
 			code = MIDIObjectGetDataProperty (handle, property, out val);
 			if (code == 0) {
 				var data = Runtime.GetNSObject (val) as NSData;
@@ -355,17 +355,17 @@ namespace CoreMidi {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			MIDIObjectSetDataProperty (handle, property, data.Handle);
 		}
-		
+
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIObjectGetStringProperty (MidiObjectRef obj, IntPtr str, out IntPtr data);
-		
+
 		public string? GetString (IntPtr property)
 		{
 			IntPtr val;
 			int code;
-			
+
 			code = MIDIObjectGetStringProperty (handle, property, out val);
-			if (code == 0){
+			if (code == 0) {
 				var ret = CFString.FromHandle (val);
 				if (val != IntPtr.Zero)
 					CFObject.CFRelease (val);
@@ -381,23 +381,23 @@ namespace CoreMidi {
 		{
 			if (value is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-			using (var nsval = new NSString (value)){
+			using (var nsval = new NSString (value)) {
 				MIDIObjectSetDictionaryProperty (handle, property, nsval.Handle);
 			}
 		}
-			
+
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static MidiError /* OSStatus = SInt32 */ MIDIObjectRemoveProperty (MidiObjectRef obj, IntPtr str);
 		public MidiError RemoveProperty (string property)
 		{
-			using (var nsstr = new NSString (property)){
+			using (var nsstr = new NSString (property)) {
 				return MIDIObjectRemoveProperty (handle, nsstr.Handle);
-			}			
+			}
 		}
 
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIObjectGetProperties (MidiObjectRef obj, out IntPtr dict, [MarshalAs (UnmanagedType.U1)] bool deep);
-		
+
 		public NSDictionary? GetDictionaryProperties (bool deep)
 		{
 			IntPtr val;
@@ -438,7 +438,7 @@ namespace CoreMidi {
 			Dispose (true);
 			GC.SuppressFinalize (this);
 		}
-		
+
 		protected virtual void Dispose (bool disposing)
 		{
 			DisposeHandle ();
@@ -451,11 +451,11 @@ namespace CoreMidi {
 		{
 			if (handle == MidiObject.InvalidRef)
 				return null;
-			
+
 			if (type == MidiObjectType.Other)
 				return new MidiObject (handle, false);
-			
-			switch (type){
+
+			switch (type) {
 			case MidiObjectType.ExternalDevice:
 			case MidiObjectType.Device:
 				return new MidiDevice (handle, false);
@@ -498,10 +498,10 @@ namespace CoreMidi {
 		{
 			ErrorCode = code;
 		}
-		
+
 		public MidiError ErrorCode { get; private set; }
 	}
-	
+
 	delegate void MidiNotifyProc (IntPtr message, IntPtr context);
 
 #if NET
@@ -530,17 +530,17 @@ namespace CoreMidi {
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
-		[Deprecated (PlatformName.iOS, 14,0)]
-		[Deprecated (PlatformName.MacOSX, 11,0)]
+		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacOSX, 11, 0)]
 #endif
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDISourceCreate (MidiObjectRef handle, IntPtr name, out MidiObjectRef endpoint);
-			
+
 		GCHandle gch;
 
 		internal override void DisposeHandle ()
 		{
-			if (handle != MidiObject.InvalidRef){
+			if (handle != MidiObject.InvalidRef) {
 				if (owns)
 					MIDIClientDispose (handle);
 				handle = MidiObject.InvalidRef;
@@ -551,7 +551,7 @@ namespace CoreMidi {
 
 		public MidiClient (string name)
 		{
-			using (var nsstr = new NSString (name)){
+			using (var nsstr = new NSString (name)) {
 				gch = GCHandle.Alloc (this);
 #if NET
 				int code = 0;
@@ -561,7 +561,7 @@ namespace CoreMidi {
 #else
 				int code = MIDIClientCreate (nsstr.Handle, static_MidiNotifyProc, GCHandle.ToIntPtr (gch), out handle);
 #endif
-				if (code != 0){
+				if (code != 0) {
 					gch.Free ();
 					handle = MidiObject.InvalidRef;
 					throw new MidiException ((MidiError) code);
@@ -585,21 +585,21 @@ namespace CoreMidi {
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
-		[Deprecated (PlatformName.iOS, 14,0)]
-		[Deprecated (PlatformName.MacOSX, 11,0)]
+		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacOSX, 11, 0)]
 #endif
 		public MidiEndpoint? CreateVirtualSource (string name, out MidiError statusCode)
 		{
-			using (var nsstr = new NSString (name)){
+			using (var nsstr = new NSString (name)) {
 				MidiObjectRef ret;
 				var code = MIDISourceCreate (handle, nsstr.Handle, out ret);
-				if (code != 0){
+				if (code != 0) {
 					statusCode = (MidiError) code;
 					return null;
 				}
 				statusCode = MidiError.Ok;
 				return new MidiEndpoint (ret, true);
-			}			
+			}
 		}
 
 #if NET
@@ -611,8 +611,8 @@ namespace CoreMidi {
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
-		[Deprecated (PlatformName.iOS, 14,0)]
-		[Deprecated (PlatformName.MacOSX, 11,0)]
+		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacOSX, 11, 0)]
 #endif
 		public MidiEndpoint? CreateVirtualDestination (string name, out MidiError status)
 		{
@@ -623,7 +623,7 @@ namespace CoreMidi {
 			m.Dispose ();
 			return null;
 		}
-		
+
 		public MidiPort CreateInputPort (string name)
 		{
 			return new MidiPort (this, name, true);
@@ -664,7 +664,7 @@ namespace CoreMidi {
 			MidiClient? client = gch.Target as MidiClient;
 
 			var id = (MidiNotificationMessageId) Marshal.ReadInt32 (message); // SInt32
-			switch (id){
+			switch (id) {
 			case MidiNotificationMessageId.SetupChanged:
 				var esc = client?.SetupChanged;
 				if (esc is not null)
@@ -672,7 +672,7 @@ namespace CoreMidi {
 				break;
 			case MidiNotificationMessageId.ObjectAdded:
 				var eoa = client?.ObjectAdded;
-				if (eoa is not null){
+				if (eoa is not null) {
 					var data = (MidiObjectAddRemoveNotification) Marshal.PtrToStructure (message, typeof (MidiObjectAddRemoveNotification))!;
 					eoa (client, new ObjectAddedOrRemovedEventArgs (MidiObjectFromType (data.ParentType, data.Parent),
 											MidiObjectFromType (data.ChildType, data.Child)));
@@ -680,7 +680,7 @@ namespace CoreMidi {
 				break;
 			case MidiNotificationMessageId.ObjectRemoved:
 				var eor = client?.ObjectRemoved;
-				if (eor is not null){
+				if (eor is not null) {
 					var data = (MidiObjectAddRemoveNotification) Marshal.PtrToStructure (message, typeof (MidiObjectAddRemoveNotification))!;
 					eor (client, new ObjectAddedOrRemovedEventArgs (MidiObjectFromType (data.ParentType, data.Parent),
 											MidiObjectFromType (data.ChildType, data.Child)));
@@ -688,10 +688,10 @@ namespace CoreMidi {
 				break;
 			case MidiNotificationMessageId.PropertyChanged:
 				var epc = client?.PropertyChanged;
-				if (epc is not null){
+				if (epc is not null) {
 					var data = (MidiObjectPropertyChangeNotification) Marshal.PtrToStructure (message, typeof (MidiObjectPropertyChangeNotification))!;
 					epc (client, new ObjectPropertyChangedEventArgs (
-						     MidiObjectFromType (data.ObjectType, data.ObjectHandle), CFString.FromHandle (data.PropertyName)));
+							 MidiObjectFromType (data.ObjectType, data.ObjectHandle), CFString.FromHandle (data.PropertyName)));
 				}
 				break;
 			case MidiNotificationMessageId.ThruConnectionsChanged:
@@ -706,7 +706,7 @@ namespace CoreMidi {
 				break;
 			case MidiNotificationMessageId.IOError:
 				var eio = client?.IOError;
-				if (eio is not null){
+				if (eio is not null) {
 					var data = (MidiIOErrorNotification) Marshal.PtrToStructure (message, typeof (MidiIOErrorNotification))!;
 					eio (client, new IOErrorEventArgs (new MidiDevice (data.DeviceRef), data.ErrorCode));
 				}
@@ -739,7 +739,7 @@ namespace CoreMidi {
 			public MidiObjectRef Child;
 			public MidiObjectType ChildType;
 		}
-	
+
 		[StructLayout (LayoutKind.Sequential)]
 		struct MidiObjectPropertyChangeNotification {
 			public MidiNotificationMessageId id;
@@ -748,7 +748,7 @@ namespace CoreMidi {
 			public MidiObjectType ObjectType;
 			public IntPtr PropertyName; // CFStringRef
 		}
-	
+
 		[StructLayout (LayoutKind.Sequential)]
 		struct MidiIOErrorNotification {
 			public MidiNotificationMessageId id;
@@ -777,7 +777,7 @@ namespace CoreMidi {
 		public long TimeStamp;
 		IntPtr byteptr;
 		byte [] bytes = Array.Empty<byte> ();
-		int    start;
+		int start;
 		public ushort Length;
 
 		public MidiPacket (long timestamp, ushort length, IntPtr bytes)
@@ -794,21 +794,21 @@ namespace CoreMidi {
 		public MidiPacket (long timestamp, byte [] bytes, int start, int len) : this (timestamp, bytes, start, len, true)
 		{
 		}
-		
+
 		MidiPacket (long timestamp, byte [] bytes, int start, int length, bool check)
 		{
 			if (bytes is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
 			if (length > UInt16.MaxValue)
 				throw new ArgumentException ("length is bigger than 64k");
-			
-			if (check){
+
+			if (check) {
 				if (start < 0 || start >= bytes.Length)
 					throw new ArgumentException ("range is not within bytes");
-				if (start+length > bytes.Length)
+				if (start + length > bytes.Length)
 					throw new ArgumentException ("range is not within bytes");
 			}
-			
+
 			TimeStamp = timestamp;
 			Length = (ushort) length;
 			this.start = start;
@@ -832,7 +832,7 @@ namespace CoreMidi {
 			byteptr = IntPtr.Zero;
 		}
 
-		internal byte[] ByteArray {
+		internal byte [] ByteArray {
 			get { return bytes; }
 		}
 
@@ -845,7 +845,7 @@ namespace CoreMidi {
 				if (bytes is null)
 					return byteptr;
 				unsafe {
-					fixed (byte *p = &bytes [start]){
+					fixed (byte* p = &bytes [start]) {
 						return (IntPtr) p;
 					}
 				}
@@ -906,7 +906,7 @@ namespace CoreMidi {
 			int npackets = Marshal.ReadInt32 (packetList);
 			var packets = new MidiPacket [npackets];
 			packetList += 4;
-			for (int i = 0; i < npackets; i++){
+			for (int i = 0; i < npackets; i++) {
 				int plen;
 				packets [i] = MidiPacket.ReadPacket (packetList, out plen);
 				packetList += plen;
@@ -963,8 +963,8 @@ namespace CoreMidi {
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
-		[Deprecated (PlatformName.iOS, 14,0)]
-		[Deprecated (PlatformName.MacOSX, 11,0)]
+		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacOSX, 11, 0)]
 #endif
 #if NET
 		[DllImport (Constants.CoreMidiLibrary)]
@@ -978,16 +978,16 @@ namespace CoreMidi {
 
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIPortDispose (MidiPortRef port);
-		
+
 		GCHandle gch;
 		bool input;
-		
+
 		internal MidiPort (MidiClient client, string portName, bool input)
 		{
-			using (var nsstr = new NSString (portName)){
+			using (var nsstr = new NSString (portName)) {
 				GCHandle gch = GCHandle.Alloc (this);
 				int code;
-				
+
 				if (input) {
 #if NET
 					unsafe {
@@ -1001,8 +1001,8 @@ namespace CoreMidi {
 				} else {
 					code = MIDIOutputPortCreate (client.handle, nsstr.Handle, out handle);
 				}
-				
-				if (code != 0){
+
+				if (code != 0) {
 					gch.Free ();
 					handle = MidiObject.InvalidRef;
 					throw new MidiException ((MidiError) code);
@@ -1015,10 +1015,10 @@ namespace CoreMidi {
 
 		public MidiClient Client { get; private set; }
 		public string PortName { get; private set; }
-		
+
 		internal override void DisposeHandle ()
 		{
-			if (handle != MidiObject.InvalidRef){
+			if (handle != MidiObject.InvalidRef) {
 				if (owns)
 					MIDIPortDispose (handle);
 				handle = MidiObject.InvalidRef;
@@ -1032,9 +1032,9 @@ namespace CoreMidi {
 			MessageReceived = null;
 			base.Dispose (disposing);
 		}
-		
+
 		public event EventHandler<MidiPacketsEventArgs>? MessageReceived;
-		
+
 #if !NET
 		static MidiReadProc? _static_MidiReadProc;
 		static MidiReadProc static_MidiReadProc {
@@ -1084,7 +1084,7 @@ namespace CoreMidi {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
 			return (MidiError) MIDIPortDisconnectSource (handle, endpoint.handle);
 		}
-		
+
 		public override string ToString ()
 		{
 			return (input ? "[input:" : "[output:") + Client + ":" + PortName + "]";
@@ -1099,8 +1099,8 @@ namespace CoreMidi {
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
-		[Deprecated (PlatformName.iOS, 14,0)]
-		[Deprecated (PlatformName.MacOSX, 11,0)]
+		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacOSX, 11, 0)]
 #endif
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static MidiError /* OSStatus = SInt32 */ MIDISend (MidiPortRef port, MidiEndpointRef endpoint, IntPtr packets);
@@ -1114,8 +1114,8 @@ namespace CoreMidi {
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
-		[Deprecated (PlatformName.iOS, 14,0)]
-		[Deprecated (PlatformName.MacOSX, 11,0)]
+		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacOSX, 11, 0)]
 #endif
 		public MidiError Send (MidiEndpoint endpoint, MidiPacket [] packets)
 		{
@@ -1151,7 +1151,7 @@ namespace CoreMidi {
 
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static MidiEndpointRef MIDIEntityGetSource (MidiEntityRef entity, nint idx);
-		
+
 		public MidiEndpoint? GetDestination (nint idx)
 		{
 			var dest = MIDIEntityGetDestination (handle, idx);
@@ -1197,7 +1197,7 @@ namespace CoreMidi {
 				return null;
 			}
 		}
-			
+
 		public int AdvanceScheduleTimeMuSec {
 			get {
 				return GetInt (kMIDIPropertyAdvanceScheduleTimeMuSec);
@@ -1554,7 +1554,7 @@ namespace CoreMidi {
 #if !COREBUILD
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static nint MIDIDeviceGetNumberOfEntities (MidiDeviceRef handle);
-		
+
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static MidiEntityRef MIDIDeviceGetEntity (MidiDeviceRef handle, nint item);
 
@@ -1567,8 +1567,8 @@ namespace CoreMidi {
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
-		[Deprecated (PlatformName.iOS, 14,0)]
-		[Deprecated (PlatformName.MacOSX, 11,0)]
+		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacOSX, 11, 0)]
 #endif
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int MIDIDeviceAddEntity (MidiDeviceRef device, /* CFString */ IntPtr name, [MarshalAs (UnmanagedType.U1)] bool embedded, nuint numSourceEndpoints, nuint numDestinationEndpoints, MidiEntityRef newEntity);
@@ -1590,7 +1590,7 @@ namespace CoreMidi {
 		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
-		[Deprecated (PlatformName.iOS, 14,0)]
+		[Deprecated (PlatformName.iOS, 14, 0)]
 #endif
 		public int Add (string name, bool embedded, nuint numSourceEndpoints, nuint numDestinationEndpoints, MidiEntity newEntity)
 		{
@@ -1606,7 +1606,7 @@ namespace CoreMidi {
 				return MIDIDeviceGetNumberOfEntities (handle);
 			}
 		}
-			
+
 		public string? Image {
 			get {
 				return GetString (kMIDIPropertyImage);
@@ -1683,8 +1683,8 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		public string? NameConfigurationDictionary {
 			get {
@@ -2043,7 +2043,7 @@ namespace CoreMidi {
 				SetInt (kMIDIPropertyTransmitsProgramChanges, value ? 1 : 0);
 			}
 		}
-	
+
 		internal MidiDevice (MidiDeviceRef handle) : base (handle)
 		{
 		}
@@ -2082,7 +2082,7 @@ namespace CoreMidi {
 		{
 		}
 
-		public nuint GetNumberOfDevices () 
+		public nuint GetNumberOfDevices ()
 		{
 			if (handle == MidiObject.InvalidRef)
 				throw new ObjectDisposedException ("handle");
@@ -2108,7 +2108,7 @@ namespace CoreMidi {
 
 		internal override void DisposeHandle ()
 		{
-			if (handle != MidiObject.InvalidRef){
+			if (handle != MidiObject.InvalidRef) {
 				if (owns)
 					MIDIDeviceListDispose (handle);
 				handle = MidiObject.InvalidRef;
@@ -2129,7 +2129,7 @@ namespace CoreMidi {
 
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIEndpointDispose (MidiEndpointRef handle);
-		
+
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -2139,8 +2139,8 @@ namespace CoreMidi {
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
-		[Deprecated (PlatformName.iOS, 14,0)]
-		[Deprecated (PlatformName.MacOSX, 11,0)]
+		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacOSX, 11, 0)]
 #endif
 #if NET
 		[DllImport (Constants.CoreMidiLibrary)]
@@ -2162,12 +2162,12 @@ namespace CoreMidi {
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
-		[Deprecated (PlatformName.iOS, 14,0)]
-		[Deprecated (PlatformName.MacOSX, 11,0)]
+		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacOSX, 11, 0)]
 #endif
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static MidiError /* OSStatus = SInt32 */ MIDIReceived (MidiEndpointRef handle, IntPtr /* MIDIPacketList* */ packetList);
-		
+
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static MidiEndpointRef MIDIGetSource (nint sourceIndex);
 
@@ -2176,7 +2176,7 @@ namespace CoreMidi {
 
 		internal override void DisposeHandle ()
 		{
-			if (handle != MidiObject.InvalidRef){
+			if (handle != MidiObject.InvalidRef) {
 				if (owns)
 					MIDIEndpointDispose (handle);
 				handle = MidiObject.InvalidRef;
@@ -2220,7 +2220,7 @@ namespace CoreMidi {
 
 		internal MidiEndpoint (MidiClient client, string name, out MidiError code)
 		{
-			using (var nsstr = new NSString (name)){
+			using (var nsstr = new NSString (name)) {
 				GCHandle gch = GCHandle.Alloc (this);
 #if NET
 				unsafe {
@@ -2228,7 +2228,7 @@ namespace CoreMidi {
 					code = MIDIDestinationCreate (client.handle, nsstr.Handle, &Read, GCHandle.ToIntPtr (gch), &tempHandle);
 					handle = tempHandle;
 				}
-#else				
+#else
 				code = MIDIDestinationCreate (client.handle, nsstr.Handle, static_MidiReadProc, GCHandle.ToIntPtr (gch), out handle);
 #endif
 				EndpointName = name;
@@ -2240,7 +2240,7 @@ namespace CoreMidi {
 			MessageReceived = null;
 			base.Dispose (disposing);
 		}
-		
+
 		public event EventHandler<MidiPacketsEventArgs>? MessageReceived;
 #if !NET
 		static MidiReadProc? _static_MidiReadProc;
@@ -2285,8 +2285,8 @@ namespace CoreMidi {
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
-		[Deprecated (PlatformName.iOS, 14,0)]
-		[Deprecated (PlatformName.MacOSX, 11,0)]
+		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.MacOSX, 11, 0)]
 #endif
 		public MidiError Received (MidiPacket [] packets)
 		{
@@ -2301,7 +2301,7 @@ namespace CoreMidi {
 
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIEndpointGetEntity (MidiEndpointRef endpoint, out MidiEntityRef entity);
-		
+
 		public MidiEntity? Entity {
 			get {
 				MidiEntityRef entity;
@@ -2314,10 +2314,10 @@ namespace CoreMidi {
 
 		public bool IsNetworkSession {
 			get {
-				using (var dict =  GetDictionaryProperties (true)){
+				using (var dict = GetDictionaryProperties (true)) {
 					if (dict is null)
 						return false;
-					
+
 					using (var key = new NSString ("apple.midirtp.session"))
 						return dict.ContainsKey (key);
 				}
@@ -2477,7 +2477,7 @@ namespace CoreMidi {
 			}
 		}
 
-// MidiEndpoint 
+		// MidiEndpoint 
 #endif // !COREBUILD
 	}
 

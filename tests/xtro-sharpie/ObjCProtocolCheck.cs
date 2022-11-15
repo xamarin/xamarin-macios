@@ -31,7 +31,7 @@ using Mono.Cecil;
 using Clang.Ast;
 
 namespace Extrospection {
-	
+
 	public class ObjCProtocolCheck : BaseVisitor {
 
 		Dictionary<string, TypeDefinition> protocol_map = new Dictionary<string, TypeDefinition> ();
@@ -118,13 +118,13 @@ namespace Extrospection {
 							s_export = p.Argument.Value as string;
 							break;
 						case "IsRequired":
-							is_required = (bool)p.Argument.Value;
+							is_required = (bool) p.Argument.Value;
 							break;
 						case "IsProperty":
-							is_property = (bool)p.Argument.Value;
+							is_property = (bool) p.Argument.Value;
 							break;
 						case "IsStatic":
-							is_static = (bool)p.Argument.Value;
+							is_static = (bool) p.Argument.Value;
 							break;
 						}
 					}

@@ -6,11 +6,9 @@ using AppKit;
 using ObjCRuntime;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[Preserve (AllMembers = true)]
-	public class NSViewControllerTests
-	{
+	public class NSViewControllerTests {
 		NSViewController controller;
 
 		[SetUp]
@@ -39,7 +37,7 @@ namespace Xamarin.Mac.Tests
 			controller.AddChildViewController (child);
 
 			Assert.IsTrue (controller.ChildViewControllers.Length == 1, "NSViewControllerShouldRemoveChildViewControllers - Failed to add child view controller");
-		
+
 			controller.RemoveChildViewController (0);
 
 			Assert.IsTrue (controller.ChildViewControllers.Length == 0, "NSViewControllerShouldRemoveChildViewController - Failed to remove child view controller");
@@ -52,7 +50,7 @@ namespace Xamarin.Mac.Tests
 
 			controller.AddChildViewController (new NSViewController ());
 			controller.AddChildViewController (new NSViewController ());
-		
+
 			Assert.IsTrue (controller.ChildViewControllers.Length == 2, "NSViewControllerShouldInsertChildViewController - Failed to add child view controller");
 
 			var child = new NSViewController ();
