@@ -33,11 +33,11 @@ namespace GameplayKit {
 		{
 			if (instance is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameterName));
-			
-			var klass = instance.Class; 
+
+			var klass = instance.Class;
 			if ((klass is null) || (klass.Handle == IntPtr.Zero))
 				throw new ArgumentException ("Not an type exposed to ObjC", parameterName);
-			
+
 			return klass;
 		}
 
