@@ -78,5 +78,7 @@ stages:
     steps:
     - template: build.yml
       parameters:
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
         isPR: ${{ parameters.isPR }}
         statusContext: ${{ parameters.statusContext }}

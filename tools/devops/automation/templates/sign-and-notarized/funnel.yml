@@ -156,6 +156,8 @@ jobs:
   steps:
   - template: upload-azure.yml
     parameters:
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
       enableDotnet: ${{ parameters.enableDotnet }}
       sbomFilter: '*.nupkg;*.pkg;*.msi'
       azureStorage: ${{ parameters.azureStorage }}
