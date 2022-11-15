@@ -15,8 +15,6 @@ steps:
 
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
   displayName: 'Clean bot'
-  env:
-    BUILD_REVISION: 'jenkins'
   continueOnError: true
   timeoutInMinutes: 60
 
