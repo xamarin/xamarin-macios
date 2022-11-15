@@ -97,7 +97,6 @@ steps:
   displayName: 'Check HD Free Space'
   timeoutInMinutes: 5
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/
-  condition: succeededOrFailed() # we do not care about the previous step
 
 # if we got to this point, it means that we do have at least 50 Gb to run the test, should
 # be more than enough, else the above script would have stopped the pipeline
