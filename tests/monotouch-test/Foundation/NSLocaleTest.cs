@@ -4,11 +4,11 @@ using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NSLocaleTest {
-		
+
 		public void DisplayCountryCodeNames (NSString s)
 		{
 			Console.WriteLine (s);

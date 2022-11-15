@@ -11,13 +11,11 @@ using MetalPerformanceShaders;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.MetalPerformanceShaders
-{
+namespace MonoTouchFixtures.MetalPerformanceShaders {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class MPSImageHistogramEqualizationTest
-	{
+	public class MPSImageHistogramEqualizationTest {
 		IMTLDevice device;
 
 		[OneTimeSetUp]

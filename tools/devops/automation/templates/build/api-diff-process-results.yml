@@ -83,7 +83,7 @@ steps:
     } catch {
       $converted = $inputContents + "`n`nUnable to convert markdown: $_`n`n"
     }
-    $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $Env:GITHUB_TOKEN -Hash $Env:GIT_HASH
+    $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $Env:GITHUB_TOKEN -Hash $Env:COMMENT_HASH
     $result = $githubComments.NewCommentFromMessage("", "", $converted)
   displayName: 'Publish GitHub comment for change detection'
   timeoutInMinutes: 10
@@ -91,3 +91,7 @@ steps:
   condition: always() # We always want to post something on github
   env:
     GITHUB_TOKEN: $(GitHub.Token)
+    ${{ if eq(parameters.repositoryAlias, 'self') }}:
+      COMMENT_HASH: $(GIT_HASH)
+    ${{ else }}:
+      COMMENT_HASH: $(Build.SourceVersion)

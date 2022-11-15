@@ -18,12 +18,10 @@ using AudioToolbox;
 using NUnit.Framework;
 using Xamarin.Utils;
 
-namespace MonoTouchFixtures.MediaToolbox
-{
+namespace MonoTouchFixtures.MediaToolbox {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AudioProcessingTapTest
-	{
+	public class AudioProcessingTapTest {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static nint CFGetRetainCount (IntPtr handle);
 
@@ -33,20 +31,21 @@ namespace MonoTouchFixtures.MediaToolbox
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			var cb = new MTAudioProcessingTapCallbacks (
-				delegate(MTAudioProcessingTap tap, nint numberFrames, MTAudioProcessingTapFlags flags, AudioBuffers bufferList, out nint numberFramesOut, out MTAudioProcessingTapFlags flagsOut) {
+				delegate (MTAudioProcessingTap tap, nint numberFrames, MTAudioProcessingTapFlags flags, AudioBuffers bufferList, out nint numberFramesOut, out MTAudioProcessingTapFlags flagsOut)
+				{
 					numberFramesOut = 2;
 					flagsOut = MTAudioProcessingTapFlags.StartOfStream;
-			});
-			
-			cb.Initialize = delegate(MTAudioProcessingTap tap, out void* tapStorage) {
-				tapStorage = (void*)44;
+				});
+
+			cb.Initialize = delegate (MTAudioProcessingTap tap, out void* tapStorage)
+			{
+				tapStorage = (void*) 44;
 			};
 
 			IntPtr handle;
-			using (var res = new MTAudioProcessingTap (cb, MTAudioProcessingTapCreationFlags.PreEffects))
-			{
+			using (var res = new MTAudioProcessingTap (cb, MTAudioProcessingTapCreationFlags.PreEffects)) {
 				handle = res.Handle;
-				Assert.AreEqual (44, (int)res.GetStorage ());
+				Assert.AreEqual (44, (int) res.GetStorage ());
 				Assert.That (CFGetRetainCount (handle), Is.EqualTo ((nint) 1), "RC");
 			}
 		}

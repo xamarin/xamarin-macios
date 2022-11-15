@@ -57,15 +57,15 @@ namespace Foundation {
 		}
 
 		public RectangleF RectangleFValue {
-			get { return (RectangleF)CGRectValue; }
+			get { return (RectangleF) CGRectValue; }
 		}
 
 		public SizeF SizeFValue {
-			get { return (SizeF)CGSizeValue; }
+			get { return (SizeF) CGSizeValue; }
 		}
 
 		public PointF PointFValue {
-			get { return (PointF)CGPointValue; }
+			get { return (PointF) CGPointValue; }
 		}
 #endif
 

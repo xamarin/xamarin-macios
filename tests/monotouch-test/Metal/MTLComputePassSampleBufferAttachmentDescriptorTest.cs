@@ -17,14 +17,14 @@ namespace MonoTouchFixtures.Metal {
 
 		[SetUp]
 		public void SetUp ()
-		{ 
+		{
 			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
 			descriptor = new MTLComputePassSampleBufferAttachmentDescriptor ();
 		}
 
 		[TearDown]
 		public void TearDown ()
-		{ 
+		{
 			descriptor?.Dispose ();
 			descriptor = null;
 		}
@@ -48,7 +48,7 @@ namespace MonoTouchFixtures.Metal {
 			nuint objIndex = 0;
 			// we want to make sure we do not crash because intro fails 
 			Assert.DoesNotThrow (() => {
-				descriptor.StartOfEncoderSampleIndex = newIndex ; 
+				descriptor.StartOfEncoderSampleIndex = newIndex;
 			}, "Setter");
 			Assert.DoesNotThrow (() => {
 				objIndex = descriptor.StartOfEncoderSampleIndex;
@@ -58,12 +58,12 @@ namespace MonoTouchFixtures.Metal {
 
 		[Test]
 		public void EndOfEncoderSampleIndexTest ()
-		{ 
+		{
 			nuint newIndex = 10;
 			nuint objIndex = 0;
 			// we want to make sure we do not crash because intro fails 
 			Assert.DoesNotThrow (() => {
-				descriptor.EndOfEncoderSampleIndex = newIndex ; 
+				descriptor.EndOfEncoderSampleIndex = newIndex;
 			}, "Setter");
 			Assert.DoesNotThrow (() => {
 				objIndex = descriptor.EndOfEncoderSampleIndex;

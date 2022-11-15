@@ -16,21 +16,21 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreFoundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class DispatchGroupTest
-	{
+	public class DispatchGroupTest {
 		[Test]
 		public void WaitTest ()
 		{
 			using (var dg = DispatchGroup.Create ()) {
 				var dq = DispatchQueue.GetGlobalQueue (DispatchQueuePriority.Default);
-			
-				dg.DispatchAsync (dq, delegate {
+
+				dg.DispatchAsync (dq, delegate
+				{
 					Console.WriteLine ("Inside dispatch");
 				});
-			
+
 				Assert.IsTrue (dg.Wait (DispatchTime.Forever));
 				dq.Dispose ();
 			}

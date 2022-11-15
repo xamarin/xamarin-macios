@@ -23,7 +23,7 @@ namespace MonoTouchFixtures.CoreVideo {
 		[Test]
 		public void CVImageBufferYCbCrMatrixTest ()
 		{
-			TestRuntime.AssertXcodeVersion (9,0);
+			TestRuntime.AssertXcodeVersion (9, 0);
 
 			var codepoint = CVImageBuffer.GetCodePoint (CVImageBufferYCbCrMatrix.ItuR2020);
 			var matrixOption = CVImageBuffer.GetYCbCrMatrixOption (codepoint);

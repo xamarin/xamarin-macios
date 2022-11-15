@@ -51,9 +51,14 @@ namespace CoreFoundation {
 				data = CFData.FromData ((IntPtr) ptr, buffer.Length);
 		}
 
-		public CFDataBuffer (IntPtr ptr)
+		public CFDataBuffer (IntPtr ptr) : this (ptr, false)
 		{
-			data = new CFData (ptr, false);
+		}
+
+
+		public CFDataBuffer (IntPtr ptr, bool owns)
+		{
+			data = new CFData (ptr, owns);
 			buffer = data.GetBuffer ();
 		}
 

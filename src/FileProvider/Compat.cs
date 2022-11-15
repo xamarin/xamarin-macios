@@ -15,14 +15,16 @@ namespace FileProvider {
 		}
 	}
 #else
-	[iOS (13,0)]
-	[Obsoleted (PlatformName.iOS, 14,0)]
+	[iOS (13, 0)]
+	[Obsoleted (PlatformName.iOS, 14, 0)]
 	public interface INSFileProviderItemDecorating : INSFileProviderItem {
 	}
 #endif
 
-	[iOS (13,0)][Obsoleted (PlatformName.iOS, 14,0)]
-	[Mac (10,15)][Obsoleted (PlatformName.MacOSX, 11,0)]
+	[iOS (13, 0)]
+	[Obsoleted (PlatformName.iOS, 14, 0)]
+	[Mac (10, 15)]
+	[Obsoleted (PlatformName.MacOSX, 11, 0)]
 	public interface INSFileProviderItemFlags : INativeObject, IDisposable {
 		bool Hidden { get; }
 		bool PathExtensionHidden { get; }

@@ -31,7 +31,7 @@ namespace Foundation {
 		{
 			CreateCookie (name, value, null, null, null, null, null, null, null, null, null, null);
 		}
-		
+
 		public NSHttpCookie (string name, string value, string path) : this (name, value, path, null)
 		{
 			CreateCookie (name, value, path, null, null, null, null, null, null, null, null, null);
@@ -41,21 +41,21 @@ namespace Foundation {
 		{
 			CreateCookie (name, value, path, domain, null, null, null, null, null, null, null, null);
 		}
-		
+
 		// FIXME: should we expose more complex/long ctor or point people to use a Cookie ?
 
 		public NSHttpCookie (Cookie cookie)
 		{
 			if (cookie == null)
 				throw new ArgumentNullException ("cookie");
-			
+
 			string commentUrl = cookie.CommentUri != null ? cookie.CommentUri.ToString () : null;
 			bool? discard = null;
 			if (cookie.Discard)
 				discard = true;
 			CreateCookie (cookie.Name, cookie.Value, cookie.Path, cookie.Domain, cookie.Comment, commentUrl, discard, cookie.Expires, null, cookie.Port, cookie.Secure, cookie.Version);
 		}
-		
+
 		void CreateCookie (string name, string value, string path, string domain, string comment, string commentUrl, bool? discard, DateTime? expires, int? maximumAge, string ports, bool? secure, int? version)
 		{
 			// mandatory checks or defaults
@@ -74,7 +74,7 @@ namespace Foundation {
 				properties.Add (NSHttpCookie.KeyValue, new NSString (value));
 				properties.Add (NSHttpCookie.KeyPath, new NSString (path));
 				properties.Add (NSHttpCookie.KeyDomain, new NSString (domain));
-				
+
 				// optional to create the cookie
 				if (!String.IsNullOrEmpty (comment))
 					properties.Add (NSHttpCookie.KeyComment, new NSString (comment));
@@ -93,7 +93,7 @@ namespace Foundation {
 					properties.Add (NSHttpCookie.KeySecure, new NSString ("1"));
 				if (version.HasValue)
 					properties.Add (NSHttpCookie.KeyVersion, new NSString (version.Value.ToString ()));
-				
+
 				if (IsDirectBinding) {
 					Handle = Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle ("initWithProperties:"), properties.Handle);
 				} else {

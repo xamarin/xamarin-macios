@@ -20,8 +20,8 @@ namespace GameplayKit {
 			return new GKQuadTree (min, max, minCellSize);
 		}
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Empty stub (always return 'false') as this API is now rejected).")]
-		[Deprecated (PlatformName.TvOS, 10,0, message: "Empty stub (always return 'false') as this API is now rejected).")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Empty stub (always return 'false') as this API is now rejected).")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Empty stub (always return 'false') as this API is now rejected).")]
 		public virtual bool RemoveData (NSObject data)
 		{
 			return false;

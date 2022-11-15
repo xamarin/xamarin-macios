@@ -47,7 +47,7 @@ namespace MonoTouchFixtures.AVFoundation {
 				Assert.IsNull (obj.StringValue, "StringValue");
 				Assert.AreEqual (AVMetadataObjectType.None, obj.Type, "Type");
 				Assert.IsNull (obj.WeakType, "WeakType");
-		}
+			}
 #endif
 		}
 	}

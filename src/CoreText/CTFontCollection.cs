@@ -80,7 +80,7 @@ namespace CoreText {
 			Dictionary = dictionary;
 		}
 
-		public NSDictionary Dictionary {get; private set;}
+		public NSDictionary Dictionary { get; private set; }
 
 		// The docs (and headers) only imply that this is a numeric value ('set to non-zero to ...')
 		// No mention of the expected type (int? NSNumber?)
@@ -122,7 +122,7 @@ namespace CoreText {
 		{
 		}
 
-#region Collection Creation
+		#region Collection Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCollectionCreateFromAvailableFonts (IntPtr options);
 		public CTFontCollection (CTFontCollectionOptions? options)
@@ -137,31 +137,31 @@ namespace CoreText {
 			using var descriptors = queryDescriptors is null ? null : CFArray.FromNativeObjects (queryDescriptors);
 			return CTFontCollectionCreateWithFontDescriptors (descriptors.GetHandle (), options.GetHandle ());
 		}
-		public CTFontCollection (CTFontDescriptor[]? queryDescriptors, CTFontCollectionOptions? options)
+		public CTFontCollection (CTFontDescriptor []? queryDescriptors, CTFontCollectionOptions? options)
 			: base (Create (queryDescriptors, options), true, true)
 		{
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCollectionCreateCopyWithFontDescriptors (IntPtr original, IntPtr queryDescriptors, IntPtr options);
-		public CTFontCollection? WithFontDescriptors (CTFontDescriptor[]? queryDescriptors, CTFontCollectionOptions? options)
+		public CTFontCollection? WithFontDescriptors (CTFontDescriptor []? queryDescriptors, CTFontCollectionOptions? options)
 		{
 			using var descriptors = queryDescriptors is null ? null : CFArray.FromNativeObjects (queryDescriptors);
-			var	h = CTFontCollectionCreateCopyWithFontDescriptors (Handle, descriptors.GetHandle (), options.GetHandle ());
+			var h = CTFontCollectionCreateCopyWithFontDescriptors (Handle, descriptors.GetHandle (), options.GetHandle ());
 			if (h == IntPtr.Zero)
 				return null;
 			return new CTFontCollection (h, true);
 		}
-#endregion
+		#endregion
 
-#region Retrieving Matching Descriptors
+		#region Retrieving Matching Descriptors
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCollectionCreateMatchingFontDescriptors (IntPtr collection);
-		public CTFontDescriptor[] GetMatchingFontDescriptors ()
+		public CTFontDescriptor [] GetMatchingFontDescriptors ()
 		{
 			var cfArrayRef = CTFontCollectionCreateMatchingFontDescriptors (Handle);
 			if (cfArrayRef == IntPtr.Zero)
-				return Array.Empty <CTFontDescriptor> ();
+				return Array.Empty<CTFontDescriptor> ();
 			return CFArray.ArrayFromHandleFunc (cfArrayRef, fd => new CTFontDescriptor (fd, false), true)!;
 		}
 
@@ -171,9 +171,9 @@ namespace CoreText {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 #else
-		[iOS (12,0)]
-		[TV (12,0)]
-		[Watch (5,0)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCollectionCreateMatchingFontDescriptorsWithOptions (IntPtr collection, IntPtr options);
@@ -184,15 +184,15 @@ namespace CoreText {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 #else
-		[iOS (12,0)]
-		[TV (12,0)]
-		[Watch (5,0)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
 #endif
 		public CTFontDescriptor [] GetMatchingFontDescriptors (CTFontCollectionOptions? options)
 		{
 			var cfArrayRef = CTFontCollectionCreateMatchingFontDescriptorsWithOptions (Handle, options.GetHandle ());
 			if (cfArrayRef == IntPtr.Zero)
-				return Array.Empty <CTFontDescriptor> ();
+				return Array.Empty<CTFontDescriptor> ();
 			return CFArray.ArrayFromHandleFunc (cfArrayRef, fd => new CTFontDescriptor (fd, false), true)!;
 		}
 
@@ -213,7 +213,7 @@ namespace CoreText {
 			return (CFIndex) rv;
 		}
 
-		public CTFontDescriptor?[]? GetMatchingFontDescriptors (Comparison<CTFontDescriptor> comparer)
+		public CTFontDescriptor? []? GetMatchingFontDescriptors (Comparison<CTFontDescriptor> comparer)
 		{
 			GCHandle comparison = GCHandle.Alloc (comparer);
 			try {
@@ -224,11 +224,10 @@ namespace CoreText {
 				if (cfArrayRef == IntPtr.Zero)
 					return Array.Empty<CTFontDescriptor> ();
 				return CFArray.ArrayFromHandleFunc (cfArrayRef, fd => new CTFontDescriptor (fd, false), true)!;
-			}
-			finally {
+			} finally {
 				comparison.Free ();
 			}
 		}
-#endregion
+		#endregion
 	}
 }

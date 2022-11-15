@@ -2,12 +2,10 @@ using CoreData;
 using Foundation;
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.CoreData
-{
+namespace MonoTouchFixtures.CoreData {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSQueryGenerationTokenTest
-	{
+	public class NSQueryGenerationTokenTest {
 		[Test]
 		public void EncodeWithCoderTest ()
 		{
