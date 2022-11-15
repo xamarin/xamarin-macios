@@ -88,6 +88,12 @@ dotnet format whitespace --folder "$SRC_DIR/src/ExternalAccessory"
 dotnet format whitespace --folder "$SRC_DIR/src/FileProvider"
 dotnet format whitespace --folder "$SRC_DIR/src/FinderSync"
 dotnet format whitespace --folder "$SRC_DIR/src/Foundation"
+dotnet format whitespace --folder "$SRC_DIR/src/GLKit"
+dotnet format whitespace --folder "$SRC_DIR/src/GameController"
+dotnet format whitespace --folder "$SRC_DIR/src/GameKit"
+dotnet format whitespace --folder "$SRC_DIR/src/GameplayKit"
+dotnet format whitespace --folder "$SRC_DIR/src/HealthKit"
+dotnet format whitespace --folder "$SRC_DIR/src/HomeKit"
 
 # dotnet format "$SRC_DIR/[...]"
 # add more projects here...

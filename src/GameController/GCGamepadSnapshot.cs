@@ -32,8 +32,8 @@ namespace GameController {
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCExtendedGamepad' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCExtendedGamepad' instead.")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCExtendedGamepad' instead.")]
-	[iOS (7,0)]
-	[Mac (10,9)]
+	[iOS (7, 0)]
+	[Mac (10, 9)]
 #endif
 	[StructLayout (LayoutKind.Sequential, Pack = 1)]
 	public struct GCGamepadSnapShotDataV100 {
@@ -67,7 +67,7 @@ namespace GameController {
 	}
 
 	public partial class GCGamepadSnapshot {
-		
+
 		// GCGamepadSnapshot.h
 		[DllImport (Constants.GameControllerLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
