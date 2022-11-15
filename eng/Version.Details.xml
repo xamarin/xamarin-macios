@@ -1,25 +1,25 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.100-alpha.1.22553.12">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.100-alpha.1.22562.2">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>e7f2729fdb741d78f7c511a995da8122adb05fc5</Sha>
+      <Sha>355d6643bdcd7e5a918550b67d12e35e65d8c646</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="7.0.100-1.22552.1" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="7.0.100-1.22560.1" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/linker</Uri>
-      <Sha>391ac60bbfb2c618b82f08af728d2d4d259d584e</Sha>
+      <Sha>9c993bf401377209cd7b4e84b60deab5e4f421a2</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.0-alpha.1.22551.9" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.0-alpha.1.22559.2" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>bdd67af67dbf43c0f5e9151b98dc100b9555898a</Sha>
+      <Sha>dd7fdb723d91c2c6cb7efc3d95f9d95ee86d48c8</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
-    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="8.0.0-alpha.1.22552.16" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="8.0.0-alpha.1.22558.5" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/aspnetcore</Uri>
-      <Sha>fb6b2e25211f9d310aa03edfbda9e38a066960b1</Sha>
+      <Sha>1bee0afeedab9d6d9d1cf23e65daa7ea5fcc6d47</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.net7.Manifest-8.0.100" Version="8.0.0-alpha.1.22510.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.net7.Manifest-8.0.100" Version="8.0.0-alpha.1.22554.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>aecb1c71c70f6db44035602a879c57fa495d37e8</Sha>
+      <Sha>b6656f5b78cd25f984355f973e65da3d844ac6d1</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
