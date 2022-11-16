@@ -64,7 +64,7 @@ namespace Xamarin.MMP.Tests
 				string main = Path.Combine (tmpDir, "Today/TodayViewController.cs");
 
 				TI.CopyFileWithSubstitutions (project, project, s => s.Replace ("%ITEMGROUP%", PackageReference));
-				TI.CopyFileWithSubstitutions (main, main, s => s.Replace ("%TESTCODE%", TestCode));
+				TI.CopyFileWithSubstitutions (main, main, s => s.Replace ("REPLACE_CODE_REPLACE", TestCode));
 
 				TI.NugetRestore (project);
 				var buildResult = TI.BuildProject (Path.Combine (tmpDir, "Today/TodayExtensionTest.csproj"));
