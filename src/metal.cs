@@ -1624,7 +1624,9 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("accelerationStructureSizesWithDescriptor:")]
+#pragma warning disable 0618 // warning CS0618: 'MTLAccelerationStructureSizes' is obsolete: 'This API is not available on this platform.'
 		MTLAccelerationStructureSizes CreateAccelerationStructureSizes (MTLAccelerationStructureDescriptor descriptor);
+#pragma warning restore
 
 		[Mac (11,0), iOS (14,0), NoTV]
 #if NET

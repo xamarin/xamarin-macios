@@ -1451,7 +1451,9 @@ namespace PdfKit {
 		[NoiOS]
 		[Export ("printOperationForPrintInfo:scalingMode:autoRotate:")]
 		[return: NullAllowed]
+#pragma warning disable 0618 // 'PdfPrintScalingMode' is obsolete: 'This type is not available on iOS.'
 		NSPrintOperation GetPrintOperation ([NullAllowed] NSPrintInfo printInfo, PdfPrintScalingMode scaleMode, bool doRotate);
+#pragma warning restore
 	}
 
 	[iOS (11,0)]
@@ -2017,7 +2019,9 @@ namespace PdfKit {
 
 		[NoiOS]
 		[Export ("printWithInfo:autoRotate:pageScaling:")]
+#pragma warning disable // 0618: 'PdfPrintScalingMode' is obsolete: 'This type is not available on iOS.'
 		void Print (NSPrintInfo printInfo, bool doRotate, PdfPrintScalingMode scaleMode);
+#pragma warning restore
 
 		[Export ("pageForPoint:nearest:")]
 		[return: NullAllowed]

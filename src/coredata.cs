@@ -1046,17 +1046,21 @@ namespace CoreData
 		[Export ("save:")]
 		bool Save (out NSError error);
 
+#pragma warning disable 0109 // warning CS0109: The member 'NSManagedObjectContext.Lock()' does not hide an accessible member. The new keyword is not required.
 		[NoWatch][NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use a queue style context and 'PerformAndWait' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use a queue style context and 'PerformAndWait' instead.")]
 		[Export ("lock")]
 		new void Lock ();
+#pragma warning restore
 
+#pragma warning disable 0109 // warning CS0109: The member 'NSManagedObjectContext.Unlock()' does not hide an accessible member. The new keyword is not required.
 		[NoWatch][NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use a queue style context and 'PerformAndWait' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use a queue style context and 'PerformAndWait' instead.")]
 		[Export ("unlock")]
 		new void Unlock ();
+#pragma warning restore
 
 		[NoWatch][NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use a queue style context and 'Perform' instead.")]
@@ -2059,17 +2063,21 @@ namespace CoreData
 		[return: NullAllowed]
 		NSManagedObjectID ManagedObjectIDForURIRepresentation (NSUrl url);
 
+#pragma warning disable 0109 // warning CS0109: The member 'NSManagedObjectContext.Lock()' does not hide an accessible member. The new keyword is not required.
 		[NoWatch][NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'PerformAndWait' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'PerformAndWait' instead.")]
 		[Export ("lock")]
 		new void Lock ();
+#pragma warning restore
 
+#pragma warning disable 0109 // warning CS0109: The member 'NSManagedObjectContext.Unlock()' does not hide an accessible member. The new keyword is not required.
 		[NoWatch][NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'PerformAndWait' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'PerformAndWait' instead.")]
 		[Export ("unlock")]
 		new void Unlock ();
+#pragma warning restore
 
 		[NoWatch][NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'Perform' instead.")]
