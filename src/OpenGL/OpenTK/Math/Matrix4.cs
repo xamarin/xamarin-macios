@@ -26,6 +26,7 @@ SOFTWARE.
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime;
 
 #if !NET
 namespace OpenTK {
