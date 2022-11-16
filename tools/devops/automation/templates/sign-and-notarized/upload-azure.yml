@@ -62,6 +62,7 @@ steps:
 # Important needed for the next step
 - template: generate-workspace-info.yml@yaml-templates
   parameters:
+    BuildTasksChannel: 'test'
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
 

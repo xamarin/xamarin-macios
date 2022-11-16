@@ -120,7 +120,7 @@ resources:
   - repository: yaml-templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/main
+    ref: refs/heads/dev/bond/build-tasks-channel
     endpoint: xamarin
 
   - repository: sdk-insertions
