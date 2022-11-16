@@ -79,7 +79,9 @@ namespace NotificationCenter {
 	[Internal]
 	[Category]
 #else
+#pragma warning disable 0618 // warning CS0618: 'CategoryAttribute.CategoryAttribute(bool)' is obsolete: 'Inline the static members in this category in the category's class (and remove this obsolete once fixed)'
 	[Category (allowStaticMembers: true)] // Classic isn't internal so we need this
+#pragma warning restore
 #endif
 	interface UIVibrancyEffect_NotificationCenter {
 		[Internal]
