@@ -1812,10 +1812,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true'"
 			Files="@(_UnpackLibraryResourceItems->'$(_StampDirectory)%(StampFile)')"
 			AlwaysCreate="True"
-		/>
-		<ItemGroup>
-			<FileWrites Include="@(_UnpackLibraryResourceItems->'$(_StampDirectory)%(StampFile)')" />
-		</ItemGroup>
+		>
+			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
+		</Touch>
 	</Target>
 
 	<Target Name="_ParseBundlerArguments">
