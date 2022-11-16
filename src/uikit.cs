@@ -23956,9 +23956,19 @@ namespace UIKit {
 		[Field ("UIConfigurationColorTransformerGrayscale")]
 		IntPtr _Grayscale { get; }
 
+#if XAMCORE_5_0
+		[Internal]
+#else
+		[Obsolete ("Use the 'PreferredTint' property instead.")]
+#endif
 		[Field ("UIConfigurationColorTransformerPreferredTint")]
 		IntPtr _PreferredTint { get; }
 
+#if XAMCORE_5_0
+		[Internal]
+#else
+		[Obsolete ("Use the 'MonochromeTint' property instead.")]
+#endif
 		[Field ("UIConfigurationColorTransformerMonochromeTint")]
 		IntPtr _MonochromeTint { get; }
 	}
