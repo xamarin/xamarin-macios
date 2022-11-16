@@ -5207,12 +5207,21 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
+	void PrintObsoleteAttributes (ICustomAttributeProvider provider, bool already_has_editor_browsable_attribute = false)
+	{
+		var obsoleteAttributes = AttributeManager.GetCustomAttributes<ObsoleteAttribute> (provider);
+
+		foreach (var oa in obsoleteAttributes) {
+			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
+		}
+
+		if (!already_has_editor_browsable_attribute && obsoleteAttributes.Any ())
+			print ("[EditorBrowsable (EditorBrowsableState.Never)]");
+	}
+
 	void PrintPropertyAttributes (PropertyInfo pi, Type type, bool skipTypeInjection = false)
 	{
-		foreach (var oa in AttributeManager.GetCustomAttributes<ObsoleteAttribute> (pi)) {
-			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
-			print ("[EditorBrowsable (EditorBrowsableState.Never)]");
-		}
+		PrintObsoleteAttributes (pi);
 
 		foreach (var ba in AttributeManager.GetCustomAttributes<DebuggerBrowsableAttribute> (pi))
 			print ("[DebuggerBrowsable (DebuggerBrowsableState.{0})]", ba.State);
@@ -5808,11 +5817,7 @@ public partial class Generator : IMemberGatherer {
 			editor_browsable_attribute = true;
 		}
 
-		foreach (var oa in AttributeManager.GetCustomAttributes<ObsoleteAttribute> (mi)) {
-			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
-			if (!editor_browsable_attribute)
-				print ("[EditorBrowsable (EditorBrowsableState.Never)]");
-		}
+		PrintObsoleteAttributes (mi, editor_browsable_attribute);
 
 		if (minfo.is_return_release)
 			print ("[return: ReleaseAttribute ()]");
@@ -7370,6 +7375,7 @@ public partial class Generator : IMemberGatherer {
 					}
 
 					PrintAttributes (field_pi, preserve: true, advice: true);
+					PrintObsoleteAttributes (field_pi);
 					print ("[Field (\"{0}\",  \"{1}\")]", fieldAttr.SymbolName, library_path ?? library_name);
 					PrintPlatformAttributes (field_pi);
 					if (AttributeManager.HasAttribute<AdvancedAttribute> (field_pi)) {
@@ -7873,8 +7879,7 @@ public partial class Generator : IMemberGatherer {
 							prev_miname = miname;
 
 						if (mi.ReturnType == TypeManager.System_Void) {
-							foreach (var oa in AttributeManager.GetCustomAttributes<ObsoleteAttribute> (mi))
-								print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
+							PrintObsoleteAttributes (mi);
 
 							if (bta.Singleton && mi.GetParameters ().Length == 0 || mi.GetParameters ().Length == 1)
 								print ("public event EventHandler {0} {{", CamelCase (GetEventName (mi)));
