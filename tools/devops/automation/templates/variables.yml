@@ -39,3 +39,6 @@ variables:
   value: 'bosstoragemirror'
 - name: azureContainer
   value: 'wrench'
+- name: BUILD_REVISION
+  value: azure-devops-$(Build.SourceVersion)
+

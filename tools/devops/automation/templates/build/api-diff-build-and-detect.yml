@@ -53,7 +53,6 @@ steps:
   name: detectChanges
   continueOnError: true # this isn't fatal, the github comment will show how bad this really is
   env:
-    BUILD_REVISION: 'devops' # doesn't matter the exact value, any value is understood as "we're in CI"
     PR_ID: ${{ parameters.prID }} # reusing jenkins vars, to be fixed
     AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
 

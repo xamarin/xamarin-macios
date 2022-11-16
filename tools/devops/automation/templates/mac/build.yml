@@ -45,7 +45,6 @@ steps:
     $statuses.SetStatus("pending", "Tests on macOS ${{ parameters.statusContext }} have started.", "${{ parameters.statusContext }}")
   displayName: "Initialize state"
   env:
-    BUILD_REVISION: $(Build.SourceVersion)
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
@@ -98,8 +97,6 @@ steps:
 
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
   displayName: 'Clean bot'
-  env:
-    BUILD_REVISION: 'jenkins'
   continueOnError: true
   timeoutInMinutes: 60
 
@@ -116,7 +113,6 @@ steps:
       exit 1
     }
   env:
-    BUILD_REVISION: $(Build.SourceVersion)
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
@@ -255,7 +251,6 @@ steps:
   timeoutInMinutes: 60
   env:
     CONTEXT: ${{ parameters.statusContext }}
-    BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     MONO_DEBUG: no-gdb-backtrace
@@ -286,7 +281,6 @@ steps:
   continueOnError: true
   env:
     CONTEXT: ${{ parameters.statusContext }}
-    BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     TEST_BOT: $(Agent.Name)

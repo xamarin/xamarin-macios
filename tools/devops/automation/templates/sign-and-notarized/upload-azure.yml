@@ -257,7 +257,6 @@ steps:
     Write-Host "Setting SBOM.PackagesPath: ${pkgsPath}"
     Write-Host "##vso[task.setvariable variable=SBOM.PackagesPath]$pkgsPath"
   env:
-    BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
     ACCESSTOKEN: $(System.AccessToken)
     AZURE_CONTAINER: ${{ parameters.azureContainer }}

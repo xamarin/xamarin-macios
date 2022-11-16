@@ -194,7 +194,6 @@ steps:
     TESTS_EXTRA_ARGUMENTS: ${{ parameters.testsLabels }}
     USE_XAMARIN_STORAGE: ${{ parameters.useXamarinStorage }}
     USE_TCP_TUNNEL: 'true'
-    BUILD_REVISION: $(Build.SourceVersion)
     PARAMETERS_TESTPREFIX: '${{ parameters.testPrefix }}'
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: 'Run tests'
