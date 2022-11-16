@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
 namespace Microsoft.Build.Tasks {
