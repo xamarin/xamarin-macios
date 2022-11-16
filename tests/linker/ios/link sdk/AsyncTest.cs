@@ -24,6 +24,9 @@ namespace LinkSdk {
 #endif
 			try {
 				LoadCategories ().GetAwaiter ().GetResult ();
+			} catch (TaskCanceledException tce) {
+				TestRuntime.IgnoreInCI ("Ignore any download timeouts");
+				throw;
 			} catch (HttpRequestException hre) {
 				TestRuntime.IgnoreInCIIfForbidden (hre); // Ignore any 403 errors.
 				throw;
