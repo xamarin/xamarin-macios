@@ -11494,7 +11494,14 @@ namespace AVFoundation {
 
 		[iOS (8,0), NoMac]
 		[Export ("videoHDRSupported")]
+		bool IsVideoHdrSupported { [Bind ("isVideoHDRSupported")] get; }
+
+#if !XAMCORE_5_0
+		[iOS (8,0), NoMac]
+		[Obsolete ("Use the 'IsVideoHdrSupported' property instead.")]
+		[Wrap ("IsVideoHdrSupported", IsVirtual = true)]
 		bool videoHDRSupportedVideoHDREnabled { [Bind ("isVideoHDRSupported")] get; }
+#endif
 
 		[iOS (8,0), NoMac]
 		[Export ("highResolutionStillImageDimensions")]

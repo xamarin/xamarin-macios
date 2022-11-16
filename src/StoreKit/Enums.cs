@@ -11,9 +11,9 @@ namespace StoreKit {
 	public enum SKPaymentTransactionState : long {
 		Purchasing,
 		Purchased,
-		Failed,  
+		Failed,
 		Restored,
-		[iOS (8,0)]Deferred
+		[iOS (8, 0)] Deferred
 	}
 
 	// untyped enum and not used in API - so it _could_ be an `int`
@@ -63,8 +63,8 @@ namespace StoreKit {
 		Waiting, Active, Paused, Finished, Failed, Cancelled
 	}
 
-	[Watch (7,0)]
-	[iOS (9,3)]
+	[Watch (7, 0)]
+	[iOS (9, 3)]
 	[Native]
 	public enum SKCloudServiceAuthorizationStatus : long {
 		NotDetermined,
@@ -73,18 +73,21 @@ namespace StoreKit {
 		Authorized
 	}
 
-	[Watch (7,0)]
-	[iOS (9,3)]
+	[Watch (7, 0)]
+	[iOS (9, 3)]
 	[Native]
 	public enum SKCloudServiceCapability : ulong {
 		None = 0,
 		MusicCatalogPlayback = 1 << 0,
-		[NoTV, iOS (10,1)]
+		[NoTV, iOS (10, 1)]
 		MusicCatalogSubscriptionEligible = 1 << 1,
 		AddToCloudMusicLibrary = 1 << 8
 	}
 
-	[iOS (11,0)][TV (11,0)][Mac (11,0)][NoWatch]
+	[iOS (11, 0)]
+	[TV (11, 0)]
+	[Mac (11, 0)]
+	[NoWatch]
 	[Native]
 	public enum SKProductStorePromotionVisibility : long {
 		Default,
@@ -92,7 +95,7 @@ namespace StoreKit {
 		Hide,
 	}
 
-	[Watch (6, 2), iOS (11,2), TV (11,2), Mac (10,13,2)]
+	[Watch (6, 2), iOS (11, 2), TV (11, 2), Mac (10, 13, 2)]
 	[Native]
 	public enum SKProductPeriodUnit : ulong {
 		Day,
@@ -101,7 +104,7 @@ namespace StoreKit {
 		Year,
 	}
 
-	[Watch (6, 2), iOS (11,2), TV (11,2), Mac (10,13,2)]
+	[Watch (6, 2), iOS (11, 2), TV (11, 2), Mac (10, 13, 2)]
 	[Native]
 	public enum SKProductDiscountPaymentMode : ulong {
 		PayAsYouGo,
@@ -109,15 +112,15 @@ namespace StoreKit {
 		FreeTrial,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (14,0)]
-	[MacCatalyst (14,0)]
+	[NoWatch, NoTV, NoMac, iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum SKOverlayPosition : long {
 		SKOverlayPositionBottom = 0,
 		Raised = 1,
 	}
 
-	[NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[NoMac, iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
 	public enum SKAdNetworkCoarseConversionValue {
 		[Field ("SKAdNetworkCoarseConversionValueHigh")]
 		High,

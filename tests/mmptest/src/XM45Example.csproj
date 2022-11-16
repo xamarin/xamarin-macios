@@ -23,7 +23,7 @@
     <UseRefCounting>false</UseRefCounting>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
-%CODE%
+REPLACE_CODE_REPLACE
   <Profiling>false</Profiling></PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

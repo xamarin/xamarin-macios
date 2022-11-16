@@ -1,5 +1,5 @@
 using System;
 
 namespace ExampleBinding {
-	%CODE%
+	REPLACE_CODE_REPLACE
 }

@@ -25,7 +25,7 @@ namespace Security {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* __nullable CFDictionaryRef */ SecPolicyCopyProperties (IntPtr /* SecPolicyRef */ policyRef);
@@ -36,7 +36,7 @@ namespace Security {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public NSDictionary? GetProperties ()
 		{
@@ -50,7 +50,7 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[Mac (10,9)]
+		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* __nullable SecPolicyRef */ SecPolicyCreateRevocation (/* CFOptionFlags */ nuint revocationFlags);
@@ -61,12 +61,12 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[Mac (10,9)]
-		[iOS (7,0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 #endif
 		static public SecPolicy? CreateRevocationPolicy (SecRevocation revocationFlags)
 		{
-			var policy = SecPolicyCreateRevocation ((nuint)(ulong) revocationFlags);
+			var policy = SecPolicyCreateRevocation ((nuint) (ulong) revocationFlags);
 			return policy == IntPtr.Zero ? null : new SecPolicy (policy, true);
 		}
 
@@ -76,8 +76,8 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[Mac (10,9)]
-		[iOS (7,0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* __nullable SecPolicyRef */ SecPolicyCreateWithProperties (IntPtr /* CFTypeRef */ policyIdentifier, IntPtr /* CFDictionaryRef */ properties);
@@ -88,8 +88,8 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[Mac (10,9)]
-		[iOS (7,0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 #endif
 		static public SecPolicy CreatePolicy (NSString policyIdentifier, NSDictionary properties)
 		{
