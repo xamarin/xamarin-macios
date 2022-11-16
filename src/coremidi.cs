@@ -88,6 +88,7 @@ namespace CoreMidi {
 		SysEx = 3,
 		ChannelVoice2 = 4,
 		Data128 = 5,
+		UnknownF = 15,
 	}
 
 	[Mac (11, 0), iOS (14, 0)]
@@ -97,6 +98,8 @@ namespace CoreMidi {
 		Start = 1,
 		Continue = 2,
 		End = 3,
+		MixedDataSetHeader = 8,
+		MixedDataSetPayload = 9,
 	}
 
 	[Mac (11, 0), iOS (14, 0)]
@@ -116,6 +119,41 @@ namespace CoreMidi {
 		SystemReset = 255,
 	}
 
+	[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
+	[NativeName ("MIDINoteAttribute")]
+	public enum MidiNoteAttribute : byte
+	{
+		None = 0,
+		ManufacturerSpecific = 1,
+		ProfileSpecific = 2,
+		Pitch = 3,
+	}
+
+	[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
+	[NativeName ("MIDIPerNoteManagementOptions")]
+	[Flags]
+	public enum MidiPerNoteManagementOptions : byte
+	{
+		Reset = 1 << 0,
+		Detach = 1 << 1,
+	}
+
+	[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
+	[NativeName ("MIDIProgramChangeOptions")]
+	[Flags]
+	public enum MidiProgramChangeOptions : byte
+	{
+		BankValid = 1 << 0,
+	}
+
+	[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
+	[NativeName ("MIDIUtilityStatus")]
+	public enum MidiUtilityStatus : uint
+	{
+		Noop = 0,
+		JitterReductionClock = 1,
+		JitterReductionTimestamp = 2,
+	}
 
 	[NoTV][NoWatch]
 	[Mac (10,15)]

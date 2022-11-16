@@ -21,8 +21,7 @@ using NUnit.Framework;
 using ObjCRuntime;
 using Foundation;
 
-namespace Introspection
-{
+namespace Introspection {
 	[Preserve (AllMembers = true)]
 	public abstract class ApiPInvokeTest : ApiBaseTest {
 		IEnumerable pinvokeQuery;
@@ -33,14 +32,14 @@ namespace Introspection
 			LogProgress = false;
 
 			pinvokeQuery = from type in Assembly.GetTypes ()
-					where !Skip (type)
-				from mi in type.GetMethods (
-					BindingFlags.NonPublic |
-					BindingFlags.Public |
-					BindingFlags.Static)
-				let attr = mi.GetCustomAttribute<DllImportAttribute> ()
-					where attr != null && !Skip (mi)
-				select mi;
+						   where !Skip (type)
+						   from mi in type.GetMethods (
+							   BindingFlags.NonPublic |
+							   BindingFlags.Public |
+							   BindingFlags.Static)
+						   let attr = mi.GetCustomAttribute<DllImportAttribute> ()
+						   where attr != null && !Skip (mi)
+						   select mi;
 		}
 
 		protected virtual bool Skip (Type type)
@@ -340,8 +339,7 @@ namespace Introspection
 		[DllImport (Constants.libcLibrary)]
 		static extern int dladdr (IntPtr addr, out Dl_info info);
 
-		struct Dl_info
-		{
+		struct Dl_info {
 			internal IntPtr dli_fname; /* Pathname of shared object */
 			internal IntPtr dli_fbase; /* Base address of shared object */
 			internal IntPtr dli_sname; /* Name of nearest symbol */
@@ -368,9 +366,6 @@ namespace Introspection
 		// it's not complete (there's many more SDK assemblies) but we cannot add all of them into a single project anyway
 
 		[Test]
-#if __MACCATALYST__ && !NET
-		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/10883")]
-#endif
 		public void Corlib ()
 		{
 			var a = typeof (int).Assembly;
@@ -379,9 +374,6 @@ namespace Introspection
 		}
 
 		[Test]
-#if __MACCATALYST__ && !NET
-		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/10883")]
-#endif
 		public void System ()
 		{
 			var a = typeof (System.Net.WebClient).Assembly;
@@ -390,9 +382,6 @@ namespace Introspection
 		}
 
 		[Test]
-#if __MACCATALYST__ && !NET
-		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/10883")]
-#endif
 		public void SystemCore ()
 		{
 			var a = typeof (Enumerable).Assembly;

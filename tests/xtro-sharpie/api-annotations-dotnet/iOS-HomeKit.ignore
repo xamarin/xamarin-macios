@@ -1,0 +1,3 @@
+# CHIP is not bound yet and will be only when is stable
+!missing-selector! HMAccessorySetupRequest::matterPayload not bound
+!missing-selector! HMAccessorySetupRequest::setMatterPayload: not bound

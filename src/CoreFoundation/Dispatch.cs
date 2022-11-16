@@ -30,6 +30,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -56,11 +59,11 @@ namespace CoreFoundation {
 	// the qos_class_t enum is defined in usr/include/sys/qos.h (typed as 'unsigned int')
 	public enum DispatchQualityOfService : uint {
 		UserInteractive = 0x21,
-		UserInitiated   = 0x19,
-		Default         = 0x15,
-		Utility         = 0x11,
-		Background      = 0x09,
-		Unspecified     = 0x00,
+		UserInitiated = 0x19,
+		Default = 0x15,
+		Utility = 0x11,
+		Background = 0x09,
+		Unspecified = 0x00,
 	}
 
 #if NET
@@ -69,8 +72,7 @@ namespace CoreFoundation {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public abstract class DispatchObject : NativeObject
-	{
+	public abstract class DispatchObject : NativeObject {
 #if !COREBUILD
 		//
 		// Constructors and lifecycle
@@ -83,7 +85,7 @@ namespace CoreFoundation {
 
 		internal DispatchObject ()
 		{
-		}      
+		}
 
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_release (IntPtr o);
@@ -126,7 +128,7 @@ namespace CoreFoundation {
 		public override bool Equals (object other)
 		{
 			var od = other as DispatchQueue;
-			if (od == null)
+			if (od is null)
 				return false;
 			return od.Handle == Handle;
 		}
@@ -152,7 +154,7 @@ namespace CoreFoundation {
 		public void SetTargetQueue (DispatchQueue queue)
 		{
 			// note: null is allowed because DISPATCH_TARGET_QUEUE_DEFAULT is defined as NULL (dispatch/queue.h)
-			IntPtr q = queue == null ? IntPtr.Zero : queue.Handle;
+			IntPtr q = queue.GetHandle ();
 			dispatch_set_target_queue (Handle, q);
 		}
 
@@ -168,10 +170,10 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,12)]
-		[iOS (10,0)]
-		[TV (10,0)]
-		[Watch (3,0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
+		[TV (10, 0)]
+		[Watch (3, 0)]
 #endif
 		public void Activate ()
 		{
@@ -184,10 +186,10 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,12)]
-		[iOS (10,0)]
-		[TV (10,0)]
-		[Watch (3,0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
+		[TV (10, 0)]
+		[Watch (3, 0)]
 #endif
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_activate (/* dispatch_object_t */ IntPtr @object);
@@ -200,7 +202,7 @@ namespace CoreFoundation {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public sealed class DispatchQueue : DispatchObject  {
+	public sealed class DispatchQueue : DispatchObject {
 #if !COREBUILD
 		[Preserve (Conditional = true)]
 		internal DispatchQueue (NativeHandle handle, bool owns) : base (handle, owns)
@@ -212,7 +214,7 @@ namespace CoreFoundation {
 		{
 		}
 #endif
-		
+
 		public DispatchQueue (string label)
 			: base (dispatch_queue_create (label, IntPtr.Zero), true)
 		{
@@ -228,26 +230,26 @@ namespace CoreFoundation {
 				return concurrent_queue;
 			}
 		}
-		
+
 		public DispatchQueue (string label, bool concurrent)
 			: base (dispatch_queue_create (label, concurrent ? ConcurrentQueue : IntPtr.Zero), true)
 		{
 			if (Handle == IntPtr.Zero)
 				throw new Exception ("Error creating dispatch queue");
 		}
-		
+
 #if NET
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,12)]
-		[iOS (10,0)]
-		[TV (10,0)]
-		[Watch (3,0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
+		[TV (10, 0)]
+		[Watch (3, 0)]
 #endif
-		public DispatchQueue (string label, Attributes attributes, DispatchQueue target = null)
+		public DispatchQueue (string label, Attributes attributes, DispatchQueue? target = null)
 			: base (dispatch_queue_create_with_target (label, attributes?.Create () ?? IntPtr.Zero, target.GetHandle ()), true)
 		{
 		}
@@ -256,7 +258,7 @@ namespace CoreFoundation {
 		// Properties and methods
 		//
 
-		public string Label {
+		public string? Label {
 			get {
 				return Marshal.PtrToStringAnsi (dispatch_queue_get_label (GetCheckedHandle ()));
 			}
@@ -268,9 +270,9 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
-		public static string CurrentQueueLabel {
+		public static string? CurrentQueueLabel {
 			get {
 				return Marshal.PtrToStringAnsi (dispatch_queue_get_label (IntPtr.Zero));
 			}
@@ -303,7 +305,7 @@ namespace CoreFoundation {
 				dispatch_set_context (GetCheckedHandle (), value);
 			}
 		}
-	
+
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -311,11 +313,8 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios6.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios6.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9")]
+		[ObsoletedOSPlatform ("ios6.0")]
 #else
 		[Deprecated (PlatformName.iOS, 6, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
@@ -330,7 +329,7 @@ namespace CoreFoundation {
 		{
 			return new DispatchQueue (dispatch_get_global_queue ((nint) (int) priority, 0), false);
 		}
-		
+
 		public static DispatchQueue GetGlobalQueue (DispatchQualityOfService service)
 		{
 			return new DispatchQueue (dispatch_get_global_queue ((nint) (int) service, 0), false);
@@ -364,14 +363,14 @@ namespace CoreFoundation {
 
 		internal delegate void dispatch_callback_iterations_t (IntPtr context, IntPtr count);
 		internal static readonly dispatch_callback_iterations_t static_dispatch_iterations = static_dispatcher_iterations_to_managed;
-		
+
 		[MonoPInvokeCallback (typeof (dispatch_callback_t))]
 		static void static_dispatcher_to_managed (IntPtr context)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (context);
 			var obj = gch.Target as Tuple<Action, DispatchQueue>;
 			gch.Free ();
-			if (obj != null) {
+			if (obj is not null) {
 				var sc = SynchronizationContext.Current;
 
 				// Set GCD synchronization context. Mainly used when await executes inside GCD to continue
@@ -380,13 +379,13 @@ namespace CoreFoundation {
 				//
 				// This assumes that only 1 queue can run on thread at the same time
 				//
-				if (sc == null)
+				if (sc is null)
 					SynchronizationContext.SetSynchronizationContext (new DispatchQueueSynchronizationContext (obj.Item2));
 
 				try {
 					obj.Item1 ();
 				} finally {
-					if (sc == null)
+					if (sc is null)
 						SynchronizationContext.SetSynchronizationContext (null);
 				}
 			}
@@ -399,7 +398,7 @@ namespace CoreFoundation {
 			GCHandle gch = GCHandle.FromIntPtr (context);
 			var obj = gch.Target as Tuple<Action<long>, DispatchQueue>;
 			gch.Free ();
-			if (obj != null) {
+			if (obj is not null) {
 				var sc = SynchronizationContext.Current;
 
 				// Set GCD synchronization context. Mainly used when await executes inside GCD to continue
@@ -408,19 +407,19 @@ namespace CoreFoundation {
 				//
 				// This assumes that only 1 queue can run on thread at the same time
 				//
-				if (sc == null)
+				if (sc is null)
 					SynchronizationContext.SetSynchronizationContext (new DispatchQueueSynchronizationContext (obj.Item2));
 
 				try {
 					obj.Item1 ((long) count);
 				} finally {
-					if (sc == null)
+					if (sc is null)
 						SynchronizationContext.SetSynchronizationContext (null);
 				}
 			}
 
 		}
-						     
+
 		internal static readonly dispatch_callback_t free_gchandle = static_free_gchandle;
 
 		[MonoPInvokeCallback (typeof (dispatch_callback_t))]
@@ -431,97 +430,97 @@ namespace CoreFoundation {
 
 		public void DispatchAsync (Action action)
 		{
-			if (action == null)
-				throw new ArgumentNullException ("action");
-			
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
+
 			dispatch_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 
 		public void DispatchAsync (DispatchBlock block)
 		{
-			if (block == null)
-				throw new ArgumentNullException (nameof (block));
+			if (block is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 
 			dispatch_async (GetCheckedHandle (), block.GetCheckedHandle ());
 		}
 
 		public void DispatchSync (Action action)
 		{
-			if (action == null)
-				throw new ArgumentNullException ("action");
-			
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
+
 			dispatch_sync_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 
 		public void DispatchSync (DispatchBlock block)
 		{
-			if (block == null)
-				throw new ArgumentNullException (nameof (block));
+			if (block is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 
 			dispatch_sync (GetCheckedHandle (), block.GetCheckedHandle ());
 		}
 
 		public void DispatchBarrierAsync (Action action)
 		{
-			if (action == null)
-				throw new ArgumentNullException ("action");
-			
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
+
 			dispatch_barrier_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 
 		public void DispatchBarrierAsync (DispatchBlock block)
 		{
-			if (block == null)
-				throw new ArgumentNullException (nameof (block));
+			if (block is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 
 			dispatch_barrier_async (GetCheckedHandle (), block.GetCheckedHandle ());
 		}
 
 		public void DispatchBarrierSync (Action action)
 		{
-			if (action == null)
-				throw new ArgumentNullException (nameof (action));
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
 			dispatch_barrier_sync_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 
 		public void DispatchBarrierSync (DispatchBlock block)
 		{
-			if (block == null)
-				throw new ArgumentNullException (nameof (block));
+			if (block is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 
 			dispatch_barrier_sync (GetCheckedHandle (), block.GetCheckedHandle ());
 		}
 
 		public void DispatchAfter (DispatchTime when, Action action)
 		{
-			if (action == null)
-				throw new ArgumentNullException ("action");
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
 			dispatch_after_f (when.Nanoseconds, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 
 		public void DispatchAfter (DispatchTime when, DispatchBlock block)
 		{
-			if (block == null)
-				throw new ArgumentNullException (nameof (block));
+			if (block is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 
 			dispatch_after (when.Nanoseconds, GetCheckedHandle (), block.GetCheckedHandle ());
 		}
 
 		public void Submit (Action<int> action, long times)
 		{
-			if (action == null)
-				throw new ArgumentNullException ("action");
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 			dispatch_apply_f ((IntPtr) times, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch_iterations);
 		}
-		
+
 		public void SetSpecific (IntPtr key, object context)
 		{
 			dispatch_queue_set_specific (GetCheckedHandle (), key, (IntPtr) GCHandle.Alloc (context), free_gchandle);
 		}
 
-		public object GetSpecific (IntPtr key)
+		public object? GetSpecific (IntPtr key)
 		{
 			GCHandle gchandle = (GCHandle) dispatch_queue_get_specific (GetCheckedHandle (), key);
 			return gchandle.Target;
@@ -533,8 +532,8 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[Mac (10,10)]
-		[iOS (8,0)]
+		[Mac (10, 10)]
+		[iOS (8, 0)]
 #endif
 		public DispatchQualityOfService GetQualityOfService (out int relative_priority)
 		{
@@ -550,8 +549,8 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[Mac (10,10)]
-		[iOS (8,0)]
+		[Mac (10, 10)]
+		[iOS (8, 0)]
 #endif
 		public DispatchQualityOfService QualityOfService {
 			get {
@@ -573,10 +572,10 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,12)]
-		[iOS (10,0)]
-		[TV (10,0)]
-		[Watch (3,0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
+		[TV (10, 0)]
+		[Watch (3, 0)]
 #endif
 		[DllImport (Constants.libcLibrary, EntryPoint = "dispatch_queue_create_with_target$V2")]
 		extern static IntPtr dispatch_queue_create_with_target (string label, IntPtr attr, IntPtr target);
@@ -618,14 +617,11 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios6.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios6.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9")]
+		[ObsoletedOSPlatform ("ios6.0")]
 #else
-		[Deprecated (PlatformName.iOS, 6,0)]
-		[Deprecated (PlatformName.MacOSX, 10,9)]
+		[Deprecated (PlatformName.iOS, 6, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 #endif
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_get_current_queue ();
@@ -650,8 +646,8 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[Mac (10,10)]
-		[iOS (8,0)]
+		[Mac (10, 10)]
+		[iOS (8, 0)]
 #endif
 		[DllImport (Constants.libcLibrary)]
 		unsafe extern static /* dispatch_qos_class_t */ DispatchQualityOfService dispatch_queue_get_qos_class (/* dispatch_queue_t */ IntPtr queue, /* int *_Nullable */ int* relative_priority);
@@ -661,25 +657,24 @@ namespace CoreFoundation {
 		// `Equals` and `GetHashCode` based on the Handle property.
 		public override bool Equals (object other)
 		{
-			DispatchQueue o = other as DispatchQueue;
-			if (o == null)
-				return false;
-			return (o.Handle == Handle);
+			if (other is DispatchQueue o)
+				return (o.Handle == Handle);
+			return false;
 		}
 #endif
 
 #if !NET
 		public static bool operator == (DispatchQueue left, DispatchQueue right)
 		{
-			if ((object) left == null)
-				return (object) right == null;
+			if (left is null)
+				return right is null;
 			return left.Equals (right);
 		}
 
 		public static bool operator != (DispatchQueue left, DispatchQueue right)
 		{
-			if ((object) left == null)
-				return (object) right != null;
+			if (left is null)
+				return right is not null;
 			return !left.Equals (right);
 		}
 
@@ -688,7 +683,7 @@ namespace CoreFoundation {
 			return ((IntPtr) Handle).ToInt32 ();
 		}
 #endif
-		
+
 #if MONOMAC
 		//
 		// Not to be used by apps that use UIApplicationMain, NSApplicationMain or CFRunLoopRun,
@@ -703,8 +698,7 @@ namespace CoreFoundation {
 		}
 #endif
 
-		public class Attributes
-		{
+		public class Attributes {
 			public bool Concurrent { get; set; }
 
 #if NET
@@ -713,10 +707,10 @@ namespace CoreFoundation {
 			[SupportedOSPlatform ("ios10.0")]
 			[SupportedOSPlatform ("tvos10.0")]
 #else
-			[Mac (10,12)]
-			[iOS (10,0)]
-			[TV (10,0)]
-			[Watch (3,0)]
+			[Mac (10, 12)]
+			[iOS (10, 0)]
+			[TV (10, 0)]
+			[Watch (3, 0)]
 #endif
 			public bool IsInitiallyInactive { get; set; }
 
@@ -726,10 +720,10 @@ namespace CoreFoundation {
 			[SupportedOSPlatform ("ios10.0")]
 			[SupportedOSPlatform ("tvos10.0")]
 #else
-			[Mac (10,12)]
-			[iOS (10,0)]
-			[TV (10,0)]
-			[Watch (3,0)]
+			[Mac (10, 12)]
+			[iOS (10, 0)]
+			[TV (10, 0)]
+			[Watch (3, 0)]
 #endif
 			public AutoreleaseFrequency? AutoreleaseFrequency { get; set; }
 
@@ -739,8 +733,8 @@ namespace CoreFoundation {
 			[SupportedOSPlatform ("tvos")]
 			[SupportedOSPlatform ("maccatalyst")]
 #else
-			[Mac (10,10)]
-			[iOS (8,0)]
+			[Mac (10, 10)]
+			[iOS (8, 0)]
 #endif
 			public int RelativePriority { get; set; }
 
@@ -750,8 +744,8 @@ namespace CoreFoundation {
 			[SupportedOSPlatform ("tvos")]
 			[SupportedOSPlatform ("maccatalyst")]
 #else
-			[Mac (10,10)]
-			[iOS (8,0)]
+			[Mac (10, 10)]
+			[iOS (8, 0)]
 #endif
 			public DispatchQualityOfService? QualityOfService { get; set; }
 
@@ -779,10 +773,10 @@ namespace CoreFoundation {
 			[SupportedOSPlatform ("ios10.0")]
 			[SupportedOSPlatform ("tvos10.0")]
 #else
-			[Mac (10,12)]
-			[iOS (10,0)]
-			[TV (10,0)]
-			[Watch (3,0)]
+			[Mac (10, 12)]
+			[iOS (10, 0)]
+			[TV (10, 0)]
+			[Watch (3, 0)]
 #endif
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_initially_inactive (/* dispatch_queue_attr_t _Nullable */ IntPtr attr);
@@ -792,10 +786,10 @@ namespace CoreFoundation {
 			[SupportedOSPlatform ("ios10.0")]
 			[SupportedOSPlatform ("tvos10.0")]
 #else
-			[Mac (10,12)]
-			[iOS (10,0)]
-			[TV (10,0)]
-			[Watch (3,0)]
+			[Mac (10, 12)]
+			[iOS (10, 0)]
+			[TV (10, 0)]
+			[Watch (3, 0)]
 #endif
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_with_autorelease_frequency (/* dispatch_queue_attr_t _Nullable */ IntPtr attr, /* dispatch_autorelease_frequency_t */ nuint frequency);
@@ -804,8 +798,8 @@ namespace CoreFoundation {
 			[SupportedOSPlatform ("macos10.10")]
 			[SupportedOSPlatform ("ios8.0")]
 #else
-			[Mac (10,10)]
-			[iOS (8,0)]
+			[Mac (10, 10)]
+			[iOS (8, 0)]
 #endif
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_with_qos_class (/* dispatch_queue_attr_t _Nullable */ IntPtr attr, /* dispatch_qos_class_t */ DispatchQualityOfService qos_class, int relative_priority);
@@ -817,10 +811,10 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,12)]
-		[iOS (10,0)]
-		[TV (10,0)]
-		[Watch (3,0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
+		[TV (10, 0)]
+		[Watch (3, 0)]
 #endif
 		[Native]
 		public enum AutoreleaseFrequency : ulong /* unsigned long */
@@ -840,8 +834,7 @@ namespace CoreFoundation {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public struct DispatchTime
-	{
+	public struct DispatchTime {
 #if !COREBUILD
 		public static readonly DispatchTime Now = new DispatchTime ();
 		public static readonly DispatchTime Forever = new DispatchTime (ulong.MaxValue);
@@ -888,8 +881,7 @@ namespace CoreFoundation {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class DispatchGroup : DispatchObject
-	{
+	public class DispatchGroup : DispatchObject {
 #if !COREBUILD
 		[Preserve (Conditional = true)]
 		private DispatchGroup (NativeHandle handle, bool owns)
@@ -902,7 +894,7 @@ namespace CoreFoundation {
 		{
 		}
 
-		public static DispatchGroup Create ()
+		public static DispatchGroup? Create ()
 		{
 			var ptr = dispatch_group_create ();
 			if (ptr == IntPtr.Zero)
@@ -913,29 +905,29 @@ namespace CoreFoundation {
 
 		public void DispatchAsync (DispatchQueue queue, Action action)
 		{
-			if (queue == null)
-				throw new ArgumentNullException ("queue");
-			if (action == null)
-				throw new ArgumentNullException ("action");
+			if (queue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
 			dispatch_group_async_f (GetCheckedHandle (), queue.Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
 		}
 
 		public void Notify (DispatchQueue queue, DispatchBlock block)
 		{
-			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
-			if (block == null)
-				throw new ArgumentNullException (nameof (block));
+			if (queue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
+			if (block is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 			dispatch_group_notify (GetCheckedHandle (), queue.Handle, block.GetCheckedHandle ());
 		}
 
 		public void Notify (DispatchQueue queue, Action action)
 		{
-			if (queue == null)
-				throw new ArgumentNullException ("queue");
-			if (action == null)
-				throw new ArgumentNullException ("action");
+			if (queue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
 			dispatch_group_notify_f (GetCheckedHandle (), queue.Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
 		}

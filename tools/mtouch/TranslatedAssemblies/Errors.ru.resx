@@ -1232,6 +1232,9 @@
 		<value>Обнаружен недопустимый BindAsAttribute в "{0}": не удалось найти базовый тип перечисления {1}. Отправьте отчет об ошибках по следующему адресу: https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
 	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>Регистратор обнаружил недопустимый тип "{0}" в сигнатуре для метода "{1}": такой интерфейс должен иметь атрибут Protocol, указывающий тип его оболочки.
 		</value>
@@ -1739,5 +1742,12 @@
 	</data>
   <data name="MX8041" xml:space="preserve">
 		<value>Невозможно создать экземпляр типа {0}.</value>
+	</data>
+  <data name="MX8042" xml:space="preserve">
+		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<comment>
+			0: name of function
+			1: exception info
+		</comment>
 	</data>
 </root>

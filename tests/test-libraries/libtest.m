@@ -250,6 +250,24 @@ x_mdltransform_get_rotation_matrix (MDLTransform *self, NSTimeInterval time,
 }
 #endif // !TARGET_OS_WATCH
 
+SCNMatrix4
+x_SCNMatrix4MakeTranslation (pfloat tx, pfloat ty, pfloat tz)
+{
+	return SCNMatrix4MakeTranslation (tx, ty, tz);
+}
+
+SCNMatrix4
+x_SCNMatrix4MakeScale (pfloat tx, pfloat ty, pfloat tz)
+{
+	return SCNMatrix4MakeScale (tx, ty, tz);
+}
+
+SCNMatrix4
+x_SCNMatrix4Translate (SCNMatrix4 m, pfloat tx, pfloat ty, pfloat tz)
+{
+	return SCNMatrix4Translate (m, tx, ty, tz);
+}
+
 @interface UltimateMachine : NSObject {
 
 }

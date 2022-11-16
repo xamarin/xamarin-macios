@@ -13,13 +13,17 @@ steps:
   displayName: 'Remove git creds store'
   condition: always()
 
+- bash: |
+    sudo rm -Rf $(Build.SourcesDirectory)/artifacts
+  displayName: "Remove artifacts"
+  condition: always()
 
-- template: uninstall-certificates/v1.yml@templates
+- template: uninstall-certificates/v1.yml@yaml-templates
   parameters:
     HostedMacKeychainPassword: ${{ parameters.keyringPass }}
 
 # this will always be executed, is the default condition in the template
-- template: uninstall-certificates/v1.yml@templates
+- template: uninstall-certificates/v1.yml@yaml-templates
   parameters:
     HostedMacKeychainPassword: ${{ parameters.keyringPass }}
 

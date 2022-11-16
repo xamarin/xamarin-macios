@@ -1,12 +1,28 @@
 # Template that performs the checkout and fixes a number of small issues we have found between the vsts <-> github integration
+
+parameters:
+
+- name: isPR
+  type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 steps:
-- checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
-  clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
-  submodules: recursive
-  path: s/xamarin-macios
+- template: sdk-unified/steps/checkout/v1.yml@yaml-templates
+  parameters:
+    resource: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+    clean: true
+    submodules: recursive
+    path: s/xamarin-macios
 
-
-- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+- ${{ if parameters.isPR }}:
   - pwsh: |
       git config remote.origin.fetch '+refs/pull/*:refs/remotes/origin/pull/*'
       git fetch origin
@@ -32,9 +48,10 @@ steps:
 
 - checkout: maccore
   clean: true
+  fetchDepth: 0
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 
-- checkout: templates
+- checkout: yaml-templates
   clean: true
 
 - checkout: release-scripts
@@ -42,9 +59,8 @@ steps:
 
 - pwsh: |
     # maccore is special, we use fetch there in some bash scripts, but VSTS uses https.. and some pools don't like the above.. :/
-    cd $(System.DefaultWorkingDirectory)/maccore
     git remote remove origin
     git remote add origin https://$(GitHub.Token)@github.com/xamarin/maccore.git
     git remote # don't add -v else we see the pat
   displayName: 'Clean git mess from VSTS'
-
+  workingDirectory: $(System.DefaultWorkingDirectory)/maccore

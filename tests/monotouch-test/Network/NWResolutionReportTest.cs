@@ -17,12 +17,12 @@ namespace MonoTouchFixtures.Network {
 		AutoResetEvent resolutionEvent;  // used to let us know when the connection was established and we got the report
 		string host;
 		NWConnection connection;
-		NWEstablishmentReport report; 
-		NWResolutionReport resolutionReport; 
+		NWEstablishmentReport report;
+		NWResolutionReport resolutionReport;
 
 		void ConnectionStateHandler (NWConnectionState state, NWError error)
 		{
-			switch (state){
+			switch (state) {
 			case NWConnectionState.Ready:
 				connectedEvent.Set ();
 				break;
@@ -36,18 +36,17 @@ namespace MonoTouchFixtures.Network {
 		[OneTimeSetUp]
 		public void Init ()
 		{
-			TestRuntime.AssertXcodeVersion (13,0);
+			TestRuntime.AssertXcodeVersion (13, 0);
 			TestRuntime.AssertDevice ();
 			// connect so that we can later when the report and test with it
-			connectedEvent = new AutoResetEvent(false);
+			connectedEvent = new AutoResetEvent (false);
 			reportEvent = new AutoResetEvent (false);
 			resolutionEvent = new AutoResetEvent (false);
 			host = NetworkResources.MicrosoftUri.Host;
 			// we create a connection which we are going to use to get the availabe
 			// interfaces, that way we can later test protperties of the NWParameters class.
 			using (var parameters = NWParameters.CreateUdp ())
-			using (var endpoint = NWEndpoint.Create (host, "80"))
-			{
+			using (var endpoint = NWEndpoint.Create (host, "80")) {
 				using (var protocolStack = parameters.ProtocolStack) {
 					var ipOptions = protocolStack.InternetProtocol;
 #if NET
@@ -59,7 +58,7 @@ namespace MonoTouchFixtures.Network {
 				connection = new NWConnection (endpoint, parameters);
 				connection.SetQueue (DispatchQueue.DefaultGlobalQueue); // important, else we will get blocked
 				connection.SetStateChangeHandler (ConnectionStateHandler);
-				connection.Start (); 
+				connection.Start ();
 				Assert.True (connectedEvent.WaitOne (20000), "Connection timed out.");
 				connection.GetEstablishmentReport (DispatchQueue.DefaultGlobalQueue, (r) => {
 					report = r;
@@ -75,7 +74,7 @@ namespace MonoTouchFixtures.Network {
 		}
 
 		[OneTimeTearDown]
-		public void Dispose()
+		public void Dispose ()
 		{
 			report?.Dispose ();
 			resolutionReport?.Dispose ();

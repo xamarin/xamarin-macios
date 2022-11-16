@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -37,11 +38,16 @@ using Xamarin.Utils;
 using NativeHandle = System.IntPtr;
 #endif
 
-partial class TestRuntime
-{
+partial class TestRuntime {
 
 	[DllImport (Constants.CoreFoundationLibrary)]
 	public extern static nint CFGetRetainCount (IntPtr handle);
+
+	[DllImport (Constants.CoreFoundationLibrary)]
+	public extern static nint CFRetain (IntPtr handle);
+
+	[DllImport (Constants.CoreFoundationLibrary)]
+	public extern static void CFRelease (IntPtr handle);
 
 	[DllImport ("/usr/lib/system/libdyld.dylib")]
 	static extern int dyld_get_program_sdk_version ();
@@ -111,11 +117,21 @@ partial class TestRuntime
 		return new Version (major, minor, build);
 	}
 
+	static bool? is_in_ci;
+	public static bool IsInCI {
+		get {
+			if (!is_in_ci.HasValue) {
+				var in_ci = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
+				in_ci |= !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")); // set by Azure DevOps
+				is_in_ci = in_ci;
+			}
+			return is_in_ci.Value;
+		}
+	}
+
 	public static void IgnoreInCI (string message)
 	{
-		var in_ci = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
-		in_ci |= !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")); // set by Azure DevOps
-		if (!in_ci) {
+		if (!IsInCI) {
 			Console.WriteLine ($"Not ignoring test ('{message}'), because not running in CI. BUILD_REVISION={Environment.GetEnvironmentVariable ("BUILD_REVISION")} BUILD_SOURCEVERSION={Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")}");
 			return;
 		}
@@ -166,6 +182,15 @@ partial class TestRuntime
 			NUnit.Framework.Assert.Ignore (message);
 #endif
 	}
+
+	public static void AssertNotARM64Desktop (string message = "This test does not run on an ARM64 desktop.")
+	{
+#if __MACOS__ || __MACCATALYST__
+		if (IsARM64)
+			NUnit.Framework.Assert.Ignore (message);
+#endif
+	}
+
 	public static void AssertIfSimulatorThenARM64 ()
 	{
 #if !__MACOS__ && !__MACCATALYST__
@@ -194,7 +219,7 @@ partial class TestRuntime
 			NUnit.Framework.Assert.Ignore (message);
 	}
 
-	public static bool IsVM => 
+	public static bool IsVM =>
 		!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("VM_VENDOR"));
 
 	public static void AssertNotVirtualMachine ()
@@ -209,7 +234,7 @@ partial class TestRuntime
 
 	public static bool IsVSTS =>
 		!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_BUILDID"));  // Env var set by vsts
-																																									 //
+																					   //
 	public static void AssertNotVSTS ()
 	{
 		if (IsVSTS)
@@ -333,6 +358,35 @@ partial class TestRuntime
 	public static bool CheckXcodeVersion (int major, int minor, int build = 0)
 	{
 		switch (major) {
+		case 14:
+			switch (minor) {
+			case 0:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (9, 0);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (16, 0);
+#elif __IOS__
+				return CheckiOSSystemVersion (16, 0);
+#elif MONOMAC
+				return CheckMacSystemVersion (13, 0);
+#else
+				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
+#endif
+			case 1:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (9, 1);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (16, 1);
+#elif __IOS__
+				return CheckiOSSystemVersion (16, 1);
+#elif MONOMAC
+				return CheckMacSystemVersion (13, 0);
+#else
+				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
+#endif
+			default:
+				throw new NotImplementedException ($"Missing version logic for checking for Xcode {major}.{minor}");
+			}
 		case 13:
 			switch (minor) {
 			case 0:
@@ -505,7 +559,7 @@ partial class TestRuntime
 #elif __TVOS__
 				return ChecktvOSSystemVersion (13, 4);
 #elif __IOS__
-				return CheckiOSSystemVersion(13, 5);
+				return CheckiOSSystemVersion (13, 5);
 #elif MONOMAC
 				return CheckMacSystemVersion (10, 15, 5);
 #else
@@ -517,7 +571,7 @@ partial class TestRuntime
 #elif __TVOS__
 				return ChecktvOSSystemVersion (13, 4);
 #elif __IOS__
-				return CheckiOSSystemVersion(13, 6);
+				return CheckiOSSystemVersion (13, 6);
 #elif MONOMAC
 				return CheckMacSystemVersion (10, 15, 6);
 #else
@@ -799,7 +853,7 @@ partial class TestRuntime
 			throw new NotImplementedException ();
 #endif
 		default:
-			throw new NotImplementedException ();
+			throw new NotImplementedException ($"Missing version logic for checking for Xcode {major}.{minor}");
 		}
 	}
 
@@ -1100,8 +1154,7 @@ partial class TestRuntime
 			if (IgnoreTestThatRequiresSystemPermissions ())
 				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to access the camera.");
 
-			AVCaptureDevice.RequestAccessForMediaType (mediaTypeToken, (accessGranted) =>
-			{
+			AVCaptureDevice.RequestAccessForMediaType (mediaTypeToken, (accessGranted) => {
 				Console.WriteLine ("Camera permission {0}", accessGranted ? "granted" : "denied");
 			});
 		}
@@ -1198,8 +1251,7 @@ partial class TestRuntime
 			if (IgnoreTestThatRequiresSystemPermissions ())
 				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to access the microphone.");
 
-			AVAudioSession.SharedInstance ().RequestRecordPermission ((bool granted) =>
-			{
+			AVAudioSession.SharedInstance ().RequestRecordPermission ((bool granted) => {
 				Console.WriteLine ("Microphone permission {0}", granted ? "granted" : "denied");
 			});
 		}
@@ -1227,8 +1279,7 @@ partial class TestRuntime
 			if (IgnoreTestThatRequiresSystemPermissions ())
 				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to access the media library.");
 
-			MPMediaLibrary.RequestAuthorization ((access) =>
-			{
+			MPMediaLibrary.RequestAuthorization ((access) => {
 				Console.WriteLine ("Media library permission: {0}", access);
 			});
 		}
@@ -1291,7 +1342,7 @@ partial class TestRuntime
 		return color.CGColor;
 #endif
 	}
-	
+
 	public static byte GetFlags (NSObject obj)
 	{
 #if NET
@@ -1332,6 +1383,62 @@ partial class TestRuntime
 		}
 	}
 
+	public static void IgnoreInCIIfBadNetwork (Exception ex)
+	{
+		IgnoreInCIfHttpStatusCodes (ex, HttpStatusCode.BadGateway, HttpStatusCode.GatewayTimeout, HttpStatusCode.ServiceUnavailable);
+	}
+
+	public static void IgnoreInCIIfBadNetwork (HttpStatusCode status)
+	{
+		IgnoreInCIfHttpStatusCodes (status, HttpStatusCode.BadGateway, HttpStatusCode.GatewayTimeout, HttpStatusCode.ServiceUnavailable);
+	}
+
+	public static void IgnoreInCIfHttpStatusCodes (HttpStatusCode status, params HttpStatusCode [] statusesToIgnore)
+	{
+		if (Array.IndexOf (statusesToIgnore, status) < 0)
+			return;
+
+		IgnoreInCI ($"Ignored due to http status code '{status}'");
+	}
+
+	public static void IgnoreInCIfHttpStatusCodes (Exception ex, params HttpStatusCode [] statusesToIgnore)
+	{
+		if (!TryGetHttpStatusCode (ex, out var status))
+			return;
+
+		if (Array.IndexOf (statusesToIgnore, status) < 0)
+			return;
+
+		IgnoreInCI ($"Ignored due to http status code '{status}': {ex.Message}");
+	}
+
+	static bool TryGetHttpStatusCode (Exception ex, out HttpStatusCode status)
+	{
+		status = (HttpStatusCode) 0;
+
+		var we = ex as WebException;
+		if (we is null)
+			return false;
+
+		var repsonseStatus = (we.Response as HttpWebResponse)?.StatusCode;
+		if (repsonseStatus.HasValue) {
+			status = repsonseStatus.Value;
+			return true;
+		}
+
+		var message = we.Message;
+		if (we.Message.Contains ("(502)")) {
+			status = (HttpStatusCode) 502;
+			return true;
+		}
+
+		if (we.Message.Contains ("(503)")) {
+			status = (HttpStatusCode) 503;
+			return true;
+		}
+
+		return false;
+	}
 
 	enum NXByteOrder /* unspecified in header, means most likely int */ {
 		Unknown,

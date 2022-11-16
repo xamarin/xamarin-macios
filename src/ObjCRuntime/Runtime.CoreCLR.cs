@@ -419,6 +419,13 @@ namespace ObjCRuntime {
 			if (obj == null)
 				return;
 
+			var structType = obj.GetType ();
+			// Unwrap enums, Marshal.StructureToPtr complains they're not blittable (https://github.com/xamarin/xamarin-macios/issues/15744)
+			if (structType.IsEnum) {
+				structType = Enum.GetUnderlyingType (structType);
+				obj = Convert.ChangeType (obj, structType);
+			}
+
 			if (obj is bool b) {
 				// Only write a single byte for bools
 				Marshal.WriteByte (ptr, b ? (byte) 1 : (byte) 0);
@@ -694,6 +701,8 @@ namespace ObjCRuntime {
 				var ex = tie.InnerException ?? tie;
 				// This will re-throw the original exception and preserve the stacktrace.
 				ExceptionDispatchInfo.Capture (ex).Throw ();
+			} catch (Exception e) {
+				throw ErrorHelper.CreateError (8042, e, Errors.MX8042 /* An exception occurred while trying to invoke the function {0}: {1}. */, GetMethodFullName (method), e.Message);
 			}
 
 			// Copy any byref parameters back out again

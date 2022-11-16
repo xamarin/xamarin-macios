@@ -47,16 +47,16 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[Watch (4,0)]
+	[Watch (4, 0)]
 #endif
 	public partial class CVImageBuffer : CVBuffer {
 #if !COREBUILD
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CVImageBuffer (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
-		
+
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CGRect CVImageBufferGetCleanRect (/* CVImageBufferRef __nonnull */ IntPtr imageBuffer);
 
@@ -87,7 +87,7 @@ namespace CoreVideo {
 		[DllImport (Constants.CoreVideoLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CVImageBufferIsFlipped (/* CVImageBufferRef __nonnull */ IntPtr imageBuffer);
-		
+
 		public bool IsFlipped {
 			get {
 				return CVImageBufferIsFlipped (Handle);
@@ -105,9 +105,7 @@ namespace CoreVideo {
 		[UnsupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.4")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.4.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.4")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 4)]
 		[Unavailable (PlatformName.iOS)]
@@ -131,7 +129,7 @@ namespace CoreVideo {
 		}
 #endif
 
-#if MONOMAC 
+#if MONOMAC
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CVImageBufferCreateColorSpaceFromAttachments (/* CFDictionaryRef */ IntPtr attachments);
 

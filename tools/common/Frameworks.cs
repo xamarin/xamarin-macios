@@ -10,8 +10,7 @@ using Registrar;
 
 using Xamarin.Utils;
 
-public class Framework
-{
+public class Framework {
 	public string Namespace;
 	public string Name; // this is the name to pass to the linker when linking. This can be an umbrella framework.
 	public string SubFramework; // if Name is an umbrella framework, this is the name of the actual sub framework.
@@ -44,8 +43,7 @@ public class Framework
 #endif
 }
 
-public class Frameworks : Dictionary <string, Framework>
-{
+public class Frameworks : Dictionary<string, Framework> {
 	public void Add (string @namespace, int major_version)
 	{
 		Add (@namespace, @namespace, new Version (major_version, 0));
@@ -151,7 +149,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "CoreAnimation", "QuartzCore", 10, 5 },
 					{ "CoreText", 10, 5 }, // it's own framework since at least 10.9
-					{ "InputMethodKit", 10, 5 },
+					{ "InputMethodKit", 10, 5 },
 					{ "PrintCore", "ApplicationServices", 10,5, "PrintCore" },
 					{ "ScriptingBridge", 10, 5 },
 					{ "QuickLook", 10, 5 },
@@ -275,6 +273,14 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "ShazamKit", "ShazamKit", 12,0 },
 
 					{ "ScreenCaptureKit", "ScreenCaptureKit", 12,3 },
+
+					{ "AVRouting", "AVRouting", 13,0},
+					{ "BackgroundAssets", "BackgroundAssets", 13,0},
+					{ "HealthKit", "HealthKit", 13,0 },
+					{ "SharedWithYou", "SharedWithYou", 13,0 },
+					{ "SharedWithYouCore", "SharedWithYouCore", 13, 0 },
+					{ "ExtensionKit", "ExtensionKit", 13,0 },
+					{ "ThreadNetwork", "ThreadNetwork", 13,0 },
 				};
 			}
 			return mac_frameworks;
@@ -430,7 +436,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
 				{ "NearbyInteraction", "NearbyInteraction", 14,0 },
 				{ "ScreenTime", "ScreenTime", 14,0 },
-				{ "SensorKit", "SensorKit", 14,0 },
+				{ "SensorKit", "SensorKit", new Version (14, 0), null, true }, /* not always present on device, e.g. any iPad, so must be weak linked; https://github.com/xamarin/xamarin-macios/issues/9938 */
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
 
 				{ "AdServices", "AdServices", 14,3 },
@@ -444,6 +450,13 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "OSLog", "OSLog", 15,0 },
 				{ "ShazamKit", "ShazamKit", new Version (15,0), NotAvailableInSimulator},
 				{ "ThreadNetwork", "ThreadNetwork", new Version (15,0), NotAvailableInSimulator},
+
+
+				{ "AVRouting", "AVRouting", 16,0},
+				{ "BackgroundAssets", "BackgroundAssets", 16,0},
+				{ "PushToTalk", "PushToTalk", new Version (16,0), NotAvailableInSimulator},
+				{ "SharedWithYou", "SharedWithYou", 16, 0 },
+				{ "SharedWithYouCore", "SharedWithYouCore", 16, 0 },
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
@@ -518,6 +531,10 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "NearbyInteraction", "NearbyInteraction", 8,0 },
 				{ "OSLog", "OSLog", 8,0 },
 				{ "ShazamKit", "ShazamKit", new Version (8, 0), NotAvailableInSimulator},
+
+				{ "DeviceCheck", "DeviceCheck", 9,0 },
+				{ "CallKit", "CallKit", 9,0 },
+				{ "LocalAuthentication", "LocalAuthentication", 9,0 },
 			};
 		}
 		return watch_frameworks;
@@ -613,6 +630,8 @@ public class Frameworks : Dictionary <string, Framework>
 #endif
 					{ "OSLog", "OSLog", 15,0 },
 					{ "ShazamKit", "ShazamKit", new Version (15, 0), NotAvailableInSimulator},
+					{ "SharedWithYou", "SharedWithYou", 16,0 },
+					{ "SharedWithYouCore", "SharedWithYouCore", 16,0 },
 				};
 			}
 			return tvos_frameworks;
@@ -630,6 +649,7 @@ public class Frameworks : Dictionary <string, Framework>
 			var min = new Version (13, 0);
 			var v14_0 = new Version (14, 0);
 			var v14_2 = new Version (14, 2);
+			var v16_1 = new Version (16, 1);
 			foreach (var f in catalyst_frameworks.Values) {
 				switch (f.Name) {
 				// These frameworks were added to Catalyst after they were added to iOS, so we have to adjust the Versions fields
@@ -644,6 +664,9 @@ public class Frameworks : Dictionary <string, Framework>
 				case "UserNotificationsUI":
 					f.Version = v14_2;
 					f.VersionAvailableInSimulator = v14_2;
+					break;
+				case "ThreadNetwork":
+					f.Version = v16_1;
 					break;
 				// These frameworks are not available on Mac Catalyst
 				case "OpenGLES":
@@ -680,6 +703,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 			// Add frameworks that are not in iOS
 			catalyst_frameworks.Add ("AppKit", 13, 0);
+			catalyst_frameworks.Add ("ExecutionPolicy", 16, 0);
 			// Due to a linking problem, ScreenCpatureKit doesn't work on Mac Catalyst (we can't pass -framework ScreenCaptureKit to the native linker,
 			// because there's no Mac Catalyst tbd file for ScreenCaptureKit).
 			// catalyst_frameworks.Add ("ScreenCaptureKit", 15, 4);
@@ -746,7 +770,28 @@ public class Frameworks : Dictionary <string, Framework>
 	static bool FilterFrameworks (Application app, Framework framework)
 	{
 		switch (app.Platform) {
+#if !NET
+		// CHIP has been removed in Xcode 14 Beta 5 in favor of Matter
+		case ApplePlatform.iOS when framework.Name == "CHIP":
+		case ApplePlatform.TVOS when framework.Name == "CHIP":
+		case ApplePlatform.MacOSX when framework.Name == "CHIP":
+		case ApplePlatform.WatchOS when framework.Name == "CHIP":
+			if (Driver.XcodeVersion.Major >= 14) {
+				Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 14+.", framework.Name);
+				return false;
+			}
+			break;
+#endif
 		case ApplePlatform.iOS:
+			switch (framework.Name) {
+			case "GameKit":
+				if (Driver.XcodeVersion.Major >= 14 && app.Is32Build) {
+					Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 14+ and building for a 32-bit simulator architecture.", framework.Name);
+					return false;
+				}
+				break;
+			}
+			break;
 		case ApplePlatform.TVOS:
 		case ApplePlatform.WatchOS:
 		case ApplePlatform.MacCatalyst:

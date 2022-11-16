@@ -26,11 +26,11 @@
   <ItemGroup>
     <EmbeddedResource Update="Errors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+      <LastGenOutput>Errors.designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Errors.Designer.cs">
+    <Compile Update="Errors.designer.cs">
       <DependentUpon>Errors.resx</DependentUpon>
     </Compile>
   </ItemGroup>

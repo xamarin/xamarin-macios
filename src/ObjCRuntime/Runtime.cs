@@ -35,10 +35,12 @@ namespace ObjCRuntime {
 		static Dictionary<IntPtrTypeValueTuple,Delegate> block_to_delegate_cache;
 		static Dictionary<Type, ConstructorInfo> intptr_ctor_cache;
 		static Dictionary<Type, ConstructorInfo> intptr_bool_ctor_cache;
+		internal static Dictionary<IntPtr, Dictionary<IntPtr, bool>> protocol_cache;
 
 		static List <object> delegates;
 		static List <Assembly> assemblies;
 		static Dictionary <IntPtr, GCHandle> object_map;
+		static Dictionary <IntPtr, bool> usertype_cache;
 		static object lock_obj;
 		static IntPtr NSObjectClass;
 		static bool initialized;
@@ -53,9 +55,10 @@ namespace ObjCRuntime {
 
 #pragma warning disable 649 // Field 'X' is never assigned to, and will always have its default value
 		internal unsafe struct MTRegistrationMap {
-			public IntPtr assembly;
+			public IntPtr product_hash;
+			public MTAssembly *assemblies;
 			public MTClassMap *map;
-			public IntPtr full_token_references; /* array of MTFullTokenReference */
+			public MTFullTokenReference *full_token_references;
 			public MTManagedClassMap* skipped_map;
 			public MTProtocolWrapperMap* protocol_wrapper_map;
 			public MTProtocolMap protocol_map;
@@ -74,6 +77,13 @@ namespace ObjCRuntime {
 			None = 0,
 			CustomType = 1,
 			UserType = 2,
+		}
+
+		[StructLayout (LayoutKind.Sequential, Pack = 1)]
+		internal unsafe struct MTFullTokenReference {
+			public uint assembly_index;
+			public uint module_token;
+			public uint token;
 		}
 
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
@@ -100,6 +110,12 @@ namespace ObjCRuntime {
 		internal unsafe struct MTProtocolMap {
 			public uint* protocol_tokens;
 			public IntPtr* protocols;
+		}
+
+		[StructLayout (LayoutKind.Sequential, Pack = 1)]
+		internal unsafe struct MTAssembly {
+			public IntPtr name;
+			public IntPtr mvid;
 		}
 
 		/* Keep Delegates, Trampolines and InitializationOptions in sync with monotouch-glue.m */
@@ -135,7 +151,7 @@ namespace ObjCRuntime {
 		internal enum InitializationFlags : int {
 			IsPartialStaticRegistrar= 0x01,
 			/* unused				= 0x02,*/
-			DynamicRegistrar		= 0x04,
+			/* unused				= 0x04,*/
 			/* unused				= 0x08,*/
 			IsSimulator				= 0x10,
 #if NET
@@ -272,14 +288,17 @@ namespace ObjCRuntime {
 			Runtime.options = options;
 			delegates = new List<object> ();
 			object_map = new Dictionary <IntPtr, GCHandle> (IntPtrEqualityComparer);
+			usertype_cache = new Dictionary <IntPtr, bool> (IntPtrEqualityComparer);
 			intptr_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
 			intptr_bool_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
 			lock_obj = new object ();
 
 			NSObjectClass = NSObject.Initialize ();
 
-			if (DynamicRegistrationSupported)
+			if (DynamicRegistrationSupported) {
 				Registrar = new DynamicRegistrar ();
+				protocol_cache = new Dictionary<IntPtr, Dictionary<IntPtr, bool>> (IntPtrEqualityComparer);
+			}
 			RegisterDelegates (options);
 			Class.Initialize (options);
 #if !NET
@@ -1419,38 +1438,36 @@ namespace ObjCRuntime {
 				return null;
 
 			var obj = TryGetNSObject (ptr, evenInFinalizerQueue: false);
-			T? o;
 
-			if (obj is null) {
-				// Try to get the managed type that correspond to this exact native type
-				IntPtr p = Class.GetClassForObject (ptr);
-				// If unknown then we'll get the Class that Lookup to NSObject even if this is not NSObject.
-				// We can use this condition to fallback on the provided (generic argument) type
-				Type target_type;
-				if (p != NSObjectClass) {
-					target_type = Class.Lookup (p);
-					if (target_type == typeof(NSObject))
-						target_type = typeof(T);
-					else if (typeof (T).IsGenericType)
-						target_type = typeof(T);
-					else if (target_type.IsSubclassOf (typeof(T))) {
-						// do nothing, this is fine.
-					} else if (Messaging.bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (typeof (T)))) {
-						// If the instance itself claims it's an instance of the provided (generic argument) type,
-						// then we believe the instance. See bug #20692 for a test case.
-						target_type = typeof(T);
-					}
-				} else {
-					target_type = typeof(NSObject);
+			// First check if we got an object of the expected type
+			if (obj is T o)
+				return o;
+
+			// We either didn't find an object, or it was of the wrong type, so we need to create a new instance.
+
+			// Try to get the managed type that correspond to this exact native type
+			IntPtr p = Class.GetClassForObject (ptr);
+			// If unknown then we'll get the Class that Lookup to NSObject even if this is not NSObject.
+			// We can use this condition to fallback on the provided (generic argument) type
+			Type target_type;
+			if (p != NSObjectClass) {
+				target_type = Class.Lookup (p);
+				if (target_type == typeof(NSObject))
+					target_type = typeof(T);
+				else if (typeof (T).IsGenericType)
+					target_type = typeof(T);
+				else if (target_type.IsSubclassOf (typeof(T))) {
+					// do nothing, this is fine.
+				} else if (Messaging.bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (typeof (T)))) {
+					// If the instance itself claims it's an instance of the provided (generic argument) type,
+					// then we believe the instance. See bug #20692 for a test case.
+					target_type = typeof(T);
 				}
-				o = ConstructNSObject<T> (ptr, target_type, MissingCtorResolution.ThrowConstructor1NotFound);
 			} else {
-				o = obj as T;
-				if (o is null)
-					throw new InvalidCastException ($"Unable to cast object of type '{obj.GetType ().FullName}' to type '{typeof(T).FullName}'.");
+				target_type = typeof(NSObject);
 			}
 
-			return o;
+			return ConstructNSObject<T> (ptr, target_type, MissingCtorResolution.ThrowConstructor1NotFound);
 		}
 
 		static public T? GetNSObject<T> (IntPtr ptr, bool owns) where T : NSObject
@@ -1735,11 +1752,31 @@ namespace ObjCRuntime {
 			throw new ArgumentException ($"'{type.FullName}' is an unknown protocol");
 		}
 
-		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal static bool IsUserType (IntPtr self)
 		{
 			var cls = Class.object_getClass (self);
+			lock (usertype_cache) {
+#if NET
+				ref var result = ref CollectionsMarshal.GetValueRefOrAddDefault (usertype_cache, cls, out var exists);
+				if (!exists)
+					result = SlowIsUserType (cls);
+#else
+				if (!usertype_cache.TryGetValue (cls, out var result)) {
+					result = SlowIsUserType (cls);
+					usertype_cache.Add (cls, result);
+				}
+#endif
+				return result;
+			}
+		}
 
+#if __MACOS__
+		static IntPtr selSetGCHandle = Selector.GetHandle ("xamarinSetGCHandle:flags:");
+#endif
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		static bool SlowIsUserType (IntPtr cls)
+		{
 			unsafe {
 				if (options->RegistrationMap is not null && options->RegistrationMap->map_count > 0) {
 					var map = options->RegistrationMap->map;
@@ -1752,8 +1789,11 @@ namespace ObjCRuntime {
 						return false;
 				}
 			}
-
+#if __MACOS__
+			return Class.class_getInstanceMethod (cls, selSetGCHandle) != IntPtr.Zero;
+#else
 			return Class.class_getInstanceMethod (cls, Selector.GetHandle ("xamarinSetGCHandle:flags:")) != IntPtr.Zero;
+#endif
 		}
 
 		static unsafe int FindUserTypeIndex (MTClassMap* map, int lo, int hi, IntPtr cls)
@@ -1917,6 +1957,8 @@ namespace ObjCRuntime {
 						return string.Equals (Marshal.PtrToStringUTF8 (utf8), str);
 					}
 					if (b != (short) str [i])
+						return false;
+					if (b == 0)
 						return false;
 				}
 				return c [str.Length] == 0;
@@ -2114,6 +2156,14 @@ namespace ObjCRuntime {
 		[DllImport ("__Internal")]
 		static extern IntPtr xamarin_get_original_working_directory_path ();
 #endif // NET || !__MACOS__
+
+		static bool InvokeConformsToProtocol (IntPtr handle, IntPtr protocol)
+		{
+			var obj = Runtime.GetNSObject (handle);
+			if (obj is null)
+				return false;
+			return obj.ConformsToProtocol (protocol);
+		}
 
 	}
 	

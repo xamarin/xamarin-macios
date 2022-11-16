@@ -8,6 +8,8 @@
 // Copyright 2014 Xamarin Inc
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -21,8 +23,7 @@ namespace VideoToolbox {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public struct VTDataRateLimit
-	{
+	public struct VTDataRateLimit {
 		public uint NumberOfBytes { get; set; }
 		public double Seconds { get; set; }
 

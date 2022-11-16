@@ -62,7 +62,11 @@ namespace MonoTouchFixtures.UIKit {
 					Assert.That (stpf.Color, Is.EqualTo (UIColor.Black), "Color");
 					Assert.That (stpf.TextAlignment, Is.EqualTo (UITextAlignment.Left), "TextAlignment");
 				}
-				Assert.NotNull (stpf.Font, "Font");
+				if (TestRuntime.CheckXcodeVersion (14, 0)) {
+					Assert.Null (stpf.Font, "Font");
+				} else {
+					Assert.NotNull (stpf.Font, "Font");
+				}
 				Assert.That (stpf.Text, Is.EqualTo ("Xamarin"), "Text");
 			}
 		}

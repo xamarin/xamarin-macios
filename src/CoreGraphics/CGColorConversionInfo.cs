@@ -28,10 +28,10 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("macos10.12")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (10,0)]
-	[TV (10,0)]
-	[Watch (3,0)]
-	[Mac (10,12)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
+	[Watch (3, 0)]
+	[Mac (10, 12)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 #if NET
@@ -51,20 +51,20 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("macos10.12")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (10,0)]
-	[TV (10,0)]
-	[Watch (3,0)]
-	[Mac (10,12)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
+	[Watch (3, 0)]
+	[Mac (10, 12)]
 #endif
 	public partial class CGColorConversionInfo : NativeObject {
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGColorConversionInfo (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
 
-		[DllImport(Constants.CoreGraphicsLibrary)]
-		extern static /* CGColorConversionInfoRef __nullable */ IntPtr CGColorConversionInfoCreateFromList (/* __nullable CFDictionaryRef */ IntPtr options, 
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static /* CGColorConversionInfoRef __nullable */ IntPtr CGColorConversionInfoCreateFromList (/* __nullable CFDictionaryRef */ IntPtr options,
 			/* CGColorSpaceRef __nullable */ IntPtr space1, CGColorConversionInfoTransformType transform1, CGColorRenderingIntent intent1,
 			/* CGColorSpaceRef __nullable */ IntPtr space2, CGColorConversionInfoTransformType transform2, CGColorRenderingIntent intent2,
 			/* CGColorSpaceRef __nullable */ IntPtr space3, CGColorConversionInfoTransformType transform3, CGColorRenderingIntent intent3,
@@ -77,7 +77,7 @@ namespace CoreGraphics {
 		// but since each parameter must be pointer-sized (to occupy the right amount of stack space),
 		// we define it as nuint (and not the enum type, which is 32-bit even on 64-bit platforms).
 		// Same for the 'intentX' argument (except that it's signed instead of unsigned).
-		[DllImport(Constants.CoreGraphicsLibrary, EntryPoint="CGColorConversionInfoCreateFromList")]
+		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint = "CGColorConversionInfoCreateFromList")]
 		extern static /* CGColorConversionInfoRef __nullable */ IntPtr CGColorConversionInfoCreateFromList_arm64 (/* __nullable CFDictionaryRef */ IntPtr options,
 			IntPtr space1, nuint transform1, nint intent1, // varargs starts after them
 			IntPtr dummy4, IntPtr dummy5, IntPtr dummy6, IntPtr dummy7, // dummies so the rest goes to the stack
@@ -104,10 +104,10 @@ namespace CoreGraphics {
 			// the API won't return a valid instance if no triple is given, i.e. at least one is needed. 
 			// `null` is accepted to mark the end of the list, not to make it optional
 			if ((triples is null) || (triples.Length == 0))
-				throw new ArgumentNullException (nameof (triples));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (triples));
 			if (triples.Length > 3)
 				throw new ArgumentException ("A maximum of 3 triples are supported");
-			
+
 			IntPtr handle;
 			IntPtr o = options.GetHandle ();
 			var first = triples [0]; // there's always one
@@ -143,16 +143,16 @@ namespace CoreGraphics {
 
 		}
 
-		[DllImport(Constants.CoreGraphicsLibrary)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static IntPtr CGColorConversionInfoCreate (/* cg_nullable CGColorSpaceRef */ IntPtr src, /* cg_nullable CGColorSpaceRef */ IntPtr dst);
 
 		static IntPtr Create (CGColorSpace source, CGColorSpace destination)
 		{
 			// API accept null arguments but returns null, which we can't use
 			if (source is null)
-				throw new ArgumentNullException (nameof (source));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 			if (destination is null)
-				throw new ArgumentNullException (nameof (destination));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (destination));
 			return CGColorConversionInfoCreate (source.Handle, destination.Handle);
 		}
 
@@ -167,20 +167,20 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,14,6)]
-		[iOS (13,0)]
-		[TV (13,0)]
-		[Watch (6,0)]
+		[Mac (10, 14, 6)]
+		[iOS (13, 0)]
+		[TV (13, 0)]
+		[Watch (6, 0)]
 #endif
-		[DllImport(Constants.CoreGraphicsLibrary)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern /* CGColorConversionInfoRef* */ IntPtr CGColorConversionInfoCreateWithOptions (/* CGColorSpaceRef* */ IntPtr src, /* CGColorSpaceRef* */ IntPtr dst, /* CFDictionaryRef _Nullable */ IntPtr options);
 
 		static IntPtr Create (CGColorSpace source, CGColorSpace destination, NSDictionary? options)
 		{
 			if (source is null)
-				throw new ArgumentNullException (nameof (source));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 			if (destination is null)
-				throw new ArgumentNullException (nameof (destination));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (destination));
 
 			return CGColorConversionInfoCreateWithOptions (source.Handle, destination.Handle, options.GetHandle ());
 		}
@@ -191,10 +191,10 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,14,6)]
-		[iOS (13,0)]
-		[TV (13,0)]
-		[Watch (6,0)]
+		[Mac (10, 14, 6)]
+		[iOS (13, 0)]
+		[TV (13, 0)]
+		[Watch (6, 0)]
 #endif
 		public CGColorConversionInfo (CGColorSpace source, CGColorSpace destination, NSDictionary? options)
 			: base (Create (source, destination, options), true, verify: true)
@@ -207,10 +207,10 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,15)]
-		[iOS (13,0)]
-		[TV (13,0)]
-		[Watch (6,0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
+		[TV (13, 0)]
+		[Watch (6, 0)]
 #endif
 		public CGColorConversionInfo (CGColorSpace source, CGColorSpace destination, CGColorConversionOptions? options) :
 			this (source, destination, options?.Dictionary)

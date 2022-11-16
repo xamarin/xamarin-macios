@@ -30,8 +30,8 @@ namespace VideoToolbox {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[iOS (8,0)]
-	[TV (10,2)]
+	[iOS (8, 0)]
+	[TV (10, 2)]
 #endif
 	public class VTCompressionSession : VTSession {
 		GCHandle callbackHandle;
@@ -43,7 +43,7 @@ namespace VideoToolbox {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal VTCompressionSession (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
@@ -54,7 +54,7 @@ namespace VideoToolbox {
 				VTCompressionSessionInvalidate (Handle);
 
 			if (callbackHandle.IsAllocated)
-				callbackHandle.Free();
+				callbackHandle.Free ();
 
 			base.Dispose (disposing);
 		}
@@ -68,7 +68,7 @@ namespace VideoToolbox {
 		// Here for legacy code, which would only work under duress (user had to manually ref the CMSampleBuffer on the callback)
 		//
 		static CompressionOutputCallback? _static_CompressionOutputCallback;
-		static CompressionOutputCallback static_CompressionOutputCallback {
+		static CompressionOutputCallback? static_CompressionOutputCallback {
 			get {
 				if (_static_CompressionOutputCallback is null)
 					_static_CompressionOutputCallback = new CompressionOutputCallback (CompressionCallback);
@@ -117,7 +117,7 @@ namespace VideoToolbox {
 		// End region of legacy code
 
 		static CompressionOutputCallback? _static_newCompressionOutputCallback;
-		static CompressionOutputCallback static_newCompressionOutputCallback {
+		static CompressionOutputCallback? static_newCompressionOutputCallback {
 			get {
 				if (_static_newCompressionOutputCallback is null)
 					_static_newCompressionOutputCallback = new CompressionOutputCallback (NewCompressionCallback);
@@ -173,18 +173,18 @@ namespace VideoToolbox {
 #if NET
 			return Create (width, height, codecType, compressionOutputCallback, encoderSpecification, sourceImageBufferAttributes?.Dictionary);
 #else
-			return Create (width, height, codecType, compressionOutputCallback, encoderSpecification, sourceImageBufferAttributes == null ? null : sourceImageBufferAttributes.Dictionary, static_CompressionOutputCallback);
+			return Create (width, height, codecType, compressionOutputCallback, encoderSpecification, sourceImageBufferAttributes?.Dictionary, static_CompressionOutputCallback);
 #endif
 		}
 
 		unsafe static VTCompressionSession? Create (int width, int height, CMVideoCodecType codecType,
 			VTCompressionOutputCallback compressionOutputCallback,
 			VTVideoEncoderSpecification? encoderSpecification, // hardware acceleration is default behavior on iOS. no opt-in required.
-		        NSDictionary? sourceImageBufferAttributes, // Undocumented options, probably always null
+				NSDictionary? sourceImageBufferAttributes, // Undocumented options, probably always null
 #if NET
 		        delegate* unmanaged</* void* CM_NULLABLE */ IntPtr, /* void* CM_NULLABLE */ IntPtr, /* OSStatus */ VTStatus, VTEncodeInfoFlags, /* CMSampleBufferRef CM_NULLABLE */ IntPtr, void> staticCback)
 #else
-		        CompressionOutputCallback staticCback)
+				CompressionOutputCallback? staticCback)
 #endif
 		{
 			var callbackHandle = default (GCHandle);
@@ -197,7 +197,7 @@ namespace VideoToolbox {
 				IntPtr.Zero,
 				callbackHandle.IsAllocated ? (staticCback) : null,
 				GCHandle.ToIntPtr (callbackHandle),
-	            out var ret);
+				out var ret);
 
 			if (result == VTStatus.Ok && ret != IntPtr.Zero)
 				return new VTCompressionSession (ret, true) {
@@ -220,7 +220,7 @@ namespace VideoToolbox {
 		{
 			var ret = VTCompressionSessionGetPixelBufferPool (GetCheckedHandle ());
 
-			if (ret != IntPtr.Zero) 
+			if (ret != IntPtr.Zero)
 				return new CVPixelBufferPool (ret, false);
 
 			return null;
@@ -232,7 +232,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("tvos10.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,9)]
+		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionPrepareToEncodeFrames (IntPtr handle);
@@ -243,42 +243,42 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("tvos10.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,9)]
+		[Mac (10, 9)]
 #endif
 		public VTStatus PrepareToEncodeFrames ()
 		{
 			return VTCompressionSessionPrepareToEncodeFrames (GetCheckedHandle ());
 		}
-		
+
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionEncodeFrame (
-			/* VTCompressionSessionRef */ IntPtr session, 
-			/* CVImageBufferRef */ IntPtr imageBuffer, 
-			/* CMTime */ CMTime presentation, 
+			/* VTCompressionSessionRef */ IntPtr session,
+			/* CVImageBufferRef */ IntPtr imageBuffer,
+			/* CMTime */ CMTime presentation,
 			/* CMTime */ CMTime duration, // can ve CMTime.Invalid
 			/* CFDictionaryRef */ IntPtr dict, // can be null, undocumented options
-			/* void* */ IntPtr sourceFrame, 
+			/* void* */ IntPtr sourceFrame,
 			/* VTEncodeInfoFlags */ out VTEncodeInfoFlags flags);
 
 		public VTStatus EncodeFrame (CVImageBuffer imageBuffer, CMTime presentationTimestamp, CMTime duration,
 			NSDictionary frameProperties, CVImageBuffer sourceFrame, out VTEncodeInfoFlags infoFlags)
 		{
 			if (sourceFrame is null)
-				throw new ArgumentNullException (nameof (sourceFrame));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sourceFrame));
 
 			return EncodeFrame (imageBuffer, presentationTimestamp, duration, frameProperties, sourceFrame.GetCheckedHandle (), out infoFlags);
 		}
 
-		public VTStatus EncodeFrame (CVImageBuffer imageBuffer, CMTime presentationTimestamp, CMTime duration, 
+		public VTStatus EncodeFrame (CVImageBuffer imageBuffer, CMTime presentationTimestamp, CMTime duration,
 			NSDictionary frameProperties, IntPtr sourceFrame, out VTEncodeInfoFlags infoFlags)
 		{
 			if (imageBuffer is null)
-				throw new ArgumentNullException (nameof (imageBuffer));
-			
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBuffer));
+
 			return VTCompressionSessionEncodeFrame (GetCheckedHandle (), imageBuffer.Handle, presentationTimestamp, duration,
 				frameProperties.GetHandle (),
 				sourceFrame, out infoFlags);
-		}		
+		}
 
 #if false // Disabling for now until we have some tests on this
 		[Mac (10,11), iOS (9,0)]
@@ -314,7 +314,7 @@ namespace VideoToolbox {
 			VTCompressionOutputHandler outputHandler)
 		{
 			if (sourceFrame is null)
-				throw new ArgumentNullException (nameof (sourceFrame));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sourceFrame));
 
 			return EncodeFrame (imageBuffer, presentationTimestamp, duration, frameProperties, sourceFrame.GetCheckedHandle (), out infoFlags, outputHandler);
 		}
@@ -325,9 +325,9 @@ namespace VideoToolbox {
 			VTCompressionOutputHandler outputHandler)
 		{
 			if (imageBuffer is null)
-				throw new ArgumentNullException ((imageBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBuffer));
 			if (outputHandler is null)
-				throw new ArgumentNullException (nameof (outputHandler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputHandler));
 
 			var block = new BlockLiteral ();
 			block.SetupBlockUnsafe (compressionOutputHandlerTrampoline, outputHandler);
@@ -356,7 +356,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("tvos10.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,10)]
+		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionBeginPass (IntPtr session, VTCompressionSessionOptionFlags flags, IntPtr reserved);
@@ -367,7 +367,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("tvos10.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,10)]
+		[Mac (10, 10)]
 #endif
 		public VTStatus BeginPass (VTCompressionSessionOptionFlags flags)
 		{
@@ -380,7 +380,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("tvos10.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,10)]
+		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionEndPass (IntPtr session, out byte furtherPassesRequestedOut, IntPtr reserved);
@@ -391,7 +391,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("tvos10.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,10)]
+		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionEndPass (IntPtr session, IntPtr ptrByte, IntPtr reserved);
@@ -402,7 +402,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("tvos10.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,10)]
+		[Mac (10, 10)]
 #endif
 		public VTStatus EndPass (out bool furtherPassesRequested)
 		{
@@ -423,12 +423,12 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("tvos10.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,10)]
+		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionGetTimeRangesForNextPass (
-			/* VTCompressionSessionRef */ IntPtr session, 
-			/* CMItemCount* */ out int itemCount, 
+			/* VTCompressionSessionRef */ IntPtr session,
+			/* CMItemCount* */ out int itemCount,
 			/* const CMTimeRange** */ out IntPtr target);
 
 #if NET
@@ -437,7 +437,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("tvos10.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,10)]
+		[Mac (10, 10)]
 #endif
 		public VTStatus GetTimeRangesForNextPass (out CMTimeRange []? timeRanges)
 		{
@@ -448,7 +448,7 @@ namespace VideoToolbox {
 			}
 			timeRanges = new CMTimeRange [count];
 			unsafe {
-				CMTimeRange *ptr = (CMTimeRange *)target;
+				CMTimeRange* ptr = (CMTimeRange*) target;
 				for (int i = 0; i < count; i++)
 					timeRanges [i] = ptr [i];
 			}
@@ -458,9 +458,9 @@ namespace VideoToolbox {
 		public VTStatus SetCompressionProperties (VTCompressionProperties options)
 		{
 			if (options is null)
-				throw new ArgumentNullException (nameof (options));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
 
 			return VTSessionSetProperties (GetCheckedHandle (), options.Dictionary.Handle);
 		}
-	}	
+	}
 }

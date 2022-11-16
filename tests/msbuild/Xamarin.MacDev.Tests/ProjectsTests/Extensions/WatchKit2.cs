@@ -3,20 +3,23 @@ using System.IO;
 
 using NUnit.Framework;
 
-namespace Xamarin.iOS.Tasks {
+using Xamarin.Tests;
+using Xamarin.Utils;
+
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
 	public class WatchKit2 : ExtensionTestBase {
 
-		public WatchKit2 (string platform) : base(platform)
+		public WatchKit2 (string platform) : base (platform)
 		{
 		}
 
 		[Test]
-		public void BasicTest () 
+		public void BasicTest ()
 		{
-			if (!Xamarin.Tests.Configuration.include_watchos)
-				Assert.Ignore ("WatchOS is not enabled");
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
 
 			BuildExtension ("MyWatchApp2", "MyWatchKit2Extension");
 		}

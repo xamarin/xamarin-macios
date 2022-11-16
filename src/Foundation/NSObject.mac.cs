@@ -26,17 +26,11 @@
 
 using System;
 using System.Reflection;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 
 namespace Foundation {
-	public partial class NSObject : INativeObject
-#if !COREBUILD
-		, IDisposable
-#endif
-		{
+	public partial class NSObject {
 #if !COREBUILD
 
 		// note: the linker will remove the unrequired `dlopen` calls
@@ -111,6 +105,10 @@ namespace Foundation {
 		static IntPtr vs = Dlfcn.dlopen (Constants.VideoSubscriberAccountLibrary, 1);
 		static IntPtr un = Dlfcn.dlopen (Constants.UserNotificationsLibrary, 1);
 		static IntPtr il  = Dlfcn.dlopen (Constants.iTunesLibraryLibrary, 1);
+		static IntPtr exl = Dlfcn.dlopen (Constants.ExtensionKitLibrary, 1);
+		static IntPtr sw = Dlfcn.dlopen (Constants.SharedWithYouLibrary, 1);
+		static IntPtr swc = Dlfcn.dlopen (Constants.SharedWithYouCoreLibrary, 1);
+		static IntPtr th = Dlfcn.dlopen (Constants.ThreadNetworkLibrary, 1);
 
 #if !NET
 		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms.")]

@@ -17,7 +17,6 @@ function Get-FrameworkVersions {
 
     $versionsPath = [System.IO.Path]::Combine($Path, "Versions")
     Write-Debug "Searching for version in $versionsPath"
-    Write-Host "Searching for version in $versionsPath"
 
     if ( -not (Test-Path $versionsPath -PathType Container)) {
         Write-Debug "Path '$versionsPath' was not found."

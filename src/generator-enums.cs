@@ -62,7 +62,7 @@ public partial class Generator {
 			var hasNativeName = !string.IsNullOrEmpty (native.NativeName);
 			var hasConvertToManaged = !string.IsNullOrEmpty (native.ConvertToManaged);
 			var hasConvertToNative = !string.IsNullOrEmpty (native.ConvertToNative);
-			if (hasNativeName || hasConvertToManaged || hasConvertToNative ) {
+			if (hasNativeName || hasConvertToManaged || hasConvertToNative) {
 				sb.Append (" (");
 				if (hasNativeName)
 					sb.Append ('"').Append (native.NativeName).Append ('"');
@@ -190,7 +190,7 @@ public partial class Generator {
 				print ("}");
 				print ("");
 			}
-			
+
 			print ("public static NSString? GetConstant (this {0} self)", type.Name);
 			print ("{");
 			indent++;
@@ -215,7 +215,7 @@ public partial class Generator {
 			print ("return (NSString?) Runtime.GetNSObject (ptr);");
 			indent--;
 			print ("}");
-			
+
 			print ("");
 
 			var nullable = null_field != null;
@@ -244,7 +244,7 @@ public partial class Generator {
 			indent--;
 			print ("}");
 		}
-			
+
 		if ((fields.Count > 0) || (error != null) || (null_field != null)) {
 			indent--;
 			print ("}");

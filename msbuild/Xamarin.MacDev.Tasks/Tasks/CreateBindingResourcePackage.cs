@@ -7,10 +7,8 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class CreateBindingResourcePackage : CreateBindingResourcePackageBase, ITaskCallback, ICancelableTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class CreateBindingResourcePackage : CreateBindingResourcePackageBase, ITaskCallback, ICancelableTask {
 		public override bool Execute ()
 		{
 			if (!ShouldExecuteRemotely ())
@@ -46,7 +44,7 @@ namespace Xamarin.MacDev.Tasks
 		public void Cancel ()
 		{
 			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 
 		IEnumerable<TaskItem> GetItemsFromNativeReference (string folderPath)
@@ -62,7 +60,7 @@ namespace Xamarin.MacDev.Tasks
 			if (PackagedFiles is not null) {
 				foreach (var package in PackagedFiles) {
 					var localRelativePath = GetLocalRelativePath (package.ItemSpec);
-					await taskRunner.GetFileAsync (localRelativePath).ConfigureAwait (continueOnCapturedContext: false);
+					await taskRunner.GetFileAsync (this, localRelativePath).ConfigureAwait (continueOnCapturedContext: false);
 				}
 			}
 		}

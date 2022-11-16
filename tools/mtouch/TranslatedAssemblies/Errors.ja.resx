@@ -1233,6 +1233,9 @@
 		<value>'{0}' に無効な BindAsAttribute が見つかりました: 基になる列挙型 {1} が見つかりませんでした。https://github.com/xamarin/xamarin-macios/issues/new にバグ報告をお寄せください
 		</value>
 	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>レジストラーにより、メソッド '{1}' のシグネチャ内で無効な型 '{0}' が検出されました: インターフェイスには、それのラッパー型を指定するプロトコル属性が必要です。
 		</value>
@@ -1740,5 +1743,12 @@
 	</data>
   <data name="MX8041" xml:space="preserve">
 		<value>型 {0} のインスタンスを作成できません。</value>
+	</data>
+  <data name="MX8042" xml:space="preserve">
+		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<comment>
+			0: name of function
+			1: exception info
+		</comment>
 	</data>
 </root>

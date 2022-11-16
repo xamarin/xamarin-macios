@@ -5,15 +5,17 @@ using System.Text;
 using NUnit.Framework;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	[TestFixture]
-	public class RuntimeTests
-	{
+	public class RuntimeTests {
 		[Test]
 		public void AssemblyRegistration ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var projectName = "AssemblyRegistration";
 			var projectPath = Path.Combine (Configuration.TestProjectsDirectory, projectName, $"{projectName}.csproj");
 

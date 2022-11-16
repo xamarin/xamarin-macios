@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-ios</TargetFramework>
+    <TargetFramework>net7.0-ios</TargetFramework>
     <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
     <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
@@ -11,6 +11,8 @@
     <_LinkMode>None</_LinkMode>
     <UseInterpreter>true</UseInterpreter>
     <MtouchExtraArgs>--registrar:dynamic</MtouchExtraArgs>
+    <!-- disable code signing unless we're building in CI, to avoid requiring code signing during developer builds (who will usually never need the prebuilt app) -->
+    <EnableCodeSigning Condition="'$(BUILD_REVISION)' == ''">false</EnableCodeSigning>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.iOS.HotRestart.Application" Version="1.1.5" />

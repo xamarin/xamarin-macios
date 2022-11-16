@@ -90,11 +90,10 @@ namespace MonoTouchFixtures.Photos {
 				error_faker = new NSError ((NSString) "domain", 42);
 				Assert.That (m.Invoke (null, args), Is.EqualTo (NativeHandle.Zero), "2");
 				Assert.That (args [2], Is.EqualTo (error_faker.Handle), "error");
-			}
-			finally {
+			} finally {
 				bl.CleanupBlock ();
 			}
- 		}
+		}
 	}
 }
 

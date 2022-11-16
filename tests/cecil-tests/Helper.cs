@@ -163,6 +163,9 @@ namespace Cecil.Tests {
 
 		public static IEnumerable PlatformAssemblies {
 			get {
+				if (!Configuration.include_legacy_xamarin)
+					yield break;
+
 				if (Configuration.include_ios) {
 					// we want to process 32/64 bits individually since their content can differ
 					yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "iOS", "Xamarin.iOS.dll"));
@@ -195,7 +198,7 @@ namespace Cecil.Tests {
 				if (Configuration.include_ios)
 					yield return CreateTestFixtureDataFromPath (Path.Combine (Configuration.SdkRootXI, "lib", "msbuild", "iOS", "Xamarin.iOS.Tasks.dll"));
 				if (Configuration.include_mac)
-					yield return CreateTestFixtureDataFromPath (Path.Combine (Configuration.SdkRootXM, "lib", "msbuild",  "Xamarin.Mac.Tasks.dll"));
+					yield return CreateTestFixtureDataFromPath (Path.Combine (Configuration.SdkRootXM, "lib", "msbuild", "Xamarin.Mac.Tasks.dll"));
 			}
 		}
 
@@ -207,10 +210,9 @@ namespace Cecil.Tests {
 		}
 	}
 
-	public static class CompatExtensions
-	{
+	public static class CompatExtensions {
 		// cecil-tests is not NET5 yet, this is required to foreach over a dictionary
-		public static void Deconstruct<T1, T2>(this KeyValuePair<T1, T2> tuple, out T1 key, out T2 value)
+		public static void Deconstruct<T1, T2> (this KeyValuePair<T1, T2> tuple, out T1 key, out T2 value)
 		{
 			key = tuple.Key;
 			value = tuple.Value;

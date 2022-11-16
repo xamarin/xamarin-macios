@@ -111,7 +111,7 @@ namespace CFNetwork {
 			if (pos < 0)
 				return;
 
-			value = value.Substring (pos+1).Trim ();
+			value = value.Substring (pos + 1).Trim ();
 			if (value.StartsWith ("charset=", StringComparison.Ordinal)) {
 				var charset = value.Substring (8);
 				Headers.ContentEncoding.Add (charset);

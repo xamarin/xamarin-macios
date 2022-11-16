@@ -6,8 +6,7 @@ using Microsoft.Build.Framework;
 
 #nullable enable
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	public class ComputeRemoteGeneratorProperties : ComputeRemoteGeneratorPropertiesTaskBase, ITaskCallback, ICancelableTask {
 		public override bool Execute ()
 		{
@@ -25,7 +24,7 @@ namespace Xamarin.MacDev.Tasks
 		public void Cancel ()
 		{
 			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 
 		public bool ShouldCopyToBuildServer (ITaskItem item)

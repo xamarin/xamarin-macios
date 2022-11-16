@@ -1,5 +1,0 @@
-# This seems to be a small API likely to change? we can check on GA if we bind it or not
-!missing-field! CellularDataDiagnosticsSuiteVersionNumber not bound
-!missing-field! CellularDataDiagnosticsSuiteVersionString not bound
-!missing-selector! SpeedTestConfig::startDownloadTest: not bound
-!missing-type! SpeedTestConfig not bound

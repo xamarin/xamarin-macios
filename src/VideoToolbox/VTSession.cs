@@ -22,7 +22,7 @@ using CoreVideo;
 using NativeHandle = System.IntPtr;
 #endif
 
-namespace VideoToolbox {		
+namespace VideoToolbox {
 
 #if NET
 	[SupportedOSPlatform ("ios8.0")]
@@ -30,8 +30,8 @@ namespace VideoToolbox {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[iOS (8,0)]
-	[TV (10,2)]
+	[iOS (8, 0)]
+	[TV (10, 2)]
 #endif
 	public class VTSession : NativeObject {
 #if !NET
@@ -41,7 +41,7 @@ namespace VideoToolbox {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal VTSession (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -67,7 +67,7 @@ namespace VideoToolbox {
 		public VTStatus SetProperties (VTPropertyOptions options)
 		{
 			if (options is null)
-				throw new ArgumentNullException (nameof (options));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
 
 			return VTSessionSetProperties (Handle, options.Dictionary.Handle);
 		}
@@ -75,7 +75,7 @@ namespace VideoToolbox {
 		public VTStatus SetProperty (NSString propertyKey, NSObject? value)
 		{
 			if (propertyKey is null)
-				throw new ArgumentNullException (nameof (propertyKey));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (propertyKey));
 
 			return VTSessionSetProperty (Handle, propertyKey.Handle, value.GetHandle ());
 		}
@@ -95,7 +95,7 @@ namespace VideoToolbox {
 		public NSObject? GetProperty (NSString propertyKey)
 		{
 			if (propertyKey is null)
-				throw new ArgumentNullException (nameof (propertyKey));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (propertyKey));
 
 			var result = VTSessionCopyProperty (Handle, propertyKey.Handle, IntPtr.Zero, out var ret);
 			if (result != VTStatus.Ok || ret == IntPtr.Zero)
@@ -118,7 +118,7 @@ namespace VideoToolbox {
 			var result = VTSessionCopySupportedPropertyDictionary (Handle, out var ret);
 			if (result != VTStatus.Ok || ret == IntPtr.Zero)
 				return null;
-			
+
 			return Runtime.GetNSObject<NSDictionary> (ret, true);
 		}
 	}

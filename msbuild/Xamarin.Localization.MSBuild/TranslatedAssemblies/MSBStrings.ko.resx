@@ -423,6 +423,10 @@
         <value>{0}이(가) 코드 {1}(으)로 종료됨
         </value>
     </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
   <data name="M0119" xml:space="preserve">
         <value>출력 파일로 '{0}'을(를) 건너뜁니다. '{1}'이(가) 더 최신입니다.
         </value>
@@ -991,10 +995,6 @@
     </data>
   <data name="E7064" xml:space="preserve">
         <value>설정: '{0}' 항목이 없음
-        </value>
-    </data>
-  <data name="E7068" xml:space="preserve">
-        <value>바인딩 프로젝트에 네이티브 참조가 없으면 바인딩 리소스 패키지를 생성할 수 없습니다.
         </value>
     </data>
   <data name="E7069" xml:space="preserve">

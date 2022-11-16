@@ -14,6 +14,9 @@ parameters:
   type: string
   default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
 
+- name: label
+  type: string
+
 - name: disableProvisionatorCache
   type: boolean
   default: false
@@ -47,9 +50,24 @@ parameters:
   type: string
   default: 'vsts-device-tests' # target to be used to run the tests
 
+- name: isPR
+  type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 steps:
 
 - template: ../common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
 
 - template: ../common/setup.yml
   parameters:
@@ -62,7 +80,7 @@ steps:
 # 3. Cancel the pipeline and do not execute any of the following steps.
 - pwsh: | 
     Import-Module ./MaciosCI.psd1
-    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
+    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
 
     if ( -not (Test-HDFreeSpace -Size 20)) {
       $statuses.SetStatus("error", "Not enough free space in the host.", "${{ parameters.statusContext }}")
@@ -79,7 +97,6 @@ steps:
   displayName: 'Check HD Free Space'
   timeoutInMinutes: 5
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/
-  condition: succeededOrFailed() # we do not care about the previous step
 
 # if we got to this point, it means that we do have at least 50 Gb to run the test, should
 # be more than enough, else the above script would have stopped the pipeline
@@ -108,29 +125,31 @@ steps:
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
 
-# download the not notarized pkgs since we do not need them to be signed
+- bash: |
+    sudo rm -Rf $(Build.SourcesDirectory)/artifacts
+  displayName: "Remove artifacts"
+  condition: always()
+
 - task: DownloadPipelineArtifact@2
-  displayName: Download not notaraized build
+  displayName: Download artifacts
   inputs:
-    artifact: 'not-signed-package'
     allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/package
+    path: $(Build.SourcesDirectory)/artifacts
 
 - pwsh: |
-    $dir = "$(Build.SourcesDirectory)/package"
-    Dir $dir
-    $items = Get-ChildItem $dir -Recurse
-    foreach ($i in $items) {
-      if ($i.Name -like "xamarin.ios-*.pkg") {
-        $path = $i.FullName
-        Write-Host "##vso[task.setvariable variable=XI_PACKAGE;]$path"
-      }
-      if ($i.Name -like "xamarin.mac-*.pkg") {
-        $path = $i.FullName
-        Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$path"
-      }
-    }
-  displayName: 'Set iOS pkgs url'
+    $dir = "$(Build.SourcesDirectory)/artifacts"
+    $versionsPath = "$dir/PkgsVersions/PkgsVersions.json"
+    $versionData = Get-Content $versionsPath | ConvertFrom-Json
+
+    $iOSVersion = $versionData | Select-Object -ExpandProperty "iOS"
+    $iOSPath = "$dir/not-signed-package/xamarin.ios-$iOSVersion.pkg"
+    Write-Host "##vso[task.setvariable variable=XI_PACKAGE;]$iOSPath"
+
+    $macOSVersion = $versionData | Select-Object -ExpandProperty "macOS"
+    $macOSPath = "$dir/not-signed-package/xamarin.mac-$macOSVersion.pkg"
+    Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$macOSPath"
+
+  displayName: 'Set pkgs url'
   timeoutInMinutes: 5
 
 - bash: |
@@ -146,11 +165,12 @@ steps:
   condition: ${{ parameters.clearProvisionatorCache }}
 
 # Use the provisionator to install the test dependencies. Those have been generated in the 'Generate Provisionator csx file' step.
-- task: xamops.azdevex.provisionator-task.provisionator@1
+- task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Xamarin.iOS'
   inputs:
     provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests-provisioning.csx
     provisioning_extra_args: '-vvvv'
+    github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
 
 - bash: |
@@ -158,39 +178,33 @@ steps:
     make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ mac-tests-provisioning.csx
   displayName: 'Generate Provisionator csx file for Mac'
 
-- task: xamops.azdevex.provisionator-task.provisionator@1
+- task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Xamarin.Mac'
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/mac-tests-provisioning.csx
     provisioning_extra_args: '-vvvv'
+    github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
 
 - bash: |
-    set -e
-    set -x
-    mac_var=$(make -C tools/devops print-variable VARIABLE=MAC_DESTDIR MAC_DESTDIR=)
-    ios_var=$(make -C tools/devops print-variable VARIABLE=IOS_DESTDIR IOS_DESTDIR=)
-    MAC_DESTDIR=${mac_var#*=}
-    IOS_DESTDIR=${ios_var#*=}
-    XM_DEST_DIR="$MAC_DESTDIR/Library/Frameworks/Xamarin.Mac.framework/Versions/"
-    XI_DEST_DIR="$IOS_DESTDIR/Library/Frameworks/Xamarin.iOS.framework/Versions/"
-    mkdir -p "$XM_DEST_DIR"
-    mkdir -p "$XI_DEST_DIR"
-    ln -s /Library/Frameworks/Xamarin.Mac.framework/Versions/Current "$XM_DEST_DIR/git"
-    ln -s /Library/Frameworks/Xamarin.iOS.framework/Versions/Current "$XI_DEST_DIR/git"
-    ls -laR "$XM_DEST_DIR"
-    ls -laR "$XI_DEST_DIR"
+    set -ex
+    ls -R /Library/Frameworks/Xamarin.iOS.framework || true
+    ls -R /Library/Frameworks/Xamarin.Mac.framework || true
+  displayName: "Show installed Frameworks"
+
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/create-legacy-ios-mac-sdk-symlinks.sh
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/
   displayName: Create legacy iOS/Mac SDK symlinks
 
 - bash: |
     set -x
     set -e
-    $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators
+    $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators --ignore-shellcheck --ignore-yamllint
   displayName: 'Provision simulators'
 
 - template: ./run-tests.yml
   parameters:
+    label: ${{ parameters.label }}
     statusContext: ${{ parameters.statusContext }}
     testsLabels: ${{ parameters.testsLabels }}
     vsdropsPrefix: ${{ parameters.vsdropsPrefix }}

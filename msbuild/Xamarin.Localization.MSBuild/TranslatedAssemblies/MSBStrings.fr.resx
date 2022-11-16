@@ -423,6 +423,10 @@
         <value>{0} s'est arrêté. Code de sortie : {1}
         </value>
     </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
   <data name="M0119" xml:space="preserve">
         <value>'{0}' est ignoré, car le fichier de sortie, '{1}', est plus récent.
         </value>
@@ -991,10 +995,6 @@
     </data>
   <data name="E7064" xml:space="preserve">
         <value>Set : l'entrée "{0}" n'existe pas
-        </value>
-    </data>
-  <data name="E7068" xml:space="preserve">
-        <value>Impossible de créer un paquet de ressources de liaison, sauf s'il existe des références natives dans le projet de liaison.
         </value>
     </data>
   <data name="E7069" xml:space="preserve">

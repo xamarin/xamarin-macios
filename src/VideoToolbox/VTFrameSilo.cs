@@ -29,9 +29,9 @@ namespace VideoToolbox {
 	[SupportedOSPlatform ("tvos10.2")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[Mac (10,10)]
-	[iOS (8,0)]
-	[TV (10,2)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
+	[TV (10, 2)]
 #endif
 	public class VTFrameSilo : NativeObject {
 #if !NET
@@ -41,7 +41,7 @@ namespace VideoToolbox {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal VTFrameSilo (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -60,8 +60,8 @@ namespace VideoToolbox {
 			var status = VTFrameSiloCreate (
 				IntPtr.Zero,
 				fileUrl.GetHandle (),
-				timeRange ?? CMTimeRange.InvalidRange, 
-				IntPtr.Zero, 
+				timeRange ?? CMTimeRange.InvalidRange,
+				IntPtr.Zero,
 				out var ret);
 
 			if (status != VTStatus.Ok)
@@ -78,7 +78,7 @@ namespace VideoToolbox {
 		public VTStatus AddSampleBuffer (CMSampleBuffer sampleBuffer)
 		{
 			if (sampleBuffer is null)
-				throw new ArgumentNullException (nameof (sampleBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sampleBuffer));
 
 			return VTFrameSiloAddSampleBuffer (Handle, sampleBuffer.Handle);
 		}
@@ -89,14 +89,14 @@ namespace VideoToolbox {
 			/* CMItemCount */ nint timeRangeCount,
 			/* const CMTimeRange * */ IntPtr timeRangeArray);
 
-		public unsafe VTStatus SetTimeRangesForNextPass (CMTimeRange[] ranges)
+		public unsafe VTStatus SetTimeRangesForNextPass (CMTimeRange [] ranges)
 		{
 			if (ranges is null)
-				throw new ArgumentNullException (nameof (ranges));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ranges));
 
 			if (ranges.Length > 0)
-				fixed (CMTimeRange *first = &ranges [0]) {
-					return VTFrameSiloSetTimeRangesForNextPass (Handle, ranges.Length, (IntPtr)first);
+				fixed (CMTimeRange* first = &ranges [0]) {
+					return VTFrameSiloSetTimeRangesForNextPass (Handle, ranges.Length, (IntPtr) first);
 				}
 			else
 				return VTFrameSiloSetTimeRangesForNextPass (Handle, ranges.Length, IntPtr.Zero);

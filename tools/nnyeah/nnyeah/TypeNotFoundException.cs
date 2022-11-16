@@ -1,6 +1,6 @@
 using System;
 namespace Microsoft.MaciOS.Nnyeah {
-	public class TypeNotFoundException : Exception {
+	public class TypeNotFoundException : ConversionException {
 		public TypeNotFoundException (string typeName)
 			: base ($"The type {typeName} was not found.")
 		{

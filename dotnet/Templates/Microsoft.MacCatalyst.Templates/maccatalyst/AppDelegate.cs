@@ -17,7 +17,7 @@ public class AppDelegate : UIApplicationDelegate {
 		vc.View!.AddSubview (new UILabel (Window!.Frame) {
 			BackgroundColor = UIColor.SystemBackground,
 			TextAlignment = UITextAlignment.Center,
-			Text = "Hello, Catalyst!",
+			Text = "Hello, Mac Catalyst!",
 			AutoresizingMask = UIViewAutoresizing.All,
 		});
 		Window.RootViewController = vc;

@@ -5,12 +5,11 @@ using System.Linq;
 
 using NUnit.Framework;
 using Xamarin.Tests;
+using Xamarin.Utils;
 
-namespace Xamarin.iOS.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
-	public class ReleaseBuild : ProjectTest
-	{
+	public class ReleaseBuild : ProjectTest {
 		public ReleaseBuild (string platform)
 			: base (platform, "Release")
 		{
@@ -19,6 +18,9 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void BuildTest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			BuildProject ("MyReleaseBuild");
 
 			var args = new List<string> { "-r", "UIWebView", AppBundlePath };
@@ -29,6 +31,9 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void RebuildTest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var csproj = BuildProject ("MyReleaseBuild");
 
 			var dsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", Path.GetFileName (AppBundlePath) + ".dSYM"));
@@ -45,10 +50,10 @@ namespace Xamarin.iOS.Tasks
 			var newDSymTimestamps = Directory.EnumerateFiles (dsymDir, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
 
 			foreach (var file in timestamps.Keys)
-				Assert.AreEqual (timestamps[file], newTimestamps[file], "#1: " + file);
+				Assert.AreEqual (timestamps [file], newTimestamps [file], "#1: " + file);
 
 			foreach (var file in dsymTimestamps.Keys)
-				Assert.AreEqual (dsymTimestamps[file], newDSymTimestamps[file], "#2: " + file);
+				Assert.AreEqual (dsymTimestamps [file], newDSymTimestamps [file], "#2: " + file);
 
 			EnsureFilestampChange ();
 
@@ -71,7 +76,7 @@ namespace Xamarin.iOS.Tasks
 				} else if (fileName == "MyReleaseBuild") {
 					// the executable must of course be modified
 					isModificationExpected = true;
-				} else if (fileName ==  "CodeResources") {
+				} else if (fileName == "CodeResources") {
 					// the signature has of course changed too
 					isModificationExpected = true;
 				} else if (fileName.EndsWith (".dll", StringComparison.Ordinal) || fileName.EndsWith (".exe", StringComparison.Ordinal)) {
@@ -80,13 +85,13 @@ namespace Xamarin.iOS.Tasks
 				}
 
 				if (isModificationExpected)
-					Assert.AreNotEqual (timestamps[file], newTimestamps[file], "#3: " + file);
+					Assert.AreNotEqual (timestamps [file], newTimestamps [file], "#3: " + file);
 				else
-					Assert.AreEqual (timestamps[file], newTimestamps[file], "#3: " + file);
+					Assert.AreEqual (timestamps [file], newTimestamps [file], "#3: " + file);
 			}
 
 			foreach (var file in dsymTimestamps.Keys)
-				Assert.AreNotEqual (dsymTimestamps[file], newDSymTimestamps[file], "#4: " + file);
+				Assert.AreNotEqual (dsymTimestamps [file], newDSymTimestamps [file], "#4: " + file);
 		}
 	}
 }

@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <Reference Include="iOSIntegration">
-      <HintPath>../../API/Converted/iOS/iOSIntegration.dll</HintPath>
+      <HintPath>../../API/Converted/iOSIntegration.dll</HintPath>
     </Reference>
       <Compile Include="../Consumer.cs" Link="Consumer.cs" />
   </ItemGroup>

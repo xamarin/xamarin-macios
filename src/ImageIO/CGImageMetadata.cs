@@ -28,7 +28,7 @@ namespace ImageIO {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[iOS (7,0)]
+	[iOS (7, 0)]
 #endif
 	public partial class CGImageMetadataEnumerateOptions {
 
@@ -55,7 +55,7 @@ namespace ImageIO {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[iOS (7,0)]
+	[iOS (7, 0)]
 #endif
 	public partial class CGImageMetadata : NativeObject {
 #if !NET
@@ -80,7 +80,7 @@ namespace ImageIO {
 		{
 		}
 
-		[DllImport (Constants.ImageIOLibrary, EntryPoint="CGImageMetadataGetTypeID")]
+		[DllImport (Constants.ImageIOLibrary, EntryPoint = "CGImageMetadataGetTypeID")]
 		public extern static /* CFTypeID */ nint GetTypeID ();
 
 

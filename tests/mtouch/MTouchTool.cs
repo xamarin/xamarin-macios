@@ -561,7 +561,6 @@ namespace Xamarin
 				File.WriteAllText (Path.Combine (testDir, appName + ".cs"), CreateCode (code, usings, extraCode));
 				if (hasPlist)
 					File.WriteAllText (Path.Combine (testDir, "Info.plist"), CreatePlist (Profile, appName));
-				Configuration.CopyDotNetSupportingFiles (testDir);
 			} else { 
 				AppPath = app;
 				RootAssembly = CompileTestAppExecutable (testDir, code, extraArgs, Profile, appName, extraCode, usings);

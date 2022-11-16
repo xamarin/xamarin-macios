@@ -15,11 +15,10 @@ using AudioToolbox;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AudioToolbox {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AudioFileGlobalInfoTest
-	{
+	public class AudioFileGlobalInfoTest {
 		[Test]
 		public void Properties ()
 		{

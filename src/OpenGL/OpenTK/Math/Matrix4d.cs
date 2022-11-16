@@ -22,6 +22,8 @@ SOFTWARE.
  */
 #endregion
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 

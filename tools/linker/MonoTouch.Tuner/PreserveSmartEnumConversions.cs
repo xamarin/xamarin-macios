@@ -15,8 +15,7 @@ using MonoTouch.Tuner;
 
 using Xamarin.Bundler;
 
-namespace Xamarin.Linker.Steps
-{
+namespace Xamarin.Linker.Steps {
 #if NET
 	public class PreserveSmartEnumConversionsHandler : ExceptionalMarkHandler
 #else

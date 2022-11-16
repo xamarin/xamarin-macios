@@ -25,9 +25,9 @@ namespace VideoToolbox {
 	[SupportedOSPlatform ("tvos10.2")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[Mac (10,11)]
-	[iOS (9,0)]
-	[TV (10,2)]
+	[Mac (10, 11)]
+	[iOS (9, 0)]
+	[TV (10, 2)]
 #endif
 	public static class VTUtilities {
 		[DllImport (Constants.VideoToolboxLibrary)]
@@ -42,7 +42,7 @@ namespace VideoToolbox {
 		public static VTStatus ToCGImage (this CVPixelBuffer pixelBuffer, out CGImage? image)
 		{
 			if (pixelBuffer is null)
-				throw new ArgumentNullException (nameof (pixelBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (pixelBuffer));
 
 			var ret = VTCreateCGImageFromCVPixelBuffer (pixelBuffer.GetCheckedHandle (),
 				IntPtr.Zero, // no options as of 9.0/10.11 - always pass NULL

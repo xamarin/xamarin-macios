@@ -14,13 +14,14 @@
     <LangVersion>latest</LangVersion>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <RootTestsDirectory>..</RootTestsDirectory>
+    <CompilerResponseFile>$(RootTestsDirectory)\..\src\build\macos-defines.rsp</CompilerResponseFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\x86\Debug</OutputPath>
-    <DefineConstants>DEBUG;MONOMAC;XAMMAC_TESTS;DYNAMIC_REGISTRAR</DefineConstants>
+    <DefineConstants>DEBUG;MONOMAC;XAMMAC_TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -43,7 +44,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\arm64\Debug</OutputPath>
-    <DefineConstants>DEBUG;MONOMAC;XAMMAC_TESTS;DYNAMIC_REGISTRAR</DefineConstants>
+    <DefineConstants>DEBUG;MONOMAC;XAMMAC_TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -287,6 +288,7 @@
       <Link>Base.lproj\Localizable.strings</Link>
     </BundleResource>
   </ItemGroup>
+  <Import Project="$(RootTestsDirectory)\ComputeRegistrarConstant.targets" />
   <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <PropertyGroup>

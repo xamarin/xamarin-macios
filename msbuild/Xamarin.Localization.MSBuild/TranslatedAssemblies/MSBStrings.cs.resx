@@ -423,6 +423,10 @@
         <value>{0} skončilo s kódem {1}.
         </value>
     </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
   <data name="M0119" xml:space="preserve">
         <value>Přeskakuje se {0}, protože výstupní soubor {1} je novější.
         </value>
@@ -991,10 +995,6 @@
     </data>
   <data name="E7064" xml:space="preserve">
         <value>Nastavení: Položka {0} neexistuje.
-        </value>
-    </data>
-  <data name="E7068" xml:space="preserve">
-        <value>Pokud ve vazebním projektu neexistují nativní odkazy, nedá se vytvořit balíček prostředků vazby.
         </value>
     </data>
   <data name="E7069" xml:space="preserve">

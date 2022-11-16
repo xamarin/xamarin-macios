@@ -3,7 +3,7 @@ using System.IO;
 using Extrospection;
 
 class Program {
-	static void Main (string[] args)
+	static void Main (string [] args)
 	{
 		var dir = args.Length == 0 ? "." : args [0];
 		foreach (var file in Directory.GetFiles (dir, "*.unclassified")) {

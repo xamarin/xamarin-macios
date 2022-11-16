@@ -27,7 +27,7 @@ namespace Xamarin.MacDev.Tasks {
 			RunMake (Path.Combine (Configuration.RootPath, "tests", "common", "TestProjects", "ComplexAssembly"), environment: env);
 		}
 
-		static void RunMake (string directory, Dictionary<string, string> environment =  null)
+		static void RunMake (string directory, Dictionary<string, string> environment = null)
 		{
 			var arguments = new List<string> {
 				"-C",
@@ -51,7 +51,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
-		MergeAppBundles CreateTask (string outputBundle, params string[] inputBundles)
+		MergeAppBundles CreateTask (string outputBundle, params string [] inputBundles)
 		{
 			var inputItems = new List<TaskItem> ();
 			for (var i = 0; i < inputBundles.Length; i++) {
@@ -66,7 +66,7 @@ namespace Xamarin.MacDev.Tasks {
 		}
 
 		// Create two app bundles, one with fileA, and one with fileB, in the root directory
-		string[] CreateAppBundles (string fileA, string fileB, string fileName = null)
+		string [] CreateAppBundles (string fileA, string fileB, string fileName = null)
 		{
 			var appBundleA = Path.Combine (Cache.CreateTemporaryDirectory (), "MergeMe.app");
 			var appBundleB = Path.Combine (Cache.CreateTemporaryDirectory (), "MergeMe.app");
@@ -77,7 +77,7 @@ namespace Xamarin.MacDev.Tasks {
 			return new string [] { appBundleA, appBundleB };
 		}
 
-		string CreateAppBundle (string directory, params string[] files)
+		string CreateAppBundle (string directory, params string [] files)
 		{
 			var appBundle = Path.Combine (Cache.CreateTemporaryDirectory (), "MergeMe.app");
 			Directory.CreateDirectory (appBundle);
@@ -93,6 +93,7 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void TestLipoExecutable ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
 			var fileA = Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "macos", "libtest.arm64.dylib");
 			var fileB = Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "macos", "libtest.x86_64.dylib");
 			var bundles = CreateAppBundles (fileA, fileB, "libtest.dylib");
@@ -256,6 +257,7 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void TestSingleInput ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
 			var fileA = Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "macos", "libtest.arm64.dylib");
 			var bundle = CreateAppBundle (Path.GetDirectoryName (fileA), Path.GetFileName (fileA));
 			var outputBundle = Path.Combine (Cache.CreateTemporaryDirectory (), "Merged.app");

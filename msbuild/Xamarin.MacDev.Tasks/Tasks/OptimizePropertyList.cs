@@ -3,10 +3,8 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class OptimizePropertyList : OptimizePropertyListTaskBase, ITaskCallback
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class OptimizePropertyList : OptimizePropertyListTaskBase, ITaskCallback {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())
@@ -25,8 +23,8 @@ namespace Xamarin.MacDev.Tasks
 		{
 			base.Cancel ();
 
-			if (!string.IsNullOrEmpty(SessionId))
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+			if (!string.IsNullOrEmpty (SessionId))
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

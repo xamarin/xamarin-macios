@@ -20,7 +20,7 @@ namespace Xharness {
 		bool generate_variations = true;
 
 		public TestPlatform TestPlatform;
-		public string Label;
+		public TestLabel Label;
 		public string Path;
 		public string? SolutionPath;
 		public string? Name;
@@ -40,7 +40,7 @@ namespace Xharness {
 		// Optional
 		public MonoNativeInfo? MonoNativeInfo { get; set; }
 
-		public TestProject (string label, string path, bool isExecutableProject = true)
+		public TestProject (TestLabel label, string path, bool isExecutableProject = true)
 		{
 			Label = label;
 			Path = path;
@@ -66,6 +66,7 @@ namespace Xharness {
 
 		protected virtual TestProject CompleteClone (TestProject rv)
 		{
+			rv.Label = Label;
 			rv.Path = Path;
 			rv.IsExecutableProject = IsExecutableProject;
 			rv.IsDotNetProject = IsDotNetProject;
@@ -86,7 +87,7 @@ namespace Xharness {
 
 		static SemaphoreSlim ls_files_semaphore = new SemaphoreSlim (1);
 
-		async Task<string[]> ListFilesAsync (ILog log, string test_dir, IProcessManager processManager)
+		async Task<string []> ListFilesAsync (ILog log, string test_dir, IProcessManager processManager)
 		{
 			var acquired = await ls_files_semaphore.WaitAsync (TimeSpan.FromMinutes (5));
 			try {
@@ -196,14 +197,6 @@ namespace Xharness {
 						}
 					}
 				}
-
-				// The global.json and NuGet.config files make sure we use the locally built packages.
-				var dotnet_test_dir = System.IO.Path.Combine (test.RootDirectory, "dotnet");
-				var global_json = System.IO.Path.Combine (dotnet_test_dir, "global.json");
-				var nuget_config = System.IO.Path.Combine (dotnet_test_dir, "NuGet.config");
-				var target_directory = directory;
-				File.Copy (global_json, System.IO.Path.Combine (target_directory, System.IO.Path.GetFileName (global_json)), true);
-				File.Copy (nuget_config, System.IO.Path.Combine (target_directory, System.IO.Path.GetFileName (nuget_config)), true);
 			}
 
 			var projectReferences = new List<TestProject> ();

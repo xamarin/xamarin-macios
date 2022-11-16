@@ -18,7 +18,7 @@ using ObjCException = Foundation.MonoTouchException;
 #endif
 
 namespace MonoTouchFixtures.ObjCRuntime {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ExceptionsTest {
@@ -143,6 +143,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #if !DEBUG && !__WATCHOS__
 			Assert.Ignore ("This test only works in debug mode in the simulator.");
 #endif
+
+			TestRuntime.AssertNotARM64Desktop ("Exception handling doesn't work on ARM64 desktop: https://github.com/xamarin/xamarin-macios/issues/16264");
+
 			var hasDebugger = global::System.Diagnostics.Debugger.IsAttached;
 
 			InstallHandlers ();
@@ -190,7 +193,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 						Assert.AreNotSame (e.Exception, thrownException, "exception");
 						Assert.AreSame (typeof (ObjCException), thrownException.GetType (), "2 thrown type");
 						Assert.AreEqual ("Caught exception", ((ObjCException) thrownException).Name, "2 thrown name");
-						Assert.That (((ObjCException) thrownException).Reason, Does.StartWith ("exception was rethrown") , "2 thrown reason");
+						Assert.That (((ObjCException) thrownException).Reason, Does.StartWith ("exception was rethrown"), "2 thrown reason");
 					}
 					if (hasDebugger) {
 						Assert.AreEqual (0, objcEventArgs.Count, "2 objc exception");
@@ -220,7 +223,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					}
 				}
 			} finally {
-				UninstallHandlers ();      
+				UninstallHandlers ();
 			}
 		}
 	}

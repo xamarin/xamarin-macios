@@ -13,7 +13,7 @@ namespace MonoTouchFixtures.CoreAnimation {
 		[SetUp]
 		public void SetUp ()
 		{
-			TestRuntime.AssertXcodeVersion (13,0);
+			TestRuntime.AssertXcodeVersion (13, 0);
 		}
 
 		[Test]

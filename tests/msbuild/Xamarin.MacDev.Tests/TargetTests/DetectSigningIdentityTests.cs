@@ -18,6 +18,9 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void BundleIdentifierInPartialAppManifest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+			Configuration.AssertDotNetAvailable ();
+
 			// https://github.com/xamarin/xamarin-macios/issues/12051
 			var csproj = $@"<?xml version=""1.0"" encoding=""utf-8""?>
 <Project Sdk=""Microsoft.NET.Sdk"">
@@ -41,7 +44,6 @@ namespace Xamarin.MacDev.Tasks {
 </plist>";
 
 			var tmpdir = Cache.CreateTemporaryDirectory ();
-			Configuration.CopyDotNetSupportingFiles (tmpdir);
 			var csprojPath = Path.Combine (tmpdir, "BundleIdentifierInPartialAppManifest.csproj");
 			File.WriteAllText (csprojPath, csproj);
 

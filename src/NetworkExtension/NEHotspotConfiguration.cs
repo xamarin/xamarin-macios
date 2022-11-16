@@ -24,6 +24,7 @@ namespace NetworkExtension {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
 		[iOS (13,0)]
 #endif
@@ -37,6 +38,7 @@ namespace NetworkExtension {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
 		[iOS (13,0)]
 #endif

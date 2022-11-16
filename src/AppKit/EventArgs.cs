@@ -31,18 +31,15 @@
 
 using Foundation;
 
-namespace AppKit
-{
-	public enum NSFontCollectionAction
-	{
+namespace AppKit {
+	public enum NSFontCollectionAction {
 		Unknown,
 		Shown,
 		Hidden,
 		Renamed
 	}
 
-	public partial class NSFontCollectionChangedEventArgs
-	{
+	public partial class NSFontCollectionChangedEventArgs {
 		public NSFontCollectionAction Action {
 			get {
 				if (_Action == NSFontCollection.ActionWasShown) {
@@ -58,19 +55,17 @@ namespace AppKit
 		}
 
 		public NSFontCollectionVisibility Visibility {
-			get { return (NSFontCollectionVisibility)(int)_Visibility; }
+			get { return (NSFontCollectionVisibility) (int) _Visibility; }
 		}
 	}
 
-	public enum NSPopoverCloseReason
-	{
+	public enum NSPopoverCloseReason {
 		Unknown,
 		Standard,
 		DetachToWindow
 	}
 
-	public partial class NSPopoverCloseEventArgs
-	{
+	public partial class NSPopoverCloseEventArgs {
 		public NSPopoverCloseReason Reason {
 			get {
 				if (_Reason == NSPopover.CloseReasonStandard) {

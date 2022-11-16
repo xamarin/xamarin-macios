@@ -17,25 +17,23 @@ using ObjCRuntime;
 namespace AddressBookUI {
 #if NET
 	[UnsupportedOSPlatform ("ios9.0")]
-#if IOS
-	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
 #else
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 #endif
 	public class ABPersonViewPerformDefaultActionEventArgs : EventArgs {
 		public ABPersonViewPerformDefaultActionEventArgs (ABPerson person, ABPersonProperty property, int? identifier)
 		{
-			Person      = person;
-			Property    = property;
-			Identifier  = identifier;
+			Person = person;
+			Property = property;
+			Identifier = identifier;
 		}
 
-		public ABPerson Person {get; private set;}
-		public ABPersonProperty Property {get; private set;}
-		public int? Identifier {get; private set;}
+		public ABPerson Person { get; private set; }
+		public ABPersonProperty Property { get; private set; }
+		public int? Identifier { get; private set; }
 
-		public bool ShouldPerformDefaultAction {get; set;}
+		public bool ShouldPerformDefaultAction { get; set; }
 	}
 
 	class InternalABPersonViewControllerDelegate : ABPersonViewControllerDelegate {
@@ -52,7 +50,7 @@ namespace AddressBookUI {
 		{
 			ABPersonProperty property = ABPersonPropertyId.ToPersonProperty (propertyId);
 			int? id = identifier == ABRecord.InvalidPropertyId ? null : (int?) identifier;
-			
+
 			var e = new ABPersonViewPerformDefaultActionEventArgs (person, property, id);
 			personViewController.OnPerformDefaultAction (e);
 			return e.ShouldPerformDefaultAction;
@@ -78,7 +76,7 @@ namespace AddressBookUI {
 			get {
 				if (displayedProperties is null) {
 					displayedProperties = new DisplayedPropertiesCollection (
-							() => _DisplayedProperties, 
+							() => _DisplayedProperties,
 							v => _DisplayedProperties = v);
 					MarkDirty ();
 				}
@@ -130,8 +128,8 @@ namespace AddressBookUI {
 		}
 
 		public event EventHandler<ABPersonViewPerformDefaultActionEventArgs> PerformDefaultAction {
-			add {EnsureEventDelegate ().performDefaultAction += value;}
-			remove {EnsureEventDelegate ().performDefaultAction -= value;}
+			add { EnsureEventDelegate ().performDefaultAction += value; }
+			remove { EnsureEventDelegate ().performDefaultAction -= value; }
 		}
 	}
 }

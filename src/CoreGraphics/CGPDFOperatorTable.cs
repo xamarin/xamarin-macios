@@ -56,7 +56,7 @@ namespace CoreGraphics {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGPDFOperatorTable (NativeHandle handle, bool owns)
 			 : base (handle, owns)
 		{
@@ -76,7 +76,7 @@ namespace CoreGraphics {
 		// We need this P/Invoke for legacy AOT scenarios (since we have public API taking a 'Action<IntPtr, IntPtr>', and with this particular native function we can't wrap the delegate)
 		// Unfortunately CoreCLR doesn't support generic Action delegates in P/Invokes: https://github.com/dotnet/runtime/issues/32963
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGPDFOperatorTableSetCallback (/* CGPDFOperatorTableRef */ IntPtr table, /* const char */ string name, /* CGPDFOperatorCallback */ Action<IntPtr,IntPtr>? callback);
+		extern static void CGPDFOperatorTableSetCallback (/* CGPDFOperatorTableRef */ IntPtr table, /* const char */ string name, /* CGPDFOperatorCallback */ Action<IntPtr, IntPtr>? callback);
 #endif
 
 #if NET
@@ -97,7 +97,7 @@ namespace CoreGraphics {
 		public void SetCallback (string name, Action<CGPDFScanner?,object?>? callback)
 		{
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 
 			if (callback is null)
 				CGPDFOperatorTableSetCallback (Handle, name, (CGPDFOperatorCallback?) null);
@@ -115,10 +115,10 @@ namespace CoreGraphics {
 
 #if !NET
 		// this API is ugly - but I do not see a better way with the AOT limitation
-		public void SetCallback (string name, Action<IntPtr,IntPtr>? callback)
+		public void SetCallback (string name, Action<IntPtr, IntPtr>? callback)
 		{
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 
 			CGPDFOperatorTableSetCallback (Handle, name, callback);
 		}
@@ -129,7 +129,7 @@ namespace CoreGraphics {
 		public unsafe void SetCallback (string name, delegate* unmanaged<IntPtr, IntPtr, void> callback)
 		{
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 
 			CGPDFOperatorTableSetCallback (Handle, name, callback);
 		}

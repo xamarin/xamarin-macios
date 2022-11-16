@@ -1,3 +1,5 @@
+#nullable enable
+
 #if __IOS__ && !NET
 using System;
 using System.Collections.Generic;

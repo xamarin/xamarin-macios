@@ -39,7 +39,7 @@ namespace Xharness.Tests.TestImporter.Tests {
 		public void IsXUnit ()
 		{
 			var testAssemblyDefinition = new TestAssemblyDefinition ("monotouch_System.Json.Microsoft_xunit-test.dll", assemblyLocator.Object);
-			Assert.True( testAssemblyDefinition.IsXUnit);
+			Assert.True (testAssemblyDefinition.IsXUnit);
 		}
 
 	}

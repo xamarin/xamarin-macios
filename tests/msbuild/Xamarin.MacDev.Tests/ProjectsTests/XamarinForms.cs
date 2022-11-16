@@ -1,12 +1,13 @@
 using System.IO;
 using NUnit.Framework;
 
-namespace Xamarin.iOS.Tasks
-{
+using Xamarin.Tests;
+using Xamarin.Utils;
+
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
-	public class XamarinForms : ProjectTest
-	{
+	public class XamarinForms : ProjectTest {
 		public XamarinForms (string platform) : base (platform)
 		{
 		}
@@ -14,6 +15,9 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void IncrementalBuilds ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var testdir = GetTestDirectory ();
 			NugetRestore (Path.Combine (testdir, "MyXamarinFormsApp", "MyXamarinFormsApp.csproj"));
 			NugetRestore (Path.Combine (testdir, "MyXamarinFormsApp", "MyXamarinFormsAppNS", "MyXamarinFormsAppNS.csproj"));

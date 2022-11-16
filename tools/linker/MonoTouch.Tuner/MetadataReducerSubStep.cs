@@ -65,7 +65,7 @@ namespace Xamarin.Linker.Steps {
 			// is something that can be solved elsewhere...
 			if (!method.HasParameters)
 				return;
-			
+
 			foreach (var p in method.Parameters)
 				p.Name = null;
 		}

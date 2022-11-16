@@ -1,13 +1,13 @@
 using NUnit.Framework;
 using System.IO;
-using Xamarin.Tests;
 
-namespace Xamarin.iOS.Tasks
-{
+using Xamarin.Tests;
+using Xamarin.Utils;
+
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
-	public class BindingProject : TestBase
-	{
+	public class BindingProject : TestBase {
 		public BindingProject (string platform)
 			: base (platform)
 		{
@@ -16,6 +16,9 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void BuildTest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var proj = SetupProjectPaths ("MyiOSFrameworkBinding", includePlatform: false);
 
 			MonoTouchProject = proj;

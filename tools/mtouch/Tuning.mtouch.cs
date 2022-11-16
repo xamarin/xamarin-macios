@@ -53,9 +53,9 @@ namespace MonoTouch.Tuner {
 			context.Resolver.AddSearchDirectory (options.OutputDirectory);
 
 			if (options.DumpDependencies) {
-				var prepareDependenciesDump = context.Annotations.GetType ().GetMethod ("PrepareDependenciesDump", new Type[1] { typeof (string) });
+				var prepareDependenciesDump = context.Annotations.GetType ().GetMethod ("PrepareDependenciesDump", new Type [1] { typeof (string) });
 				if (prepareDependenciesDump != null)
-					prepareDependenciesDump.Invoke (context.Annotations, new object[1] { string.Format ("{0}{1}linker-dependencies.xml.gz", options.OutputDirectory, Path.DirectorySeparatorChar) });
+					prepareDependenciesDump.Invoke (context.Annotations, new object [1] { string.Format ("{0}{1}linker-dependencies.xml.gz", options.OutputDirectory, Path.DirectorySeparatorChar) });
 			}
 
 			Process (pipeline, context);
@@ -79,7 +79,7 @@ namespace MonoTouch.Tuner {
 
 			return context;
 		}
-		
+
 		static SubStepDispatcher GetSubSteps ()
 		{
 			SubStepDispatcher sub = new SubStepDispatcher ();
@@ -158,7 +158,7 @@ namespace MonoTouch.Tuner {
 				// the NotSupportedException constructor we need, so we need to do this before the sweep step.
 				if (remove_incompatible_bitcode != null)
 					pipeline.Append (new SubStepDispatcher { remove_incompatible_bitcode });
-				
+
 				pipeline.Append (new MonoTouchSweepStep (options));
 				pipeline.Append (new CleanStep ());
 
@@ -211,8 +211,7 @@ namespace MonoTouch.Tuner {
 				using (StreamReader sr = new StreamReader (filename)) {
 					return new ResolveFromXmlStep (new XPathDocument (new StringReader (sr.ReadToEnd ())));
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				throw new ProductException (2005, true, e, Errors.MX2005, filename);
 			}
 		}
@@ -225,8 +224,7 @@ namespace MonoTouch.Tuner {
 		}
 	}
 
-	public class CustomizeIOSActions : CustomizeCoreActions
-	{
+	public class CustomizeIOSActions : CustomizeCoreActions {
 		LinkMode link_mode;
 
 		public CustomizeIOSActions (LinkMode mode, IEnumerable<string> skipped_assemblies)
@@ -239,7 +237,7 @@ namespace MonoTouch.Tuner {
 		{
 			if (link_mode == LinkMode.None)
 				return false;
-			
+
 			return base.IsLinked (assembly);
 		}
 
@@ -252,8 +250,7 @@ namespace MonoTouch.Tuner {
 
 			try {
 				base.ProcessAssembly (assembly);
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				throw new ProductException (2103, true, e, Errors.MX2103, assembly.FullName, e);
 			}
 		}

@@ -423,6 +423,10 @@
         <value>{0} 已退出，代码为 {1}
 </value>
     </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
   <data name="M0119" xml:space="preserve">
         <value>即将跳过“{0}”，因为输出文件“{1}”较新。
 </value>
@@ -991,10 +995,6 @@
     </data>
   <data name="E7064" xml:space="preserve">
         <value>设置: 不存在条目“{0}”
-</value>
-    </data>
-  <data name="E7068" xml:space="preserve">
-        <value>除非绑定项目中存在本机引用，否则无法创建绑定资源包。
 </value>
     </data>
   <data name="E7069" xml:space="preserve">

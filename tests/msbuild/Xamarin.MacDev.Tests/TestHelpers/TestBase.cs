@@ -9,10 +9,8 @@ using Xamarin.MacDev;
 
 using Xamarin.Utils;
 
-namespace Xamarin.Tests
-{
-	public abstract class TestBase
-	{
+namespace Xamarin.Tests {
+	public abstract class TestBase {
 		public ExecutionMode Mode = ExecutionMode.MSBuild;
 		public string Platform;
 		public string Config = "Debug";
@@ -32,8 +30,7 @@ namespace Xamarin.Tests
 			Config = config;
 		}
 
-		protected static class TargetName
-		{
+		protected static class TargetName {
 			public static string Build = "Build";
 			public static string Clean = "Clean";
 			public static string CollectBundleResources = "_CollectBundleResources";
@@ -65,7 +62,6 @@ namespace Xamarin.Tests
 			var rv = Configuration.CloneTestDirectory (Configuration.TestProjectsDirectory);
 
 			if (mode == ExecutionMode.DotNet) {
-				Configuration.CopyDotNetSupportingFiles (rv);
 				Configuration.FixupTestFiles (rv, "dotnet");
 			}
 
@@ -75,7 +71,7 @@ namespace Xamarin.Tests
 		public string [] ExpectedAppFiles = { };
 		public string [] UnexpectedAppFiles = { "monotouch.dll" };
 
-		public string[] GetCoreAppFiles (string managedExe, string nativeExe)
+		public string [] GetCoreAppFiles (string managedExe, string nativeExe)
 		{
 			var coreFiles = new List<string> ();
 
@@ -239,13 +235,13 @@ namespace Xamarin.Tests
 			get { return TargetFrameworkIdentifier == "Xamarin.TVOS"; }
 		}
 
-		public void TestFilesDoNotExist(string baseDir, IEnumerable<string> files)
+		public void TestFilesDoNotExist (string baseDir, IEnumerable<string> files)
 		{
 			foreach (var v in files.Select (s => Path.Combine (baseDir, s)))
 				Assert.IsFalse (File.Exists (v) || Directory.Exists (v), "Unexpected file: {0} exists", v);
 		}
 
-		public void TestFilesExists (string baseDir, string[] files)
+		public void TestFilesExists (string baseDir, string [] files)
 		{
 			foreach (var v in files.Select (s => Path.Combine (baseDir, s)))
 				Assert.IsTrue (File.Exists (v) || Directory.Exists (v), "Expected file: {0} does not exist", v);
@@ -261,19 +257,19 @@ namespace Xamarin.Tests
 			}
 		}
 
-		public void TestStoryboardC (string path) 
+		public void TestStoryboardC (string path)
 		{
 			Assert.IsTrue (Directory.Exists (path), "Storyboard {0} does not exist", path);
 			Assert.IsTrue (File.Exists (Path.Combine (path, "Info.plist")));
-			TestPList (path, new string [] {"CFBundleVersion", "CFBundleExecutable"});
+			TestPList (path, new string [] { "CFBundleVersion", "CFBundleExecutable" });
 		}
 
-		public void TestPList (string path, string[] keys)
+		public void TestPList (string path, string [] keys)
 		{
 			var plist = PDictionary.FromFile (Path.Combine (path, "Info.plist"));
 			foreach (var x in keys) {
 				Assert.IsTrue (plist.ContainsKey (x), "Key {0} is not present in {1} Info.plist", x, path);
-				Assert.IsNotEmpty (((PString)plist[x]).Value, "Key {0} is empty in {1} Info.plist", x, path);
+				Assert.IsNotEmpty (((PString) plist [x]).Value, "Key {0} is empty in {1} Info.plist", x, path);
 			}
 		}
 
@@ -281,7 +277,7 @@ namespace Xamarin.Tests
 		{
 			var dir = Cache.CreateTemporaryDirectory ();
 			path = Path.Combine (dir, path);
-			using (new FileStream (path, FileMode.CreateNew)) {}
+			using (new FileStream (path, FileMode.CreateNew)) { }
 			return path;
 		}
 
@@ -309,7 +305,7 @@ namespace Xamarin.Tests
 		public static bool IsAPFS {
 			get {
 				if (!is_apfs.HasValue) {
-					var exit_code = ExecutionHelper.Execute ("/bin/df", new string[] { "-t", "apfs", "/" }, out var output, TimeSpan.FromSeconds (10));
+					var exit_code = ExecutionHelper.Execute ("/bin/df", new string [] { "-t", "apfs", "/" }, out var output, TimeSpan.FromSeconds (10));
 					is_apfs = exit_code == 0 && output.Trim ().Split ('\n').Length >= 2;
 				}
 				return is_apfs.Value;
@@ -351,7 +347,7 @@ namespace Xamarin.Tests
 
 		public static void NugetRestore (string project)
 		{
-			var rv = ExecutionHelper.Execute ("nuget", new string[] { "restore", project }, out var output);
+			var rv = ExecutionHelper.Execute ("nuget", new string [] { "restore", project }, out var output);
 			if (rv != 0) {
 				Console.WriteLine ("nuget restore failed:");
 				Console.WriteLine (output);

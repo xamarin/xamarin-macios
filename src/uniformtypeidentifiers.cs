@@ -119,6 +119,18 @@ namespace UniformTypeIdentifiers {
 
 		[Export ("supertypes")]
 		NSSet<UTType> Supertypes { get; }
+
+		// extension methods used in ShazamKit
+
+		[Static]
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("SHCustomCatalogContentType", ArgumentSemantic.Strong)]
+		UTType SHCustomCatalogContentType { get; }
+
+		[Static]
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("SHSignatureContentType", ArgumentSemantic.Strong)]
+		UTType SHSignatureContentType { get; }
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14,0)]

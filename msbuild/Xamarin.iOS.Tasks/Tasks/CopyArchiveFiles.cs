@@ -56,12 +56,12 @@ namespace Xamarin.iOS.Tasks {
 			}
 		}
 
-		public void Cancel () => BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+		public void Cancel () => BuildConnection.CancelAsync (BuildEngine4).Wait ();
 
 		async System.Threading.Tasks.Task<IBuildClient> GetBuildClientAsync ()
 		{
 			var connection = await BuildConnection
-				.GetAsync (SessionId, BuildEngine4)
+				.GetAsync (BuildEngine4)
 				.ConfigureAwait (continueOnCapturedContext: false);
 
 			return connection.Client;

@@ -1232,6 +1232,9 @@
 		<value>Se encontró un objeto BindAsAttribute no válido en "{0}": no se pudo encontrar el tipo de enumeración subyacente de {1}. Presente un informe de errores en https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
 	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>El registrador encontró un tipo "{0}" no válido en la signatura del método "{1}": la interfaz debe tener un atributo de protocolo que especifique su tipo de contenedor.
 		</value>
@@ -1739,5 +1742,12 @@
 	</data>
   <data name="MX8041" xml:space="preserve">
 		<value>No se puede crear una instancia de tipo {0}.</value>
+	</data>
+  <data name="MX8042" xml:space="preserve">
+		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<comment>
+			0: name of function
+			1: exception info
+		</comment>
 	</data>
 </root>

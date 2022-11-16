@@ -189,10 +189,12 @@ namespace PassKit {
 		[Mac (12,0), iOS (15,0), Watch (8,0)]
 		Continue = 16,
 #if !NET
+#pragma warning disable 0618 // warning CS0618: 'PKPaymentButtonType.[field]' is obsolete: 'Use '[replacement]'.'
 		[iOS (12,0)]
 		Book2 = Checkout,
 		[iOS (12,0)]
 		Checkout2 = Book,
+#pragma warning restore
 #endif // !NET
 	}
 
@@ -296,6 +298,77 @@ namespace PassKit {
 		UnavailableError,
 		InvalidConfigurationError,
 		DeviceNotSupportedError,
-		DeviceNotReadyError
+		DeviceNotReadyError,
+		OSVersionNotSupportedError,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[Native]
+	public enum PKIdentityButtonLabel : long
+	{
+		VerifyIdentity = 0,
+		Verify,
+		VerifyAge,
+		Continue,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[Native]
+	public enum PKIdentityButtonStyle : long
+	{
+		Black = 0,
+		Outline,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[Native]
+	[ErrorDomain ("PKIdentityErrorDomain")]
+	public enum PKIdentityError : long
+	{
+		Unknown = 0,
+		NotSupported = 1,
+		Cancelled = 2,
+		NetworkUnavailable = 3,
+		NoElementsRequested = 4,
+		RequestAlreadyInProgress = 5,
+		InvalidNonce = 6,
+		InvalidElement = 7,
+	}
+
+	[iOS (16,0), Mac (13,0), Watch (9,0), NoTV, MacCatalyst (16,0)]
+	[Native]
+	[ErrorDomain ("PKShareSecureElementPassErrorDomain")]
+	public enum PKShareSecureElementPassErrorCode : long
+	{
+		UnknownError,
+		SetupError,
+	}
+
+	[iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV, NoMac]
+	[Native]
+	public enum PKShareSecureElementPassResult : long
+	{
+		Canceled,
+		Shared,
+		Failed,
+	}
+
+	[iOS (16,0), Mac (13,0), Watch (9,0), NoTV, MacCatalyst (16,0)]
+	[Native]
+	public enum PKVehicleConnectionErrorCode : long
+	{
+		Unknown = 0,
+		SessionUnableToStart,
+		SessionNotActive,
+	}
+
+	[iOS (16,0), Mac (13,0), Watch (9,0), NoTV, MacCatalyst (16,0)]
+	[Native]
+	public enum PKVehicleConnectionSessionConnectionState : long
+	{
+		Disconnected = 0,
+		Connected,
+		Connecting,
+		FailedToConnect,
 	}
 }

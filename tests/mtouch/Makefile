@@ -28,11 +28,15 @@ run-tests: bin/Debug/mtouchtests.dll test.config
 	@[[ ! -e .failed-stamp ]] 
 
 # mtouchtests.csproj.inc contains the mtouchtests_dependencies variable used to determine if mtouchtests.dll needs to be rebuilt or not.
+mtouchtests.csproj.inc: export BUILD_VERBOSITY=$(MSBUILD_VERBOSITY)
 -include mtouchtests.csproj.inc
 
 bin/Debug/mtouchtests.dll: $(mtouchtests_dependencies)
 	$(SYSTEM_XIBUILD) -- mtouchtests.csproj /r $(XBUILD_VERBOSITY) /bl
 	$(Q) rm -f .failed-stamp
+
+$(abspath $(TOP)/tools/mtouch/Constants.cs):
+	$(Q) $(MAKE) $(notdir $@) -C $(dir $@)
 
 build: bin/Debug/mtouchtests.dll
 

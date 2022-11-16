@@ -24,11 +24,8 @@ namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 		public List<string> PropertiesNotPresent { get; init; } = new List<string> ();
 		public Dictionary<string, PropertyDefinition> PropertyMap { get; init; } = new Dictionary<string, PropertyDefinition> ();
 
-		public ModuleDefinition MicrosoftModule { get; init; }
-
-		public TypeAndMemberMap (ModuleDefinition module)
+		public TypeAndMemberMap ()
 		{
-			MicrosoftModule = module;
 		}
 
 		public bool TypeIsNotPresent (string typeName)

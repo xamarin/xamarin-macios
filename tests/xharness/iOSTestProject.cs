@@ -12,7 +12,7 @@ namespace Xharness {
 		public bool SkipDeviceVariations;
 		public bool BuildOnly;
 
-		public iOSTestProject (string label, string path, bool isExecutableProject = true)
+		public iOSTestProject (TestLabel label, string path, bool isExecutableProject = true)
 			: base (label, path, isExecutableProject)
 		{
 			Name = System.IO.Path.GetFileNameWithoutExtension (path);

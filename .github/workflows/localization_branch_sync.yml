@@ -1,3 +1,5 @@
+# Disabling this action since we do something similar already in the CI
+
 name: Sync Localization Branch
 on:
   pull_request:
@@ -22,7 +24,7 @@ jobs:
         branches: Localization
         soft_fail: true
 
-    - uses: peterjgrainger/action-create-branch@v2.0.1
+    - uses: peterjgrainger/action-create-branch@v2.2.0
       name: 'Create Localization Branch'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

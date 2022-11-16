@@ -13,10 +13,8 @@ using Xamarin.Linker;
 using Xamarin.Tuner;
 using Xamarin.Utils;
 
-namespace Xamarin.Linker.Steps
-{
-	public class ListExportedSymbols : BaseStep
-	{
+namespace Xamarin.Linker.Steps {
+	public class ListExportedSymbols : BaseStep {
 		PInvokeWrapperGenerator state;
 #if !NET
 		bool skip_sdk_assemblies;
@@ -38,6 +36,18 @@ namespace Xamarin.Linker.Steps
 				return state;
 			}
 		}
+
+#if NET
+		protected override void EndProcess ()
+		{
+			if (state?.Started == true) {
+				// The generator is 'started' by the linker, which means it may not
+				// be started if the linker was not executed due to re-using cached results.
+				state.End ();
+			}
+			base.EndProcess ();
+		}
+#endif
 
 #if NET
 		public LinkerConfiguration Configuration {

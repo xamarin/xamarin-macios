@@ -702,6 +702,7 @@ namespace CoreNFC {
 		Iso14443 = 0x1,
 		Iso15693 = 0x2,
 		Iso18092 = 0x4,
+		Pace = 0x8,
 	}
 
 	[iOS (13,0)]

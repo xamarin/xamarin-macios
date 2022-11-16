@@ -1,14 +1,5 @@
 #nullable enable
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-using NUnit.Framework;
-
-using Xamarin.Utils;
-
 namespace Xamarin.Tests {
 	[TestFixture]
 	public class BundleStructureTest : TestBaseClass {
@@ -27,7 +18,7 @@ namespace Xamarin.Tests {
 			return false;
 		}
 
-		void CheckAppBundleContents (ApplePlatform platform, string appPath, string[] runtimeIdentifiers, CodeSignature isSigned, bool isReleaseBuild)
+		void CheckAppBundleContents (ApplePlatform platform, string appPath, string [] runtimeIdentifiers, CodeSignature isSigned, bool isReleaseBuild)
 		{
 			// Directory.GetFileSystemEntries will enter symlink directories and iterate inside :/
 			Console.WriteLine ($"App bundle: {appPath}");
@@ -46,6 +37,7 @@ namespace Xamarin.Tests {
 				var fn = Path.GetFileName (v!);
 
 				switch (fn) {
+				case "libclrgc.dylib":
 				case "libclrjit.dylib":
 				case "libcoreclr.dylib":
 				case "libdbgshim.dylib":
@@ -57,6 +49,7 @@ namespace Xamarin.Tests {
 				case "libmono-component-debugger.dylib":
 				case "libmono-component-diagnostics_tracing.dylib":
 				case "libmono-component-hot_reload.dylib":
+				case "libmono-component-marshal-ilgen.dylib":
 				case "libmonosgen-2.0.dylib":
 					return platform != ApplePlatform.MacOSX;
 				case "libSystem.Native.dylib":
@@ -151,7 +144,7 @@ namespace Xamarin.Tests {
 				AddExpectedPlugInFiles (platform, expectedFiles, "PlugInA", isSigned); // PlugIns
 				AddExpectedPlugInFiles (platform, expectedFiles, "CompressedPlugInB", isSigned); // CompressedPlugIns
 			}
-																				   // UnknownI.bin: Unknown -- this should show a warning
+			// UnknownI.bin: Unknown -- this should show a warning
 			// SomewhatUnknownI.bin: Unknown -- this should show a warning
 
 			switch (platform) {
@@ -182,7 +175,7 @@ namespace Xamarin.Tests {
 				AddExpectedPlugInFiles (platform, expectedFiles, "PlugInC", isSigned, "Subfolder"); // PlugIns
 				AddExpectedPlugInFiles (platform, expectedFiles, "CompressedPlugInD", isSigned); // CompressedPlugIns - the Link metadata has no effect, so no subfolder.
 			}
-																								// SomewhatUnknownI.bin: Unknown -- this should show a warning
+			// SomewhatUnknownI.bin: Unknown -- this should show a warning
 			switch (platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
@@ -199,6 +192,8 @@ namespace Xamarin.Tests {
 			default:
 				throw new NotImplementedException ($"Unknown platform: {platform}");
 			}
+
+			AddExpectedFrameworkFiles (platform, expectedFiles, "Framework.With.Dots", isSigned); // https://github.com/xamarin/xamarin-macios/issues/15727
 
 			expectedFiles.Add ($"{resourcesDirectory}ContentA.txt");
 			expectedFiles.Add ($"{resourcesDirectory}ContentB.txt");
@@ -393,7 +388,7 @@ namespace Xamarin.Tests {
 		}
 
 
-		static void AddMultiRidAssembly (ApplePlatform platform, List<string> expectedFiles, string assemblyDirectory, string assemblyName, string[] runtimeIdentifiers, bool forceSingleRid = false, bool hasPdb = true, bool addConfig = false, bool includeDebugFiles = false)
+		static void AddMultiRidAssembly (ApplePlatform platform, List<string> expectedFiles, string assemblyDirectory, string assemblyName, string [] runtimeIdentifiers, bool forceSingleRid = false, bool hasPdb = true, bool addConfig = false, bool includeDebugFiles = false)
 		{
 			if (forceSingleRid || runtimeIdentifiers.Length == 1) {
 				expectedFiles.Add ($"{assemblyDirectory}{assemblyName}.dll");
@@ -645,7 +640,7 @@ namespace Xamarin.Tests {
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 		}
 
-		string[] FilterWarnings (IEnumerable<BuildLogEvent> warnings)
+		string [] FilterWarnings (IEnumerable<BuildLogEvent> warnings)
 		{
 			return warnings
 				.Select (v => v?.Message!).Where (v => !string.IsNullOrWhiteSpace (v))
@@ -665,7 +660,7 @@ namespace Xamarin.Tests {
 
 		}
 
-		void AssertLibraryArchitectures (string appBundle, string[] runtimeIdentifiers)
+		void AssertLibraryArchitectures (string appBundle, string [] runtimeIdentifiers)
 		{
 			var renderArchitectures = (IEnumerable<Abi> architectures) => {
 				return string.Join (", ",
@@ -702,6 +697,6 @@ namespace Xamarin.Tests {
 				var libArchitectures = renderArchitectures (MachO.GetArchitectures (lib));
 				Assert.AreEqual (expectedArchitectures, libArchitectures, $"Architectures in {lib}");
 			}
-		}		
+		}
 	}
 }

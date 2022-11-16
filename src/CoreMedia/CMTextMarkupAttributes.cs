@@ -26,6 +26,8 @@
 //
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -42,10 +44,9 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[Watch (6,0)]
+	[Watch (6, 0)]
 #endif
-	public struct TextMarkupColor
-	{
+	public struct TextMarkupColor {
 		public TextMarkupColor (float red, float green, float blue, float alpha)
 			: this ()
 		{
@@ -76,10 +77,9 @@ namespace CoreMedia {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[Watch (6,0)]
+	[Watch (6, 0)]
 #endif
-	public class CMTextMarkupAttributes : DictionaryContainer
-	{
+	public class CMTextMarkupAttributes : DictionaryContainer {
 		public CMTextMarkupAttributes ()
 		{
 		}
@@ -163,7 +163,7 @@ namespace CoreMedia {
 			}
 		}
 
-		public string FontFamilyName {
+		public string? FontFamilyName {
 			get {
 				return GetStringValue (CMTextMarkupAttributesKeys.FontFamilyName);
 			}

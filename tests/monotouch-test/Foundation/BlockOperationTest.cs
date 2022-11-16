@@ -12,18 +12,18 @@ using Foundation;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class BlockOperationTest {
-		
+
 		[Test]
 		public void Create_Null ()
 		{
 			// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -[NSBlockOperation addExecutionBlock:]: block is nil
 			Assert.Throws<ArgumentNullException> (() => NSBlockOperation.Create (null));
 		}
-		
+
 		[Test]
 		public void Add_Null ()
 		{

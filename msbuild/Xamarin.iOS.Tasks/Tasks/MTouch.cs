@@ -5,10 +5,8 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks
-{
-	public class MTouch : MTouchTaskBase, ITaskCallback
-	{
+namespace Xamarin.iOS.Tasks {
+	public class MTouch : MTouchTaskBase, ITaskCallback {
 		public ITaskItem [] ConfigFiles { get; set; }
 
 		public override bool Execute ()
@@ -70,8 +68,8 @@ namespace Xamarin.iOS.Tasks
 		{
 			base.Cancel ();
 
-			if (!string.IsNullOrEmpty(SessionId))
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+			if (!string.IsNullOrEmpty (SessionId))
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 
 		IEnumerable<ITaskItem> GetConfigFiles (IEnumerable<ITaskItem> references)

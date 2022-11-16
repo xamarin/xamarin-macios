@@ -6,7 +6,6 @@ include $(TOP)/Make.config
 
 export TargetFrameworkFallbackSearchPaths:=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
 export MSBuildExtensionsPathFallbackPathsOverride:=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild
-export MD_APPLE_SDK_ROOT=$(abspath $(XCODE_DEVELOPER_ROOT)/../..)
 
 ifeq ($(shell uname -a),"arm64")
 IS_ARM64=1
@@ -27,15 +26,23 @@ LAUNCH_ARGUMENTS=--autostart --autoexit
 
 # Time test runs out after 5 minutes (300 seconds)
 RUN_WITH_TIMEOUT=./run-with-timeout.sh 300
+# Some tests need a bit more time... (introspection)
+RUN_WITH_TIMEOUT_LONGER=./run-with-timeout.sh 600
 
 .stamp-configure-projects-mac: Makefile xharness/xharness.exe
 	$(Q) $(MAKE) .stamp-xharness-configure
 	$(Q) touch $@
 
 PACKAGES_CONFIG:=$(shell git ls-files -- '*.csproj' '*/packages.config' | sed 's/ /\\ /g')
+ifdef INCLUDE_XAMARIN_LEGACY
 .stamp-nuget-restore-mac: tests-mac.sln $(PACKAGES_CONFIG)
 	$(Q_XBUILD) $(SYSTEM_XIBUILD) -t -- /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore tests-mac.sln
 	$(Q) touch $@
+else
+.stamp-nuget-restore-mac:
+	$(Q) echo "Legacy Xamarin is disabled, so nothing to restore"
+	$(Q) touch $@
+endif
 
 #
 # dont link
@@ -122,12 +129,9 @@ exec-mac-modern-linksdk:
 # on eachother. So here we build those library projects first, serialized,
 # so that when the test projects need them, they're already built.
 
-.stamp-copy-dotnet-config:
-	$(Q) $(MAKE) -C dotnet copy-dotnet-config
-	$(Q) touch $@
 
 define DotNetDependentProject
-.stamp-dotnet-dependency-$(2)-$(1): Makefile .stamp-copy-dotnet-config
+.stamp-dotnet-dependency-$(2)-$(1): Makefile
 	$$(Q) $$(MAKE) -C "$(1)/dotnet/$(2)" build
 	$$(Q) touch $$@
 
@@ -148,7 +152,7 @@ build-mac-dotnet-x64-$(1): .stamp-dotnet-dependency-macOS
 
 exec-mac-dotnet-x64-$(1):
 	@echo "ℹ️  Executing the '$(1)' test for macOS/.NET (x64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT) "./$(1)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-x64/$(2).app/Contents/MacOS/$(2)"
+	$$(Q) $(RUN_WITH_TIMEOUT$(3)) "./$(1)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-x64/$(2).app/Contents/MacOS/$(2)"
 
 # macOS/.NET/arm64
 build-mac-dotnet-arm64-$(1): .stamp-dotnet-dependency-macOS
@@ -157,7 +161,7 @@ build-mac-dotnet-arm64-$(1): .stamp-dotnet-dependency-macOS
 exec-mac-dotnet-arm64-$(1):
 ifeq ($(IS_APPLE_SILICON),1)
 	@echo "ℹ️  Executing the '$(1)' test for macOS/.NET (arm64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT) "./$(1)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-arm64/$(2).app/Contents/MacOS/$(2)"
+	$$(Q) $(RUN_WITH_TIMEOUT$(3)) "./$(1)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-arm64/$(2).app/Contents/MacOS/$(2)"
 else
 	@echo "⚠️  Not executing the '$(1)' test for macOS/.NET (arm64) - not executing on Apple Silicon ⚠️"
 endif
@@ -169,7 +173,7 @@ build-maccatalyst-dotnet-x64-$(1): .stamp-dotnet-dependency-MacCatalyst
 exec-maccatalyst-dotnet-x64-$(1):
 ifeq ($(SUPPORTS_MACCATALYST),1)
 	@echo "ℹ️  Executing the '$(1)' test for Mac Catalyst/.NET (x64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-x64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
+	$$(Q) $(RUN_WITH_TIMEOUT$(3)) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-x64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
 else
 	@echo "⚠️  Not executing the '$(1)' test for Mac Catalyst/.NET (x64) - macOS version $(MACOS_VERSION) is too old ⚠️"
 endif
@@ -181,32 +185,44 @@ build-maccatalyst-dotnet-arm64-$(1):.stamp-dotnet-dependency-MacCatalyst
 exec-maccatalyst-dotnet-arm64-$(1):
 ifeq ($(IS_APPLE_SILICON),1)
 	@echo "ℹ️  Executing the '$(1)' test for Mac Catalyst/.NET (arm64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-arm64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
+	$$(Q) $(RUN_WITH_TIMEOUT$(3)) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-arm64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
 else
 	@echo "⚠️  Not executing the '$(1)' test for Mac Catalyst/.NET (arm64) - not executing on Apple Silicon ⚠️"
 endif
 
 build-$(1): .stamp-nuget-restore-mac
 	$$(Q) rm -f ".$$@-failure.stamp"
+ifdef INCLUDE_XAMARIN_LEGACY
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-legacy-$(1)                   || echo "build-legacy-$(1) failed"                   >> ".$$@-failure.stamp"
+endif
+ifdef INCLUDE_MAC
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-mac-dotnet-x64-$(1)           || echo "build-mac-dotnet-x64-$(1) failed"           >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-mac-dotnet-arm64-$(1)         || echo "build-mac-dotnet-arm64-$(1) failed"         >> ".$$@-failure.stamp"
+endif
+ifdef INCLUDE_MACCATALYST
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-maccatalyst-dotnet-x64-$(1)   || echo "build-maccatalyst-dotnet-x64-$(1) failed"   >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-maccatalyst-dotnet-arm64-$(1) || echo "build-maccatalyst-dotnet-arm64-$(1) failed" >> ".$$@-failure.stamp"
+endif
 	$$(Q) if test -e ".$$@-failure.stamp"; then cat ".$$@-failure.stamp"; rm ".$$@-failure.stamp"; exit 1; fi
 
 exec-$(1):
 	$$(Q) rm -f ".$$@-failure.stamp"
+ifdef INCLUDE_XAMARIN_LEGACY
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-legacy-$(1)                   || echo "exec-legacy-$(1) failed"                   >> ".$$@-failure.stamp"
+endif
+ifdef INCLUDE_MAC
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-x64-$(1)           || echo "exec-mac-dotnet-x64-$(1) failed"           >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-arm64-$(1)         || echo "exec-mac-dotnet-arm64-$(1) failed"         >> ".$$@-failure.stamp"
+endif
+ifdef INCLUDE_MACCATALYST
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-maccatalyst-dotnet-x64-$(1)   || echo "exec-maccatalyst-dotnet-x64-$(1) failed"   >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-maccatalyst-dotnet-arm64-$(1) || echo "exec-maccatalyst-dotnet-arm64-$(1) failed" >> ".$$@-failure.stamp"
+endif
 	$$(Q) if test -e ".$$@-failure.stamp"; then cat ".$$@-failure.stamp"; rm ".$$@-failure.stamp"; exit 1; fi
 endef
 
 $(eval $(call DotNetNormalTest,monotouch-test,monotouchtest))
-$(eval $(call DotNetNormalTest,introspection,introspection))
+$(eval $(call DotNetNormalTest,introspection,introspection,_LONGER))
 
 ### .NET linker tests
 
@@ -257,20 +273,32 @@ endif
 
 build-$(1): .stamp-nuget-restore-mac
 	$$(Q) rm -f ".$$@-failure.stamp"
+ifdef INCLUDE_XAMARIN_LEGACY
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-legacy-$(1)                   || echo "build-legacy-$(1) failed"                   >> ".$$@-failure.stamp"
+endif
+ifdef INCLUDE_MAC
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-mac-dotnet-x64-$(1)           || echo "build-mac-dotnet-x64-$(1) failed"           >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-mac-dotnet-arm64-$(1)         || echo "build-mac-dotnet-arm64-$(1) failed"         >> ".$$@-failure.stamp"
+endif
+ifdef INCLUDE_MACCATALYST
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-maccatalyst-dotnet-x64-$(1)   || echo "build-maccatalyst-dotnet-x64-$(1) failed"   >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk build-maccatalyst-dotnet-arm64-$(1) || echo "build-maccatalyst-dotnet-arm64-$(1) failed" >> ".$$@-failure.stamp"
+endif
 	$$(Q) if test -e ".$$@-failure.stamp"; then cat ".$$@-failure.stamp"; rm ".$$@-failure.stamp"; exit 1; fi
 
 exec-$(1):
 	$$(Q) rm -f ".$$@-failure.stamp"
+ifdef INCLUDE_XAMARIN_LEGACY
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-legacy-$(1)                   || echo "exec-legacy-$(1) failed"                   >> ".$$@-failure.stamp"
+endif
+ifdef INCLUDE_MAC
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-x64-$(1)           || echo "exec-mac-dotnet-x64-$(1) failed"           >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-arm64-$(1)         || echo "exec-mac-dotnet-arm64-$(1) failed"         >> ".$$@-failure.stamp"
+endif
+ifdef INCLUDE_MACCATALYST
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-maccatalyst-dotnet-x64-$(1)   || echo "exec-maccatalyst-dotnet-x64-$(1) failed"   >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-maccatalyst-dotnet-arm64-$(1) || echo "exec-maccatalyst-dotnet-arm64-$(1) failed" >> ".$$@-failure.stamp"
+endif
 	$$(Q) if test -e ".$$@-failure.stamp"; then cat ".$$@-failure.stamp"; rm ".$$@-failure.stamp"; exit 1; fi
 endef
 
@@ -315,31 +343,51 @@ build-legacy-linksdk: .stamp-nuget-restore-mac
 # execution targets
 
 exec-legacy-dontlink:
+ifdef INCLUDE_XAMARIN_LEGACY
 	$(Q) rm -f ".$@-failure.stamp"
 	$(Q) $(MAKE) -f packaged-macos-tests.mk exec-mac-modern-dontlink       || echo "exec-mac-modern-dont link failed"       >> ".$@-failure.stamp"
 	$(Q) $(MAKE) -f packaged-macos-tests.mk exec-mac-full-dontlink         || echo "exec-mac-full-dont link failed"         >> ".$@-failure.stamp"
 	$(Q) $(MAKE) -f packaged-macos-tests.mk exec-mac-system-dontlink       || echo "exec-mac-system-dont link failed"       >> ".$@-failure.stamp"
 	$(Q) if test -e ".$@-failure.stamp"; then cat ".$@-failure.stamp"; rm ".$@-failure.stamp"; exit 1; fi
+else
+	$(Q) echo "Not executing $@, because legacy Xamarin is not enabled"
+endif
 
 exec-legacy-introspection:
+ifdef INCLUDE_XAMARIN_LEGACY
 	$(Q) rm -f ".$@-failure.stamp"
 	$(Q) $(MAKE) -f packaged-macos-tests.mk exec-mac-modern-introspection               || echo "exec-mac-modern-introspection failed"               >> ".$@-failure.stamp"
 	$(Q) if test -e ".$@-failure.stamp"; then cat ".$@-failure.stamp"; rm ".$@-failure.stamp"; exit 1; fi
+else
+	$(Q) echo "Not executing $@, because legacy Xamarin is not enabled"
+endif
 
 exec-xammac_tests:
+ifdef INCLUDE_XAMARIN_LEGACY
 	$(Q) rm -f ".$@-failure.stamp"
 	$(Q) $(MAKE) -f packaged-macos-tests.mk exec-mac-modern-xammac_tests || echo "exec-mac-modern-xammac_tests failed" >> ".$@-failure.stamp"
 	$(Q) if test -e ".$@-failure.stamp"; then cat ".$@-failure.stamp"; rm ".$@-failure.stamp"; exit 1; fi
+else
+	$(Q) echo "Not executing $@, because legacy Xamarin is not enabled"
+endif
 
 exec-legacy-monotouch-test: ;
 	# nothing to do here
 
 exec-legacy-linkall:
+ifdef INCLUDE_XAMARIN_LEGACY
 	$(Q) rm -f ".$@-failure.stamp"
 	$(Q) $(MAKE) -f packaged-macos-tests.mk exec-mac-modern-linkall || echo "exec-mac-modern-linkall failed"               >> ".$@-failure.stamp"
 	$(Q) if test -e ".$@-failure.stamp"; then cat ".$@-failure.stamp"; rm ".$@-failure.stamp"; exit 1; fi
+else
+	$(Q) echo "Not executing $@, because legacy Xamarin is not enabled"
+endif
 
 exec-legacy-linksdk:
+ifdef INCLUDE_XAMARIN_LEGACY
 	$(Q) rm -f ".$@-failure.stamp"
 	$(Q) $(MAKE) -f packaged-macos-tests.mk exec-mac-modern-linksdk || echo "exec-mac-modern-link sdk failed"              >> ".$@-failure.stamp"
 	$(Q) if test -e ".$@-failure.stamp"; then cat ".$@-failure.stamp"; rm ".$@-failure.stamp"; exit 1; fi
+else
+	$(Q) echo "Not executing $@, because legacy Xamarin is not enabled"
+endif

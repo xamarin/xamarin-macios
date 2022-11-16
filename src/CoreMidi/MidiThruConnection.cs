@@ -131,7 +131,7 @@ namespace CoreMidi {
 			if (Handle == InvalidRef)
 				throw new ObjectDisposedException ("MidiThruConnection");
 			if (connectionParams is null)
-				throw new ArgumentNullException (nameof (connectionParams));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (connectionParams));
 
 			using (var data = connectionParams.WriteStruct ()) {
 				var error = MIDIThruConnectionSetParams (Handle, data.Handle);
@@ -144,10 +144,10 @@ namespace CoreMidi {
 			/* CFStringRef* */ IntPtr inPersistentOwnerID,
 			/* CFDataRef */ out IntPtr outConnectionList);
 
-		public static MidiThruConnection[]? Find (string persistentOwnerID, out MidiError error)
+		public static MidiThruConnection []? Find (string persistentOwnerID, out MidiError error)
 		{
 			if (persistentOwnerID is null)
-				throw new ArgumentNullException (nameof (persistentOwnerID));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (persistentOwnerID));
 
 			IntPtr ret;
 			var persistentOwnerIDHandle = CFString.CreateNative (persistentOwnerID);
@@ -164,19 +164,19 @@ namespace CoreMidi {
 				if (totalObjs == 0)
 					return null;
 
-				var connections = new MidiThruConnection[totalObjs];
+				var connections = new MidiThruConnection [totalObjs];
 				unsafe {
 					uint* handles = (uint*) (IntPtr) data.Bytes;
 					for (int i = 0; i < totalObjs; i++) {
 						connections [i] = new MidiThruConnection (handles [i]);
 					}
 				}
-				
+
 				return connections;
 			}
 		}
 
-		public static MidiThruConnection[]? Find (string persistentOwnerID)
+		public static MidiThruConnection []? Find (string persistentOwnerID)
 		{
 			MidiError error;
 			return Find (persistentOwnerID, out error);

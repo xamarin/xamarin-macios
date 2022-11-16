@@ -33,7 +33,7 @@ namespace Xharness {
 			Action showHelp = null;
 
 			var action = HarnessAction.None;
-			var configuration = new HarnessConfiguration();
+			var configuration = new HarnessConfiguration ();
 
 			var os = new OptionSet () {
 				{ "h|?|help", "Displays the help", (v) => showHelp () },
@@ -43,26 +43,26 @@ namespace Xharness {
 				{ "configure", "Creates project files and makefiles.", (v) => action = HarnessAction.Configure },
 				{ "autoconf", "Automatically decide what to configure.", (v) => configuration.AutoConf = true },
 				{ "rootdir=", "The root directory for the tests.", (v) => HarnessConfiguration.RootDirectory = v },
-				{ "project=", "Add a project file to process. This can be specified multiple times.", (v) => configuration.IOSTestProjects.Add (new iOSTestProject (null, v)) },
+				{ "project=", "Add a project file to process. This can be specified multiple times.", (v) => configuration.IOSTestProjects.Add (new iOSTestProject (TestLabel.None, v)) },
 				{ "watchos-container-template=", "The directory to use as a template for a watchos container app.", (v) => configuration.WatchOSContainerTemplate = v },
 				{ "watchos-app-template=", "The directory to use as a template for a watchos app.", (v) => configuration.WatchOSAppTemplate = v },
 				// Run
 				{ "run=", "Executes a project.", (v) =>
 					{
 						action = HarnessAction.Run;
-						configuration.IOSTestProjects.Add (new iOSTestProject (null, v));
+						configuration.IOSTestProjects.Add (new iOSTestProject (TestLabel.None, v));
 					}
 				},
 				{ "install=", "Installs a project.", (v) =>
 					{
 						action = HarnessAction.Install;
-						configuration.IOSTestProjects.Add (new iOSTestProject (null, v));
+						configuration.IOSTestProjects.Add (new iOSTestProject (TestLabel.None, v));
 					}
 				},
 				{ "uninstall=", "Uninstalls a project.", (v) =>
 					{
 						action = HarnessAction.Uninstall;
-						configuration.IOSTestProjects.Add (new iOSTestProject (null, v));
+						configuration.IOSTestProjects.Add (new iOSTestProject (TestLabel.None, v));
 					}
 				},
 				{ "sdkroot=", "Where Xcode is", (v) => configuration.SdkRoot = v },
@@ -114,7 +114,7 @@ namespace Xharness {
 			var input = os.Parse (args);
 			if (input.Count > 0)
 				throw new Exception (string.Format ("Unknown arguments: {0}", string.Join (", ", input.ToArray ())));
-			
+
 			if (action == HarnessAction.None)
 				showHelp ();
 

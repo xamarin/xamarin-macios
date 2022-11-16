@@ -8,11 +8,9 @@ using AppKit;
 using ObjCRuntime;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[Preserve (AllMembers = true)]
-	public class NSViewTests
-	{
+	public class NSViewTests {
 		NSView view;
 
 		[SetUp]
@@ -74,7 +72,7 @@ namespace Xamarin.Mac.Tests
 
 			foreach (var ctor in types) {
 				var o = ctor ();
-				var prop = o.GetType ().GetProperty("Menu", BindingFlags.Public | BindingFlags.Instance);
+				var prop = o.GetType ().GetProperty ("Menu", BindingFlags.Public | BindingFlags.Instance);
 				if (prop == null && TestRuntime.IsLinkAll)
 					continue; // the property was linked away.
 				prop.SetValue (o, null, null);
@@ -106,7 +104,7 @@ namespace Xamarin.Mac.Tests
 				containerView.SortSubviews ((x, y) => {
 					var viewX = (NSTextView) x;
 					var viewY = (NSTextView) y;
-					var rv = string.Compare (viewX.Value, viewY.Value);
+					var rv = string.Compare (viewX.Value, viewY.Value, StringComparison.Ordinal);
 					if (rv == 0)
 						return NSComparisonResult.Same;
 					else if (rv < 0)

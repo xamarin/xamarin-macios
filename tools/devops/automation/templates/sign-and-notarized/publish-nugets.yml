@@ -1,9 +1,21 @@
 # all steps that are required to publish the nugets
 
+parameters:
+- name: isPR
+  type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 steps:
 
 # do not publish on pull requets
-- ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+- ${{ if not(parameters.isPR) }}:
   - task: NuGetCommand@2
     displayName: 'Publish Nugets to dotnet-eng'
     inputs:

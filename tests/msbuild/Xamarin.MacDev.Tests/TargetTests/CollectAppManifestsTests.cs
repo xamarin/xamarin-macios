@@ -15,6 +15,9 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void PartialAppManifest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+			Configuration.AssertDotNetAvailable ();
+
 			var csproj = $@"<?xml version=""1.0"" encoding=""utf-8""?>
 <Project Sdk=""Microsoft.NET.Sdk"">
 	<PropertyGroup>
@@ -46,7 +49,6 @@ namespace Xamarin.MacDev.Tasks {
 </plist>";
 
 			var tmpdir = Cache.CreateTemporaryDirectory ();
-			Configuration.CopyDotNetSupportingFiles (tmpdir);
 			var csprojPath = Path.Combine (tmpdir, "PartialAppManifest.csproj");
 			File.WriteAllText (csprojPath, csproj);
 
