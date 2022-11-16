@@ -15,8 +15,8 @@ namespace SensorKit {
 	[NoWatch]
 	[NoTV]
 	[NoMac]
-	[iOS (14,0)]
-	[MacCatalyst (14,0)]
+	[iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 #endif
 	public static class SRAbsoluteTime {
 
