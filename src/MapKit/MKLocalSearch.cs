@@ -45,13 +45,13 @@ namespace MapKit {
 				tcs.SetCanceled ();
 			} else {
 				var tcr = token.Register (() => { this.Cancel (); tcs.TrySetCanceled (); });
-				Start((response, error) => {
+				Start ((response, error) => {
 					tcr.Dispose ();
 					if (token.IsCancellationRequested) {
 						tcs.TrySetCanceled ();
 					} else {
 						if (error is not null)
-							tcs.SetException (new NSErrorException(error));
+							tcs.SetException (new NSErrorException (error));
 						else
 							tcs.SetResult (response);
 					}

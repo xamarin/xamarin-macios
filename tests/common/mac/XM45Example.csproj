@@ -23,7 +23,7 @@
     <EnablePackageSigning>false</EnablePackageSigning>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
-%CODE%
+REPLACE_CODE_REPLACE
     <Profiling>false</Profiling>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -35,7 +35,7 @@
     <EnableCodeSigning>false</EnableCodeSigning>
     <CreatePackage>false</CreatePackage>
     <EnablePackageSigning>false</EnablePackageSigning>
-%CODE%
+REPLACE_CODE_REPLACE
   </PropertyGroup>
 
   <ItemGroup>

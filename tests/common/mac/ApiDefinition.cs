@@ -63,5 +63,5 @@ namespace ExampleBinding
 	//
 	// For more information, see http://developer.xamarin.com/guides/ios/advanced_topics/binding_objective-c/
 	//
-%CODE%
+REPLACE_CODE_REPLACE
 }
