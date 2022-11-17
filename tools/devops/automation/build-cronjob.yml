@@ -25,6 +25,7 @@ parameters:
 
 - name: isPR
   type: boolean
+  default: false
 
 - name: repositoryAlias
   type: string
