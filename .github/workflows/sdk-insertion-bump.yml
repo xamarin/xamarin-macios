@@ -1,0 +1,24 @@
+name: Notify release branch change
+
+on:
+  # trigger for main and release branches.
+  push:
+    branches:
+      - '*'
+
+jobs:
+  pingRemote:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 'Ping remote repository'
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.SERVICEACCOUNT_PAT }}
+          event-type: 'sdk_insertion' 
+          repository: 'xamarin/sdk-insertions'
+          client-payload: '{"repository": "xamarin/xamarin-macios", "branch": "${{ github.ref_name }}", "commit": "${{ github.sha }}", "commit_message": "${{ github.event.head_commit.message }}"}'
+
+
