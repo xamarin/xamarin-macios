@@ -43,6 +43,7 @@ dotnet format whitespace --folder "$SRC_DIR/tests/generator"
 dotnet format whitespace --folder "$SRC_DIR/tests/monotouch-test"
 dotnet format whitespace --folder "$SRC_DIR/tests/msbuild"
 dotnet format whitespace --folder "$SRC_DIR/tests/xtro-sharpie"
+dotnet format whitespace --folder "$SRC_DIR/tools"
 
 dotnet format whitespace --folder "$SRC_DIR/src/Accelerate"
 dotnet format whitespace --folder "$SRC_DIR/src/Accessibility"
