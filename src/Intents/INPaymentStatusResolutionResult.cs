@@ -22,7 +22,7 @@ namespace Intents {
 #elif WATCH
 			if (SystemVersion.CheckwatchOS (4, 0))
 #endif
-				return SuccessWithResolvedPaymentStatus (resolvedValue);
+			return SuccessWithResolvedPaymentStatus (resolvedValue);
 			else
 				return SuccessWithResolvedValue (resolvedValue);
 		}
@@ -34,7 +34,7 @@ namespace Intents {
 #elif WATCH
 			if (SystemVersion.CheckwatchOS (4, 0))
 #endif
-				return ConfirmationRequiredWithPaymentStatusToConfirm (valueToConfirm);
+			return ConfirmationRequiredWithPaymentStatusToConfirm (valueToConfirm);
 			else
 				return ConfirmationRequiredWithValueToConfirm (valueToConfirm);
 		}

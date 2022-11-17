@@ -30,7 +30,7 @@ namespace SpriteKit {
 			if (points is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
-			return FromPoints (ref points[0], (nuint) points.Length);
+			return FromPoints (ref points [0], (nuint) points.Length);
 		}
 
 #if NET
@@ -66,7 +66,7 @@ namespace SpriteKit {
 			if (points is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
-			return FromSplinePoints (ref points[0], (nuint) points.Length);
+			return FromSplinePoints (ref points [0], (nuint) points.Length);
 		}
 
 #if NET

@@ -10,4 +10,4 @@ namespace Library
 	}
 }
 
-%CODE%
+REPLACE_CODE_REPLACE

@@ -26,10 +26,10 @@ namespace MapKit {
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[iOS (10,0)]
+		[iOS (10, 0)]
 		[NoTV]
-		[Watch (3,0)]
-		[Mac (10,12)]
+		[Watch (3, 0)]
+		[Mac (10, 12)]
 #endif
 		Default
 	}
@@ -39,8 +39,7 @@ namespace MapKit {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #endif
-	public class MKLaunchOptions
-	{
+	public class MKLaunchOptions {
 		public MKDirectionsMode? DirectionsMode { get; set; }
 #if !WATCH // MapType: __WATCHOS_PROHIBITED
 		public MKMapType? MapType { get; set; }
@@ -58,7 +57,7 @@ namespace MapKit {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public MKMapCamera? Camera { get; set; }
 #endif
@@ -78,14 +77,14 @@ namespace MapKit {
 #endif
 			if (n == 0)
 				return null;
-			
+
 			var keys = new NSObject [n];
 			var values = new NSObject [n];
 			int i = 0;
-			if (DirectionsMode.HasValue){
+			if (DirectionsMode.HasValue) {
 				keys [i] = MKMapItem.MKLaunchOptionsDirectionsModeKey;
 				NSString v = MKMapItem.MKLaunchOptionsDirectionsModeDriving;
-				switch (DirectionsMode.Value){
+				switch (DirectionsMode.Value) {
 				case MKDirectionsMode.Driving:
 					v = MKMapItem.MKLaunchOptionsDirectionsModeDriving;
 					break;
@@ -105,21 +104,21 @@ namespace MapKit {
 			}
 
 #if !WATCH // MapType: __WATCHOS_PROHIBITED
-			if (MapType.HasValue){
+			if (MapType.HasValue) {
 				keys [i] = MKMapItem.MKLaunchOptionsMapTypeKey;
 				values [i++] = new NSNumber ((int) MapType.Value);
 			}
 #endif
-			if (MapCenter.HasValue){
+			if (MapCenter.HasValue) {
 				keys [i] = MKMapItem.MKLaunchOptionsMapCenterKey;
 				values [i++] = NSValue.FromMKCoordinate (MapCenter.Value);
 			}
-			if (MapSpan.HasValue){
+			if (MapSpan.HasValue) {
 				keys [i] = MKMapItem.MKLaunchOptionsMapSpanKey;
 				values [i++] = NSValue.FromMKCoordinateSpan (MapSpan.Value);
 			}
 #if !WATCH // ShowsTraffic: __WATCHOS_PROHIBITED
-			if (ShowTraffic.HasValue){
+			if (ShowTraffic.HasValue) {
 				keys [i] = MKMapItem.MKLaunchOptionsShowsTrafficKey;
 				values [i++] = new NSNumber (ShowTraffic.Value);
 			}
@@ -145,6 +144,6 @@ namespace MapKit {
 			return _OpenMaps (mapItems, launchOptions?.ToDictionary ());
 		}
 	}
-	
+
 }
 #endif

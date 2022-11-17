@@ -25,6 +25,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 
 using ObjCRuntime;
@@ -39,7 +41,7 @@ namespace Foundation {
 
 #if !MONOMAC && !COREBUILD
 	public partial class NSAttributedString {
-		static NSDictionary ignore;
+		static NSDictionary? ignore;
 
 		public NSAttributedString (NSUrl url, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error)
 		: this (url, documentAttributes, out ignore, ref error) { }
@@ -48,14 +50,14 @@ namespace Foundation {
 		: this (data, documentAttributes, out ignore, ref error) { }
 
 		public NSAttributedString (NSUrl url, ref NSError error)
-		: this (url, (NSDictionary) null, out ignore, ref error) { }
+		: this (url, new NSDictionary (), out ignore, ref error) { }
 
 		public NSAttributedString (NSData data, ref NSError error)
-		: this (data, (NSDictionary) null, out ignore, ref error) { }
+		: this (data, new NSDictionary (), out ignore, ref error) { }
 
 #if IOS // not TVOS or WATCH
 		// use the best selector based on the OS version
-		public NSAttributedString (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error)
+		public NSAttributedString (NSUrl url, NSDictionary? options, out NSDictionary resultDocumentAttributes, ref NSError error)
 		{
 			if (SystemVersion.CheckiOS (9,0))
 				Handle = InitWithURL (url, options, out resultDocumentAttributes, ref error);
@@ -73,12 +75,12 @@ namespace Foundation {
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
 #if !MONOMAC && !COREBUILD
 		public NSAttributedStringDocumentAttributes () : base (new NSMutableDictionary ()) { }
-		public NSAttributedStringDocumentAttributes (NSDictionary dictionary) : base (dictionary) { }
+		public NSAttributedStringDocumentAttributes (NSDictionary? dictionary) : base (dictionary) { }
 
 		public NSStringEncoding? StringEncoding {
 			get {
 				var value = GetInt32Value (UIStringAttributeKey.NSCharacterEncodingDocumentAttribute);
-				if (value == null)
+				if (value is null)
 					return null;
 				else
 					return (NSStringEncoding) value.Value;
@@ -88,7 +90,7 @@ namespace Foundation {
 			}
 		}
 
-		public NSString WeakDocumentType {
+		public NSString? WeakDocumentType {
 			get {
 				return GetNSStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute);
 			}
@@ -139,7 +141,7 @@ namespace Foundation {
 				return null;
 			}
 			set {
-				if (value == null)
+				if (value is null)
 					RemoveValue (UIStringAttributeKey.NSPaperSizeDocumentAttribute);
 				else
 					Dictionary [UIStringAttributeKey.NSPaperSizeDocumentAttribute] = NSValue.FromCGSize (value.Value);
@@ -156,7 +158,7 @@ namespace Foundation {
 				return null;
 			}
 			set {
-				if (value == null)
+				if (value is null)
 					RemoveValue (UIStringAttributeKey.NSPaperMarginDocumentAttribute);
 				else
 					Dictionary [UIStringAttributeKey.NSPaperMarginDocumentAttribute] = NSValue.FromUIEdgeInsets (value.Value);
@@ -173,7 +175,7 @@ namespace Foundation {
 				return null;
 			}
 			set {
-				if (value == null)
+				if (value is null)
 					RemoveValue (UIStringAttributeKey.NSViewSizeDocumentAttribute);
 				else
 					Dictionary [UIStringAttributeKey.NSViewSizeDocumentAttribute] = NSValue.FromCGSize (value.Value);
@@ -185,7 +187,7 @@ namespace Foundation {
 				return GetFloatValue (UIStringAttributeKey.NSViewZoomDocumentAttribute);
 			}
 			set {
-				if (value == null)
+				if (value is null)
 					RemoveValue (UIStringAttributeKey.NSViewZoomDocumentAttribute);
 				else
 					SetNumberValue (UIStringAttributeKey.NSViewZoomDocumentAttribute, value);
@@ -195,13 +197,13 @@ namespace Foundation {
 		public NSDocumentViewMode? ViewMode {
 			get {
 				var value = GetInt32Value (UIStringAttributeKey.NSViewModeDocumentAttribute);
-				if (value == null)
+				if (value is null)
 					return null;
 				else
 					return (NSDocumentViewMode) value.Value;
 			}
 			set {
-				if (value == null)
+				if (value is null)
 					RemoveValue (UIStringAttributeKey.NSViewModeDocumentAttribute);
 				else
 					SetNumberValue (UIStringAttributeKey.NSViewModeDocumentAttribute, (int) value.Value);
@@ -211,7 +213,7 @@ namespace Foundation {
 		public bool ReadOnly {
 			get {
 				var value = GetInt32Value (UIStringAttributeKey.NSReadOnlyDocumentAttribute);
-				if (value == null || value.Value <= 0)
+				if (value is null || value.Value <= 0)
 					return false;
 				return true;
 			}
@@ -220,14 +222,14 @@ namespace Foundation {
 			}
 		}
 
-		public UIColor BackgroundColor {
+		public UIColor? BackgroundColor {
 			get {
-				NSObject value;
+				NSObject? value;
 				Dictionary.TryGetValue (UIStringAttributeKey.NSBackgroundColorDocumentAttribute, out value);
 				return value as UIColor;
 			}
 			set {
-				if (value == null)
+				if (value is null)
 					RemoveValue (UIStringAttributeKey.NSBackgroundColorDocumentAttribute);
 				else
 					Dictionary [UIStringAttributeKey.NSBackgroundColorDocumentAttribute] = value;
@@ -239,7 +241,7 @@ namespace Foundation {
 				return GetFloatValue (UIStringAttributeKey.NSReadOnlyDocumentAttribute);
 			}
 			set {
-				if (value == null)
+				if (value is null)
 					RemoveValue (UIStringAttributeKey.NSReadOnlyDocumentAttribute);
 				else {
 					if (value < 0 || value > 1.0f)
@@ -254,7 +256,7 @@ namespace Foundation {
 				return GetFloatValue (UIStringAttributeKey.NSDefaultTabIntervalDocumentAttribute);
 			}
 			set {
-				if (value == null)
+				if (value is null)
 					RemoveValue (UIStringAttributeKey.NSDefaultTabIntervalDocumentAttribute);
 				else {
 					if (value < 0 || value > 1.0f)
@@ -264,14 +266,14 @@ namespace Foundation {
 			}
 		}
 
-		public NSDictionary WeakDefaultAttributes {
+		public NSDictionary? WeakDefaultAttributes {
 			get {
-				NSObject value;
+				NSObject? value;
 				Dictionary.TryGetValue (UIStringAttributeKey.NSDefaultAttributesDocumentAttribute, out value);
 				return value as NSDictionary;
 			}
 			set {
-				if (value == null)
+				if (value is null)
 					RemoveValue (UIStringAttributeKey.NSDefaultAttributesDocumentAttribute);
 				else
 					Dictionary [UIStringAttributeKey.NSDefaultAttributesDocumentAttribute] = value;
@@ -290,13 +292,13 @@ namespace Foundation {
 		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
-		public NSUrl ReadAccessUrl {
+		public NSUrl? ReadAccessUrl {
 			get {
 				Dictionary.TryGetValue (NSAttributedStringDocumentReadingOptionKeys.ReadAccessUrlKey, out var value);
 				return value as NSUrl;
 			}
 			set {
-				if (value == null)
+				if (value is null)
 					RemoveValue (NSAttributedStringDocumentReadingOptionKeys.ReadAccessUrlKey);
 				else
 					Dictionary [NSAttributedStringDocumentReadingOptionKeys.ReadAccessUrlKey] = value;
