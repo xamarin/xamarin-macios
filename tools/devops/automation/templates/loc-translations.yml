@@ -14,20 +14,12 @@ parameters:
 steps:
 
 - ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
-  - stage: RunIsScheduled
-    displayName: The build is Scheduled
-    jobs:
-    - job: Print Schedule
-      steps:
-      - script: echo "The build is scheduled"
+  - script: echo "The build is scheduled"
 
 - ${{ else }}:
-  - stage: RunIsNotScheduled
-    displayName: The build is not Scheduled
-    jobs:
-    - job: Print Not Schedule
-      steps:
-      - script: echo "The build is not scheduled"
+  - script: echo "The build is not scheduled"
+
+# steps:
 
 # - template: sdk-unified/steps/checkout/v1.yml@yaml-templates
 #   parameters:
