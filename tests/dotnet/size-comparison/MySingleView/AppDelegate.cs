@@ -3,10 +3,8 @@ using System;
 using Foundation;
 using UIKit;
 
-namespace MyComparableApp
-{
-	public partial class AppDelegate : UIApplicationDelegate
-	{
+namespace MyComparableApp {
+	public partial class AppDelegate : UIApplicationDelegate {
 		UIWindow window;
 
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
@@ -24,7 +22,7 @@ namespace MyComparableApp
 			return true;
 		}
 
-		static void Main (string[] args)
+		static void Main (string [] args)
 		{
 			UIApplication.Main (args, null, typeof (AppDelegate));
 		}
