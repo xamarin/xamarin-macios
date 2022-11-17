@@ -71,7 +71,7 @@ schedules:
 
 # the translations team wants a green build, we can do that on sundays even if 
 # the code did not change and without the device tests.
-- cron: "43 18 * * *"
+- cron: "49 18 * * *"
   displayName: Weekly Translations build (Sunday @ noon)
   branches:
     include:
