@@ -13,6 +13,9 @@ steps:
 - task: CodeQL3000Init@0
   displayName: Initialize CodeQL
 
+# clear a variable set by the CodeQL step that make mono crash
+- script: echo "##vso[task.setvariable variable=UseSharedCompilation]"
+
 - bash: cd $(System.DefaultWorkingDirectory)/xamarin-macios/ && git clean -xdf
   displayName: 'Clean workspace'
 
