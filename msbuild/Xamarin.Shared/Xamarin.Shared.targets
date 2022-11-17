@@ -1782,7 +1782,21 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</PackLibraryResources>
 	</Target>
 
-	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="ResolveReferences;_CollectBundleResources">
+	<Target Name="_PrepareUnpackLibraryResources">
+		<PropertyGroup>
+			<_StampDirectory>$(IntermediateOutputPath)resourcestamps\</_StampDirectory>
+		</PropertyGroup>
+		<ItemGroup>
+			<_UnpackLibraryResourceItems Include="@(ReferencePath);@(ReferenceDependencyPaths)">
+				<StampFile>%(FileName).stamp</StampFile>
+			</_UnpackLibraryResourceItems>
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="ResolveReferences;_CollectBundleResources;_PrepareUnpackLibraryResources"
+		Inputs="@(_UnpackLibraryResourceItems)"
+		Outputs="@(_UnpackLibraryResourceItems->'$(_StampDirectory)%(StampFile)')">
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_StampDirectory)" />
 		<UnpackLibraryResources
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
@@ -1790,9 +1804,17 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			NoOverwrite="@(_BundleResourceWithLogicalName)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			TargetFrameworkDirectory="$(TargetFrameworkDirectory)"
-			ReferencedLibraries="@(ReferencePath);@(ReferenceDependencyPaths)">
+			ReferencedLibraries="@(_UnpackLibraryResourceItems)">
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
 		</UnpackLibraryResources>
+		<Touch
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Files="@(_UnpackLibraryResourceItems->'$(_StampDirectory)%(StampFile)')"
+			AlwaysCreate="True"
+		>
+			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
+		</Touch>
 	</Target>
 
 	<Target Name="_ParseBundlerArguments">
