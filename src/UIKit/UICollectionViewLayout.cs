@@ -36,7 +36,7 @@ namespace UIKit {
 				throw new ArgumentOutOfRangeException ("section");
 			}
 
-			return LayoutAttributesForSupplementaryView (kind, indexPath);			
+			return LayoutAttributesForSupplementaryView (kind, indexPath);
 		}
 	}
 }
