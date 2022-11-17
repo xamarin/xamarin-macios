@@ -13,12 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: 'Ping remote repository'
+      - name: 'Update remote repository'
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.SERVICEACCOUNT_PAT }}
           event-type: 'sdk_insertion' 
           repository: 'xamarin/sdk-insertions'
-          client-payload: '{"repository": "xamarin/xamarin-macios", "branch": "${{ github.ref_name }}", "commit": "${{ github.sha }}", "commit_message": "${{ github.event.head_commit.message }}"}'
+          client-payload: '{"repository": "xamarin/xamarin-macios", "branch": "${{ github.ref_name }}", "commit": "${{ github.sha }}", "commit_message": "${{ github.event.head_commit.messageHeadline }}"}'
 
 
