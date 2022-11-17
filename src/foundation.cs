@@ -333,34 +333,9 @@ namespace Foundation
 		NativeHandle Constructor (string str);
 
 #if !MONOMAC
-
-#if IOS
-		// New API in iOS9 with same signature as an older alternative.
-		// We expose only the *new* one for the new platforms as the old
-		// one was moved to `NSDeprecatedKitAdditions (NSAttributedString)`
-		[NoMac][NoWatch][NoTV]
-		[iOS (9,0)]
-		[Internal]
-		[Export ("initWithURL:options:documentAttributes:error:")]
-		IntPtr InitWithURL (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
-
-		// but we still need to allow the API to work before iOS 9.0
-		// and to compleify matters the old one was deprecated in 9.0
-		[NoMac][NoWatch][NoTV]
-		[iOS (7,0)]
-		[Internal]
-		[Deprecated (PlatformName.iOS, 9, 0)]
-		[Export ("initWithFileURL:options:documentAttributes:error:")]
-		IntPtr InitWithFileURL (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
-#elif TVOS || WATCH
-		[NoMac]
-		[iOS (9,0)]
-		[Export ("initWithURL:options:documentAttributes:error:")]
-		NativeHandle Constructor (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
-#endif
 		[NoMac]
 		[iOS (7,0)]
-		[Wrap ("this (url, options.GetDictionary (), out resultDocumentAttributes, ref error)")]
+		[Wrap ("this (url, options.GetDictionary ()!, out resultDocumentAttributes, ref error)")]
 		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 
 		[NoMac]
@@ -370,7 +345,7 @@ namespace Foundation
 
 		[NoMac]
 		[iOS (7,0)]
-		[Wrap ("this (data, options.GetDictionary (), out resultDocumentAttributes, ref error)")]
+		[Wrap ("this (data, options.GetDictionary ()!, out resultDocumentAttributes, ref error)")]
 		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 
 		[NoMac]
@@ -407,6 +382,13 @@ namespace Foundation
 		[Export ("enumerateAttribute:inRange:options:usingBlock:")]
 		void EnumerateAttribute (NSString attributeName, NSRange inRange, NSAttributedStringEnumeration options, NSAttributedStringCallback callback);
 
+		[Export ("initWithURL:options:documentAttributes:error:")]
+#if !(__MACOS__ || XAMCORE_5_0)
+		NativeHandle Constructor (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
+#else
+		NativeHandle Constructor (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
+#endif
+
 #if MONOMAC
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithData:options:documentAttributes:error:")]
@@ -425,15 +407,11 @@ namespace Foundation
 		void DrawString (CGRect rect, NSStringDrawingOptions options);	
 
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Export ("initWithURL:options:documentAttributes:error:")]
-		NativeHandle Constructor (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
-
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Wrap ("this (url, options.GetDictionary (), out resultDocumentAttributes, out error)")]
+		[Wrap ("this (url, options.GetDictionary ()!, out resultDocumentAttributes, out error)")]
 		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
 
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Wrap ("this (data, options.GetDictionary (), out resultDocumentAttributes, out error)")]
+		[Wrap ("this (data, options.GetDictionary ()!, out resultDocumentAttributes, out error)")]
 		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
 
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
