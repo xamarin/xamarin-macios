@@ -165,7 +165,7 @@ variables:
 - name: Codeql.Enabled  # do not add the the shared variables.yml because it will force other pipelines
   value: true # it is a slow process, do not enable on pipelines
 - name: Codeql.Cadence
-  value: 24
+  value: 0
 
 trigger:
   branches:
