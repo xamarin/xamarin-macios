@@ -71,7 +71,7 @@ schedules:
 
 # the translations team wants a green build, we can do that on sundays even if 
 # the code did not change and without the device tests.
-- cron: "49 18 * * *"
+- cron: "49 19 * * *"
   displayName: Weekly Translations build (Sunday @ noon)
   branches:
     include:
@@ -93,7 +93,7 @@ stages:
       pool:
         vmImage: windows-latest
       steps:
-      - template: governance-checks.yml
+      - template: templates/governance-checks.yml
         parameters:
           isPR: ${{ parameters.isPR }}
           repositoryAlias: ${{ parameters.repositoryAlias }}
@@ -106,7 +106,7 @@ stages:
         pool:
           vmImage: windows-latest
         steps:
-        - template: loc-translations.yml
+        - template:  templates/loc-translations.yml
           parameters:
             isPR: ${{ parameters.isPR }}
             repositoryAlias: ${{ parameters.repositoryAlias }}
