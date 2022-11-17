@@ -17,9 +17,9 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-using nw_advertise_descriptor_t=System.IntPtr;
-using OS_nw_advertise_descriptor=System.IntPtr;
-using OS_nw_txt_record=System.IntPtr;
+using nw_advertise_descriptor_t = System.IntPtr;
+using OS_nw_advertise_descriptor = System.IntPtr;
+using OS_nw_txt_record = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -34,17 +34,17 @@ namespace Network {
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[Watch (6,0)]
+	[TV (13, 0)]
+	[Mac (10, 15)]
+	[iOS (13, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWTxtRecord : NativeObject {
 		[Preserve (Conditional = true)]
 		internal NWTxtRecord (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern IntPtr nw_txt_record_create_with_bytes (byte *txtBytes, nuint len);
+		unsafe static extern IntPtr nw_txt_record_create_with_bytes (byte* txtBytes, nuint len);
 
 		public static NWTxtRecord? FromBytes (ReadOnlySpan<byte> bytes)
 		{
@@ -71,12 +71,12 @@ namespace Network {
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_txt_record_copy (IntPtr other);
-		
+
 		public NWTxtRecord Clone () => new NWTxtRecord (nw_txt_record_copy (GetCheckedHandle ()), owns: true);
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWTxtRecordFindKey nw_txt_record_find_key (IntPtr handle, string key);
-		
+
 		public NWTxtRecordFindKey FindKey (string key) => nw_txt_record_find_key (GetCheckedHandle (), key);
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -86,16 +86,17 @@ namespace Network {
 		{
 			unsafe {
 				fixed (byte* mh = value)
-					return nw_txt_record_set_key (GetCheckedHandle (), key, (IntPtr)mh, (nuint) value.Length) != 0;
+					return nw_txt_record_set_key (GetCheckedHandle (), key, (IntPtr) mh, (nuint) value.Length) != 0;
 			}
 		}
 
-		public bool Add (string key) {
+		public bool Add (string key)
+		{
 			unsafe {
 				return nw_txt_record_set_key (GetCheckedHandle (), key, IntPtr.Zero, 0) != 0;
 			}
 		}
-		
+
 		public bool Add (string key, string value)
 			=> Add (key, value is null ? null : Encoding.UTF8.GetBytes (value));
 
@@ -106,7 +107,7 @@ namespace Network {
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern long nw_txt_record_get_key_count (IntPtr handle);
-		
+
 		public long KeyCount => nw_txt_record_get_key_count (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -150,7 +151,7 @@ namespace Network {
 			if (del is null)
 				return false;
 
-			var mValue = new ReadOnlySpan<byte> ((void*)value, (int)valueLen);
+			var mValue = new ReadOnlySpan<byte> ((void*) value, (int) valueLen);
 #if NET
 			return del (key, found, mValue);
 #else
@@ -216,8 +217,8 @@ namespace Network {
 			if (del is not null) {
 				ReadOnlySpan<byte> mValue;
 				if (found == NWTxtRecordFindKey.NonEmptyValue)
-					mValue = new ReadOnlySpan<byte>((void*)value, (int)valueLen);
-				else	
+					mValue = new ReadOnlySpan<byte> ((void*) value, (int) valueLen);
+				else
 					mValue = Array.Empty<byte> ();
 				del (key, found, mValue);
 			}
@@ -252,7 +253,7 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<NWTxtRecordGetRawByteDelegate> (block);
 			if (del is not null) {
-				var mValue = new ReadOnlySpan<byte>((void*)value, (int)valueLen);
+				var mValue = new ReadOnlySpan<byte> ((void*) value, (int) valueLen);
 				del (mValue);
 			}
 		}
