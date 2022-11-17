@@ -1,18 +1,15 @@
 using System;
 using Foundation;
 
-namespace NS
-{
+namespace NS {
 	[BaseType (typeof (NSObject))]
-	interface OutNSObject
-	{
+	interface OutNSObject {
 		[Export ("func:")]
 		void Func (out ErrorObject error);
 	}
 
 	[BaseType (typeof (NSObject))]
-	interface ErrorObject
-	{
+	interface ErrorObject {
 
 	}
 }
