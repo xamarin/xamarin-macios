@@ -14,10 +14,8 @@ using ObjCRuntime;
 
 #nullable enable
 
-namespace WebKit
-{
-	public partial class WKWindowFeatures
-	{
+namespace WebKit {
+	public partial class WKWindowFeatures {
 		public bool? MenuBarVisibility {
 			get => menuBarVisibility?.BoolValue;
 		}
@@ -39,9 +37,9 @@ namespace WebKit
 			if (number is null)
 				return null;
 			else if (IntPtr.Size == 4)
-				return (nfloat)number.FloatValue;
+				return (nfloat) number.FloatValue;
 			else
-				return (nfloat)number.DoubleValue;
+				return (nfloat) number.DoubleValue;
 		}
 
 		public nfloat? X {

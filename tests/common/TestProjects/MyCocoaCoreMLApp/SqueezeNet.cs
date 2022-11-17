@@ -16,8 +16,7 @@ namespace MyCocoaCoreMLApp {
 	/// <summary>
 	/// Model Prediction Input Type
 	/// </summary>
-	public class SqueezeNetInput : NSObject, IMLFeatureProvider
-	{
+	public class SqueezeNetInput : NSObject, IMLFeatureProvider {
 		static readonly NSSet<NSString> featureNames = new NSSet<NSString> (
 			new NSString ("image")
 		);
@@ -64,8 +63,7 @@ namespace MyCocoaCoreMLApp {
 	/// <summary>
 	/// Model Prediction Output Type
 	/// </summary>
-	public class SqueezeNetOutput : NSObject, IMLFeatureProvider
-	{
+	public class SqueezeNetOutput : NSObject, IMLFeatureProvider {
 		static readonly NSSet<NSString> featureNames = new NSSet<NSString> (
 			new NSString ("classLabelProbs"), new NSString ("classLabel")
 		);
@@ -139,8 +137,7 @@ namespace MyCocoaCoreMLApp {
 	/// <summary>
 	/// Class for model loading and prediction
 	/// </summary>
-	public class SqueezeNet : NSObject
-	{
+	public class SqueezeNet : NSObject {
 		readonly MLModel model;
 
 		public SqueezeNet ()

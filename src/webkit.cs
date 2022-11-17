@@ -1544,7 +1544,13 @@ namespace WebKit {
 		bool Autofocus { get; set; }
 
 		[Export ("defaultChecked")]
+		bool DefaultChecked { get; set; }
+
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'DefaultChecked' property instead.")]
+		[Wrap ("DefaultChecked", IsVirtual = true)]
 		bool defaultChecked { get; set; }
+#endif
 
 		[Export ("checked")]
 		bool Checked { get; set; }

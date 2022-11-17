@@ -2377,8 +2377,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		class ABPeoplePickerNavigationControllerDelegateImpl : ABPeoplePickerNavigationControllerDelegate
-		{
+		class ABPeoplePickerNavigationControllerDelegateImpl : ABPeoplePickerNavigationControllerDelegate {
 			public NativeHandle personHandle;
 			public override void DidSelectPerson (ABPeoplePickerNavigationController peoplePicker, ABPerson selectedPerson)
 			{

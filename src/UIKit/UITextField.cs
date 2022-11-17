@@ -29,14 +29,13 @@ namespace UIKit {
 
 	public partial class UITextField : IUITextInputTraits {
 
-		internal virtual Type GetInternalEventDelegateType
-		{
+		internal virtual Type GetInternalEventDelegateType {
 			get { return typeof (_UITextFieldDelegate); }
 		}
 
 		internal virtual _UITextFieldDelegate CreateInternalEventDelegateType ()
 		{
-			return (_UITextFieldDelegate)(new _UITextFieldDelegate());
+			return (_UITextFieldDelegate) (new _UITextFieldDelegate ());
 		}
 
 		internal _UITextFieldDelegate EnsureUITextFieldDelegate ()
@@ -44,14 +43,14 @@ namespace UIKit {
 			if (Delegate != null)
 				UIApplication.EnsureEventAndDelegateAreNotMismatched (Delegate, GetInternalEventDelegateType);
 			_UITextFieldDelegate del = Delegate as _UITextFieldDelegate;
-			if (del == null){
-				del = (_UITextFieldDelegate)CreateInternalEventDelegateType ();
-				Delegate = (IUITextFieldDelegate)del;
+			if (del == null) {
+				del = (_UITextFieldDelegate) CreateInternalEventDelegateType ();
+				Delegate = (IUITextFieldDelegate) del;
 			}
 			return del;
 		}
 
-		#pragma warning disable 672
+#pragma warning disable 672
 		[Register]
 		internal class _UITextFieldDelegate : NSObject, IUITextFieldDelegate {
 			public _UITextFieldDelegate () { IsDirectBinding = false; }
@@ -62,7 +61,7 @@ namespace UIKit {
 			public void EditingEnded (UITextField textField)
 			{
 				EventHandler handler = editingEnded;
-				if (handler != null){
+				if (handler != null) {
 					handler (textField, EventArgs.Empty);
 				} else {
 					// if this is executed before iOS10 and only the new API is used we'll raise the new event (if set)
@@ -97,7 +96,7 @@ namespace UIKit {
 			public void EditingStarted (UITextField textField)
 			{
 				EventHandler handler = editingStarted;
-				if (handler != null){
+				if (handler != null) {
 					handler (textField, EventArgs.Empty);
 				}
 			}
@@ -157,7 +156,7 @@ namespace UIKit {
 				return true;
 			}
 		}
-		#pragma warning restore 672
+#pragma warning restore 672
 
 		public event EventHandler Ended {
 			add { EnsureUITextFieldDelegate ().editingEnded += value; }

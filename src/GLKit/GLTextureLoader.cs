@@ -95,7 +95,7 @@ namespace GLKit {
 			using (var array = NSArray.FromNSObjects (urls))
 				return CubeMapFromFiles (array, textureOperations?.Dictionary, out error);
 		}
-		
+
 		public static GLKTextureInfo? CubeMapFromFile (string path, GLKTextureOperations? textureOperations, out NSError error)
 		{
 			return CubeMapFromFile (path, textureOperations?.Dictionary, out error);
@@ -147,7 +147,7 @@ namespace GLKit {
 		{
 			BeginLoadCubeMap (filePath, textureOperations?.Dictionary, queue, onComplete);
 		}
-		
+
 	}
 
 #if NET
@@ -162,14 +162,14 @@ namespace GLKit {
 	[ObsoletedOSPlatform ("macos10.14", "Use 'Metal' instead.")]
 	[ObsoletedOSPlatform ("ios12.0", "Use 'Metal' instead.")]
 #else
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 #endif
 	public class GLKTextureOperations : DictionaryContainer {
-		public GLKTextureOperations () : base (new NSMutableDictionary ()) {}
+		public GLKTextureOperations () : base (new NSMutableDictionary ()) { }
 
-		public GLKTextureOperations (NSDictionary options) : base (options) {}
+		public GLKTextureOperations (NSDictionary options) : base (options) { }
 
 		public bool? ApplyPremultiplication {
 			get {
@@ -219,7 +219,7 @@ namespace GLKit {
 		[ObsoletedOSPlatform ("macos10.14", "Use 'Metal' instead.")]
 		[ObsoletedOSPlatform ("ios12.0", "Use 'Metal' instead.")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public bool? SRGB {
 			get {

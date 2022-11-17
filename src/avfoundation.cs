@@ -4924,11 +4924,15 @@ namespace AVFoundation {
 		[return: Release]
 		CMFormatDescription CopyCurrentSampleFormatDescription ();
 
+#pragma warning disable 0618 // warning CS0618: 'AVSampleCursorSyncInfo' is obsolete: 'This API is not available on this platform.'
 		[Export ("currentSampleSyncInfo")]
 		AVSampleCursorSyncInfo CurrentSampleSyncInfo { get; }
+#pragma warning restore
 
+#pragma warning disable 0618 // warning CS0618: 'AVSampleCursorSyncInfo' is obsolete: 'This API is not available on this platform.'
 		[Export ("currentSampleDependencyInfo")]
 		AVSampleCursorSyncInfo CurrentSampleDependencyInfo { get; }
+#pragma warning restore
 
 		[Mac (10,11)]
 		[Export ("samplesRequiredForDecoderRefresh")]
@@ -4938,17 +4942,23 @@ namespace AVFoundation {
 		[Export ("currentChunkStorageURL")]
 		NSUrl CurrentChunkStorageUrl { get; }
 
+#pragma warning disable 0618 // warning CS0618: 'AVSampleCursorStorageRange' is obsolete: 'This API is not available on this platform.'
 		[Export ("currentChunkStorageRange")]
 		AVSampleCursorStorageRange CurrentChunkStorageRange { get; }
+#pragma warning restore
 
+#pragma warning disable 0618 // warning CS0618: 'AVSampleCursorChunkInfo' is obsolete: 'This API is not available on this platform.'
 		[Export ("currentChunkInfo")]
 		AVSampleCursorChunkInfo CurrentChunkInfo { get; }
+#pragma warning restore
 
 		[Export ("currentSampleIndexInChunk")]
 		long CurrentSampleIndexInChunk { get; }
 
+#pragma warning disable 0618 // warning CS0618: 'AVSampleCursorStorageRange' is obsolete: 'This API is not available on this platform.'
 		[Export ("currentSampleStorageRange")]
 		AVSampleCursorStorageRange CurrentSampleStorageRange { get; }
+#pragma warning restore
 
 #if MONOMAC
 		[NoiOS][NoWatch][NoTV]
@@ -11494,7 +11504,14 @@ namespace AVFoundation {
 
 		[iOS (8,0), NoMac]
 		[Export ("videoHDRSupported")]
+		bool IsVideoHdrSupported { [Bind ("isVideoHDRSupported")] get; }
+
+#if !XAMCORE_5_0
+		[iOS (8,0), NoMac]
+		[Obsolete ("Use the 'IsVideoHdrSupported' property instead.")]
+		[Wrap ("IsVideoHdrSupported", IsVirtual = true)]
 		bool videoHDRSupportedVideoHDREnabled { [Bind ("isVideoHDRSupported")] get; }
+#endif
 
 		[iOS (8,0), NoMac]
 		[Export ("highResolutionStillImageDimensions")]

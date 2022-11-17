@@ -31,18 +31,18 @@ namespace UIKit {
 #endif
 	partial class NSLayoutManager {
 		public unsafe nuint GetGlyphs (
-			NSRange glyphRange, 
-			short[] /* CGGlyph* = CGFontIndex* = unsigned short* */ glyphBuffer,
-			NSGlyphProperty[] /* NSGlyphProperty* = nint* */ props,
-			nuint[] /* NSUInteger */ charIndexBuffer,
-			byte[] /* (unsigned char *) */ bidiLevelBuffer)
+			NSRange glyphRange,
+			short [] /* CGGlyph* = CGFontIndex* = unsigned short* */ glyphBuffer,
+			NSGlyphProperty [] /* NSGlyphProperty* = nint* */ props,
+			nuint [] /* NSUInteger */ charIndexBuffer,
+			byte [] /* (unsigned char *) */ bidiLevelBuffer)
 		{
 			if (glyphBuffer != null && glyphBuffer.Length < glyphRange.Length)
 				throw new ArgumentOutOfRangeException (string.Format ("glyphBuffer must have at least {0} elements", glyphRange.Length));
 
 			if (props != null && props.Length < glyphRange.Length)
 				throw new ArgumentOutOfRangeException (string.Format ("props must have at least {0} elements", glyphRange.Length));
-			
+
 			if (charIndexBuffer != null && charIndexBuffer.Length < glyphRange.Length)
 				throw new ArgumentOutOfRangeException (string.Format ("props must have at least {0} elements", glyphRange.Length));
 
@@ -60,7 +60,7 @@ namespace UIKit {
 				// Unified/64 + Classic: the input array is the correct size
 				var tmpArray = props;
 #endif
-				fixed (void *properties = tmpArray) {
+				fixed (void* properties = tmpArray) {
 					fixed (nuint* charIBuffer = charIndexBuffer) {
 						fixed (byte* bidi = bidiLevelBuffer) {
 							rv = GetGlyphs (glyphRange, (IntPtr) glyphs, (IntPtr) properties, (IntPtr) charIBuffer, (IntPtr) bidi);
@@ -93,8 +93,8 @@ namespace UIKit {
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.")]
 		public unsafe void ShowCGGlyphs (
 #endif // MONOMAC
-			short[] /* const CGGlyph* = CGFontIndex* = unsigned short* */ glyphs,
-			CGPoint[] /* const CGPoint* */ positions,
+			short [] /* const CGGlyph* = CGFontIndex* = unsigned short* */ glyphs,
+			CGPoint [] /* const CGPoint* */ positions,
 			nuint /* NSUInteger */ glyphCount,
 			UIFont font,
 			CGAffineTransform textMatrix,
@@ -115,10 +115,10 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst13.1")]
 #else
-		[Watch (6,0)]
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[Watch (6, 0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		public unsafe void ShowGlyphs (
 			short [] /* const CGGlyph* = CGFontIndex* = unsigned short* */ glyphs,
@@ -143,7 +143,7 @@ namespace UIKit {
 		{
 			return GetTextContainer (glyphIndex);
 		}
-		
+
 		[Obsolete ("Use 'GetTextContainer' instead.")]
 		public NSTextContainer TextContainerForGlyphAtIndex (nuint glyphIndex, ref NSRange effectiveGlyphRange)
 		{
@@ -188,7 +188,7 @@ namespace UIKit {
 		{
 			return GetGlyphRange (charRange, out actualCharRange);
 		}
-		
+
 		// CharacterRangeForGlyphRange
 		[Obsolete ("Use 'GetCharacterRange' instead.")]
 		public NSRange CharacterRangeForGlyphRange (NSRange charRange)
@@ -204,7 +204,7 @@ namespace UIKit {
 #endif // !NET && !MONOMAC
 
 		public unsafe nuint GetLineFragmentInsertionPoints (
-			nuint /* NSUInteger */ charIndex, 
+			nuint /* NSUInteger */ charIndex,
 			bool /* BOOL */ alternatePosition,
 			bool /* BOOL */ inDisplayOrder,
 			nfloat [] /* CGFloat* */ positions,

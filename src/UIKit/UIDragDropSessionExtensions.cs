@@ -17,11 +17,10 @@ namespace UIKit {
 
 	public static class UIDragDropSessionExtensions {
 
-		public static NSProgress LoadObjects<T> (this IUIDropSession session, Action<T []> completion) where T: NSObject, INSItemProviderReading
+		public static NSProgress LoadObjects<T> (this IUIDropSession session, Action<T []> completion) where T : NSObject, INSItemProviderReading
 		{
-			return session.LoadObjects (new Class (typeof (T)), (v) =>
-			{
-				var arr = v as T[];
+			return session.LoadObjects (new Class (typeof (T)), (v) => {
+				var arr = v as T [];
 				if (arr == null && v != null) {
 					arr = new T [v.Length];
 					for (int i = 0; i < arr.Length; i++) {

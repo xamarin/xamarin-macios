@@ -43,6 +43,12 @@ partial class TestRuntime {
 	[DllImport (Constants.CoreFoundationLibrary)]
 	public extern static nint CFGetRetainCount (IntPtr handle);
 
+	[DllImport (Constants.CoreFoundationLibrary)]
+	public extern static nint CFRetain (IntPtr handle);
+
+	[DllImport (Constants.CoreFoundationLibrary)]
+	public extern static void CFRelease (IntPtr handle);
+
 	[DllImport ("/usr/lib/system/libdyld.dylib")]
 	static extern int dyld_get_program_sdk_version ();
 
@@ -111,11 +117,21 @@ partial class TestRuntime {
 		return new Version (major, minor, build);
 	}
 
+	static bool? is_in_ci;
+	public static bool IsInCI {
+		get {
+			if (!is_in_ci.HasValue) {
+				var in_ci = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
+				in_ci |= !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")); // set by Azure DevOps
+				is_in_ci = in_ci;
+			}
+			return is_in_ci.Value;
+		}
+	}
+
 	public static void IgnoreInCI (string message)
 	{
-		var in_ci = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
-		in_ci |= !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")); // set by Azure DevOps
-		if (!in_ci) {
+		if (!IsInCI) {
 			Console.WriteLine ($"Not ignoring test ('{message}'), because not running in CI. BUILD_REVISION={Environment.GetEnvironmentVariable ("BUILD_REVISION")} BUILD_SOURCEVERSION={Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")}");
 			return;
 		}
@@ -126,7 +142,7 @@ partial class TestRuntime {
 #if NET
 	// error CS1061: 'AppDomain' does not contain a definition for 'DefineDynamicAssembly' and no accessible extension method 'DefineDynamicAssembly' accepting a first argument of type 'AppDomain' could be found (are you missing a using directive or an assembly reference?)
 #else
-	static AssemblyName assemblyName = new AssemblyName ("DynamicAssemblyExample"); 
+	static AssemblyName assemblyName = new AssemblyName ("DynamicAssemblyExample");
 	public static bool CheckExecutingWithInterpreter ()
 	{
 		// until System.Runtime.CompilerServices.RuntimeFeature.IsSupported("IsDynamicCodeCompiled") returns a valid result, atm it

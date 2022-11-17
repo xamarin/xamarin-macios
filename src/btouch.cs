@@ -636,6 +636,9 @@ public class BindingTouch : IDisposable {
 
 		if (Driver.RunCommand (compile_command [0], arguments, null, out var compile_output, true, Driver.Verbosity) != 0)
 			throw ErrorHelper.CreateError (errorCode, $"{compiler} {StringUtils.FormatArguments (arguments)}\n{compile_output}".Replace ("\n", "\n\t"));
+		var output = string.Join (Environment.NewLine, compile_output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
+		if (!string.IsNullOrEmpty (output))
+			Console.WriteLine (output);
 	}
 
 	static string GetWorkDir ()
