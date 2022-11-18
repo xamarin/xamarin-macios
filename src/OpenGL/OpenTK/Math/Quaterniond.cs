@@ -1236,7 +1236,7 @@ namespace OpenTK {
         public override int GetHashCode()
         {
             base.GetHashCode();
-            return HashCode.Combine(W, X, Y, Z);
+            return W.GetHashCode() ^ X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
         }
 
 		#endregion

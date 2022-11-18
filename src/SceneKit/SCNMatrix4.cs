@@ -1128,7 +1128,7 @@ namespace SceneKit {
         /// <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
         public override int GetHashCode()
         {
-            return HashCode.Combine(Row0, Row1, Row2, Row3);
+            return Row0.GetHashCode() ^ Row1.GetHashCode() ^ Row2.GetHashCode() ^ Row3.GetHashCode();
         }
 
 		#endregion
