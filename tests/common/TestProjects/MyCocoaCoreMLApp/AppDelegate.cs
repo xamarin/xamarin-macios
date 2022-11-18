@@ -5,11 +5,9 @@ using CoreGraphics;
 using CoreVideo;
 using Foundation;
 
-namespace MyCocoaCoreMLApp
-{
-	static class MainClass
-	{
-		static void Main (string[] args)
+namespace MyCocoaCoreMLApp {
+	static class MainClass {
+		static void Main (string [] args)
 		{
 			NSApplication.Init ();
 			NSApplication.SharedApplication.Delegate = new AppDelegate ();
@@ -17,8 +15,7 @@ namespace MyCocoaCoreMLApp
 		}
 	}
 
-	public partial class AppDelegate : NSApplicationDelegate
-	{
+	public partial class AppDelegate : NSApplicationDelegate {
 		NSWindow window;
 		public override void DidFinishLaunching (NSNotification notification)
 		{

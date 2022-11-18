@@ -2,10 +2,8 @@ using Foundation;
 using System;
 using UIKit;
 
-namespace ManagedContainer
-{
-	public partial class ViewController : UIViewController
-	{
+namespace ManagedContainer {
+	public partial class ViewController : UIViewController {
 		public ViewController (IntPtr handle) : base (handle)
 		{
 		}

@@ -16,8 +16,8 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-using OS_nw_protocol_options=System.IntPtr;
-using nw_ws_request_t=System.IntPtr;
+using OS_nw_protocol_options = System.IntPtr;
+using nw_ws_request_t = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -31,10 +31,10 @@ namespace Network {
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[Watch (6,0)]
+	[TV (13, 0)]
+	[Mac (10, 15)]
+	[iOS (13, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWWebSocketOptions : NWProtocolOptions {
 		bool autoReplyPing = false;
@@ -42,21 +42,21 @@ namespace Network {
 		nuint maximumMessageSize;
 
 		[Preserve (Conditional = true)]
-		internal NWWebSocketOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
+		internal NWWebSocketOptions (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_ws_create_options (NWWebSocketVersion version);
 
-		public NWWebSocketOptions (NWWebSocketVersion version) : base (nw_ws_create_options (version), true) { } 
+		public NWWebSocketOptions (NWWebSocketVersion version) : base (nw_ws_create_options (version), true) { }
 
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
 		static extern void nw_ws_options_add_additional_header (OS_nw_protocol_options options, string name, string value);
 
-		public void SetHeader (string header, string value) 
+		public void SetHeader (string header, string value)
 		{
 			if (header is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (header));
-			nw_ws_options_add_additional_header (GetCheckedHandle(), header, value); 
+			nw_ws_options_add_additional_header (GetCheckedHandle (), header, value);
 		}
 
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
@@ -73,7 +73,7 @@ namespace Network {
 		static extern void nw_ws_options_set_auto_reply_ping (OS_nw_protocol_options options, [MarshalAs (UnmanagedType.I1)] bool auto_reply_ping);
 
 		public bool AutoReplyPing {
-			get { return autoReplyPing;}
+			get { return autoReplyPing; }
 			set {
 				autoReplyPing = value;
 				nw_ws_options_set_auto_reply_ping (GetCheckedHandle (), value);
@@ -87,7 +87,7 @@ namespace Network {
 			get { return maximumMessageSize; }
 			set {
 				maximumMessageSize = value;
-				nw_ws_options_set_maximum_message_size (GetCheckedHandle(), value);
+				nw_ws_options_set_maximum_message_size (GetCheckedHandle (), value);
 			}
 		}
 

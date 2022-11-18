@@ -5338,22 +5338,30 @@ namespace AppKit {
 	, NSEditor // Conflict over if CommitEditing is a property or a method. NSViewController has it right so can't "fix" NSEditor to match existing API
 #endif
 	{
+#pragma warning disable 0108 // warning CS0108: 'NSController.DiscardEditing()' hides inherited member 'NSEditor.DiscardEditing()'. Use the new keyword if hiding was intended.
 		[Export ("discardEditing")]
 		void DiscardEditing ();
+#pragma warning restore
 
 		[Export ("commitEditingWithDelegate:didCommitSelector:contextInfo:")]
 #if NET
+#pragma warning disable 0108 // warning CS0108: 'NSController.CommitEditing(NSObject, Selector, nint)' hides inherited member 'NSEditor.CommitEditing(NSObject, Selector, nint)'. Use the new keyword if hiding was intended.
 		void CommitEditing ([NullAllowed] NSObject delegate1, [NullAllowed] Selector didCommitSelector, IntPtr contextInfo);
+#pragma warning restore
 #else
 		void CommitEditingWithDelegate ([NullAllowed] NSObject delegate1, [NullAllowed] Selector didCommitSelector, IntPtr contextInfo);
 #endif
 
 #if NET
+#pragma warning disable 0108 // warning CS0108: 'NSController.ObjectDidBeginEditing(INSEditor)' hides inherited member 'NSEditorRegistration.ObjectDidBeginEditing(INSEditor)'. Use the new keyword if hiding was intended.
 		[Export ("objectDidBeginEditing:")]
 		void ObjectDidBeginEditing (INSEditor editor);
+#pragma warning restore
 
+#pragma warning disable 0108 // warning CS0108: 'NSController.ObjectDidEndEditing(INSEditor)' hides inherited member 'NSEditorRegistration.ObjectDidEndEditing(INSEditor)'. Use the new keyword if hiding was intended.
 		[Export ("objectDidEndEditing:")]
 		void ObjectDidEndEditing (INSEditor editor);
+#pragma warning restore
 #else
 		[Export ("objectDidBeginEditing:")]
 		void ObjectDidBeginEditing (NSObject editor);
@@ -5364,7 +5372,9 @@ namespace AppKit {
 
 		[Export ("commitEditing")]
 #if NET
+#pragma warning disable 0108 // warning CS0108: 'NSController.CommitEditing()' hides inherited member 'NSEditor.CommitEditing()'. Use the new keyword if hiding was intended.
 		bool CommitEditing ();
+#pragma warning restore
 #else
 		bool CommitEditing { get; }
 #endif
@@ -5970,8 +5980,10 @@ namespace AppKit {
 		// Found in NSUserInterfaceValidations protocol with INSValidatedUserInterfaceItem param but bound originally with NSObject
 		// Adding protocol gave warning 0108 which is unfixable without API break 
 #if NET
+#pragma warning disable 0108 // warning CS0108: 'NSDocument.ValidateUserInterfaceItem(INSValidatedUserInterfaceItem)' hides inherited member 'NSUserInterfaceValidations.ValidateUserInterfaceItem(INSValidatedUserInterfaceItem)'. Use the new keyword if hiding was intended.
 		[Export ("validateUserInterfaceItem:")]
 		bool ValidateUserInterfaceItem (INSValidatedUserInterfaceItem anItem);
+#pragma warning restore
 #else
 		[Export ("validateUserInterfaceItem:")]
 		bool ValidateUserInterfaceItem (NSObject /* must implement NSValidatedUserInterfaceItem */ anItem);
@@ -6110,7 +6122,7 @@ namespace AppKit {
 		// Should be removed but radar://42781537 - Classes fail to conformsToProtocol despite header declaration
 		[Mac (10,10)]
 		[Export ("restoreUserActivityState:")]
-		void RestoreUserActivityState (NSUserActivity userActivity);
+		new void RestoreUserActivityState (NSUserActivity userActivity);
 #endif
 
 		[Mac (10,12)]
@@ -6256,8 +6268,10 @@ namespace AppKit {
 		// Found in NSUserInterfaceValidations protocol with INSValidatedUserInterfaceItem param but bound originally with NSObject
 		// Adding protocol gave warning 0108 which is unfixable without API break 
 #if NET
+#pragma warning disable 0108 // warning CS0108: 'NSDocumentController.ValidateUserInterfaceItem(INSValidatedUserInterfaceItem)' hides inherited member 'NSUserInterfaceValidations.ValidateUserInterfaceItem(INSValidatedUserInterfaceItem)'. Use the new keyword if hiding was intended.
 		[Export ("validateUserInterfaceItem:")]
 		bool ValidateUserInterfaceItem (INSValidatedUserInterfaceItem anItem);
+#pragma warning restore
 #else
 		[Export ("validateUserInterfaceItem:")]
 		bool ValidateUserInterfaceItem (NSObject /* must implement NSValidatedUserInterfaceItem */ anItem);
@@ -13125,7 +13139,7 @@ namespace AppKit {
 		// Should be removed but radar://42781537 - Classes fail to conformsToProtocol despite header declaration
 		[Mac (10,10)]
 		[Export ("restoreUserActivityState:")]
-		void RestoreUserActivityState (NSUserActivity userActivity);
+		new void RestoreUserActivityState (NSUserActivity userActivity);
 #endif
 
 		[Mac (10,10,3)]
@@ -19496,11 +19510,15 @@ namespace AppKit {
 		[Protocolize]
 		NSTextViewDelegate Delegate { get; set; }
 
+#pragma warning disable 0109 // warning CS0109: The member 'NSTextView.Editable' does not hide an accessible member. The new keyword is not required.
 		[Export ("editable")]
 		new bool Editable { [Bind ("isEditable")]get; set; }
+#pragma warning restore
 
+#pragma warning disable 0109 // warning CS0109: The member 'NSTextView.Selectable' does not hide an accessible member. The new keyword is not required.
 		[Export ("selectable")]
 		new bool Selectable { [Bind ("isSelectable")]get; set; }
+#pragma warning restore
 
 		[Export ("richText")]
 		bool RichText { [Bind ("isRichText")]get; set; }
@@ -27477,8 +27495,10 @@ namespace AppKit {
 		[Export ("downloadedFontDescriptors", ArgumentSemantic.Copy)]
 		NSFontDescriptor[] DownloadedFontDescriptors { get; }
 
+#pragma warning disable 0108 // warning CS0108: 'NSFontAssetRequest.Progress' hides inherited member 'NSProgressReporting.Progress'. Use the new keyword if hiding was intended.
 		[Export ("progress", ArgumentSemantic.Strong)]
 		NSProgress Progress { get; }
+#pragma warning restore
 
 		[Export ("downloadFontAssetsWithCompletionHandler:")]
 		void DownloadFontAssets (DownloadFontAssetsRequestCompletionHandler completionHandler);

@@ -340,7 +340,7 @@ namespace CoreFoundation {
 				var ep = CFSocketAddress.EndPointFromAddressPtr (address, false)!;
 				var handle = new CFSocketNativeHandle (Marshal.ReadInt32 (data));
 				socket.OnAccepted (new CFSocketAcceptEventArgs (handle, ep));
-			} else if (cbType == CFSocketCallBackType.ConnectCallBack && socket.ConnectEvent != null) {
+			} else if (cbType == CFSocketCallBackType.ConnectCallBack && socket.ConnectEvent is not null) {
 				CFSocketError result;
 				if (data == IntPtr.Zero)
 					result = CFSocketError.Success;
@@ -350,7 +350,7 @@ namespace CoreFoundation {
 					result = (CFSocketError) Marshal.ReadInt32 (data);
 				}
 				socket.OnConnect (new CFSocketConnectEventArgs (result));
-			} else if (cbType == CFSocketCallBackType.DataCallBack && socket.DataEvent != null) {
+			} else if (cbType == CFSocketCallBackType.DataCallBack && socket.DataEvent is not null) {
 				using (var cfdata = new CFData (data, false)) {
 					if (cfdata.Length > 0) {
 						var ep = CFSocketAddress.EndPointFromAddressPtr (address, false)!;
@@ -359,9 +359,9 @@ namespace CoreFoundation {
 				}
 			} else if (cbType == CFSocketCallBackType.NoCallBack) {
 				// nothing to do
-			} else if (cbType == CFSocketCallBackType.ReadCallBack && socket.ReadEvent != null) {
+			} else if (cbType == CFSocketCallBackType.ReadCallBack && socket.ReadEvent is not null) {
 				socket.OnRead (new CFSocketReadEventArgs ());
-			} else if (cbType == CFSocketCallBackType.WriteCallBack && socket.WriteEvent != null) {
+			} else if (cbType == CFSocketCallBackType.WriteCallBack && socket.WriteEvent is not null) {
 				socket.OnWrite (new CFSocketWriteEventArgs ());
 			}
 		}

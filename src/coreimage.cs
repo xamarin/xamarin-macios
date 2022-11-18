@@ -1728,7 +1728,7 @@ namespace CoreImage {
 		[Static]
 		[Wrap ("FromData (data, options.GetDictionary ())")]
 		[return: NullAllowed]
-		CIImage FromData (NSData data, [NullAllowed] CIImageInitializationOptionsWithMetadata? options);
+		CIImage FromData (NSData data, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
 		[Static]
 		[iOS(9,0)]
@@ -1795,7 +1795,7 @@ namespace CoreImage {
 		[Mac (10,13)]
 		[Static]
 		[Wrap ("FromSurface (surface, options.GetDictionary ())")]
-		CIImage FromSurface (IOSurface.IOSurface surface, CIImageInitializationOptions? options);
+		CIImage FromSurface (IOSurface.IOSurface surface, CIImageInitializationOptions options);
 
 		[Static]
 		[Export ("imageWithColor:")]

@@ -3,8 +3,8 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
-using OS_nw_group_descriptor=System.IntPtr;
-using OS_nw_endpoint=System.IntPtr;
+using OS_nw_group_descriptor = System.IntPtr;
+using OS_nw_endpoint = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -20,15 +20,15 @@ namespace Network {
 	[SupportedOSPlatform ("ios14.0")]
 	[SupportedOSPlatform ("maccatalyst14.0")]
 #else
-	[TV (14,0)]
-	[Mac (11,0)]
-	[iOS (14,0)]
-	[Watch (7,0)]
-	[MacCatalyst (14,0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
+	[iOS (14, 0)]
+	[Watch (7, 0)]
+	[MacCatalyst (14, 0)]
 #endif
 	public class NWMulticastGroup : NativeObject {
 		[Preserve (Conditional = true)]
-		internal NWMulticastGroup (NativeHandle handle, bool owns) : base (handle, owns) {}
+		internal NWMulticastGroup (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_group_descriptor nw_group_descriptor_create_multicast (OS_nw_endpoint multicast_group);
@@ -61,8 +61,8 @@ namespace Network {
 
 		public bool DisabledUnicastTraffic {
 			get => nw_multicast_group_descriptor_get_disable_unicast_traffic (GetCheckedHandle ());
-			set => nw_multicast_group_descriptor_set_disable_unicast_traffic  (GetCheckedHandle (), value);
-		} 
+			set => nw_multicast_group_descriptor_set_disable_unicast_traffic (GetCheckedHandle (), value);
+		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_multicast_group_descriptor_set_specific_source (OS_nw_group_descriptor multicast_descriptor, OS_nw_endpoint source);
@@ -85,7 +85,7 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<Func<NWEndpoint, bool>> (block);
 			if (del is not null) {
-				using var nsEndpoint = new NWEndpoint (endpoint, owns: false); 
+				using var nsEndpoint = new NWEndpoint (endpoint, owns: false);
 				return del (nsEndpoint);
 			}
 			return false;

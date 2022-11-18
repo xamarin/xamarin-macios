@@ -145,7 +145,10 @@ xamarin_start_wwan (const char *uri)
 	CFURLRef url = CFURLCreateWithString (kCFAllocatorDefault, host, nil);
 	
 	CFHTTPMessageRef message = CFHTTPMessageCreateRequest (kCFAllocatorDefault, get, url, kCFHTTPVersion1_1);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 	CFReadStreamRef stream = CFReadStreamCreateForHTTPRequest (kCFAllocatorDefault, message);
+#pragma clang diagnostic pop
 	
 	CFReadStreamScheduleWithRunLoop (stream, CFRunLoopGetCurrent (), kCFRunLoopCommonModes);
 	

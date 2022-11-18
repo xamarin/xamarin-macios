@@ -11,11 +11,11 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.GLKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class EffectPropertyFogTest {
-		
+
 		[Test]
 		public void Properties ()
 		{
@@ -23,7 +23,7 @@ namespace MonoTouchFixtures.GLKit {
 
 			var fog = new GLKEffectPropertyFog ();
 			Asserts.AreEqual (0, 0, 0, 0, fog.Color, "Color");
-			
+
 			fog = new GLKBaseEffect ().Fog;
 			Asserts.AreEqual (0, 0, 0, 0, fog.Color, "Color 2");
 		}

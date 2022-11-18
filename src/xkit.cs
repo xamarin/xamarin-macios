@@ -2061,16 +2061,20 @@ namespace UIKit {
 		[Export ("hidden")]
 		bool Hidden { [Bind ("isHidden")] get; set; }
 
+#pragma warning disable 0109 // warning CS0109: The member 'NSCollectionLayoutVisibleItem.Center' does not hide an accessible member. The new keyword is not required.
 		// Inherited from UIDynamicItem for !MONOMAC
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
 		new CGPoint Center { get; set; }
+#pragma warning restore
 
+#pragma warning disable 0109 // warning CS0109: The member 'NSCollectionLayoutVisibleItem.Bounds' does not hide an accessible member. The new keyword is not required.
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Abstract]
 		[Export ("bounds")]
 		new CGRect Bounds { get; }
+#pragma warning restore
 
 		[NoMac]
 		[Abstract]

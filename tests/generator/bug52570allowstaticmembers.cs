@@ -14,6 +14,6 @@ namespace bug52570AllowStaticMembers {
 
 	[BaseType (typeof (NSObject))]
 	interface FooObject {
-	
+
 	}
 }

@@ -55,20 +55,6 @@ namespace Foundation {
 		public NSAttributedString (NSData data, ref NSError error)
 		: this (data, new NSDictionary (), out ignore, ref error) { }
 
-#if IOS // not TVOS or WATCH
-		// use the best selector based on the OS version
-		public NSAttributedString (NSUrl url, NSDictionary? options, out NSDictionary resultDocumentAttributes, ref NSError error)
-		{
-			if (SystemVersion.CheckiOS (9,0))
-				Handle = InitWithURL (url, options, out resultDocumentAttributes, ref error);
-			else
-				Handle = InitWithFileURL (url, options, out resultDocumentAttributes, ref error);
-
-			if (Handle == IntPtr.Zero)
-				throw new ArgumentException ();
-		}
-#endif
-
 	}
 #endif
 
