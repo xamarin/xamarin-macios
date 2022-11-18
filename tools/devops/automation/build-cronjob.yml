@@ -38,6 +38,7 @@ parameters:
 variables:
 - name: System.Debug
   value: true
+- template: templates/variables.yml
 
 resources:
   repositories:
@@ -75,7 +76,7 @@ schedules:
 
 # the translations team wants a green build, we can do that on sundays even if 
 # the code did not change and without the device tests.
-- cron: "10 15 * * *"
+- cron: "10 16 * * *"
   displayName: Weekly Translations build (Sunday @ noon)
   branches:
     include:
