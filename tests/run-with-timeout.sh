@@ -58,4 +58,23 @@ PID=$$
 
 ) 2> /dev/null &
 
-exec "$@"
+# We detect a problem launching Mac Catalyst apps in the app itself, and in that case
+# we forcefully exit the app using exit code 99. This means that we should try running
+# the test app again, so let's do that a few times (up to 10 times).
+COUNTER=1
+MAX_ATTEMPTS=10
+TRY_AGAIN_RC=99
+while true; do
+	RC=0
+	"$@" || RC=$?
+
+	if [[ "$RC" != "$TRY_AGAIN_RC" ]]; then
+		exit $RC
+	fi
+	((COUNTER++))
+	if [[ "$COUNTER" -gt $MAX_ATTEMPTS ]]; then
+		echo "The test app requested another attempt (by returning exit code $TRY_AGAIN_RC), but we've reached the maximum number of attempts ($MAX_ATTEMPTS)."
+		exit $RC
+	fi
+	echo "The test app requested another attempt (by returning exit code $TRY_AGAIN_RC). Trying again (attempt #$COUNTER)."
+done
