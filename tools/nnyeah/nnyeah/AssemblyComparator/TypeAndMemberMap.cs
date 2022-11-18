@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Collections.Generic;
 using Mono.Cecil;
 using System.Xml.Serialization;

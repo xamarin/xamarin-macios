@@ -16,7 +16,7 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-using OS_nw_ws_response=System.IntPtr;
+using OS_nw_ws_response = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -30,15 +30,15 @@ namespace Network {
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[Watch (6,0)]
+	[TV (13, 0)]
+	[Mac (10, 15)]
+	[iOS (13, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWWebSocketResponse : NativeObject {
 
 		[Preserve (Conditional = true)]
-		internal NWWebSocketResponse (NativeHandle handle, bool owns) : base (handle, owns) {}
+		internal NWWebSocketResponse (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
 		static extern unsafe OS_nw_ws_response nw_ws_response_create (NWWebSocketResponseStatus status, string selected_subprotocol);
@@ -49,12 +49,12 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
 		static extern string nw_ws_response_get_selected_subprotocol (OS_nw_ws_response response);
 
-		public string SelectedSubprotocol => nw_ws_response_get_selected_subprotocol (GetCheckedHandle ()); 
+		public string SelectedSubprotocol => nw_ws_response_get_selected_subprotocol (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWWebSocketResponseStatus nw_ws_response_get_status (OS_nw_ws_response response);
 
-		public NWWebSocketResponseStatus Status => nw_ws_response_get_status (GetCheckedHandle ()); 
+		public NWWebSocketResponseStatus Status => nw_ws_response_get_status (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]

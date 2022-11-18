@@ -9,6 +9,6 @@ namespace BindingTests {
 
 	// error BI1018: btouch: No [Export] attribute on property MonoTouch.ObjCRuntime.INativeObject.Handle
 	[BaseType (typeof (UIPageViewController))]
-	interface MyPageViewController : IUIPageViewControllerDelegate, IUIPageViewControllerDataSource	{
+	interface MyPageViewController : IUIPageViewControllerDelegate, IUIPageViewControllerDataSource {
 	}
 }
