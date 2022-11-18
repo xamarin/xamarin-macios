@@ -179,7 +179,7 @@ Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets: Workloads/WorkloadMan
 		$$< > $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
-Workloads/Microsoft.NET.Sdk.$(1)/LICENSE: $(TOP)/LICENSE
+Workloads/Microsoft.NET.Sdk.$(1)/LICENSE: $(TOP)/LICENSE | Workloads/Microsoft.NET.Sdk.$(1)
 	$$(Q) $(CP) $$< $$@
 
 WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json
