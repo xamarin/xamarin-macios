@@ -74,14 +74,13 @@ stages:
           repositoryAlias: self
           commit: HEAD
 
-    - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
-      - job: translations
-        displayName: 'Loc translations'
-        pool:
-          vmImage: windows-latest
-        steps:
-        - template:  templates/loc-translations.yml
-          parameters:
-            isPR: false
-            repositoryAlias: self
-            commit: HEAD
+    - job: translations
+      displayName: 'Loc translations'
+      pool:
+        vmImage: windows-latest
+      steps:
+      - template:  templates/loc-translations.yml
+        parameters:
+          isPR: false
+          repositoryAlias: self
+          commit: HEAD
