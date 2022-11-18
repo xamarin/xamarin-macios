@@ -16,10 +16,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-using OS_nw_browser=System.IntPtr;
-using OS_nw_browse_descriptor=System.IntPtr;
-using OS_nw_parameters=System.IntPtr;
-using dispatch_queue_t =System.IntPtr;
+using OS_nw_browser = System.IntPtr;
+using OS_nw_browse_descriptor = System.IntPtr;
+using OS_nw_parameters = System.IntPtr;
+using dispatch_queue_t = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -37,10 +37,10 @@ namespace Network {
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[Watch (6,0)]
+	[TV (13, 0)]
+	[Mac (10, 15)]
+	[iOS (13, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWBrowser : NativeObject {
 
@@ -66,7 +66,7 @@ namespace Network {
 			SetChangesHandler (InternalChangesHandler);
 		}
 
-		public NWBrowser (NWBrowserDescriptor descriptor) : this (descriptor, null) {}
+		public NWBrowser (NWBrowserDescriptor descriptor) : this (descriptor, null) { }
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_browser_set_queue (OS_nw_browser browser, dispatch_queue_t queue);
@@ -111,7 +111,7 @@ namespace Network {
 
 		public bool IsActive {
 			get {
-				lock (startLock) 
+				lock (startLock)
 					return started;
 			}
 		}
@@ -129,7 +129,7 @@ namespace Network {
 			=> new NWParameters (nw_browser_copy_parameters (GetCheckedHandle ()), owns: true);
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_browser_set_browse_results_changed_handler (OS_nw_browser browser, void *handler);
+		unsafe static extern void nw_browser_set_browse_results_changed_handler (OS_nw_browser browser, void* handler);
 
 		delegate void nw_browser_browse_results_changed_handler_t (IntPtr block, IntPtr oldResult, IntPtr newResult, bool completed);
 		static nw_browser_browse_results_changed_handler_t static_ChangesHandler = TrampolineChangesHandler;
@@ -165,7 +165,7 @@ namespace Network {
 				// results can be null, since we could have a not old one
 				oldResult?.Dispose ();
 				newResult?.Dispose ();
-				return; 
+				return;
 			}
 			// get the change, add it to the list
 			var change = NWBrowseResult.GetChanges (oldResult, newResult);
@@ -177,7 +177,7 @@ namespace Network {
 			lock (changesLock) {
 				changes.Add (result);
 				// only call when we know we are done
-				if (completed)  {
+				if (completed) {
 					tmp_changes = changes;
 					changes = new List<(NWBrowseResult? result, NWBrowseResultChange change)> ();
 				}
@@ -199,7 +199,7 @@ namespace Network {
 					return;
 				}
 				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
+				BlockLiteral* block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ChangesHandler, handler);
 				try {
 					nw_browser_set_browse_results_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
@@ -207,7 +207,7 @@ namespace Network {
 					block_handler.CleanupBlock ();
 				}
 			}
-		}	
+		}
 
 		// let to not change the API, but would be nice to remove it in the following releases.
 #if !NET
@@ -216,7 +216,7 @@ namespace Network {
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_browser_set_state_changed_handler (OS_nw_browser browser, void *state_changed_handler);
+		unsafe static extern void nw_browser_set_state_changed_handler (OS_nw_browser browser, void* state_changed_handler);
 
 		delegate void nw_browser_set_state_changed_handler_t (IntPtr block, NWBrowserState state, IntPtr error);
 		static nw_browser_set_state_changed_handler_t static_StateChangesHandler = TrampolineStateChangesHandler;
@@ -226,7 +226,7 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<Action<NWBrowserState, NWError?>> (block);
 			if (del is not null) {
-				var nwError = (error == IntPtr.Zero)? null : new NWError (error, owns: false);
+				var nwError = (error == IntPtr.Zero) ? null : new NWError (error, owns: false);
 				del (state, nwError);
 			}
 		}
@@ -240,7 +240,7 @@ namespace Network {
 					return;
 				}
 				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
+				BlockLiteral* block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_StateChangesHandler, handler);
 				try {
 					nw_browser_set_state_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
@@ -248,6 +248,6 @@ namespace Network {
 					block_handler.CleanupBlock ();
 				}
 			}
-		}	
+		}
 	}
 }

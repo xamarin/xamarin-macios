@@ -8,10 +8,8 @@ using NUnit.Framework;
 
 using Xamarin.Utils;
 
-namespace Xamarin.Tests
-{
-	public enum LinkerOption
-	{
+namespace Xamarin.Tests {
+	public enum LinkerOption {
 		Unspecified,
 		LinkAll,
 		LinkSdk,
@@ -19,16 +17,14 @@ namespace Xamarin.Tests
 		LinkPlatform, // only applicable for XM
 	}
 
-	public enum RegistrarOption
-	{
+	public enum RegistrarOption {
 		Unspecified,
 		Dynamic,
 		Static,
 	}
 
 	[Flags]
-	enum I18N
-	{
+	enum I18N {
 		None = 0,
 
 		CJK = 1,
@@ -42,8 +38,7 @@ namespace Xamarin.Tests
 	}
 
 	// This class represents options/logic that is identical between mtouch and mmp
-	abstract class BundlerTool : Tool
-	{
+	abstract class BundlerTool : Tool {
 		public const string None = "None";
 		public bool AlwaysShowOutput;
 
@@ -327,7 +322,7 @@ namespace Xamarin.Tests
 				return;
 			var errors = Messages.Where ((v) => v.IsError).ToList ();
 			Assert.Fail ($"Expected execution to succeed, but exit code was {rv}, and there were {errors.Count} error(s).\nCommand: {ToolPath} {StringUtils.FormatArguments (ToolArguments)}\nMessage: {message}\n\t" +
-				     string.Join ("\n\t", errors.Select ((v) => v.ToString ())));
+					 string.Join ("\n\t", errors.Select ((v) => v.ToString ())));
 		}
 
 		public void AssertExecuteFailure (string message = null)

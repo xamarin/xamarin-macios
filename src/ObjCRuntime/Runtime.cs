@@ -372,9 +372,9 @@ namespace ObjCRuntime {
 		public static event MarshalObjectiveCExceptionHandler? MarshalObjectiveCException;
 		public static event MarshalManagedExceptionHandler? MarshalManagedException;
 
-		static MarshalObjectiveCExceptionMode OnMarshalObjectiveCException (IntPtr exception_handle, bool throwManagedAsDefault)
+		static MarshalObjectiveCExceptionMode OnMarshalObjectiveCException (IntPtr exception_handle, sbyte throwManagedAsDefault)
 		{
-			if (throwManagedAsDefault && MarshalObjectiveCException is null)
+			if (throwManagedAsDefault != 0 && MarshalObjectiveCException is null)
 				return MarshalObjectiveCExceptionMode.ThrowManagedException;
 			
 			if (MarshalObjectiveCException is not null) {
@@ -382,7 +382,7 @@ namespace ObjCRuntime {
 				var args = new MarshalObjectiveCExceptionEventArgs ()
 				{
 					Exception = exception,
-					ExceptionMode = throwManagedAsDefault ? MarshalObjectiveCExceptionMode.ThrowManagedException : objc_exception_mode,
+					ExceptionMode = (throwManagedAsDefault != 0) ? MarshalObjectiveCExceptionMode.ThrowManagedException : objc_exception_mode,
 				};
 
 				MarshalObjectiveCException (null, args);
@@ -723,15 +723,16 @@ namespace ObjCRuntime {
 			return AllocGCHandle (new Selector (sel));
 		}
 
-		static void GetMethodForSelector (IntPtr cls, IntPtr sel, bool is_static, IntPtr desc)
+		static void GetMethodForSelector (IntPtr cls, IntPtr sel, sbyte is_static, IntPtr desc)
 		{
 			// This is called by the old registrar code.
-			Registrar.GetMethodDescription (Class.Lookup (cls), sel, is_static, desc);
+			Registrar.GetMethodDescription (Class.Lookup (cls), sel, is_static != 0, desc);
 		}
 
-		static bool HasNSObject (IntPtr ptr)
+		static sbyte HasNSObject (IntPtr ptr)
 		{
-			return TryGetNSObject (ptr, evenInFinalizerQueue: false) is not null;
+			var rv = TryGetNSObject (ptr, evenInFinalizerQueue: false) is not null;
+			return (sbyte) (rv ? 1 : 0);
 		}
 
 		static IntPtr GetHandleForINativeObject (IntPtr ptr)
@@ -771,16 +772,16 @@ namespace ObjCRuntime {
 			return AllocGCHandle (GetNSObject (ptr, MissingCtorResolution.Ignore, true));
 		}
 
-		static IntPtr GetINativeObject_Dynamic (IntPtr ptr, bool owns, IntPtr type_ptr)
+		static IntPtr GetINativeObject_Dynamic (IntPtr ptr, sbyte owns, IntPtr type_ptr)
 		{
 			/*
 			 * This method is called from marshalling bridge (dynamic mode).
 			 */
 			var type = (System.Type) GetGCHandleTarget (type_ptr)!;
-			return AllocGCHandle (GetINativeObject (ptr, owns, type, null));
+			return AllocGCHandle (GetINativeObject (ptr, owns != 0, type, null));
 		}
 			
-		static IntPtr GetINativeObject_Static (IntPtr ptr, bool owns, uint iface_token, uint implementation_token)
+		static IntPtr GetINativeObject_Static (IntPtr ptr, sbyte owns, uint iface_token, uint implementation_token)
 		{
 			/* 
 			 * This method is called from generated code from the static registrar.
@@ -788,13 +789,15 @@ namespace ObjCRuntime {
 
 			var iface = Class.ResolveTypeTokenReference (iface_token)!;
 			var type = Class.ResolveTypeTokenReference (implementation_token);
-			return AllocGCHandle (GetINativeObject (ptr, owns, iface, type));
+			return AllocGCHandle (GetINativeObject (ptr, owns != 0, iface, type));
 		}
 
-		static IntPtr GetNSObjectWithType (IntPtr ptr, IntPtr type_ptr, out bool created)
+		unsafe static IntPtr GetNSObjectWithType (IntPtr ptr, IntPtr type_ptr, int* createdPtr)
 		{
 			var type = (System.Type) GetGCHandleTarget (type_ptr)!;
-			return AllocGCHandle (GetNSObject (ptr, type, MissingCtorResolution.ThrowConstructor1NotFound, true, true, out created));
+			var rv = AllocGCHandle (GetNSObject (ptr, type, MissingCtorResolution.ThrowConstructor1NotFound, true, true, out var created));
+			*createdPtr = created ? 1 : 0;
+			return rv;
 		}
 
 		static void Dispose (IntPtr gchandle)
@@ -802,37 +805,41 @@ namespace ObjCRuntime {
 			((IDisposable?) GetGCHandleTarget (gchandle))?.Dispose ();
 		}
 
-		static bool IsParameterTransient (IntPtr info, int parameter)
+		static sbyte IsParameterTransient (IntPtr info, int parameter)
 		{
 			var minfo = GetGCHandleTarget (info) as MethodInfo;
 			if (minfo is null)
-				return false; // might be a ConstructorInfo (bug #15583), but we don't care about that (yet at least).
+				return 0; // might be a ConstructorInfo (bug #15583), but we don't care about that (yet at least).
 			minfo = minfo.GetBaseDefinition ();
 			var parameters = minfo.GetParameters ();
 			if (parameters.Length <= parameter)
-				return false;
-			return parameters [parameter].IsDefined (typeof(TransientAttribute), false);
+				return 0;
+			var rv = parameters [parameter].IsDefined (typeof(TransientAttribute), false);
+			return (sbyte) (rv ? 1 : 0);
 		}
 
-		static bool IsParameterOut (IntPtr info, int parameter)
+		static sbyte IsParameterOut (IntPtr info, int parameter)
 		{
 			var minfo = GetGCHandleTarget (info) as MethodInfo;
 			if (minfo is null)
-				return false; // might be a ConstructorInfo (bug #15583), but we don't care about that (yet at least).
+				return 0; // might be a ConstructorInfo (bug #15583), but we don't care about that (yet at least).
 			minfo = minfo.GetBaseDefinition ();
 			var parameters = minfo.GetParameters ();
 			if (parameters.Length <= parameter)
-				return false;
-			return parameters [parameter].IsOut;
+				return 0;
+			var rv = parameters [parameter].IsOut;
+			return (sbyte) (rv ? 1 : 0);
 		}
 
-		static void GetMethodAndObjectForSelector (IntPtr klass, IntPtr sel, bool is_static, IntPtr obj, ref IntPtr mthis, IntPtr desc)
+		unsafe static void GetMethodAndObjectForSelector (IntPtr klass, IntPtr sel, sbyte is_static, IntPtr obj, IntPtr* mthisPtr, IntPtr desc)
 		{
-			Registrar.GetMethodDescriptionAndObject (Class.Lookup (klass), sel, is_static, obj, ref mthis, desc);
+			IntPtr mthis = *mthisPtr;
+			Registrar.GetMethodDescriptionAndObject (Class.Lookup (klass), sel, is_static != 0, obj, ref mthis, desc);
+			*mthisPtr = mthis;
 		}
 
 		// If inner_exception_gchandle is provided, it will be freed.
-		static IntPtr CreateProductException (int code, IntPtr inner_exception_gchandle, string msg)
+		static IntPtr CreateProductException (int code, IntPtr inner_exception_gchandle, IntPtr utf8Message)
 		{
 			Exception? inner_exception = null;
 			if (inner_exception_gchandle != IntPtr.Zero) {
@@ -840,6 +847,7 @@ namespace ObjCRuntime {
 				inner_exception = (Exception?) gchandle.Target;
 				gchandle.Free ();
 			}
+			var msg = Marshal.PtrToStringAuto (utf8Message)!;
 			Exception ex = ErrorHelper.CreateError (code, inner_exception, msg);
 			return AllocGCHandle (ex);
 		}
@@ -1894,11 +1902,12 @@ namespace ObjCRuntime {
 
 		// Check if the input is an NSObject, and in that case retain it (and return true)
 		// This way the caller knows if it can call 'autorelease' on our input.
-		static bool AttemptRetainNSObject (IntPtr gchandle)
+		static sbyte AttemptRetainNSObject (IntPtr gchandle)
 		{
 			var obj = GetGCHandleTarget (gchandle) as NSObject;
 			obj?.DangerousRetain ();
-			return obj is not null;
+			var rv = obj is not null;
+			return (sbyte) (rv ? 1 : 0);
 		}
 #endif // !COREBUILD
 
@@ -2157,12 +2166,13 @@ namespace ObjCRuntime {
 		static extern IntPtr xamarin_get_original_working_directory_path ();
 #endif // NET || !__MACOS__
 
-		static bool InvokeConformsToProtocol (IntPtr handle, IntPtr protocol)
+		static sbyte InvokeConformsToProtocol (IntPtr handle, IntPtr protocol)
 		{
 			var obj = Runtime.GetNSObject (handle);
 			if (obj is null)
-				return false;
-			return obj.ConformsToProtocol (protocol);
+				return 0;
+			var rv = obj.ConformsToProtocol (protocol);
+			return (sbyte) (rv ? 1 : 0);
 		}
 
 	}

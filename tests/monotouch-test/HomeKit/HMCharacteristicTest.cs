@@ -18,12 +18,10 @@ using HomeKit;
 using ObjCRuntime;
 using Xamarin.Utils;
 
-namespace MonoTouchFixtures.HomeKit
-{
+namespace MonoTouchFixtures.HomeKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class HMCharacteristicTest
-	{
+	public class HMCharacteristicTest {
 		[Test]
 		public void WriteValueNullTest ()
 		{

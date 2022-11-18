@@ -248,9 +248,10 @@ namespace ObjCRuntime {
 			ObjectiveCMarshal.SetMessageSendPendingException (exc);
 		}
 
-		unsafe static bool IsClassOfType (MonoObject *typeobj, TypeLookup match)
+		unsafe static sbyte IsClassOfType (MonoObject *typeobj, TypeLookup match)
 		{
-			return IsClassOfType ((Type) GetMonoObjectTarget (typeobj), match);
+			var rv = IsClassOfType ((Type) GetMonoObjectTarget (typeobj), match);
+			return (sbyte) (rv ? 1 : 0);
 		}
 
 		static bool IsClassOfType (Type type, TypeLookup match)
@@ -499,26 +500,26 @@ namespace ObjCRuntime {
 			return GetMonoObject (obj.GetType ());
 		}
 
-		unsafe static bool IsDelegate (MonoObject* typeobj)
+		unsafe static sbyte IsDelegate (MonoObject* typeobj)
 		{
 			var type = (Type) GetMonoObjectTarget (typeobj);
 			var rv = typeof (MulticastDelegate).IsAssignableFrom (type);
 			log_coreclr ($"IsDelegate ({type.FullName}) => {rv}");
-			return rv;
+			return (sbyte) (rv ? 1 : 0);
 		}
 
-		static bool IsInstance (MonoObjectPtr mobj, MonoObjectPtr mtype)
+		static sbyte IsInstance (MonoObjectPtr mobj, MonoObjectPtr mtype)
 		{
 			var obj = GetMonoObjectTarget (mobj);
 			if (obj == null)
-				return false;
+				return 0;
 
 			var type = (Type) GetMonoObjectTarget (mtype);
 			var rv = type.IsAssignableFrom (obj.GetType ());
 
 			log_coreclr ($"IsInstance ({obj.GetType ()}, {type})");
 
-			return rv;
+			return (sbyte) (rv ? 1 : 0);
 		}
 
 		static unsafe IntPtr GetMethodSignature (MonoObject* methodobj)
@@ -837,9 +838,10 @@ namespace ObjCRuntime {
 			return boxed;
 		}
 
-		static unsafe bool IsNullable (MonoObject* type)
+		static unsafe sbyte IsNullable (MonoObject* type)
 		{
-			return IsNullable ((Type) GetMonoObjectTarget (type));
+			var rv = IsNullable ((Type) GetMonoObjectTarget (type));
+			return (sbyte) (rv ? 1 : 0);
 		}
 
 		static bool IsNullable (Type type)
@@ -853,22 +855,25 @@ namespace ObjCRuntime {
 			return false;
 		}
 
-		unsafe static bool IsByRef (MonoObject *typeobj)
+		unsafe static sbyte IsByRef (MonoObject *typeobj)
 		{
 			var type = (Type) GetMonoObjectTarget (typeobj);
-			return type.IsByRef;
+			var rv = type.IsByRef;
+			return (sbyte) (rv ? 1 : 0);
 		}
 
-		unsafe static bool IsValueType (MonoObject *typeobj)
+		unsafe static sbyte IsValueType (MonoObject *typeobj)
 		{
 			var type = (Type) GetMonoObjectTarget (typeobj);
-			return type.IsValueType;
+			var rv = type.IsValueType;
+			return (sbyte) (rv ? 1 : 0);
 		}
 
-		unsafe static bool IsEnum (MonoObject *typeobj)
+		unsafe static sbyte IsEnum (MonoObject *typeobj)
 		{
 			var type = (Type) GetMonoObjectTarget (typeobj);
-			return type.IsEnum;
+			var rv = type.IsEnum;
+			return (sbyte) (rv ? 1 : 0);
 		}
 
 		static unsafe MonoObject* GetEnumBaseType (MonoObject* typeobj)

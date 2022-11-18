@@ -89,7 +89,6 @@ steps:
       }
   env:
     LABELS: ${{ join(';', parameters.simTestsConfigurations) }}
-    BUILD_REVISION: $(Build.SourceVersion)
     CONTEXT: ${{ parameters.statusContext }}
     DEVICE_PREFIX: ${{ parameters.testPrefix }}
     GITHUB_TOKEN: $(GitHub.Token)

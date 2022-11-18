@@ -3,11 +3,9 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
-namespace BI1064
-{
+namespace BI1064 {
 	[BaseType (typeof (NSObject))]
-	interface RefOutParameters
-	{
+	interface RefOutParameters {
 		[Export ("testCFBundle:a:b:")]
 		void TestCFBundle (int action, ref CFBundle refValue, out CFBundle outValue);
 
@@ -33,16 +31,16 @@ namespace BI1064
 		void TestClass (int action, ref Class refValue, out Class outValue);
 
 		[Export ("testINSCodingArray:a:b:")]
-		void TestINSCodingArray (int action, ref INSCoding[] refValues, out INSCoding[] outValues);
+		void TestINSCodingArray (int action, ref INSCoding [] refValues, out INSCoding [] outValues);
 
 		[Export ("testNSObjectArray:a:b:")]
-		void TestNSObjectArray (int action, ref NSObject[] refValues, out NSObject[] outValues);
+		void TestNSObjectArray (int action, ref NSObject [] refValues, out NSObject [] outValues);
 
 		[Export ("testNSValueArray:a:b:")]
-		void TestNSValueArray (int action, ref NSValue[] refValues, out NSValue[] outValues);
+		void TestNSValueArray (int action, ref NSValue [] refValues, out NSValue [] outValues);
 
 		[Export ("testStringArray:a:b:")]
-		void TestStringArray (int action, ref string[] refStrings, out string[] outStrings);
+		void TestStringArray (int action, ref string [] refStrings, out string [] outStrings);
 
 		[Export ("testClassArray:a:b:")]
 		void TestClassArray (int action, ref Class [] refStrings, out Class [] outStrings);

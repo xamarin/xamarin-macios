@@ -31,7 +31,7 @@ namespace VideoToolbox {
 	[SupportedOSPlatform ("watchos9.0")]
 	[SupportedOSPlatform ("tvos16.0")]
 #else
-	[Mac (10,9), iOS (16,0), MacCatalyst (16,0), Watch (9,0), TV (16,0)]
+	[Mac (10, 9), iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), TV (16, 0)]
 #endif
 	public class VTPixelTransferSession : VTSession {
 
@@ -45,8 +45,8 @@ namespace VideoToolbox {
 		{
 		}
 #endif
-		
-		[Preserve (Conditional=true)]
+
+		[Preserve (Conditional = true)]
 		internal VTPixelTransferSession (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
@@ -69,7 +69,8 @@ namespace VideoToolbox {
 
 		public static VTPixelTransferSession? Create () => Create (null);
 
-		public static VTPixelTransferSession? Create (CFAllocator? allocator) {
+		public static VTPixelTransferSession? Create (CFAllocator? allocator)
+		{
 			var result = VTPixelTransferSessionCreate (allocator.GetHandle (), out var ret);
 
 			if (result == VTStatus.Ok && ret != IntPtr.Zero)
@@ -80,8 +81,8 @@ namespace VideoToolbox {
 
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTPixelTransferSessionTransferImage (
-			/* VTPixelTransferSessionRef */ IntPtr session, 
-			/* CVPixelBuffer */ IntPtr sourceBuffer, 
+			/* VTPixelTransferSessionRef */ IntPtr session,
+			/* CVPixelBuffer */ IntPtr sourceBuffer,
 			/* CVPixelBuffer */ IntPtr destinationBuffer);
 
 		public VTStatus TransferImage (CVPixelBuffer sourceBuffer, CVPixelBuffer destinationBuffer)
@@ -102,5 +103,5 @@ namespace VideoToolbox {
 
 			return VTSessionSetProperties (Handle, options.Dictionary.Handle);
 		}
-	}	
+	}
 }

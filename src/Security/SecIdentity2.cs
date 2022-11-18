@@ -33,19 +33,19 @@ namespace Security {
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
-	[Watch (5,0)]
+	[TV (12, 0)]
+	[Mac (10, 14)]
+	[iOS (12, 0)]
+	[Watch (5, 0)]
 #endif
 	public class SecIdentity2 : NativeObject {
 #if NET
 		[Preserve (Conditional = true)]
 		internal SecIdentity2 (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		internal SecIdentity2 (NativeHandle handle) : base (handle, false) {}
+		internal SecIdentity2 (NativeHandle handle) : base (handle, false) { }
 		[Preserve (Conditional = true)]
-		public SecIdentity2 (NativeHandle handle, bool owns) : base (handle, owns) {}
+		public SecIdentity2 (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif
 
 #if !COREBUILD
@@ -86,8 +86,7 @@ namespace Security {
 				var certArray = sec_identity_copy_certificates_ref (GetCheckedHandle ());
 				try {
 					return NSArray.ArrayFromHandle<SecCertificate> (certArray);
-				}
-				finally {
+				} finally {
 					CFObject.CFRelease (certArray);
 				}
 			}
@@ -99,14 +98,14 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6,0)]
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[Watch (6, 0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
- 		static extern bool sec_identity_access_certificates (IntPtr identity, ref BlockLiteral block);
+		static extern bool sec_identity_access_certificates (IntPtr identity, ref BlockLiteral block);
 
 		internal delegate void AccessCertificatesHandler (IntPtr block, IntPtr cert);
 		static readonly AccessCertificatesHandler access = TrampolineAccessCertificates;
@@ -125,10 +124,10 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6,0)]
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[Watch (6, 0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		// no [Async] as it can be called multiple times
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -141,8 +140,7 @@ namespace Security {
 			try {
 				block_handler.SetupBlockUnsafe (access, handler);
 				return sec_identity_access_certificates (GetCheckedHandle (), ref block_handler);
-			}
-			finally {
+			} finally {
 				block_handler.CleanupBlock ();
 			}
 		}
