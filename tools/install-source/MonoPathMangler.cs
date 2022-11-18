@@ -1,10 +1,8 @@
 using System;
 using System.IO;
 
-namespace InstallSources
-{
-	public class MonoPathMangler : IPathMangler
-	{
+namespace InstallSources {
+	public class MonoPathMangler : IPathMangler {
 		public static readonly string iOSFramework = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/src/Xamarin.iOS/";
 		public static readonly string MacFramework = "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/src/Xamarin.Mac/";
 		string monoSubmodulePath;
@@ -15,7 +13,7 @@ namespace InstallSources
 		/// </summary>
 		/// <value>The mono source path.</value>
 		public string MonoSourcePath { get; set; }
-		
+
 		/// <summary>
 		/// Gets or sets the frame work dir.
 		/// </summary>
@@ -63,7 +61,7 @@ namespace InstallSources
 			var relativePath = path.Substring (IsCheckout (path) ? monoSubmodulePath.Length : MonoSourcePath.Length);
 			if (relativePath.StartsWith ("/", StringComparison.Ordinal))
 				relativePath = relativePath.Remove (0, 1);
-			var target = Path.Combine (DestinationDir, "src", (InstallDir.Contains("Xamarin.iOS")?"Xamarin.iOS":"Xamarin.Mac"), relativePath);
+			var target = Path.Combine (DestinationDir, "src", (InstallDir.Contains ("Xamarin.iOS") ? "Xamarin.iOS" : "Xamarin.Mac"), relativePath);
 			return target;
 		}
 	}

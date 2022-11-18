@@ -28,14 +28,14 @@ namespace UIKit {
 		{
 		}
 
-		static NSArray FromObjects (object[] args)
+		static NSArray FromObjects (object [] args)
 		{
 			if (args == null)
 				throw new ArgumentNullException (nameof (args));
 
 			NSObject [] nsargs = new NSObject [args.Length];
-			
-			for (int i = 0; i < args.Length; i++){
+
+			for (int i = 0; i < args.Length; i++) {
 				object a = args [i];
 				if (a == null)
 					throw new ArgumentNullException ($"Element {i} in args is null");
@@ -87,9 +87,9 @@ namespace UIKit {
 		{
 			// if the caller used an array [] then items can be null
 			// if the caller used only null then we get an array with a null item
-			if ((strings == null) || ((strings.Length == 1) && (strings[0] == null)))
+			if ((strings == null) || ((strings.Length == 1) && (strings [0] == null)))
 				throw new ArgumentNullException (nameof (strings));
-			
+
 			return NSArray.FromStrings (strings);
 		}
 
@@ -97,7 +97,7 @@ namespace UIKit {
 		{
 			if (attributes == null)
 				throw new ArgumentNullException ("attributes");
-                        
+
 			using (var dict = attributes.Dictionary) {
 				_SetTitleTextAttributes (dict, state);
 			}
@@ -115,7 +115,7 @@ namespace UIKit {
 			{
 				if (attributes == null)
 					throw new ArgumentNullException ("attributes");
-	                        
+
 				using (var dict = attributes.Dictionary) {
 					_SetTitleTextAttributes (dict, state);
 				}

@@ -17,9 +17,9 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-using OS_nw_data_transfer_report=System.IntPtr;
-using OS_nw_connection=System.IntPtr;
-using OS_nw_interface=System.IntPtr;
+using OS_nw_data_transfer_report = System.IntPtr;
+using OS_nw_connection = System.IntPtr;
+using OS_nw_interface = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -33,15 +33,15 @@ namespace Network {
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[Watch (6,0)]
+	[TV (13, 0)]
+	[Mac (10, 15)]
+	[iOS (13, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWDataTransferReport : NativeObject {
 
 		[Preserve (Conditional = true)]
-		internal NWDataTransferReport (NativeHandle handle, bool owns) : base (handle, owns) {}
+		internal NWDataTransferReport (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_data_transfer_report nw_connection_create_new_data_transfer_report (OS_nw_connection connection);
@@ -179,18 +179,18 @@ namespace Network {
 		static extern NWDataTransferReportState nw_data_transfer_report_get_state (OS_nw_data_transfer_report report);
 
 		public NWDataTransferReportState State => nw_data_transfer_report_get_state (GetCheckedHandle ());
-		
+
 #if NET
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos12.0")]
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[Watch (8,0)]
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
-		[MacCatalyst (15,0)]
+		[Watch (8, 0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWInterfaceRadioType nw_data_transfer_report_get_path_radio_type (OS_nw_data_transfer_report report, uint pathIndex);
@@ -201,11 +201,11 @@ namespace Network {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[Watch (8,0)]
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
-		[MacCatalyst (15,0)]
+		[Watch (8, 0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 #endif
 		public NWInterfaceRadioType GetPathRadioType (uint pathIndex)
 			=> nw_data_transfer_report_get_path_radio_type (GetCheckedHandle (), pathIndex);
@@ -217,11 +217,11 @@ namespace Network {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[Watch (8,0)]
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
-		[MacCatalyst (15,0)]
+		[Watch (8, 0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 #endif
 		[Obsolete ("Use the 'GetPathRadioType' property instead.")]
 		[EditorBrowsable (EditorBrowsableState.Never)]
