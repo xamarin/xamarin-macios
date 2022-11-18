@@ -75,7 +75,7 @@ namespace UIKit {
 
 		public override int GetHashCode ()
 		{
-			return Top.GetHashCode () ^ Left.GetHashCode () ^ Right.GetHashCode () ^ Bottom.GetHashCode ();
+			return HashCode.Combine(Top, Left, Right, Bottom);
 		}
 
 		[DllImport (Constants.UIKitLibrary)]

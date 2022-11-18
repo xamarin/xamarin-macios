@@ -408,7 +408,7 @@ namespace UIKit {
 
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine(GetNativeHash ());
+			return GetNativeHash ().GetHashCode ();
 		}
 	}
 }

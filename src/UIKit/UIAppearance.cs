@@ -31,7 +31,7 @@ namespace UIKit {
 
 		public override int GetHashCode ()
 		{
-			return ((IntPtr) Handle).ToInt32 ();
+			return HashCode.Combine(Handle);
 		}
 
 		public static bool operator == (UIAppearance a, UIAppearance b)

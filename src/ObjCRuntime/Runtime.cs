@@ -2185,7 +2185,7 @@ namespace ObjCRuntime {
 		}
 		public int GetHashCode (IntPtr obj)
 		{
-			return obj.GetHashCode ();
+			return HashCode.Combine(obj);
 		}
 	}
 
@@ -2199,7 +2199,7 @@ namespace ObjCRuntime {
 		{
 			if (obj is null)
 				return 0;
-			return obj.GetHashCode ();
+			return HashCode.Combine(obj);
 		}
 	}
 
@@ -2233,7 +2233,7 @@ namespace ObjCRuntime {
 
 		public override int GetHashCode ()
 		{
-			return item1Comparer.GetHashCode (Item1) ^ item2Comparer.GetHashCode (Item2);
+			return HashCode.Combine(item1Comparer, item2Comparer);
 		}
 
 		public static bool operator == (IntPtrTypeValueTuple left, IntPtrTypeValueTuple right)

@@ -124,21 +124,12 @@ namespace CoreAnimation {
 
 		public override int GetHashCode ()
 		{
-			unsafe {
-#if NET
-				int code = (int) M11;
-				fixed (nfloat *fp = &M11){
-#else
-				int code = (int) m11;
-				fixed (nfloat* fp = &m11) {
-#endif
-					int* ip = (int*) fp;
-					for (int i = 1; i < 4 * IntPtr.Size; i++) {
-						code = code ^ ip [i];
-					}
-				}
-				return code;
+			var instanceArr = [M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44];
+			var hash = new HashCode();
+			foreach (var instance in instanceArr) {
+				hash.Add(instance);
 			}
+			return hash.ToHashCode();
 		}
 
 		// Transform matrix =  [1 0 0 0; 0 1 0 0; 0 0 1 0; tx ty tz 1]

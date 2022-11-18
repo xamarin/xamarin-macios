@@ -272,7 +272,7 @@ namespace OpenTK
         /// <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
         public override int GetHashCode()
         {
-            return HashCode.Combine(X, Y);
+            return X.GetHashCode() ^ Y.GetHashCode();
         }
 
         #endregion
