@@ -4,10 +4,8 @@ using ObjCRuntime;
 using Foundation;
 using UIKit;
 
-namespace MyKeyboardExtension
-{
-	public partial class KeyboardViewController : UIInputViewController
-	{
+namespace MyKeyboardExtension {
+	public partial class KeyboardViewController : UIInputViewController {
 		UIButton nextKeyboardButton;
 
 		public KeyboardViewController (IntPtr handle) : base (handle)

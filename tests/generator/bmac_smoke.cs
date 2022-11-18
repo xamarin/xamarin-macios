@@ -1,10 +1,8 @@
 using Foundation;
 
-namespace Test
-{
+namespace Test {
 	[BaseType (typeof (NSObject))]
-	interface TestBMACLib
-	{
+	interface TestBMACLib {
 		[Export ("addTwoRows:withSecond:")]
 		int Add (int first, int second);
 	}

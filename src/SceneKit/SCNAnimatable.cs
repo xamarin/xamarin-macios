@@ -16,14 +16,13 @@ using CoreAnimation;
 
 #nullable enable
 
-namespace SceneKit
-{
+namespace SceneKit {
 	public partial class SCNAnimatable {
-		
+
 		public void AddAnimation (CAAnimation animation, string? key = null)
 		{
 			var nskey = key is null ? null : new NSString (key);
-			
+
 			AddAnimation (animation, nskey);
 			nskey?.Dispose ();
 		}
