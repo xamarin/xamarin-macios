@@ -11,33 +11,7 @@ parameters:
   type: boolean
   default: true
 
-- name: stageDisplayNamePrefix
-  type: string
-  default: ''
-
-- name: dependsOn
-  type: string
-  default: ''
-
-- name: dependsOnResult
-  type: string
-  default: ''
-
-- name: isPR
-  type: boolean
-  default: false
-
-- name: repositoryAlias
-  type: string
-  default: self
-
-- name: commit
-  type: string
-  default: HEAD
-
 variables:
-- name: System.Debug
-  value: true
 - template: templates/variables.yml
 
 resources:
@@ -87,10 +61,7 @@ stages:
 
 - ${{ if eq(parameters.runGovernanceTests, true) }}:
   - stage: governance_checks
-    displayName: '${{ parameters.stageDisplayNamePrefix }}Governance Checks'
-    dependsOn: ${{ parameters.dependsOn }}
-    ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
-      condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
+    displayName: 'Governance Checks'
     jobs:
     - job: governance
       displayName: 'Governance Checks'
@@ -99,9 +70,9 @@ stages:
       steps:
       - template: templates/governance-checks.yml
         parameters:
-          isPR: ${{ parameters.isPR }}
-          repositoryAlias: ${{ parameters.repositoryAlias }}
-          commit: ${{ parameters.commit }}
+          isPR: false
+          repositoryAlias: self
+          commit: HEAD
 
     - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
       - job: translations
@@ -111,6 +82,6 @@ stages:
         steps:
         - template:  templates/loc-translations.yml
           parameters:
-            isPR: ${{ parameters.isPR }}
-            repositoryAlias: ${{ parameters.repositoryAlias }}
-            commit: ${{ parameters.commit }}
+            isPR: false
+            repositoryAlias: self
+            commit: HEAD
