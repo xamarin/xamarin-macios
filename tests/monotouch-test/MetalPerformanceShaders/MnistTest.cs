@@ -25,8 +25,7 @@ using NUnit.Framework;
 namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 	[Preserve (AllMembers = true)]
 	[TestFixture]
-	public class MnistTester
-	{
+	public class MnistTester {
 
 		[OneTimeSetUp]
 		public void IsSupported ()
@@ -61,8 +60,7 @@ namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 		}
 	}
 
-	public class MnistTest : IDisposable
-	{
+	public class MnistTest : IDisposable {
 		const int batchSize = 3;
 
 		readonly int numTrainingIterations = 5;
@@ -119,7 +117,7 @@ namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 
 		public MnistData ()
 		{
-			dataTrainImage = new byte [ImageMetadataPrefixSize + ImageSize*ImageSize];
+			dataTrainImage = new byte [ImageMetadataPrefixSize + ImageSize * ImageSize];
 			dataTrainLabel = new byte [ImageMetadataPrefixSize + 1];
 
 			totalNumberOfTrainImages = dataTrainLabel.Length - ImageMetadataPrefixSize;
@@ -149,8 +147,7 @@ namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 		}
 	}
 
-	public class MnistGraph : MPSGraph
-	{
+	public class MnistGraph : MPSGraph {
 		const float lambda = 0.01f;
 
 		readonly int imageSize;

@@ -4924,11 +4924,15 @@ namespace AVFoundation {
 		[return: Release]
 		CMFormatDescription CopyCurrentSampleFormatDescription ();
 
+#pragma warning disable 0618 // warning CS0618: 'AVSampleCursorSyncInfo' is obsolete: 'This API is not available on this platform.'
 		[Export ("currentSampleSyncInfo")]
 		AVSampleCursorSyncInfo CurrentSampleSyncInfo { get; }
+#pragma warning restore
 
+#pragma warning disable 0618 // warning CS0618: 'AVSampleCursorSyncInfo' is obsolete: 'This API is not available on this platform.'
 		[Export ("currentSampleDependencyInfo")]
 		AVSampleCursorSyncInfo CurrentSampleDependencyInfo { get; }
+#pragma warning restore
 
 		[Mac (10,11)]
 		[Export ("samplesRequiredForDecoderRefresh")]
@@ -4938,17 +4942,23 @@ namespace AVFoundation {
 		[Export ("currentChunkStorageURL")]
 		NSUrl CurrentChunkStorageUrl { get; }
 
+#pragma warning disable 0618 // warning CS0618: 'AVSampleCursorStorageRange' is obsolete: 'This API is not available on this platform.'
 		[Export ("currentChunkStorageRange")]
 		AVSampleCursorStorageRange CurrentChunkStorageRange { get; }
+#pragma warning restore
 
+#pragma warning disable 0618 // warning CS0618: 'AVSampleCursorChunkInfo' is obsolete: 'This API is not available on this platform.'
 		[Export ("currentChunkInfo")]
 		AVSampleCursorChunkInfo CurrentChunkInfo { get; }
+#pragma warning restore
 
 		[Export ("currentSampleIndexInChunk")]
 		long CurrentSampleIndexInChunk { get; }
 
+#pragma warning disable 0618 // warning CS0618: 'AVSampleCursorStorageRange' is obsolete: 'This API is not available on this platform.'
 		[Export ("currentSampleStorageRange")]
 		AVSampleCursorStorageRange CurrentSampleStorageRange { get; }
+#pragma warning restore
 
 #if MONOMAC
 		[NoiOS][NoWatch][NoTV]
@@ -5160,7 +5170,7 @@ namespace AVFoundation {
 
 #if !NET
 		[Field ("AVMetadataFormatQuickTimeUserData")]
-		[Obsolete ("Use 'AVMetadataFormat' enum values")]
+		[Obsolete ("Use 'AVMetadataFormat' enum values.")]
 		NSString FormatQuickTimeUserData { get; }
 #endif
 		
@@ -5343,7 +5353,7 @@ namespace AVFoundation {
 #if !NET
 		[iOS (7,0), Mac (10, 9)]
 		[Field ("AVMetadataFormatISOUserData")]
-		[Obsolete ("Use 'AVMetadataFormat' enum values")]
+		[Obsolete ("Use 'AVMetadataFormat' enum values.")]
 		NSString KFormatISOUserData { get; }
 #endif
 
@@ -5491,7 +5501,7 @@ namespace AVFoundation {
 		
 #if !NET
 		[Field ("AVMetadataFormatiTunesMetadata")]
-		[Obsolete ("Use 'AVMetadataFormat' enum values")]
+		[Obsolete ("Use 'AVMetadataFormat' enum values.")]
 		NSString FormatiTunesMetadata { get; }
 #endif
 		
@@ -5645,7 +5655,7 @@ namespace AVFoundation {
 		
 #if !NET
 		[Field ("AVMetadataFormatID3Metadata")]
-		[Obsolete ("Use 'AVMetadataFormat' enum values")]
+		[Obsolete ("Use 'AVMetadataFormat' enum values.")]
 		NSString FormatID3Metadata { get; }
 #endif
 
@@ -5966,7 +5976,7 @@ namespace AVFoundation {
 #if !NET
 		[iOS (8,0)][Mac (10,10)]
 		[Field ("AVMetadataFormatHLSMetadata")]
-		[Obsolete ("Use 'AVMetadataFormat' enum values")]
+		[Obsolete ("Use 'AVMetadataFormat' enum values.")]
 		NSString FormatHlsMetadata { get; }
 #endif
 
@@ -11494,7 +11504,14 @@ namespace AVFoundation {
 
 		[iOS (8,0), NoMac]
 		[Export ("videoHDRSupported")]
+		bool IsVideoHdrSupported { [Bind ("isVideoHDRSupported")] get; }
+
+#if !XAMCORE_5_0
+		[iOS (8,0), NoMac]
+		[Obsolete ("Use the 'IsVideoHdrSupported' property instead.")]
+		[Wrap ("IsVideoHdrSupported", IsVirtual = true)]
 		bool videoHDRSupportedVideoHDREnabled { [Bind ("isVideoHDRSupported")] get; }
+#endif
 
 		[iOS (8,0), NoMac]
 		[Export ("highResolutionStillImageDimensions")]

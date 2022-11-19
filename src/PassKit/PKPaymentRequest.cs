@@ -18,7 +18,7 @@ namespace PassKit {
 				var constant = value.GetConstant ();
 				// None does not have an associated native value and Contains would throw an ANE
 				if ((constant is not null) && set.Contains (constant))
-				    fields |= value;
+					fields |= value;
 			}
 			return fields;
 		}
@@ -28,7 +28,7 @@ namespace PassKit {
 			var set = new NSMutableSet ();
 			if (values == PKContactFields.None)
 				return set;
-			
+
 			foreach (PKContactFields value in Enum.GetValues (typeof (PKContactFields))) {
 				if (values.HasFlag (value)) {
 					var constant = value.GetConstant ();
@@ -49,8 +49,8 @@ namespace PassKit {
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[Watch (4,0)]
-		[iOS (11,0)]
+		[Watch (4, 0)]
+		[iOS (11, 0)]
 #endif
 		public PKContactFields RequiredBillingContactFields {
 			get { return PKContactFieldsExtensions.GetValue (WeakRequiredBillingContactFields); }
@@ -63,8 +63,8 @@ namespace PassKit {
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[Watch (4,0)]
-		[iOS (11,0)]
+		[Watch (4, 0)]
+		[iOS (11, 0)]
 #endif
 		public PKContactFields RequiredShippingContactFields {
 			get { return PKContactFieldsExtensions.GetValue (WeakRequiredShippingContactFields); }

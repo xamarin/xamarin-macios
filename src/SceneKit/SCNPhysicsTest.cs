@@ -11,8 +11,7 @@ using System;
 
 #nullable enable
 
-namespace SceneKit
-{
+namespace SceneKit {
 	public partial class SCNPhysicsTest {
 		public SCNPhysicsSearchMode SearchMode {
 			get {
@@ -27,9 +26,9 @@ namespace SceneKit
 
 				return SCNPhysicsSearchMode.Unknown;
 			}
-			
+
 			set {
-				switch (value){
+				switch (value) {
 				case SCNPhysicsSearchMode.All:
 					_SearchMode = SCNPhysicsTestSearchModeKeys.All;
 					break;
@@ -44,6 +43,6 @@ namespace SceneKit
 				}
 			}
 		}
-		
+
 	}
 }

@@ -31,8 +31,7 @@ namespace MonoTouchFixtures.SceneKit {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class SCNVector4Test
-	{
+	public class SCNVector4Test {
 		[Test]
 		public void Transform ()
 		{

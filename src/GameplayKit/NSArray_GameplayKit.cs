@@ -21,9 +21,9 @@ namespace GameplayKit {
 	[SupportedOSPlatform ("macos10.12")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (10,0)]
-	[TV (10,0)]
-	[Mac (10,12)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
+	[Mac (10, 12)]
 #endif
 	public static class NSArray_GameplayKit {
 

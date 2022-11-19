@@ -26,8 +26,8 @@ namespace GameController {
 	[ObsoletedOSPlatform ("tvos12.2", "Use 'GCController.GetMicroGamepadController()' instead.")]
 	[ObsoletedOSPlatform ("ios12.2", "Use 'GCController.GetMicroGamepadController()' instead.")]
 #else
-	[iOS (10,0)]
-	[Mac (10,12)]
+	[iOS (10, 0)]
+	[Mac (10, 12)]
 	[Deprecated (PlatformName.iOS, 12, 2, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, 4, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 2, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
@@ -195,7 +195,7 @@ namespace GameController {
 		{
 			return GCMicroGamepadSnapShotDataV100FromNSData (out snapshotData, data.GetHandle ());
 		}
-		
+
 #if NET
 		[SupportedOSPlatform ("tvos12.2")]
 		[SupportedOSPlatform ("macos10.14.4")]
@@ -243,4 +243,4 @@ namespace GameController {
 	}
 }
 
-#endif 
+#endif

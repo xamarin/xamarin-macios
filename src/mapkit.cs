@@ -1888,8 +1888,10 @@ namespace MapKit {
 		[NullAllowed]
 		string URLTemplate { get; }
 
+#pragma warning disable 0109 // warning CS0109: The member 'MKTileOverlay.CanReplaceMapContent' does not hide an accessible member. The new keyword is not required.
 		[Export ("canReplaceMapContent")]
 		new bool CanReplaceMapContent { get; set; }
+#pragma warning restore
 
 		[Export ("URLForTilePath:")]
 		NSUrl URLForTilePath (MKTileOverlayPath path);

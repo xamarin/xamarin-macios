@@ -22,13 +22,13 @@ namespace MediaPlayer {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[Mac (10,12,2)]
+	[Mac (10, 12, 2)]
 #endif
 	public class MPNowPlayingInfo {
 		public MPNowPlayingInfo ()
 		{
 		}
-		
+
 		public double? ElapsedPlaybackTime;
 		public double? PlaybackRate;
 		public int? PlaybackQueueIndex;
@@ -37,7 +37,7 @@ namespace MediaPlayer {
 		public int? ChapterCount;
 		public int? AlbumTrackCount;
 		public int? AlbumTrackNumber;
-		public int? DiscCount; 
+		public int? DiscCount;
 		public int? DiscNumber;
 		public ulong? PersistentID;
 		public double? PlaybackDuration;
@@ -47,7 +47,7 @@ namespace MediaPlayer {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (8,0)]
+		[iOS (8, 0)]
 #endif
 		public double? DefaultPlaybackRate;
 
@@ -57,25 +57,25 @@ namespace MediaPlayer {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
+		[iOS (9, 0)]
 #endif
-		public MPNowPlayingInfoLanguageOptionGroup[]? AvailableLanguageOptions { get; set; }
+		public MPNowPlayingInfoLanguageOptionGroup []? AvailableLanguageOptions { get; set; }
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.12.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
+		[iOS (9, 0)]
 #endif
-		public MPNowPlayingInfoLanguageOption[]? CurrentLanguageOptions { get; set; }
+		public MPNowPlayingInfoLanguageOption []? CurrentLanguageOptions { get; set; }
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("macos10.12.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (10,0)]
+		[iOS (10, 0)]
 #endif
 		public string? CollectionIdentifier { get; set; }
 #if NET
@@ -84,7 +84,7 @@ namespace MediaPlayer {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (10,0)]
+		[iOS (10, 0)]
 #endif
 		public string? ExternalContentIdentifier { get; set; }
 #if NET
@@ -93,7 +93,7 @@ namespace MediaPlayer {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (10,0)]
+		[iOS (10, 0)]
 #endif
 		public string? ExternalUserProfileIdentifier { get; set; }
 #if NET
@@ -102,7 +102,7 @@ namespace MediaPlayer {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (10,0)]
+		[iOS (10, 0)]
 #endif
 		public float? PlaybackProgress { get; set; }
 #if NET
@@ -111,7 +111,7 @@ namespace MediaPlayer {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (10,0)]
+		[iOS (10, 0)]
 #endif
 		public MPNowPlayingInfoMediaType? MediaType { get; set; }
 #if NET
@@ -120,7 +120,7 @@ namespace MediaPlayer {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (10,0)]
+		[iOS (10, 0)]
 #endif
 		public bool? IsLiveStream { get; set; }
 #if NET
@@ -129,7 +129,7 @@ namespace MediaPlayer {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (10,3)]
+		[iOS (10, 3)]
 #endif
 		public NSUrl? AssetUrl { get; set; }
 #if NET
@@ -138,9 +138,9 @@ namespace MediaPlayer {
 		[SupportedOSPlatform ("macos10.13.1")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (11,1)]
-		[TV (11,1)]
-		[Mac (10,13,1)]
+		[iOS (11, 1)]
+		[TV (11, 1)]
+		[Mac (10, 13, 1)]
 #endif
 		public NSDate? CurrentPlaybackDate { get; set; }
 
@@ -183,7 +183,7 @@ namespace MediaPlayer {
 			if (PlaybackProgress.HasValue)
 				Add (dict, MPNowPlayingInfoCenter.PropertyPlaybackProgress, new NSNumber (PlaybackProgress.Value));
 			if (MediaType.HasValue)
-				Add (dict, MPNowPlayingInfoCenter.PropertyMediaType, new NSNumber ((int)MediaType.Value));
+				Add (dict, MPNowPlayingInfoCenter.PropertyMediaType, new NSNumber ((int) MediaType.Value));
 			if (IsLiveStream.HasValue)
 				Add (dict, MPNowPlayingInfoCenter.PropertyIsLiveStream, new NSNumber (IsLiveStream.Value));
 			if (AssetUrl is not null)
@@ -238,7 +238,7 @@ namespace MediaPlayer {
 		{
 			if (source is null)
 				return;
-			
+
 			NSObject? result;
 
 			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyElapsedPlaybackTime, out result))

@@ -266,10 +266,15 @@ steps:
 # to write a comment.
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:GIT_HASH
+    $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
     $githubComments.NewCommentFromMessage("Build failed", ":fire:", "Build failed for the job '$(System.JobDisplayName)'")
   condition: failed()
   displayName: 'Report build failure'
+  env:
+    ${{ if eq(parameters.repositoryAlias, 'self') }}:
+      COMMENT_HASH: $(GIT_HASH)
+    ${{ else }}:
+      COMMENT_HASH: $(Build.SourceVersion)
 
 # Upload any crash reports that occurred during the build. This is helpful if we want to file issues about dotnet/csc crashing during the build.
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/collect-and-upload-crash-reports.sh

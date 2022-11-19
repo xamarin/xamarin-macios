@@ -1,9 +1,9 @@
-﻿using Foundation;
+using Foundation;
 
 namespace LibraryA {
-	[BaseType(typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	interface A {
-		
+
 	}
 }
 

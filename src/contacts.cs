@@ -1586,7 +1586,9 @@ namespace Contacts {
 
 #if !NET
 	[iOS (9,0), Mac (10,11)]
+#pragma warning disable 0618 // warning CS0618: 'CategoryAttribute.CategoryAttribute(bool)' is obsolete: 'Inline the static members in this category in the category's class (and remove this obsolete once fixed)'
 	[Category (allowStaticMembers: true)]
+#pragma warning disable
 	[BaseType (typeof (CNContainer))]
 	interface CNContainer_PredicatesExtension {
 
@@ -1682,7 +1684,9 @@ namespace Contacts {
 
 #if !NET
 	[iOS (9,0), Mac (10,11)]
+#pragma warning disable 0618 // warning CS0618: 'CategoryAttribute.CategoryAttribute(bool)' is obsolete: 'Inline the static members in this category in the category's class (and remove this obsolete once fixed)'
 	[Category (allowStaticMembers: true)]
+#pragma warning disable
 	[BaseType (typeof (CNGroup))]
 	interface CNGroup_PredicatesExtension {
 
