@@ -367,9 +367,6 @@ namespace SharedWithYou {
 
 		[Export ("initWithHighlight:trigger:")]
 		NativeHandle Constructor (SWHighlight highlight, SWHighlightChangeEventTrigger trigger);
-
-		[Export ("highlightURL", ArgumentSemantic.Copy)]
-		NSUrl HighlightUrl { get; }
 	}
 
 	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]

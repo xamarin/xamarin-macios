@@ -175,6 +175,7 @@ stages:
     - ${{ each label in parameters.simTestsConfigurations }}:
       - tests_${{ replace(label, '-', '_') }}
     variables:
+      GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
       ${{ each label in parameters.simTestsConfigurations }}:
         # Define the variable FOO from the previous job
         # Note the use of single quotes!
@@ -205,6 +206,9 @@ stages:
     dependsOn: # has to wait for the tests to be done AND the data to be uploaded
     - configure
 
+    variables:
+      GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
+
     pool:
       vmImage: 'windows-latest'
       workspace:
@@ -221,7 +225,7 @@ stages:
     - pwsh: |
         Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
 
-        $gihubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $Env:GITHUB_TOKEN -Hash $Env:GIT_HASH -Debug
+        $gihubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $Env:GITHUB_TOKEN -Hash $Env:COMMENT_HASH -Debug
         $sb = [System.Text.StringBuilder]::new()
         $sb.AppendLine("All tests have been skipped because the label 'skip-all-tests' was set.")
         $result = $gihubComments.NewCommentFromMessage("Test results", ":seedling:", $sb.ToString())
@@ -231,3 +235,7 @@ stages:
         DEVICE_PREFIX: ${{ parameters.testPrefix }}
         GITHUB_TOKEN: $(GitHub.Token)
         ACCESSTOKEN: $(System.AccessToken)
+        ${{ if eq(parameters.repositoryAlias, 'self') }}:
+          COMMENT_HASH: $(GIT_HASH)
+        ${{ else }}:
+          COMMENT_HASH: $(Build.SourceVersion)

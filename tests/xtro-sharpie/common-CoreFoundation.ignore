@@ -667,15 +667,12 @@
 !missing-pinvoke! CFSetSetValue is not bound
 !missing-pinvoke! CFShow is not bound
 !missing-pinvoke! CFShowStr is not bound
-!missing-pinvoke! CFSocketCopyAddress is not bound
-!missing-pinvoke! CFSocketCopyPeerAddress is not bound
 !missing-pinvoke! CFSocketCopyRegisteredSocketSignature is not bound
 !missing-pinvoke! CFSocketCopyRegisteredValue is not bound
 !missing-pinvoke! CFSocketCreateWithSocketSignature is not bound
 !missing-pinvoke! CFSocketGetContext is not bound
 !missing-pinvoke! CFSocketGetDefaultNameRegistryPortNumber is not bound
 !missing-pinvoke! CFSocketGetTypeID is not bound
-!missing-pinvoke! CFSocketInvalidate is not bound
 !missing-pinvoke! CFSocketIsValid is not bound
 !missing-pinvoke! CFSocketRegisterSocketSignature is not bound
 !missing-pinvoke! CFSocketRegisterValue is not bound

@@ -659,7 +659,7 @@ function Get-XamarinStorageIndexUrl {
         * SYSTEM_TEAMFOUNDATIONCOLLECTIONURI: The uri of the vsts collection. Needed to be able to calculate the target url.
         * SYSTEM_TEAMPROJECT: The team project executing the build. Needed to be able to calculate the target url.
         * BUILD_BUILDID: The current build id. Needed to be able to calculate the target url.
-        * BUILD_REVISION: The revision of the current build. Needed to know the commit whose status to change.
+        * BUILD_SOURCEVERSION: The revision of the current build. Needed to know the commit whose status to change.
         * GITHUB_TOKEN: OAuth or PAT token to interact with the GitHub API.
 #>
 function New-GitHubComment {
@@ -684,7 +684,7 @@ function New-GitHubComment {
         "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI;
         "SYSTEM_TEAMPROJECT" = $Env:SYSTEM_TEAMPROJECT;
         "BUILD_DEFINITIONNAME" = $Env:BUILD_DEFINITIONNAME;
-        "BUILD_REVISION" = $Env:BUILD_REVISION;
+        "BUILD_SOURCEVERSION" = $Env:BUILD_SOURCEVERSION;
         "BUILD_REASON" = $Env:BUILD_REASON;
         "BUILD_SOURCEBRANCH" = $Env:BUILD_SOURCEBRANCH;
         "GITHUB_TOKEN" = $Env:GITHUB_TOKEN;
@@ -720,7 +720,7 @@ function New-GitHubComment {
         $changeId = $buildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
         $url = "https://api.github.com/repos/xamarin/xamarin-macios/issues/$changeId/comments"
     } else {
-        $url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env:BUILD_REVISION/comments"
+        $url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env:BUILD_SOURCEVERSION/comments"
     }
 
     # github has a max size for the comments to be added in a PR, it can be the case that because we failed so much, that we

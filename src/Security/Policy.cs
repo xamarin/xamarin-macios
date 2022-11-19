@@ -50,7 +50,7 @@ namespace Security {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal SecPolicy (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{
@@ -77,7 +77,7 @@ namespace Security {
 			return new SecPolicy (SecPolicyCreateBasicX509 (), true);
 		}
 
-		[DllImport (Constants.SecurityLibrary, EntryPoint="SecPolicyGetTypeID")]
+		[DllImport (Constants.SecurityLibrary, EntryPoint = "SecPolicyGetTypeID")]
 		public extern static nint GetTypeID ();
 
 #if !NET

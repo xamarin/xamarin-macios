@@ -15,7 +15,7 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-using nw_connection_group_t=System.IntPtr;
+using nw_connection_group_t = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -29,10 +29,10 @@ namespace Network {
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
-	[Watch (6,0)]
+	[TV (12, 0)]
+	[Mac (10, 14)]
+	[iOS (12, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWListener : NativeObject {
 		bool connectionHandlerWasSet = false;
@@ -115,7 +115,8 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_listener_start (IntPtr handle);
 
-		public void Start () {
+		public void Start ()
+		{
 			lock (connectionHandlerLock) {
 				// we will get a sigabort if the handler is not set, lets be nicer.
 				if (!connectionHandlerWasSet)
@@ -133,10 +134,10 @@ namespace Network {
 		static nw_listener_state_changed_handler_t static_ListenerStateChanged = TrampolineListenerStateChanged;
 
 		[MonoPInvokeCallback (typeof (nw_listener_state_changed_handler_t))]
-		static void TrampolineListenerStateChanged (IntPtr block, NWListenerState state,  IntPtr nwerror)
+		static void TrampolineListenerStateChanged (IntPtr block, NWListenerState state, IntPtr nwerror)
 		{
-			var del = BlockLiteral.GetTarget<Action<NWListenerState,NWError?>> (block);
-			if (del is not null){
+			var del = BlockLiteral.GetTarget<Action<NWListenerState, NWError?>> (block);
+			if (del is not null) {
 				NWError? err = nwerror == IntPtr.Zero ? null : new NWError (nwerror, owns: false);
 				del (state, err);
 				err?.Dispose ();
@@ -144,19 +145,19 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_listener_set_state_changed_handler (IntPtr handle, void *callback);
+		static extern unsafe void nw_listener_set_state_changed_handler (IntPtr handle, void* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void SetStateChangedHandler (Action<NWListenerState,NWError?> callback)
+		public void SetStateChangedHandler (Action<NWListenerState, NWError?> callback)
 		{
 			unsafe {
-				if (callback is null){
+				if (callback is null) {
 					nw_listener_set_state_changed_handler (GetCheckedHandle (), null);
 					return;
 				}
 
 				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
+				BlockLiteral* block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ListenerStateChanged, callback);
 
 				try {
@@ -174,14 +175,14 @@ namespace Network {
 		static void TrampolineNewConnection (IntPtr block, IntPtr connection)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWConnection>> (block);
-			if (del is not null){
+			if (del is not null) {
 				var nwconnection = new NWConnection (connection, owns: false);
 				del (nwconnection);
 			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_listener_set_new_connection_handler (IntPtr handle, void *callback);
+		static extern unsafe void nw_listener_set_new_connection_handler (IntPtr handle, void* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetNewConnectionHandler (Action<NWConnection> callback)
@@ -194,7 +195,7 @@ namespace Network {
 					}
 
 					BlockLiteral block_handler = new BlockLiteral ();
-					BlockLiteral *block_ptr_handler = &block_handler;
+					BlockLiteral* block_ptr_handler = &block_handler;
 					block_handler.SetupBlockUnsafe (static_NewConnection, callback);
 
 					try {
@@ -223,19 +224,19 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_listener_set_advertised_endpoint_changed_handler (IntPtr handle, void *callback);
+		static extern unsafe void nw_listener_set_advertised_endpoint_changed_handler (IntPtr handle, void* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetAdvertisedEndpointChangedHandler (AdvertisedEndpointChanged callback)
 		{
 			unsafe {
-				if (callback is null){
+				if (callback is null) {
 					nw_listener_set_advertised_endpoint_changed_handler (GetCheckedHandle (), null);
 					return;
 				}
 
 				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
+				BlockLiteral* block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_AdvertisedEndpointChangedHandler, callback);
 
 				try {
@@ -260,9 +261,9 @@ namespace Network {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern uint nw_listener_get_new_connection_limit (IntPtr listener);
@@ -273,9 +274,9 @@ namespace Network {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_listener_set_new_connection_limit (IntPtr listener, uint new_connection_limit);
@@ -286,30 +287,30 @@ namespace Network {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		public uint ConnectionLimit {
 			get => nw_listener_get_new_connection_limit (GetCheckedHandle ());
 			set => nw_listener_set_new_connection_limit (GetCheckedHandle (), value);
 		}
-		
+
 #if NET
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos12.0")]
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[Watch (8,0)]
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
-		[MacCatalyst (15,0)]
+		[Watch (8, 0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_listener_set_new_connection_group_handler (IntPtr listener, /* [NullAllowed] */ ref BlockLiteral handler);
-		
+
 		delegate void nw_listener_new_connection_group_handler_t (IntPtr block, nw_connection_group_t group);
 		static nw_listener_new_connection_group_handler_t static_NewConnectionGroup = TrampolineNewConnectionGroup;
 
@@ -329,11 +330,11 @@ namespace Network {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[Watch (8,0)]
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
-		[MacCatalyst (15,0)]
+		[Watch (8, 0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetNewConnectionGroupHandler (Action<NWConnectionGroup> handler)

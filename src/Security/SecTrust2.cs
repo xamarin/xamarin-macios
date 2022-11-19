@@ -33,17 +33,17 @@ namespace Security {
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
-	[Watch (5,0)]
+	[TV (12, 0)]
+	[Mac (10, 14)]
+	[iOS (12, 0)]
+	[Watch (5, 0)]
 #endif
 	public class SecTrust2 : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
 		internal SecTrust2 (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		public SecTrust2 (NativeHandle handle, bool owns) : base (handle, owns) {}
+		public SecTrust2 (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif
 
 		[DllImport (Constants.SecurityLibrary)]

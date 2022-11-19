@@ -289,7 +289,9 @@ namespace UIKit {
 
 #if !XAMCORE_3_0
 	[NoWatch]
+#pragma warning disable 0618 // warning CS0618: 'CategoryAttribute.CategoryAttribute(bool)' is obsolete: 'Inline the static members in this category in the category's class (and remove this obsolete once fixed)'
 	[Category (allowStaticMembers: true)] // Classic isn't internal so we need this
+#pragma warning restore
 	[BaseType (typeof (NSAttributedString))]
 	interface NSAttributedStringAttachmentConveniences {
 		[Internal]
@@ -11483,9 +11485,11 @@ namespace UIKit {
 
 		// from UIResponder (UIActivityItemsConfiguration)
 
+#pragma warning disable 0109 // warning CS0109: The member 'UIResponder.ActivityItemsConfiguration' does not hide an accessible member. The new keyword is not required.
 		[NoWatch, NoTV, iOS (13, 0)]
 		[NullAllowed, Export ("activityItemsConfiguration", ArgumentSemantic.Strong)]
 		new IUIActivityItemsConfigurationReading ActivityItemsConfiguration { get; set; }
+#pragma warning restore
 
 		// from UIResponder (UICaptureTextFromCameraSupporting)
 		[TV (15,0), iOS (15,0), MacCatalyst (15,0)]
@@ -11498,11 +11502,13 @@ namespace UIKit {
 		[return: NullAllowed]
 		NSTouchBar CreateTouchBar ();
 
+#pragma warning disable 0108 // warning CS0108: 'NSFontAssetRequest.Progress' hides inherited member 'NSProgressReporting.Progress'. Use the new keyword if hiding was intended.
 		[MacCatalyst (13, 0)]
 		[NoWatch, NoTV, NoiOS]
 		[Export ("touchBar", ArgumentSemantic.Strong)]
 		[NullAllowed]
-		new NSTouchBar TouchBar { get; set; }
+		NSTouchBar TouchBar { get; set; }
+#pragma warning restore
 	}
 	
 	[NoWatch]
@@ -23956,9 +23962,19 @@ namespace UIKit {
 		[Field ("UIConfigurationColorTransformerGrayscale")]
 		IntPtr _Grayscale { get; }
 
+#if XAMCORE_5_0
+		[Internal]
+#else
+		[Obsolete ("Use the 'PreferredTint' property instead.")]
+#endif
 		[Field ("UIConfigurationColorTransformerPreferredTint")]
 		IntPtr _PreferredTint { get; }
 
+#if XAMCORE_5_0
+		[Internal]
+#else
+		[Obsolete ("Use the 'MonochromeTint' property instead.")]
+#endif
 		[Field ("UIConfigurationColorTransformerMonochromeTint")]
 		IntPtr _MonochromeTint { get; }
 	}

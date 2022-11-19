@@ -38,12 +38,12 @@ namespace SceneKit {
 				return new NSArray ();
 
 			var count = items.Length;
-			var buf = Marshal.AllocHGlobal ((IntPtr)(count * IntPtr.Size));
+			var buf = Marshal.AllocHGlobal ((IntPtr) (count * IntPtr.Size));
 
 			for (nint i = 0; i < count; i++) {
 				var item = NSValue.FromSCNMatrix4 (items [i]);
-				var h = item?.Handle ??  NSNull.Null.Handle;
-				Marshal.WriteIntPtr (buf, (int)(i * IntPtr.Size), h);
+				var h = item?.Handle ?? NSNull.Null.Handle;
+				Marshal.WriteIntPtr (buf, (int) (i * IntPtr.Size), h);
 			}
 
 			var nsa = new NSArray (NSArray.FromObjects (buf, count));
