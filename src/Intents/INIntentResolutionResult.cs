@@ -26,12 +26,11 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
-	[TV (14,0)]
+	[TV (14, 0)]
 #endif
 	[Register ("INIntentResolutionResult", SkipRegistration = true)]
 	public sealed partial class INIntentResolutionResult<ObjectType> : INIntentResolutionResult
-		where ObjectType : class, INativeObject 
-	{
+		where ObjectType : class, INativeObject {
 		internal INIntentResolutionResult (NativeHandle handle) : base (handle)
 		{
 		}
@@ -63,9 +62,9 @@ namespace Intents {
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6,0)]
-		[iOS (13,0)]
-		[Mac (11,0)]
+		[Watch (6, 0)]
+		[iOS (13, 0)]
+		[Mac (11, 0)]
 #endif
 		public static INIntentResolutionResult GetUnsupported (nint reason) => throw new NotImplementedException ("All subclasses of INIntentResolutionResult must re-implement this method");
 
@@ -75,9 +74,9 @@ namespace Intents {
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6,0)]
-		[iOS (13,0)]
-		[Mac (11,0)]
+		[Watch (6, 0)]
+		[iOS (13, 0)]
+		[Mac (11, 0)]
 #endif
 		public static INIntentResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason) => throw new NotImplementedException ("All subclasses of INIntentResolutionResult must re-implement this method");
 

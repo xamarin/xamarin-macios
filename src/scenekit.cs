@@ -1970,7 +1970,7 @@ namespace SceneKit {
 		SCNHitTestResult [] HitTest (SCNVector3 pointA, SCNVector3 pointB, [NullAllowed] NSDictionary options);
 
 		[Wrap ("HitTest (pointA, pointB, options.GetDictionary ())")]
-		SCNHitTestResult [] HitTest (SCNVector3 pointA, SCNVector3 pointB, SCNHitTestOptions? options);
+		SCNHitTestResult [] HitTest (SCNVector3 pointA, SCNVector3 pointB, [NullAllowed] SCNHitTestOptions options);
 
 		[Mac (10,10)]
 		[Export ("eulerAngles")]

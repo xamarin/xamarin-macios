@@ -18,13 +18,13 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AddressBook {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AddressBookTest {
-		
+
 		// very general ABSource related tests (works on both simulator and devices)
-		
+
 		[SetUp]
 		public void Setup ()
 		{
@@ -41,7 +41,7 @@ namespace MonoTouchFixtures.AddressBook {
 			int value = Runtime.Arch == Arch.DEVICE || TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false) ? 0 : 1;
 			Assert.That (sources.Length, Is.GreaterThanOrEqualTo (value), "GetAllSources");
 		}
-		
+
 		[Test]
 		public void GetDefaultSource ()
 		{

@@ -39,9 +39,9 @@ namespace UIKit {
 		public CGRect InsetRect (CGRect rect)
 		{
 			return new CGRect (rect.X + Left,
-			                       rect.Y + Top,
-			                       rect.Width - Left - Right,
-			                       rect.Height - Top - Bottom);
+								   rect.Y + Top,
+								   rect.Width - Left - Right,
+								   rect.Height - Top - Bottom);
 		}
 
 		// note: UIEdgeInsetsEqualToEdgeInsets (UIGeometry.h) is a macro
@@ -108,13 +108,13 @@ namespace UIKit {
 	[SupportedOSPlatform ("tvos9.0")]
 	[SupportedOSPlatform ("maccatalyst13.0")]
 #else
-	[iOS (9,0)]
+	[iOS (9, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct UIFloatRange : IEquatable<UIFloatRange> {
 
 		public nfloat Minimum, Maximum;
-		
+
 		public UIFloatRange (nfloat minimum, nfloat maximum)
 		{
 			Minimum = minimum;

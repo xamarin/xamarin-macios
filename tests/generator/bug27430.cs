@@ -5,10 +5,9 @@ using ObjCRuntime;
 using Foundation;
 using UIKit;
 
-namespace Bug27430
-{
+namespace Bug27430 {
 	delegate void SomeHandler (int @int, string @string, NSError @namespace);
-	delegate void SomeHandler2 (NSDictionary[] @switch, string[] @case, NSError @namespace);
+	delegate void SomeHandler2 (NSDictionary [] @switch, string [] @case, NSError @namespace);
 
 	[BaseType (typeof (NSObject))]
 	interface Widget {
@@ -71,7 +70,7 @@ namespace Bug27430
 		UIView [] @foreach { get; [Bind ("foo3:")] set; }
 
 		[Export ("dont4")]
-		UIView [] @case {[Bind ("bar4")] get; [Bind ("foo4:")] set; }
+		UIView [] @case { [Bind ("bar4")] get; [Bind ("foo4:")] set; }
 
 		[Export ("dont")]
 		NSArray @void { get; }

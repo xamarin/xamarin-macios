@@ -18,7 +18,7 @@ using Foundation;
 using ObjCRuntime;
 
 namespace SystemConfiguration {
-	
+
 	// http://developer.apple.com/library/ios/#documentation/SystemConfiguration/Reference/CaptiveNetworkRef/Reference/reference.html
 	// CaptiveNetwork.h
 	public static partial class CaptiveNetwork {
@@ -59,14 +59,14 @@ namespace SystemConfiguration {
 		public static StatusCode TryGetSupportedInterfaces (out string[] supportedInterfaces)  => throw new NotSupportedException ();
 #endif // !NET
 #else
-		
+
 #if !MONOMAC
 
 #if NET
 		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
-		[Deprecated (PlatformName.iOS, 14,0)]
+		[Deprecated (PlatformName.iOS, 14, 0)]
 #endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static IntPtr /* CFDictionaryRef __nullable */  CNCopyCurrentNetworkInfo (
@@ -77,7 +77,7 @@ namespace SystemConfiguration {
 		[UnsupportedOSPlatform ("maccatalyst14.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
-		[Deprecated (PlatformName.iOS, 14,0)]
+		[Deprecated (PlatformName.iOS, 14, 0)]
 #endif
 		static public StatusCode TryCopyCurrentNetworkInfo (string interfaceName, out NSDictionary? currentNetworkInfo)
 		{
@@ -87,7 +87,7 @@ namespace SystemConfiguration {
 					currentNetworkInfo = null;
 					return StatusCodeError.SCError ();
 				}
-					
+
 				currentNetworkInfo = new NSDictionary (ni);
 
 				// Must release since the IntPtr constructor calls Retain
@@ -107,16 +107,16 @@ namespace SystemConfiguration {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("ios14.0", "Use 'NEHotspotNetwork.FetchCurrent' instead.")]
 #else
-		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'NEHotspotNetwork.FetchCurrent' instead.")]
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'NEHotspotNetwork.FetchCurrent' instead.")]
 #endif
-		static public StatusCode TryGetSupportedInterfaces (out string?[]? supportedInterfaces)
+		static public StatusCode TryGetSupportedInterfaces (out string? []? supportedInterfaces)
 		{
 			IntPtr array = CNCopySupportedInterfaces ();
 			if (array == IntPtr.Zero) {
 				supportedInterfaces = null;
 				return StatusCodeError.SCError ();
 			}
-			
+
 			supportedInterfaces = CFArray.StringArrayFromHandle (array);
 			CFObject.CFRelease (array);
 			return StatusCode.OK;
@@ -128,7 +128,7 @@ namespace SystemConfiguration {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("ios9.0")]
 #else
-		[Deprecated (PlatformName.iOS, 9,0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 #endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
@@ -140,7 +140,7 @@ namespace SystemConfiguration {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("ios9.0")]
 #else
-		[Deprecated (PlatformName.iOS, 9,0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 #endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
@@ -152,7 +152,7 @@ namespace SystemConfiguration {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("ios9.0")]
 #else
-		[Deprecated (PlatformName.iOS, 9,0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 #endif
 		static public bool MarkPortalOnline (string iface)
 		{
@@ -167,7 +167,7 @@ namespace SystemConfiguration {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("ios9.0")]
 #else
-		[Deprecated (PlatformName.iOS, 9,0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 #endif
 		static public bool MarkPortalOffline (string iface)
 		{
@@ -182,7 +182,7 @@ namespace SystemConfiguration {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("ios9.0")]
 #else
-		[Deprecated (PlatformName.iOS, 9,0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 #endif
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
@@ -194,7 +194,7 @@ namespace SystemConfiguration {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("ios9.0")]
 #else
-		[Deprecated (PlatformName.iOS, 9,0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 #endif
 		static public bool SetSupportedSSIDs (string [] ssids)
 		{

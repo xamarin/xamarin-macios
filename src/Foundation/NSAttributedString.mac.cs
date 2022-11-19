@@ -6,6 +6,8 @@
 //
 // Copyright 2013 Xamarin Inc
 
+#nullable enable
+
 #if MONOMAC
 
 using System;
@@ -18,39 +20,39 @@ namespace Foundation
 {
 	public partial class NSAttributedString
 	{
-		public NSAttributedString (string str, NSStringAttributes attributes)
-			: this (str, attributes != null ? attributes.Dictionary : null)
+		public NSAttributedString (string str, NSStringAttributes? attributes)
+			: this (str, attributes?.Dictionary)
 		{
 		}
 
 		public NSAttributedString (string str,
-			NSFont font = null,
-			NSColor foregroundColor = null,
-			NSColor backgroundColor = null,
-			NSColor strokeColor = null,
-			NSColor underlineColor = null,
-			NSColor strikethroughColor = null,
+			NSFont? font = null,
+			NSColor? foregroundColor = null,
+			NSColor? backgroundColor = null,
+			NSColor? strokeColor = null,
+			NSColor? underlineColor = null,
+			NSColor? strikethroughColor = null,
 			NSUnderlineStyle underlineStyle = NSUnderlineStyle.None,
 			NSUnderlineStyle strikethroughStyle = NSUnderlineStyle.None,
-			NSParagraphStyle paragraphStyle = null,
+			NSParagraphStyle? paragraphStyle = null,
 			float strokeWidth = 0,
-			NSShadow shadow = null,
-			NSUrl link = null,
+			NSShadow? shadow = null,
+			NSUrl? link = null,
 			bool superscript = false,
-			NSTextAttachment attachment = null,
+			NSTextAttachment? attachment = null,
 			NSLigatureType ligature = NSLigatureType.Default,
 			float baselineOffset = 0,
 			float kerningAdjustment = 0,
 			float obliqueness = 0,
 			float expansion = 0,
-			NSCursor cursor = null,
-			string toolTip = null,
+			NSCursor? cursor = null,
+			string? toolTip = null,
 			int characterShape = 0,
-			NSGlyphInfo glyphInfo = null,
-			NSArray writingDirection = null,
+			NSGlyphInfo? glyphInfo = null,
+			NSArray? writingDirection = null,
 			bool markedClauseSegment = false,
 			NSTextLayoutOrientation verticalGlyphForm = NSTextLayoutOrientation.Horizontal,
-			NSTextAlternatives textAlternatives = null,
+			NSTextAlternatives? textAlternatives = null,
 			NSSpellingState spellingState = NSSpellingState.None) : this (str, NSStringAttributes.ToDictionary (
 				font: font,
 				foregroundColor: foregroundColor,
@@ -127,16 +129,16 @@ namespace Foundation
 			return new NSAttributedString (wordDocFormat, NSAttributedStringDataType.DocFormat, out docAttributes);
 		}
 
-		public NSStringAttributes GetAppKitAttributes (nint location, out NSRange effectiveRange)
+		public NSStringAttributes? GetAppKitAttributes (nint location, out NSRange effectiveRange)
 		{
 			var attr = GetAttributes (location, out effectiveRange);
-			return attr == null ? null : new NSStringAttributes (attr);
+			return attr is null ? null : new NSStringAttributes (attr);
 		}
 
-		public NSStringAttributes GetAppKitAttributes (nint location, out NSRange longestEffectiveRange, NSRange rangeLimit)
+		public NSStringAttributes? GetAppKitAttributes (nint location, out NSRange longestEffectiveRange, NSRange rangeLimit)
 		{
 			var attr = GetAttributes (location, out longestEffectiveRange, rangeLimit);
-			return attr == null ? null : new NSStringAttributes (attr);			
+			return attr is null ? null : new NSStringAttributes (attr);
 		}
 	}
 
@@ -144,27 +146,27 @@ namespace Foundation
 		public NSAttributedStringDocumentAttributes () : base (new NSMutableDictionary ()) {}
 		public NSAttributedStringDocumentAttributes (NSDictionary dictionary) : base (dictionary) {}
 
-		public WebPreferences WebPreferences { 
+		public WebPreferences? WebPreferences {
 			get {
 				NSObject value;
 				Dictionary.TryGetValue (NSStringAttributeKey.NSWebPreferencesDocumentOption, out value);
 				return value as WebPreferences;
 			}
 			set {
-				if (value == null)
+				if (value is null)
 					RemoveValue (NSStringAttributeKey.NSWebPreferencesDocumentOption);
 				else
 					Dictionary [NSStringAttributeKey.NSWebPreferencesDocumentOption] = value;
 			}
 		}
-		public NSObject WebResourceLoadDelegate { 
+		public NSObject? WebResourceLoadDelegate {
 			get {
 				NSObject value;
 				Dictionary.TryGetValue (NSStringAttributeKey.NSWebResourceLoadDelegateDocumentOption, out value);
 				return value;
 			}
 			set {
-				if (value == null)
+				if (value is null)
 					RemoveValue (NSStringAttributeKey.NSWebResourceLoadDelegateDocumentOption);
 				else
 					Dictionary [NSStringAttributeKey.NSWebResourceLoadDelegateDocumentOption] = value;
@@ -174,7 +176,7 @@ namespace Foundation
 		public NSStringEncoding? StringEncoding {
 			get {
 				var value = GetInt32Value (NSStringAttributeKey.NSCharacterEncodingDocumentOption);
-				if (value == null)
+				if (value is null)
 					return null;
 				else
 					return (NSStringEncoding) value.Value;
@@ -184,7 +186,7 @@ namespace Foundation
 			}
 		}
 
-		public NSString WeakDocumentType {
+		public NSString? WeakDocumentType {
 			get {
 				return GetNSStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption);
 			}
@@ -256,21 +258,21 @@ namespace Foundation
 			}
 		}
 
-		public NSDictionary WeakDefaultAttributes {
+		public NSDictionary? WeakDefaultAttributes {
 			get {
 				NSObject value;
 				Dictionary.TryGetValue (NSStringAttributeKey.NSDefaultAttributesDocumentOption, out value);
 				return value as NSDictionary;
 			}
 			set {
-				if (value == null)
+				if (value is null)
 					RemoveValue (NSStringAttributeKey.NSDefaultAttributesDocumentOption);
 				else
 					Dictionary [NSStringAttributeKey.NSDefaultAttributesDocumentOption] = value;
 			}
 		}
 
-		public NSUrl BaseUrl {
+		public NSUrl? BaseUrl {
 			get { 
 				return GetNativeValue <NSUrl> (NSStringAttributeKey.NSBaseURLDocumentOption);
 			} 
@@ -279,7 +281,7 @@ namespace Foundation
 			} 
 		}
 
-		public string TextEncodingName { 
+		public string? TextEncodingName {
 			get {
 				return (string)GetNSStringValue (NSStringAttributeKey.NSTextEncodingNameDocumentOption);
 			}

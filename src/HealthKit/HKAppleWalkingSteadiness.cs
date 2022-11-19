@@ -14,12 +14,11 @@ namespace HealthKit {
 	[SupportedOSPlatform ("maccatalyst15.0")]
 	[SupportedOSPlatform ("macos13.0")]
 #else
-	[Watch (8,0)]
-	[iOS (15,0)]
-	[Mac (13,0)]
+	[Watch (8, 0)]
+	[iOS (15, 0)]
+	[Mac (13, 0)]
 #endif
-	public static class HKAppleWalkingSteadiness
-	{
+	public static class HKAppleWalkingSteadiness {
 
 		[DllImport (Constants.HealthKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -33,10 +32,10 @@ namespace HealthKit {
 			error = null;
 			if (HKAppleWalkingSteadinessClassificationForQuantity (value.GetHandle (), out var classificationOut, out var errorPtr)) {
 				classification = (HKAppleWalkingSteadinessClassification) (long) classificationOut;
-				error = Runtime.GetNSObject<NSError> (errorPtr, false); 
+				error = Runtime.GetNSObject<NSError> (errorPtr, false);
 				return true;
 			}
-			return false; 
+			return false;
 
 		}
 
@@ -44,13 +43,13 @@ namespace HealthKit {
 		static extern HKQuantityRef HKAppleWalkingSteadinessMinimumQuantityForClassification (nint classification);
 
 		public static HKQuantity? GetMinimumQuantity (HKAppleWalkingSteadinessClassification classification)
-			=> Runtime.GetNSObject<HKQuantity> (HKAppleWalkingSteadinessMinimumQuantityForClassification ((nint) (long) classification), false); 
+			=> Runtime.GetNSObject<HKQuantity> (HKAppleWalkingSteadinessMinimumQuantityForClassification ((nint) (long) classification), false);
 
 		[DllImport (Constants.HealthKitLibrary)]
 		static extern HKQuantityRef HKAppleWalkingSteadinessMaximumQuantityForClassification (nint classification);
 
 		public static HKQuantity? GetMaximumQuantity (HKAppleWalkingSteadinessClassification classification)
-			=> Runtime.GetNSObject<HKQuantity> (HKAppleWalkingSteadinessMaximumQuantityForClassification ((nint) (long) classification), false); 
+			=> Runtime.GetNSObject<HKQuantity> (HKAppleWalkingSteadinessMaximumQuantityForClassification ((nint) (long) classification), false);
 	}
 
 }

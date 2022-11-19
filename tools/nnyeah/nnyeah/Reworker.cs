@@ -680,7 +680,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 		static MethodReference CtorWithNArgs (TypeDefinition type, int args) =>
 			type.Methods.First (m => m.Name == ".ctor" && m.Parameters.Count == args);
-		
+
 		static TypeReference EmptyTypeReference = new TypeReference ("none", "still_none", null, null);
 	}
 }

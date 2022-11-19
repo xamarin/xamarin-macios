@@ -22,7 +22,7 @@ using CoreVideo;
 using NativeHandle = System.IntPtr;
 #endif
 
-namespace VideoToolbox {		
+namespace VideoToolbox {
 
 #if NET
 	[SupportedOSPlatform ("ios8.0")]
@@ -30,8 +30,8 @@ namespace VideoToolbox {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[iOS (8,0)]
-	[TV (10,2)]
+	[iOS (8, 0)]
+	[TV (10, 2)]
 #endif
 	public class VTSession : NativeObject {
 #if !NET
@@ -41,7 +41,7 @@ namespace VideoToolbox {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal VTSession (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -118,7 +118,7 @@ namespace VideoToolbox {
 			var result = VTSessionCopySupportedPropertyDictionary (Handle, out var ret);
 			if (result != VTStatus.Ok || ret == IntPtr.Zero)
 				return null;
-			
+
 			return Runtime.GetNSObject<NSDictionary> (ret, true);
 		}
 	}

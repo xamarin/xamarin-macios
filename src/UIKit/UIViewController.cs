@@ -13,7 +13,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Foundation; 
+using Foundation;
 #if HAS_IAD && !NET
 using iAd;
 #endif
@@ -22,10 +22,10 @@ using CoreGraphics;
 
 namespace UIKit {
 	public partial class UIViewController : IEnumerable {
-		
+
 		// https://bugzilla.xamarin.com/show_bug.cgi?id=3189
 		static Stack<UIViewController> modal;
-		
+
 		static void PushModal (UIViewController controller)
 		{
 			if (modal == null)
@@ -41,7 +41,7 @@ namespace UIKit {
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=3489#c2
 			if (modal == null || (modal.Count == 0))
 				return;
-			
+
 			UIViewController pop = modal.Pop ();
 			while (pop != controller && (modal.Count > 0)) {
 				pop = modal.Pop ();
