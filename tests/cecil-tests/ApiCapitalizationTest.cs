@@ -25,9 +25,9 @@ namespace Cecil.Tests {
 
 		[OneTimeSetUp]
 		public void SetUp ()
-		{ 
+		{
 			foreach (string assemblyPath in Helper.NetPlatformAssemblies) {
-				
+
 				var assembly = Helper.GetAssembly (assemblyPath);
 				assemblyCache.Add (assemblyPath, assembly);
 			}
@@ -70,7 +70,7 @@ namespace Cecil.Tests {
 			if (property == null)
 				return false;
 
-			if (property.HasCustomAttributes && property.CustomAttributes.Where ((p) => p.AttributeType.Name == "ObsoleteAttribute" || p.AttributeType.Name == "ObsoletedOSPlatformAttribute").Any()) {
+			if (property.HasCustomAttributes && property.CustomAttributes.Where ((p) => p.AttributeType.Name == "ObsoleteAttribute" || p.AttributeType.Name == "ObsoletedOSPlatformAttribute").Any ()) {
 				return true;
 			}
 
@@ -79,7 +79,7 @@ namespace Cecil.Tests {
 
 
 		bool IsException (string assemblyPath, MethodDefinition m)
-		{ 
+		{
 
 			if (m == null)
 				return false;
@@ -94,7 +94,7 @@ namespace Cecil.Tests {
 		Dictionary<string, HashSet<string>> allowedProperties = new Dictionary<string, HashSet<string>> () {
 			["MPMusicPlayerController"] = new HashSet<string> () { "iPodMusicPlayer" },
 			["ABPersonPhoneLabel"] = new HashSet<string> () { "iPhone" },
-			["CNLabelPhoneNumberKey"] = new HashSet<string> () { "iPhone"},
+			["CNLabelPhoneNumberKey"] = new HashSet<string> () { "iPhone" },
 			["AVMetadata"] = new HashSet<string> () { "iTunesMetadataKeyAccountKind",
 			"iTunesMetadataKeyAcknowledgement",
 			"iTunesMetadataKeyAlbum",
@@ -153,10 +153,10 @@ namespace Cecil.Tests {
 			["Dlfcn"] = new HashSet<string> () { "dlopen", "dlerror", "dlsym" }
 		};
 
-		public bool IsSkip(string type, string memberName, Dictionary<string, HashSet<string>> allowed)
+		public bool IsSkip (string type, string memberName, Dictionary<string, HashSet<string>> allowed)
 		{
 			if (allowed.TryGetValue (type, out var result)) {
-				if (allowed [type].TryGetValue(memberName, out var skipped)) {
+				if (allowed [type].TryGetValue (memberName, out var skipped)) {
 					return true;
 				}
 			}
@@ -172,7 +172,7 @@ namespace Cecil.Tests {
 				var typeName = type.Name;
 				var c = type.Properties
 						.Where (p => p.GetMethod?.IsPublic == true || p.SetMethod?.IsPublic == true)
-						.Where (p => !IsSkip(type.Name, p.Name, allowedProperties) && !IsPropertyObsolete (p, type) && !p.IsSpecialName)
+						.Where (p => !IsSkip (type.Name, p.Name, allowedProperties) && !IsPropertyObsolete (p, type) && !p.IsSpecialName)
 						.Select (p => p.Name);
 				return c;
 			};
@@ -185,7 +185,7 @@ namespace Cecil.Tests {
 		{
 			Func<TypeDefinition, IEnumerable<string>> selectLambda = (type) => {
 				var c = from m in type.Methods
-						where m.IsPublic && !IsSkip (type.Name, m.Name, allowedMethods) && !IsException (assemblyPath, m) 
+						where m.IsPublic && !IsSkip (type.Name, m.Name, allowedMethods) && !IsException (assemblyPath, m)
 						select m.Name;
 				return c;
 			};
@@ -211,7 +211,7 @@ namespace Cecil.Tests {
 		{
 			Func<TypeDefinition, IEnumerable<string>> selectLambda = (type) => {
 				var c = from f in type.Fields
-						where f.IsPublic && f.IsFamilyOrAssembly && !IsSkip(type.Name, f.Name, allowedFields)
+						where f.IsPublic && f.IsFamilyOrAssembly && !IsSkip (type.Name, f.Name, allowedFields)
 						select f.Name;
 				return c;
 			};
@@ -229,7 +229,7 @@ namespace Cecil.Tests {
 				foreach (var type in publicTypes) {
 					var err = selectLambda (type);
 					if (err is not null && err.Any ()) {
-						if(typeDict.TryGetValue($"Type: {type.Name}", out var errMembers)) {
+						if (typeDict.TryGetValue ($"Type: {type.Name}", out var errMembers)) {
 							typeDict [$"Type: {type.Name}"] += string.Join ("; ", err);
 						} else {
 							typeDict.Add ($"Type: {type.Name}", string.Join ("; ", err));
