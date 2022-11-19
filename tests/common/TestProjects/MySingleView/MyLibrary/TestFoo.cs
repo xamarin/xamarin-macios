@@ -1,9 +1,7 @@
 using System;
 
-namespace MyLibrary
-{
-	public class TestFoo
-	{
+namespace MyLibrary {
+	public class TestFoo {
 		public TestFoo ()
 		{
 		}

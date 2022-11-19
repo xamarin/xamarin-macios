@@ -30,7 +30,7 @@ namespace UIKit {
 
 		public TextAttributes GetTitleTextAttributes (UIControlState state)
 		{
-			using (var d = _GetTitleTextAttributes (state)){
+			using (var d = _GetTitleTextAttributes (state)) {
 				return new TextAttributes (d);
 			}
 		}
@@ -40,14 +40,14 @@ namespace UIKit {
 			{
 				if (attributes == null)
 					throw new ArgumentNullException ("attributes");
-				using (var dict = attributes.Dictionary){
+				using (var dict = attributes.Dictionary) {
 					_SetTitleTextAttributes (dict, state);
 				}
 			}
 
 			public virtual TextAttributes GetTitleTextAttributes (UIControlState state)
 			{
-				using (var d = _GetTitleTextAttributes (state)){
+				using (var d = _GetTitleTextAttributes (state)) {
 					return new TextAttributes (d);
 				}
 			}

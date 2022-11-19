@@ -30,8 +30,8 @@ namespace VideoToolbox {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else
-	[iOS (8,0)]
-	[TV (10,2)]
+	[iOS (8, 0)]
+	[TV (10, 2)]
 #endif
 	public class VTDecompressionSession : VTSession {
 
@@ -43,7 +43,7 @@ namespace VideoToolbox {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal VTDecompressionSession (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
@@ -54,26 +54,25 @@ namespace VideoToolbox {
 				VTDecompressionSessionInvalidate (Handle);
 
 			if (callbackHandle.IsAllocated)
-				callbackHandle.Free();
+				callbackHandle.Free ();
 
 			base.Dispose (disposing);
 		}
 
 		[StructLayout (LayoutKind.Sequential)]
-		struct VTDecompressionOutputCallbackRecord
-		{
+		struct VTDecompressionOutputCallbackRecord {
 #if NET
 			public unsafe delegate* unmanaged</* void* */ IntPtr, /* void* */ IntPtr, /* OSStatus */ VTStatus, VTDecodeInfoFlags, /* CVImageBuffer */ IntPtr, CMTime, CMTime, void> Proc;
 #else
 			public DecompressionOutputCallback Proc;
 #endif
-			public IntPtr DecompressionOutputRefCon; 
+			public IntPtr DecompressionOutputRefCon;
 		}
 
 		// sourceFrame: It seems it's only used as a parameter to be passed into DecodeFrame so no need to strong type it
 		public delegate void VTDecompressionOutputCallback (/* void* */ IntPtr sourceFrame, /* OSStatus */ VTStatus status, VTDecodeInfoFlags flags, CVImageBuffer buffer, CMTime presentationTimeStamp, CMTime presentationDuration);
 #if !NET
-		delegate void DecompressionOutputCallback (/* void* */ IntPtr outputCallbackClosure, /* void* */ IntPtr sourceFrame, /* OSStatus */ VTStatus status, 
+		delegate void DecompressionOutputCallback (/* void* */ IntPtr outputCallbackClosure, /* void* */ IntPtr sourceFrame, /* OSStatus */ VTStatus status,
 			VTDecodeInfoFlags infoFlags, /* CVImageBuffer */ IntPtr cmSampleBufferPtr, CMTime presentationTimeStamp, CMTime presentationDuration);
 #endif
 
@@ -98,7 +97,7 @@ namespace VideoToolbox {
 		[MonoPInvokeCallback (typeof (DecompressionOutputCallback))]
 #endif
 #endif
-		static void DecompressionCallback (IntPtr outputCallbackClosure, IntPtr sourceFrame, VTStatus status, 
+		static void DecompressionCallback (IntPtr outputCallbackClosure, IntPtr sourceFrame, VTStatus status,
 			VTDecodeInfoFlags infoFlags, IntPtr imageBufferPtr, CMTime presentationTimeStamp, CMTime presentationDuration)
 		{
 			var gch = GCHandle.FromIntPtr (outputCallbackClosure);
@@ -135,7 +134,7 @@ namespace VideoToolbox {
 		[MonoPInvokeCallback (typeof (DecompressionOutputCallback))]
 #endif
 #endif
-		static void NewDecompressionCallback (IntPtr outputCallbackClosure, IntPtr sourceFrame, VTStatus status, 
+		static void NewDecompressionCallback (IntPtr outputCallbackClosure, IntPtr sourceFrame, VTStatus status,
 			VTDecodeInfoFlags infoFlags, IntPtr imageBufferPtr, CMTime presentationTimeStamp, CMTime presentationDuration)
 		{
 			var gch = GCHandle.FromIntPtr (outputCallbackClosure);
@@ -191,22 +190,22 @@ namespace VideoToolbox {
 #if !NET
 		[Obsolete ("This overload requires that the provided compressionOutputCallback manually CFRetain the passed CMSampleBuffer, use Create(VTDecompressionOutputCallback,CMVideoFormatDescription,VTVideoDecoderSpecification,CVPixelBufferAttributes) variant instead which does not have that requirement.")]
 		public static VTDecompressionSession? Create (VTDecompressionOutputCallback outputCallback,
-							     CMVideoFormatDescription formatDescription,
-							     VTVideoDecoderSpecification? decoderSpecification = null, // hardware acceleration is default behavior on iOS. no opt-in required.
-							     NSDictionary? destinationImageBufferAttributes = null)
+								 CMVideoFormatDescription formatDescription,
+								 VTVideoDecoderSpecification? decoderSpecification = null, // hardware acceleration is default behavior on iOS. no opt-in required.
+								 NSDictionary? destinationImageBufferAttributes = null)
 		{
 			return Create (outputCallback, formatDescription, decoderSpecification, destinationImageBufferAttributes, static_DecompressionOutputCallback);
 		}
 #endif // !NET
-	
+
 		public static VTDecompressionSession? Create (VTDecompressionOutputCallback outputCallback,
-							     CMVideoFormatDescription formatDescription,
+								 CMVideoFormatDescription formatDescription,
 #if NET
 							     VTVideoDecoderSpecification? decoderSpecification = null, // hardware acceleration is default behavior on iOS. no opt-in required.
 							     CVPixelBufferAttributes? destinationImageBufferAttributes = null)
 #else
-							     VTVideoDecoderSpecification? decoderSpecification, // hardware acceleration is default behavior on iOS. no opt-in required.
-							     CVPixelBufferAttributes? destinationImageBufferAttributes)
+								 VTVideoDecoderSpecification? decoderSpecification, // hardware acceleration is default behavior on iOS. no opt-in required.
+								 CVPixelBufferAttributes? destinationImageBufferAttributes)
 #endif
 		{
 #if NET
@@ -217,17 +216,17 @@ namespace VideoToolbox {
 			return Create (outputCallback, formatDescription, decoderSpecification, destinationImageBufferAttributes?.Dictionary, static_newDecompressionOutputCallback);
 #endif
 		}
-	
+
 		unsafe static VTDecompressionSession? Create (VTDecompressionOutputCallback outputCallback,
-						      CMVideoFormatDescription formatDescription,
-						      VTVideoDecoderSpecification? decoderSpecification, // hardware acceleration is default behavior on iOS. no opt-in required.
-						      NSDictionary? destinationImageBufferAttributes,
+							  CMVideoFormatDescription formatDescription,
+							  VTVideoDecoderSpecification? decoderSpecification, // hardware acceleration is default behavior on iOS. no opt-in required.
+							  NSDictionary? destinationImageBufferAttributes,
 #if NET
 						      delegate* unmanaged</* void* */ IntPtr, /* void* */ IntPtr, /* OSStatus */ VTStatus, VTDecodeInfoFlags, /* CVImageBuffer */ IntPtr, CMTime, CMTime, void> cback)
 #else
-						      DecompressionOutputCallback cback)
+							  DecompressionOutputCallback cback)
 #endif
-		{	
+		{
 			if (outputCallback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputCallback));
 
@@ -372,9 +371,9 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,13)]
-		[iOS (11,0)]
-		[TV (11,0)]
+		[Mac (10, 13)]
+		[iOS (11, 0)]
+		[TV (11, 0)]
 #endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
@@ -386,9 +385,9 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,13)]
-		[iOS (11,0)]
-		[TV (11,0)]
+		[Mac (10, 13)]
+		[iOS (11, 0)]
+		[TV (11, 0)]
 #endif
 		public static bool IsHardwareDecodeSupported (CMVideoCodecType codecType)
 		{

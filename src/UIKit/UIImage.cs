@@ -47,7 +47,7 @@ namespace UIKit {
 			using (var pool = new NSAutoreleasePool ())
 				return (NSData) Runtime.GetNSObject (UIImagePNGRepresentation (Handle));
 		}
-		
+
 		[DllImport (Constants.UIKitLibrary)]
 		extern static /* NSData */ IntPtr UIImageJPEGRepresentation (/* UIImage */ IntPtr image, /* CGFloat */ nfloat compressionQuality);
 
@@ -69,8 +69,8 @@ namespace UIKit {
 
 			Draw (new CGRect (0, 0, newSize.Width, newSize.Height));
 
-			var scaledImage = UIGraphics.GetImageFromCurrentImageContext();
-			UIGraphics.EndImageContext();
+			var scaledImage = UIGraphics.GetImageFromCurrentImageContext ();
+			UIGraphics.EndImageContext ();
 
 			return scaledImage;
 		}
@@ -80,11 +80,11 @@ namespace UIKit {
 			UIGraphics.BeginImageContext (newSize);
 
 			Draw (new CGRect (0, 0, newSize.Width, newSize.Height));
-	
-			var scaledImage = UIGraphics.GetImageFromCurrentImageContext();
-			UIGraphics.EndImageContext();
 
-			return scaledImage;			
+			var scaledImage = UIGraphics.GetImageFromCurrentImageContext ();
+			UIGraphics.EndImageContext ();
+
+			return scaledImage;
 		}
 
 		// required because of GetCallingAssembly (if we ever inline across assemblies)
@@ -102,15 +102,15 @@ namespace UIKit {
 			byte [] buffer = new byte [stream.Length];
 			stream.Read (buffer, 0, buffer.Length);
 			unsafe {
-				fixed (byte *p = &buffer [0]){
+				fixed (byte* p = &buffer [0]) {
 					var data = NSData.FromBytes ((IntPtr) p, (uint) stream.Length);
 					return LoadFromData (data);
 				}
 			}
 		}
 
-// that was used (03be3e0d43085dfef2e732494216d9b2bf8fc079) to implement FromResource but that code 
-// was changed later (d485b61793b0d986f416c8d6154fb92c7a57d79d) making it unused AFAICS
+		// that was used (03be3e0d43085dfef2e732494216d9b2bf8fc079) to implement FromResource but that code 
+		// was changed later (d485b61793b0d986f416c8d6154fb92c7a57d79d) making it unused AFAICS
 #if false
 		internal class DataWrapper : NSData {
 			IntPtr buffer;
@@ -127,7 +127,7 @@ namespace UIKit {
 		}
 #endif
 	}
-	
+
 #if IOS
 	[Register ("__MonoTouch_UIImageStatusDispatcher")]
 	internal class UIImageStatusDispatcher : NSObject {
