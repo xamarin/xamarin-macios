@@ -4,25 +4,47 @@ using System.Text.Json.Serialization;
 namespace Xamarin.Tests {
 	[TestFixture]
 	public class TemplateTest : TestBaseClass {
+		public enum TemplateLanguage {
+			Undefined,
+			CSharp,
+			FSharp
+		}
+
 		public struct TemplateInfo {
 			public readonly ApplePlatform Platform;
+			public readonly TemplateLanguage Language;
 			public readonly string Template;
 			public readonly bool Execute;
 			public readonly TemplateType TemplateType;
 
-			public TemplateInfo (ApplePlatform platform, string template, bool execute = false)
+			public TemplateInfo (ApplePlatform platform, TemplateLanguage language, string template, bool execute = false)
 			{
 				Platform = platform;
+				Language = language;
 				Template = template;
 				Execute = execute;
-				TemplateType = ParseConfig (Platform, template);
+				TemplateType = ParseConfig (Platform, language, template);
 			}
 
-			static TemplateType ParseConfig (ApplePlatform platform, string template)
+			static TemplateType ParseConfig (ApplePlatform platform, TemplateLanguage language, string template)
 			{
 				// read the template's configuration to figure out if it's a project template, and if not, skip it
 				var dir = Path.Combine (Configuration.SourceRoot, "dotnet", "Templates", $"Microsoft.{platform.AsString ()}.Templates");
-				var jsonPath = Path.Combine (dir, template, ".template.config", "template.json");
+				var rootPath = Path.Combine (dir, template);
+
+				switch (language) {
+					case TemplateLanguage.Undefined:
+						break;
+					case TemplateLanguage.CSharp:
+						rootPath = Path.Combine (rootPath, "csharp");
+						break;
+					case TemplateLanguage.FSharp:
+						rootPath = Path.Combine (rootPath, "fsharp");
+						break;
+				}
+
+				var jsonPath = Path.Combine (rootPath, ".template.config", "template.json");
+
 				var options = new JsonSerializerOptions {
 					PropertyNameCaseInsensitive = true,
 					IncludeFields = true,
@@ -50,43 +72,44 @@ namespace Xamarin.Tests {
 
 		public static TemplateInfo [] Templates = {
 			/* project templates */
-			new TemplateInfo (ApplePlatform.iOS, "ios"),
-			new TemplateInfo (ApplePlatform.iOS, "ios-tabbed"),
-			new TemplateInfo (ApplePlatform.iOS, "ioslib"),
-			new TemplateInfo (ApplePlatform.iOS, "iosbinding"),
+			new TemplateInfo (ApplePlatform.iOS, TemplateLanguage.CSharp, "ios"),
+			new TemplateInfo (ApplePlatform.iOS, TemplateLanguage.FSharp, "ios"),
+			new TemplateInfo (ApplePlatform.iOS, TemplateLanguage.Undefined, "ios-tabbed"),
+			new TemplateInfo (ApplePlatform.iOS, TemplateLanguage.Undefined, "ioslib"),
+			new TemplateInfo (ApplePlatform.iOS, TemplateLanguage.Undefined, "iosbinding"),
 
-			new TemplateInfo (ApplePlatform.TVOS, "tvos"),
-			new TemplateInfo (ApplePlatform.TVOS, "tvoslib"),
-			new TemplateInfo (ApplePlatform.TVOS, "tvosbinding"),
+			new TemplateInfo (ApplePlatform.TVOS, TemplateLanguage.Undefined, "tvos"),
+			new TemplateInfo (ApplePlatform.TVOS, TemplateLanguage.Undefined, "tvoslib"),
+			new TemplateInfo (ApplePlatform.TVOS, TemplateLanguage.Undefined, "tvosbinding"),
 
-			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalyst", execute: true),
-			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalystlib"),
-			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalystbinding"),
+			new TemplateInfo (ApplePlatform.MacCatalyst, TemplateLanguage.Undefined, "maccatalyst", execute: true),
+			new TemplateInfo (ApplePlatform.MacCatalyst, TemplateLanguage.Undefined, "maccatalystlib"),
+			new TemplateInfo (ApplePlatform.MacCatalyst, TemplateLanguage.Undefined, "maccatalystbinding"),
 
-			new TemplateInfo (ApplePlatform.MacOSX, "macos", execute: true),
-			new TemplateInfo (ApplePlatform.MacOSX, "macoslib"),
-			new TemplateInfo (ApplePlatform.MacOSX, "macosbinding"),
+			new TemplateInfo (ApplePlatform.MacOSX, TemplateLanguage.Undefined, "macos", execute: true),
+			new TemplateInfo (ApplePlatform.MacOSX, TemplateLanguage.Undefined, "macoslib"),
+			new TemplateInfo (ApplePlatform.MacOSX, TemplateLanguage.Undefined, "macosbinding"),
 
 			/* item templates */
-			new TemplateInfo (ApplePlatform.iOS, "ios-controller"),
-			new TemplateInfo (ApplePlatform.iOS, "ios-storyboard"),
-			new TemplateInfo (ApplePlatform.iOS, "ios-view"),
-			new TemplateInfo (ApplePlatform.iOS, "ios-viewcontroller"),
+			new TemplateInfo (ApplePlatform.iOS, TemplateLanguage.Undefined, "ios-controller"),
+			new TemplateInfo (ApplePlatform.iOS, TemplateLanguage.Undefined, "ios-storyboard"),
+			new TemplateInfo (ApplePlatform.iOS, TemplateLanguage.Undefined, "ios-view"),
+			new TemplateInfo (ApplePlatform.iOS, TemplateLanguage.Undefined, "ios-viewcontroller"),
 
-			new TemplateInfo (ApplePlatform.TVOS, "tvos-controller"),
-			new TemplateInfo (ApplePlatform.TVOS, "tvos-storyboard"),
-			new TemplateInfo (ApplePlatform.TVOS, "tvos-view"),
-			new TemplateInfo (ApplePlatform.TVOS, "tvos-viewcontroller"),
+			new TemplateInfo (ApplePlatform.TVOS, TemplateLanguage.Undefined, "tvos-controller"),
+			new TemplateInfo (ApplePlatform.TVOS, TemplateLanguage.Undefined, "tvos-storyboard"),
+			new TemplateInfo (ApplePlatform.TVOS, TemplateLanguage.Undefined, "tvos-view"),
+			new TemplateInfo (ApplePlatform.TVOS, TemplateLanguage.Undefined, "tvos-viewcontroller"),
 
-			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalyst-controller"),
-			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalyst-storyboard"),
-			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalyst-view"),
-			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalyst-viewcontroller"),
+			new TemplateInfo (ApplePlatform.MacCatalyst, TemplateLanguage.Undefined, "maccatalyst-controller"),
+			new TemplateInfo (ApplePlatform.MacCatalyst, TemplateLanguage.Undefined, "maccatalyst-storyboard"),
+			new TemplateInfo (ApplePlatform.MacCatalyst, TemplateLanguage.Undefined, "maccatalyst-view"),
+			new TemplateInfo (ApplePlatform.MacCatalyst, TemplateLanguage.Undefined, "maccatalyst-viewcontroller"),
 
-			new TemplateInfo (ApplePlatform.MacOSX, "macos-controller"),
-			new TemplateInfo (ApplePlatform.MacOSX, "macos-storyboard"),
-			new TemplateInfo (ApplePlatform.MacOSX, "macos-view"),
-			new TemplateInfo (ApplePlatform.MacOSX, "macos-viewcontroller"),
+			new TemplateInfo (ApplePlatform.MacOSX, TemplateLanguage.Undefined, "macos-controller"),
+			new TemplateInfo (ApplePlatform.MacOSX, TemplateLanguage.Undefined, "macos-storyboard"),
+			new TemplateInfo (ApplePlatform.MacOSX, TemplateLanguage.Undefined, "macos-view"),
+			new TemplateInfo (ApplePlatform.MacOSX, TemplateLanguage.Undefined, "macos-viewcontroller"),
 		};
 
 		public static TemplateInfo [] GetProjectTemplates ()
