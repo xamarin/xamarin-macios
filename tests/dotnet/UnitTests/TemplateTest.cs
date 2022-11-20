@@ -33,14 +33,14 @@ namespace Xamarin.Tests {
 				var rootPath = Path.Combine (dir, template);
 
 				switch (language) {
-					case TemplateLanguage.Undefined:
-						break;
-					case TemplateLanguage.CSharp:
-						rootPath = Path.Combine (rootPath, "csharp");
-						break;
-					case TemplateLanguage.FSharp:
-						rootPath = Path.Combine (rootPath, "fsharp");
-						break;
+				case TemplateLanguage.Undefined:
+					break;
+				case TemplateLanguage.CSharp:
+					rootPath = Path.Combine (rootPath, "csharp");
+					break;
+				case TemplateLanguage.FSharp:
+					rootPath = Path.Combine (rootPath, "fsharp");
+					break;
 				}
 
 				var jsonPath = Path.Combine (rootPath, ".template.config", "template.json");
