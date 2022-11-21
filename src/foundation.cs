@@ -353,8 +353,10 @@ namespace Foundation
 #endif
 
 		[Export ("initWithData:options:documentAttributes:error:")]
-#if __MACOS__ || XAMCORE_5_0
+#if XAMCORE_5_0
 		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
+#elif __MACOS__
+		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary docAttributes, out NSError error);
 #else
 		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #endif
