@@ -349,7 +349,11 @@ partial class TestRuntime {
 			 *
 			 * The above statement also applies to 'CheckExactmacOSSystemVersion' =S
 			 */
+#if NET
 			return NSProcessInfo.ProcessInfo.OperatingSystemVersionString.Contains (v.macOS.Build, StringComparison.Ordinal);
+#else
+			return NSProcessInfo.ProcessInfo.OperatingSystemVersionString.Contains (v.macOS.Build);
+#endif
 #else
 			throw new NotImplementedException ();
 #endif
@@ -1484,11 +1488,11 @@ partial class TestRuntime {
 		IntPtr description; // const char *
 
 		public string Name {
-			get { return Marshal.PtrToStringUTF8 (name)!; }
+			get { return Marshal.PtrToStringAuto (name)!; }
 		}
 
 		public string Description {
-			get { return Marshal.PtrToStringUTF8 (description)!; }
+			get { return Marshal.PtrToStringAuto (description)!; }
 		}
 	}
 
