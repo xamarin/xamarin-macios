@@ -5170,7 +5170,7 @@ namespace AVFoundation {
 
 #if !NET
 		[Field ("AVMetadataFormatQuickTimeUserData")]
-		[Obsolete ("Use 'AVMetadataFormat' enum values")]
+		[Obsolete ("Use 'AVMetadataFormat' enum values.")]
 		NSString FormatQuickTimeUserData { get; }
 #endif
 		
@@ -5353,7 +5353,7 @@ namespace AVFoundation {
 #if !NET
 		[iOS (7,0), Mac (10, 9)]
 		[Field ("AVMetadataFormatISOUserData")]
-		[Obsolete ("Use 'AVMetadataFormat' enum values")]
+		[Obsolete ("Use 'AVMetadataFormat' enum values.")]
 		NSString KFormatISOUserData { get; }
 #endif
 
@@ -5501,7 +5501,7 @@ namespace AVFoundation {
 		
 #if !NET
 		[Field ("AVMetadataFormatiTunesMetadata")]
-		[Obsolete ("Use 'AVMetadataFormat' enum values")]
+		[Obsolete ("Use 'AVMetadataFormat' enum values.")]
 		NSString FormatiTunesMetadata { get; }
 #endif
 		
@@ -5655,7 +5655,7 @@ namespace AVFoundation {
 		
 #if !NET
 		[Field ("AVMetadataFormatID3Metadata")]
-		[Obsolete ("Use 'AVMetadataFormat' enum values")]
+		[Obsolete ("Use 'AVMetadataFormat' enum values.")]
 		NSString FormatID3Metadata { get; }
 #endif
 
@@ -5976,7 +5976,7 @@ namespace AVFoundation {
 #if !NET
 		[iOS (8,0)][Mac (10,10)]
 		[Field ("AVMetadataFormatHLSMetadata")]
-		[Obsolete ("Use 'AVMetadataFormat' enum values")]
+		[Obsolete ("Use 'AVMetadataFormat' enum values.")]
 		NSString FormatHlsMetadata { get; }
 #endif
 
