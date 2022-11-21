@@ -65,7 +65,7 @@ namespace OpenGL {
 			CGLReleasePixelFormat (GetCheckedHandle ());
 		}
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGLPixelFormat (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -78,13 +78,13 @@ namespace OpenGL {
 		extern static void CGLReleasePixelFormat (IntPtr handle);
 
 		[DllImport (Constants.OpenGLLibrary)]
-		extern static CGLErrorCode CGLChoosePixelFormat (CGLPixelFormatAttribute[] attributes, out IntPtr /* CGLPixelFormatObj* */ pix, out int /* GLint* */ npix);
-		public CGLPixelFormat (CGLPixelFormatAttribute[] attributes, out int npix)
+		extern static CGLErrorCode CGLChoosePixelFormat (CGLPixelFormatAttribute [] attributes, out IntPtr /* CGLPixelFormatObj* */ pix, out int /* GLint* */ npix);
+		public CGLPixelFormat (CGLPixelFormatAttribute [] attributes, out int npix)
 			: base (Create (attributes, out npix), true)
 		{
 		}
 
-		static IntPtr Create (CGLPixelFormatAttribute[] attributes, out int npix)
+		static IntPtr Create (CGLPixelFormatAttribute [] attributes, out int npix)
 		{
 			if (attributes is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (attributes));
@@ -114,9 +114,9 @@ namespace OpenGL {
 		static CGLPixelFormatAttribute [] ConvertToAttributes (object [] args)
 		{
 			var list = new List<CGLPixelFormatAttribute> ();
-			for (int i = 0; i < args.Length; i++){
+			for (int i = 0; i < args.Length; i++) {
 				var v = (CGLPixelFormatAttribute) args [i];
-				switch (v){
+				switch (v) {
 				case CGLPixelFormatAttribute.AllRenderers:
 				case CGLPixelFormatAttribute.DoubleBuffer:
 				case CGLPixelFormatAttribute.Stereo:
@@ -135,7 +135,7 @@ namespace OpenGL {
 				case CGLPixelFormatAttribute.Compliant:
 				case CGLPixelFormatAttribute.PixelBuffer:
 
-					// Not listed in the docs, but header file implies it
+				// Not listed in the docs, but header file implies it
 				case CGLPixelFormatAttribute.RemotePixelBuffer:
 				case CGLPixelFormatAttribute.AuxDepthStencil:
 				case CGLPixelFormatAttribute.ColorFloat:
@@ -147,7 +147,7 @@ namespace OpenGL {
 				case CGLPixelFormatAttribute.MPSafe:
 					list.Add (v);
 					break;
-					
+
 				case CGLPixelFormatAttribute.AuxBuffers:
 				case CGLPixelFormatAttribute.ColorSize:
 				case CGLPixelFormatAttribute.AlphaSize:
@@ -157,7 +157,7 @@ namespace OpenGL {
 				case CGLPixelFormatAttribute.RendererID:
 				case CGLPixelFormatAttribute.ScreenMask:
 
-					// not listed in the docs, but header file implies it
+				// not listed in the docs, but header file implies it
 				case CGLPixelFormatAttribute.SampleBuffers:
 				case CGLPixelFormatAttribute.Samples:
 				case CGLPixelFormatAttribute.VirtualScreenCount:
@@ -179,6 +179,6 @@ namespace OpenGL {
 			}
 			return list.ToArray ();
 		}
-		
+
 	}
 }
