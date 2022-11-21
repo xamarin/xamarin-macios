@@ -33,30 +33,30 @@ namespace WebKit {
 		static IntPtr selUse = Selector.GetHandle ("use");
 		static IntPtr selDownload = Selector.GetHandle ("download");
 		static IntPtr selIgnore = Selector.GetHandle ("ignore");
-		
+
 		public static void DecideUse (NSObject decisionToken)
 		{
 			if (decisionToken is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (decisionToken));
-			
+
 			ObjCRuntime.Messaging.void_objc_msgSend (decisionToken.Handle, selUse);
 		}
-		
+
 		public static void DecideDownload (NSObject decisionToken)
 		{
 			if (decisionToken is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (decisionToken));
-			
+
 			ObjCRuntime.Messaging.void_objc_msgSend (decisionToken.Handle, selDownload);
 		}
-		
+
 		public static void DecideIgnore (NSObject decisionToken)
 		{
 			if (decisionToken is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (decisionToken));
-			
+
 			ObjCRuntime.Messaging.void_objc_msgSend (decisionToken.Handle, selIgnore);
 		}
-		
+
 	}
 }
