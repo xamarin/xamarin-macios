@@ -176,14 +176,21 @@ $$($(1)_DIRECTORIES):
 
 endef
 
+ifdef IOS_SUPPORTS_32BIT_ARCHITECTURES
+IOS_SIMULATOR_ARCHITECTURES=x86
+IOS_DEVICE_ARCHITECTURES=armv7 armv7s
+endif
+IOS_SIMULATOR_ARCHITECTURES+=x86_64 arm64
+IOS_DEVICE_ARCHITECTURES+=arm64
+
 # 1: platform infix
 # 2: platform variable
 # 3: architectures
 # 4: platform name
 # 5: min version
 # 6: os
-$(eval $(call Template,iphonesimulator,IOSSIMULATOR,x86 x86_64 arm64,iPhoneSimulator,-mios-simulator-version-min=8.0 -isysroot $(SIMULATOR_SDK)))
-$(eval $(call Template,iphoneos,IPHONEOS,armv7 armv7s arm64,iPhoneOS,-miphoneos-version-min=8.0 -isysroot $(DEVICE_SDK)))
+$(eval $(call Template,iphonesimulator,IOSSIMULATOR,$(IOS_SIMULATOR_ARCHITECTURES),iPhoneSimulator,-mios-simulator-version-min=8.0 -isysroot $(SIMULATOR_SDK)))
+$(eval $(call Template,iphoneos,IPHONEOS,$(IOS_DEVICE_ARCHITECTURES),iPhoneOS,-miphoneos-version-min=8.0 -isysroot $(DEVICE_SDK)))
 ifdef INCLUDE_TVOS
 $(eval $(call Template,tvsimulator,TVSIMULATOR,x86_64 arm64,AppleTVSimulator,-mtvos-simulator-version-min=9.0 -isysroot $(SIMULATORTV_SDK)))
 $(eval $(call Template,tvos,TVOS,arm64,AppleTVOS,-mtvos-version-min=9.0 -fembed-bitcode -isysroot $(DEVICETV_SDK)))
@@ -211,9 +218,11 @@ $(5)_TARGETS += .libs/$(4)/libtest.$(1).a
 all-local:: $$($(5)_TARGETS)
 endef
 
+ifdef IOS_SUPPORTS_32BIT_ARCHITECTURES
 $(eval $(call LibTemplate,armv7+7s,.libs/iphoneos/libtest.armv7.o,.libs/iphoneos/libtest.armv7s.o,ios-fat,IOS))
 $(eval $(call LibTemplate,armv7+x86,.libs/iphoneos/libtest.armv7.o,.libs/iphonesimulator/libtest.x86.o,ios-fat,IOS))
 $(eval $(call LibTemplate,armv7s+x86,.libs/iphoneos/libtest.armv7s.o,.libs/iphonesimulator/libtest.x86.o,ios-fat,IOS))
+endif
 
 ifdef INCLUDE_TVOS
 $(eval $(call LibTemplate,arm64+x86_64,.libs/tvos/libtest.arm64.o,.libs/tvsimulator/libtest.x86_64.o,tvos-fat,TVOS))

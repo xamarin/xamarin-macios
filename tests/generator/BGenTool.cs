@@ -13,10 +13,8 @@ using Mono.Cecil.Cil;
 
 using Xamarin.Utils;
 
-namespace Xamarin.Tests
-{
-	class BGenTool : Tool
-	{
+namespace Xamarin.Tests {
+	class BGenTool : Tool {
 		public const string None = "None";
 		AssemblyDefinition assembly;
 
@@ -397,8 +395,7 @@ namespace Xamarin.Tests
 
 	// This class will replace stdout/stderr with its own thread-static storage for stdout/stderr.
 	// This means we're capturing stdout/stderr per thread.
-	class ThreadStaticTextWriter : TextWriter
-	{
+	class ThreadStaticTextWriter : TextWriter {
 		[ThreadStatic]
 		static TextWriter current_writer;
 
@@ -411,7 +408,7 @@ namespace Xamarin.Tests
 
 		public static void ReplaceConsole (StringBuilder sb)
 		{
-			lock (lock_obj) { 
+			lock (lock_obj) {
 				if (counter == 0) {
 					original_stdout = Console.Out;
 					original_stderr = Console.Error;
@@ -424,7 +421,7 @@ namespace Xamarin.Tests
 		}
 
 		public static void RestoreConsole ()
-		{ 
+		{
 			lock (lock_obj) {
 				current_writer.Dispose ();
 				current_writer = null;
