@@ -1315,9 +1315,9 @@ partial class TestRuntime {
 #else
 			if (TestRuntime.CheckMacSystemVersion (10, 10))
 				return; // Crossing fingers that this won't hang.
-#endif
 			NUnit.Framework.Assert.Ignore ("This test requires permission to access events, but there's no API to request access without potentially showing dialogs.");
 			break;
+#endif
 		case EKAuthorizationStatus.Denied:
 			if (assert_granted)
 				NUnit.Framework.Assert.Ignore ("This test requires permission to access events.");
