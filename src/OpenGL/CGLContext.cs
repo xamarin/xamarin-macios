@@ -55,7 +55,7 @@ namespace OpenGL {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGLContext (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{
@@ -90,7 +90,7 @@ namespace OpenGL {
 		{
 			return CGLUnlockContext (Handle);
 		}
-	
+
 		[DllImport (Constants.OpenGLLibrary)]
 		extern static CGLErrorCode CGLSetCurrentContext (IntPtr ctx);
 
@@ -104,7 +104,7 @@ namespace OpenGL {
 					return new CGLContext (ctx, false);
 				else
 					return null;
-			} 
+			}
 
 			set {
 				var retValue = CGLSetCurrentContext (value.GetHandle ());
