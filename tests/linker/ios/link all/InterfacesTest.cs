@@ -15,19 +15,19 @@ using NUnit.Framework;
 
 namespace LinkAll.Interfaces {
 
-	interface I	{
+	interface I {
 		void Foo ();
 		void Bar ();
 	}
-	
+
 	class A : I {
-		public void Foo () {}
-		public void Bar () {}
+		public void Foo () { }
+		public void Bar () { }
 	}
-	
+
 	class B : I {
-		public void Foo () {}
-		public void Bar () {}
+		public void Foo () { }
+		public void Bar () { }
 	}
 
 	class UTF8Marshaler : ICustomMarshaler {
@@ -99,7 +99,7 @@ namespace LinkAll.Interfaces {
 #endif
 		public void Issue9566 ()
 		{
-			var ifaces = (I[]) (object) new B[0];
+			var ifaces = (I []) (object) new B [0];
 			Assert.IsNotNull (ifaces, "Array cast");
 		}
 

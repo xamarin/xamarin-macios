@@ -4,31 +4,31 @@ using ObjCRuntime;
 using NUnit.Framework;
 
 namespace LinkSdk.Aot {
-	
+
 	[TestFixture]
 	// we want the test to be availble if we use the linker
 	[Preserve (AllMembers = true)]
 	public partial class AotBugsTest {
-		
+
 		public struct VT {
 			public Action a;
 		}
-		
+
 		public class D {
 		}
-		
+
 		public class A {
 			public void OuterMethod<TArg1> (TArg1 value)
 			{
 				this.InnerMethod<TArg1, long> (value, 0);
 			}
-			
+
 			private void InnerMethod<TArg1, TArg2> (TArg1 v1, TArg2 v2)
 			{
 				Console.WriteLine ("{0} {1}", v1, v2);
 			}
 		}
-		
+
 		[Test]
 		public void Bug2096_Aot ()
 		{
@@ -37,11 +37,11 @@ namespace LinkSdk.Aot {
 			a.OuterMethod<int> (1);
 			a.OuterMethod<DateTime> (DateTime.Now);
 			// works with 5.0.2 (5.1)
-			
+
 			var v = new VT ();
 			a.OuterMethod<VT> (v);
 			// works with 5.0.2 (5.1)
-			
+
 			var x = new D ();
 			a.OuterMethod<D> (x);
 #if !__MACOS__

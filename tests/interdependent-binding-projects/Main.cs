@@ -23,8 +23,7 @@ namespace Xamarin.Mac.Tests {
 }
 #elif !__WATCHOS__
 [Register ("AppDelegate")]
-public partial class AppDelegate : UIApplicationDelegate
-{
+public partial class AppDelegate : UIApplicationDelegate {
 	UIWindow window;
 	TouchRunner runner;
 
@@ -47,7 +46,7 @@ public partial class AppDelegate : UIApplicationDelegate
 		return true;
 	}
 
-	static void Main (string[] args)
+	static void Main (string [] args)
 	{
 		UIApplication.Main (args, null, typeof (AppDelegate));
 	}
@@ -65,8 +64,7 @@ public static partial class TestLoader {
 
 // In some cases NUnit fails if asked to run tests from an assembly that doesn't have any tests. So add a dummy test here to not fail in that scenario.
 [TestFixture]
-public class DummyTest
-{
+public class DummyTest {
 	public void TestMe ()
 	{
 		Assert.True (true, "YAY!");

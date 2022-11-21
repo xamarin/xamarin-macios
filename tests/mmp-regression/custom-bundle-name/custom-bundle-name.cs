@@ -7,9 +7,9 @@ using Foundation;
 
 
 namespace Xamarin.Mac.Linker.Test {
-	
+
 	class CustomBundleName {
-		static void Main (string[] args)
+		static void Main (string [] args)
 		{
 			NSApplication.Init ();
 

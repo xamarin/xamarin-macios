@@ -7,14 +7,12 @@ using Foundation;
 using UIKit;
 using MonoTouch.NUnit.UI;
 
-namespace LinkAll
-{
+namespace LinkAll {
 	// The UIApplicationDelegate for the application. This class is responsible for launching the 
 	// User Interface of the application, as well as listening (and optionally responding) to 
 	// application events from iOS.
 	[Register ("AppDelegate")]
-	public partial class AppDelegate : UIApplicationDelegate
-	{
+	public partial class AppDelegate : UIApplicationDelegate {
 		// class-level declarations
 		UIWindow window;
 		TouchRunner runner;
@@ -41,14 +39,14 @@ namespace LinkAll
 			runner.Add (typeof (BundledResources.ResourcesTest).Assembly);
 
 			window.RootViewController = new UINavigationController (runner.GetViewController ());
-			
+
 			// make the window visible
 			window.MakeKeyAndVisible ();
-			
+
 			return true;
 		}
 
-		static void Main (string[] args)
+		static void Main (string [] args)
 		{
 			UIApplication.Main (args, null, typeof (AppDelegate));
 		}
