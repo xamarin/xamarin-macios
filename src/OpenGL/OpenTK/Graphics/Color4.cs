@@ -118,7 +118,7 @@ namespace OpenTK.Graphics.OpenGL
         /// <remarks>This method is intended only for compatibility with System.Drawing. It compresses the color into 8 bits per channel, which means color information is lost.</remarks>
         public int ToArgb()
         {
-			return unchecked(HashCode.Combine(A, R, G, B));
+			return HashCode.Combine(A, R, G, B);
         }
 
         /// <summary>

@@ -985,7 +985,7 @@ namespace ObjCRuntime {
 			int IEqualityComparer<IntPtr>.GetHashCode (IntPtr obj)
 			{
 				unchecked {
-					return HashCode.Combine(obj);
+					return (int) Hash (obj);
 				}
 			}
 		}
