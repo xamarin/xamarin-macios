@@ -7,8 +7,7 @@ using ObjCRuntime;
 namespace PassKit {
 
 #if !TVOS && !WATCH
-	public partial class PKShareablePassMetadata
-	{
+	public partial class PKShareablePassMetadata {
 
 #if NET
 		[SupportedOSPlatform ("ios16.0")]
@@ -16,7 +15,7 @@ namespace PassKit {
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
 #endif
 		public enum CardType {
 			Template = 0,
@@ -29,7 +28,7 @@ namespace PassKit {
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
 #endif
 		public PKShareablePassMetadata (string credentialIdentifier, string sharingInstanceIdentifier, string templateIdentifier, PKShareablePassMetadataPreview preview) :
 			this (credentialIdentifier, sharingInstanceIdentifier, templateIdentifier, preview, CardType.Template)
@@ -42,7 +41,7 @@ namespace PassKit {
 		[SupportedOSPlatform ("maccatalyst16.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
 #endif
 		public PKShareablePassMetadata (string credentialIdentifier, string sharingInstanceIdentifier, string templateIdentifier, PKShareablePassMetadataPreview preview, CardType cardType) : base (NSObjectFlag.Empty)
 		{
