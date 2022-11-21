@@ -130,7 +130,7 @@ namespace ObjCRuntime {
 
 		public override int GetHashCode ()
 		{
-			return Handle.GetHashCode ();
+			return HashCode.Combine(Handle);
 		}
 
 		// This method is treated as an intrinsic operation by

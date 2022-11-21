@@ -100,7 +100,7 @@ namespace ObjCRuntime {
 #if NET
 		public override int GetHashCode ()
 		{
-			return handle.GetHashCode ();
+			return HashCode.Combine(handle);
 		}
 
 		public override bool Equals (object? obj)

@@ -269,7 +269,7 @@ namespace AVFoundation {
 
 		public override int GetHashCode ()
 		{
-			return Temperature.GetHashCode () ^ Tint.GetHashCode ();
+			return HashCode.Combine(Temperature, Tint);
 		}
 	}
 

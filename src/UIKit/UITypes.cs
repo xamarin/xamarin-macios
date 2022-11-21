@@ -146,7 +146,7 @@ namespace UIKit {
 
 		public override int GetHashCode ()
 		{
-			return Minimum.GetHashCode () ^ Maximum.GetHashCode ();
+			return HashCode.Combine(Minimum, Maximum);
 		}
 
 		[Field ("UIFloatRangeZero")] // fake (but helps testing and could also help documentation)

@@ -677,7 +677,7 @@ namespace OpenTK
         /// <returns>A hash code formed from the bitwise XOR of this objects members.</returns>
         public override int GetHashCode()
         {
-            return Xyz.GetHashCode() ^ W.GetHashCode();
+            return HashCode.Combine(Xyz, W);
         }
 
         #endregion
@@ -1258,7 +1258,7 @@ namespace OpenTK
         public override int GetHashCode()
         {
             base.GetHashCode();
-            return W.GetHashCode() ^ X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
+            return HashCode.Combine(W, X, Y, Z);
         }
 
         #endregion

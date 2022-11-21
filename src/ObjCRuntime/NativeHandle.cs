@@ -85,7 +85,7 @@ namespace ObjCRuntime {
 
 		public override int GetHashCode ()
 		{
-			return handle.GetHashCode ();
+			return HashCode.Combine(handle);
 		}
 
 		public bool Equals (NativeHandle other)

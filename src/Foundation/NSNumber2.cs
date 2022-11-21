@@ -194,7 +194,7 @@ namespace Foundation {
 			// "If two objects compare as equal, the GetHashCode method for each object must return the same value."
 			// otherwise NSNumber (1) needs to be != from NSNumber (1d), a breaking change from classic and 
 			// something that's really not obvious
-			return StringValue.GetHashCode ();
+			return HashCode.Combine(StringValue);
 		}
 #endif
 	}

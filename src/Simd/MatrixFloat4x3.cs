@@ -180,10 +180,12 @@ namespace OpenTK
 
 		public override int GetHashCode ()
 		{
-			return
-				M11.GetHashCode () ^ M12.GetHashCode () ^ M13.GetHashCode () ^ M14.GetHashCode () ^
-				M21.GetHashCode () ^ M22.GetHashCode () ^ M23.GetHashCode () ^ M24.GetHashCode () ^
-				M31.GetHashCode () ^ M32.GetHashCode () ^ M33.GetHashCode () ^ M34.GetHashCode ();
+			var instanceArr = [M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34];
+            var hash = new HashCode();
+            foreach (var instance in instanceArr) {
+                hash.Add(instance);
+            }
+            return hash.ToHashCode();
 		}
 
 		public override bool Equals (object? obj)

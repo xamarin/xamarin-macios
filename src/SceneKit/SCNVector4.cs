@@ -1077,14 +1077,14 @@ namespace SceneKit {
 
 		#region public override int GetHashCode()
 
-		/// <summary>
-		/// Returns the hashcode for this instance.
-		/// </summary>
-		/// <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
-		public override int GetHashCode ()
-		{
-			return X.GetHashCode () ^ Y.GetHashCode () ^ Z.GetHashCode () ^ W.GetHashCode ();
-		}
+        /// <summary>
+        /// Returns the hashcode for this instance.
+        /// </summary>
+        /// <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(X, Y, Z, W);
+        }
 
 		#endregion
 

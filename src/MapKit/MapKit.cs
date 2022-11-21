@@ -362,7 +362,7 @@ namespace MapKit {
 
 		public override int GetHashCode ()
 		{
-			return Origin.GetHashCode () ^ Size.GetHashCode ();
+			return HashCode.Combine(Origin, Size);
 		}
 
 		// MKStringFromMapRect does not really exists, it's inlined in MKGeometry.h

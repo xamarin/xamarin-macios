@@ -109,7 +109,7 @@ namespace ObjCRuntime {
 
 		public override int GetHashCode ()
 		{
-			return handle.GetHashCode ();
+			return HashCode.Combine(handle);
 		}
 
 		internal static string GetName (IntPtr handle)

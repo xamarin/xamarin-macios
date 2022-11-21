@@ -565,9 +565,7 @@ namespace OpenTK
         /// <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
         public override int GetHashCode()
         {
-            return
-                R0C0.GetHashCode() ^ R0C1.GetHashCode() ^
-                R1C0.GetHashCode() ^ R1C1.GetHashCode();
+            return HashCode.Combine(R0C0, R0C1, R1C0, R1C1);
         }
 
         #endregion

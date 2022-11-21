@@ -801,10 +801,12 @@ namespace OpenTK
         /// <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
         public override int GetHashCode()
         {
-            return
-                R0C0.GetHashCode() ^ R0C1.GetHashCode() ^ R0C2.GetHashCode() ^
-                R1C0.GetHashCode() ^ R1C1.GetHashCode() ^ R1C2.GetHashCode() ^
-                R2C0.GetHashCode() ^ R2C1.GetHashCode() ^ R2C2.GetHashCode();
+            var instanceArr = [R0C0, R0C1, R0C2, R1C0, R1C1, R1C2, R2C0, R2C1, R2C2];
+            var hash = new HashCode();
+            foreach (var instance in instanceArr) {
+                hash.Add(instance);
+            }
+            return hash.ToHashCode();
         }
 
         #endregion
