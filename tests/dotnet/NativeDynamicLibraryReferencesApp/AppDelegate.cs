@@ -3,14 +3,12 @@ using System.Runtime.InteropServices;
 
 using Foundation;
 
-namespace NativeDynamicLibraryReferencesApp
-{
-	public class Program
-	{
+namespace NativeDynamicLibraryReferencesApp {
+	public class Program {
 		[DllImport ("libtest.dylib")]
 		static extern int theUltimateAnswer ();
 
-		static int Main (string[] args)
+		static int Main (string [] args)
 		{
 			Console.WriteLine ($"Dynamic library: {theUltimateAnswer ()}");
 
