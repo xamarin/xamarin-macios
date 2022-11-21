@@ -1584,9 +1584,7 @@ namespace WatchKit {
 		BARDisabled = 6,
 		NotApprovedToStartSession = 7,
 		NotApprovedToSchedule = 8,
-		[Watch (9,0)]
 		MustBeActiveToPrompt = 9,
-		[Watch (9,0)]
 		UnsupportedSessionType = 10,
 	}
 
