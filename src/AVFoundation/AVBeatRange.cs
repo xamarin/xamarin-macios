@@ -82,7 +82,7 @@ namespace AVFoundation {
 
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine(Start, Length);
+			return HashCode.Combine (Start, Length);
 		}
 	}
 }

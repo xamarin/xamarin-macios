@@ -114,7 +114,7 @@ namespace AVFoundation {
 
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine(Yaw, Pitch, Roll);
+			return HashCode.Combine (Yaw, Pitch, Roll);
 		}
 	}
 
@@ -169,7 +169,7 @@ namespace AVFoundation {
 
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine(RedGain, GreenGain, BlueGain);
+			return HashCode.Combine (RedGain, GreenGain, BlueGain);
 		}
 	}
 
@@ -219,7 +219,7 @@ namespace AVFoundation {
 
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine(X,Y);
+			return HashCode.Combine (X, Y);
 		}
 	}
 
@@ -269,7 +269,7 @@ namespace AVFoundation {
 
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine(Temperature, Tint);
+			return HashCode.Combine (Temperature, Tint);
 		}
 	}
 

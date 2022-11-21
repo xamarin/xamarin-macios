@@ -145,7 +145,7 @@ namespace MapKit {
 
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine(X, Y);
+			return HashCode.Combine (X, Y);
 		}
 
 		// MKStringFromMapPoint does not really exists, it's inlined in MKGeometry.h
@@ -206,7 +206,7 @@ namespace MapKit {
 
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine(Width, Height);
+			return HashCode.Combine (Width, Height);
 		}
 
 		// MKStringFromMapSize does not really exists, it's inlined in MKGeometry.h
@@ -362,7 +362,7 @@ namespace MapKit {
 
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine(Origin, Size);
+			return HashCode.Combine (Origin, Size);
 		}
 
 		// MKStringFromMapRect does not really exists, it's inlined in MKGeometry.h

@@ -391,7 +391,7 @@ namespace CoreFoundation {
 		// `Equals` and `GetHashCode` based on the Handle property.
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine(Handle);
+			return HashCode.Combine (Handle);
 		}
 
 		public override bool Equals (object? other)

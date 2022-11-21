@@ -77,7 +77,7 @@ namespace CoreVideo {
 
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine(TimeValue, TimeScale, Flags);
+			return HashCode.Combine (TimeValue, TimeScale, Flags);
 		}
 
 		// CVHostTime.h

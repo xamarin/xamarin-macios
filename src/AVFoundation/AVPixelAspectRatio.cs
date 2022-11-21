@@ -66,7 +66,7 @@ namespace AVFoundation {
 
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine(HorizontalSpacing, VerticalSpacing);
+			return HashCode.Combine (HorizontalSpacing, VerticalSpacing);
 		}
 
 		public override bool Equals (object? other)

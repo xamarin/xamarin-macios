@@ -84,7 +84,7 @@ namespace CoreBluetooth {
 		// this fixes a compiler warning: CS0661: `CoreBluetooth.CBUUID' defines operator == or operator != but does not override Object.GetHashCode()
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine(base);
+			return HashCode.Combine (base);
 		}
 
 		public unsafe string ToString (bool fullUuid)

@@ -229,7 +229,7 @@ namespace Foundation {
 			// "If two objects compare as equal, the GetHashCode method for each object must return the same value."
 			// otherwise the same value (e.g. 100) can be represented with different values (e.g.
 			// by varying mantissa an exponent)
-			return HashCode.Combine(ToString());
+			return HashCode.Combine (ToString ());
 		}
 #endif // !COREBUILD
 	}

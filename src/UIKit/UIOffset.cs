@@ -39,7 +39,7 @@ namespace UIKit {
 
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine(Horizontal, Vertical);
+			return HashCode.Combine (Horizontal, Vertical);
 		}
 
 		public static bool operator == (UIOffset left, UIOffset right)

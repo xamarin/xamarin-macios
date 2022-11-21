@@ -75,7 +75,7 @@ namespace UIKit {
 
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine(Top, Left, Right, Bottom);
+			return HashCode.Combine (Top, Left, Right, Bottom);
 		}
 
 		[DllImport (Constants.UIKitLibrary)]
@@ -146,7 +146,7 @@ namespace UIKit {
 
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine(Minimum, Maximum);
+			return HashCode.Combine (Minimum, Maximum);
 		}
 
 		[Field ("UIFloatRangeZero")] // fake (but helps testing and could also help documentation)

@@ -227,7 +227,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			public override int GetHashCode ()
 			{
-				return HashCode.Combine(base, Comment);
+				return HashCode.Combine (base, Comment);
 			}
 
 			public override bool Equals (object t)

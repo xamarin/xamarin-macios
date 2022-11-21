@@ -299,7 +299,7 @@ namespace Foundation {
 
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine(base);
+			return HashCode.Combine (base);
 		}
 #endif // !COREBUILD
 	}

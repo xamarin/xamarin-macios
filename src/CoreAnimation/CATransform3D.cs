@@ -125,11 +125,11 @@ namespace CoreAnimation {
 		public override int GetHashCode ()
 		{
 			var instanceArr = [M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44];
-			var hash = new HashCode();
+			var hash = new HashCode ();
 			foreach (var instance in instanceArr) {
-				hash.Add(instance);
+				hash.Add (instance);
 			}
-			return hash.ToHashCode();
+			return hash.ToHashCode ();
 		}
 
 		// Transform matrix =  [1 0 0 0; 0 1 0 0; 0 0 1 0; tx ty tz 1]

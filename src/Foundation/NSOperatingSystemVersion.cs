@@ -78,7 +78,7 @@ namespace Foundation {
 		}
 
 		public override int GetHashCode ()
-			=> HashCode.Combine(Tuple.Create (Major, Minor, PatchVersion));
+			=> HashCode.Combine (Tuple.Create (Major, Minor, PatchVersion));
 
 		public static bool operator == (NSOperatingSystemVersion os1, NSOperatingSystemVersion os2)
 			=> os1.Equals (os2);
