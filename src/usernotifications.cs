@@ -194,10 +194,12 @@ namespace UserNotifications {
 
 		// Additional enum values to fix reordering - to be at the end of the enum
 #if !XAMCORE_5_0
+#pragma warning disable 0618 // warning CS0618: 'UNNotificationInterruptionLevel.[field]' is obsolete: 'Use '[replacement]'.'
 		Active2 = Critical,
 		Critical2 = TimeSensitive,
 		Passive2 = Active,
 		TimeSensitive2 = Passive,
+#pragma warning restore
 #endif // !XAMCORE_5_0
 	}
 

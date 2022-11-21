@@ -14,7 +14,7 @@ using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Foundation; 
+using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 
@@ -79,14 +79,14 @@ namespace UIKit {
 
 			public static _UIViewStaticCallback Prepare ()
 			{
-				if (shared == null){
+				if (shared == null) {
 					shared = new _UIViewStaticCallback ();
 					SetAnimationDelegate (shared);
 				}
 				return shared;
 			}
 		}
-		
+
 		public static event Action AnimationWillStart {
 			add {
 				_UIViewStaticCallback.Prepare ().WillStart += value;
@@ -109,9 +109,9 @@ namespace UIKit {
 		public static void Animate (double duration, Action animation, Action completion)
 		{
 			// animation null check will be done in AnimateNotify
-			AnimateNotify (duration, animation, (x) => { 
+			AnimateNotify (duration, animation, (x) => {
 				if (completion != null)
-					completion (); 
+					completion ();
 			});
 		}
 
@@ -121,7 +121,7 @@ namespace UIKit {
 			// animation null check will be done in AnimateNotify
 			AnimateNotify (duration, delay, options, animation, (x) => {
 				if (completion != null)
-					completion (); 
+					completion ();
 			});
 		}
 
@@ -130,7 +130,7 @@ namespace UIKit {
 		{
 			TransitionNotify (fromView, toView, duration, options, (x) => {
 				if (completion != null)
-					completion (); 
+					completion ();
 			});
 		}
 
@@ -140,7 +140,7 @@ namespace UIKit {
 			// animation null check will be done in AnimateNotify
 			TransitionNotify (withView, duration, options, animation, (x) => {
 				if (completion != null)
-					completion (); 
+					completion ();
 			});
 		}
 

@@ -25,9 +25,9 @@ namespace MediaPlayer {
 		[UnsupportedOSPlatform ("ios11.3")]
 		[ObsoletedOSPlatform ("ios11.3", "Use 'MPVolumeView' to present volume controls.")]
 #else
-		[Deprecated (PlatformName.iOS, 11,3, message: "Use 'MPVolumeView' to present volume controls.")]
+		[Deprecated (PlatformName.iOS, 11, 3, message: "Use 'MPVolumeView' to present volume controls.")]
 #endif
-		[DllImport (Constants.MediaPlayerLibrary, EntryPoint="MPVolumeSettingsAlertShow")]
+		[DllImport (Constants.MediaPlayerLibrary, EntryPoint = "MPVolumeSettingsAlertShow")]
 		public extern static void AlertShow ();
 
 #if NET
@@ -36,9 +36,9 @@ namespace MediaPlayer {
 		[UnsupportedOSPlatform ("ios11.3")]
 		[ObsoletedOSPlatform ("ios11.3", "Use 'MPVolumeView' to present volume controls.")]
 #else
-		[Deprecated (PlatformName.iOS, 11,3, message: "Use 'MPVolumeView' to present volume controls.")]
+		[Deprecated (PlatformName.iOS, 11, 3, message: "Use 'MPVolumeView' to present volume controls.")]
 #endif
-		[DllImport (Constants.MediaPlayerLibrary, EntryPoint="MPVolumeSettingsAlertHide")]
+		[DllImport (Constants.MediaPlayerLibrary, EntryPoint = "MPVolumeSettingsAlertHide")]
 		public extern static void AlertHide ();
 
 		// note: sizeof (BOOL) is 1 like C, i.e. it's not a Win32 BOOL (4 bytes)
@@ -48,9 +48,9 @@ namespace MediaPlayer {
 		[UnsupportedOSPlatform ("ios11.3")]
 		[ObsoletedOSPlatform ("ios11.3", "Use 'MPVolumeView' to present volume controls.")]
 #else
-		[Deprecated (PlatformName.iOS, 11,3, message: "Use 'MPVolumeView' to present volume controls.")]
+		[Deprecated (PlatformName.iOS, 11, 3, message: "Use 'MPVolumeView' to present volume controls.")]
 #endif
-		[DllImport (Constants.MediaPlayerLibrary, EntryPoint="MPVolumeSettingsAlertIsVisible")]
+		[DllImport (Constants.MediaPlayerLibrary, EntryPoint = "MPVolumeSettingsAlertIsVisible")]
 		[return: MarshalAs (UnmanagedType.I1)]
 		public extern static /* BOOL */ bool AlertIsVisible ();
 	}

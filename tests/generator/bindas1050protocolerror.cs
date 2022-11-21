@@ -12,6 +12,6 @@ namespace BindAs1050ProtocolErrorTests {
 		[return: BindAs (typeof (CAScroll? []))]
 		[Export ("getScrollArrayEnum2:")]
 		NSNumber [] GetScrollArrayFooEnumArray2 ([BindAs (typeof (CAScroll []))] NSNumber [] arg1);
-		
+
 	}
 }

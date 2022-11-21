@@ -4205,7 +4205,9 @@ namespace HealthKit {
 
 		[iOS (15,4)]
 		[Export ("initWithRecordTypes:sourceTypes:predicate:resultsHandler:")]
+#pragma warning disable 8632 // warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		IntPtr Constructor (string [] recordTypes, [BindAs (typeof (HKVerifiableClinicalRecordSourceType []))] NSString [] sourceTypes, [NullAllowed] NSPredicate predicate, Action<HKVerifiableClinicalRecordQuery, HKVerifiableClinicalRecord []?, NSError?> resultsHandler);
+#pragma warning restore
 	}
 
 	[NoWatch, iOS (15,0), Mac (13,0)]

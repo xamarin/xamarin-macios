@@ -65,7 +65,7 @@ namespace MonoTouchFixtures.HealthKit {
 				case HKQuantityTypeIdentifier.RestingHeartRate:
 				case HKQuantityTypeIdentifier.WalkingHeartRateAverage:
 				case HKQuantityTypeIdentifier.HeartRateVariabilitySdnn:
-					if (!TestRuntime.CheckXcodeVersion(9, 0))
+					if (!TestRuntime.CheckXcodeVersion (9, 0))
 						continue;
 					break;
 				case HKQuantityTypeIdentifier.DistanceDownhillSnowSports:
@@ -75,7 +75,7 @@ namespace MonoTouchFixtures.HealthKit {
 				case HKQuantityTypeIdentifier.AppleStandTime:
 				case HKQuantityTypeIdentifier.EnvironmentalAudioExposure:
 				case HKQuantityTypeIdentifier.HeadphoneAudioExposure:
-					if (!TestRuntime.CheckXcodeVersion(11, 0))
+					if (!TestRuntime.CheckXcodeVersion (11, 0))
 						continue;
 					break;
 				case HKQuantityTypeIdentifier.SixMinuteWalkTestDistance:
@@ -107,7 +107,7 @@ namespace MonoTouchFixtures.HealthKit {
 				case HKQuantityTypeIdentifier.AppleSleepingWristTemperature:
 				case HKQuantityTypeIdentifier.UnderwaterDepth:
 				case HKQuantityTypeIdentifier.WaterTemperature:
-				// These are all available in iOS 16.0, but lets bump to 14.1 to test only on macOS 13
+					// These are all available in iOS 16.0, but lets bump to 14.1 to test only on macOS 13
 					if (!TestRuntime.CheckXcodeVersion (14, 1))
 						continue;
 					break;
@@ -117,8 +117,7 @@ namespace MonoTouchFixtures.HealthKit {
 					using (var ct = HKQuantityType.Create (value)) {
 						Assert.That (ct.Handle, Is.Not.EqualTo (IntPtr.Zero), value.ToString ());
 					}
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					failures.Add ($"{value} could not be created: {e}");
 				}
 			}
