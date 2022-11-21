@@ -41,19 +41,17 @@ namespace Foundation {
 
 #if !MONOMAC && !COREBUILD
 	public partial class NSAttributedString {
-		static NSDictionary? ignore;
-
 		public NSAttributedString (NSUrl url, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error)
-		: this (url, documentAttributes, out ignore, ref error) { }
+		: this (url, documentAttributes, out _, ref error) { }
 
 		public NSAttributedString (NSData data, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error)
-		: this (data, documentAttributes, out ignore, ref error) { }
+		: this (data, documentAttributes, out _, ref error) { }
 
 		public NSAttributedString (NSUrl url, ref NSError error)
-		: this (url, new NSDictionary (), out ignore, ref error) { }
+		: this (url, new NSDictionary (), out _, ref error) { }
 
 		public NSAttributedString (NSData data, ref NSError error)
-		: this (data, new NSDictionary (), out ignore, ref error) { }
+		: this (data, new NSDictionary (), out _, ref error) { }
 
 	}
 #endif
