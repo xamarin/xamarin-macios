@@ -89,8 +89,8 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			}
 
-			if (!string.IsNullOrEmpty(AccentColor)) {
-				args.Add("--accent-color", AccentColor);
+			if (!string.IsNullOrEmpty (AccentColor)) {
+				args.Add ("--accent-color", AccentColor);
 			}
 
 			if (!string.IsNullOrEmpty (XSLaunchImageAssets)) {
