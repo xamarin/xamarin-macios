@@ -22,9 +22,9 @@ namespace MetalPerformanceShaders {
 	[SupportedOSPlatform ("macos10.13.4")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (11,3)]
-	[TV (11,3)]
-	[Mac (10,13,4)]
+	[iOS (11, 3)]
+	[TV (11, 3)]
+	[Mac (10, 13, 4)]
 #endif
 	public static partial class MPSStateBatch {
 
@@ -60,9 +60,9 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (12,0)]
-		[TV (12,0)]
-		[Mac (10,14)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Mac (10, 14)]
 #endif
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
 		static extern nuint MPSStateBatchResourceSize (IntPtr batch);
@@ -74,9 +74,9 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (12,0)]
-		[TV (12,0)]
-		[Mac (10,14)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Mac (10, 14)]
 #endif
 		public static nuint GetResourceSize (NSArray<MPSState> stateBatch)
 		{
