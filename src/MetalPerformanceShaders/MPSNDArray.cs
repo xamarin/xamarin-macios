@@ -7,7 +7,7 @@ using Foundation;
 namespace MetalPerformanceShaders {
 	public partial class MPSNDArray {
 
-		public static MPSNDArray Create (IMTLDevice device, ReadOnlySpan<float> values, params int[] shape)
+		public static MPSNDArray Create (IMTLDevice device, ReadOnlySpan<float> values, params int [] shape)
 		{
 			var ushape = new nuint [shape.Length];
 			for (var i = 0; i < shape.Length; i++) {
@@ -23,10 +23,10 @@ namespace MetalPerformanceShaders {
 		{
 			ExportData (cmdBuf, buffer, sourceDataType, offset, IntPtr.Zero);
 		}
-		public unsafe void ExportData (IMTLCommandBuffer cmdBuf, IMTLBuffer buffer, MPSDataType sourceDataType, nuint offset, nint[] rowStrides)
+		public unsafe void ExportData (IMTLCommandBuffer cmdBuf, IMTLBuffer buffer, MPSDataType sourceDataType, nuint offset, nint [] rowStrides)
 		{
 			fixed (nint* p = rowStrides) {
-				ExportData (cmdBuf, buffer, sourceDataType, offset, (IntPtr)p);
+				ExportData (cmdBuf, buffer, sourceDataType, offset, (IntPtr) p);
 			}
 		}
 
@@ -34,10 +34,10 @@ namespace MetalPerformanceShaders {
 		{
 			ImportData (cmdBuf, buffer, sourceDataType, offset, IntPtr.Zero);
 		}
-		public unsafe void ImportData (IMTLCommandBuffer cmdBuf, IMTLBuffer buffer, MPSDataType sourceDataType, nuint offset, nint[] rowStrides)
+		public unsafe void ImportData (IMTLCommandBuffer cmdBuf, IMTLBuffer buffer, MPSDataType sourceDataType, nuint offset, nint [] rowStrides)
 		{
 			fixed (nint* p = rowStrides) {
-				ImportData (cmdBuf, buffer, sourceDataType, offset, (IntPtr)p);
+				ImportData (cmdBuf, buffer, sourceDataType, offset, (IntPtr) p);
 			}
 		}
 
@@ -45,16 +45,16 @@ namespace MetalPerformanceShaders {
 		{
 			WriteBytes (buffer, IntPtr.Zero);
 		}
-		public unsafe void WriteBytes (IntPtr buffer, nint[] strideBytesPerDimension)
+		public unsafe void WriteBytes (IntPtr buffer, nint [] strideBytesPerDimension)
 		{
 			fixed (nint* p = strideBytesPerDimension) {
-				WriteBytes (buffer, (IntPtr)p);
+				WriteBytes (buffer, (IntPtr) p);
 			}
 		}
 		public unsafe void Write (ReadOnlySpan<float> values)
 		{
 			if (DataType != MPSDataType.Float32)
-				throw new InvalidOperationException($"Attempted to write array data of type {DataType} to span of Float32s.");
+				throw new InvalidOperationException ($"Attempted to write array data of type {DataType} to span of Float32s.");
 			nuint length = 1;
 			var ndims = NumberOfDimensions;
 			for (nuint i = 0; i < ndims; i++) {
@@ -71,10 +71,10 @@ namespace MetalPerformanceShaders {
 		{
 			ReadBytes (buffer, IntPtr.Zero);
 		}
-		public unsafe void ReadBytes (IntPtr buffer, nint[] strideBytesPerDimension)
+		public unsafe void ReadBytes (IntPtr buffer, nint [] strideBytesPerDimension)
 		{
 			fixed (nint* p = strideBytesPerDimension) {
-				ReadBytes (buffer, (IntPtr)p);
+				ReadBytes (buffer, (IntPtr) p);
 			}
 		}
 		public unsafe void Read (Span<float> values)
