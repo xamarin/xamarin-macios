@@ -198,16 +198,16 @@ namespace Xamarin.MacDev.Tasks {
 			Assert.AreEqual (output, task.CustomBundleName, output);
 		}
 
-		[TestCase ("--gcc_flags -dead_strip", new string[] { "-dead_strip" })]
-		[TestCase ("--gcc_flags=-dead_strip", new string[] { "-dead_strip" })]
-		[TestCase ("-gcc_flags -dead_strip", new string[] { "-dead_strip" })]
-		[TestCase ("-gcc_flags=-dead_strip", new string[] { "-dead_strip" })]
-		[TestCase ("--link_flags -dead_strip", new string[] { "-dead_strip" })]
-		[TestCase ("--link_flags=-dead_strip", new string[] { "-dead_strip" })]
-		[TestCase ("-link_flags -dead_strip", new string[] { "-dead_strip" })]
-		[TestCase ("-link_flags=-dead_strip", new string[] { "-dead_strip" })]
-		[TestCase ("--gcc_flags \"-dead_strip -v\"", new string[] { "-dead_strip", "-v" })]
-		public void CustomLinkFlags (string input, string[] output)
+		[TestCase ("--gcc_flags -dead_strip", new string [] { "-dead_strip" })]
+		[TestCase ("--gcc_flags=-dead_strip", new string [] { "-dead_strip" })]
+		[TestCase ("-gcc_flags -dead_strip", new string [] { "-dead_strip" })]
+		[TestCase ("-gcc_flags=-dead_strip", new string [] { "-dead_strip" })]
+		[TestCase ("--link_flags -dead_strip", new string [] { "-dead_strip" })]
+		[TestCase ("--link_flags=-dead_strip", new string [] { "-dead_strip" })]
+		[TestCase ("-link_flags -dead_strip", new string [] { "-dead_strip" })]
+		[TestCase ("-link_flags=-dead_strip", new string [] { "-dead_strip" })]
+		[TestCase ("--gcc_flags \"-dead_strip -v\"", new string [] { "-dead_strip", "-v" })]
+		public void CustomLinkFlags (string input, string [] output)
 		{
 			var task = CreateTask<CustomParseBundlerArguments> ();
 			task.ExtraArgs = input;
