@@ -14913,6 +14913,9 @@ namespace Foundation
 		[Export ("currentDirectoryPath")]
 		string CurrentDirectoryPath { get; set; }
 
+		[Export ("currentDirectoryURL")]
+		NSURL CurrentDirectoryURL { get; set; }
+
 		[NullAllowed]
 		[Export ("standardInput", ArgumentSemantic.Retain)]
 		NSObject StandardInput { get; set; }
