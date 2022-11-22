@@ -14902,7 +14902,7 @@ namespace Foundation
 
 		[NullAllowed]
 		[Export ("executableURL")]
-		string ExecutableUrl { get; set; }
+		NSUrl ExecutableUrl { get; set; }
 
 		[NullAllowed]
 		[Export ("arguments")]
