@@ -12,7 +12,7 @@ namespace Xamarin.Tests {
 			return @this switch {
 				TemplateLanguage.CSharp => "csharp",
 				TemplateLanguage.FSharp => "fsharp",
-				var language => throw new NotImplementedException($"'{language} is not implemented.'")
+				var language => throw new NotImplementedException ($"'{language} is not implemented.'")
 			};
 		}
 
@@ -21,7 +21,7 @@ namespace Xamarin.Tests {
 			return @this switch {
 				TemplateLanguage.CSharp => "csproj",
 				TemplateLanguage.FSharp => "fsproj",
-				_ => throw new NotImplementedException($"'{@this} is not implemented.'")
+				_ => throw new NotImplementedException ($"'{@this} is not implemented.'")
 			};
 		}
 
@@ -30,11 +30,11 @@ namespace Xamarin.Tests {
 			return @this switch {
 				TemplateLanguage.CSharp => "C#",
 				TemplateLanguage.FSharp => "F#",
-				_ => throw new NotImplementedException($"'{@this} is not implemented.'")
+				_ => throw new NotImplementedException ($"'{@this} is not implemented.'")
 			};
 		}
 	}
-	
+
 	[TestFixture]
 	public class TemplateTest : TestBaseClass {
 		public struct TemplateInfo {
@@ -57,7 +57,7 @@ namespace Xamarin.Tests {
 			{
 				var languageDir = language?.AsString () ?? "";
 				var jsonPath = Path.Combine (Configuration.SourceRoot, "dotnet", "Templates", $"Microsoft.{platform.AsString ()}.Templates", template, languageDir, ".template.config", "template.json");
-				
+
 				var options = new JsonSerializerOptions {
 					PropertyNameCaseInsensitive = true,
 					IncludeFields = true,
@@ -150,20 +150,20 @@ namespace Xamarin.Tests {
 		{
 			var allListedTemplates = Templates.Select (v => v.TemplateWithLanguage).ToArray ();
 			var allTemplates = new List<string> ();
-			
+
 			foreach (var platform in Enum.GetValues<ApplePlatform> ()) {
 				var dir = Path.Combine (Configuration.SourceRoot, "dotnet", "Templates", $"Microsoft.{platform.AsString ()}.Templates");
 				if (!Directory.Exists (dir))
 					continue;
 
 				var templateDirectories = Directory.GetDirectories (dir);
-				
+
 				// read the template's configuration to figure out if it's a project template, and if not, skip it
 				foreach (var template in templateDirectories) {
 					var templateDir = Path.Combine (dir, template);
 					var hasFoundLangTemplate = false;
-					
-					foreach (var language in Enum.GetValues<TemplateLanguage>()) {
+
+					foreach (var language in Enum.GetValues<TemplateLanguage> ()) {
 						var langDir = Path.Combine (templateDir, language.AsString ());
 						if (!Directory.Exists (langDir))
 							continue;
@@ -173,7 +173,7 @@ namespace Xamarin.Tests {
 						if (!File.Exists (jsonPath))
 							continue;
 
-						allTemplates.Add ($"{Path.GetFileName(template)}-{language.AsString ()}");
+						allTemplates.Add ($"{Path.GetFileName (template)}-{language.AsString ()}");
 						hasFoundLangTemplate = true;
 					}
 
@@ -183,7 +183,7 @@ namespace Xamarin.Tests {
 						if (!File.Exists (rootJsonPath))
 							continue;
 
-						allTemplates.Add (Path.GetFileName(template));
+						allTemplates.Add (Path.GetFileName (template));
 					}
 				}
 			}
@@ -246,7 +246,7 @@ namespace Xamarin.Tests {
 			// We create a new project from the basic project template, and then we add all the
 			// item templates for the given platforms. This is faster than testing the item templates
 			// one-by-one.
-			
+
 			const TemplateLanguage csharp = TemplateLanguage.CSharp;
 
 			var info = Templates.Single (v => string.Equals (v.Template, platform.AsString (), StringComparison.OrdinalIgnoreCase) && v.Language is null or csharp);
@@ -305,7 +305,7 @@ Environment.Exit (0);
 			// We create a new project from the basic project template, and then we add all the
 			// item templates for the given platforms. This is faster than testing the item templates
 			// one-by-one.
-			
+
 			const TemplateLanguage fsharp = TemplateLanguage.FSharp;
 
 			var info = Templates.Single (v => string.Equals (v.Template, platform.AsString (), StringComparison.OrdinalIgnoreCase) && v.Language == fsharp);

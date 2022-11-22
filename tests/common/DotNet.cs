@@ -90,7 +90,7 @@ namespace Xamarin.Tests {
 				args.Add ("--name");
 				args.Add (name);
 			}
-			
+
 			if (!string.IsNullOrEmpty (language)) {
 				args.Add ("--language");
 				args.Add (language);
