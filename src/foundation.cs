@@ -14866,7 +14866,7 @@ namespace Foundation
 		[Export ("launch")]
 		void Launch ();
 
-		[Export ("launchAndReturnError")]
+		[Export ("launchAndReturnError:")]
 		bool LaunchAndReturnError ([NullAllowed] out NSError error);
 
 		[Export ("interrupt")]
@@ -14888,6 +14888,10 @@ namespace Foundation
 		[Deprecated (PlatformName.MacOSX, 10,15)]
 		[Export ("launchedTaskWithLaunchPath:arguments:")]
 		NSTask LaunchFromPath (string path, string[] arguments);
+
+		[Static]
+		[Export ("launchedTaskWithExecutableURL:arguments:error:terminationHandler:")]
+		NSTask LaunchFromUrl (NSUrl url, string[] arguments, [NullAllowed] out NSError error, Action<NSTask> terminationHandler);
 
 		//Detected properties
 		[NullAllowed]
@@ -14914,7 +14918,7 @@ namespace Foundation
 		string CurrentDirectoryPath { get; set; }
 
 		[Export ("currentDirectoryURL")]
-		NSURL CurrentDirectoryURL { get; set; }
+		NSUrl CurrentDirectoryUrl { get; set; }
 
 		[NullAllowed]
 		[Export ("standardInput", ArgumentSemantic.Retain)]
