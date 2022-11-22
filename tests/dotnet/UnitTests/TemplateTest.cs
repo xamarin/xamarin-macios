@@ -1,50 +1,63 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Xamarin.Tests {
-	[TestFixture]
-	public class TemplateTest : TestBaseClass {
-		public enum TemplateLanguage {
-			Undefined,
-			CSharp,
-			FSharp
+	public enum TemplateLanguage {
+		CSharp,
+		FSharp
+	}
+
+	public static class TemplateLanguageExtensions {
+		public static string AsString (this TemplateLanguage @this)
+		{
+			return @this switch {
+				TemplateLanguage.CSharp => "csharp",
+				TemplateLanguage.FSharp => "fsharp",
+				var language => throw new NotImplementedException($"'{language} is not implemented.'")
+			};
 		}
 
+		public static string AsFileExtension (this TemplateLanguage @this)
+		{
+			return @this switch {
+				TemplateLanguage.CSharp => "csproj",
+				TemplateLanguage.FSharp => "fsproj",
+				_ => throw new NotImplementedException($"'{@this} is not implemented.'")
+			};
+		}
+
+		public static string AsLanguageIdentifier (this TemplateLanguage @this)
+		{
+			return @this switch {
+				TemplateLanguage.CSharp => "C#",
+				TemplateLanguage.FSharp => "F#",
+				_ => throw new NotImplementedException($"'{@this} is not implemented.'")
+			};
+		}
+	}
+	
+	[TestFixture]
+	public class TemplateTest : TestBaseClass {
 		public struct TemplateInfo {
 			public readonly ApplePlatform Platform;
-			public readonly TemplateLanguage Language;
+			public readonly TemplateLanguage? Language;
 			public readonly string Template;
 			public readonly bool Execute;
 			public readonly TemplateType TemplateType;
 
-			public TemplateInfo (ApplePlatform platform, TemplateLanguage language, string template, bool execute = false)
+			public TemplateInfo (ApplePlatform platform, string template, TemplateLanguage? language = null, bool execute = false)
 			{
 				Platform = platform;
 				Language = language;
 				Template = template;
 				Execute = execute;
-				TemplateType = ParseConfig (Platform, language, template);
+				TemplateType = ParseConfig (platform, language, template);
 			}
 
-			static TemplateType ParseConfig (ApplePlatform platform, TemplateLanguage language, string template)
+			static TemplateType ParseConfig (ApplePlatform platform, TemplateLanguage? language, string template)
 			{
-				// read the template's configuration to figure out if it's a project template, and if not, skip it
-				var dir = Path.Combine (Configuration.SourceRoot, "dotnet", "Templates", $"Microsoft.{platform.AsString ()}.Templates");
-				var rootPath = Path.Combine (dir, template);
-
-				switch (language) {
-				case TemplateLanguage.Undefined:
-					break;
-				case TemplateLanguage.CSharp:
-					rootPath = Path.Combine (rootPath, "csharp");
-					break;
-				case TemplateLanguage.FSharp:
-					rootPath = Path.Combine (rootPath, "fsharp");
-					break;
-				}
-
-				var jsonPath = Path.Combine (rootPath, ".template.config", "template.json");
-
+				var languageDir = language?.AsString () ?? "";
+				var jsonPath = Path.Combine (Configuration.SourceRoot, "dotnet", "Templates", $"Microsoft.{platform.AsString ()}.Templates", template, languageDir, ".template.config", "template.json");
+				
 				var options = new JsonSerializerOptions {
 					PropertyNameCaseInsensitive = true,
 					IncludeFields = true,
@@ -63,6 +76,10 @@ namespace Xamarin.Tests {
 			{
 				return Template;
 			}
+
+			public string TemplateWithLanguage {
+				get => Language.HasValue ? $"{Template}-{Language.Value.AsString ()}" : Template;
+			}
 		}
 
 		public enum TemplateType {
@@ -72,44 +89,44 @@ namespace Xamarin.Tests {
 
 		public static TemplateInfo [] Templates = {
 			/* project templates */
-			new TemplateInfo (ApplePlatform.iOS, TemplateLanguage.CSharp, "ios"),
-			new TemplateInfo (ApplePlatform.iOS, TemplateLanguage.FSharp, "ios"),
-			new TemplateInfo (ApplePlatform.iOS, TemplateLanguage.Undefined, "ios-tabbed"),
-			new TemplateInfo (ApplePlatform.iOS, TemplateLanguage.Undefined, "ioslib"),
-			new TemplateInfo (ApplePlatform.iOS, TemplateLanguage.Undefined, "iosbinding"),
+			new TemplateInfo (ApplePlatform.iOS, "ios", TemplateLanguage.CSharp),
+			new TemplateInfo (ApplePlatform.iOS, "ios", TemplateLanguage.FSharp),
+			new TemplateInfo (ApplePlatform.iOS, "ios-tabbed"),
+			new TemplateInfo (ApplePlatform.iOS, "ioslib"),
+			new TemplateInfo (ApplePlatform.iOS, "iosbinding"),
 
-			new TemplateInfo (ApplePlatform.TVOS, TemplateLanguage.Undefined, "tvos"),
-			new TemplateInfo (ApplePlatform.TVOS, TemplateLanguage.Undefined, "tvoslib"),
-			new TemplateInfo (ApplePlatform.TVOS, TemplateLanguage.Undefined, "tvosbinding"),
+			new TemplateInfo (ApplePlatform.TVOS, "tvos"),
+			new TemplateInfo (ApplePlatform.TVOS, "tvoslib"),
+			new TemplateInfo (ApplePlatform.TVOS, "tvosbinding"),
 
-			new TemplateInfo (ApplePlatform.MacCatalyst, TemplateLanguage.Undefined, "maccatalyst", execute: true),
-			new TemplateInfo (ApplePlatform.MacCatalyst, TemplateLanguage.Undefined, "maccatalystlib"),
-			new TemplateInfo (ApplePlatform.MacCatalyst, TemplateLanguage.Undefined, "maccatalystbinding"),
+			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalyst", execute: true),
+			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalystlib"),
+			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalystbinding"),
 
-			new TemplateInfo (ApplePlatform.MacOSX, TemplateLanguage.Undefined, "macos", execute: true),
-			new TemplateInfo (ApplePlatform.MacOSX, TemplateLanguage.Undefined, "macoslib"),
-			new TemplateInfo (ApplePlatform.MacOSX, TemplateLanguage.Undefined, "macosbinding"),
+			new TemplateInfo (ApplePlatform.MacOSX, "macos", execute: true),
+			new TemplateInfo (ApplePlatform.MacOSX, "macoslib"),
+			new TemplateInfo (ApplePlatform.MacOSX, "macosbinding"),
 
 			/* item templates */
-			new TemplateInfo (ApplePlatform.iOS, TemplateLanguage.Undefined, "ios-controller"),
-			new TemplateInfo (ApplePlatform.iOS, TemplateLanguage.Undefined, "ios-storyboard"),
-			new TemplateInfo (ApplePlatform.iOS, TemplateLanguage.Undefined, "ios-view"),
-			new TemplateInfo (ApplePlatform.iOS, TemplateLanguage.Undefined, "ios-viewcontroller"),
+			new TemplateInfo (ApplePlatform.iOS, "ios-controller"),
+			new TemplateInfo (ApplePlatform.iOS, "ios-storyboard"),
+			new TemplateInfo (ApplePlatform.iOS, "ios-view"),
+			new TemplateInfo (ApplePlatform.iOS, "ios-viewcontroller"),
 
-			new TemplateInfo (ApplePlatform.TVOS, TemplateLanguage.Undefined, "tvos-controller"),
-			new TemplateInfo (ApplePlatform.TVOS, TemplateLanguage.Undefined, "tvos-storyboard"),
-			new TemplateInfo (ApplePlatform.TVOS, TemplateLanguage.Undefined, "tvos-view"),
-			new TemplateInfo (ApplePlatform.TVOS, TemplateLanguage.Undefined, "tvos-viewcontroller"),
+			new TemplateInfo (ApplePlatform.TVOS, "tvos-controller"),
+			new TemplateInfo (ApplePlatform.TVOS, "tvos-storyboard"),
+			new TemplateInfo (ApplePlatform.TVOS, "tvos-view"),
+			new TemplateInfo (ApplePlatform.TVOS, "tvos-viewcontroller"),
 
-			new TemplateInfo (ApplePlatform.MacCatalyst, TemplateLanguage.Undefined, "maccatalyst-controller"),
-			new TemplateInfo (ApplePlatform.MacCatalyst, TemplateLanguage.Undefined, "maccatalyst-storyboard"),
-			new TemplateInfo (ApplePlatform.MacCatalyst, TemplateLanguage.Undefined, "maccatalyst-view"),
-			new TemplateInfo (ApplePlatform.MacCatalyst, TemplateLanguage.Undefined, "maccatalyst-viewcontroller"),
+			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalyst-controller"),
+			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalyst-storyboard"),
+			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalyst-view"),
+			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalyst-viewcontroller"),
 
-			new TemplateInfo (ApplePlatform.MacOSX, TemplateLanguage.Undefined, "macos-controller"),
-			new TemplateInfo (ApplePlatform.MacOSX, TemplateLanguage.Undefined, "macos-storyboard"),
-			new TemplateInfo (ApplePlatform.MacOSX, TemplateLanguage.Undefined, "macos-view"),
-			new TemplateInfo (ApplePlatform.MacOSX, TemplateLanguage.Undefined, "macos-viewcontroller"),
+			new TemplateInfo (ApplePlatform.MacOSX, "macos-controller"),
+			new TemplateInfo (ApplePlatform.MacOSX, "macos-storyboard"),
+			new TemplateInfo (ApplePlatform.MacOSX, "macos-view"),
+			new TemplateInfo (ApplePlatform.MacOSX, "macos-viewcontroller"),
 		};
 
 		public static TemplateInfo [] GetProjectTemplates ()
@@ -131,27 +148,43 @@ namespace Xamarin.Tests {
 		[Test]
 		public void AreAllTemplatesListed ()
 		{
-			var allListedTemplates = Templates.Select (v => v.Template).ToArray ();
+			var allListedTemplates = Templates.Select (v => v.TemplateWithLanguage).ToArray ();
 			var allTemplates = new List<string> ();
+			
 			foreach (var platform in Enum.GetValues<ApplePlatform> ()) {
 				var dir = Path.Combine (Configuration.SourceRoot, "dotnet", "Templates", $"Microsoft.{platform.AsString ()}.Templates");
 				if (!Directory.Exists (dir))
 					continue;
 
 				var templateDirectories = Directory.GetDirectories (dir);
-				var options = new JsonSerializerOptions {
-					PropertyNameCaseInsensitive = true,
-					IncludeFields = true,
-				};
-
+				
 				// read the template's configuration to figure out if it's a project template, and if not, skip it
-				foreach (var templateDir in templateDirectories) {
-					var jsonPath = Path.Combine (templateDir, ".template.config", "template.json");
-					Assert.That (jsonPath, Does.Exist, "Config file must exist");
-					if (!File.Exists (jsonPath))
-						continue;
+				foreach (var template in templateDirectories) {
+					var templateDir = Path.Combine (dir, template);
+					var hasFoundLangTemplate = false;
+					
+					foreach (var language in Enum.GetValues<TemplateLanguage>()) {
+						var langDir = Path.Combine (templateDir, language.AsString ());
+						if (!Directory.Exists (langDir))
+							continue;
 
-					allTemplates.Add (Path.GetFileName (templateDir));
+						var jsonPath = Path.Combine (langDir, ".template.config", "template.json");
+						Assert.That (jsonPath, Does.Exist, "Config file must exist");
+						if (!File.Exists (jsonPath))
+							continue;
+
+						allTemplates.Add ($"{Path.GetFileName(template)}-{language.AsString ()}");
+						hasFoundLangTemplate = true;
+					}
+
+					if (!hasFoundLangTemplate) {
+						var rootJsonPath = Path.Combine (templateDir, ".template.config", "template.json");
+						Assert.That (rootJsonPath, Does.Exist, "Config file must exist");
+						if (!File.Exists (rootJsonPath))
+							continue;
+
+						allTemplates.Add (Path.GetFileName(template));
+					}
 				}
 			}
 			Assert.That (allListedTemplates, Is.EquivalentTo (allTemplates), "The listed templates here and the templates on disk don't match");
@@ -213,19 +246,21 @@ namespace Xamarin.Tests {
 			// We create a new project from the basic project template, and then we add all the
 			// item templates for the given platforms. This is faster than testing the item templates
 			// one-by-one.
+			
+			const TemplateLanguage csharp = TemplateLanguage.CSharp;
 
-			var info = Templates.Single (v => string.Equals (v.Template, platform.AsString (), StringComparison.OrdinalIgnoreCase));
-			var itemTemplates = Templates.Where (v => v.TemplateType == TemplateType.Item && v.Platform == platform);
+			var info = Templates.Single (v => string.Equals (v.Template, platform.AsString (), StringComparison.OrdinalIgnoreCase) && v.Language is null or csharp);
+			var itemTemplates = Templates.Where (v => v.TemplateType == TemplateType.Item && v.Platform == platform && v.Language is null or csharp);
 
 			var tmpDir = Cache.CreateTemporaryDirectory ();
 			var outputDir = Path.Combine (tmpDir, info.Template);
-			DotNet.AssertNew (outputDir, info.Template);
+			DotNet.AssertNew (outputDir, info.Template, language: csharp.AsLanguageIdentifier ());
 
 			foreach (var item in itemTemplates)
-				DotNet.AssertNew (outputDir, item.Template, "item_" + item.Template);
+				DotNet.AssertNew (outputDir, item.Template, "item_" + item.Template, language: csharp.AsLanguageIdentifier ());
 
-			var csproj = Path.Combine (outputDir, info.Template + ".csproj");
-			var rv = DotNet.AssertBuild (csproj);
+			var proj = Path.Combine (outputDir, $"{info.Template}.{csharp.AsFileExtension ()}");
+			var rv = DotNet.AssertBuild (proj);
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
 			Assert.That (warnings, Is.Empty, $"Build warnings:\n\t{string.Join ("\n\t", warnings)}");
 
@@ -238,22 +273,83 @@ namespace Xamarin.Tests {
 				var mainFile = Path.Combine (outputDir, "Main.cs");
 				var mainContents = File.ReadAllText (mainFile);
 				var exitSampleWithSuccess = @"NSTimer.CreateScheduledTimer (1, (v) => {
-	Console.WriteLine (Environment.GetEnvironmentVariable (""MAGIC_WORD""));
-	Environment.Exit (0);
-			});
-			";
-				var modifiedMainContents = mainContents.Replace ("// This is the main entry point of the application.", exitSampleWithSuccess);
+Console.WriteLine (Environment.GetEnvironmentVariable (""MAGIC_WORD""));
+Environment.Exit (0);
+		});
+		";
+				var modifiedMainContents =
+					mainContents.Replace ("// This is the main entry point of the application.",
+						exitSampleWithSuccess);
 				Assert.AreNotEqual (modifiedMainContents, mainContents, "Failed to modify the main content");
 				File.WriteAllText (mainFile, modifiedMainContents);
 
 				// Build the sample
-				rv = DotNet.AssertBuild (csproj);
+				rv = DotNet.AssertBuild (proj);
 
 				// There should still not be any warnings
 				warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
 				Assert.That (warnings, Is.Empty, $"Build warnings (2):\n\t{string.Join ("\n\t", warnings)}");
 
-				var appPath = GetAppPath (csproj, platform, runtimeIdentifiers);
+				var appPath = GetAppPath (proj, platform, runtimeIdentifiers);
+				var appExecutable = GetNativeExecutable (platform, appPath);
+				ExecuteWithMagicWordAndAssert (appExecutable);
+			}
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS)]
+		public void CreateAndBuildFSharpItemTemplates (ApplePlatform platform)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			// We create a new project from the basic project template, and then we add all the
+			// item templates for the given platforms. This is faster than testing the item templates
+			// one-by-one.
+			
+			const TemplateLanguage fsharp = TemplateLanguage.FSharp;
+
+			var info = Templates.Single (v => string.Equals (v.Template, platform.AsString (), StringComparison.OrdinalIgnoreCase) && v.Language == fsharp);
+			var itemTemplates = Templates.Where (v => v.TemplateType == TemplateType.Item && v.Platform == platform && v.Language == fsharp);
+
+			var tmpDir = Cache.CreateTemporaryDirectory ();
+			var outputDir = Path.Combine (tmpDir, info.Template);
+			DotNet.AssertNew (outputDir, info.Template, language: fsharp.AsLanguageIdentifier ());
+
+			foreach (var item in itemTemplates)
+				DotNet.AssertNew (outputDir, item.Template, "item_" + item.Template, language: fsharp.AsLanguageIdentifier ());
+
+			var proj = Path.Combine (outputDir, $"{info.Template}.{fsharp.AsFileExtension ()}");
+			var rv = DotNet.AssertBuild (proj);
+			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
+			Assert.That (warnings, Is.Empty, $"Build warnings:\n\t{string.Join ("\n\t", warnings)}");
+
+			if (info.Execute) {
+				var runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
+
+				Assert.IsTrue (CanExecute (info.Platform, runtimeIdentifiers), "Must be executable to execute!");
+
+				// First add some code to exit the template if it launches successfully.
+				var mainFile = Path.Combine (outputDir, "Main.fs");
+				var mainContents = File.ReadAllText (mainFile);
+
+				// Attention: The indentation is important in F#, so to avoid having to deal with that, put everything on a single line.
+				var exitSampleWithSuccess =
+					@"Foundation.NSTimer.CreateScheduledTimer(1, fun _ -> System.Console.WriteLine(System.Environment.GetEnvironmentVariable(""MAGIC_WORD"")); System.Environment.Exit(0)) |> ignore";
+
+				var modifiedMainContents =
+					mainContents.Replace ("// This is the main entry point of the application.",
+						exitSampleWithSuccess);
+				Assert.AreNotEqual (modifiedMainContents, mainContents, "Failed to modify the main content");
+				File.WriteAllText (mainFile, modifiedMainContents);
+
+				// Build the sample
+				rv = DotNet.AssertBuild (proj);
+
+				// There should still not be any warnings
+				warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
+				Assert.That (warnings, Is.Empty, $"Build warnings (2):\n\t{string.Join ("\n\t", warnings)}");
+
+				var appPath = GetAppPath (proj, platform, runtimeIdentifiers);
 				var appExecutable = GetNativeExecutable (platform, appPath);
 				ExecuteWithMagicWordAndAssert (appExecutable);
 			}
