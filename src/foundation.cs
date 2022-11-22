@@ -14897,6 +14897,10 @@ namespace Foundation
 		string LaunchPath { get; set; }
 
 		[NullAllowed]
+		[Export ("executableURL")]
+		string ExecutableUrl { get; set; }
+
+		[NullAllowed]
 		[Export ("arguments")]
 		string [] Arguments { get; set; }
 
