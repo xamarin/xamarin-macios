@@ -130,7 +130,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			RegistrarTestClass obj = new RegistrarTestClass ();
 			IntPtr receiver = obj.Handle;
 			int dummy = 314;
-			
+
 			// readonly, attribute on property
 			CallProperty (receiver, "Property1", ref obj.called_Property1Getter, "#Instance-1-r");
 			CallProperty (receiver, "setProperty1:", ref dummy, "#Instance-1-w", true);
@@ -140,7 +140,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			// writeonly, attribute on property
 			//CallProperty (receiver, "Property3", ref dummy, "#Instance-3-r", true);
 			CallProperty (receiver, "setProperty3:", ref obj.called_Property3Setter, "#Instance-3-w");
-			
+
 			// readonly, atteribute on getter
 			CallProperty (receiver, "Property4", ref obj.called_Property4Getter, "#Instance-4-r");
 			CallProperty (receiver, "setProperty4:", ref dummy, "#Instance-4-w", true);
@@ -152,13 +152,13 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			CallProperty (receiver, "setProperty6:", ref dummy, "#Instance-6-r", true);
 			CallProperty (receiver, "Property6:", ref obj.called_Property6Setter, "#Instance-6-w");
 		}
-		
+
 		[Test]
 		public void TestStaticProperties ()
 		{
 			IntPtr receiver = Class.GetHandle ("RegistrarTestClass");
 			int dummy = 314;
-			
+
 			RegistrarTestClass.called_StaticProperty1Getter = 0;
 			RegistrarTestClass.called_StaticProperty2Getter = 0;
 			RegistrarTestClass.called_StaticProperty4Getter = 0;
@@ -167,7 +167,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			RegistrarTestClass.called_StaticProperty3Setter = 0;
 			RegistrarTestClass.called_StaticProperty5Setter = 0;
 			RegistrarTestClass.called_StaticProperty6Setter = 0;
-			
+
 			// readonly, attribute on property
 			CallProperty (receiver, "StaticProperty1", ref RegistrarTestClass.called_StaticProperty1Getter, "#Static-1-r");
 			CallProperty (receiver, "setStaticProperty1:", ref dummy, "#Static-1-w", true);
@@ -177,7 +177,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			// writeonly, attribute on property
 			CallProperty (receiver, "StaticProperty3", ref dummy, "#Static-3-r", true);
 			CallProperty (receiver, "setStaticProperty3:", ref RegistrarTestClass.called_StaticProperty3Setter, "#Static-3-w");
-			
+
 			// readonly, atteribute on getter
 			CallProperty (receiver, "StaticProperty4", ref RegistrarTestClass.called_StaticProperty4Getter, "#Static-4-r");
 			CallProperty (receiver, "setStaticProperty4:", ref dummy, "#Static-4-w", true);
@@ -208,30 +208,30 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.That (expectFailure, id + "-expected-success-but-failed: " + ex.Message);
 			}
 		}
-		
+
 		[Test]
 		public void TestINativeObject ()
 		{
 			var receiver = Class.GetHandle ("RegistrarTestClass");
 			NativeHandle ptr;
 			CGPath path;
-			
+
 			if ((CurrentRegistrar & Registrars.AllStatic) == 0)
 				Assert.Ignore ("This test only passes with the static registrars.");
-			
+
 			Assert.False (Messaging.bool_objc_msgSend_IntPtr (receiver, new Selector ("INativeObject1:").Handle, NativeHandle.Zero), "#a1");
 			Assert.True (Messaging.bool_objc_msgSend_IntPtr (receiver, new Selector ("INativeObject1:").Handle, new CGPath ().Handle), "#a2");
-			
+
 			Assert.That ((NativeHandle) Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject2:").Handle, false), Is.EqualTo (NativeHandle.Zero), "#b1");
 			ptr = Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject2:").Handle, true);
 			Assert.That ((NativeHandle) ptr, Is.Not.EqualTo (NativeHandle.Zero), "#b2");
 			CGPathRelease (ptr);
-			
+
 			void_objc_msgSend_out_IntPtr_bool (receiver, new Selector ("INativeObject3:create:").Handle, out ptr, true);
 			Assert.That (ptr, Is.Not.EqualTo (NativeHandle.Zero), "#c1");
 			void_objc_msgSend_out_IntPtr_bool (receiver, new Selector ("INativeObject3:create:").Handle, out ptr, false);
 			Assert.That (ptr, Is.EqualTo (NativeHandle.Zero), "#c2");
-			
+
 			path = null;
 			ptr = NativeHandle.Zero;
 			Assert.False (bool_objc_msgSend_ref_intptr (receiver, new Selector ("INativeObject4:").Handle, ref ptr), "#d1");
@@ -240,7 +240,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			ptr = path.Handle;
 			Assert.True (bool_objc_msgSend_ref_intptr (receiver, new Selector ("INativeObject4:").Handle, ref ptr), "#d3");
 			Assert.That (ptr, Is.EqualTo (path.Handle), "#d4");
-			
+
 			ptr = Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject5:").Handle, false);
 			Assert.That (ptr, Is.EqualTo (NativeHandle.Zero), "#e1");
 			ptr = Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject5:").Handle, true);
@@ -257,10 +257,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			DerivedRegistrar1 d1 = new DerivedRegistrar1 ();
 			DerivedRegistrar2 d2 = new DerivedRegistrar2 ();
 			Selector sel = new Selector ("VirtualMethod");
-			
+
 			string a = NSString.FromHandle (Messaging.IntPtr_objc_msgSend (d1.Handle, sel.Handle)).ToString ();
 			string b = NSString.FromHandle (Messaging.IntPtr_objc_msgSend (d2.Handle, sel.Handle)).ToString ();
-			
+
 			Assert.That (a, Is.EqualTo (d1.GetType ().Name), "#a");
 			Assert.That (b, Is.EqualTo (d2.GetType ().Name), "#b");
 		}
@@ -282,9 +282,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			// bug #6170
 			int rv;
 
-			rv = Messaging.int_objc_msgSend (Class.GetHandle (typeof(StaticBaseClass)), Selector.GetHandle ("foo"));
+			rv = Messaging.int_objc_msgSend (Class.GetHandle (typeof (StaticBaseClass)), Selector.GetHandle ("foo"));
 			Assert.AreEqual (rv, 314, "#base");
-			rv = Messaging.int_objc_msgSend (Class.GetHandle (typeof(StaticDerivedClass)), Selector.GetHandle ("foo"));
+			rv = Messaging.int_objc_msgSend (Class.GetHandle (typeof (StaticDerivedClass)), Selector.GetHandle ("foo"));
 			Assert.AreEqual (rv, 314, "#derived");
 		}
 
@@ -326,16 +326,16 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 #endif // !__TVOS__ && !__WATCHOS__
 
-		class TS1 : NSObject {}
-		class TS2 : NSObject {}
-		class TS3 : NSObject {}
-		class TS4 : NSObject {}
-		class TS5 : NSObject {}
-		class TS6 : NSObject {}
-		class TS7 : NSObject {}
-		class TS8 : NSObject {}
-		class TS9 : NSObject {}
-		class TS10 : NSObject {}
+		class TS1 : NSObject { }
+		class TS2 : NSObject { }
+		class TS3 : NSObject { }
+		class TS4 : NSObject { }
+		class TS5 : NSObject { }
+		class TS6 : NSObject { }
+		class TS7 : NSObject { }
+		class TS8 : NSObject { }
+		class TS9 : NSObject { }
+		class TS10 : NSObject { }
 
 		static bool tested_thread_safety;
 
@@ -350,7 +350,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			tested_thread_safety = true;
 
 			var threads = new Thread [5];
-			var types = new Type [] { typeof(TS1), typeof(TS2), typeof(TS3), typeof(TS4), typeof(TS5), typeof (TS6), typeof (TS7), typeof (TS8), typeof (TS9), typeof (TS10) };
+			var types = new Type [] { typeof (TS1), typeof (TS2), typeof (TS3), typeof (TS4), typeof (TS5), typeof (TS6), typeof (TS7), typeof (TS8), typeof (TS9), typeof (TS10) };
 			var exceptions = new List<Exception> ();
 			var wait = new ManualResetEvent (false);
 			var start_counter = new CountdownEvent (threads.Length);
@@ -361,10 +361,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					try {
 						start_counter.Signal (); // signal "I'm ready"
 						wait.WaitOne (); // wait for go-ahead
-						// Do the actual test.
-						// We fetch the class handle for the types in question in several threads at once.
-						// This will cause the registrar to try to register the type, but that should only
-						// be done once.
+										 // Do the actual test.
+										 // We fetch the class handle for the types in question in several threads at once.
+										 // This will cause the registrar to try to register the type, but that should only
+										 // be done once.
 						foreach (var t in types)
 							Class.GetHandle (t);
 					} catch (Exception ex) {
@@ -412,7 +412,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					ptr = Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("testRetainArray"));
 				using (var rv = Runtime.GetNSObject (ptr)) {
 					Assert.AreEqual ((nuint) 2, rv.RetainCount, "array");
-					Assert.AreSame (typeof(NSArray), rv.GetType (), "array type");
+					Assert.AreSame (typeof (NSArray), rv.GetType (), "array type");
 					rv.DangerousRelease ();
 				}
 
@@ -420,7 +420,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					ptr = Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("testReturnINativeObject"));
 				using (var rv = Runtime.GetNSObject (ptr)) {
 					Assert.AreEqual ((nuint) 2, rv.RetainCount, "inativeobject");
-					Assert.AreSame (typeof(NSObject), rv.GetType (), "inativeobject type");
+					Assert.AreSame (typeof (NSObject), rv.GetType (), "inativeobject type");
 					rv.DangerousRelease ();
 				}
 
@@ -428,7 +428,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					ptr = Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("testRetainNSObject"));
 				using (var rv = Runtime.GetNSObject (ptr)) {
 					Assert.AreEqual ((nuint) 2, rv.RetainCount, "nsobject");
-					Assert.AreSame (typeof(NSObject), rv.GetType (), "nsobject type");
+					Assert.AreSame (typeof (NSObject), rv.GetType (), "nsobject type");
 					rv.DangerousRelease ();
 				}
 
@@ -446,7 +446,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					ptr = Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("testOverriddenRetainNSObject"));
 				using (var rv = Runtime.GetNSObject (ptr)) {
 					Assert.AreEqual ((nuint) 2, rv.RetainCount, "overridden nsobject");
-					Assert.AreSame (typeof(NSObject), rv.GetType (), "overridden nsobject type");
+					Assert.AreSame (typeof (NSObject), rv.GetType (), "overridden nsobject type");
 					rv.DangerousRelease ();
 				}
 
@@ -464,7 +464,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void TestObjCProperties ()
 		{
-			var class_handle = Class.GetHandle (typeof(Props));
+			var class_handle = Class.GetHandle (typeof (Props));
 			Assert.AreNotEqual (IntPtr.Zero, class_getProperty (class_handle, "myProp"));
 		}
 
@@ -543,8 +543,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				var foo = new Open<NSSet, string> ();
 
 				var view = new NSSet ();
-				var expectedU = typeof(NSSet);
-				var expectedV = typeof(string);
+				var expectedU = typeof (NSSet);
+				var expectedV = typeof (string);
 				Messaging.void_objc_msgSend_IntPtr (foo.Handle, Selector.GetHandle ("bar:"), IntPtr.Zero);
 				Assert.IsNull (foo.LastArg);
 				Assert.AreEqual (expectedU, foo.UType);
@@ -560,7 +560,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.AreEqual (expectedU, foo.UType);
 				Assert.AreEqual (expectedV, foo.VType);
 				Messaging.void_objc_msgSend_IntPtr (foo.Handle, Selector.GetHandle ("zap:"), arr.Handle);
-				Assert.AreSame (view, ((object[])foo.LastArg) [0]);
+				Assert.AreSame (view, ((object []) foo.LastArg) [0]);
 				Assert.AreEqual (expectedU, foo.UType);
 				Assert.AreEqual (expectedV, foo.VType);
 
@@ -593,8 +593,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				var foo = new Open<NSObject, int> ();
 
 				var view = new NSObject ();
-				var expectedU = typeof(NSObject);
-				var expectedV = typeof(int);
+				var expectedU = typeof (NSObject);
+				var expectedV = typeof (int);
 				Messaging.void_objc_msgSend_IntPtr (foo.Handle, Selector.GetHandle ("bar:"), IntPtr.Zero);
 				Assert.IsNull (foo.LastArg);
 				Assert.AreEqual (expectedU, foo.UType);
@@ -610,7 +610,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.AreEqual (expectedU, foo.UType);
 				Assert.AreEqual (expectedV, foo.VType);
 				Messaging.void_objc_msgSend_IntPtr (foo.Handle, Selector.GetHandle ("zap:"), arr.Handle);
-				Assert.AreSame (view, ((object[])foo.LastArg) [0]);
+				Assert.AreSame (view, ((object []) foo.LastArg) [0]);
 				Assert.AreEqual (expectedU, foo.UType);
 				Assert.AreEqual (expectedV, foo.VType);
 
@@ -647,10 +647,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			using (var iview = new NullableIntView (new CGRect (0, 0, 100, 100))) {
 				using (var strview = new StringView (new CGRect (0, 0, 100, 100))) {
 					Messaging.void_objc_msgSend_CGRect (iview.Handle, Selector.GetHandle ("drawRect:"), CGRect.Empty);
-					Assert.AreEqual (typeof(int?), iview.TypeT, "int?");
+					Assert.AreEqual (typeof (int?), iview.TypeT, "int?");
 					Assert.AreEqual ("NullableIntView", iview.TypeName, "int? typename");
 					Messaging.void_objc_msgSend_CGRect (strview.Handle, Selector.GetHandle ("drawRect:"), CGRect.Empty);
-					Assert.AreEqual (typeof(string), strview.TypeT, "string");
+					Assert.AreEqual (typeof (string), strview.TypeT, "string");
 					Assert.AreEqual ("StringView", strview.TypeName, "string typename");
 				}
 			}
@@ -746,32 +746,31 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		const string LIBOBJC_DYLIB = "/usr/lib/libobjc.dylib";
-		
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		extern static void void_objc_msgSend_out_IntPtr (IntPtr receiver, IntPtr selector, out NativeHandle value);
 
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		extern static void void_objc_msgSend_ref_IntPtr (IntPtr receiver, IntPtr selector, ref NativeHandle value);
 
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		extern static void void_objc_msgSend_out_IntPtr_bool (IntPtr receiver, IntPtr selector, out NativeHandle path, bool create);
-		
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		extern static bool bool_objc_msgSend_ref_intptr (IntPtr receiver, IntPtr selector, ref NativeHandle path);
 
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		extern static void void_objc_msgSend_SizeF_IntPtr_out_IntPtr (IntPtr receiver, IntPtr selector, SizeF size, IntPtr input, out NativeHandle value);
 
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		extern static void void_objc_msgSend_ref_BlockLiteral (IntPtr receiver, IntPtr selector, ref BlockLiteral block);
 
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		extern static void void_objc_msgSend_CGPoint_ref_CGPoint (IntPtr receiver, IntPtr selector, PointF p1, ref PointF p2);
 
-#region Exported type
+		#region Exported type
 		[Register ("RegistrarTestClass")]
-		class RegistrarTestClass : NSObject
-		{
+		class RegistrarTestClass : NSObject {
 			public virtual bool B1 {
 				[Export ("b1")]
 				get {
@@ -788,7 +787,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					return true;
 				}
 			}
-			
+
 			public static int called_StaticProperty2Getter;
 			public static int called_StaticProperty2Setter;
 			[Export ("StaticProperty2")]
@@ -801,7 +800,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					called_StaticProperty2Setter++;
 				}
 			}
-			
+
 			public static int called_StaticProperty3Setter;
 			[Export ("StaticProperty3")]
 			static bool StaticProperty3 {
@@ -809,7 +808,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					called_StaticProperty3Setter++;
 				}
 			}
-			
+
 			public static int called_StaticProperty4Getter;
 			static bool StaticProperty4 {
 				[Export ("StaticProperty4")]
@@ -818,7 +817,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					return true;
 				}
 			}
-			
+
 			public static int called_StaticProperty5Getter;
 			public static int called_StaticProperty5Setter;
 			static bool StaticProperty5 {
@@ -832,7 +831,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					called_StaticProperty5Setter++;
 				}
 			}
-			
+
 			public static int called_StaticProperty6Setter;
 			static bool StaticProperty6 {
 				[Export ("StaticProperty6:")]
@@ -840,7 +839,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					called_StaticProperty6Setter++;
 				}
 			}
-			
+
 			// instance properties
 			public int called_Property1Getter;
 			[Export ("Property1")]
@@ -850,7 +849,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					return true;
 				}
 			}
-			
+
 			public int called_Property2Getter;
 			public int called_Property2Setter;
 			[Export ("Property2")]
@@ -863,7 +862,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					called_Property2Setter++;
 				}
 			}
-			
+
 			public int called_Property3Setter;
 			[Export ("Property3")]
 			bool Property3 {
@@ -871,7 +870,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					called_Property3Setter++;
 				}
 			}
-			
+
 			public int called_Property4Getter;
 			bool Property4 {
 				[Export ("Property4")]
@@ -880,7 +879,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					return true;
 				}
 			}
-			
+
 			public int called_Property5Getter;
 			public int called_Property5Setter;
 			bool Property5 {
@@ -894,7 +893,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					called_Property5Setter++;
 				}
 			}
-			
+
 			public int called_Property6Setter;
 			bool Property6 {
 				[Export ("Property6:")]
@@ -902,45 +901,45 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					called_Property6Setter++;
 				}
 			}
-			
+
 			[Export ("INativeObject1:")]
 			static bool INativeObject1 (CGPath img /*CGPath is a INativeObject */)
 			{
 				return img != null;
 			}
-			
+
 			[Export ("INativeObject2:")]
 			[return: ReleaseAttribute] // can't return an INativeObject without retaining it (we can autorelease NSObjects, but that doesn't work for INativeObjects)
 			static CGPath INativeObject2 (bool create)
 			{
 				return create ? new CGPath () : null;
 			}
-			
+
 			[Export ("INativeObject3:create:")]
 			static void INativeObject3 (out CGPath path, bool create)
 			{
 				path = create ? new CGPath () : null;
 			}
-			
+
 			[Export ("INativeObject4:")]
 			static bool INativeObject4 (ref CGPath path)
 			{
 				return path != null;
 			}
-			
+
 			[Export ("INativeObject5:")]
 			[return: ReleaseAttribute] // can't return an INativeObject without retaining it (we can autorelease NSObjects, but that doesn't work for INativeObjects)
 			static CGPath INativeObject5 (bool create)
 			{
 				return create ? new CGPath () : null;
 			}
-			
+
 			[Export ("VirtualMethod")]
 			public virtual string VirtualMethod ()
 			{
 				return "base";
 			}
-			
+
 			[Export ("testNSAction:")]
 			public void TestNSAction (Action action)
 			{
@@ -969,9 +968,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 			[return: ReleaseAttribute ()]
 			[Export ("testRetainArray")]
-			public NSObject[] TestRetainArray ()
+			public NSObject [] TestRetainArray ()
 			{
-				return new NSObject[] { new NSObject () };
+				return new NSObject [] { new NSObject () };
 			}
 
 			[Export ("testBug23289:")]
@@ -1061,7 +1060,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 #if !__WATCHOS__ && !MONOMAC
 			[Export ("arrayOfINativeObject")]
-			public IUIKeyInput[] NativeObjects { get { return null; } }
+			public IUIKeyInput [] NativeObjects { get { return null; } }
 #endif // !__WATCHOS__
 
 			[Export ("fetchNSArrayOfNSString:")]
@@ -1097,8 +1096,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			static internal readonly DActionArity1V1 Handler = Invoke;
 
 			[MonoPInvokeCallback (typeof (DActionArity1V1))]
-			static unsafe void Invoke (IntPtr block, UIBackgroundFetchResult obj) {
-				var descriptor = (BlockLiteral *) block;
+			static unsafe void Invoke (IntPtr block, UIBackgroundFetchResult obj)
+			{
+				var descriptor = (BlockLiteral*) block;
 				var del = (global::System.Action<UIBackgroundFetchResult>) (descriptor->Target);
 				if (del != null)
 					del (obj);
@@ -1109,19 +1109,19 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			IntPtr blockPtr;
 			DActionArity1V1 invoker;
 
-			[Preserve (Conditional=true)]
-			public unsafe NIDActionArity1V1 (BlockLiteral *block)
+			[Preserve (Conditional = true)]
+			public unsafe NIDActionArity1V1 (BlockLiteral* block)
 			{
 				blockPtr = (IntPtr) block;
 				invoker = block->GetDelegateForBlock<DActionArity1V1> ();
 			}
-			[Preserve (Conditional=true)]
+			[Preserve (Conditional = true)]
 			public unsafe static global::System.Action<UIBackgroundFetchResult> Create (IntPtr block)
 			{
-				return new NIDActionArity1V1 ((BlockLiteral *) block).Invoke;
+				return new NIDActionArity1V1 ((BlockLiteral*) block).Invoke;
 			}
 
-			[Preserve (Conditional=true)]
+			[Preserve (Conditional = true)]
 			unsafe void Invoke (UIBackgroundFetchResult obj)
 			{
 				invoker (blockPtr, obj);
@@ -1131,8 +1131,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 
 		[Register ("StaticBaseClass")]
-		class StaticBaseClass : NSObject
-		{
+		class StaticBaseClass : NSObject {
 			[Export ("foo")]
 			public static int Foo ()
 			{
@@ -1141,13 +1140,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Register ("StaticDerivedClass")]
-		class StaticDerivedClass : StaticBaseClass
-		{
+		class StaticDerivedClass : StaticBaseClass {
 		}
-		
+
 		[Register ("DerivedRegistrar1")]
-		class DerivedRegistrar1 : RegistrarTestClass
-		{
+		class DerivedRegistrar1 : RegistrarTestClass {
 			public override string VirtualMethod ()
 			{
 				return "DerivedRegistrar1";
@@ -1165,10 +1162,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				}
 			}
 		}
-		
+
 		[Register ("DerivedRegistrar2")]
-		class DerivedRegistrar2 : DerivedRegistrar1
-		{
+		class DerivedRegistrar2 : DerivedRegistrar1 {
 			public override string VirtualMethod ()
 			{
 				return "DerivedRegistrar2";
@@ -1176,8 +1172,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Register ("GenericBaseClass")]
-		class GenericBaseClass : NSObject
-		{
+		class GenericBaseClass : NSObject {
 			[Export ("GetTypeFullName")]
 			public virtual string GetTypeFullName ()
 			{
@@ -1186,9 +1181,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Register ("Open_1")]
-		class Open<T> : NSObject {}
-		class Closed : Open<NSSet>
-		{
+		class Open<T> : NSObject { }
+		class Closed : Open<NSSet> {
 			[Export ("foo")]
 			public void Foo ()
 			{
@@ -1205,8 +1199,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		class Open<U, V> : NSObject where U: NSObject
-		{
+		class Open<U, V> : NSObject where U : NSObject {
 			public object LastArg;
 			public object UType;
 			public object VType;
@@ -1214,58 +1207,57 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			[Export ("bar:")]
 			public void Bar (U arg)
 			{
-				UType = typeof(U);
-				VType = typeof(V);
+				UType = typeof (U);
+				VType = typeof (V);
 				LastArg = arg;
 			}
 
 			[Export ("zap:")]
-			public void Zap (U[] arg)
+			public void Zap (U [] arg)
 			{
-				UType = typeof(U);
-				VType = typeof(V);
+				UType = typeof (U);
+				VType = typeof (V);
 				LastArg = arg;
 			}
 
 			[Export ("xyz")]
 			public U XyZ ()
 			{
-				UType = typeof(U);
-				VType = typeof(V);
+				UType = typeof (U);
+				VType = typeof (V);
 				LastArg = null;
 				return null;
 			}
 
 			[Export ("barzap")]
-			public U BarZap { 
-				get { 
-					UType = typeof(U);
-					VType = typeof(V);
+			public U BarZap {
+				get {
+					UType = typeof (U);
+					VType = typeof (V);
 					LastArg = null;
-					return null; 
-				} 
-				set { 
-					UType = typeof(U);
-					VType = typeof(V);
+					return null;
+				}
+				set {
+					UType = typeof (U);
+					VType = typeof (V);
 					LastArg = value;
 				}
 			}
 		}
 
 		// This T is also valid/usable
-		class Open1<T>  : NSObject where T : NSObject {}
-		class Open2<T>  : NSObject where T : C {}
-		class C : NSObject {}
+		class Open1<T> : NSObject where T : NSObject { }
+		class Open2<T> : NSObject where T : C { }
+		class C : NSObject { }
 
 		class ClosedGenericParameter : NSObject {
 			// TODO: create test for this once we can call delegates with a null function pointer.
 			[Export ("foo:")]
-			public void Foo (Action<string> func) {}
+			public void Foo (Action<string> func) { }
 		}
 
 		[Register ("GenericTestClass")]
-		class GenericTestClass<T> : GenericBaseClass
-		{
+		class GenericTestClass<T> : GenericBaseClass {
 			public GenericTestClass ()
 			{
 			}
@@ -1286,8 +1278,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		class DerivedGenericTestClass<T> : GenericTestClass<T> 
-		{
+		class DerivedGenericTestClass<T> : GenericTestClass<T> {
 			public override string GetTypeFullName ()
 			{
 				return base.GetTypeFullName ();
@@ -1297,11 +1288,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void TestRegisteredName ()
 		{
-			Assert.AreEqual ("MonoTouchFixtures_ObjCRuntime_RegistrarTest_ConstrainedGenericType_1", new Class (typeof(ConstrainedGenericType<>)).Name);
-			Assert.AreEqual ("MonoTouchFixtures_ObjCRuntime_RegistrarTest_ConstrainedGenericType_1", new Class (typeof(ConstrainedGenericType<NSSet>)).Name);
-			Assert.AreEqual ("MonoTouchFixtures_ObjCRuntime_RegistrarTest_NestedParent_1_Nested", new Class (typeof(NestedParent<NSObject>.Nested)).Name);
-			Assert.AreEqual ("UnderlyingEnumValues", new Class (typeof(UnderlyingEnumValues)).Name);
-			Assert.AreEqual ("MonoTouchFixtures_ObjCRuntime_RegistrarTest_Nested1_Dummy", new Class (typeof(Nested1.Dummy)).Name);
+			Assert.AreEqual ("MonoTouchFixtures_ObjCRuntime_RegistrarTest_ConstrainedGenericType_1", new Class (typeof (ConstrainedGenericType<>)).Name);
+			Assert.AreEqual ("MonoTouchFixtures_ObjCRuntime_RegistrarTest_ConstrainedGenericType_1", new Class (typeof (ConstrainedGenericType<NSSet>)).Name);
+			Assert.AreEqual ("MonoTouchFixtures_ObjCRuntime_RegistrarTest_NestedParent_1_Nested", new Class (typeof (NestedParent<NSObject>.Nested)).Name);
+			Assert.AreEqual ("UnderlyingEnumValues", new Class (typeof (UnderlyingEnumValues)).Name);
+			Assert.AreEqual ("MonoTouchFixtures_ObjCRuntime_RegistrarTest_Nested1_Dummy", new Class (typeof (Nested1.Dummy)).Name);
 			Assert.AreEqual ("MonoTouchFixtures_ObjCRuntime_RegistrarTest_C", new Class (typeof (C)).Name);
 		}
 
@@ -1332,13 +1323,13 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 #endif
 
-// The type checks have been disabled for now.
-//#if DEBUG
-//			Assert.Throws<InvalidCastException> (code, message);
-//#else
+			// The type checks have been disabled for now.
+			//#if DEBUG
+			//			Assert.Throws<InvalidCastException> (code, message);
+			//#else
 			if (execute_release_mode)
 				Assert.DoesNotThrow (code, message);
-//#endif
+			//#endif
 		}
 
 		[Test]
@@ -1363,7 +1354,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 						void_objc_msgSend_out_IntPtr (obj.Handle, Selector.GetHandle ("m2:"), out value);
 						Assert.AreEqual (NativeHandle.Zero, value);
 
-						value = (NativeHandle) new IntPtr ((unchecked ((int) 0xdeadbeef)));
+						value = (NativeHandle) new IntPtr ((unchecked((int) 0xdeadbeef)));
 						void_objc_msgSend_out_IntPtr (obj.Handle, Selector.GetHandle ("m2:"), out value);
 						Assert.AreEqual (NativeHandle.Zero, value);
 
@@ -1454,7 +1445,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.IsTrue (Messaging.bool_objc_msgSend_IntPtr (Class.GetHandle (typeof (Test24970)), Selector.GetHandle ("conformsToProtocol:"), Protocol.GetHandle ("UIApplicationDelegate")), "UIApplicationDelegate/17669");
 #endif
 			// We don't support [Adopts] (yet at least).
-//			Assert.IsTrue (Messaging.bool_objc_msgSend_IntPtr (Class.GetHandle (typeof (ConformsToProtocolTestClass)), Selector.GetHandle ("conformsToProtocol:"), Runtime.GetProtocol ("NSCoding")), "Adopts/ConformsToProtocolTestClass");
+			//			Assert.IsTrue (Messaging.bool_objc_msgSend_IntPtr (Class.GetHandle (typeof (ConformsToProtocolTestClass)), Selector.GetHandle ("conformsToProtocol:"), Runtime.GetProtocol ("NSCoding")), "Adopts/ConformsToProtocolTestClass");
 		}
 
 		[Test]
@@ -1471,18 +1462,17 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			var exp = new string [] { "@", ":", "^v", "C", "c", "s", "s", "S", "i", "I", "q", "Q", "f", "d", boolEncoding, "@", ":", "#" };
 
 			Assert.AreEqual ((nuint) exp.Length, sig.NumberOfArguments, "NumberOfArguments");
-//			for (uint i = 0; i < exp.Length; i++) {
-//				var p = Marshal.PtrToStringAuto (sig.GetArgumentType (i));
-//				Console.WriteLine ("{0}: {1}", i, p);
-//			}
+			//			for (uint i = 0; i < exp.Length; i++) {
+			//				var p = Marshal.PtrToStringAuto (sig.GetArgumentType (i));
+			//				Console.WriteLine ("{0}: {1}", i, p);
+			//			}
 			for (uint i = 0; i < exp.Length; i++) {
 				var p = Marshal.PtrToStringAuto (sig.GetArgumentType (i));
 				Assert.AreEqual (exp [i], p, "#{0}", i);
 			}
 		}
 
-		class TestTypeEncodingsClass : NSObject 
-		{
+		class TestTypeEncodingsClass : NSObject {
 			[Export ("foo::::::::::::::::")]
 			public static void Foo (IntPtr p1, byte p2, sbyte p3, char p4, short p5, ushort p6, int p7, uint p8, long p9, ulong p10, float p11, double p12, bool p13, string p14, Selector p15, Class p16)
 			{
@@ -1527,12 +1517,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		public class NativeObjectArrayType : NSObject
-		{
-			public IMKAnnotation[] Annotations;
+		public class NativeObjectArrayType : NSObject {
+			public IMKAnnotation [] Annotations;
 
 			[Export ("addAnnotations:")]
-			public void AddAnnotations (params IMKAnnotation[] annotations)
+			public void AddAnnotations (params IMKAnnotation [] annotations)
 			{
 				this.Annotations = annotations;
 			}
@@ -1540,8 +1529,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #endif // !__WATCHOS__
 #endif // !__TVOS__
 
-		class ConstrainedGenericType<T> : NSObject where T: NSObject
-		{
+		class ConstrainedGenericType<T> : NSObject where T : NSObject {
 			[Export ("m1:")]
 			public void M1 (T t) { }
 
@@ -1552,23 +1540,22 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			public void M3 (ref T t) { }
 
 			[Export ("m4:")]
-			public void M4 (T[] t) { }
+			public void M4 (T [] t) { }
 
 			[Export ("r1")]
 			public T R1 () { return null; }
 
 			[Export ("r2")]
-			public T[] R2 () { return null; }
+			public T [] R2 () { return null; }
 
 			[Export ("p1")]
 			public T P1 { get { return null; } set { } }
 
 			[Export ("p2")]
-			public T[] P2 { get { return null; } set { } }
+			public T [] P2 { get { return null; } set { } }
 		}
 
-		class Generic2<T> : NSObject where T: NSObject
-		{
+		class Generic2<T> : NSObject where T : NSObject {
 			public string Method;
 
 			[Export ("M1")]
@@ -1585,22 +1572,22 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		class NestedParent<T> where T:NSObject {
+		class NestedParent<T> where T : NSObject {
 			public class Nested : NSObject {
 				[Export ("foo:")]
-				public void Foo (T foo) {
+				public void Foo (T foo)
+				{
 				}
 			}
 		}
 
 
 #if !__WATCHOS__ && !MONOMAC
-		class CustomView<T> : UIView
-		{
+		class CustomView<T> : UIView {
 			public object TypeName;
 			public object TypeT;
 
-			public CustomView (RectangleF rect) : base (rect) {}
+			public CustomView (RectangleF rect) : base (rect) { }
 			public override void Draw (RectangleF rect)
 			{
 				TypeT = typeof (T);
@@ -1609,16 +1596,15 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		class StringView : CustomView<string> {
-			public StringView (RectangleF rect) : base (rect) {}
+			public StringView (RectangleF rect) : base (rect) { }
 		}
 
 		class NullableIntView : CustomView<int?> {
-			public NullableIntView (RectangleF rect) : base (rect) {}
+			public NullableIntView (RectangleF rect) : base (rect) { }
 		}
 #endif // !__WATCHOS__
 
-		class GenericConstrainedBase<T> : NSObject where T: NSObject
-		{
+		class GenericConstrainedBase<T> : NSObject where T : NSObject {
 			public T FooT;
 			public string FooType;
 
@@ -1630,8 +1616,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		class GenericConstrainedDerived<T> : GenericConstrainedBase<T> where T:NSObject
-		{
+		class GenericConstrainedDerived<T> : GenericConstrainedBase<T> where T : NSObject {
 			public override void Foo (T obj)
 			{
 				FooT = obj;
@@ -1690,12 +1675,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Adopts ("NSCoding")]
-		public class ConformsToProtocolTestClass<T> : NSObject where T: NSObject {
+		public class ConformsToProtocolTestClass<T> : NSObject where T : NSObject {
 		}
 
 		[Register ("UnderlyingEnumValues")]
-		internal class UnderlyingEnumValues : NSObject
-		{
+		internal class UnderlyingEnumValues : NSObject {
 			[Export ("Foo:a:b:c:d:e:f:g:h")]
 			void Foo (EnumB b, EnumSB sb, EnumS s, EnumUS us, EnumI i, EnumUI ui, EnumL l, EnumUL ul)
 			{
@@ -1736,7 +1720,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		class Nested2 {
 			class Dummy : NSObject { }
 		}
-#endregion
+		#endregion
 
 		[Protocol]
 		interface IProtocol {
@@ -1834,8 +1818,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		public class TestClass : ObjCRegistrarTest
-		{
+		public class TestClass : ObjCRegistrarTest {
 		}
 
 		[Test]
@@ -1846,8 +1829,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		public class IdAsIntPtrClass : ObjCProtocolTest
-		{
+		public class IdAsIntPtrClass : ObjCProtocolTest {
 			[Export ("idAsIntPtr:")]
 			public new void IdAsIntPtr (IntPtr id)
 			{
@@ -1901,8 +1883,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		public class OutNSErrorOnStackClass : ObjCRegistrarTest
-		{
+		public class OutNSErrorOnStackClass : ObjCRegistrarTest {
 			public override void OutNSErrorOnStack (int i1, int i2, int i3, int i4, int i5, int i6, out NSError error)
 			{
 				error = null;
@@ -1964,8 +1945,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				static internal readonly DActionArity1V42 Handler = Invoke;
 
 				[MonoPInvokeCallback (typeof (DActionArity1V42))]
-				static unsafe void Invoke (IntPtr block, nuint obj) {
-					var descriptor = (BlockLiteral *) block;
+				static unsafe void Invoke (IntPtr block, nuint obj)
+				{
+					var descriptor = (BlockLiteral*) block;
 					var del = (global::System.Action<UIBackgroundFetchResult>) (descriptor->Target);
 					if (del != null)
 						del ((UIBackgroundFetchResult) (global::System.UInt64) obj);
@@ -1976,26 +1958,26 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				IntPtr blockPtr;
 				DActionArity1V42 invoker;
 
-				[Preserve (Conditional=true)]
-				public unsafe NIDActionArity1V42 (BlockLiteral *block)
+				[Preserve (Conditional = true)]
+				public unsafe NIDActionArity1V42 (BlockLiteral* block)
 				{
 					blockPtr = _Block_copy ((IntPtr) block);
 					invoker = block->GetDelegateForBlock<DActionArity1V42> ();
 				}
 
-				[Preserve (Conditional=true)]
+				[Preserve (Conditional = true)]
 				~NIDActionArity1V42 ()
 				{
 					_Block_release (blockPtr);
 				}
 
-				[Preserve (Conditional=true)]
+				[Preserve (Conditional = true)]
 				public unsafe static Action<UIBackgroundFetchResult> Create (IntPtr block)
 				{
-					return new NIDActionArity1V42 ((BlockLiteral *) block).Invoke;
+					return new NIDActionArity1V42 ((BlockLiteral*) block).Invoke;
 				}
 
-				[Preserve (Conditional=true)]
+				[Preserve (Conditional = true)]
 				unsafe void Invoke (UIBackgroundFetchResult obj)
 				{
 					invoker (blockPtr, (nuint) (UInt64) obj);
@@ -2010,11 +1992,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		}
 #endif // !__TVOS__ && !__WATCHOS__
-		
+
 		[Protocol]
 		[Model]
 		class Test25781 : NSObject { }
-		class Test25781D : Test25781 {}
+		class Test25781D : Test25781 { }
 
 		[Test]
 		public void TestProtocolAndRegister ()
@@ -2032,10 +2014,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		[Protocol]
 		[Register ("TestProtocolRegister")]
-		class TestProtocolRegister : NSObject {}
+		class TestProtocolRegister : NSObject { }
 
 		[Register ("DerivedTestProtocolRegister")]
-		class DerivedTestProtocolRegister : TestProtocolRegister {}
+		class DerivedTestProtocolRegister : TestProtocolRegister { }
 
 		class D1 : NSObject {
 			public string ctor1;
@@ -2301,7 +2283,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 			// Run the main loop for a little while.
 			var counter = size;
-			TestRuntime.RunAsync (TimeSpan.FromSeconds (10), () => { }, () => counter-- <= 0 );
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (10), () => { }, () => counter-- <= 0);
 
 			// Verify that none of the managed instances have been collected by the GC:
 			for (var i = 0; i < size; i++) {
@@ -2316,8 +2298,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #endif
 
 #if !__WATCHOS__ && !MONOMAC
-		class Bug28757A : NSObject, IUITableViewDataSource
-		{
+		class Bug28757A : NSObject, IUITableViewDataSource {
 			public virtual nint RowsInSection (UITableView tableView, nint section)
 			{
 				return 1;
@@ -2328,8 +2309,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		class Bug28757B : Bug28757A
-		{
+		class Bug28757B : Bug28757A {
 			public override nint RowsInSection (UITableView tableView, nint section)
 			{
 				return 2;
@@ -2366,8 +2346,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #endif // !__WATCHOS
 
 #if !__WATCHOS__ && !MONOMAC
-		class Scroller : NSObject, IUIScrollViewDelegate
-		{
+		class Scroller : NSObject, IUIScrollViewDelegate {
 			[Export ("scrollViewWillEndDragging:withVelocity:targetContentOffset:")]
 			public void WillEndDragging (UIScrollView scrollView, PointF velocity, ref PointF targetContentOffset)
 			{
@@ -2398,8 +2377,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		class ABPeoplePickerNavigationControllerDelegateImpl : ABPeoplePickerNavigationControllerDelegate
-		{
+		class ABPeoplePickerNavigationControllerDelegateImpl : ABPeoplePickerNavigationControllerDelegate {
 			public NativeHandle personHandle;
 			public override void DidSelectPerson (ABPeoplePickerNavigationController peoplePicker, ABPerson selectedPerson)
 			{
@@ -2419,7 +2397,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					Year = 1923,
 				};
 				var handle = Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (Class.GetHandle (typeof (CNLabeledValue<>)), Selector.GetHandle ("labeledValueWithLabel:value:"), IntPtr.Zero, dt.Handle);
-				var array = Messaging.IntPtr_objc_msgSend_IntPtr (Class.GetHandle (typeof(NSArray)), Selector.GetHandle ("arrayWithObject:"), handle);
+				var array = Messaging.IntPtr_objc_msgSend_IntPtr (Class.GetHandle (typeof (NSArray)), Selector.GetHandle ("arrayWithObject:"), handle);
 				Messaging.void_objc_msgSend_IntPtr (contact.Handle, Selector.GetHandle ("setDates:"), array);
 
 				Assert.AreEqual ((nint) 1923, contact.Dates [0].Value.Year, "Dates");
@@ -2568,8 +2546,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		class CtorChaining2 : CtorChaining1
-		{
+		class CtorChaining2 : CtorChaining1 {
 			public CtorChaining2 ()
 			{
 			}
@@ -2598,9 +2575,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 #endif
 
-		class ProtocolArgumentClass : NSObject
-		{
-			[Export("someMethod:")]
+		class ProtocolArgumentClass : NSObject {
+			[Export ("someMethod:")]
 			IntPtr SomeMethod (Protocol protocol)
 			{
 				return protocol.Handle;
@@ -2618,8 +2594,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		class Bug41319 : NSObject
-		{
+		class Bug41319 : NSObject {
 			[Export ("initWithCoder:")]
 			public Bug41319 (NSCoder coder)
 			{
@@ -2672,8 +2647,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		class NullOutParameters : ObjCRegistrarTest
-		{
+		class NullOutParameters : ObjCRegistrarTest {
 			public override void V (out NSObject n1, out NSString n2)
 			{
 				n1 = null;
@@ -4805,7 +4779,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 				// Only managed calls can be done because we need to use an NSMutableArray, and the binding code creates NSArrays when marshalling to native code.
 				Func<string [], NSMutableArray> fromStrings = (arr) => {
-				 	var rv = new NSMutableArray ((nuint) arr.Length);
+					var rv = new NSMutableArray ((nuint) arr.Length);
 					for (int i = 0; i < arr.Length; i++)
 						rv.Add ((NSString) arr [i]);
 					return rv;
@@ -5032,7 +5006,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.IsNotNull (o7, "O7");
 			}
 		}
-		
+
 		class MethodEncodingsTests : NSObject, IObjCProtocolTest {
 			[Export ("methodEncodings:obj2:obj3:obj4:obj5:obj6:obj7:")]
 			public void GetMethodEncodings (ref NSObject obj1, ref NSObject obj2, ref NSObject obj3, ref NSObject obj4, ref NSObject obj5, ref NSObject obj6, ref NSObject obj7)
@@ -5053,9 +5027,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				obj7 = new NSObject ();
 			}
 		}
-		
-		class RefOutParametersSubclass : BI1064.RefOutParameters
-		{
+
+		class RefOutParametersSubclass : BI1064.RefOutParameters {
 			public override void TestCFBundle (int action, ref CFBundle refValue, out CFBundle outValue)
 			{
 				var managedAction = (action & 0xFF00) >> 8;
@@ -5165,7 +5138,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					break;
 				case 4: // set both parameteres to different objects
 					refValue = NSValue.FromMKCoordinate (new CLLocationCoordinate2D (3, 14));
-					outValue = NSValue.FromMKCoordinate (new CLLocationCoordinate2D (2, 71)); 
+					outValue = NSValue.FromMKCoordinate (new CLLocationCoordinate2D (2, 71));
 					break;
 				default:
 					throw new NotImplementedException ();
@@ -5357,7 +5330,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					outValue = null; // compiler-enforced
 					break;
 				case 3: // set both parameteres to the same pointer of an NSObject
-					var obj = new NSValue [] { NSValue.FromMKCoordinate (new CLLocationCoordinate2D (3, 14)), NSValue.FromMKCoordinate (new CLLocationCoordinate2D (2, 71))  };
+					var obj = new NSValue [] { NSValue.FromMKCoordinate (new CLLocationCoordinate2D (3, 14)), NSValue.FromMKCoordinate (new CLLocationCoordinate2D (2, 71)) };
 					refValue = obj;
 					outValue = obj;
 					break;
@@ -5402,7 +5375,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					throw new NotImplementedException ();
 				}
 			}
-				
+
 			public override void TestClassArray (int action, ref Class [] refValue, out Class [] outValue)
 			{
 				var managedAction = (action & 0xFF00) >> 8;
@@ -5515,8 +5488,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 #if !__WATCHOS__
 	[Category (typeof (CALayer))]
-	static class CALayerColorsHelpers
-	{
+	static class CALayerColorsHelpers {
 		[Export ("setBorderUIColor:")]
 		static void BorderUIColor (this CALayer self, UIColor borderColor)
 		{
@@ -5528,11 +5500,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class BlockSignatureTest
-	{
+	public class BlockSignatureTest {
 		[StructLayout (LayoutKind.Sequential)]
-		struct BlockDescriptor2
-		{
+		struct BlockDescriptor2 {
 			public IntPtr reserved;
 			public IntPtr size;
 			public IntPtr copy_helper;
@@ -5541,8 +5511,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[StructLayout (LayoutKind.Sequential)]
-		struct BlockLiteral2
-		{
+		struct BlockLiteral2 {
 			public IntPtr isa;
 			public /*BlockFlags*/ int flags;
 			public int reserved;
@@ -5554,8 +5523,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
 		internal delegate void DActionArity1V1 (IntPtr block, IntPtr obj);
-		static internal class SDActionArity1V1
-		{
+		static internal class SDActionArity1V1 {
 			static internal readonly DActionArity1V1 Handler = Invoke;
 
 			[MonoPInvokeCallback (typeof (DActionArity1V1))]
@@ -5568,8 +5536,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
 		[UserDelegateType (typeof (Action<NSObject>))]
 		internal delegate void DActionArity1V2 (IntPtr block, IntPtr obj);
-		static internal class SDActionArity1V2
-		{
+		static internal class SDActionArity1V2 {
 			static internal readonly DActionArity1V2 Handler = Invoke;
 
 			[MonoPInvokeCallback (typeof (DActionArity1V2))]
@@ -5585,7 +5552,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			BlockDescriptor2* descptr = (BlockDescriptor2*) blockptr->block_descriptor;
 			return Marshal.PtrToStringAuto (descptr->signature);
 		}
-	
+
 		[Test]
 		public void WithoutUserDelegateTypeAttribute ()
 		{
@@ -5620,8 +5587,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	}
 
 	[Preserve]
-	class OverloadByStaticity : NSObject
-	{
+	class OverloadByStaticity : NSObject {
 		// Two Objective-C methods can have the same selector if one is static and the other instance.
 		[Export ("method")]
 		public void InstanceMethod () { }
@@ -5633,8 +5599,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	// It should be possible to use a protocol with a member we can't use yet (because its signature uses a type not in the current SDK)
 	[Protocol]
 	[ProtocolMember (IsRequired = false, IsProperty = false, IsStatic = false, Name = "DetectPremonition", Selector = "detectPremonition:", ParameterType = new Type [] { typeof (FutureClass) }, ParameterByRef = new bool [] { false })]
-	public interface ISomeDelegate : INativeObject, IDisposable
-	{
+	public interface ISomeDelegate : INativeObject, IDisposable {
 	}
 #if NET
 	[SupportedOSPlatform ("macos100.0")]
@@ -5647,12 +5612,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	[Introduced (PlatformName.TvOS, 100, 0)]
 	[Introduced (PlatformName.WatchOS, 100, 0)]
 #endif
-	public class FutureClass : NSObject
-	{
+	public class FutureClass : NSObject {
 	}
 	[Preserve]
-	public class SomeConsumer : NSObject, ISomeDelegate
-	{
+	public class SomeConsumer : NSObject, ISomeDelegate {
 	}
 
 	public delegate void ACompletionHandler (string strArg, NSError error);

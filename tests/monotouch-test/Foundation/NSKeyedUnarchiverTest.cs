@@ -3,18 +3,16 @@ using Foundation;
 using NUnit.Framework;
 using ObjCRuntime;
 
-namespace MonoTouchFixtures.Foundation
-{
+namespace MonoTouchFixtures.Foundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSKeyedUnarchiverTest
-	{
+	public class NSKeyedUnarchiverTest {
 		[Test]
 		public void GetUnarchivedObject_TypeWrappers ()
 		{
 			TestRuntime.AssertXcodeVersion (10, 0);
 
-			NSDictionary<NSString, NSString> testValues = new NSDictionary<NSString, NSString> ((NSString)"1", (NSString)"a");
+			NSDictionary<NSString, NSString> testValues = new NSDictionary<NSString, NSString> ((NSString) "1", (NSString) "a");
 #if NET
 			NSData data = NSKeyedArchiver.GetArchivedData (testValues, true, out NSError error);
 #else
@@ -47,7 +45,7 @@ namespace MonoTouchFixtures.Foundation
 			TestRuntime.AssertXcodeVersion (10, 0);
 
 			Class [] classes = NSSecureUnarchiveFromDataTransformer.AllowedTopLevelClasses;
-			Type [] types =  NSSecureUnarchiveFromDataTransformer.AllowedTopLevelTypes;
+			Type [] types = NSSecureUnarchiveFromDataTransformer.AllowedTopLevelTypes;
 
 			Assert.AreEqual (classes.Length, types.Length, "Lengths not equal");
 		}

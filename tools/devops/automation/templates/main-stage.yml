@@ -163,12 +163,22 @@ parameters:
   type: string
   default: ''
 
+- name: dependsOn
+  type: string
+  default: ''
+
+- name: dependsOnResult
+  type: string
+  default: ''
+
 stages:
 
 - ${{ if eq(parameters.runGovernanceTests, true) }}:
   - stage: governance_checks
     displayName: '${{ parameters.stageDisplayNamePrefix }}Governance Checks'
-    dependsOn: []
+    dependsOn: ${{ parameters.dependsOn }}
+    ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
+      condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
     variables:
       Codeql.SkipTaskAutoInjection: true
     jobs:
@@ -213,7 +223,9 @@ stages:
 
 - stage: build_packages
   displayName: '${{ parameters.stageDisplayNamePrefix }}Build'
-  dependsOn: []
+  dependsOn: ${{ parameters.dependsOn }}
+  ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
+    condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
   jobs:
   - template: ./build/build-stage.yml
     parameters:
@@ -301,7 +313,9 @@ stages:
 - ${{ if eq(parameters.enableAPIDiff, true) }}:
   - stage: generate_api_diff
     displayName: '${{ parameters.stageDisplayNamePrefix }}API diff'
-    dependsOn: []
+    dependsOn: ${{ parameters.dependsOn }}
+    ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
+      condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
     variables:
       Codeql.SkipTaskAutoInjection: true
     jobs:

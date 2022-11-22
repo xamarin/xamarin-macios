@@ -5,13 +5,11 @@ using CloudKit;
 using ObjCRuntime;
 using Xamarin.Utils;
 
-namespace MonoTouchFixtures.CloudKit
-{
+namespace MonoTouchFixtures.CloudKit {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CKModifyBadgeOperationTest
-	{
+	public class CKModifyBadgeOperationTest {
 		CKModifyBadgeOperation op = null;
 
 		[SetUp]
@@ -31,7 +29,7 @@ namespace MonoTouchFixtures.CloudKit
 		[Test]
 		public void TestCompletedSetter ()
 		{
-			op.Completed = (e) => { Console.WriteLine ("Completed");};
+			op.Completed = (e) => { Console.WriteLine ("Completed"); };
 			Assert.NotNull (op.Completed);
 		}
 

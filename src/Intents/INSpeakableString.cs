@@ -23,7 +23,7 @@ namespace Intents {
 #elif MONOMAC
 			if (SystemVersion.CheckmacOS (10, 13))
 #endif
-				InitializeHandle (InitWithVocabularyIdentifier (identifier, spokenPhrase, pronunciationHint));
+			InitializeHandle (InitWithVocabularyIdentifier (identifier, spokenPhrase, pronunciationHint));
 #if !TVOS
 			else
 				InitializeHandle (InitWithIdentifier (identifier, spokenPhrase, pronunciationHint));

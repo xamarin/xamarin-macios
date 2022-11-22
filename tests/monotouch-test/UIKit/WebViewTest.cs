@@ -10,7 +10,7 @@ using UIKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class WebViewTest {
@@ -21,7 +21,7 @@ namespace MonoTouchFixtures.UIKit {
 			if (Type.GetType ("UIKit.DeprecatedWebView, Xamarin.iOS") != null)
 				Assert.Ignore ("All type references to UIWebView were removed (optimized).");
 		}
-		
+
 		[Test]
 		public void InitWithFrame ()
 		{
@@ -40,8 +40,7 @@ namespace MonoTouchFixtures.UIKit {
 			}
 		}
 
-		class DerivedUIWebView : UIWebView 
-		{
+		class DerivedUIWebView : UIWebView {
 		}
 	}
 

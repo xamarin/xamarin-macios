@@ -8,10 +8,8 @@ using System.Text.RegularExpressions;
 using NUnit.Framework;
 using Xamarin.Utils;
 
-namespace Xamarin.Tests
-{
-	class ToolMessage
-	{
+namespace Xamarin.Tests {
+	class ToolMessage {
 		public bool IsError;
 		public bool IsWarning { get { return !IsError; } }
 		public string Prefix;
@@ -31,8 +29,7 @@ namespace Xamarin.Tests
 		}
 	}
 
-	abstract class Tool
-	{
+	abstract class Tool {
 		StringBuilder output = new StringBuilder ();
 
 		List<string> output_lines;
@@ -70,7 +67,7 @@ namespace Xamarin.Tests
 			return Execute (ToolPath, arguments, false);
 		}
 
-		public int Execute (IList<string>  arguments, bool always_show_output)
+		public int Execute (IList<string> arguments, bool always_show_output)
 		{
 			return Execute (ToolPath, arguments, always_show_output);
 		}
@@ -121,7 +118,7 @@ namespace Xamarin.Tests
 				if (start >= 0) {
 					// we want to get the space before `[` too.
 					if (start > 0 && line [start - 1] == ' ')
-						start --;
+						start--;
 
 					line = line.Substring (0, start);
 					return line;
@@ -288,7 +285,7 @@ namespace Xamarin.Tests
 		public static void AssertWarningCount (IEnumerable<ToolMessage> messages, int count, string message = "warnings")
 		{
 			if (count != GetWarningCount (messages))
-				Assert.Fail ($"{message}\nExpected: {count}\nBut was: { GetWarningCount (messages)}\nWarnings:\n\t{string.Join ("\n\t", messages.Where ((v) => v.IsWarning).Select ((v) => v.ToString ()))}");
+				Assert.Fail ($"{message}\nExpected: {count}\nBut was: {GetWarningCount (messages)}\nWarnings:\n\t{string.Join ("\n\t", messages.Where ((v) => v.IsWarning).Select ((v) => v.ToString ()))}");
 		}
 
 		public void AssertErrorCount (int count, string message = "errors")
@@ -330,8 +327,8 @@ namespace Xamarin.Tests
 			var matches = messages.Where ((msg) => msg.Message == message);
 			if (!matches.Any ()) {
 				var details = messages.
-				                      Where ((msg) => msg.Prefix == prefix && msg.Number == number && msg.Message != message).
-				                      Select ((msg) => string.Format ("\tMessage #{2} did not match:\n\t\tactual:   '{0}'\n\t\texpected: '{1}'", msg.Message, message, messages.IndexOf (msg) + 1));
+									  Where ((msg) => msg.Prefix == prefix && msg.Number == number && msg.Message != message).
+									  Select ((msg) => string.Format ("\tMessage #{2} did not match:\n\t\tactual:   '{0}'\n\t\texpected: '{1}'", msg.Message, message, messages.IndexOf (msg) + 1));
 				Assert.Fail (string.Format ("The error '{0}{1:0000}: {2}' was not found in the output:\n{3}", prefix, number, message, string.Join ("\n", details.ToArray ())));
 			}
 

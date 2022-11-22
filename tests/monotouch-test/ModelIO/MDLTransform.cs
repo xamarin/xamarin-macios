@@ -28,7 +28,7 @@ using Matrix4 = global::System.Numerics.Matrix4x4;
 using MatrixFloat2x2 = global::CoreGraphics.NMatrix2;
 using MatrixFloat3x3 = global::CoreGraphics.NMatrix3;
 using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
-using VectorFloat3 =   global::CoreGraphics.NVector3;
+using VectorFloat3 = global::CoreGraphics.NVector3;
 #else
 using OpenTK;
 using MatrixFloat2x2 = global::OpenTK.NMatrix2;
@@ -68,7 +68,7 @@ namespace MonoTouchFixtures.ModelIO {
 				Asserts.AreEqual (Vector3.One, obj.Scale, "Scale");
 				Asserts.AreEqual (Vector3.Zero, obj.Rotation, "Rotation");
 				Asserts.AreEqual (id, obj.Matrix, "Matrix");
-				if (TestRuntime.CheckXcodeVersion (8,0))
+				if (TestRuntime.CheckXcodeVersion (8, 0))
 					Asserts.AreEqual (false, obj.ResetsTransform, "ResetsTransform");
 
 				obj.Translation = V3;
@@ -146,7 +146,7 @@ namespace MonoTouchFixtures.ModelIO {
 			}
 #endif
 		}
-			
+
 		[Test]
 		public void ScaleAtTimeTest ()
 		{
@@ -209,8 +209,8 @@ namespace MonoTouchFixtures.ModelIO {
 				obj.SetRotation (V3, 0);
 				var expected = new MatrixFloat4x4 (
 					1, 0, 0, 0,
-					0, (float) Math.Cos (1.0f), (float) -Math.Sin(1.0f), 0,
-					0, (float) Math.Sin (1.0f), (float) Math.Cos(1.0f), 0,
+					0, (float) Math.Cos (1.0f), (float) -Math.Sin (1.0f), 0,
+					0, (float) Math.Sin (1.0f), (float) Math.Cos (1.0f), 0,
 					0, 0, 0, 1
 				);
 #if NET

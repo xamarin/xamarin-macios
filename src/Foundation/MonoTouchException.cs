@@ -9,11 +9,13 @@ namespace Foundation {
 	public class MonoTouchException : Exception {
 		NSException? native_exc;
 
-		public MonoTouchException () : base () {
+		public MonoTouchException () : base ()
+		{
 			native_exc = new NSException ("default", String.Empty, null);
 		}
 
-		public MonoTouchException (NSException exc) : base () {
+		public MonoTouchException (NSException exc) : base ()
+		{
 			native_exc = exc;
 		}
 

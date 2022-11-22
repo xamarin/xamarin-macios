@@ -175,7 +175,7 @@ namespace MyTVMetalGame {
 			IMTLFunction vertexProgram = defaultLibrary.CreateFunction ("lighting_vertex");
 
 			// Setup the vertex buffers
-			vertexBuffer = device.CreateBuffer<float> (cubeVertexData, (MTLResourceOptions)0);
+			vertexBuffer = device.CreateBuffer<float> (cubeVertexData, (MTLResourceOptions) 0);
 			vertexBuffer.Label = "Vertices";
 
 			// Create a reusable pipeline state
@@ -253,7 +253,7 @@ namespace MyTVMetalGame {
 			renderEncoder.PushDebugGroup ("DrawCube");
 			renderEncoder.SetRenderPipelineState (pipelineState);
 			renderEncoder.SetVertexBuffer (vertexBuffer, 0, 0);
-			renderEncoder.SetVertexBuffer (dynamicConstantBuffer, (nuint)(Marshal.SizeOf (typeof (Uniforms)) * constantDataBufferIndex), 1);
+			renderEncoder.SetVertexBuffer (dynamicConstantBuffer, (nuint) (Marshal.SizeOf (typeof (Uniforms)) * constantDataBufferIndex), 1);
 
 			// Tell the render context we want to draw our primitives
 			renderEncoder.DrawPrimitives (MTLPrimitiveType.Triangle, 0, 36, 1);
@@ -275,14 +275,14 @@ namespace MyTVMetalGame {
 			commandBuffer.Commit ();
 
 			// The renderview assumes it can now increment the buffer index and that the previous index won't be touched until we cycle back around to the same index
-			constantDataBufferIndex = (byte)((constantDataBufferIndex + 1) % max_inflight_buffers);
+			constantDataBufferIndex = (byte) ((constantDataBufferIndex + 1) % max_inflight_buffers);
 		}
 
 		void Reshape ()
 		{
 			// When reshape is called, update the view and projection matricies since this means the view orientation or size changed
-			var aspect = (float)(View.Bounds.Size.Width / View.Bounds.Size.Height);
-			projectionMatrix = CreateMatrixFromPerspective (65.0f * ((float)Math.PI / 180.0f), aspect, 0.1f, 100.0f);
+			var aspect = (float) (View.Bounds.Size.Width / View.Bounds.Size.Height);
+			projectionMatrix = CreateMatrixFromPerspective (65.0f * ((float) Math.PI / 180.0f), aspect, 0.1f, 100.0f);
 
 			viewMatrix = Matrix4.Identity;
 		}
@@ -340,7 +340,7 @@ namespace MyTVMetalGame {
 
 		static Matrix4 CreateMatrixFromPerspective (float fovY, float aspect, float nearZ, float farZ)
 		{
-			float yscale = 1.0f / (float)Math.Tan (fovY * 0.5f);
+			float yscale = 1.0f / (float) Math.Tan (fovY * 0.5f);
 			float xscale = yscale / aspect;
 			float q = farZ / (farZ - nearZ);
 
@@ -367,8 +367,8 @@ namespace MyTVMetalGame {
 		static Matrix4 CreateMatrixFromRotation (float radians, float x, float y, float z)
 		{
 			Vector3 v = Vector3.Normalize (new Vector3 (x, y, z));
-			var cos = (float)Math.Cos (radians);
-			var sin = (float)Math.Sin (radians);
+			var cos = (float) Math.Cos (radians);
+			var sin = (float) Math.Sin (radians);
 			float cosp = 1.0f - cos;
 
 			var m = new Matrix4 (

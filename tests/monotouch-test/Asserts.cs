@@ -50,8 +50,7 @@ using pfloat = System.Single;
 
 using NUnit.Framework;
 
-public static class Asserts
-{
+public static class Asserts {
 	public static void AreEqual (bool expected, bool actual, string message)
 	{
 		Assert.AreEqual (expected, actual, $"{message} (M) expected: {expected} actual: {actual}");
@@ -492,7 +491,7 @@ public static class Asserts
 		AreEqual (expected.M44, actual.M44, $"{message} (M44) expected: {expected} actual: {actual}");
 	}
 
-#region Double Based Types
+	#region Double Based Types
 	public static void AreEqual (double expected, double actual, string message)
 	{
 		Assert.AreEqual (expected, actual, $"{message} (M) expected: {expected} actual: {actual}");
@@ -738,7 +737,7 @@ public static class Asserts
 		AreEqual (expected.M24, actual.M24, $"{message} (M24) expected: {expected} actual: {actual}");
 		AreEqual (expected.M34, actual.M34, $"{message} (M34) expected: {expected} actual: {actual}");
 	}
-#endregion
+	#endregion
 
 #if HAS_SCENEKIT
 	public static void AreEqual (SCNVector3 expected, SCNVector3 actual, string message)

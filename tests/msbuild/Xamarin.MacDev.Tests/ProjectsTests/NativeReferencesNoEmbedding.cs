@@ -6,8 +6,7 @@ using NUnit.Framework;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
 	public class NativeReferencesNoEmbedding : ProjectTest {
@@ -80,7 +79,7 @@ namespace Xamarin.MacDev.Tasks
 			ClearMessages ();
 
 			// No change build should not
-			BuildProjectNoEmbedding (bindingLib, clean : false);
+			BuildProjectNoEmbedding (bindingLib, clean: false);
 			Assert.False (GetMessages ().Contains (CreatePackageString), "Rebuild build did create package?");
 			ClearMessages ();
 

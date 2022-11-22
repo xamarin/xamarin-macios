@@ -9,8 +9,8 @@ namespace NetworkExtension {
 	public class NEHotspotHelperOptions : DictionaryContainer {
 
 #if !COREBUILD
-		public NEHotspotHelperOptions () : base (new NSMutableDictionary ()) {}
-		public NEHotspotHelperOptions (NSDictionary dictionary) : base (dictionary) {}
+		public NEHotspotHelperOptions () : base (new NSMutableDictionary ()) { }
+		public NEHotspotHelperOptions (NSDictionary dictionary) : base (dictionary) { }
 
 		public NSString? DisplayName {
 			get {

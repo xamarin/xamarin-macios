@@ -20,9 +20,9 @@ var argumentIndex = 2;
 var platform = args [argumentIndex++];
 var version = args [argumentIndex++];
 var net6Version = args [argumentIndex++];
-var runtimeIdentifiers = args [argumentIndex++].Split (' ');
+var runtimeIdentifiers = args [argumentIndex++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 var outputPath = args [argumentIndex++];
-var windowsPlatforms = args [argumentIndex++].Split (' ');
+var windowsPlatforms = args [argumentIndex++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 var hasWindows = Array.IndexOf (windowsPlatforms, platform) >= 0;
 
 var platformLowerCase = platform.ToLowerInvariant ();

@@ -26,8 +26,8 @@ namespace MonoTouchFixtures.GamePlayKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class GKPathTests {
-		
-		Vector2[] points = new Vector2[] { 
+
+		Vector2 [] points = new Vector2 [] {
 			new Vector2 (0,0), new Vector2 (0,1), new Vector2 (0,2), new Vector2 (0,3),
 			new Vector2 (1,3), new Vector2 (1,2), new Vector2 (1,1), new Vector2 (1,0)
 		};
@@ -49,7 +49,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 		public void FromPointsTest ()
 		{
 			TestRuntime.AssertXcodeVersion (7, 0);
-			
+
 			var path = GKPath.FromPoints (points, 1, false);
 			Assert.NotNull (path, "GKPath.FromPoints should not be null");
 		}
@@ -84,9 +84,9 @@ namespace MonoTouchFixtures.GamePlayKit {
 			Assert.NotNull (path, "GKPath.FromPoints should not be null");
 
 			for (int i = 0; i < test_vectors3.Length; i++)
-				Asserts.AreEqual (path.GetVector3Point ((nuint) i), test_vectors3[i], $"InitWithVector3 iter {i}");
+				Asserts.AreEqual (path.GetVector3Point ((nuint) i), test_vectors3 [i], $"InitWithVector3 iter {i}");
 		}
 	}
 }
-	
+
 #endif // __WATCHOS__

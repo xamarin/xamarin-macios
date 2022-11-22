@@ -506,9 +506,6 @@ namespace CarPlay {
 		[Export ("initWithText:detailText:image:accessoryImage:accessoryType:")]
 		NativeHandle Constructor ([NullAllowed] string text, [NullAllowed] string detailText, [NullAllowed] UIImage image, [NullAllowed] UIImage accessoryImage, CPListItemAccessoryType accessoryType);
 
-		[NullAllowed, Export ("text")]
-		new string Text { get; }
-
 		[NullAllowed, Export ("detailText")]
 		string DetailText { get; }
 
@@ -518,9 +515,6 @@ namespace CarPlay {
 		[Deprecated (PlatformName.iOS, 14, 0)]
 		[Export ("showsDisclosureIndicator")]
 		bool ShowsDisclosureIndicator { get; }
-
-		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
-		new NSObject UserInfo { get; set; }
 
 		[iOS (14, 0)]
 		[Export ("explicitContent")]
@@ -566,14 +560,6 @@ namespace CarPlay {
 		[iOS (14,0)]
 		[Export ("setText:")]
 		void SetText (string text);
-
-		[NullAllowed, iOS (14, 0)]
-		[Export ("handler", ArgumentSemantic.Copy)]
-		new CPSelectableListItemHandler Handler { get; set; }
-
-		[iOS (15, 0), MacCatalyst (15,0)]
-		[Export ("enabled")]
-		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
@@ -1600,10 +1586,6 @@ namespace CarPlay {
 		[NullAllowed, Export ("listImageRowHandler", ArgumentSemantic.Copy)]
 		CPListImageRowItemHandler ListImageRowHandler { get; set; }
 
-		[Export ("handler", ArgumentSemantic.Copy)]
-		[NullAllowed]
-		new CPSelectableListItemHandler Handler { get; set; }
-
 		[Static]
 		[Export ("maximumImageSize")]
 		CGSize MaximumImageSize { get; }
@@ -1613,13 +1595,6 @@ namespace CarPlay {
 
 		[NullAllowed, Export ("text")]
 		new string Text { get; set; }
-
-		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
-		new NSObject UserInfo { get; set; }
-
-		[iOS (15, 0), MacCatalyst (15,0)]
-		[Export ("enabled")]
-		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
@@ -1686,13 +1661,6 @@ namespace CarPlay {
 
 		[NullAllowed, Export ("text")]
 		new string Text { get; set; }
-
-		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
-		new NSObject UserInfo { get; set; }
-
-		[iOS (15, 0), MacCatalyst (15,0)]
-		[Export ("enabled")]
-		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
