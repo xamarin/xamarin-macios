@@ -14866,6 +14866,9 @@ namespace Foundation
 		[Export ("launch")]
 		void Launch ();
 
+		[Export ("launchAndReturnError")]
+		bool LaunchAndReturnError ([NullAllowed] out NSError error);
+
 		[Export ("interrupt")]
 		void Interrupt ();
 
