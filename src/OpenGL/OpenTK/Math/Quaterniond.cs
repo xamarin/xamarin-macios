@@ -649,14 +649,14 @@ namespace OpenTK {
 
 		#region public override int GetHashCode ()
 
-        /// <summary>
-        /// Provides the hash code for this object. 
-        /// </summary>
-        /// <returns>A hash code formed from the bitwise XOR of this objects members.</returns>
-        public override int GetHashCode()
-        {
-            return Xyz.GetHashCode() ^ W.GetHashCode();
-        }
+		/// <summary>
+		/// Provides the hash code for this object. 
+		/// </summary>
+		/// <returns>A hash code formed from the bitwise XOR of this objects members.</returns>
+		public override int GetHashCode ()
+		{
+			return Xyz.GetHashCode () ^ W.GetHashCode ();
+		}
 
 		#endregion
 
