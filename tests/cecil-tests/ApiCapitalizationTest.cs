@@ -13,6 +13,7 @@ using Xamarin.Tests;
 using Xamarin.Utils;
 using System.Configuration.Assemblies;
 using MethodAttributes = Mono.Cecil.MethodAttributes;
+using ICustomAttributeProvider = Mono.Cecil.ICustomAttributeProvider;
 
 #nullable enable
 
@@ -39,41 +40,24 @@ namespace Cecil.Tests {
 			assemblyCache.Clear ();
 		}
 
-		bool IsTypeObsolete (TypeDefinition type)
+		bool IsMemberObsolete (ICustomAttributeProvider member)
 		{
-			if (type is null)
+			if (member is null || !member.HasCustomAttributes)
 				return false;
 
-			return type.HasCustomAttributes && type.CustomAttributes.Where ((t) => t.AttributeType.Name == "ObsoleteAttribute" || t.AttributeType.Name == "AdviceAttribute").Any ());
-
-			return false;
+			return member.CustomAttributes.Any ((m) =>
+					m.AttributeType.Name == "ObsoleteAttribute" ||
+					m.AttributeType.Name == "AdviceAttribute" ||
+					m.AttributeType.Name == "ObsoletedOSPlatformAttribute");
 		}
 
-
-		bool IsMethodObsolete (MethodDefinition method)
-		{
-			if (method == null)
-				return false;
-
-			return method.HasCustomAttributes && method.CustomAttributes.Where ((m) => m.AttributeType.Name == "ObsoleteAttribute").Any ());
-		}
-
-		bool IsPropertyObsolete (PropertyDefinition property, TypeDefinition t)
-		{
-			if (property is null)
-				return false;
-
-			return property.HasCustomAttributes && property.CustomAttributes.Where ((p) => p.AttributeType.Name == "ObsoleteAttribute" || p.AttributeType.Name == "ObsoletedOSPlatformAttribute").Any ());
-		}
-
-
-		bool IsException (string assemblyPath, MethodDefinition m)
+		bool IsUnique (string assemblyPath, MethodDefinition m)
 		{
 
 			if (m is null)
 				return false;
 
-			return m.IsRemoveOn || m.IsAddOn || m.IsConstructor || m.IsSpecialName || IsMethodObsolete (m) || m.IsFamilyOrAssembly || m.IsPInvokeImpl;
+			return m.IsRemoveOn || m.IsAddOn || m.IsConstructor || m.IsSpecialName || IsMemberObsolete (m) || m.IsFamilyOrAssembly || m.IsPInvokeImpl;
 		}
 
 
@@ -128,7 +112,8 @@ namespace Cecil.Tests {
 			"iTunesMetadataKeyTrackNumber",
 			"iTunesMetadataKeyTrackSubTitle",
 			"iTunesMetadataKeyUserComment",
-			"iTunesMetadataKeyUserGenre" }
+			"iTunesMetadataKeyUserGenre" },
+			["QuickTimeMetadata"] = new HashSet<string> () { "iXML" }
 		};
 
 		Dictionary<string, HashSet<string>> allowedFields = new Dictionary<string, HashSet<string>> () {
@@ -142,9 +127,8 @@ namespace Cecil.Tests {
 		public bool IsSkip (string type, string memberName, Dictionary<string, HashSet<string>> allowed)
 		{
 			if (allowed.TryGetValue (type, out var result)) {
-				if (allowed [type].TryGetValue (memberName, out var skipped)) {
+				if (result.Contains (memberName))
 					return true;
-				}
 			}
 
 			return Char.IsUpper (memberName [0]);
@@ -158,7 +142,7 @@ namespace Cecil.Tests {
 				var typeName = type.Name;
 				return type.Properties
 						.Where (p => p.GetMethod?.IsPublic == true || p.SetMethod?.IsPublic == true)
-						.Where (p => !IsSkip (type.Name, p.Name, allowedProperties) && !IsPropertyObsolete (p, type) && !p.IsSpecialName)
+						.Where (p => !IsSkip (type.Name, p.Name, allowedProperties) && !IsMemberObsolete (p) && !p.IsSpecialName)
 						.Select (p => p.Name);
 			};
 			CapitalizationTest (assemblyPath, selectLambda);
@@ -170,8 +154,8 @@ namespace Cecil.Tests {
 		{
 			Func<TypeDefinition, IEnumerable<string>> selectLambda = (type) => {
 				return from m in type.Methods
-					   where m.IsPublic && !IsSkip (type.Name, m.Name, allowedMethods) && !IsException (assemblyPath, m)
-					   select m.Name;
+						where m.IsPublic && !IsSkip (type.Name, m.Name, allowedMethods) && !IsUnique (assemblyPath, m)
+						select m.Name;
 			};
 			CapitalizationTest (assemblyPath, selectLambda);
 		}
@@ -206,29 +190,34 @@ namespace Cecil.Tests {
 			if (assemblyCache.TryGetValue (assemblyPath, out var cache)) {
 				var typeDict = new Dictionary<string, string> ();
 
-				var publicTypes = cache.MainModule.Types.Where ((t) => t.IsPublic && !IsTypeObsolete (t));
+				var publicTypes = cache.MainModule.Types.Where ((t) => t.IsPublic && !IsMemberObsolete (t));
 
 				foreach (var type in publicTypes) {
-					var err = selectLambda (type);
-					if (err is not null && err.Any ()) {
-						if (typeDict.TryGetValue ($"Type: {type.Name}", out var errMembers)) {
-							typeDict [$"Type: {type.Name}"] += string.Join ("; ", err);
-						} else {
-							typeDict.Add ($"Type: {type.Name}", string.Join ("; ", err));
+					TypeCheck(type, selectLambda, typeDict);
+					if (type.HasNestedTypes) {
+						foreach (var nestedType in type.NestedTypes) {
+							TypeCheck (nestedType, selectLambda, typeDict);
 						}
 					}
 				}
 
-				if (typeDict is not null) {
-					Assert.AreEqual (0, typeDict.Count (), $"Capitalization Issues Found: {string.Join (Environment.NewLine, typeDict)}");
-				}
+				Assert.AreEqual (0, typeDict.Count (), $"Capitalization Issues Found: {string.Join (Environment.NewLine, typeDict)}");
 			} else {
 				Assert.Ignore ($"{assemblyPath} could not be found (might be disabled in build)");
 			}
 
 		}
 
-
+		public void TypeCheck (TypeDefinition type, Func<TypeDefinition, IEnumerable<string>> selectLambda, Dictionary<string, string> typeDict) {
+			var err = selectLambda (type);
+			if (err is not null && err.Any ()) {
+				if (typeDict.TryGetValue ($"Type: {type.Name}", out var errMembers)) {
+					typeDict [$"Type: {type.Name}"] += string.Join ("; ", err);
+				} else {
+					typeDict.Add ($"Type: {type.Name}", string.Join ("; ", err));
+				}
+			}
+		}
 
 	}
 }
