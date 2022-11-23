@@ -29,8 +29,7 @@ namespace OpenTK
 	[SupportedOSPlatform ("tvos")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct NVector3 : IEquatable<NVector3>
-	{
+	public struct NVector3 : IEquatable<NVector3> {
 		public float X;
 		public float Y;
 		public float Z;

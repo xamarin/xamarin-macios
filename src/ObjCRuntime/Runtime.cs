@@ -28,19 +28,19 @@ using AppKit;
 #endif
 
 namespace ObjCRuntime {
-	
+
 	public partial class Runtime {
 #if !COREBUILD
 #pragma warning disable 8618 // "Non-nullable field '...' must contain a non-null value when exiting constructor. Consider declaring the field as nullable.": we make sure through other means that these will never be null
-		static Dictionary<IntPtrTypeValueTuple,Delegate> block_to_delegate_cache;
+		static Dictionary<IntPtrTypeValueTuple, Delegate> block_to_delegate_cache;
 		static Dictionary<Type, ConstructorInfo> intptr_ctor_cache;
 		static Dictionary<Type, ConstructorInfo> intptr_bool_ctor_cache;
 		internal static Dictionary<IntPtr, Dictionary<IntPtr, bool>> protocol_cache;
 
-		static List <object> delegates;
-		static List <Assembly> assemblies;
-		static Dictionary <IntPtr, GCHandle> object_map;
-		static Dictionary <IntPtr, bool> usertype_cache;
+		static List<object> delegates;
+		static List<Assembly> assemblies;
+		static Dictionary<IntPtr, GCHandle> object_map;
+		static Dictionary<IntPtr, bool> usertype_cache;
 		static object lock_obj;
 		static IntPtr NSObjectClass;
 		static bool initialized;
@@ -56,9 +56,9 @@ namespace ObjCRuntime {
 #pragma warning disable 649 // Field 'X' is never assigned to, and will always have its default value
 		internal unsafe struct MTRegistrationMap {
 			public IntPtr product_hash;
-			public MTAssembly *assemblies;
-			public MTClassMap *map;
-			public MTFullTokenReference *full_token_references;
+			public MTAssembly* assemblies;
+			public MTClassMap* map;
+			public MTFullTokenReference* full_token_references;
 			public MTManagedClassMap* skipped_map;
 			public MTProtocolWrapperMap* protocol_wrapper_map;
 			public MTProtocolMap protocol_map;
@@ -72,8 +72,7 @@ namespace ObjCRuntime {
 #pragma warning restore 649
 
 		[Flags]
-		internal enum MTTypeFlags : uint
-		{
+		internal enum MTTypeFlags : uint {
 			None = 0,
 			CustomType = 1,
 			UserType = 2,
@@ -94,8 +93,7 @@ namespace ObjCRuntime {
 		}
 
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
-		internal struct MTManagedClassMap
-		{
+		internal struct MTManagedClassMap {
 			public uint skipped_reference; // implied token type: TypeDef
 			public uint actual_reference; // implied token type: TypeDef
 		}
@@ -149,11 +147,11 @@ namespace ObjCRuntime {
 
 		[Flags]
 		internal enum InitializationFlags : int {
-			IsPartialStaticRegistrar= 0x01,
+			IsPartialStaticRegistrar = 0x01,
 			/* unused				= 0x02,*/
 			/* unused				= 0x04,*/
 			/* unused				= 0x08,*/
-			IsSimulator				= 0x10,
+			IsSimulator = 0x10,
 #if NET
 			IsCoreCLR				= 0x20,
 #endif
@@ -172,9 +170,9 @@ namespace ObjCRuntime {
 		internal unsafe struct InitializationOptions {
 			public int Size;
 			public InitializationFlags Flags;
-			public Delegates *Delegates;
-			public Trampolines *Trampolines;
-			public MTRegistrationMap *RegistrationMap;
+			public Delegates* Delegates;
+			public Trampolines* Trampolines;
+			public MTRegistrationMap* RegistrationMap;
 			public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptionMode;
 			public MarshalManagedExceptionMode MarshalManagedExceptionMode;
 #if MONOMAC
@@ -223,7 +221,7 @@ namespace ObjCRuntime {
 		internal static bool Initialized {
 			get { return initialized; }
 		}
-			
+
 #if MONOMAC
 		[DllImport (Constants.libcLibrary)]
 		static extern int _NSGetExecutablePath (byte[] buf, ref int bufsize);
@@ -287,8 +285,8 @@ namespace ObjCRuntime {
 
 			Runtime.options = options;
 			delegates = new List<object> ();
-			object_map = new Dictionary <IntPtr, GCHandle> (IntPtrEqualityComparer);
-			usertype_cache = new Dictionary <IntPtr, bool> (IntPtrEqualityComparer);
+			object_map = new Dictionary<IntPtr, GCHandle> (IntPtrEqualityComparer);
+			usertype_cache = new Dictionary<IntPtr, bool> (IntPtrEqualityComparer);
 			intptr_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
 			intptr_bool_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
 			lock_obj = new object ();
@@ -376,11 +374,10 @@ namespace ObjCRuntime {
 		{
 			if (throwManagedAsDefault != 0 && MarshalObjectiveCException is null)
 				return MarshalObjectiveCExceptionMode.ThrowManagedException;
-			
+
 			if (MarshalObjectiveCException is not null) {
 				var exception = GetNSObject<NSException> (exception_handle);
-				var args = new MarshalObjectiveCExceptionEventArgs ()
-				{
+				var args = new MarshalObjectiveCExceptionEventArgs () {
 					Exception = exception,
 					ExceptionMode = (throwManagedAsDefault != 0) ? MarshalObjectiveCExceptionMode.ThrowManagedException : objc_exception_mode,
 				};
@@ -395,8 +392,7 @@ namespace ObjCRuntime {
 		{
 			if (MarshalManagedException is not null) {
 				var exception = GCHandle.FromIntPtr (exception_handle).Target as Exception;
-				var args = new MarshalManagedExceptionEventArgs ()
-				{
+				var args = new MarshalManagedExceptionEventArgs () {
 					Exception = exception,
 					ExceptionMode = managed_exception_mode,
 				};
@@ -442,7 +438,7 @@ namespace ObjCRuntime {
 			return AllocGCHandle (rv);
 		}
 
-#region Wrappers for delegate callbacks
+		#region Wrappers for delegate callbacks
 		static void RegisterAssembly (IntPtr a)
 		{
 			RegisterAssembly ((Assembly) GetGCHandleTarget (a)!);
@@ -510,7 +506,7 @@ namespace ObjCRuntime {
 		{
 			return AllocGCHandle (CreateBlockProxy ((MethodInfo) GetGCHandleTarget (method)!, block));
 		}
-			
+
 		static IntPtr CreateDelegateProxy (IntPtr method, IntPtr @delegate, IntPtr signature, uint token_ref)
 		{
 			return BlockLiteral.GetBlockForDelegate ((MethodInfo) GetGCHandleTarget (method)!, GetGCHandleTarget (@delegate), token_ref, Marshal.PtrToStringAuto (signature));
@@ -589,7 +585,7 @@ namespace ObjCRuntime {
 			var assemblies = new List<Assembly> ();
 
 			assemblies.Add (NSObject.PlatformAssembly); // make sure our platform assembly comes first
-			// Recursively get all assemblies referenced by the entry assembly.
+														// Recursively get all assemblies referenced by the entry assembly.
 			if (entry_assembly is not null) {
 				var register_entry_assembly = true;
 #if MONOMAC
@@ -628,8 +624,7 @@ namespace ObjCRuntime {
 					var a = Assembly.Load (rf);
 					if (!assemblies.Contains (a))
 						CollectReferencedAssemblies (assemblies, a);
-				}
-				catch (FileNotFoundException fefe) {
+				} catch (FileNotFoundException fefe) {
 					// that's more important for XI because device builds don't go thru this step
 					// and we can end up with simulator-only failures - bug #29211
 					NSLog ($"Could not find `{fefe.FileName}` referenced by assembly `{assembly.FullName}`.");
@@ -691,7 +686,7 @@ namespace ObjCRuntime {
 #endif
 
 			if (assemblies is null) {
-				assemblies = new List <Assembly> ();
+				assemblies = new List<Assembly> ();
 				Class.Register (typeof (NSObject));
 			}
 
@@ -740,7 +735,7 @@ namespace ObjCRuntime {
 			return ((INativeObject) GetGCHandleTarget (ptr)!).Handle;
 		}
 
-		static void UnregisterNSObject (IntPtr native_obj, IntPtr managed_obj) 
+		static void UnregisterNSObject (IntPtr native_obj, IntPtr managed_obj)
 		{
 			NativeObjectHasDied (native_obj, GetGCHandleTarget (managed_obj) as NSObject);
 		}
@@ -780,7 +775,7 @@ namespace ObjCRuntime {
 			var type = (System.Type) GetGCHandleTarget (type_ptr)!;
 			return AllocGCHandle (GetINativeObject (ptr, owns != 0, type, null));
 		}
-			
+
 		static IntPtr GetINativeObject_Static (IntPtr ptr, sbyte owns, uint iface_token, uint implementation_token)
 		{
 			/* 
@@ -814,7 +809,7 @@ namespace ObjCRuntime {
 			var parameters = minfo.GetParameters ();
 			if (parameters.Length <= parameter)
 				return 0;
-			var rv = parameters [parameter].IsDefined (typeof(TransientAttribute), false);
+			var rv = parameters [parameter].IsDefined (typeof (TransientAttribute), false);
 			return (sbyte) (rv ? 1 : 0);
 		}
 
@@ -852,8 +847,8 @@ namespace ObjCRuntime {
 			return AllocGCHandle (ex);
 		}
 
-		static IntPtr TypeGetFullName (IntPtr type) 
-		{	
+		static IntPtr TypeGetFullName (IntPtr type)
+		{
 			return Marshal.StringToHGlobalAuto (((Type) GetGCHandleTarget (type)!).FullName);
 		}
 
@@ -869,7 +864,7 @@ namespace ObjCRuntime {
 		{
 			return Marshal.StringToHGlobalAuto (Class.Lookup (klass)?.FullName);
 		}
-#endregion
+		#endregion
 
 		static MethodInfo? GetBlockProxyAttributeMethod (MethodInfo method, int parameter)
 		{
@@ -939,9 +934,9 @@ namespace ObjCRuntime {
 			// If this method is changed, that method will probably have to be updated too (tests!!!)
 			MethodInfo first = method;
 			MethodInfo? last = null;
-			Type[]? extensionParameters = null;
+			Type []? extensionParameters = null;
 
-			while (method != last){
+			while (method != last) {
 				last = method;
 				var createMethod = GetBlockProxyAttributeMethod (method, parameter);
 				if (createMethod is not null)
@@ -982,7 +977,7 @@ namespace ObjCRuntime {
 				string extensionName = string.Empty;
 				if (!string.IsNullOrEmpty (iface.Namespace))
 					extensionName = iface.Namespace + ".";
-				extensionName +=iface.Name.Substring (1) + "_Extensions";
+				extensionName += iface.Name.Substring (1) + "_Extensions";
 				var extensionType = iface.Assembly.GetType (extensionName, false);
 				if (extensionType is not null) {
 					if (extensionParameters is null) {
@@ -1014,7 +1009,7 @@ namespace ObjCRuntime {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		static Delegate CreateBlockProxy (MethodInfo method, IntPtr block)
 		{
-			return (Delegate) method.Invoke (null, new object [] { block } )!;
+			return (Delegate) method.Invoke (null, new object [] { block })!;
 		}
 
 		internal static Delegate? GetDelegateForBlock (IntPtr methodPtr, Type type)
@@ -1091,13 +1086,14 @@ namespace ObjCRuntime {
 			throw ErrorHelper.CreateError (8002, "Could not find the method '{methodName}' in the type '{type.FullName}'.");
 		}
 
-		internal static void UnregisterNSObject (IntPtr ptr) {
+		internal static void UnregisterNSObject (IntPtr ptr)
+		{
 			lock (lock_obj) {
 				if (object_map.Remove (ptr, out var value))
 					value.Free ();
 			}
 		}
-					
+
 		internal static void NativeObjectHasDied (IntPtr ptr, NSObject? managed_obj)
 		{
 			lock (lock_obj) {
@@ -1117,8 +1113,9 @@ namespace ObjCRuntime {
 					managed_obj.ClearHandle ();
 			}
 		}
-		
-		internal static void RegisterNSObject (NSObject obj, IntPtr ptr) {
+
+		internal static void RegisterNSObject (NSObject obj, IntPtr ptr)
+		{
 #if NET
 			GCHandle handle;
 			if (Runtime.IsCoreCLR) {
@@ -1224,14 +1221,14 @@ namespace ObjCRuntime {
 			}
 		}
 
-		internal static T? ConstructNSObject<T> (IntPtr ptr) where T: NSObject
+		internal static T? ConstructNSObject<T> (IntPtr ptr) where T : NSObject
 		{
 			return ConstructNSObject<T> (ptr, typeof (T), MissingCtorResolution.ThrowConstructor1NotFound);
 		}
 
 		// The generic argument T is only used to cast the return value.
 		// The 'selector' and 'method' arguments are only used in error messages.
-		static T? ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution) where T: class, INativeObject
+		static T? ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution) where T : class, INativeObject
 		{
 			if (type is null)
 				throw new ArgumentNullException (nameof (type));
@@ -1302,7 +1299,7 @@ namespace ObjCRuntime {
 			var ctors = type.GetConstructors (BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
 			ConstructorInfo? backupConstructor = null;
 			for (int i = 0; i < ctors.Length; ++i) {
-				var param = ctors[i].GetParameters ();
+				var param = ctors [i].GetParameters ();
 				if (param.Length != 1)
 					continue;
 #if NET
@@ -1347,7 +1344,7 @@ namespace ObjCRuntime {
 			var ctors = type.GetConstructors (BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
 			ConstructorInfo? backupConstructor = null;
 			for (int i = 0; i < ctors.Length; ++i) {
-				var param = ctors[i].GetParameters ();
+				var param = ctors [i].GetParameters ();
 				if (param.Length != 2)
 					continue;
 
@@ -1416,7 +1413,7 @@ namespace ObjCRuntime {
 							return null;
 						}
 					}
-					    
+
 					return target;
 				}
 			}
@@ -1424,11 +1421,13 @@ namespace ObjCRuntime {
 			return null;
 		}
 
-		public static NSObject? GetNSObject (IntPtr ptr) {
+		public static NSObject? GetNSObject (IntPtr ptr)
+		{
 			return GetNSObject (ptr, MissingCtorResolution.ThrowConstructor1NotFound);
 		}
 
-		internal static NSObject? GetNSObject (IntPtr ptr, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue = false) {
+		internal static NSObject? GetNSObject (IntPtr ptr, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue = false)
+		{
 			if (ptr == IntPtr.Zero)
 				return null;
 
@@ -1460,19 +1459,19 @@ namespace ObjCRuntime {
 			Type target_type;
 			if (p != NSObjectClass) {
 				target_type = Class.Lookup (p);
-				if (target_type == typeof(NSObject))
-					target_type = typeof(T);
+				if (target_type == typeof (NSObject))
+					target_type = typeof (T);
 				else if (typeof (T).IsGenericType)
-					target_type = typeof(T);
-				else if (target_type.IsSubclassOf (typeof(T))) {
+					target_type = typeof (T);
+				else if (target_type.IsSubclassOf (typeof (T))) {
 					// do nothing, this is fine.
 				} else if (Messaging.bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (typeof (T)))) {
 					// If the instance itself claims it's an instance of the provided (generic argument) type,
 					// then we believe the instance. See bug #20692 for a test case.
-					target_type = typeof(T);
+					target_type = typeof (T);
 				}
 			} else {
-				target_type = typeof(NSObject);
+				target_type = typeof (NSObject);
 			}
 
 			return ConstructNSObject<T> (ptr, target_type, MissingCtorResolution.ThrowConstructor1NotFound);
@@ -1506,7 +1505,8 @@ namespace ObjCRuntime {
 		//
 
 		// The 'selector' and 'method' arguments are only used in error messages.
-		static NSObject? GetNSObject (IntPtr ptr, Type target_type, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue, bool createNewInstanceIfWrongType, out bool created) {
+		static NSObject? GetNSObject (IntPtr ptr, Type target_type, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue, bool createNewInstanceIfWrongType, out bool created)
+		{
 			created = false;
 
 			if (ptr == IntPtr.Zero)
@@ -1550,7 +1550,7 @@ namespace ObjCRuntime {
 					target_type = dynamic_type;
 				}
 			} else {
-				target_type = typeof(NSObject);
+				target_type = typeof (NSObject);
 			}
 
 			created = true;
@@ -1592,7 +1592,7 @@ namespace ObjCRuntime {
 				interface_check_type = interface_check_type.GetElementType ();
 #endif
 
-			if (interface_check_type!.IsInterface) 
+			if (interface_check_type!.IsInterface)
 				implementation = FindProtocolWrapperType (implementation);
 
 			return implementation!;
@@ -1668,7 +1668,7 @@ namespace ObjCRuntime {
 			// which is not optimal, but sometimes the alternative can be worse :/
 			if (o is not null && !forced_type) {
 				// found an existing object, but with an incompatible type.
-				if (!typeof (T).IsInterface && typeof(NSObject).IsAssignableFrom (typeof (T))) {
+				if (!typeof (T).IsInterface && typeof (NSObject).IsAssignableFrom (typeof (T))) {
 					// if the target type is another NSObject subclass, there's nothing we can do.
 					throw new InvalidCastException ($"Unable to cast object of type '{o.GetType ().FullName}' to type '{typeof (T).FullName}'.");
 				}
@@ -1828,7 +1828,7 @@ namespace ObjCRuntime {
 
 			ConnectMethod (type, method, new ExportAttribute (selector.Name));
 		}
-			
+
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void ConnectMethod (Type type, MethodInfo method, ExportAttribute export)
 		{
@@ -1859,7 +1859,7 @@ namespace ObjCRuntime {
 		extern static void xamarin_log (string s);
 
 		[DllImport (Constants.libcLibrary)]
-		extern static nint write (int filedes, byte[] buf, nint nbyte);
+		extern static nint write (int filedes, byte [] buf, nint nbyte);
 
 		internal static void NSLog (string value)
 		{
@@ -1924,7 +1924,7 @@ namespace ObjCRuntime {
 				if (!Version.TryParse (systemVersion, out SystemVersion))
 					SystemVersion = new Version (2, 0, 0);
 			}
-			
+
 			if (SystemVersion.Major > major)
 				return true;
 			else if (SystemVersion.Major < major)
@@ -2176,9 +2176,8 @@ namespace ObjCRuntime {
 		}
 
 	}
-	
-	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr>
-	{
+
+	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr> {
 		public bool Equals (IntPtr x, IntPtr y)
 		{
 			return x == y;
@@ -2189,8 +2188,7 @@ namespace ObjCRuntime {
 		}
 	}
 
-	internal class TypeEqualityComparer : IEqualityComparer<Type>
-	{
+	internal class TypeEqualityComparer : IEqualityComparer<Type> {
 		public bool Equals (Type? x, Type? y)
 		{
 			return (object?) x == (object?) y;
@@ -2203,8 +2201,7 @@ namespace ObjCRuntime {
 		}
 	}
 
-	internal struct IntPtrTypeValueTuple : IEquatable<IntPtrTypeValueTuple>
-	{
+	internal struct IntPtrTypeValueTuple : IEquatable<IntPtrTypeValueTuple> {
 		static readonly IEqualityComparer<IntPtr> item1Comparer = Runtime.IntPtrEqualityComparer;
 		static readonly IEqualityComparer<Type> item2Comparer = Runtime.TypeEqualityComparer;
 
@@ -2238,12 +2235,12 @@ namespace ObjCRuntime {
 
 		public static bool operator == (IntPtrTypeValueTuple left, IntPtrTypeValueTuple right)
 		{
-			return left.Equals(right);
+			return left.Equals (right);
 		}
 
 		public static bool operator != (IntPtrTypeValueTuple left, IntPtrTypeValueTuple right)
 		{
-			return !left.Equals(right);
+			return !left.Equals (right);
 		}
 	}
 }
