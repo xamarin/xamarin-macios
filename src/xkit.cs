@@ -4386,4 +4386,13 @@ namespace UIKit {
 		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
 		NSString CocoaVersionDocumentAttribute { get; }
 	}
+
+	[Static]
+	[Internal]
+	interface NSAttributedStringDocumentReadingOptionKey {
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSWebPreferencesDocumentOption")]
+		NSString NSWebPreferencesDocumentOption { get; }
+	}
 }

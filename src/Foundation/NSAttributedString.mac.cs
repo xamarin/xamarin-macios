@@ -138,19 +138,6 @@ namespace Foundation
 	}
 
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
-		public WebPreferences? WebPreferences {
-			get {
-				NSObject value;
-				Dictionary.TryGetValue (NSStringAttributeKey.NSWebPreferencesDocumentOption, out value);
-				return value as WebPreferences;
-			}
-			set {
-				if (value is null)
-					RemoveValue (NSStringAttributeKey.NSWebPreferencesDocumentOption);
-				else
-					Dictionary [NSStringAttributeKey.NSWebPreferencesDocumentOption] = value;
-			}
-		}
 		public NSObject? WebResourceLoadDelegate {
 			get {
 				NSObject value;

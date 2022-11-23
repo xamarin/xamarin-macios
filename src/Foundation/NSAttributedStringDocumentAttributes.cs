@@ -18,6 +18,9 @@ using Foundation;
 #if HAS_UIKIT
 using UIKit;
 #endif
+#if !COREBUILD && HAS_WEBKIT
+using WebKit;
+#endif
 
 #if !COREBUILD
 #if __MACOS__
@@ -272,6 +275,24 @@ namespace Foundation {
 			}
 		}
 #endif // !TVOS && !WATCH
+
+#if __MACOS__
+#if NET
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+#endif // NET
+		public WebPreferences? WebPreferences {
+			get {
+				return GetNativeValue<WebPreferences> (NSAttributedStringDocumentReadingOptionKey.NSWebPreferencesDocumentOption);
+			}
+			set {
+				SetNativeValue (NSAttributedStringDocumentReadingOptionKey.NSWebPreferencesDocumentOption, value);
+			}
+		}
+#endif // !__MACOS__
+
 #endif // !COREBUILD
 	}
 }
