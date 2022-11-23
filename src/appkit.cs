@@ -15530,9 +15530,6 @@ namespace AppKit {
 		[Internal, Field ("NSDefaultAttributesDocumentOption")]
 		NSString NSDefaultAttributesDocumentOption { get; }
 
-		[Internal, Field ("NSCharacterEncodingDocumentOption")]
-		NSString NSCharacterEncodingDocumentOption { get; }
-
 		[Internal, Field ("NSTextEncodingNameDocumentOption")]
 		NSString NSTextEncodingNameDocumentOption { get; }
 

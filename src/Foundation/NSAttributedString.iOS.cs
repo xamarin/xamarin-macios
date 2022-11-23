@@ -41,19 +41,6 @@ namespace Foundation {
 
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
 #if !MONOMAC && !COREBUILD
-		public NSStringEncoding? StringEncoding {
-			get {
-				var value = GetInt32Value (NSAttributedStringDocumentAttributeKey.NSCharacterEncodingDocumentAttribute);
-				if (value is null)
-					return null;
-				else
-					return (NSStringEncoding) value.Value;
-			}
-			set {
-				SetNumberValue (NSAttributedStringDocumentAttributeKey.NSCharacterEncodingDocumentAttribute, (int?) value);
-			}
-		}
-
 		public NSString? WeakDocumentType {
 			get {
 				return GetNSStringValue (NSAttributedStringDocumentAttributeKey.NSDocumentTypeDocumentAttribute);

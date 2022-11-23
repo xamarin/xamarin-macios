@@ -165,19 +165,6 @@ namespace Foundation
 			}
 		}
 
-		public NSStringEncoding? StringEncoding {
-			get {
-				var value = GetInt32Value (NSStringAttributeKey.NSCharacterEncodingDocumentOption);
-				if (value is null)
-					return null;
-				else
-					return (NSStringEncoding) value.Value;
-			}
-			set {
-				SetNumberValue (NSStringAttributeKey.NSCharacterEncodingDocumentOption, (int?) value);
-			}
-		}
-
 		public NSString? WeakDocumentType {
 			get {
 				return GetNSStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption);

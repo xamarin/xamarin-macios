@@ -10,13 +10,28 @@
 
 using System;
 
+#if HAS_APPKIT
+using AppKit;
+#endif
 using Foundation;
+#if HAS_UIKIT
+using UIKit;
+#endif
 
 namespace Foundation {
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
 #if !COREBUILD
 		public NSAttributedStringDocumentAttributes () { }
 		public NSAttributedStringDocumentAttributes (NSDictionary? dictionary) : base (dictionary) { }
+
+		public NSStringEncoding? StringEncoding {
+			get {
+				return (NSStringEncoding?) (long?) GetNIntValue (NSAttributedStringDocumentAttributeKey.NSCharacterEncodingDocumentAttribute);
+			}
+			set {
+				SetNumberValue (NSAttributedStringDocumentAttributeKey.NSCharacterEncodingDocumentAttribute, (nint?) (long?) value);
+			}
+		}
 #endif // !COREBUILD
 	}
 }
