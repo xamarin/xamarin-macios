@@ -54,10 +54,7 @@ namespace Cecil.Tests {
 		bool IsUnique (string assemblyPath, MethodDefinition m)
 		{
 
-			if (m is null)
-				return false;
-
-			return m.IsRemoveOn || m.IsAddOn || m.IsConstructor || m.IsSpecialName || IsMemberObsolete (m) || m.IsFamilyOrAssembly || m.IsPInvokeImpl;
+			return m is not null && (m.IsRemoveOn || m.IsAddOn || m.IsConstructor || m.IsSpecialName || IsMemberObsolete (m) || m.IsFamilyOrAssembly || m.IsPInvokeImpl);
 		}
 
 
