@@ -138,14 +138,6 @@ namespace Foundation
 	}
 
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
-		public string? TextEncodingName {
-			get {
-				return (string)GetNSStringValue (NSStringAttributeKey.NSTextEncodingNameDocumentOption);
-			}
-			set {
-				SetStringValue (NSStringAttributeKey.NSTextEncodingNameDocumentOption, (NSString)value);
-			}
-		}
 		public float? TextSizeMultiplier { 
 			get { return GetFloatValue (NSStringAttributeKey.NSTextSizeMultiplierDocumentOption); }
 			set { SetNumberValue (NSStringAttributeKey.NSTextSizeMultiplierDocumentOption, (float?) value); }

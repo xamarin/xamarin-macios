@@ -327,6 +327,23 @@ namespace Foundation {
 		}
 #endif // !__MACOS__
 
+#if __MACOS__
+#if NET
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+#endif // NET
+		public string? TextEncodingName {
+			get {
+				return GetStringValue (NSAttributedStringDocumentReadingOptionKey.NSTextEncodingNameDocumentOption);
+			}
+			set {
+				SetStringValue (NSAttributedStringDocumentReadingOptionKey.NSTextEncodingNameDocumentOption, value);
+			}
+		}
+#endif // !__MACOS__
+
 #endif // !COREBUILD
 	}
 }

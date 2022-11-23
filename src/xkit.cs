@@ -4402,5 +4402,10 @@ namespace UIKit {
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Internal, Field ("NSBaseURLDocumentOption")]
 		NSString NSBaseURLDocumentOption { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSTextEncodingNameDocumentOption")]
+		NSString NSTextEncodingNameDocumentOption { get; }
+
 	}
 }

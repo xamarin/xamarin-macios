@@ -15524,9 +15524,6 @@ namespace AppKit {
 		NSString TextEffect { get; }
 
 		// Internal
-		[Internal, Field ("NSTextEncodingNameDocumentOption")]
-		NSString NSTextEncodingNameDocumentOption { get; }
-
 		[Internal, Field ("NSTimeoutDocumentOption")]
 		NSString NSTimeoutDocumentOption { get; }
 
