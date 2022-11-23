@@ -134,6 +134,29 @@ namespace Foundation {
 			}
 		}
 
+#if !__MACOS__
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("macos")]
+#endif // NET
+		public UIEdgeInsets? PaperMargin {
+			get {
+				if (!Dictionary.TryGetValue (NSAttributedStringDocumentAttributeKey.NSPaperMarginDocumentAttribute, out var value))
+					return null;
+
+				if (value is NSValue size)
+					return size.UIEdgeInsetsValue;
+
+				return null;
+			}
+			set {
+				SetNativeValue (NSAttributedStringDocumentAttributeKey.NSPaperMarginDocumentAttribute, value is null ? null : NSValue.FromUIEdgeInsets (value.Value));
+			}
+		}
+#endif // !__MACOS__
+
 #if !TVOS && !WATCH
 		// documentation is unclear if an NSString or an NSUrl should be used...
 		// but providing an `NSString` throws a `NSInvalidArgumentException Reason: (null) is not a file URL`
