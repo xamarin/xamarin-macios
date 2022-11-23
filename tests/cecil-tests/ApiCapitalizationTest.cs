@@ -193,7 +193,7 @@ namespace Cecil.Tests {
 				var publicTypes = cache.MainModule.Types.Where ((t) => t.IsPublic && !IsMemberObsolete (t));
 
 				foreach (var type in publicTypes) {
-					TypeCheck(type, selectLambda, typeDict);
+					TypeCheck (type, selectLambda, typeDict);
 				}
 
 				Assert.AreEqual (0, typeDict.Count (), $"Capitalization Issues Found: {string.Join (Environment.NewLine, typeDict)}");
