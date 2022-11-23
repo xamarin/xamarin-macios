@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -142,7 +143,7 @@ partial class TestRuntime {
 #if NET
 	// error CS1061: 'AppDomain' does not contain a definition for 'DefineDynamicAssembly' and no accessible extension method 'DefineDynamicAssembly' accepting a first argument of type 'AppDomain' could be found (are you missing a using directive or an assembly reference?)
 #else
-	static AssemblyName assemblyName = new AssemblyName ("DynamicAssemblyExample"); 
+	static AssemblyName assemblyName = new AssemblyName ("DynamicAssemblyExample");
 	public static bool CheckExecutingWithInterpreter ()
 	{
 		// until System.Runtime.CompilerServices.RuntimeFeature.IsSupported("IsDynamicCodeCompiled") returns a valid result, atm it
@@ -1388,6 +1389,11 @@ partial class TestRuntime {
 		IgnoreInCIfHttpStatusCodes (ex, HttpStatusCode.BadGateway, HttpStatusCode.GatewayTimeout, HttpStatusCode.ServiceUnavailable);
 	}
 
+	public static void IgnoreInCIIfForbidden (Exception ex)
+	{
+		IgnoreInCIfHttpStatusCodes (ex, HttpStatusCode.BadGateway, HttpStatusCode.GatewayTimeout, HttpStatusCode.ServiceUnavailable, HttpStatusCode.Forbidden);
+	}
+
 	public static void IgnoreInCIIfBadNetwork (HttpStatusCode status)
 	{
 		IgnoreInCIfHttpStatusCodes (status, HttpStatusCode.BadGateway, HttpStatusCode.GatewayTimeout, HttpStatusCode.ServiceUnavailable);
@@ -1415,6 +1421,16 @@ partial class TestRuntime {
 	static bool TryGetHttpStatusCode (Exception ex, out HttpStatusCode status)
 	{
 		status = (HttpStatusCode) 0;
+
+#if NET // HttpRequestException.StatusCode only exists in .NET 5+
+		if (ex is HttpRequestException hre) {
+			if (hre.StatusCode.HasValue) {
+				status = hre.StatusCode.Value;
+				return true;
+			}
+			return false;
+		}
+#endif
 
 		var we = ex as WebException;
 		if (we is null)

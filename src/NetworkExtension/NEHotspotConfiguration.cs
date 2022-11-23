@@ -26,7 +26,7 @@ namespace NetworkExtension {
 		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[iOS (13,0)]
+		[iOS (13, 0)]
 #endif
 		public NEHotspotConfiguration (string ssid, bool ssidIsPrefix)
 		{
@@ -40,7 +40,7 @@ namespace NetworkExtension {
 		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[iOS (13,0)]
+		[iOS (13, 0)]
 #endif
 		public NEHotspotConfiguration (string ssid, string passphrase, bool isWep, bool ssidIsPrefix)
 		{

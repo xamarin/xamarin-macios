@@ -31,8 +31,7 @@ namespace OpenTK
 	[SupportedOSPlatform ("tvos")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct NMatrix3 : IEquatable<NMatrix3>
-	{
+	public struct NMatrix3 : IEquatable<NMatrix3> {
 		/* Due to memory alignment, vectors of length 3 are 
 		 * represented as vectors of length 4, so we pad here
 		 * with dummy fields.
@@ -127,8 +126,7 @@ namespace OpenTK
 
 		public static NMatrix3 Identity { get => _identity; }
 #else
-		public readonly static NMatrix3 Identity = new NMatrix3 
-		{
+		public readonly static NMatrix3 Identity = new NMatrix3 {
 			M11 = 1f,
 			M22 = 1f,
 			M33 = 1f,

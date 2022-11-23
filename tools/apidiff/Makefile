@@ -237,7 +237,15 @@ define ApiDiffReportHtml
 endef
 
 $(OUTPUT_DIR)/api-diff.html: $(API_DIFF_DEPENDENCIES)
-	$(QF_GEN) echo "<h1>API diffs</h1>" > $@
+	$(Q) rm -f $@
+	$(QF_GEN) echo "<!DOCTYPE html>" >> $@
+	$(QF_GEN) echo "<html>" >> $@
+	$(QF_GEN) echo "<head>" >> $@
+	$(QF_GEN) echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>' >> $@
+	$(QF_GEN) echo "<title>API diffs</title>" >> $@
+	$(QF_GEN) echo "</head>" >> $@
+	$(QF_GEN) echo "<body>" >> $@
+	$(QF_GEN) echo "<h1>API diffs</h1>" >> $@
 
 ifdef INCLUDE_XAMARIN_LEGACY
 	$(Q) if $(foreach html,$(wildcard $(OUTPUT_DIR)/*-api-diff.html),! test -s "$(html)" &&) true; then \
@@ -299,6 +307,8 @@ endif
 	$(Q) echo "</ul>" >> $@
 endif # INCLUDE_XAMARIN_VS_DOTNET
 endif # INCLUDE_XAMARIN_LEGACY
+	$(QF_GEN) echo "</body>" >> $@
+	$(QF_GEN) echo "</html>" >> $@
 
 endif # DOTNET
 	$(Q) if grep "$(HTML_BREAKING_CHANGES_MESSAGE)" $@ >/dev/null 2>&1; then \

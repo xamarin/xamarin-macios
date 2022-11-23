@@ -18,7 +18,7 @@ using System.Runtime.Versioning;
 #if NET
 using VectorFloat4=global::System.Numerics.Vector4;
 #else
-using VectorFloat4=global::OpenTK.Vector4;
+using VectorFloat4 = global::OpenTK.Vector4;
 #endif
 
 // This type does not come from the CoreGraphics framework; it's defined in /usr/include/simd/matrix_types.h
@@ -35,8 +35,7 @@ namespace OpenTK
 	[SupportedOSPlatform ("tvos")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct NMatrix4x3 : IEquatable<NMatrix4x3>
-	{
+	public struct NMatrix4x3 : IEquatable<NMatrix4x3> {
 		public float M11;
 		public float M21;
 		public float M31;

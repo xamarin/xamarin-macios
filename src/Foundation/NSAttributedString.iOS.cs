@@ -41,33 +41,17 @@ namespace Foundation {
 
 #if !MONOMAC && !COREBUILD
 	public partial class NSAttributedString {
-		static NSDictionary? ignore;
-
 		public NSAttributedString (NSUrl url, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error)
-		: this (url, documentAttributes, out ignore, ref error) { }
+		: this (url, documentAttributes, out _, ref error) { }
 
 		public NSAttributedString (NSData data, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error)
-		: this (data, documentAttributes, out ignore, ref error) { }
+		: this (data, documentAttributes, out _, ref error) { }
 
 		public NSAttributedString (NSUrl url, ref NSError error)
-		: this (url, new NSDictionary (), out ignore, ref error) { }
+		: this (url, new NSDictionary (), out _, ref error) { }
 
 		public NSAttributedString (NSData data, ref NSError error)
-		: this (data, new NSDictionary (), out ignore, ref error) { }
-
-#if IOS // not TVOS or WATCH
-		// use the best selector based on the OS version
-		public NSAttributedString (NSUrl url, NSDictionary? options, out NSDictionary resultDocumentAttributes, ref NSError error)
-		{
-			if (SystemVersion.CheckiOS (9,0))
-				Handle = InitWithURL (url, options, out resultDocumentAttributes, ref error);
-			else
-				Handle = InitWithFileURL (url, options, out resultDocumentAttributes, ref error);
-
-			if (Handle == IntPtr.Zero)
-				throw new ArgumentException ();
-		}
-#endif
+		: this (data, new NSDictionary (), out _, ref error) { }
 
 	}
 #endif

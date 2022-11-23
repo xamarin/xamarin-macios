@@ -9,15 +9,15 @@ public partial class ViewController : NSViewController {
 
 	public override void ViewDidLoad ()
 	{
-		base.ViewDidLoad ();		
+		base.ViewDidLoad ();
 		// Do any additional setup after loading the view.
 	}
 
 	public override void ViewDidAppear ()
 	{
 		var alert = new NSAlert ();
-		alert.MessageText = ConsumerTests.Consumer.Test();
-		alert.RunModal();
+		alert.MessageText = ConsumerTests.Consumer.Test ();
+		alert.RunModal ();
 		NSApplication.SharedApplication.Terminate (this);
 	}
 

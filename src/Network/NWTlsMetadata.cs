@@ -27,15 +27,15 @@ namespace Network {
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
-	[Watch (6,0)]
+	[TV (12, 0)]
+	[Mac (10, 14)]
+	[iOS (12, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWTlsMetadata : NWProtocolMetadata {
 
 		[Preserve (Conditional = true)]
-		internal NWTlsMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
+		internal NWTlsMetadata (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		public SecProtocolMetadata SecProtocolMetadata
 			=> new SecProtocolMetadata (nw_tls_copy_sec_protocol_metadata (GetCheckedHandle ()), owns: true);

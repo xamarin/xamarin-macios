@@ -32,7 +32,6 @@ steps:
     $result = $gihubComments.NewCommentFromObject("Artifacts", ":books:", $artifact)
     Write-Host $result
   env:
-    BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
     ACCESSTOKEN: $(System.AccessToken)
     ${{ if eq(parameters.repositoryAlias, 'self') }}:
