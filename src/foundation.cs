@@ -14893,7 +14893,8 @@ namespace Foundation
 		[Static]
 		[NoMacCatalyst]
 		[Export ("launchedTaskWithExecutableURL:arguments:error:terminationHandler:")]
-		NSTask LaunchFromUrl (NSUrl url, string[] arguments, [NullAllowed] out NSError error, Action<NSTask> terminationHandler);
+		[return: NullAllowed]
+		NSTask LaunchFromUrl (NSUrl url, string[] arguments, [NullAllowed] out NSError error, [NullAllowed] Action<NSTask> terminationHandler);
 
 		//Detected properties
 		[NullAllowed]
@@ -14920,6 +14921,7 @@ namespace Foundation
 		[Export ("currentDirectoryPath")]
 		string CurrentDirectoryPath { get; set; }
 
+		[NullAllowed]
 		[NoMacCatalyst]
 		[Export ("currentDirectoryURL")]
 		NSUrl CurrentDirectoryUrl { get; set; }
@@ -14948,6 +14950,7 @@ namespace Foundation
 		[Export ("terminationStatus")]
 		int TerminationStatus { get; } /* int, not NSInteger */
 
+		[NullAllowed]
 		[NoMacCatalyst]
 		[Export ("terminationHandler")]
 		Action<NSTask> TerminationHandler { get; set; }
