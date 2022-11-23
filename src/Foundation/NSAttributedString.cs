@@ -55,16 +55,16 @@ namespace Foundation {
 		: this (data, new NSDictionary (), out var _, out error) {}
 #else
 		public NSAttributedString (NSUrl url, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error)
-		: this (url, documentAttributes, out var _, ref error) {}
+		: this (url, documentAttributes, out var _, ref error) { }
 
 		public NSAttributedString (NSData data, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error)
-		: this (data, documentAttributes, out var _, ref error) {}
+		: this (data, documentAttributes, out var _, ref error) { }
 
 		public NSAttributedString (NSUrl url, ref NSError error)
-		: this (url, new NSDictionary (), out var _, ref error) {}
+		: this (url, new NSDictionary (), out var _, ref error) { }
 
 		public NSAttributedString (NSData data, ref NSError error)
-		: this (data, new NSDictionary (), out var _, ref error) {}
+		: this (data, new NSDictionary (), out var _, ref error) { }
 #endif
 
 #if __MACOS__
