@@ -138,9 +138,6 @@ namespace Foundation
 	}
 
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
-		public NSAttributedStringDocumentAttributes () : base (new NSMutableDictionary ()) {}
-		public NSAttributedStringDocumentAttributes (NSDictionary dictionary) : base (dictionary) {}
-
 		public WebPreferences? WebPreferences {
 			get {
 				NSObject value;

@@ -41,9 +41,6 @@ namespace Foundation {
 
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
 #if !MONOMAC && !COREBUILD
-		public NSAttributedStringDocumentAttributes () : base (new NSMutableDictionary ()) { }
-		public NSAttributedStringDocumentAttributes (NSDictionary? dictionary) : base (dictionary) { }
-
 		public NSStringEncoding? StringEncoding {
 			get {
 				var value = GetInt32Value (NSAttributedStringDocumentAttributeKey.NSCharacterEncodingDocumentAttribute);
