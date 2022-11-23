@@ -1,20 +1,13 @@
+#nullable enable
+
 using System;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
 
 namespace HomeKit {
 
-#if NET
-	[SupportedOSPlatform ("tvos10.0")]
-	[SupportedOSPlatform ("ios8.0")]
-#else
-	[TV (10,0)]
-	[iOS (8,0)]
-#endif
-	public partial class HMCharacteristicMetadata
-	{
+	public partial class HMCharacteristicMetadata {
 		public HMCharacteristicMetadataUnits Units {
 			get {
 				var u = _Units;

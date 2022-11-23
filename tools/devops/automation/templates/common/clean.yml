@@ -1,0 +1,47 @@
+# Perform gihub cleaning steps
+
+parameters:
+- name: commentToHide
+  type: string
+  default: '[comment]: <> (This is a comment added by Azure DevOps)'
+
+- name: checkoutCode
+  type: boolean
+  default: true
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+steps:
+
+- ${{ if parameters.checkoutCode }}:
+  - template: checkout.yml
+    parameters:
+      isPR: false # always use the latests version of the script
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+
+    $comments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
+    $ciComment = "${{ parameters.commentToHide }}"
+
+    $prId = "$(Build.SourceBranch)".Replace("refs/pull/", "").Replace("/merge", "")
+    $prComments = $comments.GetCommentsForPR($prId)
+
+    $botComments = [System.Collections.ArrayList]@()
+    foreach ($c in $prComments) {
+      if ($c.Author -eq "vs-mobiletools-engineering-service2") {
+        if ($c.Body.Contains($ciComment)) {
+          $botComments.Add($c)
+        }
+      }
+    }
+    $comments.MinimizeComments($botComments)
+  displayName: Clear past comments

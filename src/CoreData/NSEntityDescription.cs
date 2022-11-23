@@ -6,24 +6,23 @@
 //
 // Copyright 2015 Xamarin Inc. All rights reserved.
 
-using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
 #nullable enable
 
-namespace CoreData
-{
-	public partial class NSEntityDescription
-	{
+namespace CoreData {
+	public partial class NSEntityDescription {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
-		[Mac (10,11)]
+		[iOS (9, 0)]
+		[Mac (10, 11)]
 #endif
-		public NSObject[][] UniquenessConstraints {
+		public NSObject [] [] UniquenessConstraints {
 			get { return NSArray.FromArrayOfArray (_UniquenessConstraints); }
 			set { _UniquenessConstraints = NSArray.From (value); }
 		}

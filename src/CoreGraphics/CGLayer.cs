@@ -30,6 +30,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using CoreFoundation;
 using ObjCRuntime;
@@ -41,11 +42,17 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreGraphics {
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CGLayer.h
-	public class CGLayer : NativeObject
-	{
+	public class CGLayer : NativeObject {
 #if !COREBUILD
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGLayer (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -53,16 +60,16 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGLayerRelease (/* CGLayerRef */ IntPtr layer);
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGLayerRef */ IntPtr CGLayerRetain (/* CGLayerRef */ IntPtr layer);
-		
-		protected override void Retain ()
+
+		protected internal override void Retain ()
 		{
 			CGLayerRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGLayerRelease (GetCheckedHandle ());
 		}
@@ -75,7 +82,7 @@ namespace CoreGraphics {
 				return CGLayerGetSize (Handle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGContextRef */ IntPtr CGLayerGetContext (/* CGLayerRef */ IntPtr layer);
 

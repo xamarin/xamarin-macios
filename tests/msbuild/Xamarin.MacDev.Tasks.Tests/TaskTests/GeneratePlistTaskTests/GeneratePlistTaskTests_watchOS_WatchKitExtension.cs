@@ -2,14 +2,17 @@ using System.Linq;
 using NUnit.Framework;
 using Xamarin.MacDev;
 
-namespace Xamarin.iOS.Tasks
-{
-	[TestFixture]
-	public class GeneratePlistTaskTests_watchOS_WatchKitExtension : GeneratePlistTaskTests_watchOS
-	{
-		public override void ConfigureTask ()
+namespace Xamarin.MacDev.Tasks {
+	[TestFixture (false)]
+	public class GeneratePlistTaskTests_watchOS_WatchKitExtension : GeneratePlistTaskTests_watchOS {
+		public GeneratePlistTaskTests_watchOS_WatchKitExtension (bool isDotNet)
+			: base (isDotNet)
 		{
-			base.ConfigureTask ();
+		}
+
+		protected override void ConfigureTask (bool isDotNet)
+		{
+			base.ConfigureTask (isDotNet);
 			Task.IsWatchExtension = true;
 		}
 

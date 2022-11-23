@@ -2,7 +2,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -13,6 +12,7 @@ namespace UIKit {
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11, 0)]
 		[TV (11, 0)]
@@ -23,6 +23,7 @@ namespace UIKit {
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11, 0)]
 		[TV (11, 0)]
@@ -37,12 +38,13 @@ namespace UIKit {
 			if (c2 == null)
 				throw new ArgumentException ($"Unknown 'UIContentSizeCategory' value", nameof (category2));
 
-			return (NSComparisonResult)(long)UIContentSizeCategoryCompareToCategory (c1.Handle, c2.Handle);
+			return (NSComparisonResult) (long) UIContentSizeCategoryCompareToCategory (c1.Handle, c2.Handle);
 		}
 
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11, 0)]
 		[TV (11, 0)]
@@ -54,6 +56,7 @@ namespace UIKit {
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11, 0)]
 		[TV (11, 0)]

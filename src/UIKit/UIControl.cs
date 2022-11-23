@@ -13,7 +13,6 @@ using Foundation;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Runtime.Versioning;
 using ObjCRuntime;
 
 namespace UIKit {
@@ -46,16 +45,15 @@ namespace UIKit {
 			base.Dispose (disposing);
 		}
 	}
-	
+
 	public partial class UIControl {
-		static ConditionalWeakTable<UIControl,Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>>> allTargets;
+		static ConditionalWeakTable<UIControl, Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>>> allTargets;
 		public void AddTarget (EventHandler notification, UIControlEvent events)
 		{
 			if (allTargets == null)
 				allTargets = new ();
 
-			var targets = allTargets.GetValue (this, k =>
-			{
+			var targets = allTargets.GetValue (this, k => {
 				MarkDirty ();
 				return new Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>> ();
 			});
@@ -124,12 +122,12 @@ namespace UIKit {
 			}
 		}
 
-		public event EventHandler TouchDragInside  {
+		public event EventHandler TouchDragInside {
 			add {
-				AddTarget (value, UIControlEvent.TouchDragInside );
+				AddTarget (value, UIControlEvent.TouchDragInside);
 			}
 			remove {
-				RemoveTarget (value, UIControlEvent.TouchDragInside );
+				RemoveTarget (value, UIControlEvent.TouchDragInside);
 			}
 		}
 
@@ -198,8 +196,10 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
+		[iOS (9, 0)]
 #endif
 		public event EventHandler PrimaryActionTriggered {
 			add {

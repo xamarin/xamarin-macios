@@ -6,7 +6,7 @@ using System;
 
 namespace ThreadNetwork {
 
-	[iOS (15,0), NoMac, NoMacCatalyst]
+	[iOS (15,0), Mac (13,0), MacCatalyst (16,1), NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
 	interface THClient
 	{
@@ -33,9 +33,14 @@ namespace ThreadNetwork {
 		[Async]
 		[Export ("retrieveCredentialsForExtendedPANID:completion:")]
 		void RetrieveCredentialsForExtendedPanId (NSData extendedPanId, Action<THCredentials, NSError> completion);
+
+		[iOS (16,0)] // was added in xcode14 targeting iOS 15, intro says otherthings.
+		[Async]
+		[Export ("checkPreferredNetworkForActiveOperationalDataset:completion:")]
+		void CheckPreferredNetwork (NSData activeOperationalDataSet, Action<bool> completion);
 	}
 
-	[iOS (15,0), NoMac, NoMacCatalyst]
+	[iOS (15,0), Mac (13,0), MacCatalyst (16,1), NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface THCredentials : NSSecureCoding

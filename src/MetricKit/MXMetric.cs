@@ -1,4 +1,7 @@
 #if IOS
+
+#nullable enable
+
 using System;
 
 using Foundation;

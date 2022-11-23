@@ -14,6 +14,9 @@
 // which must be set for tracking to work.
 //#define TRACK_MONOOBJECTS
 
+// Uncomment VERBOSE_LOG to enable verbose logging
+// #define VERBOSE_LOG
+
 #if NET && !COREBUILD
 
 using System;
@@ -77,11 +80,45 @@ namespace ObjCRuntime {
 		static bool? track_monoobject_with_stacktraces;
 #endif
 
-		// Comment out the attribute to get all printfs
-		[System.Diagnostics.Conditional ("UNDEFINED")]
+		// Define VERBOSE_LOG at the top of this file to get all printfs
+		[System.Diagnostics.Conditional ("VERBOSE_LOG")]
 		static void log_coreclr (string message)
 		{
 			NSLog (message);
+		}
+
+		// Define VERBOSE_LOG at the top of this file to get all printfs
+		[System.Diagnostics.Conditional ("VERBOSE_LOG")]
+		static void log_coreclr_render (string message, params object[] argumentsToRender)
+		{
+			var args = new string [argumentsToRender.Length];
+			for (var i = 0; i < args.Length; i++) {
+				string arg;
+				var obj = argumentsToRender [i];
+				if (obj is null) {
+					arg = "<null>";
+				} else if (obj is IntPtr ptr) {
+					arg = $"0x{ptr.ToString ("x")} (IntPtr)";
+				} else if (obj.GetType ().IsValueType) {
+					arg = $"{obj.ToString ()} ({obj.GetType ()})";
+				} else if (obj is INativeObject inativeobj) {
+					// Don't call ToString on an INativeObject, we may end up with infinite recursion.
+					arg = $"{inativeobj.Handle.ToString ()} ({obj.GetType ()})";
+				} else {
+					var toString = obj.ToString ();
+					// Print one line, and at most 256 characters.
+					var strLength = Math.Min (256, toString.Length);
+					var eol = toString.IndexOf ('\n');
+					if (eol != -1 && eol < strLength)
+						strLength = eol;
+					if (strLength != toString.Length)
+						toString = toString.Substring (0, strLength) + " [...]";
+
+					arg = $"{toString} ({obj.GetType ()})";
+				}
+				args [i] = arg;
+			}
+			log_coreclr (string.Format (message, args));
 		}
 
 		static unsafe void InitializeCoreCLRBridge (InitializationOptions* options)
@@ -117,8 +154,7 @@ namespace ObjCRuntime {
 			public NSObject.Flags Flags;
 		}
 
-		// See  "Toggle-ref support for CoreCLR" in coreclr-bridge.m for more information.
-		internal static void RegisterToggleReferenceCoreCLR (NSObject obj, IntPtr handle, bool isCustomType)
+		internal static GCHandle CreateTrackingGCHandle (NSObject obj, IntPtr handle)
 		{
 			var gchandle = ObjectiveCMarshal.CreateReferenceTrackingHandle (obj, out var info);
 
@@ -129,7 +165,19 @@ namespace ObjCRuntime {
 				tracked_info->Handle = handle;
 				tracked_info->Flags = obj.FlagsInternal;
 				obj.tracked_object_info = tracked_info;
-				obj.tracked_object_handle = gchandle;
+
+				log_coreclr ($"GetOrCreateTrackingGCHandle ({obj.GetType ().FullName}, 0x{handle.ToString ("x")}) => Info=0x{((IntPtr) tracked_info).ToString ("x")} Flags={tracked_info->Flags} Created new");
+			}
+
+			return gchandle;
+		}
+
+		// See  "Toggle-ref support for CoreCLR" in coreclr-bridge.m for more information.
+		internal static void RegisterToggleReferenceCoreCLR (NSObject obj, IntPtr handle, bool isCustomType)
+		{
+			unsafe {
+				TrackedObjectInfo* tracked_info = obj.tracked_object_info;
+				tracked_info->Flags = obj.FlagsInternal;
 
 				log_coreclr ($"RegisterToggleReferenceCoreCLR ({obj.GetType ().FullName}, 0x{handle.ToString ("x")}, {isCustomType}) => Info=0x{((IntPtr) tracked_info).ToString ("x")} Flags={tracked_info->Flags}");
 			}
@@ -200,9 +248,10 @@ namespace ObjCRuntime {
 			ObjectiveCMarshal.SetMessageSendPendingException (exc);
 		}
 
-		unsafe static bool IsClassOfType (MonoObject *typeobj, TypeLookup match)
+		unsafe static sbyte IsClassOfType (MonoObject *typeobj, TypeLookup match)
 		{
-			return IsClassOfType ((Type) GetMonoObjectTarget (typeobj), match);
+			var rv = IsClassOfType ((Type) GetMonoObjectTarget (typeobj), match);
+			return (sbyte) (rv ? 1 : 0);
 		}
 
 		static bool IsClassOfType (Type type, TypeLookup match)
@@ -371,6 +420,13 @@ namespace ObjCRuntime {
 			if (obj == null)
 				return;
 
+			var structType = obj.GetType ();
+			// Unwrap enums, Marshal.StructureToPtr complains they're not blittable (https://github.com/xamarin/xamarin-macios/issues/15744)
+			if (structType.IsEnum) {
+				structType = Enum.GetUnderlyingType (structType);
+				obj = Convert.ChangeType (obj, structType);
+			}
+
 			if (obj is bool b) {
 				// Only write a single byte for bools
 				Marshal.WriteByte (ptr, b ? (byte) 1 : (byte) 0);
@@ -444,26 +500,26 @@ namespace ObjCRuntime {
 			return GetMonoObject (obj.GetType ());
 		}
 
-		unsafe static bool IsDelegate (MonoObject* typeobj)
+		unsafe static sbyte IsDelegate (MonoObject* typeobj)
 		{
 			var type = (Type) GetMonoObjectTarget (typeobj);
 			var rv = typeof (MulticastDelegate).IsAssignableFrom (type);
 			log_coreclr ($"IsDelegate ({type.FullName}) => {rv}");
-			return rv;
+			return (sbyte) (rv ? 1 : 0);
 		}
 
-		static bool IsInstance (MonoObjectPtr mobj, MonoObjectPtr mtype)
+		static sbyte IsInstance (MonoObjectPtr mobj, MonoObjectPtr mtype)
 		{
 			var obj = GetMonoObjectTarget (mobj);
 			if (obj == null)
-				return false;
+				return 0;
 
 			var type = (Type) GetMonoObjectTarget (mtype);
 			var rv = type.IsAssignableFrom (obj.GetType ());
 
 			log_coreclr ($"IsInstance ({obj.GetType ()}, {type})");
 
-			return rv;
+			return (sbyte) (rv ? 1 : 0);
 		}
 
 		static unsafe IntPtr GetMethodSignature (MonoObject* methodobj)
@@ -562,7 +618,7 @@ namespace ObjCRuntime {
 			}
 
 			// Log our input
-			log_coreclr ($"InvokeMethod ({method.DeclaringType.FullName}::{method}, {instance}, 0x{native_parameters.ToString ("x")})");
+			log_coreclr ($"InvokeMethod ({method.DeclaringType.FullName}::{method}, {(instance is null ? "<null>" : instance.GetType ().FullName)}, 0x{native_parameters.ToString ("x")})");
 			for (var i = 0; i < methodParameters.Length; i++) {
 				var nativeParam = nativeParameters [i];
 				var p = methodParameters [i];
@@ -580,7 +636,7 @@ namespace ObjCRuntime {
 				var isByRef = paramType.IsByRef;
 				if (isByRef)
 					paramType = paramType.GetElementType ();
-				log_coreclr ($"    Marshalling #{i + 1}: IntPtr => 0x{nativeParam.ToString ("x")} => {p.ParameterType.FullName} [...]");
+				log_coreclr ($"    Marshalling #{i + 1}: IntPtr => 0x{nativeParam.ToString ("x")} => {p.ParameterType.FullName}");
 
 				if (paramType == typeof (IntPtr)) {
 					log_coreclr ($"        IntPtr");
@@ -593,7 +649,7 @@ namespace ObjCRuntime {
 					} else {
 						parameters [i] = nativeParam == IntPtr.Zero ? IntPtr.Zero : Marshal.ReadIntPtr (nativeParam);
 					}
-					log_coreclr ($"            => 0x{((IntPtr) parameters [i]).ToString ("x")}");
+					log_coreclr_render ("            => {0}", parameters [i]);
 				} else if (paramType.IsClass || paramType.IsInterface || (paramType.IsValueType && IsNullable (paramType))) {
 					log_coreclr ($"        IsClass/IsInterface/IsNullable IsByRef: {isByRef} IsOut: {p.IsOut} ParameterType: {paramType}");
 					if (nativeParam != IntPtr.Zero) {
@@ -606,7 +662,7 @@ namespace ObjCRuntime {
 							parameters [i] = GetMonoObjectTarget (mono_obj);
 						}
 					}
-					log_coreclr ($"            => {(parameters [i] == null ? "<null>" : parameters [i].GetType ().FullName)}");
+					log_coreclr_render ("            => {0}", parameters [i]);
 				} else if (paramType.IsValueType) {
 					log_coreclr ($"        IsValueType IsByRef: {isByRef} IsOut: {p.IsOut} nativeParam: 0x{nativeParam.ToString ("x")} ParameterType: {paramType}");
 					if (nativeParam != IntPtr.Zero) {
@@ -626,7 +682,7 @@ namespace ObjCRuntime {
 							vt = Enum.ToObject (enumType, vt);
 						parameters [i] = vt;
 					}
-					log_coreclr ($"            => {(parameters [i] == null ? "<null>" : parameters [i].ToString ())}");
+					log_coreclr_render ("            => {0}", parameters [i]);
 				} else {
 					throw ErrorHelper.CreateError (8037, Errors.MX8037 /* Don't know how to marshal the parameter of type {p.ParameterType.FullName} for parameter {p.Name} in call to {method} */, p.ParameterType.FullName, p.Name, method);
 				}
@@ -646,6 +702,8 @@ namespace ObjCRuntime {
 				var ex = tie.InnerException ?? tie;
 				// This will re-throw the original exception and preserve the stacktrace.
 				ExceptionDispatchInfo.Capture (ex).Throw ();
+			} catch (Exception e) {
+				throw ErrorHelper.CreateError (8042, e, Errors.MX8042 /* An exception occurred while trying to invoke the function {0}: {1}. */, GetMethodFullName (method), e.Message);
 			}
 
 			// Copy any byref parameters back out again
@@ -657,12 +715,12 @@ namespace ObjCRuntime {
 
 				byrefParameterCount++;
 
-				log_coreclr ($"    Marshalling #{i + 1} back (Type: {p.ParameterType.FullName}) value: {(parameters [i] == null ? "<null>" : parameters [i].GetType ().FullName)}");
-
 				var parameterType = p.ParameterType.GetElementType ();
 				var isMonoObject = parameterType.IsClass || parameterType.IsInterface || (parameterType.IsValueType && IsNullable (parameterType));
 
 				var nativeParam = nativeParameters [i];
+
+				log_coreclr_render ($"    Marshalling #{i + 1} back (Type: {p.ParameterType.FullName}) nativeParam: 0x{nativeParam.ToString ("x")} value: {{0}}", parameters [i]);
 
 				if (nativeParam == IntPtr.Zero) {
 					log_coreclr ($"    No output pointer was provided.");
@@ -680,21 +738,21 @@ namespace ObjCRuntime {
 
 				if (parameterType == typeof (IntPtr)) {
 					Marshal.WriteIntPtr (nativeParam, (IntPtr) parameters [i]);
-					log_coreclr ($"        IntPtr: 0x{((IntPtr) parameters [i]).ToString ("x")} => Type: {parameters [i]?.GetType ()} nativeParam: 0x{nativeParam.ToString ("x")}");
+					log_coreclr ($"        IntPtr");
 				} else if (isMonoObject) {
 					var ptr = GetMonoObject (parameters [i]);
 					Marshal.WriteIntPtr (nativeParam, ptr);
-					log_coreclr ($"        IsClass/IsInterface/IsNullable: {(parameters [i] == null ? "<null>" : parameters [i].GetType ().FullName)}  nativeParam: 0x{nativeParam.ToString ("x")} -> MonoObject: 0x{ptr.ToString ("x")}");
+					log_coreclr ($"        IsClass/IsInterface/IsNullable  MonoObject: 0x{ptr.ToString ("x")}");
 				} else if (parameterType.IsValueType) {
 					StructureToPtr (parameters [i], nativeParam);
-					log_coreclr ($"        IsValueType: {(parameters [i] == null ? "<null>" : parameters [i].ToString ())} nativeParam: 0x{nativeParam.ToString ("x")}");
+					log_coreclr ($"        IsValueType");
 				} else {
 					throw ErrorHelper.CreateError (8038, Errors.MX8038 /* Don't know how to marshal back the parameter of type {p.ParameterType.FullName} for parameter {p.Name} in call to {method} */, p.ParameterType.FullName, p.Name, method);
 				}
 			}
 
 			// we're done!
-			log_coreclr ($"    Invoke complete with {byrefParameterCount} ref parameters and return value of type {rv?.GetType ()}");
+			log_coreclr_render ($"    Invoke complete with {byrefParameterCount} ref parameters and return value: {{0}}", rv);
 
 			return rv;
 		}
@@ -780,9 +838,10 @@ namespace ObjCRuntime {
 			return boxed;
 		}
 
-		static unsafe bool IsNullable (MonoObject* type)
+		static unsafe sbyte IsNullable (MonoObject* type)
 		{
-			return IsNullable ((Type) GetMonoObjectTarget (type));
+			var rv = IsNullable ((Type) GetMonoObjectTarget (type));
+			return (sbyte) (rv ? 1 : 0);
 		}
 
 		static bool IsNullable (Type type)
@@ -796,22 +855,25 @@ namespace ObjCRuntime {
 			return false;
 		}
 
-		unsafe static bool IsByRef (MonoObject *typeobj)
+		unsafe static sbyte IsByRef (MonoObject *typeobj)
 		{
 			var type = (Type) GetMonoObjectTarget (typeobj);
-			return type.IsByRef;
+			var rv = type.IsByRef;
+			return (sbyte) (rv ? 1 : 0);
 		}
 
-		unsafe static bool IsValueType (MonoObject *typeobj)
+		unsafe static sbyte IsValueType (MonoObject *typeobj)
 		{
 			var type = (Type) GetMonoObjectTarget (typeobj);
-			return type.IsValueType;
+			var rv = type.IsValueType;
+			return (sbyte) (rv ? 1 : 0);
 		}
 
-		unsafe static bool IsEnum (MonoObject *typeobj)
+		unsafe static sbyte IsEnum (MonoObject *typeobj)
 		{
 			var type = (Type) GetMonoObjectTarget (typeobj);
-			return type.IsEnum;
+			var rv = type.IsEnum;
+			return (sbyte) (rv ? 1 : 0);
 		}
 
 		static unsafe MonoObject* GetEnumBaseType (MonoObject* typeobj)

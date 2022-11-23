@@ -1,8 +1,9 @@
 // Copyright 2019 Microsoft Corporation
 
+#nullable enable
+
 #if !MONOMAC
 
-using System.Runtime.Versioning;
 using Foundation;
 
 namespace NetworkExtension {
@@ -21,9 +22,11 @@ namespace NetworkExtension {
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
-		[iOS (13,0)]
+		[iOS (13, 0)]
 #endif
 		public NEHotspotConfiguration (string ssid, bool ssidIsPrefix)
 		{
@@ -33,9 +36,11 @@ namespace NetworkExtension {
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
-		[iOS (13,0)]
+		[iOS (13, 0)]
 #endif
 		public NEHotspotConfiguration (string ssid, string passphrase, bool isWep, bool ssidIsPrefix)
 		{

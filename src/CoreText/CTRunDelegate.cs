@@ -24,8 +24,12 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -38,7 +42,7 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreText {
 
-#region Run Delegate Callbacks
+	#region Run Delegate Callbacks
 	delegate void CTRunDelegateDeallocateCallback (IntPtr refCon);
 	delegate nfloat CTRunDelegateGetCallback (IntPtr refCon);
 
@@ -50,8 +54,14 @@ namespace CoreText {
 		public CTRunDelegateGetCallback getDescent;
 		public CTRunDelegateGetCallback getWidth;
 	}
-#endregion
+	#endregion
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTRunDelegateOperations : IDisposable {
 		// This instance is kept alive using a GCHandle until the Deallocate callback has been called,
 		// which is called when the corresponding CTRunDelegate is freed (retainCount reaches 0).
@@ -133,7 +143,7 @@ namespace CoreText {
 		static void Deallocate (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
-			if (self == null)
+			if (self is null)
 				return;
 
 			self.Dispose ();
@@ -143,7 +153,7 @@ namespace CoreText {
 			self.handle = new GCHandle ();
 		}
 
-		internal static CTRunDelegateOperations GetOperations (IntPtr refCon)
+		internal static CTRunDelegateOperations? GetOperations (IntPtr refCon)
 		{
 			GCHandle c = GCHandle.FromIntPtr (refCon);
 
@@ -154,7 +164,7 @@ namespace CoreText {
 		static nfloat GetAscent (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
-			if (self == null)
+			if (self is null)
 				return 0;
 			return (nfloat) self.GetAscent ();
 		}
@@ -163,7 +173,7 @@ namespace CoreText {
 		static nfloat GetDescent (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
-			if (self == null)
+			if (self is null)
 				return 0;
 			return (nfloat) self.GetDescent ();
 		}
@@ -172,12 +182,18 @@ namespace CoreText {
 		static nfloat GetWidth (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
-			if (self == null)
+			if (self is null)
 				return 0;
 			return (nfloat) self.GetWidth ();
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTRunDelegate : NativeObject, IDisposable {
 		[Preserve (Conditional = true)]
 		internal CTRunDelegate (NativeHandle handle, bool owns)
@@ -185,14 +201,14 @@ namespace CoreText {
 		{
 		}
 
-#region RunDelegate Creation
+		#region RunDelegate Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTRunDelegateCreate (ref CTRunDelegateCallbacks callbacks, IntPtr refCon);
 
 		static IntPtr Create (CTRunDelegateOperations operations)
 		{
-			if (operations == null)
-				throw new ArgumentNullException (nameof (operations));
+			if (operations is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (operations));
 
 			CTRunDelegateCallbacks callbacks = operations.GetCallbacks ();
 			return CTRunDelegateCreate (ref callbacks, operations.Handle);
@@ -202,17 +218,17 @@ namespace CoreText {
 			: base (Create (operations), true)
 		{
 		}
-#endregion
+		#endregion
 
-#region Run Delegate Access
+		#region Run Delegate Access
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTRunDelegateGetRefCon (IntPtr runDelegate);
 
-		public CTRunDelegateOperations Operations {
+		public CTRunDelegateOperations? Operations {
 			get {
 				return CTRunDelegateOperations.GetOperations (CTRunDelegateGetRefCon (Handle));
 			}
 		}
-#endregion
+		#endregion
 	}
 }

@@ -133,6 +133,10 @@ namespace CoreGraphics {
 		[Field ("kCGColorSpaceITUR_709_PQ")]
 		NSString ItuR_709_PQ { get; }
 
+		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0), Watch (9,0)]
+		[Field ("kCGColorSpaceITUR_709_HLG")]
+		NSString ItuR_709_Hlg { get; }
+
 		[Mac (10,11)]
 		[Field ("kCGColorSpaceITUR_2020")]
 		NSString ItuR_2020 { get; }
@@ -187,27 +191,30 @@ namespace CoreGraphics {
 		[Field ("kCGColorSpaceExtendedLinearGray")]
 		NSString ExtendedLinearGray { get; }
 
-#if MONOMAC
-		[Obsolete ("Now accessible as GenericCmyk")]
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
+		[Obsolete ("Now accessible as GenericCmyk.")]
 		[Field ("kCGColorSpaceGenericCMYK")]
 		NSString GenericCMYK { get; }
 
-		[Obsolete ("Now accessible as AdobeRgb1998")]
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
+		[Obsolete ("Now accessible as AdobeRgb1998.")]
 		[Field ("kCGColorSpaceAdobeRGB1998")]
 		NSString AdobeRGB1998 { get; }
 
-		[Obsolete ("Now accessible as Srgb")]
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
+		[Obsolete ("Now accessible as Srgb.")]
 		[Field ("kCGColorSpaceSRGB")]
 		NSString SRGB { get; }
 
-		[Obsolete ("Now accessible as GenericRgb")]
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
+		[Obsolete ("Now accessible as GenericRgb.")]
 		[Field ("kCGColorSpaceGenericRGB")]
 		NSString GenericRGB { get; }
 
-		[Obsolete ("Now accessible as GenericRgb")]
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
+		[Obsolete ("Now accessible as GenericRgb.")]
 		[Field ("kCGColorSpaceGenericRGBLinear")]
 		NSString GenericRGBLinear { get; }
-#endif
 
 		[iOS (11,0)][Mac (10,13)][Watch (4,0)][TV (11,0)]
 		[Field ("kCGColorSpaceGenericLab")]
@@ -399,5 +406,49 @@ namespace CoreGraphics {
 		Black,
 		[Field ("kCGColorClear")]
 		Clear,
+	}
+
+	// Adding suffix *Keys to avoid possible name clash
+	[NoiOS, NoTV, NoWatch, Mac (10,9), MacCatalyst (13,1)]
+	[Static]
+	interface CGDisplayStreamKeys {
+
+		[Field ("kCGDisplayStreamColorSpace")]
+		NSString ColorSpace { get; }
+
+		[Field ("kCGDisplayStreamDestinationRect")]
+		NSString DestinationRect { get; }
+
+		[Field ("kCGDisplayStreamMinimumFrameTime")]
+		NSString MinimumFrameTime { get; }
+
+		[Field ("kCGDisplayStreamPreserveAspectRatio")]
+		NSString PreserveAspectRatio { get; }
+
+		[Field ("kCGDisplayStreamQueueDepth")]
+		NSString QueueDepth { get; }
+
+		[Field ("kCGDisplayStreamShowCursor")]
+		NSString ShowCursor { get; }
+
+		[Field ("kCGDisplayStreamSourceRect")]
+		NSString SourceRect { get; }
+
+		[Field ("kCGDisplayStreamYCbCrMatrix")]
+		NSString YCbCrMatrix { get; }
+	}
+
+	[NoiOS, NoTV, NoWatch, Mac (10,9), MacCatalyst (13,1)]
+	[Static]
+	interface CGDisplayStreamYCbCrMatrixOptionKeys {
+
+		[Field ("kCGDisplayStreamYCbCrMatrix_ITU_R_601_4")]
+		NSString Itu_R_601_4 { get; }
+
+		[Field ("kCGDisplayStreamYCbCrMatrix_ITU_R_709_2")]
+		NSString Itu_R_709_2 { get; }
+
+		[Field ("kCGDisplayStreamYCbCrMatrix_SMPTE_240M_1995")]
+		NSString Smpte_240M_1995 { get; }
 	}
 }

@@ -13,7 +13,6 @@ using System;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -28,16 +27,17 @@ namespace CoreServices {
 
 	// all fields constants that this is using are deprecated in Xcode 7
 #if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 	[UnsupportedOSPlatform ("macos10.11")]
 	[UnsupportedOSPlatform ("ios9.0")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.11 use 'NSUrlSession'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-	[Obsolete ("Starting with ios9.0 use 'NSUrlSession'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+	[ObsoletedOSPlatform ("macos10.11", "Use 'NSUrlSession'.")]
+	[ObsoletedOSPlatform ("ios9.0", "Use 'NSUrlSession'.")]
 #else
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'NSUrlSession'.")]
-	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSUrlSession'.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'NSUrlSession'.")]
+	[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSUrlSession'.")]
 #endif
 	// Dotnet attributes are included in partial class inside cfnetwork.cs
 	public partial class CFHTTPStream : CFReadStream {
@@ -105,7 +105,7 @@ namespace CoreServices {
 			}
 			set {
 				SetProperty (_AttemptPersistentConnection,
-				             CFBoolean.FromBoolean (value));
+							 CFBoolean.FromBoolean (value));
 			}
 		}
 
@@ -134,7 +134,7 @@ namespace CoreServices {
 			}
 			set {
 				SetProperty (_ShouldAutoredirect,
-				             CFBoolean.FromBoolean (value));
+							 CFBoolean.FromBoolean (value));
 			}
 		}
 
@@ -148,7 +148,7 @@ namespace CoreServices {
 		public void SetProxy (CFProxySettings proxySettings)
 		{
 			if (proxySettings is null)
-				throw new ArgumentNullException (nameof (proxySettings));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (proxySettings));
 
 			SetProperty (_Proxy, proxySettings.Dictionary);
 		}

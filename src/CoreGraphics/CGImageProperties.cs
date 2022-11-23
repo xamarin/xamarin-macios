@@ -25,7 +25,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
+using System.Runtime.Versioning;
 
 using Foundation;
 using CoreFoundation;
@@ -47,8 +50,13 @@ namespace CoreGraphics {
 		Lab
 	}
 
-	public class CGImageProperties : DictionaryContainer
-	{
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class CGImageProperties : DictionaryContainer {
 #if !COREBUILD
 
 		public CGImageProperties ()
@@ -56,7 +64,7 @@ namespace CoreGraphics {
 		{
 		}
 
-		public CGImageProperties (NSDictionary dictionary)
+		public CGImageProperties (NSDictionary? dictionary)
 			: base (dictionary)
 		{
 		}
@@ -81,7 +89,7 @@ namespace CoreGraphics {
 					return CGImageColorModel.CMYK;
 				if (v == Keys.ColorModelLab)
 					return CGImageColorModel.Lab;
-				return null;					
+				return null;
 			}
 			set {
 				NSString key;
@@ -163,7 +171,7 @@ namespace CoreGraphics {
 #if !WATCH
 		public CIImageOrientation? Orientation {
 			get {
-				return (CIImageOrientation?)GetInt32Value (Keys.Orientation);
+				return (CIImageOrientation?) GetInt32Value (Keys.Orientation);
 			}
 			set {
 				SetNumberValue (Keys.Orientation, (int?) value);
@@ -189,7 +197,7 @@ namespace CoreGraphics {
 			}
 		}
 
-		public string ProfileName {
+		public string? ProfileName {
 			get {
 				return GetStringValue (Keys.ProfileName);
 			}
@@ -198,45 +206,45 @@ namespace CoreGraphics {
 			}
 		}
 
-		public CGImagePropertiesExif Exif {
+		public CGImagePropertiesExif? Exif {
 			get {
 				var dict = GetNSDictionary (Keys.ExifDictionary);
-				return dict == null ? null : new CGImagePropertiesExif (dict);
+				return dict is null ? null : new CGImagePropertiesExif (dict);
 			}
 		}
 
-		public CGImagePropertiesGps Gps {
+		public CGImagePropertiesGps? Gps {
 			get {
 				var dict = GetNSDictionary (Keys.GPSDictionary);
-				return dict == null ? null : new CGImagePropertiesGps (dict);
+				return dict is null ? null : new CGImagePropertiesGps (dict);
 			}
 		}
 
-		public CGImagePropertiesIptc Iptc {
+		public CGImagePropertiesIptc? Iptc {
 			get {
 				var dict = GetNSDictionary (Keys.IPTCDictionary);
-				return dict == null ? null : new CGImagePropertiesIptc (dict);
+				return dict is null ? null : new CGImagePropertiesIptc (dict);
 			}
 		}
 
-		public CGImagePropertiesPng Png {
+		public CGImagePropertiesPng? Png {
 			get {
 				var dict = GetNSDictionary (Keys.PNGDictionary);
-				return dict == null ? null : new CGImagePropertiesPng (dict);
+				return dict is null ? null : new CGImagePropertiesPng (dict);
 			}
 		}
 
-		public CGImagePropertiesJfif Jfif {
+		public CGImagePropertiesJfif? Jfif {
 			get {
 				var dict = GetNSDictionary (Keys.JFIFDictionary);
-				return dict == null ? null : new CGImagePropertiesJfif (dict);
+				return dict is null ? null : new CGImagePropertiesJfif (dict);
 			}
 		}
 
-		public CGImagePropertiesTiff Tiff {
+		public CGImagePropertiesTiff? Tiff {
 			get {
 				var dict = GetNSDictionary (Keys.TIFFDictionary);
-				return dict == null ? null : new CGImagePropertiesTiff (dict);
+				return dict is null ? null : new CGImagePropertiesTiff (dict);
 			}
 		}
 
@@ -244,8 +252,13 @@ namespace CoreGraphics {
 	}
 
 #if !COREBUILD
-	public class CGImagePropertiesExif : DictionaryContainer
-	{
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class CGImagePropertiesExif : DictionaryContainer {
 		public CGImagePropertiesExif ()
 			: base (new NSMutableDictionary ())
 		{
@@ -308,7 +321,7 @@ namespace CoreGraphics {
 			set {
 				SetNumberValue (Keys.ExifExposureIndex, value);
 			}
-		}		
+		}
 
 		public float? ExposureTime {
 			get {
@@ -373,7 +386,7 @@ namespace CoreGraphics {
 			}
 		}
 
-		public int[] ISOSpeedRatings {
+		public int []? ISOSpeedRatings {
 			get {
 				return GetArray (Keys.ExifISOSpeedRatings, l => new NSNumber (l).Int32Value);
 			}
@@ -427,8 +440,13 @@ namespace CoreGraphics {
 		// TODO: Many more available but underlying types need to be investigated
 	}
 
-	public class CGImagePropertiesTiff : DictionaryContainer
-	{
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class CGImagePropertiesTiff : DictionaryContainer {
 		public CGImagePropertiesTiff ()
 			: base (new NSMutableDictionary ())
 		{
@@ -442,7 +460,7 @@ namespace CoreGraphics {
 #if !WATCH
 		public CIImageOrientation? Orientation {
 			get {
-				return (CIImageOrientation?)GetInt32Value (Keys.TIFFOrientation);
+				return (CIImageOrientation?) GetInt32Value (Keys.TIFFOrientation);
 			}
 			set {
 				SetNumberValue (Keys.TIFFOrientation, (int?) value);
@@ -468,7 +486,7 @@ namespace CoreGraphics {
 			}
 		}
 
-		public string Software {
+		public string? Software {
 			get {
 				return GetStringValue (Keys.TIFFSoftware);
 			}
@@ -480,8 +498,13 @@ namespace CoreGraphics {
 		// TODO: Many more available but underlying types need to be investigated
 	}
 
-	public class CGImagePropertiesJfif : DictionaryContainer
-	{
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class CGImagePropertiesJfif : DictionaryContainer {
 		public CGImagePropertiesJfif ()
 			: base (new NSMutableDictionary ())
 		{
@@ -513,8 +536,13 @@ namespace CoreGraphics {
 		// TODO: Many more available but underlying types need to be investigated
 	}
 
-	public class CGImagePropertiesPng : DictionaryContainer
-	{
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class CGImagePropertiesPng : DictionaryContainer {
 		public CGImagePropertiesPng ()
 			: base (new NSMutableDictionary ())
 		{
@@ -525,7 +553,7 @@ namespace CoreGraphics {
 		{
 		}
 
-		public string Author {
+		public string? Author {
 			get {
 				return GetStringValue (Keys.PNGAuthor);
 			}
@@ -534,7 +562,7 @@ namespace CoreGraphics {
 			}
 		}
 
-		public string Description {
+		public string? Description {
 			get {
 				return GetStringValue (Keys.PNGDescription);
 			}
@@ -552,7 +580,7 @@ namespace CoreGraphics {
 			}
 		}
 
-		public string Software {
+		public string? Software {
 			get {
 				return GetStringValue (Keys.PNGSoftware);
 			}
@@ -579,7 +607,7 @@ namespace CoreGraphics {
 			}
 		}
 
-		public string Title {
+		public string? Title {
 			get {
 				return GetStringValue (Keys.PNGTitle);
 			}
@@ -591,8 +619,13 @@ namespace CoreGraphics {
 		// TODO: Many more available but underlying types need to be investigated
 	}
 
-	public class CGImagePropertiesGps : DictionaryContainer
-	{
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class CGImagePropertiesGps : DictionaryContainer {
 		public CGImagePropertiesGps ()
 			: base (new NSMutableDictionary ())
 		{
@@ -634,8 +667,13 @@ namespace CoreGraphics {
 	}
 
 
-	public class CGImagePropertiesIptc : DictionaryContainer
-	{
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class CGImagePropertiesIptc : DictionaryContainer {
 		public CGImagePropertiesIptc ()
 			: base (new NSMutableDictionary ())
 		{
@@ -646,7 +684,7 @@ namespace CoreGraphics {
 		{
 		}
 
-		public string Byline {
+		public string? Byline {
 			get {
 				return GetStringValue (Keys.IPTCByline);
 			}
@@ -655,7 +693,7 @@ namespace CoreGraphics {
 			}
 		}
 
-		public string BylineTitle {
+		public string? BylineTitle {
 			get {
 				return GetStringValue (Keys.IPTCBylineTitle);
 			}
@@ -664,7 +702,7 @@ namespace CoreGraphics {
 			}
 		}
 
-		public string CaptionAbstract {
+		public string? CaptionAbstract {
 			get {
 				return GetStringValue (Keys.IPTCCaptionAbstract);
 			}
@@ -673,7 +711,7 @@ namespace CoreGraphics {
 			}
 		}
 
-		public string City {
+		public string? City {
 			get {
 				return GetStringValue (Keys.IPTCCity);
 			}
@@ -681,8 +719,8 @@ namespace CoreGraphics {
 				SetStringValue (Keys.IPTCCity, value);
 			}
 		}
-		
-		public string ContentLocationName {
+
+		public string? ContentLocationName {
 			get {
 				return GetStringValue (Keys.IPTCContentLocationName);
 			}
@@ -691,7 +729,7 @@ namespace CoreGraphics {
 			}
 		}
 
-		public string CountryPrimaryLocationName {
+		public string? CountryPrimaryLocationName {
 			get {
 				return GetStringValue (Keys.IPTCCountryPrimaryLocationName);
 			}
@@ -700,7 +738,7 @@ namespace CoreGraphics {
 			}
 		}
 
-		public string CopyrightNotice {
+		public string? CopyrightNotice {
 			get {
 				return GetStringValue (Keys.IPTCCopyrightNotice);
 			}
@@ -709,7 +747,7 @@ namespace CoreGraphics {
 			}
 		}
 
-		public string Credit {
+		public string? Credit {
 			get {
 				return GetStringValue (Keys.IPTCCredit);
 			}
@@ -718,7 +756,7 @@ namespace CoreGraphics {
 			}
 		}
 
-		public string Source {
+		public string? Source {
 			get {
 				return GetStringValue (Keys.IPTCSource);
 			}
@@ -727,7 +765,7 @@ namespace CoreGraphics {
 			}
 		}
 
-		public string WriterEditor {
+		public string? WriterEditor {
 			get {
 				return GetStringValue (Keys.IPTCWriterEditor);
 			}

@@ -25,6 +25,8 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#nullable enable
+
 #if MONOMAC
 
 using System;
@@ -188,11 +190,11 @@ namespace Darwin {
 
 		public int KEvent (KernelEvent[] changeList, KernelEvent[] eventList, TimeSpan? timeout = null)
 		{
-			if (changeList == null)
-				throw new ArgumentNullException (nameof (changeList));
+			if (changeList is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (changeList));
 
-			if (eventList == null)
-				throw new ArgumentNullException (nameof (eventList));
+			if (eventList is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (eventList));
 
 			if (changeList.Length < 1)
 				throw new ArgumentOutOfRangeException ("eventList must contain at least one element", nameof (eventList));
@@ -205,11 +207,11 @@ namespace Darwin {
 
 		public unsafe int KEvent (KernelEvent[] changeList, int nChanges, KernelEvent[] eventList, int nEvents, TimeSpec? timeout = null)
 		{
-			if (changeList == null)
-				throw new ArgumentNullException (nameof (changeList));
+			if (changeList is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (changeList));
 
-			if (eventList == null)
-				throw new ArgumentNullException (nameof (eventList));
+			if (eventList is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (eventList));
 
 			if (changeList.Length < 1)
 				throw new ArgumentOutOfRangeException ("eventList must contain at least one element", nameof (eventList));
@@ -226,7 +228,7 @@ namespace Darwin {
 			unsafe {
 				fixed (KernelEvent *cp = &changeList [0])
 					fixed (KernelEvent *ep = &eventList [0]) {
-						if (timeout == null) {
+						if (timeout is null) {
 							return kevent (handle, cp, nChanges, ep, nEvents, IntPtr.Zero);
 						} else {
 							TimeSpec ts = timeout.Value;
@@ -238,7 +240,7 @@ namespace Darwin {
 
 		static TimeSpec? ToTimespec (TimeSpan? ts)
 		{
-			if (ts == null)
+			if (ts is null)
 				return null;
 
 			var rv = new TimeSpec ();
@@ -247,14 +249,16 @@ namespace Darwin {
 			return rv;
 		}
 
+// Don't worry about nullability for !NET
+#nullable disable
 #if !NET
 		[Obsolete ("Use any of the overloads that return an int to get how many events were returned from kevent.")]
 		public bool KEvent (KernelEvent [] changeList, int nChanges, KernelEvent [] eventList, int nEvents, ref TimeSpec timeOut)
 		{
-			if (changeList != null && changeList.Length < nChanges)
+			if (changeList is not null && changeList.Length < nChanges)
 				throw new ArgumentException ("nChanges is larger than the number of elements in changeList");
 
-			if (eventList != null && eventList.Length < nEvents)
+			if (eventList is not null && eventList.Length < nEvents)
 				throw new ArgumentException ("nChanges is larger than the number of elements in changeList");
 			
 			unsafe {
@@ -267,10 +271,10 @@ namespace Darwin {
 		[Obsolete ("Use any of the overloads that return an int to get how many events were returned from kevent.")]
 		public bool KEvent (KernelEvent [] changeList, int nChanges, KernelEvent [] eventList, int nEvents)
 		{
-			if (changeList != null && changeList.Length < nChanges)
+			if (changeList is not null && changeList.Length < nChanges)
 				throw new ArgumentException ("nChanges is larger than the number of elements in changeList");
 
-			if (eventList != null && eventList.Length < nEvents)
+			if (eventList is not null && eventList.Length < nEvents)
 				throw new ArgumentException ("nChanges is larger than the number of elements in changeList");
 			
 			unsafe {
@@ -286,10 +290,11 @@ namespace Darwin {
 			unsafe {
 				fixed (KernelEvent *cp = &changeList [0])
 					fixed (KernelEvent *ep = &eventList [0])
-						return kevent (handle, cp, changeList != null ? changeList.Length : 0, ep, eventList != null ? eventList.Length : 0, ref timeOut) != -1;
+						return kevent (handle, cp, changeList?.Length ?? 0, ep, eventList?.Length ?? 0, ref timeOut) != -1;
 			}
 		}
 #endif
+#nullable enable
 
 #if NET
 		public int KEvent (KernelEvent [] changeList, KernelEvent [] eventList)
@@ -302,9 +307,9 @@ namespace Darwin {
 				fixed (KernelEvent *cp = &changeList [0])
 					fixed (KernelEvent *ep = &eventList [0])
 #if NET
-						return kevent (handle, cp, changeList != null ? changeList.Length : 0, ep, eventList != null ? eventList.Length : 0, IntPtr.Zero);
+						return kevent (handle, cp, changeList?.Length ?? 0, ep, eventList?.Length ?? 0, IntPtr.Zero);
 #else
-						return kevent (handle, cp, changeList != null ? changeList.Length : 0, ep, eventList != null ? eventList.Length : 0, IntPtr.Zero) != -1;
+						return kevent (handle, cp, changeList?.Length ?? 0, ep, eventList?.Length ?? 0, IntPtr.Zero) != -1;
 #endif
 			}
 		}

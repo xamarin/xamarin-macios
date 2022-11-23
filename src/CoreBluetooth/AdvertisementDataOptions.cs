@@ -30,7 +30,6 @@ using System;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -40,11 +39,15 @@ namespace CoreBluetooth {
 	// It's intentionally not called AdvertisementDataOptions because different options
 	// are valid in different contexts
 	//
-#if !NET
-	[Watch (4,0)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
+	[Watch (4, 0)]
 #endif
-	public class StartAdvertisingOptions : DictionaryContainer
-	{
+	public class StartAdvertisingOptions : DictionaryContainer {
 #if !COREBUILD
 		public StartAdvertisingOptions ()
 			: base (new NSMutableDictionary ())
@@ -65,7 +68,7 @@ namespace CoreBluetooth {
 			}
 		}
 
-		public CBUUID[]? ServicesUUID {
+		public CBUUID []? ServicesUUID {
 			get {
 				return GetArray<CBUUID> (CBAdvertisement.DataServiceUUIDsKey);
 			}

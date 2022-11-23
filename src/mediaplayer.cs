@@ -14,12 +14,28 @@ using Foundation;
 using CoreFoundation;
 using CoreGraphics;
 using CoreLocation;
+using CoreMedia;
 #if MONOMAC
 using AppKit;
 #else
 using UIKit;
 #endif
 using System;
+
+#if MONOMAC
+using UIColor = AppKit.NSImage;
+using UIControlState = Foundation.NSObject;
+using UIImage = AppKit.NSImage;
+using UIInterfaceOrientation = Foundation.NSObject;
+using UIView = AppKit.NSView;
+using UIViewAnimationCurve = Foundation.NSObject;
+using UIViewController = AppKit.NSViewController;
+#else
+using NSImage = UIKit.UIImage;
+#endif
+#if WATCH
+using UIViewController = Foundation.NSObject;
+#endif
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -262,35 +278,28 @@ namespace MediaPlayer {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MPMediaItemArtwork {
-#if !MONOMAC
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Export ("initWithBoundsSize:requestHandler:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (CGSize boundsSize, Func<CGSize, UIImage> requestHandler);
 
+		[NoMac]
 		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Export ("initWithImage:")]
 		NativeHandle Constructor (UIImage image);
 		
 		[Export ("imageWithSize:")]
 		[return: NullAllowed]
 		UIImage ImageWithSize (CGSize size);
-#else
-		[Export ("initWithBoundsSize:requestHandler:")]
-		[DesignatedInitializer]
-		NativeHandle Constructor (CGSize boundsSize, Func<CGSize, NSImage> requestHandler);
-
-		[Export ("imageWithSize:")]
-		[return: NullAllowed]
-		NSImage ImageWithSize (CGSize size);
-#endif
 
 		[Export ("bounds")]
 		CGRect Bounds { get; }
 
 		[NoMac]
 		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Export ("imageCropRect")]
 		CGRect ImageCropRectangle { get; }
 	}
@@ -381,8 +390,7 @@ namespace MediaPlayer {
 		void GetPlaylist (NSUuid uuid, [NullAllowed] MPMediaPlaylistCreationMetadata creationMetadata, Action<MPMediaPlaylist, NSError> completionHandler);
 	}
 
-#if !MONOMAC && !WATCH
-	[NoTV]
+	[NoTV][NoMac][NoWatch]
 	[BaseType (typeof (UIViewController), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(MPMediaPickerControllerDelegate)})]
 	interface MPMediaPickerController {
 		[DesignatedInitializer]
@@ -414,7 +422,7 @@ namespace MediaPlayer {
 		bool ShowsItemsWithProtectedAssets { get; set; }
 	}
 
-	[NoTV]
+	[NoTV][NoMac][NoWatch]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -425,7 +433,6 @@ namespace MediaPlayer {
 		[Export ("mediaPickerDidCancel:"), EventArgs ("MPMediaPickerController"), EventName ("DidCancel")]
 		void MediaPickerDidCancel (MPMediaPickerController sender);
 	}
-#endif
 
 	[NoMac]
 	[NoTV]
@@ -728,7 +735,7 @@ namespace MediaPlayer {
 		MPMovieFinishReason FinishReason { get; }
 	}
 
-#if !MONOMAC
+	[NoMac]
 	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	interface MPMoviePlayerFullScreenEventArgs {
@@ -739,6 +746,7 @@ namespace MediaPlayer {
 		UIViewAnimationCurve AnimationCurve { get; }
 	}
 
+	[NoMac]
 	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	interface MPMoviePlayerThumbnailEventArgs {
@@ -751,7 +759,6 @@ namespace MediaPlayer {
 		[Export ("MPMoviePlayerThumbnailErrorKey")]
 		NSError Error { get; }
 	}
-#endif
 
 	[NoMac]
 	[NoWatch]
@@ -764,7 +771,7 @@ namespace MediaPlayer {
 	[NoMac]
 #if NET
 	[NoWatch] // marked as unavailable in xcode 12 beta 1
-	[NoTV]
+	[TV (16,0)]
 #else
 	[Watch (5,0)]
 	[Obsoleted (PlatformName.TvOS, 14,0, message: "Removed in Xcode 12.")]
@@ -813,15 +820,14 @@ namespace MediaPlayer {
 		void EndSeeking ();
 	}
 
-#if !MONOMAC 
-
+	[NoMac]
+	[NoTV]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'AVPlayerViewController' (AVKit) instead.")]
+	[MacCatalyst (14,0)] // docs says 13.0 but this throws: NSInvalidArgumentException Reason: MPMoviePlayerController is no longer available. Use AVPlayerViewController in AVKit.
 #if WATCH
 	[Static]
 	interface MPMoviePlayerController {
 #else
-	[NoTV]
-	[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'AVPlayerViewController' (AVKit) instead.")]
-	[MacCatalyst (14,0)] // docs says 13.0 but this throws: NSInvalidArgumentException Reason: MPMoviePlayerController is no longer available. Use AVPlayerViewController in AVKit.
 	[BaseType (typeof (NSObject))]
 	interface MPMoviePlayerController : MPMediaPlayback {
 #endif
@@ -1138,7 +1144,6 @@ namespace MediaPlayer {
 		[Notification]
 		NSString MPMoviePlayerIsAirPlayVideoActiveDidChangeNotification { get; }
 	}
-#endif
 
 	[NoMac]
 	[NoTV]
@@ -1168,8 +1173,7 @@ namespace MediaPlayer {
 		NSDictionary AllMetadata { get;  }
 	}
 
-#if !MONOMAC && !WATCH
-	[NoTV]
+	[NoTV][NoMac][NoWatch]
 	[BaseType (typeof (UIViewController))]
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'AVPlayerViewController' (AVKit) instead.")]
 	[MacCatalyst (14,0)] // docs says 13.0 but this throws: NSInvalidArgumentException Reason: MPMoviePlayerViewController is no longer available. Use AVPlayerViewController in AVKit.
@@ -1189,7 +1193,6 @@ namespace MediaPlayer {
 		bool ShouldAutorotateToInterfaceOrientation (UIInterfaceOrientation orientation);
 #endif // !NET
 	}
-#endif
 
 	[NoMac]
 	[TV (14,0)]
@@ -1298,7 +1301,7 @@ namespace MediaPlayer {
 		NSString VolumeDidChangeNotification { get; }
 	}
 
-#if !MONOMAC && !WATCH
+	[NoMac][NoWatch]
 	[TV (14,0)]
 	[BaseType (typeof (UIView))]
 	interface MPVolumeView {
@@ -1306,6 +1309,7 @@ namespace MediaPlayer {
 		NativeHandle Constructor (CGRect frame);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRoutePickerView' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AVRoutePickerView' instead.")]
 		[Export ("showsRouteButton")]
 		bool ShowsRouteButton { get; set; }
 
@@ -1342,25 +1346,30 @@ namespace MediaPlayer {
 		CGRect GetVolumeThumbRect (CGRect bounds, CGRect columeSliderRect, float /* float, not CGFloat */ value);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRoutePickerView.RoutePickerButtonStyle' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AVRoutePickerView.RoutePickerButtonStyle' instead.")]
 		[Export ("setRouteButtonImage:forState:")]
 		void SetRouteButtonImage ([NullAllowed] UIImage image, UIControlState state);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "See 'AVRoutePickerView' for possible replacements.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "See 'AVRoutePickerView' for possible replacements.")]
 		[return: NullAllowed]
 		[Export ("routeButtonImageForState:")]
 		UIImage GetRouteButtonImage (UIControlState state);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "See 'AVRoutePickerView' for possible replacements.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "See 'AVRoutePickerView' for possible replacements.")]
 		[Export ("routeButtonRectForBounds:")]
 		CGRect GetRouteButtonRect (CGRect bounds);
 
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRouteDetector.MultipleRoutesDetected' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AVRouteDetector.MultipleRoutesDetected' instead.")]
 		[Export ("wirelessRoutesAvailable")]
 		bool AreWirelessRoutesAvailable { [Bind ("areWirelessRoutesAvailable")] get; }
 
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVPlayer.ExternalPlaybackActive' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AVPlayer.ExternalPlaybackActive' instead.")]
 		[Export ("wirelessRouteActive")]
 		bool IsWirelessRouteActive { [Bind ("isWirelessRouteActive")] get; }
 
@@ -1381,7 +1390,6 @@ namespace MediaPlayer {
 		[Field ("MPVolumeViewWirelessRouteActiveDidChangeNotification")]
 		NSString WirelessRouteActiveDidChangeNotification { get; }
 	}	
-#endif
 
 	[NoMac]
 	[NoTV]
@@ -1500,6 +1508,14 @@ namespace MediaPlayer {
 		[Internal]
 		[Field ("MPNowPlayingInfoPropertyCurrentPlaybackDate")]
 		NSString PropertyCurrentPlaybackDate { get; }
+
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16,0), Watch (9,0)]
+		[Field ("MPNowPlayingInfoPropertyAdTimeRanges")]
+		NSString PropertyAdTimeRanges { get; }
+
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16,0), Watch (9,0)]
+		[Field ("MPNowPlayingInfoPropertyCreditsStartTime")]
+		NSString PropertyCreditsStartTime { get; }
 	}
 
 	[Mac (10,12,2)]
@@ -2281,8 +2297,8 @@ namespace MediaPlayer {
 
 	interface IMPNowPlayingSessionDelegate {}
 
-	[TV (14,0)]
-	[NoWatch, NoMac, NoiOS]
+	[TV (14,0), iOS (16,0)]
+	[NoWatch, NoMac, NoMacCatalyst]
 #if NET
 	[Protocol, Model]
 #else
@@ -2298,8 +2314,8 @@ namespace MediaPlayer {
 		void DidChangeCanBecomeActive (MPNowPlayingSession nowPlayingSession);
 	}
 
-	[TV (14,0)]
-	[NoWatch, NoMac, NoiOS]
+	[TV (14,0), iOS (16,0)]
+	[NoWatch, NoMac, NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MPNowPlayingSession {
@@ -2338,5 +2354,23 @@ namespace MediaPlayer {
 
 		[Export ("removePlayer:")]
 		void RemovePlayer (AVPlayer player);
+
+		[TV (16, 0), NoWatch, NoMacCatalyst, NoMac]
+		[Export ("automaticallyPublishesNowPlayingInfo")]
+		bool AutomaticallyPublishesNowPlayingInfo { get; set; }
 	}
+
+	[TV (16,0), NoWatch, NoMacCatalyst, NoMac, iOS (16,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MPAdTimeRange : NSCopying
+	{
+		[Export ("timeRange", ArgumentSemantic.Assign)]
+		CMTimeRange TimeRange { get; set; }
+
+		[Export ("initWithTimeRange:")]
+		NativeHandle Constructor (CMTimeRange timeRange);
+	}
+
+
 }

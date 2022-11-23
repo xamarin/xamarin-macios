@@ -17,20 +17,20 @@ namespace Xharness {
 		readonly IProcessManager processManager;
 		readonly Func<ILog> getLog;
 		readonly string msBuildPath;
+		readonly string systemDotnetPath;
 		readonly string dotnetPath;
-		readonly string dotnet6Path;
 
-		// Gets either the DOTNET or DOTNET6 variable, depending on any global.json
+		// Gets either the system .NET or DOTNET variable, depending on any global.json
 		// config file found in the specified directory or any containing directories.
 		readonly Dictionary<string, string> dotnet_executables = new Dictionary<string, string> ();
 
-		public AppBundleLocator (IProcessManager processManager, Func<ILog> getLog, string msBuildPath, string dotnetPath, string dotnet6Path)
+		public AppBundleLocator (IProcessManager processManager, Func<ILog> getLog, string msBuildPath, string systemDotnetPath, string dotnetPath)
 		{
 			this.processManager = processManager;
 			this.getLog = getLog;
 			this.msBuildPath = msBuildPath;
+			this.systemDotnetPath = systemDotnetPath;
 			this.dotnetPath = dotnetPath;
-			this.dotnet6Path = dotnet6Path;
 		}
 
 		public async Task<string> LocateAppBundle (XmlDocument projectFile, string projectFilePath, TestTarget target, string buildConfiguration)
@@ -86,22 +86,22 @@ namespace Xharness {
 
 					proc.StartInfo.FileName = isDotNetProject ? GetDotNetExecutable (projectPath) : msBuildPath;
 					var args = new List<string> ();
-					
+
 					if (isDotNetProject)
 						args.Add ("build");
-					
+
 					args.Add ("/p:ProjectFile=" + projectPath);
 					args.Add ("/p:OutputFile=" + output);
-					
+
 					foreach (var prop in properties)
 						args.Add ($"/p:{prop.Key}={prop.Value}");
-					
+
 					args.Add (inspector);
-					
+
 					var env = new Dictionary<string, string> {
 						{ "MSBUILD_EXE_PATH", null },
 					};
-					
+
 					proc.StartInfo.Arguments = StringUtils.FormatArguments (args);
 					proc.StartInfo.WorkingDirectory = dir;
 
@@ -123,7 +123,7 @@ namespace Xharness {
 						if (acquired)
 							evaluate_semaphore.Release ();
 					}
-					
+
 					return File.ReadAllText (output).Trim ();
 				}
 			} finally {
@@ -169,14 +169,14 @@ namespace Xharness {
 			switch (version [0]) {
 			case '3':
 			case '5':
-				executable = dotnetPath;
+				executable = systemDotnetPath;
 				break;
 			default:
-				executable = dotnet6Path;
+				executable = dotnetPath;
 				break;
 			}
 
-			getLog()?.WriteLine ($"Mapped .NET SDK version {version} to {executable} for {directory}");
+			getLog ()?.WriteLine ($"Mapped .NET SDK version {version} to {executable} for {directory}");
 
 			lock (dotnet_executables) {
 				dotnet_executables [directory] = executable;

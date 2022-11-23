@@ -26,21 +26,22 @@ using ObjCRuntime;
 using Foundation;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 
 namespace Foundation {
 
 	[Register]
-	internal class InternalNSNotificationHandler : NSObject  {
+	internal class InternalNSNotificationHandler : NSObject {
 		NSNotificationCenter notificationCenter;
 		Action<NSNotification> notify;
-		
+
 		public InternalNSNotificationHandler (NSNotificationCenter notificationCenter, Action<NSNotification> notify)
 		{
 			this.notificationCenter = notificationCenter;
 			this.notify = notify;
 			IsDirectBinding = false;
 		}
-		
+
 		[Export ("post:")]
 		[Preserve (Conditional = true)]
 		public void Post (NSNotification s)
@@ -51,7 +52,7 @@ namespace Foundation {
 
 		protected override void Dispose (bool disposing)
 		{
-			if (disposing && notificationCenter != null){
+			if (disposing && notificationCenter != null) {
 				notificationCenter.RemoveObserver (this);
 				notificationCenter = null;
 			}
@@ -63,22 +64,21 @@ namespace Foundation {
 	public partial class NSNotificationCenter {
 		const string postSelector = "post:";
 
-		class ObservedData 
-		{
+		class ObservedData {
 			public NSObject Observer;
 			public string Name;
 			public NSObject Object;
 		}
 
-		List <ObservedData> __mt_ObserverList_var = new List <ObservedData> ();
+		List<ObservedData> __mt_ObserverList_var = new List<ObservedData> ();
 
 		public NSObject AddObserver (NSString aName, Action<NSNotification> notify, NSObject fromObject)
 		{
 			if (notify == null)
 				throw new ArgumentNullException ("notify");
-			
+
 			var proxy = new InternalNSNotificationHandler (this, notify);
-			
+
 			AddObserver (proxy, new Selector (postSelector), aName, fromObject);
 
 			return proxy;
@@ -125,6 +125,12 @@ namespace Foundation {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class NSNotificationEventArgs : EventArgs {
 		public NSNotification Notification { get; private set; }
 		public NSNotificationEventArgs (NSNotification notification)

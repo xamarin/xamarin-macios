@@ -33,21 +33,26 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 using CoreImage;
+using System.Runtime.Versioning;
 
-namespace AudioUnit
-{
-	public class ClassInfoDictionary : DictionaryContainer
-	{
-		const string VersionKey  		= "version";
-		const string TypeKey 			= "type";
-		const string SubtypeKey 		= "subtype";
-		const string ManufacturerKey	= "manufacturer";
-		const string DataKey			= "data";
-		const string NameKey			= "name";
-		const string RenderQualityKey	= "render-quality";
-		const string CPULoadKey			= "cpu-load";
-		const string ElementNameKey		= "element-name";
-		const string ExternalFileRefs	= "file-references";
+namespace AudioUnit {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class ClassInfoDictionary : DictionaryContainer {
+		const string VersionKey = "version";
+		const string TypeKey = "type";
+		const string SubtypeKey = "subtype";
+		const string ManufacturerKey = "manufacturer";
+		const string DataKey = "data";
+		const string NameKey = "name";
+		const string RenderQualityKey = "render-quality";
+		const string CPULoadKey = "cpu-load";
+		const string ElementNameKey = "element-name";
+		const string ExternalFileRefs = "file-references";
 
 		public ClassInfoDictionary ()
 			: base (new NSMutableDictionary ())
@@ -68,7 +73,7 @@ namespace AudioUnit
 
 		public string? Name {
 			get {
-				return GetStringValue (NameKey);					
+				return GetStringValue (NameKey);
 			}
 		}
 

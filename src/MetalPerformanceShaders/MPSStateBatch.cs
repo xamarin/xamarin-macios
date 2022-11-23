@@ -7,9 +7,10 @@
 // Copyright 2019 Microsoft Corporation.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using Metal;
@@ -19,10 +20,11 @@ namespace MetalPerformanceShaders {
 	[SupportedOSPlatform ("ios11.3")]
 	[SupportedOSPlatform ("tvos11.3")]
 	[SupportedOSPlatform ("macos10.13.4")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (11,3)]
-	[TV (11,3)]
-	[Mac (10,13,4)]
+	[iOS (11, 3)]
+	[TV (11, 3)]
+	[Mac (10, 13, 4)]
 #endif
 	public static partial class MPSStateBatch {
 
@@ -32,8 +34,8 @@ namespace MetalPerformanceShaders {
 		// Using 'NSArray<MPSState>' instead of `MPSState[]` because array 'Handle' matters.
 		public static nuint IncrementReadCount (NSArray<MPSState> stateBatch, nint amount)
 		{
-			if (stateBatch == null)
-				throw new ArgumentNullException (nameof (stateBatch));
+			if (stateBatch is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (stateBatch));
 
 			return MPSStateBatchIncrementReadCount (stateBatch.Handle, amount);
 		}
@@ -44,10 +46,10 @@ namespace MetalPerformanceShaders {
 		// Using 'NSArray<MPSState>' instead of `MPSState[]` because array 'Handle' matters.
 		public static void Synchronize (NSArray<MPSState> stateBatch, IMTLCommandBuffer commandBuffer)
 		{
-			if (stateBatch == null)
-				throw new ArgumentNullException (nameof (stateBatch));
-			if (commandBuffer == null)
-				throw new ArgumentNullException (nameof (commandBuffer));
+			if (stateBatch is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (stateBatch));
+			if (commandBuffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (commandBuffer));
 
 			MPSStateBatchSynchronize (stateBatch.Handle, commandBuffer.Handle);
 		}
@@ -56,10 +58,11 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (12,0)]
-		[TV (12,0)]
-		[Mac (10,14)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Mac (10, 14)]
 #endif
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
 		static extern nuint MPSStateBatchResourceSize (IntPtr batch);
@@ -69,15 +72,16 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (12,0)]
-		[TV (12,0)]
-		[Mac (10,14)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Mac (10, 14)]
 #endif
 		public static nuint GetResourceSize (NSArray<MPSState> stateBatch)
 		{
-			if (stateBatch == null)
-				throw new ArgumentNullException (nameof (stateBatch));
+			if (stateBatch is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (stateBatch));
 
 			return MPSStateBatchResourceSize (stateBatch.Handle);
 		}

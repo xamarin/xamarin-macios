@@ -18,11 +18,11 @@ using UIKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class LocaleTest {
-		
+
 		[Test]
 		public void CurrentLocale ()
 		{
@@ -37,12 +37,12 @@ namespace MonoTouchFixtures.Foundation {
 			string ident = NSLocale.CurrentLocale.Identifier;
 			Assert.That (NSLocale.FromLocaleIdentifier (ident).Identifier, Is.EqualTo (ident), "FromLocaleIdentifier");
 		}
-		
+
 		[Test]
 		public void InitRegionInfo ()
 		{
 			string name = NSLocale.CurrentLocale.CountryCode; // two letter code
-			// Handle manually set locale (without country) in iOS Simulator (plist) - ref bug #18520
+															  // Handle manually set locale (without country) in iOS Simulator (plist) - ref bug #18520
 			if (name == null)
 				Assert.Inconclusive ("You can construct locale without countries");
 			RegionInfo ri = new RegionInfo (name);

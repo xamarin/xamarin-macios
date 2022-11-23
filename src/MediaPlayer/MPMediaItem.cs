@@ -13,10 +13,9 @@
 
 using System;
 using System.Collections;
-using Foundation; 
+using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
-using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -25,7 +24,7 @@ namespace MediaPlayer {
 		ulong UInt64ForProperty (NSString property)
 		{
 			var prop = ValueForProperty (property) as NSNumber;
-			if (prop == null)
+			if (prop is null)
 				return 0;
 			return prop.UInt64Value;
 		}
@@ -33,7 +32,7 @@ namespace MediaPlayer {
 		uint UInt32ForProperty (NSString property)
 		{
 			var prop = ValueForProperty (property) as NSNumber;
-			if (prop == null)
+			if (prop is null)
 				return 0;
 			return prop.UInt32Value;
 		}
@@ -41,7 +40,7 @@ namespace MediaPlayer {
 		int Int32ForProperty (NSString property)
 		{
 			var prop = ValueForProperty (property) as NSNumber;
-			if (prop == null)
+			if (prop is null)
 				return 0;
 			return prop.Int32Value;
 		}
@@ -49,7 +48,7 @@ namespace MediaPlayer {
 		double DoubleForProperty (NSString property)
 		{
 			var prop = ValueForProperty (property) as NSNumber;
-			if (prop == null)
+			if (prop is null)
 				return 0;
 			return prop.DoubleValue;
 		}
@@ -57,7 +56,7 @@ namespace MediaPlayer {
 		bool BoolForProperty (NSString property)
 		{
 			var prop = ValueForProperty (property) as NSNumber;
-			if (prop == null)
+			if (prop is null)
 				return false;
 			return prop.BoolValue;
 		}
@@ -73,7 +72,7 @@ namespace MediaPlayer {
 				return UInt64ForProperty (AlbumPersistentIDProperty);
 			}
 		}
-		
+
 		public ulong ArtistPersistentID {
 			get {
 				return UInt64ForProperty (ArtistPersistentIDProperty);
@@ -265,11 +264,14 @@ namespace MediaPlayer {
 				return Int32ForProperty (IsCloudItemProperty) != 0;
 			}
 		}
-		
+
 #if NET
 		[SupportedOSPlatform ("ios9.2")]
+		[SupportedOSPlatform ("macos10.12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,2)]
+		[iOS (9, 2)]
 #endif
 		public bool HasProtectedAsset {
 			get {
@@ -279,8 +281,11 @@ namespace MediaPlayer {
 
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (10,0)]
+		[iOS (10, 0)]
 #endif
 		public bool IsExplicitItem {
 			get {
@@ -290,8 +295,11 @@ namespace MediaPlayer {
 
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (10,0)]
+		[iOS (10, 0)]
 #endif
 		public NSDate? DateAdded {
 			get {
@@ -301,8 +309,11 @@ namespace MediaPlayer {
 
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("macos10.12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (10,3)]
+		[iOS (10, 3)]
 #endif
 		public NSString? PlaybackStoreID {
 			get {
@@ -314,11 +325,12 @@ namespace MediaPlayer {
 		[SupportedOSPlatform ("tvos14.5")]
 		[SupportedOSPlatform ("macos11.3")]
 		[SupportedOSPlatform ("ios14.5")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (7,4)]
-		[TV (14,5)]
-		[Mac (11,3)]
-		[iOS (14,5)]
+		[Watch (7, 4)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 #endif
 		public bool IsPreorder {
 			get {

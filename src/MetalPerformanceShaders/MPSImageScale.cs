@@ -1,5 +1,7 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
@@ -9,7 +11,7 @@ using ObjCRuntime;
 namespace MetalPerformanceShaders {
 
 	public partial class MPSImageScale {
-		static int size_of_scale_transform = Marshal.SizeOf (typeof(MPSScaleTransform));
+		static int size_of_scale_transform = Marshal.SizeOf (typeof (MPSScaleTransform));
 
 		public virtual MPSScaleTransform? ScaleTransform {
 			get {
@@ -24,8 +26,7 @@ namespace MetalPerformanceShaders {
 					try {
 						Marshal.StructureToPtr<MPSScaleTransform> (value.Value, ptr, false);
 						_SetScaleTransform (ptr);
-					}
-					finally {
+					} finally {
 						Marshal.FreeHGlobal (ptr);
 					}
 				} else {

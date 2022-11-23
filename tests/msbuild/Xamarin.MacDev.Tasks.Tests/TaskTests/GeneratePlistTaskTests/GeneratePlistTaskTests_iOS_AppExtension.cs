@@ -1,14 +1,18 @@
 using NUnit.Framework;
 using Xamarin.MacDev;
 
-namespace Xamarin.iOS.Tasks
-{
-	[TestFixture]
-	public class GeneratePlistTaskTests_iOS_AppExtension : GeneratePlistTaskTests_iOS
-	{
-		public override void ConfigureTask ()
+namespace Xamarin.MacDev.Tasks {
+	[TestFixture (true)]
+	[TestFixture (false)]
+	public class GeneratePlistTaskTests_iOS_AppExtension : GeneratePlistTaskTests_iOS {
+		public GeneratePlistTaskTests_iOS_AppExtension (bool isDotNet)
+			: base (isDotNet)
 		{
-			base.ConfigureTask ();
+		}
+
+		protected override void ConfigureTask (bool isDotNet)
+		{
+			base.ConfigureTask (isDotNet);
 			Task.IsAppExtension = true;
 		}
 

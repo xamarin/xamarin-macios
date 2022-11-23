@@ -134,7 +134,7 @@ namespace Darwin {
 		public int Log (string text)
 		{
 			if (text is null)
-				throw new ArgumentNullException (nameof (text));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (text));
 			
 			return asl_log (Handle, IntPtr.Zero, text);
 		}
@@ -145,7 +145,7 @@ namespace Darwin {
 		public int Log (Message msg)
 		{
 			if (msg is null)
-				throw new ArgumentNullException (nameof (msg));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (msg));
 			
 			return asl_send (Handle, msg.Handle);
 		}
@@ -170,7 +170,7 @@ namespace Darwin {
 		public IEnumerable<Message> Search (Message msg)
 		{
 			if (msg is null)
-				throw new ArgumentNullException (nameof (msg));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (msg));
 			var search = asl_search (Handle, msg.Handle);
 			IntPtr mh;
 			
@@ -234,12 +234,12 @@ namespace Darwin {
 		public string this [string key] {
 			get {
 				if (key is null)
-					throw new ArgumentNullException (nameof (key));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 				return asl_get (Handle, key);
 			}
 			set {
 				if (key is null)
-					throw new ArgumentNullException (nameof (key));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 				asl_set (Handle, key, value);
 			}
 		}
@@ -250,7 +250,7 @@ namespace Darwin {
 		public void Remove (string key)
 		{
 			if (key is null)
-				throw new ArgumentNullException (nameof (key));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 			asl_unset (Handle, key);
 		}
 		

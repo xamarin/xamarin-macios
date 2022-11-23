@@ -7,11 +7,13 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev;
 using System.Linq;
 
-namespace Xamarin.iOS.Tasks
-{
+using Xamarin.MacDev.Tasks;
+using Xamarin.Tests;
+using Xamarin.Utils;
+
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
-	public abstract class GeneratePlistTaskTests_Core : TestBase
-	{
+	public abstract class GeneratePlistTaskTests_Core : TestBase {
 		protected const string appBundleName = "BundleName";
 		protected const string assemblyName = "AssemblyName";
 		protected const string bundleIdentifier = "DefaultIdentifier";
@@ -26,11 +28,20 @@ namespace Xamarin.iOS.Tasks
 			get; set;
 		}
 
-		protected CompileAppManifestTaskCore Task {
+		protected CompileAppManifest Task {
 			get; set;
 		}
 
-		public virtual void ConfigureTask ()
+		protected bool IsDotNet { get; private set; }
+
+		protected abstract ApplePlatform Platform { get; }
+
+		protected GeneratePlistTaskTests_Core (bool isDotNet)
+		{
+			IsDotNet = isDotNet;
+		}
+
+		protected virtual void ConfigureTask (bool isDotNet)
 		{
 			Task = CreateTask<CompileAppManifest> ();
 
@@ -52,7 +63,13 @@ namespace Xamarin.iOS.Tasks
 		{
 			base.Setup ();
 
-			ConfigureTask ();
+			if (IsDotNet) {
+				Configuration.AssertDotNetAvailable ();
+			} else {
+				Configuration.AssertLegacyXamarinAvailable ();
+			}
+
+			ConfigureTask (IsDotNet);
 
 			Task.Execute ();
 			CompiledPlist = PDictionary.FromFile (Task.CompiledAppManifest.ItemSpec);
@@ -94,8 +111,12 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public virtual void XamarinVersion ()
 		{
-			Assert.That (CompiledPlist.ContainsKey ("com.xamarin.ios"), "#1");
-			Assert.That (CompiledPlist.Get<PDictionary> ("com.xamarin.ios").GetString ("Version").Value, Is.Not.Null.Or.Empty, "#2");
+			var keyName = "com.xamarin.ios";
+			if (IsDotNet) {
+				keyName = "com.microsoft." + Platform.AsString ().ToLowerInvariant ();
+			}
+			Assert.That (CompiledPlist.ContainsKey (keyName), "#1");
+			Assert.That (CompiledPlist.Get<PDictionary> (keyName).GetString ("Version").Value, Is.Not.Null.Or.Empty, "#2");
 		}
 		#endregion
 

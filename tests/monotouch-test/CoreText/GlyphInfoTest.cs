@@ -18,7 +18,7 @@ namespace MonoTouchFixtures.CoreText {
 			using (var g = new CTGlyphInfo (64, f, "Foo")) {
 				Assert.That (g.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 
-				if (TestRuntime.CheckXcodeVersion (11,0)) {
+				if (TestRuntime.CheckXcodeVersion (11, 0)) {
 					Assert.That (g.GetGlyph (), Is.EqualTo (64), "GetGlyph");
 				}
 			}

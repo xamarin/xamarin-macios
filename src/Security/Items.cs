@@ -39,7 +39,6 @@ using System.Runtime.InteropServices;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 #if !MONOMAC
 using UIKit;
 #endif
@@ -64,31 +63,33 @@ namespace Security {
 		WhenUnlocked,
 		AfterFirstUnlock,
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.14")]
 		[UnsupportedOSPlatform ("ios12.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.14 use 'AfterFirstUnlock' or a better suited option instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios12.0 use 'AfterFirstUnlock' or a better suited option instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.14", "Use 'AfterFirstUnlock' or a better suited option instead.")]
+		[ObsoletedOSPlatform ("ios12.0", "Use 'AfterFirstUnlock' or a better suited option instead.")]
 #else
-		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'AfterFirstUnlock' or a better suited option instead.")]
-		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'AfterFirstUnlock' or a better suited option instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'AfterFirstUnlock' or a better suited option instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'AfterFirstUnlock' or a better suited option instead.")]
 #endif
 		Always,
 		WhenUnlockedThisDeviceOnly,
 		AfterFirstUnlockThisDeviceOnly,
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.14")]
 		[UnsupportedOSPlatform ("ios12.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.14 use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios12.0 use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.14", "Use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.")]
+		[ObsoletedOSPlatform ("ios12.0", "Use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.")]
 #else
-		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.")]
-		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.")]
 #endif
 		AlwaysThisDeviceOnly,
 		WhenPasscodeSetThisDeviceOnly
@@ -98,7 +99,7 @@ namespace Security {
 		Invalid = -1,
 		Ftp, FtpAccount, Http, Irc, Nntp, Pop3, Smtp, Socks, Imap, Ldap, AppleTalk, Afp, Telnet, Ssh,
 		Ftps, Https, HttpProxy, HttpsProxy, FtpProxy, Smb, Rtsp, RtspProxy, Daap, Eppc, Ipp,
-		Nntps, Ldaps, Telnets, Imaps, Ircs, Pop3s, 
+		Nntps, Ldaps, Telnets, Imaps, Ircs, Pop3s,
 	}
 
 	public enum SecAuthenticationType {
@@ -114,6 +115,12 @@ namespace Security {
 		Default = 1953261156,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class SecKeyChain : INativeObject {
 
 		internal SecKeyChain (NativeHandle handle)
@@ -135,27 +142,26 @@ namespace Security {
 				n = NSNumber.FromInt32 (max);
 				val = n.Handle;
 			}
-			
+
 			dict.LowlevelSetObject (val, SecItem.MatchLimit);
 			return n;
 		}
-		
+
 		public static NSData? QueryAsData (SecRecord query, bool wantPersistentReference, out SecStatusCode status)
 		{
 			if (query is null)
-				throw new ArgumentNullException (nameof (query));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (query));
 
-			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)){
+			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)) {
 				SetLimit (copy, 1);
 				if (wantPersistentReference)
 					copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnPersistentRef);
 				else
 					copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
-				
-				IntPtr ptr;
-				status = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
+
+				status = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				if (status == SecStatusCode.Success)
-					return Runtime.GetNSObject<NSData> (ptr, false);
+					return Runtime.GetNSObject<NSData> (ptr, true);
 				return null;
 			}
 		}
@@ -163,28 +169,32 @@ namespace Security {
 		public static NSData []? QueryAsData (SecRecord query, bool wantPersistentReference, int max, out SecStatusCode status)
 		{
 			if (query is null)
-				throw new ArgumentNullException (nameof (query));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (query));
 
-			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)){
+			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)) {
 				var n = SetLimit (copy, max);
 				if (wantPersistentReference)
 					copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnPersistentRef);
 				else
 					copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
 
-				IntPtr ptr;
-				status = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
+				status = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				n = null;
-				if (status == SecStatusCode.Success){
-					if (max == 1)
-						return new NSData [] { Runtime.GetNSObject<NSData> (ptr, false)! };
+				if (status == SecStatusCode.Success) {
+					// From the header docs, it's guaranteed the function will return an array only if we pass max > 1.
 
-					return NSArray.ArrayFromHandle<NSData> (ptr);
+					// By default, this function returns only the first match found.
+					// To obtain more than one matching item at a time, specify the search key kSecMatchLimit with a value greater than 1.
+					// The result will be an object of type CFArrayRef containing up to that number of matching items.
+					if (max == 1)
+						return new NSData [] { Runtime.GetNSObject<NSData> (ptr, true)! };
+
+					return CFArray.ArrayFromHandle<NSData> (ptr, true)!;
 				}
 				return null;
 			}
 		}
-		
+
 		public static NSData? QueryAsData (SecRecord query)
 		{
 			SecStatusCode status;
@@ -196,68 +206,72 @@ namespace Security {
 			SecStatusCode status;
 			return QueryAsData (query, false, max, out status);
 		}
-		
+
 		public static SecRecord? QueryAsRecord (SecRecord query, out SecStatusCode result)
 		{
 			if (query is null)
-				throw new ArgumentNullException (nameof (query));
-			
-			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)){
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (query));
+
+			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)) {
 				SetLimit (copy, 1);
 				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnAttributes);
 				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
-				IntPtr ptr;
-				result = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
+				result = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				if (result == SecStatusCode.Success)
-					return new SecRecord (new NSMutableDictionary (ptr, false));
-				return null;
-			}
-		}
-		
-		public static SecRecord []? QueryAsRecord (SecRecord query, int max, out SecStatusCode result)
-		{
-			if (query is null)
-				throw new ArgumentNullException (nameof (query));
-			
-			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)){
-				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnAttributes);
-				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
-				var n = SetLimit (copy, max);
-				
-				IntPtr ptr;
-				result = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
-				n = null;
-				if (result == SecStatusCode.Success)
-					return NSArray.ArrayFromHandleFunc<SecRecord> (ptr, (element) => new SecRecord (Runtime.GetNSObject<NSMutableDictionary> (element, false)!))!;
+					return new SecRecord (new NSMutableDictionary (ptr, true));
 				return null;
 			}
 		}
 
-		public static INativeObject[]? QueryAsReference (SecRecord query, int max, out SecStatusCode result)
+		public static SecRecord []? QueryAsRecord (SecRecord query, int max, out SecStatusCode result)
+		{
+			if (query is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (query));
+
+			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)) {
+				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnAttributes);
+				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
+				var n = SetLimit (copy, max);
+
+				result = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
+				n = null;
+				if (result == SecStatusCode.Success)
+					return CFArray.ArrayFromHandleFunc<SecRecord> (ptr, (element) => {
+						var dictionary = Runtime.GetNSObject<NSMutableDictionary> (element, false)!;
+						return new SecRecord (dictionary);
+					}, releaseHandle: true)!;
+				return null;
+			}
+		}
+
+		public static INativeObject []? QueryAsReference (SecRecord query, int max, out SecStatusCode result)
 		{
 			if (query is null) {
 				result = SecStatusCode.Param;
 				return null;
 			}
 
-			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)){
+			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)) {
 				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnRef);
 				SetLimit (copy, max);
 
-				IntPtr ptr;
-				result = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
+				result = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				if ((result == SecStatusCode.Success) && (ptr != IntPtr.Zero)) {
-					var array = NSArray.ArrayFromHandle<INativeObject> (ptr, p => {
+					var array = CFArray.ArrayFromHandleFunc<INativeObject> (ptr, p => {
 						nint cfType = CFType.GetTypeID (p);
+						CFObject.CFRetain (p);
+
 						if (cfType == SecCertificate.GetTypeID ())
 							return new SecCertificate (p, true);
 						else if (cfType == SecKey.GetTypeID ())
 							return new SecKey (p, true);
 						else if (cfType == SecIdentity.GetTypeID ())
 							return new SecIdentity (p, true);
-						else
+						else {
+							CFObject.CFRelease (p);
 							throw new Exception (String.Format ("Unexpected type: 0x{0:x}", cfType));
-					})!;
+						}
+					}, releaseHandle: true)!;
 					return array;
 				}
 				return null;
@@ -267,24 +281,24 @@ namespace Security {
 		public static SecStatusCode Add (SecRecord record)
 		{
 			if (record is null)
-				throw new ArgumentNullException (nameof (record));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (record));
 			return SecItem.SecItemAdd (record.queryDict.Handle, IntPtr.Zero);
-			
+
 		}
 
 		public static SecStatusCode Remove (SecRecord record)
 		{
 			if (record is null)
-				throw new ArgumentNullException (nameof (record));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (record));
 			return SecItem.SecItemDelete (record.queryDict.Handle);
 		}
-		
+
 		public static SecStatusCode Update (SecRecord query, SecRecord newAttributes)
 		{
 			if (query is null)
-				throw new ArgumentNullException (nameof (query));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (query));
 			if (newAttributes is null)
-				throw new ArgumentNullException (nameof (newAttributes));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (newAttributes));
 
 			return SecItem.SecItemUpdate (query.queryDict.Handle, newAttributes.queryDict.Handle);
 
@@ -533,16 +547,15 @@ namespace Security {
 				result = SecStatusCode.Param;
 				return null;
 			}
-			
-			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)){
+
+			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)) {
 				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnRef);
 				SetLimit (copy, 1);
-				
-				IntPtr ptr;
-				result = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
+
+				result = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				if ((result == SecStatusCode.Success) && (ptr != IntPtr.Zero)) {
 					nint cfType = CFType.GetTypeID (ptr);
-					
+
 					if (cfType == SecCertificate.GetTypeID ())
 						return new SecCertificate (ptr, true);
 					else if (cfType == SecKey.GetTypeID ())
@@ -551,7 +564,7 @@ namespace Security {
 						return new SecIdentity (ptr, true);
 					else
 						throw new Exception (String.Format ("Unexpected type: 0x{0:x}", cfType));
-				} 
+				}
 				return null;
 			}
 		}
@@ -560,7 +573,7 @@ namespace Security {
 		public static void AddIdentity (SecIdentity identity)
 		{
 			if (identity is null)
-				throw new ArgumentNullException (nameof (identity));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (identity));
 			using (var record = new SecRecord ()) {
 				record.SetValueRef (identity);
 
@@ -574,7 +587,7 @@ namespace Security {
 		public static void RemoveIdentity (SecIdentity identity)
 		{
 			if (identity is null)
-				throw new ArgumentNullException (nameof (identity));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (identity));
 			using (var record = new SecRecord ()) {
 				record.SetValueRef (identity);
 
@@ -588,7 +601,7 @@ namespace Security {
 		public static SecIdentity? FindIdentity (SecCertificate certificate, bool throwOnError = false)
 		{
 			if (certificate is null)
-				throw new ArgumentNullException (nameof (certificate));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (certificate));
 			var identity = FindIdentity (cert => SecCertificate.Equals (certificate, cert));
 			if (!throwOnError || identity is not null)
 				return identity;
@@ -612,7 +625,7 @@ namespace Security {
 					return null;
 
 				for (int i = 0; i < result.Length; i++) {
-					var identity = (SecIdentity?)result [i];
+					var identity = (SecIdentity?) result [i];
 					if (filter (identity?.Certificate!))
 						return identity;
 				}
@@ -621,15 +634,20 @@ namespace Security {
 			return null;
 		}
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class SecRecord : IDisposable {
 		// Fix <= iOS 6 Behaviour - Desk #83099
 		// NSCFDictionary: mutating method sent to immutable object
 		// iOS 6 returns an inmutable NSDictionary handle and when we try to set its values it goes kaboom
 		// By explicitly calling `MutableCopy` we ensure we always have a mutable reference we expect that.
 		NSMutableDictionary? _queryDict;
-		internal NSMutableDictionary queryDict 
-		{ 
+		internal NSMutableDictionary queryDict {
 			get {
 				return _queryDict!;
 			}
@@ -659,7 +677,7 @@ namespace Security {
 #else
 			// Apple changed/fixed this in iOS7 (not the only change, see comments above)
 			// test suite has a test case that needs to work on both pre-7.0 and post-7.0
-			if ((kind == SecClass.Identity) && !SystemVersion.CheckiOS (7,0))
+			if ((kind == SecClass.Identity) && !SystemVersion.CheckiOS (7, 0))
 				queryDict = new NSMutableDictionary ();
 			else
 				queryDict = NSMutableDictionary.LowlevelFromObjectAndKey (kind, SecClass.SecClassKey);
@@ -684,7 +702,7 @@ namespace Security {
 		public SecCertificate? GetCertificate ()
 		{
 			CheckClass (SecClass.Certificate);
-			return GetValueRef <SecCertificate> ();
+			return GetValueRef<SecCertificate> ();
 		}
 
 		public SecIdentity? GetIdentity ()
@@ -733,7 +751,7 @@ namespace Security {
 		{
 			Dispose (false);
 		}
-			
+
 		IntPtr Fetch (IntPtr key)
 		{
 			return queryDict.LowlevelObjectForKey (key);
@@ -765,7 +783,7 @@ namespace Security {
 		{
 			return (T?) FetchObject (key);
 		}
-		
+
 
 		void SetValue (NSObject val, IntPtr key)
 		{
@@ -782,7 +800,7 @@ namespace Security {
 			// FIXME: it's not clear that we should not allow null (i.e. that null should remove entries)
 			// but this is compatible with the exiting behaviour of older XI/XM
 			if (value is null)
-				throw new ArgumentNullException (nameof (value));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 			var ptr = CFString.CreateNative (value);
 			try {
 				queryDict.LowlevelSetObject (ptr, key);
@@ -790,7 +808,7 @@ namespace Security {
 				CFString.ReleaseNative (ptr);
 			}
 		}
-		
+
 		//
 		// Attributes
 		//
@@ -798,7 +816,7 @@ namespace Security {
 			get {
 				return KeysAccessible.ToSecAccessible (Fetch (SecAttributeKey.Accessible));
 			}
-			
+
 			set {
 				SetValue (KeysAccessible.FromSecAccessible (value), SecAttributeKey.Accessible);
 			}
@@ -825,8 +843,11 @@ namespace Security {
 #if !MONOMAC
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
 #else
-		[iOS (9,0)]
+		[iOS (9, 0)]
 #endif
 		public string? SyncViewHint {
 			get {
@@ -839,8 +860,11 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
+		[iOS (9, 0)]
 #endif
 		public SecTokenID TokenID {
 			get {
@@ -857,10 +881,10 @@ namespace Security {
 			get {
 				return (NSDate?) FetchObject (SecAttributeKey.CreationDate);
 			}
-			
+
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetValue (value, SecAttributeKey.CreationDate);
 			}
 		}
@@ -869,10 +893,10 @@ namespace Security {
 			get {
 				return (NSDate?) FetchObject (SecAttributeKey.ModificationDate);
 			}
-			
+
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetValue (value, SecAttributeKey.ModificationDate);
 			}
 		}
@@ -901,7 +925,7 @@ namespace Security {
 			get {
 				return FetchInt (SecAttributeKey.Creator);
 			}
-					
+
 			set {
 				SetValue (new NSNumber (value), SecAttributeKey.Creator);
 			}
@@ -911,7 +935,7 @@ namespace Security {
 			get {
 				return FetchInt (SecAttributeKey.Type);
 			}
-					
+
 			set {
 				SetValue (new NSNumber (value), SecAttributeKey.Type);
 			}
@@ -931,7 +955,7 @@ namespace Security {
 			get {
 				return Fetch (SecAttributeKey.IsInvisible) == CFBoolean.TrueHandle;
 			}
-			
+
 			set {
 				SetValue (CFBoolean.ToHandle (value), SecAttributeKey.IsInvisible);
 			}
@@ -941,7 +965,7 @@ namespace Security {
 			get {
 				return Fetch (SecAttributeKey.IsNegative) == CFBoolean.TrueHandle;
 			}
-			
+
 			set {
 				SetValue (CFBoolean.ToHandle (value), SecAttributeKey.IsNegative);
 			}
@@ -979,13 +1003,14 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios9.0")]
-#if IOS
-		[Obsolete ("Starting with ios9.0 use 'AuthenticationUI' property instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios9.0", "Use 'AuthenticationUI' property instead.")]
 #else
 		[iOS (8, 0)]
-		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'AuthenticationUI' property instead.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'AuthenticationUI' property instead.")]
 #endif
 		public bool UseNoAuthenticationUI {
 			get {
@@ -999,9 +1024,11 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
-		[Mac (10,11)]
+		[iOS (9, 0)]
+		[Mac (10, 11)]
 #endif
 		public SecAuthenticationUI AuthenticationUI {
 			get {
@@ -1017,6 +1044,8 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
 		[iOS (9, 0)]
 		[Mac (10, 11)]
@@ -1027,7 +1056,7 @@ namespace Security {
 			}
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetValue (value.Handle, SecItem.UseAuthenticationContext);
 			}
 		}
@@ -1042,7 +1071,7 @@ namespace Security {
 			}
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				_secAccessControl = value;
 				SetValue (value.Handle, SecAttributeKeys.AccessControlKey.Handle);
 			}
@@ -1055,7 +1084,7 @@ namespace Security {
 
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetValue (value, SecAttributeKey.Generic);
 			}
 		}
@@ -1084,7 +1113,7 @@ namespace Security {
 			get {
 				return SecProtocolKeys.ToSecProtocol (Fetch (SecAttributeKey.Protocol));
 			}
-			
+
 			set {
 				SetValue (SecProtocolKeys.FromSecProtocol (value), SecAttributeKey.Protocol);
 			}
@@ -1097,10 +1126,10 @@ namespace Security {
 					return SecAuthenticationType.Default;
 				return KeysAuthenticationType.ToSecAuthenticationType (at);
 			}
-			
+
 			set {
 				SetValue (KeysAuthenticationType.FromSecAuthenticationType (value),
-							     SecAttributeKey.AuthenticationType);
+								 SecAttributeKey.AuthenticationType);
 			}
 		}
 
@@ -1108,7 +1137,7 @@ namespace Security {
 			get {
 				return FetchInt (SecAttributeKey.Port);
 			}
-					
+
 			set {
 				SetValue (new NSNumber (value), SecAttributeKey.Port);
 			}
@@ -1203,7 +1232,7 @@ namespace Security {
 			get {
 				return Fetch (SecAttributeKeys.IsPermanentKey.Handle) == CFBoolean.TrueHandle;
 			}
-			
+
 			set {
 				SetValue (CFBoolean.ToHandle (value), SecAttributeKeys.IsPermanentKey.Handle);
 			}
@@ -1213,7 +1242,7 @@ namespace Security {
 			get {
 				return Fetch (SecAttributeKey.IsSensitive) == CFBoolean.TrueHandle;
 			}
-			
+
 			set {
 				SetValue (CFBoolean.ToHandle (value), SecAttributeKey.IsSensitive);
 			}
@@ -1223,7 +1252,7 @@ namespace Security {
 			get {
 				return Fetch (SecAttributeKey.IsExtractable) == CFBoolean.TrueHandle;
 			}
-			
+
 			set {
 				SetValue (CFBoolean.ToHandle (value), SecAttributeKey.IsExtractable);
 			}
@@ -1233,10 +1262,10 @@ namespace Security {
 			get {
 				return Fetch<NSData> (SecAttributeKeys.ApplicationTagKey.Handle);
 			}
-			
+
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetValue (value, SecAttributeKeys.ApplicationTagKey.Handle);
 			}
 		}
@@ -1249,7 +1278,7 @@ namespace Security {
 				using (var s = new NSString (k))
 					return SecKeyTypeExtensions.GetValue (s);
 			}
-			
+
 			set {
 				var k = value.GetConstant ();
 				if (k is null)
@@ -1262,7 +1291,7 @@ namespace Security {
 			get {
 				return FetchInt (SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
 			}
-					
+
 			set {
 				SetValue (new NSNumber (value), SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
 			}
@@ -1272,7 +1301,7 @@ namespace Security {
 			get {
 				return FetchInt (SecAttributeKeys.EffectiveKeySizeKey.Handle);
 			}
-					
+
 			set {
 				SetValue (new NSNumber (value), SecAttributeKeys.EffectiveKeySizeKey.Handle);
 			}
@@ -1282,7 +1311,7 @@ namespace Security {
 			get {
 				return Fetch (SecAttributeKeys.CanEncryptKey.Handle) == CFBoolean.TrueHandle;
 			}
-			
+
 			set {
 				SetValue (CFBoolean.ToHandle (value), SecAttributeKeys.CanEncryptKey.Handle);
 			}
@@ -1292,7 +1321,7 @@ namespace Security {
 			get {
 				return Fetch (SecAttributeKeys.CanDecryptKey.Handle) == CFBoolean.TrueHandle;
 			}
-			
+
 			set {
 				SetValue (CFBoolean.ToHandle (value), SecAttributeKeys.CanDecryptKey.Handle);
 			}
@@ -1302,7 +1331,7 @@ namespace Security {
 			get {
 				return Fetch (SecAttributeKeys.CanDeriveKey.Handle) == CFBoolean.TrueHandle;
 			}
-			
+
 			set {
 				SetValue (CFBoolean.ToHandle (value), SecAttributeKeys.CanDeriveKey.Handle);
 			}
@@ -1312,7 +1341,7 @@ namespace Security {
 			get {
 				return Fetch (SecAttributeKeys.CanSignKey.Handle) == CFBoolean.TrueHandle;
 			}
-			
+
 			set {
 				SetValue (CFBoolean.ToHandle (value), SecAttributeKeys.CanSignKey.Handle);
 			}
@@ -1322,7 +1351,7 @@ namespace Security {
 			get {
 				return Fetch (SecAttributeKeys.CanVerifyKey.Handle) == CFBoolean.TrueHandle;
 			}
-			
+
 			set {
 				SetValue (CFBoolean.ToHandle (value), SecAttributeKeys.CanVerifyKey.Handle);
 			}
@@ -1332,7 +1361,7 @@ namespace Security {
 			get {
 				return Fetch (SecKeyGenerationAttributeKeys.CanWrapKey.Handle) == CFBoolean.TrueHandle;
 			}
-			
+
 			set {
 				SetValue (CFBoolean.ToHandle (value), SecKeyGenerationAttributeKeys.CanWrapKey.Handle);
 			}
@@ -1342,7 +1371,7 @@ namespace Security {
 			get {
 				return Fetch (SecAttributeKeys.CanUnwrapKey.Handle) == CFBoolean.TrueHandle;
 			}
-			
+
 			set {
 				SetValue (CFBoolean.ToHandle (value), SecAttributeKeys.CanUnwrapKey.Handle);
 			}
@@ -1362,11 +1391,12 @@ namespace Security {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (11,0)]
-		[TV (11,0)]
-		[Watch (4,0)]
-		[Mac (10,13)]
+		[iOS (11, 0)]
+		[TV (11, 0)]
+		[Watch (4, 0)]
+		[Mac (10, 13)]
 #endif
 		public bool PersistentReference {
 			get {
@@ -1374,6 +1404,26 @@ namespace Security {
 			}
 			set {
 				SetValue (CFBoolean.ToHandle (value), SecAttributeKey.PersistentReference);
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("maccatalyst13.1")]
+#else
+		[iOS (13, 0)]
+		[TV (13, 0)]
+		[Watch (6, 0)]
+		[Mac (10, 15)]
+#endif
+		public bool UseDataProtectionKeychain {
+			get {
+				return Fetch (SecItem.UseDataProtectionKeychain) == CFBoolean.TrueHandle;
+			}
+			set {
+				SetValue (CFBoolean.ToHandle (value), SecItem.UseDataProtectionKeychain);
 			}
 		}
 
@@ -1389,7 +1439,7 @@ namespace Security {
 
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetValue (value.Handle, SecItem.MatchPolicy);
 			}
 		}
@@ -1401,7 +1451,7 @@ namespace Security {
 
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				using (var array = NSArray.FromNativeObjects (value))
 					SetValue (array, SecItem.MatchItemList);
 			}
@@ -1413,8 +1463,8 @@ namespace Security {
 			}
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
-				
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
+
 				SetValue (NSArray.FromNSObjects (value), SecItem.MatchIssuers);
 			}
 		}
@@ -1443,7 +1493,7 @@ namespace Security {
 			get {
 				return Fetch (SecItem.MatchCaseInsensitive) == CFBoolean.TrueHandle;
 			}
-			
+
 			set {
 				SetValue (CFBoolean.ToHandle (value), SecItem.MatchCaseInsensitive);
 			}
@@ -1453,7 +1503,7 @@ namespace Security {
 			get {
 				return Fetch (SecItem.MatchTrustedOnly) == CFBoolean.TrueHandle;
 			}
-			
+
 			set {
 				SetValue (CFBoolean.ToHandle (value), SecItem.MatchTrustedOnly);
 			}
@@ -1463,10 +1513,10 @@ namespace Security {
 			get {
 				return Runtime.GetNSObject<NSDate> (Fetch (SecItem.MatchValidOnDate));
 			}
-			
+
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetValue (value, SecItem.MatchValidOnDate);
 			}
 		}
@@ -1478,7 +1528,7 @@ namespace Security {
 
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetValue (value, SecItem.ValueData);
 			}
 		}
@@ -1499,7 +1549,7 @@ namespace Security {
 		public void SetKey (SecKey key) => SetValueRef (key);
 
 	}
-	
+
 	internal partial class SecItem {
 
 		[DllImport (Constants.SecurityLibrary)]
@@ -1516,10 +1566,10 @@ namespace Security {
 	}
 
 	internal static partial class SecClass {
-	
+
 		public static IntPtr FromSecKind (SecKind secKind)
 		{
-			switch (secKind){
+			switch (secKind) {
 			case SecKind.InternetPassword:
 				return InternetPassword;
 			case SecKind.GenericPassword:
@@ -1535,11 +1585,11 @@ namespace Security {
 			}
 		}
 	}
-	
+
 	internal static partial class KeysAccessible {
 		public static IntPtr FromSecAccessible (SecAccessible accessible)
 		{
-			switch (accessible){
+			switch (accessible) {
 			case SecAccessible.WhenUnlocked:
 				return WhenUnlocked;
 			case SecAccessible.AfterFirstUnlock:
@@ -1558,7 +1608,7 @@ namespace Security {
 				throw new ArgumentException (nameof (accessible));
 			}
 		}
-			
+
 		// note: we're comparing pointers - but it's an (even if opaque) CFType
 		// and it turns out to be using CFString - so we need to use CFTypeEqual
 		public static SecAccessible ToSecAccessible (IntPtr handle)
@@ -1582,11 +1632,11 @@ namespace Security {
 			return SecAccessible.Invalid;
 		}
 	}
-	
+
 	internal static partial class SecProtocolKeys {
 		public static IntPtr FromSecProtocol (SecProtocol protocol)
 		{
-			switch (protocol){
+			switch (protocol) {
 			case SecProtocol.Ftp: return FTP;
 			case SecProtocol.FtpAccount: return FTPAccount;
 			case SecProtocol.Http: return HTTP;
@@ -1594,29 +1644,29 @@ namespace Security {
 			case SecProtocol.Nntp: return NNTP;
 			case SecProtocol.Pop3: return POP3;
 			case SecProtocol.Smtp: return SMTP;
-			case SecProtocol.Socks:return SOCKS;
-			case SecProtocol.Imap:return IMAP;
-			case SecProtocol.Ldap:return LDAP;
-			case SecProtocol.AppleTalk:return AppleTalk;
-			case SecProtocol.Afp:return AFP;
-			case SecProtocol.Telnet:return Telnet;
-			case SecProtocol.Ssh:return SSH;
-			case SecProtocol.Ftps:return FTPS;
-			case SecProtocol.Https:return HTTPS;
-			case SecProtocol.HttpProxy:return HTTPProxy;
-			case SecProtocol.HttpsProxy:return HTTPSProxy;
-			case SecProtocol.FtpProxy:return FTPProxy;
-			case SecProtocol.Smb:return SMB;
-			case SecProtocol.Rtsp:return RTSP;
-			case SecProtocol.RtspProxy:return RTSPProxy;
-			case SecProtocol.Daap:return DAAP;
-			case SecProtocol.Eppc:return EPPC;
-			case SecProtocol.Ipp:return IPP;
-			case SecProtocol.Nntps:return NNTPS;
-			case SecProtocol.Ldaps:return LDAPS;
-			case SecProtocol.Telnets:return TelnetS;
-			case SecProtocol.Imaps:return IMAPS;
-			case SecProtocol.Ircs:return IRCS;
+			case SecProtocol.Socks: return SOCKS;
+			case SecProtocol.Imap: return IMAP;
+			case SecProtocol.Ldap: return LDAP;
+			case SecProtocol.AppleTalk: return AppleTalk;
+			case SecProtocol.Afp: return AFP;
+			case SecProtocol.Telnet: return Telnet;
+			case SecProtocol.Ssh: return SSH;
+			case SecProtocol.Ftps: return FTPS;
+			case SecProtocol.Https: return HTTPS;
+			case SecProtocol.HttpProxy: return HTTPProxy;
+			case SecProtocol.HttpsProxy: return HTTPSProxy;
+			case SecProtocol.FtpProxy: return FTPProxy;
+			case SecProtocol.Smb: return SMB;
+			case SecProtocol.Rtsp: return RTSP;
+			case SecProtocol.RtspProxy: return RTSPProxy;
+			case SecProtocol.Daap: return DAAP;
+			case SecProtocol.Eppc: return EPPC;
+			case SecProtocol.Ipp: return IPP;
+			case SecProtocol.Nntps: return NNTPS;
+			case SecProtocol.Ldaps: return LDAPS;
+			case SecProtocol.Telnets: return TelnetS;
+			case SecProtocol.Imaps: return IMAPS;
+			case SecProtocol.Ircs: return IRCS;
 			case SecProtocol.Pop3s: return POP3S;
 			}
 			throw new ArgumentException (nameof (protocol));
@@ -1691,7 +1741,7 @@ namespace Security {
 			return SecProtocol.Invalid;
 		}
 	}
-	
+
 	internal static partial class KeysAuthenticationType {
 		public static SecAuthenticationType ToSecAuthenticationType (IntPtr handle)
 		{
@@ -1718,7 +1768,7 @@ namespace Security {
 
 		public static IntPtr FromSecAuthenticationType (SecAuthenticationType type)
 		{
-			switch (type){
+			switch (type) {
 			case SecAuthenticationType.Ntlm:
 				return NTLM;
 			case SecAuthenticationType.Msn:
@@ -1740,14 +1790,20 @@ namespace Security {
 			}
 		}
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class SecurityException : Exception {
 		static string ToMessage (SecStatusCode code)
 		{
-			
-			switch (code){
-			case SecStatusCode.Success: 
-			case SecStatusCode.Unimplemented: 
+
+			switch (code) {
+			case SecStatusCode.Success:
+			case SecStatusCode.Unimplemented:
 			case SecStatusCode.Param:
 			case SecStatusCode.Allocate:
 			case SecStatusCode.NotAvailable:
@@ -1759,7 +1815,7 @@ namespace Security {
 			}
 			return String.Format ("Unknown error: 0x{0:x}", code);
 		}
-		
+
 		public SecurityException (SecStatusCode code) : base (ToMessage (code))
 		{
 		}
@@ -1772,6 +1828,8 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8, 0)]
 		[Mac (10, 10)]
@@ -1782,7 +1840,7 @@ namespace Security {
 			}
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				_secAccessControl = value;
 				SetNativeValue (SecAttributeKeys.AccessControlKey, value);
 			}
@@ -1812,6 +1870,8 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8, 0)]
 		[Mac (10, 10)]
@@ -1823,7 +1883,7 @@ namespace Security {
 
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				_secAccessControl = value;
 				SetNativeValue (SecAttributeKeys.AccessControlKey, value);
 			}
@@ -1832,6 +1892,8 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9, 0)]
 		[Mac (10, 12)]

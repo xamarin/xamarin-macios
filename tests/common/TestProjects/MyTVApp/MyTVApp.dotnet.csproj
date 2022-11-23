@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-tvos</TargetFramework>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-tvos</TargetFramework>
     <RuntimeIdentifier>tvossimulator-x64</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
     <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>

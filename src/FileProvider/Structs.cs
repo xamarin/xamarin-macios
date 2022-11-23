@@ -1,17 +1,19 @@
-#if MONOMAC
+#if MONOMAC || IOS
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using ObjCRuntime;
 
 namespace FileProvider {
 
 #if NET
 	[SupportedOSPlatform ("macos12.0")]
-	[UnsupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("ios16.0")]
 	[UnsupportedOSPlatform ("maccatalyst")]
 #else
-	[NoiOS]
+	[iOS (16,0)]
 	[NoMacCatalyst]
 	[Mac (12,0)]
 #endif

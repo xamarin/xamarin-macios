@@ -22,13 +22,13 @@ namespace CoreBluetooth {
 		// CFUUID.h
 		[DllImport (Constants.CoreFoundationLibrary)]
 		public extern static /* CFUUIDRef */ IntPtr CFUUIDCreateFromString ( /* CFAllocatorRef */ IntPtr alloc, /* CFStringRef */ IntPtr uuidStr);
-	}		
-	
+	}
+
 	public partial class CBCentralManager {
 
 		public void ConnectPeripheral (CBPeripheral peripheral, PeripheralConnectionOptions? options = null)
 		{
-			ConnectPeripheral (peripheral, options == null ? null : options.Dictionary);
+			ConnectPeripheral (peripheral, options?.Dictionary);
 		}
 #if !NET && !TVOS && !WATCH
 		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
@@ -41,13 +41,13 @@ namespace CoreBluetooth {
 #endif
 		public void ScanForPeripherals (CBUUID []? peripheralUuids, NSDictionary? options)
 		{
-			if (peripheralUuids == null)
+			if (peripheralUuids is null)
 				ScanForPeripherals ((NSArray?) null, options);
 			else
 				ScanForPeripherals (NSArray.FromObjects (peripheralUuids), options);
 		}
 
-		public void ScanForPeripherals (CBUUID[] peripheralUuids, PeripheralScanningOptions? options = null)
+		public void ScanForPeripherals (CBUUID [] peripheralUuids, PeripheralScanningOptions? options = null)
 		{
 			ScanForPeripherals (peripheralUuids, options?.Dictionary);
 		}
@@ -77,7 +77,7 @@ namespace CoreBluetooth {
 
 		public void DiscoverServices (CBUUID []? services)
 		{
-			if (services == null)
+			if (services is null)
 				DiscoverServices ((NSArray?) null);
 			else
 				DiscoverServices (NSArray.FromObjects (services));
@@ -85,7 +85,7 @@ namespace CoreBluetooth {
 
 		public void DiscoverIncludedServices (CBUUID []? includedServiceUUIDs, CBService forService)
 		{
-			if (includedServiceUUIDs == null)
+			if (includedServiceUUIDs is null)
 				DiscoverIncludedServices ((NSArray?) null, forService);
 			else
 				DiscoverIncludedServices (NSArray.FromObjects (includedServiceUUIDs), forService);
@@ -98,7 +98,7 @@ namespace CoreBluetooth {
 
 		public void DiscoverCharacteristics (CBUUID []? charactersticUUIDs, CBService forService)
 		{
-			if (charactersticUUIDs == null)
+			if (charactersticUUIDs is null)
 				DiscoverCharacteristics ((NSArray?) null, forService);
 			else
 				DiscoverCharacteristics (NSArray.FromObjects (charactersticUUIDs), forService);

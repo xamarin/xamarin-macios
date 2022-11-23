@@ -25,7 +25,7 @@ namespace Xharness.Jenkins {
 				TestName = "MMP Regression Tests",
 				Target = "all", // -j" + Environment.ProcessorCount,
 				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "mmp-regression"),
-				Ignored = !jenkins.IncludeMmpTest || !jenkins.IncludeMac,
+				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Mmp) || !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac),
 				Timeout = TimeSpan.FromMinutes (30),
 				SupportsParallelExecution = false, // Already doing parallel execution by running "make -jX"
 			};
@@ -41,20 +41,10 @@ namespace Xharness.Jenkins {
 				TestName = "Mac Binding Projects",
 				Target = "all",
 				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "mac-binding-project"),
-				Ignored = !jenkins.IncludeMacBindingProject || !jenkins.IncludeMac,
+				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.MacBindingProject) || !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac) || !jenkins.TestSelection.IsEnabled (PlatformLabel.LegacyXamarin),
 				Timeout = TimeSpan.FromMinutes (15),
 			};
 			yield return runMacBindingProject;
-
-			var runDocsTests = new MakeTask (jenkins: jenkins, processManager: processManager) {
-				Platform = TestPlatform.All,
-				TestName = "Documentation",
-				Target = "wrench-docs",
-				WorkingDirectory = HarnessConfiguration.RootDirectory,
-				Ignored = !jenkins.IncludeDocs,
-				Timeout = TimeSpan.FromMinutes (45),
-			};
-			yield return runDocsTests;
 		}
 
 		IEnumerator IEnumerable.GetEnumerator () => GetEnumerator ();

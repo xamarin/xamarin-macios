@@ -8,7 +8,6 @@
 !missing-protocol-conformance! MPSCNNBatchNormalizationNode should conform to MPSNNTrainableNode
 !missing-protocol-conformance! MPSCNNConvolutionNode should conform to MPSNNTrainableNode
 !missing-protocol-conformance! MPSCNNInstanceNormalizationNode should conform to MPSNNTrainableNode
-!missing-protocol-member! MPSCNNConvolutionDataSource::kernelWeightsDataType not found
 !missing-protocol-member! MPSCNNConvolutionDataSource::weightsLayout not found
 !missing-protocol-member! MPSCNNInstanceNormalizationDataSource::load not found
 !missing-protocol-member! MPSCNNInstanceNormalizationDataSource::purge not found

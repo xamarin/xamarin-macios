@@ -15,6 +15,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 // This type does not come from the CoreGraphics framework; it's defined in /usr/include/simd/matrix_types.h
 #if NET
@@ -23,9 +24,14 @@ namespace CoreGraphics
 namespace OpenTK
 #endif
 {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct NMatrix3 : IEquatable<NMatrix3>
-	{
+	public struct NMatrix3 : IEquatable<NMatrix3> {
 		/* Due to memory alignment, vectors of length 3 are 
 		 * represented as vectors of length 4, so we pad here
 		 * with dummy fields.
@@ -120,8 +126,7 @@ namespace OpenTK
 
 		public static NMatrix3 Identity { get => _identity; }
 #else
-		public readonly static NMatrix3 Identity = new NMatrix3 
-		{
+		public readonly static NMatrix3 Identity = new NMatrix3 {
 			M11 = 1f,
 			M22 = 1f,
 			M33 = 1f,

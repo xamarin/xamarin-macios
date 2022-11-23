@@ -3,7 +3,8 @@ using Foundation;
 
 namespace Bug42855Tests {
 
-	[Protocol][Model]
+	[Protocol]
+	[Model]
 	interface MyFooClass {
 
 		[Abstract]

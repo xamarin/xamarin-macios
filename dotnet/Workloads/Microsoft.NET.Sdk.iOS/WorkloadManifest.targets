@@ -1,8 +1,0 @@
-<Project>
-	<Import Project="Sdk.props" Sdk="Microsoft.iOS.Sdk" Condition="'$(TargetPlatformIdentifier)' == 'iOS'" />
-	<Import Project="Sdk.props" Sdk="Microsoft.iOS.Windows.Sdk.Aliased" Condition=" '$(TargetPlatformIdentifier)' == 'iOS' and $([MSBuild]::IsOSPlatform('windows'))" />
-
-	<ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' and $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '6.0')) ">
-		<SdkSupportedTargetPlatformIdentifier Include="ios" DisplayName="iOS" />
-	</ItemGroup>
-</Project>

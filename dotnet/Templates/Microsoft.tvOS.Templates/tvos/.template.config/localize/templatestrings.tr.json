@@ -1,0 +1,7 @@
+{
+  "author": "Microsoft",
+  "name": "tvOS Uygulaması",
+  "description": "Bir .NET tvOS uygulaması oluşturmaya yönelik proje",
+  "symbols/bundleId/description": "Info.plist dosyasındaki CFBundleIdentifier öğesini geçersiz kılar",
+  "symbols/minOSVersion/description": "Proje dosyasındaki SupportedOSPlatformVersion öğesini geçersiz kılar"
+}

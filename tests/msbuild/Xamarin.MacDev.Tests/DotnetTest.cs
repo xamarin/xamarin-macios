@@ -1,11 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 using NUnit.Framework;
 
-namespace Xamarin.iOS.Tasks {
+namespace Xamarin.MacDev.Tasks {
 
 	// This test builds test projects using both MSBuild (old-style) and .NET (new-style), and
 	// compares the resulting .app directories.
@@ -51,6 +53,18 @@ namespace Xamarin.iOS.Tasks {
 		public void CompareBuilds (string project, int expectedErrorCount = 0)
 		{
 			Configuration.AssertDotNetAvailable ();
+			Configuration.AssertLegacyXamarinAvailable ();
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.TVOS);
+
+			Dictionary<string, string> properties = null;
+
+			if (Platform == "iPhoneSimulator") {
+				properties = new Dictionary<string, string>
+				{
+					{ "EnableDefaultCodesignEntitlements", "false" },
+				};
+			}
 
 			tfi = "Xamarin.iOS";
 			switch (project) {
@@ -66,13 +80,10 @@ namespace Xamarin.iOS.Tasks {
 
 			ClearTestDirectory ();
 
-			Console.WriteLine ("Building dotnet");
 			Mode = ExecutionMode.DotNet;
-			BuildProject (project, clean: false, expectedErrorCount: expectedErrorCount);
-			Console.WriteLine ("Done building dotnet");
+			BuildProject (project, clean: false, expectedErrorCount: expectedErrorCount, properties: properties);
 			var dotnet_bundle = AppBundlePath;
 
-			Console.WriteLine ("Building net461");
 			Mode = ExecutionMode.MSBuild;
 			var net461 = GetTestDirectory (forceClone: true);
 			switch (project) {
@@ -83,8 +94,7 @@ namespace Xamarin.iOS.Tasks {
 				NugetRestore (Path.Combine (net461, "MyExtensionWithPackageReference", "MyExtensionWithPackageReference.csproj"));
 				break;
 			}
-			BuildProject (project, nuget_restore: true, expectedErrorCount: expectedErrorCount);
-			Console.WriteLine ("Done building net461");
+			BuildProject (project, nuget_restore: true, expectedErrorCount: expectedErrorCount, properties: properties);
 			var net461_bundle = AppBundlePath;
 
 			if (expectedErrorCount == 0)

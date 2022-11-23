@@ -12,7 +12,6 @@
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindAotCompiler" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.InstallNameTool" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.SymbolStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.MergeAppBundles" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ILStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
 
@@ -242,6 +241,7 @@
 			CopyFilesToPublishDirectory;
 			_CopyDirectoriesToBundle;
 			_CopyAppExtensionsToBundle;
+			_PostProcessAppBundle;
 		</CreateAppBundleDependsOn>
 
 		<!-- not inner build for multi-rid build (single-rid build or outer build for multi-rid build) -->
@@ -256,6 +256,7 @@
 			$(CreateAppBundleDependsOn);
 			_CompileEntitlements;
 			_CreateMergedAppBundle;
+			_PostProcessAppBundle;
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
 
@@ -266,6 +267,11 @@
 			<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And '$(_MustTrim)' == 'true'">true</PublishTrimmed>
 		</PropertyGroup>
 		<Error Condition="'$(_MustTrim)' == 'true' And '$(PublishTrimmed)' != 'true'" Text="$(_PlatformName) projects must build with PublishTrimmed=true. Current value: $(PublishTrimmed)." />
+		<PropertyGroup Condition="'$(PublishTrimmed)' != '' And '$(IsMacEnabled)' != 'true'">
+			<_PreviousPublishTrimmedValue>$(PublishTrimmed)</_PreviousPublishTrimmedValue>
+			<PublishTrimmed />
+		</PropertyGroup>
+		<Warning Condition="'$(_PreviousPublishTrimmedValue)' != ''" Text="The linker has been disabled because there's no connection to a Mac." />
 	</Target>
 
 	<Target Name="_WarnRuntimeIdentifiersClash" Condition="'$(_RuntimeIdentifiersClashMessage)' != ''">
@@ -293,6 +299,8 @@
 				<!-- Platform = "rid-arch".Substring (0, "rid-arch".IndexOf ('-')) -->
 				<Platform>$([System.String]::new('%(Identity)').Substring(0, $([System.String]::new('%(Identity)').IndexOf ('-'))))</Platform>
 				<RidSpecificCodesignItemsPath>$(DeviceSpecificIntermediateOutputPath)codesignitems-%(Identity).items</RidSpecificCodesignItemsPath>
+				<RidSpecificSymbolsListPath>$(DeviceSpecificIntermediateOutputPath)mtouch-symbols-%(Identity).list</RidSpecificSymbolsListPath>
+				<RidSpecificUserFrameworksWithoutDebugSymbolsPath>$(DeviceSpecificIntermediateOutputPath)user-frameworks-without-dsym-%(Identity).list</RidSpecificUserFrameworksWithoutDebugSymbolsPath>
 			</_RuntimeIdentifiersAsItems>
 
 			<!-- Verify that we're not mixing simulator + device RIDs in a single build -->
@@ -301,6 +309,10 @@
 
 			<!-- Create an item group with all the rid-specific CodesignItemsPath -->
 			<_RidSpecificCodesignItemsPath Include="@(_RuntimeIdentifiersAsItems -> '%(RidSpecificCodesignItemsPath)')" />
+			<!-- Create an item group with all the rid-specific symbol lists -->
+			<_RidSpecificSymbolsListPath Include="@(_RuntimeIdentifiersAsItems -> '%(RidSpecificSymbolsListPath)')" />
+			<!-- Create an item group with all the rid-specific user frameworks without debug symbols -->
+			<_RidSpecificUserFrameworksWithoutDebugSymbolsPath Include="@(_RuntimeIdentifiersAsItems -> '%(RidSpecificUserFrameworksWithoutDebugSymbolsPath)')" />
 		</ItemGroup>
 
 		<!-- Show an error if we're mixing simulator + device RIDs in a single build -->
@@ -328,6 +340,8 @@
 			Properties="
 				RuntimeIdentifier=%(_RuntimeIdentifiersAsItems.Identity);
 				_CodesignItemsPath=%(_RuntimeIdentifiersAsItems.RidSpecificCodesignItemsPath);
+				_MtouchSymbolsList=%(_RuntimeIdentifiersAsItems.RidSpecificSymbolsList);
+				_UserFrameworksWithoutDebugSymbolsPath=%(_RuntimeIdentifiersAsItems.RidSpecificUserFrameworksWithoutDebugSymbolsPath);
 				$(_RidSpecificProperties);
 				">
 			<Output TaskParameter="TargetOutputs" ItemName="_AssemblyPublishDirectories" />
@@ -437,9 +451,10 @@
 
 			<!-- TrimMode specifies what the linker will do with framework assemblies -->
 			<TrimMode Condition="'$(_LinkMode)' == 'TrimMode'">$(TrimMode)</TrimMode>
-			<TrimMode Condition="'$(_LinkMode)' == 'None'">copy</TrimMode> <!-- Don't use 'copyused', because that might still end up saving some assemblies, and if that's the platform assembly, it may break the partial static registrar -->
-			<TrimMode Condition="'$(_LinkMode)' == 'SdkOnly' Or '$(_LinkMode)' == 'Full'">link</TrimMode>
-			<!-- For Full link mode we also need to set TrimMode for all non-framework assemblies. This is done further below -->
+			<TrimMode Condition="'$(_LinkMode)' == 'None'">copy</TrimMode>
+			<TrimMode Condition="'$(_LinkMode)' == 'SdkOnly'">partial</TrimMode>
+			<TrimMode Condition="'$(_LinkMode)' == 'Full'">full</TrimMode>
+			<!-- For None link mode we also need to set TrimMode for all assemblies. This is done further below -->
 
 			<!-- Determine if any assemblies are actually trimmed, or if we're in a "Don't link" scenario -->
 			<!-- We're in a "Don't link" scenario if both of the following are true:
@@ -454,6 +469,7 @@
 			<_CustomLinkerOptions>
 				AreAnyAssembliesTrimmed=$(_AreAnyAssembliesTrimmed)
 				AssemblyName=$(AssemblyName).dll
+				@(_AotArguments -> 'AOTArgument=%(Identity)')
 				AOTCompiler=$(_AOTCompiler)
 				AOTOutputDirectory=$(_AOTOutputDirectory)
 				AppBundleManifestPath=$(_AppBundleManifestPath)
@@ -483,7 +499,8 @@
 				Platform=$(_PlatformName)
 				PlatformAssembly=$(_PlatformAssemblyName).dll
 				RelativeAppBundlePath=$(_RelativeAppBundlePath)
-				Registrar=$(_BundlerRegistrar)
+				Registrar=$(Registrar)
+				RequirePInvokeWrappers=$(_RequirePInvokeWrappers)
 				RuntimeConfigurationFile=$(_RuntimeConfigurationFile)
 				SdkDevPath=$(_SdkDevPath)
 				SdkRootDirectory=$(_XamarinSdkRootDirectory)
@@ -492,6 +509,7 @@
 				TargetFramework=$(_ComputedTargetFrameworkMoniker)
 				UseLlvm=$(MtouchUseLlvm)
 				Verbosity=$(_BundlerVerbosity)
+				XamarinNativeLibraryDirectory=$(_XamarinNativeLibraryDirectory)
 				XamarinRuntime=$(_XamarinRuntime)
 			</_CustomLinkerOptions>
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --custom-data "LinkerOptionsFile=$(_CustomLinkerOptionsFile)"</_ExtraTrimmerArgs>
@@ -536,6 +554,9 @@
 			<_ExtraTrimmerArgs Condition="('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS') And '$(_SdkIsSimulator)' == 'true'">$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.Arch.IsSimulator true</_ExtraTrimmerArgs>
 			<_ExtraTrimmerArgs Condition="('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS') And '$(_SdkIsSimulator)' != 'true'">$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.Arch.IsSimulator false</_ExtraTrimmerArgs>
 
+			<!-- Enable serialization discovery. Ref: https://github.com/xamarin/xamarin-macios/issues/15676 -->
+			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --enable-serialization-discovery</_ExtraTrimmerArgs>
+
 			<!-- We always want the linker to process debug symbols, even when building in Release mode, because the AOT compiler uses the managed debug symbols to output DWARF debugging symbols -->
 			<TrimmerRemoveSymbols Condition="'$(TrimmerRemoveSymbols)' == ''">false</TrimmerRemoveSymbols>
 
@@ -545,12 +566,12 @@
 		</PropertyGroup>
 
 		<ItemGroup>
-			<!-- Mark all assemblies to be linked if we're linking all assemblies -->
+			<!-- Mark all assemblies to be copied if we're not linking any assemblies -->
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
-				Condition="'$(_LinkMode)' == 'Full' And '%(ResolvedFileToPublish.Extension)' == '.dll' And '%(ResolvedFileToPublish.AssetType)' != 'native'"
+				Condition="'$(_LinkMode)' == 'None' And '%(ResolvedFileToPublish.Extension)' == '.dll' And '%(ResolvedFileToPublish.AssetType)' != 'native'"
 			>
-				<TrimMode>link</TrimMode>
+				<TrimMode>copy</TrimMode> <!-- Don't use 'copyused', because that might still end up saving some assemblies, and if that's the platform assembly, it may break the partial static registrar -->
 			</ResolvedFileToPublish>
 
 			<!-- Mark our entry assembly as a root assembly. -->
@@ -637,8 +658,8 @@
 
 			<!-- Set TargetDirectory and SourceDirectory for all frameworks we have to publish -->
 			<_FrameworkToPublish Update="@(_FrameworkToPublish)">
-				<TargetDirectory>$(_RelativePublishDir)$(_AppBundleFrameworksDir)\%(Filename).framework</TargetDirectory>
-				<SourceDirectory>%(RootDir)%(Directory)</SourceDirectory>
+				<TargetDirectory>$(_RelativePublishDir)$(_AppBundleFrameworksDir)\%(Filename)%(Extension).framework</TargetDirectory>
+				<SourceDirectory>%(RelativeDir)</SourceDirectory>
 			</_FrameworkToPublish>
 		</ItemGroup>
 
@@ -661,6 +682,12 @@
 		Inputs="@(_DirectoriesToPublish)"
 		Outputs="@(_DirectoriesToPublish -> '%(TargetDirectory)/%(Filename)')"
 		>
+
+		<!-- Ask ditto to not copy architectures we don't care about. This can be overridden by passing 'SkipLibraryThinning=true' -->
+		<PropertyGroup Condition="'$(TargetArchitectures)' != '' And '$(SkipLibraryThinning)' != 'true'">
+			<_DittoArchitectures>--arch $([System.String]::Join('--arch ',$(TargetArchitectures.ToLowerInvariant().Split(','))))</_DittoArchitectures>
+		</PropertyGroup>
+
 		<!-- We specifically do *not* use the publishing logic in .NET to (ResolvedFileToPublish) copy whole directories to the app bundle, because symlinks aren't handled correctly.
 			 In particular, MSBuild can't handle symlinks to directories: https://github.com/dotnet/msbuild/issues/6821.
 			 So we have a custom item group (_DirectoriesToPublish), which we copy ourselves.
@@ -668,6 +695,8 @@
 		<Ditto
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			AdditionalArguments="$(_DittoArchitectures)"
+			CopyFromWindows="true"
 			ToolExe="$(DittoExe)"
 			ToolPath="$(DittoPath)"
 			Source="%(_DirectoriesToPublish.SourceDirectory)"
@@ -726,7 +755,11 @@
 			<_AssemblyDirsToCreate Include="@(_AssembliesToBeStripped->'%(OutputPath)%(Directory)'->Distinct())"/>
 		</ItemGroup>
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="@(_AssemblyDirsToCreate)" />
-		<Xamarin.MacDev.Tasks.ILStrip Assemblies="@(_AssembliesToBeStripped)" SessionId="$(BuildSessionId)">
+		<Xamarin.MacDev.Tasks.ILStrip
+			Assemblies="@(_AssembliesToBeStripped)"
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			>
 			<Output TaskParameter="StrippedAssemblies" ItemName="_StrippedAssemblies" />
 		</Xamarin.MacDev.Tasks.ILStrip>
 		<ItemGroup>
@@ -736,7 +769,7 @@
 	</Target>
 
 
-	<Target Name="_LoadLinkerOutput" DependsOnTargets="ComputeFilesToPublish">
+	<Target Name="_LoadLinkerOutput" DependsOnTargets="ComputeFilesToPublish" Condition="'$(IsMacEnabled)' == 'true'">
 		<!-- Load _MainFile -->
 		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_MainFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainFile.items')">
 			<Output TaskParameter="Items" ItemName="_MainFile" />
@@ -793,7 +826,7 @@
 
 	<!-- Native code -->
 
-	<Target Name="_ComputeFrameworkVariables" DependsOnTargets="ResolveRuntimePackAssets">
+	<Target Name="_ComputeFrameworkVariables" DependsOnTargets="ResolveRuntimePackAssets;ResolveFrameworkReferences">
 		<PropertyGroup>
 			<_PackageIdInfix Condition="'$(UseMonoRuntime)' == 'true'">Mono.</_PackageIdInfix>
 
@@ -810,7 +843,7 @@
 			<_XamarinRefPackageDirectory>%(_XamarinFrameworkReference.TargetingPackPath)</_XamarinRefPackageDirectory>
 			<_XamarinNativeLibraryDirectory>$(_XamarinSdkRuntimePackDirectory)/runtimes/$(RuntimeIdentifier)/native</_XamarinNativeLibraryDirectory>
 			<_XamarinIncludeDirectory>$(_XamarinSdkRuntimePackDirectory)/runtimes/$(RuntimeIdentifier)/native</_XamarinIncludeDirectory>
-			<_XamarinRefAssemblyDirectory>$(_XamarinRefPackageDirectory)/ref/net6.0/</_XamarinRefAssemblyDirectory>
+			<_XamarinRefAssemblyDirectory>$(_XamarinRefPackageDirectory)/ref/net7.0/</_XamarinRefAssemblyDirectory>
 			<_XamarinRefAssemblyPath>$(_XamarinRefAssemblyDirectory)$(_PlatformAssemblyName).dll</_XamarinRefAssemblyPath>
 
 			<_LibPartialStaticRegistrar Condition="'$(UseMonoRuntime)' == 'true'">$(_XamarinNativeLibraryDirectory)/Microsoft.$(_PlatformName).registrar.a</_LibPartialStaticRegistrar>
@@ -853,7 +886,7 @@
 			<!-- We need it for device builds for mobile platforms -->
 			<_RunAotCompiler Condition="'$(_SdkIsSimulator)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'">true</_RunAotCompiler>
 			<!-- We need it if the interpreter is enabled, no matter where -->
-			<_RunAotCompiler Condition="'$(MtouchInterpreter)' != ''">true</_RunAotCompiler>
+			<_RunAotCompiler Condition="'$(MtouchInterpreter)' != '' And '$(_PlatformName)' != 'macOS'">true</_RunAotCompiler>
 			<!-- We need it for Mac Catalyst on arm64 -->
 			<_RunAotCompiler Condition="'$(RuntimeIdentifier)' == 'maccatalyst-arm64'">true</_RunAotCompiler>
 			<!-- We need it for iOS/tvOS simulator on arm64 -->
@@ -950,6 +983,7 @@
 		<FindAotCompiler
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '$(_RunAotCompiler)' == 'true'"
+			KeepTemporaryOutput="$(FindAotCompilerKeepKeepTemporaryOutput)"
 			MonoAotCrossCompiler="@(MonoAotCrossCompiler)"
 			RuntimeIdentifier="$(RuntimeIdentifier)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
@@ -1026,15 +1060,9 @@
 			<BTouchToolExe>bgen.dll</BTouchToolExe>
 			<BTouchToolPath>$(_XamarinSdkRootDirectory)\tools\lib\bgen</BTouchToolPath>
 			<BaseLibDllPath>$(_XamarinRefAssemblyPath)</BaseLibDllPath>
-			<BTouchCompiler>$(RoslynTargetsPath)/bincore/csc.dll</BTouchCompiler>
 			<_GeneratorAttributeAssembly>$(_XamarinSdkRootDirectory)/tools/lib/Xamarin.Apple.BindingAttributes.dll</_GeneratorAttributeAssembly>
-			<_DotNetCscCompiler>$(RoslynTargetsPath)/bincore/csc.dll</_DotNetCscCompiler>
+			<_DotNetCscCompiler>$(RoslynTargetsPath)\bincore\csc.dll</_DotNetCscCompiler>
 		</PropertyGroup>
-
-		<ItemGroup>
-			<_BTouchCompileCommand Include="$(DOTNET_HOST_PATH)" />
-			<_BTouchCompileCommand Include="$(RoslynTargetsPath)/bincore/csc.dll" />
-		</ItemGroup>
 	</Target>
 
 	<Target Name="_ComputeNativeExecutableInputs" DependsOnTargets="_ComputeVariables">
@@ -1106,8 +1134,8 @@
 		</_LinkNativeExecutableDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_ComputeLinkNativeExecutableInputs">
-		<ItemGroup Condition="'$(IsMacEnabled)' == 'true'">
+	<Target Name="_ComputeLinkNativeExecutableInputs" Condition="'$(IsMacEnabled)' == 'true'">
+		<ItemGroup>
 			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
 			<!-- Link with the libraries shipped with the mono runtime pack -->
 			<_XamarinMainLibraries Include="@(_MonoLibrary)" />
@@ -1191,7 +1219,7 @@
 	<Target Name="_LinkNativeExecutable"
 			DependsOnTargets="$(_LinkNativeExecutableDependsOn)"
 			Inputs="@(_LinkNativeExecutableInputs)"
-			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
+			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName);$(_MtouchSymbolsList)"
 		>
 
 		<LinkNativeCode
@@ -1216,14 +1244,6 @@
 		<!-- remove the `-u` prefix from `_ReferencesLinkerFlags` so we can give the output file to `strip` -->
 		<WriteLinesToFile SessionId="$(BuildSessionId)" File="$(_MtouchSymbolsList)" Lines="@(_ReferencesLinkerFlags->'%(Identity)'->Substring (2))" Overwrite="true" />
 
-		<SymbolStrip
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false'"
-			Executable="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
-			IsFramework="false"
-			SymbolFile="$(_MtouchSymbolsList)"
-		/>
-
 		<ItemGroup>
 			<!-- Copy the executable from the intermediate directory to the .app -->
 			<ResolvedFileToPublish Include="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)">
@@ -1231,6 +1251,25 @@
 				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			</ResolvedFileToPublish>
 		</ItemGroup>
+	</Target>
+
+	<!-- When we're building a universal app, we need to collect the symbols from each inner build -->
+	<Target Name="_CollectRidSpecificSymbolLists" Inputs="@(_RidSpecificSymbolsListPath)" Outputs="$(_MtouchSymbolsList)">
+		<ReadLinesFromFile File="%(_RidSpecificSymbolsListPath.Identity)">
+			<Output TaskParameter="Lines" ItemName="_AllExecutableSymbols" />
+		</ReadLinesFromFile>
+		<WriteLinesToFile File="$(_MtouchSymbolsList)" Lines="@(_AllExecutableSymbols->DistinctWithCase())" Overwrite="true" />
+	</Target>
+
+	<!-- When we're building a universal app, we need to collect the list of user frameworks we need to run dsymutil on -->
+	<Target Name="_CollectRidSpecificUserFrameworksWithoutDebugSymbols">
+		<ReadItemsFromFile
+			SessionId="$(BuildSessionId)"
+			File="%(_RidSpecificUserFrameworksWithoutDebugSymbolsPath.Identity)"
+			Condition="Exists('%(_RidSpecificUserFrameworksWithoutDebugSymbolsPath.Identity)')"
+		>
+			<Output TaskParameter="Lines" ItemName="_UserFrameworksWithoutDebugSymbols" />
+		</ReadItemsFromFile>
 	</Target>
 
 	<Target Name="_ComputeDefaultLinkMode" DependsOnTargets="_DetectSdkLocations">
@@ -1268,7 +1307,7 @@
 		<ReadItemsFromFile
 			SessionId="$(BuildSessionId)"
 			File="%(_RidSpecificCodesignItemsPath.Identity)"
-			Condition="@(_RidSpecificCodesignItemsPath->Count()) &gt; 0"
+			Condition="@(_RidSpecificCodesignItemsPath->Count()) &gt; 0 And '$(IsMacEnabled)' == 'true'"
 		>
 			<Output TaskParameter="Items" ItemName="_RidSpecificCodesignItems" />
 		</ReadItemsFromFile>
@@ -1543,6 +1582,7 @@
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AdditionalArguments="-x -k"
+			CopyFromWindows="true"
 			Source="%(_CompressedAppleBindingResourcePackage.Identity)"
 			Destination="$(_IntermediateDecompressionDir)/%(Filename)"
 			>
@@ -1590,6 +1630,7 @@
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AdditionalArguments="-x -k"
+			CopyFromWindows="true"
 			Source="%(_CompressedPlugIns.Identity)"
 			Destination="$(_IntermediateDecompressionDir)/%(Filename)%(Extension)"
 			>
@@ -1628,7 +1669,7 @@
 	<Target Name="_DecompressAppleFrameworks"
 		Inputs="@(_CompressedAppleFrameworks)"
 		Outputs="@(_CompressedAppleFrameworks -> '$(_IntermediateFrameworksDir)/%(Filename)%(Extension).stamp')"
-		DependsOnTargets="_ComputePublishLocation;_ComputeVariables"
+		DependsOnTargets="_ComputeVariables"
 		BeforeTargets="_ExpandNativeReferences"
 		>
 
@@ -1636,6 +1677,7 @@
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AdditionalArguments="-x -k"
+			CopyFromWindows="true"
 			Source="%(_CompressedAppleFrameworks.Identity)"
 			Destination="$(_IntermediateFrameworksDir)/%(Filename)%(Extension)"
 			>
@@ -1700,8 +1742,8 @@
 	</Target>
 
 	<Target Name="_ValidateRuntimeIdentifier"
-		Condition="'$(RuntimeIdentifier)' != '' And '$(_RuntimeIdentifierValidation)' != 'false'"
-		BeforeTargets="Restore;Build;ResolvedFrameworkReference;ResolveRuntimePackAssets;ProcessFrameworkReferences">
+		Condition="'$(RuntimeIdentifier)' != '' And '$(_RuntimeIdentifierValidation)' != 'false' And '$(_RuntimeIdentifierIsRequired)' == 'true'"
+		BeforeTargets="Build;ResolvedFrameworkReference;ResolveRuntimePackAssets">
 		<PropertyGroup>
 			<_IsValidRuntimeIdentifier Condition="@(_XamarinValidRuntimeIdentifier->WithMetadataValue('Platform', '$(_PlatformName)')->WithMetadataValue('Filename', '$(RuntimeIdentifier)')->Count()) &gt; 0">true</_IsValidRuntimeIdentifier>
 		</PropertyGroup>
@@ -1715,6 +1757,8 @@
 	</PropertyGroup>
 
 	<Target Name="_InstallMobile" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName" Condition="'$(_SdkIsSimulator)' == 'false'">
+		<!-- Launching from the command line on windows hasn't been implemented: https://github.com/xamarin/xamarin-macios/issues/16609 -->
+		<Error Condition="$([MSBuild]::IsOSPlatform('windows'))" Text="It's currently not supported to launch an app from the command line on Windows." />
 		<GetMlaunchArguments
 			SessionId="$(BuildSessionId)"
 			AppBundlePath="$(_AppBundlePath)"
@@ -1735,6 +1779,8 @@
 
 	<!-- This is only needed for mobile platforms, RunCommand and RunArguments are defined for macOS in Microsoft.macOS.Sdk.targets. -->
 	<Target Name="_PrepareRunMobile" DependsOnTargets="_InstallMobile" Condition="'$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'">
+		<!-- Launching from the command line on windows hasn't been implemented: https://github.com/xamarin/xamarin-macios/issues/16609 -->
+		<Error Condition="$([MSBuild]::IsOSPlatform('windows'))" Text="It's currently not supported to launch an app from the command line on Windows." />
 		<PropertyGroup>
 			<!-- capture output by default -->
 			<_MlaunchCaptureOutput Condition="'$(_MlaunchCaptureOutput)' == ''">true</_MlaunchCaptureOutput>
@@ -1775,6 +1821,74 @@
 	</PropertyGroup>
 
 	<Target Name="_PrepareRun" DependsOnTargets="$(_PrepareRunDependsOn)" BeforeTargets="Run" />
+
+	<!--
+		Add a 'global using nfloat = System.Runtime.InteropServices.NFloat' to ease migration from Xamarin.
+		We're not using a the Usings item group, because this code shows a warning in .NET 7:
+			The type name 'nfloat' only contains lower-cased ascii characters. Such names may become reserved for the language.
+		and we want to hide this warning.
+		Note: we only add this if compiling using C# 10 or later.
+		This code is a slightly modified version of this:
+		https://github.com/dotnet/sdk/blob/1eee82034899436f8ddb0e379612a32ce0dfb9e4/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.GenerateGlobalUsings.targets#L26-L55
+	-->
+	<!--
+		Note that this must run before every invocation of CoreCompile to ensure that all compiler
+		runs see the generated global usings. There is at least one scenario involving Xaml
+		where CoreCompile is invoked without other potential hooks such as Compile or CoreBuild,
+		etc., so we hook directly on to CoreCompile. Furthermore, we  must run *after*
+		PrepareForBuild to ensure that the intermediate directory has been created.
+
+		Targets that generate Compile items are also expected to run before
+		BeforeCompile targets (common targets convention).
+	-->
+	<Target Name="GenerateGlobalnfloatUsing"
+		BeforeTargets="BeforeCompile;CoreCompile"
+		AfterTargets="PrepareForBuild"
+		Condition="'$(Language)' == 'C#'
+						And '$(NoNFloatUsing)' != 'true'
+						And ('$(LangVersion)' == ''
+							Or '$(LangVersion)' == 'preview'
+							Or '$(LangVersion)' == 'latest'
+							Or '$(LangVersion)' == 'latestMajor'
+							Or '$(LangVersion)' == 'default'
+							Or $([MSBuild]::VersionGreaterThanOrEquals('$(LangVersion)','10.0'))
+					)">
+
+		<PropertyGroup>
+			<GeneratedNFloatGlobalUsingFile Condition="'$(GeneratedNFloatGlobalUsingsFile)' ==''">$(IntermediateOutputPath)$(MSBuildProjectName).nfloat.g$(DefaultLanguageSourceExtension)</GeneratedNFloatGlobalUsingFile>
+			<GeneratedNFloatGlobalUsing>
+#pragma warning disable CS8981
+global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
+#pragma warning restore CS8981
+			</GeneratedNFloatGlobalUsing>
+		</PropertyGroup>
+
+		<WriteLinesToFile
+			File="$(GeneratedNFloatGlobalUsingFile)"
+			Lines="$(GeneratedNFloatGlobalUsing)"
+			Overwrite="true"
+			WriteOnlyWhenDifferent="true" />
+
+		<ItemGroup>
+			<Compile Include="$(GeneratedNFloatGlobalUsingFile)" />
+			<!-- Performing a clean and waiting without a build results in build warnings in VS due to all the missing namespaces, so we'll avoid recording it in FileWrites -->
+		</ItemGroup>
+	</Target>
+
+	<!--
+		The .NET 6 sdk pack will add a global using directive by adding to the
+	    'Using' item group, but we don't want that anymore in .NET 7 (we
+	    manually generate the global using to avoid a C# warning), so remove
+	    any global using that may have been added by the .NET sdk pack. The
+	    .NET 6 sdk pack will one day condition the inclusion on the current
+	    target framework version, and at that point we can remove this
+	    workaround (https://github.com/xamarin/xamarin-macios/pull/15385).
+	-->
+	<Target Name="RemoveGlobalnfloatUsingItemGroup" BeforeTargets="PrepareForBuild">
+		<ItemGroup>
+			<Using Remove="System.Runtime.InteropServices.NFloat" />
+		</ItemGroup>
+	</Target>
 
 	<!-- Import existing targets -->
 

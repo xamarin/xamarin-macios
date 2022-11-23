@@ -8,7 +8,7 @@ using Mono.Cecil;
 using Clang.Ast;
 
 namespace Extrospection {
-	
+
 	public class Runner {
 
 		public Runner ()
@@ -18,6 +18,7 @@ namespace Extrospection {
 		public void Execute (string pchFile, IEnumerable<string> assemblyNames, string outputDirectory = "")
 		{
 			var managed_reader = new AssemblyReader () {
+				new MapNamesVisitor (), // must come first to map managed and native names.
 				new ReleaseAttributeCheck (),
 				new DesignatedInitializerCheck (),
 				new DllImportCheck (),
@@ -160,7 +161,7 @@ namespace Extrospection {
 
 	// debug
 	class ListNative : BaseVisitor {
-		
+
 		public override void VisitDecl (Decl decl)
 		{
 			if (decl is FunctionDecl) {

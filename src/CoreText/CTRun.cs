@@ -31,7 +31,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -52,6 +51,12 @@ namespace CoreText {
 		HasNonIdentityMatrix = (1 << 2)
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTRun : NativeObject {
 		[Preserve (Conditional = true)]
 		internal CTRun (NativeHandle handle, bool owns)
@@ -68,7 +73,7 @@ namespace CoreText {
 
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static void CTRunGetAdvances (IntPtr h, NSRange range, [In, Out] CGSize []? buffer);
-		public CGSize[] GetAdvances (NSRange range, CGSize[]? buffer)
+		public CGSize [] GetAdvances (NSRange range, CGSize []? buffer)
 		{
 			buffer = GetBuffer (range, buffer);
 
@@ -77,7 +82,7 @@ namespace CoreText {
 			return buffer;
 		}
 
-		T[] GetBuffer<T> (NSRange range, T[]? buffer)
+		T [] GetBuffer<T> (NSRange range, T []? buffer)
 		{
 			var glyphCount = GlyphCount;
 
@@ -89,7 +94,8 @@ namespace CoreText {
 			return buffer ?? new T [range.Length == 0 ? glyphCount : range.Length];
 		}
 
-		public CGSize [] GetAdvances (NSRange range) {
+		public CGSize [] GetAdvances (NSRange range)
+		{
 			return GetAdvances (range, null);
 		}
 
@@ -118,7 +124,7 @@ namespace CoreText {
 
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static void CTRunGetGlyphs (IntPtr h, NSRange range, [In, Out] ushort []? buffer);
-		public ushort[] GetGlyphs (NSRange range, ushort[]? buffer)
+		public ushort [] GetGlyphs (NSRange range, ushort []? buffer)
 		{
 			buffer = GetBuffer (range, buffer);
 
@@ -127,7 +133,8 @@ namespace CoreText {
 			return buffer;
 		}
 
-		public ushort [] GetGlyphs (NSRange range) {
+		public ushort [] GetGlyphs (NSRange range)
+		{
 			return GetGlyphs (range, null);
 		}
 
@@ -138,13 +145,14 @@ namespace CoreText {
 
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static CGRect CTRunGetImageBounds (IntPtr h, IntPtr context, NSRange range);
-		public CGRect GetImageBounds (CGContext context, NSRange range) {
+		public CGRect GetImageBounds (CGContext context, NSRange range)
+		{
 			return CTRunGetImageBounds (Handle, context.Handle, range);
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static void CTRunGetPositions (IntPtr h, NSRange range, [In, Out] CGPoint []? buffer);
-		public CGPoint [] GetPositions (NSRange range, CGPoint[]? buffer)
+		public CGPoint [] GetPositions (NSRange range, CGPoint []? buffer)
 		{
 			buffer = GetBuffer (range, buffer);
 
@@ -153,7 +161,8 @@ namespace CoreText {
 			return buffer;
 		}
 
-		public CGPoint [] GetPositions (NSRange range) {
+		public CGPoint [] GetPositions (NSRange range)
+		{
 			return GetPositions (range, null);
 		}
 
@@ -172,7 +181,7 @@ namespace CoreText {
 
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static void CTRunGetStringIndices (IntPtr h, NSRange range, [In, Out] nint /* CFIndex */ []? buffer);
-		public nint [] GetStringIndices (NSRange range, nint[]? buffer)
+		public nint [] GetStringIndices (NSRange range, nint []? buffer)
 		{
 			buffer = GetBuffer (range, buffer);
 
@@ -181,7 +190,8 @@ namespace CoreText {
 			return buffer;
 		}
 
-		public nint [] GetStringIndices (NSRange range) {
+		public nint [] GetStringIndices (NSRange range)
+		{
 			return GetStringIndices (range, null);
 		}
 
@@ -197,7 +207,7 @@ namespace CoreText {
 				return CTRunGetStringRange (Handle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static CGAffineTransform CTRunGetTextMatrix (IntPtr handle);
 		public CGAffineTransform TextMatrix {
@@ -205,13 +215,14 @@ namespace CoreText {
 				return CTRunGetTextMatrix (Handle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static double CTRunGetTypographicBounds (IntPtr h, NSRange range, out nfloat ascent, out nfloat descent, out nfloat leading);
 
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static double CTRunGetTypographicBounds (IntPtr h, NSRange range, IntPtr ascent, IntPtr descent, IntPtr leading);
-		public double GetTypographicBounds (NSRange range, out nfloat ascent, out nfloat descent, out nfloat leading) {
+		public double GetTypographicBounds (NSRange range, out nfloat ascent, out nfloat descent, out nfloat leading)
+		{
 			return CTRunGetTypographicBounds (Handle, range, out ascent, out descent, out leading);
 		}
 
@@ -225,26 +236,28 @@ namespace CoreText {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6,0)]
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[Watch (6, 0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern void CTRunGetBaseAdvancesAndOrigins (/* CTRunRef */ IntPtr runRef, /* CFRange */ NSRange range, CGSize[] advancesBuffer, CGPoint[] originsBuffer);
+		static extern void CTRunGetBaseAdvancesAndOrigins (/* CTRunRef */ IntPtr runRef, /* CFRange */ NSRange range, CGSize [] advancesBuffer, CGPoint [] originsBuffer);
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6,0)]
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[Watch (6, 0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
-		public void GetBaseAdvancesAndOrigins (NSRange range, out CGSize[] advancesBuffer, out CGPoint[] originsBuffer)
+		public void GetBaseAdvancesAndOrigins (NSRange range, out CGSize [] advancesBuffer, out CGPoint [] originsBuffer)
 		{
 			advancesBuffer = GetBuffer<CGSize> (range, null);
 			originsBuffer = GetBuffer<CGPoint> (range, null);

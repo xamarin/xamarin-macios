@@ -1236,11 +1236,10 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyExifOffsetTimeDigitized")]
 		NSString ExifOffsetTimeDigitized { get; }
 
-#if !MONOMAC
+		[NoMac]
 		[iOS (7,0)]
 		[Field ("kCGImagePropertyMakerAppleDictionary")]
 		NSString MakerAppleDictionary { get; }
-#endif
 
 		[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
 		[Field ("kCGImagePropertyImageCount")]
@@ -2102,6 +2101,18 @@ namespace ImageIO {
 		[Mac (12, 0), iOS (15, 0), TV (15,0), MacCatalyst (15,0), Watch (8,0)]
 		[Field ("kCGImagePropertyGroupTypeAlternate")]
 		NSString GroupTypeAlternate { get; }
+
+		[iOS (16,0), Mac (13,0), Watch (9,0), TV (16,0), MacCatalyst (16,0)]
+		[Field ("kCGImagePropertyGroupImageBaseline")]
+		NSString GroupImageBaseline { get; }
+
+		[iOS (16,0), Mac (13,0), Watch (9,0), TV (16,0), MacCatalyst (16,0)]
+		[Field ("kCGImagePropertyGroupImageDisparityAdjustment")]
+		NSString GroupImageDisparityAdjustment { get; }
+
+		[iOS (16,0), Mac (13,0), Watch (9,0), TV (16,0), MacCatalyst (16,0)]
+		[Field ("kCGImagePropertyHEIFDictionary")]
+		NSString HeifDictionary { get; }
 	}
 
 	[iOS (7,0)]
@@ -2489,5 +2500,49 @@ namespace ImageIO {
 		nuint LoopCount { get; set; }
 
 		nuint StartIndex { get; set; }
+	}
+
+	[Static]
+	[iOS (16,0), Mac (13,0), Watch (9,0), TV (16,0), MacCatalyst (16,0)]
+	interface IOCameraExtrinsics {
+		[Field ("kIIOCameraExtrinsics_CoordinateSystemID")]
+		NSString CoordinateSystemId { get; }
+
+		[Field ("kIIOCameraExtrinsics_Position")]
+		NSString Position { get; }
+
+		[Field ("kIIOCameraExtrinsics_Rotation")]
+		NSString Rotation { get; }
+	}
+
+	[Static]
+	[iOS (16,0), Mac (13,0), Watch (9,0), TV (16,0), MacCatalyst (16,0)]
+	interface IOCameraModel {
+		[Field ("kIIOCameraModel_Intrinsics")]
+		NSString Intrinsics { get; }
+
+		[Mac (13, 0), iOS (16, 0)]
+		[Field ("kIIOCameraModel_ModelType")]
+		NSString ModelType { get; }
+	}
+
+	[Static]
+	[iOS (16,0), Mac (13,0), Watch (9,0), TV (16,0), MacCatalyst (16,0)]
+	interface IOCameraModelType {
+		[Field ("kIIOCameraModelType_SimplifiedPinhole")]
+		NSString SimplifiedPinhole { get; }
+
+		[Field ("kIIOCameraModelType_GenericPinhole")]
+		NSString GenericPinhole { get; }
+	}
+	
+	[Static]
+	[iOS (16,0), Mac (13,0), Watch (9,0), TV (16,0), MacCatalyst (16,0)]
+	interface IOMetadata {
+		[Field ("kIIOMetadata_CameraExtrinsicsKey")]
+		NSString CameraExtrinsicsKey { get; }
+
+		[Field ("kIIOMetadata_CameraModelKey")]
+		NSString CameraModelKey { get; }
 	}
 }

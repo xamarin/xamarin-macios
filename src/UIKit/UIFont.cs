@@ -12,7 +12,6 @@
 using System;
 using ObjCRuntime;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace UIKit {
 	public partial class UIFont {
@@ -23,63 +22,75 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public static UIFont PreferredHeadline {
 			get {
 				return GetPreferredFontForTextStyle (UIFontTextStyle.Headline);
 			}
 		}
-		
+
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public static UIFont PreferredBody {
 			get {
 				return GetPreferredFontForTextStyle (UIFontTextStyle.Body);
 			}
 		}
-		
+
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public static UIFont PreferredSubheadline {
 			get {
 				return GetPreferredFontForTextStyle (UIFontTextStyle.Subheadline);
 			}
 		}
-		
+
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public static UIFont PreferredFootnote {
 			get {
 				return GetPreferredFontForTextStyle (UIFontTextStyle.Footnote);
 			}
 		}
-		
+
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public static UIFont PreferredCaption1 {
 			get {
 				return GetPreferredFontForTextStyle (UIFontTextStyle.Caption1);
 			}
 		}
-		
+
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public static UIFont PreferredCaption2 {
 			get {
@@ -89,41 +100,49 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
+		[iOS (9, 0)]
 #endif
 		public static UIFont PreferredTitle1 {
 			get {
 				return GetPreferredFontForTextStyle (UIFontTextStyle.Title1);
 			}
 		}
-		
+
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
+		[iOS (9, 0)]
 #endif
 		public static UIFont PreferredTitle2 {
 			get {
 				return GetPreferredFontForTextStyle (UIFontTextStyle.Title2);
 			}
 		}
-		
+
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
+		[iOS (9, 0)]
 #endif
 		public static UIFont PreferredTitle3 {
 			get {
 				return GetPreferredFontForTextStyle (UIFontTextStyle.Title3);
 			}
 		}
-		
+
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
+		[iOS (9, 0)]
 #endif
 		public static UIFont PreferredCallout {
 			get {
@@ -158,9 +177,35 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.2")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("tvos16.0")]
 #else
-		[iOS (8,2)]
+		[Watch (9, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#endif
+		static nfloat GetFontWidth (UIFontWidth width)
+		{
+			switch (width) {
+			case UIFontWidth.Condensed:
+				return UIFontWidthConstants.Condensed;
+			case UIFontWidth.Standard:
+				return UIFontWidthConstants.Standard;
+			case UIFontWidth.Expanded:
+				return UIFontWidthConstants.Expanded;
+			case UIFontWidth.Compressed:
+				return UIFontWidthConstants.Compressed;
+			default:
+				throw new ArgumentException (width.ToString ());
+			}
+		}
+
+
+#if NET
+		[SupportedOSPlatform ("ios8.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
+		[iOS (8, 2)]
 #endif
 		public static UIFont SystemFontOfSize (nfloat size, UIFontWeight weight)
 		{
@@ -169,8 +214,10 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
+		[iOS (9, 0)]
 #endif
 		public static UIFont MonospacedDigitSystemFontOfSize (nfloat size, nfloat weight)
 		{
@@ -180,8 +227,10 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
+		[iOS (9, 0)]
 #endif
 		public static UIFont MonospacedDigitSystemFontOfSize (nfloat fontSize, UIFontWeight weight)
 		{
@@ -191,9 +240,10 @@ namespace UIKit {
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (13,0)]
-		[TV (13,0)]
+		[iOS (13, 0)]
+		[TV (13, 0)]
 #endif
 		public static UIFont GetMonospacedSystemFont (nfloat size, nfloat weight)
 		{
@@ -204,9 +254,10 @@ namespace UIKit {
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (13,0)]
-		[TV (13,0)]
+		[iOS (13, 0)]
+		[TV (13, 0)]
 #endif
 		public static UIFont GetMonospacedSystemFont (nfloat size, UIFontWeight weight) => GetMonospacedSystemFont (size, GetFontWeight (weight));
 
@@ -216,6 +267,8 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7, 0)]
 #endif
@@ -227,6 +280,8 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7, 0)]
 #endif
@@ -238,6 +293,8 @@ namespace UIKit {
 #if !WATCH
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7, 0)]
 #endif
@@ -249,6 +306,8 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7, 0)]
 #endif
@@ -260,6 +319,8 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7, 0)]
 #endif
@@ -282,9 +343,24 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.2")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("tvos16.0")]
 #else
-		[iOS (8,2)]
+		[Watch (9, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#endif
+		public static UIFont SystemFontOfSize (nfloat fontSize, UIFontWeight weight, UIFontWidth width)
+		{
+			var ptr = _SystemFontOfSize (fontSize, GetFontWeight (weight), GetFontWidth (width));
+			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios8.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
+		[iOS (8, 2)]
 #endif
 		public static UIFont SystemFontOfSize (nfloat size, nfloat weight)
 		{

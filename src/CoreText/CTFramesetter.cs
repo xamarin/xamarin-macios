@@ -29,7 +29,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -42,29 +41,35 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreText {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTFramesetter : NativeObject {
 		[Preserve (Conditional = true)]
 		internal CTFramesetter (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{
 		}
-		
-#region Framesetter Creation
+
+		#region Framesetter Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFramesetterCreateWithAttributedString (IntPtr @string);
 		public CTFramesetter (NSAttributedString value)
 			: base (CTFramesetterCreateWithAttributedString (Runtime.ThrowOnNull (value, nameof (value)).Handle), true, true)
 		{
 		}
-#endregion
+		#endregion
 
-#region Frame Creation
+		#region Frame Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFramesetterCreateFrame (IntPtr framesetter, NSRange stringRange, IntPtr path, IntPtr frameAttributes);
 		public CTFrame? GetFrame (NSRange stringRange, CGPath path, CTFrameAttributes? frameAttributes)
 		{
 			if (path is null)
-				throw new ArgumentNullException (nameof (path));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path));
 			var frame = CTFramesetterCreateFrame (Handle, stringRange, path.Handle, frameAttributes.GetHandle ());
 			if (frame == IntPtr.Zero)
 				return null;
@@ -81,9 +86,9 @@ namespace CoreText {
 				return null;
 			return new CTTypesetter (h, false);
 		}
-#endregion
+		#endregion
 
-#region Frame Sizing
+		#region Frame Sizing
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern CGSize CTFramesetterSuggestFrameSizeWithConstraints (
 				IntPtr framesetter, NSRange stringRange, IntPtr frameAttributes, CGSize constraints, out NSRange fitRange);
@@ -94,16 +99,17 @@ namespace CoreText {
 					frameAttributes.GetHandle (),
 					constraints, out fitRange);
 		}
-#endregion
+		#endregion
 #if NET
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,14)]
-		[iOS (12,0)]
-		[TV (12,0)]
-		[Watch (5,0)]
+		[Mac (10, 14)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFramesetterCreateWithTypesetter (IntPtr typesetter);
@@ -112,16 +118,17 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,14)]
-		[iOS (12,0)]
-		[TV (12,0)]
-		[Watch (5,0)]
+		[Mac (10, 14)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
 #endif
 		public static CTFramesetter? Create (CTTypesetter typesetter)
 		{
 			if (typesetter is null)
-				throw new ArgumentNullException (nameof (typesetter));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (typesetter));
 
 			var ret = CTFramesetterCreateWithTypesetter (typesetter.Handle);
 			if (ret == IntPtr.Zero)

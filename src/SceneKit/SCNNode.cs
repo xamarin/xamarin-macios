@@ -19,10 +19,8 @@ using ObjCRuntime;
 
 #nullable enable
 
-namespace SceneKit
-{
-	public partial class SCNNode : IEnumerable, IEnumerable<SCNNode>
-	{
+namespace SceneKit {
+	public partial class SCNNode : IEnumerable, IEnumerable<SCNNode> {
 		public void Add (SCNNode node)
 		{
 			AddChildNode (node);
@@ -30,12 +28,12 @@ namespace SceneKit
 
 		public void AddNodes (params SCNNode [] nodes)
 		{
-			if (nodes == null)
+			if (nodes is null)
 				return;
 			foreach (var n in nodes)
 				AddChildNode (n);
 		}
-		
+
 		public IEnumerator<SCNNode> GetEnumerator ()
 		{
 			foreach (var node in ChildNodes)
@@ -50,7 +48,7 @@ namespace SceneKit
 #if !WATCH
 		public void AddAnimation (CAAnimation animation, string? key)
 		{
-			if (key == null) {
+			if (key is null) {
 				((ISCNAnimatable) this).AddAnimation (animation, (NSString?) null);
 			} else {
 				using (var s = new NSString (key))
@@ -64,7 +62,7 @@ namespace SceneKit
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (key));
 
 			using (var s = new NSString (key))
-				((ISCNAnimatable)this).RemoveAnimation (s, duration);
+				((ISCNAnimatable) this).RemoveAnimation (s, duration);
 		}
 
 		public void RemoveAnimation (string key)
@@ -73,7 +71,7 @@ namespace SceneKit
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (key));
 
 			using (var s = new NSString (key))
-				((ISCNAnimatable)this).RemoveAnimation (s);
+				((ISCNAnimatable) this).RemoveAnimation (s);
 		}
 
 		public CAAnimation? GetAnimation (string key)
@@ -82,7 +80,7 @@ namespace SceneKit
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (key));
 
 			using (var s = new NSString (key))
-				return ((ISCNAnimatable)this).GetAnimation (s);
+				return ((ISCNAnimatable) this).GetAnimation (s);
 		}
 
 		public void PauseAnimation (string key)
@@ -91,7 +89,7 @@ namespace SceneKit
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (key));
 
 			using (var s = new NSString (key))
-				((ISCNAnimatable)this).PauseAnimation (s);
+				((ISCNAnimatable) this).PauseAnimation (s);
 		}
 
 		public void ResumeAnimation (string key)
@@ -100,7 +98,7 @@ namespace SceneKit
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (key));
 
 			using (var s = new NSString (key))
-				((ISCNAnimatable)this).ResumeAnimation (s);
+				((ISCNAnimatable) this).ResumeAnimation (s);
 		}
 
 		public bool IsAnimationPaused (string key)
@@ -111,7 +109,7 @@ namespace SceneKit
 			bool isPaused;
 
 			using (var s = new NSString (key))
-				isPaused = ((ISCNAnimatable)this).IsAnimationPaused (s);
+				isPaused = ((ISCNAnimatable) this).IsAnimationPaused (s);
 
 			return isPaused;
 		}

@@ -3,11 +3,10 @@ using ObjCRuntime;
 using Foundation;
 using System;
 
-namespace CloudKit
-{
+namespace CloudKit {
 	// NSInteger -> CKContainer.h
-	[Watch (3,0)]
-	[iOS (8,0)]
+	[Watch (3, 0)]
+	[iOS (8, 0)]
 	[Mac (10, 10)]
 	[Native]
 	public enum CKAccountStatus : long {
@@ -15,13 +14,13 @@ namespace CloudKit
 		Available = 1,
 		Restricted = 2,
 		NoAccount = 3,
-		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+		[Mac (12, 0), iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		TemporarilyUnavailable = 4,
 	}
 
 	// NSUInteger -> CKContainer.h
-	[Watch (3,0)]
-	[iOS (8,0)]
+	[Watch (3, 0)]
+	[iOS (8, 0)]
 	[Mac (10, 10)]
 	[Native]
 	[Flags]
@@ -30,8 +29,8 @@ namespace CloudKit
 	}
 
 	// NSInteger -> CKContainer.h
-	[Watch (3,0)]
-	[iOS (8,0)]
+	[Watch (3, 0)]
+	[iOS (8, 0)]
 	[Mac (10, 10)]
 	[Native]
 	public enum CKApplicationPermissionStatus : long {
@@ -42,8 +41,8 @@ namespace CloudKit
 	}
 
 	// NSInteger -> CKError.h
-	[Watch (3,0)]
-	[iOS (8,0)]
+	[Watch (3, 0)]
+	[iOS (8, 0)]
 	[Mac (10, 10)]
 	[Native]
 	[ErrorDomain ("CKErrorDomain")]
@@ -75,7 +74,7 @@ namespace CloudKit
 		BadDatabase = 24,
 		QuotaExceeded = 25,
 		ZoneNotFound = 26,
-		LimitExceeded  = 27,
+		LimitExceeded = 27,
 		UserDeletedZone = 28,
 		TooManyParticipants = 29,
 		AlreadyShared = 30,
@@ -88,8 +87,8 @@ namespace CloudKit
 	}
 
 	// NSInteger -> CKModifyRecordsOperation.h
-	[Watch (3,0)]
-	[iOS (8,0)]
+	[Watch (3, 0)]
+	[iOS (8, 0)]
 	[Mac (10, 10)]
 	[Native]
 	public enum CKRecordSavePolicy : long {
@@ -99,20 +98,20 @@ namespace CloudKit
 	}
 
 	// NSInteger -> CKNotification.h
-	[Watch (3,0)]
-	[iOS (8,0)]
+	[Watch (3, 0)]
+	[iOS (8, 0)]
 	[Mac (10, 10)]
 	[Native]
 	public enum CKNotificationType : long {
 		Query = 1,
 		RecordZone = 2,
 		ReadNotification = 3,
-		[iOS (10,0), TV (10,0), Mac (10,12)] Database = 4,
+		[iOS (10, 0), TV (10, 0), Mac (10, 12)] Database = 4,
 	}
 
 	// NSInteger -> CKNotification.h
-	[Watch (3,0)]
-	[iOS (8,0)]
+	[Watch (3, 0)]
+	[iOS (8, 0)]
 	[Mac (10, 10)]
 	[Native]
 	public enum CKQueryNotificationReason : long {
@@ -122,24 +121,24 @@ namespace CloudKit
 	}
 
 	// NSUInteger -> CKRecordZone.h
-	[Watch (3,0)]
-	[iOS (8,0)]
+	[Watch (3, 0)]
+	[iOS (8, 0)]
 	[Mac (10, 10)]
 	[Flags]
 	[Native]
 	public enum CKRecordZoneCapabilities : ulong {
 		FetchChanges = 1 << 0,
 		Atomic = 1 << 1,
-		[iOS (10,0), TV (10,0), Mac (10,12)]
+		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
 		Sharing = 1 << 2,
-		[Mac (12,0), iOS (15,0), TV (15,0)]
+		[Mac (12, 0), iOS (15, 0), TV (15, 0)]
 		ZoneWideSharing = 1 << 3,
 
 	}
 
 	// NSUInteger -> CKReference.h
-	[Watch (3,0)]
-	[iOS (8,0)]
+	[Watch (3, 0)]
+	[iOS (8, 0)]
 	[Mac (10, 10)]
 	[Native]
 	public enum CKReferenceAction : ulong {
@@ -148,14 +147,14 @@ namespace CloudKit
 	}
 
 	// NSInteger -> CKSubscription.h
-	[Watch (6,0)]
-	[iOS (8,0)]
+	[Watch (6, 0)]
+	[iOS (8, 0)]
 	[Mac (10, 10)]
 	[Native]
 	public enum CKSubscriptionType : long {
 		Query = 1,
 		RecordZone = 2,
-		[iOS (10,0), TV (10,0), Mac (10,12)] Database = 3,
+		[iOS (10, 0), TV (10, 0), Mac (10, 12)] Database = 3,
 	}
 
 	// NSInteger -> CKSubscription.h
@@ -163,11 +162,11 @@ namespace CloudKit
 #if !NET
 	[NoWatch]
 	[iOS (8, 0)]
-	[Obsoleted (PlatformName.iOS, 14, 0, message : "Use 'CKQuerySubscriptionOptions' instead.")]
-	[Deprecated (PlatformName.iOS, 10, 0, message : "Use 'CKQuerySubscriptionOptions' instead.")]
+	[Obsoleted (PlatformName.iOS, 14, 0, message: "Use 'CKQuerySubscriptionOptions' instead.")]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CKQuerySubscriptionOptions' instead.")]
 	[Mac (10, 10)]
-	[Obsoleted (PlatformName.MacOSX, 10, 16, message : "Use 'CKQuerySubscriptionOptions' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'CKQuerySubscriptionOptions' instead.")]
+	[Obsoleted (PlatformName.MacOSX, 10, 16, message: "Use 'CKQuerySubscriptionOptions' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'CKQuerySubscriptionOptions' instead.")]
 	[Flags]
 	[Native]
 	public enum CKSubscriptionOptions : ulong {
@@ -177,65 +176,59 @@ namespace CloudKit
 		FiresOnce = 1 << 3,
 	}
 #endif
-	
-	[Watch (3,0)]
-	[iOS (10,0), Mac (10,12)]
+
+	[Watch (3, 0)]
+	[iOS (10, 0), Mac (10, 12)]
 	[Native]
-	public enum CKDatabaseScope : long
-	{
+	public enum CKDatabaseScope : long {
 		Public = 1,
 		Private,
 		Shared,
 	}
-	
-	[Watch (3,0)]
-	[iOS (10,0), Mac (10,12)]
+
+	[Watch (3, 0)]
+	[iOS (10, 0), Mac (10, 12)]
 	[Native]
-	public enum CKShareParticipantAcceptanceStatus : long
-	{
+	public enum CKShareParticipantAcceptanceStatus : long {
 		Unknown,
 		Pending,
 		Accepted,
 		Removed,
 	}
 
-	[Watch (3,0)]
-	[iOS (10,0), Mac (10,12)]
+	[Watch (3, 0)]
+	[iOS (10, 0), Mac (10, 12)]
 	[Native]
-	public enum CKShareParticipantPermission : long
-	{
+	public enum CKShareParticipantPermission : long {
 		Unknown,
 		None,
 		ReadOnly,
 		ReadWrite,
 	}
 
-	[Watch (3,0)]
-	[iOS (10,10), Mac (10,12)]
+	[Watch (3, 0)]
+	[iOS (10, 10), Mac (10, 12)]
 	[Native]
-	public enum CKShareParticipantType : long
-	{
+	public enum CKShareParticipantType : long {
 		Unknown = 0,
 		Owner = 1,
 		PrivateUser = 3,
 		PublicUser = 4,
 	}
 
-	[Watch (6,0)]
-	[iOS (10,0), Mac(10,12)]
+	[Watch (6, 0)]
+	[iOS (10, 0), Mac (10, 12)]
 	[Native]
-	public enum CKQuerySubscriptionOptions : ulong
-	{
+	public enum CKQuerySubscriptionOptions : ulong {
 		RecordCreation = 1 << 0,
 		RecordUpdate = 1 << 1,
 		RecordDeletion = 1 << 2,
 		FiresOnce = 1 << 3,
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[Native]
-	public enum CKOperationGroupTransferSize : long
-	{
+	public enum CKOperationGroupTransferSize : long {
 		Unknown,
 		Kilobytes,
 		Megabytes,
@@ -246,12 +239,28 @@ namespace CloudKit
 		HundredsOfGigabytes,
 	}
 
-	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+	[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
 	[Native]
 	public enum CKShareParticipantRole : long {
 		Unknown = 0,
 		Owner = 1,
 		PrivateUser = 3,
 		PublicUser = 4,
+	}
+
+	[NoTV, NoWatch, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	[Native, Flags]
+	public enum CKSharingParticipantAccessOption : ulong {
+		AnyoneWithLink = 1uL << 0,
+		SpecifiedRecipientsOnly = 1uL << 1,
+		Any = AnyoneWithLink | SpecifiedRecipientsOnly,
+	}
+
+	[NoTV, NoWatch, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	[Native, Flags]
+	public enum CKSharingParticipantPermissionOption : ulong {
+		ReadOnly = 1uL << 0,
+		ReadWrite = 1uL << 1,
+		Any = ReadOnly | ReadWrite,
 	}
 }

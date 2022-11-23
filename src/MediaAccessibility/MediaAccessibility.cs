@@ -6,9 +6,10 @@
 //
 // Copyright 2013, 2015 Xamarin Inc.
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -21,21 +22,23 @@ namespace MediaAccessibility {
 #if NET
 	[SupportedOSPlatform ("ios7.0")]
 	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
 #else
-	[iOS (7,0)]
-	[Mac (10,9)]
+	[iOS (7, 0)]
+	[Mac (10, 9)]
 #endif
 	public static partial class MACaptionAppearance {
 
 #if !NET
 		// FIXME: make this a real notification
-		public static readonly NSString SettingsChangedNotification;
+		public static readonly NSString? SettingsChangedNotification;
 
 		[Advice ("Use 'MediaCharacteristic.DescribesMusicAndSoundForAccessibility' getter.")]
-		public static readonly NSString MediaCharacteristicDescribesMusicAndSoundForAccessibility;
+		public static readonly NSString? MediaCharacteristicDescribesMusicAndSoundForAccessibility;
 
 		[Advice ("Use 'MediaCharacteristic.TranscribesSpokenDialogForAccessibility' getter.")]
-		public static readonly NSString MediaCharacteristicTranscribesSpokenDialogForAccessibility;
+		public static readonly NSString? MediaCharacteristicTranscribesSpokenDialogForAccessibility;
 
 		static MACaptionAppearance ()
 		{
@@ -51,7 +54,7 @@ namespace MediaAccessibility {
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
- 		static extern bool MACaptionAppearanceAddSelectedLanguage (nint domain,
+		static extern bool MACaptionAppearanceAddSelectedLanguage (nint domain,
 			/* CFStringRef __nonnull */ IntPtr language);
 
 		public static bool AddSelectedLanguage (MACaptionAppearanceDomain domain, string language)
@@ -65,12 +68,12 @@ namespace MediaAccessibility {
 		[DllImport (Constants.MediaAccessibilityLibrary)]
 		static extern /* CFArrayRef __nonnull */ IntPtr MACaptionAppearanceCopySelectedLanguages (nint domain);
 
-		public static string [] GetSelectedLanguages (MACaptionAppearanceDomain domain)
+		public static string? [] GetSelectedLanguages (MACaptionAppearanceDomain domain)
 		{
 			using (var langs = new CFArray (MACaptionAppearanceCopySelectedLanguages ((int) domain), owns: true)) {
-				var languages = new string [langs.Count];
+				var languages = new string? [langs.Count];
 				for (int i = 0; i < langs.Count; i++) {
-					languages[i] = CFString.FromHandle (langs.GetValue (i));
+					languages [i] = CFString.FromHandle (langs.GetValue (i));
 				}
 				return languages;
 			}
@@ -78,12 +81,12 @@ namespace MediaAccessibility {
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
 		static extern nint MACaptionAppearanceGetDisplayType (nint domain);
-		
+
 		public static MACaptionAppearanceDisplayType GetDisplayType (MACaptionAppearanceDomain domain)
 		{
 			return (MACaptionAppearanceDisplayType) (int) MACaptionAppearanceGetDisplayType ((int) domain);
 		}
-	
+
 		[DllImport (Constants.MediaAccessibilityLibrary)]
 		static extern void MACaptionAppearanceSetDisplayType (nint domain, nint displayType);
 
@@ -100,16 +103,16 @@ namespace MediaAccessibility {
 			using (var chars = new CFArray (MACaptionAppearanceCopyPreferredCaptioningMediaCharacteristics ((int) domain), owns: true)) {
 				NSString [] characteristics = new NSString [chars.Count];
 				for (int i = 0; i < chars.Count; i++) {
-					characteristics[i] = new NSString (chars.GetValue (i));
+					characteristics [i] = new NSString (chars.GetValue (i));
 				}
 				return characteristics;
 			}
 		}
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
-		static extern /* CGColorRef __nonnull */ IntPtr MACaptionAppearanceCopyForegroundColor (nint domain, 
+		static extern /* CGColorRef __nonnull */ IntPtr MACaptionAppearanceCopyForegroundColor (nint domain,
 			/* MACaptionAppearanceBehavior * __nullable */ ref nint behavior);
-		
+
 		public static CGColor GetForegroundColor (MACaptionAppearanceDomain domain, ref MACaptionAppearanceBehavior behavior)
 		{
 			nint b = (int) behavior;
@@ -119,7 +122,7 @@ namespace MediaAccessibility {
 		}
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
-		static extern /* CGColorRef __nonnull */ IntPtr MACaptionAppearanceCopyBackgroundColor (nint domain, 
+		static extern /* CGColorRef __nonnull */ IntPtr MACaptionAppearanceCopyBackgroundColor (nint domain,
 			/* MACaptionAppearanceBehavior * __nullable */ ref nint behavior);
 
 		public static CGColor GetBackgroundColor (MACaptionAppearanceDomain domain, ref MACaptionAppearanceBehavior behavior)
@@ -131,7 +134,7 @@ namespace MediaAccessibility {
 		}
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
-		static extern /* CGColorRef __nonnull */ IntPtr MACaptionAppearanceCopyWindowColor (nint domain, 
+		static extern /* CGColorRef __nonnull */ IntPtr MACaptionAppearanceCopyWindowColor (nint domain,
 			/* MACaptionAppearanceBehavior * __nullable */ ref nint behavior);
 
 		public static CGColor GetWindowColor (MACaptionAppearanceDomain domain, ref MACaptionAppearanceBehavior behavior)
@@ -190,7 +193,7 @@ namespace MediaAccessibility {
 		}
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
-		static extern /* CTFontDescriptorRef __nonnull */ IntPtr MACaptionAppearanceCopyFontDescriptorForStyle (nint domain, 
+		static extern /* CTFontDescriptorRef __nonnull */ IntPtr MACaptionAppearanceCopyFontDescriptorForStyle (nint domain,
 			/* MACaptionAppearanceBehavior * __nullable */ ref nint behavior, nint fontStyle);
 
 		public static CTFontDescriptor GetFontDescriptor (MACaptionAppearanceDomain domain, ref MACaptionAppearanceBehavior behavior, MACaptionAppearanceFontStyle fontStyle)
@@ -229,10 +232,11 @@ namespace MediaAccessibility {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.MediaAccessibilityLibrary)]
 		static extern void MACaptionAppearanceDidDisplayCaptions (IntPtr /* CFArratRef */ strings);
@@ -241,14 +245,15 @@ namespace MediaAccessibility {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
-		public static void DidDisplayCaptions (string[] strings)
+		public static void DidDisplayCaptions (string [] strings)
 		{
-			if ((strings == null) || (strings.Length == 0))
+			if ((strings is null) || (strings.Length == 0))
 				MACaptionAppearanceDidDisplayCaptions (IntPtr.Zero);
 			else {
 				using (var array = NSArray.FromStrings (strings))
@@ -260,16 +265,17 @@ namespace MediaAccessibility {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
-		public static void DidDisplayCaptions (NSAttributedString[] strings)
+		public static void DidDisplayCaptions (NSAttributedString [] strings)
 		{
 			// CFAttributedString is “toll-free bridged” with its Foundation counterpart, NSAttributedString.
 			// https://developer.apple.com/documentation/corefoundation/cfattributedstring?language=objc
-			if ((strings == null) || (strings.Length == 0))
+			if ((strings is null) || (strings.Length == 0))
 				MACaptionAppearanceDidDisplayCaptions (IntPtr.Zero);
 			else {
 				using (var array = NSArray.FromNSObjects (strings))
@@ -278,20 +284,28 @@ namespace MediaAccessibility {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	static partial class MAAudibleMedia {
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (8,0)]
-		[Mac (10,10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.MediaAccessibilityLibrary)]
 		static extern unsafe IntPtr /* CFArrayRef __nonnull */ MAAudibleMediaCopyPreferredCharacteristics ();
 
 		// according to webkit source code (the only use I could find) this is an array of CFString
 		// https://github.com/WebKit/webkit/blob/master/Source/WebCore/page/CaptionUserPreferencesMediaAF.cpp
-		static public string[] GetPreferredCharacteristics ()
+		static public string? []? GetPreferredCharacteristics ()
 		{
 			var handle = MAAudibleMediaCopyPreferredCharacteristics ();
 			if (handle == IntPtr.Zero)

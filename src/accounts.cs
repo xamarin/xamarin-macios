@@ -156,12 +156,11 @@ namespace Accounts {
 		[Field ("ACAccountTypeIdentifierTencentWeibo")]
 		NSString TencentWeibo { get; }
 
-#if MONOMAC
+		[NoiOS][NoTV][NoWatch]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use LinkedIn SDK instead.")]
 		[Mac (10,9)]
 		[Field ("ACAccountTypeIdentifierLinkedIn")]
 		NSString LinkedIn { get; }
-#endif
 	}
 
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
@@ -204,7 +203,7 @@ namespace Accounts {
 		NSString AppId { get; }
 	}
 
-#if MONOMAC
+	[NoiOS][NoTV][NoWatch]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use LinkedIn SDK instead.")]
 	[Mac (10,9)]
 	[Static]
@@ -215,5 +214,4 @@ namespace Accounts {
 		[Field ("ACLinkedInPermissionsKey")]
 		NSString Permissions { get; }
 	}
-#endif
 }

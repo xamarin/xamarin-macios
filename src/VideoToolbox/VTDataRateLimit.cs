@@ -8,14 +8,22 @@
 // Copyright 2014 Xamarin Inc
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace VideoToolbox {
 
-	public struct VTDataRateLimit
-	{
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public struct VTDataRateLimit {
 		public uint NumberOfBytes { get; set; }
 		public double Seconds { get; set; }
 

@@ -13,10 +13,8 @@ using Mono.Cecil.Cil;
 
 using Xamarin.Utils;
 
-namespace Xamarin.Tests
-{
-	class BGenTool : Tool
-	{
+namespace Xamarin.Tests {
+	class BGenTool : Tool {
 		public const string None = "None";
 		AssemblyDefinition assembly;
 
@@ -73,62 +71,49 @@ namespace Xamarin.Tests
 			}
 		}
 
+		public static string GetTargetFramework (Profile profile)
+		{
+			switch (profile) {
+#if NET
+			case Profile.iOS:
+				return TargetFramework.DotNet_iOS_String;
+			case Profile.tvOS:
+				return TargetFramework.DotNet_tvOS_String;
+			case Profile.watchOS:
+				return TargetFramework.DotNet_watchOS_String;
+			case Profile.macOSMobile:
+				return TargetFramework.DotNet_macOS_String;
+			case Profile.macOSFull:
+			case Profile.macOSSystem:
+				throw new InvalidOperationException ($"Only the Mobile profile can be specified for .NET");
+#else
+			case Profile.iOS:
+				return "Xamarin.iOS,v1.0";
+			case Profile.tvOS:
+				return "Xamarin.TVOS,v1.0";
+			case Profile.watchOS:
+				return "Xamarin.WatchOS,v1.0";
+			case Profile.macOSClassic:
+				return "XamMac,v1.0";
+			case Profile.macOSFull:
+				return "Xamarin.Mac,Version=v4.5,Profile=Full";
+			case Profile.macOSMobile:
+				return "Xamarin.Mac,Version=v2.0,Profile=Mobile";
+			case Profile.macOSSystem:
+				return "Xamarin.Mac,Version=v4.5,Profile=System";
+#endif
+			default:
+				throw new NotImplementedException ($"Profile: {profile}");
+			}
+		}
+
 		string [] BuildArgumentArray ()
 		{
 			var sb = new List<string> ();
 			var targetFramework = (string) null;
 
-#if NET
-			switch (Profile) {
-			case Profile.None:
-				break;
-			case Profile.iOS:
-				targetFramework = TargetFramework.DotNet_6_0_iOS_String;
-				break;
-			case Profile.tvOS:
-				targetFramework = TargetFramework.DotNet_6_0_tvOS_String;
-				break;
-			case Profile.watchOS:
-				targetFramework = TargetFramework.DotNet_6_0_watchOS_String;
-				break;
-			case Profile.macOSMobile:
-				targetFramework = TargetFramework.DotNet_6_0_macOS_String;
-				break;
-			case Profile.macOSFull:
-			case Profile.macOSSystem:
-				throw new InvalidOperationException ($"Only the Mobile profile can be specified for .NET");
-			default:
-				throw new NotImplementedException ($"Profile: {Profile}");
-			}
-#else
-			switch (Profile) {
-			case Profile.None:
-				break;
-			case Profile.iOS:
-				targetFramework = "Xamarin.iOS,v1.0";
-				break;
-			case Profile.tvOS:
-				targetFramework = "Xamarin.TVOS,v1.0";
-				break;
-			case Profile.watchOS:
-				targetFramework = "Xamarin.WatchOS,v1.0";
-				break;
-			case Profile.macOSClassic:
-				targetFramework = "XamMac,v1.0";
-				break;
-			case Profile.macOSFull:
-				targetFramework = "Xamarin.Mac,Version=v4.5,Profile=Full";
-				break;
-			case Profile.macOSMobile:
-				targetFramework = "Xamarin.Mac,Version=v2.0,Profile=Mobile";
-				break;
-			case Profile.macOSSystem:
-				targetFramework = "Xamarin.Mac,Version=v4.5,Profile=System";
-				break;
-			default:
-				throw new NotImplementedException ($"Profile: {Profile}");
-			}
-#endif
+			if (Profile != Profile.None)
+				targetFramework = GetTargetFramework (Profile);
 
 #if NET
 			if (CompileCommand is null) {
@@ -175,7 +160,7 @@ namespace Xamarin.Tests
 				if (tf == null) {
 					// do nothing
 				} else if (tf.Value.IsDotNet == true) {
-					References.AddRange (Directory.GetFiles (Configuration.DotNet6BclDir, "*.dll"));
+					References.AddRange (Directory.GetFiles (Configuration.DotNetBclDir, "*.dll"));
 				} else {
 					throw new NotImplementedException ("ReferenceBclByDefault");
 				}
@@ -410,8 +395,7 @@ namespace Xamarin.Tests
 
 	// This class will replace stdout/stderr with its own thread-static storage for stdout/stderr.
 	// This means we're capturing stdout/stderr per thread.
-	class ThreadStaticTextWriter : TextWriter
-	{
+	class ThreadStaticTextWriter : TextWriter {
 		[ThreadStatic]
 		static TextWriter current_writer;
 
@@ -424,7 +408,7 @@ namespace Xamarin.Tests
 
 		public static void ReplaceConsole (StringBuilder sb)
 		{
-			lock (lock_obj) { 
+			lock (lock_obj) {
 				if (counter == 0) {
 					original_stdout = Console.Out;
 					original_stderr = Console.Error;
@@ -437,7 +421,7 @@ namespace Xamarin.Tests
 		}
 
 		public static void RestoreConsole ()
-		{ 
+		{
 			lock (lock_obj) {
 				current_writer.Dispose ();
 				current_writer = null;

@@ -31,7 +31,6 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 using CoreGraphics;
-using System.Runtime.Versioning;
 #if !WATCH
 using CoreMedia;
 #endif
@@ -43,6 +42,8 @@ namespace Foundation {
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10, 10)]
 		[iOS (8, 0)]
@@ -51,6 +52,8 @@ namespace Foundation {
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10, 10)]
 		[iOS (8, 0)]
@@ -60,11 +63,11 @@ namespace Foundation {
 		Taiwan = RepublicOfChina
 #pragma warning restore 612
 	}
-	
+
 	public partial class NSCalendar {
 		static NSString GetCalendarIdentifier (NSCalendarType type)
 		{
-			switch (type){
+			switch (type) {
 			case NSCalendarType.Gregorian:
 				return NSGregorianCalendar;
 			case NSCalendarType.Buddhist:
@@ -74,7 +77,7 @@ namespace Foundation {
 			case NSCalendarType.Hebrew:
 				return NSHebrewCalendar;
 			case NSCalendarType.Islamic:
-				return NSIslamicCalendar; 
+				return NSIslamicCalendar;
 			case NSCalendarType.IslamicCivil:
 				return NSIslamicCivilCalendar;
 			case NSCalendarType.Japanese:
@@ -103,7 +106,7 @@ namespace Foundation {
 				throw new ArgumentException ("Unknown NSCalendarType value");
 			}
 		}
-		
-		public NSCalendar (NSCalendarType calendarType) : this (GetCalendarIdentifier (calendarType)) {}
+
+		public NSCalendar (NSCalendarType calendarType) : this (GetCalendarIdentifier (calendarType)) { }
 	}
 }

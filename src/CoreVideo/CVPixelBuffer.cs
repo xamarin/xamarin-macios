@@ -12,11 +12,10 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 #if NET
-using System.Runtime.Versioning;
 #endif
 
-using CFDictionaryRef=System.IntPtr;
-using CVPixelBufferRef=System.IntPtr; 
+using CFDictionaryRef = System.IntPtr;
+using CVPixelBufferRef = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -26,15 +25,20 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreVideo {
 
-#if !NET
-	[Watch (4,0)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
+	[Watch (4, 0)]
 #endif
 	public partial class CVPixelBuffer : CVImageBuffer {
 #if !COREBUILD
 		[DllImport (Constants.CoreVideoLibrary, EntryPoint = "CVPixelBufferGetTypeID")]
 		public extern static /* CFTypeID */ nint GetTypeID ();
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CVPixelBuffer (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
@@ -42,7 +46,7 @@ namespace CoreVideo {
 #if !COREBUILD
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVReturn CVPixelBufferCreate (
-			/* CFAllocatorRef __nullable */ IntPtr allocator, /* size_t */ nint width, /* size_t */ nint height, 
+			/* CFAllocatorRef __nullable */ IntPtr allocator, /* size_t */ nint width, /* size_t */ nint height,
 			/* OSType */ CVPixelFormatType pixelFormatType,
 			/* CFDictionaryRef __nullable */ IntPtr pixelBufferAttributes,
 			/* CVPixelBufferRef __nullable * __nonnull */ out IntPtr pixelBufferOut);
@@ -53,7 +57,7 @@ namespace CoreVideo {
 		}
 
 		public CVPixelBuffer (nint width, nint height, CVPixelFormatType pixelFormatType, CVPixelBufferAttributes? attributes)
-			: this (width, height, pixelFormatType, attributes == null ? null : attributes.Dictionary)
+			: this (width, height, pixelFormatType, attributes?.Dictionary)
 		{
 		}
 
@@ -89,7 +93,7 @@ namespace CoreVideo {
 		{
 			CVReturn ret;
 			IntPtr resolvedDictionaryOut;
-			if (attributes == null) {
+			if (attributes is null) {
 				ret = CVPixelBufferCreateResolvedAttributesDictionary (IntPtr.Zero, IntPtr.Zero, out resolvedDictionaryOut);
 			} else {
 				using (var array = NSArray.FromNSObjects (attributes)) {
@@ -107,10 +111,10 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios15.0")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8,0)]
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
+		[Watch (8, 0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
 		[NoMacCatalyst]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -122,13 +126,14 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios15.0")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (8,0)]
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
+		[Watch (8, 0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
 		[NoMacCatalyst]
 #endif
-		public CVPixelBufferAttributes? GetPixelBufferCreationAttributes () {
+		public CVPixelBufferAttributes? GetPixelBufferCreationAttributes ()
+		{
 			var attrs = Runtime.GetNSObject<NSDictionary> (CVPixelBufferCopyCreationAttributes (Handle), true);
 			if (attrs is null)
 				return null;
@@ -139,18 +144,38 @@ namespace CoreVideo {
 		/* CVPixelBufferCreateWithBytes */
 
 		delegate void CVPixelBufferReleaseBytesCallback (
-			/* void * CV_NULLABLE */ IntPtr releaseRefCon, 
+			/* void * CV_NULLABLE */ IntPtr releaseRefCon,
 			/* const void * CV_NULLABLE */ IntPtr baseAddress);
-		
-		static CVPixelBufferReleaseBytesCallback releaseBytesCallback = new CVPixelBufferReleaseBytesCallback (ReleaseBytesCallback);
 
+#if !NET
+		static CVPixelBufferReleaseBytesCallback releaseBytesCallback = new CVPixelBufferReleaseBytesCallback (ReleaseBytesCallback);
+#endif
+
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallbackAttribute (typeof (CVPixelBufferReleaseBytesCallback))]
+#endif
 		static void ReleaseBytesCallback (IntPtr releaseRefCon, IntPtr baseAddress)
 		{
 			GCHandle handle = GCHandle.FromIntPtr (releaseRefCon);
 			handle.Free ();
 		}
 
+#if NET
+		[DllImport (Constants.CoreVideoLibrary)]
+		static unsafe extern CVReturn CVPixelBufferCreateWithBytes (
+			/* CFAllocatorRef CV_NULLABLE */ IntPtr allocator,
+			/* size_t */ nint width,
+			/* size_t */ nint height,
+			/* OSType */ CVPixelFormatType pixelFormatType,
+			/* void * CV_NONNULL */ IntPtr baseAddress,
+			/* size_t */ nint bytesPerRow,
+			delegate* unmanaged<IntPtr, IntPtr, void> releaseCallback,
+			/* void * CV_NULLABLE */ IntPtr releaseRefCon,
+			/* CFDictionaryRef CV_NULLABLE */ IntPtr pixelBufferAttributes,
+			/* CV_RETURNS_RETAINED_PARAMETER CVPixelBufferRef CV_NULLABLE * CV_NONNULL */ out IntPtr pixelBufferOut);// __OSX_AVAILABLE_STARTING(__MAC_10_4,__IPHONE_4_0);
+#else
 		[DllImport (Constants.CoreVideoLibrary)]
 		static extern CVReturn CVPixelBufferCreateWithBytes (
 			/* CFAllocatorRef CV_NULLABLE */ IntPtr allocator,
@@ -163,27 +188,33 @@ namespace CoreVideo {
 			/* void * CV_NULLABLE */ IntPtr releaseRefCon,
 			/* CFDictionaryRef CV_NULLABLE */ IntPtr pixelBufferAttributes,
 			/* CV_RETURNS_RETAINED_PARAMETER CVPixelBufferRef CV_NULLABLE * CV_NONNULL */ out IntPtr pixelBufferOut);// __OSX_AVAILABLE_STARTING(__MAC_10_4,__IPHONE_4_0);
-
-		public static CVPixelBuffer? Create (nint width, nint height, CVPixelFormatType pixelFormatType, byte[] data, nint bytesPerRow, CVPixelBufferAttributes pixelBufferAttributes)
+#endif
+		public static CVPixelBuffer? Create (nint width, nint height, CVPixelFormatType pixelFormatType, byte [] data, nint bytesPerRow, CVPixelBufferAttributes pixelBufferAttributes)
 		{
 			CVReturn status;
 			return Create (width, height, pixelFormatType, data, bytesPerRow, pixelBufferAttributes, out status);
 		}
 
-		public static CVPixelBuffer? Create (nint width, nint height, CVPixelFormatType pixelFormatType, byte[] data, nint bytesPerRow, CVPixelBufferAttributes pixelBufferAttributes, out CVReturn status)
+		public static CVPixelBuffer? Create (nint width, nint height, CVPixelFormatType pixelFormatType, byte [] data, nint bytesPerRow, CVPixelBufferAttributes pixelBufferAttributes, out CVReturn status)
 		{
 			IntPtr handle;
 			GCHandle gchandle;
 
-			if (data == null)
-				throw new ArgumentNullException (nameof (data));
+			if (data is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 
 			if (data.Length < height * bytesPerRow)
 				throw new ArgumentOutOfRangeException (nameof (data), "The length of data is smaller than height * bytesPerRow");
 
 			gchandle = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, because unsafe code is scoped to the current block, and the address of the byte array will be used after this function returns.
 
+#if NET
+			unsafe {
+				status = CVPixelBufferCreateWithBytes (IntPtr.Zero, width, height, pixelFormatType, gchandle.AddrOfPinnedObject (), bytesPerRow, &ReleaseBytesCallback, GCHandle.ToIntPtr (gchandle), DictionaryContainerHelper.GetHandle (pixelBufferAttributes), out handle);
+			}
+#else
 			status = CVPixelBufferCreateWithBytes (IntPtr.Zero, width, height, pixelFormatType, gchandle.AddrOfPinnedObject (), bytesPerRow, releaseBytesCallback, GCHandle.ToIntPtr (gchandle), DictionaryContainerHelper.GetHandle (pixelBufferAttributes), out handle);
+#endif
 
 			if (status != CVReturn.Success) {
 				gchandle.Free ();
@@ -195,32 +226,41 @@ namespace CoreVideo {
 
 		/* CVPixelBufferCreateWithPlanarBytes */
 
-		class PlaneData
-		{
-			public GCHandle[] dataHandles = Array.Empty<GCHandle> ();
+		class PlaneData {
+			public GCHandle [] dataHandles = Array.Empty<GCHandle> ();
 		}
 
 		delegate void CVPixelBufferReleasePlanarBytesCallback (
 			/* void* */ IntPtr releaseRefCon,
-			/* const void*/ IntPtr dataPtr, 
+			/* const void*/ IntPtr dataPtr,
 			/* size_t */ nint dataSize,
 			/* size_t */ nint numberOfPlanes,
 			/* const void* */IntPtr planeAddresses);
-
+#if !NET
 		static CVPixelBufferReleasePlanarBytesCallback releasePlanarBytesCallback = new CVPixelBufferReleasePlanarBytesCallback (ReleasePlanarBytesCallback);
+#endif
 
-		[MonoPInvokeCallbackAttribute (typeof (CVPixelBufferReleasePlanarBytesCallback))]
-		static void ReleasePlanarBytesCallback (IntPtr releaseRefCon, IntPtr dataPtr, nint dataSize, nint numberOfPlanes, IntPtr planeAddresses)
+		static void ReleasePlanarBytesCallbackImpl (IntPtr releaseRefCon, IntPtr dataPtr, nint dataSize, nint numberOfPlanes, IntPtr planeAddresses)
 		{
 			GCHandle handle = GCHandle.FromIntPtr (releaseRefCon);
 			PlaneData data = (PlaneData) handle.Target!;
 			for (int i = 0; i < data.dataHandles.Length; i++)
-				data.dataHandles[i].Free ();
+				data.dataHandles [i].Free ();
 			handle.Free ();
 		}
+#if NET
+		[UnmanagedCallersOnly]
+#else
+		[MonoPInvokeCallbackAttribute (typeof (CVPixelBufferReleasePlanarBytesCallback))]
+#endif
+		static void ReleasePlanarBytesCallback (IntPtr releaseRefCon, IntPtr dataPtr, nint dataSize, nint numberOfPlanes, IntPtr planeAddresses)
+		{
+			ReleasePlanarBytesCallbackImpl (releaseRefCon, dataPtr, dataSize, numberOfPlanes, planeAddresses);
+		}
 
+#if NET
 		[DllImport (Constants.CoreVideoLibrary)]
-		static extern CVReturn CVPixelBufferCreateWithPlanarBytes (
+		static unsafe extern CVReturn CVPixelBufferCreateWithPlanarBytes (
 			/* CFAllocatorRef CV_NULLABLE */ IntPtr allocator,
 			/* size_t */ nint width,
 			/* size_t */ nint height,
@@ -232,41 +272,61 @@ namespace CoreVideo {
 			/* size_t[] */ nint [] planeWidth,
 			/* size_t[] */ nint [] planeHeight,
 			/* size_t[] */ nint [] planeBytesPerRow,
-			CVPixelBufferReleasePlanarBytesCallback /* CV_NULLABLE */ releaseCallback,
+			delegate* unmanaged<IntPtr, IntPtr, nint, nint, IntPtr, void>/* CV_NULLABLE */ releaseCallback,
 			/* void * CV_NULLABLE */ IntPtr releaseRefCon,
 			/* CFDictionaryRef CV_NULLABLE */ IntPtr pixelBufferAttributes,
 			/* CV_RETURNS_RETAINED_PARAMETER CVPixelBufferRef CV_NULLABLE * CV_NONNULL */ out IntPtr pixelBufferOut); // __OSX_AVAILABLE_STARTING(__MAC_10_4,__IPHONE_4_0);
 
-		public static CVPixelBuffer? Create (nint width, nint height, CVPixelFormatType pixelFormatType, byte[][] planes, nint[] planeWidths, nint[] planeHeights, nint[] planeBytesPerRow, CVPixelBufferAttributes pixelBufferAttributes)
+#else
+		[DllImport (Constants.CoreVideoLibrary)]
+		static extern CVReturn CVPixelBufferCreateWithPlanarBytes (
+			/* CFAllocatorRef CV_NULLABLE */ IntPtr allocator,
+			/* size_t */ nint width,
+			/* size_t */ nint height,
+			/* OSType */ CVPixelFormatType pixelFormatType,
+			/* void * CV_NULLABLE */ IntPtr dataPtr, /* pass a pointer to a plane descriptor block, or NULL /*
+			/* size_t */ nint dataSize, /* pass size if planes are contiguous, NULL if not */
+			/* size_t */ nint numberOfPlanes,
+			/* void *[] CV_NULLABLE */ IntPtr [] planeBaseAddress,
+			/* size_t[] */ nint [] planeWidth,
+			/* size_t[] */ nint [] planeHeight,
+			/* size_t[] */ nint [] planeBytesPerRow,
+			CVPixelBufferReleasePlanarBytesCallback /* CV_NULLABLE */ releaseCallback,
+			/* void * CV_NULLABLE */ IntPtr releaseRefCon,
+			/* CFDictionaryRef CV_NULLABLE */ IntPtr pixelBufferAttributes,
+			/* CV_RETURNS_RETAINED_PARAMETER CVPixelBufferRef CV_NULLABLE * CV_NONNULL */ out IntPtr pixelBufferOut); // __OSX_AVAILABLE_STARTING(__MAC_10_4,__IPHONE_4_0);
+#endif
+
+		public static CVPixelBuffer? Create (nint width, nint height, CVPixelFormatType pixelFormatType, byte [] [] planes, nint [] planeWidths, nint [] planeHeights, nint [] planeBytesPerRow, CVPixelBufferAttributes pixelBufferAttributes)
 		{
 			CVReturn status;
 			return Create (width, height, pixelFormatType, planes, planeWidths, planeHeights, planeBytesPerRow, pixelBufferAttributes, out status);
 		}
 
-		public static CVPixelBuffer? Create (nint width, nint height, CVPixelFormatType pixelFormatType, byte[][] planes, nint[] planeWidths, nint[] planeHeights, nint[] planeBytesPerRow, CVPixelBufferAttributes pixelBufferAttributes, out CVReturn status)
+		public static CVPixelBuffer? Create (nint width, nint height, CVPixelFormatType pixelFormatType, byte [] [] planes, nint [] planeWidths, nint [] planeHeights, nint [] planeBytesPerRow, CVPixelBufferAttributes pixelBufferAttributes, out CVReturn status)
 		{
 			IntPtr handle;
-			IntPtr[] addresses;
+			IntPtr [] addresses;
 			PlaneData data;
 			GCHandle data_handle;
 
-			if (planes == null)
-				throw new ArgumentNullException (nameof (planes));
+			if (planes is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (planes));
 
-			if (planeWidths == null)
-				throw new ArgumentNullException (nameof (planeWidths));
+			if (planeWidths is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (planeWidths));
 
-			if (planeHeights == null)
-				throw new ArgumentNullException (nameof (planeHeights));
+			if (planeHeights is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (planeHeights));
 
-			if (planeBytesPerRow == null)
-				throw new ArgumentNullException (nameof (planeBytesPerRow));
+			if (planeBytesPerRow is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (planeBytesPerRow));
 
 			var planeCount = planes.Length;
 
 			if (planeWidths.Length != planeCount)
 				throw new ArgumentOutOfRangeException (nameof (planeWidths), "The length of planeWidths does not match the number of planes");
-			
+
 			if (planeHeights.Length != planeCount)
 				throw new ArgumentOutOfRangeException (nameof (planeWidths), "The length of planeHeights does not match the number of planes");
 
@@ -277,20 +337,30 @@ namespace CoreVideo {
 			data = new PlaneData ();
 			data.dataHandles = new GCHandle [planeCount];
 			for (int i = 0; i < planeCount; i++) {
-				data.dataHandles[i] = GCHandle.Alloc (planes [i], GCHandleType.Pinned); // This can't use unsafe code because we need to get the pointer for an unbound number of objects.
-				addresses[i] = data.dataHandles[i].AddrOfPinnedObject ();
+				data.dataHandles [i] = GCHandle.Alloc (planes [i], GCHandleType.Pinned); // This can't use unsafe code because we need to get the pointer for an unbound number of objects.
+				addresses [i] = data.dataHandles [i].AddrOfPinnedObject ();
 			}
 			data_handle = GCHandle.Alloc (data);
 
 			IntPtr data_handle_ptr = GCHandle.ToIntPtr (data_handle);
-			status = CVPixelBufferCreateWithPlanarBytes (IntPtr.Zero, 
+#if NET
+			unsafe {
+				status = CVPixelBufferCreateWithPlanarBytes (IntPtr.Zero, 
 			                                             width, height, pixelFormatType, IntPtr.Zero, 0, 
 			                                             planeCount, addresses, planeWidths, planeHeights, planeBytesPerRow, 
-			                                             releasePlanarBytesCallback, data_handle_ptr,
+			                                             &ReleasePlanarBytesCallback, data_handle_ptr,
 			                                             DictionaryContainerHelper.GetHandle (pixelBufferAttributes), out handle);
+			}
+#else
+			status = CVPixelBufferCreateWithPlanarBytes (IntPtr.Zero,
+														 width, height, pixelFormatType, IntPtr.Zero, 0,
+														 planeCount, addresses, planeWidths, planeHeights, planeBytesPerRow,
+														 releasePlanarBytesCallback, data_handle_ptr,
+														 DictionaryContainerHelper.GetHandle (pixelBufferAttributes), out handle);
+#endif
 
 			if (status != CVReturn.Success) {
-				ReleasePlanarBytesCallback (data_handle_ptr, IntPtr.Zero, 0, 0, IntPtr.Zero);
+				ReleasePlanarBytesCallbackImpl (data_handle_ptr, IntPtr.Zero, 0, 0, IntPtr.Zero);
 				return null;
 			}
 
@@ -305,7 +375,7 @@ namespace CoreVideo {
 		public void GetExtendedPixels (ref nuint extraColumnsOnLeft, ref nuint extraColumnsOnRight,
 			ref nuint extraRowsOnTop, ref nuint extraRowsOnBottom)
 		{
-			CVPixelBufferGetExtendedPixels (Handle, ref extraColumnsOnLeft, ref extraColumnsOnRight, 
+			CVPixelBufferGetExtendedPixels (Handle, ref extraColumnsOnLeft, ref extraColumnsOnRight,
 				ref extraRowsOnTop, ref extraRowsOnBottom);
 		}
 

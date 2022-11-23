@@ -20,10 +20,10 @@ parameters:
   type: string
   default: 'compact'
   values:
-    - default
-    - compact
-    - json
-    - syslog
+  - default
+  - compact
+  - json
+  - syslog
 
 - name: uploadLogs
   type: boolean
@@ -39,7 +39,7 @@ steps:
 
     # there is no var that gives us the start time, but we can use the rest api to get the time when
     # the build started
-    
+
     # User name can be anything. It is the personal access token (PAT) token that matters.
     $user= "AnyUser"
     $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $user, $Env:ACCESSTOKEN)))
@@ -62,6 +62,8 @@ steps:
     }
 
   displayName: 'Gathering agent logs'
+  condition: always()
+  continueOnError: true
   env:
     ACCESSTOKEN: $(System.AccessToken)
     OUTPUT: ${{ parameters.outputPath }}
@@ -74,11 +76,12 @@ steps:
 - ${{ if eq(parameters.uploadLogs, true) }}:
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Artifact: Agent logs'
+    condition: always()
     inputs:
       # add or not the working dir to the upload
       ${{ if eq(parameters.workingDirectory, '') }}:
         targetPath: ${{ parameters.outputPath }}
       ${{ else }}:
         targetPath: ${{ parameters.workingDirectory }}/${{ parameters.outputPath }} 
-      artifactName: $(Agent.Name)-${{ parameters.outputPath }} 
+      artifactName: $(Agent.Name)-$(System.JobName)-$(System.JobId)-${{ parameters.outputPath }} 
     continueOnError: true

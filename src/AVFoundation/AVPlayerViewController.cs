@@ -2,7 +2,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 #if HAS_IAD && !NET

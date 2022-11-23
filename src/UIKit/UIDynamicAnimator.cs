@@ -14,8 +14,7 @@ using System.Collections.Generic;
 
 namespace UIKit {
 	public partial class UIDynamicAnimator :
-	IEnumerable<UIDynamicBehavior>
-	{
+	IEnumerable<UIDynamicBehavior> {
 		public void AddBehaviors (params UIDynamicBehavior [] behaviors)
 		{
 			foreach (var behavior in behaviors)

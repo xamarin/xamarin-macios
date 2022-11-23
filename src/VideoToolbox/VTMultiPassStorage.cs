@@ -11,7 +11,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using CoreFoundation;
 using ObjCRuntime;
@@ -28,10 +27,11 @@ namespace VideoToolbox {
 	[SupportedOSPlatform ("macos10.10")]
 	[SupportedOSPlatform ("ios8.0")]
 	[SupportedOSPlatform ("tvos10.2")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[Mac (10,10)]
-	[iOS (8,0)]
-	[TV (10,2)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
+	[TV (10, 2)]
 #endif
 	public class VTMultiPassStorage : NativeObject {
 		bool closed;
@@ -44,7 +44,7 @@ namespace VideoToolbox {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal VTMultiPassStorage (NativeHandle handle, bool owns)
 			: base (handle, false)
 		{
@@ -82,7 +82,7 @@ namespace VideoToolbox {
 			var status = VTMultiPassStorageCreate (
 				IntPtr.Zero,
 				fileUrl.GetHandle (),
-				timeRange ?? CMTimeRange.InvalidRange, 
+				timeRange ?? CMTimeRange.InvalidRange,
 				options.GetHandle (),
 				out var ret);
 

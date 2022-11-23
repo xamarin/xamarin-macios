@@ -19,9 +19,12 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Collections.Generic;
-
+using CoreFoundation;
 using Foundation;
 
 namespace NaturalLanguage {
@@ -30,16 +33,15 @@ namespace NaturalLanguage {
 
 		public static NLLanguage GetDominantLanguage (string @string)
 		{
-			var nsstring = NSString.CreateNative (@string);
+			var nsstring = CFString.CreateNative (@string);
 			try {
 				using (var nslang = _GetDominantLanguage (nsstring))
 					return NLLanguageExtensions.GetValue (nslang);
-			}
-			finally {
+			} finally {
 				NSString.ReleaseNative (nsstring);
 			}
 		}
-	
+
 		public Dictionary<NLLanguage, double> GetLanguageHypotheses (nuint maxHypotheses)
 		{
 			using (var hypo = GetNativeLanguageHypotheses (maxHypotheses)) {
@@ -47,21 +49,26 @@ namespace NaturalLanguage {
 			}
 		}
 
-		public Dictionary<NLLanguage, double> LanguageHints
-		{
+		public Dictionary<NLLanguage, double> LanguageHints {
 			get {
 				return NLLanguageExtensions.Convert (NativeLanguageHints);
 			}
 			set {
 				var i = 0;
-				var nsKeys = new NSString[value.Keys.Count];
-				var nsValues = new NSNumber[value.Keys.Count];
+				var skipCount = 0;
+				var nsKeys = new NSString [value.Keys.Count];
+				var nsValues = new NSNumber [value.Keys.Count];
 				foreach (var item in value) {
-					nsKeys[i] = NLLanguageExtensions.GetConstant (item.Key);
-					nsValues[i] = new NSNumber (item.Value);
+					var constant = NLLanguageExtensions.GetConstant (item.Key);
+					if (constant is null) {
+						skipCount++;
+						continue;
+					}
+					nsKeys [i] = constant;
+					nsValues [i] = new NSNumber (item.Value);
 					i++;
 				}
-				NativeLanguageHints = NSDictionary<NSString, NSNumber>.FromObjectsAndKeys (nsValues, nsKeys, nsKeys.Length);
+				NativeLanguageHints = NSDictionary<NSString, NSNumber>.FromObjectsAndKeys (nsValues, nsKeys, nsKeys.Length - skipCount);
 			}
 		}
 	}

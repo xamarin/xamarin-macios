@@ -5,13 +5,13 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>com.your-company.MyActionExtension</string>
+	<string>com.xamarin.MyActionExtension</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.your-company.MyTabbedApplication.MyActionExtension</string>
+	<string>com.xamarin.MyTabbedApplication.MyActionExtension</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>com.your-company.MyActionExtension</string>
+	<string>com.xamarin.MyActionExtension</string>
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>

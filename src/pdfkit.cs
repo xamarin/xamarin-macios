@@ -26,12 +26,14 @@
 //
 // PdfKit.cs: Bindings for the PdfKit API
 //
-#if MONOMAC || IOS
 
 using System;
 #if MONOMAC
 using AppKit;
 using UIViewController = Foundation.NSObject;
+using UIFindInteraction = Foundation.NSObject;
+using UIFindInteractionDelegate = Foundation.NSObject;
+using UIView = AppKit.NSView;
 #else
 using UIKit;
 using NSColor = UIKit.UIColor;
@@ -50,6 +52,7 @@ using NSPrintOperation = Foundation.NSObject;
 using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
+using System.ComponentModel;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -404,6 +407,31 @@ namespace PdfKit {
 		NSString KeywordsKey { get; }
 	}
 
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[StrongDictionary ("PdfPageImageInitializationOptionKeys")]
+	interface PdfPageImageInitializationOption {
+		CGRect MediaBox { get; set; }
+		int Rotation { get; set; }
+		bool UpscaleIfSmaller { get; set; }
+		double CompressionQuality { get; set; }
+	}
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[Static]
+	interface PdfPageImageInitializationOptionKeys {
+		[Field ("PDFPageImageInitializationOptionMediaBox")]
+		NSString MediaBoxKey { get; }
+
+		[Field ("PDFPageImageInitializationOptionRotation")]
+		NSString RotationKey { get; }
+
+		[Field ("PDFPageImageInitializationOptionUpscaleIfSmaller")]
+		NSString UpscaleIfSmallerKey { get; }
+
+		[Field ("PDFPageImageInitializationOptionCompressionQuality")]
+		NSString CompressionQualityKey { get; }
+	}
+
 	[iOS (11,0)]
 	[StrongDictionary ("PdfDocumentAttributeKeys")]
 	interface PdfDocumentAttributes {
@@ -433,6 +461,14 @@ namespace PdfKit {
 		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
 		[Field ("PDFDocumentAccessPermissionsOption", "+PDFKit")]
 		NSString AccessPermissionsKey { get; }
+
+		[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[Field ("PDFDocumentBurnInAnnotationsOption", "+PDFKit")]
+		NSString BurnInAnnotationsKey { get; }
+
+		[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[Field ("PDFDocumentSaveTextFromOCROption", "+PDFKit")]
+		NSString SaveTextFromOcrKey { get; }
 	}
 
 	[Mac (10,13)]
@@ -1233,9 +1269,11 @@ namespace PdfKit {
 		[Export ("minorVersion")]
 		nint MinorVersion { get; }
 #else
+		[NoiOS]
 		[Export ("majorVersion")]
 		int MajorVersion { get; } /* int, not NSInteger */
 
+		[NoiOS]
 		[Export ("minorVersion")]
 		int MinorVersion { get; } /* int, not NSInteger */
 #endif
@@ -1413,7 +1451,9 @@ namespace PdfKit {
 		[NoiOS]
 		[Export ("printOperationForPrintInfo:scalingMode:autoRotate:")]
 		[return: NullAllowed]
+#pragma warning disable 0618 // 'PdfPrintScalingMode' is obsolete: 'This type is not available on iOS.'
 		NSPrintOperation GetPrintOperation ([NullAllowed] NSPrintInfo printInfo, PdfPrintScalingMode scaleMode, bool doRotate);
+#pragma warning restore
 	}
 
 	[iOS (11,0)]
@@ -1523,9 +1563,18 @@ namespace PdfKit {
 		[DesignatedInitializer]
 		NativeHandle Constructor ();
 
-		[DesignatedInitializer]
 		[Export ("initWithImage:")]
 		NativeHandle Constructor (NSImage image);
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[DesignatedInitializer]
+		[Export ("initWithImage:options:")]
+		NativeHandle Constructor (NSImage image, NSDictionary options);
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Wrap ("this (image, options.GetDictionary ()!)")]
+		NativeHandle Constructor (NSImage image, PdfPageImageInitializationOption options);
 
 		[Export ("document"), NullAllowed]
 		PdfDocument Document { get; }
@@ -1742,7 +1791,7 @@ namespace PdfKit {
 	[BaseType (typeof (NSView), Name = "PDFView", Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (PdfViewDelegate) })]
 	interface PdfView :
 #if IOS
-	UIGestureRecognizerDelegate
+	UIGestureRecognizerDelegate, UIFindInteractionDelegate
 #else
 	NSMenuDelegate, NSAnimationDelegate
 #endif
@@ -1970,7 +2019,9 @@ namespace PdfKit {
 
 		[NoiOS]
 		[Export ("printWithInfo:autoRotate:pageScaling:")]
+#pragma warning disable // 0618: 'PdfPrintScalingMode' is obsolete: 'This type is not available on iOS.'
 		void Print (NSPrintInfo printInfo, bool doRotate, PdfPrintScalingMode scaleMode);
+#pragma warning restore
 
 		[Export ("pageForPoint:nearest:")]
 		[return: NullAllowed]
@@ -2064,6 +2115,22 @@ namespace PdfKit {
 		[Mac (10,13)]
 		[Export ("acceptsDraggedFiles")]
 		bool AcceptsDraggedFiles { get; set; }
+
+		[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[NullAllowed, Export ("pageOverlayViewProvider", ArgumentSemantic.Weak)]
+		IPdfPageOverlayViewProvider PageOverlayViewProvider { get; set; }
+
+		[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[Export ("inMarkupMode")]
+		bool InMarkupMode { [Bind ("isInMarkupMode")] get; set; }
+
+		[iOS (16,0), NoMac, MacCatalyst (16,0)]
+		[Export ("findInteraction")]
+		UIFindInteraction FindInteraction { get; }
+
+		[iOS (16,0), NoMac, MacCatalyst (16,0)]
+		[Export ("findInteractionEnabled")]
+		bool FindInteractionEnabled { [Bind ("isFindInteractionEnabled")] get; set; }
 	}
 	
 	[NoiOS]
@@ -2117,5 +2184,22 @@ namespace PdfKit {
 		UIViewController ParentViewController { get; }
 	}
 
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	interface IPdfPageOverlayViewProvider {}
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[Protocol (Name = "PDFPageOverlayViewProvider")]
+	interface PdfPageOverlayViewProvider
+	{
+		[Abstract]
+		[Export ("pdfView:overlayViewForPage:")]
+		[return: NullAllowed]
+		UIView GetOverlayView (PdfView view, PdfPage page);
+
+		[Export ("pdfView:willDisplayOverlayView:forPage:")]
+		void WillDisplayOverlayView (PdfView pdfView, UIView overlayView, PdfPage page);
+
+		[Export ("pdfView:willEndDisplayingOverlayView:forPage:")]
+		void WillEndDisplayingOverlayView (PdfView pdfView, UIView overlayView, PdfPage page);
+	}
 }
-#endif // MONOMAC || IOS

@@ -1,6 +1,7 @@
+#nullable enable
+
 #if !__MACCATALYST__
 using System;
-using System.Runtime.Versioning;
 using System.Threading.Tasks;
 using ObjCRuntime;
 
@@ -14,15 +15,18 @@ namespace VideoSubscriberAccount {
 		[SupportedOSPlatform ("macos10.14")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (10,1)]
-		[iOS (10,2)]
+		[TV (10, 1)]
+		[iOS (10, 2)]
 #endif
-		public VSAccountProviderAuthenticationScheme[] SupportedAuthenticationSchemes {
+		public VSAccountProviderAuthenticationScheme [] SupportedAuthenticationSchemes {
 			get {
 				return VSAccountProviderAuthenticationSchemeExtensions.GetValues (SupportedAuthenticationSchemesString);
 			}
 			set {
-				SupportedAuthenticationSchemesString = value?.GetConstants ();
+				var constants = value.GetConstants ();
+				if (constants is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
+				SupportedAuthenticationSchemesString = constants!;
 			}
 		}
 	}

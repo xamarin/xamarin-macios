@@ -6,8 +6,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 
 namespace Xharness.Targets {
-	public class TVOSTarget : iOSTarget
-	{
+	public class TVOSTarget : iOSTarget {
 		public override string Suffix {
 			get {
 				return "-tvos";
@@ -69,7 +68,7 @@ namespace Xharness.Targets {
 			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.tvOS, MonoNativeInfo.Flavor);
 		}
 
-		protected override int[] UIDeviceFamily {
+		protected override int [] UIDeviceFamily {
 			get {
 				return new int [] { 3 };
 			}
@@ -96,7 +95,7 @@ namespace Xharness.Targets {
 		public override string DotNetSdk => "Microsoft.tvOS.Sdk";
 		public override string RuntimeIdentifier => "tvossimulator-x64";
 		public override DevicePlatform ApplePlatform => DevicePlatform.tvOS;
-		public override string TargetFramework => "net6.0-tvos";
+		public override string TargetFramework => DotNetTfm + "-tvos";
 		public override string TargetFrameworkForNuGet => "xamarintvos10";
 
 		static Dictionary<string, string> project_guids = new Dictionary<string, string> ();

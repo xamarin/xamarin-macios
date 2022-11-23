@@ -5,15 +5,26 @@ parameters:
   type: string 
   default: 'pr' # default reason is a pr build 
 
-- name: devicePrefix
+- name: testPrefix
   type: string 
   default: 'sim' # always sim, but use a param to move in the future if needed
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+
 steps:
 
-- checkout: self
-  path: s/xamarin-macios
-  persistCredentials: true
+- template: ./common/checkout.yml
+  parameters:
+    isPR: ${{ eq(parameters.reason, "pr") }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
 
 - checkout: macios.ci 
   clean: true
@@ -32,13 +43,11 @@ steps:
 - download: macios 
 
 - pwsh: |
+    Import-Module $Env:BUILD_SOURCESDIRECTORY\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
     $configFile = Join-Path $(PIPELINE.WORKSPACE) "macios" "build-configuration" "configuration.json"
-    if (-not (Test-Path -Path $configFile -PathType Leaf)) {
-      Write-Host "Configuration file is missing!"
-      exit 1
-    }
-    Get-Content $configFile | Write-Host
-    $config = Get-Content $configFile | ConvertFrom-Json
+    $config = Import-BuildConfiguration -ConfigFile $configFile
+    $config | Write-Host
+
     # export variables to be present in the othe steps
     Write-Host "##vso[task.setvariable variable=BuildReason;isOutput=true]$($config.BuildReason)"
     Write-Host "##vso[task.setvariable variable=BuildSourceBranchName;isOutput=true]$($config.BuildSourceBranchName)"
@@ -115,10 +124,17 @@ steps:
     }
 
     # remove empty dirs
-    Get-ChildItem $destinationRoot -Recurse -Force -Directory |
+    $empty = Get-ChildItem $destinationRoot -Recurse -Force -Directory |
       Sort-Object -Property FullName -Descending |
-      Where-Object { $($_ | Get-ChildItem -Force | Select-Object -First 1).Count -eq 0 } |
-      Remove-Item -Verbose
+      Where-Object { $($_ | Get-ChildItem -Force | Select-Object -First 1).Count -eq 0 } 
+    foreach ($d in $empty) {
+      try {
+        Write-Host "Removing $d"
+        Remove-Item -Verbose -Force $d
+      } catch {
+        $null  # do nothing
+      }
+    }
 
     if ($Env:SYSTEM_DEBUG) {
       Get-ChildItem $destinationRoot -Recurse

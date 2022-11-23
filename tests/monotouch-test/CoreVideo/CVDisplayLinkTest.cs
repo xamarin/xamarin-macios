@@ -21,7 +21,7 @@ namespace MonoTouchFixtures.CoreVideo {
 			Assert.DoesNotThrow (() => {
 				using var displayLink = CVDisplayLink.CreateFromDisplayId ((uint) CGDisplay.MainDisplayID);
 				Assert.NotNull (displayLink, "Not null");
-				Assert.AreEqual (CGDisplay.MainDisplayID,  displayLink.GetCurrentDisplay (), "DisplayId");
+				Assert.AreEqual (CGDisplay.MainDisplayID, displayLink.GetCurrentDisplay (), "DisplayId");
 			}, "Throws");
 		}
 
@@ -42,7 +42,7 @@ namespace MonoTouchFixtures.CoreVideo {
 			// we might not have more than one display, therefore we will use an array 
 			// with a single one, there is nothing in the docs that say that we cannot do that
 			Assert.DoesNotThrow (() => {
-				using var displayLink = CVDisplayLink.CreateFromDisplayIds (new []{ (uint) CGDisplay.MainDisplayID});
+				using var displayLink = CVDisplayLink.CreateFromDisplayIds (new [] { (uint) CGDisplay.MainDisplayID });
 				Assert.NotNull (displayLink, "Not null");
 			}, "Throws");
 		}
@@ -59,21 +59,33 @@ namespace MonoTouchFixtures.CoreVideo {
 		}
 
 		[Test]
-		public void DefaultConstructorTest () => Assert.DoesNotThrow (() => {
-			using var displayLink = new CVDisplayLink ();
-		});
+		public void DefaultConstructorTest ()
+		{
+			TestRuntime.AssertNotVSTS ();
+			Assert.DoesNotThrow (() => {
+				using var displayLink = new CVDisplayLink ();
+			});
+		}
 
 		[Test]
-		public void SetCurrentDisplayOpenGLTest () => Assert.DoesNotThrow (() => {
-			using var displayLink = new CVDisplayLink ();
-			displayLink.SetCurrentDisplay (CGDisplay.MainDisplayID);
-		});
+		public void SetCurrentDisplayOpenGLTest ()
+		{
+			TestRuntime.AssertNotVSTS ();
+			Assert.DoesNotThrow (() => {
+				using var displayLink = new CVDisplayLink ();
+				displayLink.SetCurrentDisplay (CGDisplay.MainDisplayID);
+			});
+		}
 
 		[Test]
-		public void GetCurrentDisplayTest () => Assert.DoesNotThrow (() => {
-			using var displayLink = new CVDisplayLink ();
-			Assert.AreEqual (CGDisplay.MainDisplayID,  displayLink.GetCurrentDisplay ());
-		});
+		public void GetCurrentDisplayTest ()
+		{
+			TestRuntime.AssertNotVSTS ();
+			Assert.DoesNotThrow (() => {
+				using var displayLink = new CVDisplayLink ();
+				Assert.AreEqual (CGDisplay.MainDisplayID, displayLink.GetCurrentDisplay ());
+			});
+		}
 
 		[Test]
 		public void GetTypeIdTest ()
@@ -87,11 +99,12 @@ namespace MonoTouchFixtures.CoreVideo {
 		[Test]
 		public void TryTranslateTimeValidTest ()
 		{
+			TestRuntime.AssertNotVSTS ();
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 12, 0);
 			var outTime = new CVTimeStamp {
 				Version = 0,
 				Flags = (1L << 0) | (1L << 1), // kCVTimeStampVideoTimeValid | kCVTimeStampHostTimeValid
-			}; 
+			};
 			using var displayLink = new CVDisplayLink ();
 			// it has to be running else you will get a crash
 			if (displayLink.Start () == 0) {

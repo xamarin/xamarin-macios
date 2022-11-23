@@ -7,7 +7,6 @@
 
 #if !TVOS
 
-using System.Runtime.Versioning;
 
 using Foundation;
 using CoreLocation;
@@ -24,18 +23,23 @@ namespace MapKit {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[iOS (10,0)]
+		[iOS (10, 0)]
 		[NoTV]
-		[Watch (3,0)]
-		[Mac (10,12)]
+		[Watch (3, 0)]
+		[Mac (10, 12)]
 #endif
 		Default
 	}
-	
-	public class MKLaunchOptions
-	{
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
+	public class MKLaunchOptions {
 		public MKDirectionsMode? DirectionsMode { get; set; }
 #if !WATCH // MapType: __WATCHOS_PROHIBITED
 		public MKMapType? MapType { get; set; }
@@ -50,8 +54,10 @@ namespace MapKit {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public MKMapCamera? Camera { get; set; }
 #endif
@@ -67,18 +73,18 @@ namespace MapKit {
 			if (MapSpan.HasValue) n++;
 #if !WATCH
 			if (ShowTraffic.HasValue) n++;
-			if (Camera != null) n++;
+			if (Camera is not null) n++;
 #endif
 			if (n == 0)
 				return null;
-			
+
 			var keys = new NSObject [n];
 			var values = new NSObject [n];
 			int i = 0;
-			if (DirectionsMode.HasValue){
+			if (DirectionsMode.HasValue) {
 				keys [i] = MKMapItem.MKLaunchOptionsDirectionsModeKey;
 				NSString v = MKMapItem.MKLaunchOptionsDirectionsModeDriving;
-				switch (DirectionsMode.Value){
+				switch (DirectionsMode.Value) {
 				case MKDirectionsMode.Driving:
 					v = MKMapItem.MKLaunchOptionsDirectionsModeDriving;
 					break;
@@ -98,27 +104,27 @@ namespace MapKit {
 			}
 
 #if !WATCH // MapType: __WATCHOS_PROHIBITED
-			if (MapType.HasValue){
+			if (MapType.HasValue) {
 				keys [i] = MKMapItem.MKLaunchOptionsMapTypeKey;
 				values [i++] = new NSNumber ((int) MapType.Value);
 			}
 #endif
-			if (MapCenter.HasValue){
+			if (MapCenter.HasValue) {
 				keys [i] = MKMapItem.MKLaunchOptionsMapCenterKey;
 				values [i++] = NSValue.FromMKCoordinate (MapCenter.Value);
 			}
-			if (MapSpan.HasValue){
+			if (MapSpan.HasValue) {
 				keys [i] = MKMapItem.MKLaunchOptionsMapSpanKey;
 				values [i++] = NSValue.FromMKCoordinateSpan (MapSpan.Value);
 			}
 #if !WATCH // ShowsTraffic: __WATCHOS_PROHIBITED
-			if (ShowTraffic.HasValue){
+			if (ShowTraffic.HasValue) {
 				keys [i] = MKMapItem.MKLaunchOptionsShowsTrafficKey;
 				values [i++] = new NSNumber (ShowTraffic.Value);
 			}
 #endif
 #if !WATCH // MKLaunchOptionsCameraKey is allowed in WatchOS, but there's no MKMapCamera type.
-			if (Camera != null) {
+			if (Camera is not null) {
 				keys [i] = MKMapItem.MKLaunchOptionsCameraKey;
 				values [i++] = Camera;
 			}
@@ -126,7 +132,7 @@ namespace MapKit {
 			return NSDictionary.FromObjectsAndKeys (values, keys);
 		}
 	}
-	
+
 	public partial class MKMapItem {
 		public void OpenInMaps (MKLaunchOptions? launchOptions = null)
 		{
@@ -138,6 +144,6 @@ namespace MapKit {
 			return _OpenMaps (mapItems, launchOptions?.ToDictionary ());
 		}
 	}
-	
+
 }
 #endif

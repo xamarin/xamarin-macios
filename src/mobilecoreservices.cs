@@ -478,13 +478,13 @@ namespace MobileCoreServices {
 		[Field ("kUTTagClassMIMEType", "+CoreServices")]
 		NSString TagClassMIMEType { get; }
 		
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Field ("kUTTagClassNSPboardType", "+CoreServices")]
 		NSString TagClassNSPboardType { get; }
 		
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Field ("kUTTagClassOSType", "+CoreServices")]
 		NSString TagClassOSType { get; }
-#endif
 
 		[Mac(10,11), iOS (9,0)]
 		[Field ("kUTTypeSwiftSource", "+CoreServices")]

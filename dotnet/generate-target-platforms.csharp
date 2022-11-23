@@ -24,14 +24,22 @@ var doc = new XmlDocument ();
 doc.Load (plistPath);
 var nodes = doc.SelectNodes ($"/plist/dict/key[text()='KnownVersions']/following-sibling::dict[1]/key[text()='{platform}']/following-sibling::array[1]/string");
 
+var minSdkVersionName = $"DOTNET_MIN_{platform.ToUpper ()}_SDK_VERSION";
+var minSdkVersionString = File.ReadAllLines ("../Make.config").Single (v => v.StartsWith (minSdkVersionName + "=", StringComparison.Ordinal)).Substring (minSdkVersionName.Length + 1);
+var minSdkVersion = Version.Parse (minSdkVersionString);
+
 using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"<!-- This file contains a generated list of the {platform} platform versions that are supported for this SDK -->");
 	writer.WriteLine ($"<!-- Generation script: https://github.com/xamarin/xamarin-macios/blob/main/dotnet/generate-target-platforms.csharp -->");
 	writer.WriteLine ("<Project>");
 	writer.WriteLine ("\t<ItemGroup>");
 
-	foreach (XmlNode n in nodes)
+	foreach (XmlNode n in nodes) {
+		var version = n.InnerText;
+		if (Version.Parse (version) < minSdkVersion)
+			continue;
 		writer.WriteLine ($"\t\t<{platform}SdkSupportedTargetPlatformVersion Include=\"{n.InnerText}\" />");
+	}
 
 	writer.WriteLine ("\t</ItemGroup>");
 	writer.WriteLine ("\t<ItemGroup>");

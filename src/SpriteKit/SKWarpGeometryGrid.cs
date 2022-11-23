@@ -19,10 +19,8 @@ using Vector2 = global::OpenTK.Vector2;
 
 #nullable enable
 
-namespace SpriteKit
-{
-	public partial class SKWarpGeometryGrid
-	{
+namespace SpriteKit {
+	public partial class SKWarpGeometryGrid {
 		public unsafe static SKWarpGeometryGrid Create (nint cols, nint rows, Vector2 [] sourcePositions, Vector2 [] destPositions)
 		{
 			if (cols < 1 || rows < 1)
@@ -35,8 +33,8 @@ namespace SpriteKit
 				throw new InvalidOperationException ("destPositions should have a minimum lenght of (cols + 1) * (rows + 1)");
 
 			fixed (Vector2* source_ptr = sourcePositions)
-				fixed (Vector2* dest_ptr = destPositions)
-					return GridWithColumns (cols, rows, (IntPtr) source_ptr, (IntPtr) dest_ptr);
+			fixed (Vector2* dest_ptr = destPositions)
+				return GridWithColumns (cols, rows, (IntPtr) source_ptr, (IntPtr) dest_ptr);
 		}
 
 		[DesignatedInitializer]
@@ -52,13 +50,13 @@ namespace SpriteKit
 				throw new InvalidOperationException ("destPositions should have a minimum lenght of (cols + 1) * (rows + 1)");
 
 			fixed (Vector2* source_ptr = sourcePositions)
-				fixed (Vector2* dest_ptr = destPositions)
-					InitializeHandle (InitWithColumns (cols, rows, (IntPtr) source_ptr, (IntPtr) dest_ptr), "initWithColumns:rows:sourcePositions:destPositions:");
+			fixed (Vector2* dest_ptr = destPositions)
+				InitializeHandle (InitWithColumns (cols, rows, (IntPtr) source_ptr, (IntPtr) dest_ptr), "initWithColumns:rows:sourcePositions:destPositions:");
 		}
 
 		public unsafe SKWarpGeometryGrid GetGridByReplacingSourcePositions (Vector2 [] sourcePositions)
 		{
-			if (sourcePositions == null)
+			if (sourcePositions is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sourcePositions));
 			// TODO: Verify this assumption when/if doc is updated or headers changed in newer betas.
 			if (sourcePositions.Length < ((NumberOfColumns + 1) * (NumberOfRows + 1)))
@@ -70,7 +68,7 @@ namespace SpriteKit
 
 		public unsafe SKWarpGeometryGrid GetGridByReplacingDestPositions (Vector2 [] destPositions)
 		{
-			if (destPositions == null)
+			if (destPositions is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (destPositions));
 			// TODO: Verify this assumption when/if doc is updated or headers changed in newer betas.
 			if (destPositions.Length < ((NumberOfColumns + 1) * (NumberOfRows + 1)))

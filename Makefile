@@ -38,15 +38,23 @@ ifdef INCLUDE_IOS
 endif
 endif
 	@./system-dependencies.sh
-	@echo "Building the packages:"
-	@echo "    Xamarin.iOS $(IOS_PACKAGE_VERSION)"
-	@echo "    Xamarin.Mac $(MAC_PACKAGE_VERSION)"
-	@echo "and the NuGets:"
-	@echo "    Xamarin.iOS $(IOS_NUGET_VERSION_FULL)"
-	@echo "    Xamarin.tvOS $(TVOS_NUGET_VERSION_FULL)"
-	@echo "    Xamarin.watchOS $(WATCHOS_NUGET_VERSION_FULL)"
-	@echo "    Xamarin.macOS $(MACOS_NUGET_VERSION_FULL)"
-	@echo "    Xamarin.MacCatalyst $(MACCATALYST_NUGET_VERSION_FULL)"
+	$(Q) $(MAKE) show-versions
+
+show-versions:
+	@echo "Building:"
+ifdef INCLUDE_XAMARIN_LEGACY
+	@echo "    The legacy package(s):"
+ifdef INCLUDE_IOS
+	@echo "        Xamarin.iOS $(IOS_PACKAGE_VERSION)"
+endif
+ifdef INCLUDE_MAC
+	@echo "        Xamarin.Mac $(MAC_PACKAGE_VERSION)"
+endif
+endif
+ifdef ENABLE_DOTNET
+	@echo "    The .NET NuGet(s):"
+	@$(foreach platform,$(DOTNET_PLATFORMS),echo "        Microsoft.$(platform) $($(shell echo $(platform) | tr 'a-z' 'A-Z')_NUGET_VERSION_FULL)";)
+endif
 
 check-permissions:
 ifdef INCLUDE_MAC
@@ -58,14 +66,14 @@ ifdef INCLUDE_IOS
 	@echo Validated file permissions for Xamarin.iOS.
 endif
 
-all-local:: global6.json
+all-local:: global.json
 
 # This tells NuGet to use the exact same dotnet version we've configured in Make.config
-global6.json: $(TOP)/Make.config.inc Makefile $(TOP)/.git/HEAD $(TOP)/.git/index
+global.json: $(TOP)/dotnet.config Makefile $(TOP)/.git/HEAD $(TOP)/.git/index
 	$(Q_GEN) \
 		printf "{\n" > $@; \
-		printf "\t\"sdk\": { \"version\": \"$(DOTNET6_VERSION)\" }\n" >> $@; \
-		printf "\n}\n" >> $@
+		printf "  \"sdk\": {\n    \"version\": \"$(DOTNET_VERSION)\"\n  }\n" >> $@; \
+		printf "}\n" >> $@
 
 install-hook::
 	@$(MAKE) check-permissions
@@ -97,13 +105,21 @@ else
 endif
 endif
 
-package:
-	mkdir -p ../package
-	$(MAKE) -C $(MACCORE_PATH) package
+.PHONY: package release
+package release:
+	$(Q) $(MAKE) -C $(TOP)/release release
 	# copy .pkg, .zip and *updateinfo to the packages directory to be uploaded to storage
-	$(CP) $(MACCORE_PATH)/release/*.pkg ../package
-	$(CP) $(MACCORE_PATH)/release/*.zip ../package
-	$(CP) $(MACCORE_PATH)/release/*updateinfo ../package
+	$(Q) mkdir -p ../package
+	$(Q) echo "Output from 'make release':"
+	$(Q) ls -la $(TOP)/release | sed 's/^/    /'
+	$(Q) if test -n "$$(shopt -s nullglob; echo $(TOP)/release/*.pkg)"; then $(CP) $(TOP)/release/*.pkg ../package; fi
+	$(Q) if test -n "$$(shopt -s nullglob; echo $(TOP)/release/*.zip)"; then $(CP) $(TOP)/release/*.zip ../package; fi
+	$(Q) if test -n "$$(shopt -s nullglob; echo $(TOP)/release/*updateinfo)"; then $(CP) $(TOP)/release/*updateinfo ../package; fi
+	$(Q) echo "Packages:"
+	$(Q) ls -la ../package | sed 's/^/    /'
+
+dotnet-install-system:
+	$(Q) $(MAKE) -C dotnet install-system
 
 install-system: install-system-ios install-system-mac
 	@# Clean up some old files
@@ -113,9 +129,6 @@ install-system: install-system-ios install-system-mac
 	$(Q) rm -Rf /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Xamarin.ObjcBinding.Tasks.dll
 	$(Q) rm -Rf /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac
 	$(Q) $(MAKE) install-symlinks MAC_DESTDIR=/ MAC_INSTALL_VERSION=Current IOS_DESTDIR=/ IOS_INSTALL_VERSION=Current -C msbuild V=$(V)
-ifdef ENABLE_XAMARIN
-	$(Q) $(MAKE) install-symlinks MAC_DESTDIR=/ MAC_INSTALL_VERSION=Current IOS_DESTDIR=/ IOS_INSTALL_VERSION=Current -C $(MACCORE_PATH) V=$(V)
-endif
 
 install-system-ios:
 ifdef INCLUDE_IOS
@@ -149,6 +162,14 @@ fix-xcode-select:
 fix-xcode-first-run:
 	$(XCODE_DEVELOPER_ROOT)/usr/bin/xcodebuild -runFirstLaunch
 
+install-dotnet:
+	@echo "Figuring out package link..."
+	@export PKG=$$(make -C builds print-dotnet-pkg-urls); \
+	echo "Downloading $$(basename $$PKG)..."; \
+	curl -LO "$$PKG"; \
+	echo "Installing $$(basename $$PKG)..."; \
+	time sudo installer -pkg "$$(basename $$PKG)" -target / -verbose -dumplog
+
 git-clean-all:
 	@echo "$(COLOR_RED)Cleaning and resetting all dependencies. This is a destructive operation.$(COLOR_CLEAR)"
 	@echo "$(COLOR_RED)You have 5 seconds to cancel (Ctrl-C) if you wish.$(COLOR_CLEAR)"
@@ -175,9 +196,5 @@ git-clean-all:
 	else \
 		echo "Done"; \
 	fi; \
-
-ifdef ENABLE_XAMARIN
-SUBDIRS += $(MACCORE_PATH)
-endif
 
 SUBDIRS += tests

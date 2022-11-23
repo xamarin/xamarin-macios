@@ -4,7 +4,6 @@ using System;
 using System.Threading.Tasks;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #if WATCH
 using AnimationType = global::SceneKit.ISCNAnimationProtocol;
@@ -23,7 +22,7 @@ namespace SceneKit {
 		[Obsolete ("Use 'TimingFunction2' property.")]
 		public virtual Action<float>? TimingFunction {
 			get {
-				if (TimingFunction2 == null)
+				if (TimingFunction2 is null)
 					return null;
 				else
 					return (f) => {
@@ -31,7 +30,7 @@ namespace SceneKit {
 					};
 			}
 			set {
-				if (value == null)
+				if (value is null)
 					TimingFunction2 = null;
 				else
 					TimingFunction2 = (f) => {
@@ -77,7 +76,7 @@ namespace SceneKit {
 		[Mac (10, 9)]
 		public virtual bool WriteToUrl (NSUrl url, SCNSceneLoadingOptions options, SCNSceneExportDelegate handler, SCNSceneExportProgressHandler exportProgressHandler)
 		{
-			return WriteToUrl (url: url, options: options == null ? null : options.Dictionary, aDelegate: handler, exportProgressHandler: exportProgressHandler);
+			return WriteToUrl (url: url, options: options?.Dictionary, aDelegate: handler, exportProgressHandler: exportProgressHandler);
 		}
 
 		[Obsolete ("Use the 'ISCNSceneExportDelegate' overload instead.")]
@@ -93,7 +92,7 @@ namespace SceneKit {
 	public abstract partial class SCNSceneRenderer : NSObject {
 		[Mac (10, 10)]
 		[Obsolete ("Use 'SCNSceneRenderer_Extensions.PrepareAsync' instead.")]
-		public unsafe virtual Task<bool> PrepareAsync (NSObject[] objects)
+		public unsafe virtual Task<bool> PrepareAsync (NSObject [] objects)
 		{
 			return SCNSceneRenderer_Extensions.PrepareAsync (this, objects);
 		}
@@ -111,11 +110,10 @@ namespace SceneKit {
 
 
 #if !NET
-	[Mac (10,9), iOS (8,0), Watch (4,0)]
+	[Mac (10, 9), iOS (8, 0), Watch (4, 0)]
 	public delegate void SCNAnimationEventHandler (AnimationType animation, NSObject animatedObject, bool playingBackward);
 
-	public partial class SCNAnimationEvent : NSObject
-	{
+	public partial class SCNAnimationEvent : NSObject {
 		public static SCNAnimationEvent Create (nfloat keyTime, SCNAnimationEventHandler eventHandler)
 		{
 			var handler = new Action<IntPtr, NSObject, bool> ((animationPtr, animatedObject, playingBackward) => {
@@ -128,21 +126,21 @@ namespace SceneKit {
 #endif // !NET
 
 #if !WATCH && !NET
-	[iOS (11,0)]
-	[TV (11,0)]
-	[Mac (10,13,0, PlatformArchitecture.Arch64)]
+	[iOS (11, 0)]
+	[TV (11, 0)]
+	[Mac (10, 13, 0, PlatformArchitecture.Arch64)]
 	static public partial class SCNAnimatableExtensions {
 		static public void AddAnimation (this ISCNAnimatable self, SCNAnimation animation, string key)
 		{
 			using (var ca = CAAnimation.FromSCNAnimation (animation))
-			using (var st = key != null ? new NSString (key) : null)
+			using (var st = key is not null ? new NSString (key) : null)
 				self.AddAnimation (ca, st);
 		}
 	}
 #endif // !WATCH && !NET
 
 #if !NET
-	[Watch (3,0)]
+	[Watch (3, 0)]
 	public partial class SCNHitTestOptions {
 		[Obsolete ("Use 'SearchMode' instead.")]
 		public SCNHitTestSearchMode? OptionSearchMode {
@@ -154,9 +152,9 @@ namespace SceneKit {
 
 #if !MONOMAC && !WATCH && !__MACCATALYST__
 	public partial class SCNView {
-		[Watch (6,0), TV (13,0), iOS (13,0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[Obsolete ("Empty stub. (not a public API).")]
-		public virtual bool DrawableResizesAsynchronously { get; set; } 
+		public virtual bool DrawableResizesAsynchronously { get; set; }
 	}
 #endif // !MONOMAC && !WATCH && !__MACCATALYST__
 #endif // !NET

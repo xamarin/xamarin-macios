@@ -2,10 +2,10 @@ using Foundation;
 using LibraryA;
 
 namespace LibraryB {
-	[BaseType(typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	interface B {
-		[Export("a")]
-		A GetA();
+		[Export ("a")]
+		A GetA ();
 	}
 }
 

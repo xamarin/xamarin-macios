@@ -1,12 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class DSymUtil : DSymUtilTaskBase, ITaskCallback
-	{
+#nullable enable
+
+namespace Xamarin.MacDev.Tasks {
+	public class DSymUtil : DSymUtilTaskBase, ITaskCallback {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())
@@ -15,17 +17,9 @@ namespace Xamarin.MacDev.Tasks
 			return base.Execute ();
 		}
 
-		public override void Cancel ()
-		{
-			base.Cancel ();
-
-			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
-		}
-
 		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
 
-		public bool ShouldCreateOutputFile (ITaskItem item) => item == Executable;
+		public bool ShouldCreateOutputFile (ITaskItem item) => Executable.Contains (item);
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 	}

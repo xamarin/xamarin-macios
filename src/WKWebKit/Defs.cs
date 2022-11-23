@@ -13,8 +13,7 @@ using ObjCRuntime;
 
 #nullable enable
 
-namespace WebKit
-{
+namespace WebKit {
 	[Mac (10, 10)]
 	[iOS (8, 0)]
 	[Native]
@@ -33,7 +32,8 @@ namespace WebKit
 	public enum WKNavigationActionPolicy : long {
 		Cancel,
 		Allow,
-		[Mac (11,3)][iOS (14,5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		Download,
 	}
 
@@ -43,7 +43,8 @@ namespace WebKit
 	public enum WKNavigationResponsePolicy : long {
 		Cancel,
 		Allow,
-		[Mac (11,3)][iOS (14,5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		Download,
 	}
 
@@ -78,6 +79,10 @@ namespace WebKit
 		JavaScriptInvalidFrameTarget,
 		NavigationAppBoundDomain,
 		JavaScriptAppBoundDomain,
+		// Xcode 14
+		DuplicateCredential,
+		MalformedCredential,
+		CredentialNotFound,
 	}
 
 #if NET
@@ -89,7 +94,8 @@ namespace WebKit
 		Dynamic, Character
 	}
 
-	[iOS (10,0)][NoMac]
+	[iOS (10, 0)]
+	[NoMac]
 	[Native]
 	[Flags]
 	public enum WKDataDetectorTypes : ulong {
@@ -105,17 +111,18 @@ namespace WebKit
 		All = UInt64.MaxValue
 	}
 
-	[iOS (10,0)][Mac (10,12)]
+	[iOS (10, 0)]
+	[Mac (10, 12)]
 	[Native]
 	[Flags]
-	public enum WKAudiovisualMediaTypes : ulong	{
+	public enum WKAudiovisualMediaTypes : ulong {
 		None = 0,
 		Audio = 1 << 0,
 		Video = 1 << 1,
 		All = UInt64.MaxValue
 	}
 
-	[Mac (12,0), iOS (15,0), NoTV, MacCatalyst (15,0)]
+	[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0)]
 	[Native]
 	public enum WKMediaCaptureState : long {
 		None,
@@ -123,7 +130,7 @@ namespace WebKit
 		Muted,
 	}
 
-	[Mac (12,0), iOS (15,0), NoTV, MacCatalyst (15,0)]
+	[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0)]
 	[Native]
 	public enum WKMediaCaptureType : long {
 		Camera,
@@ -131,7 +138,7 @@ namespace WebKit
 		CameraAndMicrophone,
 	}
 
-	[Mac (12,0), iOS (15,0), NoTV, MacCatalyst (15,0)]
+	[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0)]
 	[Native]
 	public enum WKPermissionDecision : long {
 		Prompt,

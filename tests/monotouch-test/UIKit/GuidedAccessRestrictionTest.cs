@@ -34,7 +34,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void GuidedAccessConfigureAccessibilityFeaturesTest ()
 		{
-			TestRuntime.AssertXcodeVersion (10,2);
+			TestRuntime.AssertXcodeVersion (10, 2);
 
 			var gotError = false;
 			var didSuccess = true;

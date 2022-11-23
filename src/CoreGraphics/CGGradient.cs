@@ -30,6 +30,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -48,11 +49,16 @@ namespace CoreGraphics {
 		DrawsBeforeStartLocation = (1 << 0),
 		DrawsAfterEndLocation = (1 << 1)
 	}
-	
-	public class CGGradient : NativeObject
-	{
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class CGGradient : NativeObject {
 #if !COREBUILD
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGGradient (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -64,19 +70,19 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGGradientRelease (/* CGGradientRef */ IntPtr gradient);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGGradientRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGGradientRelease (GetCheckedHandle ());
 		}
 
-		[DllImport(Constants.CoreGraphicsLibrary)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGGradientRef __nullable */ IntPtr CGGradientCreateWithColorComponents (
-			/* CGColorSpaceRef __nullable */ IntPtr colorspace, /* const CGFloat* __nullable */ nfloat []? components, 
+			/* CGColorSpaceRef __nullable */ IntPtr colorspace, /* const CGFloat* __nullable */ nfloat []? components,
 			/* const CGFloat* __nullable */ nfloat []? locations, /* size_t */ nint count);
 
 		static IntPtr Create (CGColorSpace colorspace, nfloat [] components, nfloat []? locations)
@@ -84,9 +90,9 @@ namespace CoreGraphics {
 			// those parameters are __nullable but would return a `nil` instance back,
 			// which is not something we can handle nicely from a .NET constructor
 			if (colorspace is null)
-				throw new ArgumentNullException (nameof (colorspace));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (colorspace));
 			if (components is null)
-				throw new ArgumentNullException (nameof (components));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (components));
 
 			return CGGradientCreateWithColorComponents (colorspace.GetCheckedHandle (), components, locations, components.Length / (colorspace.Components + 1));
 		}
@@ -101,9 +107,9 @@ namespace CoreGraphics {
 			// those parameters are __nullable but would return a `nil` instance back,
 			// which is not something we can handle nicely from a .NET constructor
 			if (colorspace is null)
-				throw new ArgumentNullException (nameof (colorspace));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (colorspace));
 			if (components is null)
-				throw new ArgumentNullException (nameof (components));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (components));
 
 			return CGGradientCreateWithColorComponents (colorspace.GetCheckedHandle (), components, null, components.Length / (colorspace.Components + 1));
 		}
@@ -113,9 +119,9 @@ namespace CoreGraphics {
 		{
 		}
 
-		[DllImport(Constants.CoreGraphicsLibrary)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGGradientRef __nullable */ IntPtr CGGradientCreateWithColors (
-			/* CGColorSpaceRef __nullable */ IntPtr space, /* CFArrayRef __nullable */ IntPtr colors, 
+			/* CGColorSpaceRef __nullable */ IntPtr space, /* CFArrayRef __nullable */ IntPtr colors,
 			/* const CGFloat* __nullable */ nfloat []? locations);
 
 		static IntPtr Create (CGColorSpace? colorspace, CGColor [] colors, nfloat []? locations)
@@ -123,7 +129,7 @@ namespace CoreGraphics {
 			// colors is __nullable but would return a `nil` instance back,
 			// which is not something we can handle nicely from a .NET constructor
 			if (colors is null)
-				throw new ArgumentNullException (nameof (colors));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (colors));
 
 			using (var array = CFArray.FromNativeObjects (colors))
 				return CGGradientCreateWithColors (colorspace.GetHandle (), array.Handle, locations);
@@ -137,7 +143,7 @@ namespace CoreGraphics {
 		static IntPtr Create (CGColorSpace? colorspace, CGColor [] colors)
 		{
 			if (colors is null)
-				throw new ArgumentNullException (nameof (colors));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (colors));
 
 			using (var array = CFArray.FromNativeObjects (colors))
 				return CGGradientCreateWithColors (colorspace.GetHandle (), array.Handle, null);

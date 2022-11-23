@@ -19,6 +19,8 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVAudioChannelLayout {
 		static IntPtr CreateLayoutPtr (AudioChannelLayout layout, out IntPtr handleToLayout)
@@ -39,17 +41,17 @@ namespace AVFoundation {
 			Marshal.FreeHGlobal (handleToLayout);
 		}
 
-		public AudioChannelLayout Layout {
+		public AudioChannelLayout? Layout {
 			get {
 				return AudioChannelLayout.FromHandle (_Layout);
 			}
 		}
-		
+
 		public static bool operator == (AVAudioChannelLayout a, AVAudioChannelLayout b)
 		{
 			return a.Equals (b);
 		}
-		
+
 		public static bool operator != (AVAudioChannelLayout a, AVAudioChannelLayout b)
 		{
 			return !a.Equals (b);

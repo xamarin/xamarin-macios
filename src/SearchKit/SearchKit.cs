@@ -21,6 +21,7 @@
 #nullable enable
 
 using System;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
@@ -31,8 +32,7 @@ using System.Runtime.InteropServices;
 using NativeHandle = System.IntPtr;
 #endif
 
-namespace SearchKit
-{
+namespace SearchKit {
 	public enum SKIndexType {
 		Unknown, Inverted, Vector, InvertedVector
 	};
@@ -45,8 +45,10 @@ namespace SearchKit
 		FindSimilar = 1 << 2
 	}
 
-	public class SKSearch : NativeObject
-	{
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
+	public class SKSearch : NativeObject {
 		[Preserve (Conditional = true)]
 		internal SKSearch (NativeHandle handle, bool owns)
 			: base (handle, owns)
@@ -55,28 +57,28 @@ namespace SearchKit
 
 		[DllImport (Constants.SearchKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
- 		extern static bool SKSearchFindMatches (IntPtr handle, nint maxCount, IntPtr ids, IntPtr scores, double time, out nint foundCount);
+		extern static bool SKSearchFindMatches (IntPtr handle, nint maxCount, IntPtr ids, IntPtr scores, double time, out nint foundCount);
 
 		public bool FindMatches (nint maxCount, ref nint [] ids, double waitTime, out nint foundCount)
 		{
 			if (ids is null)
-				throw new ArgumentNullException (nameof (ids));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ids));
 			if (ids.Length == 0)
 				throw new ArgumentException ("ids should have at least one element");
 			if (ids.Length != maxCount)
 				throw new ArgumentException ("ids should have as many elements as maxCount");
 
 			unsafe {
-				fixed (nint *p = &ids [0]){
+				fixed (nint* p = &ids [0]) {
 					return SKSearchFindMatches (Handle, maxCount, (IntPtr) p, IntPtr.Zero, waitTime, out foundCount);
 				}
-			} 
+			}
 		}
-		
+
 		public bool FindMatches (nint maxCount, ref nint [] ids, ref float []? scores, double waitTime, out nint foundCount)
 		{
 			if (ids is null)
-				throw new ArgumentNullException (nameof (ids));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ids));
 			if (ids.Length == 0)
 				throw new ArgumentException ("ids should have at least one element");
 			if (ids.Length != maxCount)
@@ -89,16 +91,16 @@ namespace SearchKit
 					throw new ArgumentException ("scores should have as many elements as maxCount");
 			}
 			unsafe {
-				fixed (nint *p = &ids [0]){
+				fixed (nint* p = &ids [0]) {
 					if (scores is null)
 						return SKSearchFindMatches (Handle, maxCount, (IntPtr) p, IntPtr.Zero, waitTime, out foundCount);
 					else {
-						fixed (float *s = &scores [0]){
+						fixed (float* s = &scores [0]) {
 							return SKSearchFindMatches (Handle, maxCount, (IntPtr) p, (IntPtr) s, waitTime, out foundCount);
 						}
 					}
 				}
-			} 
+			}
 		}
 
 		[DllImport (Constants.SearchKitLibrary)]
@@ -109,8 +111,10 @@ namespace SearchKit
 		}
 	}
 
-	public class SKDocument : NativeObject
-	{
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
+	public class SKDocument : NativeObject {
 		[DllImport (Constants.SearchKitLibrary)]
 		extern static IntPtr SKDocumentCreate (IntPtr scheme, IntPtr docParent, IntPtr name);
 		[DllImport (Constants.SearchKitLibrary)]
@@ -119,7 +123,7 @@ namespace SearchKit
 		static IntPtr Create (string name, SKDocument? parent = null, string? scheme = null)
 		{
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 			var schemeHandle = CFString.CreateNative (scheme);
 			var nameHandle = CFString.CreateNative (name);
 			try {
@@ -184,6 +188,7 @@ namespace SearchKit
 	}
 
 #if NET
+	[SupportedOSPlatform ("macos")]
 	public class SKIndex : DisposableObject
 #else
 	public class SKIndex : NativeObject
@@ -212,7 +217,7 @@ namespace SearchKit
 		public static SKIndex? CreateWithUrl (NSUrl url, string indexName, SKIndexType type, SKTextAnalysis analysisProperties)
 		{
 			if (url is null)
-				throw new ArgumentNullException (nameof (url));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 			var indexNameHandle = CFString.CreateNative (indexName);
 			try {
 				var handle = SKIndexCreateWithURL (url.Handle, indexNameHandle, type, analysisProperties.GetHandle ());
@@ -227,9 +232,9 @@ namespace SearchKit
 		public static SKIndex? FromUrl (NSUrl url, string indexName, bool writeAccess)
 		{
 			if (url is null)
-				throw new ArgumentNullException (nameof (url));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 			if (indexName is null)
-				throw new ArgumentNullException (nameof (indexName));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (indexName));
 			var indexNameHandle = CFString.CreateNative (indexName);
 			try {
 				var handle = SKIndexOpenWithURL (url.Handle, indexNameHandle, writeAccess);
@@ -244,9 +249,9 @@ namespace SearchKit
 		public static SKIndex? CreateWithMutableData (NSMutableData data, string indexName, SKIndexType type, SKTextAnalysis analysisProperties)
 		{
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			if (indexName is null)
-				throw new ArgumentNullException (nameof (indexName));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (indexName));
 			var indexNameHandle = CFString.CreateNative (indexName);
 			try {
 				var handle = SKIndexCreateWithMutableData (data.Handle, indexNameHandle, type, analysisProperties.GetHandle ());
@@ -261,9 +266,9 @@ namespace SearchKit
 		public static SKIndex? FromMutableData (NSMutableData data, string indexName)
 		{
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			if (indexName is null)
-				throw new ArgumentNullException (nameof (indexName));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (indexName));
 			var indexNameHandle = CFString.CreateNative (indexName);
 			try {
 				var handle = SKIndexOpenWithMutableData (data.Handle, indexNameHandle);
@@ -278,9 +283,9 @@ namespace SearchKit
 		public static SKIndex? FromData (NSData data, string indexName)
 		{
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			if (indexName is null)
-				throw new ArgumentNullException (nameof (indexName));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (indexName));
 			var indexNameHandle = CFString.CreateNative (indexName);
 			try {
 				var handle = SKIndexOpenWithData (data.Handle, indexNameHandle);
@@ -298,11 +303,11 @@ namespace SearchKit
 		}
 
 #if !NET
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 		}
 #endif
@@ -317,12 +322,12 @@ namespace SearchKit
 
 		[DllImport (Constants.SearchKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
- 		extern static bool SKIndexAddDocumentWithText (IntPtr h, IntPtr doc, IntPtr str, [MarshalAs (UnmanagedType.I1)] bool canreplace);
+		extern static bool SKIndexAddDocumentWithText (IntPtr h, IntPtr doc, IntPtr str, [MarshalAs (UnmanagedType.I1)] bool canreplace);
 
 		public bool AddDocumentWithText (SKDocument document, string text, bool canReplace)
 		{
 			if (document is null)
-				throw new ArgumentNullException (nameof (document));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (document));
 			var textHandle = CFString.CreateNative (text);
 			try {
 				return SKIndexAddDocumentWithText (Handle, document.Handle, textHandle, canReplace);
@@ -333,12 +338,12 @@ namespace SearchKit
 
 		[DllImport (Constants.SearchKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
- 		extern static bool SKIndexAddDocument (IntPtr h, IntPtr doc, IntPtr mimeHintStr, [MarshalAs (UnmanagedType.I1)] bool canReplace);
+		extern static bool SKIndexAddDocument (IntPtr h, IntPtr doc, IntPtr mimeHintStr, [MarshalAs (UnmanagedType.I1)] bool canReplace);
 
 		public bool AddDocument (SKDocument document, string mimeHint, bool canReplace)
 		{
 			if (document is null)
-				throw new ArgumentNullException (nameof (document));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (document));
 			var mimeHintHandle = CFString.CreateNative (mimeHint);
 			try {
 				return SKIndexAddDocument (Handle, document.Handle, mimeHintHandle, canReplace);
@@ -347,19 +352,19 @@ namespace SearchKit
 			}
 		}
 
-		[DllImport (Constants.SearchKitLibrary, EntryPoint="SKLoadDefaultExtractorPlugIns")]
+		[DllImport (Constants.SearchKitLibrary, EntryPoint = "SKLoadDefaultExtractorPlugIns")]
 		public extern static void LoadDefaultExtractorPlugIns ();
 
 		[DllImport (Constants.SearchKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
- 		extern static bool SKIndexFlush (IntPtr h);
+		extern static bool SKIndexFlush (IntPtr h);
 		public bool Flush ()
 		{
 			return SKIndexFlush (Handle);
 		}
 		[DllImport (Constants.SearchKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
- 		extern static bool SKIndexCompact (IntPtr h);
+		extern static bool SKIndexCompact (IntPtr h);
 		public bool Compact ()
 		{
 			return SKIndexCompact (Handle);
@@ -381,7 +386,7 @@ namespace SearchKit
 				return SKIndexGetMaximumDocumentID (Handle);
 			}
 		}
-			
+
 		[DllImport (Constants.SearchKitLibrary)]
 		extern static nint SKIndexGetMaximumTermID (IntPtr handle);
 		public nint MaximumTermID {
@@ -400,39 +405,39 @@ namespace SearchKit
 
 		[DllImport (Constants.SearchKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
- 		extern static bool SKIndexMoveDocument (IntPtr h, IntPtr document, IntPtr newParent);
+		extern static bool SKIndexMoveDocument (IntPtr h, IntPtr document, IntPtr newParent);
 		public bool MoveDocument (SKDocument document, SKDocument newParent)
 		{
 			if (document is null)
-				throw new ArgumentNullException (nameof (document));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (document));
 			if (newParent is null)
-				throw new ArgumentNullException (nameof (newParent));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (newParent));
 			return SKIndexMoveDocument (Handle, document.Handle, newParent.Handle);
 		}
 
 
 		[DllImport (Constants.SearchKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
- 		extern static bool SKIndexRemoveDocument (IntPtr h, IntPtr doc);
+		extern static bool SKIndexRemoveDocument (IntPtr h, IntPtr doc);
 
 		public bool RemoveDocument (SKDocument document)
 		{
 			if (document is null)
-				throw new ArgumentNullException (nameof (document));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (document));
 			return SKIndexRemoveDocument (Handle, document.Handle);
 		}
 
 
 		[DllImport (Constants.SearchKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
- 		extern static bool SKIndexRenameDocument (IntPtr h, IntPtr doc, IntPtr newName);
+		extern static bool SKIndexRenameDocument (IntPtr h, IntPtr doc, IntPtr newName);
 		public bool RenameDocument (SKDocument document, string newName)
 		{
 			if (document is null)
-				throw new ArgumentNullException (nameof (document));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (document));
 			if (newName is null)
-				throw new ArgumentNullException (nameof (newName));
-			var newNameHandle =CFString.CreateNative (newName);
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (newName));
+			var newNameHandle = CFString.CreateNative (newName);
 			try {
 				return SKIndexRenameDocument (Handle, document.Handle, newNameHandle);
 			} finally {
@@ -458,11 +463,11 @@ namespace SearchKit
 
 		[DllImport (Constants.SearchKitLibrary)]
 		extern static IntPtr SKSearchCreate (IntPtr h, IntPtr str, SKSearchOptions options);
-	
+
 		public SKSearch Search (string query, SKSearchOptions options = SKSearchOptions.Default)
 		{
 			if (query is null)
-				throw new ArgumentNullException (nameof (query));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (query));
 			var queryHandle = CFString.CreateNative (query);
 			try {
 				return new SKSearch (SKSearchCreate (Handle, queryHandle, options), true);
@@ -487,15 +492,17 @@ namespace SearchKit
 		public void SetDocumentProperties (SKDocument document, NSDictionary dict)
 		{
 			if (document is null)
-				throw new ArgumentNullException (nameof (document));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (document));
 			if (dict is null)
-				throw new ArgumentNullException (nameof (dict));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dict));
 			SKIndexSetDocumentProperties (Handle, document.Handle, dict.Handle);
 		}
 	}
 
-	public class SKSummary : NativeObject
-	{
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
+	public class SKSummary : NativeObject {
 		[Preserve (Conditional = true)]
 		internal SKSummary (NativeHandle handle, bool owns)
 			: base (handle, owns)
@@ -508,7 +515,7 @@ namespace SearchKit
 		public static SKSummary? Create (string text)
 		{
 			if (text is null)
-				throw new ArgumentNullException (nameof (text));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (text));
 			var x = CFString.CreateNative (text);
 			try {
 				var handle = SKSummaryCreateWithString (x);
@@ -523,25 +530,25 @@ namespace SearchKit
 		public static SKSummary? Create (NSString nsString)
 		{
 			if (nsString is null)
-				throw new ArgumentNullException (nameof (nsString));
-			
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (nsString));
+
 			var h = SKSummaryCreateWithString (nsString.Handle);
 			if (h == IntPtr.Zero)
 				return null;
-			
+
 			return new SKSummary (h, true);
 		}
 
 		[DllImport (Constants.SearchKitLibrary)]
-		extern static nint SKSummaryGetSentenceSummaryInfo (IntPtr summary, nint maxNumSentencesInSummary, IntPtr rankOrderOfSentences, IntPtr sentenceIndexOfSentences, IntPtr paragraphIndexOfSentences );
+		extern static nint SKSummaryGetSentenceSummaryInfo (IntPtr summary, nint maxNumSentencesInSummary, IntPtr rankOrderOfSentences, IntPtr sentenceIndexOfSentences, IntPtr paragraphIndexOfSentences);
 
 		nint []? hack;
-		
+
 		public nint GetSentenceSummaryInfo (int maxNumSentencesInSummary, nint [] rankOrderOfSentences, nint [] sentenceIndexOfSentences, nint [] paragraphIndexOfSentences)
 		{
 			if (rankOrderOfSentences is not null && rankOrderOfSentences.Length != maxNumSentencesInSummary)
 				throw new ArgumentException ("array must contain as many element as specified in maxNumSentencesInSummary", nameof (rankOrderOfSentences));
-			
+
 			if (sentenceIndexOfSentences is not null && sentenceIndexOfSentences.Length != maxNumSentencesInSummary)
 				throw new ArgumentException ("array must contain as many element as specified in maxNumSentencesInSummary", nameof (sentenceIndexOfSentences));
 
@@ -560,15 +567,15 @@ namespace SearchKit
 				nint [] arr = rankOrderOfSentences is null ? hack : rankOrderOfSentences;
 				nint [] ars = sentenceIndexOfSentences is null ? hack : sentenceIndexOfSentences;
 				nint [] arp = paragraphIndexOfSentences is null ? hack : paragraphIndexOfSentences;
-				
-				fixed (nint *r = &arr [0]){
-					fixed (nint *s = &ars [0]){
-						fixed (nint *p = &arp [0]){
-							fixed (nint *hp = &hack [0]){
+
+				fixed (nint* r = &arr [0]) {
+					fixed (nint* s = &ars [0]) {
+						fixed (nint* p = &arp [0]) {
+							fixed (nint* hp = &hack [0]) {
 								return SKSummaryGetSentenceSummaryInfo (Handle, maxNumSentencesInSummary,
-													(IntPtr)(r == hp ? null : r),
-													(IntPtr)(s == hp ? null : s),
-													(IntPtr)(p == hp ? null : p));
+													(IntPtr) (r == hp ? null : r),
+													(IntPtr) (s == hp ? null : s),
+													(IntPtr) (p == hp ? null : p));
 							}
 						}
 					}
@@ -597,13 +604,13 @@ namespace SearchKit
 			unsafe {
 				nint [] ar = rankOrderOfParagraphs is null ? hack : rankOrderOfParagraphs;
 				nint [] ap = paragraphIndexOfParagraphs is null ? hack : paragraphIndexOfParagraphs;
-				
-				fixed (nint *r = &ar [0]){
-					fixed (nint *p = &ap [0]){
-						fixed (nint *hp = &hack [0]){
+
+				fixed (nint* r = &ar [0]) {
+					fixed (nint* p = &ap [0]) {
+						fixed (nint* hp = &hack [0]) {
 							return SKSummaryGetParagraphSummaryInfo (Handle, maxNumParagraphsInSummary,
-												 (IntPtr)(r == hp ? null : r),
-												 (IntPtr)(p == hp ? null : p));
+												 (IntPtr) (r == hp ? null : r),
+												 (IntPtr) (p == hp ? null : p));
 						}
 					}
 				}
@@ -614,7 +621,7 @@ namespace SearchKit
 		extern static nint SKSummaryGetSentenceCount (IntPtr summary);
 		[DllImport (Constants.SearchKitLibrary)]
 		extern static nint SKSummaryGetParagraphCount (IntPtr summary);
-		
+
 		public nint SentenceCount {
 			get {
 				return SKSummaryGetSentenceCount (GetCheckedHandle ());
@@ -657,6 +664,6 @@ namespace SearchKit
 		{
 			return CFString.FromHandle (SKSummaryCopyParagraphSummaryString (Handle, maxParagraphs), releaseHandle: true);
 		}
-		
+
 	}
 }

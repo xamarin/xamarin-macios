@@ -5,13 +5,13 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>com.your-company.MyKeyboardExtension</string>
+	<string>com.xamarin.MyKeyboardExtension</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.your-company.MyMetalGame.MyKeyboardExtension</string>
+	<string>com.xamarin.MyMetalGame.MyKeyboardExtension</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>com.your-company.MyKeyboardExtension</string>
+	<string>com.xamarin.MyKeyboardExtension</string>
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>

@@ -367,8 +367,6 @@
 !extra-null-allowed! 'System.Void AppKit.NSView::set_ContentFilters(CoreImage.CIFilter[])' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void AppKit.NSView::WillRemoveSubview(AppKit.NSView)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void Foundation.NSAttributedString::.ctor(Foundation.NSData,Foundation.NSDictionary,Foundation.NSDictionary&)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.Void Foundation.NSAttributedString::.ctor(Foundation.NSData,Foundation.NSDictionary,Foundation.NSDictionary&,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.Void Foundation.NSAttributedString::.ctor(Foundation.NSUrl,Foundation.NSDictionary,Foundation.NSDictionary&,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
 
 # Initial result from new rule missing-null-allowed
 !missing-null-allowed! 'AppKit.INSPasteboardWriting AppKit.NSCollectionViewDelegate::PasteboardWriterForItem(AppKit.NSCollectionView,System.nuint)' is missing an [NullAllowed] on return type
@@ -618,7 +616,6 @@
 !missing-null-allowed! 'Foundation.NSData AppKit.NSPasteboardItem::GetDataForType(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData AppKit.NSText::RtfdFromRange(Foundation.NSRange)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData AppKit.NSText::RtfFromRange(Foundation.NSRange)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetData(Foundation.NSRange,Foundation.NSDictionary,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetDocFormat(Foundation.NSRange,Foundation.NSDictionary)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetRtf(Foundation.NSRange,Foundation.NSDictionary)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetRtfd(Foundation.NSRange,Foundation.NSDictionary)' is missing an [NullAllowed] on return type
@@ -634,7 +631,6 @@
 !missing-null-allowed! 'Foundation.NSExpression[] AppKit.NSPredicateEditorRowTemplate::get_LeftExpressions()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSExpression[] AppKit.NSPredicateEditorRowTemplate::get_RightExpressions()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSFileWrapper AppKit.NSDocument::GetAsFileWrapper(System.String,Foundation.NSError&)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSFileWrapper Foundation.NSAttributedString::GetFileWrapper(Foundation.NSRange,Foundation.NSDictionary,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSFileWrapper Foundation.NSAttributedString::GetRtfdFileWrapper(Foundation.NSRange,Foundation.NSDictionary)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSIndexPath AppKit.NSTreeController::GetSelectionIndexPath()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSIndexSet AppKit.NSBrowser::SelectedRowIndexes(System.nint)' is missing an [NullAllowed] on return type
@@ -718,7 +714,6 @@
 !missing-null-allowed! 'Foundation.NSUrl AppKit.NSWorkspace::UrlForApplication(Foundation.NSUrl)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl AppKit.NSWorkspace::UrlForApplication(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSBundle::GetUrlForImageResource(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::FromPasteboard(AppKit.NSPasteboard)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl[] AppKit.NSDocumentController::UrlsFromRunningOpenPanel()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl[] AppKit.NSSharingService::get_AttachmentFileUrls()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'ObjCRuntime.Class AppKit.NSDocumentController::DocumentClassForType(System.String)' is missing an [NullAllowed] on return type
@@ -1233,11 +1228,9 @@
 !extra-null-allowed! 'AppKit.NSView AppKit.NSTextFinderClient::ContentViewAtIndexeffectiveCharacterRange(System.nuint,Foundation.NSRange&)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'Foundation.NSArray AppKit.NSTokenFieldCellDelegate::GetCompletionStrings(AppKit.NSTokenFieldCell,System.String,System.nint,System.nint&)' has a extraneous [NullAllowed] on parameter #3
 !extra-null-allowed! 'Foundation.NSData AppKit.NSBitmapImageRep::RepresentationUsingTypeProperties(AppKit.NSBitmapImageFileType,Foundation.NSDictionary)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetData(Foundation.NSRange,Foundation.NSDictionary,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetDocFormat(Foundation.NSRange,Foundation.NSDictionary)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetRtf(Foundation.NSRange,Foundation.NSDictionary)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetRtfd(Foundation.NSRange,Foundation.NSDictionary)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'Foundation.NSFileWrapper Foundation.NSAttributedString::GetFileWrapper(Foundation.NSRange,Foundation.NSDictionary,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'Foundation.NSFileWrapper Foundation.NSAttributedString::GetRtfdFileWrapper(Foundation.NSRange,Foundation.NSDictionary)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.String AppKit.NSTextFinderClient::StringAtIndexeffectiveRangeendsWithSearchBoundary(System.nuint,Foundation.NSRange&,System.Boolean)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.String[] AppKit.NSControlTextEditingDelegate::GetCompletions(AppKit.NSControl,AppKit.NSTextView,System.String[],Foundation.NSRange,System.nint&)' has a extraneous [NullAllowed] on parameter #4
@@ -1319,3 +1312,15 @@
 # deprecated
 !extra-enum-value! Managed value 2048 for NSWindowStyle.Unscaled not found in native headers
 
+# Will be deprecated in a future release 
+!deprecated-attribute-missing! NSColorWell::isBordered missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSColorWell::setBordered: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSImage::lockFocus missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSImage::lockFocusFlipped: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSImage::unlockFocus missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbar::centeredItemIdentifier missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbar::setCenteredItemIdentifier: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbar::setSizeMode: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbar::sizeMode missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSWindow::setShowsToolbarButton: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSWindow::showsToolbarButton missing a [Deprecated] attribute

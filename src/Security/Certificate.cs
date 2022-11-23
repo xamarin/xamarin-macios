@@ -32,8 +32,7 @@
 
 #if !NET
 #define NATIVE_APPLE_CERTIFICATE
-#else 
-using System.Runtime.Versioning;
+#else
 #endif
 
 using System;
@@ -63,24 +62,24 @@ namespace Security {
 		{
 		}
 #if !COREBUILD
-		[DllImport (Constants.SecurityLibrary, EntryPoint="SecCertificateGetTypeID")]
+		[DllImport (Constants.SecurityLibrary, EntryPoint = "SecCertificateGetTypeID")]
 		public extern static nint GetTypeID ();
-			
+
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr SecCertificateCreateWithData (IntPtr allocator, IntPtr cfData);
 
 		public SecCertificate (NSData data)
 		{
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 
 			Initialize (data);
 		}
 
-		public SecCertificate (byte[] data)
+		public SecCertificate (byte [] data)
 		{
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 
 			using (NSData cert = NSData.FromArray (data)) {
 				Initialize (cert);
@@ -90,7 +89,7 @@ namespace Security {
 		public SecCertificate (X509Certificate certificate)
 		{
 			if (certificate is null)
-				throw new ArgumentNullException (nameof (certificate));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (certificate));
 
 #if NATIVE_APPLE_CERTIFICATE
 			var handle = certificate.Impl.GetNativeAppleCertificate ();
@@ -125,7 +124,7 @@ namespace Security {
 		public SecCertificate (X509Certificate2 certificate)
 		{
 			if (certificate is null)
-				throw new ArgumentNullException (nameof (certificate));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (certificate));
 
 #if NATIVE_APPLE_CERTIFICATE
 			var handle = certificate.Impl.GetNativeAppleCertificate ();
@@ -170,7 +169,7 @@ namespace Security {
 			}
 		}
 
-		byte[] GetRawData ()
+		byte [] GetRawData ()
 		{
 			using (NSData data = DerData)
 				return data.ToArray ();
@@ -198,9 +197,9 @@ namespace Security {
 			 * SecCertificateRef's for equality.
 			 */
 			if (first is null)
-				throw new ArgumentNullException (nameof (first));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (first));
 			if (second is null)
-				throw new ArgumentNullException (nameof (second));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (second));
 			if (first.Handle == second.Handle)
 				return true;
 
@@ -211,7 +210,7 @@ namespace Security {
 
 				if (firstData.Length != secondData.Length)
 					return false;
-				nint length = (nint)firstData.Length;
+				nint length = (nint) firstData.Length;
 				for (nint i = 0; i < length; i++) {
 					if (firstData [i] != secondData [i])
 						return false;
@@ -228,10 +227,13 @@ namespace Security {
 		extern static /* CFDictionaryRef */ IntPtr SecCertificateCopyValues (/* SecCertificateRef */ IntPtr certificate, /* CFArrayRef */ IntPtr keys, /* CFErrorRef _Nullable * */ IntPtr error);
 
 #if NET
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.14 use 'GetKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("macos10.14", "Use 'GetKey' instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'GetKey' instead.")]
 #endif
@@ -258,19 +260,18 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("tvos10.3")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos12.0")]
 		[UnsupportedOSPlatform ("ios12.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos12.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios12.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos12.0")]
+		[ObsoletedOSPlatform ("ios12.0")]
 #else
-		[iOS (10,3)]
-		[TV (10,3)]
-		[Deprecated (PlatformName.iOS, 12,0)]
-		[Deprecated (PlatformName.TvOS, 12,0)]
-		[Deprecated (PlatformName.WatchOS, 5,0)]
+		[iOS (10, 3)]
+		[TV (10, 3)]
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.TvOS, 12, 0)]
+		[Deprecated (PlatformName.WatchOS, 5, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* __nullable SecKeyRef */ IntPtr SecCertificateCopyPublicKey (IntPtr /* SecCertificateRef */ certificate);
@@ -278,19 +279,18 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("tvos10.3")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos12.0")]
 		[UnsupportedOSPlatform ("ios12.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos12.0 use 'GetKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios12.0 use 'GetKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos12.0", "Use 'GetKey' instead.")]
+		[ObsoletedOSPlatform ("ios12.0", "Use 'GetKey' instead.")]
 #else
-		[iOS (10,3)]
-		[TV (10,3)]
-		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'GetKey' instead.")]
-		[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'GetKey' instead.")]
-		[Deprecated (PlatformName.WatchOS, 5,0, message: "Use 'GetKey' instead.")]
+		[iOS (10, 3)]
+		[TV (10, 3)]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'GetKey' instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'GetKey' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'GetKey' instead.")]
 #endif
 		public SecKey? GetPublicKey ()
 		{
@@ -304,11 +304,12 @@ namespace Security {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (12,0)]
-		[Mac (10,14)]
-		[iOS (12,0)]
-		[Watch (5,0)]
+		[TV (12, 0)]
+		[Mac (10, 14)]
+		[iOS (12, 0)]
+		[Watch (5, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern IntPtr /* SecKeyRef* */ SecCertificateCopyKey (IntPtr /* SecKeyRef* */ key);
@@ -317,11 +318,12 @@ namespace Security {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (12,0)]
-		[Mac (10,14)]
-		[iOS (12,0)]
-		[Watch (5,0)]
+		[TV (12, 0)]
+		[Mac (10, 14)]
+		[iOS (12, 0)]
+		[Watch (5, 0)]
 #endif
 		public SecKey? GetKey ()
 		{
@@ -332,10 +334,12 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("tvos10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
-		[iOS (10,3)] // [Mac (10,5)]
-		[TV (10,3)]
-		[Watch (3,3)]
+		[iOS (10, 3)] // [Mac (10,5)]
+		[TV (10, 3)]
+		[Watch (3, 3)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SecCertificateCopyCommonName (IntPtr /* SecCertificateRef */ certificate, out IntPtr /* CFStringRef * __nonnull CF_RETURNS_RETAINED */ commonName);
@@ -343,10 +347,12 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("tvos10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
-		[iOS (10,3)]
-		[TV (10,3)]
-		[Watch (3,3)]
+		[iOS (10, 3)]
+		[TV (10, 3)]
+		[Watch (3, 3)]
 #endif
 		public string? GetCommonName ()
 		{
@@ -358,10 +364,12 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("tvos10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
-		[iOS (10,3)] // [Mac (10,5)]
-		[TV (10,3)]
-		[Watch (3,3)]
+		[iOS (10, 3)] // [Mac (10,5)]
+		[TV (10, 3)]
+		[Watch (3, 3)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SecCertificateCopyEmailAddresses (IntPtr /* SecCertificateRef */ certificate, out IntPtr /* CFArrayRef * __nonnull CF_RETURNS_RETAINED */ emailAddresses);
@@ -369,12 +377,14 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("tvos10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
-		[iOS (10,3)]
-		[TV (10,3)]
-		[Watch (3,3)]
+		[iOS (10, 3)]
+		[TV (10, 3)]
+		[Watch (3, 3)]
 #endif
-		public string?[]? GetEmailAddresses ()
+		public string? []? GetEmailAddresses ()
 		{
 			if (SecCertificateCopyEmailAddresses (Handle, out var emails) == 0)
 				return CFArray.StringArrayFromHandle (emails, true);
@@ -385,11 +395,12 @@ namespace Security {
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("macos10.12.4")]
 		[SupportedOSPlatform ("tvos10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (10,3)]
-		[Mac (10,12,4)]
-		[TV (10,3)]
-		[Watch (3,3)]
+		[iOS (10, 3)]
+		[Mac (10, 12, 4)]
+		[TV (10, 3)]
+		[Watch (3, 3)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopyNormalizedIssuerSequence (IntPtr /* SecCertificateRef */ certificate);
@@ -398,11 +409,12 @@ namespace Security {
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("macos10.12.4")]
 		[SupportedOSPlatform ("tvos10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (10,3)]
-		[Mac (10,12,4)]
-		[TV (10,3)]
-		[Watch (3,3)]
+		[iOS (10, 3)]
+		[Mac (10, 12, 4)]
+		[TV (10, 3)]
+		[Watch (3, 3)]
 #endif
 		public NSData? GetNormalizedIssuerSequence ()
 		{
@@ -414,11 +426,12 @@ namespace Security {
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("macos10.12.4")]
 		[SupportedOSPlatform ("tvos10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (10,3)]
-		[Mac (10,12,4)]
-		[TV (10,3)]
-		[Watch (3,3)]
+		[iOS (10, 3)]
+		[Mac (10, 12, 4)]
+		[TV (10, 3)]
+		[Watch (3, 3)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopyNormalizedSubjectSequence (IntPtr /* SecCertificateRef */ certificate);
@@ -427,11 +440,12 @@ namespace Security {
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("macos10.12.4")]
 		[SupportedOSPlatform ("tvos10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (10,3)]
-		[Mac (10,12,4)]
-		[TV (10,3)]
-		[Watch (3,3)]
+		[iOS (10, 3)]
+		[Mac (10, 12, 4)]
+		[TV (10, 3)]
+		[Watch (3, 3)]
 #endif
 		public NSData? GetNormalizedSubjectSequence ()
 		{
@@ -441,10 +455,9 @@ namespace Security {
 
 #if MONOMAC
 #if NET
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos10.13")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.13 use 'GetSerialNumber' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.13", "Use 'GetSerialNumber' instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'GetSerialNumber' instead.")]
 #endif
@@ -454,44 +467,42 @@ namespace Security {
 #else // !MONOMAC
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("ios11.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.13 use 'GetSerialNumber' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos11.0 use 'GetSerialNumber' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios11.0 use 'GetSerialNumber' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.13", "Use 'GetSerialNumber' instead.")]
+		[ObsoletedOSPlatform ("tvos11.0", "Use 'GetSerialNumber' instead.")]
+		[ObsoletedOSPlatform ("ios11.0", "Use 'GetSerialNumber' instead.")]
 #else
-		[iOS (10,3)]
-		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'GetSerialNumber' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'GetSerialNumber' instead.")]
-		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'GetSerialNumber' instead.")]
-		[Deprecated (PlatformName.TvOS, 11,0, message: "Use 'GetSerialNumber' instead.")]
+		[iOS (10, 3)]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'GetSerialNumber' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'GetSerialNumber' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'GetSerialNumber' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'GetSerialNumber' instead.")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumber (IntPtr /* SecCertificateRef */ certificate);
 #endif
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("ios11.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.13 use 'GetSerialNumber(out NSError)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos11.0 use 'GetSerialNumber(out NSError)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios11.0 use 'GetSerialNumber(out NSError)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.13", "Use 'GetSerialNumber(out NSError)' instead.")]
+		[ObsoletedOSPlatform ("tvos11.0", "Use 'GetSerialNumber(out NSError)' instead.")]
+		[ObsoletedOSPlatform ("ios11.0", "Use 'GetSerialNumber(out NSError)' instead.")]
 #else
-		[iOS (10,3)]
-		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'GetSerialNumber(out NSError)' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'GetSerialNumber(out NSError)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'GetSerialNumber(out NSError)' instead.")]
-		[Deprecated (PlatformName.TvOS, 11,0, message: "Use 'GetSerialNumber(out NSError)' instead.")]
+		[iOS (10, 3)]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'GetSerialNumber(out NSError)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'GetSerialNumber(out NSError)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'GetSerialNumber(out NSError)' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'GetSerialNumber(out NSError)' instead.")]
 #endif
 		public NSData? GetSerialNumber ()
 		{
@@ -507,11 +518,12 @@ namespace Security {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (11,0)]
-		[TV (11,0)]
-		[Watch (4,0)]
-		[Mac (10,13)]
+		[iOS (11, 0)]
+		[TV (11, 0)]
+		[Watch (4, 0)]
+		[Mac (10, 13)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumberData (IntPtr /* SecCertificateRef */ certificate, ref IntPtr /* CFErrorRef * */ error);
@@ -520,11 +532,12 @@ namespace Security {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (11,0)]
-		[TV (11,0)]
-		[Watch (4,0)]
-		[Mac (10,13)]
+		[iOS (11, 0)]
+		[TV (11, 0)]
+		[Watch (4, 0)]
+		[Mac (10, 13)]
 #endif
 		public NSData? GetSerialNumber (out NSError? error)
 		{
@@ -552,7 +565,7 @@ namespace Security {
 		}
 
 #if !COREBUILD
-		[DllImport (Constants.SecurityLibrary, EntryPoint="SecIdentityGetTypeID")]
+		[DllImport (Constants.SecurityLibrary, EntryPoint = "SecIdentityGetTypeID")]
 		public extern static nint GetTypeID ();
 
 		[DllImport (Constants.SecurityLibrary)]
@@ -567,15 +580,15 @@ namespace Security {
 			}
 		}
 
-		public static SecIdentity Import (byte[] data, string password)
+		public static SecIdentity Import (byte [] data, string password)
 		{
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			if (string.IsNullOrEmpty (password)) // SecPKCS12Import() doesn't allow empty passwords.
 				throw new ArgumentException (nameof (password));
 			using (var pwstring = new NSString (password))
 			using (var options = NSDictionary.FromObjectAndKey (pwstring, SecImportExport.Passphrase)) {
-				NSDictionary[] array;
+				NSDictionary [] array;
 				SecStatusCode result = SecImportExport.ImportPkcs12 (data, options, out array);
 				if (result != SecStatusCode.Success)
 					throw new InvalidOperationException (result.ToString ());
@@ -587,7 +600,7 @@ namespace Security {
 		public static SecIdentity Import (X509Certificate2 certificate)
 		{
 			if (certificate is null)
-				throw new ArgumentNullException (nameof (certificate));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (certificate));
 			if (!certificate.HasPrivateKey)
 				throw new InvalidOperationException ("Need X509Certificate2 with a private key.");
 
@@ -621,65 +634,63 @@ namespace Security {
 		}
 
 #if !COREBUILD
-		[DllImport (Constants.SecurityLibrary, EntryPoint="SecKeyGetTypeID")]
+		[DllImport (Constants.SecurityLibrary, EntryPoint = "SecKeyGetTypeID")]
 		public extern static nint GetTypeID ();
-		
+
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos12.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos12.0 use 'SecKeyCreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 use 'SecKeyCreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos15.0 use 'SecKeyCreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 use 'SecKeyCreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos12.0", "Use 'SecKeyCreateRandomKey' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'SecKeyCreateRandomKey' instead.")]
+		[ObsoletedOSPlatform ("tvos15.0", "Use 'SecKeyCreateRandomKey' instead.")]
+		[ObsoletedOSPlatform ("ios15.0", "Use 'SecKeyCreateRandomKey' instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'SecKeyCreateRandomKey' instead.")]
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'SecKeyCreateRandomKey' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'SecKeyCreateRandomKey' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'SecKeyCreateRandomKey' instead.")]
-		[Deprecated (PlatformName.WatchOS, 8, 0, message:  "Use 'SecKeyCreateRandomKey' instead.")]
+		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'SecKeyCreateRandomKey' instead.")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode SecKeyGeneratePair (IntPtr dictHandle, out IntPtr pubKey, out IntPtr privKey);
 
 		// TODO: pull all the TypeRefs needed for the NSDictionary
-		
+
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos12.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos12.0 use 'CreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 use 'CreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos15.0 use 'CreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 use 'CreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos12.0", "Use 'CreateRandomKey' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'CreateRandomKey' instead.")]
+		[ObsoletedOSPlatform ("tvos15.0", "Use 'CreateRandomKey' instead.")]
+		[ObsoletedOSPlatform ("ios15.0", "Use 'CreateRandomKey' instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CreateRandomKey' instead.")]
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CreateRandomKey' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'CreateRandomKey' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CreateRandomKey' instead.")]
-		[Deprecated (PlatformName.WatchOS, 8, 0, message:  "Use 'CreateRandomKey' instead.")]
+		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'CreateRandomKey' instead.")]
 #endif
 		public static SecStatusCode GenerateKeyPair (NSDictionary parameters, out SecKey? publicKey, out SecKey? privateKey)
 		{
 			if (parameters is null)
-				throw new ArgumentNullException (nameof (parameters));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 
 			IntPtr pub, priv;
-			
+
 			var res = SecKeyGeneratePair (parameters.Handle, out pub, out priv);
-			if (res == SecStatusCode.Success){
+			if (res == SecStatusCode.Success) {
 				publicKey = new SecKey (pub, true);
 				privateKey = new SecKey (priv, true);
 			} else
@@ -727,7 +738,7 @@ namespace Security {
 			}
 		}
 #endif
-			
+
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* size_t */ nint SecKeyGetBlockSize (IntPtr handle);
 
@@ -738,16 +749,16 @@ namespace Security {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 use 'SecKeyCreateSignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos15.0 use 'SecKeyCreateSignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 use 'SecKeyCreateSignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'SecKeyCreateSignature' instead.")]
+		[ObsoletedOSPlatform ("tvos15.0", "Use 'SecKeyCreateSignature' instead.")]
+		[ObsoletedOSPlatform ("ios15.0", "Use 'SecKeyCreateSignature' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'SecKeyCreateSignature' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'SecKeyCreateSignature' instead.")]
@@ -758,16 +769,16 @@ namespace Security {
 		extern static SecStatusCode SecKeyRawSign (IntPtr handle, SecPadding padding, IntPtr dataToSign, nint dataToSignLen, IntPtr sig, ref nint sigLen);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 use 'CreateSignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos15.0 use 'CreateSignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 use 'CreateSignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'CreateSignature' instead.")]
+		[ObsoletedOSPlatform ("tvos15.0", "Use 'CreateSignature' instead.")]
+		[ObsoletedOSPlatform ("ios15.0", "Use 'CreateSignature' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CreateSignature' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'CreateSignature' instead.")]
@@ -785,9 +796,9 @@ namespace Security {
 		public unsafe SecStatusCode RawSign (SecPadding padding, byte [] dataToSign, out byte [] result)
 		{
 			if (dataToSign is null)
-				throw new ArgumentNullException (nameof (dataToSign));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dataToSign));
 
-			fixed (byte *bp = dataToSign)
+			fixed (byte* bp = dataToSign)
 				return _RawSign (padding, (IntPtr) bp, dataToSign.Length, out result);
 		}
 
@@ -796,24 +807,24 @@ namespace Security {
 			SecStatusCode status;
 			nint len = 1024;
 			result = new byte [len];
-			fixed (byte *p = result) {
+			fixed (byte* p = result) {
 				status = SecKeyRawSign (GetCheckedHandle (), padding, dataToSign, dataToSignLen, (IntPtr) p, ref len);
 				Array.Resize (ref result, (int) len);
 			}
 			return status;
 		}
-		
+
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 use 'SecKeyVerifySignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos15.0 use 'SecKeyVerifySignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 use 'SecKeyVerifySignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'SecKeyVerifySignature' instead.")]
+		[ObsoletedOSPlatform ("tvos15.0", "Use 'SecKeyVerifySignature' instead.")]
+		[ObsoletedOSPlatform ("ios15.0", "Use 'SecKeyVerifySignature' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'SecKeyVerifySignature' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'SecKeyVerifySignature' instead.")]
@@ -824,16 +835,16 @@ namespace Security {
 		extern static SecStatusCode SecKeyRawVerify (IntPtr handle, SecPadding padding, IntPtr signedData, nint signedLen, IntPtr sign, nint signLen);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 use 'VerifySignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos15.0 use 'VerifySignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 use 'VerifySignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'VerifySignature' instead.")]
+		[ObsoletedOSPlatform ("tvos15.0", "Use 'VerifySignature' instead.")]
+		[ObsoletedOSPlatform ("ios15.0", "Use 'VerifySignature' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'VerifySignature' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'VerifySignature' instead.")]
@@ -848,33 +859,33 @@ namespace Security {
 		public SecStatusCode RawVerify (SecPadding padding, byte [] signedData, byte [] signature)
 		{
 			if (signature is null)
-				throw new ArgumentNullException (nameof (signature));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (signature));
 			if (signedData is null)
-				throw new ArgumentNullException (nameof (signedData));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (signedData));
 			unsafe {
 				// SecKeyRawVerify will try to read from the signedData/signature pointers even if
 				// the corresponding length is 0, which may crash (happens in Xcode 11 beta 1)
 				// so if length is 0, then pass an array with one element.
 				var signatureArray = signature.Length == 0 ? new byte [] { 0 } : signature;
 				var signedDataArray = signedData.Length == 0 ? new byte [] { 0 } : signedData;
-				fixed (byte *sp = signatureArray)
-				fixed (byte *dp = signedDataArray) {
+				fixed (byte* sp = signatureArray)
+				fixed (byte* dp = signedDataArray) {
 					return SecKeyRawVerify (GetCheckedHandle (), padding, (IntPtr) dp, (nint) signedData.Length, (IntPtr) sp, (nint) signature.Length);
 				}
 			}
 		}
-		
+
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos15.0 use 'SecKeyCreateEncryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 use 'SecKeyCreateEncryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 use 'SecKeyCreateEncryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", "Use 'SecKeyCreateEncryptedData' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'SecKeyCreateEncryptedData' instead.")]
+		[ObsoletedOSPlatform ("ios15.0", "Use 'SecKeyCreateEncryptedData' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'SecKeyCreateEncryptedData' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'SecKeyCreateEncryptedData' instead.")]
@@ -885,16 +896,16 @@ namespace Security {
 		extern static SecStatusCode SecKeyEncrypt (IntPtr handle, SecPadding padding, IntPtr plainText, nint plainTextLen, IntPtr cipherText, ref nint cipherTextLengh);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos15.0 use 'CreateEncryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 use 'CreateEncryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 use 'CreateEncryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", "Use 'CreateEncryptedData' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'CreateEncryptedData' instead.")]
+		[ObsoletedOSPlatform ("ios15.0", "Use 'CreateEncryptedData' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CreateEncryptedData' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CreateEncryptedData' instead.")]
@@ -909,12 +920,12 @@ namespace Security {
 		public SecStatusCode Encrypt (SecPadding padding, byte [] plainText, byte [] cipherText)
 		{
 			if (cipherText is null)
-				throw new ArgumentNullException (nameof (cipherText));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (cipherText));
 			if (plainText is null)
-				throw new ArgumentNullException (nameof (plainText));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (plainText));
 			unsafe {
-				fixed (byte *cp = cipherText)
-				fixed (byte *pp = plainText) {
+				fixed (byte* cp = cipherText)
+				fixed (byte* pp = plainText) {
 					nint len = (nint) cipherText.Length;
 					return SecKeyEncrypt (GetCheckedHandle (), padding, (IntPtr) pp, (nint) plainText.Length, (IntPtr) cp, ref len);
 				}
@@ -928,16 +939,16 @@ namespace Security {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos15.0 use 'SecKeyCreateDecryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 use 'SecKeyCreateDecryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 use 'SecKeyCreateDecryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", "Use 'SecKeyCreateDecryptedData' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'SecKeyCreateDecryptedData' instead.")]
+		[ObsoletedOSPlatform ("ios15.0", "Use 'SecKeyCreateDecryptedData' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'SecKeyCreateDecryptedData' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'SecKeyCreateDecryptedData' instead.")]
@@ -948,16 +959,16 @@ namespace Security {
 		extern static SecStatusCode SecKeyDecrypt (IntPtr handle, SecPadding padding, IntPtr cipherTextLen, nint cipherLen, IntPtr plainText, ref nint plainTextLen);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos15.0 use 'CreateDecryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0 use 'CreateDecryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0 use 'CreateDecryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", "Use 'CreateDecryptedData' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'CreateDecryptedData' instead.")]
+		[ObsoletedOSPlatform ("ios15.0", "Use 'CreateDecryptedData' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CreateDecryptedData' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CreateDecryptedData' instead.")]
@@ -972,16 +983,16 @@ namespace Security {
 		SecStatusCode _Decrypt (SecPadding padding, byte [] cipherText, ref byte []? plainText)
 		{
 			if (cipherText is null)
-				throw new ArgumentNullException (nameof (cipherText));
-		
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (cipherText));
+
 			unsafe {
-				fixed (byte *cp = cipherText) {
+				fixed (byte* cp = cipherText) {
 					if (plainText is null)
 						plainText = new byte [cipherText.Length];
 					nint len = plainText.Length;
 					SecStatusCode status;
-					fixed (byte *pp = plainText)
-						status = SecKeyDecrypt (GetCheckedHandle (), padding, (IntPtr)cp, (nint)cipherText.Length, (IntPtr)pp, ref len);
+					fixed (byte* pp = plainText)
+						status = SecKeyDecrypt (GetCheckedHandle (), padding, (IntPtr) cp, (nint) cipherText.Length, (IntPtr) pp, ref len);
 					if (len < plainText.Length)
 						Array.Resize<byte> (ref plainText, (int) len);
 					return status;
@@ -999,11 +1010,12 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern IntPtr /* SecKeyRef _Nullable */ SecKeyCreateRandomKey (IntPtr /* CFDictionaryRef* */ parameters, out IntPtr /* CFErrorRef** */ error);
@@ -1012,16 +1024,17 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		static public SecKey? CreateRandomKey (NSDictionary parameters, out NSError? error)
 		{
 			if (parameters is null)
-				throw new ArgumentNullException (nameof (parameters));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 
 			IntPtr err;
 			var key = SecKeyCreateRandomKey (parameters.Handle, out err);
@@ -1033,11 +1046,12 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		static public SecKey? CreateRandomKey (SecKeyType keyType, int keySizeInBits, NSDictionary? parameters, out NSError? error)
 		{
@@ -1053,6 +1067,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (3, 0)]
 		[TV (10, 0)]
@@ -1062,7 +1077,7 @@ namespace Security {
 		static public SecKey? CreateRandomKey (SecKeyGenerationParameters parameters, out NSError? error)
 		{
 			if (parameters is null)
-				throw new ArgumentNullException (nameof (parameters));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 			if (parameters.KeyType == SecKeyType.Invalid)
 				throw new ArgumentException ("invalid 'SecKeyType'", "SecKeyGeneration.KeyType");
 
@@ -1075,11 +1090,12 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern IntPtr /* SecKeyRef _Nullable */ SecKeyCreateWithData (IntPtr /* CFDataRef* */ keyData, IntPtr /* CFDictionaryRef* */ attributes, out IntPtr /* CFErrorRef** */ error);
@@ -1088,18 +1104,19 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		static public SecKey? Create (NSData keyData, NSDictionary parameters, out NSError? error)
 		{
 			if (keyData is null)
-				throw new ArgumentNullException (nameof (keyData));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (keyData));
 			if (parameters is null)
-				throw new ArgumentNullException (nameof (parameters));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 
 			IntPtr err;
 			var key = SecKeyCreateWithData (keyData.Handle, parameters.Handle, out err);
@@ -1111,11 +1128,12 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		static public SecKey? Create (NSData keyData, SecKeyType keyType, SecKeyClass keyClass, int keySizeInBits, NSDictionary parameters, out NSError? error)
 		{
@@ -1132,11 +1150,12 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern IntPtr /* CFDataRef _Nullable */ SecKeyCopyExternalRepresentation (IntPtr /* SecKeyRef* */ key, out IntPtr /* CFErrorRef** */ error);
@@ -1145,11 +1164,12 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		public NSData? GetExternalRepresentation (out NSError? error)
 		{
@@ -1162,11 +1182,12 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		public NSData? GetExternalRepresentation ()
 		{
@@ -1178,11 +1199,12 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern IntPtr /* CFDictionaryRef _Nullable */ SecKeyCopyAttributes (IntPtr /* SecKeyRef* */ key);
@@ -1191,11 +1213,12 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		public NSDictionary? GetAttributes ()
 		{
@@ -1207,11 +1230,12 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern IntPtr /* SecKeyRef* */ SecKeyCopyPublicKey (IntPtr /* SecKeyRef* */ key);
@@ -1220,11 +1244,12 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		public SecKey? GetPublicKey ()
 		{
@@ -1236,11 +1261,12 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
@@ -1250,11 +1276,12 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		public bool IsAlgorithmSupported (SecKeyOperationType operation, SecKeyAlgorithm algorithm)
 		{
@@ -1265,11 +1292,12 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* CFDataRef _Nullable */ IntPtr SecKeyCreateSignature (/* SecKeyRef */ IntPtr key, /* SecKeyAlgorithm */ IntPtr algorithm, /* CFDataRef */ IntPtr dataToSign, /* CFErrorRef* */ out IntPtr error);
@@ -1278,16 +1306,17 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		public NSData? CreateSignature (SecKeyAlgorithm algorithm, NSData dataToSign, out NSError? error)
 		{
 			if (dataToSign is null)
-				throw new ArgumentNullException (nameof (dataToSign));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dataToSign));
 
 			var data = SecKeyCreateSignature (Handle, algorithm.GetConstant ().GetHandle (), dataToSign.Handle, out var err);
 			error = Runtime.GetNSObject<NSError> (err);
@@ -1298,11 +1327,12 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
@@ -1312,19 +1342,20 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		public bool VerifySignature (SecKeyAlgorithm algorithm, NSData signedData, NSData signature, out NSError? error)
 		{
 			if (signedData is null)
-				throw new ArgumentNullException (nameof (signedData));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (signedData));
 			if (signature is null)
-				throw new ArgumentNullException (nameof (signature));
-			
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (signature));
+
 			var result = SecKeyVerifySignature (Handle, algorithm.GetConstant ().GetHandle (), signedData.Handle, signature.Handle, out var err);
 			error = Runtime.GetNSObject<NSError> (err);
 			return result;
@@ -1334,11 +1365,12 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* CFDataRef _Nullable */ IntPtr SecKeyCreateEncryptedData (/* SecKeyRef */ IntPtr key, /* SecKeyAlgorithm */ IntPtr algorithm, /* CFDataRef */ IntPtr plaintext, /* CFErrorRef* */ out IntPtr error);
@@ -1347,16 +1379,17 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		public NSData? CreateEncryptedData (SecKeyAlgorithm algorithm, NSData plaintext, out NSError? error)
 		{
 			if (plaintext is null)
-				throw new ArgumentNullException (nameof (plaintext));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (plaintext));
 
 			var data = SecKeyCreateEncryptedData (Handle, algorithm.GetConstant ().GetHandle (), plaintext.Handle, out var err);
 			error = Runtime.GetNSObject<NSError> (err);
@@ -1367,11 +1400,12 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* CFDataRef _Nullable */ IntPtr SecKeyCreateDecryptedData (/* SecKeyRef */ IntPtr key, /* SecKeyAlgorithm */ IntPtr algorithm, /* CFDataRef */ IntPtr ciphertext, /* CFErrorRef* */ out IntPtr error);
@@ -1380,16 +1414,17 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		public NSData? CreateDecryptedData (SecKeyAlgorithm algorithm, NSData ciphertext, out NSError? error)
 		{
 			if (ciphertext is null)
-				throw new ArgumentNullException (nameof (ciphertext));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ciphertext));
 
 			var data = SecKeyCreateDecryptedData (Handle, algorithm.GetConstant ().GetHandle (), ciphertext.Handle, out var err);
 			error = Runtime.GetNSObject<NSError> (err);
@@ -1400,11 +1435,12 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* CFDataRef _Nullable */ IntPtr SecKeyCopyKeyExchangeResult (/* SecKeyRef */ IntPtr privateKey, /* SecKeyAlgorithm */ IntPtr algorithm, /* SecKeyRef */ IntPtr publicKey, /* CFDictionaryRef */ IntPtr parameters, /* CFErrorRef* */ out IntPtr error);
@@ -1413,18 +1449,19 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		public NSData? GetKeyExchangeResult (SecKeyAlgorithm algorithm, SecKey publicKey, NSDictionary parameters, out NSError? error)
 		{
 			if (publicKey is null)
-				throw new ArgumentNullException (nameof (publicKey));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (publicKey));
 			if (parameters is null)
-				throw new ArgumentNullException (nameof (parameters));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 
 			var data = SecKeyCopyKeyExchangeResult (Handle, algorithm.GetConstant ().GetHandle (), publicKey.Handle, parameters.Handle, out var err);
 			error = Runtime.GetNSObject<NSError> (err);
@@ -1435,16 +1472,17 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		public NSData? GetKeyExchangeResult (SecKeyAlgorithm algorithm, SecKey publicKey, SecKeyKeyExchangeParameter parameters, out NSError? error)
 		{
 			if (parameters is null)
-				throw new ArgumentNullException (nameof (parameters));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 
 			return GetKeyExchangeResult (algorithm, publicKey, parameters.Dictionary!, out error);
 		}

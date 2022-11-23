@@ -17,10 +17,19 @@ using Security;
 #if MONOMAC
 using AppKit;
 using UIColor=AppKit.NSColor;
+using UIScrollView = AppKit.NSScrollView;
+using UIImage = AppKit.NSImage;
+using IUIContextMenuInteractionCommitAnimating = Foundation.NSObject;
+using UIContextMenuConfiguration = Foundation.NSObject;
+using UIEdgeInsets = AppKit.NSEdgeInsets;
+using UIFindInteraction = Foundation.NSObject;
+using UIViewController = AppKit.NSViewController;
 #else
 using UIKit;
 using NSPrintInfo = Foundation.NSObject;
 using NSPrintOperation = Foundation.NSObject;
+using NSEventModifierMask = System.Object;
+using NSImage = UIKit.UIImage;
 #endif
 
 #if !NET
@@ -29,6 +38,24 @@ using NativeHandle = System.IntPtr;
 
 namespace WebKit
 {
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[Native]
+	public enum WKFullscreenState : long {
+		NotInFullscreen,
+		EnteringFullscreen,
+		InFullscreen,
+		ExitingFullscreen,
+	}
+
+	[iOS (16,0), MacCatalyst (16,0), Mac (13,0)]
+	[Native]
+	public enum WKDialogResult : long
+	{
+		ShowDefault = 1,
+		AskAgain,
+		Handled,
+	}
+
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor ()] // Crashes during deallocation in Xcode 6 beta 2. radar 17377712.
@@ -190,13 +217,13 @@ namespace WebKit
 		[Export ("request", ArgumentSemantic.Copy)]
 		NSUrlRequest Request { get; }
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst]
 		[Export ("modifierFlags")]
 		NSEventModifierMask ModifierFlags { get; }
 
+		[NoiOS][NoMacCatalyst]
 		[Export ("buttonNumber")]
 		nint ButtonNumber { get; }
-#endif
 
 		[Mac (11,3)][iOS (14,5)]
 		[MacCatalyst (14,5)]
@@ -288,20 +315,21 @@ namespace WebKit
 		[Export ("javaScriptCanOpenWindowsAutomatically")]
 		bool JavaScriptCanOpenWindowsAutomatically { get; set; }
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Feature no longer supported.")]
 		[Export ("javaEnabled")]
 		bool JavaEnabled { get; set; }
 
+		[NoiOS][NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Feature no longer supported.")]
 		[Export ("plugInsEnabled")]
 		bool PlugInsEnabled { get; set; }
 
 		// Headers says 10,12,3 but it is not available likely they meant 10,12,4
+		[NoiOS][NoMacCatalyst]
 		[Mac (10,12,4)]
 		[Export ("tabFocusesLinks")]
 		bool TabFocusesLinks { get; set; }
-#endif
 
 		[Mac (10, 15), iOS (13, 0)]
 		[Export ("fraudulentWebsiteWarningEnabled")]
@@ -318,6 +346,14 @@ namespace WebKit
 		[MacCatalyst (15,0)]
 		[Export ("isTextInteractionEnabled")]
 		bool _NewGetTextInteractionEnabled ();
+
+		[Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Export ("siteSpecificQuirksModeEnabled")]
+		bool SiteSpecificQuirksModeEnabled { [Bind ("isSiteSpecificQuirksModeEnabled")] get; set; }
+
+		[Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Export ("elementFullscreenEnabled")]
+		bool ElementFullscreenEnabled { [Bind ("isElementFullscreenEnabled")] get; set; }
 	}
 
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
@@ -474,6 +510,10 @@ namespace WebKit
 		[Mac (10, 13, 4), iOS (11, 3)]
 		[Field ("WKWebsiteDataTypeServiceWorkerRegistrations")]
 		NSString ServiceWorkerRegistrations { get; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+		[Field ("WKWebsiteDataTypeFileSystem")]
+		NSString FileSystem { get; }
 	}
 	
 	[iOS (9,0), Mac(10,11)]
@@ -557,9 +597,9 @@ namespace WebKit
 		[Export ("webView:shouldPreviewElement:")]
 		bool ShouldPreviewElement (WKWebView webView, WKPreviewElementInfo elementInfo);
 
-#if !MONOMAC
 		[iOS (10,0)][NoMac]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'SetContextMenuConfiguration' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'SetContextMenuConfiguration' instead.")]
 		[Export ("webView:previewingViewControllerForElement:defaultActions:")]
 		[return: NullAllowed]
 		UIViewController GetPreviewingViewController (WKWebView webView, WKPreviewElementInfo elementInfo, IWKPreviewActionItem[] previewActions);
@@ -569,14 +609,15 @@ namespace WebKit
 		[Export ("webView:commitPreviewingViewController:")]
 		void CommitPreviewingViewController (WKWebView webView, UIViewController previewingViewController);
 
+		[MacCatalyst (13,1)]
 		[iOS (13,0)][NoMac]
 		[Export ("webView:contextMenuConfigurationForElement:completionHandler:")]
 		void SetContextMenuConfiguration (WKWebView webView, WKContextMenuElementInfo elementInfo, Action<UIContextMenuConfiguration> completionHandler);
 
+		[MacCatalyst (13,1)]
 		[iOS (13,0)][NoMac]
 		[Export ("webView:contextMenuForElement:willCommitWithAnimator:")]
 		void WillCommitContextMenu (WKWebView webView, WKContextMenuElementInfo elementInfo, IUIContextMenuInteractionCommitAnimating animator);
-#endif
 
 		[iOS (13,0)][NoMac]
 		[Export ("webView:contextMenuWillPresentForElement:")]
@@ -595,6 +636,11 @@ namespace WebKit
 		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
 		[Export ("webView:requestMediaCapturePermissionForOrigin:initiatedByFrame:type:decisionHandler:")]
 		void RequestMediaCapturePermission (WKWebView webView, WKSecurityOrigin origin, WKFrameInfo frame, WKMediaCaptureType type, Action<WKPermissionDecision> decisionHandler);
+
+		[Async]
+		[NoMac, iOS (16,0), MacCatalyst (16,0)] // headers say 13, is not true since the enum is from 16
+		[Export ("webView:showLockdownModeFirstUseMessage:completionHandler:")]
+		void ShowLockDownMode (WKWebView webView, string firstUseMessage, Action<WKDialogResult> completionHandler);
 	}
 
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
@@ -750,13 +796,13 @@ namespace WebKit
 		[Export ("allowsBackForwardNavigationGestures")]
 		bool AllowsBackForwardNavigationGestures { get; set; }
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst]
 		[Export ("allowsMagnification")]
 		bool AllowsMagnification { get; set; }
 
+		[NoiOS][NoMacCatalyst]
 		[Export ("magnification")]
 		nfloat Magnification { get; set; }
-#endif
 
 		[Export ("loadRequest:")]
 		[return: NullAllowed]
@@ -801,13 +847,13 @@ namespace WebKit
 		[Async]
 		void EvaluateJavaScript (string javascript, WKJavascriptEvaluationResult completionHandler);
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst]
 		[Export ("setMagnification:centeredAtPoint:")]
 		void SetMagnification (nfloat magnification, CGPoint centerPoint);
-#else
+
+		[NoMac][MacCatalyst (13,1)]
 		[Export ("scrollView", ArgumentSemantic.Strong)]
 		UIScrollView ScrollView { get; }
-#endif
 
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("loadData:MIMEType:characterEncodingName:baseURL:")]
@@ -838,17 +884,12 @@ namespace WebKit
 		[NullAllowed, Export ("serverTrust")]
 		SecTrust ServerTrust { get; }
 
-#if !MONOMAC
+		[Mac (10,13)][MacCatalyst (13,1)]
 		[iOS (11,0)]
 		[Async]
 		[Export ("takeSnapshotWithConfiguration:completionHandler:")]
 		void TakeSnapshot ([NullAllowed] WKSnapshotConfiguration snapshotConfiguration, Action<UIImage, NSError> completionHandler);
-#else
-		[Mac (10,13)]
-		[Export ("takeSnapshotWithConfiguration:completionHandler:")]
-		[Async]
-		void TakeSnapshot ([NullAllowed] WKSnapshotConfiguration snapshotConfiguration, Action<NSImage, NSError> completionHandler);
-#endif
+
 		[Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("handlesURLScheme:")]
@@ -1003,6 +1044,31 @@ namespace WebKit
 		[iOS (15,0), MacCatalyst (15,0), Mac (12,0), NoTV]
 		[NullAllowed, Export ("underPageBackgroundColor", ArgumentSemantic.Copy)]
 		UIColor UnderPageBackgroundColor { get; set; }
+
+		[iOS (16,0), MacCatalyst (16,0), Mac (13,0), NoTV]
+		[Export ("fullscreenState")]
+		WKFullscreenState FullscreenState { get; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+		[Export ("minimumViewportInset")]
+		UIEdgeInsets MinimumViewportInset { get; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+		[Export ("maximumViewportInset")]
+		UIEdgeInsets MaximumViewportInset { get; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+		[Export ("setMinimumViewportInset:maximumViewportInset:")]
+		void SetViewportInsets (UIEdgeInsets minimumViewportInset, UIEdgeInsets maximumViewportInset);
+
+		[iOS (16,0), MacCatalyst (16,0), NoMac, NoWatch, NoTV]
+		[Export ("findInteractionEnabled")]
+		bool FindInteractionEnabled { [Bind ("isFindInteractionEnabled")] get; set; }
+
+		[iOS (16,0), MacCatalyst (16,0), NoMac, NoWatch, NoTV]
+		[Export ("findInteraction")]
+		[NullAllowed]
+		UIFindInteraction FindInteraction { get; }
 	}
 
 	delegate void WKJavascriptEvaluationResult (NSObject result, NSError error);
@@ -1036,34 +1102,43 @@ namespace WebKit
 		[Export ("allowsAirPlayForMediaPlayback")]
 		bool AllowsAirPlayForMediaPlayback { get; set; }
 
-#if !MONOMAC
+		[NoMac][MacCatalyst (13,1)]
 		[Export ("allowsInlineMediaPlayback")]
 		bool AllowsInlineMediaPlayback { get; set; }
 
+		[NoMac]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'RequiresUserActionForMediaPlayback' or 'MediaTypesRequiringUserActionForPlayback' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'RequiresUserActionForMediaPlayback' or 'MediaTypesRequiringUserActionForPlayback' instead.")]
 		[Export ("mediaPlaybackRequiresUserAction")]
 		bool MediaPlaybackRequiresUserAction { get; set; }
 
+		[NoMac]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'AllowsAirPlayForMediaPlayback' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'AllowsAirPlayForMediaPlayback' instead.")]
 		[Export ("mediaPlaybackAllowsAirPlay")]
 		bool MediaPlaybackAllowsAirPlay { get; set; }
 
+		[NoMac][MacCatalyst (13,1)]
 		[Export ("selectionGranularity")]
 		WKSelectionGranularity SelectionGranularity { get; set; }
 
+		[NoMac]
 		[iOS (9, 0)]
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'MediaTypesRequiringUserActionForPlayback' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'MediaTypesRequiringUserActionForPlayback' instead.")]
 		[Export ("requiresUserActionForMediaPlayback")]
 		bool RequiresUserActionForMediaPlayback { get; set; }
 
+		[NoMac][MacCatalyst (13,1)]
 		[iOS (9,0)]
 		[Export ("allowsPictureInPictureMediaPlayback")]
 		bool AllowsPictureInPictureMediaPlayback { get; set; }
 
+		[NoMac][MacCatalyst (13,1)]
 		[iOS (10, 0)]
 		[Export ("dataDetectorTypes", ArgumentSemantic.Assign)]
 		WKDataDetectorTypes DataDetectorTypes { get; set; }
-#endif
+
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("mediaTypesRequiringUserActionForPlayback", ArgumentSemantic.Assign)]
 		WKAudiovisualMediaTypes MediaTypesRequiringUserActionForPlayback { get; set; }
@@ -1143,18 +1218,21 @@ namespace WebKit
 		NSNumber height { get; }
 	}
 
-#if !MONOMAC
+#if MONOMAC
+	interface UIPreviewActionItem {}
+#endif
+
 	interface IWKPreviewActionItem {}
 
 	[iOS (10,0)][NoMac]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'TBD' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'TBD' instead.")]
 	[Protocol]
 	interface WKPreviewActionItem : UIPreviewActionItem {
 		[Abstract]
 		[Export ("identifier", ArgumentSemantic.Copy)]
 		NSString Identifier { get; }
 	}
-#endif
 
 	[iOS (10,0)][NoMac]
 	[Static]
@@ -1202,6 +1280,10 @@ namespace WebKit
 		[iOS (14,0)]
 		[Export ("allowsContentJavaScript")]
 		bool AllowsContentJavaScript { get; set; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+		[Export ("lockdownModeEnabled")]
+		bool LockdownModeEnabled { [Bind ("isLockdownModeEnabled")] get; set; }
 	}
 
 	[NoMac]

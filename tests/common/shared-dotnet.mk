@@ -10,14 +10,24 @@ ifeq ($(TESTNAME),)
 TESTNAME:=$(notdir $(shell dirname "$(shell dirname "$(CURDIR)")"))
 endif
 
+ifeq ($(TEST_TFM),)
+TEST_TFM=$(DOTNET_TFM)
+endif
+
+ifeq ($(CONFIG),)
+CONFIG=Debug
+else
+CONFIG_ARGUMENT=/p:Configuration=$(CONFIG)
+endif
+
 prepare:
-	$(Q) $(MAKE) -C $(TOP)/tests/dotnet copy-dotnet-config
+	@# nothing to do here right now
 
 reload:
 	$(Q) $(MAKE) -C $(TOP) -j8 all
 	$(Q) $(MAKE) -C $(TOP) -j8 install
 	$(Q) git clean -xfdq
-	$(Q) $(DOTNET6) build-server shutdown # make sure msbuild picks up any new task assemblies we built
+	$(Q) $(DOTNET) build-server shutdown # make sure msbuild picks up any new task assemblies we built
 
 reload-and-build:
 	$(Q) $(MAKE) reload
@@ -28,18 +38,18 @@ reload-and-run:
 	$(Q) $(MAKE) run
 
 build: prepare
-	$(Q) $(DOTNET6) build "/bl:$(abspath $@-$(BINLOG_TIMESTAMP).binlog)" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS)
+	$(Q) $(DOTNET) build "/bl:$(abspath $@-$(BINLOG_TIMESTAMP).binlog)" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS) $(CONFIG_ARGUMENT)
 
 run: prepare
-	$(Q) $(DOTNET6) build "/bl:$(abspath $@-$(BINLOG_TIMESTAMP).binlog)" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS) -t:Run
+	$(Q) $(DOTNET) build "/bl:$(abspath $@-$(BINLOG_TIMESTAMP).binlog)" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS) $(CONFIG_ARGUMENT) -t:Run
 
 run-bare:
-	$(Q) "$(abspath .)"/bin/Debug/net6.0-*/*/"$(TESTNAME)".app/Contents/MacOS/"$(TESTNAME)" --autostart --autoexit
+	$(Q) "$(abspath .)"/bin/$(CONFIG)/$(TEST_TFM)-*/*/"$(TESTNAME)".app/Contents/MacOS/"$(TESTNAME)" --autostart --autoexit
 
 run-remote:
 	$(Q) test -n "$(REMOTE_HOST)" || ( echo "Must specify the remote machine by setting the REMOTE_HOST environment variable"; exit 1 )
 	@echo "Copying the '$(TESTNAME)' test app to $(REMOTE_HOST)..."
-	rsync -avz ./bin/Debug/net6.0-*/*/"$(TESTNAME)".app $(USER)@$(REMOTE_HOST):/tmp/test-run-remote-execution/
+	rsync -avz ./bin/$(CONFIG)/$(TEST_TFM)-*/*/"$(TESTNAME)".app $(USER)@$(REMOTE_HOST):/tmp/test-run-remote-execution/
 	@echo "Killing any existing test executables ('$(TESTNAME)')"
 	ssh $(USER)@$(REMOTE_HOST) -- pkill -9 "$(TESTNAME)" || true
 	@echo "Executing '$(TESTNAME)' on $(REMOTE_HOST)..."
@@ -52,10 +62,10 @@ delete-remote:
 BINLOGS:=$(wildcard *.binlog)
 diag: prepare
 	$(Q) if [[ "$(words $(BINLOGS))" == "1" ]]; then \
-		$(DOTNET6) build /v:diag $(BINLOGS); \
+		$(DOTNET) build /v:diag $(BINLOGS); \
 	else \
 		echo "Choose your binlog to print:"; \
-		select binlog in $(BINLOGS); do $(DOTNET6) build /v:diag $$binlog; break; done \
+		select binlog in $(BINLOGS); do $(DOTNET) build /v:diag $$binlog; break; done \
 	fi
 
 clean:

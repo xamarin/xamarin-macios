@@ -8,11 +8,9 @@ using NUnit.Framework;
 using Xamarin.Tests;
 using System.Linq;
 
-namespace Xamarin.iOS.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
-	public class FrameworkListTests
-	{
+	public class FrameworkListTests {
 		[TestCase ("Xamarin.iOS-FrameworkList.xml.in")]
 		[TestCase ("Xamarin.TVOS-FrameworkList.xml.in")]
 		[TestCase ("Xamarin.WatchOS-FrameworkList.xml.in")]
@@ -20,8 +18,10 @@ namespace Xamarin.iOS.Tasks
 		[TestCase ("Xamarin.Mac-Mobile-FrameworkList.xml.in")]
 		public void CheckFrameworkListFile (string frameworkListFile)
 		{
+			Configuration.AssertLegacyXamarinAvailable ();
+
 			var fameworkListFileParts = frameworkListFile.Split ('-');
-			string frameworkName = fameworkListFileParts[0];
+			string frameworkName = fameworkListFileParts [0];
 			switch (frameworkName) {
 			case "Xamarin.iOS":
 				if (!Configuration.include_ios)
@@ -41,7 +41,7 @@ namespace Xamarin.iOS.Tasks
 				break;
 			}
 			var isMac = frameworkName == "Xamarin.Mac";
-			var isFull = fameworkListFileParts[1] == "Full";
+			var isFull = fameworkListFileParts [1] == "Full";
 			var frameworkListAssemblies = ScanFrameworkListXml (frameworkListFile, isMac);
 			var installedAssemblies = ScanAssemblyDirectory (frameworkName, isMac, isFull);
 
@@ -88,7 +88,7 @@ namespace Xamarin.iOS.Tasks
 		List<AssemblyInfo> ScanFrameworkListXml (string frameworkListFile, bool isMac)
 		{
 			var assemblies = new List<AssemblyInfo> ();
-			var path = Path.GetFullPath (Path.Combine (Configuration.SourceRoot, "msbuild", isMac ? "Xamarin.Mac.Tasks" : "Xamarin.iOS.Tasks.Core", frameworkListFile));
+			var path = Path.GetFullPath (Path.Combine (Configuration.SourceRoot, "msbuild", isMac ? "Xamarin.Mac.Tasks" : "Xamarin.iOS.Tasks", frameworkListFile));
 			using (var reader = XmlReader.Create (path)) {
 				while (reader.Read ()) {
 					if (reader.IsStartElement ()) {
@@ -147,8 +147,7 @@ namespace Xamarin.iOS.Tasks
 		}
 	}
 
-	class AssemblyInfo
-	{
+	class AssemblyInfo {
 		public string Name;
 
 		public string Version;
@@ -179,7 +178,8 @@ namespace Xamarin.iOS.Tasks
 			PublicKeyToken = fn.Substring (i, j - i);
 		}
 
-		public bool Equals (AssemblyInfo other) {
+		public bool Equals (AssemblyInfo other)
+		{
 			// ignore Culture and InGac for equality since those are not mentioned in the FrameworkList.xml
 			return other.Name == this.Name &&
 				other.Version == this.Version &&

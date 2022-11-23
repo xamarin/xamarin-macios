@@ -7,6 +7,8 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -19,21 +21,20 @@ using Vector3 = global::OpenTK.Vector3;
 #endif
 
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 namespace GameplayKit {
 	public partial class GKPath {
 
-		public static GKPath FromPoints (Vector2[] points, float radius, bool cyclical)
+		public static GKPath FromPoints (Vector2 [] points, float radius, bool cyclical)
 		{
-			if (points == null)
-				throw new ArgumentNullException ("points");
+			if (points is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
 			var buffer = IntPtr.Zero;
 			try {
 				PrepareBuffer (out buffer, ref points);
 
-				return FromPoints (buffer, (nuint)points.Length, radius, cyclical);
+				return FromPoints (buffer, (nuint) points.Length, radius, cyclical);
 			} finally {
 				if (buffer != IntPtr.Zero)
 					Marshal.FreeHGlobal (buffer);
@@ -43,14 +44,14 @@ namespace GameplayKit {
 		[DesignatedInitializer]
 		public GKPath (Vector2 [] points, float radius, bool cyclical)
 		{
-			if (points == null)
-				throw new ArgumentNullException ("points");
-			
+			if (points is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
+
 			var buffer = IntPtr.Zero;
 			try {
 				PrepareBuffer (out buffer, ref points);
 
-				Handle = InitWithPoints (buffer, (nuint)points.Length, radius, cyclical);
+				Handle = InitWithPoints (buffer, (nuint) points.Length, radius, cyclical);
 			} finally {
 				if (buffer != IntPtr.Zero)
 					Marshal.FreeHGlobal (buffer);
@@ -61,23 +62,23 @@ namespace GameplayKit {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (10,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
+		[iOS (10, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
 #endif
 		public static GKPath FromPoints (Vector3 [] points, float radius, bool cyclical)
 		{
-			if (points == null)
-				throw new ArgumentNullException ("points");
+			if (points is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
 			var buffer = IntPtr.Zero;
 			try {
 				PrepareBuffer (out buffer, ref points);
 
 				return FromFloat3Points (buffer, (nuint) points.Length, radius, cyclical);
-			}
-			finally {
+			} finally {
 				if (buffer != IntPtr.Zero)
 					Marshal.FreeHGlobal (buffer);
 			}
@@ -87,29 +88,29 @@ namespace GameplayKit {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (10,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
+		[iOS (10, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
 #endif
 		public GKPath (Vector3 [] points, float radius, bool cyclical)
 		{
-			if (points == null)
-				throw new ArgumentNullException ("points");
+			if (points is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
 			var buffer = IntPtr.Zero;
 			try {
 				PrepareBuffer (out buffer, ref points);
 
 				Handle = InitWithFloat3Points (buffer, (nuint) points.Length, radius, cyclical);
-			}
-			finally {
+			} finally {
 				if (buffer != IntPtr.Zero)
 					Marshal.FreeHGlobal (buffer);
 			}
 		}
 
-		static void PrepareBuffer<T> (out IntPtr buffer, ref T[] points) where T : struct
+		static void PrepareBuffer<T> (out IntPtr buffer, ref T [] points) where T : struct
 		{
 			var type = typeof (T);
 			// Vector3 is 12 bytes but vector_float3 is 16

@@ -28,7 +28,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using CoreFoundation;
 using ObjCRuntime;
@@ -42,6 +41,9 @@ using NativeHandle = System.IntPtr;
 #nullable enable
 
 namespace CoreVideo {
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class CVDisplayLink : NativeObject {
 		GCHandle callbackHandle;
 		
@@ -134,7 +136,7 @@ namespace CoreVideo {
 		public static CVDisplayLink? CreateFromDisplayIds (uint[] displayIds, out CVReturn error)
 		{
 			if (displayIds is null)
-				throw new ArgumentNullException (nameof (displayIds));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (displayIds));
 			error = 0;
 			IntPtr handle = IntPtr.Zero;
 			error = CVDisplayLinkCreateWithCGDisplays (displayIds, displayIds.Length, out handle);
@@ -212,12 +214,12 @@ namespace CoreVideo {
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static void CVDisplayLinkRelease (IntPtr handle);
 		
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CVDisplayLinkRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CVDisplayLinkRelease (GetCheckedHandle ());
 		}
@@ -328,27 +330,50 @@ namespace CoreVideo {
 		public delegate CVReturn DisplayLinkOutputCallback (CVDisplayLink displayLink, ref CVTimeStamp inNow, ref CVTimeStamp inOutputTime, CVOptionFlags flagsIn, ref CVOptionFlags flagsOut);	
 		delegate CVReturn CVDisplayLinkOutputCallback (IntPtr displayLink, ref CVTimeStamp inNow, ref CVTimeStamp inOutputTime, CVOptionFlags flagsIn, ref CVOptionFlags flagsOut, IntPtr displayLinkContext);		
 	  
+#if NET
+		[UnmanagedCallersOnly]
+		static unsafe CVReturn OutputCallback (IntPtr displayLink, CVTimeStamp* inNow, CVTimeStamp* inOutputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, IntPtr displayLinkContext)
+#else
 		static CVDisplayLinkOutputCallback static_OutputCallback = new CVDisplayLinkOutputCallback (OutputCallback);
-			
-	#if !MONOMAC
+#if !MONOMAC
 		[MonoPInvokeCallback (typeof (CVDisplayLinkOutputCallback))]
-	#endif
+#endif
 		static CVReturn OutputCallback (IntPtr displayLink, ref CVTimeStamp inNow, ref CVTimeStamp inOutputTime, CVOptionFlags flagsIn, ref CVOptionFlags flagsOut, IntPtr displayLinkContext)
+#endif
 		{
 			GCHandle callbackHandle = GCHandle.FromIntPtr (displayLinkContext);
 			DisplayLinkOutputCallback func = (DisplayLinkOutputCallback) callbackHandle.Target!;
 			CVDisplayLink delegateDisplayLink = new CVDisplayLink(displayLink, false);
+#if NET
+			return func (delegateDisplayLink,
+				ref System.Runtime.CompilerServices.Unsafe.AsRef<CVTimeStamp> (inNow),
+				ref System.Runtime.CompilerServices.Unsafe.AsRef<CVTimeStamp> (inOutputTime),
+				flagsIn, ref System.Runtime.CompilerServices.Unsafe.AsRef<CVOptionFlags> (flagsOut));
+#else
 			return func (delegateDisplayLink, ref inNow, ref inOutputTime, flagsIn, ref flagsOut);
+#endif
 		}
-	  
+
+#if NET
+		[DllImport (Constants.CoreVideoLibrary)]
+		extern static unsafe CVReturn CVDisplayLinkSetOutputCallback (IntPtr displayLink, delegate* unmanaged<IntPtr, CVTimeStamp*, CVTimeStamp*, CVOptionFlags, CVOptionFlags *, IntPtr, CVReturn> function, IntPtr userInfo);
+#else
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVReturn CVDisplayLinkSetOutputCallback (IntPtr displayLink, CVDisplayLinkOutputCallback function, IntPtr userInfo);
+#endif
 		public CVReturn SetOutputCallback (DisplayLinkOutputCallback callback)
 		{
 			callbackHandle = GCHandle.Alloc (callback);
+#if NET
+			unsafe {
+				CVReturn ret = CVDisplayLinkSetOutputCallback (this.Handle, &OutputCallback, GCHandle.ToIntPtr (callbackHandle));
+				return ret;
+			}
+#else
 			CVReturn ret = CVDisplayLinkSetOutputCallback (this.Handle, static_OutputCallback, GCHandle.ToIntPtr (callbackHandle));
-				
 			return ret;
+#endif
+				
 		}
 
 #if NET

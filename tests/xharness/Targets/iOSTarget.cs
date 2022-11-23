@@ -3,11 +3,9 @@ using System.Xml;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Xharness.Targets
-{
+namespace Xharness.Targets {
 	// iOS here means Xamarin.iOS, not iOS as opposed to tvOS/watchOS.
-	public abstract class iOSTarget : Target
-	{
+	public abstract class iOSTarget : Target {
 		public iOSTestProject TestProject;
 
 		public MonoNativeInfo MonoNativeInfo => TestProject.MonoNativeInfo;

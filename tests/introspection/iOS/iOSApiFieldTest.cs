@@ -51,6 +51,12 @@ namespace Introspection {
 				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
 					return true;
 				break;
+#if __TVOS__
+			case "MetalPerformanceShadersGraph":
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
+#endif // __TVOS__
 			case "Phase":
 			case "DeviceCheck": // Only available on device
 				if (TestRuntime.IsSimulatorOrDesktop)
@@ -66,13 +72,13 @@ namespace Introspection {
 			}
 
 			switch (p.Name) {
-			case "AutoConfigurationHTTPResponseKey":		// kCFProxyAutoConfigurationHTTPResponseKey
-			case "CFNetworkProxiesProxyAutoConfigJavaScript":	// kCFNetworkProxiesProxyAutoConfigJavaScript
+			case "AutoConfigurationHTTPResponseKey":        // kCFProxyAutoConfigurationHTTPResponseKey
+			case "CFNetworkProxiesProxyAutoConfigJavaScript":   // kCFNetworkProxiesProxyAutoConfigJavaScript
 				return true;
 
 			// defined in Apple PDF (online) but not in the HTML documentation
 			// but also inside CLError.h from iOS 5.1 SDK...
-			case "ErrorUserInfoAlternateRegionKey":			// kCLErrorUserInfoAlternateRegionKey
+			case "ErrorUserInfoAlternateRegionKey":         // kCLErrorUserInfoAlternateRegionKey
 				return true;
 
 			// ImageIO: documented since iOS 4.3 but null in iOS5 (works on iOS 6.1)
@@ -154,6 +160,10 @@ namespace Introspection {
 			// Xcode 12.2 Beta 1 does not ship this but it is available in Xcode 12.0...
 			case "HKMetadataKeyBarometricPressure":
 				return true;
+#if __WATCHOS__
+			case "AVCaptureLensPositionCurrent": // looks like this was bound by mistake in watchOS
+				return true;
+#endif
 			default:
 				return false;
 			}

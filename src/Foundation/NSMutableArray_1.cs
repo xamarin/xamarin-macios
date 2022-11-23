@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
@@ -33,10 +34,15 @@ using NativeHandle = System.IntPtr;
 
 namespace Foundation {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[Register ("NSMutableArray", SkipRegistration = true)]
 	public sealed partial class NSMutableArray<TValue> : NSMutableArray, IEnumerable<TValue>
-		where TValue : class, INativeObject
-	{
+		where TValue : class, INativeObject {
 		public NSMutableArray ()
 		{
 		}
@@ -60,7 +66,7 @@ namespace Foundation {
 		{
 			if (values == null)
 				throw new ArgumentNullException (nameof (values));
-			
+
 			for (int i = 0; i < values.Length; i++)
 				Add (values [i]);
 		}
@@ -111,7 +117,7 @@ namespace Foundation {
 			_ReplaceObject (index, withObject.Handle);
 		}
 
-		public void AddObjects (params TValue[] source)
+		public void AddObjects (params TValue [] source)
 		{
 			if (source == null)
 				throw new ArgumentNullException (nameof (source));
@@ -124,7 +130,7 @@ namespace Foundation {
 				_Add (source [i].Handle);
 		}
 
-		public void InsertObjects (TValue[] objects, NSIndexSet atIndexes)
+		public void InsertObjects (TValue [] objects, NSIndexSet atIndexes)
 		{
 			if (objects == null)
 				throw new ArgumentNullException (nameof (objects));
@@ -178,18 +184,28 @@ namespace Foundation {
 				throw new IndexOutOfRangeException (nameof (index));
 		}
 
-#region IEnumerable<T> implementation
+		#region IEnumerable<T> implementation
 		public IEnumerator<TValue> GetEnumerator ()
 		{
 			return new NSFastEnumerator<TValue> (this);
 		}
-#endregion
+		#endregion
 
-#region IEnumerable implementation
+		#region IEnumerable implementation
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
 		{
 			return GetEnumerator ();
 		}
-#endregion
+		#endregion
+
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
+#if !NET
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos10.15")]
+#endif
+		public void ApplyDifference (NSOrderedCollectionDifference<TValue> difference)
+			=> ApplyDifference ((NSOrderedCollectionDifference) difference);
+#endif
 	}
 }

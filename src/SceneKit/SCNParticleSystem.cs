@@ -12,15 +12,21 @@ using System.Collections;
 using System.Collections.Generic;
 
 using Foundation;
+using System.Runtime.Versioning;
 
 #nullable enable
 
-namespace SceneKit
-{
+namespace SceneKit {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class SCNPropertyControllers {
 		NSMutableDictionary? mutDict;
 		internal NSDictionary dict;
-		
+
 		internal SCNPropertyControllers (NSDictionary dict)
 		{
 			this.dict = dict;
@@ -36,13 +42,13 @@ namespace SceneKit
 
 		internal void Set (NSString key, SCNParticlePropertyController? value)
 		{
-			if (mutDict == null){
+			if (mutDict is null) {
 				mutDict = new NSMutableDictionary (dict);
 				dict = mutDict;
 			}
 			mutDict [key] = value;
 		}
-		
+
 		public SCNParticlePropertyController? Position {
 			get {
 				return dict [SCNParticleProperty.Position] as SCNParticlePropertyController;
@@ -51,7 +57,7 @@ namespace SceneKit
 				Set (SCNParticleProperty.Position, value);
 			}
 		}
-		
+
 		public SCNParticlePropertyController? Angle {
 			get {
 				return dict [SCNParticleProperty.Angle] as SCNParticlePropertyController;
@@ -60,7 +66,7 @@ namespace SceneKit
 				Set (SCNParticleProperty.Angle, value);
 			}
 		}
-		
+
 		public SCNParticlePropertyController? RotationAxis {
 			get {
 				return dict [SCNParticleProperty.RotationAxis] as SCNParticlePropertyController;
@@ -69,7 +75,7 @@ namespace SceneKit
 				Set (SCNParticleProperty.RotationAxis, value);
 			}
 		}
-		
+
 		public SCNParticlePropertyController? Velocity {
 			get {
 				return dict [SCNParticleProperty.Velocity] as SCNParticlePropertyController;
@@ -78,7 +84,7 @@ namespace SceneKit
 				Set (SCNParticleProperty.Velocity, value);
 			}
 		}
-		
+
 		public SCNParticlePropertyController? AngularVelocity {
 			get {
 				return dict [SCNParticleProperty.AngularVelocity] as SCNParticlePropertyController;
@@ -87,7 +93,7 @@ namespace SceneKit
 				Set (SCNParticleProperty.AngularVelocity, value);
 			}
 		}
-		
+
 		public SCNParticlePropertyController? Life {
 			get {
 				return dict [SCNParticleProperty.Life] as SCNParticlePropertyController;
@@ -96,7 +102,7 @@ namespace SceneKit
 				Set (SCNParticleProperty.Life, value);
 			}
 		}
-		
+
 		public SCNParticlePropertyController? Color {
 			get {
 				return dict [SCNParticleProperty.Color] as SCNParticlePropertyController;
@@ -105,7 +111,7 @@ namespace SceneKit
 				Set (SCNParticleProperty.Color, value);
 			}
 		}
-		
+
 		public SCNParticlePropertyController? Opacity {
 			get {
 				return dict [SCNParticleProperty.Opacity] as SCNParticlePropertyController;
@@ -114,7 +120,7 @@ namespace SceneKit
 				Set (SCNParticleProperty.Opacity, value);
 			}
 		}
-		
+
 		public SCNParticlePropertyController? Size {
 			get {
 				return dict [SCNParticleProperty.Size] as SCNParticlePropertyController;
@@ -123,7 +129,7 @@ namespace SceneKit
 				Set (SCNParticleProperty.Size, value);
 			}
 		}
-		
+
 		public SCNParticlePropertyController? Frame {
 			get {
 				return dict [SCNParticleProperty.Frame] as SCNParticlePropertyController;
@@ -132,7 +138,7 @@ namespace SceneKit
 				Set (SCNParticleProperty.Frame, value);
 			}
 		}
-		
+
 		public SCNParticlePropertyController? FrameRate {
 			get {
 				return dict [SCNParticleProperty.FrameRate] as SCNParticlePropertyController;
@@ -141,7 +147,7 @@ namespace SceneKit
 				Set (SCNParticleProperty.FrameRate, value);
 			}
 		}
-		
+
 		public SCNParticlePropertyController? Bounce {
 			get {
 				return dict [SCNParticleProperty.Bounce] as SCNParticlePropertyController;
@@ -150,7 +156,7 @@ namespace SceneKit
 				Set (SCNParticleProperty.Bounce, value);
 			}
 		}
-		
+
 		public SCNParticlePropertyController? Charge {
 			get {
 				return dict [SCNParticleProperty.Charge] as SCNParticlePropertyController;
@@ -159,7 +165,7 @@ namespace SceneKit
 				Set (SCNParticleProperty.Charge, value);
 			}
 		}
-		
+
 		public SCNParticlePropertyController? Friction {
 			get {
 				return dict [SCNParticleProperty.Friction] as SCNParticlePropertyController;
@@ -168,15 +174,14 @@ namespace SceneKit
 				Set (SCNParticleProperty.Friction, value);
 			}
 		}
-		
+
 	}
-	
-	public partial class SCNParticleSystem
-	{
+
+	public partial class SCNParticleSystem {
 		public SCNPropertyControllers? PropertyControllers {
 			get {
 				var weak = WeakPropertyControllers;
-				if (weak == null)
+				if (weak is null)
 					return null;
 				return new SCNPropertyControllers (weak);
 			}

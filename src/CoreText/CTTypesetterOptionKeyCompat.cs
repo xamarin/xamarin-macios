@@ -7,19 +7,18 @@
 // Copyright 2018 Microsoft Corporation.
 //
 
+#nullable enable
+
 #if !NET
 using System;
 using ObjCRuntime;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace CoreText {
 	public static partial class CTTypesetterOptionKey {
 #if NET
 		[UnsupportedOSPlatform ("ios6.0")]
-#if IOS
-		[Obsolete ("Starting with ios6.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios6.0")]
 #else
 		[Deprecated (PlatformName.iOS, 6, 0)]
 #endif

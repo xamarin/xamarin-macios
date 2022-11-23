@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using ObjCRuntime;
 
 #nullable enable
@@ -16,8 +15,8 @@ namespace SensorKit {
 	[NoWatch]
 	[NoTV]
 	[NoMac]
-	[iOS (14,0)]
-	[MacCatalyst (14,0)]
+	[iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 #endif
 	public static class SRAbsoluteTime {
 

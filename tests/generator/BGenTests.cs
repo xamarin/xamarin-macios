@@ -10,12 +10,10 @@ using Mono.Cecil.Cil;
 
 using Xamarin.Tests;
 
-namespace GeneratorTests
-{
+namespace GeneratorTests {
 	[TestFixture ()]
 	[Parallelizable (ParallelScope.All)]
-	public class BGenTests
-	{
+	public class BGenTests {
 		// Removing the following variable might make running the unit tests in VSMac fail.
 		static Type variable_to_keep_reference_to_system_runtime_compilerservices_unsafe_assembly = typeof (System.Runtime.CompilerServices.Unsafe);
 
@@ -200,6 +198,7 @@ namespace GeneratorTests
 		[TestCase (Profile.macOSMobile)]
 		public void Bug31788 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
 			bgen.Profile = profile;
 			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
@@ -238,7 +237,13 @@ namespace GeneratorTests
 			const string attrib = "IntroducedAttribute";
 #endif
 			var preserves = allMembers.Sum ((v) => v.CustomAttributes.Count ((ca) => ca.AttributeType.Name == attrib));
-			Assert.AreEqual (10, preserves, "Introduced attribute count"); // If you modified code that generates IntroducedAttributes please update the attribute count
+			Assert.AreEqual (
+#if NET
+				48, // This number should be lower - https://github.com/xamarin/xamarin-macios/issues/14802
+#else
+				10,
+#endif
+				 preserves, "Introduced attribute count"); // If you modified code that generates IntroducedAttributes please update the attribute count
 		}
 
 		[Test]
@@ -248,10 +253,12 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		public void Bug39614 ()
+		[TestCase (Profile.iOS)]
+		public void Bug39614 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.AddTestApiDefinition ("bug39614.cs");
 			bgen.CreateTemporaryBinding ();
 			bgen.AssertExecute ("build");
@@ -286,10 +293,12 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		public void Bug46292 ()
+		[TestCase (Profile.iOS)]
+		public void Bug46292 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.ProcessEnums = true;
 			bgen.AddTestApiDefinition ("bug46292.cs");
 			bgen.CreateTemporaryBinding ();
@@ -413,10 +422,12 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		public void ClassNameCollision ()
+		[TestCase (Profile.iOS)]
+		public void ClassNameCollision (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
 			bgen.Sources.Add (Path.Combine (Configuration.SourceRoot, "tests", "generator", "classNameCollision-enum.cs"));
 			bgen.ApiDefinitions.Add (Path.Combine (Configuration.SourceRoot, "tests", "generator", "classNameCollision.cs"));
@@ -426,10 +437,12 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		public void VirtualWrap ()
+		[TestCase (Profile.iOS)]
+		public void VirtualWrap (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.AddTestApiDefinition ("virtualwrap.cs");
 			bgen.CreateTemporaryBinding ();
 			bgen.ProcessEnums = true;
@@ -449,10 +462,12 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		public void NoAsyncInternalWrapper ()
+		[TestCase (Profile.iOS)]
+		public void NoAsyncInternalWrapper (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.AddTestApiDefinition ("noasyncinternalwrapper.cs");
 			bgen.CreateTemporaryBinding ();
 			bgen.AssertExecute ("build");
@@ -470,10 +485,12 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		public void NoAsyncWarningCS0219 ()
+		[TestCase (Profile.iOS)]
+		public void NoAsyncWarningCS0219 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.AddTestApiDefinition ("noasyncwarningcs0219.cs");
 			bgen.CreateTemporaryBinding ();
 			bgen.AssertExecute ("build");
@@ -481,10 +498,12 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		public void FieldEnumTests ()
+		[TestCase (Profile.iOS)]
+		public void FieldEnumTests (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.ProcessEnums = true;
 			bgen.AddTestApiDefinition ("fieldenumtests.cs");
 			bgen.CreateTemporaryBinding ();
@@ -493,10 +512,12 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		public void SmartEnumWithFramework ()
+		[TestCase (Profile.iOS)]
+		public void SmartEnumWithFramework (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.ProcessEnums = true;
 			bgen.AddTestApiDefinition ("smartenumwithframework.cs");
 			bgen.CreateTemporaryBinding ();
@@ -597,10 +618,12 @@ namespace GeneratorTests
 		public void GHIssue5444 () => BuildFile (Profile.iOS, "ghissue5444.cs");
 
 		[Test]
-		public void GH5416_method ()
+		[TestCase (Profile.iOS)]
+		public void GH5416_method (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.AddTestApiDefinition ("ghissue5416b.cs");
 			bgen.CreateTemporaryBinding ();
 			bgen.AssertExecute ("build");
@@ -608,10 +631,12 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		public void GH5416_setter ()
+		[TestCase (Profile.iOS)]
+		public void GH5416_setter (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.AddTestApiDefinition ("ghissue5416a.cs");
 			bgen.CreateTemporaryBinding ();
 			bgen.AssertExecute ("build");
@@ -756,10 +781,12 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		public void NativeEnum ()
+		[TestCase (Profile.iOS)]
+		public void NativeEnum (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.ProcessEnums = true;
 			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
 			bgen.Sources = new string [] { Path.Combine (Configuration.SourceRoot, "tests", "generator", "tests", "nativeenum-extensions.cs") }.ToList ();
@@ -854,6 +881,8 @@ namespace GeneratorTests
 		[Test]
 #if !NET
 		[Ignore ("This only applies to .NET")]
+#else
+		[Ignore ("https://github.com/dotnet/roslyn/issues/61525")]
 #endif
 		public void NativeIntDelegates ()
 		{
@@ -876,6 +905,15 @@ namespace GeneratorTests
 			verifyDelegate ("D2");
 			verifyDelegate ("D3");
 			verifyDelegate ("NSTableViewColumnRowPredicate");
+		}
+
+		[Test]
+#if !NET
+		[Ignore ("This only applies to .NET")]
+#endif
+		public void CSharp10Syntax ()
+		{
+			BuildFile (Profile.iOS, "tests/csharp10syntax.cs");
 		}
 
 		[Test]
@@ -906,6 +944,7 @@ namespace GeneratorTests
 
 		BGenTool BuildFile (Profile profile, bool nowarnings, bool processEnums, IEnumerable<string> references, params string [] filenames)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
 			bgen.Profile = profile;
 			bgen.ProcessEnums = processEnums;

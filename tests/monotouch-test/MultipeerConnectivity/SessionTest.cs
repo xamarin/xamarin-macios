@@ -91,7 +91,7 @@ namespace MonoTouchFixtures.MultipeerConnectivity {
 			using (var trust = new SecTrust (id.Certificate, SecPolicy.CreateBasicX509Policy ()))
 			using (var peer = new MCPeerID ("me")) {
 				SecCertificate [] certs = new SecCertificate [trust.Count];
-				for (int i=0; i < trust.Count; i++)
+				for (int i = 0; i < trust.Count; i++)
 					certs [i] = trust [i];
 
 				using (var s = new MCSession (peer, id, certs, MCEncryptionPreference.Required)) {

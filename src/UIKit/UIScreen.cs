@@ -12,7 +12,7 @@
 
 using System;
 using System.Collections;
-using Foundation; 
+using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 
@@ -39,7 +39,7 @@ namespace UIKit {
 				} finally {
 					UIGraphics.EndImageContext ();
 				}
-			} 
+			}
 
 			// This is from: https://developer.apple.com/library/ios/#qa/qa2010/qa1703.html
 			var selScreen = new Selector ("screen");

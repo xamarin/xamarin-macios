@@ -5,7 +5,7 @@
 	<key>CFBundleName</key>
 	<string>MyReleaseBuild</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.your-company.myreleasebuild</string>
+	<string>com.xamarin.myreleasebuild</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>

@@ -1,3 +1,5 @@
+#nullable enable
+
 #if iOS
 
 using System;
@@ -11,6 +13,7 @@ namespace CoreLocation {
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Introduced (PlatformName.iOS, 13,0, PlatformArchitecture.All)]

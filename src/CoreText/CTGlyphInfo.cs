@@ -29,13 +29,12 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-using CGGlyph     = System.UInt16;
+using CGGlyph = System.UInt16;
 using CGFontIndex = System.UInt16;
 
 #if !NET
@@ -44,17 +43,23 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreText {
 
-#region Glyph Info Values
+	#region Glyph Info Values
 	public enum CTCharacterCollection : ushort {
 		IdentityMapping = 0,
-		AdobeCNS1       = 1,
-		AdobeGB1        = 2,
-		AdobeJapan1     = 3,
-		AdobeJapan2     = 4,
-		AdobeKorea1     = 5,
+		AdobeCNS1 = 1,
+		AdobeGB1 = 2,
+		AdobeJapan1 = 3,
+		AdobeJapan2 = 4,
+		AdobeKorea1 = 5,
 	}
-#endregion
+	#endregion
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTGlyphInfo : NativeObject {
 		[Preserve (Conditional = true)]
 		internal CTGlyphInfo (NativeHandle handle, bool owns)
@@ -62,18 +67,18 @@ namespace CoreText {
 		{
 		}
 
-#region Glyph Info Creation
+		#region Glyph Info Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTGlyphInfoCreateWithGlyphName (IntPtr glyphName, IntPtr font, IntPtr baseString);
 
 		static IntPtr Create (string glyphName, CTFont font, string baseString)
 		{
 			if (glyphName is null)
-				throw new ArgumentNullException (nameof (glyphName));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (glyphName));
 			if (font is null)
-				throw new ArgumentNullException (nameof (font));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
 			if (baseString is null)
-				throw new ArgumentNullException (nameof (baseString));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (baseString));
 
 			var gnHandle = CFString.CreateNative (glyphName);
 			var bsHandle = CFString.CreateNative (baseString);
@@ -96,9 +101,9 @@ namespace CoreText {
 		static IntPtr Create (CGGlyph glyph, CTFont font, string baseString)
 		{
 			if (font is null)
-				throw new ArgumentNullException (nameof (font));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
 			if (baseString is null)
-				throw new ArgumentNullException (nameof (baseString));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (baseString));
 
 			var bsHandle = CFString.CreateNative (baseString);
 			try {
@@ -119,7 +124,7 @@ namespace CoreText {
 		static IntPtr Create (CGFontIndex cid, CTCharacterCollection collection, string baseString)
 		{
 			if (baseString is null)
-				throw new ArgumentNullException (nameof (baseString));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (baseString));
 
 			var bsHandle = CFString.CreateNative (baseString);
 			try {
@@ -133,9 +138,9 @@ namespace CoreText {
 			: base (Create (cid, collection, baseString), true, true)
 		{
 		}
-#endregion
+		#endregion
 
-#region Glyph Info Access
+		#region Glyph Info Access
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTGlyphInfoGetGlyphName (IntPtr glyphInfo);
 		public string? GlyphName {
@@ -148,24 +153,25 @@ namespace CoreText {
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern CGFontIndex CTGlyphInfoGetCharacterIdentifier (IntPtr glyphInfo);
 		public CGFontIndex CharacterIdentifier {
-			get {return CTGlyphInfoGetCharacterIdentifier (Handle);}
+			get { return CTGlyphInfoGetCharacterIdentifier (Handle); }
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern CTCharacterCollection CTGlyphInfoGetCharacterCollection (IntPtr glyphInfo);
 		public CTCharacterCollection CharacterCollection {
-			get {return CTGlyphInfoGetCharacterCollection (Handle);}
+			get { return CTGlyphInfoGetCharacterCollection (Handle); }
 		}
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (13,0)]
-		[Mac (10,15)]
-		[TV (13,0)]
-		[Watch (6,0)]
+		[iOS (13, 0)]
+		[Mac (10, 15)]
+		[TV (13, 0)]
+		[Watch (6, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern ushort /* CGGlyph */ CTGlyphInfoGetGlyph (IntPtr /* CTGlyphInfoRef */ glyphInfo);
@@ -174,17 +180,18 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (13,0)]
-		[Mac (10,15)]
-		[TV (13,0)]
-		[Watch (6,0)]
+		[iOS (13, 0)]
+		[Mac (10, 15)]
+		[TV (13, 0)]
+		[Watch (6, 0)]
 #endif
 		public CGGlyph GetGlyph ()
 		{
 			return CTGlyphInfoGetGlyph (Handle);
 		}
-#endregion
+		#endregion
 
 		public override string? ToString ()
 		{

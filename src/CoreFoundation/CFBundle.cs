@@ -6,7 +6,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -26,6 +25,12 @@ namespace CoreFoundation {
 			Bundle
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		public struct PackageInfo {
 			public PackageInfo (CFBundle.PackageType type, string creator)
 			{
@@ -49,7 +54,7 @@ namespace CoreFoundation {
 		static IntPtr Create (NSUrl bundleUrl)
 		{
 			if (bundleUrl is null)
-				throw new ArgumentNullException (nameof (bundleUrl));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bundleUrl));
 
 			return CFBundleCreate (IntPtr.Zero, bundleUrl.Handle);
 
@@ -63,10 +68,10 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFArrayRef */ IntPtr CFBundleCreateBundlesFromDirectory (/* CFAllocatorRef can be null */ IntPtr allocator, /* CFUrlRef */ IntPtr directoryURL, /* CFStringRef */ IntPtr bundleType);
 
-		public static CFBundle[]? GetBundlesFromDirectory (NSUrl directoryUrl, string bundleType)
+		public static CFBundle []? GetBundlesFromDirectory (NSUrl directoryUrl, string bundleType)
 		{
 			if (directoryUrl is null) // NSUrl cannot be "" by definition
-				throw new ArgumentNullException (nameof (directoryUrl));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (directoryUrl));
 			if (String.IsNullOrEmpty (bundleType))
 				throw new ArgumentException (nameof (bundleType));
 			var bundleTypeHandle = CFString.CreateNative (bundleType);
@@ -80,8 +85,8 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static IntPtr CFBundleGetAllBundles ();
-		
-		public static CFBundle[]? GetAll ()
+
+		public static CFBundle []? GetAll ()
 		{
 			// as per apple documentation: 
 			// CFBundleGetAllBundles
@@ -93,7 +98,7 @@ namespace CoreFoundation {
 			// that Apple does not modify the array while we work with it. That avoids changes
 			// in the index or in the bundles returned.
 			using (var cfBundles = new CFArray (CFBundleGetAllBundles (), false))
-			using (var cfBundlesCopy = cfBundles.Clone () ) {
+			using (var cfBundlesCopy = cfBundles.Clone ()) {
 				return CFArray.ArrayFromHandleFunc<CFBundle> (cfBundlesCopy.Handle, (handle) => new CFBundle (handle, false), false);
 			}
 		}
@@ -101,7 +106,7 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static IntPtr CFBundleGetBundleWithIdentifier (/* CFStringRef */ IntPtr bundleID);
-		
+
 		public static CFBundle? Get (string bundleID)
 		{
 			if (String.IsNullOrEmpty (bundleID))
@@ -133,7 +138,7 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundleIsExecutableLoaded (IntPtr bundle);
-		
+
 		public bool HasLoadedExecutable {
 			get { return CFBundleIsExecutableLoaded (Handle); }
 		}
@@ -141,7 +146,7 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundlePreflightExecutable (IntPtr bundle, out IntPtr error);
-		
+
 		public bool PreflightExecutable (out NSError? error)
 		{
 			IntPtr errorPtr = IntPtr.Zero;
@@ -154,7 +159,7 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundleLoadExecutableAndReturnError (IntPtr bundle, out IntPtr error);
-		
+
 		public bool LoadExecutable (out NSError? error)
 		{
 			IntPtr errorPtr = IntPtr.Zero;
@@ -163,18 +168,18 @@ namespace CoreFoundation {
 			error = Runtime.GetNSObject<NSError> (errorPtr);
 			return loaded;
 		}
-		
+
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static void CFBundleUnloadExecutable (IntPtr bundle);
-		
+
 		public void UnloadExecutable ()
 		{
 			CFBundleUnloadExecutable (Handle);
 		}
-		
+
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFUrlRef */ IntPtr CFBundleCopyAuxiliaryExecutableURL (IntPtr bundle, /* CFStringRef */ IntPtr executableName);
-		
+
 		public NSUrl? GetAuxiliaryExecutableUrl (string executableName)
 		{
 			if (String.IsNullOrEmpty (executableName))
@@ -188,28 +193,28 @@ namespace CoreFoundation {
 				CFString.ReleaseNative (executableNameHandle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFUrlRef */ IntPtr CFBundleCopyBuiltInPlugInsURL (IntPtr bundle);
-		
+
 		public NSUrl? BuiltInPlugInsUrl {
 			get {
 				return Runtime.GetNSObject<NSUrl> (CFBundleCopyBuiltInPlugInsURL (Handle), true);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFUrlRef */ IntPtr CFBundleCopyExecutableURL (IntPtr bundle);
-		
+
 		public NSUrl? ExecutableUrl {
 			get {
 				return Runtime.GetNSObject<NSUrl> (CFBundleCopyExecutableURL (Handle), true);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFUrlRef */ IntPtr CFBundleCopyPrivateFrameworksURL (IntPtr bundle);
-		
+
 		public NSUrl? PrivateFrameworksUrl {
 			get {
 				return Runtime.GetNSObject<NSUrl> (CFBundleCopyPrivateFrameworksURL (Handle), true);
@@ -218,7 +223,7 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFUrlRef */ IntPtr CFBundleCopyResourcesDirectoryURL (IntPtr bundle);
-		
+
 		public NSUrl? ResourcesDirectoryUrl {
 			get {
 				return Runtime.GetNSObject<NSUrl> (CFBundleCopyResourcesDirectoryURL (Handle), true);
@@ -227,7 +232,7 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFUrlRef */ IntPtr CFBundleCopySharedFrameworksURL (IntPtr bundle);
-		
+
 		public NSUrl? SharedFrameworksUrl {
 			get {
 				return Runtime.GetNSObject<NSUrl> (CFBundleCopySharedFrameworksURL (Handle), true);
@@ -245,7 +250,7 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFUrlRef */ IntPtr CFBundleCopySupportFilesDirectoryURL (IntPtr bundle);
-		
+
 		public NSUrl? SupportFilesDirectoryUrl {
 			get {
 				return Runtime.GetNSObject<NSUrl> (CFBundleCopySupportFilesDirectoryURL (Handle), true);
@@ -255,7 +260,7 @@ namespace CoreFoundation {
 		// the parameters do not take CFString because we want to be able to pass null (IntPtr.Zero) to the resource type and subdir names
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFUrlRef */ IntPtr CFBundleCopyResourceURL (IntPtr bundle, /* CFStringRef */ IntPtr resourceName, /* CFString */ IntPtr resourceType, /* CFString */ IntPtr subDirName);
-		
+
 		public NSUrl? GetResourceUrl (string resourceName, string resourceType, string subDirName)
 		{
 			if (String.IsNullOrEmpty (resourceName))
@@ -280,11 +285,11 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFUrlRef */ IntPtr CFBundleCopyResourceURLInDirectory (/* CFUrlRef */ IntPtr bundleURL, /* CFStringRef */ IntPtr resourceName, /* CFStringRef */ IntPtr resourceType, /* CFStringRef */ IntPtr subDirName);
-		
+
 		public static NSUrl? GetResourceUrl (NSUrl bundleUrl, string resourceName, string resourceType, string subDirName)
 		{
 			if (bundleUrl is null)
-				throw new ArgumentNullException (nameof (bundleUrl));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bundleUrl));
 
 			if (String.IsNullOrEmpty (resourceName))
 				throw new ArgumentException (nameof (resourceName));
@@ -308,12 +313,12 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFArray */ IntPtr CFBundleCopyResourceURLsOfType (IntPtr bundle, /* CFStringRef */ IntPtr resourceType, /* CFStringRef */ IntPtr subDirName);
-		
-		public NSUrl?[]? GetResourceUrls (string resourceType, string subDirName)
+
+		public NSUrl? []? GetResourceUrls (string resourceType, string subDirName)
 		{
 			if (String.IsNullOrEmpty (resourceType))
 				throw new ArgumentException (nameof (resourceType));
-			
+
 			var resourceTypeHandle = CFString.CreateNative (resourceType);
 			var dirNameHandle = CFString.CreateNative (string.IsNullOrEmpty (subDirName) ? null : subDirName);
 			try {
@@ -328,14 +333,14 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFArray */ IntPtr CFBundleCopyResourceURLsOfTypeInDirectory (/* CFUrlRef */ IntPtr bundleURL, /* CFStringRef */ IntPtr resourceType, /* CFStringRef */ IntPtr subDirName);
 
-		public static NSUrl?[]? GetResourceUrls (NSUrl bundleUrl, string resourceType, string subDirName)
+		public static NSUrl? []? GetResourceUrls (NSUrl bundleUrl, string resourceType, string subDirName)
 		{
 			if (bundleUrl is null)
-				throw new ArgumentNullException (nameof (bundleUrl));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bundleUrl));
 
 			if (String.IsNullOrEmpty (resourceType))
 				throw new ArgumentException (nameof (resourceType));
-			
+
 			var resourceTypeHandle = CFString.CreateNative (resourceType);
 			var dirNameHandle = CFString.CreateNative (string.IsNullOrEmpty (subDirName) ? null : subDirName);
 			try {
@@ -349,8 +354,8 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFUrlRef */ IntPtr CFBundleCopyResourceURLForLocalization (IntPtr bundle, /* CFStringRef */ IntPtr resourceName, /* CFStringRef */ IntPtr resourceType, /* CFStringRef */ IntPtr subDirName,
-		                                                                            /* CFStringRef */ IntPtr localizationName);
-		
+																					/* CFStringRef */ IntPtr localizationName);
+
 		public NSUrl? GetResourceUrl (string resourceName, string resourceType, string subDirName, string localizationName)
 		{
 			if (String.IsNullOrEmpty (resourceName))
@@ -358,7 +363,7 @@ namespace CoreFoundation {
 
 			if (String.IsNullOrEmpty (resourceType))
 				throw new ArgumentException (nameof (resourceType));
-			
+
 			if (String.IsNullOrEmpty (localizationName))
 				throw new ArgumentException (nameof (localizationName));
 
@@ -376,19 +381,19 @@ namespace CoreFoundation {
 				CFString.ReleaseNative (localizationNameHandle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFArray */ IntPtr CFBundleCopyResourceURLsOfTypeForLocalization (IntPtr bundle, /* CFStringRef */ IntPtr resourceType, /* CFStringRef */ IntPtr subDirName,
-		                                                                                  /* CFStringRef */ IntPtr localizationName);
-		
-		public NSUrl?[]? GetResourceUrls (string resourceType, string subDirName, string localizationName)
+																						  /* CFStringRef */ IntPtr localizationName);
+
+		public NSUrl? []? GetResourceUrls (string resourceType, string subDirName, string localizationName)
 		{
 			if (String.IsNullOrEmpty (resourceType))
 				throw new ArgumentException (nameof (resourceType));
-			
+
 			if (String.IsNullOrEmpty (localizationName))
 				throw new ArgumentException (nameof (localizationName));
-			
+
 			var resourceTypeHandle = CFString.CreateNative (resourceType);
 			var dirNameHandle = CFString.CreateNative (string.IsNullOrEmpty (subDirName) ? null : subDirName);
 			var localizationNameHandle = CFString.CreateNative (localizationName);
@@ -401,10 +406,10 @@ namespace CoreFoundation {
 				CFString.ReleaseNative (localizationNameHandle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFString */ IntPtr CFBundleCopyLocalizedString (IntPtr bundle, /* CFStringRef */ IntPtr key, /* CFStringRef */ IntPtr value, /* CFStringRef */ IntPtr tableName);
-		
+
 		public string? GetLocalizedString (string key, string defaultValue, string? tableName)
 		{
 			if (String.IsNullOrEmpty (key))
@@ -433,12 +438,12 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFArray */ IntPtr CFBundleCopyLocalizationsForPreferences (/* CFArrayRef */ IntPtr locArray, /* CFArrayRef */ IntPtr prefArray);
 
-		public static string?[]? GetLocalizationsForPreferences (string[] locArray, string[] prefArray)
+		public static string? []? GetLocalizationsForPreferences (string [] locArray, string [] prefArray)
 		{
 			if (locArray is null)
-				throw new ArgumentNullException (nameof (locArray));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (locArray));
 			if (prefArray is null)
-				throw new ArgumentNullException (nameof (prefArray));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (prefArray));
 
 			var cfLocalArrayHandle = IntPtr.Zero;
 			var cfPrefArrayHandle = IntPtr.Zero;
@@ -458,22 +463,22 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFArray */ IntPtr CFBundleCopyLocalizationsForURL (/* CFUrlRef */ IntPtr url);
-		
-		public static string?[]? GetLocalizations (NSUrl bundle)
+
+		public static string? []? GetLocalizations (NSUrl bundle)
 		{
 			if (bundle is null)
-				throw new ArgumentNullException (nameof (bundle));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bundle));
 			var rv = CFBundleCopyLocalizationsForURL (bundle.Handle);
 			return CFArray.StringArrayFromHandle (rv, true);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFArray */ IntPtr CFBundleCopyPreferredLocalizationsFromArray (/* CFArrayRef */ IntPtr locArray);
-		
-		public static string?[]? GetPreferredLocalizations (string[] locArray)
+
+		public static string? []? GetPreferredLocalizations (string [] locArray)
 		{
 			if (locArray is null)
-				throw new ArgumentNullException (nameof (locArray));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (locArray));
 
 			var cfString = new CFString [locArray.Length];
 			for (int index = 0; index < locArray.Length; index++) {
@@ -487,30 +492,30 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFUrlRef */ IntPtr CFBundleCopyBundleURL (IntPtr bundle);
-		
+
 		public NSUrl? Url {
-			get { 
+			get {
 				return Runtime.GetNSObject<NSUrl> (CFBundleCopyBundleURL (Handle), true);
 			}
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static /* CFString */ IntPtr CFBundleGetDevelopmentRegion (IntPtr bundle );
-		
+		extern static /* CFString */ IntPtr CFBundleGetDevelopmentRegion (IntPtr bundle);
+
 		public string? DevelopmentRegion {
 			get { return CFString.FromHandle (CFBundleGetDevelopmentRegion (Handle)); }
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFString */ IntPtr CFBundleGetIdentifier (IntPtr bundle);
-		
+
 		public string? Identifier {
 			get { return CFString.FromHandle (CFBundleGetIdentifier (Handle)); }
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static /* CFDictionary */ IntPtr CFBundleGetInfoDictionary (IntPtr bundle ); 
-		
+		extern static /* CFDictionary */ IntPtr CFBundleGetInfoDictionary (IntPtr bundle);
+
 		public NSDictionary? InfoDictionary {
 			get {
 				// follows the Get rule, we need to retain
@@ -519,8 +524,8 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static /* NSDictionary */ IntPtr CFBundleGetLocalInfoDictionary (IntPtr bundle );	
-		
+		extern static /* NSDictionary */ IntPtr CFBundleGetLocalInfoDictionary (IntPtr bundle);
+
 		public NSDictionary? LocalInfoDictionary {
 			get {
 				// follows the Get rule, we need to retain
@@ -534,15 +539,15 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* NSDictionary */ IntPtr CFBundleCopyInfoDictionaryForURL (/* CFUrlRef */ IntPtr url);
-		
+
 		public static NSDictionary? GetInfoDictionary (NSUrl url)
 		{
 			if (url is null)
-				throw new ArgumentNullException (nameof (url));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 			// follow the create rule, no need to retain
 			return Runtime.GetNSObject<NSDictionary> (CFBundleCopyInfoDictionaryForURL (url.Handle));
 		}
-		
+
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static void CFBundleGetPackageInfo (IntPtr bundle, out uint packageType, out uint packageCreator);
 
@@ -550,7 +555,7 @@ namespace CoreFoundation {
 			get {
 				uint type = 0;
 				uint creator = 0;
-				
+
 				CFBundleGetPackageInfo (Handle, out type, out creator);
 				var creatorStr = Runtime.ToFourCCString (creator);
 				switch (type) {
@@ -568,7 +573,7 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFArray */ IntPtr CFBundleCopyExecutableArchitectures (IntPtr bundle);
 
-		public CFBundle.Architecture[]? Architectures {
+		public CFBundle.Architecture []? Architectures {
 			get {
 				var rv = CFBundleCopyExecutableArchitectures (Handle);
 				return CFArray.ArrayFromHandleFunc (rv,
@@ -602,7 +607,7 @@ namespace CoreFoundation {
 		public static bool IsExecutableLoadable (CFBundle bundle)
 		{
 			if (bundle is null)
-				throw new ArgumentNullException (nameof (bundle));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bundle));
 
 			return CFBundleIsExecutableLoadable (bundle.GetCheckedHandle ());
 		}
@@ -628,7 +633,7 @@ namespace CoreFoundation {
 		public static bool IsExecutableLoadable (NSUrl url)
 		{
 			if (url is null)
-				throw new ArgumentNullException (nameof (url));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			return CFBundleIsExecutableLoadableForURL (url.Handle);
 		}

@@ -44,10 +44,10 @@ namespace GameKit {
 			[Preserve (Conditional = true)]
 			void Receive (NSData data, string peer, GKSession session, IntPtr context)
 			{
-				if (receiver != null)
+				if (receiver is not null)
 					receiver (session, new GKDataReceivedEventArgs (data, peer, session));
 			}
-				
+
 		}
 
 		//
@@ -55,16 +55,16 @@ namespace GameKit {
 		ReceiverObject? receiver;
 		public event EventHandler<GKDataReceivedEventArgs>? ReceiveData {
 			add {
-				if (receiver == null){
+				if (receiver is null) {
 					receiver = new ReceiverObject ();
 					_SetDataReceiveHandler (receiver, IntPtr.Zero);
 					MarkDirty ();
 				}
 				receiver.receiver += value;
 			}
-			
+
 			remove {
-				if (receiver == null)
+				if (receiver is null)
 					return;
 				receiver.receiver -= value;
 			}
@@ -82,9 +82,9 @@ namespace GameKit {
 		Mono_GKSessionDelegate EnsureDelegate ()
 		{
 			var del = WeakDelegate;
-			if (del == null || (!(del is Mono_GKSessionDelegate))){
-					del = new Mono_GKSessionDelegate ();
-					WeakDelegate = del;
+			if (del is null || (!(del is Mono_GKSessionDelegate))) {
+				del = new Mono_GKSessionDelegate ();
+				WeakDelegate = del;
 			}
 			return (Mono_GKSessionDelegate) del;
 		}
@@ -98,7 +98,7 @@ namespace GameKit {
 				EnsureDelegate ().cbPeerChanged -= value;
 			}
 		}
-		
+
 		public event EventHandler<GKPeerConnectionEventArgs> ConnectionRequest {
 			add {
 				EnsureDelegate ().cbConnectionRequest += value;
@@ -141,29 +141,29 @@ namespace GameKit {
 		[Preserve (Conditional = true)]
 		public override void PeerChangedState (GKSession session, string peerID, GKPeerConnectionState state)
 		{
-			if (cbPeerChanged != null)
+			if (cbPeerChanged is not null)
 				cbPeerChanged (session, new GKPeerChangedStateEventArgs (session, peerID, state));
 		}
-		
+
 		[Preserve (Conditional = true)]
 		public override void PeerConnectionRequest (GKSession session, string peerID)
 		{
-			if (cbConnectionRequest != null)
+			if (cbConnectionRequest is not null)
 				cbConnectionRequest (session, new GKPeerConnectionEventArgs (session, peerID, null));
 		}
-			
+
 		[Preserve (Conditional = true)]
 		public override void PeerConnectionFailed (GKSession session, string peerID, NSError error)
 		{
-			if (cbConnectionFailed != null)
+			if (cbConnectionFailed is not null)
 				cbConnectionFailed (session, new GKPeerConnectionEventArgs (session, peerID, error));
 
 		}
-			
+
 		[Preserve (Conditional = true)]
 		public override void FailedWithError (GKSession session, NSError error)
 		{
-			if (cbFailedWithError != null)
+			if (cbFailedWithError is not null)
 				cbFailedWithError (session, new GKPeerConnectionEventArgs (session, null, error));
 		}
 	}
@@ -201,7 +201,7 @@ namespace GameKit {
 		[Obsolete ("Use 'SetMute (bool, string)' method.")]
 		public virtual void SetMute (bool isMuted, GKPlayer player)
 		{
-			if (player == null)
+			if (player is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (player));
 
 			SetMute (isMuted, player.PlayerID);

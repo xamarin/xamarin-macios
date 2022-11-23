@@ -14,6 +14,13 @@ using OS_nw_interface = System.IntPtr;
 using NativeHandle = System.IntPtr;
 #endif
 
+#if MONOMAC
+using NEHotspotHelperOptions = Foundation.NSObject;
+using NEHotspotHelperResult = Foundation.NSObject;
+using NEHotspotHelperCommandType = Foundation.NSObject;
+using NEHotspotHelperConfidence = Foundation.NSObject;
+#endif
+
 namespace NetworkExtension {
 
 	// Just to satisfy the core dll contract, the right type will be used on the generated file
@@ -170,6 +177,33 @@ namespace NetworkExtension {
 		Unknown = 4,
 	}
 
+	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[Native]
+	[ErrorDomain ("NEVPNConnectionErrorDomain")]
+	public enum NEVpnConnectionError : long
+	{
+		Overslept = 1,
+		NoNetworkAvailable = 2,
+		UnrecoverableNetworkChange = 3,
+		ConfigurationFailed = 4,
+		ServerAddressResolutionFailed = 5,
+		ServerNotResponding = 6,
+		ServerDead = 7,
+		AuthenticationFailed = 8,
+		ClientCertificateInvalid = 9,
+		ClientCertificateNotYetValid = 10,
+		ClientCertificateExpired = 11,
+		PluginFailed = 12,
+		ConfigurationNotFound = 13,
+		PluginDisabled = 14,
+		NegotiationFailed = 15,
+		ServerDisconnected = 16,
+		ServerCertificateInvalid = 17,
+		ServerCertificateNotYetValid = 18,
+		ServerCertificateExpired = 19,
+	}
+
+
 	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // documented as such and ...
@@ -303,10 +337,15 @@ namespace NetworkExtension {
 	[DisableDefaultCtor]
 	interface NEAppRule : NSSecureCoding, NSCopying
 	{
+		[iOS (9, 0)][MacCatalyst (13, 1)][NoTV][NoWatch]
+#if NET
+		[NoMac]
+#endif
 		[Export ("initWithSigningIdentifier:")]
 		NativeHandle Constructor (string signingIdentifier);
 
-		[NoiOS, NoTV, NoWatch, MacCatalyst (15,0)]
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Mac (10, 11)]
 		[Export ("initWithSigningIdentifier:designatedRequirement:")]
 		NativeHandle Constructor (string signingIdentifier, string designatedRequirement);
 
@@ -515,6 +554,11 @@ namespace NetworkExtension {
 		[NoiOS, MacCatalyst (15,0)]
 		[NullAllowed, Export ("sourceAppAuditToken")]
 		NSData SourceAppAuditToken { get; }
+
+		[Mac (13,0), NoiOS, NoMacCatalyst, NoWatch, NoTV]
+		[NullAllowed]
+		[Export ("sourceProcessAuditToken")]
+		NSData SourceProcessAuditToken { get; }
 
 		[iOS (13, 1)]
 		[Export ("identifier")]
@@ -733,10 +777,11 @@ namespace NetworkExtension {
 		NSUuid FilterFlowIdentifier { get; }
 	}
 
-#if !MONOMAC
+	[NoMac]
 	[iOS (9,0)]
 	delegate void NEHotspotHelperHandler (NEHotspotHelperCommand cmd);
 
+	[NoMac]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	interface NEHotspotHelper {
@@ -758,12 +803,14 @@ namespace NetworkExtension {
 	}
 
 	[Static]
+	[NoMac]
 	[iOS (9,0)]
 	interface NEHotspotHelperOptionInternal {
 		[Field ("kNEHotspotHelperOptionDisplayName")]
 		NSString DisplayName { get; }
 	}
 
+	[NoMac]
 	[iOS (9,0)]
 	[Category]
 	[BaseType (typeof (NSMutableUrlRequest))]
@@ -772,6 +819,7 @@ namespace NetworkExtension {
 		void BindTo (NEHotspotHelperCommand command);
 	}
 
+	[NoMac]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	interface NEHotspotHelperCommand {
@@ -794,6 +842,7 @@ namespace NetworkExtension {
 		NWUdpSession CreateUdpSession (NWEndpoint endpoint);
 	}
 
+	[NoMac]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	interface NEHotspotHelperResponse {
@@ -807,6 +856,7 @@ namespace NetworkExtension {
 		void Deliver ();
 	}
 
+	[NoMac]
 	[iOS (9,0)]
 	[BaseType (typeof(NSObject))]
 	interface NEHotspotNetwork {
@@ -848,7 +898,6 @@ namespace NetworkExtension {
 		[Export ("securityType")]
 		NEHotspotNetworkSecurityType SecurityType { get; }
 	}
-#endif
 
 	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof(NSObject))]
@@ -913,6 +962,11 @@ namespace NetworkExtension {
 	
 		[NullAllowed, Export ("excludedRoutes", ArgumentSemantic.Copy)]
 		NEIPv4Route[] ExcludedRoutes { get; set; }
+
+		[NoWatch, NoTV, NoiOS, Mac (13, 0)]
+		[Export ("router")]
+		[NullAllowed]
+		string Router { get; set; }
 	}
 
 	[iOS (9,0)][Mac (10,11)]
@@ -1232,6 +1286,11 @@ namespace NetworkExtension {
 		[Notification]
 		[Field ("NEVPNStatusDidChangeNotification")]
 		NSString StatusDidChangeNotification { get; }
+
+		[Async]
+		[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("fetchLastDisconnectErrorWithCompletionHandler:")]
+		void FetchLastDisconnectError (Action<NSError> handler);
 	}
 
 	[Static][Internal]
@@ -2286,6 +2345,11 @@ namespace NetworkExtension {
 		[NullAllowed]
 		[Export ("serverURL", ArgumentSemantic.Copy)]
 		NSUrl ServerUrl { get; set; }
+
+		[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
+		[Export ("identityReference", ArgumentSemantic.Copy)]
+		[NullAllowed]
+		NSData IdentityReference { get; set; }
 	}
 
 	[NoWatch, NoTV, Mac (11,0), iOS (14,0)]
@@ -2295,6 +2359,11 @@ namespace NetworkExtension {
 		[NullAllowed]
 		[Export ("serverName")]
 		string ServerName { get; set; }
+
+		[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
+		[Export ("identityReference", ArgumentSemantic.Copy)]
+		[NullAllowed]
+		NSData IdentityReference { get; set; }
 	}
 
 	[NoWatch, NoTV, Mac (11,0), iOS (14,0)]
@@ -2371,6 +2440,24 @@ namespace NetworkExtension {
 		[NullAllowed]
 		[Export ("trackingAreaCode")]
 		string TrackingAreaCode { get; set; }
+	}
+
+	[NoWatch, NoTV, NoiOS, Mac (13,0)]
+	[BaseType (typeof (NEPacketTunnelProvider))]
+	[DisableDefaultCtor]
+	interface NEEthernetTunnelProvider
+	{
+	}
+
+	[NoWatch, NoTV, NoiOS, Mac (13,0)]
+	[BaseType (typeof (NEPacketTunnelNetworkSettings))]
+	interface NEEthernetTunnelNetworkSettings
+	{
+		[Export ("initWithTunnelRemoteAddress:ethernetAddress:mtu:")]
+		NativeHandle Constructor (string address, string ethernetAddress, nint mtu);
+
+		[Export ("ethernetAddress")]
+		string EthernetAddress { get; }
 	}
 
 }

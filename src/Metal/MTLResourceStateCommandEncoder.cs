@@ -4,11 +4,10 @@
 // Authors:
 //   Manuel de la Pena <mandel@microsoft.com>
 //
-#if IOS 
+#if IOS
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
@@ -17,9 +16,16 @@ using ObjCRuntime;
 
 namespace Metal {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("macos")]
+#endif
 	public static partial class MTLResourceStateCommandEncoder_Extensions {
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
@@ -28,13 +34,13 @@ namespace Metal {
 #endif
 		public static void Update (this IMTLResourceStateCommandEncoder This, IMTLTexture texture, MTLSparseTextureMappingMode mode, MTLRegion[] regions, nuint[] mipLevels, nuint[] slices)
 		{
-			if (texture == null)
+			if (texture is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (texture));
-			if (regions == null)
+			if (regions is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (regions));
-			if (mipLevels == null)
+			if (mipLevels is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mipLevels));
-			if (slices == null)
+			if (slices is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (slices));
 
 			var regionsHandle = GCHandle.Alloc (regions, GCHandleType.Pinned); 

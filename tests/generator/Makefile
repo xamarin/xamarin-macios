@@ -10,7 +10,7 @@ build-unit-tests:
 
 run-unit-tests: build-unit-tests
 	rm -f .failed-stamp
-	$(TOP)/tools/nunit3-console-3.11.1 $(abspath $(TOP)/tests/generator/bin/Debug/generator-tests.dll) "--result=$(abspath $(CURDIR)/TestResult.xml);format=nunit2" $(TEST_FIXTURE) --labels=All || touch $(CURDIR)/.failed-stamp
+	$(TOP)/tools/nunit3-console-3.11.1 $(abspath $(TOP)/tests/generator/bin/Debug/generator-tests.dll) "--result=$(abspath $(CURDIR)/TestResult.xml);format=nunit2" $(TEST_FIXTURE) --labels=After || touch $(CURDIR)/.failed-stamp
 	@# Create an html file and tell MonkeyWrench to upload it (if we're running there)
 	@[[ -z "$$BUILD_REPOSITORY" ]] || \
 		( xsltproc $(TOP)/tests/HtmlTransform.xslt TestResult.xml  > index.html && \

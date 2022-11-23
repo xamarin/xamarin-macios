@@ -11,7 +11,6 @@ using System;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
@@ -35,7 +34,7 @@ namespace Foundation {
 			fixed (nuint* ptr = indexes)
 				return _FromIndex ((IntPtr) ptr, indexes.Length);
 		}
-		
+
 		public unsafe static NSIndexPath Create (params int [] indexes)
 		{
 			if (indexes == null)
@@ -67,7 +66,7 @@ namespace Foundation {
 		public unsafe nuint [] GetIndexes ()
 		{
 			var ret = new nuint [Length];
-			fixed (nuint *ptr = ret)
+			fixed (nuint* ptr = ret)
 				_GetIndexes ((IntPtr) ptr);
 			return ret;
 		}
@@ -75,14 +74,16 @@ namespace Foundation {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
-		[Mac (10,11)]
+		[iOS (9, 0)]
+		[Mac (10, 11)]
 #endif
 		public unsafe nuint [] GetIndexes (NSRange range)
 		{
 			var ret = new nuint [range.Length];
-			fixed (nuint *ptr = ret)
+			fixed (nuint* ptr = ret)
 				_GetIndexes ((IntPtr) ptr, range);
 			return ret;
 		}

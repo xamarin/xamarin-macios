@@ -4,7 +4,6 @@ using System;
 using Foundation;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using NativeHandle = System.IntPtr;
 
@@ -15,7 +14,7 @@ namespace Metal {
 	public partial class MTLSharedTextureHandle {
 
 		[Obsolete ("Type is not meant to be created by user code.")]
-		public MTLSharedTextureHandle () {}
+		public MTLSharedTextureHandle () { }
 	}
 
 #if MONOMAC
@@ -30,7 +29,7 @@ namespace Metal {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IMTLCounterSampleBuffer? CreateIMTLCounterSampleBuffer (this IMTLDevice This, MTLCounterSampleBufferDescriptor descriptor, out NSError? error)
 		{
-			if (descriptor == null)
+			if (descriptor is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (descriptor));
 			var errorValue = NativeHandle.Zero;
 
@@ -47,7 +46,7 @@ namespace Metal {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void SampleCounters (this IMTLComputeCommandEncoder This, IMTLCounterSampleBuffer sampleBuffer, nuint sampleIndex, bool barrier)
 		{
-			if (sampleBuffer == null)
+			if (sampleBuffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sampleBuffer));
 			global::ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_UIntPtr_bool (This.Handle, Selector.GetHandle ("sampleCountersInBuffer:atSampleIndex:withBarrier:"), sampleBuffer.Handle, (UIntPtr) sampleIndex, barrier);
 		}

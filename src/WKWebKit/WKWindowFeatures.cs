@@ -14,34 +14,32 @@ using ObjCRuntime;
 
 #nullable enable
 
-namespace WebKit
-{
-	public partial class WKWindowFeatures
-	{
+namespace WebKit {
+	public partial class WKWindowFeatures {
 		public bool? MenuBarVisibility {
-			get { return menuBarVisibility == null ? (bool?)null : menuBarVisibility.BoolValue; }
+			get => menuBarVisibility?.BoolValue;
 		}
 
 		public bool? StatusBarVisibility {
-			get { return statusBarVisibility == null ? (bool?)null : statusBarVisibility.BoolValue; }
+			get => statusBarVisibility?.BoolValue;
 		}
 
 		public bool? ToolbarsVisibility {
-			get { return toolbarsVisibility == null ? (bool?)null : toolbarsVisibility.BoolValue; }
+			get => toolbarsVisibility?.BoolValue;
 		}
 
 		public bool? AllowsResizing {
-			get { return allowsResizing == null ? (bool?)null : allowsResizing.BoolValue; }
+			get => allowsResizing?.BoolValue;
 		}
 
 		static nfloat? NFloatValue (NSNumber? number)
 		{
-			if (number == null)
+			if (number is null)
 				return null;
 			else if (IntPtr.Size == 4)
-				return (nfloat)number.FloatValue;
+				return (nfloat) number.FloatValue;
 			else
-				return (nfloat)number.DoubleValue;
+				return (nfloat) number.DoubleValue;
 		}
 
 		public nfloat? X {

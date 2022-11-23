@@ -8,7 +8,7 @@ using Metal;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Metal {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class MTLBufferLayoutDescriptorTest {
@@ -27,7 +27,7 @@ namespace MonoTouchFixtures.Metal {
 			descriptor.Stride = stride;
 			Assert.AreEqual ((nuint) stride, descriptor.Stride);
 		}
-		
+
 		[Test]
 		public void GetSetStepFunctionTest ()
 		{
@@ -36,7 +36,7 @@ namespace MonoTouchFixtures.Metal {
 			descriptor.StepFunction = func;
 			Assert.AreEqual (func, descriptor.StepFunction);
 		}
-		
+
 		[Test]
 		public void GetSetStepRate ()
 		{

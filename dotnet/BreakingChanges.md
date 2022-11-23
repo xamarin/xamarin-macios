@@ -56,6 +56,11 @@ global using nfloat = System.Runtime.InteropServices.NFloat;
 If this global using directive is undesirable, it can be turned off by setting
 a `NoNFloatUsing=true` property in the project file.
 
+Also, we're only adding the global using directive for projects that target C#
+10 or later (since that's the first C# version that supports global using
+directives). Projects that use an older C# version will have to manually add
+the using directive to every source file.
+
 There are a few other source code incompatibilities:
 
 * Any code that refers to the full typename (`System.nfloat`) will have to be

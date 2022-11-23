@@ -26,10 +26,8 @@ using System;
 
 using UIKit;
 
-namespace Bug60536
-{
-	public partial class ViewController : UIViewController
-	{
+namespace Bug60536 {
+	public partial class ViewController : UIViewController {
 		protected ViewController (IntPtr handle) : base (handle)
 		{
 			// Note: this .ctor should not contain any initialization logic.

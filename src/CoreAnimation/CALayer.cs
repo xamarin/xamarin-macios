@@ -27,9 +27,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using System.Runtime.Versioning;
 
-using Foundation; 
+using Foundation;
 using ObjCRuntime;
 #if MONOMAC
 using AppKit;
@@ -46,10 +45,10 @@ namespace CoreAnimation {
 		[Export ("initWithLayer:")]
 		public CALayer (CALayer other)
 		{
-			if (other == null)
+			if (other is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (other));
 
-			if (this.GetType () == typeof (CALayer)){
+			if (this.GetType () == typeof (CALayer)) {
 				Messaging.IntPtr_objc_msgSend_IntPtr (Handle, Selector.GetHandle (selInitWithLayer), other.Handle);
 			} else {
 				Messaging.IntPtr_objc_msgSendSuper_IntPtr (SuperHandle, Selector.GetHandle (selInitWithLayer), other.Handle);
@@ -89,14 +88,14 @@ namespace CoreAnimation {
 		void SetCALayerDelegate (CALayerDelegate? value)
 		{
 			// Remove ourselves from any existing CALayerDelegate.
-			if (calayerdelegate != null) {
+			if (calayerdelegate is not null) {
 				var del = (CALayerDelegate?) calayerdelegate.Target;
 				if (del == value)
 					return;
 				del?.SetCALayer (null);
 			}
 			// Tell the new CALayerDelegate about ourselves
-			if (value == null) {
+			if (value is null) {
 				calayerdelegate = null;
 			} else {
 				calayerdelegate = new WeakReference (value);
@@ -108,21 +107,21 @@ namespace CoreAnimation {
 		[Preserve (Conditional = true)]
 		void OnDispose ()
 		{
-			if (calayerdelegate != null) {
+			if (calayerdelegate is not null) {
 				var del = (CALayerDelegate?) calayerdelegate.Target;
-				if (del != null)
+				if (del is not null)
 					WeakDelegate = null;
 			}
 		}
 
-		public T? GetContentsAs <T> () where T : NSObject
+		public T? GetContentsAs<T> () where T : NSObject
 		{
 			return Runtime.GetNSObject<T> (_Contents);
 		}
 
 		public void SetContents (NSObject value)
 		{
-			_Contents = value == null ? IntPtr.Zero : value.Handle;
+			_Contents = value.GetHandle ();
 		}
 
 #if MONOMAC && !NET
@@ -140,11 +139,12 @@ namespace CoreAnimation {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (3,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
-		[iOS (10,0)]
+		[Watch (3, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
+		[iOS (10, 0)]
 #endif
 		public CAContentsFormat ContentsFormat {
 			get { return CAContentsFormatExtensions.GetValue (_ContentsFormat); }

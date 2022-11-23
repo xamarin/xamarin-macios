@@ -1,17 +1,18 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 
+#nullable enable
+
 #if IOS || MONOMAC
 
 using System;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace CoreSpotlight {
 
 	public partial class CSSearchableItemAttributeSet {
 
-		public INSSecureCoding this [CSCustomAttributeKey key] {
+		public INSSecureCoding? this [CSCustomAttributeKey key] {
 			get {
 				return ValueForCustomKey (key);
 			}
@@ -24,6 +25,7 @@ namespace CoreSpotlight {
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[iOS (11,0)]
@@ -39,6 +41,7 @@ namespace CoreSpotlight {
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[iOS (11,0)]
@@ -54,6 +57,7 @@ namespace CoreSpotlight {
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[iOS (11,0)]

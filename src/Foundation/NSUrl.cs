@@ -21,11 +21,13 @@
 //
 using System;
 
+#nullable enable
+
 namespace Foundation {
 
-		// Equals(Object) and GetHashCode are provided by NSObject
-		// NSObject.GetHashCode calls GetNativeHash, which means it matches Equals (NSUrl)' behavior (which also calls the native implementation), so there's no need to override it.
-		// NSObject.Equals calls the native isEqual: implementation, so that's fine as well, and no need to override.
+	// Equals(Object) and GetHashCode are provided by NSObject
+	// NSObject.GetHashCode calls GetNativeHash, which means it matches Equals (NSUrl)' behavior (which also calls the native implementation), so there's no need to override it.
+	// NSObject.Equals calls the native isEqual: implementation, so that's fine as well, and no need to override.
 #pragma warning disable 660 // `Foundation.NSUrl' defines operator == or operator != but does not override Object.Equals(object o)
 #pragma warning disable 661 // `Foundation.NSUrl' defines operator == or operator != but does not override Object.GetHashCode()
 	public partial class NSUrl : IEquatable<NSUrl> {
@@ -36,25 +38,32 @@ namespace Foundation {
 		}
 
 		// but NSUrl has it's own isEqual: selector, which we re-expose in a more .NET-ish way
-		public bool Equals (NSUrl url)
+		public bool Equals (NSUrl? url)
 		{
-			if (url == null)
+			if (url is null)
 				return false;
 			// we can only ask `isEqual:` to test equality if both objects are direct bindings
 			return IsDirectBinding && url.IsDirectBinding ? IsEqual (url) : Equals ((object) url);
 		}
 
 		// Converts from an NSURL to a System.Uri
-		public static implicit operator Uri (NSUrl url)
+		public static implicit operator Uri? (NSUrl? url)
 		{
-			if (Uri.TryCreate (url.AbsoluteString, UriKind.Absolute, out var uri))
+			if (url?.AbsoluteString is not string absoluteUrl) {
+				return null;
+			}
+
+			if (Uri.TryCreate (absoluteUrl, UriKind.Absolute, out var uri))
 				return uri;
 			else
-				return new Uri (url.AbsoluteString, UriKind.Relative);
+				return new Uri (absoluteUrl, UriKind.Relative);
 		}
 
-		public static implicit operator NSUrl (Uri uri)
+		public static implicit operator NSUrl? (Uri? uri)
 		{
+			if (uri is null) {
+				return null;
+			}
 			if (uri.IsAbsoluteUri)
 				return new NSUrl (uri.AbsoluteUri);
 			else
@@ -65,7 +74,7 @@ namespace Foundation {
 		{
 			return new NSUrl (url, false);
 		}
-		
+
 		public NSUrl MakeRelative (string url)
 		{
 			return _FromStringRelative (url, this);
@@ -104,18 +113,18 @@ namespace Foundation {
 			}
 		}
 
-		public static bool operator == (NSUrl x, NSUrl y)
+		public static bool operator == (NSUrl? x, NSUrl? y)
 		{
-			if ((object) x == (object) y) // If both are null, or both are same instance, return true.
+			if ((object?) x == (object?) y) // If both are null, or both are same instance, return true.
 				return true;
 
-			if (((object) x == null) || ((object) y == null)) // If one is null, but not both, return false.
+			if (x is null || y is null) // If one is null, but not both, return false.
 				return false;
 
 			return x.Equals (y);
 		}
 
-		public static bool operator != (NSUrl x, NSUrl y)
+		public static bool operator != (NSUrl? x, NSUrl? y)
 		{
 			return !(x == y);
 		}

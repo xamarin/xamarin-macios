@@ -30,17 +30,20 @@ using System;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace CoreBluetooth {
 
-#if !NET
-	[Watch (4,0)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
+	[Watch (4, 0)]
 #endif
-	public class PeripheralConnectionOptions : DictionaryContainer
-	{
+	public class PeripheralConnectionOptions : DictionaryContainer {
 #if !COREBUILD
 		public PeripheralConnectionOptions ()
 			: base (new NSMutableDictionary ())
@@ -57,9 +60,9 @@ namespace CoreBluetooth {
 			get {
 				return GetBoolValue (CBConnectPeripheralOptionsKeys.NotifyOnConnectionKey);
 			}
-			
+
 			set {
-				if (!value.HasValue){
+				if (!value.HasValue) {
 					RemoveValue (CBConnectPeripheralOptionsKeys.NotifyOnConnectionKey);
 					return;
 				}
@@ -70,15 +73,15 @@ namespace CoreBluetooth {
 		public bool? NotifyOnNotification {
 			get {
 				return GetBoolValue (CBConnectPeripheralOptionsKeys.NotifyOnNotificationKey);
-				
+
 			}
-			
+
 			set {
-				if (!value.HasValue){
+				if (!value.HasValue) {
 					RemoveValue (CBConnectPeripheralOptionsKeys.NotifyOnNotificationKey);
 					return;
 				}
-				
+
 				SetNumberValue (CBConnectPeripheralOptionsKeys.NotifyOnNotificationKey, value.Value ? 1 : 0);
 			}
 		}
@@ -89,12 +92,12 @@ namespace CoreBluetooth {
 				return GetBoolValue (CBConnectPeripheralOptionsKeys.NotifyOnDisconnectionKey);
 			}
 			set {
-				if (!value.HasValue){
+				if (!value.HasValue) {
 					RemoveValue (CBConnectPeripheralOptionsKeys.NotifyOnDisconnectionKey);
 					return;
 				}
 				SetNumberValue (CBConnectPeripheralOptionsKeys.NotifyOnDisconnectionKey, value.Value ? 1 : 0);
-			}			
+			}
 		}
 #endif
 	}

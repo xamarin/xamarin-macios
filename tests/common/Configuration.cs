@@ -9,21 +9,20 @@ using NUnit.Framework;
 
 using Xamarin.Utils;
 
-namespace Xamarin.Tests
-{
-	static partial class Configuration
-	{
+#nullable disable // until we get around to fixing this file
+
+namespace Xamarin.Tests {
+	static partial class Configuration {
 		public const string XI_ProductName = "MonoTouch";
 		public const string XM_ProductName = "Xamarin.Mac";
-
-		const string XS_PATH = "/Applications/Visual Studio.app/Contents/Resources";
 
 		static string mt_root;
 		static string ios_destdir;
 		static string mac_destdir;
-		public static string DotNet6BclDir;
+		public static string DotNetBclDir;
 		public static string DotNetCscCommand;
 		public static string DotNetExecutable;
+		public static string DotNetTfm;
 		public static string mt_src_root;
 		public static string sdk_version;
 		public static string watchos_sdk_version;
@@ -46,6 +45,7 @@ namespace Xamarin.Tests
 		public static bool include_maccatalyst;
 		public static bool include_device;
 		public static bool include_dotnet;
+		public static bool include_legacy_xamarin;
 
 		static Version xcode_version;
 		public static Version XcodeVersion {
@@ -68,6 +68,18 @@ namespace Xamarin.Tests
 			}
 		}
 
+		static bool? is_vsts; // if the system-installed XI/XM should be used instead of the local one.
+		public static bool IsVsts {
+			get {
+				if (!is_vsts.HasValue)
+					is_vsts = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_BUILDID"));
+				return is_vsts.Value;
+			}
+			set {
+				is_vsts = value;
+			}
+		}
+
 		public static string XcodeLocation {
 			get {
 				return xcode_root;
@@ -75,7 +87,7 @@ namespace Xamarin.Tests
 		}
 
 		public static string IOS_DESTDIR {
-			get { return ios_destdir;  }
+			get { return ios_destdir; }
 		}
 
 		public static string MAC_DESTDIR {
@@ -107,8 +119,7 @@ namespace Xamarin.Tests
 			if (with_versions.Count == 0)
 				return null;
 
-			with_versions.Sort ((x, y) =>
-			{
+			with_versions.Sort ((x, y) => {
 				if (x.Item1 > y.Item1)
 					return -1;
 				else if (x.Item1 < y.Item1)
@@ -200,10 +211,17 @@ namespace Xamarin.Tests
 			return result;
 		}
 
+		static IList<string> GetVariableArray (string variable, string @default = "")
+		{
+			// variables with more than one value are wrapped in ', get the var remove the '' and split
+			var value = GetVariable (variable, @default).Trim ('\'');
+			return value.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+		}
+
 		public static string EvaluateVariable (string variable)
 		{
 			var output = new StringBuilder ();
-			var rv = ExecutionHelper.Execute ("/usr/bin/make", new string [] { "-C", Path.Combine (SourceRoot, "jenkins"), "print-abspath-variable", $"VARIABLE={variable}" }, environmentVariables: null, stdout: output, stderr: output, timeout: TimeSpan.FromSeconds (5));
+			var rv = ExecutionHelper.Execute ("/usr/bin/make", new string [] { "-C", Path.Combine (SourceRoot, "tools", "devops"), "print-abspath-variable", $"VARIABLE={variable}" }, environmentVariables: null, stdout: output, stderr: output, timeout: TimeSpan.FromSeconds (5));
 			if (rv != 0)
 				throw new Exception ($"Failed to evaluate variable '{variable}'. Exit code: {rv}. Output:\n{output}");
 			var result = output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Where (v => v.StartsWith (variable + "=", StringComparison.Ordinal)).SingleOrDefault ();
@@ -275,9 +293,11 @@ namespace Xamarin.Tests
 			include_maccatalyst = !string.IsNullOrEmpty (GetVariable ("INCLUDE_MACCATALYST", ""));
 			include_device = !string.IsNullOrEmpty (GetVariable ("INCLUDE_DEVICE", ""));
 			include_dotnet = !string.IsNullOrEmpty (GetVariable ("ENABLE_DOTNET", ""));
-			DotNet6BclDir = GetVariable ("DOTNET6_BCL_DIR", null);
+			include_legacy_xamarin = !string.IsNullOrEmpty (GetVariable ("INCLUDE_XAMARIN_LEGACY", ""));
+			DotNetBclDir = GetVariable ("DOTNET_BCL_DIR", null);
 			DotNetCscCommand = GetVariable ("DOTNET_CSC_COMMAND", null)?.Trim ('\'');
-			DotNetExecutable = GetVariable ("DOTNET6", null);
+			DotNetExecutable = GetVariable ("DOTNET", null);
+			DotNetTfm = GetVariable ("DOTNET_TFM", null);
 
 			XcodeVersionString = GetXcodeVersion (xcode_root);
 #if MONOMAC
@@ -310,7 +330,7 @@ namespace Xamarin.Tests
 				var path = Path.Combine (dir, ".git");
 				while (!Directory.Exists (path) && path.Length > 3) {
 					dir = Path.GetDirectoryName (dir);
-					if (dir == null)
+					if (dir is null)
 						throw new Exception ($"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
 					path = Path.Combine (dir, ".git");
 				}
@@ -331,7 +351,7 @@ namespace Xamarin.Tests
 				return false;
 			}
 		}
-			
+
 		static string TestAssemblyDirectory {
 			get {
 				return TestContext.CurrentContext.WorkDirectory;
@@ -394,12 +414,16 @@ namespace Xamarin.Tests
 
 		public static string TargetDirectoryXI {
 			get {
+				if (UseSystem)
+					return "/";
 				return make_config ["IOS_DESTDIR"];
 			}
 		}
 
 		public static string TargetDirectoryXM {
 			get {
+				if (UseSystem)
+					return "/";
 				return make_config ["MAC_DESTDIR"];
 			}
 		}
@@ -423,7 +447,7 @@ namespace Xamarin.Tests
 		static string GetRefNuGetName (TargetFramework targetFramework) => GetRefNuGetName (targetFramework.Platform);
 
 		static string GetRefNuGetName (ApplePlatform platform)
-        {
+		{
 			switch (platform) {
 			case ApplePlatform.iOS:
 				return "Microsoft.iOS.Ref";
@@ -479,27 +503,48 @@ namespace Xamarin.Tests
 
 		public static string GetDotNetRoot ()
 		{
-			return Path.Combine (SourceRoot, "_build");
+			if (IsVsts) {
+				return Path.Combine (EvaluateVariable ("DOTNET_DIR"), "packs");
+			} else {
+				return Path.Combine (SourceRoot, "_build");
+			}
 		}
 
 		public static string GetRefDirectory (ApplePlatform platform)
 		{
-			return Path.Combine (GetDotNetRoot (), GetRefNuGetName (platform), "ref", "net6.0");
+			var rv = Path.Combine (GetDotNetRoot (), GetRefNuGetName (platform));
+			if (UseSystem)
+				rv = Path.Combine (rv, GetNuGetVersionNoMetadata (platform));
+			rv = Path.Combine (rv, "ref", DotNetTfm);
+			return rv;
 		}
 
 		public static string GetRefDirectory (TargetFramework targetFramework)
 		{
 			if (targetFramework.IsDotNet)
-				return Path.Combine (GetDotNetRoot (), GetRefNuGetName (targetFramework), "ref", "net6.0");
+				return GetRefDirectory (targetFramework.Platform);
 
 			// This is only applicable for .NET
 			throw new InvalidOperationException (targetFramework.ToString ());
 		}
 
+		public static string GetNuGetVersionNoMetadata (TargetFramework framework)
+		{
+			return GetNuGetVersionNoMetadata (framework.Platform);
+		}
+
+		public static string GetNuGetVersionNoMetadata (ApplePlatform platform)
+		{
+			return GetVariable ($"{platform.AsString ().ToUpper ()}_NUGET_VERSION_NO_METADATA", string.Empty);
+		}
+
 		// This is only applicable for .NET
 		public static string GetRuntimeDirectory (ApplePlatform platform, string runtimeIdentifier)
 		{
-			return Path.Combine (GetDotNetRoot (), GetRuntimeNuGetName (platform, runtimeIdentifier), "runtimes", runtimeIdentifier);
+			var rv = Path.Combine (GetDotNetRoot (), GetRuntimeNuGetName (platform, runtimeIdentifier));
+			if (UseSystem)
+				rv = Path.Combine (rv, GetNuGetVersionNoMetadata (platform));
+			return Path.Combine (rv, "runtimes", runtimeIdentifier);
 		}
 
 		public static string GetTargetDirectory (ApplePlatform platform)
@@ -519,7 +564,7 @@ namespace Xamarin.Tests
 		public static string GetSdkRoot (TargetFramework targetFramework)
 		{
 			if (targetFramework.IsDotNet)
-				return Path.Combine (GetDotNetRoot (), GetSdkNuGetName (targetFramework), "tools");
+				return GetSdkRoot (targetFramework.Platform);
 			switch (targetFramework.Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
@@ -535,7 +580,10 @@ namespace Xamarin.Tests
 		// Only valid for .NET
 		public static string GetSdkRoot (ApplePlatform platform)
 		{
-			return Path.Combine (GetDotNetRoot (), GetSdkNuGetName (platform), "tools");
+			var rv = Path.Combine (GetDotNetRoot (), GetSdkNuGetName (platform));
+			if (UseSystem)
+				rv = Path.Combine (rv, GetNuGetVersionNoMetadata (platform));
+			return Path.Combine (rv, "tools");
 		}
 
 		public static string SdkRootXI {
@@ -559,12 +607,6 @@ namespace Xamarin.Tests
 		public static string BinDirXM {
 			get {
 				return Path.Combine (SdkRootXM, "bin");
-			}
-		}
-
-		static string XSIphoneDir {
-			get {
-				return Path.Combine (XS_PATH, "lib", "monodevelop", "AddIns", "MonoDevelop.IPhone");
 			}
 		}
 
@@ -702,7 +744,7 @@ namespace Xamarin.Tests
 					throw new NotSupportedException ($"Unknown assembly: {assemblyName}");
 				}
 			}
-		}		
+		}
 
 		public static string GetBaseLibrary (TargetFramework targetFramework)
 		{
@@ -755,9 +797,20 @@ namespace Xamarin.Tests
 
 		public static IList<string> GetRuntimeIdentifiers (ApplePlatform platform)
 		{
-			// variables with more than one value are wrapped in ', get the var remove the '' and split
-			var variable = GetVariable ($"DOTNET_{platform.AsString ().ToUpper ()}_RUNTIME_IDENTIFIERS", string.Empty).Trim ('\'');
-			return variable.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			return GetVariableArray ($"DOTNET_{platform.AsString ().ToUpper ()}_RUNTIME_IDENTIFIERS");
+		}
+
+		public static IList<string> GetArchitectures (ApplePlatform platform)
+		{
+			var rv = new List<string> ();
+			foreach (var rid in GetRuntimeIdentifiers (platform))
+				rv.AddRange (GetArchitectures (rid));
+			return rv;
+		}
+
+		public static IList<string> GetArchitectures (string runtimeIdentifier)
+		{
+			return GetVariableArray ($"DOTNET_{runtimeIdentifier}_ARCHITECTURES");
 		}
 
 		public static IEnumerable<string> GetBaseLibraryImplementations ()
@@ -771,7 +824,7 @@ namespace Xamarin.Tests
 		{
 			var runtimeIdentifiers = GetRuntimeIdentifiers (platform);
 			foreach (var rid in runtimeIdentifiers) {
-				var libdir = Path.Combine (GetRuntimeDirectory (platform, rid), "lib", "net6.0");
+				var libdir = Path.Combine (GetRuntimeDirectory (platform, rid), "lib", DotNetTfm);
 				yield return Path.Combine (libdir, GetBaseLibraryName (platform, true));
 			}
 		}
@@ -781,20 +834,6 @@ namespace Xamarin.Tests
 		{
 			foreach (var platform in GetIncludedPlatforms (true))
 				yield return Path.Combine (GetRefDirectory (platform), GetBaseLibraryName (platform, true));
-		}
-
-		public static IEnumerable<ApplePlatform> GetIncludedPlatforms (bool dotnet)
-		{
-			if (include_ios)
-				yield return ApplePlatform.iOS;
-			if (include_tvos)
-				yield return ApplePlatform.TVOS;
-			if (include_mac)
-				yield return ApplePlatform.MacOSX;
-			if (include_maccatalyst)
-				yield return ApplePlatform.MacCatalyst;
-			if (include_watchos && !dotnet)
-				yield return ApplePlatform.WatchOS;
 		}
 
 		public static string GetTargetFramework (Profile profile)
@@ -859,7 +898,32 @@ namespace Xamarin.Tests
 			return "/Library/Frameworks/Mono.framework/Commands/csc";
 		}
 #endif // !XAMMAC_TESTS
-		
+
+		public static IEnumerable<ApplePlatform> GetIncludedPlatforms (bool dotnet)
+		{
+			if (include_ios)
+				yield return ApplePlatform.iOS;
+			if (include_tvos)
+				yield return ApplePlatform.TVOS;
+			if (include_mac)
+				yield return ApplePlatform.MacOSX;
+			if (include_maccatalyst)
+				yield return ApplePlatform.MacCatalyst;
+			if (include_watchos && !dotnet)
+				yield return ApplePlatform.WatchOS;
+		}
+
+		public static IEnumerable<ApplePlatform> GetAllPlatforms (bool dotnet)
+		{
+			yield return ApplePlatform.iOS;
+			yield return ApplePlatform.TVOS;
+			yield return ApplePlatform.MacOSX;
+			if (dotnet)
+				yield return ApplePlatform.MacCatalyst;
+			if (!dotnet)
+				yield return ApplePlatform.WatchOS;
+		}
+
 		public static string NuGetPackagesDirectory {
 			get {
 				return Path.Combine (RootPath, "packages");
@@ -882,6 +946,13 @@ namespace Xamarin.Tests
 			if (include_dotnet)
 				return;
 			Assert.Ignore (".NET tests not enabled");
+		}
+
+		public static void AssertLegacyXamarinAvailable ()
+		{
+			if (include_legacy_xamarin)
+				return;
+			Assert.Ignore ("Legacy xamarin build not enabled");
 		}
 
 		public static string CloneTestDirectory (string directory)
@@ -930,25 +1001,6 @@ namespace Xamarin.Tests
 			}
 		}
 
-		public static string [] CopyDotNetSupportingFiles (params string[] targetDirectories)
-		{
-			var srcDirectory = Path.Combine (SourceRoot, "tests", "dotnet");
-			var files = new string [] { "global.json", "NuGet.config" };
-			var targets = new List<string> ();
-			for (var i = 0; i < files.Length; i++) {
-				var fn = files [i];
-				var src = Path.Combine (srcDirectory, fn);
-				if (!File.Exists (src))
-					ExecutionHelper.Execute ("make", new [] { "-C", srcDirectory, fn });
-				foreach (var targetDirectory in targetDirectories) {
-					var target = Path.Combine (targetDirectory, fn);
-					File.Copy (src, target, true);
-					targets.Add (target);
-				}
-			}
-			return targets.ToArray ();
-		}
-
 		public static Dictionary<string, string> GetBuildEnvironment (ApplePlatform platform)
 		{
 			Dictionary<string, string> environment = new Dictionary<string, string> ();
@@ -966,7 +1018,14 @@ namespace Xamarin.Tests
 			environment ["MD_APPLE_SDK_ROOT"] = Path.GetDirectoryName (Path.GetDirectoryName (xcode_root));
 			environment ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (rootDirectory, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
 			environment ["MSBuildExtensionsPathFallbackPathsOverride"] = Path.Combine (rootDirectory, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
-			
+
+			// This is set by `dotnet test` and can cause building legacy projects to fail to build with:
+			// Microsoft.NET.Build.Extensions.ConflictResolution.targets(30,5):
+			// error MSB4062: The "ResolvePackageFileConflicts" task could not be loaded from the assembly Microsoft.NET.Build.Extensions.Tasks.dll.
+			// Invalid Image Confirm that the <UsingTask> declaration is correct, that the assembly and all its dependencies are available,
+			// and that the task contains a public class that implements Microsoft.Build.Framework.ITask.
+			environment ["MSBuildExtensionsPath"] = null;
+
 			switch (platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
@@ -1001,7 +1060,7 @@ namespace Xamarin.Tests
 				if (!include_dotnet_watchos)
 					Assert.Ignore ("watchOS is not included in this build");
 #endif
-					
+
 				break;
 			case ApplePlatform.MacOSX:
 				if (!include_mac)
@@ -1033,6 +1092,15 @@ namespace Xamarin.Tests
 			default:
 				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
 			}
+		}
+
+		public static void IgnoreIfAnyIgnoredPlatforms (bool dotnet = true)
+		{
+			var allPlatforms = GetAllPlatforms (dotnet);
+			var includedPlatforms = GetIncludedPlatforms (dotnet);
+			var notIncluded = allPlatforms.Where (v => !includedPlatforms.Contains (v));
+			if (notIncluded.Any ())
+				Assert.Ignore ($"This test requires all platforms to be included, but the following platforms aren't included: {string.Join (", ", notIncluded.Select (v => v.AsString ()))}");
 		}
 
 		public static string GetTestLibraryDirectory (ApplePlatform platform, bool? simulator = null)

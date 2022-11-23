@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ActualPackageVersion Condition="'$(CustomDotNetVersion)' != ''">$(CustomDotNetVersion)</ActualPackageVersion>
+    <ActualPackageVersion Condition="'$(ActualPackageVersion)' == ''">$(BundledNETCorePlatformsPackageVersion)</ActualPackageVersion>
+    <NoWarn>$(NoWarn);NU1505</NoWarn> <!--  warning NU1505: Duplicate 'PackageDownload' items found. Remove the duplicate items or use the Update functionality to ensure a consistent restore behavior. -->
+  </PropertyGroup>
+
+  <Import Project="../../eng/Versions.props" />
+
+  <ItemGroup>
+    <!-- Download any runtime packs as specified using the PackageRuntimeIdentifiers property -->
+    <PackageRuntimeIdentifiers Include="$(PackageRuntimeIdentifiers.Split(' '))" />
+    <PackageRuntimeIdentifiersCoreCLR Include="$(PackageRuntimeIdentifiersCoreCLR.Split(' '))" />
+
+    <!-- download the runtime packs -->
+    <PackageDownload Include="@(PackageRuntimeIdentifiers -> 'Microsoft.NETCore.App.Runtime.Mono.%(Identity)')" Version="[$(ActualPackageVersion)]" />
+    <PackageDownload Include="@(PackageRuntimeIdentifiersCoreCLR -> 'Microsoft.NETCore.App.Runtime.%(Identity)')" Version="[$(ActualPackageVersion)]" />
+
+    <!-- download the reference assemblies -->
+    <PackageDownload Include="microsoft.netcore.app.ref" Version="[$(ActualPackageVersion)]" />
+
+    <!-- and get the mono workload as well -->
+    <PackageDownload Include="Microsoft.NET.Workload.Mono.ToolChain.net7.Manifest-$(ToolChainManifestVersionBand)" Version="[$(ActualPackageVersion)]" />
+    <PackageDownload Include="Microsoft.NET.Workload.Mono.ToolChain.net6.Manifest-$(ToolChainManifestVersionBand)" Version="[$(ActualPackageVersion)]" />
+
+    <!-- and get the emscripten workload as well -->
+    <PackageDownload Include="Microsoft.NET.Workload.Emscripten.net7.Manifest-$(ToolChainManifestVersionBand)" Version="[$(MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion)]" />
+    <PackageDownload Include="Microsoft.NET.Workload.Emscripten.net6.Manifest-$(ToolChainManifestVersionBand)" Version="[$(MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion)]" />
+  </ItemGroup>
+
+  <Import Project="all-package-references.csproj" />
+
+  <!-- target to write out the BundledNETCorePlatformsPackageVersion to a file -->
+  <Target Name="WriteBundledNETCorePlatformsPackageVersion" Condition="'$(WriteFilePath)' != ''">
+    <WriteLinesToFile File="$(WriteFilePath)" Lines="$(ActualPackageVersion)" Overwrite="true" />
+  </Target>
+</Project>

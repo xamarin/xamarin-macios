@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -54,8 +55,7 @@ namespace Xamarin.Bundler {
 		Static,
 	}
 
-	public partial class Application
-	{
+	public partial class Application {
 		public Cache Cache;
 		public string AppDirectory = ".";
 		public bool DeadStrip = true;
@@ -290,7 +290,7 @@ namespace Xamarin.Bundler {
 				// if there's a specific way libmono is being linked, use the same way.
 				if (libmono_link_mode.HasValue)
 					return libmono_link_mode.Value;
-				return HasDynamicLibraries ? AssemblyBuildTarget.DynamicLibrary: AssemblyBuildTarget.StaticObject;
+				return HasDynamicLibraries ? AssemblyBuildTarget.DynamicLibrary : AssemblyBuildTarget.StaticObject;
 			}
 		}
 
@@ -437,7 +437,7 @@ namespace Xamarin.Bundler {
 		public Version DeploymentTarget;
 		public Version SdkVersion; // for Mac Catalyst this is the iOS version
 		public Version NativeSdkVersion; // this is the same as SdkVersion, except that for Mac Catalyst it's the macOS SDK version.
-	
+
 		public MonoNativeMode MonoNativeMode { get; set; }
 		List<Abi> abis;
 		public bool IsLLVM { get { return IsArchEnabled (Abi.LLVM); } }
@@ -611,8 +611,16 @@ namespace Xamarin.Bundler {
 			get { return Path.GetFileNameWithoutExtension (AppDirectory); }
 		}
 
+		bool? requires_pinvoke_wrappers;
 		public bool RequiresPInvokeWrappers {
 			get {
+				if (requires_pinvoke_wrappers.HasValue)
+					return requires_pinvoke_wrappers.Value;
+
+				// By default this is disabled for .NET
+				if (Driver.IsDotNet)
+					return false;
+
 				if (Platform == ApplePlatform.MacOSX)
 					return false;
 
@@ -623,6 +631,9 @@ namespace Xamarin.Bundler {
 					return false;
 
 				return MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.ThrowManagedException || MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.Abort;
+			}
+			set {
+				requires_pinvoke_wrappers = value;
 			}
 		}
 
@@ -644,7 +655,7 @@ namespace Xamarin.Bundler {
 				}
 			}
 		}
-		
+
 		public static bool IsUptodate (string source, string target, bool check_contents = false, bool check_stamp = true)
 		{
 			return FileCopier.IsUptodate (source, target, check_contents, check_stamp);
@@ -653,11 +664,11 @@ namespace Xamarin.Bundler {
 		public static void RemoveResource (ModuleDefinition module, string name)
 		{
 			for (int i = 0; i < module.Resources.Count; i++) {
-				EmbeddedResource embedded = module.Resources[i] as EmbeddedResource;
-				
+				EmbeddedResource embedded = module.Resources [i] as EmbeddedResource;
+
 				if (embedded == null || embedded.Name != name)
 					continue;
-				
+
 				module.Resources.RemoveAt (i);
 				break;
 			}
@@ -694,11 +705,11 @@ namespace Xamarin.Bundler {
 		public static void ExtractResource (ModuleDefinition module, string name, string path, bool remove)
 		{
 			for (int i = 0; i < module.Resources.Count; i++) {
-				EmbeddedResource embedded = module.Resources[i] as EmbeddedResource;
-				
+				EmbeddedResource embedded = module.Resources [i] as EmbeddedResource;
+
 				if (embedded == null || embedded.Name != name)
 					continue;
-				
+
 				string dirname = Path.GetDirectoryName (path);
 				if (!Directory.Exists (dirname))
 					Directory.CreateDirectory (dirname);
@@ -706,10 +717,10 @@ namespace Xamarin.Bundler {
 				using (Stream ostream = File.OpenWrite (path)) {
 					embedded.GetResourceStream ().CopyTo (ostream);
 				}
-				
+
 				if (remove)
 					module.Resources.RemoveAt (i);
-				
+
 				break;
 			}
 		}
@@ -720,8 +731,7 @@ namespace Xamarin.Bundler {
 			if (!Application.IsUptodate (source, target, check_contents)) {
 				CopyFile (source, target);
 				return true;
-			}
-			else {
+			} else {
 				Driver.Log (3, "Target '{0}' is up-to-date", target);
 				return false;
 			}
@@ -735,13 +745,13 @@ namespace Xamarin.Bundler {
 		{
 			return FileCopier.IsUptodate (sources, targets, check_stamp);
 		}
-		
+
 		public static void UpdateDirectory (string source, string target)
 		{
 			FileCopier.UpdateDirectory (source, target);
 		}
 
-		static string[] NonEssentialDirectoriesInsideFrameworks = { "CVS", ".svn", ".git", ".hg", "Headers", "PrivateHeaders", "Modules" };
+		static string [] NonEssentialDirectoriesInsideFrameworks = { "CVS", ".svn", ".git", ".hg", "Headers", "PrivateHeaders", "Modules" };
 
 		// Duplicate xcode's `builtin-copy` exclusions
 		public static void ExcludeNonEssentialFrameworkFiles (string framework)
@@ -862,6 +872,12 @@ namespace Xamarin.Bundler {
 				ErrorHelper.Warning (3007, Errors.MX3007);
 			}
 
+			if (Driver.XcodeVersion.Major >= 14 && BitCodeMode != BitCodeMode.None && Platform == ApplePlatform.TVOS) {
+				// We currently have to leave watchOS alone, because the process is to first build bitcode, then compile bitcode into native code, and finally remove the bitcode from the executable (this is likely fixable, but looks like it's a larger effort involving the runtime team).
+				ErrorHelper.Warning (186, Errors.MX0186 /* Bitcode is enabled, but bitcode is not supported in Xcode 14+ and has been disabled. Please disable bitcode by removing the 'MtouchEnableBitcode' property from the project file. */);
+				BitCodeMode = BitCodeMode.None;
+			}
+
 			Optimizations.Initialize (this, out var messages);
 			ErrorHelper.Show (messages);
 			if (Driver.Verbosity > 3)
@@ -976,21 +992,21 @@ namespace Xamarin.Bundler {
 				var rootName = Path.GetFileNameWithoutExtension (asm);
 				if (rootName == productAssembly)
 					foundProductAssembly = true;
-				
+
 				try {
 					AssemblyDefinition lastAssembly = ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ());
 					if (lastAssembly == null) {
 						ErrorHelper.Warning (7, Errors.MX0007, rootName);
 						continue;
 					}
-					
+
 					if (resolvedAssemblies.TryGetValue (rootName, out var previousAssembly)) {
 						if (lastAssembly.MainModule.RuntimeVersion != previousAssembly.MainModule.RuntimeVersion) {
 							Driver.Log (2, "Attemping to load an assembly another time {0} (previous {1})", lastAssembly.FullName, previousAssembly.FullName);
 						}
 						continue;
 					}
-					
+
 					resolvedAssemblies.Add (rootName, lastAssembly);
 					Driver.Log (3, "Loaded {0}", lastAssembly.MainModule.FileName);
 				} catch (Exception ex) {
@@ -1013,9 +1029,9 @@ namespace Xamarin.Bundler {
 #endif
 			var registrar = new Registrar.StaticRegistrar (this);
 			if (RootAssemblies.Count == 1)
-				registrar.GenerateSingleAssembly (resolver, resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
+				registrar.GenerateSingleAssembly (resolver, resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly), out var _);
 			else
-				registrar.Generate (resolver, resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m);
+				registrar.Generate (resolver, resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, out var _);
 		}
 
 		public IEnumerable<Abi> Abis {
@@ -1473,7 +1489,7 @@ namespace Xamarin.Bundler {
 #if NET
 			if (Platform == ApplePlatform.MacOSX)
 				return false; // AOT on .NET for macOS hasn't been implemented yet.
-#else	
+#else
 			if (Platform == ApplePlatform.MacOSX)
 				throw ErrorHelper.CreateError (99, Errors.MX0099, "IsAOTCompiled isn't a valid operation for macOS apps.");
 #endif
@@ -1595,6 +1611,35 @@ namespace Xamarin.Bundler {
 			aotArguments.Add ($"outfile={outputFile}");
 			if (enable_llvm)
 				aotArguments.Add ($"llvm-outfile={llvmOutputFile}");
+
+#if NET
+			// If the interpreter is enabled, and we're building for x86_64, we're AOT-compiling but we
+			// don't have access to infinite trampolines. So we're bumping the trampoline count (unless
+			// the developer has already set a value) to something higher than the default.
+			//
+			// Ref:
+			// * https://github.com/xamarin/xamarin-macios/issues/14887
+			// * https://github.com/dotnet/runtime/issues/68808
+			if (interp && (abi & Abi.x86_64) == Abi.x86_64) {
+				// The default values are here: https://github.com/dotnet/runtime/blob/main/src/mono/mono/mini/aot-compiler.c#L13945-L13953
+				// Let's try 4x the default values.
+				var trampolines = new []
+				{
+					(Name: "ntrampolines", Default: 4096),
+					(Name: "nrgctx-trampolines", Default: 4096),
+					(Name: "nimt-trampolines", Default: 512),
+					(Name: "nrgctx-fetch-trampolines", Default: 128),
+					(Name: "ngsharedvt-trampolines", Default: 512),
+					(Name: "nftnptr-arg-trampolines", Default: 128),
+					(Name: "nunbox-arbitrary-trampolines", Default: 256),
+				};
+				foreach (var tramp in trampolines) {
+					var nameWithEq = tramp.Name + "=";
+					if (!aotArguments.Any (v => v.StartsWith (nameWithEq, StringComparison.Ordinal)))
+						aotArguments.Add (nameWithEq + (tramp.Default * 4).ToString (CultureInfo.InvariantCulture));
+				}
+			}
+#endif
 		}
 
 		public string AssemblyName {
@@ -1701,8 +1746,10 @@ namespace Xamarin.Bundler {
 				return !Profile.IsSdkAssembly (Path.GetFileNameWithoutExtension (assembly));
 			case ApplePlatform.TVOS:
 			case ApplePlatform.WatchOS:
-			case ApplePlatform.MacCatalyst:
 				return false;
+			case ApplePlatform.MacCatalyst:
+				// https://github.com/xamarin/xamarin-macios/issues/14437
+				return true;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 			}

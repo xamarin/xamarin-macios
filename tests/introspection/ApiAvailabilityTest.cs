@@ -67,7 +67,7 @@ namespace Introspection {
 			Platform = ApplePlatform.MacOSX;
 			Minimum = Xamarin.SdkVersions.MinOSXVersion;
 #else
-			#error No Platform Defined
+#error No Platform Defined
 #endif
 #else
 #if __MACCATALYST__
@@ -86,7 +86,7 @@ namespace Introspection {
 			Platform = PlatformName.MacOSX;
 			Minimum = Xamarin.SdkVersions.MinOSXVersion;
 #else
-			#error No Platform Defined
+#error No Platform Defined
 #endif
 #endif // NET
 
@@ -332,6 +332,10 @@ namespace Introspection {
 					if (uaPlatform == Platform)
 						return true;
 				}
+				if (a is ObsoletedOSPlatformAttribute ab && ab.TryParse (out ApplePlatform? ubPlatform, out version)) {
+					if (ubPlatform == Platform)
+						return true;
+				}
 #else
 				if (ca is UnavailableAttribute ua) {
 					if (ua.Platform == Platform)
@@ -368,13 +372,29 @@ namespace Introspection {
 
 		void CheckUnavailable (Type t, bool typeUnavailable, Version? typeUnavailableVersion, MemberInfo m)
 		{
+			// Turns out Version (13, 1, 0) > Version (13, 1) since undefined fields are -1
+			// However, we consider them equal, so force a 0 Build if set to -1
+			if (typeUnavailableVersion is not null && typeUnavailableVersion.Build == -1) {
+				typeUnavailableVersion = new Version (typeUnavailableVersion.Major, typeUnavailableVersion.Minor, 0);
+			}
+
 			var ma = GetAvailable (m, out var availableVersion);
 			if (typeUnavailable && (ma != null)) {
 				if (typeUnavailableVersion is not null && availableVersion is not null) {
+#if NET
+					// Introduced and Deprecated in same version happens a lot in catalyst
+					if (availableVersion > typeUnavailableVersion)
+#else
 					if (availableVersion >= typeUnavailableVersion)
+#endif
 						AddErrorLine ($"[FAIL] {m} in {m.DeclaringType.FullName} is marked with {ma} in {availableVersion} but the type {t.FullName} is [Unavailable ({Platform})] in {typeUnavailableVersion}");
-				} else {
-					AddErrorLine ($"[FAIL] {m} is marked with {ma} but the type {t.FullName} is [Unavailable ({Platform})]");
+				}
+#if NET
+				// Availabile with no version and unavailable is a common valid pattern in NET-land
+				else if (typeUnavailableVersion is not null && availableVersion is null) { }
+#endif
+				 else {
+					AddErrorLine ($"[FAIL] {m} in {m.DeclaringType.FullName} is marked with {ma} but the type {t.FullName} is [Unavailable ({Platform})]");
 				}
 			}
 
@@ -384,6 +404,8 @@ namespace Introspection {
 					// Apple is introducing and deprecating numerous APIs in the same Mac Catalyst version,
 					// so specifically for Mac Catalyst, we do a simple 'greater than' version check,
 					// instead of a 'greater than or equal' version like we do for the other platforms.
+#if !NET // https://github.com/xamarin/xamarin-macios/issues/14802
+
 					if (Platform == ApplePlatform.MacCatalyst) {
 						if (availableVersion > unavailableVersion)
 							AddErrorLine ($"[FAIL] {m} is marked both [Unavailable ({Platform})] and {ma}, and it's available in version {availableVersion} which is > than the unavailable version {unavailableVersion}");
@@ -391,8 +413,18 @@ namespace Introspection {
 						if (availableVersion >= unavailableVersion)
 							AddErrorLine ($"[FAIL] {m} is marked both [Unavailable ({Platform})] and {ma}, and it's available in version {availableVersion} which is >= than the unavailable version {unavailableVersion}");
 					}
+#endif
 				} else {
+					// As documented in https://docs.microsoft.com/en-us/dotnet/standard/analyzers/platform-compat-analyzer#advanced-scenarios-for-attribute-combinations
+					// it is valid, and required in places to declare a type both availabile and unavailable on a given platform.
+					// Example:
+					// 		[SupportedOSPlatform ("macos")]
+					// 		[UnsupportedOSPlatform ("macos10.13")]
+					// This API was introduced on macOS but became unavailable on 10.13
+					// The legacy attributes described this with Deprecated, and did not need to double declare
+#if !NET
 					AddErrorLine ($"[FAIL] {m} in {m.DeclaringType.FullName} is marked both [Unavailable ({Platform})] and {ma}.");
+#endif
 				}
 			}
 		}
@@ -414,6 +446,7 @@ namespace Introspection {
 						// Apple is introducing and deprecating numerous APIs in the same Mac Catalyst version,
 						// so specifically for Mac Catalyst, we do a simple 'greater than' version check,
 						// instead of a 'greater than or equal' version like we do for the other platforms.
+#if !NET // https://github.com/xamarin/xamarin-macios/issues/14802
 						if (Platform == ApplePlatform.MacCatalyst) {
 							if (availableVersion > unavailableVersion)
 								AddErrorLine ($"[FAIL] {t.FullName} is marked both [Unavailable ({Platform})] and {ta}, and it's available in version {availableVersion} which is > than the unavailable version {unavailableVersion}");
@@ -422,8 +455,18 @@ namespace Introspection {
 							if (availableVersion >= unavailableVersion)
 								AddErrorLine ($"[FAIL] {t.FullName} is marked both [Unavailable ({Platform})] and {ta}, and it's available in version {availableVersion} which is >= than the unavailable version {unavailableVersion}");
 						}
+#endif
 					} else {
+						// As documented in https://docs.microsoft.com/en-us/dotnet/standard/analyzers/platform-compat-analyzer#advanced-scenarios-for-attribute-combinations
+						// it is valid, and required in places to declare a type both availabile and unavailable on a given platform.
+						// Example:
+						// 		[SupportedOSPlatform ("macos")]
+						// 		[UnsupportedOSPlatform ("macos10.13")]
+						// This API was introduced on macOS but became unavailable on 10.13
+						// The legacy attributes described this with Deprecated, and did not need to double declare
+#if !NET
 						AddErrorLine ($"[FAIL] {t.FullName} is marked both [Unavailable ({Platform})] and {ta}. Available: {availableVersion} Unavailable: {unavailableVersion}");
+#endif
 					}
 				}
 
@@ -450,10 +493,10 @@ namespace Introspection {
 		{
 #if __MACCATALYST__
 			switch (type.Namespace) {
-				case "AddressBook": {
-					// The entire framework was introduced and deprecated in the same Mac Catalyst version
-					return true;
-				}
+			case "AddressBook": {
+				// The entire framework was introduced and deprecated in the same Mac Catalyst version
+				return true;
+			}
 			}
 #endif
 
@@ -472,93 +515,113 @@ namespace Introspection {
 		{
 			switch (type.FullName) {
 #if __MACOS__
-				case "AppKit.NSDrawer":
-					switch (memberName) {
-					case "AccessibilityChildrenInNavigationOrder":
-					case "get_AccessibilityChildrenInNavigationOrder":
-					case "set_AccessibilityChildrenInNavigationOrder":
-					case "AccessibilityCustomActions":
-					case "get_AccessibilityCustomActions":
-					case "set_AccessibilityCustomActions":
-					case "AccessibilityCustomRotors":
-					case "get_AccessibilityCustomRotors":
-					case "set_AccessibilityCustomRotors":
-						// NSDrawer was deprecated in macOS 10.13, but implements (and inlines) NSAccessibility, which added several new members in macOS 10.13, so ignore those members here.
-						return true;
-					}
-					break;
-				case "GLKit.GLKTextureLoader":
-					switch (memberName) {
-					case "GrayscaleAsAlpha":
-					case "get_GrayscaleAsAlpha":
-						// GLKTextureLoader is deprecated, but the GLKTextureLoaderGrayscaleAsAlpha value, which we've put inside the GLKTextureLoader class, isn't.
-						return true;
-					}
-					break;
+			case "AppKit.NSDrawer":
+				switch (memberName) {
+				case "AccessibilityChildrenInNavigationOrder":
+				case "get_AccessibilityChildrenInNavigationOrder":
+				case "set_AccessibilityChildrenInNavigationOrder":
+				case "AccessibilityCustomActions":
+				case "get_AccessibilityCustomActions":
+				case "set_AccessibilityCustomActions":
+				case "AccessibilityCustomRotors":
+				case "get_AccessibilityCustomRotors":
+				case "set_AccessibilityCustomRotors":
+					// NSDrawer was deprecated in macOS 10.13, but implements (and inlines) NSAccessibility, which added several new members in macOS 10.13, so ignore those members here.
+					return true;
+				}
+				break;
+			case "GLKit.GLKTextureLoader":
+				switch (memberName) {
+				case "GrayscaleAsAlpha":
+				case "get_GrayscaleAsAlpha":
+					// GLKTextureLoader is deprecated, but the GLKTextureLoaderGrayscaleAsAlpha value, which we've put inside the GLKTextureLoader class, isn't.
+					return true;
+				}
+				break;
 #endif
 #if __MACCATALYST__
-				case "AudioUnit.AudioComponent":
-					switch (memberName) {
-					case "LastActiveTime":
-						// introduced and deprecated in the same Mac Catalyst version
-						return true;
-					}
-					break;
+			case "AudioUnit.AudioComponent":
+				switch (memberName) {
+				case "LastActiveTime":
+					// introduced and deprecated in the same Mac Catalyst version
+					return true;
+				}
+				break;
+			// Apple itself is inconsistent in the availability of the type compared to these selectors
+			case "AVFoundation.AVCaptureStillImageOutput":
+				switch (memberName) {
+				case "AutomaticallyEnablesStillImageStabilizationWhenAvailable":
+				case "CapturingStillImage":
+				case "HighResolutionStillImageOutputEnabled":
+				case "IsStillImageStabilizationActive":
+				case "IsStillImageStabilizationSupported":
+					return true;
+				}
+				break;
 #endif
-				case "CarPlay.CPApplicationDelegate":
-					switch (memberName) {
-					case "DidDiscardSceneSessions":
-					case "GetConfiguration":
-					case "GetHandlerForIntent":
-					case "ShouldAutomaticallyLocalizeKeyCommands":
-					case "ShouldRestoreSecureApplicationState":
-					case "ShouldSaveSecureApplicationState":
-						// CPApplicationDelegate is deprecated in macOS 10.15, but these members are pulled in from the UIApplicationDelegate protocol (which is not deprecated)
-						return true;
-					}
-					break;
-				case "GameKit.GKScore": {
-					switch (memberName) {
-					case "ReportLeaderboardScores":
-					case "ReportLeaderboardScoresAsync":
-						// Apple introduced and deprecated this method in the same OS version.
-						return true;
-					}
-					break;
+			case "CarPlay.CPApplicationDelegate":
+				switch (memberName) {
+				case "DidDiscardSceneSessions":
+				case "GetConfiguration":
+				case "GetHandlerForIntent":
+				case "ShouldAutomaticallyLocalizeKeyCommands":
+				case "ShouldRestoreSecureApplicationState":
+				case "ShouldSaveSecureApplicationState":
+					// CPApplicationDelegate is deprecated in macOS 10.15, but these members are pulled in from the UIApplicationDelegate protocol (which is not deprecated)
+					return true;
 				}
-				case "Intents.INNoteContentTypeResolutionResult": {
-					switch (memberName) {
-					case "GetConfirmationRequired":
-					case "GetUnsupported":
-						// These are static members that have been re-implemented from the base class - the base class isn't deprecated, while INNoteContentTypeResolutionResult is.
-						return true;
-					}
-					break;
+				break;
+			case "CoreMedia.CMTimebase": {
+				switch (memberName) {
+				case "SetMasterTimebase":
+				case "SetMasterClock":
+					// These APIs were introduced and deprecated in the same version
+					return true;
 				}
-				case "MobileCoreServices.UTType": {
-					switch (memberName) {
-					case "UniversalSceneDescriptionMobile":
-					case "get_UniversalSceneDescriptionMobile":
-						// Apple added new members to a deprecated enum
-						return true;
-					}
-					break;
+				break;
+			}
+			case "GameKit.GKScore": {
+				switch (memberName) {
+				case "ReportLeaderboardScores":
+				case "ReportLeaderboardScoresAsync":
+					// Apple introduced and deprecated this method in the same OS version.
+					return true;
 				}
-				case "SceneKit.SCNLayer": {
-					switch (memberName) {
-					case "CurrentViewport":
-					case "TemporalAntialiasingEnabled":
-					case "get_CurrentViewport":
-					case "get_TemporalAntialiasingEnabled":
-					case "set_TemporalAntialiasingEnabled":
-					case "get_UsesReverseZ":
-					case "set_UsesReverseZ":
-					case "UsesReverseZ":
-						// SCNLayer is deprecated in macOS 10.15, but these members are pulled in from the SCNSceneRenderer protocol (which is not deprecated)
-						return true;
-					}
-					break;
+				break;
+			}
+			case "Intents.INNoteContentTypeResolutionResult": {
+				switch (memberName) {
+				case "GetConfirmationRequired":
+				case "GetUnsupported":
+					// These are static members that have been re-implemented from the base class - the base class isn't deprecated, while INNoteContentTypeResolutionResult is.
+					return true;
 				}
+				break;
+			}
+			case "MobileCoreServices.UTType": {
+				switch (memberName) {
+				case "UniversalSceneDescriptionMobile":
+				case "get_UniversalSceneDescriptionMobile":
+					// Apple added new members to a deprecated enum
+					return true;
+				}
+				break;
+			}
+			case "SceneKit.SCNLayer": {
+				switch (memberName) {
+				case "CurrentViewport":
+				case "TemporalAntialiasingEnabled":
+				case "get_CurrentViewport":
+				case "get_TemporalAntialiasingEnabled":
+				case "set_TemporalAntialiasingEnabled":
+				case "get_UsesReverseZ":
+				case "set_UsesReverseZ":
+				case "UsesReverseZ":
+					// SCNLayer is deprecated in macOS 10.15, but these members are pulled in from the SCNSceneRenderer protocol (which is not deprecated)
+					return true;
+				}
+				break;
+			}
 			}
 			return false;
 		}
@@ -572,7 +635,7 @@ namespace Introspection {
 				var s = String.Empty;
 #if NET
 				if (a is OSPlatformAttribute aa)
-					s = $"[{a.GetType().Name} (\"{aa.PlatformName}\")]";
+					s = $"[{a.GetType ().Name} (\"{aa.PlatformName}\")]";
 #else
 				if (a is AvailabilityBaseAttribute aa)
 					s = aa.ToString ();
@@ -582,10 +645,12 @@ namespace Introspection {
 					if (type_level.Contains (s))
 						AddErrorLine ($"[FAIL] Both '{t}' and '{m}' are marked with `{s}`.");
 #endif
+#if !NET // https://github.com/xamarin/xamarin-macios/issues/14802
 					if (member_level.Contains (s))
 						AddErrorLine ($"[FAIL] '{m}' is decorated more than once with `{s}`.");
 					else
 						member_level.Add (s);
+#endif
 				}
 			}
 		}
@@ -604,7 +669,7 @@ namespace Introspection {
 				foreach (var a in t.GetCustomAttributes (false)) {
 #if NET
 					if (a is OSPlatformAttribute aa)
-						type_level.Add ($"[{a.GetType().Name} (\"{aa.PlatformName}\")]");
+						type_level.Add ($"[{a.GetType ().Name} (\"{aa.PlatformName}\")]");
 #else
 					if (a is AvailabilityBaseAttribute aa)
 						type_level.Add (aa.ToString ());

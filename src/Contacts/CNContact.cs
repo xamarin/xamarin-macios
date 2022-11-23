@@ -7,6 +7,8 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -14,7 +16,7 @@ using ObjCRuntime;
 namespace Contacts {
 
 	public partial class CNContact {
-		
+
 		public virtual bool IsKeyAvailable (CNContactOptions options)
 		{
 			var key = ContactOptionsToNSString (options);

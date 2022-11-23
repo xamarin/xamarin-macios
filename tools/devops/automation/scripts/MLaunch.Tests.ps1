@@ -5,7 +5,7 @@
 Import-Module ./MLaunch -Force
 
 Describe 'Set-MLaunchVerbosity' {
-    Context 'default' {
+    Context 'default' -Skip {
         It 'set the given verbosity' {
             Mock Set-Content
             Mock Test-Path {
@@ -36,7 +36,7 @@ Describe 'Set-MLaunchVerbosity' {
 }
 
 Describe 'Optimize-DeviceDiscovery' {
-    Context 'default' {
+    Context 'default' -Skip {
         It 'stops usbmuxd' {
             Mock Start-Process 
 

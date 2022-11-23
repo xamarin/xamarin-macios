@@ -6,6 +6,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using CoreFoundation;
 using Foundation;
@@ -16,8 +17,14 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace CoreFoundation {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CFType : NativeObject, ICFType {
-		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFGetTypeID")]
+		[DllImport (Constants.CoreFoundationLibrary, EntryPoint = "CFGetTypeID")]
 		public static extern nint GetTypeID (IntPtr typeRef);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -40,12 +47,12 @@ namespace CoreFoundation {
 		public string? GetDescription (IntPtr handle)
 		{
 			if (handle == IntPtr.Zero)
-				throw new ArgumentNullException (nameof (handle));
-			
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handle));
+
 			return CFString.FromHandle (CFCopyDescription (handle));
 		}
-		
-		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFEqual")]
+
+		[DllImport (Constants.CoreFoundationLibrary, EntryPoint = "CFEqual")]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFEqual (/*CFTypeRef*/ IntPtr cf1, /*CFTypeRef*/ IntPtr cf2);
 

@@ -50,11 +50,15 @@
       <Link>XStaticObjectTest.framework</Link>
       <LinkerFlags>-lz</LinkerFlags>
       <Frameworks>CoreLocation Foundation ModelIO</Frameworks>
+      <NoDSymUtil>true</NoDSymUtil>
+      <NoSymbolStrip>true</NoSymbolStrip>
     </NativeReference>
     <NativeReference Include="$(RepositoryPath)\tests\test-libraries\.libs\ios-fat\XStaticArTest.framework">
       <Kind>Framework</Kind>
       <Link>XStaticArTest.framework</Link>
       <Frameworks>CoreLocation Foundation ModelIO</Frameworks>
+      <NoDSymUtil>true</NoDSymUtil>
+      <NoSymbolStrip>true</NoSymbolStrip>
     </NativeReference>
   </ItemGroup>
   <ItemGroup>

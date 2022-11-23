@@ -9,13 +9,13 @@
 #if IOS
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
 namespace UIKit {
 #if NET
 	[SupportedOSPlatform ("ios13.4")]
+	[SupportedOSPlatform ("maccatalyst13.4")]
 #else
 	[Introduced (PlatformName.iOS, 13,4, PlatformArchitecture.All)]
 #endif

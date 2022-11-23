@@ -1,12 +1,13 @@
+#nullable enable
+
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace CoreMedia {
 
 	// empty interface used as a marker to state which CM objects DO support the API
 #if !NET
-	[Watch (6,0)]
+	[Watch (6, 0)]
 #endif
-	public interface ICMAttachmentBearer : INativeObject {}
+	public interface ICMAttachmentBearer : INativeObject { }
 
 }

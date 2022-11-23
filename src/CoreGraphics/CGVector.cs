@@ -26,16 +26,24 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 using CoreFoundation;
 
 namespace CoreGraphics {
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CGGeometry.h
 	public struct CGVector {
 		public /* CGFloat */ nfloat dx, dy;
@@ -62,12 +70,12 @@ namespace CoreGraphics {
 			return HashCode.Combine (dx, dy);
 #else
 			unchecked {
-				return ((int)dx) ^ ((int)dy);
+				return ((int) dx) ^ ((int) dy);
 			}
 #endif
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (other is CGVector vector)
 				return dx == vector.dx && dy == vector.dy;
@@ -78,6 +86,9 @@ namespace CoreGraphics {
 #if !COREBUILD
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
 #else
 		[iOS (8,0)]
 #endif
@@ -86,16 +97,22 @@ namespace CoreGraphics {
 		
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
 #else
 		[iOS (8,0)]
 #endif
-		public override string ToString ()
+		public override string? ToString ()
 		{
 			return CFString.FromHandle (NSStringFromCGVector (this));
 		}
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
 #else
 		[iOS (8,0)]
 #endif
@@ -104,6 +121,9 @@ namespace CoreGraphics {
 		
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
 #else
 		[iOS (8,0)]
 #endif

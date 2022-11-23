@@ -1586,7 +1586,9 @@ namespace Contacts {
 
 #if !NET
 	[iOS (9,0), Mac (10,11)]
+#pragma warning disable 0618 // warning CS0618: 'CategoryAttribute.CategoryAttribute(bool)' is obsolete: 'Inline the static members in this category in the category's class (and remove this obsolete once fixed)'
 	[Category (allowStaticMembers: true)]
+#pragma warning disable
 	[BaseType (typeof (CNContainer))]
 	interface CNContainer_PredicatesExtension {
 
@@ -1682,7 +1684,9 @@ namespace Contacts {
 
 #if !NET
 	[iOS (9,0), Mac (10,11)]
+#pragma warning disable 0618 // warning CS0618: 'CategoryAttribute.CategoryAttribute(bool)' is obsolete: 'Inline the static members in this category in the category's class (and remove this obsolete once fixed)'
 	[Category (allowStaticMembers: true)]
+#pragma warning disable
 	[BaseType (typeof (CNGroup))]
 	interface CNGroup_PredicatesExtension {
 
@@ -2277,6 +2281,10 @@ namespace Contacts {
 		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("transactionAuthor")]
 		string TransactionAuthor { get; set; }
+
+		[Mac (12, 3), iOS (15,4), MacCatalyst (15,4)]
+		[Export ("shouldRefetchContacts")]
+		bool ShouldRefetchContacts { get; set; }
 	}
 #endif // !WATCH
 

@@ -23,6 +23,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -38,7 +40,7 @@ namespace IOSurface {
 #elif TVOS || IOS
 			return SystemVersion.CheckiOS (12, 0);
 #else
-			#error Unknown platform
+#error Unknown platform
 #endif
 		}
 

@@ -11,7 +11,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -25,8 +24,11 @@ namespace ImageIO {
 
 #if NET
 	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 #else
-	[iOS (7,0)]
+	[iOS (7, 0)]
 #endif
 	public partial class CGImageMetadataEnumerateOptions {
 
@@ -49,8 +51,11 @@ namespace ImageIO {
 	// CGImageMetadata.h
 #if NET
 	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 #else
-	[iOS (7,0)]
+	[iOS (7, 0)]
 #endif
 	public partial class CGImageMetadata : NativeObject {
 #if !NET
@@ -75,7 +80,7 @@ namespace ImageIO {
 		{
 		}
 
-		[DllImport (Constants.ImageIOLibrary, EntryPoint="CGImageMetadataGetTypeID")]
+		[DllImport (Constants.ImageIOLibrary, EntryPoint = "CGImageMetadataGetTypeID")]
 		public extern static /* CFTypeID */ nint GetTypeID ();
 
 
@@ -88,7 +93,7 @@ namespace ImageIO {
 		{
 			// parent may be null
 			if (path is null)
-				throw new ArgumentNullException (nameof (path));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path));
 			var result = CGImageMetadataCopyStringValueWithPath (Handle, parent.GetHandle (), path.Handle);
 			return Runtime.GetNSObject<NSString> (result, true);
 		}
@@ -112,7 +117,7 @@ namespace ImageIO {
 		{
 			// parent may be null
 			if (path is null)
-				throw new ArgumentNullException (nameof (path));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path));
 			IntPtr result = CGImageMetadataCopyTagWithPath (Handle, parent.GetHandle (), path.Handle);
 			return (result == IntPtr.Zero) ? null : new CGImageMetadataTag (result, true);
 		}
@@ -148,9 +153,9 @@ namespace ImageIO {
 		public CGImageMetadataTag? CopyTagMatchingImageProperty (NSString dictionaryName, NSString propertyName)
 		{
 			if (dictionaryName is null)
-				throw new ArgumentNullException (nameof (dictionaryName));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dictionaryName));
 			if (propertyName is null)
-				throw new ArgumentNullException (nameof (propertyName));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (propertyName));
 			IntPtr result = CGImageMetadataCopyTagMatchingImageProperty (Handle, dictionaryName.Handle, propertyName.Handle);
 			return result == IntPtr.Zero ? null : new CGImageMetadataTag (result, true);
 		}

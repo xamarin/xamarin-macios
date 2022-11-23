@@ -15,7 +15,12 @@ rm -Rf "$DIR"
 mkdir -p "$DIR"
 
 make test.config
-source test.config
+cat test.config
+INCLUDE_XAMARIN_LEGACY=$(grep ^INCLUDE_XAMARIN_LEGACY= test.config | sed 's/.*=//')
+INCLUDE_MAC=$(grep ^INCLUDE_MAC= test.config | sed 's/.*=//')
+INCLUDE_MACCATALYST=$(grep ^INCLUDE_MACCATALYST= test.config | sed 's/.*=//')
+XCODE_DEVELOPER_ROOT=$(grep ^XCODE_DEVELOPER_ROOT= test.config | sed 's/.*=//')
+MAC_DESTDIR=$(grep ^MAC_DESTDIR= test.config | sed 's/.*=//')
 export MD_APPLE_SDK_ROOT="$(dirname "$(dirname "$XCODE_DEVELOPER_ROOT")")"
 export XAMMAC_FRAMEWORK_PATH=$MAC_DESTDIR/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 export XamarinMacFrameworkRoot=$MAC_DESTDIR/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
@@ -24,27 +29,47 @@ export MSBuildExtensionsPathFallbackPathsOverride=$MAC_DESTDIR/Library/Framework
 
 make
 make .stamp-xharness-configure
-../tools/xibuild/xibuild -- /r ../external/Touch.Unit/Touch.Client/macOS/mobile/Touch.Client-macOS-mobile.csproj
-../tools/xibuild/xibuild -- /r ../external/Touch.Unit/Touch.Client/macOS/full/Touch.Client-macOS-full.csproj
-../tools/xibuild/xibuild -- /r bindings-test/macOS/bindings-test.csproj
+if test -n "$INCLUDE_XAMARIN_LEGACY"; then
+	../tools/xibuild/xibuild -- /r ../external/Touch.Unit/Touch.Client/macOS/mobile/Touch.Client-macOS-mobile.csproj
+	../tools/xibuild/xibuild -- /r ../external/Touch.Unit/Touch.Client/macOS/full/Touch.Client-macOS-full.csproj
+	../tools/xibuild/xibuild -- /r bindings-test/macOS/bindings-test.csproj
+fi
 
-make -C bindings-test/dotnet/macOS build
-make -C bindings-test/dotnet/MacCatalyst build
+TEST_SUITE_DEPENDENCIES+=(bindings-test)
+TEST_SUITE_DEPENDENCIES+=(EmbeddedResources)
+TEST_SUITE_DEPENDENCIES+=(fsharplibrary)
+TEST_SUITE_DEPENDENCIES+=(BundledResources)
+
+for dep in "${TEST_SUITE_DEPENDENCIES[@]}"; do
+	if test -n "$INCLUDE_MAC"; then
+		make -C "$dep"/dotnet/macOS build
+	fi
+	if test -n "$INCLUDE_MACCATALYST"; then
+		make -C "$dep"/dotnet/MacCatalyst build
+	fi
+done
 
 TEST_SUITES+=(build-dontlink)
 TEST_SUITES+=(build-linksdk)
 TEST_SUITES+=(build-linkall)
 TEST_SUITES+=(build-introspection)
-TEST_SUITES+=(build-xammac_tests)
+if test -n "$INCLUDE_XAMARIN_LEGACY"; then
+	TEST_SUITES+=(build-xammac_tests)
+fi
 TEST_SUITES+=(build-monotouch-test)
-TEST_SUITES+=(build-introspection)
 
-make -f packaged-macos-tests.mk "${TEST_SUITES[@]}" -j
+if test -n "$BUILD_REVISION"; then
+	MAKE_FLAGS=-j
+fi
 
-for app in */bin/x86/*/*.app linker/mac/*/bin/x86/*/*.app linker/mac/*/generated-projects/*/bin/x86/*/*.app introspection/Mac/bin/x86/*/*.app; do
-	mkdir -p "$DIR/tests/$app"
-	$CP -R "$app" "$DIR/tests/$app/.."
-done
+make -f packaged-macos-tests.mk "${TEST_SUITES[@]}" $MAKE_FLAGS
+
+if test -n "$INCLUDE_XAMARIN_LEGACY"; then
+	for app in */bin/x86/*/*.app linker/mac/*/bin/x86/*/*.app linker/mac/*/generated-projects/*/bin/x86/*/*.app introspection/Mac/bin/x86/*/*.app; do
+		mkdir -p "$DIR/tests/$app"
+		$CP -R "$app" "$DIR/tests/$app/.."
+	done
+fi
 
 for app in linker/*/*/dotnet/*/bin/*/*/*/*.app */dotnet/*/bin/*/*/*/*.app; do
 	mkdir -p "$DIR/tests/$app"
@@ -52,12 +77,13 @@ for app in linker/*/*/dotnet/*/bin/*/*/*/*.app */dotnet/*/bin/*/*/*/*.app; do
 done
 
 $CP -p packaged-macos-tests.mk "$DIR/tests"
+$CP -p run-with-timeout.sh "$DIR/tests"
 $CP -p ../Make.config "$DIR"
 $CP -p ../Make.versions "$DIR"
 $CP -p test-dependencies.sh "$DIR"
 $CP -p ../system-dependencies.sh "$DIR"
+$CP -p ../configure.inc "$DIR"
 mkdir -p "$DIR/mk"
-$CP -p ../Make.config "$DIR"
 $CP -p ../mk/subdirs.mk "$DIR/mk"
 $CP -p ../mk/rules.mk "$DIR/mk"
 $CP -p ../mk/quiet.mk "$DIR/mk"

@@ -7,6 +7,8 @@
 // Copyright 2011-2015 Xamarin Inc.
 //
 
+#nullable enable
+
 using ObjCRuntime;
 
 namespace EventKitUI {
@@ -17,7 +19,7 @@ namespace EventKitUI {
 	public enum EKCalendarChooserSelectionStyle : long {
 		Single, Multiple
 	}
-	
+
 	// untyped enum -> EKCalendarChooser.h
 	// iOS 9 promoted this to an NSInteger - which breaks compatibility
 	[Native]

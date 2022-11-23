@@ -6,7 +6,8 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 using AudioToolbox;
-using System.Runtime.Versioning;
+
+#nullable enable
 
 namespace AVFoundation {
 	public partial class AVCaptureVideoPreviewLayer {
@@ -15,8 +16,10 @@ namespace AVFoundation {
 			WithConnection,
 #if NET
 			[SupportedOSPlatform ("ios8.0")]
+			[SupportedOSPlatform ("macos")]
+			[SupportedOSPlatform ("maccatalyst")]
 #else
-			[iOS (8,0)]
+			[iOS (8, 0)]
 #endif
 			WithNoConnection,
 		}
@@ -35,7 +38,7 @@ namespace AVFoundation {
 			}
 		}
 
-		public AVCaptureVideoPreviewLayer (AVCaptureSession session) : this (session, InitMode.WithConnection) {}
+		public AVCaptureVideoPreviewLayer (AVCaptureSession session) : this (session, InitMode.WithConnection) { }
 	}
 }
 

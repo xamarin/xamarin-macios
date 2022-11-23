@@ -8,16 +8,16 @@ using System.Collections.Generic;
 using NUnit.Framework;
 
 using Xamarin.MacDev;
+using Xamarin.Tests;
+using Xamarin.Utils;
 
-namespace Xamarin.iOS.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone", "Debug")]
 	[TestFixture ("iPhone", "Release")]
 	// Note: Disabled because Simulator builds aren't consistently signed or not-signed, while device builds are.
 	//[TestFixture ("iPhoneSimulator", "Debug")]
 	//[TestFixture ("iPhoneSimulator", "Release")]
-	public class CodesignAppBundle : ProjectTest
-	{
+	public class CodesignAppBundle : ProjectTest {
 		public CodesignAppBundle (string platform, string configuration)
 			: base (platform, configuration)
 		{
@@ -57,6 +57,9 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void RebuildNoChanges ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			bool expectedCodesignResults = Platform != "iPhoneSimulator";
 
 			BuildProject ("MyTabbedApplication");
@@ -88,7 +91,7 @@ namespace Xamarin.iOS.Tasks
 				if (Path.GetFileName (file) == "MyTabbedApplication" || Path.GetExtension (file) == ".dylib")
 					continue;
 
-				Assert.AreEqual (timestamps[file], newTimestamps[file], "App Bundle timestamp changed: " + file);
+				Assert.AreEqual (timestamps [file], newTimestamps [file], "App Bundle timestamp changed: " + file);
 			}
 
 			if (Platform != "iPhoneSimulator") {
@@ -98,9 +101,9 @@ namespace Xamarin.iOS.Tasks
 				foreach (var file in dsymTimestamps.Keys) {
 					// The Info.plist should be newer because it gets touched
 					if (Path.GetFileName (file) == "Info.plist") {
-						Assert.IsTrue (dsymTimestamps[file] < newDsymTimestamps[file], "App Bundle dSYMs Info.plist not touched: " + file);
+						Assert.IsTrue (dsymTimestamps [file] < newDsymTimestamps [file], "App Bundle dSYMs Info.plist not touched: " + file);
 					} else {
-						Assert.AreEqual (dsymTimestamps[file], newDsymTimestamps[file], "App Bundle dSYMs changed: " + file);
+						Assert.AreEqual (dsymTimestamps [file], newDsymTimestamps [file], "App Bundle dSYMs changed: " + file);
 					}
 				}
 
@@ -110,13 +113,16 @@ namespace Xamarin.iOS.Tasks
 				// Note: we could fix this by not using `ditto` and instead implementing this ourselves to only overwrite files if they've changed
 				// and then setting some [Output] params that specify whether or not we need to re-codesign and/or strip debug symbols.
 				foreach (var file in appexDsymTimestamps.Keys)
-					Assert.IsTrue (appexDsymTimestamps[file] < newAppexDsymTimestamps[file], "App Extension dSYMs should be newer: " + file);
+					Assert.IsTrue (appexDsymTimestamps [file] < newAppexDsymTimestamps [file], "App Extension dSYMs should be newer: " + file);
 			}
 		}
 
 		[Test]
 		public void CodesignAfterModifyingAppExtensionTest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var csproj = BuildProject ("MyTabbedApplication", clean: true).ProjectCSProjPath;
 			var testsDir = Path.GetDirectoryName (Path.GetDirectoryName (csproj));
 			var appexProjectDir = Path.Combine (testsDir, "MyActionExtension");
@@ -152,6 +158,10 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void RebuildWatchAppNoChanges ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			bool expectedCodesignResults = Platform != "iPhoneSimulator";
 
 			BuildProject ("MyWatch2Container");
@@ -165,11 +175,28 @@ namespace Xamarin.iOS.Tasks
 
 			// make sure everything is still codesigned properly
 			AssertProperlyCodesigned (expectedCodesignResults);
+
+			if (Platform == "iPhone") {
+				// make sure the dSYMs exist
+
+				var mainDsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatch2Container.app.dSYM"));
+				Assert.That (mainDsymDir, Does.Exist, "MyWatch2Container dSYMs not found");
+
+				var appexDsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatchKit2Extension.appex.dSYM"));
+				Assert.That (appexDsymDir, Does.Exist, "MyWatchKit2Extension dSYMs not found");
+
+				var appex2DsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatchKit2IntentsExtension.appex.dSYM"));
+				Assert.That (appex2DsymDir, Does.Exist, "MyWatchKit2IntentsExtension/ dSYMs not found");
+			}
 		}
 
 		[Test]
 		public void CodesignAfterModifyingWatchApp2Test ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var csproj = BuildProject ("MyWatch2Container", clean: true).ProjectCSProjPath;
 			var testsDir = Path.GetDirectoryName (Path.GetDirectoryName (csproj));
 			var appexProjectDir = Path.Combine (testsDir, "MyWatchKit2Extension");
@@ -200,6 +227,19 @@ namespace Xamarin.iOS.Tasks
 				// restore the original ActionViewController.cs code...
 				text = text.Replace ("{0} The Awakening...", "{0} awake with context");
 				File.WriteAllText (viewController, text);
+			}
+
+			if (Platform == "iPhone") {
+				// make sure the dSYMs exist
+
+				var mainDsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatch2Container.app.dSYM"));
+				Assert.That (mainDsymDir, Does.Exist, "MyWatch2Container dSYMs not found");
+
+				var appexDsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatchKit2Extension.appex.dSYM"));
+				Assert.That (appexDsymDir, Does.Exist, "MyWatchKit2Extension dSYMs not found");
+
+				var appex2DsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatchKit2IntentsExtension.appex.dSYM"));
+				Assert.That (appex2DsymDir, Does.Exist, "MyWatchKit2IntentsExtension/ dSYMs not found");
 			}
 		}
 	}

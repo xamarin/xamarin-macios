@@ -1,14 +1,6 @@
 #nullable enable
 
-using System;
-using System.IO;
 using System.IO.Compression;
-using System.Linq;
-
-using NUnit.Framework;
-
-using Xamarin.Utils;
-using Xamarin.MacDev;
 
 namespace Xamarin.Tests {
 	public class PackTest : TestBaseClass {
@@ -26,7 +18,6 @@ namespace Xamarin.Tests {
 
 			var project_path = GetProjectPath (project, platform: platform);
 			Clean (project_path);
-			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (project_path));
 
 			var tmpdir = Cache.CreateTemporaryDirectory ();
 			var outputPath = Path.Combine (tmpdir, "OutputPath");
@@ -35,7 +26,7 @@ namespace Xamarin.Tests {
 			properties ["OutputPath"] = outputPath + Path.DirectorySeparatorChar;
 			properties ["IntermediateOutputPath"] = intermediateOutputPath + Path.DirectorySeparatorChar;
 
-			var rv =DotNet.AssertPackFailure (project_path, properties);
+			var rv = DotNet.AssertPackFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			Assert.AreEqual (1, errors.Length, "Error count");
 			Assert.AreEqual ($"Creating a NuGet package is not supported for projects that have ObjcBindingNativeLibrary items. Migrate to use NativeReference items instead.", errors [0].Message, "Error message");
@@ -57,7 +48,6 @@ namespace Xamarin.Tests {
 
 			var project_path = Path.Combine (Configuration.RootPath, "tests", project, "dotnet", platform.AsString (), $"{project}.csproj");
 			Clean (project_path);
-			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (project_path));
 
 			var tmpdir = Cache.CreateTemporaryDirectory ();
 			var outputPath = Path.Combine (tmpdir, "OutputPath");
@@ -111,11 +101,17 @@ namespace Xamarin.Tests {
 		{
 			var project = "bindings-xcframework-test";
 			var assemblyName = "bindings-framework-test";
-			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			// This tests gets really complicated if not all platforms are included,
+			// because the (number of) files included in the nupkg depends not only
+			// on the current platform, but on the other included platforms as well.
+			// For example: if either macOS or Mac Catalyst is included, then some
+			// parts of the .xcframework will be zipped differently (due to symlinks
+			// in the xcframework).
+			Configuration.IgnoreIfAnyIgnoredPlatforms ();
 
 			var project_path = Path.Combine (Configuration.RootPath, "tests", project, "dotnet", platform.AsString (), $"{project}.csproj");
 			Clean (project_path);
-			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (project_path));
 
 			var tmpdir = Cache.CreateTemporaryDirectory ();
 			var outputPath = Path.Combine (tmpdir, "OutputPath");

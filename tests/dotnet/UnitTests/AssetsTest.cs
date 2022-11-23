@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using NUnit.Framework;
-using Xamarin.Utils;
 
 #nullable enable
 
@@ -19,7 +12,7 @@ namespace Xamarin.Tests {
 	[TestFixture (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "macosx", true)]
 	[TestFixture (ApplePlatform.MacOSX, "osx-x64", "macosx", true)]
 	[TestFixture (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "macosx", true)] // https://github.com/xamarin/xamarin-macios/issues/12410
-	// Build, add the XCAssets, then build again
+																			  // Build, add the XCAssets, then build again
 	[TestFixture (ApplePlatform.iOS, "iossimulator-x64", "iphonesimulator", false)]
 	[TestFixture (ApplePlatform.iOS, "ios-arm64;ios-arm", "iphoneos", false)]
 	[TestFixture (ApplePlatform.TVOS, "tvossimulator-x64", "appletvsimulator", false)]
@@ -149,7 +142,7 @@ namespace Xamarin.Tests {
 			Assert.Greater (assets.Length, 1);
 
 			var executable = "touch";
-			var arguments = new string [] { assets[1] };
+			var arguments = new string [] { assets [1] };
 			var rv = Execution.RunWithStringBuildersAsync (executable, arguments, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (120)).Result;
 			Assert.AreEqual (0, rv.ExitCode, $"Processing Update Symlink Error: {rv.StandardError}. Unexpected ExitCode");
 		}
@@ -157,17 +150,27 @@ namespace Xamarin.Tests {
 		JsonDocument ProcessAssets (string assetsPath, string sdkVersion)
 		{
 			var output = new StringBuilder ();
+			var stderr = new StringBuilder ();
 			var executable = "xcrun";
 			var arguments = new string [] { "--sdk", sdkVersion, "assetutil", "--info", assetsPath };
-			var rv = Execution.RunWithStringBuildersAsync (executable, arguments, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (120)).Result;
-			Assert.AreEqual (0, rv.ExitCode, $"Processing Assets Error: {rv.StandardError}. Unexpected ExitCode");
+			var rv = Execution.RunWithStringBuildersAsync (executable, arguments, standardOutput: output, standardError: stderr, timeout: TimeSpan.FromSeconds (120)).Result;
+			Assert.AreEqual (0, rv.ExitCode, $"Processing Assets Error: {stderr}. Unexpected ExitCode");
 			var s = output.ToString ();
 
 			// This Execution call produces an output with an objc warning. We just want the json below it.
 			if (s.StartsWith ("objc", StringComparison.Ordinal))
 				s = s.Substring (s.IndexOf (Environment.NewLine) + 1);
 
-			return JsonDocument.Parse (s);
+			try {
+				return JsonDocument.Parse (s);
+			} catch (Exception e) {
+				Console.WriteLine ($"Failure to parse json:");
+				Console.WriteLine (e);
+				Console.WriteLine ("Json document:");
+				Console.WriteLine (s);
+				Assert.Fail ($"Failure to parse json: {e.Message}\nJson document:\n{s}");
+				throw;
+			}
 		}
 
 		HashSet<string> FindAssets (JsonDocument doc)

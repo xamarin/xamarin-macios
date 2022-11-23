@@ -13,7 +13,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
@@ -25,23 +24,26 @@ namespace SystemConfiguration {
 	// SCNetworkReachabilityFlags -> uint32_t -> SCNetworkReachability.h
 	[Flags]
 	public enum NetworkReachabilityFlags {
-		TransientConnection = 1<<0,
-		Reachable = 1<<1,
-		ConnectionRequired = 1<<2,
-		ConnectionOnTraffic = 1<<3,
-		InterventionRequired = 1<<4,
-		ConnectionOnDemand = 1<<5,
-		IsLocalAddress = 1<<16,
-		IsDirect = 1<<17,
+		TransientConnection = 1 << 0,
+		Reachable = 1 << 1,
+		ConnectionRequired = 1 << 2,
+		ConnectionOnTraffic = 1 << 3,
+		InterventionRequired = 1 << 4,
+		ConnectionOnDemand = 1 << 5,
+		IsLocalAddress = 1 << 16,
+		IsDirect = 1 << 17,
 #if NET
 		[UnsupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Unavailable (PlatformName.MacOSX)]
 #endif
-		IsWWAN = 1<<18,
+		IsWWAN = 1 << 18,
 		ConnectionAutomatic = ConnectionOnTraffic
 	}
-	
+
 	// http://developer.apple.com/library/ios/#documentation/SystemConfiguration/Reference/SCNetworkReachabilityRef/Reference/reference.html
 	public class NetworkReachability : NativeObject {
 		// netinet/in.h
@@ -51,12 +53,12 @@ namespace SystemConfiguration {
 			[FieldOffset (1)] byte sin_family;
 			[FieldOffset (2)] short sin_port;
 			[FieldOffset (4)] int sin_addr;
-			
+
 			// IPv6
 			[FieldOffset (4)] uint sin6_flowinfo;
-			[FieldOffset (8)] [MarshalAs (UnmanagedType.ByValArray, SizeConst = 16)] public byte[] sin6_addr8;
-			[FieldOffset (24)] uint sin6_scope_id;			
-			
+			[FieldOffset (8)][MarshalAs (UnmanagedType.ByValArray, SizeConst = 16)] public byte [] sin6_addr8;
+			[FieldOffset (24)] uint sin6_scope_id;
+
 			public sockaddr_in (IPAddress address)
 			{
 				sin_addr = 0;
@@ -64,11 +66,13 @@ namespace SystemConfiguration {
 				sin6_flowinfo = 0;
 				sin6_scope_id = 0;
 				sin6_addr8 = new byte [16];
-			
+
 				switch (address.AddressFamily) {
 				case AddressFamily.InterNetwork:
 					sin_family = 2;  // Address for IPv4
+#pragma warning disable CS0618 // Type or member is obsolete
 					sin_addr = (int) address.Address;
+#pragma warning restore CS0618 // Type or member is obsolete
 					break;
 				case AddressFamily.InterNetworkV6:
 					sin_family = 30; // Address for IPv6
@@ -78,7 +82,7 @@ namespace SystemConfiguration {
 				default:
 					throw new NotSupportedException (address.AddressFamily.ToString ());
 				}
-				
+
 				sin_port = 0;
 			}
 		}
@@ -98,34 +102,34 @@ namespace SystemConfiguration {
 				version = retain = release = copyDescription = IntPtr.Zero;
 			}
 		}
-		
+
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static /* SCNetworkReachabilityRef __nullable */ IntPtr SCNetworkReachabilityCreateWithName (
 			/* CFAllocatorRef __nullable */ IntPtr allocator, /* const char* __nonnull */ string address);
 
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static /* SCNetworkReachabilityRef __nullable */ IntPtr SCNetworkReachabilityCreateWithAddress (
-			/* CFAllocatorRef __nullable */ IntPtr allocator, 
+			/* CFAllocatorRef __nullable */ IntPtr allocator,
 			/* const struct sockaddr * __nonnull */ ref sockaddr_in address);
 
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static /* SCNetworkReachabilityRef __nullable */ IntPtr SCNetworkReachabilityCreateWithAddressPair (
-			/* CFAllocatorRef __nullable */ IntPtr allocator, 
+			/* CFAllocatorRef __nullable */ IntPtr allocator,
 			/* const struct sockaddr * __nullable */ ref sockaddr_in localAddress,
 			/* const struct sockaddr * __nullable */ ref sockaddr_in remoteAddress);
-		
+
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static /* SCNetworkReachabilityRef __nullable */ IntPtr SCNetworkReachabilityCreateWithAddressPair (
-			/* CFAllocatorRef __nullable */ IntPtr allocator, 
-			/* const struct sockaddr * __nullable */ IntPtr localAddress, 
+			/* CFAllocatorRef __nullable */ IntPtr allocator,
+			/* const struct sockaddr * __nullable */ IntPtr localAddress,
 			/* const struct sockaddr * __nullable */ ref sockaddr_in remoteAddress);
-		
+
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static /* SCNetworkReachabilityRef __nullable */ IntPtr SCNetworkReachabilityCreateWithAddressPair (
-			/* CFAllocatorRef __nullable */ IntPtr allocator, 
-			/* const struct sockaddr * __nullable */ ref sockaddr_in localAddress, 
+			/* CFAllocatorRef __nullable */ IntPtr allocator,
+			/* const struct sockaddr * __nullable */ ref sockaddr_in localAddress,
 			/* const struct sockaddr * __nullable */ IntPtr remoteAddress);
-		
+
 		static IntPtr CheckFailure (IntPtr handle)
 		{
 			if (handle == IntPtr.Zero)
@@ -136,7 +140,7 @@ namespace SystemConfiguration {
 		static IntPtr Create (IPAddress ip)
 		{
 			if (ip is null)
-				throw new ArgumentNullException (nameof (ip));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ip));
 
 			var s = new sockaddr_in (ip);
 			return CheckFailure (SCNetworkReachabilityCreateWithAddress (IntPtr.Zero, ref s));
@@ -150,7 +154,7 @@ namespace SystemConfiguration {
 		static IntPtr Create (string address)
 		{
 			if (address is null)
-				throw new ArgumentNullException (nameof (address));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (address));
 
 			return CheckFailure (SCNetworkReachabilityCreateWithName (IntPtr.Zero, address));
 		}
@@ -187,17 +191,17 @@ namespace SystemConfiguration {
 		public NetworkReachability (IPAddress localAddress, IPAddress remoteAddress)
 			: base (Create (localAddress, remoteAddress), true)
 		{
-		} 
+		}
 
 		[DllImport (Constants.SystemConfigurationLibrary)]
-		static extern int SCNetworkReachabilityGetFlags (/* SCNetworkReachabilityRef __nonnull */ IntPtr target, 
+		static extern int SCNetworkReachabilityGetFlags (/* SCNetworkReachabilityRef __nonnull */ IntPtr target,
 			/* SCNetworkReachabilityFlags* __nonnull */ out NetworkReachabilityFlags flags);
 
 		public bool TryGetFlags (out NetworkReachabilityFlags flags)
 		{
 			return GetFlags (out flags) == StatusCode.OK;
 		}
-		
+
 		public StatusCode GetFlags (out NetworkReachabilityFlags flags)
 		{
 			return SCNetworkReachabilityGetFlags (Handle, out flags) == 0 ?
@@ -211,22 +215,22 @@ namespace SystemConfiguration {
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		unsafe static extern /* Boolean */ bool SCNetworkReachabilitySetCallback (
-			/* SCNetworkReachabilityRef __nonnull */ IntPtr handle, 
+			/* SCNetworkReachabilityRef __nonnull */ IntPtr handle,
 #if NET
 			/* __nullable SCNetworkReachabilityCallBack */ delegate* unmanaged<IntPtr, NetworkReachabilityFlags, IntPtr, void> callout,
 #else
 			/* __nullable */ SCNetworkReachabilityCallBack? callout,
 #endif
 			/* __nullable */ ref SCNetworkReachabilityContext context);
-		
+
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		unsafe static extern /* Boolean */ bool SCNetworkReachabilitySetCallback (
-			/* SCNetworkReachabilityRef __nullable */ IntPtr handle, 
+			/* SCNetworkReachabilityRef __nullable */ IntPtr handle,
 #if NET
 			/* __nullable SCNetworkReachabilityCallBack */ delegate* unmanaged<IntPtr, NetworkReachabilityFlags, IntPtr, void> callout,
 #else
-			/* __nullable */ SCNetworkReachabilityCallBack? callout, 
+			/* __nullable */ SCNetworkReachabilityCallBack? callout,
 #endif
 			/* SCNetworkReachabilityContext* __nullable */ IntPtr context);
 
@@ -237,7 +241,7 @@ namespace SystemConfiguration {
 #if !NET
 		SCNetworkReachabilityCallBack? callouth;
 #endif
-		
+
 #if NET
 		[UnmanagedCallersOnly]
 #else
@@ -254,20 +258,20 @@ namespace SystemConfiguration {
 
 		public StatusCode SetNotification (Notification callback)
 		{
-			if (notification is null){
+			if (notification is null) {
 				if (callback is null)
 					return StatusCode.OK;
-			
+
 				gch = GCHandle.Alloc (this);
 				var ctx = new SCNetworkReachabilityContext (GCHandle.ToIntPtr (gch));
 
 #if !NET
-				lock (typeof (NetworkReachability)){
-					if (callouth == null)
+				lock (typeof (NetworkReachability)) {
+					if (callouth is null)
 						callouth = Callback;
 				}
 #endif
-				
+
 #if NET
 				unsafe {
 					if (!SCNetworkReachabilitySetCallback (Handle, &Callback, ref ctx))
@@ -278,7 +282,7 @@ namespace SystemConfiguration {
 					return StatusCodeError.SCError ();
 #endif
 			} else {
-				if (callback is null){
+				if (callback is null) {
 					this.notification = null;
 #if !NET
 					callouth = null;
@@ -287,11 +291,11 @@ namespace SystemConfiguration {
 						if (!SCNetworkReachabilitySetCallback (Handle, null, IntPtr.Zero))
 							return StatusCodeError.SCError ();
 					}
-					
+
 					return StatusCode.OK;
 				}
 			}
-			
+
 			this.notification = callback;
 			return StatusCode.OK;
 		}
@@ -299,16 +303,16 @@ namespace SystemConfiguration {
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		extern static /* Boolean */ bool SCNetworkReachabilityScheduleWithRunLoop (
-			/* SCNetworkReachabilityRef __nonnull */ IntPtr target, /* CFRunLoopRef __nonnull */ IntPtr runloop, 
+			/* SCNetworkReachabilityRef __nonnull */ IntPtr target, /* CFRunLoopRef __nonnull */ IntPtr runloop,
 			/* CFStringRef __nonnull */ IntPtr runLoopMode);
-		
+
 		public bool Schedule (CFRunLoop runLoop, string mode)
 		{
 			if (runLoop is null)
-				throw new ArgumentNullException (nameof (runLoop));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (runLoop));
 
 			if (mode is null)
-				throw new ArgumentNullException (nameof (mode));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 
 			var modeHandle = CFString.CreateNative (mode);
 			try {
@@ -329,10 +333,10 @@ namespace SystemConfiguration {
 		public bool Unschedule (CFRunLoop runLoop, string mode)
 		{
 			if (runLoop is null)
-				throw new ArgumentNullException (nameof (runLoop));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (runLoop));
 
 			if (mode is null)
-				throw new ArgumentNullException (nameof (mode));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 
 			var modeHandle = CFString.CreateNative (mode);
 			try {

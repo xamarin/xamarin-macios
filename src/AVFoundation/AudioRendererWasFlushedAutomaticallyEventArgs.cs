@@ -2,7 +2,8 @@
 using Foundation;
 using CoreMedia;
 using ObjCRuntime;
-using System.Runtime.Versioning;
+
+#nullable enable
 
 namespace AVFoundation {
 
@@ -10,6 +11,7 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("tvos11.0")]
 	[SupportedOSPlatform ("macos10.13")]
 	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (11, 0)]
 	[NoWatch]
@@ -17,7 +19,7 @@ namespace AVFoundation {
 	[iOS (11, 0)]
 #endif
 	public partial class AudioRendererWasFlushedAutomaticallyEventArgs {
-		public CMTime AudioRendererFlushTime { 
+		public CMTime AudioRendererFlushTime {
 			get {
 				return _AudioRendererFlushTime.CMTimeValue;
 			}

@@ -1,0 +1,4 @@
+namespace macOSBinding1
+{
+
+}

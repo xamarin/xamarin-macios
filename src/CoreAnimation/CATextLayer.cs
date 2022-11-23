@@ -30,7 +30,7 @@
 
 using System;
 
-using Foundation; 
+using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 using CoreFoundation;
@@ -53,25 +53,25 @@ namespace CoreAnimation {
 				_AttributedString = value.GetHandle ();
 			}
 		}
-		
+
 		public void SetFont (string fontName)
 		{
-			if (fontName == null)
+			if (fontName is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (fontName));
 			using (var nss = new NSString (fontName))
 				_Font = nss.Handle;
 		}
-		
+
 		public void SetFont (CGFont font)
 		{
-			if (font == null)
+			if (font is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
 			_Font = font.Handle;
 		}
 
 		public void SetFont (CTFont font)
 		{
-			if (font == null)
+			if (font is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
 			_Font = font.Handle;
 		}
@@ -79,7 +79,7 @@ namespace CoreAnimation {
 #if MONOMAC
 		public void SetFont (NSFont font)
 		{
-			if (font == null)
+			if (font is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
 			_Font = font.Handle;
 		}
@@ -100,34 +100,34 @@ namespace CoreAnimation {
 #else
 				return null;
 #endif
-			} 
+			}
 
 			// Allows CTFont, CGFont, string and in OSX NSFont settings
 			set {
 #if MONOMAC
 				var ns = value as NSFont;
-				if (ns != null){
+				if (ns is not null){
 					_Font = ns.Handle;
 					return;
 				}
 #endif
 				var ct = value as CTFont;
-				if (ct != null){
+				if (ct is not null) {
 					_Font = ct.Handle;
 					return;
 				}
 				var cg = value as CGFont;
-				if (cg != null){
+				if (cg is not null) {
 					_Font = cg.Handle;
 					return;
 				}
 				var nss = value as NSString;
-				if (nss != null){
+				if (nss is not null) {
 					_Font = nss.Handle;
 					return;
 				}
 				var str = value as string;
-				if (str != null){
+				if (str is not null) {
 					nss = new NSString (str);
 					_Font = nss.Handle;
 				}

@@ -1,5 +1,6 @@
+#nullable enable
+
 using System;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -8,10 +9,11 @@ namespace HomeKit {
 
 #if NET
 	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos10.0")]
 #else
-	[iOS (8,0)]
-	[TV (10,0)]
+	[iOS (8, 0)]
+	[TV (10, 0)]
 #endif
 	public class HMCharacteristicProperties {
 

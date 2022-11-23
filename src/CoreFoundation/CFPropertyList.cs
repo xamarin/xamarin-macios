@@ -10,6 +10,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -18,10 +19,14 @@ using Foundation;
 using NativeHandle = System.IntPtr;
 #endif
 
-namespace CoreFoundation
-{
-	public class CFPropertyList : NativeObject
-	{
+namespace CoreFoundation {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class CFPropertyList : NativeObject {
 		static nint CFDataTypeID = CFData.GetTypeID ();
 		static nint CFStringTypeID = CFString.GetTypeID ();
 		static nint CFArrayTypeID = CFArray.GetTypeID ();
@@ -61,7 +66,7 @@ namespace CoreFoundation
 			FromData (NSData data, CFPropertyListMutabilityOptions options = CFPropertyListMutabilityOptions.Immutable)
 		{
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			if (data.Handle == IntPtr.Zero)
 				throw new ObjectDisposedException (nameof (data));
 

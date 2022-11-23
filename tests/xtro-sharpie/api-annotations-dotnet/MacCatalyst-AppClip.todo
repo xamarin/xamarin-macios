@@ -1,6 +1,0 @@
-!missing-enum! APActivationPayloadErrorCode not bound
-!missing-field! APActivationPayloadErrorDomain not bound
-!missing-selector! APActivationPayload::confirmAcquiredInRegion:completionHandler: not bound
-!missing-selector! APActivationPayload::URL not bound
-!missing-selector! NSUserActivity::appClipActivationPayload not bound
-!missing-type! APActivationPayload not bound

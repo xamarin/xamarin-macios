@@ -9,7 +9,6 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using Foundation;
 using ModelIO;
@@ -19,9 +18,16 @@ using ObjCRuntime;
 
 namespace Metal {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct MTLOrigin {
 		public nint X, Y, Z;
-		public MTLOrigin (nint x, nint y, nint z){
+		public MTLOrigin (nint x, nint y, nint z)
+		{
 			X = x;
 			Y = y;
 			Z = z;
@@ -33,10 +39,17 @@ namespace Metal {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct MTLSize {
 		public nint Width, Height, Depth;
-		
-		public MTLSize (nint width, nint height, nint depth){
+
+		public MTLSize (nint width, nint height, nint depth)
+		{
 			Width = width;
 			Height = height;
 			Depth = depth;
@@ -44,14 +57,22 @@ namespace Metal {
 	}
 
 #if !COREBUILD
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public static class MTLVertexFormatExtensions {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
-		[Mac (10,11)]
+		[iOS (9, 0)]
+		[Mac (10, 11)]
 #endif
 		[DllImport (Constants.MetalKitLibrary)]
 		static extern /* MDLVertexFormat */ nuint MTKModelIOVertexFormatFromMetal (/* MTLVertexFormat */ nuint modelIODescriptor);
@@ -59,18 +80,26 @@ namespace Metal {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
-		[Mac (10,11)]
+		[iOS (9, 0)]
+		[Mac (10, 11)]
 #endif
 		public static MDLVertexFormat ToModelVertexFormat (this MTLVertexFormat vertexFormat)
 		{
-			nuint mdlVertexFormat = MTKModelIOVertexFormatFromMetal ((nuint)(ulong)vertexFormat);
-			return (MDLVertexFormat)(ulong)mdlVertexFormat;
+			nuint mdlVertexFormat = MTKModelIOVertexFormatFromMetal ((nuint) (ulong) vertexFormat);
+			return (MDLVertexFormat) (ulong) mdlVertexFormat;
 		}
 	}
 #endif
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct MTLScissorRect {
 		public nuint X, Y, Width, Height;
 
@@ -88,6 +117,12 @@ namespace Metal {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct MTLViewport {
 		public double OriginX, OriginY, Width, Height, ZNear, ZFar;
 		public MTLViewport (double originX, double originY, double width, double height, double znear, double zfar)
@@ -99,16 +134,21 @@ namespace Metal {
 			ZNear = znear;
 			ZFar = zfar;
 		}
-		
+
 		public override string ToString ()
 		{
 			return String.Format ("({0},{1},{2},{3} Znear={4} Zfar={5})", OriginX, OriginY, Width, Height, ZNear, ZFar);
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct MTLSamplePosition
-	{
+	public struct MTLSamplePosition {
 		public float X;
 
 		public float Y;
@@ -121,6 +161,12 @@ namespace Metal {
 	}
 
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct MTLClearColor {
 		public double Red, Green, Blue, Alpha;
 
@@ -133,9 +179,15 @@ namespace Metal {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct MTLRegion {
 		public MTLOrigin Origin;
-		public MTLSize   Size;
+		public MTLSize Size;
 
 		public MTLRegion (MTLOrigin origin, MTLSize size)
 		{
@@ -194,7 +246,13 @@ namespace Metal {
 			return region;
 		}
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Explicit)]
 	public struct MTLClearValue {
 		[FieldOffset (0)]
@@ -210,23 +268,23 @@ namespace Metal {
 			Stencil = 0;
 			Color = color;
 		}
-		
+
 		public MTLClearValue (double depth)
 		{
 			Color.Red = 0;
 			Stencil = 0;
-			
+
 			Depth = depth;
 			Color.Green = 0;
 			Color.Blue = 0;
 			Color.Alpha = 0;
 		}
-		
+
 		public MTLClearValue (ulong stencil)
 		{
 			Color.Red = 0;
 			Depth = 0;
-			
+
 			Stencil = stencil;
 			Color.Green = 0;
 			Color.Blue = 0;
@@ -234,6 +292,12 @@ namespace Metal {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct MTLDispatchThreadgroupsIndirectArguments {
 		public uint ThreadGroupsPerGrid1;
 		public uint ThreadGroupsPerGrid2;
@@ -244,10 +308,11 @@ namespace Metal {
 	[SupportedOSPlatform ("macos10.14")]
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[Mac (10,14)]
-	[iOS (12,0)]
-	[TV (12,0)]
+	[Mac (10, 14)]
+	[iOS (12, 0)]
+	[TV (12, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLStageInRegionIndirectArguments {
@@ -260,6 +325,12 @@ namespace Metal {
 		public uint StageInSize3;
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct MTLDrawPrimitivesIndirectArguments {
 		public uint VertexCount;
 		public uint InstanceCount;
@@ -267,6 +338,12 @@ namespace Metal {
 		public uint BaseInstance;
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct MTLDrawIndexedPrimitivesIndirectArguments {
 		public uint IndexCount;
 		public uint InstanceCount;
@@ -274,44 +351,44 @@ namespace Metal {
 		public uint BaseVertex;
 		public uint BaseInstance;
 	}
-	
+
 #if NET
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
 	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (10,0)]
-	[TV (10,0)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
 	[NoWatch]
-	[Mac (10,12)]
+	[Mac (10, 12)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct MTLSizeAndAlign
-	{
+	public struct MTLSizeAndAlign {
 		public nuint Size;
 		public nuint Align;
-		
+
 		public MTLSizeAndAlign (nuint size, nuint align)
 		{
 			Size = size;
 			Align = align;
 		}
-	
+
 	}
 
 #if NET
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
 	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (10,0)]
-	[TV (10,0)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
 	[NoWatch]
-	[Mac (10,12)]
+	[Mac (10, 12)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct MTLDrawPatchIndirectArguments
-	{
+	public struct MTLDrawPatchIndirectArguments {
 		public uint PatchCount;
 		public uint InstanceCount;
 		public uint PatchStart;
@@ -331,46 +408,46 @@ namespace Metal {
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
 	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (10,0)]
-	[TV (10,0)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
 	[NoWatch]
-	[Mac (10,12)]
+	[Mac (10, 12)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct MTLQuadTessellationFactorsHalf
-	{
+	public struct MTLQuadTessellationFactorsHalf {
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 4)]
-		public ushort[] EdgeTessellationFactor;
+		public ushort [] EdgeTessellationFactor;
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 2)]
-		public ushort[] InsideTessellationFactor;
-		
-		public MTLQuadTessellationFactorsHalf (ushort[] edgeTessellationFactor, ushort[] insideTessellationFactor)
+		public ushort [] InsideTessellationFactor;
+
+		public MTLQuadTessellationFactorsHalf (ushort [] edgeTessellationFactor, ushort [] insideTessellationFactor)
 		{
 			EdgeTessellationFactor = edgeTessellationFactor;
 			InsideTessellationFactor = insideTessellationFactor;
 		}
-	
+
 	}
 
 #if NET
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
 	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (10,0)]
-	[TV (10,0)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
 	[NoWatch]
-	[Mac (10,12)]
+	[Mac (10, 12)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct MTLTriangleTessellationFactorsHalf
-	{
+	public struct MTLTriangleTessellationFactorsHalf {
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 3)]
-		public ushort[] EdgeTessellationFactor;
+		public ushort [] EdgeTessellationFactor;
 		public ushort InsideTessellationFactor;
-		
-		public MTLTriangleTessellationFactorsHalf (ushort[] edgeTessellationFactor, ushort insideTessellationFactor)
+
+		public MTLTriangleTessellationFactorsHalf (ushort [] edgeTessellationFactor, ushort insideTessellationFactor)
 		{
 			EdgeTessellationFactor = edgeTessellationFactor;
 			InsideTessellationFactor = insideTessellationFactor;
@@ -414,10 +491,11 @@ namespace Metal {
 	[SupportedOSPlatform ("macos10.15")]
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[TV (13,0)]
+	[Mac (10, 15)]
+	[iOS (13, 0)]
+	[TV (13, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLTextureSwizzleChannels {
@@ -479,16 +557,15 @@ namespace Metal {
 	[UnsupportedOSPlatform ("tvos")]
 #else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Mac (11,0)]
-	[iOS (14,0)]
+	[Mac (11, 0)]
+	[iOS (14, 0)]
 	[NoTV]
 #if TVOS
 	[Obsolete ("This API is not available on this platform.")]
 #endif
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct MTLAccelerationStructureSizes
-	{
+	public struct MTLAccelerationStructureSizes {
 		public nuint AccelerationStructureSize;
 
 		public nuint BuildScratchBufferSize;

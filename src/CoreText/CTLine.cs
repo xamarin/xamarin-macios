@@ -31,7 +31,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -55,22 +54,28 @@ namespace CoreText {
 	[Native]
 	[Flags]
 	public enum CTLineBoundsOptions : ulong {
-		ExcludeTypographicLeading  = 1 << 0,
-		ExcludeTypographicShifts   = 1 << 1,
-		UseHangingPunctuation      = 1 << 2,
-		UseGlyphPathBounds         = 1 << 3,
-		UseOpticalBounds           = 1 << 4,
-		IncludeLanguageExtents     = 1 << 5, // iOS8 and Mac 10.11
-    }
-	
+		ExcludeTypographicLeading = 1 << 0,
+		ExcludeTypographicShifts = 1 << 1,
+		UseHangingPunctuation = 1 << 2,
+		UseGlyphPathBounds = 1 << 3,
+		UseOpticalBounds = 1 << 4,
+		IncludeLanguageExtents = 1 << 5, // iOS8 and Mac 10.11
+	}
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTLine : NativeObject {
 		[Preserve (Conditional = true)]
 		internal CTLine (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{
 		}
-		
-#region Line Creation
+
+		#region Line Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTLineCreateWithAttributedString (IntPtr @string);
 		public CTLine (NSAttributedString value)
@@ -97,9 +102,9 @@ namespace CoreText {
 				return null;
 			return new CTLine (h, true);
 		}
-#endregion
+		#endregion
 
-#region Line Access
+		#region Line Access
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern nint CTLineGetGlyphCount (IntPtr line);
 		public nint GlyphCount {
@@ -108,13 +113,13 @@ namespace CoreText {
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTLineGetGlyphRuns (IntPtr line);
-		public CTRun[] GetGlyphRuns ()
+		public CTRun [] GetGlyphRuns ()
 		{
 			var cfArrayRef = CTLineGetGlyphRuns (Handle);
 			if (cfArrayRef == IntPtr.Zero)
 				return Array.Empty<CTRun> ();
 
-			return NSArray.ArrayFromHandle (cfArrayRef, 
+			return NSArray.ArrayFromHandle (cfArrayRef,
 					v => new CTRun (v, false))!;
 		}
 
@@ -136,12 +141,12 @@ namespace CoreText {
 		public void Draw (CGContext context)
 		{
 			if (context is null)
-				throw new ArgumentNullException (nameof (context));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 			CTLineDraw (Handle, context.Handle);
 		}
-#endregion
+		#endregion
 
-#region Line Measurement
+		#region Line Measurement
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern CGRect CTLineGetImageBounds (/* CTLineRef __nonnull */ IntPtr line,
 			/* CGContextRef __nullable */ IntPtr context);
@@ -176,11 +181,11 @@ namespace CoreText {
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern double CTLineGetTrailingWhitespaceWidth (IntPtr line);
 		public double TrailingWhitespaceWidth {
-			get {return CTLineGetTrailingWhitespaceWidth (Handle);}
+			get { return CTLineGetTrailingWhitespaceWidth (Handle); }
 		}
-#endregion
+		#endregion
 
-#region Line Caret Positioning and Highlighting
+		#region Line Caret Positioning and Highlighting
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern nint CTLineGetStringIndexForPosition (IntPtr line, CGPoint position);
 		public nint GetStringIndexForPosition (CGPoint position)
@@ -204,13 +209,15 @@ namespace CoreText {
 
 		public delegate void CaretEdgeEnumerator (double offset, nint charIndex, bool leadingEdge, ref bool stop);
 		unsafe delegate void CaretEdgeEnumeratorProxy (IntPtr block, double offset, nint charIndex, [MarshalAs (UnmanagedType.I1)] bool leadingEdge, [MarshalAs (UnmanagedType.I1)] ref bool stop);
-		
+
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
-		[Mac (10,11)]
+		[iOS (9, 0)]
+		[Mac (10, 11)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern void CTLineEnumerateCaretOffsets (IntPtr line, ref BlockLiteral blockEnumerator);
@@ -228,22 +235,24 @@ namespace CoreText {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
-		[Mac (10,11)]
+		[iOS (9, 0)]
+		[Mac (10, 11)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateCaretOffsets (CaretEdgeEnumerator enumerator)
 		{
 			if (enumerator is null)
-				throw new ArgumentNullException (nameof (enumerator));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (enumerator));
 
 			var block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_enumerate, enumerator);
 			CTLineEnumerateCaretOffsets (Handle, ref block_handler);
 			block_handler.CleanupBlock ();
 		}
-#endregion
+		#endregion
 	}
 }
 

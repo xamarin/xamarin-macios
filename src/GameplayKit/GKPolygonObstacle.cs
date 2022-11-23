@@ -7,6 +7,8 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -22,18 +24,18 @@ namespace GameplayKit {
 
 		public static GKPolygonObstacle FromPoints (Vector2 [] points)
 		{
-			if (points == null)
-				throw new ArgumentNullException ("points");
-			
+			if (points is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
+
 			var size = Marshal.SizeOf (typeof (Vector2));
 			var length = points.Length * size;
 			var buffer = Marshal.AllocHGlobal (length);
 
 			try {
 				for (int i = 0; i < points.Length; i++)
-					Marshal.StructureToPtr (points[i], IntPtr.Add (buffer, i * size), false);
+					Marshal.StructureToPtr (points [i], IntPtr.Add (buffer, i * size), false);
 
-				return FromPoints (buffer, (nuint)points.Length);
+				return FromPoints (buffer, (nuint) points.Length);
 			} finally {
 				if (buffer != IntPtr.Zero)
 					Marshal.FreeHGlobal (buffer);
@@ -43,10 +45,10 @@ namespace GameplayKit {
 		[ThreadStatic]
 		static IntPtr ctor_pointer;
 
-		static unsafe IntPtr GetPointer (Vector2[] points)
+		static unsafe IntPtr GetPointer (Vector2 [] points)
 		{
-			if (points == null)
-				throw new ArgumentNullException ("points");
+			if (points is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
 			if (ctor_pointer != IntPtr.Zero) {
 				// This can occur of a previous call to the base ctor threw an exception
@@ -59,7 +61,7 @@ namespace GameplayKit {
 			var buffer = Marshal.AllocHGlobal (length);
 
 			for (int i = 0; i < points.Length; i++)
-				Marshal.StructureToPtr (points[i], IntPtr.Add (buffer, i * size), false);
+				Marshal.StructureToPtr (points [i], IntPtr.Add (buffer, i * size), false);
 
 			ctor_pointer = buffer;
 			return ctor_pointer = buffer;

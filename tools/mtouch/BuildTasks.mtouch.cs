@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 using Xamarin.MacDev;
 using Xamarin.Utils;
 
-namespace Xamarin.Bundler
-{
-	public abstract class ProcessTask : BuildTask
-	{
+namespace Xamarin.Bundler {
+	public abstract class ProcessTask : BuildTask {
 		public string FileName;
 		public IList<string> Arguments;
 		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
@@ -61,8 +59,7 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	class GenerateMainTask : BuildTask
-	{
+	class GenerateMainTask : BuildTask {
 		public Target Target;
 		public Abi Abi;
 		public string MainM;
@@ -87,27 +84,25 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	class CompileMainTask : CompileTask
-	{
+	class CompileMainTask : CompileTask {
 		protected override void CompilationFailed (int exitCode)
 		{
 			throw ErrorHelper.CreateError (5103, Errors.MT5103_A, string.Join ("', '", CompilerFlags.SourceFiles.ToArray ()));
 		}
 	}
 
-	class PinvokesTask : CompileTask
-	{
+	class PinvokesTask : CompileTask {
 		protected override void CompilationFailed (int exitCode)
 		{
 			throw ErrorHelper.CreateError (4002, Errors.MT4002);
 		}
 	}
 
-	class RunRegistrarTask : BuildTask
-	{
+	class RunRegistrarTask : BuildTask {
 		public Target Target;
 		public string RegistrarCodePath;
 		public string RegistrarHeaderPath;
+		public List<string> RegistrationMethods;
 
 		public override IEnumerable<string> Inputs {
 			get {
@@ -125,12 +120,12 @@ namespace Xamarin.Bundler
 
 		protected override void Execute ()
 		{
-			Target.StaticRegistrar.Generate (Target.Assemblies.Select ((a) => a.AssemblyDefinition), RegistrarHeaderPath, RegistrarCodePath);
+			Target.StaticRegistrar.Generate (Target.Assemblies.Select ((a) => a.AssemblyDefinition), RegistrarHeaderPath, RegistrarCodePath, out var initialization_name);
+			RegistrationMethods.Add (initialization_name);
 		}
 	}
 
-	class CompileRegistrarTask : CompileTask
-	{
+	class CompileRegistrarTask : CompileTask {
 		public string RegistrarCodePath;
 		public string RegistrarHeaderPath;
 
@@ -147,8 +142,7 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	public class AOTTask : ProcessTask
-	{
+	public class AOTTask : ProcessTask {
 		public Assembly Assembly;
 		public string AssemblyName;
 		public bool AddBitcodeMarkerSection;
@@ -233,7 +227,7 @@ namespace Xamarin.Bundler
 
 			WriteLimitedOutput ($"AOT Compilation exited with code {exit_code}, command:\n{Command}", output_lines, exceptions);
 
-			exceptions.Add (ErrorHelper.CreateError (3001, Errors.MX3001, "AOT",  AssemblyName));
+			exceptions.Add (ErrorHelper.CreateError (3001, Errors.MX3001, "AOT", AssemblyName));
 
 			throw new AggregateException (exceptions);
 		}
@@ -244,8 +238,7 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	public class NativeLinkTask : BuildTask
-	{
+	public class NativeLinkTask : BuildTask {
 		public Target Target;
 		public string OutputFile;
 		public CompilerFlags CompilerFlags;
@@ -315,6 +308,9 @@ namespace Xamarin.Bundler
 						}
 					}
 				}
+
+				if (code == 0 && Driver.XcodeVersion.Major >= 14 && Target.App.BitCodeMode != BitCodeMode.None)
+					Target.App.StripBitcode (OutputFile);
 			} catch (System.ComponentModel.Win32Exception wex) {
 				/* This means we failed to execute the linker, not that the linker itself returned with a failure */
 				if (wex.NativeErrorCode == 7 /* E2BIG = Too many arguments */ ) {
@@ -342,14 +338,16 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	public class LinkTask : CompileTask
-	{
+	public class LinkTask : CompileTask {
 		protected override async Task ExecuteAsync ()
 		{
 			await base.ExecuteAsync ();
 			// we can't trust the native linker to pick the right (non private) framework when an older TargetVersion is used
 			if (CompilerFlags.WeakFrameworks.Count > 0)
 				Target.AdjustDylibs (OutputFile);
+			// Remove bitcode from the binary
+			if (Driver.XcodeVersion.Major >= 14 && App.BitCodeMode != BitCodeMode.None)
+				App.StripBitcode (OutputFile);
 		}
 
 		protected override void CompilationFailed (int exitCode)
@@ -358,8 +356,7 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	public class CompileTask : BuildTask
-	{
+	public class CompileTask : BuildTask {
 		public Target Target;
 		public Application App { get { return Target.App; } }
 		public bool SharedLibrary;
@@ -580,8 +577,7 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	public class BitCodeifyTask : BuildTask
-	{
+	public class BitCodeifyTask : BuildTask {
 		public string Input { get; set; }
 		public string OutputFile { get; set; }
 		public ApplePlatform Platform { get; set; }
@@ -611,8 +607,7 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	public class LipoTask : BuildTask
-	{
+	public class LipoTask : BuildTask {
 		public Application App;
 		public IEnumerable<string> InputFiles { get; set; }
 		public string OutputFile { get; set; }
@@ -641,8 +636,7 @@ namespace Xamarin.Bundler
 	}
 
 
-	public class FileCopyTask : BuildTask
-	{
+	public class FileCopyTask : BuildTask {
 		public string InputFile { get; set; }
 		public string OutputFile { get; set; }
 

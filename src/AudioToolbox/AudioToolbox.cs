@@ -8,7 +8,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using CoreFoundation;
 using ObjCRuntime;
@@ -18,6 +17,12 @@ using OSStatus = System.Int32;
 
 namespace AudioToolbox {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class InstrumentInfo {
 
 		// defines, not NSString, are used for the key names
@@ -51,20 +56,32 @@ namespace AudioToolbox {
 		public NSDictionary Dictionary { get; private set; }
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public static class SoundBank {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)] // 10.5
+		[iOS (7, 0)] // 10.5
 #endif
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus CopyNameFromSoundBank (/* CFURLRef */ IntPtr inURL, /* CFStringRef */ ref IntPtr outName);
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)] // 10.5
+		[iOS (7, 0)] // 10.5
 #endif
 		public static string? GetName (NSUrl url)
 		{
@@ -84,9 +101,11 @@ namespace AudioToolbox {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
-		[Mac (10,9)]
+		[iOS (7, 0)]
+		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus CopyInstrumentInfoFromSoundBank (/* CFURLRef */ IntPtr inURL, /* CFSArrayRef */ ref IntPtr outInstrumentInfo);
@@ -94,9 +113,11 @@ namespace AudioToolbox {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
-		[Mac (10,9)]
+		[iOS (7, 0)]
+		[Mac (10, 9)]
 #endif
 		public static InstrumentInfo []? GetInstrumentInfo (NSUrl url)
 		{

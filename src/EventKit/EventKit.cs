@@ -7,6 +7,8 @@
 // Copyright 2012-2014, Xamarin Inc.
 //
 
+#nullable enable
+
 using ObjCRuntime;
 using Foundation;
 using System;
@@ -43,7 +45,7 @@ namespace EventKit {
 	partial class EKAlarm {
 #if !NET
 		[Obsolete ("Use the static methods FromDate or FromTimeInterval to create alarms")]
-		public EKAlarm () {}
+		public EKAlarm () { }
 #endif
 	}
 
@@ -51,7 +53,7 @@ namespace EventKit {
 #if !NET
 		// https://github.com/xamarin/maccore/issues/1832
 		[Obsolete ("Use 'Create' instead.")]
-		public EKReminder () {}
+		public EKReminder () { }
 #endif
 	}
 }

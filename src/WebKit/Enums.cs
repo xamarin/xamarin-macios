@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
@@ -57,9 +56,9 @@ namespace WebKit {
 
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	public enum DomRangeCompareHow : ushort {
-		StartToStart = 0, 
-		StartToEnd = 1, 
-		EndToEnd = 2, 
+		StartToStart = 0,
+		StartToEnd = 1,
+		EndToEnd = 2,
 		EndToStart = 3
 	}
 
@@ -78,7 +77,7 @@ namespace WebKit {
 	public enum WebDragSourceAction : ulong {
 		None = 0,
 		DHTML = 1,
-		Image = 2, 
+		Image = 2,
 		Link = 4,
 		Selection = 8,
 		Any = UInt64.MaxValue
@@ -89,7 +88,7 @@ namespace WebKit {
 	public enum WebDragDestinationAction : ulong {
 		None = 0,
 		DHTML = 1,
-		Image = 2, 
+		Image = 2,
 		Link = 4,
 		[Obsolete ("This API is not available on this platform.")]
 		Selection = 8,

@@ -21,10 +21,16 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
+using System.Runtime.Versioning;
 
 namespace WebKit {
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class DomEventArgs : EventArgs {
 		public DomEventArgs (DomEvent evt)
 		{
@@ -32,15 +38,15 @@ namespace WebKit {
 		}
 		public DomEvent Event { get; set; }
 	}
-	
+
 	public delegate void DomEventListenerHandler (object sender, DomEventArgs args);
-	
+
 	public partial class DomNode {
 
 		internal class DomNodeEventProxy : DomEventListener {
 			DomEventListenerHandler handler;
 			DomNode root;
-			
+
 			public DomNodeEventProxy (DomNode root, DomEventListenerHandler handler)
 			{
 				this.root = root;
@@ -55,7 +61,7 @@ namespace WebKit {
 
 		internal class DomNodeEventProxy2 : DomEventListener {
 			Action<DomEvent> callback;
-			
+
 			public DomNodeEventProxy2 (Action<DomEvent> callback)
 			{
 				this.callback = callback;
@@ -73,8 +79,8 @@ namespace WebKit {
 		public DomEventListener AddEventListener (string type, DomEventListenerHandler handler, bool useCapture)
 #endif
 		{
-			if (handler == null)
-				throw new ArgumentNullException ("handler");
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 			var obj = new DomNodeEventProxy (this, handler);
 			AddEventListener (type, obj, useCapture);
 			return obj;
@@ -86,8 +92,8 @@ namespace WebKit {
 		public DomEventListener AddEventListener (string type, Action<DomEvent> callback, bool useCapture)
 #endif
 		{
-			if (callback == null)
-				throw new ArgumentNullException ("callback");
+			if (callback is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 			var obj = new DomNodeEventProxy2 (callback);
 			AddEventListener (type, obj, useCapture);
 			return obj;

@@ -2,14 +2,13 @@
 #if !WATCH
 
 #if !MONOMAC
-using NSFont=UIKit.UIFont;
+using NSFont = UIKit.UIFont;
 #endif
 
 using System;
 using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
-using System.Runtime.Versioning;
 
 #if MONOMAC
 namespace AppKit {

@@ -35,8 +35,8 @@ build-%: $(TARGETS)
 build-specific:
 	$(Q) test -n "$(XAMARIN_RUNTIME)" || (echo "$(COLOR_RED)You must set the variable $(COLOR_GRAY)XAMARIN_RUNTIME$(COLOR_RED) to select which runtime to use (to either $(COLOR_GRAY)CoreCLR$(COLOR_RED) or $(COLOR_GRAY)MonoVM$(COLOR_RED)).$(COLOR_CLEAR)"; exit 1)
 	$(Q) rm -rf $(TOP)/tests/monotouch-test/dotnet/macOS/bin $(TOP)/tests/monotouch-test/dotnet/macOS/obj
-	if ! $(DOTNET6) build $(TOP)/tests/monotouch-test/dotnet/macOS/monotouch-test.csproj "/bl:$@-$(XAMARIN_RUNTIME).binlog" $(BUILD_PARAMETERS) /p:Configuration=$(XAMARIN_RUNTIME) /p:UseMonoRuntime=$(if $(subst MonoVM,,$(XAMARIN_RUNTIME)),false,true) $(MSBUILD_VERBOSITY); then \
-			$(DOTNET6) build /v:diag "$@-$(XAMARIN_RUNTIME).binlog"; \
+	if ! $(DOTNET) build $(TOP)/tests/monotouch-test/dotnet/macOS/monotouch-test.csproj "/bl:$@-$(XAMARIN_RUNTIME).binlog" $(BUILD_PARAMETERS) /p:Configuration=$(XAMARIN_RUNTIME) /p:UseMonoRuntime=$(if $(subst MonoVM,,$(XAMARIN_RUNTIME)),false,true) $(MSBUILD_VERBOSITY); then \
+			$(DOTNET) build /v:diag "$@-$(XAMARIN_RUNTIME).binlog"; \
 			exit 1; \
 	fi
 
@@ -47,11 +47,11 @@ exec-%: $(TARGETS)
 
 exec:
 	$(Q) test -n "$(XAMARIN_RUNTIME)" || (echo "XAMARIN_RUNTIME is not set"; exit 1)
-	$(Q) echo "Running monotouch-test: $(COLOR_GRAY)$(abspath $(TOP)/tests/monotouch-test/dotnet/macOS/bin/$(XAMARIN_RUNTIME)/net6.0-macos/osx-*/monotouchtest.app/Contents/MacOS/monotouchtest) $(ARGUMENTS)$(COLOR_CLEAR)"
+	$(Q) echo "Running monotouch-test: $(COLOR_GRAY)$(abspath $(TOP)/tests/monotouch-test/dotnet/macOS/bin/$(XAMARIN_RUNTIME)/$(DOTNET_TFM)-macos/osx-*/monotouchtest.app/Contents/MacOS/monotouchtest) $(ARGUMENTS)$(COLOR_CLEAR)"
 	$(Q) echo "Writing output to: $(COLOR_GRAY)$(LOGFILENAME)$(COLOR_CLEAR)"
 	$(Q) mkdir -p "$(dir $(LOGFILENAME))"
 	$(Q) echo "VM: $(XAMARIN_RUNTIME)" > "$(LOGFILENAME)"
-	$(Q) if ! $(abspath $(TOP)/tests/monotouch-test/dotnet/macOS/bin/$(XAMARIN_RUNTIME)/net6.0-macos/osx-*/monotouchtest.app/Contents/MacOS/monotouchtest) $(ARGUMENTS) >> "$(LOGFILENAME)" 2>&1 ; then \
+	$(Q) if ! $(abspath $(TOP)/tests/monotouch-test/dotnet/macOS/bin/$(XAMARIN_RUNTIME)/$(DOTNET_TFM)-macos/osx-*/monotouchtest.app/Contents/MacOS/monotouchtest) $(ARGUMENTS) >> "$(LOGFILENAME)" 2>&1 ; then \
 		echo "❌ Test run failed"; \
 		grep "[[]FAIL[]]" "$(LOGFILENAME)"; \
 		grep "Tests run:" "$(LOGFILENAME)"; \

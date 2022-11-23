@@ -6,10 +6,12 @@
 //
 // Copyright 2015, Xamarin Inc.
 //
+#nullable enable
 
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
@@ -18,6 +20,12 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace Foundation {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[Register ("NSOrderedSet", SkipRegistration = true)]
 	public sealed partial class NSOrderedSet<TKey> : NSOrderedSet, IEnumerable<TKey>
 		where TKey : class, INativeObject {
@@ -54,10 +62,10 @@ namespace Foundation {
 		{
 		}
 
-		public new TKey this [nint idx] {
+		public new TKey? this [nint idx] {
 			get {
 				var ret = _GetObject (idx);
-				return Runtime.GetINativeObject <TKey> (ret, false);
+				return Runtime.GetINativeObject<TKey> (ret, false);
 			}
 		}
 
@@ -68,7 +76,7 @@ namespace Foundation {
 
 		public bool Contains (TKey obj)
 		{
-			if (obj == null)
+			if (obj is null)
 				throw new ArgumentNullException (nameof (obj));
 
 			return _Contains (obj.Handle);
@@ -76,28 +84,28 @@ namespace Foundation {
 
 		public nint IndexOf (TKey obj)
 		{
-			if (obj == null)
+			if (obj is null)
 				throw new ArgumentNullException (nameof (obj));
 
 			return _IndexOf (obj.Handle);
 		}
 
-		public TKey FirstObject ()
+		public TKey? FirstObject ()
 		{
 			var ret = _FirstObject ();
-			return Runtime.GetINativeObject <TKey> (ret, false);
+			return Runtime.GetINativeObject<TKey> (ret, false);
 		}
 
-		public TKey LastObject ()
+		public TKey? LastObject ()
 		{
 			var ret = _LastObject ();
-			return Runtime.GetINativeObject <TKey> (ret, false);
+			return Runtime.GetINativeObject<TKey> (ret, false);
 		}
 
-		public NSSet<TKey> AsSet ()
+		public NSSet<TKey>? AsSet ()
 		{
 			var ret = _AsSet ();
-			return Runtime.GetINativeObject <NSSet<TKey>> (ret, false);
+			return Runtime.GetINativeObject<NSSet<TKey>> (ret, false);
 		}
 
 		#region IEnumerable<TKey>
@@ -114,11 +122,11 @@ namespace Foundation {
 		}
 		#endregion
 
-		public static NSOrderedSet<TKey> operator + (NSOrderedSet<TKey> first, NSOrderedSet<TKey> second)
+		public static NSOrderedSet<TKey>? operator + (NSOrderedSet<TKey>? first, NSOrderedSet<TKey>? second)
 		{
-			if (first == null)
-				return second != null ? new NSOrderedSet<TKey> (second) : null;
-			if (second == null)
+			if (first is null)
+				return second is not null ? new NSOrderedSet<TKey> (second) : null;
+			if (second is null)
 				return new NSOrderedSet<TKey> (first);
 			var copy = new NSMutableOrderedSet<TKey> (first);
 			copy.UnionSet (second);
@@ -126,11 +134,11 @@ namespace Foundation {
 			return copyset;
 		}
 
-		public static NSOrderedSet<TKey> operator + (NSOrderedSet<TKey> first, NSSet<TKey> second)
+		public static NSOrderedSet<TKey>? operator + (NSOrderedSet<TKey>? first, NSSet<TKey>? second)
 		{
-			if (first == null)
-				return second != null ? new NSOrderedSet<TKey> (second) : null;
-			if (second == null)
+			if (first is null)
+				return second is not null ? new NSOrderedSet<TKey> (second) : null;
+			if (second is null)
 				return new NSOrderedSet<TKey> (first);
 			var copy = new NSMutableOrderedSet<TKey> (first);
 			copy.UnionSet (second);
@@ -138,11 +146,11 @@ namespace Foundation {
 			return copyset;
 		}
 
-		public static NSOrderedSet<TKey> operator - (NSOrderedSet<TKey> first, NSOrderedSet<TKey> second)
+		public static NSOrderedSet<TKey>? operator - (NSOrderedSet<TKey>? first, NSOrderedSet<TKey>? second)
 		{
-			if (first == null)
+			if (first is null)
 				return null;
-			if (second == null)
+			if (second is null)
 				return new NSOrderedSet<TKey> (first);
 			var copy = new NSMutableOrderedSet<TKey> (first);
 			copy.MinusSet (second);
@@ -150,11 +158,11 @@ namespace Foundation {
 			return copyset;
 		}
 
-		public static NSOrderedSet<TKey> operator - (NSOrderedSet<TKey> first, NSSet<TKey> second)
+		public static NSOrderedSet<TKey>? operator - (NSOrderedSet<TKey>? first, NSSet<TKey>? second)
 		{
-			if (first == null)
+			if (first is null)
 				return null;
-			if (second == null)
+			if (second is null)
 				return new NSOrderedSet<TKey> (first);
 			var copy = new NSMutableOrderedSet<TKey> (first);
 			copy.MinusSet (second);
@@ -187,7 +195,7 @@ namespace Foundation {
 		public override bool Equals (object other)
 		{
 			var o = other as NSOrderedSet<TKey>;
-			if (o == null)
+			if (o is null)
 				return false;
 			return IsEqualToOrderedSet (o);
 		}
@@ -196,5 +204,68 @@ namespace Foundation {
 		{
 			return (int) GetNativeHash ();
 		}
+
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
+
+#if !NET
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos10.15")]
+#endif
+		public NSOrderedCollectionDifference<TKey> GetDifference (NSOrderedSet<TKey> other, NSOrderedCollectionDifferenceCalculationOptions options)
+			=> new NSOrderedCollectionDifference<TKey> (_GetDifference (other, options));
+
+#if !NET
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos10.15")]
+#endif
+		public NSOrderedCollectionDifference<TKey> GetDifference (NSOrderedSet other)
+			=> new NSOrderedCollectionDifference<TKey> (_GetDifference (other));
+
+#if !NET
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos10.15")]
+#endif
+		public NSOrderedSet<TKey>? GetOrderedSet (NSOrderedCollectionDifference difference)
+		{
+			var ptr = _GetOrderedSet (difference); 
+			return Runtime.GetNSObject<NSOrderedSet<TKey>> (ptr);
+		}
+
+		static readonly NSOrderedCollectionDifferenceEquivalenceTestProxy static_DiffEqualityGeneric = DiffEqualityHandlerGeneric;
+
+		[MonoPInvokeCallback (typeof (NSOrderedCollectionDifferenceEquivalenceTestProxy))]
+		static bool DiffEqualityHandlerGeneric (IntPtr block, IntPtr first, IntPtr second)
+		{
+			var callback = BlockLiteral.GetTarget<NSOrderedCollectionDifferenceEquivalenceTest<TKey>> (block);
+			if (callback is not null) {
+				var nsFirst = Runtime.GetINativeObject<TKey> (first, false);
+				var nsSecond = Runtime.GetINativeObject<TKey> (second, false);
+				return callback (nsFirst, nsSecond);
+			}
+			return false;
+		}
+
+#if !NET
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos10.15")]
+#endif
+		public NSOrderedCollectionDifference<TKey>? GetDifference (NSOrderedSet<TKey> other, NSOrderedCollectionDifferenceCalculationOptions options, NSOrderedCollectionDifferenceEquivalenceTest<TKey> equivalenceTest) 
+		{
+			if (equivalenceTest is null)
+				throw new ArgumentNullException (nameof (equivalenceTest));
+
+			var block = new BlockLiteral ();
+			block.SetupBlock (static_DiffEqualityGeneric, equivalenceTest);
+			try {
+				return Runtime.GetNSObject<NSOrderedCollectionDifference<TKey>> (_GetDifference (other, options, ref block));
+			} finally {
+				block.CleanupBlock ();
+			}
+		}
+#endif
 	}
 }

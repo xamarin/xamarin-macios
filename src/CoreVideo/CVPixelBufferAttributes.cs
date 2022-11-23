@@ -29,17 +29,20 @@ using System;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace CoreVideo {
 
-#if !NET
-	[Watch (4,0)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
+	[Watch (4, 0)]
 #endif
-	public class CVPixelBufferAttributes : DictionaryContainer
-	{
+	public class CVPixelBufferAttributes : DictionaryContainer {
 #if !COREBUILD
 		public CVPixelBufferAttributes ()
 			: base (new NSMutableDictionary ())
@@ -61,12 +64,12 @@ namespace CoreVideo {
 
 		public CVPixelFormatType? PixelFormatType {
 			set {
-				SetNumberValue (CVPixelBuffer.PixelFormatTypeKey, (uint?)value);
+				SetNumberValue (CVPixelBuffer.PixelFormatTypeKey, (uint?) value);
 			}
 			get {
 				return (CVPixelFormatType?) GetUIntValue (CVPixelBuffer.PixelFormatTypeKey);
 			}
-		} 
+		}
 
 		public CFAllocator? MemoryAllocator {
 			get {
@@ -187,7 +190,7 @@ namespace CoreVideo {
 					RemoveValue (CVPixelBuffer.IOSurfacePropertiesKey);
 			}
 			get {
-				return GetNSDictionary (CVPixelBuffer.IOSurfacePropertiesKey) != null;
+				return GetNSDictionary (CVPixelBuffer.IOSurfacePropertiesKey) is not null;
 			}
 		}
 
@@ -205,8 +208,11 @@ namespace CoreVideo {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
 #else
-		[iOS (8,0)]
+		[iOS (8, 0)]
 #endif
 		public bool? MetalCompatibility {
 			set {

@@ -9,7 +9,6 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using Foundation;
 using CoreFoundation;
 using CoreGraphics;
@@ -30,7 +29,7 @@ namespace ModelIO {
 
 	partial class MDLMesh {
 
-		public enum  MDLMeshVectorType {
+		public enum MDLMeshVectorType {
 			Dimensions,
 			Extent,
 		}
@@ -83,10 +82,11 @@ namespace ModelIO {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (10,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
+		[iOS (10, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
 #endif
 		public static MDLMesh CreateBox (Vector3 dimensions, Vector3i segments, MDLGeometryType geometryType, bool inwardNormals, IMDLMeshBufferAllocator allocator)
 		{
@@ -97,10 +97,11 @@ namespace ModelIO {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (10,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
+		[iOS (10, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
 #endif
 		public static MDLMesh CreateBox (Vector3 vector, Vector3i segments, MDLGeometryType geometryType, bool inwardNormals, IMDLMeshBufferAllocator allocator, MDLMeshVectorType type = MDLMeshVectorType.Dimensions)
 		{
@@ -118,10 +119,11 @@ namespace ModelIO {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (10,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
+		[iOS (10, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
 #endif
 		public static MDLMesh CreateSphere (Vector3 dimensions, Vector2i segments, MDLGeometryType geometryType, bool inwardNormals, IMDLMeshBufferAllocator allocator)
 		{
@@ -132,10 +134,11 @@ namespace ModelIO {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (10,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
+		[iOS (10, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
 #endif
 		public static MDLMesh CreateHemisphere (Vector3 dimensions, Vector2i segments, MDLGeometryType geometryType, bool inwardNormals, bool cap, IMDLMeshBufferAllocator allocator)
 		{
@@ -146,10 +149,11 @@ namespace ModelIO {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (10,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
+		[iOS (10, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
 #endif
 		public static MDLMesh CreateCylinder (Vector3 extent, Vector2i segments, bool inwardNormals, bool topCap, bool bottomCap, MDLGeometryType geometryType, IMDLMeshBufferAllocator allocator)
 		{
@@ -160,10 +164,11 @@ namespace ModelIO {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (10,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
+		[iOS (10, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
 #endif
 		public static MDLMesh CreateCapsule (Vector3 dimensions, Vector2i segments, MDLGeometryType geometryType, bool inwardNormals, int hemisphereSegments, IMDLMeshBufferAllocator allocator)
 		{
@@ -174,10 +179,11 @@ namespace ModelIO {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (10,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
+		[iOS (10, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
 #endif
 		public static MDLMesh CreateCone (Vector3 dimensions, Vector2i segments, MDLGeometryType geometryType, bool inwardNormals, bool cap, IMDLMeshBufferAllocator allocator)
 		{
@@ -188,10 +194,11 @@ namespace ModelIO {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (10,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
+		[iOS (10, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
 #endif
 		public static MDLMesh CreatePlane (Vector3 extent, Vector2i segments, MDLGeometryType geometryType, IMDLMeshBufferAllocator allocator)
 		{
@@ -202,10 +209,11 @@ namespace ModelIO {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (10,0)]
-		[TV (10,0)]
-		[Mac (10,12)]
+		[iOS (10, 0)]
+		[TV (10, 0)]
+		[Mac (10, 12)]
 #endif
 		public static MDLMesh CreateIcosahedron (Vector3 extent, bool inwardNormals, MDLGeometryType geometryType, IMDLMeshBufferAllocator allocator)
 		{
@@ -222,85 +230,85 @@ namespace ModelIO {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.Anisotropy);
 			}
 		}
-		
+
 		public MDLVertexAttributeData? BinormalVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.Binormal);
 			}
 		}
-		
+
 		public MDLVertexAttributeData? BitangentVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.Bitangent);
 			}
 		}
-		
+
 		public MDLVertexAttributeData? ColorVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.Color);
 			}
 		}
-		
+
 		public MDLVertexAttributeData? EdgeCreaseVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.EdgeCrease);
 			}
 		}
-		
+
 		public MDLVertexAttributeData? JointIndicesVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.JointIndices);
 			}
 		}
-		
+
 		public MDLVertexAttributeData? JointWeightsVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.JointWeights);
 			}
 		}
-		
+
 		public MDLVertexAttributeData? NormalVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.Normal);
 			}
 		}
-		
+
 		public MDLVertexAttributeData? OcclusionValueVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.OcclusionValue);
 			}
 		}
-		
+
 		public MDLVertexAttributeData? PositionVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.Position);
 			}
 		}
-		
+
 		public MDLVertexAttributeData? ShadingBasisUVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.ShadingBasisU);
 			}
 		}
-		
+
 		public MDLVertexAttributeData? ShadingBasisVVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.ShadingBasisV);
 			}
 		}
-		
+
 		public MDLVertexAttributeData? SubdivisionStencilVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.SubdivisionStencil);
 			}
 		}
-		
+
 		public MDLVertexAttributeData? TangentVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.Tangent);
 			}
 		}
-		
+
 		public MDLVertexAttributeData? TextureCoordinateVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.TextureCoordinate);

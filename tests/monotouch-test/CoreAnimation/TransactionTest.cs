@@ -14,11 +14,11 @@ using Foundation;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreAnimation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class TransactionTest {
-		
+
 		[Test]
 		public void CompletionBlock_Null ()
 		{

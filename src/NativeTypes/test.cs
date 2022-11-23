@@ -1,12 +1,13 @@
+#nullable enable
+
 using System;
 using System.Drawing;
 using CoreGraphics;
 namespace Foundation {
-	public class NSDictionary {}
+	public class NSDictionary { }
 }
 
-unsafe static class Test
-{
+unsafe static class Test {
 	static void Main ()
 	{
 		nint a = 55;
@@ -25,7 +26,7 @@ unsafe static class Test
 		var dr = fr;
 		Console.WriteLine (fr);
 		Console.WriteLine (dr);
-		fr = (RectangleF)dr;
+		fr = (RectangleF) dr;
 		Console.WriteLine (fr);
 
 	}

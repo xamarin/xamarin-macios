@@ -31,12 +31,14 @@ namespace LinkSdk {
 			// located inside System.Core.dll - IOW the linker needs to be aware of this
 			Aes aes = Aes.Create ();
 			Assert.NotNull (aes, "Aes");
-#if NET
+#if NET7_0_OR_GREATER
+			const string prefix = "System.Security.Cryptography, ";
+#elif NET
 			const string prefix = "System.Security.Cryptography.Algorithms, ";
 #else
 			const string prefix = "System.Core, ";
 #endif
-			Assert.True (aes.GetType ().Assembly.FullName.StartsWith (prefix, StringComparison.Ordinal), prefix);
+			Assert.That (aes.GetType ().Assembly.FullName, Does.StartWith (prefix), prefix);
 		}
 
 		static int trust_validation_callback;
@@ -68,6 +70,9 @@ namespace LinkSdk {
 				// caching means it will be called at least for the first run, but it might not
 				// be called again in subsequent requests (unless it expires)
 				Assert.That (trust_validation_callback, Is.GreaterThan (0), "validation done");
+			} catch (WebException we) {
+				TestRuntime.IgnoreInCIIfBadNetwork (we);
+				throw;
 			}
 			finally {
 				ServicePointManager.ServerCertificateValidationCallback = null;
@@ -75,17 +80,12 @@ namespace LinkSdk {
 		}
 
 		[Test]
-#if NET
-		[Ignore ("Crash https://github.com/dotnet/runtime/issues/54239")]
-#endif
 		public void SSL_IP_5706 ()
 		{
 #if __WATCHOS__
 			Assert.Ignore ("WatchOS doesn't support BSD sockets, which our network stack currently requires.");
 #endif
 			WebClient wc = new WebClient ();
-			// the certificate contains (several rules) the host name
-			Assert.NotNull (wc.DownloadString (NetworkResources.MicrosoftUrl));
 
 			// IP are (generally) not allowed
 			foreach (var ip in Dns.GetHostAddresses ("www.google.com")) {
@@ -134,10 +134,7 @@ namespace LinkSdk {
 			catch (WebException we) {
 				// failing to get data does not mean the SSL/TLS session was not established
 				if (sne_validation_callback == 0) {
-					// The remote server returned an error: (502) Bad Gateway.
-					// The remote server returned an error: (503) Service Unavailable.
-					if (we.Message.Contains ("(502)") || we.Message.Contains ("(503)"))
-						Assert.Inconclusive (we.Message);
+					TestRuntime.IgnoreInCIIfBadNetwork (we);
 					throw;
 				}
 			}

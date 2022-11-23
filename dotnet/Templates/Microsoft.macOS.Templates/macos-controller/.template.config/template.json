@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Microsoft",
+  "classifications": [ "macOS" ],
+  "name": "macOS Controller",
+  "description": "A macOS View Controller with UI implemented in code",
+  "tags": {
+    "language": "C#",
+    "type": "item"
+  },
+  "identity": "Microsoft.macOS.Controller",
+  "shortName": "macos-controller",
+  "sourceName": "Controller1",
+  "primaryOutputs": [
+    { "path": "Controller1.cs" }
+  ],
+  "defaultName": "Controller1",
+  "symbols": {
+    "namespace": {
+      "description": "namespace for the generated code",
+      "replaces": "macOSApp1",
+      "type": "parameter"
+    }
+  }
+}

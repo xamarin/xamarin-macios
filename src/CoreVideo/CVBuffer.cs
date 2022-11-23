@@ -30,7 +30,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
@@ -44,13 +43,17 @@ using NativeHandle = System.IntPtr;
 namespace CoreVideo {
 
 	// CVBuffer.h
-#if !NET
-	[Watch (4,0)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
+	[Watch (4, 0)]
 #endif
-	public partial class CVBuffer : NativeObject
-	{
+	public partial class CVBuffer : NativeObject {
 #if !COREBUILD
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CVBuffer (NativeHandle handle, bool owns)
 			: base (handle, owns, verify: true)
 		{
@@ -58,16 +61,16 @@ namespace CoreVideo {
 
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static void CVBufferRelease (/* CVBufferRef */ IntPtr buffer);
-		
+
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CVBufferRef */ IntPtr CVBufferRetain (/* CVBufferRef */ IntPtr buffer);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CVBufferRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CVBufferRelease (GetCheckedHandle ());
 		}
@@ -86,25 +89,24 @@ namespace CoreVideo {
 		public void RemoveAttachment (NSString key)
 		{
 			if (key is null)
-				throw new ArgumentNullException (nameof (key));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 
 			CVBufferRemoveAttachment (Handle, key.Handle);
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos12.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos12.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos15.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos12.0")]
+		[ObsoletedOSPlatform ("tvos15.0")]
+		[ObsoletedOSPlatform ("maccatalyst15.0")]
+		[ObsoletedOSPlatform ("ios15.0")]
 #else
 		[Deprecated (PlatformName.MacOSX, 12, 0)]
 		[Deprecated (PlatformName.iOS, 15, 0)]
@@ -123,35 +125,35 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[Watch (8,0)]
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
-		[MacCatalyst (15,0)]
+		[Watch (8, 0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CFTypeRef */ IntPtr CVBufferCopyAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key, out CVAttachmentMode attachmentMode);
 
-// FIXME: we need to bring the new API to xamcore
+		// FIXME: we need to bring the new API to xamcore
 #if !MONOMAC
 		// any CF object can be attached
 		public T? GetAttachment<T> (NSString key, out CVAttachmentMode attachmentMode) where T : class, INativeObject
 		{
 			if (key is null)
-				throw new ArgumentNullException (nameof (key));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 #if IOS || __MACCATALYST__ || TVOS
 			if (SystemVersion.CheckiOS (15, 0))
 #elif WATCH
 			if (SystemVersion.CheckwatchOS (8, 0))
 #endif
-				return Runtime.GetINativeObject<T> (CVBufferCopyAttachment (Handle, key.Handle, out attachmentMode), true);
+			return Runtime.GetINativeObject<T> (CVBufferCopyAttachment (Handle, key.Handle, out attachmentMode), true);
 			return Runtime.GetINativeObject<T> (CVBufferGetAttachment (Handle, key.Handle, out attachmentMode), false);
 		}
 #else
 		public NSObject? GetAttachment (NSString key, out CVAttachmentMode attachmentMode)
 		{
 			if (key is null)
-				throw new ArgumentNullException (nameof (key));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 			if (SystemVersion.CheckmacOS (12, 0))
 				return Runtime.GetNSObject<NSObject> (CVBufferCopyAttachment (Handle, key.Handle, out attachmentMode), true);
 			else
@@ -160,19 +162,18 @@ namespace CoreVideo {
 #endif
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos12.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos12.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos15.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos12.0")]
+		[ObsoletedOSPlatform ("tvos15.0")]
+		[ObsoletedOSPlatform ("maccatalyst15.0")]
+		[ObsoletedOSPlatform ("ios15.0")]
 #else
 		[Deprecated (PlatformName.MacOSX, 12, 0)]
 		[Deprecated (PlatformName.iOS, 15, 0)]
@@ -189,11 +190,11 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[Watch (8,0)]
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
-		[MacCatalyst (15,0)]
+		[Watch (8, 0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CFDictionaryRef */ IntPtr CVBufferCopyAttachments (/* CVBufferRef */ IntPtr buffer, CVAttachmentMode attachmentMode);
@@ -207,7 +208,7 @@ namespace CoreVideo {
 #elif MONOMAC
 			if (SystemVersion.CheckmacOS (12, 0))
 #endif
-				return Runtime.GetINativeObject<NSDictionary> (CVBufferCopyAttachments (Handle, attachmentMode), true);
+			return Runtime.GetINativeObject<NSDictionary> (CVBufferCopyAttachments (Handle, attachmentMode), true);
 			return Runtime.GetNSObject<NSDictionary> (CVBufferGetAttachments (Handle, attachmentMode), false);
 		}
 
@@ -226,7 +227,7 @@ namespace CoreVideo {
 		public void PropogateAttachments (CVBuffer destinationBuffer)
 		{
 			if (destinationBuffer is null)
-				throw new ArgumentNullException (nameof (destinationBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (destinationBuffer));
 
 			CVBufferPropagateAttachments (Handle, destinationBuffer.Handle);
 		}
@@ -237,9 +238,9 @@ namespace CoreVideo {
 		public void SetAttachment (NSString key, INativeObject @value, CVAttachmentMode attachmentMode)
 		{
 			if (key is null)
-				throw new ArgumentNullException (nameof (key));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 			if (@value is null)
-				throw new ArgumentNullException (nameof (value));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 			CVBufferSetAttachment (Handle, key.Handle, @value.Handle, attachmentMode);
 		}
 
@@ -249,7 +250,7 @@ namespace CoreVideo {
 		public void SetAttachments (NSDictionary theAttachments, CVAttachmentMode attachmentMode)
 		{
 			if (theAttachments is null)
-				throw new ArgumentNullException (nameof (theAttachments));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (theAttachments));
 			CVBufferSetAttachments (Handle, theAttachments.Handle, attachmentMode);
 		}
 
@@ -259,11 +260,11 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("maccatalyst15.0")]
 		[SupportedOSPlatform ("macos12.0")]
 #else
-		[iOS (15,0)]
-		[TV (15,0)]
-		[MacCatalyst (15,0)]
-		[Mac (12,0)]
-		[Watch (8,0)]
+		[iOS (15, 0)]
+		[TV (15, 0)]
+		[MacCatalyst (15, 0)]
+		[Mac (12, 0)]
+		[Watch (8, 0)]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
@@ -275,16 +276,16 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("maccatalyst15.0")]
 		[SupportedOSPlatform ("macos12.0")]
 #else
-		[iOS (15,0)]
-		[TV (15,0)]
-		[MacCatalyst (15,0)]
-		[Mac (12,0)]
-		[Watch (8,0)]
+		[iOS (15, 0)]
+		[TV (15, 0)]
+		[MacCatalyst (15, 0)]
+		[Mac (12, 0)]
+		[Watch (8, 0)]
 #endif
 		public bool HasAttachment (NSString key)
 		{
 			if (key is null)
-				throw new ArgumentNullException (nameof (key));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 			return CVBufferHasAttachment (Handle, key.Handle);
 		}
 

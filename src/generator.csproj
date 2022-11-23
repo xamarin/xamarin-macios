@@ -120,6 +120,7 @@
     <Compile Include="..\src\ObjCRuntime\BindingImplAttribute.cs" />
     <Compile Include="..\src\ObjCRuntime\LinkWithAttribute.cs" />
     <Compile Include="..\src\ObjCRuntime\NativeAttribute.cs" />
+    <Compile Include="..\src\ObjCRuntime\NativeNameAttribute.cs" />
     <Compile Include="..\src\ObjCRuntime\PlatformAvailability2.cs" />
     <Compile Include="..\src\ObjCRuntime\PlatformAvailabilityShadow.cs" />
     <Compile Include="..\src\ObjCRuntime\Registrar.core.cs" />

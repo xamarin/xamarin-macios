@@ -7,11 +7,12 @@
 // Copyright 2014 Xamarin Inc.
 //
 
+#nullable enable
+
 using System;
 using System.IO;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
@@ -24,6 +25,10 @@ namespace Security {
 #endif
 
 #if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 	[UnsupportedOSPlatform ("macos10.15")]
 	[UnsupportedOSPlatform ("tvos13.0")]
 	[UnsupportedOSPlatform ("ios13.0")]
@@ -35,10 +40,10 @@ namespace Security {
 	[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-	[Deprecated (PlatformName.MacOSX, 10,15, message: Constants.UseNetworkInstead)]
-	[Deprecated (PlatformName.iOS, 13,0, message: Constants.UseNetworkInstead)]
-	[Deprecated (PlatformName.TvOS, 13,0, message: Constants.UseNetworkInstead)]
-	[Deprecated (PlatformName.WatchOS, 6,0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.MacOSX, 10, 15, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.iOS, 13, 0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.TvOS, 13, 0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.WatchOS, 6, 0, message: Constants.UseNetworkInstead)]
 #endif
 	public abstract class SslConnection : IDisposable {
 
@@ -94,7 +99,7 @@ namespace Security {
 #endif
 		unsafe static SslStatus Read (IntPtr connection, IntPtr data, nint* dataLength)
 		{
-			var c = (SslConnection) GCHandle.FromIntPtr (connection).Target;
+			var c = (SslConnection) GCHandle.FromIntPtr (connection).Target!;
 			return c.Read (data, ref System.Runtime.CompilerServices.Unsafe.AsRef<nint> (dataLength));
 		}
 
@@ -105,20 +110,27 @@ namespace Security {
 #endif
 		unsafe static SslStatus Write (IntPtr connection, IntPtr data, nint* dataLength)
 		{
-			var c = (SslConnection) GCHandle.FromIntPtr (connection).Target;
+			var c = (SslConnection) GCHandle.FromIntPtr (connection).Target!;
 			return c.Write (data, ref System.Runtime.CompilerServices.Unsafe.AsRef<nint> (dataLength));
 		}
 	}
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// a concrete connection based on a managed Stream
 	public class SslStreamConnection : SslConnection {
 
-		byte[] buffer;
+		byte [] buffer;
 
 		public SslStreamConnection (Stream stream)
 		{
-			if (stream == null)
-				throw new ArgumentNullException ("stream");
+			if (stream is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (stream));
 			InnerStream = stream;
 			// a bit higher than the default maximum fragment size
 			buffer = new byte [16384];
@@ -143,11 +155,9 @@ namespace Security {
 			using (var ms = new UnmanagedMemoryStream ((byte*) data, dataLength)) {
 				try {
 					ms.CopyTo (InnerStream);
-				}
-				catch (IOException) {
+				} catch (IOException) {
 					return SslStatus.ClosedGraceful;
-				}
-				catch {
+				} catch {
 					return SslStatus.Internal;
 				}
 			}

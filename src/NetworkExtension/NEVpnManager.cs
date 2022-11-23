@@ -14,21 +14,22 @@ using System;
 using Foundation;
 using ObjCRuntime;
 using Security;
-using System.Runtime.Versioning;
 
 namespace NetworkExtension {
 	public partial class NEVpnManager {
 
 #if NET
 		[SupportedOSPlatform ("macos10.11")]
-		[SupportedOSPlatform ("ios8.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,11)]
 #endif
 		public void SetAuthorization (Authorization authorization)
 		{
 			if (authorization is null)
-				throw new ArgumentNullException (nameof (authorization));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (authorization));
 
 			_SetAuthorization (authorization.Handle);
 		}

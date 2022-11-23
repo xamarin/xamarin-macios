@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -26,7 +28,7 @@ namespace CoreGraphics {
 #endif // MONOMAC
 
 #if !COREBUILD
-		public override string ToString ()
+		public override string? ToString ()
 		{
 			return CFString.FromHandle (NSStringFromCGRect (this));
 		}

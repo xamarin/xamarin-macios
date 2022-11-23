@@ -19,6 +19,7 @@ using CoreGraphics;
 #if MONOMAC
 using AppKit;
 using AUViewControllerBase = AppKit.NSViewController;
+using UIViewController = AppKit.NSViewController;
 #else
 using UIKit;
 using AUViewControllerBase = UIKit.UIViewController;
@@ -154,6 +155,7 @@ namespace CoreAudioKit {
 
 #if !MONOMAC
 	[iOS (8,0)]
+	[NoMac]
 	// in iOS 8.3 (Xcode 6.3 SDK) the base type was changed from UIViewController to UITableViewController
 	[BaseType (typeof (UITableViewController), Name="CABTMIDICentralViewController")]
 	interface CABTMidiCentralViewController {
@@ -167,6 +169,7 @@ namespace CoreAudioKit {
 	}
 
 	[iOS (8,0)]
+	[NoMac]
 	[BaseType (typeof (UIViewController), Name="CABTMIDILocalPeripheralViewController")]
 	interface CABTMidiLocalPeripheralViewController {
 		[Export ("initWithNibName:bundle:")]
@@ -175,6 +178,7 @@ namespace CoreAudioKit {
 	}
 
 	[iOS (8,0)]
+	[NoMac]
 	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
 	[NoMacCatalyst]
 	[BaseType (typeof (UIView))]
@@ -193,6 +197,7 @@ namespace CoreAudioKit {
 	}
 
 	[iOS (8,0)]
+	[NoMac]
 	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
 	[NoMacCatalyst]
 	[BaseType (typeof (UIView))]
@@ -236,4 +241,17 @@ namespace CoreAudioKit {
 		void SetOutputAudioUnit (AudioUnit.AudioUnit audioUnit);
 	}
 #endif
+
+	[Mac (13,0), iOS (16,0)]
+	[BaseType (typeof(UIViewController))]
+	interface AUGenericViewController
+	{
+
+		[DesignatedInitializer]
+		[Export ("initWithNibName:bundle:")]
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+
+		[NullAllowed, Export ("auAudioUnit", ArgumentSemantic.Strong)]
+		AUAudioUnit AuAudioUnit { get; set; }
+	}
 }

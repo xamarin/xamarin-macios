@@ -76,8 +76,20 @@ namespace ObjCRuntime {
 		public enum RTLD {
 			Next = -1,
 			Default = -2,
-			Self =  -3,
+			Self = -3,
 			MainOnly = -5
+		}
+
+		[Flags]
+		public enum Mode : int {
+			None = 0x0,
+			Lazy = 0x1,
+			Now = 0x2,
+			Local = 0x4,
+			Global = 0x8,
+			NoLoad = 0x10,
+			NoDelete = 0x80,
+			First = 0x100,
 		}
 
 #if MONOMAC
@@ -96,12 +108,17 @@ namespace ObjCRuntime {
 		[DllImport (Constants.libSystemLibrary)]
 		public static extern int dlclose (IntPtr handle);
 
-		[DllImport (Constants.libSystemLibrary, EntryPoint="dlopen")]
-		internal static extern IntPtr _dlopen (string? path, int mode /* this is int32, not nint */);
+		[DllImport (Constants.libSystemLibrary, EntryPoint = "dlopen")]
+		internal static extern IntPtr _dlopen (string? path, Mode mode /* this is int32, not nint */);
 
 		public static IntPtr dlopen (string? path, int mode)
 		{
 			return dlopen (path, mode, showWarning: true);
+		}
+
+		public static IntPtr dlopen (string? path, Mode mode)
+		{
+			return _dlopen (path, mode);
 		}
 
 		static bool warningShown;
@@ -115,14 +132,14 @@ namespace ObjCRuntime {
 
 		internal static IntPtr dlopen (string? path, int mode, bool showWarning)
 		{
-			var x = _dlopen (path, mode);
+			var x = _dlopen (path, (Mode) mode);
 			if (x != IntPtr.Zero)
 				return x;
 
 			// In iOS < 9, you could dlopen ("libc") and that would work.
 			// In iOS >= 9, this fails with:
 			// "no cache image with name (<top>)"
-			if (path?.IndexOf ('/') == -1){
+			if (path?.IndexOf ('/') == -1) {
 				if (showWarning)
 					WarnOnce ();
 				return dlopen ("/usr/lib/" + path, mode, false);
@@ -138,7 +155,7 @@ namespace ObjCRuntime {
 			return dlsym ((IntPtr) lookupType, symbol);
 		}
 
-		[DllImport (Constants.libSystemLibrary, EntryPoint="dlerror")]
+		[DllImport (Constants.libSystemLibrary, EntryPoint = "dlerror")]
 		internal static extern IntPtr dlerror_ ();
 
 		public static string? dlerror ()
@@ -205,7 +222,7 @@ namespace ObjCRuntime {
 				return;
 			Marshal.WriteInt32 (indirect, (int) value);
 		}
-		
+
 		public static long GetInt64 (IntPtr handle, string symbol)
 		{
 			var indirect = dlsym (handle, symbol);
@@ -213,7 +230,7 @@ namespace ObjCRuntime {
 				return 0;
 			return Marshal.ReadInt64 (indirect);
 		}
-		
+
 		public static void SetInt64 (IntPtr handle, string symbol, long value)
 		{
 			var indirect = dlsym (handle, symbol);
@@ -284,7 +301,7 @@ namespace ObjCRuntime {
 
 		public static nint GetNInt (IntPtr handle, string symbol)
 		{
-			return (nint)GetIntPtr (handle, symbol);
+			return (nint) GetIntPtr (handle, symbol);
 		}
 
 		public static void SetNInt (IntPtr handle, string symbol, nint value)
@@ -310,9 +327,9 @@ namespace ObjCRuntime {
 
 			unsafe {
 				if (sizeof (IntPtr) == 4)
-					return (nfloat) (*(float *) indirect);
+					return (nfloat) (*(float*) indirect);
 				else
-					return (nfloat) (*(double *) indirect);
+					return (nfloat) (*(double*) indirect);
 			}
 		}
 
@@ -366,7 +383,7 @@ namespace ObjCRuntime {
 			if (indirect == IntPtr.Zero)
 				return CGRect.Empty;
 			unsafe {
-				nfloat *ptr = (nfloat *) indirect;
+				nfloat* ptr = (nfloat*) indirect;
 				return new CGRect (ptr [0], ptr [1], ptr [2], ptr [3]);
 			}
 		}
@@ -377,7 +394,7 @@ namespace ObjCRuntime {
 			if (indirect == IntPtr.Zero)
 				return CGSize.Empty;
 			unsafe {
-				nfloat *ptr = (nfloat *) indirect;
+				nfloat* ptr = (nfloat*) indirect;
 				return new CGSize (ptr [0], ptr [1]);
 			}
 		}
@@ -388,7 +405,7 @@ namespace ObjCRuntime {
 			if (indirect == IntPtr.Zero)
 				return;
 			unsafe {
-				nfloat *ptr = (nfloat *) indirect;
+				nfloat* ptr = (nfloat*) indirect;
 				ptr [0] = value.Width;
 				ptr [1] = value.Height;
 			}
@@ -400,7 +417,7 @@ namespace ObjCRuntime {
 			if (indirect == IntPtr.Zero)
 				return 0;
 			unsafe {
-				double *d = (double *) indirect;
+				double* d = (double*) indirect;
 
 				return *d;
 			}
@@ -412,7 +429,7 @@ namespace ObjCRuntime {
 			if (indirect == IntPtr.Zero)
 				return;
 			unsafe {
-				*(double *) indirect = value;
+				*(double*) indirect = value;
 			}
 		}
 
@@ -422,7 +439,7 @@ namespace ObjCRuntime {
 			if (indirect == IntPtr.Zero)
 				return 0;
 			unsafe {
-				float *d = (float *) indirect;
+				float* d = (float*) indirect;
 
 				return *d;
 			}
@@ -434,10 +451,10 @@ namespace ObjCRuntime {
 			if (indirect == IntPtr.Zero)
 				return;
 			unsafe {
-				*(float *) indirect = value;
+				*(float*) indirect = value;
 			}
 		}
-		
+
 		internal static int SlowGetInt32 (string? lib, string symbol)
 		{
 			var handle = dlopen (lib, 0);

@@ -1,14 +1,15 @@
+#nullable enable
+
 using System;
 
-namespace iTunesLibrary
-{
+namespace iTunesLibrary {
 #if !NET
-    public partial class ITLibrary {
+	public partial class ITLibrary {
 
-        [Obsolete ("This constructor does not create a valid instance of the type.")]
-        public ITLibrary ()
-        {
-        }
-    }
+		[Obsolete ("This constructor does not create a valid instance of the type.")]
+		public ITLibrary ()
+		{
+		}
+	}
 #endif
 }

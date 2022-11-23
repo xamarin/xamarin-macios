@@ -31,7 +31,6 @@
 using System;
 using ObjCRuntime;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace AppKit {
 
@@ -40,8 +39,9 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,12)]
+		[Mac (10, 12)]
 #endif
 		public static NSSlider FromTarget (Action action)
 		{
@@ -53,8 +53,9 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,12)]
+		[Mac (10, 12)]
 #endif
 		public static NSSlider FromValue (double value, double minValue, double maxValue, Action action)
 		{

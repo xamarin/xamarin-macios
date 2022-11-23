@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.Versioning;
 using ObjCRuntime;
 
 #nullable enable
@@ -12,11 +11,12 @@ namespace MapKit {
 	[SupportedOSPlatform ("tvos11.0")]
 	[SupportedOSPlatform ("ios11.0")]
 	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (11,0)]
+	[TV (11, 0)]
 	[NoWatch]
-	[iOS (11,0)]
-	[Mac (10,13)]
+	[iOS (11, 0)]
+	[Mac (10, 13)]
 #endif
 #if WATCH && !NET
 	[Obsolete ("This API is not available on this platform.")]

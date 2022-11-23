@@ -108,7 +108,6 @@
 //
 using System;
 using System.Diagnostics;
-using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -124,8 +123,11 @@ namespace CoreImage {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (8,0)]
+		[iOS (8, 0)]
 #endif
 		protected CIFilter () : base ()
 		{
@@ -162,7 +164,7 @@ namespace CoreImage {
 		{
 			SetHandle (key, value.GetHandle ());
 		}
-		
+
 		internal static IntPtr CreateFilter (string name)
 		{
 			var ptr = CFString.CreateNative (name);
@@ -257,7 +259,7 @@ namespace CoreImage {
 		internal void SetHandle (string key, IntPtr handle)
 		{
 			var nsname = CFString.CreateNative (key);
-			
+
 			if (IsDirectBinding) {
 				Messaging.void_objc_msgSend_IntPtr_IntPtr (
 					this.Handle, Selector.GetHandle ("setValue:forKey:"), handle, nsname);
@@ -272,26 +274,26 @@ namespace CoreImage {
 		{
 			var nsname = CFString.CreateNative (key);
 			IntPtr ret;
-			
-			if (IsDirectBinding) 
+
+			if (IsDirectBinding)
 				ret = Messaging.IntPtr_objc_msgSend_IntPtr (Handle, Selector.GetHandle ("valueForKey:"), nsname);
 			else
 				ret = Messaging.IntPtr_objc_msgSendSuper_IntPtr (SuperHandle, Selector.GetHandle ("valueForKey:"), nsname);
-			
+
 			CFString.ReleaseNative (nsname);
 			return ret;
 		}
-		
+
 		internal CGPoint GetPoint (string key)
 		{
 			var v = Get<CIVector> (key);
-			return v != null ? new CGPoint (v.X, v.Y) : default (CGPoint);
+			return v is not null ? new CGPoint (v.X, v.Y) : default (CGPoint);
 		}
 
 		internal CGRect GetRect (string key)
 		{
 			var v = Get<CIVector> (key);
-			return v != null ? new CGRect (v.X, v.Y, v.Z, v.W) : default (CGRect);
+			return v is not null ? new CGRect (v.X, v.Y, v.Z, v.W) : default (CGRect);
 		}
 
 #if MONOMAC
@@ -309,7 +311,7 @@ namespace CoreImage {
 		// TODO could be generated too
 		internal static CIFilter FromName (string? filterName, IntPtr handle)
 		{
-			switch (filterName){
+			switch (filterName) {
 			case "CIAdditionCompositing":
 				return new CIAdditionCompositing (handle);
 			case "CIAffineTransform":

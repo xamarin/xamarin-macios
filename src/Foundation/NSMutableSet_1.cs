@@ -27,6 +27,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
@@ -35,10 +36,15 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace Foundation {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[Register ("NSMutableSet", SkipRegistration = true)]
 	public sealed partial class NSMutableSet<TKey> : NSMutableSet, IEnumerable<TKey>
-		where TKey : class, INativeObject
-	{
+		where TKey : class, INativeObject {
 		public NSMutableSet ()
 		{
 		}
@@ -92,7 +98,7 @@ namespace Foundation {
 		public bool Contains (TKey obj)
 		{
 			if (obj == null)
-				throw new ArgumentNullException (nameof(obj));
+				throw new ArgumentNullException (nameof (obj));
 
 			return _Contains (obj.Handle);
 		}
@@ -152,18 +158,18 @@ namespace Foundation {
 				_AddObjects (array.Handle);
 		}
 
-#region IEnumerable<T> implementation
+		#region IEnumerable<T> implementation
 		IEnumerator<TKey> IEnumerable<TKey>.GetEnumerator ()
 		{
 			return new NSFastEnumerator<TKey> (this);
 		}
-#endregion
+		#endregion
 
-#region IEnumerable implementation
+		#region IEnumerable implementation
 		IEnumerator IEnumerable.GetEnumerator ()
 		{
 			return new NSFastEnumerator<TKey> (this);
 		}
-#endregion
+		#endregion
 	}
 }

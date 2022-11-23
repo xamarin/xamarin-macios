@@ -5,22 +5,21 @@ using System.Diagnostics;
 using System.Collections.Generic;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 using NUnit.Framework;
 
-namespace Xamarin.iOS.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
-	public class CoreMLCompiler : ProjectTest
-	{
+	public class CoreMLCompiler : ProjectTest {
 		public CoreMLCompiler (string platform) : base (platform)
 		{
 		}
 
 		void AssertCompiledModelExists (string modelName)
 		{
-			var expected = new string[] { "coremldata.bin", "model.espresso.net", "model.espresso.shape", "model.espresso.weights", "model/coremldata.bin", "neural_network_optionals/coremldata.bin" };
+			var expected = new string [] { "coremldata.bin", "model.espresso.net", "model.espresso.shape", "model.espresso.weights", "model/coremldata.bin", "neural_network_optionals/coremldata.bin" };
 			var mlmodelc = Path.Combine (AppBundlePath, modelName + ".mlmodelc");
 
 			Assert.IsTrue (Directory.Exists (mlmodelc));
@@ -43,6 +42,9 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void RebuildTest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			BuildProject ("MyCoreMLApp");
 
 			AssertCompiledModelExists ("SqueezeNet");

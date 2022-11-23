@@ -5,7 +5,7 @@ System scripts unit tests.
 Import-Module ./System -Force
 
 Describe 'Clear-AfterTests' {
-    Context 'default' {
+    Context 'default' -Skip {
         It 'removes the expected files' {
 
             Mock Remove-Item
@@ -30,7 +30,7 @@ Describe 'Clear-AfterTests' {
     }
 }
 Describe 'Test-HDFreeSpace' {
-    Context 'checks space' {
+    Context 'checks space' -Skip {
         It 'returns TRUE with enough space' {
             Mock Get-PSDrive {
                 [PSCustomObject]@{ Free = 539715158016 }
@@ -50,7 +50,7 @@ Describe 'Test-HDFreeSpace' {
 }
 
 Describe 'Clear-XamarinProcesses' {
-    Context 'default' {
+    Context 'default' -Skip {
         It 'kills all processes' {
             Mock Start-Process
 

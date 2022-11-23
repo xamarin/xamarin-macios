@@ -7,6 +7,8 @@
 // Copyright 2017 Microsoft
 //
 
+#nullable enable
+
 using System;
 using ObjCRuntime;
 
@@ -34,5 +36,5 @@ namespace IOSurface {
 		CopybackInnerCache = 5 << 8,
 	};
 
-	
+
 }

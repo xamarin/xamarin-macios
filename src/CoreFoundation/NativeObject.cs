@@ -10,6 +10,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 
@@ -32,6 +33,12 @@ namespace CoreFoundation {
 	// base class to be reused for other patterns that use other retain/release
 	// systems.
 	//
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public abstract class NativeObject : DisposableObject {
 		protected NativeObject ()
 		{
@@ -58,10 +65,10 @@ namespace CoreFoundation {
 
 		// <quote>If cf is NULL, this will cause a runtime error and your application will crash.</quote>
 		// https://developer.apple.com/documentation/corefoundation/1521269-cfretain?language=occ
-		protected virtual void Retain () => CFObject.CFRetain (GetCheckedHandle ());
+		protected internal virtual void Retain () => CFObject.CFRetain (GetCheckedHandle ());
 
 		// <quote>If cf is NULL, this will cause a runtime error and your application will crash.</quote>
 		// https://developer.apple.com/documentation/corefoundation/1521153-cfrelease
-		protected virtual void Release () => CFObject.CFRelease (GetCheckedHandle ());
+		protected internal virtual void Release () => CFObject.CFRelease (GetCheckedHandle ());
 	}
 }

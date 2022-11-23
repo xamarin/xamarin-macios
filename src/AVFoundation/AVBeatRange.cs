@@ -24,18 +24,21 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
+
+#nullable enable
 
 namespace AVFoundation {
 
 #if NET
 	[SupportedOSPlatform ("ios9.0")]
 	[SupportedOSPlatform ("macos10.11")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
 #else
-	[iOS (9,0)]
-	[Mac (10,11)]
+	[iOS (9, 0)]
+	[Mac (10, 11)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVBeatRange {
@@ -64,12 +67,12 @@ namespace AVFoundation {
 			return !left.Equals (right);
 		}
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
 			if (!(obj is AVBeatRange))
 				return false;
 
-			return this.Equals ((AVBeatRange)obj);
+			return this.Equals ((AVBeatRange) obj);
 		}
 
 		public bool Equals (AVBeatRange other)

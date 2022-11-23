@@ -509,7 +509,7 @@ namespace MonoTouchFixtures.ModelIO {
 				animatedQuat.Reset (TestMatrices.QuaterniondArray, TestMatrices.GetTimesArray (TestMatrices.QuaterniondArray.Length));
 				var arrd = animatedQuat.GetQuaterniondValues (20);
 				Asserts.AreEqual (TestMatrices.QuaterniondArray, arrd, "C2");
-			} 
+			}
 		}
 
 		[Test]
@@ -698,9 +698,9 @@ namespace MonoTouchFixtures.ModelIO {
 			new NMatrix4d (0.006755914d, 0.07464754d, 0.287938d, 0.3724834d, 0.1496783d, 0.6224982d, 0.7150125d, 0.5554719d, 0.4638171d, 0.4200902d, 0.4867154d, 0.773377d, 0.3558737d, 0.4043404d, 0.04670618d, 0.7695189d),
 		};
 
-		public static T [] CreateOnesArray <T> (int size) where T : struct
+		public static T [] CreateOnesArray<T> (int size) where T : struct
 		{
-			T[] array = null;
+			T [] array = null;
 			var t = typeof (T);
 
 			if (t == typeof (float))

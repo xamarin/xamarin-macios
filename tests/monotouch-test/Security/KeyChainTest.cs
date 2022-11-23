@@ -14,11 +14,11 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Security {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class KeyChainTest {
-		
+
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static int CFGetRetainCount (IntPtr handle);
 
@@ -31,13 +31,13 @@ namespace MonoTouchFixtures.Security {
 #if MONOMAC && !NET
 			Stream certStream = typeof (KeyChainTest).Assembly.GetManifestResourceStream ("xammac_tests.Security.openssl_crt.der");
 #else
-			Stream certStream = typeof(KeyChainTest).Assembly.GetManifestResourceStream ("monotouchtest.Security.openssl_crt.der");
+			Stream certStream = typeof (KeyChainTest).Assembly.GetManifestResourceStream ("monotouchtest.Security.openssl_crt.der");
 #endif
 			NSData data = NSData.FromStream (certStream);
 
-			var query = new SecRecord (SecKind.Certificate) {
-				Label = $"Internet Widgits Pty Ltd",
-			};
+			var query = RecordTest.CreateSecRecord (SecKind.Certificate,
+				label: $"Internet Widgits Pty Ltd"
+			);
 			var rec = query.Clone ();
 			rec.SetValueRef (new SecCertificate (data));
 
@@ -62,7 +62,7 @@ namespace MonoTouchFixtures.Security {
 		{
 			if (TestRuntime.CheckXcodeVersion (13, 0))
 				Assert.Ignore ("code == errSecInternal (-26276)");
-			using (SecRecord rec = new SecRecord (SecKind.Identity))
+			using (var rec = RecordTest.CreateSecRecord (SecKind.Identity))
 			using (var id = IdentityTest.GetIdentity ()) {
 				rec.SetValueRef (id);
 				SecStatusCode code = SecKeyChain.Add (rec);
@@ -72,7 +72,7 @@ namespace MonoTouchFixtures.Security {
 			if (!TestRuntime.CheckXcodeVersion (5, 0))
 				Assert.Inconclusive ("QueryAsConcreteType does not work before iOS7");
 
-			using (SecRecord rec = new SecRecord (SecKind.Identity)) {
+			using (var rec = RecordTest.CreateSecRecord (SecKind.Identity)) {
 				SecStatusCode code;
 				var match = SecKeyChain.QueryAsConcreteType (rec, out code);
 				if ((match == null) && (code == SecStatusCode.ItemNotFound))
@@ -93,7 +93,7 @@ namespace MonoTouchFixtures.Security {
 
 		[DllImport ("/System/Library/Frameworks/Security.framework/Security")]
 		internal extern static SecStatusCode SecItemAdd (IntPtr cfDictRef, IntPtr result);
-		
+
 		[Test]
 		// same as Add_Identity but directly p/invoking - shows that the type MUST NOT be included for Identity
 #if __MACCATALYST__
@@ -148,14 +148,14 @@ namespace MonoTouchFixtures.Security {
 		Guid GetID ()
 		{
 			SecStatusCode code;
-			SecRecord queryRec = new SecRecord (SecKind.GenericPassword) { 
-				Service = RecordService,
-				Account = RecordAccount,
-			};
+			var queryRec = RecordTest.CreateSecRecord (SecKind.GenericPassword,
+				service: RecordService,
+				account: RecordAccount
+			);
 			var queryResponse = SecKeyChain.QueryAsRecord (queryRec, out code);
 			if (code == SecStatusCode.Success && queryResponse?.Generic != null)
 				return new Guid (NSString.FromData (queryResponse.Generic, NSStringEncoding.UTF8));
-			
+
 			return Guid.Empty;
 		}
 
@@ -163,10 +163,10 @@ namespace MonoTouchFixtures.Security {
 		public void QueryAsData ()
 		{
 			SecStatusCode code;
-			SecRecord queryRec = new SecRecord (SecKind.GenericPassword) {
-				Service = RecordService,
-				Account = RecordAccount,
-			};
+			var queryRec = RecordTest.CreateSecRecord (SecKind.GenericPassword,
+				service: RecordService,
+				account: RecordAccount
+			);
 			var data = SecKeyChain.QueryAsData (queryRec, true, out code);
 			if (code == SecStatusCode.Success && queryRec != null) {
 				Assert.NotNull (data.Bytes);
@@ -177,10 +177,10 @@ namespace MonoTouchFixtures.Security {
 		public void QueryAsDataArray ()
 		{
 			SecStatusCode code;
-			SecRecord queryRec = new SecRecord (SecKind.GenericPassword) {
-				Service = RecordService,
-				Account = RecordAccount,
-			};
+			var queryRec = RecordTest.CreateSecRecord (SecKind.GenericPassword,
+				service: RecordService,
+				account: RecordAccount
+			);
 			var data = SecKeyChain.QueryAsData (queryRec, true, 1, out code);
 			if (code == SecStatusCode.Success && queryRec != null) {
 				Assert.NotNull (data [0].Bytes);
@@ -189,19 +189,19 @@ namespace MonoTouchFixtures.Security {
 
 		SecStatusCode RemoveID ()
 		{
-			var queryRec = new SecRecord (SecKind.GenericPassword) {
-				Service = RecordService,
-				Account = RecordAccount,
-			};
+			var queryRec = RecordTest.CreateSecRecord (SecKind.GenericPassword,
+				service: RecordService,
+				account: RecordAccount
+			);
 			return SecKeyChain.Remove (queryRec);
 		}
 
 		SecStatusCode SetID (Guid setID)
 		{
-			var queryRec = new SecRecord (SecKind.GenericPassword) {
-				Service = RecordService,
-				Account = RecordAccount,
-			};
+			var queryRec = RecordTest.CreateSecRecord (SecKind.GenericPassword,
+				service: RecordService,
+				account: RecordAccount
+			);
 			var record = queryRec.Clone ();
 			record.Generic = NSData.FromString (Convert.ToString (setID), NSStringEncoding.UTF8);
 			record.Accessible = SecAccessible.Always;
@@ -214,7 +214,7 @@ namespace MonoTouchFixtures.Security {
 			}
 			return code;
 		}
-		
+
 		[Test]
 #if __MACCATALYST__
 		[Ignore ("This test requires an app signed with the keychain-access-groups entitlement, and for Mac Catalyst that requires a custom provisioning profile.")]
@@ -222,8 +222,8 @@ namespace MonoTouchFixtures.Security {
 		public void CheckId ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 1); // macOS 10.9
-			// test case from http://stackoverflow.com/questions/9481860/monotouch-cant-get-value-of-existing-keychain-item
-			// not a bug (no class lib fix) just a misuse of the API wrt status codes
+												   // test case from http://stackoverflow.com/questions/9481860/monotouch-cant-get-value-of-existing-keychain-item
+												   // not a bug (no class lib fix) just a misuse of the API wrt status codes
 			Guid g = Guid.NewGuid ();
 			try {
 				Assert.That (SetID (g), Is.EqualTo (SecStatusCode.Success), "success");

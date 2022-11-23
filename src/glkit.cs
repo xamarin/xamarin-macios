@@ -52,10 +52,16 @@ using pfloat = System.Runtime.InteropServices.NFloat;
 using pfloat = System.nfloat;
 #endif
 using AppKit;
+using EAGLSharegroup = Foundation.NSObject;
+using EAGLContext = Foundation.NSObject;
+using UIView = AppKit.NSView;
+using UIImage = AppKit.NSImage;
+using UIViewController = AppKit.NSViewController;
 #else
 using OpenGLES;
 using UIKit;
 using pfloat = System.Single;
+using NSOpenGLContext = Foundation.NSObject;
 #endif
 
 #if !NET
@@ -506,13 +512,13 @@ namespace GLKit {
 		[return: NullAllowed]
 		GLKTextureInfo FromName (string name, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary<NSString, NSNumber> options, out NSError outError);
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithShareContext:")]
 		NativeHandle Constructor (NSOpenGLContext context);
-#else
+
+		[NoMac]
 		[Export ("initWithSharegroup:")]
 		NativeHandle Constructor (EAGLSharegroup sharegroup);
-#endif
 
 		[Export ("textureWithContentsOfFile:options:queue:completionHandler:")]
 		[Async]
@@ -575,7 +581,7 @@ namespace GLKit {
 		NSString GLErrorKey { get; }
 	}
 
-#if !MONOMAC
+	[NoMac]
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (UIView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof (GLKViewDelegate)})]
@@ -631,6 +637,7 @@ namespace GLKit {
 		void DeleteDrawable ();
 	}
 
+	[NoMac]
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (NSObject))]
@@ -642,6 +649,7 @@ namespace GLKit {
 		void DrawInRect (GLKView view, CGRect rect);
 	}
 
+	[NoMac]
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (UIViewController))]
@@ -692,6 +700,7 @@ namespace GLKit {
 		void Update ();
 	}
 
+	[NoMac]
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (NSObject))]
@@ -705,5 +714,4 @@ namespace GLKit {
 		[Export ("glkViewController:willPause:")]
 		void WillPause (GLKViewController controller, bool pause);
 	}
-#endif
 }

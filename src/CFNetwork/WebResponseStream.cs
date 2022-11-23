@@ -401,7 +401,7 @@ namespace CFNetwork {
 
 			void SetException (Exception error);
 
-			byte[] GetBuffer (out int index, out int count);
+			byte [] GetBuffer (out int index, out int count);
 
 			Task<bool> Write (int count);
 		}
@@ -412,7 +412,7 @@ namespace CFNetwork {
 			bool completed;
 
 			protected Operation (WebResponseStream parent,
-			                     CancellationToken cancellationToken)
+								 CancellationToken cancellationToken)
 			{
 				cts = CancellationTokenSource.CreateLinkedTokenSource (
 					cancellationToken);
@@ -462,7 +462,7 @@ namespace CFNetwork {
 
 			protected abstract void OnCompleted ();
 
-			public abstract byte[] GetBuffer (out int index, out int count);
+			public abstract byte [] GetBuffer (out int index, out int count);
 
 			public abstract Task<bool> Write (int count);
 
@@ -470,7 +470,7 @@ namespace CFNetwork {
 			{
 				Dispose (false);
 			}
-		
+
 			public void Dispose ()
 			{
 				Dispose (true);
@@ -491,18 +491,18 @@ namespace CFNetwork {
 
 		class CopyToAsyncOperation : Operation<object> {
 			Stream destination;
-			byte[] buffer;
+			byte [] buffer;
 
 			public CopyToAsyncOperation (WebResponseStream parent,
-			                             Stream destination, int bufferSize,
-			                             CancellationToken cancellationToken)
+										 Stream destination, int bufferSize,
+										 CancellationToken cancellationToken)
 				: base (parent, cancellationToken)
 			{
 				this.destination = destination;
 				buffer = new byte [bufferSize];
 			}
 
-			public override byte[] GetBuffer (out int index, out int count)
+			public override byte [] GetBuffer (out int index, out int count)
 			{
 				index = 0;
 				count = buffer.Length;
@@ -522,14 +522,14 @@ namespace CFNetwork {
 		}
 
 		class ReadAsyncOperation : Operation<int> {
-			byte[] buffer;
+			byte [] buffer;
 			int bufferIndex;
 			int bufferCount;
 			int successfullyWritten;
 
 			public ReadAsyncOperation (WebResponseStream parent,
-			                           byte[] buffer, int offset, int count,
-			                           CancellationToken cancellationToken)
+									   byte [] buffer, int offset, int count,
+									   CancellationToken cancellationToken)
 				: base (parent, cancellationToken)
 			{
 				this.buffer = buffer;
@@ -537,7 +537,7 @@ namespace CFNetwork {
 				this.bufferCount = count;
 			}
 
-			public override byte[] GetBuffer (out int index, out int count)
+			public override byte [] GetBuffer (out int index, out int count)
 			{
 				index = bufferIndex;
 				count = bufferCount;
@@ -559,7 +559,7 @@ namespace CFNetwork {
 		}
 
 		public async Task<CFHTTPMessage> Open (WorkerThread worker,
-		                                       CancellationToken cancellationToken)
+											   CancellationToken cancellationToken)
 		{
 			this.worker = worker;
 			openTcs = new TaskCompletionSource<CFHTTPMessage> ();
@@ -628,7 +628,7 @@ namespace CFNetwork {
 		#region implemented abstract members of System.IO.Stream
 
 		public override Task CopyToAsync (Stream destination, int bufferSize,
-		                                  CancellationToken cancellationToken)
+										  CancellationToken cancellationToken)
 		{
 			var operation = new CopyToAsyncOperation (
 				this, destination, bufferSize, cancellationToken);
@@ -641,8 +641,8 @@ namespace CFNetwork {
 			;
 		}
 
-		public override Task<int> ReadAsync (byte[] buffer, int offset, int count,
-		                                     CancellationToken cancellationToken)
+		public override Task<int> ReadAsync (byte [] buffer, int offset, int count,
+											 CancellationToken cancellationToken)
 		{
 			var operation = new ReadAsyncOperation (
 				this, buffer, offset, count, cancellationToken);
@@ -650,7 +650,7 @@ namespace CFNetwork {
 			return operation.Task;
 		}
 
-		public override int Read (byte[] buffer, int offset, int count)
+		public override int Read (byte [] buffer, int offset, int count)
 		{
 			if (Thread.CurrentThread.Equals (mainThread) ||
 				Thread.CurrentThread.Equals (workerThread))
@@ -670,7 +670,7 @@ namespace CFNetwork {
 			throw new NotSupportedException ();
 		}
 
-		public override void Write (byte[] buffer, int offset, int count)
+		public override void Write (byte [] buffer, int offset, int count)
 		{
 			throw new NotSupportedException ();
 		}

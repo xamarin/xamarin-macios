@@ -1,10 +1,14 @@
+using System.Collections.Generic;
+using System.Linq;
+
 using Microsoft.Build.Framework;
+
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class SymbolStrip : SymbolStripTaskBase
-	{
+#nullable enable
+
+namespace Xamarin.MacDev.Tasks {
+	public class SymbolStrip : SymbolStripTaskBase, ITaskCallback {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())
@@ -13,12 +17,10 @@ namespace Xamarin.MacDev.Tasks
 			return base.Execute ();
 		}
 
-		public override void Cancel ()
-		{
-			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
 
-			base.Execute ();
-		}
+		public bool ShouldCreateOutputFile (ITaskItem item) => false;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 	}
 }

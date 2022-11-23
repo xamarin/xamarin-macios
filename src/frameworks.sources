@@ -301,10 +301,20 @@ AVKIT_API_SOURCES = \
 AVKIT_SOURCES = \
 	AVKit/AVPlayerViewController.cs \
 
+# AVRouting
+
+AVROUTING_SOURCES = \
+	AVRouting/AVCustomDeviceRoute.cs \
+
 # BackgroundTasks
 
 BACKGROUNDTASKS_API_SOURCES = \
 	BackgroundTasks/Enums.cs \
+
+# BackgroundAssets
+
+BACKGROUNDASSETS_SOURCES = \
+	BackgroundAssets/BACompat.cs \
 
 # BusinessChat
 
@@ -450,6 +460,7 @@ COREFOUNDATION_CORE_SOURCES = \
 	CoreFoundation/DispatchData.cs \
 	CoreFoundation/NativeObject.cs \
 	CoreFoundation/Architecture.cs \
+	CoreFoundation/CGAffineTransformComponents.cs \
 
 COREFOUNDATION_SOURCES = \
 	CoreFoundation/CFAllocator.cs \
@@ -595,6 +606,9 @@ COREMIDI_CORE_SOURCES = \
 	CoreMidi/MidiServices.cs \
 	CoreMidi/MidiThruConnection.cs \
 	CoreMidi/MidiThruConnectionParams.cs \
+
+COREMIDI_SOURCES = \
+	CoreMidi/MidiBluetoothDriver.cs \
 
 # CoreML
 
@@ -790,6 +804,10 @@ FOUNDATION_SOURCES = \
 	Foundation/NSBundleResourceRequest.cs \
 	Foundation/NSCalendar.cs \
 	Foundation/NSCoder.cs \
+	Foundation/NSOrderedCollectionChange.cs \
+	Foundation/NSOrderedCollectionChange_1.cs \
+	Foundation/NSOrderedCollectionDifference.cs \
+	Foundation/NSOrderedCollectionDifference_1.cs \
 	Foundation/NSConnection.cs \
 	Foundation/NSData.cs \
 	Foundation/NSDate.cs \
@@ -934,6 +952,7 @@ HEALTHKIT_SOURCES = \
 	HealthKit/EnumsCompat.cs \
 	HealthKit/HKAppleWalkingSteadiness.cs \
 	HealthKit/HKAnchoredObjectQuery.cs \
+	HealthKit/HKCategoryValueSleepAnalysisAsleep.cs \
 	HealthKit/HKObjectType.cs \
 	HealthKit/HKObsolete.cs \
 	HealthKit/HKSampleQuery.cs \
@@ -1187,7 +1206,19 @@ METALPERFORMANCESHADERS_SOURCES = \
 	MetalPerformanceShaders/MPSStateBatch.cs \
 	MetalPerformanceShaders/MPSStateResourceList.cs \
 
+# MetalPerformanceShadersGraph
+
+METALPERFORMANCESHADERSGRAPH_API_SOURCES = \
+	MetalPerformanceShadersGraph/MPSGraphEnums.cs \
+
+METALPERFORMANCESHADERSGRAPH_SOURCES = \
+	MetalPerformanceShadersGraph/MPSGraphExtensions.cs \
+	MetalPerformanceShadersGraph/MPSGraphTensorData.cs \
+
 # MetricKit
+
+METRICKIT_API_SOURCES = \
+	MetricKit/MXEnums.cs \
 
 METRICKIT_SOURCES = \
 	MetricKit/MXMetaData.cs \
@@ -1274,6 +1305,7 @@ NETWORK_SOURCES = \
 	Network/NWIPMetadata.cs			\
 	Network/NWListener.cs			\
 	Network/NWPrivacyContext.cs	\
+	Network/NWProtocolFramerOptions.cs \
 	Network/NWProtocolIPOptions.cs	\
 	Network/NWParameters.cs			\
 	Network/NWPath.cs			\
@@ -1304,7 +1336,9 @@ NEARBYINTERACTION_API_SOURCES = \
 	NearbyInteraction/Enums.cs \
 
 NEARBYINTERACTION_SOURCES = \
+	NearbyInteraction/NICompat.cs \
 	NearbyInteraction/NINearbyObject.cs \
+	NearbyInteraction/NIAlgorithmConvergenceStatusReasonValues.cs \
 
 # NetworkExtension
 
@@ -1398,6 +1432,7 @@ PASSKIT_API_SOURCES = \
 PASSKIT_SOURCES = \
 	PassKit/PKCompat.cs	\
 	PassKit/PKPaymentRequest.cs	\
+	PassKit/PKShareablePassMetadata.cs \
 
 # PencilKit
 PENCILKIT_API_SOURCEs = \
@@ -1500,6 +1535,13 @@ SCENEKIT_SOURCES = \
 	SceneKit/SCNSkinner.cs \
 	SceneKit/SCNTechnique.cs \
 
+# ScreenCaptureKit
+
+SCREENCAPTUREKIT_API_SOURCES = \
+
+SCREENCAPTUREKIT_SOURCES = \
+	ScreenCaptureKit/SCContentFilter.cs \
+
 # ScriptingBridge
 
 SCRIPTINGBRIDGE_CORE_SOURCES = \
@@ -1552,6 +1594,11 @@ SENSORKIT_CORE_SOURCES = \
 SENSORKIT_SOURCES = \
 	SensorKit/SRAbsoluteTime.cs \
 	SensorKit/SRSensor.cs \
+
+# ShareWithYouCore
+
+SHAREDWITHYOUCORE_SOURCES = \
+	SharedWithYouCore/SWCollaborationMetadata.cs \
 
 # Social
 
@@ -1745,6 +1792,11 @@ VIDEOTOOLBOX_SOURCES = \
 	VideoToolbox/VTDecompressionSession.cs \
 	VideoToolbox/VTFrameSilo.cs \
 	VideoToolbox/VTMultiPassStorage.cs \
+	VideoToolbox/VTPixelRotationProperties.cs \
+	VideoToolbox/VTPixelRotationSession.cs \
+	VideoToolbox/VTPixelTransferProperties.cs \
+	VideoToolbox/VTPixelTransferSession.cs \
+	VideoToolbox/VTProfessionalVideoWorkflow.cs \
 	VideoToolbox/VTPropertyOptions.cs \
 	VideoToolbox/VTSession.cs \
 	VideoToolbox/VTVideoEncoder.cs \
@@ -1844,6 +1896,7 @@ SHARED_API_SOURCES = \
 	ObjCRuntime/ObsoleteConstants.cs \
 
 SHARED_CORE_SOURCES = \
+	DotNetGlobals.cs \
 	MinimumVersions.cs \
 	MonoPInvokeCallbackAttribute.cs \
 	$(BUILD_DIR)/common/NativeTypes/Drawing.cs \
@@ -1857,8 +1910,10 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/ErrorConstants.cs \
 	ObjCRuntime/INativeObject.cs \
 	ObjCRuntime/LinkWithAttribute.cs \
+	ObjCRuntime/Messaging.cs \
 	ObjCRuntime/NativeAttribute.cs \
 	ObjCRuntime/NativeHandle.cs \
+	ObjCRuntime/NativeNameAttribute.cs \
 	ObjCRuntime/NFloat.cs \
 	ObjCRuntime/ObsoleteConstants.cs \
 	ObjCRuntime/PlatformAvailability.cs \
@@ -1945,6 +2000,7 @@ COMMON_FRAMEWORKS =         \
 	CoreML                  \
 	CoreVideo               \
 	Compression             \
+	DeviceCheck             \
 	Foundation              \
 	GameKit                 \
 	NaturalLanguage         \
@@ -1968,7 +2024,9 @@ MACOS_FRAMEWORKS =          \
 	AudioUnit               \
 	AutomaticAssessmentConfiguration \
 	AVKit                   \
+	AVRouting               \
 	BusinessChat            \
+	BackgroundAssets        \
 	CallKit \
 	CFNetwork               \
 	Chip                    \
@@ -1987,9 +2045,9 @@ MACOS_FRAMEWORKS =          \
 	CoreSpotlight           \
 	CoreText                \
 	CoreWlan                \
-	DeviceCheck             \
 	EventKit                \
 	ExecutionPolicy		\
+	ExtensionKit		\
 	ExternalAccessory 	\
 	FileProvider	\
 	FileProviderUI	\
@@ -1997,6 +2055,7 @@ MACOS_FRAMEWORKS =          \
 	GameController          \
 	GameplayKit             \
 	GLKit                   \
+	HealthKit               \
 	ImageIO                 \
 	ImageCaptureCore	\
 	ImageKit                \
@@ -2017,6 +2076,7 @@ MACOS_FRAMEWORKS =          \
 	Metal                   \
 	MetalKit                \
 	MetalPerformanceShaders \
+	MetalPerformanceShadersGraph \
 	MetricKit               \
 	MLCompute               \
 	MobileCoreServices      \
@@ -2041,13 +2101,17 @@ MACOS_FRAMEWORKS =          \
 	QuickLookUI             \
 	ReplayKit               \
 	SafariServices          \
+	ScreenCaptureKit        \
 	ScreenTime              \
 	ScriptingBridge         \
 	SearchKit               \
 	Security                \
+	SharedWithYou           \
+	SharedWithYouCore       \
 	Social                  \
 	Speech                  \
 	SystemConfiguration     \
+	ThreadNetwork           \
 	UserNotifications       \
 	UserNotificationsUI		\
 	VideoSubscriberAccount  \
@@ -2059,6 +2123,7 @@ MACOS_FRAMEWORKS =          \
 IOS_FRAMEWORKS =         \
 	$(COMMON_FRAMEWORKS) \
 	AVKit \
+	AVRouting \
 	Accounts \
 	AdServices \
 	AdSupport \
@@ -2071,6 +2136,7 @@ IOS_FRAMEWORKS =         \
 	AudioToolbox \
 	AudioUnit \
 	AutomaticAssessmentConfiguration \
+	BackgroundAssets \
 	BackgroundTasks \
 	BusinessChat \
 	CallKit \
@@ -2094,7 +2160,6 @@ IOS_FRAMEWORKS =         \
 	CoreSpotlight \
 	CoreTelephony \
 	CoreText \
-	DeviceCheck \
 	EventKit \
 	EventKitUI \
 	ExternalAccessory \
@@ -2125,6 +2190,7 @@ IOS_FRAMEWORKS =         \
 	Metal \
 	MetalKit \
 	MetalPerformanceShaders \
+	MetalPerformanceShadersGraph \
 	MetricKit \
 	MLCompute \
 	MobileCoreServices \
@@ -2142,6 +2208,7 @@ IOS_FRAMEWORKS =         \
 	Photos \
 	PhotosUI \
 	PushKit \
+	PushToTalk \
 	QuickLook \
 	QuickLookThumbnailing \
 	ReplayKit \
@@ -2149,6 +2216,8 @@ IOS_FRAMEWORKS =         \
 	ScreenTime \
 	Security \
 	SensorKit \
+	SharedWithYou \
+	SharedWithYouCore \
 	Social \
 	Speech \
 	SystemConfiguration \
@@ -2168,6 +2237,7 @@ IOS_FRAMEWORKS =         \
 
 WATCHOS_FRAMEWORKS =        \
 	$(COMMON_FRAMEWORKS)    \
+	CallKit                 \
 	Chip                    \
 	ClockKit                \
 	CloudKit                \
@@ -2181,6 +2251,7 @@ WATCHOS_FRAMEWORKS =        \
 	HomeKit                 \
 	ImageIO                 \
 	Intents                 \
+	LocalAuthentication     \
 	MapKit                  \
 	MediaPlayer             \
 	MobileCoreServices      \
@@ -2211,7 +2282,6 @@ TVOS_FRAMEWORKS =           \
 	CoreLocation            \
 	CoreSpotlight			\
 	CoreText                \
-	DeviceCheck             \
 	ExternalAccessory       \
 	GLKit                   \
 	GameController          \
@@ -2229,6 +2299,7 @@ TVOS_FRAMEWORKS =           \
 	Metal                   \
 	MetalKit                \
 	MetalPerformanceShaders \
+	MetalPerformanceShadersGraph \
 	MLCompute               \
 	MobileCoreServices      \
 	ModelIO                 \
@@ -2238,6 +2309,8 @@ TVOS_FRAMEWORKS =           \
 	PhotosUI                \
 	ReplayKit               \
 	Security                \
+	SharedWithYou           \
+	SharedWithYouCore       \
 	SystemConfiguration     \
 	TVMLKit                 \
 	TVUIKit					\
@@ -2250,8 +2323,10 @@ TVOS_FRAMEWORKS =           \
 
 MACCATALYST_FRAMEWORKS = \
 	$(COMMON_FRAMEWORKS) \
+	AppClip \
 	AppKit \
 	AVKit \
+	AVRouting \
 	Accounts \
 	AdServices \
 	AdSupport \
@@ -2260,6 +2335,7 @@ MACCATALYST_FRAMEWORKS = \
 	AudioToolbox \
 	AudioUnit \
 	AutomaticAssessmentConfiguration \
+	BackgroundAssets \
 	BackgroundTasks \
 	BusinessChat \
 	CallKit \
@@ -2274,20 +2350,26 @@ MACCATALYST_FRAMEWORKS = \
 	CoreHaptics \
 	CoreImage \
 	CoreLocation \
+	CoreLocationUI \
 	CoreMIDI \
 	CoreMotion \
+	CoreNFC \
 	CoreSpotlight \
 	CoreTelephony \
 	CoreText \
 	CoreWlan \
-	DeviceCheck \
 	EventKit \
+	EventKitUI \
+	ExecutionPolicy \
 	ExternalAccessory \
 	FileProvider \
 	GameController \
 	GameplayKit \
+	HealthKit \
+	HealthKitUI \
 	HomeKit \
 	IdentityLookup \
+	IdentityLookupUI \
 	ImageIO \
 	Intents \
 	IntentsUI \
@@ -2304,6 +2386,7 @@ MACCATALYST_FRAMEWORKS = \
 	Metal \
 	MetalKit \
 	MetalPerformanceShaders \
+	MetalPerformanceShadersGraph \
 	MetricKit \
 	MLCompute \
 	MobileCoreServices \
@@ -2325,9 +2408,12 @@ MACCATALYST_FRAMEWORKS = \
 	ScreenTime \
 	Security \
 	SensorKit \
+	SharedWithYou \
+	SharedWithYouCore \
 	Social \
 	Speech \
 	SystemConfiguration \
+	ThreadNetwork \
 	UIKit XKit \
 	UserNotifications \
 	UserNotificationsUI \

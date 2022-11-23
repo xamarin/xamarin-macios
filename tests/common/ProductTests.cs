@@ -13,11 +13,9 @@ using NUnit.Framework;
 
 using Xamarin;
 
-namespace Xamarin.Tests
-{
+namespace Xamarin.Tests {
 	[TestFixture]
-	public class ProductTests
-	{
+	public class ProductTests {
 		[Test]
 		public void MonoVersion ()
 		{
@@ -49,6 +47,7 @@ namespace Xamarin.Tests
 		[TestCase (Profile.tvOS, MachO.LoadCommands.MintvOS, MachO.Platform.TvOS, true)]
 		public void MinOSVersion (Profile profile, MachO.LoadCommands load_command, MachO.Platform platform, bool device = false)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			if (device)
 				Configuration.AssertDeviceAvailable ();
 
@@ -79,7 +78,7 @@ namespace Xamarin.Tests
 
 						Version lc_min_version;
 						var mincmd = lc as MinCommand;
-						if (mincmd != null){
+						if (mincmd != null) {
 							Assert.AreEqual (load_command, mincmd.Command, "Unexpected min load command");
 							lc_min_version = mincmd.Version;
 						} else {
@@ -100,7 +99,7 @@ namespace Xamarin.Tests
 								alternativePlatform = MachO.Platform.WatchOS;
 								break;
 							}
-							Assert.That (buildver.Platform, Is.EqualTo (platform).Or.EqualTo (alternativePlatform) , $"Unexpected build version command in {machoFile} ({slice.Filename})");
+							Assert.That (buildver.Platform, Is.EqualTo (platform).Or.EqualTo (alternativePlatform), $"Unexpected build version command in {machoFile} ({slice.Filename})");
 							lc_min_version = buildver.MinOS;
 						}
 
@@ -188,11 +187,10 @@ namespace Xamarin.Tests
 		}
 	}
 
-	static class VersionExtensions
-	{
-			public static Version WithBuild (this Version version)
-			{
-				return new Version (version.Major, version.Minor, version.Build < 0 ? 0 : version.Build);
-			}
+	static class VersionExtensions {
+		public static Version WithBuild (this Version version)
+		{
+			return new Version (version.Major, version.Minor, version.Build < 0 ? 0 : version.Build);
+		}
 	}
 }

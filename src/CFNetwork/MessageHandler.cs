@@ -84,7 +84,7 @@ namespace CFNetwork {
 		internal
 #endif
 		protected override async Task<HttpResponseMessage> SendAsync (HttpRequestMessage request,
-		                                                              CancellationToken cancellationToken)
+																	  CancellationToken cancellationToken)
 		{
 			if (!request.RequestUri.IsAbsoluteUri)
 				throw new InvalidOperationException ();
@@ -153,7 +153,7 @@ namespace CFNetwork {
 		}
 
 		async Task<WebRequestStream> CreateBody (HttpRequestMessage request, CFHTTPMessage message,
-		                                         CancellationToken cancellationToken)
+												 CancellationToken cancellationToken)
 		{
 			if (request.Content == null)
 				return null;
@@ -196,7 +196,7 @@ namespace CFNetwork {
 
 			return request.Headers.Contains ("Keep-Alive");
 		}
-		
+
 		// Decide if we redirect or not, similar to what is done in the managed handler
 		// https://github.com/mono/mono/blob/eca15996c7163f331c9f2cd0a17b63e8f92b1d55/mcs/class/referencesource/System/net/System/Net/HttpWebRequest.cs#L5681
 		static bool IsRedirect (HttpStatusCode status)
@@ -209,10 +209,10 @@ namespace CFNetwork {
 		}
 
 		async Task<HttpResponseMessage> ProcessRequest (HttpRequestMessage request,
-		                                                CFHTTPMessage message,
-		                                                WebRequestStream body,
-		                                                bool retryWithCredentials,
-		                                                CancellationToken cancellationToken, bool isFirstRequest)
+														CFHTTPMessage message,
+														WebRequestStream body,
+														bool retryWithCredentials,
+														CancellationToken cancellationToken, bool isFirstRequest)
 		{
 			cancellationToken.ThrowIfCancellationRequested ();
 
@@ -234,22 +234,22 @@ namespace CFNetwork {
 			var response = await stream.Open (
 				WorkerThread, cancellationToken).ConfigureAwait (true); // with false, we will have a deadlock.
 
-			var status = (HttpStatusCode)response.ResponseStatusCode;
+			var status = (HttpStatusCode) response.ResponseStatusCode;
 
-			if ( IsRedirect (status)) {
+			if (IsRedirect (status)) {
 				request.Headers.Authorization = null;
 				stream.Dispose ();
 				// we cannot reuse the message, will deadlock and also the message.ApplyCredentials (auth, credential); 
 				// was called the first time
-				using (var retryMsg = CreateRequest (request, false)) { 
+				using (var retryMsg = CreateRequest (request, false)) {
 					return await ProcessRequest (
 						request, retryMsg, null, false, cancellationToken, false);
 				}
-				
+
 			}
 			if (retryWithCredentials && (body == null) &&
-			    (status == HttpStatusCode.Unauthorized) ||
-			    (status == HttpStatusCode.ProxyAuthenticationRequired)) {
+				(status == HttpStatusCode.Unauthorized) ||
+				(status == HttpStatusCode.ProxyAuthenticationRequired)) {
 				if (HandleAuthentication (request.RequestUri, message, response)) {
 					stream.Dispose ();
 					using (var retryMsg = CreateRequest (request, true)) { // behave as if it was the first attempt
@@ -323,13 +323,13 @@ namespace CFNetwork {
 		}
 
 		bool HandleAuthentication (CFHTTPMessage request, CFHTTPMessage response,
-		                           CFHTTPMessage.AuthenticationScheme scheme,
-		                           NetworkCredential credential)
+								   CFHTTPMessage.AuthenticationScheme scheme,
+								   NetworkCredential credential)
 		{
 			bool forProxy = response.ResponseStatusCode == HttpStatusCode.ProxyAuthenticationRequired;
 
 			return request.AddAuthentication (
-				response, (NSString)credential.UserName, (NSString)credential.Password,
+				response, (NSString) credential.UserName, (NSString) credential.Password,
 				scheme, forProxy);
 		}
 
@@ -362,10 +362,10 @@ namespace CFNetwork {
 		}
 
 		void DecodeHeader (HttpResponseMessage response, Content content,
-		                   KeyValuePair<NSObject,NSObject> entry)
+						   KeyValuePair<NSObject, NSObject> entry)
 		{
-			string key = (NSString)entry.Key;
-			string value = (NSString)entry.Value;
+			string key = (NSString) entry.Key;
+			string value = (NSString) entry.Value;
 
 			try {
 				if (content.DecodeHeader (key, value))

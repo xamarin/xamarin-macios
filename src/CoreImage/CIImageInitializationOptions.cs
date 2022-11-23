@@ -26,6 +26,7 @@
 //
 
 using System;
+using System.Runtime.Versioning;
 
 using Foundation;
 using CoreFoundation;
@@ -36,23 +37,28 @@ using CoreGraphics;
 
 namespace CoreImage {
 
-	public partial class CIImageInitializationOptions
-	{
+	public partial class CIImageInitializationOptions {
 #if !COREBUILD
 		public CGColorSpace? ColorSpace {
 			get {
 				return GetNativeValue<CGColorSpace> (CIImageInitializationOptionsKeys.ColorSpaceKey);
 			}
 			set {
-				SetNativeValue (CIImageInitializationOptionsKeys.ColorSpaceKey, value == null ? null : value);
+				SetNativeValue (CIImageInitializationOptionsKeys.ColorSpaceKey, value);
 			}
 		}
 #endif
 	}
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// Keeping 'CIImageInitializationOptionsWithMetadata' to avoid breaking change
-	public class CIImageInitializationOptionsWithMetadata : CIImageInitializationOptions
-	{
+	public class CIImageInitializationOptionsWithMetadata : CIImageInitializationOptions {
 #if !COREBUILD
 		public CIImageInitializationOptionsWithMetadata ()
 		{

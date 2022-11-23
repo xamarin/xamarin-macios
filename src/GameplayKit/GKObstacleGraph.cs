@@ -7,10 +7,11 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -33,10 +34,11 @@ namespace GameplayKit {
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
 	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (10,0)]
-	[TV (10,0)]
-	[Mac (10,12)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
+	[Mac (10, 12)]
 #endif
 	[Register ("GKObstacleGraph", SkipRegistration = true)]
 	public partial class GKObstacleGraph<NodeType> : GKObstacleGraph where NodeType : GKGraphNode2D {
@@ -54,12 +56,12 @@ namespace GameplayKit {
 		{
 		}
 
-		public static GKObstacleGraph<NodeType> FromObstacles (GKPolygonObstacle [] obstacles, float bufferRadius)
+		public static new GKObstacleGraph<NodeType>? FromObstacles (GKPolygonObstacle [] obstacles, float bufferRadius)
 		{
-			return Runtime.GetNSObject <GKObstacleGraph<NodeType>> (GraphWithObstacles (obstacles, bufferRadius, new Class (typeof (NodeType))));
+			return Runtime.GetNSObject<GKObstacleGraph<NodeType>> (GraphWithObstacles (obstacles, bufferRadius, new Class (typeof (NodeType))));
 		}
 
-		public NodeType [] GetNodes (GKPolygonObstacle obstacle)
+		public new NodeType [] GetNodes (GKPolygonObstacle obstacle)
 		{
 			return NSArray.ArrayFromHandle<NodeType> (_GetNodes (obstacle));
 		}

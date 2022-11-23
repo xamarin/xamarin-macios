@@ -11,7 +11,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using CoreFoundation;
 using ObjCRuntime;
@@ -26,8 +25,11 @@ namespace ImageIO {
 	// CGImageMetadata.h
 #if NET
 	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 #else
-	[iOS (7,0)]
+	[iOS (7, 0)]
 #endif
 	public class CGImageMetadataTag : NativeObject {
 
@@ -44,7 +46,7 @@ namespace ImageIO {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGImageMetadataTag (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -71,17 +73,17 @@ namespace ImageIO {
 		CGImageMetadataTag (NSString xmlns, NSString? prefix, NSString name, CGImageMetadataType type, IntPtr value)
 		{
 			if (xmlns is null)
-				throw new ArgumentNullException (nameof (xmlns));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (xmlns));
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 			// it won't crash - but the instance is invalid (null handle)
 			if (value == IntPtr.Zero)
-				throw new ArgumentNullException (nameof (value));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 
 			InitializeHandle (CGImageMetadataTagCreate (xmlns.Handle, prefix.GetHandle (), name.Handle, type, value));
 		}
 
-		[DllImport (Constants.ImageIOLibrary, EntryPoint="CGImageMetadataTagGetTypeID")]
+		[DllImport (Constants.ImageIOLibrary, EntryPoint = "CGImageMetadataTagGetTypeID")]
 		public extern static nint GetTypeID ();
 
 
@@ -139,7 +141,7 @@ namespace ImageIO {
 		extern static /* CFArrayRef __nullable */ IntPtr CGImageMetadataTagCopyQualifiers (
 			/* CGImageMetadataTagRef __nonnull */ IntPtr tag);
 
-		public CGImageMetadataTag?[]? GetQualifiers ()
+		public CGImageMetadataTag? []? GetQualifiers ()
 		{
 			IntPtr result = CGImageMetadataTagCopyQualifiers (Handle);
 			return CFArray.ArrayFromHandle<CGImageMetadataTag> (result, true);

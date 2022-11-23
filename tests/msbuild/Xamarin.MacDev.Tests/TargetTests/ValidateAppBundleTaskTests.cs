@@ -7,12 +7,11 @@ using Microsoft.Build.Evaluation;
 using Xamarin.MacDev;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
-namespace Xamarin.iOS.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
-	public class ValidateAppBundleTaskTests : ExtensionTestBase
-	{
+	public class ValidateAppBundleTaskTests : ExtensionTestBase {
 		string extensionBundlePath;
 		string mainAppPlistPath;
 		string extensionPlistPath;
@@ -25,6 +24,9 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void MissingFiles ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var paths = BuildExtension ("MyTabbedApplication", "MyActionExtension");
 			extensionBundlePath = paths.AppBundlePath;
 			mainAppPlistPath = Path.Combine (AppBundlePath, "Info.plist");
@@ -51,7 +53,7 @@ namespace Xamarin.iOS.Tasks
 		void MissingPlist_Extension ()
 		{
 			var contents = File.ReadAllBytes (extensionPlistPath);
-			try { 
+			try {
 				File.Delete (extensionPlistPath);
 				RunTarget (MonoTouchProject, "_ValidateAppBundle", 1);
 				Assert.IsTrue (Engine.Logger.ErrorEvents.Count > 0, "#2");

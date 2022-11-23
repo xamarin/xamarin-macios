@@ -1,7 +1,8 @@
+#nullable enable
+
 #if MONOMAC || __MACCATALYST__
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 
@@ -10,6 +11,7 @@ namespace CoreGraphics
 
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif
@@ -21,6 +23,7 @@ namespace CoreGraphics
 
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif
@@ -84,10 +87,9 @@ namespace CoreGraphics
 
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.9")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 #endif

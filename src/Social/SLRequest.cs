@@ -7,6 +7,8 @@
 // Copyright 2012-2013 Xamarin Inc
 //
 
+#nullable enable
+
 using System;
 using ObjCRuntime;
 using Foundation;
@@ -17,7 +19,7 @@ namespace Social {
 	public partial class SLRequest {
 		internal static NSString KindToType (SLServiceKind kind)
 		{
-			switch (kind){
+			switch (kind) {
 			case SLServiceKind.Facebook:
 				return SLServiceType.Facebook;
 			case SLServiceKind.Twitter:
@@ -30,10 +32,11 @@ namespace Social {
 			case SLServiceKind.LinkedIn:
 				return SLServiceType.LinkedIn;
 #endif
+			default:
+				throw new ArgumentOutOfRangeException (nameof (kind));
 			}
-			return null;
 		}
-		
+
 		public static SLRequest Create (SLServiceKind serviceKind, SLRequestMethod method, NSUrl url, NSDictionary parameters)
 		{
 			return Create (KindToType (serviceKind), method, url, parameters);

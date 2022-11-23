@@ -29,6 +29,7 @@
 using ObjCRuntime;
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 namespace Foundation {
 
@@ -46,16 +47,22 @@ namespace Foundation {
 	}
 #endif
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class NSFileAttributes {
 		public bool? AppendOnly { get; set; }
 		public bool? Busy { get; set; }
-		public bool? ExtensionHidden { get ; set; }
+		public bool? ExtensionHidden { get; set; }
 		public NSDate CreationDate { get; set; }
 		public string OwnerAccountName { get; set; }
 		public string GroupOwnerAccountName { get; set; }
 		public nint? SystemNumber { get; set; } // NSInteger
 		public nuint? DeviceIdentifier { get; set; } // unsigned long
-		public nuint? GroupOwnerAccountID { get ; set; } // unsigned long
+		public nuint? GroupOwnerAccountID { get; set; } // unsigned long
 
 		public bool? Immutable { get; set; }
 		public NSDate ModificationDate { get; set; }
@@ -68,7 +75,7 @@ namespace Foundation {
 		public nuint? SystemFileNumber { get; set; } // unsigned long
 		public ulong? Size { get; set; } // unsigned long long
 		public NSFileType? Type { get; set; }
-				
+
 #if !MONOMAC
 		public NSFileProtection? ProtectionKey { get; set; }
 #endif
@@ -119,7 +126,7 @@ namespace Foundation {
 
 			if (type.HasValue) {
 				v = null;
-				switch (type.Value){
+				switch (type.Value) {
 				case NSFileType.Directory:
 					v = NSFileManager.TypeDirectory; break;
 				case NSFileType.Regular:
@@ -157,7 +164,7 @@ namespace Foundation {
 			return dict;
 		}
 
-#region fetch
+		#region fetch
 		internal static bool? fetch_bool (NSDictionary dict, NSString key)
 		{
 			var k = dict.ObjectForKey (key) as NSNumber;
@@ -165,7 +172,7 @@ namespace Foundation {
 				return null;
 			return k.BoolValue;
 		}
-			
+
 		internal static uint? fetch_uint (NSDictionary dict, NSString key)
 		{
 			var k = dict.ObjectForKey (key) as NSNumber;
@@ -213,9 +220,9 @@ namespace Foundation {
 				return null;
 			return k.Int16Value;
 		}
-#endregion
+		#endregion
 
-	public static NSFileAttributes FromDictionary (NSDictionary dict)
+		public static NSFileAttributes FromDictionary (NSDictionary dict)
 		{
 			if (dict == null)
 				return null;
@@ -260,10 +267,10 @@ namespace Foundation {
 					type = NSFileType.BlockSpecial;
 				else if (name == NSFileManager.TypeUnknown)
 					type = NSFileType.Unknown;
-					
+
 				ret.Type = type;
 			}
-				
+
 #if !MONOMAC
 			name = dict.ObjectForKey (NSFileManager.FileProtectionKey) as NSString;
 			if (name != null) {
@@ -285,9 +292,15 @@ namespace Foundation {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class NSFileSystemAttributes {
 		NSDictionary dict;
-		
+
 		internal NSFileSystemAttributes (NSDictionary dict)
 		{
 			this.dict = dict;
@@ -306,11 +319,11 @@ namespace Foundation {
 			if (dict == null)
 				return null;
 			var ret = new NSFileSystemAttributes (dict);
-			ret.Size      = NSFileAttributes.fetch_ulong (dict, NSFileManager.SystemSize) ?? 0;
-			ret.FreeSize  = NSFileAttributes.fetch_ulong (dict, NSFileManager.SystemFreeSize) ?? 0;
-			ret.Nodes     = NSFileAttributes.fetch_long (dict, NSFileManager.SystemNodes) ?? 0;
+			ret.Size = NSFileAttributes.fetch_ulong (dict, NSFileManager.SystemSize) ?? 0;
+			ret.FreeSize = NSFileAttributes.fetch_ulong (dict, NSFileManager.SystemFreeSize) ?? 0;
+			ret.Nodes = NSFileAttributes.fetch_long (dict, NSFileManager.SystemNodes) ?? 0;
 			ret.FreeNodes = NSFileAttributes.fetch_long (dict, NSFileManager.SystemFreeNodes) ?? 0;
-			ret.Number    = NSFileAttributes.fetch_uint (dict, NSFileManager.SystemFreeNodes) ?? 0;
+			ret.Number = NSFileAttributes.fetch_uint (dict, NSFileManager.SystemFreeNodes) ?? 0;
 
 			return ret;
 		}
@@ -320,9 +333,9 @@ namespace Foundation {
 		{
 			return attr.dict;
 		}
-		
-	}		
-	
+
+	}
+
 	public partial class NSFileManager {
 
 		[DllImport (Constants.FoundationLibrary)]
@@ -358,8 +371,9 @@ namespace Foundation {
 		[DllImport (Constants.FoundationLibrary)]
 		static extern IntPtr NSHomeDirectoryForUser (/* NSString */IntPtr userName);
 
-		public static string GetHomeDirectory (string userName) {
-			if (userName == null) 
+		public static string GetHomeDirectory (string userName)
+		{
+			if (userName == null)
 				throw new ArgumentNullException (nameof (userName));
 
 			using (var nsstring = new NSString (userName))
@@ -386,11 +400,10 @@ namespace Foundation {
 
 		public bool SetAttributes (NSFileAttributes attributes, string path)
 		{
-			NSError ignore;
 			if (attributes == null)
 				throw new ArgumentNullException ("attributes");
 
-			return SetAttributes (attributes.ToDictionary (), path, out ignore);
+			return SetAttributes (attributes.ToDictionary (), path, out _);
 		}
 
 		public bool CreateDirectory (string path, bool createIntermediates, NSFileAttributes attributes, out NSError error)
@@ -411,7 +424,7 @@ namespace Foundation {
 			var dict = attributes == null ? null : attributes.ToDictionary ();
 			return CreateFile (path, data, dict);
 		}
-		
+
 		public NSFileAttributes GetAttributes (string path, out NSError error)
 		{
 			return NSFileAttributes.FromDictionary (_GetAttributes (path, out error));
@@ -434,7 +447,7 @@ namespace Foundation {
 			return NSFileSystemAttributes.FromDictionary (_GetFileSystemAttributes (path, out error));
 		}
 
-		public NSUrl[] GetMountedVolumes (NSString [] properties, NSVolumeEnumerationOptions options)
+		public NSUrl [] GetMountedVolumes (NSString [] properties, NSVolumeEnumerationOptions options)
 		{
 			using var array = NSArray.FromNSObjects (properties);
 			return GetMountedVolumes (array, options);

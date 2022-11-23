@@ -1,7 +1,8 @@
+#nullable enable
+
 using System;
 using ObjCRuntime;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace HomeKit {
 
@@ -12,13 +13,13 @@ namespace HomeKit {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
 #else
-		[iOS (9,0)]
+		[iOS (9, 0)]
 #endif
 		public HMActionSetType ActionSetType {
 			get {
 				var s = _ActionSetType;
 				// safety in case the field does not exists / cannot be loaded / new in future iOS versions...
-				if (s == null)
+				if (s is null)
 					return HMActionSetType.Unknown;
 				if (s == HMActionSetTypesInternal.WakeUp)
 					return HMActionSetType.WakeUp;

@@ -33,7 +33,6 @@ using System.Runtime.InteropServices;
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
-using System.Runtime.Versioning;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -41,10 +40,9 @@ using NativeHandle = System.IntPtr;
 
 namespace OpenGL {
 #if NET
+	[SupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 use 'Metal' Framework instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+	[ObsoletedOSPlatform ("macos10.14", "Use 'Metal' Framework instead.")]
 #else
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' Framework instead.")]
 #endif
@@ -57,7 +55,7 @@ namespace OpenGL {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGLContext (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{
@@ -69,12 +67,12 @@ namespace OpenGL {
 		[DllImport (Constants.OpenGLLibrary)]
 		extern static void CGLReleaseContext (IntPtr handle);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGLRetainContext (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGLReleaseContext (GetCheckedHandle ());
 		}
@@ -92,7 +90,7 @@ namespace OpenGL {
 		{
 			return CGLUnlockContext (Handle);
 		}
-	
+
 		[DllImport (Constants.OpenGLLibrary)]
 		extern static CGLErrorCode CGLSetCurrentContext (IntPtr ctx);
 
@@ -106,7 +104,7 @@ namespace OpenGL {
 					return new CGLContext (ctx, false);
 				else
 					return null;
-			} 
+			}
 
 			set {
 				var retValue = CGLSetCurrentContext (value.GetHandle ());

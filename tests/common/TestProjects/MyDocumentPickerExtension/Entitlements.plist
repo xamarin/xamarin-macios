@@ -4,7 +4,7 @@
 <dict>
     <key>com.apple.security.application-groups</key>
     <array>
-        <string>group.com.your-company.app-name</string>
+        <string>group.com.xamarin.app-name</string>
     </array>
 </dict>
 </plist>
