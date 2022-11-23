@@ -1,3 +1,4 @@
+#if !__WATCHOS__
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -55,3 +56,4 @@ public static class MainClass {
 #endif
 	}
 }
+#endif // !__WATCHOS__
