@@ -4407,5 +4407,9 @@ namespace UIKit {
 		[Internal, Field ("NSTextEncodingNameDocumentOption")]
 		NSString NSTextEncodingNameDocumentOption { get; }
 
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSTextSizeMultiplierDocumentOption")]
+		NSString NSTextSizeMultiplierDocumentOption { get; }
+
 	}
 }

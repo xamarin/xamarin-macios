@@ -15527,9 +15527,6 @@ namespace AppKit {
 		[Internal, Field ("NSTimeoutDocumentOption")]
 		NSString NSTimeoutDocumentOption { get; }
 
-		[Internal, Field ("NSTextSizeMultiplierDocumentOption")]
-		NSString NSTextSizeMultiplierDocumentOption { get; }
-
 		[Internal, Field ("NSFileTypeDocumentOption")]
 		NSString NSFileTypeDocumentOption { get; }
 

@@ -138,11 +138,6 @@ namespace Foundation
 	}
 
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
-		public float? TextSizeMultiplier { 
-			get { return GetFloatValue (NSStringAttributeKey.NSTextSizeMultiplierDocumentOption); }
-			set { SetNumberValue (NSStringAttributeKey.NSTextSizeMultiplierDocumentOption, (float?) value); }
-		}
-
 		public float? Timeout { 
 			get { return GetFloatValue (NSStringAttributeKey.NSTimeoutDocumentOption); }
 			set { SetNumberValue (NSStringAttributeKey.NSTimeoutDocumentOption, (float?)value); }

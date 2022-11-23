@@ -344,6 +344,23 @@ namespace Foundation {
 		}
 #endif // !__MACOS__
 
+#if __MACOS__
+#if NET
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+#endif // NET
+		public float? TextSizeMultiplier {
+			get {
+				return GetFloatValue (NSAttributedStringDocumentReadingOptionKey.NSTextSizeMultiplierDocumentOption);
+			}
+			set {
+				SetNumberValue (NSAttributedStringDocumentReadingOptionKey.NSTextSizeMultiplierDocumentOption, value);
+			}
+		}
+#endif // !__MACOS__
+
 #endif // !COREBUILD
 	}
 }
