@@ -170,8 +170,8 @@ namespace Cecil.Tests {
 		{
 			Func<TypeDefinition, IEnumerable<string>> selectLambda = (type) => {
 				return from m in type.Methods
-						where m.IsPublic && !IsSkip (type.Name, m.Name, allowedMethods) && !IsException (assemblyPath, m)
-						select m.Name;
+					   where m.IsPublic && !IsSkip (type.Name, m.Name, allowedMethods) && !IsException (assemblyPath, m)
+					   select m.Name;
 			};
 			CapitalizationTest (assemblyPath, selectLambda);
 		}
@@ -182,8 +182,8 @@ namespace Cecil.Tests {
 		{
 			Func<TypeDefinition, IEnumerable<string>> selectLambda = (type) => {
 				return from e in type.Events
-						where !(Char.IsUpper (e.Name [0]))
-						select e.Name;
+					   where !(Char.IsUpper (e.Name [0]))
+					   select e.Name;
 			};
 			CapitalizationTest (assemblyPath, selectLambda);
 		}
@@ -194,8 +194,8 @@ namespace Cecil.Tests {
 		{
 			Func<TypeDefinition, IEnumerable<string>> selectLambda = (type) => {
 				return from f in type.Fields
-						where f.IsPublic && f.IsFamilyOrAssembly && !IsSkip (type.Name, f.Name, allowedFields)
-						select f.Name;
+					   where f.IsPublic && f.IsFamilyOrAssembly && !IsSkip (type.Name, f.Name, allowedFields)
+					   select f.Name;
 			};
 			CapitalizationTest (assemblyPath, selectLambda);
 		}
