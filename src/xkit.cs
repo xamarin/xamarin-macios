@@ -4394,5 +4394,9 @@ namespace UIKit {
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Internal, Field ("NSWebPreferencesDocumentOption")]
 		NSString NSWebPreferencesDocumentOption { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSWebResourceLoadDelegateDocumentOption")]
+		NSString NSWebResourceLoadDelegateDocumentOption { get; }
 	}
 }

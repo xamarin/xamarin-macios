@@ -138,20 +138,6 @@ namespace Foundation
 	}
 
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
-		public NSObject? WebResourceLoadDelegate {
-			get {
-				NSObject value;
-				Dictionary.TryGetValue (NSStringAttributeKey.NSWebResourceLoadDelegateDocumentOption, out value);
-				return value;
-			}
-			set {
-				if (value is null)
-					RemoveValue (NSStringAttributeKey.NSWebResourceLoadDelegateDocumentOption);
-				else
-					Dictionary [NSStringAttributeKey.NSWebResourceLoadDelegateDocumentOption] = value;
-			}
-		}
-
 		public NSUrl? BaseUrl {
 			get { 
 				return GetNativeValue <NSUrl> (NSStringAttributeKey.NSBaseURLDocumentOption);

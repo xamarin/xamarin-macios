@@ -293,6 +293,23 @@ namespace Foundation {
 		}
 #endif // !__MACOS__
 
+#if __MACOS__
+#if NET
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+#endif // NET
+		public NSObject? WebResourceLoadDelegate {
+			get {
+				return GetNativeValue<NSObject> (NSAttributedStringDocumentReadingOptionKey.NSWebResourceLoadDelegateDocumentOption);
+			}
+			set {
+				SetNativeValue (NSAttributedStringDocumentReadingOptionKey.NSWebResourceLoadDelegateDocumentOption, value);
+			}
+		}
+#endif // !__MACOS__
+
 #endif // !COREBUILD
 	}
 }

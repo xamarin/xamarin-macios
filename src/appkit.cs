@@ -15533,9 +15533,6 @@ namespace AppKit {
 		[Internal, Field ("NSTimeoutDocumentOption")]
 		NSString NSTimeoutDocumentOption { get; }
 
-		[Internal, Field ("NSWebResourceLoadDelegateDocumentOption")]
-		NSString NSWebResourceLoadDelegateDocumentOption { get; }
-
 		[Internal, Field ("NSTextSizeMultiplierDocumentOption")]
 		NSString NSTextSizeMultiplierDocumentOption { get; }
 
