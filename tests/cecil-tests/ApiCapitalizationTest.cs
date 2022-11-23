@@ -41,12 +41,10 @@ namespace Cecil.Tests {
 
 		bool IsTypeObsolete (TypeDefinition type)
 		{
-			if (type == null)
+			if (type is null)
 				return false;
 
-			if (type.HasCustomAttributes && type.CustomAttributes.Where ((t) => t.AttributeType.Name == "ObsoleteAttribute" || t.AttributeType.Name == "AdviceAttribute").Any ()) {
-				return true;
-			}
+			return type.HasCustomAttributes && type.CustomAttributes.Where ((t) => t.AttributeType.Name == "ObsoleteAttribute" || t.AttributeType.Name == "AdviceAttribute").Any ());
 
 			return false;
 		}
@@ -57,37 +55,25 @@ namespace Cecil.Tests {
 			if (method == null)
 				return false;
 
-			if (method.HasCustomAttributes && method.CustomAttributes.Where ((m) => m.AttributeType.Name == "ObsoleteAttribute").Any ()) {
-				return true;
-			}
-
-
-			return false;
+			return method.HasCustomAttributes && method.CustomAttributes.Where ((m) => m.AttributeType.Name == "ObsoleteAttribute").Any ());
 		}
 
 		bool IsPropertyObsolete (PropertyDefinition property, TypeDefinition t)
 		{
-			if (property == null)
+			if (property is null)
 				return false;
 
-			if (property.HasCustomAttributes && property.CustomAttributes.Where ((p) => p.AttributeType.Name == "ObsoleteAttribute" || p.AttributeType.Name == "ObsoletedOSPlatformAttribute").Any ()) {
-				return true;
-			}
-
-			return false;
+			return property.HasCustomAttributes && property.CustomAttributes.Where ((p) => p.AttributeType.Name == "ObsoleteAttribute" || p.AttributeType.Name == "ObsoletedOSPlatformAttribute").Any ());
 		}
 
 
 		bool IsException (string assemblyPath, MethodDefinition m)
 		{
 
-			if (m == null)
+			if (m is null)
 				return false;
 
-			if (m.IsRemoveOn || m.IsAddOn || m.IsConstructor || m.IsSpecialName || IsMethodObsolete (m) || m.IsFamilyOrAssembly || m.IsPInvokeImpl)
-				return true;
-
-			return false;
+			return m.IsRemoveOn || m.IsAddOn || m.IsConstructor || m.IsSpecialName || IsMethodObsolete (m) || m.IsFamilyOrAssembly || m.IsPInvokeImpl;
 		}
 
 
@@ -170,11 +156,10 @@ namespace Cecil.Tests {
 		{
 			Func<TypeDefinition, IEnumerable<string>> selectLambda = (type) => {
 				var typeName = type.Name;
-				var c = type.Properties
+				return type.Properties
 						.Where (p => p.GetMethod?.IsPublic == true || p.SetMethod?.IsPublic == true)
 						.Where (p => !IsSkip (type.Name, p.Name, allowedProperties) && !IsPropertyObsolete (p, type) && !p.IsSpecialName)
 						.Select (p => p.Name);
-				return c;
 			};
 			CapitalizationTest (assemblyPath, selectLambda);
 		}
@@ -184,10 +169,9 @@ namespace Cecil.Tests {
 		public void MethodsCapitalizationTest (string assemblyPath)
 		{
 			Func<TypeDefinition, IEnumerable<string>> selectLambda = (type) => {
-				var c = from m in type.Methods
+				return from m in type.Methods
 						where m.IsPublic && !IsSkip (type.Name, m.Name, allowedMethods) && !IsException (assemblyPath, m)
 						select m.Name;
-				return c;
 			};
 			CapitalizationTest (assemblyPath, selectLambda);
 		}
@@ -197,10 +181,9 @@ namespace Cecil.Tests {
 		public void EventsCapitalizationTest (string assemblyPath)
 		{
 			Func<TypeDefinition, IEnumerable<string>> selectLambda = (type) => {
-				var c = from e in type.Events
+				return from e in type.Events
 						where !(Char.IsUpper (e.Name [0]))
 						select e.Name;
-				return c;
 			};
 			CapitalizationTest (assemblyPath, selectLambda);
 		}
@@ -210,10 +193,9 @@ namespace Cecil.Tests {
 		public void FieldsCapitalizationTest (string assemblyPath)
 		{
 			Func<TypeDefinition, IEnumerable<string>> selectLambda = (type) => {
-				var c = from f in type.Fields
+				return from f in type.Fields
 						where f.IsPublic && f.IsFamilyOrAssembly && !IsSkip (type.Name, f.Name, allowedFields)
 						select f.Name;
-				return c;
 			};
 			CapitalizationTest (assemblyPath, selectLambda);
 		}
