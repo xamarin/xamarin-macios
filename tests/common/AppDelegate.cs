@@ -12,8 +12,7 @@ using NUnit.Framework;
 using NUnit.Framework.Internal;
 
 [Register ("AppDelegate")]
-public partial class AppDelegate : UIApplicationDelegate
-{
+public partial class AppDelegate : UIApplicationDelegate {
 	public static TouchRunner Runner { get; set; }
 
 #if !__MACOS__
@@ -49,10 +48,10 @@ public partial class AppDelegate : UIApplicationDelegate
 }
 
 public static class MainClass {
-		static void Main (string[] args)
-		{
+	static void Main (string [] args)
+	{
 #if !__MACOS__
-			UIApplication.Main (args, null, typeof (AppDelegate));
+		UIApplication.Main (args, null, typeof (AppDelegate));
 #endif
-		}
+	}
 }
