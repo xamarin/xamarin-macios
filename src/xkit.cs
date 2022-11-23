@@ -4411,5 +4411,8 @@ namespace UIKit {
 		[Internal, Field ("NSTextSizeMultiplierDocumentOption")]
 		NSString NSTextSizeMultiplierDocumentOption { get; }
 
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSTimeoutDocumentOption")]
+		NSString NSTimeoutDocumentOption { get; }
 	}
 }

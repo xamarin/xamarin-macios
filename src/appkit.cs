@@ -15524,9 +15524,6 @@ namespace AppKit {
 		NSString TextEffect { get; }
 
 		// Internal
-		[Internal, Field ("NSTimeoutDocumentOption")]
-		NSString NSTimeoutDocumentOption { get; }
-
 		[Internal, Field ("NSFileTypeDocumentOption")]
 		NSString NSFileTypeDocumentOption { get; }
 

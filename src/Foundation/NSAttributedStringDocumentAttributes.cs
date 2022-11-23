@@ -361,6 +361,23 @@ namespace Foundation {
 		}
 #endif // !__MACOS__
 
+#if __MACOS__
+#if NET
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+#endif // NET
+		public float? Timeout {
+			get {
+				return GetFloatValue (NSAttributedStringDocumentReadingOptionKey.NSTimeoutDocumentOption);
+			}
+			set {
+				SetNumberValue (NSAttributedStringDocumentReadingOptionKey.NSTimeoutDocumentOption, value);
+			}
+		}
+#endif // !__MACOS__
+
 #endif // !COREBUILD
 	}
 }

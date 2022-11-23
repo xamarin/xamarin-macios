@@ -138,10 +138,6 @@ namespace Foundation
 	}
 
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
-		public float? Timeout { 
-			get { return GetFloatValue (NSStringAttributeKey.NSTimeoutDocumentOption); }
-			set { SetNumberValue (NSStringAttributeKey.NSTimeoutDocumentOption, (float?)value); }
-		}
 	}
 }
 
