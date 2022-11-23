@@ -41,38 +41,6 @@ namespace Foundation {
 
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
 #if !MONOMAC && !COREBUILD
-		public NSDocumentType DocumentType {
-			get {
-				var s = GetNSStringValue (NSAttributedStringDocumentAttributeKey.NSDocumentTypeDocumentAttribute);
-				if (s == NSAttributedStringDocumentType.NSPlainTextDocumentType)
-					return NSDocumentType.PlainText;
-				if (s == NSAttributedStringDocumentType.NSRtfdTextDocumentType)
-					return NSDocumentType.RTFD;
-				if (s == NSAttributedStringDocumentType.NSRtfTextDocumentType)
-					return NSDocumentType.RTF;
-				if (s == NSAttributedStringDocumentType.NSHtmlTextDocumentType)
-					return NSDocumentType.HTML;
-				return NSDocumentType.Unknown;
-			}
-
-			set {
-				switch (value) {
-				case NSDocumentType.PlainText:
-					SetStringValue (NSAttributedStringDocumentAttributeKey.NSDocumentTypeDocumentAttribute, NSAttributedStringDocumentType.NSPlainTextDocumentType);
-					break;
-				case NSDocumentType.RTFD:
-					SetStringValue (NSAttributedStringDocumentAttributeKey.NSDocumentTypeDocumentAttribute, NSAttributedStringDocumentType.NSRtfdTextDocumentType);
-					break;
-				case NSDocumentType.RTF:
-					SetStringValue (NSAttributedStringDocumentAttributeKey.NSDocumentTypeDocumentAttribute, NSAttributedStringDocumentType.NSRtfTextDocumentType);
-					break;
-				case NSDocumentType.HTML:
-					SetStringValue (NSAttributedStringDocumentAttributeKey.NSDocumentTypeDocumentAttribute, NSAttributedStringDocumentType.NSHtmlTextDocumentType);
-					break;
-				}
-			}
-		}
-
 		public CGSize? PaperSize {
 			get {
 				NSObject value;

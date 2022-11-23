@@ -165,69 +165,6 @@ namespace Foundation
 			}
 		}
 
-		public NSDocumentType DocumentType {
-			get {
-				var s = GetNSStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption);
-
-				if (s == NSAttributedStringDocumentType.NSPlainTextDocumentType)
-					return NSDocumentType.PlainText;
-				if (s == NSAttributedStringDocumentType.NSRtfTextDocumentType)
-					return NSDocumentType.RTF;
-				if (s == NSAttributedStringDocumentType.NSRtfdTextDocumentType)
-					return NSDocumentType.RTFD;
-				if (s == NSAttributedStringDocumentType.NSMacSimpleTextDocumentType)
-					return NSDocumentType.MacSimpleText;
-				if (s == NSAttributedStringDocumentType.NSHtmlTextDocumentType)
-					return NSDocumentType.HTML;
-				if (s == NSAttributedStringDocumentType.NSDocFormatTextDocumentType)
-					return NSDocumentType.DocFormat;
-				if (s == NSAttributedStringDocumentType.NSWordMLTextDocumentType)
-					return NSDocumentType.WordML;
-				if (s == NSAttributedStringDocumentType.NSWebArchiveTextDocumentType)
-					return NSDocumentType.WebArchive;
-				if (s == NSAttributedStringDocumentType.NSOfficeOpenXMLTextDocumentType)
-					return NSDocumentType.OfficeOpenXml;
-				if (s == NSAttributedStringDocumentType.NSOpenDocumentTextDocumentType)
-					return NSDocumentType.OpenDocument;
-				return NSDocumentType.Unknown;
-			}
-
-			set {
-				switch (value){
-				case NSDocumentType.PlainText:
-					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSAttributedStringDocumentType.NSPlainTextDocumentType);
-					break;
-				case NSDocumentType.RTFD:
-					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSAttributedStringDocumentType.NSRtfdTextDocumentType);
-					break;
-				case NSDocumentType.RTF:
-					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSAttributedStringDocumentType.NSRtfTextDocumentType);
-					break;
-				case NSDocumentType.HTML:
-					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSAttributedStringDocumentType.NSHtmlTextDocumentType);
-					break;
-				case NSDocumentType.MacSimpleText:
-					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSAttributedStringDocumentType.NSMacSimpleTextDocumentType);
-					break;
-				case NSDocumentType.DocFormat:
-					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSAttributedStringDocumentType.NSDocFormatTextDocumentType);
-					break;
-				case NSDocumentType.WordML:
-					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSAttributedStringDocumentType.NSWordMLTextDocumentType);
-					break;
-				case NSDocumentType.WebArchive:
-					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSAttributedStringDocumentType.NSWebArchiveTextDocumentType);
-					break;
-				case NSDocumentType.OfficeOpenXml:
-					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSAttributedStringDocumentType.NSOfficeOpenXMLTextDocumentType);
-					break;
-				case NSDocumentType.OpenDocument:
-					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSAttributedStringDocumentType.NSOpenDocumentTextDocumentType);
-					break;
-				}
-			}
-		}
-
 		public NSDictionary? WeakDefaultAttributes {
 			get {
 				NSObject value;
