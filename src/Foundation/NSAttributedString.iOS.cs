@@ -41,23 +41,6 @@ namespace Foundation {
 
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
 #if !MONOMAC && !COREBUILD
-		public CGSize? ViewSize {
-			get {
-				NSObject value;
-				Dictionary.TryGetValue (NSAttributedStringDocumentAttributeKey.NSViewSizeDocumentAttribute, out value);
-				var size = value as NSValue;
-				if (size != null)
-					return size.CGSizeValue;
-				return null;
-			}
-			set {
-				if (value is null)
-					RemoveValue (NSAttributedStringDocumentAttributeKey.NSViewSizeDocumentAttribute);
-				else
-					Dictionary [NSAttributedStringDocumentAttributeKey.NSViewSizeDocumentAttribute] = NSValue.FromCGSize (value.Value);
-			}
-		}
-
 		public float? ViewZoom {
 			get {
 				return GetFloatValue (NSAttributedStringDocumentAttributeKey.NSViewZoomDocumentAttribute);

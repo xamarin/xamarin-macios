@@ -157,6 +157,15 @@ namespace Foundation {
 		}
 #endif // !__MACOS__
 
+		public CGSize? ViewSize {
+			get {
+				return GetCGSizeValue (NSAttributedStringDocumentAttributeKey.NSViewSizeDocumentAttribute);
+			}
+			set {
+				SetCGSizeValue (NSAttributedStringDocumentAttributeKey.NSViewSizeDocumentAttribute, value);
+			}
+		}
+
 #if !TVOS && !WATCH
 		// documentation is unclear if an NSString or an NSUrl should be used...
 		// but providing an `NSString` throws a `NSInvalidArgumentException Reason: (null) is not a file URL`
