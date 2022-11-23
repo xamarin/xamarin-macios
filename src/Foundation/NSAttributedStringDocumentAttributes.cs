@@ -13,6 +13,7 @@ using System;
 #if HAS_APPKIT
 using AppKit;
 #endif
+using CoreGraphics;
 using Foundation;
 #if HAS_UIKIT
 using UIKit;
@@ -121,6 +122,15 @@ namespace Foundation {
 			}
 			set {
 				SetNativeValue (NSAttributedStringDocumentAttributeKey.NSDefaultAttributesDocumentAttribute, value);
+			}
+		}
+
+		public CGSize? PaperSize {
+			get {
+				return GetCGSizeValue (NSAttributedStringDocumentAttributeKey.NSPaperSizeDocumentAttribute);
+			}
+			set {
+				SetCGSizeValue (NSAttributedStringDocumentAttributeKey.NSPaperSizeDocumentAttribute, value);
 			}
 		}
 

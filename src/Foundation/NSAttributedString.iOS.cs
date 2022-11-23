@@ -41,23 +41,6 @@ namespace Foundation {
 
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
 #if !MONOMAC && !COREBUILD
-		public CGSize? PaperSize {
-			get {
-				NSObject value;
-				Dictionary.TryGetValue (NSAttributedStringDocumentAttributeKey.NSPaperSizeDocumentAttribute, out value);
-				var size = value as NSValue;
-				if (size != null)
-					return size.CGSizeValue;
-				return null;
-			}
-			set {
-				if (value is null)
-					RemoveValue (NSAttributedStringDocumentAttributeKey.NSPaperSizeDocumentAttribute);
-				else
-					Dictionary [NSAttributedStringDocumentAttributeKey.NSPaperSizeDocumentAttribute] = NSValue.FromCGSize (value.Value);
-			}
-		}
-
 		public UIEdgeInsets? PaperMargin {
 			get {
 				NSObject value;
