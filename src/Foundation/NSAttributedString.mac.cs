@@ -165,15 +165,6 @@ namespace Foundation
 			}
 		}
 
-		public NSString? WeakDocumentType {
-			get {
-				return GetNSStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption);
-			}
-			set {
-				SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, value);
-			}
-		}
-
 		public NSDocumentType DocumentType {
 			get {
 				var s = GetNSStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption);

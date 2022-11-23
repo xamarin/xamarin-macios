@@ -32,6 +32,15 @@ namespace Foundation {
 				SetNumberValue (NSAttributedStringDocumentAttributeKey.NSCharacterEncodingDocumentAttribute, (nint?) (long?) value);
 			}
 		}
+
+		public NSString? WeakDocumentType {
+			get {
+				return GetNSStringValue (NSAttributedStringDocumentAttributeKey.NSDocumentTypeDocumentAttribute);
+			}
+			set {
+				SetStringValue (NSAttributedStringDocumentAttributeKey.NSDocumentTypeDocumentAttribute, value);
+			}
+		}
 #endif // !COREBUILD
 	}
 }

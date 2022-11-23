@@ -15524,9 +15524,6 @@ namespace AppKit {
 		NSString TextEffect { get; }
 
 		// Internal
-		[Internal, Field ("NSDocumentTypeDocumentOption")]
-		NSString NSDocumentTypeDocumentOption { get; }
-
 		[Internal, Field ("NSDefaultAttributesDocumentOption")]
 		NSString NSDefaultAttributesDocumentOption { get; }
 
