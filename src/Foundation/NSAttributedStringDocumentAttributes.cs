@@ -42,6 +42,18 @@ namespace Foundation {
 			}
 		}
 
+		public float? HyphenationFactor {
+			get {
+				return GetFloatValue (NSAttributedStringDocumentAttributeKey.NSHyphenationFactorDocumentAttribute);
+			}
+			set {
+				if (value < 0 || value > 1.0f)
+					throw new ArgumentOutOfRangeException (nameof (value), value, "Value must be between 0 and 1");
+
+				SetNumberValue (NSAttributedStringDocumentAttributeKey.NSHyphenationFactorDocumentAttribute, value);
+			}
+		}
+
 		public NSStringEncoding? StringEncoding {
 			get {
 				return (NSStringEncoding?) (long?) GetNIntValue (NSAttributedStringDocumentAttributeKey.NSCharacterEncodingDocumentAttribute);
