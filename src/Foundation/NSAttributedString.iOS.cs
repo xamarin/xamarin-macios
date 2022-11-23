@@ -41,20 +41,6 @@ namespace Foundation {
 
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
 #if !MONOMAC && !COREBUILD
-		public UIColor? BackgroundColor {
-			get {
-				NSObject? value;
-				Dictionary.TryGetValue (NSAttributedStringDocumentAttributeKey.NSBackgroundColorDocumentAttribute, out value);
-				return value as UIColor;
-			}
-			set {
-				if (value is null)
-					RemoveValue (NSAttributedStringDocumentAttributeKey.NSBackgroundColorDocumentAttribute);
-				else
-					Dictionary [NSAttributedStringDocumentAttributeKey.NSBackgroundColorDocumentAttribute] = value;
-			}
-		}
-
 		public float? HyphenationFactor {
 			get {
 				return GetFloatValue (NSAttributedStringDocumentAttributeKey.NSHyphenationFactorDocumentAttribute);

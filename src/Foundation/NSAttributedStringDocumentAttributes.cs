@@ -19,11 +19,28 @@ using Foundation;
 using UIKit;
 #endif
 
+#if !COREBUILD
+#if __MACOS__
+using XColor = AppKit.NSColor;
+#else
+using XColor = UIKit.UIColor;
+#endif
+#endif
+
 namespace Foundation {
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
 #if !COREBUILD
 		public NSAttributedStringDocumentAttributes () { }
 		public NSAttributedStringDocumentAttributes (NSDictionary? dictionary) : base (dictionary) { }
+
+		public XColor? BackgroundColor {
+			get {
+				return GetNativeValue<XColor> (NSAttributedStringDocumentAttributeKey.NSBackgroundColorDocumentAttribute);
+			}
+			set {
+				SetNativeValue (NSAttributedStringDocumentAttributeKey.NSBackgroundColorDocumentAttribute, value);
+			}
+		}
 
 		public NSStringEncoding? StringEncoding {
 			get {
