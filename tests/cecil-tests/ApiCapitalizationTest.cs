@@ -154,8 +154,8 @@ namespace Cecil.Tests {
 		{
 			Func<TypeDefinition, IEnumerable<string>> selectLambda = (type) => {
 				return from m in type.Methods
-						where m.IsPublic && !IsSkip (type.Name, m.Name, allowedMethods) && !IsUnique (assemblyPath, m)
-						select m.Name;
+					   where m.IsPublic && !IsSkip (type.Name, m.Name, allowedMethods) && !IsUnique (assemblyPath, m)
+					   select m.Name;
 			};
 			CapitalizationTest (assemblyPath, selectLambda);
 		}
@@ -193,7 +193,7 @@ namespace Cecil.Tests {
 				var publicTypes = cache.MainModule.Types.Where ((t) => t.IsPublic && !IsMemberObsolete (t));
 
 				foreach (var type in publicTypes) {
-					TypeCheck(type, selectLambda, typeDict);
+					TypeCheck (type, selectLambda, typeDict);
 					if (type.HasNestedTypes) {
 						foreach (var nestedType in type.NestedTypes) {
 							TypeCheck (nestedType, selectLambda, typeDict);
@@ -208,7 +208,8 @@ namespace Cecil.Tests {
 
 		}
 
-		public void TypeCheck (TypeDefinition type, Func<TypeDefinition, IEnumerable<string>> selectLambda, Dictionary<string, string> typeDict) {
+		public void TypeCheck (TypeDefinition type, Func<TypeDefinition, IEnumerable<string>> selectLambda, Dictionary<string, string> typeDict)
+		{
 			var err = selectLambda (type);
 			if (err is not null && err.Any ()) {
 				if (typeDict.TryGetValue ($"Type: {type.Name}", out var errMembers)) {
