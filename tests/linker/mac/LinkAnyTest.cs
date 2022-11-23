@@ -28,12 +28,12 @@ namespace LinkAnyTest {
 
 		void TimedWait (Task task)
 		{
-				var rv = task.Wait (TimeSpan.FromMinutes (1));
-				if (rv)
-					return;
+			var rv = task.Wait (TimeSpan.FromMinutes (1));
+			if (rv)
+				return;
 
-				TestRuntime.IgnoreInCI ("This test times out randomly in CI due to bad network.");
-				Assert.Fail ("Test timed out");
+			TestRuntime.IgnoreInCI ("This test times out randomly in CI due to bad network.");
+			Assert.Fail ("Test timed out");
 		}
 
 		// http://blogs.msdn.com/b/csharpfaq/archive/2012/06/26/understanding-a-simple-async-program.aspx
