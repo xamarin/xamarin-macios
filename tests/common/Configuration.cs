@@ -46,6 +46,7 @@ namespace Xamarin.Tests {
 		public static bool include_device;
 		public static bool include_dotnet;
 		public static bool include_legacy_xamarin;
+		public static bool iOSSupports32BitArchitectures;
 
 		static Version xcode_version;
 		public static Version XcodeVersion {
@@ -298,6 +299,7 @@ namespace Xamarin.Tests {
 			DotNetCscCommand = GetVariable ("DOTNET_CSC_COMMAND", null)?.Trim ('\'');
 			DotNetExecutable = GetVariable ("DOTNET", null);
 			DotNetTfm = GetVariable ("DOTNET_TFM", null);
+			iOSSupports32BitArchitectures = !string.IsNullOrEmpty (GetVariable ("IOS_SUPPORTS_32BIT_ARCHITECTURES", ""));
 
 			XcodeVersionString = GetXcodeVersion (xcode_root);
 #if MONOMAC
