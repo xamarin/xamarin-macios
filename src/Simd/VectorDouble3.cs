@@ -30,8 +30,7 @@ namespace OpenTK
 	[SupportedOSPlatform ("tvos")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct NVector3d : IEquatable<NVector3d>
-	{
+	public struct NVector3d : IEquatable<NVector3d> {
 		public double X;
 		public double Y;
 		public double Z;
