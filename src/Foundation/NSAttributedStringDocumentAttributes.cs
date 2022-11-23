@@ -166,6 +166,14 @@ namespace Foundation {
 			}
 		}
 
+		public float? ViewZoom {
+			get {
+				return GetFloatValue (NSAttributedStringDocumentAttributeKey.NSViewZoomDocumentAttribute);
+			}
+			set {
+				SetNumberValue (NSAttributedStringDocumentAttributeKey.NSViewZoomDocumentAttribute, value);
+			}
+		}
 #if !TVOS && !WATCH
 		// documentation is unclear if an NSString or an NSUrl should be used...
 		// but providing an `NSString` throws a `NSInvalidArgumentException Reason: (null) is not a file URL`

@@ -41,18 +41,6 @@ namespace Foundation {
 
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
 #if !MONOMAC && !COREBUILD
-		public float? ViewZoom {
-			get {
-				return GetFloatValue (NSAttributedStringDocumentAttributeKey.NSViewZoomDocumentAttribute);
-			}
-			set {
-				if (value is null)
-					RemoveValue (NSAttributedStringDocumentAttributeKey.NSViewZoomDocumentAttribute);
-				else
-					SetNumberValue (NSAttributedStringDocumentAttributeKey.NSViewZoomDocumentAttribute, value);
-			}
-		}
-
 		public NSDocumentViewMode? ViewMode {
 			get {
 				var value = GetInt32Value (NSAttributedStringDocumentAttributeKey.NSViewModeDocumentAttribute);
