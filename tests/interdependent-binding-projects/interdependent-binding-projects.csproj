@@ -16,6 +16,7 @@
     <DefineConstants></DefineConstants>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <RootTestsDirectory>..</RootTestsDirectory>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>True</DebugSymbols>
