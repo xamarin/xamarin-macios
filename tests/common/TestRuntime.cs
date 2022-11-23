@@ -1343,7 +1343,7 @@ partial class TestRuntime {
 		return color.CGColor;
 #endif
 	}
-	
+
 	public static ushort GetFlags (NSObject obj)
 	{
 #if NET
