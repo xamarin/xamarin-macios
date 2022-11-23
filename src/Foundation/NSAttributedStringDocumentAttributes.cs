@@ -115,6 +115,15 @@ namespace Foundation {
 			}
 		}
 
+		public NSDictionary? WeakDefaultAttributes {
+			get {
+				return GetNativeValue<NSDictionary> (NSAttributedStringDocumentAttributeKey.NSDefaultAttributesDocumentAttribute);
+			}
+			set {
+				SetNativeValue (NSAttributedStringDocumentAttributeKey.NSDefaultAttributesDocumentAttribute, value);
+			}
+		}
+
 #if !TVOS && !WATCH
 		// documentation is unclear if an NSString or an NSUrl should be used...
 		// but providing an `NSString` throws a `NSInvalidArgumentException Reason: (null) is not a file URL`

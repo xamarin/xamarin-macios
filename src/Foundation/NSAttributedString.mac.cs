@@ -165,20 +165,6 @@ namespace Foundation
 			}
 		}
 
-		public NSDictionary? WeakDefaultAttributes {
-			get {
-				NSObject value;
-				Dictionary.TryGetValue (NSStringAttributeKey.NSDefaultAttributesDocumentOption, out value);
-				return value as NSDictionary;
-			}
-			set {
-				if (value is null)
-					RemoveValue (NSStringAttributeKey.NSDefaultAttributesDocumentOption);
-				else
-					Dictionary [NSStringAttributeKey.NSDefaultAttributesDocumentOption] = value;
-			}
-		}
-
 		public NSUrl? BaseUrl {
 			get { 
 				return GetNativeValue <NSUrl> (NSStringAttributeKey.NSBaseURLDocumentOption);

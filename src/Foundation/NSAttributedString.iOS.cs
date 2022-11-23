@@ -175,20 +175,6 @@ namespace Foundation {
 				}
 			}
 		}
-
-		public NSDictionary? WeakDefaultAttributes {
-			get {
-				NSObject? value;
-				Dictionary.TryGetValue (NSAttributedStringDocumentAttributeKey.NSDefaultAttributesDocumentAttribute, out value);
-				return value as NSDictionary;
-			}
-			set {
-				if (value is null)
-					RemoveValue (NSAttributedStringDocumentAttributeKey.NSDefaultAttributesDocumentAttribute);
-				else
-					Dictionary [NSAttributedStringDocumentAttributeKey.NSDefaultAttributesDocumentAttribute] = value;
-			}
-		}
 #endif
 	}
 }
