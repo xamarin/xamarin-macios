@@ -14866,6 +14866,7 @@ namespace Foundation
 		[Export ("launch")]
 		void Launch ();
 
+		[NoMacCatalyst]
 		[Export ("launchAndReturnError:")]
 		bool Launch ([NullAllowed] out NSError error);
 
@@ -14890,6 +14891,7 @@ namespace Foundation
 		NSTask LaunchFromPath (string path, string[] arguments);
 
 		[Static]
+		[NoMacCatalyst]
 		[Export ("launchedTaskWithExecutableURL:arguments:error:terminationHandler:")]
 		NSTask LaunchFromUrl (NSUrl url, string[] arguments, [NullAllowed] out NSError error, Action<NSTask> terminationHandler);
 
@@ -14901,6 +14903,7 @@ namespace Foundation
 		string LaunchPath { get; set; }
 
 		[NullAllowed]
+		[NoMacCatalyst]
 		[Export ("executableURL")]
 		NSUrl ExecutableUrl { get; set; }
 
@@ -14917,6 +14920,7 @@ namespace Foundation
 		[Export ("currentDirectoryPath")]
 		string CurrentDirectoryPath { get; set; }
 
+		[NoMacCatalyst]
 		[Export ("currentDirectoryURL")]
 		NSUrl CurrentDirectoryUrl { get; set; }
 
@@ -14932,6 +14936,9 @@ namespace Foundation
 		[Export ("standardError", ArgumentSemantic.Retain)]
 		NSObject StandardError { get; set; }
 
+		[Export ("qualityOfService")]
+		NSQualityOfService QualityOfService { get; set; }
+
 		[Export ("isRunning")]
 		bool IsRunning { get; }
 
@@ -14940,6 +14947,10 @@ namespace Foundation
 
 		[Export ("terminationStatus")]
 		int TerminationStatus { get; } /* int, not NSInteger */
+
+		[NoMacCatalyst]
+		[Export ("terminationHandler")]
+		Action<NSTask> TerminationHandler { get; set; }
 
 		[NoMacCatalyst]
 		[Export ("terminationReason")]
