@@ -124,7 +124,7 @@ namespace CoreAnimation {
 
 		public override int GetHashCode ()
 		{
-			var hash = new HashCode();
+			var hash = new HashCode ();
 			hash.Add (M11);
 			hash.Add (M12);
 			hash.Add (M13);
