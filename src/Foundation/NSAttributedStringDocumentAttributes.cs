@@ -114,6 +114,28 @@ namespace Foundation {
 					WeakDocumentType= documentType;
 			}
 		}
+
+#if !TVOS && !WATCH
+		// documentation is unclear if an NSString or an NSUrl should be used...
+		// but providing an `NSString` throws a `NSInvalidArgumentException Reason: (null) is not a file URL`
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (10, 15)]
+		[iOS (13, 0)]
+#endif
+		public NSUrl? ReadAccessUrl {
+			get {
+				return GetNativeValue<NSUrl> (NSAttributedStringDocumentReadingOptionKeys.ReadAccessUrlKey);
+			}
+			set {
+				SetNativeValue (NSAttributedStringDocumentReadingOptionKeys.ReadAccessUrlKey, value);
+			}
+		}
+#endif // !TVOS && !WATCH
 #endif // !COREBUILD
 	}
 }
