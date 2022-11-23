@@ -41,22 +41,6 @@ namespace Foundation {
 
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
 #if !MONOMAC && !COREBUILD
-		public NSDocumentViewMode? ViewMode {
-			get {
-				var value = GetInt32Value (NSAttributedStringDocumentAttributeKey.NSViewModeDocumentAttribute);
-				if (value is null)
-					return null;
-				else
-					return (NSDocumentViewMode) value.Value;
-			}
-			set {
-				if (value is null)
-					RemoveValue (NSAttributedStringDocumentAttributeKey.NSViewModeDocumentAttribute);
-				else
-					SetNumberValue (NSAttributedStringDocumentAttributeKey.NSViewModeDocumentAttribute, (int) value.Value);
-			}
-		}
-
 		public bool ReadOnly {
 			get {
 				var value = GetInt32Value (NSAttributedStringDocumentAttributeKey.NSReadOnlyDocumentAttribute);

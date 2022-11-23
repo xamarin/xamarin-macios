@@ -174,6 +174,16 @@ namespace Foundation {
 				SetNumberValue (NSAttributedStringDocumentAttributeKey.NSViewZoomDocumentAttribute, value);
 			}
 		}
+
+		public NSDocumentViewMode? ViewMode {
+			get {
+				return (NSDocumentViewMode?) GetInt32Value (NSAttributedStringDocumentAttributeKey.NSViewModeDocumentAttribute);
+			}
+			set {
+				SetNumberValue (NSAttributedStringDocumentAttributeKey.NSViewModeDocumentAttribute, value is null ? null : (int) value.Value);
+			}
+		}
+
 #if !TVOS && !WATCH
 		// documentation is unclear if an NSString or an NSUrl should be used...
 		// but providing an `NSString` throws a `NSInvalidArgumentException Reason: (null) is not a file URL`
