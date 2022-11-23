@@ -4398,5 +4398,9 @@ namespace UIKit {
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Internal, Field ("NSWebResourceLoadDelegateDocumentOption")]
 		NSString NSWebResourceLoadDelegateDocumentOption { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSBaseURLDocumentOption")]
+		NSString NSBaseURLDocumentOption { get; }
 	}
 }

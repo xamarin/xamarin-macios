@@ -310,6 +310,23 @@ namespace Foundation {
 		}
 #endif // !__MACOS__
 
+#if __MACOS__
+#if NET
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+#endif // NET
+		public NSUrl? BaseUrl {
+			get {
+				return GetNativeValue<NSUrl> (NSAttributedStringDocumentReadingOptionKey.NSBaseURLDocumentOption);
+			}
+			set {
+				SetNativeValue (NSAttributedStringDocumentReadingOptionKey.NSBaseURLDocumentOption, value);
+			}
+		}
+#endif // !__MACOS__
+
 #endif // !COREBUILD
 	}
 }

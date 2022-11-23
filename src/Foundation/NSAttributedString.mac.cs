@@ -138,15 +138,6 @@ namespace Foundation
 	}
 
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
-		public NSUrl? BaseUrl {
-			get { 
-				return GetNativeValue <NSUrl> (NSStringAttributeKey.NSBaseURLDocumentOption);
-			} 
-			set { 
-				SetNativeValue (NSStringAttributeKey.NSBaseURLDocumentOption, value);
-			} 
-		}
-
 		public string? TextEncodingName {
 			get {
 				return (string)GetNSStringValue (NSStringAttributeKey.NSTextEncodingNameDocumentOption);

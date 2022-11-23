@@ -15527,9 +15527,6 @@ namespace AppKit {
 		[Internal, Field ("NSTextEncodingNameDocumentOption")]
 		NSString NSTextEncodingNameDocumentOption { get; }
 
-		[Internal, Field ("NSBaseURLDocumentOption")]
-		NSString NSBaseURLDocumentOption { get; }
-
 		[Internal, Field ("NSTimeoutDocumentOption")]
 		NSString NSTimeoutDocumentOption { get; }
 
