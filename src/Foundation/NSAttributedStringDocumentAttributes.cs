@@ -184,6 +184,32 @@ namespace Foundation {
 			}
 		}
 
+#if XAMCORE_5_0 || __MACOS__
+		public bool? ReadOnly {
+			get {
+				var value = GetInt32Value (NSAttributedStringDocumentAttributeKey.NSReadOnlyDocumentAttribute);
+				if (value is null)
+					return null;
+				return value.Value == 1;
+			}
+			set {
+				SetNumberValue (NSAttributedStringDocumentAttributeKey.NSReadOnlyDocumentAttribute, value is null ? null : (value.Value ? 1 : 0));
+			}
+		}
+#else
+		public bool ReadOnly {
+			get {
+				var value = GetInt32Value (NSAttributedStringDocumentAttributeKey.NSReadOnlyDocumentAttribute);
+				if (value is null || value.Value != 1)
+					return false;
+				return true;
+			}
+			set {
+				SetNumberValue (NSAttributedStringDocumentAttributeKey.NSReadOnlyDocumentAttribute, value ? 1 : 0);
+			}
+		}
+#endif // XAMCORE_5_0 || __MACOS__
+
 #if !TVOS && !WATCH
 		// documentation is unclear if an NSString or an NSUrl should be used...
 		// but providing an `NSString` throws a `NSInvalidArgumentException Reason: (null) is not a file URL`

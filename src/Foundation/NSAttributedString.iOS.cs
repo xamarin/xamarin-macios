@@ -41,18 +41,6 @@ namespace Foundation {
 
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
 #if !MONOMAC && !COREBUILD
-		public bool ReadOnly {
-			get {
-				var value = GetInt32Value (NSAttributedStringDocumentAttributeKey.NSReadOnlyDocumentAttribute);
-				if (value is null || value.Value <= 0)
-					return false;
-				return true;
-			}
-			set {
-				SetNumberValue (NSAttributedStringDocumentAttributeKey.NSReadOnlyDocumentAttribute, value ? 1 : 0);
-			}
-		}
-
 		public UIColor? BackgroundColor {
 			get {
 				NSObject? value;
