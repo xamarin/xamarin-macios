@@ -2185,7 +2185,7 @@ namespace ObjCRuntime {
 		}
 		public int GetHashCode (IntPtr obj)
 		{
-			return HashCode.Combine(obj);
+			return obj.GetHashCode ();
 		}
 	}
 
@@ -2199,7 +2199,7 @@ namespace ObjCRuntime {
 		{
 			if (obj is null)
 				return 0;
-			return HashCode.Combine(obj);
+			return obj.GetHashCode ();
 		}
 	}
 

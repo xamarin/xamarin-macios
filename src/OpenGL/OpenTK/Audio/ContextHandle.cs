@@ -84,7 +84,7 @@ namespace OpenTK.Audio
         /// <returns>A System.Int32 with the hash code of this instance.</returns>
         public override int GetHashCode()
         {
-            return HashCode.Combine(Handle);
+            return Handle.GetHashCode();
         }
 
 #endregion
