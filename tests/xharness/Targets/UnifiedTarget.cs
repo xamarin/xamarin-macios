@@ -53,13 +53,13 @@ namespace Xharness.Targets {
 
 		public override string SimulatorArchitectures {
 			get {
-				return "i386, x86_64";
+				return "x86_64";
 			}
 		}
 
 		public override string DeviceArchitectures {
 			get {
-				return "ARMv7, ARM64";
+				return "ARM64";
 			}
 		}
 
