@@ -1175,6 +1175,7 @@ namespace Xamarin.Tests {
 
 			AssertThatDylibExistsAndIsReidentified (appPath, "libtest.dylib");
 			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libtest.dylib");
+			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libtest.so");
 
 			ExecuteWithMagicWordAndAssert (appExecutable);
 		}
