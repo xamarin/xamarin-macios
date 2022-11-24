@@ -710,7 +710,9 @@
 		<ItemGroup>
 			<!-- Support a 'CopyToAppBundle' metadata that can be set to 'false' to avoid copying a framework to the app bundle -->
 			<_DynamicLibraryToPublish Include="@(_FileNativeReference)" Condition="'%(_FileNativeReference.Kind)' == 'Dynamic' And '%(_FileNativeReference.CopyToAppBundle)' != 'false'">
-				<RelativePath>$(_DylibPublishDir)\%(Filename)%(Extension)</RelativePath>
+				<!-- Rewrite the relative path so that everything ends up in the app bundle -->
+				<RelativePath Condition="'%(_FileNativeReference.RelativePath)' == ''">$(_DylibPublishDir)\%(Filename)%(Extension)</RelativePath>
+				<RelativePath Condition="'%(_FileNativeReference.RelativePath)' != ''">$(_RelativeAppBundlePath)\%(_FileNativeReference.RelativePath)</RelativePath>
 				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			</_DynamicLibraryToPublish>
 
