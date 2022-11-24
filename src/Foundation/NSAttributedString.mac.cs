@@ -136,9 +136,6 @@ namespace Foundation
 			return attr is null ? null : new NSStringAttributes (attr);
 		}
 	}
-
-	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
-	}
 }
 
 #endif // MONOMAC
