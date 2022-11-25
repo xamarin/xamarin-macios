@@ -87,7 +87,6 @@ namespace Xharness.Targets {
 			var suffix = Suffix + "-extension";
 
 			// Remove unused configurations
-			csproj.DeleteConfiguration ("iPhone", "Release-bitcode");
 			csproj.DeleteConfiguration ("iPhone", "Release64");
 			csproj.DeleteConfiguration ("iPhone", "Debug64");
 
@@ -117,7 +116,6 @@ namespace Xharness.Targets {
 
 			csproj.FixInfoPListInclude (suffix, Path.GetDirectoryName (TemplateProjectPath));
 			csproj.SetOutputType ("Library");
-			csproj.AddAdditionalDefines ("BITCODE", "iPhone", "Release");
 			csproj.AddAdditionalDefines ("XAMCORE_3_0;FEATURE_NO_BSD_SOCKETS;MONOTOUCH_WATCH;");
 			csproj.RemoveReferences ("OpenTK-1.0");
 			csproj.RemovePackageReference ("MonoTouch.Dialog");
