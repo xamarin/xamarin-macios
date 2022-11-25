@@ -81,7 +81,7 @@ namespace Xharness.Targets {
 		{
 			if (MonoNativeInfo == null)
 				return templateMinimumOSVersion;
-			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.iOS, MonoNativeInfo.Flavor);
+			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.iOS);
 		}
 
 		protected override int [] UIDeviceFamily {

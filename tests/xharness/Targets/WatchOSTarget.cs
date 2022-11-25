@@ -226,7 +226,7 @@ namespace Xharness.Targets {
 		{
 			if (MonoNativeInfo == null)
 				return templateMinimumOSVersion;
-			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.watchOS, MonoNativeInfo.Flavor);
+			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.watchOS);
 		}
 
 		public override string Suffix {

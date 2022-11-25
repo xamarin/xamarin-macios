@@ -21,7 +21,7 @@ namespace Xharness {
 		{
 			if (MonoNativeInfo == null)
 				return true;
-			var min_version = MonoNativeHelper.GetMinimumOSVersion (devicePlatform, MonoNativeInfo.Flavor);
+			var min_version = MonoNativeHelper.GetMinimumOSVersion (devicePlatform);
 			return Version.Parse (productVersion) >= Version.Parse (min_version);
 		}
 
