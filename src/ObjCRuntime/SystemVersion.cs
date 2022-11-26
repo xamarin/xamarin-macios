@@ -70,7 +70,7 @@ namespace ObjCRuntime {
 			return WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (major, minor);
 		}
 #else
-		#error Unknown platform
+#error Unknown platform
 #endif
 	}
 }

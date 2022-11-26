@@ -332,23 +332,6 @@ namespace Foundation
 		[Export ("initWithString:")]
 		NativeHandle Constructor (string str);
 
-#if !MONOMAC
-		[NoMac]
-		[iOS (7,0)]
-		[Wrap ("this (url, options.GetDictionary ()!, out resultDocumentAttributes, ref error)")]
-		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
-
-		[NoMac]
-		[iOS (7,0)]
-		[Export ("initWithData:options:documentAttributes:error:")]
-		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
-
-		[NoMac]
-		[iOS (7,0)]
-		[Wrap ("this (data, options.GetDictionary ()!, out resultDocumentAttributes, ref error)")]
-		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
-#endif
-		
 		[Export ("initWithString:attributes:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NativeHandle Constructor (string str, [NullAllowed] NSDictionary attributes);
@@ -369,11 +352,32 @@ namespace Foundation
 		NativeHandle Constructor (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
 #endif
 
-#if MONOMAC
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithData:options:documentAttributes:error:")]
-		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary options, out NSDictionary docAttributes, out NSError error);
+#if XAMCORE_5_0
+		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
+#elif __MACOS__
+		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary docAttributes, out NSError error);
+#else
+		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
+#endif
 
+#if __MACOS__ || XAMCORE_5_0
+		[Wrap ("this (url, options.GetDictionary ()!, out resultDocumentAttributes, out error)")]
+		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
+#else
+		[Wrap ("this (url, options.GetDictionary ()!, out resultDocumentAttributes, ref error)")]
+		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
+#endif
+
+#if __MACOS__ || XAMCORE_5_0
+		[Wrap ("this (data, options.GetDictionary ()!, out resultDocumentAttributes, out error)")]
+		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
+#else
+		[Wrap ("this (data, options.GetDictionary ()!, out resultDocumentAttributes, ref error)")]
+		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
+#endif
+
+#if MONOMAC
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithDocFormat:documentAttributes:")]
 		NativeHandle Constructor(NSData wordDocFormat, out NSDictionary docAttributes);
@@ -385,14 +389,6 @@ namespace Foundation
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("drawWithRect:options:")]
 		void DrawString (CGRect rect, NSStringDrawingOptions options);	
-
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Wrap ("this (url, options.GetDictionary ()!, out resultDocumentAttributes, out error)")]
-		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
-
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Wrap ("this (data, options.GetDictionary ()!, out resultDocumentAttributes, out error)")]
-		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
 
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSAttributedString (NSUrl, NSDictionary, out NSDictionary, ref NSError)' instead.")]

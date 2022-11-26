@@ -5,10 +5,8 @@ using Foundation;
 using Social;
 using UIKit;
 
-namespace MyShareExtension
-{
-	public partial class ShareViewController : SLComposeServiceViewController
-	{
+namespace MyShareExtension {
+	public partial class ShareViewController : SLComposeServiceViewController {
 		public ShareViewController (IntPtr handle) : base (handle)
 		{
 		}
@@ -27,10 +25,10 @@ namespace MyShareExtension
 			ExtensionContext.CompleteRequest (null, null);
 		}
 
-		public override SLComposeSheetConfigurationItem[] GetConfigurationItems ()
+		public override SLComposeSheetConfigurationItem [] GetConfigurationItems ()
 		{
 			// To add configuration options via table cells at the bottom of the sheet, return an array of SLComposeSheetConfigurationItem here.
-			return new SLComposeSheetConfigurationItem[0];
+			return new SLComposeSheetConfigurationItem [0];
 		}
 	}
 }

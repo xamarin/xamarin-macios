@@ -35,8 +35,7 @@ namespace OpenTK
 	[SupportedOSPlatform ("tvos")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct NMatrix4 : IEquatable<NMatrix4>
-	{
+	public struct NMatrix4 : IEquatable<NMatrix4> {
 		public float M11;
 		public float M21;
 		public float M31;

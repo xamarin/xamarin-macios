@@ -386,12 +386,17 @@ IOS_TARGETS += \
 endif
 
 DOTNET_TARGETS += \
-	$(IOS_DOTNET_BUILD_DIR)/32/Microsoft.iOS.dll \
 	$(IOS_DOTNET_BUILD_DIR)/64/Microsoft.iOS.dll \
 	$(IOS_DOTNET_BUILD_DIR)/ref/Microsoft.iOS.dll \
 	$(DOTNET_DESTDIR)/$(IOS_NUGET).Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.dll \
 	$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.iOS.dll) \
 	$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.iOS.pdb) \
+
+ifdef IOS_SUPPORTS_32BIT_ARCHITECTURES
+DOTNET_TARGETS += \
+	$(IOS_DOTNET_BUILD_DIR)/32/Microsoft.iOS.dll \
+
+endif
 
 DOTNET_TARGETS_DIRS += \
 	$(IOS_DOTNET_BUILD_DIR) \
