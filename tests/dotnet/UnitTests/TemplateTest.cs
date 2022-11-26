@@ -3,7 +3,7 @@ using System.Text.Json;
 namespace Xamarin.Tests {
 	public enum TemplateLanguage {
 		CSharp,
-		FSharp
+		FSharp,
 	}
 
 	public static class TemplateLanguageExtensions {
@@ -12,7 +12,7 @@ namespace Xamarin.Tests {
 			return @this switch {
 				TemplateLanguage.CSharp => "csharp",
 				TemplateLanguage.FSharp => "fsharp",
-				var language => throw new NotImplementedException ($"'{language} is not implemented.'")
+				_ => throw new NotImplementedException ($"'{@this} is not implemented.'")
 			};
 		}
 
@@ -74,7 +74,7 @@ namespace Xamarin.Tests {
 
 			public override string ToString ()
 			{
-				return Template;
+				return TemplateWithLanguage;
 			}
 
 			public string TemplateWithLanguage {
