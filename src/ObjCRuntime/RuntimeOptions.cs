@@ -195,14 +195,14 @@ namespace ObjCRuntime {
 			return new NSUrlSessionHandler ();
 #else
 			switch (handler_name) {
-				case CFNetworkHandlerValue:
-					return new CFNetworkHandler ();
-				case NSUrlSessionHandlerValue:
-					return new NSUrlSessionHandler ();
-				default:
-					if (handler_name != null && handler_name != HttpClientHandlerValue)
-						Runtime.NSLog ($"{handler_name} is not a valid HttpMessageHandler, defaulting to System.Net.Http.HttpClientHandler");
-					return new HttpClientHandler ();
+			case CFNetworkHandlerValue:
+				return new CFNetworkHandler ();
+			case NSUrlSessionHandlerValue:
+				return new NSUrlSessionHandler ();
+			default:
+				if (handler_name != null && handler_name != HttpClientHandlerValue)
+					Runtime.NSLog ($"{handler_name} is not a valid HttpMessageHandler, defaulting to System.Net.Http.HttpClientHandler");
+				return new HttpClientHandler ();
 			}
 #endif
 		}

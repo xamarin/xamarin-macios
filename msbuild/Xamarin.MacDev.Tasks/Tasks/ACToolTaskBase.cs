@@ -17,6 +17,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		#region Inputs
 
+		public string AccentColor { get; set; }
+
 		public string DeviceModel { get; set; }
 
 		public string DeviceOSVersion { get; set; }
@@ -85,6 +87,10 @@ namespace Xamarin.MacDev.Tasks {
 					if (IsMessagesExtension)
 						args.Add ("--product-type com.apple.product-type.app-extension.messages");
 				}
+			}
+
+			if (!string.IsNullOrEmpty (AccentColor)) {
+				args.Add ("--accent-color", AccentColor);
 			}
 
 			if (!string.IsNullOrEmpty (XSLaunchImageAssets)) {
