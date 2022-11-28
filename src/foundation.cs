@@ -131,6 +131,8 @@ using NSImage = Foundation.NSObject;
 #if IOS || WATCH || TVOS
 using NSNotificationSuspensionBehavior = Foundation.NSObject;
 using NSNotificationFlags = Foundation.NSObject;
+using NSTextBlock = Foundation.NSObject;
+using NSTextTable = Foundation.NSString; // Different frmo NSTextBlock, because some methods overload on these two types.
 #endif
 
 #if !NET
@@ -377,7 +379,6 @@ namespace Foundation
 		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #endif
 
-#if MONOMAC
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithDocFormat:documentAttributes:")]
 		NativeHandle Constructor(NSData wordDocFormat, out NSDictionary docAttributes);
@@ -472,7 +473,6 @@ namespace Foundation
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("itemNumberInTextList:atIndex:")]
 		nint GetItemNumber (NSTextList textList, nuint index);
-#endif
 
 #if !(MONOMAC || XAMCORE_5_0)
 		[Sealed]
