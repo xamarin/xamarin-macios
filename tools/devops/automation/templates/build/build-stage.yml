@@ -36,6 +36,14 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 - name: xcodeChannel
   type: string
 
@@ -52,6 +60,8 @@ jobs:
   steps:
   - template: ../common/configure.yml
     parameters: 
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
       uploadArtifacts: true
       enableDotnet: ${{ parameters.enableDotnet }}
 
@@ -63,7 +73,7 @@ jobs:
     - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
 
     # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
-    - template: azure-devops-pools/agent-pool-selector.yml@templates
+    - template: azure-devops-pools/agent-pool-selector.yml@yaml-templates
       parameters:
         agentPoolPR: $(PRBuildPool)
         agentPoolPRUrl: $(PRBuildPoolUrl)
@@ -103,30 +113,22 @@ jobs:
     # add all the variables that have been parsed by the configuration step. Could we have a less verbose way??
     #
     # build-package
-    # run-internal-tests
     # skip-packages
     # skip-nugets
     # skip-signing
-    # skip-external-tests
-    # trigger-device-tests
     # run-sample-tests
-    # skip-packaged-xamarin-mac-tests
-    BuildPackage: $[ dependencies.configure.outputs['labels.build-package'] ]
-    RunInternalTests: $[ dependencies.configure.outputs['labels.run-internal-tests'] ]
-    SkipPackages: $[ dependencies.configure.outputs['labels.skip-packages'] ]
-    SkipNugets: $[ dependencies.configure.outputs['labels.skip-nugets'] ]
-    SkipSigning: $[ dependencies.configure.outputs['labels.skip-signing'] ]
-    SkipExternalTests: $[ dependencies.configure.outputs['labels.skip-external-tests'] ]
-    TriggerDeviceTests: $[ dependencies.configure.outputs['labels.trigger-device-tests'] ]
-    RunSampleTests: $[ dependencies.configure.outputs['labels.run-sample-tests'] ]
-    SkipPackagedXamarinMacTests: $[ dependencies.configure.outputs['labels.skip-packaged-xamarin-mac-tests'] ]
-    SkipApiComparison: $[ dependencies.configure.outputs['labels.skip-api-comparison'] ]
+    BuildPackage: $[ dependencies.configure.outputs['labels.build_package'] ]
+    SkipPackages: $[ dependencies.configure.outputs['labels.skip_packages'] ]
+    SkipNugets: $[ dependencies.configure.outputs['labels.skip_nugets'] ]
+    SkipSigning: $[ dependencies.configure.outputs['labels.skip_signing'] ]
+    RunSampleTests: $[ dependencies.configure.outputs['labels.run_sample_tests'] ]
+    SkipApiComparison: $[ dependencies.configure.outputs['labels.skip_api_comparison'] ]
     # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
-    PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+    PR_ID: $[ dependencies.configure.outputs['labels.pr_number'] ]
     # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
     BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-    BUILD_REVISION: $[ variables['Build.SourceVersion'] ]
-    XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness-labels'] ]
+    XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness_labels'] ]
+    RUN_MAC_TESTS: $[ dependencies.configure.outputs['decisions.RUN_MAC_TESTS'] ]
   pool:
     name: $(AgentPoolComputed)
     demands:
@@ -140,6 +142,8 @@ jobs:
   - template: build-pkgs.yml
     parameters:
       isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
       runTests: ${{ parameters.runTests }}
       runDeviceTests: ${{ parameters.runDeviceTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}

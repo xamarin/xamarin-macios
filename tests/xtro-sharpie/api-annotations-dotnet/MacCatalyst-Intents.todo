@@ -1,1 +1,4 @@
-!extra-enum-value! Managed value 12 for INStartCallIntentResponseCode.FailureCallRinging is available for the current platform while the value in the native header is not
+!missing-selector! INMessage::audioMessageFile not bound
+!missing-selector! INMessage::initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:messageType:serviceName:audioMessageFile: not bound
+!missing-selector! INSendMessageIntentResponse::sentMessages not bound
+!missing-selector! INSendMessageIntentResponse::setSentMessages: not bound

@@ -14,8 +14,8 @@ namespace NetworkExtension {
 	public class NEVpnConnectionStartOptions : DictionaryContainer {
 
 #if !COREBUILD
-		public NEVpnConnectionStartOptions () : base (new NSMutableDictionary ()) {}
-		public NEVpnConnectionStartOptions (NSDictionary dictionary) : base (dictionary) {}
+		public NEVpnConnectionStartOptions () : base (new NSMutableDictionary ()) { }
+		public NEVpnConnectionStartOptions (NSDictionary dictionary) : base (dictionary) { }
 
 		public NSString? Username {
 			get {

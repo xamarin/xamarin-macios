@@ -45,4 +45,17 @@ namespace AudioToolbox {
 		AmbienceBed = 3,
 	}
 
+	[NoWatch]
+	[TV (16, 0)]
+	[Mac (13, 0)]
+	[iOS (16, 0)]
+	public enum AUSpatialMixerPersonalizedHrtfMode : uint {
+		[NoiOS, NoTV]
+		Off = 0,
+		[NoiOS, NoTV]
+		On = 1,
+		[NoiOS, NoTV]
+		Auto = 2,
+	}
+
 }

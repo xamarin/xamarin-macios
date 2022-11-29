@@ -105,6 +105,10 @@ namespace Foundation {
 		static IntPtr vs = Dlfcn.dlopen (Constants.VideoSubscriberAccountLibrary, 1);
 		static IntPtr un = Dlfcn.dlopen (Constants.UserNotificationsLibrary, 1);
 		static IntPtr il  = Dlfcn.dlopen (Constants.iTunesLibraryLibrary, 1);
+		static IntPtr exl = Dlfcn.dlopen (Constants.ExtensionKitLibrary, 1);
+		static IntPtr sw = Dlfcn.dlopen (Constants.SharedWithYouLibrary, 1);
+		static IntPtr swc = Dlfcn.dlopen (Constants.SharedWithYouCoreLibrary, 1);
+		static IntPtr th = Dlfcn.dlopen (Constants.ThreadNetworkLibrary, 1);
 
 #if !NET
 		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms.")]

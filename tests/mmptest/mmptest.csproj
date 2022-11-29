@@ -113,8 +113,8 @@
     <Compile Include="..\..\tools\common\MachO.cs">
       <Link>MachO.cs</Link>
     </Compile>
-    <Compile Include="..\..\tools\mtouch\Errors.Designer.cs">
-      <Link>Errors.Designer.cs</Link>
+    <Compile Include="..\..\tools\mtouch\Errors.designer.cs">
+      <Link>Errors.designer.cs</Link>
     </Compile>
     <Compile Include="src\NativeExtensionEmbedding.cs" />
     <Compile Include="..\common\BinLog.cs">

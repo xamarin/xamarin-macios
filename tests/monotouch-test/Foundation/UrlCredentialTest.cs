@@ -65,7 +65,7 @@ namespace MonoTouchFixtures.Foundation {
 				var expectedPersistence = NSUrlCredentialPersistence.ForSession;
 #if __MACOS__
 				if (!TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 8))
-					expectedPersistence = (NSUrlCredentialPersistence)uint.MaxValue;
+					expectedPersistence = (NSUrlCredentialPersistence) uint.MaxValue;
 #endif
 				Assert.That (creds.Persistence, Is.EqualTo (expectedPersistence), "Persistence");
 				Assert.Null (creds.User, "User");

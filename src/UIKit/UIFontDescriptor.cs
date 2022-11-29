@@ -12,12 +12,12 @@ using CoreGraphics;
 using Foundation;
 
 namespace UIKit {
-	
+
 	public class UIFontAttributes : DictionaryContainer {
-		public UIFontAttributes () {}
+		public UIFontAttributes () { }
 
 #if !COREBUILD
-		public UIFontAttributes (NSDictionary dictionary) : base (dictionary) {}
+		public UIFontAttributes (NSDictionary dictionary) : base (dictionary) { }
 
 #if !WATCH
 		public UIFontAttributes (params UIFontFeature [] features)
@@ -25,7 +25,7 @@ namespace UIKit {
 			FeatureSettings = features;
 		}
 #endif
-		
+
 		public string Family {
 			get {
 				return GetStringValue (UIFontDescriptor.FamilyAttribute);
@@ -87,7 +87,7 @@ namespace UIKit {
 				NSObject value;
 				if (!Dictionary.TryGetValue (UIFontDescriptor.MatrixAttribute, out value))
 					return null;
-				
+
 				return ((NSValue) value).CGAffineTransformValue;
 			}
 			set {
@@ -104,7 +104,7 @@ namespace UIKit {
 				return Dictionary [UIFontDescriptor.CharacterSetAttribute] as NSCharacterSet;
 			}
 			set {
-				if (value == null){
+				if (value == null) {
 					RemoveValue (UIFontDescriptor.CharacterSetAttribute);
 					return;
 				}
@@ -115,10 +115,10 @@ namespace UIKit {
 		public UIFontDescriptor [] CascadeList {
 			get {
 				return GetArray<UIFontDescriptor> (UIFontDescriptor.CascadeListAttribute);
-				
+
 			}
 			set {
-				if (value == null){
+				if (value == null) {
 					RemoveValue (UIFontDescriptor.CascadeListAttribute);
 					return;
 				}
@@ -134,11 +134,11 @@ namespace UIKit {
 				return new UIFontTraits (traits);
 			}
 			set {
-				if (value == null){
+				if (value == null) {
 					RemoveValue (UIFontDescriptor.TraitsAttribute);
 					return;
 				}
-				
+
 				Dictionary [UIFontDescriptor.TraitsAttribute] = value.Dictionary;
 			}
 		}
@@ -154,10 +154,10 @@ namespace UIKit {
 
 		public NSDictionary [] WeakFeatureSettings {
 			get {
-				return GetArray<NSDictionary> (UIFontDescriptor.FeatureSettingsAttribute);				
+				return GetArray<NSDictionary> (UIFontDescriptor.FeatureSettingsAttribute);
 			}
 			set {
-				if (value == null){
+				if (value == null) {
 					RemoveValue (UIFontDescriptor.FeatureSettingsAttribute);
 					return;
 				}
@@ -171,7 +171,7 @@ namespace UIKit {
 				var dictArray = WeakFeatureSettings;
 				if (dictArray == null)
 					return new UIFontFeature [0];
-				
+
 				var strong = new UIFontFeature [dictArray.Length];
 				for (int i = 0; i < dictArray.Length; i++)
 					strong [i] = new UIFontFeature (dictArray [i]);
@@ -192,31 +192,31 @@ namespace UIKit {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Headline);
 			}
 		}
-		
+
 		public static UIFontDescriptor PreferredBody {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Body);
 			}
 		}
-		
+
 		public static UIFontDescriptor PreferredSubheadline {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Subheadline);
 			}
 		}
-		
+
 		public static UIFontDescriptor PreferredFootnote {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Footnote);
 			}
 		}
-		
+
 		public static UIFontDescriptor PreferredCaption1 {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Caption1);
 			}
 		}
-		
+
 		public static UIFontDescriptor PreferredCaption2 {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Caption2);
@@ -228,61 +228,61 @@ namespace UIKit {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
+		[iOS (9, 0)]
 #endif
 		public static UIFontDescriptor PreferredTitle1 {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Title1);
 			}
 		}
-		
+
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
+		[iOS (9, 0)]
 #endif
 		public static UIFontDescriptor PreferredTitle2 {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Title2);
 			}
 		}
-		
+
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
+		[iOS (9, 0)]
 #endif
 		public static UIFontDescriptor PreferredTitle3 {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Title3);
 			}
 		}
-		
+
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
+		[iOS (9, 0)]
 #endif
 		public static UIFontDescriptor PreferredCallout {
 			get {
 				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Callout);
 			}
 		}
-	
+
 		public UIFontDescriptor [] GetMatchingFontDescriptors (params UIFontDescriptorAttribute [] mandatoryKeys)
 		{
 			var n = mandatoryKeys.Length;
 			if (n == 0)
 				return GetMatchingFontDescriptors ((NSSet) null);
 			var all = new NSString [n];
-			for (int i = 0; i < n; i++){
-				switch (mandatoryKeys [i]){
+			for (int i = 0; i < n; i++) {
+				switch (mandatoryKeys [i]) {
 				case UIFontDescriptorAttribute.Family:
 					all [i] = FamilyAttribute;
 					break;
@@ -336,7 +336,7 @@ namespace UIKit {
 				return n.FloatValue;
 			return null;
 		}
-	
+
 		public string Family {
 			get {
 				return GetStringValue (UIFontDescriptor.FamilyAttribute);
@@ -418,7 +418,7 @@ namespace UIKit {
 				var dictArray = WeakFeatureSettings;
 				if (dictArray == null)
 					return new UIFontFeature [0];
-				
+
 				var strong = new UIFontFeature [dictArray.Length];
 				for (int i = 0; i < dictArray.Length; i++)
 					strong [i] = new UIFontFeature (dictArray [i]);
@@ -432,10 +432,10 @@ namespace UIKit {
 	public enum UIFontDescriptorAttribute {
 		Family, Face, Name, Size, VisibleName, Matrix, CharacterSet, CascadeList, Traits, FixedAdvance, FeatureSettings, TextStyle
 	}
-	
+
 	public class UIFontTraits : DictionaryContainer {
-		public UIFontTraits (){}
-		public UIFontTraits (NSDictionary dictionary) : base (dictionary) {}
+		public UIFontTraits () { }
+		public UIFontTraits (NSDictionary dictionary) : base (dictionary) { }
 
 		public UIFontDescriptorSymbolicTraits? SymbolicTrait {
 			get {

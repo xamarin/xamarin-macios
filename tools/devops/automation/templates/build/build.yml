@@ -23,6 +23,14 @@ parameters:
   type: boolean
   default: false
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 - name: buildSteps 
   type: stepList 
   default: []
@@ -36,12 +44,14 @@ steps:
 - template: ../common/checkout.yml
   parameters:
     isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
 
 - template: ../common/setup.yml
   parameters:
     keyringPass: ${{ parameters.keyringPass }}
 
-- template: install-certificates.yml@templates
+- template: install-certificates.yml@yaml-templates
   parameters:
     DeveloperIdApplication: $(developer-id-application)
     DeveloperIdInstaller: $(developer-id-installer)
@@ -60,6 +70,7 @@ steps:
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-brew-packages.csx
     provisioning_extra_args: '-vvvv'
+    github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 30
   enabled: true
   continueOnError: true # brew installation can be temperamental, and things usually work even if the installation fail.
@@ -68,11 +79,12 @@ steps:
     make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops build-provisioning.csx
   displayName: 'Generate provisionator files.'
 
-- task: xamops.azdevex.provisionator-task.provisionator@1
+- task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Products & Frameworks'
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/build-provisioning.csx
     provisioning_extra_args: '-vvvv'
+    github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
 
 # Use the env variables that were set by the label parsing in the configure step
@@ -87,9 +99,6 @@ steps:
 
     $xamTop = "$(Build.SourcesDirectory)/xamarin-macios/"
     Write-Host "##vso[task.setvariable variable=XAM_TOP]$xamTop"
-
-    $maccoreTop = "$(Build.SourcesDirectory)/maccore/"
-    Write-Host "##vso[task.setvariable variable=MACCORE_TOP]$maccoreTop"
 
     $buildReason = "$(Build.Reason)"
     $buildSourceBranchName = "$(Build.SourceBranchName)"
@@ -113,12 +122,6 @@ steps:
         $configVars.Add("BuildPkgs", "True")
       }
 
-      # if we want to have device tests, we do need the pkgs so that we can fwd them to the device tests
-      if ($Env:TriggerDeviceTests -eq "True") {
-        $configVars.Add("BuildPkgs", "True")
-        $configVars.Add("RunDeviceTests", "True")
-      }
-
       if ($Env:SkipNugets -eq "True") {
         $configVars.Add("BuildNugets", "False")
       } else {
@@ -131,20 +134,7 @@ steps:
         $configVars.Add("SignPkgs", "True")
       }
 
-      if ($Env:SkipExternalTests -eq "True") {
-        $configVars.Add("RunExternalTests", "False")
-      } else {
-        $configVars.Add("RunExternalTests", "True")
-      }
-
-      if ($Env:SkipPackagedXamarinMacTests -eq "True") {
-        $configVars.Add("RunMacTests", "False")
-      } else {
-        $configVars.Add("RunMacTests", "True")
-      }
-
       $configVars.Add("RunSampleTests", $Env:RunSampleTests)
-      $configVars.Add("RunInternalTests", $Env:RunInternalTests)
 
     } else {
       # set the defaults, all the things! o/
@@ -154,17 +144,7 @@ steps:
       $configVars.Add("SignPkgs", "True")
 
       # tests, run all of them, internal, external, mac but not sample tests
-      $configVars.Add("RunInternalTests", "True")
-      $configVars.Add("RunExternalTests", "True")
-      $configVars.Add("RunMacTests", "True")
       $configVars.Add("RunSampleTests", "False")
-
-      # if a developer decided to trigger one without device tests, allow it
-      if ($Env:RUN_DEVICE_TESTS -eq "true") {
-        $configVars.Add("RunDeviceTests", "True")
-      } else {
-        $configVars.Add("RunDeviceTests", "False")
-      }
     }
     # write debugging and process of the vars
     foreach($key in $configVars.Keys) {
@@ -175,8 +155,6 @@ steps:
   name: configuration
   displayName: "Parse PR labels"
   timeoutInMinutes: 5
-  env:
-    RUN_DEVICE_TESTS: '${{ parameters.runDeviceTests }}'
 
 - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
   - task: PowerShell@2
@@ -224,6 +202,15 @@ steps:
   displayName: "Configure build"
   timeoutInMinutes: 5
 
+# Make sure we have the right maccore hash checked out before we try to add
+# the provisioning profiles.
+- bash: |
+    set -ex
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
+  name: resetDependencies
+  displayName: 'Reset dependencies'
+  timeoutInMinutes: 10
+
 # We'll need these profiles to build the hot restart prebuilt app during the build
 # (it's built for device, and thus needs a certificate available so that the app can be signed).
 # We do this again before running the tests further below.
@@ -250,7 +237,6 @@ steps:
     set -x
     set -e
     echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
     MAKE_FLAGS=""
 
     if [[ "$SYSTEM_DEBUG" == "true" ]]; then
@@ -280,11 +266,15 @@ steps:
 # to write a comment.
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-
-    $githubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token) -Hash $Env:GIT_HASH
+    $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
     $githubComments.NewCommentFromMessage("Build failed", ":fire:", "Build failed for the job '$(System.JobDisplayName)'")
   condition: failed()
   displayName: 'Report build failure'
+  env:
+    ${{ if eq(parameters.repositoryAlias, 'self') }}:
+      COMMENT_HASH: $(GIT_HASH)
+    ${{ else }}:
+      COMMENT_HASH: $(Build.SourceVersion)
 
 # Upload any crash reports that occurred during the build. This is helpful if we want to file issues about dotnet/csc crashing during the build.
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/collect-and-upload-crash-reports.sh

@@ -25,8 +25,7 @@ using NUnit.Framework;
 namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 	[Preserve (AllMembers = true)]
 	[TestFixture]
-	public class MnistTester
-	{
+	public class MnistTester {
 
 		[OneTimeSetUp]
 		public void IsSupported ()
@@ -36,6 +35,11 @@ namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 #if __TVOS__
 			if (Runtime.Arch == Arch.SIMULATOR)
 				Assert.Inconclusive ("Metal Performance Shaders Graph is not supported in the tvOS simulator");
+#endif
+#if __IOS__ && !__MACCATALYST__
+
+			if (TestRuntime.CheckXcodeVersion (14, 0))
+				TestRuntime.AssertNotSimulator ("Fails with 'Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -[MTLSimHeap protectionOptions]: unrecognized selector sent to instance 0x600002a09090' - note that we don't call this selector.");
 #endif
 			TestRuntime.IgnoreInCI ("This test seems to make bots keel over and die.");
 
@@ -56,8 +60,7 @@ namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 		}
 	}
 
-	public class MnistTest : IDisposable
-	{
+	public class MnistTest : IDisposable {
 		const int batchSize = 3;
 
 		readonly int numTrainingIterations = 5;
@@ -114,7 +117,7 @@ namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 
 		public MnistData ()
 		{
-			dataTrainImage = new byte [ImageMetadataPrefixSize + ImageSize*ImageSize];
+			dataTrainImage = new byte [ImageMetadataPrefixSize + ImageSize * ImageSize];
 			dataTrainLabel = new byte [ImageMetadataPrefixSize + 1];
 
 			totalNumberOfTrainImages = dataTrainLabel.Length - ImageMetadataPrefixSize;
@@ -144,8 +147,7 @@ namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 		}
 	}
 
-	public class MnistGraph : MPSGraph
-	{
+	public class MnistGraph : MPSGraph {
 		const float lambda = 0.01f;
 
 		readonly int imageSize;

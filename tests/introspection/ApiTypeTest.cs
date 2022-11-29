@@ -19,7 +19,7 @@ namespace Introspection {
 		bool Skip (Type type)
 		{
 			switch (type.Namespace) {
-#if __IOS__
+#if __IOS__ || __WATCHOS__
 			// running the .cctor on the simulator works... but makes some other CoreNFC intro tests fail later
 			// we'll still get the results from device tests
 			case "CoreNFC":
@@ -49,8 +49,7 @@ namespace Introspection {
 				// we rather catch them all here *now* than trying to figure out how to replicate the specific conditions *later*
 				try {
 					RuntimeHelpers.RunClassConstructor (t.TypeHandle);
-				}
-				catch (TypeInitializationException e) {
+				} catch (TypeInitializationException e) {
 					issues.Add (t.FullName);
 					ReportError ($"{t.FullName} .cctor could not execute properly: {e}");
 				}

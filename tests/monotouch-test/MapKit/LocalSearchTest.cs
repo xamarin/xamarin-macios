@@ -18,7 +18,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MapKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class LocalSearchTest {
@@ -31,7 +31,7 @@ namespace MonoTouchFixtures.MapKit {
 
 			using (var lsr = new MKLocalSearchRequest ())
 			using (MKLocalSearch ls = new MKLocalSearch (lsr)) {
-				lsr.Region = new MKCoordinateRegion (new CLLocationCoordinate2D (47,-71), new MKCoordinateSpan (1,1));
+				lsr.Region = new MKCoordinateRegion (new CLLocationCoordinate2D (47, -71), new MKCoordinateSpan (1, 1));
 				bool wait = true;
 				ls.Start ((MKLocalSearchResponse response, NSError error) => {
 					wait = false;

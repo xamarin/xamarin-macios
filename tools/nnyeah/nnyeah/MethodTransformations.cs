@@ -22,7 +22,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 			var uintPtrType = moduleToEdit.TypeSystem.UIntPtr;
 			var boolType = moduleToEdit.TypeSystem.Boolean;
 			var stringType = moduleToEdit.TypeSystem.String;
-			
+
 			// there are two types of transforms here: ones that can be made statically
 			// and ones that need more in the way of state and intermediate variables.
 

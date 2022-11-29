@@ -203,3 +203,4 @@
 !missing-type! CMIOExtensionStreamCustomClockConfiguration not bound
 !missing-type! CMIOExtensionStreamFormat not bound
 !missing-type! CMIOExtensionStreamProperties not bound
+!missing-selector! CMIOExtensionClient::signingID not bound

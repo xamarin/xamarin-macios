@@ -61,7 +61,7 @@ namespace MonoTouchFixtures.CoreText {
 				// Assert.IsNotNull (err, "err 3");
 				err = CTFontManager.UnregisterFontsForUrl (url, CTFontManagerScope.Process);
 #if MONOMAC || __MACCATALYST__
-				if (TestRuntime.CheckXcodeVersion (12,2))
+				if (TestRuntime.CheckXcodeVersion (12, 2))
 					Assert.IsNotNull (err, "err 4");
 				else
 					Assert.IsNull (err, "err 4");
@@ -116,7 +116,7 @@ namespace MonoTouchFixtures.CoreText {
 		{
 			Assert.That (errors.Length, Is.EqualTo (1), "errors");
 			Assert.True (errors [0].UserInfo.TryGetValue (CTFontManagerErrorKeys.FontUrlsKey, out var urls), "FontUrlsKey");
-			Assert.True ((urls as NSArray).GetItem<NSUrl> (0).AbsoluteString.EndsWith ("NonExistent.ttf", StringComparison.Ordinal), "NonExistent"); 
+			Assert.True ((urls as NSArray).GetItem<NSUrl> (0).AbsoluteString.EndsWith ("NonExistent.ttf", StringComparison.Ordinal), "NonExistent");
 			Assert.True (done, "done");
 			return true;
 		}
@@ -170,7 +170,7 @@ namespace MonoTouchFixtures.CoreText {
 				Assert.IsNotNull (err [0], "err 4[0]");
 #endif
 			}
-			}
+		}
 
 		[Test]
 		public void RegisterFontDescriptors_Null ()
@@ -247,7 +247,7 @@ namespace MonoTouchFixtures.CoreText {
 			// method under test
 			var fonts = CTFontManager.GetFonts (url);
 			Assert.AreEqual (1, fonts.Length);
-			Assert.AreEqual ("Pacifico", fonts[0].GetAttributes().Name?.ToString ());
+			Assert.AreEqual ("Pacifico", fonts [0].GetAttributes ().Name?.ToString ());
 
 			err = CTFontManager.UnregisterFontsForUrl (url, CTFontManagerScope.Process);
 			Assert.IsNull (err, "Unregister error");

@@ -3,11 +3,9 @@ using FinderSync;
 using Foundation;
 using Social;
 
-namespace FinderExtensionTest
-{
+namespace FinderExtensionTest {
 	[Register ("FinderSync")]
-	public partial class FinderSync : FIFinderSync
-	{
+	public partial class FinderSync : FIFinderSync {
 		public override void BeginRequestWithExtensionContext (NSExtensionContext context)
 		{
 		}
@@ -19,26 +17,20 @@ namespace FinderExtensionTest
 			return menu;
 		}
 
-		public override string ToolbarItemName
-		{
-			get
-			{
+		public override string ToolbarItemName {
+			get {
 				return "FinderExtension";
 			}
 		}
 
-		public override string ToolbarItemToolTip
-		{
-			get
-			{
+		public override string ToolbarItemToolTip {
+			get {
 				return "FinderExtension: Click the toolbar item for a menu.";
 			}
 		}
 
-		public override NSImage ToolbarItemImage
-		{
-			get
-			{
+		public override NSImage ToolbarItemImage {
+			get {
 				return NSImage.ImageNamed (NSImageName.Caution);
 			}
 		}

@@ -26,12 +26,11 @@ namespace MonoTouchFixtures.CoreGraphics {
 		{
 			bool tested = false;
 			using (var vc = new UIViewController ()) {
-				vc.View = new CustomView ()
-				{
+				vc.View = new CustomView () {
 					BackgroundColor = UIColor.Green,
 					Shaded = () => tested = true,
 				};
-				MonoTouchFixtures.AppDelegate.PresentModalViewController (vc, 0.1);
+				AppDelegate.PresentModalViewController (vc, 0.1);
 			}
 
 			if (!tested)
@@ -45,13 +44,12 @@ namespace MonoTouchFixtures.CoreGraphics {
 				var start = new CGPoint (rect.Left, rect.Bottom);
 				var end = new CGPoint (rect.Left, rect.Top);
 
-				var domain = new nfloat[] {0f, 1f};
-				var range = new nfloat[] {0f, 1f, 0f, 1f};
+				var domain = new nfloat [] { 0f, 1f };
+				var range = new nfloat [] { 0f, 1f, 0f, 1f };
 				using (var context = UIGraphics.GetCurrentContext ())
-				using (var rgb = CGColorSpace.CreateDeviceGray())
-				using (var shadingFunction = new CGFunction(domain, range, Shading))
-				using (var shading = CGShading.CreateAxial (rgb, start, end, shadingFunction, true, false))
-				{
+				using (var rgb = CGColorSpace.CreateDeviceGray ())
+				using (var shadingFunction = new CGFunction (domain, range, Shading))
+				using (var shading = CGShading.CreateAxial (rgb, start, end, shadingFunction, true, false)) {
 					context.DrawShading (shading);
 				}
 
@@ -60,16 +58,16 @@ namespace MonoTouchFixtures.CoreGraphics {
 
 			public unsafe void Shading (nfloat* data, nfloat* outData)
 			{
-				var p = data[0];
-				outData[0] = 0.0f;
-				outData[1] = (1.0f-Slope(p, 2.0f)) * 0.5f;
+				var p = data [0];
+				outData [0] = 0.0f;
+				outData [1] = (1.0f - Slope (p, 2.0f)) * 0.5f;
 				Shaded ();
 			}
 
 			public nfloat Slope (nfloat x, nfloat A)
 			{
-				var p = Math.Pow(x, A);
-				return (nfloat)(p/(p + Math.Pow(1.0f-x, A)));
+				var p = Math.Pow (x, A);
+				return (nfloat) (p / (p + Math.Pow (1.0f - x, A)));
 			}
 		}
 

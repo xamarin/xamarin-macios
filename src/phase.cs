@@ -70,6 +70,7 @@ namespace Phase {
 	[ErrorDomain ("PHASEErrorDomain")]
 	public enum PhaseError : long {
 		InitializeFailed = 1346913633,
+		InvalidObject = 1346913634,
 	}
 
 	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
@@ -147,6 +148,10 @@ namespace Phase {
 		InverseSine = 1668434259,
 		Sigmoid = 1668436839,
 		InverseSigmoid = 1668434247,
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		HoldStartValue = 1668434003,
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		JumpToEndValue = 1668434501,
 	}
 
 	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]

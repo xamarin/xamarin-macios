@@ -31,10 +31,10 @@ namespace Chip {
 
 		protected ChipError (NSObjectFlag t) => throw new InvalidOperationException (Constants.RemovedFromChip);
 		protected ChipError (IntPtr handle) => throw new InvalidOperationException (Constants.RemovedFromChip);
-		
+
 		public static int ConvertToChipErrorCode (NSError errorCode) => throw new InvalidOperationException (Constants.RemovedFromChip);
 		public static NSError? Create (int errorCode) => throw new InvalidOperationException (Constants.RemovedFromChip);
-		
+
 	} /* class ChipError */
 
 #if !MONOMAC
@@ -47,7 +47,7 @@ namespace Chip {
 		protected ChipContentLaunch (NSObjectFlag t) => throw new InvalidOperationException (Constants.RemovedFromChip);
 		protected ChipContentLaunch (IntPtr handle) => throw new InvalidOperationException (Constants.RemovedFromChip);
 		public ChipContentLaunch (ChipDevice device, byte endpoint, DispatchQueue queue) => throw new InvalidOperationException (Constants.RemovedFromChip);
-		
+
 		public virtual void LaunchContent (byte autoPlay, string data, ChipResponseHandler responseHandler) => throw new InvalidOperationException (Constants.RemovedFromChip);
 		public virtual Task<ChipReadAttributeResult> LaunchContentAsync (byte autoPlay, string data) => throw new InvalidOperationException (Constants.RemovedFromChip);
 		public virtual void LaunchUrl (string contentUrl, string displayString, ChipResponseHandler responseHandler) => throw new InvalidOperationException (Constants.RemovedFromChip);
@@ -65,8 +65,7 @@ namespace Chip {
 #if !MONOMAC
 	[Obsolete ("This class is removed.")]
 	[Register ("CHIPTrustedRootCertificates", SkipRegistration = true)]
-	public class ChipTrustedRootCertificates : NSObject
-	{
+	public class ChipTrustedRootCertificates : NSObject {
 		public override IntPtr ClassHandle => throw new InvalidOperationException (Constants.RemovedFromChip);
 
 		protected ChipTrustedRootCertificates (NSObjectFlag t) => throw new InvalidOperationException (Constants.RemovedFromChip);
@@ -93,7 +92,7 @@ namespace Chip {
 #elif WATCH
 			return SystemVersion.CheckwatchOS (8, 3);
 #else
-			#error Unknown platform
+#error Unknown platform
 #endif
 		}
 #endif
@@ -140,11 +139,11 @@ namespace Chip {
 
 	}
 
-	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 	public delegate void ChipDeviceConnectionCallback (ChipDevice device, NSError error);
 
 	[Obsolete ("This class is removed.")]
-	[Register("CHIPDeviceController", true)]
+	[Register ("CHIPDeviceController", true)]
 	public partial class ChipDeviceController : NSObject {
 		public override IntPtr ClassHandle { get { throw new InvalidOperationException (Constants.RemovedFromChip); } }
 
@@ -152,7 +151,7 @@ namespace Chip {
 
 		protected internal ChipDeviceController (IntPtr handle) : base (handle) => throw new InvalidOperationException (Constants.RemovedFromChip);
 
-		public virtual bool GetConnectedDevice (ulong deviceID, global::CoreFoundation.DispatchQueue queue,ChipDeviceConnectionCallback completionHandler) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public virtual bool GetConnectedDevice (ulong deviceID, global::CoreFoundation.DispatchQueue queue, ChipDeviceConnectionCallback completionHandler) => throw new InvalidOperationException (Constants.RemovedFromChip);
 
 		public virtual Task<ChipDevice> GetConnectedDeviceAsync (ulong deviceID, global::CoreFoundation.DispatchQueue queue) => throw new InvalidOperationException (Constants.RemovedFromChip);
 
@@ -191,7 +190,7 @@ namespace Chip {
 		public virtual bool StopDevicePairing (ulong deviceId, out NSError? error) => throw new InvalidOperationException (Constants.RemovedFromChip);
 
 		public virtual bool UnpairDevice (ulong deviceId, out NSError? error) => throw new InvalidOperationException (Constants.RemovedFromChip);
-		
+
 		public virtual void UpdateDevice (ulong deviceId, ulong fabricId) => throw new InvalidOperationException (Constants.RemovedFromChip);
 
 		public virtual NSNumber ControllerNodeId => throw new InvalidOperationException (Constants.RemovedFromChip);
@@ -200,7 +199,7 @@ namespace Chip {
 	}
 
 	[Obsolete ("This class is removed.")]
-	[Register("CHIPLowPower", true)]
+	[Register ("CHIPLowPower", true)]
 	public partial class ChipLowPower : ChipCluster {
 		public override IntPtr ClassHandle { get { throw new InvalidOperationException (Constants.RemovedFromChip); } }
 
@@ -219,12 +218,12 @@ namespace Chip {
 
 		public virtual Task<ChipReadAttributeResult> ReadAttributeClusterRevisionAsync () => throw new InvalidOperationException (Constants.RemovedFromChip);
 
-		public virtual void Sleep (ChipResponseHandler responseHandler)  => throw new InvalidOperationException (Constants.RemovedFromChip);
-		public virtual Task<ChipReadAttributeResult> SleepAsync ()  => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public virtual void Sleep (ChipResponseHandler responseHandler) => throw new InvalidOperationException (Constants.RemovedFromChip);
+		public virtual Task<ChipReadAttributeResult> SleepAsync () => throw new InvalidOperationException (Constants.RemovedFromChip);
 	}
 
 	[Obsolete ("This class is removed.")]
-	[Register("CHIPTestCluster", true)]
+	[Register ("CHIPTestCluster", true)]
 	public partial class ChipTestCluster : ChipCluster {
 		public override IntPtr ClassHandle { get { throw new InvalidOperationException (Constants.RemovedFromChip); } }
 
@@ -336,7 +335,7 @@ namespace Chip {
 		public virtual Task<ChipReadAttributeResult> ReadAttributeUnsupportedAsync () => throw new InvalidOperationException (Constants.RemovedFromChip);
 
 		public virtual void Test (ChipResponseHandler responseHandler) => throw new InvalidOperationException (Constants.RemovedFromChip);
-		
+
 		public virtual Task<ChipReadAttributeResult> TestAsync () => throw new InvalidOperationException (Constants.RemovedFromChip);
 
 		public virtual void TestAddArguments (byte arg1, byte arg2, ChipResponseHandler responseHandler) => throw new InvalidOperationException (Constants.RemovedFromChip);
@@ -370,7 +369,7 @@ namespace Chip {
 		public virtual void WriteAttributeBitmap8 (byte value, ChipResponseHandler responseHandler) => throw new InvalidOperationException (Constants.RemovedFromChip);
 
 		public virtual Task<ChipReadAttributeResult> WriteAttributeBitmap8Async (byte value) => throw new InvalidOperationException (Constants.RemovedFromChip);
-		
+
 		public virtual void WriteAttributeBoolean (byte value, ChipResponseHandler responseHandler) => throw new InvalidOperationException (Constants.RemovedFromChip);
 
 		public virtual Task<ChipReadAttributeResult> WriteAttributeBooleanAsync (byte value) => throw new InvalidOperationException (Constants.RemovedFromChip);
@@ -398,7 +397,7 @@ namespace Chip {
 		public virtual void WriteAttributeInt16u (ushort value, ChipResponseHandler responseHandler) => throw new InvalidOperationException (Constants.RemovedFromChip);
 
 		public virtual Task<ChipReadAttributeResult> WriteAttributeInt16uAsync (ushort value) => throw new InvalidOperationException (Constants.RemovedFromChip);
-		
+
 		public virtual void WriteAttributeInt32s (int value, ChipResponseHandler responseHandler) => throw new InvalidOperationException (Constants.RemovedFromChip);
 
 		public virtual Task<ChipReadAttributeResult> WriteAttributeInt32sAsync (int value) => throw new InvalidOperationException (Constants.RemovedFromChip);
@@ -441,10 +440,10 @@ namespace Chip {
 	}
 
 	[Obsolete ("This class is removed.")]
-	[Register("CHIPGeneralCommissioning", true)]
+	[Register ("CHIPGeneralCommissioning", true)]
 	public partial class ChipGeneralCommissioning : ChipCluster {
 		public override IntPtr ClassHandle { get { throw new InvalidOperationException (Constants.RemovedFromChip); } }
-		
+
 		protected ChipGeneralCommissioning (NSObjectFlag t) : base (t) => throw new InvalidOperationException (Constants.RemovedFromChip);
 
 		protected internal ChipGeneralCommissioning (IntPtr handle) : base (handle) => throw new InvalidOperationException (Constants.RemovedFromChip);

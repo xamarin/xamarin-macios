@@ -53,10 +53,10 @@ namespace CoreFoundation {
 		static CFErrorDomain ()
 		{
 			var handle = Libraries.CoreFoundation.Handle;
-			Cocoa     = Dlfcn.GetStringConstant (handle, "kCFErrorDomainCocoa");
-			Mach      = Dlfcn.GetStringConstant (handle, "kCFErrorDomainMach");
-			OSStatus  = Dlfcn.GetStringConstant (handle, "kCFErrorDomainOSStatus");
-			Posix     = Dlfcn.GetStringConstant (handle, "kCFErrorDomainPosix");
+			Cocoa = Dlfcn.GetStringConstant (handle, "kCFErrorDomainCocoa");
+			Mach = Dlfcn.GetStringConstant (handle, "kCFErrorDomainMach");
+			OSStatus = Dlfcn.GetStringConstant (handle, "kCFErrorDomainOSStatus");
+			Posix = Dlfcn.GetStringConstant (handle, "kCFErrorDomainPosix");
 		}
 	}
 
@@ -77,11 +77,11 @@ namespace CoreFoundation {
 		static CFExceptionDataKey ()
 		{
 			var handle = Libraries.CoreFoundation.Handle;
-			Description                 = Dlfcn.GetStringConstant (handle, "kCFErrorDescriptionKey");
-			LocalizedDescription        = Dlfcn.GetStringConstant (handle, "kCFErrorLocalizedDescriptionKey");
-			LocalizedFailureReason      = Dlfcn.GetStringConstant (handle, "kCFErrorLocalizedFailureReasonKey");
+			Description = Dlfcn.GetStringConstant (handle, "kCFErrorDescriptionKey");
+			LocalizedDescription = Dlfcn.GetStringConstant (handle, "kCFErrorLocalizedDescriptionKey");
+			LocalizedFailureReason = Dlfcn.GetStringConstant (handle, "kCFErrorLocalizedFailureReasonKey");
 			LocalizedRecoverySuggestion = Dlfcn.GetStringConstant (handle, "kCFErrorLocalizedRecoverySuggestionKey");
-			UnderlyingError             = Dlfcn.GetStringConstant (handle, "kCFErrorUnderlyingErrorKey");
+			UnderlyingError = Dlfcn.GetStringConstant (handle, "kCFErrorUnderlyingErrorKey");
 		}
 	}
 
@@ -96,10 +96,10 @@ namespace CoreFoundation {
 		public CFException (string? description, NSString? domain, nint code, string? failureReason, string? recoverySuggestion)
 			: base (description)
 		{
-			Code                = code;
-			Domain              = domain;
-			FailureReason       = failureReason;
-			RecoverySuggestion  = recoverySuggestion;
+			Code = code;
+			Domain = domain;
+			FailureReason = failureReason;
+			RecoverySuggestion = recoverySuggestion;
 		}
 
 		public static CFException FromCFError (IntPtr cfErrorHandle)
@@ -133,10 +133,10 @@ namespace CoreFoundation {
 			return e;
 		}
 
-		public nint Code {get; private set;}
-		public NSString? Domain {get; private set;}
-		public string? FailureReason {get; private set;}
-		public string? RecoverySuggestion {get; private set;}
+		public nint Code { get; private set; }
+		public NSString? Domain { get; private set; }
+		public string? FailureReason { get; private set; }
+		public string? RecoverySuggestion { get; private set; }
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern IntPtr CFErrorCopyDescription (IntPtr err);

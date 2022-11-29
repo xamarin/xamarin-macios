@@ -11,14 +11,12 @@ using NUnit.Framework;
 
 #nullable enable
 
-namespace MonoTouchFixtures.Phase
-{
+namespace MonoTouchFixtures.Phase {
 
 	[TestFixture]
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
-	public class PhaseObjectTest 
-	{
+	public class PhaseObjectTest {
 		PhaseEngine? engine;
 		PhaseObject? phaseObject;
 
@@ -40,7 +38,8 @@ namespace MonoTouchFixtures.Phase
 		}
 
 		[Test]
-		public void RigthTest () {
+		public void RigthTest ()
+		{
 			var right = PhaseObject.Right;
 			Assert.NotNull (right, "not null");
 			Assert.AreEqual (1, right.Length, "length");
@@ -69,7 +68,7 @@ namespace MonoTouchFixtures.Phase
 			Assert.NotNull (matrix, "not null");
 			Assert.AreEqual (1, matrix.M11, "11");
 		}
-		
+
 		[Test]
 		public void WorldTransform ()
 		{

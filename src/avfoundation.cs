@@ -60,6 +60,7 @@ using CoreGraphics;
 using CoreVideo;
 using UniformTypeIdentifiers;
 using ImageIO;
+using MediaPlayer;
 using System;
 
 #if MONOMAC
@@ -1832,8 +1833,14 @@ namespace AVFoundation {
 		[Protocolize]
 		AVAudioRecorderDelegate Delegate { get; set;  }
 	
-		[Export ("currentTime")]
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'CurrentTime' property instead.")]
+		[Wrap ("CurrentTime", IsVirtual = true)]
 		double currentTime { get; }
+#endif
+
+		[Export ("currentTime")]
+		double CurrentTime { get; }
 	
 		[Export ("meteringEnabled")]
 		bool MeteringEnabled { [Bind ("isMeteringEnabled")] get; set;  }
@@ -4233,8 +4240,21 @@ namespace AVFoundation {
 		[Export ("shouldOptimizeForNetworkUse")]
 		bool ShouldOptimizeForNetworkUse { get; set;  }
 
+#if !XAMCORE_5_0
+		[Internal]
 		[Export ("inputs")]
-		AVAssetWriterInput [] inputs { get;  }  // TODO: Should have been Inputs
+		NSArray InternalInputs { get; }
+
+		[Obsolete ("Use the 'Inputs' property instead.")]
+		[Wrap ("InternalInputs", IsVirtual = true)]
+		AVAssetWriterInput [] inputs { get;  }
+
+		[Wrap ("InternalInputs", IsVirtual = true)]
+		AVAssetWriterInput [] Inputs { get;  }
+#else
+		[Export ("Inputs")]
+		AVAssetWriterInput [] Inputs { get;  }
+#endif
 
 		[Export ("availableMediaTypes")]
 		NSString [] AvailableMediaTypes { get; }
@@ -4904,11 +4924,15 @@ namespace AVFoundation {
 		[return: Release]
 		CMFormatDescription CopyCurrentSampleFormatDescription ();
 
+#pragma warning disable 0618 // warning CS0618: 'AVSampleCursorSyncInfo' is obsolete: 'This API is not available on this platform.'
 		[Export ("currentSampleSyncInfo")]
 		AVSampleCursorSyncInfo CurrentSampleSyncInfo { get; }
+#pragma warning restore
 
+#pragma warning disable 0618 // warning CS0618: 'AVSampleCursorSyncInfo' is obsolete: 'This API is not available on this platform.'
 		[Export ("currentSampleDependencyInfo")]
 		AVSampleCursorSyncInfo CurrentSampleDependencyInfo { get; }
+#pragma warning restore
 
 		[Mac (10,11)]
 		[Export ("samplesRequiredForDecoderRefresh")]
@@ -4918,17 +4942,23 @@ namespace AVFoundation {
 		[Export ("currentChunkStorageURL")]
 		NSUrl CurrentChunkStorageUrl { get; }
 
+#pragma warning disable 0618 // warning CS0618: 'AVSampleCursorStorageRange' is obsolete: 'This API is not available on this platform.'
 		[Export ("currentChunkStorageRange")]
 		AVSampleCursorStorageRange CurrentChunkStorageRange { get; }
+#pragma warning restore
 
+#pragma warning disable 0618 // warning CS0618: 'AVSampleCursorChunkInfo' is obsolete: 'This API is not available on this platform.'
 		[Export ("currentChunkInfo")]
 		AVSampleCursorChunkInfo CurrentChunkInfo { get; }
+#pragma warning restore
 
 		[Export ("currentSampleIndexInChunk")]
 		long CurrentSampleIndexInChunk { get; }
 
+#pragma warning disable 0618 // warning CS0618: 'AVSampleCursorStorageRange' is obsolete: 'This API is not available on this platform.'
 		[Export ("currentSampleStorageRange")]
 		AVSampleCursorStorageRange CurrentSampleStorageRange { get; }
+#pragma warning restore
 
 #if MONOMAC
 		[NoiOS][NoWatch][NoTV]
@@ -5140,7 +5170,7 @@ namespace AVFoundation {
 
 #if !NET
 		[Field ("AVMetadataFormatQuickTimeUserData")]
-		[Obsolete ("Use 'AVMetadataFormat' enum values")]
+		[Obsolete ("Use 'AVMetadataFormat' enum values.")]
 		NSString FormatQuickTimeUserData { get; }
 #endif
 		
@@ -5323,7 +5353,7 @@ namespace AVFoundation {
 #if !NET
 		[iOS (7,0), Mac (10, 9)]
 		[Field ("AVMetadataFormatISOUserData")]
-		[Obsolete ("Use 'AVMetadataFormat' enum values")]
+		[Obsolete ("Use 'AVMetadataFormat' enum values.")]
 		NSString KFormatISOUserData { get; }
 #endif
 
@@ -5471,7 +5501,7 @@ namespace AVFoundation {
 		
 #if !NET
 		[Field ("AVMetadataFormatiTunesMetadata")]
-		[Obsolete ("Use 'AVMetadataFormat' enum values")]
+		[Obsolete ("Use 'AVMetadataFormat' enum values.")]
 		NSString FormatiTunesMetadata { get; }
 #endif
 		
@@ -5625,7 +5655,7 @@ namespace AVFoundation {
 		
 #if !NET
 		[Field ("AVMetadataFormatID3Metadata")]
-		[Obsolete ("Use 'AVMetadataFormat' enum values")]
+		[Obsolete ("Use 'AVMetadataFormat' enum values.")]
 		NSString FormatID3Metadata { get; }
 #endif
 
@@ -5946,7 +5976,7 @@ namespace AVFoundation {
 #if !NET
 		[iOS (8,0)][Mac (10,10)]
 		[Field ("AVMetadataFormatHLSMetadata")]
-		[Obsolete ("Use 'AVMetadataFormat' enum values")]
+		[Obsolete ("Use 'AVMetadataFormat' enum values.")]
 		NSString FormatHlsMetadata { get; }
 #endif
 
@@ -11474,7 +11504,14 @@ namespace AVFoundation {
 
 		[iOS (8,0), NoMac]
 		[Export ("videoHDRSupported")]
+		bool IsVideoHdrSupported { [Bind ("isVideoHDRSupported")] get; }
+
+#if !XAMCORE_5_0
+		[iOS (8,0), NoMac]
+		[Obsolete ("Use the 'IsVideoHdrSupported' property instead.")]
+		[Wrap ("IsVideoHdrSupported", IsVirtual = true)]
 		bool videoHDRSupportedVideoHDREnabled { [Bind ("isVideoHDRSupported")] get; }
+#endif
 
 		[iOS (8,0), NoMac]
 		[Export ("highResolutionStillImageDimensions")]
@@ -12311,7 +12348,7 @@ namespace AVFoundation {
 		[Export ("externalMetadata", ArgumentSemantic.Copy)]
 		AVMetadataItem[] ExternalMetadata { get; set; }
 
-		[NoiOS][NoMac][NoWatch]
+		[iOS (16,0)][NoMacCatalyst][NoMac][NoWatch]
 		[TV (9,0)]
 		[Export ("interstitialTimeRanges", ArgumentSemantic.Copy)]
 		AVInterstitialTimeRange[] InterstitialTimeRanges { get; set; }
@@ -12404,6 +12441,10 @@ namespace AVFoundation {
 		[TV (15, 0), NoWatch, NoMac, NoiOS, NoMacCatalyst]
 		[Export ("translatesPlayerInterstitialEvents")]
 		bool TranslatesPlayerInterstitialEvents { get; set; }
+
+		[Watch (9, 0), TV (16, 0), NoMac, iOS (16, 0)]
+		[NullAllowed, Export ("nowPlayingInfo", ArgumentSemantic.Copy)]
+		NSDictionary WeakNowPlayingInfo { get; set; }
 	}
 
 	[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]

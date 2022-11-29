@@ -82,8 +82,6 @@
 !extra-null-allowed! 'System.Boolean UIKit.NSLayoutManagerDelegate::ShouldSetLineFragmentRect(UIKit.NSLayoutManager,CoreGraphics.CGRect&,CoreGraphics.CGRect&,System.nfloat&,UIKit.NSTextContainer,Foundation.NSRange)' has a extraneous [NullAllowed] on parameter #2
 !extra-null-allowed! 'System.Boolean UIKit.NSLayoutManagerDelegate::ShouldSetLineFragmentRect(UIKit.NSLayoutManager,CoreGraphics.CGRect&,CoreGraphics.CGRect&,System.nfloat&,UIKit.NSTextContainer,Foundation.NSRange)' has a extraneous [NullAllowed] on parameter #3
 !extra-null-allowed! 'System.Boolean UIKit.UIApplication::CanOpenUrl(Foundation.NSUrl)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.IntPtr Foundation.NSAttributedString::InitWithURL(Foundation.NSUrl,Foundation.NSDictionary,Foundation.NSDictionary&,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.Void Foundation.NSAttributedString::.ctor(Foundation.NSData,Foundation.NSDictionary,Foundation.NSDictionary&,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void UIKit.UIAccessibilityCustomAction::.ctor(Foundation.NSAttributedString,UIKit.UIAccessibilityCustomActionHandler)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void UIKit.UIAccessibilityCustomAction::.ctor(System.String,UIKit.UIAccessibilityCustomActionHandler)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void UIKit.UIAccessibilityCustomAction::set_Name(System.String)' has a extraneous [NullAllowed] on parameter #0
@@ -94,8 +92,6 @@
 !extra-null-allowed! 'System.Void UIKit.UIDynamicAnimator::AddBehavior(UIKit.UIDynamicBehavior)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UIDynamicAnimator::RemoveBehavior(UIKit.UIDynamicBehavior)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UIMarkupTextPrintFormatter::.ctor(System.String)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void UIKit.UIMenuItem::set_Action(ObjCRuntime.Selector)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void UIKit.UIMenuItem::set_Title(System.String)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UINavigationController::set_ViewControllers(UIKit.UIViewController[])' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UINavigationController::SetViewControllers(UIKit.UIViewController[],System.Boolean)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UIPopoverPresentationControllerDelegate::WillRepositionPopover(UIKit.UIPopoverPresentationController,CoreGraphics.CGRect&,UIKit.UIView&)' has a extraneous [NullAllowed] on parameter #1
@@ -122,7 +118,6 @@
 !missing-null-allowed! 'Foundation.NSAttributedString UIKit.UIButton::get_CurrentAttributedTitle()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSAttributedString UIKit.UIButton::GetAttributedTitle(UIKit.UIControlState)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSAttributedString UIKit.UIPickerViewDelegate::GetAttributedTitle(UIKit.UIPickerView,System.nint,System.nint)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetDataFromRange(Foundation.NSRange,Foundation.NSDictionary,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData UIKit.UIPasteboard::DataForPasteboardType(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData[] UIKit.UIPasteboard::GetDataForPasteboardType(System.String,Foundation.NSIndexSet)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'Foundation.NSData[] UIKit.UIPasteboard::GetDataForPasteboardType(System.String,Foundation.NSIndexSet)' is missing an [NullAllowed] on return type
@@ -135,7 +130,6 @@
 !missing-null-allowed! 'Foundation.NSDictionary UIKit.UIMotionEffect::ComputeKeyPathsAndRelativeValues(UIKit.UIOffset)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary UIKit.UISearchBar::_GetScopeBarButtonTitleTextAttributes(UIKit.UIControlState)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDictionary UIKit.UISegmentedControl::_GetTitleTextAttributes(UIKit.UIControlState)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSFileWrapper Foundation.NSAttributedString::GetFileWrapperFromRange(Foundation.NSRange,Foundation.NSDictionary,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSIndexPath UIKit.UICollectionViewFocusUpdateContext::get_NextFocusedIndexPath()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSIndexPath UIKit.UICollectionViewFocusUpdateContext::get_PreviouslyFocusedIndexPath()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSIndexPath UIKit.UITableViewDelegate::WillDeselectRow(UIKit.UITableView,Foundation.NSIndexPath)' is missing an [NullAllowed] on return type
@@ -548,4 +542,37 @@
 !extra-enum-value! Managed value 3 for UITextAlignment.Justified not found in native headers
 !extra-enum-value! Managed value 4 for UITextAlignment.Natural not found in native headers
 !extra-null-allowed! 'System.Void UIKit.UIScrollViewDelegate::WillEndDragging(UIKit.UIScrollView,CoreGraphics.CGPoint,CoreGraphics.CGPoint&)' has a extraneous [NullAllowed] on parameter #2
+
+## manually bound
 !missing-field! UIListSeparatorAutomaticInsets not bound
+
+## added in xcode 14 and is between a #if XAMCORE_5_0
+!incorrect-protocol-member! UISearchSuggestion::localizedAttributedSuggestion is REQUIRED and should be abstract
+!incorrect-protocol-member! UISearchSuggestion::representedObject is REQUIRED and should be abstract
+!incorrect-protocol-member! UISearchSuggestion::setRepresentedObject: is REQUIRED and should be abstract
+
+# deprecated in xcode 14 beta 5
+!extra-enum-value! Managed value 8 for UIModalPresentationStyle.BlurOverFullScreen is available for the current platform while the value in the native header is not
+
+# out trampolines generators does not support the following
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::canReorderItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::didReorderHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::setCanReorderItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::setDidReorderHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::setWillReorderHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::willReorderHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setShouldCollapseItemHandler: not bound
+
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setShouldExpandItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setSnapshotForExpandingParentItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setWillCollapseItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setWillExpandItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::shouldCollapseItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::shouldExpandItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::snapshotForExpandingParentItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willCollapseItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willExpandItemHandler not bound
+
+# no bound due to issues with foundation https://github.com/xamarin/xamarin-macios/issues/15577
+!missing-selector! NSDiffableDataSourceSectionTransaction::difference not bound
+!missing-selector! NSDiffableDataSourceTransaction::difference not bound

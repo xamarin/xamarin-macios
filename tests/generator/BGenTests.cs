@@ -10,12 +10,10 @@ using Mono.Cecil.Cil;
 
 using Xamarin.Tests;
 
-namespace GeneratorTests
-{
+namespace GeneratorTests {
 	[TestFixture ()]
 	[Parallelizable (ParallelScope.All)]
-	public class BGenTests
-	{
+	public class BGenTests {
 		// Removing the following variable might make running the unit tests in VSMac fail.
 		static Type variable_to_keep_reference_to_system_runtime_compilerservices_unsafe_assembly = typeof (System.Runtime.CompilerServices.Unsafe);
 
@@ -241,7 +239,7 @@ namespace GeneratorTests
 			var preserves = allMembers.Sum ((v) => v.CustomAttributes.Count ((ca) => ca.AttributeType.Name == attrib));
 			Assert.AreEqual (
 #if NET
-				36, // This number should be lower - https://github.com/xamarin/xamarin-macios/issues/14802
+				48, // This number should be lower - https://github.com/xamarin/xamarin-macios/issues/14802
 #else
 				10,
 #endif
@@ -636,7 +634,7 @@ namespace GeneratorTests
 		[TestCase (Profile.iOS)]
 		public void GH5416_setter (Profile profile)
 		{
-			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform());
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
 			bgen.Profile = profile;
 			bgen.AddTestApiDefinition ("ghissue5416a.cs");
@@ -883,6 +881,8 @@ namespace GeneratorTests
 		[Test]
 #if !NET
 		[Ignore ("This only applies to .NET")]
+#else
+		[Ignore ("https://github.com/dotnet/roslyn/issues/61525")]
 #endif
 		public void NativeIntDelegates ()
 		{

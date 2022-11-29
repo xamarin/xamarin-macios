@@ -1,7 +1,0 @@
-<Project>
-	<Import Project="Sdk.props" Sdk="Microsoft.tvOS.Sdk.net6" Condition="'$(TargetPlatformIdentifier)' == 'tvOS'" />
-
-	<ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' and $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '6.0')) ">
-		<SdkSupportedTargetPlatformIdentifier Include="tvos" DisplayName="tvOS" />
-	</ItemGroup>
-</Project>

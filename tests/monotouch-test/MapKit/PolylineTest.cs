@@ -12,7 +12,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MapKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PolylineTest {
@@ -21,13 +21,13 @@ namespace MonoTouchFixtures.MapKit {
 		{
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
-		
+
 		[Test]
 		public void FromPoints_Null ()
 		{
 			Assert.Throws<ArgumentNullException> (() => MKPolyline.FromPoints (null));
 		}
-		
+
 		void CheckEmpty (MKPolyline pl)
 		{
 			// MKAnnotation
@@ -51,7 +51,7 @@ namespace MonoTouchFixtures.MapKit {
 			Assert.False (pl.Intersects (pl.BoundingMapRect), "Intersect/Self");
 			MKMapRect rect = new MKMapRect (0, 0, 0, 0);
 			Assert.False (pl.Intersects (rect), "Intersect/Empty");
-			
+
 			ShapeTest.CheckShape (pl);
 		}
 
@@ -67,14 +67,14 @@ namespace MonoTouchFixtures.MapKit {
 		{
 			Assert.Throws<ArgumentNullException> (() => MKPolyline.FromCoordinates (null));
 		}
-		
+
 		[Test]
 		public void FromCoordinates_Empty ()
 		{
 			MKPolyline pl = MKPolyline.FromCoordinates (new CLLocationCoordinate2D [] { });
 			CheckEmpty (pl);
 		}
-		
+
 #if false
 		// Annotations that support dragging should implement this method to update the position of the annotation.
 		// keyword is SHOULD - it's not working for MKPolyline

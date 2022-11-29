@@ -15,7 +15,7 @@ namespace SensorKit {
 	[NoWatch]
 	[NoTV]
 	[NoMac]
-	[iOS (14,0)]
+	[iOS (14, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct SRAmbientLightChromaticity {

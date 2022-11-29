@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-using Foundation; 
+using Foundation;
 using ObjCRuntime;
 
 #nullable enable
@@ -14,15 +14,14 @@ namespace CoreAnimation {
 	[SupportedOSPlatform ("ios15.0")]
 	[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-	[Watch (8,0)]
-	[TV (15,0)]
-	[Mac (12,0)]
-	[iOS (15,0)]
-	[MacCatalyst (15,0)]
+	[Watch (8, 0)]
+	[TV (15, 0)]
+	[Mac (12, 0)]
+	[iOS (15, 0)]
+	[MacCatalyst (15, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct CAFrameRateRange
-	{
+	public struct CAFrameRateRange {
 		public float Minimum;
 
 		public float Maximum;
@@ -37,11 +36,11 @@ namespace CoreAnimation {
 		public static extern CAFrameRateRange Create (float minimum, float maximum, float preferred);
 
 		public bool IsEqualTo (CAFrameRateRange other)
-			=> IsEqualTo  (this, other);
+			=> IsEqualTo (this, other);
 
 #if !COREBUILD
 		[Field ("CAFrameRateRangeDefault", "CoreAnimation")]
- 		public static CAFrameRateRange Default => Marshal.PtrToStructure<CAFrameRateRange> (Dlfcn.GetIndirect (Libraries.CoreAnimation.Handle, "CAFrameRateRangeDefault"))!;
+		public static CAFrameRateRange Default => Marshal.PtrToStructure<CAFrameRateRange> (Dlfcn.GetIndirect (Libraries.CoreAnimation.Handle, "CAFrameRateRangeDefault"))!;
 #endif
 
 	}

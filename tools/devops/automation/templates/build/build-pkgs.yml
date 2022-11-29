@@ -38,10 +38,20 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 steps:
 - template: build.yml
   parameters:
     isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
     runDeviceTests: ${{ parameters.runDeviceTests }}
     vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
     keyringPass: ${{ parameters.keyringPass }}
@@ -113,12 +123,7 @@ steps:
       continueOnError: true
 
     # funny enough we need these profiles to build the mac tests
-    - bash: |
-        set -x
-        set -e
-
-        cd "$SOURCES_DIR/maccore/tools/"
-        ./install-qa-provisioning-profiles.sh -v
+    - bash: '"$BUILD_SOURCESDIRECTORY"/maccore/tools/install-qa-provisioning-profiles.sh -v'
       displayName: 'Add tests provisioning profiles'
       timeoutInMinutes: 30
       continueOnError: true # should not stop the build will result in test failures but we do want the pkg
@@ -129,7 +134,6 @@ steps:
         AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
         AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
         AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
-        SOURCES_DIR: $(Build.SourcesDirectory)
 
     - bash: |
         set -x
@@ -145,7 +149,7 @@ steps:
 
       name: macTestPkg
       displayName: 'Package macOS tests'
-      condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
+      condition: and(succeeded(), contains(variables['RUN_MAC_TESTS'], 'true'))
       continueOnError: true # not a terrible blocking issue
       timeoutInMinutes: 60
 

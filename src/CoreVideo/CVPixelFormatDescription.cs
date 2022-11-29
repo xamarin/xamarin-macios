@@ -41,7 +41,7 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[Watch (4,0)]
+	[Watch (4, 0)]
 #endif
 	public static class CVPixelFormatDescription {
 #if !COREBUILD
@@ -58,18 +58,18 @@ namespace CoreVideo {
 		public static readonly NSString BlackBlockKey;
 		public static readonly NSString HorizontalSubsamplingKey;
 		public static readonly NSString VerticalSubsamplingKey;
-   
+
 		public static readonly NSString OpenGLFormatKey;
 		public static readonly NSString OpenGLTypeKey;
 		public static readonly NSString OpenGLInternalFormatKey;
-   
+
 		public static readonly NSString CGBitmapInfoKey;
-   
+
 		public static readonly NSString QDCompatibilityKey;
 		public static readonly NSString CGBitmapContextCompatibilityKey;
 		public static readonly NSString CGImageCompatibilityKey;
 		public static readonly NSString OpenGLCompatibilityKey;
-   
+
 		public static readonly NSString FillExtendedPixelsCallbackKey;
 
 #if NET
@@ -78,8 +78,8 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (8,0)]
-		[Mac (10,10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 #endif
 		public static readonly NSString ContainsRgb;
 #if NET
@@ -88,8 +88,8 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (8,0)]
-		[Mac (10,10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 #endif
 		public static readonly NSString ContainsYCbCr;
 
@@ -99,8 +99,8 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
-		[Mac (10,10)]
+		[iOS (9, 0)]
+		[Mac (10, 10)]
 #endif
 		public static readonly NSString ComponentRangeKey;
 #if NET
@@ -109,8 +109,8 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
-		[Mac (10,10)]
+		[iOS (9, 0)]
+		[Mac (10, 10)]
 #endif
 		public static readonly NSString ComponentRangeFullRangeKey;
 #if NET
@@ -119,8 +119,8 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
-		[Mac (10,10)]
+		[iOS (9, 0)]
+		[Mac (10, 10)]
 #endif
 		public static readonly NSString ComponentRangeVideoRangeKey;
 #if NET
@@ -129,8 +129,8 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
-		[Mac (10,10)]
+		[iOS (9, 0)]
+		[Mac (10, 10)]
 #endif
 		public static readonly NSString ComponentRangeWideRangeKey;
 
@@ -140,12 +140,22 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (12,0)]
-		[TV (12,0)]
-		[Watch (5,0)]
-		[Mac (10,14)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
+		[Mac (10, 14)]
 #endif
 		public static readonly NSString ContainsGrayscaleKey;
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#endif
+		public static readonly NSString ContainsSenselArray;
 
 		static CVPixelFormatDescription ()
 		{
@@ -185,6 +195,9 @@ namespace CoreVideo {
 
 			// Xcode 10
 			ContainsGrayscaleKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatContainsGrayscale")!;
+
+			// Xcode 14
+			ContainsSenselArray = Dlfcn.GetStringConstant (handle, "kCVPixelFormatContainsSenselArray")!;
 		}
 
 		// note: bad documentation, ref: https://bugzilla.xamarin.com/show_bug.cgi?id=13917
@@ -194,7 +207,7 @@ namespace CoreVideo {
 
 		public static NSNumber [] AllTypes {
 			get {
-				return NSArray.ArrayFromHandle <NSNumber> (CVPixelFormatDescriptionArrayCreateWithAllPixelFormatTypes (IntPtr.Zero));
+				return NSArray.ArrayFromHandle<NSNumber> (CVPixelFormatDescriptionArrayCreateWithAllPixelFormatTypes (IntPtr.Zero));
 			}
 		}
 
@@ -209,7 +222,7 @@ namespace CoreVideo {
 		}
 #endif
 
-		public static NSDictionary? Create (CVPixelFormatType pixelFormat) 
+		public static NSDictionary? Create (CVPixelFormatType pixelFormat)
 		{
 			return Runtime.GetNSObject<NSDictionary> (CVPixelFormatDescriptionCreateWithPixelFormatType (IntPtr.Zero, (int) pixelFormat));
 		}

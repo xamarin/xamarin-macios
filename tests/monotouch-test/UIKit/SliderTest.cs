@@ -11,15 +11,15 @@ using UIKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	class SliderPoker : UISlider {
-		
+
 		static FieldInfo bkCurrentThumbImage;
 		static FieldInfo bkCurrentMinTrackImage;
 		static FieldInfo bkCurrentMaxTrackImage;
 		static FieldInfo bkMinValueImage;
 		static FieldInfo bkMaxValueImage;
-		
+
 		static SliderPoker ()
 		{
 			var t = typeof (UISlider);
@@ -29,16 +29,16 @@ namespace MonoTouchFixtures.UIKit {
 			bkMinValueImage = t.GetField ("__mt_MinValueImage_var", BindingFlags.Instance | BindingFlags.NonPublic);
 			bkMaxValueImage = t.GetField ("__mt_MaxValueImage_var", BindingFlags.Instance | BindingFlags.NonPublic);
 		}
-		
+
 		public static bool NewRefcountEnabled ()
 		{
 			return NSObject.IsNewRefcountEnabled ();
 		}
-		
+
 		public SliderPoker ()
 		{
 		}
-		
+
 		public UIImage CurrentThumbImageBackingField {
 			get {
 				return (UIImage) bkCurrentThumbImage.GetValue (this);
@@ -69,11 +69,11 @@ namespace MonoTouchFixtures.UIKit {
 			}
 		}
 	}
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class SliderTest {
-		
+
 		[Test]
 		public void InitWithFrame ()
 		{
@@ -88,7 +88,7 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			if (SliderPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-			
+
 			using (var s = new SliderPoker ()) {
 				// default constructor does not set any UIViewController so the backing fields are null
 				Assert.Null (s.CurrentThumbImageBackingField, "1a");
@@ -110,13 +110,13 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			if (SliderPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-			
+
 			using (var i = new UIImage ())
 			using (var s = new SliderPoker ()) {
 				// default constructor does not set any UIViewController so the backing fields are null
 				Assert.Null (s.CurrentThumbImageBackingField, "1a");
 				Assert.Null (s.CurrentThumbImage, "1b");
-				
+
 				s.SetThumbImage (i, UIControlState.Normal);
 				Assert.NotNull (s.CurrentThumbImageBackingField, "1c");
 				Assert.NotNull (s.CurrentThumbImage, "1d");
@@ -128,13 +128,13 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			if (SliderPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-			
+
 			using (var i = new UIImage ())
 			using (var s = new SliderPoker ()) {
 				// default constructor does not set any UIViewController so the backing fields are null
 				Assert.Null (s.CurrentMinTrackImageBackingField, "1a");
 				Assert.Null (s.CurrentMinTrackImage, "1b");
-				
+
 				s.SetMinTrackImage (i, UIControlState.Normal);
 				Assert.NotNull (s.CurrentMinTrackImageBackingField, "1c");
 				Assert.NotNull (s.CurrentMinTrackImage, "1d");
@@ -146,13 +146,13 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			if (SliderPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-			
+
 			using (var i = new UIImage ())
 			using (var s = new SliderPoker ()) {
 				// default constructor does not set any UIViewController so the backing fields are null
 				Assert.Null (s.CurrentMaxTrackImageBackingField, "1a");
 				Assert.Null (s.CurrentMaxTrackImage, "1b");
-				
+
 				s.SetMaxTrackImage (i, UIControlState.Normal);
 				Assert.NotNull (s.CurrentMaxTrackImageBackingField, "1c");
 				Assert.NotNull (s.CurrentMaxTrackImage, "1d");

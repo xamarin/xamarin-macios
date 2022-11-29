@@ -17,6 +17,8 @@ mkdir -p "$DIR"
 make test.config
 cat test.config
 INCLUDE_XAMARIN_LEGACY=$(grep ^INCLUDE_XAMARIN_LEGACY= test.config | sed 's/.*=//')
+INCLUDE_MAC=$(grep ^INCLUDE_MAC= test.config | sed 's/.*=//')
+INCLUDE_MACCATALYST=$(grep ^INCLUDE_MACCATALYST= test.config | sed 's/.*=//')
 XCODE_DEVELOPER_ROOT=$(grep ^XCODE_DEVELOPER_ROOT= test.config | sed 's/.*=//')
 MAC_DESTDIR=$(grep ^MAC_DESTDIR= test.config | sed 's/.*=//')
 export MD_APPLE_SDK_ROOT="$(dirname "$(dirname "$XCODE_DEVELOPER_ROOT")")"
@@ -39,8 +41,12 @@ TEST_SUITE_DEPENDENCIES+=(fsharplibrary)
 TEST_SUITE_DEPENDENCIES+=(BundledResources)
 
 for dep in "${TEST_SUITE_DEPENDENCIES[@]}"; do
-	make -C $dep/dotnet/macOS build
-	make -C $dep/dotnet/MacCatalyst build
+	if test -n "$INCLUDE_MAC"; then
+		make -C "$dep"/dotnet/macOS build
+	fi
+	if test -n "$INCLUDE_MACCATALYST"; then
+		make -C "$dep"/dotnet/MacCatalyst build
+	fi
 done
 
 TEST_SUITES+=(build-dontlink)
@@ -52,7 +58,11 @@ if test -n "$INCLUDE_XAMARIN_LEGACY"; then
 fi
 TEST_SUITES+=(build-monotouch-test)
 
-make -f packaged-macos-tests.mk "${TEST_SUITES[@]}" -j
+if test -n "$BUILD_REVISION"; then
+	MAKE_FLAGS=-j
+fi
+
+make -f packaged-macos-tests.mk "${TEST_SUITES[@]}" $MAKE_FLAGS
 
 if test -n "$INCLUDE_XAMARIN_LEGACY"; then
 	for app in */bin/x86/*/*.app linker/mac/*/bin/x86/*/*.app linker/mac/*/generated-projects/*/bin/x86/*/*.app introspection/Mac/bin/x86/*/*.app; do

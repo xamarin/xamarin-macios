@@ -17,73 +17,74 @@ namespace ObjCRuntime {
 		 * http://developer.apple.com/documentation/DeveloperTools/gcc-4.0.1/gcc/Type-encoding.html
 		 */
 		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
-		public static Type ToManaged (string type) {
+		public static Type ToManaged (string type)
+		{
 			if (!Runtime.DynamicRegistrationSupported) // The call to Runtime.GetAssemblies further below requires the dynamic registrar.
 				throw ErrorHelper.CreateError (8026, "TypeConverter.ToManaged is not supported when the dynamic registrar has been linked away.");
 
-			switch (type[0]) {
-				case '@':
-					return typeof (IntPtr);
-				case '#':
-					return typeof (IntPtr);
-				case ':':
-					return typeof (IntPtr);
-				case 'c':
-					return typeof (char);
-				case 'C':
-					return typeof (char);
-				case 's':
-					return typeof (short);
-				case 'S':
-					return typeof (ushort);
-				case 'i':
-				case 'l':
-					return typeof (int);
-				case 'I':
-				case 'L':
-					return typeof (uint);
-				case 'q':
-					return typeof (long);
-				case 'Q':
-					return typeof (ulong);
-				case 'f':
-					return typeof (float);
-				case 'd':
-					return typeof (double);
-				case 'b':
-					return typeof (char); // XXX: bitfield?
-				case 'B':
-					return typeof (bool);
-				case 'v':
-					return typeof (void);
-				case '?':
-					return typeof (IntPtr); // XXX: undef?
-				case '^':
-					return typeof (IntPtr);
-				case '*':
-					return typeof (string);
-				case '%':
-					return typeof (IntPtr); // XXX: Atom?
-				case '[':
-					throw new NotImplementedException ("arrays");
-				case '(':
-					throw new NotImplementedException ("unions");
-				case '{': {
-					string struct_name = type.Substring (1, type.IndexOf ('=') - 1);
-					var assemblies = Runtime.GetAssemblies ();
-					
-					// TODO: caching? valuetype specific list of structs to walk?  speed me up
-					foreach (Assembly a in assemblies)
-						foreach (Type t in a.GetTypes ())
-							if (t.IsValueType && !t.IsEnum && t.Name == struct_name)
-								return t;
+			switch (type [0]) {
+			case '@':
+				return typeof (IntPtr);
+			case '#':
+				return typeof (IntPtr);
+			case ':':
+				return typeof (IntPtr);
+			case 'c':
+				return typeof (char);
+			case 'C':
+				return typeof (char);
+			case 's':
+				return typeof (short);
+			case 'S':
+				return typeof (ushort);
+			case 'i':
+			case 'l':
+				return typeof (int);
+			case 'I':
+			case 'L':
+				return typeof (uint);
+			case 'q':
+				return typeof (long);
+			case 'Q':
+				return typeof (ulong);
+			case 'f':
+				return typeof (float);
+			case 'd':
+				return typeof (double);
+			case 'b':
+				return typeof (char); // XXX: bitfield?
+			case 'B':
+				return typeof (bool);
+			case 'v':
+				return typeof (void);
+			case '?':
+				return typeof (IntPtr); // XXX: undef?
+			case '^':
+				return typeof (IntPtr);
+			case '*':
+				return typeof (string);
+			case '%':
+				return typeof (IntPtr); // XXX: Atom?
+			case '[':
+				throw new NotImplementedException ("arrays");
+			case '(':
+				throw new NotImplementedException ("unions");
+			case '{': {
+				string struct_name = type.Substring (1, type.IndexOf ('=') - 1);
+				var assemblies = Runtime.GetAssemblies ();
 
-					throw new NotImplementedException ("struct marshalling: " + struct_name + " " + type);
-				}
-				case '!':
-					throw new NotImplementedException ("vectors");
-				case 'r':
-					throw new NotImplementedException ("consts");
+				// TODO: caching? valuetype specific list of structs to walk?  speed me up
+				foreach (Assembly a in assemblies)
+					foreach (Type t in a.GetTypes ())
+						if (t.IsValueType && !t.IsEnum && t.Name == struct_name)
+							return t;
+
+				throw new NotImplementedException ("struct marshalling: " + struct_name + " " + type);
+			}
+			case '!':
+				throw new NotImplementedException ("vectors");
+			case 'r':
+				throw new NotImplementedException ("consts");
 			}
 
 			throw new Exception ("Teach me how to parse: " + type);
@@ -95,7 +96,8 @@ namespace ObjCRuntime {
 		 *
 		 * http://developer.apple.com/documentation/DeveloperTools/gcc-4.0.1/gcc/Type-encoding.html
 		 */
-		public static string ToNative (Type type) {
+		public static string ToNative (Type type)
+		{
 			if (type.IsGenericParameter)
 				throw new ArgumentException ("Unable to convert generic types");
 
@@ -104,7 +106,7 @@ namespace ObjCRuntime {
 			if (type == typeof (byte)) return "C";
 			if (type == typeof (sbyte)) return "c";
 			if (type == typeof (char)) return "c";
-//			if (type == typeof (uchar)) return "C";
+			//			if (type == typeof (uchar)) return "C";
 			if (type == typeof (short)) return "s";
 			if (type == typeof (ushort)) return "S";
 			if (type == typeof (int)) return "i";
@@ -121,11 +123,11 @@ namespace ObjCRuntime {
 			if (type == typeof (nfloat)) return IntPtr.Size == 8 ? "d" : "f";
 			if (type == typeof (nint)) return IntPtr.Size == 8 ? "q" : "i";
 			if (type == typeof (nuint)) return IntPtr.Size == 8 ? "Q" : "I";
-			if (typeof(INativeObject).IsAssignableFrom (type)) return "@";
+			if (typeof (INativeObject).IsAssignableFrom (type)) return "@";
 			if (type.IsValueType && !type.IsEnum) {
 				// TODO: We should cache the results of this in a temporary hash that we destroy when we're done initializing/registrations
 				StringBuilder sb = new StringBuilder ();
-				
+
 				sb.AppendFormat ("{{{0}=", type.Name);
 				foreach (FieldInfo field in type.GetFields (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
 					sb.Append (ToNative (field.FieldType));

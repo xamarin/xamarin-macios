@@ -21,10 +21,10 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[TV (13,0)]
-	[Watch (6,0)]
+	[Mac (10, 15)]
+	[iOS (13, 0)]
+	[TV (13, 0)]
+	[Watch (6, 0)]
 #endif
 	public static class CGPdfTagType_Extensions {
 

@@ -4,7 +4,7 @@ using ObjCRuntime;
 namespace Foundation {
 
 	// Utility enum, ObjC uses NSString
-	[iOS (7,0)]
+	[iOS (7, 0)]
 	public enum NSDocumentType {
 		Unknown = -1,
 		PlainText,
@@ -27,11 +27,11 @@ namespace Foundation {
 
 	// Utility enum, ObjC uses NSString
 	[NoMac]
-	[iOS (7,0)]
+	[iOS (7, 0)]
 	public enum NSDocumentViewMode {
 		Normal,
 		PageLayout
-			
+
 	}
 
 	public enum NSRunLoopMode {
@@ -62,8 +62,8 @@ namespace Foundation {
 		Other = 1000
 	}
 
-	[Mac (10,9)]
-	[iOS (7,0)]
+	[Mac (10, 9)]
+	[iOS (7, 0)]
 	public enum NSItemDownloadingStatus {
 		[Field (null)]
 		Unknown = -1,
@@ -78,7 +78,8 @@ namespace Foundation {
 		NotDownloaded,
 	}
 
-	[iOS (9,0)][Mac (10,11)]
+	[iOS (9, 0)]
+	[Mac (10, 11)]
 	public enum NSStringTransform {
 		[Field ("NSStringTransformLatinToKatakana")]
 		LatinToKatakana,
@@ -170,13 +171,13 @@ namespace Foundation {
 		Word,
 
 		[Field ("NSLinguisticTagPunctuation")]
- 		Punctuation,
+		Punctuation,
 
 		[Field ("NSLinguisticTagWhitespace")]
- 		Whitespace,
+		Whitespace,
 
 		[Field ("NSLinguisticTagOther")]
- 		Other,
+		Other,
 
 		[Field ("NSLinguisticTagNoun")]
 		Noun,
@@ -262,8 +263,7 @@ namespace Foundation {
 
 	[Flags]
 	[Native]
-	public enum NSStringEnumerationOptions : ulong
-	{
+	public enum NSStringEnumerationOptions : ulong {
 		ByLines = 0x0,
 		ByParagraphs = 0x1,
 		ByComposedCharacterSequences = 0x2,
@@ -276,4 +276,112 @@ namespace Foundation {
 		Localized = 1uL << 10,
 	}
 
+	[Mac (12, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0), Watch (8, 0)]
+	[Flags]
+	[Native]
+	public enum NSAttributedStringFormattingOptions : ulong {
+		InsertArgumentAttributesWithoutMerging = 1uL << 0,
+		ApplyReplacementIndexAttribute = 1uL << 1,
+	}
+
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Native]
+	public enum NSAttributedStringMarkdownInterpretedSyntax : long {
+		Full = 0,
+		InlineOnly = 1,
+		InlineOnlyPreservingWhitespace = 2,
+	}
+
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Native]
+	public enum NSAttributedStringMarkdownParsingFailurePolicy : long {
+		Error = 0,
+		PartiallyParsedIfPossible = 1,
+	}
+
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Native]
+	public enum NSGrammaticalGender : long {
+		NotSet = 0,
+		Feminine,
+		Masculine,
+		Neuter,
+	}
+
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Native]
+	public enum NSGrammaticalNumber : long {
+		NotSet = 0,
+		Singular,
+		Zero,
+		Plural,
+		PluralTwo,
+		PluralFew,
+		PluralMany,
+	}
+
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Native]
+	public enum NSGrammaticalPartOfSpeech : long {
+		NotSet = 0,
+		Determiner,
+		Pronoun,
+		Letter,
+		Adverb,
+		Particle,
+		Adjective,
+		Adposition,
+		Verb,
+		Noun,
+		Conjunction,
+		Numeral,
+		Interjection,
+		Preposition,
+		Abbreviation,
+	}
+
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Native]
+	public enum NSInlinePresentationIntent : ulong {
+		Emphasized = 1uL << 0,
+		StronglyEmphasized = 1uL << 1,
+		Code = 1uL << 2,
+		Strikethrough = 1uL << 5,
+		SoftBreak = 1uL << 6,
+		LineBreak = 1uL << 7,
+		InlineHTML = 1uL << 8,
+		BlockHTML = 1uL << 9,
+	}
+
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Native]
+	public enum NSPresentationIntentKind : long {
+		Paragraph,
+		Header,
+		OrderedList,
+		UnorderedList,
+		ListItem,
+		CodeBlock,
+		BlockQuote,
+		ThematicBreak,
+		Table,
+		TableHeaderRow,
+		TableRow,
+		TableCell,
+	}
+
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Native]
+	public enum NSPresentationIntentTableColumnAlignment : long {
+		Left,
+		Center,
+		Right,
+	}
+
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[Native]
+	public enum NSURLRequestAttribution : ulong {
+		Developer = 0,
+		User = 1,
+	}
 }

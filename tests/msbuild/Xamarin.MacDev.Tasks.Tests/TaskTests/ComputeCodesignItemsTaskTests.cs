@@ -510,7 +510,7 @@ namespace Xamarin.MacDev.Tasks {
 				Environment.CurrentDirectory = currentDir;
 			}
 		}
-		void VerifyCodesigningResults (CodesignInfo [] infos, ITaskItem[] outputCodesignItems, ApplePlatform platform)
+		void VerifyCodesigningResults (CodesignInfo [] infos, ITaskItem [] outputCodesignItems, ApplePlatform platform)
 		{
 			Assert.That (outputCodesignItems.Select (v => v.ItemSpec), Is.Unique, "Uniqueness");
 

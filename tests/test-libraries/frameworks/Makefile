@@ -47,8 +47,13 @@ maccatalyst_INFO_PLIST_INFIX=/Versions/A/Resources
 maccatalyst_BINARY_INFIX=/Versions/A
 
 # For XCFrameworks, we have to lipo some of the RID-specific frameworks together (the ones with multiple RIDs below)
+ifdef IOS_SUPPORTS_32BIT_ARCHITECTURES
 iphonesimulator_XC_RUNTIMEIDENTIFIERS=iossimulator-x86 iossimulator-x64  iossimulator-arm64
 iphoneos_XC_RUNTIMEIDENTIFIERS=ios-arm ios-arm64
+else
+iphonesimulator_XC_RUNTIMEIDENTIFIERS=iossimulator-x64 iossimulator-arm64
+iphoneos_XC_RUNTIMEIDENTIFIERS=ios-arm64
+endif
 tvsimulator_XC_RUNTIMEIDENTIFIERS=tvossimulator-x64 tvossimulator-arm64
 tvos_XC_RUNTIMEIDENTIFIERS=tvos-arm64
 mac_XC_RUNTIMEIDENTIFIERS=osx-x64 osx-arm64
@@ -137,7 +142,7 @@ endif
 	$$(Q_ZIP) cd .libs/$(3)/$(1).resources && $(ZIP) -r $$(abspath .libs/$(3)/$(1).resources.zip) .
 
 ## a binding resource package needs an adjacent assembly to be considered a binding resource package, so create a dummy assembly.
-.libs/$(3)/$(1).dll:
+.libs/$(3)/$(1).dll: .libs/$(3)
 	$$(Q) printf "Fake assembly named $(3)\n" > $$@
 
 $(3)_BINDING_RESOURCE_PACKAGE_TARGETS += \
