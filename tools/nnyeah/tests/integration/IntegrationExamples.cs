@@ -20,27 +20,25 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.Integration {
 		// TODO - This code, and passing xamarin-assembly/microsoft-assembly should be removed long term from nnyeah
 		string GetLegacyPlatform (ApplePlatform platform)
 		{
-			switch (platform)
-			{
-				case ApplePlatform.MacOSX:
-					return Configuration.GetBaseLibrary (TargetFramework.Xamarin_Mac_2_0_Mobile);
-				case ApplePlatform.iOS:
-					return Configuration.GetBaseLibrary (TargetFramework.Xamarin_iOS_1_0);
-				default:
-					throw new NotImplementedException ();
+			switch (platform) {
+			case ApplePlatform.MacOSX:
+				return Configuration.GetBaseLibrary (TargetFramework.Xamarin_Mac_2_0_Mobile);
+			case ApplePlatform.iOS:
+				return Configuration.GetBaseLibrary (TargetFramework.Xamarin_iOS_1_0);
+			default:
+				throw new NotImplementedException ();
 			}
 		}
 
 		string GetNetPlatform (ApplePlatform platform)
 		{
-			switch (platform)
-			{
-				case ApplePlatform.MacOSX:
-					return Configuration.GetBaseLibrary (TargetFramework.DotNet_macOS);
-				case ApplePlatform.iOS:
-					return Configuration.GetBaseLibrary (TargetFramework.DotNet_iOS);
-				default:
-					throw new NotImplementedException ();
+			switch (platform) {
+			case ApplePlatform.MacOSX:
+				return Configuration.GetBaseLibrary (TargetFramework.DotNet_macOS);
+			case ApplePlatform.iOS:
+				return Configuration.GetBaseLibrary (TargetFramework.DotNet_iOS);
+			default:
+				throw new NotImplementedException ();
 			}
 		}
 
@@ -50,7 +48,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.Integration {
 
 			var environment = Configuration.GetBuildEnvironment (platform);
 
-			Execution execution = await Execution.RunAsync (MSBuildPath, new List<string>() { project }, environment, mergeOutput: true);
+			Execution execution = await Execution.RunAsync (MSBuildPath, new List<string> () { project }, environment, mergeOutput: true);
 			var output = execution.StandardOutput?.ToString () ?? "";
 			Assert.Zero (execution.ExitCode, $"Build Output: {output}");
 		}
@@ -263,13 +261,13 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.Integration {
 			var tmpDir = Cache.CreateTemporaryDirectory ("NugetExamples");
 
 			// Remove the leading / from the download uri
-			var nupkgPath = Path.Combine (tmpDir, downloadUrl.Split ('/').Last());
+			var nupkgPath = Path.Combine (tmpDir, downloadUrl.Split ('/').Last ());
 			var nugetPath = Path.Combine (tmpDir, libraryPath);
 
-			using (var client = new HttpClient()) {
+			using (var client = new HttpClient ()) {
 				var response = await client.GetAsync (downloadUrl);
 				var fs = new FileStream (nupkgPath, FileMode.CreateNew);
-				await response.Content.CopyToAsync(fs);
+				await response.Content.CopyToAsync (fs);
 			}
 			System.IO.Compression.ZipFile.ExtractToDirectory (nupkgPath, tmpDir);
 

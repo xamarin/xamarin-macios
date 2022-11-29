@@ -24,7 +24,7 @@ namespace SpriteKit {
 #elif TVOS || IOS
 			return SystemVersion.CheckiOS (8, 0);
 #else
-			#error Unknown platform
+#error Unknown platform
 #endif
 		}
 

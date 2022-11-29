@@ -11,7 +11,7 @@ namespace GameKit {
 		// GKInviteEventListener and GKTurnBasedEventListener both export same selector
 		// but generator changes now catch this. Stub it out to prevent API break
 		[Obsolete ("Use 'DidRequestMatch (GKPlayer player, GKPlayer[] recipientPlayers)' instead.")]
-		public virtual void DidRequestMatchWithPlayers (GKPlayer player, string[] playerIDsToInvite)
+		public virtual void DidRequestMatchWithPlayers (GKPlayer player, string [] playerIDsToInvite)
 		{
 		}
 	}

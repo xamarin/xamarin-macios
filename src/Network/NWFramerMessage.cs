@@ -16,13 +16,13 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-using OS_nw_framer=System.IntPtr;
-using OS_nw_protocol_metadata=System.IntPtr;
-using OS_dispatch_data=System.IntPtr;
-using OS_nw_protocol_definition=System.IntPtr;
-using OS_nw_protocol_options=System.IntPtr;
-using OS_nw_endpoint=System.IntPtr;
-using OS_nw_parameters=System.IntPtr;
+using OS_nw_framer = System.IntPtr;
+using OS_nw_protocol_metadata = System.IntPtr;
+using OS_dispatch_data = System.IntPtr;
+using OS_nw_protocol_definition = System.IntPtr;
+using OS_nw_protocol_options = System.IntPtr;
+using OS_nw_endpoint = System.IntPtr;
+using OS_nw_parameters = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -36,14 +36,14 @@ namespace Network {
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[Watch (6,0)]
+	[TV (13, 0)]
+	[Mac (10, 15)]
+	[iOS (13, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWFramerMessage : NWProtocolMetadata {
 		[Preserve (Conditional = true)]
-		internal NWFramerMessage (NativeHandle handle, bool owns) : base (handle, owns) {}
+		internal NWFramerMessage (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_framer_protocol_create_message (OS_nw_protocol_definition definition);
@@ -74,7 +74,7 @@ namespace Network {
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void SetData (string key, byte[] value)
+		public void SetData (string key, byte [] value)
 		{
 			// the method takes a callback to cleanup the data, but we do not need that since we are managed
 			if (key is null)
@@ -88,7 +88,7 @@ namespace Network {
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_SetDataHandler, callback);
 			try {
-				nw_framer_message_set_value (GetCheckedHandle (), key,  pinned.AddrOfPinnedObject (), ref block_handler);
+				nw_framer_message_set_value (GetCheckedHandle (), key, pinned.AddrOfPinnedObject (), ref block_handler);
 			} finally {
 				block_handler.CleanupBlock ();
 			}
@@ -113,17 +113,18 @@ namespace Network {
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public bool GetData (string key, int dataLength, out ReadOnlySpan<byte> outData) {
+		public bool GetData (string key, int dataLength, out ReadOnlySpan<byte> outData)
+		{
 			IntPtr outPointer = IntPtr.Zero;
 			// create a function that will get the data, and the data length passed and will set the out param returning the value
 			Func<IntPtr, bool> callback = (inData) => {
 				if (inData != IntPtr.Zero) {
-					outPointer = inData; 
+					outPointer = inData;
 					return true;
 				} else {
 					return false;
 				}
-			}; 
+			};
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_AccessValueHandler, callback);
@@ -132,10 +133,10 @@ namespace Network {
 				var found = nw_framer_message_access_value (GetCheckedHandle (), key, ref block_handler);
 				if (found) {
 					unsafe {
-						outData = new ReadOnlySpan<byte>((void*) outPointer, dataLength);
+						outData = new ReadOnlySpan<byte> ((void*) outPointer, dataLength);
 					}
 				} else {
-					outData = ReadOnlySpan<byte>.Empty; 
+					outData = ReadOnlySpan<byte>.Empty;
 				}
 				return found;
 			} finally {
@@ -147,7 +148,7 @@ namespace Network {
 		static extern void nw_framer_message_set_object_value (OS_nw_protocol_metadata message, string key, IntPtr value);
 
 		public void SetObject (string key, NSObject value)
-			=> nw_framer_message_set_object_value (GetCheckedHandle (), key, value.GetHandle ()); 
+			=> nw_framer_message_set_object_value (GetCheckedHandle (), key, value.GetHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_framer_message_copy_object_value (OS_nw_protocol_metadata message, string key);

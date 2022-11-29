@@ -5,7 +5,11 @@ include $(TOP)/Make.config
 # in system headers show up.
 export CCACHE_CPP2=1
 
+ifdef IOS_SUPPORTS_32BIT_ARCHITECTURES
 SIMLAUNCHERS = simlauncher32-sgen simlauncher64-sgen
+else
+SIMLAUNCHERS = simlauncher64-sgen
+endif
 
 UNREFERENCED_SYMBOLS = 							\
 	_xamarin_dyn_objc_msgSend 					\
@@ -258,11 +262,15 @@ define RunRegistrar
 .SECONDARY: Xamarin.$(5).registrar.$(1).$(2).m Xamarin.$(5).registrar.$(1).$(2).h Xamarin.$(5).registrar.$(1).$(2).a
 .SECONDARY: .libs/Microsoft.$(8).registrar.$(2).m .libs/Microsoft.$(8).registrar.$(2).h .libs/Microsoft.$(8).registrar.$(2).a
 endef
+ifdef IOS_SUPPORTS_32BIT_ARCHITECTURES
 $(eval $(call RunRegistrar,ios,i386,32,$(IOS_SDK_VERSION),iOS,$(SIMULATOR86_CFLAGS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/include,$(MONOTOUCH_MONO_PATH),iOS,iossimulator-x86))
+endif
 $(eval $(call RunRegistrar,ios,x86_64,64,$(IOS_SDK_VERSION),iOS,$(SIMULATOR64_CFLAGS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/include,$(MONOTOUCH_MONO_PATH),iOS,iossimulator-x64))
 $(eval $(call RunRegistrar,ios,arm64,64,$(IOS_SDK_VERSION),iOS,$(SIMULATOR_ARM64_CFLAGS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/include,$(MONOTOUCH_MONO_PATH),iOS,iossimulator-arm64))
+ifdef IOS_SUPPORTS_32BIT_ARCHITECTURES
 $(eval $(call RunRegistrar,ios,armv7,32,$(IOS_SDK_VERSION),iOS,$(DEVICE7_CFLAGS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphoneos.sdk/include,$(MONOTOUCH_MONO_PATH),iOS,armv7))
 $(eval $(call RunRegistrar,ios,armv7s,32,$(IOS_SDK_VERSION),iOS,$(DEVICE7S_CFLAGS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphoneos.sdk/include,$(MONOTOUCH_MONO_PATH),iOS,armv7s))
+endif
 $(eval $(call RunRegistrar,ios,arm64,64,$(IOS_SDK_VERSION),iOS,$(DEVICE64_CFLAGS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphoneos.sdk/include,$(MONOTOUCH_MONO_PATH),iOS,ios-arm64))
 $(eval $(call RunRegistrar,tvos,x86_64,64,$(TVOS_SDK_VERSION),TVOS,$(SIMULATORTV_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/include,$(MONOTOUCH_TV_MONO_PATH),tvOS,tvossimulator-x64))
 $(eval $(call RunRegistrar,tvos,arm64,64,$(TVOS_SDK_VERSION),TVOS,$(SIMULATORTV_ARM64_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/include,$(MONOTOUCH_TV_MONO_PATH),tvOS,tvossimulator-arm64))
@@ -274,10 +282,18 @@ $(eval $(call RunRegistrar,watchos,arm64_32,32,$(WATCH_SDK_VERSION),WatchOS,$(DE
 $(eval $(call RunRegistrar,maccatalyst,x86_64,64,$(MACCATALYST_SDK_VERSION),MacCatalyst,$(MACCATALYST_X86_64_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/include,$(MONOTOUCH_MACCATALYST_MONO_PATH),MacCatalyst,maccatalyst-x64))
 $(eval $(call RunRegistrar,maccatalyst,arm64,64,$(MACCATALYST_SDK_VERSION),MacCatalyst,$(MACCATALYST_ARM64_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/include,$(MONOTOUCH_MACCATALYST_MONO_PATH),MacCatalyst,maccatalyst-arm64))
 
+ifdef IOS_SUPPORTS_32BIT_ARCHITECTURES
 %.registrar.ios.simulator.a:     %.registrar.ios.i386.a %.registrar.ios.x86_64.a
+else
+%.registrar.ios.simulator.a:     %.registrar.ios.x86_64.a
+endif
 	$(Q_LIPO) $(DEVICE_BIN_PATH)/lipo -create -output $@ $^
 
+ifdef IOS_SUPPORTS_32BIT_ARCHITECTURES
 %.registrar.ios.device.a:        %.registrar.ios.arm64.a %.registrar.ios.armv7.a %.registrar.ios.armv7s.a
+else
+%.registrar.ios.device.a:        %.registrar.ios.arm64.a
+endif
 	$(Q_LIPO) $(DEVICE_BIN_PATH)/lipo -create -output $@ $^
 
 %.registrar.watchos.device.a:    %.registrar.watchos.armv7k.a %.registrar.watchos.arm64_32.a
@@ -420,7 +436,17 @@ verify-sorted-resx:
 	fi
 
 ifdef INCLUDE_XAMARIN_LEGACY
+ifdef INCLUDE_IOS
+PACKAGE_INTROSPECTION_DEPENDENCIES=1
+endif
+endif
+
+ifdef PACKAGE_INTROSPECTION_DEPENDENCIES
+ifdef IOS_SUPPORTS_32BIT_ARCHITECTURES
 package-introspection-dependencies.zip: simlauncher32-sgen simlauncher64-sgen
+else
+package-introspection-dependencies.zip: simlauncher64-sgen
+endif
 	$(Q) mkdir -p $@.tmpdir
 	$(Q) $(CP) -a simlauncher*-sgen*  $@.tmpdir
 	$(Q_GEN) cd $@.tmpdir && zip -9r $(abspath $@) .

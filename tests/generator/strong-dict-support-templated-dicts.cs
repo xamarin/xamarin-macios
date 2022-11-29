@@ -1,9 +1,8 @@
 using Foundation;
 using ObjCRuntime;
 
-namespace Test
-{
-	
+namespace Test {
+
 	[StrongDictionary ("AdvertisementDataKeys")]
 	interface AdvertisementData {
 		// ensure that the generator continues to work with classic

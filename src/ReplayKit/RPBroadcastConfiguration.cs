@@ -44,13 +44,13 @@ namespace ReplayKit {
 	public partial class RPBroadcastConfiguration {
 		public AVVideoCodecSettings? VideoCompressionProperties {
 			get {
-				var weak = WeakVideoCompressionProperties; 
+				var weak = WeakVideoCompressionProperties;
 				return weak is null ? null : new AVVideoCodecSettings (new NSMutableDictionary (weak));
 			}
 			set {
 				WeakVideoCompressionProperties = value is null ? null : new NSDictionary<NSString, INSSecureCoding> (value.Dictionary.Handle);
 			}
-		}		
+		}
 	}
 }
 

@@ -1,6 +1,6 @@
 {
   "author": "Майкрософт",
-  "name": "iOS Application",
+  "name": "Приложение iOS",
   "description": "Проект для создания приложения .NET для iOS",
   "symbols/bundleId/description": "Переопределяет CFBundleIdentifier в Info.plist",
   "symbols/minOSVersion/description": "Переопределяет SupportedOSPlatformVersion в файле проекта",

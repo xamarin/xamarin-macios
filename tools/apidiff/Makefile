@@ -44,11 +44,10 @@ export HTML_NO_BREAKING_CHANGES_MESSAGE=No breaking changes
 export MARKDOWN_BREAKING_CHANGES_MESSAGE=:heavy_exclamation_mark: Breaking changes :heavy_exclamation_mark:
 export MARKDOWN_NO_BREAKING_CHANGES_MESSAGE=No breaking changes
 
+ifeq ($(DOTNET_TFM_REFERENCE),)
 # Change the below to net7.0 once we have reference assemblies from net7.0 (i.e. once net7.0 goes stable).
-DOTNET_TFM_REFERENCE_iOS=net6.0
-DOTNET_TFM_REFERENCE_tvOS=net6.0
-DOTNET_TFM_REFERENCE_macOS=net6.0
-DOTNET_TFM_REFERENCE_MacCatalyst=net6.0
+DOTNET_TFM_REFERENCE=net6.0
+endif
 
 # I18N are excluded - but otherwise if should be like ../../builds/Makefile + what XI adds
 # in the order to the api-diff.html merged file
@@ -130,9 +129,9 @@ $(APIDIFF_DIR)/temp/dotnet/%.xml: $(DOTNET_DESTDIR)/%.dll $(MONO_API_INFO)
 # dependencies changed)
 
 define DotNetComputeDiff
-$(OUTPUT_DIR)/diff/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1)%html $(OUTPUT_DIR)/diff/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1)%md: $(APIDIFF_DIR)/temp/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1)%xml $(APIDIFF_DIR)/references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM_REFERENCE_$(1))/Microsoft.$(1).xml $(MONO_API_HTML)
+$(OUTPUT_DIR)/diff/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1)%html $(OUTPUT_DIR)/diff/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1)%md: $(APIDIFF_DIR)/temp/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1)%xml $(APIDIFF_DIR)/references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM_REFERENCE)/Microsoft.$(1).xml $(MONO_API_HTML)
 	$$(Q) mkdir -p $$(dir $$@)
-	$$(QF_GEN) $(MONO_API_HTML_EXEC) $(NEW_REGEX) $(ADD_REGEX) $$(abspath $(APIDIFF_DIR)/references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM_REFERENCE_$(1))/Microsoft.$(1).xml) $$(abspath $(APIDIFF_DIR)/temp/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).xml) $(APIDIFF_IGNORE) --html "$$(abspath $$(basename $$@).html)" --markdown "$$(abspath $$(basename $$@).md)"
+	$$(QF_GEN) $(MONO_API_HTML_EXEC) $(NEW_REGEX) $(ADD_REGEX) $$(abspath $(APIDIFF_DIR)/references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM_REFERENCE)/Microsoft.$(1).xml) $$(abspath $(APIDIFF_DIR)/temp/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).xml) $(APIDIFF_IGNORE) --html "$$(abspath $$(basename $$@).html)" --markdown "$$(abspath $$(basename $$@).md)"
 	$$(Q) touch $$@
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DotNetComputeDiff,$(platform))))
@@ -238,7 +237,15 @@ define ApiDiffReportHtml
 endef
 
 $(OUTPUT_DIR)/api-diff.html: $(API_DIFF_DEPENDENCIES)
-	$(QF_GEN) echo "<h1>API diffs</h1>" > $@
+	$(Q) rm -f $@
+	$(QF_GEN) echo "<!DOCTYPE html>" >> $@
+	$(QF_GEN) echo "<html>" >> $@
+	$(QF_GEN) echo "<head>" >> $@
+	$(QF_GEN) echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>' >> $@
+	$(QF_GEN) echo "<title>API diffs</title>" >> $@
+	$(QF_GEN) echo "</head>" >> $@
+	$(QF_GEN) echo "<body>" >> $@
+	$(QF_GEN) echo "<h1>API diffs</h1>" >> $@
 
 ifdef INCLUDE_XAMARIN_LEGACY
 	$(Q) if $(foreach html,$(wildcard $(OUTPUT_DIR)/*-api-diff.html),! test -s "$(html)" &&) true; then \
@@ -300,6 +307,8 @@ endif
 	$(Q) echo "</ul>" >> $@
 endif # INCLUDE_XAMARIN_VS_DOTNET
 endif # INCLUDE_XAMARIN_LEGACY
+	$(QF_GEN) echo "</body>" >> $@
+	$(QF_GEN) echo "</html>" >> $@
 
 endif # DOTNET
 	$(Q) if grep "$(HTML_BREAKING_CHANGES_MESSAGE)" $@ >/dev/null 2>&1; then \
@@ -413,7 +422,7 @@ APIDIFF_UNIQUE_HASHES=$(foreach url,$(APIDIFF_UNIQUE_URLS),$(word 5,$(subst /, ,
 
 AUTH_TOKEN_GITHUB_COM_FILE=$(HOME)/.config/AUTH_TOKEN_GITHUB_COM
 ifeq ($(AUTH_TOKEN_GITHUB_COM),)
-ifeq ($(AUTH_TOKEN_GITHUB_COM_FILE),$(shell ls -1 $(AUTH_TOKEN_GITHUB_COM_FILE 2>/dev/null)))
+ifeq ($(AUTH_TOKEN_GITHUB_COM_FILE),$(shell ls -1 $(AUTH_TOKEN_GITHUB_COM_FILE) 2>/dev/null))
 AUTH_TOKEN_GITHUB_COM:=$(shell cat $(AUTH_TOKEN_GITHUB_COM_FILE))
 endif
 endif
@@ -510,7 +519,7 @@ $(APIDIFF_DIR)/updated-references/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURREN
 	$(QF_GEN) $(MONO_API_INFO_EXEC) -d $(dir $<) $(abspath $<) -o $(abspath $(APIDIFF_DIR)/references/xm/$*.xml)
 
 define DotNetGenerateReferenceXml
-$(APIDIFF_DIR)/references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM_REFERENCE_$(1))/Microsoft.$(1).xml: $(UNZIP_DIR_DOTNET_$(1))/Microsoft.$(1).Ref/ref/$(DOTNET_TFM_REFERENCE_$(1))/Microsoft.$(1).dll  $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM_REFERENCE)/Microsoft.$(1).xml: $(UNZIP_DIR_DOTNET_$(1))/Microsoft.$(1).Ref/ref/$(DOTNET_TFM_REFERENCE)/Microsoft.$(1).dll  $(MONO_API_INFO)
 	$$(Q) mkdir -p $$(dir $$@)
 	$$(QF_GEN) $(MONO_API_INFO_EXEC) $$(abspath $$<) -o $$(abspath $$@)
 endef

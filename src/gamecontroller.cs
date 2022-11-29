@@ -2417,9 +2417,13 @@ namespace GameController {
 	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
 	[Protocol]
 	interface GCDevicePhysicalInput : GCDevicePhysicalInputState {
+#if !XAMCORE_5_0
+#pragma warning disable 0108 // warning CS0108: 'GCDevicePhysicalInput.Device' hides inherited member 'GCDevicePhysicalInputState.Device'. Use the new keyword if hiding was intended.
 		[Abstract]
 		[NullAllowed, Export ("device", ArgumentSemantic.Weak)]
 		IGCDevice Device { get; }
+#pragma warning restore
+#endif
 
 		[Abstract]
 		[NullAllowed, Export ("elementValueDidChangeHandler", ArgumentSemantic.Copy)]

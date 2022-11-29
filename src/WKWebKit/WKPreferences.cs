@@ -18,18 +18,18 @@ namespace WebKit {
 		[SupportedOSPlatform ("maccatalyst14.5")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[Mac (11,3)]
-		[iOS (14,5)]
-		[MacCatalyst (14,5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 #endif
-		public bool TextInteractionEnabled { 
+		public bool TextInteractionEnabled {
 			get {
-#if IOS || __MACCATALYST__ 
+#if IOS || __MACCATALYST__
 				if (SystemVersion.CheckiOS (15, 0))
 #elif MONOMAC
 				if (SystemVersion.CheckmacOS (12, 0))
 #endif
-					return _NewGetTextInteractionEnabled ();
+				return _NewGetTextInteractionEnabled ();
 				else
 					return _OldTextInteractionEnabled;
 			}

@@ -8,8 +8,8 @@ namespace Metal {
 
 	public partial class MTLResourceStatePassSampleBufferAttachmentDescriptorArray {
 
-		public MTLResourceStatePassSampleBufferAttachmentDescriptor this[nuint i] {
- 			get => GetObject (i);
+		public MTLResourceStatePassSampleBufferAttachmentDescriptor this [nuint i] {
+			get => GetObject (i);
 			set => SetObject (value, i);
 		}
 	}

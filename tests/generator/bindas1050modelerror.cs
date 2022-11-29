@@ -13,6 +13,6 @@ namespace BindAs1050ModelErrorTests {
 		[return: BindAs (typeof (CAScroll? []))]
 		[Export ("getScrollArrayEnum2:")]
 		NSNumber [] GetScrollArrayFooEnumArray2 ([BindAs (typeof (CAScroll []))] NSNumber [] arg1);
-		
+
 	}
 }

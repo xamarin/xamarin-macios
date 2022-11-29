@@ -11,11 +11,11 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.GLKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class EffectPropertyLightTest {
-		
+
 		[Test]
 		public void Properties ()
 		{

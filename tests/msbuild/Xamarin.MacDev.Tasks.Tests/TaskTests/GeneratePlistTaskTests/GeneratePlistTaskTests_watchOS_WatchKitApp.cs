@@ -1,11 +1,8 @@
 using NUnit.Framework;
 
-namespace Xamarin.MacDev.Tasks
-{
-	[TestFixture (true)]
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture (false)]
-	public class GeneratePlistTaskTests_watchOS_WatchKitApp : GeneratePlistTaskTests_watchOS
-	{
+	public class GeneratePlistTaskTests_watchOS_WatchKitApp : GeneratePlistTaskTests_watchOS {
 		public GeneratePlistTaskTests_watchOS_WatchKitApp (bool isDotNet)
 			: base (isDotNet)
 		{

@@ -9,17 +9,15 @@ using Xamarin.MacDev;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
-	public class TargetTests : TestBase
-	{
+	public class TargetTests : TestBase {
 		public TargetTests ()
 			: base ("iPhoneSimulator")
 		{
 		}
 
-		string[] ExpectedExecutableBundleResources {
+		string [] ExpectedExecutableBundleResources {
 			get {
 				var files = new [] {
 					Path.Combine ("Folder", "BundleResource.txt"),
@@ -50,7 +48,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 		}
 
-		string[] ExpectedLibraryBundleResources {
+		string [] ExpectedLibraryBundleResources {
 			get {
 				var files = new [] {
 					Path.Combine ("LibrarySecondStoryboard.storyboardc", "43-view-49.nib"),
@@ -69,7 +67,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 		}
 
-		string[] ExpectedExecutableFiles {
+		string [] ExpectedExecutableFiles {
 			get {
 				var files = new [] {
 					"MonoTouchDebugConfiguration.txt",
@@ -101,8 +99,8 @@ namespace Xamarin.MacDev.Tasks
 				return expected.ToArray ();
 			}
 		}
-		
-		static string[] ExpectedLibraryEmbeddedResources {
+
+		static string [] ExpectedLibraryEmbeddedResources {
 			get {
 				return new [] {
 					"MyLibrary.MyLibraryFolder.LibraryLinkedEmbeddedResource.txt",
@@ -149,7 +147,7 @@ namespace Xamarin.MacDev.Tasks
 
 			RunTarget (MonoTouchProject, TargetName.ResolveReferences);
 			var references = MonoTouchProjectInstance.GetItems ("ReferencePath").ToArray ();
-			var expected_references = new string[] {
+			var expected_references = new string [] {
 				"MyLibrary.dll",
 				"System.dll",
 				"System.Xml.dll",
@@ -172,7 +170,7 @@ namespace Xamarin.MacDev.Tasks
 
 			RunTarget (LibraryProject, TargetName.ResolveReferences);
 			var references = LibraryProjectInstance.GetItems ("ReferencePath").ToArray ();
-			var expected_references = new string[] {
+			var expected_references = new string [] {
 				"System.dll",
 				"System.Xml.dll",
 				"System.Core.dll",
@@ -208,13 +206,13 @@ namespace Xamarin.MacDev.Tasks
 
 			// Verify that we have not bundled BundleResource or Content items as embedded resources
 			var assemblyDef = AssemblyDefinition.ReadAssembly (Path.Combine (AppBundlePath, "MySingleView.exe"));
-			Assert.AreEqual (2, assemblyDef.MainModule.Resources.OfType <EmbeddedResource> ().Count (), "#3");
-			
+			Assert.AreEqual (2, assemblyDef.MainModule.Resources.OfType<EmbeddedResource> ().Count (), "#3");
+
 			var plist = PDictionary.FromFile (Path.Combine (AppBundlePath, "Info.plist"));
 			Assert.IsTrue (plist.ContainsKey ("CFBundleExecutable"));
 			Assert.IsTrue (plist.ContainsKey ("CFBundleVersion"));
-			Assert.IsNotEmpty (((PString)plist["CFBundleExecutable"]).Value);
-			Assert.IsNotEmpty (((PString)plist["CFBundleVersion"]).Value);
+			Assert.IsNotEmpty (((PString) plist ["CFBundleExecutable"]).Value);
+			Assert.IsNotEmpty (((PString) plist ["CFBundleVersion"]).Value);
 		}
 
 		[Test]
@@ -403,10 +401,10 @@ namespace Xamarin.MacDev.Tasks
 			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
 
 			var libraryPath = Path.Combine (LibraryProjectBinPath, "MyLibrary.dll");
-			
+
 			RunTarget (LibraryProject, TargetName.Build);
 			var timestamp = GetLastModified (libraryPath);
-			
+
 			Touch (Path.Combine (LibraryProjectPath, "LibraryStoryboard.storyboard"));
 			RunTarget (LibraryProject, TargetName.Build);
 			Assert.AreNotEqual (timestamp, GetLastModified (libraryPath));
@@ -428,30 +426,30 @@ namespace Xamarin.MacDev.Tasks
 			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
 
 			LibraryProjectInstance.RemoveItems ("InterfaceDefinition");
-			
+
 			BuildLibraryCore (ExpectedLibraryEmbeddedResources.Where (s => !s.Contains ("storyboardc")).ToArray ());
 		}
 
-		void BuildLibraryCore (string[] expectedResources)
+		void BuildLibraryCore (string [] expectedResources)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
 			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
 
 			var library = Path.Combine (LibraryProjectBinPath, "MyLibrary.dll");
 			RunTarget (LibraryProject, TargetName.Build);
-			
+
 			Assert.IsTrue (string.IsNullOrEmpty (LibraryProjectInstance.GetPropertyValue ("AppBundleDir")), "#1");
 			var entries = Directory.GetFileSystemEntries (LibraryProjectBinPath);
 			Assert.AreEqual (2, entries.Length, "#1");
 			Assert.IsTrue (File.Exists (library), "#2");
 			Assert.IsTrue (File.Exists (Path.ChangeExtension (library, ".pdb")), "#3");
-			
+
 			var assemblyDef = AssemblyDefinition.ReadAssembly (library);
 			var actualResources = assemblyDef.MainModule.Resources.Select (n => n.Name).ToList ();
-			
+
 			foreach (var resource in expectedResources)
 				Assert.IsTrue (actualResources.Contains (resource), "#1. " + resource);
-			Assert.AreEqual (expectedResources.Length, assemblyDef.MainModule.Resources.OfType <EmbeddedResource> ().Count (), "#2");
+			Assert.AreEqual (expectedResources.Length, assemblyDef.MainModule.Resources.OfType<EmbeddedResource> ().Count (), "#2");
 		}
 
 		[Test]
@@ -481,8 +479,8 @@ namespace Xamarin.MacDev.Tasks
 			RunTarget (MonoTouchProject, TargetName.PackLibraryResources);
 			var embeddedResources = MonoTouchProjectInstance.GetItems ("EmbeddedResource").ToArray ();
 			Assert.AreEqual (2, embeddedResources.Length, "#1");
-			Assert.IsTrue (embeddedResources.Any (i => i.EvaluatedInclude == "LinkedEmbeddedResource.txt"), "#1"); 
-			Assert.IsTrue (embeddedResources.Any (i => i.EvaluatedInclude == Path.Combine ("Folder", "EmbeddedResource.txt")), "#2"); 
+			Assert.IsTrue (embeddedResources.Any (i => i.EvaluatedInclude == "LinkedEmbeddedResource.txt"), "#1");
+			Assert.IsTrue (embeddedResources.Any (i => i.EvaluatedInclude == Path.Combine ("Folder", "EmbeddedResource.txt")), "#2");
 		}
 
 		[Test]
@@ -566,7 +564,7 @@ namespace Xamarin.MacDev.Tasks
 		}
 
 		[Test (Description = "Xambug #39137")]
-		public void AddAppIcon_NoClean()
+		public void AddAppIcon_NoClean ()
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
 			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
@@ -577,7 +575,7 @@ namespace Xamarin.MacDev.Tasks
 			var plistCopy = PDictionary.FromFile (path);
 
 			// Start without app icon.
-			plist.Remove("XSAppIconAssets");
+			plist.Remove ("XSAppIconAssets");
 			plist.SetMinimumOSVersion ("7.0");
 			plist.Save (path, true);
 

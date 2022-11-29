@@ -11,7 +11,7 @@ namespace UIKit {
 	public
 #endif
 	partial class UIDevice {
-		
+
 		public bool CheckSystemVersion (int major, int minor)
 		{
 #if WATCH

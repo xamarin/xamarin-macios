@@ -13,10 +13,10 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
-using nw_connection_t=System.IntPtr;
-using nw_endpoint_t=System.IntPtr;
-using nw_parameters_t=System.IntPtr;
-using nw_establishment_report_t=System.IntPtr;
+using nw_connection_t = System.IntPtr;
+using nw_endpoint_t = System.IntPtr;
+using nw_parameters_t = System.IntPtr;
+using nw_establishment_report_t = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -51,17 +51,17 @@ namespace Network {
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
-	[Watch (6,0)]
+	[TV (12, 0)]
+	[Mac (10, 14)]
+	[iOS (12, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWConnection : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
 		internal NWConnection (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		public NWConnection (NativeHandle handle, bool owns) : base (handle, owns) {}
+		public NWConnection (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -106,7 +106,7 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (StateChangeCallback))]
 		static void Trampoline_StateChangeCallback (IntPtr block, NWConnectionState state, IntPtr error)
 		{
-			var del = BlockLiteral.GetTarget<Action<NWConnectionState,NWError?>> (block);
+			var del = BlockLiteral.GetTarget<Action<NWConnectionState, NWError?>> (block);
 			if (del is not null) {
 				NWError? err = error != IntPtr.Zero ? new NWError (error, owns: false) : null;
 				del (state, err);
@@ -114,10 +114,10 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_connection_set_state_changed_handler (nw_connection_t connection, void *handler);
+		unsafe static extern void nw_connection_set_state_changed_handler (nw_connection_t connection, void* handler);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public unsafe void SetStateChangeHandler (Action<NWConnectionState,NWError?> stateHandler)
+		public unsafe void SetStateChangeHandler (Action<NWConnectionState, NWError?> stateHandler)
 		{
 			if (stateHandler is null) {
 				nw_connection_set_state_changed_handler (GetCheckedHandle (), null);
@@ -126,7 +126,7 @@ namespace Network {
 
 			unsafe {
 				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
+				BlockLiteral* block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_stateChangeHandler, stateHandler);
 
 				try {
@@ -137,7 +137,7 @@ namespace Network {
 			}
 		}
 
-		delegate void nw_connection_boolean_event_handler_t (IntPtr block, [MarshalAs(UnmanagedType.U1)] bool value);
+		delegate void nw_connection_boolean_event_handler_t (IntPtr block, [MarshalAs (UnmanagedType.U1)] bool value);
 		static nw_connection_boolean_event_handler_t static_BooleanChangeHandler = TrampolineBooleanChangeHandler;
 
 		[MonoPInvokeCallback (typeof (nw_connection_boolean_event_handler_t))]
@@ -145,11 +145,11 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<Action<bool>> (block);
 			if (del is not null)
-			        del (value);
+				del (value);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_connection_set_viability_changed_handler  (IntPtr handle, void *callback);
+		static extern unsafe void nw_connection_set_viability_changed_handler (IntPtr handle, void* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe void SetBooleanChangeHandler (Action<bool> callback)
@@ -161,7 +161,7 @@ namespace Network {
 
 			unsafe {
 				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
+				BlockLiteral* block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_BooleanChangeHandler, callback);
 
 				try {
@@ -173,7 +173,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_connection_set_better_path_available_handler (IntPtr handle, void *callback);
+		static extern unsafe void nw_connection_set_better_path_available_handler (IntPtr handle, void* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe void SetBetterPathAvailableHandler (Action<bool> callback)
@@ -185,7 +185,7 @@ namespace Network {
 
 			unsafe {
 				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
+				BlockLiteral* block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_BooleanChangeHandler, callback);
 
 				try {
@@ -285,10 +285,10 @@ namespace Network {
 				}
 
 				del (bufferAddress,
-				     bufferSize,
-				     contentContext == IntPtr.Zero ? null : new NWContentContext (contentContext, owns: false),
-				     isComplete,
-				     error == IntPtr.Zero ? null : new NWError (error, owns: false));
+					 bufferSize,
+					 contentContext == IntPtr.Zero ? null : new NWContentContext (contentContext, owns: false),
+					 isComplete,
+					 error == IntPtr.Zero ? null : new NWError (error, owns: false));
 
 				if (dispatchData is not null) {
 					dataCopy?.Dispose ();
@@ -309,9 +309,9 @@ namespace Network {
 					dispatchData = new DispatchData (dispatchDataPtr, owns: false);
 
 				del (dispatchData,
-				     contentContext == IntPtr.Zero ? null : new NWContentContext (contentContext, owns: false),
-				     isComplete,
-				     error == IntPtr.Zero ? null : new NWError (error, owns: false));
+					 contentContext == IntPtr.Zero ? null : new NWContentContext (contentContext, owns: false),
+					 isComplete,
+					 error == IntPtr.Zero ? null : new NWError (error, owns: false));
 
 				if (dispatchData is not null)
 					dispatchData.Dispose ();
@@ -325,7 +325,7 @@ namespace Network {
 			if (del is not null) {
 				var dispatchData = (dispatchDataPtr != IntPtr.Zero) ? new DispatchData (dispatchDataPtr, owns: false) : null;
 
-				var spanData = new ReadOnlySpan<byte> (dispatchData?.ToArray () ?? Array.Empty<byte>());
+				var spanData = new ReadOnlySpan<byte> (dispatchData?.ToArray () ?? Array.Empty<byte> ());
 				del (spanData,
 					contentContext == IntPtr.Zero ? null : new NWContentContext (contentContext, owns: false),
 					isComplete,
@@ -454,23 +454,23 @@ namespace Network {
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_connection_send (IntPtr handle,
-							      IntPtr dispatchData,
-							      IntPtr contentContext,
-							      [MarshalAs(UnmanagedType.U1)] bool isComplete,
-							      void *callback);
+								  IntPtr dispatchData,
+								  IntPtr contentContext,
+								  [MarshalAs (UnmanagedType.U1)] bool isComplete,
+								  void* callback);
 
 		//
 		// This has more uses than the current ones, we might want to introduce
 		// additional SendXxx methods to encode the few options that are currently
 		// configured via one of the three NWContentContext static properties
 		//
-		unsafe void LowLevelSend (IntPtr handle, DispatchData? buffer, IntPtr contentContext, bool isComplete, void *callback)
+		unsafe void LowLevelSend (IntPtr handle, DispatchData? buffer, IntPtr contentContext, bool isComplete, void* callback)
 		{
 			nw_connection_send (handle: GetCheckedHandle (),
-					    dispatchData: buffer.GetHandle (),
-					    contentContext: contentContext,
-					    isComplete: isComplete,
-					    callback: callback);
+						dispatchData: buffer.GetHandle (),
+						contentContext: contentContext,
+						isComplete: isComplete,
+						callback: callback);
 		}
 
 		public void Send (byte [] buffer, NWContentContext context, bool isComplete, Action<NWError?> callback)
@@ -501,7 +501,7 @@ namespace Network {
 
 			unsafe {
 				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
+				BlockLiteral* block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_SendCompletion, callback);
 
 				try {
@@ -517,7 +517,7 @@ namespace Network {
 			if (context is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 
-			LowLevelSend (GetCheckedHandle (), buffer, context.Handle, isComplete, (void *) NWConnectionConstants._SendIdempotentContent);
+			LowLevelSend (GetCheckedHandle (), buffer, context.Handle, isComplete, (void*) NWConnectionConstants._SendIdempotentContent);
 		}
 
 		public void SendIdempotent (byte [] buffer, NWContentContext context, bool isComplete)
@@ -579,7 +579,7 @@ namespace Network {
 
 		public void Batch (Action method)
 		{
-			BlockLiteral.SimpleCall (method, (arg)=> nw_connection_batch (GetCheckedHandle (), arg));
+			BlockLiteral.SimpleCall (method, (arg) => nw_connection_batch (GetCheckedHandle (), arg));
 		}
 
 #if NET
@@ -588,14 +588,14 @@ namespace Network {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_connection_access_establishment_report (IntPtr connection, IntPtr queue, ref BlockLiteral access_block);
 
-		delegate void nw_establishment_report_access_block_t (IntPtr block, nw_establishment_report_t report); 
+		delegate void nw_establishment_report_access_block_t (IntPtr block, nw_establishment_report_t report);
 		static nw_establishment_report_access_block_t static_GetEstablishmentReportHandler = TrampolineGetEstablishmentReportHandler;
 
 		[MonoPInvokeCallback (typeof (nw_establishment_report_access_block_t))]
@@ -615,9 +615,9 @@ namespace Network {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void GetEstablishmentReport (DispatchQueue queue, Action<NWEstablishmentReport> handler)

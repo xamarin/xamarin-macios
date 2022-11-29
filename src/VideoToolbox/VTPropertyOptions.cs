@@ -21,7 +21,7 @@ using CoreVideo;
 namespace VideoToolbox {
 
 	public partial class VTPropertyOptions {
-		public VTPropertyType Type { 
+		public VTPropertyType Type {
 			get {
 				var key = GetNSStringValue (VTPropertyKeys.Type);
 
@@ -53,7 +53,7 @@ namespace VideoToolbox {
 			}
 		}
 
-		public VTReadWriteStatus ReadWriteStatus { 
+		public VTReadWriteStatus ReadWriteStatus {
 			get {
 				var key = GetNSStringValue (VTPropertyKeys.ReadWriteStatus);
 

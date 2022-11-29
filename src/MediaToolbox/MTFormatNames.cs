@@ -24,8 +24,8 @@ namespace MediaToolbox {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
-		[Mac (10,11)]
+		[iOS (9, 0)]
+		[Mac (10, 11)]
 #endif
 		[DllImport (Constants.MediaToolboxLibrary)]
 		static extern /* CFStringRef CM_NULLABLE */ IntPtr MTCopyLocalizedNameForMediaType (
@@ -37,8 +37,8 @@ namespace MediaToolbox {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
-		[Mac (10,11)]
+		[iOS (9, 0)]
+		[Mac (10, 11)]
 #endif
 		static public string? GetLocalizedName (this CMMediaType mediaType)
 		{
@@ -51,8 +51,8 @@ namespace MediaToolbox {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
-		[Mac (10,11)]
+		[iOS (9, 0)]
+		[Mac (10, 11)]
 #endif
 		[DllImport (Constants.MediaToolboxLibrary)]
 		static extern /* CFStringRef CM_NULLABLE */ IntPtr MTCopyLocalizedNameForMediaSubType (
@@ -64,8 +64,8 @@ namespace MediaToolbox {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
-		[Mac (10,11)]
+		[iOS (9, 0)]
+		[Mac (10, 11)]
 #endif
 		static public string? GetLocalizedName (this CMMediaType mediaType, uint mediaSubType)
 		{
