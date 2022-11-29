@@ -1215,6 +1215,7 @@ partial class TestRuntime {
 #if __MACCATALYST__
 		NUnit.Framework.Assert.Ignore ("CheckAddressBookPermission -> Ignore in MacCat, it hangs since our TCC hack does not work on BS.");
 #endif
+#pragma warning disable CA1422 // warning CA1422: This call site is reachable on: 'MacCatalyst' 13.3 and later. 'ABAuthorizationStatus.*' is obsoleted on: 'maccatalyst' 9.0 and later (Use the 'Contacts' API instead.).
 		switch (ABAddressBook.GetAuthorizationStatus ()) {
 		case ABAuthorizationStatus.NotDetermined:
 			if (IgnoreTestThatRequiresSystemPermissions ())
@@ -1229,6 +1230,7 @@ partial class TestRuntime {
 			break;
 		}
 	}
+#pragma warning restore CA1422
 #endif // !MONOMAC && !__TVOS__ && !__WATCHOS__
 
 #if !__WATCHOS__
