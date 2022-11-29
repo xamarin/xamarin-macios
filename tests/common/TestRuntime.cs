@@ -13,6 +13,7 @@ using System.Reflection.Emit;
 
 using AVFoundation;
 using CoreBluetooth;
+using CoreFoundation;
 using Foundation;
 #if !__TVOS__
 using Contacts;
@@ -74,7 +75,7 @@ partial class TestRuntime {
 #elif MONOMAC
 		throw new Exception ("Can't get iOS Build version on OSX.");
 #else
-		return NSString.FromHandle (IntPtr_objc_msgSend (UIDevice.CurrentDevice.Handle, Selector.GetHandle ("buildVersion")));
+		return CFString.FromHandle (IntPtr_objc_msgSend (UIDevice.CurrentDevice.Handle, Selector.GetHandle ("buildVersion")));
 #endif
 	}
 
