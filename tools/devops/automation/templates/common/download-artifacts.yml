@@ -11,8 +11,8 @@ parameters:
 
 steps:
 
-- bash: |
-    sudo rm -Rf $(Build.DefaultWorkingDirectory)/Reports
+- pwsh: |
+    Remove-Item -Path "$(Build.DefaultWorkingDirectory)/Reports" -Force -Recurse
   displayName: "Remove artifacts"
   condition: always()
 

@@ -37,8 +37,8 @@ steps:
     gci env: | format-table -autosize -wrap
   displayName: 'Show Environment'
 
-- bash: |
-    sudo rm -Rf $(Build.DefaultWorkingDirectory)/Artifacts
+- pwsh: |
+    Remove-Item -Path "$(Build.DefaultWorkingDirectory)/Artifacts" -Force -Recurse
   displayName: "Remove artifacts"
   condition: always()
 

@@ -37,8 +37,8 @@ steps:
 - checkout: yaml-templates
   clean: true
 
-- bash: |
-    sudo rm -Rf $(Build.SourcesDirectory)/artifacts
+- pwsh: |
+    Remove-Item -Path "$(Build.SourcesDirectory)/artifacts" -Force -Recurse
   displayName: "Remove artifacts"
   condition: always()
 
