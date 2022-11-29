@@ -89,6 +89,7 @@ steps:
     prSourceBranchPrefix: 'locfiles'
     repoType: gitHub
     gitHubPatVariable: '$(GitHub.Token)'
+    isDeletePrSourceBranchSelected: false
 
 - task: PublishBuildArtifacts@1
   continueOnError: true
