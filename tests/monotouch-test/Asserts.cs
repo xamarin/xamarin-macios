@@ -1019,4 +1019,25 @@ public static class Asserts {
 		}
 		Assert.Fail ($"{message}\nExpected: {e_sb}\nActual:   {a_sb}\n          {d_sb}");
 	}
+
+	public static void AreEqual (DateTime expected, DateTime actual, string message)
+	{
+		if (expected == actual)
+			return;
+
+		var diff = expected - actual;
+		Assert.Fail ($"{message}\n\tExpected DateTime: {expected} (Ticks: {expected.Ticks})\n\tActual DateTime: {actual} (Ticks: {actual.Ticks})\n\tDifference is: {diff} = {diff.TotalMilliseconds} ms = {diff.TotalSeconds} s");
+	}
+
+	public static void AreEqual (DateTime expected, DateTime actual, TimeSpan tolerance, string message)
+	{
+		if (expected == actual)
+			return;
+
+		var diff = expected - actual;
+		if (Math.Abs (diff.Ticks) < tolerance.Ticks)
+			return;
+
+		Assert.Fail ($"{message}\n\tExpected DateTime: {expected} (Ticks: {expected.Ticks})\n\tActual DateTime: {actual} (Ticks: {actual.Ticks})\n\tDifference is: {diff} = {diff.TotalMilliseconds} ms = {diff.TotalSeconds} s\n\tTolerance is: {tolerance} = {tolerance.TotalMilliseconds} ms = {tolerance.TotalSeconds} s");
+	}
 }

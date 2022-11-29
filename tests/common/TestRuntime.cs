@@ -13,6 +13,7 @@ using System.Reflection.Emit;
 
 using AVFoundation;
 using CoreBluetooth;
+using CoreFoundation;
 using Foundation;
 #if !__TVOS__
 using Contacts;
@@ -74,7 +75,7 @@ partial class TestRuntime {
 #elif MONOMAC
 		throw new Exception ("Can't get iOS Build version on OSX.");
 #else
-		return NSString.FromHandle (IntPtr_objc_msgSend (UIDevice.CurrentDevice.Handle, Selector.GetHandle ("buildVersion")));
+		return CFString.FromHandle (IntPtr_objc_msgSend (UIDevice.CurrentDevice.Handle, Selector.GetHandle ("buildVersion")));
 #endif
 	}
 
@@ -1215,6 +1216,7 @@ partial class TestRuntime {
 #if __MACCATALYST__
 		NUnit.Framework.Assert.Ignore ("CheckAddressBookPermission -> Ignore in MacCat, it hangs since our TCC hack does not work on BS.");
 #endif
+#pragma warning disable CA1422 // warning CA1422: This call site is reachable on: 'MacCatalyst' 13.3 and later. 'ABAuthorizationStatus.*' is obsoleted on: 'maccatalyst' 9.0 and later (Use the 'Contacts' API instead.).
 		switch (ABAddressBook.GetAuthorizationStatus ()) {
 		case ABAuthorizationStatus.NotDetermined:
 			if (IgnoreTestThatRequiresSystemPermissions ())
@@ -1229,6 +1231,7 @@ partial class TestRuntime {
 			break;
 		}
 	}
+#pragma warning restore CA1422
 #endif // !MONOMAC && !__TVOS__ && !__WATCHOS__
 
 #if !__WATCHOS__
@@ -1315,9 +1318,9 @@ partial class TestRuntime {
 #else
 			if (TestRuntime.CheckMacSystemVersion (10, 10))
 				return; // Crossing fingers that this won't hang.
-#endif
 			NUnit.Framework.Assert.Ignore ("This test requires permission to access events, but there's no API to request access without potentially showing dialogs.");
 			break;
+#endif
 		case EKAuthorizationStatus.Denied:
 			if (assert_granted)
 				NUnit.Framework.Assert.Ignore ("This test requires permission to access events.");

@@ -31,12 +31,48 @@ using System;
 using CoreFoundation;
 using CoreText;
 using ObjCRuntime;
+#if MONOMAC || __MACCATALYST__
+using AppKit;
+#endif
 #if !MONOMAC
 using UIKit;
 #endif
 
 namespace Foundation {
 	public partial class NSAttributedString {
+
+#if __MACOS__ || XAMCORE_5_0
+		public NSAttributedString (NSUrl url, NSAttributedStringDocumentAttributes documentAttributes, out NSError error)
+		: this (url, documentAttributes, out var _, out error) {}
+
+		public NSAttributedString (NSData data, NSAttributedStringDocumentAttributes documentAttributes, out NSError error)
+		: this (data, documentAttributes, out var _, out error) {}
+
+		public NSAttributedString (NSUrl url, out NSError error)
+		: this (url, new NSDictionary (), out var _, out error) {}
+
+		public NSAttributedString (NSData data, out NSError error)
+		: this (data, new NSDictionary (), out var _, out error) {}
+#else
+		public NSAttributedString (NSUrl url, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error)
+		: this (url, documentAttributes, out var _, ref error) { }
+
+		public NSAttributedString (NSData data, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error)
+		: this (data, documentAttributes, out var _, ref error) { }
+
+		public NSAttributedString (NSUrl url, ref NSError error)
+		: this (url, new NSDictionary (), out var _, ref error) { }
+
+		public NSAttributedString (NSData data, ref NSError error)
+		: this (data, new NSDictionary (), out var _, ref error) { }
+#endif
+
+#if __MACOS__
+		public NSAttributedString (string str, NSStringAttributes? attributes)
+			: this (str, attributes?.Dictionary)
+		{
+		}
+#endif // __MACOS__
 
 		public string? Value {
 			get {

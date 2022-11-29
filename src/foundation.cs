@@ -131,6 +131,8 @@ using NSImage = Foundation.NSObject;
 #if IOS || WATCH || TVOS
 using NSNotificationSuspensionBehavior = Foundation.NSObject;
 using NSNotificationFlags = Foundation.NSObject;
+using NSTextBlock = Foundation.NSObject;
+using NSTextTable = Foundation.NSString; // Different frmo NSTextBlock, because some methods overload on these two types.
 #endif
 
 #if !NET
@@ -332,23 +334,6 @@ namespace Foundation
 		[Export ("initWithString:")]
 		NativeHandle Constructor (string str);
 
-#if !MONOMAC
-		[NoMac]
-		[iOS (7,0)]
-		[Wrap ("this (url, options.GetDictionary ()!, out resultDocumentAttributes, ref error)")]
-		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
-
-		[NoMac]
-		[iOS (7,0)]
-		[Export ("initWithData:options:documentAttributes:error:")]
-		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
-
-		[NoMac]
-		[iOS (7,0)]
-		[Wrap ("this (data, options.GetDictionary ()!, out resultDocumentAttributes, ref error)")]
-		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
-#endif
-		
 		[Export ("initWithString:attributes:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NativeHandle Constructor (string str, [NullAllowed] NSDictionary attributes);
@@ -369,10 +354,30 @@ namespace Foundation
 		NativeHandle Constructor (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
 #endif
 
-#if MONOMAC
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithData:options:documentAttributes:error:")]
-		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary options, out NSDictionary docAttributes, out NSError error);
+#if XAMCORE_5_0
+		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
+#elif __MACOS__
+		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary docAttributes, out NSError error);
+#else
+		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
+#endif
+
+#if __MACOS__ || XAMCORE_5_0
+		[Wrap ("this (url, options.GetDictionary ()!, out resultDocumentAttributes, out error)")]
+		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
+#else
+		[Wrap ("this (url, options.GetDictionary ()!, out resultDocumentAttributes, ref error)")]
+		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
+#endif
+
+#if __MACOS__ || XAMCORE_5_0
+		[Wrap ("this (data, options.GetDictionary ()!, out resultDocumentAttributes, out error)")]
+		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
+#else
+		[Wrap ("this (data, options.GetDictionary ()!, out resultDocumentAttributes, ref error)")]
+		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
+#endif
 
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithDocFormat:documentAttributes:")]
@@ -385,14 +390,6 @@ namespace Foundation
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("drawWithRect:options:")]
 		void DrawString (CGRect rect, NSStringDrawingOptions options);	
-
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Wrap ("this (url, options.GetDictionary ()!, out resultDocumentAttributes, out error)")]
-		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
-
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Wrap ("this (data, options.GetDictionary ()!, out resultDocumentAttributes, out error)")]
-		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
 
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSAttributedString (NSUrl, NSDictionary, out NSDictionary, ref NSError)' instead.")]
@@ -476,7 +473,6 @@ namespace Foundation
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("itemNumberInTextList:atIndex:")]
 		nint GetItemNumber (NSTextList textList, nuint index);
-#endif
 
 #if !(MONOMAC || XAMCORE_5_0)
 		[Sealed]
@@ -665,6 +661,65 @@ namespace Foundation
 		[Export ("attributedStringByInflectingString")]
 		NSAttributedString AttributedStringByInflectingString { get; }
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
+		[Export ("boundingRectWithSize:options:")]
+		CGRect BoundingRectWithSize (CGSize size, NSStringDrawingOptions options);
+
+#if MONOMAC
+		[Field ("NSTextLayoutSectionOrientation", "AppKit")]
+#else
+		[Field ("NSTextLayoutSectionOrientation", "UIKit")]
+#endif
+		[iOS (7,0)]
+		NSString TextLayoutSectionOrientation { get; }
+
+#if MONOMAC
+		[Field ("NSTextLayoutSectionRange", "AppKit")]
+#else
+		[Field ("NSTextLayoutSectionRange", "UIKit")]
+#endif
+		[iOS (7,0)]
+		NSString TextLayoutSectionRange { get; }
+
+#if MONOMAC
+		[Field ("NSTextLayoutSectionsAttribute", "AppKit")]
+#else
+		[Field ("NSTextLayoutSectionsAttribute", "UIKit")]
+#endif
+		[iOS (7,0)]
+		NSString TextLayoutSectionsAttribute { get; }
+
+		[NoiOS, NoWatch, NoTV]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
+		[Field ("NSUnderlineByWordMask", "AppKit")]
+		nint UnderlineByWordMaskAttributeName { get; }
+
+#if MONOMAC
+		[Field ("NSTextScalingDocumentAttribute", "AppKit")]
+#else
+		[Field ("NSTextScalingDocumentAttribute", "UIKit")]
+#endif
+		[Mac (10,15)]
+		[iOS (13,0), TV (13,0), Watch (6,0)]
+		NSString TextScalingDocumentAttribute { get; }
+
+#if MONOMAC
+		[Field ("NSSourceTextScalingDocumentAttribute", "AppKit")]
+#else
+		[Field ("NSSourceTextScalingDocumentAttribute", "UIKit")]
+#endif
+		[Mac (10,15)]
+		[iOS (13,0), TV (13,0), Watch (6,0)]
+		NSString SourceTextScalingDocumentAttribute { get; }
+
+#if MONOMAC
+		[Field ("NSCocoaVersionDocumentAttribute", "AppKit")]
+#else
+		[Field ("NSCocoaVersionDocumentAttribute", "UIKit")]
+#endif
+		[Mac (10,15)]
+		[iOS (13,0), TV (13,0), Watch (6,0)]
+		NSString CocoaVersionDocumentAttribute { get; }
 	}
 
 	// we follow the API found in swift
@@ -13980,65 +14035,6 @@ namespace Foundation
 		NSImage ImageForResource (string name);
 	}
 
-	partial interface NSAttributedString {
-
-#if MONOMAC
-		[Field ("NSTextLayoutSectionOrientation", "AppKit")]
-#else
-		[Field ("NSTextLayoutSectionOrientation", "UIKit")]
-#endif
-		[iOS (7,0)]
-		NSString TextLayoutSectionOrientation { get; }
-
-#if MONOMAC
-		[Field ("NSTextLayoutSectionRange", "AppKit")]
-#else
-		[Field ("NSTextLayoutSectionRange", "UIKit")]
-#endif
-		[iOS (7,0)]
-		NSString TextLayoutSectionRange { get; }
-
-#if MONOMAC
-		[Field ("NSTextLayoutSectionsAttribute", "AppKit")]
-#else
-		[Field ("NSTextLayoutSectionsAttribute", "UIKit")]
-#endif
-		[iOS (7,0)]
-		NSString TextLayoutSectionsAttribute { get; }
-
-		[NoiOS, NoWatch, NoTV]
-		[Deprecated (PlatformName.MacOSX, 10, 11)]
-		[Field ("NSUnderlineByWordMask", "AppKit")]
-		nint UnderlineByWordMaskAttributeName { get; }
-
-#if MONOMAC
-		[Field ("NSTextScalingDocumentAttribute", "AppKit")]
-#else
-		[Field ("NSTextScalingDocumentAttribute", "UIKit")]
-#endif
-		[Mac (10,15)]
-		[iOS (13,0), TV (13,0), Watch (6,0)]
-		NSString TextScalingDocumentAttribute { get; }
-
-#if MONOMAC
-		[Field ("NSSourceTextScalingDocumentAttribute", "AppKit")]
-#else
-		[Field ("NSSourceTextScalingDocumentAttribute", "UIKit")]
-#endif
-		[Mac (10,15)]
-		[iOS (13,0), TV (13,0), Watch (6,0)]
-		NSString SourceTextScalingDocumentAttribute { get; }
-
-#if MONOMAC
-		[Field ("NSCocoaVersionDocumentAttribute", "AppKit")]
-#else
-		[Field ("NSCocoaVersionDocumentAttribute", "UIKit")]
-#endif
-		[Mac (10,15)]
-		[iOS (13,0), TV (13,0), Watch (6,0)]
-		NSString CocoaVersionDocumentAttribute { get; }
-	}
-
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSDateInterval : NSCopying, NSSecureCoding {
@@ -14195,13 +14191,6 @@ namespace Foundation
 		[NullAllowed]
 		[Export ("primaryPresentedItemURL")]
 		NSUrl PrimaryPresentedItemUrl { get; }
-	}
-
-	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-	partial interface NSAttributedString {
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Export ("boundingRectWithSize:options:")]
-		CGRect BoundingRectWithSize (CGSize size, NSStringDrawingOptions options);
 	}
 
 	[NoiOS][NoMacCatalyst][NoWatch][NoTV]

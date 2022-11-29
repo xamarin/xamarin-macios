@@ -16,7 +16,7 @@ namespace ObjCRuntime {
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		static extern IntPtr _Block_copy (IntPtr ptr);
 
-		protected unsafe TrampolineBlockBase (BlockLiteral *block)
+		protected unsafe TrampolineBlockBase (BlockLiteral* block)
 		{
 			blockPtr = _Block_copy ((IntPtr) block);
 		}
@@ -34,7 +34,7 @@ namespace ObjCRuntime {
 		{
 			if (!BlockLiteral.IsManagedBlock (block))
 				return null;
-			return ((BlockLiteral *) block)->Target;
+			return ((BlockLiteral*) block)->Target;
 		}
 	}
 }

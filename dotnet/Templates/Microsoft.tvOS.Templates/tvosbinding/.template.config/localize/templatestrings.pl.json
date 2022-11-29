@@ -1,5 +1,5 @@
 {
   "author": "Microsoft",
   "name": "tvOS Binding Library",
-  "description": "Projekt służący do tworzenia biblioteki powiązań platformy .NET 6 dla systemu tvOS"
+  "description": "A project for creating a .NET tvOS binding library"
 }

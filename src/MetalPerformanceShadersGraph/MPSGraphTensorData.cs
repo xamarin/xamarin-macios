@@ -9,17 +9,15 @@ using ObjCRuntime;
 using Metal;
 using MetalPerformanceShaders;
 
-namespace MetalPerformanceShadersGraph
-{
-	public partial class MPSGraphTensorData
-	{
-		public static MPSGraphTensorData Create (IMTLDevice device, ReadOnlySpan<float> values, params int[] shape)
+namespace MetalPerformanceShadersGraph {
+	public partial class MPSGraphTensorData {
+		public static MPSGraphTensorData Create (IMTLDevice device, ReadOnlySpan<float> values, params int [] shape)
 		{
 			var ndarray = MPSNDArray.Create (device, values, shape);
 			return new MPSGraphTensorData (ndarray);
 		}
 
-		public static MPSGraphTensorData Create (params MPSImage[] imageBatch)
+		public static MPSGraphTensorData Create (params MPSImage [] imageBatch)
 		{
 			if (imageBatch is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBatch));
