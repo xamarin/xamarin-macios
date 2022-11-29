@@ -11,6 +11,11 @@ parameters:
 
 steps:
 
+- bash: |
+    sudo rm -Rf $(Build.DefaultWorkingDirectory)/Reports
+  displayName: "Remove artifacts"
+  condition: always()
+
 - ${{ if eq(parameters.runTests, true) }}:
   # Download the Html Report that was added by the tests job.
   - task: DownloadPipelineArtifact@2

@@ -37,6 +37,11 @@ steps:
     gci env: | format-table -autosize -wrap
   displayName: 'Show Environment'
 
+- bash: |
+    sudo rm -Rf $(Build.DefaultWorkingDirectory)/Artifacts
+  displayName: "Remove artifacts"
+  condition: always()
+
 # Download the change detection artifact
 - task: DownloadPipelineArtifact@2
   displayName: 'Download change detection artifacts'

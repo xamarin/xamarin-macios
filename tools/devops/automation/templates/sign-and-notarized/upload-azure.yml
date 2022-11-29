@@ -37,6 +37,11 @@ steps:
 - checkout: yaml-templates
   clean: true
 
+- bash: |
+    sudo rm -Rf $(Build.SourcesDirectory)/artifacts
+  displayName: "Remove artifacts"
+  condition: always()
+
 # Download the Html Report that was added by the tests job.
 - task: DownloadPipelineArtifact@2
   displayName: Download packages
