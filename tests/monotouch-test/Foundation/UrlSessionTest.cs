@@ -26,6 +26,14 @@ namespace MonoTouchFixtures.Foundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class UrlSessionTest {
+		void AssertTrueOrIgnoreInCI (bool value, string message)
+		{
+			if (value)
+				return;
+
+			TestRuntime.IgnoreInCI ($"This test times out randomly in CI due to bad network: {message}");
+			Assert.Fail (message);
+		}
 
 		//TODO: TestRuntime.RunAsync is not on mac currently
 #if !MONOMAC
@@ -47,37 +55,62 @@ namespace MonoTouchFixtures.Foundation {
 
 			var completed = false;
 			var timeout = 30;
+			Exception ex = null;
 
 			/* CreateDataTask */
 			completed = false;
-			Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
-				await session.CreateDataTaskAsync (request);
-				completed = true;
+			AssertTrueOrIgnoreInCI (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
+				try {
+					await session.CreateDataTaskAsync (request);
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					completed = true;
+				}
 			}, () => completed), "CreateDataTask a");
+			Assert.IsNull (ex, "CreateDataTask a Exception");
 
 			completed = false;
-			Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
-				await session.CreateDataTaskAsync (url);
-				completed = true;
+			AssertTrueOrIgnoreInCI (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
+				try {
+					await session.CreateDataTaskAsync (url);
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					completed = true;
+				}
 			}, () => completed), "CreateDataTask b");
+			Assert.IsNull (ex, "CreateDataTask b Exception");
 
 			/* CreateDownloadTask */
 			completed = false;
-			Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
-				await session.CreateDownloadTaskAsync (request);
-				completed = true;
+			AssertTrueOrIgnoreInCI (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
+				try {
+					await session.CreateDownloadTaskAsync (request);
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					completed = true;
+				}
 			}, () => completed), "CreateDownloadTask a");
+			Assert.IsNull (ex, "CreateDownloadTask a Exception");
 
 
 			completed = false;
-			Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
-				await session.CreateDownloadTaskAsync (url);
-				completed = true;
+			AssertTrueOrIgnoreInCI (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
+				try {
+					await session.CreateDownloadTaskAsync (url);
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					completed = true;
+				}
 			}, () => completed), "CreateDownloadTask b");
+			Assert.IsNull (ex, "CreateDownloadTask b Exception");
 
 			/* CreateUploadTask */
 			completed = false;
-			Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
+			AssertTrueOrIgnoreInCI (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
 				try {
 					var uploadRequest = new NSMutableUrlRequest (url);
 					uploadRequest.HttpMethod = "POST";
@@ -88,9 +121,10 @@ namespace MonoTouchFixtures.Foundation {
 					completed = true;
 				}
 			}, () => completed), "CreateUploadTask a");
+			Assert.IsNull (ex, "CreateUploadTask a Exception");
 
 			completed = false;
-			Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
+			AssertTrueOrIgnoreInCI (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
 				try {
 					var uploadRequest = new NSMutableUrlRequest (url);
 					uploadRequest.HttpMethod = "POST";
@@ -101,6 +135,7 @@ namespace MonoTouchFixtures.Foundation {
 					completed = true;
 				}
 			}, () => completed), "CreateUploadTask b");
+			Assert.IsNull (ex, "CreateUploadTask b Exception");
 		}
 
 		[Test]
