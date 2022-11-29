@@ -153,7 +153,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppDelegate.cs" />
+    <Compile Include="..\..\AppDelegate.cs" />
+    <Compile Include="..\..\..\common\AppDelegate.cs" />
     <Compile Include="DontLinkRegressionTests.cs" />
     <Compile Include="TableViewSourceTest.cs" />
     <Compile Include="CalendarTest.cs" />

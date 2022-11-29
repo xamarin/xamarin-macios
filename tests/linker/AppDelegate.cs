@@ -5,11 +5,13 @@ using System.Collections.Generic;
 
 using Foundation;
 
-public partial class AppDelegate {
+public partial class AppDelegate
+{
 	public partial IEnumerable<Assembly> GetTestAssemblies ()
 	{
 		return new Assembly [] {
 			Assembly.GetExecutingAssembly (),
+			typeof (BundledResources.ResourcesTest).Assembly,
 		};
 	}
 }
