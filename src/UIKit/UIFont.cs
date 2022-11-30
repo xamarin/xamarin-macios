@@ -16,7 +16,8 @@ using Foundation;
 namespace UIKit {
 
 	public static class Extensions {
-		public static nfloat GetWeight(this UIFontWeight weight) {
+		public static nfloat GetWeight (this UIFontWeight weight)
+		{
 			switch (weight) {
 			case UIFontWeight.UltraLight:
 				return UIFontWeightConstants.UltraLight;
@@ -211,7 +212,7 @@ namespace UIKit {
 #endif
 		public static UIFont SystemFontOfSize (nfloat size, UIFontWeight weight)
 		{
-			return SystemFontOfSize (size, weight.GetWeight());
+			return SystemFontOfSize (size, weight.GetWeight ());
 		}
 
 #if NET
@@ -236,7 +237,7 @@ namespace UIKit {
 #endif
 		public static UIFont MonospacedDigitSystemFontOfSize (nfloat fontSize, UIFontWeight weight)
 		{
-			return MonospacedDigitSystemFontOfSize (fontSize, weight.GetWeight());
+			return MonospacedDigitSystemFontOfSize (fontSize, weight.GetWeight ());
 		}
 
 #if NET
@@ -261,7 +262,7 @@ namespace UIKit {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 #endif
-		public static UIFont GetMonospacedSystemFont (nfloat size, UIFontWeight weight) => GetMonospacedSystemFont (size, weight.GetWeight());
+		public static UIFont GetMonospacedSystemFont (nfloat size, UIFontWeight weight) => GetMonospacedSystemFont (size, weight.GetWeight ());
 
 		// In this case we want to _always_ return a different managed instance
 		// so one can be disposed without affecting others
@@ -353,7 +354,7 @@ namespace UIKit {
 #endif
 		public static UIFont SystemFontOfSize (nfloat fontSize, UIFontWeight weight, UIFontWidth width)
 		{
-			var ptr = _SystemFontOfSize (fontSize, weight.GetWeight(), GetFontWidth (width));
+			var ptr = _SystemFontOfSize (fontSize, weight.GetWeight (), GetFontWidth (width));
 			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
 		}
 

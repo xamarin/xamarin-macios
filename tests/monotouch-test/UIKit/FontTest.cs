@@ -40,7 +40,7 @@ namespace MonoTouchFixtures.UIKit {
 		public void GetWeight ()
 		{
 			var weight = UIFontWeight.Semibold;
-			Assert.AreEqual (weight.GetWeight(), UIFontWeightConstants.Semibold);
+			Assert.AreEqual (weight.GetWeight (), UIFontWeightConstants.Semibold);
 		}
 
 		[Test]
