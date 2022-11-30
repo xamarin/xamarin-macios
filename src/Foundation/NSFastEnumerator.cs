@@ -44,7 +44,7 @@ namespace Foundation {
 				// * The next time we read these pointers, we'll read random memory, and thus get random results.
 				// * Ref: https://github.com/xamarin/maccore/issues/2606.
 				// * It would probably also work to create a pinned GCHandle to the NSFastEnumerator structure (instead of allocating native memory), but that doesn't seem easier on the GC.
-				state = (NSFastEnumerationState *) Marshal.AllocHGlobal (sizeof (NSFastEnumerationState));
+				state = (NSFastEnumerationState*) Marshal.AllocHGlobal (sizeof (NSFastEnumerationState));
 				// Zero-initialize
 				*state = default (NSFastEnumerationState);
 			}
