@@ -14859,6 +14859,10 @@ namespace Foundation
 		[Export ("launch")]
 		void Launch ();
 
+		[NoMacCatalyst]
+		[Export ("launchAndReturnError:")]
+		bool Launch ([NullAllowed] out NSError error);
+
 		[Export ("interrupt")]
 		void Interrupt ();
 
@@ -14879,12 +14883,23 @@ namespace Foundation
 		[Export ("launchedTaskWithLaunchPath:arguments:")]
 		NSTask LaunchFromPath (string path, string[] arguments);
 
+		[Static]
+		[NoMacCatalyst]
+		[Export ("launchedTaskWithExecutableURL:arguments:error:terminationHandler:")]
+		[return: NullAllowed]
+		NSTask LaunchFromUrl (NSUrl url, string[] arguments, [NullAllowed] out NSError error, [NullAllowed] Action<NSTask> terminationHandler);
+
 		//Detected properties
 		[NullAllowed]
 		[Deprecated (PlatformName.MacOSX, 10,15)]
 		[NoMacCatalyst]
 		[Export ("launchPath")]
 		string LaunchPath { get; set; }
+
+		[NullAllowed]
+		[NoMacCatalyst]
+		[Export ("executableURL")]
+		NSUrl ExecutableUrl { get; set; }
 
 		[NullAllowed]
 		[Export ("arguments")]
@@ -14900,6 +14915,11 @@ namespace Foundation
 		string CurrentDirectoryPath { get; set; }
 
 		[NullAllowed]
+		[NoMacCatalyst]
+		[Export ("currentDirectoryURL")]
+		NSUrl CurrentDirectoryUrl { get; set; }
+
+		[NullAllowed]
 		[Export ("standardInput", ArgumentSemantic.Retain)]
 		NSObject StandardInput { get; set; }
 
@@ -14911,6 +14931,9 @@ namespace Foundation
 		[Export ("standardError", ArgumentSemantic.Retain)]
 		NSObject StandardError { get; set; }
 
+		[Export ("qualityOfService")]
+		NSQualityOfService QualityOfService { get; set; }
+
 		[Export ("isRunning")]
 		bool IsRunning { get; }
 
@@ -14919,6 +14942,11 @@ namespace Foundation
 
 		[Export ("terminationStatus")]
 		int TerminationStatus { get; } /* int, not NSInteger */
+
+		[NullAllowed]
+		[NoMacCatalyst]
+		[Export ("terminationHandler")]
+		Action<NSTask> TerminationHandler { get; set; }
 
 		[NoMacCatalyst]
 		[Export ("terminationReason")]
