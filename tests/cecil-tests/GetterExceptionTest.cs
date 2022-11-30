@@ -7,11 +7,9 @@ using Mono.Cecil.Cil;
 using Xamarin.Utils;
 using Xamarin.Tests;
 
-namespace Cecil.Tests
-{
+namespace Cecil.Tests {
 	[TestFixture]
-	public class GetterExceptionTest
-	{
+	public class GetterExceptionTest {
 		Dictionary<string, AssemblyDefinition> assemblyCache = new ();
 
 		[OneTimeSetUp]
@@ -29,12 +27,12 @@ namespace Cecil.Tests
 			assemblyCache.Clear ();
 		}
 
-		bool IsMemberObsolete(ICustomAttributeProvider member)
+		bool IsMemberObsolete (ICustomAttributeProvider member)
 		{
 			if (member is null || !member.HasCustomAttributes)
 				return false;
 
-			return member.CustomAttributes.Any((m) =>
+			return member.CustomAttributes.Any ((m) =>
 					m.AttributeType.Name == "ObsoleteAttribute" ||
 					m.AttributeType.Name == "AdviceAttribute" ||
 					m.AttributeType.Name == "ObsoletedOSPlatformAttribute");
@@ -63,7 +61,7 @@ namespace Cecil.Tests
 			if (assemblyCache.TryGetValue (assemblyPath, out var cache)) {
 				foreach (TypeDefinition type in cache.MainModule.Types) {
 					foreach (PropertyDefinition property in type.Properties) {
-						if (!IsMemberObsolete(property) && VerifyIfGetterThrowsException(property.GetMethod))
+						if (!IsMemberObsolete (property) && VerifyIfGetterThrowsException (property.GetMethod))
 							propertiesWithGetterExceptions [type.Name] = property.Name;
 					}
 				}
