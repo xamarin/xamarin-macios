@@ -13,7 +13,8 @@ namespace Cecil.Tests {
 	[TestFixture]
 	public class BlittablePInvokes {
 		struct MethodBlitResult {
-			public MethodBlitResult (bool isBlittable) {
+			public MethodBlitResult (bool isBlittable)
+			{
 				IsBlittable = isBlittable;
 				Result = new StringBuilder ();
 			}
@@ -47,7 +48,7 @@ namespace Cecil.Tests {
 			var assembly = Helper.GetAssembly (assemblyPath, readSymbols: true);
 			var pinvokes = AllPInvokes (assembly).Where (IsPInvokeOK);
 			Assert.IsTrue (pinvokes.Count () > 0);
-			
+
 			var blitCache = new Dictionary<string, BlitAndReason> ();
 			var results = pinvokes.Select (pi => IsMethodBlittable (assembly, pi, blitCache)).Where (r => !r.IsBlittable);
 			if (results.Count () > 0) {
@@ -108,12 +109,11 @@ namespace Cecil.Tests {
 				return true;
 			}
 			var localResult = new StringBuilder ();
-			if (IsBlittableValueType (assembly, type, localResult, blitCache))
-			{
+			if (IsBlittableValueType (assembly, type, localResult, blitCache)) {
 				blitCache [type.Name] = new BlitAndReason (true, "");
 				return true;
 			}
-			result.Append (localResult); 
+			result.Append (localResult);
 			blitCache [type.Name] = new BlitAndReason (false, result.ToString ());
 			return false;
 		}
@@ -142,7 +142,7 @@ namespace Cecil.Tests {
 		{
 			return typesWeLike.Contains (t.ToString ());
 		}
-		
+
 		bool IsBlittablePointer (TypeReference type)
 		{
 			return type.IsPointer || type.IsFunctionPointer;
@@ -184,13 +184,13 @@ namespace Cecil.Tests {
 				if (!IsTypeBlittable (assembly, f.FieldType, localResult, blitCache)) {
 					if (!allBlittable)
 						fieldsResult.Append ($" {type.Name}:");
-					fieldsResult.Append ($" ({f.Name}: {localResult})"); 
+					fieldsResult.Append ($" ({f.Name}: {localResult})");
 					allBlittable = false;
 				}
 			}
 			if (!allBlittable) {
 				result.Append (fieldsResult);
-				blitCache [type.Name] = new BlitAndReason (false, fieldsResult.ToString ()) ;
+				blitCache [type.Name] = new BlitAndReason (false, fieldsResult.ToString ());
 			}
 			return allBlittable;
 		}
