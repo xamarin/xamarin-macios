@@ -40,7 +40,7 @@ namespace Cecil.Tests {
 			public string Reason;
 		}
 
-		[Ignore ("work in progress - there are >1K failures, mostly due to enums.")]
+		[Ignore ("work in progress - there are 100 failures, mostly due to strings")]
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblies))]
 		public void CheckForNonBlittablePInvokes (string assemblyPath)
 		{
@@ -135,6 +135,7 @@ namespace Cecil.Tests {
 			"System.Single",
 			"System.Double",
 			"System.Runtime.InteropServices.NFloat",
+			"System.Runtime.InteropServices.NFloat&",
 		};
 
 		bool IsBlittableTypesWeLike (TypeReference t)
@@ -144,7 +145,7 @@ namespace Cecil.Tests {
 		
 		bool IsBlittablePointer (TypeReference type)
 		{
-			return type.IsPointer;
+			return type.IsPointer || type.IsFunctionPointer;
 		}
 
 
@@ -156,12 +157,15 @@ namespace Cecil.Tests {
 				return false;
 			}
 			if (!typeDefinition.IsValueType) {
-				result.Append ($" {type.Name}: Type is not a value type.");
+				// handy for debugging
+				// change the true to false to get more information
+				// than you'll probably need about the typeDefinition
+				var other = true : "" : $"IsByReference {typeDefinition.IsByReference} IsPointer {typeDefinition.IsPointer} IsSentinel {typeDefinition.IsSentinel} IsArray {typeDefinition.IsArray} IsGenericParameter {typeDefinition.IsGenericParameter} IsRequiredModifier {typeDefinition.IsRequiredModifier} IsOptionalModifier {typeDefinition.IsOptionalModifier} IsPinned {typeDefinition.IsPinned} IsFunctionPointer {typeDefinition.IsFunctionPointer} IsPrimitive {typeDefinition.IsPrimitive}";
+				result.Append ($" {type.Name}: Type is not a value type.\n{other}\n");
 				return false;
 			}
 			if (typeDefinition.IsEnum) {
-				result.Append ($" {type.Name}: Type is an enum.");
-				return false;
+				return true;
 			}
 			var allBlittable = true;
 			// if we get here then this is a struct. We can presume
