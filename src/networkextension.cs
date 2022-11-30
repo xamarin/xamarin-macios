@@ -1103,6 +1103,9 @@ namespace NetworkExtension {
 		[NullAllowed, Export ("proxySettings", ArgumentSemantic.Copy)]
 		NEProxySettings ProxySettings { get; set; }
 	}
+
+	[iOS(9, 0)][Mac(10, 11)]
+	delegate void NETunnelAppMessageHandler ([NullAllowed] NSData data);
 		
 	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof(NEProvider))]
@@ -1111,8 +1114,8 @@ namespace NetworkExtension {
 	{
 		[Export ("handleAppMessage:completionHandler:")]
 		[Async]
-		void HandleAppMessage (NSData messageData, [NullAllowed] Action<NSData?> completionHandler);
-	
+		void HandleAppMessage (NSData messageData, [NullAllowed] NETunnelAppMessageHandler completionHandler);
+
 		[Export ("setTunnelNetworkSettings:completionHandler:")]
 		[Async]
 		void SetTunnelNetworkSettings ([NullAllowed] NETunnelNetworkSettings tunnelNetworkSettings, [NullAllowed] Action<NSError> completionHandler);
