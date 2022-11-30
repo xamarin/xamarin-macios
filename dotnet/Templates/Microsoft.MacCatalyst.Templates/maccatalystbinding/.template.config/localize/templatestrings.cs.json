@@ -1,5 +1,5 @@
 {
   "author": "Microsoft",
   "name": "Mac Catalyst Binding Library",
-  "description": "Projekt pro vytvoření knihovny vazeb .NET MacCatalyst"
+  "description": "A project for creating a .NET Mac Catalyst binding library"
 }

@@ -396,7 +396,7 @@ namespace Xamarin.BindingTests
 
 			public override int GetHashCode ()
 			{
-				return Name.GetHashCode () ^ Value.GetHashCode ();
+				return HashCode.Combine(Name, Value);
 			}
 
 			public override string ToString ()

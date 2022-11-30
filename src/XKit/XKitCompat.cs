@@ -22,7 +22,7 @@ namespace UIKit {
 #if !COREBUILD
 
 #if !NET
-	[iOS (7,0)]
+	[iOS (7, 0)]
 #endif
 	public partial class NSLayoutManager {
 		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
@@ -31,7 +31,7 @@ namespace UIKit {
 
 #if !MONOMAC
 		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
-		public virtual void SetTemporaryAttributes (Foundation.NSDictionary<Foundation.NSString,Foundation.NSObject> attributes, Foundation.NSRange characterReange)
+		public virtual void SetTemporaryAttributes (Foundation.NSDictionary<Foundation.NSString, Foundation.NSObject> attributes, Foundation.NSRange characterReange)
 			=> throw new NotSupportedException ();
 #endif
 

@@ -1,6 +1,6 @@
 {
   "author": "Майкрософт",
-  "name": "tvOS Application",
+  "name": "Приложение tvOS",
   "description": "Проект для создания приложения .NET для tvOS",
   "symbols/bundleId/description": "Переопределяет CFBundleIdentifier в Info.plist",
   "symbols/minOSVersion/description": "Переопределяет SupportedOSPlatformVersion в файле проекта"
