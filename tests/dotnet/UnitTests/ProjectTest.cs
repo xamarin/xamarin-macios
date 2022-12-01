@@ -1158,5 +1158,36 @@ namespace Xamarin.Tests {
 				Assert.True (jitNotAllowed, "Jit Not Allowed");
 			}
 		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		public void BuildAndExecuteAppWithNativeDynamicLibrariesInPackageReference (ApplePlatform platform, string runtimeIdentifier)
+		{
+			var project = "AppWithNativeDynamicLibrariesInPackageReference";
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifier);
+			DotNet.AssertBuild (project_path, properties);
+
+			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
+			Assert.That (appExecutable, Does.Exist, "There is an executable");
+
+			AssertThatDylibExistsAndIsReidentified (appPath, "libtest.dylib");
+			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libtest.dylib");
+
+			ExecuteWithMagicWordAndAssert (appExecutable);
+		}
+
+		void AssertThatDylibExistsAndIsReidentified (string appPath, string dylibRelPath)
+		{
+			var dylibPath = Path.Join (appPath, "Contents", "MonoBundle", dylibRelPath);
+			Assert.That (dylibPath, Does.Exist, "There is a library");
+
+			var shared_libraries = ExecutionHelper.Execute ("otool", new [] { "-L", dylibPath }, hide_output: true);
+			Assert.That (shared_libraries, Does.Contain (dylibPath), "The library ID is correct");
+			Assert.That (shared_libraries, Does.Contain ($"@executable_path/../../Contents/MonoBundle/{dylibRelPath}"),
+				"The dependent bundled shared library install name is relative to @executable_path");
+		}
 	}
 }

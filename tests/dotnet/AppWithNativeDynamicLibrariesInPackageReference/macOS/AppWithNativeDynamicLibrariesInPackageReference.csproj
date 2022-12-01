@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-macos</TargetFramework>
+		<RuntimeIdentifier>osx-x64</RuntimeIdentifier>
+		<FatName>macos-fat</FatName>
+	</PropertyGroup>
+	<Import Project="..\shared.csproj" />
+</Project>
