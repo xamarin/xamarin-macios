@@ -195,11 +195,14 @@ namespace Xamarin.Tests {
 		public void CreateAndBuildProjectTemplate (TemplateInfo info)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (info.Platform);
+			
+			var language = info.Language ?? TemplateLanguage.CSharp;
+			
 			var tmpDir = Cache.CreateTemporaryDirectory ();
 			var outputDir = Path.Combine (tmpDir, info.Template);
-			DotNet.AssertNew (outputDir, info.Template);
-			var csproj = Path.Combine (outputDir, info.Template + ".csproj");
-			var rv = DotNet.AssertBuild (csproj);
+			DotNet.AssertNew (outputDir, info.Template, language.AsLanguageIdentifier ());
+			var proj = Path.Combine (outputDir, $"{info.Template}.{language.AsFileExtension ()}");
+			var rv = DotNet.AssertBuild (proj);
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
 			Assert.That (warnings, Is.Empty, $"Build warnings:\n\t{string.Join ("\n\t", warnings)}");
 
@@ -210,36 +213,37 @@ namespace Xamarin.Tests {
 				Assert.IsTrue (CanExecute (info.Platform, runtimeIdentifiers), "Must be executable to execute!");
 
 				// First add some code to exit the template if it launches successfully.
-				var mainFile = Path.Combine (outputDir, "Main.cs");
-				var mainContents = File.ReadAllText (mainFile);
-				var exitSampleWithSuccess = @"NSTimer.CreateScheduledTimer (1, (v) => {
-	Console.WriteLine (Environment.GetEnvironmentVariable (""MAGIC_WORD""));
-	Environment.Exit (0);
-			});
-			";
-				var modifiedMainContents = mainContents.Replace ("// This is the main entry point of the application.", exitSampleWithSuccess);
-				Assert.AreNotEqual (modifiedMainContents, mainContents, "Failed to modify the main content");
-				File.WriteAllText (mainFile, modifiedMainContents);
+				switch (language) {
+					case TemplateLanguage.CSharp:
+						InsertCSharpCodeToExitAppAfterLaunch (outputDir);
+						break;
+					case TemplateLanguage.FSharp:
+						InsertFSharpCodeToExitAppAfterLaunch (outputDir);
+						break;
+					default:
+						throw new NotImplementedException ($"'Inserting {language} code is not implemented.'");
+				}
 
 				// Build the sample
-				rv = DotNet.AssertBuild (csproj);
+				rv = DotNet.AssertBuild (proj);
 
 				// There should still not be any warnings
 				warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
 				Assert.That (warnings, Is.Empty, $"Build warnings (2):\n\t{string.Join ("\n\t", warnings)}");
 
-				var appPath = GetAppPath (csproj, platform, runtimeIdentifiers);
+				var appPath = GetAppPath (proj, platform, runtimeIdentifiers);
 				var appExecutable = GetNativeExecutable (platform, appPath);
 				ExecuteWithMagicWordAndAssert (appExecutable);
 			}
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.iOS)]
-		[TestCase (ApplePlatform.TVOS)]
-		[TestCase (ApplePlatform.MacCatalyst)]
-		[TestCase (ApplePlatform.MacOSX)]
-		public void CreateAndBuildItemTemplates (ApplePlatform platform)
+		[TestCase (ApplePlatform.iOS, TemplateLanguage.CSharp)]
+		[TestCase (ApplePlatform.iOS, TemplateLanguage.FSharp)]
+		[TestCase (ApplePlatform.TVOS, TemplateLanguage.CSharp)]
+		[TestCase (ApplePlatform.MacCatalyst, TemplateLanguage.CSharp)]
+		[TestCase (ApplePlatform.MacOSX, TemplateLanguage.CSharp)]
+		public void CreateAndBuildItemTemplates (ApplePlatform platform, TemplateLanguage language)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
@@ -247,19 +251,25 @@ namespace Xamarin.Tests {
 			// item templates for the given platforms. This is faster than testing the item templates
 			// one-by-one.
 
-			const TemplateLanguage csharp = TemplateLanguage.CSharp;
+			bool IsMatching (TemplateLanguage lang, TemplateLanguage? value)
+			{
+				if (lang == TemplateLanguage.CSharp)
+					return value is null or TemplateLanguage.CSharp;
 
-			var info = Templates.Single (v => string.Equals (v.Template, platform.AsString (), StringComparison.OrdinalIgnoreCase) && v.Language is null or csharp);
-			var itemTemplates = Templates.Where (v => v.TemplateType == TemplateType.Item && v.Platform == platform && v.Language is null or csharp);
+				return lang == value;
+			}
+
+			var info = Templates.Single (v => string.Equals (v.Template, platform.AsString (), StringComparison.OrdinalIgnoreCase) && IsMatching (language, v.Language));
+			var itemTemplates = Templates.Where (v => v.TemplateType == TemplateType.Item && v.Platform == platform && IsMatching (language, v.Language));
 
 			var tmpDir = Cache.CreateTemporaryDirectory ();
 			var outputDir = Path.Combine (tmpDir, info.Template);
-			DotNet.AssertNew (outputDir, info.Template, language: csharp.AsLanguageIdentifier ());
+			DotNet.AssertNew (outputDir, info.Template, language: language.AsLanguageIdentifier ());
 
 			foreach (var item in itemTemplates)
-				DotNet.AssertNew (outputDir, item.Template, "item_" + item.Template, language: csharp.AsLanguageIdentifier ());
+				DotNet.AssertNew (outputDir, item.Template, "item_" + item.Template, language: language.AsLanguageIdentifier ());
 
-			var proj = Path.Combine (outputDir, $"{info.Template}.{csharp.AsFileExtension ()}");
+			var proj = Path.Combine (outputDir, $"{info.Template}.{language.AsFileExtension ()}");
 			var rv = DotNet.AssertBuild (proj);
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
 			Assert.That (warnings, Is.Empty, $"Build warnings:\n\t{string.Join ("\n\t", warnings)}");
@@ -270,89 +280,60 @@ namespace Xamarin.Tests {
 				Assert.IsTrue (CanExecute (info.Platform, runtimeIdentifiers), "Must be executable to execute!");
 
 				// First add some code to exit the template if it launches successfully.
-				var mainFile = Path.Combine (outputDir, "Main.cs");
-				var mainContents = File.ReadAllText (mainFile);
-				var exitSampleWithSuccess = @"NSTimer.CreateScheduledTimer (1, (v) => {
+				switch (language) {
+					case TemplateLanguage.CSharp:
+						InsertCSharpCodeToExitAppAfterLaunch (outputDir);
+						break;
+					case TemplateLanguage.FSharp:
+						InsertFSharpCodeToExitAppAfterLaunch (outputDir);
+						break;
+					default:
+						throw new NotImplementedException ($"'Inserting {language} code is not implemented.'");
+				}
+
+				// Build the sample
+				rv = DotNet.AssertBuild (proj);
+
+				// There should still not be any warnings
+				warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
+				Assert.That (warnings, Is.Empty, $"Build warnings (2):\n\t{string.Join ("\n\t", warnings)}");
+
+				var appPath = GetAppPath (proj, platform, runtimeIdentifiers);
+				var appExecutable = GetNativeExecutable (platform, appPath);
+				ExecuteWithMagicWordAndAssert (appExecutable);
+			}
+		}
+
+		static void InsertCSharpCodeToExitAppAfterLaunch (string outputDir)
+		{
+			var mainFile = Path.Combine (outputDir, "Main.cs");
+			var mainContents = File.ReadAllText (mainFile);
+			var exitSampleWithSuccess = @"NSTimer.CreateScheduledTimer (1, (v) => {
 Console.WriteLine (Environment.GetEnvironmentVariable (""MAGIC_WORD""));
 Environment.Exit (0);
 		});
 		";
-				var modifiedMainContents =
-					mainContents.Replace ("// This is the main entry point of the application.",
-						exitSampleWithSuccess);
-				Assert.AreNotEqual (modifiedMainContents, mainContents, "Failed to modify the main content");
-				File.WriteAllText (mainFile, modifiedMainContents);
-
-				// Build the sample
-				rv = DotNet.AssertBuild (proj);
-
-				// There should still not be any warnings
-				warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
-				Assert.That (warnings, Is.Empty, $"Build warnings (2):\n\t{string.Join ("\n\t", warnings)}");
-
-				var appPath = GetAppPath (proj, platform, runtimeIdentifiers);
-				var appExecutable = GetNativeExecutable (platform, appPath);
-				ExecuteWithMagicWordAndAssert (appExecutable);
-			}
+			var modifiedMainContents =
+				mainContents.Replace ("// This is the main entry point of the application.",
+					exitSampleWithSuccess);
+			Assert.AreNotEqual (modifiedMainContents, mainContents, "Failed to modify the main content");
+			File.WriteAllText (mainFile, modifiedMainContents);
 		}
 
-		[Test]
-		[TestCase (ApplePlatform.iOS)]
-		public void CreateAndBuildFSharpItemTemplates (ApplePlatform platform)
+		static void InsertFSharpCodeToExitAppAfterLaunch (string outputDir)
 		{
-			Configuration.IgnoreIfIgnoredPlatform (platform);
+			var mainFile = Path.Combine (outputDir, "Main.fs");
+			var mainContents = File.ReadAllText (mainFile);
 
-			// We create a new project from the basic project template, and then we add all the
-			// item templates for the given platforms. This is faster than testing the item templates
-			// one-by-one.
+			// Attention: The indentation is important in F#, so to avoid having to deal with that, put everything on a single line.
+			var exitSampleWithSuccess =
+				@"Foundation.NSTimer.CreateScheduledTimer(1, fun _ -> System.Console.WriteLine(System.Environment.GetEnvironmentVariable(""MAGIC_WORD"")); System.Environment.Exit(0)) |> ignore";
 
-			const TemplateLanguage fsharp = TemplateLanguage.FSharp;
-
-			var info = Templates.Single (v => string.Equals (v.Template, platform.AsString (), StringComparison.OrdinalIgnoreCase) && v.Language == fsharp);
-			var itemTemplates = Templates.Where (v => v.TemplateType == TemplateType.Item && v.Platform == platform && v.Language == fsharp);
-
-			var tmpDir = Cache.CreateTemporaryDirectory ();
-			var outputDir = Path.Combine (tmpDir, info.Template);
-			DotNet.AssertNew (outputDir, info.Template, language: fsharp.AsLanguageIdentifier ());
-
-			foreach (var item in itemTemplates)
-				DotNet.AssertNew (outputDir, item.Template, "item_" + item.Template, language: fsharp.AsLanguageIdentifier ());
-
-			var proj = Path.Combine (outputDir, $"{info.Template}.{fsharp.AsFileExtension ()}");
-			var rv = DotNet.AssertBuild (proj);
-			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
-			Assert.That (warnings, Is.Empty, $"Build warnings:\n\t{string.Join ("\n\t", warnings)}");
-
-			if (info.Execute) {
-				var runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
-
-				Assert.IsTrue (CanExecute (info.Platform, runtimeIdentifiers), "Must be executable to execute!");
-
-				// First add some code to exit the template if it launches successfully.
-				var mainFile = Path.Combine (outputDir, "Main.fs");
-				var mainContents = File.ReadAllText (mainFile);
-
-				// Attention: The indentation is important in F#, so to avoid having to deal with that, put everything on a single line.
-				var exitSampleWithSuccess =
-					@"Foundation.NSTimer.CreateScheduledTimer(1, fun _ -> System.Console.WriteLine(System.Environment.GetEnvironmentVariable(""MAGIC_WORD"")); System.Environment.Exit(0)) |> ignore";
-
-				var modifiedMainContents =
-					mainContents.Replace ("// This is the main entry point of the application.",
-						exitSampleWithSuccess);
-				Assert.AreNotEqual (modifiedMainContents, mainContents, "Failed to modify the main content");
-				File.WriteAllText (mainFile, modifiedMainContents);
-
-				// Build the sample
-				rv = DotNet.AssertBuild (proj);
-
-				// There should still not be any warnings
-				warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
-				Assert.That (warnings, Is.Empty, $"Build warnings (2):\n\t{string.Join ("\n\t", warnings)}");
-
-				var appPath = GetAppPath (proj, platform, runtimeIdentifiers);
-				var appExecutable = GetNativeExecutable (platform, appPath);
-				ExecuteWithMagicWordAndAssert (appExecutable);
-			}
+			var modifiedMainContents =
+				mainContents.Replace ("// This is the main entry point of the application.",
+					exitSampleWithSuccess);
+			Assert.AreNotEqual (modifiedMainContents, mainContents, "Failed to modify the main content");
+			File.WriteAllText (mainFile, modifiedMainContents);
 		}
 	}
 }
