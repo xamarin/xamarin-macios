@@ -327,24 +327,24 @@ namespace OpenTK
 
 		public override int GetHashCode ()
 		{
-			var hash = new HashCode();
-			hash.Add(M11);
-			hash.Add(M12);
-			hash.Add(M13);
-			hash.Add(M14);
-			hash.Add(M21);
-			hash.Add(M22);
-			hash.Add(M23);
-			hash.Add(M24);
-			hash.Add(M31);
-			hash.Add(M32);
-			hash.Add(M33);
-			hash.Add(M34);
-			hash.Add(M41);
-			hash.Add(M42);
-			hash.Add(M43);
-			hash.Add(M44);
-			return hash.ToHashCode();
+			var hash = new HashCode ();
+			hash.Add (M11);
+			hash.Add (M12);
+			hash.Add (M13);
+			hash.Add (M14);
+			hash.Add (M21);
+			hash.Add (M22);
+			hash.Add (M23);
+			hash.Add (M24);
+			hash.Add (M31);
+			hash.Add (M32);
+			hash.Add (M33);
+			hash.Add (M34);
+			hash.Add (M41);
+			hash.Add (M42);
+			hash.Add (M43);
+			hash.Add (M44);
+			return hash.ToHashCode ();
 		}
 
 		public override bool Equals (object? obj)
