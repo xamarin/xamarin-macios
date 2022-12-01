@@ -191,7 +191,7 @@ namespace OpenTK
 
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine(M11, M12, M21, M22);
+			return HashCode.Combine (M11, M12, M21, M22);
 		}
 
 		public override bool Equals (object? obj)
