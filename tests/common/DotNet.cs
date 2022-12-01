@@ -88,7 +88,7 @@ namespace Xamarin.Tests {
 			args.Add (template);
 			if (!string.IsNullOrEmpty (name)) {
 				args.Add ("--name");
-				args.Add (name);
+				args.Add (name!);
 			}
 
 			var env = new Dictionary<string, string?> ();
