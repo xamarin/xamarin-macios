@@ -291,17 +291,17 @@ namespace OpenTK
 
 		public override int GetHashCode ()
 		{
-			var hash = new HashCode();
-			hash.Add(M11);
-			hash.Add(M12);
-			hash.Add(M13);
-			hash.Add(M21);
-			hash.Add(M22);
-			hash.Add(M23);
-			hash.Add(M31);
-			hash.Add(M32);
-			hash.Add(M33);
-			return hash.ToHashCode();
+			var hash = new HashCode ();
+			hash.Add (M11);
+			hash.Add (M12);
+			hash.Add (M13);
+			hash.Add (M21);
+			hash.Add (M22);
+			hash.Add (M23);
+			hash.Add (M31);
+			hash.Add (M32);
+			hash.Add (M33);
+			return hash.ToHashCode ();
 		}
 
 		public override bool Equals (object? obj)
