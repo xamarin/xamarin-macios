@@ -6090,7 +6090,7 @@ namespace UIKit {
 	
 	delegate CGVector UIFieldCustomEvaluator (UIFieldBehavior field, CGPoint position, CGVector velocity, nfloat mass, nfloat charge, double deltaTime);
 	
-	[Static][Internal]
+	[Static]
 	[iOS (8,2)]
 	interface UIFontWeightConstants {
 		[Field ("UIFontWeightUltraLight")]

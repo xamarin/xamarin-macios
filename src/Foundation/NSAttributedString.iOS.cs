@@ -205,15 +205,15 @@ namespace Foundation {
 
 		public float? HyphenationFactor {
 			get {
-				return GetFloatValue (UIStringAttributeKey.NSReadOnlyDocumentAttribute);
+				return GetFloatValue (UIStringAttributeKey.NSHyphenationFactorDocumentAttribute);
 			}
 			set {
 				if (value is null)
-					RemoveValue (UIStringAttributeKey.NSReadOnlyDocumentAttribute);
+					RemoveValue (UIStringAttributeKey.NSHyphenationFactorDocumentAttribute);
 				else {
 					if (value < 0 || value > 1.0f)
 						throw new ArgumentException ("value must be between 0 and 1");
-					SetNumberValue (UIStringAttributeKey.NSReadOnlyDocumentAttribute, value);
+					SetNumberValue (UIStringAttributeKey.NSHyphenationFactorDocumentAttribute, value);
 				}
 			}
 		}
