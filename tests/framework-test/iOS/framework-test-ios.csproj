@@ -165,6 +165,7 @@
   <ItemGroup>
     <Compile Include="AppDelegate.cs" />
     <Compile Include="FrameworkTests.cs" />
+    <Compile Include="..\..\common\AppDelegate.cs" />
   </ItemGroup>
   <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

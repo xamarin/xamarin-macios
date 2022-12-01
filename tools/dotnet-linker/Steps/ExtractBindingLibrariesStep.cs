@@ -25,7 +25,7 @@ namespace Xamarin.Linker {
 					var item = new MSBuildItem {
 						Include = arg,
 						Metadata = new Dictionary<string, string> {
-							{ "ForceLoad", "true" },
+							{ "ForceLoad", asm.ForceLoad ? "true" : "false" },
 							{ "Assembly", asm.Identity },
 						},
 					};

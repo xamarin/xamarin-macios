@@ -14,11 +14,11 @@ using Foundation;
 namespace CoreSpotlight {
 	// NSInteger -> CNContact.h
 	[NoTV] // CS_TVOS_UNAVAILABLE
-	[iOS (9,0), Mac (10,11)]
+	[iOS (9, 0), Mac (10, 11)]
 	[Native]
 	[ErrorDomain ("CSIndexErrorDomain")]
 	public enum CSIndexErrorCode : long {
-		UnknownError =	-1,
+		UnknownError = -1,
 		IndexUnavailableError = -1000,
 		InvalidItemError = -1001,
 		InvalidClientStateError = -1002,
@@ -27,8 +27,9 @@ namespace CoreSpotlight {
 		IndexingUnsupported = -1005,
 	}
 
-	[NoTV][iOS (10,0)]
-	[Mac (10,13)]
+	[NoTV]
+	[iOS (10, 0)]
+	[Mac (10, 13)]
 	[ErrorDomain ("CSSearchQueryErrorDomain")]
 	[Native]
 	public enum CSSearchQueryErrorCode : long {
@@ -38,8 +39,9 @@ namespace CoreSpotlight {
 		Cancelled = -2003
 	}
 
-	[iOS (9,0)]
-	[NoTV][NoMac]
+	[iOS (9, 0)]
+	[NoTV]
+	[NoMac]
 	public enum CSFileProtection {
 		None,
 		Complete,
