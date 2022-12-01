@@ -19,8 +19,7 @@ public partial class AppDelegate : UIApplicationDelegate {
 		try {
 			runner.OpenWriter ("Magic Tap");
 			runner.Run (runner.LoadedTest as TestSuite);
-		}
-		finally {
+		} finally {
 			runner.CloseWriter ();
 		}
 		return true;
