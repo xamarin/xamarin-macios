@@ -92,7 +92,7 @@ namespace OpenTK
 
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine(X, Y, Z);
+			return HashCode.Combine (X, Y, Z);
 		}
 
 		public override bool Equals (object? obj)

@@ -18,6 +18,12 @@ steps:
     ${{ else }}:
       VAR_NAME: 'NUGET_PRIVATE_FEED'
 
+- bash: |
+    sudo rm -Rf $(Build.SourcesDirectory)/package
+    sudo rm -Rf $(Build.SourcesDirectory)/vsi-msi-nugets
+  displayName: "Remove artifacts"
+  condition: always()
+
 - task: DownloadPipelineArtifact@2
   inputs:
     artifactName: nuget-signed

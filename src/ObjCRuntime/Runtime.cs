@@ -2230,7 +2230,7 @@ namespace ObjCRuntime {
 
 		public override int GetHashCode ()
 		{
-			return HashCode.Combine(item1Comparer, item2Comparer);
+			return HashCode.Combine (item1Comparer, item2Comparer);
 		}
 
 		public static bool operator == (IntPtrTypeValueTuple left, IntPtrTypeValueTuple right)
