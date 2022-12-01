@@ -38,7 +38,8 @@ steps:
   displayName: 'Show Environment'
 
 - pwsh: |
-    Remove-Item -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Artifacts" -Force -Recurse
+    if (Test-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Artifacts" -PathType Container)
+      Remove-Item -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Artifacts" -Force -Recurse
   displayName: "Remove artifacts"
   condition: always()
 

@@ -23,7 +23,9 @@ parameters:
 steps:
 
 - pwsh: |
-    Remove-Item -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Reports" -Force -Recurse
+    if (Test-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Reports" -PathType Container) {
+      Remove-Item -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Reports" -Force -Recurse
+    }
   displayName: "Remove artifacts"
   condition: always()
 

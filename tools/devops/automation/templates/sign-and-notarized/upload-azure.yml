@@ -38,7 +38,9 @@ steps:
   clean: true
 
 - pwsh: |
-    Remove-Item -Path "$Env:BUILD_SOURCESDIRECTORY/artifacts" -Force -Recurse
+    if (Test-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/artifacts" -PathType Container) {
+      Remove-Item -Path "$Env:BUILD_SOURCESDIRECTORY/artifacts" -Force -Recurse
+    }
   displayName: "Remove artifacts"
   condition: always()
 
