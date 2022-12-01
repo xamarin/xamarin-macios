@@ -10,7 +10,7 @@
     <MicrosoftTemplateEngineTasksVersion>7.0.100-alpha.1.21601.1</MicrosoftTemplateEngineTasksVersion>
     <!-- This is a subscription of the .NET 6 versions of our packages -->
     <MicrosoftMacCatalystSdkPackageVersion>16.1.229</MicrosoftMacCatalystSdkPackageVersion>
-    <MicrosoftmacOSSdkPackageVersion>13.0.784</MicrosoftmacOSSdkPackageVersion>
+    <MicrosoftmacOSSdkPackageVersion>13.0.787</MicrosoftmacOSSdkPackageVersion>
     <MicrosoftiOSSdkPackageVersion>16.1.232</MicrosoftiOSSdkPackageVersion>
     <MicrosofttvOSSdkPackageVersion>16.1.232</MicrosofttvOSSdkPackageVersion>
   </PropertyGroup>
