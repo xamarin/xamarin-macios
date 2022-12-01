@@ -37,6 +37,13 @@ steps:
 - checkout: yaml-templates
   clean: true
 
+- pwsh: |
+    if (Test-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/artifacts" -PathType Container) {
+      Remove-Item -Path "$Env:BUILD_SOURCESDIRECTORY/artifacts" -Force -Recurse
+    }
+  displayName: "Remove artifacts"
+  condition: always()
+
 # Download the Html Report that was added by the tests job.
 - task: DownloadPipelineArtifact@2
   displayName: Download packages

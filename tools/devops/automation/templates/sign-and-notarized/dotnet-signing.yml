@@ -45,6 +45,11 @@ jobs:
       repositoryAlias: ${{ parameters.repositoryAlias }}
       commit: ${{ parameters.commit }}
 
+  - bash: |
+      sudo rm -Rf $(Build.SourcesDirectory)/package
+    displayName: "Remove artifacts"
+    condition: always()
+
   - task: DownloadPipelineArtifact@2
     displayName: Download not notarized build
     inputs:
