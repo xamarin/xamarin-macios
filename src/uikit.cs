@@ -12970,9 +12970,9 @@ namespace UIKit {
 		[iOS (7, 0)]
 		[Internal, Field ("NSDocumentTypeDocumentAttribute")]
 		NSString NSDocumentTypeDocumentAttribute { get; }
-	//
-	//
-	//
+		//
+		//
+		//
 		[iOS (7, 0)]
 		[Internal, Field ("NSCharacterEncodingDocumentAttribute")]
 		NSString NSCharacterEncodingDocumentAttribute { get; }
