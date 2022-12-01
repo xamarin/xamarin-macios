@@ -15,7 +15,7 @@ using Foundation;
 
 namespace UIKit {
 
-	public static class Extensions {
+	public static class UIFontWeightExtensions {
 		public static nfloat GetWeight (this UIFontWeight weight)
 		{
 			switch (weight) {
