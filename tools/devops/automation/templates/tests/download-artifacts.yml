@@ -22,8 +22,8 @@ parameters:
 
 steps:
 
-- bash: |
-    sudo rm -Rf $(System.DefaultWorkingDirectory)/Reports
+- pwsh: |
+    Remove-Item -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Reports" -Force -Recurse
   displayName: "Remove artifacts"
   condition: always()
 

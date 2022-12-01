@@ -12,7 +12,7 @@ parameters:
 steps:
 
 - pwsh: |
-    Remove-Item -Path "$(Build.DefaultWorkingDirectory)/Reports" -Force -Recurse
+    Remove-Item -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Reports" -Force -Recurse
   displayName: "Remove artifacts"
   condition: always()
 
