@@ -131,6 +131,8 @@ using NSImage = Foundation.NSObject;
 #if IOS || WATCH || TVOS
 using NSNotificationSuspensionBehavior = Foundation.NSObject;
 using NSNotificationFlags = Foundation.NSObject;
+using NSTextBlock = Foundation.NSObject;
+using NSTextTable = Foundation.NSString; // Different frmo NSTextBlock, because some methods overload on these two types.
 #endif
 
 #if !NET
@@ -377,7 +379,6 @@ namespace Foundation
 		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #endif
 
-#if MONOMAC
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithDocFormat:documentAttributes:")]
 		NativeHandle Constructor(NSData wordDocFormat, out NSDictionary docAttributes);
@@ -472,7 +473,6 @@ namespace Foundation
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("itemNumberInTextList:atIndex:")]
 		nint GetItemNumber (NSTextList textList, nuint index);
-#endif
 
 #if !(MONOMAC || XAMCORE_5_0)
 		[Sealed]
@@ -661,6 +661,65 @@ namespace Foundation
 		[Export ("attributedStringByInflectingString")]
 		NSAttributedString AttributedStringByInflectingString { get; }
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
+		[Export ("boundingRectWithSize:options:")]
+		CGRect BoundingRectWithSize (CGSize size, NSStringDrawingOptions options);
+
+#if MONOMAC
+		[Field ("NSTextLayoutSectionOrientation", "AppKit")]
+#else
+		[Field ("NSTextLayoutSectionOrientation", "UIKit")]
+#endif
+		[iOS (7,0)]
+		NSString TextLayoutSectionOrientation { get; }
+
+#if MONOMAC
+		[Field ("NSTextLayoutSectionRange", "AppKit")]
+#else
+		[Field ("NSTextLayoutSectionRange", "UIKit")]
+#endif
+		[iOS (7,0)]
+		NSString TextLayoutSectionRange { get; }
+
+#if MONOMAC
+		[Field ("NSTextLayoutSectionsAttribute", "AppKit")]
+#else
+		[Field ("NSTextLayoutSectionsAttribute", "UIKit")]
+#endif
+		[iOS (7,0)]
+		NSString TextLayoutSectionsAttribute { get; }
+
+		[NoiOS, NoWatch, NoTV]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
+		[Field ("NSUnderlineByWordMask", "AppKit")]
+		nint UnderlineByWordMaskAttributeName { get; }
+
+#if MONOMAC
+		[Field ("NSTextScalingDocumentAttribute", "AppKit")]
+#else
+		[Field ("NSTextScalingDocumentAttribute", "UIKit")]
+#endif
+		[Mac (10,15)]
+		[iOS (13,0), TV (13,0), Watch (6,0)]
+		NSString TextScalingDocumentAttribute { get; }
+
+#if MONOMAC
+		[Field ("NSSourceTextScalingDocumentAttribute", "AppKit")]
+#else
+		[Field ("NSSourceTextScalingDocumentAttribute", "UIKit")]
+#endif
+		[Mac (10,15)]
+		[iOS (13,0), TV (13,0), Watch (6,0)]
+		NSString SourceTextScalingDocumentAttribute { get; }
+
+#if MONOMAC
+		[Field ("NSCocoaVersionDocumentAttribute", "AppKit")]
+#else
+		[Field ("NSCocoaVersionDocumentAttribute", "UIKit")]
+#endif
+		[Mac (10,15)]
+		[iOS (13,0), TV (13,0), Watch (6,0)]
+		NSString CocoaVersionDocumentAttribute { get; }
 	}
 
 	// we follow the API found in swift
@@ -13976,65 +14035,6 @@ namespace Foundation
 		NSImage ImageForResource (string name);
 	}
 
-	partial interface NSAttributedString {
-
-#if MONOMAC
-		[Field ("NSTextLayoutSectionOrientation", "AppKit")]
-#else
-		[Field ("NSTextLayoutSectionOrientation", "UIKit")]
-#endif
-		[iOS (7,0)]
-		NSString TextLayoutSectionOrientation { get; }
-
-#if MONOMAC
-		[Field ("NSTextLayoutSectionRange", "AppKit")]
-#else
-		[Field ("NSTextLayoutSectionRange", "UIKit")]
-#endif
-		[iOS (7,0)]
-		NSString TextLayoutSectionRange { get; }
-
-#if MONOMAC
-		[Field ("NSTextLayoutSectionsAttribute", "AppKit")]
-#else
-		[Field ("NSTextLayoutSectionsAttribute", "UIKit")]
-#endif
-		[iOS (7,0)]
-		NSString TextLayoutSectionsAttribute { get; }
-
-		[NoiOS, NoWatch, NoTV]
-		[Deprecated (PlatformName.MacOSX, 10, 11)]
-		[Field ("NSUnderlineByWordMask", "AppKit")]
-		nint UnderlineByWordMaskAttributeName { get; }
-
-#if MONOMAC
-		[Field ("NSTextScalingDocumentAttribute", "AppKit")]
-#else
-		[Field ("NSTextScalingDocumentAttribute", "UIKit")]
-#endif
-		[Mac (10,15)]
-		[iOS (13,0), TV (13,0), Watch (6,0)]
-		NSString TextScalingDocumentAttribute { get; }
-
-#if MONOMAC
-		[Field ("NSSourceTextScalingDocumentAttribute", "AppKit")]
-#else
-		[Field ("NSSourceTextScalingDocumentAttribute", "UIKit")]
-#endif
-		[Mac (10,15)]
-		[iOS (13,0), TV (13,0), Watch (6,0)]
-		NSString SourceTextScalingDocumentAttribute { get; }
-
-#if MONOMAC
-		[Field ("NSCocoaVersionDocumentAttribute", "AppKit")]
-#else
-		[Field ("NSCocoaVersionDocumentAttribute", "UIKit")]
-#endif
-		[Mac (10,15)]
-		[iOS (13,0), TV (13,0), Watch (6,0)]
-		NSString CocoaVersionDocumentAttribute { get; }
-	}
-
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSDateInterval : NSCopying, NSSecureCoding {
@@ -14191,13 +14191,6 @@ namespace Foundation
 		[NullAllowed]
 		[Export ("primaryPresentedItemURL")]
 		NSUrl PrimaryPresentedItemUrl { get; }
-	}
-
-	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-	partial interface NSAttributedString {
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Export ("boundingRectWithSize:options:")]
-		CGRect BoundingRectWithSize (CGSize size, NSStringDrawingOptions options);
 	}
 
 	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
@@ -14866,6 +14859,10 @@ namespace Foundation
 		[Export ("launch")]
 		void Launch ();
 
+		[NoMacCatalyst]
+		[Export ("launchAndReturnError:")]
+		bool Launch ([NullAllowed] out NSError error);
+
 		[Export ("interrupt")]
 		void Interrupt ();
 
@@ -14886,12 +14883,23 @@ namespace Foundation
 		[Export ("launchedTaskWithLaunchPath:arguments:")]
 		NSTask LaunchFromPath (string path, string[] arguments);
 
+		[Static]
+		[NoMacCatalyst]
+		[Export ("launchedTaskWithExecutableURL:arguments:error:terminationHandler:")]
+		[return: NullAllowed]
+		NSTask LaunchFromUrl (NSUrl url, string[] arguments, [NullAllowed] out NSError error, [NullAllowed] Action<NSTask> terminationHandler);
+
 		//Detected properties
 		[NullAllowed]
 		[Deprecated (PlatformName.MacOSX, 10,15)]
 		[NoMacCatalyst]
 		[Export ("launchPath")]
 		string LaunchPath { get; set; }
+
+		[NullAllowed]
+		[NoMacCatalyst]
+		[Export ("executableURL")]
+		NSUrl ExecutableUrl { get; set; }
 
 		[NullAllowed]
 		[Export ("arguments")]
@@ -14907,6 +14915,11 @@ namespace Foundation
 		string CurrentDirectoryPath { get; set; }
 
 		[NullAllowed]
+		[NoMacCatalyst]
+		[Export ("currentDirectoryURL")]
+		NSUrl CurrentDirectoryUrl { get; set; }
+
+		[NullAllowed]
 		[Export ("standardInput", ArgumentSemantic.Retain)]
 		NSObject StandardInput { get; set; }
 
@@ -14918,6 +14931,9 @@ namespace Foundation
 		[Export ("standardError", ArgumentSemantic.Retain)]
 		NSObject StandardError { get; set; }
 
+		[Export ("qualityOfService")]
+		NSQualityOfService QualityOfService { get; set; }
+
 		[Export ("isRunning")]
 		bool IsRunning { get; }
 
@@ -14926,6 +14942,11 @@ namespace Foundation
 
 		[Export ("terminationStatus")]
 		int TerminationStatus { get; } /* int, not NSInteger */
+
+		[NullAllowed]
+		[NoMacCatalyst]
+		[Export ("terminationHandler")]
+		Action<NSTask> TerminationHandler { get; set; }
 
 		[NoMacCatalyst]
 		[Export ("terminationReason")]

@@ -172,7 +172,8 @@
     <None Include="extra-linker-defs.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppDelegate.cs" />
+    <Compile Include="..\..\AppDelegate.cs" />
+    <Compile Include="..\..\..\common\AppDelegate.cs" />
     <Compile Include="LinkSdkRegressionTest.cs" />
     <Compile Include="Bug1820Test.cs" />
     <Compile Include="Bug2096Test.cs" />
