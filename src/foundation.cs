@@ -2502,7 +2502,7 @@ namespace Foundation
 		bool IsPartialStringValid (string partialString, [NullAllowed] out string newString, [NullAllowed] out NSString error);
 
 		[Export ("isPartialStringValid:proposedSelectedRange:originalString:originalSelectedRange:errorDescription:")]
-		bool IsPartialStringValid ([NullAllowed] ref string partialString, out NSRange proposedSelRange, string origString, NSRange origSelRange, [NullAllowed] out string error);
+		bool IsPartialStringValid (ref string partialString, out NSRange proposedSelRange, string origString, NSRange origSelRange, [NullAllowed] out string error);
 	}
 
 	[BaseType (typeof (NSObject))]
