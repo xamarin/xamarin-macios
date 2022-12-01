@@ -23,8 +23,8 @@ namespace ModelIO {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (10,2)]
-		[Mac (10,12)]
+		[iOS (10, 2)]
+		[Mac (10, 12)]
 #endif
 		public MDLNoiseTexture (float input, string name, Vector2i textureDimensions, MDLTextureChannelEncoding channelEncoding, MDLNoiseTextureType type)
 		{

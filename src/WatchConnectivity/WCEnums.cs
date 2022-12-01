@@ -14,7 +14,7 @@ using Foundation;
 namespace WatchConnectivity {
 
 	// NSInteger -> WCError.h
-	[iOS (9,0)]
+	[iOS (9, 0)]
 	[Native]
 	public enum WCErrorCode : long {
 		GenericError = 7001,
@@ -40,7 +40,8 @@ namespace WatchConnectivity {
 		WatchOnlyApp = 7019,
 	}
 
-	[Watch (2,2)][iOS (9,3)]
+	[Watch (2, 2)]
+	[iOS (9, 3)]
 	[Native]
 	public enum WCSessionActivationState : long {
 		NotActivated = 0,

@@ -4115,7 +4115,7 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An exception occurred while trying to invoke the function {0}: {1}..
+        ///   Looks up a localized string similar to An exception occurred while trying to invoke the function {0}: {1}.
         /// </summary>
         public static string MX8042 {
             get {
