@@ -22,9 +22,7 @@ namespace Microsoft.Build.Tasks {
 				return result;
 			}
 
-			foreach (var file in Files) {
-				client.DeleteFileAsync (file.ItemSpec).Wait ();
-			}
+			client.DeleteFilesAsync (Files).Wait ();
 
 			return result;
 		}
