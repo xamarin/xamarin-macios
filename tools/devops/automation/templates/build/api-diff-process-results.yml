@@ -37,6 +37,13 @@ steps:
     gci env: | format-table -autosize -wrap
   displayName: 'Show Environment'
 
+- pwsh: |
+    if (Test-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Artifacts" -PathType Container) {
+      Remove-Item -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Artifacts" -Force -Recurse
+    }
+  displayName: "Remove artifacts"
+  condition: always()
+
 # Download the change detection artifact
 - task: DownloadPipelineArtifact@2
   displayName: 'Download change detection artifacts'
