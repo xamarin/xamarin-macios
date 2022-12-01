@@ -2499,10 +2499,10 @@ namespace Foundation
 		bool GetObjectValue (out NSObject obj, string str, out NSString error);
 
 		[Export ("isPartialStringValid:newEditingString:errorDescription:")]
-		bool IsPartialStringValid (string partialString, out string newString, out NSString error);
+		bool IsPartialStringValid (string partialString, [NullAllowed] out string newString, [NullAllowed] out NSString error);
 
 		[Export ("isPartialStringValid:proposedSelectedRange:originalString:originalSelectedRange:errorDescription:")]
-		bool IsPartialStringValid (ref string partialString, out NSRange proposedSelRange, string origString, NSRange origSelRange, out string error);
+		bool IsPartialStringValid ([NullAllowed] ref string partialString, out NSRange proposedSelRange, string origString, NSRange origSelRange, [NullAllowed] out string error);
 	}
 
 	[BaseType (typeof (NSObject))]
