@@ -195,9 +195,9 @@ namespace Xamarin.Tests {
 		public void CreateAndBuildProjectTemplate (TemplateInfo info)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (info.Platform);
-			
+
 			var language = info.Language ?? TemplateLanguage.CSharp;
-			
+
 			var tmpDir = Cache.CreateTemporaryDirectory ();
 			var outputDir = Path.Combine (tmpDir, info.Template);
 			DotNet.AssertNew (outputDir, info.Template, language.AsLanguageIdentifier ());
@@ -214,14 +214,14 @@ namespace Xamarin.Tests {
 
 				// First add some code to exit the template if it launches successfully.
 				switch (language) {
-					case TemplateLanguage.CSharp:
-						InsertCSharpCodeToExitAppAfterLaunch (outputDir);
-						break;
-					case TemplateLanguage.FSharp:
-						InsertFSharpCodeToExitAppAfterLaunch (outputDir);
-						break;
-					default:
-						throw new NotImplementedException ($"'Inserting {language} code is not implemented.'");
+				case TemplateLanguage.CSharp:
+					InsertCSharpCodeToExitAppAfterLaunch (outputDir);
+					break;
+				case TemplateLanguage.FSharp:
+					InsertFSharpCodeToExitAppAfterLaunch (outputDir);
+					break;
+				default:
+					throw new NotImplementedException ($"'Inserting {language} code is not implemented.'");
 				}
 
 				// Build the sample
@@ -281,14 +281,14 @@ namespace Xamarin.Tests {
 
 				// First add some code to exit the template if it launches successfully.
 				switch (language) {
-					case TemplateLanguage.CSharp:
-						InsertCSharpCodeToExitAppAfterLaunch (outputDir);
-						break;
-					case TemplateLanguage.FSharp:
-						InsertFSharpCodeToExitAppAfterLaunch (outputDir);
-						break;
-					default:
-						throw new NotImplementedException ($"'Inserting {language} code is not implemented.'");
+				case TemplateLanguage.CSharp:
+					InsertCSharpCodeToExitAppAfterLaunch (outputDir);
+					break;
+				case TemplateLanguage.FSharp:
+					InsertFSharpCodeToExitAppAfterLaunch (outputDir);
+					break;
+				default:
+					throw new NotImplementedException ($"'Inserting {language} code is not implemented.'");
 				}
 
 				// Build the sample
