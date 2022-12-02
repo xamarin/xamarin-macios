@@ -12839,56 +12839,6 @@ namespace UIKit {
 		[Internal, Field ("NSTextEffectLetterpressStyle")]
 		NSString NSTextEffectLetterpressStyle { get; }
 
-		[iOS (7,0)]
-		[Internal, Field ("NSDocumentTypeDocumentAttribute")]
-		NSString NSDocumentTypeDocumentAttribute { get; }
-	//
-	//
-	//
-		[iOS (7,0)]
-		[Internal, Field ("NSCharacterEncodingDocumentAttribute")]
-		NSString NSCharacterEncodingDocumentAttribute { get; }
-		
-		[iOS (7,0)]
-		[Internal, Field ("NSDefaultAttributesDocumentAttribute")]
-		NSString NSDefaultAttributesDocumentAttribute { get; }
-
-		[iOS (7,0)]
-		[Internal, Field ("NSPaperSizeDocumentAttribute")]
-		NSString NSPaperSizeDocumentAttribute { get; }
-
-		[iOS (7,0)]
-		[Internal, Field ("NSPaperMarginDocumentAttribute")]
-		NSString NSPaperMarginDocumentAttribute { get; }
-
-		[iOS (7,0)]
-		[Internal, Field ("NSViewSizeDocumentAttribute")]
-		NSString NSViewSizeDocumentAttribute { get; }
-
-		[iOS (7,0)]
-		[Internal, Field ("NSViewZoomDocumentAttribute")]
-		NSString NSViewZoomDocumentAttribute { get; }
-
-		[iOS (7,0)]
-		[Internal, Field ("NSViewModeDocumentAttribute")]
-		NSString NSViewModeDocumentAttribute { get; }
-
-		[iOS (7,0)]
-		[Internal, Field ("NSReadOnlyDocumentAttribute")]
-		NSString NSReadOnlyDocumentAttribute { get; }
-
-		[iOS (7,0)]
-		[Internal, Field ("NSBackgroundColorDocumentAttribute")]
-		NSString NSBackgroundColorDocumentAttribute { get; }
-
-		[iOS (7,0)]
-		[Internal, Field ("NSHyphenationFactorDocumentAttribute")]
-		NSString NSHyphenationFactorDocumentAttribute { get; }
-
-		[iOS (7,0)]
-		[Internal, Field ("NSDefaultTabIntervalDocumentAttribute")]
-		NSString NSDefaultTabIntervalDocumentAttribute { get; }
-
 		// we do not seem to expose other options like NSDefaultAttributesDocumentOption so keeping these as is for now
 		[iOS (13,0), TV (13,0), Watch (6,0)]
 		[Internal, Field ("NSTargetTextScalingDocumentOption")]

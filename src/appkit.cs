@@ -15577,10 +15577,6 @@ namespace AppKit {
 		[Internal, Field ("NSFileTypeDocumentOption")]
 		NSString NSFileTypeDocumentOption { get; }
 
-		[Mac (10,11)]
-		[Internal, Field ("NSDefaultAttributesDocumentAttribute")]
-		NSString NSDefaultAttributesDocumentAttribute { get; }
-
 		[Mac (10, 15)]
 		[Internal, Field ("NSTargetTextScalingDocumentOption")]
 		NSString TargetTextScalingDocumentOption { get; }

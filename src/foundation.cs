@@ -681,6 +681,7 @@ namespace Foundation
 		[iOS (7,0)]
 		NSString TextLayoutSectionRange { get; }
 
+#if !XAMCORE_5_0
 #if MONOMAC
 		[Field ("NSTextLayoutSectionsAttribute", "AppKit")]
 #else
@@ -688,12 +689,14 @@ namespace Foundation
 #endif
 		[iOS (7,0)]
 		NSString TextLayoutSectionsAttribute { get; }
+#endif // !XAMCORE_5_0
 
 		[NoiOS, NoWatch, NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Field ("NSUnderlineByWordMask", "AppKit")]
 		nint UnderlineByWordMaskAttributeName { get; }
 
+#if !XAMCORE_5_0
 #if MONOMAC
 		[Field ("NSTextScalingDocumentAttribute", "AppKit")]
 #else
@@ -702,7 +705,9 @@ namespace Foundation
 		[Mac (10,15)]
 		[iOS (13,0), TV (13,0), Watch (6,0)]
 		NSString TextScalingDocumentAttribute { get; }
+#endif // !XAMCORE_5_0
 
+#if !XAMCORE_5_0
 #if MONOMAC
 		[Field ("NSSourceTextScalingDocumentAttribute", "AppKit")]
 #else
@@ -711,7 +716,9 @@ namespace Foundation
 		[Mac (10,15)]
 		[iOS (13,0), TV (13,0), Watch (6,0)]
 		NSString SourceTextScalingDocumentAttribute { get; }
+#endif // !XAMCORE_5_0
 
+#if !XAMCORE_5_0
 #if MONOMAC
 		[Field ("NSCocoaVersionDocumentAttribute", "AppKit")]
 #else
@@ -720,6 +727,7 @@ namespace Foundation
 		[Mac (10,15)]
 		[iOS (13,0), TV (13,0), Watch (6,0)]
 		NSString CocoaVersionDocumentAttribute { get; }
+#endif // !XAMCORE_5_0
 	}
 
 	// we follow the API found in swift
