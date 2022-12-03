@@ -176,7 +176,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppDelegate.cs" />
+    <Compile Include="..\..\AppDelegate.cs" />
+    <Compile Include="..\..\..\common\AppDelegate.cs" />
     <Compile Include="LinkAllTest.cs" />
     <Compile Include="ClassLayoutTest.cs" />
     <Compile Include="StructLayoutTest.cs" />

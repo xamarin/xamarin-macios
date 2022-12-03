@@ -21,24 +21,24 @@
       </Item>
       <Item ItemId=";description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[A project for creating a .NET MacCatalyst application]]></Val>
+          <Val><![CDATA[A project for creating a .NET Mac Catalyst application]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[.NET MacCatalyst 애플리케이션을 만들기 위한 프로젝트]]></Val>
+            <Val><![CDATA[.NET Mac Catalyst 애플리케이션을 만들기 위한 프로젝트]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[A project for creating a .NET 6 MacCatalyst application]]></Val>
+            <Val><![CDATA[A project for creating a .NET MacCatalyst application]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";name" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[MacCatalyst Application]]></Val>
+          <Val><![CDATA[Mac Catalyst Application]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[MacCatalyst 응용 프로그램]]></Val>
+            <Val><![CDATA[Mac Catalyst 애플리케이션]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[MacCatalyst Application (Preview)]]></Val>
+            <Val><![CDATA[MacCatalyst Application]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />

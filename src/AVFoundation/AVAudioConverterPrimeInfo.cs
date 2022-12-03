@@ -81,7 +81,7 @@ namespace AVFoundation {
 
 		public override int GetHashCode ()
 		{
-			return LeadingFrames.GetHashCode () ^ TrailingFrames.GetHashCode ();
+			return HashCode.Combine (LeadingFrames, TrailingFrames);
 		}
 	}
 }

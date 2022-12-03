@@ -39,23 +39,6 @@ using UIKit;
 
 namespace Foundation {
 
-#if !MONOMAC && !COREBUILD
-	public partial class NSAttributedString {
-		public NSAttributedString (NSUrl url, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error)
-		: this (url, documentAttributes, out _, ref error) { }
-
-		public NSAttributedString (NSData data, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error)
-		: this (data, documentAttributes, out _, ref error) { }
-
-		public NSAttributedString (NSUrl url, ref NSError error)
-		: this (url, new NSDictionary (), out _, ref error) { }
-
-		public NSAttributedString (NSData data, ref NSError error)
-		: this (data, new NSDictionary (), out _, ref error) { }
-
-	}
-#endif
-
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
 #if !MONOMAC && !COREBUILD
 		public NSAttributedStringDocumentAttributes () : base (new NSMutableDictionary ()) { }
@@ -222,15 +205,15 @@ namespace Foundation {
 
 		public float? HyphenationFactor {
 			get {
-				return GetFloatValue (UIStringAttributeKey.NSReadOnlyDocumentAttribute);
+				return GetFloatValue (UIStringAttributeKey.NSHyphenationFactorDocumentAttribute);
 			}
 			set {
 				if (value is null)
-					RemoveValue (UIStringAttributeKey.NSReadOnlyDocumentAttribute);
+					RemoveValue (UIStringAttributeKey.NSHyphenationFactorDocumentAttribute);
 				else {
 					if (value < 0 || value > 1.0f)
 						throw new ArgumentException ("value must be between 0 and 1");
-					SetNumberValue (UIStringAttributeKey.NSReadOnlyDocumentAttribute, value);
+					SetNumberValue (UIStringAttributeKey.NSHyphenationFactorDocumentAttribute, value);
 				}
 			}
 		}
