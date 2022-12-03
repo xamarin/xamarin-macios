@@ -433,7 +433,9 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+#if !NET
 		public static int Concurrency => Driver.Concurrency;
+#endif
 		public Version DeploymentTarget;
 		public Version SdkVersion; // for Mac Catalyst this is the iOS version
 		public Version NativeSdkVersion; // this is the same as SdkVersion, except that for Mac Catalyst it's the macOS SDK version.

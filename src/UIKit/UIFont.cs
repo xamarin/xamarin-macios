@@ -14,6 +14,35 @@ using ObjCRuntime;
 using Foundation;
 
 namespace UIKit {
+
+	public static class UIFontWeightExtensions {
+		public static nfloat GetWeight (this UIFontWeight weight)
+		{
+			switch (weight) {
+			case UIFontWeight.UltraLight:
+				return UIFontWeightConstants.UltraLight;
+			case UIFontWeight.Thin:
+				return UIFontWeightConstants.Thin;
+			case UIFontWeight.Light:
+				return UIFontWeightConstants.Light;
+			case UIFontWeight.Regular:
+				return UIFontWeightConstants.Regular;
+			case UIFontWeight.Medium:
+				return UIFontWeightConstants.Medium;
+			case UIFontWeight.Semibold:
+				return UIFontWeightConstants.Semibold;
+			case UIFontWeight.Bold:
+				return UIFontWeightConstants.Bold;
+			case UIFontWeight.Heavy:
+				return UIFontWeightConstants.Heavy;
+			case UIFontWeight.Black:
+				return UIFontWeightConstants.Black;
+			default:
+				throw new ArgumentException (weight.ToString ());
+			}
+		}
+	}
+
 	public partial class UIFont {
 		public override string ToString ()
 		{
@@ -150,32 +179,6 @@ namespace UIKit {
 			}
 		}
 
-		static nfloat GetFontWeight (UIFontWeight weight)
-		{
-			switch (weight) {
-			case UIFontWeight.UltraLight:
-				return UIFontWeightConstants.UltraLight;
-			case UIFontWeight.Thin:
-				return UIFontWeightConstants.Thin;
-			case UIFontWeight.Light:
-				return UIFontWeightConstants.Light;
-			case UIFontWeight.Regular:
-				return UIFontWeightConstants.Regular;
-			case UIFontWeight.Medium:
-				return UIFontWeightConstants.Medium;
-			case UIFontWeight.Semibold:
-				return UIFontWeightConstants.Semibold;
-			case UIFontWeight.Bold:
-				return UIFontWeightConstants.Bold;
-			case UIFontWeight.Heavy:
-				return UIFontWeightConstants.Heavy;
-			case UIFontWeight.Black:
-				return UIFontWeightConstants.Black;
-			default:
-				throw new ArgumentException (weight.ToString ());
-			}
-		}
-
 #if NET
 		[SupportedOSPlatform ("ios16.0")]
 		[SupportedOSPlatform ("maccatalyst16.0")]
@@ -209,7 +212,7 @@ namespace UIKit {
 #endif
 		public static UIFont SystemFontOfSize (nfloat size, UIFontWeight weight)
 		{
-			return SystemFontOfSize (size, GetFontWeight (weight));
+			return SystemFontOfSize (size, weight.GetWeight ());
 		}
 
 #if NET
@@ -234,7 +237,7 @@ namespace UIKit {
 #endif
 		public static UIFont MonospacedDigitSystemFontOfSize (nfloat fontSize, UIFontWeight weight)
 		{
-			return MonospacedDigitSystemFontOfSize (fontSize, GetFontWeight (weight));
+			return MonospacedDigitSystemFontOfSize (fontSize, weight.GetWeight ());
 		}
 
 #if NET
@@ -259,7 +262,7 @@ namespace UIKit {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 #endif
-		public static UIFont GetMonospacedSystemFont (nfloat size, UIFontWeight weight) => GetMonospacedSystemFont (size, GetFontWeight (weight));
+		public static UIFont GetMonospacedSystemFont (nfloat size, UIFontWeight weight) => GetMonospacedSystemFont (size, weight.GetWeight ());
 
 		// In this case we want to _always_ return a different managed instance
 		// so one can be disposed without affecting others
@@ -351,7 +354,7 @@ namespace UIKit {
 #endif
 		public static UIFont SystemFontOfSize (nfloat fontSize, UIFontWeight weight, UIFontWidth width)
 		{
-			var ptr = _SystemFontOfSize (fontSize, GetFontWeight (weight), GetFontWidth (width));
+			var ptr = _SystemFontOfSize (fontSize, weight.GetWeight (), GetFontWidth (width));
 			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
 		}
 
