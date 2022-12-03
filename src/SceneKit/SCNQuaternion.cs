@@ -681,7 +681,7 @@ namespace SceneKit {
 		/// <returns>A hash code formed from the bitwise XOR of this objects members.</returns>
 		public override int GetHashCode ()
 		{
-			return Xyz.GetHashCode () ^ W.GetHashCode ();
+			return HashCode.Combine (Xyz, W);
 		}
 
 		#endregion
