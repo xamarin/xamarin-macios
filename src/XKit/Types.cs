@@ -95,7 +95,7 @@ namespace UIKit {
 
 		public override int GetHashCode ()
 		{
-			return Top.GetHashCode () ^ Leading.GetHashCode () ^ Trailing.GetHashCode () ^ Bottom.GetHashCode ();
+			return HashCode.Combine (Top, Leading, Trailing, Bottom);
 		}
 
 #if !MONOMAC

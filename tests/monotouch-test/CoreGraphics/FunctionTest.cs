@@ -30,7 +30,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 					BackgroundColor = UIColor.Green,
 					Shaded = () => tested = true,
 				};
-				MonoTouchFixtures.AppDelegate.PresentModalViewController (vc, 0.1);
+				AppDelegate.PresentModalViewController (vc, 0.1);
 			}
 
 			if (!tested)

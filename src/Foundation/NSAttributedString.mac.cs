@@ -20,11 +20,6 @@ namespace Foundation
 {
 	public partial class NSAttributedString
 	{
-		public NSAttributedString (string str, NSStringAttributes? attributes)
-			: this (str, attributes?.Dictionary)
-		{
-		}
-
 		public NSAttributedString (string str,
 			NSFont? font = null,
 			NSColor? foregroundColor = null,
