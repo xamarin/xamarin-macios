@@ -30,14 +30,14 @@ namespace LinkAll.Serialization.DataContract {
 		// You also need to add custom types as '[KnownType(typeof(CustomType))]' attributes
 		public static string ToXml<T> (T obj)
 		{
-			var sb = new StringBuilder();
+			var sb = new StringBuilder ();
 			using (var x = XmlWriter.Create (sb, new XmlWriterSettings ())) {
 				var s = new DataContractSerializer (typeof (T));
-				s.WriteObject(x, obj);
+				s.WriteObject (x, obj);
 			}
-			return sb.ToString();
+			return sb.ToString ();
 		}
-		
+
 		public static T FromXml<T> (string xml)
 		{
 			using (var r = XmlReader.Create (new StringReader (xml))) {
@@ -45,10 +45,9 @@ namespace LinkAll.Serialization.DataContract {
 				return (T) s.ReadObject (r);
 			}
 		}
-		
+
 		[DataContract (Namespace = "mb")]
-		public class TestClass
-		{
+		public class TestClass {
 			public TestClass (SomeTypes types)
 			{
 				Types = types;
@@ -57,8 +56,9 @@ namespace LinkAll.Serialization.DataContract {
 			[DataMember]
 			public SomeTypes Types { get; set; }
 		}
-		
-		[DataContract (Namespace = "mb")][Flags] 
+
+		[DataContract (Namespace = "mb")]
+		[Flags]
 		public enum SomeTypes {
 			[Preserve (AllMembers = true)][EnumMember] None = 0,
 			[Preserve (AllMembers = true)][EnumMember] Image = 1,

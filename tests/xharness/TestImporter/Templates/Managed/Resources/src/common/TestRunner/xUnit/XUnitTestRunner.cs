@@ -12,17 +12,14 @@ using System.Xml.Xsl;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Xamarin.iOS.UnitTests.XUnit
-{
-	public class XsltIdGenerator
-	{
+namespace Xamarin.iOS.UnitTests.XUnit {
+	public class XsltIdGenerator {
 		// NUnit3 xml does not have schema, there is no much info about it, most examples just have incremental IDs.
 		int seed = 1000;
 		public int GenerateHash (string name) => seed++;
 	}
 
-	public class XUnitTestRunner : TestRunner
-	{
+	public class XUnitTestRunner : TestRunner {
 		readonly TestMessageSink messageSink;
 
 		XElement assembliesElement;
@@ -48,8 +45,8 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			messageSink.Runner.TestAssemblyExecutionStartingEvent += HandleTestAssemblyExecutionStarting;
 			messageSink.Runner.TestExecutionSummaryEvent += HandleTestExecutionSummary;
 
-			messageSink.Execution.AfterTestFinishedEvent += (MessageHandlerArgs <IAfterTestFinished> args) => HandleEvent ("AfterTestFinishedEvent", args, HandleAfterTestFinished);
-			messageSink.Execution.AfterTestStartingEvent += (MessageHandlerArgs <IAfterTestStarting> args) => HandleEvent ("AfterTestStartingEvent", args, HandleAfterTestStarting);
+			messageSink.Execution.AfterTestFinishedEvent += (MessageHandlerArgs<IAfterTestFinished> args) => HandleEvent ("AfterTestFinishedEvent", args, HandleAfterTestFinished);
+			messageSink.Execution.AfterTestStartingEvent += (MessageHandlerArgs<IAfterTestStarting> args) => HandleEvent ("AfterTestStartingEvent", args, HandleAfterTestStarting);
 			messageSink.Execution.BeforeTestFinishedEvent += (MessageHandlerArgs<IBeforeTestFinished> args) => HandleEvent ("BeforeTestFinishedEvent", args, HandleBeforeTestFinished);
 			messageSink.Execution.BeforeTestStartingEvent += (MessageHandlerArgs<IBeforeTestStarting> args) => HandleEvent ("BeforeTestStartingEvent", args, HandleBeforeTestStarting);
 			messageSink.Execution.TestAssemblyCleanupFailureEvent += (MessageHandlerArgs<ITestAssemblyCleanupFailure> args) => HandleEvent ("TestAssemblyCleanupFailureEvent", args, HandleTestAssemblyCleanupFailure);
@@ -99,7 +96,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			filters.AddRange (newFilters);
 		}
 
-		void HandleEvent<T> (string name, MessageHandlerArgs <T> args, Action <MessageHandlerArgs<T>> actualHandler) where T: class, IMessageSinkMessage
+		void HandleEvent<T> (string name, MessageHandlerArgs<T> args, Action<MessageHandlerArgs<T>> actualHandler) where T : class, IMessageSinkMessage
 		{
 			try {
 				actualHandler (args);
@@ -113,13 +110,13 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		{
 			if (args == null || args.Message == null)
 				return;
-			
+
 			OnDebug ("Test starting");
 			LogTestDetails (args.Message.Test, log: OnDebug);
 			ReportTestCases ("   Associated", args.Message.TestCases, args.Message.TestCase, OnDiagnostic);
 		}
 
-		void HandleTestSkipped (MessageHandlerArgs <ITestSkipped> args)
+		void HandleTestSkipped (MessageHandlerArgs<ITestSkipped> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -131,7 +128,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			ReportTestCases ("   Associated", args.Message.TestCases, log: OnDiagnostic);
 		}
 
-		void HandleTestPassed (MessageHandlerArgs <ITestPassed> args)
+		void HandleTestPassed (MessageHandlerArgs<ITestPassed> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -143,7 +140,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			ReportTestCases ("   Associated", args.Message.TestCases, log: OnDiagnostic);
 		}
 
-		void HandleTestOutput (MessageHandlerArgs <ITestOutput> args)
+		void HandleTestOutput (MessageHandlerArgs<ITestOutput> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -151,7 +148,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			OnInfo (args.Message.Output);
 		}
 
-		void HandleTestMethodStarting (MessageHandlerArgs <ITestMethodStarting> args)
+		void HandleTestMethodStarting (MessageHandlerArgs<ITestMethodStarting> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -162,7 +159,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			ReportTestCases ("   Associated", args.Message.TestCases, log: OnDiagnostic);
 		}
 
-		void HandleTestMethodFinished (MessageHandlerArgs <ITestMethodFinished> args)
+		void HandleTestMethodFinished (MessageHandlerArgs<ITestMethodFinished> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -174,7 +171,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			ReportTestCases ("   Associated", args.Message.TestCases, log: OnDiagnostic);
 		}
 
-		void HandleTestMethodCleanupFailure (MessageHandlerArgs <ITestMethodCleanupFailure> args)
+		void HandleTestMethodCleanupFailure (MessageHandlerArgs<ITestMethodCleanupFailure> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -186,7 +183,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			LogFailureInformation (args.Message, log: OnError);
 		}
 
-		void HandleTestFinished (MessageHandlerArgs <ITestFinished> args)
+		void HandleTestFinished (MessageHandlerArgs<ITestFinished> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -239,7 +236,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			OnInfo (sb.ToString ());
 		}
 
-		void HandleTestCollectionStarting (MessageHandlerArgs <ITestCollectionStarting> args)
+		void HandleTestCollectionStarting (MessageHandlerArgs<ITestCollectionStarting> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -250,7 +247,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			ReportTestCases ("   Associated", args.Message.TestCases, log: OnDiagnostic);
 		}
 
-		void HandleTestCollectionFinished (MessageHandlerArgs <ITestCollectionFinished> args)
+		void HandleTestCollectionFinished (MessageHandlerArgs<ITestCollectionFinished> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -261,18 +258,18 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			ReportTestCases ("   Associated", args.Message.TestCases, log: OnDiagnostic);
 		}
 
-		void HandleTestCollectionCleanupFailure (MessageHandlerArgs <ITestCollectionCleanupFailure> args)
+		void HandleTestCollectionCleanupFailure (MessageHandlerArgs<ITestCollectionCleanupFailure> args)
 		{
 			if (args == null || args.Message == null)
 				return;
 
 			OnError ("Error during test collection cleanup");
-			LogTestCollectionDetails (args.Message.TestCollection, log:OnError);
+			LogTestCollectionDetails (args.Message.TestCollection, log: OnError);
 			ReportTestCases ("   Associated", args.Message.TestCases, log: OnError);
 			LogFailureInformation (args.Message, log: OnError);
 		}
 
-		void HandleTestCleanupFailure (MessageHandlerArgs <ITestCleanupFailure> args)
+		void HandleTestCleanupFailure (MessageHandlerArgs<ITestCleanupFailure> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -283,7 +280,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			LogFailureInformation (args.Message, log: OnError);
 		}
 
-		void HandleTestClassStarting (MessageHandlerArgs <ITestClassStarting> args)
+		void HandleTestClassStarting (MessageHandlerArgs<ITestClassStarting> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -292,18 +289,18 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			LogTestClassDetails (args.Message.TestClass, log: OnDiagnostic);
 		}
 
-		void HandleTestClassFinished (MessageHandlerArgs <ITestClassFinished> args)
+		void HandleTestClassFinished (MessageHandlerArgs<ITestClassFinished> args)
 		{
 			if (args == null || args.Message == null)
 				return;
-			
+
 			OnDebug ("Test class finished");
 			OnInfo ($"{args.Message.TestClass.Class.Name} {args.Message.ExecutionTime} ms");
 			LogTestClassDetails (args.Message.TestClass, OnDebug);
 			ReportTestCases ("   Associated", args.Message.TestCases, log: OnDiagnostic);
 		}
 
-		void HandleTestClassDisposeStarting (MessageHandlerArgs <ITestClassDisposeStarting> args)
+		void HandleTestClassDisposeStarting (MessageHandlerArgs<ITestClassDisposeStarting> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -313,7 +310,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			ReportTestCases ("   Associated", args.Message.TestCases, log: OnDiagnostic);
 		}
 
-		void HandleTestClassDisposeFinished (MessageHandlerArgs <ITestClassDisposeFinished> args)
+		void HandleTestClassDisposeFinished (MessageHandlerArgs<ITestClassDisposeFinished> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -323,7 +320,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			ReportTestCases ("   Associated", args.Message.TestCases, log: OnDiagnostic);
 		}
 
-		void HandleTestClassConstructionStarting (MessageHandlerArgs <ITestClassConstructionStarting> args)
+		void HandleTestClassConstructionStarting (MessageHandlerArgs<ITestClassConstructionStarting> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -333,7 +330,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			ReportTestCases ("   Associated", args.Message.TestCases, args.Message.TestCase, OnDiagnostic);
 		}
 
-		void HandleTestClassConstructionFinished (MessageHandlerArgs <ITestClassConstructionFinished> args)
+		void HandleTestClassConstructionFinished (MessageHandlerArgs<ITestClassConstructionFinished> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -343,7 +340,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			ReportTestCases ("   Associated", args.Message.TestCases, args.Message.TestCase, OnDiagnostic);
 		}
 
-		void HandleTestClassCleanupFailure (MessageHandlerArgs <ITestClassCleanupFailure> args)
+		void HandleTestClassCleanupFailure (MessageHandlerArgs<ITestClassCleanupFailure> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -355,7 +352,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			LogFailureInformation (args.Message, log: OnError);
 		}
 
-		void HandleTestCaseStarting (MessageHandlerArgs <ITestCaseStarting> args)
+		void HandleTestCaseStarting (MessageHandlerArgs<ITestCaseStarting> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -365,7 +362,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			ReportTestCases ("   Associated", args.Message.TestCases, args.Message.TestCase, OnDiagnostic);
 		}
 
-		void HandleTestCaseFinished (MessageHandlerArgs <ITestCaseFinished> args)
+		void HandleTestCaseFinished (MessageHandlerArgs<ITestCaseFinished> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -376,7 +373,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			LogSummary (args.Message, log: OnDebug);
 		}
 
-		void HandleTestCaseCleanupFailure (MessageHandlerArgs <ITestCaseCleanupFailure> args)
+		void HandleTestCaseCleanupFailure (MessageHandlerArgs<ITestCaseCleanupFailure> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -387,7 +384,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			LogFailureInformation (args.Message, log: OnError);
 		}
 
-		void HandleTestAssemblyStarting (MessageHandlerArgs <ITestAssemblyStarting> args)
+		void HandleTestAssemblyStarting (MessageHandlerArgs<ITestAssemblyStarting> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -398,7 +395,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			ReportTestCases ("   Associated", args.Message.TestCases, log: OnDebug);
 		}
 
-		void HandleTestAssemblyFinished (MessageHandlerArgs <ITestAssemblyFinished> args)
+		void HandleTestAssemblyFinished (MessageHandlerArgs<ITestAssemblyFinished> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -410,7 +407,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			ReportTestCases ("   Associated", args.Message.TestCases, log: OnDiagnostic);
 		}
 
-		void HandleTestAssemblyCleanupFailure (MessageHandlerArgs <ITestAssemblyCleanupFailure> args)
+		void HandleTestAssemblyCleanupFailure (MessageHandlerArgs<ITestAssemblyCleanupFailure> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -421,7 +418,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			LogFailureInformation (args.Message, log: OnError);
 		}
 
-		void HandleBeforeTestStarting (MessageHandlerArgs <IBeforeTestStarting> args)
+		void HandleBeforeTestStarting (MessageHandlerArgs<IBeforeTestStarting> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -429,7 +426,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			OnDiagnostic ($"'Before' method for test '{args.Message.Test.DisplayName}' starting");
 		}
 
-		void HandleBeforeTestFinished (MessageHandlerArgs <IBeforeTestFinished> args)
+		void HandleBeforeTestFinished (MessageHandlerArgs<IBeforeTestFinished> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -437,7 +434,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			OnDiagnostic ($"'Before' method for test '{args.Message.Test.DisplayName}' finished");
 		}
 
-		void HandleAfterTestStarting (MessageHandlerArgs <IAfterTestStarting> args)
+		void HandleAfterTestStarting (MessageHandlerArgs<IAfterTestStarting> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -445,7 +442,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			OnDiagnostic ($"'After' method for test '{args.Message.Test.DisplayName}' starting");
 		}
 
-		void HandleAfterTestFinished (MessageHandlerArgs <IAfterTestFinished> args)
+		void HandleAfterTestFinished (MessageHandlerArgs<IAfterTestFinished> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -453,7 +450,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			OnDiagnostic ($"'After' method for test '{args.Message.Test.DisplayName}' finished");
 		}
 
-		void HandleTestExecutionSummary (MessageHandlerArgs <ITestExecutionSummary> args)
+		void HandleTestExecutionSummary (MessageHandlerArgs<ITestExecutionSummary> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -464,14 +461,14 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			if (args.Message.Summaries == null || args.Message.Summaries.Count == 0)
 				return;
 
-			foreach (KeyValuePair <string, ExecutionSummary> summary in args.Message.Summaries) {
+			foreach (KeyValuePair<string, ExecutionSummary> summary in args.Message.Summaries) {
 				OnInfo (String.Empty);
 				OnInfo ($" Assembly: {summary.Key}");
 				LogSummary (summary.Value, log: OnDebug);
 			}
 		}
 
-		void HandleTestAssemblyExecutionStarting (MessageHandlerArgs <ITestAssemblyExecutionStarting> args)
+		void HandleTestAssemblyExecutionStarting (MessageHandlerArgs<ITestAssemblyExecutionStarting> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -479,7 +476,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			OnInfo ($"Execution starting for assembly {args.Message.Assembly.AssemblyFilename}");
 		}
 
-		void HandleTestAssemblyExecutionFinished (MessageHandlerArgs <ITestAssemblyExecutionFinished> args)
+		void HandleTestAssemblyExecutionFinished (MessageHandlerArgs<ITestAssemblyExecutionFinished> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -488,7 +485,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			LogSummary (args.Message.ExecutionSummary, log: OnDebug);
 		}
 
-		void HandleTestAssemblyDiscoveryStarting (MessageHandlerArgs <ITestAssemblyDiscoveryStarting> args)
+		void HandleTestAssemblyDiscoveryStarting (MessageHandlerArgs<ITestAssemblyDiscoveryStarting> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -497,7 +494,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			OnInfo ($"   Will use AppDomain: {args.Message.AppDomain.YesNo ()}");
 		}
 
-		void HandleTestAssemblyDiscoveryFinished (MessageHandlerArgs <ITestAssemblyDiscoveryFinished> args)
+		void HandleTestAssemblyDiscoveryFinished (MessageHandlerArgs<ITestAssemblyDiscoveryFinished> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -507,7 +504,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			OnInfo ($"   Test cases to run: {args.Message.TestCasesToRun}");
 		}
 
-		void HandleDiagnosticMessage (MessageHandlerArgs <IDiagnosticMessage> args)
+		void HandleDiagnosticMessage (MessageHandlerArgs<IDiagnosticMessage> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -515,7 +512,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			OnDiagnostic (args.Message.Message);
 		}
 
-		void HandleDiagnosticErrorMessage (MessageHandlerArgs <IErrorMessage> args)
+		void HandleDiagnosticErrorMessage (MessageHandlerArgs<IErrorMessage> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -523,7 +520,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			LogFailureInformation (args.Message);
 		}
 
-		void HandleDiscoveryCompleteMessage (MessageHandlerArgs <IDiscoveryCompleteMessage> args)
+		void HandleDiscoveryCompleteMessage (MessageHandlerArgs<IDiscoveryCompleteMessage> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -531,7 +528,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			OnInfo ("Discovery complete");
 		}
 
-		void HandleDiscoveryTestCaseMessage (MessageHandlerArgs <ITestCaseDiscoveryMessage> args)
+		void HandleDiscoveryTestCaseMessage (MessageHandlerArgs<ITestCaseDiscoveryMessage> args)
 		{
 			if (args == null || args.Message == null)
 				return;
@@ -563,14 +560,14 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			if (testCase == null)
 				return;
 
-			EnsureLogger (log)($"{verb} test case: {testCase.DisplayName}");
+			EnsureLogger (log) ($"{verb} test case: {testCase.DisplayName}");
 		}
 
-		void LogAssemblyInformation (ITestAssemblyMessage message,  Action<string> log = null, StringBuilder sb = null)
+		void LogAssemblyInformation (ITestAssemblyMessage message, Action<string> log = null, StringBuilder sb = null)
 		{
 			if (message == null)
 				return;
-			
+
 			do_log ($"[Assembly name: {message.TestAssembly.Assembly.Name}]", log, sb);
 			do_log ($"[Assembly path: {message.TestAssembly.Assembly.AssemblyPath}]", OnDiagnostic, sb);
 		}
@@ -579,7 +576,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		{
 			if (info == null)
 				return;
-			
+
 			string message = ExceptionUtility.CombineMessages (info);
 			do_log ($"   Exception messages: {message}", log, sb);
 
@@ -727,7 +724,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			foreach (TestAssemblyInfo assemblyInfo in testAssemblies) {
 				if (assemblyInfo == null || assemblyInfo.Assembly == null || !ShouldRunAssembly (assemblyInfo))
 					continue;
-				
+
 				if (String.IsNullOrEmpty (assemblyInfo.FullPath)) {
 					OnWarning ($"Assembly '{assemblyInfo.Assembly}' cannot be found on the filesystem. xUnit requires access to actual on-disk file.");
 					continue;
@@ -769,8 +766,8 @@ namespace Xamarin.iOS.UnitTests.XUnit
 
 					string filterExtension = Path.GetExtension (filter.AssemblyName);
 					if (String.IsNullOrEmpty (filterExtension) ||
-					    (String.Compare (filterExtension, ".exe", StringComparison.OrdinalIgnoreCase) != 0 &&
-					     String.Compare (filterExtension, ".dll", StringComparison.OrdinalIgnoreCase) != 0)) {
+						(String.Compare (filterExtension, ".exe", StringComparison.OrdinalIgnoreCase) != 0 &&
+						 String.Compare (filterExtension, ".dll", StringComparison.OrdinalIgnoreCase) != 0)) {
 						string asmName = $"{filter.AssemblyName}.dll";
 						if (String.Compare (asmName, fileName, StringComparison.Ordinal) == 0)
 							return ReportFilteredAssembly (assemblyInfo, filter);
@@ -803,7 +800,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			// remove all the empty nodes
 			assembliesElement.Descendants ().Where (e => e.Name == "collection" && !e.Descendants ().Any ()).Remove ();
 			string outputFilePath = GetResultsFilePath ();
-			var settings = new XmlWriterSettings { Indent = true};
+			var settings = new XmlWriterSettings { Indent = true };
 			using (var xmlWriter = XmlWriter.Create (outputFilePath, settings)) {
 				switch (jargon) {
 				case Jargon.NUnitV2:
@@ -817,7 +814,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 					break;
 				}
 			}
-			
+
 			return outputFilePath;
 		}
 		public override void WriteResultsToFile (TextWriter writer, Jargon jargon)
@@ -858,7 +855,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 				return;
 			using (var xsltStream = GetType ().Assembly.GetManifestResourceStream (name)) {
 				if (xsltStream == null) {
-					throw new Exception ($"Stream with name {name} cannot be found! We have {GetType ().Assembly.GetManifestResourceNames ()[0]}");
+					throw new Exception ($"Stream with name {name} cannot be found! We have {GetType ().Assembly.GetManifestResourceNames () [0]}");
 				}
 				// add the extension so that we can get the hash from the name of the test
 				// Create an XsltArgumentList.
@@ -1056,7 +1053,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			if (tests.Any ()) {
 				// create a single filter per test
 				foreach (var t in tests) {
-					if (t.StartsWith("KLASS:", StringComparison.Ordinal)) {
+					if (t.StartsWith ("KLASS:", StringComparison.Ordinal)) {
 						var klass = t.Replace ("KLASS:", "");
 						filters.Add (XUnitFilter.CreateClassFilter (klass, true));
 					} else if (t.StartsWith ("KLASS32:", StringComparison.Ordinal) && IntPtr.Size == 4) {
@@ -1080,7 +1077,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			if (categories.Any ()) {
 				foreach (var c in categories) {
 					var traitInfo = c.Split ("=");
-					filters.Add (XUnitFilter.CreateTraitFilter (traitInfo[0], traitInfo[1], true));
+					filters.Add (XUnitFilter.CreateTraitFilter (traitInfo [0], traitInfo [1], true));
 				}
 			}
 		}

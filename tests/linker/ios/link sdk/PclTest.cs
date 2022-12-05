@@ -16,7 +16,7 @@ namespace LinkSdk {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PclTest {
-		
+
 		[Test]
 		public void Corlib ()
 		{
@@ -32,37 +32,33 @@ namespace LinkSdk {
 #endif
 			const string url = "http://www.google.com";
 			Uri uri = new Uri (url);
-			
+
 			Assert.False (this is ICommand, "ICommand");
-			
+
 			HttpWebRequest hwr = WebRequest.CreateHttp (uri);
 			try {
 				Assert.True (hwr.SupportsCookieContainer, "SupportsCookieContainer");
-			}
-			catch (NotImplementedException) {
+			} catch (NotImplementedException) {
 				// feature is not available, but the symbol itself is needed
 			}
-			
+
 			WebResponse wr = hwr.GetResponse ();
 			try {
 				Assert.True (wr.SupportsHeaders, "SupportsHeaders");
-			}
-			catch (NotImplementedException) {
+			} catch (NotImplementedException) {
 				// feature is not available, but the symbol itself is needed
 			}
 			wr.Dispose ();
 
 			try {
 				Assert.NotNull (WebRequest.CreateHttp (url));
-			}
-			catch (NotImplementedException) {
+			} catch (NotImplementedException) {
 				// feature is not available, but the symbol itself is needed
 			}
 
 			try {
 				Assert.NotNull (WebRequest.CreateHttp (uri));
-			}
-			catch (NotImplementedException) {
+			} catch (NotImplementedException) {
 				// feature is not available, but the symbol itself is needed
 			}
 		}
@@ -74,15 +70,13 @@ namespace LinkSdk {
 			AddressHeaderCollection ahc = new AddressHeaderCollection ();
 			try {
 				ahc.FindAll ("name", "namespace");
-			}
-			catch (NotImplementedException) {
+			} catch (NotImplementedException) {
 				// feature is not available, but the symbol itself is needed
 			}
-			
+
 			try {
 				FaultException.CreateFault (new TestFault (), String.Empty, Array.Empty<Type> ());
-			}
-			catch (NotImplementedException) {
+			} catch (NotImplementedException) {
 				// feature is not available, but the symbol itself is needed
 			}
 		}
@@ -103,31 +97,28 @@ namespace LinkSdk {
 		{
 			try {
 				XmlConvert.VerifyPublicId (String.Empty);
-			}
-			catch (NotImplementedException) {
+			} catch (NotImplementedException) {
 				// feature is not available, but the symbol itself is needed
 			}
 
 			try {
 				XmlConvert.VerifyWhitespace (String.Empty);
-			}
-			catch (NotImplementedException) {
+			} catch (NotImplementedException) {
 				// feature is not available, but the symbol itself is needed
 			}
 
 			try {
 				XmlConvert.VerifyXmlChars (String.Empty);
-			}
-			catch (NotImplementedException) {
+			} catch (NotImplementedException) {
 				// feature is not available, but the symbol itself is needed
 			}
-			
+
 			var xr = XmlReader.Create (Stream.Null);
 			xr.Dispose ();
-			
+
 			var xw = XmlWriter.Create (Stream.Null);
 			xw.Dispose ();
-			
+
 			XmlReaderSettings xrs = new XmlReaderSettings ();
 			xrs.DtdProcessing = DtdProcessing.Ignore;
 		}
