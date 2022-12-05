@@ -18,7 +18,8 @@ namespace LinkAnyTest {
 			int i = 0;
 			string b = null;
 			NSSet s = new NSSet ("a", "b", "c");
-			s.Enumerate (delegate (NSObject obj, ref bool stop) {
+			s.Enumerate (delegate (NSObject obj, ref bool stop)
+			{
 				stop = i++ == 1;
 				b = obj.ToString ();
 			});

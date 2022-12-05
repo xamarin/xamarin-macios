@@ -40,7 +40,7 @@ namespace DontLink {
 
 	[TestFixture]
 	public class DontLinkRegressionTests {
-		
+
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=587
 		// regressed: http://bugzilla.xamarin.com/show_bug.cgi?id=1824
 		private readonly Dictionary<string, string> queued = new Dictionary<string, string> ();
@@ -48,7 +48,7 @@ namespace DontLink {
 		[Test]
 		public void Bug587_FullAotRuntime ()
 		{
-			KeyValuePair<string, string> valuePair = queued.FirstOrDefault (delegate {return true; });
+			KeyValuePair<string, string> valuePair = queued.FirstOrDefault (delegate { return true; });
 			Assert.NotNull (valuePair);
 			// should not crash with System.ExecutionEngineException
 		}

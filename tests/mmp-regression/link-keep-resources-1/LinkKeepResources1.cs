@@ -17,10 +17,10 @@ using ObjCRuntime;
 // * Link SDK or Link All must be enabled
 
 namespace Xamarin.Mac.Linker.Test {
-	
+
 	class KeepResources1 {
 
-		static void Main (string[] args)
+		static void Main (string [] args)
 		{
 			NSApplication.Init ();
 
