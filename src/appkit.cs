@@ -15554,36 +15554,6 @@ namespace AppKit {
 		[Internal, Field ("NSFileTypeDocumentOption")]
 		NSString NSFileTypeDocumentOption { get; }
 
-		[Internal, Field ("NSPlainTextDocumentType")]
-		NSString NSPlainTextDocumentType { get; }
-
-		[Internal, Field ("NSRTFTextDocumentType")]
-		NSString NSRtfTextDocumentType { get; }
-
-		[Internal, Field ("NSRTFDTextDocumentType")]
-		NSString NSRtfdTextDocumentType { get; }
-
-		[Internal, Field ("NSMacSimpleTextDocumentType")]
-		NSString NSMacSimpleTextDocumentType { get; }
-
-		[Internal, Field ("NSHTMLTextDocumentType")]
-		NSString NSHTMLTextDocumentType { get; }
-
-		[Internal, Field ("NSDocFormatTextDocumentType")]
-		NSString NSDocFormatTextDocumentType { get; }
-
-		[Internal, Field ("NSWordMLTextDocumentType")]
-		NSString NSWordMLTextDocumentType { get; }
-
-		[Internal, Field ("NSWebArchiveTextDocumentType")]
-		NSString NSWebArchiveTextDocumentType { get; }
-
-		[Internal, Field ("NSOfficeOpenXMLTextDocumentType")]
-		NSString NSOfficeOpenXMLTextDocumentType { get; }
-
-		[Internal, Field ("NSOpenDocumentTextDocumentType")]
-		NSString NSOpenDocumentTextDocumentType { get; }
-
 		[Mac (10, 11)]
 		[Internal, Field ("NSDefaultAttributesDocumentAttribute")]
 		NSString NSDefaultAttributesDocumentAttribute { get; }

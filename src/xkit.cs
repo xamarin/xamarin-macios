@@ -4243,4 +4243,43 @@ namespace UIKit {
 		NSTextListElement ParentElement { get; }
 	}
 
+	[Static]
+	[Internal]
+	interface NSAttributedStringDocumentType {
+		[Field ("NSPlainTextDocumentType")]
+		NSString NSPlainTextDocumentType { get; }
+
+		[Field ("NSRTFDTextDocumentType")]
+		NSString NSRtfdTextDocumentType { get; }
+
+		[Field ("NSRTFTextDocumentType")]
+		NSString NSRtfTextDocumentType { get; }
+
+		[Field ("NSHTMLTextDocumentType")]
+		NSString NSHtmlTextDocumentType { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSMacSimpleTextDocumentType")]
+		NSString NSMacSimpleTextDocumentType { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSDocFormatTextDocumentType")]
+		NSString NSDocFormatTextDocumentType { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSWordMLTextDocumentType")]
+		NSString NSWordMLTextDocumentType { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSWebArchiveTextDocumentType")]
+		NSString NSWebArchiveTextDocumentType { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSOfficeOpenXMLTextDocumentType")]
+		NSString NSOfficeOpenXMLTextDocumentType { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSOpenDocumentTextDocumentType")]
+		NSString NSOpenDocumentTextDocumentType { get; }
+	}
 }
