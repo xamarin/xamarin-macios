@@ -5,12 +5,10 @@ using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Filters;
 
-namespace Xamarin.iOS.UnitTests.NUnit
-{
-	public class ClassOrNamespaceFilter : TestFilter
-	{
+namespace Xamarin.iOS.UnitTests.NUnit {
+	public class ClassOrNamespaceFilter : TestFilter {
 		bool isClassFilter;
-		List <string> names;
+		List<string> names;
 
 		public ClassOrNamespaceFilter (string name, bool isClassFilter)
 		{
@@ -39,7 +37,7 @@ namespace Xamarin.iOS.UnitTests.NUnit
 				throw new ArgumentException ("must not be null or empty", nameof (name));
 
 			if (names == null)
-				names = new List <string> ();
+				names = new List<string> ();
 			if (names.Contains (name))
 				return;
 

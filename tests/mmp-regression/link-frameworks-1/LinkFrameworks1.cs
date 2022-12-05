@@ -12,7 +12,7 @@ using Foundation;
 // * Link All must be enabled
 
 namespace Xamarin.Mac.Linker.Test {
-	
+
 	class Framework {
 		static void TestFrameworks ()
 		{
@@ -64,8 +64,8 @@ namespace Xamarin.Mac.Linker.Test {
 				case "mk": // MapKit
 				case "bc": // BusinessChat
 				case "un": // UserNotifications
-					// This needs investigation, it should be possible to link at least some of these frameworks away.
-					// https://github.com/xamarin/xamarin-macios/issues/6542
+						   // This needs investigation, it should be possible to link at least some of these frameworks away.
+						   // https://github.com/xamarin/xamarin-macios/issues/6542
 					continue;
 				default:
 					Test.Log.WriteLine ($"[FAIL] Unexpectedly found field NSObject.{field.Name} for framework '{framework}'.");
@@ -74,7 +74,7 @@ namespace Xamarin.Mac.Linker.Test {
 			}
 		}
 
-		static void Main (string[] args)
+		static void Main (string [] args)
 		{
 			NSApplication.Init ();
 

@@ -4,10 +4,8 @@ using MonoMac.Foundation;
 using MonoMac.AppKit;
 using MonoMac.WebKit;
 
-namespace WebKitDelegateEvents
-{
-	public partial class MainWindowController : NSWindowController
-	{
+namespace WebKitDelegateEvents {
+	public partial class MainWindowController : NSWindowController {
 		string currentLocation;
 
 		public MainWindowController (IntPtr handle) : base (handle)
@@ -33,16 +31,14 @@ namespace WebKitDelegateEvents
 			}
 		}
 
-		class DomOutlineViewDelegate : NSOutlineViewDelegate
-		{
+		class DomOutlineViewDelegate : NSOutlineViewDelegate {
 			public override void SelectionDidChange (NSNotification notification)
 			{
 				Console.WriteLine ("SELECTION CHANGE VIA DELEGATE");
 			}
 		}
 
-		class DomOutlineViewDataSource : NSOutlineViewDataSource
-		{
+		class DomOutlineViewDataSource : NSOutlineViewDataSource {
 			WebView webView;
 
 			DomNodeList GetChildren (NSObject item)

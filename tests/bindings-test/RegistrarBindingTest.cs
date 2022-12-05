@@ -8,12 +8,10 @@ using NUnit.Framework;
 
 using Bindings.Test;
 
-namespace Xamarin.BindingTests
-{
+namespace Xamarin.BindingTests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class RegistrarBindingTest
-	{
+	public class RegistrarBindingTest {
 		[Test]
 		public void BlockCallback ()
 		{
@@ -36,8 +34,7 @@ namespace Xamarin.BindingTests
 			}
 		}
 
-		class BlockCallbackClass : NSObject, IObjCProtocolBlockTest
-		{
+		class BlockCallbackClass : NSObject, IObjCProtocolBlockTest {
 			public void RequiredCallback (Action<int> completionHandler)
 			{
 				completionHandler (42);
@@ -108,14 +105,12 @@ namespace Xamarin.BindingTests
 			}
 		}
 
-		abstract class BaseBlockCallbackClass : NSObject, IObjCProtocolBlockTest
-		{
+		abstract class BaseBlockCallbackClass : NSObject, IObjCProtocolBlockTest {
 			public abstract void RequiredCallback (Action<int> completionHandler);
 			public abstract Action<int> RequiredReturnValue ();
 		}
 
-		class DerivedBlockCallbackClass : BaseBlockCallbackClass
-		{
+		class DerivedBlockCallbackClass : BaseBlockCallbackClass {
 			public static int Answer = 42;
 			public override void RequiredCallback (Action<int> completionHandler)
 			{
@@ -153,7 +148,7 @@ namespace Xamarin.BindingTests
 			public Action<int> OptionalReturnValue ()
 			{
 				return new Action<int> ((v) => {
-				Console.WriteLine ("OptionalReturnValue");
+					Console.WriteLine ("OptionalReturnValue");
 					Assert.AreEqual (Answer, v, "RequiredReturnValue");
 				});
 			}
@@ -170,14 +165,13 @@ namespace Xamarin.BindingTests
 			public static Action<int> OptionalStaticReturnValue ()
 			{
 				return new Action<int> ((v) => {
-				Console.WriteLine ("OptionalStaticReturnValue");
+					Console.WriteLine ("OptionalStaticReturnValue");
 					Assert.AreEqual (Answer, v, "RequiredReturnValue");
 				});
 			}
 		}
 
-		class BlockCallbackClassExplicit : NSObject, IObjCProtocolBlockTest
-		{
+		class BlockCallbackClassExplicit : NSObject, IObjCProtocolBlockTest {
 			// Explicitly implemented interface member
 			void IObjCProtocolBlockTest.RequiredCallback (Action<int> completionHandler)
 			{
@@ -235,8 +229,7 @@ namespace Xamarin.BindingTests
 			}
 		}
 
-		public class BlockCallbackTester : ObjCBlockTester
-		{
+		public class BlockCallbackTester : ObjCBlockTester {
 			public override void ClassCallback (Action<int> completionHandler)
 			{
 				completionHandler (42);
