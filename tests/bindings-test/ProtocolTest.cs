@@ -393,7 +393,7 @@ namespace Xamarin.BindingTests {
 
 			public override int GetHashCode ()
 			{
-				return HashCode.Combine(Name, Value);
+				return HashCode.Combine (Name, Value);
 			}
 
 			public override string ToString ()
