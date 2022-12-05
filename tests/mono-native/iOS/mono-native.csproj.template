@@ -17,6 +17,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <RootTestsDirectory>..\..</RootTestsDirectory>
     <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <MonoNativeMode Condition="'$(TargetFrameworkIdentifier)|$(Configuration)|$(Platform)' == 'Xamarin.iOS|Debug|iPhoneSimulator'">MONO_NATIVE_SYMLINK</MonoNativeMode>
