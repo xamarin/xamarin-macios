@@ -14,12 +14,12 @@ namespace Cecil.Tests {
 	[TestFixture]
 	public class Test {
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblyDefinitions))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblyDefinitions))]
 		// ref: https://github.com/xamarin/xamarin-macios/pull/7760
-		public void IdentifyBackingFieldAssignation (string assemblyPath)
+		public void IdentifyBackingFieldAssignation (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath);
+			var assembly = info.Assembly;
 			// look inside all .cctor (static constructor) inside `assemblyName`
 			foreach (var m in Helper.FilterMethods (assembly!, (m) => m.IsStatic && m.IsConstructor)) {
 				foreach (var ins in m.Body.Instructions) {
@@ -50,12 +50,12 @@ namespace Cecil.Tests {
 			}
 		}
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblyDefinitions))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblyDefinitions))]
 		// ref: https://github.com/xamarin/xamarin-macios/issues/8249
-		public void EnsureUIThreadOnInit (string assemblyPath)
+		public void EnsureUIThreadOnInit (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath);
+			var assembly = info.Assembly;
 
 			// `CNContactsUserDefaults` is `[ThreadSafe (false)]` and part of iOS and macOS
 			var t = assembly.MainModule.GetType ("Contacts.CNContactsUserDefaults");
@@ -85,17 +85,17 @@ namespace Cecil.Tests {
 			}
 		}
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
-		public void NoSystemConsoleReference (string assemblyPath)
+		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblyDefinitions))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
+		public void NoSystemConsoleReference (AssemblyInfo info)
 		{
-			if (Path.GetFileName (assemblyPath) == "Xamarin.Mac.dll")
+			var assembly = info.Assembly;
+			if (assembly.Name.Name == "Xamarin.Mac")
 				Assert.Ignore ("Xamarin.Mac has a workaround for Sierra bug w/NSLog");
 
-			var assembly = Helper.GetAssembly (assemblyPath);
 			// this has a quite noticeable impact on (small) app size
 			if (assembly.MainModule.TryGetTypeReference ("System.Console", out var _))
-				Assert.Fail ($"{assemblyPath} has a reference to `System.Console`. Please use `Runtime.NSLog` inside the platform assemblies");
+				Assert.Fail ($"{assembly} has a reference to `System.Console`. Please use `Runtime.NSLog` inside the platform assemblies");
 		}
 
 		// we should not p/invoke into API that are banned (by MS) from the C runtime
@@ -128,11 +128,11 @@ namespace Cecil.Tests {
 			"wvsprintfa", "wvsprintfw"
 		};
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
-		public void NoBannedApi (string assemblyPath)
+		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblyDefinitions))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
+		public void NoBannedApi (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath);
+			var assembly = info.Assembly;
 			List<string> found = new List<string> ();
 			foreach (var m in Helper.FilterMethods (assembly!, (m) => m.IsPInvokeImpl)) {
 				var symbol = m.PInvokeInfo.EntryPoint;
@@ -154,12 +154,12 @@ namespace Cecil.Tests {
 			MacCatalyst,
 		}
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblyDefinitions))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
 		// ref: https://github.com/xamarin/xamarin-macios/issues/4835
-		public void Unavailable (string assemblyPath)
+		public void Unavailable (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath);
+			var assembly = info.Assembly;
 
 			var platform = PlatformName.None;
 			switch (assembly.Name.Name) {

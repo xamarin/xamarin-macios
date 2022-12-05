@@ -42,10 +42,10 @@ namespace Cecil.Tests {
 		}
 
 		[Ignore ("work in progress - there are 100 failures, mostly due to strings")]
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblies))]
-		public void CheckForNonBlittablePInvokes (string assemblyPath)
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblyDefinitions))]
+		public void CheckForNonBlittablePInvokes (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath, readSymbols: true);
+			var assembly = info.Assembly;
 			var pinvokes = AllPInvokes (assembly).Where (IsPInvokeOK);
 			Assert.IsTrue (pinvokes.Count () > 0);
 
@@ -53,7 +53,7 @@ namespace Cecil.Tests {
 			var results = pinvokes.Select (pi => IsMethodBlittable (assembly, pi, blitCache)).Where (r => !r.IsBlittable);
 			if (results.Count () > 0) {
 				var failString = new StringBuilder ();
-				failString.Append ($"There is an issue with {results.Count ()} pinvokes in {assembly.Name} ({assemblyPath}):\n");
+				failString.Append ($"There is an issue with {results.Count ()} pinvokes in {assembly.Name} ({info.Path}):\n");
 				foreach (var sb in results.Select (r => r.Result)) {
 					failString.Append (sb.ToString ());
 				}

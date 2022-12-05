@@ -15,11 +15,11 @@ namespace Cecil.Tests {
 
 	[TestFixture]
 	public class MarshalAsTest {
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
-		public void TestAssembly (string assemblyPath)
+		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblyDefinitions))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
+		public void TestAssembly (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath);
+			var assembly = info.Assembly;
 			var failedMethods = new List<string> ();
 			List<string>? failures = null;
 			var checkedTypes = new List<TypeReference> ();
