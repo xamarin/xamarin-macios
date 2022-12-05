@@ -2,8 +2,9 @@ using System;
 
 #if MTOUCH || MMP || BUNDLER
 using Xamarin.Bundler;
-using Xamarin.Utils;
 #endif
+
+using Xamarin.Utils;
 
 #if MTOUCH
 using MonoTouch;
@@ -120,6 +121,32 @@ namespace Xamarin {
 			}
 		}
 #endif
+
+		public static Version GetVersion (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.MacOSX: return OSXVersion;
+			case ApplePlatform.iOS: return iOSVersion;
+			case ApplePlatform.WatchOS: return WatchOSVersion;
+			case ApplePlatform.TVOS: return TVOSVersion;
+			case ApplePlatform.MacCatalyst: return MacCatalystVersion;
+			default:
+				throw new ArgumentOutOfRangeException(nameof(platform), platform, $"Unknown platform: {platform}");
+			}
+		}
+
+		public static Version GetMinVersion (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.MacOSX: return MinOSXVersion;
+			case ApplePlatform.iOS: return MiniOSVersion;
+			case ApplePlatform.WatchOS: return MinWatchOSVersion;
+			case ApplePlatform.TVOS: return MinTVOSVersion;
+			case ApplePlatform.MacCatalyst: return MinMacCatalystVersion;
+			default:
+				throw new ArgumentOutOfRangeException(nameof(platform), platform, $"Unknown platform: {platform}");
+			}
+		}
 	}
 
 #if MMP
