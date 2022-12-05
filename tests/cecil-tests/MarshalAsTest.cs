@@ -23,7 +23,7 @@ namespace Cecil.Tests {
 			var failedMethods = new List<string> ();
 			List<string>? failures = null;
 			var checkedTypes = new List<TypeReference> ();
-			foreach (var m in Helper.FilterMethods (assembly!, (m) => m.HasPInvokeInfo)) {
+			foreach (var m in assembly.EnumerateMethods ((m) => m.HasPInvokeInfo)) {
 				failures = null;
 				checkedTypes.Clear ();
 				if (!CheckMarshalAs (checkedTypes, m, ref failures)) {

@@ -132,7 +132,7 @@ namespace Cecil.Tests {
 
 		IEnumerable<MethodDefinition> AllPInvokes (AssemblyDefinition assembly)
 		{
-			return Helper.FilterMethods (assembly, method =>
+			return assembly.EnumerateMethods (method =>
 				(method.Attributes & MethodAttributes.PInvokeImpl) != 0);
 		}
 
@@ -147,7 +147,7 @@ namespace Cecil.Tests {
 
 		IEnumerable<MethodDefinition> AllSetupBlocks (AssemblyDefinition assembly)
 		{
-			return Helper.FilterMethods (assembly, method => {
+			return assembly.EnumerateMethods (method => {
 				if (method.Body is null)
 					return false;
 				return method.Body.Instructions.Any (IsCallToSetupBlockUnsafe);

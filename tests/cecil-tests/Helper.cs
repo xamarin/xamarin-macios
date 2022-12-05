@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using NUnit.Framework;
 
@@ -14,7 +15,7 @@ using Xamarin.Utils;
 
 namespace Cecil.Tests {
 
-	public class Helper {
+	public static class Helper {
 
 		static Dictionary<string, AssemblyDefinition> cache = new Dictionary<string, AssemblyDefinition> ();
 
@@ -38,99 +39,92 @@ namespace Cecil.Tests {
 			return ad;
 		}
 
-		public static IEnumerable<MethodDefinition> FilterMethods (AssemblyDefinition assembly, Func<MethodDefinition, bool>? filter)
+		// Enumerates all the methods in the assembly, for all types (including nested types), potentially providing a custom filter function.
+		public static IEnumerable<MethodDefinition> EnumerateMethods (this AssemblyDefinition assembly, Func<MethodDefinition, bool>? filter = null)
 		{
-			foreach (var module in assembly.Modules) {
-				foreach (var type in module.Types) {
-					foreach (var method in FilterMethods (type, filter))
-						yield return method;
-				}
-			}
-			yield break;
-		}
+			foreach (var type in EnumerateTypes (assembly)) {
+				if (!type.HasMethods)
+					continue;
 
-		static IEnumerable<MethodDefinition> FilterMethods (TypeDefinition type, Func<MethodDefinition, bool>? filter)
-		{
-			if (type.HasMethods) {
 				foreach (var method in type.Methods) {
-					if ((filter == null) || filter (method))
+					if (filter is null || filter (method))
 						yield return method;
 				}
 			}
-			if (type.HasNestedTypes) {
-				foreach (var nested in type.NestedTypes) {
-					foreach (var method in FilterMethods (nested, filter))
-						yield return method;
-				}
-			}
-			yield break;
 		}
 
-		public static IEnumerable<PropertyDefinition> FilterProperties (AssemblyDefinition assembly, Func<PropertyDefinition, bool>? filter)
+		// Enumerates all the properties in the assembly, for all types (including nested types), potentially providing a custom filter function.
+		public static IEnumerable<PropertyDefinition> EnumerateProperties (this AssemblyDefinition assembly, Func<PropertyDefinition, bool>? filter = null)
 		{
-			foreach (var module in assembly.Modules) {
-				foreach (var type in module.Types) {
-					foreach (var property in FilterProperties (type, filter))
-						yield return property;
-				}
-			}
-			yield break;
-		}
+			foreach (var type in EnumerateTypes (assembly)) {
+				if (!type.HasProperties)
+					continue;
 
-		static IEnumerable<PropertyDefinition> FilterProperties (TypeDefinition type, Func<PropertyDefinition, bool>? filter)
-		{
-			if (type.HasProperties) {
 				foreach (var property in type.Properties) {
-					if ((filter is null) || filter (property))
+					if (filter is null || filter (property))
 						yield return property;
 				}
 			}
-			if (type.HasNestedTypes) {
-				foreach (var nested in type.NestedTypes) {
-					foreach (var property in FilterProperties (nested, filter))
-						yield return property;
-				}
-			}
-			yield break;
 		}
 
-		public static IEnumerable<TypeDefinition> FilterTypes (AssemblyDefinition assembly, Func<TypeDefinition, bool>? filter)
+		// Enumerates all the events in the assembly, for all types (including nested types), potentially providing a custom filter function.
+		public static IEnumerable<EventDefinition> EnumerateEvents (this AssemblyDefinition assembly, Func<EventDefinition, bool>? filter = null)
+		{
+			foreach (var type in EnumerateTypes (assembly)) {
+				if (!type.HasEvents)
+					continue;
+
+				foreach (var @event in type.Events) {
+					if (filter is null || filter (@event))
+						yield return @event;
+				}
+			}
+		}
+
+		// Recursively enumerates all the nested types for the given type, potentially providing a custom filter function.
+		static IEnumerable<TypeDefinition> EnumerateNestedTypes (TypeDefinition type, Func<TypeDefinition, bool>? filter)
+		{
+			if (!type.HasNestedTypes)
+				yield break;
+
+			foreach (var nestedType in type.NestedTypes) {
+				foreach (var nn in EnumerateNestedTypes (nestedType, filter))
+					yield return nn;
+
+				if (filter is null || filter (nestedType))
+					yield return nestedType;
+			}
+		}
+
+		// Enumerates all the types in the assembly, including nested types, potentially providing a custom filter function.
+		public static IEnumerable<TypeDefinition> EnumerateTypes (this AssemblyDefinition assembly, Func<TypeDefinition, bool>? filter = null)
 		{
 			foreach (var module in assembly.Modules) {
+				if (!module.HasTypes)
+					continue;
+
 				foreach (var type in module.Types) {
-					if ((filter is null) || filter (type))
+					if (filter is null || filter (type))
 						yield return type;
+
+					foreach (var nestedType in EnumerateNestedTypes (type, filter))
+						yield return nestedType;
 				}
 			}
-			yield break;
 		}
 
-		public static IEnumerable<FieldDefinition> FilterFields (AssemblyDefinition assembly, Func<FieldDefinition, bool>? filter)
+		// Enumerates all the fields in the assembly, for all types (including nested types), potentially providing a custom filter function.
+		public static IEnumerable<FieldDefinition> EnumerateFields (this AssemblyDefinition assembly, Func<FieldDefinition, bool>? filter = null)
 		{
-			foreach (var module in assembly.Modules) {
-				foreach (var type in module.Types) {
-					foreach (var field in FilterFields (type, filter))
-						yield return field;
-				}
-			}
-			yield break;
-		}
+			foreach (var type in EnumerateTypes (assembly)) {
+				if (!type.HasFields)
+					continue;
 
-		static IEnumerable<FieldDefinition> FilterFields (TypeDefinition type, Func<FieldDefinition, bool>? filter)
-		{
-			if (type.HasFields) {
 				foreach (var field in type.Fields) {
-					if ((filter is null) || filter (field))
+					if (filter is null || filter (field))
 						yield return field;
 				}
 			}
-			if (type.HasNestedTypes) {
-				foreach (var nested in type.NestedTypes) {
-					foreach (var field in FilterFields (nested, filter))
-						yield return field;
-				}
-			}
-			yield break;
 		}
 
 		public static string GetBCLDirectory (string assembly)
@@ -189,7 +183,7 @@ namespace Cecil.Tests {
 			}
 		}
 
-		public static IEnumerable NetPlatformAssemblies => Configuration.GetRefLibraries ();
+		public static IEnumerable<string> NetPlatformAssemblies => Configuration.GetRefLibraries ();
 
 		public static IEnumerable NetPlatformImplementationAssemblies => Configuration.GetBaseLibraryImplementations ();
 

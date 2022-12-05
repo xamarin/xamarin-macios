@@ -197,7 +197,7 @@ namespace Cecil.Tests {
 
 		IEnumerable<MethodDefinition> AllPInvokes (AssemblyDefinition assembly)
 		{
-			return Helper.FilterMethods (assembly, method =>
+			return assembly.EnumerateMethods (method =>
 				(method.Attributes & MethodAttributes.PInvokeImpl) != 0);
 		}
 
