@@ -69,13 +69,13 @@ namespace Foundation {
 		public NSDocumentType DocumentType {
 			get {
 				var s = GetNSStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute);
-				if (s == UIStringAttributeKey.NSPlainTextDocumentType)
+				if (s == NSAttributedStringDocumentType.NSPlainTextDocumentType)
 					return NSDocumentType.PlainText;
-				if (s == UIStringAttributeKey.NSRTFDTextDocumentType)
+				if (s == NSAttributedStringDocumentType.NSRtfdTextDocumentType)
 					return NSDocumentType.RTFD;
-				if (s == UIStringAttributeKey.NSRTFTextDocumentType)
+				if (s == NSAttributedStringDocumentType.NSRtfTextDocumentType)
 					return NSDocumentType.RTF;
-				if (s == UIStringAttributeKey.NSHTMLTextDocumentType)
+				if (s == NSAttributedStringDocumentType.NSHtmlTextDocumentType)
 					return NSDocumentType.HTML;
 				return NSDocumentType.Unknown;
 			}
@@ -83,16 +83,16 @@ namespace Foundation {
 			set {
 				switch (value) {
 				case NSDocumentType.PlainText:
-					SetStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute, UIStringAttributeKey.NSPlainTextDocumentType);
+					SetStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute, NSAttributedStringDocumentType.NSPlainTextDocumentType);
 					break;
 				case NSDocumentType.RTFD:
-					SetStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute, UIStringAttributeKey.NSRTFDTextDocumentType);
+					SetStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute, NSAttributedStringDocumentType.NSRtfdTextDocumentType);
 					break;
 				case NSDocumentType.RTF:
-					SetStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute, UIStringAttributeKey.NSRTFTextDocumentType);
+					SetStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute, NSAttributedStringDocumentType.NSRtfTextDocumentType);
 					break;
 				case NSDocumentType.HTML:
-					SetStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute, UIStringAttributeKey.NSHTMLTextDocumentType);
+					SetStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute, NSAttributedStringDocumentType.NSHtmlTextDocumentType);
 					break;
 				}
 			}
