@@ -17,6 +17,7 @@
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <DefineConstants>MOBILE;XAMMAC</DefineConstants>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <Optimize>false</Optimize>
