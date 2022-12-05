@@ -6,21 +6,19 @@ using AppKit;
 using ObjCRuntime;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSDraggingItemTests
-	{
+	public class NSDraggingItemTests {
 		[Test]
 		public void NSDraggingItemConstructorTests ()
 		{
 #pragma warning disable 0219
-			NSDraggingItem item = new NSDraggingItem ((NSString)"Testing");
+			NSDraggingItem item = new NSDraggingItem ((NSString) "Testing");
 			item = new NSDraggingItem (new MyPasteboard ());
 #pragma warning restore 0219
 		}
-		
+
 #if NET
 		class MyPasteboard : NSObject, INSPasteboardWriting
 #else
@@ -37,12 +35,12 @@ namespace Xamarin.Mac.Tests
 			}
 
 #if NET
-			string[] INSPasteboardWriting.GetWritableTypesForPasteboard (NSPasteboard pasteboard)
+			string [] INSPasteboardWriting.GetWritableTypesForPasteboard (NSPasteboard pasteboard)
 #else
 			public override string[] GetWritableTypesForPasteboard (NSPasteboard pasteboard)
 #endif
 			{
-				return new string [] {};
+				return new string [] { };
 			}
 
 #if NET

@@ -13,8 +13,8 @@ namespace StoreKit {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,1)]
-		[Mac (10,14)]
+		[iOS (7, 1)]
+		[Mac (10, 14)]
 #endif
 		[DllImport (Constants.StoreKitLibrary, EntryPoint = "SKTerminateForInvalidReceipt")]
 		static extern public void TerminateForInvalidReceipt ();

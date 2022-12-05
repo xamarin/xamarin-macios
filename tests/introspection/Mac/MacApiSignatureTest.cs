@@ -17,12 +17,12 @@ using Foundation;
 using ObjCRuntime;
 
 namespace Introspection {
-	
+
 	[TestFixture]
 	// we want the tests to be available because we use the linker
 	[Preserve (AllMembers = true)]
 	public class MacSignatureTest : ApiSignatureTest {
-		
+
 		static MacSignatureTest ()
 		{
 			Runtime.RegisterAssembly (typeof (NSObject).Assembly);
@@ -52,7 +52,7 @@ namespace Introspection {
 					return true;
 				break;
 			}
-			
+
 			// Bug 20232 - This is a hack.
 			if (selector == "geometryElementWithData:primitiveType:primitiveCount:bytesPerIndex:")
 				return true;
@@ -166,7 +166,7 @@ namespace Introspection {
 			// CIImage 'static MonoMac.CoreImage.CIImage FromImageBuffer(MonoMac.CoreVideo.CVImageBuffer)' selector: imageWithCVImageBuffer: == @12@0:4^{__CVBuffer=}8
 			// AVAssetWriterInputPixelBufferAdaptor 'instance Boolean AppendPixelBufferWithPresentationTime(MonoMac.CoreVideo.CVPixelBuffer, CMTime)' selector: appendPixelBuffer:withPresentationTime: == c36@0:4^{__CVBuffer=}8{?=qiIq}12
 			case "__CVBuffer":
-				return type.Name == "CVImageBuffer" || type.Name == "CVPixelBuffer";;
+				return type.Name == "CVImageBuffer" || type.Name == "CVPixelBuffer"; ;
 			case "CATransform3D":
 				return type.Name == "CATransform3D" || type.Name == "SCNMatrix4";
 			case "SCNVector4":

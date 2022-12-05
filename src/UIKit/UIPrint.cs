@@ -17,7 +17,7 @@ namespace UIKit {
 				return _ErrorDomain;
 			}
 		}
-	
+
 	}
 }
 

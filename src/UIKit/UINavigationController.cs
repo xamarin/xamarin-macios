@@ -9,11 +9,11 @@ namespace UIKit {
 		{
 			return t == null ? IntPtr.Zero : Class.GetHandle (t);
 		}
-		
+
 		public UINavigationController (Type navigationBarType, Type toolbarType) : this (LookupClass (navigationBarType), LookupClass (toolbarType))
 		{
 		}
-						      
+
 	}
 }
 

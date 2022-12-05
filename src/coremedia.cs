@@ -176,6 +176,10 @@ namespace CoreMedia {
 		[Mac (10,10)]
 		[Field ("kCMSampleBufferAttachmentKey_ForceKeyFrame")]
 		NSString ForceKeyFrameKey { get; }
+
+		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Field ("kCMSampleAttachmentKey_HDR10PlusPerFrameData")]
+		NSString Hdr10PlusPerFrameDataKey { get; }
 	}
 
 	[Watch (6,0)]
@@ -213,6 +217,10 @@ namespace CoreMedia {
 
 		[Mac (10,10)]
 		bool ForceKeyFrame { get; set; }
+
+		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Field ("kCMSampleAttachmentKey_HDR10PlusPerFrameData")]
+		NSData Hdr10PlusPerFrameData { get; set; } // it is a CFData, but that is a toll-free bridged
 	}
 
 	[Internal]

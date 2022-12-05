@@ -62,15 +62,15 @@ namespace CoreFoundation {
 		public int Location {
 			get { return (int) loc; }
 		}
-		
+
 		public int Length {
 			get { return (int) len; }
 		}
-		
+
 		public long LongLocation {
 			get { return (long) loc; }
 		}
-		
+
 		public long LongLength {
 			get { return (long) len; }
 		}
@@ -105,7 +105,7 @@ namespace CoreFoundation {
 #else
 	public static class CFObject {
 #endif
-	
+
 		[DllImport (Constants.CoreFoundationLibrary)]
 		internal extern static void CFRelease (IntPtr obj);
 
@@ -127,25 +127,25 @@ namespace CoreFoundation {
 #if !COREBUILD
 		internal string? str;
 
-		protected CFString () {}
+		protected CFString () { }
 
-		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
+		[DllImport (Constants.CoreFoundationLibrary, CharSet = CharSet.Unicode)]
 		extern static IntPtr CFStringCreateWithCharacters (IntPtr allocator, string str, nint count);
 
-		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
+		[DllImport (Constants.CoreFoundationLibrary, CharSet = CharSet.Unicode)]
 		extern static nint CFStringGetLength (IntPtr handle);
 
-		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
+		[DllImport (Constants.CoreFoundationLibrary, CharSet = CharSet.Unicode)]
 		extern static unsafe char* CFStringGetCharactersPtr (IntPtr handle);
 
-		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
+		[DllImport (Constants.CoreFoundationLibrary, CharSet = CharSet.Unicode)]
 		extern static unsafe IntPtr CFStringGetCharacters (IntPtr handle, CFRange range, char* buffer);
 
 		public static NativeHandle CreateNative (string? value)
 		{
 			if (value is null)
 				return NativeHandle.Zero;
-			
+
 			return CFStringCreateWithCharacters (IntPtr.Zero, value, value.Length);
 		}
 
@@ -159,21 +159,21 @@ namespace CoreFoundation {
 		{
 			if (str is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (str));
-			
+
 			Handle = CFStringCreateWithCharacters (IntPtr.Zero, str, str.Length);
 			this.str = str;
 		}
 
-		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFStringGetTypeID")]
+		[DllImport (Constants.CoreFoundationLibrary, EntryPoint = "CFStringGetTypeID")]
 		public extern static nint GetTypeID ();
-		
+
 #if !NET
 		public CFString (NativeHandle handle)
 			: this (handle, false)
 		{
 		}
 #endif
-		
+
 		[Preserve (Conditional = true)]
 #if NET
 		internal CFString (NativeHandle handle, bool owns)
@@ -190,7 +190,7 @@ namespace CoreFoundation {
 			if (handle == IntPtr.Zero)
 				return null;
 
-			int l = (int)CFStringGetLength (handle);
+			int l = (int) CFStringGetLength (handle);
 			if (l == 0)
 				return String.Empty;
 
@@ -237,7 +237,7 @@ namespace CoreFoundation {
 
 			if (x.str is null)
 				x.str = FromHandle (x.Handle);
-			
+
 			return x.str;
 		}
 
@@ -255,14 +255,14 @@ namespace CoreFoundation {
 				if (str is not null)
 					return str.Length;
 				else
-					return (int)CFStringGetLength (Handle);
+					return (int) CFStringGetLength (Handle);
 			}
 		}
 
-		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
+		[DllImport (Constants.CoreFoundationLibrary, CharSet = CharSet.Unicode)]
 		[return: MarshalAs (UnmanagedType.U2)]
 		extern static char CFStringGetCharacterAtIndex (IntPtr handle, nint p);
-		
+
 		public char this [nint p] {
 			get {
 				if (str is not null)
@@ -271,7 +271,7 @@ namespace CoreFoundation {
 					return CFStringGetCharacterAtIndex (Handle, p);
 			}
 		}
-		
+
 		public override string ToString ()
 		{
 			if (str is null)

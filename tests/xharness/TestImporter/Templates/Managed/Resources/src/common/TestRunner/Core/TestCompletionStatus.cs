@@ -1,7 +1,5 @@
-namespace Xamarin.iOS.UnitTests
-{
-	public enum TestCompletionStatus
-	{
+namespace Xamarin.iOS.UnitTests {
+	public enum TestCompletionStatus {
 		Undefined,
 		Passed,
 		Failed,

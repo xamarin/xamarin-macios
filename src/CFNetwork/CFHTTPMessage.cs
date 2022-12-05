@@ -36,9 +36,9 @@ namespace CoreServices {
 		{
 		}
 
-		[DllImport (Constants.CFNetworkLibrary, EntryPoint="CFHTTPMessageGetTypeID")]
+		[DllImport (Constants.CFNetworkLibrary, EntryPoint = "CFHTTPMessageGetTypeID")]
 		public extern static /* CFTypeID */ nint GetTypeID ();
-		
+
 		static IntPtr GetVersion (Version? version)
 		{
 			if ((version is null) || version.Equals (HttpVersion.Version11))
@@ -53,7 +53,7 @@ namespace CoreServices {
 					return _HTTPVersion3_0;
 				else if (_HTTPVersion2_0 != IntPtr.Zero)
 					return _HTTPVersion2_0;
-				else 
+				else
 					return _HTTPVersion1_1;
 			}
 
@@ -61,7 +61,7 @@ namespace CoreServices {
 				// HTTP 2.0 requires OS X 10.11 or later.
 				if (_HTTPVersion2_0 != IntPtr.Zero)
 					return _HTTPVersion2_0;
-				else 
+				else
 					return _HTTPVersion1_1;
 			}
 
@@ -141,7 +141,7 @@ namespace CoreServices {
 				if (IsRequest)
 					throw new InvalidOperationException ();
 				int status = (int) CFHTTPMessageGetResponseStatusCode (Handle);
-				return (HttpStatusCode)status;
+				return (HttpStatusCode) status;
 			}
 		}
 
@@ -195,9 +195,9 @@ namespace CoreServices {
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPMessageAppendBytes (
 			/* CFHTTPMessageRef __nonnull */ IntPtr message,
-			/* const UInt8* __nonnull */ byte[] newBytes, /* CFIndex */ nint numBytes);
+			/* const UInt8* __nonnull */ byte [] newBytes, /* CFIndex */ nint numBytes);
 
-		public bool AppendBytes (byte[] bytes)
+		public bool AppendBytes (byte [] bytes)
 		{
 			if (bytes is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
@@ -205,7 +205,7 @@ namespace CoreServices {
 			return CFHTTPMessageAppendBytes (Handle, bytes, bytes.Length);
 		}
 
-		public bool AppendBytes (byte[] bytes, nint count)
+		public bool AppendBytes (byte [] bytes, nint count)
 		{
 			if (bytes is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
@@ -219,7 +219,7 @@ namespace CoreServices {
 
 		public NSDictionary? GetAllHeaderFields ()
 		{
-			return Runtime.GetNSObject <NSDictionary> (CFHTTPMessageCopyAllHeaderFields (GetCheckedHandle ()));
+			return Runtime.GetNSObject<NSDictionary> (CFHTTPMessageCopyAllHeaderFields (GetCheckedHandle ()));
 		}
 
 		#region Authentication
@@ -253,7 +253,7 @@ namespace CoreServices {
 
 		[DllImport (Constants.CFNetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFHTTPMessageApplyCredentials (/* CFHTTPMessageRef */ IntPtr request, 
+		extern static /* Boolean */ bool CFHTTPMessageApplyCredentials (/* CFHTTPMessageRef */ IntPtr request,
 			/* CFHTTPAuthenticationRef */ IntPtr auth, /* CFString */ IntPtr username, /* CFString */ IntPtr password,
 			/* CFStreamError* */ out CFStreamError error);
 
@@ -295,19 +295,15 @@ namespace CoreServices {
 			[UnsupportedOSPlatform ("macos10.14")]
 			[UnsupportedOSPlatform ("ios12.0")]
 			[UnsupportedOSPlatform ("maccatalyst")]
-#if TVOS
-			[Obsolete ("Starting with tvos12.0 not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-			[Obsolete ("Starting with macos10.14 not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-			[Obsolete ("Starting with ios12.0 not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+			[ObsoletedOSPlatform ("tvos12.0", "Not available anymore.")]
+			[ObsoletedOSPlatform ("macos10.14", "Not available anymore.")]
+			[ObsoletedOSPlatform ("ios12.0", "Not available anymore.")]
 #else
 			[Mac (10, 9)]
-			[iOS (7,0)]
-			[Deprecated (PlatformName.iOS, 12,0, message: "Not available anymore.")]
-			[Deprecated (PlatformName.TvOS, 12,0, message: "Not available anymore.")]
-			[Deprecated (PlatformName.MacOSX, 10,14, message: "Not available anymore.")]
+			[iOS (7, 0)]
+			[Deprecated (PlatformName.iOS, 12, 0, message: "Not available anymore.")]
+			[Deprecated (PlatformName.TvOS, 12, 0, message: "Not available anymore.")]
+			[Deprecated (PlatformName.MacOSX, 10, 14, message: "Not available anymore.")]
 #endif
 			OAuth1,
 		}
@@ -337,16 +333,16 @@ namespace CoreServices {
 		[DllImport (Constants.CFNetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPMessageAddAuthentication (
-			/* CFHTTPMessageRef __nonnull */ IntPtr request, 
+			/* CFHTTPMessageRef __nonnull */ IntPtr request,
 			/* CFHTTPMessageRef __nullable */ IntPtr authenticationFailureResponse,
-			/* CFStringRef __nonnull */ IntPtr username, 
+			/* CFStringRef __nonnull */ IntPtr username,
 			/* CFStringRef __nonnull */ IntPtr password,
 			/* CFStringRef __nullable */ IntPtr authenticationScheme,
 			/* Boolean */ [MarshalAs (UnmanagedType.I1)] bool forProxy);
 
 		public bool AddAuthentication (CFHTTPMessage failureResponse, NSString username,
-		                               NSString password, AuthenticationScheme scheme,
-		                               bool forProxy)
+									   NSString password, AuthenticationScheme scheme,
+									   bool forProxy)
 		{
 			if (username is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (username));
@@ -360,7 +356,7 @@ namespace CoreServices {
 
 		[DllImport (Constants.CFNetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFHTTPMessageApplyCredentialDictionary (/* CFHTTPMessageRef */ IntPtr request, 
+		extern static /* Boolean */ bool CFHTTPMessageApplyCredentialDictionary (/* CFHTTPMessageRef */ IntPtr request,
 			/* CFHTTPAuthenticationRef */ IntPtr auth, /* CFDictionaryRef */ IntPtr dict, /* CFStreamError* */ out CFStreamError error);
 
 		public void ApplyCredentialDictionary (CFHTTPAuthentication auth, NetworkCredential credential)
@@ -402,7 +398,7 @@ namespace CoreServices {
 		#endregion
 
 		[DllImport (Constants.CFNetworkLibrary)]
-		extern static void CFHTTPMessageSetHeaderFieldValue (/* CFHTTPMessageRef __nonnull */IntPtr message, 
+		extern static void CFHTTPMessageSetHeaderFieldValue (/* CFHTTPMessageRef __nonnull */IntPtr message,
 			/* CFStringRef __nonnull */ IntPtr headerField, /* CFStringRef __nullable */ IntPtr value);
 
 		public void SetHeaderFieldValue (string name, string value)
@@ -424,11 +420,11 @@ namespace CoreServices {
 		extern static void CFHTTPMessageSetBody (/* CFHTTPMessageRef __nonnull */ IntPtr message,
 			/* CFDataRef__nonnull  */ IntPtr data);
 
-		public void SetBody (byte[] buffer)
+		public void SetBody (byte [] buffer)
 		{
 			if (buffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
-			
+
 			using (var data = new CFDataBuffer (buffer))
 				CFHTTPMessageSetBody (Handle, data.Handle);
 		}

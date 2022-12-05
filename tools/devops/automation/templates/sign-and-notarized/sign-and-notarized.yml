@@ -28,11 +28,24 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 steps:
 
 - ${{ each step in parameters.signingSetupSteps }}:
   - ${{ each pair in step }}:
       ${{ pair.key }}: ${{ pair.value }}
+
+- bash: |
+    sudo rm -Rf $(Build.SourcesDirectory)/package
+  displayName: "Remove artifacts"
+  condition: always()
 
 - task: DownloadPipelineArtifact@2
   displayName: Download not notarized build

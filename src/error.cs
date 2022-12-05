@@ -13,12 +13,12 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-using ProductException=BindingException;
+using ProductException = BindingException;
 
 // Error allocation: the errors are listed (and documented) in $(TOP)/docs/website/generator-errors.md
 
 public class BindingException : Exception {
-	
+
 	public BindingException (int code, bool error) :
 		base (GetMessage (code))
 	{
@@ -26,17 +26,17 @@ public class BindingException : Exception {
 		Error = error || ErrorHelper.GetWarningLevel (code) == ErrorHelper.WarningLevel.Error;
 	}
 
-	public BindingException (int code, params object[] args) : 
+	public BindingException (int code, params object [] args) :
 		this (code, false, args)
 	{
 	}
 
-	public BindingException (int code, bool error, params object[] args) : 
+	public BindingException (int code, bool error, params object [] args) :
 		this (code, error, null, args)
 	{
 	}
 
-	public BindingException (int code, bool error, Exception innerException, params object[] args) : 
+	public BindingException (int code, bool error, Exception innerException, params object [] args) :
 		base (String.Format (GetMessage (code), args), innerException)
 	{
 		Code = code;
@@ -57,9 +57,9 @@ public class BindingException : Exception {
 	}
 
 	public int Code { get; private set; }
-	
+
 	public bool Error { get; private set; }
-	
+
 	// http://blogs.msdn.com/b/msbuild/archive/2006/11/03/msbuild-visual-studio-aware-error-messages-and-message-formats.aspx
 	public override string ToString ()
 	{
@@ -82,13 +82,13 @@ public static class ErrorHelper {
 
 	[ThreadStatic]
 	static Dictionary<int, WarningLevel> warning_levels;
-	
+
 	public static ProductException CreateError (int code)
 	{
 		return new ProductException (code, true);
 	}
 
-	public static ProductException CreateError (int code, params object[] args)
+	public static ProductException CreateError (int code, params object [] args)
 	{
 		return new ProductException (code, true, args);
 	}
@@ -98,7 +98,7 @@ public static class ErrorHelper {
 		Show (new ProductException (code, false));
 	}
 
-	public static void Warning (int code, params object[] args)
+	public static void Warning (int code, params object [] args)
 	{
 		Show (new ProductException (code, false, args));
 	}
@@ -153,7 +153,7 @@ public static class ErrorHelper {
 				return false;
 
 			Console.Out.WriteLine (mte.ToString ());
-			
+
 			if (Verbosity > 1) {
 				Exception ie = e.InnerException;
 				if (ie != null) {
@@ -166,7 +166,7 @@ public static class ErrorHelper {
 					}
 				}
 			}
-			
+
 			if (Verbosity > 2)
 				Console.Error.WriteLine (e.StackTrace);
 		} else {

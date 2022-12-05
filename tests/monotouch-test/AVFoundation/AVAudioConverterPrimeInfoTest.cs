@@ -6,19 +6,19 @@ namespace MonoTouchFixtures.AVFoundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AVAudioConverterPrimeInfoTest {
-	
+
 		[Test]
 		public void ConstructorTest ()
 		{
 			uint leading = 2;
 			uint trailing = 30;
-			
+
 			var info = new AVAudioConverterPrimeInfo (leading, trailing);
-			
+
 			Assert.AreEqual (leading, info.LeadingFrames, "Wrong LeadingFrames value.");
-			Assert.AreEqual (trailing, info.TrailingFrames, "Wrong TrailingFrames value."); 
+			Assert.AreEqual (trailing, info.TrailingFrames, "Wrong TrailingFrames value.");
 		}
-		
+
 		[Test]
 		public void AreEqualTrueTest ()
 		{
@@ -26,12 +26,12 @@ namespace MonoTouchFixtures.AVFoundation {
 			uint trainling = 20;
 			var info1 = new AVAudioConverterPrimeInfo (leading, trainling);
 			var info2 = new AVAudioConverterPrimeInfo (leading, trainling);
-			
+
 			Assert.True (info1 == info2, "info1 == info2");
 			Assert.True (info1.Equals (info2), "info1.Equals (info2)");
 			Assert.False (info1 != info2, "info1 != info2");
 		}
-		
+
 		[Test]
 		public void AreEqualFalseTest ()
 		{
@@ -41,7 +41,7 @@ namespace MonoTouchFixtures.AVFoundation {
 			Assert.False (info1.Equals (info2), "info1.Equals (info2)");
 			Assert.True (info1 != info2, "info1 != info2");
 		}
-		
+
 		[Test]
 		public void AreEqualDiffType ()
 		{

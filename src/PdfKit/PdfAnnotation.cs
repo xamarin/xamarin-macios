@@ -23,8 +23,9 @@ namespace PdfKit {
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
-		[Mac (10,12)]
+		[Mac (10, 12)]
 #endif
 		public bool SetValue<T> (T value, PdfAnnotationKey key) where T : class, INativeObject
 		{
@@ -38,8 +39,9 @@ namespace PdfKit {
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
-		[Mac (10,12)]
+		[Mac (10, 12)]
 #endif
 		public bool SetValue (string str, PdfAnnotationKey key)
 		{
@@ -55,8 +57,9 @@ namespace PdfKit {
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
-		[Mac (10,12)]
+		[Mac (10, 12)]
 #endif
 		public T GetValue<T> (PdfAnnotationKey key) where T : class, INativeObject
 		{
@@ -77,16 +80,16 @@ namespace PdfKit {
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
-		[Mac (10,13)]
+		[Mac (10, 13)]
 #endif
-		public CGPoint[] QuadrilateralPoints {
+		public CGPoint [] QuadrilateralPoints {
 			get {
-				return NSArray.ArrayFromHandleFunc<CGPoint> (_QuadrilateralPoints, (v) =>
-					{
-						using (var value = new NSValue (v))
-							return value.CGPointValue;
-					});
+				return NSArray.ArrayFromHandleFunc<CGPoint> (_QuadrilateralPoints, (v) => {
+					using (var value = new NSValue (v))
+						return value.CGPointValue;
+				});
 			}
 			set {
 				if (value is null) {

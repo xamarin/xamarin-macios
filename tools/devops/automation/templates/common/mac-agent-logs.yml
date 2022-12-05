@@ -63,6 +63,7 @@ steps:
 
   displayName: 'Gathering agent logs'
   condition: always()
+  continueOnError: true
   env:
     ACCESSTOKEN: $(System.AccessToken)
     OUTPUT: ${{ parameters.outputPath }}

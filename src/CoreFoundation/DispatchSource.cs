@@ -17,9 +17,9 @@ using System.IO;
 using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
-using dispatch_source_type_t=System.IntPtr;
-using dispatch_source_t=System.IntPtr;
-using dispatch_queue_t=System.IntPtr;
+using dispatch_source_type_t = System.IntPtr;
+using dispatch_source_t = System.IntPtr;
+using dispatch_queue_t = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -28,15 +28,15 @@ using NativeHandle = System.IntPtr;
 namespace CoreFoundation {
 
 	[Flags]
-	public enum MemoryPressureFlags { 
+	public enum MemoryPressureFlags {
 		Normal = 1, Warn = 2, Critical = 4
 	}
 
 	[Flags]
 	public enum ProcessMonitorFlags : uint {
-		Exit   = 0x80000000,
-		Fork   = 0x40000000,
-		Exec   = 0x20000000,
+		Exit = 0x80000000,
+		Fork = 0x40000000,
+		Exec = 0x20000000,
 		Signal = 0x08000000
 	}
 
@@ -57,7 +57,7 @@ namespace CoreFoundation {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class DispatchSource : DispatchObject  {
+	public class DispatchSource : DispatchObject {
 		DispatchQueue? queue;
 
 		// constructors for use in bindings
@@ -75,8 +75,8 @@ namespace CoreFoundation {
 
 		// Invoked by subclasses in this file that fully initialize both
 		// queue and handle
-		internal DispatchSource () {}
-		
+		internal DispatchSource () { }
+
 
 		[DllImport (Constants.libcLibrary)]
 		extern static dispatch_source_t dispatch_source_create (dispatch_source_type_t type, IntPtr handle, IntPtr mask, dispatch_queue_t queue);
@@ -86,7 +86,7 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_source_get_mask (dispatch_source_t source);
-	
+
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_source_get_data (dispatch_source_t source);
 
@@ -107,19 +107,20 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_source_cancel (dispatch_source_t source);
-		
+
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_source_testcancel (dispatch_source_t source);
 
 		public void SetEventHandler (Action handler)
 		{
-			if (handler is null){
+			if (handler is null) {
 				dispatch_source_set_event_handler_f (GetCheckedHandle (), IntPtr.Zero);
 				return;
 			}
 
 			DispatchBlock.Invoke (
-				delegate {
+				delegate
+				{
 					var sc = SynchronizationContext.Current;
 					if (sc is null) {
 						if (queue is null)
@@ -132,7 +133,7 @@ namespace CoreFoundation {
 						if (sc is null)
 							SynchronizationContext.SetSynchronizationContext (null);
 					}
-				}, block=> dispatch_source_set_event_handler (GetCheckedHandle (), block));
+				}, block => dispatch_source_set_event_handler (GetCheckedHandle (), block));
 		}
 
 		public void Suspend ()
@@ -144,14 +145,15 @@ namespace CoreFoundation {
 		{
 			dispatch_resume (GetCheckedHandle ());
 		}
-		
+
 		public void SetRegistrationHandler (Action handler)
 		{
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			DispatchBlock.Invoke (
-				delegate {
+				delegate
+				{
 					var sc = SynchronizationContext.Current;
 					if (sc is null) {
 						if (queue is null)
@@ -173,7 +175,8 @@ namespace CoreFoundation {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			DispatchBlock.Invoke (
-				delegate {
+				delegate
+				{
 					var sc = SynchronizationContext.Current;
 					if (sc is null) {
 						if (queue is null)
@@ -201,7 +204,7 @@ namespace CoreFoundation {
 			// but might still have a side effect (for example, invoking a handler).
 			base.Dispose (disposing);
 		}
-		
+
 		public bool IsCanceled {
 			get {
 				return dispatch_source_testcancel (GetCheckedHandle ()) != IntPtr.Zero;
@@ -215,8 +218,8 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		public class Data : DispatchSource {
-			internal Data () {}
-			internal Data (IntPtr handle, bool owns) : base (handle, owns) {}
+			internal Data () { }
+			internal Data (IntPtr handle, bool owns) : base (handle, owns) { }
 
 			public void MergeData (IntPtr value)
 			{
@@ -242,7 +245,7 @@ namespace CoreFoundation {
 			public DataAdd (IntPtr handle, bool owns) : base (handle, owns) { }
 			public DataAdd (IntPtr handle) : base (handle, false) { }
 
-			public DataAdd (DispatchQueue? queue = null) 
+			public DataAdd (DispatchQueue? queue = null)
 			{
 				if (type_data_add == IntPtr.Zero)
 					type_data_add = Dlfcn.dlsym (Libraries.System.Handle, "_dispatch_source_type_data_add");
@@ -250,7 +253,7 @@ namespace CoreFoundation {
 				this.queue = queue;
 				var handle = dispatch_source_create (type_data_add,
 								 handle: IntPtr.Zero,
-								 mask:   IntPtr.Zero,
+								 mask: IntPtr.Zero,
 								 queue: queue.GetHandle ());
 				if (handle != IntPtr.Zero)
 					InitializeHandle (handle);
@@ -268,7 +271,7 @@ namespace CoreFoundation {
 
 			public DataOr (IntPtr handle, bool owns) : base (handle, owns) { }
 			public DataOr (IntPtr handle) : base (handle, false) { }
-			
+
 			public DataOr (DispatchQueue? queue = null)
 			{
 				if (type_data_or == IntPtr.Zero)
@@ -276,8 +279,8 @@ namespace CoreFoundation {
 				this.queue = queue;
 				var handle = dispatch_source_create (type_data_or,
 								 handle: IntPtr.Zero,
-								 mask:   IntPtr.Zero,
-								 queue:  queue.GetHandle ());
+								 mask: IntPtr.Zero,
+								 queue: queue.GetHandle ());
 				if (handle != IntPtr.Zero)
 					InitializeHandle (handle);
 			}
@@ -292,9 +295,9 @@ namespace CoreFoundation {
 		public class Mach : DispatchSource {
 			internal Mach (IntPtr handle, bool owns) : base (handle, owns) { }
 			internal Mach (IntPtr handle) : base (handle, false) { }
-			internal Mach () 
+			internal Mach ()
 			{ }
-			
+
 			public int MachPort {
 				get {
 					return (int) dispatch_source_get_handle (GetCheckedHandle ());
@@ -313,7 +316,7 @@ namespace CoreFoundation {
 
 			public MachSend (IntPtr handle, bool owns) : base (handle, owns) { }
 			public MachSend (IntPtr handle) : base (handle, false) { }
-			
+
 			public MachSend (int machPort, bool sendDead = false, DispatchQueue? queue = null)
 			{
 				if (type_mach_send == IntPtr.Zero)
@@ -321,13 +324,13 @@ namespace CoreFoundation {
 				this.queue = queue;
 				var handle = dispatch_source_create (type_mach_send,
 								 handle: (IntPtr) machPort,
-								 mask:   (IntPtr) (sendDead ? 1 : 0),
-								 queue:  queue.GetHandle ());
+								 mask: (IntPtr) (sendDead ? 1 : 0),
+								 queue: queue.GetHandle ());
 				if (handle != IntPtr.Zero)
 					InitializeHandle (handle);
 			}
 
-			public bool SendRightsDestroyed  {
+			public bool SendRightsDestroyed {
 				get {
 					return dispatch_source_get_data (GetCheckedHandle ()) != IntPtr.Zero;
 				}
@@ -344,7 +347,7 @@ namespace CoreFoundation {
 
 			public MachReceive (IntPtr handle, bool owns) : base (handle, owns) { }
 			public MachReceive (IntPtr handle) : base (handle, false) { }
-			
+
 			public MachReceive (int machPort, DispatchQueue? queue = null)
 			{
 				if (type_mach_recv == IntPtr.Zero)
@@ -352,7 +355,7 @@ namespace CoreFoundation {
 				this.queue = queue;
 				var handle = dispatch_source_create (type_mach_recv,
 								 handle: (IntPtr) machPort,
-								 mask:   IntPtr.Zero,
+								 mask: IntPtr.Zero,
 								 queue: queue.GetHandle ());
 				if (handle != IntPtr.Zero)
 					InitializeHandle (handle);
@@ -368,9 +371,9 @@ namespace CoreFoundation {
 #endif
 		public class MemoryPressure : DispatchSource {
 			static IntPtr type_memorypressure;
-			public MemoryPressure (IntPtr handle, bool owns) : base (handle, owns){}
-			public MemoryPressure (IntPtr handle) : base (handle, false){}
-			
+			public MemoryPressure (IntPtr handle, bool owns) : base (handle, owns) { }
+			public MemoryPressure (IntPtr handle) : base (handle, false) { }
+
 			public MemoryPressure (MemoryPressureFlags monitorFlags = MemoryPressureFlags.Normal | MemoryPressureFlags.Warn, DispatchQueue? queue = null)
 			{
 				if (type_memorypressure == IntPtr.Zero)
@@ -378,7 +381,7 @@ namespace CoreFoundation {
 				this.queue = queue;
 				var handle = dispatch_source_create (type_memorypressure,
 								 handle: IntPtr.Zero,
-								 mask:   (IntPtr) monitorFlags,
+								 mask: (IntPtr) monitorFlags,
 								 queue: queue.GetHandle ());
 				if (handle != IntPtr.Zero)
 					InitializeHandle (handle);
@@ -400,17 +403,17 @@ namespace CoreFoundation {
 		public class ProcessMonitor : DispatchSource {
 			static IntPtr type_proc;
 
-			public ProcessMonitor (IntPtr handle, bool owns) : base (handle, owns){}
-			public ProcessMonitor (IntPtr handle) : base (handle, false){}
+			public ProcessMonitor (IntPtr handle, bool owns) : base (handle, owns) { }
+			public ProcessMonitor (IntPtr handle) : base (handle, false) { }
 			public ProcessMonitor (int processId, ProcessMonitorFlags monitorKind = ProcessMonitorFlags.Exit, DispatchQueue? queue = null)
 			{
-				
+
 				if (type_proc == IntPtr.Zero)
 					type_proc = Dlfcn.dlsym (Libraries.System.Handle, "_dispatch_source_type_proc");
 				this.queue = queue;
 				var handle = dispatch_source_create (type_proc,
 								 handle: (IntPtr) processId,
-								 mask:   (IntPtr) monitorKind,
+								 mask: (IntPtr) monitorKind,
 								 queue: queue.GetHandle ());
 				if (handle != IntPtr.Zero)
 					InitializeHandle (handle);
@@ -437,17 +440,17 @@ namespace CoreFoundation {
 #endif
 		public class ReadMonitor : DispatchSource {
 			static IntPtr type_read;
-			public ReadMonitor (IntPtr handle, bool owns) : base (handle, owns){}
-			public ReadMonitor (IntPtr handle) : base (handle, false){}
+			public ReadMonitor (IntPtr handle, bool owns) : base (handle, owns) { }
+			public ReadMonitor (IntPtr handle) : base (handle, false) { }
 			public ReadMonitor (int fileDescriptor, DispatchQueue? queue = null)
 			{
-				
+
 				if (type_read == IntPtr.Zero)
 					type_read = Dlfcn.dlsym (Libraries.System.Handle, "_dispatch_source_type_read");
 				this.queue = queue;
 				var handle = dispatch_source_create (type_read,
 								 handle: (IntPtr) fileDescriptor,
-								 mask:   IntPtr.Zero,
+								 mask: IntPtr.Zero,
 								 queue: queue.GetHandle ());
 				if (handle != IntPtr.Zero)
 					InitializeHandle (handle);
@@ -474,8 +477,8 @@ namespace CoreFoundation {
 #endif
 		public class SignalMonitor : DispatchSource {
 			static IntPtr type_signal;
-			public SignalMonitor (IntPtr handle, bool owns) : base (handle, owns){}
-			public SignalMonitor (IntPtr handle) : base (handle, false){}
+			public SignalMonitor (IntPtr handle, bool owns) : base (handle, owns) { }
+			public SignalMonitor (IntPtr handle) : base (handle, false) { }
 			public SignalMonitor (int signalNumber, DispatchQueue? queue = null)
 			{
 				if (type_signal == IntPtr.Zero)
@@ -483,7 +486,7 @@ namespace CoreFoundation {
 				this.queue = queue;
 				var handle = dispatch_source_create (type_signal,
 								 handle: (IntPtr) signalNumber,
-								 mask:   IntPtr.Zero,
+								 mask: IntPtr.Zero,
 								 queue: queue.GetHandle ());
 				if (handle != IntPtr.Zero)
 					InitializeHandle (handle);
@@ -510,10 +513,10 @@ namespace CoreFoundation {
 #endif
 		public class Timer : DispatchSource {
 			static IntPtr type_timer;
-			public Timer (IntPtr handle, bool owns) : base (handle, owns){}
-			public Timer (IntPtr handle) : base (handle, false){}
-			public Timer (DispatchQueue? queue = null) : this (false, queue) {}
-				
+			public Timer (IntPtr handle, bool owns) : base (handle, owns) { }
+			public Timer (IntPtr handle) : base (handle, false) { }
+			public Timer (DispatchQueue? queue = null) : this (false, queue) { }
+
 			public Timer (bool strict = false, DispatchQueue? queue = null)
 			{
 				if (type_timer == IntPtr.Zero)
@@ -552,10 +555,10 @@ namespace CoreFoundation {
 
 			// If different than -1, we opened the descriptor and must close it.
 			int fd;
-			
-			public VnodeMonitor (IntPtr handle, bool owns) : base (handle, owns){}
-			public VnodeMonitor (IntPtr handle) : base (handle, false){}
-			
+
+			public VnodeMonitor (IntPtr handle, bool owns) : base (handle, owns) { }
+			public VnodeMonitor (IntPtr handle) : base (handle, false) { }
+
 			public VnodeMonitor (int fileDescriptor, VnodeMonitorKind vnodeKind, DispatchQueue? queue = null)
 			{
 				if (type_vnode == IntPtr.Zero)
@@ -564,7 +567,7 @@ namespace CoreFoundation {
 				fd = -1;
 				var handle = dispatch_source_create (type_vnode,
 								 handle: (IntPtr) fileDescriptor,
-								 mask:   (IntPtr) vnodeKind,
+								 mask: (IntPtr) vnodeKind,
 								 queue: queue.GetHandle ());
 				if (handle != IntPtr.Zero)
 					InitializeHandle (handle);
@@ -576,7 +579,7 @@ namespace CoreFoundation {
 
 			[DllImport (Constants.libcLibrary)]
 			internal extern static int close (int fd);
-			
+
 			public VnodeMonitor (string path, VnodeMonitorKind vnodeKind, DispatchQueue? queue = null)
 			{
 				if (path is null)
@@ -588,10 +591,10 @@ namespace CoreFoundation {
 				if (type_vnode == IntPtr.Zero)
 					type_vnode = Dlfcn.dlsym (Libraries.System.Handle, "_dispatch_source_type_vnode");
 				this.queue = queue;
-				
+
 				var handle = dispatch_source_create (type_vnode,
 								 handle: (IntPtr) fd,
-								 mask:   (IntPtr) vnodeKind,
+								 mask: (IntPtr) vnodeKind,
 								 queue: queue.GetHandle ());
 				if (handle != IntPtr.Zero)
 					InitializeHandle (handle);
@@ -599,7 +602,7 @@ namespace CoreFoundation {
 
 			protected override void Dispose (bool disposing)
 			{
-				if (fd != -1){
+				if (fd != -1) {
 					close (fd);
 					fd = -1;
 				}
@@ -612,12 +615,12 @@ namespace CoreFoundation {
 				}
 			}
 
-			public VnodeMonitorKind ObservedEvents  {
+			public VnodeMonitorKind ObservedEvents {
 				get {
 					return (VnodeMonitorKind) (int) dispatch_source_get_data (GetCheckedHandle ());
 				}
 			}
-				
+
 		}
 
 #if NET
@@ -628,9 +631,9 @@ namespace CoreFoundation {
 #endif
 		public class WriteMonitor : DispatchSource {
 			static IntPtr type_write;
-			public WriteMonitor (IntPtr handle, bool owns) : base (handle, owns){}
-			public WriteMonitor (IntPtr handle) : base (handle, false){}
-			
+			public WriteMonitor (IntPtr handle, bool owns) : base (handle, owns) { }
+			public WriteMonitor (IntPtr handle) : base (handle, false) { }
+
 			public WriteMonitor (int fileDescriptor, DispatchQueue? queue = null)
 			{
 				if (type_write == IntPtr.Zero)
@@ -648,7 +651,7 @@ namespace CoreFoundation {
 					return (int) dispatch_source_get_handle (GetCheckedHandle ());
 				}
 			}
-			
+
 			public int BufferSpaceAvailable {
 				get {
 					return (int) dispatch_source_get_data (GetCheckedHandle ());

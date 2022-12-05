@@ -16,13 +16,11 @@ using ObjCRuntime;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.CoreML
-{
+namespace MonoTouchFixtures.CoreML {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class MLMultiArrayTest
-	{
+	public class MLMultiArrayTest {
 		[Test]
 		public void Ctors ()
 		{

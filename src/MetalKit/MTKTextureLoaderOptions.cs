@@ -23,8 +23,8 @@ namespace MetalKit {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[iOS (9,0)]
-	[Mac (10,11)]
+	[iOS (9, 0)]
+	[Mac (10, 11)]
 #endif
 	public partial class MTKTextureLoaderOptions : DictionaryContainer {
 
@@ -32,12 +32,12 @@ namespace MetalKit {
 			get {
 				var val = GetNUIntValue (MTKTextureLoaderKeys.TextureUsageKey);
 				if (val is not null)
-					return (MTLTextureUsage)(uint) val;
+					return (MTLTextureUsage) (uint) val;
 				return null;
 			}
 			set {
 				if (value.HasValue)
-					SetNumberValue (MTKTextureLoaderKeys.TextureUsageKey, (nuint)(uint)value.Value);
+					SetNumberValue (MTKTextureLoaderKeys.TextureUsageKey, (nuint) (uint) value.Value);
 				else
 					RemoveValue (MTKTextureLoaderKeys.TextureUsageKey);
 			}
@@ -47,12 +47,12 @@ namespace MetalKit {
 			get {
 				var val = GetNUIntValue (MTKTextureLoaderKeys.TextureCpuCacheModeKey);
 				if (val is not null)
-					return (MTLCpuCacheMode)(uint) val;
+					return (MTLCpuCacheMode) (uint) val;
 				return null;
 			}
 			set {
 				if (value.HasValue)
-					SetNumberValue (MTKTextureLoaderKeys.TextureCpuCacheModeKey, (nuint)(uint)value.Value);
+					SetNumberValue (MTKTextureLoaderKeys.TextureCpuCacheModeKey, (nuint) (uint) value.Value);
 				else
 					RemoveValue (MTKTextureLoaderKeys.TextureCpuCacheModeKey);
 			}
@@ -64,19 +64,19 @@ namespace MetalKit {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (10,0)]
-		[Mac (10,12)]
+		[iOS (10, 0)]
+		[Mac (10, 12)]
 #endif
 		public MTLStorageMode? TextureStorageMode {
 			get {
 				var val = GetNUIntValue (MTKTextureLoaderKeys.TextureStorageModeKey);
 				if (val is not null)
-					return (MTLStorageMode)(uint) val;
+					return (MTLStorageMode) (uint) val;
 				return null;
 			}
 			set {
 				if (value.HasValue)
-					SetNumberValue (MTKTextureLoaderKeys.TextureStorageModeKey, (nuint)(uint)value.Value);
+					SetNumberValue (MTKTextureLoaderKeys.TextureStorageModeKey, (nuint) (uint) value.Value);
 				else
 					RemoveValue (MTKTextureLoaderKeys.TextureStorageModeKey);
 			}
@@ -88,8 +88,8 @@ namespace MetalKit {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (10,0)]
-		[Mac (10,12)]
+		[iOS (10, 0)]
+		[Mac (10, 12)]
 #endif
 		public MTKTextureLoaderCubeLayout? CubeLayout {
 			get {
@@ -112,8 +112,8 @@ namespace MetalKit {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (10,0)]
-		[Mac (10,12)]
+		[iOS (10, 0)]
+		[Mac (10, 12)]
 #endif
 		public MTKTextureLoaderOrigin? Origin {
 			get {

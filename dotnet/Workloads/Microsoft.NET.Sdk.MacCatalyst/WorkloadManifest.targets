@@ -1,7 +1,0 @@
-<Project>
-	<Import Project="Sdk.props" Sdk="Microsoft.MacCatalyst.Sdk.net6" Condition="'$(TargetPlatformIdentifier)' == 'MacCatalyst'" />
-
-	<ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' and $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '6.0')) ">
-		<SdkSupportedTargetPlatformIdentifier Include="maccatalyst" DisplayName="Mac Catalyst" />
-	</ItemGroup>
-</Project>

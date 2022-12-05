@@ -28,17 +28,17 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 			return await Compile (outputFile, platformName, isLibrary, dir, outputCSFile);
 		}
 
-		public static async Task<string> Compile (string outputFile, PlatformName platformName, bool isLibrary, string workingDirectory, params string[] sourceFiles)
+		public static async Task<string> Compile (string outputFile, PlatformName platformName, bool isLibrary, string workingDirectory, params string [] sourceFiles)
 		{
 			var compilerArgs = BuildCompilerArgs (sourceFiles, outputFile, platformName, isLibrary);
-			Execution execution = await Execution.RunAsync(MonoCompiler, compilerArgs, mergeOutput: true, workingDirectory: workingDirectory);
-			return execution!.StandardOutput?.ToString()!;
+			Execution execution = await Execution.RunAsync (MonoCompiler, compilerArgs, mergeOutput: true, workingDirectory: workingDirectory);
+			return execution!.StandardOutput?.ToString ()!;
 		}
 
-		static List<string> BuildCompilerArgs (string[] sourceFiles, string outputFile, PlatformName platformName,
+		static List<string> BuildCompilerArgs (string [] sourceFiles, string outputFile, PlatformName platformName,
 			bool isLibrary)
 		{
-			var args = new List<string>();
+			var args = new List<string> ();
 
 			args.Add ("/unsafe");
 			args.Add ("/nostdlib+");

@@ -17,7 +17,7 @@ using ObjCRuntime;
 using Foundation;
 
 namespace ImageIO {
-	
+
 	public partial class CGImageSource {
 
 		// CGImageSource.h
@@ -32,7 +32,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public CGImageMetadata? CopyMetadata (nint index, NSDictionary? options)
@@ -47,7 +47,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public CGImageMetadata? CopyMetadata (nint index, CGImageOptions? options)
 		{
@@ -62,7 +62,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static void CGImageSourceRemoveCacheAtIndex (/* CGImageSourceRef __nonnull */ IntPtr isrc,
@@ -74,7 +74,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public void RemoveCache (nint index)
 		{

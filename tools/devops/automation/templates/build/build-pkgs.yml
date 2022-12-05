@@ -38,10 +38,20 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 steps:
 - template: build.yml
   parameters:
     isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
     runDeviceTests: ${{ parameters.runDeviceTests }}
     vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
     keyringPass: ${{ parameters.keyringPass }}
@@ -139,7 +149,7 @@ steps:
 
       name: macTestPkg
       displayName: 'Package macOS tests'
-      condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
+      condition: and(succeeded(), contains(variables['RUN_MAC_TESTS'], 'true'))
       continueOnError: true # not a terrible blocking issue
       timeoutInMinutes: 60
 

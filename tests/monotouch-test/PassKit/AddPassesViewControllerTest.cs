@@ -18,7 +18,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.PassKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AddPassesViewControllerTest {
@@ -46,7 +46,7 @@ namespace MonoTouchFixtures.PassKit {
 
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Phone)
 				Assert.Inconclusive ("PassKit does not work on iPads");
-			
+
 			PKAddPassesViewController ctrl = new PKAddPassesViewController (null, null);
 			Assert.NotNull (ctrl, "PKAddPassesViewController ctor(String, NSBundle)");
 

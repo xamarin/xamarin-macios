@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "iOS Controller template",
+  "name": "Contrôleur iOS",
   "description": "Classe de contrôleur iOS",
   "symbols/namespace/description": "espace de noms pour le code généré"
 }

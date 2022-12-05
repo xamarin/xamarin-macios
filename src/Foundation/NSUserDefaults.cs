@@ -3,7 +3,7 @@ using ObjCRuntime;
 
 namespace Foundation {
 
-	public enum  NSUserDefaultsType {
+	public enum NSUserDefaultsType {
 		UserName,
 		SuiteName
 	}
@@ -16,11 +16,8 @@ namespace Foundation {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.10.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.10")]
+		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Mac (10, 9)]
@@ -36,7 +33,7 @@ namespace Foundation {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public NSUserDefaults (string name, NSUserDefaultsType type)
 		{
@@ -58,7 +55,7 @@ namespace Foundation {
 			NSString str = new NSString (value);
 
 			SetObjectForKey (str, defaultName);
-			
+
 			str.Dispose ();
 		}
 

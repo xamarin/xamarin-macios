@@ -216,6 +216,10 @@ namespace CoreBluetooth {
 		[iOS (7,0), Mac (10,9)]
 		NSString OptionShowPowerAlertKey { get; }
 
+		[iOS (16,0), NoMac, TV(16,0), MacCatalyst (16,0), Watch (9,0)]
+		[Field ("CBCentralManagerOptionDeviceAccessForMedia")]
+		NSString OptionDeviceAccessForMedia { get; }
+
 		[Field ("CBCentralManagerScanOptionSolicitedServiceUUIDsKey")]
 		[iOS (7,0), Mac (10,9)]
 		NSString ScanOptionSolicitedServiceUUIDsKey { get; }

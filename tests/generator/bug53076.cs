@@ -28,13 +28,13 @@ namespace Bug53076Test {
 		[Abstract]
 		[Async (ResultTypeName = "RequiredReturnMethodObjResult")]
 		[Export ("requiredReturnMethodObj:completion:")]
-		bool RequiredReturnMethodObj (int arg1, Action<NSError,NSObject> err);
+		bool RequiredReturnMethodObj (int arg1, Action<NSError, NSObject> err);
 
 		[Async (ResultTypeName = "RequiredReturnMethodObjResult")]
 		[Export ("optionalReturnObj:completion:")]
-		bool OptionalReturnMethodObj (int arg1, Action<NSError,NSObject> err);
+		bool OptionalReturnMethodObj (int arg1, Action<NSError, NSObject> err);
 	}
 
 	[BaseType (typeof (NSObject))]
-	interface RequiredReturnMethodObjResult {}
+	interface RequiredReturnMethodObjResult { }
 }

@@ -24,6 +24,14 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 - name: xcodeChannel
   type: string
 
@@ -40,6 +48,8 @@ jobs:
   steps:
   - template: ../common/configure.yml
     parameters: 
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
       uploadArtifacts: false
       enableDotnet: ${{ parameters.enableDotnet }}
 
@@ -51,7 +61,7 @@ jobs:
     - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
 
     # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
-    - template: azure-devops-pools/agent-pool-selector.yml@templates
+    - template: azure-devops-pools/agent-pool-selector.yml@yaml-templates
       parameters:
         agentPoolPR: $(PRBuildPool)
         agentPoolPRUrl: $(PRBuildPoolUrl)
@@ -91,6 +101,8 @@ jobs:
   - template: api-diff-build-and-detect.yml
     parameters:
       isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
       keyringPass: ${{ parameters.keyringPass }}
       gitHubToken: ${{ parameters.gitHubToken }}
@@ -116,3 +128,5 @@ jobs:
   - template: api-diff-process-results.yml
     parameters:
       isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}

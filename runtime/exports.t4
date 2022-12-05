@@ -255,6 +255,7 @@
 			"MonoProfileThreadFunc", "end"
 		) {
 			XamarinRuntime = RuntimeMode.MonoVM,
+			Mode = DotNetMode.OnlyLegacy,
 		},
 
 		new Export ("void", "mono_profiler_install_gc",

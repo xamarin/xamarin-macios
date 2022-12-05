@@ -13,7 +13,7 @@ using NativeHandle = System.IntPtr;
 
 namespace HealthKitUI {
 
-	[iOS (9,3), Watch (2,2)]
+	[iOS (9,3), Watch (2,2), MacCatalyst (13,0)]
 	[BaseType (typeof (UIView))]
 	[DisableDefaultCtor] // nil handle (introspection)
 	interface HKActivityRingView {

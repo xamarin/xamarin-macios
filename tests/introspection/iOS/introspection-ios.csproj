@@ -163,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppDelegate.cs" />
+    <Compile Include="..\..\common\AppDelegate.cs" />
     <Compile Include="iOSApiCtorInitTest.cs" />
     <Compile Include="iOSApiFieldTest.cs" />
     <Compile Include="iOSApiSelectorTest.cs" />

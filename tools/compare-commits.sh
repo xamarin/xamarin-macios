@@ -203,7 +203,7 @@ if test -z "${BUILD_REVISION:-}"; then
 	GIT_COLOR_P=(-c "color.status=always")
 else
 	GIT_COLOR=
-	GIT_COLOR_P=()
+	GIT_COLOR_P=(-c "color.status=auto")
 fi
 
 GENERATOR_DIFF_FILE=
@@ -222,7 +222,9 @@ mkdir -p "$(dirname "$GH_COMMENTS_FILE")"
 if test -z "$SKIP_DIRTY_CHECK"; then
 	if [ -n "$(git status --porcelain --ignore-submodule)" ]; then
 		report_error_line "${RED}** Error: Working directory isn't clean:${CLEAR}"
-		git "${GIT_COLOR_P[@]}" status --ignore-submodule | sed 's/^/    /' | while read -r line; do report_error_line "$line"; done
+		# The funny GIT_COLOR_P syntax is explained here: https://stackoverflow.com/a/61551944/183422
+		git ${GIT_COLOR_P[@]+"${GIT_COLOR_P[@]}"} status --ignore-submodules | sed 's/^/    /' | while read -r line; do report_error_line "$line"; done || true
+		git ${GIT_COLOR_P[@]+"${GIT_COLOR_P[@]}"} diff --ignore-submodules | sed 's/^/    /' | while read -r line; do report_error_line "$line"; done || true
 		exit 1
 	fi
 fi
@@ -359,10 +361,14 @@ if test -n "$ENABLE_API_DIFF"; then
 	#
 	echo "💪 ${BLUE}Computing API diff vs ${WHITE}${BASE_HASH}${BLUE}${CLEAR} 💪"
 
+	# Compute the TFM of the previous hash
+	PREVIOUS_DOTNET_TFM=$(make -C "$OUTPUT_SRC_DIR/xamarin-macios/tools/devops" print-variable VARIABLE=DOTNET_TFM)
+	PREVIOUS_DOTNET_TFM=${PREVIOUS_DOTNET_TFM#*=}
+
 	# Calculate apidiff references according to the temporary build
 	echo "    ${BLUE}Updating apidiff references...${CLEAR}"
 	rm -rf "$APIDIFF_RESULTS_DIR" "$APIDIFF_TMP_DIR"
-	if ! make update-refs -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$APIDIFF_TMP_DIR" OUTPUT_DIR="$APIDIFF_RESULTS_DIR" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build" 2>&1 | sed 's/^/        /'; then
+	if ! make update-refs -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$APIDIFF_TMP_DIR" OUTPUT_DIR="$APIDIFF_RESULTS_DIR" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build" DOTNET_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_build" DOTNET_TFM_REFERENCE="$PREVIOUS_DOTNET_TFM" 2>&1 | sed 's/^/        /'; then
 		EC=${PIPESTATUS[0]}
 		report_error_line "${RED}Failed to update apidiff references${CLEAR}"
 		exit "$EC"
@@ -371,7 +377,7 @@ if test -n "$ENABLE_API_DIFF"; then
 	# Now compare the current build against those references
 	echo "    ${BLUE}Running apidiff...${CLEAR}"
 	APIDIFF_FILE=$APIDIFF_RESULTS_DIR/api-diff.html
-	if ! make all-local -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$APIDIFF_TMP_DIR" OUTPUT_DIR="$APIDIFF_RESULTS_DIR" SKIP_XAMARIN_VS_DOTNET=1 SKIP_IOS_VS_MACCATALYST=1 2>&1 | sed 's/^/        /'; then
+	if ! make all-local -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$APIDIFF_TMP_DIR" OUTPUT_DIR="$APIDIFF_RESULTS_DIR" SKIP_XAMARIN_VS_DOTNET=1 SKIP_IOS_VS_MACCATALYST=1 DOTNET_TFM_REFERENCE="$PREVIOUS_DOTNET_TFM" 2>&1 | sed 's/^/        /'; then
 		EC=${PIPESTATUS[0]}
 		report_error_line "${RED}Failed to run apidiff${CLEAR}"
 		exit "$EC"
@@ -379,7 +385,7 @@ if test -n "$ENABLE_API_DIFF"; then
 
 	# Now create the markdowns with these references
 	echo "    ${BLUE}Creating markdowns...${CLEAR}"
-	if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$APIDIFF_TMP_DIR" OUTPUT_DIR="$APIDIFF_RESULTS_DIR" 2>&1 | sed 's/^/        /'; then
+	if ! make all-markdowns -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$APIDIFF_TMP_DIR" OUTPUT_DIR="$APIDIFF_RESULTS_DIR" DOTNET_TFM_REFERENCE="$PREVIOUS_DOTNET_TFM" 2>&1 | sed 's/^/        /'; then
 		EC=${PIPESTATUS[0]}
 		report_error_line "${RED}Failed to create markdowns${CLEAR}"
 		exit "$EC"

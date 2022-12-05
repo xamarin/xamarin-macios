@@ -415,9 +415,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios8.0")]
-#if IOS
-		[Obsolete ("Starting with ios8.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios8.0")]
 #else
 		[Deprecated (PlatformName.iOS, 8, 0)]
 #endif

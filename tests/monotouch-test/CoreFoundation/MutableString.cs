@@ -21,7 +21,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void CreateString1 ()
 		{
-			Assert.Throws<ArgumentNullException> (() => new CFMutableString ((string)null), "null");
+			Assert.Throws<ArgumentNullException> (() => new CFMutableString ((string) null), "null");
 			using (var s = new CFMutableString ("bonjour!")) {
 				Assert.That (s.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle-1");
 			}
@@ -99,7 +99,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			using (var s = new CFMutableString ("Bonjour à tous!")) {
 				Assert.True (s.Transform (CFStringTransform.ToXmlHex, false), "Transform-1");
 				Assert.That (s.ToString (), Is.EqualTo ("Bonjour &#xE0; tous!"), "ToString-1");
-		
+
 				Assert.True (s.Transform (CFStringTransform.ToXmlHex, true), "Transform-2");
 				Assert.That (s.ToString (), Is.EqualTo ("Bonjour à tous!"), "ToString-2");
 			}

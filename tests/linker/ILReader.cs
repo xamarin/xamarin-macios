@@ -14,10 +14,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace Linker.Shared
-{
-	public class ILInstruction
-	{
+namespace Linker.Shared {
+	public class ILInstruction {
 		public MethodBase Method;
 		public OpCode OpCode;
 		public int Offset;
@@ -40,8 +38,7 @@ namespace Linker.Shared
 		}
 	}
 
-	public class ILReader : IEnumerable<ILInstruction>
-	{
+	public class ILReader : IEnumerable<ILInstruction> {
 		List<ILInstruction> instructions;
 
 		static OpCode [] oneByteOpcodes = new OpCode [0x100];
@@ -164,7 +161,7 @@ namespace Linker.Shared
 			}
 		}
 
-		static byte ReadByte (byte[] bytes, ref int position)
+		static byte ReadByte (byte [] bytes, ref int position)
 		{
 			return bytes [position++];
 		}

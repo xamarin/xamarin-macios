@@ -19,7 +19,7 @@ namespace EventKitUI {
 	[SupportedOSPlatform ("ios11.0")]
 	[SupportedOSPlatform ("maccatalyst13.0")]
 #else
-	[iOS (11,0)]
+	[iOS (11, 0)]
 #endif
 	public static class EKUIBundle {
 
