@@ -27,12 +27,12 @@ namespace MessageUI {
 		public NSError? Error { get; private set; }
 		public MFMailComposeViewController Controller { get; private set; }
 	}
-	
+
 	public partial class MFMailComposeViewController {
 		Mono_MFMailComposeViewControllerDelegate EnsureDelegate ()
 		{
 			NSObject? del = WeakMailComposeDelegate;
-			if (del is null || (!(del is Mono_MFMailComposeViewControllerDelegate))){
+			if (del is null || (!(del is Mono_MFMailComposeViewControllerDelegate))) {
 				del = new Mono_MFMailComposeViewControllerDelegate ();
 				WeakMailComposeDelegate = del;
 			}
@@ -82,7 +82,7 @@ namespace MessageUI {
 		Mono_MFMessageComposeViewControllerDelegate EnsureDelegate ()
 		{
 			NSObject? del = WeakMessageComposeDelegate;
-			if (del is null || (!(del is Mono_MFMessageComposeViewControllerDelegate))){
+			if (del is null || (!(del is Mono_MFMessageComposeViewControllerDelegate))) {
 				del = new Mono_MFMessageComposeViewControllerDelegate ();
 				WeakMessageComposeDelegate = del;
 			}

@@ -26,8 +26,8 @@ namespace CoreSpotlight {
 		[UnsupportedOSPlatform ("macos13.0")]
 		[UnsupportedOSPlatform ("tvos")]
 #endif
-		public virtual string[] ProtectionClasses { 
-			get => null; 
+		public virtual string [] ProtectionClasses {
+			get => null;
 			set => throw new InvalidOperationException (Constants.ApiRemovedGeneral);
 		}
 	}

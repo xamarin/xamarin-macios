@@ -22,34 +22,15 @@ namespace Xamarin.Mac.Tests {
 	}
 }
 #elif !__WATCHOS__
-[Register ("AppDelegate")]
-public partial class AppDelegate : UIApplicationDelegate
+public partial class AppDelegate
 {
-	UIWindow window;
-	TouchRunner runner;
-
-	public override bool FinishedLaunching (UIApplication app, NSDictionary options)
+	public partial IEnumerable<Assembly> GetTestAssemblies ()
 	{
-#if __MACCATALYST__
-		// Debug spew to track down https://github.com/xamarin/maccore/issues/2414
-		Console.WriteLine ("AppDelegate.FinishedLaunching");
-#endif
-		window = new UIWindow (UIScreen.MainScreen.Bounds);
-
-		runner = new TouchRunner (window);
-		runner.Add (System.Reflection.Assembly.GetExecutingAssembly ());
-		runner.Add (typeof (Xamarin.BindingTests2.BindingTest).Assembly);
-		runner.Add (typeof (Xamarin.BindingTests.ProtocolTest).Assembly);
-
-		window.RootViewController = new UINavigationController (runner.GetViewController ());
-		window.MakeKeyAndVisible ();
-
-		return true;
-	}
-
-	static void Main (string[] args)
-	{
-		UIApplication.Main (args, null, typeof (AppDelegate));
+		return new Assembly [] {
+			Assembly.GetExecutingAssembly (),
+			typeof (Xamarin.BindingTests2.BindingTest).Assembly,
+			typeof (Xamarin.BindingTests.ProtocolTest).Assembly,
+		};
 	}
 }
 #else

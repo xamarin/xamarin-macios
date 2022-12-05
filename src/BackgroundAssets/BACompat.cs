@@ -77,7 +77,7 @@ namespace BackgroundAssets {
 		[UnsupportedOSPlatform ("maccatalyst16.1")]
 		[UnsupportedOSPlatform ("macos13.0")]
 #endif
-		public virtual NSError? Error  => null;
+		public virtual NSError? Error => null;
 	}
 
 }

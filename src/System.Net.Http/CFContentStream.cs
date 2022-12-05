@@ -40,16 +40,13 @@ using CoreServices;
 using CoreFoundation;
 #endif
 
-namespace System.Net.Http
-{
-	class BufferData 
-	{
-		public byte[] Buffer;
+namespace System.Net.Http {
+	class BufferData {
+		public byte [] Buffer;
 		public int Length;
 	}
 
-	class CFContentStream : HttpContent
-	{
+	class CFContentStream : HttpContent {
 		readonly CFHTTPStream http_stream;
 		BufferData data;
 		Mutex data_mutex;
@@ -92,7 +89,7 @@ namespace System.Net.Http
 		{
 			var gotMutex = data_mutex.WaitOne ();
 			if (gotMutex) {
-				var stream = (CFHTTPStream)sender;
+				var stream = (CFHTTPStream) sender;
 				if (e.EventType == CFStreamEventType.ErrorOccurred)
 					Volatile.Write (ref http_exception, ExceptionDispatchInfo.Capture (stream.GetError ()));
 				data_mutex.ReleaseMutex ();

@@ -1,8 +1,8 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.100-alpha.1.22578.8">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.100-alpha.1.22602.5">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>fb558269a38bc9f9d79ca7d4e36d8169cf25aed4</Sha>
+      <Sha>243326d8d19c03876ba6a037fcddfb7ebe8b0b4d</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="7.0.100-1.22564.1" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/linker</Uri>
@@ -22,21 +22,21 @@
       <Sha>b6656f5b78cd25f984355f973e65da3d844ac6d1</Sha>
     </Dependency>
     <!-- This is a subscription of the .NET 7 versions of our packages -->
-    <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.1.1480">
+    <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.1.1483">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>8ee45638b4e74a99d909e010c06b96ac031e5b5d</Sha>
+      <Sha>7c4db9ebe12113e43ef07a3ecc8854443aa8c604</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.macOS.Sdk" Version="13.0.2035">
+    <Dependency Name="Microsoft.macOS.Sdk" Version="13.0.2038">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>8ee45638b4e74a99d909e010c06b96ac031e5b5d</Sha>
+      <Sha>7c4db9ebe12113e43ef07a3ecc8854443aa8c604</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.iOS.Sdk" Version="16.1.1480">
+    <Dependency Name="Microsoft.iOS.Sdk" Version="16.1.1483">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>8ee45638b4e74a99d909e010c06b96ac031e5b5d</Sha>
+      <Sha>7c4db9ebe12113e43ef07a3ecc8854443aa8c604</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.tvOS.Sdk" Version="16.1.1480">
+    <Dependency Name="Microsoft.tvOS.Sdk" Version="16.1.1483">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>8ee45638b4e74a99d909e010c06b96ac031e5b5d</Sha>
+      <Sha>7c4db9ebe12113e43ef07a3ecc8854443aa8c604</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
