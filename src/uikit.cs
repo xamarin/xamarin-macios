@@ -12839,29 +12839,9 @@ namespace UIKit {
 		[Internal, Field ("NSTextEffectLetterpressStyle")]
 		NSString NSTextEffectLetterpressStyle { get; }
 
-	//
-	// Document Types
-	//
 		[iOS (7,0)]
 		[Internal, Field ("NSDocumentTypeDocumentAttribute")]
 		NSString NSDocumentTypeDocumentAttribute { get; }
-
-		[iOS (7,0)]
-		[Internal, Field ("NSPlainTextDocumentType")]
-		NSString NSPlainTextDocumentType { get; }
-		
-		[iOS (7,0)]
-		[Internal, Field ("NSRTFDTextDocumentType")]
-		NSString NSRTFDTextDocumentType { get; }
-		
-		[iOS (7,0)]
-		[Internal, Field ("NSRTFTextDocumentType")]
-		NSString NSRTFTextDocumentType { get; }
-
-		[iOS (7,0)]
-		[Internal, Field ("NSHTMLTextDocumentType")]
-		NSString NSHTMLTextDocumentType { get; }
-
 	//
 	//
 	//
