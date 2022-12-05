@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <RootTestsDirectory>..\..</RootTestsDirectory>
+  </PropertyGroup>
+  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{2B174B45-CC6B-443D-870F-6B5394FDE3FD}</ProjectGuid>
@@ -58,6 +61,12 @@
     </Compile>
     <Compile Include="..\..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\NativePlatformTest.cs">
       <Link>NativePlatformTest.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

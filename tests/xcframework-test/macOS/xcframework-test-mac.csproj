@@ -67,6 +67,12 @@
     <Compile Include="..\..\common\mac\MacMain.cs">
       <Link>MacMain.cs</Link>
     </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\external\Touch.Unit\Touch.Client\macOS\mobile\Touch.Client-macOS-mobile.csproj">
