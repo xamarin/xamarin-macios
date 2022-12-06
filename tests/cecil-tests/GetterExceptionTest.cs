@@ -9,23 +9,14 @@ using Xamarin.Tests;
 
 namespace Cecil.Tests {
 	[TestFixture]
-	public class GetterExceptionTest {
-		Dictionary<string, AssemblyDefinition> assemblyCache = new ();
-
-		[OneTimeSetUp]
-		public void SetUp ()
+	public class GetterExceptionTest
+	{
+		readonly HashSet<string> exceptionsToSkip = new ()
 		{
-			foreach (string assemblyPath in Helper.NetPlatformAssemblies) {
-				var assembly = Helper.GetAssembly (assemblyPath);
-				assemblyCache.Add (assemblyPath, assembly);
-			}
-		}
-
-		[OneTimeTearDown]
-		public void TearDown ()
-		{
-			assemblyCache.Clear ();
-		}
+			"AudioQueueException",
+			"ModelNotImplementedException",
+			"You_Should_Not_Call_base_In_This_Method"
+		};
 
 		bool IsMemberObsolete (ICustomAttributeProvider member)
 		{
@@ -38,31 +29,44 @@ namespace Cecil.Tests {
 					m.AttributeType.Name == "ObsoletedOSPlatformAttribute");
 		}
 
-		bool VerifyIfGetterThrowsException (MethodDefinition methodDefinition)
+		bool VerifyIfGetterThrowsException (MethodDefinition methodDefinition, out string exceptionMessage)
 		{
+			exceptionMessage = string.Empty;
 			if (methodDefinition is null || methodDefinition.Body is null)
 				return false;
 
-			foreach (var inst in methodDefinition.Body.Instructions) {
-				if (inst.OpCode == OpCodes.Throw) {
-					return true;
+			foreach (Instruction? inst in methodDefinition.Body.Instructions) {
+				if (inst.OpCode == OpCodes.Newobj) {
+					string? baseType = ((inst.Operand as MemberReference)
+						?.DeclaringType as TypeDefinition)
+						?.BaseType.Name;
+
+					if (baseType != null && baseType.Equals("Exception")) {
+						string? exceptionType = (inst.Operand as MemberReference)?.DeclaringType.Name;
+						if (exceptionType != null && !exceptionsToSkip.Contains(exceptionType)) {
+							exceptionMessage = exceptionType;
+							return true;
+						}
+					}
 				}
 			}
 
 			return false;
 		}
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblies))]
 		[Test]
 		public void TestForAssembliesWithGetterExceptions (string assemblyPath)
 		{
 			Dictionary<string, string> propertiesWithGetterExceptions = new ();
+			AssemblyDefinition assembly = Helper.GetAssembly(assemblyPath);
 
-			if (assemblyCache.TryGetValue (assemblyPath, out var cache)) {
-				foreach (TypeDefinition type in cache.MainModule.Types) {
-					foreach (PropertyDefinition property in type.Properties) {
-						if (!IsMemberObsolete (property) && VerifyIfGetterThrowsException (property.GetMethod))
-							propertiesWithGetterExceptions [type.Name] = property.Name;
+			if (assembly != null) {
+				foreach (TypeDefinition type in assembly.MainModule.Types) {
+						foreach (PropertyDefinition property in type.Properties) {
+							if (!IsMemberObsolete(property) &&
+								VerifyIfGetterThrowsException(property.GetMethod, out string exceptionConstructed))
+									propertiesWithGetterExceptions [type.Name] = $"{property.Name} Exception: {exceptionConstructed}";
 					}
 				}
 
