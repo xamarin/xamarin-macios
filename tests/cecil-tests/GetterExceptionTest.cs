@@ -9,8 +9,7 @@ using Xamarin.Tests;
 
 namespace Cecil.Tests {
 	[TestFixture]
-	public class GetterExceptionTest
-	{
+	public class GetterExceptionTest {
 		readonly HashSet<string> exceptionsToSkip = new ()
 		{
 			"AudioQueueException",
@@ -41,9 +40,9 @@ namespace Cecil.Tests {
 						?.DeclaringType as TypeDefinition)
 						?.BaseType.Name;
 
-					if (baseType != null && baseType.Equals("Exception")) {
+					if (baseType != null && baseType.Equals ("Exception")) {
 						string? exceptionType = (inst.Operand as MemberReference)?.DeclaringType.Name;
-						if (exceptionType != null && !exceptionsToSkip.Contains(exceptionType)) {
+						if (exceptionType != null && !exceptionsToSkip.Contains (exceptionType)) {
 							exceptionMessage = exceptionType;
 							return true;
 						}
@@ -59,14 +58,14 @@ namespace Cecil.Tests {
 		public void TestForAssembliesWithGetterExceptions (string assemblyPath)
 		{
 			Dictionary<string, string> propertiesWithGetterExceptions = new ();
-			AssemblyDefinition assembly = Helper.GetAssembly(assemblyPath);
+			AssemblyDefinition assembly = Helper.GetAssembly (assemblyPath);
 
 			if (assembly != null) {
 				foreach (TypeDefinition type in assembly.MainModule.Types) {
-						foreach (PropertyDefinition property in type.Properties) {
-							if (!IsMemberObsolete(property) &&
-								VerifyIfGetterThrowsException(property.GetMethod, out string exceptionConstructed))
-									propertiesWithGetterExceptions [type.Name] = $"{property.Name} Exception: {exceptionConstructed}";
+					foreach (PropertyDefinition property in type.Properties) {
+						if (!IsMemberObsolete (property) &&
+							VerifyIfGetterThrowsException (property.GetMethod, out string exceptionConstructed))
+							propertiesWithGetterExceptions [type.Name] = $"{property.Name} Exception: {exceptionConstructed}";
 					}
 				}
 
