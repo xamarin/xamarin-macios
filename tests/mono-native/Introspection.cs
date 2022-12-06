@@ -7,11 +7,9 @@ using System.Runtime.InteropServices;
 using NUnit.Framework;
 using ObjCRuntime;
 
-namespace Xamarin.Tests
-{
+namespace Xamarin.Tests {
 	[TestFixture]
-	public class Introspection
-	{
+	public class Introspection {
 		public static string RootDirectory => Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location);
 
 		void AssertShouldExist (string name)

@@ -9,8 +9,7 @@ using System.Reflection;
 
 using Xamarin.Tests;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	public class NativeReferenceTests {
 		public const string ItemGroupTemplate = @"<ItemGroup>{0}</ItemGroup>";
 		public const string NativeReferenceTemplate = @"<NativeReference Include=""{0}""><IsCxx>False</IsCxx><Kind>{1}</Kind></NativeReference>";
@@ -125,7 +124,7 @@ namespace Xamarin.MMP.Tests
 				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_MissingLibrariesActAsExpected - Nonexistant", null, false);
 
 				// Test a system dylib. Does not matter which one
-				test.ItemGroup = CreateSingleNativeRef ( "/System/Library/Frameworks/MapKit.framework/Versions/A/Resources/BridgeSupport/MapKit.dylib", "Dynamic");
+				test.ItemGroup = CreateSingleNativeRef ("/System/Library/Frameworks/MapKit.framework/Versions/A/Resources/BridgeSupport/MapKit.dylib", "Dynamic");
 				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_MissingLibrariesActAsExpected - System", null, true);
 
 				// Test one of the ignored libs
@@ -168,8 +167,7 @@ namespace Xamarin.MMP.Tests
 				string filePath = CreateCopyOfSimpleClassInTestDir (tmpDir);
 
 				// Use absolute path here and in TestDecl to trigger bug
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) 
-				{
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					ProjectName = "UnifiedExample.csproj",
 					ItemGroup = CreateSingleNativeRef (filePath, "Dynamic"),
 					TestDecl = string.Format ("[System.Runtime.InteropServices.DllImport (\"{0}\")]public static extern int GetFour ();", filePath),
@@ -189,7 +187,7 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					ProjectName = "UnifiedExample.csproj",
 					CSProjConfig = "<EnableCodeSigning>true</EnableCodeSigning>",
-					ItemGroup = CreateItemGroup (new string[] { CreateNativeRefInclude (firstPath, "Dynamic"), CreateNativeRefInclude (secondPath, "Dynamic") }),
+					ItemGroup = CreateItemGroup (new string [] { CreateNativeRefInclude (firstPath, "Dynamic"), CreateNativeRefInclude (secondPath, "Dynamic") }),
 				};
 				NativeReferenceTestCore (tmpDir, test, "MultipleNativeReferences_OnlyInvokeMMPOneTime_AndCopyEverythingIn", null, true);
 			});

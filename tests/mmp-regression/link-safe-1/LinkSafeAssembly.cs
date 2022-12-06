@@ -16,7 +16,7 @@ using ObjCRuntime;
 [assembly: LinkerSafe]
 
 namespace Xamarin.Mac.Linker.Test {
-	
+
 	class SafeToLinkAssembly {
 
 		static int UnusedProperty {
@@ -27,12 +27,12 @@ namespace Xamarin.Mac.Linker.Test {
 		{
 		}
 
-		static Type type_stla = typeof(SafeToLinkAssembly);
+		static Type type_stla = typeof (SafeToLinkAssembly);
 
-		static void Main (string[] args)
+		static void Main (string [] args)
 		{
 			NSApplication.Init ();
-			
+
 			Test.EnsureLinker (true);
 
 			int pcount = type_stla.GetProperties (BindingFlags.NonPublic | BindingFlags.Static).Length;

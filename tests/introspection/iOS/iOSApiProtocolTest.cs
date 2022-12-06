@@ -167,7 +167,7 @@ namespace Introspection {
 			case "CAMetalLayer":
 				return TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (11, 0);
 #if !XAMCORE_3_0
-				// mistake (base type) fixed by a breaking change
+			// mistake (base type) fixed by a breaking change
 			case "MFMailComposeViewControllerDelegate":
 				if (protocolName == "UINavigationControllerDelegate")
 					return true;

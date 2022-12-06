@@ -30,7 +30,8 @@ namespace Linker.Shared {
 		public void Bug11452 ()
 		{
 			var button = new UIButton ();
-			button.TouchCancel += delegate {
+			button.TouchCancel += delegate
+			{
 				if (TestRuntime.IsSimulatorOrDesktop) {
 					// kaboom
 				}
@@ -44,7 +45,8 @@ namespace Linker.Shared {
 		public void Bug11452 ()
 		{
 			var button = new UIButton ();
-			button.TouchCancel += delegate {
+			button.TouchCancel += delegate
+			{
 				if (TestRuntime.IsSimulatorOrDesktop) {
 					// kaboom
 				}
@@ -57,14 +59,14 @@ namespace Linker.Shared {
 	// we want the test to be availble if we use the linker
 	[Preserve (AllMembers = true)]
 	public class OptimizeGeneratedCodeTest : BaseOptimizeGeneratedCodeTest {
-		
+
 		// tests related to IL re-writting inside OptimizeGeneratedCodeSubStep
-		
+
 		// note: the following tests don't really ensure the IL code is ok -
 		// the best way to be sure if decompiling and reviewing the IL. OTOH
 		// it's pretty likely to crash if the IL was badly rewritten so running
 		// them makes me feel better ;-)
-		
+
 #if !__TVOS__ && !__WATCHOS__ && !__MACCATALYST__ && !__MACOS__
 		[Test]
 		public void IsNewRefcountEnabled ()
@@ -76,7 +78,7 @@ namespace Linker.Shared {
 
 		class MyUIWebViewDelegate : UIWebViewDelegate {
 		}
-		
+
 		[Test]
 		public void MarkDirty ()
 		{
@@ -100,7 +102,7 @@ namespace Linker.Shared {
 			}
 		}
 #endif // !__TVOS__
-		
+
 		// this has 2 "if (Runtime.Arch == Arch.DEVICE)" conditions separated
 		// by "if (IsDirectBinding)" so modifying IL is a bit more tricky - so
 		// testing this, linked on both the simulator and on device is important
@@ -190,8 +192,8 @@ namespace Linker.Shared {
 				GetType ().GetMethod (nameof (Size4Test), BindingFlags.NonPublic | BindingFlags.Instance),
 				GetType ().GetMethod (nameof (Size4Test_Optimizable), BindingFlags.NonPublic | BindingFlags.Instance)
 			};
-			MethodInfo[] passingMethods = null;
-			MethodInfo[] failingMethods = null;
+			MethodInfo [] passingMethods = null;
+			MethodInfo [] failingMethods = null;
 			switch (IntPtr.Size) {
 			case 4:
 				Size4Test ();
