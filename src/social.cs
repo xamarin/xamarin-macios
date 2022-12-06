@@ -53,18 +53,19 @@ namespace Social {
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Tencent Weibo SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Tencent Weibo SDK instead.")]
-		[iOS (7,0)]
+		[iOS (7, 0)]
 		[Field ("SLServiceTypeTencentWeibo")]
-		[Mac (10,9)]
+		[Mac (10, 9)]
 		NSString TencentWeibo { get; }
 
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use LinkedIn SDK instead.")]
 		[Field ("SLServiceTypeLinkedIn")]
-		[NoiOS][NoMacCatalyst]
-		[Mac (10,9)]
+		[NoiOS]
+		[NoMacCatalyst]
+		[Mac (10, 9)]
 		NSString LinkedIn { get; }
 	}
-	
+
 	[BaseType (typeof (NSObject))]
 	// init -> Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: SLRequestMultiPart must be obtained through!
 	[DisableDefaultCtor]
@@ -76,16 +77,16 @@ namespace Social {
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 		[Export ("account", ArgumentSemantic.Retain), NullAllowed]
-		ACAccount Account { get; set;  }
+		ACAccount Account { get; set; }
 
 		[Export ("requestMethod")]
-		SLRequestMethod RequestMethod { get;  }
+		SLRequestMethod RequestMethod { get; }
 
 		[Export ("URL")]
-		NSUrl Url { get;  }
+		NSUrl Url { get; }
 
 		[Export ("parameters")]
-		NSDictionary Parameters { get;  }
+		NSDictionary Parameters { get; }
 
 		[NoiOS] // just macOS
 		[Export ("addMultipartData:withName:type:")]
@@ -100,7 +101,7 @@ namespace Social {
 		// async 
 		[Export ("performRequestWithHandler:")]
 		[Async (ResultTypeName = "SLRequestResult")]
-		void PerformRequest (Action<NSData,NSHttpUrlResponse,NSError> handler);
+		void PerformRequest (Action<NSData, NSHttpUrlResponse, NSError> handler);
 	}
 
 	[NoMac]
@@ -112,10 +113,10 @@ namespace Social {
 		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("serviceType")]
-		NSString ServiceType { get;  }
+		NSString ServiceType { get; }
 
 		[Export ("completionHandler", ArgumentSemantic.Copy)]
-		Action<SLComposeViewControllerResult> CompletionHandler { get; set;  }
+		Action<SLComposeViewControllerResult> CompletionHandler { get; set; }
 
 		[Static]
 		[Export ("composeViewControllerForServiceType:")]
@@ -142,8 +143,8 @@ namespace Social {
 		bool RemoveAllUrls ();
 	}
 
-	[Mac (10,10)]
-	[iOS (8,0)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
 	[BaseType (typeof (SocialViewController))]
 	interface SLComposeServiceViewController : SocialTextViewDelegate {
 		[Export ("initWithNibName:bundle:")]
@@ -200,7 +201,7 @@ namespace Social {
 
 		[NoMac]
 		[Export ("loadPreviewView")]
-		SocialView LoadPreviewView();
+		SocialView LoadPreviewView ();
 
 		[NoMac]
 		[NullAllowed] // by default this property is null
@@ -210,7 +211,7 @@ namespace Social {
 
 
 	[NoMac]
-	[iOS (8,0)]
+	[iOS (8, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // designated
 	interface SLComposeSheetConfigurationItem {

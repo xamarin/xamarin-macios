@@ -42,7 +42,7 @@ namespace LinkSdk {
 			c = TypeDescriptor.GetConverter (typeof (ulong));
 			Assert.That (c.GetType ().Name, Is.EqualTo ("UInt64Converter"), "UInt64Converter");
 
-			c = TypeDescriptor.GetConverter (typeof (int[]));
+			c = TypeDescriptor.GetConverter (typeof (int []));
 			Assert.That (c.GetType ().Name, Is.EqualTo ("ArrayConverter"), "ArrayConverter");
 
 			c = TypeDescriptor.GetConverter (typeof (int?));
@@ -59,7 +59,7 @@ namespace LinkSdk {
 
 			c = TypeDescriptor.GetConverter (typeof (ushort));
 			Assert.That (c.GetType ().Name, Is.EqualTo ("UInt16Converter"), "UInt16Converter");
-		
+
 			c = TypeDescriptor.GetConverter (typeof (Guid));
 			Assert.That (c.GetType ().Name, Is.EqualTo ("GuidConverter"), "GuidConverter");
 

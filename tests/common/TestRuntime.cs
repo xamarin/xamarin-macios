@@ -1469,8 +1469,6 @@ partial class TestRuntime {
 		var env = Environment.GetEnvironmentVariable ("LAUNCH_SENTINEL_FILE");
 		if (!string.IsNullOrEmpty (env))
 			File.WriteAllText (env, "Launched!"); // content doesn't matter, the file just has to exist.
-												  // Debug spew to track down https://github.com/xamarin/maccore/issues/2414
-		Console.WriteLine ("Launch is complete");
 	}
 
 	enum NXByteOrder /* unspecified in header, means most likely int */ {

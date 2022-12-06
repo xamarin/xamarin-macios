@@ -10,12 +10,10 @@ using NUnit.Framework;
 
 using Bindings.Test2;
 
-namespace Xamarin.BindingTests2
-{
+namespace Xamarin.BindingTests2 {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class BindingTest
-	{
+	public class BindingTest {
 		[Test]
 		public void Test ()
 		{

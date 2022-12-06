@@ -1148,13 +1148,13 @@
         <value>値 '{1}' のプロパティ '{0}' が不明です。</value>
     </data>
   <data name="E7102" xml:space="preserve">
-        <value>Invalid value '{0}' for the entitlement '{1}' of type '{2}' specified in the CustomEntitlements item group. Expected no value at all.</value>
+        <value>CustomEntitlements アイテム グループで指定された '{2}' 種類のエンタイトルメント '{1}' の値 '{0}' が無効です。値がないことが必要です。</value>
         <comment>
             Don't translate: CustomEntitlements (name of option in project file)
         </comment>
     </data>
   <data name="E7103" xml:space="preserve">
-        <value>Invalid value '{0}' for the entitlement '{1}' of type '{2}' specified in the CustomEntitlements item group. Expected 'true' or 'false'.</value>
+        <value>CustomEntitlements アイテム グループで指定された '{2}' 種類のエンタイトルメント '{1}' の値 '{0}' が無効です。'true' または 'false' であることが必要です。</value>
         <comment>
             Don't translate:
                 * CustomEntitlements (name of option in project file)
@@ -1162,7 +1162,7 @@
         </comment>
     </data>
   <data name="E7104" xml:space="preserve">
-        <value>Unknown type '{0}' for the entitlement '{1}' specified in the CustomEntitlements item group. Expected 'Remove', 'Boolean', 'String', or 'StringArray'.</value>
+        <value>CustomEntitlements アイテム グループで指定されたエンタイトルメント '{1}' の不明な種類 '{0}'。'Remove'、'Boolean'、'String'、または 'StringArray' が必要です。</value>
         <comment>
             Don't translate:
                 * CustomEntitlements (name of option in project file)
@@ -1170,7 +1170,7 @@
         </comment>
     </data>
   <data name="W7105" xml:space="preserve">
-        <value>Unexpected extension '{0}' for native reference '{1}' in manifest '{2}'.</value>
+        <value>マニフェスト '{2}' のネイティブ参照 '{1}' に予期しない拡張機能 '{0}'。</value>
         <comment>
             {0}: file extension
             {1}: path to a file

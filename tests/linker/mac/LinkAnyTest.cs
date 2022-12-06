@@ -28,12 +28,12 @@ namespace LinkAnyTest {
 
 		void TimedWait (Task task)
 		{
-				var rv = task.Wait (TimeSpan.FromMinutes (1));
-				if (rv)
-					return;
+			var rv = task.Wait (TimeSpan.FromMinutes (1));
+			if (rv)
+				return;
 
-				TestRuntime.IgnoreInCI ("This test times out randomly in CI due to bad network.");
-				Assert.Fail ("Test timed out");
+			TestRuntime.IgnoreInCI ("This test times out randomly in CI due to bad network.");
+			Assert.Fail ("Test timed out");
 		}
 
 		// http://blogs.msdn.com/b/csharpfaq/archive/2012/06/26/understanding-a-simple-async-program.aspx
@@ -42,8 +42,8 @@ namespace LinkAnyTest {
 		{
 			// do not use GetStringAsync, we are going to miss useful data, such as the resul code
 			using (var client = new HttpClient ()) {
-				HttpResponseMessage response = await client.GetAsync ("http://example.com"); 
-				if(!response.IsSuccessStatusCode) {
+				HttpResponseMessage response = await client.GetAsync ("http://example.com");
+				if (!response.IsSuccessStatusCode) {
 					requestError = true;
 					statusCode = response.StatusCode;
 				} else {
@@ -73,7 +73,7 @@ namespace LinkAnyTest {
 			}
 		}
 
-		void WebClientTest (string[] urls)
+		void WebClientTest (string [] urls)
 		{
 			var exceptions = new List<string> ();
 			foreach (var url in urls) {
