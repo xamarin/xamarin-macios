@@ -14,38 +14,28 @@ namespace Cecil.Tests {
 		{
 			"AudioQueueException",
 			"ModelNotImplementedException",
-			"You_Should_Not_Call_base_In_This_Method"
+			"You_Should_Not_Call_base_In_This_Method",
 		};
 
 		bool IsMemberObsolete (ICustomAttributeProvider member)
-		{
-			if (member is null || !member.HasCustomAttributes)
-				return false;
-
-			return member.CustomAttributes.Any ((m) =>
+			 => member?.CustomAttributes?.Any ((m) =>
 					m.AttributeType.Name == "ObsoleteAttribute" ||
 					m.AttributeType.Name == "AdviceAttribute" ||
-					m.AttributeType.Name == "ObsoletedOSPlatformAttribute");
-		}
+					m.AttributeType.Name == "ObsoletedOSPlatformAttribute") == true;
 
 		bool VerifyIfGetterThrowsException (MethodDefinition methodDefinition, out string exceptionMessage)
 		{
 			exceptionMessage = string.Empty;
-			if (methodDefinition?.Body is null)
+			if (!methodDefinition.HasBody)
 				return false;
 
 			foreach (Instruction? inst in methodDefinition.Body.Instructions) {
-				if (inst.OpCode == OpCodes.Newobj) {
-					string? baseType = ((inst.Operand as MemberReference)
-						?.DeclaringType as TypeDefinition)
-						?.BaseType.Name;
-
-					if (baseType != null && baseType.Equals ("Exception")) {
-						string? exceptionType = (inst.Operand as MemberReference)?.DeclaringType.Name;
-						if (exceptionType != null && !exceptionsToSkip.Contains (exceptionType)) {
-							exceptionMessage = exceptionType;
+				if (inst?.OpCode == OpCodes.Newobj && inst?.Operand is MemberReference reference) {
+					TypeReference? baseType = (reference.DeclaringType as TypeDefinition)?.BaseType;
+					if (baseType is not null && baseType.Is ("System", "Exception") &&
+						!exceptionsToSkip.Contains(reference.DeclaringType.Name)) {
+							exceptionMessage = reference.DeclaringType.Name;
 							return true;
-						}
 					}
 				}
 			}
@@ -60,22 +50,19 @@ namespace Cecil.Tests {
 			Dictionary<string, string> propertiesWithGetterExceptions = new ();
 			AssemblyDefinition assembly = Helper.GetAssembly (assemblyPath);
 
-			if (assembly != null) {
-				foreach (TypeDefinition type in assembly.MainModule.Types) {
-					foreach (PropertyDefinition property in type.Properties) {
-						if (!IsMemberObsolete (property) && property.GetMethod != null &&
-							VerifyIfGetterThrowsException (property.GetMethod, out string exceptionConstructed))
-							propertiesWithGetterExceptions [type.Name] = $"{property.Name} Exception: {exceptionConstructed}";
-					}
+			foreach (TypeDefinition type in assembly.MainModule.Types)
+			{
+				foreach (PropertyDefinition property in type.Properties)
+				{
+					if (!IsMemberObsolete(property) && property.GetMethod != null &&
+						VerifyIfGetterThrowsException(property.GetMethod, out string exceptionConstructed))
+							propertiesWithGetterExceptions[type.Name] = $"{property.Name} Exception: {exceptionConstructed}";
 				}
-
-				Assert.AreEqual (0,
-					propertiesWithGetterExceptions.Count (),
-					$"Exceptions found in Getters: {string.Join (Environment.NewLine, propertiesWithGetterExceptions)}");
-
-			} else {
-				Assert.Ignore ($"{assemblyPath} could not be found (might be disabled in build.)");
 			}
+
+			Assert.AreEqual (0,
+				propertiesWithGetterExceptions.Count (),
+				$"Exceptions found in Getters: {string.Join (Environment.NewLine, propertiesWithGetterExceptions)}");
 		}
 	}
 }
