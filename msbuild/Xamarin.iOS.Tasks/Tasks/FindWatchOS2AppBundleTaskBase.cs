@@ -19,7 +19,7 @@ namespace Xamarin.iOS.Tasks {
 
 		[Output]
 		public string WatchOS2AppBundle { get; set; }
-		
+
 		[Output]
 		public bool HasWatchKitStub { get; set; }
 
