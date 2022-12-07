@@ -1,6 +1,5 @@
 using System;
 using ObjCRuntime;
 
-namespace MobileBinding
-{
+namespace MobileBinding {
 }

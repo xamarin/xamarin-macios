@@ -892,7 +892,7 @@ namespace Introspection {
 				message = ((ObsoleteAttribute) attribute).Message;
 #if !NET
 			if (attribute is AvailabilityBaseAttribute)
-				message = ((AvailabilityBaseAttribute)attribute).Message;
+				message = ((AvailabilityBaseAttribute) attribute).Message;
 #endif
 
 			return message;

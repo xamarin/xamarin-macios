@@ -9,12 +9,12 @@ using ObjCRuntime;
 using NUnit.Framework;
 
 namespace LinkSdk.Serialization {
-	
+
 	[TestFixture]
 	// we want the test to be availble if we use the linker
 	[Preserve (AllMembers = true)]
 	public partial class XmlSerializationTest {
-		
+
 		[Serializable]
 		[XmlType (AnonymousType = true)]
 		[XmlRoot (Namespace = "", IsNullable = false)]
@@ -26,7 +26,7 @@ namespace LinkSdk.Serialization {
 			{
 				this.dataUpdatesField = new DataUpdates ();
 			}
-	
+
 			[XmlElement (Order = 0)]
 			public DataUpdates DataUpdates {
 				get { return this.dataUpdatesField; }
@@ -46,7 +46,7 @@ namespace LinkSdk.Serialization {
 				StringReader stringReader = null;
 				try {
 					stringReader = new StringReader (xml);
-					return ((Response)(Serializer.Deserialize (XmlReader.Create (stringReader))));
+					return ((Response) (Serializer.Deserialize (XmlReader.Create (stringReader))));
 				} finally {
 					if ((stringReader != null)) {
 						stringReader.Dispose ();
@@ -61,7 +61,7 @@ namespace LinkSdk.Serialization {
 		public class DataUpdates {
 			private List<DataUpdatesDataUpdateInfo> dataUpdateInfoField;
 			private static XmlSerializer serializer;
-	
+
 			public DataUpdates ()
 			{
 				this.dataUpdateInfoField = new List<DataUpdatesDataUpdateInfo> ();
@@ -87,7 +87,7 @@ namespace LinkSdk.Serialization {
 				StringReader stringReader = null;
 				try {
 					stringReader = new StringReader (xml);
-					return ((DataUpdates)(Serializer.Deserialize (XmlReader.Create (stringReader))));
+					return ((DataUpdates) (Serializer.Deserialize (XmlReader.Create (stringReader))));
 				} finally {
 					if ((stringReader != null)) {
 						stringReader.Dispose ();
@@ -95,52 +95,52 @@ namespace LinkSdk.Serialization {
 				}
 			}
 		}
-	
+
 		[Serializable]
 		[XmlType (AnonymousType = true)]
 		public class DataUpdatesDataUpdateInfo {
-	
+
 			private DateTime dataDateField;
 			private string dataTypeField;
 			private DateTime lastUpdatedDateField;
 			private static XmlSerializer serializer;
-	
+
 			public DataUpdatesDataUpdateInfo ()
 			{
 			}
-	
+
 			[XmlAttribute]
 			public DateTime DataDate {
 				get { return this.dataDateField; }
 				set { this.dataDateField = value; }
 			}
-	
+
 			[XmlAttribute]
 			public string DataType {
 				get { return this.dataTypeField; }
 				set { this.dataTypeField = value; }
 			}
-	
+
 			[XmlAttribute]
 			public DateTime LastUpdatedDate {
 				get { return this.lastUpdatedDateField; }
 				set { this.lastUpdatedDateField = value; }
 			}
-	
+
 			private static XmlSerializer Serializer {
 				get {
 					if ((serializer == null))
-						serializer = new XmlSerializer (typeof(DataUpdatesDataUpdateInfo));
+						serializer = new XmlSerializer (typeof (DataUpdatesDataUpdateInfo));
 					return serializer;
 				}
 			}
-	
+
 			public static DataUpdatesDataUpdateInfo Deserialize (string xml)
 			{
 				StringReader stringReader = null;
 				try {
 					stringReader = new StringReader (xml);
-					return ((DataUpdatesDataUpdateInfo)(Serializer.Deserialize (XmlReader.Create (stringReader))));
+					return ((DataUpdatesDataUpdateInfo) (Serializer.Deserialize (XmlReader.Create (stringReader))));
 				} finally {
 					if ((stringReader != null)) {
 						stringReader.Dispose ();
@@ -148,7 +148,7 @@ namespace LinkSdk.Serialization {
 				}
 			}
 		}
-		
+
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=1820
 		// note: this also test the linker (5.1+) ability not to remove 'unused' XML setters and .ctors used for serialization
