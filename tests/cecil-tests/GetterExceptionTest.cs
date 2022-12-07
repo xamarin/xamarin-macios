@@ -31,7 +31,7 @@ namespace Cecil.Tests {
 		bool VerifyIfGetterThrowsException (MethodDefinition methodDefinition, out string exceptionMessage)
 		{
 			exceptionMessage = string.Empty;
-			if (methodDefinition is null || methodDefinition.Body is null)
+			if (methodDefinition?.Body is null)
 				return false;
 
 			foreach (Instruction? inst in methodDefinition.Body.Instructions) {
@@ -63,7 +63,7 @@ namespace Cecil.Tests {
 			if (assembly != null) {
 				foreach (TypeDefinition type in assembly.MainModule.Types) {
 					foreach (PropertyDefinition property in type.Properties) {
-						if (!IsMemberObsolete (property) &&
+						if (!IsMemberObsolete (property) && property.GetMethod != null &&
 							VerifyIfGetterThrowsException (property.GetMethod, out string exceptionConstructed))
 							propertiesWithGetterExceptions [type.Name] = $"{property.Name} Exception: {exceptionConstructed}";
 					}
