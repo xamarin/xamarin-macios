@@ -262,12 +262,6 @@ namespace Xharness.Targets {
 			}
 		}
 
-		protected override bool SupportsBitcode {
-			get {
-				return true;
-			}
-		}
-
 		public override IEnumerable<RelatedProject> GetRelatedProjects ()
 		{
 			return new RelatedProject [] {
