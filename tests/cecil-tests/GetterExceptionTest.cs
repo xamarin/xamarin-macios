@@ -33,9 +33,9 @@ namespace Cecil.Tests {
 				if (inst?.OpCode == OpCodes.Newobj && inst?.Operand is MemberReference reference) {
 					TypeReference? baseType = (reference.DeclaringType as TypeDefinition)?.BaseType;
 					if (baseType is not null && baseType.Is ("System", "Exception") &&
-						!exceptionsToSkip.Contains(reference.DeclaringType.Name)) {
-							exceptionMessage = reference.DeclaringType.Name;
-							return true;
+						!exceptionsToSkip.Contains (reference.DeclaringType.Name)) {
+						exceptionMessage = reference.DeclaringType.Name;
+						return true;
 					}
 				}
 			}
@@ -50,13 +50,11 @@ namespace Cecil.Tests {
 			Dictionary<string, string> propertiesWithGetterExceptions = new ();
 			AssemblyDefinition assembly = Helper.GetAssembly (assemblyPath);
 
-			foreach (TypeDefinition type in assembly.MainModule.Types)
-			{
-				foreach (PropertyDefinition property in type.Properties)
-				{
-					if (!IsMemberObsolete(property) && property.GetMethod != null &&
-						VerifyIfGetterThrowsException(property.GetMethod, out string exceptionConstructed))
-							propertiesWithGetterExceptions[type.Name] = $"{property.Name} Exception: {exceptionConstructed}";
+			foreach (TypeDefinition type in assembly.MainModule.Types) {
+				foreach (PropertyDefinition property in type.Properties) {
+					if (!IsMemberObsolete (property) && property.GetMethod != null &&
+						VerifyIfGetterThrowsException (property.GetMethod, out string exceptionConstructed))
+						propertiesWithGetterExceptions [type.Name] = $"{property.Name} Exception: {exceptionConstructed}";
 				}
 			}
 
