@@ -89,7 +89,7 @@ namespace Cecil.Tests {
 				return true;
 
 			if (type is null)
-				throw new Exception($"Unable to resolve {tr.FullName}");
+				throw new Exception ($"Unable to resolve {tr.FullName}");
 
 			if (type.IsEnum)
 				return true;
