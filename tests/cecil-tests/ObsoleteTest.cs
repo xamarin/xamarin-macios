@@ -118,11 +118,13 @@ namespace Cecil.Tests {
 			var fullname = member.FullName;
 
 			switch (fullname) {
+#if !XAMCORE_5_0 // these exceptions should be fixed in XAMCORE_5_0
 			case "GameKit.IGKPeerPickerControllerDelegate":
 			case "GameKit.GKPeerPickerControllerDelegate_Extensions":
 			case "GameKit.GKPeerPickerControllerDelegate":
 			case "GameKit.GKPeerPickerController":
 				return true;
+#endif
 			default:
 				return false;
 			}
