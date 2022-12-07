@@ -404,11 +404,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			WatchAppReferences="@(_ResolvedWatchAppReferences)"
 			>
 			<Output TaskParameter="WatchOS2AppBundle" PropertyName="_WatchOS2AppBundle"/>
+			<Output TaskParameter="HasWatchKitStub" PropertyName="_HasWatchKitStub" />
 		</FindWatchOS2AppBundle>
 
 		<Copy
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_WatchOS2AppBundle)' != ''"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_WatchOS2AppBundle)' != '' And '$(_HasWatchKitStub)' == 'true'" 
 			SourceFiles="$(_WatchOS2AppBundle)\_WatchKitStub\WK"
 			DestinationFolder="$(DeviceSpecificIntermediateOutputPath)ipa\WatchKitSupport2"
 		/>
