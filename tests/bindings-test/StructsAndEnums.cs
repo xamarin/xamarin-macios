@@ -32,8 +32,7 @@ public static class LibTest {
 	public static extern int theUltimateAnswer ();
 }
 
-namespace Bindings.Test
-{
+namespace Bindings.Test {
 	public static class CFunctions {
 		[DllImport ("__Internal")]
 		public static extern int theUltimateAnswer ();

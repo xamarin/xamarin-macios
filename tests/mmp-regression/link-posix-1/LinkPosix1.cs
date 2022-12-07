@@ -17,23 +17,22 @@ using ObjCRuntime;
 // * Link SDK or Link All must be enabled
 
 namespace Xamarin.Mac.Linker.Test {
-	
+
 	class Posix1 {
 
-		static void Main (string[] args)
+		static void Main (string [] args)
 		{
 			NSApplication.Init ();
-			
+
 			Test.EnsureLinker (true);
-			
+
 			bool gzip = false;
 			try {
 				GZipStream gz = new GZipStream (Stream.Null, CompressionMode.Compress);
 				gz.WriteByte (0);
 				gz.Close ();
 				gzip = true;
-			}
-			catch {
+			} catch {
 			}
 			Test.Log.WriteLine ("{0}\t{1}", gzip ? "[PASS]" : "[FAIL]", "GZipStream support");
 

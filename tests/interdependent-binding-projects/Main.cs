@@ -22,8 +22,7 @@ namespace Xamarin.Mac.Tests {
 	}
 }
 #elif !__WATCHOS__
-public partial class AppDelegate
-{
+public partial class AppDelegate {
 	public partial IEnumerable<Assembly> GetTestAssemblies ()
 	{
 		return new Assembly [] {
@@ -46,8 +45,7 @@ public static partial class TestLoader {
 
 // In some cases NUnit fails if asked to run tests from an assembly that doesn't have any tests. So add a dummy test here to not fail in that scenario.
 [TestFixture]
-public class DummyTest
-{
+public class DummyTest {
 	public void TestMe ()
 	{
 		Assert.True (true, "YAY!");

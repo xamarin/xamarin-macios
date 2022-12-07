@@ -3,11 +3,9 @@ using System.Linq;
 using NUnit.Framework;
 using Xamarin.Utils;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	[TestFixture]
-	public class TargetFrameworkMutateTests
-	{
+	public class TargetFrameworkMutateTests {
 		const string MigrateCSProjTag = "<MigrateToNewXMIdentifier>true</MigrateToNewXMIdentifier>";
 
 		public bool MatchesTFI (string expected, BuildResult buildOutput)
