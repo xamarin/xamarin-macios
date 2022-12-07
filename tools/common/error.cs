@@ -16,7 +16,7 @@ namespace Xamarin.Bundler {
 		{
 		}
 
-		public ProductException (int code, string message, params object?[] args) :
+		public ProductException (int code, string message, params object? [] args) :
 			this (code, false, message, args)
 		{
 		}
@@ -26,7 +26,7 @@ namespace Xamarin.Bundler {
 		{
 		}
 
-		public ProductException (int code, bool error, string message, params object?[] args) :
+		public ProductException (int code, bool error, string message, params object? [] args) :
 			this (code, error, null, message, args)
 		{
 		}
