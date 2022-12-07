@@ -165,7 +165,7 @@ namespace StoreKit {
 		[Export ("quantity")]
 		nint Quantity { get; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[NullAllowed]
 		[Export ("applicationUsername", ArgumentSemantic.Copy)]
 		string ApplicationUsername { get; }
@@ -210,7 +210,7 @@ namespace StoreKit {
 		[Override]
 		NSData RequestData { get; set; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[NullAllowed] // by default this property is null
 		[Export ("applicationUsername", ArgumentSemantic.Copy)]
 		[New]
@@ -244,7 +244,7 @@ namespace StoreKit {
 		[Export ("restoreCompletedTransactions")]
 		void RestoreCompletedTransactions ();
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("restoreCompletedTransactionsWithApplicationUsername:")]
 		void RestoreCompletedTransactions ([NullAllowed] string username);
 
@@ -524,7 +524,6 @@ namespace StoreKit {
 	}
 
 	[Watch (6, 2)]
-	[iOS (7, 0)]
 	[Mac (10, 9)]
 	[BaseType (typeof (SKRequest))]
 	interface SKReceiptRefreshRequest {
@@ -543,7 +542,6 @@ namespace StoreKit {
 		SKReceiptProperties ReceiptProperties { get; }
 	}
 
-	[iOS (7, 0)]
 	[Mac (10, 9)]
 	[Watch (6, 2)]
 	[Static, Internal]

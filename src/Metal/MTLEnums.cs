@@ -472,7 +472,7 @@ namespace Metal {
 		[iOS (9, 0)]
 		Depth32Float_Stencil8 = 260,
 
-		[NoWatch, iOS (9, 0), TV (9, 0)]
+		[NoWatch, iOS (9, 0)]
 		X32_Stencil8 = 261,
 
 		[Mac (10, 12)]
@@ -897,12 +897,10 @@ namespace Metal {
 		macOS_GPUFamily2_v1 = 10005,
 
 #if !NET
-		[TV (9, 0)]
 		[Obsolete ("Use 'tvOS_GPUFamily1_v1' instead.")]
 		TVOS_GPUFamily1_v1 = 30000,
 #endif
 
-		[TV (9, 0)]
 		tvOS_GPUFamily1_v1 = 30000,
 
 		[NoiOS, TV (10, 0), NoWatch, NoMac]

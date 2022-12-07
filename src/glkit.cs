@@ -576,7 +576,6 @@ namespace GLKit {
 		[Field ("GLKTextureLoaderGrayscaleAsAlpha")]
 		NSString GrayscaleAsAlpha { get; }
 
-		[iOS (7, 0)]
 		[Field ("GLKTextureLoaderSRGB")]
 		NSString SRGB { get; }
 

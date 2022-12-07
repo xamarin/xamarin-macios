@@ -482,7 +482,6 @@ namespace AVFoundation {
 		NotDetermined, Restricted, Denied, Authorized
 	}
 
-	[iOS (7, 0)]
 	[Mac (10, 14)]
 	[Native]
 	// NSInteger - AVSpeechSynthesis.h
@@ -929,10 +928,8 @@ namespace AVFoundation {
 		PresetHevc3840x2160 = 12,
 	}
 
-	[TV (9, 0)]
 	[NoWatch]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	public enum AVOutputSettingsPreset {
 		[Field ("AVOutputSettingsPreset640x480")]
 		Preset640x480 = 0,

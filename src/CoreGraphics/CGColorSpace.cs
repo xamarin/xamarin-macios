@@ -627,7 +627,6 @@ namespace CoreGraphics {
 		[ObsoletedOSPlatform ("tvos11.0", "Use 'GetICCData' instead.")]
 		[ObsoletedOSPlatform ("ios11.0", "Use 'GetICCData' instead.")]
 #else
-		[iOS (7, 0)] // note: pre-release docs/headers says iOS6 and later, available on OSX since 10.5
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'GetICCData' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'GetICCData' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'GetICCData' instead.")]

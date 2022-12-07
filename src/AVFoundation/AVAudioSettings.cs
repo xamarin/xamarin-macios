@@ -175,8 +175,6 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public AVAudioBitRateStrategy? BitRateStrategy {
 			set {
@@ -220,8 +218,6 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public AVSampleRateConverterAlgorithm? SampleRateConverterAlgorithm {
 			get {
@@ -255,8 +251,6 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public AVAudioQuality? EncoderAudioQualityForVBR {
 			get {
