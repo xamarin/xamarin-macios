@@ -19,17 +19,17 @@ namespace NewsstandKit {
 	interface NKAssetDownload {
 		[NullAllowed]
 		[Export ("issue", ArgumentSemantic.Weak)]
-		NKIssue Issue { get;  }
+		NKIssue Issue { get; }
 
 		[Export ("identifier", ArgumentSemantic.Copy)]
-		string Identifier { get;  }
+		string Identifier { get; }
 
 		[NullAllowed]
 		[Export ("userInfo", ArgumentSemantic.Copy)]
-		NSDictionary UserInfo { get; set;  }
+		NSDictionary UserInfo { get; set; }
 
 		[Export ("URLRequest", ArgumentSemantic.Copy)]
-		NSUrlRequest UrlRequest { get;  }
+		NSUrlRequest UrlRequest { get; }
 
 		[Export ("downloadWithDelegate:")]
 		NSUrlConnection DownloadWithDelegate ([Protocolize] NSUrlConnectionDownloadDelegate downloadDelegate);
@@ -43,24 +43,24 @@ namespace NewsstandKit {
 	[DisableDefaultCtor]
 	interface NKIssue {
 		[Export ("downloadingAssets", ArgumentSemantic.Copy)]
-		NKAssetDownload [] DownloadingAssets { get;  }
+		NKAssetDownload [] DownloadingAssets { get; }
 
 		[Export ("contentURL", ArgumentSemantic.Copy)]
-		NSUrl ContentUrl { get;  }
+		NSUrl ContentUrl { get; }
 
 		[Export ("status")]
-		NKIssueContentStatus Status { get;  }
+		NKIssueContentStatus Status { get; }
 
 		[Export ("name", ArgumentSemantic.Copy)]
-		string Name { get;  }
+		string Name { get; }
 
 		[Export ("date", ArgumentSemantic.Copy)]
-		NSDate Date { get;  }
+		NSDate Date { get; }
 
 		[Export ("addAssetWithRequest:")]
 		NKAssetDownload AddAsset (NSUrlRequest request);
 
-        [Deprecated(PlatformName.iOS, 13, 0, message: "Use the Remote Notifications Background Modes instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the Remote Notifications Background Modes instead.")]
 		[Field ("NKIssueDownloadCompletedNotification")]
 		[Notification]
 		NSString DownloadCompletedNotification { get; }
@@ -72,14 +72,14 @@ namespace NewsstandKit {
 	[DisableDefaultCtor]
 	interface NKLibrary {
 		[Export ("issues", ArgumentSemantic.Strong)]
-		NKIssue [] Issues { get;  }
+		NKIssue [] Issues { get; }
 
 		[Export ("downloadingAssets", ArgumentSemantic.Strong)]
-		NKAssetDownload [] DownloadingAssets { get;  }
+		NKAssetDownload [] DownloadingAssets { get; }
 
 		[NullAllowed]
 		[Export ("currentlyReadingIssue", ArgumentSemantic.Strong)]
-		NKIssue CurrentlyReadingIssue { get; set;  }
+		NKIssue CurrentlyReadingIssue { get; set; }
 
 		[Static]
 		[NullAllowed]
@@ -96,5 +96,5 @@ namespace NewsstandKit {
 		[Export ("removeIssue:")]
 		void RemoveIssue (NKIssue issue);
 	}
-	
+
 }

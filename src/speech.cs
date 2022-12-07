@@ -72,7 +72,7 @@ namespace Speech {
 		[Export ("requiresOnDeviceRecognition")]
 		bool RequiresOnDeviceRecognition { get; set; }
 
-		[Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("addsPunctuation")]
 		bool AddsPunctuation { get; set; }
 	}
@@ -121,7 +121,7 @@ namespace Speech {
 		bool Final { [Bind ("isFinal")] get; }
 
 		[iOS (14, 5), Mac (11, 3)]
-		[MacCatalyst (14,5)]
+		[MacCatalyst (14, 5)]
 		[NullAllowed, Export ("speechRecognitionMetadata")]
 		SFSpeechRecognitionMetadata SpeechRecognitionMetadata { get; }
 	}
@@ -149,7 +149,7 @@ namespace Speech {
 		NSError Error { get; }
 	}
 
-	interface ISFSpeechRecognitionTaskDelegate {}
+	interface ISFSpeechRecognitionTaskDelegate { }
 
 	[iOS (10, 0), Mac (10, 15)]
 	[Protocol, Model]
@@ -175,7 +175,7 @@ namespace Speech {
 		void DidFinishSuccessfully (SFSpeechRecognitionTask task, bool successfully);
 	}
 
-	interface ISFSpeechRecognizerDelegate {}
+	interface ISFSpeechRecognizerDelegate { }
 
 	[iOS (10, 0), Mac (10, 15)]
 	[Protocol, Model]
@@ -233,12 +233,11 @@ namespace Speech {
 		NSOperationQueue Queue { get; set; }
 	}
 
-	[iOS (14,5), Mac (11,3)]
-	[MacCatalyst (14,5)]
-	[BaseType (typeof(NSObject))]
+	[iOS (14, 5), Mac (11, 3)]
+	[MacCatalyst (14, 5)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface SFSpeechRecognitionMetadata : NSCopying, NSSecureCoding
-	{
+	interface SFSpeechRecognitionMetadata : NSCopying, NSSecureCoding {
 
 		[Export ("speakingRate")]
 		double SpeakingRate { get; }
@@ -314,7 +313,7 @@ namespace Speech {
 	interface SFAcousticFeature : NSCopying, NSSecureCoding {
 
 		[Export ("acousticFeatureValuePerFrame", ArgumentSemantic.Copy)]
-		NSNumber[] AcousticFeatureValuePerFrame { get; }
+		NSNumber [] AcousticFeatureValuePerFrame { get; }
 
 		[Export ("frameDuration")]
 		double FrameDuration { get; }
