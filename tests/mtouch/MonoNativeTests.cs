@@ -32,14 +32,12 @@ using NUnit.Framework;
 // using ExecutionHelper = Xamarin.Tests.ExecutionHelper;
 // using MTouchRegistrar = Xamarin.Tests.RegistrarOption;
 
-namespace Xamarin
-{
+namespace Xamarin {
 	using Tests;
 	using Utils;
 
 	[TestFixture]
-	public class MonoNativeTests
-	{
+	public class MonoNativeTests {
 		[Test]
 		public void TestDebugSymlink ()
 		{

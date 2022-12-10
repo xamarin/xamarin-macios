@@ -5,7 +5,7 @@ using Mono.Options;
 using Xamarin.iOS.UnitTests;
 
 namespace BCLTests {
-	
+
 	public enum XmlMode {
 		Default = 0,
 		Wrapped = 1,
@@ -19,7 +19,7 @@ namespace BCLTests {
 	public class ApplicationOptions {
 
 		static public ApplicationOptions Current = new ApplicationOptions ();
-		
+
 		public ApplicationOptions ()
 		{
 			var defaults = NSUserDefaults.StandardUserDefaults;
@@ -28,13 +28,13 @@ namespace BCLTests {
 			EnableNetwork = defaults.BoolForKey ("network.enabled");
 			EnableXml = defaults.BoolForKey ("xml.enabled");
 			HostName = defaults.StringForKey ("network.host.name");
-			HostPort = (int)defaults.IntForKey ("network.host.port");
+			HostPort = (int) defaults.IntForKey ("network.host.port");
 			UseTcpTunnel = defaults.BoolForKey ("execution.usetcptunnel");
 			Transport = defaults.StringForKey ("network.transport");
 			SortNames = defaults.BoolForKey ("display.sort");
 			LogFile = defaults.StringForKey ("log.file");
 			ResultFile = defaults.StringForKey ("result.file");
-			
+
 			bool b;
 			if (bool.TryParse (Environment.GetEnvironmentVariable ("NUNIT_AUTOEXIT"), out b))
 				TerminateAfterExecution = b;
@@ -60,7 +60,7 @@ namespace BCLTests {
 				XmlMode = (XmlMode) Enum.Parse (typeof (XmlMode), xml_mode, true);
 			var xml_version = Environment.GetEnvironmentVariable ("NUNIT_XML_VERSION");
 			if (!string.IsNullOrEmpty (xml_version))
-				XmlVersion = (XmlVersion)Enum.Parse (typeof (XmlVersion), xml_version, true);
+				XmlVersion = (XmlVersion) Enum.Parse (typeof (XmlVersion), xml_version, true);
 			if (!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("NUNIT_LOG_FILE")))
 				LogFile = Environment.GetEnvironmentVariable ("NUNIT_LOG_FILE");
 
@@ -78,14 +78,14 @@ namespace BCLTests {
 				{ "logfile=", "A path where output will be saved.", v => LogFile = v },
 				{ "result=", "The path to be used to store the result", v => ResultFile = v},
 			};
-			
+
 			try {
 				os.Parse (Environment.GetCommandLineArgs ());
 			} catch (OptionException oe) {
 				Console.WriteLine ("{0} for options '{1}'", oe.Message, oe.OptionName);
 			}
 		}
-		
+
 		private bool EnableNetwork { get; set; }
 
 		public XmlMode XmlMode { get; set; }
@@ -93,21 +93,21 @@ namespace BCLTests {
 		public XmlVersion XmlVersion { get; set; } = XmlVersion.NUnitV2;
 
 		public bool EnableXml { get; set; }
-		
+
 		public string HostName { get; private set; }
-		
+
 		public int HostPort { get; private set; }
-		
+
 		public bool UseTcpTunnel { get; set; } = false;
 
 		public bool AutoStart { get; set; }
-		
+
 		public bool TerminateAfterExecution { get; set; }
-		
+
 		public string Transport { get; set; } = "TCP";
 
 		public string LogFile { get; set; }
-		
+
 		public string ResultFile { get; set; }
 
 		public bool ShowUseNetworkLogger {

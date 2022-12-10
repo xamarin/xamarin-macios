@@ -23,8 +23,8 @@ using NativeHandle = System.IntPtr;
 
 namespace FileProviderUI {
 
-	[iOS (11,0)]
-	[Mac (10,15)]
+	[iOS (11, 0)]
+	[Mac (10, 15)]
 	[ErrorDomain ("FPUIErrorDomain")]
 	[Native]
 	enum FPUIExtensionErrorCode : ulong {
@@ -32,8 +32,8 @@ namespace FileProviderUI {
 		Failed
 	}
 
-	[iOS (11,0)]
-	[Mac (10,15)]
+	[iOS (11, 0)]
+	[Mac (10, 15)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSExtensionContext))]
 	interface FPUIActionExtensionContext {
@@ -48,8 +48,8 @@ namespace FileProviderUI {
 		void CancelRequest (NSError error);
 	}
 
-	[iOS (11,0)]
-	[Mac (10,15)]
+	[iOS (11, 0)]
+	[Mac (10, 15)]
 #if IOS
 	[BaseType (typeof (UIViewController))]
 #else
