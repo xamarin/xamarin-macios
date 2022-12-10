@@ -9,36 +9,33 @@ using NativeHandle = System.IntPtr;
 
 namespace Accessibility {
 
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)] 
-	[BaseType (typeof(NSObject))]
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface AXCategoricalDataAxisDescriptor : AXDataAxisDescriptor
-	{
+	interface AXCategoricalDataAxisDescriptor : AXDataAxisDescriptor {
 		[Export ("categoryOrder", ArgumentSemantic.Copy)]
-		string[] CategoryOrder { get; set; }
+		string [] CategoryOrder { get; set; }
 
 		[Export ("initWithTitle:categoryOrder:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (string title, string[] categoryOrder);
+		NativeHandle Constructor (string title, string [] categoryOrder);
 
 		[Export ("initWithAttributedTitle:categoryOrder:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (NSAttributedString attributedTitle, string[] categoryOrder);
+		NativeHandle Constructor (NSAttributedString attributedTitle, string [] categoryOrder);
 	}
 
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)] 
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Protocol]
-	interface AXChart
-	{
+	interface AXChart {
 		[Abstract]
 		[NullAllowed, Export ("accessibilityChartDescriptor", ArgumentSemantic.Strong)]
 		AXChartDescriptor AccessibilityChartDescriptor { get; set; }
 	}
 
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)] 
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
-	public enum AXChartDescriptorContentDirection : long
-	{
+	public enum AXChartDescriptorContentDirection : long {
 		LeftToRight = 0,
 		RightToLeft,
 		TopToBottom,
@@ -47,11 +44,10 @@ namespace Accessibility {
 		RadialCounterClockwise,
 	}
 
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)] 
-	[BaseType (typeof(NSObject))]
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface AXChartDescriptor : NSCopying
-	{
+	interface AXChartDescriptor : NSCopying {
 		[NullAllowed, Export ("title")]
 		string Title { get; set; }
 
@@ -68,7 +64,7 @@ namespace Accessibility {
 		CGRect ContentFrame { get; set; }
 
 		[Export ("series", ArgumentSemantic.Copy)]
-		AXDataSeriesDescriptor[] Series { get; set; }
+		AXDataSeriesDescriptor [] Series { get; set; }
 
 		[Export ("xAxis", ArgumentSemantic.Strong)]
 		IAXDataAxisDescriptor XAxis { get; set; }
@@ -77,38 +73,36 @@ namespace Accessibility {
 		AXNumericDataAxisDescriptor YAxis { get; set; }
 
 		[NullAllowed, Export ("additionalAxes", ArgumentSemantic.Copy)]
-		IAXDataAxisDescriptor[] AdditionalAxes { get; set; }
+		IAXDataAxisDescriptor [] AdditionalAxes { get; set; }
 
 		[Export ("initWithTitle:summary:xAxisDescriptor:yAxisDescriptor:series:")]
-		NativeHandle Constructor ([NullAllowed] string title, [NullAllowed] string summary, IAXDataAxisDescriptor xAxis, [NullAllowed] AXNumericDataAxisDescriptor yAxis, AXDataSeriesDescriptor[] series);
+		NativeHandle Constructor ([NullAllowed] string title, [NullAllowed] string summary, IAXDataAxisDescriptor xAxis, [NullAllowed] AXNumericDataAxisDescriptor yAxis, AXDataSeriesDescriptor [] series);
 
 		[Export ("initWithAttributedTitle:summary:xAxisDescriptor:yAxisDescriptor:series:")]
-		NativeHandle Constructor ([NullAllowed] NSAttributedString attributedTitle, [NullAllowed] string summary, IAXDataAxisDescriptor xAxis, AXNumericDataAxisDescriptor yAxis, AXDataSeriesDescriptor[] series);
+		NativeHandle Constructor ([NullAllowed] NSAttributedString attributedTitle, [NullAllowed] string summary, IAXDataAxisDescriptor xAxis, AXNumericDataAxisDescriptor yAxis, AXDataSeriesDescriptor [] series);
 
 		[Export ("initWithTitle:summary:xAxisDescriptor:yAxisDescriptor:additionalAxes:series:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor ([NullAllowed] string title, [NullAllowed] string summary, IAXDataAxisDescriptor xAxis, [NullAllowed] AXNumericDataAxisDescriptor yAxis, [NullAllowed] IAXDataAxisDescriptor[] additionalAxes, AXDataSeriesDescriptor[] series);
+		NativeHandle Constructor ([NullAllowed] string title, [NullAllowed] string summary, IAXDataAxisDescriptor xAxis, [NullAllowed] AXNumericDataAxisDescriptor yAxis, [NullAllowed] IAXDataAxisDescriptor [] additionalAxes, AXDataSeriesDescriptor [] series);
 
 		[Export ("initWithAttributedTitle:summary:xAxisDescriptor:yAxisDescriptor:additionalAxes:series:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor ([NullAllowed] NSAttributedString attributedTitle, [NullAllowed] string summary, IAXDataAxisDescriptor xAxis, [NullAllowed] AXNumericDataAxisDescriptor yAxis, [NullAllowed] IAXDataAxisDescriptor[] additionalAxes, AXDataSeriesDescriptor[] series);
+		NativeHandle Constructor ([NullAllowed] NSAttributedString attributedTitle, [NullAllowed] string summary, IAXDataAxisDescriptor xAxis, [NullAllowed] AXNumericDataAxisDescriptor yAxis, [NullAllowed] IAXDataAxisDescriptor [] additionalAxes, AXDataSeriesDescriptor [] series);
 	}
 
 	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
-	[MacCatalyst (14,0)]
+	[MacCatalyst (14, 0)]
 	[Native]
-	public enum AXCustomContentImportance : ulong
-	{
+	public enum AXCustomContentImportance : ulong {
 		Default,
 		High,
 	}
 
 	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
-	[MacCatalyst (14,0)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface AXCustomContent : NSCopying, NSSecureCoding
-	{
+	interface AXCustomContent : NSCopying, NSSecureCoding {
 		[Static]
 		[Export ("customContentWithLabel:value:")]
 		AXCustomContent Create (string label, string value);
@@ -134,21 +128,19 @@ namespace Accessibility {
 	}
 
 	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
-	[MacCatalyst (14,0)]
+	[MacCatalyst (14, 0)]
 	[Protocol]
-	interface AXCustomContentProvider
-	{
+	interface AXCustomContentProvider {
 		[Abstract]
 		[NullAllowed, Export ("accessibilityCustomContent", ArgumentSemantic.Copy)]
-		AXCustomContent[] AccessibilityCustomContent { get; set; }
+		AXCustomContent [] AccessibilityCustomContent { get; set; }
 	}
 
-	interface IAXDataAxisDescriptor {}
+	interface IAXDataAxisDescriptor { }
 
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)] 
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Protocol]
-	interface AXDataAxisDescriptor : NSCopying
-	{
+	interface AXDataAxisDescriptor : NSCopying {
 		[Abstract]
 		[Export ("title")]
 		string Title { get; set; }
@@ -158,11 +150,10 @@ namespace Accessibility {
 		NSAttributedString AttributedTitle { get; set; }
 	}
 
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)] 
-	[BaseType (typeof(NSObject))]
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface AXDataPoint : NSCopying
-	{
+	interface AXDataPoint : NSCopying {
 		[Export ("xValue", ArgumentSemantic.Copy)]
 		AXDataPointValue XValue { get; set; }
 
@@ -170,7 +161,7 @@ namespace Accessibility {
 		AXDataPointValue YValue { get; set; }
 
 		[Export ("additionalValues", ArgumentSemantic.Copy)]
-		AXDataPointValue[] AdditionalValues { get; set; }
+		AXDataPointValue [] AdditionalValues { get; set; }
 
 		[NullAllowed, Export ("label")]
 		string Label { get; set; }
@@ -182,18 +173,17 @@ namespace Accessibility {
 		NativeHandle Constructor (AXDataPointValue xValue, [NullAllowed] AXDataPointValue yValue);
 
 		[Export ("initWithX:y:additionalValues:")]
-		NativeHandle Constructor (AXDataPointValue xValue, [NullAllowed] AXDataPointValue yValue, [NullAllowed] AXDataPointValue[] additionalValues);
+		NativeHandle Constructor (AXDataPointValue xValue, [NullAllowed] AXDataPointValue yValue, [NullAllowed] AXDataPointValue [] additionalValues);
 
 		[Export ("initWithX:y:additionalValues:label:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (AXDataPointValue xValue, [NullAllowed] AXDataPointValue yValue, [NullAllowed] AXDataPointValue[] additionalValues, [NullAllowed] string label);
+		NativeHandle Constructor (AXDataPointValue xValue, [NullAllowed] AXDataPointValue yValue, [NullAllowed] AXDataPointValue [] additionalValues, [NullAllowed] string label);
 	}
 
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)] 
-	[BaseType (typeof(NSObject))]
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface AXDataPointValue : NSCopying
-	{
+	interface AXDataPointValue : NSCopying {
 		[Export ("number", ArgumentSemantic.Assign)]
 		double Number { get; set; }
 
@@ -209,11 +199,10 @@ namespace Accessibility {
 		AXDataPointValue CreateValueWithCategory (string category);
 	}
 
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)] 
-	[BaseType (typeof(NSObject))]
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface AXDataSeriesDescriptor : NSCopying
-	{
+	interface AXDataSeriesDescriptor : NSCopying {
 		[NullAllowed, Export ("name")]
 		string Name { get; set; }
 
@@ -224,33 +213,31 @@ namespace Accessibility {
 		bool IsContinuous { get; set; }
 
 		[Export ("dataPoints", ArgumentSemantic.Copy)]
-		AXDataPoint[] DataPoints { get; set; }
+		AXDataPoint [] DataPoints { get; set; }
 
 		[Export ("initWithName:isContinuous:dataPoints:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (string name, bool isContinuous, AXDataPoint[] dataPoints);
+		NativeHandle Constructor (string name, bool isContinuous, AXDataPoint [] dataPoints);
 
 		[Export ("initWithAttributedName:isContinuous:dataPoints:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (NSAttributedString attributedName, bool isContinuous, AXDataPoint[] dataPoints);
+		NativeHandle Constructor (NSAttributedString attributedName, bool isContinuous, AXDataPoint [] dataPoints);
 	}
 
-	[Watch (8,0), NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+	[Watch (8, 0), NoTV, NoMac, iOS (15, 0), MacCatalyst (15, 0)]
 	[Flags]
 	[Native]
-	public enum AXHearingDeviceEar : ulong
-	{
+	public enum AXHearingDeviceEar : ulong {
 		None = 0,
 		Left = 1 << 1,
 		Right = 1 << 2,
 		Both = Left | Right,
 	}
 
-	[Watch (8,0), NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+	[Watch (8, 0), NoTV, NoMac, iOS (15, 0), MacCatalyst (15, 0)]
 	[Static]
 	[Partial]
-	partial interface AXHearingUtilities
-	{
+	partial interface AXHearingUtilities {
 		[Field ("AXMFiHearingDeviceStreamingEarDidChangeNotification")]
 		[Notification]
 		NSString StreamingEarDidChangeNotification { get; }
@@ -260,11 +247,10 @@ namespace Accessibility {
 		NSString PairedUUIDsDidChangeNotification { get; }
 	}
 
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)] 
-	[BaseType (typeof(NSObject))]
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface AXLiveAudioGraph
-	{
+	interface AXLiveAudioGraph {
 		[Static]
 		[Export ("start")]
 		void Start ();
@@ -278,10 +264,9 @@ namespace Accessibility {
 		void Stop ();
 	}
 
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)] 
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
-	public enum AXNumericDataAxisDescriptorScale : long
-	{
+	public enum AXNumericDataAxisDescriptorScale : long {
 		Linear = 0,
 		Log10,
 		Ln,
@@ -289,11 +274,10 @@ namespace Accessibility {
 
 	delegate NSString ValueDescriptionProviderHandler (double dataValue);
 
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)] 
-	[BaseType (typeof(NSObject))]
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface AXNumericDataAxisDescriptor : AXDataAxisDescriptor
-	{
+	interface AXNumericDataAxisDescriptor : AXDataAxisDescriptor {
 		[Export ("scaleType", ArgumentSemantic.Assign)]
 		AXNumericDataAxisDescriptorScale ScaleType { get; set; }
 
@@ -307,18 +291,18 @@ namespace Accessibility {
 		ValueDescriptionProviderHandler ValueDescriptionProvider { get; set; }
 
 		[Export ("gridlinePositions", ArgumentSemantic.Copy)]
-		NSNumber[] GridlinePositions { get; set; }
+		NSNumber [] GridlinePositions { get; set; }
 
 		[Export ("initWithTitle:lowerBound:upperBound:gridlinePositions:valueDescriptionProvider:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (string title, double lowerBound, double upperBound, [NullAllowed] NSNumber[] gridlinePositions, Func<double, NSString> valueDescriptionProvider);
+		NativeHandle Constructor (string title, double lowerBound, double upperBound, [NullAllowed] NSNumber [] gridlinePositions, Func<double, NSString> valueDescriptionProvider);
 
 		[Export ("initWithAttributedTitle:lowerBound:upperBound:gridlinePositions:valueDescriptionProvider:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (NSAttributedString attributedTitle, double lowerBound, double upperBound, [NullAllowed] NSNumber[] gridlinePositions, Func<double, NSString> valueDescriptionProvider);
+		NativeHandle Constructor (NSAttributedString attributedTitle, double lowerBound, double upperBound, [NullAllowed] NSNumber [] gridlinePositions, Func<double, NSString> valueDescriptionProvider);
 	}
 
-	[Watch (8,3), TV (15,2), Mac (12,1), iOS (15,2), MacCatalyst (15,2)]
+	[Watch (8, 3), TV (15, 2), Mac (12, 1), iOS (15, 2), MacCatalyst (15, 2)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AXBrailleMap : NSCopying, NSSecureCoding {
@@ -336,7 +320,7 @@ namespace Accessibility {
 		void Present (CGImage image);
 	}
 
-	[Watch (8,3), TV (15,2), Mac (12,1), iOS (15,2), MacCatalyst (15,2)]
+	[Watch (8, 3), TV (15, 2), Mac (12, 1), iOS (15, 2), MacCatalyst (15, 2)]
 	[Protocol]
 	interface AXBrailleMapRenderer {
 

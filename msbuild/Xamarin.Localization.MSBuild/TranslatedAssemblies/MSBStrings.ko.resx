@@ -1148,13 +1148,13 @@
         <value>알 수 없는 속성 '{0}'과(와) 값 '{1}'입니다.</value>
     </data>
   <data name="E7102" xml:space="preserve">
-        <value>Invalid value '{0}' for the entitlement '{1}' of type '{2}' specified in the CustomEntitlements item group. Expected no value at all.</value>
+        <value>CustomEntitlements 항목 그룹에 지정된 '{2}' 유형의 인타이틀먼트 '{1}'에 대한 값 '{0}'이(가) 잘못되었습니다. 값이 전혀 필요되지 않습니다.</value>
         <comment>
             Don't translate: CustomEntitlements (name of option in project file)
         </comment>
     </data>
   <data name="E7103" xml:space="preserve">
-        <value>Invalid value '{0}' for the entitlement '{1}' of type '{2}' specified in the CustomEntitlements item group. Expected 'true' or 'false'.</value>
+        <value>CustomEntitlements 항목 그룹에 지정된 '{2}' 유형의 인타이틀먼트 '{1}'에 대한 값 '{0}'이(가) 잘못되었습니다. 'true' 또는 'false'가 필요합니다.</value>
         <comment>
             Don't translate:
                 * CustomEntitlements (name of option in project file)
@@ -1162,7 +1162,7 @@
         </comment>
     </data>
   <data name="E7104" xml:space="preserve">
-        <value>Unknown type '{0}' for the entitlement '{1}' specified in the CustomEntitlements item group. Expected 'Remove', 'Boolean', 'String', or 'StringArray'.</value>
+        <value>CustomEntitlements 항목 그룹에 지정된 인타이틀먼트 '{1}'에 대해 알 수 없는 유형 '{0}'. 'Remove', 'Boolean', 'String' 또는 'StringArray'가 필요합니다.</value>
         <comment>
             Don't translate:
                 * CustomEntitlements (name of option in project file)
@@ -1170,7 +1170,7 @@
         </comment>
     </data>
   <data name="W7105" xml:space="preserve">
-        <value>Unexpected extension '{0}' for native reference '{1}' in manifest '{2}'.</value>
+        <value>매니페스트 '{2}'의 네이티브 참조 '{1}'에 대한 예기치 않은 확장 '{0}'.</value>
         <comment>
             {0}: file extension
             {1}: path to a file

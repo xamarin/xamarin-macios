@@ -14,8 +14,7 @@ using Xamarin;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-public static class ProcessHelper
-{
+public static class ProcessHelper {
 	static int counter;
 
 	static string log_directory;
@@ -28,12 +27,12 @@ public static class ProcessHelper
 
 	}
 
-	public static void AssertRunProcess (string filename, string[] arguments, TimeSpan timeout, string workingDirectory, Dictionary<string, string> environment_variables, string message)
+	public static void AssertRunProcess (string filename, string [] arguments, TimeSpan timeout, string workingDirectory, Dictionary<string, string> environment_variables, string message)
 	{
 		AssertRunProcess (filename, arguments, timeout, workingDirectory, environment_variables, message, out _);
 	}
 
-	public static void AssertRunProcess (string filename, string[] arguments, TimeSpan timeout, string workingDirectory, Dictionary<string, string> environment_variables, string message, out string logfile)
+	public static void AssertRunProcess (string filename, string [] arguments, TimeSpan timeout, string workingDirectory, Dictionary<string, string> environment_variables, string message, out string logfile)
 	{
 		var exitCode = 0;
 		var output = new List<string> ();
