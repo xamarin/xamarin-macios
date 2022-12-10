@@ -13,7 +13,7 @@ using System;
 
 namespace AdSupport {
 
-	[Mac (10,14)]
+	[Mac (10, 14)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ASIdentifierManager {
@@ -31,7 +31,8 @@ namespace AdSupport {
 		[Export ("advertisingIdentifier")]
 		NSUuid AdvertisingIdentifier { get; }
 
-		[NoTV][NoiOS]
+		[NoTV]
+		[NoiOS]
 		[NoMac] // unclear when that was changed (xcode 12 GM allowed it)
 		[Export ("clearAdvertisingIdentifier")]
 		void ClearAdvertisingIdentifier ();

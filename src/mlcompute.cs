@@ -8,9 +8,11 @@ using ObjCRuntime;
 namespace MLCompute {
 
 	// compilation helper for async custom types
-	interface MLCExecutionResult {}
+	interface MLCExecutionResult { }
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	enum MLCActivationType {
 		None = 0,
@@ -32,14 +34,20 @@ namespace MLCompute {
 		TanhShrink = 16,
 		Threshold = 17,
 		Gelu = 18,
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		HardSwish = 19,
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		Clamp = 20,
 		// Count, // must be last, not available in swift
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	enum MLCArithmeticOperation {
 		Add = 0,
@@ -68,18 +76,28 @@ namespace MLCompute {
 		Exp2 = 23,
 		Log = 24,
 		Log2 = 25,
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		MultiplyNoNaN = 26,
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		DivideNoNaN = 27,
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		Min = 28,
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		Max = 29,
 		// Count, // must be last, not available in swift
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	enum MLCConvolutionType {
 		Standard = 0,
@@ -87,35 +105,41 @@ namespace MLCompute {
 		Depthwise = 2,
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	enum MLCDataType {
 		Invalid = 0,
 		Float32 = 1,
-		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
 		Float16 = 3,
 		Boolean = 4,
 		Int64 = 5,
 		Inot32 = 7,
-		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
 		Int8 = 8,
-		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
 		UInt8 = 9,
 		// Count, // must be last, not available in swift
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	enum MLCDeviceType /* int32_t */ {
 		Cpu = 0,
 		Gpu = 1,
 		Any = 2,
-		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
-		Ane  = 3, // Apple neural engine
-		// Count, // must be last, not available in swift
+		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		Ane = 3, // Apple neural engine
+				 // Count, // must be last, not available in swift
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[Flags]
 	enum MLCExecutionOptions : ulong {
@@ -124,11 +148,13 @@ namespace MLCompute {
 		Synchronous = 0x2,
 		Profiling = 0x4,
 		ForwardForInference = 0x8,
-		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
 		PerLayerProfiling = 0x10,
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[Flags]
 	enum MLCGraphCompilationOptions : ulong {
@@ -139,7 +165,9 @@ namespace MLCompute {
 		ComputeAllGradients = 0x8,
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	enum MLCLossType {
 		MeanAbsoluteError = 0,
@@ -154,14 +182,18 @@ namespace MLCompute {
 		// Count, // must be last, not available in swift
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	enum MLCLstmResultMode : ulong /* uint64_t */ {
 		Output = 0,
 		OutputAndStates = 1,
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	enum MLCPaddingPolicy {
 		Same = 0,
@@ -169,26 +201,31 @@ namespace MLCompute {
 		UsePaddingSize = 2,
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
-	enum MLCPaddingType	{
+	enum MLCPaddingType {
 		Zero = 0,
 		Reflect = 1,
 		Symmetric = 2,
 		Constant = 3,
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
-	enum MLCPoolingType
-	{
+	enum MLCPoolingType {
 		Max = 1,
 		Average = 2,
 		L2Norm = 3,
 		// Count, // must be last, not available in swift
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	enum MLCRandomInitializerType {
 		Invalid = 0,
@@ -198,7 +235,9 @@ namespace MLCompute {
 		// Count, // must be last, not available in swift
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	enum MLCReductionType {
 		None = 0,
@@ -208,16 +247,24 @@ namespace MLCompute {
 		Min = 4,
 		ArgMax = 5,
 		ArgMin = 6,
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		L1Norm = 7,
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		Any = 8,
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		All = 9,
 		// Count, // must be last, not available in swift
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	enum MLCRegularizationType {
 		None = 0,
@@ -225,21 +272,25 @@ namespace MLCompute {
 		L2 = 2,
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	enum MLCSampleMode {
 		Nearest = 0,
 		Linear = 1,
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
-	enum MLCSoftmaxOperation	{
+	enum MLCSoftmaxOperation {
 		Softmax = 0,
 		LogSoftmax = 1,
 	}
 
-	[iOS (15,0), TV (15,0), Mac (12,0), NoWatch, MacCatalyst (15,0)]
+	[iOS (15, 0), TV (15, 0), Mac (12, 0), NoWatch, MacCatalyst (15, 0)]
 	public enum MLCGradientClippingType {
 		Value = 0,
 		Norm = 1,
@@ -247,7 +298,9 @@ namespace MLCompute {
 	}
 
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -286,7 +339,9 @@ namespace MLCompute {
 		MLCActivationDescriptor Create (MLCActivationType activationType, float a, float b, float c);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -305,12 +360,14 @@ namespace MLCompute {
 		[Export ("supportsDataType:onDevice:")]
 		bool SupportsDataType (MLCDataType dataType, MLCDeviceType device);
 
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("deviceType")]
 		MLCDeviceType DeviceType { get; }
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
@@ -427,18 +484,24 @@ namespace MLCompute {
 		[Export ("geluLayer")]
 		MLCActivationLayer GeluLayer { get; }
 
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		[Static]
 		[Export ("hardSwishLayer")]
 		MLCActivationLayer CreateHardSwishLayer ();
 
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		[Static]
 		[Export ("clampLayerWithMinValue:maxValue:")]
 		MLCActivationLayer CreateClampLayer (float minValue, float maxValue);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -465,20 +528,22 @@ namespace MLCompute {
 		[Export ("regularizationType")]
 		MLCRegularizationType RegularizationType { get; }
 
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("gradientClippingType")]
 		MLCGradientClippingType GradientClippingType { get; }
 
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("maximumClippingNorm")]
 		float MaximumClippingNorm { get; }
 
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("customGlobalNorm")]
 		float CustomGlobalNorm { get; }
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -513,25 +578,27 @@ namespace MLCompute {
 		[Export ("descriptorWithLearningRate:gradientRescale:appliesGradientClipping:gradientClipMax:gradientClipMin:regularizationType:regularizationScale:")]
 		MLCOptimizerDescriptor Create (float learningRate, float gradientRescale, bool appliesGradientClipping, float gradientClipMax, float gradientClipMin, MLCRegularizationType regularizationType, float regularizationScale);
 
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Static]
 		[Export ("descriptorWithLearningRate:gradientRescale:appliesGradientClipping:gradientClippingType:gradientClipMax:gradientClipMin:maximumClippingNorm:customGlobalNorm:regularizationType:regularizationScale:")]
 		MLCOptimizerDescriptor Create (float learningRate, float gradientRescale, bool appliesGradientClipping, MLCGradientClippingType gradientClippingType, float gradientClipMax, float gradientClipMin, float maximumClippingNorm, float customGlobalNorm, MLCRegularizationType regularizationType, float regularizationScale);
 
-		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("gradientClippingType")]
 		MLCGradientClippingType GradientClippingType { get; }
 
-		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("maximumClippingNorm")]
 		float MaximumClippingNorm { get; }
 
-		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("customGlobalNorm")]
 		float CustomGlobalNorm { get; }
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCOptimizer))]
 	[DisableDefaultCtor]
@@ -549,7 +616,7 @@ namespace MLCompute {
 		[Export ("timeStep")]
 		nuint TimeStep { get; }
 
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("usesAMSGrad")]
 		bool UsesAmsGrad { get; }
 
@@ -561,13 +628,15 @@ namespace MLCompute {
 		[Export ("optimizerWithDescriptor:beta1:beta2:epsilon:timeStep:")]
 		MLCAdamOptimizer Create (MLCOptimizerDescriptor optimizerDescriptor, float beta1, float beta2, float epsilon, nuint timeStep);
 
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Static]
 		[Export ("optimizerWithDescriptor:beta1:beta2:epsilon:usesAMSGrad:timeStep:")]
 		MLCAdamOptimizer Create (MLCOptimizerDescriptor optimizerDescriptor, float beta1, float beta2, float epsilon, bool usesAmsGrad, nuint timeStep);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -577,7 +646,7 @@ namespace MLCompute {
 		MLCDeviceType Type { get; }
 
 		[Export ("gpuDevices")]
-		IMTLDevice[] GpuDevices { get; }
+		IMTLDevice [] GpuDevices { get; }
 
 		[Static]
 		[Export ("cpuDevice")]
@@ -596,26 +665,29 @@ namespace MLCompute {
 		[Static]
 		[Export ("deviceWithGPUDevices:")]
 		[return: NullAllowed]
-		MLCDevice GetDevice (IMTLDevice[] gpus);
+		MLCDevice GetDevice (IMTLDevice [] gpus);
 
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Static]
 		[Export ("aneDevice")]
 		[return: NullAllowed]
 		MLCDevice GetAneDevice ();
 
-		[iOS (14,2)][TV (14,2)]
+		[iOS (14, 2)]
+		[TV (14, 2)]
 		[Static]
 		[Export ("deviceWithType:selectsMultipleComputeDevices:")]
 		[return: NullAllowed]
 		MLCDevice GetDevice (MLCDeviceType type, bool selectsMultipleComputeDevices);
 
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("actualDeviceType")]
 		MLCDeviceType ActualDeviceType { get; }
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -637,7 +709,7 @@ namespace MLCompute {
 		MLCDevice Device { get; }
 
 		[Export ("optimizerData", ArgumentSemantic.Copy)]
-		MLCTensorData[] OptimizerData {
+		MLCTensorData [] OptimizerData {
 			get;
 #if !NET
 			[NotImplemented]
@@ -646,7 +718,7 @@ namespace MLCompute {
 		}
 
 		[Export ("optimizerDeviceData", ArgumentSemantic.Copy)]
-		MLCTensorOptimizerDeviceData[] OptimizerDeviceData { get; }
+		MLCTensorOptimizerDeviceData [] OptimizerDeviceData { get; }
 
 		[Static]
 		[Export ("tensorWithDescriptor:")]
@@ -662,19 +734,19 @@ namespace MLCompute {
 
 		[Static]
 		[Export ("tensorWithShape:")]
-		MLCTensor Create ([BindAs (typeof (nint[]))] NSNumber[] shape);
+		MLCTensor Create ([BindAs (typeof (nint []))] NSNumber [] shape);
 
 		[Static]
 		[Export ("tensorWithShape:randomInitializerType:")]
-		MLCTensor Create ([BindAs (typeof (nint[]))] NSNumber[] shape, MLCRandomInitializerType randomInitializerType);
+		MLCTensor Create ([BindAs (typeof (nint []))] NSNumber [] shape, MLCRandomInitializerType randomInitializerType);
 
 		[Static]
 		[Export ("tensorWithShape:dataType:")]
-		MLCTensor Create ([BindAs (typeof (nint[]))] NSNumber[] shape, MLCDataType dataType);
+		MLCTensor Create ([BindAs (typeof (nint []))] NSNumber [] shape, MLCDataType dataType);
 
 		[Static]
 		[Export ("tensorWithShape:data:dataType:")]
-		MLCTensor Create ([BindAs (typeof (nint[]))] NSNumber[] shape, MLCTensorData data, MLCDataType dataType);
+		MLCTensor Create ([BindAs (typeof (nint []))] NSNumber [] shape, MLCTensorData data, MLCDataType dataType);
 
 		[Static]
 		[Export ("tensorWithWidth:height:featureChannelCount:batchSize:")]
@@ -711,11 +783,11 @@ namespace MLCompute {
 		[Static]
 		[Export ("tensorWithSequenceLengths:sortedSequences:featureChannelCount:batchSize:randomInitializerType:")]
 		[return: NullAllowed]
-		MLCTensor Create ([BindAs (typeof (nint[]))] NSNumber[] sequenceLengths, bool sortedSequences, nuint featureChannelCount, nuint batchSize, MLCRandomInitializerType randomInitializerType);
+		MLCTensor Create ([BindAs (typeof (nint []))] NSNumber [] sequenceLengths, bool sortedSequences, nuint featureChannelCount, nuint batchSize, MLCRandomInitializerType randomInitializerType);
 
 		[Static]
 		[Export ("tensorWithShape:fillWithData:dataType:")]
-		MLCTensor Create ([BindAs (typeof (nint[]))] NSNumber[] shape, NSNumber fillData, MLCDataType dataType);
+		MLCTensor Create ([BindAs (typeof (nint []))] NSNumber [] shape, NSNumber fillData, MLCDataType dataType);
 
 		[Static]
 		[Export ("tensorWithDescriptor:fillWithData:")]
@@ -724,7 +796,7 @@ namespace MLCompute {
 		[Static]
 		[Export ("tensorWithSequenceLengths:sortedSequences:featureChannelCount:batchSize:data:")]
 		[return: NullAllowed]
-		MLCTensor Create ([BindAs (typeof (nint[]))] NSNumber[] sequenceLengths, bool sortedSequences, nuint featureChannelCount, nuint batchSize, [NullAllowed] MLCTensorData data);
+		MLCTensor Create ([BindAs (typeof (nint []))] NSNumber [] sequenceLengths, bool sortedSequences, nuint featureChannelCount, nuint batchSize, [NullAllowed] MLCTensorData data);
 
 		[Export ("hasValidNumerics")]
 		bool HasValidNumerics { get; }
@@ -742,35 +814,37 @@ namespace MLCompute {
 		bool BindAndWrite (MLCTensorData data, MLCDevice device);
 
 		[Export ("bindOptimizerData:deviceData:")]
-		bool BindOptimizer (MLCTensorData[] data, [NullAllowed] MLCTensorOptimizerDeviceData[] deviceData);
+		bool BindOptimizer (MLCTensorData [] data, [NullAllowed] MLCTensorOptimizerDeviceData [] deviceData);
 
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("tensorByQuantizingToType:scale:bias:")]
 		[return: NullAllowed]
 		MLCTensor CreateByQuantizing (MLCDataType type, float scale, nint bias);
 
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("tensorByDequantizingToType:scale:bias:")]
 		[return: NullAllowed]
 		MLCTensor CreateByDequantizing (MLCDataType type, MLCTensor scale, MLCTensor bias);
 
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("tensorByQuantizingToType:scale:bias:axis:")]
 		[return: NullAllowed]
 		MLCTensor CreateByQuantizing (MLCDataType type, MLCTensor scale, MLCTensor bias, nint axis);
 
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("tensorByDequantizingToType:scale:bias:axis:")]
 		[return: NullAllowed]
 		MLCTensor CreateByDequantizing (MLCDataType type, MLCTensor scale, MLCTensor bias, nint axis);
 
 		[Static]
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("tensorWithShape:randomInitializerType:dataType:")]
-		MLCTensor Create ([BindAs (typeof (nint[]))] NSNumber[] shape, MLCRandomInitializerType randomInitializerType, MLCDataType dataType);
+		MLCTensor Create ([BindAs (typeof (nint []))] NSNumber [] shape, MLCRandomInitializerType randomInitializerType, MLCDataType dataType);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -790,13 +864,17 @@ namespace MLCompute {
 		[Export ("dataWithImmutableBytesNoCopy:length:")]
 		MLCTensorData CreateFromImmutableBytesNoCopy (IntPtr bytes, nuint length);
 
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		[Static]
 		[Export ("dataWithBytesNoCopy:length:deallocator:")]
 		MLCTensorData CreateFromBytesNoCopy (IntPtr bytes, nuint length, Action<IntPtr, nuint> deallocator);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -809,28 +887,28 @@ namespace MLCompute {
 		nuint DimensionCount { get; }
 
 		[Export ("shape", ArgumentSemantic.Copy)]
-		[BindAs (typeof (nint[]))] // swift `[Int]`
-		NSNumber[] Shape { get; }
+		[BindAs (typeof (nint []))] // swift `[Int]`
+		NSNumber [] Shape { get; }
 
 		[Export ("stride", ArgumentSemantic.Copy)]
-		[BindAs (typeof (nint[]))] // swift `[Int]`
-		NSNumber[] Stride { get; }
+		[BindAs (typeof (nint []))] // swift `[Int]`
+		NSNumber [] Stride { get; }
 
 		[Export ("tensorAllocationSizeInBytes")]
 		nuint TensorAllocationSizeInBytes { get; }
 
 		[NullAllowed]
 		[Export ("sequenceLengths", ArgumentSemantic.Copy)]
-		[BindAs (typeof (nint[]))] // swift `[Int]?`
-		NSNumber[] SequenceLengths { get; }
+		[BindAs (typeof (nint []))] // swift `[Int]?`
+		NSNumber [] SequenceLengths { get; }
 
 		[Export ("sortedSequences")]
 		bool SortedSequences { get; }
 
 		[NullAllowed]
 		[Export ("batchSizePerSequenceStep", ArgumentSemantic.Copy)]
-		[BindAs (typeof (nint[]))] // swift `[Int]?`
-		NSNumber[] BatchSizePerSequenceStep { get; }
+		[BindAs (typeof (nint []))] // swift `[Int]?`
+		NSNumber [] BatchSizePerSequenceStep { get; }
 
 		[Static]
 		[Export ("maxTensorDimensions")]
@@ -839,12 +917,12 @@ namespace MLCompute {
 		[Static]
 		[Export ("descriptorWithShape:dataType:")]
 		[return: NullAllowed]
-		MLCTensorDescriptor Create ([BindAs (typeof (nint[]))] NSNumber[] shape, MLCDataType dataType);
+		MLCTensorDescriptor Create ([BindAs (typeof (nint []))] NSNumber [] shape, MLCDataType dataType);
 
 		[Static]
 		[Export ("descriptorWithShape:sequenceLengths:sortedSequences:dataType:")]
 		[return: NullAllowed]
-		MLCTensorDescriptor Create ([BindAs (typeof (nint[]))]NSNumber[] shape, [BindAs (typeof (nint[]))] NSNumber[] sequenceLengths, bool sortedSequences, MLCDataType dataType);
+		MLCTensorDescriptor Create ([BindAs (typeof (nint []))] NSNumber [] shape, [BindAs (typeof (nint []))] NSNumber [] sequenceLengths, bool sortedSequences, MLCDataType dataType);
 
 		[Static]
 		[Export ("descriptorWithWidth:height:featureChannelCount:batchSize:")]
@@ -872,7 +950,9 @@ namespace MLCompute {
 		MLCTensorDescriptor CreateConvolutionBiases (nuint featureChannelCount, MLCDataType dataType);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -890,10 +970,12 @@ namespace MLCompute {
 
 		[Static]
 		[Export ("parameterWithTensor:optimizerData:")]
-		MLCTensorParameter Create (MLCTensor tensor, [NullAllowed] MLCTensorData[] optimizerData);
+		MLCTensorParameter Create (MLCTensor tensor, [NullAllowed] MLCTensorData [] optimizerData);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
@@ -907,7 +989,9 @@ namespace MLCompute {
 		MLCArithmeticLayer Create (MLCArithmeticOperation operation);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
@@ -951,7 +1035,9 @@ namespace MLCompute {
 		MLCBatchNormalizationLayer Create (nuint featureChannelCount, MLCTensor mean, MLCTensor variance, [NullAllowed] MLCTensor beta, [NullAllowed] MLCTensor gamma, float varianceEpsilon, float momentum);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
@@ -969,7 +1055,9 @@ namespace MLCompute {
 		MLCConcatenationLayer Create (nuint dimension);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1022,7 +1110,7 @@ namespace MLCompute {
 
 		[Static]
 		[Export ("descriptorWithType:kernelSizes:inputFeatureChannelCount:outputFeatureChannelCount:groupCount:strides:dilationRates:paddingPolicy:paddingSizes:")]
-		MLCConvolutionDescriptor Create (MLCConvolutionType convolutionType, [BindAs (typeof (nuint[]))] NSNumber[] kernelSizes, nuint inputFeatureChannelCount, nuint outputFeatureChannelCount, nuint groupCount, [BindAs (typeof (nuint[]))] NSNumber[] strides, [BindAs (typeof (nuint[]))] NSNumber[] dilationRates, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint[]))] [NullAllowed] NSNumber[] paddingSizes);
+		MLCConvolutionDescriptor Create (MLCConvolutionType convolutionType, [BindAs (typeof (nuint []))] NSNumber [] kernelSizes, nuint inputFeatureChannelCount, nuint outputFeatureChannelCount, nuint groupCount, [BindAs (typeof (nuint []))] NSNumber [] strides, [BindAs (typeof (nuint []))] NSNumber [] dilationRates, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint []))][NullAllowed] NSNumber [] paddingSizes);
 
 		[Static]
 		[Export ("descriptorWithKernelWidth:kernelHeight:inputFeatureChannelCount:outputFeatureChannelCount:")]
@@ -1030,11 +1118,11 @@ namespace MLCompute {
 
 		[Static]
 		[Export ("descriptorWithKernelSizes:inputFeatureChannelCount:outputFeatureChannelCount:strides:paddingPolicy:paddingSizes:")]
-		MLCConvolutionDescriptor Create ([BindAs (typeof (nuint[]))] NSNumber[] kernelSizes, nuint inputFeatureChannelCount, nuint outputFeatureChannelCount, [BindAs (typeof (nuint[]))] NSNumber[] strides, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint[]))] [NullAllowed] NSNumber[] paddingSizes);
+		MLCConvolutionDescriptor Create ([BindAs (typeof (nuint []))] NSNumber [] kernelSizes, nuint inputFeatureChannelCount, nuint outputFeatureChannelCount, [BindAs (typeof (nuint []))] NSNumber [] strides, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint []))][NullAllowed] NSNumber [] paddingSizes);
 
 		[Static]
 		[Export ("descriptorWithKernelSizes:inputFeatureChannelCount:outputFeatureChannelCount:groupCount:strides:dilationRates:paddingPolicy:paddingSizes:")]
-		MLCConvolutionDescriptor Create ([BindAs (typeof (nuint[]))] NSNumber[] kernelSizes, nuint inputFeatureChannelCount, nuint outputFeatureChannelCount, nuint groupCount, [BindAs (typeof (nuint[]))] NSNumber[] strides, [BindAs (typeof (nuint[]))] NSNumber[] dilationRates, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint[]))] [NullAllowed] NSNumber[] paddingSizes);
+		MLCConvolutionDescriptor Create ([BindAs (typeof (nuint []))] NSNumber [] kernelSizes, nuint inputFeatureChannelCount, nuint outputFeatureChannelCount, nuint groupCount, [BindAs (typeof (nuint []))] NSNumber [] strides, [BindAs (typeof (nuint []))] NSNumber [] dilationRates, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint []))][NullAllowed] NSNumber [] paddingSizes);
 
 		[Static]
 		[Export ("convolutionTransposeDescriptorWithKernelWidth:kernelHeight:inputFeatureChannelCount:outputFeatureChannelCount:")]
@@ -1042,11 +1130,11 @@ namespace MLCompute {
 
 		[Static]
 		[Export ("convolutionTransposeDescriptorWithKernelSizes:inputFeatureChannelCount:outputFeatureChannelCount:strides:paddingPolicy:paddingSizes:")]
-		MLCConvolutionDescriptor CreateConvolutionTranspose ([BindAs (typeof (nuint[]))] NSNumber[] kernelSizes, nuint inputFeatureChannelCount, nuint outputFeatureChannelCount, [BindAs (typeof (nuint[]))] NSNumber[] strides, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint[]))] [NullAllowed] NSNumber[] paddingSizes);
+		MLCConvolutionDescriptor CreateConvolutionTranspose ([BindAs (typeof (nuint []))] NSNumber [] kernelSizes, nuint inputFeatureChannelCount, nuint outputFeatureChannelCount, [BindAs (typeof (nuint []))] NSNumber [] strides, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint []))][NullAllowed] NSNumber [] paddingSizes);
 
 		[Static]
 		[Export ("convolutionTransposeDescriptorWithKernelSizes:inputFeatureChannelCount:outputFeatureChannelCount:groupCount:strides:dilationRates:paddingPolicy:paddingSizes:")]
-		MLCConvolutionDescriptor CreateConvolutionTranspose ([BindAs (typeof (nuint[]))] NSNumber[] kernelSizes, nuint inputFeatureChannelCount, nuint outputFeatureChannelCount, nuint groupCount, [BindAs (typeof (nuint[]))] NSNumber[] strides, [BindAs (typeof (nuint[]))] NSNumber[] dilationRates, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint[]))] [NullAllowed] NSNumber[] paddingSizes);
+		MLCConvolutionDescriptor CreateConvolutionTranspose ([BindAs (typeof (nuint []))] NSNumber [] kernelSizes, nuint inputFeatureChannelCount, nuint outputFeatureChannelCount, nuint groupCount, [BindAs (typeof (nuint []))] NSNumber [] strides, [BindAs (typeof (nuint []))] NSNumber [] dilationRates, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint []))][NullAllowed] NSNumber [] paddingSizes);
 
 		[Static]
 		[Export ("depthwiseConvolutionDescriptorWithKernelWidth:kernelHeight:inputFeatureChannelCount:channelMultiplier:")]
@@ -1054,14 +1142,16 @@ namespace MLCompute {
 
 		[Static]
 		[Export ("depthwiseConvolutionDescriptorWithKernelSizes:inputFeatureChannelCount:channelMultiplier:strides:paddingPolicy:paddingSizes:")]
-		MLCConvolutionDescriptor CreateDepthwiseConvolution ([BindAs (typeof (nuint[]))] NSNumber[] kernelSizes, nuint inputFeatureChannelCount, nuint channelMultiplier, [BindAs (typeof (nuint[]))] NSNumber[] strides, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint[]))] [NullAllowed] NSNumber[] paddingSizes);
+		MLCConvolutionDescriptor CreateDepthwiseConvolution ([BindAs (typeof (nuint []))] NSNumber [] kernelSizes, nuint inputFeatureChannelCount, nuint channelMultiplier, [BindAs (typeof (nuint []))] NSNumber [] strides, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint []))][NullAllowed] NSNumber [] paddingSizes);
 
 		[Static]
 		[Export ("depthwiseConvolutionDescriptorWithKernelSizes:inputFeatureChannelCount:channelMultiplier:strides:dilationRates:paddingPolicy:paddingSizes:")]
-		MLCConvolutionDescriptor CreateDepthwiseConvolution ([BindAs (typeof (nuint[]))] NSNumber[] kernelSizes, nuint inputFeatureChannelCount, nuint channelMultiplier, [BindAs (typeof (nuint[]))] NSNumber[] strides, [BindAs (typeof (nuint[]))] NSNumber[] dilationRates, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint[]))] [NullAllowed] NSNumber[] paddingSizes);
+		MLCConvolutionDescriptor CreateDepthwiseConvolution ([BindAs (typeof (nuint []))] NSNumber [] kernelSizes, nuint inputFeatureChannelCount, nuint channelMultiplier, [BindAs (typeof (nuint []))] NSNumber [] strides, [BindAs (typeof (nuint []))] NSNumber [] dilationRates, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint []))][NullAllowed] NSNumber [] paddingSizes);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
@@ -1088,7 +1178,9 @@ namespace MLCompute {
 		MLCConvolutionLayer Create (MLCTensor weights, [NullAllowed] MLCTensor biases, MLCConvolutionDescriptor descriptor);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
@@ -1105,7 +1197,9 @@ namespace MLCompute {
 		MLCDropoutLayer Create (float rate, nuint seed);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1148,7 +1242,9 @@ namespace MLCompute {
 		MLCEmbeddingDescriptor Create ([BindAs (typeof (nint))] NSNumber embeddingCount, [BindAs (typeof (nint))] NSNumber embeddingDimension, [BindAs (typeof (nint?))] NSNumber paddingIndex, [BindAs (typeof (float?))] NSNumber maximumNorm, [BindAs (typeof (float?))] NSNumber pNorm, bool scalesGradientByFrequency);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
@@ -1168,7 +1264,9 @@ namespace MLCompute {
 		MLCEmbeddingLayer Create (MLCEmbeddingDescriptor descriptor, MLCTensor weights);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
@@ -1195,7 +1293,9 @@ namespace MLCompute {
 		MLCFullyConnectedLayer Create (MLCTensor weights, [NullAllowed] MLCTensor biases, MLCConvolutionDescriptor descriptor);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
@@ -1209,7 +1309,9 @@ namespace MLCompute {
 		MLCGramMatrixLayer Create (float scale);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
@@ -1242,7 +1344,9 @@ namespace MLCompute {
 		MLCGroupNormalizationLayer Create (nuint featureChannelCount, nuint groupCount, [NullAllowed] MLCTensor beta, [NullAllowed] MLCTensor gamma, float varianceEpsilon);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
@@ -1269,11 +1373,15 @@ namespace MLCompute {
 		[Export ("momentum")]
 		float Momentum { get; }
 
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		[NullAllowed, Export ("mean", ArgumentSemantic.Retain)]
 		MLCTensor Mean { get; }
 
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		[NullAllowed, Export ("variance", ArgumentSemantic.Retain)]
 		MLCTensor Variance { get; }
 
@@ -1287,22 +1395,26 @@ namespace MLCompute {
 		[return: NullAllowed]
 		MLCInstanceNormalizationLayer Create (nuint featureChannelCount, [NullAllowed] MLCTensor beta, [NullAllowed] MLCTensor gamma, float varianceEpsilon, float momentum);
 
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		[Static]
 		[Export ("layerWithFeatureChannelCount:mean:variance:beta:gamma:varianceEpsilon:momentum:")]
 		[return: NullAllowed]
 		MLCInstanceNormalizationLayer Create (nuint featureChannelCount, MLCTensor mean, MLCTensor variance, [NullAllowed] MLCTensor beta, [NullAllowed] MLCTensor gamma, float varianceEpsilon, float momentum);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCLayerNormalizationLayer {
 
 		[Export ("normalizedShape", ArgumentSemantic.Copy)]
-		[BindAs (typeof (nint[]))] // swift `[Int]`
-		NSNumber[] NormalizedShape { get; }
+		[BindAs (typeof (nint []))] // swift `[Int]`
+		NSNumber [] NormalizedShape { get; }
 
 		[NullAllowed, Export ("beta", ArgumentSemantic.Retain)]
 		MLCTensor Beta { get; }
@@ -1322,10 +1434,12 @@ namespace MLCompute {
 		[Static]
 		[Export ("layerWithNormalizedShape:beta:gamma:varianceEpsilon:")]
 		[return: NullAllowed]
-		MLCLayerNormalizationLayer Create ([BindAs (typeof (nint[]))] NSNumber[] normalizedShape, [NullAllowed] MLCTensor beta, [NullAllowed] MLCTensor gamma, float varianceEpsilon);
+		MLCLayerNormalizationLayer Create ([BindAs (typeof (nint []))] NSNumber [] normalizedShape, [NullAllowed] MLCTensor beta, [NullAllowed] MLCTensor gamma, float varianceEpsilon);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1369,7 +1483,9 @@ namespace MLCompute {
 		MLCLossDescriptor Create (MLCLossType lossType, MLCReductionType reductionType, float weight, float labelSmoothing, nuint classCount, float epsilon, float delta);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
@@ -1462,7 +1578,9 @@ namespace MLCompute {
 		MLCLossLayer CreateCosineDistanceLoss (MLCReductionType reductionType, [NullAllowed] MLCTensor weights);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject), Name = "MLCLSTMDescriptor")]
 	[DisableDefaultCtor]
@@ -1516,7 +1634,9 @@ namespace MLCompute {
 		MLCLstmDescriptor Create (nuint inputSize, nuint hiddenSize, nuint layerCount, bool usesBiases, bool batchFirst, bool isBidirectional, bool returnsSequences, float dropout, MLCLstmResultMode resultMode);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer), Name = "MLCLSTMLayer")]
 	[DisableDefaultCtor]
@@ -1526,52 +1646,54 @@ namespace MLCompute {
 		MLCLstmDescriptor Descriptor { get; }
 
 		[Export ("gateActivations", ArgumentSemantic.Copy)]
-		MLCActivationDescriptor[] GateActivations { get; }
+		MLCActivationDescriptor [] GateActivations { get; }
 
 		[Export ("outputResultActivation", ArgumentSemantic.Copy)]
 		MLCActivationDescriptor OutputResultActivation { get; }
 
 		[Export ("inputWeights", ArgumentSemantic.Retain)]
-		MLCTensor[] InputWeights { get; }
+		MLCTensor [] InputWeights { get; }
 
 		[Export ("hiddenWeights", ArgumentSemantic.Retain)]
-		MLCTensor[] HiddenWeights { get; }
+		MLCTensor [] HiddenWeights { get; }
 
 		[NullAllowed, Export ("peepholeWeights", ArgumentSemantic.Retain)]
-		MLCTensor[] PeepholeWeights { get; }
+		MLCTensor [] PeepholeWeights { get; }
 
 		[NullAllowed, Export ("biases", ArgumentSemantic.Retain)]
-		MLCTensor[] Biases { get; }
+		MLCTensor [] Biases { get; }
 
 		[Export ("inputWeightsParameters", ArgumentSemantic.Retain)]
-		MLCTensorParameter[] InputWeightsParameters { get; }
+		MLCTensorParameter [] InputWeightsParameters { get; }
 
 		[Export ("hiddenWeightsParameters", ArgumentSemantic.Retain)]
-		MLCTensorParameter[] HiddenWeightsParameters { get; }
+		MLCTensorParameter [] HiddenWeightsParameters { get; }
 
 		[NullAllowed, Export ("peepholeWeightsParameters", ArgumentSemantic.Retain)]
-		MLCTensorParameter[] PeepholeWeightsParameters { get; }
+		MLCTensorParameter [] PeepholeWeightsParameters { get; }
 
 		[NullAllowed, Export ("biasesParameters", ArgumentSemantic.Retain)]
-		MLCTensorParameter[] BiasesParameters { get; }
+		MLCTensorParameter [] BiasesParameters { get; }
 
 		[Static]
 		[Export ("layerWithDescriptor:inputWeights:hiddenWeights:biases:")]
 		[return: NullAllowed]
-		MLCLstmLayer Create (MLCLstmDescriptor descriptor, MLCTensor[] inputWeights, MLCTensor[] hiddenWeights, [NullAllowed] MLCTensor[] biases);
+		MLCLstmLayer Create (MLCLstmDescriptor descriptor, MLCTensor [] inputWeights, MLCTensor [] hiddenWeights, [NullAllowed] MLCTensor [] biases);
 
 		[Static]
 		[Export ("layerWithDescriptor:inputWeights:hiddenWeights:peepholeWeights:biases:")]
 		[return: NullAllowed]
-		MLCLstmLayer Create (MLCLstmDescriptor descriptor, MLCTensor[] inputWeights, MLCTensor[] hiddenWeights, [NullAllowed] MLCTensor[] peepholeWeights, [NullAllowed] MLCTensor[] biases);
+		MLCLstmLayer Create (MLCLstmDescriptor descriptor, MLCTensor [] inputWeights, MLCTensor [] hiddenWeights, [NullAllowed] MLCTensor [] peepholeWeights, [NullAllowed] MLCTensor [] biases);
 
 		[Static]
 		[Export ("layerWithDescriptor:inputWeights:hiddenWeights:peepholeWeights:biases:gateActivations:outputResultActivation:")]
 		[return: NullAllowed]
-		MLCLstmLayer Create (MLCLstmDescriptor descriptor, MLCTensor[] inputWeights, MLCTensor[] hiddenWeights, [NullAllowed] MLCTensor[] peepholeWeights, [NullAllowed] MLCTensor[] biases, MLCActivationDescriptor[] gateActivations, MLCActivationDescriptor outputResultActivation);
+		MLCLstmLayer Create (MLCLstmDescriptor descriptor, MLCTensor [] inputWeights, MLCTensor [] hiddenWeights, [NullAllowed] MLCTensor [] peepholeWeights, [NullAllowed] MLCTensor [] biases, MLCActivationDescriptor [] gateActivations, MLCActivationDescriptor outputResultActivation);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1596,7 +1718,9 @@ namespace MLCompute {
 		MLCMatMulDescriptor Create ();
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
@@ -1611,7 +1735,9 @@ namespace MLCompute {
 		MLCMatMulLayer Create (MLCMatMulDescriptor descriptor);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1651,7 +1777,9 @@ namespace MLCompute {
 		MLCMultiheadAttentionDescriptor Create (nuint modelDimension, nuint headCount);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
@@ -1661,27 +1789,29 @@ namespace MLCompute {
 		MLCMultiheadAttentionDescriptor Descriptor { get; }
 
 		[Export ("weights", ArgumentSemantic.Retain)]
-		MLCTensor[] Weights { get; }
+		MLCTensor [] Weights { get; }
 
 		[NullAllowed, Export ("biases", ArgumentSemantic.Retain)]
-		MLCTensor[] Biases { get; }
+		MLCTensor [] Biases { get; }
 
 		[NullAllowed, Export ("attentionBiases", ArgumentSemantic.Retain)]
-		MLCTensor[] AttentionBiases { get; }
+		MLCTensor [] AttentionBiases { get; }
 
 		[Export ("weightsParameters", ArgumentSemantic.Retain)]
-		MLCTensorParameter[] WeightsParameters { get; }
+		MLCTensorParameter [] WeightsParameters { get; }
 
 		[NullAllowed, Export ("biasesParameters", ArgumentSemantic.Retain)]
-		MLCTensorParameter[] BiasesParameters { get; }
+		MLCTensorParameter [] BiasesParameters { get; }
 
 		[Static]
 		[Export ("layerWithDescriptor:weights:biases:attentionBiases:")]
 		[return: NullAllowed]
-		MLCMultiheadAttentionLayer Create (MLCMultiheadAttentionDescriptor descriptor, MLCTensor[] weights, [NullAllowed] MLCTensor[] biases, [NullAllowed] MLCTensor[] attentionBiases);
+		MLCMultiheadAttentionLayer Create (MLCMultiheadAttentionDescriptor descriptor, MLCTensor [] weights, [NullAllowed] MLCTensor [] biases, [NullAllowed] MLCTensor [] attentionBiases);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
@@ -1707,22 +1837,24 @@ namespace MLCompute {
 
 		[Static]
 		[Export ("layerWithReflectionPadding:")]
-		MLCPaddingLayer CreateReflectionPadding ([BindAs (typeof (nuint[]))] NSNumber[] padding);
+		MLCPaddingLayer CreateReflectionPadding ([BindAs (typeof (nuint []))] NSNumber [] padding);
 
 		[Static]
 		[Export ("layerWithSymmetricPadding:")]
-		MLCPaddingLayer CreateSymmetricPadding ([BindAs (typeof (nuint[]))] NSNumber[] padding);
+		MLCPaddingLayer CreateSymmetricPadding ([BindAs (typeof (nuint []))] NSNumber [] padding);
 
 		[Static]
 		[Export ("layerWithZeroPadding:")]
-		MLCPaddingLayer CreateZeroPadding ([BindAs (typeof (nuint[]))] NSNumber[] padding);
+		MLCPaddingLayer CreateZeroPadding ([BindAs (typeof (nuint []))] NSNumber [] padding);
 
 		[Static]
 		[Export ("layerWithConstantPadding:constantValue:")]
-		MLCPaddingLayer CreateConstantPadding ([BindAs (typeof (nuint[]))] NSNumber[] padding, float constantValue);
+		MLCPaddingLayer CreateConstantPadding ([BindAs (typeof (nuint []))] NSNumber [] padding, float constantValue);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1767,30 +1899,32 @@ namespace MLCompute {
 
 		[Static]
 		[Export ("maxPoolingDescriptorWithKernelSizes:strides:paddingPolicy:paddingSizes:")]
-		MLCPoolingDescriptor CreateMaxPooling ([BindAs (typeof (nuint[]))] NSNumber[] kernelSizes, [BindAs (typeof (nuint[]))] NSNumber[] strides, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint[]))] [NullAllowed] NSNumber[] paddingSizes);
+		MLCPoolingDescriptor CreateMaxPooling ([BindAs (typeof (nuint []))] NSNumber [] kernelSizes, [BindAs (typeof (nuint []))] NSNumber [] strides, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint []))][NullAllowed] NSNumber [] paddingSizes);
 
 		[Static]
 		[Export ("maxPoolingDescriptorWithKernelSizes:strides:dilationRates:paddingPolicy:paddingSizes:")]
-		MLCPoolingDescriptor CreateMaxPooling ([BindAs (typeof (nuint[]))] NSNumber[] kernelSizes, [BindAs (typeof (nuint[]))] NSNumber[] strides, [BindAs (typeof (nuint[]))] NSNumber[] dilationRates, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint[]))] [NullAllowed] NSNumber[] paddingSizes);
+		MLCPoolingDescriptor CreateMaxPooling ([BindAs (typeof (nuint []))] NSNumber [] kernelSizes, [BindAs (typeof (nuint []))] NSNumber [] strides, [BindAs (typeof (nuint []))] NSNumber [] dilationRates, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint []))][NullAllowed] NSNumber [] paddingSizes);
 
 		[Static]
 		[Export ("averagePoolingDescriptorWithKernelSizes:strides:paddingPolicy:paddingSizes:countIncludesPadding:")]
-		MLCPoolingDescriptor CreateAveragePooling ([BindAs (typeof (nuint[]))] NSNumber[] kernelSizes, [BindAs (typeof (nuint[]))] NSNumber[] strides, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint[]))] [NullAllowed] NSNumber[] paddingSizes, bool countIncludesPadding);
+		MLCPoolingDescriptor CreateAveragePooling ([BindAs (typeof (nuint []))] NSNumber [] kernelSizes, [BindAs (typeof (nuint []))] NSNumber [] strides, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint []))][NullAllowed] NSNumber [] paddingSizes, bool countIncludesPadding);
 
 		[Static]
 		[Export ("averagePoolingDescriptorWithKernelSizes:strides:dilationRates:paddingPolicy:paddingSizes:countIncludesPadding:")]
-		MLCPoolingDescriptor CreateAveragePooling ([BindAs (typeof (nuint[]))] NSNumber[] kernelSizes, [BindAs (typeof (nuint[]))] NSNumber[] strides, [BindAs (typeof (nuint[]))] NSNumber[] dilationRates, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint[]))]  [NullAllowed] NSNumber[] paddingSizes, bool countIncludesPadding);
+		MLCPoolingDescriptor CreateAveragePooling ([BindAs (typeof (nuint []))] NSNumber [] kernelSizes, [BindAs (typeof (nuint []))] NSNumber [] strides, [BindAs (typeof (nuint []))] NSNumber [] dilationRates, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint []))][NullAllowed] NSNumber [] paddingSizes, bool countIncludesPadding);
 
 		[Static]
 		[Export ("l2NormPoolingDescriptorWithKernelSizes:strides:paddingPolicy:paddingSizes:")]
-		MLCPoolingDescriptor CreateL2NormPooling ([BindAs (typeof (nuint[]))] NSNumber[] kernelSizes, [BindAs (typeof (nuint[]))] NSNumber[] strides, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint[]))]  [NullAllowed] NSNumber[] paddingSizes);
+		MLCPoolingDescriptor CreateL2NormPooling ([BindAs (typeof (nuint []))] NSNumber [] kernelSizes, [BindAs (typeof (nuint []))] NSNumber [] strides, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint []))][NullAllowed] NSNumber [] paddingSizes);
 
 		[Static]
 		[Export ("l2NormPoolingDescriptorWithKernelSizes:strides:dilationRates:paddingPolicy:paddingSizes:")]
-		MLCPoolingDescriptor CreateL2NormPooling ([BindAs (typeof (nuint[]))] NSNumber[] kernelSizes, [BindAs (typeof (nuint[]))] NSNumber[] strides, [BindAs (typeof (nuint[]))] NSNumber[] dilationRates, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint[]))] [NullAllowed] NSNumber[] paddingSizes);
+		MLCPoolingDescriptor CreateL2NormPooling ([BindAs (typeof (nuint []))] NSNumber [] kernelSizes, [BindAs (typeof (nuint []))] NSNumber [] strides, [BindAs (typeof (nuint []))] NSNumber [] dilationRates, MLCPaddingPolicy paddingPolicy, [BindAs (typeof (nuint []))][NullAllowed] NSNumber [] paddingSizes);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
@@ -1804,7 +1938,9 @@ namespace MLCompute {
 		MLCPoolingLayer Create (MLCPoolingDescriptor descriptor);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
@@ -1816,42 +1952,52 @@ namespace MLCompute {
 		[Export ("dimension")]
 		nuint Dimension { get; }
 
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		[Export ("dimensions")]
-		[BindAs (typeof (nuint[]))]
-		NSNumber[] Dimensions { get; }
+		[BindAs (typeof (nuint []))]
+		NSNumber [] Dimensions { get; }
 
 		[Static]
 		[Export ("layerWithReductionType:dimension:")]
 		[return: NullAllowed]
 		MLCReductionLayer Create (MLCReductionType reductionType, nuint dimension);
 
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		[Static]
 		[Export ("layerWithReductionType:dimensions:")]
 		[return: NullAllowed]
-		MLCReductionLayer Create (MLCReductionType reductionType, [BindAs (typeof (nuint[]))] NSNumber[] dimensions);
+		MLCReductionLayer Create (MLCReductionType reductionType, [BindAs (typeof (nuint []))] NSNumber [] dimensions);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCReshapeLayer {
 
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		[Export ("shape", ArgumentSemantic.Copy)]
-		[BindAs (typeof (nint[]))]
-		NSNumber[] Shape { get; }
+		[BindAs (typeof (nint []))]
+		NSNumber [] Shape { get; }
 
 		[Static]
 		[Export ("layerWithShape:")]
 		[return: NullAllowed]
 		// swift uses `[Int]`
-		MLCReshapeLayer Create ([BindAs (typeof (nint[]))] NSNumber[] shape);
+		MLCReshapeLayer Create ([BindAs (typeof (nint []))] NSNumber [] shape);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCOptimizer), Name = "MLCRMSPropOptimizer")]
 	interface MLCRmsPropOptimizer : NSCopying {
@@ -1877,7 +2023,9 @@ namespace MLCompute {
 		MLCRmsPropOptimizer Create (MLCOptimizerDescriptor optimizerDescriptor, float momentumScale, float alpha, float epsilon, bool isCentered);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCOptimizer), Name = "MLCSGDOptimizer")]
 	[DisableDefaultCtor]
@@ -1898,32 +2046,36 @@ namespace MLCompute {
 		MLCSgdOptimizer Create (MLCOptimizerDescriptor optimizerDescriptor, float momentumScale, bool usesNesterovMomentum);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCSliceLayer {
 
 		[Export ("start", ArgumentSemantic.Copy)]
-		[BindAs (typeof (nint[]))] // swift `[Int]`
-		NSNumber[] Start { get; }
+		[BindAs (typeof (nint []))] // swift `[Int]`
+		NSNumber [] Start { get; }
 
 		[Export ("end", ArgumentSemantic.Copy)]
-		[BindAs (typeof (nint[]))] // swift `[Int]`
-		NSNumber[] End { get; }
+		[BindAs (typeof (nint []))] // swift `[Int]`
+		NSNumber [] End { get; }
 
 		[NullAllowed]
 		[Export ("stride", ArgumentSemantic.Copy)]
-		[BindAs (typeof (nint[]))] // swift `[Int]?`
-		NSNumber[] Stride { get; }
+		[BindAs (typeof (nint []))] // swift `[Int]?`
+		NSNumber [] Stride { get; }
 
 		[Static]
 		[Export ("sliceLayerWithStart:end:stride:")]
 		[return: NullAllowed]
-		MLCSliceLayer Create ([BindAs (typeof (nint[]))] NSNumber[] start, [BindAs (typeof (nint[]))] NSNumber[] end, [BindAs (typeof (nint[]))] [NullAllowed] NSNumber[] stride);
+		MLCSliceLayer Create ([BindAs (typeof (nint []))] NSNumber [] start, [BindAs (typeof (nint []))] NSNumber [] end, [BindAs (typeof (nint []))][NullAllowed] NSNumber [] stride);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
@@ -1944,7 +2096,9 @@ namespace MLCompute {
 		MLCSoftmaxLayer Create (MLCSoftmaxOperation operation, nuint dimension);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
@@ -1958,8 +2112,8 @@ namespace MLCompute {
 
 		[NullAllowed]
 		[Export ("splitSectionLengths", ArgumentSemantic.Copy)]
-		[BindAs (typeof (nint[]))] // swift `[Int]`
-		NSNumber[] SplitSectionLengths { get; }
+		[BindAs (typeof (nint []))] // swift `[Int]`
+		NSNumber [] SplitSectionLengths { get; }
 
 		[Static]
 		[Export ("layerWithSplitCount:dimension:")]
@@ -1967,34 +2121,38 @@ namespace MLCompute {
 
 		[Static]
 		[Export ("layerWithSplitSectionLengths:dimension:")]
-		MLCSplitLayer Create ([BindAs (typeof (nint[]))] NSNumber[] splitSectionLengths, nuint dimension);
+		MLCSplitLayer Create ([BindAs (typeof (nint []))] NSNumber [] splitSectionLengths, nuint dimension);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCTransposeLayer {
 
 		[Export ("dimensions", ArgumentSemantic.Copy)]
-		[BindAs (typeof (nint[]))] // swift `[Int]`
-		NSNumber[] Dimensions { get; }
+		[BindAs (typeof (nint []))] // swift `[Int]`
+		NSNumber [] Dimensions { get; }
 
 		[Static]
 		[Export ("layerWithDimensions:")]
 		[return: NullAllowed]
-		MLCTransposeLayer Create ([BindAs (typeof (nint[]))] NSNumber[] dimensions);
+		MLCTransposeLayer Create ([BindAs (typeof (nint []))] NSNumber [] dimensions);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCUpsampleLayer {
 
 		[Export ("shape", ArgumentSemantic.Copy)]
-		[BindAs (typeof (nint[]))] // swift `[Int]`
-		NSNumber[] Shape { get; }
+		[BindAs (typeof (nint []))] // swift `[Int]`
+		NSNumber [] Shape { get; }
 
 		[Export ("sampleMode")]
 		MLCSampleMode SampleMode { get; }
@@ -2005,17 +2163,19 @@ namespace MLCompute {
 		[Static]
 		[Export ("layerWithShape:")]
 		[return: NullAllowed]
-		MLCUpsampleLayer Create ([BindAs (typeof (nint[]))] NSNumber[] shape);
+		MLCUpsampleLayer Create ([BindAs (typeof (nint []))] NSNumber [] shape);
 
 		[Static]
 		[Export ("layerWithShape:sampleMode:alignsCorners:")]
 		[return: NullAllowed]
-		MLCUpsampleLayer Create ([BindAs (typeof (nint[]))] NSNumber[] shape, MLCSampleMode sampleMode, bool alignsCorners);
+		MLCUpsampleLayer Create ([BindAs (typeof (nint []))] NSNumber [] shape, MLCSampleMode sampleMode, bool alignsCorners);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
-	[BaseType (typeof (NSObject), Name ="MLCYOLOLossDescriptor")]
+	[BaseType (typeof (NSObject), Name = "MLCYOLOLossDescriptor")]
 	[DisableDefaultCtor]
 	interface MLCYoloLossDescriptor : NSCopying {
 
@@ -2054,9 +2214,11 @@ namespace MLCompute {
 		MLCYoloLossDescriptor Create (NSData anchorBoxes, nuint anchorBoxCount);
 	}
 
-	[iOS (14,0)][TV (14,0)][Mac (11,0)]
+	[iOS (14, 0)]
+	[TV (14, 0)]
+	[Mac (11, 0)]
 	[NoWatch]
-	[BaseType (typeof(MLCLossLayer), Name = "MLCYOLOLossLayer")]
+	[BaseType (typeof (MLCLossLayer), Name = "MLCYOLOLossLayer")]
 	[DisableDefaultCtor]
 	interface MLCYoloLossLayer {
 
@@ -2070,14 +2232,14 @@ namespace MLCompute {
 
 	delegate void MLCGraphCompletionHandler ([NullAllowed] MLCTensor resultTensor, [NullAllowed] NSError error, /* NSTimeInterval */ double executionTime);
 
-	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLCTensorOptimizerDeviceData : NSCopying {
 	}
 
-	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -2087,7 +2249,7 @@ namespace MLCompute {
 		MLCDevice Device { get; }
 
 		[Export ("layers")]
-		MLCLayer[] Layers { get; }
+		MLCLayer [] Layers { get; }
 
 		[Static]
 		[Export ("graph")]
@@ -2102,37 +2264,37 @@ namespace MLCompute {
 
 		[Export ("nodeWithLayer:sources:")]
 		[return: NullAllowed]
-		MLCTensor CreateNode (MLCLayer layer, MLCTensor[] sources);
+		MLCTensor CreateNode (MLCLayer layer, MLCTensor [] sources);
 
 		[Export ("nodeWithLayer:sources:disableUpdate:")]
 		[return: NullAllowed]
-		MLCTensor CreateNode (MLCLayer layer, MLCTensor[] sources, bool disableUpdate);
+		MLCTensor CreateNode (MLCLayer layer, MLCTensor [] sources, bool disableUpdate);
 
 		[Export ("nodeWithLayer:sources:lossLabels:")]
 		[return: NullAllowed]
-		MLCTensor CreateNode (MLCLayer layer, MLCTensor[] sources, MLCTensor[] lossLabels);
+		MLCTensor CreateNode (MLCLayer layer, MLCTensor [] sources, MLCTensor [] lossLabels);
 
 		[Export ("splitWithSource:splitCount:dimension:")]
 		[return: NullAllowed]
-		MLCTensor[] Split (MLCTensor source, nuint splitCount, nuint dimension);
+		MLCTensor [] Split (MLCTensor source, nuint splitCount, nuint dimension);
 
 		[Export ("splitWithSource:splitSectionLengths:dimension:")]
 		[return: NullAllowed]
-		MLCTensor[] Split (MLCTensor source, [BindAs (typeof (nuint[]))] NSNumber[] splitSectionLengths, nuint dimension);
+		MLCTensor [] Split (MLCTensor source, [BindAs (typeof (nuint []))] NSNumber [] splitSectionLengths, nuint dimension);
 
 		[Export ("concatenateWithSources:dimension:")]
 		[return: NullAllowed]
-		MLCTensor Concatenate (MLCTensor[] sources, nuint dimension);
+		MLCTensor Concatenate (MLCTensor [] sources, nuint dimension);
 
 		[Export ("reshapeWithShape:source:")]
 		[return: NullAllowed]
 		// swift `[Int]`
-		MLCTensor Reshape ([BindAs (typeof (nint[]))] NSNumber[] shape, MLCTensor source);
+		MLCTensor Reshape ([BindAs (typeof (nint []))] NSNumber [] shape, MLCTensor source);
 
 		[Export ("transposeWithDimensions:source:")]
 		[return: NullAllowed]
 		// swift `[Int]`
-		MLCTensor Transpose ([BindAs (typeof (nint[]))] NSNumber[] dimensions, MLCTensor source);
+		MLCTensor Transpose ([BindAs (typeof (nint []))] NSNumber [] dimensions, MLCTensor source);
 
 		[Export ("bindAndWriteData:forInputs:toDevice:batchSize:synchronous:")]
 		bool BindAndWrite (NSDictionary<NSString, MLCTensorData> inputsData, NSDictionary<NSString, MLCTensor> inputTensors, MLCDevice device, nuint batchSize, bool synchronous);
@@ -2141,28 +2303,34 @@ namespace MLCompute {
 		bool BindAndWrite (NSDictionary<NSString, MLCTensorData> inputsData, NSDictionary<NSString, MLCTensor> inputTensors, MLCDevice device, bool synchronous);
 
 		[Export ("sourceTensorsForLayer:")]
-		MLCTensor[] GetSourceTensors (MLCLayer layer);
+		MLCTensor [] GetSourceTensors (MLCLayer layer);
 
 		[Export ("resultTensorsForLayer:")]
-		MLCTensor[] GetResultTensors (MLCLayer layer);
+		MLCTensor [] GetResultTensors (MLCLayer layer);
 
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		[Export ("gatherWithDimension:source:indices:")]
 		[return: NullAllowed]
 		MLCTensor Gather (nuint dimension, MLCTensor source, MLCTensor indices);
 
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		[Export ("scatterWithDimension:source:indices:copyFrom:reductionType:")]
 		[return: NullAllowed]
 		MLCTensor Scatter (nuint dimension, MLCTensor source, MLCTensor indices, MLCTensor copyFrom, MLCReductionType reductionType);
 
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		[Export ("selectWithSources:condition:")]
 		[return: NullAllowed]
-		MLCTensor Select (MLCTensor[] sources, MLCTensor condition);
+		MLCTensor Select (MLCTensor [] sources, MLCTensor condition);
 	}
 
-	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCGraph))]
 	[DisableDefaultCtor]
@@ -2176,7 +2344,7 @@ namespace MLCompute {
 
 		[Static]
 		[Export ("graphWithGraphObjects:lossLayer:optimizer:")]
-		MLCTrainingGraph Create (MLCGraph[] graphObjects, [NullAllowed] MLCLayer lossLayer, [NullAllowed] MLCOptimizer optimizer);
+		MLCTrainingGraph Create (MLCGraph [] graphObjects, [NullAllowed] MLCLayer lossLayer, [NullAllowed] MLCOptimizer optimizer);
 
 		[Export ("addInputs:lossLabels:")]
 		bool AddInputs (NSDictionary<NSString, MLCTensor> inputs, [NullAllowed] NSDictionary<NSString, MLCTensor> lossLabels);
@@ -2188,12 +2356,14 @@ namespace MLCompute {
 		bool AddOutputs (NSDictionary<NSString, MLCTensor> outputs);
 
 		[Export ("stopGradientForTensors:")]
-		bool StopGradient (MLCTensor[] tensors);
+		bool StopGradient (MLCTensor [] tensors);
 
 		[Export ("compileWithOptions:device:")]
 		bool Compile (MLCGraphCompilationOptions options, MLCDevice device);
 
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		[Export ("compileWithOptions:device:inputTensors:inputTensorsData:")]
 		bool Compile (MLCGraphCompilationOptions options, MLCDevice device, [NullAllowed] NSDictionary<NSString, MLCTensor> inputTensors, [NullAllowed] NSDictionary<NSString, MLCTensorData> inputTensorsData);
 
@@ -2201,13 +2371,13 @@ namespace MLCompute {
 		bool Compile (MLCOptimizer optimizer);
 
 		[Export ("linkWithGraphs:")]
-		bool Link (MLCTrainingGraph[] graphs);
+		bool Link (MLCTrainingGraph [] graphs);
 
 		[Export ("sourceGradientTensorsForLayer:")]
-		MLCTensor[] GetSourceGradientTensors (MLCLayer layer);
+		MLCTensor [] GetSourceGradientTensors (MLCLayer layer);
 
 		[Export ("resultGradientTensorsForLayer:")]
-		MLCTensor[] GetResultGradientTensors (MLCLayer layer);
+		MLCTensor [] GetResultGradientTensors (MLCLayer layer);
 
 		[Export ("gradientDataForParameter:layer:")]
 		[return: NullAllowed]
@@ -2249,18 +2419,19 @@ namespace MLCompute {
 		void SynchronizeUpdates ();
 
 		[Export ("setTrainingTensorParameters:")]
-		bool SetTrainingTensorParameters (MLCTensorParameter[] parameters);
+		bool SetTrainingTensorParameters (MLCTensorParameter [] parameters);
 
 		[Export ("gradientTensorForInput:")]
 		[return: NullAllowed]
 		MLCTensor GetGradientTensor (MLCTensor input);
 
-		[iOS (14,2)][TV (14,2)]
+		[iOS (14, 2)]
+		[TV (14, 2)]
 		[Export ("bindOptimizerData:deviceData:withTensor:")]
-		bool BindOptimizer (MLCTensorData[] data, [NullAllowed] MLCTensorOptimizerDeviceData[] deviceData, MLCTensor tensor);
+		bool BindOptimizer (MLCTensorData [] data, [NullAllowed] MLCTensorOptimizerDeviceData [] deviceData, MLCTensor tensor);
 	}
 
-	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 	[NoWatch]
 	[BaseType (typeof (MLCGraph))]
 	[DisableDefaultCtor]
@@ -2271,7 +2442,7 @@ namespace MLCompute {
 
 		[Static]
 		[Export ("graphWithGraphObjects:")]
-		MLCInferenceGraph Create (MLCGraph[] graphObjects);
+		MLCInferenceGraph Create (MLCGraph [] graphObjects);
 
 		[Export ("addInputs:")]
 		bool AddInputs (NSDictionary<NSString, MLCTensor> inputs);
@@ -2285,12 +2456,14 @@ namespace MLCompute {
 		[Export ("compileWithOptions:device:")]
 		bool Compile (MLCGraphCompilationOptions options, MLCDevice device);
 
-		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
 		[Export ("compileWithOptions:device:inputTensors:inputTensorsData:")]
 		bool Compile (MLCGraphCompilationOptions options, MLCDevice device, [NullAllowed] NSDictionary<NSString, MLCTensor> inputTensors, [NullAllowed] NSDictionary<NSString, MLCTensorData> inputTensorsData);
 
 		[Export ("linkWithGraphs:")]
-		bool Link (MLCInferenceGraph[] graphs);
+		bool Link (MLCInferenceGraph [] graphs);
 
 		[Async (ResultTypeName = "MLCGraphCompletionResult")]
 		[Export ("executeWithInputsData:batchSize:options:completionHandler:")]
@@ -2309,7 +2482,9 @@ namespace MLCompute {
 		bool Execute (NSDictionary<NSString, MLCTensorData> inputsData, [NullAllowed] NSDictionary<NSString, MLCTensorData> lossLabelsData, [NullAllowed] NSDictionary<NSString, MLCTensorData> lossLabelWeightsData, [NullAllowed] NSDictionary<NSString, MLCTensorData> outputsData, nuint batchSize, MLCExecutionOptions options, [NullAllowed] MLCGraphCompletionHandler completionHandler);
 	}
 
-	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[TV (14, 5)]
+	[Mac (11, 3)]
+	[iOS (14, 5)]
 	enum MLCComparisonOperation {
 		Equal = 0,
 		NotEqual = 1,
@@ -2325,7 +2500,9 @@ namespace MLCompute {
 		LogicalXor = 11,
 	}
 
-	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[TV (14, 5)]
+	[Mac (11, 3)]
+	[iOS (14, 5)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCComparisonLayer {
@@ -2338,7 +2515,9 @@ namespace MLCompute {
 		MLCComparisonLayer Create (MLCComparisonOperation operation);
 	}
 
-	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[TV (14, 5)]
+	[Mac (11, 3)]
+	[iOS (14, 5)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCGatherLayer {
@@ -2351,7 +2530,9 @@ namespace MLCompute {
 		MLCGatherLayer Create (nuint dimension);
 	}
 
-	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[TV (14, 5)]
+	[Mac (11, 3)]
+	[iOS (14, 5)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCScatterLayer {
@@ -2368,7 +2549,9 @@ namespace MLCompute {
 		MLCScatterLayer Create (nuint dimension, MLCReductionType reductionType);
 	}
 
-	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[TV (14, 5)]
+	[Mac (11, 3)]
+	[iOS (14, 5)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCSelectionLayer {
@@ -2378,11 +2561,11 @@ namespace MLCompute {
 		MLCSelectionLayer Create ();
 	}
 
-	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLCPlatform {
-		
+
 		[Static]
 		[Export ("setRNGSeedTo:")]
 		void SetRngSeed ([BindAs (typeof (nuint))] NSNumber seed);
@@ -2393,11 +2576,10 @@ namespace MLCompute {
 		NSNumber GetRngSeed ();
 	}
 
-	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (MLCOptimizer))]
 	[DisableDefaultCtor]
-	interface MLCAdamWOptimizer : NSCopying
-	{
+	interface MLCAdamWOptimizer : NSCopying {
 		[Export ("beta1")]
 		float Beta1 { get; }
 

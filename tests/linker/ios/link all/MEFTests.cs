@@ -11,20 +11,17 @@ using NUnit.Framework;
 namespace LinkAll.Mef {
 
 	// From Desk Case 70807
-	public interface IStorageType
-	{
+	public interface IStorageType {
 	}
 
-	[System.ComponentModel.Composition.Export(typeof (IStorageType))]
+	[System.ComponentModel.Composition.Export (typeof (IStorageType))]
 	[Preserve (AllMembers = true)]
-	public class Storage : IStorageType
-	{
+	public class Storage : IStorageType {
 	}
 
 	[Preserve (AllMembers = true)]
 	[TestFixture]
-	public class MEFTests
-	{
+	public class MEFTests {
 		CompositionContainer _container;
 
 		[ImportMany]

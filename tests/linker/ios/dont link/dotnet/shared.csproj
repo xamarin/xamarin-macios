@@ -34,6 +34,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="$(RootTestsDirectory)\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
     <Compile Include="$(ThisTestDirectory)\DontLinkRegressionTests.cs" />
     <Compile Include="$(ThisTestDirectory)\TableViewSourceTest.cs" />
     <Compile Include="$(ThisTestDirectory)\CalendarTest.cs" />
