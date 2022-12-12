@@ -1445,9 +1445,6 @@ namespace Xamarin.Bundler {
 			bool need_libcpp = false;
 			if (App.EnableBitCode)
 				need_libcpp = true;
-#if ENABLE_BITCODE_ON_IOS
-			need_libcpp = true;
-#endif
 			if (need_libcpp)
 				linker_flags.AddOtherFlag ("-lc++");
 

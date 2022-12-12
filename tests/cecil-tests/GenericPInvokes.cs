@@ -6,6 +6,7 @@ using System.Text;
 using NUnit.Framework;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using Xamarin.Utils;
 
 #nullable enable
 
@@ -148,7 +149,7 @@ namespace Cecil.Tests {
 		IEnumerable<MethodDefinition> AllSetupBlocks (AssemblyDefinition assembly)
 		{
 			return assembly.EnumerateMethods (method => {
-				if (method.Body is null)
+				if (!method.HasBody)
 					return false;
 				return method.Body.Instructions.Any (IsCallToSetupBlockUnsafe);
 			});
@@ -156,8 +157,29 @@ namespace Cecil.Tests {
 
 		static bool IsCallToSetupBlockUnsafe (Instruction instr)
 		{
-			return IsCall (instr) && instr.Operand is not null &&
-				instr.Operand.ToString () == "System.Void ObjCRuntime.BlockLiteral::SetupBlockUnsafe(System.Delegate,System.Delegate)";
+			if (!IsCall (instr))
+				return false;
+
+			var operand = instr.Operand;
+			if (!(operand is MethodReference mr))
+				return false;
+
+			if (!mr.DeclaringType.Is ("ObjCRuntime", "BlockLiteral"))
+				return false;
+
+			if (mr.Name != "SetupBlockUnsafe")
+				return false;
+
+			if (!mr.ReturnType.Is ("System", "Void"))
+				return false;
+
+			if (!mr.HasParameters || mr.Parameters.Count != 2)
+				return false;
+
+			if (!mr.Parameters [0].ParameterType.Is ("System", "Delegate") || !mr.Parameters [1].ParameterType.Is ("System", "Delegate"))
+				return false;
+
+			return true;
 		}
 
 		static bool IsCall (Instruction instr)
