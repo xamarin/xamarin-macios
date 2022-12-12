@@ -4282,4 +4282,152 @@ namespace UIKit {
 		[Field ("NSOpenDocumentTextDocumentType")]
 		NSString NSOpenDocumentTextDocumentType { get; }
 	}
+
+	[Static]
+	[Internal]
+	interface NSAttributedStringDocumentAttributeKey {
+		[Field ("NSDocumentTypeDocumentAttribute")]
+		NSString NSDocumentTypeDocumentAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSConvertedDocumentAttribute")]
+		NSString NSConvertedDocumentAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSFileTypeDocumentAttribute")]
+		NSString NSFileTypeDocumentAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSTitleDocumentAttribute")]
+		NSString NSTitleDocumentAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSCompanyDocumentAttribute")]
+		NSString NSCompanyDocumentAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSCopyrightDocumentAttribute")]
+		NSString NSCopyrightDocumentAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSSubjectDocumentAttribute")]
+		NSString NSSubjectDocumentAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSAuthorDocumentAttribute")]
+		NSString NSAuthorDocumentAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSKeywordsDocumentAttribute")]
+		NSString NSKeywordsDocumentAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSCommentDocumentAttribute")]
+		NSString NSCommentDocumentAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSEditorDocumentAttribute")]
+		NSString NSEditorDocumentAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSCreationTimeDocumentAttribute")]
+		NSString NSCreationTimeDocumentAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSModificationTimeDocumentAttribute")]
+		NSString NSModificationTimeDocumentAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSManagerDocumentAttribute")]
+		NSString NSManagerDocumentAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSCategoryDocumentAttribute")]
+		NSString NSCategoryDocumentAttribute { get; }
+
+		[Mac (10, 14)]
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSAppearanceDocumentAttribute")]
+		NSString NSAppearanceDocumentAttribute { get; }
+
+		[Field ("NSCharacterEncodingDocumentAttribute")]
+		NSString NSCharacterEncodingDocumentAttribute { get; }
+
+		[Field ("NSDefaultAttributesDocumentAttribute")]
+		NSString NSDefaultAttributesDocumentAttribute { get; }
+
+		[Field ("NSPaperSizeDocumentAttribute")]
+		NSString NSPaperSizeDocumentAttribute { get; }
+
+		[NoMac]
+		[Field ("NSPaperMarginDocumentAttribute")]
+		NSString NSPaperMarginDocumentAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSLeftMarginDocumentAttribute")]
+		NSString NSLeftMarginDocumentAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSRightMarginDocumentAttribute")]
+		NSString NSRightMarginDocumentAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSTopMarginDocumentAttribute")]
+		NSString NSTopMarginDocumentAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSBottomMarginDocumentAttribute")]
+		NSString NSBottomMarginDocumentAttribute { get; }
+
+		[Field ("NSViewSizeDocumentAttribute")]
+		NSString NSViewSizeDocumentAttribute { get; }
+
+		[Field ("NSViewZoomDocumentAttribute")]
+		NSString NSViewZoomDocumentAttribute { get; }
+
+		[Field ("NSViewModeDocumentAttribute")]
+		NSString NSViewModeDocumentAttribute { get; }
+
+		[Field ("NSReadOnlyDocumentAttribute")]
+		NSString NSReadOnlyDocumentAttribute { get; }
+
+		[Field ("NSBackgroundColorDocumentAttribute")]
+		NSString NSBackgroundColorDocumentAttribute { get; }
+
+		[Field ("NSHyphenationFactorDocumentAttribute")]
+		NSString NSHyphenationFactorDocumentAttribute { get; }
+
+		[Field ("NSDefaultTabIntervalDocumentAttribute")]
+		NSString NSDefaultTabIntervalDocumentAttribute { get; }
+
+		[Field ("NSTextLayoutSectionsAttribute")]
+		NSString TextLayoutSectionsAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSExcludedElementsDocumentAttribute")]
+		NSString NSExcludedElementsDocumentAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSTextEncodingNameDocumentAttribute")]
+		NSString NSTextEncodingNameDocumentAttribute { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Field ("NSPrefixSpacesDocumentAttribute")]
+		NSString NSPrefixSpacesDocumentAttribute { get; }
+
+		[Field ("NSTextScalingDocumentAttribute")]
+		[Mac (10, 15)]
+		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
+		NSString TextScalingDocumentAttribute { get; }
+
+		[Field ("NSSourceTextScalingDocumentAttribute")]
+		[Mac (10, 15)]
+		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
+		NSString SourceTextScalingDocumentAttribute { get; }
+
+		[Field ("NSCocoaVersionDocumentAttribute")]
+		[Mac (10, 15)]
+		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
+		NSString CocoaVersionDocumentAttribute { get; }
+	}
 }

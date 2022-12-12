@@ -46,29 +46,29 @@ namespace Foundation {
 
 		public NSStringEncoding? StringEncoding {
 			get {
-				var value = GetInt32Value (UIStringAttributeKey.NSCharacterEncodingDocumentAttribute);
+				var value = GetInt32Value (NSAttributedStringDocumentAttributeKey.NSCharacterEncodingDocumentAttribute);
 				if (value is null)
 					return null;
 				else
 					return (NSStringEncoding) value.Value;
 			}
 			set {
-				SetNumberValue (UIStringAttributeKey.NSCharacterEncodingDocumentAttribute, (int?) value);
+				SetNumberValue (NSAttributedStringDocumentAttributeKey.NSCharacterEncodingDocumentAttribute, (int?) value);
 			}
 		}
 
 		public NSString? WeakDocumentType {
 			get {
-				return GetNSStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute);
+				return GetNSStringValue (NSAttributedStringDocumentAttributeKey.NSDocumentTypeDocumentAttribute);
 			}
 			set {
-				SetStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute, value);
+				SetStringValue (NSAttributedStringDocumentAttributeKey.NSDocumentTypeDocumentAttribute, value);
 			}
 		}
 
 		public NSDocumentType DocumentType {
 			get {
-				var s = GetNSStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute);
+				var s = GetNSStringValue (NSAttributedStringDocumentAttributeKey.NSDocumentTypeDocumentAttribute);
 				if (s == NSAttributedStringDocumentType.NSPlainTextDocumentType)
 					return NSDocumentType.PlainText;
 				if (s == NSAttributedStringDocumentType.NSRtfdTextDocumentType)
@@ -83,16 +83,16 @@ namespace Foundation {
 			set {
 				switch (value) {
 				case NSDocumentType.PlainText:
-					SetStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute, NSAttributedStringDocumentType.NSPlainTextDocumentType);
+					SetStringValue (NSAttributedStringDocumentAttributeKey.NSDocumentTypeDocumentAttribute, NSAttributedStringDocumentType.NSPlainTextDocumentType);
 					break;
 				case NSDocumentType.RTFD:
-					SetStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute, NSAttributedStringDocumentType.NSRtfdTextDocumentType);
+					SetStringValue (NSAttributedStringDocumentAttributeKey.NSDocumentTypeDocumentAttribute, NSAttributedStringDocumentType.NSRtfdTextDocumentType);
 					break;
 				case NSDocumentType.RTF:
-					SetStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute, NSAttributedStringDocumentType.NSRtfTextDocumentType);
+					SetStringValue (NSAttributedStringDocumentAttributeKey.NSDocumentTypeDocumentAttribute, NSAttributedStringDocumentType.NSRtfTextDocumentType);
 					break;
 				case NSDocumentType.HTML:
-					SetStringValue (UIStringAttributeKey.NSDocumentTypeDocumentAttribute, NSAttributedStringDocumentType.NSHtmlTextDocumentType);
+					SetStringValue (NSAttributedStringDocumentAttributeKey.NSDocumentTypeDocumentAttribute, NSAttributedStringDocumentType.NSHtmlTextDocumentType);
 					break;
 				}
 			}
@@ -101,7 +101,7 @@ namespace Foundation {
 		public CGSize? PaperSize {
 			get {
 				NSObject value;
-				Dictionary.TryGetValue (UIStringAttributeKey.NSPaperSizeDocumentAttribute, out value);
+				Dictionary.TryGetValue (NSAttributedStringDocumentAttributeKey.NSPaperSizeDocumentAttribute, out value);
 				var size = value as NSValue;
 				if (size != null)
 					return size.CGSizeValue;
@@ -109,16 +109,16 @@ namespace Foundation {
 			}
 			set {
 				if (value is null)
-					RemoveValue (UIStringAttributeKey.NSPaperSizeDocumentAttribute);
+					RemoveValue (NSAttributedStringDocumentAttributeKey.NSPaperSizeDocumentAttribute);
 				else
-					Dictionary [UIStringAttributeKey.NSPaperSizeDocumentAttribute] = NSValue.FromCGSize (value.Value);
+					Dictionary [NSAttributedStringDocumentAttributeKey.NSPaperSizeDocumentAttribute] = NSValue.FromCGSize (value.Value);
 			}
 		}
 
 		public UIEdgeInsets? PaperMargin {
 			get {
 				NSObject value;
-				Dictionary.TryGetValue (UIStringAttributeKey.NSPaperMarginDocumentAttribute, out value);
+				Dictionary.TryGetValue (NSAttributedStringDocumentAttributeKey.NSPaperMarginDocumentAttribute, out value);
 				var size = value as NSValue;
 				if (size != null)
 					return size.UIEdgeInsetsValue;
@@ -126,16 +126,16 @@ namespace Foundation {
 			}
 			set {
 				if (value is null)
-					RemoveValue (UIStringAttributeKey.NSPaperMarginDocumentAttribute);
+					RemoveValue (NSAttributedStringDocumentAttributeKey.NSPaperMarginDocumentAttribute);
 				else
-					Dictionary [UIStringAttributeKey.NSPaperMarginDocumentAttribute] = NSValue.FromUIEdgeInsets (value.Value);
+					Dictionary [NSAttributedStringDocumentAttributeKey.NSPaperMarginDocumentAttribute] = NSValue.FromUIEdgeInsets (value.Value);
 			}
 		}
 
 		public CGSize? ViewSize {
 			get {
 				NSObject value;
-				Dictionary.TryGetValue (UIStringAttributeKey.NSViewSizeDocumentAttribute, out value);
+				Dictionary.TryGetValue (NSAttributedStringDocumentAttributeKey.NSViewSizeDocumentAttribute, out value);
 				var size = value as NSValue;
 				if (size != null)
 					return size.CGSizeValue;
@@ -143,27 +143,27 @@ namespace Foundation {
 			}
 			set {
 				if (value is null)
-					RemoveValue (UIStringAttributeKey.NSViewSizeDocumentAttribute);
+					RemoveValue (NSAttributedStringDocumentAttributeKey.NSViewSizeDocumentAttribute);
 				else
-					Dictionary [UIStringAttributeKey.NSViewSizeDocumentAttribute] = NSValue.FromCGSize (value.Value);
+					Dictionary [NSAttributedStringDocumentAttributeKey.NSViewSizeDocumentAttribute] = NSValue.FromCGSize (value.Value);
 			}
 		}
 
 		public float? ViewZoom {
 			get {
-				return GetFloatValue (UIStringAttributeKey.NSViewZoomDocumentAttribute);
+				return GetFloatValue (NSAttributedStringDocumentAttributeKey.NSViewZoomDocumentAttribute);
 			}
 			set {
 				if (value is null)
-					RemoveValue (UIStringAttributeKey.NSViewZoomDocumentAttribute);
+					RemoveValue (NSAttributedStringDocumentAttributeKey.NSViewZoomDocumentAttribute);
 				else
-					SetNumberValue (UIStringAttributeKey.NSViewZoomDocumentAttribute, value);
+					SetNumberValue (NSAttributedStringDocumentAttributeKey.NSViewZoomDocumentAttribute, value);
 			}
 		}
 
 		public NSDocumentViewMode? ViewMode {
 			get {
-				var value = GetInt32Value (UIStringAttributeKey.NSViewModeDocumentAttribute);
+				var value = GetInt32Value (NSAttributedStringDocumentAttributeKey.NSViewModeDocumentAttribute);
 				if (value is null)
 					return null;
 				else
@@ -171,64 +171,64 @@ namespace Foundation {
 			}
 			set {
 				if (value is null)
-					RemoveValue (UIStringAttributeKey.NSViewModeDocumentAttribute);
+					RemoveValue (NSAttributedStringDocumentAttributeKey.NSViewModeDocumentAttribute);
 				else
-					SetNumberValue (UIStringAttributeKey.NSViewModeDocumentAttribute, (int) value.Value);
+					SetNumberValue (NSAttributedStringDocumentAttributeKey.NSViewModeDocumentAttribute, (int) value.Value);
 			}
 		}
 
 		public bool ReadOnly {
 			get {
-				var value = GetInt32Value (UIStringAttributeKey.NSReadOnlyDocumentAttribute);
+				var value = GetInt32Value (NSAttributedStringDocumentAttributeKey.NSReadOnlyDocumentAttribute);
 				if (value is null || value.Value <= 0)
 					return false;
 				return true;
 			}
 			set {
-				SetNumberValue (UIStringAttributeKey.NSReadOnlyDocumentAttribute, value ? 1 : 0);
+				SetNumberValue (NSAttributedStringDocumentAttributeKey.NSReadOnlyDocumentAttribute, value ? 1 : 0);
 			}
 		}
 
 		public UIColor? BackgroundColor {
 			get {
 				NSObject? value;
-				Dictionary.TryGetValue (UIStringAttributeKey.NSBackgroundColorDocumentAttribute, out value);
+				Dictionary.TryGetValue (NSAttributedStringDocumentAttributeKey.NSBackgroundColorDocumentAttribute, out value);
 				return value as UIColor;
 			}
 			set {
 				if (value is null)
-					RemoveValue (UIStringAttributeKey.NSBackgroundColorDocumentAttribute);
+					RemoveValue (NSAttributedStringDocumentAttributeKey.NSBackgroundColorDocumentAttribute);
 				else
-					Dictionary [UIStringAttributeKey.NSBackgroundColorDocumentAttribute] = value;
+					Dictionary [NSAttributedStringDocumentAttributeKey.NSBackgroundColorDocumentAttribute] = value;
 			}
 		}
 
 		public float? HyphenationFactor {
 			get {
-				return GetFloatValue (UIStringAttributeKey.NSHyphenationFactorDocumentAttribute);
+				return GetFloatValue (NSAttributedStringDocumentAttributeKey.NSHyphenationFactorDocumentAttribute);
 			}
 			set {
 				if (value is null)
-					RemoveValue (UIStringAttributeKey.NSHyphenationFactorDocumentAttribute);
+					RemoveValue (NSAttributedStringDocumentAttributeKey.NSHyphenationFactorDocumentAttribute);
 				else {
 					if (value < 0 || value > 1.0f)
 						throw new ArgumentException ("value must be between 0 and 1");
-					SetNumberValue (UIStringAttributeKey.NSHyphenationFactorDocumentAttribute, value);
+					SetNumberValue (NSAttributedStringDocumentAttributeKey.NSHyphenationFactorDocumentAttribute, value);
 				}
 			}
 		}
 
 		public float? DefaultTabInterval {
 			get {
-				return GetFloatValue (UIStringAttributeKey.NSDefaultTabIntervalDocumentAttribute);
+				return GetFloatValue (NSAttributedStringDocumentAttributeKey.NSDefaultTabIntervalDocumentAttribute);
 			}
 			set {
 				if (value is null)
-					RemoveValue (UIStringAttributeKey.NSDefaultTabIntervalDocumentAttribute);
+					RemoveValue (NSAttributedStringDocumentAttributeKey.NSDefaultTabIntervalDocumentAttribute);
 				else {
 					if (value < 0 || value > 1.0f)
 						throw new ArgumentException ("value must be between 0 and 1");
-					SetNumberValue (UIStringAttributeKey.NSDefaultTabIntervalDocumentAttribute, value);
+					SetNumberValue (NSAttributedStringDocumentAttributeKey.NSDefaultTabIntervalDocumentAttribute, value);
 				}
 			}
 		}
@@ -236,14 +236,14 @@ namespace Foundation {
 		public NSDictionary? WeakDefaultAttributes {
 			get {
 				NSObject? value;
-				Dictionary.TryGetValue (UIStringAttributeKey.NSDefaultAttributesDocumentAttribute, out value);
+				Dictionary.TryGetValue (NSAttributedStringDocumentAttributeKey.NSDefaultAttributesDocumentAttribute, out value);
 				return value as NSDictionary;
 			}
 			set {
 				if (value is null)
-					RemoveValue (UIStringAttributeKey.NSDefaultAttributesDocumentAttribute);
+					RemoveValue (NSAttributedStringDocumentAttributeKey.NSDefaultAttributesDocumentAttribute);
 				else
-					Dictionary [UIStringAttributeKey.NSDefaultAttributesDocumentAttribute] = value;
+					Dictionary [NSAttributedStringDocumentAttributeKey.NSDefaultAttributesDocumentAttribute] = value;
 			}
 		}
 #endif

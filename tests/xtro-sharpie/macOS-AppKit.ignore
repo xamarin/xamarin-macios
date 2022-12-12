@@ -143,40 +143,8 @@
 !incorrect-protocol-member! NSUserInterfaceItemIdentification::setIdentifier: is REQUIRED and should be abstract
 !missing-enum! NSWritingDirectionFormatType not bound
 !missing-enum-native! NSSpellingState
-!missing-field! NSAuthorDocumentAttribute not bound
-!missing-field! NSBackgroundColorDocumentAttribute not bound
-!missing-field! NSBottomMarginDocumentAttribute not bound
-!missing-field! NSCategoryDocumentAttribute not bound
-!missing-field! NSAppearanceDocumentAttribute not bound
-!missing-field! NSCharacterEncodingDocumentAttribute not bound
-!missing-field! NSCommentDocumentAttribute not bound
-!missing-field! NSCompanyDocumentAttribute not bound
-!missing-field! NSConvertedDocumentAttribute not bound
-!missing-field! NSCopyrightDocumentAttribute not bound
-!missing-field! NSCreationTimeDocumentAttribute not bound
-!missing-field! NSDefaultTabIntervalDocumentAttribute not bound
-!missing-field! NSDocumentTypeDocumentAttribute not bound
-!missing-field! NSEditorDocumentAttribute not bound
-!missing-field! NSExcludedElementsDocumentAttribute not bound
-!missing-field! NSFileTypeDocumentAttribute not bound
-!missing-field! NSHyphenationFactorDocumentAttribute not bound
-!missing-field! NSKeywordsDocumentAttribute not bound
-!missing-field! NSLeftMarginDocumentAttribute not bound
-!missing-field! NSManagerDocumentAttribute not bound
-!missing-field! NSModificationTimeDocumentAttribute not bound
-!missing-field! NSPaperSizeDocumentAttribute not bound
-!missing-field! NSPrefixSpacesDocumentAttribute not bound
-!missing-field! NSReadOnlyDocumentAttribute not bound
-!missing-field! NSRightMarginDocumentAttribute not bound
-!missing-field! NSSubjectDocumentAttribute not bound
 !missing-field! NSTextEffectLetterpressStyle not bound
-!missing-field! NSTextEncodingNameDocumentAttribute not bound
-!missing-field! NSTitleDocumentAttribute not bound
-!missing-field! NSTopMarginDocumentAttribute not bound
 !missing-field! NSUserActivityDocumentURLKey not bound
-!missing-field! NSViewModeDocumentAttribute not bound
-!missing-field! NSViewSizeDocumentAttribute not bound
-!missing-field! NSViewZoomDocumentAttribute not bound
 !missing-protocol! NSGlyphStorage not bound
 !missing-protocol-conformance! NSCollectionViewItem should conform to NSCollectionViewElement
 !missing-protocol-conformance! NSColorPicker should conform to NSColorPickingDefault

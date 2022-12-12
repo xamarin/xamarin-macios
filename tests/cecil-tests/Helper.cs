@@ -169,7 +169,8 @@ namespace Cecil.Tests {
 
 				if (Configuration.include_ios) {
 					// we want to process 32/64 bits individually since their content can differ
-					yield return Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "iOS", "Xamarin.iOS.dll");
+					if (Configuration.iOSSupports32BitArchitectures)
+						yield return Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "iOS", "Xamarin.iOS.dll");
 					yield return Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "64bits", "iOS", "Xamarin.iOS.dll");
 				}
 
