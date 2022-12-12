@@ -194,25 +194,25 @@ namespace Foundation
 			get {
 				var s = GetNSStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption);
 
-				if (s == NSStringAttributeKey.NSPlainTextDocumentType)
+				if (s == NSAttributedStringDocumentType.NSPlainTextDocumentType)
 					return NSDocumentType.PlainText;
-				if (s == NSStringAttributeKey.NSRtfTextDocumentType)
+				if (s == NSAttributedStringDocumentType.NSRtfTextDocumentType)
 					return NSDocumentType.RTF;
-				if (s == NSStringAttributeKey.NSRtfdTextDocumentType)
+				if (s == NSAttributedStringDocumentType.NSRtfdTextDocumentType)
 					return NSDocumentType.RTFD;
-				if (s == NSStringAttributeKey.NSMacSimpleTextDocumentType)
+				if (s == NSAttributedStringDocumentType.NSMacSimpleTextDocumentType)
 					return NSDocumentType.MacSimpleText;
-				if (s == NSStringAttributeKey.NSHTMLTextDocumentType)
+				if (s == NSAttributedStringDocumentType.NSHtmlTextDocumentType)
 					return NSDocumentType.HTML;
-				if (s == NSStringAttributeKey.NSDocFormatTextDocumentType)
+				if (s == NSAttributedStringDocumentType.NSDocFormatTextDocumentType)
 					return NSDocumentType.DocFormat;
-				if (s == NSStringAttributeKey.NSWordMLTextDocumentType)
+				if (s == NSAttributedStringDocumentType.NSWordMLTextDocumentType)
 					return NSDocumentType.WordML;
-				if (s == NSStringAttributeKey.NSWebArchiveTextDocumentType)
+				if (s == NSAttributedStringDocumentType.NSWebArchiveTextDocumentType)
 					return NSDocumentType.WebArchive;
-				if (s == NSStringAttributeKey.NSOfficeOpenXMLTextDocumentType)
+				if (s == NSAttributedStringDocumentType.NSOfficeOpenXMLTextDocumentType)
 					return NSDocumentType.OfficeOpenXml;
-				if (s == NSStringAttributeKey.NSOpenDocumentTextDocumentType)
+				if (s == NSAttributedStringDocumentType.NSOpenDocumentTextDocumentType)
 					return NSDocumentType.OpenDocument;
 				return NSDocumentType.Unknown;
 			}
@@ -220,34 +220,34 @@ namespace Foundation
 			set {
 				switch (value){
 				case NSDocumentType.PlainText:
-					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSStringAttributeKey.NSPlainTextDocumentType);
+					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSAttributedStringDocumentType.NSPlainTextDocumentType);
 					break;
 				case NSDocumentType.RTFD:
-					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSStringAttributeKey.NSRtfdTextDocumentType);
+					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSAttributedStringDocumentType.NSRtfdTextDocumentType);
 					break;
 				case NSDocumentType.RTF:
-					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSStringAttributeKey.NSRtfTextDocumentType);
+					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSAttributedStringDocumentType.NSRtfTextDocumentType);
 					break;
 				case NSDocumentType.HTML:
-					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSStringAttributeKey.NSHTMLTextDocumentType);
+					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSAttributedStringDocumentType.NSHtmlTextDocumentType);
 					break;
 				case NSDocumentType.MacSimpleText:
-					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSStringAttributeKey.NSMacSimpleTextDocumentType);
+					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSAttributedStringDocumentType.NSMacSimpleTextDocumentType);
 					break;
 				case NSDocumentType.DocFormat:
-					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSStringAttributeKey.NSDocFormatTextDocumentType);
+					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSAttributedStringDocumentType.NSDocFormatTextDocumentType);
 					break;
 				case NSDocumentType.WordML:
-					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSStringAttributeKey.NSWordMLTextDocumentType);
+					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSAttributedStringDocumentType.NSWordMLTextDocumentType);
 					break;
 				case NSDocumentType.WebArchive:
-					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSStringAttributeKey.NSWebArchiveTextDocumentType);
+					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSAttributedStringDocumentType.NSWebArchiveTextDocumentType);
 					break;
 				case NSDocumentType.OfficeOpenXml:
-					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSStringAttributeKey.NSOfficeOpenXMLTextDocumentType);
+					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSAttributedStringDocumentType.NSOfficeOpenXMLTextDocumentType);
 					break;
 				case NSDocumentType.OpenDocument:
-					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSStringAttributeKey.NSOpenDocumentTextDocumentType);
+					SetStringValue (NSStringAttributeKey.NSDocumentTypeDocumentOption, NSAttributedStringDocumentType.NSOpenDocumentTextDocumentType);
 					break;
 				}
 			}

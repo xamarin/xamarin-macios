@@ -1641,12 +1641,19 @@ project-files: $(PROJECT_FILES)
 $(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	@$(MAKE) -C $(TOP)/tools/mtouch ../common/SdkVersions.cs
 
+COMMA=,
 MinimumVersions.cs: MinimumVersions.cs.in Makefile $(TOP)/Make.config
 	$(Q_GEN) sed \
 		-e 's/@DOTNET_MIN_IOS_SDK_VERSION@/$(DOTNET_MIN_IOS_SDK_VERSION)/g' \
 		-e 's/@DOTNET_MIN_TVOS_SDK_VERSION@/$(DOTNET_MIN_TVOS_SDK_VERSION)/' \
 		-e 's/@DOTNET_MIN_MACOS_SDK_VERSION@/$(DOTNET_MIN_MACOS_SDK_VERSION)/' \
 		-e 's/@DOTNET_MIN_MACCATALYST_SDK_VERSION@/$(DOTNET_MIN_MACCATALYST_SDK_VERSION)/g' \
+		\
+		-e 's/@MIN_IOS_SDK_VERSION@/$(subst .,$(COMMA) ,$(MIN_IOS_SDK_VERSION))/g' \
+		-e 's/@MIN_MACOS_SDK_VERSION@/$(subst .,$(COMMA) ,$(MIN_MACOS_SDK_VERSION))/g' \
+		-e 's/@MIN_WATCHOS_SDK_VERSION@/$(subst .,$(COMMA) ,$(MIN_WATCHOS_SDK_VERSION))/g' \
+		-e 's/@MIN_TVOS_SDK_VERSION@/$(subst .,$(COMMA) ,$(MIN_TVOS_SDK_VERSION))/g' \
+		-e 's/@MIN_MACCATALYST_SDK_VERSION@/$(subst .,$(COMMA) ,$(MIN_MACCATALYST_SDK_VERSION))/g' \
 		$< > $@
 
 # Using .SECONDARY can cause make to go into an infinite loop.

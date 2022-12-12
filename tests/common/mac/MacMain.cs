@@ -10,6 +10,8 @@ namespace Xamarin.Mac.Tests {
 	static class MainClass {
 		static async Task<int> Main (string [] args)
 		{
+			TestRuntime.NotifyLaunchCompleted ();
+
 			// Skip arguments added by VSfM/macOS when running from the IDE
 			var arguments = new List<string> (args);
 			arguments.RemoveAll ((arg) => arg.StartsWith ("-psn_", StringComparison.Ordinal));

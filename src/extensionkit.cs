@@ -20,7 +20,7 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace ExtensionKit {
-	[Mac (13,0), NoiOS, NoMacCatalyst, NoWatch, NoTV]
+	[Mac (13, 0), NoiOS, NoMacCatalyst, NoWatch, NoTV]
 	[BaseType (typeof (UIViewController))]
 	interface EXAppExtensionBrowserViewController {
 		[DesignatedInitializer]
@@ -30,7 +30,7 @@ namespace ExtensionKit {
 
 	interface IEXHostViewControllerDelegate { }
 
-	[Mac (13,0), NoiOS, NoMacCatalyst, NoWatch, NoTV]
+	[Mac (13, 0), NoiOS, NoMacCatalyst, NoWatch, NoTV]
 #if NET
 	[Protocol, Model]
 #else
@@ -49,10 +49,9 @@ namespace ExtensionKit {
 	}
 
 	// @interface EXHostViewController : NSViewController
-	[Mac (13,0), NoiOS, NoMacCatalyst, NoWatch, NoTV]
-	[BaseType (typeof(UIViewController))]
-	interface EXHostViewController
-	{
+	[Mac (13, 0), NoiOS, NoMacCatalyst, NoWatch, NoTV]
+	[BaseType (typeof (UIViewController))]
+	interface EXHostViewController {
 		[DesignatedInitializer]
 		[Export ("initWithNibName:bundle:")]
 		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);

@@ -70,8 +70,10 @@ namespace Xamarin.Linker {
 				foreach (var ins in body.Instructions) {
 					switch (ins.OpCode.OperandType) {
 					case OperandType.InlineField:
-						var field = (ins.Operand as FieldReference)?.Resolve ();
-						if (!context.Annotations.IsMarked (field)) {
+						var fr = ins.Operand as FieldReference;
+						var field = fr?.Resolve ();
+						var isMarked = field is not null && context.Annotations.IsMarked (field);
+						if (!isMarked) {
 							var store_field = ins;
 							var load_null = ins.Previous;
 							var load_this = ins.Previous.Previous;
