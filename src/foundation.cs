@@ -11838,7 +11838,6 @@ namespace Foundation {
 
 		[Mac (10, 0)]
 		[MacCatalyst (15, 0)]
-		x
 #if MONOMAC
 		[Export ("pointValue")]
 #else
