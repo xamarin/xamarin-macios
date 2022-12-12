@@ -108,7 +108,7 @@ namespace PushKit {
 		void DidReceiveIncomingPush (PKPushRegistry registry, PKPushPayload payload, string type);
 
 		[iOS (11, 0)]
-		[MacCatalyst (10, 13)]
+		[MacCatalyst (13, 0)]
 		[Export ("pushRegistry:didReceiveIncomingPushWithPayload:forType:withCompletionHandler:")]
 		void DidReceiveIncomingPush (PKPushRegistry registry, PKPushPayload payload, string type, Action completion);
 
