@@ -46,6 +46,7 @@ namespace Xamarin.Tests {
 		public static bool include_device;
 		public static bool include_dotnet;
 		public static bool include_legacy_xamarin;
+		public static bool iOSSupports32BitArchitectures;
 
 		static Version xcode_version;
 		public static Version XcodeVersion {
@@ -298,6 +299,7 @@ namespace Xamarin.Tests {
 			DotNetCscCommand = GetVariable ("DOTNET_CSC_COMMAND", null)?.Trim ('\'');
 			DotNetExecutable = GetVariable ("DOTNET", null);
 			DotNetTfm = GetVariable ("DOTNET_TFM", null);
+			iOSSupports32BitArchitectures = !string.IsNullOrEmpty (GetVariable ("IOS_SUPPORTS_32BIT_ARCHITECTURES", ""));
 
 			XcodeVersionString = GetXcodeVersion (xcode_root);
 #if MONOMAC
@@ -767,32 +769,6 @@ namespace Xamarin.Tests {
 			}
 
 			throw new InvalidOperationException (targetFramework.ToString ());
-		}
-
-		public static IEnumerable<string> GetBaseLibraryImplementations (Profile profile)
-		{
-			switch (profile) {
-			case Profile.iOS:
-				yield return Path.Combine (mt_root, "lib", "32bits", "Xamarin.iOS.dll");
-				yield return Path.Combine (mt_root, "lib", "64bits", "Xamarin.iOS.dll");
-				break;
-			case Profile.macOSMobile:
-				yield return Path.Combine (SdkRootXM, "lib", "x86_64", "mobile", "Xamarin.Mac.dll");
-				yield return Path.Combine (SdkRootXM, "lib", "i386", "mobile", "Xamarin.Mac.dll");
-				break;
-			case Profile.macOSFull:
-				yield return Path.Combine (SdkRootXM, "lib", "x86_64", "full", "Xamarin.Mac.dll");
-				yield return Path.Combine (SdkRootXM, "lib", "i386", "full", "Xamarin.Mac.dll");
-				break;
-			case Profile.tvOS:
-				yield return Path.Combine (mt_root, "lib", "64bits", "Xamarin.TVOS.dll");
-				break;
-			case Profile.watchOS:
-				yield return Path.Combine (mt_root, "lib", "32bits", "Xamarin.WatchOS.dll");
-				break;
-			default:
-				throw new NotImplementedException ();
-			}
 		}
 
 		public static IList<string> GetRuntimeIdentifiers (ApplePlatform platform)
