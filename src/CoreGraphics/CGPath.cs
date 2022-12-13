@@ -722,7 +722,7 @@ namespace CoreGraphics {
 			/* CGPathRef */ IntPtr path,
 			/* const CGAffineTransform * */ CGAffineTransform* transform,
 			/* CGFloat */ nfloat phase,
-			/* CGFloat */ nfloat [] lengths,
+			/* CGFloat */ nfloat* lengths,
 			/* size_t */ nint count);
 
 		public CGPath CopyByDashingPath (CGAffineTransform transform, nfloat [] lengths)
@@ -732,7 +732,9 @@ namespace CoreGraphics {
 
 		public unsafe CGPath CopyByDashingPath (CGAffineTransform transform, nfloat [] lengths, nfloat phase)
 		{
-			return MakeMutable (CGPathCreateCopyByDashingPath (Handle, &transform, phase, lengths, lengths is null ? 0 : lengths.Length), true);
+			fixed (nfloat* lengthsPtr = lengths) {
+				return MakeMutable (CGPathCreateCopyByDashingPath (Handle, &transform, phase, lengthsPtr, lengths is null ? 0 : lengths.Length), true);
+			}
 		}
 
 		public CGPath CopyByDashingPath (nfloat [] lengths)
@@ -742,8 +744,10 @@ namespace CoreGraphics {
 
 		public unsafe CGPath CopyByDashingPath (nfloat [] lengths, nfloat phase)
 		{
-			var path = CGPathCreateCopyByDashingPath (Handle, null, phase, lengths, lengths is null ? 0 : lengths.Length);
-			return MakeMutable (path, true);
+			fixed (nfloat* lengthsPtr = lengths) {
+				var path = CGPathCreateCopyByDashingPath (Handle, null, phase, lengthsPtr, lengths is null ? 0 : lengths.Length);
+				return MakeMutable (path, true);
+			}
 		}
 
 		public unsafe CGPath Copy ()
