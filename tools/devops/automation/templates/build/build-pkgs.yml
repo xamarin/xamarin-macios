@@ -73,8 +73,8 @@ steps:
 
     - pwsh: |
         Write-Host "EnableDotnet param: $Env:ENABLE_DOTNET"
-        Wrie-Host "Config value: $Env:CONFIG_VALUE"
-      dsiplayName: "Debug build nugets"
+        Write-Host "Config value: $Env:CONFIG_VALUE"
+      displayName: "Debug build nugets"
       env:
         CONFIG_VALUE: contains(variables['configuration.BuildNugets'], 'True')
         ${{ if eq(parameters.enableDotnet, true) }}:
