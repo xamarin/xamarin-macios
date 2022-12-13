@@ -11818,29 +11818,29 @@ namespace Foundation {
 		[Static]
 		NSValue FromCGPoint (CGPoint point);
 
+		[Mac (10, 0)]
+		[MacCatalyst (15, 0)]
 #if MONOMAC
-		[Mac (10,0)]
 		[Export ("rectValue")]
 #else
-		[MacCatalyst (15, 0)]
 		[Export ("CGRectValue")]
 #endif
 		CGRect CGRectValue { get; }
 
+		[Mac (10, 0)]
+		[MacCatalyst (15, 0)]
 #if MONOMAC
-		[Mac (10,0)]
 		[Export ("sizeValue")]
 #else
-		[MacCatalyst (15, 0)]
 		[Export ("CGSizeValue")]
 #endif
 		CGSize CGSizeValue { get; }
 
+		[Mac (10, 0)]
+		[MacCatalyst (15, 0)]
 #if MONOMAC
-		[Mac (10,0)]
 		[Export ("pointValue")]
 #else
-		[MacCatalyst (15, 0)]
 		[Export ("CGPointValue")]
 #endif
 		CGPoint CGPointValue { get; }
