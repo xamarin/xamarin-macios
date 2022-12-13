@@ -842,7 +842,7 @@ namespace CoreMidi {
 
 		public IntPtr Bytes {
 			get {
-				if (bytes is null)
+				if (bytes is null || bytes.Length < 1)
 					return byteptr;
 				unsafe {
 					fixed (byte *p = &bytes [start]){
