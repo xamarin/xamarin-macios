@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using NUnit.Framework;
 
@@ -161,7 +162,7 @@ namespace Cecil.Tests {
 			return rv;
 		}
 
-		public static IEnumerable PlatformAssemblies {
+		static IEnumerable<string> PlatformAssemblies {
 			get {
 				if (!Configuration.include_legacy_xamarin)
 					yield break;
@@ -169,32 +170,69 @@ namespace Cecil.Tests {
 				if (Configuration.include_ios) {
 					// we want to process 32/64 bits individually since their content can differ
 					if (Configuration.iOSSupports32BitArchitectures)
-						yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "iOS", "Xamarin.iOS.dll"));
-					yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "64bits", "iOS", "Xamarin.iOS.dll"));
+						yield return Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "iOS", "Xamarin.iOS.dll");
+					yield return Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "64bits", "iOS", "Xamarin.iOS.dll");
 				}
 
 				if (Configuration.include_watchos) {
 					// XamarinWatchOSDll is stripped of its IL
-					yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "watchOS", "Xamarin.WatchOS.dll"));
+					yield return Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "watchOS", "Xamarin.WatchOS.dll");
 				}
 
 				if (Configuration.include_tvos) {
 					// XamarinTVOSDll is stripped of it's IL
-					yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "64bits", "tvOS", "Xamarin.TVOS.dll"));
+					yield return Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "64bits", "tvOS", "Xamarin.TVOS.dll");
 				}
 
 				if (Configuration.include_mac) {
-					yield return new TestCaseData (Configuration.XamarinMacMobileDll);
-					yield return new TestCaseData (Configuration.XamarinMacFullDll);
+					yield return Configuration.XamarinMacMobileDll;
+					yield return Configuration.XamarinMacFullDll;
 				}
 			}
 		}
 
-		public static IEnumerable NetPlatformAssemblies => Configuration.GetRefLibraries ();
+		static IList<AssemblyInfo>? platform_assembly_definitions;
+		public static IEnumerable<AssemblyInfo> PlatformAssemblyDefinitions {
+			get {
+				if (platform_assembly_definitions is null) {
+					platform_assembly_definitions = PlatformAssemblies
+						.Select (v => new AssemblyInfo (v, GetAssembly (v, readSymbols: true), false))
+						.ToArray ();
+				}
+				return platform_assembly_definitions;
+			}
+		}
 
-		public static IEnumerable NetPlatformImplementationAssemblies => Configuration.GetBaseLibraryImplementations ();
 
-		public static IEnumerable TaskAssemblies {
+		static IEnumerable<string> NetPlatformAssemblies => Configuration.GetRefLibraries ();
+
+		static IList<AssemblyInfo>? net_platform_assembly_definitions;
+		public static IEnumerable<AssemblyInfo> NetPlatformAssemblyDefinitions {
+			get {
+				if (net_platform_assembly_definitions is null) {
+					net_platform_assembly_definitions = NetPlatformAssemblies
+						.Select (v => new AssemblyInfo (v, GetAssembly (v, readSymbols: false), true))
+						.ToArray ();
+				}
+				return net_platform_assembly_definitions;
+			}
+		}
+
+		static IEnumerable<string> NetPlatformImplementationAssemblies => Configuration.GetBaseLibraryImplementations ();
+
+		static IList<AssemblyInfo>? net_platform_assembly_implemnetation_assembly_definitions;
+		public static IEnumerable<AssemblyInfo> NetPlatformImplementationAssemblyDefinitions {
+			get {
+				if (net_platform_assembly_implemnetation_assembly_definitions is null) {
+					net_platform_assembly_implemnetation_assembly_definitions = NetPlatformImplementationAssemblies
+						.Select (v => new AssemblyInfo (v, GetAssembly (v, readSymbols: true), true))
+						.ToArray ();
+				}
+				return net_platform_assembly_implemnetation_assembly_definitions;
+			}
+		}
+
+		public static IEnumerable<TestFixtureData> TaskAssemblies {
 			get {
 				if (Configuration.include_ios)
 					yield return CreateTestFixtureDataFromPath (Path.Combine (Configuration.SdkRootXI, "lib", "msbuild", "iOS", "Xamarin.iOS.Tasks.dll"));
@@ -217,6 +255,25 @@ namespace Cecil.Tests {
 		{
 			key = tuple.Key;
 			value = tuple.Value;
+		}
+	}
+
+	public class AssemblyInfo {
+		public AssemblyDefinition Assembly;
+		public string Path;
+		public ApplePlatform Platform;
+
+		public AssemblyInfo (string path, AssemblyDefinition assembly, bool isDotNet)
+		{
+			Assembly = assembly;
+			Path = path;
+			Platform = Configuration.GetPlatform (path, isDotNet);
+		}
+
+		public override string ToString ()
+		{
+			// The returned text will show up in VSMac's unit test pad
+			return Path.Replace (Configuration.RootPath, string.Empty).TrimStart ('/');
 		}
 	}
 }
