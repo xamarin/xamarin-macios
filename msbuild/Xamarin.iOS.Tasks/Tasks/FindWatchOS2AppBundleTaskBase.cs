@@ -1,4 +1,5 @@
 using System;
+
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -20,9 +21,6 @@ namespace Xamarin.iOS.Tasks {
 		[Output]
 		public string WatchOS2AppBundle { get; set; }
 
-		[Output]
-		public bool HasWatchKitStub { get; set; }
-
 		#endregion
 
 		public override bool Execute ()
@@ -31,7 +29,7 @@ namespace Xamarin.iOS.Tasks {
 
 			if (WatchAppReferences.Length > 0) {
 				WatchOS2AppBundle = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLinks (WatchAppReferences [0].ItemSpec));
-				HasWatchKitStub = System.IO.Directory.Exists (System.IO.Path.Combine (WatchOS2AppBundle, "_WatchKitStub"));
+
 				return true;
 			}
 
