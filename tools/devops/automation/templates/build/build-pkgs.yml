@@ -61,6 +61,17 @@ steps:
       condition: and(succeeded(), contains(variables['configuration.BuildPkgs'], 'True'))
       timeoutInMinutes: 180
 
+    - pwsh: |
+        Write-Host "EnableDotnet param: $Env:ENABLE_DOTNET"
+        Wrie-Host "Config value: $Env:CONFIG_VALUE"
+      dsiplayName: "Debug build nugets"
+      env:
+        CONFIG_VALUE: contains(variables['configuration.BuildNugets'], 'True')
+        ${{ if eq(parameters.enableDotnet, true) }}:
+          ENABLE_DOTNET: "True"
+        ${{ else }}:
+          ENABLE_DOTNET: "False"
+
     # build nugets
     - ${{ if eq(parameters.enableDotnet, true) }}:
       - template: build-nugets.yml
