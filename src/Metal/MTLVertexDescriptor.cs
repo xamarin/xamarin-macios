@@ -17,7 +17,7 @@ namespace Metal {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
+		[iOS (9, 0)]
 #endif
 		[DllImport (Constants.MetalKitLibrary)]
 		static extern  /* MTLVertexDescriptor __nonnull */ IntPtr MTKMetalVertexDescriptorFromModelIO (/* MDLVertexDescriptor __nonnull */ IntPtr modelIODescriptor);
@@ -28,7 +28,7 @@ namespace Metal {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
+		[iOS (9, 0)]
 #endif
 		public static MTLVertexDescriptor? FromModelIO (MDLVertexDescriptor descriptor)
 		{
@@ -43,9 +43,9 @@ namespace Metal {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (10,0)]
-		[Mac (10,12)]
-		[TV (10,0)]
+		[iOS (10, 0)]
+		[Mac (10, 12)]
+		[TV (10, 0)]
 #endif
 		[DllImport (Constants.MetalKitLibrary)]
 		static extern /* MTLVertexDescriptor __nonnull */ IntPtr MTKMetalVertexDescriptorFromModelIOWithError (/* MDLVertexDescriptor __nonnull */ IntPtr modelIODescriptor, out IntPtr error);
@@ -56,9 +56,9 @@ namespace Metal {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (10,0)]
-		[Mac (10,12)]
-		[TV (10,0)]
+		[iOS (10, 0)]
+		[Mac (10, 12)]
+		[TV (10, 0)]
 #endif
 		public static MTLVertexDescriptor? FromModelIO (MDLVertexDescriptor descriptor, out NSError? error)
 		{

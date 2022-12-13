@@ -19,8 +19,7 @@ using OpenTK;
 
 #nullable enable
 
-namespace MonoTouchFixtures.Phase
-{
+namespace MonoTouchFixtures.Phase {
 
 	[TestFixture]
 	// we want the test to be available if we use the linker
@@ -39,19 +38,19 @@ namespace MonoTouchFixtures.Phase
 		public void TestConstructor ()
 		{
 			var orientation = new Quaternion (1, 2, 1, 1);
-			var audioChannelLayout = new AudioChannelLayout { 
+			var audioChannelLayout = new AudioChannelLayout {
 				Tag = (int) AudioChannelLayoutTag.UseChannelDescriptions,
 				Bitmap = 0,
 				Channels = new AudioChannelDescription [] {
-					new AudioChannelDescription { 
+					new AudioChannelDescription {
 						Flags = AudioChannelFlags.AllOff,
 						Label = AudioChannelLabel.Discrete_4,
-						Coords = new float [] { 0, 0, 0}, 
+						Coords = new float [] { 0, 0, 0},
 					},
 					new AudioChannelDescription {
 						Flags = AudioChannelFlags.AllOff,
 						Label = AudioChannelLabel.Discrete_5,
-						Coords = new float [] { 0, 0, 0}, 
+						Coords = new float [] { 0, 0, 0},
 					}
 				}
 			};

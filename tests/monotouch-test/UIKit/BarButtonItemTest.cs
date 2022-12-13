@@ -11,19 +11,19 @@ using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
 	class MyView : UIView {
-		
+
 		public MyView (string note)
 		{
 			Annotation = note;
 		}
-		
+
 		public string Annotation { get; private set; }
 	}
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ButtonBarItemTest {
-		
+
 		[Test]
 		public void InitWithImage ()
 		{
@@ -67,7 +67,7 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.Null (btn.Title, "Title-null");
 			}
 		}
-		
+
 		[Test]
 		public void CustomView_Null ()
 		{
@@ -76,7 +76,7 @@ namespace MonoTouchFixtures.UIKit {
 				btn.CustomView = null; // nullable
 			}
 		}
-		
+
 		[Test]
 		public void TintColor_Null ()
 		{
@@ -124,7 +124,7 @@ namespace MonoTouchFixtures.UIKit {
 
 #if !__TVOS__
 		[Test]
-		public void SetTitleTextAttributes_Null	 ()
+		public void SetTitleTextAttributes_Null ()
 		{
 			using (MyView v = new MyView ("note"))
 			using (var b = new UIBarButtonItem (v)) {

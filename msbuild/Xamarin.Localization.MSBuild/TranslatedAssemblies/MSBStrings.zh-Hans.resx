@@ -424,7 +424,7 @@
 </value>
     </data>
   <data name="E0118" xml:space="preserve">
-        <value>{0} exited with code {1}:
+        <value>{0} 已退出，代码为 {1}:
 {2}</value>
     </data>
   <data name="M0119" xml:space="preserve">
@@ -997,6 +997,7 @@
         <value>设置: 不存在条目“{0}”
 </value>
     </data>
+  <!-- E7068: not in use anymore -->
   <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14+ 不支持 watchOS 1 应用。请将你的项目迁移到 watchOS 2+。</value>
     </data>
@@ -1145,5 +1146,35 @@
     </data>
   <data name="E7101" xml:space="preserve">
         <value>值为“{1}”的未知属性“{0}”。</value>
+    </data>
+  <data name="E7102" xml:space="preserve">
+        <value>在 CustomEntitlements 项组中为类型为“{2}”的权利“{1}”指定的值“{0}”无效。根本不应为任何值。</value>
+        <comment>
+            Don't translate: CustomEntitlements (name of option in project file)
+        </comment>
+    </data>
+  <data name="E7103" xml:space="preserve">
+        <value>在 CustomEntitlements 项组中为类型为“{2}”的权利“{1}”指定的值“{0}”无效。应为 “true” 或 “false”。</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'true', 'false'
+        </comment>
+    </data>
+  <data name="E7104" xml:space="preserve">
+        <value>在 CustomEntitlements 项组中指定的权利“{1}”的类型“{0}”未知。应为 “Remove”、“Boolean”、“String” 或“StringArray”。</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'Remove', 'Boolean', 'String', 'StringArray'
+        </comment>
+    </data>
+  <data name="W7105" xml:space="preserve">
+        <value>清单“{2}”中本机引用“{1}”的意外扩展“{0}”。</value>
+        <comment>
+            {0}: file extension
+            {1}: path to a file
+            {2}: path to a file
+        </comment>
     </data>
 </root>

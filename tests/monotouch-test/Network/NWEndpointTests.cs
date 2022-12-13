@@ -55,7 +55,7 @@ namespace MonoTouchFixtures.Network {
 			var signature = endpoint.Signature;
 			Assert.AreEqual (0, signature.Length);
 		}
-		
+
 		[Test]
 		public void TxtRecordTest ()
 		{

@@ -213,6 +213,7 @@ namespace Registrar {
 
 	class StaticRegistrar : Registrar {
 		static string NFloatTypeName { get => Driver.IsDotNet ? "System.Runtime.InteropServices.NFloat" : "System.nfloat"; }
+		const uint INVALID_TOKEN_REF = 0xFFFFFFFF;
 
 		Dictionary<ICustomAttribute, MethodDefinition> protocol_member_method_map;
 
@@ -2785,7 +2786,16 @@ namespace Registrar {
 			skipped_types.Add (new SkippedType { Skipped = type, Actual = registered_type });
 		}
 
-		void Specialize (AutoIndentStringBuilder sb)
+		public string GetInitializationMethodName (string single_assembly)
+		{
+			if (!string.IsNullOrEmpty (single_assembly)) {
+				return "xamarin_create_classes_" + single_assembly.Replace ('.', '_').Replace ('-', '_');
+			} else {
+				return "xamarin_create_classes";
+			}
+		}
+
+		void Specialize (AutoIndentStringBuilder sb, out string initialization_method)
 		{
 			List<Exception> exceptions = new List<Exception> ();
 			List<ObjCMember> skip = new List<ObjCMember> ();
@@ -2809,11 +2819,9 @@ namespace Registrar {
 			}
 
 			map.AppendLine ("static MTClassMap __xamarin_class_map [] = {");
-			if (string.IsNullOrEmpty (single_assembly)) {
-				map_init.AppendLine ("void xamarin_create_classes () {");
-			} else {
-				map_init.AppendLine ("void xamarin_create_classes_{0} () {{", single_assembly.Replace ('.', '_').Replace ('-', '_'));
-			}
+
+			initialization_method = GetInitializationMethodName (single_assembly);
+			map_init.AppendLine ($"void {initialization_method} () {{");
 
 			// Select the types that needs to be registered.
 			var allTypes = new List<ObjCType> ();
@@ -2870,10 +2878,11 @@ namespace Registrar {
 						flags |= MTTypeFlags.UserType;
 
 					CheckNamespace (@class, exceptions);
-					token_ref = CreateTokenReference (@class.Type, TokenType.TypeDef);
+					if (!TryCreateTokenReference (@class.Type, TokenType.TypeDef, out token_ref, exceptions))
+						continue;
 					map.AppendLine ("{{ NULL, 0x{1:X} /* #{3} '{0}' => '{2}' */, (MTTypeFlags) ({4}) /* {5} */ }},",
 									@class.ExportedName,
-									CreateTokenReference (@class.Type, TokenType.TypeDef),
+									token_ref,
 									GetAssemblyQualifiedName (@class.Type), map_entries,
 									(int) flags, flags);
 					map_dict [@class] = map_entries++;
@@ -2912,9 +2921,11 @@ namespace Registrar {
 
 
 				if (@class.IsProtocol && @class.ProtocolWrapperType != null) {
-					if (token_ref == uint.MaxValue)
-						token_ref = CreateTokenReference (@class.Type, TokenType.TypeDef);
-					protocol_wrapper_map.Add (token_ref, new Tuple<ObjCType, uint> (@class, CreateTokenReference (@class.ProtocolWrapperType, TokenType.TypeDef)));
+					if (token_ref == INVALID_TOKEN_REF && !TryCreateTokenReference (@class.Type, TokenType.TypeDef, out token_ref, exceptions))
+						continue;
+					if (!TryCreateTokenReference (@class.ProtocolWrapperType, TokenType.TypeDef, out var protocol_wrapper_type_ref, exceptions))
+						continue;
+					protocol_wrapper_map.Add (token_ref, new Tuple<ObjCType, uint> (@class, protocol_wrapper_type_ref));
 					if (needs_protocol_map || TryGetAttribute (@class.Type, "Foundation", "XpcInterfaceAttribute", out var xpcAttr)) {
 						protocols.Add (new ProtocolInfo { TokenReference = token_ref, Protocol = @class });
 						CheckNamespace (@class, exceptions);
@@ -3141,8 +3152,12 @@ namespace Registrar {
 			if (skipped_types.Count > 0) {
 				map.AppendLine ("static const MTManagedClassMap __xamarin_skipped_map [] = {");
 				foreach (var skipped in skipped_types) {
-					skipped.SkippedTokenReference = CreateTokenReference (skipped.Skipped, TokenType.TypeDef);
-					skipped.ActualTokenReference = CreateTokenReference (skipped.Actual.Type, TokenType.TypeDef);
+					if (!TryCreateTokenReference (skipped.Skipped, TokenType.TypeDef, out var skipped_ref, exceptions))
+						continue;
+					if (!TryCreateTokenReference (skipped.Actual.Type, TokenType.TypeDef, out var actual_ref, exceptions))
+						continue;
+					skipped.SkippedTokenReference = skipped_ref;
+					skipped.ActualTokenReference = actual_ref;
 				}
 
 				foreach (var skipped in skipped_types.OrderBy ((v) => v.SkippedTokenReference))
@@ -3208,6 +3223,7 @@ namespace Registrar {
 				map.AppendLine ("};");
 			}
 			map.AppendLine ("static struct MTRegistrationMap __xamarin_registration_map = {");
+			map.AppendLine ($"\"{Xamarin.ProductConstants.Hash}\",");
 			map.AppendLine ("__xamarin_registration_assemblies,");
 			map.AppendLine ("__xamarin_class_map,");
 			map.AppendLine (full_token_reference_count == 0 ? "NULL," : "__xamarin_token_references,");
@@ -3449,7 +3465,8 @@ namespace Registrar {
 			setup_return.Indentation = indent;
 			cleanup.Indentation = indent;
 
-			var token_ref = CreateTokenReference (method.Method, TokenType.Method);
+			if (!TryCreateTokenReference (method.Method, TokenType.Method, out var token_ref, exceptions))
+				return;
 
 			// A comment describing the managed signature
 			if (trace) {
@@ -3756,9 +3773,13 @@ namespace Registrar {
 							setup_call_stack.AppendLine ("paramtype{0} = xamarin_get_parameter_type (managed_method, {0});", i);
 							if (isNativeObjectInterface) {
 								var resolvedElementType = ResolveType (elementType);
-								var iface_token_ref = $"0x{CreateTokenReference (resolvedElementType, TokenType.TypeDef):X} /* {resolvedElementType} */ ";
-								var implementation_token_ref = $"0x{CreateTokenReference (nativeObjType, TokenType.TypeDef):X} /* {nativeObjType} */ ";
-								setup_call_stack.AppendLine ("marr{0} = xamarin_nsarray_to_managed_inativeobject_array_static (arr{0}, paramtype{0}, NULL, {1}, {2}, &exception_gchandle);", i, iface_token_ref, implementation_token_ref);
+								if (TryCreateTokenReference (resolvedElementType, TokenType.TypeDef, out var iface_token_ref, out _) && TryCreateTokenReference (nativeObjType, TokenType.TypeDef, out var implementation_token_ref, out _)) {
+									var iface_token_ref_str = $"0x{iface_token_ref:X} /* {resolvedElementType} */ ";
+									var implementation_token_ref_str = $"0x{implementation_token_ref:X} /* {nativeObjType} */ ";
+									setup_call_stack.AppendLine ("marr{0} = xamarin_nsarray_to_managed_inativeobject_array_static (arr{0}, paramtype{0}, NULL, {1}, {2}, &exception_gchandle);", i, iface_token_ref_str, implementation_token_ref_str);
+								} else {
+									setup_call_stack.AppendLine ("marr{0} = xamarin_nsarray_to_managed_inativeobject_array (arr{0}, paramtype{0}, NULL, &exception_gchandle);", i);
+								}
 							} else {
 								setup_call_stack.AppendLine ("marr{0} = xamarin_nsarray_to_managed_inativeobject_array (arr{0}, paramtype{0}, NULL, &exception_gchandle);", i);
 							}
@@ -3875,20 +3896,29 @@ namespace Registrar {
 						if (!HasIntPtrBoolCtor (nativeObjType, exceptions))
 							throw ErrorHelper.CreateError (4103, Errors.MT4103, nativeObjType.FullName, descriptiveMethodName);
 
+						var findMonoClass = false;
+						var tdTokenRef = INVALID_TOKEN_REF;
+						var nativeObjectTypeTokenRef = INVALID_TOKEN_REF;
 						if (!td.IsInterface) {
+							findMonoClass = true;
+						} else if (!(isRef && isOut) && (!TryCreateTokenReference (td, TokenType.TypeDef, out tdTokenRef, out _) || !TryCreateTokenReference (nativeObjType, TokenType.TypeDef, out nativeObjectTypeTokenRef, out _))) {
+							findMonoClass = true;
+						}
+						if (findMonoClass) {
 							// find the MonoClass for this parameter
 							body_setup.AppendLine ("MonoType *type{0};", i);
 							cleanup.AppendLine ("xamarin_mono_object_release (&type{0});", i);
 							setup_call_stack.AppendLine ("type{0} = xamarin_get_parameter_type (managed_method, {0});", i);
 						}
+
 						body_setup.AppendLine ("MonoObject *inobj{0} = NULL;", i);
 						cleanup.AppendLine ($"xamarin_mono_object_release (&inobj{i});");
 
 						if (isRef) {
 							if (isOut) {
 								// Do nothing
-							} else if (td.IsInterface) {
-								setup_call_stack.AppendLine ("inobj{0} = xamarin_get_inative_object_static (*p{0}, false, 0x{1:X} /* {2} */, 0x{3:X} /* {4} */, &exception_gchandle);", i, CreateTokenReference (td, TokenType.TypeDef), td.FullName, CreateTokenReference (nativeObjType, TokenType.TypeDef), nativeObjType.FullName);
+							} else if (td.IsInterface && tdTokenRef != INVALID_TOKEN_REF && nativeObjectTypeTokenRef != INVALID_TOKEN_REF) {
+								setup_call_stack.AppendLine ("inobj{0} = xamarin_get_inative_object_static (*p{0}, false, 0x{1:X} /* {2} */, 0x{3:X} /* {4} */, &exception_gchandle);", i, tdTokenRef, td.FullName, nativeObjectTypeTokenRef, nativeObjType.FullName);
 								setup_call_stack.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
 							} else {
 								body_setup.AppendLine ("MonoReflectionType *reflectiontype{0} = NULL;", i);
@@ -3909,8 +3939,8 @@ namespace Registrar {
 							copyback.AppendLine ("}");
 							copyback.AppendLine ("*p{0} = (id) handle{0};", i);
 						} else {
-							if (td.IsInterface) {
-								setup_call_stack.AppendLine ("inobj{0} = xamarin_get_inative_object_static (p{0}, false, 0x{1:X} /* {2} */, 0x{3:X} /* {4} */, &exception_gchandle);", i, CreateTokenReference (td, TokenType.TypeDef), td.FullName, CreateTokenReference (nativeObjType, TokenType.TypeDef), nativeObjType.FullName);
+							if (td.IsInterface && tdTokenRef != INVALID_TOKEN_REF && nativeObjectTypeTokenRef != INVALID_TOKEN_REF) {
+								setup_call_stack.AppendLine ($"inobj{i} = xamarin_get_inative_object_static (p{i}, false, 0x{tdTokenRef:X} /* {td.FullName} */, 0x{nativeObjectTypeTokenRef:X} /* {nativeObjType.FullName} */, &exception_gchandle);");
 							} else {
 								body_setup.AppendLine ("MonoReflectionType *reflectiontype{0} = NULL;", i);
 								cleanup.AppendLine ("xamarin_mono_object_release (&reflectiontype{0});", i);
@@ -3937,10 +3967,10 @@ namespace Registrar {
 							var token = "INVALID_TOKEN_REF";
 							if (App.Optimizations.StaticBlockToDelegateLookup == true) {
 								var creatorMethod = GetBlockWrapperCreator (method, i);
-								if (creatorMethod != null) {
-									token = $"0x{CreateTokenReference (creatorMethod, TokenType.Method):X} /* {creatorMethod.FullName} */ ";
-								} else {
+								if (creatorMethod is null) {
 									exceptions.Add (ErrorHelper.CreateWarning (App, 4174, method.Method, Errors.MT4174, method.DescriptiveMethodName, i + 1));
+								} else if (TryCreateTokenReference (creatorMethod, TokenType.Method, out var creator_method_token_ref, out _)) {
+									token = $"0x{creator_method_token_ref:X} /* {creatorMethod.FullName} */ ";
 								}
 							}
 							body_setup.AppendLine ("MonoObject *del{0} = NULL;", i);
@@ -4099,10 +4129,10 @@ namespace Registrar {
 								}
 							}
 							var delegateProxyType = GetDelegateProxyType (method);
-							if (delegateProxyType != null) {
-								token = $"0x{CreateTokenReference (delegateProxyType, TokenType.TypeDef):X} /* {delegateProxyType.FullName} */ ";
-							} else {
+							if (delegateProxyType is null) {
 								exceptions.Add (ErrorHelper.CreateWarning (App, 4176, method.Method, "Unable to locate the delegate to block conversion type for the return value of the method {0}.", method.DescriptiveMethodName));
+							} else if (TryCreateTokenReference (delegateProxyType, TokenType.TypeDef, out var delegate_proxy_type_token_ref, out _)) {
+								token = $"0x{delegate_proxy_type_token_ref:X} /* {delegateProxyType.FullName} */ ";
 							}
 						}
 						setup_return.AppendLine ("res = xamarin_get_block_for_delegate (managed_method, retval, {0}, {1}, &exception_gchandle);", signature, token);
@@ -4731,8 +4761,8 @@ namespace Registrar {
 					// method linked away!? this should already be verified
 					ErrorHelper.Show (ErrorHelper.CreateWarning (99, Errors.MX0099, $"the smart enum {underlyingManagedType.FullName} doesn't seem to be a smart enum after all"));
 					token = "INVALID_TOKEN_REF";
-				} else {
-					token = $"0x{CreateTokenReference (getValueMethod, TokenType.Method):X} /* {getValueMethod.FullName} */";
+				} else if (TryCreateTokenReference (getValueMethod, TokenType.Method, out var get_value_method_token_ref, out _)) {
+					token = $"0x{get_value_method_token_ref:X} /* {getValueMethod.FullName} */";
 				}
 			} else {
 				throw ErrorHelper.CreateError (99, Errors.MX0099, $"can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}");
@@ -4825,8 +4855,8 @@ namespace Registrar {
 					// method linked away!? this should already be verified
 					ErrorHelper.Show (ErrorHelper.CreateWarning (99, Errors.MX0099, $"the smart enum {underlyingManagedType.FullName} doesn't seem to be a smart enum after all"));
 					token = "INVALID_TOKEN_REF";
-				} else {
-					token = $"0x{CreateTokenReference (getConstantMethod, TokenType.Method):X} /* {getConstantMethod.FullName} */";
+				} else if (TryCreateTokenReference (getConstantMethod, TokenType.Method, out var get_constant_method_token_ref, out _)) {
+					token = $"0x{get_constant_method_token_ref:X} /* {getConstantMethod.FullName} */";
 				}
 			} else {
 				throw ErrorHelper.CreateError (99, Errors.MX0099, $"can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}");
@@ -4865,59 +4895,78 @@ namespace Registrar {
 			}
 		}
 
-		uint CreateFullTokenReference (MemberReference member)
+		bool TryCreateFullTokenReference (MemberReference member, out uint token_ref, out Exception exception)
 		{
-			var rv = (full_token_reference_count++ << 1) + 1;
+			token_ref = (full_token_reference_count++ << 1) + 1;
 			switch (member.MetadataToken.TokenType) {
 			case TokenType.TypeDef:
 			case TokenType.Method:
 				break; // OK
 			default:
-				throw ErrorHelper.CreateError (99, Errors.MX0099, $"unsupported tokentype ({member.MetadataToken.TokenType}) for {member.FullName}");
+				exception = ErrorHelper.CreateError (99, Errors.MX0099, $"unsupported tokentype ({member.MetadataToken.TokenType}) for {member.FullName}");
+				return false;
 			}
 			var assemblyIndex = registered_assemblies.FindIndex (v => v.Assembly == member.Module.Assembly);
+			if (assemblyIndex == -1) {
+				exception = ErrorHelper.CreateError (99, Errors.MX0099, $"Could not find {member.Module.Assembly.Name.Name} in the list of registered assemblies when processing {member.FullName}:\n\t{string.Join ("\n\t", registered_assemblies.Select (v => v.Assembly.Name.Name))}");
+				return false;
+			}
 			var assemblyName = registered_assemblies [assemblyIndex].Name;
 			var moduleToken = member.Module.MetadataToken.ToUInt32 ();
 			var moduleName = member.Module.Name;
 			var memberToken = member.MetadataToken.ToUInt32 ();
 			var memberName = member.FullName;
-			full_token_references.Append ($"\t\t{{ /* #{full_token_reference_count} = 0x{rv:X} */ {assemblyIndex} /* {assemblyName} */, 0x{moduleToken:X} /* {moduleName} */, 0x{memberToken:X} /* {memberName} */ }},\n");
-			return rv;
+			exception = null;
+			full_token_references.Append ($"\t\t{{ /* #{full_token_reference_count} = 0x{token_ref:X} */ {assemblyIndex} /* {assemblyName} */, 0x{moduleToken:X} /* {moduleName} */, 0x{memberToken:X} /* {memberName} */ }},\n");
+			return true;
 		}
 
 		Dictionary<Tuple<MemberReference, TokenType>, uint> token_ref_cache = new Dictionary<Tuple<MemberReference, TokenType>, uint> ();
-		uint CreateTokenReference (MemberReference member, TokenType implied_type)
+		bool TryCreateTokenReference (MemberReference member, TokenType implied_type, out uint token_ref, List<Exception> exceptions)
 		{
-			var key = new Tuple<MemberReference, TokenType> (member, implied_type);
-			uint rv;
-			if (!token_ref_cache.TryGetValue (key, out rv))
-				token_ref_cache [key] = rv = CreateTokenReference2 (member, implied_type);
+			var rv = TryCreateTokenReference (member, implied_type, out token_ref, out var ex);
+			if (!rv)
+				exceptions.Add (ex);
 			return rv;
 		}
 
-		uint CreateTokenReference2 (MemberReference member, TokenType implied_type)
+		bool TryCreateTokenReference (MemberReference member, TokenType implied_type, out uint token_ref, out Exception exception)
+		{
+			var key = new Tuple<MemberReference, TokenType> (member, implied_type);
+			exception = null;
+			if (!token_ref_cache.TryGetValue (key, out token_ref)) {
+				if (!TryCreateTokenReferenceUncached (member, implied_type, out token_ref, out exception))
+					return false;
+				token_ref_cache [key] = token_ref;
+			}
+			return true;
+		}
+
+		bool TryCreateTokenReferenceUncached (MemberReference member, TokenType implied_type, out uint token_ref, out Exception exception)
 		{
 			var token = member.MetadataToken;
 
 			/* We can't create small token references if we're in partial mode, because we may have multiple arrays of registered assemblies, and no way of saying which one we refer to with the assembly index */
 			if (IsSingleAssembly)
-				return CreateFullTokenReference (member);
+				return TryCreateFullTokenReference (member, out token_ref, out exception);
 
 			/* If the implied token type doesn't match, we need a full token */
 			if (implied_type != token.TokenType)
-				return CreateFullTokenReference (member);
+				return TryCreateFullTokenReference (member, out token_ref, out exception);
 
 			/* For small token references the only valid module is the first one */
 			if (member.Module.MetadataToken.ToInt32 () != 1)
-				return CreateFullTokenReference (member);
+				return TryCreateFullTokenReference (member, out token_ref, out exception);
 
 			/* The assembly must be a registered one, and only within the first 128 assemblies */
 			var assembly_name = GetAssemblyName (member.Module.Assembly);
 			var index = registered_assemblies.FindIndex (v => v.Name == assembly_name);
 			if (index < 0 || index > 127)
-				return CreateFullTokenReference (member);
+				return TryCreateFullTokenReference (member, out token_ref, out exception);
 
-			return (token.RID << 8) + ((uint) index << 1);
+			token_ref = (token.RID << 8) + ((uint) index << 1);
+			exception = null;
+			return true;
 		}
 
 		public void GeneratePInvokeWrappersStart (AutoIndentStringBuilder hdr, AutoIndentStringBuilder decls, AutoIndentStringBuilder mthds, AutoIndentStringBuilder ifaces)
@@ -5079,18 +5128,18 @@ namespace Registrar {
 			pinfo.EntryPoint = wrapperName;
 		}
 
-		public void GenerateSingleAssembly (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly)
+		public void GenerateSingleAssembly (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly, out string initialization_method)
 		{
 			single_assembly = assembly;
-			Generate (resolver, assemblies, header_path, source_path);
+			Generate (resolver, assemblies, header_path, source_path, out initialization_method);
 		}
 
-		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path)
+		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method)
 		{
-			Generate (null, assemblies, header_path, source_path);
+			Generate (null, assemblies, header_path, source_path, out initialization_method);
 		}
 
-		public void Generate (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path)
+		public void Generate (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method)
 		{
 			this.resolver = resolver;
 
@@ -5104,10 +5153,10 @@ namespace Registrar {
 				RegisterAssembly (assembly);
 			}
 
-			Generate (header_path, source_path);
+			Generate (header_path, source_path, out initialization_method);
 		}
 
-		void Generate (string header_path, string source_path)
+		void Generate (string header_path, string source_path, out string initialization_method)
 		{
 			var sb = new AutoIndentStringBuilder ();
 			header = new AutoIndentStringBuilder ();
@@ -5142,7 +5191,7 @@ namespace Registrar {
 			if (App.Embeddinator)
 				methods.WriteLine ("void xamarin_embeddinator_initialize ();");
 
-			Specialize (sb);
+			Specialize (sb, out initialization_method);
 
 			methods.WriteLine ();
 			methods.AppendLine ();

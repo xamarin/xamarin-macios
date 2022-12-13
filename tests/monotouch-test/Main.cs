@@ -7,8 +7,7 @@ using UIKit;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
 
-partial class TestRuntime
-{
+partial class TestRuntime {
 	public static bool RunAsync (TimeSpan timeout, Action action, Func<bool> check_completed, UIImage imageToShow = null)
 	{
 		return RunAsync (DateTime.Now.Add (timeout), action, check_completed, imageToShow);
@@ -26,7 +25,7 @@ partial class TestRuntime
 
 		return true;
 #else
-		return MonoTouchFixtures.AppDelegate.RunAsync (timeout, action, check_completed, imageToShow);
+		return AppDelegate.RunAsync (timeout, action, check_completed, imageToShow);
 #endif
 	}
 }

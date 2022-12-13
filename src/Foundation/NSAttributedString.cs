@@ -25,10 +25,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using CoreFoundation;
 using CoreText;
 using ObjCRuntime;
+#if MONOMAC || __MACCATALYST__
+using AppKit;
+#endif
 #if !MONOMAC
 using UIKit;
 #endif
@@ -36,17 +41,50 @@ using UIKit;
 namespace Foundation {
 	public partial class NSAttributedString {
 
-		public string Value {
+#if __MACOS__ || XAMCORE_5_0
+		public NSAttributedString (NSUrl url, NSAttributedStringDocumentAttributes documentAttributes, out NSError error)
+		: this (url, documentAttributes, out var _, out error) {}
+
+		public NSAttributedString (NSData data, NSAttributedStringDocumentAttributes documentAttributes, out NSError error)
+		: this (data, documentAttributes, out var _, out error) {}
+
+		public NSAttributedString (NSUrl url, out NSError error)
+		: this (url, new NSDictionary (), out var _, out error) {}
+
+		public NSAttributedString (NSData data, out NSError error)
+		: this (data, new NSDictionary (), out var _, out error) {}
+#else
+		public NSAttributedString (NSUrl url, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error)
+		: this (url, documentAttributes, out var _, ref error) { }
+
+		public NSAttributedString (NSData data, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error)
+		: this (data, documentAttributes, out var _, ref error) { }
+
+		public NSAttributedString (NSUrl url, ref NSError error)
+		: this (url, new NSDictionary (), out var _, ref error) { }
+
+		public NSAttributedString (NSData data, ref NSError error)
+		: this (data, new NSDictionary (), out var _, ref error) { }
+#endif
+
+#if __MACOS__
+		public NSAttributedString (string str, NSStringAttributes? attributes)
+			: this (str, attributes?.Dictionary)
+		{
+		}
+#endif // __MACOS__
+
+		public string? Value {
 			get {
 				return CFString.FromHandle (LowLevelValue);
 			}
 		}
 
-		public NSDictionary GetAttributes (nint location, out NSRange effectiveRange)
+		public NSDictionary? GetAttributes (nint location, out NSRange effectiveRange)
 		{
 			return Runtime.GetNSObject<NSDictionary> (LowLevelGetAttributes (location, out effectiveRange));
 		}
-		
+
 #if NET
 		public IntPtr LowLevelGetAttributes (nint location, out NSRange effectiveRange)
 		{
@@ -58,21 +96,21 @@ namespace Foundation {
 		}
 #endif
 
-		public NSAttributedString (string str, CTStringAttributes attributes)
-			: this (str, attributes != null ? attributes.Dictionary : null)
+		public NSAttributedString (string str, CTStringAttributes? attributes)
+			: this (str, attributes?.Dictionary)
 		{
 		}
 
-		public CTStringAttributes GetCoreTextAttributes (nint location, out NSRange effectiveRange)
+		public CTStringAttributes? GetCoreTextAttributes (nint location, out NSRange effectiveRange)
 		{
 			var attr = GetAttributes (location, out effectiveRange);
-			return attr == null ? null : new CTStringAttributes (attr);
+			return attr is null ? null : new CTStringAttributes (attr);
 		}
 
-		public CTStringAttributes GetCoreTextAttributes (nint location, out NSRange longestEffectiveRange, NSRange rangeLimit)
+		public CTStringAttributes? GetCoreTextAttributes (nint location, out NSRange longestEffectiveRange, NSRange rangeLimit)
 		{
 			var attr = GetAttributes (location, out longestEffectiveRange, rangeLimit);
-			return attr == null ? null : new CTStringAttributes (attr);			
+			return attr is null ? null : new CTStringAttributes (attr);
 		}
 
 		public NSAttributedString Substring (nint start, nint len)
@@ -81,89 +119,89 @@ namespace Foundation {
 		}
 
 #if !MONOMAC
-		public NSAttributedString (string str, UIStringAttributes attributes)
-			: this (str, attributes != null ? attributes.Dictionary : null)
+		public NSAttributedString (string str, UIStringAttributes? attributes)
+			: this (str, attributes?.Dictionary)
 		{
 		}
 
-		public UIStringAttributes GetUIKitAttributes (nint location, out NSRange effectiveRange)
+		public UIStringAttributes? GetUIKitAttributes (nint location, out NSRange effectiveRange)
 		{
 			var attr = GetAttributes (location, out effectiveRange);
-			return attr == null ? null : new UIStringAttributes (attr);
+			return attr is null ? null : new UIStringAttributes (attr);
 		}
 
-		public UIStringAttributes GetUIKitAttributes (nint location, out NSRange longestEffectiveRange, NSRange rangeLimit)
+		public UIStringAttributes? GetUIKitAttributes (nint location, out NSRange longestEffectiveRange, NSRange rangeLimit)
 		{
 			var attr = GetAttributes (location, out longestEffectiveRange, rangeLimit);
-			return attr == null ? null : new UIStringAttributes (attr);			
+			return attr is null ? null : new UIStringAttributes (attr);
 		}
 
-		static internal NSDictionary ToDictionary (
-						  UIFont font,
-						  UIColor foregroundColor,
-						  UIColor backgroundColor,
-						  UIColor strokeColor,
-						  NSParagraphStyle paragraphStyle,
+		static internal NSDictionary? ToDictionary (
+						  UIFont? font,
+						  UIColor? foregroundColor,
+						  UIColor? backgroundColor,
+						  UIColor? strokeColor,
+						  NSParagraphStyle? paragraphStyle,
 						  NSLigatureType ligature,
 						  float kerning,
 						  NSUnderlineStyle underlineStyle,
 #if !WATCH
-						  NSShadow shadow,
+						  NSShadow? shadow,
 #endif
 						  float strokeWidth,
 						  NSUnderlineStyle strikethroughStyle)
 		{
 			var attr = new UIStringAttributes ();
-			if (font != null){
+			if (font is not null) {
 				attr.Font = font;
 			}
-			if (foregroundColor != null){
+			if (foregroundColor is not null) {
 				attr.ForegroundColor = foregroundColor;
 			}
-			if (backgroundColor != null){
+			if (backgroundColor is not null) {
 				attr.BackgroundColor = backgroundColor;
 			}
-			if (strokeColor != null){
+			if (strokeColor is not null) {
 				attr.StrokeColor = strokeColor;
 			}
-			if (paragraphStyle != null){
+			if (paragraphStyle is not null) {
 				attr.ParagraphStyle = paragraphStyle;
 			}
-			if (ligature != NSLigatureType.Default){
+			if (ligature != NSLigatureType.Default) {
 				attr.Ligature = ligature;
 			}
-			if (kerning != 0){
+			if (kerning != 0) {
 				attr.KerningAdjustment = kerning;
 			}
-			if (underlineStyle != NSUnderlineStyle.None){
+			if (underlineStyle != NSUnderlineStyle.None) {
 				attr.UnderlineStyle = underlineStyle;
 			}
 #if !WATCH
-			if (shadow != null){
+			if (shadow is not null) {
 				attr.Shadow = shadow;
 			}
 #endif
-			if (strokeWidth != 0){
+			if (strokeWidth != 0) {
 				attr.StrokeWidth = strokeWidth;
 			}
-			if (strikethroughStyle != NSUnderlineStyle.None){
+			if (strikethroughStyle != NSUnderlineStyle.None) {
 				attr.StrikethroughStyle = strikethroughStyle;
 			}
 			var dict = attr.Dictionary;
 			return dict.Count == 0 ? null : dict;
-		}				
+		}
 
 		public NSAttributedString (string str,
-					   UIFont font = null,
-					   UIColor foregroundColor = null,
-					   UIColor backgroundColor = null,
-					   UIColor strokeColor = null,
-					   NSParagraphStyle paragraphStyle = null,
+					   UIFont? font = null,
+					   UIColor? foregroundColor = null,
+					   UIColor? backgroundColor = null,
+					   UIColor? strokeColor = null,
+					   NSParagraphStyle? paragraphStyle = null,
 					   NSLigatureType ligatures = NSLigatureType.Default,
 					   float kerning = 0,
 					   NSUnderlineStyle underlineStyle = NSUnderlineStyle.None,
 #if !WATCH
-					   NSShadow shadow = null,
+					   NSShadow? shadow = null,
 #endif
 					   float strokeWidth = 0,
 					   NSUnderlineStyle strikethroughStyle = NSUnderlineStyle.None)
@@ -183,9 +221,9 @@ namespace Foundation {
 		// note: we cannot reuse the same method name - as it would break compilation of existing apps
 		public static NSAttributedString CreateFrom (NSTextAttachment attachment)
 		{
-			return (null as NSAttributedString).FromTextAttachment (attachment);
+			return (null as NSAttributedString)!.FromTextAttachment (attachment);
 		}
 #endif
-#endif						      
+#endif
 	}
 }

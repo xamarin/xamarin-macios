@@ -37,7 +37,7 @@ namespace Introspection {
 			// we always link with the CoreFoundation framework
 			case "CoreFoundation":
 				return true;
-				// not a framework but a dynamic library /usr/lib/libcompression.dylib - tracked elsewhere (p/invoke only)
+			// not a framework but a dynamic library /usr/lib/libcompression.dylib - tracked elsewhere (p/invoke only)
 			case "Compression":
 				return true;
 			// not a framework, largely p/invokes to /usr/lib/libobjc.dylib

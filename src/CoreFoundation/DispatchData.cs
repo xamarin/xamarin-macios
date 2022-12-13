@@ -158,7 +158,7 @@ namespace CoreFoundation {
 			nuint bufferSize = 0;
 			using DispatchData dataCopy = CreateMap (out bufferAddress, out bufferSize);
 
-			byte[] managedArray = new byte[(int) bufferSize];
+			byte [] managedArray = new byte [(int) bufferSize];
 			Marshal.Copy (bufferAddress, managedArray, 0, (int) bufferSize);
 			return managedArray;
 		}

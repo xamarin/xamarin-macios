@@ -6,10 +6,8 @@ using NUnit.Framework;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class ResponseFileArguments : ProjectTest
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class ResponseFileArguments : ProjectTest {
 		public ResponseFileArguments () : base ("iPhoneSimulator")
 		{
 		}

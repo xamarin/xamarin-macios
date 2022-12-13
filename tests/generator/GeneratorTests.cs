@@ -9,12 +9,10 @@ using Xamarin;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace GeneratorTests
-{
+namespace GeneratorTests {
 	[TestFixture ()]
 	[Parallelizable (ParallelScope.All)]
-	public class BGen
-	{
+	public class BGen {
 		[Test]
 		[TestCase (Profile.iOS)]
 		public void ResponseFile (Profile profile)

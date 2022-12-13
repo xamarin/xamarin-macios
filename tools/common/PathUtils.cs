@@ -172,12 +172,12 @@ namespace Xamarin.Utils {
 			// ignore any errors.
 		}
 
-		struct timespec {
+		struct Timespec {
 			public IntPtr tv_sec;
 			public IntPtr tv_nsec;
 		}
 
-		struct stat { /* when _DARWIN_FEATURE_64_BIT_INODE is defined */
+		struct Stat { /* when _DARWIN_FEATURE_64_BIT_INODE is defined */
 			public uint st_dev;
 			public ushort st_mode;
 			public ushort st_nlink;
@@ -185,10 +185,10 @@ namespace Xamarin.Utils {
 			public uint st_uid;
 			public uint st_gid;
 			public uint st_rdev;
-			public timespec st_atimespec;
-			public timespec st_mtimespec;
-			public timespec st_ctimespec;
-			public timespec st_birthtimespec;
+			public Timespec st_atimespec;
+			public Timespec st_mtimespec;
+			public Timespec st_ctimespec;
+			public Timespec st_birthtimespec;
 			public ulong st_size;
 			public ulong st_blocks;
 			public uint st_blksize;
@@ -200,12 +200,12 @@ namespace Xamarin.Utils {
 		}
 
 		[DllImport ("/usr/lib/libc.dylib", EntryPoint = "lstat$INODE64", SetLastError = true)]
-		static extern int lstat_x64 (string file_name, out stat buf);
+		static extern int lstat_x64 (string file_name, out Stat buf);
 
 		[DllImport ("/usr/lib/libc.dylib", EntryPoint = "lstat", SetLastError = true)]
-		static extern int lstat_arm64 (string file_name, out stat buf);
+		static extern int lstat_arm64 (string file_name, out Stat buf);
 
-		static int lstat (string path, out stat buf)
+		static int lstat (string path, out Stat buf)
 		{
 			if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64) {
 				return lstat_arm64 (path, out buf);
@@ -216,7 +216,7 @@ namespace Xamarin.Utils {
 
 		public static bool IsSymlink (string file)
 		{
-			stat buf;
+			Stat buf;
 			var rv = lstat (file, out buf);
 			if (rv != 0)
 				throw new Exception (string.Format ("Could not lstat '{0}': {1}", file, Marshal.GetLastWin32Error ()));

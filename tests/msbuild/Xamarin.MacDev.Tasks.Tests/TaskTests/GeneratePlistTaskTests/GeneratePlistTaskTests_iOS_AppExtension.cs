@@ -1,12 +1,10 @@
 using NUnit.Framework;
 using Xamarin.MacDev;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture (true)]
 	[TestFixture (false)]
-	public class GeneratePlistTaskTests_iOS_AppExtension : GeneratePlistTaskTests_iOS
-	{
+	public class GeneratePlistTaskTests_iOS_AppExtension : GeneratePlistTaskTests_iOS {
 		public GeneratePlistTaskTests_iOS_AppExtension (bool isDotNet)
 			: base (isDotNet)
 		{

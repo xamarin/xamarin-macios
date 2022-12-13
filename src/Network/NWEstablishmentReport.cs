@@ -17,11 +17,11 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-using OS_nw_establishment_report=System.IntPtr;
-using nw_endpoint_t=System.IntPtr;
-using nw_report_protocol_enumerator_t=System.IntPtr;
-using nw_protocol_definition_t=System.IntPtr;
-using nw_resolution_report_t=System.IntPtr;
+using OS_nw_establishment_report = System.IntPtr;
+using nw_endpoint_t = System.IntPtr;
+using nw_report_protocol_enumerator_t = System.IntPtr;
+using nw_protocol_definition_t = System.IntPtr;
+using nw_resolution_report_t = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -35,15 +35,15 @@ namespace Network {
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (13,0)]
-	[Mac (10,15)]
-	[iOS (13,0)]
-	[Watch (6,0)]
+	[TV (13, 0)]
+	[Mac (10, 15)]
+	[iOS (13, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWEstablishmentReport : NativeObject {
 
 		[Preserve (Conditional = true)]
-		internal NWEstablishmentReport (NativeHandle handle, bool owns) : base (handle, owns) {}
+		internal NWEstablishmentReport (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -85,7 +85,7 @@ namespace Network {
 			if (del is not null) {
 				using (var nwSuccesfulEndpoint = new NWEndpoint (successful_endpoint, owns: false))
 				using (var nwPreferredEndpoint = new NWEndpoint (preferred_endpoint, owns: false))
-					del (source,TimeSpan.FromMilliseconds (milliseconds), endpoint_count, nwSuccesfulEndpoint, nwPreferredEndpoint);
+					del (source, TimeSpan.FromMilliseconds (milliseconds), endpoint_count, nwSuccesfulEndpoint, nwPreferredEndpoint);
 			}
 		}
 
@@ -116,14 +116,14 @@ namespace Network {
 			var del = BlockLiteral.GetTarget<Action<NWProtocolDefinition, TimeSpan, TimeSpan>> (block);
 			if (del is not null) {
 				using (var nwProtocolDefinition = new NWProtocolDefinition (protocol, owns: false))
-					del (nwProtocolDefinition, TimeSpan.FromMilliseconds (handshake_milliseconds), TimeSpan.FromMilliseconds (handshake_rtt_milliseconds)); 
+					del (nwProtocolDefinition, TimeSpan.FromMilliseconds (handshake_milliseconds), TimeSpan.FromMilliseconds (handshake_rtt_milliseconds));
 			}
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateProtocols (Action<NWProtocolDefinition, TimeSpan, TimeSpan> handler)
 		{
-			if (handler is null) 
+			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
@@ -141,25 +141,25 @@ namespace Network {
 		public NWEndpoint? ProxyEndpoint {
 			get {
 				var ptr = nw_establishment_report_copy_proxy_endpoint (GetCheckedHandle ());
-				return (ptr == IntPtr.Zero) ? null : new NWEndpoint (ptr, owns:true);
+				return (ptr == IntPtr.Zero) ? null : new NWEndpoint (ptr, owns: true);
 			}
 		}
-		
+
 #if NET
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos12.0")]
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[Watch (8,0)]
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
-		[MacCatalyst (15,0)]
+		[Watch (8, 0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_establishment_report_enumerate_resolution_reports (OS_nw_establishment_report report, ref BlockLiteral enumerateBlock);
-		
+
 		delegate void nw_report_resolution_report_enumerator_t (IntPtr block, nw_resolution_report_t report);
 		static nw_report_resolution_report_enumerator_t static_EnumerateResolutionReport = TrampolineEnumerateResolutionReport;
 
@@ -179,16 +179,16 @@ namespace Network {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[Watch (8,0)]
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
-		[MacCatalyst (15,0)]
+		[Watch (8, 0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateResolutionReports (Action<NWResolutionReport> handler)
 		{
-			if (handler is null) 
+			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral blockHandler = new ();

@@ -33,7 +33,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 		{
 			if (!TestRuntime.CheckXcodeVersion (8, 0))
 				Assert.Ignore ("Ignoring GameplayKit tests: Requires iOS10+");
-			
+
 			var size = new Vector2d (1.0, 1.0);
 			var origin = new Vector2d (0, 0);
 			var sample = new Vector2i (100, 100);

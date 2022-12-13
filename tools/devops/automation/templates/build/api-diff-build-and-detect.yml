@@ -24,11 +24,21 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 # build the source code (build.yml) and detect changes (the nested api-diff.yml)
 steps:
 - template: build.yml
   parameters:
     isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
     vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
     keyringPass: ${{ parameters.keyringPass }}
     gitHubToken: ${{ parameters.gitHubToken }}
@@ -43,7 +53,6 @@ steps:
   name: detectChanges
   continueOnError: true # this isn't fatal, the github comment will show how bad this really is
   env:
-    BUILD_REVISION: 'devops' # doesn't matter the exact value, any value is understood as "we're in CI"
     PR_ID: ${{ parameters.prID }} # reusing jenkins vars, to be fixed
     AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
 

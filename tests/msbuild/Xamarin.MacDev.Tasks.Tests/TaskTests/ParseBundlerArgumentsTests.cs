@@ -6,12 +6,10 @@ using NUnit.Framework;
 
 using Xamarin.MacDev.Tasks;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
-	public class ParseBundlerArgumentsTests : TestBase
-	{
-		class CustomParseBundlerArguments : ParseBundlerArgumentsTaskBase {}
+	public class ParseBundlerArgumentsTests : TestBase {
+		class CustomParseBundlerArguments : ParseBundlerArgumentsTaskBase { }
 
 		[Test]
 		public void NoExtraArgs ()
@@ -198,6 +196,23 @@ namespace Xamarin.MacDev.Tasks
 			task.ExtraArgs = input;
 			Assert.IsTrue (task.Execute (), input);
 			Assert.AreEqual (output, task.CustomBundleName, output);
+		}
+
+		[TestCase ("--gcc_flags -dead_strip", new string [] { "-dead_strip" })]
+		[TestCase ("--gcc_flags=-dead_strip", new string [] { "-dead_strip" })]
+		[TestCase ("-gcc_flags -dead_strip", new string [] { "-dead_strip" })]
+		[TestCase ("-gcc_flags=-dead_strip", new string [] { "-dead_strip" })]
+		[TestCase ("--link_flags -dead_strip", new string [] { "-dead_strip" })]
+		[TestCase ("--link_flags=-dead_strip", new string [] { "-dead_strip" })]
+		[TestCase ("-link_flags -dead_strip", new string [] { "-dead_strip" })]
+		[TestCase ("-link_flags=-dead_strip", new string [] { "-dead_strip" })]
+		[TestCase ("--gcc_flags \"-dead_strip -v\"", new string [] { "-dead_strip", "-v" })]
+		public void CustomLinkFlags (string input, string [] output)
+		{
+			var task = CreateTask<CustomParseBundlerArguments> ();
+			task.ExtraArgs = input;
+			Assert.IsTrue (task.Execute (), input);
+			CollectionAssert.AreEquivalent (output, task.CustomLinkFlags.Select (v => v.ItemSpec).ToArray (), string.Join (" ", output));
 		}
 	}
 }

@@ -16,7 +16,7 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-using OS_nw_path_monitor=System.IntPtr;
+using OS_nw_path_monitor = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -30,17 +30,17 @@ namespace Network {
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
-	[Watch (6,0)]
+	[TV (12, 0)]
+	[Mac (10, 14)]
+	[iOS (12, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWPathMonitor : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
 		internal NWPathMonitor (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		public NWPathMonitor (NativeHandle handle, bool owns) : base (handle, owns) {}
+		public NWPathMonitor (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -100,7 +100,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_path_monitor_set_update_handler (IntPtr handle, void *callback);
+		static extern unsafe void nw_path_monitor_set_update_handler (IntPtr handle, void* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		void _SetUpdatedSnapshotHandler (Action<NWPath> callback)
@@ -112,7 +112,7 @@ namespace Network {
 				}
 
 				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
+				BlockLiteral* block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_UpdateSnapshot, callback);
 
 				try {
@@ -158,7 +158,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_path_monitor_set_cancel_handler (IntPtr handle, void *callback);
+		static extern unsafe void nw_path_monitor_set_cancel_handler (IntPtr handle, void* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetMonitorCanceledHandler (Action callback)
@@ -170,7 +170,7 @@ namespace Network {
 				}
 
 				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
+				BlockLiteral* block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_MonitorCanceled, callback);
 
 				try {
@@ -180,19 +180,19 @@ namespace Network {
 				}
 			}
 		}
-		
-		
+
+
 #if NET
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos12.0")]
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[Watch (8,0)]
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
-		[MacCatalyst (15,0)]
+		[Watch (8, 0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_path_monitor_prohibit_interface_type (OS_nw_path_monitor monitor, NWInterfaceType interfaceType);
@@ -203,11 +203,11 @@ namespace Network {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[Watch (8,0)]
-		[TV (15,0)]
-		[Mac (12,0)]
-		[iOS (15,0)]
-		[MacCatalyst (15,0)]
+		[Watch (8, 0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 #endif
 		public void ProhibitInterfaceType (NWInterfaceType interfaceType)
 			=> nw_path_monitor_prohibit_interface_type (GetCheckedHandle (), interfaceType);

@@ -28,7 +28,7 @@ namespace MonoTouchFixtures.GameController {
 		{
 			if (!TestRuntime.CheckXcodeVersion (5, 0, 1))
 				Assert.Inconclusive ("GameController is iOS7+ or macOS 10.9+");
-			
+
 			GCExtendedGamepadSnapShotDataV100 data;
 			Assert.False (GCExtendedGamepadSnapshot.TryGetSnapShotData (null, out data), "TryGetSnapshotData");
 			Assert.True (data.Version == 0, "Version");

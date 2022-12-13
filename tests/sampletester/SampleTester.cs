@@ -15,14 +15,14 @@ namespace Samples {
 		public bool BuildSolution;
 		public string KnownFailure;
 		public string CodesignKey;
-		public string[] DebugConfigurations;
-		public string[] ReleaseConfigurations;
-		public string[] Platforms;
+		public string [] DebugConfigurations;
+		public string [] ReleaseConfigurations;
+		public string [] Platforms;
 
 		// for various reasons (build'ability, compatibility, performance) it can be
 		// better to build a subset of a solution
 		// e.g. `nuget restore` requires removing the projects from the .sln
-		public string[] RemoveProjects;
+		public string [] RemoveProjects;
 	}
 
 	public class SampleTestData {
@@ -218,7 +218,7 @@ namespace Samples {
 					Select ((v) => GetProjectInfo (v, Path.Combine (GitHub.CloneRepository (org, repo, hash, default_branch, false), v))).
 					Where ((v) => v.IsApplicable (false)).
 					ToArray ();
-			
+
 				projects [repo] = rv;
 			}
 			return rv;

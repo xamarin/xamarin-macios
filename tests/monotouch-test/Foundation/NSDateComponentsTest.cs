@@ -6,7 +6,7 @@ namespace MonoTouchFixtures.Foundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NSDateComponentsTest {
-	
+
 		[Test]
 		public void TestUndefinedComponent ()
 		{

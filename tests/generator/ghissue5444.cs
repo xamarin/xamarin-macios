@@ -12,8 +12,10 @@ namespace GHIssue5444 {
 		new NSString ShapeScheme { get; set; }
 
 		NSString SemanticColorScheme {
-			[Wrap ("Runtime.GetNSObject<NSString> (ColorScheme.Handle, false)")] get;
-			[Wrap ("ColorScheme = value")] set;
+			[Wrap ("Runtime.GetNSObject<NSString> (ColorScheme.Handle, false)")]
+			get;
+			[Wrap ("ColorScheme = value")]
+			set;
 		}
 	}
 }

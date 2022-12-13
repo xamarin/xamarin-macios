@@ -1156,11 +1156,6 @@
 			<_LinkNativeExecutableInputs Include="@(_XamarinMainLibraries)" />
 			<_LinkNativeExecutableInputs Include="@(_FileNativeReference)" />
 		</ItemGroup>
-
-		<ItemGroup Condition="'$(_XamarinRuntime)' == 'MonoVM' And $([MSBuild]::VersionGreaterThanOrEquals('$(_XcodeVersion)','14.0'))">
-			<_MainLinkerFlags Include="-Wl,-no_compact_unwind" />
-			<_MainLinkerFlags Include="-Wl,-keep_dwarf_unwind" />
-		</ItemGroup>
 	</Target>
 
 	<!-- Any .dylibs we link with might have an incorrect identity (see https://github.com/xamarin/xamarin-macios/issues/13999),
@@ -1762,6 +1757,8 @@
 	</PropertyGroup>
 
 	<Target Name="_InstallMobile" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName" Condition="'$(_SdkIsSimulator)' == 'false'">
+		<!-- Launching from the command line on windows hasn't been implemented: https://github.com/xamarin/xamarin-macios/issues/16609 -->
+		<Error Condition="$([MSBuild]::IsOSPlatform('windows'))" Text="It's currently not supported to launch an app from the command line on Windows." />
 		<GetMlaunchArguments
 			SessionId="$(BuildSessionId)"
 			AppBundlePath="$(_AppBundlePath)"
@@ -1782,6 +1779,8 @@
 
 	<!-- This is only needed for mobile platforms, RunCommand and RunArguments are defined for macOS in Microsoft.macOS.Sdk.targets. -->
 	<Target Name="_PrepareRunMobile" DependsOnTargets="_InstallMobile" Condition="'$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'">
+		<!-- Launching from the command line on windows hasn't been implemented: https://github.com/xamarin/xamarin-macios/issues/16609 -->
+		<Error Condition="$([MSBuild]::IsOSPlatform('windows'))" Text="It's currently not supported to launch an app from the command line on Windows." />
 		<PropertyGroup>
 			<!-- capture output by default -->
 			<_MlaunchCaptureOutput Condition="'$(_MlaunchCaptureOutput)' == ''">true</_MlaunchCaptureOutput>

@@ -19,7 +19,7 @@ using Vector2i = global::OpenTK.Vector2i;
 
 namespace GameplayKit {
 	public partial class GKGridGraph {
-		
+
 #if !NET
 		public virtual GKGridGraphNode? GetNodeAt (Vector2i position)
 		{

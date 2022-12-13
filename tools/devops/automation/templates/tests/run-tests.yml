@@ -44,14 +44,12 @@ steps:
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     Set-MLaunchVerbosity -Verbosity 10
   displayName: 'Make mlaunch verbose'
-  condition: succeededOrFailed() # we do not care about the previous step
 
 # Re-start the daemon used to find the devices in the bot.
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     Optimize-DeviceDiscovery
   displayName: 'Fix device discovery (reset launchctl)'
-  condition: succeededOrFailed() # making mlaunch verbose should be a non blocker
 
 - bash: |
     make -C src build/generator-frameworks.g.cs
@@ -195,7 +193,6 @@ steps:
     TESTS_EXTRA_ARGUMENTS: ${{ parameters.testsLabels }}
     USE_XAMARIN_STORAGE: ${{ parameters.useXamarinStorage }}
     USE_TCP_TUNNEL: 'true'
-    BUILD_REVISION: $(Build.SourceVersion)
     PARAMETERS_TESTPREFIX: '${{ parameters.testPrefix }}'
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: 'Run tests'
@@ -236,7 +233,7 @@ steps:
     $testAttempt = [int]"$(System.JobAttempt)"
     $testResult = New-TestResults -Path $testResultsPath -Status "$(runTests.TESTS_JOBSTATUS)" -Context "${{ parameters.statusContext }}" -Attempt $testAttempt
 
-    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
+    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
     $statuses.SetStatus($testResult.GetStatus())
   displayName: "Set tests status."
   continueOnError: true

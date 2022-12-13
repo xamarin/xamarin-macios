@@ -75,6 +75,7 @@ DIRECTORIES += \
 	$(TMP_PKG_DIR) \
 	$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Windows.Sdk/Sdk) \
 	$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Windows.Sdk/targets) \
+	$(foreach platform,$(DOTNET_PLATFORMS),Workloads/Microsoft.NET.Sdk.$(platform)) \
 
 $(DIRECTORIES):
 	$(Q) mkdir -p $@
@@ -169,19 +170,18 @@ endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call SharedAfterTargetsTemplate,$(platform),$(NET6_$(platform)_NUGET_VERSION_NO_METADATA),$(NET7_$(platform)_NUGET_VERSION_NO_METADATA))))
 
 define WorkloadTargets
-Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index Makefile generate-workloadmanifest-json.csharp
-	$$(Q) mkdir -p Workloads/Microsoft.NET.Sdk.$(1)/
+Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index Makefile generate-workloadmanifest-json.csharp | Workloads/Microsoft.NET.Sdk.$(1)
 	$$(Q) rm -f $$@.tmp
 	$$(Q_GEN) ./generate-workloadmanifest-json.csharp "$(1)" "$(3)" "$(4)" "$(6)" "$$(DOTNET_$(5)_RUNTIME_IDENTIFIERS)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)"
 	$$(Q) mv $$@.tmp $$@
 
-Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets: Workloads/WorkloadManifest.$(1).template.targets Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index
+Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets: Workloads/WorkloadManifest.$(1).template.targets Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index | Workloads/Microsoft.NET.Sdk.$(1)
 	$$(Q_GEN) sed \
 		-e "s/@NUGET_VERSION_NO_METADATA@/$3/g" \
 		$$< > $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
-Workloads/Microsoft.NET.Sdk.$(1)/LICENSE: $(TOP)/LICENSE
+Workloads/Microsoft.NET.Sdk.$(1)/LICENSE: $(TOP)/LICENSE | Workloads/Microsoft.NET.Sdk.$(1)
 	$$(Q) $(CP) $$< $$@
 
 WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json
@@ -198,7 +198,7 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform)
 # We reset the commit distance (to the commits since NUGET_PRERELEASE_IDENTIFIER changed - which must have changed for a branch to become a stable branch)
 # We use the commit distance as the third number in the version, instead of the fourth.
 ifeq ($(NUGET_PRERELEASE_IDENTIFIER),)
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_MSI_VERSION:=$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_OS_VERSION).$(NUGET_STABLE_COMMIT_DISTANCE)))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_MSI_VERSION:=$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_OS_VERSION).$(NUGET_STABLE_COMMIT_DISTANCE).0))
 else
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_MSI_VERSION:=$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_OS_VERSION).0.$($(shell echo $(platform) | tr a-z A-Z)_NUGET_COMMIT_DISTANCE)))
 endif

@@ -3,11 +3,9 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace RoslynTestApp
-{
-	static class MainClass
-	{
-		static void Main (string[] args)
+namespace RoslynTestApp {
+	static class MainClass {
+		static void Main (string [] args)
 		{
 			NSApplication.IgnoreMissingAssembliesDuringRegistration = true;
 			NSApplication.Init ();
@@ -29,7 +27,7 @@ namespace HelloWorld
     }
 }");
 
-			var root = (CompilationUnitSyntax)tree.GetRoot ();
+			var root = (CompilationUnitSyntax) tree.GetRoot ();
 			System.Console.WriteLine (root);
 		}
 	}

@@ -56,10 +56,10 @@ namespace Foundation {
 			if (data is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			NSString? ret = null;
-			try { 
+			try {
 				ret = new NSString (data, encoding);
 			} catch (Exception) {
-			
+
 			}
 			return ret;
 		}
@@ -69,7 +69,7 @@ namespace Foundation {
 			// `compare:` behavior is undefined if `nil` is provided, so we need to handle that case.
 			if (other is null)
 				return -1;
-			return (int)Compare (other);
+			return (int) Compare (other);
 		}
 
 		public char this [nint idx] {
@@ -80,7 +80,8 @@ namespace Foundation {
 
 #if !NET && !MONOMAC
 		[Obsolete ("Use 'GetLocalizedUserNotificationString' that takes 'NSString' to preserve localization.")]
-		public static string GetLocalizedUserNotificationString (string key, params NSObject[] arguments) {
+		public static string GetLocalizedUserNotificationString (string key, params NSObject [] arguments)
+		{
 			return GetLocalizedUserNotificationString ((NSString) key, arguments);
 		}
 #endif

@@ -1,4 +1,3 @@
-namespace iOSBinding1
-{
+namespace iOSBinding1 {
 
 }

@@ -14,11 +14,11 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Security {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class KeyChainTest {
-		
+
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static int CFGetRetainCount (IntPtr handle);
 
@@ -31,7 +31,7 @@ namespace MonoTouchFixtures.Security {
 #if MONOMAC && !NET
 			Stream certStream = typeof (KeyChainTest).Assembly.GetManifestResourceStream ("xammac_tests.Security.openssl_crt.der");
 #else
-			Stream certStream = typeof(KeyChainTest).Assembly.GetManifestResourceStream ("monotouchtest.Security.openssl_crt.der");
+			Stream certStream = typeof (KeyChainTest).Assembly.GetManifestResourceStream ("monotouchtest.Security.openssl_crt.der");
 #endif
 			NSData data = NSData.FromStream (certStream);
 
@@ -93,7 +93,7 @@ namespace MonoTouchFixtures.Security {
 
 		[DllImport ("/System/Library/Frameworks/Security.framework/Security")]
 		internal extern static SecStatusCode SecItemAdd (IntPtr cfDictRef, IntPtr result);
-		
+
 		[Test]
 		// same as Add_Identity but directly p/invoking - shows that the type MUST NOT be included for Identity
 #if __MACCATALYST__
@@ -155,7 +155,7 @@ namespace MonoTouchFixtures.Security {
 			var queryResponse = SecKeyChain.QueryAsRecord (queryRec, out code);
 			if (code == SecStatusCode.Success && queryResponse?.Generic != null)
 				return new Guid (NSString.FromData (queryResponse.Generic, NSStringEncoding.UTF8));
-			
+
 			return Guid.Empty;
 		}
 
@@ -214,7 +214,7 @@ namespace MonoTouchFixtures.Security {
 			}
 			return code;
 		}
-		
+
 		[Test]
 #if __MACCATALYST__
 		[Ignore ("This test requires an app signed with the keychain-access-groups entitlement, and for Mac Catalyst that requires a custom provisioning profile.")]
@@ -222,8 +222,8 @@ namespace MonoTouchFixtures.Security {
 		public void CheckId ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 1); // macOS 10.9
-			// test case from http://stackoverflow.com/questions/9481860/monotouch-cant-get-value-of-existing-keychain-item
-			// not a bug (no class lib fix) just a misuse of the API wrt status codes
+												   // test case from http://stackoverflow.com/questions/9481860/monotouch-cant-get-value-of-existing-keychain-item
+												   // not a bug (no class lib fix) just a misuse of the API wrt status codes
 			Guid g = Guid.NewGuid ();
 			try {
 				Assert.That (SetID (g), Is.EqualTo (SecStatusCode.Success), "success");

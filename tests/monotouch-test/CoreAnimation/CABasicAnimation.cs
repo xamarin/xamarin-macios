@@ -8,12 +8,10 @@ using CoreAnimation;
 using CoreGraphics;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CABasicAnimationTests
-	{
+	public class CABasicAnimationTests {
 		[Test]
 		public void CABasicAnimation_FromToBy_INativeTests ()
 		{

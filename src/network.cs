@@ -7,8 +7,8 @@ using CoreFoundation;
 
 namespace Network {
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
+	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[Watch (6, 0)]
 	public enum NWErrorDomain {
 		Invalid = 0,
 		[Field ("kNWErrorDomainPOSIX")]
@@ -19,14 +19,14 @@ namespace Network {
 		Tls = 3,
 	}
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
+	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[Watch (6, 0)]
 	[Static]
 	[Internal]
 	partial interface NWContentContextConstants {
 		[Field ("_nw_content_context_default_message")]
 		IntPtr _DefaultMessage { get; }
-		
+
 		[Field ("_nw_content_context_final_send")]
 		IntPtr _FinalSend { get; }
 
@@ -34,8 +34,8 @@ namespace Network {
 		IntPtr _DefaultStream { get; }
 	}
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
+	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[Watch (6, 0)]
 	[Static]
 	[Internal]
 	partial interface NWConnectionConstants {
@@ -44,8 +44,8 @@ namespace Network {
 		IntPtr _SendIdempotentContent { get; }
 	}
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
+	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[Watch (6, 0)]
 	[Static]
 	[Internal]
 	partial interface NWParametersConstants {
@@ -56,17 +56,20 @@ namespace Network {
 		IntPtr _ProtocolDisable { get; }
 
 	}
-	
+
 	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
 	[Static]
 	[Internal]
 	partial interface NWPrivacyContextConstants {
-		
+
 		[Field ("_nw_privacy_context_default_context")]
 		IntPtr _DefaultContext { get; }
 	}
 
-	[iOS (14,2)][TV (14,2)][Watch (7,1)][Mac (11,0)]
+	[iOS (14, 2)]
+	[TV (14, 2)]
+	[Watch (7, 1)]
+	[Mac (11, 0)]
 	// untyped `nw_path_unsatisfied_reason_t` enum
 	enum NWPathUnsatisfiedReason {
 		NotAvailable = 0,

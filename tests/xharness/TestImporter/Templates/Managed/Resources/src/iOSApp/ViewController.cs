@@ -15,24 +15,24 @@ namespace BCLTests {
 	public partial class ViewController : UIViewController {
 
 		internal static IEnumerable<TestAssemblyInfo> GetTestAssemblies ()
- 		{
+		{
 			// var t = Path.GetFileName (typeof (ActivatorCas).Assembly.Location);
 			foreach (var name in RegisterType.TypesToRegister.Keys) {
 				var a = RegisterType.TypesToRegister [name].Assembly;
 				if (a == null) {
 					Console.WriteLine ($"# WARNING: Unable to load assembly {name}.");
- 					continue;
+					continue;
 				} else {
 					Console.WriteLine ($"Loading assembly: {name}.");
 				}
 				yield return new TestAssemblyInfo (a, name);
 			}
- 		}
- 		
- 		public ViewController ()
+		}
+
+		public ViewController ()
 		{
 		}
-		
+
 		protected ViewController (IntPtr handle) : base (handle)
 		{
 			// Note: this .ctor should not contain any initialization logic.
@@ -82,7 +82,7 @@ namespace BCLTests {
 
 			// add category filters if they have been added
 			runner.SkipCategories (categories);
-			
+
 			// if we have ignore files, ignore those tests
 			var skippedTests = await IgnoreFileParser.ParseContentFilesAsync (NSBundle.MainBundle.BundlePath);
 			if (skippedTests.Any ()) {
@@ -108,7 +108,7 @@ namespace BCLTests {
 				string resultsFilePath = runner.WriteResultsToFile (jargon);
 				logger.Info ($"Xml result can be found {resultsFilePath}");
 			}
-			
+
 			logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.FilteredTests}");
 			if (options.TerminateAfterExecution)
 				BeginInvokeOnMainThread (TerminateWithSuccess);

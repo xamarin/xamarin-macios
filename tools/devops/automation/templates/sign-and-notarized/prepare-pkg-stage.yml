@@ -18,6 +18,14 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 - name: packages
   type: object
   default: []
@@ -34,6 +42,9 @@ jobs:
 
   steps:
   - template: ../common/configure.yml
+    parameters:
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
 
 - ${{ each pkg in parameters.packages }}:
   - job: ${{ pkg.job }}
@@ -51,6 +62,8 @@ jobs:
     - template: sign-and-notarized.yml
       parameters:
         isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
         signingSetupSteps: ${{ parameters.signingSetupSteps }}
         keyringPass: ${{ parameters.keyringPass }}
         skipESRP: ${{ parameters.skipESRP }}

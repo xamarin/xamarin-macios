@@ -116,7 +116,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			using (var dummy = CreateDummy ("<array><string>SomeStringArrayValue</string></array>")) {
 				var value = dummy.Value;
 				Assert.AreEqual (typeof (NSMutableArray), value.GetType (), "Array Value Type");
-				var arr = (NSArray)value;
+				var arr = (NSArray) value;
 				Assert.AreEqual ((nuint) 1, arr.Count, "Array Count");
 				Assert.AreEqual ("SomeStringArrayValue", arr.GetItem<NSString> (0).ToString (), "Array First Value");
 			}

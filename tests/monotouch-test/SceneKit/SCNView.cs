@@ -9,12 +9,10 @@ using CoreAnimation;
 using CoreGraphics;
 using SceneKit;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class SCNViewTests
-	{
+	public class SCNViewTests {
 		[SetUp]
 		public void SetUp ()
 		{

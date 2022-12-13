@@ -10,6 +10,8 @@ namespace Xamarin.Mac.Tests {
 	static class MainClass {
 		static async Task<int> Main (string [] args)
 		{
+			TestRuntime.NotifyLaunchCompleted ();
+
 			// Skip arguments added by VSfM/macOS when running from the IDE
 			var arguments = new List<string> (args);
 			arguments.RemoveAll ((arg) => arg.StartsWith ("-psn_", StringComparison.Ordinal));
@@ -21,8 +23,7 @@ namespace Xamarin.Mac.Tests {
 			var exit_code = await MonoTouch.NUnit.UI.MacRunner.MainAsync (arguments, true, _exit, assemblies.ToArray ());
 
 #if NET
-			var exit_monitor = new Thread (() =>
-			{
+			var exit_monitor = new Thread (() => {
 				// Wait for 3 seconds
 				Thread.Sleep (3000);
 				// If we're still here, then something went wrong. Let's exit.
@@ -48,8 +49,7 @@ namespace Xamarin.Mac.Tests {
 		static extern void _exit (int exit_code);
 	}
 
-	public static partial class TestLoader
-	{
+	public static partial class TestLoader {
 		static partial void AddTestAssembliesImpl (List<Assembly> assemblies);
 
 		public static void AddTestAssemblies (List<Assembly> assemblies)

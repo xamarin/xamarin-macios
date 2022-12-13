@@ -14,9 +14,9 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-using nw_advertise_descriptor_t=System.IntPtr;
-using OS_nw_advertise_descriptor=System.IntPtr;
-using OS_nw_txt_record=System.IntPtr;
+using nw_advertise_descriptor_t = System.IntPtr;
+using OS_nw_advertise_descriptor = System.IntPtr;
+using OS_nw_txt_record = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -29,10 +29,10 @@ namespace Network {
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
-	[Watch (6,0)]
+	[TV (12, 0)]
+	[Mac (10, 14)]
+	[iOS (12, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWAdvertiseDescriptor : NativeObject {
 		[Preserve (Conditional = true)]
@@ -49,10 +49,10 @@ namespace Network {
 		[SupportedOSPlatform ("ios16.0")]
 		[SupportedOSPlatform ("maccatalyst16.0")]
 #else
-		[TV (16,0)]
-		[Mac (13,0)]
-		[iOS (16,0)]
-		[Watch (9,0)]
+		[TV (16, 0)]
+		[Mac (13, 0)]
+		[iOS (16, 0)]
+		[Watch (9, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_advertise_descriptor nw_advertise_descriptor_create_application_service (string application_service_name);
@@ -63,12 +63,12 @@ namespace Network {
 		[SupportedOSPlatform ("ios16.0")]
 		[SupportedOSPlatform ("maccatalyst16.0")]
 #else
-		[TV (16,0)]
-		[Mac (13,0)]
-		[iOS (16,0)]
-		[Watch (9,0)]
+		[TV (16, 0)]
+		[Mac (13, 0)]
+		[iOS (16, 0)]
+		[Watch (9, 0)]
 #endif
-		public NWAdvertiseDescriptor (string applicationServiceName) : base (nw_advertise_descriptor_create_application_service (applicationServiceName), true) {}
+		public NWAdvertiseDescriptor (string applicationServiceName) : base (nw_advertise_descriptor_create_application_service (applicationServiceName), true) { }
 
 #if NET
 		[SupportedOSPlatform ("tvos16.0")]
@@ -76,10 +76,10 @@ namespace Network {
 		[SupportedOSPlatform ("ios16.0")]
 		[SupportedOSPlatform ("maccatalyst16.0")]
 #else
-		[TV (16,0)]
-		[Mac (13,0)]
-		[iOS (16,0)]
-		[Watch (9,0)]
+		[TV (16, 0)]
+		[Mac (13, 0)]
+		[iOS (16, 0)]
+		[Watch (9, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_advertise_descriptor_get_application_service_name (OS_nw_advertise_descriptor advertise_descriptor);
@@ -90,10 +90,10 @@ namespace Network {
 		[SupportedOSPlatform ("ios16.0")]
 		[SupportedOSPlatform ("maccatalyst16.0")]
 #else
-		[TV (16,0)]
-		[Mac (13,0)]
-		[iOS (16,0)]
-		[Watch (9,0)]
+		[TV (16, 0)]
+		[Mac (13, 0)]
+		[iOS (16, 0)]
+		[Watch (9, 0)]
 #endif
 		public string? ApplicationServiceName {
 			get {
@@ -148,9 +148,9 @@ namespace Network {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_txt_record nw_advertise_descriptor_copy_txt_record_object (OS_nw_advertise_descriptor advertise_descriptor);
@@ -161,9 +161,9 @@ namespace Network {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_advertise_descriptor_set_txt_record_object (OS_nw_advertise_descriptor advertise_descriptor, OS_nw_txt_record txt_record);
@@ -174,13 +174,13 @@ namespace Network {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		public NWTxtRecord TxtRecord {
-			get => new NWTxtRecord (nw_advertise_descriptor_copy_txt_record_object (GetCheckedHandle ()), owns: true); 
-			set => nw_advertise_descriptor_set_txt_record_object (GetCheckedHandle (), value.GetHandle ()); 
+			get => new NWTxtRecord (nw_advertise_descriptor_copy_txt_record_object (GetCheckedHandle ()), owns: true);
+			set => nw_advertise_descriptor_set_txt_record_object (GetCheckedHandle (), value.GetHandle ());
 		}
 	}
 }

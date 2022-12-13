@@ -5,15 +5,14 @@ using System.Linq;
 using System.Text;
 
 using Xamarin.Utils;
-	
+
 using Microsoft.Build.Framework;
 using Microsoft.Build.Logging.StructuredLogger;
 
 #nullable enable
 
 namespace Xamarin.Tests {
-	public class BuildEngine
-	{
+	public class BuildEngine {
 		public Dictionary<string, string> Properties { get; private set; } = new Dictionary<string, string> ();
 
 		public void SetGlobalProperty (string name, string value)
@@ -108,7 +107,7 @@ namespace Xamarin.Tests {
 				if (parent?.Name != name)
 					return false;
 
-				if (!(parent is Parameter || parent is AddItem))
+				if (!(parent is Parameter || parent is AddItem))
 					return false;
 
 				parent = parent.Parent as NamedNode;
@@ -259,10 +258,7 @@ namespace Xamarin.Tests {
 			var output = new StringBuilder ();
 			var executable = Configuration.XIBuildPath;
 			var rv = Execution.RunWithStringBuildersAsync (executable, args, Configuration.GetBuildEnvironment (platform), output, output, Console.Out, workingDirectory: Path.GetDirectoryName (project), timeout: TimeSpan.FromMinutes (10)).Result;
-			return new ExecutionResult {
-				StandardOutput = output,
-				StandardError = output,
-				ExitCode = rv.ExitCode,
+			return new ExecutionResult (output, output, rv.ExitCode) {
 				BinLogPath = binlog,
 			};
 		}
