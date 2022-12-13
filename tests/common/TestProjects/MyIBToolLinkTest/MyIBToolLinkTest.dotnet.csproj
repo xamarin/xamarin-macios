@@ -4,6 +4,6 @@
     <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
     <OutputType>Exe</OutputType>
     <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
-    <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion>$(iOSMinSupportedOSPlatformVersion)</SupportedOSPlatformVersion>
   </PropertyGroup>
 </Project>

@@ -4,6 +4,6 @@
     <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-tvos</TargetFramework>
     <RuntimeIdentifier>tvossimulator-x64</RuntimeIdentifier>
     <IsAppExtension>true</IsAppExtension>
-    <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion>$(tvOSMinSupportedOSPlatformVersion)</SupportedOSPlatformVersion>
   </PropertyGroup>
 </Project>
