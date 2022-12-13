@@ -41,8 +41,7 @@ using NativeHandle = System.IntPtr;
 
 namespace ImageIO {
 
-	public partial class CGImageDestinationOptions
-	{
+	public partial class CGImageDestinationOptions {
 		CGColor? destinationBackgroundColor;
 		public CGColor? DestinationBackgroundColor {
 			get { return destinationBackgroundColor; }
@@ -58,15 +57,14 @@ namespace ImageIO {
 		}
 	}
 
-	public partial class CGCopyImageSourceOptions
-	{
+	public partial class CGCopyImageSourceOptions {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public CGImageMetadata? Metadata { get; set; }
 
@@ -76,7 +74,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public bool MergeMetadata { get; set; }
 
@@ -86,7 +84,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public bool ShouldExcludeXMP { get; set; }
 
@@ -107,7 +105,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public DateTime? DateTime { get; set; }
 
@@ -117,7 +115,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public int? Orientation { get; set; }
 
@@ -147,7 +145,7 @@ namespace ImageIO {
 				using (var n = new NSNumber (Orientation.Value))
 					dict.LowlevelSetObject (n.Handle, kOrientation);
 			}
-			
+
 			return dict;
 		}
 	}
@@ -178,15 +176,15 @@ namespace ImageIO {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGImageDestination (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
 
-		[DllImport (Constants.ImageIOLibrary, EntryPoint="CGImageDestinationGetTypeID")]
+		[DllImport (Constants.ImageIOLibrary, EntryPoint = "CGImageDestinationGetTypeID")]
 		public extern static /* CFTypeID */ nint GetTypeID ();
-		
+
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static /* CFArrayRef __nonnull */ IntPtr CGImageDestinationCopyTypeIdentifiers ();
 
@@ -221,7 +219,7 @@ namespace ImageIO {
 
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static /* CGImageDestinationRef __nullable */ IntPtr CGImageDestinationCreateWithData (
-			/* CFMutableDataRef __nonnull */ IntPtr data, /* CFStringRef __nonnull */ IntPtr stringType, 
+			/* CFMutableDataRef __nonnull */ IntPtr data, /* CFStringRef __nonnull */ IntPtr stringType,
 			/* size_t */ nint count, /* CFDictionaryRef __nullable */ IntPtr options);
 
 		public static CGImageDestination? Create (NSMutableData data, string typeIdentifier, int imageCount, CGImageDestinationOptions? options = null)
@@ -289,13 +287,13 @@ namespace ImageIO {
 		{
 			if (image is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (image));
-			
+
 			CGImageDestinationAddImage (Handle, image.Handle, properties.GetHandle ());
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static void CGImageDestinationAddImageFromSource (/* CGImageDestinationRef __nonnull */ IntPtr idst,
-			/* CGImageSourceRef __nonnull */ IntPtr sourceHandle, /* size_t */ nint index, 
+			/* CGImageSourceRef __nonnull */ IntPtr sourceHandle, /* size_t */ nint index,
 			/* CFDictionaryRef __nullable */ IntPtr properties);
 
 		public void AddImage (CGImageSource source, int index, CGImageDestinationOptions? options = null)
@@ -311,7 +309,7 @@ namespace ImageIO {
 		{
 			if (source is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
-			
+
 			CGImageDestinationAddImageFromSource (Handle, source.Handle, index, properties.GetHandle ());
 		}
 
@@ -332,7 +330,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static void CGImageDestinationAddImageAndMetadata (/* CGImageDestinationRef __nonnull */ IntPtr idst,
@@ -345,7 +343,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public void AddImageAndMetadata (CGImage image, CGImageMetadata meta, NSDictionary? options)
@@ -361,7 +359,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public void AddImageAndMetadata (CGImage image, CGImageMetadata meta, CGImageDestinationOptions? options)
 		{
@@ -375,7 +373,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -389,7 +387,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public bool CopyImageSource (CGImageSource image, NSDictionary? options, out NSError? error)
@@ -407,7 +405,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public bool CopyImageSource (CGImageSource image, CGCopyImageSourceOptions? options, out NSError? error)
 		{

@@ -12,15 +12,14 @@
 #if !TVOS && !MONOMAC && !WATCH
 
 using System;
-using Foundation; 
+using Foundation;
 using ObjCRuntime;
 
 #nullable enable
 
 namespace MediaPlayer {
 
-	public partial class MPMediaQuery
-	{
+	public partial class MPMediaQuery {
 		public MPMediaItem GetItem (nuint index)
 		{
 			using (var array = new NSArray (Messaging.IntPtr_objc_msgSend (Handle, Selector.GetHandle ("items"))))

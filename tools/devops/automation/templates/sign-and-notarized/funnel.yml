@@ -18,12 +18,15 @@ parameters:
   type: string
   default: HEAD
 
-
 - name: azureStorage
   type: string
 
 - name: azureContainer
   type: string
+
+- name: windowsPool
+  type: string
+  default: "VSEng-VSMac-Xamarin-Shared"
 
 jobs:
 - job: configure
@@ -75,6 +78,13 @@ jobs:
 
   - checkout: release-scripts
     clean: true
+
+  - bash: |
+      sudo rm -Rf $(Build.SourcesDirectory)/package
+      sudo rm -Rf $(Build.SourcesDirectory)/classic-*-signed
+      sudo rm -Rf $(Build.SourcesDirectory)/package-internal
+    displayName: "Remove artifacts"
+    condition: always()
 
   - bash: |
       mkdir -p $(Build.SourcesDirectory)/package/notarized
@@ -150,12 +160,16 @@ jobs:
     SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip_nugets'] ]
 
   pool:
-    vmImage: 'windows-latest'
+    name: ${{ parameters.windowsPool }}
+    demands:
+    - agent.os -equals Windows_NT
     workspace:
       clean: all
   steps:
   - template: upload-azure.yml
     parameters:
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
       enableDotnet: ${{ parameters.enableDotnet }}
       sbomFilter: '*.nupkg;*.pkg;*.msi'
       azureStorage: ${{ parameters.azureStorage }}

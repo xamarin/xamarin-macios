@@ -45,7 +45,6 @@ steps:
     $statuses.SetStatus("pending", "Tests on macOS ${{ parameters.statusContext }} have started.", "${{ parameters.statusContext }}")
   displayName: "Initialize state"
   env:
-    BUILD_REVISION: $(Build.SourceVersion)
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
@@ -98,8 +97,6 @@ steps:
 
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
   displayName: 'Clean bot'
-  env:
-    BUILD_REVISION: 'jenkins'
   continueOnError: true
   timeoutInMinutes: 60
 
@@ -116,7 +113,6 @@ steps:
       exit 1
     }
   env:
-    BUILD_REVISION: $(Build.SourceVersion)
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
@@ -131,6 +127,12 @@ steps:
     github_token: $(Github.Token)
   timeoutInMinutes: 30
   enabled: false
+
+- bash: |
+    sudo rm -Rf $(Build.SourcesDirectory)/package
+    sudo rm -Rf $(Build.SourcesDirectory)/artifacts
+  displayName: "Remove artifacts"
+  condition: always()
 
 - task: DownloadPipelineArtifact@2
   displayName: Download not notarized build
@@ -255,7 +257,6 @@ steps:
   timeoutInMinutes: 60
   env:
     CONTEXT: ${{ parameters.statusContext }}
-    BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     MONO_DEBUG: no-gdb-backtrace
@@ -269,7 +270,7 @@ steps:
 # Make sure to report any errors
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:GIT_HASH
+    $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
     $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
     
     if (Test-Path -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -PathType Leaf)  {
@@ -286,7 +287,10 @@ steps:
   continueOnError: true
   env:
     CONTEXT: ${{ parameters.statusContext }}
-    BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     TEST_BOT: $(Agent.Name)
+    ${{ if eq(parameters.repositoryAlias, 'self') }}:
+      COMMENT_HASH: $(GIT_HASH)
+    ${{ else }}:
+      COMMENT_HASH: $(Build.SourceVersion)

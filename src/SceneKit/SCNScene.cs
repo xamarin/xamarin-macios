@@ -13,10 +13,8 @@ using System.Collections.Generic;
 
 #nullable enable
 
-namespace SceneKit
-{
-	public partial class SCNScene : IEnumerable<SCNNode>
-	{
+namespace SceneKit {
+	public partial class SCNScene : IEnumerable<SCNNode> {
 		public void Add (SCNNode node)
 		{
 			RootNode.AddChildNode (node);

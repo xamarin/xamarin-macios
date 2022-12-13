@@ -30,10 +30,10 @@ namespace Social {
 	// note: those are NSString in iOS/OSX that we expose as an enum (i.e. it's NOT a native enum)
 	// when adding a value make sure to update SLRequest.KindToType method
 	public enum SLServiceKind {
-		Facebook, 
-		Twitter, 
-		SinaWeibo, 
-		TencentWeibo, 
+		Facebook,
+		Twitter,
+		SinaWeibo,
+		TencentWeibo,
 #if MONOMAC
 		LinkedIn
 #endif

@@ -30,8 +30,7 @@ namespace OpenTK
 	[SupportedOSPlatform ("tvos")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct NVector3d : IEquatable<NVector3d>
-	{
+	public struct NVector3d : IEquatable<NVector3d> {
 		public double X;
 		public double Y;
 		public double Z;
@@ -93,7 +92,7 @@ namespace OpenTK
 
 		public override int GetHashCode ()
 		{
-			return X.GetHashCode () ^ Y.GetHashCode () ^ Z.GetHashCode ();
+			return HashCode.Combine (X, Y, Z);
 		}
 
 		public override bool Equals (object? obj)

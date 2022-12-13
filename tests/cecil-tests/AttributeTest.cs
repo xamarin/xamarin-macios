@@ -38,10 +38,10 @@ namespace Cecil.Tests {
 		//
 		// This test should find Extension, note that it has an ios attribute,
 		// and insist that some maccatalyst must also be set.
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
-		public void ChildElementsListAvailabilityForAllPlatformsOnParent (string assemblyPath)
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
+		public void ChildElementsListAvailabilityForAllPlatformsOnParent (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath);
+			var assembly = info.Assembly;
 
 			HashSet<string> found = new HashSet<string> ();
 			foreach (var prop in Helper.FilterProperties (assembly, a => HasAnyAvailabilityAttribute (a))) {
@@ -82,15 +82,10 @@ namespace Cecil.Tests {
 		// Example #2:
 		// [Watch (5,0), NoTV, NoMac, iOS (12,0), NoTV]
 		// interface Type { }
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
-		public void DoubleAttributedElements (string assemblyPath)
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
+		public void DoubleAttributedElements (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath);
-			if (assembly is null) {
-				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
-				return;
-			}
-
+			var assembly = info.Assembly;
 			var doubleAttributed = new List<string> ();
 			foreach (var type in Helper.FilterTypes (assembly, a => HasAnyAvailabilityAttribute (a))) {
 				var platformCount = new Dictionary<string, int> ();
@@ -177,14 +172,9 @@ namespace Cecil.Tests {
 			var harvestedInfo = new Dictionary<string, Dictionary<string, PlatformClaimInfo>> ();
 
 			// Load each platform assembly
-			foreach (string assemblyPath in Helper.NetPlatformAssemblies) {
-				var assembly = Helper.GetAssembly (assemblyPath);
-				if (assembly is null) {
-					Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
-					return;
-				}
-
-				string currentPlatform = AssemblyToAttributeName (assemblyPath);
+			foreach (var info in Helper.NetPlatformAssemblyDefinitions) {
+				var assembly = info.Assembly;
+				string currentPlatform = AssemblyToAttributeName (assembly);
 
 				// Walk every class/struct/enum/property/method/enum value/pinvoke/event
 				foreach (var module in assembly.Modules) {
@@ -513,12 +503,12 @@ namespace Cecil.Tests {
 		// }
 		//
 		// When run against mac, this fails as Extension does not include a mac supported of any kind attribute
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
-		public void AllAttributedItemsMustIncludeCurrentPlatform (string assemblyPath)
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
+		public void AllAttributedItemsMustIncludeCurrentPlatform (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath);
+			var assembly = info.Assembly;
 
-			string platformName = AssemblyToAttributeName (assemblyPath);
+			string platformName = AssemblyToAttributeName (assembly);
 
 			HashSet<string> found = new HashSet<string> ();
 			foreach (var type in Helper.FilterTypes (assembly, a => HasAnyAvailabilityAttribute (a))) {
@@ -567,9 +557,9 @@ namespace Cecil.Tests {
 			}
 		}
 
-		string AssemblyToAttributeName (string assemblyPath)
+		string AssemblyToAttributeName (AssemblyDefinition assembly)
 		{
-			var baseName = Path.GetFileName (assemblyPath);
+			var baseName = assembly.Name.Name + ".dll";
 			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_iOS.Platform, true) == baseName)
 				return "ios";
 			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_tvOS.Platform, true) == baseName)

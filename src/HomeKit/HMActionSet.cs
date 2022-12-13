@@ -13,7 +13,7 @@ namespace HomeKit {
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
 #else
-		[iOS (9,0)]
+		[iOS (9, 0)]
 #endif
 		public HMActionSetType ActionSetType {
 			get {

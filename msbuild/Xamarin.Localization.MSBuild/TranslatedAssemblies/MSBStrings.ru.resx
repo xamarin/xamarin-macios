@@ -424,7 +424,7 @@
         </value>
     </data>
   <data name="E0118" xml:space="preserve">
-        <value>{0} exited with code {1}:
+        <value>{0} завершил работу с кодом {1}:
 {2}</value>
     </data>
   <data name="M0119" xml:space="preserve">
@@ -997,6 +997,7 @@
         <value>Задание: запись "{0}" не существует.
         </value>
     </data>
+  <!-- E7068: not in use anymore -->
   <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14+ не поддерживает приложения watchOS 1. Перенесите свой проект на watchOS 2+.</value>
     </data>
@@ -1145,5 +1146,35 @@
     </data>
   <data name="E7101" xml:space="preserve">
         <value>Неизвестное свойство \"{0}\" со значением \"{1}\".</value>
+    </data>
+  <data name="E7102" xml:space="preserve">
+        <value>Недопустимое значение "{0}" для объема обслуживания "{1}" типа "{2}", указанного в группе элементов CustomEntitlements. Ожидается отсутствие значения.</value>
+        <comment>
+            Don't translate: CustomEntitlements (name of option in project file)
+        </comment>
+    </data>
+  <data name="E7103" xml:space="preserve">
+        <value>Недопустимое значение "{0}" для объема обслуживания "{1}" типа "{2}", указанного в группе элементов CustomEntitlements. Ожидается ИСТИНА или ЛОЖЬ.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'true', 'false'
+        </comment>
+    </data>
+  <data name="E7104" xml:space="preserve">
+        <value>Неизвестный тип "{0}" для объема обслуживания "{1}", указанного в группе элементов CustomEntitlements. Ожидается "Remove", "Boolean", "String" или "StringArray".</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'Remove', 'Boolean', 'String', 'StringArray'
+        </comment>
+    </data>
+  <data name="W7105" xml:space="preserve">
+        <value>Непредвиденное расширение "{0}" для собственной ссылки "{1}" в манифесте "{2}".</value>
+        <comment>
+            {0}: file extension
+            {1}: path to a file
+            {2}: path to a file
+        </comment>
     </data>
 </root>

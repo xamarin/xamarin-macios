@@ -42,7 +42,7 @@ namespace ObjCRuntime {
 		// We use the last significant bit of the IntPtr to store if this is a custom class or not.
 #pragma warning disable CS8618 // "Non-nullable field must contain a non-null value when exiting constructor." - we ensure these fields are non-null in other ways
 		static Dictionary<Type, IntPtr> type_to_class; // accessed from multiple threads, locking required.
-		static Type?[] class_to_type;
+		static Type? [] class_to_type;
 #pragma warning restore CS8618
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -59,7 +59,7 @@ namespace ObjCRuntime {
 			if (!Runtime.DynamicRegistrationSupported)
 				return; // Only the dynamic registrar needs the list of registered assemblies.
 
-			
+
 			for (int i = 0; i < map->assembly_count; i++) {
 				var assembly = map->assemblies [i];
 				Runtime.Registrar.SetAssemblyRegistered (Marshal.PtrToStringAuto (assembly.name));
@@ -138,11 +138,13 @@ namespace ObjCRuntime {
 		// class (it will be faster than GetHandle, but it will
 		// not compile unless the class in question actually exists
 		// as an ObjectiveC class in the binary).
-		public static NativeHandle GetHandleIntrinsic (string name) {
+		public static NativeHandle GetHandleIntrinsic (string name)
+		{
 			return objc_getClass (name);
 		}
 
-		public static NativeHandle GetHandle (Type type) {
+		public static NativeHandle GetHandle (Type type)
+		{
 			return GetClassHandle (type, true, out _);
 		}
 
@@ -323,7 +325,7 @@ namespace ObjCRuntime {
 			return Runtime.StringEquals (assembly_name, asm_name);
 		}
 
-		static unsafe int FindMapIndex (Runtime.MTClassMap *array, int lo, int hi, IntPtr @class)
+		static unsafe int FindMapIndex (Runtime.MTClassMap* array, int lo, int hi, IntPtr @class)
 		{
 			if (hi >= lo) {
 				int mid = lo + (hi - lo) / 2;
@@ -480,7 +482,7 @@ namespace ObjCRuntime {
 			throw ErrorHelper.CreateError (8020, $"Could not find the module with MetadataToken 0x{token:X} in the assembly {assembly}.");
 		}
 
-// Restrict this code to desktop for now, which is where most of the problems with outdated generated static registrar code occur.
+		// Restrict this code to desktop for now, which is where most of the problems with outdated generated static registrar code occur.
 #if __MACOS__ || __MACCATALYST__
 		static bool? verify_static_registrar_code;
 		static object? verification_lock;
@@ -574,7 +576,7 @@ namespace ObjCRuntime {
 					return Runtime.INVALID_TOKEN_REF;
 				throw ErrorHelper.CreateError (8025, $"Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because its module's metadata token is {type.Module.MetadataToken} when expected 1.");
 			}
-			
+
 			var map = Runtime.options->RegistrationMap;
 
 			// Find the assembly index in our list of registered assemblies.
@@ -600,7 +602,7 @@ namespace ObjCRuntime {
 			}
 
 			return (uint) ((type.MetadataToken << 8) + (assembly_index << 1));
-			
+
 		}
 
 		// Look for the specified metadata token in the table of full token references.
@@ -636,7 +638,7 @@ namespace ObjCRuntime {
 			var @class = GetClassHandle (type, false, out is_custom_type);
 			if (@class != IntPtr.Zero)
 				return is_custom_type;
-			
+
 			if (Runtime.DynamicRegistrationSupported)
 				return Runtime.Registrar.IsCustomType (type);
 
@@ -686,11 +688,11 @@ namespace ObjCRuntime {
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal extern static IntPtr class_getInstanceMethod (IntPtr cls, IntPtr sel);
 
-		[DllImport (Messaging.LIBOBJC_DYLIB, CharSet=CharSet.Ansi)]
+		[DllImport (Messaging.LIBOBJC_DYLIB, CharSet = CharSet.Ansi)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		internal extern static bool class_addProperty (IntPtr cls, string name, objc_attribute_prop [] attributes, int count);
 
-		[StructLayout (LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+		[StructLayout (LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 		internal struct objc_attribute_prop {
 			[MarshalAs (UnmanagedType.LPStr)] internal string name;
 			[MarshalAs (UnmanagedType.LPStr)] internal string value;

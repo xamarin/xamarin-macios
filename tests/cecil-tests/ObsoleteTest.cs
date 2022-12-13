@@ -16,10 +16,10 @@ namespace Cecil.Tests {
 		// This test verifies that we don't have any obsolete API in .NET that we don't expect to be there
 		// in particular that we don't start out with obsolete APIs from the very beginning (such API should have been removed).
 		// Any obsoleted API after the first stable .NET release should likely be skipped (until XAMCORE_5_0)
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblies))] // call this method with every .net6 library
-		public void GetAllObsoletedThings (string assemblyPath)
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblyDefinitions))] // call this method with every .net6 library
+		public void GetAllObsoletedThings (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath, readSymbols: true);
+			var assembly = info.Assembly;
 
 			// Make a list of Obsolete things
 			var found = new HashSet<string> ();
@@ -118,11 +118,13 @@ namespace Cecil.Tests {
 			var fullname = member.FullName;
 
 			switch (fullname) {
+#if !XAMCORE_5_0 // these exceptions should be fixed in XAMCORE_5_0
 			case "GameKit.IGKPeerPickerControllerDelegate":
 			case "GameKit.GKPeerPickerControllerDelegate_Extensions":
 			case "GameKit.GKPeerPickerControllerDelegate":
 			case "GameKit.GKPeerPickerController":
 				return true;
+#endif
 			default:
 				return false;
 			}

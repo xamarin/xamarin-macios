@@ -4,12 +4,9 @@ using Xamarin.MacDev;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
-	[TestFixture (true)]
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture (false)]
-	public abstract class GeneratePlistTaskTests_watchOS: GeneratePlistTaskTests_Core
-	{
+	public abstract class GeneratePlistTaskTests_watchOS : GeneratePlistTaskTests_Core {
 		protected override ApplePlatform Platform => ApplePlatform.WatchOS;
 
 		public GeneratePlistTaskTests_watchOS (bool isDotNet)

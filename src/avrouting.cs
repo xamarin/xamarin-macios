@@ -22,19 +22,17 @@ using OS_nw_endpoint = ObjCRuntime.NativeHandle;
 
 namespace AVRouting {
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoTV, NoWatch]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoTV, NoWatch]
 	[Native]
-	public enum AVCustomRoutingEventReason : long
-	{
+	public enum AVCustomRoutingEventReason : long {
 		Activate = 0,
 		Deactivate,
 		Reactivate,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
-	interface AVCustomDeviceRoute
-	{
+	interface AVCustomDeviceRoute {
 		[Internal]
 		[Export ("networkEndpoint")]
 		OS_nw_endpoint _NetworkEndpoint { get; }
@@ -43,10 +41,9 @@ namespace AVRouting {
 		NSUuid BluetoothIdentifier { get; }
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
-	interface AVCustomRoutingActionItem
-	{
+	interface AVCustomRoutingActionItem {
 		[Export ("type", ArgumentSemantic.Copy)]
 		UTType Type { get; set; }
 
@@ -54,10 +51,9 @@ namespace AVRouting {
 		string OverrideTitle { get; set; }
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
-	interface AVCustomRoutingController
-	{
+	interface AVCustomRoutingController {
 		[Wrap ("WeakDelegate")]
 		IAVCustomRoutingControllerDelegate Delegate { get; set; }
 
@@ -65,10 +61,10 @@ namespace AVRouting {
 		NSObject WeakDelegate { get; set; }
 
 		[Export ("authorizedRoutes")]
-		AVCustomDeviceRoute[] AuthorizedRoutes { get; }
+		AVCustomDeviceRoute [] AuthorizedRoutes { get; }
 
 		[Export ("customActionItems", ArgumentSemantic.Strong)]
-		AVCustomRoutingActionItem[] CustomActionItems { get; set; }
+		AVCustomRoutingActionItem [] CustomActionItems { get; set; }
 
 		[Export ("invalidateAuthorizationForRoute:")]
 		void InvalidateAuthorization (AVCustomDeviceRoute route);
@@ -79,15 +75,14 @@ namespace AVRouting {
 		[Export ("isRouteActive:")]
 		bool IsRouteActive (AVCustomDeviceRoute route);
 
-		[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+		[NoWatch, NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
 		[Notification, Field ("AVCustomRoutingControllerAuthorizedRoutesDidChangeNotification")]
 		NSString AuthorizedRoutesDidChangeNotification { get; }
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
-	interface AVCustomRoutingEvent
-	{
+	interface AVCustomRoutingEvent {
 		[Export ("reason")]
 		AVCustomRoutingEventReason Reason { get; }
 

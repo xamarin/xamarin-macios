@@ -15,11 +15,11 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-using OS_nw_protocol_definition=System.IntPtr;
-using OS_nw_protocol_metadata=System.IntPtr;
-using nw_service_class_t=System.IntPtr;
-using nw_protocol_stack_t=System.IntPtr;
-using nw_protocol_options_t=System.IntPtr;
+using OS_nw_protocol_definition = System.IntPtr;
+using OS_nw_protocol_metadata = System.IntPtr;
+using nw_service_class_t = System.IntPtr;
+using nw_protocol_stack_t = System.IntPtr;
+using nw_protocol_options_t = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -33,17 +33,17 @@ namespace Network {
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
-	[Watch (6,0)]
+	[TV (12, 0)]
+	[Mac (10, 14)]
+	[iOS (12, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWProtocolStack : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
 		internal NWProtocolStack (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		public NWProtocolStack (NativeHandle handle, bool owns) : base (handle, owns) {}
+		public NWProtocolStack (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -72,7 +72,7 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<Action<NWProtocolOptions>> (block);
 			if (del is not null) {
-				using (var tempOptions = new NWProtocolOptions (options, owns: false)) 
+				using (var tempOptions = new NWProtocolOptions (options, owns: false))
 				using (var definition = tempOptions.ProtocolDefinition) {
 					NWProtocolOptions? castedOptions = null;
 
@@ -86,7 +86,7 @@ namespace Network {
 						castedOptions = new NWProtocolIPOptions (options, owns: false);
 					} else if (definition.Equals (NWProtocolDefinition.CreateWebSocketDefinition ())) {
 						castedOptions = new NWWebSocketOptions (options, owns: false);
-					} 
+					}
 
 					del (castedOptions ?? tempOptions);
 					castedOptions?.Dispose ();
@@ -121,7 +121,7 @@ namespace Network {
 				var pHandle = nw_protocol_stack_copy_transport_protocol (GetCheckedHandle ());
 				if (pHandle == IntPtr.Zero)
 					return null;
-				var tempOptions = new NWProtocolOptions (pHandle, owns: true); 
+				var tempOptions = new NWProtocolOptions (pHandle, owns: true);
 
 				using (var definition = tempOptions.ProtocolDefinition) {
 					NWProtocolOptions? castedOptions = null;
@@ -130,7 +130,7 @@ namespace Network {
 					}
 					if (definition.Equals (NWProtocolDefinition.CreateUdpDefinition ())) {
 						castedOptions = new NWProtocolUdpOptions (pHandle, owns: true);
-					} 
+					}
 					if (castedOptions is null) {
 						return tempOptions;
 					} else {

@@ -29,17 +29,17 @@ namespace Network {
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
-	[Watch (6,0)]
+	[TV (12, 0)]
+	[Mac (10, 14)]
+	[iOS (12, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWPath : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
 		internal NWPath (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		public NWPath (NativeHandle handle, bool owns) : base (handle, owns) {}
+		public NWPath (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -138,8 +138,7 @@ namespace Network {
 			if (callback is null)
 				return;
 
-			Func<NWInterface, bool> func = (v) =>
-			{
+			Func<NWInterface, bool> func = (v) => {
 				callback (v);
 				return true;
 			};
@@ -169,9 +168,9 @@ namespace Network {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -183,9 +182,9 @@ namespace Network {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		public bool IsConstrained => nw_path_is_constrained (GetCheckedHandle ());
 
@@ -195,9 +194,9 @@ namespace Network {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_path_enumerate_gateways (IntPtr path, ref BlockLiteral enumerate_block);
@@ -224,16 +223,15 @@ namespace Network {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		[Obsolete ("Use the overload that takes a 'Func<NWEndpoint, bool>' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		public void EnumerateGateways (Action<NWEndpoint> callback)
 		{
-			Func<NWEndpoint,bool> func = (v) =>
-			{
+			Func<NWEndpoint, bool> func = (v) => {
 				callback (v);
 				return true;
 			};
@@ -247,9 +245,9 @@ namespace Network {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateGateways (Func<NWEndpoint, bool> callback)
@@ -273,11 +271,11 @@ namespace Network {
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("maccatalyst14.2")]
 #else
-		[iOS (14,2)]
-		[TV (14,2)]
-		[Watch (7,1)]
-		[Mac (11,0)]
-		[MacCatalyst (14,2)]
+		[iOS (14, 2)]
+		[TV (14, 2)]
+		[Watch (7, 1)]
+		[Mac (11, 0)]
+		[MacCatalyst (14, 2)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWPathUnsatisfiedReason /* nw_path_unsatisfied_reason_t */ nw_path_get_unsatisfied_reason (IntPtr /* OS_nw_path */ path);
@@ -288,11 +286,11 @@ namespace Network {
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("maccatalyst14.2")]
 #else
-		[iOS (14,2)]
-		[TV (14,2)]
-		[Watch (7,1)]
-		[Mac (11,0)]
-		[MacCatalyst (14,2)]
+		[iOS (14, 2)]
+		[TV (14, 2)]
+		[Watch (7, 1)]
+		[Mac (11, 0)]
+		[MacCatalyst (14, 2)]
 #endif
 		public NWPathUnsatisfiedReason GetUnsatisfiedReason ()
 		{

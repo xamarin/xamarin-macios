@@ -41,7 +41,7 @@ namespace UIKit {
 			{
 				if (attributes == null)
 					throw new ArgumentNullException ("attributes");
-	
+
 				using (var dict = attributes.Dictionary) {
 					_SetScopeBarButtonTitle (dict, state);
 				}

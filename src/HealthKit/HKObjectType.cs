@@ -14,8 +14,7 @@
 
 using System;
 using Foundation;
-namespace HealthKit
-{
+namespace HealthKit {
 #pragma warning disable CS0618 // Type or member is obsolete
 	public partial class HKQuantityType {
 		public static HKQuantityType? Create (HKQuantityTypeIdentifier kind)

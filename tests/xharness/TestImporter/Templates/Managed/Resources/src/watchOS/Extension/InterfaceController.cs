@@ -18,11 +18,9 @@ using BCLTests.TestRunner.Core;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace monotouchtestWatchKitExtension
-{
+namespace monotouchtestWatchKitExtension {
 	[Register ("InterfaceController")]
-	public partial class InterfaceController : WKInterfaceController
-	{
+	public partial class InterfaceController : WKInterfaceController {
 		bool running;
 		Xamarin.iOS.UnitTests.TestRunner runner;
 		HttpTextWriter http_writer;
@@ -44,7 +42,7 @@ namespace monotouchtestWatchKitExtension
 
 		[Outlet ("cmdRun")]
 		WatchKit.WKInterfaceButton cmdRun { get; set; }
-		
+
 		[DllImport ("libc")]
 		static extern void exit (int code);
 		protected virtual void TerminateWithSuccess ()
@@ -56,12 +54,10 @@ namespace monotouchtestWatchKitExtension
 
 		static InterfaceController ()
 		{
-			ObjCRuntime.Runtime.MarshalManagedException += (object sender, ObjCRuntime.MarshalManagedExceptionEventArgs args) =>
-			{
+			ObjCRuntime.Runtime.MarshalManagedException += (object sender, ObjCRuntime.MarshalManagedExceptionEventArgs args) => {
 				Console.WriteLine ("Managed exception: {0}", args.Exception);
 			};
-			ObjCRuntime.Runtime.MarshalObjectiveCException += (object sender, ObjCRuntime.MarshalObjectiveCExceptionEventArgs args) =>
-			{
+			ObjCRuntime.Runtime.MarshalObjectiveCException += (object sender, ObjCRuntime.MarshalObjectiveCExceptionEventArgs args) => {
 				Console.WriteLine ("Objective-C exception: {0}", args.Exception);
 			};
 		}
@@ -78,24 +74,24 @@ namespace monotouchtestWatchKitExtension
 		}
 
 		internal static IEnumerable<TestAssemblyInfo> GetTestAssemblies ()
- 		{
+		{
 			// var t = Path.GetFileName (typeof (ActivatorCas).Assembly.Location);
 			foreach (var name in RegisterType.TypesToRegister.Keys) {
 				var a = Assembly.Load (name);
 				if (a == null) {
 					Console.WriteLine ($"# WARNING: Unable to load assembly {name}.");
- 					continue;
+					continue;
 				}
 				yield return new TestAssemblyInfo (a, name);
 			}
- 		}
- 		
+		}
+
 		void RunTests ()
 		{
 			var options = ApplicationOptions.Current;
 			TextWriter writer = null;
 			if (!string.IsNullOrEmpty (options.HostName) && string.IsNullOrEmpty (options.LogFile)) {
-				http_writer = new HttpTextWriter () { HostName = options.HostName.Split (',')[0], Port = options.HostPort };
+				http_writer = new HttpTextWriter () { HostName = options.HostName.Split (',') [0], Port = options.HostPort };
 				Console.WriteLine ("Sending results to {0}:{1} using HTTP", http_writer.HostName, http_writer.Port);
 				http_writer.Open ();
 				writer = http_writer;
@@ -114,18 +110,16 @@ namespace monotouchtestWatchKitExtension
 
 			// add category filters if they have been added
 			runner.SkipCategories (categories);
-			
+
 			// if we have ignore files, ignore those tests
 			var skippedTests = IgnoreFileParser.ParseContentFiles (NSBundle.MainBundle.BundlePath);
 			if (skippedTests.Any ()) {
 				// ensure that we skip those tests that have been passed via the ignore files
 				runner.SkipTests (skippedTests);
 			}
-			
-			ThreadPool.QueueUserWorkItem ((v) =>
-			{
-				BeginInvokeOnMainThread (async () =>
-				{
+
+			ThreadPool.QueueUserWorkItem ((v) => {
+				BeginInvokeOnMainThread (async () => {
 					lblStatus.SetText (string.Format ("{0} tests", runner.TotalTests));
 					await runner.Run (testAssemblies).ConfigureAwait (false);
 					RenderResults ();
@@ -195,8 +189,7 @@ namespace monotouchtestWatchKitExtension
 	}
 }
 
-class NameStartsWithFilter : NUnit.Framework.Internal.TestFilter
-{
+class NameStartsWithFilter : NUnit.Framework.Internal.TestFilter {
 	public char FirstChar;
 	public char LastChar;
 
@@ -208,7 +201,7 @@ class NameStartsWithFilter : NUnit.Framework.Internal.TestFilter
 		var method = test as NUnit.Framework.Internal.TestMethod;
 		if (method != null)
 			return Match (method.Parent);
-		
+
 		var name = !string.IsNullOrEmpty (test.Name) ? test.Name : test.FullName;
 		bool rv;
 		if (string.IsNullOrEmpty (name)) {

@@ -493,7 +493,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 						var projectData = new Dictionary<WatchAppType, (string plist, string project)> ();
 						foreach (var appType in new [] { WatchAppType.Extension, WatchAppType.App }) {
 							(string plist, string project) data;
-							var plist = InfoPlistGenerator.GenerateCode (GetPlistTemplate (appType), projectDefinition.Name);
+							var plist = InfoPlistGenerator.GenerateCode (Platform.WatchOS, GetPlistTemplate (appType), projectDefinition.Name);
 							data.plist = GetPListPath (generatedCodeDir, appType);
 							using (var file = new StreamWriter (data.plist, false)) { // false is do not append
 								await file.WriteAsync (plist);
@@ -518,7 +518,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 							projectData [appType] = data;
 						} // foreach app type
 
-						var rootPlist = InfoPlistGenerator.GenerateCode (GetPlistTemplate (Platform.WatchOS), projectDefinition.Name);
+						var rootPlist = InfoPlistGenerator.GenerateCode (Platform.iOS, GetPlistTemplate (Platform.WatchOS), projectDefinition.Name);
 						var infoPlistPath = GetPListPath (generatedCodeDir, Platform.WatchOS);
 						using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
 							await file.WriteAsync (rootPlist);
@@ -621,7 +621,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 				gp.TimeoutMultiplier = def.TimeoutMultiplier;
 				gp.GenerationCompleted = Task.Run (async () => {
 					try {
-						var plist = InfoPlistGenerator.GenerateCode (GetPlistTemplate (platform), projectDefinition.Name);
+						var plist = InfoPlistGenerator.GenerateCode (platform, GetPlistTemplate (platform), projectDefinition.Name);
 						var infoPlistPath = GetPListPath (generatedCodeDir, platform);
 						using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
 							await file.WriteAsync (plist);
@@ -728,7 +728,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 							await file.WriteAsync (registerCode);
 						}
 
-						var plist = InfoPlistGenerator.GenerateCode (GetPlistTemplate (platform), projectDefinition.Name);
+						var plist = InfoPlistGenerator.GenerateCode (platform, GetPlistTemplate (platform), projectDefinition.Name);
 						var infoPlistPath = GetPListPath (generatedCodeDir, platform);
 						using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
 							await file.WriteAsync (plist);

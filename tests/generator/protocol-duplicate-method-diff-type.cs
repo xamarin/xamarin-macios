@@ -4,11 +4,9 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
-namespace Test 
-{
+namespace Test {
 	[Protocol]
-	public interface First
-	{
+	public interface First {
 		[Abstract]
 		[Export ("doit:with:more:")]
 		void DoIt (int a, int b, int c);

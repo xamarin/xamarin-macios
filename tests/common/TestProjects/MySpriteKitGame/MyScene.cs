@@ -5,10 +5,8 @@ using Foundation;
 using SpriteKit;
 using UIKit;
 
-namespace MySpriteKitGame
-{
-	public class MyScene : SKScene
-	{
+namespace MySpriteKitGame {
+	public class MyScene : SKScene {
 		public MyScene (CGSize size) : base (size)
 		{
 			// Setup your scene here
@@ -27,7 +25,7 @@ namespace MySpriteKitGame
 		{
 			// Called when a touch begins
 			foreach (var touch in touches) {
-				var location = ((UITouch)touch).LocationInNode (this);
+				var location = ((UITouch) touch).LocationInNode (this);
 
 				var sprite = new SKSpriteNode ("Spaceship") {
 					Position = location,
@@ -35,7 +33,7 @@ namespace MySpriteKitGame
 					YScale = 0.4f
 				};
 
-				var action = SKAction.RotateByAngle ((float)Math.PI, 1.0);
+				var action = SKAction.RotateByAngle ((float) Math.PI, 1.0);
 
 				sprite.RunAction (SKAction.RepeatActionForever (action));
 
