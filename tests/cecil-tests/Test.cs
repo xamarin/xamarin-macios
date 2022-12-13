@@ -90,9 +90,6 @@ namespace Cecil.Tests {
 		public void NoSystemConsoleReference (AssemblyInfo info)
 		{
 			var assembly = info.Assembly;
-			if (assembly.Name.Name == "Xamarin.Mac")
-				Assert.Ignore ("Xamarin.Mac has a workaround for Sierra bug w/NSLog");
-
 			// this has a quite noticeable impact on (small) app size
 			if (assembly.MainModule.TryGetTypeReference ("System.Console", out var _))
 				Assert.Fail ($"{assembly} has a reference to `System.Console`. Please use `Runtime.NSLog` inside the platform assemblies");
