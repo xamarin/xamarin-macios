@@ -2551,13 +2551,17 @@ namespace CoreText {
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern nint CTFontGetLigatureCaretPositions (IntPtr handle, CGGlyph glyph, [Out] nfloat [] positions, nint max);
+		static extern unsafe nint CTFontGetLigatureCaretPositions (IntPtr handle, CGGlyph glyph, [Out] nfloat* positions, nint max);
 
 		public nint GetLigatureCaretPositions (CGGlyph glyph, nfloat [] positions)
 		{
 			if (positions is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (positions));
-			return CTFontGetLigatureCaretPositions (Handle, glyph, positions, positions.Length);
+			unsafe {
+				fixed (nfloat* positionsPtr = positions) {
+					return CTFontGetLigatureCaretPositions (Handle, glyph, positionsPtr, positions.Length);
+				}
+			}
 		}
 		#endregion
 
