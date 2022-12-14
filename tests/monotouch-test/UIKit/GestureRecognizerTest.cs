@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using Foundation;
 using UIKit;
 using NUnit.Framework;
+using System.Threading;
 
 namespace MonoTouchFixtures.UIKit {
 	
@@ -89,6 +90,32 @@ namespace MonoTouchFixtures.UIKit {
 			GC.KeepAlive (list);
 		}
 
+		[Test]
+		public void GenericCallbackTest ()
+		{
+			var didRun = false;
+			var callbackEvent = new AutoResetEvent (false);
+			Action<UITapGestureRecognizer> callback = (UITapGestureRecognizer _) => {
+				didRun = true;
+				callbackEvent.Set ();
+			};
+
+			using var recognizer = new UITapGestureRecognizer (callback);
+
+			// add gesture recognizer to UI view
+			using UIView view = new UIView ();
+			view.AddGestureRecognizer (recognizer);
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), () => {
+				// change state of gesture recognizer to execute callback
+				recognizer.State = UIGestureRecognizerState.Changed;
+				recognizer.State = UIGestureRecognizerState.Ended;
+			}, () => didRun);
+
+			// blocks main thread until event is trigerred
+			callbackEvent.WaitOne (30000);
+			Assert.IsTrue (didRun, "didRun");
+		}
+
 		class FinalizerNotifier
 		{
 			public Action Action;
@@ -102,7 +129,7 @@ namespace MonoTouchFixtures.UIKit {
 					Action ();
 			}
 		}
-	}
-}
+	} //end of class
+} //end of namespace
 
 #endif // !__WATCHOS__

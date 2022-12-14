@@ -17,14 +17,16 @@ namespace Xamarin.Messaging.Build {
 		{
 			this.serializer = serializer;
 
-			var dotnetPath = Path.Combine (MessagingContext.GetXmaPath (), "SDKs", "dotnet", "dotnet");
+			var sdkRootPath = Path.Combine (MessagingContext.GetXmaPath (), "SDKs");
+			var dotnetPath = Path.Combine (sdkRootPath, "dotnet", "dotnet");
 
-			//In case the XMA dotnet has not been installed yet
-			if (!File.Exists (dotnetPath)) {
+			if (File.Exists (dotnetPath)) {
+				Environment.SetEnvironmentVariable ("DOTNET_CUSTOM_HOME", Path.Combine (sdkRootPath, ".home"));
+			} else {
+				//In case the XMA dotnet has not been installed yet
 				dotnetPath = "/usr/local/share/dotnet/dotnet";
 			}
 
-			// TODO: Needed by the ILLinkTask, we need to add support for doing this from Windows
 			Environment.SetEnvironmentVariable ("DOTNET_HOST_PATH", dotnetPath);
 		}
 
@@ -32,7 +34,7 @@ namespace Xamarin.Messaging.Build {
 
 		internal void LoadTasks (Assembly assembly) => tasks.AddRange (assembly.GetTypes ());
 
-		internal void LoadXamarinTasks () => LoadTasks (typeof (iOS.Tasks.CompileAppManifest).Assembly);
+		internal void LoadXamarinTasks () => LoadTasks (typeof (iOS.Tasks.MTouch).Assembly);
 
 		public ExecuteTaskResult Execute (string taskName, string inputs)
 		{

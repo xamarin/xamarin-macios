@@ -428,6 +428,10 @@ namespace Introspection {
 			case "VTCompressionSession":
 			case "VTSession":
 				return VTCompressionSession.Create (1024, 768, CMVideoCodecType.H264, (sourceFrame, status, flags, buffer) => { }, null, (CVPixelBufferAttributes) null);
+			case "VTPixelRotationSession":
+				return VTPixelRotationSession.Create ();
+			case "VTPixelTransferSession":
+				return VTPixelTransferSession.Create ();
 			case "VTFrameSilo":
 				return VTFrameSilo.Create ();
 			case "VTMultiPassStorage":

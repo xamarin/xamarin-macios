@@ -8,13 +8,12 @@ using System.Text.RegularExpressions;
 using NUnit.Framework;
 using Xamarin.Utils;
 
-namespace Xamarin.Tests
-{
-	class XBuild
-	{
+#nullable disable // until we get around to fixing this file
+
+namespace Xamarin.Tests {
+	class XBuild {
 		public static string ToolPath {
-			get
-			{
+			get {
 				return Configuration.XIBuildPath;
 			}
 		}

@@ -1,11 +1,5 @@
 ## Unavailable
 !missing-field! AVCaptureSessionPresetiFrame960x540 not bound
-!missing-selector! AVAssetReaderOutputCaptionAdaptor::setValidationDelegate: not bound
-
-# delegate is not present and will result in a compilation error
-!missing-selector! AVAssetReaderOutputCaptionAdaptor::validationDelegate not bound
-
-# added and deprecated 
 
 # not possible with the generator but added INSFastEnumeration for whenever is supported.
 !missing-protocol-conformance! AVCaptureSynchronizedDataCollection should conform to NSFastEnumeration
@@ -34,3 +28,6 @@
 
 ## this API is to have cute Objective-C syntax for something that's (according to the docs) identical to what another method does (which we've bound).
 !missing-selector! AVCaptureSynchronizedDataCollection::objectForKeyedSubscript: not bound
+
+### deprecated in iOS8
+!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found

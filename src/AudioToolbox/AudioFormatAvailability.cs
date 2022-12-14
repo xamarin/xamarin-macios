@@ -44,35 +44,34 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public static class AudioFormatAvailability
-	{
-		public static AudioValueRange[]? GetAvailableEncodeBitRates (AudioFormatType format)
+	public static class AudioFormatAvailability {
+		public static AudioValueRange []? GetAvailableEncodeBitRates (AudioFormatType format)
 		{
 			return GetAvailable<AudioValueRange> (AudioFormatProperty.AvailableEncodeBitRates, format);
 		}
 
-		public static AudioValueRange[]? GetAvailableEncodeSampleRates (AudioFormatType format)
+		public static AudioValueRange []? GetAvailableEncodeSampleRates (AudioFormatType format)
 		{
 			return GetAvailable<AudioValueRange> (AudioFormatProperty.AvailableEncodeSampleRates, format);
 		}
 
-		public static AudioClassDescription[]? GetDecoders (AudioFormatType format)
+		public static AudioClassDescription []? GetDecoders (AudioFormatType format)
 		{
 			return GetAvailable<AudioClassDescription> (AudioFormatProperty.Decoders, format);
 		}
 
-		public static AudioClassDescription[]? GetEncoders (AudioFormatType format)
+		public static AudioClassDescription []? GetEncoders (AudioFormatType format)
 		{
 			return GetAvailable<AudioClassDescription> (AudioFormatProperty.Encoders, format);
 		}
 
-		unsafe static T[]? GetAvailable<T> (AudioFormatProperty prop, AudioFormatType format)
-		{		
+		unsafe static T []? GetAvailable<T> (AudioFormatProperty prop, AudioFormatType format)
+		{
 			uint size;
 			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (prop, sizeof (AudioFormatType), ref format, out size) != 0)
 				return null;
 
-			var data = new T[size / Marshal.SizeOf (typeof (T))];
+			var data = new T [size / Marshal.SizeOf (typeof (T))];
 			var array_handle = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, since it's not possible to use unsafe code to get the address of a generic object.
 
 			try {
@@ -89,10 +88,9 @@ namespace AudioToolbox {
 		}
 	}
 
-	static partial class AudioFormatPropertyNative
-	{
+	static partial class AudioFormatPropertyNative {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		public unsafe extern static AudioFormatError AudioFormatGetProperty (AudioFormatProperty inPropertyID, int inSpecifierSize, AudioClassDescription* inSpecifier, ref int ioPropertyDataSize,
 			out uint outPropertyData);
-	}	
+	}
 }

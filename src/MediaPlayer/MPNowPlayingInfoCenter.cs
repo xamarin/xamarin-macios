@@ -170,15 +170,15 @@ namespace MediaPlayer {
 			if (DefaultPlaybackRate.HasValue)
 				Add (dict, MPNowPlayingInfoCenter.PropertyDefaultPlaybackRate, new NSNumber (DefaultPlaybackRate.Value));
 
-			if (AvailableLanguageOptions != null && AvailableLanguageOptions.Length != 0)
+			if (AvailableLanguageOptions is not null && AvailableLanguageOptions.Length != 0)
 				Add (dict, MPNowPlayingInfoCenter.PropertyAvailableLanguageOptions, NSArray.FromObjects (AvailableLanguageOptions));
-			if (CurrentLanguageOptions != null && CurrentLanguageOptions.Length != 0)
+			if (CurrentLanguageOptions is not null && CurrentLanguageOptions.Length != 0)
 				Add (dict, MPNowPlayingInfoCenter.PropertyCurrentLanguageOptions, NSArray.FromObjects (CurrentLanguageOptions));
-			if (CollectionIdentifier != null)
+			if (CollectionIdentifier is not null)
 				Add (dict, MPNowPlayingInfoCenter.PropertyCollectionIdentifier, new NSString (CollectionIdentifier));
-			if (ExternalContentIdentifier != null)
+			if (ExternalContentIdentifier is not null)
 				Add (dict, MPNowPlayingInfoCenter.PropertyExternalContentIdentifier, new NSString (ExternalContentIdentifier));
-			if (ExternalUserProfileIdentifier != null)
+			if (ExternalUserProfileIdentifier is not null)
 				Add (dict, MPNowPlayingInfoCenter.PropertyExternalUserProfileIdentifier, new NSString (ExternalUserProfileIdentifier));
 			if (PlaybackProgress.HasValue)
 				Add (dict, MPNowPlayingInfoCenter.PropertyPlaybackProgress, new NSNumber (PlaybackProgress.Value));
@@ -186,9 +186,9 @@ namespace MediaPlayer {
 				Add (dict, MPNowPlayingInfoCenter.PropertyMediaType, new NSNumber ((int)MediaType.Value));
 			if (IsLiveStream.HasValue)
 				Add (dict, MPNowPlayingInfoCenter.PropertyIsLiveStream, new NSNumber (IsLiveStream.Value));
-			if (AssetUrl != null)
+			if (AssetUrl is not null)
 				Add (dict, MPNowPlayingInfoCenter.PropertyAssetUrl, AssetUrl);
-			if (CurrentPlaybackDate != null)
+			if (CurrentPlaybackDate is not null)
 				Add (dict, MPNowPlayingInfoCenter.PropertyCurrentPlaybackDate, CurrentPlaybackDate);
 
 			if (AlbumTrackCount.HasValue)
@@ -204,17 +204,17 @@ namespace MediaPlayer {
 			if (PlaybackDuration.HasValue)
 				dict.Add (MPMediaItem.PlaybackDurationProperty, new NSNumber (PlaybackDuration.Value));
 
-			if (AlbumTitle != null)
+			if (AlbumTitle is not null)
 				dict.Add (MPMediaItem.AlbumTitleProperty, new NSString (AlbumTitle));
-			if (Artist != null)
+			if (Artist is not null)
 				dict.Add (MPMediaItem.ArtistProperty, new NSString (Artist));
-			if (Artwork != null)
+			if (Artwork is not null)
 				dict.Add (MPMediaItem.ArtworkProperty, Artwork);
-			if (Composer != null)
+			if (Composer is not null)
 				dict.Add (MPMediaItem.ComposerProperty, new NSString (Composer));
-			if (Genre != null)
+			if (Genre is not null)
 				dict.Add (MPMediaItem.GenreProperty, new NSString (Genre));
-			if (Title != null)
+			if (Title is not null)
 				dict.Add (MPMediaItem.TitleProperty, new NSString (Title));
 
 			return dict;
@@ -222,13 +222,13 @@ namespace MediaPlayer {
 
 		void Add (NSMutableDictionary dictionary, NSObject key, NSObject value)
 		{
-			if (key != null)
+			if (key is not null)
 				dictionary.Add (key, value);
 		}
 
 		bool TryGetValue (NSDictionary source, NSObject? key, [NotNullWhen (true)] out NSObject? result)
 		{
-			if (key != null)
+			if (key is not null)
 				return source.TryGetValue (key, out result);
 			result = null;
 			return false;
@@ -236,7 +236,7 @@ namespace MediaPlayer {
 
 		internal MPNowPlayingInfo (NSDictionary? source)
 		{
-			if (source == null)
+			if (source is null)
 				return;
 			
 			NSObject? result;

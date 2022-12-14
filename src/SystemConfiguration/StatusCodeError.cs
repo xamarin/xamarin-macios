@@ -7,6 +7,8 @@
 // Copyright 2012, 2016 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -23,7 +25,7 @@ namespace SystemConfiguration {
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static IntPtr /* const char* */ SCErrorString (int code);
 		
-		public static string GetErrorDescription (StatusCode statusCode)
+		public static string? GetErrorDescription (StatusCode statusCode)
 		{
 			var ptr = SCErrorString ((int) statusCode);
 			return Marshal.PtrToStringAnsi (ptr);

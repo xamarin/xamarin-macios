@@ -1,3 +1,5 @@
+#nullable enable
+
 #if __IOS__ && !NET
 using System;
 using System.ComponentModel;
@@ -45,7 +47,7 @@ namespace WatchKit {
 			throw new PlatformNotSupportedException (Constants.WatchKitRemoved);
 		}
 
-		public virtual void DismissController ()
+		public new virtual void DismissController ()
 		{
 			throw new PlatformNotSupportedException (Constants.WatchKitRemoved);
 		}

@@ -2497,6 +2497,15 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid {0} found on &apos;{1}&apos;. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
+        /// </summary>
+        public static string MT4124_I {
+            get {
+                return ResourceManager.GetString("MT4124_I", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The registrar found an invalid type &apos;{0}&apos; in signature for method &apos;{1}&apos;: The interface must have a Protocol attribute specifying its wrapper type.
         ///		.
         /// </summary>
@@ -3785,6 +3794,15 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bitcode is enabled, but bitcode is not supported in Xcode 14+ and has been disabled. Please disable bitcode by removing the &apos;MtouchEnableBitcode&apos; property from the project file..
+        /// </summary>
+        public static string MX0186 {
+            get {
+                return ResourceManager.GetString("MX0186", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not copy the assembly &apos;{0}&apos; to &apos;{1}&apos;: {2}
         ///		.
         /// </summary>
@@ -4093,6 +4111,33 @@ namespace Xamarin.Bundler {
         public static string MX8041 {
             get {
                 return ResourceManager.GetString("MX8041", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An exception occurred while trying to invoke the function {0}: {1}..
+        /// </summary>
+        public static string MX8042 {
+            get {
+                return ResourceManager.GetString("MX8042", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An exception occurred while validating the static registrar code for {0}: {1}.
+        /// </summary>
+        public static string MX8043 {
+            get {
+                return ResourceManager.GetString("MX8043", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The assembly {0} has been modified since the app was built, invalidating the generated static registrar code. The MVID for the loaded assembly is {1}, while the MVID for the assembly the generated static registrar code corresponds to is {2}..
+        /// </summary>
+        public static string MX8044 {
+            get {
+                return ResourceManager.GetString("MX8044", resourceCulture);
             }
         }
     }

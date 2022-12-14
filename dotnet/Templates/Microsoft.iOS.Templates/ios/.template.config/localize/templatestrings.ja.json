@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "iOS アプリケーション (プレビュー)",
+  "name": "iOS Application",
   "description": ".NET iOS アプリケーションを作成するためのプロジェクト",
   "symbols/bundleId/description": "Info.plist の CFBundleIdentifier をオーバーライドします",
   "symbols/minOSVersion/description": "プロジェクト ファイルの SupportedOSPlatformVersion をオーバーライドします",

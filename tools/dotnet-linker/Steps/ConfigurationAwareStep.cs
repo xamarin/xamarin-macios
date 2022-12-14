@@ -115,7 +115,7 @@ namespace Xamarin.Linker {
 				return new AggregateException (productExceptions);
 			}
 
-			return ErrorHelper.CreateError (ErrorCode | 1, e, Errors.MX_ConfigurationAwareStep, Name, e.Message);
+			return ErrorHelper.CreateError (ErrorCode | 1, e, Errors.MX_ConfigurationAwareStep, Name, e.Message);
 		}
 
 		protected virtual Exception FailEnd (Exception e)

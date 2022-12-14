@@ -13,6 +13,11 @@
 extern "C" {
 #endif
 
+// The inclusion of "_Nullable" in the signature for xamarin_UIApplicationMain makes clang complain about missing nullability info for other methods in this file.
+// We don't want to fix that right now (but feel free to do so if you're reading this), so ignore the missing nullability info warning for the methods in question.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnullability-completeness"
+
 void * xamarin_IntPtr_objc_msgSend_IntPtr (id self, SEL sel, void *a);
 void * xamarin_IntPtr_objc_msgSendSuper_IntPtr (struct objc_super *super, SEL sel, void *a);
 
@@ -55,6 +60,10 @@ void * xamarin_IntPtr_objc_msgSendSuper_IntPtr_UInt32_nint_UInt32 (struct objc_s
 
 void * xamarin_IntPtr_objc_msgSend_IntPtr_UInt64_nint_UInt64 (id self, SEL sel, void *a, uint64_t b, xm_nint_t c, uint64_t d);
 void * xamarin_IntPtr_objc_msgSendSuper_IntPtr_UInt64_nint_UInt64 (struct objc_super *super, SEL sel, void *a, uint64_t b, xm_nint_t c, uint64_t d);
+
+#pragma clang diagnostic push
+
+int xamarin_UIApplicationMain (int argc, char * _Nullable argv[_Nonnull], NSString * _Nullable principalClassName, NSString * _Nullable delegateClassName, GCHandle *exception_gchandle);
 
 /* Types copied from headers */
 /* We need to do this for now, since we must be able to build XM on older OSXs */

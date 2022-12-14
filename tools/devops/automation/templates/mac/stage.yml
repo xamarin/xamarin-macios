@@ -28,6 +28,9 @@ parameters:
   type: object
   default: []
 
+- name: isPR
+  type: boolean
+
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
@@ -77,5 +80,6 @@ stages:
     steps:
     - template: build.yml
       parameters:
+        isPR: ${{ parameters.isPR }}
         statusContext: ${{ parameters.statusContext }}
         keyringPass: ${{ parameters.keyringPass }} 

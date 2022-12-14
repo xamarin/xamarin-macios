@@ -43,7 +43,7 @@ namespace MultipeerConnectivity {
 	// NSInteger -> MCError.h
 	[TV (10,0)]
 	[iOS (7,0)]
-	[Native]
+	[Native ("MCErrorCode")]
 	[ErrorDomain ("MCErrorDomain")]
 	public enum MCError : long {
 		Unknown ,

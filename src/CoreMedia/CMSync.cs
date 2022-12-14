@@ -365,10 +365,13 @@ namespace CoreMedia {
 		[Obsolete ("Starting with macos10.11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
 		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 		[Deprecated (PlatformName.MacOSX, 10,11)]
+		[Deprecated (PlatformName.TvOS, 9,0)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CMTimebaseRef */ IntPtr CMTimebaseGetMasterTimebase (/* CMTimebaseRef */ IntPtr timebase);
@@ -409,10 +412,13 @@ namespace CoreMedia {
 		[Obsolete ("Starting with macos10.11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
 		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 		[Deprecated (PlatformName.MacOSX, 10,11)]
+		[Deprecated (PlatformName.TvOS, 9,0)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CMClockRef */ IntPtr CMTimebaseGetMasterClock (/* CMTimebaseRef */ IntPtr timebase);
@@ -453,10 +459,13 @@ namespace CoreMedia {
 		[Obsolete ("Starting with macos10.11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
 		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 		[Deprecated (PlatformName.MacOSX, 10,11)]
+		[Deprecated (PlatformName.TvOS, 9,0)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CMClockOrTimebaseRef */ IntPtr CMTimebaseGetMaster (/* CMTimebaseRef */ IntPtr timebase);
@@ -497,10 +506,13 @@ namespace CoreMedia {
 		[Obsolete ("Starting with macos10.11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
 		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 		[Deprecated (PlatformName.MacOSX, 10,11)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CMClockRef */ IntPtr CMTimebaseGetUltimateMasterClock (/* CMTimebaseRef */ IntPtr timebase);

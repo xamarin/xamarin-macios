@@ -1,10 +1,8 @@
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class GetNativeExecutableName : GetNativeExecutableNameTaskBase, ICancelableTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class GetNativeExecutableName : GetNativeExecutableNameTaskBase, ICancelableTask {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())

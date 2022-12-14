@@ -1,11 +1,3 @@
-# deprecated types - not working at runtime
-!missing-selector! GKLeaderboardViewControllerGKLeaderboardViewController::category not bound
-!missing-selector! GKLeaderboardViewControllerGKLeaderboardViewController::leaderboardDelegate not bound
-!missing-selector! GKLeaderboardViewControllerGKLeaderboardViewController::setCategory: not bound
-!missing-selector! GKLeaderboardViewControllerGKLeaderboardViewController::setLeaderboardDelegate: not bound
-!missing-selector! GKLeaderboardViewControllerGKLeaderboardViewController::setTimeScope: not bound
-!missing-selector! GKLeaderboardViewControllerGKLeaderboardViewController::timeScope not bound
-
 # This selector does not exist (respond?) in macOS either
 !missing-selector! GKLeaderboardSet::loadImageWithCompletionHandler: not bound
 

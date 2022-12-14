@@ -18,7 +18,7 @@ namespace SafariServices {
 	// NSInteger -> SSReadingList.h
 	[NoMac][iOS (7,0)]
 	[MacCatalyst (14,0)]
-	[Native]
+	[Native ("SSReadingListErrorCode")]
 	[ErrorDomain ("SSReadingListErrorDomain")]
 	public enum SSReadingListError : long {
 		UrlSchemeNotAllowed = 1

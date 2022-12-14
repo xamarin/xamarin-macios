@@ -6,8 +6,7 @@ using Microsoft.Build.Framework;
 
 #nullable enable
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	public class ComputeRemoteGeneratorProperties : ComputeRemoteGeneratorPropertiesTaskBase, ITaskCallback, ICancelableTask {
 		public override bool Execute ()
 		{

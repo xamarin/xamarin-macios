@@ -1,6 +1,0 @@
-!missing-pinvoke! VTPixelTransferSessionCreate is not bound
-!missing-pinvoke! VTPixelTransferSessionGetTypeID is not bound
-!missing-pinvoke! VTPixelTransferSessionInvalidate is not bound
-!missing-pinvoke! VTPixelTransferSessionTransferImage is not bound
-!missing-pinvoke! VTRegisterProfessionalVideoWorkflowVideoDecoders is not bound
-!missing-pinvoke! VTRegisterProfessionalVideoWorkflowVideoEncoders is not bound

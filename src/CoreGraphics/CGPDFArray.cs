@@ -265,7 +265,7 @@ namespace CoreGraphics {
 		public bool Apply (ApplyCallback callback, object? info = null)
 		{
 			if (callback is null)
-				throw new ArgumentNullException (nameof (callback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (applyblock_handler, callback);

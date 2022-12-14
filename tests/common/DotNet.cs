@@ -10,6 +10,8 @@ using Xamarin.Utils;
 
 using NUnit.Framework;
 
+#nullable disable
+
 namespace Xamarin.Tests {
 	public static class DotNet {
 		static string dotnet_executable;
@@ -77,13 +79,17 @@ namespace Xamarin.Tests {
 			return Execute ("build", project, properties, false);
 		}
 
-		public static ExecutionResult AssertNew (string outputDirectory, string template)
+		public static ExecutionResult AssertNew (string outputDirectory, string template, string? name = null)
 		{
 			Directory.CreateDirectory (outputDirectory);
 
 			var args = new List<string> ();
 			args.Add ("new");
 			args.Add (template);
+			if (!string.IsNullOrEmpty (name)) {
+				args.Add ("--name");
+				args.Add (name);
+			}
 
 			var env = new Dictionary<string, string> ();
 			env ["MSBuildSDKsPath"] = null;
@@ -167,8 +173,9 @@ namespace Xamarin.Tests {
 				var output = new StringBuilder ();
 				var rv = Execution.RunWithStringBuildersAsync (Executable, args, env, output, output, Console.Out, workingDirectory: Path.GetDirectoryName (project), timeout: TimeSpan.FromMinutes (10)).Result;
 				if (assert_success && rv.ExitCode != 0) {
+					var outputStr = output.ToString ();
 					Console.WriteLine ($"'{Executable} {StringUtils.FormatArguments (args)}' failed with exit code {rv.ExitCode}.");
-					Console.WriteLine (output);
+					Console.WriteLine (outputStr);
 					Assert.AreEqual (0, rv.ExitCode, $"Exit code: {Executable} {StringUtils.FormatArguments (args)}");
 				}
 				return new ExecutionResult {
@@ -214,6 +221,9 @@ namespace Xamarin.Tests {
 						return false; // the .NET runtime will deal with selecting the http handler, no need for us to do anything
 					case "runtimeconfig.bin":
 						return false; // this file is present for .NET apps, but not legacy apps.
+					case "embedded.mobileprovision":
+					case "CodeResources":
+						return false; // sometimes we don't sign in .NET when we do in legacy (if there's an empty Entitlements.plist file)
 					}
 
 					var components = v.Split ('/');

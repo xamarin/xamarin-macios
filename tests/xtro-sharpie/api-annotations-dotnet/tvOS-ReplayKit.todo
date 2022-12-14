@@ -1,1 +1,2 @@
 !deprecated-attribute-missing! RPScreenRecorder::startRecordingWithMicrophoneEnabled:handler: missing a [Deprecated] attribute
+!missing-field! SCStreamErrorDomain not bound

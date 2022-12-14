@@ -42,7 +42,7 @@ namespace VideoToolbox {
 		public static VTStatus ToCGImage (this CVPixelBuffer pixelBuffer, out CGImage? image)
 		{
 			if (pixelBuffer is null)
-				throw new ArgumentNullException (nameof (pixelBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (pixelBuffer));
 
 			var ret = VTCreateCGImageFromCVPixelBuffer (pixelBuffer.GetCheckedHandle (),
 				IntPtr.Zero, // no options as of 9.0/10.11 - always pass NULL

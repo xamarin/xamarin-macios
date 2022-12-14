@@ -4,8 +4,7 @@
       <method signature="System.Void WarnOnce()" body="stub" feature="System.Diagnostics.Debugger.IsSupported" featurevalue="false" />
     </type>
     <type fullname="ObjCRuntime.Runtime">
-      <method signature="System.Boolean get_IsCoreCLR()" body="stub" value="false" feature="ObjCRuntime.Runtime.IsCoreCLR" featurevalue="false" />
-      <method signature="System.Boolean get_IsCoreCLR()" body="stub" value="true" feature="ObjCRuntime.Runtime.IsCoreCLR" featurevalue="true" />
+      <method signature="System.Boolean get_IsCoreCLR()" body="stub" value="true" />
     </type>
     <type fullname="AppKit.NSApplication">
       <method signature="System.Void EnsureEventAndDelegateAreNotMismatched(System.Object,System.Type)" body="stub" feature="System.Diagnostics.Debugger.IsSupported" featurevalue="false" />

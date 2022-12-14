@@ -58,7 +58,7 @@ namespace SpriteKit
 
 		public unsafe SKWarpGeometryGrid GetGridByReplacingSourcePositions (Vector2 [] sourcePositions)
 		{
-			if (sourcePositions == null)
+			if (sourcePositions is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sourcePositions));
 			// TODO: Verify this assumption when/if doc is updated or headers changed in newer betas.
 			if (sourcePositions.Length < ((NumberOfColumns + 1) * (NumberOfRows + 1)))
@@ -70,7 +70,7 @@ namespace SpriteKit
 
 		public unsafe SKWarpGeometryGrid GetGridByReplacingDestPositions (Vector2 [] destPositions)
 		{
-			if (destPositions == null)
+			if (destPositions is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (destPositions));
 			// TODO: Verify this assumption when/if doc is updated or headers changed in newer betas.
 			if (destPositions.Length < ((NumberOfColumns + 1) * (NumberOfRows + 1)))

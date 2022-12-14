@@ -1,0 +1,21 @@
+#!/bin/sh
+
+#
+# Remove MTVS build server from the system LaunchAgents
+# According to launchd.plist(5):
+# FILES
+#      ~/Library/LaunchAgents         Per-user agents provided by the user.
+#      /Library/LaunchAgents          Per-user agents provided by the administrator.
+#
+
+# If the plist had been loaded from a previous session, forcefully remove it and potential running mtbserver
+(sudo -u $USER launchctl unload -w /Library/LaunchAgents/com.xamarin.mtvs.buildserver.plist &> /dev/null) || true
+(sudo -u $USER launchctl remove com.xamarin.mtvs.buildserver &> /dev/null) || true
+(killall -KILL mtbserver &> /dev/null) || true
+
+rm -rf /Library/LaunchAgents/com.xamarin.mtvs.buildserver.plist || true
+
+# Remove the plist file for launching the Build Server UI, we decided against this 
+rm -rf /Library/LaunchAgents/com.xamarin.mtvs.buildservergui.plist || true
+
+exit 0

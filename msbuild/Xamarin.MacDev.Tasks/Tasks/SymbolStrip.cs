@@ -7,10 +7,8 @@ using Xamarin.Messaging.Build.Client;
 
 #nullable enable
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class SymbolStrip : SymbolStripTaskBase, ITaskCallback
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class SymbolStrip : SymbolStripTaskBase, ITaskCallback {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())

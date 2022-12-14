@@ -13,6 +13,10 @@ steps:
   displayName: 'Remove git creds store'
   condition: always()
 
+- bash: |
+    sudo rm -Rf $(Build.SourcesDirectory)/artifacts
+  displayName: "Remove artifacts"
+  condition: always()
 
 - template: uninstall-certificates/v1.yml@templates
   parameters:

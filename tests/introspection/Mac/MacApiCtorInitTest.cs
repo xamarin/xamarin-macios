@@ -290,6 +290,11 @@ namespace Introspection {
 				if (TestRuntime.CheckXcodeVersion (12, 0))
 					return;
 				break;
+			// crash with xcode 14 Beta 6
+			case "IOSurface.IOSurface":
+				if (TestRuntime.CheckXcodeVersion (14, 0))
+					return;
+				break;
 			default:
 				base.CheckToString (obj);
 				break;

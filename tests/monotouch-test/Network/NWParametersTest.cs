@@ -417,7 +417,14 @@ namespace MonoTouchFixtures.Network {
 				});
 			}
 		}
-
+		
+		[Test]
+		public void CreateApplicationServiceTest ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+			using var nwParams = NWParameters.CreateApplicationService ();
+			Assert.NotNull (nwParams);
+		}
 	}
 }
 #endif

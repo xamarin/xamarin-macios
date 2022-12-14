@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "Šablona kontroleru iOS (Preview)",
+  "name": "iOS Controller template",
   "description": "Třída kontroleru iOS",
   "symbols/namespace/description": "obor názvů pro vygenerovaný kód"
 }

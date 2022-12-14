@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using Xamarin.Messaging.Build.Client;
 using Microsoft.Build.Framework;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	public class FindAotCompiler : FindAotCompilerTaskBase, ITaskCallback, ICancelableTask {
 		public override bool Execute ()
 		{

@@ -36,8 +36,6 @@
 !unknown-pinvoke! objc_msgSendSuper_stret bound
 
 ## only on iOS and macOS
-!unknown-pinvoke! object_getInstanceVariable bound
-!unknown-pinvoke! object_setInstanceVariable bound
 
 ## present in <os/log.h>
 !unknown-pinvoke! os_log_create bound

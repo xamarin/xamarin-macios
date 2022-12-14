@@ -1232,6 +1232,9 @@
 		<value>BindAsAttribute inválido encontrado em '{0}': não foi possível encontrar o tipo enumerado subjacente de {1}. Registre um relatório de bugs em https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
 	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>O registrador encontrou um tipo '{0}' inválido na assinatura do método '{1}': a interface precisa ter um atributo de Protocolo especificando seu tipo de wrapper.
 		</value>
@@ -1739,5 +1742,12 @@
 	</data>
   <data name="MX8041" xml:space="preserve">
 		<value>Não foi possível criar uma instância do tipo {0}.</value>
+	</data>
+  <data name="MX8042" xml:space="preserve">
+		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<comment>
+			0: name of function
+			1: exception info
+		</comment>
 	</data>
 </root>

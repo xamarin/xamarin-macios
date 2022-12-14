@@ -2197,6 +2197,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";MT4124_I" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[在 '{0}' 中找到無效的 {1}。請前往 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 報告]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";MT4125" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The registrar found an invalid type '{0}' in signature for method '{1}': The interface must have a Protocol attribute specifying its wrapper type.]D;]A;		]]></Val>
@@ -3630,6 +3639,15 @@
           <Val><![CDATA[Unable to create an instance of the type {0}.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[無法建立 {0} 類型的執行個體。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8042" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An exception occurred while trying to invoke the function {0}: {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[嘗試叫用函數 {0} 時發生例外狀況: {1}。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

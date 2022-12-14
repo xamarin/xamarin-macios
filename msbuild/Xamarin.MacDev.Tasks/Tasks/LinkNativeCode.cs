@@ -5,10 +5,8 @@ using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class LinkNativeCode : LinkNativeCodeTaskBase, ITaskCallback
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class LinkNativeCode : LinkNativeCodeTaskBase, ITaskCallback {
 		string outputPath;
 
 		public override bool Execute ()

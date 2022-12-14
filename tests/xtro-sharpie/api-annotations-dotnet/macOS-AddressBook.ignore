@@ -338,3 +338,10 @@
 !missing-selector! ABRecord::init not bound
 !missing-selector! ABRecord::isReadOnly not bound
 !missing-selector! NSObject::actionProperty not bound
+
+## constants were manually bound and this framework is deprecated (Contact)
+## so it's not worth updating the binding code for them
+!missing-field! kABGroupNameProperty not bound
+!missing-field! kABHomeLabel not bound
+!missing-field! kABOtherLabel not bound
+!missing-field! kABWorkLabel not bound

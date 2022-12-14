@@ -7,10 +7,8 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class CreateBindingResourcePackage : CreateBindingResourcePackageBase, ITaskCallback, ICancelableTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class CreateBindingResourcePackage : CreateBindingResourcePackageBase, ITaskCallback, ICancelableTask {
 		public override bool Execute ()
 		{
 			if (!ShouldExecuteRemotely ())

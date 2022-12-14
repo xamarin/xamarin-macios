@@ -11,7 +11,7 @@ namespace SensorKit {
 		public static SRSensor GetSensorForDeletionRecords (this SRSensor self)
 		{
 			var constant = self.GetConstant ();
-			if (constant == null)
+			if (constant is null)
 				return SRSensor.Invalid;
 			return GetValue (constant._GetSensorForDeletionRecordsFromSensor ());
 		}

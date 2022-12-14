@@ -87,7 +87,7 @@ namespace CoreGraphics {
 		static public CGDataProvider? FromFile (string file)
 		{
 			if (file is null)
-				throw new ArgumentNullException (nameof (file));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (file));
 
 			var handle = CGDataProviderCreateWithFilename (file);
 			if (handle == IntPtr.Zero)
@@ -99,7 +99,7 @@ namespace CoreGraphics {
 		static IntPtr Create (string file)
 		{
 			if (file is null)
-				throw new ArgumentNullException (nameof (file));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (file));
 
 			var handle = CGDataProviderCreateWithFilename (file);
 			if (handle == IntPtr.Zero)
@@ -119,7 +119,7 @@ namespace CoreGraphics {
 		{
 			// not it's a __nullable parameter but it would return nil (see unit tests) and create an invalid instance
 			if (url is null)
-				throw new ArgumentNullException (nameof (url));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 			return CGDataProviderCreateWithURL (url.Handle);
 		}
 
@@ -135,7 +135,7 @@ namespace CoreGraphics {
 		{
 			// not it's a __nullable parameter but it would return nil (see unit tests) and create an invalid instance
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			return CGDataProviderCreateWithCFData (data.Handle);
 		}
 
@@ -144,29 +144,48 @@ namespace CoreGraphics {
 		{
 		}
 
+#if NET
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static unsafe IntPtr CGDataProviderCreateWithData (/* void* */ IntPtr info, /* const void* */ IntPtr data, /* size_t */ nint size, /* CGDataProviderReleaseDataCallback */ delegate* unmanaged<IntPtr, IntPtr, nint, void> releaseData);
+#else
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static IntPtr CGDataProviderCreateWithData (/* void* */ IntPtr info, /* const void* */ IntPtr data, /* size_t */ nint size, /* CGDataProviderReleaseDataCallback */ CGDataProviderReleaseDataCallback releaseData);
+#endif
 
+#if !NET
 		delegate void CGDataProviderReleaseDataCallback (IntPtr info, IntPtr data, nint size);
 		static CGDataProviderReleaseDataCallback release_gchandle_callback = ReleaseGCHandle;
 		static CGDataProviderReleaseDataCallback release_buffer_callback = ReleaseBuffer;
 		static CGDataProviderReleaseDataCallback release_func_callback = ReleaseFunc;
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (CGDataProviderReleaseDataCallback))]
+#endif
 		private static void ReleaseGCHandle (IntPtr info, IntPtr data, nint size)
 		{
 			var gch = GCHandle.FromIntPtr (info);
 			gch.Free ();
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (CGDataProviderReleaseDataCallback))]
+#endif
 		private static void ReleaseBuffer (IntPtr info, IntPtr data, nint size)
 		{
 			if (data != IntPtr.Zero)
 				Marshal.FreeHGlobal (data);
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (CGDataProviderReleaseDataCallback))]
+#endif
 		private static void ReleaseFunc (IntPtr info, IntPtr data, nint size)
 		{
 			var gch = GCHandle.FromIntPtr (info);
@@ -188,7 +207,13 @@ namespace CoreGraphics {
 		{
 			if (!ownBuffer)
 				memoryBlock = Runtime.CloneMemory (memoryBlock, size);
+#if NET
+			unsafe {
+				return CGDataProviderCreateWithData (IntPtr.Zero, memoryBlock, size, &ReleaseBuffer);
+			}
+#else
 			return CGDataProviderCreateWithData (IntPtr.Zero, memoryBlock, size, release_buffer_callback);
+#endif
 		}
 
 		public CGDataProvider (IntPtr memoryBlock, int size, bool ownBuffer)
@@ -199,10 +224,16 @@ namespace CoreGraphics {
 		static IntPtr Create (IntPtr memoryBlock, int size, Action<IntPtr> releaseMemoryBlockCallback)
 		{
 			if (releaseMemoryBlockCallback is null)
-				throw new ArgumentNullException (nameof (releaseMemoryBlockCallback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (releaseMemoryBlockCallback));
 
 			var gch = GCHandle.Alloc (releaseMemoryBlockCallback);
+#if NET
+			unsafe {
+				return CGDataProviderCreateWithData (GCHandle.ToIntPtr (gch), memoryBlock, size, &ReleaseFunc);
+			}
+#else
 			return CGDataProviderCreateWithData (GCHandle.ToIntPtr (gch), memoryBlock, size, release_func_callback);
+#endif
 		}
 
 		public CGDataProvider (IntPtr memoryBlock, int size, Action<IntPtr> releaseMemoryBlockCallback)
@@ -213,7 +244,7 @@ namespace CoreGraphics {
 		static IntPtr Create (byte [] buffer, int offset, int count)
 		{
 			if (buffer is null)
-				throw new ArgumentNullException (nameof (buffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
 			if (offset < 0 || offset > buffer.Length)
 				throw new ArgumentException (nameof (offset));
 			if (offset + count > buffer.Length)
@@ -221,7 +252,13 @@ namespace CoreGraphics {
 
 			var gch = GCHandle.Alloc (buffer, GCHandleType.Pinned); // This requires a pinned GCHandle, because unsafe code is scoped to the current block, and the address of the byte array will be used after this function returns.
 			var ptr = gch.AddrOfPinnedObject () + offset;
+#if NET
+			unsafe {
+				return CGDataProviderCreateWithData (GCHandle.ToIntPtr (gch), ptr, count, &ReleaseGCHandle);
+			}
+#else
 			return CGDataProviderCreateWithData (GCHandle.ToIntPtr (gch), ptr, count, release_gchandle_callback);
+#endif
 		}
 
 		public CGDataProvider (byte [] buffer, int offset, int count)

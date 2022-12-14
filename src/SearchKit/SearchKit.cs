@@ -64,7 +64,7 @@ namespace SearchKit
 		public bool FindMatches (nint maxCount, ref nint [] ids, double waitTime, out nint foundCount)
 		{
 			if (ids is null)
-				throw new ArgumentNullException (nameof (ids));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ids));
 			if (ids.Length == 0)
 				throw new ArgumentException ("ids should have at least one element");
 			if (ids.Length != maxCount)
@@ -80,7 +80,7 @@ namespace SearchKit
 		public bool FindMatches (nint maxCount, ref nint [] ids, ref float []? scores, double waitTime, out nint foundCount)
 		{
 			if (ids is null)
-				throw new ArgumentNullException (nameof (ids));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ids));
 			if (ids.Length == 0)
 				throw new ArgumentException ("ids should have at least one element");
 			if (ids.Length != maxCount)
@@ -126,7 +126,7 @@ namespace SearchKit
 		static IntPtr Create (string name, SKDocument? parent = null, string? scheme = null)
 		{
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 			var schemeHandle = CFString.CreateNative (scheme);
 			var nameHandle = CFString.CreateNative (name);
 			try {
@@ -220,7 +220,7 @@ namespace SearchKit
 		public static SKIndex? CreateWithUrl (NSUrl url, string indexName, SKIndexType type, SKTextAnalysis analysisProperties)
 		{
 			if (url is null)
-				throw new ArgumentNullException (nameof (url));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 			var indexNameHandle = CFString.CreateNative (indexName);
 			try {
 				var handle = SKIndexCreateWithURL (url.Handle, indexNameHandle, type, analysisProperties.GetHandle ());
@@ -235,9 +235,9 @@ namespace SearchKit
 		public static SKIndex? FromUrl (NSUrl url, string indexName, bool writeAccess)
 		{
 			if (url is null)
-				throw new ArgumentNullException (nameof (url));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 			if (indexName is null)
-				throw new ArgumentNullException (nameof (indexName));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (indexName));
 			var indexNameHandle = CFString.CreateNative (indexName);
 			try {
 				var handle = SKIndexOpenWithURL (url.Handle, indexNameHandle, writeAccess);
@@ -252,9 +252,9 @@ namespace SearchKit
 		public static SKIndex? CreateWithMutableData (NSMutableData data, string indexName, SKIndexType type, SKTextAnalysis analysisProperties)
 		{
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			if (indexName is null)
-				throw new ArgumentNullException (nameof (indexName));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (indexName));
 			var indexNameHandle = CFString.CreateNative (indexName);
 			try {
 				var handle = SKIndexCreateWithMutableData (data.Handle, indexNameHandle, type, analysisProperties.GetHandle ());
@@ -269,9 +269,9 @@ namespace SearchKit
 		public static SKIndex? FromMutableData (NSMutableData data, string indexName)
 		{
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			if (indexName is null)
-				throw new ArgumentNullException (nameof (indexName));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (indexName));
 			var indexNameHandle = CFString.CreateNative (indexName);
 			try {
 				var handle = SKIndexOpenWithMutableData (data.Handle, indexNameHandle);
@@ -286,9 +286,9 @@ namespace SearchKit
 		public static SKIndex? FromData (NSData data, string indexName)
 		{
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			if (indexName is null)
-				throw new ArgumentNullException (nameof (indexName));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (indexName));
 			var indexNameHandle = CFString.CreateNative (indexName);
 			try {
 				var handle = SKIndexOpenWithData (data.Handle, indexNameHandle);
@@ -330,7 +330,7 @@ namespace SearchKit
 		public bool AddDocumentWithText (SKDocument document, string text, bool canReplace)
 		{
 			if (document is null)
-				throw new ArgumentNullException (nameof (document));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (document));
 			var textHandle = CFString.CreateNative (text);
 			try {
 				return SKIndexAddDocumentWithText (Handle, document.Handle, textHandle, canReplace);
@@ -346,7 +346,7 @@ namespace SearchKit
 		public bool AddDocument (SKDocument document, string mimeHint, bool canReplace)
 		{
 			if (document is null)
-				throw new ArgumentNullException (nameof (document));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (document));
 			var mimeHintHandle = CFString.CreateNative (mimeHint);
 			try {
 				return SKIndexAddDocument (Handle, document.Handle, mimeHintHandle, canReplace);
@@ -412,9 +412,9 @@ namespace SearchKit
 		public bool MoveDocument (SKDocument document, SKDocument newParent)
 		{
 			if (document is null)
-				throw new ArgumentNullException (nameof (document));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (document));
 			if (newParent is null)
-				throw new ArgumentNullException (nameof (newParent));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (newParent));
 			return SKIndexMoveDocument (Handle, document.Handle, newParent.Handle);
 		}
 
@@ -426,7 +426,7 @@ namespace SearchKit
 		public bool RemoveDocument (SKDocument document)
 		{
 			if (document is null)
-				throw new ArgumentNullException (nameof (document));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (document));
 			return SKIndexRemoveDocument (Handle, document.Handle);
 		}
 
@@ -437,9 +437,9 @@ namespace SearchKit
 		public bool RenameDocument (SKDocument document, string newName)
 		{
 			if (document is null)
-				throw new ArgumentNullException (nameof (document));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (document));
 			if (newName is null)
-				throw new ArgumentNullException (nameof (newName));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (newName));
 			var newNameHandle =CFString.CreateNative (newName);
 			try {
 				return SKIndexRenameDocument (Handle, document.Handle, newNameHandle);
@@ -470,7 +470,7 @@ namespace SearchKit
 		public SKSearch Search (string query, SKSearchOptions options = SKSearchOptions.Default)
 		{
 			if (query is null)
-				throw new ArgumentNullException (nameof (query));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (query));
 			var queryHandle = CFString.CreateNative (query);
 			try {
 				return new SKSearch (SKSearchCreate (Handle, queryHandle, options), true);
@@ -495,9 +495,9 @@ namespace SearchKit
 		public void SetDocumentProperties (SKDocument document, NSDictionary dict)
 		{
 			if (document is null)
-				throw new ArgumentNullException (nameof (document));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (document));
 			if (dict is null)
-				throw new ArgumentNullException (nameof (dict));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dict));
 			SKIndexSetDocumentProperties (Handle, document.Handle, dict.Handle);
 		}
 	}
@@ -519,7 +519,7 @@ namespace SearchKit
 		public static SKSummary? Create (string text)
 		{
 			if (text is null)
-				throw new ArgumentNullException (nameof (text));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (text));
 			var x = CFString.CreateNative (text);
 			try {
 				var handle = SKSummaryCreateWithString (x);
@@ -534,7 +534,7 @@ namespace SearchKit
 		public static SKSummary? Create (NSString nsString)
 		{
 			if (nsString is null)
-				throw new ArgumentNullException (nameof (nsString));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (nsString));
 			
 			var h = SKSummaryCreateWithString (nsString.Handle);
 			if (h == IntPtr.Zero)

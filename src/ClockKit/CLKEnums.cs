@@ -14,6 +14,7 @@ using ObjCRuntime;
 
 namespace ClockKit {
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Native]
 	public enum CLKComplicationFamily : long {
 		ModularSmall,

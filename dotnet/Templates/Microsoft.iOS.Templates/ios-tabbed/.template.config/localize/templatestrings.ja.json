@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "iOS タブ付きアプリケーション (プレビュー)",
+  "name": "iOS Tabbed Application",
   "description": ".NET iOS タブ付きアプリケーションを作成するためのプロジェクト",
   "symbols/bundleId/description": "Info.plist の CFBundleIdentifier をオーバーライドします",
   "symbols/minOSVersion/description": "プロジェクト ファイルの SupportedOSPlatformVersion をオーバーライドします",

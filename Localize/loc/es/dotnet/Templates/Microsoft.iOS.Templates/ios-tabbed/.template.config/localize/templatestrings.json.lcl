@@ -30,10 +30,13 @@
       </Item>
       <Item ItemId=";name" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[iOS Tabbed Application (Preview)]]></Val>
+          <Val><![CDATA[iOS Tabbed Application]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Aplicación con pestañas de iOS (versión preliminar)]]></Val>
+            <Val><![CDATA[Aplicación con pestañas de iOS]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[iOS Tabbed Application (Preview)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

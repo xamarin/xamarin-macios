@@ -4,6 +4,8 @@ using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 
+#nullable enable
+
 namespace Compression
 {
 #if NET
