@@ -93,10 +93,10 @@ namespace CoreText {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.8")]
-		[UnsupportedOSPlatform ("ios6.0")]
 		[ObsoletedOSPlatform ("macos10.8", "Use 'MaximumLineSpacing' instead.")]
 		[ObsoletedOSPlatform ("ios6.0", "Use 'MaximumLineSpacing' instead.")]
+		[ObsoletedOSPlatform ("tvos16.0", "Use 'MaximumLineSpacing' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst13.1", "Use 'MaximumLineSpacing' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'MaximumLineSpacing' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message: "Use 'MaximumLineSpacing' instead.")]

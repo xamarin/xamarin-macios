@@ -28,8 +28,8 @@ namespace CoreVideo {
 
 	// CVOpenGLESTexture.h
 #if NET
-	[UnsupportedOSPlatform ("tvos12.0")]
-	[UnsupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("tvos12.0", "Use 'CVMetalTexture' instead.")]
 	[ObsoletedOSPlatform ("ios12.0", "Use 'CVMetalTexture' instead.")]
 #else

@@ -365,7 +365,6 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("ios6.0")]
 		[ObsoletedOSPlatform ("ios6.0", "Use 'AVAudioSession.Notification.ObserveInterruption' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVAudioSession.Notification.ObserveInterruption' instead.")]
@@ -385,7 +384,6 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("ios6.0")]
 		[ObsoletedOSPlatform ("ios6.0", "Use 'AVAudioSession.Notification.ObserveInterruption' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVAudioSession.Notification.ObserveInterruption' instead.")]
@@ -405,7 +403,6 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("ios6.0")]
 		[ObsoletedOSPlatform ("ios6.0", "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
@@ -425,7 +422,6 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("ios6.0")]
 		[ObsoletedOSPlatform ("ios6.0", "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
@@ -445,7 +441,6 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("ios6.0")]
 		[ObsoletedOSPlatform ("ios6.0", "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
@@ -466,7 +461,6 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("ios6.0")]
 		[ObsoletedOSPlatform ("ios6.0", "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
@@ -487,7 +481,6 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("ios6.0")]
 		[ObsoletedOSPlatform ("ios6.0", "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
