@@ -44,13 +44,13 @@ namespace Cecil.Tests {
 			var assembly = info.Assembly;
 
 			HashSet<string> found = new HashSet<string> ();
-			foreach (var prop in Helper.FilterProperties (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var prop in assembly.EnumerateProperties (a => HasAnyAvailabilityAttribute (a))) {
 				CheckAllPlatformsOnParent (prop, prop.FullName, prop.DeclaringType, found);
 			}
-			foreach (var meth in Helper.FilterMethods (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var meth in assembly.EnumerateMethods (a => HasAnyAvailabilityAttribute (a))) {
 				CheckAllPlatformsOnParent (meth, meth.FullName, meth.DeclaringType, found);
 			}
-			foreach (var field in Helper.FilterFields (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var field in assembly.EnumerateFields (a => HasAnyAvailabilityAttribute (a))) {
 				CheckAllPlatformsOnParent (field, field.FullName, field.DeclaringType, found);
 			}
 			Assert.That (found, Is.Empty, $"{found.Count} issues found");
@@ -87,7 +87,7 @@ namespace Cecil.Tests {
 		{
 			var assembly = info.Assembly;
 			var doubleAttributed = new List<string> ();
-			foreach (var type in Helper.FilterTypes (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var type in assembly.EnumerateTypes (a => HasAnyAvailabilityAttribute (a))) {
 				var platformCount = new Dictionary<string, int> ();
 				foreach (var attribute in type.CustomAttributes.Where (a => IsAvailabilityAttribute (a))) {
 					var kind = FindAvailabilityKind (attribute);
@@ -511,16 +511,16 @@ namespace Cecil.Tests {
 			string platformName = AssemblyToAttributeName (assembly);
 
 			HashSet<string> found = new HashSet<string> ();
-			foreach (var type in Helper.FilterTypes (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var type in assembly.EnumerateTypes (a => HasAnyAvailabilityAttribute (a))) {
 				CheckCurrentPlatformIncludedIfAny (type, platformName, type.FullName, type.DeclaringType, found);
 			}
-			foreach (var prop in Helper.FilterProperties (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var prop in assembly.EnumerateProperties (a => HasAnyAvailabilityAttribute (a))) {
 				CheckCurrentPlatformIncludedIfAny (prop, platformName, prop.FullName, prop.DeclaringType, found);
 			}
-			foreach (var meth in Helper.FilterMethods (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var meth in assembly.EnumerateMethods (a => HasAnyAvailabilityAttribute (a))) {
 				CheckCurrentPlatformIncludedIfAny (meth, platformName, meth.FullName, meth.DeclaringType, found);
 			}
-			foreach (var field in Helper.FilterFields (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var field in assembly.EnumerateFields (a => HasAnyAvailabilityAttribute (a))) {
 				CheckCurrentPlatformIncludedIfAny (field, platformName, field.FullName, field.DeclaringType, found);
 			}
 			Assert.That (found, Is.Empty, $"{found.Count} issues found");
