@@ -180,7 +180,7 @@ namespace CoreGraphics {
 #endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateCalibratedGray (/* const CGFloat[3] */ nfloat [] whitepoint, /* const CGFloat[3] */ nfloat []? blackpoint, /* CGFloat */ nfloat gamma);
+		extern unsafe static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateCalibratedGray (/* const CGFloat[3] */ nfloat* whitepoint, /* const CGFloat[3] */ nfloat* blackpoint, /* CGFloat */ nfloat gamma);
 
 		public static CGColorSpace? CreateCalibratedGray (nfloat [] whitepoint, nfloat []? blackpoint, nfloat gamma)
 		{
@@ -191,13 +191,17 @@ namespace CoreGraphics {
 			if (blackpoint is not null && blackpoint.Length != 3)
 				throw new ArgumentException ("Must be null or have exactly 3 values", nameof (blackpoint));
 
-			var ptr = CGColorSpaceCreateCalibratedGray (whitepoint, blackpoint, gamma);
-			return FromHandle (ptr, true);
+			unsafe {
+				fixed (nfloat* whitepointPtr = whitepoint, blackpointPtr = blackpoint) {
+					var ptr = CGColorSpaceCreateCalibratedGray (whitepointPtr, blackpointPtr, gamma);
+					return FromHandle (ptr, true);
+				}
+			}
 		}
 
 		// 3, 3, 3, 9
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateCalibratedRGB (/* const CGFloat[3] */ nfloat [] whitePoint, /* const CGFloat[3] */ nfloat []? blackPoint, /* const CGFloat[3] */ nfloat []? gamma, /* const CGFloat[9] */ nfloat []? matrix);
+		extern static unsafe /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateCalibratedRGB (/* const CGFloat[3] */ nfloat* whitePoint, /* const CGFloat[3] */ nfloat* blackPoint, /* const CGFloat[3] */ nfloat* gamma, /* const CGFloat[9] */ nfloat* matrix);
 
 		public static CGColorSpace? CreateCalibratedRGB (nfloat [] whitepoint, nfloat []? blackpoint, nfloat []? gamma, nfloat []? matrix)
 		{
@@ -212,12 +216,16 @@ namespace CoreGraphics {
 			if (matrix is not null && matrix.Length != 9)
 				throw new ArgumentException ("Must be null or have exactly 9 values", nameof (matrix));
 
-			var ptr = CGColorSpaceCreateCalibratedRGB (whitepoint, blackpoint, gamma, matrix);
-			return FromHandle (ptr, true);
+			unsafe {
+				fixed (nfloat* whitepointPtr = whitepoint, blackpointPtr = blackpoint, gammaPtr = gamma, matrixPtr = matrix) {
+					var ptr = CGColorSpaceCreateCalibratedRGB (whitepointPtr, blackpointPtr, gammaPtr, matrixPtr);
+					return FromHandle (ptr, true);
+				}
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGColorSpaceRef __nullable */ IntPtr CGColorSpaceCreateLab (nfloat [] whitepoint, nfloat []? blackpoint, nfloat []? range);
+		extern static unsafe /* CGColorSpaceRef __nullable */ IntPtr CGColorSpaceCreateLab (nfloat* whitepoint, nfloat* blackpoint, nfloat* range);
 
 		// Available since the beginning of time
 		public static CGColorSpace? CreateLab (nfloat [] whitepoint, nfloat []? blackpoint, nfloat []? range)
@@ -231,8 +239,12 @@ namespace CoreGraphics {
 			if (range is not null && range.Length != 4)
 				throw new ArgumentException ("Must be null or have exactly 4 values", nameof (range));
 
-			var ptr = CGColorSpaceCreateLab (whitepoint, blackpoint, range);
-			return FromHandle (ptr, true);
+			unsafe {
+				fixed (nfloat* whitepointPtr = whitepoint, blackpointPtr = blackpoint, rangePtr = range) {
+					var ptr = CGColorSpaceCreateLab (whitepointPtr, blackpointPtr, rangePtr);
+					return FromHandle (ptr, true);
+				}
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -579,8 +591,8 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateICCBased (/* size_t */ nint nComponents,
-			/* const CGFloat* __nullable */ nfloat []? range,
+		extern static unsafe /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateICCBased (/* size_t */ nint nComponents,
+			/* const CGFloat* __nullable */ nfloat* range,
 			/* CGDataProviderRef __nullable */ IntPtr profile,
 			/* CGColorSpaceRef __nullable */ IntPtr alternate);
 
@@ -591,8 +603,12 @@ namespace CoreGraphics {
 #endif
 		{
 			nint nComponents = range is null ? 0 : range.Length / 2;
-			var ptr = CGColorSpaceCreateICCBased (nComponents, range, profile.GetHandle (), alternate.GetHandle ());
-			return FromHandle (ptr, true);
+			unsafe {
+				fixed (nfloat* rangePtr = range) {
+					var ptr = CGColorSpaceCreateICCBased (nComponents, rangePtr, profile.GetHandle (), alternate.GetHandle ());
+					return FromHandle (ptr, true);
+				}
+			}
 		}
 
 #if NET

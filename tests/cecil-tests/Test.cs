@@ -21,7 +21,7 @@ namespace Cecil.Tests {
 		{
 			var assembly = info.Assembly;
 			// look inside all .cctor (static constructor) inside `assemblyName`
-			foreach (var m in Helper.FilterMethods (assembly!, (m) => m.IsStatic && m.IsConstructor)) {
+			foreach (var m in assembly.EnumerateMethods ((m) => m.IsStatic && m.IsConstructor)) {
 				foreach (var ins in m.Body.Instructions) {
 					if (ins.OpCode != OpCodes.Stsfld)
 						continue;
@@ -134,7 +134,7 @@ namespace Cecil.Tests {
 		{
 			var assembly = info.Assembly;
 			List<string> found = new List<string> ();
-			foreach (var m in Helper.FilterMethods (assembly!, (m) => m.IsPInvokeImpl)) {
+			foreach (var m in assembly.EnumerateMethods ((m) => m.IsPInvokeImpl)) {
 				var symbol = m.PInvokeInfo.EntryPoint;
 				if (BannedCApi.Contains (symbol))
 					found.Add (symbol);

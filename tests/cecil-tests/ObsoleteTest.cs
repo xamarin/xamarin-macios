@@ -24,21 +24,21 @@ namespace Cecil.Tests {
 			// Make a list of Obsolete things
 			var found = new HashSet<string> ();
 
-			foreach (var prop in Helper.FilterProperties (assembly, a => FilterMember (a))) {
+			foreach (var prop in assembly.EnumerateProperties (a => FilterMember (a))) {
 				if (Skip (prop))
 					continue;
 				Console.WriteLine ($"{GetLocation (prop.GetMethod ?? prop.SetMethod)} {prop.FullName}");
 				found.Add (prop.FullName);
 			}
 
-			foreach (var meth in Helper.FilterMethods (assembly, a => FilterMember (a))) {
+			foreach (var meth in assembly.EnumerateMethods (a => FilterMember (a))) {
 				if (Skip (meth))
 					continue;
 				Console.WriteLine ($"{GetLocation (meth)} {meth.FullName}");
 				found.Add (meth.FullName);
 			}
 
-			foreach (var type in Helper.FilterTypes (assembly, a => FilterMember (a))) {
+			foreach (var type in assembly.EnumerateTypes (a => FilterMember (a))) {
 				if (Skip (type))
 					continue;
 				Console.WriteLine ($"{GetLocation (type.Methods.FirstOrDefault ())} {type.FullName}");

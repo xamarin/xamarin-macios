@@ -164,12 +164,16 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetLineDash (/* CGContextRef */ IntPtr c, /* CGFloat */ nfloat phase, /* CGFloat[] */ nfloat []? lengths, /* size_t */ nint count);
+		extern static unsafe void CGContextSetLineDash (/* CGContextRef */ IntPtr c, /* CGFloat */ nfloat phase, /* CGFloat[] */ nfloat* lengths, /* size_t */ nint count);
 
 		public void SetLineDash (nfloat phase, nfloat []? lengths)
 		{
 			int n = lengths is null ? 0 : lengths.Length;
-			CGContextSetLineDash (Handle, phase, lengths, n);
+			unsafe {
+				fixed (nfloat* lengthsPtr = lengths) {
+					CGContextSetLineDash (Handle, phase, lengthsPtr, n);
+				}
+			}
 		}
 
 		public void SetLineDash (nfloat phase, nfloat []? lengths, int n)
@@ -178,7 +182,11 @@ namespace CoreGraphics {
 				n = 0;
 			else if (n < 0 || n > lengths.Length)
 				throw new ArgumentException (nameof (n));
-			CGContextSetLineDash (Handle, phase, lengths, n);
+			unsafe {
+				fixed (nfloat* lengthsPtr = lengths) {
+					CGContextSetLineDash (Handle, phase, lengthsPtr, n);
+				}
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -583,39 +591,55 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetFillColor (/* CGContextRef */ IntPtr context,
-			/* const CGFloat * __nullable */ nfloat []? components);
+		extern static unsafe void CGContextSetFillColor (/* CGContextRef */ IntPtr context,
+			/* const CGFloat * __nullable */ nfloat* components);
 
 		public void SetFillColor (nfloat []? components)
 		{
-			CGContextSetFillColor (Handle, components);
+			unsafe {
+				fixed (nfloat* componentsPtr = components) {
+					CGContextSetFillColor (Handle, componentsPtr);
+				}
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetStrokeColor (/* CGContextRef */ IntPtr context,
-			/* const CGFloat * __nullable */ nfloat []? components);
+		extern static unsafe void CGContextSetStrokeColor (/* CGContextRef */ IntPtr context,
+			/* const CGFloat * __nullable */ nfloat* components);
 
 		public void SetStrokeColor (nfloat []? components)
 		{
-			CGContextSetStrokeColor (Handle, components);
+			unsafe {
+				fixed (nfloat* componentsPtr = components) {
+					CGContextSetStrokeColor (Handle, componentsPtr);
+				}
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetFillPattern (/* CGContextRef */ IntPtr context,
-			/* CGPatternRef __nullable */ IntPtr pattern, /* const CGFloat * __nullable */ nfloat []? components);
+		extern static unsafe void CGContextSetFillPattern (/* CGContextRef */ IntPtr context,
+			/* CGPatternRef __nullable */ IntPtr pattern, /* const CGFloat * __nullable */ nfloat* components);
 
 		public void SetFillPattern (CGPattern pattern, nfloat []? components)
 		{
-			CGContextSetFillPattern (Handle, pattern.GetHandle (), components);
+			unsafe {
+				fixed (nfloat* componentsPtr = components) {
+					CGContextSetFillPattern (Handle, pattern.GetHandle (), componentsPtr);
+				}
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetStrokePattern (/* CGContextRef */ IntPtr context,
-			/* CGPatternRef __nullable */ IntPtr pattern, /* const CGFloat * __nullable */ nfloat []? components);
+		extern static unsafe void CGContextSetStrokePattern (/* CGContextRef */ IntPtr context,
+			/* CGPatternRef __nullable */ IntPtr pattern, /* const CGFloat * __nullable */ nfloat* components);
 
 		public void SetStrokePattern (CGPattern? pattern, nfloat []? components)
 		{
-			CGContextSetStrokePattern (Handle, pattern.GetHandle (), components);
+			unsafe {
+				fixed (nfloat* componentsPtr = components) {
+					CGContextSetStrokePattern (Handle, pattern.GetHandle (), componentsPtr);
+				}
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
