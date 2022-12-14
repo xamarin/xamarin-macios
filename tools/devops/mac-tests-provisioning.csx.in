@@ -7,14 +7,15 @@ using System.Linq;
 using static Xamarin.Provisioning.ProvisioningScript;
 
 // provisionator knows how to deal with this items
-Item ("@MONO_PACKAGE@");
-Item ("@VS_PACKAGE@");
-Item ("@XM_PACKAGE@");
-DotNetCoreSdk ("@SYSTEM_DOTNET_VERSION@");
+if (!string.IsNullOrEmpty ("@INCLUDE_XAMARIN_LEGACY@")) {
+	Item ("@MONO_PACKAGE@");
+	if (!string.IsNullOrEmpty ("@INCLUDE_MAC@"))
+		Item ("@XM_PACKAGE@");
+}
 
 BrewPackages ("p7zip");
 
-var appleSdkOverride = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), "Library", "Preferences", "Xamarin", "Settings.plist");
+var appleSdkOverride = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), "Library", "Preferences", "Xamarin", "Settings.plist");
 Item ("Override Apple SDK Settings")
 	.Condition (item => !File.Exists (appleSdkOverride) || GetSettingValue (appleSdkOverride, "AppleSdkRoot") != GetSelectedXcodePath ())
 	.Action (item => {

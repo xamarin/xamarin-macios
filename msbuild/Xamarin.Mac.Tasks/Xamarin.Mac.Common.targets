@@ -103,6 +103,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			ExtraArgs="$(_BundlerArguments)"
 			NativeReferences="@(_FrameworkNativeReference);@(_FileNativeReference)"
 			References="@(ReferencePath);@(_BundlerReferencePath)"
+			Registrar="$(Registrar)"
 			ResponseFilePath="$(IntermediateOutputPath)response-file.rsp"
 			SdkRoot="$(_SdkDevPath)"
 			IntermediateOutputPath="$(IntermediateOutputPath)mmp-cache"

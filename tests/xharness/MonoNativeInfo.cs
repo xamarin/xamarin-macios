@@ -31,23 +31,20 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
 namespace Xharness {
-	public enum MonoNativeFlavor
-	{
+	public enum MonoNativeFlavor {
 		None,
 		Compat,
 		Unified,
 	}
 
-	public enum MonoNativeLinkMode
-	{
+	public enum MonoNativeLinkMode {
 		None,
 		Static,
 		Dynamic,
 		Symlink,
 	}
 
-	public static class MonoNativeHelper
-	{
+	public static class MonoNativeHelper {
 		public static void AddProjectDefines (XmlDocument project, MonoNativeLinkMode link)
 		{
 			switch (link) {
@@ -100,8 +97,7 @@ namespace Xharness {
 		}
 	}
 
-	public class MonoNativeInfo
-	{
+	public class MonoNativeInfo {
 		Action<int, string> log;
 		public MonoNativeFlavor Flavor { get; }
 		public DevicePlatform DevicePlatform { get; set; }

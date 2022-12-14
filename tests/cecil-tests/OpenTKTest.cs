@@ -14,7 +14,7 @@ namespace Cecil.Tests {
 		// https://github.com/xamarin/xamarin-macios/issues/9724
 		public void BeGone (string assemblyPath)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath)!;
+			var assembly = Helper.GetAssembly (assemblyPath);
 			var found = new HashSet<string> ();
 			foreach (var type in assembly.MainModule.Types) {
 				if (type.Namespace?.StartsWith ("OpenTK", StringComparison.Ordinal) == true) {

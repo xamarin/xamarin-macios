@@ -1,7 +1,5 @@
 using System;
 
-#nullable enable
-
 namespace Microsoft.MaciOS.Nnyeah {
 	public class WarningEventArgs : BaseTransformEventArgs {
 		public WarningEventArgs (string containerName, string methodName, string targetOperand, string message)

@@ -4,17 +4,14 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class CompileNativeCode : CompileNativeCodeTaskBase, ICancelableTask, ITaskCallback
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class CompileNativeCode : CompileNativeCodeTaskBase, ICancelableTask, ITaskCallback {
 		public override bool Execute ()
 		{
 			if (!ShouldExecuteRemotely ())
 				return base.Execute ();
 
-			foreach (var info in CompileInfo)
-			{
+			foreach (var info in CompileInfo) {
 				var outputFile = info.GetMetadata ("OutputFile");
 
 				if (!string.IsNullOrEmpty (outputFile))
@@ -31,11 +28,9 @@ namespace Xamarin.MacDev.Tasks
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
 		{
 			if (IncludeDirectories != null) {
-				foreach (var dir in IncludeDirectories) 
-				{
-					foreach (var file in Directory.EnumerateFiles(dir.ItemSpec, "*.*", SearchOption.AllDirectories)) 
-					{
-						yield return new TaskItem(file);
+				foreach (var dir in IncludeDirectories) {
+					foreach (var file in Directory.EnumerateFiles (dir.ItemSpec, "*.*", SearchOption.AllDirectories)) {
+						yield return new TaskItem (file);
 					}
 				}
 			}

@@ -1,0 +1,5 @@
+!missing-protocol-member! GCDevicePhysicalInputState::axes not found
+!missing-protocol-member! GCDevicePhysicalInputState::buttons not found
+!missing-protocol-member! GCDevicePhysicalInputState::dpads not found
+!missing-protocol-member! GCDevicePhysicalInputState::elements not found
+!missing-protocol-member! GCDevicePhysicalInputState::switches not found

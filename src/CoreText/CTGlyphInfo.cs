@@ -74,11 +74,11 @@ namespace CoreText {
 		static IntPtr Create (string glyphName, CTFont font, string baseString)
 		{
 			if (glyphName is null)
-				throw new ArgumentNullException (nameof (glyphName));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (glyphName));
 			if (font is null)
-				throw new ArgumentNullException (nameof (font));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
 			if (baseString is null)
-				throw new ArgumentNullException (nameof (baseString));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (baseString));
 
 			var gnHandle = CFString.CreateNative (glyphName);
 			var bsHandle = CFString.CreateNative (baseString);
@@ -101,9 +101,9 @@ namespace CoreText {
 		static IntPtr Create (CGGlyph glyph, CTFont font, string baseString)
 		{
 			if (font is null)
-				throw new ArgumentNullException (nameof (font));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
 			if (baseString is null)
-				throw new ArgumentNullException (nameof (baseString));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (baseString));
 
 			var bsHandle = CFString.CreateNative (baseString);
 			try {
@@ -124,7 +124,7 @@ namespace CoreText {
 		static IntPtr Create (CGFontIndex cid, CTCharacterCollection collection, string baseString)
 		{
 			if (baseString is null)
-				throw new ArgumentNullException (nameof (baseString));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (baseString));
 
 			var bsHandle = CFString.CreateNative (baseString);
 			try {

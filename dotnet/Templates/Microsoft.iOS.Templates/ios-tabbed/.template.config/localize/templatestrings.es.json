@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "Aplicación con pestañas de iOS (versión preliminar)",
+  "name": "iOS Tabbed Application",
   "description": "Proyecto para crear una aplicación con pestañas de iOS de .NET",
   "symbols/bundleId/description": "Invalida CFBundleIdentifier en Info.plist",
   "symbols/minOSVersion/description": "Invalida SupportedOSPlatformVersion en el archivo de proyecto",

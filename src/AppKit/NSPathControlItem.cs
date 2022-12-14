@@ -3,10 +3,10 @@ using System;
 using Foundation;
 
 namespace AppKit {
-	public partial class NSPathControlItem 
+	public partial class NSPathControlItem
 #if !XAMCORE_3_0
 	: INSCoding
-#endif 
+#endif
 	{
 #if !XAMCORE_3_0
 		public NSPathControlItem (NSCoder coder) : this ()

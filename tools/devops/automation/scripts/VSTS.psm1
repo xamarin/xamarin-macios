@@ -38,7 +38,7 @@ class Agents {
         if (-not $name) {
             throw [System.ArgumentNullException]::new("name")
         }
-        $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools/$($pool.GetID())/agents?agentName=$name&api-version=6.0"
+        $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools/$($pool.GetID())/agents?agentName=$name&includeCapabilities=true&api-version=6.0"
         $headers = Get-AuthHeader($this.Token)
         $agents = Invoke-RestMethod -Uri $url -Headers $headers -Method "GET"  -ContentType 'application/json'
         if ($agents.count -ne 1) {
@@ -51,7 +51,7 @@ class Agents {
         if (-not $pool) {
             throw [System.ArgumentNullException]::new("pool")
         }
-        $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools/$($pool.GetID())/agents?api-version=6.0"
+        $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools/$($pool.GetID())/agents?includeCapabilities=true&api-version=6.0"
         $headers = Get-AuthHeader($this.Token)
         $agents = Invoke-RestMethod -Uri $url -Headers $headers -Method "GET"  -ContentType 'application/json'
         $result = [System.Collections.ArrayList]@()
@@ -62,13 +62,18 @@ class Agents {
     }
 
     [void] SetEnabled($pool, $agent, $isEnabled) {
-        if (-not $agent) {
+        if (-not $pool) {
             throw [System.ArgumentNullException]::new("pool")
         }
+        if (-not $agent) {
+            throw [System.ArgumentNullException]::new("agent")
+        }
         $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools/$($pool.GetID())/agents/$($agent.GetID())?api-version=6.0"
+        Write-Debug "Url is $url"
         $headers = Get-AuthHeader($this.Token)
         $payload = @{
-            enabled = $isEnabled
+            id = $agent.GetID() ;
+            enabled = $isEnabled ;
         }
         Invoke-RestMethod -Uri $url -Headers $headers -Method "PATCH" -Body ($payload | ConvertTo-json) -ContentType 'application/json'
     }
@@ -231,11 +236,11 @@ class Vsts {
         # generate the helper objects
         $this.Pools = [Pools]::new($org, $token)
         $this.Agents = [Agents]::new($org, $token)
-        $this.Agents = [Artifacts]::new($org, $project, $token)
+        $this.Artifacts = [Artifacts]::new($org, $project, $token)
     }
 }
 
-function New-VstsAPI {
+function New-VSTS {
     param
     (
         [Parameter(Mandatory)]
@@ -425,7 +430,7 @@ function Set-BuildTags {
 
     foreach ($t in $Tags) {
         $url = Get-TagsRestAPIUrl -Tag $t
-        Write-Host "Uri is $url"
+        Write-Debug "Uri is $url"
 
         Invoke-RestMethod -Uri $url -Headers $headers -Method "PUT"  -ContentType 'application/json'
     }
@@ -435,3 +440,4 @@ function Set-BuildTags {
 Export-ModuleMember -Function Stop-Pipeline
 Export-ModuleMember -Function Set-PipelineResult
 Export-ModuleMember -Function Set-BuildTags
+Export-ModuleMember -Function New-VSTS

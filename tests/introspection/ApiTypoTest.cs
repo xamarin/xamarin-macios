@@ -1089,6 +1089,7 @@ namespace Introspection
 #endif
 #if __TVOS__
 				case "MetalPerformanceShadersLibrary":
+				case "MetalPerformanceShadersGraphLibrary":
 					// not supported in tvOS (12.1) simulator so load fails
 					if (TestRuntime.IsSimulatorOrDesktop)
 						break;

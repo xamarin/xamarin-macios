@@ -3,6 +3,8 @@
 //
 // Copyright (C) 2011-2014 Xamarin Inc
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 

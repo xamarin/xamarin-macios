@@ -1,10 +1,8 @@
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class SpotlightIndexer : SpotlightIndexerTaskBase
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class SpotlightIndexer : SpotlightIndexerTaskBase {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())

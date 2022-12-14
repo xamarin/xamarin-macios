@@ -105,7 +105,7 @@ namespace CoreGraphics {
 		static IntPtr Create (CFPropertyList propertyList)
 		{
 			if (propertyList is null)
-				throw new ArgumentNullException (nameof (propertyList));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (propertyList));
 			return CGColorSpaceCreateWithPropertyList (propertyList.GetCheckedHandle ());
 		}
 
@@ -186,7 +186,7 @@ namespace CoreGraphics {
 		public static CGColorSpace? CreateCalibratedGray (nfloat [] whitepoint, nfloat []? blackpoint, nfloat gamma)
 		{
 			if (whitepoint is null)
-				throw new ArgumentNullException (nameof (whitepoint));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (whitepoint));
 			if (whitepoint.Length != 3)
 				throw new ArgumentException ("Must have exactly 3 values", nameof (whitepoint));
 			if (blackpoint is not null && blackpoint.Length != 3)
@@ -203,7 +203,7 @@ namespace CoreGraphics {
 		public static CGColorSpace? CreateCalibratedRGB (nfloat [] whitepoint, nfloat []? blackpoint, nfloat []? gamma, nfloat []? matrix)
 		{
 			if (whitepoint is null)
-				throw new ArgumentNullException (nameof (whitepoint));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (whitepoint));
 			if (whitepoint.Length != 3)
 				throw new ArgumentException ("Must have exactly 3 values", nameof (whitepoint));
 			if (blackpoint is not null && blackpoint.Length != 3)
@@ -224,7 +224,7 @@ namespace CoreGraphics {
 		public static CGColorSpace? CreateLab (nfloat [] whitepoint, nfloat []? blackpoint, nfloat []? range)
 		{
 			if (whitepoint is null)
-				throw new ArgumentNullException (nameof (whitepoint));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (whitepoint));
 			if (whitepoint.Length != 3)
 				throw new ArgumentException ("Must have exactly 3 values", nameof (whitepoint));
 			if (blackpoint is not null && blackpoint.Length != 3)
@@ -262,7 +262,7 @@ namespace CoreGraphics {
 		public static CGColorSpace? CreateWithName (string name)
 		{
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 			using (var ns = new NSString (name)) {
 				var cs = CGColorSpaceCreateWithName (ns.Handle);
 				return FromHandle (cs, true);
@@ -1037,6 +1037,35 @@ namespace CoreGraphics {
 		[MacCatalyst (14,0)]
 #endif
 		public CGColorSpace? CreateExtendedLinearized () => Runtime.GetINativeObject<CGColorSpace> (CGColorSpaceCreateExtendedLinearized (Handle), owns: true);
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[iOS (16,0)]
+		[TV (16,0)]
+		[Mac (13,0)]
+		[MacCatalyst (16,0)]
+		[Watch (9,0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern IntPtr CGColorSpaceCreateCopyWithStandardRange (/* CGColorSpaceRef */ IntPtr s);
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[iOS (16,0)]
+		[TV (16,0)]
+		[Mac (13,0)]
+		[MacCatalyst (16,0)]
+		[Watch (9,0)]
+#endif
+		public CGColorSpace? CreateCopyWithStandardRange () => Runtime.GetINativeObject<CGColorSpace> (CGColorSpaceCreateCopyWithStandardRange (Handle), owns: true);
 
 #if NET
 		[SupportedOSPlatform ("macos12.0")]

@@ -56,60 +56,60 @@ namespace AddressBook {
 	[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-	[Deprecated (PlatformName.iOS, 9,0)]
+	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
 #endif
 	static class ABMultiValue {
 		public const uint Mask = (1 << 8);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueCopyValueAtIndex")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueCopyValueAtIndex")]
 		public static extern IntPtr CopyValueAtIndex (IntPtr multiValue, nint index);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueCopyLabelAtIndex")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueCopyLabelAtIndex")]
 		public static extern IntPtr CopyLabelAtIndex (IntPtr multiValue, nint index);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueGetIdentifierAtIndex")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueGetIdentifierAtIndex")]
 		public static extern int /* ABMultiValueIdentifier */ GetIdentifierAtIndex (IntPtr multiValue, nint index);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueCopyArrayOfAllValues")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueCopyArrayOfAllValues")]
 		public static extern IntPtr CopyArrayOfAllValues (IntPtr multiValue);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueGetCount")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueGetCount")]
 		public static extern nint GetCount (IntPtr multiValue);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueGetFirstIndexOfValue")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueGetFirstIndexOfValue")]
 		public static extern nint GetFirstIndexOfValue (IntPtr multiValue, IntPtr value);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueGetIndexForIdentifier")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueGetIndexForIdentifier")]
 		public static extern nint GetIndexForIdentifier (IntPtr multiValue, int /* ABMultiValueIdentifier */ identifier);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueGetPropertyType")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueGetPropertyType")]
 		public static extern ABPropertyType GetPropertyType (IntPtr multiValue);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueCreateMutable")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueCreateMutable")]
 		public static extern IntPtr CreateMutable (ABPropertyType type);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueCreateMutableCopy")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueCreateMutableCopy")]
 		public static extern IntPtr CreateMutableCopy (IntPtr multiValue);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueAddValueAndLabel")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueAddValueAndLabel")]
 		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool AddValueAndLabel (IntPtr multiValue, IntPtr value, IntPtr label, out int /* int32_t */ outIdentifier);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueReplaceValueAtIndex")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueReplaceValueAtIndex")]
 		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool ReplaceValueAtIndex (IntPtr multiValue, IntPtr value, nint index);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueReplaceLabelAtIndex")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueReplaceLabelAtIndex")]
 		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool ReplaceLabelAtIndex (IntPtr multiValue, IntPtr value, nint index);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueInsertValueAndLabelAtIndex")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueInsertValueAndLabelAtIndex")]
 		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool InsertValueAndLabelAtIndex (IntPtr multiValue, IntPtr value, IntPtr label, nint index, out int /* int32_t */ outIdentifier);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueRemoveValueAndLabelAtIndex")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueRemoveValueAndLabelAtIndex")]
 		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool RemoveValueAndLabelAtIndex (IntPtr multiValue, nint index);
 	}
@@ -124,19 +124,18 @@ namespace AddressBook {
 	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
 #endif
-	public struct ABMultiValueEntry<T>
-	{
+	public struct ABMultiValueEntry<T> {
 		ABMultiValue<T> self;
 		nint index;
 
 		internal ABMultiValueEntry (ABMultiValue<T> self, nint index)
 		{
-			this.self   = self;
-			this.index  = index;
+			this.self = self;
+			this.index = index;
 		}
 
 		internal void AssertValid ()
@@ -146,7 +145,7 @@ namespace AddressBook {
 		}
 
 		public bool IsReadOnly {
-			get {return self.IsReadOnly;}
+			get { return self.IsReadOnly; }
 		}
 
 		NativeHandle ToIntPtr (T value)
@@ -159,7 +158,7 @@ namespace AddressBook {
 
 		static Exception CreateNotSupportedException ()
 		{
-			return new NotSupportedException ("ABMultiValue record is read-only. " + 
+			return new NotSupportedException ("ABMultiValue record is read-only. " +
 					"To update properties, use an ABMutableMultiValue<T>. " +
 					"See ABMultiValue<T>.ToMutableMultiValue().");
 		}
@@ -209,18 +208,17 @@ namespace AddressBook {
 	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
 #endif
-	public class ABMultiValue<T> : NativeObject, IEnumerable<ABMultiValueEntry<T>>
-	{
+	public class ABMultiValue<T> : NativeObject, IEnumerable<ABMultiValueEntry<T>> {
 		internal Converter<NativeHandle, T> toManaged;
 		internal Converter<T, NativeHandle> toNative;
 
 		[Preserve (Conditional = true)]
 		internal ABMultiValue (NativeHandle handle, bool owns)
-			: this (handle, 
+			: this (handle,
 					v => (T) (object) Runtime.GetNSObject (v)!,
 					v => ((INativeObject?) v).GetHandle (), owns)
 		{
@@ -237,7 +235,7 @@ namespace AddressBook {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (toNative));
 
 			this.toManaged = toManaged;
-			this.toNative  = toNative;
+			this.toNative = toNative;
 		}
 
 		public virtual bool IsReadOnly {
@@ -248,10 +246,10 @@ namespace AddressBook {
 		}
 
 		public ABPropertyType PropertyType {
-			get {return ABMultiValue.GetPropertyType (Handle);}
+			get { return ABMultiValue.GetPropertyType (Handle); }
 		}
 
-		public T[] GetValues ()
+		public T [] GetValues ()
 		{
 			return NSArray.ArrayFromHandle (ABMultiValue.CopyArrayOfAllValues (Handle), toManaged)
 				?? Array.Empty<T> ();
@@ -309,12 +307,11 @@ namespace AddressBook {
 	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
 #endif
-	public class ABMutableMultiValue<T> : ABMultiValue<T>
-	{
+	public class ABMutableMultiValue<T> : ABMultiValue<T> {
 		[Preserve (Conditional = true)]
 		internal ABMutableMultiValue (NativeHandle handle, bool owns)
 			: base (handle, owns)
@@ -335,7 +332,7 @@ namespace AddressBook {
 
 		public bool Add (T value, NSString? label)
 		{
-			return ABMultiValue.AddValueAndLabel (Handle, 
+			return ABMultiValue.AddValueAndLabel (Handle,
 						toNative (value),
 						label.GetHandle (),
 						out _);
@@ -366,9 +363,9 @@ namespace AddressBook {
 	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
 #endif
 	public class ABMutableDateMultiValue : ABMutableMultiValue<NSDate> {
 		public ABMutableDateMultiValue ()
@@ -387,9 +384,9 @@ namespace AddressBook {
 	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
 #endif
 	public class ABMutableDictionaryMultiValue : ABMutableMultiValue<NSDictionary> {
 		public ABMutableDictionaryMultiValue ()
@@ -408,13 +405,13 @@ namespace AddressBook {
 	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
 #endif
 	public class ABMutableStringMultiValue : ABMutableMultiValue<string> {
 		public ABMutableStringMultiValue ()
-			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiString), 
+			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiString),
 					ABPerson.ToString, CFString.CreateNative)
 		{
 		}

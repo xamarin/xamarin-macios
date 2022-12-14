@@ -97,7 +97,7 @@ namespace GameKit {
 	}
 
 	// NSInteger -> GKError.h
-	[Native]
+	[Native ("GKErrorCode")]
 	[ErrorDomain ("GKErrorDomain")]
 	public enum GKError : long {
 		None = 0,

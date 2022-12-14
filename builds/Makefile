@@ -6,6 +6,12 @@ PREFIX=$(abspath $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/)
 # Keep all intermediate files always.
 .SECONDARY:
 
+ifeq ($(shell arch),arm64)
+DOTNET_ARCH=arm64
+else
+DOTNET_ARCH=x64
+endif
+
 ##
 ## Mono download vs. build
 ##
@@ -19,7 +25,6 @@ download-mono: \
 downloads/$(basename $(MONO_IOS_FILENAME)): MONO_URL=$(MONO_IOS_URL)
 downloads/$(basename $(MONO_MAC_FILENAME)): MONO_URL=$(MONO_MAC_URL)
 downloads/$(basename $(MONO_MACCATALYST_FILENAME)): MONO_URL=$(MONO_MACCATALYST_URL)
-downloads/$(DOTNET_TARBALL_NAME): MONO_URL=$(DOTNET_TARBALL)
 
 include $(TOP)/mk/colors.mk
 
@@ -40,7 +45,7 @@ $(DOWNLOADS):
 		$(CP) ~/Library/Caches/xamarin-macios/$(notdir $@) $@.tmp; \
 	else \
 		EC=0; \
-		curl -f -L $(if $(V),-v,-s) $(MONO_URL) --output $@.tmp || EC=$$?; \
+		$(CURL_RETRY) $(MONO_URL) --output $@.tmp || EC=$$?; \
 		if [[ x$$EC == x22 ]]; then \
 			MSG="Could not download the archive %s because the URL doesn't exist. This can happen if bumping mono very soon after the corresponding commit was pushed to mono (i.e. the archive hasn't been built yet). If so, please wait a bit and try again."; \
 			printf "$(COLOR_RED)*** $$MSG$(COLOR_CLEAR)\n" "$(notdir $@)"; \
@@ -72,9 +77,9 @@ downloads/%: downloads/%.nupkg
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Unzipped $*."
 
-downloads/$(basename $(basename $(DOTNET_TARBALL_NAME))): dotnet-install.sh
+downloads/$(DOTNET_INSTALL_NAME): dotnet-install.sh
 	$(Q) echo "Downloading and installing .NET $(DOTNET_VERSION) into $@..."
-	$(Q) ./dotnet-install.sh --install-dir "$@.tmp" --version "$(DOTNET_VERSION)" --architecture x64 --no-path $$DOTNET_INSTALL_EXTRA_ARGS
+	$(Q) ./dotnet-install.sh --install-dir "$@.tmp" --version "$(DOTNET_VERSION)" --architecture $(DOTNET_ARCH) --no-path $$DOTNET_INSTALL_EXTRA_ARGS
 	$(Q) rm -Rf "$@"
 	$(Q) mv "$@.tmp" "$@"
 	$(Q) echo "Downloaded and installed .NET $(DOTNET_VERSION) into $@."
@@ -82,15 +87,15 @@ downloads/$(basename $(basename $(DOTNET_TARBALL_NAME))): dotnet-install.sh
 # This is just a helpful target to print the url to the .pkg to download and install the current .NET version into the system.
 print-dotnet-pkg-urls: dotnet-install.sh
 	$(Q) rm -f $@-found-it.stamp
-	$(Q) for url in $$(./dotnet-install.sh --version "$(DOTNET_VERSION)" --architecture x64 --no-path $$DOTNET_INSTALL_EXTRA_ARGS --dry-run | grep URL.*primary: | sed 's/.*primary: //'); do \
+	$(Q) for url in $$(./dotnet-install.sh --version "$(DOTNET_VERSION)" --architecture $(DOTNET_ARCH) --no-path $$DOTNET_INSTALL_EXTRA_ARGS --dry-run | grep URL.*primary: | sed 's/.*primary: //'); do \
 		pkg=$${url/tar.gz/pkg}; \
-		if curl -LI --fail "$$pkg" >/dev/null 2>&1; then echo "$$pkg"; touch $@-found-it.stamp; break; fi; \
+		if $(CURL) -I "$$pkg" >/dev/null 2>&1; then echo "$$pkg"; touch $@-found-it.stamp; break; fi; \
 	done
 	$(Q) if ! test -f $@-found-it.stamp; then echo "No working urls were found."; exit 1; fi
 	$(Q) rm -f $@-found-it.stamp
 
 dotnet-install.sh: Makefile
-	$(Q) curl --retry 20 --retry-delay 2 --connect-timeout 15 -S -L $(if $(V),-v,-s) https://dot.net/v1/dotnet-install.sh --output $@.tmp
+	$(Q) $(CURL_RETRY) https://dot.net/v1/dotnet-install.sh --output $@.tmp
 	$(Q) chmod +x $@.tmp
 	$(Q) mv $@.tmp $@
 
@@ -126,10 +131,14 @@ DOWNLOAD_DOTNET_VERSION=$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)
 endif
 endif
 
-.stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(basename $(basename $(DOTNET_TARBALL_NAME))) package-download/global.json package-download/NuGet.config
+package-download/all-package-references.csproj: $(TOP)/.git/HEAD $(TOP)/.git/index ./create-csproj-for-all-packagereferences.sh
+	$(Q_GEN) ./create-csproj-for-all-packagereferences.sh --output "$(abspath $@.tmp)" $(if $(V),-v,)
+	$(Q) mv "$@.tmp" "$@"
+
+.stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(DOTNET_INSTALL_NAME) package-download/all-package-references.csproj
 	$(Q_GEN) cd package-download && $(DOTNET) \
 		build \
-		download-packages.proj \
+		download-packages.csproj \
 		/t:WriteBundledNETCorePlatformsPackageVersion \
 		/p:WriteFilePath=$(CURDIR)/BundledNETCorePlatformsPackageVersion.txt \
 		/p:PackageRuntimeIdentifiers="$(DOTNET_RUNTIME_IDENTIFIERS)" \
@@ -139,34 +148,22 @@ endif
 		/p:ToolChainManifestVersionBand="$(TOOLCHAIN_MANIFEST_VERSION_BAND)" \
 		/bl \
 		$(DOTNET_BUILD_VERBOSITY)
-	$(Q) $(CP) ./downloads/microsoft.net.workload.mono.toolchain.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(DOWNLOAD_DOTNET_VERSION)/data/WorkloadManifest.* ./downloads/dotnet-sdk-$(DOTNET_VERSION)-osx-x64/sdk-manifests/$(SDK_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain/
-	$(Q) $(CP) ./downloads/microsoft.net.workload.emscripten.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(EMSCRIPTEN_MANIFEST_PACKAGE_VERSION)/data/WorkloadManifest.* ./downloads/dotnet-sdk-$(DOTNET_VERSION)-osx-x64/sdk-manifests/$(SDK_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten/
+	$(Q) mkdir -p ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain/
+	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.mono.toolchain.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(DOWNLOAD_DOTNET_VERSION)/data/WorkloadManifest.* ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain/
+	$(Q) mkdir -p ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten/
+	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.emscripten.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(EMSCRIPTEN_MANIFEST_PACKAGE_VERSION)/data/WorkloadManifest.* ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten/
 	$(Q) touch $@
-
 
 .stamp-install-t4: $(TOP)/.config/dotnet-tools.json .stamp-download-dotnet-packages
 	@# https://github.com/dotnet/sdk/issues/16165
 	$(Q) rm -f ~/.dotnet/toolResolverCache/*/dotnet-t4
-	$(SYSTEM_DOTNET) tool restore
+	$(DOTNET) tool restore
 	$(Q) touch $@
 
 BundledNETCorePlatformsPackageVersion.txt: .stamp-download-dotnet-packages
 
-package-download/global.json: $(TOP)/global6.json Makefile
-	$(Q) $(CP) $< $@
-
-# put any downloaded packages in our own directory, not in ~
-package-download/NuGet.config: $(TOP)/NuGet.config Makefile
-	$(Q) $(CP) $< $@
-	$(Q) $(CP) $< $@.tmp
-	$(Q) nuget config -Set globalPackagesFolder=$(abspath $(CURDIR)/downloads) -Config $@.tmp
-ifdef CUSTOM_DOTNET
-	$(Q) nuget sources add -Name dev-runtime-feed -Source $(abspath $(DOTNET_RUNTIME_PATH)/artifacts/packages/Release/Shipping) -ConfigFile $@.tmp
-endif
-	$(Q) mv $@.tmp $@
-
 DOTNET_DOWNLOADS = \
-	downloads/$(basename $(basename $(DOTNET_TARBALL_NAME))) \
+	downloads/$(DOTNET_INSTALL_NAME) \
 	.stamp-download-dotnet-packages \
 	.stamp-install-t4 \
 

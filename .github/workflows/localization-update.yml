@@ -4,12 +4,18 @@ on:
     branches:
     - "lego/*"
 
+permissions:
+  contents: read
+
 jobs:
   pull-request:
+    permissions:
+      contents: read  # for actions/checkout to fetch code
+      pull-requests: write  # for repo-sync/pull-request to create pull requests
     name: '[Localization PR to main]'
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       name: checkout
 
     - uses: repo-sync/pull-request@v2

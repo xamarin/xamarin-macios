@@ -9,6 +9,8 @@
 // Copyright 2012-2015 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using CoreFoundation;
@@ -26,15 +28,15 @@ namespace SystemConfiguration {
 #if !NET
 		[Obsolete ("Always return 'null'.")]
 		[Unavailable (PlatformName.TvOS)]
-		public static Foundation.NSString NetworkInfoKeyBSSID => null;
+		public static Foundation.NSString? NetworkInfoKeyBSSID => null;
 
 		[Obsolete ("Always return 'null'.")]
 		[Unavailable (PlatformName.TvOS)]
-		public static Foundation.NSString NetworkInfoKeySSID => null;
+		public static Foundation.NSString? NetworkInfoKeySSID => null;
 
 		[Obsolete ("Always return 'null'.")]
 		[Unavailable (PlatformName.TvOS)]
-		public static Foundation.NSString NetworkInfoKeySSIDData => null;
+		public static Foundation.NSString? NetworkInfoKeySSIDData => null;
 
 		[Obsolete ("Throw a 'NotSupportedException'.")]
 		[Unavailable (PlatformName.TvOS)]
@@ -81,7 +83,7 @@ namespace SystemConfiguration {
 #else
 		[Deprecated (PlatformName.iOS, 14,0)]
 #endif
-		static public StatusCode TryCopyCurrentNetworkInfo (string interfaceName, out NSDictionary currentNetworkInfo)
+		static public StatusCode TryCopyCurrentNetworkInfo (string interfaceName, out NSDictionary? currentNetworkInfo)
 		{
 			using (var nss = new NSString (interfaceName)) {
 				var ni = CNCopyCurrentNetworkInfo (nss.Handle);
@@ -113,7 +115,7 @@ namespace SystemConfiguration {
 #else
 		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'NEHotspotNetwork.FetchCurrent' instead.")]
 #endif
-		static public StatusCode TryGetSupportedInterfaces (out string[] supportedInterfaces)
+		static public StatusCode TryGetSupportedInterfaces (out string?[]? supportedInterfaces)
 		{
 			IntPtr array = CNCopySupportedInterfaces ();
 			if (array == IntPtr.Zero) {

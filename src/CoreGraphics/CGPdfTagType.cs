@@ -7,6 +7,8 @@
 // Copyright 2018-2019 Microsoft Corporation
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -29,7 +31,7 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern /* const char * _Nullable */ IntPtr CGPDFTagTypeGetName (CGPdfTagType tagType);
 
-		public static string GetName (this CGPdfTagType self)
+		public static string? GetName (this CGPdfTagType self)
 		{
 			return Marshal.PtrToStringAnsi (CGPDFTagTypeGetName (self));
 		}

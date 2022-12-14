@@ -34,7 +34,7 @@ namespace NetworkExtension {
 	}
 
 	[iOS (8,0)][Mac (10,10)]
-	[Native]
+	[Native ("NEVPNIKEv2EncryptionAlgorithm")]
 	public enum NEVpnIke2EncryptionAlgorithm : long {
 		DES = 1,
 		TripleDES = 2,
@@ -49,7 +49,7 @@ namespace NetworkExtension {
 	}
 
 	[iOS (8,0)][Mac (10,10)]
-	[Native]
+	[Native ("NEVPNIKEv2IntegrityAlgorithm")]
 	public enum NEVpnIke2IntegrityAlgorithm : long {
 		SHA96 = 1,
 		SHA160 = 2,
@@ -59,7 +59,7 @@ namespace NetworkExtension {
 	}
 
 	[iOS (8,0)][Mac (10,10)]
-	[Native]
+	[Native ("NEVPNIKEv2DeadPeerDetectionRate")]
 	public enum NEVpnIke2DeadPeerDetectionRate : long {
 		None = 0,
 		Low = 1,
@@ -68,7 +68,7 @@ namespace NetworkExtension {
 	}
 
 	[iOS (8,0)][Mac (10,10)]
-	[Native]
+	[Native ("NEVPNIKEv2DiffieHellmanGroup")]
 	public enum NEVpnIke2DiffieHellman : long {
 		Invalid = 0,
 		Group0 = Invalid,
@@ -113,7 +113,7 @@ namespace NetworkExtension {
 	}
 
 	[iOS (8,3)][Mac (10,11)]
-	[Native] // NSInteger
+	[Native ("NEVPNIKEv2CertificateType")] // NSInteger
 	public enum NEVpnIke2CertificateType : long {
 		RSA = 1,
 		ECDSA256 = 2,
@@ -281,7 +281,7 @@ namespace NetworkExtension {
 	}
 
 	[NoWatch, NoTV, Mac (11,0), iOS (14,0)]
-	[Native]
+	[Native ("NEDNSProtocol")]
 	public enum NEDnsProtocol : long {
 		Cleartext = 1,
 		Tls = 2,
@@ -289,7 +289,7 @@ namespace NetworkExtension {
 	}
 
 	[NoWatch, NoTV, Mac (11,0), iOS (14,0)]
-	[Native]
+	[Native ("NEDNSSettingsManagerError")]
 	[ErrorDomain ("NEDNSSettingsErrorDomain")]
 	public enum NEDnsSettingsManagerError : long {
 		Invalid = 1,

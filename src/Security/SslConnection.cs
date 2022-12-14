@@ -7,6 +7,8 @@
 // Copyright 2014 Xamarin Inc.
 //
 
+#nullable enable
+
 using System;
 using System.IO;
 using System.Net.Sockets;
@@ -97,7 +99,7 @@ namespace Security {
 #endif
 		unsafe static SslStatus Read (IntPtr connection, IntPtr data, nint* dataLength)
 		{
-			var c = (SslConnection) GCHandle.FromIntPtr (connection).Target;
+			var c = (SslConnection) GCHandle.FromIntPtr (connection).Target!;
 			return c.Read (data, ref System.Runtime.CompilerServices.Unsafe.AsRef<nint> (dataLength));
 		}
 
@@ -108,7 +110,7 @@ namespace Security {
 #endif
 		unsafe static SslStatus Write (IntPtr connection, IntPtr data, nint* dataLength)
 		{
-			var c = (SslConnection) GCHandle.FromIntPtr (connection).Target;
+			var c = (SslConnection) GCHandle.FromIntPtr (connection).Target!;
 			return c.Write (data, ref System.Runtime.CompilerServices.Unsafe.AsRef<nint> (dataLength));
 		}
 	}
@@ -127,8 +129,8 @@ namespace Security {
 
 		public SslStreamConnection (Stream stream)
 		{
-			if (stream == null)
-				throw new ArgumentNullException ("stream");
+			if (stream is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (stream));
 			InnerStream = stream;
 			// a bit higher than the default maximum fragment size
 			buffer = new byte [16384];

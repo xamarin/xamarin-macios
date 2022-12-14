@@ -5,6 +5,9 @@
 //     
 // Copyright 2015 Xamarin Inc.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
@@ -21,7 +24,7 @@ namespace VideoToolbox {
 			get {
 				var key = GetNSStringValue (VTCompressionPropertyKey.ProfileLevel);
 
-				if (key == null)
+				if (key is null)
 					return VTProfileLevel.Unset;
 				if (key == VTProfileLevelKeys.H264_Baseline_1_3)
 					return VTProfileLevel.H264Baseline13;
@@ -296,7 +299,7 @@ namespace VideoToolbox {
 			get {
 				var key = GetNSStringValue (VTCompressionPropertyKey.H264EntropyMode);
 
-				if (key == null)
+				if (key is null)
 					return VTH264EntropyMode.Unset;
 				if (key == VTH264EntropyModeKeys.CAVLC)
 					return VTH264EntropyMode.Cavlc;
@@ -319,10 +322,10 @@ namespace VideoToolbox {
 			}
 		}
 
-		public List<VTDataRateLimit> DataRateLimits { 
+		public List<VTDataRateLimit>? DataRateLimits { 
 			get { 
 				using (var arr = GetNativeValue <NSArray> (VTCompressionPropertyKey.DataRateLimits)) {
-					if (arr == null)
+					if (arr is null)
 						return null;
 
 					var list = new List<VTDataRateLimit> ();
@@ -337,7 +340,7 @@ namespace VideoToolbox {
 				}
 			}
 			set {
-				if (value != null) {
+				if (value is not null) {
 					using (var arr = new NSMutableArray (capacity: (nuint)(value.Count * 2))) {
 						foreach (var item in value) {
 							arr.Add (NSNumber.FromUInt32 (item.NumberOfBytes));
@@ -354,7 +357,7 @@ namespace VideoToolbox {
 			get {
 				var key = GetNSStringValue (VTCompressionPropertyKey.FieldDetail);
 
-				if (key == null)
+				if (key is null)
 					return VTFieldDetail.Unset;
 				if (key == CVImageBuffer.FieldDetailTemporalTopFirst)
 					return VTFieldDetail.TemporalTopFirst;
@@ -391,7 +394,7 @@ namespace VideoToolbox {
 			get {
 				var key = GetNSStringValue (VTCompressionPropertyKey.ColorPrimaries);
 
-				if (key == null)
+				if (key is null)
 					return VTColorPrimaries.Unset;
 				if (key == CVImageBuffer.ColorPrimaries_ITU_R_709_2)
 					return VTColorPrimaries.ItuR7092;
@@ -428,7 +431,7 @@ namespace VideoToolbox {
 			get {
 				var key = GetNSStringValue (VTCompressionPropertyKey.TransferFunction);
 
-				if (key == null)
+				if (key is null)
 					return VTTransferFunction.Unset;
 				if (key == CVImageBuffer.TransferFunction_ITU_R_709_2)
 					return VTTransferFunction.ItuR7092;
@@ -460,7 +463,7 @@ namespace VideoToolbox {
 			get {
 				var key = GetNSStringValue (VTCompressionPropertyKey.YCbCrMatrix);
 
-				if (key == null)
+				if (key is null)
 					return VTYCbCrMatrix.Unset;
 				if (key == CVImageBuffer.YCbCrMatrix_ITU_R_709_2)
 					return VTYCbCrMatrix.ItuR7092;
@@ -488,7 +491,7 @@ namespace VideoToolbox {
 			}
 		}
 
-		public VTMultiPassStorage MultiPassStorage {
+		public VTMultiPassStorage? MultiPassStorage {
 			get	{
 				return GetNativeValue<VTMultiPassStorage> (VTCompressionPropertyKey.MultiPassStorage);
 			}
@@ -508,7 +511,7 @@ namespace VideoToolbox {
 		[Introduced (PlatformName.TvOS, 13,0)]
 #endif
 		public VTAlphaChannelMode AlphaChannelMode {
-			get => VTAlphaChannelModeExtensions.GetValue (GetNSStringValue (VTCompressionPropertyKey.AlphaChannelMode));
+			get => VTAlphaChannelModeExtensions.GetValue (GetNSStringValue (VTCompressionPropertyKey.AlphaChannelMode)!);
 			set => SetStringValue (VTCompressionPropertyKey.AlphaChannelMode, value.GetConstant ());
 		}
 

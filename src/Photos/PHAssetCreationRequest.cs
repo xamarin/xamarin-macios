@@ -6,6 +6,8 @@
 // Authors:
 //    Miguel de Icaza (miguel@xamarin.com)
 
+#nullable enable
+
 using System;
 using Foundation;
 

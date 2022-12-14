@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using ObjCRuntime;
 using Foundation;
@@ -17,7 +19,7 @@ namespace HomeKit {
 			get {
 				var s = _ActionSetType;
 				// safety in case the field does not exists / cannot be loaded / new in future iOS versions...
-				if (s == null)
+				if (s is null)
 					return HMActionSetType.Unknown;
 				if (s == HMActionSetTypesInternal.WakeUp)
 					return HMActionSetType.WakeUp;

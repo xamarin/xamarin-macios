@@ -22,9 +22,9 @@ namespace ARKit {
 
 		public unsafe Matrix4 [] JointModelTransforms {
 			get {
-				var count = (int)JointCount;
+				var count = (int) JointCount;
 				var rv = new Matrix4 [count];
-				var ptr = (Matrix4 *) RawJointModelTransforms;
+				var ptr = (Matrix4*) RawJointModelTransforms;
 				for (int i = 0; i < count; i++)
 					rv [i] = *ptr++;
 				return rv;
@@ -33,9 +33,9 @@ namespace ARKit {
 
 		public unsafe Matrix4 [] JointLocalTransforms {
 			get {
-				var count = (int)JointCount;
+				var count = (int) JointCount;
 				var rv = new Matrix4 [count];
-				var ptr = (Matrix4 *) RawJointLocalTransforms;
+				var ptr = (Matrix4*) RawJointLocalTransforms;
 				for (int i = 0; i < count; i++)
 					rv [i] = *ptr++;
 				return rv;

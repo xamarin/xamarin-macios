@@ -128,6 +128,8 @@ public class AttributeManager
 #endif
 		case "ObjCRuntime.NativeAttribute":
 			return typeof (ObjCRuntime.NativeAttribute);
+		case "ObjCRuntime.NativeNameAttribute":
+			return typeof (ObjCRuntime.NativeNameAttribute);
 #if NET
 		case "ObsoletedAttribute":
 			return typeof (ObsoletedAttribute);

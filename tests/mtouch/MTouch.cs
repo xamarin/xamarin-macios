@@ -1115,6 +1115,31 @@ public class B : A {}
 		}
 
 		[Test]
+		[TestCase (Profile.tvOS, MTouchBitcode.ASMOnly, "arm64+llvm")]
+		[TestCase (Profile.tvOS, MTouchBitcode.Full, "arm64+llvm")]
+		[TestCase (Profile.tvOS, MTouchBitcode.Marker, "arm64+llvm")]
+		public void MT0186 (Profile profile, MTouchBitcode mode, string abi)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = profile;
+				if (profile == Profile.watchOS) {
+					mtouch.CreateTemporaryWatchKitExtension ();
+				} else {
+					mtouch.CreateTemporaryApp ();
+				}
+				mtouch.Abi = abi;
+				mtouch.Bitcode = mode;
+				mtouch.WarnAsError = new int[] { 186 };
+				if (Configuration.XcodeVersion.Major >= 14) {
+					Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildDev));
+					mtouch.AssertError (186, "Bitcode is enabled, but bitcode is not supported in Xcode 14+ and has been disabled. Please disable bitcode by removing the 'MtouchEnableBitcode' property from the project file.");
+				} else {
+					Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev));
+				}
+			}
+		}
+
+		[Test]
 		public void MT0095_SharedCode ()
 		{
 			using (var exttool = new MTouchTool ()) {
@@ -1987,7 +2012,7 @@ public class TestApp {
 		static string [] GetBindingsLibraryWithReferences (Profile profile)
 		{
 			var lib = GetBindingsLibrary (profile, out var version);
-			var nunit_framework = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), ".nuget", "packages", "nunit", version, "lib", "netstandard2.0", "nunit.framework.dll");
+			var nunit_framework = Path.Combine (Configuration.RootPath, "packages", "nunit", version, "lib", "netstandard2.0", "nunit.framework.dll");
 			if (!File.Exists (nunit_framework))
 				throw new FileNotFoundException ($"Could not find nunit.framework.dll in {nunit_framework}. Has the version changed?");
 			return new string [] { lib, nunit_framework };

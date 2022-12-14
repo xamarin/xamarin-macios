@@ -51,6 +51,12 @@ namespace Introspection {
 				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
 					return true;
 				break;
+#if __TVOS__
+			case "MetalPerformanceShadersGraph":
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
+#endif // __TVOS__
 			case "Phase":
 			case "DeviceCheck": // Only available on device
 				if (TestRuntime.IsSimulatorOrDesktop)
@@ -154,6 +160,10 @@ namespace Introspection {
 			// Xcode 12.2 Beta 1 does not ship this but it is available in Xcode 12.0...
 			case "HKMetadataKeyBarometricPressure":
 				return true;
+#if __WATCHOS__
+			case "AVCaptureLensPositionCurrent": // looks like this was bound by mistake in watchOS
+				return true;
+#endif
 			default:
 				return false;
 			}

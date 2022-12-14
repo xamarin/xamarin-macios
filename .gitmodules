@@ -17,8 +17,12 @@
 [submodule "external/Xamarin.MacDev"]
     path = external/Xamarin.MacDev
     url = ../../xamarin/Xamarin.MacDev
-    branch = main
+    branch = net6.0
 [submodule "external/MonoTouch.Dialog"]
     path = external/MonoTouch.Dialog
     url = ../../migueldeicaza/MonoTouch.Dialog
     branch = dotnet
+[submodule "api-tools"]
+    path = external/api-tools
+    url = ../../rolfbjarne/api-tools
+    branch = main

@@ -239,8 +239,8 @@ namespace Xamarin.Linker.Steps {
 		{
 			if (processing_generated_dispose) {
 				switch (instruction.OpCode.OperandType) {
-					case OperandType.InlineField:
-					case OperandType.InlineTok:
+				case OperandType.InlineField:
+				case OperandType.InlineTok:
 					if (SkipField (instruction.Operand as FieldDefinition))
 						return;
 					break;
@@ -254,7 +254,7 @@ namespace Xamarin.Linker.Steps {
 			var method = base.MarkMethod (reference);
 			if (method == null)
 				return null;
-			
+
 			var t = method.DeclaringType;
 
 			// We have special processing that prevents protocol interfaces from being marked if they're
@@ -286,7 +286,7 @@ namespace Xamarin.Linker.Steps {
 							isProtocolImplementation = true;
 							break;
 						}
-						
+
 					}
 					if (isProtocolImplementation) {
 						MarkType (r.InterfaceType);

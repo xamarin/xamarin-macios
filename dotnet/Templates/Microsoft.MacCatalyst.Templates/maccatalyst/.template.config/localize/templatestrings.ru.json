@@ -1,6 +1,6 @@
 {
   "author": "Майкрософт",
-  "name": "Приложение MacCatalyst (предварительная версия)",
+  "name": "MacCatalyst Application",
   "description": "Проект для создания приложения .NET в MacCatalyst",
   "symbols/bundleId/description": "Переопределяет CFBundleIdentifier в Info.plist",
   "symbols/minOSVersion/description": "Переопределяет SupportedOSPlatformVersion в файле проекта"

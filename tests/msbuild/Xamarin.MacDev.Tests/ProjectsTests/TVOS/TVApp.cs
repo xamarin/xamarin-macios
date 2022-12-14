@@ -3,8 +3,9 @@ using System;
 using NUnit.Framework;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
@@ -17,6 +18,9 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void BasicTest()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.TVOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			BuildExtension ("MyTVApp", "MyTVServicesExtension");
 		}
 

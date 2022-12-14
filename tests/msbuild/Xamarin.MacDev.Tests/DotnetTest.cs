@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 using NUnit.Framework;
 
-namespace Xamarin.iOS.Tasks {
+namespace Xamarin.MacDev.Tasks {
 
 	// This test builds test projects using both MSBuild (old-style) and .NET (new-style), and
 	// compares the resulting .app directories.
@@ -52,6 +53,9 @@ namespace Xamarin.iOS.Tasks {
 		public void CompareBuilds (string project, int expectedErrorCount = 0)
 		{
 			Configuration.AssertDotNetAvailable ();
+			Configuration.AssertLegacyXamarinAvailable ();
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.TVOS);
 
 			Dictionary<string, string> properties = null;
 

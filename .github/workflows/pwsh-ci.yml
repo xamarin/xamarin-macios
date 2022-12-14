@@ -3,11 +3,14 @@ on:
   push:
     branches: [ main ]
   pull_request:
+permissions:
+  contents: read
+
 jobs:
   test-pwsh:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Run Pester tests
       run: |
         Set-PSRepository psgallery -InstallationPolicy trusted

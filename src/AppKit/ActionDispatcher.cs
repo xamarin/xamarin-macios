@@ -29,8 +29,7 @@ using System;
 using ObjCRuntime;
 using Foundation;
 
-namespace AppKit
-{
+namespace AppKit {
 	[Register ("__monomac_internal_ActionDispatcher")]
 	internal class ActionDispatcher : NSObject
 #if !__MACCATALYST__
@@ -62,7 +61,7 @@ namespace AppKit
 			if (handler != null)
 				handler (sender, EventArgs.Empty);
 		}
-		
+
 		public ActionDispatcher (EventHandler handler)
 		{
 			IsDirectBinding = false;
@@ -77,7 +76,7 @@ namespace AppKit
 		public static NSObject SetupAction (NSObject target, EventHandler handler)
 		{
 			ActionDispatcher ctarget = target as ActionDispatcher;
-			if (ctarget == null){
+			if (ctarget == null) {
 				ctarget = new ActionDispatcher ();
 			}
 			ctarget.Activated += handler;
@@ -91,11 +90,11 @@ namespace AppKit
 				return;
 			ctarget.Activated -= handler;
 		}
-		
+
 		public static NSObject SetupDoubleAction (NSObject target, EventHandler doubleHandler)
 		{
 			ActionDispatcher ctarget = target as ActionDispatcher;
-			if (ctarget == null){
+			if (ctarget == null) {
 				ctarget = new ActionDispatcher ();
 			}
 			ctarget.DoubleActivated += doubleHandler;

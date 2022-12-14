@@ -1,9 +1,7 @@
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class CodesignVerify : CodesignVerifyTaskBase
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class CodesignVerify : CodesignVerifyTaskBase {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())

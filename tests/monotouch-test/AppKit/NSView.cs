@@ -106,7 +106,7 @@ namespace Xamarin.Mac.Tests
 				containerView.SortSubviews ((x, y) => {
 					var viewX = (NSTextView) x;
 					var viewY = (NSTextView) y;
-					var rv = string.Compare (viewX.Value, viewY.Value);
+					var rv = string.Compare (viewX.Value, viewY.Value, StringComparison.Ordinal);
 					if (rv == 0)
 						return NSComparisonResult.Same;
 					else if (rv < 0)

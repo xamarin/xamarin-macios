@@ -69,10 +69,10 @@ namespace CoreFoundation {
 		public static CFDictionary FromObjectsAndKeys (INativeObject[] objects, INativeObject[] keys)
 		{
 			if (objects is null)
-				throw new ArgumentNullException (nameof (objects));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (objects));
 
 			if (keys is null)
-				throw new ArgumentNullException (nameof (keys));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (keys));
 
 			if (objects.Length != keys.Length)
 				throw new ArgumentException ("The length of both arrays must be the same");

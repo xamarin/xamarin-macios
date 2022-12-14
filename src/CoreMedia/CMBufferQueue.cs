@@ -51,23 +51,37 @@ namespace CoreMedia {
 		CMBufferCompare? compare;
 		CMBufferGetSize? getTotalSize;
 		
+#if !NET
 		delegate CMTime BufferGetTimeCallback (/* CMBufferRef */ IntPtr buf, /* void* */ IntPtr refcon);
 		[return: MarshalAs (UnmanagedType.I1)]
 		delegate bool   BufferGetBooleanCallback (/* CMBufferRef */ IntPtr buf, /* void* */ IntPtr refcon);
 		delegate int    BufferCompareCallback (/* CMBufferRef */ IntPtr buf1, /* CMBufferRef */ IntPtr buf2, /* void* */ IntPtr refcon);
 		delegate nint   BufferGetSizeCallback (/* CMBufferRef */ IntPtr buffer, /* void* */ IntPtr refcon);
+#endif
 		
 		[StructLayout (LayoutKind.Sequential)]
 		struct CMBufferCallbacks {
 			internal uint version;
 			internal IntPtr refcon;
+#if NET
+			internal unsafe delegate* unmanaged<IntPtr, IntPtr, CMTime> XgetDecodeTimeStamp;
+			internal unsafe delegate* unmanaged<IntPtr, IntPtr, CMTime> XgetPresentationTimeStamp;
+			internal unsafe delegate* unmanaged<IntPtr, IntPtr, CMTime> XgetDuration;
+			internal unsafe delegate* unmanaged<IntPtr, IntPtr, byte> XisDataReady;
+			internal unsafe delegate* unmanaged<IntPtr, IntPtr, IntPtr, int> Xcompare;
+#else
 			internal BufferGetTimeCallback? XgetDecodeTimeStamp;
 			internal BufferGetTimeCallback? XgetPresentationTimeStamp;
 			internal BufferGetTimeCallback? XgetDuration;
 			internal BufferGetBooleanCallback? XisDataReady;
 			internal BufferCompareCallback? Xcompare;
+#endif
 			internal IntPtr cfStringPtr_dataBecameReadyNotification;
+#if NET
+			internal unsafe delegate* unmanaged<IntPtr, IntPtr, nint> XgetSize;
+#else
 			internal BufferGetSizeCallback? XgetSize;
+#endif
 		}
 
 		// A version with no delegates, just native pointers
@@ -124,17 +138,34 @@ namespace CoreMedia {
 			CMBufferGetBool? isDataReady, CMBufferCompare? compare, NSString dataBecameReadyNotification, CMBufferGetSize? getTotalSize)
 		{
 			var bq = new CMBufferQueue (count);
+#if NET
+			CMBufferCallbacks cbacks;
+			unsafe {
+				cbacks = new CMBufferCallbacks () {
+					version = (uint) (getTotalSize is null ? 0 : 1),
+					refcon = GCHandle.ToIntPtr (bq.gch),
+					XgetDecodeTimeStamp = getDecodeTimeStamp is not null ? &GetDecodeTimeStamp : null,
+					XgetPresentationTimeStamp = getPresentationTimeStamp is not null ? &GetPresentationTimeStamp : null,
+					XgetDuration = getDuration is not null ? &GetDuration : null,
+					XisDataReady = isDataReady is not null ? &GetDataReady : null,
+					Xcompare = compare is not null ? &Compare : null,
+					cfStringPtr_dataBecameReadyNotification = dataBecameReadyNotification is null ? IntPtr.Zero : dataBecameReadyNotification.Handle,
+					XgetSize = getTotalSize is not null ? &GetTotalSize : null
+				};
+			}
+#else
 			var cbacks = new CMBufferCallbacks () {
 				version = (uint) (getTotalSize is null ? 0 : 1),
 				refcon = GCHandle.ToIntPtr (bq.gch),
-				XgetDecodeTimeStamp = getDecodeTimeStamp is null ? (BufferGetTimeCallback?) null : GetDecodeTimeStamp,
-				XgetPresentationTimeStamp = getPresentationTimeStamp is null ? (BufferGetTimeCallback?) null : GetPresentationTimeStamp,
-				XgetDuration = getDuration is null ? (BufferGetTimeCallback?) null : GetDuration,
-				XisDataReady = isDataReady is null ? (BufferGetBooleanCallback?) null : GetDataReady,
-				Xcompare = compare is null ? (BufferCompareCallback?) null : Compare,
+				XgetDecodeTimeStamp = getDecodeTimeStamp is not null ? GetDecodeTimeStamp : null,
+				XgetPresentationTimeStamp = getPresentationTimeStamp is not null ? GetPresentationTimeStamp : null,
+				XgetDuration = getDuration is not null ? GetDuration : null,
+				XisDataReady = isDataReady is not null ? GetDataReady : null,
+				Xcompare = compare is not null ? Compare : null,
 				cfStringPtr_dataBecameReadyNotification = dataBecameReadyNotification is null ? IntPtr.Zero : dataBecameReadyNotification.Handle,
-				XgetSize = getTotalSize is null ? (BufferGetSizeCallback?) null : GetTotalSize
+				XgetSize = getTotalSize is not null ? GetTotalSize : null
 			};
+#endif
 
 			bq.getDecodeTimeStamp = getDecodeTimeStamp;
 			bq.getPresentationTimeStamp = getPresentationTimeStamp;
@@ -322,8 +353,12 @@ namespace CoreMedia {
 			return queueObjects [v];
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (BufferGetTimeCallback))]
+#endif
 #endif
 		static CMTime GetDecodeTimeStamp (IntPtr buffer, IntPtr refcon)
 		{
@@ -333,8 +368,12 @@ namespace CoreMedia {
 			return queue.getDecodeTimeStamp (queue.Surface (buffer));
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (BufferGetTimeCallback))]
+#endif
 #endif
 		static CMTime GetPresentationTimeStamp (IntPtr buffer, IntPtr refcon)
 		{
@@ -344,8 +383,12 @@ namespace CoreMedia {
 			return queue.getPresentationTimeStamp (queue.Surface (buffer));
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (BufferGetTimeCallback))]
+#endif
 #endif
 		static CMTime GetDuration (IntPtr buffer, IntPtr refcon)
 		{
@@ -355,19 +398,33 @@ namespace CoreMedia {
 			return queue.getDuration (queue.Surface (buffer));
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+		static byte GetDataReady (IntPtr buffer, IntPtr refcon)
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (BufferGetBooleanCallback))]
 #endif
 		static bool GetDataReady (IntPtr buffer, IntPtr refcon)
+#endif
 		{
 			var queue = (CMBufferQueue?) GCHandle.FromIntPtr (refcon).Target;
 			if (queue?.isDataReady is null)
+#if NET
+				return 0;
+			return (byte) (queue.isDataReady (queue.Surface (buffer)) ? 1 : 0);
+#else
 				return false;
 			return queue.isDataReady (queue.Surface (buffer));
+#endif
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (BufferCompareCallback))]
+#endif
 #endif
 		static int Compare (IntPtr buffer1, IntPtr buffer2, IntPtr refcon)
 		{
@@ -377,8 +434,12 @@ namespace CoreMedia {
 			return queue.compare (queue.Surface (buffer1), queue.Surface (buffer2));
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (BufferGetSizeCallback))]
+#endif
 #endif
 		static nint GetTotalSize (IntPtr buffer, IntPtr refcon)
 		{

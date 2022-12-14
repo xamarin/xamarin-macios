@@ -1,6 +1,13 @@
+parameters:
+
+- name: isPR
+  type: boolean
+
 steps:
 
 - template: ./common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
 
 - task: CredScan@3
   displayName: "Run CredScan"

@@ -75,7 +75,7 @@ namespace CoreFoundation {
 		static public CFUrl? FromFile (string filename)
 		{
 			if (filename is null)
-				throw new ArgumentNullException (nameof (filename));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (filename));
 			var strHandle = CFString.CreateNative (filename);
 			try {
 				var handle = CFURLCreateWithFileSystemPath (IntPtr.Zero, strHandle, (nint)(long)CFUrlPathStyle.POSIX, false);
@@ -95,7 +95,7 @@ namespace CoreFoundation {
 		static public CFUrl? FromUrlString (string url, CFUrl? baseurl)
 		{
 			if (url is null)
-				throw new ArgumentNullException (nameof (url));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 			var strHandle = CFString.CreateNative (url);
 			try {
 				return FromStringHandle (strHandle, baseurl);

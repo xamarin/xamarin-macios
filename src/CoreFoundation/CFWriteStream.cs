@@ -112,14 +112,14 @@ namespace CoreFoundation {
 		public int Write (byte[] buffer)
 		{
 			if (buffer is null)
-				throw new ArgumentNullException (nameof (buffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
 			return Write (buffer, 0, buffer.Length);
 		}
 
 		public unsafe int Write (byte[] buffer, nint offset, nint count)
 		{
 			if (buffer is null)
-				throw new ArgumentNullException (nameof (buffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
 			GetCheckedHandle ();
 			if (offset < 0)
 				throw new ArgumentException ();
@@ -148,9 +148,9 @@ namespace CoreFoundation {
 		protected override void ScheduleWithRunLoop (CFRunLoop loop, NSString? mode)
 		{
 			if (loop is null)
-				throw new ArgumentNullException (nameof (loop));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (loop));
 			if (mode is null)
-				throw new ArgumentNullException (nameof (mode));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 			CFWriteStreamScheduleWithRunLoop (Handle, loop.Handle, mode.Handle);
 		}
 
@@ -160,9 +160,9 @@ namespace CoreFoundation {
 		protected override void UnscheduleFromRunLoop (CFRunLoop loop, NSString? mode)
 		{
 			if (loop is null)
-				throw new ArgumentNullException (nameof (loop));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (loop));
 			if (mode is null)
-				throw new ArgumentNullException (nameof (mode));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 			CFWriteStreamUnscheduleFromRunLoop (Handle, loop.Handle, mode.Handle);
 		}
 
@@ -172,7 +172,7 @@ namespace CoreFoundation {
 		protected override IntPtr DoGetProperty (NSString name)
 		{
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 			return CFWriteStreamSetProperty (Handle, name.Handle);
 		}
 
@@ -183,7 +183,7 @@ namespace CoreFoundation {
 		protected override bool DoSetProperty (NSString name, INativeObject? value)
 		{
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 			return CFWriteStreamSetProperty (Handle, name.Handle, value.GetHandle ());
 		}
 	}

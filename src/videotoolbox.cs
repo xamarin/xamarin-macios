@@ -79,6 +79,10 @@ namespace VideoToolbox {
 		[Field ("kVTCompressionPropertyKey_Depth")]
 		NSString Depth { get; }
 
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), Watch (9,0), TV (16,0)]
+		[Field ("kVTCompressionPropertyKey_PreserveAlphaChannel")]
+		NSString PreserveAlphaChannel { get; }
+
 		// Runtime restrictions
 
 		[Field ("kVTCompressionPropertyKey_MaxFrameDelayCount")]
@@ -114,6 +118,10 @@ namespace VideoToolbox {
 		[Mac (10,13), iOS (11,0), TV (11,0)]
 		[Field ("kVTCompressionPropertyKey_BaseLayerFrameRate")]
 		NSString BaseLayerFrameRate { get; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), Watch (9,0), TV (16,0)]
+		[Field ("kVTCompressionPropertyKey_ReferenceBufferCount")]
+		NSString ReferenceBufferCount { get; }
 
 		// Hardware acceleration
 		// Hardware acceleration is default behavior on iOS. No opt-in required.
@@ -204,6 +212,14 @@ namespace VideoToolbox {
 		[Field ("kVTCompressionPropertyKey_PrioritizeEncodingSpeedOverQuality")]
 		NSString PrioritizeEncodingSpeedOverQuality { get; }
 
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
+		[Field ("kVTCompressionPropertyKey_ConstantBitRate")]
+		NSString ConstantBitRate { get; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), Watch (9,0), TV (16,0)]
+		[Field ("kVTCompressionPropertyKey_EstimatedAverageBytesPerFrame")]
+		NSString EstimatedAverageBytesPerFrame { get; }
+
 		[iOS (14,1)]
 		[TV (14,2)][Mac (11,0)]
 		[MacCatalyst (14,1)]
@@ -226,6 +242,10 @@ namespace VideoToolbox {
 		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
 		[Field ("kVTCompressionPropertyKey_MaxAllowedFrameQP")]
 		NSString MaxAllowedFrameQP { get; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
+		[Field ("kVTCompressionPropertyKey_MinAllowedFrameQP")]
+		NSString MinAllowedFrameQP { get; }
 
 		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
 		[Field ("kVTCompressionPropertyKey_SupportsBaseFrameQP")]
@@ -289,6 +309,10 @@ namespace VideoToolbox {
 		[Export ("Depth")]
 		CMPixelFormat Depth { get; set; }
 
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), Watch (9,0), TV (16,0)]
+		[Export ("PreserveAlphaChannel")]
+		bool PreserveAlphaChannel { get; set; }
+
 		[Export ("MaxFrameDelayCount")]
 		int MaxFrameDelayCount { get; set; }
 
@@ -315,6 +339,10 @@ namespace VideoToolbox {
 		[Mac (10,13), iOS (11,0), TV (11,0)]
 		[Export ("BaseLayerFrameRate")]
 		double BaseLayerFrameRate { get; set; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), Watch (9,0), TV (16,0)]
+		[Export ("ReferenceBufferCount")]
+		long ReferenceBufferCount { get; }
 
 		[Export ("UsingHardwareAcceleratedVideoEncoder")]
 		bool UsingHardwareAcceleratedVideoEncoder { get; }
@@ -364,11 +392,48 @@ namespace VideoToolbox {
 		[Export ("UsingGpuRegistryId")]
 		uint UsingGpuRegistryId { get; }
 
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
+		[Export ("ConstantBitRate")]
+		long ConstantBitRate { get; set; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), Watch (9,0), TV (16,0)]
+		[Export ("EstimatedAverageBytesPerFrame")]
+		long EstimatedAverageBytesPerFrame { get; }
+
 		[iOS (14,1)]
 		[TV (14,2)][Mac (11,0)]
 		[MacCatalyst (14,1)]
 		[Export ("PreserveDynamicHdrMetadata")]
 		bool PreserveDynamicHdrMetadata { get; set; }
+
+		[TV (14,5)][Mac (11,3)][iOS (14,5)][NoWatch]
+		[MacCatalyst (14,5)]
+		[Export ("EnableLowLatencyRateControl")]
+		bool EnableLowLatencyRateControl { get; set; }
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0), NoWatch]
+		[Export ("BaseLayerBitRateFraction")]
+		float BaseLayerBitRateFraction { get; set; }
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0), NoWatch]
+		[Export ("EnableLtr")]
+		bool EnableLtr { get; set; }
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0), NoWatch]
+		[Export ("MaxAllowedFrameQP")]
+		uint MaxAllowedFrameQP { get; set; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
+		[Export ("MinAllowedFrameQP")]
+		uint MinAllowedFrameQP { get; }
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0), NoWatch]
+		[Export ("SupportsBaseFrameQP")]
+		bool SupportsBaseFrameQP { get; }
+
+		[Watch (8,5), TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Export ("OutputBitDepth")]
+		bool OutputBitDepth { get; set; }
 	}
 
 	[iOS (8,0), TV (10,2)]
@@ -1166,5 +1231,36 @@ namespace VideoToolbox {
 		[Mac (10,15), iOS (13,0), TV (13,0)]
 		[Field ("kVTPixelTransferPropertyKey_RealTime")]
 		NSString RealTime { get; }
+	}
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), Watch (9,0), TV (16,0)]
+	[StrongDictionary ("VTPixelRotationPropertyKeys")]
+	interface VTPixelRotationProperties {
+		[Export ("FlipHorizontalOrientation")]
+		bool FlipHorizontalOrientation { get; set; }
+
+		[Export ("FlipVerticalOrientation")]
+		bool FlipVerticalOrientation { get; set; }
+	}
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), Watch (9,0), TV (16,0)]
+	[Static]
+	[Advanced]
+	interface VTPixelRotationPropertyKeys {
+		
+		// Rotation
+		
+		[Field ("kVTPixelRotationPropertyKey_Rotation")]		
+		NSString Rotation { get; }
+
+		// FlipHorizontalOrientation
+
+		[Field ("kVTPixelRotationPropertyKey_FlipHorizontalOrientation")]
+		NSString FlipHorizontalOrientation { get; }
+
+		// FlipVerticalOrientation
+
+		[Field ("kVTPixelRotationPropertyKey_FlipVerticalOrientation")]
+		NSString FlipVerticalOrientation { get; }
 	}
 }

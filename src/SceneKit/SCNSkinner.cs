@@ -42,7 +42,7 @@ namespace SceneKit {
 
 			for (nint i = 0; i < count; i++) {
 				var item = NSValue.FromSCNMatrix4 (items [i]);
-				var h = item == null ? NSNull.Null.Handle : item.Handle;
+				var h = item?.Handle ??  NSNull.Null.Handle;
 				Marshal.WriteIntPtr (buf, (int)(i * IntPtr.Size), h);
 			}
 

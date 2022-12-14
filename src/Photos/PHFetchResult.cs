@@ -1,3 +1,5 @@
+#nullable enable
+
 using ObjCRuntime;
 using Foundation;
 using System;

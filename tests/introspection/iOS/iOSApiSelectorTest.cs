@@ -34,6 +34,12 @@ namespace Introspection {
 		protected override bool Skip (Type type)
 		{
 			switch (type.Namespace) {
+#if __WATCHOS__
+			case "GameKit":
+				if (IntPtr.Size == 4)
+					return true;
+				break;
+#endif
 			// they don't answer on the simulator (Apple implementation does not work) but fine on devices
 			case "GameController":
 			case "MonoTouch.GameController":
@@ -58,6 +64,12 @@ namespace Introspection {
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
+#if __TVOS__
+			case "MetalPerformanceShadersGraph":
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
+#endif // __TVOS__
 			// Xcode 9
 			case "CoreNFC": // Only available on devices that support NFC, so check if NFCNDEFReaderSession is present.
 				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
@@ -81,6 +93,7 @@ namespace Introspection {
 					return true;
 				break;
 #endif // HAS_WATCHCONNECTIVITY
+			case "PushToTalk":
 			case "ShazamKit":
 				// ShazamKit is not fully supported in the simulator
 				if (TestRuntime.IsSimulatorOrDesktop)
@@ -760,7 +773,12 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (8, 0);
 				case "HMLocationEvent":
 					return !TestRuntime.CheckXcodeVersion (9, 0);
+				case "MPSGraphExecutableExecutionDescriptor":
+					return TestRuntime.CheckXcodeVersion (14, 0);
 #if __WATCHOS__
+				case "HKElectrocardiogramVoltageMeasurement":
+					// NSCopying conformance added in Xcode 14
+					return !TestRuntime.CheckXcodeVersion (14, 0);
 				case "INParameter":
 					// NSCopying conformance added in Xcode 10
 					return !TestRuntime.CheckXcodeVersion (10, 0);

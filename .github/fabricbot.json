@@ -258,6 +258,17 @@
 				{
 				  "name": "activitySenderHasPermissions",
 				  "parameters": {
+					"permissions": "admin"
+				  }
+				}
+			  ]
+			},
+			{
+			  "operator": "not",
+			  "operands": [
+				{
+				  "name": "activitySenderHasPermissions",
+				  "parameters": {
 					"permissions": "write"
 				  }
 				}

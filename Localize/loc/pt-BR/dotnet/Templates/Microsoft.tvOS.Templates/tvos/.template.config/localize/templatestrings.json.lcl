@@ -33,10 +33,13 @@
       </Item>
       <Item ItemId=";name" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[tvOS Application (Preview)]]></Val>
+          <Val><![CDATA[tvOS Application]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Aplicativo tvOS (Visualização)]]></Val>
+            <Val><![CDATA[Aplicativo tvOS]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[tvOS Application (Preview)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

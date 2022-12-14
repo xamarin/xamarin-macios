@@ -276,7 +276,7 @@ namespace CoreGraphics {
 		public void AddRects (CGRect [] rects)
 		{
 			if (rects is null)
-				throw new ArgumentNullException (nameof (rects));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (rects));
 			CGContextAddRects (Handle, rects, rects.Length);
 		}
 		
@@ -285,7 +285,7 @@ namespace CoreGraphics {
 		public void AddLines (CGPoint [] points)
 		{
 			if (points is null)
-				throw new ArgumentNullException (nameof (points));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 			CGContextAddLines (Handle, points, points.Length);
 		}
 			
@@ -319,7 +319,7 @@ namespace CoreGraphics {
 		public void AddPath (CGPath path)
 		{
 			if (path is null)
-				throw new ArgumentNullException (nameof (path));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path));
 			CGContextAddPath (Handle, path.Handle);
 		}
 
@@ -412,7 +412,7 @@ namespace CoreGraphics {
 		public void ContextFillRects (CGRect [] rects)
 		{
 			if (rects is null)
-				throw new ArgumentNullException (nameof (rects));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (rects));
 			CGContextFillRects (Handle, rects, rects.Length);
 		}
 			
@@ -543,7 +543,7 @@ namespace CoreGraphics {
 		public void ClipToRects (CGRect [] rects)
 		{
 			if (rects is null)
-				throw new ArgumentNullException (nameof (rects));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (rects));
 			CGContextClipToRects (Handle, rects, rects.Length);
 		}
 		
@@ -1411,7 +1411,7 @@ namespace CoreGraphics {
 		public void DrawLayer (CGLayer layer, CGRect rect)
 		{
 			if (layer is null)
-				throw new ArgumentNullException (nameof (layer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (layer));
 			CGContextDrawLayerInRect (Handle, rect, layer.Handle);
 		}
 
@@ -1421,7 +1421,7 @@ namespace CoreGraphics {
 		public void DrawLayer (CGLayer layer, CGPoint point)
 		{
 			if (layer is null)
-				throw new ArgumentNullException (nameof (layer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (layer));
 			CGContextDrawLayerAtPoint (Handle, point, layer.Handle);
 		}
 

@@ -1,0 +1,6 @@
+<pkg-info format-version="2" identifier="com.xamarin.xamarin-ios-build-host.pkg" version="1" install-location="/" auth="root">
+    <payload installKBytes="0" numberOfFiles="0"/>
+    <scripts>
+        <preinstall file="./preinstall"/>
+    </scripts>
+</pkg-info>

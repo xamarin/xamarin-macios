@@ -33,7 +33,7 @@ namespace Xharness.Jenkins.TestTasks {
 				args.Add ("/r");
 			args.Add (projectFile);
 			if (Constants.Count > 0)
-				args.Add($"/p:DefineConstants=\"{string.Join(";", Constants)}\"");
+				args.Add ($"/p:DefineConstants=\"{string.Join (";", Constants)}\"");
 			return args;
 		}
 

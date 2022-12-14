@@ -9,16 +9,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Xamarin.Bundler
-{
+namespace Xamarin.Bundler {
 	// This contains all the tasks that has to be done to create the final output.
 	// Intermediate tasks do not have to be in this list (as long as they're in another task's dependencies),
 	// but it doesn't hurt if they're here either.
 	// This is a directed graph, where the top nodes represent the input, and the leaf nodes the output.
 	// Each node (BuildTask) will build its dependencies before building itself, so at build time
 	// we only have to iterate over the leaf nodes to build the whole graph.
-	public class BuildTasks : List<BuildTask>
-	{
+	public class BuildTasks : List<BuildTask> {
 		SemaphoreSlim semaphore;
 
 		public BuildTasks ()
@@ -44,8 +42,7 @@ namespace Xamarin.Bundler
 			for (int i = 0; i < Count; i++)
 				tasks [i] = this [i].Execute (this);
 
-			Task.Factory.StartNew (async () =>
-			{
+			Task.Factory.StartNew (async () => {
 				try {
 					await Task.WhenAll (tasks);
 				} catch (Exception e) {
@@ -86,8 +83,7 @@ namespace Xamarin.Bundler
 			var all_files = new HashSet<string> ();
 			var circular_ref_nodes = new HashSet<string> ();
 
-			var render_file = new Func<string, string> ((v) =>
-			{
+			var render_file = new Func<string, string> ((v) => {
 				if (Path.GetDirectoryName (v).EndsWith (".framework", StringComparison.Ordinal))
 					v = Path.GetDirectoryName (v);
 				var cache = v.IndexOf (app.Cache.Location, StringComparison.Ordinal);
@@ -157,8 +153,7 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	public abstract class BuildTask
-	{
+	public abstract class BuildTask {
 		static int counter;
 		public readonly int ID = counter++;
 
@@ -236,7 +231,7 @@ namespace Xamarin.Bundler
 					var dep_tasks = new Task [deps.Length];
 					for (int i = 0; i < deps.Length; i++)
 						dep_tasks [i] = deps [i].Execute (build_tasks);
-					
+
 					Log ("Waiting for dependencies to complete.");
 					await Task.WhenAll (dep_tasks);
 					Log ("Done waiting for dependencies.");
@@ -246,7 +241,7 @@ namespace Xamarin.Bundler
 						if (Outputs.Count () > 1) {
 							Driver.Log (3, "Targets '{0}' are up-to-date.", string.Join ("', '", Outputs.ToArray ()));
 						} else {
-							Driver.Log (3, "Target '{0}' is up-to-date.", Outputs.First () );
+							Driver.Log (3, "Target '{0}' is up-to-date.", Outputs.First ());
 						}
 						completed_task.SetResult (false);
 					} else {
@@ -330,8 +325,7 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	class SingleThreadedSynchronizationContext : SynchronizationContext
-	{
+	class SingleThreadedSynchronizationContext : SynchronizationContext {
 		readonly BlockingCollection<Tuple<SendOrPostCallback, object>> queue = new BlockingCollection<Tuple<SendOrPostCallback, object>> ();
 
 		public override void Post (SendOrPostCallback d, object state)

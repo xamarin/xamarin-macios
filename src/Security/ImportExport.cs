@@ -26,6 +26,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -48,8 +50,8 @@ namespace Security {
 
 		static public SecStatusCode ImportPkcs12 (NSData data, NSDictionary options, out NSDictionary[] array)
 		{
-			if (options == null)
-				throw new ArgumentNullException ("options");
+			if (options is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
 			
 			IntPtr handle;
 			SecStatusCode code = SecPKCS12Import (data.Handle, options.Handle, out handle);

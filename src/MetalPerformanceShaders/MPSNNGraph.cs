@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using CoreGraphics;
@@ -17,7 +19,7 @@ namespace MetalPerformanceShaders {
 		[Mac (10,15)]
 		[iOS (13,0)]
 #endif
-		public unsafe static MPSNNGraph Create (IMTLDevice device, MPSNNImageNode[] resultImages, bool[] resultsAreNeeded)
+		public unsafe static MPSNNGraph? Create (IMTLDevice device, MPSNNImageNode[] resultImages, bool[] resultsAreNeeded)
 		{
 			fixed (void *resultsAreNeededHandle = resultsAreNeeded)
 				return Create (device, resultImages, (IntPtr) resultsAreNeededHandle);
