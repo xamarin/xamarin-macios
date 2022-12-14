@@ -470,7 +470,7 @@
 				AreAnyAssembliesTrimmed=$(_AreAnyAssembliesTrimmed)
 				AssemblyName=$(AssemblyName).dll
 				@(_AotArguments -> 'AOTArgument=%(Identity)')
-				AOTCompiler=$(_AOTCompiler)
+				AOTCompiler=$(_XamarinAOTCompiler)
 				AOTOutputDirectory=$(_AOTOutputDirectory)
 				AppBundleManifestPath=$(_AppBundleManifestPath)
 				CacheDirectory=$(_LinkerCacheDirectory)
@@ -981,41 +981,41 @@
 
 	<Target Name="_FindAotCompiler" DependsOnTargets="_ComputeVariables">
 		<PropertyGroup>
-			<_AotCompilerCachePath>$(DeviceSpecificIntermediateOutputPath)aot-compiler-path-$(NETCoreSdkVersion).txt</_AotCompilerCachePath>
+			<_XamarinAOTCompilerCachePath>$(DeviceSpecificIntermediateOutputPath)aot-compiler-path-$(NETCoreSdkVersion).txt</_XamarinAOTCompilerCachePath>
 		</PropertyGroup>
 
 		<!-- This task does not take a SessionId because we cache the path on Windows for remote builds to avoid a round-trip -->
 		<ReadLinesFromFile
-			Condition="Exists('$(_AotCompilerCachePath)')"
-			File="$(_AotCompilerCachePath)"
+			Condition="Exists('$(_XamarinAOTCompilerCachePath)')"
+			File="$(_XamarinAOTCompilerCachePath)"
 		>
-			<Output TaskParameter="Lines" PropertyName="_AOTCompiler" />
+			<Output TaskParameter="Lines" PropertyName="_XamarinAOTCompiler" />
 		</ReadLinesFromFile>
 
 		<!-- If the cached value points to a file that doesn't exist, then don't use it -->
-		<PropertyGroup Condition="!Exists('$(_AOTCompiler)')">
-			<_AOTCompiler />
+		<PropertyGroup Condition="!Exists('$(_XamarinAOTCompiler)')">
+			<_XamarinAOTCompiler />
 		</PropertyGroup>
 
 		<FindAotCompiler
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_RunAotCompiler)' == 'true' And '$(_AOTCompiler)' == ''"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_RunAotCompiler)' == 'true' And '$(_XamarinAOTCompiler)' == ''"
 			KeepTemporaryOutput="$(FindAotCompilerKeepKeepTemporaryOutput)"
 			MonoAotCrossCompiler="@(MonoAotCrossCompiler)"
 			RuntimeIdentifier="$(RuntimeIdentifier)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		>
-			<Output TaskParameter="AotCompiler" PropertyName="_AOTCompiler" />
+			<Output TaskParameter="AotCompiler" PropertyName="_XamarinAOTCompiler" />
 		</FindAotCompiler>
 
 		<!-- This task does not take a SessionId because we cache the path on Windows for remote builds to avoid a round-trip -->
 		<WriteLinesToFile
-			File="$(_AotCompilerCachePath)"
-			Lines="$(_AOTCompiler)"
+			File="$(_XamarinAOTCompilerCachePath)"
+			Lines="$(_XamarinAOTCompiler)"
 			Overwrite="true"
 		/>
 		<ItemGroup>
-			<FileWrites Include="$(_AotCompilerCachePath)" />
+			<FileWrites Include="$(_XamarinAOTCompilerCachePath)" />
 		</ItemGroup>
 	</Target>
 
@@ -1039,7 +1039,7 @@
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			Assemblies="@(_AssembliesToAOT)"
-			AOTCompilerPath="$(_AOTCompiler)"
+			AOTCompilerPath="$(_XamarinAOTCompiler)"
 			InputDirectory="$(_AOTInputDirectory)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			OutputDirectory="$(_AOTOutputDirectory)\%(_AssembliesToAOT.Arch)"
