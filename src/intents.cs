@@ -2073,7 +2073,7 @@ namespace Intents {
 		NoMatchingCall = 1,
 	}
 
-	[Watch (9,2), NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+	[NoWatch, NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
 	[Native]
 	public enum INAnswerCallIntentResponseCode : long {
 		Unspecified = 0,
@@ -2085,7 +2085,7 @@ namespace Intents {
 		FailureRequiringAppLaunch,
 	}
 
-	[Watch (9,2), NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+	[NoWatch, NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
 	[Native]
 	public enum INHangUpCallIntentResponseCode : long {
 		Unspecified = 0,
@@ -2222,11 +2222,11 @@ namespace Intents {
 		[Field ("INStartCallIntentIdentifier")]
 		StartCall,
 
-		[Watch (9,2), NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+		[NoWatch, NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
 		[Field ("INAnswerCallIntentIdentifier")]
 		AnswerCall,
 
-		[Watch (9,2), NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+		[NoWatch, NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
 		[Field ("INHangUpCallIntentIdentifier")]
 		HangUpCall,
 	}
@@ -14462,7 +14462,7 @@ namespace Intents {
 		string GroupId { get; }
 	}
 
-	[Watch (9,2), NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+	[NoWatch, NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
 	[BaseType (typeof (INIntent))]
 	interface INAnswerCallIntent {
 
@@ -14479,7 +14479,7 @@ namespace Intents {
 		string CallIdentifier { get; }
 	}
 
-	[Watch (9,2), NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+	[NoWatch, NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
 	[Protocol]
 	interface INAnswerCallIntentHandling {
 
@@ -14491,7 +14491,7 @@ namespace Intents {
 		void ConfirmAnswerCall (INAnswerCallIntent intent, Action<INAnswerCallIntentResponse> completion);
 	}
 
-	[Watch (9,2), NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+	[NoWatch, NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INAnswerCallIntentResponse {
@@ -14509,11 +14509,11 @@ namespace Intents {
 		INCallRecord[] CallRecords { get; set; }
 	}
 
-	[Watch (9,2), NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+	[NoWatch, NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
 	[BaseType (typeof (INIntent))]
 	interface INHangUpCallIntent {
 
-		[Watch (9,2), Mac (13,1), iOS (16,2)]
+		[NoWatch, Mac (13,1), iOS (16,2)]
 		[Export ("initWithCallIdentifier:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] string callIdentifier);
@@ -14523,7 +14523,7 @@ namespace Intents {
 		string CallIdentifier { get; }
 	}
 
-	[Watch (9,2), NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+	[NoWatch, NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
 	[Protocol]
 	interface INHangUpCallIntentHandling {
 
@@ -14535,7 +14535,7 @@ namespace Intents {
 		void ConfirmHangUpCall (INHangUpCallIntent intent, Action<INHangUpCallIntentResponse> completion);
 	}
 
-	[Watch (9,2), NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+	[NoWatch, NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INHangUpCallIntentResponse {
