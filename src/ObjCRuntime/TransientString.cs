@@ -23,7 +23,22 @@ namespace ObjCRuntime {
 			
 		public TransientString (string? str, Encoding encoding = Encoding.Auto)
 		{
-			ptr = (Encode (encoding)) (str);
+			switch (encoding) {
+			case Encoding.Auto:
+				ptr = Marshal.StringToHGlobalAuto (str);
+				break;
+			case Encoding.BStr:
+				ptr = Marshal.StringToBSTR (str);
+				break;
+			case Encoding.Ansi:
+				ptr = Marshal.StringToHGlobalAnsi (str);
+				break;
+			case Encoding.Unicode:
+				ptr = Marshal.StringToHGlobalUni (str);
+				break;
+			default:
+				throw new ArgumentOutOfRangeException (nameof (encoding));
+			}
 		}
 
 		public void Dispose ()
@@ -33,16 +48,6 @@ namespace ObjCRuntime {
 				ptr = IntPtr.Zero;
 			}
 		}
-
-		static Func<string?, IntPtr> Encode (Encoding encoding) => encoding switch 
-		{
-			Encoding.Auto => Marshal.StringToHGlobalAuto,
-			Encoding.BStr => Marshal.StringToBSTR,
-			Encoding.Ansi => Marshal.StringToHGlobalAnsi,
-			Encoding.Unicode => Marshal.StringToHGlobalUni,
-			_ => throw new ArgumentOutOfRangeException (nameof (encoding))
-		};
-		
 
 		public static implicit operator IntPtr (TransientString str) => str.ptr;
 	}
