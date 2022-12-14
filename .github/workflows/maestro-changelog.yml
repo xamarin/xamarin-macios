@@ -13,15 +13,7 @@ jobs:
         set -exo pipefail
         git clone https://github.com/spouliot/dotnet-tools
         cd dotnet-tools/changelog
-        dotnet run https://github.com/$GITHUB_REPOSITORY/pull/${GITHUB_REF_NAME/\/*/} > changelog.txt 2>&1
-
-        # need to replace newlines with actual "\n"
-        CHANGELOG_FILE=changelog2.txt
-        rm -f "$CHANGELOG_FILE"
-        cat changelog.txt | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g' >> "$CHANGELOG_FILE"
-        cat "$CHANGELOG_FILE"
-
-        cp "$CHANGELOG_FILE" /tmp/changelog.txt
+        dotnet run https://github.com/$GITHUB_REPOSITORY/pull/${GITHUB_REF_NAME/\/*/} > /tmp/changelog.txt 2>&1
 
     - name: 'Add changelog'
       uses: actions/github-script@v6.3.3
