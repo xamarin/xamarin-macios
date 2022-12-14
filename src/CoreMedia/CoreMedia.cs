@@ -7,6 +7,9 @@
 // Copyright 2010-2011 Novell Inc
 // Copyright 2012-2014 Xamarin Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using CoreFoundation;
@@ -76,7 +79,7 @@ namespace CoreMedia {
 		[iOS (9,0)]
 		[Mac (10,11)]
 #endif
-		public static NSString TimeMappingSourceKey { get; private set; }
+		public static NSString? TimeMappingSourceKey { get; private set; }
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
@@ -87,22 +90,24 @@ namespace CoreMedia {
 		[iOS (9,0)]
 		[Mac (10,11)]
 #endif
-		public static NSString TimeMappingTargetKey { get; private set; }
+		public static NSString? TimeMappingTargetKey { get; private set; }
 
 		static CMTimeRange () {
 			var lib = Libraries.CoreMedia.Handle;
 			var retZero = Dlfcn.dlsym (lib, "kCMTimeRangeZero");
-			Zero = (CMTimeRange)Marshal.PtrToStructure (retZero, typeof(CMTimeRange));
+			Zero = (CMTimeRange)Marshal.PtrToStructure (retZero, typeof(CMTimeRange))!;
 
 			var retInvalid = Dlfcn.dlsym (lib, "kCMTimeRangeInvalid");
 #if !XAMCORE_3_0
-			Invalid = (CMTimeRange)Marshal.PtrToStructure (retInvalid, typeof(CMTimeRange));
+#pragma warning disable CS0618 // Type or member is obsolete
+			Invalid = (CMTimeRange)Marshal.PtrToStructure (retInvalid, typeof(CMTimeRange))!;
+#pragma warning restore CS0618 // Type or member is obsolete
 #endif
-			InvalidRange = (CMTimeRange)Marshal.PtrToStructure (retInvalid, typeof(CMTimeRange));
+			InvalidRange = (CMTimeRange)Marshal.PtrToStructure (retInvalid, typeof(CMTimeRange))!;
 
 			var retMappingInvalid = Dlfcn.dlsym (lib, "kCMTimeMappingInvalid");
-			if (retMappingInvalid  != IntPtr.Zero)
-				InvalidMapping = (CMTimeRange)Marshal.PtrToStructure (retMappingInvalid, typeof(CMTimeRange));
+			if (retMappingInvalid != IntPtr.Zero)
+				InvalidMapping = (CMTimeRange)Marshal.PtrToStructure (retMappingInvalid, typeof(CMTimeRange))!;
 
 			TimeMappingSourceKey = Dlfcn.GetStringConstant (lib, "kCMTimeMappingSourceKey");
 			TimeMappingTargetKey = Dlfcn.GetStringConstant (lib, "kCMTimeMappingTargetKey");
@@ -190,7 +195,7 @@ namespace CoreMedia {
 		[iOS (9,0)]
 		[Mac (10,11)]
 #endif
-		public string Description
+		public string? Description
 		{
 			get
 			{

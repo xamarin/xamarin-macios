@@ -37,15 +37,13 @@ using CoreVideo;
 namespace AVFoundation {
 
 	// Convenience enum for native strings - AVVideoSettings.h
-	public enum AVVideoCodec : int
-	{
+	public enum AVVideoCodec : int {
 		H264 = 1,
 		JPEG = 2
 	}
 
 	// Convenience enum for native strings - AVVideoSettings.h
-	public enum AVVideoScalingMode : int
-	{
+	public enum AVVideoScalingMode : int {
 		Fit,
 		Resize,
 		ResizeAspect,
@@ -53,12 +51,11 @@ namespace AVFoundation {
 	}
 
 	// Convenience enum for native strings - AVVideoSettings.h
-	public enum AVVideoProfileLevelH264 : int
-	{
+	public enum AVVideoProfileLevelH264 : int {
 		Baseline30 = 1,
 		Baseline31,
 		Baseline41,
- 		Main30,
+		Main30,
 		Main31,
 		Main32,
 		Main41,
@@ -76,8 +73,7 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class AVVideoSettingsUncompressed : CVPixelBufferAttributes
-	{
+	public class AVVideoSettingsUncompressed : CVPixelBufferAttributes {
 #if !COREBUILD
 		public AVVideoSettingsUncompressed ()
 		{
@@ -153,8 +149,7 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class AVVideoSettingsCompressed : DictionaryContainer
-	{
+	public class AVVideoSettingsCompressed : DictionaryContainer {
 #if !COREBUILD
 		public AVVideoSettingsCompressed ()
 			: base (new NSMutableDictionary ())
@@ -225,7 +220,7 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public double? MaxKeyFrameIntervalDuration {
 			get {
@@ -243,7 +238,7 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public bool? AllowFrameReordering {
 			get {
@@ -260,7 +255,7 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public AVVideoH264EntropyMode? EntropyEncoding {
 			get {
@@ -295,7 +290,7 @@ namespace AVFoundation {
 					SetNativeValue (AVVideo.H264EntropyModeKey, v);
 			}
 		}
-			
+
 		// frame rate can be floating point (29.97 is common for instance)
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
@@ -303,7 +298,7 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public float? ExpectedSourceFrameRate {
 			get {
@@ -321,7 +316,7 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public float? AverageNonDroppableFrameRate {
 			get {
@@ -388,8 +383,7 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class AVVideoCodecSettings : DictionaryContainer
-	{
+	public class AVVideoCodecSettings : DictionaryContainer {
 #if !COREBUILD
 		public AVVideoCodecSettings ()
 			: base (new NSMutableDictionary ())
@@ -469,7 +463,7 @@ namespace AVFoundation {
 
 				return null;
 			}
-			
+
 			set {
 				NSString? v;
 				switch (value) {
@@ -548,8 +542,8 @@ namespace AVFoundation {
 
 			set {
 				SetNativeValue (AVVideo.CleanApertureKey, value?.Dictionary);
-			}			
-		} 
+			}
+		}
 #endif
 	}
 
@@ -559,8 +553,7 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class AVVideoPixelAspectRatioSettings : DictionaryContainer
-	{
+	public class AVVideoPixelAspectRatioSettings : DictionaryContainer {
 #if !COREBUILD
 		public AVVideoPixelAspectRatioSettings ()
 			: base (new NSMutableDictionary ())
@@ -598,8 +591,7 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class AVVideoCleanApertureSettings : DictionaryContainer
-	{
+	public class AVVideoCleanApertureSettings : DictionaryContainer {
 #if !COREBUILD
 		public AVVideoCleanApertureSettings ()
 			: base (new NSMutableDictionary ())

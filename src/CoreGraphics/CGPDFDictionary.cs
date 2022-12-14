@@ -83,7 +83,7 @@ namespace CoreGraphics {
 		public bool GetBoolean (string key, out bool result)
 		{
 			if (key is null)
-				throw new ArgumentNullException (nameof (key));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 			return CGPDFDictionaryGetBoolean (Handle, key, out result);
 		}
 
@@ -96,7 +96,7 @@ namespace CoreGraphics {
 		public bool GetInt (string key, out nint result)
 		{
 			if (key is null)
-				throw new ArgumentNullException (nameof (key));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 			return CGPDFDictionaryGetInteger (Handle, key, out result);
 		}
 
@@ -109,7 +109,7 @@ namespace CoreGraphics {
 		public bool GetFloat (string key, out nfloat result)
 		{
 			if (key is null)
-				throw new ArgumentNullException (nameof (key));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 			return CGPDFDictionaryGetNumber (Handle, key, out result);
 		}
 
@@ -120,7 +120,7 @@ namespace CoreGraphics {
 		public bool GetName (string key, out string? result)
 		{
 			if (key is null)
-				throw new ArgumentNullException (nameof (key));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 			var r = CGPDFDictionaryGetName (Handle, key, out var res);
 			result = r ? Marshal.PtrToStringAnsi (res) : null;
 			return r;
@@ -133,7 +133,7 @@ namespace CoreGraphics {
 		public bool GetDictionary (string key, out CGPDFDictionary? result)
 		{
 			if (key is null)
-				throw new ArgumentNullException (nameof (key));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 			var r = CGPDFDictionaryGetDictionary (Handle, key, out var res);
 			result = r ? new CGPDFDictionary (res) : null;
 			return r;
@@ -146,7 +146,7 @@ namespace CoreGraphics {
 		public bool GetStream (string key, out CGPDFStream? result)
 		{
 			if (key is null)
-				throw new ArgumentNullException (nameof (key));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 			var r = CGPDFDictionaryGetStream (Handle, key, out var ptr);
 			result = r ? new CGPDFStream (ptr) : null;
 			return r;
@@ -159,7 +159,7 @@ namespace CoreGraphics {
 		public bool GetArray (string key, out CGPDFArray? array)
 		{
 			if (key is null)
-				throw new ArgumentNullException (nameof (key));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 			var r = CGPDFDictionaryGetArray (Handle, key, out var ptr);
 			array = r ? new CGPDFArray (ptr) : null;
 			return r;
@@ -251,7 +251,7 @@ namespace CoreGraphics {
 		public bool GetString (string key, out string? result)
 		{
 			if (key is null)
-				throw new ArgumentNullException (nameof (key));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 			var r = CGPDFDictionaryGetString (Handle, key, out var res);
 			result = r ? CGPDFString.ToString (res) : null;
 			return r;

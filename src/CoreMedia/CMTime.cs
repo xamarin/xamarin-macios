@@ -6,6 +6,9 @@
 // Copyright 2010-2011 Novell Inc
 // Copyright 2012-2014 Xamarin Inc. All rights reserved.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using CoreFoundation;
@@ -184,7 +187,7 @@ namespace CoreMedia {
 			return comp >= 0;
 		}
 		
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
 			if (obj is CMTime time)
 				return CMTimeCompare (this, time) == 0;
@@ -348,10 +351,10 @@ namespace CoreMedia {
 		}
 
 		// FIXME: generated will need some changes to emit [Field] in partial struct (not class)
-		public readonly static NSString ValueKey;
-		public readonly static NSString ScaleKey;
-		public readonly static NSString EpochKey;
-		public readonly static NSString FlagsKey;
+		public readonly static NSString? ValueKey;
+		public readonly static NSString? ScaleKey;
+		public readonly static NSString? EpochKey;
+		public readonly static NSString? FlagsKey;
 		
 		static CMTime ()
 		{
@@ -373,13 +376,13 @@ namespace CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CFStringRef */ IntPtr CMTimeCopyDescription (/* CFAllocatorRef */ IntPtr allocator, CMTime time);
 
-		public string Description {
+		public string? Description {
 			get {
 				return CFString.FromHandle (CMTimeCopyDescription (IntPtr.Zero, this));
 			}
 		}
 		
-		public override string ToString ()
+		public override string? ToString ()
 		{
 			return Description;
 		}

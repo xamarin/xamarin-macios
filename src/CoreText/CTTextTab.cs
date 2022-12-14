@@ -70,7 +70,7 @@ namespace CoreText {
 		public CTTextTabOptions (NSDictionary dictionary)
 		{
 			if (dictionary is null)
-				throw new ArgumentNullException (nameof (dictionary));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dictionary));
 			Dictionary = dictionary;
 		}
 

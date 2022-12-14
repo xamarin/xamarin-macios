@@ -3,10 +3,8 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class Zip : ZipTaskBase, ITaskCallback
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class Zip : ZipTaskBase, ITaskCallback {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())

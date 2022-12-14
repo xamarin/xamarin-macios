@@ -317,6 +317,8 @@ namespace Foundation {
 		protected CMTime? GetCMTimeValue (NSString key)
 		{
 			var dictValue = GetNSDictionary (key);
+			if (dictValue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dictValue));
 			var value = CMTime.FromDictionary (dictValue);
 			if (value.IsInvalid)
 				return null;

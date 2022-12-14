@@ -19,7 +19,7 @@ namespace StoreKit {
 	// untyped enum and not used in API - so it _could_ be an `int`
 	// OTOH it's meant to be used with NSError.Code which is an NSInteger/nint
 	// StoreKit.framework/Headers/SKError.h
-	[Native]
+	[Native ("SKErrorCode")]
 	[ErrorDomain ("SKErrorDomain")]
 	public enum SKError : long {
 		Unknown,
@@ -115,5 +115,15 @@ namespace StoreKit {
 	public enum SKOverlayPosition : long {
 		SKOverlayPositionBottom = 0,
 		Raised = 1,
+	}
+
+	[NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	public enum SKAdNetworkCoarseConversionValue {
+		[Field ("SKAdNetworkCoarseConversionValueHigh")]
+		High,
+		[Field ("SKAdNetworkCoarseConversionValueMedium")]
+		Medium,
+		[Field ("SKAdNetworkCoarseConversionValueLow")]
+		Low,
 	}
 }

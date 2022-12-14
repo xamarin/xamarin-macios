@@ -3,7 +3,11 @@ using System.IO;
 
 using NUnit.Framework;
 
-namespace Xamarin.iOS.Tasks
+using Xamarin.iOS.Tasks;
+
+using Xamarin.Tests;
+
+namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture]
 	public class DetectSdkLocationsTaskTests : TestBase
@@ -22,6 +26,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void InexistentSDKVersion ()
 		{
+			Configuration.AssertLegacyXamarinAvailable ();
 			var task = CreateTask<DetectSdkLocations> ();
 			task.SdkVersion = "4.0";
 			task.TargetFrameworkMoniker = "Xamarin.iOS,v1.0";

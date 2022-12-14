@@ -129,3 +129,6 @@
 !missing-type! ENManager not bound
 !missing-type! ENScanInstance not bound
 !missing-type! ENTemporaryExposureKey not bound
+!missing-enum! ENAuthorizationStatus not bound
+!missing-enum! ENErrorCode not bound
+!missing-enum! ENStatus not bound

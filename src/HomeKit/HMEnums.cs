@@ -7,7 +7,7 @@ namespace HomeKit {
 	[iOS (8,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-	[Native]
+	[Native ("HMErrorCode")]
 	public enum HMError : long {
 		UnexpectedError                         = -1,
 		AlreadyExists                           = 1,
@@ -886,7 +886,7 @@ namespace HomeKit {
 	[iOS (8,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-	[Native]
+	[Native ("HMCharacteristicValueLockMechanismLastKnownAction")]
 	// in iOS 8.3 this was renamed HMCharacteristicValueLockMechanismLastKnownAction but that would be a breaking change for us
 	public enum HMCharacteristicValueLockMechanism : long {
 		LastKnownActionSecuredUsingPhysicalMovementInterior = 0,
@@ -905,7 +905,7 @@ namespace HomeKit {
 	[iOS (9,0)]
 	[TV (10,0)]
 	[MacCatalyst (14,0)]
-	[Native]
+	[Native ("HMCharacteristicValueAirParticulateSize")]
 	public enum HMCharacteristicValueAirParticulate : long {
 		Size2_5 = 0,
 		Size10

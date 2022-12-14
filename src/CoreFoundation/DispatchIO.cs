@@ -30,6 +30,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -43,7 +46,7 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreFoundation {
 
-	public delegate void DispatchIOHandler (DispatchData data, int error);
+	public delegate void DispatchIOHandler (DispatchData? data, int error);
 
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -71,7 +74,7 @@ namespace CoreFoundation {
 		static void Trampoline_DispatchReadWriteHandler (IntPtr block, IntPtr dispatchData, int error)
 		{
 			var del = BlockLiteral.GetTarget<DispatchIOHandler> (block);
-			if (del != null) {
+			if (del is not null) {
 				var dd = dispatchData == IntPtr.Zero ? null : new DispatchData (dispatchData, owns: false);
 				del (dd, error);
 			}
@@ -86,10 +89,10 @@ namespace CoreFoundation {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void Read (int fd, nuint size, DispatchQueue dispatchQueue, DispatchIOHandler handler)
 		{
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
-			if (dispatchQueue == null)
-				throw new ArgumentNullException (nameof (dispatchQueue));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
+			if (dispatchQueue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dispatchQueue));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_DispatchReadWriteHandler, handler);
@@ -103,12 +106,12 @@ namespace CoreFoundation {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void Write (int fd, DispatchData dispatchData, DispatchQueue dispatchQueue, DispatchIOHandler handler)
 		{
-			if (dispatchData == null)
-				throw new ArgumentNullException (nameof (dispatchData));
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
-			if (dispatchQueue == null)
-				throw new ArgumentNullException (nameof (dispatchQueue));
+			if (dispatchData is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dispatchData));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
+			if (dispatchQueue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dispatchQueue));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_DispatchReadWriteHandler, handler);

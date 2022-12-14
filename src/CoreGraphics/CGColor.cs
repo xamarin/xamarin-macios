@@ -119,7 +119,7 @@ namespace CoreGraphics {
 		static IntPtr Create (string name)
 		{
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 
 			var nameHandle = CFString.CreateNative (name);
 			try {
@@ -143,7 +143,7 @@ namespace CoreGraphics {
 		{
 			var constant = color.GetConstant ();
 			if (constant is null)
-				throw new ArgumentNullException (nameof (color));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (color));
 			var handle = CGColorGetConstantColor (constant.Handle);
 			if (handle == IntPtr.Zero)
 				throw new ArgumentException (nameof (color));
@@ -194,7 +194,7 @@ namespace CoreGraphics {
 		static IntPtr Create (CGColor source, nfloat alpha)
 		{
 			if (source is null)
-				throw new ArgumentNullException (nameof (source));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 			return CGColorCreateCopyWithAlpha (source.GetCheckedHandle (), alpha);
 		}
 

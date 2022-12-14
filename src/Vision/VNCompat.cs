@@ -1,3 +1,5 @@
+#nullable enable
+
 #if !NET
 
 using System;
@@ -7,7 +9,7 @@ namespace Vision {
 	public partial class VNRequest {
 
 		[Obsolete ("Empty stub (not a public API).")]
-		public virtual IMTLDevice PreferredMetalContext { get; set; }
+		public virtual IMTLDevice? PreferredMetalContext { get; set; }
 	}
 }
 

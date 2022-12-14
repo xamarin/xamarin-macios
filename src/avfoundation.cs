@@ -60,6 +60,7 @@ using CoreGraphics;
 using CoreVideo;
 using UniformTypeIdentifiers;
 using ImageIO;
+using MediaPlayer;
 using System;
 
 #if MONOMAC
@@ -105,7 +106,12 @@ namespace AVFoundation {
 	interface MTAudioProcessingTap {}
 #endif
 
+#if XAMCORE_5_0
+	delegate void AVAssetImageGeneratorCompletionHandler (CMTime requestedTime, CGImage imageRef, CMTime actualTime, AVAssetImageGeneratorResult result, NSError error);
+#else
 	delegate void AVAssetImageGeneratorCompletionHandler (CMTime requestedTime, IntPtr imageRef, CMTime actualTime, AVAssetImageGeneratorResult result, NSError error);
+	delegate void AVAssetImageGeneratorCompletionHandler2 (CMTime requestedTime, CGImage imageRef, CMTime actualTime, AVAssetImageGeneratorResult result, NSError error);
+#endif
 	delegate void AVCompletion (bool finished);
 	delegate void AVRequestAccessStatus (bool accessGranted);
 	delegate AVAudioBuffer AVAudioConverterInputHandler (uint inNumberOfPackets, out AVAudioConverterInputStatus outStatus);
@@ -1274,8 +1280,9 @@ namespace AVFoundation {
 		[Export ("interleaved")]
 		bool Interleaved { [Bind ("isInterleaved")] get; }
 
+		[Internal]
 		[Export ("streamDescription")]
-		AudioStreamBasicDescription StreamDescription { get; }
+		IntPtr _StreamDescription { get; }
 
 		[Export ("channelLayout"), NullAllowed]
 		AVAudioChannelLayout ChannelLayout { get; }
@@ -1826,8 +1833,14 @@ namespace AVFoundation {
 		[Protocolize]
 		AVAudioRecorderDelegate Delegate { get; set;  }
 	
-		[Export ("currentTime")]
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'CurrentTime' property instead.")]
+		[Wrap ("CurrentTime", IsVirtual = true)]
 		double currentTime { get; }
+#endif
+
+		[Export ("currentTime")]
+		double CurrentTime { get; }
 	
 		[Export ("meteringEnabled")]
 		bool MeteringEnabled { [Bind ("isMeteringEnabled")] get; set;  }
@@ -3741,6 +3754,12 @@ namespace AVFoundation {
 
 		[Export ("generateCGImagesAsynchronouslyForTimes:completionHandler:")]
 		void GenerateCGImagesAsynchronously (NSValue[] cmTimesRequestedTimes, AVAssetImageGeneratorCompletionHandler handler);
+
+#if !XAMCORE_5_0
+		[Sealed]
+		[Export ("generateCGImagesAsynchronouslyForTimes:completionHandler:")]
+		void GenerateCGImagesAsynchronously (NSValue[] cmTimesRequestedTimes, AVAssetImageGeneratorCompletionHandler2 handler);
+#endif
 
 		[Export ("cancelAllCGImageGeneration")]
 		void CancelAllCGImageGeneration ();
@@ -12299,7 +12318,7 @@ namespace AVFoundation {
 		[Export ("externalMetadata", ArgumentSemantic.Copy)]
 		AVMetadataItem[] ExternalMetadata { get; set; }
 
-		[NoiOS][NoMac][NoWatch]
+		[iOS (16,0)][NoMacCatalyst][NoMac][NoWatch]
 		[TV (9,0)]
 		[Export ("interstitialTimeRanges", ArgumentSemantic.Copy)]
 		AVInterstitialTimeRange[] InterstitialTimeRanges { get; set; }
@@ -12392,6 +12411,10 @@ namespace AVFoundation {
 		[TV (15, 0), NoWatch, NoMac, NoiOS, NoMacCatalyst]
 		[Export ("translatesPlayerInterstitialEvents")]
 		bool TranslatesPlayerInterstitialEvents { get; set; }
+
+		[Watch (9, 0), TV (16, 0), NoMac, iOS (16, 0)]
+		[NullAllowed, Export ("nowPlayingInfo", ArgumentSemantic.Copy)]
+		NSDictionary WeakNowPlayingInfo { get; set; }
 	}
 
 	[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]

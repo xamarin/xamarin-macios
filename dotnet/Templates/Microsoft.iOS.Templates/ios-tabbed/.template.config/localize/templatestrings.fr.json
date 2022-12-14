@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "Application à onglets iOS (préversion)",
+  "name": "iOS Tabbed Application",
   "description": "Projet de création d’une application à onglets .NET iOS",
   "symbols/bundleId/description": "Remplace CFBundleIdentifier dans Info.plist",
   "symbols/minOSVersion/description": "Remplace SupportedOSPlatformVersion dans le fichier projet",

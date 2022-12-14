@@ -49,8 +49,15 @@ namespace UIKit {
 #if !WATCH
 		// We link with __Internal here so that this function is interposable from third-party native libraries.
 		// See: https://github.com/xamarin/MicrosoftInTune/issues/3 for an example.
-		[DllImport (/*Constants.UIKitLibrary*/ "__Internal")]
-		extern static int UIApplicationMain (int argc, /* char[]* */ string []? argv, /* NSString* */ IntPtr principalClassName, /* NSString* */ IntPtr delegateClassName);
+		[DllImport ("__Internal")]
+		extern static int xamarin_UIApplicationMain (int argc, /* char[]* */ string []? argv, /* NSString* */ IntPtr principalClassName, /* NSString* */ IntPtr delegateClassName, out IntPtr gchandle);
+
+		static int UIApplicationMain (int argc, /* char[]* */ string []? argv, /* NSString* */ IntPtr principalClassName, /* NSString* */ IntPtr delegateClassName)
+		{
+			var rv = xamarin_UIApplicationMain (argc, argv, principalClassName, delegateClassName, out var gchandle);
+			Runtime.ThrowException (gchandle);
+			return rv;
+		}
 #endif
 
 		// called from NSExtension.Initialize (so other, future stuff, can be added if needed)

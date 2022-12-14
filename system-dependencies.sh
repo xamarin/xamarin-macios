@@ -80,6 +80,16 @@ while ! test -z $1; do
 			unset IGNORE_DOTNET
 			shift
 			;;
+		--provision-shellcheck)
+			PROVISION_SHELLCHECK=1
+			unset IGNORE_SHELLCHECK
+			shift
+			;;
+		--provision-yamllint)
+			PROVISION_YAMLLINT=1
+			unset IGNORE_YAMLLINT
+			shift
+			;;
 		--provision-all)
 			PROVISION_MONO=1
 			unset IGNORE_MONO
@@ -103,6 +113,10 @@ while ! test -z $1; do
 			unset IGNORE_PYTHON3
 			PROVISION_DOTNET=1
 			unset IGNORE_DOTNET
+			PROVISION_SHELLCHECK=1
+			unset IGNORE_SHELLCHECK
+			PROVISION_YAMLLINT=1
+			unset IGNORE_YAMLLINT
 			shift
 			;;
 		--ignore-all)
@@ -118,6 +132,8 @@ while ! test -z $1; do
 			IGNORE_SIMULATORS=1
 			IGNORE_PYTHON3=1
 			IGNORE_DOTNET=1
+			IGNORE_SHELLCHECK=1
+			IGNORE_YAMLLINT=1
 			shift
 			;;
 		--ignore-osx)
@@ -172,6 +188,14 @@ while ! test -z $1; do
 			;;
 		--ignore-dotnet)
 			IGNORE_DOTNET=1
+			shift
+			;;
+		--ignore-shellcheck)
+			IGNORE_SHELLCHECK=1
+			shift
+			;;
+		--ignore-yamllint)
+			IGNORE_YAMLLINT=1
 			shift
 			;;
 		-v | --verbose)
@@ -281,6 +305,41 @@ function install_mono () {
 	rm -f $MONO_PKG
 }
 
+function download_xcode_platforms ()
+{
+	local XCODE_VERSION
+	local XCODE_DEVELOPER_ROOT="$1"
+	local TVOS_VERSION="$2"
+	local WATCHOS_VERSION="$3"
+
+	XCODE_VERSION=$(grep ^XCODE_VERSION= Make.config | sed 's/.*=//')
+
+	if ! is_at_least_version "$XCODE_VERSION" 14.0; then
+		# Nothing to do here
+		log "This version of Xcode ($XCODE_VERSION) does not have any additional platforms to download"
+		return
+	fi
+
+	TVOS_SIMULATOR_VERSION=$(/usr/libexec/PlistBuddy -c 'Print :ProductBuildVersion' "$XCODE_DEVELOPER_ROOT"/Platforms/AppleTVSimulator.platform/version.plist)
+	WATCHOS_SIMULATOR_VERSION=$(/usr/libexec/PlistBuddy -c 'Print :ProductBuildVersion' "$XCODE_DEVELOPER_ROOT"/Platforms/WatchSimulator.platform/version.plist)
+
+	if test -d "/Library/Developer/CoreSimulator/Volumes/tvOS_$TVOS_SIMULATOR_VERSION/Library/Developer/CoreSimulator/Profiles/Runtimes/tvOS $TVOS_VERSION.simruntime"; then
+		if test -d "/Library/Developer/CoreSimulator/Volumes/watchOS_$WATCHOS_SIMULATOR_VERSION/Library/Developer/CoreSimulator/Profiles/Runtimes/watchOS $WATCHOS_VERSION.simruntime"; then
+			log "All the additional platforms have already been downloaded for this version of Xcode ($XCODE_VERSION)"
+			return
+		fi
+	fi
+
+	if ! test -z "$PROVISION_XCODE"; then
+		fail "Xcode has additional platforms that must be downloaded. Execute './system-dependencies.sh --provision-xcode' to execute those tasks."
+		return
+	fi
+
+	log "Executing '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
+	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
+	log "Executed '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
+}
+
 function run_xcode_first_launch ()
 {
 	local XCODE_VERSION="$1"
@@ -379,8 +438,6 @@ function install_specific_xcode () {
 		done
 	fi
 
-	log "Executing '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT'"
-	$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT
 	log "Clearing xcrun cache..."
 	xcrun -k
 
@@ -458,16 +515,10 @@ function check_specific_xcode () {
 	local XCODE_DEVELOPER_ROOT=`grep XCODE$1_DEVELOPER_ROOT= Make.config | sed 's/.*=//'`
 	local XCODE_VERSION=`grep XCODE$1_VERSION= Make.config | sed 's/.*=//'`
 	local XCODE_ROOT=$(dirname `dirname $XCODE_DEVELOPER_ROOT`)
-	local ENABLE_XAMARIN=$(grep -s ^ENABLE_XAMARIN= Make.config.local configure.inc | sed 's/.*=//')
 	
 	if ! test -d $XCODE_DEVELOPER_ROOT; then
 		if ! test -z $PROVISION_XCODE; then
-			if ! test -z $ENABLE_XAMARIN; then
-				install_specific_xcode "$1" "$XCODE_DEVELOPER_ROOT"
-			else
-				fail "Automatic provisioning of Xcode is only supported for provisioning internal build bots."
-				fail "Please download and install Xcode $XCODE_VERSION here: https://developer.apple.com/downloads/index.action?name=Xcode"
-			fi
+			install_specific_xcode "$1" "$XCODE_DEVELOPER_ROOT"
 		else
 			fail "You must install Xcode ($XCODE_VERSION) in $XCODE_ROOT. You can download Xcode $XCODE_VERSION here: https://developer.apple.com/downloads/index.action?name=Xcode"
 		fi
@@ -494,20 +545,6 @@ function check_specific_xcode () {
 		return
 	fi
 
-	if test -z "$1"; then
-		local XCODE_SELECT=$(xcode-select -p)
-		if [[ "x$XCODE_SELECT" != "x$XCODE_DEVELOPER_ROOT" ]]; then
-			if ! test -z $PROVISION_XCODE; then
-				log "Executing '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT'"
-				$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT
-				log "Clearing xcrun cache..."
-				xcrun -k
-			else
-				fail "'xcode-select -p' does not point to $XCODE_DEVELOPER_ROOT, it points to $XCODE_SELECT. Execute 'make fix-xcode-select' to fix."
-			fi
-		fi
-	fi
-
 	ok "Found Xcode $XCODE_ACTUAL_VERSION in $XCODE_ROOT"
 }
 
@@ -524,6 +561,8 @@ function check_xcode () {
 	MACOS_SDK_VERSION=$(grep ^MACOS_NUGET_OS_VERSION= Make.versions | sed -e 's/.*=//')
 	WATCH_SDK_VERSION=$(grep ^WATCHOS_NUGET_OS_VERSION= Make.versions | sed -e 's/.*=//')
 	TVOS_SDK_VERSION=$(grep ^TVOS_NUGET_OS_VERSION= Make.versions | sed -e 's/.*=//')
+
+	download_xcode_platforms "$XCODE_DEVELOPER_ROOT" "$TVOS_SDK_VERSION" "$WATCH_SDK_VERSION"
 
 	local D=$XCODE_DEVELOPER_ROOT/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator${IOS_SDK_VERSION}.sdk
 	if test ! -d $D -a -z "$FAIL"; then
@@ -612,6 +651,26 @@ function install_autoconf () {
 	brew install autoconf
 }
 
+function install_shellcheck () {
+	if ! brew --version >& /dev/null; then
+		fail "Asked to install shellcheck, but brew is not installed."
+		return
+	fi
+
+	ok "Installing ${COLOR_BLUE}shellcheck${COLOR_RESET}..."
+	brew install shellcheck
+}
+
+function install_yamllint () {
+	if ! brew --version >& /dev/null; then
+		fail "Asked to install yamllint, but brew is not installed."
+		return
+	fi
+
+	ok "Installing ${COLOR_BLUE}yamllint${COLOR_RESET}..."
+	brew install yamllint
+}
+
 function install_python3 () {
 	if ! brew --version >& /dev/null; then
 		fail "Asked to install python3, but brew is not installed."
@@ -674,6 +733,40 @@ IFS='
 	else
 		fail "You must install automake, read the README.md for instructions"
 	fi
+IFS=$IFS_tmp
+}
+
+function check_shellcheck () {
+	if ! test -z $IGNORE_SHELLCHECK; then return; fi
+
+IFStmp=$IFS
+IFS='
+'
+	if SHELLCHECK_VERSION=($(shellcheck --version 2>/dev/null)); then
+		ok "Found shellcheck ${SHELLCHECK_VERSION[1]} (no specific version is required)"
+	elif ! test -z $PROVISION_SHELLCHECK; then
+		install_shellcheck
+	else
+		fail "You must install shellcheck. The easiest way is to use homebrew, and execute ${COLOR_MAGENTA}brew install shellcheck${COLOR_RESET}."
+	fi
+
+IFS=$IFS_tmp
+}
+
+function check_yamllint () {
+	if ! test -z $IGNORE_YAMLLINT; then return; fi
+
+IFStmp=$IFS
+IFS='
+'
+	if YAMLLINT_VERSION=($(yamllint --version 2>/dev/null)); then
+		ok "Found ${YAMLLINT_VERSION[0]} (no specific version is required)"
+	elif ! test -z $PROVISION_YAMLLINT; then
+		install_yamllint
+	else
+		fail "You must install yamllint. The easiest way is to use homebrew, and execute ${COLOR_MAGENTA}brew install yamllint${COLOR_RESET}."
+	fi
+
 IFS=$IFS_tmp
 }
 
@@ -933,55 +1026,6 @@ function check_simulators ()
 	fi
 }
 
-function check_dotnet ()
-{
-	if test -n "$IGNORE_DOTNET"; then return; fi
-
-	local DOTNET_VERSION
-	local DOTNET_FILENAME
-	local URL
-	local INSTALL_DIR
-	local CACHED_FILE
-	local DOWNLOADED_FILE
-
-	DOTNET_VERSION=$(grep "^SYSTEM_DOTNET_VERSION=" dotnet.config | sed 's/.*=//')
-	ARCH=$(arch)
-	if [[ "$ARCH" =~ "arm64" ]]; then
-		URL=https://dotnetcli.azureedge.net/dotnet/Sdk/"$DOTNET_VERSION"/dotnet-sdk-"$DOTNET_VERSION"-osx-arm64.pkg
-	else
-		URL=https://dotnetcli.azureedge.net/dotnet/Sdk/"$DOTNET_VERSION"/dotnet-sdk-"$DOTNET_VERSION"-osx-x64.pkg
-	fi
-	INSTALL_DIR=/usr/local/share/dotnet/sdk/"$DOTNET_VERSION"
-
-	if test -d "$INSTALL_DIR"; then
-		ok "Found dotnet $DOTNET_VERSION in $INSTALL_DIR (exactly $DOTNET_VERSION is required)."
-		return
-	fi
-	if test -z "$PROVISION_DOTNET"; then
-		fail "You must install dotnet $DOTNET_VERSION. You can download it from ${COLOR_BLUE}$URL${COLOR_RESET}."
-		fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_DOTNET=1${COLOR_RED} to skip this check."
-		return
-	fi
-
-	DOTNET_FILENAME=$(basename "$URL")
-
-	CACHED_FILE=$HOME/Library/Caches/xamarin-macios/$DOTNET_FILENAME
-	if test -f "$CACHED_FILE"; then
-		log "Found cached version in $CACHED_FILE, will install from cache."
-		DOWNLOADED_FILE="$HOME/Library/Caches/xamarin-macios/$DOTNET_FILENAME"
-	else
-		log "Downloading dotnet $DOTNET_VERSION from $URL..."
-		mkdir -p "$PROVISION_DOWNLOAD_DIR"
-		DOWNLOADED_FILE="$PROVISION_DOWNLOAD_DIR/$DOTNET_FILENAME"
-		curl -f -L "$URL" -o "$DOWNLOADED_FILE"
-	fi
-
-	log "Installing dotnet $DOTNET_VERSION into $INSTALL_DIR..."
-	$SUDO installer -pkg "$DOWNLOADED_FILE" -target /
-
-	ok "Installed dotnet $DOTNET_VERSION into $INSTALL_DIR."
-}
-
 echo "Checking system..."
 
 check_osx_version
@@ -989,13 +1033,14 @@ check_checkout_dir
 check_xcode
 check_homebrew
 check_autotools
+check_shellcheck
+check_yamllint
 check_python3
 check_mono
 check_cmake
 check_7z
 check_objective_sharpie
 check_simulators
-check_dotnet ""
 if test -z "$IGNORE_DOTNET"; then
 	ok "Installed .NET SDKs:"
 	(IFS=$'\n'; for i in $(/usr/local/share/dotnet/dotnet --list-sdks); do log "$i"; done)

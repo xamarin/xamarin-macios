@@ -1,4 +1,0 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Import Project="..\targets\Microsoft.MacCatalyst.Sdk.DefaultItems.props" />
-	<Import Project="..\targets\Microsoft.MacCatalyst.Sdk.ImplicitNamespaceImports.props" />
-</Project>

@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "macOS アプリケーション (プレビュー)",
+  "name": "macOS Application",
   "description": ".NET macOS アプリケーションを作成するためのプロジェクト",
   "symbols/bundleId/description": "Info.plist の CFBundleIdentifier をオーバーライドします",
   "symbols/minOSVersion/description": "プロジェクト ファイルの SupportedOSPlatformVersion をオーバーライドします"

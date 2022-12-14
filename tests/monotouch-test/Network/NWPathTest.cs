@@ -162,19 +162,43 @@ namespace MonoTouchFixtures.Network {
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);
 
-			Assert.Throws<ArgumentNullException> (() => { path.EnumerateGateways (null); });
+			Assert.Throws<ArgumentNullException> (() => { path.EnumerateGateways ((Func<NWEndpoint, bool>) null); });
 		}
 
 		[Test]
 		public void EnumerateGatewayTest ()
 		{
-			TestRuntime.AssertXcodeVersion (11, 0);
-			var e = new AutoResetEvent (false);
-			path.EnumerateGateways ((endPoint) => {
-				Assert.IsNotNull (endPoint);
-				e.Set ();
-			});
-			e.WaitOne (10000);
+			var e1 = new ManualResetEvent (false);
+			var e2 = new ManualResetEvent (false);
+			var monitor = new NWPathMonitor ();
+			try {
+				monitor.SetQueue (DispatchQueue.DefaultGlobalQueue);
+				monitor.Start ();
+				monitor.SnapshotHandler += path =>
+				{
+					path.EnumerateGateways (gateway =>
+					{
+						e1.Set ();
+						return true;
+					});
+
+					path.EnumerateInterfaces (@interface =>
+					{
+						e2.Set ();
+						return true;
+					});
+				};
+				TestRuntime.RunAsync (TimeSpan.FromSeconds (5),
+						() => { },
+						() => WaitHandle.WaitAll (new WaitHandle [] { e1, e2 }, 0));
+				var rv = WaitHandle.WaitAll (new WaitHandle [] { e1, e2 }, 10000);
+				if (!rv)
+					TestRuntime.IgnoreInCI ("This test doesn't seem to be working on the bots, uncommon network setup?");
+				Assert.IsTrue (rv, "Called back");
+			} finally {
+				monitor.Cancel ();
+				monitor.Dispose ();
+			}
 		}
 
 		[Test]

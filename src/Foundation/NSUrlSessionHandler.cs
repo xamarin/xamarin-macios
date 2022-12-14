@@ -152,7 +152,7 @@ namespace Foundation {
 		public NSUrlSessionHandler (NSUrlSessionConfiguration configuration)
 		{
 			if (configuration is null)
-				throw new ArgumentNullException (nameof (configuration));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (configuration));
 
 			// HACK: we need to store the following because session.Configuration gets a copy of the object and the value gets lost
 			sessionType = configuration.SessionType;
@@ -578,7 +578,7 @@ namespace Foundation {
 			set {
 				// I believe it's possible to implement support for MaxAutomaticRedirections (it just has to be done)
 				if (value != int.MaxValue)
-					throw new ArgumentOutOfRangeException (nameof (value), value, "It's not possible to lower the max number of automatic redirections.");;
+					ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (value), value, "It's not possible to lower the max number of automatic redirections.");;
 			}
 		}
 
@@ -639,13 +639,114 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("macos")]
 		public SslProtocols SslProtocols { get; set; } = SslProtocols.Tls12 | SslProtocols.Tls13;
 
-		// We're ignoring this property, just like Xamarin.Android does:
-		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L160
-		[UnsupportedOSPlatform ("ios")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos")]
-		public Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool>? ServerCertificateCustomValidationCallback { get; set; }
+		private ServerCertificateCustomValidationCallbackHelper? _serverCertificateCustomValidationCallbackHelper;
+		public Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool>? ServerCertificateCustomValidationCallback {
+			get => _serverCertificateCustomValidationCallbackHelper?.Callback;
+			set {
+				if (value is null) {
+					_serverCertificateCustomValidationCallbackHelper = null;
+				} else {
+					_serverCertificateCustomValidationCallbackHelper = new ServerCertificateCustomValidationCallbackHelper (value);
+				}
+			}
+		}
+
+		// returns false if there's no callback
+		internal bool TryInvokeServerCertificateCustomValidationCallback (HttpRequestMessage request, SecTrust secTrust, out bool trusted)
+		{
+			trusted = false;
+			var helper = _serverCertificateCustomValidationCallbackHelper;
+			if (helper is null)
+				return false;
+			trusted = helper.Invoke (request, secTrust);
+			return true;
+		}
+
+		sealed class ServerCertificateCustomValidationCallbackHelper
+		{
+			public Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool> Callback { get; private set; }
+
+			public ServerCertificateCustomValidationCallbackHelper (Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool> callback)
+			{
+				Callback = callback;
+			}
+
+			public bool Invoke (HttpRequestMessage request, SecTrust secTrust)
+			{
+				X509Certificate2[] certificates = ConvertCertificates (secTrust);
+				X509Certificate2? certificate = certificates.Length > 0 ? certificates [0] : null;
+				using X509Chain chain = CreateChain (certificates);
+				SslPolicyErrors sslPolicyErrors = EvaluateSslPolicyErrors (certificate, chain, secTrust);
+
+				return Callback (request, certificate, chain, sslPolicyErrors);
+			}
+
+			X509Certificate2[] ConvertCertificates (SecTrust secTrust)
+			{
+				var certificates = new X509Certificate2 [secTrust.Count];
+
+				if (IsSecTrustGetCertificateChainSupported) {
+					var originalChain = secTrust.GetCertificateChain ();
+					for (int i = 0; i < originalChain.Length; i++)
+						certificates [i] = originalChain [i].ToX509Certificate2 ();
+				} else {
+					for (int i = 0; i < secTrust.Count; i++)
+						certificates [i] = secTrust [i].ToX509Certificate2 ();
+				}
+
+				return certificates;
+			}
+
+			static bool? isSecTrustGetCertificateChainSupported = null;
+			static bool IsSecTrustGetCertificateChainSupported {
+				get {
+					if (!isSecTrustGetCertificateChainSupported.HasValue) {
+#if MONOMAC
+						isSecTrustGetCertificateChainSupported = ObjCRuntime.SystemVersion.CheckmacOS (12, 0);
+#elif WATCH
+						isSecTrustGetCertificateChainSupported = ObjCRuntime.SystemVersion.CheckWatchOS (8, 0);
+#elif IOS || TVOS || MACCATALYST
+						isSecTrustGetCertificateChainSupported = ObjCRuntime.SystemVersion.CheckiOS (15, 0);
+#else
+						#error Unknown platform
+#endif
+					}
+
+					return isSecTrustGetCertificateChainSupported.Value;
+				}
+			}
+
+			X509Chain CreateChain (X509Certificate2[] certificates)
+			{
+				// inspired by https://github.com/dotnet/runtime/blob/99d21b9276ebe8f7bea7fb3ba74dca9fca625fe2/src/libraries/System.Security.Cryptography.Pkcs/src/System/Security/Cryptography/Pkcs/SignerInfo.cs#L691-L696
+				var chain = new X509Chain ();
+				chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
+				chain.ChainPolicy.RevocationFlag = X509RevocationFlag.ExcludeRoot;
+				chain.ChainPolicy.ExtraStore.AddRange (certificates);
+				return chain;
+			}
+
+			SslPolicyErrors EvaluateSslPolicyErrors (X509Certificate2? certificate, X509Chain chain, SecTrust secTrust)
+			{
+				var sslPolicyErrors = SslPolicyErrors.None;
+				
+				try {
+					if (certificate is null) {
+						sslPolicyErrors |= SslPolicyErrors.RemoteCertificateNotAvailable;
+					} else if (!chain.Build (certificate)) {
+						sslPolicyErrors |= SslPolicyErrors.RemoteCertificateChainErrors;
+					}
+				} catch (ArgumentException) {
+					sslPolicyErrors |= SslPolicyErrors.RemoteCertificateChainErrors;
+				}
+
+				if (!secTrust.Evaluate (out _)) {
+					sslPolicyErrors |= SslPolicyErrors.RemoteCertificateChainErrors;
+				}
+
+				return sslPolicyErrors;
+			}
+		}
 
 		// There's no way to turn off automatic decompression, so yes, we support it
 		public bool SupportsAutomaticDecompression {
@@ -669,7 +770,7 @@ namespace Foundation {
 			get => true;
 			set {
 				if (!value)
-					throw new ArgumentOutOfRangeException (nameof (value), value, "It's not possible to disable the use of system proxies.");;
+					ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (value), value, "It's not possible to disable the use of system proxies.");;
 			}
 		}
 #endif // NET
@@ -711,15 +812,12 @@ namespace Foundation {
 				return null;
 			}
 
-			void UpdateManagedCookieContainer (NSUrl url, NSHttpCookie[] cookies)
+			void UpdateManagedCookieContainer (Uri absoluteUri, NSHttpCookie[] cookies)
 			{
-				var uri = new Uri (url.AbsoluteString);
 				if (sessionHandler.cookieContainer is not null && cookies.Length > 0)
 					lock (sessionHandler.inflightRequestsLock) { // ensure we lock when writing to the collection
-						var cookiesContents = new string [cookies.Length];
-						for (var index = 0; index < cookies.Length; index++)
-							cookiesContents [index] = cookies [index].GetHeaderValue ();
-						sessionHandler.cookieContainer.SetCookies (uri, string.Join (',', cookiesContents)); //  as per docs: The contents of an HTTP set-cookie header as returned by a HTTP server, with Cookie instances delimited by commas.
+						var cookiesContents = Array.ConvertAll(cookies, static cookie => cookie.GetHeaderValue());
+						sessionHandler.cookieContainer.SetCookies (absoluteUri, string.Join (',', cookiesContents)); //  as per docs: The contents of an HTTP set-cookie header as returned by a HTTP server, with Cookie instances delimited by commas.
 					}
 			}
 
@@ -734,6 +832,7 @@ namespace Foundation {
 				try {
 					var urlResponse = (NSHttpUrlResponse)response;
 					var status = (int)urlResponse.StatusCode;
+					var absoluteUri = new Uri(urlResponse.Url.AbsoluteString!);
 
 					var content = new NSUrlSessionDataTaskStreamContent (inflight.Stream, () => {
 						if (!inflight.Completed) {
@@ -751,7 +850,7 @@ namespace Foundation {
 						Content = content,
 						RequestMessage = inflight.Request
 					};
-					httpResponse.RequestMessage.RequestUri = new Uri (urlResponse.Url.AbsoluteString);
+					httpResponse.RequestMessage.RequestUri = absoluteUri;
 
 					foreach (var v in urlResponse.AllHeaderFields) {
 						// NB: Cocoa trolling us so hard by giving us back dummy dictionary entries
@@ -768,7 +867,7 @@ namespace Foundation {
 					// cookie container. Once we have the cookies from the response, we need to update the managed cookie container
 					if (session.Configuration.HttpCookieStorage is not null) {
 						var cookies = session.Configuration.HttpCookieStorage.CookiesForUrl (response.Url);
-						UpdateManagedCookieContainer (response.Url, cookies);
+						UpdateManagedCookieContainer (absoluteUri, cookies);
 						for (var index = 0; index < cookies.Length; index++) {
 							httpResponse.Headers.TryAddWithoutValidation (SetCookie, cookies [index].GetHeaderValue ());
 						}
@@ -881,26 +980,32 @@ namespace Foundation {
 					return;
 
 				// ToCToU for the callback
+				var trustCallbackForUrl = sessionHandler.TrustOverrideForUrl;
+				var trustSec = false;
+				var usedCallback = false;
 #if !NET
 				var trustCallback = sessionHandler.TrustOverride;
-#endif
-				var trustCallbackForUrl = sessionHandler.TrustOverrideForUrl;
-#if NET
-				var hasCallBack = trustCallbackForUrl is not null;
-#else
 				var hasCallBack = trustCallback is not null || trustCallbackForUrl is not null;
-#endif
 				if (hasCallBack && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodServerTrust) {
-#if NET
-					// if the trust delegate allows to ignore the cert, do it. Since we are using nullables, if the delegate is not present, by default is false
-					var trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false);
-#else
 					// if one of the delegates allows to ignore the cert, do it. We check first the one that takes the url because is more precisse, later the
 					// more general one. Since we are using nullables, if the delegate is not present, by default is false
-					var trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false) || 
+					trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false) || 
 						(trustCallback?.Invoke (sessionHandler, challenge.ProtectionSpace.ServerSecTrust) ?? false);
+					usedCallback = true;
+				}
+#else
+				if (challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodServerTrust) {
+					// if the trust delegate allows to ignore the cert, do it. Since we are using nullables, if the delegate is not present, by default is false
+					if (trustCallbackForUrl is not null) {
+						trustSec = trustCallbackForUrl (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust);
+						usedCallback = true;
+					} else if (sessionHandler.TryInvokeServerCertificateCustomValidationCallback (inflight.Request, challenge.ProtectionSpace.ServerSecTrust, out trustSec)) {
+						usedCallback = true;
+					}
+				}
 #endif
 
+				if (usedCallback) {
 					if (trustSec) {
 						var credential = new NSUrlCredential (challenge.ProtectionSpace.ServerSecTrust);
 						completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
@@ -1083,10 +1188,10 @@ namespace Foundation {
 			public MonoStreamContent (Stream content, int bufferSize)
 			{
 				if (content is null)
-					throw new ArgumentNullException ("content");
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (content));
 
 				if (bufferSize <= 0)
-					throw new ArgumentOutOfRangeException ("bufferSize");
+					ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (bufferSize), bufferSize, "Buffer size must be >0");
 
 				this.content = content;
 				this.bufferSize = bufferSize;

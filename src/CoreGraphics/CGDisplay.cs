@@ -1,3 +1,5 @@
+#nullable enable
+
 #if MONOMAC || __MACCATALYST__
 using System;
 using System.Runtime.InteropServices;

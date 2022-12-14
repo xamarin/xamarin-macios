@@ -42,10 +42,6 @@ namespace Cecil.Tests {
 		public void ChildElementsListAvailabilityForAllPlatformsOnParent (string assemblyPath)
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
-			if (assembly is null) {
-				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
-				return;
-			}
 
 			HashSet<string> found = new HashSet<string> ();
 			foreach (var prop in Helper.FilterProperties (assembly, a => HasAnyAvailabilityAttribute (a))) {
@@ -95,25 +91,24 @@ namespace Cecil.Tests {
 				return;
 			}
 
-			var doubleAttributed = new List<string>();
+			var doubleAttributed = new List<string> ();
 			foreach (var type in Helper.FilterTypes (assembly, a => HasAnyAvailabilityAttribute (a))) {
 				var platformCount = new Dictionary<string, int> ();
 				foreach (var attribute in type.CustomAttributes.Where (a => IsAvailabilityAttribute (a))) {
 					var kind = FindAvailabilityKind (attribute);
 					if (kind is not null) {
-						string key = $"{attribute.AttributeType.Name}-{kind}";						
+						string key = $"{attribute.AttributeType.Name}-{kind}";
 						if (platformCount.ContainsKey (key)) {
-							platformCount[key] += 1;
-						}
-						else {
-							platformCount[key] = 1;
+							platformCount [key] += 1;
+						} else {
+							platformCount [key] = 1;
 						}
 					}
 				}
 				foreach (var (kind, count) in platformCount) {
 					// AVFoundation.AVMetadataIdentifiers uses an old pattern of a parent
 					// class and many child classes with constants.
-					if (type.ToString() == "AVFoundation.AVMetadataIdentifiers") {
+					if (type.ToString () == "AVFoundation.AVMetadataIdentifiers") {
 						continue;
 					}
 					if (count != 1) {
@@ -137,13 +132,12 @@ namespace Cecil.Tests {
 
 			var myAvailability = GetAvailabilityAttributes (item);
 			if (!FirstContainsAllOfSecond (myAvailability, parentAvailability)) {
-					DebugPrint (fullName, parentAvailability, myAvailability);
-					found.Add (fullName);
+				DebugPrint (fullName, parentAvailability, myAvailability);
+				found.Add (fullName);
 			}
 		}
 
-		public class PlatformClaimInfo
-		{
+		public class PlatformClaimInfo {
 			public HashSet<string> MentionedPlatforms { get; set; } // Mentioned in both Supported and Unsupported contexts
 			public HashSet<string> ClaimedPlatforms { get; set; } // Mentioned only in Supported contexts
 
@@ -177,6 +171,8 @@ namespace Cecil.Tests {
 		[Test]
 		public void FindSupportedOnElementsThatDoNotExistInThatAssembly ()
 		{
+			Configuration.IgnoreIfAnyIgnoredPlatforms ();
+
 			// Dictionary of (FullName of Member) -> (Dictionary of (Actual Platform) -> Platform Claim Info)
 			var harvestedInfo = new Dictionary<string, Dictionary<string, PlatformClaimInfo>> ();
 
@@ -194,59 +190,58 @@ namespace Cecil.Tests {
 				foreach (var module in assembly.Modules) {
 					foreach (var type in module.Types) {
 						foreach (var member in GetAllTypeMembers (type)) {
-							var mentionedPlatforms = GetAvailabilityAttributes (member).ToList();
-							if (mentionedPlatforms.Any()) {
-								var claimedPlatforms = GetSupportedAvailabilityAttributes (member).ToList();
+							var mentionedPlatforms = GetAvailabilityAttributes (member).ToList ();
+							if (mentionedPlatforms.Any ()) {
+								var claimedPlatforms = GetSupportedAvailabilityAttributes (member).ToList ();
 								string key = GetMemberLookupKey (member);
 								if (!harvestedInfo.ContainsKey (key)) {
-									harvestedInfo[key] = new Dictionary<string, PlatformClaimInfo>();
+									harvestedInfo [key] = new Dictionary<string, PlatformClaimInfo> ();
 								}
 								var claimInfo = new PlatformClaimInfo (mentionedPlatforms, claimedPlatforms);
-								if (harvestedInfo[key].ContainsKey(currentPlatform)) {
-									harvestedInfo[key][currentPlatform].UnionWith (claimInfo);
-								}
-								else {
-									harvestedInfo[key][currentPlatform] = claimInfo;
+								if (harvestedInfo [key].ContainsKey (currentPlatform)) {
+									harvestedInfo [key] [currentPlatform].UnionWith (claimInfo);
+								} else {
+									harvestedInfo [key] [currentPlatform] = claimInfo;
 								}
 							}
 						}
 					}
 				}
 			}
-					
+
 			// Now walk every item found above and check two things:
-			var attributesWereCompiledOut = new List<string>();			
-			var doesNotExistWhereClaimed = new List<string>();
+			var attributesWereCompiledOut = new List<string> ();
+			var doesNotExistWhereClaimed = new List<string> ();
 			foreach (var (member, info) in harvestedInfo) {
 				// 1. All platforms match in count of mentioned (we did not conditionally compile out attributes)
-				int expectedPlatformCount = info.First().Value.MentionedPlatforms.Count();
-				if (info.Any (i => i.Value.MentionedPlatforms.Count() != expectedPlatformCount)) {
-						if (IgnoreElementsThatDoNotExistInThatAssembly (member)) {
-							continue;
-						}
-						string detailedPlatformBreakdown = string.Join ("\n", info.Select(x => ($"Assembly {x.Key} => {x.Value}")));
-						string errorMessage = $"{member} did not have the same number of SupportedOSPlatformAttribute in every assembly:\n{detailedPlatformBreakdown}";
-						attributesWereCompiledOut.Add (errorMessage);
+				int expectedPlatformCount = info.First ().Value.MentionedPlatforms.Count ();
+				if (info.Any (i => i.Value.MentionedPlatforms.Count () != expectedPlatformCount)) {
+					if (IgnoreElementsThatDoNotExistInThatAssembly (member)) {
+						continue;
+					}
+					string detailedPlatformBreakdown = string.Join ("\n", info.Select (x => ($"Assembly {x.Key} => {x.Value}")));
+					string errorMessage = $"{member} did not have the same number of SupportedOSPlatformAttribute in every assembly:\n{detailedPlatformBreakdown}";
+					attributesWereCompiledOut.Add (errorMessage);
 #if DEBUG
-						Console.Error.WriteLine (errorMessage);
+					Console.Error.WriteLine (errorMessage);
 #endif
 				}
 
 
 				// 2. For each supported attribute claim exist, that it exists on that platform
 				// Since we know each platform claims are now equal, just use the first one
-				var claimedPlatforms = info.First().Value.ClaimedPlatforms;
+				var claimedPlatforms = info.First ().Value.ClaimedPlatforms;
 				foreach (var platform in claimedPlatforms) {
 					if (!info.ContainsKey (platform)) {
 						if (IgnoreElementsThatDoNotExistInThatAssembly (member)) {
 							continue;
 						}
-						string detailedPlatformBreakdown = string.Join ("\n", info.Select(x => ($"Assembly {x.Key} => Declares ({string.Join (" ", x.Value)})")));
+						string detailedPlatformBreakdown = string.Join ("\n", info.Select (x => ($"Assembly {x.Key} => Declares ({string.Join (" ", x.Value)})")));
 						string errorMessage = $"{member} was not found on {platform} despite being declared supported there.";
 						doesNotExistWhereClaimed.Add (errorMessage);
 #if DEBUG
 						Console.Error.WriteLine (errorMessage);
-#endif		
+#endif
 					}
 				}
 			}
@@ -262,7 +257,7 @@ namespace Cecil.Tests {
 				return true;
 			}
 			// QuickLook is aliased with QuickLookUI on some platforms
-			if (member.StartsWith("QuickLook")) {
+			if (member.StartsWith ("QuickLook")) {
 				return true;
 			}
 			// These two types are defined with non-trivial define magic and one platform doesn't necessarily have
@@ -277,10 +272,29 @@ namespace Cecil.Tests {
 				return true;
 			}
 			// Generator Bug - Protocol inline with different attribute bug
-			if (member.StartsWith ("SceneKit.SCNLayer") || 
-				member.StartsWith ("AVFoundation.AVAudioSession")) {
+			var inlineProtocols = new List<string> {
+				"SceneKit.SCNLayer",
+				"AVFoundation.AVAudioSession",
+				"MediaPlayer.MPMoviePlayerController",
+				"AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialAssertion",
+				"AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialRegistration",
+				"AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor",
+				"GameController.GCRacingWheel.get_HandlerQueue",
+				"GameController.GCRacingWheel.set_HandlerQueue",
+				"GameController.GCRacingWheel.get_VendorName",
+				"GameController.GCRacingWheel.get_ProductCategory",
+				"GameController.GCRacingWheel.get_PhysicalInputProfile",
+				"GameController.GCGearShifterElement.get_Aliases",
+				"GameController.GCGearShifterElement.get_LocalizedName",
+				"GameController.GCGearShifterElement.get_SfSymbolsName",
+				"GameController.GCRacingWheelInput",
+				"GameController.GCSteeringWheelElemen",
+			};
+
+			if (inlineProtocols.Any ((p) => member.StartsWith (p))) {
 				return true;
 			}
+
 			switch (member) {
 			case "GameplayKit.GKHybridStrategist.get_GameModel":
 			case "GameplayKit.GKHybridStrategist.get_RandomSource":
@@ -305,6 +319,7 @@ namespace Cecil.Tests {
 			case "AVFoundation.AVAssetDownloadDelegate.DidFinishCollectingMetrics":
 			case "AVFoundation.AVAssetDownloadDelegate.TaskIsWaitingForConnectivity":
 			case "AVFoundation.AVAssetDownloadDelegate.WillBeginDelayedRequest":
+			case "AVFoundation.AVAssetDownloadDelegate.DidCreateTask":
 			case "ARKit.ARQuickLookPreviewItem.get_PreviewItemTitle":
 			case "ARKit.ARQuickLookPreviewItem.get_PreviewItemUrl":
 			case "Intents.INPerson.get_AlternativeSpeakableMatches":
@@ -327,6 +342,10 @@ namespace Cecil.Tests {
 			case "CoreWlan.CWNetwork.Copy":
 			case "CoreWlan.CWNetworkProfile.Copy":
 			case "CoreWlan.CWNetworkProfile.MutableCopy":
+			case "MapKit.MKMapFeatureAnnotation.SetCoordinate":
+			case "MapKit.MKMapFeatureAnnotation.get_Coordinate":
+			case "MapKit.MKMapFeatureAnnotation.get_Subtitle":
+			case "MapKit.MKMapFeatureAnnotation.get_Title":
 				return true;
 			}
 			// Generator Bug/Limitation - Related to ^, Wrapper protocol get/set with attributes
@@ -461,7 +480,7 @@ namespace Cecil.Tests {
 			// Members of xkit and other places conditionally inline and include members in one of two namespaces
 			// based upon platform assembly. Cludge them to the same key, so we don't mistakenly think members are missing
 			// from some platforms
-			return $"{member.DeclaringType.FullName}.{member.Name}".Replace("AppKit", "Kit").Replace("UIKit", "Kit");
+			return $"{member.DeclaringType.FullName}.{member.Name}".Replace ("AppKit", "Kit").Replace ("UIKit", "Kit");
 		}
 
 		IEnumerable<IMemberDefinition> GetAllTypeMembers (TypeDefinition type)
@@ -498,10 +517,6 @@ namespace Cecil.Tests {
 		public void AllAttributedItemsMustIncludeCurrentPlatform (string assemblyPath)
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
-			if (assembly is null) {
-				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
-				return;
-			}
 
 			string platformName = AssemblyToAttributeName (assemblyPath);
 
@@ -531,7 +546,7 @@ namespace Cecil.Tests {
 				if (!supportedAttributes.Any (a => FindAvailabilityKind (a) == platformName)) {
 #if DEBUG
 					Console.WriteLine (fullName);
-					Console.WriteLine (String.Join(" ", supportedAttributes.Select (x => FindAvailabilityKind(x))));
+					Console.WriteLine (String.Join (" ", supportedAttributes.Select (x => FindAvailabilityKind (x))));
 					Console.WriteLine (platformName);
 #endif
 					found.Add (fullName);
@@ -623,7 +638,7 @@ namespace Cecil.Tests {
 
 		bool HasAnyAvailabilityAttribute (ICustomAttributeProvider provider) => provider.CustomAttributes.Any (a => IsAvailabilityAttribute (a));
 		bool HasAnySupportedAttribute (ICustomAttributeProvider provider) => provider.CustomAttributes.Any (a => IsSupportedAttribute (a));
-		
+
 		bool IsAvailabilityAttribute (CustomAttribute attribute) => IsSupportedAttribute (attribute) || attribute.AttributeType.Name == "UnsupportedOSPlatformAttribute";
 		bool IsSupportedAttribute (CustomAttribute attribute) => attribute.AttributeType.Name == "SupportedOSPlatformAttribute";
 	}

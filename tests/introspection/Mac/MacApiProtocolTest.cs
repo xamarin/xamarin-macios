@@ -49,6 +49,8 @@ namespace Introspection {
 			case "NSMenuView": // not longer supported
 				return true;
 #endif // !NET
+			case "ASAuthorizationProviderExtensionRegistrationHandler":
+				return true;
 			default:
 				return base.Skip (type);
 			}
@@ -134,6 +136,15 @@ namespace Introspection {
 				case "NSMergePolicy":
 				case "MEComposeSession":
 				case "MEComposeContext":
+				// xcode 14
+				case "SNClassifySoundRequest":
+				case "PKInk":
+				case "VSUserAccount":
+				case "SCContentFilter":
+				case "SCDisplay":
+				case "SCRunningApplication":
+				case "SCWindow":
+				case "HKAudiogramSensitivityPoint":
 					return true;
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
@@ -171,6 +182,25 @@ namespace Introspection {
 				case "NSPropertyMapping":
 				case "HMAccessoryOwnershipToken":
 				case "MEComposeSession":
+				// xcode 14
+				case "SNClassifySoundRequest":
+				case "SCContentFilter":
+				case "SCDisplay":
+				case "SCRunningApplication":
+				case "SCStreamConfiguration":
+				case "SCWindow":
+				case "HKAudiogramSample":
+				case "HKCategorySample":
+				case "HKCdaDocumentSample":
+				case "HKCorrelation":
+				case "HKCumulativeQuantitySample":
+				case "HKDiscreteQuantitySample":
+				case "HKDocumentSample":
+				case "HKElectrocardiogram":
+				case "HKObject":
+				case "HKQuantitySample":
+				case "HKSample":
+				case "HKWorkout":
 					return true;
 				}
 				break;
@@ -250,6 +280,15 @@ namespace Introspection {
 				case "NSImageSymbolConfiguration":
 				case "NSMergePolicy":
 				case "MEComposeContext":
+				// xcode 14 
+				case "SNClassifySoundRequest":
+				case "PKInk":
+				case "VSUserAccount":
+				case "SCContentFilter":
+				case "SCDisplay":
+				case "SCRunningApplication":
+				case "SCWindow":
+				case "HKAudiogramSensitivityPoint":
 					return true;
 				}
 				break;

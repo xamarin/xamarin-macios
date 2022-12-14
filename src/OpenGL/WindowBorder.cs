@@ -1,3 +1,5 @@
+#nullable enable
+
 #if OPENTK_DLL
 
 using System;

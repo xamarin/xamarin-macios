@@ -232,5 +232,19 @@ namespace Foundation {
 			copy.MinusSet (second);
 			return copy;
 		}
+
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
+#if !NET
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos10.15")]
+#endif
+		public void ApplyDifference (NSOrderedCollectionDifference<TKey> difference)
+		{
+			if (difference is null)
+				throw new ArgumentNullException (nameof (difference));
+			_ApplyDifference (difference.Handle);
+		}
+#endif
 	}
 }

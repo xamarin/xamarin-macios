@@ -32,7 +32,7 @@ namespace Xamarin.Linker {
 		}
 
 		protected LinkerConfiguration Configuration {
-			get { return LinkerConfiguration.GetInstance (Context);  }
+			get { return LinkerConfiguration.GetInstance (Context); }
 		}
 
 		protected Profile Profile {

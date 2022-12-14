@@ -11,7 +11,7 @@ namespace Xamarin.Bundler {
 	public abstract class CoreResolver : IAssemblyResolver {
 
 		internal Dictionary<string, AssemblyDefinition> cache;
-		Dictionary<string,ReaderParameters> params_cache;
+		Dictionary<string, ReaderParameters> params_cache;
 
 		public string FrameworkDirectory { get; set; }
 		public string RootDirectory { get; set; }
@@ -92,16 +92,14 @@ namespace Xamarin.Bundler {
 						if (File.Exists (pdb))
 							ErrorHelper.Show (ErrorHelper.CreateWarning (178, Errors.MX0178, fileName));
 					}
-				}
-				catch (SymbolsNotMatchingException) {
+				} catch (SymbolsNotMatchingException) {
 					parameters.ReadSymbols = false;
 					parameters.SymbolReaderProvider = null;
 					assembly = ModuleDefinition.ReadModule (fileName, parameters).Assembly;
 					// only report the warning (on symbols) if we can actually load the assembly itself (otherwise it's more confusing than helpful)
 					ErrorHelper.Show (ErrorHelper.CreateWarning (129, Errors.MX0129, fileName));
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				throw new ProductException (9, true, e, Errors.MX0009, fileName);
 			}
 			return CacheAssembly (assembly);

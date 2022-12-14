@@ -7,6 +7,8 @@
 // Copyright 2019 Microsoft Corporation.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -32,8 +34,8 @@ namespace MetalPerformanceShaders {
 		// Using 'NSArray<MPSState>' instead of `MPSState[]` because array 'Handle' matters.
 		public static nuint IncrementReadCount (NSArray<MPSState> stateBatch, nint amount)
 		{
-			if (stateBatch == null)
-				throw new ArgumentNullException (nameof (stateBatch));
+			if (stateBatch is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (stateBatch));
 
 			return MPSStateBatchIncrementReadCount (stateBatch.Handle, amount);
 		}
@@ -44,10 +46,10 @@ namespace MetalPerformanceShaders {
 		// Using 'NSArray<MPSState>' instead of `MPSState[]` because array 'Handle' matters.
 		public static void Synchronize (NSArray<MPSState> stateBatch, IMTLCommandBuffer commandBuffer)
 		{
-			if (stateBatch == null)
-				throw new ArgumentNullException (nameof (stateBatch));
-			if (commandBuffer == null)
-				throw new ArgumentNullException (nameof (commandBuffer));
+			if (stateBatch is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (stateBatch));
+			if (commandBuffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (commandBuffer));
 
 			MPSStateBatchSynchronize (stateBatch.Handle, commandBuffer.Handle);
 		}
@@ -78,8 +80,8 @@ namespace MetalPerformanceShaders {
 #endif
 		public static nuint GetResourceSize (NSArray<MPSState> stateBatch)
 		{
-			if (stateBatch == null)
-				throw new ArgumentNullException (nameof (stateBatch));
+			if (stateBatch is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (stateBatch));
 
 			return MPSStateBatchResourceSize (stateBatch.Handle);
 		}

@@ -52,6 +52,7 @@
 !missing-selector! AUAudioUnit::scheduleMIDIEventBlock not bound
 !missing-selector! AUAudioUnit::setMusicalContextBlock: not bound
 !missing-selector! AUAudioUnit::tokenByAddingRenderObserver: not bound
+!missing-selector! AUAudioUnitV2Bridge::audioUnit not bound
 !missing-type! AUAudioUnitV2Bridge not bound
 !missing-pinvoke! AudioCodecAppendInputBufferList is not bound
 !missing-pinvoke! AudioCodecAppendInputData is not bound
@@ -77,3 +78,21 @@
 !missing-selector! AUAudioUnit::AudioUnitMIDIProtocol not bound
 !missing-selector! AUAudioUnit::hostMIDIProtocol not bound
 !missing-selector! AUAudioUnit::setHostMIDIProtocol: not bound
+
+# ignored in the past on macOS now ignored in every platform.
+!missing-pinvoke! AUListenerAddParameter is not bound
+!missing-pinvoke! AUListenerRemoveParameter is not bound
+!missing-pinvoke! AUListenerCreate is not bound
+!missing-pinvoke! AUListenerCreateWithDispatchQueue is not bound
+!missing-pinvoke! AUListenerDispose is not bound
+!missing-pinvoke! AUEventListenerAddEventType is not bound
+!missing-pinvoke! AUEventListenerCreate is not bound
+!missing-pinvoke! AUEventListenerCreateWithDispatchQueue is not bound
+!missing-pinvoke! AUEventListenerNotify is not bound
+!missing-pinvoke! AUEventListenerRemoveEventType is not bound
+!missing-pinvoke! AUParameterFormatValue is not bound
+!missing-pinvoke! AUParameterListenerNotify is not bound
+!missing-pinvoke! AUParameterSet is not bound
+!missing-pinvoke! AUParameterValueFromLinear is not bound
+!missing-pinvoke! AUParameterValueToLinear is not bound
+

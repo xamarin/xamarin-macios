@@ -380,6 +380,15 @@ namespace Introspection {
 					return true;
 				}
 				break;
+#if __WATCHOS__
+			case "AVPlayerItem":
+				switch (selectorName) {
+				case "nowPlayingInfo":
+				case "setNowPlayingInfo:":
+					return TestRuntime.IsSimulatorOrDesktop;
+				}
+				break;
+#endif
 			case "AVPlayerItemVideoOutput":
 				switch (selectorName) {
 				case "initWithOutputSettings:":
@@ -893,10 +902,21 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "MPSGraphCompilationDescriptor":
+				// Runtime lookup doesn't work, but executing it works fine.
+				return true;
 			case "MPSImageDescriptor":
 				switch (selectorName) {
 				case "copyWithZone:":
 					if (!TestRuntime.CheckXcodeVersion (10, 0))
+						return true;
+					break;
+				}
+				break;
+			case "MPSGraphExecutableExecutionDescriptor":
+				switch (selectorName) {
+				case "copyWithZone:":
+					if (!TestRuntime.CheckXcodeVersion (14, 0))
 						return true;
 					break;
 				}
@@ -920,6 +940,12 @@ namespace Introspection {
 					break;
 				}
 #endif
+				break;
+			case "SWRemoveParticipantAlertController":
+				switch (selectorName) {
+				case "initWithFrame:":
+					return true;
+				}
 				break;
 #if NET
 			// Incorrect attributes in inlined protocol selectors - https://github.com/xamarin/xamarin-macios/issues/14802
@@ -1190,18 +1216,24 @@ namespace Introspection {
 			case "initWithCenter:diameter:":
 			case "initWithCenter:radius:":
 			case "initWithR:theta:":
+			// PassKit
+			case "initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardTemplateIdentifier:preview:":
+			case "initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardConfigurationIdentifier:preview:":
 			// NSImage
 			case "initWithDataIgnoringOrientation:":
-				var mi = m as MethodInfo;
-				return mi != null && !mi.IsPublic && mi.ReturnType.Name == "IntPtr";
-			// NSAppleEventDescriptor
-			case "initListDescriptor":
-			case "initRecordDescriptor":
 			// SCContentFilter
 			case "initWithDisplay:excludingApplications:exceptingWindows:":
 			case "initWithDisplay:excludingWindows:":
 			case "initWithDisplay:includingApplications:exceptingWindows:":
 			case "initWithDisplay:includingWindows:":
+				var mi = m as MethodInfo;
+				return mi != null && !mi.IsPublic && (mi.ReturnType.Name == "IntPtr" || mi.ReturnType.Name == "NativeHandle");
+			// NSAppleEventDescriptor
+			case "initListDescriptor":
+			case "initRecordDescriptor":
+			// SharedWithYouCore
+			case "initWithLocalIdentifier:":
+			case "initWithCollaborationIdentifier:":
 				return true;
 			default:
 				return false;

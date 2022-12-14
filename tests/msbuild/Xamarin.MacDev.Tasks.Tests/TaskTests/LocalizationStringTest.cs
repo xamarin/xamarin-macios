@@ -11,9 +11,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using Xamarin.iOS.Tasks;
 using Xamarin.Tests;
 
-namespace Xamarin.iOS.Tasks {
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
 	public class LocalizationStringTest : TestBase {
 		[TestCase ("cs-CZ", "došlo k chybě: neznámý formát image")]

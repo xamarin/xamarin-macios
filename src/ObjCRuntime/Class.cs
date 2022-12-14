@@ -10,6 +10,7 @@
 #nullable enable
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -17,6 +18,10 @@ using System.Runtime.InteropServices;
 using Foundation;
 #if !COREBUILD
 using Registrar;
+#endif
+
+#if !COREBUILD
+using Xamarin.Bundler;
 #endif
 
 #if !NET
@@ -56,8 +61,8 @@ namespace ObjCRuntime {
 
 			
 			for (int i = 0; i < map->assembly_count; i++) {
-				var ptr = Marshal.ReadIntPtr (map->assembly, i * IntPtr.Size);
-				Runtime.Registrar.SetAssemblyRegistered (Marshal.PtrToStringAuto (ptr));
+				var assembly = map->assemblies [i];
+				Runtime.Registrar.SetAssemblyRegistered (Marshal.PtrToStringAuto (assembly.name));
 			}
 		}
 
@@ -246,7 +251,7 @@ namespace ObjCRuntime {
 				type = type.GetGenericTypeDefinition ();
 
 			// Look for the type in the type map.
-			var asm_name = type.Assembly.GetName ().Name;
+			var asm_name = type.Assembly.GetName ().Name!;
 			var mod_token = type.Module.MetadataToken;
 			var type_token = type.MetadataToken & ~0x02000000;
 			for (int i = 0; i < map->map_count; i++) {
@@ -284,7 +289,7 @@ namespace ObjCRuntime {
 			return IntPtr.Zero;
 		}
 
-		unsafe static bool CompareTokenReference (string? asm_name, int mod_token, int type_token, uint token_reference)
+		unsafe static bool CompareTokenReference (string asm_name, int mod_token, int type_token, uint token_reference)
 		{
 			var map = Runtime.options->RegistrationMap;
 			IntPtr assembly_name;
@@ -292,27 +297,27 @@ namespace ObjCRuntime {
 			if ((token_reference & 0x1) == 0x1) {
 				// full token reference
 				var idx = (int) (token_reference >> 1);
-				var entry = Runtime.options->RegistrationMap->full_token_references + (IntPtr.Size + 8) * idx;
+				var entry = map->full_token_references [idx];
 				// first compare what's most likely to fail (the type's metadata token)
-				var token = (uint) Marshal.ReadInt32 (entry + IntPtr.Size + 4);
+				var token = entry.token;
 				type_token |= 0x02000000 /* TypeDef - the token type is explicit in the full token reference, but not present in the type_token argument, so we have to add it before comparing */;
 				if (type_token != token)
 					return false;
 
 				// then the module token
-				var module_token = (uint) Marshal.ReadInt32 (entry + IntPtr.Size);
+				var module_token = entry.module_token;
 				if (mod_token != module_token)
 					return false;
 
 				// leave the assembly name for the end, since it's the most expensive comparison (string comparison)
-				assembly_name = Marshal.ReadIntPtr (entry);
+				assembly_name = map->assemblies [entry.assembly_index].name;
 			} else {
 				// packed token reference
 				if (token_reference >> 8 != type_token)
 					return false;
 
 				var assembly_index = (token_reference >> 1) & 0x7F;
-				assembly_name = Marshal.ReadIntPtr (map->assembly, (int) assembly_index * IntPtr.Size);
+				assembly_name = map->assemblies [(int) assembly_index].name;
 			}
 
 			return Runtime.StringEquals (assembly_name, asm_name);
@@ -369,7 +374,7 @@ namespace ObjCRuntime {
 			type = ResolveTypeTokenReference (type_reference);
 
 #if LOG_TYPELOAD
-			Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => {type.FullName}; is custom: {is_custom_type} (token reference: 0x{type_reference:X}).");
+			Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => {type?.FullName}; is custom: {is_custom_type} (token reference: 0x{type_reference:X}).");
 #endif
 
 			class_to_type [mapIndex] = type;
@@ -380,10 +385,11 @@ namespace ObjCRuntime {
 		internal unsafe static MemberInfo? ResolveFullTokenReference (uint token_reference)
 		{
 			// sizeof (MTFullTokenReference) = IntPtr.Size + 4 + 4
-			var entry = Runtime.options->RegistrationMap->full_token_references + (IntPtr.Size + 8) * (int) (token_reference >> 1);
-			var assembly_name = Marshal.ReadIntPtr (entry);
-			var module_token = (uint) Marshal.ReadInt32 (entry + IntPtr.Size);
-			var token = (uint) Marshal.ReadInt32 (entry + IntPtr.Size + 4);
+			var idx = (int) (token_reference >> 1);
+			var entry = Runtime.options->RegistrationMap->full_token_references [idx];
+			var assembly_name = Runtime.options->RegistrationMap->assemblies [entry.assembly_index].name;
+			var module_token = entry.module_token;
+			var token = entry.token;
 
 #if LOG_TYPELOAD
 			Console.WriteLine ($"ResolveFullTokenReference (0x{token_reference:X}) assembly name: {assembly_name} module token: 0x{module_token:X} token: 0x{token:X}.");
@@ -430,7 +436,7 @@ namespace ObjCRuntime {
 			Console.WriteLine ($"ResolveTokenReference (0x{token_reference:X}) assembly index: {assembly_index} token: 0x{token:X}.");
 #endif
 
-			var assembly_name = Marshal.ReadIntPtr (map->assembly, (int) assembly_index * IntPtr.Size);
+			var assembly_name = map->assemblies [(int) assembly_index].name;
 			var assembly = ResolveAssembly (assembly_name);
 			var module = ResolveModule (assembly, 0x1);
 
@@ -451,7 +457,7 @@ namespace ObjCRuntime {
 			case 0x06000000: // Method
 				var method = module.ResolveMethod ((int) token);
 #if LOG_TYPELOAD
-				Console.WriteLine ($"ResolveToken (0x{token:X}) => Method: {method.DeclaringType.FullName}.{method.Name}");
+				Console.WriteLine ($"ResolveToken (0x{token:X}) => Method: {method?.DeclaringType?.FullName}.{method.Name}");
 #endif
 				return method;
 			default:
@@ -474,15 +480,57 @@ namespace ObjCRuntime {
 			throw ErrorHelper.CreateError (8020, $"Could not find the module with MetadataToken 0x{token:X} in the assembly {assembly}.");
 		}
 
+// Restrict this code to desktop for now, which is where most of the problems with outdated generated static registrar code occur.
+#if __MACOS__ || __MACCATALYST__
+		static bool? verify_static_registrar_code;
+		static object? verification_lock;
+		static Dictionary<IntPtr, object?>? verified_assemblies; // Use Dictionary instead of HashSet to avoid pulling in System.Core.dll.
+		unsafe static void VerifyStaticRegistrarCode (IntPtr assembly_name, Assembly assembly)
+		{
+			if (verify_static_registrar_code is null) {
+				verify_static_registrar_code = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("XAMARIN_VALIDATE_STATIC_REGISTRAR_CODE"));
+				verification_lock = new object ();
+			}
+			if (verify_static_registrar_code != true)
+				return;
+
+			lock (verification_lock!) {
+				if (verified_assemblies is null) {
+					verified_assemblies = new Dictionary<IntPtr, object?> (Runtime.IntPtrEqualityComparer);
+				} else if (verified_assemblies.ContainsKey (assembly_name)) {
+					return;
+				}
+				verified_assemblies [assembly_name] = null;
+			}
+
+			var map = Runtime.options->RegistrationMap;
+			if (map is null)
+				return;
+
+			for (var i = 0; i < map->assembly_count; i++) {
+				var entry = map->assemblies [i];
+				var name = Marshal.PtrToStringAuto (entry.name)!;
+				if (!Runtime.StringEquals (assembly_name, name))
+					continue;
+				try {
+					var mvid = Marshal.PtrToStringAuto (entry.mvid)!;
+					var runtime_mvid = assembly.ManifestModule.ModuleVersionId;
+					var registered_mvid = Guid.Parse (mvid);
+					if (registered_mvid == runtime_mvid)
+						continue;
+					throw ErrorHelper.CreateError (8044, Errors.MX8044 /* The assembly {0} has been modified since the app was built, invalidating the generated static registrar code. The MVID for the loaded assembly is {1}, while the MVID for the assembly the generated static registrar code corresponds to is {2}. */, name, runtime_mvid, registered_mvid);
+				} catch (Exception e) {
+					throw ErrorHelper.CreateError (8043, e, Errors.MX8043 /* An exception occurred while validating the static registrar code for {0}: {1} */, name, e.Message);
+				}
+			}
+		}
+#endif // __MACOS__ || __MACCATALYST__
+
 		static Assembly ResolveAssembly (IntPtr assembly_name)
 		{
-			// Find the assembly. We've already loaded all the assemblies that contain registered types, so just look at those assemblies.
-			foreach (var asm in AppDomain.CurrentDomain.GetAssemblies ()) {
-				if (!Runtime.StringEquals (assembly_name, asm.GetName ().Name))
-					continue;
-
-#if LOG_TYPELOAD
-				Console.WriteLine ($"ResolveAssembly (0x{assembly_name:X}): {asm.FullName}.");
+			if (TryResolveAssembly (assembly_name, out var asm)) {
+#if __MACOS__ || __MACCATALYST__
+				VerifyStaticRegistrarCode (assembly_name, asm);
 #endif
 				return asm;
 			}
@@ -490,12 +538,30 @@ namespace ObjCRuntime {
 			throw ErrorHelper.CreateError (8019, $"Could not find the assembly {Marshal.PtrToStringAuto (assembly_name)} in the loaded assemblies.");
 		}
 
+		static bool TryResolveAssembly (IntPtr assembly_name, [NotNullWhen (true)] out Assembly? assembly)
+		{
+			// Find the assembly. We've already loaded all the assemblies that contain registered types, so just look at those assemblies.
+			foreach (var asm in AppDomain.CurrentDomain.GetAssemblies ()) {
+				if (!Runtime.StringEquals (assembly_name, asm.GetName ().Name))
+					continue;
+
+#if LOG_TYPELOAD
+				Console.WriteLine ($"TryResolveAssembly (0x{assembly_name:X}): {asm.FullName}.");
+#endif
+				assembly = asm;
+				return true;
+			}
+
+			assembly = null;
+			return false;
+		}
+
 		internal unsafe static uint GetTokenReference (Type type, bool throw_exception = true)
 		{
 			if (type.IsGenericType)
 				type = type.GetGenericTypeDefinition ();
 
-			var asm_name = type.Module.Assembly.GetName ().Name;
+			var asm_name = type.Module.Assembly.GetName ().Name!;
 
 			// First check if there's a full token reference to this type
 			var token = GetFullTokenReference (asm_name, type.Module.MetadataToken, type.MetadataToken);
@@ -514,7 +580,7 @@ namespace ObjCRuntime {
 			// Find the assembly index in our list of registered assemblies.
 			int assembly_index = -1;
 			for (int i = 0; i < map->assembly_count; i++) {
-				var name_ptr = Marshal.ReadIntPtr (map->assembly, (int) i * IntPtr.Size);
+				var name_ptr = map->assemblies [(int) i].name;
 				if (Runtime.StringEquals (name_ptr, asm_name)) {
 					assembly_index = i;
 					break;
@@ -538,19 +604,20 @@ namespace ObjCRuntime {
 		}
 
 		// Look for the specified metadata token in the table of full token references.
-		static unsafe uint GetFullTokenReference (string? assembly_name, int module_token, int metadata_token)
+		static unsafe uint GetFullTokenReference (string assembly_name, int module_token, int metadata_token)
 		{
 			var map = Runtime.options->RegistrationMap;
 			for (int i = 0; i < map->full_token_reference_count; i++) {
-				var ptr = map->full_token_references + (i * (IntPtr.Size + 8));
-				var asm_ptr = Marshal.ReadIntPtr (ptr);
-				var token = Marshal.ReadInt32 (ptr + IntPtr.Size + 4);
+				var ftr = map->full_token_references [i];
+				var token = ftr.token;
 				if (token != metadata_token)
 					continue;
-				var mod_token = Marshal.ReadInt32 (ptr + IntPtr.Size);
+				var mod_token = ftr.module_token;
 				if (mod_token != module_token)
 					continue;
-				if (!Runtime.StringEquals (asm_ptr, assembly_name))
+				var assembly_index = ftr.assembly_index;
+				var assembly = map->assemblies [assembly_index];
+				if (!Runtime.StringEquals (assembly.name, assembly_name))
 					continue;
 
 				return ((uint) i << 1) + 1;
@@ -576,50 +643,50 @@ namespace ObjCRuntime {
 			throw ErrorHelper.CreateError (8026, $"Can't determine if {type.FullName} is a custom type when the dynamic registrar has been linked away.");
 		}
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal static extern IntPtr objc_allocateClassPair (IntPtr superclass, string name, IntPtr extraBytes);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal static extern IntPtr objc_getClass (string name);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal static extern void objc_registerClassPair (IntPtr cls);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		internal static extern bool class_addIvar (IntPtr cls, string name, IntPtr size, byte alignment, string types);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		internal static extern bool class_addMethod (IntPtr cls, IntPtr name, IntPtr imp, string types);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		internal extern static bool class_addMethod (IntPtr cls, IntPtr name, Delegate imp, string types);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		internal extern static bool class_addProtocol (IntPtr cls, IntPtr protocol);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal static extern IntPtr class_getName (IntPtr cls);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal static extern IntPtr class_getSuperclass (IntPtr cls);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal static extern IntPtr object_getClass (IntPtr obj);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal extern static IntPtr class_getMethodImplementation (IntPtr cls, IntPtr sel);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal extern static IntPtr class_getInstanceVariable (IntPtr cls, string name);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal extern static IntPtr class_getInstanceMethod (IntPtr cls, IntPtr sel);
 
-		[DllImport ("/usr/lib/libobjc.dylib", CharSet=CharSet.Ansi)]
+		[DllImport (Messaging.LIBOBJC_DYLIB, CharSet=CharSet.Ansi)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		internal extern static bool class_addProperty (IntPtr cls, string name, objc_attribute_prop [] attributes, int count);
 

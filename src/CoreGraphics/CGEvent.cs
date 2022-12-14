@@ -62,7 +62,7 @@ namespace CoreGraphics {
 		static IntPtr Create (NSData source)
 		{
 			if (source is null)
-				throw new ArgumentNullException (nameof (source));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 
 			return CGEventCreateFromData (IntPtr.Zero, source.Handle);
 		}
@@ -281,7 +281,7 @@ namespace CoreGraphics {
 		public void SetEventSource (CGEventSource eventSource)
 		{
 			if (eventSource is null)
-				throw new ArgumentNullException (nameof (eventSource));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (eventSource));
 			CGEventSetSource (Handle, eventSource.Handle);
 		}
 
@@ -334,14 +334,14 @@ namespace CoreGraphics {
 		public static void TapEnable (CFMachPort machPort)
 		{
 			if (machPort is null)
-				throw new ArgumentNullException (nameof (machPort));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (machPort));
 			CGEventTapEnable (machPort.Handle, true);
 		}
 
 		public static void TapDisable (CFMachPort machPort)
 		{
 			if (machPort is null)
-				throw new ArgumentNullException (nameof (machPort));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (machPort));
 			CGEventTapEnable (machPort.Handle, false);
 		}
 
@@ -352,7 +352,7 @@ namespace CoreGraphics {
 		public static bool IsTapEnabled (CFMachPort machPort)
 		{
 			if (machPort is null)
-				throw new ArgumentNullException (nameof (machPort));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (machPort));
 			return CGEventTapIsEnabled (machPort.Handle);
 		}
 
@@ -372,7 +372,7 @@ namespace CoreGraphics {
 		public void SetUnicodeString (string value)
 		{
 			if (value is null)
-				throw new ArgumentNullException (nameof (value));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 			CGEventKeyboardSetUnicodeString (Handle, (nuint) value.Length, value);
 		}
 
@@ -382,7 +382,7 @@ namespace CoreGraphics {
 		public static void TapPostEven (IntPtr tapProxyEvent, CGEvent evt)
 		{
 			if (evt is null)
-				throw new ArgumentNullException (nameof (evt));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (evt));
 			
 			CGEventTapPostEvent (tapProxyEvent, evt.Handle);
 		}
@@ -393,7 +393,7 @@ namespace CoreGraphics {
 		public static void Post (CGEvent evt, CGEventTapLocation location)
 		{
 			if (evt is null)
-				throw new ArgumentNullException (nameof (evt));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (evt));
 			
 			CGEventPost (location, evt.Handle);
 		}
@@ -404,7 +404,7 @@ namespace CoreGraphics {
 		public static void PostToPSN (CGEvent evt, IntPtr processSerialNumber)
 		{
 			if (evt is null)
-				throw new ArgumentNullException (nameof (evt));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (evt));
 			
 			CGEventPostToPSN (processSerialNumber, evt.Handle);
 		}

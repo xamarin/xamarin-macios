@@ -25,6 +25,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 #if !WATCH
 
 using System;
@@ -54,7 +56,7 @@ namespace StoreKit {
 			}
 		}
 
-		public string AffiliateToken {
+		public string? AffiliateToken {
 			get {
 				return GetStringValue (SKStoreProductParameterKey.AffiliateToken);
 			}
@@ -63,7 +65,7 @@ namespace StoreKit {
 			}
 		}
 
-		public string CampaignToken {
+		public string? CampaignToken {
 			get {
 				return GetStringValue (SKStoreProductParameterKey.CampaignToken);
 			}

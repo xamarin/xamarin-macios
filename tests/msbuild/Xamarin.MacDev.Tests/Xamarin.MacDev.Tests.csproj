@@ -19,7 +19,7 @@
     <Compile Include="..\..\mtouch\Cache.cs">
       <Link>external\Cache.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\msbuild\Xamarin.MacDev.Tasks.Core\CommandLineArgumentBuilder.cs">
+    <Compile Include="..\..\..\msbuild\Xamarin.MacDev.Tasks\CommandLineArgumentBuilder.cs">
       <Link>external\CommandLineArgumentBuilder.cs</Link>
     </Compile>
     <Compile Include="..\..\common\Configuration.cs">

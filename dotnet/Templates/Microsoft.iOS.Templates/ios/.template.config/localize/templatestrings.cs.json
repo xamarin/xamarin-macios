@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "Aplikace pro iOS (Preview)",
+  "name": "iOS Application",
   "description": "Projekt pro vytvoření aplikace .NET pro iOS",
   "symbols/bundleId/description": "Přepíše CFBundleIdentifier v souboru Info.plist.",
   "symbols/minOSVersion/description": "Přepíše SupportedOSPlatformVersion v souboru projektu.",

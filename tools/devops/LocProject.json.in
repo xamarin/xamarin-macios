@@ -8,7 +8,7 @@
 			"Languages": "",
 			"CopyOption": "LangIDOnName",
 			"OutputPath": "@WORKING_DIRECTORY@/../../msbuild/Xamarin.Localization.MSBuild/TranslatedAssemblies",
-			"LclFile": "@WORKING_DIRECTORY@/../../Localize/loc/{Lang}/msbuild/Xamarin.Localization.MSBuild/MSBStrings.resx.lcl",
+			"LclFile": "",
 			"LciFile": "",
 			"Parser": "",
 			"LssFiles": []
@@ -18,7 +18,7 @@
 			"Languages": "",
 			"CopyOption": "LangIDOnName",
 			"OutputPath": "@WORKING_DIRECTORY@/../../tools/mtouch/TranslatedAssemblies",
-			"LclFile": "@WORKING_DIRECTORY@/../../Localize/loc/{Lang}/tools/mtouch/Errors.resx.lcl",
+			"LclFile": "",
 			"LciFile": "",
 			"Parser": "",
 			"LssFiles": []

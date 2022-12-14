@@ -1,4 +1,4 @@
-#if MONOMAC
+#if MONOMAC || IOS
 
 #nullable enable
 
@@ -10,10 +10,10 @@ namespace FileProvider {
 
 #if NET
 	[SupportedOSPlatform ("macos12.0")]
-	[UnsupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("ios16.0")]
 	[UnsupportedOSPlatform ("maccatalyst")]
 #else
-	[NoiOS]
+	[iOS (16,0)]
 	[NoMacCatalyst]
 	[Mac (12,0)]
 #endif

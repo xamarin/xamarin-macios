@@ -22,7 +22,7 @@ using ObjCRuntime;
 namespace Xamarin.Linker.Steps {
 
 	public class CoreHttpMessageHandler : ExceptionalSubStep {
-		
+
 		public CoreHttpMessageHandler ()
 		{
 		}

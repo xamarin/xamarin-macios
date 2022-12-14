@@ -1,10 +1,8 @@
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks
-{
-	public class ResolveNativeWatchApp : ResolveNativeWatchAppTaskBase, ICancelableTask
-	{
+namespace Xamarin.iOS.Tasks {
+	public class ResolveNativeWatchApp : ResolveNativeWatchAppTaskBase, ICancelableTask {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())

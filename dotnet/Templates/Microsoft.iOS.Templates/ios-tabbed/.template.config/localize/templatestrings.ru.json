@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "Приложение с вкладками для iOS (предварительная версия)",
+  "name": "iOS Tabbed Application",
   "description": "Проект для создания приложения .NET с вкладками для iOS",
   "symbols/bundleId/description": "Переопределяет CFBundleIdentifier в Info.plist",
   "symbols/minOSVersion/description": "Переопределяет SupportedOSPlatformVersion в файле проекта",

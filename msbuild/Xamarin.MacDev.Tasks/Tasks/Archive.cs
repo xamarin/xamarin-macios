@@ -1,16 +1,18 @@
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
+using Xamarin.iOS.Tasks;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class Archive : ArchiveTaskBase, ICancelableTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class Archive : ArchiveTaskBase, ICancelableTask {
 		public override bool Execute ()
 		{
-			if (ShouldExecuteRemotely ())
-				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+			if (!ShouldExecuteRemotely ())
+				return base.Execute ();
 
-			return base.Execute ();
+			if (AppExtensionReferences != null)
+				TaskItemFixer.ReplaceItemSpecsWithBuildServerPath (AppExtensionReferences, SessionId);
+
+			return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 		}
 
 		public void Cancel ()

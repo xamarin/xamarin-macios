@@ -6,6 +6,9 @@
 // Authors:
 //   Miguel de Icaza 
 //
+
+#nullable enable
+
 using System.Runtime.InteropServices;
 
 namespace CoreMotion {
