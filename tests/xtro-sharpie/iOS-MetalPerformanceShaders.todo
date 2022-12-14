@@ -491,3 +491,6 @@
 !missing-enum-value! MPSIntersectionDataType native value MPSIntersectionDataTypeDistancePrimitiveIndexBufferIndexCoordinates = 6 not bound
 !missing-enum-value! MPSIntersectionDataType native value MPSIntersectionDataTypeDistancePrimitiveIndexBufferIndexInstanceIndex = 7 not bound
 !missing-enum-value! MPSIntersectionDataType native value MPSIntersectionDataTypeDistancePrimitiveIndexBufferIndexInstanceIndexCoordinates = 8 not bound
+!missing-enum-value! MPSDataType native value MPSDataTypeComplexBit = 16777216 not bound
+!missing-enum-value! MPSDataType native value MPSDataTypeComplexFloat16 = 285212704 not bound
+!missing-enum-value! MPSDataType native value MPSDataTypeComplexFloat32 = 285212736 not bound
