@@ -19,8 +19,8 @@ namespace ObjCRuntime {
 			Ansi, // aka LPStr
 			Unicode,
 		};
-			
-			
+
+
 		public TransientString (string? str, Encoding encoding = Encoding.Auto)
 		{
 			switch (encoding) {
