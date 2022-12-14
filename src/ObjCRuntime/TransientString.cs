@@ -19,8 +19,8 @@ namespace ObjCRuntime {
 			Ansi, // aka LPStr
 			Unicode,
 		};
-			
-			
+
+
 		public TransientString (string? str, Encoding encoding = Encoding.Auto)
 		{
 			ptr = (Encode (encoding)) (str);
@@ -34,15 +34,14 @@ namespace ObjCRuntime {
 			}
 		}
 
-		static Func<string?, IntPtr> Encode (Encoding encoding) => encoding switch 
-		{
+		static Func<string?, IntPtr> Encode (Encoding encoding) => encoding switch {
 			Encoding.Auto => Marshal.StringToHGlobalAuto,
 			Encoding.BStr => Marshal.StringToBSTR,
 			Encoding.Ansi => Marshal.StringToHGlobalAnsi,
 			Encoding.Unicode => Marshal.StringToHGlobalUni,
 			_ => throw new ArgumentOutOfRangeException (nameof (encoding))
 		};
-		
+
 
 		public static implicit operator IntPtr (TransientString str) => str.ptr;
 	}

@@ -357,7 +357,7 @@ namespace Security {
 			if (context is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 			using var labelPtr = new TransientString (label, TransientString.Encoding.Ansi);
-			fixed (byte* p = context) 
+			fixed (byte* p = context)
 				return CreateDispatchData (sec_protocol_metadata_create_secret_with_context (GetCheckedHandle (), (nuint) label.Length, labelPtr, (nuint) context.Length, p, exporterLength));
 		}
 
