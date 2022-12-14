@@ -1331,11 +1331,11 @@ namespace GameKit {
 		[Export ("startBrowsingForNearbyPlayersWithHandler:")]
 		void StartBrowsingForNearbyPlayers ([NullAllowed] Action<GKPlayer, bool> handler);
 
-		[Mac (13,1), iOS (16,2)]
+		[Mac (13,1), iOS (16,2), NoTV]
 		[Export ("startGroupActivityWithPlayerHandler:")]
 		void StartGroupActivity (Action<GKPlayer> handler);
 
-		[Mac (13,1), iOS (16,2)]
+		[Mac (13,1), iOS (16,2), NoTV]
 		[Export ("stopGroupActivity")]
 		void StopGroupActivity ();
 	}
