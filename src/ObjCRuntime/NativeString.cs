@@ -11,9 +11,9 @@ namespace ObjCRuntime {
 	//
 	// If SomePInvoke doesn't make a copy, this is not the right tool
 	// for you.
-	internal struct NativeString : IDisposable {
+	internal struct TransientString : IDisposable {
 		IntPtr ptr;
-		public NativeString (string? str)
+		public TransientString (string? str)
 		{
 			// the docs say when str is null the IntPtr will be 0
 			ptr = Marshal.StringToHGlobalAuto (str);
@@ -27,6 +27,6 @@ namespace ObjCRuntime {
 			}
 		}
 
-		public static implicit operator IntPtr (NativeString str) => str.ptr;
+		public static implicit operator IntPtr (TransientString str) => str.ptr;
 	}
 }

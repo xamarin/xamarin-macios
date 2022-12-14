@@ -156,7 +156,7 @@ namespace SystemConfiguration {
 			if (address is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (address));
 
-			using var addressStr = new NativeString (address);
+			using var addressStr = new TransientString (address);
 			return CheckFailure (SCNetworkReachabilityCreateWithName (IntPtr.Zero, addressStr));
 		}
 
