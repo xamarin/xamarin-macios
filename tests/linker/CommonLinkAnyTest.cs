@@ -52,5 +52,19 @@ namespace LinkAnyTest {
 			Assert.IsNotNull (AppContext.GetData ("PINVOKE_OVERRIDE"), "PINVOKE_OVERRIDE");
 		}
 #endif
+
+#if !__WATCHOS__
+		[Test]
+		public void BackingFieldInGenericType ()
+		{
+			// https://github.com/dotnet/linker/issues/3148
+#if __MACOS__
+			var view = new AppKit.NSView ();
+#else
+			var view = new UIKit.UIView ();
+#endif
+			GC.KeepAlive (view.HeightAnchor);
+		}
+#endif // !__WATCHOS__
 	}
 }

@@ -26,11 +26,10 @@ using ObjCRuntime;
 
 #else 
 
-// legacy (hardcoded, they are not likely to change)
-[assembly: Introduced (PlatformName.iOS, 7,0)]
-[assembly: Introduced (PlatformName.TvOS, 9,0)]
-[assembly: Introduced (PlatformName.WatchOS, 2,0)]
-[assembly: Introduced (PlatformName.MacCatalyst, 13,1)]
-[assembly: Introduced (PlatformName.MacOSX, 10,9)]
+[assembly: Introduced (PlatformName.iOS, @MIN_IOS_SDK_VERSION@)]
+[assembly: Introduced (PlatformName.TvOS, @MIN_TVOS_SDK_VERSION@)]
+[assembly: Introduced (PlatformName.WatchOS, @MIN_WATCHOS_SDK_VERSION@)]
+[assembly: Introduced (PlatformName.MacCatalyst, @MIN_MACCATALYST_SDK_VERSION@)]
+[assembly: Introduced (PlatformName.MacOSX, @MIN_MACOS_SDK_VERSION@)]
 
 #endif // NET
