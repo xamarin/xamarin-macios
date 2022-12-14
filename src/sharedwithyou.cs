@@ -294,7 +294,7 @@ namespace SharedWithYou {
 		UIImage HeaderImage { get; set; }
 
 		[NoiOS, NoMacCatalyst]
-		[Mac (13,1)]
+		[Mac (13, 1)]
 		[Export ("menuFormRepresentation")]
 		NSMenuItem MenuFormRepresentation { get; }
 

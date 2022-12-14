@@ -87,7 +87,7 @@ namespace ScreenCaptureKit {
 		[Field ("SCStreamFrameInfoDirtyRects")]
 		NSString DirtyRects { get; }
 
-		[Mac (13,1)]
+		[Mac (13, 1)]
 		[Field ("SCStreamFrameInfoScreenRect")]
 		NSString ScreenRect { get; }
 	}
