@@ -4,7 +4,6 @@ using ObjCRuntime;
 namespace Foundation {
 
 	// Utility enum, ObjC uses NSString
-	[iOS (7, 0)]
 	public enum NSDocumentType {
 		Unknown = -1,
 		PlainText,
@@ -27,7 +26,6 @@ namespace Foundation {
 
 	// Utility enum, ObjC uses NSString
 	[NoMac]
-	[iOS (7, 0)]
 	public enum NSDocumentViewMode {
 		Normal,
 		PageLayout
@@ -63,7 +61,6 @@ namespace Foundation {
 	}
 
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	public enum NSItemDownloadingStatus {
 		[Field (null)]
 		Unknown = -1,

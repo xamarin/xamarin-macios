@@ -31,7 +31,6 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKDefines.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[ErrorDomain ("HKErrorDomain")]
@@ -52,7 +51,6 @@ namespace HealthKit {
 	}
 
 	[iOS (10, 0)]
-	[Watch (2, 0)]
 	[Mac (13, 0)]
 	[Native]
 	public enum HKWorkoutSessionLocationType : long {
@@ -62,7 +60,6 @@ namespace HealthKit {
 	}
 
 	[NoiOS]
-	[Watch (2, 0)]
 	[Mac (13, 0)]
 	[Native]
 	public enum HKWorkoutSessionState : long {
@@ -178,7 +175,6 @@ namespace HealthKit {
 
 	delegate void HKWorkoutRouteBuilderDataHandler (HKWorkoutRouteQuery query, CLLocation [] routeData, bool done, NSError error);
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (HKQuery))]
@@ -214,7 +210,6 @@ namespace HealthKit {
 		HKAnchoredObjectUpdateHandler UpdateHandler { get; set; }
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[Static]
@@ -421,7 +416,6 @@ namespace HealthKit {
 		NSString ValidationError { get; }
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -500,7 +494,6 @@ namespace HealthKit {
 		string CustodianName { get; }
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (HKSample))]
@@ -534,7 +527,6 @@ namespace HealthKit {
 
 	delegate void HKCorrelationQueryResultHandler (HKCorrelationQuery query, HKCorrelation [] correlations, NSError error);
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (HKQuery))]
@@ -550,7 +542,6 @@ namespace HealthKit {
 		NSDictionary SamplePredicates { get; }
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (HKSampleType))]
@@ -563,7 +554,6 @@ namespace HealthKit {
 	delegate void HKHealthStoreRecoverActiveWorkoutSessionHandler (HKWorkoutSession session, NSError error);
 	delegate void HKHealthStoreCompletionHandler (bool success, NSError error);
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (NSObject))]
@@ -752,7 +742,6 @@ namespace HealthKit {
 
 	delegate void HKStoreSampleAddedCallback (bool success, NSError error);
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (NSObject))]
@@ -761,7 +750,6 @@ namespace HealthKit {
 		HKBiologicalSex BiologicalSex { get; }
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (NSObject))]
@@ -929,7 +917,6 @@ namespace HealthKit {
 		HKQuantity HeartRateEventThreshold { get; set; }
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[Static]
@@ -1168,7 +1155,6 @@ namespace HealthKit {
 		NSString UserMotionContext { get; }
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 #if NET
@@ -1199,7 +1185,6 @@ namespace HealthKit {
 		HKDevice Device { get; }
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 #if NET
@@ -1318,7 +1303,6 @@ namespace HealthKit {
 
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (HKObjectType))]
@@ -1327,7 +1311,6 @@ namespace HealthKit {
 
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKSampleType
@@ -1364,7 +1347,6 @@ namespace HealthKit {
 
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (HKSampleType))]
@@ -1381,7 +1363,6 @@ namespace HealthKit {
 
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (HKSampleType))]
@@ -1399,7 +1380,6 @@ namespace HealthKit {
 	[Watch (8, 0), iOS (15, 0)]
 	delegate void HKObserverQueryDescriptorUpdateHandler (HKObserverQuery query, NSSet<HKSampleType> samples, [BlockCallback] Action completion, NSError error);
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (HKQuery))]
@@ -1416,7 +1396,6 @@ namespace HealthKit {
 		NativeHandle Constructor (HKQueryDescriptor [] queryDescriptors, HKObserverQueryDescriptorUpdateHandler updateHandler);
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -1436,7 +1415,6 @@ namespace HealthKit {
 		NSComparisonResult Compare (HKQuantity quantity);
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (HKSample))]
@@ -1471,7 +1449,6 @@ namespace HealthKit {
 		nint Count { get; }
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -1707,7 +1684,6 @@ namespace HealthKit {
 		NSPredicate GetPredicateForWorkouts (NSPredicate activityPredicate);
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (HKObject))]
@@ -1741,7 +1717,6 @@ namespace HealthKit {
 
 	delegate void HKSampleQueryResultsHandler (HKSampleQuery query, HKSample [] results, NSError error);
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (HKQuery))]
@@ -1766,7 +1741,6 @@ namespace HealthKit {
 		NativeHandle Constructor (HKQueryDescriptor [] queryDescriptors, nint limit, NSSortDescriptor [] sortDescriptors, HKSampleQueryResultsHandler resultsHandler);
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -1785,7 +1759,6 @@ namespace HealthKit {
 
 	delegate void HKSourceQueryCompletionHandler (HKSourceQuery query, NSSet sources, NSError error);
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (HKQuery))]
@@ -1796,7 +1769,6 @@ namespace HealthKit {
 		NativeHandle Constructor (HKSampleType sampleType, [NullAllowed] NSPredicate objectPredicate, HKSourceQueryCompletionHandler completionHandler);
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -1876,7 +1848,6 @@ namespace HealthKit {
 
 	delegate void HKStatisticsCollectionEnumerator (HKStatistics result, bool stop);
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -1901,7 +1872,6 @@ namespace HealthKit {
 	delegate void HKStatisticsCollectionQueryStatisticsUpdateHandler (HKStatisticsCollectionQuery query, HKStatistics statistics, HKStatisticsCollection collection, NSError error);
 
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (HKQuery))]
@@ -1929,7 +1899,6 @@ namespace HealthKit {
 
 	delegate void HKStatisticsQueryHandler (HKStatisticsQuery query, HKStatistics result, NSError error);
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (HKQuery))]
@@ -1940,7 +1909,6 @@ namespace HealthKit {
 		NativeHandle Constructor (HKQuantityType quantityType, [NullAllowed] NSPredicate quantitySamplePredicate, HKStatisticsOptions options, HKStatisticsQueryHandler handler);
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	enum HKQuantityTypeIdentifier {
@@ -2297,7 +2265,6 @@ namespace HealthKit {
 		WaterTemperature,
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	enum HKCorrelationTypeIdentifier {
@@ -2314,7 +2281,6 @@ namespace HealthKit {
 		HeartbeatSeries,
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	enum HKCategoryTypeIdentifier {
@@ -2584,7 +2550,6 @@ namespace HealthKit {
 		ProlongedMenstrualPeriods,
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	enum HKCharacteristicTypeIdentifier {
@@ -2612,7 +2577,6 @@ namespace HealthKit {
 		ActivityMoveMode,
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -2946,7 +2910,6 @@ namespace HealthKit {
 		HKUnit DegreeAngle { get; }
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (HKSample))]
@@ -3078,7 +3041,6 @@ namespace HealthKit {
 		HKStatistics GetStatistics (HKQuantityType quantityType);
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (NSObject))]
@@ -3135,7 +3097,6 @@ namespace HealthKit {
 		NSDateInterval DateInterval { get; }
 	}
 
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (HKSampleType))]
@@ -3145,7 +3106,6 @@ namespace HealthKit {
 		NSString Identifier { get; }
 	}
 
-	[Watch (2, 0)]
 	[iOS (9, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (NSObject))]
@@ -3163,7 +3123,6 @@ namespace HealthKit {
 		HKMetadata Metadata { get; }
 	}
 
-	[Watch (2, 0)]
 	[iOS (9, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (NSObject))]
@@ -3219,7 +3178,6 @@ namespace HealthKit {
 		NativeHandle Constructor (HKDocumentType documentType, [NullAllowed] NSPredicate predicate, nuint limit, [NullAllowed] NSSortDescriptor [] sortDescriptors, bool includeDocumentData, Action<HKDocumentQuery, HKDocumentSample [], bool, NSError> resultsHandler);
 	}
 
-	[Watch (2, 0)]
 	[iOS (9, 0)]
 	[Mac (13, 0)]
 	[Static]
@@ -3249,7 +3207,6 @@ namespace HealthKit {
 		NSString UdiDeviceIdentifier { get; }
 	}
 
-	[Watch (2, 0)]
 	[iOS (9, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (NSObject))]
@@ -3265,7 +3222,6 @@ namespace HealthKit {
 		HKWheelchairUse WheelchairUse { get; }
 	}
 
-	[Watch (2, 0)]
 	[iOS (9, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (NSObject))]
@@ -3313,7 +3269,6 @@ namespace HealthKit {
 		//NSOperatingSystemVersion AnyOperatingSystem { get; }
 	}
 
-	[Watch (2, 0)]
 	[iOS (9, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (NSObject))]
@@ -3326,7 +3281,6 @@ namespace HealthKit {
 
 
 	[NoiOS]
-	[Watch (2, 0)]
 	[Mac (13, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -3415,7 +3369,6 @@ namespace HealthKit {
 	}
 
 	[NoiOS]
-	[Watch (2, 0)]
 	[Mac (13, 0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]

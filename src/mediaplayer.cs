@@ -190,7 +190,6 @@ namespace MediaPlayer {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString ArtworkProperty { get; }
 
-		[iOS (7, 0)]
 		[Field ("MPMediaItemPropertyIsExplicit")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString IsExplicitProperty { get; }
@@ -456,16 +455,13 @@ namespace MediaPlayer {
 		[Export ("valueForProperty:")]
 		NSObject ValueForProperty (string property);
 
-		[iOS (7, 0)]
 		[Export ("persistentID")]
 		ulong PersistentID { get; }
 
-		[iOS (7, 0)]
 		[Export ("name")]
 		[NullAllowed]
 		string Name { get; }
 
-		[iOS (7, 0)]
 		[Export ("playlistAttributes")]
 		MPMediaPlaylistAttribute PlaylistAttributes { get; }
 
@@ -1381,30 +1377,25 @@ namespace MediaPlayer {
 		[Export ("routeButtonRectForBounds:")]
 		CGRect GetRouteButtonRect (CGRect bounds);
 
-		[iOS (7, 0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRouteDetector.MultipleRoutesDetected' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AVRouteDetector.MultipleRoutesDetected' instead.")]
 		[Export ("wirelessRoutesAvailable")]
 		bool AreWirelessRoutesAvailable { [Bind ("areWirelessRoutesAvailable")] get; }
 
-		[iOS (7, 0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVPlayer.ExternalPlaybackActive' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AVPlayer.ExternalPlaybackActive' instead.")]
 		[Export ("wirelessRouteActive")]
 		bool IsWirelessRouteActive { [Bind ("isWirelessRouteActive")] get; }
 
-		[iOS (7, 0)]
 		[NullAllowed] // by default this property is null
 		[Export ("volumeWarningSliderImage", ArgumentSemantic.Retain)]
 		UIImage VolumeWarningSliderImage { get; set; }
 
-		[iOS (7, 0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRouteDetector.MultipleRoutesDetectedDidChange' instead.")]
 		[Notification]
 		[Field ("MPVolumeViewWirelessRoutesAvailableDidChangeNotification")]
 		NSString WirelessRoutesAvailableDidChangeNotification { get; }
 
-		[iOS (7, 0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVPlayer.ExternalPlaybackActive' KVO instead.")]
 		[Notification]
 		[Field ("MPVolumeViewWirelessRouteActiveDidChangeNotification")]
@@ -2026,7 +2017,6 @@ namespace MediaPlayer {
 		bool IsAutomaticLegibleLanguageOption { get; }
 
 		[iOS (9, 1)]
-		[TV (9, 0)]
 		[Export ("isAutomaticAudibleLanguageOption")]
 		bool IsAutomaticAudibleLanguageOption { get; }
 	}
@@ -2292,7 +2282,6 @@ namespace MediaPlayer {
 	}
 
 	[iOS (9, 0)]
-	[TV (9, 0)]
 	[Mac (10, 12, 1)]
 	[Watch (6, 0)]
 	[Category]
@@ -2304,7 +2293,6 @@ namespace MediaPlayer {
 	}
 
 	[iOS (9, 0)]
-	[TV (9, 0)]
 	[Mac (10, 12, 1)]
 	[Watch (6, 0)]
 	[Category]
