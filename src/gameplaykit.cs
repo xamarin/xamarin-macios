@@ -489,7 +489,6 @@ namespace GameplayKit {
 
 		[Mac (10, 11, 2)]
 		[iOS (9, 1)]
-		[TV (9, 0)]
 		[Export ("unapplyGameModelUpdate:")]
 		void UnapplyGameModelUpdate (IGKGameModelUpdate gameModelUpdate);
 	}
@@ -1366,7 +1365,6 @@ namespace GameplayKit {
 
 	[NoMac]
 	[iOS (9, 1)]
-	[TV (9, 0)]
 	[BaseType (typeof (NSObject))]
 	interface GKHybridStrategist : GKStrategist {
 		[Export ("budget")]
@@ -1380,7 +1378,6 @@ namespace GameplayKit {
 	}
 
 	[iOS (9, 1)]
-	[TV (9, 0)]
 	[Protocol]
 	interface GKStrategist {
 		[Abstract]
@@ -1396,7 +1393,7 @@ namespace GameplayKit {
 		IGKGameModelUpdate GetBestMoveForActivePlayer ();
 	}
 
-	[iOS (9, 1), TV (9, 0), Mac (10, 12)]
+	[iOS (9, 1), Mac (10, 12)]
 	[BaseType (typeof (NSObject))]
 	interface GKMonteCarloStrategist : GKStrategist {
 		[Export ("budget")]

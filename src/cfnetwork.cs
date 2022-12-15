@@ -117,7 +117,6 @@ namespace CoreServices {
 		// iOS headers says it's iOS 7.0 only (but comments talks about OSX)
 		// yet both 7.0+ and 10.9 returns null
 		[Mac (10, 9)]
-		[iOS (7, 0)]
 		[Internal]
 		[Field ("kCFHTTPAuthenticationSchemeOAuth1", "CFNetwork")]
 		IntPtr _AuthenticationSchemeOAuth1 { get; }
