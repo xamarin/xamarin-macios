@@ -29,7 +29,6 @@ namespace CoreTelephony {
 
 	[MacCatalyst (14, 0)]
 	[Static]
-	[iOS (7, 0)]
 	interface CTRadioAccessTechnology {
 		[Field ("CTRadioAccessTechnologyGPRS")]
 		NSString GPRS { get; }
@@ -103,7 +102,7 @@ namespace CoreTelephony {
 		Action<CTCarrier> CellularProviderUpdatedEventHandler { get; set; }
 
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'ServiceCurrentRadioAccessTechnology' instead.")]
-		[iOS (7, 0), Export ("currentRadioAccessTechnology")]
+		[Export ("currentRadioAccessTechnology")]
 		[NullAllowed]
 		NSString CurrentRadioAccessTechnology { get; }
 
@@ -194,7 +193,6 @@ namespace CoreTelephony {
 
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
-	[iOS (7, 0)]
 	partial interface CTSubscriber {
 		[Export ("carrierToken")]
 		[NullAllowed]

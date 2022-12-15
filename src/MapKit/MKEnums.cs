@@ -23,7 +23,6 @@ namespace MapKit {
 	[NoWatch]
 	[Native]
 	[TV (9, 2)]
-	[iOS (7, 0)]
 	public enum MKDirectionsTransportType : ulong {
 		Automobile = 1 << 0,
 		Walking = 1 << 1,
@@ -50,7 +49,6 @@ namespace MapKit {
 	// NSUInteger -> MKDistanceFormatter.h
 	[Native]
 	[TV (9, 2)]
-	[iOS (7, 0)]
 	public enum MKDistanceFormatterUnits : ulong {
 		Default,
 		Metric,
@@ -61,7 +59,6 @@ namespace MapKit {
 	// NSUInteger -> MKDistanceFormatter.h
 	[Native]
 	[TV (9, 2)]
-	[iOS (7, 0)]
 	public enum MKDistanceFormatterUnitStyle : ulong {
 		Default = 0,
 		Abbreviated,
@@ -72,7 +69,6 @@ namespace MapKit {
 	[TV (9, 2)]
 	[NoWatch]
 	[Native]
-	[iOS (7, 0)]
 	public enum MKOverlayLevel : long {
 		AboveRoads = 0,
 		AboveLabels,

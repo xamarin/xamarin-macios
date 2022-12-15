@@ -28,7 +28,7 @@ namespace Xamarin.MMP.Tests {
 				"--arch=x86_64","" +
 				"--sdkroot",
 				Configuration.xcode_root,
-				"--minos", "10.9",
+				"--minos", SdkVersions.MinOSX,
 				libPath,
 				"--sdk", Configuration.macos_sdk_version,
 				"--nolink",

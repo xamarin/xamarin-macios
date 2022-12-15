@@ -320,6 +320,7 @@ namespace Cecil.Tests {
 						case "CFNotificationCenter": // needs a custom ctor implementation
 						case "AUGraph": // needs a custom ctor implementation
 						case "ABMultiValue`1": // has a custom ctor implementation
+						case "NWPathMonitor": // has a custom ctor implementation
 							skipILVerification = true;
 							break;
 						}

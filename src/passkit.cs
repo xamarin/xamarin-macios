@@ -96,7 +96,6 @@ namespace PassKit {
 		[Export ("replacePassWithPass:")]
 		bool Replace (PKPass pass);
 
-		[iOS (7, 0)]
 		[Export ("addPasses:withCompletionHandler:")]
 		[Async]
 		void AddPasses (PKPass [] passes, [NullAllowed] Action<PKPassLibraryAddPassesStatus> completion);
@@ -693,7 +692,6 @@ namespace PassKit {
 		[Export ("initWithPass:")]
 		NativeHandle Constructor (PKPass pass);
 
-		[iOS (7, 0)]
 		[Export ("initWithPasses:")]
 		NativeHandle Constructor (PKPass [] pass);
 
@@ -885,7 +883,6 @@ namespace PassKit {
 		NSString ErrorDomain { get; }
 #endif
 
-		[iOS (7, 0)]
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Copy)]
 		NSDictionary UserInfo { get; }
 
