@@ -39,17 +39,16 @@ namespace AVFoundation {
 				IntPtr ptrtohandle = (IntPtr) (&errhandle);
 
 				try {
-					var ap = new AVAudioPlayer(url, ptrtohandle);
+					var ap = new AVAudioPlayer (url, ptrtohandle);
 					if (ap.Handle == IntPtr.Zero) {
-						error = Runtime.GetNSObject<NSError>(errhandle);
+						error = Runtime.GetNSObject<NSError> (errhandle);
 						return null;
-					}
-					else
+					} else
 						error = null;
 
 					return ap;
 				} catch {
-					error = Runtime.GetNSObject<NSError>(errhandle);
+					error = Runtime.GetNSObject<NSError> (errhandle);
 					return null;
 				}
 			}
@@ -59,7 +58,7 @@ namespace AVFoundation {
 		{
 			unsafe {
 				try {
-					var ap = new AVAudioPlayer(url, IntPtr.Zero);
+					var ap = new AVAudioPlayer (url, IntPtr.Zero);
 					if (ap.Handle == IntPtr.Zero)
 						return null;
 
@@ -74,20 +73,19 @@ namespace AVFoundation {
 		{
 			unsafe {
 				IntPtr errhandle;
-				IntPtr ptrtohandle = (IntPtr)(&errhandle);
+				IntPtr ptrtohandle = (IntPtr) (&errhandle);
 
 				try {
-					var ap = new AVAudioPlayer(data, ptrtohandle);
+					var ap = new AVAudioPlayer (data, ptrtohandle);
 					if (ap.Handle == IntPtr.Zero) {
-						error = Runtime.GetNSObject<NSError>(errhandle);
+						error = Runtime.GetNSObject<NSError> (errhandle);
 						return null;
-					}
-					else
+					} else
 						error = null;
 
 					return ap;
 				} catch {
-					error = Runtime.GetNSObject<NSError>(errhandle);
+					error = Runtime.GetNSObject<NSError> (errhandle);
 					return null;
 				}
 			}
@@ -97,7 +95,7 @@ namespace AVFoundation {
 		{
 			unsafe {
 				try {
-					var ap = new AVAudioPlayer(data, IntPtr.Zero);
+					var ap = new AVAudioPlayer (data, IntPtr.Zero);
 					if (ap.Handle == IntPtr.Zero)
 						return null;
 
