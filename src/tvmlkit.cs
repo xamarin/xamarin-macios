@@ -15,7 +15,6 @@ using NativeHandle = System.IntPtr;
 
 namespace TVMLKit {
 
-	[TV (9, 0)]
 	[Native]
 	public enum TVColorType : long {
 		None,
@@ -24,7 +23,6 @@ namespace TVMLKit {
 		LinearGradientLeftToRight
 	}
 
-	[TV (9, 0)]
 	[Native]
 	public enum TVElementAlignment : long {
 		Undefined,
@@ -37,7 +35,6 @@ namespace TVMLKit {
 		Trailing,
 	}
 
-	[TV (9, 0)]
 	[Native]
 	public enum TVElementContentAlignment : long {
 		Undefined,
@@ -46,7 +43,6 @@ namespace TVMLKit {
 		Bottom
 	}
 
-	[TV (9, 0)]
 	[Native]
 	public enum TVElementPosition : long {
 		Undefined,
@@ -75,7 +71,6 @@ namespace TVMLKit {
 		BottomTrailing,
 	}
 
-	[TV (9, 0)]
 	[Native]
 	public enum TVElementEventType : long {
 		Play = 1,
@@ -85,7 +80,6 @@ namespace TVMLKit {
 		Change
 	}
 
-	[TV (9, 0)]
 	[Native]
 	public enum TVElementUpdateType : long {
 		None,
@@ -103,14 +97,12 @@ namespace TVMLKit {
 #endif
 	}
 
-	[TV (9, 0)]
 	[Native]
 	public enum TVElementResettableProperty : long {
 		UpdateType,
 		AutoHighlightIdentifier
 	}
 
-	[TV (9, 0)]
 	[Native]
 	public enum TVImageType : long {
 		Image,
@@ -119,7 +111,6 @@ namespace TVMLKit {
 		Hero
 	}
 
-	[TV (9, 0)]
 	[Native]
 	[ErrorDomain ("TVMLKitErrorDomain")]
 	public enum TVMLKitError : long {
@@ -129,7 +120,6 @@ namespace TVMLKit {
 		Last
 	}
 
-	[TV (9, 0)]
 	[Native]
 	public enum TVViewElementStyleType : long {
 		Integer = 1,
@@ -142,7 +132,6 @@ namespace TVMLKit {
 		EdgeInsets
 	}
 
-	[TV (9, 0)]
 	[Native]
 	public enum TVTextElementStyle : long {
 		None,
@@ -209,7 +198,6 @@ namespace TVMLKit {
 		Music,
 	}
 
-	[TV (9, 0)]
 	[BaseType (typeof (NSObject))]
 	interface TVApplicationControllerContext : NSCopying {
 		[Export ("javaScriptApplicationURL", ArgumentSemantic.Copy)]
@@ -226,7 +214,6 @@ namespace TVMLKit {
 		bool SupportsPictureInPicturePlayback { get; set; }
 	}
 
-	[TV (9, 0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface TVApplicationControllerDelegate {
@@ -281,7 +268,6 @@ namespace TVMLKit {
 		void Stop ();
 	}
 
-	[TV (9, 0)]
 	[BaseType (typeof (NSObject))]
 	interface TVColor : NSCopying {
 		[Export ("colorType")]
@@ -298,7 +284,6 @@ namespace TVMLKit {
 	}
 
 #if false // TVMLKit/TVElementTypes.h was removed from Xcode 7.1 beta 3 (mistake?)
-	[TV (9,0)]
 	[Static]
 	interface TVAttributeKey {
 		// FIXME: does it fit here ?
@@ -396,7 +381,6 @@ namespace TVMLKit {
 		NSString TVAttributeSiriData { get; }
 	}
 
-	[TV (9,0)]
 	[Static]
 	interface TVElementKey {
 		[Field ("TVElementKeyActivityIndicator")]
@@ -692,7 +676,6 @@ namespace TVMLKit {
 	}
 
 	// FIXME: enum'ify ?
-	[TV (9,0)]
 	[Static]
 	interface TVKeyboardType {
 		[Field ("TVKeyboardTypeEmailAddress")]
@@ -706,7 +689,6 @@ namespace TVMLKit {
 	}
 #endif
 
-	[TV (9, 0)]
 	[BaseType (typeof (NSObject))]
 	interface TVElementFactory {
 		// FIXME: provide System.Type overload
@@ -715,7 +697,6 @@ namespace TVMLKit {
 		void RegisterViewElementClass (Class elementClass, string elementName);
 	}
 
-	[TV (9, 0)]
 	[BaseType (typeof (NSObject))]
 	interface TVViewElementStyle : NSCopying {
 		// FIXME: badly named, unsure of return value
@@ -804,7 +785,6 @@ namespace TVMLKit {
 		TVColor TintColor { get; }
 	}
 
-	[TV (9, 0)]
 	[BaseType (typeof (NSObject))]
 	interface TVViewElement : NSCopying {
 		[Export ("elementIdentifier")]
@@ -856,7 +836,6 @@ namespace TVMLKit {
 		NSDictionary<NSString, NSObject> ElementData { get; }
 	}
 
-	[TV (9, 0)]
 	[BaseType (typeof (TVViewElement))]
 	interface TVImageElement {
 		[NullAllowed, Export ("URL")]
@@ -869,7 +848,6 @@ namespace TVMLKit {
 		TVImageType ImageType { get; }
 	}
 
-	[TV (9, 0)]
 	[Protocol]
 	interface TVInterfaceCreating {
 		[Export ("viewForElement:existingView:")]
@@ -902,7 +880,6 @@ namespace TVMLKit {
 
 	interface ITVInterfaceCreating { }
 
-	[TV (9, 0)]
 	[BaseType (typeof (NSObject))]
 	interface TVInterfaceFactory : TVInterfaceCreating {
 		[Static]
@@ -913,7 +890,6 @@ namespace TVMLKit {
 		ITVInterfaceCreating ExtendedInterfaceCreator { get; set; }
 	}
 
-	[TV (9, 0)]
 	[BaseType (typeof (NSObject))]
 	interface TVStyleFactory {
 		[Static]
@@ -921,7 +897,6 @@ namespace TVMLKit {
 		void RegisterStyle (string styleName, TVViewElementStyleType type, bool inherited);
 	}
 
-	[TV (9, 0)]
 	[BaseType (typeof (TVViewElement))]
 	interface TVTextElement {
 		[NullAllowed, Export ("attributedText")]

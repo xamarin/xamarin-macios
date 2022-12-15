@@ -34,7 +34,6 @@ namespace CoreLocation {
 
 	[NoTV]
 	[NoWatch]
-	[iOS (7, 0)]
 	[Native] // NSInteger -> CLRegion.h
 	public enum CLRegionState : long {
 		Unknown,
@@ -45,7 +44,6 @@ namespace CoreLocation {
 	[Mac (10, 15)]
 	[NoTV]
 	[NoWatch]
-	[iOS (7, 0)]
 	[Native] // NSInteger -> CLRegion.h
 	public enum CLProximity : long {
 		Unknown,
@@ -393,14 +391,14 @@ namespace CoreLocation {
 		[NoWatch]
 		[NoTV]
 		[Mac (10, 10)]
-		[iOS (7, 0), Static, Export ("isMonitoringAvailableForClass:")]
+		[Static, Export ("isMonitoringAvailableForClass:")]
 		bool IsMonitoringAvailable (Class regionClass);
 
 		[NoWatch]
 		[NoTV]
 		[NoMac]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'RangedBeaconConstraints' instead.")]
-		[iOS (7, 0), Export ("rangedRegions", ArgumentSemantic.Copy)]
+		[Export ("rangedRegions", ArgumentSemantic.Copy)]
 		NSSet RangedRegions { get; }
 
 		[NoWatch, NoTV, Mac (11, 0), iOS (13, 0)]
@@ -410,7 +408,7 @@ namespace CoreLocation {
 		[Mac (10, 10)]
 		[NoWatch]
 		[NoTV]
-		[iOS (7, 0), Export ("requestStateForRegion:")]
+		[Export ("requestStateForRegion:")]
 		void RequestState (CLRegion region);
 
 		[NoWatch]
@@ -418,7 +416,7 @@ namespace CoreLocation {
 		[NoMac]
 		[NoMacCatalyst]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'StartRangingBeacons(CLBeaconIdentityConstraint)' instead.")]
-		[iOS (7, 0), Export ("startRangingBeaconsInRegion:")]
+		[Export ("startRangingBeaconsInRegion:")]
 		void StartRangingBeacons (CLBeaconRegion region);
 
 		[NoWatch, NoTV, Mac (11, 0), iOS (13, 0)]
@@ -430,7 +428,7 @@ namespace CoreLocation {
 		[NoMac]
 		[NoMacCatalyst]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'StopRangingBeacons(CLBeaconIdentityConstraint)' instead.")]
-		[iOS (7, 0), Export ("stopRangingBeaconsInRegion:")]
+		[Export ("stopRangingBeaconsInRegion:")]
 		void StopRangingBeacons (CLBeaconRegion region);
 
 		[NoWatch, NoTV, Mac (11, 0), iOS (13, 0)]
@@ -439,7 +437,7 @@ namespace CoreLocation {
 
 		[NoWatch]
 		[NoTV]
-		[iOS (7, 0), Mac (11, 0)]
+		[Mac (11, 0)]
 		[Static]
 		[Export ("isRangingAvailable")]
 		bool IsRangingAvailable { get; }
@@ -564,14 +562,14 @@ namespace CoreLocation {
 		[NoWatch]
 		[NoTV]
 		[Mac (10, 10)]
-		[iOS (7, 0), Export ("locationManager:didDetermineState:forRegion:"), EventArgs ("CLRegionStateDetermined")]
+		[Export ("locationManager:didDetermineState:forRegion:"), EventArgs ("CLRegionStateDetermined")]
 		void DidDetermineState (CLLocationManager manager, CLRegionState state, CLRegion region);
 
 		[NoWatch]
 		[NoTV]
 		[NoMac]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'DidRangeBeaconsSatisfyingConstraint' instead.")]
-		[iOS (7, 0), Export ("locationManager:didRangeBeacons:inRegion:"), EventArgs ("CLRegionBeaconsRanged")]
+		[Export ("locationManager:didRangeBeacons:inRegion:"), EventArgs ("CLRegionBeaconsRanged")]
 		void DidRangeBeacons (CLLocationManager manager, CLBeacon [] beacons, CLBeaconRegion region);
 
 		[NoWatch, NoTV, Mac (11, 0), iOS (13, 0)]
@@ -583,7 +581,7 @@ namespace CoreLocation {
 		[NoTV]
 		[NoMac]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'DidFailRangingBeacons' instead.")]
-		[iOS (7, 0), Export ("locationManager:rangingBeaconsDidFailForRegion:withError:"), EventArgs ("CLRegionBeaconsFailed")]
+		[Export ("locationManager:rangingBeaconsDidFailForRegion:withError:"), EventArgs ("CLRegionBeaconsFailed")]
 		void RangingBeaconsDidFailForRegion (CLLocationManager manager, CLBeaconRegion region, NSError error);
 
 		[NoWatch, NoTV, Mac (11, 0), iOS (13, 0)]
@@ -671,11 +669,11 @@ namespace CoreLocation {
 		[Export ("containsCoordinate:")]
 		bool Contains (CLLocationCoordinate2D coordinate);
 
-		[iOS (7, 0), Export ("notifyOnEntry", ArgumentSemantic.Assign)]
+		[Export ("notifyOnEntry", ArgumentSemantic.Assign)]
 		[Mac (10, 10)]
 		bool NotifyOnEntry { get; set; }
 
-		[iOS (7, 0), Export ("notifyOnExit", ArgumentSemantic.Assign)]
+		[Export ("notifyOnExit", ArgumentSemantic.Assign)]
 		[Mac (10, 10)]
 		bool NotifyOnExit { get; set; }
 	}
@@ -748,7 +746,7 @@ namespace CoreLocation {
 	}
 
 	[Mac (10, 10)]
-	[iOS (7, 0), BaseType (typeof (CLRegion))]
+	[BaseType (typeof (CLRegion))]
 #if MONOMAC
 	[DisableDefaultCtor]
 #endif
@@ -770,7 +768,7 @@ namespace CoreLocation {
 	[NoWatch]
 	[Mac (11, 0)]
 	[NoTV]
-	[iOS (7, 0), BaseType (typeof (CLRegion))]
+	[BaseType (typeof (CLRegion))]
 	[DisableDefaultCtor] // nil-Handle on iOS8 if 'init' is used
 	partial interface CLBeaconRegion {
 
@@ -838,7 +836,7 @@ namespace CoreLocation {
 	[NoWatch]
 	[Mac (11, 0)]
 	[NoTV]
-	[iOS (7, 0), BaseType (typeof (NSObject))]
+	[BaseType (typeof (NSObject))]
 	partial interface CLBeacon : NSCopying, NSSecureCoding {
 
 		[NoMac]

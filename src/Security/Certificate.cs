@@ -32,7 +32,6 @@
 
 #if !NET
 #define NATIVE_APPLE_CERTIFICATE
-#else
 #endif
 
 using System;
@@ -335,7 +334,7 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 #else
-		[iOS (10, 3)] // [Mac (10,5)]
+		[iOS (10, 3)] // 
 		[TV (10, 3)]
 		[Watch (3, 3)]
 #endif
@@ -365,7 +364,7 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 #else
-		[iOS (10, 3)] // [Mac (10,5)]
+		[iOS (10, 3)] // 
 		[TV (10, 3)]
 		[Watch (3, 3)]
 #endif

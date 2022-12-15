@@ -107,7 +107,7 @@ namespace MapKit {
 		// optional, not implemented by MKPolygon, MKPolyline and MKCircle
 		// implemented by MKTileOverlay (and defined there)
 		[OptionalImplementation]
-		[iOS (7, 0), Export ("canReplaceMapContent")]
+		[Export ("canReplaceMapContent")]
 		bool CanReplaceMapContent { get; }
 	}
 
@@ -290,11 +290,11 @@ namespace MapKit {
 	interface MKDirectionsRequest {
 		[NullAllowed] // by default this property is null
 		[Export ("destination")]
-		MKMapItem Destination { get; [iOS (7, 0)] set; }
+		MKMapItem Destination { get; set; }
 
 		[NullAllowed] // by default this property is null
 		[Export ("source")]
-		MKMapItem Source { get; [iOS (7, 0)] set; }
+		MKMapItem Source { get; set; }
 
 		[Export ("initWithContentsOfURL:")]
 		NativeHandle Constructor (NSUrl url);
@@ -303,18 +303,18 @@ namespace MapKit {
 		[Export ("isDirectionsRequestURL:")]
 		bool IsDirectionsRequestUrl (NSUrl url);
 
-		[iOS (7, 0), Export ("transportType")]
+		[Export ("transportType")]
 		MKDirectionsTransportType TransportType { get; set; }
 
-		[iOS (7, 0), Export ("requestsAlternateRoutes")]
+		[Export ("requestsAlternateRoutes")]
 		bool RequestsAlternateRoutes { get; set; }
 
 		[NullAllowed] // by default this property is null
-		[iOS (7, 0), Export ("departureDate", ArgumentSemantic.Copy)]
+		[Export ("departureDate", ArgumentSemantic.Copy)]
 		NSDate DepartureDate { get; set; }
 
 		[NullAllowed] // by default this property is null
-		[iOS (7, 0), Export ("arrivalDate", ArgumentSemantic.Copy)]
+		[Export ("arrivalDate", ArgumentSemantic.Copy)]
 		NSDate ArrivalDate { get; set; }
 
 		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, TV (16, 0)]
@@ -639,54 +639,52 @@ namespace MapKit {
 		[Export ("setUserTrackingMode:animated:")]
 		void SetUserTrackingMode (MKUserTrackingMode trackingMode, bool animated);
 
-		[iOS (7, 0), Export ("camera", ArgumentSemantic.Copy)]
+		[Export ("camera", ArgumentSemantic.Copy)]
 		MKMapCamera Camera { get; set; }
 
-		[iOS (7, 0), Export ("setCamera:animated:")]
+		[Export ("setCamera:animated:")]
 		void SetCamera (MKMapCamera camera, bool animated);
 
 		[NoTV]
-		[iOS (7, 0), Export ("rotateEnabled")]
+		[Export ("rotateEnabled")]
 		bool RotateEnabled { [Bind ("isRotateEnabled")] get; set; }
 
 		[NoTV]
-		[iOS (7, 0), Export ("pitchEnabled")]
+		[Export ("pitchEnabled")]
 		bool PitchEnabled { [Bind ("isPitchEnabled")] get; set; }
 
-		[iOS (7, 0), Export ("showAnnotations:animated:")]
+		[Export ("showAnnotations:animated:")]
 		void ShowAnnotations (IMKAnnotation [] annotations, bool animated);
 
-		[iOS (7, 0), Export ("addOverlay:level:")]
+		[Export ("addOverlay:level:")]
 		[PostGet ("Overlays")]
 		void AddOverlay (IMKOverlay overlay, MKOverlayLevel level);
 
-		[iOS (7, 0), Export ("addOverlays:level:")]
+		[Export ("addOverlays:level:")]
 		[PostGet ("Overlays")]
 		void AddOverlays (IMKOverlay [] overlays, MKOverlayLevel level);
 
-		[iOS (7, 0), Export ("exchangeOverlay:withOverlay:")]
+		[Export ("exchangeOverlay:withOverlay:")]
 		[PostGet ("Overlays")]
 		void ExchangeOverlay (IMKOverlay overlay1, IMKOverlay overlay2);
 
-		[iOS (7, 0), Export ("insertOverlay:atIndex:level:")]
+		[Export ("insertOverlay:atIndex:level:")]
 		[PostGet ("Overlays")]
 		void InsertOverlay (IMKOverlay overlay, nuint index, MKOverlayLevel level);
 
-		[iOS (7, 0), Export ("overlaysInLevel:")]
+		[Export ("overlaysInLevel:")]
 		IMKOverlay [] OverlaysInLevel (MKOverlayLevel level);
 
-		[iOS (7, 0), Export ("rendererForOverlay:")]
+		[Export ("rendererForOverlay:")]
 		[return: NullAllowed]
 		MKOverlayRenderer RendererForOverlay (IMKOverlay overlay);
 
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'PointOfInterestFilter' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'PointOfInterestFilter' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'PointOfInterestFilter' instead.")]
-		[iOS (7, 0)]
 		[Export ("showsPointsOfInterest")]
 		bool ShowsPointsOfInterest { get; set; }
 
-		[iOS (7, 0)]
 		[Export ("showsBuildings")]
 		bool ShowsBuildings { get; set; }
 
@@ -834,16 +832,16 @@ namespace MapKit {
 		[Export ("mapView:didChangeUserTrackingMode:animated:"), EventArgs ("MMapViewUserTracking")]
 		void DidChangeUserTrackingMode (MKMapView mapView, MKUserTrackingMode mode, bool animated);
 
-		[iOS (7, 0), Export ("mapView:rendererForOverlay:"), DelegateName ("MKRendererForOverlayDelegate"), DefaultValue (null)]
+		[Export ("mapView:rendererForOverlay:"), DelegateName ("MKRendererForOverlayDelegate"), DefaultValue (null)]
 		MKOverlayRenderer OverlayRenderer (MKMapView mapView, IMKOverlay overlay);
 
-		[iOS (7, 0), Export ("mapView:didAddOverlayRenderers:"), EventArgs ("MKDidAddOverlayRenderers")]
+		[Export ("mapView:didAddOverlayRenderers:"), EventArgs ("MKDidAddOverlayRenderers")]
 		void DidAddOverlayRenderers (MKMapView mapView, MKOverlayRenderer [] renderers);
 
-		[iOS (7, 0), Export ("mapViewWillStartRenderingMap:")]
+		[Export ("mapViewWillStartRenderingMap:")]
 		void WillStartRenderingMap (MKMapView mapView);
 
-		[iOS (7, 0), Export ("mapViewDidFinishRenderingMap:fullyRendered:"), EventArgs ("MKDidFinishRenderingMap")]
+		[Export ("mapViewDidFinishRenderingMap:fullyRendered:"), EventArgs ("MKDidFinishRenderingMap")]
 		void DidFinishRenderingMap (MKMapView mapView, bool fullyRendered);
 
 		[TV (11, 0)]
@@ -1416,7 +1414,7 @@ namespace MapKit {
 
 	[NoWatch]
 	[TV (9, 2)]
-	[iOS (7, 0), BaseType (typeof (MKOverlayPathRenderer))]
+	[BaseType (typeof (MKOverlayPathRenderer))]
 	[Mac (10, 9)]
 	partial interface MKCircleRenderer {
 
@@ -1439,7 +1437,7 @@ namespace MapKit {
 
 	[NoWatch]
 	[TV (9, 2)]
-	[iOS (7, 0), BaseType (typeof (NSObject))]
+	[BaseType (typeof (NSObject))]
 	[Mac (10, 9)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: Cannot initialize MKDirections with nil request
 	partial interface MKDirections {
@@ -1469,7 +1467,7 @@ namespace MapKit {
 
 	[NoWatch]
 	[TV (9, 2)]
-	[iOS (7, 0), BaseType (typeof (NSObject))]
+	[BaseType (typeof (NSObject))]
 	[Mac (10, 9)]
 	partial interface MKETAResponse {
 		[Export ("source")]
@@ -1501,7 +1499,7 @@ namespace MapKit {
 
 	[NoWatch]
 	[TV (9, 2)]
-	[iOS (7, 0), BaseType (typeof (NSObject))]
+	[BaseType (typeof (NSObject))]
 	[Mac (10, 9)]
 	partial interface MKDirectionsResponse {
 
@@ -1517,7 +1515,7 @@ namespace MapKit {
 
 	[NoWatch]
 	[TV (9, 2)]
-	[iOS (7, 0), BaseType (typeof (NSObject))]
+	[BaseType (typeof (NSObject))]
 	[Mac (10, 9)]
 	partial interface MKRoute {
 
@@ -1553,7 +1551,7 @@ namespace MapKit {
 
 	[NoWatch]
 	[TV (9, 2)]
-	[iOS (7, 0), BaseType (typeof (NSObject))]
+	[BaseType (typeof (NSObject))]
 	[Mac (10, 9)]
 	partial interface MKRouteStep {
 
@@ -1575,7 +1573,7 @@ namespace MapKit {
 	}
 
 	[TV (9, 2)]
-	[iOS (7, 0), BaseType (typeof (NSFormatter))]
+	[BaseType (typeof (NSFormatter))]
 	[Mac (10, 9)]
 	partial interface MKDistanceFormatter {
 
@@ -1598,7 +1596,7 @@ namespace MapKit {
 
 	[NoWatch]
 	[TV (9, 2)]
-	[iOS (7, 0), BaseType (typeof (MKPolyline))]
+	[BaseType (typeof (MKPolyline))]
 	[Mac (10, 9)]
 	partial interface MKGeodesicPolyline {
 
@@ -1613,7 +1611,7 @@ namespace MapKit {
 
 	[NoWatch]
 	[TV (9, 2)]
-	[iOS (7, 0), BaseType (typeof (NSObject))]
+	[BaseType (typeof (NSObject))]
 	[Mac (10, 9)]
 	partial interface MKMapCamera : NSCopying, NSSecureCoding {
 
@@ -1656,7 +1654,7 @@ namespace MapKit {
 
 	[NoWatch]
 	[TV (9, 2)]
-	[iOS (7, 0), BaseType (typeof (NSObject))]
+	[BaseType (typeof (NSObject))]
 	[Mac (10, 9)]
 	partial interface MKMapSnapshot {
 
@@ -1680,7 +1678,7 @@ namespace MapKit {
 
 	[NoWatch]
 	[TV (9, 2)]
-	[iOS (7, 0), BaseType (typeof (NSObject))]
+	[BaseType (typeof (NSObject))]
 	[Mac (10, 9)]
 	partial interface MKMapSnapshotOptions : NSCopying {
 
@@ -1733,7 +1731,7 @@ namespace MapKit {
 
 	[NoWatch]
 	[TV (9, 2)]
-	[iOS (7, 0), BaseType (typeof (NSObject))]
+	[BaseType (typeof (NSObject))]
 	[Mac (10, 9)]
 	partial interface MKMapSnapshotter {
 
@@ -1760,7 +1758,7 @@ namespace MapKit {
 
 	[NoWatch]
 	[TV (9, 2)]
-	[iOS (7, 0), BaseType (typeof (MKOverlayRenderer))]
+	[BaseType (typeof (MKOverlayRenderer))]
 	[Mac (10, 9)]
 	[ThreadSafe]
 	partial interface MKOverlayPathRenderer {
@@ -1824,7 +1822,7 @@ namespace MapKit {
 
 	[NoWatch]
 	[TV (9, 2)]
-	[iOS (7, 0), BaseType (typeof (NSObject))]
+	[BaseType (typeof (NSObject))]
 	[Mac (10, 9)]
 	partial interface MKOverlayRenderer {
 
@@ -1880,7 +1878,7 @@ namespace MapKit {
 
 	[NoWatch]
 	[TV (9, 2)]
-	[iOS (7, 0), BaseType (typeof (MKOverlayPathRenderer))]
+	[BaseType (typeof (MKOverlayPathRenderer))]
 	[Mac (10, 9)]
 	partial interface MKPolygonRenderer {
 
@@ -1903,7 +1901,7 @@ namespace MapKit {
 
 	[NoWatch]
 	[TV (9, 2)]
-	[iOS (7, 0), BaseType (typeof (MKOverlayPathRenderer))]
+	[BaseType (typeof (MKOverlayPathRenderer))]
 	[Mac (10, 9)]
 	partial interface MKPolylineRenderer {
 
@@ -1944,7 +1942,7 @@ namespace MapKit {
 	[ThreadSafe]
 	[TV (9, 2)]
 	[Mac (10, 9)]
-	[iOS (7, 0), BaseType (typeof (NSObject))]
+	[BaseType (typeof (NSObject))]
 	partial interface MKTileOverlay : MKOverlay {
 		[DesignatedInitializer]
 		[Export ("initWithURLTemplate:")]
@@ -1985,7 +1983,7 @@ namespace MapKit {
 
 	[NoWatch]
 	[TV (9, 2)]
-	[iOS (7, 0), BaseType (typeof (MKOverlayRenderer))]
+	[BaseType (typeof (MKOverlayRenderer))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: Expected a MKTileOverlay but got (null)
 	[DisableDefaultCtor] // throw in iOS8 beta 1 ^
 	[Mac (10, 9)]

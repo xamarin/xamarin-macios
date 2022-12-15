@@ -159,8 +159,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public NSString WeakTextEffect {
 			get {
@@ -175,8 +173,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public NSTextEffect TextEffect {
 			get {
@@ -201,8 +197,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public NSTextAttachment TextAttachment {
 			get {
@@ -218,8 +212,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public NSUrl Link {
 			get {
@@ -234,8 +226,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public float? BaselineOffset {
 			get {
@@ -250,8 +240,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public UIColor StrikethroughColor {
 			get {
@@ -266,8 +254,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public UIColor UnderlineColor {
 			get {
@@ -283,8 +269,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public float? Obliqueness {
 			get {
@@ -299,8 +283,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public float? Expansion {
 			get {
@@ -315,8 +297,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public NSNumber [] WritingDirectionInt {
 			get {
