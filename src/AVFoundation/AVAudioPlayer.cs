@@ -38,24 +38,35 @@ namespace AVFoundation {
 				IntPtr errhandle;
 				IntPtr ptrtohandle = (IntPtr) (&errhandle);
 
-				var ap = new AVAudioPlayer (url, ptrtohandle);
-				if (ap.Handle == IntPtr.Zero) {
-					error = Runtime.GetNSObject<NSError> (errhandle);
+				try {
+					var ap = new AVAudioPlayer(url, ptrtohandle);
+					if (ap.Handle == IntPtr.Zero) {
+						error = Runtime.GetNSObject<NSError>(errhandle);
+						return null;
+					}
+					else
+						error = null;
+
+					return ap;
+				} catch {
+					error = Runtime.GetNSObject<NSError>(errhandle);
 					return null;
-				} else
-					error = null;
-				return ap;
+				}
 			}
 		}
 
 		public static AVAudioPlayer? FromUrl (NSUrl url)
 		{
 			unsafe {
-				var ap = new AVAudioPlayer (url, IntPtr.Zero);
-				if (ap.Handle == IntPtr.Zero)
-					return null;
+				try {
+					var ap = new AVAudioPlayer(url, IntPtr.Zero);
+					if (ap.Handle == IntPtr.Zero)
+						return null;
 
-				return ap;
+					return ap;
+				} catch {
+					return null;
+				}
 			}
 		}
 
@@ -63,26 +74,37 @@ namespace AVFoundation {
 		{
 			unsafe {
 				IntPtr errhandle;
-				IntPtr ptrtohandle = (IntPtr) (&errhandle);
+				IntPtr ptrtohandle = (IntPtr)(&errhandle);
 
-				var ap = new AVAudioPlayer (data, ptrtohandle);
-				if (ap.Handle == IntPtr.Zero) {
-					error = Runtime.GetNSObject<NSError> (errhandle);
+				try {
+					var ap = new AVAudioPlayer(data, ptrtohandle);
+					if (ap.Handle == IntPtr.Zero) {
+						error = Runtime.GetNSObject<NSError>(errhandle);
+						return null;
+					}
+					else
+						error = null;
+
+					return ap;
+				} catch {
+					error = Runtime.GetNSObject<NSError>(errhandle);
 					return null;
-				} else
-					error = null;
-				return ap;
+				}
 			}
 		}
 
 		public static AVAudioPlayer? FromData (NSData data)
 		{
 			unsafe {
-				var ap = new AVAudioPlayer (data, IntPtr.Zero);
-				if (ap.Handle == IntPtr.Zero)
-					return null;
+				try {
+					var ap = new AVAudioPlayer(data, IntPtr.Zero);
+					if (ap.Handle == IntPtr.Zero)
+						return null;
 
-				return ap;
+					return ap;
+				} catch {
+					return null;
+				}
 			}
 		}
 	}
