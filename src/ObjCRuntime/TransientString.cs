@@ -13,10 +13,32 @@ namespace ObjCRuntime {
 	// for you.
 	internal struct TransientString : IDisposable {
 		IntPtr ptr;
-		public TransientString (string? str)
+		public enum Encoding {
+			Auto = 0,
+			BStr,
+			Ansi, // aka LPStr
+			Unicode,
+		};
+
+
+		public TransientString (string? str, Encoding encoding = Encoding.Auto)
 		{
-			// the docs say when str is null the IntPtr will be 0
-			ptr = Marshal.StringToHGlobalAuto (str);
+			switch (encoding) {
+			case Encoding.Auto:
+				ptr = Marshal.StringToHGlobalAuto (str);
+				break;
+			case Encoding.BStr:
+				ptr = Marshal.StringToBSTR (str);
+				break;
+			case Encoding.Ansi:
+				ptr = Marshal.StringToHGlobalAnsi (str);
+				break;
+			case Encoding.Unicode:
+				ptr = Marshal.StringToHGlobalUni (str);
+				break;
+			default:
+				throw new ArgumentOutOfRangeException (nameof (encoding));
+			}
 		}
 
 		public void Dispose ()
