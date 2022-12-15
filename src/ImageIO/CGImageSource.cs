@@ -71,7 +71,6 @@ namespace ImageIO {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 		public bool ShouldCacheImmediately { get; set; }

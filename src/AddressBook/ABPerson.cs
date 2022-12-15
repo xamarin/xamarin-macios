@@ -696,8 +696,6 @@ namespace AddressBook {
 		[UnsupportedOSPlatform ("ios9.0")]
 		[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 		[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
-#else
-		[iOS (7, 0)]
 #endif
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static ABPersonCompositeNameFormat ABPersonGetCompositeNameFormatForRecord (IntPtr record);
@@ -709,8 +707,6 @@ namespace AddressBook {
 		[UnsupportedOSPlatform ("ios9.0")]
 		[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 		[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
-#else
-		[iOS (7, 0)]
 #endif
 		public static ABPersonCompositeNameFormat GetCompositeNameFormat (ABRecord? record)
 		{
@@ -724,8 +720,6 @@ namespace AddressBook {
 		[UnsupportedOSPlatform ("ios9.0")]
 		[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 		[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
-#else
-		[iOS (7, 0)]
 #endif
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCopyCompositeNameDelimiterForRecord (IntPtr record);
@@ -737,8 +731,6 @@ namespace AddressBook {
 		[UnsupportedOSPlatform ("ios9.0")]
 		[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 		[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
-#else
-		[iOS (7, 0)]
 #endif
 		public static string? GetCompositeNameDelimiter (ABRecord? record)
 		{

@@ -24,8 +24,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* __nullable CFDictionaryRef */ SecPolicyCopyProperties (IntPtr /* SecPolicyRef */ policyRef);
@@ -35,8 +33,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public NSDictionary? GetProperties ()
 		{
@@ -62,7 +58,6 @@ namespace Security {
 		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10, 9)]
-		[iOS (7, 0)]
 #endif
 		static public SecPolicy? CreateRevocationPolicy (SecRevocation revocationFlags)
 		{
@@ -77,7 +72,6 @@ namespace Security {
 		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10, 9)]
-		[iOS (7, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* __nullable SecPolicyRef */ SecPolicyCreateWithProperties (IntPtr /* CFTypeRef */ policyIdentifier, IntPtr /* CFDictionaryRef */ properties);
@@ -89,7 +83,6 @@ namespace Security {
 		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10, 9)]
-		[iOS (7, 0)]
 #endif
 		static public SecPolicy CreatePolicy (NSString policyIdentifier, NSDictionary properties)
 		{

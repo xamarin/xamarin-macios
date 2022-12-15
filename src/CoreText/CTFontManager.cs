@@ -434,8 +434,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CFArrayRef */ IntPtr CTFontManagerCreateFontDescriptorsFromURL (/* CFURLRef */ IntPtr fileURL);
@@ -445,8 +443,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public static CTFontDescriptor [] GetFonts (NSUrl url)
 		{
@@ -532,8 +528,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		static NSString? RegisteredFontsChangedNotification {
 			get {
@@ -698,7 +692,6 @@ namespace CoreText {
 		}
 #endif
 
-		// [Watch (2,0), TV (9,0), Mac (10,7), iOS (7,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern unsafe /* CTFontDescriptorRef _Nullable */ IntPtr CTFontManagerCreateFontDescriptorFromData (/* CFDataRef */ IntPtr data);
 

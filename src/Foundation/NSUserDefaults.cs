@@ -32,8 +32,6 @@ namespace Foundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public NSUserDefaults (string name, NSUserDefaultsType type)
 		{

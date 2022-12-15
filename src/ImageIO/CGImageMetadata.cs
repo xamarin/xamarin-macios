@@ -27,8 +27,6 @@ namespace ImageIO {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[iOS (7, 0)]
 #endif
 	public partial class CGImageMetadataEnumerateOptions {
 
@@ -54,8 +52,6 @@ namespace ImageIO {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[iOS (7, 0)]
 #endif
 	public partial class CGImageMetadata : NativeObject {
 #if !NET

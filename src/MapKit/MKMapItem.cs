@@ -56,8 +56,6 @@ namespace MapKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public MKMapCamera? Camera { get; set; }
 #endif

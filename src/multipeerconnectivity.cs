@@ -25,7 +25,6 @@ using NativeHandle = System.IntPtr;
 namespace MultipeerConnectivity {
 
 	[TV (10, 0)]
-	[iOS (7, 0)]
 	[Mac (10, 10)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[MCPeerID init]: unrecognized selector sent to instance 0x7d721090
@@ -42,7 +41,6 @@ namespace MultipeerConnectivity {
 	delegate void MCSessionNearbyConnectionDataForPeerCompletionHandler (NSData connectionData, NSError error);
 
 	[TV (10, 0)]
-	[iOS (7, 0)]
 	[Mac (10, 10)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash when calling `description` selector
@@ -115,7 +113,6 @@ namespace MultipeerConnectivity {
 	}
 
 	[TV (10, 0)]
-	[iOS (7, 0)]
 	[Mac (10, 10)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -146,7 +143,6 @@ namespace MultipeerConnectivity {
 	}
 
 	[TV (10, 0)]
-	[iOS (7, 0)]
 	[Mac (10, 10)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException -[MCNearbyServiceAdvertiser init]: unrecognized selector sent to instance 0x19195e50
@@ -183,7 +179,6 @@ namespace MultipeerConnectivity {
 	delegate void MCNearbyServiceAdvertiserInvitationHandler (bool accept, [NullAllowed] MCSession session);
 
 	[TV (10, 0)]
-	[iOS (7, 0)]
 	[Mac (10, 10)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -199,7 +194,6 @@ namespace MultipeerConnectivity {
 	}
 
 	[TV (10, 0)]
-	[iOS (7, 0)]
 	[Mac (10, 10)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException -[MCNearbyServiceBrowser init]: unrecognized selector sent to instance 0x15519a70
@@ -233,7 +227,6 @@ namespace MultipeerConnectivity {
 	}
 
 	[TV (10, 0)]
-	[iOS (7, 0)]
 	[Mac (10, 10)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -256,7 +249,6 @@ namespace MultipeerConnectivity {
 
 	[Mac (10, 10)]
 	[TV (10, 0)]
-	[iOS (7, 0)]
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor] // NSInvalidArgumentException -[MCPeerPickerViewController initWithNibName:bundle:]: unrecognized selector sent to instance 0x15517b90
 	partial interface MCBrowserViewController : MCNearbyServiceBrowserDelegate {
@@ -295,7 +287,6 @@ namespace MultipeerConnectivity {
 	}
 
 	[TV (10, 0)]
-	[iOS (7, 0)]
 	[Mac (10, 10)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -317,7 +308,6 @@ namespace MultipeerConnectivity {
 	}
 
 	[TV (10, 0)]
-	[iOS (7, 0)]
 	[Mac (10, 10)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[MCAdvertiserAssistant init]: unrecognized selector sent to instance 0x7ea7fa40
@@ -352,7 +342,6 @@ namespace MultipeerConnectivity {
 	}
 
 	[TV (10, 0)]
-	[iOS (7, 0)]
 	[Mac (10, 10)]
 	[BaseType (typeof (NSObject))]
 	[Model]

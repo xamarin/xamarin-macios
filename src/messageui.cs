@@ -91,27 +91,22 @@ namespace MessageUI {
 		[Export ("canSendText")]
 		bool CanSendText { get; }
 
-		[iOS (7, 0)]
 		[Static]
 		[Export ("canSendAttachments")]
 		bool CanSendAttachments { get; }
 
-		[iOS (7, 0)]
 		[Static]
 		[Export ("canSendSubject")]
 		bool CanSendSubject { get; }
 
-		[iOS (7, 0)]
 		[Static]
 		[Export ("isSupportedAttachmentUTI:")]
 		bool IsSupportedAttachment (string uti);
 
-		[iOS (7, 0)]
 		[NullAllowed]
 		[Export ("subject", ArgumentSemantic.Copy)]
 		string Subject { get; set; }
 
-		[iOS (7, 0)]
 		[return: NullAllowed]
 		[Export ("attachments")]
 		NSDictionary [] GetAttachments ();
@@ -120,11 +115,9 @@ namespace MessageUI {
 		[NullAllowed, Export ("message", ArgumentSemantic.Copy)]
 		MSMessage Message { get; set; }
 
-		[iOS (7, 0)]
 		[Export ("addAttachmentURL:withAlternateFilename:")]
 		bool AddAttachment (NSUrl attachmentURL, [NullAllowed] string alternateFilename);
 
-		[iOS (7, 0)]
 		[Export ("addAttachmentData:typeIdentifier:filename:")]
 		bool AddAttachment (NSData attachmentData, string uti, string filename);
 
@@ -132,7 +125,6 @@ namespace MessageUI {
 		[Export ("insertCollaborationItemProvider:")]
 		bool InsertCollaboration (NSItemProvider itemProvider);
 
-		[iOS (7, 0)]
 		[Export ("disableUserAttachments")]
 		void DisableUserAttachments ();
 
@@ -143,11 +135,9 @@ namespace MessageUI {
 		[Field ("MFMessageComposeViewControllerTextMessageAvailabilityKey")]
 		NSString TextMessageAvailabilityKey { get; }
 
-		[iOS (7, 0)]
 		[Field ("MFMessageComposeViewControllerAttachmentAlternateFilename")]
 		NSString AttachmentAlternateFilename { get; }
 
-		[iOS (7, 0)]
 		[Field ("MFMessageComposeViewControllerAttachmentURL")]
 		NSString AttachmentURL { get; }
 	}

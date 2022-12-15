@@ -61,7 +61,6 @@ namespace CoreData {
 	[NoWatch]
 	[NoTV]
 	[Native] // NUInteger -> NSPersistentStoreCoordinator.h
-	[iOS (7, 0)]
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Please see the release notes and Core Data documentation.")]
 	[Mac (10, 9)]
 	[Deprecated (PlatformName.MacOSX, 10, 12, message: "Please see the release notes and Core Data documentation.")]
@@ -915,7 +914,7 @@ namespace CoreData {
 
 		// headers say this is introduced in 7.0,10.9 but Xcode 7 API diff
 		// indicates it's new in 9.0,10.11... going by the header value...
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("hasPersistentChangedValues")]
 		bool HasPersistentChangedValues { get; }
 
@@ -1983,7 +1982,6 @@ namespace CoreData {
 		[return: NullAllowed]
 		NSDictionary MetadataForPersistentStoreOfType ([NullAllowed] NSString storeType, NSUrl url, out NSError error);
 
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 		[Static, Export ("metadataForPersistentStoreOfType:URL:options:error:")]
 		[return: NullAllowed]
@@ -1994,7 +1992,6 @@ namespace CoreData {
 		[Static, Export ("setMetadata:forPersistentStoreOfType:URL:error:")]
 		bool SetMetadata ([NullAllowed] NSDictionary metadata, [NullAllowed] NSString storeType, NSUrl url, out NSError error);
 
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 		[Static, Export ("setMetadata:forPersistentStoreOfType:URL:options:error:")]
 		bool SetMetadata ([NullAllowed] NSDictionary<NSString, NSObject> metadata, string storeType, NSUrl url, [NullAllowed] NSDictionary options, out NSError error);
@@ -2226,46 +2223,46 @@ namespace CoreData {
 
 		[NoWatch]
 		[NoTV]
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("NSPersistentStoreUbiquitousPeerTokenOption")]
 		NSString PersistentStoreUbiquitousPeerTokenOption { get; }
 
 		[NoWatch]
 		[NoTV]
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Static]
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Please see the release notes and Core Data documentation.")]
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Please see the release notes and Core Data documentation.")]
 		[Export ("removeUbiquitousContentAndPersistentStoreAtURL:options:error:")]
 		bool RemoveUbiquitousContentAndPersistentStore (NSUrl storeUrl, [NullAllowed] NSDictionary options, out NSError error);
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Notification (typeof (NSPersistentStoreCoordinatorStoreChangeEventArgs))]
 		[Field ("NSPersistentStoreCoordinatorStoresWillChangeNotification")]
 		NSString StoresWillChangeNotification { get; }
 
 		[NoWatch]
 		[NoTV]
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("NSPersistentStoreRebuildFromUbiquitousContentOption")]
 		NSString RebuildFromUbiquitousContentOption { get; }
 
 		[NoWatch]
 		[NoTV]
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("NSPersistentStoreRemoveUbiquitousMetadataOption")]
 		NSString RemoveUbiquitousMetadataOption { get; }
 
 		[NoWatch]
 		[NoTV]
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("NSPersistentStoreUbiquitousContainerIdentifierKey")]
 		[Obsolete ("Use 'UbiquitousContainerIdentifierKey' instead.")]
 		NSString eUbiquitousContainerIdentifierKey { get; }
 
 		[NoWatch]
 		[NoTV]
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("NSPersistentStoreUbiquitousContainerIdentifierKey")]
 		NSString UbiquitousContainerIdentifierKey { get; }
 
@@ -2310,7 +2307,6 @@ namespace CoreData {
 		[NoWatch]
 		[NoTV]
 		[Export ("NSPersistentStoreUbiquitousTransitionTypeKey")]
-		[iOS (7, 0)]
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Please see the release notes and Core Data documentation.")]
 		NSPersistentStoreUbiquitousTransitionType EventType { get; }
 	}

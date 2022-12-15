@@ -269,8 +269,6 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public static string? CurrentQueueLabel {
 			get {
