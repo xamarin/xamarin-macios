@@ -9,6 +9,8 @@ using Xamarin.Utils;
 using MonoTouch;
 #endif
 
+#nullable enable
+
 namespace Xamarin {
 	static class SdkVersions {
 		public const string Xcode = "14.1";
