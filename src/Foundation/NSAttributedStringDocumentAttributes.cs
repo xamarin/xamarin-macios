@@ -156,7 +156,7 @@ namespace Foundation {
 				}
 
 				if (documentType is not null)
-					WeakDocumentType= documentType;
+					WeakDocumentType = documentType;
 			}
 		}
 
