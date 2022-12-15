@@ -68,13 +68,14 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		extern static IntPtr nw_content_context_create (string contextIdentifier);
+		extern static IntPtr nw_content_context_create (IntPtr contextIdentifier);
 
 		public NWContentContext (string contextIdentifier)
 		{
 			if (contextIdentifier is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (contextIdentifier));
-			InitializeHandle (nw_content_context_create (contextIdentifier));
+			using var contextIdentifierPtr = new TransientString (contextIdentifier);
+			InitializeHandle (nw_content_context_create (contextIdentifierPtr));
 		}
 
 		[DllImport (Constants.NetworkLibrary)]

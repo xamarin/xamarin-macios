@@ -50,23 +50,26 @@ namespace Network {
 		public NWWebSocketOptions (NWWebSocketVersion version) : base (nw_ws_create_options (version), true) { }
 
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-		static extern void nw_ws_options_add_additional_header (OS_nw_protocol_options options, string name, string value);
+		static extern void nw_ws_options_add_additional_header (OS_nw_protocol_options options, IntPtr name, IntPtr value);
 
 		public void SetHeader (string header, string value)
 		{
 			if (header is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (header));
-			nw_ws_options_add_additional_header (GetCheckedHandle (), header, value);
+			using var headerPtr = new TransientString (header);
+			using var valuePtr = new TransientString (value);
+			nw_ws_options_add_additional_header (GetCheckedHandle (), headerPtr, valuePtr);
 		}
 
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-		static extern void nw_ws_options_add_subprotocol (OS_nw_protocol_options options, string subprotocol);
+		static extern void nw_ws_options_add_subprotocol (OS_nw_protocol_options options, IntPtr subprotocol);
 
 		public void AddSubprotocol (string subprotocol)
 		{
 			if (subprotocol is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (subprotocol));
-			nw_ws_options_add_subprotocol (GetCheckedHandle (), subprotocol);
+			using var subprotocolPtr = new TransientString (subprotocol);
+			nw_ws_options_add_subprotocol (GetCheckedHandle (), subprotocolPtr);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]

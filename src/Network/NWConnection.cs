@@ -530,7 +530,13 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		extern static string nw_connection_copy_description (IntPtr handle);
+		extern static IntPtr nw_connection_copy_description_ptr (IntPtr handle);
+
+		static string nw_connection_copy_description (IntPtr handle)
+		{
+			var ptr = nw_connection_copy_description_ptr (handle);
+			return TransientString.ToStringAndFree (ptr)!;
+		}
 
 		public string Description => nw_connection_copy_description (GetCheckedHandle ());
 

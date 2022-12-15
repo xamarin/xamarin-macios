@@ -140,7 +140,7 @@ namespace Network {
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe OS_nw_protocol_definition nw_framer_create_definition (string identifier, NWFramerCreateFlags flags, ref BlockLiteral start_handler);
+		static extern unsafe OS_nw_protocol_definition nw_framer_create_definition (IntPtr identifier, NWFramerCreateFlags flags, ref BlockLiteral start_handler);
 		delegate NWFramerStartResult nw_framer_create_definition_t (IntPtr block, IntPtr framer);
 		static nw_framer_create_definition_t static_CreateFramerHandler = TrampolineCreateFramerHandler;
 
@@ -172,7 +172,8 @@ namespace Network {
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_CreateFramerHandler, startCallback);
 			try {
-				return new NWProtocolDefinition (nw_framer_create_definition (identifier, flags, ref block_handler), owns: true);
+				using var identifierPtr = new TransientString (identifier);
+				return new NWProtocolDefinition (nw_framer_create_definition (identifierPtr, flags, ref block_handler), owns: true);
 			} finally {
 				block_handler.CleanupBlock ();
 			}
