@@ -219,8 +219,6 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public double? MaxKeyFrameIntervalDuration {
 			get {
@@ -237,8 +235,6 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public bool? AllowFrameReordering {
 			get {
@@ -254,8 +250,6 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public AVVideoH264EntropyMode? EntropyEncoding {
 			get {
@@ -297,8 +291,6 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public float? ExpectedSourceFrameRate {
 			get {
@@ -315,8 +307,6 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public float? AverageNonDroppableFrameRate {
 			get {

@@ -280,8 +280,8 @@ namespace Cecil.Tests {
 								Console.WriteLine ($"{GetLocation (intptrCtor)}{msg}");
 								failures.Add (msg);
 							} else {
-								var msg = $"{type}: private (IntPtr) constructor found. It should probably not exist.";
-								Console.WriteLine ($"{GetLocation (intptrCtor)}{msg}");
+								var msg = $"{type}: private (IntPtr) constructor found. It should probably not exist. If it should, add an exception to this test.";
+								failures.Add ($"{GetLocation (intptrCtor)}{msg}");
 							}
 						}
 
@@ -320,6 +320,7 @@ namespace Cecil.Tests {
 						case "CFNotificationCenter": // needs a custom ctor implementation
 						case "AUGraph": // needs a custom ctor implementation
 						case "ABMultiValue`1": // has a custom ctor implementation
+						case "NWPathMonitor": // has a custom ctor implementation
 							skipILVerification = true;
 							break;
 						}

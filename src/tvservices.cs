@@ -12,7 +12,6 @@ using NativeHandle = System.IntPtr;
 
 namespace TVServices {
 
-	[TV (9, 0)]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'TVTopShelfContentProvider' instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -28,7 +27,6 @@ namespace TVServices {
 		NativeHandle Constructor (string identifier, [NullAllowed] TVContentIdentifier container);
 	}
 
-	[TV (9, 0)]
 	[BaseType (typeof (NSObject))]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'TVTopShelfItem' instead.")]
 	[DisableDefaultCtor]
@@ -90,7 +88,6 @@ namespace TVServices {
 		void SetImageUrl ([NullAllowed] NSUrl aUrl, TVContentItemImageTrait traits);
 	}
 
-	[TV (9, 0)]
 	[Protocol]
 	interface TVTopShelfProvider {
 		[Abstract]
@@ -102,7 +99,6 @@ namespace TVServices {
 		TVContentItem [] TopShelfItems { get; }
 	}
 
-	[TV (9, 0)]
 	[Static]
 	interface TVTopShelfItems {
 		[Notification]

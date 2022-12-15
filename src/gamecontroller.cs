@@ -34,9 +34,7 @@ using NativeHandle = System.IntPtr;
 
 namespace GameController {
 
-	[iOS (7, 0)]
 	[Mac (10, 9)]
-	[TV (9, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // The GCControllerElement class is never instantiated directly.
 	partial interface GCControllerElement {
@@ -88,7 +86,6 @@ namespace GameController {
 
 	delegate void GCControllerAxisValueChangedHandler (GCControllerAxisInput axis, float /* float, not CGFloat */ value);
 
-	[iOS (7, 0)]
 	[Mac (10, 9)]
 	[BaseType (typeof (GCControllerElement))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
@@ -111,7 +108,7 @@ namespace GameController {
 	delegate void GCControllerButtonValueChanged (GCControllerButtonInput button, float /* float, not CGFloat */ buttonValue, bool pressed);
 	delegate void GCControllerButtonTouchedChanged (GCControllerButtonInput button, float value, bool pressed, bool touched);
 
-	[iOS (7, 0), Mac (10, 9)]
+	[Mac (10, 9)]
 	[BaseType (typeof (GCControllerElement))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
 	partial interface GCControllerButtonInput {
@@ -163,7 +160,6 @@ namespace GameController {
 
 	delegate void GCControllerDirectionPadValueChangedHandler (GCControllerDirectionPad dpad, float /* float, not CGFloat */ xValue, float /* float, not CGFloat */ yValue);
 
-	[iOS (7, 0)]
 	[Mac (10, 9)]
 	[BaseType (typeof (GCControllerElement))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
@@ -202,7 +198,6 @@ namespace GameController {
 	[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'GCExtendedGamepad' instead.")]
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'GCExtendedGamepad' instead.")]
 	[Deprecated (PlatformName.TvOS, 10, 0, message: "Use 'GCExtendedGamepad' instead.")]
-	[iOS (7, 0)]
 	[Mac (10, 9)]
 	[BaseType (typeof (GCPhysicalInputProfile))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
@@ -243,7 +238,6 @@ namespace GameController {
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCExtendedGamepad' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCExtendedGamepad' instead.")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCExtendedGamepad' instead.")]
-	[iOS (7, 0)]
 	[Mac (10, 9)]
 	[BaseType (typeof (GCGamepad))]
 	[DisableDefaultCtor]
@@ -261,7 +255,6 @@ namespace GameController {
 
 	delegate void GCExtendedGamepadValueChangedHandler (GCExtendedGamepad gamepad, GCControllerElement element);
 
-	[iOS (7, 0)]
 	[Mac (10, 9)]
 	[BaseType (typeof (GCPhysicalInputProfile))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
@@ -339,7 +332,6 @@ namespace GameController {
 		GCControllerButtonInput ButtonHome { get; }
 	}
 
-	[iOS (7, 0)]
 	[Mac (10, 9)]
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
@@ -365,7 +357,7 @@ namespace GameController {
 		GCExtendedGamepadSnapshotDataVersion DataVersion { get; }
 	}
 
-	[iOS (7, 0), Mac (10, 9)]
+	[Mac (10, 9)]
 	[BaseType (typeof (NSObject))]
 	partial interface GCController : GCDevice {
 
@@ -606,12 +598,10 @@ namespace GameController {
 
 	[Mac (10, 11)]
 	[iOS (10, 0)]
-	[TV (9, 0)]
 	delegate void GCMicroGamepadValueChangedHandler (GCMicroGamepad gamepad, GCControllerElement element);
 
 	[Mac (10, 11)]
 	[iOS (10, 0)]
-	[TV (9, 0)]
 	[BaseType (typeof (GCPhysicalInputProfile))]
 	[DisableDefaultCtor]
 	interface GCMicroGamepad {
@@ -656,7 +646,6 @@ namespace GameController {
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.Capture()' instead.")]
 	[Mac (10, 12)]
 	[iOS (10, 0)]
-	[TV (9, 0)]
 	[BaseType (typeof (GCMicroGamepad))]
 	interface GCMicroGamepadSnapshot {
 		[Export ("snapshotData", ArgumentSemantic.Copy)]
@@ -678,7 +667,6 @@ namespace GameController {
 
 	[Mac (10, 12)]
 	[iOS (10, 0)]
-	[TV (9, 0)]
 	[BaseType (typeof (UIViewController))]
 	interface GCEventViewController {
 

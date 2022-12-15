@@ -155,7 +155,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 #if NET
@@ -244,7 +243,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 		public NSError? UbiquitousItemDownloadingError {
@@ -259,7 +257,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 		public NSError? UbiquitousItemUploadingError {
