@@ -231,16 +231,13 @@ namespace CoreMotion {
 	delegate void CMMagnetometerHandler (CMMagnetometerData magnetometerData, NSError error);
 
 	[NoWatch]
-	[iOS (7, 0)]
 	delegate void CMStepQueryHandler (nint numberOfSteps, NSError error);
 
 	[NoWatch]
-	[iOS (7, 0)]
 	delegate void CMStepUpdateHandler (nint numberOfSteps, NSDate timestamp, NSError error);
 
 	[NoMac]
 	[NoWatch]
-	[iOS (7, 0)]
 	[BaseType (typeof (NSObject))]
 	[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'CMPedometer' instead.")]
 	interface CMStepCounter {
@@ -362,15 +359,12 @@ namespace CoreMotion {
 	}
 
 	[NoMac]
-	[iOS (7, 0)]
 	delegate void CMMotionActivityHandler (CMMotionActivity activity);
 
 	[NoMac]
-	[iOS (7, 0)]
 	delegate void CMMotionActivityQueryHandler (CMMotionActivity [] activities, NSError error);
 
 	[NoMac]
-	[iOS (7, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CMMotionActivityManager {
 
@@ -395,7 +389,6 @@ namespace CoreMotion {
 	}
 
 	[NoMac]
-	[iOS (7, 0)]
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // <quote>You do not create instances of this class yourself.</quote>
 	interface CMMotionActivity : NSCopying, NSSecureCoding {

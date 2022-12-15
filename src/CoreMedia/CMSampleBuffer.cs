@@ -656,7 +656,6 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
@@ -668,7 +667,6 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 		public CMSampleBufferError CopyPCMDataIntoAudioBufferList (int frameOffset, int numFrames, AudioBuffers bufferList)

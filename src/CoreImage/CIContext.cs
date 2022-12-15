@@ -125,8 +125,6 @@ namespace CoreImage {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public bool? OutputPremultiplied {
 			get {

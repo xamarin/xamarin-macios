@@ -8,7 +8,7 @@ namespace MediaAccessibility {
 #if NET
 	[Static]
 	interface MACaptionAppearance {
-		[iOS (7,0)][Mac (10,9)]
+		[Mac (10,9)]
 		[Notification]
 		[Field ("kMACaptionAppearanceSettingsChangedNotification")]
 		NSString SettingsChangedNotification { get; }
@@ -26,7 +26,6 @@ namespace MediaAccessibility {
 
 	[Static]
 	interface MAMediaCharacteristic {
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 		[Field ("MAMediaCharacteristicDescribesMusicAndSoundForAccessibility")]
 		NSString DescribesMusicAndSoundForAccessibility { get; }
@@ -36,7 +35,6 @@ namespace MediaAccessibility {
 		[Field ("MAMediaCharacteristicDescribesVideoForAccessibility")]
 		NSString DescribesVideoForAccessibility { get; }
 
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 		[Field ("MAMediaCharacteristicTranscribesSpokenDialogForAccessibility")]
 		NSString TranscribesSpokenDialogForAccessibility { get; }
