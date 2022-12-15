@@ -53,8 +53,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public static UIFont PreferredHeadline {
 			get {
@@ -66,8 +64,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public static UIFont PreferredBody {
 			get {
@@ -79,8 +75,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public static UIFont PreferredSubheadline {
 			get {
@@ -92,8 +86,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public static UIFont PreferredFootnote {
 			get {
@@ -105,8 +97,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public static UIFont PreferredCaption1 {
 			get {
@@ -118,8 +108,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public static UIFont PreferredCaption2 {
 			get {
@@ -272,8 +260,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public static UIFont GetPreferredFontForTextStyle (NSString uiFontTextStyle)
 		{
@@ -285,8 +271,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public static UIFont GetPreferredFontForTextStyle (UIFontTextStyle uiFontTextStyle)
 		{
@@ -298,8 +282,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public static UIFont GetPreferredFontForTextStyle (NSString uiFontTextStyle, UITraitCollection traitCollection)
 		{
@@ -311,8 +293,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public static UIFont GetPreferredFontForTextStyle (UIFontTextStyle uiFontTextStyle, UITraitCollection traitCollection)
 		{
@@ -324,8 +304,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public static UIFont FromDescriptor (UIFontDescriptor descriptor, nfloat pointSize)
 		{

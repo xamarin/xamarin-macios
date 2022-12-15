@@ -19,7 +19,7 @@ namespace JavaScriptCore {
 
 	delegate void JSContextExceptionHandler (JSContext context, JSValue exception);
 
-	[Mac (10, 9), iOS (7, 0)]
+	[Mac (10, 9)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	partial interface JSContext {
@@ -93,7 +93,7 @@ namespace JavaScriptCore {
 	[TV (13, 0)]
 	delegate void JSPromiseCreationExecutor (JSValue resolve, JSValue rejected);
 
-	[Mac (10, 9), iOS (7, 0)]
+	[Mac (10, 9)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // invalid (null) Handle is returned
 	partial interface JSValue {
@@ -319,7 +319,7 @@ namespace JavaScriptCore {
 		bool IsSymbol { get; }
 	}
 
-	[Mac (10, 9), iOS (7, 0)]
+	[Mac (10, 9)]
 	[BaseType (typeof (NSObject))]
 #if XAMCORE_3_0
 	[DisableDefaultCtor]
@@ -339,7 +339,7 @@ namespace JavaScriptCore {
 		JSValue Value { get; }
 	}
 
-	[Mac (10, 9), iOS (7, 0)]
+	[Mac (10, 9)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	partial interface JSVirtualMachine {
@@ -354,7 +354,7 @@ namespace JavaScriptCore {
 		void RemoveManagedReference (NSObject obj, NSObject owner);
 	}
 
-	[Mac (10, 9), iOS (7, 0)]
+	[Mac (10, 9)]
 	[Static]
 	interface JSPropertyDescriptorKeys {
 
@@ -377,7 +377,7 @@ namespace JavaScriptCore {
 		NSString Set { get; }
 	}
 
-	[Mac (10, 9), iOS (7, 0)]
+	[Mac (10, 9)]
 #if NET
 	[Protocol, Model]
 #else

@@ -337,17 +337,18 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		static extern /* OS_dispatch_data */ IntPtr sec_protocol_metadata_create_secret (/* OS_sec_protocol_metadata */ IntPtr metadata, /* size_t */ nuint label_len, /* const char*/ [MarshalAs (UnmanagedType.LPStr)] string label, /* size_t */ nuint exporter_length);
+		static extern /* OS_dispatch_data */ IntPtr sec_protocol_metadata_create_secret (/* OS_sec_protocol_metadata */ IntPtr metadata, /* size_t */ nuint label_len, /* const char*/ IntPtr label, /* size_t */ nuint exporter_length);
 
 		public DispatchData? CreateSecret (string label, nuint exporterLength)
 		{
 			if (label is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (label));
-			return CreateDispatchData (sec_protocol_metadata_create_secret (GetCheckedHandle (), (nuint) label.Length, label, exporterLength));
+			using var labelPtr = new TransientString (label, TransientString.Encoding.Ansi);
+			return CreateDispatchData (sec_protocol_metadata_create_secret (GetCheckedHandle (), (nuint) label.Length, labelPtr, exporterLength));
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		static unsafe extern /* OS_dispatch_data */ IntPtr sec_protocol_metadata_create_secret_with_context (/* OS_sec_protocol_metadata */ IntPtr metadata, /* size_t */ nuint label_len, /* const char*/ [MarshalAs (UnmanagedType.LPStr)] string label, /* size_t */  nuint context_len, byte* context, /* size_t */ nuint exporter_length);
+		static unsafe extern /* OS_dispatch_data */ IntPtr sec_protocol_metadata_create_secret_with_context (/* OS_sec_protocol_metadata */ IntPtr metadata, /* size_t */ nuint label_len, /* const char*/ IntPtr label, /* size_t */  nuint context_len, byte* context, /* size_t */ nuint exporter_length);
 
 		public unsafe DispatchData? CreateSecret (string label, byte [] context, nuint exporterLength)
 		{
@@ -355,8 +356,9 @@ namespace Security {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (label));
 			if (context is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
+			using var labelPtr = new TransientString (label, TransientString.Encoding.Ansi);
 			fixed (byte* p = context)
-				return CreateDispatchData (sec_protocol_metadata_create_secret_with_context (GetCheckedHandle (), (nuint) label.Length, label, (nuint) context.Length, p, exporterLength));
+				return CreateDispatchData (sec_protocol_metadata_create_secret_with_context (GetCheckedHandle (), (nuint) label.Length, labelPtr, (nuint) context.Length, p, exporterLength));
 		}
 
 		// API returning `OS_dispatch_data` can also return `null` and

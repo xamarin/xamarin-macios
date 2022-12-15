@@ -40,8 +40,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustCopyPolicies (IntPtr /* SecTrustRef */ trust, ref IntPtr /* CFArrayRef* */ policies);
@@ -51,8 +49,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public SecPolicy [] GetPolicies ()
 		{
@@ -105,7 +101,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -117,7 +112,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -129,7 +123,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 		public bool NetworkFetchAllowed {
@@ -152,8 +145,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustCopyCustomAnchorCertificates (IntPtr /* SecTrustRef */ trust, out IntPtr /* CFArrayRef* */ anchors);
@@ -163,8 +154,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public SecCertificate [] GetCustomAnchorCertificates ()
 		{
@@ -187,7 +176,6 @@ namespace Security {
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
 		[ObsoletedOSPlatform ("ios13.0", "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
 #else
-		[iOS (7, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
@@ -221,7 +209,6 @@ namespace Security {
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
 		[ObsoletedOSPlatform ("ios13.0", "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
 #else
-		[iOS (7, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
@@ -306,8 +293,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustGetTrustResult (IntPtr /* SecTrustRef */ trust, out SecTrustResult /* SecTrustResultType */ result);
@@ -317,8 +302,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public SecTrustResult GetTrustResult ()
 		{
@@ -368,7 +351,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -380,7 +362,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 		public NSDictionary GetResult ()
@@ -394,7 +375,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -421,8 +401,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public void SetOCSPResponse (NSData ocspResponse)
 		{
@@ -437,8 +415,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public void SetOCSPResponse (IEnumerable<NSData> ocspResponses)
 		{
@@ -454,8 +430,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public void SetOCSPResponse (NSArray ocspResponses)
 		{

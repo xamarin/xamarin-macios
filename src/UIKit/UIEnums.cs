@@ -289,7 +289,6 @@ namespace UIKit {
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'UIBarMetrics.Compat' instead.")]
 		LandscapePhone = Compact,
 
-		[iOS (7, 0)]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'UIBarMetrics.CompactPrompt' instead.")]
 		LandscapePhonePrompt = CompactPrompt
 	}
@@ -694,7 +693,6 @@ namespace UIKit {
 		DetailDisclosureButton,
 		Checkmark,
 		[NoTV]
-		[iOS (7, 0)]
 		DetailButton
 	}
 
@@ -1460,7 +1458,6 @@ namespace UIKit {
 
 	// NSUInteger -> UIView.h
 	[Native]
-	[iOS (7, 0)]
 	[NoWatch]
 	public enum UIViewKeyframeAnimationOptions : ulong {
 		LayoutSubviews = UIViewAnimationOptions.LayoutSubviews,
@@ -1517,7 +1514,6 @@ namespace UIKit {
 	// NSUInteger -> UISearchBar.h
 	[Native]
 	[NoWatch]
-	[iOS (7, 0)]
 	public enum UISearchBarStyle : ulong {
 		Default,
 		Prominent,
@@ -1527,7 +1523,6 @@ namespace UIKit {
 	// NSInteger -> UIInputView.h
 	[Native]
 	[NoWatch]
-	[iOS (7, 0)]
 	public enum UIInputViewStyle : long {
 		Default,
 		Keyboard
@@ -3075,7 +3070,6 @@ namespace UIKit {
 	// NSInteger -> UIGuidedAccessRestrictions.h
 	[Native]
 	[NoWatch]
-	[iOS (7, 0)]
 	public enum UIGuidedAccessRestrictionState : long {
 		Allow,
 		Deny,

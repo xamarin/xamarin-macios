@@ -53,7 +53,6 @@ namespace Social {
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Tencent Weibo SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Tencent Weibo SDK instead.")]
-		[iOS (7, 0)]
 		[Field ("SLServiceTypeTencentWeibo")]
 		[Mac (10, 9)]
 		NSString TencentWeibo { get; }
