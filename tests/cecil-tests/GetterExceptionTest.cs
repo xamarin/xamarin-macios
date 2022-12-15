@@ -51,12 +51,11 @@ namespace Cecil.Tests {
 			Dictionary<string, string> propertiesWithGetterExceptions = new ();
 			AssemblyDefinition assembly = info.Assembly;
 
-			foreach (PropertyDefinition property in assembly.EnumerateProperties())
-			{
+			foreach (PropertyDefinition property in assembly.EnumerateProperties ()) {
 				if (!IsMemberObsolete (property) && property.GetMethod != null &&
 					VerifyIfGetterThrowsException (property.GetMethod, out string exceptionConstructed))
 					propertiesWithGetterExceptions [property.FullName] = $"Exception: {exceptionConstructed}";
-				
+
 			}
 
 			Assert.AreEqual (0,
