@@ -44,19 +44,19 @@ namespace Cecil.Tests {
 			return false;
 		}
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblyDefinitions))]
 		[Test]
-		public void TestForAssembliesWithGetterExceptions (string assemblyPath)
+		public void TestForAssembliesWithGetterExceptions (AssemblyInfo info)
 		{
 			Dictionary<string, string> propertiesWithGetterExceptions = new ();
-			AssemblyDefinition assembly = Helper.GetAssembly (assemblyPath);
+			AssemblyDefinition assembly = info.Assembly;
 
-			foreach (TypeDefinition type in assembly.MainModule.Types) {
-				foreach (PropertyDefinition property in type.Properties) {
-					if (!IsMemberObsolete (property) && property.GetMethod != null &&
-						VerifyIfGetterThrowsException (property.GetMethod, out string exceptionConstructed))
-						propertiesWithGetterExceptions [type.Name] = $"{property.Name} Exception: {exceptionConstructed}";
-				}
+			foreach (PropertyDefinition property in assembly.EnumerateProperties())
+			{
+				if (!IsMemberObsolete (property) && property.GetMethod != null &&
+					VerifyIfGetterThrowsException (property.GetMethod, out string exceptionConstructed))
+					propertiesWithGetterExceptions [property.FullName] = $"Exception: {exceptionConstructed}";
+				
 			}
 
 			Assert.AreEqual (0,
