@@ -192,12 +192,10 @@ namespace WatchKit {
 		[Export ("dismissMediaPlayerController")]
 		void DismissMediaPlayerController ();
 
-		[Watch (2, 0)]
 		[Export ("presentAudioRecorderControllerWithOutputURL:preset:options:completion:")]
 		[Async]
 		void PresentAudioRecorderController (NSUrl outputUrl, WKAudioRecorderPreset preset, [NullAllowed] NSDictionary options, Action<bool, NSError> completion);
 
-		[Watch (2, 0)]
 		[Export ("dismissAudioRecorderController")]
 		void DismissAudioRecorderController ();
 
@@ -321,7 +319,6 @@ namespace WatchKit {
 		void PerformDismissAction ();
 
 		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'PerformDismissAction' instead.")]
-		[Watch (2, 0)]
 		[Export ("dismissController")]
 		void DismissController ();
 
@@ -395,7 +392,6 @@ namespace WatchKit {
 		[Export ("setAccessibilityIdentifier:")]
 		void SetAccessibilityIdentifier ([NullAllowed] string accessibilityIdentifier);
 
-		[Watch (2, 0)]
 		[Notification]
 		[Field ("WKAccessibilityVoiceOverStatusChanged")]
 		NSString VoiceOverStatusChanged { get; }
@@ -444,23 +440,18 @@ namespace WatchKit {
 		[Export ("removeAllCachedImages")]
 		void RemoveAllCachedImages ();
 
-		[Watch (2, 0)]
 		[Export ("systemVersion")]
 		string SystemVersion { get; }
 
-		[Watch (2, 0)]
 		[Export ("name")]
 		string Name { get; }
 
-		[Watch (2, 0)]
 		[Export ("model")]
 		string Model { get; }
 
-		[Watch (2, 0)]
 		[Export ("localizedModel")]
 		string LocalizedModel { get; }
 
-		[Watch (2, 0)]
 		[Export ("systemName")]
 		string SystemName { get; }
 
@@ -468,7 +459,6 @@ namespace WatchKit {
 		[Export ("waterResistanceRating")]
 		WKWaterResistanceRating WaterResistanceRating { get; }
 
-		[Watch (2, 0)]
 		[Export ("playHaptic:")]
 		void PlayHaptic (WKHapticType type);
 
@@ -919,17 +909,14 @@ namespace WatchKit {
 		void SetCurrentTime (double time);
 #endif
 
-		[Watch (2, 0)]
 		[Notification]
 		[Field ("WKAudioFilePlayerItemTimeJumpedNotification")]
 		NSString TimeJumpedNotification { get; }
 
-		[Watch (2, 0)]
 		[Notification]
 		[Field ("WKAudioFilePlayerItemDidPlayToEndTimeNotification")]
 		NSString DidPlayToEndTimeNotification { get; }
 
-		[Watch (2, 0)]
 		[Notification]
 		[Field ("WKAudioFilePlayerItemFailedToPlayToEndTimeNotification")]
 		NSString FailedToPlayToEndTimeNotification { get; }
@@ -1226,7 +1213,6 @@ namespace WatchKit {
 
 	// to be made [Internal] once #34656 is fixed
 	[Static]
-	[Watch (2, 0)]
 	[NoiOS]
 	interface WKMediaPlayerControllerOptionsKeys {
 		[Field ("WKMediaPlayerControllerOptionsAutoplayKey")]
@@ -1244,7 +1230,6 @@ namespace WatchKit {
 
 	// to be made [Internal] once #34656 is fixed
 	[Static]
-	[Watch (2, 0)]
 	[NoiOS]
 	interface WKAudioRecorderControllerOptionsKey {
 		[Field ("WKAudioRecorderControllerOptionsActionTitleKey")]

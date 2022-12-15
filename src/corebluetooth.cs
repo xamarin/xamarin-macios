@@ -138,12 +138,12 @@ namespace CoreBluetooth {
 		NativeHandle Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue);
 
 		[DesignatedInitializer]
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("initWithDelegate:queue:options:")]
 		[PostGet ("WeakDelegate")]
 		NativeHandle Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue, [NullAllowed] NSDictionary options);
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Wrap ("this (centralDelegate, queue, options.GetDictionary ())")]
 		NativeHandle Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue, CBCentralInitOptions options);
 
@@ -190,35 +190,31 @@ namespace CoreBluetooth {
 		NSString OptionStartDelayKey { get; }
 
 		[Field ("CBCentralManagerOptionRestoreIdentifierKey")]
-		[iOS (7, 0)]
 		[Mac (10, 13)]
 		NSString OptionRestoreIdentifierKey { get; }
 
 		[Field ("CBCentralManagerRestoredStatePeripheralsKey")]
-		[iOS (7, 0)]
 		[Mac (10, 13)]
 		NSString RestoredStatePeripheralsKey { get; }
 
 		[Field ("CBCentralManagerRestoredStateScanServicesKey")]
-		[iOS (7, 0)]
 		[Mac (10, 13)]
 		NSString RestoredStateScanServicesKey { get; }
 
 		[Field ("CBCentralManagerRestoredStateScanOptionsKey")]
-		[iOS (7, 0)]
 		[Mac (10, 13)]
 		NSString RestoredStateScanOptionsKey { get; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("retrievePeripheralsWithIdentifiers:")]
 		CBPeripheral [] RetrievePeripheralsWithIdentifiers ([Params] NSUuid [] identifiers);
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("retrieveConnectedPeripheralsWithServices:")]
 		CBPeripheral [] RetrieveConnectedPeripherals ([Params] CBUUID [] serviceUUIDs);
 
 		[Field ("CBCentralManagerOptionShowPowerAlertKey")]
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		NSString OptionShowPowerAlertKey { get; }
 
 		[iOS (16, 0), NoMac, TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
@@ -226,7 +222,7 @@ namespace CoreBluetooth {
 		NSString OptionDeviceAccessForMedia { get; }
 
 		[Field ("CBCentralManagerScanOptionSolicitedServiceUUIDsKey")]
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		NSString ScanOptionSolicitedServiceUUIDsKey { get; }
 
 		[iOS (9, 0)]
@@ -284,11 +280,11 @@ namespace CoreBluetooth {
 		[Field ("CBAdvertisementDataTxPowerLevelKey")]
 		NSString TxPowerLevelKey { get; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("CBAdvertisementDataIsConnectable")]
 		NSString IsConnectableKey { get; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("CBAdvertisementDataSolicitedServiceUUIDsKey")]
 		NSString SolicitedServiceUuidsKey { get; }
 	}
@@ -308,17 +304,14 @@ namespace CoreBluetooth {
 	[Watch (4, 0)]
 	[Static, Internal]
 	interface RestoredStateKeys {
-		[iOS (7, 0)]
 		[Mac (10, 13)]
 		[Field ("CBCentralManagerRestoredStatePeripheralsKey")]
 		NSString PeripheralsKey { get; }
 
-		[iOS (7, 0)]
 		[Mac (10, 13)]
 		[Field ("CBCentralManagerRestoredStateScanServicesKey")]
 		NSString ScanServicesKey { get; }
 
-		[iOS (7, 0)]
 		[Mac (10, 13)]
 		[Field ("CBCentralManagerRestoredStateScanOptionsKey")]
 		NSString ScanOptionsKey { get; }
@@ -401,11 +394,11 @@ namespace CoreBluetooth {
 		[Field ("CBAdvertisementDataOverflowServiceUUIDsKey")]
 		NSString DataOverflowServiceUUIDsKey { get; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("CBAdvertisementDataIsConnectable")]
 		NSString IsConnectable { get; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("CBAdvertisementDataSolicitedServiceUUIDsKey")]
 		NSString DataSolicitedServiceUUIDsKey { get; }
 
@@ -471,7 +464,7 @@ namespace CoreBluetooth {
 		[Override]
 		CBDescriptor [] Descriptors { get; set; }
 
-		[iOS (7, 0), Export ("subscribedCentrals")]
+		[Export ("subscribedCentrals")]
 		[NullAllowed]
 		CBCentral [] SubscribedCentrals { get; }
 	}
@@ -575,7 +568,7 @@ namespace CoreBluetooth {
 		[Export ("maximumWriteValueLengthForType:")]
 		nuint GetMaximumWriteValueLength (CBCharacteristicWriteType type);
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("state")]
 		CBPeripheralState State { get; }
 
@@ -656,7 +649,6 @@ namespace CoreBluetooth {
 		[Export ("peripheralDidUpdateName:")]
 		void UpdatedName (CBPeripheral peripheral);
 
-		[iOS (7, 0)]
 		[Export ("peripheral:didModifyServices:"), EventArgs ("CBPeripheralServices")]
 		void ModifiedServices (CBPeripheral peripheral, CBService [] services);
 
@@ -747,7 +739,7 @@ namespace CoreBluetooth {
 		CBUUID FromCFUUID (IntPtr theUUID);
 
 		[Static]
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("UUIDWithNSUUID:")]
 		CBUUID FromNSUuid (NSUuid theUUID);
 
@@ -884,7 +876,6 @@ namespace CoreBluetooth {
 		NSUuid Identifier { get; }
 
 		// Introduced with iOS7, but does not have NS_AVAILABLE
-		[iOS (7, 0)]
 		[Export ("maximumUpdateValueLength")]
 		nuint MaximumUpdateValueLength { get; }
 	}
@@ -907,7 +898,6 @@ namespace CoreBluetooth {
 		[NoTV]
 		[NoWatch]
 		[DesignatedInitializer]
-		[iOS (7, 0)]
 		[Export ("initWithDelegate:queue:options:")]
 		[PostGet ("WeakDelegate")]
 		NativeHandle Constructor ([NullAllowed][Protocolize] CBPeripheralManagerDelegate peripheralDelegate, [NullAllowed] DispatchQueue queue, [NullAllowed] NSDictionary options);
@@ -964,26 +954,21 @@ namespace CoreBluetooth {
 		void UnpublishL2CapChannel (ushort psm);
 
 		[Field ("CBPeripheralManagerOptionShowPowerAlertKey")]
-		[iOS (7, 0)]
 		NSString OptionShowPowerAlertKey { get; }
 
 		[Field ("CBPeripheralManagerOptionRestoreIdentifierKey")]
-		[iOS (7, 0)]
 		NSString OptionRestoreIdentifierKey { get; }
 
 		[Field ("CBPeripheralManagerRestoredStateServicesKey")]
-		[iOS (7, 0)]
 		NSString RestoredStateServicesKey { get; }
 
 		[Field ("CBPeripheralManagerRestoredStateAdvertisementDataKey")]
-		[iOS (7, 0)]
 		NSString RestoredStateAdvertisementDataKey { get; }
 
 #if !NET
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'CBManager.Authorization' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'CBManager.Authorization' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'CBManager.Authorization' instead.")]
-		[iOS (7, 0)]
 		[Static]
 		[Export ("authorizationStatus")]
 		CBPeripheralManagerAuthorizationStatus AuthorizationStatus { get; }
@@ -1063,7 +1048,6 @@ namespace CoreBluetooth {
 		IntPtr _UUID { get; }
 #endif
 
-		[iOS (7, 0)]
 		[Export ("identifier")]
 		NSUuid Identifier { get; }
 	}

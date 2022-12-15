@@ -227,20 +227,18 @@ namespace AVKit {
 		NSObject WeakDelegate { get; set; }
 
 		[NoMac]
-		[TV (9, 0), iOS (14, 0)]
+		[iOS (14, 0)]
 		[Export ("requiresLinearPlayback")]
 		bool RequiresLinearPlayback { get; set; }
 
 		#region AVPlayerViewControllerSubtitleOptions
 		[NoiOS]
 		[NoMac]
-		[TV (9, 0)]
 		[NullAllowed, Export ("allowedSubtitleOptionLanguages", ArgumentSemantic.Copy)]
 		string [] AllowedSubtitleOptionLanguages { get; set; }
 
 		[NoiOS]
 		[NoMac]
-		[TV (9, 0)]
 		[Export ("requiresFullSubtitles")]
 		bool RequiresFullSubtitles { get; set; }
 		#endregion
@@ -372,7 +370,6 @@ namespace AVKit {
 		[NoMac]
 		[NoMacCatalyst]
 		[NoWatch]
-		[TV (9, 0)]
 		[Export ("playerViewController:didPresentInterstitialTimeRange:")]
 		void DidPresentInterstitialTimeRange (AVPlayerViewController playerViewController, AVInterstitialTimeRange interstitial);
 
@@ -398,25 +395,21 @@ namespace AVKit {
 		[NoMac]
 		[NoWatch]
 		[NoMacCatalyst]
-		[TV (9, 0)]
 		[Export ("playerViewController:willPresentInterstitialTimeRange:")]
 		void WillPresentInterstitialTimeRange (AVPlayerViewController playerViewController, AVInterstitialTimeRange interstitial);
 
 		[NoiOS]
 		[NoMac]
-		[TV (9, 0)]
 		[Export ("playerViewController:willResumePlaybackAfterUserNavigatedFromTime:toTime:")]
 		void WillResumePlaybackAfterUserNavigatedFromTime (AVPlayerViewController playerViewController, CMTime oldTime, CMTime targetTime);
 
 		[NoiOS]
 		[NoMac]
-		[TV (9, 0)]
 		[Export ("playerViewController:didSelectMediaSelectionOption:inMediaSelectionGroup:")]
 		void DidSelectMediaSelectionOption (AVPlayerViewController playerViewController, [NullAllowed] AVMediaSelectionOption mediaSelectionOption, AVMediaSelectionGroup mediaSelectionGroup);
 
 		[NoiOS]
 		[NoMac]
-		[TV (9, 0)]
 		[Export ("playerViewController:didSelectExternalSubtitleOptionLanguage:")]
 		void DidSelectExternalSubtitleOptionLanguage (AVPlayerViewController playerViewController, string language);
 
@@ -688,7 +681,6 @@ namespace AVKit {
 	[NoMac]
 	[NoMacCatalyst]
 	[NoWatch]
-	[TV (9, 0)]
 	[BaseType (typeof (NSObject))]
 	interface AVInterstitialTimeRange : NSCopying, NSSecureCoding {
 		[Export ("initWithTimeRange:")]
@@ -701,7 +693,6 @@ namespace AVKit {
 
 	[NoiOS]
 	[NoMac]
-	[TV (9, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface AVNavigationMarkersGroup {

@@ -244,7 +244,6 @@ namespace CoreSpotlight {
 		bool MultiValued { [Bind ("isMultiValued")] get; }
 	}
 
-	[TV (9, 0)] // Headers don't say, documentation says no, however everything works just fine in Xcode (and no warnings).
 	[iOS (9, 0)]
 	[Mac (10, 13)]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
