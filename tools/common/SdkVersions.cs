@@ -51,33 +51,33 @@ namespace Xamarin {
 		public const string DefaultTargetPlatformVersionmacOS = "13.0";
 		public const string DefaultTargetPlatformVersionMacCatalyst = "16.1";
 
-		public static Version OSXVersion { get { return new Version (OSX); }}
-		public static Version iOSVersion { get { return new Version (iOS); }}
-		public static Version WatchOSVersion { get { return new Version (WatchOS); }}
-		public static Version TVOSVersion { get { return new Version (TVOS); }}
-		public static Version MacCatalystVersion { get { return new Version (MacCatalyst); }}
+		public static Version OSXVersion { get { return new Version (OSX); } }
+		public static Version iOSVersion { get { return new Version (iOS); } }
+		public static Version WatchOSVersion { get { return new Version (WatchOS); } }
+		public static Version TVOSVersion { get { return new Version (TVOS); } }
+		public static Version MacCatalystVersion { get { return new Version (MacCatalyst); } }
 
-		public static Version iOSTargetVersion { get { return new Version (MaxiOSDeploymentTarget); }}
-		public static Version WatchOSTargetVersion { get { return new Version (MaxWatchDeploymentTarget); }}
-		public static Version TVOSTargetVersion { get { return new Version (MaxTVOSDeploymentTarget); }}
+		public static Version iOSTargetVersion { get { return new Version (MaxiOSDeploymentTarget); } }
+		public static Version WatchOSTargetVersion { get { return new Version (MaxWatchDeploymentTarget); } }
+		public static Version TVOSTargetVersion { get { return new Version (MaxTVOSDeploymentTarget); } }
 
-		public static Version MinOSXVersion { get { return new Version (MinOSX); }}
-		public static Version MiniOSVersion { get { return new Version (MiniOS); }}
-		public static Version MinWatchOSVersion { get { return new Version (MinWatchOS); }}
-		public static Version MinTVOSVersion { get { return new Version (MinTVOS); }}
-		public static Version MinMacCatalystVersion { get { return new Version (MinMacCatalyst); }}
+		public static Version MinOSXVersion { get { return new Version (MinOSX); } }
+		public static Version MiniOSVersion { get { return new Version (MiniOS); } }
+		public static Version MinWatchOSVersion { get { return new Version (MinWatchOS); } }
+		public static Version MinTVOSVersion { get { return new Version (MinTVOS); } }
+		public static Version MinMacCatalystVersion { get { return new Version (MinMacCatalyst); } }
 
-		public static Version MiniOSSimulatorVersion { get { return new Version (MiniOSSimulator); }}
-		public static Version MinWatchOSSimulatorVersion { get { return new Version (MinWatchOSSimulator); }}
-		public static Version MinWatchOSCompanionSimulatorVersion { get { return new Version (MinWatchOSCompanionSimulator); }}
-		public static Version MinTVOSSimulatorVersion { get { return new Version (MinTVOSSimulator); }}
+		public static Version MiniOSSimulatorVersion { get { return new Version (MiniOSSimulator); } }
+		public static Version MinWatchOSSimulatorVersion { get { return new Version (MinWatchOSSimulator); } }
+		public static Version MinWatchOSCompanionSimulatorVersion { get { return new Version (MinWatchOSCompanionSimulator); } }
+		public static Version MinTVOSSimulatorVersion { get { return new Version (MinTVOSSimulator); } }
 
-		public static Version MaxiOSSimulatorVersion { get { return new Version (MaxiOSSimulator); }}
-		public static Version MaxWatchOSSimulatorVersion { get { return new Version (MaxWatchOSSimulator); }}
-		public static Version MaxWatchOSCompanionSimulatorVersion { get { return new Version (MaxWatchOSCompanionSimulator); }}
-		public static Version MaxTVOSSimulatorVersion { get { return new Version (MaxTVOSSimulator); }}
+		public static Version MaxiOSSimulatorVersion { get { return new Version (MaxiOSSimulator); } }
+		public static Version MaxWatchOSSimulatorVersion { get { return new Version (MaxWatchOSSimulator); } }
+		public static Version MaxWatchOSCompanionSimulatorVersion { get { return new Version (MaxWatchOSCompanionSimulator); } }
+		public static Version MaxTVOSSimulatorVersion { get { return new Version (MaxTVOSSimulator); } }
 
-		public static Version XcodeVersion { get { return new Version (Xcode); }}
+		public static Version XcodeVersion { get { return new Version (Xcode); } }
 
 #if MTOUCH || MMP || BUNDLER
 		public static Version GetVersion (Application app)
@@ -123,7 +123,7 @@ namespace Xamarin {
 #if MMP
 	static class MonoVersions {
 		public static string MinimumMono = "6.4.0.94";
-		public static Version MinimumMonoVersion { get { return new Version (MinimumMono); }}
+		public static Version MinimumMonoVersion { get { return new Version (MinimumMono); } }
 	}
 #endif
 }
