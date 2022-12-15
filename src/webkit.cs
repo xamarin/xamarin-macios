@@ -40,8 +40,13 @@ using UIEdgeInsets = AppKit.NSEdgeInsets;
 using UIFindInteraction = Foundation.NSObject;
 using UIViewController = AppKit.NSViewController;
 #else
-using UIKit;
+#if __MACCATALYST__
+using AppKit;
+#else
 using NSDraggingInfo = Foundation.NSObject;
+using INSDraggingInfo = Foundation.NSObject;
+#endif
+using UIKit;
 using NSEventModifierMask = System.Object;
 using NSImage = UIKit.UIImage;
 using NSMenuItem = Foundation.NSObject;
