@@ -1275,22 +1275,22 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyMakerCanonAspectRatioInfo")]
 		NSString MakerCanonAspectRatioInfo { get; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("kCGImagePropertyExifISOSpeed")]
 		NSString ExifISOSpeed { get; }
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("kCGImagePropertyExifISOSpeedLatitudeyyy")]
 		NSString ExifISOSpeedLatitudeYyy { get; }
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("kCGImagePropertyExifISOSpeedLatitudezzz")]
 		NSString ExifISOSpeedLatitudeZzz { get; }
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("kCGImagePropertyExifRecommendedExposureIndex")]
 		NSString ExifRecommendedExposureIndex { get; }
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("kCGImagePropertyExifSensitivityType")]
 		NSString ExifSensitivityType { get; }
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("kCGImagePropertyExifStandardOutputSensitivity")]
 		NSString ExifStandardOutputSensitivity { get; }
 
@@ -1316,7 +1316,6 @@ namespace ImageIO {
 		NSString ExifOffsetTimeDigitized { get; }
 
 		[NoMac]
-		[iOS (7, 0)]
 		[Field ("kCGImagePropertyMakerAppleDictionary")]
 		NSString MakerAppleDictionary { get; }
 
@@ -2758,7 +2757,6 @@ namespace ImageIO {
 		NSString HeifDictionary { get; }
 	}
 
-	[iOS (7, 0)]
 	[Static]
 	interface CGImageMetadataTagNamespaces {
 		[Field ("kCGImageMetadataNamespaceExif")]
@@ -2787,7 +2785,6 @@ namespace ImageIO {
 		NSString IPTCExtension { get; }
 	}
 
-	[iOS (7, 0)]
 	[Static]
 	interface CGImageMetadataTagPrefixes {
 		[Field ("kCGImageMetadataPrefixExif")]
@@ -2816,7 +2813,6 @@ namespace ImageIO {
 		NSString IPTCExtension { get; }
 	}
 
-	[iOS (7, 0)]
 	interface CGImageMetadata {
 		[Field ("kCFErrorDomainCGImageMetadata")]
 		NSString ErrorDomain { get; }
@@ -2832,7 +2828,6 @@ namespace ImageIO {
 		[Field ("kCGImageSourceShouldCache")]
 		IntPtr kShouldCache { get; }
 
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 		[Internal]
 		[Field ("kCGImageSourceShouldCacheImmediately")]
@@ -3073,17 +3068,14 @@ namespace ImageIO {
 	[Partial]
 	interface CGCopyImageSourceOptions {
 
-		[iOS (7, 0)]
 		[Internal]
 		[Field ("kCGImageDestinationMetadata")]
 		IntPtr kMetadata { get; }
 
-		[iOS (7, 0)]
 		[Internal]
 		[Field ("kCGImageDestinationMergeMetadata")]
 		IntPtr kMergeMetadata { get; }
 
-		[iOS (7, 0)]
 		[Internal]
 		[Field ("kCGImageMetadataShouldExcludeXMP")]
 		IntPtr kShouldExcludeXMP { get; }
@@ -3094,12 +3086,10 @@ namespace ImageIO {
 		[Field ("kCGImageMetadataShouldExcludeGPS")]
 		IntPtr kShouldExcludeGPS { get; }
 
-		[iOS (7, 0)]
 		[Internal]
 		[Field ("kCGImageDestinationDateTime")]
 		IntPtr kDateTime { get; }
 
-		[iOS (7, 0)]
 		[Internal]
 		[Field ("kCGImageDestinationOrientation")]
 		IntPtr kOrientation { get; }

@@ -980,9 +980,26 @@
 	</Target>
 
 	<Target Name="_FindAotCompiler" DependsOnTargets="_ComputeVariables">
+		<PropertyGroup>
+			<_AotCompilerCachePath>$(DeviceSpecificIntermediateOutputPath)aot-compiler-path-$(NETCoreSdkVersion).txt</_AotCompilerCachePath>
+		</PropertyGroup>
+
+		<!-- This task does not take a SessionId because we cache the path on Windows for remote builds to avoid a round-trip -->
+		<ReadLinesFromFile
+			Condition="Exists('$(_AotCompilerCachePath)')"
+			File="$(_AotCompilerCachePath)"
+		>
+			<Output TaskParameter="Lines" PropertyName="_AOTCompiler" />
+		</ReadLinesFromFile>
+
+		<!-- If the cached value points to a file that doesn't exist, then don't use it -->
+		<PropertyGroup Condition="!Exists('$(_AOTCompiler)')">
+			<_AOTCompiler />
+		</PropertyGroup>
+
 		<FindAotCompiler
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_RunAotCompiler)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_RunAotCompiler)' == 'true' And '$(_AOTCompiler)' == ''"
 			KeepTemporaryOutput="$(FindAotCompilerKeepKeepTemporaryOutput)"
 			MonoAotCrossCompiler="@(MonoAotCrossCompiler)"
 			RuntimeIdentifier="$(RuntimeIdentifier)"
@@ -990,6 +1007,16 @@
 		>
 			<Output TaskParameter="AotCompiler" PropertyName="_AOTCompiler" />
 		</FindAotCompiler>
+
+		<!-- This task does not take a SessionId because we cache the path on Windows for remote builds to avoid a round-trip -->
+		<WriteLinesToFile
+			File="$(_AotCompilerCachePath)"
+			Lines="$(_AOTCompiler)"
+			Overwrite="true"
+		/>
+		<ItemGroup>
+			<FileWrites Include="$(_AotCompilerCachePath)" />
+		</ItemGroup>
 	</Target>
 
 	<PropertyGroup>

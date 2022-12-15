@@ -3923,7 +3923,6 @@ namespace Metal {
 	interface IMTLHeap { }
 	[iOS (8, 0)]
 	[Mac (10, 11)]
-	[TV (9, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLResource {

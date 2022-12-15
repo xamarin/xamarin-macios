@@ -23,8 +23,6 @@ namespace ImageIO {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[iOS (7, 0)]
 #endif
 	public class CGMutableImageMetadata : CGImageMetadata {
 
