@@ -372,8 +372,8 @@ namespace CoreMedia {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -389,8 +389,8 @@ namespace CoreMedia {
 			/* CMFormatDescriptionRef* */ out IntPtr formatDescriptionOut);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -433,8 +433,8 @@ namespace CoreMedia {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -450,8 +450,8 @@ namespace CoreMedia {
 			/* int* */ out int nalUnitHeaderLengthOut);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -496,7 +496,7 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -516,7 +516,7 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -562,7 +562,7 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -581,7 +581,7 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else

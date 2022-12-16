@@ -10,7 +10,7 @@ using Foundation;
 namespace CoreMidi {
 
 #if NET
-	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("tvos")]
