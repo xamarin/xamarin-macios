@@ -52,9 +52,6 @@ namespace ObjCRuntime {
 		public static implicit operator IntPtr (TransientString str) => str.ptr;
 
 
-		[DllImport ("/usr/lib/libc.dylib")]
-		static extern void free (IntPtr ptr);
-
 		public static string? ToStringAndFree (IntPtr ptr, Encoding encoding = Encoding.Auto)
 		{
 			string? result = null;
@@ -74,8 +71,7 @@ namespace ObjCRuntime {
 			default:
 				throw new ArgumentOutOfRangeException (nameof (encoding));
 			}
-			if (ptr != IntPtr.Zero)
-				free (ptr);
+			Marshal.FreeHGlobal (ptr);
 			return result;
 		}
 	}
