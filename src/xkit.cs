@@ -148,7 +148,6 @@ namespace UIKit {
 	// NSInteger -> NSLayoutConstraint.h
 	[Native]
 	[NoWatch]
-	[iOS (6, 0)]
 	[MacCatalyst (13, 0)]
 	public enum NSLayoutAttribute : long {
 		NoAttribute = 0,
@@ -199,7 +198,6 @@ namespace UIKit {
 	[Flags]
 	[NoWatch]
 	[MacCatalyst (13, 0)]
-	[iOS (6, 0)]
 	public enum NSLayoutFormatOptions : ulong {
 		None = 0,
 
@@ -1652,7 +1650,6 @@ namespace UIKit {
 
 	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
-	[iOS (6, 0)]
 	[MacCatalyst (13, 1)]
 	interface NSParagraphStyle : NSSecureCoding, NSMutableCopying {
 		[Export ("lineSpacing")]
@@ -1759,7 +1756,6 @@ namespace UIKit {
 
 	[ThreadSafe]
 	[BaseType (typeof (NSParagraphStyle))]
-	[iOS (6, 0)]
 	[MacCatalyst (13, 1)]
 	interface NSMutableParagraphStyle {
 		[Export ("lineSpacing")]
@@ -2366,7 +2362,6 @@ namespace UIKit {
 #endif
 	}
 
-	[iOS (6, 0)]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -4385,5 +4380,34 @@ namespace UIKit {
 		[Mac (10, 15)]
 		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
 		NSString CocoaVersionDocumentAttribute { get; }
+	}
+
+	[Static]
+	[Internal]
+	interface NSAttributedStringDocumentReadingOptionKey {
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSWebPreferencesDocumentOption")]
+		NSString NSWebPreferencesDocumentOption { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSWebResourceLoadDelegateDocumentOption")]
+		NSString NSWebResourceLoadDelegateDocumentOption { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSBaseURLDocumentOption")]
+		NSString NSBaseURLDocumentOption { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSTextEncodingNameDocumentOption")]
+		NSString NSTextEncodingNameDocumentOption { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSTextSizeMultiplierDocumentOption")]
+		NSString NSTextSizeMultiplierDocumentOption { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSTimeoutDocumentOption")]
+		NSString NSTimeoutDocumentOption { get; }
 	}
 }

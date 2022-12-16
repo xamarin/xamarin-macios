@@ -30,13 +30,13 @@ namespace CoreServices
 		IgnoreSelf = 0x00000008,
 		FileEvents = 0x00000010,
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[Mac (10,9)]
 #endif
 		MarkSelf = 0x00000020,
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[Mac (10,13)]
 #endif
@@ -76,7 +76,7 @@ namespace CoreServices
 		ItemIsHardlink = 0x00100000,
 		ItemIsLastHardlink = 0x00200000,
 #if NET
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[Mac (10,14)]
 #endif
