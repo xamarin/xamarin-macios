@@ -64,7 +64,7 @@ namespace MapKit {
 
 	// MKGeometry.h
 #if NET
-	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
@@ -98,7 +98,7 @@ namespace MapKit {
 
 	// MKGeometry.h
 #if NET
-	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
@@ -218,7 +218,7 @@ namespace MapKit {
 
 	// MKGeometry.h
 #if NET
-	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
@@ -229,7 +229,7 @@ namespace MapKit {
 	public struct MKMapRect {
 #if NET
 		[SupportedOSPlatform ("tvos9.2")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -327,7 +327,7 @@ namespace MapKit {
 
 #if NET
 		[SupportedOSPlatform ("tvos9.2")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -444,7 +444,7 @@ namespace MapKit {
 
 	// MKGeometry.h
 #if NET
-	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]

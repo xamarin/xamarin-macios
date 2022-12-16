@@ -23,7 +23,7 @@ using NativeHandle = System.IntPtr;
 namespace ImageIO {
 
 #if NET
-	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
@@ -48,7 +48,7 @@ namespace ImageIO {
 
 	// CGImageMetadata.h
 #if NET
-	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
