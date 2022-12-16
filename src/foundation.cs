@@ -284,10 +284,6 @@ namespace Foundation {
 #endif
 	}
 
-#if MONOMAC
-	interface NSAttributedStringDocumentAttributes { }
-#endif
-
 	[BaseType (typeof (NSObject))]
 	partial interface NSAttributedString : NSCoding, NSMutableCopying, NSSecureCoding
 #if MONOMAC

@@ -25,7 +25,6 @@ namespace Foundation {
 	}
 
 	// Utility enum, ObjC uses NSString
-	[NoMac]
 	public enum NSDocumentViewMode {
 		Normal,
 		PageLayout
