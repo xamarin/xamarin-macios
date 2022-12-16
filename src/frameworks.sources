@@ -1099,6 +1099,7 @@ MAPKIT_SOURCES = \
 	MapKit/MKMapCameraZoomRange.cs \
 	MapKit/MKMapItem.cs \
 	MapKit/MKMultiPoint.cs \
+	MapKit/MKOverlayRenderer.cs \
 	MapKit/MKOverlayView.cs \
 	MapKit/MKPointOfInterestFilter.cs \
 	MapKit/MKPolygon.cs \
