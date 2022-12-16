@@ -815,8 +815,8 @@ namespace CoreGraphics {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -828,8 +828,8 @@ namespace CoreGraphics {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -844,8 +844,8 @@ namespace CoreGraphics {
 		unsafe extern static void CGPathAddRoundedRect (/* CGMutablePathRef */ IntPtr path, CGAffineTransform* transform, CGRect rect, /* CGFloat */ nfloat cornerWidth, /* CGFloat */ nfloat cornerHeight);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -857,8 +857,8 @@ namespace CoreGraphics {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else

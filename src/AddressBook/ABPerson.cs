@@ -690,7 +690,7 @@ namespace AddressBook {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios9.0")]
@@ -701,7 +701,7 @@ namespace AddressBook {
 		extern static ABPersonCompositeNameFormat ABPersonGetCompositeNameFormatForRecord (IntPtr record);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios9.0")]
@@ -714,7 +714,7 @@ namespace AddressBook {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios9.0")]
@@ -725,7 +725,7 @@ namespace AddressBook {
 		extern static IntPtr ABPersonCopyCompositeNameDelimiterForRecord (IntPtr record);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios9.0")]

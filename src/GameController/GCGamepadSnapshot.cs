@@ -18,8 +18,8 @@ namespace GameController {
 	// GCGamepadSnapshot.h
 	// float_t are 4 bytes (at least for ARM64)
 #if NET
-	[SupportedOSPlatform ("ios7.0")]
-	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
 	[UnsupportedOSPlatform ("macos10.15")]
