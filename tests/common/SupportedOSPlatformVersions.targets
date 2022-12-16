@@ -4,7 +4,7 @@
 <Project>
 	<PropertyGroup Condition="'$(SupportedOSPlatformVersion)' == ''">
 		<SupportedOSPlatformVersion Condition="$(TargetFramework.EndsWith('-ios'))">$(iOSMinSupportedOSPlatformVersion)</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$(TargetFramework.EndsWith('-tvos'))">$(tvOSMinSupportedOSPlatformVersion</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$(TargetFramework.EndsWith('-tvos'))">$(tvOSMinSupportedOSPlatformVersion)</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$(TargetFramework.EndsWith('-macos'))">$(macOSMinSupportedOSPlatformVersion)</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$(TargetFramework.EndsWith('-maccatalyst'))">$(MacCatalystMinSupportedOSPlatformVersion)</SupportedOSPlatformVersion>
 	</PropertyGroup>
