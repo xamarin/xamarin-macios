@@ -72,7 +72,7 @@ namespace Network {
 
 		public string? Hostname => Marshal.PtrToStringAnsi (nw_endpoint_get_hostname (GetCheckedHandle ()));
 
-		[DllImport (Constants.NetworkLibrary)]
+		[DllImport (Constants.NetworkLibrary, EntryPoint = "nw_endpoint_copy_port_string")]
 		static extern IntPtr nw_endpoint_copy_port_string_ptr (OS_nw_endpoint endpoint);
 
 		static string nw_endpoint_copy_port_string (OS_nw_endpoint endpoint)
@@ -95,7 +95,7 @@ namespace Network {
 		// address family would have to be mapped, and it does not look like a very useful
 		// type to begin with.
 
-		[DllImport (Constants.NetworkLibrary)]
+		[DllImport (Constants.NetworkLibrary, EntryPoint = "nw_endpoint_copy_address_string")]
 		static extern IntPtr nw_endpoint_copy_address_string_ptr (OS_nw_endpoint endpoint);
 
 		static string nw_endpoint_copy_address_string (OS_nw_endpoint endpoint)

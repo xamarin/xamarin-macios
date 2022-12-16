@@ -54,7 +54,7 @@ namespace Network {
 			set => nw_quic_set_keepalive_interval (GetCheckedHandle (), value);
 		}
 
-		[DllImport (Constants.NetworkLibrary)]
+		[DllImport (Constants.NetworkLibrary, EntryPoint = "nw_quic_get_application_error_reason")]
 		static extern IntPtr nw_quic_get_application_error_reason_ptr (OS_nw_protocol_metadata metadata);
 
 		static string nw_quic_get_application_error_reason (OS_nw_protocol_metadata metadata)

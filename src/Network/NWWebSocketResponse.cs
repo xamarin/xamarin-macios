@@ -52,13 +52,13 @@ namespace Network {
 		public NWWebSocketResponse (NWWebSocketResponseStatus status, string subprotocol)
 			=> InitializeHandle (nw_ws_response_create (status, subprotocol));
 
-		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+		[DllImport (Constants.NetworkLibrary, EntryPoint = "nw_ws_response_get_selected_subprotocol", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
 		static extern IntPtr nw_ws_response_get_selected_subprotocol_ptr (OS_nw_ws_response response);
 
 		static string nw_ws_response_get_selected_subprotocol (OS_nw_ws_response response)
 		{
 			var ptr = nw_ws_response_get_selected_subprotocol_ptr (response);
-			return TransientString.ToStringAndFree (ptr)!;
+			return TransientString.ToStringAndFree (ptr, TransientString.Encoding.Ansi)!;
 		}
 
 		public string SelectedSubprotocol => nw_ws_response_get_selected_subprotocol (GetCheckedHandle ());
