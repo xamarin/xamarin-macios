@@ -658,7 +658,6 @@ namespace Foundation {
 		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSStringDrawingContext context);
 
 		[MacCatalyst (13, 1)]
-		[iOS (6, 0)]
 		[Export ("size")]
 		CGSize Size { get; }
 

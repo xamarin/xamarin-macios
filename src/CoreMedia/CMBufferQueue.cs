@@ -321,7 +321,7 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("ios7.1")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -333,7 +333,7 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("ios7.1")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else

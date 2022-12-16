@@ -527,7 +527,7 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -540,7 +540,7 @@ namespace CoreGraphics {
 		// we return an NSString, instead of a string, as all our UTType constants are NSString (see mobilecoreservices.cs)
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -556,7 +556,7 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -570,7 +570,7 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -583,7 +583,7 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -597,7 +597,7 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else

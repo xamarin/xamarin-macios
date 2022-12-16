@@ -20,8 +20,8 @@ namespace GameController {
 	// GCExtendedGamepadSnapshot.h
 	// float_t are 4 bytes (at least for ARM64)
 #if NET
-	[SupportedOSPlatform ("ios7.0")]
-	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("macos10.14.4")]
 	[UnsupportedOSPlatform ("tvos12.2")]
 	[UnsupportedOSPlatform ("ios12.2")]
@@ -73,8 +73,8 @@ namespace GameController {
 		// public bool RightThumbstickButton;
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
