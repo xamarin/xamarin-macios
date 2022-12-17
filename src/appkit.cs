@@ -15524,33 +15524,6 @@ namespace AppKit {
 		NSString TextEffect { get; }
 
 		// Internal
-		[Internal, Field ("NSDocumentTypeDocumentOption")]
-		NSString NSDocumentTypeDocumentOption { get; }
-
-		[Internal, Field ("NSDefaultAttributesDocumentOption")]
-		NSString NSDefaultAttributesDocumentOption { get; }
-
-		[Internal, Field ("NSCharacterEncodingDocumentOption")]
-		NSString NSCharacterEncodingDocumentOption { get; }
-
-		[Internal, Field ("NSTextEncodingNameDocumentOption")]
-		NSString NSTextEncodingNameDocumentOption { get; }
-
-		[Internal, Field ("NSBaseURLDocumentOption")]
-		NSString NSBaseURLDocumentOption { get; }
-
-		[Internal, Field ("NSTimeoutDocumentOption")]
-		NSString NSTimeoutDocumentOption { get; }
-
-		[Internal, Field ("NSWebPreferencesDocumentOption")]
-		NSString NSWebPreferencesDocumentOption { get; }
-
-		[Internal, Field ("NSWebResourceLoadDelegateDocumentOption")]
-		NSString NSWebResourceLoadDelegateDocumentOption { get; }
-
-		[Internal, Field ("NSTextSizeMultiplierDocumentOption")]
-		NSString NSTextSizeMultiplierDocumentOption { get; }
-
 		[Internal, Field ("NSFileTypeDocumentOption")]
 		NSString NSFileTypeDocumentOption { get; }
 

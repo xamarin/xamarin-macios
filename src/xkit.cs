@@ -4381,4 +4381,33 @@ namespace UIKit {
 		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
 		NSString CocoaVersionDocumentAttribute { get; }
 	}
+
+	[Static]
+	[Internal]
+	interface NSAttributedStringDocumentReadingOptionKey {
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSWebPreferencesDocumentOption")]
+		NSString NSWebPreferencesDocumentOption { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSWebResourceLoadDelegateDocumentOption")]
+		NSString NSWebResourceLoadDelegateDocumentOption { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSBaseURLDocumentOption")]
+		NSString NSBaseURLDocumentOption { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSTextEncodingNameDocumentOption")]
+		NSString NSTextEncodingNameDocumentOption { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSTextSizeMultiplierDocumentOption")]
+		NSString NSTextSizeMultiplierDocumentOption { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSTimeoutDocumentOption")]
+		NSString NSTimeoutDocumentOption { get; }
+	}
 }
