@@ -128,7 +128,6 @@ namespace MediaPlayer {
 		MusicVideo = 1 << 11,
 		[Mac (10, 12, 2)]
 		VideoITunesU = 1 << 12,
-		[iOS (7, 0)]
 		[Mac (10, 12, 2)]
 		HomeVideo = 1 << 13,
 		[Mac (10, 12, 2)]

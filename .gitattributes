@@ -1,0 +1,11 @@
+# By default to the default thing
+
+* text=auto
+
+# The automatic translation apparently runs on windows, creates files with
+# crlf, and will check in the corresponding files as such. During the local
+# build these files will be read and written out again, but now with lf
+# endings. So set the 'text' git attribute for these files, so that they're
+# stored as 'lf' and converted to 'crlf' on Windows.
+
+**/.template.config/localize/templatestrings.*.json text

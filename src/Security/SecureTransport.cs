@@ -180,7 +180,6 @@ namespace Security {
 		BreakOnCertRequested,
 		BreakOnClientAuth,
 
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 		FalseStart,
 

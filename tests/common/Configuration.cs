@@ -688,6 +688,7 @@ namespace Xamarin.Tests {
 			case Profile.macOSMobile:
 				return XamarinMacMobileDll;
 			case Profile.macOSFull:
+			case Profile.macOSSystem:
 				return XamarinMacFullDll;
 			default:
 				throw new NotImplementedException ();

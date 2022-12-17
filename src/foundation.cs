@@ -284,10 +284,6 @@ namespace Foundation {
 #endif
 	}
 
-#if MONOMAC
-	interface NSAttributedStringDocumentAttributes { }
-#endif
-
 	[BaseType (typeof (NSObject))]
 	partial interface NSAttributedString : NSCoding, NSMutableCopying, NSSecureCoding
 #if MONOMAC
@@ -658,9 +654,6 @@ namespace Foundation {
 		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSStringDrawingContext context);
 
 		[MacCatalyst (13, 1)]
-		[TV (9, 0)]
-		[Mac (10, 0)]
-		[iOS (6, 0)]
 		[Export ("size")]
 		CGSize Size { get; }
 
@@ -778,7 +771,6 @@ namespace Foundation {
 #else
 		[Field ("NSTextLayoutSectionOrientation", "UIKit")]
 #endif
-		[iOS (7, 0)]
 		NSString TextLayoutSectionOrientation { get; }
 
 #if MONOMAC
@@ -786,7 +778,6 @@ namespace Foundation {
 #else
 		[Field ("NSTextLayoutSectionRange", "UIKit")]
 #endif
-		[iOS (7, 0)]
 		NSString TextLayoutSectionRange { get; }
 
 #if !XAMCORE_5_0
@@ -795,7 +786,6 @@ namespace Foundation {
 #else
 		[Field ("NSTextLayoutSectionsAttribute", "UIKit")]
 #endif
-		[iOS (7, 0)]
 		NSString TextLayoutSectionsAttribute { get; }
 #endif // !XAMCORE_5_0
 
@@ -1872,27 +1862,27 @@ namespace Foundation {
 		[Export ("rangeOfData:options:range:")]
 		NSRange Find (NSData dataToFind, NSDataSearchOptions searchOptions, NSRange searchRange);
 
-		[iOS (7, 0), Mac (10, 9)] // 10.9
+		[Mac (10, 9)] // 10.9
 		[Export ("initWithBase64EncodedString:options:")]
 		NativeHandle Constructor (string base64String, NSDataBase64DecodingOptions options);
 
-		[iOS (7, 0), Mac (10, 9)] // 10.9
+		[Mac (10, 9)] // 10.9
 		[Export ("initWithBase64EncodedData:options:")]
 		NativeHandle Constructor (NSData base64Data, NSDataBase64DecodingOptions options);
 
-		[iOS (7, 0), Mac (10, 9)] // 10.9
+		[Mac (10, 9)] // 10.9
 		[Export ("base64EncodedDataWithOptions:")]
 		NSData GetBase64EncodedData (NSDataBase64EncodingOptions options);
 
-		[iOS (7, 0), Mac (10, 9)] // 10.9
+		[Mac (10, 9)] // 10.9
 		[Export ("base64EncodedStringWithOptions:")]
 		string GetBase64EncodedString (NSDataBase64EncodingOptions options);
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("enumerateByteRangesUsingBlock:")]
 		void EnumerateByteRange (NSDataByteRangeEnumerator enumerator);
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("initWithBytesNoCopy:length:deallocator:")]
 		NativeHandle Constructor (IntPtr bytes, nuint length, [NullAllowed] Action<IntPtr, nuint> deallocator);
 
@@ -2190,7 +2180,7 @@ namespace Foundation {
 		[Export ("setLocalizedDateFormatFromTemplate:")]
 		void SetLocalizedDateFormatFromTemplate (string dateFormatTemplate);
 
-		[Watch (2, 0), TV (9, 0), Mac (10, 10), iOS (8, 0)]
+		[Mac (10, 10), iOS (8, 0)]
 		[Export ("formattingContext", ArgumentSemantic.Assign)]
 		NSFormattingContext FormattingContext { get; set; }
 	}
@@ -2852,7 +2842,7 @@ namespace Foundation {
 		[Export ("classNameForClass:")]
 		string GetClassName (Class kls);
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("NSKeyedArchiveRootObjectKey")]
 		NSString RootObjectKey { get; }
 
@@ -3176,17 +3166,14 @@ namespace Foundation {
 		[Field ("NSMetadataUbiquitousItemIsUploadingKey")]
 		NSString UbiquitousItemIsUploadingKey { get; }
 
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 		[Field ("NSMetadataUbiquitousItemDownloadingStatusKey")]
 		NSString UbiquitousItemDownloadingStatusKey { get; }
 
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 		[Field ("NSMetadataUbiquitousItemDownloadingErrorKey")]
 		NSString UbiquitousItemDownloadingErrorKey { get; }
 
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 		[Field ("NSMetadataUbiquitousItemUploadingErrorKey")]
 		NSString UbiquitousItemUploadingErrorKey { get; }
@@ -3825,22 +3812,22 @@ namespace Foundation {
 		[Field ("NSMetadataUbiquitousSharedItemPermissionsReadWrite")]
 		NSString UbiquitousSharedItemPermissionsReadWrite { get; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[NullAllowed] // by default this property is null
 		[Export ("searchItems", ArgumentSemantic.Copy)]
 		// DOC: object is a mixture of NSString, NSMetadataItem, NSUrl
 		NSObject [] SearchItems { get; set; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[NullAllowed] // by default this property is null
 		[Export ("operationQueue", ArgumentSemantic.Retain)]
 		NSOperationQueue OperationQueue { get; set; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("enumerateResultsUsingBlock:")]
 		void EnumerateResultsUsingBlock (NSMetadataQueryEnumerationCallback callback);
 
-		[iOS (7, 0), Mac (10, 9), Export ("enumerateResultsWithOptions:usingBlock:")]
+		[Mac (10, 9), Export ("enumerateResultsWithOptions:usingBlock:")]
 		void EnumerateResultsWithOptions (NSEnumerationOptions opts, NSMetadataQueryEnumerationCallback block);
 
 		//
@@ -4068,7 +4055,6 @@ namespace Foundation {
 
 		[NoMac]
 		[NoTV]
-		[iOS (7, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'ReadFromUrl' instead.")]
 		[Export ("readFromFileURL:options:documentAttributes:error:")]
 		bool ReadFromFile (NSUrl url, NSDictionary options, ref NSDictionary returnOptions, ref NSError error);
@@ -4080,7 +4066,6 @@ namespace Foundation {
 		bool ReadFromFile (NSUrl url, NSAttributedStringDocumentAttributes options, ref NSDictionary returnOptions, ref NSError error);
 
 		[NoMac]
-		[iOS (7, 0)]
 		[Export ("readFromData:options:documentAttributes:error:")]
 		bool ReadFromData (NSData data, NSDictionary options, ref NSDictionary returnOptions, ref NSError error);
 
@@ -4595,7 +4580,6 @@ namespace Foundation {
 #if false
 		// FIXME that value is present in the header (7.0 DP 6) files but returns NULL (i.e. unusable)
 		// we're also missing other NSURLError* fields (which we should add)
-		[iOS (7,0)]
 		[Field ("NSURLErrorBackgroundTaskCancelledReasonKey")]
 		NSString NSUrlErrorBackgroundTaskCancelledReasonKey { get; }
 #endif
@@ -4692,7 +4676,7 @@ namespace Foundation {
 		[Static, Export ("expressionForBlock:arguments:")]
 		NSExpression FromFunction (NSExpressionCallbackHandler target, NSExpression [] parameters);
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Static]
 		[Export ("expressionForAnyKey")]
 		NSExpression FromAnyKey ();
@@ -4702,7 +4686,7 @@ namespace Foundation {
 		[Export ("expressionForConditional:trueExpression:falseExpression:")]
 		NSExpression FromConditional (NSPredicate predicate, NSExpression trueExpression, NSExpression falseExpression);
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("allowEvaluation")]
 		void AllowEvaluation ();
 
@@ -5167,7 +5151,6 @@ namespace Foundation {
 		[Static]
 		NSLocaleLanguageDirection GetLineDirection (string isoLanguageCode);
 
-		[iOS (7, 0)] // already in OSX 10.6
 		[Static]
 		[Export ("localeWithLocaleIdentifier:")]
 		NSLocale FromLocaleIdentifier (string ident);
@@ -5532,7 +5515,7 @@ namespace Foundation {
 		[Export ("reversedSortDescriptor")]
 		NSObject ReversedSortDescriptor { get; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("allowEvaluation")]
 		void AllowEvaluation ();
 	}
@@ -5617,7 +5600,7 @@ namespace Foundation {
 		[Export ("userInfo")]
 		NSObject UserInfo { get; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("tolerance")]
 		double Tolerance { get; set; }
 	}
@@ -5812,7 +5795,7 @@ namespace Foundation {
 	}
 
 	[iOS (8, 0)]
-	[Mac (10, 10), Watch (2, 0), TV (9, 0)] // .objc_class_name_NSUserActivity", referenced from '' not found
+	[Mac (10, 10)] // .objc_class_name_NSUserActivity", referenced from '' not found
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // xcode 8 beta 4 marks it as API_DEPRECATED
 	partial interface NSUserActivity
@@ -5984,7 +5967,7 @@ namespace Foundation {
 	}
 
 	[iOS (8, 0)]
-	[Mac (10, 10), Watch (3, 0), TV (9, 0)] // same as NSUserActivity
+	[Mac (10, 10), Watch (3, 0)] // same as NSUserActivity
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	partial interface NSUserActivityDelegate {
@@ -6020,7 +6003,7 @@ namespace Foundation {
 		IntPtr InitWithUserName (string username);
 
 		[Internal]
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("initWithSuiteName:")]
 		IntPtr InitWithSuiteName (string suiteName);
 
@@ -6308,32 +6291,32 @@ namespace Foundation {
 		[Export ("URLByDeletingPathExtension")]
 		NSUrl RemovePathExtension ();
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("getFileSystemRepresentation:maxLength:")]
 		bool GetFileSystemRepresentation (IntPtr buffer, nint maxBufferLength);
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("fileSystemRepresentation")]
 		IntPtr GetFileSystemRepresentationAsUtf8Ptr { get; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("removeCachedResourceValueForKey:")]
 		void RemoveCachedResourceValueForKey (NSString key);
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("removeAllCachedResourceValues")]
 		void RemoveAllCachedResourceValues ();
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("setTemporaryResourceValue:forKey:")]
 		void SetTemporaryResourceValue (NSObject value, NSString key);
 
 		[DesignatedInitializer]
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("initFileURLWithFileSystemRepresentation:isDirectory:relativeToURL:")]
 		NativeHandle Constructor (IntPtr ptrUtf8path, bool isDir, [NullAllowed] NSUrl baseURL);
 
-		[iOS (7, 0), Mac (10, 9), Static, Export ("fileURLWithFileSystemRepresentation:isDirectory:relativeToURL:")]
+		[Mac (10, 9), Static, Export ("fileURLWithFileSystemRepresentation:isDirectory:relativeToURL:")]
 		NSUrl FromUTF8Pointer (IntPtr ptrUtf8path, bool isDir, [NullAllowed] NSUrl baseURL);
 
 		/* These methods come from NURL_AppKitAdditions */
@@ -6750,27 +6733,27 @@ namespace Foundation {
 		[Field ("NSURLPathKey")]
 		NSString PathKey { get; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("NSURLUbiquitousItemDownloadingStatusKey")]
 		NSString UbiquitousItemDownloadingStatusKey { get; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("NSURLUbiquitousItemDownloadingErrorKey")]
 		NSString UbiquitousItemDownloadingErrorKey { get; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("NSURLUbiquitousItemUploadingErrorKey")]
 		NSString UbiquitousItemUploadingErrorKey { get; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("NSURLUbiquitousItemDownloadingStatusNotDownloaded")]
 		NSString UbiquitousItemDownloadingStatusNotDownloaded { get; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("NSURLUbiquitousItemDownloadingStatusDownloaded")]
 		NSString UbiquitousItemDownloadingStatusDownloaded { get; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("NSURLUbiquitousItemDownloadingStatusCurrent")]
 		NSString UbiquitousItemDownloadingStatusCurrent { get; }
 
@@ -6983,22 +6966,22 @@ namespace Foundation {
 
 	[Category, BaseType (typeof (NSCharacterSet))]
 	partial interface NSUrlUtilities_NSCharacterSet {
-		[iOS (7, 0), Static, Export ("URLUserAllowedCharacterSet", ArgumentSemantic.Copy)]
+		[Static, Export ("URLUserAllowedCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet UrlUserAllowedCharacterSet { get; }
 
-		[iOS (7, 0), Static, Export ("URLPasswordAllowedCharacterSet", ArgumentSemantic.Copy)]
+		[Static, Export ("URLPasswordAllowedCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet UrlPasswordAllowedCharacterSet { get; }
 
-		[iOS (7, 0), Static, Export ("URLHostAllowedCharacterSet", ArgumentSemantic.Copy)]
+		[Static, Export ("URLHostAllowedCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet UrlHostAllowedCharacterSet { get; }
 
-		[iOS (7, 0), Static, Export ("URLPathAllowedCharacterSet", ArgumentSemantic.Copy)]
+		[Static, Export ("URLPathAllowedCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet UrlPathAllowedCharacterSet { get; }
 
-		[iOS (7, 0), Static, Export ("URLQueryAllowedCharacterSet", ArgumentSemantic.Copy)]
+		[Static, Export ("URLQueryAllowedCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet UrlQueryAllowedCharacterSet { get; }
 
-		[iOS (7, 0), Static, Export ("URLFragmentAllowedCharacterSet", ArgumentSemantic.Copy)]
+		[Static, Export ("URLFragmentAllowedCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet UrlFragmentAllowedCharacterSet { get; }
 	}
 
@@ -7061,7 +7044,7 @@ namespace Foundation {
 		void RemoveCachedResponse (NSUrlSessionDataTask dataTask);
 	}
 
-	[iOS (7, 0), Mac (10, 9)]
+	[Mac (10, 9)]
 	[BaseType (typeof (NSObject), Name = "NSURLComponents")]
 	partial interface NSUrlComponents : NSCopying {
 		[Export ("initWithURL:resolvingAgainstBaseURL:")]
@@ -7475,11 +7458,11 @@ namespace Foundation {
 		[Export ("setDefaultCredential:forProtectionSpace:")]
 		void SetDefaultCredential (NSUrlCredential credential, NSUrlProtectionSpace forProtectionSpace);
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("removeCredential:forProtectionSpace:options:")]
 		void RemoveCredential (NSUrlCredential credential, NSUrlProtectionSpace forProtectionSpace, NSDictionary options);
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Field ("NSURLCredentialStorageRemoveSynchronizableCredentials")]
 		NSString RemoveSynchronizableCredentials { get; }
 
@@ -7539,7 +7522,6 @@ namespace Foundation {
 	// but Apple has flagged these as not allowing null.
 	//
 	// Leaving the null allowed for now.
-	[iOS (7, 0)]
 	[Mac (10, 9)]
 	[BaseType (typeof (NSObject), Name = "NSURLSession")]
 	[DisableDefaultCtorAttribute]
@@ -7768,7 +7750,6 @@ namespace Foundation {
 		void StopSecureConnection ();
 	}
 
-	[iOS (7, 0)]
 	[Mac (10, 9)]
 	[BaseType (typeof (NSObject), Name = "NSURLSessionTask")]
 	[DisableDefaultCtor]
@@ -7873,7 +7854,6 @@ namespace Foundation {
 	// All of the NSUrlSession APIs are either 10.10, or 10.9 and 64-bit only
 	// "NSURLSession is not available for i386 targets before Mac OS X 10.10."
 
-	[iOS (7, 0)]
 	[Mac (10, 9)]
 	[BaseType (typeof (NSUrlSessionTask), Name = "NSURLSessionDataTask")]
 	[DisableDefaultCtor]
@@ -7886,7 +7866,6 @@ namespace Foundation {
 		NativeHandle Constructor ();
 	}
 
-	[iOS (7, 0)]
 	[Mac (10, 9)]
 	[BaseType (typeof (NSUrlSessionDataTask), Name = "NSURLSessionUploadTask")]
 	[DisableDefaultCtor]
@@ -7899,7 +7878,6 @@ namespace Foundation {
 		NativeHandle Constructor ();
 	}
 
-	[iOS (7, 0)]
 	[Mac (10, 9)]
 	[BaseType (typeof (NSUrlSessionTask), Name = "NSURLSessionDownloadTask")]
 	[DisableDefaultCtor]
@@ -7951,7 +7929,6 @@ namespace Foundation {
 		int HttpsProxyPort { get; set; }
 	}
 
-	[iOS (7, 0)]
 	[Mac (10, 9)]
 	[BaseType (typeof (NSObject), Name = "NSURLSessionConfiguration")]
 	[DisableDefaultCtorAttribute]
@@ -8095,7 +8072,6 @@ namespace Foundation {
 		bool RequiresDnsSecValidation { get; set; }
 	}
 
-	[iOS (7, 0)]
 	[Mac (10, 9)]
 	[Model, BaseType (typeof (NSObject), Name = "NSURLSessionDelegate")]
 	[Protocol]
@@ -8113,7 +8089,6 @@ namespace Foundation {
 
 	public interface INSUrlSessionTaskDelegate { }
 
-	[iOS (7, 0)]
 	[Mac (10, 9)]
 	[Model]
 	[BaseType (typeof (NSUrlSessionDelegate), Name = "NSURLSessionTaskDelegate")]
@@ -8155,7 +8130,6 @@ namespace Foundation {
 		void DidCreateTask (NSUrlSession session, NSUrlSessionTask task);
 	}
 
-	[iOS (7, 0)]
 	[Mac (10, 9)]
 	[Model]
 	[BaseType (typeof (NSUrlSessionTaskDelegate), Name = "NSURLSessionDataDelegate")]
@@ -8178,7 +8152,6 @@ namespace Foundation {
 		void DidBecomeStreamTask (NSUrlSession session, NSUrlSessionDataTask dataTask, NSUrlSessionStreamTask streamTask);
 	}
 
-	[iOS (7, 0)]
 	[Mac (10, 9)]
 	[Model]
 	[BaseType (typeof (NSUrlSessionTaskDelegate), Name = "NSURLSessionDownloadDelegate")]
@@ -9195,11 +9168,9 @@ namespace Foundation {
 
 	[Category, BaseType (typeof (NSString))]
 	partial interface NSUrlUtilities_NSString {
-		[iOS (7, 0)]
 		[Export ("stringByAddingPercentEncodingWithAllowedCharacters:")]
 		NSString CreateStringByAddingPercentEncoding (NSCharacterSet allowedCharacters);
 
-		[iOS (7, 0)]
 		[Export ("stringByRemovingPercentEncoding")]
 		NSString CreateStringByRemovingPercentEncoding ();
 
@@ -9842,7 +9813,6 @@ namespace Foundation {
 		[Export ("queuePriority")]
 		NSOperationQueuePriority QueuePriority { get; set; }
 
-		[iOS (7, 0)]
 		[Export ("asynchronous")]
 		bool Asynchronous { [Bind ("isAsynchronous")] get; }
 
@@ -10694,7 +10664,6 @@ namespace Foundation {
 		[Export ("localizations")]
 		string [] Localizations { get; }
 
-		[iOS (7, 0)]
 		[Export ("appStoreReceiptURL")]
 		NSUrl AppStoreReceiptUrl { get; }
 
@@ -10811,7 +10780,6 @@ namespace Foundation {
 		void _GetIndexes (IntPtr target);
 
 		[Mac (10, 9)]
-		[iOS (7, 0)]
 		[Export ("getIndexes:range:")]
 		[Internal]
 		void _GetIndexes (IntPtr target, NSRange positionRange);
@@ -11438,7 +11406,7 @@ namespace Foundation {
 		[Export ("stopMonitoring")]
 		void StopMonitoring ();
 
-		[iOS (7, 0), Mac (10, 10)]
+		[Mac (10, 10)]
 		[Export ("includesPeerToPeer")]
 		bool IncludesPeerToPeer { get; set; }
 	}
@@ -11471,7 +11439,6 @@ namespace Foundation {
 		[Export ("netService:didUpdateTXTRecordData:"), EventArgs ("NSNetServiceData")]
 		void UpdatedTxtRecordData (NSNetService sender, NSData data);
 
-		[iOS (7, 0)]
 		[Export ("netService:didAcceptConnectionWithInputStream:outputStream:"), EventArgs ("NSNetServiceConnection")]
 		void DidAcceptConnection (NSNetService sender, NSInputStream inputStream, NSOutputStream outputStream);
 	}
@@ -11525,7 +11492,7 @@ namespace Foundation {
 		[Export ("stop")]
 		void Stop ();
 
-		[iOS (7, 0), Mac (10, 10)]
+		[Mac (10, 10)]
 		[Export ("includesPeerToPeer")]
 		bool IncludesPeerToPeer { get; set; }
 	}
@@ -11818,29 +11785,26 @@ namespace Foundation {
 		[Static]
 		NSValue FromCGPoint (CGPoint point);
 
+		[MacCatalyst (15, 0)]
 #if MONOMAC
-		[Mac (10,0)]
 		[Export ("rectValue")]
 #else
-		[MacCatalyst (15, 0)]
 		[Export ("CGRectValue")]
 #endif
 		CGRect CGRectValue { get; }
 
+		[MacCatalyst (15, 0)]
 #if MONOMAC
-		[Mac (10,0)]
 		[Export ("sizeValue")]
 #else
-		[MacCatalyst (15, 0)]
 		[Export ("CGSizeValue")]
 #endif
 		CGSize CGSizeValue { get; }
 
+		[MacCatalyst (15, 0)]
 #if MONOMAC
-		[Mac (10,0)]
 		[Export ("pointValue")]
 #else
-		[MacCatalyst (15, 0)]
 		[Export ("CGPointValue")]
 #endif
 		CGPoint CGPointValue { get; }
@@ -12815,15 +12779,15 @@ namespace Foundation {
 		[Export ("systemUptime")]
 		double SystemUptime { get; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("beginActivityWithOptions:reason:")]
 		NSObject BeginActivity (NSActivityOptions options, string reason);
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("endActivity:")]
 		void EndActivity (NSObject activity);
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("performActivityWithOptions:reason:usingBlock:")]
 		void PerformActivity (NSActivityOptions options, string reason, Action runCode);
 
@@ -12929,7 +12893,7 @@ namespace Foundation {
 		string GetFullUserName ();
 	}
 
-	[iOS (7, 0), Mac (10, 9)]
+	[Mac (10, 9)]
 	[BaseType (typeof (NSObject))]
 	partial interface NSProgress {
 
@@ -13587,7 +13551,6 @@ namespace Foundation {
 		[Notification]
 		NSString UbiquityIdentityDidChangeNotification { get; }
 
-		[iOS (7, 0)]
 		[Export ("containerURLForSecurityApplicationGroupIdentifier:")]
 		NSUrl GetContainerUrl (string securityApplicationGroupIdentifier);
 
@@ -14024,7 +13987,7 @@ namespace Foundation {
 		[Export ("predicateFromMetadataQueryString:")]
 		NSPredicate FromMetadataQueryString (string query);
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("allowEvaluation")]
 		void AllowEvaluation ();
 	}
@@ -14352,7 +14315,6 @@ namespace Foundation {
 		string ReplacementString { get; }
 
 		[Export ("alternativeStrings")]
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 		string [] AlternativeStrings { get; }
 
@@ -14432,7 +14394,6 @@ namespace Foundation {
 
 		[Static]
 		[Export ("correctionCheckingResultWithRange:replacementString:alternativeStrings:")]
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 		NSTextCheckingResult CorrectionCheckingResult (NSRange range, string replacementString, string [] alternativeStrings);
 
@@ -17155,8 +17116,6 @@ namespace Foundation {
 
 		[Mac (10, 11)]
 		[iOS (9, 0)]
-		[Watch (2, 0)]
-		[TV (9, 0)]
 		[Export ("synchronousRemoteObjectProxyWithErrorHandler:"), Internal]
 		IntPtr _CreateSynchronousRemoteObjectProxy ([BlockCallback] Action<NSError> errorHandler);
 
