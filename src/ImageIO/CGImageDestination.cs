@@ -59,37 +59,31 @@ namespace ImageIO {
 
 	public partial class CGCopyImageSourceOptions {
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public CGImageMetadata? Metadata { get; set; }
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public bool MergeMetadata { get; set; }
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public bool ShouldExcludeXMP { get; set; }
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -100,22 +94,18 @@ namespace ImageIO {
 		public bool ShouldExcludeGPS { get; set; }
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public DateTime? DateTime { get; set; }
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public int? Orientation { get; set; }
 
@@ -325,12 +315,10 @@ namespace ImageIO {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static void CGImageDestinationAddImageAndMetadata (/* CGImageDestinationRef __nonnull */ IntPtr idst,
@@ -338,12 +326,10 @@ namespace ImageIO {
 			/* CFDictionaryRef __nullable */ IntPtr options);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public void AddImageAndMetadata (CGImage image, CGImageMetadata meta, NSDictionary? options)
@@ -354,12 +340,10 @@ namespace ImageIO {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public void AddImageAndMetadata (CGImage image, CGImageMetadata meta, CGImageDestinationOptions? options)
 		{
@@ -368,12 +352,10 @@ namespace ImageIO {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -382,12 +364,10 @@ namespace ImageIO {
 			/* CFErrorRef* */ out IntPtr err);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public bool CopyImageSource (CGImageSource image, NSDictionary? options, out NSError? error)
@@ -400,12 +380,10 @@ namespace ImageIO {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public bool CopyImageSource (CGImageSource image, CGCopyImageSourceOptions? options, out NSError? error)
 		{
@@ -415,7 +393,7 @@ namespace ImageIO {
 
 #if NET
 		[SupportedOSPlatform ("tvos11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -429,7 +407,7 @@ namespace ImageIO {
 
 #if NET
 		[SupportedOSPlatform ("tvos11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else

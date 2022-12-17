@@ -15,7 +15,6 @@ using CoreFoundation;
 namespace Security {
 
 	[Static]
-	[iOS (7, 0)]
 	interface SecPolicyIdentifier {
 		// they are CFString -> https://github.com/Apple-FOSS-Mirror/libsecurity_keychain/blob/master/lib/SecPolicy.cpp
 
@@ -77,7 +76,6 @@ namespace Security {
 	}
 
 	[Static]
-	[iOS (7, 0)]
 	interface SecPolicyPropertyKey {
 		[Field ("kSecPolicyOid")]
 		NSString Oid { get; }
@@ -109,7 +107,6 @@ namespace Security {
 
 
 	[Static]
-	[iOS (7, 0)]
 	interface SecTrustPropertyKey {
 		[Field ("kSecPropertyTypeTitle")]
 		NSString Title { get; }
@@ -119,7 +116,7 @@ namespace Security {
 	}
 
 	[Static]
-	[iOS (7, 0), Mac (10, 9)]
+	[Mac (10, 9)]
 	interface SecTrustResultKey {
 		[Field ("kSecTrustEvaluationDate")]
 		NSString EvaluationDate { get; }
@@ -518,12 +515,10 @@ namespace Security {
 		[Field ("kSecAttrAccessible")]
 		IntPtr Accessible { get; }
 
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 		[Field ("kSecAttrSynchronizableAny")]
 		IntPtr SynchronizableAny { get; }
 
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 		[Field ("kSecAttrSynchronizable")]
 		IntPtr Synchronizable { get; }

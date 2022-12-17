@@ -54,7 +54,7 @@ namespace AudioToolbox {
 		WAVE = 0x57415645, // WAVE
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -80,7 +80,7 @@ namespace AudioToolbox {
 		AMR = 0x616d7266, // amrf
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else

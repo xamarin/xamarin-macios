@@ -40,7 +40,7 @@ namespace Foundation {
 		Gregorian, Buddhist, Chinese, Hebrew, Islamic, IslamicCivil, Japanese, [Obsolete] RepublicOfChina, Persian, Indian, ISO8601,
 		Coptic, EthiopicAmeteAlem, EthiopicAmeteMihret,
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -50,7 +50,7 @@ namespace Foundation {
 #endif
 		IslamicTabular,
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]

@@ -60,7 +60,6 @@ namespace SafariServices {
 	}
 
 	[NoMac]
-	[iOS (7, 0)]
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSGenericException Misuse of SSReadingList interface. Use class method defaultReadingList.

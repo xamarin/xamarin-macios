@@ -208,7 +208,7 @@ namespace GLKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
@@ -218,8 +218,6 @@ namespace GLKit {
 		[ObsoletedOSPlatform ("tvos12.0", "Use 'Metal' instead.")]
 		[ObsoletedOSPlatform ("macos10.14", "Use 'Metal' instead.")]
 		[ObsoletedOSPlatform ("ios12.0", "Use 'Metal' instead.")]
-#else
-		[iOS (7, 0)]
 #endif
 		public bool? SRGB {
 			get {
