@@ -151,7 +151,6 @@ namespace SpriteKit {
 	[DisableDefaultCtor] // DesignatedInitializer below
 	[Mac (10, 9)]
 	[Watch (3, 0)]
-	[iOS (7, 0)]
 	[MacCatalyst (13, 1)]
 #if MONOMAC
 	[BaseType (typeof (NSResponder))]
@@ -322,7 +321,6 @@ namespace SpriteKit {
 		bool IntersectsNode (SKNode node);
 
 		[iOS (8, 3)]
-		[TV (9, 0)]
 		[Mac (10, 11)]
 		[Export ("isEqualToNode:")]
 		bool IsEqual (SKNode node);
@@ -427,7 +425,6 @@ namespace SpriteKit {
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[NoWatch]
-	[iOS (7, 0)]
 	[Category, BaseType (typeof (UITouch))]
 	partial interface SKNodeTouches_UITouch {
 
@@ -440,7 +437,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKEffectNode : SKWarpable {
 
@@ -569,7 +565,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (SKEffectNode))]
 	interface SKScene
 #if !WATCH
@@ -737,7 +732,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKSpriteNode : SKWarpable {
 
@@ -845,7 +839,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (NSObject))]
 	partial interface SKKeyframeSequence : NSSecureCoding, NSCopying {
 
@@ -897,7 +890,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKEmitterNode {
 
@@ -1088,7 +1080,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKShapeNode {
 
@@ -1269,7 +1260,6 @@ namespace SpriteKit {
 	}
 
 	[Watch (3, 0)]
-	[iOS (7, 0)]
 	[Mac (10, 9)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKLabelNode {
@@ -1362,7 +1352,6 @@ namespace SpriteKit {
 
 	[Watch (4, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKVideoNode {
 
@@ -1471,7 +1460,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKCropNode {
 
@@ -1482,7 +1470,6 @@ namespace SpriteKit {
 
 	[NoWatch]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (UIView))]
 #if XAMCORE_3_0
 	[DisableDefaultCtor]
@@ -1601,7 +1588,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	partial interface SKTransition : NSCopying {
@@ -1658,7 +1644,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	partial interface SKTexture : NSSecureCoding, NSCopying {
@@ -1765,7 +1750,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (NSObject))]
 	partial interface SKTextureAtlas : NSSecureCoding {
 
@@ -2246,7 +2230,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // <quote>To create an action, call the class method for the action you are interested in. </quote>
 	partial interface SKAction : NSSecureCoding, NSCopying {
@@ -2698,7 +2681,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[DisableDefaultCtor] // see https://bugzilla.xamarin.com/show_bug.cgi?id=14502
 	[BaseType (typeof (NSObject))]
 	partial interface SKPhysicsBody : NSSecureCoding, NSCopying {
@@ -2841,7 +2823,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // <quote>An SKPhysicsContact object is created automatically by Scene Kit</quote>
 	partial interface SKPhysicsContact {
@@ -2866,7 +2847,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -2884,7 +2864,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (NSObject),
 		   Delegates = new string [] { "WeakContactDelegate" },
 		   Events = new Type [] { typeof (SKPhysicsContactDelegate) })]
@@ -2945,7 +2924,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // <quote>You never instantiate objects of this class directly</quote>
 	partial interface SKPhysicsJoint : NSSecureCoding {
@@ -2967,7 +2945,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (SKPhysicsJoint))]
 	[DisableDefaultCtor] // impossible to set the `anchor` using the default ctor (see #14511) 
 	partial interface SKPhysicsJointPin {
@@ -2994,7 +2971,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (SKPhysicsJoint))]
 	[DisableDefaultCtor] // impossible to set the `anchorA` and `anchorB` using the default ctor (see #14511) 
 	partial interface SKPhysicsJointSpring {
@@ -3011,7 +2987,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (SKPhysicsJoint))]
 	[DisableDefaultCtor] // https://bugzilla.xamarin.com/show_bug.cgi?id=14511
 	partial interface SKPhysicsJointFixed {
@@ -3022,7 +2997,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (SKPhysicsJoint))]
 	[DisableDefaultCtor] // impossible to set the `anchor` and `axis` using the default ctor (see #14511) 
 	partial interface SKPhysicsJointSliding {
@@ -3042,7 +3016,6 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
-	[iOS (7, 0)]
 	[BaseType (typeof (SKPhysicsJoint))]
 	[DisableDefaultCtor] // impossible to set the `anchorA` and `anchorB` using the default ctor (see #14511) 
 	partial interface SKPhysicsJointLimit {

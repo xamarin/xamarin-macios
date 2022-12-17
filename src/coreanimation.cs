@@ -629,11 +629,11 @@ namespace CoreAnimation {
 		[Export ("drawsAsynchronously")]
 		bool DrawsAsynchronously { get; set; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("allowsEdgeAntialiasing")]
 		bool AllowsEdgeAntialiasing { get; set; }
 
-		[iOS (7, 0), Mac (10, 9)]
+		[Mac (10, 9)]
 		[Export ("allowsGroupOpacity")]
 		bool AllowsGroupOpacity { get; set; }
 
@@ -1906,7 +1906,7 @@ namespace CoreAnimation {
 	// 'initWithType:', 'behaviorWithType:' and 'behaviorTypes' API now cause rejection
 	// https://trello.com/c/J8BDDUV9/86-33590997-coreanimation-quartzcore-api-removals
 #if !NET
-	[iOS (7, 0), Mac (10, 9)]
+	[Mac (10, 9)]
 	[BaseType (typeof (NSObject))]
 	interface CAEmitterBehavior : NSSecureCoding {
 

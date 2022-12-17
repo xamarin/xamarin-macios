@@ -148,9 +148,6 @@ namespace UIKit {
 	// NSInteger -> NSLayoutConstraint.h
 	[Native]
 	[NoWatch]
-	[iOS (6, 0)]
-	[Mac (10, 7)]
-	[TV (9, 0)]
 	[MacCatalyst (13, 0)]
 	public enum NSLayoutAttribute : long {
 		NoAttribute = 0,
@@ -201,9 +198,6 @@ namespace UIKit {
 	[Flags]
 	[NoWatch]
 	[MacCatalyst (13, 0)]
-	[iOS (6, 0)]
-	[Mac (10, 7)]
-	[TV (9, 0)]
 	public enum NSLayoutFormatOptions : ulong {
 		None = 0,
 
@@ -306,9 +300,6 @@ namespace UIKit {
 
 	[MacCatalyst (13, 1)]
 	[NoWatch] // Header is not present in watchOS SDK.
-	[iOS (7, 0)]
-	[TV (9, 0)]
-	[Mac (10, 7)]
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	partial interface NSLayoutManager : NSSecureCoding {
@@ -1453,12 +1444,9 @@ namespace UIKit {
 	interface INSLayoutManagerDelegate { }
 
 	[NoWatch] // Header not present in watchOS SDK.
-	[iOS (7, 0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	[Mac (10, 0)]
-	[TV (9, 0)]
 	[MacCatalyst (13, 1)]
 	interface NSLayoutManagerDelegate {
 		[Export ("layoutManagerDidInvalidateLayout:")]
@@ -1468,7 +1456,6 @@ namespace UIKit {
 		void DidInvalidatedLayout (NSLayoutManager sender);
 #endif
 
-		[iOS (7, 0)]
 		[Export ("layoutManager:didCompleteLayoutForTextContainer:atEnd:")]
 #if NET || !MONOMAC
 		void DidCompleteLayout (NSLayoutManager layoutManager, [NullAllowed] NSTextContainer textContainer, bool layoutFinishedFlag);
@@ -1663,9 +1650,6 @@ namespace UIKit {
 
 	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
-	[iOS (6, 0)]
-	[Mac (10, 0)]
-	[TV (9, 0)]
 	[MacCatalyst (13, 1)]
 	interface NSParagraphStyle : NSSecureCoding, NSMutableCopying {
 		[Export ("lineSpacing")]
@@ -1733,11 +1717,9 @@ namespace UIKit {
 		NSParagraphStyle DefaultParagraphStyle { get; [NotImplemented] set; }
 #endif
 
-		[iOS (7, 0)]
 		[Export ("defaultTabInterval")]
 		nfloat DefaultTabInterval { get; [NotImplemented] set; }
 
-		[iOS (7, 0)]
 		[Export ("tabStops", ArgumentSemantic.Copy)]
 		[NullAllowed]
 		NSTextTab [] TabStops { get; [NotImplemented] set; }
@@ -1774,9 +1756,6 @@ namespace UIKit {
 
 	[ThreadSafe]
 	[BaseType (typeof (NSParagraphStyle))]
-	[iOS (6, 0)]
-	[Mac (10, 0)]
-	[TV (9, 0)]
 	[MacCatalyst (13, 1)]
 	interface NSMutableParagraphStyle {
 		[Export ("lineSpacing")]
@@ -1835,12 +1814,10 @@ namespace UIKit {
 		[Export ("usesDefaultHyphenation")]
 		bool UsesDefaultHyphenation { get; set; }
 
-		[iOS (7, 0)]
 		[Export ("defaultTabInterval")]
 		[Override]
 		nfloat DefaultTabInterval { get; set; }
 
-		[iOS (7, 0)]
 		[Export ("tabStops", ArgumentSemantic.Copy)]
 		[Override]
 		[NullAllowed]
@@ -2385,9 +2362,6 @@ namespace UIKit {
 #endif
 	}
 
-	[iOS (6, 0)]
-	[Mac (10, 7)]
-	[TV (9, 0)]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -2474,7 +2448,6 @@ namespace UIKit {
 
 	[Watch (9, 0)]
 	[Introduced (PlatformName.iOS)]
-	[TV (9, 0)]
 	[Mac (10, 11)]
 	[MacCatalyst (13, 0)]
 	[Model]
@@ -2497,9 +2470,6 @@ namespace UIKit {
 		CGRect GetAttachmentBounds ([NullAllowed] NSTextContainer textContainer, CGRect proposedLineFragment, CGPoint glyphPosition, nuint characterIndex);
 	}
 
-	[iOS (7, 0)]
-	[Mac (10, 0)]
-	[TV (9, 0)]
 	[MacCatalyst (13, 1)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
@@ -2603,7 +2573,6 @@ namespace UIKit {
 
 	[NoWatch]
 	[MacCatalyst (13, 0)]
-	[iOS (7, 0)]
 	[BaseType (typeof (NSMutableAttributedString), Delegates = new string [] { "Delegate" }, Events = new Type [] { typeof (NSTextStorageDelegate) })]
 	partial interface NSTextStorage : NSSecureCoding {
 		[Export ("initWithString:")]
@@ -2681,14 +2650,12 @@ namespace UIKit {
 		[Export ("ensureAttributesAreFixedInRange:")]
 		void EnsureAttributesAreFixed (NSRange range);
 
-		[iOS (7, 0)]
 		[Notification, Field ("NSTextStorageWillProcessEditingNotification")]
 #if !MONOMAC || NET
 		[Internal]
 #endif
 		NSString WillProcessEditingNotification { get; }
 
-		[iOS (7, 0)]
 		[Notification, Field ("NSTextStorageDidProcessEditingNotification")]
 #if !MONOMAC || NET
 		[Internal]
@@ -2704,9 +2671,6 @@ namespace UIKit {
 	interface INSTextStorageDelegate { }
 
 	[NoWatch]
-	[iOS (7, 0)]
-	[Mac (10, 6)]
-	[TV (9, 0)]
 	[MacCatalyst (13, 0)]
 	[Model]
 	[BaseType (typeof (NSObject))]
@@ -2997,7 +2961,7 @@ namespace UIKit {
 		string ElementKind { get; }
 	}
 
-	[iOS (9, 0), Watch (2, 0)]
+	[iOS (9, 0)]
 	[MacCatalyst (13, 0)]
 	[Mac (10, 11)]
 	[BaseType (typeof (NSObject))]
@@ -3046,9 +3010,6 @@ namespace UIKit {
 		NSColor ShadowColor { get; set; }
 	}
 
-	[iOS (7, 0)]
-	[Mac (10, 0)]
-	[TV (9, 0)]
 	[MacCatalyst (13, 0)]
 	[BaseType (typeof (NSObject))]
 	interface NSTextTab : NSSecureCoding, NSCopying {
@@ -3089,10 +3050,7 @@ namespace UIKit {
 		NSString ColumnTerminatorsAttributeName { get; }
 	}
 
-	[Mac (10, 7)]
-	[iOS (7, 0)]
 	[MacCatalyst (13, 0)]
-	[TV (9, 0)]
 	[NoWatch]
 	[Protocol]
 	// no [Model] since it's not exposed in any API
@@ -3110,9 +3068,6 @@ namespace UIKit {
 	}
 
 	[NoWatch]
-	[iOS (7, 0)]
-	[Mac (10, 0)]
-	[TV (9, 0)]
 	[MacCatalyst (13, 0)]
 	[BaseType (typeof (NSObject))]
 	partial interface NSTextContainer : NSTextLayoutOrientationProvider, NSSecureCoding {
@@ -3209,28 +3164,24 @@ namespace UIKit {
 	[ThreadSafe]
 	[Category, BaseType (typeof (NSString))]
 	interface NSExtendedStringDrawing {
-		[iOS (7, 0)]
 		[TV (7, 0)]
 		[MacCatalyst (13, 1)]
 		[Mac (10, 11)]
 		[Export ("drawWithRect:options:attributes:context:")]
 		void WeakDrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
 
-		[iOS (7, 0)]
 		[TV (7, 0)]
 		[MacCatalyst (13, 1)]
 		[Mac (10, 11)]
 		[Wrap ("WeakDrawString (This, rect, options, attributes.GetDictionary (), context)")]
 		void DrawString (CGRect rect, NSStringDrawingOptions options, StringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
 
-		[iOS (7, 0)]
 		[TV (7, 0)]
 		[MacCatalyst (13, 1)]
 		[Mac (10, 11)]
 		[Export ("boundingRectWithSize:options:attributes:context:")]
 		CGRect WeakGetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
 
-		[iOS (7, 0)]
 		[TV (7, 0)]
 		[MacCatalyst (13, 1)]
 		[Mac (10, 11)]
@@ -4154,7 +4105,7 @@ namespace UIKit {
 		NSTextRange GetAdjustedRange (NSTextRange textRange, bool forEditingTextSelection);
 	}
 
-	[TV (9, 0), NoWatch, Mac (10, 0), iOS (7, 0), MacCatalyst (13, 0)]
+	[NoWatch, MacCatalyst (13, 0)]
 	[BaseType (typeof (NSObject))]
 	interface NSTextList : NSCoding, NSCopying, NSSecureCoding {
 		[Export ("initWithMarkerFormat:options:")]
@@ -4429,5 +4380,34 @@ namespace UIKit {
 		[Mac (10, 15)]
 		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
 		NSString CocoaVersionDocumentAttribute { get; }
+	}
+
+	[Static]
+	[Internal]
+	interface NSAttributedStringDocumentReadingOptionKey {
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSWebPreferencesDocumentOption")]
+		NSString NSWebPreferencesDocumentOption { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSWebResourceLoadDelegateDocumentOption")]
+		NSString NSWebResourceLoadDelegateDocumentOption { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSBaseURLDocumentOption")]
+		NSString NSBaseURLDocumentOption { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSTextEncodingNameDocumentOption")]
+		NSString NSTextEncodingNameDocumentOption { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSTextSizeMultiplierDocumentOption")]
+		NSString NSTextSizeMultiplierDocumentOption { get; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Internal, Field ("NSTimeoutDocumentOption")]
+		NSString NSTimeoutDocumentOption { get; }
 	}
 }

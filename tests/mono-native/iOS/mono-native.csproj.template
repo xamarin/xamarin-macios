@@ -146,21 +146,6 @@
     <MtouchLink>SdkOnly</MtouchLink>
     <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'XRelease-bitcodeX|iPhone' ">
-    <DebugType>none</DebugType>
-    <Optimize>True</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <MtouchExtraArgs>-v -v --bitcode:full</MtouchExtraArgs>
-    <MtouchUseLlvm>true</MtouchUseLlvm>
-    <MtouchLink>SdkOnly</MtouchLink>
-    <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />

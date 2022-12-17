@@ -16,7 +16,7 @@ namespace GameController {
 	// float_t are 4 bytes (at least for ARM64)
 #if NET
 	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
 	[UnsupportedOSPlatform ("macos10.14.4")]
@@ -50,7 +50,7 @@ namespace GameController {
 
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.15")]
@@ -156,9 +156,9 @@ namespace GameController {
 
 		// GCGamepadSnapshot.h
 #if NET
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos9.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
@@ -176,9 +176,9 @@ namespace GameController {
 		static extern bool GCMicroGamepadSnapShotDataV100FromNSData (out GCMicroGamepadSnapShotDataV100 snapshotData, /* NSData */ IntPtr data);
 
 #if NET
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos9.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos10.14.4")]
 		[UnsupportedOSPlatform ("tvos12.2")]

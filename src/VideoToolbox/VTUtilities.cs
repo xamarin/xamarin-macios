@@ -20,7 +20,7 @@ using CoreVideo;
 namespace VideoToolbox {
 
 #if NET
-	[SupportedOSPlatform ("macos10.11")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios9.0")]
 	[SupportedOSPlatform ("tvos10.2")]
 	[SupportedOSPlatform ("maccatalyst")]

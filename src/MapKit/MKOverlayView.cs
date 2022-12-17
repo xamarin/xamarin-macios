@@ -17,7 +17,7 @@ namespace MapKit {
 
 #if NET
 		[SupportedOSPlatform ("tvos9.2")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]

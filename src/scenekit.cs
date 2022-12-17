@@ -228,7 +228,6 @@ namespace SceneKit {
 
 		[Abstract]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'SCNAnimationPlayer.Paused' instead.")]
-		[TV (9, 0)]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'SCNAnimationPlayer.Paused' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'SCNAnimationPlayer.Paused' instead.")]
 		[Mac (10, 9)]
@@ -3023,7 +3022,6 @@ namespace SceneKit {
 	[Watch (3, 0)]
 	[iOS (8, 0)]
 	[MacCatalyst (13, 0)]
-	[TV (9, 0)]
 	[Mac (10, 8)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
