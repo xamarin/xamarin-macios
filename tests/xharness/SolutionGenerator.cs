@@ -24,12 +24,6 @@ namespace Xharness {
 				"\t\t{0}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU\n" +
 				"\t\t{0}.Debug|iPhone.ActiveCfg = Debug|Any CPU\n" +
 				"\t\t{0}.Debug|iPhone.Build.0 = Debug|Any CPU\n" +
-				"\t\t{0}.Release-bitcode|Any CPU.ActiveCfg = Release-bitcode|Any CPU\n" +
-				"\t\t{0}.Release-bitcode|Any CPU.Build.0 = Release-bitcode|Any CPU\n" +
-				"\t\t{0}.Release-bitcode|iPhoneSimulator.ActiveCfg = Release-bitcode|Any CPU\n" +
-				"\t\t{0}.Release-bitcode|iPhoneSimulator.Build.0 = Release-bitcode|Any CPU\n" +
-				"\t\t{0}.Release-bitcode|iPhone.ActiveCfg = Release-bitcode|Any CPU\n" +
-				"\t\t{0}.Release-bitcode|iPhone.Build.0 = Release-bitcode|Any CPU\n" +
 				"\t\t{0}.Release|Any CPU.ActiveCfg = Release|Any CPU\n" +
 				"\t\t{0}.Release|Any CPU.Build.0 = Release|Any CPU\n" +
 				"\t\t{0}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU\n" +
@@ -112,14 +106,13 @@ namespace Xharness {
 				writer.WriteLine ("\t\tRelease|iPhoneSimulator = Release|iPhoneSimulator");
 				writer.WriteLine ("\t\tDebug|iPhone = Debug|iPhone");
 				writer.WriteLine ("\t\tRelease|iPhone = Release|iPhone");
-				writer.WriteLine ("\t\tRelease-bitcode|iPhone = Release-bitcode|iPhone");
 				writer.WriteLine ("\t\tDebug|Any CPU = Debug|Any CPU");
 				writer.WriteLine ("\t\tRelease|Any CPU = Release|Any CPU");
 				writer.WriteLine ("\tEndGlobalSection");
 
 				writer.WriteLine ("\tGlobalSection(ProjectConfigurationPlatforms) = postSolution");
 				var exePlatforms = new string [] { "iPhone", "iPhoneSimulator" };
-				var configurations = new string [] { "Debug", "Release", "Release-bitcode" };
+				var configurations = new string [] { "Debug", "Release" };
 				foreach (var target in targets) {
 					if (target.IsExe && exeTarget != null && target != exeTarget)
 						continue;

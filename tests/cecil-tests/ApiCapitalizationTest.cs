@@ -20,26 +20,6 @@ using ICustomAttributeProvider = Mono.Cecil.ICustomAttributeProvider;
 namespace Cecil.Tests {
 	[TestFixture]
 	public class ApiCapitalizationTest {
-
-		Dictionary<string, AssemblyDefinition> assemblyCache = new Dictionary<string, AssemblyDefinition> ();
-
-
-		[OneTimeSetUp]
-		public void SetUp ()
-		{
-			foreach (string assemblyPath in Helper.NetPlatformAssemblies) {
-
-				var assembly = Helper.GetAssembly (assemblyPath);
-				assemblyCache.Add (assemblyPath, assembly);
-			}
-		}
-
-		[OneTimeTearDown]
-		public void TearDown ()
-		{
-			assemblyCache.Clear ();
-		}
-
 		bool IsMemberObsolete (ICustomAttributeProvider member)
 		{
 			if (member is null || !member.HasCustomAttributes)
@@ -51,7 +31,7 @@ namespace Cecil.Tests {
 					m.AttributeType.Name == "ObsoletedOSPlatformAttribute");
 		}
 
-		bool IsUnique (string assemblyPath, MethodDefinition m)
+		bool IsUnique (MethodDefinition m)
 		{
 
 			return m is not null && (m.IsRemoveOn || m.IsAddOn || m.IsConstructor || m.IsSpecialName || IsMemberObsolete (m) || m.IsFamilyOrAssembly || m.IsPInvokeImpl);
@@ -131,10 +111,11 @@ namespace Cecil.Tests {
 			return Char.IsUpper (memberName [0]);
 		}
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
 		[Test]
-		public void PropertiesCapitalizationTest (string assemblyPath)
+		public void PropertiesCapitalizationTest (AssemblyInfo info)
 		{
+			var assembly = info.Assembly;
 			Func<TypeDefinition, IEnumerable<string>> selectLambda = (type) => {
 				var typeName = type.Name;
 				return type.Properties
@@ -142,62 +123,60 @@ namespace Cecil.Tests {
 						.Where (p => !IsSkip (type.Name, p.Name, allowedProperties) && !IsMemberObsolete (p) && !p.IsSpecialName)
 						.Select (p => p.Name);
 			};
-			CapitalizationTest (assemblyPath, selectLambda);
+			CapitalizationTest (assembly, selectLambda);
 		}
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
 		[Test]
-		public void MethodsCapitalizationTest (string assemblyPath)
+		public void MethodsCapitalizationTest (AssemblyInfo info)
 		{
+			var assembly = info.Assembly;
 			Func<TypeDefinition, IEnumerable<string>> selectLambda = (type) => {
 				return from m in type.Methods
-					   where m.IsPublic && !IsSkip (type.Name, m.Name, allowedMethods) && !IsUnique (assemblyPath, m)
+					   where m.IsPublic && !IsSkip (type.Name, m.Name, allowedMethods) && !IsUnique (m)
 					   select m.Name;
 			};
-			CapitalizationTest (assemblyPath, selectLambda);
+			CapitalizationTest (assembly, selectLambda);
 		}
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
 		[Test]
-		public void EventsCapitalizationTest (string assemblyPath)
+		public void EventsCapitalizationTest (AssemblyInfo info)
 		{
+			var assembly = info.Assembly;
 			Func<TypeDefinition, IEnumerable<string>> selectLambda = (type) => {
 				return from e in type.Events
 					   where !(Char.IsUpper (e.Name [0]))
 					   select e.Name;
 			};
-			CapitalizationTest (assemblyPath, selectLambda);
+			CapitalizationTest (assembly, selectLambda);
 		}
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
 		[Test]
-		public void FieldsCapitalizationTest (string assemblyPath)
+		public void FieldsCapitalizationTest (AssemblyInfo info)
 		{
+			var assembly = info.Assembly;
 			Func<TypeDefinition, IEnumerable<string>> selectLambda = (type) => {
 				return from f in type.Fields
 					   where f.IsPublic && f.IsFamilyOrAssembly && !IsSkip (type.Name, f.Name, allowedFields)
 					   select f.Name;
 			};
-			CapitalizationTest (assemblyPath, selectLambda);
+			CapitalizationTest (assembly, selectLambda);
 		}
 
-		public void CapitalizationTest (string assemblyPath, Func<TypeDefinition, IEnumerable<string>> selectLambda)
+		public void CapitalizationTest (AssemblyDefinition assembly, Func<TypeDefinition, IEnumerable<string>> selectLambda)
 		{
 
-			if (assemblyCache.TryGetValue (assemblyPath, out var cache)) {
-				var typeDict = new Dictionary<string, string> ();
+			var typeDict = new Dictionary<string, string> ();
 
-				var publicTypes = cache.MainModule.Types.Where ((t) => t.IsPublic && !IsMemberObsolete (t));
+			var publicTypes = assembly.MainModule.Types.Where ((t) => t.IsPublic && !IsMemberObsolete (t));
 
-				foreach (var type in publicTypes) {
-					TypeCheck (type, selectLambda, typeDict);
-				}
-
-				Assert.AreEqual (0, typeDict.Count (), $"Capitalization Issues Found: {string.Join (Environment.NewLine, typeDict)}");
-			} else {
-				Assert.Ignore ($"{assemblyPath} could not be found (might be disabled in build)");
+			foreach (var type in publicTypes) {
+				TypeCheck (type, selectLambda, typeDict);
 			}
 
+			Assert.AreEqual (0, typeDict.Count (), $"Capitalization Issues Found: {string.Join (Environment.NewLine, typeDict)}");
 		}
 
 		public void TypeCheck (TypeDefinition type, Func<TypeDefinition, IEnumerable<string>> selectLambda, Dictionary<string, string> typeDict)

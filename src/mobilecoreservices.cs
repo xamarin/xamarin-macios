@@ -534,7 +534,6 @@ namespace MobileCoreServices {
 
 		[Watch (2, 2)]
 		[iOS (9, 1)]
-		[TV (9, 0)]
 		[NoMac]
 		[Field ("kUTTypeLivePhoto", "+CoreServices")]
 		NSString LivePhoto { get; }

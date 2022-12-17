@@ -295,7 +295,6 @@ namespace GameKit {
 	}
 
 	// uint8_t -> GKTurnBasedMatch.h
-	[iOS (7, 0)]
 	public enum GKTurnBasedExchangeStatus : sbyte {
 		Unknown,
 		Active,
