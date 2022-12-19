@@ -442,6 +442,7 @@ namespace Security {
 		Proceed,
 
 		[Deprecated (PlatformName.iOS, 7, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		Confirm,
 		Deny,

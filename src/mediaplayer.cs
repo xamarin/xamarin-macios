@@ -1248,6 +1248,7 @@ namespace MediaPlayer {
 		MPMusicShuffleMode ShuffleMode { get; set; }
 
 		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'MPVolumeView' for volume control instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'MPVolumeView' for volume control instead.")]
 		[Export ("volume")]
 		float Volume { get; set; } // nfloat, not CGFloat
 
@@ -1330,10 +1331,12 @@ namespace MediaPlayer {
 		bool ShowsRouteButton { get; set; }
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRouteDetector.MultipleRoutesDetected' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AVRouteDetector.MultipleRoutesDetected' instead.")]
 		[Export ("showsVolumeSlider")]
 		bool ShowsVolumeSlider { get; set; }
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVPlayer.ExternalPlaybackActive' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AVPlayer.ExternalPlaybackActive' instead.")]
 		[Export ("setMinimumVolumeSliderImage:forState:")]
 		void SetMinimumVolumeSliderImage ([NullAllowed] UIImage image, UIControlState state);
 
@@ -1392,11 +1395,13 @@ namespace MediaPlayer {
 		UIImage VolumeWarningSliderImage { get; set; }
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRouteDetector.MultipleRoutesDetectedDidChange' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AVRouteDetector.MultipleRoutesDetectedDidChange' instead.")]
 		[Notification]
 		[Field ("MPVolumeViewWirelessRoutesAvailableDidChangeNotification")]
 		NSString WirelessRoutesAvailableDidChangeNotification { get; }
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVPlayer.ExternalPlaybackActive' KVO instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AVPlayer.ExternalPlaybackActive' KVO instead.")]
 		[Notification]
 		[Field ("MPVolumeViewWirelessRouteActiveDidChangeNotification")]
 		NSString WirelessRouteActiveDidChangeNotification { get; }
@@ -2124,6 +2129,7 @@ namespace MediaPlayer {
 
 		[Export ("init")]
 		[Deprecated (PlatformName.iOS, 11, 3)]
+		[Deprecated (PlatformName.TvOS, 11, 3)]
 		NativeHandle Constructor ();
 	}
 

@@ -502,6 +502,7 @@ namespace UIKit {
 		[Export ("glyphAtIndex:isValidIndex:")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'GetCGGlyph' instead).")]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'GetGlyph' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'GetGlyph' instead.")]
 #if MONOMAC
 #if NET
 		NSGlyph GlyphAtIndex (nuint glyphIndex, ref bool isValidIndex);
@@ -515,6 +516,7 @@ namespace UIKit {
 		[Export ("glyphAtIndex:")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'GetCGGlyph' instead).")]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'GetGlyph' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'GetGlyph' instead.")]
 #if MONOMAC
 #if NET
 		NSGlyph GlyphAtIndex (nuint glyphIndex);

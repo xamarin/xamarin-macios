@@ -1977,6 +1977,7 @@ namespace CoreData {
 		void RegisterStoreClass ([NullAllowed] Class storeClass, NSString storeType);
 
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use the method that takes an out NSError parameter.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use the method that takes an out NSError parameter.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use the method that takes an out NSError parameter.")]
 		[Static, Export ("metadataForPersistentStoreOfType:URL:error:")]
 		[return: NullAllowed]
@@ -1988,6 +1989,7 @@ namespace CoreData {
 		NSDictionary<NSString, NSObject> GetMetadata (string storeType, NSUrl url, [NullAllowed] NSDictionary options, out NSError error);
 
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use the method that takes an 'out NSError' parameter.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use the method that takes an 'out NSError' parameter.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use the method that takes an 'out NSError' parameter.")]
 		[Static, Export ("setMetadata:forPersistentStoreOfType:URL:error:")]
 		bool SetMetadata ([NullAllowed] NSDictionary metadata, [NullAllowed] NSString storeType, NSUrl url, out NSError error);
