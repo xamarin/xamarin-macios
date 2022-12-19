@@ -1,5 +1,5 @@
 //
-// WKWebKit/WKWindowFeatures.cs
+// WebKit/WKWindowFeatures.cs
 //
 // Authors:
 //   Aaron Bockover (abock@xamarin.com)

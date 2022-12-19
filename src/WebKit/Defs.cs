@@ -1,5 +1,5 @@
 //
-// WKWebKit/Defs.cs
+// WebKit/Defs.cs
 //
 // Authors:
 //   Aaron Bockover (abock@xamarin.com)
