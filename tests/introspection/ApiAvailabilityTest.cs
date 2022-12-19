@@ -294,8 +294,7 @@ namespace Introspection {
 				if (typeUnavailableVersion is not null && availableVersion is not null) {
 					if (availableVersion >= typeUnavailableVersion)
 						AddErrorLine ($"[FAIL] {m} in {m.DeclaringType.FullName} is marked with {ma} in {availableVersion} but the type {t.FullName} is [Unavailable ({Platform})] in {typeUnavailableVersion}");
-				}
-				 else {
+				} else {
 					AddErrorLine ($"[FAIL] {m} in {m.DeclaringType.FullName} is marked with {ma} but the type {t.FullName} is [Unavailable ({Platform})]");
 				}
 			}

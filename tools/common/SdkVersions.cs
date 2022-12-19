@@ -131,7 +131,7 @@ namespace Xamarin {
 			case ApplePlatform.TVOS: return TVOSVersion;
 			case ApplePlatform.MacCatalyst: return MacCatalystVersion;
 			default:
-				throw new ArgumentOutOfRangeException(nameof(platform), platform, $"Unknown platform: {platform}");
+				throw new ArgumentOutOfRangeException (nameof (platform), platform, $"Unknown platform: {platform}");
 			}
 		}
 
@@ -144,7 +144,7 @@ namespace Xamarin {
 			case ApplePlatform.TVOS: return MinTVOSVersion;
 			case ApplePlatform.MacCatalyst: return MinMacCatalystVersion;
 			default:
-				throw new ArgumentOutOfRangeException(nameof(platform), platform, $"Unknown platform: {platform}");
+				throw new ArgumentOutOfRangeException (nameof (platform), platform, $"Unknown platform: {platform}");
 			}
 		}
 	}

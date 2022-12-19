@@ -24,7 +24,7 @@ namespace Xamarin.Utils {
 			case "SupportedOSPlatformAttribute":
 				return $"[SupportedOSPlatform (\"{(string) ca.ConstructorArguments [0].Value}\")]";
 			case "ObsoletedOSPlatformAttribute":
-				return $"[ObsoletedOSPlatformAttribute (\"{(string) ca.ConstructorArguments[0].Value}\")]";
+				return $"[ObsoletedOSPlatformAttribute (\"{(string) ca.ConstructorArguments [0].Value}\")]";
 			default:
 				throw new NotImplementedException (ca.AttributeType.FullName);
 			}
