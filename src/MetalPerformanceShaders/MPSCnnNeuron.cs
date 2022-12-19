@@ -9,7 +9,7 @@ namespace MetalPerformanceShaders {
 	public partial class MPSCnnNeuronPReLU {
 #if NET
 		[SupportedOSPlatform ("tvos11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos12.0")]

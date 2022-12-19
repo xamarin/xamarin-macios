@@ -289,8 +289,8 @@ namespace CoreServices {
 			NTLM,
 			Digest,
 #if NET
-			[SupportedOSPlatform ("macos10.9")]
-			[SupportedOSPlatform ("ios7.0")]
+			[SupportedOSPlatform ("macos")]
+			[SupportedOSPlatform ("ios")]
 			[UnsupportedOSPlatform ("tvos12.0")]
 			[UnsupportedOSPlatform ("macos10.14")]
 			[UnsupportedOSPlatform ("ios12.0")]

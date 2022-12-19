@@ -284,10 +284,6 @@ namespace Foundation {
 #endif
 	}
 
-#if MONOMAC
-	interface NSAttributedStringDocumentAttributes { }
-#endif
-
 	[BaseType (typeof (NSObject))]
 	partial interface NSAttributedString : NSCoding, NSMutableCopying, NSSecureCoding
 #if MONOMAC
@@ -658,7 +654,6 @@ namespace Foundation {
 		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSStringDrawingContext context);
 
 		[MacCatalyst (13, 1)]
-		[iOS (6, 0)]
 		[Export ("size")]
 		CGSize Size { get; }
 

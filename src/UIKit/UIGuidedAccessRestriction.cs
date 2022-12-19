@@ -21,7 +21,7 @@ namespace UIKit {
 	public static partial class UIGuidedAccessRestriction {
 #if !COREBUILD
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #endif
@@ -29,7 +29,7 @@ namespace UIKit {
 		extern static /* UIGuidedAccessRestrictionState */ nint UIGuidedAccessRestrictionStateForIdentifier (/* NSString */ IntPtr restrictionIdentifier);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #endif

@@ -22,8 +22,8 @@ namespace AppKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.11")]
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -35,7 +35,7 @@ namespace AppKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]

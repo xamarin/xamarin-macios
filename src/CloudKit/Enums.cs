@@ -207,7 +207,13 @@ namespace CloudKit {
 	}
 
 	[Watch (3, 0)]
-	[iOS (10, 10), Mac (10, 12)]
+	[iOS (10, 0)]
+	[Mac (10, 12)]
+	[TV (10, 0)]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'CKShareParticipantRole' instead.")]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'CKShareParticipantRole' instead.")]
+	[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'CKShareParticipantRole' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'CKShareParticipantRole' instead.")]
 	[Native]
 	public enum CKShareParticipantType : long {
 		Unknown = 0,
