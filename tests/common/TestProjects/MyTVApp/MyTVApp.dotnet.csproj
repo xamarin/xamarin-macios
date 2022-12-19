@@ -4,7 +4,7 @@
     <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-tvos</TargetFramework>
     <RuntimeIdentifier>tvossimulator-x64</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
-    <SupportedOSPlatformVersion>$(tvOSMinSupportedOSPlatformVersion)</SupportedOSPlatformVersion>
+    <CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
   </PropertyGroup>
 
   <ItemGroup>

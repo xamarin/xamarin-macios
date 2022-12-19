@@ -4,6 +4,6 @@
     <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
     <OutputType>Exe</OutputType>
     <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
-    <SupportedOSPlatformVersion>$(iOSMinSupportedOSPlatformVersion)</SupportedOSPlatformVersion>
+    <CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
   </PropertyGroup>
 </Project>

@@ -4,7 +4,7 @@
 		<TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
 		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
 		<OutputType>Exe</OutputType>
-		<SupportedOSPlatformVersion>$(iOSMinSupportedOSPlatformVersion)</SupportedOSPlatformVersion>
+		<CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../../../tests/common/SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
 	</PropertyGroup>
 	<ItemGroup>
 		<Compile Include="../AppDelegate.cs" />

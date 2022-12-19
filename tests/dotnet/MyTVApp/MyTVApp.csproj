@@ -3,6 +3,6 @@
 	<PropertyGroup>
 		<TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-tvos</TargetFramework>
 		<OutputType>Exe</OutputType>
-		<SupportedOSPlatformVersion>$(tvOSMinSupportedOSPlatformVersion)</SupportedOSPlatformVersion>
+		<CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../common/SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
 	</PropertyGroup>
 </Project>
