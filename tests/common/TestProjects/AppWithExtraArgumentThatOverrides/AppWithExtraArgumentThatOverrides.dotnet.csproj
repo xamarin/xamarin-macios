@@ -11,4 +11,8 @@
   <PropertyGroup>
     <MtouchExtraArgs>--linksdkonly</MtouchExtraArgs>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Info.plist" />
+    <None Update="Info-dotnet.plist" Link="Info.plist" />
+  </ItemGroup>
 </Project>
