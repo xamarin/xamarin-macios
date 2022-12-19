@@ -874,6 +874,13 @@ namespace Xamarin.Tests {
 			args.Add ($"-lib:{Path.GetDirectoryName (GetBaseLibrary (profile))}");
 			return "/Library/Frameworks/Mono.framework/Commands/csc";
 		}
+
+		public static void AssertiOS32BitAvailable ()
+		{
+			if (iOSSupports32BitArchitectures)
+				return;
+			Assert.Ignore ($"32-bit iOS support is not available in the current build.");
+		}
 #endif // !XAMMAC_TESTS
 
 		public static IEnumerable<ApplePlatform> GetIncludedPlatforms (bool dotnet)
