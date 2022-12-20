@@ -1164,6 +1164,7 @@ namespace Xamarin.Tests {
 		public void BuildAndExecuteAppWithNativeDynamicLibrariesInPackageReference (ApplePlatform platform, string runtimeIdentifier)
 		{
 			var project = "AppWithNativeDynamicLibrariesInPackageReference";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
 			Clean (project_path);
