@@ -33,11 +33,11 @@ namespace MonoTouchFixtures.AVFoundation {
 		}
 
 		[Test]
-		public void FromUrlWithInvalidUrl()
+		public void FromUrlWithInvalidUrl ()
 		{
-			Assert.DoesNotThrow(() => {
-				using (AVAudioPlayer player = AVAudioPlayer.FromUrl(NSUrl.FromString("sdf"), out NSError error)) ;
-				Assert.Null(player, "AVAudioPlayer");
+			Assert.DoesNotThrow (() => {
+				using (AVAudioPlayer player = AVAudioPlayer.FromUrl (NSUrl.FromString ("sdf"), out NSError error)) ;
+				Assert.Null (player, "AVAudioPlayer");
 				Assert.NotNull (error, "NSError");
 			});
 		}
@@ -45,8 +45,8 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void FromData ()
 		{
-			using (NSData data = NSData.FromFile(NSBundle.MainBundle.PathForResource("Hand", "wav")));
-			using (AVAudioPlayer ap = AVAudioPlayer.FromData(data, out NSError error));
+			using (NSData data = NSData.FromFile (NSBundle.MainBundle.PathForResource ("Hand", "wav"))) ;
+			using (AVAudioPlayer ap = AVAudioPlayer.FromData (data, out NSError error)) ;
 			Assert.NotNull (ap, "AVAudioPlayer");
 			Assert.NotNull (error, "NSError");
 		}
@@ -56,7 +56,7 @@ namespace MonoTouchFixtures.AVFoundation {
 		{
 			Assert.DoesNotThrow (() => {
 				using (var ap = AVAudioPlayer.FromData (null, out NSError error))
-				Assert.Null (player, "AVAudioPlayer");
+					Assert.Null (player, "AVAudioPlayer");
 				Assert.NotNull (error, "NSError");
 			});
 		}

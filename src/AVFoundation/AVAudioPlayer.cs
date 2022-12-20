@@ -52,7 +52,7 @@ namespace AVFoundation {
 
 		public static AVAudioPlayer? FromUrl (NSUrl url)
 		{
-			return FromUrl(url, out _);
+			return FromUrl (url, out _);
 		}
 
 		public static AVAudioPlayer? FromData (NSData data, out NSError? error)
@@ -73,7 +73,7 @@ namespace AVFoundation {
 
 		public static AVAudioPlayer? FromData (NSData data)
 		{
-			return FromData(data, out _);
+			return FromData (data, out _);
 		}
 	}
 #endif // !WATCH
