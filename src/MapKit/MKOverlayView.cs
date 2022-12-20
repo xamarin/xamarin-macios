@@ -2,6 +2,7 @@
 // 
 //
 
+#if !XAMCORE_5_0
 #if !WATCH
 
 using System;
@@ -20,9 +21,12 @@ namespace MapKit {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("ios7.0")]
-		[ObsoletedOSPlatform ("ios7.0", "Use 'MKOverlayRenderer' instead.")]
+		[ObsoletedOSPlatform ("ios", "Use 'MKOverlayRenderer.MKRoadWidthAtZoomScale' instead.")]
+		[ObsoletedOSPlatform ("macos", "Use 'MKOverlayRenderer.MKRoadWidthAtZoomScale' instead.")]
+		[ObsoletedOSPlatform ("tvos", "Use 'MKOverlayRenderer.MKRoadWidthAtZoomScale' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst", "Use 'MKOverlayRenderer.MKRoadWidthAtZoomScale' instead.")]
 #else
+		[Obsolete ("Use 'MKOverlayRenderer.MKRoadWidthAtZoomScale' instead.")]
 		[TV (9, 2)]
 		[Mac (10, 9)]
 #endif
@@ -32,3 +36,4 @@ namespace MapKit {
 }
 
 #endif
+#endif // !XAMCORE_5_0
