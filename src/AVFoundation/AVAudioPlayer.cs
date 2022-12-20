@@ -33,7 +33,7 @@ namespace AVFoundation {
 	public partial class AVAudioPlayer {
 
 		[DllImport (Constants.ObjectiveCLibrary, EntryPoint = "objc_msgSend")]
-		unsafe static extern IntPtr objc_msgSend (IntPtr receiver, IntPtr selector, IntPtr arg1, IntPtr arg2);
+		unsafe static extern IntPtr objc_msgSend (IntPtr receiver, IntPtr selector, IntPtr arg1, IntPtr* arg2);
 
 		public static AVAudioPlayer? FromUrl (NSUrl url, out NSError? error)
 		{
@@ -44,7 +44,7 @@ namespace AVFoundation {
 			if (handle == IntPtr.Zero)
 				return null;
 			unsafe {
-				handle = objc_msgSend (handle, Selector.GetHandle ("initWithContentsOfURL:error:"), url__handle__, errorptr);
+				handle = objc_msgSend (handle, Selector.GetHandle ("initWithContentsOfURL:error:"), url__handle__, &errorptr);
 			}
 			error = Runtime.GetNSObject<NSError> (errorptr);
 			return Runtime.GetNSObject<AVAudioPlayer> (handle, owns: true);
@@ -65,7 +65,7 @@ namespace AVFoundation {
 			if (handle == IntPtr.Zero)
 				return null;
 			unsafe {
-				handle = objc_msgSend (handle, Selector.GetHandle ("initWithData:error:"), data__handle__, errorptr);
+				handle = objc_msgSend (handle, Selector.GetHandle ("initWithData:error:"), data__handle__, &errorptr);
 			}
 			error = Runtime.GetNSObject<NSError> (errorptr);
 			return Runtime.GetNSObject<AVAudioPlayer> (handle, owns: true);
