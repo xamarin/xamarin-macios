@@ -229,6 +229,7 @@ namespace Foundation {
 		Second = 128,
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
 		Week = 256,
 		Weekday = 512,
 		WeekdayOrdinal = 1024,

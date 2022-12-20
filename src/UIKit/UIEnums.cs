@@ -64,6 +64,7 @@ namespace UIKit {
 		Plain,
 
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'UIBarButtonItemStyle.Plain' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'UIBarButtonItemStyle.Plain' instead.")]
 		Bordered,
 
 		Done,
@@ -97,6 +98,7 @@ namespace UIKit {
 		Undo,
 		Redo,
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.TvOS, 11, 0)]
 		PageCurl,
 		[iOS (13, 0), NoTV]
 		Close,
@@ -287,9 +289,11 @@ namespace UIKit {
 		CompactPrompt,
 
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'UIBarMetrics.Compat' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'UIBarMetrics.Compat' instead.")]
 		LandscapePhone = Compact,
 
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'UIBarMetrics.CompactPrompt' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'UIBarMetrics.CompactPrompt' instead.")]
 		LandscapePhonePrompt = CompactPrompt
 	}
 
