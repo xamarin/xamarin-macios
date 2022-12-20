@@ -218,7 +218,6 @@ namespace Cecil.Tests {
 			"Intents.INStartCallIntent..ctor(Intents.INCallAudioRoute, Intents.INCallDestinationType, Intents.INPerson[], Intents.INCallRecordType, Intents.INCallCapability)",
 			"Intents.INStartCallIntent.get_RecordTypeForRedialing()",
 			"MapKit.MKOverlayView",
-			"MapKit.MKOverlayView.MKRoadWidthAtZoomScale(System.Runtime.InteropServices.NFloat)",
 			"MapKit.MKPinAnnotationColor",
 			"MediaPlayer.MPMoviePlayerController",
 			"MediaPlayer.MPMoviePlayerViewController",
