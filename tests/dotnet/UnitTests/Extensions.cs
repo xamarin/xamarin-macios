@@ -3,8 +3,7 @@ using System;
 #nullable enable
 
 namespace Xamarin.Tests {
-	public static class Extensions
-	{
+	public static class Extensions {
 		public static void AssertNoWarnings (this ExecutionResult result)
 		{
 			var warnings = BinLog.GetBuildLogWarnings (result.BinLogPath).ToArray ();
