@@ -57,6 +57,7 @@ namespace CoreGraphics {
 
 	// untyped enum -> CGContext.h
 	[Deprecated (PlatformName.iOS, 7, 0)]
+	[Deprecated (PlatformName.TvOS, 9, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 9)]
 	public enum CGTextEncoding {
 		FontSpecific,

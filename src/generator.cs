@@ -3534,7 +3534,7 @@ public partial class Generator : IMemberGatherer {
 
 	static void AddImpliedPlatforms (List<AvailabilityBaseAttribute> memberAvailability)
 	{
-		foreach (var platform in new [] { PlatformName.MacCatalyst, PlatformName.TvOS }) {
+		foreach (var platform in new [] { PlatformName.MacCatalyst }) {
 			if (!PlatformMarkedUnavailable (platform, memberAvailability) &&
 				!PlatformHasIntroduced (platform, memberAvailability)) {
 				foreach (var attr in memberAvailability.Where (v => v.Platform == PlatformName.iOS).ToList ()) {

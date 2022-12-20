@@ -275,12 +275,14 @@ namespace CoreImage {
 #if HAS_OPENGLES
 		[NoMac][NoMacCatalyst]
 		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.TvOS, 12, 0)]
 		[Static]
 		[Export ("contextWithEAGLContext:")]
 		CIContext FromContext (EAGLContext eaglContext);
 
 		[NoMac][NoMacCatalyst]
 		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.TvOS, 12, 0)]
 		[Static]
 		[Export ("contextWithEAGLContext:options:")]
 		CIContext FromContext (EAGLContext eaglContext, [NullAllowed] NSDictionary dictionary);
@@ -315,6 +317,7 @@ namespace CoreImage {
 		void Render (CIImage image, IMTLTexture texture, [NullAllowed] IMTLCommandBuffer commandBuffer, CGRect bounds, CGColorSpace colorSpace);
 
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'DrawImage (image, CGRect, CGRect)' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'DrawImage (image, CGRect, CGRect)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message: "Use 'DrawImage (image, CGRect, CGRect)' instead.")]
 		[Export ("drawImage:atPoint:fromRect:")]
 		void DrawImage (CIImage image, CGPoint atPoint, CGRect fromRect);
@@ -1813,6 +1816,7 @@ namespace CoreImage {
 		CIImage FromData (NSData bitmapData, nint bytesPerRow, CGSize size, int /* CIFormat = int */ pixelFormat, [NullAllowed] CGColorSpace colorSpace);
 
 		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.TvOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Static]
 		[Export ("imageWithTexture:size:flipped:colorSpace:")]
@@ -2731,12 +2735,14 @@ namespace CoreImage {
 		CIKernel [] FromMetalSource (string source, [NullAllowed] out NSError error);
 
 		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.TvOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Static, Export ("kernelsWithString:")]
 		[return: NullAllowed]
 		CIKernel [] FromProgramMultiple (string coreImageShaderProgram);
 
 		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.TvOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Static, Export ("kernelWithString:")]
 		[return: NullAllowed]
@@ -2793,6 +2799,7 @@ namespace CoreImage {
 		// Note: the API is supported in iOS 8, but with iOS 9, they guarantee
 		// a more derived result
 		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.TvOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[New, Static, Export ("kernelWithString:")]
 		[return: NullAllowed]
@@ -2811,6 +2818,7 @@ namespace CoreImage {
 		// Note: the API is supported in iOS 8, but with iOS 9, they guarantee
 		// a more derived result
 		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.TvOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[New, Static, Export ("kernelWithString:")]
 		[return: NullAllowed]
@@ -5968,6 +5976,7 @@ namespace CoreImage {
 	interface CIBlendKernel {
 
 		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.TvOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Static]
 		[Export ("kernelWithString:")]
