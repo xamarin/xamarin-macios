@@ -2006,11 +2006,13 @@ namespace UIKit {
 	interface UIViewControllerPreviewing {
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
 		[Abstract]
 		[Export ("previewingGestureRecognizerForFailureRelationship")]
 		UIGestureRecognizer PreviewingGestureRecognizerForFailureRelationship { get; }
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
 		[Abstract]
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate {
@@ -2025,11 +2027,13 @@ namespace UIKit {
 		IUIViewControllerPreviewingDelegate Delegate { get; }
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
 		[Abstract]
 		[Export ("sourceView")]
 		UIView SourceView { get; }
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
 		[Abstract]
 		[Export ("sourceRect")]
 		CGRect SourceRect { get; set; }
@@ -7209,6 +7213,7 @@ namespace UIKit {
 
 		[iOS (9, 0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'UIKeyCommand.Create (NSString, UIKeyModifierFlags, Selector)' overload instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'UIKeyCommand.Create (NSString, UIKeyModifierFlags, Selector)' overload instead.")]
 		[Static]
 		[Export ("keyCommandWithInput:modifierFlags:action:discoverabilityTitle:")]
 		UIKeyCommand Create (NSString keyCommandInput, UIKeyModifierFlags modifierFlags, Selector action, NSString discoverabilityTitle);
@@ -11205,6 +11210,7 @@ namespace UIKit {
 	delegate void UIPreviewHandler (UIPreviewAction action, UIViewController previewViewController);
 
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
+	[Deprecated (PlatformName.TvOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
 	[iOS (9, 0), NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface UIPreviewAction : UIPreviewActionItem, NSCopying {
@@ -11218,6 +11224,7 @@ namespace UIKit {
 	}
 
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
+	[Deprecated (PlatformName.TvOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
 	[iOS (9, 0), NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface UIPreviewActionGroup : UIPreviewActionItem, NSCopying {
@@ -13756,10 +13763,12 @@ namespace UIKit {
 		bool ShouldShowMenu (UITableView tableView, NSIndexPath rowAtindexPath);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
 		[Export ("tableView:canPerformAction:forRowAtIndexPath:withSender:")]
 		bool CanPerformAction (UITableView tableView, Selector action, NSIndexPath indexPath, [NullAllowed] NSObject sender);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
 		[Export ("tableView:performAction:forRowAtIndexPath:withSender:")]
 		void PerformAction (UITableView tableView, Selector action, NSIndexPath indexPath, [NullAllowed] NSObject sender);
 
@@ -15274,71 +15283,85 @@ namespace UIKit {
 		[NoTV]
 		[Export ("contentStretch")]
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'CreateResizableImage' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'CreateResizableImage' instead.")]
 		CGRect ContentStretch { get; set; }
 
 		[Static]
 		[Export ("beginAnimations:context:")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
 		void BeginAnimations ([NullAllowed] string animationID, IntPtr context);
 
 		[Static]
 		[Export ("commitAnimations")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
 		void CommitAnimations ();
 
 		[Static]
 		[Export ("setAnimationDelegate:")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
 		void SetAnimationDelegate (NSObject del);
 
 		[Static]
 		[Export ("setAnimationWillStartSelector:")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
 		void SetAnimationWillStartSelector (Selector sel);
 
 		[Static]
 		[Export ("setAnimationDidStopSelector:")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
 		void SetAnimationDidStopSelector (Selector sel);
 
 		[Static]
 		[Export ("setAnimationDuration:")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
 		void SetAnimationDuration (double duration);
 
 		[Static]
 		[Export ("setAnimationDelay:")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
 		void SetAnimationDelay (double delay);
 
 		[Static]
 		[Export ("setAnimationStartDate:")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
 		void SetAnimationStartDate (NSDate startDate);
 
 		[Static]
 		[Export ("setAnimationCurve:")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
 		void SetAnimationCurve (UIViewAnimationCurve curve);
 
 		[Static]
 		[Export ("setAnimationRepeatCount:")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
 		void SetAnimationRepeatCount (float repeatCount /* This is float, not nfloat */);
 
 		[Static]
 		[Export ("setAnimationRepeatAutoreverses:")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
 		void SetAnimationRepeatAutoreverses (bool repeatAutoreverses);
 
 		[Static]
 		[Export ("setAnimationBeginsFromCurrentState:")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
 		void SetAnimationBeginsFromCurrentState (bool fromCurrentState);
 
 		[Static]
 		[Export ("setAnimationTransition:forView:cache:")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Please use the 'Action' handler based animation APIs instead.")]
 		void SetAnimationTransition (UIViewAnimationTransition transition, UIView forView, bool cache);
 
 		[Static]
@@ -16970,6 +16993,7 @@ namespace UIKit {
 
 		[Abstract]
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'NotifyWhenInteractionChanges' instead.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use 'NotifyWhenInteractionChanges' instead.")]
 		[Export ("notifyWhenInteractionEndsUsingBlock:")]
 		void NotifyWhenInteractionEndsUsingBlock (Action<IUIViewControllerTransitionCoordinatorContext> handler);
 
@@ -17687,6 +17711,7 @@ namespace UIKit {
 #pragma warning restore 618
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Not supported anymore.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Not supported anymore.")]
 		[Static, Export ("wantsDefaultContentAppearance")]
 		bool WantsDefaultContentAppearance { get; }
 	}
@@ -19562,6 +19587,7 @@ namespace UIKit {
 		[NullAllowed, Export ("preferredFocusedView", ArgumentSemantic.Weak)]
 		[iOS (9, 0)] // duplicated so it's inlined properly
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'PreferredFocusEnvironments' instead.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use 'PreferredFocusEnvironments' instead.")]
 		UIView PreferredFocusedView { get; }
 
 		[Abstract]
