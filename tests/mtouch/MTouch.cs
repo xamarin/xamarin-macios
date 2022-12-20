@@ -427,7 +427,7 @@ public class B : A {}
 						// Assert that the xamarin_supports_dynamic_registration is identical between the app and the extension.
 						string [] abis;
 						if (string.IsNullOrEmpty (abi)) {
-							abis = new string [] { "arm64" };
+							abis = new string [] { Configuration.iOSSupports32BitArchitectures ? "armv7" : "arm64" };
 						} else {
 							abis = abi.Split (',').Select ((v) => v.Replace ("+llvm", "")).ToArray ();
 						}
