@@ -45,5 +45,11 @@
     <Compile Include="..\mtouch\Cache.cs">
       <Link>Cache.cs</Link>
     </Compile>
+    <Compile Include="..\..\tools\common\OSPlatformAttributeExtensions.cs">
+      <Link>OSPlatformAttributeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
   </ItemGroup>
 </Project>
