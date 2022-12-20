@@ -27,6 +27,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -337,6 +338,7 @@ namespace Foundation {
 #endif
 
 #if !XAMCORE_5_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
 #if NET8_0
 		[Obsolete ("This property is ignored.")]
 #else
