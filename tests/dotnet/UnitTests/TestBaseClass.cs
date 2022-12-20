@@ -66,12 +66,12 @@ namespace Xamarin.Tests {
 		{
 			var rv = GetProjectPath (project, subdir, platform);
 			if (string.IsNullOrEmpty (runtimeIdentifiers))
-				runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
+				runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform, configuration);
 			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
 			return Path.Combine (Path.GetDirectoryName (rv)!, "bin", configuration, platform.ToFramework (netVersion), appPathRuntimeIdentifier);
 		}
 
-		protected string GetDefaultRuntimeIdentifier (ApplePlatform platform)
+		protected string GetDefaultRuntimeIdentifier (ApplePlatform platform, string configuration = "Debug")
 		{
 			switch (platform) {
 			case ApplePlatform.iOS:
@@ -79,9 +79,9 @@ namespace Xamarin.Tests {
 			case ApplePlatform.TVOS:
 				return "tvossimulator-x64";
 			case ApplePlatform.MacOSX:
-				return "osx-x64";
+				return "Release".Equals (configuration, StringComparison.OrdinalIgnoreCase) ? "osx-x64;osx-arm64" : "osx-x64";
 			case ApplePlatform.MacCatalyst:
-				return "maccatalyst-x64";
+				return "Release".Equals (configuration, StringComparison.OrdinalIgnoreCase) ? "maccatalyst-x64;maccatalyst-arm64" : "maccatalyst-x64";
 			default:
 				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
 			}

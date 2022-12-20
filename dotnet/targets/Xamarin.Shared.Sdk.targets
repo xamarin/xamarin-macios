@@ -172,6 +172,7 @@
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' == '' And '$(_IsMultiRidBuild)' != 'true'">
 			_ComputePublishTrimmed;
 			BuildOnlySettings;
+			_CompileEntitlements;
 			_CollectBundleResources;
 			_PackLibraryResources;
 			_UnpackLibraryResources;
@@ -197,8 +198,8 @@
 		<!-- outer build for multi-rid build -->
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
 			_CollectBundleResources;
-			_RunRidSpecificBuild;
 			_CompileEntitlements;
+			_RunRidSpecificBuild;
 			_DetectAppManifest;
 			_ReadAppManifest;
 			_WriteAppManifest;
@@ -221,7 +222,6 @@
 			_CreatePkgInfo;
 			_SmeltMetal;
 			_TemperMetal;
-			_CompileEntitlements;
 			_DetectAppManifest;
 			_ReadAppManifest;
 			_WriteAppManifest;
@@ -330,6 +330,7 @@
 				_ProcessedColladaAssetsPath=$(_ProcessedColladaAssetsPath);
 				_ProcessedTextureAtlasesPath=$(_ProcessedTextureAtlasesPath);
 				_ProcessedCoreMLModelsPath=$(_ProcessedCoreMLModelsPath);
+				_CompiledEntitlementsPath=$(_CompiledEntitlementsPath);
 			</_RidSpecificProperties>
 		</PropertyGroup>
 
@@ -1579,7 +1580,7 @@
 			<_CreateDumpExecutableToSign Include="@(_CreateDumpExecutable -> '$(_DylibPublishDir)%(RelativePath)')" KeepMetadata="false">
 				<CodesignAllocate>$(_CodesignAllocate)</CodesignAllocate>
 				<CodesignDisableTimestamp Condition="'$(_BundlerDebug)' == 'true'">true</CodesignDisableTimestamp>
-				<CodesignEntitlements>$(IntermediateOutputPath)Entitlements.xcent</CodesignEntitlements>
+				<CodesignEntitlements>$(_CompiledEntitlementsPath)</CodesignEntitlements>
 				<CodesignExtraArgs>$(CodesignExtraArgs)</CodesignExtraArgs>
 				<CodesignKeychain>$(CodesignKeychain)</CodesignKeychain>
 				<CodesignResourceRules>$(_PreparedResourceRules)</CodesignResourceRules>
