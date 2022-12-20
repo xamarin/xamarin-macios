@@ -4387,27 +4387,33 @@ namespace UIKit {
 	interface NSAttributedStringDocumentReadingOptionKey {
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
-		[Internal, Field ("NSWebPreferencesDocumentOption")]
+		[Field ("NSWebPreferencesDocumentOption")]
 		NSString NSWebPreferencesDocumentOption { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
-		[Internal, Field ("NSWebResourceLoadDelegateDocumentOption")]
+		[Field ("NSWebResourceLoadDelegateDocumentOption")]
 		NSString NSWebResourceLoadDelegateDocumentOption { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
-		[Internal, Field ("NSBaseURLDocumentOption")]
+		[Field ("NSBaseURLDocumentOption")]
 		NSString NSBaseURLDocumentOption { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
-		[Internal, Field ("NSTextEncodingNameDocumentOption")]
+		[Field ("NSTextEncodingNameDocumentOption")]
 		NSString NSTextEncodingNameDocumentOption { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
-		[Internal, Field ("NSTextSizeMultiplierDocumentOption")]
+		[Field ("NSTextSizeMultiplierDocumentOption")]
 		NSString NSTextSizeMultiplierDocumentOption { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
-		[Internal, Field ("NSTimeoutDocumentOption")]
+		[Field ("NSTimeoutDocumentOption")]
 		NSString NSTimeoutDocumentOption { get; }
+
+		// This field is really inside WebKit
+		[NoWatch, NoTV]
+		[Mac (10, 15), iOS (13, 0)]
+		[Field ("NSReadAccessURLDocumentOption", "WebKit")]
+		NSString NSReadAccessURLDocumentOption { get; }
 	}
 }

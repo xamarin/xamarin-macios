@@ -869,16 +869,6 @@ namespace Foundation {
 	[Mac (10, 15), iOS (13, 0)]
 	delegate void NSAttributedStringCompletionHandler ([NullAllowed] NSAttributedString attributedString, [NullAllowed] NSDictionary<NSString, NSObject> attributes, [NullAllowed] NSError error);
 
-	[NoWatch]
-	[NoTV] // really inside WebKit
-	[Mac (10, 15), iOS (13, 0)]
-	[Static]
-	[Internal]
-	interface NSAttributedStringDocumentReadingOptionKeys {
-		[Field ("NSReadAccessURLDocumentOption", "WebKit")]
-		NSString ReadAccessUrlKey { get; }
-	}
-
 	[BaseType (typeof (NSObject),
 		   Delegates = new string [] { "WeakDelegate" },
 		   Events = new Type [] { typeof (NSCacheDelegate) })]
