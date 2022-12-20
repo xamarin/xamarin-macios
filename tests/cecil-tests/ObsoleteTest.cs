@@ -37,7 +37,7 @@ namespace Cecil.Tests {
 		bool FilterMember (ICustomAttributeProvider provider)
 		{
 			// If an API isn't obsolete, it's not under scrutiny from this test.
-			if (!HasObsoleteAttribute (provider))
+			if (!provider.IsObsolete ())
 				return false;
 
 			// If the API has an UnsupportedOSPlatform attribute with a version, it means the API is available
@@ -48,19 +48,13 @@ namespace Cecil.Tests {
 #if !XAMCORE_5_0
 			// If we've hidden an API from the IDE, assume we've decided to keep the API for binary compatibility
 			// At least until the next time we can do breaking changes.
-			if (HasEditorBrowseableNeverAttribute (provider))
+			if (provider.HasEditorBrowseableNeverAttribute ())
 				return false;
 #endif
 
 			// I'm bad!
 			return true;
 		}
-
-		bool HasObsoleteAttribute (ICustomAttributeProvider provider) => HasObsoleteAttribute (provider.CustomAttributes);
-
-		bool HasObsoleteAttribute (IEnumerable<CustomAttribute> attributes) => attributes.Any (a => IsObsoleteAttribute (a));
-
-		bool IsObsoleteAttribute (CustomAttribute attribute) => attribute.AttributeType.Name == "Obsolete" || (attribute.AttributeType.Name == "ObsoleteAttribute");
 
 		bool HasVersionedUnsupportedOSPlatformAttribute (ICustomAttributeProvider provider)
 		{

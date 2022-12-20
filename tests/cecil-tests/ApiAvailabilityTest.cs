@@ -356,8 +356,13 @@ namespace Cecil.Tests {
 
 				// If an API is just unavailable, it shouldn't be here in the first place.
 				//     [UnsupportedOSPlatform ("ios")]
-				if (apiUnsupportedAttribute is not null && string.IsNullOrEmpty (unsupportedPlatformName))
-					failures.Add ($"[FAIL] {api.AsFullName ()} is marked unsupported");
+				// Exceptions:
+				// * If the API is obsolete, or has EditorBrowsable (Never), then we skip this check (it's likely a mistake of some sort).
+				// * We expose enum values that aren't supported on a given platform for error enums.
+				if (apiUnsupportedAttribute is not null && apiUnsupportedVersion is null && !(api.IsObsolete () || api.HasEditorBrowseableNeverAttribute ())) {
+					if (!IsEnumField (api))
+						failures.Add ($"[FAIL] {api.AsFullName ()} is marked unsupported: \"{unsupportedPlatformName}\" {api.RenderLocation ()}");
+				}
 
 				// The subsequent tests are limited to members of the current API, so just continue looping if we're not a type.
 				if (!(api is TypeDefinition type))
@@ -389,6 +394,14 @@ namespace Cecil.Tests {
 			var msg = $"{failures.Count} API with inconsistent availability attributes:" + "\n\t" + string.Join ("\n\t", failures);
 			Console.WriteLine (msg);
 			Assert.Fail (msg);
+		}
+
+		static bool IsEnumField (ICustomAttributeProvider api)
+		{
+			if (!(api is FieldDefinition fd))
+				return false;
+
+			return fd.DeclaringType.BaseType.Is ("System", "Enum");
 		}
 
 		bool SkipSupportedAndObsoleteAtTheSameTime (ICustomAttributeProvider api, ApplePlatform platform, Version version)
