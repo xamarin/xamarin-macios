@@ -475,7 +475,7 @@ namespace Cecil.Tests {
 
 	public class OSPlatformAttribute {
 		public ApplePlatform Platform;
-		public string PlatformName = string.Empty;
+		public string PlatformName;
 		public Version? Version;
 		public CustomAttribute Attribute;
 
@@ -485,6 +485,16 @@ namespace Cecil.Tests {
 			PlatformName = platformName;
 			Version = version;
 			Attribute = attribute;
+		}
+
+		public string? Message {
+			get {
+				if (Attribute?.HasConstructorArguments != true)
+					return null;
+				if (Attribute.ConstructorArguments.Count < 2)
+					return null;
+				return Attribute.ConstructorArguments [1].Value as string;
+			}
 		}
 	}
 
