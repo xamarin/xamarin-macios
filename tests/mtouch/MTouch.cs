@@ -385,7 +385,7 @@ public class B : A {}
 		[TestCase ("single", "", false, new string [] { })]
 		[TestCase ("dual", "armv7,arm64", false, new string [] { })]
 		[TestCase ("llvm", "armv7+llvm", false, new string [] { })]
-		[TestCase ("llvm", "arm64+llvm", false, new string[] { })]
+		[TestCase ("llvm", "arm64+llvm", false, new string [] { })]
 		[TestCase ("debug", "", true, new string [] { })]
 		[TestCase ("single-framework", "", false, new string [] { "@sdk=framework=Xamarin.Sdk", "@all=staticobject" })]
 		public void RebuildTest_WithExtensions (string name, string abi, bool debug, string [] assembly_build_targets)
