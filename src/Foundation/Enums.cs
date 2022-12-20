@@ -3,6 +3,7 @@ using ObjCRuntime;
 
 namespace Foundation {
 
+#if !XAMCORE_5_0
 	// Utility enum, ObjC uses NSString
 	public enum NSDocumentType {
 		Unknown = -1,
@@ -23,6 +24,7 @@ namespace Foundation {
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		OpenDocument,
 	}
+#endif // !XAMCORE_5_0
 
 	// Utility enum, ObjC uses NSString
 	public enum NSDocumentViewMode {
