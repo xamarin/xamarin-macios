@@ -672,7 +672,7 @@ namespace Foundation {
 		// inlined from NSAttributedStringWebKitAdditions category (since they are all static members)
 
 		[NoWatch]
-		[NoTV] // really inside WKWebKit
+		[NoTV] // really inside WebKit
 		[Mac (10, 15), iOS (13, 0)]
 		[Static]
 		[Export ("loadFromHTMLWithRequest:options:completionHandler:")]
@@ -682,7 +682,7 @@ namespace Foundation {
 		void LoadFromHtml (NSUrlRequest request, NSDictionary options, NSAttributedStringCompletionHandler completionHandler);
 
 		[NoWatch]
-		[NoTV] // really inside WKWebKit
+		[NoTV] // really inside WebKit
 		[Mac (10, 15), iOS (13, 0)]
 		[Static]
 		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
@@ -690,7 +690,7 @@ namespace Foundation {
 		void LoadFromHtml (NSUrlRequest request, NSAttributedStringDocumentAttributes options, NSAttributedStringCompletionHandler completionHandler);
 
 		[NoWatch]
-		[NoTV] // really inside WKWebKit
+		[NoTV] // really inside WebKit
 		[Mac (10, 15), iOS (13, 0)]
 		[Static]
 		[Export ("loadFromHTMLWithFileURL:options:completionHandler:")]
@@ -700,7 +700,7 @@ namespace Foundation {
 		void LoadFromHtml (NSUrl fileUrl, NSDictionary options, NSAttributedStringCompletionHandler completionHandler);
 
 		[NoWatch]
-		[NoTV] // really inside WKWebKit
+		[NoTV] // really inside WebKit
 		[Mac (10, 15), iOS (13, 0)]
 		[Static]
 		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
@@ -708,7 +708,7 @@ namespace Foundation {
 		void LoadFromHtml (NSUrl fileUrl, NSAttributedStringDocumentAttributes options, NSAttributedStringCompletionHandler completionHandler);
 
 		[NoWatch]
-		[NoTV] // really inside WKWebKit
+		[NoTV] // really inside WebKit
 		[Mac (10, 15), iOS (13, 0)]
 		[Static]
 		[Export ("loadFromHTMLWithString:options:completionHandler:")]
@@ -718,7 +718,7 @@ namespace Foundation {
 		void LoadFromHtml (string @string, NSDictionary options, NSAttributedStringCompletionHandler completionHandler);
 
 		[NoWatch]
-		[NoTV] // really inside WKWebKit
+		[NoTV] // really inside WebKit
 		[Mac (10, 15), iOS (13, 0)]
 		[Static]
 		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
@@ -726,7 +726,7 @@ namespace Foundation {
 		void LoadFromHtml (string @string, NSAttributedStringDocumentAttributes options, NSAttributedStringCompletionHandler completionHandler);
 
 		[NoWatch]
-		[NoTV] // really inside WKWebKit
+		[NoTV] // really inside WebKit
 		[Mac (10, 15), iOS (13, 0)]
 		[Static]
 		[Export ("loadFromHTMLWithData:options:completionHandler:")]
@@ -736,7 +736,7 @@ namespace Foundation {
 		void LoadFromHtml (NSData data, NSDictionary options, NSAttributedStringCompletionHandler completionHandler);
 
 		[NoWatch]
-		[NoTV] // really inside WKWebKit
+		[NoTV] // really inside WebKit
 		[Mac (10, 15), iOS (13, 0)]
 		[Static]
 		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
@@ -865,12 +865,12 @@ namespace Foundation {
 	}
 
 	[NoWatch]
-	[NoTV] // really inside WKWebKit
+	[NoTV] // really inside WebKit
 	[Mac (10, 15), iOS (13, 0)]
 	delegate void NSAttributedStringCompletionHandler ([NullAllowed] NSAttributedString attributedString, [NullAllowed] NSDictionary<NSString, NSObject> attributes, [NullAllowed] NSError error);
 
 	[NoWatch]
-	[NoTV] // really inside WKWebKit
+	[NoTV] // really inside WebKit
 	[Mac (10, 15), iOS (13, 0)]
 	[Static]
 	[Internal]
