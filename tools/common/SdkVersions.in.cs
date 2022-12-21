@@ -2,8 +2,9 @@ using System;
 
 #if MTOUCH || MMP || BUNDLER
 using Xamarin.Bundler;
-using Xamarin.Utils;
 #endif
+
+using Xamarin.Utils;
 
 #if MTOUCH
 using MonoTouch;
@@ -53,33 +54,33 @@ namespace Xamarin {
 		public const string DefaultTargetPlatformVersionmacOS = "@DEFAULT_TARGET_PLATFORM_VERSION_MACOS@";
 		public const string DefaultTargetPlatformVersionMacCatalyst = "@DEFAULT_TARGET_PLATFORM_VERSION_MACCATALYST@";
 
-		public static Version OSXVersion { get { return new Version (OSX); }}
-		public static Version iOSVersion { get { return new Version (iOS); }}
-		public static Version WatchOSVersion { get { return new Version (WatchOS); }}
-		public static Version TVOSVersion { get { return new Version (TVOS); }}
-		public static Version MacCatalystVersion { get { return new Version (MacCatalyst); }}
+		public static Version OSXVersion { get { return new Version (OSX); } }
+		public static Version iOSVersion { get { return new Version (iOS); } }
+		public static Version WatchOSVersion { get { return new Version (WatchOS); } }
+		public static Version TVOSVersion { get { return new Version (TVOS); } }
+		public static Version MacCatalystVersion { get { return new Version (MacCatalyst); } }
 
-		public static Version iOSTargetVersion { get { return new Version (MaxiOSDeploymentTarget); }}
-		public static Version WatchOSTargetVersion { get { return new Version (MaxWatchDeploymentTarget); }}
-		public static Version TVOSTargetVersion { get { return new Version (MaxTVOSDeploymentTarget); }}
+		public static Version iOSTargetVersion { get { return new Version (MaxiOSDeploymentTarget); } }
+		public static Version WatchOSTargetVersion { get { return new Version (MaxWatchDeploymentTarget); } }
+		public static Version TVOSTargetVersion { get { return new Version (MaxTVOSDeploymentTarget); } }
 
-		public static Version MinOSXVersion { get { return new Version (MinOSX); }}
-		public static Version MiniOSVersion { get { return new Version (MiniOS); }}
-		public static Version MinWatchOSVersion { get { return new Version (MinWatchOS); }}
-		public static Version MinTVOSVersion { get { return new Version (MinTVOS); }}
-		public static Version MinMacCatalystVersion { get { return new Version (MinMacCatalyst); }}
+		public static Version MinOSXVersion { get { return new Version (MinOSX); } }
+		public static Version MiniOSVersion { get { return new Version (MiniOS); } }
+		public static Version MinWatchOSVersion { get { return new Version (MinWatchOS); } }
+		public static Version MinTVOSVersion { get { return new Version (MinTVOS); } }
+		public static Version MinMacCatalystVersion { get { return new Version (MinMacCatalyst); } }
 
-		public static Version MiniOSSimulatorVersion { get { return new Version (MiniOSSimulator); }}
-		public static Version MinWatchOSSimulatorVersion { get { return new Version (MinWatchOSSimulator); }}
-		public static Version MinWatchOSCompanionSimulatorVersion { get { return new Version (MinWatchOSCompanionSimulator); }}
-		public static Version MinTVOSSimulatorVersion { get { return new Version (MinTVOSSimulator); }}
+		public static Version MiniOSSimulatorVersion { get { return new Version (MiniOSSimulator); } }
+		public static Version MinWatchOSSimulatorVersion { get { return new Version (MinWatchOSSimulator); } }
+		public static Version MinWatchOSCompanionSimulatorVersion { get { return new Version (MinWatchOSCompanionSimulator); } }
+		public static Version MinTVOSSimulatorVersion { get { return new Version (MinTVOSSimulator); } }
 
-		public static Version MaxiOSSimulatorVersion { get { return new Version (MaxiOSSimulator); }}
-		public static Version MaxWatchOSSimulatorVersion { get { return new Version (MaxWatchOSSimulator); }}
-		public static Version MaxWatchOSCompanionSimulatorVersion { get { return new Version (MaxWatchOSCompanionSimulator); }}
-		public static Version MaxTVOSSimulatorVersion { get { return new Version (MaxTVOSSimulator); }}
+		public static Version MaxiOSSimulatorVersion { get { return new Version (MaxiOSSimulator); } }
+		public static Version MaxWatchOSSimulatorVersion { get { return new Version (MaxWatchOSSimulator); } }
+		public static Version MaxWatchOSCompanionSimulatorVersion { get { return new Version (MaxWatchOSCompanionSimulator); } }
+		public static Version MaxTVOSSimulatorVersion { get { return new Version (MaxTVOSSimulator); } }
 
-		public static Version XcodeVersion { get { return new Version (Xcode); }}
+		public static Version XcodeVersion { get { return new Version (Xcode); } }
 
 #if MTOUCH || MMP || BUNDLER
 		public static Version GetVersion (Application app)
@@ -120,34 +121,38 @@ namespace Xamarin {
 			}
 		}
 #endif
-	}
 
-	sealed class ProductConstants {
-		public string Version;
-		public string Revision;
-		public const string Hash = "@PRODUCT_HASH@";
-
-		ProductConstants (string version, string revision)
+		public static Version GetVersion (ApplePlatform platform)
 		{
-			Version = version;
-			Revision = revision;
+			switch (platform) {
+			case ApplePlatform.MacOSX: return OSXVersion;
+			case ApplePlatform.iOS: return iOSVersion;
+			case ApplePlatform.WatchOS: return WatchOSVersion;
+			case ApplePlatform.TVOS: return TVOSVersion;
+			case ApplePlatform.MacCatalyst: return MacCatalystVersion;
+			default:
+				throw new ArgumentOutOfRangeException (nameof (platform), platform, $"Unknown platform: {platform}");
+			}
 		}
-#if BUNDLER
-		public readonly static ProductConstants iOS = new ProductConstants ("@IOS_NUGET_VERSION@", "@IOS_NUGET_REVISION@");
-		public readonly static ProductConstants tvOS = new ProductConstants ("@TVOS_NUGET_VERSION@", "@TVOS_NUGET_REVISION@");
-		public readonly static ProductConstants watchOS = new ProductConstants ("@WATCHOS_NUGET_VERSION@", "@WATCHOS_NUGET_REVISION@");
-		public readonly static ProductConstants macOS = new ProductConstants ("@MACOS_NUGET_VERSION@", "@MACOS_NUGET_REVISION@");
-#else
-		public readonly static ProductConstants iOS = new ProductConstants ("@IOS_VERSION@", "@IOS_REVISION@");
-		public readonly static ProductConstants tvOS = new ProductConstants ("@TVOS_VERSION@", "@TVOS_REVISION@");
-		public readonly static ProductConstants watchOS = new ProductConstants ("@WATCHOS_VERSION@", "@WATCHOS_REVISION@");
-		public readonly static ProductConstants macOS = new ProductConstants ("@MACOS_VERSION@", "@MACOS_REVISION@");
-#endif
+
+		public static Version GetMinVersion (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.MacOSX: return MinOSXVersion;
+			case ApplePlatform.iOS: return MiniOSVersion;
+			case ApplePlatform.WatchOS: return MinWatchOSVersion;
+			case ApplePlatform.TVOS: return MinTVOSVersion;
+			case ApplePlatform.MacCatalyst: return MinMacCatalystVersion;
+			default:
+				throw new ArgumentOutOfRangeException (nameof (platform), platform, $"Unknown platform: {platform}");
+			}
+		}
 	}
+
 #if MMP
 	static class MonoVersions {
 		public static string MinimumMono = "@MIN_XM_MONO_VERSION@";
-		public static Version MinimumMonoVersion { get { return new Version (MinimumMono); }}
+		public static Version MinimumMonoVersion { get { return new Version (MinimumMono); } }
 	}
 #endif
 }

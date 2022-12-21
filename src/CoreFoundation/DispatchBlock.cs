@@ -25,7 +25,7 @@ namespace CoreFoundation {
 
 #if NET
 	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
 #else

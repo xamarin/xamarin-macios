@@ -87,7 +87,9 @@ public partial class Generator {
 		Tuple<FieldInfo, FieldAttribute> null_field = null;
 		Tuple<FieldInfo, FieldAttribute> default_symbol = null;
 		var underlying_type = GetCSharpTypeName (TypeManager.GetUnderlyingEnumType (type));
-		print ("{0} enum {1} : {2} {{", AttributeManager.HasAttribute<InternalAttribute> (type) ? "internal" : "public", type.Name, underlying_type);
+		var is_internal = AttributeManager.HasAttribute<InternalAttribute> (type);
+		var visibility = is_internal ? "internal" : "public";
+		print ("{0} enum {1} : {2} {{", visibility, type.Name, underlying_type);
 		indent++;
 		foreach (var f in type.GetFields ()) {
 			// skip value__ field 
@@ -126,7 +128,7 @@ public partial class Generator {
 			// the *Extensions has the same version requirement as the enum itself
 			PrintPlatformAttributes (type);
 			print_generated_code ();
-			print ("static public partial class {0}Extensions {{", type.Name);
+			print ("static {1} partial class {0}Extensions {{", type.Name, visibility);
 			indent++;
 
 			var field = fields.FirstOrDefault ();

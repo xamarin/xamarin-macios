@@ -1638,7 +1638,7 @@ endif
 
 project-files: $(PROJECT_FILES)
 
-$(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
+$(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.in.cs
 	@$(MAKE) -C $(TOP)/tools/mtouch ../common/SdkVersions.cs
 
 COMMA=,
