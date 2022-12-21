@@ -213,6 +213,13 @@ namespace Xamarin.Bundler {
 							if (!Driver.LinkProhibitedFrameworks)
 								continue;
 							break;
+						case "CHIP":
+							// CHIP has been removed in Xcode 14 Beta 5 in favor of Matter
+							if (Driver.XcodeVersion.Major >= 14) {
+								Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 14+", framework.Name);
+								continue;
+							}
+							break;
 #else
 						case "CoreAudioKit":
 							// CoreAudioKit seems to be functional in the iOS 9 simulator.
@@ -222,9 +229,6 @@ namespace Xamarin.Bundler {
 						case "Metal":
 						case "MetalKit":
 						case "MetalPerformanceShaders":
-#if !NET
-						case "CHIP":
-#endif
 						case "PHASE":
 						case "ThreadNetwork":
 							// some frameworks do not exists on simulators and will result in linker errors if we include them
@@ -252,7 +256,21 @@ namespace Xamarin.Bundler {
 								continue;
 							}
 							break;
+						case "CHIP":
+							// CHIP has been removed in Xcode 14 Beta 5 in favor of Matter
+							if (Driver.XcodeVersion.Major >= 14) {
+								Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 14+", framework.Name);
+								continue;
+							} else if (App.IsSimulatorBuild)
+								continue;
+							break;
 #endif
+						case "GameKit":
+							if (Driver.XcodeVersion.Major >= 14 && Is32Build) {
+								Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 14+ and building for a 32-bit simulator architecture.", framework.Name);
+								continue;
+							}
+							break;
 						default:
 							if (App.IsSimulatorBuild && !App.IsFrameworkAvailableInSimulator (framework.Name)) {
 								if (App.AreAnyAssembliesTrimmed) {
@@ -604,7 +622,7 @@ namespace Xamarin.Bundler {
 			sw.WriteLine ("#include <xamarin/xamarin.h>");
 #if !NET
 			if (App.Registrar == RegistrarMode.PartialStatic)
-				sw.WriteLine ("extern \"C\" void xamarin_create_classes_Xamarin_Mac ();");
+				sw.WriteLine ($"extern \"C\" void {StaticRegistrar.GetInitializationMethodName ("Xamarin.Mac")} ();");
 #endif
 			sw.WriteLine ();
 			sw.WriteLine ();
@@ -625,13 +643,6 @@ namespace Xamarin.Bundler {
 			if (App.DisableOmitFramePointer ?? App.EnableDebug)
 				sw.WriteLine ("\txamarin_disable_omit_fp = true;");
 			sw.WriteLine ();
-
-#if !NET
-			if (App.Registrar == RegistrarMode.Static)
-				sw.WriteLine ("\txamarin_create_classes ();");
-			else if (App.Registrar == RegistrarMode.PartialStatic)
-				sw.WriteLine ("\txamarin_create_classes_Xamarin_Mac ();");
-#endif
 
 			if (App.EnableDebug)
 				sw.WriteLine ("\txamarin_debug_mode = TRUE;");

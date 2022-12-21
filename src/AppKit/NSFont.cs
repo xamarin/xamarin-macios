@@ -20,7 +20,7 @@ namespace AppKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 13)]
@@ -42,7 +42,7 @@ namespace AppKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 13)]
@@ -156,9 +156,7 @@ namespace AppKit {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.13")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.13.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
@@ -173,9 +171,7 @@ namespace AppKit {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.13")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.13.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
@@ -190,9 +186,7 @@ namespace AppKit {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.13")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.13.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
@@ -210,7 +204,7 @@ namespace AppKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 11)]
@@ -222,7 +216,19 @@ namespace AppKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("macos13.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Mac (13, 0)]
+#endif
+		public static NSFont SystemFontOfSize (nfloat fontSize, nfloat weight, nfloat width)
+		{
+			var ptr = _SystemFontOfSize (fontSize, weight, width);
+			return ptr == IntPtr.Zero ? null : new NSFont (ptr);
+		}
+
+#if NET
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 11)]

@@ -19,8 +19,7 @@ using Foundation;
 namespace Introspection {
 
 	[TestFixture]
-	public class ApiStructTest : ApiBaseTest
-	{
+	public class ApiStructTest : ApiBaseTest {
 		public ApiStructTest ()
 		{
 			ContinueOnFailure = true;
@@ -39,8 +38,8 @@ namespace Introspection {
 			int totalErrors = 0;
 
 			var structQuery = from type in Assembly.GetTypes ()
-				where type.IsValueType && !type.IsPrimitive && !type.IsEnum && !Skip (type)
-				select type;
+							  where type.IsValueType && !type.IsPrimitive && !type.IsEnum && !Skip (type)
+							  select type;
 
 			foreach (var type in structQuery) {
 				totalStructs++;

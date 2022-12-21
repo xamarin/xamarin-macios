@@ -207,7 +207,13 @@ namespace CloudKit {
 	}
 
 	[Watch (3, 0)]
-	[iOS (10, 10), Mac (10, 12)]
+	[iOS (10, 0)]
+	[Mac (10, 12)]
+	[TV (10, 0)]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'CKShareParticipantRole' instead.")]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'CKShareParticipantRole' instead.")]
+	[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'CKShareParticipantRole' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'CKShareParticipantRole' instead.")]
 	[Native]
 	public enum CKShareParticipantType : long {
 		Unknown = 0,
@@ -246,5 +252,21 @@ namespace CloudKit {
 		Owner = 1,
 		PrivateUser = 3,
 		PublicUser = 4,
+	}
+
+	[NoTV, NoWatch, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	[Native, Flags]
+	public enum CKSharingParticipantAccessOption : ulong {
+		AnyoneWithLink = 1uL << 0,
+		SpecifiedRecipientsOnly = 1uL << 1,
+		Any = AnyoneWithLink | SpecifiedRecipientsOnly,
+	}
+
+	[NoTV, NoWatch, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	[Native, Flags]
+	public enum CKSharingParticipantPermissionOption : ulong {
+		ReadOnly = 1uL << 0,
+		ReadWrite = 1uL << 1,
+		Any = ReadOnly | ReadWrite,
 	}
 }

@@ -3,7 +3,7 @@ using System.IO;
 using System.Reflection;
 
 namespace Xamarin.Tests {
-	public partial  class Configuration {
+	public partial class Configuration {
 		static object lock_obj = new object ();
 		static string sample_root_directory;
 		public static string SampleRootDirectory {

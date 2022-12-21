@@ -40,10 +40,9 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[Watch (4,0)]
+	[Watch (4, 0)]
 #endif
-	public class CVPixelBufferAttributes : DictionaryContainer
-	{
+	public class CVPixelBufferAttributes : DictionaryContainer {
 #if !COREBUILD
 		public CVPixelBufferAttributes ()
 			: base (new NSMutableDictionary ())
@@ -65,12 +64,12 @@ namespace CoreVideo {
 
 		public CVPixelFormatType? PixelFormatType {
 			set {
-				SetNumberValue (CVPixelBuffer.PixelFormatTypeKey, (uint?)value);
+				SetNumberValue (CVPixelBuffer.PixelFormatTypeKey, (uint?) value);
 			}
 			get {
 				return (CVPixelFormatType?) GetUIntValue (CVPixelBuffer.PixelFormatTypeKey);
 			}
-		} 
+		}
 
 		public CFAllocator? MemoryAllocator {
 			get {
@@ -213,7 +212,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[iOS (8,0)]
+		[iOS (8, 0)]
 #endif
 		public bool? MetalCompatibility {
 			set {

@@ -20,13 +20,13 @@ namespace CoreVideo {
 
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (11,0)]
-		[Mac (10,13)]
-		[TV (11,0)]
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[TV (11, 0)]
 		[NoWatch]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -36,13 +36,13 @@ namespace CoreVideo {
 
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (11,0)]
-		[Mac (10,13)]
-		[TV (11,0)]
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[TV (11, 0)]
 		[NoWatch]
 #endif
 		public IOSurface.IOSurface? GetIOSurface ()
@@ -54,18 +54,18 @@ namespace CoreVideo {
 			if (ret == IntPtr.Zero)
 				return null;
 
-			return Runtime.GetINativeObject <IOSurface.IOSurface> (ret, false);
+			return Runtime.GetINativeObject<IOSurface.IOSurface> (ret, false);
 		}
 
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (11,0)]
-		[Mac (10,13)]
-		[TV (11,0)]
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[TV (11, 0)]
 		[NoWatch]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -78,13 +78,13 @@ namespace CoreVideo {
 
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (11,0)]
-		[Mac (10,13)]
-		[TV (11,0)]
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[TV (11, 0)]
 		[NoWatch]
 #endif
 		public static CVPixelBuffer? Create (IOSurface.IOSurface surface, out CVReturn result, CVPixelBufferAttributes? pixelBufferAttributes = null)
@@ -108,13 +108,13 @@ namespace CoreVideo {
 
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (11,0)]
-		[Mac (10,13)]
-		[TV (11,0)]
+		[iOS (11, 0)]
+		[Mac (10, 13)]
+		[TV (11, 0)]
 		[NoWatch]
 #endif
 		public static CVPixelBuffer? Create (IOSurface.IOSurface surface, CVPixelBufferAttributes? pixelBufferAttributes = null)

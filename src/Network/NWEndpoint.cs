@@ -16,7 +16,8 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-using OS_nw_endpoint=System.IntPtr;
+using OS_nw_endpoint = System.IntPtr;
+using OS_nw_txt_record = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -26,14 +27,14 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
-	[Watch (6,0)]
+	[TV (12, 0)]
+	[Mac (10, 14)]
+	[iOS (12, 0)]
+	[Watch (6, 0)]
 #endif
 
 	public class NWEndpoint : NativeObject {
@@ -41,7 +42,7 @@ namespace Network {
 #if NET
 		internal NWEndpoint (NativeHandle handle, bool owns) : base (handle, owns) {}
 #else
-		public NWEndpoint (NativeHandle handle, bool owns) : base (handle, owns) {}
+		public NWEndpoint (NativeHandle handle, bool owns) : base (handle, owns) { }
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -132,9 +133,9 @@ namespace Network {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
 		static extern OS_nw_endpoint nw_endpoint_create_url (string url);
@@ -145,9 +146,9 @@ namespace Network {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		public static NWEndpoint? Create (string url)
 		{
@@ -165,9 +166,9 @@ namespace Network {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
 		static extern IntPtr nw_endpoint_get_url (OS_nw_endpoint endpoint);
@@ -178,10 +179,83 @@ namespace Network {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		public string? Url => Marshal.PtrToStringAnsi (nw_endpoint_get_url (GetCheckedHandle ()));
+
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16, 0)]
+		[Mac (13, 0)]
+		[iOS (16, 0)]
+		[Watch (9, 0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern unsafe byte* nw_endpoint_get_signature (OS_nw_endpoint endpoint, out nuint out_signature_length);
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16, 0)]
+		[Mac (13, 0)]
+		[iOS (16, 0)]
+		[Watch (9, 0)]
+#endif
+		public ReadOnlySpan<byte> Signature {
+			get {
+				unsafe {
+					var data = nw_endpoint_get_signature (GetCheckedHandle (), out var length);
+					var mValue = new ReadOnlySpan<byte> (data, (int) length);
+					// we do not know who manages the byte array, so we return a copy, is more expensive but
+					// safer until we know what is the mem management.
+					return new ReadOnlySpan<byte> (mValue.ToArray ());
+				}
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16, 0)]
+		[Mac (13, 0)]
+		[iOS (16, 0)]
+		[Watch (9, 0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_txt_record nw_endpoint_copy_txt_record (OS_nw_endpoint endpoint);
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16, 0)]
+		[Mac (13, 0)]
+		[iOS (16, 0)]
+		[Watch (9, 0)]
+#endif
+		public NWTxtRecord? TxtRecord {
+			get {
+				var record = nw_endpoint_copy_txt_record (GetCheckedHandle ());
+				if (record == IntPtr.Zero)
+					return null;
+				return new NWTxtRecord (record, owns: true);
+			}
+		}
+
 	}
 }

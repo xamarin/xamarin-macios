@@ -3,8 +3,7 @@ using System.Threading.Tasks;
 using CloudKit;
 using ObjCRuntime;
 
-namespace Foundation 
-{
+namespace Foundation {
 #if MONOMAC || IOS
 	public partial class NSItemProvider
 	{
@@ -31,7 +30,7 @@ namespace Foundation
 
 #if NET
 		[SupportedOSPlatform ("tvos11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -53,7 +52,7 @@ namespace Foundation
 
 #if NET
 		[SupportedOSPlatform ("tvos11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -76,7 +75,7 @@ namespace Foundation
 
 #if NET
 		[SupportedOSPlatform ("tvos11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else

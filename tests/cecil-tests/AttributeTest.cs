@@ -38,19 +38,19 @@ namespace Cecil.Tests {
 		//
 		// This test should find Extension, note that it has an ios attribute,
 		// and insist that some maccatalyst must also be set.
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
-		public void ChildElementsListAvailabilityForAllPlatformsOnParent (string assemblyPath)
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
+		public void ChildElementsListAvailabilityForAllPlatformsOnParent (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath);
+			var assembly = info.Assembly;
 
 			HashSet<string> found = new HashSet<string> ();
-			foreach (var prop in Helper.FilterProperties (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var prop in assembly.EnumerateProperties (a => HasAnyAvailabilityAttribute (a))) {
 				CheckAllPlatformsOnParent (prop, prop.FullName, prop.DeclaringType, found);
 			}
-			foreach (var meth in Helper.FilterMethods (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var meth in assembly.EnumerateMethods (a => HasAnyAvailabilityAttribute (a))) {
 				CheckAllPlatformsOnParent (meth, meth.FullName, meth.DeclaringType, found);
 			}
-			foreach (var field in Helper.FilterFields (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var field in assembly.EnumerateFields (a => HasAnyAvailabilityAttribute (a))) {
 				CheckAllPlatformsOnParent (field, field.FullName, field.DeclaringType, found);
 			}
 			Assert.That (found, Is.Empty, $"{found.Count} issues found");
@@ -82,17 +82,12 @@ namespace Cecil.Tests {
 		// Example #2:
 		// [Watch (5,0), NoTV, NoMac, iOS (12,0), NoTV]
 		// interface Type { }
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
-		public void DoubleAttributedElements (string assemblyPath)
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
+		public void DoubleAttributedElements (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath);
-			if (assembly is null) {
-				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
-				return;
-			}
-
+			var assembly = info.Assembly;
 			var doubleAttributed = new List<string> ();
-			foreach (var type in Helper.FilterTypes (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var type in assembly.EnumerateTypes (a => HasAnyAvailabilityAttribute (a))) {
 				var platformCount = new Dictionary<string, int> ();
 				foreach (var attribute in type.CustomAttributes.Where (a => IsAvailabilityAttribute (a))) {
 					var kind = FindAvailabilityKind (attribute);
@@ -177,14 +172,9 @@ namespace Cecil.Tests {
 			var harvestedInfo = new Dictionary<string, Dictionary<string, PlatformClaimInfo>> ();
 
 			// Load each platform assembly
-			foreach (string assemblyPath in Helper.NetPlatformAssemblies) {
-				var assembly = Helper.GetAssembly (assemblyPath);
-				if (assembly is null) {
-					Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
-					return;
-				}
-
-				string currentPlatform = AssemblyToAttributeName (assemblyPath);
+			foreach (var info in Helper.NetPlatformAssemblyDefinitions) {
+				var assembly = info.Assembly;
+				string currentPlatform = AssemblyToAttributeName (assembly);
 
 				// Walk every class/struct/enum/property/method/enum value/pinvoke/event
 				foreach (var module in assembly.Modules) {
@@ -272,10 +262,29 @@ namespace Cecil.Tests {
 				return true;
 			}
 			// Generator Bug - Protocol inline with different attribute bug
-			if (member.StartsWith ("SceneKit.SCNLayer") ||
-				member.StartsWith ("AVFoundation.AVAudioSession")) {
+			var inlineProtocols = new List<string> {
+				"SceneKit.SCNLayer",
+				"AVFoundation.AVAudioSession",
+				"MediaPlayer.MPMoviePlayerController",
+				"AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialAssertion",
+				"AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialRegistration",
+				"AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor",
+				"GameController.GCRacingWheel.get_HandlerQueue",
+				"GameController.GCRacingWheel.set_HandlerQueue",
+				"GameController.GCRacingWheel.get_VendorName",
+				"GameController.GCRacingWheel.get_ProductCategory",
+				"GameController.GCRacingWheel.get_PhysicalInputProfile",
+				"GameController.GCGearShifterElement.get_Aliases",
+				"GameController.GCGearShifterElement.get_LocalizedName",
+				"GameController.GCGearShifterElement.get_SfSymbolsName",
+				"GameController.GCRacingWheelInput",
+				"GameController.GCSteeringWheelElemen",
+			};
+
+			if (inlineProtocols.Any ((p) => member.StartsWith (p))) {
 				return true;
 			}
+
 			switch (member) {
 			case "GameplayKit.GKHybridStrategist.get_GameModel":
 			case "GameplayKit.GKHybridStrategist.get_RandomSource":
@@ -300,6 +309,7 @@ namespace Cecil.Tests {
 			case "AVFoundation.AVAssetDownloadDelegate.DidFinishCollectingMetrics":
 			case "AVFoundation.AVAssetDownloadDelegate.TaskIsWaitingForConnectivity":
 			case "AVFoundation.AVAssetDownloadDelegate.WillBeginDelayedRequest":
+			case "AVFoundation.AVAssetDownloadDelegate.DidCreateTask":
 			case "ARKit.ARQuickLookPreviewItem.get_PreviewItemTitle":
 			case "ARKit.ARQuickLookPreviewItem.get_PreviewItemUrl":
 			case "Intents.INPerson.get_AlternativeSpeakableMatches":
@@ -322,6 +332,10 @@ namespace Cecil.Tests {
 			case "CoreWlan.CWNetwork.Copy":
 			case "CoreWlan.CWNetworkProfile.Copy":
 			case "CoreWlan.CWNetworkProfile.MutableCopy":
+			case "MapKit.MKMapFeatureAnnotation.SetCoordinate":
+			case "MapKit.MKMapFeatureAnnotation.get_Coordinate":
+			case "MapKit.MKMapFeatureAnnotation.get_Subtitle":
+			case "MapKit.MKMapFeatureAnnotation.get_Title":
 				return true;
 			}
 			// Generator Bug/Limitation - Related to ^, Wrapper protocol get/set with attributes
@@ -489,24 +503,24 @@ namespace Cecil.Tests {
 		// }
 		//
 		// When run against mac, this fails as Extension does not include a mac supported of any kind attribute
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
-		public void AllAttributedItemsMustIncludeCurrentPlatform (string assemblyPath)
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
+		public void AllAttributedItemsMustIncludeCurrentPlatform (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath);
+			var assembly = info.Assembly;
 
-			string platformName = AssemblyToAttributeName (assemblyPath);
+			string platformName = AssemblyToAttributeName (assembly);
 
 			HashSet<string> found = new HashSet<string> ();
-			foreach (var type in Helper.FilterTypes (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var type in assembly.EnumerateTypes (a => HasAnyAvailabilityAttribute (a))) {
 				CheckCurrentPlatformIncludedIfAny (type, platformName, type.FullName, type.DeclaringType, found);
 			}
-			foreach (var prop in Helper.FilterProperties (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var prop in assembly.EnumerateProperties (a => HasAnyAvailabilityAttribute (a))) {
 				CheckCurrentPlatformIncludedIfAny (prop, platformName, prop.FullName, prop.DeclaringType, found);
 			}
-			foreach (var meth in Helper.FilterMethods (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var meth in assembly.EnumerateMethods (a => HasAnyAvailabilityAttribute (a))) {
 				CheckCurrentPlatformIncludedIfAny (meth, platformName, meth.FullName, meth.DeclaringType, found);
 			}
-			foreach (var field in Helper.FilterFields (assembly, a => HasAnyAvailabilityAttribute (a))) {
+			foreach (var field in assembly.EnumerateFields (a => HasAnyAvailabilityAttribute (a))) {
 				CheckCurrentPlatformIncludedIfAny (field, platformName, field.FullName, field.DeclaringType, found);
 			}
 			Assert.That (found, Is.Empty, $"{found.Count} issues found");
@@ -543,9 +557,9 @@ namespace Cecil.Tests {
 			}
 		}
 
-		string AssemblyToAttributeName (string assemblyPath)
+		string AssemblyToAttributeName (AssemblyDefinition assembly)
 		{
-			var baseName = Path.GetFileName (assemblyPath);
+			var baseName = assembly.Name.Name + ".dll";
 			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_iOS.Platform, true) == baseName)
 				return "ios";
 			if (Configuration.GetBaseLibraryName (TargetFramework.DotNet_tvOS.Platform, true) == baseName)

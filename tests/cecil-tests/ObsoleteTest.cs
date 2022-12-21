@@ -13,29 +13,32 @@ namespace Cecil.Tests {
 
 	[TestFixture]
 	public class ObsoleteTest {
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblies))] // call this method with every .net6 library
-		public void GetAllObsoletedThings (string assemblyPath)
+		// This test verifies that we don't have any obsolete API in .NET that we don't expect to be there
+		// in particular that we don't start out with obsolete APIs from the very beginning (such API should have been removed).
+		// Any obsoleted API after the first stable .NET release should likely be skipped (until XAMCORE_5_0)
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblyDefinitions))] // call this method with every .net6 library
+		public void GetAllObsoletedThings (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath, readSymbols: true);
+			var assembly = info.Assembly;
 
 			// Make a list of Obsolete things
 			var found = new HashSet<string> ();
 
-			foreach (var prop in Helper.FilterProperties (assembly, a => FilterMember (a))) {
+			foreach (var prop in assembly.EnumerateProperties (a => FilterMember (a))) {
 				if (Skip (prop))
 					continue;
 				Console.WriteLine ($"{GetLocation (prop.GetMethod ?? prop.SetMethod)} {prop.FullName}");
 				found.Add (prop.FullName);
 			}
 
-			foreach (var meth in Helper.FilterMethods (assembly, a => FilterMember (a))) {
+			foreach (var meth in assembly.EnumerateMethods (a => FilterMember (a))) {
 				if (Skip (meth))
 					continue;
 				Console.WriteLine ($"{GetLocation (meth)} {meth.FullName}");
 				found.Add (meth.FullName);
 			}
 
-			foreach (var type in Helper.FilterTypes (assembly, a => FilterMember (a))) {
+			foreach (var type in assembly.EnumerateTypes (a => FilterMember (a))) {
 				if (Skip (type))
 					continue;
 				Console.WriteLine ($"{GetLocation (type.Methods.FirstOrDefault ())} {type.FullName}");
@@ -112,9 +115,16 @@ namespace Cecil.Tests {
 
 		bool Skip (MemberReference member)
 		{
-			var ns = member.FullName.Split ('.') [0];
+			var fullname = member.FullName;
 
-			switch (ns) {
+			switch (fullname) {
+#if !XAMCORE_5_0 // these exceptions should be fixed in XAMCORE_5_0
+			case "GameKit.IGKPeerPickerControllerDelegate":
+			case "GameKit.GKPeerPickerControllerDelegate_Extensions":
+			case "GameKit.GKPeerPickerControllerDelegate":
+			case "GameKit.GKPeerPickerController":
+				return true;
+#endif
 			default:
 				return false;
 			}
@@ -122,14 +132,7 @@ namespace Cecil.Tests {
 
 		static string GetLocation (MethodDefinition method)
 		{
-			if (method is null)
-				return "<no location> ";
-
-			if (method.DebugInformation.HasSequencePoints) {
-				var seq = method.DebugInformation.SequencePoints [0];
-				return seq.Document.Url + ":" + seq.StartLine + " ";
-			}
-			return string.Empty;
+			return method.RenderLocation ();
 		}
 	}
 }

@@ -11,18 +11,18 @@ namespace VideoSubscriberAccount {
 
 		// these are less common pattern so it's not automatically generated
 
-		public static NSString?[] GetConstants (this VSAccountProviderAuthenticationScheme[] self)
+		public static NSString? [] GetConstants (this VSAccountProviderAuthenticationScheme [] self)
 		{
 			if (self is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (self));
-			
+
 			var array = new NSString? [self.Length];
 			for (int n = 0; n < self.Length; n++)
 				array [n] = self [n].GetConstant ();
 			return array;
 		}
 
-		public static VSAccountProviderAuthenticationScheme[] GetValues (NSString[] constants)
+		public static VSAccountProviderAuthenticationScheme [] GetValues (NSString [] constants)
 		{
 			if (constants is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (constants));

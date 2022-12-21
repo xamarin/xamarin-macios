@@ -1,5 +1,7 @@
 using Microsoft.Build.Logging.StructuredLogger;
 
+#nullable enable
+
 namespace Xamarin.Tests {
 	public class IncrementalBuildTest : TestBaseClass {
 
@@ -21,7 +23,7 @@ class MainClass {
 	}
 }
 ";
-			var mainFile = Path.Combine (Path.GetDirectoryName (project_path), "Main.cs");
+			var mainFile = Path.Combine (Path.GetDirectoryName (project_path)!, "Main.cs");
 
 			File.WriteAllText (mainFile, mainContents);
 
@@ -46,7 +48,7 @@ class MainClass {
 			AssertTargetExecuted (allTargets, "_LinkNativeExecutable", "B");
 
 			// Verify that the timestamp of the executable has been updated
-			var executable = GetNativeExecutable (platform, appPath);
+			var executable = GetNativeExecutable (platform, appPath!);
 			Assert.That (File.GetLastWriteTimeUtc (executable), Is.GreaterThan (timestamp), "B: Executable modified");
 		}
 

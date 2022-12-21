@@ -17,10 +17,9 @@ using JavaScriptCore;
 
 #nullable enable
 
-namespace SceneKit
-{
+namespace SceneKit {
 #if NET
-	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios8.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
@@ -28,8 +27,7 @@ namespace SceneKit
 	[Mac (10, 10)]
 	[iOS (8, 0)]
 #endif
-	public static class SCNJavaScript
-	{
+	public static class SCNJavaScript {
 		[DllImport (Constants.SceneKitLibrary)]
 		static extern void SCNExportJavaScriptModule (IntPtr context);
 

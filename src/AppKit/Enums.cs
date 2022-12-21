@@ -630,10 +630,12 @@ namespace AppKit {
 		CapsLock = 0x39,
 		Option = 0x3A,
 		Control = 0x3B,
+		RightCommand = 0x36,
 		RightShift = 0x3C,
 		RightOption = 0x3D,
 		RightControl = 0x3E,
 		Function = 0x3F,
+		F17 = 0x40,
 		VolumeUp = 0x48,
 		VolumeDown = 0x49,
 		Mute = 0x4A,
@@ -920,7 +922,10 @@ namespace AppKit {
 		FullScreenAuxiliary = 1 << 8,
 		FullScreenNone = 1 << 9,
 		[Mac (10, 11)] FullScreenAllowsTiling = 1 << 11,
-		[Mac (10, 11)] FullScreenDisallowsTiling = 1 << 12
+		[Mac (10, 11)] FullScreenDisallowsTiling = 1 << 12,
+		[Mac (10, 13)] Primary = 1 << 16,
+		[Mac (10, 13)] Auxiliary = 1 << 17,
+		[Mac (10, 13)] CanJoinAllApplications = 1 << 18,
 	}
 
 	[NoMacCatalyst]
@@ -1634,13 +1639,6 @@ namespace AppKit {
 	[Native]
 	public enum NSTextTableLayoutAlgorithm : ulong {
 		Automatic, Fixed
-	}
-
-	[NoMacCatalyst]
-	[Flags]
-	[Native]
-	public enum NSTextListOptions : ulong {
-		PrependEnclosingMarker = 1
 	}
 
 	[NoMacCatalyst]
@@ -3216,5 +3214,20 @@ namespace AppKit {
 		Small = 1,
 		Medium = 2,
 		Large = 3,
+	}
+
+	[NoMacCatalyst, Mac (13, 0)]
+	[Native]
+	public enum NSColorWellStyle : long {
+		Default = 0,
+		Minimal,
+		Expanded,
+	}
+
+	[NoMacCatalyst, Mac (13, 0)]
+	[Native]
+	public enum NSComboButtonStyle : long {
+		Split = 0,
+		Unified = 1,
 	}
 }

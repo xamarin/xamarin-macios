@@ -171,11 +171,8 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.10 canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios8.0 canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.10", "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.")]
+		[ObsoletedOSPlatform ("ios8.0", "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.")]

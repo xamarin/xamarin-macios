@@ -10,7 +10,7 @@ using MediaPlayer;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MediaPlayer {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class VolumeViewTest {

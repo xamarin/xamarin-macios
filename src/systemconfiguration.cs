@@ -16,15 +16,21 @@ namespace SystemConfiguration {
 	[Static]
 	interface CaptiveNetwork {
 
-		[NoTV][NoWatch][NoMac]
+		[NoTV]
+		[NoWatch]
+		[NoMac]
 		[Field ("kCNNetworkInfoKeyBSSID")]
 		NSString NetworkInfoKeyBSSID { get; }
 
-		[NoTV][NoWatch][NoMac]
+		[NoTV]
+		[NoWatch]
+		[NoMac]
 		[Field ("kCNNetworkInfoKeySSID")]
 		NSString NetworkInfoKeySSID { get; }
 
-		[NoTV][NoWatch][NoMac]
+		[NoTV]
+		[NoWatch]
+		[NoMac]
 		[Field ("kCNNetworkInfoKeySSIDData")]
 		NSString NetworkInfoKeySSIDData { get; }
 	}

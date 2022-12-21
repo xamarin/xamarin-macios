@@ -66,7 +66,7 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* size_t */ nint CGPDFArrayGetCount (/* CGPDFArrayRef */ IntPtr array);
-		
+
 		public nint Count {
 			get {
 				return CGPDFArrayGetCount (Handle);
@@ -237,7 +237,7 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -252,7 +252,7 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else

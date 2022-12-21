@@ -10,12 +10,10 @@ using Mono.Cecil.Cil;
 
 using Xamarin.Tests;
 
-namespace GeneratorTests
-{
+namespace GeneratorTests {
 	[TestFixture ()]
 	[Parallelizable (ParallelScope.All)]
-	public class BGenTests
-	{
+	public class BGenTests {
 		// Removing the following variable might make running the unit tests in VSMac fail.
 		static Type variable_to_keep_reference_to_system_runtime_compilerservices_unsafe_assembly = typeof (System.Runtime.CompilerServices.Unsafe);
 
@@ -223,6 +221,40 @@ namespace GeneratorTests
 			BuildFile (Profile.iOS, "bug34042.cs");
 		}
 
+
+		static string RenderArgument (CustomAttributeArgument arg)
+		{
+			var td = arg.Type.Resolve ();
+			// If it's an enum value, try to find the enum field name and return that.
+			if (td?.BaseType?.Name == "Enum") {
+				if (arg.Value is byte b2) {
+					var field = td.Fields.SingleOrDefault (f => f.HasConstant && (byte) f.Constant == b2);
+					if (field is not null)
+						return td.FullName + "." + field.Name;
+				}
+			}
+			var obj = arg.Value;
+			if (obj is null)
+				return "null";
+
+			if (obj is string str)
+				return "\"" + str + "\"";
+
+			if (obj is byte b)
+				return b.ToString ();
+
+			if (obj is int i32)
+				return i32.ToString ();
+
+			// Good enough for now, implement more cases as required.
+			throw new NotImplementedException (obj.GetType ().FullName);
+		}
+
+		static string RenderSupportedOSPlatformAttribute (CustomAttribute ca)
+		{
+			return "[" + ca.AttributeType.Name.Replace ("Attribute", "") + "(" + string.Join (", ", ca.ConstructorArguments.Select (arg => RenderArgument (arg))) + ")]";
+		}
+
 		[Test]
 		public void Bug35176 ()
 		{
@@ -238,14 +270,73 @@ namespace GeneratorTests
 #else
 			const string attrib = "IntroducedAttribute";
 #endif
-			var preserves = allMembers.Sum ((v) => v.CustomAttributes.Count ((ca) => ca.AttributeType.Name == attrib));
+			var allSupportedAttributes = allMembers.SelectMany (v => v.CustomAttributes.Where (ca => ca.AttributeType.Name == attrib).Select (ca => new Tuple<ICustomAttributeProvider, CustomAttribute> (v, ca)));
+			var renderedSupportedAttributes = allSupportedAttributes.Select (v => v.Item1.ToString () + ": " + RenderSupportedOSPlatformAttribute (v.Item2) + "");
+			var preserves = allSupportedAttributes.Count ();
+			var renderedAttributes = "\t" + string.Join ("\n\t", renderedSupportedAttributes.OrderBy (v => v)) + "\n";
+			Console.WriteLine (renderedAttributes);
+#if NET
+			const string expectedAttributes =
+@"	Bug35176.IFooInterface: [SupportedOSPlatform(""ios14.3"")]
+	Bug35176.IFooInterface: [SupportedOSPlatform(""maccatalyst14.3"")]
+	Bug35176.IFooInterface: [SupportedOSPlatform(""macos11.2"")]
+	System.Void Bug35176.BarObject::set_FooView(UIKit.UIView): [SupportedOSPlatform(""ios14.3"")]
+	System.Void Bug35176.BarObject::set_FooView(UIKit.UIView): [SupportedOSPlatform(""maccatalyst14.3"")]
+	System.Void Bug35176.BarObject::set_FooView(UIKit.UIView): [SupportedOSPlatform(""macos11.2"")]
+	System.Void Bug35176.FooInterfaceWrapper::set_FooView(UIKit.UIView): [SupportedOSPlatform(""ios14.3"")]
+	System.Void Bug35176.FooInterfaceWrapper::set_FooView(UIKit.UIView): [SupportedOSPlatform(""maccatalyst14.3"")]
+	System.Void Bug35176.FooInterfaceWrapper::set_FooView(UIKit.UIView): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.BarObject::BarView(): [SupportedOSPlatform(""ios14.3"")]
+	UIKit.UIView Bug35176.BarObject::BarView(): [SupportedOSPlatform(""maccatalyst14.3"")]
+	UIKit.UIView Bug35176.BarObject::BarView(): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.BarObject::FooView(): [SupportedOSPlatform(""ios14.3"")]
+	UIKit.UIView Bug35176.BarObject::FooView(): [SupportedOSPlatform(""maccatalyst14.3"")]
+	UIKit.UIView Bug35176.BarObject::FooView(): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.BarObject::get_BarView(): [SupportedOSPlatform(""ios14.4"")]
+	UIKit.UIView Bug35176.BarObject::get_BarView(): [SupportedOSPlatform(""maccatalyst14.4"")]
+	UIKit.UIView Bug35176.BarObject::get_BarView(): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.BarObject::get_FooView(): [SupportedOSPlatform(""ios14.3"")]
+	UIKit.UIView Bug35176.BarObject::get_FooView(): [SupportedOSPlatform(""maccatalyst14.3"")]
+	UIKit.UIView Bug35176.BarObject::get_FooView(): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [SupportedOSPlatform(""ios14.3"")]
+	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [SupportedOSPlatform(""maccatalyst14.3"")]
+	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarMember(Bug35176.IFooInterface,System.Int32): [SupportedOSPlatform(""ios14.3"")]
+	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarMember(Bug35176.IFooInterface,System.Int32): [SupportedOSPlatform(""maccatalyst14.3"")]
+	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarMember(Bug35176.IFooInterface,System.Int32): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""ios14.4"")]
+	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""maccatalyst14.4"")]
+	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.FooInterfaceWrapper::FooView(): [SupportedOSPlatform(""ios14.3"")]
+	UIKit.UIView Bug35176.FooInterfaceWrapper::FooView(): [SupportedOSPlatform(""maccatalyst14.3"")]
+	UIKit.UIView Bug35176.FooInterfaceWrapper::FooView(): [SupportedOSPlatform(""macos11.2"")]
+	UIKit.UIView Bug35176.FooInterfaceWrapper::get_FooView(): [SupportedOSPlatform(""ios14.3"")]
+	UIKit.UIView Bug35176.FooInterfaceWrapper::get_FooView(): [SupportedOSPlatform(""maccatalyst14.3"")]
+	UIKit.UIView Bug35176.FooInterfaceWrapper::get_FooView(): [SupportedOSPlatform(""macos11.2"")]
+";
+#else
+			const string expectedAttributes =
+@"	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.iOS, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
+	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.MacOSX, 11, 2, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::BarView(): [Introduced(ObjCRuntime.PlatformName.iOS, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::BarView(): [Introduced(ObjCRuntime.PlatformName.MacOSX, 11, 2, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::FooView(): [Introduced(ObjCRuntime.PlatformName.iOS, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::FooView(): [Introduced(ObjCRuntime.PlatformName.MacOSX, 11, 2, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::get_BarView(): [Introduced(ObjCRuntime.PlatformName.iOS, 14, 4, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [Introduced(ObjCRuntime.PlatformName.iOS, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [Introduced(ObjCRuntime.PlatformName.MacOSX, 11, 2, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [Introduced(ObjCRuntime.PlatformName.iOS, 14, 4, ObjCRuntime.PlatformArchitecture.None, null)]
+";
+#endif
+
+			Assert.AreEqual (expectedAttributes, renderedAttributes, "Introduced attributes");
 			Assert.AreEqual (
 #if NET
 				36, // This number should be lower - https://github.com/xamarin/xamarin-macios/issues/14802
 #else
 				10,
 #endif
-				 preserves, "Introduced attribute count"); // If you modified code that generates IntroducedAttributes please update the attribute count
+				 preserves, $"Introduced attribute count:\n{renderedAttributes}"); // If you modified code that generates IntroducedAttributes please update the attribute count
 		}
 
 		[Test]
@@ -636,7 +727,7 @@ namespace GeneratorTests
 		[TestCase (Profile.iOS)]
 		public void GH5416_setter (Profile profile)
 		{
-			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform());
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
 			bgen.Profile = profile;
 			bgen.AddTestApiDefinition ("ghissue5416a.cs");
@@ -883,6 +974,8 @@ namespace GeneratorTests
 		[Test]
 #if !NET
 		[Ignore ("This only applies to .NET")]
+#else
+		[Ignore ("https://github.com/dotnet/roslyn/issues/61525")]
 #endif
 		public void NativeIntDelegates ()
 		{

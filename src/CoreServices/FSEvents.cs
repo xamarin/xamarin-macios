@@ -30,13 +30,13 @@ namespace CoreServices
 		IgnoreSelf = 0x00000008,
 		FileEvents = 0x00000010,
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[Mac (10,9)]
 #endif
 		MarkSelf = 0x00000020,
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[Mac (10,13)]
 #endif
@@ -76,7 +76,7 @@ namespace CoreServices
 		ItemIsHardlink = 0x00100000,
 		ItemIsLastHardlink = 0x00200000,
 #if NET
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[Mac (10,14)]
 #endif
@@ -504,6 +504,12 @@ namespace CoreServices
 		static extern void FSEventStreamScheduleWithRunLoop (IntPtr handle,
 			IntPtr runLoop, IntPtr runLoopMode);
 
+#if NET
+		[Obsolete ("Starting with macOS13.0 use 'SetDispatchQueue' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[UnsupportedOSPlatform ("macos13.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 13,0, message: "Use 'SetDispatchQueue' instead.")]
+#endif
 		public void ScheduleWithRunLoop (CFRunLoop runLoop, NSString runLoopMode)
 		{
 			FSEventStreamScheduleWithRunLoop (GetCheckedHandle (), runLoop.Handle, runLoopMode.Handle);
@@ -528,6 +534,12 @@ namespace CoreServices
 		static extern void FSEventStreamUnscheduleFromRunLoop (IntPtr handle,
 			IntPtr runLoop, IntPtr runLoopMode);
 
+#if NET
+		[Obsolete ("Starting with macOS13.0 use 'SetDispatchQueue' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[UnsupportedOSPlatform ("macos13.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 13,0, message: "Use 'SetDispatchQueue' instead.")]
+#endif
 		public void UnscheduleFromRunLoop (CFRunLoop runLoop, NSString runLoopMode)
 		{
 			FSEventStreamScheduleWithRunLoop (GetCheckedHandle (), runLoop.Handle, runLoopMode.Handle);

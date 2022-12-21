@@ -2,10 +2,8 @@ using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
 
-namespace OpenGLES
-{
-	public partial class EAGLContext
-	{
+namespace OpenGLES {
+	public partial class EAGLContext {
 		public enum PresentationMode {
 			AtTime = 0,
 			AfterMinimumDuration = 1,
@@ -27,14 +25,11 @@ namespace OpenGLES
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos12.0")]
 		[UnsupportedOSPlatform ("ios12.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos12.0 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios12.0 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos12.0", "Use 'Metal' instead.")]
+		[ObsoletedOSPlatform ("ios12.0", "Use 'Metal' instead.")]
 #else
-		[iOS (10,0)]
-		[TV (10,0)]
+		[iOS (10, 0)]
+		[TV (10, 0)]
 #endif
 		public virtual bool PresentRenderBuffer (nuint target, double presentationTime)
 		{
@@ -47,14 +42,11 @@ namespace OpenGLES
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos12.0")]
 		[UnsupportedOSPlatform ("ios12.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos12.0 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios12.0 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos12.0", "Use 'Metal' instead.")]
+		[ObsoletedOSPlatform ("ios12.0", "Use 'Metal' instead.")]
 #else
-		[iOS (10,3)]
-		[TV (10,2)]
+		[iOS (10, 3)]
+		[TV (10, 2)]
 #endif
 		public virtual bool PresentRenderBuffer (nuint target, double presentationTime, PresentationMode mode)
 		{

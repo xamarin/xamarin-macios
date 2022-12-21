@@ -18,7 +18,7 @@ namespace SpriteKit {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -30,12 +30,12 @@ namespace SpriteKit {
 			if (points is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
-			return FromPoints (ref points[0], (nuint) points.Length);
+			return FromPoints (ref points [0], (nuint) points.Length);
 		}
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -54,7 +54,7 @@ namespace SpriteKit {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -66,12 +66,12 @@ namespace SpriteKit {
 			if (points is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
-			return FromSplinePoints (ref points[0], (nuint) points.Length);
+			return FromSplinePoints (ref points [0], (nuint) points.Length);
 		}
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else

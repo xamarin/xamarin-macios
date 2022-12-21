@@ -16,8 +16,7 @@ using ObjCRuntime;
 
 #nullable enable
 
-namespace SceneKit
-{
+namespace SceneKit {
 	public partial class SCNSceneSource {
 
 		public NSObject? GetEntryWithIdentifier<T> (string uid)
@@ -27,7 +26,7 @@ namespace SceneKit
 
 		public string [] GetIdentifiersOfEntries<T> ()
 		{
-			return CFArray.StringArrayFromHandle (Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle ("identifiersOfEntriesWithClass:"), new Class (typeof(T)).Handle))!;
+			return CFArray.StringArrayFromHandle (Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle ("identifiersOfEntriesWithClass:"), new Class (typeof (T)).Handle))!;
 		}
 	}
 }

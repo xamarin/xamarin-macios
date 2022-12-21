@@ -26,11 +26,11 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class StringTest {
-		
+
 		[Test]
 		public void Compare_Null ()
 		{
@@ -38,26 +38,24 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.Throws<ArgumentNullException> (() => s.Compare (null));
 			}
 		}
-		
+
 		[Test]
 		public void Compare ()
 		{
-			using (NSString s1 = new NSString ("Sebastien")) 
-			using (NSString s2 = new NSString ("Sébastien")) 
-			{
+			using (NSString s1 = new NSString ("Sebastien"))
+			using (NSString s2 = new NSString ("Sébastien")) {
 				Assert.That (s1.Compare (s1), Is.EqualTo (NSComparisonResult.Same), "Same");
 				Assert.That (s1.Compare (s2), Is.EqualTo (NSComparisonResult.Ascending), "Ascending");
 				Assert.That (s2.Compare (s1), Is.EqualTo (NSComparisonResult.Descending), "Descending");
 			}
 		}
-		
+
 		[Test]
 		public void Compare_Options ()
 		{
-			using (NSString s1 = new NSString ("Sebastien")) 
-			using (NSString s2 = new NSString ("Sébastien")) 
-			{
-				Assert.That (s1.Compare (s2, NSStringCompareOptions.DiacriticInsensitiveSearch), 
+			using (NSString s1 = new NSString ("Sebastien"))
+			using (NSString s2 = new NSString ("Sébastien")) {
+				Assert.That (s1.Compare (s2, NSStringCompareOptions.DiacriticInsensitiveSearch),
 					Is.EqualTo (NSComparisonResult.Same), "DiacriticInsensitiveSearch");
 			}
 		}
@@ -65,11 +63,10 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Compare_Range ()
 		{
-			using (NSString s1 = new NSString ("Bastien")) 
-			using (NSString s2 = new NSString ("Sébastien")) 
-			{
+			using (NSString s1 = new NSString ("Bastien"))
+			using (NSString s2 = new NSString ("Sébastien")) {
 				NSRange r = new NSRange (2, s2.Length - 2);
-				Assert.That (s2.Compare (s1, NSStringCompareOptions.CaseInsensitiveSearch, r), 
+				Assert.That (s2.Compare (s1, NSStringCompareOptions.CaseInsensitiveSearch, r),
 					Is.EqualTo (NSComparisonResult.Same), "skip accent");
 			}
 		}
@@ -77,29 +74,27 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Compare_Locale ()
 		{
-			using (NSString s1 = new NSString ("sebastien")) 
-			using (NSString s2 = new NSString ("Sébastien")) 
-			{
+			using (NSString s1 = new NSString ("sebastien"))
+			using (NSString s2 = new NSString ("Sébastien")) {
 				NSStringCompareOptions options = NSStringCompareOptions.DiacriticInsensitiveSearch | NSStringCompareOptions.CaseInsensitiveSearch;
 				NSRange r = new NSRange (0, s2.Length);
-				Assert.That (s1.Compare (s2, options, r, null), 
+				Assert.That (s1.Compare (s2, options, r, null),
 					Is.EqualTo (NSComparisonResult.Same), "null");
-				Assert.That (s1.Compare (s2, options, r, NSLocale.SystemLocale), 
+				Assert.That (s1.Compare (s2, options, r, NSLocale.SystemLocale),
 					Is.EqualTo (NSComparisonResult.Same), "SystemLocale");
 			}
 		}
-		
+
 		[Test]
 		// requested in http://bugzilla.xamarin.com/show_bug.cgi?id=1870
 		public void Replace_Range ()
 		{
-			using (NSString s1 = new NSString ("Sebastien")) 
-			using (NSString s2 = new NSString ("é")) 
+			using (NSString s1 = new NSString ("Sebastien"))
+			using (NSString s2 = new NSString ("é"))
 			using (NSString s3 = new NSString ("sébastien"))
-			using (NSString result = s1.Replace (new NSRange (1, 1), s2))
-			{
+			using (NSString result = s1.Replace (new NSRange (1, 1), s2)) {
 				NSStringCompareOptions options = NSStringCompareOptions.CaseInsensitiveSearch;
-				Assert.That (result.Compare (s3, options), 
+				Assert.That (result.Compare (s3, options),
 					Is.EqualTo (NSComparisonResult.Same), "Replace");
 			}
 		}
@@ -210,9 +205,9 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Equality ()
 		{
-			using (var s1 = new NSString ("\u00f6"))	// o-umlaut
-			using (var s2 = new NSString ("o\u0308")) {	// o + combining diaeresis
-				// since ObjC thinks it's different
+			using (var s1 = new NSString ("\u00f6"))    // o-umlaut
+			using (var s2 = new NSString ("o\u0308")) { // o + combining diaeresis
+														// since ObjC thinks it's different
 				Assert.That (s1.GetHashCode (), Is.Not.EqualTo (s2.GetHashCode ()), "GetHashCode");
 				// then it's "correct" to return false for equality
 				Assert.False (s1.Equals ((object) s2), "Equal(object)");

@@ -56,10 +56,9 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CGGradient : NativeObject
-	{
+	public class CGGradient : NativeObject {
 #if !COREBUILD
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGGradient (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -81,10 +80,10 @@ namespace CoreGraphics {
 			CGGradientRelease (GetCheckedHandle ());
 		}
 
-		[DllImport(Constants.CoreGraphicsLibrary)]
-		extern static /* CGGradientRef __nullable */ IntPtr CGGradientCreateWithColorComponents (
-			/* CGColorSpaceRef __nullable */ IntPtr colorspace, /* const CGFloat* __nullable */ nfloat []? components, 
-			/* const CGFloat* __nullable */ nfloat []? locations, /* size_t */ nint count);
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static unsafe /* CGGradientRef __nullable */ IntPtr CGGradientCreateWithColorComponents (
+			/* CGColorSpaceRef __nullable */ IntPtr colorspace, /* const CGFloat* __nullable */ nfloat* components,
+			/* const CGFloat* __nullable */ nfloat* locations, /* size_t */ nint count);
 
 		static IntPtr Create (CGColorSpace colorspace, nfloat [] components, nfloat []? locations)
 		{
@@ -95,7 +94,11 @@ namespace CoreGraphics {
 			if (components is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (components));
 
-			return CGGradientCreateWithColorComponents (colorspace.GetCheckedHandle (), components, locations, components.Length / (colorspace.Components + 1));
+			unsafe {
+				fixed (nfloat* componentsPtr = components, locationsPtr = locations) {
+					return CGGradientCreateWithColorComponents (colorspace.GetCheckedHandle (), componentsPtr, locationsPtr, components.Length / (colorspace.Components + 1));
+				}
+			}
 		}
 
 		public CGGradient (CGColorSpace colorspace, nfloat [] components, nfloat []? locations)
@@ -112,7 +115,11 @@ namespace CoreGraphics {
 			if (components is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (components));
 
-			return CGGradientCreateWithColorComponents (colorspace.GetCheckedHandle (), components, null, components.Length / (colorspace.Components + 1));
+			unsafe {
+				fixed (nfloat* componentsPtr = components) {
+					return CGGradientCreateWithColorComponents (colorspace.GetCheckedHandle (), componentsPtr, null, components.Length / (colorspace.Components + 1));
+				}
+			}
 		}
 
 		public CGGradient (CGColorSpace colorspace, nfloat [] components)
@@ -120,10 +127,10 @@ namespace CoreGraphics {
 		{
 		}
 
-		[DllImport(Constants.CoreGraphicsLibrary)]
-		extern static /* CGGradientRef __nullable */ IntPtr CGGradientCreateWithColors (
-			/* CGColorSpaceRef __nullable */ IntPtr space, /* CFArrayRef __nullable */ IntPtr colors, 
-			/* const CGFloat* __nullable */ nfloat []? locations);
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static unsafe /* CGGradientRef __nullable */ IntPtr CGGradientCreateWithColors (
+			/* CGColorSpaceRef __nullable */ IntPtr space, /* CFArrayRef __nullable */ IntPtr colors,
+			/* const CGFloat* __nullable */ nfloat* locations);
 
 		static IntPtr Create (CGColorSpace? colorspace, CGColor [] colors, nfloat []? locations)
 		{
@@ -132,8 +139,13 @@ namespace CoreGraphics {
 			if (colors is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (colors));
 
-			using (var array = CFArray.FromNativeObjects (colors))
-				return CGGradientCreateWithColors (colorspace.GetHandle (), array.Handle, locations);
+			using (var array = CFArray.FromNativeObjects (colors)) {
+				unsafe {
+					fixed (nfloat* locationsPtr = locations) {
+						return CGGradientCreateWithColors (colorspace.GetHandle (), array.Handle, locationsPtr);
+					}
+				}
+			}
 		}
 
 		public CGGradient (CGColorSpace colorspace, CGColor [] colors, nfloat []? locations)
@@ -146,8 +158,11 @@ namespace CoreGraphics {
 			if (colors is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (colors));
 
-			using (var array = CFArray.FromNativeObjects (colors))
-				return CGGradientCreateWithColors (colorspace.GetHandle (), array.Handle, null);
+			using (var array = CFArray.FromNativeObjects (colors)) {
+				unsafe {
+					return CGGradientCreateWithColors (colorspace.GetHandle (), array.Handle, null);
+				}
+			}
 		}
 
 		public CGGradient (CGColorSpace? colorspace, CGColor [] colors)

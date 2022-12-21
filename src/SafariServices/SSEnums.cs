@@ -16,8 +16,8 @@ using ObjCRuntime;
 namespace SafariServices {
 
 	// NSInteger -> SSReadingList.h
-	[NoMac][iOS (7,0)]
-	[MacCatalyst (14,0)]
+	[NoMac]
+	[MacCatalyst (14, 0)]
 	[Native ("SSReadingListErrorCode")]
 	[ErrorDomain ("SSReadingListErrorDomain")]
 	public enum SSReadingListError : long {
@@ -25,10 +25,10 @@ namespace SafariServices {
 	}
 
 	[NoMac]
-	[iOS (9,0)]
-	[Deprecated (PlatformName.iOS, 10,0, message: "Use 'SFErrorCode' enum.")]
-	[MacCatalyst (13,4)]
-	[Deprecated (PlatformName.MacCatalyst, 13,4, message: "Use 'SFErrorCode' enum.")]
+	[iOS (9, 0)]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'SFErrorCode' enum.")]
+	[MacCatalyst (13, 4)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 4, message: "Use 'SFErrorCode' enum.")]
 	[Native]
 	[ErrorDomain ("SFContentBlockerErrorDomain")]
 	public enum SFContentBlockerErrorCode : long {
@@ -38,12 +38,11 @@ namespace SafariServices {
 		LoadingInterrupted = 3
 	}
 
-	[iOS (10,0)]
-	[Introduced (PlatformName.MacCatalyst, 13,4)]
+	[iOS (10, 0)]
+	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[Native]
 	[ErrorDomain ("SFErrorDomain")]
-	public enum SFErrorCode : long
-	{
+	public enum SFErrorCode : long {
 		Ok = 0,
 		NoExtensionFound = 1,
 		NoAttachmentFound = 2,
@@ -51,7 +50,7 @@ namespace SafariServices {
 	}
 
 	[NoMac]
-	[iOS (11,0)]
+	[iOS (11, 0)]
 	[Native]
 	public enum SFSafariViewControllerDismissButtonStyle : long {
 		Done,
@@ -60,10 +59,10 @@ namespace SafariServices {
 	}
 
 	[NoMac]
-	[iOS (11,0)]
+	[iOS (11, 0)]
 	[Native]
 	[ErrorDomain ("SFAuthenticationErrorDomain")]
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'ASWebAuthenticationSessionErrorCode' instead.")]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'ASWebAuthenticationSessionErrorCode' instead.")]
 	public enum SFAuthenticationError : long {
 		CanceledLogin = 1,
 	}
@@ -71,12 +70,12 @@ namespace SafariServices {
 #if !NET
 	[Obsolete ("Enum not used by any API.")]
 	[NoiOS]
-	[Mac (10,12,4)]
+	[Mac (10, 12, 4)]
 	[Native]
 	public enum SFSafariServicesVersion : long {
 		V10_0,
 		V10_1,
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		V11_0,
 	}
 #endif

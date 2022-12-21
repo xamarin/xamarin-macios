@@ -8,11 +8,9 @@ using NUnit.Framework;
 using Xamarin.Tests;
 using System.Linq;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
-	public class FrameworkListTests
-	{
+	public class FrameworkListTests {
 		[TestCase ("Xamarin.iOS-FrameworkList.xml.in")]
 		[TestCase ("Xamarin.TVOS-FrameworkList.xml.in")]
 		[TestCase ("Xamarin.WatchOS-FrameworkList.xml.in")]
@@ -23,7 +21,7 @@ namespace Xamarin.MacDev.Tasks
 			Configuration.AssertLegacyXamarinAvailable ();
 
 			var fameworkListFileParts = frameworkListFile.Split ('-');
-			string frameworkName = fameworkListFileParts[0];
+			string frameworkName = fameworkListFileParts [0];
 			switch (frameworkName) {
 			case "Xamarin.iOS":
 				if (!Configuration.include_ios)
@@ -43,7 +41,7 @@ namespace Xamarin.MacDev.Tasks
 				break;
 			}
 			var isMac = frameworkName == "Xamarin.Mac";
-			var isFull = fameworkListFileParts[1] == "Full";
+			var isFull = fameworkListFileParts [1] == "Full";
 			var frameworkListAssemblies = ScanFrameworkListXml (frameworkListFile, isMac);
 			var installedAssemblies = ScanAssemblyDirectory (frameworkName, isMac, isFull);
 
@@ -149,8 +147,7 @@ namespace Xamarin.MacDev.Tasks
 		}
 	}
 
-	class AssemblyInfo
-	{
+	class AssemblyInfo {
 		public string Name;
 
 		public string Version;
@@ -181,7 +178,8 @@ namespace Xamarin.MacDev.Tasks
 			PublicKeyToken = fn.Substring (i, j - i);
 		}
 
-		public bool Equals (AssemblyInfo other) {
+		public bool Equals (AssemblyInfo other)
+		{
 			// ignore Culture and InGac for equality since those are not mentioned in the FrameworkList.xml
 			return other.Name == this.Name &&
 				other.Version == this.Version &&

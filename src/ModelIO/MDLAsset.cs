@@ -11,7 +11,7 @@ namespace ModelIO {
 
 #if !NET
 		[Obsolete ("Use the overload that takes an 'MDLLightProbeIrradianceDataSource' instead.")]
-		public static MDLLightProbe[] PlaceLightProbes (float density, MDLProbePlacement type, MDLLightProbeIrradianceDataSource dataSource)
+		public static MDLLightProbe [] PlaceLightProbes (float density, MDLProbePlacement type, MDLLightProbeIrradianceDataSource dataSource)
 		{
 			return PlaceLightProbes (density, type, (IMDLLightProbeIrradianceDataSource) dataSource);
 		}

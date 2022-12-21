@@ -40,7 +40,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		}
 
 		[Test]
-		public void AppendMemoryBlockTest()
+		public void AppendMemoryBlockTest ()
 		{
 			CMBlockBufferError err1;
 			CMBlockBufferError err2;
@@ -53,7 +53,7 @@ namespace MonoTouchFixtures.CoreMedia {
 				Assert.That (err2, Is.EqualTo (CMBlockBufferError.None), "AppendMemoryBlock error");
 				Assert.That (bb.DataLength, Is.EqualTo ((nuint) 10), "AppendMemoryBlock DataLength");
 			}
-				
+
 			using (var bb = CMBlockBuffer.FromMemoryBlock (IntPtr.Zero, 16, new CMCustomBlockAllocator (), 0, 5, CMBlockBufferFlags.AssureMemoryNow, out err1)) {
 				Assert.That (err1, Is.EqualTo (CMBlockBufferError.None), "FromMemoryBlock error");
 				Assert.That (bb.DataLength, Is.EqualTo ((nuint) 5), "FromMemoryBlock DataLength");
@@ -113,8 +113,7 @@ namespace MonoTouchFixtures.CoreMedia {
 			Assert.IsTrue (freeCalled, "FromMemoryBlock FreeCalled");
 		}
 
-		class CustomAllocator : CMCustomBlockAllocator
-		{
+		class CustomAllocator : CMCustomBlockAllocator {
 			BlockBufferTest test;
 
 			public CustomAllocator (BlockBufferTest bufferTest)
@@ -142,7 +141,7 @@ namespace MonoTouchFixtures.CoreMedia {
 			GCHandle pinned = GCHandle.Alloc (data, GCHandleType.Pinned);
 			IntPtr pointer = pinned.AddrOfPinnedObject ();
 			CMBlockBufferError err;
-			using (var buf = CMBlockBuffer.FromMemoryBlock (pointer, (uint)data.Length, null, 0, (uint)data.Length, CMBlockBufferFlags.AssureMemoryNow, out err)) {
+			using (var buf = CMBlockBuffer.FromMemoryBlock (pointer, (uint) data.Length, null, 0, (uint) data.Length, CMBlockBufferFlags.AssureMemoryNow, out err)) {
 				Assert.That (err, Is.EqualTo (CMBlockBufferError.None), "CMBlockBufferError");
 				// dispose called before unpinning (ok)
 			}
@@ -197,7 +196,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void CopyDataBytesTest ()
 		{
-			byte [] data = new byte []{ 0x0, 0x1, 0x2, 0x3, 0x4 };
+			byte [] data = new byte [] { 0x0, 0x1, 0x2, 0x3, 0x4 };
 			byte [] destData = new byte [data.Length];
 			GCHandle pinned = GCHandle.Alloc (data, GCHandleType.Pinned);
 			GCHandle destPinned = GCHandle.Alloc (destData, GCHandleType.Pinned);
@@ -292,7 +291,7 @@ namespace MonoTouchFixtures.CoreMedia {
 				Marshal.Copy (outPtr, tempBuffer, 0, 5);
 
 				for (int i = 0; i < tempBuffer.Length; i++)
-					Assert.AreEqual ((byte)(i + 5), tempBuffer [i], $"CMBlockBuffer AccessDataBytesTest iteration: {i}");
+					Assert.AreEqual ((byte) (i + 5), tempBuffer [i], $"CMBlockBuffer AccessDataBytesTest iteration: {i}");
 			}
 			pinned.Free ();
 			tempBufferPinned.Free ();
@@ -314,7 +313,7 @@ namespace MonoTouchFixtures.CoreMedia {
 
 				err = buf.GetDataPointer (5, out lengthAtOffset, out totalLength, ref outPtr);
 				Assert.That (err, Is.EqualTo (CMBlockBufferError.None), $"CMBlockBufferError 2: {err}");
-				Marshal.Copy (outPtr, tempBuffer, 0, (int)lengthAtOffset);
+				Marshal.Copy (outPtr, tempBuffer, 0, (int) lengthAtOffset);
 
 				for (int i = 0; i < tempBuffer.Length; i++)
 					Assert.AreEqual ((byte) (i + 5), tempBuffer [i], $"CMBlockBuffer GetDataPointerTest iteration: {i}");

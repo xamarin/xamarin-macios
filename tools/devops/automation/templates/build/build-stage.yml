@@ -36,6 +36,14 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 - name: xcodeChannel
   type: string
 
@@ -52,6 +60,8 @@ jobs:
   steps:
   - template: ../common/configure.yml
     parameters: 
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
       uploadArtifacts: true
       enableDotnet: ${{ parameters.enableDotnet }}
 
@@ -63,7 +73,7 @@ jobs:
     - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
 
     # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
-    - template: azure-devops-pools/agent-pool-selector.yml@templates
+    - template: azure-devops-pools/agent-pool-selector.yml@yaml-templates
       parameters:
         agentPoolPR: $(PRBuildPool)
         agentPoolPRUrl: $(PRBuildPoolUrl)
@@ -117,7 +127,6 @@ jobs:
     PR_ID: $[ dependencies.configure.outputs['labels.pr_number'] ]
     # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
     BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-    BUILD_REVISION: $[ variables['Build.SourceVersion'] ]
     XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness_labels'] ]
     RUN_MAC_TESTS: $[ dependencies.configure.outputs['decisions.RUN_MAC_TESTS'] ]
   pool:
@@ -133,6 +142,8 @@ jobs:
   - template: build-pkgs.yml
     parameters:
       isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
       runTests: ${{ parameters.runTests }}
       runDeviceTests: ${{ parameters.runDeviceTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}

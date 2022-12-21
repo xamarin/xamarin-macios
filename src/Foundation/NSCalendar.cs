@@ -40,7 +40,7 @@ namespace Foundation {
 		Gregorian, Buddhist, Chinese, Hebrew, Islamic, IslamicCivil, Japanese, [Obsolete] RepublicOfChina, Persian, Indian, ISO8601,
 		Coptic, EthiopicAmeteAlem, EthiopicAmeteMihret,
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -50,7 +50,7 @@ namespace Foundation {
 #endif
 		IslamicTabular,
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -67,7 +67,7 @@ namespace Foundation {
 	public partial class NSCalendar {
 		static NSString GetCalendarIdentifier (NSCalendarType type)
 		{
-			switch (type){
+			switch (type) {
 			case NSCalendarType.Gregorian:
 				return NSGregorianCalendar;
 			case NSCalendarType.Buddhist:
@@ -77,7 +77,7 @@ namespace Foundation {
 			case NSCalendarType.Hebrew:
 				return NSHebrewCalendar;
 			case NSCalendarType.Islamic:
-				return NSIslamicCalendar; 
+				return NSIslamicCalendar;
 			case NSCalendarType.IslamicCivil:
 				return NSIslamicCivilCalendar;
 			case NSCalendarType.Japanese:
@@ -106,7 +106,7 @@ namespace Foundation {
 				throw new ArgumentException ("Unknown NSCalendarType value");
 			}
 		}
-		
-		public NSCalendar (NSCalendarType calendarType) : this (GetCalendarIdentifier (calendarType)) {}
+
+		public NSCalendar (NSCalendarType calendarType) : this (GetCalendarIdentifier (calendarType)) { }
 	}
 }

@@ -122,7 +122,7 @@ namespace Foundation {
 
 		public NSStreamSocketSecurityLevel SocketSecurityLevel {
 			get {
-				var k = this[SocketSecurityLevelKey] as NSString;
+				var k = this [SocketSecurityLevelKey] as NSString;
 				if (k == SocketSecurityLevelNone)
 					return NSStreamSocketSecurityLevel.None;
 				if (k == SocketSecurityLevelSslV2)
@@ -137,7 +137,7 @@ namespace Foundation {
 			}
 			set {
 				NSString v = null;
-				switch (value){
+				switch (value) {
 				case NSStreamSocketSecurityLevel.None:
 					v = SocketSecurityLevelNone;
 					break;
@@ -186,7 +186,7 @@ namespace Foundation {
 			}
 			set {
 				NSString v = null;
-				switch (value){
+				switch (value) {
 				case NSStreamServiceType.Background:
 					v = NetworkServiceTypeBackground;
 					break;
@@ -207,7 +207,7 @@ namespace Foundation {
 		}
 
 		static void AssignStreams (IntPtr read, IntPtr write,
-				    out NSInputStream readStream, out NSOutputStream writeStream)
+					out NSInputStream readStream, out NSOutputStream writeStream)
 		{
 			readStream = Runtime.GetNSObject<NSInputStream> (read);
 			writeStream = Runtime.GetNSObject<NSOutputStream> (write);
@@ -215,7 +215,7 @@ namespace Foundation {
 
 		public static void CreatePairWithSocket (CFSocket socket,
 							 out NSInputStream readStream,
-		                                         out NSOutputStream writeStream)
+												 out NSOutputStream writeStream)
 		{
 			if (socket == null)
 				throw new ArgumentNullException ("socket");
@@ -226,9 +226,9 @@ namespace Foundation {
 		}
 
 		public static void CreatePairWithPeerSocketSignature (AddressFamily family, SocketType type,
-		                                                      ProtocolType proto, IPEndPoint endpoint,
-		                                                      out NSInputStream readStream,
-		                                                      out NSOutputStream writeStream)
+															  ProtocolType proto, IPEndPoint endpoint,
+															  out NSInputStream readStream,
+															  out NSOutputStream writeStream)
 		{
 			using (var address = new CFSocketAddress (endpoint)) {
 				var sig = new CFSocketSignature (family, type, proto, address);
@@ -240,8 +240,8 @@ namespace Foundation {
 
 #if !WATCH // There's no CFStreamCreatePairWithSocketToCFHost in WatchOS
 		public static void CreatePairWithSocketToHost (IPEndPoint endpoint,
-		                                               out NSInputStream readStream,
-		                                               out NSOutputStream writeStream)
+													   out NSInputStream readStream,
+													   out NSOutputStream writeStream)
 		{
 			using (var host = CFHost.Create (endpoint)) {
 				IntPtr read, write;

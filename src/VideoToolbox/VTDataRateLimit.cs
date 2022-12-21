@@ -23,8 +23,7 @@ namespace VideoToolbox {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public struct VTDataRateLimit
-	{
+	public struct VTDataRateLimit {
 		public uint NumberOfBytes { get; set; }
 		public double Seconds { get; set; }
 

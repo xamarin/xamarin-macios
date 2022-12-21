@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>dotnet_linker</RootNamespace>
     <DefineConstants>$(DefineConstants);BUNDLER</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -76,6 +76,9 @@
     </Compile>
     <Compile Include="..\common\SdkVersions.cs">
       <Link>external\tools\common\SdkVersions.cs</Link>
+    </Compile>
+    <Compile Include="..\common\ProductConstants.cs">
+      <Link>external\tools\common\ProductConstants.cs</Link>
     </Compile>
     <Compile Include="..\common\Symbols.cs">
       <Link>external\tools\common\Symbols.cs</Link>
@@ -277,7 +280,7 @@
       <ManifestResourceName>Xamarin.Bundler.Errors.zh-Hant</ManifestResourceName>
     </EmbeddedResource>
   </ItemGroup>
-  <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.cs.in;../common/Make.common" Outputs="../common/SdkVersions.cs">
-    <Exec Command="make ../common/SdkVersions.cs" />
+  <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.cs.in;../common/ProductConstants.cs.in" Outputs="../common/SdkVersions.cs;../common/ProductConstants.cs">
+    <Exec Command="make ../common/SdkVersions.cs ../common/ProductConstants.cs" />
   </Target>
 </Project>

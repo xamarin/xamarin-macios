@@ -424,7 +424,7 @@
         </value>
     </data>
   <data name="E0118" xml:space="preserve">
-        <value>{0} exited with code {1}:
+        <value>{0} がコード {1}で終了しました :
 {2}</value>
     </data>
   <data name="M0119" xml:space="preserve">
@@ -997,6 +997,7 @@
         <value>設定: エントリ "{0}" が存在しません
         </value>
     </data>
+  <!-- E7068: not in use anymore -->
   <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14 以降では watchOS 1 アプリがサポートされていません。プロジェクトを watchOS 2 以降に移行してください。</value>
     </data>
@@ -1145,5 +1146,35 @@
     </data>
   <data name="E7101" xml:space="preserve">
         <value>値 '{1}' のプロパティ '{0}' が不明です。</value>
+    </data>
+  <data name="E7102" xml:space="preserve">
+        <value>CustomEntitlements アイテム グループで指定された '{2}' 種類のエンタイトルメント '{1}' の値 '{0}' が無効です。値がないことが必要です。</value>
+        <comment>
+            Don't translate: CustomEntitlements (name of option in project file)
+        </comment>
+    </data>
+  <data name="E7103" xml:space="preserve">
+        <value>CustomEntitlements アイテム グループで指定された '{2}' 種類のエンタイトルメント '{1}' の値 '{0}' が無効です。'true' または 'false' であることが必要です。</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'true', 'false'
+        </comment>
+    </data>
+  <data name="E7104" xml:space="preserve">
+        <value>CustomEntitlements アイテム グループで指定されたエンタイトルメント '{1}' の不明な種類 '{0}'。'Remove'、'Boolean'、'String'、または 'StringArray' が必要です。</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'Remove', 'Boolean', 'String', 'StringArray'
+        </comment>
+    </data>
+  <data name="W7105" xml:space="preserve">
+        <value>マニフェスト '{2}' のネイティブ参照 '{1}' に予期しない拡張機能 '{0}'。</value>
+        <comment>
+            {0}: file extension
+            {1}: path to a file
+            {2}: path to a file
+        </comment>
     </data>
 </root>

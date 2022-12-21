@@ -134,7 +134,7 @@ namespace CoreGraphics {
 		{
 			return new CGAffineTransform (1, 0, 0, 1, 0, 0);
 		}
-		
+
 		public static CGAffineTransform MakeRotation (nfloat angle)
 		{
 			var cos = (nfloat) Math.Cos (angle);
@@ -170,11 +170,11 @@ namespace CoreGraphics {
 #else
 #pragma warning disable CS0618 // Type or member is obsolete
 			return new CGAffineTransform (a.xx * b.xx + a.yx * b.xy,
-						      a.xx * b.yx + a.yx * b.yy,
-						      a.xy * b.xx + a.yy * b.xy,
-						      a.xy * b.yx + a.yy * b.yy,
-						      a.x0 * b.xx + a.y0 * b.xy + b.x0,
-						      a.x0 * b.yx + a.y0 * b.yy + b.y0);
+							  a.xx * b.yx + a.yx * b.yy,
+							  a.xy * b.xx + a.yy * b.xy,
+							  a.xy * b.yx + a.yy * b.yy,
+							  a.x0 * b.xx + a.y0 * b.xy + b.x0,
+							  a.x0 * b.yx + a.y0 * b.yy + b.y0);
 #pragma warning restore CS0618 // Type or member is obsolete
 #endif // NET
 		}
@@ -215,7 +215,7 @@ namespace CoreGraphics {
 				throw new ArgumentOutOfRangeException (nameof (order));
 			}
 		}
-		
+
 		[Advice ("By default, the new operation is applied after the old operation: t' = t * [ sx 0 0 sy 0 0 ].\nTo have the same behavior as the native Swift API, pass 'MatrixOrder.Prepend' to 'Scale (nfloat, nfloat, MatrixOrder)'.")]
 		public void Scale (nfloat sx, nfloat sy)
 		{
@@ -308,7 +308,7 @@ namespace CoreGraphics {
 		{
 			Rotate (angle, MatrixOrder.Append);
 		}
-			
+
 		public static CGAffineTransform Rotate (CGAffineTransform transform, nfloat angle)
 		{
 #if NET
@@ -345,7 +345,7 @@ namespace CoreGraphics {
 #endif
 			}
 		}
-		
+
 #if NET && !MONOMAC
 		// on macOS NSAffineTransform is an ObjC type
 		[DllImport (Constants.UIKitLibrary)]
@@ -355,11 +355,11 @@ namespace CoreGraphics {
 		public override String? ToString ()
 		{
 #if NET
-	#if MONOMAC
+#if MONOMAC
 			var s = $"[{A}, {B}, {C}, {D}, {Tx}, {Ty}]";
-	#else
+#else
 			var s = CFString.FromHandle (NSStringFromCGAffineTransform (this));
-	#endif
+#endif
 #else
 			var s = String.Format ("xx:{0:##0.0#} yx:{1:##0.0#} xy:{2:##0.0#} yy:{3:##0.0#} x0:{4:##0.0#} y0:{5:##0.0#}", xx, yx, xy, yy, x0, y0);
 #endif
@@ -375,13 +375,13 @@ namespace CoreGraphics {
 #else
 			return (lhs.xx == rhs.xx && lhs.xy == rhs.xy &&
 				lhs.yx == rhs.yx && lhs.yy == rhs.yy &&
-				lhs.x0 == rhs.x0 && lhs.y0 == rhs.y0 );
+				lhs.x0 == rhs.x0 && lhs.y0 == rhs.y0);
 #endif
 		}
 
 		public static bool operator != (CGAffineTransform lhs, CGAffineTransform rhs)
 		{
-			return !(lhs==rhs);
+			return !(lhs == rhs);
 		}
 
 		public static CGAffineTransform operator * (CGAffineTransform a, CGAffineTransform b)
@@ -395,15 +395,15 @@ namespace CoreGraphics {
 						      a.Tx * b.B + a.Ty * b.D + b.Ty);
 #else
 			return new CGAffineTransform (a.xx * b.xx + a.yx * b.xy,
-						      a.xx * b.yx + a.yx * b.yy,
-						      a.xy * b.xx + a.yy * b.xy,
-						      a.xy * b.yx + a.yy * b.yy,
-						      a.x0 * b.xx + a.y0 * b.xy + b.x0,
-						      a.x0 * b.yx + a.y0 * b.yy + b.y0);
+							  a.xx * b.yx + a.yx * b.yy,
+							  a.xy * b.xx + a.yy * b.xy,
+							  a.xy * b.yx + a.yy * b.yy,
+							  a.x0 * b.xx + a.y0 * b.xy + b.x0,
+							  a.x0 * b.yx + a.y0 * b.yy + b.y0);
 #endif
 		}
 
-		public override bool Equals(object? o)
+		public override bool Equals (object? o)
 		{
 			if (o is CGAffineTransform transform) {
 				return this == transform;
@@ -411,14 +411,14 @@ namespace CoreGraphics {
 				return false;
 		}
 
-		public override int GetHashCode()
+		public override int GetHashCode ()
 		{
 #if NET
 			return HashCode.Combine (A, C, B, D, Tx, Ty);
 #else
-			return  (int)this.xx ^ (int)this.xy ^
-					(int)this.yx ^ (int)this.yy ^
-					(int)this.x0 ^ (int)this.y0;
+			return (int) this.xx ^ (int) this.xy ^
+					(int) this.yx ^ (int) this.yy ^
+					(int) this.x0 ^ (int) this.y0;
 #endif
 		}
 
@@ -429,7 +429,7 @@ namespace CoreGraphics {
 					    B * point.X + D * point.Y + Ty);
 #else
 			return new CGPoint (xx * point.X + xy * point.Y + x0,
-					    yx * point.X + yy * point.Y + y0);
+						yx * point.X + yy * point.Y + y0);
 #endif
 		}
 
@@ -443,18 +443,50 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static CGSize CGSizeApplyAffineTransform (CGSize rect, CGAffineTransform t);
-		
+
 		public CGSize TransformSize (CGSize size)
 		{
 			return CGSizeApplyAffineTransform (size, this);
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		public extern static CGAffineTransform CGAffineTransformInvert (CGAffineTransform t);
 
 		public CGAffineTransform Invert ()
 		{
 			return CGAffineTransformInvert (this);
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern CGAffineTransformComponents CGAffineTransformDecompose (CGAffineTransform transform);
+
+		public CGAffineTransformComponents Decompose ()
+		{
+			return CGAffineTransformDecompose (this);
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern CGAffineTransform CGAffineTransformMakeWithComponents (CGAffineTransformComponents components);
+
+		public static CGAffineTransform MakeWithComponents (CGAffineTransformComponents components)
+		{
+			return CGAffineTransformMakeWithComponents (components);
 		}
 #endif // !COREBUILD
 	}

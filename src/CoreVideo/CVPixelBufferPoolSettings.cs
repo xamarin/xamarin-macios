@@ -41,10 +41,9 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[Watch (4,0)]
+	[Watch (4, 0)]
 #endif
-	public class CVPixelBufferPoolSettings : DictionaryContainer
-	{
+	public class CVPixelBufferPoolSettings : DictionaryContainer {
 #if !COREBUILD
 		public CVPixelBufferPoolSettings ()
 			: base (new NSMutableDictionary ())
@@ -82,7 +81,7 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[Watch (4,0)]
+	[Watch (4, 0)]
 #endif
 	public partial class CVPixelBufferPoolAllocationSettings : DictionaryContainer {
 #if !COREBUILD

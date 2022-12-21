@@ -7,10 +7,8 @@ using Social;
 using AppKit;
 using System.Linq;
 
-namespace ShareExtensionTest
-{
-	public partial class ShareViewController : NSViewController
-	{
+namespace ShareExtensionTest {
+	public partial class ShareViewController : NSViewController {
 		public ShareViewController (IntPtr handle) : base (handle)
 		{
 		}
@@ -26,7 +24,7 @@ namespace ShareExtensionTest
 		partial void Cancel (Foundation.NSObject sender)
 		{
 			NSExtensionItem outputItem = new NSExtensionItem ();
-			var outputItems = new[] { outputItem };
+			var outputItems = new [] { outputItem };
 			ExtensionContext.CompleteRequest (outputItems, null);
 		}
 

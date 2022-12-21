@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="D:\a\1\s\xamarin-macios\dotnet\Templates\Microsoft.macOS.Templates\macosbinding\.template.config\localize\templatestrings.json" PsrId="306" SrcCul="en-US" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx" TgtCul="pl-PL">
+  <OwnedComments>
+    <Cmt Name="Dev" />
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Rccx" />
+  </OwnedComments>
+  <Item ItemId=";String Table" ItemType="0" PsrId="306" Leaf="false">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="306" Leaf="false">
+      <Disp Icon="Str" Disp="true" LocTbl="false" />
+      <Item ItemId=";author" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Microsoft]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";description" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A project for creating a .NET macOS binding library]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";name" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[macOS Binding Library]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+    </Item>
+  </Item>
+<Settings Name="@vsLocTools@\default.lss" Type="Lss" /></LCX>

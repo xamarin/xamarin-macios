@@ -3,11 +3,21 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 steps:
 
 - template: ./common/checkout.yml
   parameters:
     isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
 
 - task: CredScan@3
   displayName: "Run CredScan"

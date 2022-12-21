@@ -35,7 +35,7 @@ namespace Foundation {
 #endif
 	[AttributeUsage (AttributeTargets.Assembly)]
 	public sealed class LinkerSafeAttribute : Attribute {
-		
+
 		public LinkerSafeAttribute ()
 		{
 		}

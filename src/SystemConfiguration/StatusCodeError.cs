@@ -17,14 +17,13 @@ using ObjCRuntime;
 namespace SystemConfiguration {
 
 	// https://developer.apple.com/library/mac/#documentation/SystemConfiguration/Reference/SystemConfiguration_Utilities/Reference/reference.html
-	public static class StatusCodeError
-	{
+	public static class StatusCodeError {
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern internal static StatusCode /* int */ SCError ();
-		
+
 		[DllImport (Constants.SystemConfigurationLibrary)]
 		extern static IntPtr /* const char* */ SCErrorString (int code);
-		
+
 		public static string? GetErrorDescription (StatusCode statusCode)
 		{
 			var ptr = SCErrorString ((int) statusCode);

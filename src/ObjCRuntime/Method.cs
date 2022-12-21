@@ -16,7 +16,7 @@ namespace ObjCRuntime {
 				return Runtime.options->Trampolines->fpret_single_tramp;
 			}
 		}
-		
+
 		public unsafe static IntPtr StaticSingleTrampoline {
 			get {
 				return Runtime.options->Trampolines->static_fpret_single_tramp;
@@ -28,7 +28,7 @@ namespace ObjCRuntime {
 				return Runtime.options->Trampolines->fpret_double_tramp;
 			}
 		}
-		
+
 		public unsafe static IntPtr StaticDoubleTrampoline {
 			get {
 				return Runtime.options->Trampolines->static_fpret_double_tramp;
@@ -40,7 +40,7 @@ namespace ObjCRuntime {
 				return Runtime.options->Trampolines->stret_tramp;
 			}
 		}
-		
+
 		public unsafe static IntPtr StaticStretTrampoline {
 			get {
 				return Runtime.options->Trampolines->static_stret_tramp;
@@ -70,25 +70,25 @@ namespace ObjCRuntime {
 				return Runtime.options->Trampolines->retain_tramp;
 			}
 		}
-			
+
 		internal unsafe static IntPtr X86_DoubleABI_StretTrampoline {
 			get {
 				return Runtime.options->Trampolines->x86_double_abi_stret_tramp;
 			}
 		}
-		
+
 		internal unsafe static IntPtr X86_DoubleABI_StaticStretTrampoline {
 			get {
 				return Runtime.options->Trampolines->x86_double_abi_static_stret_tramp;
 			}
 		}
-		
+
 		internal unsafe static IntPtr LongTrampoline {
 			get {
 				return Runtime.options->Trampolines->long_tramp;
 			}
 		}
-		
+
 		internal unsafe static IntPtr StaticLongTrampoline {
 			get {
 				return Runtime.options->Trampolines->static_long_tramp;

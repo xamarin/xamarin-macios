@@ -21,7 +21,7 @@ using NativeHandle = System.IntPtr;
 
 namespace ScreenCaptureKit {
 
-	[NoiOS, NoTV, NoWatch, Mac (12,3), NoMacCatalyst]
+	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
 	[ErrorDomain ("SCStreamErrorDomain")]
 	[Native]
 	enum SCStreamErrorCode : long {
@@ -41,9 +41,12 @@ namespace ScreenCaptureKit {
 		NoDisplayList = -3814,
 		NoCaptureSource = -3815,
 		RemovingStream = -3816,
+		UserStopped = -3817,
+		FailedToStartAudioCapture = -3818,
+		FailedToStopAudioCapture = -3819,
 	}
 
-	[NoiOS, NoTV, NoWatch, Mac (12,3), NoMacCatalyst]
+	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
 	[Native]
 	enum SCFrameStatus : long {
 		Complete,
@@ -54,13 +57,15 @@ namespace ScreenCaptureKit {
 		Stopped,
 	}
 
-	[NoiOS, NoTV, NoWatch, Mac (12,3), NoMacCatalyst]
+	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
 	[Native]
 	enum SCStreamOutputType : long {
 		Screen,
+		[Mac (13, 0)]
+		Audio,
 	}
 
-	[NoiOS, NoTV, NoWatch, Mac (12,3), NoMacCatalyst]
+	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
 	[Static]
 	interface SCStreamFrameInfoKeys {
 
@@ -81,9 +86,13 @@ namespace ScreenCaptureKit {
 
 		[Field ("SCStreamFrameInfoDirtyRects")]
 		NSString DirtyRects { get; }
+
+		[Mac (13, 1)]
+		[Field ("SCStreamFrameInfoScreenRect")]
+		NSString ScreenRect { get; }
 	}
 
-	[NoiOS, NoTV, NoWatch, Mac (12,3), NoMacCatalyst]
+	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SCRunningApplication {
@@ -98,7 +107,7 @@ namespace ScreenCaptureKit {
 		int ProcessId { get; }
 	}
 
-	[NoiOS, NoTV, NoWatch, Mac (12,3), NoMacCatalyst]
+	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SCWindow {
@@ -120,10 +129,14 @@ namespace ScreenCaptureKit {
 
 		[Export ("onScreen")]
 		bool OnScreen { [Bind ("isOnScreen")] get; }
+
+		[Mac (13, 1)]
+		[Export ("active")]
+		bool Active { [Bind ("isActive")] get; }
 	}
 
 
-	[NoiOS, NoTV, NoWatch, Mac (12,3), NoMacCatalyst]
+	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SCDisplay {
@@ -141,7 +154,7 @@ namespace ScreenCaptureKit {
 		CGRect Frame { get; }
 	}
 
-	[NoiOS, NoTV, NoWatch, Mac (12,3), NoMacCatalyst]
+	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SCShareableContent {
@@ -176,7 +189,7 @@ namespace ScreenCaptureKit {
 		SCRunningApplication [] Applications { get; }
 	}
 
-	[NoiOS, NoTV, NoWatch, Mac (12,3), NoMacCatalyst]
+	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SCContentFilter {
@@ -201,7 +214,7 @@ namespace ScreenCaptureKit {
 		NativeHandle InitWithDisplayExcludingApplications (SCDisplay display, SCRunningApplication [] excludingApplications, SCWindow [] exceptingWindows);
 	}
 
-	[NoiOS, NoTV, NoWatch, Mac (12,3), NoMacCatalyst]
+	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface SCStreamConfiguration {
 
@@ -244,9 +257,25 @@ namespace ScreenCaptureKit {
 		[Advice ("Use the constants inside 'CGColorSpaceNames' class.")]
 		[Export ("colorSpaceName", ArgumentSemantic.Assign)]
 		NSString WeakColorSpaceName { get; set; }
+
+		[Mac (13, 0)]
+		[Export ("capturesAudio")]
+		bool CapturesAudio { get; set; }
+
+		[Mac (13, 0)]
+		[Export ("sampleRate")]
+		nint SampleRate { get; set; }
+
+		[Mac (13, 0)]
+		[Export ("channelCount")]
+		nint ChannelCount { get; set; }
+
+		[Mac (13, 0)]
+		[Export ("excludesCurrentProcessAudio")]
+		bool ExcludesCurrentProcessAudio { get; set; }
 	}
 
-	[NoiOS, NoTV, NoWatch, Mac (12,3), NoMacCatalyst]
+	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SCStream {
@@ -275,11 +304,15 @@ namespace ScreenCaptureKit {
 		// No Async even on Swift and it makes sense, these are callback APIs.
 		[Export ("stopCaptureWithCompletionHandler:")]
 		void StopCapture ([NullAllowed] Action<NSError> completionHandler);
+
+		[Mac (13, 0)]
+		[Export ("synchronizationClock")]
+		CMClock SynchronizationClock { [return: NullAllowed] get; }
 	}
 
-	interface ISCStreamDelegate {}
+	interface ISCStreamDelegate { }
 
-	[NoiOS, NoTV, NoWatch, Mac (12,3), NoMacCatalyst]
+	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
 	[Protocol]
 #if NET
 	[Model]
@@ -293,9 +326,9 @@ namespace ScreenCaptureKit {
 		void DidStop (SCStream stream, NSError error);
 	}
 
-	interface ISCStreamOutput {}
+	interface ISCStreamOutput { }
 
-	[NoiOS, NoTV, NoWatch, Mac (12,3), NoMacCatalyst]
+	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
 	[Protocol]
 	interface SCStreamOutput {
 

@@ -71,7 +71,8 @@ DOTNET_REFERENCES = \
 	/r:$(DOTNET_BCL_DIR)/System.Runtime.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Runtime.CompilerServices.Unsafe.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Runtime.Extensions.dll \
-	/r:$(DOTNET_SYSTEM_RUNTIME_INTEROPSERVICES_REF_ASSEMBLY_DIR)/System.Runtime.InteropServices.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Runtime.InteropServices.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Security.Cryptography.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Security.Cryptography.X509Certificates.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Text.RegularExpressions.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Threading.dll \
@@ -86,8 +87,6 @@ DOTNET_COMPILER=$(DOTNET_BUILD_DIR)/compiler
 DOTNET_GENERATOR_FLAGS=$(GENERATOR_FLAGS) -compiler=$(abspath $(DOTNET_COMPILER)) --lib=$(DOTNET_BCL_DIR) -attributelib:$(DOTNET_BINDING_ATTRIBUTES) $(DOTNET_REFERENCES)
 DOTNET_GENERATOR=$(DOTNET_BUILD_DIR)/bgen/bgen
 DOTNET_BINDING_ATTRIBUTES=$(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll
-
-include $(TOP)/opentk/Makefile.include
 
 #
 # Specific warnings that we want reported as errors by generator
@@ -111,8 +110,8 @@ IOS_WARNINGS_THAT_YOU_SHOULD_FIX=108
 # this is due to deprecated APIs used in the generated code.
 WARNINGS_TO_IGNORE=BI1234
 
-include ./OpenGLES/Makefile-1.0.include
 include ./Makefile.generator
+include ./opentk.mk
 
 include ./generator-diff.mk
 
@@ -376,18 +375,28 @@ IOS_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/OpenTK-1.0.dll          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/OpenTK-1.0.pdb          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/OpenTK-1.0.dll.config   \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/iOS/Xamarin.iOS.dll               \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/iOS/Xamarin.iOS.pdb               \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/iOS/Xamarin.iOS.dll               \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/iOS/Xamarin.iOS.pdb               \
 
+ifdef IOS_SUPPORTS_32BIT_ARCHITECTURES
+IOS_TARGETS += \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/iOS/Xamarin.iOS.dll               \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/iOS/Xamarin.iOS.pdb               \
+
+endif
+
 DOTNET_TARGETS += \
-	$(IOS_DOTNET_BUILD_DIR)/32/Microsoft.iOS.dll \
 	$(IOS_DOTNET_BUILD_DIR)/64/Microsoft.iOS.dll \
 	$(IOS_DOTNET_BUILD_DIR)/ref/Microsoft.iOS.dll \
 	$(DOTNET_DESTDIR)/$(IOS_NUGET).Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.dll \
 	$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.iOS.dll) \
 	$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.iOS.pdb) \
+
+ifdef IOS_SUPPORTS_32BIT_ARCHITECTURES
+DOTNET_TARGETS += \
+	$(IOS_DOTNET_BUILD_DIR)/32/Microsoft.iOS.dll \
+
+endif
 
 DOTNET_TARGETS_DIRS += \
 	$(IOS_DOTNET_BUILD_DIR) \
@@ -1632,12 +1641,19 @@ project-files: $(PROJECT_FILES)
 $(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	@$(MAKE) -C $(TOP)/tools/mtouch ../common/SdkVersions.cs
 
+COMMA=,
 MinimumVersions.cs: MinimumVersions.cs.in Makefile $(TOP)/Make.config
 	$(Q_GEN) sed \
 		-e 's/@DOTNET_MIN_IOS_SDK_VERSION@/$(DOTNET_MIN_IOS_SDK_VERSION)/g' \
 		-e 's/@DOTNET_MIN_TVOS_SDK_VERSION@/$(DOTNET_MIN_TVOS_SDK_VERSION)/' \
 		-e 's/@DOTNET_MIN_MACOS_SDK_VERSION@/$(DOTNET_MIN_MACOS_SDK_VERSION)/' \
 		-e 's/@DOTNET_MIN_MACCATALYST_SDK_VERSION@/$(DOTNET_MIN_MACCATALYST_SDK_VERSION)/g' \
+		\
+		-e 's/@MIN_IOS_SDK_VERSION@/$(subst .,$(COMMA) ,$(MIN_IOS_SDK_VERSION))/g' \
+		-e 's/@MIN_MACOS_SDK_VERSION@/$(subst .,$(COMMA) ,$(MIN_MACOS_SDK_VERSION))/g' \
+		-e 's/@MIN_WATCHOS_SDK_VERSION@/$(subst .,$(COMMA) ,$(MIN_WATCHOS_SDK_VERSION))/g' \
+		-e 's/@MIN_TVOS_SDK_VERSION@/$(subst .,$(COMMA) ,$(MIN_TVOS_SDK_VERSION))/g' \
+		-e 's/@MIN_MACCATALYST_SDK_VERSION@/$(subst .,$(COMMA) ,$(MIN_MACCATALYST_SDK_VERSION))/g' \
 		$< > $@
 
 # Using .SECONDARY can cause make to go into an infinite loop.

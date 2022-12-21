@@ -8,11 +8,9 @@ using AppKit;
 using ObjCRuntime;
 using Foundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[Preserve (AllMembers = true)]
-	public class NSWindowControllerTests
-	{
+	public class NSWindowControllerTests {
 		[Test]
 		public void NSWindowController_ShowWindowTest ()
 		{

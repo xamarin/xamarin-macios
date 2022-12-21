@@ -4,8 +4,7 @@ using Foundation;
 #endif
 using UIKit;
 
-partial class TestRuntime
-{
+partial class TestRuntime {
 	public static bool RunAsync (DateTime timeout, Action action, Func<bool> check_completed)
 	{
 #if __WATCHOS__

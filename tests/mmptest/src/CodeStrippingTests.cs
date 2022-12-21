@@ -6,10 +6,8 @@ using NUnit.Framework;
 using Xamarin.Utils;
 using Xamarin.Tests;
 
-namespace Xamarin.MMP.Tests
-{
-	public class CodeStrippingTests
-	{
+namespace Xamarin.MMP.Tests {
+	public class CodeStrippingTests {
 		static Func<string, bool> LipoStripConditional = s => s.Contains ("lipo") && s.Contains ("-extract_family");
 		static Func<string, bool> LipoStripSkipPosixAndMonoNativeConditional = s => LipoStripConditional (s) && !s.Contains ("libMonoPosixHelper.dylib") && !s.Contains ("libmono-native.dylib");
 
@@ -31,7 +29,7 @@ namespace Xamarin.MMP.Tests
 				test.CSProjConfig = $"<MonoBundlingExtraArgs>--optimize={(strip.Value ? "+" : "-")}trim-architectures {additionalMMPArgs}</MonoBundlingExtraArgs>";
 			else if (!string.IsNullOrEmpty (additionalMMPArgs))
 				test.CSProjConfig = $"<MonoBundlingExtraArgs>{additionalMMPArgs}</MonoBundlingExtraArgs>";
-			
+
 			return test;
 		}
 
@@ -67,12 +65,11 @@ namespace Xamarin.MMP.Tests
 		[TestCase (false, false, false)]
 		public void ShouldStripMonoPosixHelper (bool? strip, bool debugStrips, bool releaseStrips)
 		{
-			var posixHelper = Path.Combine (Configuration.SdkRootXM, "SDKs","Xamarin.macOS.sdk", "lib", "libMonoPosixHelper.dylib");
+			var posixHelper = Path.Combine (Configuration.SdkRootXM, "SDKs", "Xamarin.macOS.sdk", "lib", "libMonoPosixHelper.dylib");
 			if (Xamarin.MachO.GetArchitectures (posixHelper).Count < 2)
 				Assert.Ignore ($"libMonoPosixHelper.dylib is not a fat library.");
 
-			MMPTests.RunMMPTest (tmpDir =>
-			{
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = CreateStripTestConfig (strip, tmpDir);
 				// Mono's linker is smart enough to remove libMonoPosixHelper unless used (DeflateStream uses it)
 				test.TestCode = "using (var ms = new System.IO.MemoryStream ()) { using (var gz = new System.IO.Compression.DeflateStream (ms, System.IO.Compression.CompressionMode.Compress)) { }}";
@@ -85,8 +82,7 @@ namespace Xamarin.MMP.Tests
 		[TestCase (false, false, false)]
 		public void ShouldStripUserFramework (bool? strip, bool debugStrips, bool releaseStrips)
 		{
-			MMPTests.RunMMPTest (tmpDir =>
-			{
+			MMPTests.RunMMPTest (tmpDir => {
 				var frameworkPath = FrameworkBuilder.CreateFatFramework (tmpDir);
 				TI.UnifiedTestConfig test = CreateStripTestConfig (strip, tmpDir, $"--native-reference={frameworkPath}");
 
@@ -142,8 +138,7 @@ namespace Xamarin.MMP.Tests
 		[TestCase (true)]
 		public void ThirdPartyLibrary_WithIncorrectBitness_ShouldWarnOnRelease (bool sixtyFourBits)
 		{
-			MMPTests.RunMMPTest (tmpDir =>
-			{
+			MMPTests.RunMMPTest (tmpDir => {
 				var frameworkPath = FrameworkBuilder.CreateFatFramework (tmpDir);
 
 				TI.UnifiedTestConfig test = CreateStripTestConfig (null, tmpDir, $" --native-reference=\"{frameworkPath}\"");
@@ -165,8 +160,7 @@ namespace Xamarin.MMP.Tests
 		[TestCase]
 		public void ThirdPartyLibrary_WithCorrectBitness_ShouldNotStripOrWarn ()
 		{
-			MMPTests.RunMMPTest (tmpDir =>
-			{
+			MMPTests.RunMMPTest (tmpDir => {
 				var frameworkPath = FrameworkBuilder.CreateThinFramework (tmpDir);
 
 				TI.UnifiedTestConfig test = CreateStripTestConfig (null, tmpDir, $" --native-reference=\"{frameworkPath}\"");

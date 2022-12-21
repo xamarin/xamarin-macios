@@ -1,12 +1,9 @@
-!missing-enum! AudioUnitEventType not bound
 !missing-enum! AUParameterMIDIMappingFlags not bound
 !missing-enum! CAClockMessage not bound
 !missing-enum! CAClockPropertyID not bound
 !missing-enum! CAClockSyncMode not bound
 !missing-enum! CAClockTimebase not bound
 !missing-enum! CAClockTimeFormat not bound
-!missing-pinvoke! AudioComponentCopyConfigurationInfo is not bound
-!missing-pinvoke! AudioComponentValidate is not bound
 !missing-pinvoke! AudioFileComponentCloseFile is not bound
 !missing-pinvoke! AudioFileComponentCountUserData is not bound
 !missing-pinvoke! AudioFileComponentCreateURL is not bound
@@ -30,21 +27,6 @@
 !missing-pinvoke! AudioFileComponentSetUserData is not bound
 !missing-pinvoke! AudioFileComponentWriteBytes is not bound
 !missing-pinvoke! AudioFileComponentWritePackets is not bound
-!missing-pinvoke! AUEventListenerAddEventType is not bound
-!missing-pinvoke! AUEventListenerCreate is not bound
-!missing-pinvoke! AUEventListenerCreateWithDispatchQueue is not bound
-!missing-pinvoke! AUEventListenerNotify is not bound
-!missing-pinvoke! AUEventListenerRemoveEventType is not bound
-!missing-pinvoke! AUListenerAddParameter is not bound
-!missing-pinvoke! AUListenerCreate is not bound
-!missing-pinvoke! AUListenerCreateWithDispatchQueue is not bound
-!missing-pinvoke! AUListenerDispose is not bound
-!missing-pinvoke! AUListenerRemoveParameter is not bound
-!missing-pinvoke! AUParameterFormatValue is not bound
-!missing-pinvoke! AUParameterListenerNotify is not bound
-!missing-pinvoke! AUParameterSet is not bound
-!missing-pinvoke! AUParameterValueFromLinear is not bound
-!missing-pinvoke! AUParameterValueToLinear is not bound
 !missing-pinvoke! CAClockAddListener is not bound
 !missing-pinvoke! CAClockArm is not bound
 !missing-pinvoke! CAClockBarBeatTimeToBeats is not bound
@@ -73,3 +55,5 @@
 !missing-pinvoke! MusicTrackGetDestMIDIEndpoint is not bound
 !missing-pinvoke! MusicTrackSetDestMIDIEndpoint is not bound
 !missing-protocol! AUCocoaUIBase not bound
+!missing-selector! AUAudioUnit::messageChannelFor: not bound
+!missing-protocol! AUMessageChannel not bound

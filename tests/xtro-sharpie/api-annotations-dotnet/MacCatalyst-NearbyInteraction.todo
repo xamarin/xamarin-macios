@@ -1,0 +1,27 @@
+!missing-enum! NIAlgorithmConvergenceStatus not bound
+!missing-enum! NINearbyObjectVerticalDirectionEstimate not bound
+!missing-enum-value! NIErrorCode native value NIErrorCodeAccessoryPeerDeviceUnavailable = -5882 not bound
+!missing-enum-value! NIErrorCode native value NIErrorCodeInvalidARConfiguration = -5883 not bound
+!missing-field! NIAlgorithmConvergenceStatusReasonInsufficientHorizontalSweep not bound
+!missing-field! NIAlgorithmConvergenceStatusReasonInsufficientLighting not bound
+!missing-field! NIAlgorithmConvergenceStatusReasonInsufficientMovement not bound
+!missing-field! NIAlgorithmConvergenceStatusReasonInsufficientVerticalSweep not bound
+!missing-field! NINearbyObjectAngleNotAvailable not bound
+!missing-field! NINearbyObjectWorldTransformNotAvailable not bound
+!missing-pinvoke! NIAlgorithmConvergenceStatusReasonDescription is not bound
+!missing-protocol! NIDeviceCapability not bound
+!missing-protocol-member! NISessionDelegate::session:didUpdateAlgorithmConvergence:forObject: not found
+!missing-protocol-member! NISessionDelegate::sessionDidStartRunning: not found
+!missing-selector! +NISession::deviceCapabilities not bound
+!missing-selector! NIAlgorithmConvergence::reasons not bound
+!missing-selector! NIAlgorithmConvergence::status not bound
+!missing-selector! NINearbyAccessoryConfiguration::initWithAccessoryData:bluetoothPeerIdentifier:error: not bound
+!missing-selector! NINearbyAccessoryConfiguration::isCameraAssistanceEnabled not bound
+!missing-selector! NINearbyAccessoryConfiguration::setCameraAssistanceEnabled: not bound
+!missing-selector! NINearbyObject::horizontalAngle not bound
+!missing-selector! NINearbyObject::verticalDirectionEstimate not bound
+!missing-selector! NINearbyPeerConfiguration::isCameraAssistanceEnabled not bound
+!missing-selector! NINearbyPeerConfiguration::setCameraAssistanceEnabled: not bound
+!missing-selector! NISession::setARSession: not bound
+!missing-selector! NISession::worldTransformForObject: not bound
+!missing-type! NIAlgorithmConvergence not bound

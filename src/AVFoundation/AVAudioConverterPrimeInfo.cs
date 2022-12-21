@@ -33,7 +33,7 @@ namespace AVFoundation {
 
 #if NET
 	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("macos10.11")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
 #else
@@ -81,7 +81,7 @@ namespace AVFoundation {
 
 		public override int GetHashCode ()
 		{
-			return LeadingFrames.GetHashCode () ^ TrailingFrames.GetHashCode ();
+			return HashCode.Combine (LeadingFrames, TrailingFrames);
 		}
 	}
 }

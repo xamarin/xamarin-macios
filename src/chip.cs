@@ -12,7 +12,12 @@ using NativeHandle = System.IntPtr;
 
 namespace Chip {
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum ChipOnboardingPayloadType : ulong {
 		QRCode = 0,
@@ -21,7 +26,12 @@ namespace Chip {
 		Admin,
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum ChipPairingStatus : ulong {
 		SecurePairingSuccess = 0,
@@ -29,7 +39,12 @@ namespace Chip {
 		UnknownStatus,
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[ErrorDomain ("CHIPErrorDomain")]
 	[Native]
 	public enum ChipErrorCode : long {
@@ -46,7 +61,12 @@ namespace Chip {
 		UnsupportedAttribute = 10,
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Flags]
 	[Native]
 	public enum ChipRendezvousInformationFlags : ulong {
@@ -57,7 +77,12 @@ namespace Chip {
 		AllMask = SoftAP | Ble | OnNetwork,
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum ChipCommissioningFlow : ulong {
 		Standard = 0,
@@ -65,7 +90,13 @@ namespace Chip {
 		Custom = 2,
 		Invalid = 3,
 	}
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum ChipOptionalQRCodeInfoType : ulong {
 		Unknown,
@@ -73,12 +104,15 @@ namespace Chip {
 		Int32,
 	}
 
-
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="CHIPDevice")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "CHIPDevice")]
 	[DisableDefaultCtor]
-	interface ChipDevice
-	{
+	interface ChipDevice {
 		[Export ("openPairingWindow:error:")]
 		bool OpenPairingWindow (nuint duration, [NullAllowed] out NSError error);
 
@@ -90,12 +124,16 @@ namespace Chip {
 		bool IsActive { get; }
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="CHIPCluster")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "CHIPCluster")]
 	[DisableDefaultCtor]
-	interface ChipCluster
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipCluster {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -111,15 +149,24 @@ namespace Chip {
 #endif
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	delegate void ChipResponseHandler ([NullAllowed] NSError error, [NullAllowed] NSDictionary data);
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPApplicationBasic")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPApplicationBasic")]
 	[DisableDefaultCtor]
-	interface ChipApplicationBasic
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipApplicationBasic {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -134,7 +181,7 @@ namespace Chip {
 		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 #endif
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("changeStatus:responseHandler:")]
 		void ChangeStatus (byte status, ChipResponseHandler responseHandler);
@@ -171,7 +218,7 @@ namespace Chip {
 		void ReadAttributeApplicationSatus (ChipResponseHandler responseHandler);
 #endif
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeApplicationStatusWithResponseHandler:")]
 		void ReadAttributeApplicationStatus (ChipResponseHandler responseHandler);
@@ -181,12 +228,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPBarrierControl")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPBarrierControl")]
 	[DisableDefaultCtor]
-	interface ChipBarrierControl
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipBarrierControl {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -230,12 +281,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPBasic")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPBasic")]
 	[DisableDefaultCtor]
-	interface ChipBasic
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipBasic {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -340,12 +395,12 @@ namespace Chip {
 		void WriteAttributeLocalConfigDisabled (byte value, ChipResponseHandler responseHandler);
 #endif
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("writeAttributeLocalConfigDisabledWithValue:responseHandler:")]
 		void WriteAttributeLocalConfigDisabled (bool disabled, ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeReachableWithResponseHandler:")]
 		void ReadAttributeReachable (ChipResponseHandler responseHandler);
@@ -355,12 +410,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPBinding")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPBinding")]
 	[DisableDefaultCtor]
-	interface ChipBinding
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipBinding {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -386,7 +445,7 @@ namespace Chip {
 		void Bind (ulong nodeId, ushort groupId, byte endpointId, ushort clusterId, ChipResponseHandler responseHandler);
 #endif
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("bind:groupId:endpointId:clusterId:responseHandler:")]
 		void Bind (ulong nodeId, ushort groupId, ushort endpointId, uint clusterId, ChipResponseHandler responseHandler);
@@ -402,7 +461,7 @@ namespace Chip {
 		void Unbind (ulong nodeId, ushort groupId, byte endpointId, ushort clusterId, ChipResponseHandler responseHandler);
 #endif
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("unbind:groupId:endpointId:clusterId:responseHandler:")]
 		void Unbind (ulong nodeId, ushort groupId, ushort endpointId, uint clusterId, ChipResponseHandler responseHandler);
@@ -412,12 +471,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPColorControl")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPColorControl")]
 	[DisableDefaultCtor]
-	interface ChipColorControl
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipColorControl {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -432,27 +495,27 @@ namespace Chip {
 		NativeHandle Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 #endif
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("colorLoopSet:action:direction:time:startHue:optionsMask:optionsOverride:responseHandler:")]
 		void ColorLoopSet (byte updateFlags, byte action, byte direction, ushort time, ushort startHue, byte optionsMask, byte optionsOverride, ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("enhancedMoveHue:rate:optionsMask:optionsOverride:responseHandler:")]
 		void EnhancedMoveHue (byte moveMode, ushort rate, byte optionsMask, byte optionsOverride, ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("enhancedMoveToHue:direction:transitionTime:optionsMask:optionsOverride:responseHandler:")]
 		void EnhancedMoveToHue (ushort enhancedHue, byte direction, ushort transitionTime, byte optionsMask, byte optionsOverride, ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("enhancedMoveToHueAndSaturation:saturation:transitionTime:optionsMask:optionsOverride:responseHandler:")]
 		void EnhancedMoveToHueAndSaturation (ushort enhancedHue, byte saturation, ushort transitionTime, byte optionsMask, byte optionsOverride, ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("enhancedStepHue:stepSize:transitionTime:optionsMask:optionsOverride:responseHandler:")]
 		void EnhancedStepHue (byte stepMode, ushort stepSize, ushort transitionTime, byte optionsMask, byte optionsOverride, ChipResponseHandler responseHandler);
@@ -781,12 +844,12 @@ namespace Chip {
 		[Export ("readAttributeColorLoopTimeWithResponseHandler:")]
 		void ReadAttributeColorLoopTime (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeColorLoopStartEnhancedHueWithResponseHandler:")]
 		void ReadAttributeColorLoopStartEnhancedHue (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeColorLoopStoredEnhancedHueWithResponseHandler:")]
 		void ReadAttributeColorLoopStoredEnhancedHue (ChipResponseHandler responseHandler);
@@ -820,12 +883,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPDescriptor")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPDescriptor")]
 	[DisableDefaultCtor]
-	interface ChipDescriptor
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipDescriptor {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -861,11 +928,15 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
-	[BaseType (typeof(ChipCluster), Name="CHIPDiagnosticLogs")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPDiagnosticLogs")]
 	[DisableDefaultCtor]
-	interface ChipDiagnosticLogs
-	{
+	interface ChipDiagnosticLogs {
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -874,12 +945,16 @@ namespace Chip {
 		void RetrieveLogsRequest (byte intent, byte requestedProtocol, NSData transferFileDesignator, ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPDoorLock")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPDoorLock")]
 	[DisableDefaultCtor]
-	interface ChipDoorLock
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipDoorLock {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -1011,12 +1086,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPGroupKeyManagement")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPGroupKeyManagement")]
 	[DisableDefaultCtor]
-	interface ChipGroupKeyManagement
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipGroupKeyManagement {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -1044,12 +1123,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPGroups")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPGroups")]
 	[DisableDefaultCtor]
-	interface ChipGroups
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipGroups {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -1097,12 +1180,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPIdentify")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPIdentify")]
 	[DisableDefaultCtor]
-	interface ChipIdentify
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipIdentify {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -1138,12 +1225,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPLevelControl")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPLevelControl")]
 	[DisableDefaultCtor]
-	interface ChipLevelControl
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipLevelControl {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -1207,12 +1298,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPNetworkCommissioning")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPNetworkCommissioning")]
 	[DisableDefaultCtor]
-	interface ChipNetworkCommissioning
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipNetworkCommissioning {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -1267,17 +1362,21 @@ namespace Chip {
 		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeFeatureMapWithResponseHandler:")]
 		void ReadAttributeFeatureMap (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
-	[BaseType (typeof(ChipCluster), Name="CHIPOtaSoftwareUpdateProvider")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPOtaSoftwareUpdateProvider")]
 	[DisableDefaultCtor]
-	interface ChipOtaSoftwareUpdateProvider
-	{
+	interface ChipOtaSoftwareUpdateProvider {
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -1299,11 +1398,15 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
-	[BaseType (typeof(ChipCluster), Name="CHIPOccupancySensing")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPOccupancySensing")]
 	[DisableDefaultCtor]
-	interface ChipOccupancySensing
-	{
+	interface ChipOccupancySensing {
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -1333,12 +1436,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPOnOff")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPOnOff")]
 	[DisableDefaultCtor]
-	interface ChipOnOff
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipOnOff {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -1357,7 +1464,7 @@ namespace Chip {
 		[Export ("off:")]
 		void Off (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("offWithEffect:effectVariant:responseHandler:")]
 		void OffWithEffect (byte effectId, byte effectVariant, ChipResponseHandler responseHandler);
@@ -1366,12 +1473,12 @@ namespace Chip {
 		[Export ("on:")]
 		void On (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("onWithRecallGlobalScene:")]
 		void OnWithRecallGlobalScene (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("onWithTimedOff:onTime:offWaitTime:responseHandler:")]
 		void OnWithTimedOff (byte onOffControl, ushort onTime, ushort offWaitTime, ChipResponseHandler responseHandler);
@@ -1392,42 +1499,42 @@ namespace Chip {
 		[Export ("reportAttributeOnOffWithResponseHandler:")]
 		void ReportAttributeOnOff (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeGlobalSceneControlWithResponseHandler:")]
 		void ReadAttributeGlobalSceneControl (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeOnTimeWithResponseHandler:")]
 		void ReadAttributeOnTime (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("writeAttributeOnTimeWithValue:responseHandler:")]
 		void WriteAttributeOnTime (ushort value, ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeOffWaitTimeWithResponseHandler:")]
 		void ReadAttributeOffWaitTime (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("writeAttributeOffWaitTimeWithValue:responseHandler:")]
 		void WriteAttributeOffWaitTime (ushort value, ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeStartUpOnOffWithResponseHandler:")]
 		void ReadAttributeStartUpOnOff (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("writeAttributeStartUpOnOffWithValue:responseHandler:")]
 		void WriteAttributeStartUpOnOff (byte value, ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeFeatureMapWithResponseHandler:")]
 		void ReadAttributeFeatureMap (ChipResponseHandler responseHandler);
@@ -1437,11 +1544,15 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
-	[BaseType (typeof(ChipCluster), Name="CHIPOnOffSwitchConfiguration")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPOnOffSwitchConfiguration")]
 	[DisableDefaultCtor]
-	interface ChipOnOffSwitchConfiguration
-	{
+	interface ChipOnOffSwitchConfiguration {
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -1463,12 +1574,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPOperationalCredentials")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPOperationalCredentials")]
 	[DisableDefaultCtor]
-	interface ChipOperationalCredentials
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipOperationalCredentials {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -1492,12 +1607,12 @@ namespace Chip {
 #endif
 
 		// Parameter names are left to match header files. Without documentation, we cannot know what the parameters signify for certain.
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("addNOC:iPKValue:caseAdminNode:adminVendorId:responseHandler:")]
 		void AddNoc (NSData nocArray, NSData iPKValue, ulong caseAdminNode, ushort adminVendorId, ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("addTrustedRootCertificate:responseHandler:")]
 		void AddTrustedRootCertificate (NSData rootCertificate, ChipResponseHandler responseHandler);
@@ -1527,12 +1642,12 @@ namespace Chip {
 		void RemoveFabric (ulong fabricId, ulong nodeId, ushort vendorId, ChipResponseHandler responseHandler);
 #endif
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("removeFabric:responseHandler:")]
 		void RemoveFabric (byte fabricIndex, ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("removeTrustedRootCertificate:responseHandler:")]
 		void RemoveTrustedRootCertificate (NSData trustedRootIdentifier, ChipResponseHandler responseHandler);
@@ -1541,7 +1656,7 @@ namespace Chip {
 		[Export ("updateFabricLabel:responseHandler:")]
 		void UpdateFabricLabel (string label, ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("updateNOC:responseHandler:")]
 		void UpdateNoc (NSData nocArray, ChipResponseHandler responseHandler);
@@ -1550,12 +1665,12 @@ namespace Chip {
 		[Export ("readAttributeFabricsListWithResponseHandler:")]
 		void ReadAttributeFabricsList (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeSupportedFabricsWithResponseHandler:")]
 		void ReadAttributeSupportedFabrics (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeCommissionedFabricsWithResponseHandler:")]
 		void ReadAttributeCommissionedFabrics (ChipResponseHandler responseHandler);
@@ -1565,11 +1680,15 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
-	[BaseType (typeof(ChipCluster), Name="CHIPPressureMeasurement")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPPressureMeasurement")]
 	[DisableDefaultCtor]
-	interface ChipPressureMeasurement
-	{
+	interface ChipPressureMeasurement {
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -1596,15 +1715,19 @@ namespace Chip {
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
-		void ReadAttributeClusterRevision(ChipResponseHandler responseHandler);
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPPumpConfigurationAndControl")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPPumpConfigurationAndControl")]
 	[DisableDefaultCtor]
-	interface ChipPumpConfigurationAndControl
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipPumpConfigurationAndControl {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -1664,12 +1787,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPScenes")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPScenes")]
 	[DisableDefaultCtor]
-	interface ChipScenes
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipScenes {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -1695,7 +1822,7 @@ namespace Chip {
 		void AddScene (ushort groupId, byte sceneId, ushort transitionTime, string sceneName, ushort clusterId, byte length, byte value, ChipResponseHandler responseHandler);
 #endif
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("addScene:sceneId:transitionTime:sceneName:clusterId:length:value:responseHandler:")]
 		void AddScene (ushort groupId, byte sceneId, ushort transitionTime, string sceneName, uint clusterId, byte length, byte value, ChipResponseHandler responseHandler);
@@ -1749,12 +1876,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPSwitch")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPSwitch")]
 	[DisableDefaultCtor]
-	interface ChipSwitch
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipSwitch {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -1790,12 +1921,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPTemperatureMeasurement")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPTemperatureMeasurement")]
 	[DisableDefaultCtor]
-	interface ChipTemperatureMeasurement
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipTemperatureMeasurement {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -1835,12 +1970,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPThermostat")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPThermostat")]
 	[DisableDefaultCtor]
-	interface ChipThermostat
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipThermostat {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -1887,22 +2026,22 @@ namespace Chip {
 		[Export ("reportAttributeLocalTemperatureWithResponseHandler:")]
 		void ReportAttributeLocalTemperature (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeAbsMinHeatSetpointLimitWithResponseHandler:")]
 		void ReadAttributeAbsMinHeatSetpointLimit (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeAbsMaxHeatSetpointLimitWithResponseHandler:")]
 		void ReadAttributeAbsMaxHeatSetpointLimit (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeAbsMinCoolSetpointLimitWithResponseHandler:")]
 		void ReadAttributeAbsMinCoolSetpointLimit (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeAbsMaxCoolSetpointLimitWithResponseHandler:")]
 		void ReadAttributeAbsMaxCoolSetpointLimit (ChipResponseHandler responseHandler);
@@ -1915,42 +2054,42 @@ namespace Chip {
 		[Export ("writeAttributeOccupiedCoolingSetpointWithValue:responseHandler:")]
 		void WriteAttributeOccupiedCoolingSetpoint (short value, ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeMinHeatSetpointLimitWithResponseHandler:")]
 		void ReadAttributeMinHeatSetpointLimit (ChipResponseHandler responseHandler);
-		
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("writeAttributeMinHeatSetpointLimitWithValue:responseHandler:")]
 		void WriteAttributeMinHeatSetpointLimit (short value, ChipResponseHandler responseHandler);
-		
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeMaxHeatSetpointLimitWithResponseHandler:")]
 		void ReadAttributeMaxHeatSetpointLimit (ChipResponseHandler responseHandler);
-		
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("writeAttributeMaxHeatSetpointLimitWithValue:responseHandler:")]
 		void WriteAttributeMaxHeatSetpointLimit (short value, ChipResponseHandler responseHandler);
-		
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeMinCoolSetpointLimitWithResponseHandler:")]
 		void ReadAttributeMinCoolSetpointLimit (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("writeAttributeMinCoolSetpointLimitWithValue:responseHandler:")]
 		void WriteAttributeMinCoolSetpointLimit (short value, ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeMaxCoolSetpointLimitWithResponseHandler:")]
 		void ReadAttributeMaxCoolSetpointLimit (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("writeAttributeMaxCoolSetpointLimitWithValue:responseHandler:")]
 		void WriteAttributeMaxCoolSetpointLimit (short value, ChipResponseHandler responseHandler);
@@ -1979,22 +2118,22 @@ namespace Chip {
 		[Export ("writeAttributeSystemModeWithValue:responseHandler:")]
 		void WriteAttributeSystemMode (byte value, ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeStartOfWeekWithResponseHandler:")]
 		void ReadAttributeStartOfWeek (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeNumberOfWeeklyTransitionsWithResponseHandler:")]
 		void ReadAttributeNumberOfWeeklyTransitions (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeNumberOfDailyTransitionsWithResponseHandler:")]
 		void ReadAttributeNumberOfDailyTransitions (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeFeatureMapWithResponseHandler:")]
 		void ReadAttributeFeatureMap (ChipResponseHandler responseHandler);
@@ -2004,28 +2143,36 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="CHIPOnboardingPayloadParser")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "CHIPOnboardingPayloadParser")]
 	[DisableDefaultCtor]
-	interface ChipOnboardingPayloadParser
-	{
+	interface ChipOnboardingPayloadParser {
 		[Static]
 		[Export ("setupPayloadForOnboardingPayload:ofType:error:")]
 		[return: NullAllowed]
 		ChipSetupPayload SetupPayload (string onboardingPayload, ChipOnboardingPayloadType type, [NullAllowed] out NSError error);
 	}
 
-	interface IChipDevicePairingDelegate {}
+	interface IChipDevicePairingDelegate { }
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 #if NET
 	[Protocol, Model]
 #else
 	[Protocol, Model (AutoGeneratedName = true)]
 #endif
-	[BaseType (typeof (NSObject), Name="CHIPDevicePairingDelegate")]
-	interface ChipDevicePairingDelegate
-	{
+	[BaseType (typeof (NSObject), Name = "CHIPDevicePairingDelegate")]
+	interface ChipDevicePairingDelegate {
 		[Export ("onStatusUpdate:")]
 		void OnStatusUpdate (ChipPairingStatus status);
 
@@ -2039,17 +2186,21 @@ namespace Chip {
 		void OnAddressUpdated ([NullAllowed] NSError error);
 	}
 
-	interface IChipKeypair {}
+	interface IChipKeypair { }
 
-	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 #if NET
 	[Protocol, Model]
 #else
 	[Protocol, Model (AutoGeneratedName = true)]
 #endif
-	[BaseType (typeof(NSObject), Name="CHIPKeypair")]
-	interface ChipKeypair
-	{
+	[BaseType (typeof (NSObject), Name = "CHIPKeypair")]
+	interface ChipKeypair {
 		[Abstract]
 		[Export ("initialize")]
 		bool Initialize ();
@@ -2063,11 +2214,15 @@ namespace Chip {
 		IntPtr /* SecKeyRef _Nullable */ GetPubKeyRef ();
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="CHIPManualSetupPayloadParser")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "CHIPManualSetupPayloadParser")]
 	[DisableDefaultCtor]
-	interface ChipManualSetupPayloadParser
-	{
+	interface ChipManualSetupPayloadParser {
 		[Export ("initWithDecimalStringRepresentation:")]
 		NativeHandle Constructor (string decimalStringRepresentation);
 
@@ -2076,17 +2231,21 @@ namespace Chip {
 		ChipSetupPayload PopulatePayload ([NullAllowed] out NSError error);
 	}
 
-	interface IChipPersistentStorageDelegate {}
+	interface IChipPersistentStorageDelegate { }
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 #if NET
 	[Protocol, Model]
 #else
 	[Protocol, Model (AutoGeneratedName = true)]
 #endif
-	[BaseType (typeof (NSObject), Name="CHIPPersistentStorageDelegate")]
-	interface ChipPersistentStorageDelegate
-	{
+	[BaseType (typeof (NSObject), Name = "CHIPPersistentStorageDelegate")]
+	interface ChipPersistentStorageDelegate {
 		[Abstract]
 		[Export ("CHIPGetKeyValue:")]
 		[return: NullAllowed]
@@ -2101,11 +2260,15 @@ namespace Chip {
 		void DeleteValue (string key);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="CHIPOptionalQRCodeInfo")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "CHIPOptionalQRCodeInfo")]
 	[DisableDefaultCtor]
-	interface ChipOptionalQRCodeInfo
-	{
+	interface ChipOptionalQRCodeInfo {
 		[Export ("infoType", ArgumentSemantic.Strong)]
 		NSNumber InfoType { get; set; }
 
@@ -2119,11 +2282,15 @@ namespace Chip {
 		string StringValue { get; set; }
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="CHIPSetupPayload")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "CHIPSetupPayload")]
 	[DisableDefaultCtor]
-	interface ChipSetupPayload
-	{
+	interface ChipSetupPayload {
 		[Export ("version", ArgumentSemantic.Strong)]
 		NSNumber Version { get; set; }
 
@@ -2150,14 +2317,18 @@ namespace Chip {
 
 		[Export ("getAllOptionalVendorData:")]
 		[return: NullAllowed]
-		ChipOptionalQRCodeInfo[] GetAllOptionalVendorData ([NullAllowed] out NSError error);
+		ChipOptionalQRCodeInfo [] GetAllOptionalVendorData ([NullAllowed] out NSError error);
 	}
 
-	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
-	[BaseType (typeof(NSObject), Name="CHIPThreadOperationalDataset")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
+	[BaseType (typeof (NSObject), Name = "CHIPThreadOperationalDataset")]
 	[DisableDefaultCtor]
-	interface ChipThreadOperationalDataset
-	{
+	interface ChipThreadOperationalDataset {
 		[NullAllowed, Export ("networkName")]
 		string NetworkName { get; }
 
@@ -2166,7 +2337,7 @@ namespace Chip {
 
 		[NullAllowed, Export ("masterKey", ArgumentSemantic.Copy)]
 		NSData MasterKey { get; }
-		
+
 		// API names are left to match header files. 
 		// PSK is likely pre-shared key, but without documentation, we cannot know for certain.
 		[NullAllowed, Export ("PSKc", ArgumentSemantic.Copy)]
@@ -2188,11 +2359,15 @@ namespace Chip {
 		NSData GetAsData ();
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (NSObject), Name="CHIPQRCodeSetupPayloadParser")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject), Name = "CHIPQRCodeSetupPayloadParser")]
 	[DisableDefaultCtor]
-	interface ChipQRCodeSetupPayloadParser
-	{
+	interface ChipQRCodeSetupPayloadParser {
 		[Export ("initWithBase38Representation:")]
 		NativeHandle Constructor (string base38Representation);
 
@@ -2201,12 +2376,16 @@ namespace Chip {
 		ChipSetupPayload PopulatePayload ([NullAllowed] out NSError error);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPAccountLogin")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPAccountLogin")]
 	[DisableDefaultCtor]
-	interface ChipAccountLogin
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipAccountLogin {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -2234,11 +2413,15 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
-	[BaseType (typeof(ChipCluster), Name="CHIPAdministratorCommissioning")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPAdministratorCommissioning")]
 	[DisableDefaultCtor]
-	interface ChipAdministratorCommissioning
-	{
+	interface ChipAdministratorCommissioning {
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -2262,12 +2445,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPApplicationLauncher")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPApplicationLauncher")]
 	[DisableDefaultCtor]
-	interface ChipApplicationLauncher
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipApplicationLauncher {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -2290,12 +2477,12 @@ namespace Chip {
 		[Export ("readAttributeApplicationLauncherListWithResponseHandler:")]
 		void ReadAttributeApplicationLauncherList (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeCatalogVendorIdWithResponseHandler:")]
 		void ReadAttributeCatalogVendorId (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeApplicationIdWithResponseHandler:")]
 		void ReadAttributeApplicationId (ChipResponseHandler responseHandler);
@@ -2305,12 +2492,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPAudioOutput")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPAudioOutput")]
 	[DisableDefaultCtor]
-	interface ChipAudioOutput
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipAudioOutput {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -2337,22 +2528,26 @@ namespace Chip {
 		[Export ("readAttributeAudioOutputListWithResponseHandler:")]
 		void ReadAttributeAudioOutputList (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeCurrentAudioOutputWithResponseHandler:")]
-		void ReadAttributeCurrentAudioOutput(ChipResponseHandler responseHandler);
+		void ReadAttributeCurrentAudioOutput (ChipResponseHandler responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPBinaryInputBasic")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPBinaryInputBasic")]
 	[DisableDefaultCtor]
-	interface ChipBinaryInputBasic
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipBinaryInputBasic {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -2382,7 +2577,7 @@ namespace Chip {
 		void WriteAttributeOutOfService (byte value, ChipResponseHandler responseHandler);
 #endif
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("writeAttributeOutOfServiceWithValue:responseHandler:")]
 		void WriteAttributeOutOfService (bool boolValue, ChipResponseHandler responseHandler);
@@ -2402,7 +2597,7 @@ namespace Chip {
 		void WriteAttributePresentValue (byte value, ChipResponseHandler responseHandler);
 #endif
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("writeAttributePresentValueWithValue:responseHandler:")]
 		void WriteAttributePresentValue (bool boolValue, ChipResponseHandler responseHandler);
@@ -2432,12 +2627,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPBridgedDeviceBasic")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPBridgedDeviceBasic")]
 	[DisableDefaultCtor]
-	interface ChipBridgedDeviceBasic
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipBridgedDeviceBasic {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -2517,11 +2716,15 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
-	[BaseType (typeof (ChipCluster), Name="CHIPContentLauncher")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPContentLauncher")]
 	[DisableDefaultCtor]
-	interface ChipContentLauncher
-	{
+	interface ChipContentLauncher {
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -2547,31 +2750,35 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
-	[BaseType (typeof(ChipCluster), Name="CHIPElectricalMeasurement")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPElectricalMeasurement")]
 	[DisableDefaultCtor]
-	interface ChipElectricalMeasurement
-	{
+	interface ChipElectricalMeasurement {
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeMeasurementTypeWithResponseHandler:")]
-		void ReadAttributeMeasurementType(ChipResponseHandler responseHandler);
+		void ReadAttributeMeasurementType (ChipResponseHandler responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeTotalActivePowerWithResponseHandler:")]
-		void ReadAttributeTotalActivePower(ChipResponseHandler responseHandler);
-		
+		void ReadAttributeTotalActivePower (ChipResponseHandler responseHandler);
+
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeRmsVoltageWithResponseHandler:")]
 		void ReadAttributeRmsVoltage (ChipResponseHandler responseHandler);
-		
+
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeRmsVoltageMinWithResponseHandler:")]
 		void ReadAttributeRmsVoltageMin (ChipResponseHandler responseHandler);
-		
+
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeRmsVoltageMaxWithResponseHandler:")]
 		void ReadAttributeRmsVoltageMax (ChipResponseHandler responseHandler);
@@ -2605,12 +2812,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPEthernetNetworkDiagnostics")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPEthernetNetworkDiagnostics")]
 	[DisableDefaultCtor]
-	interface ChipEthernetNetworkDiagnostics
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipEthernetNetworkDiagnostics {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -2654,12 +2865,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPFixedLabel")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPFixedLabel")]
 	[DisableDefaultCtor]
-	interface ChipFixedLabel
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipFixedLabel {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -2683,11 +2898,15 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
-	[BaseType (typeof(ChipCluster), Name="CHIPFlowMeasurement")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPFlowMeasurement")]
 	[DisableDefaultCtor]
-	interface ChipFlowMeasurement
-	{
+	interface ChipFlowMeasurement {
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -2695,26 +2914,30 @@ namespace Chip {
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeMeasuredValueWithResponseHandler:")]
 		void ReadAttributeMeasuredValue (ChipResponseHandler responseHandler);
-		
+
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeMinMeasuredValueWithResponseHandler:")]
 		void ReadAttributeMinMeasuredValue (ChipResponseHandler responseHandler);
-		
+
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeMaxMeasuredValueWithResponseHandler:")]
 		void ReadAttributeMaxMeasuredValue (ChipResponseHandler responseHandler);
-		
+
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPGeneralDiagnostics")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPGeneralDiagnostics")]
 	[DisableDefaultCtor]
-	interface ChipGeneralDiagnostics
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipGeneralDiagnostics {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -2742,12 +2965,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPKeypadInput")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPKeypadInput")]
 	[DisableDefaultCtor]
-	interface ChipKeypadInput
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipKeypadInput {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -2771,12 +2998,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPMediaInput")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPMediaInput")]
 	[DisableDefaultCtor]
-	interface ChipMediaInput
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipMediaInput {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -2811,7 +3042,7 @@ namespace Chip {
 		[Export ("readAttributeMediaInputListWithResponseHandler:")]
 		void ReadAttributeMediaInputList (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeCurrentMediaInputWithResponseHandler:")]
 		void ReadAttributeCurrentMediaInput (ChipResponseHandler responseHandler);
@@ -2821,12 +3052,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPMediaPlayback")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPMediaPlayback")]
 	[DisableDefaultCtor]
-	interface ChipMediaPlayback
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipMediaPlayback {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -2865,7 +3100,7 @@ namespace Chip {
 		[Export ("mediaRewind:")]
 		void Rewind (ChipResponseHandler responseHandler);
 
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("mediaSeek:responseHandler:")]
 		void MediaSeek (ulong position, ChipResponseHandler responseHandler);
@@ -2899,12 +3134,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPRelativeHumidityMeasurement")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPRelativeHumidityMeasurement")]
 	[DisableDefaultCtor]
-	interface ChipRelativeHumidityMeasurement
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipRelativeHumidityMeasurement {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -2944,12 +3183,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPSoftwareDiagnostics")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPSoftwareDiagnostics")]
 	[DisableDefaultCtor]
-	interface ChipSoftwareDiagnostics
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipSoftwareDiagnostics {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -2977,12 +3220,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPTargetNavigator")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPTargetNavigator")]
 	[DisableDefaultCtor]
-	interface ChipTargetNavigator
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipTargetNavigator {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -3010,11 +3257,15 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
-	[BaseType (typeof (ChipCluster), Name="CHIPThermostatUserInterfaceConfiguration")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPThermostatUserInterfaceConfiguration")]
 	[DisableDefaultCtor]
-	interface ChipThermostatUserInterfaceConfiguration
-	{
+	interface ChipThermostatUserInterfaceConfiguration {
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -3048,12 +3299,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPTvChannel")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPTvChannel")]
 	[DisableDefaultCtor]
-	interface ChipTvChannel
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipTvChannel {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -3097,11 +3352,15 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
-	[BaseType (typeof(ChipCluster), Name="CHIPThreadNetworkDiagnostics")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPThreadNetworkDiagnostics")]
 	[DisableDefaultCtor]
-	interface ChipThreadNetworkDiagnostics
-	{
+	interface ChipThreadNetworkDiagnostics {
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -3355,12 +3614,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPWakeOnLan")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPWakeOnLan")]
 	[DisableDefaultCtor]
-	interface ChipWakeOnLan
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipWakeOnLan {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -3377,18 +3640,22 @@ namespace Chip {
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeWakeOnLanMacAddressWithResponseHandler:")]
-		void ReadAttributeWakeOnLanMacAddress(ChipResponseHandler responseHandler);
+		void ReadAttributeWakeOnLanMacAddress (ChipResponseHandler responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
-	[BaseType (typeof(ChipCluster), Name="CHIPWiFiNetworkDiagnostics")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPWiFiNetworkDiagnostics")]
 	[DisableDefaultCtor]
-	interface ChipWiFiNetworkDiagnostics
-	{
+	interface ChipWiFiNetworkDiagnostics {
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -3422,12 +3689,16 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ChipCluster), Name="CHIPWindowCovering")]
+	[Obsoleted (PlatformName.iOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.TvOS, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.MacOSX, 13, 0, message: Constants.ChipRemoved)]
+	[Obsoleted (PlatformName.WatchOS, 9, 0, message: Constants.ChipRemoved)]
+	[Mac (12, 0), Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (ChipCluster), Name = "CHIPWindowCovering")]
 	[DisableDefaultCtor]
-	interface ChipWindowCovering
-	{
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+	interface ChipWindowCovering {
+		[Mac (12, 1), Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Export ("initWithDevice:endpoint:queue:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (ChipDevice device, ushort endpoint, DispatchQueue queue);
@@ -3518,44 +3789,44 @@ namespace Chip {
 		void ReportAttributeWindowCoveringType (ChipResponseHandler responseHandler);
 #endif
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("downOrClose:")]
 		void DownOrClose (ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("goToLiftPercentage:liftPercent100thsValue:responseHandler:")]
 		void GoToLiftPercentage (byte liftPercentageValue, ushort liftPercent100thsValue, ChipResponseHandler responseHandler);
 
 		[Internal]
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("goToLiftValue:responseHandler:")]
 		void _NewGoToLiftValue (ushort liftValue, ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("goToTiltPercentage:tiltPercent100thsValue:responseHandler:")]
 		void GoToTiltPercentage (byte tiltPercentageValue, ushort tiltPercent100thsValue, ChipResponseHandler responseHandler);
 
 		[Internal]
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("goToTiltValue:responseHandler:")]
 		void _NewGoToTiltValue (ushort tiltValue, ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("stopMotion:")]
 		void StopMotion (ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("upOrOpen:")]
 		void UpOrOpen (ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeTypeWithResponseHandler:")]
 		void ReadAttributeType (ChipResponseHandler responseHandler);
@@ -3620,112 +3891,112 @@ namespace Chip {
 		void ReportAttributeConfigStatus (ChipResponseHandler responseHandler);
 #endif
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeCurrentPositionLiftPercentageWithResponseHandler:")]
 		void ReadAttributeCurrentPositionLiftPercentage (ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("configureAttributeCurrentPositionLiftPercentageWithMinInterval:maxInterval:change:responseHandler:")]
 		void ConfigureAttributeCurrentPositionLiftPercentage (ushort minInterval, ushort maxInterval, byte change, ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("reportAttributeCurrentPositionLiftPercentageWithResponseHandler:")]
 		void ReportAttributeCurrentPositionLiftPercentage (ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeCurrentPositionTiltPercentageWithResponseHandler:")]
 		void ReadAttributeCurrentPositionTiltPercentage (ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("configureAttributeCurrentPositionTiltPercentageWithMinInterval:maxInterval:change:responseHandler:")]
 		void ConfigureAttributeCurrentPositionTiltPercentage (ushort minInterval, ushort maxInterval, byte change, ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("reportAttributeCurrentPositionTiltPercentageWithResponseHandler:")]
 		void ReportAttributeCurrentPositionTiltPercentage (ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeOperationalStatusWithResponseHandler:")]
 		void ReadAttributeOperationalStatus (ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("configureAttributeOperationalStatusWithMinInterval:maxInterval:responseHandler:")]
 		void ConfigureAttributeOperationalStatus (ushort minInterval, ushort maxInterval, ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("reportAttributeOperationalStatusWithResponseHandler:")]
 		void ReportAttributeOperationalStatus (ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeTargetPositionLiftPercent100thsWithResponseHandler:")]
 		void ReadAttributeTargetPositionLiftPercent100ths (ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("configureAttributeTargetPositionLiftPercent100thsWithMinInterval:maxInterval:change:responseHandler:")]
 		void ConfigureAttributeTargetPositionLiftPercent100ths (ushort minInterval, ushort maxInterval, ushort change, ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("reportAttributeTargetPositionLiftPercent100thsWithResponseHandler:")]
 		void ReportAttributeTargetPositionLiftPercent100ths (ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeTargetPositionTiltPercent100thsWithResponseHandler:")]
 		void ReadAttributeTargetPositionTiltPercent100ths (ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("configureAttributeTargetPositionTiltPercent100thsWithMinInterval:maxInterval:change:responseHandler:")]
 		void ConfigureAttributeTargetPositionTiltPercent100ths (ushort minInterval, ushort maxInterval, ushort change, ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("reportAttributeTargetPositionTiltPercent100thsWithResponseHandler:")]
 		void ReportAttributeTargetPositionTiltPercent100ths (ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeEndProductTypeWithResponseHandler:")]
 		void ReadAttributeEndProductType (ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeCurrentPositionLiftPercent100thsWithResponseHandler:")]
 		void ReadAttributeCurrentPositionLiftPercent100ths (ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("configureAttributeCurrentPositionLiftPercent100thsWithMinInterval:maxInterval:change:responseHandler:")]
 		void ConfigureAttributeCurrentPositionLiftPercent100ths (ushort minInterval, ushort maxInterval, ushort change, ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("reportAttributeCurrentPositionLiftPercent100thsWithResponseHandler:")]
 		void ReportAttributeCurrentPositionLiftPercent100ths (ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeCurrentPositionTiltPercent100thsWithResponseHandler:")]
 		void ReadAttributeCurrentPositionTiltPercent100ths (ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("configureAttributeCurrentPositionTiltPercent100thsWithMinInterval:maxInterval:change:responseHandler:")]
 		void ConfigureAttributeCurrentPositionTiltPercent100ths (ushort minInterval, ushort maxInterval, ushort change, ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("reportAttributeCurrentPositionTiltPercent100thsWithResponseHandler:")]
 		void ReportAttributeCurrentPositionTiltPercent100ths (ChipResponseHandler responseHandler);
@@ -3754,17 +4025,17 @@ namespace Chip {
 		[Export ("writeAttributeModeWithValue:responseHandler:")]
 		void WriteAttributeMode (byte value, ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeSafetyStatusWithResponseHandler:")]
 		void ReadAttributeSafetyStatus (ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("configureAttributeSafetyStatusWithMinInterval:maxInterval:responseHandler:")]
 		void ConfigureAttributeSafetyStatus (ushort minInterval, ushort maxInterval, ChipResponseHandler responseHandler);
 
-		[NoMac, Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+		[NoMac, Watch (8, 3), TV (15, 2), iOS (15, 2), MacCatalyst (15, 2)]
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("reportAttributeSafetyStatusWithResponseHandler:")]
 		void ReportAttributeSafetyStatus (ChipResponseHandler responseHandler);
