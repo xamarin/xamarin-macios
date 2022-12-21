@@ -50,7 +50,7 @@ namespace MonoTouchFixtures.AVFoundation {
 			using (AVAudioPlayer player = AVAudioPlayer.FromData (data, out NSError error)) {
 				Assert.NotNull (player, "AVAudioPlayer");
 				Assert.NotNull (error, "NSError");
-				}
+			}
 		}
 
 		[Test]
@@ -60,7 +60,7 @@ namespace MonoTouchFixtures.AVFoundation {
 				using (var player = AVAudioPlayer.FromData (null, out NSError error)) {
 					Assert.Null (player, "AVAudioPlayer");
 					Assert.NotNull (error, "NSError");
-					}
+				}
 			});
 		}
 	}
