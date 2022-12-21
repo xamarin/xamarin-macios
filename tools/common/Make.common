@@ -59,7 +59,7 @@
 		$< > $@.tmp
 	$(Q) if ! diff $@ $@.tmp >/dev/null; then $(CP) $@.tmp $@; echo "The file $(TOP)/tools/common/SdkVersions.cs has been automatically re-generated; please commit the changes."; fi
 
-../common/ProductConstants.cs: ../common/ProductConstants.cs.in Makefile $(TOP)/Make.config
+../common/ProductConstants.cs: ../common/ProductConstants.in.cs Makefile $(TOP)/Make.config
 	$(Q_GEN) sed \
 		-e "s/@IOS_VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
 		-e "s/@TVOS_VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
