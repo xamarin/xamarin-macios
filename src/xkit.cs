@@ -4414,6 +4414,6 @@ namespace UIKit {
 		[NoWatch, NoTV]
 		[Mac (10, 15), iOS (13, 0)]
 		[Field ("NSReadAccessURLDocumentOption", "WebKit")]
-		NSString NSReadAccessURLDocumentOption { get; }
+		NSString NSReadAccessUrlDocumentOption { get; }
 	}
 }
