@@ -532,7 +532,7 @@ namespace Security {
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios9.0")]
 		[ObsoletedOSPlatform ("macos10.11", "Export ciphers are not available anymore.")]
-		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Export ciphers are not available anymore.")]
 		[ObsoletedOSPlatform ("ios9.0", "Export ciphers are not available anymore.")]
 #else
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Export ciphers are not available anymore.")]
