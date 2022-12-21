@@ -202,7 +202,7 @@ namespace Xamarin.Tests {
 
 			var tmpDir = Cache.CreateTemporaryDirectory ();
 			var outputDir = Path.Combine (tmpDir, info.Template);
-			DotNet.AssertNew (outputDir, info.Template, language.AsLanguageIdentifier ());
+			DotNet.AssertNew (outputDir, info.Template, language: language.AsLanguageIdentifier ());
 			var proj = Path.Combine (outputDir, $"{info.Template}.{language.AsFileExtension ()}");
 			var rv = DotNet.AssertBuild (proj);
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
