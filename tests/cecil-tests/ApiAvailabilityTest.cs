@@ -24,6 +24,7 @@ namespace Cecil.Tests {
 			var harvestedInfo = Helper.MappedNetApi;
 
 			var failures = new List<(string Key, ICustomAttributeProvider Api, OSPlatformAttributes [] Obsoleted, OSPlatformAttributes [] Supported)> ();
+			var mismatchedObsoleteMessages = new List<string> ();
 			foreach (var kvp in harvestedInfo) {
 				var attributes = kvp.Value.Select (v => v.Api.GetAvailabilityAttributes (v.Platform) ?? new OSPlatformAttributes (v.Api, v.Platform) ?? new OSPlatformAttributes (v.Api, v.Platform)).ToArray ();
 				var obsoleted = attributes.Where (v => v?.Obsoleted is not null).ToArray ();
@@ -41,7 +42,18 @@ namespace Cecil.Tests {
 				if (!notObsoletedNorUnsupported.Any ())
 					continue;
 
-				failures.Add (new (kvp.Key, kvp.Value.First ().Api, obsoleted, notObsoletedNorUnsupported));
+				var failure = (kvp.Key, kvp.Value.First ().Api, obsoleted, notObsoletedNorUnsupported);
+				failures.Add (failure);
+
+				var obsoleteMessages = obsoleted.Select (v => v.Obsoleted?.Message).Distinct ().ToArray ();
+				if (obsoleteMessages.Length > 1) {
+					var obsoleteFailure = new StringBuilder ();
+					obsoleteFailure.AppendLine ($"{failure.Key}: Found different {obsoleteMessages.Length} obsolete messages:");
+					foreach (var msg in obsoleteMessages)
+						obsoleteFailure.AppendLine ($"    {(msg is null ? "null" : (msg.Length == 0 ? "<empty string>" : "\"" + msg + "\""))}");
+					mismatchedObsoleteMessages.Add (obsoleteFailure.ToString ());
+					Console.WriteLine (obsoleteFailure);
+				}
 			}
 
 			var newFailures = failures.Where (v => !knownFailuresInMissingObsoleteAttributes.Contains (v.Key)).ToArray ();
@@ -69,6 +81,7 @@ namespace Cecil.Tests {
 
 			Assert.That (sb.ToString (), Is.Empty, "Failures");
 			Assert.IsEmpty (fixedFailures, "Known failures that aren't failing anymore - remove these from the list of known failures");
+			Assert.IsEmpty (mismatchedObsoleteMessages, "Mismatched obsolete messages");
 		}
 
 		static HashSet<string> knownFailuresInMissingObsoleteAttributes = new HashSet<string> {
@@ -372,12 +385,12 @@ namespace Cecil.Tests {
 
 				// Verify that any SupportedOSPlatform attributes don't specify a version that is
 				// either earlier than our minimum deployment target, or later than the current OS version.
-				if (apiSupportedVersion is not null) {
+				if (apiSupportedVersion is not null && !(api is AssemblyDefinition)) {
 					var minimum = Xamarin.SdkVersions.GetMinVersion (platform);
 					var maximum = Xamarin.SdkVersions.GetVersion (platform);
-					// FIXME: This is a big change to fix, and should be fixed in a different PR.
-					//if (apiSupportedVersion <= minimum)
-					//	failures.Add ($"[FAIL] {apiSupportedVersion} <= {minimum} (Min) on '{api.AsFullName ()}'.");
+
+					if (apiSupportedVersion <= minimum)
+						failures.Add ($"[FAIL] {apiSupportedVersion} <= {minimum} (Min) on '{api.AsFullName ()}'.");
 					if (apiSupportedVersion > maximum)
 						failures.Add ($"[FAIL] {apiSupportedVersion} > {maximum} (Max) on '{api.AsFullName ()}'.");
 				}

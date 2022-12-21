@@ -14,12 +14,12 @@ using MonoTouch;
 
 namespace Xamarin {
 	static class SdkVersions {
-		public const string Xcode = "14.1";
-		public const string OSX = "13.0";
-		public const string iOS = "16.1";
+		public const string Xcode = "14.2";
+		public const string OSX = "13.1";
+		public const string iOS = "16.2";
 		public const string WatchOS = "9.1";
 		public const string TVOS = "16.1";
-		public const string MacCatalyst = "16.1";
+		public const string MacCatalyst = "16.2";
 
 #if NET
 		public const string MinOSX = "10.14";
@@ -40,12 +40,12 @@ namespace Xamarin {
 		public const string MinWatchOSCompanionSimulator = "14.5";
 		public const string MinTVOSSimulator = "12.4";
 
-		public const string MaxiOSSimulator = "16.1";
+		public const string MaxiOSSimulator = "16.2";
 		public const string MaxWatchOSSimulator = "9.1";
-		public const string MaxWatchOSCompanionSimulator = "16.1";
+		public const string MaxWatchOSCompanionSimulator = "16.2";
 		public const string MaxTVOSSimulator = "16.1";
 
-		public const string MaxiOSDeploymentTarget = "16.1";
+		public const string MaxiOSDeploymentTarget = "16.2";
 		public const string MaxWatchDeploymentTarget = "9.1";
 		public const string MaxTVOSDeploymentTarget = "16.1";
 
