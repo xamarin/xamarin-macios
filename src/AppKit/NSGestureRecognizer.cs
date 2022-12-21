@@ -35,7 +35,7 @@ namespace AppKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #endif
 		[Register ("__NSGestureRecognizerToken")]
@@ -48,7 +48,7 @@ namespace AppKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #endif
 		[Register ("__NSGestureRecognizerParameterlessToken")]
@@ -70,7 +70,7 @@ namespace AppKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #endif
 		[Register ("__NSGestureRecognizerParametrizedToken")]

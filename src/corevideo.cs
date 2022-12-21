@@ -368,12 +368,14 @@ namespace CoreVideo {
 		Smpte240M1995,
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "This API is no longer supported.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "This API is no longer supported.")]
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "This API is no longer supported.")]
 		[Field ("kCVImageBufferYCbCrMatrix_DCI_P3")]
 		[iOS (9, 0), Mac (10, 12)]
 		DciP3,
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "This API is no longer supported.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "This API is no longer supported.")]
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "This API is no longer supported.")]
 		[Field ("kCVImageBufferYCbCrMatrix_P3_D65")]
 		[iOS (9, 0), Mac (10, 12)]

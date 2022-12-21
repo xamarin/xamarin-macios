@@ -2172,6 +2172,11 @@ namespace ModelIO {
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'new MDLVoxelArray (MDLAsset, int, float)'.")]
 #if NET
 		[NoiOS]
+#if XAMCORE_5_0
+		[NoTV]
+#else
+		[Obsoleted (PlatformName.TvOS, 10, 0, message: "Use 'new MDLVoxelArray (MDLAsset, int, float)'.")]
+#endif
 #else
 		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use 'new MDLVoxelArray (MDLAsset, int, float)'.")]
 #endif
@@ -2181,6 +2186,11 @@ namespace ModelIO {
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'new MDLVoxelArray (MDLAsset, int, float)'.")]
 #if NET
 		[NoiOS]
+#if XAMCORE_5_0
+		[NoTV]
+#else
+		[Obsoleted (PlatformName.TvOS, 10, 0, message: "Use 'new MDLVoxelArray (MDLAsset, int, float)'.")]
+#endif
 #else
 		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use 'new MDLVoxelArray (MDLAsset, int, float)'.")]
 #endif
@@ -2218,6 +2228,11 @@ namespace ModelIO {
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'SetVoxels (MDLMesh, int, float)' instead.")]
 #if NET
 		[NoiOS]
+#if XAMCORE_5_0
+		[NoTV]
+#else
+		[Obsoleted (PlatformName.TvOS, 10, 0, message: "Use 'SetVoxels (MDLMesh, int, float)' instead.")]
+#endif
 #else
 		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use 'SetVoxels (MDLMesh, int, float)' instead.")]
 #endif
@@ -2227,6 +2242,11 @@ namespace ModelIO {
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'SetVoxels (MDLMesh, int, float)' instead.")]
 #if NET
 		[NoiOS]
+#if XAMCORE_5_0
+		[NoTV]
+#else
+		[Obsoleted (PlatformName.TvOS, 10, 0, message: "Use 'SetVoxels (MDLMesh, int, float)' instead.")]
+#endif
 #else
 		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use 'SetVoxels (MDLMesh, int, float)' instead.")]
 #endif

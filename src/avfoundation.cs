@@ -1704,16 +1704,19 @@ namespace AVFoundation {
 
 		[NoMac]
 		[Deprecated (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Export ("audioPlayerBeginInterruption:")]
 		void BeginInterruption (AVAudioPlayer player);
 
 		[NoMac]
 		[Export ("audioPlayerEndInterruption:")]
 		[Deprecated (PlatformName.iOS, 6, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
 		void EndInterruption (AVAudioPlayer player);
 
 		[NoMac]
 		[Deprecated (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Export ("audioPlayerEndInterruption:withOptions:")]
 #if NET
 		void EndInterruption (AVAudioPlayer player, AVAudioSessionInterruptionOptions flags);
@@ -5654,6 +5657,7 @@ namespace AVFoundation {
 		NSString ID3MetadataKeyCommercial { get; }
 
 		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Field ("AVMetadataID3MetadataKeyCommerical")]
 		NSString ID3MetadataKeyCommerical { get; }
@@ -6626,6 +6630,7 @@ namespace AVFoundation {
 
 			[iOS (8, 0)]
 			[Deprecated (PlatformName.iOS, 9, 0)]
+			[Deprecated (PlatformName.TvOS, 9, 0)]
 			[Mac (10, 10)]
 			[Deprecated (PlatformName.MacOSX, 10, 11)]
 			[Field ("AVMetadataIdentifierID3MetadataCommerical")]
