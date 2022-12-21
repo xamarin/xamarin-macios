@@ -6,6 +6,7 @@
     <AssemblyName>cecil-tests</AssemblyName>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
