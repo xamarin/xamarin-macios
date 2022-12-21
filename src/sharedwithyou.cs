@@ -28,6 +28,7 @@ using UIWindow=AppKit.NSWindow;
 #else
 using UIKit;
 using ICloudSharingControllerDelegate = UIKit.IUICloudSharingControllerDelegate;
+using NSMenuItem = Foundation.NSObject;
 #endif
 
 #if !NET
@@ -291,6 +292,11 @@ namespace SharedWithYou {
 
 		[Export ("headerImage", ArgumentSemantic.Strong)]
 		UIImage HeaderImage { get; set; }
+
+		[NoiOS, NoMacCatalyst]
+		[Mac (13, 1)]
+		[Export ("menuFormRepresentation")]
+		NSMenuItem MenuFormRepresentation { get; }
 
 		[NoMac]
 		[Wrap ("WeakCloudSharingControllerDelegate")]

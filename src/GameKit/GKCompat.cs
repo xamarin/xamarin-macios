@@ -1,6 +1,7 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 
 using System;
+using System.ComponentModel;
 using Foundation;
 using ObjCRuntime;
 
@@ -71,6 +72,7 @@ namespace GameKit {
 
 #if !XAMCORE_5_0
 #if __IOS__ || __MACCATALYST__
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("Use 'MCBrowserViewController' from the 'MultipeerConnectivity' framework instead.")]
 #if NET
 	[UnsupportedOSPlatform ("macos")]
@@ -87,6 +89,7 @@ namespace GameKit {
 	{
 	}
 
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("Use 'MCBrowserViewController' from the 'MultipeerConnectivity' framework instead.")]
 #if NET
 	[UnsupportedOSPlatform ("macos")]
@@ -121,6 +124,7 @@ namespace GameKit {
 		}
 	}
 
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("Use 'MCBrowserViewController' from the 'MultipeerConnectivity' framework instead.")]
 #if NET
 	[UnsupportedOSPlatform ("macos")]
@@ -170,6 +174,7 @@ namespace GameKit {
 		}
 	} /* class GKPeerPickerControllerDelegate */
 
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("Use 'MCBrowserViewController' from the 'MultipeerConnectivity' framework instead.")]
 #if NET
 	[UnsupportedOSPlatform ("macos")]
