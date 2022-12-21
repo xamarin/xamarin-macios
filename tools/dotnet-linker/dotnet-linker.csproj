@@ -280,7 +280,7 @@
       <ManifestResourceName>Xamarin.Bundler.Errors.zh-Hant</ManifestResourceName>
     </EmbeddedResource>
   </ItemGroup>
-  <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.cs.in;../common/ProductConstants.cs.in" Outputs="../common/SdkVersions.cs;../common/ProductConstants.cs">
+  <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.in.cs;../common/ProductConstants.in.cs" Outputs="../common/SdkVersions.cs;../common/ProductConstants.cs">
     <Exec Command="make ../common/SdkVersions.cs ../common/ProductConstants.cs" />
   </Target>
 </Project>
