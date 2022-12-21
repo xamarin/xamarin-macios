@@ -20807,7 +20807,7 @@ namespace AppKit {
 		bool ReleasedWhenClosed { [Bind ("isReleasedWhenClosed")] get; set; }
 #endif
 
-		// relasedWhenClosed is a variation of sending a delayed 'autorelease', and since
+		// releasedWhenClosed is a variation of sending a delayed 'autorelease', and since
 		// we've bound release/retain/autorelease with a 'Dangerous' prefix, we're adding
 		// one for this property as well.
 		[Sealed]
