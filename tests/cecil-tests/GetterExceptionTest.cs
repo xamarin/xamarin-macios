@@ -45,8 +45,8 @@ namespace Cecil.Tests {
 				if (inst?.OpCode == OpCodes.Newobj && inst?.Operand is MemberReference reference) {
 					if (!exceptionsToSkip.Contains (reference.DeclaringType.Name) &&
 						SubclassesException (reference.DeclaringType as TypeDefinition)) {
-							exceptionMessage = reference.DeclaringType.Name;
-							return true;
+						exceptionMessage = reference.DeclaringType.Name;
+						return true;
 					}
 				}
 			}
