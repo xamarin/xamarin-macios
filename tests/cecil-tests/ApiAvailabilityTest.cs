@@ -372,12 +372,12 @@ namespace Cecil.Tests {
 
 				// Verify that any SupportedOSPlatform attributes don't specify a version that is
 				// either earlier than our minimum deployment target, or later than the current OS version.
-				if (apiSupportedVersion is not null) {
+				if (apiSupportedVersion is not null && !(api is AssemblyDefinition)) {
 					var minimum = Xamarin.SdkVersions.GetMinVersion (platform);
 					var maximum = Xamarin.SdkVersions.GetVersion (platform);
-					// FIXME: This is a big change to fix, and should be fixed in a different PR.
-					//if (apiSupportedVersion <= minimum)
-					//	failures.Add ($"[FAIL] {apiSupportedVersion} <= {minimum} (Min) on '{api.AsFullName ()}'.");
+
+					if (apiSupportedVersion <= minimum)
+						failures.Add ($"[FAIL] {apiSupportedVersion} <= {minimum} (Min) on '{api.AsFullName ()}'.");
 					if (apiSupportedVersion > maximum)
 						failures.Add ($"[FAIL] {apiSupportedVersion} > {maximum} (Max) on '{api.AsFullName ()}'.");
 				}

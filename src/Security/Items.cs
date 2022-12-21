@@ -1411,7 +1411,7 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
-		[SupportedOSPlatform ("maccatalyst13.1")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
