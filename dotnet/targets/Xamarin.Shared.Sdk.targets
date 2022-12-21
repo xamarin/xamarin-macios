@@ -172,7 +172,6 @@
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' == '' And '$(_IsMultiRidBuild)' != 'true'">
 			_ComputePublishTrimmed;
 			BuildOnlySettings;
-			_CompileEntitlements;
 			_CollectBundleResources;
 			_PackLibraryResources;
 			_UnpackLibraryResources;
@@ -198,7 +197,6 @@
 		<!-- outer build for multi-rid build -->
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
 			_CollectBundleResources;
-			_CompileEntitlements;
 			_RunRidSpecificBuild;
 			_DetectAppManifest;
 			_ReadAppManifest;
@@ -248,13 +246,13 @@
 		<CreateAppBundleDependsOn Condition="'$(_IsMultiRidBuild)' != 'true'">
 			_CreateDebugSettings;
 			_CreateDebugConfiguration;
+			_CompileEntitlements;
 			$(CreateAppBundleDependsOn);
 		</CreateAppBundleDependsOn>
 
 		<!-- outer build for multi-rid build -->
 		<CreateAppBundleDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
 			$(CreateAppBundleDependsOn);
-			_CompileEntitlements;
 			_CreateMergedAppBundle;
 			_PostProcessAppBundle;
 		</CreateAppBundleDependsOn>
