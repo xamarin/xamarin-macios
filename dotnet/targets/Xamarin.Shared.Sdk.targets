@@ -470,7 +470,7 @@
 				AreAnyAssembliesTrimmed=$(_AreAnyAssembliesTrimmed)
 				AssemblyName=$(AssemblyName).dll
 				@(_AotArguments -> 'AOTArgument=%(Identity)')
-				AOTCompiler=$(_AOTCompiler)
+				AOTCompiler=$(_XamarinAOTCompiler)
 				AOTOutputDirectory=$(_AOTOutputDirectory)
 				AppBundleManifestPath=$(_AppBundleManifestPath)
 				CacheDirectory=$(_LinkerCacheDirectory)
@@ -573,9 +573,6 @@
 			>
 				<TrimMode>copy</TrimMode> <!-- Don't use 'copyused', because that might still end up saving some assemblies, and if that's the platform assembly, it may break the partial static registrar -->
 			</ResolvedFileToPublish>
-
-			<!-- Mark our entry assembly as a root assembly. -->
-			<TrimmerRootAssembly Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Filename)' == '$(AssemblyName)' And '%(ResolvedFileToPublish.Extension)' == '.dll'" />
 
 			<!--
 				pre-mark custom steps
@@ -710,7 +707,9 @@
 		<ItemGroup>
 			<!-- Support a 'CopyToAppBundle' metadata that can be set to 'false' to avoid copying a framework to the app bundle -->
 			<_DynamicLibraryToPublish Include="@(_FileNativeReference)" Condition="'%(_FileNativeReference.Kind)' == 'Dynamic' And '%(_FileNativeReference.CopyToAppBundle)' != 'false'">
-				<RelativePath>$(_DylibPublishDir)\%(Filename)%(Extension)</RelativePath>
+				<!-- Rewrite the relative path so that everything ends up in the app bundle -->
+				<RelativePath Condition="'%(_FileNativeReference.RelativePath)' == ''">$(_DylibPublishDir)\%(Filename)%(Extension)</RelativePath>
+				<RelativePath Condition="'%(_FileNativeReference.RelativePath)' != ''">$(_RelativeAppBundlePath)\%(_FileNativeReference.RelativePath)</RelativePath>
 				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			</_DynamicLibraryToPublish>
 
@@ -980,16 +979,43 @@
 	</Target>
 
 	<Target Name="_FindAotCompiler" DependsOnTargets="_ComputeVariables">
+		<PropertyGroup>
+			<_XamarinAOTCompilerCachePath>$(DeviceSpecificIntermediateOutputPath)aot-compiler-path-$(NETCoreSdkVersion).txt</_XamarinAOTCompilerCachePath>
+		</PropertyGroup>
+
+		<!-- This task does not take a SessionId because we cache the path on Windows for remote builds to avoid a round-trip -->
+		<ReadLinesFromFile
+			Condition="Exists('$(_XamarinAOTCompilerCachePath)')"
+			File="$(_XamarinAOTCompilerCachePath)"
+		>
+			<Output TaskParameter="Lines" PropertyName="_XamarinAOTCompiler" />
+		</ReadLinesFromFile>
+
+		<!-- If the cached value points to a file that doesn't exist, then don't use it -->
+		<PropertyGroup Condition="!Exists('$(_XamarinAOTCompiler)')">
+			<_XamarinAOTCompiler />
+		</PropertyGroup>
+
 		<FindAotCompiler
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_RunAotCompiler)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_RunAotCompiler)' == 'true' And '$(_XamarinAOTCompiler)' == ''"
 			KeepTemporaryOutput="$(FindAotCompilerKeepKeepTemporaryOutput)"
 			MonoAotCrossCompiler="@(MonoAotCrossCompiler)"
 			RuntimeIdentifier="$(RuntimeIdentifier)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		>
-			<Output TaskParameter="AotCompiler" PropertyName="_AOTCompiler" />
+			<Output TaskParameter="AotCompiler" PropertyName="_XamarinAOTCompiler" />
 		</FindAotCompiler>
+
+		<!-- This task does not take a SessionId because we cache the path on Windows for remote builds to avoid a round-trip -->
+		<WriteLinesToFile
+			File="$(_XamarinAOTCompilerCachePath)"
+			Lines="$(_XamarinAOTCompiler)"
+			Overwrite="true"
+		/>
+		<ItemGroup>
+			<FileWrites Include="$(_XamarinAOTCompilerCachePath)" />
+		</ItemGroup>
 	</Target>
 
 	<PropertyGroup>
@@ -1012,7 +1038,7 @@
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			Assemblies="@(_AssembliesToAOT)"
-			AOTCompilerPath="$(_AOTCompiler)"
+			AOTCompilerPath="$(_XamarinAOTCompiler)"
 			InputDirectory="$(_AOTInputDirectory)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			OutputDirectory="$(_AOTOutputDirectory)\%(_AssembliesToAOT.Arch)"
@@ -1182,13 +1208,22 @@
 	<Target Name="_ComputeDynamicLibrariesToReidentify">
 		<PropertyGroup>
 			<_ExecutablePathPrefix Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS'">@executable_path/</_ExecutablePathPrefix>
-			<_ExecutablePathPrefix Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">@executable_path/../$(_CustomBundleName)/</_ExecutablePathPrefix>
+			<_ExecutablePathPrefix Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">@executable_path/../../</_ExecutablePathPrefix>
 		</PropertyGroup>
 		<ItemGroup>
+			<!-- Create the ComputedRelativePath metadata from RelativePath -->
 			<_DynamicLibraryToReidentify Include="@(_FileNativeReference)" Condition="'%(Extension)' == '.dylib'">
-				<DynamicLibraryId>$(_ExecutablePathPrefix)%(Filename)%(Extension)</DynamicLibraryId>
 				<SourceItemGroup>_FileNativeReference</SourceItemGroup>
-				<ReidentifiedPath>$(_IntermediateNativeLibraryDir)/%(Filename)%(Extension)</ReidentifiedPath>
+				<ComputedRelativePath>%(_FileNativeReference.RelativePath)</ComputedRelativePath>
+			</_DynamicLibraryToReidentify>
+			<!-- Set ComputedRelativePath from Filename and Extension if not set (i.e. RelativePath didn't exist on the item) -->
+			<_DynamicLibraryToReidentify Update="@(_DynamicLibraryToReidentify)" Condition="'%(SourceItemGroup)' == '_FileNativeReference' And '%(_DynamicLibraryToReidentify.ComputedRelativePath)' == ''">
+				<ComputedRelativePath>Contents/$(_CustomBundleName)/%(Filename)%(Extension)</ComputedRelativePath>
+			</_DynamicLibraryToReidentify>
+			<!-- Compute DynamicLibraryId and ReidentifiedPath -->
+			<_DynamicLibraryToReidentify Update="@(_DynamicLibraryToReidentify)" Condition="'%(SourceItemGroup)' == '_FileNativeReference'">
+				<DynamicLibraryId Condition="'%(_DynamicLibraryToReidentify.DynamicLibraryId)' == ''">$([System.String]::Copy('$(_ExecutablePathPrefix)%(_DynamicLibraryToReidentify.ComputedRelativePath)').Replace('\', '/'))</DynamicLibraryId>
+				<ReidentifiedPath Condition="'%(_DynamicLibraryToReidentify.ReidentifiedPath)' == ''">$(_IntermediateNativeLibraryDir)/%(_DynamicLibraryToReidentify.ComputedRelativePath)</ReidentifiedPath>
 			</_DynamicLibraryToReidentify>
 		</ItemGroup>
 	</Target>

@@ -1675,7 +1675,7 @@ namespace CoreText {
 
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1800,12 +1800,10 @@ namespace CoreText {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)] // documented as 3.2 but it's wrong (see unit tests)
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateWithNameAndOptions (IntPtr name, nfloat size, IntPtr matrix, nuint options);
@@ -1826,12 +1824,10 @@ namespace CoreText {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)] // documented as 3.2 but it's wrong (see unit tests)
 #endif
 		public CTFont (string name, nfloat size, CTFontOptions options)
 			: base (Create (name, size, options), true)
@@ -1839,12 +1835,10 @@ namespace CoreText {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)] // documented as 3.2 but it's wrong (see unit tests)
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateWithNameAndOptions (IntPtr name, nfloat size, ref CGAffineTransform matrix, nuint options);
@@ -1865,12 +1859,10 @@ namespace CoreText {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)] // documented as 3.2 but it's wrong (see unit tests)
 #endif
 		public CTFont (string name, nfloat size, ref CGAffineTransform matrix, CTFontOptions options)
 			: base (Create (name, size, ref matrix, options), true)
@@ -1878,12 +1870,10 @@ namespace CoreText {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)] // documented as 3.2 but it's wrong (see unit tests)
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateWithFontDescriptorAndOptions (IntPtr descriptor, nfloat size, IntPtr matrix, nuint options);
@@ -1899,12 +1889,10 @@ namespace CoreText {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)] // documented as 3.2 but it's wrong (see unit tests)
 #endif
 		public CTFont (CTFontDescriptor descriptor, nfloat size, CTFontOptions options)
 			: base (Create (descriptor, size, options), true)
@@ -1912,12 +1900,10 @@ namespace CoreText {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)] // documented as 3.2 but it's wrong (see unit tests)
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateWithFontDescriptorAndOptions (IntPtr descriptor, nfloat size, ref CGAffineTransform matrix, nuint options);
@@ -1933,12 +1919,10 @@ namespace CoreText {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)] // documented as 3.2 but it's wrong (see unit tests)
 #endif
 		public CTFont (CTFontDescriptor descriptor, nfloat size, CTFontOptions options, ref CGAffineTransform matrix)
 			: base (Create (descriptor, size, options, ref matrix), true)
@@ -2551,13 +2535,17 @@ namespace CoreText {
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern nint CTFontGetLigatureCaretPositions (IntPtr handle, CGGlyph glyph, [Out] nfloat [] positions, nint max);
+		static extern unsafe nint CTFontGetLigatureCaretPositions (IntPtr handle, CGGlyph glyph, [Out] nfloat* positions, nint max);
 
 		public nint GetLigatureCaretPositions (CGGlyph glyph, nfloat [] positions)
 		{
 			if (positions is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (positions));
-			return CTFontGetLigatureCaretPositions (Handle, glyph, positions, positions.Length);
+			unsafe {
+				fixed (nfloat* positionsPtr = positions) {
+					return CTFontGetLigatureCaretPositions (Handle, glyph, positionsPtr, positions.Length);
+				}
+			}
 		}
 		#endregion
 

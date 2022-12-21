@@ -13,12 +13,12 @@ namespace Cecil.Tests {
 	[TestFixture]
 	public class EnumTest {
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblyDefinitions))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
 		// https://github.com/xamarin/xamarin-macios/issues/9724
-		public void NoAvailabilityOnError (string assemblyPath)
+		public void NoAvailabilityOnError (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath);
+			var assembly = info.Assembly;
 			HashSet<string> found = new HashSet<string> ();
 			foreach (var type in assembly.MainModule.Types)
 				NoAvailabilityOnError (type, found);

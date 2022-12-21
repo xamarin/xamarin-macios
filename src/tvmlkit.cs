@@ -15,7 +15,6 @@ using NativeHandle = System.IntPtr;
 
 namespace TVMLKit {
 
-	[TV (9,0)]
 	[Native]
 	public enum TVColorType : long {
 		None,
@@ -24,20 +23,18 @@ namespace TVMLKit {
 		LinearGradientLeftToRight
 	}
 
-	[TV (9,0)]
 	[Native]
 	public enum TVElementAlignment : long {
 		Undefined,
 		Left,
 		Center,
 		Right,
-		[TV (11,0)]
+		[TV (11, 0)]
 		Leading,
 		[TV (11, 0)]
 		Trailing,
 	}
 
-	[TV (9,0)]
 	[Native]
 	public enum TVElementContentAlignment : long {
 		Undefined,
@@ -46,7 +43,6 @@ namespace TVMLKit {
 		Bottom
 	}
 
-	[TV (9,0)]
 	[Native]
 	public enum TVElementPosition : long {
 		Undefined,
@@ -75,7 +71,6 @@ namespace TVMLKit {
 		BottomTrailing,
 	}
 
-	[TV (9,0)]
 	[Native]
 	public enum TVElementEventType : long {
 		Play = 1,
@@ -85,7 +80,6 @@ namespace TVMLKit {
 		Change
 	}
 
-	[TV (9,0)]
 	[Native]
 	public enum TVElementUpdateType : long {
 		None,
@@ -98,19 +92,17 @@ namespace TVMLKit {
 #else
 		Children,
 		Self,
-		[TV (10,0)]
+		[TV (10, 0)]
 		Styles,
 #endif
 	}
 
-	[TV (9,0)]
 	[Native]
 	public enum TVElementResettableProperty : long {
 		UpdateType,
 		AutoHighlightIdentifier
 	}
 
-	[TV (9,0)]
 	[Native]
 	public enum TVImageType : long {
 		Image,
@@ -119,7 +111,6 @@ namespace TVMLKit {
 		Hero
 	}
 
-	[TV (9,0)]
 	[Native]
 	[ErrorDomain ("TVMLKitErrorDomain")]
 	public enum TVMLKitError : long {
@@ -129,7 +120,6 @@ namespace TVMLKit {
 		Last
 	}
 
-	[TV (9,0)]
 	[Native]
 	public enum TVViewElementStyleType : long {
 		Integer = 1,
@@ -142,7 +132,6 @@ namespace TVMLKit {
 		EdgeInsets
 	}
 
-	[TV (9,0)]
 	[Native]
 	public enum TVTextElementStyle : long {
 		None,
@@ -152,7 +141,7 @@ namespace TVMLKit {
 		Decoration
 	}
 
-	[TV (12,0)]
+	[TV (12, 0)]
 	[Native]
 	public enum TVPlaybackState : long {
 		Undefined,
@@ -166,7 +155,7 @@ namespace TVMLKit {
 		End,
 	}
 
-	[TV (12,0)]
+	[TV (12, 0)]
 	[Native]
 	public enum TVPlaylistRepeatMode : long {
 		None = 0,
@@ -174,7 +163,7 @@ namespace TVMLKit {
 		One,
 	}
 
-	[TV (12,0)]
+	[TV (12, 0)]
 	[Native]
 	public enum TVPlaylistEndAction : long {
 		Stop = 0,
@@ -182,7 +171,7 @@ namespace TVMLKit {
 		WaitForMoreItems,
 	}
 
-	[TV (12,0)]
+	[TV (12, 0)]
 	public enum TVMediaItemType {
 		// NS_TYPED_EXTENSIBLE_ENUM
 		[DefaultEnumValue]
@@ -194,7 +183,7 @@ namespace TVMLKit {
 		Video,
 	}
 
-	[TV (12,0)]
+	[TV (12, 0)]
 	public enum TVMediaItemContentRatingDomain {
 		// NS_TYPED_EXTENSIBLE_ENUM
 		[DefaultEnumValue]
@@ -209,7 +198,6 @@ namespace TVMLKit {
 		Music,
 	}
 
-	[TV (9,0)]
 	[BaseType (typeof (NSObject))]
 	interface TVApplicationControllerContext : NSCopying {
 		[Export ("javaScriptApplicationURL", ArgumentSemantic.Copy)]
@@ -219,14 +207,13 @@ namespace TVMLKit {
 		string StorageIdentifier { get; set; }
 
 		[Export ("launchOptions", ArgumentSemantic.Copy)]
-		NSDictionary<NSString,NSObject> LaunchOptions { get; set; }
+		NSDictionary<NSString, NSObject> LaunchOptions { get; set; }
 
-		[TV (14,0)]
+		[TV (14, 0)]
 		[Export ("supportsPictureInPicturePlayback")]
 		bool SupportsPictureInPicturePlayback { get; set; }
 	}
 
-	[TV (9,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface TVApplicationControllerDelegate {
@@ -242,14 +229,14 @@ namespace TVMLKit {
 		[Export ("appController:didStopWithOptions:")]
 		void DidStop (TVApplicationController appController, [NullAllowed] NSDictionary<NSString, NSObject> options);
 
-		[TV (12,0)]
+		[TV (12, 0)]
 		[Export ("playerForAppController:")]
 		[return: NullAllowed]
 		TVPlayer GetPlayer (TVApplicationController appController);
 	}
 
-	interface ITVApplicationControllerDelegate {}
-	
+	interface ITVApplicationControllerDelegate { }
+
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVApplicationController {
@@ -281,8 +268,7 @@ namespace TVMLKit {
 		void Stop ();
 	}
 
-	[TV (9,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	interface TVColor : NSCopying {
 		[Export ("colorType")]
 		TVColorType ColorType { get; }
@@ -291,14 +277,13 @@ namespace TVMLKit {
 		UIColor Color { get; }
 
 		[NullAllowed, Export ("gradientColors")]
-		UIColor[] GradientColors { get; }
+		UIColor [] GradientColors { get; }
 
 		[NullAllowed, Export ("gradientPoints")]
-		NSNumber[] GradientPoints { get; }
+		NSNumber [] GradientPoints { get; }
 	}
 
 #if false // TVMLKit/TVElementTypes.h was removed from Xcode 7.1 beta 3 (mistake?)
-	[TV (9,0)]
 	[Static]
 	interface TVAttributeKey {
 		// FIXME: does it fit here ?
@@ -396,7 +381,6 @@ namespace TVMLKit {
 		NSString TVAttributeSiriData { get; }
 	}
 
-	[TV (9,0)]
 	[Static]
 	interface TVElementKey {
 		[Field ("TVElementKeyActivityIndicator")]
@@ -692,7 +676,6 @@ namespace TVMLKit {
 	}
 
 	// FIXME: enum'ify ?
-	[TV (9,0)]
 	[Static]
 	interface TVKeyboardType {
 		[Field ("TVKeyboardTypeEmailAddress")]
@@ -706,7 +689,6 @@ namespace TVMLKit {
 	}
 #endif
 
-	[TV (9,0)]
 	[BaseType (typeof (NSObject))]
 	interface TVElementFactory {
 		// FIXME: provide System.Type overload
@@ -715,8 +697,7 @@ namespace TVMLKit {
 		void RegisterViewElementClass (Class elementClass, string elementName);
 	}
 
-	[TV (9,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	interface TVViewElementStyle : NSCopying {
 		// FIXME: badly named, unsure of return value
 		[Export ("valueForStyleProperty:")]
@@ -742,7 +723,7 @@ namespace TVMLKit {
 		[Export ("margin")]
 		UIEdgeInsets Margin { get; }
 
-		[TV (10,0)]
+		[TV (10, 0)]
 		[Export ("focusMargin")]
 		UIEdgeInsets FocusMargin { get; }
 
@@ -804,7 +785,6 @@ namespace TVMLKit {
 		TVColor TintColor { get; }
 	}
 
-	[TV (9,0)]
 	[BaseType (typeof (NSObject))]
 	interface TVViewElement : NSCopying {
 		[Export ("elementIdentifier")]
@@ -817,7 +797,7 @@ namespace TVMLKit {
 		TVViewElement ParentViewElement { get; }
 
 		[NullAllowed, Export ("childViewElements")]
-		TVViewElement[] ChildViewElements { get; }
+		TVViewElement [] ChildViewElements { get; }
 
 		[NullAllowed, Export ("attributes")]
 		NSDictionary<NSString, NSString> Attributes { get; }
@@ -830,11 +810,13 @@ namespace TVMLKit {
 
 		[Export ("disabled")]
 		bool Disabled {
-			[Bind ("isDisabled")] get;
+			[Bind ("isDisabled")]
+			get;
 			set;
 		}
 
-		[Internal][Sealed]
+		[Internal]
+		[Sealed]
 		[Export ("updateType")]
 		TVElementUpdateType _UpdateType { get; }
 
@@ -849,13 +831,12 @@ namespace TVMLKit {
 		[Async (ResultType = typeof (TVViewElementDispatchResult))]
 		void DispatchEvent (string eventName, bool canBubble, bool isCancellable, [NullAllowed] NSDictionary<NSString, NSObject> extraInfo, [NullAllowed] Action<bool, bool> completion);
 
-		[TV (13,0)]
+		[TV (13, 0)]
 		[Export ("elementData")]
 		NSDictionary<NSString, NSObject> ElementData { get; }
 	}
 
-	[TV (9,0)]
-	[BaseType (typeof(TVViewElement))]
+	[BaseType (typeof (TVViewElement))]
 	interface TVImageElement {
 		[NullAllowed, Export ("URL")]
 		NSUrl Url { get; }
@@ -867,7 +848,6 @@ namespace TVMLKit {
 		TVImageType ImageType { get; }
 	}
 
-	[TV (9,0)]
 	[Protocol]
 	interface TVInterfaceCreating {
 		[Export ("viewForElement:existingView:")]
@@ -882,25 +862,24 @@ namespace TVMLKit {
 		[return: NullAllowed]
 		NSUrl GetUrlForResource (string resourceName);
 
-		[TV (9,2)]
+		[TV (9, 2)]
 		[Export ("imageForResource:")]
 		[return: NullAllowed]
 		UIImage GetImageForResource (string resourceName);
 
-		[TV (10,0)]
+		[TV (10, 0)]
 		[Export ("collectionViewCellClassForElement:")]
 		[return: NullAllowed]
 		Class GetCollectionViewCellClass (TVViewElement element);
 
-		[TV (12,0)]
+		[TV (12, 0)]
 		[Export ("playerViewControllerForPlayer:")]
 		[return: NullAllowed]
 		UIViewController GetPlayerViewController (TVPlayer player);
 	}
 
-	interface ITVInterfaceCreating {}
+	interface ITVInterfaceCreating { }
 
-	[TV (9,0)]
 	[BaseType (typeof (NSObject))]
 	interface TVInterfaceFactory : TVInterfaceCreating {
 		[Static]
@@ -911,7 +890,6 @@ namespace TVMLKit {
 		ITVInterfaceCreating ExtendedInterfaceCreator { get; set; }
 	}
 
-	[TV (9,0)]
 	[BaseType (typeof (NSObject))]
 	interface TVStyleFactory {
 		[Static]
@@ -919,7 +897,6 @@ namespace TVMLKit {
 		void RegisterStyle (string styleName, TVViewElementStyleType type, bool inherited);
 	}
 
-	[TV (9,0)]
 	[BaseType (typeof (TVViewElement))]
 	interface TVTextElement {
 		[NullAllowed, Export ("attributedText")]
@@ -935,9 +912,9 @@ namespace TVMLKit {
 		NSAttributedString GetAttributedString (UIFont font, [NullAllowed] UIColor foregroundColor, UITextAlignment alignment);
 	}
 
-	interface ITVPlaybackEventMarshaling {}
+	interface ITVPlaybackEventMarshaling { }
 
-	[TV (12,0)]
+	[TV (12, 0)]
 	[Protocol]
 	interface TVPlaybackEventMarshaling {
 		[Abstract]
@@ -948,7 +925,7 @@ namespace TVMLKit {
 		void ProcessReturn (JSValue value, JSContext jsContext);
 	}
 
-	[TV (12,0)]
+	[TV (12, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVPlaybackCustomEventUserInfo : TVPlaybackEventMarshaling {
@@ -962,12 +939,12 @@ namespace TVMLKit {
 		NSObject ReturnValue { get; }
 	}
 
-	[TV (12,0)]
+	[TV (12, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVPlaylist {
 		[Export ("mediaItems", ArgumentSemantic.Copy)]
-		TVMediaItem[] MediaItems { get; }
+		TVMediaItem [] MediaItems { get; }
 
 		[Export ("endAction", ArgumentSemantic.Assign)]
 		TVPlaylistEndAction EndAction { get; }
@@ -979,7 +956,7 @@ namespace TVMLKit {
 		NSDictionary<NSString, NSObject> UserInfo { get; }
 	}
 
-	[TV (12,0)]
+	[TV (12, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVMediaItem {
@@ -1019,33 +996,37 @@ namespace TVMLKit {
 		bool ExplicitContent { get; }
 
 		[Export ("resumeTime")]
-		/* NSInterval */ double ResumeTime { get; }
+		/* NSInterval */
+		double ResumeTime { get; }
 
 		[Export ("interstitials", ArgumentSemantic.Strong)]
-		TVTimeRange[] Interstitials { get; }
+		TVTimeRange [] Interstitials { get; }
 
 		[Export ("highlightGroups", ArgumentSemantic.Strong)]
-		TVHighlightGroup[] HighlightGroups { get; }
+		TVHighlightGroup [] HighlightGroups { get; }
 
 		[Export ("userInfo", ArgumentSemantic.Strong)]
 		NSDictionary<NSString, NSObject> UserInfo { get; }
 	}
 
-	[TV (12,0)]
+	[TV (12, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVTimeRange {
 		[Export ("startTime")]
-		/* NSInterval */ double StartTime { get; }
+		/* NSInterval */
+		double StartTime { get; }
 
 		[Export ("endTime")]
-		/* NSInterval */ double EndTime { get; }
+		/* NSInterval */
+		double EndTime { get; }
 
 		[Export ("duration")]
-		/* NSInterval */ double Duration { get; }
+		/* NSInterval */
+		double Duration { get; }
 	}
 
-	[TV (12,0)]
+	[TV (12, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVHighlightGroup {
@@ -1053,10 +1034,10 @@ namespace TVMLKit {
 		string LocalizedName { get; }
 
 		[Export ("highlights", ArgumentSemantic.Strong)]
-		TVHighlight[] Highlights { get; }
+		TVHighlight [] Highlights { get; }
 	}
 
-	[TV (12,0)]
+	[TV (12, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVHighlight {
@@ -1073,7 +1054,7 @@ namespace TVMLKit {
 		NSUrl ImageUrl { get; }
 	}
 
-	[TV (12,0)]
+	[TV (12, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVPlayer {
@@ -1114,12 +1095,12 @@ namespace TVMLKit {
 		[Export ("changeToMediaItemAtIndex:")]
 		void ChangeToMediaItem (nint index);
 
-		[TV (13,0)]
+		[TV (13, 0)]
 		[Export ("presentWithAnimation:")]
 		void Present (bool animated);
 	}
 
-	[TV (13,0)]
+	[TV (13, 0)]
 	[Native]
 	[ErrorDomain ("TVDocumentErrorDomain")]
 	public enum TVDocumentError : long {
@@ -1129,11 +1110,12 @@ namespace TVMLKit {
 
 	interface ITVBrowserViewControllerDataSource { }
 
-	[TV (13,0)]
+	[TV (13, 0)]
 #if NET
 	[Protocol][Model]
 #else
-	[Protocol][Model (AutoGeneratedName = true)]
+	[Protocol]
+	[Model (AutoGeneratedName = true)]
 #endif
 	[BaseType (typeof (NSObject))]
 	interface TVBrowserViewControllerDataSource {
@@ -1145,11 +1127,12 @@ namespace TVMLKit {
 
 	interface ITVBrowserViewControllerDelegate { }
 
-	[TV (13,0)]
+	[TV (13, 0)]
 #if NET
 	[Protocol][Model]
 #else
-	[Protocol][Model (AutoGeneratedName = true)]
+	[Protocol]
+	[Model (AutoGeneratedName = true)]
 #endif
 	[BaseType (typeof (NSObject))]
 	interface TVBrowserViewControllerDelegate {
@@ -1160,7 +1143,7 @@ namespace TVMLKit {
 		void DidCenterOnViewElement (TVBrowserViewController browserViewController, TVViewElement viewElement);
 	}
 
-	[TV (13,0)]
+	[TV (13, 0)]
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor]
 	interface TVBrowserViewController {
@@ -1207,11 +1190,12 @@ namespace TVMLKit {
 
 	interface ITVDocumentViewControllerDelegate { }
 
-	[TV (13,0)]
+	[TV (13, 0)]
 #if NET
 	[Protocol][Model]
 #else
-	[Protocol][Model (AutoGeneratedName = true)]
+	[Protocol]
+	[Model (AutoGeneratedName = true)]
 #endif
 	[BaseType (typeof (NSObject))]
 	interface TVDocumentViewControllerDelegate {
@@ -1252,7 +1236,7 @@ namespace TVMLKit {
 		Disappear,
 	}
 
-	[TV (13,0)]
+	[TV (13, 0)]
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor]
 	interface TVDocumentViewController {
@@ -1280,7 +1264,7 @@ namespace TVMLKit {
 		void Update (NSDictionary<NSString, NSObject> context);
 	}
 
-	[TV(13, 0)]
+	[TV (13, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVBrowserTransitionAnimator : UIViewControllerAnimatedTransitioning {

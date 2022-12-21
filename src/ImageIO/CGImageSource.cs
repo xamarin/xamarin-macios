@@ -66,12 +66,11 @@ namespace ImageIO {
 		public bool ShouldCache { get; set; }
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 		public bool ShouldCacheImmediately { get; set; }
@@ -104,7 +103,7 @@ namespace ImageIO {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -370,7 +369,7 @@ namespace ImageIO {
 
 #if NET
 		[SupportedOSPlatform ("tvos11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -384,7 +383,7 @@ namespace ImageIO {
 
 #if NET
 		[SupportedOSPlatform ("tvos11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -404,7 +403,7 @@ namespace ImageIO {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -418,7 +417,7 @@ namespace ImageIO {
 		extern static nuint CGImageSourceGetPrimaryImageIndex (IntPtr /* CGImageSource */ src);
 
 #if NET
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]

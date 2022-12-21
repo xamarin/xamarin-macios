@@ -65,7 +65,7 @@ namespace CoreMedia {
 #if !MONOMAC
 		// CMAudioClock.h
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -589,7 +589,7 @@ namespace CoreMedia {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos9.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -600,7 +600,6 @@ namespace CoreMedia {
 		[ObsoletedOSPlatform ("macos10.10")]
 		[ObsoletedOSPlatform ("ios8.0")]
 #else
-		[TV (9, 0)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
@@ -610,7 +609,7 @@ namespace CoreMedia {
 		extern static CMTimebaseError CMTimebaseSetMasterTimebase (/* CMTimebaseRef* */ IntPtr timebase, /* CMTimebaseRef* */ IntPtr newMasterTimebase);
 
 #if NET
-		[SupportedOSPlatform ("tvos9.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -619,7 +618,6 @@ namespace CoreMedia {
 		[ObsoletedOSPlatform ("macos10.10")]
 		[ObsoletedOSPlatform ("ios8.0")]
 #else
-		[TV (9, 0)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
@@ -634,7 +632,7 @@ namespace CoreMedia {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos9.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -643,7 +641,6 @@ namespace CoreMedia {
 		[ObsoletedOSPlatform ("macos10.10")]
 		[ObsoletedOSPlatform ("ios8.0")]
 #else
-		[TV (9, 0)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
@@ -653,7 +650,7 @@ namespace CoreMedia {
 		extern static CMTimebaseError CMTimebaseSetMasterClock (/* CMTimebaseRef* */ IntPtr timebase, /* CMClockRef* */ IntPtr newMasterClock);
 
 #if NET
-		[SupportedOSPlatform ("tvos9.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -662,7 +659,6 @@ namespace CoreMedia {
 		[ObsoletedOSPlatform ("macos10.10")]
 		[ObsoletedOSPlatform ("ios8.0")]
 #else
-		[TV (9, 0)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
@@ -761,7 +757,7 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[ObsoletedOSPlatform ("tvos9.0", "Use 'CMTimebaseGetMasterTimebase' instead.")]
 		[ObsoletedOSPlatform ("macos10.11", "Use 'CMTimebaseGetMasterTimebase' instead.")]
@@ -781,7 +777,7 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[ObsoletedOSPlatform ("maccatalyst13.0", "Use 'CMTimebaseGetMasterClock' instead.")]
@@ -801,7 +797,7 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[ObsoletedOSPlatform ("tvos9.0", "Use 'CMTimebaseGetMaster' instead.")]
 		[ObsoletedOSPlatform ("macos10.11", "Use 'CMTimebaseGetMaster' instead.")]
@@ -821,7 +817,7 @@ namespace CoreMedia {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[ObsoletedOSPlatform ("tvos9.0", "Use 'CMTimebaseGetUltimateMasterClock' instead.")]
 		[ObsoletedOSPlatform ("macos10.11", "Use 'CMTimebaseGetUltimateMasterClock' instead.")]

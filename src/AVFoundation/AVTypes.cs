@@ -300,7 +300,7 @@ namespace AVFoundation {
 #if MONOMAC || !NET
 
 #if NET
-	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("tvos")]
@@ -326,7 +326,7 @@ namespace AVFoundation {
 	}
 
 #if NET
-	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("tvos")]
@@ -361,7 +361,7 @@ namespace AVFoundation {
 	}
 
 #if NET
-	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("tvos")]
@@ -381,7 +381,7 @@ namespace AVFoundation {
 	}
 
 #if NET
-	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("tvos")]

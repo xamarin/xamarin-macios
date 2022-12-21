@@ -1,3 +1,5 @@
+#nullable enable
+
 namespace Xamarin.Tests {
 	public class PartialAppManifestTest : TestBaseClass {
 

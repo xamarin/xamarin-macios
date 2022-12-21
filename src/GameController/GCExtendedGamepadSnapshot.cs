@@ -20,8 +20,8 @@ namespace GameController {
 	// GCExtendedGamepadSnapshot.h
 	// float_t are 4 bytes (at least for ARM64)
 #if NET
-	[SupportedOSPlatform ("ios7.0")]
-	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("macos10.14.4")]
 	[UnsupportedOSPlatform ("tvos12.2")]
 	[UnsupportedOSPlatform ("ios12.2")]
@@ -30,7 +30,6 @@ namespace GameController {
 	[ObsoletedOSPlatform ("tvos12.2", "Use 'GCExtendedGamepadSnapshotData' instead.")]
 	[ObsoletedOSPlatform ("ios12.2", "Use 'GCExtendedGamepadSnapshotData' instead.")]
 #else
-	[iOS (7, 0)]
 	[Mac (10, 9)]
 	[Deprecated (PlatformName.iOS, 12, 2, message: "Use 'GCExtendedGamepadSnapshotData' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, 4, message: "Use 'GCExtendedGamepadSnapshotData' instead.")]
@@ -74,8 +73,8 @@ namespace GameController {
 		// public bool RightThumbstickButton;
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]

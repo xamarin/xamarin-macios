@@ -442,6 +442,7 @@ namespace Security {
 		Proceed,
 
 		[Deprecated (PlatformName.iOS, 7, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		Confirm,
 		Deny,
@@ -499,7 +500,6 @@ namespace Security {
 
 	// untyped enum in Security.framework/Headers/SecPolicy.h but the API use CFOptionFlags
 	// which is defined as in CFBase.h (do not trust Apple web documentation)
-	[iOS (7, 0)]
 	[Flags]
 	[Native]
 	public enum SecRevocation : ulong {

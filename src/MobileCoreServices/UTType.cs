@@ -39,7 +39,7 @@ namespace MobileCoreServices {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos14.0")]
@@ -58,7 +58,7 @@ namespace MobileCoreServices {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos14.0")]
@@ -77,7 +77,7 @@ namespace MobileCoreServices {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos14.0")]
@@ -103,7 +103,7 @@ namespace MobileCoreServices {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos14.0")]
@@ -164,7 +164,7 @@ namespace MobileCoreServices {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos14.0")]
@@ -182,7 +182,7 @@ namespace MobileCoreServices {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos14.0")]

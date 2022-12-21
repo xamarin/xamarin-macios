@@ -79,6 +79,9 @@
     <Compile Include="..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
+    <Compile Include="..\..\tools\common\ProductConstants.cs">
+      <Link>ProductConstants.cs</Link>
+    </Compile>
     <Compile Include="ErrorTest.cs" />
     <Compile Include="Setup.cs" />
     <Compile Include="Compat.cs" />

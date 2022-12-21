@@ -15,7 +15,7 @@ using IdentityLookup;
 
 namespace IdentityLookupUI {
 
-	[iOS (12,0)]
+	[iOS (12, 0)]
 	[BaseType (typeof (NSExtensionContext))]
 	interface ILClassificationUIExtensionContext {
 
@@ -23,7 +23,7 @@ namespace IdentityLookupUI {
 		bool ReadyForClassificationResponse { [Bind ("isReadyForClassificationResponse")] get; set; }
 	}
 
-	[iOS (12,0)]
+	[iOS (12, 0)]
 	[BaseType (typeof (UIViewController))]
 	interface ILClassificationUIExtensionViewController {
 
