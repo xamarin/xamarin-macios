@@ -86,6 +86,10 @@ namespace ScreenCaptureKit {
 
 		[Field ("SCStreamFrameInfoDirtyRects")]
 		NSString DirtyRects { get; }
+
+		[Mac (13, 1)]
+		[Field ("SCStreamFrameInfoScreenRect")]
+		NSString ScreenRect { get; }
 	}
 
 	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
@@ -125,6 +129,10 @@ namespace ScreenCaptureKit {
 
 		[Export ("onScreen")]
 		bool OnScreen { [Bind ("isOnScreen")] get; }
+
+		[Mac (13, 1)]
+		[Export ("active")]
+		bool Active { [Bind ("isActive")] get; }
 	}
 
 

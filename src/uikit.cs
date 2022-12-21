@@ -24754,6 +24754,10 @@ namespace UIKit {
 		[Export ("calendarView:decorationForDateComponents:")]
 		[return: NullAllowed]
 		UICalendarViewDecoration GetDecoration (UICalendarView calendarView, NSDateComponents dateComponents);
+
+		[iOS (16, 2), MacCatalyst (16, 0)]
+		[Export ("calendarView:didChangeVisibleDateComponentsFrom:")]
+		void DidChangeVisibleDateComponents (UICalendarView calendarView, NSDateComponents previousDateComponents);
 	}
 
 	[NoWatch, NoTV, iOS (16, 0), MacCatalyst (16, 0)]
