@@ -24,6 +24,17 @@ namespace Cecil.Tests {
 					m.AttributeType.Name == "AdviceAttribute" ||
 					m.AttributeType.Name == "ObsoletedOSPlatformAttribute") == true;
 
+		bool SubclassesException (TypeDefinition? type)
+		{
+			if (type is null)
+				return false;
+
+			if (type.Namespace == "System" && type.Name == "Exception")
+				return true;
+
+			return SubclassesException (type.BaseType?.Resolve ());
+		}
+
 		bool VerifyIfGetterThrowsException (MethodDefinition methodDefinition, out string exceptionMessage)
 		{
 			exceptionMessage = string.Empty;
@@ -32,11 +43,10 @@ namespace Cecil.Tests {
 
 			foreach (Instruction? inst in methodDefinition.Body.Instructions) {
 				if (inst?.OpCode == OpCodes.Newobj && inst?.Operand is MemberReference reference) {
-					TypeReference? baseType = (reference.DeclaringType as TypeDefinition)?.BaseType;
-					if (baseType is not null && baseType.Is ("System", "Exception") &&
-						!exceptionsToSkip.Contains (reference.DeclaringType.Name)) {
-						exceptionMessage = reference.DeclaringType.Name;
-						return true;
+					if (!exceptionsToSkip.Contains (reference.DeclaringType.Name) &&
+						SubclassesException (reference.DeclaringType as TypeDefinition)) {
+							exceptionMessage = reference.DeclaringType.Name;
+							return true;
 					}
 				}
 			}
