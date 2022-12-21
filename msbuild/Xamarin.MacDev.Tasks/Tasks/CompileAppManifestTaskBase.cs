@@ -99,7 +99,7 @@ namespace Xamarin.MacDev.Tasks {
 			var appManifest = AppManifest?.ItemSpec;
 			if (appManifest is not null && File.Exists (appManifest)) {
 				try {
-					plist = PDictionary.FromFile (appManifest);
+					plist = PDictionary.FromFile (appManifest)!;
 				} catch (Exception ex) {
 					LogAppManifestError (MSBStrings.E0010, appManifest, ex.Message);
 					return false;
@@ -247,8 +247,10 @@ namespace Xamarin.MacDev.Tasks {
 			if (Platform == ApplePlatform.MacCatalyst && !string.IsNullOrEmpty (SupportedOSPlatformVersion)) {
 				// SupportedOSPlatformVersion is the iOS version for Mac Catalyst.
 				// But we need to store the macOS version in the app manifest, so convert it to the macOS version here.
-				if (!MacCatalystSupport.TryGetMacOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), SupportedOSPlatformVersion, out var convertedVersion, out var knowniOSVersions))
+				if (!MacCatalystSupport.TryGetMacOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), SupportedOSPlatformVersion, out var convertedVersion, out var knowniOSVersions)) {
 					Log.LogError (MSBStrings.E0188, SupportedOSPlatformVersion, string.Join (", ", knowniOSVersions));
+					return false;
+				}
 				convertedSupportedOSPlatformVersion = convertedVersion;
 			} else {
 				convertedSupportedOSPlatformVersion = SupportedOSPlatformVersion;
@@ -259,8 +261,10 @@ namespace Xamarin.MacDev.Tasks {
 				var minimumiOSVersionInManifest = plist.Get<PString> (ManifestKeys.MinimumOSVersion)?.Value;
 				if (!string.IsNullOrEmpty (minimumiOSVersionInManifest)) {
 					// Convert to the macOS version
-					if (!MacCatalystSupport.TryGetMacOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), minimumiOSVersionInManifest!, out var convertedVersion, out var knowniOSVersions))
+					if (!MacCatalystSupport.TryGetMacOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), minimumiOSVersionInManifest!, out var convertedVersion, out var knowniOSVersions)) {
 						Log.LogError (MSBStrings.E0188, minimumiOSVersionInManifest, string.Join (", ", knowniOSVersions));
+						return false;
+					}
 					minimumOSVersionInManifest = convertedVersion;
 				}
 			}
@@ -346,16 +350,17 @@ namespace Xamarin.MacDev.Tasks {
 		public static void MergePartialPlistDictionary (PDictionary plist, PDictionary partial)
 		{
 			foreach (var property in partial) {
-				if (plist.ContainsKey (property.Key)) {
-					var value = plist [property.Key];
+				var key = property.Key!;
+				if (plist.ContainsKey (key)) {
+					var value = plist [key];
 
 					if (value is PDictionary && property.Value is PDictionary) {
 						MergePartialPlistDictionary ((PDictionary) value, (PDictionary) property.Value);
 					} else {
-						plist [property.Key] = property.Value.Clone ();
+						plist [key] = property.Value.Clone ();
 					}
 				} else {
-					plist [property.Key] = property.Value.Clone ();
+					plist [key] = property.Value.Clone ();
 				}
 			}
 		}
@@ -369,7 +374,7 @@ namespace Xamarin.MacDev.Tasks {
 				PDictionary partial;
 
 				try {
-					partial = PDictionary.FromFile (template.ItemSpec);
+					partial = PDictionary.FromFile (template.ItemSpec)!;
 				} catch (Exception ex) {
 					task.Log.LogError (MSBStrings.E0107, template.ItemSpec, ex.Message);
 					continue;
@@ -542,7 +547,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		void SetRequiredArchitectures (PDictionary plist)
 		{
-			PObject capabilities;
+			PObject? capabilities;
 
 			if (plist.TryGetValue (ManifestKeys.UIRequiredDeviceCapabilities, out capabilities)) {
 				if (capabilities is PArray) {
@@ -644,7 +649,7 @@ namespace Xamarin.MacDev.Tasks {
 			// directly to IP addresses, which means we won't have to do this at all
 			// (sometime in the future).
 
-			PDictionary ats;
+			PDictionary? ats;
 
 			if (!plist.TryGetValue (ManifestKeys.NSAppTransportSecurity, out ats))
 				plist.Add (ManifestKeys.NSAppTransportSecurity, ats = new PDictionary ());

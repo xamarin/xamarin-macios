@@ -289,8 +289,8 @@ namespace CoreServices {
 			NTLM,
 			Digest,
 #if NET
-			[SupportedOSPlatform ("macos10.9")]
-			[SupportedOSPlatform ("ios7.0")]
+			[SupportedOSPlatform ("macos")]
+			[SupportedOSPlatform ("ios")]
 			[UnsupportedOSPlatform ("tvos12.0")]
 			[UnsupportedOSPlatform ("macos10.14")]
 			[UnsupportedOSPlatform ("ios12.0")]
@@ -300,7 +300,6 @@ namespace CoreServices {
 			[ObsoletedOSPlatform ("ios12.0", "Not available anymore.")]
 #else
 			[Mac (10, 9)]
-			[iOS (7, 0)]
 			[Deprecated (PlatformName.iOS, 12, 0, message: "Not available anymore.")]
 			[Deprecated (PlatformName.TvOS, 12, 0, message: "Not available anymore.")]
 			[Deprecated (PlatformName.MacOSX, 10, 14, message: "Not available anymore.")]

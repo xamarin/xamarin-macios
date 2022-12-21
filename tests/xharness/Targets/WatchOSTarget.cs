@@ -77,7 +77,7 @@ namespace Xharness.Targets {
 			info_plist.LoadWithoutNetworkAccess (Path.Combine (Harness.WatchOSContainerTemplate, "Info.plist"));
 			info_plist.SetCFBundleIdentifier (BundleIdentifier);
 			info_plist.SetCFBundleName (Name);
-			info_plist.SetMinimumOSVersion ("9.0");
+			info_plist.SetMinimumOSVersion (SdkVersions.MiniOS);
 			info_plist.Save (target_info_plist, Harness);
 		}
 
@@ -87,7 +87,6 @@ namespace Xharness.Targets {
 			var suffix = Suffix + "-extension";
 
 			// Remove unused configurations
-			csproj.DeleteConfiguration ("iPhone", "Release-bitcode");
 			csproj.DeleteConfiguration ("iPhone", "Release64");
 			csproj.DeleteConfiguration ("iPhone", "Debug64");
 
@@ -117,7 +116,6 @@ namespace Xharness.Targets {
 
 			csproj.FixInfoPListInclude (suffix, Path.GetDirectoryName (TemplateProjectPath));
 			csproj.SetOutputType ("Library");
-			csproj.AddAdditionalDefines ("BITCODE", "iPhone", "Release");
 			csproj.AddAdditionalDefines ("XAMCORE_3_0;FEATURE_NO_BSD_SOCKETS;MONOTOUCH_WATCH;");
 			csproj.RemoveReferences ("OpenTK-1.0");
 			csproj.RemovePackageReference ("MonoTouch.Dialog");
@@ -150,7 +148,7 @@ namespace Xharness.Targets {
 			if (BundleIdentifier.Length >= 58)
 				BundleIdentifier = BundleIdentifier.Substring (0, 57); // If the main app's bundle id is 58 characters (or sometimes more), then the watch extension crashes at launch. radar #29847128.
 			info_plist.SetCFBundleIdentifier (BundleIdentifier + ".watchkitapp.watchkitextension");
-			info_plist.SetMinimumOSVersion (GetMinimumOSVersion ("2.0"));
+			info_plist.SetMinimumOSVersion (GetMinimumOSVersion (SdkVersions.MinWatchOS));
 			info_plist.SetUIDeviceFamily (4);
 			info_plist.AddPListStringValue ("RemoteInterfacePrincipleClass", "InterfaceController");
 			info_plist.AddPListKeyValuePair ("NSExtension", "dict", string.Format (
@@ -261,12 +259,6 @@ namespace Xharness.Targets {
 		public override string Platform {
 			get {
 				return "watchos";
-			}
-		}
-
-		protected override bool SupportsBitcode {
-			get {
-				return true;
 			}
 		}
 

@@ -888,11 +888,6 @@ namespace Xamarin.Bundler {
 
 		void InitializeDeploymentTarget ()
 		{
-#if ENABLE_BITCODE_ON_IOS
-			if (Platform == ApplePlatform.iOS)
-				DeploymentTarget = new Version (9, 0);
-#endif
-
 			if (DeploymentTarget == null)
 				DeploymentTarget = SdkVersions.GetVersion (this);
 

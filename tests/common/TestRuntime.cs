@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -348,7 +349,11 @@ partial class TestRuntime {
 			 *
 			 * The above statement also applies to 'CheckExactmacOSSystemVersion' =S
 			 */
+#if NET
 			return NSProcessInfo.ProcessInfo.OperatingSystemVersionString.Contains (v.macOS.Build, StringComparison.Ordinal);
+#else
+			return NSProcessInfo.ProcessInfo.OperatingSystemVersionString.Contains (v.macOS.Build);
+#endif
 #else
 			throw new NotImplementedException ();
 #endif
@@ -1459,6 +1464,13 @@ partial class TestRuntime {
 		return false;
 	}
 
+	public static void NotifyLaunchCompleted ()
+	{
+		var env = Environment.GetEnvironmentVariable ("LAUNCH_SENTINEL_FILE");
+		if (!string.IsNullOrEmpty (env))
+			File.WriteAllText (env, "Launched!"); // content doesn't matter, the file just has to exist.
+	}
+
 	enum NXByteOrder /* unspecified in header, means most likely int */ {
 		Unknown,
 		LittleEndian,
@@ -1474,11 +1486,11 @@ partial class TestRuntime {
 		IntPtr description; // const char *
 
 		public string Name {
-			get { return Marshal.PtrToStringUTF8 (name)!; }
+			get { return Marshal.PtrToStringAuto (name)!; }
 		}
 
 		public string Description {
-			get { return Marshal.PtrToStringUTF8 (description)!; }
+			get { return Marshal.PtrToStringAuto (description)!; }
 		}
 	}
 

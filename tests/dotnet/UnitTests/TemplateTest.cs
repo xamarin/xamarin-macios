@@ -1,5 +1,7 @@
 using System.Text.Json;
 
+#nullable enable
+
 namespace Xamarin.Tests {
 	public enum TemplateLanguage {
 		CSharp,
@@ -65,8 +67,8 @@ namespace Xamarin.Tests {
 				};
 				try {
 					var json = JsonSerializer.Deserialize<TemplateConfig> (File.ReadAllText (jsonPath), options);
-					var type = json.Tags.Type;
-					return Enum.Parse<TemplateType> (type, true);
+					var type = json?.Tags?.Type;
+					return Enum.Parse<TemplateType> (type!, true);
 				} catch (Exception e) {
 					throw new Exception ($"Failed to parse {jsonPath}", e);
 				}
@@ -135,14 +137,14 @@ namespace Xamarin.Tests {
 		}
 
 		public class TemplateConfig {
-			public string Name;
-			public string ShortName;
-			public TemplateConfigTag Tags;
+			public string? Name;
+			public string? ShortName;
+			public TemplateConfigTag? Tags;
 		}
 
 		public class TemplateConfigTag {
-			public string Language;
-			public string Type;
+			public string? Language;
+			public string? Type;
 		}
 
 		[Test]

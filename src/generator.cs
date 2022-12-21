@@ -3534,7 +3534,7 @@ public partial class Generator : IMemberGatherer {
 
 	static void AddImpliedPlatforms (List<AvailabilityBaseAttribute> memberAvailability)
 	{
-		foreach (var platform in new [] { PlatformName.MacCatalyst, PlatformName.TvOS }) {
+		foreach (var platform in new [] { PlatformName.MacCatalyst }) {
 			if (!PlatformMarkedUnavailable (platform, memberAvailability) &&
 				!PlatformHasIntroduced (platform, memberAvailability)) {
 				foreach (var attr in memberAvailability.Where (v => v.Platform == PlatformName.iOS).ToList ()) {
@@ -5300,7 +5300,7 @@ public partial class Generator : IMemberGatherer {
 			indent++;
 			if (pi.CanRead) {
 #if !NET
-				PrintAttributes (pi, platform:true);
+				PrintAttributes (pi, platform: true);
 #endif
 				PrintAttributes (pi.GetGetMethod (), platform: true, preserve: true, advice: true);
 				print ("get {");
@@ -5322,7 +5322,7 @@ public partial class Generator : IMemberGatherer {
 			}
 			if (pi.CanWrite) {
 #if !NET
-				PrintAttributes (pi, platform:true);
+				PrintAttributes (pi, platform: true);
 #endif
 				PrintAttributes (pi.GetSetMethod (), platform: true, preserve: true, advice: true);
 				print ("set {");
@@ -5451,7 +5451,7 @@ public partial class Generator : IMemberGatherer {
 #if NET
 			if (false) {
 #else
-			if (minfo.is_abstract){
+			if (minfo.is_abstract) {
 				print ("get; ");
 #endif
 			} else {
@@ -5524,7 +5524,7 @@ public partial class Generator : IMemberGatherer {
 #if NET
 			if (false) {
 #else
-			if (minfo.is_abstract){
+			if (minfo.is_abstract) {
 				print ("set; ");
 #endif
 			} else {

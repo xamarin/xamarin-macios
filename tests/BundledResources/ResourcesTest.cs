@@ -31,7 +31,7 @@ namespace BundledResources {
 
 			// resources are removed by the linker or an extra step (e.g. "link sdk" or "don't link") but that
 			// extra step is done only on device (to keep the simulator builds as fast as possible)
-			var resources = typeof(ResourcesTest).Assembly.GetManifestResourceNames ();
+			var resources = typeof (ResourcesTest).Assembly.GetManifestResourceNames ();
 #if __MACOS__ || __MACCATALYST__
 			var hasResources = false;
 #else

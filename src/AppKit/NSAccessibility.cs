@@ -21,14 +21,14 @@ namespace AppKit {
 	public partial interface INSAccessibility { }
 
 #if NET
-	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[Mac (10, 9)] // but the field/notifications are in 10.9
 #endif
 	public partial class NSAccessibility {
 #if !COREBUILD
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[Mac (10, 10)]
 #endif
@@ -41,7 +41,7 @@ namespace AppKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[Mac (10, 10)]
 #endif

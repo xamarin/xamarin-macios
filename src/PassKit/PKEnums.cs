@@ -34,7 +34,6 @@ namespace PassKit {
 	}
 
 	// NSInteger -> PKPassLibrary.h
-	[iOS (7, 0)]
 	[Mac (11, 0)]
 	[Native]
 	public enum PKPassLibraryAddPassesStatus : long {
