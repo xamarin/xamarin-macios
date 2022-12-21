@@ -1182,7 +1182,7 @@ namespace Xamarin.Tests {
 
 		[Test]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
-		public void BuildAndExecuteAppWithWinExeOutputType(ApplePlatform platform, string runtimeIdentifier)
+		public void BuildAndExecuteAppWithWinExeOutputType (ApplePlatform platform, string runtimeIdentifier)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			var project = "AppWithWinExeOutputType";
