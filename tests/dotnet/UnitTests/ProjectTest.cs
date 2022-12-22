@@ -1202,6 +1202,23 @@ namespace Xamarin.Tests {
 			ExecuteWithMagicWordAndAssert (appExecutable);
 		}
 
+		[Test]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		public void BuildAndExecuteAppWithWinExeOutputType (ApplePlatform platform, string runtimeIdentifier)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			var project = "AppWithWinExeOutputType";
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifier);
+
+			var rv = DotNet.AssertBuildFailure (project_path, properties);
+
+			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
+			Assert.AreEqual (1, errors.Length, "Error count");
+			Assert.AreEqual ($"WinExe is not a valid output type for macOS", errors [0].Message, "Error message");
+		}
+
 		void AssertThatDylibExistsAndIsReidentified (string appPath, string dylibRelPath)
 		{
 			var dylibPath = Path.Join (appPath, "Contents", "MonoBundle", dylibRelPath);
