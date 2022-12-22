@@ -550,6 +550,7 @@
 !incorrect-protocol-member! UISearchSuggestion::localizedAttributedSuggestion is REQUIRED and should be abstract
 !incorrect-protocol-member! UISearchSuggestion::representedObject is REQUIRED and should be abstract
 !incorrect-protocol-member! UISearchSuggestion::setRepresentedObject: is REQUIRED and should be abstract
+!incorrect-protocol-member! UICalendarViewDelegate::calendarView:decorationForDateComponents: is OPTIONAL and should NOT be abstract
 
 # deprecated in xcode 14 beta 5
 !extra-enum-value! Managed value 8 for UIModalPresentationStyle.BlurOverFullScreen is available for the current platform while the value in the native header is not

@@ -1360,6 +1360,14 @@ namespace GameKit {
 		[iOS (8, 0), Mac (10, 10)]
 		[Export ("startBrowsingForNearbyPlayersWithHandler:")]
 		void StartBrowsingForNearbyPlayers ([NullAllowed] Action<GKPlayer, bool> handler);
+
+		[Mac (13, 1), iOS (16, 2), NoTV]
+		[Export ("startGroupActivityWithPlayerHandler:")]
+		void StartGroupActivity (Action<GKPlayer> handler);
+
+		[Mac (13, 1), iOS (16, 2), NoTV]
+		[Export ("stopGroupActivity")]
+		void StopGroupActivity ();
 	}
 
 	[NoWatch]

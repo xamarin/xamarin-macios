@@ -181,7 +181,7 @@ build-test-libraries:
 
 all-local:: .stamp-xharness-configure
 
-$(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
+$(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.in.cs
 	@$(MAKE) -C $(TOP)/tools/mtouch ../common/SdkVersions.cs
 
 .stamp-src-project-files:
