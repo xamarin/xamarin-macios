@@ -20637,16 +20637,16 @@ namespace AppKit {
 		CGRect ContentRectFor (CGRect frameRect);
 
 		[Export ("init")]
-		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }", Optimizable = true)]
+		[PostSnippet ("InitializeReleasedWhenClosed ();", Optimizable = true)]
 		NativeHandle Constructor ();
 
 		[DesignatedInitializer]
 		[Export ("initWithContentRect:styleMask:backing:defer:")]
-		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }", Optimizable = true)]
+		[PostSnippet ("InitializeReleasedWhenClosed ();", Optimizable = true)]
 		NativeHandle Constructor (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation);
 
 		[Export ("initWithContentRect:styleMask:backing:defer:screen:")]
-		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }", Optimizable = true)]
+		[PostSnippet ("InitializeReleasedWhenClosed ();", Optimizable = true)]
 		NativeHandle Constructor (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation, NSScreen screen);
 
 		[Export ("title")]
@@ -20801,8 +20801,18 @@ namespace AppKit {
 		[Internal, Export ("close")]
 		void _Close ();
 
+#if !XAMCORE_5_0
+		[Obsolete ("Call 'ReleaseWhenClosed ()' instead.")]
 		[Export ("releasedWhenClosed")]
 		bool ReleasedWhenClosed { [Bind ("isReleasedWhenClosed")] get; set; }
+#endif
+
+		// releasedWhenClosed is a variation of sending a delayed 'autorelease', and since
+		// we've bound release/retain/autorelease with a 'Dangerous' prefix, we're adding
+		// one for this property as well.
+		[Sealed]
+		[Export ("releasedWhenClosed")]
+		bool DangerousReleasedWhenClosed { [Bind ("isReleasedWhenClosed")] get; set; }
 
 		[Export ("miniaturize:")]
 		void Miniaturize ([NullAllowed] NSObject sender);
