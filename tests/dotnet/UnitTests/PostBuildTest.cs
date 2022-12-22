@@ -7,7 +7,7 @@ namespace Xamarin.Tests {
 	public class PostBuildTest : TestBaseClass {
 		[Test]
 		// IGNORE: https://github.com/dotnet/runtime/issues/78154 // [TestCase (ApplePlatform.iOS, "ios-arm64")]
-		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm")]
+		// IGNORE: https://github.com/dotnet/runtime/issues/78154 // [TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm")]
 		// IGNORE: https://github.com/dotnet/runtime/issues/78154 // [TestCase (ApplePlatform.TVOS, "tvos-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
@@ -38,7 +38,7 @@ namespace Xamarin.Tests {
 
 		[Test]
 		// IGNORE: https://github.com/dotnet/runtime/issues/78154 // [TestCase (ApplePlatform.iOS, "ios-arm64")]
-		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm")]
+		// IGNORE: https://github.com/dotnet/runtime/issues/78154 // [TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm")]
 		// IGNORE: https://github.com/dotnet/runtime/issues/78154 // [TestCase (ApplePlatform.TVOS, "tvos-arm64")]
 		public void BuildIpaTest (ApplePlatform platform, string runtimeIdentifiers)
 		{
