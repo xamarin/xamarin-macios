@@ -311,6 +311,7 @@ namespace GameKit {
 
 		[NoWatch] // deprecated in 2.0 (but framework not added before 3.0)
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use '.ctor (GKPlayer [] players)' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use '.ctor (GKPlayer [] players)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use '.ctor (GKPlayer [] players)' instead.")]
 		[Export ("initWithPlayerIDs:")]
 		NativeHandle Constructor ([NullAllowed] string [] players);
@@ -1359,6 +1360,14 @@ namespace GameKit {
 		[iOS (8, 0), Mac (10, 10)]
 		[Export ("startBrowsingForNearbyPlayersWithHandler:")]
 		void StartBrowsingForNearbyPlayers ([NullAllowed] Action<GKPlayer, bool> handler);
+
+		[Mac (13, 1), iOS (16, 2), NoTV]
+		[Export ("startGroupActivityWithPlayerHandler:")]
+		void StartGroupActivity (Action<GKPlayer> handler);
+
+		[Mac (13, 1), iOS (16, 2), NoTV]
+		[Export ("stopGroupActivity")]
+		void StopGroupActivity ();
 	}
 
 	[NoWatch]
@@ -1486,6 +1495,7 @@ namespace GameKit {
 	interface GKAchievement : NSSecureCoding {
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'IsHidden' on the 'GKAchievementDescription' class instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'IsHidden' on the 'GKAchievementDescription' class instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'IsHidden' on the 'GKAchievementDescription' class instead.")]
 		[Export ("hidden", ArgumentSemantic.Assign)]
 		bool Hidden { [Bind ("isHidden")] get; }
@@ -1521,6 +1531,7 @@ namespace GameKit {
 
 		[NoMac]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'ctor (string identifier, GKPlayer player)' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'ctor (string identifier, GKPlayer player)' instead.")]
 		[Export ("initWithIdentifier:forPlayer:")]
 		NativeHandle Constructor ([NullAllowed] string identifier, string playerId);
 
@@ -1649,6 +1660,7 @@ namespace GameKit {
 		[Export ("image")]
 #endif
 		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'LoadImage' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'LoadImage' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message: "Use 'LoadImage' instead.")]
 		[NullAllowed]
 		UIImage Image { get; }

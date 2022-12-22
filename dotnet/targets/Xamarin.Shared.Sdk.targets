@@ -574,9 +574,6 @@
 				<TrimMode>copy</TrimMode> <!-- Don't use 'copyused', because that might still end up saving some assemblies, and if that's the platform assembly, it may break the partial static registrar -->
 			</ResolvedFileToPublish>
 
-			<!-- Mark our entry assembly as a root assembly. -->
-			<TrimmerRootAssembly Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Filename)' == '$(AssemblyName)' And '%(ResolvedFileToPublish.Extension)' == '.dll'" />
-
 			<!--
 				pre-mark custom steps
 			-->
@@ -845,7 +842,7 @@
 			<_XamarinRefPackageDirectory>%(_XamarinFrameworkReference.TargetingPackPath)</_XamarinRefPackageDirectory>
 			<_XamarinNativeLibraryDirectory>$(_XamarinSdkRuntimePackDirectory)/runtimes/$(RuntimeIdentifier)/native</_XamarinNativeLibraryDirectory>
 			<_XamarinIncludeDirectory>$(_XamarinSdkRuntimePackDirectory)/runtimes/$(RuntimeIdentifier)/native</_XamarinIncludeDirectory>
-			<_XamarinRefAssemblyDirectory>$(_XamarinRefPackageDirectory)/ref/net7.0/</_XamarinRefAssemblyDirectory>
+			<_XamarinRefAssemblyDirectory>$(_XamarinRefPackageDirectory)/ref/net8.0/</_XamarinRefAssemblyDirectory>
 			<_XamarinRefAssemblyPath>$(_XamarinRefAssemblyDirectory)$(_PlatformAssemblyName).dll</_XamarinRefAssemblyPath>
 
 			<_LibPartialStaticRegistrar Condition="'$(UseMonoRuntime)' == 'true'">$(_XamarinNativeLibraryDirectory)/Microsoft.$(_PlatformName).registrar.a</_LibPartialStaticRegistrar>

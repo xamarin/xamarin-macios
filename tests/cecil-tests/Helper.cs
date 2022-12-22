@@ -43,16 +43,22 @@ namespace Cecil.Tests {
 		public static IEnumerable<MethodDefinition> EnumerateMethods (this AssemblyDefinition assembly, Func<MethodDefinition, bool>? filter = null)
 		{
 			foreach (var type in EnumerateTypes (assembly)) {
-				if (!type.HasMethods)
-					continue;
-
-				foreach (var method in type.Methods) {
-					if (filter is null || filter (method))
-						yield return method;
-				}
+				foreach (var method in type.EnumerateMethods (filter))
+					yield return method;
 			}
 		}
 
+		// Enumerates all the methods in the type, potentially providing a custom filter function.
+		public static IEnumerable<MethodDefinition> EnumerateMethods (this TypeDefinition type, Func<MethodDefinition, bool>? filter = null)
+		{
+			if (!type.HasMethods)
+				yield break;
+
+			foreach (var method in type.Methods) {
+				if (filter is null || filter (method))
+					yield return method;
+			}
+		}
 		// Enumerates all the properties in the assembly, for all types (including nested types), potentially providing a custom filter function.
 		public static IEnumerable<PropertyDefinition> EnumerateProperties (this AssemblyDefinition assembly, Func<PropertyDefinition, bool>? filter = null)
 		{
@@ -67,22 +73,41 @@ namespace Cecil.Tests {
 			}
 		}
 
+		// Enumerates all the properties in the type, potentially providing a custom filter function.
+		public static IEnumerable<PropertyDefinition> EnumerateProperties (this TypeDefinition type, Func<PropertyDefinition, bool>? filter = null)
+		{
+			if (!type.HasProperties)
+				yield break;
+
+			foreach (var property in type.Properties) {
+				if (filter is null || filter (property))
+					yield return property;
+			}
+		}
+
 		// Enumerates all the events in the assembly, for all types (including nested types), potentially providing a custom filter function.
 		public static IEnumerable<EventDefinition> EnumerateEvents (this AssemblyDefinition assembly, Func<EventDefinition, bool>? filter = null)
 		{
 			foreach (var type in EnumerateTypes (assembly)) {
-				if (!type.HasEvents)
-					continue;
+				foreach (var @event in type.EnumerateEvents (filter))
+					yield return @event;
+			}
+		}
 
-				foreach (var @event in type.Events) {
-					if (filter is null || filter (@event))
-						yield return @event;
-				}
+		// Enumerates all the events in the type, potentially providing a custom filter function.
+		public static IEnumerable<EventDefinition> EnumerateEvents (this TypeDefinition type, Func<EventDefinition, bool>? filter = null)
+		{
+			if (!type.HasEvents)
+				yield break;
+
+			foreach (var @event in type.Events) {
+				if (filter is null || filter (@event))
+					yield return @event;
 			}
 		}
 
 		// Recursively enumerates all the nested types for the given type, potentially providing a custom filter function.
-		static IEnumerable<TypeDefinition> EnumerateNestedTypes (TypeDefinition type, Func<TypeDefinition, bool>? filter)
+		static IEnumerable<TypeDefinition> EnumerateNestedTypes (this TypeDefinition type, Func<TypeDefinition, bool>? filter)
 		{
 			if (!type.HasNestedTypes)
 				yield break;
@@ -117,14 +142,69 @@ namespace Cecil.Tests {
 		public static IEnumerable<FieldDefinition> EnumerateFields (this AssemblyDefinition assembly, Func<FieldDefinition, bool>? filter = null)
 		{
 			foreach (var type in EnumerateTypes (assembly)) {
-				if (!type.HasFields)
-					continue;
-
-				foreach (var field in type.Fields) {
-					if (filter is null || filter (field))
-						yield return field;
-				}
+				foreach (var field in type.EnumerateFields (filter))
+					yield return field;
 			}
+		}
+
+		// Enumerates all the fields in the type, potentially providing a custom filter function.
+		public static IEnumerable<FieldDefinition> EnumerateFields (this TypeDefinition type, Func<FieldDefinition, bool>? filter = null)
+		{
+			if (!type.HasFields)
+				yield break;
+
+			foreach (var field in type.Fields) {
+				if (filter is null || filter (field))
+					yield return field;
+			}
+		}
+
+		public static IEnumerable<ICustomAttributeProvider> EnumerateAttributeProviders (this AssemblyDefinition assembly, Func<ICustomAttributeProvider, bool>? filter = null)
+		{
+			if (filter is null || filter (assembly))
+				yield return assembly;
+
+			foreach (var module in assembly.Modules) {
+				if (filter is null || filter (module))
+					yield return module;
+			}
+
+			foreach (var item in assembly.EnumerateTypes (filter))
+				yield return item;
+
+			foreach (var item in assembly.EnumerateFields (filter))
+				yield return item;
+
+			foreach (var item in assembly.EnumerateMethods (filter))
+				yield return item;
+
+			foreach (var item in assembly.EnumerateProperties (filter))
+				yield return item;
+
+			foreach (var item in assembly.EnumerateEvents (filter))
+				yield return item;
+		}
+
+		public static IEnumerable<ICustomAttributeProvider> EnumerateAttributeProviders (this TypeDefinition type, Func<ICustomAttributeProvider, bool>? filter = null)
+		{
+			// EnumerateNestedTypes will recurse, but we don't want to do that here.
+			if (type.HasNestedTypes) {
+				foreach (var item in type.NestedTypes)
+					if (filter is null || filter (item))
+						yield return item;
+			}
+
+			foreach (var item in type.EnumerateFields (filter))
+				yield return item;
+
+			foreach (var item in type.EnumerateMethods (filter))
+				yield return item;
+
+			foreach (var item in type.EnumerateProperties (filter))
+				yield return item;
+
+			foreach (var item in type.EnumerateEvents (filter))
+				yield return item;
 		}
 
 		public static string GetBCLDirectory (string assembly)
@@ -225,6 +305,33 @@ namespace Cecil.Tests {
 			}
 		}
 
+		static Dictionary<string, List<MappedApiInfo>>? mapped_net_api;
+		public static Dictionary<string, List<MappedApiInfo>> MappedNetApi {
+			get {
+				Configuration.IgnoreIfAnyIgnoredPlatforms ();
+
+				if (mapped_net_api is null) {
+					mapped_net_api = new Dictionary<string, List<MappedApiInfo>> ();
+					var assemblies = Helper.NetPlatformAssemblyDefinitions.ToArray ();
+					foreach (var info in assemblies) {
+						var assembly = info.Assembly;
+
+						foreach (var api in assembly.EnumerateAttributeProviders ()) {
+							var fullname = api.AsFullName ();
+							if (!mapped_net_api.TryGetValue (fullname, out var list))
+								mapped_net_api [fullname] = list = new List<MappedApiInfo> ();
+							list.Add (new MappedApiInfo (info.Platform, api));
+
+							// Verify that the Fullname is unique for each API
+							if (list.Count > assemblies.Length)
+								throw new InvalidOperationException ($"The key '{fullname}' was used for more than one given API.");
+						}
+					}
+				}
+				return mapped_net_api;
+			}
+		}
+
 		public static IEnumerable<TestFixtureData> TaskAssemblies {
 			get {
 				if (Configuration.include_ios)
@@ -238,6 +345,91 @@ namespace Cecil.Tests {
 		{
 			var rv = new TestFixtureData (path);
 			rv.SetArgDisplayNames (Path.GetFileName (path));
+			return rv;
+		}
+
+		public static string RenderLocation (this IMemberDefinition member)
+		{
+			if (member is null)
+				return string.Empty;
+
+			if (member is PropertyDefinition pd) {
+				if (pd.GetMethod is not null)
+					return RenderLocation (pd.GetMethod);
+				if (pd.SetMethod is not null)
+					return RenderLocation (pd.SetMethod);
+				return "<no location>";
+			}
+
+			if (member is TypeDefinition td && td.HasMethods)
+				return RenderLocation (td.Methods.Where (v => v.HasBody).FirstOrDefault ());
+
+			if (!(member is MethodDefinition method))
+				return "<no location> ";
+
+			if (method.DebugInformation.HasSequencePoints) {
+				var seq = method.DebugInformation.SequencePoints [0];
+				return seq.Document.Url + ":" + seq.StartLine + " ";
+			}
+			return string.Empty;
+		}
+
+		public static string RenderLocation (this ICustomAttributeProvider provider)
+		{
+			if (provider is IMemberDefinition md)
+				return RenderLocation (md);
+			return string.Empty;
+		}
+
+		public static OSPlatformAttributes? GetAvailabilityAttributes (this ICustomAttributeProvider provider, ApplePlatform platform)
+		{
+			if (!provider.HasCustomAttributes)
+				return null;
+
+			OSPlatformAttributes? rv = null;
+
+			foreach (var a in provider.CustomAttributes) {
+				var attributeType = a.AttributeType;
+				if (attributeType.Namespace != "System.Runtime.Versioning")
+					continue;
+
+				if (!a.HasConstructorArguments)
+					continue;
+
+				if (a.ConstructorArguments.Count != 1 && a.ConstructorArguments.Count != 2)
+					continue;
+
+				if (!a.ConstructorArguments [0].Type.Is ("System", "String"))
+					continue;
+
+				var platformName = (string) a.ConstructorArguments [0].Value;
+				if (!OSPlatformAttributeExtensions.TryParse (platformName, out ApplePlatform? attributePlatform, out var version))
+					throw new InvalidOperationException ($"The API {provider.AsFullName ()} has an invalid OSPlatform attribute: {platformName}");
+
+				if (attributePlatform != platform)
+					continue;
+
+				if (rv is null)
+					rv = new OSPlatformAttributes (provider, platform);
+
+				switch (attributeType.Name) {
+				case "UnsupportedOSPlatformAttribute":
+					rv.Unsupported = new OSPlatformAttribute (platform, platformName, version, a);
+					break;
+				case "SupportedOSPlatformAttribute":
+					rv.Supported = new OSPlatformAttribute (platform, platformName, version, a);
+					break;
+				case "ObsoletedOSPlatformAttribute":
+					rv.Obsoleted = new OSPlatformAttribute (platform, platformName, version, a);
+					break;
+				case "TargetPlatformAttribute":
+				case "SupportedOSPlatformGuardAttribute":
+					continue;
+				default:
+					throw new NotImplementedException (attributeType.FullName);
+				}
+			}
+
 			return rv;
 		}
 	}
@@ -267,6 +459,56 @@ namespace Cecil.Tests {
 		{
 			// The returned text will show up in VSMac's unit test pad
 			return Path.Replace (Configuration.RootPath, string.Empty).TrimStart ('/');
+		}
+	}
+
+	public class MappedApiInfo {
+		public ApplePlatform Platform;
+		public ICustomAttributeProvider Api;
+
+		public MappedApiInfo (ApplePlatform platform, ICustomAttributeProvider api)
+		{
+			Platform = platform;
+			Api = api;
+		}
+	}
+
+	public class OSPlatformAttribute {
+		public ApplePlatform Platform;
+		public string PlatformName;
+		public Version? Version;
+		public CustomAttribute Attribute;
+
+		public OSPlatformAttribute (ApplePlatform platform, string platformName, Version? version, CustomAttribute attribute)
+		{
+			Platform = platform;
+			PlatformName = platformName;
+			Version = version;
+			Attribute = attribute;
+		}
+
+		public string? Message {
+			get {
+				if (Attribute?.HasConstructorArguments != true)
+					return null;
+				if (Attribute.ConstructorArguments.Count < 2)
+					return null;
+				return Attribute.ConstructorArguments [1].Value as string;
+			}
+		}
+	}
+
+	public class OSPlatformAttributes {
+		public ICustomAttributeProvider Api;
+		public ApplePlatform Platform;
+		public OSPlatformAttribute? Supported;
+		public OSPlatformAttribute? Obsoleted;
+		public OSPlatformAttribute? Unsupported;
+
+		public OSPlatformAttributes (ICustomAttributeProvider api, ApplePlatform platform)
+		{
+			Api = api;
+			Platform = platform;
 		}
 	}
 }
