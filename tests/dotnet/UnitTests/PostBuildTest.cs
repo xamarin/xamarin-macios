@@ -37,6 +37,7 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
+		[Ignore ("https://github.com/dotnet/runtime/issues/78154")]
 		// IGNORE: https://github.com/dotnet/runtime/issues/78154 // [TestCase (ApplePlatform.iOS, "ios-arm64")]
 		// IGNORE: https://github.com/dotnet/runtime/issues/78154 // [TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm")]
 		// IGNORE: https://github.com/dotnet/runtime/issues/78154 // [TestCase (ApplePlatform.TVOS, "tvos-arm64")]
