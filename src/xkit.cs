@@ -4429,12 +4429,12 @@ namespace UIKit {
 		NSString NSTimeoutDocumentOption { get; }
 
 		[Mac (10, 15)]
-		[iOS (13,0), TV (13,0), Watch (6,0)]
+		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
 		[Field ("NSTargetTextScalingDocumentOption")]
 		NSString NSTargetTextScalingDocumentOption { get; }
 
 		[Mac (10, 15)]
-		[iOS (13,0), TV (13,0), Watch (6,0)]
+		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
 		[Field ("NSSourceTextScalingDocumentOption")]
 		NSString NSSourceTextScalingDocumentOption { get; }
 
