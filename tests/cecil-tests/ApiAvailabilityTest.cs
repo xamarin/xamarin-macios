@@ -168,7 +168,6 @@ namespace Cecil.Tests {
 			"CoreText.CTFontManager.RegisterFontsForUrl(Foundation.NSUrl[], CoreText.CTFontManagerScope)",
 			"CoreText.CTFontManager.UnregisterFontsForUrl(Foundation.NSUrl[], CoreText.CTFontManagerScope)",
 			"CoreText.CTFontManagerAutoActivation CoreText.CTFontManagerAutoActivation::PromptUser",
-			"CoreText.CTParagraphStyleSpecifier CoreText.CTParagraphStyleSpecifier::LineSpacing",
 			"CoreText.CTTypesetterOptionKey.get_DisableBidiProcessing()",
 			"CoreText.FontFeatureGroup CoreText.FontFeatureGroup::LetterCase",
 			"EventKit.EKParticipant.GetRecord(AddressBook.ABAddressBook)",
@@ -419,16 +418,15 @@ namespace Cecil.Tests {
 				//if (apiSupportedAttribute is null && apiUnsupportedVersion is not null)
 				//	failures.Add ($"[FAIL] {api.AsFullName ()} is unsupported (in {apiUnsupportedVersion}), but does not have a SupportedOSPlatform attribute.");
 
-				// FIXME: This is a big change to fix, and should be fixed in a different PR.
-				//// APIs are first obsoleted, then unsupported.
-				//// Invalid (unsupported before obsoleted)
-				////     [ObsoletedOSPlatform ("ios12.0")]
-				////     [UnsupportedOSPlatform ("ios11.0")]
-				//// or (unsupported at the same time as obsoleted)
-				////     [ObsoletedOSPlatform ("ios12.0")]
-				////     [UnsupportedOSPlatform ("ios12.0")]
-				//if (apiUnsupportedVersion is not null && apiObsoletedVersion is not null && apiUnsupportedVersion <= apiObsoletedVersion)
-				//	failures.Add ($"[FAIL] {api.AsFullName ()} can only be marked unsupported (in {unsupportedPlatformName}) after it's obsoleted (in {obsoletedPlatformName})");
+				// APIs are first obsoleted, then unsupported.
+				// Invalid (unsupported before obsoleted)
+				//     [ObsoletedOSPlatform ("ios12.0")]
+				//     [UnsupportedOSPlatform ("ios11.0")]
+				// or (unsupported at the same time as obsoleted)
+				//     [ObsoletedOSPlatform ("ios12.0")]
+				//     [UnsupportedOSPlatform ("ios12.0")]
+				if (apiUnsupportedVersion is not null && apiObsoletedVersion is not null && apiUnsupportedVersion <= apiObsoletedVersion)
+					failures.Add ($"[FAIL] {api.AsFullName ()} can only be marked unsupported (in {unsupportedPlatformName}) after it's obsoleted (in {obsoletedPlatformName})");
 
 				// If an API is just unavailable, it shouldn't be here in the first place.
 				//     [UnsupportedOSPlatform ("ios")]
