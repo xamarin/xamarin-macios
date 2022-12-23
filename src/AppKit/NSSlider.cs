@@ -38,7 +38,7 @@ namespace AppKit {
 		NSActionDispatcher dispatcher;
 
 #if NET
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 12)]
@@ -52,7 +52,7 @@ namespace AppKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 12)]

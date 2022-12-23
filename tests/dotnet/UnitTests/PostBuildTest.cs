@@ -6,9 +6,9 @@ namespace Xamarin.Tests {
 	[TestFixture]
 	public class PostBuildTest : TestBaseClass {
 		[Test]
-		[TestCase (ApplePlatform.iOS, "ios-arm64")]
-		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm")]
-		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
+		// IGNORE: https://github.com/dotnet/runtime/issues/78154 // [TestCase (ApplePlatform.iOS, "ios-arm64")]
+		// IGNORE: https://github.com/dotnet/runtime/issues/78154 // [TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm")]
+		// IGNORE: https://github.com/dotnet/runtime/issues/78154 // [TestCase (ApplePlatform.TVOS, "tvos-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
@@ -42,6 +42,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
 		public void BuildIpaTest (ApplePlatform platform, string runtimeIdentifiers)
 		{
+			Assert.Ignore ("https://github.com/dotnet/runtime/issues/78154");
 			var project = "MySimpleApp";
 			var configuration = "Release";
 			Configuration.IgnoreIfIgnoredPlatform (platform);

@@ -17,7 +17,7 @@ using NativeHandle = System.IntPtr;
 namespace ScreenTime {
 
 	[Mac (11, 0), iOS (14, 0)]
-	[MacCatalyst (14,0)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface STScreenTimeConfiguration : NSSecureCoding {
@@ -25,8 +25,8 @@ namespace ScreenTime {
 		bool EnforcesChildRestrictions { get; }
 	}
 
-	[Mac (11,0), iOS (14,0)]
-	[MacCatalyst (14,0)]
+	[Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface STScreenTimeConfigurationObserver {
@@ -45,7 +45,7 @@ namespace ScreenTime {
 	}
 
 	[Mac (11, 0), iOS (14, 0)]
-	[MacCatalyst (14,0)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface STWebHistory {
@@ -64,11 +64,10 @@ namespace ScreenTime {
 	}
 
 	[Mac (11, 0), iOS (14, 0)]
-	[MacCatalyst (14,0)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor]
-	interface STWebpageController
-	{
+	interface STWebpageController {
 		[DesignatedInitializer]
 		[Export ("initWithNibName:bundle:")]
 		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);

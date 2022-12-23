@@ -28,7 +28,7 @@ namespace Xamarin.Tests {
 			AssertThatLinkerExecuted (result);
 			AssertAppContents (platform, appPath);
 			var infoPlistPath = Path.Combine (appPath, "Info.plist");
-			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			var infoPlist = PDictionary.FromFile (infoPlistPath)!;
 			Assert.AreEqual ("com.xamarin.mysingletitle", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
 			Assert.AreEqual ("MySingleTitle", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
 			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
@@ -83,7 +83,7 @@ namespace Xamarin.Tests {
 			AssertThatLinkerExecuted (result);
 			AssertAppContents (platform, appPath);
 			var infoPlistPath = Path.Combine (appPath, "Contents", "Info.plist");
-			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			var infoPlist = PDictionary.FromFile (infoPlistPath)!;
 			Assert.AreEqual ("com.xamarin.mycatalystapp", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
 			Assert.AreEqual ("MyCatalystApp", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
 			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
@@ -326,7 +326,7 @@ namespace Xamarin.Tests {
 			AssertThatLinkerExecuted (result);
 			var infoPlistPath = GetInfoPListPath (platform, appPath);
 			Assert.That (infoPlistPath, Does.Exist, "Info.plist");
-			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			var infoPlist = PDictionary.FromFile (infoPlistPath)!;
 			Assert.AreEqual ("com.xamarin.mysimpleapp", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
 			Assert.AreEqual ("MySimpleApp", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
 			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
@@ -357,7 +357,7 @@ namespace Xamarin.Tests {
 			var appPath = Path.Combine (Path.GetDirectoryName (project_path)!, "bin", "Debug", platform.ToFramework (), "monotouchtest.app");
 			var infoPlistPath = GetInfoPListPath (platform, appPath);
 			Assert.That (infoPlistPath, Does.Exist, "Info.plist");
-			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			var infoPlist = PDictionary.FromFile (infoPlistPath)!;
 			Assert.AreEqual ("com.xamarin.monotouch-test", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
 			Assert.AreEqual ("MonoTouchTest", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
 		}
@@ -577,7 +577,7 @@ namespace Xamarin.Tests {
 			AssertThatLinkerExecuted (rv);
 			var infoPlistPath = GetInfoPListPath (platform, appPath);
 			Assert.That (infoPlistPath, Does.Exist, "Info.plist");
-			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			var infoPlist = PDictionary.FromFile (infoPlistPath)!;
 			Assert.AreEqual ("com.xamarin.mysimpleapp", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
 			Assert.AreEqual ("MySimpleApp", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
 			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
@@ -689,7 +689,7 @@ namespace Xamarin.Tests {
 			Assert.That (fontBFile, Does.Exist, "B.otf existence");
 			Assert.That (fontCFile, Does.Exist, "C.ttf existence");
 
-			var plist = PDictionary.FromFile (GetInfoPListPath (platform, appPath));
+			var plist = PDictionary.FromFile (GetInfoPListPath (platform, appPath))!;
 			switch (platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
@@ -974,7 +974,7 @@ namespace Xamarin.Tests {
 			AssertThatLinkerExecuted (result);
 			var infoPlistPath = GetInfoPListPath (platform, appPath);
 			Assert.That (infoPlistPath, Does.Exist, "Info.plist");
-			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			var infoPlist = PDictionary.FromFile (infoPlistPath)!;
 			Assert.AreEqual ("com.xamarin.mysimpleapp", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
 			Assert.AreEqual ("MySimpleApp", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
 			Assert.AreEqual ("6.0", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
@@ -1157,6 +1157,38 @@ namespace Xamarin.Tests {
 				var jitNotAllowed = !foundEntitlements || !entitlements!.ContainsKey ("com.apple.security.cs.allow-jit");
 				Assert.True (jitNotAllowed, "Jit Not Allowed");
 			}
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		public void BuildAndExecuteAppWithNativeDynamicLibrariesInPackageReference (ApplePlatform platform, string runtimeIdentifier)
+		{
+			var project = "AppWithNativeDynamicLibrariesInPackageReference";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifier);
+			DotNet.AssertBuild (project_path, properties);
+
+			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
+			Assert.That (appExecutable, Does.Exist, "There is an executable");
+
+			AssertThatDylibExistsAndIsReidentified (appPath, "libtest.dylib");
+			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libtest.dylib");
+
+			ExecuteWithMagicWordAndAssert (appExecutable);
+		}
+
+		void AssertThatDylibExistsAndIsReidentified (string appPath, string dylibRelPath)
+		{
+			var dylibPath = Path.Join (appPath, "Contents", "MonoBundle", dylibRelPath);
+			Assert.That (dylibPath, Does.Exist, "There is a library");
+
+			var shared_libraries = ExecutionHelper.Execute ("otool", new [] { "-L", dylibPath }, hide_output: true);
+			Assert.That (shared_libraries, Does.Contain (dylibPath), "The library ID is correct");
+			Assert.That (shared_libraries, Does.Contain ($"@executable_path/../../Contents/MonoBundle/{dylibRelPath}"),
+				"The dependent bundled shared library install name is relative to @executable_path");
 		}
 	}
 }

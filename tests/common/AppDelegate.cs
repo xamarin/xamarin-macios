@@ -26,9 +26,8 @@ public partial class AppDelegate : UIApplicationDelegate {
 
 	public override bool FinishedLaunching (UIApplication application, NSDictionary launchOptions)
 	{
-#if __MACCATALYST__
-		// Debug spew to track down https://github.com/xamarin/maccore/issues/2414
-		Console.WriteLine ("AppDelegate.FinishedLaunching");
+#if __MACCATALYST__ || __MACOS__
+		TestRuntime.NotifyLaunchCompleted ();
 #endif
 		var window = new UIWindow (UIScreen.MainScreen.Bounds);
 

@@ -1,3 +1,5 @@
+#if __MACOS__
+
 #nullable enable
 
 namespace WebKit {
@@ -10,3 +12,5 @@ namespace WebKit {
 		}
 	}
 }
+
+#endif // __MACOS__

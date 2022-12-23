@@ -25,9 +25,9 @@ CONFIG?=Debug
 LAUNCH_ARGUMENTS=--autostart --autoexit
 
 # Time test runs out after 5 minutes (300 seconds)
-RUN_WITH_TIMEOUT=./run-with-timeout.sh 300
+RUN_WITH_TIMEOUT=./run-with-timeout.csharp 300
 # Some tests need a bit more time... (introspection)
-RUN_WITH_TIMEOUT_LONGER=./run-with-timeout.sh 600
+RUN_WITH_TIMEOUT_LONGER=./run-with-timeout.csharp 600
 
 .stamp-configure-projects-mac: Makefile xharness/xharness.exe
 	$(Q) $(MAKE) .stamp-xharness-configure

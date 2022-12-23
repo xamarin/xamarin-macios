@@ -19,7 +19,7 @@ namespace MetalPerformanceShaders {
 
 	// uses NSInteger
 #if NET
-	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
@@ -34,7 +34,7 @@ namespace MetalPerformanceShaders {
 
 	// really use double, not CGFloat
 #if NET
-	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
@@ -49,7 +49,7 @@ namespace MetalPerformanceShaders {
 
 	// really use double, not CGFloat
 #if NET
-	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
@@ -79,7 +79,7 @@ namespace MetalPerformanceShaders {
 	}
 
 #if NET
-	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
@@ -93,7 +93,7 @@ namespace MetalPerformanceShaders {
 
 	// really use double, not CGFloat
 #if NET
-	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
@@ -110,7 +110,7 @@ namespace MetalPerformanceShaders {
 #if NET
 	[SupportedOSPlatform ("ios11.3")]
 	[SupportedOSPlatform ("tvos11.3")]
-	[SupportedOSPlatform ("macos10.13.4")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (11, 3)]
@@ -126,7 +126,7 @@ namespace MetalPerformanceShaders {
 #if NET
 	[SupportedOSPlatform ("ios11.3")]
 	[SupportedOSPlatform ("tvos11.3")]
-	[SupportedOSPlatform ("macos10.13.4")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (11, 3)]
@@ -140,7 +140,7 @@ namespace MetalPerformanceShaders {
 
 	// MPSImageHistogram.h
 #if NET
-	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
@@ -170,7 +170,7 @@ namespace MetalPerformanceShaders {
 
 #if NET
 	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios11.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -187,7 +187,7 @@ namespace MetalPerformanceShaders {
 
 #if NET
 	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios11.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -202,7 +202,7 @@ namespace MetalPerformanceShaders {
 
 #if NET
 	[SupportedOSPlatform ("tvos11.0")]
-	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios11.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -218,7 +218,7 @@ namespace MetalPerformanceShaders {
 #if NET
 	[SupportedOSPlatform ("tvos11.3")]
 	[SupportedOSPlatform ("ios11.3")]
-	[SupportedOSPlatform ("macos10.13.4")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (11, 3)]
@@ -262,7 +262,7 @@ namespace MetalPerformanceShaders {
 
 #if NET
 	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -294,7 +294,7 @@ namespace MetalPerformanceShaders {
 #if NET
 	[SupportedOSPlatform ("ios11.2")]
 	[SupportedOSPlatform ("tvos11.2")]
-	[SupportedOSPlatform ("macos10.13.2")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (11, 2)]

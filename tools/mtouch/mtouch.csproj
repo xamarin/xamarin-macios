@@ -46,6 +46,9 @@
     <Compile Include="..\common\SdkVersions.cs">
       <Link>tools\common\SdkVersions.cs</Link>
     </Compile>
+    <Compile Include="..\common\ProductConstants.cs">
+      <Link>tools\common\ProductConstants.cs</Link>
+    </Compile>
     <Compile Include="Stripper.cs" />
     <Compile Include="Target.mtouch.cs" />
     <Compile Include="Tuning.mtouch.cs" />
@@ -582,8 +585,8 @@
       <ManifestResourceName>Xamarin.Bundler.Errors.zh-Hant</ManifestResourceName>
     </EmbeddedResource>
   </ItemGroup>
-  <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.cs.in" Outputs="../common/SdkVersions.cs">
-    <Exec Command="make ../common/SdkVersions.cs" />
+  <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.in.cs;../common/ProductConstants.in.cs" Outputs="../common/SdkVersions.cs;../common/ProductConstants.cs">
+    <Exec Command="make ../common/SdkVersions.cs ../common/ProductConstants.cs" />
   </Target>
   <Target Name="AfterBuild">
     <!-- This makes sure that just building the csproj will install the updated mtouch.exe, so that tests get it without having to 'make mtouch' manually -->
