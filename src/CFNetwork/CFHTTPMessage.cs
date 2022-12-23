@@ -291,9 +291,7 @@ namespace CoreServices {
 #if NET
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("ios")]
-			[UnsupportedOSPlatform ("tvos12.0")]
-			[UnsupportedOSPlatform ("macos10.14")]
-			[UnsupportedOSPlatform ("ios12.0")]
+			[SupportedOSPlatform ("tvos")]
 			[UnsupportedOSPlatform ("maccatalyst")]
 			[ObsoletedOSPlatform ("tvos12.0", "Not available anymore.")]
 			[ObsoletedOSPlatform ("macos10.14", "Not available anymore.")]
