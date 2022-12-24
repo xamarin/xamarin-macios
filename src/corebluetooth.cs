@@ -421,6 +421,7 @@ namespace CoreBluetooth {
 		CBDescriptor [] Descriptors { get; [NotImplemented ("Not available on CBCharacteristic, only available on CBMutableCharacteristic")] set; }
 
 		[Deprecated (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Export ("isBroadcasted")]
 		bool IsBroadcasted { get; }
@@ -507,6 +508,7 @@ namespace CoreBluetooth {
 		string Name { get; }
 
 		[Deprecated (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[NoWatch]
 		[Export ("RSSI", ArgumentSemantic.Retain)]
@@ -596,6 +598,7 @@ namespace CoreBluetooth {
 	interface CBPeripheralDelegate {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'RssiRead' instead.")]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'RssiRead' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'RssiRead' instead.")]
 		[Export ("peripheralDidUpdateRSSI:error:"), EventArgs ("NSError", true)]
 		void RssiUpdated (CBPeripheral peripheral, [NullAllowed] NSError error);
 
@@ -733,6 +736,7 @@ namespace CoreBluetooth {
 
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[NoWatch]
 		[Static]
 		[Export ("UUIDWithCFUUID:")]

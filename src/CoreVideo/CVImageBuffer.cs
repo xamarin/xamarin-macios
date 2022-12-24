@@ -104,7 +104,6 @@ namespace CoreVideo {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.4")]
 		[ObsoletedOSPlatform ("macos10.4")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 4)]

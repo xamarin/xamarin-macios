@@ -24,6 +24,8 @@
 #if !__MACCATALYST__
 
 using System;
+using System.ComponentModel;
+
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -32,7 +34,30 @@ namespace AppKit {
 
 	public partial class NSWindow {
 
+		// Automatically set ReleaseWhenClosed=false in every constructor.
+		[Obsolete ("Set 'TrackReleasedWhenClosed' and call 'ReleaseWhenClosed()' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static bool DisableReleasedWhenClosedInConstructor;
+
+		// * If 'releasedWhenClosed' is true at the end of the constructor, automatically call 'retain'.
+		// * Enable our own managed 'ReleaseWhenClosed (bool)' method (which will call 'retain'/'release' as needed).
+		// * Don't do anything in Close (most importantly do not call Dispose).
+		// If 'TrackReleasedWhenClosed' is not set, we default to 'false' until .NET 9, and then we default to 'true'.
+		// Hopefully we can then remove the variable and just implement the tracking as the only behavior at some point
+		// (XAMCORE_5_0 && NET10_0?)
+		static bool? track_relased_when_closed;
+		public static bool TrackReleasedWhenClosed {
+			get {
+#if NET9_0
+				return track_relased_when_closed != false;
+#else
+				return track_relased_when_closed == true;
+#endif
+			}
+			set {
+				track_relased_when_closed = value;
+			}
+		}
 
 		static IntPtr selInitWithWindowRef = Selector.GetHandle ("initWithWindowRef:");
 
@@ -47,8 +72,7 @@ namespace AppKit {
 			} else {
 				Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper (this.SuperHandle, selInitWithWindowRef);
 			}
-			if (!DisableReleasedWhenClosedInConstructor)
-				ReleasedWhenClosed = false;
+			InitializeReleasedWhenClosed ();
 		}
 
 		static public NSWindow FromWindowRef (IntPtr windowRef)
@@ -56,8 +80,41 @@ namespace AppKit {
 			return new NSWindow (windowRef, NSObjectFlag.Empty);
 		}
 
+		void InitializeReleasedWhenClosed ()
+		{
+			if (TrackReleasedWhenClosed) {
+				if (DangerousReleasedWhenClosed)
+					DangerousRetain ();
+			} else if (!DisableReleasedWhenClosedInConstructor) {
+				DangerousReleasedWhenClosed = false;
+			}
+		}
+
+		// Call DangerousRetain when 'ReleasedWhenClosed' changes from false to true.
+		// Call DangerousRelease when 'ReleasedWhenClosed' changes from true to false.
+		public void ReleaseWhenClosed (bool value = true)
+		{
+			if (!TrackReleasedWhenClosed)
+				throw new InvalidOperationException ($"The NSWindow.{nameof (TrackReleasedWhenClosed)} field must be set to 'true' when calling this method.");
+
+			if (DangerousReleasedWhenClosed == value)
+				return;
+
+			if (value) {
+				DangerousRetain ();
+			} else {
+				DangerousRelease ();
+			}
+			DangerousReleasedWhenClosed = value;
+		}
+
 		public void Close ()
 		{
+			if (TrackReleasedWhenClosed) {
+				_Close ();
+				return;
+			}
+
 			// Windows that do not have a WindowController use released_when_closed
 			// if set to true, the call to Close will release the object, and we will
 			// end up with a double free.
@@ -65,7 +122,7 @@ namespace AppKit {
 			// If that is the case, we take a reference first, and to keep the behavior
 			// we call Dispose after that.
 			if (WindowController == null) {
-				bool released_when_closed = ReleasedWhenClosed;
+				bool released_when_closed = DangerousReleasedWhenClosed;
 				if (released_when_closed)
 					CFObject.CFRetain (Handle);
 				_Close ();
