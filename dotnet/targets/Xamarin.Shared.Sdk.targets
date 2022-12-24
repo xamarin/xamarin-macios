@@ -1776,6 +1776,17 @@
 		</ResolveNativeReferences>
 	</Target>
 
+	<Target Name="_VerifyValidOutputType">
+		<Error Text="WinExe is not a valid output type for $(_PlatformName)" Condition="'$(OutputType)' == 'WinExe'"/>
+	</Target>
+
+	<PropertyGroup>
+		<BuildDependsOn>
+			_VerifyValidOutputType;
+			$(BuildDependsOn);
+		</BuildDependsOn>
+	</PropertyGroup>
+
 	<Target Name="_ValidateRuntimeIdentifier"
 		Condition="'$(RuntimeIdentifier)' != '' And '$(_RuntimeIdentifierValidation)' != 'false' And '$(_RuntimeIdentifierIsRequired)' == 'true'"
 		BeforeTargets="Build;ResolvedFrameworkReference;ResolveRuntimePackAssets">

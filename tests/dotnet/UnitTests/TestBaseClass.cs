@@ -389,7 +389,7 @@ namespace Xamarin.Tests {
 			Assert.AreEqual (0, rv, $"'codesign {string.Join (" ", args)}' failed:\n{codesignOutput}");
 			if (File.Exists (entitlementsPath)) {
 				entitlements = PDictionary.FromFile (entitlementsPath);
-				return true;
+				return entitlements is not null;
 			}
 			entitlements = null;
 			return false;

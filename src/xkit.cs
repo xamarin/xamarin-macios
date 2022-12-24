@@ -502,6 +502,7 @@ namespace UIKit {
 		[Export ("glyphAtIndex:isValidIndex:")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'GetCGGlyph' instead).")]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'GetGlyph' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'GetGlyph' instead.")]
 #if MONOMAC
 #if NET
 		NSGlyph GlyphAtIndex (nuint glyphIndex, ref bool isValidIndex);
@@ -515,6 +516,7 @@ namespace UIKit {
 		[Export ("glyphAtIndex:")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'GetCGGlyph' instead).")]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'GetGlyph' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'GetGlyph' instead.")]
 #if MONOMAC
 #if NET
 		NSGlyph GlyphAtIndex (nuint glyphIndex);
@@ -4194,44 +4196,49 @@ namespace UIKit {
 		NSTextListElement ParentElement { get; }
 	}
 
-	[Static]
+#if !XAMCORE_5_0
 	[Internal]
-	interface NSAttributedStringDocumentType {
+#endif
+	enum NSAttributedStringDocumentType {
+		[DefaultEnumValue]
+		[Field (null)]
+		Unknown = NSDocumentType.Unknown,
+
 		[Field ("NSPlainTextDocumentType")]
-		NSString NSPlainTextDocumentType { get; }
+		Plain = NSDocumentType.PlainText,
 
 		[Field ("NSRTFDTextDocumentType")]
-		NSString NSRtfdTextDocumentType { get; }
+		Rtfd = NSDocumentType.RTFD,
 
 		[Field ("NSRTFTextDocumentType")]
-		NSString NSRtfTextDocumentType { get; }
+		Rtf = NSDocumentType.RTF,
 
 		[Field ("NSHTMLTextDocumentType")]
-		NSString NSHtmlTextDocumentType { get; }
+		Html = NSDocumentType.HTML,
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSMacSimpleTextDocumentType")]
-		NSString NSMacSimpleTextDocumentType { get; }
+		MacSimple = NSDocumentType.MacSimpleText,
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSDocFormatTextDocumentType")]
-		NSString NSDocFormatTextDocumentType { get; }
+		DocFormat = NSDocumentType.DocFormat,
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSWordMLTextDocumentType")]
-		NSString NSWordMLTextDocumentType { get; }
+		WordML = NSDocumentType.WordML,
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSWebArchiveTextDocumentType")]
-		NSString NSWebArchiveTextDocumentType { get; }
+		WebArchive = NSDocumentType.WebArchive,
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSOfficeOpenXMLTextDocumentType")]
-		NSString NSOfficeOpenXMLTextDocumentType { get; }
+		OfficeOpenXml = NSDocumentType.OfficeOpenXml,
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSOpenDocumentTextDocumentType")]
-		NSString NSOpenDocumentTextDocumentType { get; }
+		OpenDocument = NSDocumentType.OpenDocument,
 	}
 
 	[Static]
@@ -4387,27 +4394,33 @@ namespace UIKit {
 	interface NSAttributedStringDocumentReadingOptionKey {
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
-		[Internal, Field ("NSWebPreferencesDocumentOption")]
+		[Field ("NSWebPreferencesDocumentOption")]
 		NSString NSWebPreferencesDocumentOption { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
-		[Internal, Field ("NSWebResourceLoadDelegateDocumentOption")]
+		[Field ("NSWebResourceLoadDelegateDocumentOption")]
 		NSString NSWebResourceLoadDelegateDocumentOption { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
-		[Internal, Field ("NSBaseURLDocumentOption")]
+		[Field ("NSBaseURLDocumentOption")]
 		NSString NSBaseURLDocumentOption { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
-		[Internal, Field ("NSTextEncodingNameDocumentOption")]
+		[Field ("NSTextEncodingNameDocumentOption")]
 		NSString NSTextEncodingNameDocumentOption { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
-		[Internal, Field ("NSTextSizeMultiplierDocumentOption")]
+		[Field ("NSTextSizeMultiplierDocumentOption")]
 		NSString NSTextSizeMultiplierDocumentOption { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
-		[Internal, Field ("NSTimeoutDocumentOption")]
+		[Field ("NSTimeoutDocumentOption")]
 		NSString NSTimeoutDocumentOption { get; }
+
+		// This field is really inside WebKit
+		[NoWatch, NoTV]
+		[Mac (10, 15), iOS (13, 0)]
+		[Field ("NSReadAccessURLDocumentOption", "WebKit")]
+		NSString NSReadAccessUrlDocumentOption { get; }
 	}
 }

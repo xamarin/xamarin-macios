@@ -676,6 +676,26 @@ namespace Xamarin.Tests {
 		}
 
 #if !XAMMAC_TESTS
+		public static void AssertRuntimeIdentifierAvailable (ApplePlatform platform, string runtimeIdentifier)
+		{
+			if (string.IsNullOrEmpty (runtimeIdentifier))
+				return;
+
+			if (GetRuntimeIdentifiers (platform).Contains (runtimeIdentifier))
+				return;
+
+			Assert.Ignore ($"The runtime identifier {runtimeIdentifier} is not available on {platform}");
+		}
+
+		public static void AssertRuntimeIdentifiersAvailable (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			if (string.IsNullOrEmpty (runtimeIdentifiers))
+				return;
+
+			foreach (var rid in runtimeIdentifiers.Split (new char [] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+				AssertRuntimeIdentifierAvailable (platform, rid);
+		}
+
 		public static string GetBaseLibrary (Profile profile)
 		{
 			switch (profile) {
@@ -873,6 +893,13 @@ namespace Xamarin.Tests {
 		{
 			args.Add ($"-lib:{Path.GetDirectoryName (GetBaseLibrary (profile))}");
 			return "/Library/Frameworks/Mono.framework/Commands/csc";
+		}
+
+		public static void AssertiOS32BitAvailable ()
+		{
+			if (iOSSupports32BitArchitectures)
+				return;
+			Assert.Ignore ($"32-bit iOS support is not available in the current build.");
 		}
 #endif // !XAMMAC_TESTS
 

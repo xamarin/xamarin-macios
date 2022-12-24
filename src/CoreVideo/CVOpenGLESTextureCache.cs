@@ -27,8 +27,8 @@ namespace CoreVideo {
 
 	// CVOpenGLESTextureCache.h
 #if NET
-	[UnsupportedOSPlatform ("tvos12.0")]
-	[UnsupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("tvos12.0", "Use 'CVMetalTextureCache' instead.")]
 	[ObsoletedOSPlatform ("ios12.0", "Use 'CVMetalTextureCache' instead.")]
 #else
