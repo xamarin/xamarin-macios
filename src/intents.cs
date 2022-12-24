@@ -2073,6 +2073,30 @@ namespace Intents {
 		NoMatchingCall = 1,
 	}
 
+	[NoWatch, NoTV, Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
+	[Native]
+	public enum INAnswerCallIntentResponseCode : long {
+		Unspecified = 0,
+		Ready,
+		ContinueInApp,
+		InProgress,
+		Success,
+		Failure,
+		FailureRequiringAppLaunch,
+	}
+
+	[NoWatch, NoTV, Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
+	[Native]
+	public enum INHangUpCallIntentResponseCode : long {
+		Unspecified = 0,
+		Ready,
+		InProgress,
+		Success,
+		Failure,
+		FailureRequiringAppLaunch,
+		FailureNoCallToHangUp,
+	}
+
 	[iOS (10, 0)]
 	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
@@ -2197,6 +2221,14 @@ namespace Intents {
 		[MacCatalyst (14, 0)]
 		[Field ("INStartCallIntentIdentifier")]
 		StartCall,
+
+		[NoWatch, NoTV, Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
+		[Field ("INAnswerCallIntentIdentifier")]
+		AnswerCall,
+
+		[NoWatch, NoTV, Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
+		[Field ("INHangUpCallIntentIdentifier")]
+		HangUpCall,
 	}
 
 	[iOS (10, 2)]
@@ -7147,6 +7179,7 @@ namespace Intents {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'VocabularyIdentifier' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'VocabularyIdentifier' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'VocabularyIdentifier' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'VocabularyIdentifier' instead.")]
 #if !NET
 		[Abstract]
 #endif
@@ -11141,6 +11174,7 @@ namespace Intents {
 		NativeHandle Constructor ([NullAllowed] INMediaItem [] mediaItems, [NullAllowed] INMediaItem mediaContainer, [NullAllowed, BindAs (typeof (bool?))] NSNumber playShuffled, INPlaybackRepeatMode playbackRepeatMode, [NullAllowed, BindAs (typeof (bool?))] NSNumber resumePlayback, INPlaybackQueueLocation playbackQueueLocation, [NullAllowed, BindAs (typeof (double?))] NSNumber playbackSpeed, [NullAllowed] INMediaSearch mediaSearch);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the '.ctor (INMediaItem [], INMediaItem, bool?, INPlaybackRepeatMode, bool?, INPlaybackQueueLocation, double?, INMediaSearch)' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use the '.ctor (INMediaItem [], INMediaItem, bool?, INPlaybackRepeatMode, bool?, INPlaybackQueueLocation, double?, INMediaSearch)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use the '.ctor (INMediaItem [], INMediaItem, bool?, INPlaybackRepeatMode, bool?, INPlaybackQueueLocation, double?, INMediaSearch)' instead.")]
 		[Export ("initWithMediaItems:mediaContainer:playShuffled:playbackRepeatMode:resumePlayback:")]
 		NativeHandle Constructor ([NullAllowed] INMediaItem [] mediaItems, [NullAllowed] INMediaItem mediaContainer, [NullAllowed, BindAs (typeof (bool?))] NSNumber playShuffled, INPlaybackRepeatMode playbackRepeatMode, [NullAllowed, BindAs (typeof (bool?))] NSNumber resumePlayback);
@@ -14430,6 +14464,89 @@ namespace Intents {
 		string GroupId { get; }
 	}
 
+	[NoWatch, NoTV, Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
+	[BaseType (typeof (INIntent))]
+	interface INAnswerCallIntent {
 
+		[Export ("initWithAudioRoute:callIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INCallAudioRoute audioRoute, [NullAllowed] string callIdentifier);
 
+		[NoTV, NoMac, NoiOS]
+		[Export ("audioRoute", ArgumentSemantic.Assign)]
+		INCallAudioRoute AudioRoute { get; }
+
+		[NoWatch, NoTV, NoMac, NoiOS]
+		[NullAllowed, Export ("callIdentifier")]
+		string CallIdentifier { get; }
+	}
+
+	[NoWatch, NoTV, Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
+	[Protocol]
+	interface INAnswerCallIntentHandling {
+
+		[Abstract]
+		[Export ("handleAnswerCall:completion:")]
+		void HandleAnswerCall (INAnswerCallIntent intent, Action<INAnswerCallIntentResponse> completion);
+
+		[Export ("confirmAnswerCall:completion:")]
+		void ConfirmAnswerCall (INAnswerCallIntent intent, Action<INAnswerCallIntentResponse> completion);
+	}
+
+	[NoWatch, NoTV, Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
+	[BaseType (typeof (INIntentResponse))]
+	[DisableDefaultCtor]
+	interface INAnswerCallIntentResponse {
+
+		[Export ("initWithCode:userActivity:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INAnswerCallIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INAnswerCallIntentResponseCode Code { get; }
+
+		[NoMac]
+		[NullAllowed]
+		[Export ("callRecords", ArgumentSemantic.Copy)]
+		INCallRecord [] CallRecords { get; set; }
+	}
+
+	[NoWatch, NoTV, Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
+	[BaseType (typeof (INIntent))]
+	interface INHangUpCallIntent {
+
+		[NoWatch, Mac (13, 1), iOS (16, 2)]
+		[Export ("initWithCallIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] string callIdentifier);
+
+		[NoWatch, NoMac, NoiOS]
+		[NullAllowed, Export ("callIdentifier")]
+		string CallIdentifier { get; }
+	}
+
+	[NoWatch, NoTV, Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
+	[Protocol]
+	interface INHangUpCallIntentHandling {
+
+		[Abstract]
+		[Export ("handleHangUpCall:completion:")]
+		void HandleHangUpCall (INHangUpCallIntent intent, Action<INHangUpCallIntentResponse> completion);
+
+		[Export ("confirmHangUpCall:completion:")]
+		void ConfirmHangUpCall (INHangUpCallIntent intent, Action<INHangUpCallIntentResponse> completion);
+	}
+
+	[NoWatch, NoTV, Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
+	[BaseType (typeof (INIntentResponse))]
+	[DisableDefaultCtor]
+	interface INHangUpCallIntentResponse {
+
+		[Export ("initWithCode:userActivity:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INHangUpCallIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INHangUpCallIntentResponseCode Code { get; }
+	}
 }

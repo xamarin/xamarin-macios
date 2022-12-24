@@ -852,8 +852,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -869,8 +867,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -901,8 +897,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -917,8 +911,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -939,8 +931,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -957,8 +947,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -973,8 +961,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -995,8 +981,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -1013,8 +997,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -1030,8 +1012,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -1048,8 +1028,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -1066,8 +1044,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -1092,8 +1068,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -1109,8 +1083,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -1127,8 +1099,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -1149,8 +1119,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -1166,8 +1134,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -1188,8 +1154,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -1206,8 +1170,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -1224,8 +1186,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else

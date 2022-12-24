@@ -3397,6 +3397,26 @@ public partial class Generator : IMemberGatherer {
 #endif
 	}
 
+	public static ApplePlatform AsApplePlatform (PlatformName platform)
+	{
+		switch (platform) {
+		case PlatformName.iOS:
+			return ApplePlatform.iOS;
+		case PlatformName.TvOS:
+			return ApplePlatform.TVOS;
+		case PlatformName.MacCatalyst:
+			return ApplePlatform.MacCatalyst;
+		case PlatformName.MacOSX:
+			return ApplePlatform.MacOSX;
+		case PlatformName.WatchOS:
+			return ApplePlatform.WatchOS;
+		case PlatformName.None:
+			return ApplePlatform.None;
+		default:
+			throw new ArgumentOutOfRangeException (nameof (platform), platform, $"Unknown platform: {platform}");
+		}
+	}
+
 	static AvailabilityBaseAttribute CloneFromOtherPlatform (AvailabilityBaseAttribute attr, PlatformName platform)
 	{
 		if (attr.Version is null) {
@@ -3416,14 +3436,18 @@ public partial class Generator : IMemberGatherer {
 			// Due to the absurd API of Version, you can not pass a -1 to the revision constructor
 			// nor can you coerse to 0, as that will fail with "16.0.0 <= 16.0" => false in the registrar
 			// So determine if the revision is -1, and use the 2 or 3 param ctor...
-			if (attr.Version.Revision == -1) {
+			var version = attr.Version;
+			var minimum = Xamarin.SdkVersions.GetMinVersion (AsApplePlatform (platform));
+			if (version < minimum)
+				version = minimum;
+			if (version.Revision == -1) {
 				switch (attr.AvailabilityKind) {
 				case AvailabilityKind.Introduced:
-					return new IntroducedAttribute (platform, attr.Version.Major, attr.Version.Minor, message: attr.Message);
+					return new IntroducedAttribute (platform, version.Major, version.Minor, message: attr.Message);
 				case AvailabilityKind.Deprecated:
-					return new DeprecatedAttribute (platform, attr.Version.Major, attr.Version.Minor, message: attr.Message);
+					return new DeprecatedAttribute (platform, version.Major, version.Minor, message: attr.Message);
 				case AvailabilityKind.Obsoleted:
-					return new ObsoletedAttribute (platform, attr.Version.Major, attr.Version.Minor, message: attr.Message);
+					return new ObsoletedAttribute (platform, version.Major, version.Minor, message: attr.Message);
 				case AvailabilityKind.Unavailable:
 					return new UnavailableAttribute (platform, message: attr.Message);
 				default:
@@ -3432,11 +3456,11 @@ public partial class Generator : IMemberGatherer {
 			} else {
 				switch (attr.AvailabilityKind) {
 				case AvailabilityKind.Introduced:
-					return new IntroducedAttribute (platform, attr.Version.Major, attr.Version.Minor, attr.Version.Revision, message: attr.Message);
+					return new IntroducedAttribute (platform, version.Major, version.Minor, version.Revision, message: attr.Message);
 				case AvailabilityKind.Deprecated:
-					return new DeprecatedAttribute (platform, attr.Version.Major, attr.Version.Minor, attr.Version.Revision, message: attr.Message);
+					return new DeprecatedAttribute (platform, version.Major, version.Minor, version.Revision, message: attr.Message);
 				case AvailabilityKind.Obsoleted:
-					return new ObsoletedAttribute (platform, attr.Version.Major, attr.Version.Minor, attr.Version.Revision, message: attr.Message);
+					return new ObsoletedAttribute (platform, version.Major, version.Minor, version.Revision, message: attr.Message);
 				case AvailabilityKind.Unavailable:
 					return new UnavailableAttribute (platform, message: attr.Message);
 				default:
@@ -3534,7 +3558,7 @@ public partial class Generator : IMemberGatherer {
 
 	static void AddImpliedPlatforms (List<AvailabilityBaseAttribute> memberAvailability)
 	{
-		foreach (var platform in new [] { PlatformName.MacCatalyst, PlatformName.TvOS }) {
+		foreach (var platform in new [] { PlatformName.MacCatalyst }) {
 			if (!PlatformMarkedUnavailable (platform, memberAvailability) &&
 				!PlatformHasIntroduced (platform, memberAvailability)) {
 				foreach (var attr in memberAvailability.Where (v => v.Platform == PlatformName.iOS).ToList ()) {

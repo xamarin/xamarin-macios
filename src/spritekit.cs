@@ -1801,6 +1801,7 @@ namespace SpriteKit {
 		[Internal]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("initWithName:floatVector2:")]
 		IntPtr InitWithNameFloatVector2 (string name, Vector2 value);
@@ -1821,6 +1822,7 @@ namespace SpriteKit {
 		[Internal]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("initWithName:floatVector3:")]
 		IntPtr InitWithNameFloatVector3 (string name, Vector3 value);
@@ -1840,6 +1842,7 @@ namespace SpriteKit {
 		[Internal]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("initWithName:floatVector4:")]
 		IntPtr InitWithNameFloatVector4 (string name, Vector4 value);
@@ -1860,6 +1863,7 @@ namespace SpriteKit {
 		[Internal]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("initWithName:floatMatrix2:")]
 		IntPtr InitWithNameFloatMatrix2 (string name, Matrix2 value);
@@ -1892,6 +1896,7 @@ namespace SpriteKit {
 		[Internal]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("initWithName:floatMatrix3:")]
 		IntPtr InitWithNameFloatMatrix3 (string name, Matrix3 value);
@@ -1922,6 +1927,7 @@ namespace SpriteKit {
 		[Internal]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("initWithName:floatMatrix4:")]
 		IntPtr InitWithNameFloatMatrix4 (string name, Matrix4 value);
@@ -1966,6 +1972,7 @@ namespace SpriteKit {
 		[Internal]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("floatVector2Value")]
 		Vector2 _FloatVector2Value { get; set; }
@@ -1989,6 +1996,7 @@ namespace SpriteKit {
 		[Internal]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("floatVector3Value")]
 		Vector3 _FloatVector3Value { get; set; }
@@ -2012,6 +2020,7 @@ namespace SpriteKit {
 		[Internal]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("floatVector4Value")]
 		Vector4 _FloatVector4Value { get; set; }
@@ -2035,6 +2044,7 @@ namespace SpriteKit {
 #if !NET
 		[Internal]
 		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[NoWatch]
 		[Export ("floatMatrix2Value")]
@@ -2070,6 +2080,7 @@ namespace SpriteKit {
 		[Internal]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("floatMatrix3Value")]
 		Matrix3 _FloatMatrix3Value { get; set; }
@@ -2104,6 +2115,7 @@ namespace SpriteKit {
 		[Internal]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("floatMatrix4Value")]
 		Matrix4 _FloatMatrix4Value { get; set; }
