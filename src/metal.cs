@@ -466,6 +466,7 @@ namespace Metal {
 		IMTLCommandBuffer CommandBufferWithUnretainedReferences ();
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'MTLCaptureScope' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'MTLCaptureScope' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'MTLCaptureScope' instead.")]
 		[Abstract, Export ("insertDebugCaptureBoundary")]
 		void InsertDebugCaptureBoundary ();

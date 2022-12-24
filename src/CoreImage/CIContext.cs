@@ -239,7 +239,6 @@ namespace CoreImage {
 #if NET
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.11")]
 		[ObsoletedOSPlatform ("macos10.11")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 11)]

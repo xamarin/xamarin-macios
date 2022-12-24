@@ -757,6 +757,7 @@ namespace Security {
 
 		[iOS (8, 0), Deprecated (PlatformName.iOS, 9, 0)]
 		[Mac (10, 10), Deprecated (PlatformName.MacOSX, 10, 11)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Field ("kSecUseNoAuthenticationUI")]
 		IntPtr UseNoAuthenticationUI { get; }
 

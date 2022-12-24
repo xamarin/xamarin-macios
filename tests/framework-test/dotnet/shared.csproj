@@ -39,6 +39,4 @@
       <Link>ApplePlatform.cs</Link>
     </Compile>
   </ItemGroup>
-
-  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
 </Project>

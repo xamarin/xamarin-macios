@@ -280,51 +280,39 @@ namespace GeneratorTests {
 @"	Bug35176.IFooInterface: [SupportedOSPlatform(""ios14.3"")]
 	Bug35176.IFooInterface: [SupportedOSPlatform(""maccatalyst14.3"")]
 	Bug35176.IFooInterface: [SupportedOSPlatform(""macos11.2"")]
-	Bug35176.IFooInterface: [SupportedOSPlatform(""tvos14.3"")]
 	System.Void Bug35176.BarObject::set_FooView(UIKit.UIView): [SupportedOSPlatform(""ios14.3"")]
 	System.Void Bug35176.BarObject::set_FooView(UIKit.UIView): [SupportedOSPlatform(""maccatalyst14.3"")]
 	System.Void Bug35176.BarObject::set_FooView(UIKit.UIView): [SupportedOSPlatform(""macos11.2"")]
-	System.Void Bug35176.BarObject::set_FooView(UIKit.UIView): [SupportedOSPlatform(""tvos14.3"")]
 	System.Void Bug35176.FooInterfaceWrapper::set_FooView(UIKit.UIView): [SupportedOSPlatform(""ios14.3"")]
 	System.Void Bug35176.FooInterfaceWrapper::set_FooView(UIKit.UIView): [SupportedOSPlatform(""maccatalyst14.3"")]
 	System.Void Bug35176.FooInterfaceWrapper::set_FooView(UIKit.UIView): [SupportedOSPlatform(""macos11.2"")]
-	System.Void Bug35176.FooInterfaceWrapper::set_FooView(UIKit.UIView): [SupportedOSPlatform(""tvos14.3"")]
 	UIKit.UIView Bug35176.BarObject::BarView(): [SupportedOSPlatform(""ios14.3"")]
 	UIKit.UIView Bug35176.BarObject::BarView(): [SupportedOSPlatform(""maccatalyst14.3"")]
 	UIKit.UIView Bug35176.BarObject::BarView(): [SupportedOSPlatform(""macos11.2"")]
-	UIKit.UIView Bug35176.BarObject::BarView(): [SupportedOSPlatform(""tvos14.3"")]
 	UIKit.UIView Bug35176.BarObject::FooView(): [SupportedOSPlatform(""ios14.3"")]
 	UIKit.UIView Bug35176.BarObject::FooView(): [SupportedOSPlatform(""maccatalyst14.3"")]
 	UIKit.UIView Bug35176.BarObject::FooView(): [SupportedOSPlatform(""macos11.2"")]
-	UIKit.UIView Bug35176.BarObject::FooView(): [SupportedOSPlatform(""tvos14.3"")]
 	UIKit.UIView Bug35176.BarObject::get_BarView(): [SupportedOSPlatform(""ios14.4"")]
 	UIKit.UIView Bug35176.BarObject::get_BarView(): [SupportedOSPlatform(""maccatalyst14.4"")]
 	UIKit.UIView Bug35176.BarObject::get_BarView(): [SupportedOSPlatform(""macos11.2"")]
-	UIKit.UIView Bug35176.BarObject::get_BarView(): [SupportedOSPlatform(""tvos14.4"")]
 	UIKit.UIView Bug35176.BarObject::get_FooView(): [SupportedOSPlatform(""ios14.3"")]
 	UIKit.UIView Bug35176.BarObject::get_FooView(): [SupportedOSPlatform(""maccatalyst14.3"")]
 	UIKit.UIView Bug35176.BarObject::get_FooView(): [SupportedOSPlatform(""macos11.2"")]
-	UIKit.UIView Bug35176.BarObject::get_FooView(): [SupportedOSPlatform(""tvos14.3"")]
 	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [SupportedOSPlatform(""ios14.3"")]
 	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [SupportedOSPlatform(""maccatalyst14.3"")]
 	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [SupportedOSPlatform(""macos11.2"")]
-	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [SupportedOSPlatform(""tvos14.3"")]
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarMember(Bug35176.IFooInterface,System.Int32): [SupportedOSPlatform(""ios14.3"")]
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarMember(Bug35176.IFooInterface,System.Int32): [SupportedOSPlatform(""maccatalyst14.3"")]
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarMember(Bug35176.IFooInterface,System.Int32): [SupportedOSPlatform(""macos11.2"")]
-	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarMember(Bug35176.IFooInterface,System.Int32): [SupportedOSPlatform(""tvos14.3"")]
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""ios14.4"")]
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""maccatalyst14.4"")]
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""macos11.2"")]
-	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""tvos14.4"")]
 	UIKit.UIView Bug35176.FooInterfaceWrapper::FooView(): [SupportedOSPlatform(""ios14.3"")]
 	UIKit.UIView Bug35176.FooInterfaceWrapper::FooView(): [SupportedOSPlatform(""maccatalyst14.3"")]
 	UIKit.UIView Bug35176.FooInterfaceWrapper::FooView(): [SupportedOSPlatform(""macos11.2"")]
-	UIKit.UIView Bug35176.FooInterfaceWrapper::FooView(): [SupportedOSPlatform(""tvos14.3"")]
 	UIKit.UIView Bug35176.FooInterfaceWrapper::get_FooView(): [SupportedOSPlatform(""ios14.3"")]
 	UIKit.UIView Bug35176.FooInterfaceWrapper::get_FooView(): [SupportedOSPlatform(""maccatalyst14.3"")]
 	UIKit.UIView Bug35176.FooInterfaceWrapper::get_FooView(): [SupportedOSPlatform(""macos11.2"")]
-	UIKit.UIView Bug35176.FooInterfaceWrapper::get_FooView(): [SupportedOSPlatform(""tvos14.3"")]
 ";
 #else
 			const string expectedAttributes =
@@ -344,7 +332,7 @@ namespace GeneratorTests {
 			Assert.AreEqual (expectedAttributes, renderedAttributes, "Introduced attributes");
 			Assert.AreEqual (
 #if NET
-				48, // This number should be lower - https://github.com/xamarin/xamarin-macios/issues/14802
+				36, // This number should be lower - https://github.com/xamarin/xamarin-macios/issues/14802
 #else
 				10,
 #endif

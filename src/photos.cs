@@ -783,6 +783,7 @@ namespace Photos {
 		CoreImage.CIImageOrientation FullSizeImageOrientation { get; }
 
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'AudiovisualAsset' property instead.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use 'AudiovisualAsset' property instead.")]
 		[NoMac]
 		[NullAllowed, Export ("avAsset", ArgumentSemantic.Strong)]
 		AVAsset AvAsset { get; }
