@@ -81,7 +81,6 @@ schedules:
   branches:
     include:
     - main
-    - test-cron
   always: true
 
 stages:
