@@ -154,7 +154,7 @@ namespace CoreGraphics {
 		{
 			if (key is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
-			
+
 			using var keyPtr = new TransientString (key);
 			var r = CGPDFDictionaryGetStream (Handle, keyPtr, out var ptr);
 			result = r ? new CGPDFStream (ptr) : null;
