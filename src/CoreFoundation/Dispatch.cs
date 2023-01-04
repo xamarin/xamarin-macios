@@ -216,7 +216,7 @@ namespace CoreFoundation {
 #endif
 
 		public DispatchQueue (string label)
-			: base (dispatch_queue_create (label, IntPtr.Zero), true)
+			: base (dispatch_queue_create_wrapper (label, IntPtr.Zero), true)
 		{
 			if (Handle == IntPtr.Zero)
 				throw new Exception ("Error creating dispatch queue");
@@ -232,7 +232,7 @@ namespace CoreFoundation {
 		}
 
 		public DispatchQueue (string label, bool concurrent)
-			: base (dispatch_queue_create (label, concurrent ? ConcurrentQueue : IntPtr.Zero), true)
+			: base (dispatch_queue_create_wrapper (label, concurrent ? ConcurrentQueue : IntPtr.Zero), true)
 		{
 			if (Handle == IntPtr.Zero)
 				throw new Exception ("Error creating dispatch queue");
@@ -250,7 +250,7 @@ namespace CoreFoundation {
 		[Watch (3, 0)]
 #endif
 		public DispatchQueue (string label, Attributes attributes, DispatchQueue? target = null)
-			: base (dispatch_queue_create_with_target (label, attributes?.Create () ?? IntPtr.Zero, target.GetHandle ()), true)
+			: base (dispatch_queue_create_with_target_wrapper (label, attributes?.Create () ?? IntPtr.Zero, target.GetHandle ()), true)
 		{
 		}
 
@@ -556,6 +556,11 @@ namespace CoreFoundation {
 			}
 		}
 
+		static IntPtr dispatch_queue_create_wrapper (string label, IntPtr attr)
+		{
+			using var labelPtr = new TransientString (label);
+			return dispatch_queue_create (labelPtr, attr);
+		}
 		//
 		// Native methods
 		//
@@ -573,8 +578,14 @@ namespace CoreFoundation {
 		[TV (10, 0)]
 		[Watch (3, 0)]
 #endif
+		static IntPtr dispatch_queue_create_with_target_wrapper (string label, IntPtr attr, IntPtr target)
+		{
+			using var labelPtr = new TransientString (label);
+			return dispatch_queue_create_with_target (labelPtr, attr, target);
+		}
+
 		[DllImport (Constants.libcLibrary, EntryPoint = "dispatch_queue_create_with_target$V2")]
-		extern static IntPtr dispatch_queue_create_with_target (string label, IntPtr attr, IntPtr target);
+		extern static IntPtr dispatch_queue_create_with_target (IntPtr label, IntPtr attr, IntPtr target);
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_async_f (IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
