@@ -210,7 +210,6 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.11")]
 		[ObsoletedOSPlatform ("macos10.11", "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
@@ -220,7 +219,6 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.11")]
 		[ObsoletedOSPlatform ("macos10.11", "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]

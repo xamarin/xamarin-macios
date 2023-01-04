@@ -88,7 +88,6 @@ namespace CoreGraphics
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("macos10.9")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 9)]

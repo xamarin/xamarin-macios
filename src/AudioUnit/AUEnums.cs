@@ -190,6 +190,7 @@ namespace AudioUnit {
 #if XAMCORE_3_0
 		[NoiOS][NoTV]
 #endif
+		[MacCatalyst (13, 1)] // This is required for .NET, because otherwise the generator thinks it's not available because it's not available on iOS.
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the 'ProcessIsMain' element instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the 'ProcessIsMain' element instead.")]
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the 'ProcessIsMain' element instead.")]
