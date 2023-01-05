@@ -565,7 +565,7 @@ namespace CoreFoundation {
 		// Native methods
 		//
 		[DllImport (Constants.libcLibrary)]
-		extern static IntPtr dispatch_queue_create (string label, IntPtr attr);
+		extern static IntPtr dispatch_queue_create (IntPtr label, IntPtr attr);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
