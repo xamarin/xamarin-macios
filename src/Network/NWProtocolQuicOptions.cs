@@ -37,8 +37,13 @@ namespace Network {
 		public NWProtocolQuicOptions () : this (nw_quic_create_options (), owns: true) { }
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_quic_add_tls_application_protocol (OS_nw_protocol_options options, string applicationProtocol);
+		static extern void nw_quic_add_tls_application_protocol (OS_nw_protocol_options options, IntPtr applicationProtocol);
 
+		static void nw_quic_add_tls_application_protocol (OS_nw_protocol_options options, string applicationProtocol)
+		{
+			using var applicationProtocolPtr = new TransientString (applicationProtocol);
+			nw_quic_add_tls_application_protocol (options, applicationProtocolPtr);
+		}
 		public void AddTlsApplicationProtocol (string applicationProtocol)
 			=> nw_quic_add_tls_application_protocol (GetCheckedHandle (), applicationProtocol);
 
