@@ -50,5 +50,29 @@ namespace ObjCRuntime {
 		}
 
 		public static implicit operator IntPtr (TransientString str) => str.ptr;
+
+
+		public static string? ToStringAndFree (IntPtr ptr, Encoding encoding = Encoding.Auto)
+		{
+			string? result = null;
+			switch (encoding) {
+			case Encoding.Auto:
+				result = Marshal.PtrToStringAuto (ptr);
+				break;
+			case Encoding.BStr:
+				result = Marshal.PtrToStringBSTR (ptr);
+				break;
+			case Encoding.Ansi:
+				result = Marshal.PtrToStringAnsi (ptr);
+				break;
+			case Encoding.Unicode:
+				result = Marshal.PtrToStringUni (ptr);
+				break;
+			default:
+				throw new ArgumentOutOfRangeException (nameof (encoding));
+			}
+			Marshal.FreeHGlobal (ptr);
+			return result;
+		}
 	}
 }
