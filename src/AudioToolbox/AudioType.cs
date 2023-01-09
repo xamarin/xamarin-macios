@@ -169,8 +169,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("ios8.0")]
 		[ObsoletedOSPlatform ("macos10.10", "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.")]
 		[ObsoletedOSPlatform ("ios8.0", "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.")]
 #else
