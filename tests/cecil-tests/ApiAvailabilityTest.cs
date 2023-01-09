@@ -394,29 +394,31 @@ namespace Cecil.Tests {
 						failures.Add ($"[FAIL] {apiSupportedVersion} > {maximum} (Max) on '{api.AsFullName ()}'.");
 				}
 
-				// FIXME: This is a big change to fix, and should be fixed in a different PR.
-				//// APIs shouldn't become unsupported in the same version they become supported.
-				////     [SupportedOSPlatform ("ios12.0")]
-				////     [UnsupportedOSPlatform ("ios12.0")]
-				//if (apiSupportedVersion is not null && apiUnsupportedVersion is not null && supportedPlatformName == unsupportedPlatformName)
-				//	failures.Add ($"[FAIL] {api.AsFullName ()} is marked both supported and unsupported in the same version ({supportedPlatformName})");
+				// APIs shouldn't become unsupported in the same version they become supported.
+				//     [SupportedOSPlatform ("ios12.0")]
+				//     [UnsupportedOSPlatform ("ios12.0")]
+				// Exceptions:
+				// * Apple introduced numerous already deprecated frameworks in Mac Catalyst 13.* and Mac Catalyst 14.0, so it's correct to declare those
+				//   both supported and unsupported in the same version - so we skip any APIs introduced in Mac Catalyst 14.0 or earlier.
+				if (apiSupportedVersion is not null && apiUnsupportedVersion is not null && supportedPlatformName == unsupportedPlatformName) {
+					var macCatalystEarlyBirds = platform == ApplePlatform.MacCatalyst && apiUnsupportedVersion == new Version (14, 0);
+					if (!macCatalystEarlyBirds)
+						failures.Add ($"[FAIL] {api.AsFullName ()} is marked both supported and unsupported in the same version ({supportedPlatformName})");
+				}
 
-				// FIXME: This is a big change to fix, and should be fixed in a different PR.
-				//// APIs shouldn't become obsolete in the same version they become supported, although Apple does that somewhat frequently, so we have an escape hatch here.
-				////     [SupportedOSPlatform("ios12.0")]
-				////     [ObsoletedOSPlatform("ios12.0")]
-				//if (apiSupportedVersion is not null && apiObsoletedVersion is not null && supportedPlatformName == obsoletedPlatformName && !SkipSupportedAndObsoleteAtTheSameTime(api, platform, apiObsoletedVersion))
-				//	failures.Add($"[FAIL] {api.AsFullName ()} is marked both supported and obsoleted in the same version ({supportedPlatformName})");
+				// APIs shouldn't become obsolete in the same version they become supported, although Apple does that somewhat frequently, so we have an escape hatch here.
+				//     [SupportedOSPlatform("ios12.0")]
+				//     [ObsoletedOSPlatform("ios12.0")]
+				if (apiSupportedVersion is not null && apiObsoletedVersion is not null && supportedPlatformName == obsoletedPlatformName && !SkipSupportedAndObsoleteAtTheSameTime (api, platform, apiObsoletedVersion))
+					failures.Add ($"[FAIL] {api.AsFullName ()} is marked both supported and obsoleted in the same version ({supportedPlatformName})");
 
-				// FIXME: This is a big change to fix, and should be fixed in a different PR.
-				//// If there's an ObsoleteOSPlatform, there must also be a SupportedOSPlatform.
-				//if (apiSupportedAttribute is null && apiObsoletedAttribute is not null)
-				//	failures.Add ($"[FAIL] {api.AsFullName ()} is obsoleted (in {obsoletedPlatformName}), but does not have a SupportedOSPlatform attribute.");
+				// If there's an ObsoleteOSPlatform, there must also be a SupportedOSPlatform.
+				if (apiSupportedAttribute is null && apiObsoletedAttribute is not null)
+					failures.Add ($"[FAIL] {api.AsFullName ()} is obsoleted (in {obsoletedPlatformName}), but does not have a SupportedOSPlatform attribute.");
 
-				// FIXME: This is a big change to fix, and should be fixed in a different PR.
-				//// If there's an UnsupportedOSPlatform with version, there must also be a SupportedOSPlatform.
-				//if (apiSupportedAttribute is null && apiUnsupportedVersion is not null)
-				//	failures.Add ($"[FAIL] {api.AsFullName ()} is unsupported (in {apiUnsupportedVersion}), but does not have a SupportedOSPlatform attribute.");
+				// If there's an UnsupportedOSPlatform with version, there must also be a SupportedOSPlatform.
+				if (apiSupportedAttribute is null && apiUnsupportedVersion is not null)
+					failures.Add ($"[FAIL] {api.AsFullName ()} is unsupported (in {apiUnsupportedVersion}), but does not have a SupportedOSPlatform attribute.");
 
 				// APIs are first obsoleted, then unsupported.
 				// Invalid (unsupported before obsoleted)
