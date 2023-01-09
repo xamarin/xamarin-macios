@@ -391,23 +391,25 @@ namespace Security {
 		static public TlsProtocolVersion DefaultMaxTlsProtocolVersion => sec_protocol_options_get_default_max_tls_protocol_version ();
 
 		[DllImport (Constants.SecurityLibrary)]
-		static extern void sec_protocol_options_add_tls_application_protocol (sec_protocol_options_t handle, string applicationProtocol);
+		static extern void sec_protocol_options_add_tls_application_protocol (sec_protocol_options_t handle, IntPtr applicationProtocol);
 
 		public void AddTlsApplicationProtocol (string applicationProtocol)
 		{
 			if (applicationProtocol is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationProtocol));
-			sec_protocol_options_add_tls_application_protocol (GetCheckedHandle (), applicationProtocol);
+			using var applicationProtocolPtr = new TransientString (applicationProtocol);
+			sec_protocol_options_add_tls_application_protocol (GetCheckedHandle (), applicationProtocolPtr);
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		static extern void sec_protocol_options_set_tls_server_name (sec_protocol_options_t handle, string serverName);
+		static extern void sec_protocol_options_set_tls_server_name (sec_protocol_options_t handle, IntPtr serverName);
 
 		public void SetTlsServerName (string serverName)
 		{
 			if (serverName is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (serverName));
-			sec_protocol_options_set_tls_server_name (GetCheckedHandle (), serverName);
+			using var serverNamePtr = new TransientString (serverName);
+			sec_protocol_options_set_tls_server_name (GetCheckedHandle (), serverNamePtr);
 		}
 
 #if NET
