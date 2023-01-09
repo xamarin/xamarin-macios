@@ -31,8 +31,6 @@ namespace CoreServices {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("macos10.11")]
-	[UnsupportedOSPlatform ("ios9.0")]
 	[ObsoletedOSPlatform ("macos10.11", "Use 'NSUrlSession'.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use 'NSUrlSession'.")]
 #else
