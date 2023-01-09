@@ -138,13 +138,13 @@ namespace HomeKit {
 
 #endif
 
-#if !NET
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("This class is removed.")]
-#else
-	[UnsupportedOSPlatform ("ios16.1")]
-	[UnsupportedOSPlatform ("tvos16.1")]
-	[UnsupportedOSPlatform ("maccatalyst16.1")]
-	[UnsupportedOSPlatform ("macos13.0")]
+#if NET
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("macos")]
 #endif
 	[Register ("HMMatterRoom", SkipRegistration = true)]
 	public partial class HMMatterRoom : NSObject, INSCoding, INSCopying, INSSecureCoding {
@@ -162,13 +162,13 @@ namespace HomeKit {
 
 	}
 
-#if !NET
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("This class is removed.")]
-#else
-	[UnsupportedOSPlatform ("ios16.1")]
-	[UnsupportedOSPlatform ("tvos16.1")]
-	[UnsupportedOSPlatform ("maccatalyst16.1")]
-	[UnsupportedOSPlatform ("macos13.0")]
+#if NET
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("macos")]
 #endif
 	[Register ("HMMatterHome", SkipRegistration = true)]
 	public partial class HMMatterHome : NSObject, INSCoding, INSCopying, INSSecureCoding {
@@ -188,13 +188,13 @@ namespace HomeKit {
 
 	}
 
-#if !NET
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("This class is removed.")]
-#else
-	[UnsupportedOSPlatform ("ios16.1")]
-	[UnsupportedOSPlatform ("tvos16.1")]
-	[UnsupportedOSPlatform ("maccatalyst16.1")]
-	[UnsupportedOSPlatform ("macos13.0")]
+#if NET
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("macos")]
 #endif
 	[Register ("HMMatterTopology", SkipRegistration = true)]
 	public partial class HMMatterTopology : NSObject, INSCoding, INSCopying, INSSecureCoding {
@@ -214,13 +214,13 @@ namespace HomeKit {
 
 	public delegate void HMFetchRoomHandler (HMMatterRoom [] rooms, NSError error);
 
-#if !NET
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("This class is removed.")]
-#else
-	[UnsupportedOSPlatform ("ios16.1")]
-	[UnsupportedOSPlatform ("tvos16.1")]
-	[UnsupportedOSPlatform ("maccatalyst16.1")]
-	[UnsupportedOSPlatform ("macos13.0")]
+#if NET
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("macos")]
 #endif
 	[Register ("HMMatterRequestHandler", SkipRegistration = true)]
 	public partial class HMMatterRequestHandler : NSObject, INSExtensionRequestHandling {

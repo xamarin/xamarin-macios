@@ -47,7 +47,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		extern static IntPtr nw_listener_create_with_port (string port, IntPtr nwparameters);
+		extern static IntPtr nw_listener_create_with_port (IntPtr port, IntPtr nwparameters);
 
 		public static NWListener? Create (string port, NWParameters parameters)
 		{
@@ -58,7 +58,8 @@ namespace Network {
 			if (port is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (port));
 
-			handle = nw_listener_create_with_port (port, parameters.Handle);
+			using var portPtr = new TransientString (port);
+			handle = nw_listener_create_with_port (portPtr, parameters.Handle);
 			if (handle == IntPtr.Zero)
 				return null;
 			return new NWListener (handle, owns: true);

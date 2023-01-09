@@ -72,7 +72,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("ios6.0")]
 		[ObsoletedOSPlatform ("ios6.0")]
 #else
 		[Deprecated (PlatformName.iOS, 6, 0)]

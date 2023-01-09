@@ -4384,7 +4384,6 @@ namespace UIKit {
 		NSString SourceTextScalingDocumentAttribute { get; }
 
 		[Field ("NSCocoaVersionDocumentAttribute")]
-		[Mac (10, 15)]
 		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
 		NSString CocoaVersionDocumentAttribute { get; }
 	}
