@@ -27,6 +27,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -173,7 +174,7 @@ namespace Foundation {
 			inflightRequests = new Dictionary<NSUrlSessionTask, InflightData> ();
 		}
 
-#if !MONOMAC && !__WATCHOS__
+#if !MONOMAC && !__WATCHOS__ && !NET8_0
 
 		void AddNotification ()
 		{
@@ -223,7 +224,7 @@ namespace Foundation {
 					data.Dispose ();
 					inflightRequests.Remove (task);
 				}
-#if !MONOMAC && !__WATCHOS__
+#if !MONOMAC && !__WATCHOS__ && !NET8_0
 				// do we need to be notified? If we have not inflightData, we do not
 				if (inflightRequests.Count == 0)
 					RemoveNotification ();
@@ -239,7 +240,7 @@ namespace Foundation {
 		protected override void Dispose (bool disposing)
 		{
 			lock (inflightRequestsLock) {
-#if !MONOMAC && !__WATCHOS__
+#if !MONOMAC && !__WATCHOS__ && !NET8_0
 				// remove the notification if present, method checks against null
 				RemoveNotification ();
 #endif
@@ -328,21 +329,37 @@ namespace Foundation {
 				trustOverrideForUrl = value;
 			}
 		}
+#if !NET8_0
 		// we do check if a user does a request and the application goes to the background, but
 		// in certain cases the user does that on purpose (BeingBackgroundTask) and wants to be able
 		// to use the network. In those cases, which are few, we want the developer to explicitly 
 		// bypass the check when there are not request in flight 
 		bool bypassBackgroundCheck = true;
+#endif
 
+#if !XAMCORE_5_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
+#if NET8_0
+		[Obsolete ("This property is ignored.")]
+#else
+		[Obsolete ("This property will be ignored in .NET 8.")]
+#endif
 		public bool BypassBackgroundSessionCheck {
 			get {
+#if NET8_0
+				return true;
+#else
 				return bypassBackgroundCheck;
+#endif
 			}
 			set {
+#if !NET8_0
 				EnsureModifiability ();
 				bypassBackgroundCheck = value;
+#endif
 			}
 		}
+#endif // !XAMCORE_5_0
 
 		public CookieContainer? CookieContainer {
 			get {
@@ -497,7 +514,7 @@ namespace Foundation {
 			var inflightData = new InflightData (request.RequestUri?.AbsoluteUri!, cancellationToken, request);
 
 			lock (inflightRequestsLock) {
-#if !MONOMAC && !__WATCHOS__
+#if !MONOMAC && !__WATCHOS__ && !NET8_0
 				// Add the notification whenever needed
 				AddNotification ();
 #endif

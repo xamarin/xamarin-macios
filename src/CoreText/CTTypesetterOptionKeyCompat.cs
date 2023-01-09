@@ -17,7 +17,6 @@ using Foundation;
 namespace CoreText {
 	public static partial class CTTypesetterOptionKey {
 #if NET
-		[UnsupportedOSPlatform ("ios6.0")]
 		[ObsoletedOSPlatform ("ios6.0")]
 #else
 		[Deprecated (PlatformName.iOS, 6, 0)]

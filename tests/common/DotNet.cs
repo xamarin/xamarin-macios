@@ -79,7 +79,7 @@ namespace Xamarin.Tests {
 			return Execute ("build", project, properties, false);
 		}
 
-		public static ExecutionResult AssertNew (string outputDirectory, string template, string? name = null)
+		public static ExecutionResult AssertNew (string outputDirectory, string template, string? name = null, string? language = null)
 		{
 			Directory.CreateDirectory (outputDirectory);
 
@@ -89,6 +89,11 @@ namespace Xamarin.Tests {
 			if (!string.IsNullOrEmpty (name)) {
 				args.Add ("--name");
 				args.Add (name!);
+			}
+
+			if (!string.IsNullOrEmpty (language)) {
+				args.Add ("--language");
+				args.Add (language);
 			}
 
 			var env = new Dictionary<string, string?> ();
