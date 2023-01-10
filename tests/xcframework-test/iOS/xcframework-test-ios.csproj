@@ -165,7 +165,6 @@
     <None Include="Entitlements.plist" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppDelegate.cs" />
     <Compile Include="..\..\common\AppDelegate.cs" />
     <Compile Include="XCFrameworkTests.cs" />
   </ItemGroup>

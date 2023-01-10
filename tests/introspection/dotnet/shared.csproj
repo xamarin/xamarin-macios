@@ -139,6 +139,9 @@
     <Compile Include="$(IntrospectionTestDirectory)\..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
+    <Compile Include="$(IntrospectionTestDirectory)\..\..\tests\common\TestAssemblyLoader.cs">
+      <Link>TestAssemblyLoader.cs</Link>
+    </Compile>
     <Compile Include="$(IntrospectionTestDirectory)\ApiFrameworkTest.cs">
       <Link>ApiFrameworkTest.cs</Link>
     </Compile>

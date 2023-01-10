@@ -132,6 +132,9 @@
     <Compile Include="..\common\ExecutionHelper.cs">
       <Link>ExecutionHelper.cs</Link>
     </Compile>
+    <Compile Include="..\common\TestAssemblyLoader.cs">
+      <Link>TestAssemblyLoader.cs</Link>
+    </Compile>
     <Compile Include="..\api-shared\ObjCRuntime\RegistrarTest.cs">
       <Link>api-shared\ObjCRuntime\RegistrarTest.cs</Link>
     </Compile>

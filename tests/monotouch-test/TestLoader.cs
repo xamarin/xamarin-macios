@@ -1,44 +1,24 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
-using Foundation;
-#if !__MACOS__
-using UIKit;
-#endif
-
-using MonoTouch.NUnit.UI;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
-#if __MACOS__
-namespace Xamarin.Mac.Tests {
-	public static partial class TestLoader {
-		static partial void AddTestAssembliesImpl (List<Assembly> assemblies)
-		{
-			assemblies.Add (typeof (EmbeddedResources.ResourcesTest).Assembly);
-			assemblies.Add (typeof (Xamarin.BindingTests.ProtocolTest).Assembly);
-		}
-	}
-}
-#elif !__WATCHOS__
-public partial class AppDelegate {
-	public partial IEnumerable<Assembly> GetTestAssemblies ()
-	{
-		return new Assembly [] {
-			Assembly.GetExecutingAssembly (),
-			typeof (EmbeddedResources.ResourcesTest).Assembly,
-			typeof (Xamarin.BindingTests.ProtocolTest).Assembly,
-		};
-	}
-}
-#else
+#nullable enable
+
 public static partial class TestLoader {
-	static partial void AddTestAssembliesImpl (BaseTouchRunner runner)
+	static partial void AddTestAssembliesImpl (HashSet<Assembly> assemblies)
 	{
-		runner.Add (typeof (EmbeddedResources.ResourcesTest).Assembly);
-		runner.Add (typeof (Xamarin.BindingTests.ProtocolTest).Assembly);
+		assemblies.Add (typeof (EmbeddedResources.ResourcesTest).Assembly);
+		assemblies.Add (typeof (Xamarin.BindingTests.ProtocolTest).Assembly);
 	}
 }
 
-#endif // !__WATCHOS__
+[TestFixture]
+public class LoaderTest {
+	public void TestAssemblyCount ()
+	{
+		Assert.AreEqual (3, TestLoader.GetTestAssemblies ().Count (), "Test assembly count");
+	}
+}

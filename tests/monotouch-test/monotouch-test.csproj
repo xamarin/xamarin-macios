@@ -206,6 +206,9 @@
     <Compile Include="..\common\Extensions.cs">
       <Link>Extensions.cs</Link>
     </Compile>
+    <Compile Include="..\common\TestAssemblyLoader.cs">
+      <Link>TestAssemblyLoader.cs</Link>
+    </Compile>
     <Compile Include="..\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>
     </Compile>
