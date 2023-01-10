@@ -16,6 +16,8 @@ using System.Collections.Generic;
 using Foundation;
 using CoreData;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSPredicateEditorRowTemplate {
 		public NSPredicateEditorRowTemplate (params NSCompoundPredicateType [] compoundTypes)

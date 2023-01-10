@@ -33,6 +33,8 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using CoreGraphics;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSCell {
 
@@ -46,9 +48,9 @@ namespace AppKit {
 			bool vertical, NSCompositingOperation op, nfloat alphaFraction, bool flipped)
 		{
 			NSDrawThreePartImage (
-				frame, startCap != null ? startCap.Handle : IntPtr.Zero,
-				centerFill != null ? centerFill.Handle : IntPtr.Zero,
-				endCap != null ? endCap.Handle : IntPtr.Zero,
+				frame, startCap is not null ? startCap.Handle : IntPtr.Zero,
+				centerFill is not null ? centerFill.Handle : IntPtr.Zero,
+				endCap is not null ? endCap.Handle : IntPtr.Zero,
 				vertical, (nint) (long) op, alphaFraction, flipped);
 		}
 
@@ -66,15 +68,15 @@ namespace AppKit {
 			NSCompositingOperation op, nfloat alphaFraction, bool flipped)
 		{
 			NSDrawNinePartImage (
-				frame, topLeftCorner != null ? topLeftCorner.Handle : IntPtr.Zero,
-				topEdgeFill != null ? topEdgeFill.Handle : IntPtr.Zero,
-				topRightCorner != null ? topRightCorner.Handle : IntPtr.Zero,
-				leftEdgeFill != null ? leftEdgeFill.Handle : IntPtr.Zero,
-				centerFill != null ? centerFill.Handle : IntPtr.Zero,
-				rightEdgeFill != null ? rightEdgeFill.Handle : IntPtr.Zero,
-				bottomLeftCorner != null ? bottomLeftCorner.Handle : IntPtr.Zero,
-				bottomEdgeFill != null ? bottomEdgeFill.Handle : IntPtr.Zero,
-				bottomRightCorner != null ? bottomRightCorner.Handle : IntPtr.Zero,
+				frame, topLeftCorner is not null ? topLeftCorner.Handle : IntPtr.Zero,
+				topEdgeFill is not null ? topEdgeFill.Handle : IntPtr.Zero,
+				topRightCorner is not null ? topRightCorner.Handle : IntPtr.Zero,
+				leftEdgeFill is not null ? leftEdgeFill.Handle : IntPtr.Zero,
+				centerFill is not null ? centerFill.Handle : IntPtr.Zero,
+				rightEdgeFill is not null ? rightEdgeFill.Handle : IntPtr.Zero,
+				bottomLeftCorner is not null ? bottomLeftCorner.Handle : IntPtr.Zero,
+				bottomEdgeFill is not null ? bottomEdgeFill.Handle : IntPtr.Zero,
+				bottomRightCorner is not null ? bottomRightCorner.Handle : IntPtr.Zero,
 				(nint) (long) op, alphaFraction, flipped);
 		}
 	}

@@ -30,6 +30,8 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AppKit {
 
 	public partial class NSWindow {
@@ -121,7 +123,7 @@ namespace AppKit {
 			//
 			// If that is the case, we take a reference first, and to keep the behavior
 			// we call Dispose after that.
-			if (WindowController == null) {
+			if (WindowController is null) {
 				bool released_when_closed = DangerousReleasedWhenClosed;
 				if (released_when_closed)
 					CFObject.CFRetain (Handle);
