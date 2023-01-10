@@ -3,7 +3,7 @@
     <TargetFramework>net8.0-ios</TargetFramework>
     <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
-    <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
+    <CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../../tests/common/SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
   </PropertyGroup>
   <PropertyGroup>
     <ProvisioningType>automatic</ProvisioningType>
