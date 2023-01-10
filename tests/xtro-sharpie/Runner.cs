@@ -67,7 +67,7 @@ namespace Extrospection {
 	}
 
 	class AssemblyResolver : IAssemblyResolver, IDisposable {
-		Dictionary<string, AssemblyDefinition> cache = new Dictionary<string, AssemblyDefinition>(StringComparer.Ordinal);
+		Dictionary<string, AssemblyDefinition> cache = new Dictionary<string, AssemblyDefinition> (StringComparer.Ordinal);
 		HashSet<string> directories = new HashSet<string> ();
 
 		public AssemblyDefinition Resolve (AssemblyNameReference name)
