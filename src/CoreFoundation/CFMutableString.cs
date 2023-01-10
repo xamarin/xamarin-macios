@@ -55,7 +55,7 @@ namespace CoreFoundation {
 				throw new ArgumentException (nameof (maxLength));
 			Handle = CFStringCreateMutable (IntPtr.Zero, maxLength);
 			if (@string is not null) {
-				using var stringPtr = new TransientString (@string);
+				using var stringPtr = new TransientString (@string, TransientString.Encoding.Unicode);
 				CFStringAppendCharacters (Handle, stringPtr, @string.Length);
 			}
 		}
@@ -81,7 +81,7 @@ namespace CoreFoundation {
 			if (@string is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (@string));
 			str = null; // destroy any cached value
-			using var stringPtr = new TransientString (@string);
+			using var stringPtr = new TransientString (@string, TransientString.Encoding.Unicode);
 			CFStringAppendCharacters (Handle, stringPtr, @string.Length);
 		}
 
