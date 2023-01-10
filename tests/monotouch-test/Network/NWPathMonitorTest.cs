@@ -37,6 +37,7 @@ namespace monotouchtest.Network {
 					if (path != null) {
 						finalPath = monitor.CurrentPath;
 						isPathUpdated = true;
+						monitor.Cancel ();
 					}
 
 				});
@@ -66,6 +67,7 @@ namespace monotouchtest.Network {
 						oldPath = monitor.CurrentPath;
 						isOldPathSet = true;
 						cbEvent.Set ();
+						monitor.Cancel ();
 					}
 				});
 
@@ -82,6 +84,7 @@ namespace monotouchtest.Network {
 					if (path != null) {
 						newPath = monitor.CurrentPath;
 						isNewPathSet = true;
+						monitor.Cancel ();
 					}
 
 				});
