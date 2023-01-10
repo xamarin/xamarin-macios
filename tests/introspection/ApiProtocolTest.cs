@@ -563,10 +563,6 @@ namespace Introspection {
 				if (type.Name == "HMChipServiceRequestHandler") // Apple removed this class
 					return true;
 				break;
-			case "QLPreviewItem":
-				if (type.Name == "NSUrl")
-					return true;
-				break;
 			}
 			return false;
 		}
