@@ -22,11 +22,11 @@ namespace monotouchtest.Network {
 		[Test]
 		public void StatusPropertyTest ()
 		{
+			using var monitor = new NWPathMonitor ();
 			Assert.That (monitor.CurrentPath, Is.Null, "'CurrentPath' property should be null");
 
 			NWPath finalPath = null;
 			bool isPathUpdated = false;
-			using var monitor = new NWPathMonitor ();
 
 			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
 
@@ -52,48 +52,32 @@ namespace monotouchtest.Network {
 		public void PathIsAlwaysUpdatedWithNewHandlerTest ()
 		{
 			using var monitor = new NWPathMonitor ();
-			NWPath oldPath = monitor.CurrentPath;
-			NWPath newPath = monitor.CurrentPath;
-			bool isOldPathSet = false;
-			bool isNewPathSet = false;
-			var cbEvent = new AutoResetEvent (false);
+			NWPath oldPath = null;
+			NWPath newPath = null;
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			var q = new DispatchQueue (label: "monitor");
+			monitor.SetQueue (q);
 
-				monitor.SnapshotHandler = ((path) => {
-					if (path != null) {
-						oldPath = monitor.CurrentPath;
-						isOldPathSet = true;
-						cbEvent.Set ();
-						monitor.Cancel ();
-					}
-				});
+			monitor.SnapshotHandler = ((path) => {
+				if (path is not null) {
+					oldPath = monitor.CurrentPath;
+				}
+			});
+			monitor.Start ();
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (3), () => {}, () => oldPath is not null);
 
-				var q = new DispatchQueue (label: "monitor");
-				monitor.SetQueue (q);
-				monitor.Start ();
+			// Set a different handler
+			monitor.SnapshotHandler = ((path) => {
+				if (path is not null) {
+					newPath = monitor.CurrentPath;
+				}
+			});
+			monitor.Start ();
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (3), () => {}, () => newPath is not null);
+			monitor.Cancel ();
 
-			}, () => isOldPathSet);
-
-
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
-				cbEvent.WaitOne ();
-				monitor.SnapshotHandler = ((path) => {
-					if (path != null) {
-						newPath = monitor.CurrentPath;
-						isNewPathSet = true;
-						monitor.Cancel ();
-					}
-
-				});
-
-				var q = new DispatchQueue (label: "monitor");
-				monitor.SetQueue (q);
-				monitor.Start ();
-			}, () => isNewPathSet);
-
-			Assert.True (isOldPathSet, "isOldPathSet (no timeout)");
-			Assert.True (isNewPathSet, "isNewPathSet (no timeout)");
+			Assert.IsNotNull (oldPath, "oldPath set (no timeout)");
+			Assert.IsNotNull (newPath, "newPath set (no timeout)");
 			// they might be the same native objects (happens on macOS and Catalyst) and,
 			// in such case, they will have the same `Handle` value, making them equal on the
 			// .net profile. However what we want to know here is if the path was updated
