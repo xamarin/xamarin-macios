@@ -13,14 +13,10 @@ namespace monotouchtest.Network {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NWPathMonitorTest {
-
-		NWPathMonitor monitor;
-
 		[SetUp]
 		public void SetUp ()
 		{
 			TestRuntime.AssertXcodeVersion (10, 0);
-			monitor = new NWPathMonitor ();
 		}
 
 		[Test]
@@ -30,6 +26,7 @@ namespace monotouchtest.Network {
 
 			NWPath finalPath = null;
 			bool isPathUpdated = false;
+			using var monitor = new NWPathMonitor ();
 
 			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
 
@@ -54,6 +51,7 @@ namespace monotouchtest.Network {
 		[Test]
 		public void PathIsAlwaysUpdatedWithNewHandlerTest ()
 		{
+			using var monitor = new NWPathMonitor ();
 			NWPath oldPath = monitor.CurrentPath;
 			NWPath newPath = monitor.CurrentPath;
 			bool isOldPathSet = false;
@@ -102,16 +100,10 @@ namespace monotouchtest.Network {
 			Assert.False (Object.ReferenceEquals (oldPath, newPath), "different instances");
 		}
 
-		[TearDown]
-		public void TearDown ()
-		{
-			monitor?.Dispose ();
-		}
-
-
 		[Test]
 		public void ProhibitInterfaceTypeTest ()
 		{
+			using var monitor = new NWPathMonitor ();
 			TestRuntime.AssertXcodeVersion (13, 0);
 			Assert.DoesNotThrow (() => {
 				monitor.ProhibitInterfaceType (NWInterfaceType.Wifi);
