@@ -48,9 +48,9 @@ namespace AppKit {
 			bool vertical, NSCompositingOperation op, nfloat alphaFraction, bool flipped)
 		{
 			NSDrawThreePartImage (
-				frame, startCap is not null ? startCap.Handle : IntPtr.Zero,
-				centerFill is not null ? centerFill.Handle : IntPtr.Zero,
-				endCap is not null ? endCap.Handle : IntPtr.Zero,
+				frame, startCap.GetHandle (),
+				centerFill.GetHandle (),
+				endCap.GetHandle (),
 				vertical, (nint) (long) op, alphaFraction, flipped);
 		}
 
@@ -68,15 +68,15 @@ namespace AppKit {
 			NSCompositingOperation op, nfloat alphaFraction, bool flipped)
 		{
 			NSDrawNinePartImage (
-				frame, topLeftCorner is not null ? topLeftCorner.Handle : IntPtr.Zero,
-				topEdgeFill is not null ? topEdgeFill.Handle : IntPtr.Zero,
-				topRightCorner is not null ? topRightCorner.Handle : IntPtr.Zero,
-				leftEdgeFill is not null ? leftEdgeFill.Handle : IntPtr.Zero,
-				centerFill is not null ? centerFill.Handle : IntPtr.Zero,
-				rightEdgeFill is not null ? rightEdgeFill.Handle : IntPtr.Zero,
-				bottomLeftCorner is not null ? bottomLeftCorner.Handle : IntPtr.Zero,
-				bottomEdgeFill is not null ? bottomEdgeFill.Handle : IntPtr.Zero,
-				bottomRightCorner is not null ? bottomRightCorner.Handle : IntPtr.Zero,
+				frame, topLeftCorner.GetHandle (),
+				topEdgeFill.GetHandle (),
+				topRightCorner.GetHandle (),
+				leftEdgeFill.GetHandle (),
+				centerFill.GetHandle (),
+				rightEdgeFill.GetHandle (),
+				bottomLeftCorner.GetHandle (),
+				bottomEdgeFill.GetHandle (),
+				bottomRightCorner.GetHandle (),
 				(nint) (long) op, alphaFraction, flipped);
 		}
 	}

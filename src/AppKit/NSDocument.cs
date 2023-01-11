@@ -34,7 +34,7 @@ namespace AppKit {
 			}
 		}
 
-		public void DuplicateDocument (DuplicateCallback callback)
+		public void DuplicateDocument (DuplicateCallback? callback)
 		{
 			if (callback is null) {
 				_DuplicateDocument (null, null, IntPtr.Zero);

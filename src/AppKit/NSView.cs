@@ -23,7 +23,12 @@ namespace AppKit {
 
 		sealed class SortData {
 			public Exception? Exception;
-			public Func<NSView, NSView, NSComparisonResult>? Comparer;
+			public Func<NSView?, NSView?, NSComparisonResult> Comparer;
+			
+			public SortData (Func<NSView?, NSView?, NSComparisonResult> comparer)
+			{
+				Comparer = comparer;
+			}
 		}
 
 #if NET
@@ -33,25 +38,20 @@ namespace AppKit {
 #endif
 		static nint view_compare (IntPtr view1, IntPtr view2, IntPtr context)
 		{
-			var data = GCHandle.FromIntPtr (context).Target as SortData;
+			var data = (SortData) GCHandle.FromIntPtr (context).Target;
 			try {
-				if (Runtime.GetNSObject (view1) is NSView a
-						&& Runtime.GetNSObject (view2) is NSView b) {
-					var result = data?.Comparer?.Invoke (a, b);
-					return result is null ? (nint) (long) NSComparisonResult.Same : (nint) (long) result;
-				} else {
-					return (nint) (long) NSComparisonResult.Same;
-				}
+				var a = Runtime.GetNSObject (view1) as NSView;
+				var b = Runtime.GetNSObject (view2) as NSView;
+				return (nint) (long) data.Comparer (a, b);
 			} catch (Exception e) {
-				if (data is not null)
-					data.Exception = e;
+				data.Exception = e;
 				return (nint) (long) NSComparisonResult.Same;
 			}
 		}
 
-		public unsafe void SortSubviews (Func<NSView, NSView, NSComparisonResult>? comparer)
+		public unsafe void SortSubviews (Func<NSView?, NSView?, NSComparisonResult> comparer)
 		{
-			if (comparer is null)
+			if (comparer == null)
 				throw new ArgumentNullException (nameof (comparer));
 
 #if NET
@@ -60,11 +60,11 @@ namespace AppKit {
 #else
 			var func = Marshal.GetFunctionPointerForDelegate (view_comparer);
 #endif
-			var context = new SortData () { Comparer = comparer };
+			var context = new SortData (comparer);
 			var handle = GCHandle.Alloc (context);
 			try {
 				SortSubviews (func, GCHandle.ToIntPtr (handle));
-				if (context.Exception is not null)
+				if (context.Exception != null)
 					throw new Exception ($"An exception occurred during sorting.", context.Exception);
 			} finally {
 				handle.Free ();

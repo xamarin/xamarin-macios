@@ -90,7 +90,7 @@ namespace AppKit {
 			return RunSheetModal (window, NSApplication.SharedApplication);
 		}
 
-		public nint RunSheetModal (NSWindow? window, NSApplication? application)
+		public nint RunSheetModal (NSWindow? window, NSApplication application)
 		{
 			if (application is null)
 				throw new ArgumentNullException ("application");

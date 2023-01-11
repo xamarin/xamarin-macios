@@ -27,7 +27,7 @@ namespace AppKit {
 #else
 		[Mac (10, 13)]
 #endif
-		public unsafe CGRect [] GetBoundingRects (CGGlyph []? glyphs)
+		public unsafe CGRect [] GetBoundingRects (CGGlyph [] glyphs)
 		{
 			if (glyphs is null)
 				throw new ArgumentNullException ("glyphs");
@@ -49,7 +49,7 @@ namespace AppKit {
 #else
 		[Mac (10, 13)]
 #endif
-		public unsafe CGSize [] GetAdvancements (CGGlyph []? glyphs)
+		public unsafe CGSize [] GetAdvancements (CGGlyph [] glyphs)
 		{
 			if (glyphs is null)
 				throw new ArgumentNullException ("glyphs");

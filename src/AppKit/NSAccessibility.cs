@@ -58,7 +58,7 @@ namespace AppKit {
 		[DllImport (Constants.AppKitLibrary)]
 		static extern void NSAccessibilityPostNotificationWithUserInfo (IntPtr element, IntPtr notification, IntPtr userInfo);
 
-		public static void PostNotification (NSObject? element, NSString? notification, NSDictionary? userInfo)
+		public static void PostNotification (NSObject element, NSString notification, NSDictionary? userInfo)
 		{
 			if (element is null)
 				throw new ArgumentNullException ("element");
@@ -66,11 +66,7 @@ namespace AppKit {
 			if (notification is null)
 				throw new ArgumentNullException ("notification");
 
-			IntPtr userInfoHandle;
-			if (userInfo is null)
-				userInfoHandle = IntPtr.Zero;
-			else
-				userInfoHandle = userInfo.Handle;
+			var userInfoHandle = userInfo.GetHandle ();
 
 			NSAccessibilityPostNotificationWithUserInfo (element.Handle, notification.Handle, userInfoHandle);
 		}
@@ -78,7 +74,7 @@ namespace AppKit {
 		[DllImport (Constants.AppKitLibrary)]
 		static extern void NSAccessibilityPostNotification (IntPtr element, IntPtr notification);
 
-		public static void PostNotification (NSObject? element, NSString? notification)
+		public static void PostNotification (NSObject element, NSString notification)
 		{
 			if (element is null)
 				throw new ArgumentNullException ("element");
@@ -92,7 +88,7 @@ namespace AppKit {
 		[DllImport (Constants.AppKitLibrary)]
 		static extern IntPtr NSAccessibilityRoleDescription (IntPtr role, IntPtr subrole);
 
-		public static string? GetRoleDescription (NSString? role, NSString? subrole)
+		public static string? GetRoleDescription (NSString role, NSString? subrole)
 		{
 			if (role is null)
 				throw new ArgumentNullException ("role");
@@ -110,7 +106,7 @@ namespace AppKit {
 		[DllImport (Constants.AppKitLibrary)]
 		static extern IntPtr NSAccessibilityRoleDescriptionForUIElement (IntPtr element);
 
-		public static string? GetRoleDescription (NSObject? element)
+		public static string? GetRoleDescription (NSObject element)
 		{
 			if (element is null)
 				throw new ArgumentNullException ("element");
@@ -122,7 +118,7 @@ namespace AppKit {
 		[DllImport (Constants.AppKitLibrary)]
 		static extern IntPtr NSAccessibilityActionDescription (IntPtr action);
 
-		public static string? GetActionDescription (NSString? action)
+		public static string? GetActionDescription (NSString action)
 		{
 			if (action is null)
 				throw new ArgumentNullException ("action");
@@ -134,7 +130,7 @@ namespace AppKit {
 		[DllImport (Constants.AppKitLibrary)]
 		static extern IntPtr NSAccessibilityUnignoredAncestor (IntPtr element);
 
-		public static NSObject? GetUnignoredAncestor (NSObject? element)
+		public static NSObject? GetUnignoredAncestor (NSObject element)
 		{
 			if (element is null)
 				throw new ArgumentNullException ("element");
@@ -146,7 +142,7 @@ namespace AppKit {
 		[DllImport (Constants.AppKitLibrary)]
 		static extern IntPtr NSAccessibilityUnignoredDescendant (IntPtr element);
 
-		public static NSObject? GetUnignoredDescendant (NSObject? element)
+		public static NSObject? GetUnignoredDescendant (NSObject element)
 		{
 			if (element is null)
 				throw new ArgumentNullException ("element");
@@ -159,7 +155,7 @@ namespace AppKit {
 		[DllImport (Constants.AppKitLibrary)]
 		static extern IntPtr NSAccessibilityUnignoredChildren (IntPtr originalChildren);
 
-		public static NSObject [] GetUnignoredChildren (NSArray? originalChildren)
+		public static NSObject [] GetUnignoredChildren (NSArray originalChildren)
 		{
 			if (originalChildren is null)
 				throw new ArgumentNullException ("originalChildren");
@@ -172,7 +168,7 @@ namespace AppKit {
 		[DllImport (Constants.AppKitLibrary)]
 		static extern IntPtr NSAccessibilityUnignoredChildrenForOnlyChild (IntPtr originalChild);
 
-		public static NSObject [] GetUnignoredChildren (NSObject? originalChild)
+		public static NSObject [] GetUnignoredChildren (NSObject originalChild)
 		{
 			if (originalChild is null)
 				throw new ArgumentNullException ("originalChild");

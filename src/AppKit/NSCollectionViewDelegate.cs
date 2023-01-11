@@ -20,7 +20,7 @@ namespace AppKit {
 	public partial class NSCollectionViewDelegateFlowLayout {
 		[Mac (10, 11)]
 		[Obsolete ("Use 'ValidateDropOperation (NSCollectionView collectionView, NSDraggingInfo draggingInfo, ref NSIndexPath proposedDropIndexPath, ref NSCollectionViewDropOperation proposedDropOperation)' instead.")]
-		public virtual NSDragOperation? ValidateDrop (NSCollectionView collectionView, NSDraggingInfo draggingInfo, out NSIndexPath proposedDropIndexPath, out NSCollectionViewDropOperation proposedDropOperation)
+		public virtual NSDragOperation ValidateDrop (NSCollectionView collectionView, NSDraggingInfo draggingInfo, out NSIndexPath proposedDropIndexPath, out NSCollectionViewDropOperation proposedDropOperation)
 		{
 			proposedDropIndexPath = null!;
 			proposedDropOperation = NSCollectionViewDropOperation.On;
