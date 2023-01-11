@@ -556,11 +556,16 @@ namespace CoreFoundation {
 			}
 		}
 
+		static IntPtr dispatch_queue_create (string label, IntPtr attr)
+		{
+			using var labelPtr = new TransientString (label);
+			return dispatch_queue_create (labelPtr, attr);
+		}
 		//
 		// Native methods
 		//
 		[DllImport (Constants.libcLibrary)]
-		extern static IntPtr dispatch_queue_create (string label, IntPtr attr);
+		extern static IntPtr dispatch_queue_create (IntPtr label, IntPtr attr);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
@@ -573,8 +578,14 @@ namespace CoreFoundation {
 		[TV (10, 0)]
 		[Watch (3, 0)]
 #endif
+		static IntPtr dispatch_queue_create_with_target (string label, IntPtr attr, IntPtr target)
+		{
+			using var labelPtr = new TransientString (label);
+			return dispatch_queue_create_with_target (labelPtr, attr, target);
+		}
+
 		[DllImport (Constants.libcLibrary, EntryPoint = "dispatch_queue_create_with_target$V2")]
-		extern static IntPtr dispatch_queue_create_with_target (string label, IntPtr attr, IntPtr target);
+		extern static IntPtr dispatch_queue_create_with_target (IntPtr label, IntPtr attr, IntPtr target);
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_async_f (IntPtr queue, IntPtr context, dispatch_callback_t dispatch);

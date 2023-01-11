@@ -82,6 +82,7 @@ steps:
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/package  # ideally, we would use a variable for this
+    AdditionalArgumentsForBlobCopy: "/SetContentType /Y $(AzCopyFullCopyArg)"
     outputStorageContainerSasToken: PackageSasToken
 
 - task: AzureFileCopy@3
@@ -93,6 +94,7 @@ steps:
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: jenkins/$(Build.SourceBranchName)/$(Build.SourceVersion)
+    AdditionalArgumentsForBlobCopy: "/SetContentType /Y $(AzCopyFullCopyArg)"
     outputStorageContainerSasToken: PackageSasToken
 
 - task: AzureFileCopy@3
@@ -104,6 +106,7 @@ steps:
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: jenkins/$(Build.SourceBranchName)/latest
+    AdditionalArgumentsForBlobCopy: "/SetContentType /Y $(AzCopyFullCopyArg)"
     outputStorageContainerSasToken: PackageSasToken
 
 - task: AzureFileCopy@3
@@ -115,6 +118,7 @@ steps:
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: jenkins/$(Build.SourceVersion)
+    AdditionalArgumentsForBlobCopy: "/SetContentType /Y $(AzCopyFullCopyArg)"
     outputStorageContainerSasToken: PackageSasToken
 
 - pwsh: |

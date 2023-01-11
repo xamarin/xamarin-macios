@@ -146,12 +146,6 @@
 !extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UINavigationBar::get_TitleTextAttributes() should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! System.Void UIKit.UINavigationBar::set_TitleTextAttributes(UIKit.UIStringAttributes) should NOT be decorated with [Appearance]
 
-## unsorted
-
-!missing-field! NSCharacterEncodingDocumentOption not bound
-!missing-field! NSDefaultAttributesDocumentOption not bound
-!missing-field! NSDocumentTypeDocumentOption not bound
-
 ## helpers
 !extra-enum-value! Managed value -1 for UITextFieldDidEndEditingReason.Unknown not found in native headers
 !extra-enum-value! Managed value 18 for UIViewAutoresizing.FlexibleDimensions not found in native headers
