@@ -250,6 +250,40 @@ namespace GeneratorTests {
 			throw new NotImplementedException (obj.GetType ().FullName);
 		}
 
+		static IEnumerable<CustomAttribute> GetAvailabilityAttributes (ICustomAttributeProvider provider)
+		{
+			if (!provider.HasCustomAttributes)
+				yield break;
+
+			foreach (var ca in provider.CustomAttributes) {
+				switch (ca.AttributeType.Name) {
+#if NET
+				case "SupportedOSPlatformAttribute":
+				case "UnsupportedOSPlatformAttribute":
+				case "ObsoletedOSPlatformAttribute":
+#else
+				case "IntroducedAttribute":
+				case "ObsoletedAttribute":
+				case "DeprecatedAttribute":
+#endif
+					yield return ca;
+					break;
+				}
+			}
+		}
+
+		static string RenderSupportedOSPlatformAttributes (ICustomAttributeProvider provider)
+		{
+			var attributes = GetAvailabilityAttributes (provider).ToArray ();
+			if (attributes is null || attributes.Length == 0)
+				return string.Empty;
+			var lines = new List<string> ();
+			foreach (var ca in attributes)
+				lines.Add (RenderSupportedOSPlatformAttribute (ca));
+			lines.Sort ();
+			return string.Join ("\n", lines);
+		}
+
 		static string RenderSupportedOSPlatformAttribute (CustomAttribute ca)
 		{
 			return "[" + ca.AttributeType.Name.Replace ("Attribute", "") + "(" + string.Join (", ", ca.ConstructorArguments.Select (arg => RenderArgument (arg))) + ")]";
@@ -274,18 +308,11 @@ namespace GeneratorTests {
 			var renderedSupportedAttributes = allSupportedAttributes.Select (v => v.Item1.ToString () + ": " + RenderSupportedOSPlatformAttribute (v.Item2) + "");
 			var preserves = allSupportedAttributes.Count ();
 			var renderedAttributes = "\t" + string.Join ("\n\t", renderedSupportedAttributes.OrderBy (v => v)) + "\n";
-			Console.WriteLine (renderedAttributes);
 #if NET
 			const string expectedAttributes =
 @"	Bug35176.IFooInterface: [SupportedOSPlatform(""ios14.3"")]
 	Bug35176.IFooInterface: [SupportedOSPlatform(""maccatalyst14.3"")]
 	Bug35176.IFooInterface: [SupportedOSPlatform(""macos11.2"")]
-	System.Void Bug35176.BarObject::set_FooView(UIKit.UIView): [SupportedOSPlatform(""ios14.3"")]
-	System.Void Bug35176.BarObject::set_FooView(UIKit.UIView): [SupportedOSPlatform(""maccatalyst14.3"")]
-	System.Void Bug35176.BarObject::set_FooView(UIKit.UIView): [SupportedOSPlatform(""macos11.2"")]
-	System.Void Bug35176.FooInterfaceWrapper::set_FooView(UIKit.UIView): [SupportedOSPlatform(""ios14.3"")]
-	System.Void Bug35176.FooInterfaceWrapper::set_FooView(UIKit.UIView): [SupportedOSPlatform(""maccatalyst14.3"")]
-	System.Void Bug35176.FooInterfaceWrapper::set_FooView(UIKit.UIView): [SupportedOSPlatform(""macos11.2"")]
 	UIKit.UIView Bug35176.BarObject::BarView(): [SupportedOSPlatform(""ios14.3"")]
 	UIKit.UIView Bug35176.BarObject::BarView(): [SupportedOSPlatform(""maccatalyst14.3"")]
 	UIKit.UIView Bug35176.BarObject::BarView(): [SupportedOSPlatform(""macos11.2"")]
@@ -295,24 +322,12 @@ namespace GeneratorTests {
 	UIKit.UIView Bug35176.BarObject::get_BarView(): [SupportedOSPlatform(""ios14.4"")]
 	UIKit.UIView Bug35176.BarObject::get_BarView(): [SupportedOSPlatform(""maccatalyst14.4"")]
 	UIKit.UIView Bug35176.BarObject::get_BarView(): [SupportedOSPlatform(""macos11.2"")]
-	UIKit.UIView Bug35176.BarObject::get_FooView(): [SupportedOSPlatform(""ios14.3"")]
-	UIKit.UIView Bug35176.BarObject::get_FooView(): [SupportedOSPlatform(""maccatalyst14.3"")]
-	UIKit.UIView Bug35176.BarObject::get_FooView(): [SupportedOSPlatform(""macos11.2"")]
 	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [SupportedOSPlatform(""ios14.3"")]
 	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [SupportedOSPlatform(""maccatalyst14.3"")]
 	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [SupportedOSPlatform(""macos11.2"")]
-	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarMember(Bug35176.IFooInterface,System.Int32): [SupportedOSPlatform(""ios14.3"")]
-	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarMember(Bug35176.IFooInterface,System.Int32): [SupportedOSPlatform(""maccatalyst14.3"")]
-	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarMember(Bug35176.IFooInterface,System.Int32): [SupportedOSPlatform(""macos11.2"")]
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""ios14.4"")]
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""maccatalyst14.4"")]
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""macos11.2"")]
-	UIKit.UIView Bug35176.FooInterfaceWrapper::FooView(): [SupportedOSPlatform(""ios14.3"")]
-	UIKit.UIView Bug35176.FooInterfaceWrapper::FooView(): [SupportedOSPlatform(""maccatalyst14.3"")]
-	UIKit.UIView Bug35176.FooInterfaceWrapper::FooView(): [SupportedOSPlatform(""macos11.2"")]
-	UIKit.UIView Bug35176.FooInterfaceWrapper::get_FooView(): [SupportedOSPlatform(""ios14.3"")]
-	UIKit.UIView Bug35176.FooInterfaceWrapper::get_FooView(): [SupportedOSPlatform(""maccatalyst14.3"")]
-	UIKit.UIView Bug35176.FooInterfaceWrapper::get_FooView(): [SupportedOSPlatform(""macos11.2"")]
 ";
 #else
 			const string expectedAttributes =
@@ -329,10 +344,17 @@ namespace GeneratorTests {
 ";
 #endif
 
+			if (renderedAttributes != expectedAttributes) {
+				Console.WriteLine ($"Expected:");
+				Console.WriteLine (expectedAttributes);
+				Console.WriteLine ($"Actual:");
+				Console.WriteLine (renderedAttributes);
+			}
+
 			Assert.AreEqual (expectedAttributes, renderedAttributes, "Introduced attributes");
 			Assert.AreEqual (
 #if NET
-				36, // This number should be lower - https://github.com/xamarin/xamarin-macios/issues/14802
+				18, // This number should be lower - https://github.com/xamarin/xamarin-macios/issues/14802
 #else
 				10,
 #endif
@@ -1111,6 +1133,26 @@ namespace GeneratorTests {
 			bgen.AssertMethod ("NS.IProtocol_Extensions", "GetIPropAOpt", parameterTypes: "NS.IIProtocol");
 			bgen.AssertMethod ("NS.IProtocol_Extensions", "SetIPropBOpt", parameterTypes: new string [] { "NS.IIProtocol", "Foundation.NSObject" });
 			bgen.AssertPublicMethodCount ("NS.IProtocol_Extensions", 2);
+		}
+
+#if !NET
+		[Ignore ("This test only applies to .NET")]
+#endif
+		[Test]
+		public void GeneratedAttributeOnPropertyAccessors ()
+		{
+			var bgen = BuildFile (Profile.MacCatalyst, "tests/generated-attribute-on-property-accessors.cs");
+
+			var messaging = bgen.ApiAssembly.MainModule.Types.First (v => v.Name == "ISomething");
+			var property = messaging.Properties.First (v => v.Name == "IsLoadedInProcess");
+			var getter = messaging.Methods.First (v => v.Name == "get_IsLoadedInProcess");
+			var expectedPropertyAttributes =
+@"[SupportedOSPlatform(""maccatalyst"")]
+[SupportedOSPlatform(""macos10.15"")]
+[UnsupportedOSPlatform(""ios"")]
+[UnsupportedOSPlatform(""tvos"")]";
+			Assert.AreEqual (expectedPropertyAttributes, RenderSupportedOSPlatformAttributes (property), "Property attributes");
+			Assert.AreEqual (string.Empty, RenderSupportedOSPlatformAttributes (getter), "Getter Attributes");
 		}
 
 		BGenTool BuildFile (Profile profile, params string [] filenames)

@@ -3761,7 +3761,7 @@ public partial class Generator : IMemberGatherer {
 		return memberAvailability.ToArray ();
 	}
 
-	public bool PrintPlatformAttributes (MemberInfo mi, Type type = null, bool is_enum = false)
+	public bool PrintPlatformAttributes (MemberInfo mi, Type inlinedType = null)
 	{
 		bool printed = false;
 		if (mi == null)
@@ -3769,8 +3769,8 @@ public partial class Generator : IMemberGatherer {
 
 		AvailabilityBaseAttribute [] type_ca = null;
 
-		foreach (var availability in GetPlatformAttributesToPrint (mi, is_enum ? mi.DeclaringType : type, is_enum ? null : mi.DeclaringType)) {
-			var t = type ?? (mi as TypeInfo) ?? mi.DeclaringType;
+		foreach (var availability in GetPlatformAttributesToPrint (mi, mi.DeclaringType, inlinedType)) {
+			var t = inlinedType ?? (mi as TypeInfo) ?? mi.DeclaringType;
 			if (type_ca == null) {
 				if (t != null)
 					type_ca = AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (t);
@@ -5289,7 +5289,7 @@ public partial class Generator : IMemberGatherer {
 				PrintPlatformAttributes (pi.DeclaringType, type);
 			}
 		} else {
-			PrintPlatformAttributes (pi, type);
+			PrintPlatformAttributes (pi);
 		}
 
 		foreach (var sa in AttributeManager.GetCustomAttributes<ThreadSafeAttribute> (pi))
