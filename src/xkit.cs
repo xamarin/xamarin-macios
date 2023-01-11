@@ -3998,6 +3998,10 @@ namespace UIKit {
 
 	[NoWatch, TV (16, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	enum NSTextListMarkerFormats {
+		[DefaultEnumValue]
+		[Field (null)]
+		CustomString = -1,
+
 		[Mac (10, 13)]
 		[Field ("NSTextListMarkerBox")]
 		Box,
@@ -4071,6 +4075,7 @@ namespace UIKit {
 	[Flags]
 	[Native]
 	public enum NSTextListOptions : ulong {
+		None = 0,
 		PrependEnclosingMarker = 1,
 	}
 
@@ -4111,16 +4116,16 @@ namespace UIKit {
 	[BaseType (typeof (NSObject))]
 	interface NSTextList : NSCoding, NSCopying, NSSecureCoding {
 		[Export ("initWithMarkerFormat:options:")]
-#if NET
-		NativeHandle Constructor ([BindAs (typeof (NSTextListMarkerFormats))] NSString format, NSTextListOptions mask);
-#else
 		NativeHandle Constructor (string format, NSTextListOptions mask);
-#endif
 
-#if !NET
+		[Wrap ("this (format, NSTextListOptions.None)")]
+		NativeHandle Constructor (string format);
+
 		[Wrap ("this (format.GetConstant(), mask)")]
 		NativeHandle Constructor (NSTextListMarkerFormats format, NSTextListOptions mask);
-#endif
+
+		[Wrap ("this (format.GetConstant(), NSTextListOptions.None)")]
+		NativeHandle Constructor (NSTextListMarkerFormats format);
 
 #if NET
 		[BindAs (typeof (NSTextListMarkerFormats))] 
@@ -4129,8 +4134,14 @@ namespace UIKit {
 #if NET
 		NSString MarkerFormat { get; }
 #else
+		[Obsolete ("Use 'CustomMarkerFormat' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		string MarkerFormat { get; }
 #endif
+
+		[Sealed]
+		[Export ("markerFormat")]
+		string CustomMarkerFormat { get; }
 
 		[TV (16, 0), NoWatch, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("initWithMarkerFormat:options:startingItemNumber:")]
