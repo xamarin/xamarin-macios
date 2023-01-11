@@ -166,6 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\common\AppDelegate.cs" />
+    <Compile Include="..\..\common\TestAssemblyLoader.cs" />
     <Compile Include="XCFrameworkTests.cs" />
   </ItemGroup>
   <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />

@@ -5,6 +5,8 @@ using System.Reflection;
 
 using NUnit.Framework;
 
+using Foundation;
+
 #nullable enable
 
 public static partial class TestLoader {
@@ -16,6 +18,7 @@ public static partial class TestLoader {
 }
 
 [TestFixture]
+[Preserve (AllMembers = true)]
 public class LoaderTest {
 	public void TestAssemblyCount ()
 	{

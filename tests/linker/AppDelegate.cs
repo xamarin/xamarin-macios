@@ -2,6 +2,8 @@ using System;
 using System.Reflection;
 using System.Collections.Generic;
 
+using NUnit.Framework;
+
 public static partial class TestLoader {
 	static partial void AddTestAssembliesImpl (HashSet<Assembly> assemblies)
 	{
