@@ -24,7 +24,7 @@ namespace AppKit {
 		sealed class SortData {
 			public Exception? Exception;
 			public Func<NSView?, NSView?, NSComparisonResult> Comparer;
-			
+
 			public SortData (Func<NSView?, NSView?, NSComparisonResult> comparer)
 			{
 				Comparer = comparer;
