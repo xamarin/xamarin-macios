@@ -24,10 +24,6 @@ parameters:
 - name: azureContainer
   type: string
 
-- name: windowsPool
-  type: string
-  default: "VSEng-VSMac-Xamarin-Shared"
-
 jobs:
 - job: configure
   displayName: 'Configure build'
@@ -160,9 +156,7 @@ jobs:
     SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip_nugets'] ]
 
   pool:
-    name: ${{ parameters.windowsPool }}
-    demands:
-    - agent.os -equals Windows_NT
+    vmImage: windows-latest
     workspace:
       clean: all
   steps:

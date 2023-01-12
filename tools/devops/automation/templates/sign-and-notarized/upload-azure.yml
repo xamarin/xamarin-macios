@@ -48,7 +48,7 @@ steps:
 - task: DownloadPipelineArtifact@2
   displayName: Download packages
   inputs:
-    patterns: '**'
+    patterns: '!(*binlogs*|*DropMetadata*/**|*HtmlReport*/**|*TestSummary*/**|*agent-logs*/**|mac-test-package/**|crash-reports*/**)' # downlod all except some data we re not interested in 
     allowFailedBuilds: true
     path: $(Build.SourcesDirectory)/artifacts
 
@@ -82,7 +82,6 @@ steps:
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/package  # ideally, we would use a variable for this
-    AdditionalArgumentsForBlobCopy: "/SetContentType /Y $(AzCopyFullCopyArg)"
     outputStorageContainerSasToken: PackageSasToken
 
 - task: AzureFileCopy@3
@@ -94,7 +93,6 @@ steps:
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: jenkins/$(Build.SourceBranchName)/$(Build.SourceVersion)
-    AdditionalArgumentsForBlobCopy: "/SetContentType /Y $(AzCopyFullCopyArg)"
     outputStorageContainerSasToken: PackageSasToken
 
 - task: AzureFileCopy@3
@@ -106,7 +104,6 @@ steps:
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: jenkins/$(Build.SourceBranchName)/latest
-    AdditionalArgumentsForBlobCopy: "/SetContentType /Y $(AzCopyFullCopyArg)"
     outputStorageContainerSasToken: PackageSasToken
 
 - task: AzureFileCopy@3
@@ -118,7 +115,6 @@ steps:
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: jenkins/$(Build.SourceVersion)
-    AdditionalArgumentsForBlobCopy: "/SetContentType /Y $(AzCopyFullCopyArg)"
     outputStorageContainerSasToken: PackageSasToken
 
 - pwsh: |
