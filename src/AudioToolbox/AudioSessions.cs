@@ -32,6 +32,8 @@ using System.Runtime.InteropServices;
 using CoreFoundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AudioToolbox {
 
 	public enum AudioSessionErrors { // Implictly cast to OSType 

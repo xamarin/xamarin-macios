@@ -575,7 +575,7 @@ namespace CoreFoundation {
 
 			const int O_EVTONLY = 0x8000;
 			[DllImport (Constants.libcLibrary, SetLastError = true)]
-			extern static int open (string path, int flags);
+			extern static int open (IntPtr path, int flags);
 
 			[DllImport (Constants.libcLibrary)]
 			internal extern static int close (int fd);
@@ -585,7 +585,8 @@ namespace CoreFoundation {
 				if (path is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path));
 
-				fd = open (path, O_EVTONLY);
+				using var pathPtr = new TransientString (path);
+				fd = open (pathPtr, O_EVTONLY);
 				if (fd == -1)
 					throw new IOException ("Failure to open the file", Marshal.GetLastWin32Error ());
 				if (type_vnode == IntPtr.Zero)
