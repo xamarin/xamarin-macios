@@ -3,6 +3,8 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreMedia {
 	// keys names got changed at some point, but they all refer to a CMSampleBuffer (there is not CMSample obj)
 	[Watch (6, 0)]
