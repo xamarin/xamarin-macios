@@ -977,6 +977,12 @@ namespace Xamarin.Tests {
 				var tgtDir = Path.GetDirectoryName (tgt);
 				Directory.CreateDirectory (tgtDir);
 				File.Copy (src, tgt);
+				if (tgt.EndsWith (".csproj", StringComparison.OrdinalIgnoreCase)) {
+					var initialContents = File.ReadAllText (tgt);
+					var fixedContents = initialContents.Replace ($"$(MSBuildThisFileDirectory)", Path.GetDirectoryName (src) + Path.DirectorySeparatorChar);
+					if (initialContents != fixedContents)
+						File.WriteAllText (tgt, fixedContents);
+				}
 			}
 
 			return testsTemporaryDirectory;
