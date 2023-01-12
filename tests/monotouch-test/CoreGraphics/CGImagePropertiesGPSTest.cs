@@ -9,11 +9,9 @@ using CoreGraphics;
 using NUnit.Framework;
 using System.IO;
 
-namespace monotouchtest.CoreGraphics
-{
+namespace monotouchtest.CoreGraphics {
 	[TestFixture]
-	public class CGImagePropertiesGPSTest
-	{
+	public class CGImagePropertiesGPSTest {
 		[Test]
 		public void LongitudeRefAndLattitudeRefTest ()
 		{
@@ -23,7 +21,7 @@ namespace monotouchtest.CoreGraphics
 				new NSString ("LongitudeRef"),
 				new NSString ("Longitude")
 			};
-			var values = new object[] {
+			var values = new object [] {
 				new NSString ("N"),
 				47.6422f,
 				new NSString ("W"),
@@ -33,7 +31,7 @@ namespace monotouchtest.CoreGraphics
 			Assert.AreEqual (gps.LatitudeRef, values [0]);
 			Assert.AreEqual (gps.Latitude, values [1]);
 			Assert.AreEqual (gps.LongitudeRef, values [2]);
-			Assert.AreEqual (gps.Longitude, values [3]);		
+			Assert.AreEqual (gps.Longitude, values [3]);
 		}
 	}
 }
