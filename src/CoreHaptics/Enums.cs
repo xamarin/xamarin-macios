@@ -10,6 +10,8 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreHaptics {
 
 	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
