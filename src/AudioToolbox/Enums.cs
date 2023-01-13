@@ -9,6 +9,7 @@ namespace AudioToolbox {
 	[TV (10, 0)]
 	[Mac (10, 12)]
 	[iOS (10, 0)]
+	[MacCatalyst (13, 1)]
 	[Flags]
 	public enum AudioSettingsFlags : uint {
 		ExpertParameter = (1u << 0),
@@ -21,6 +22,7 @@ namespace AudioToolbox {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	public enum AUSpatialMixerOutputType : uint {
 		Headphones = 1,
 		BuiltInSpeakers = 2,
@@ -31,6 +33,7 @@ namespace AudioToolbox {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	public enum AUSpatialMixerPointSourceInHeadMode : uint {
 		Mono = 0,
 		Bypass = 1,
@@ -40,6 +43,7 @@ namespace AudioToolbox {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	public enum AUSpatialMixerSourceMode : uint {
 		SpatializeIfMono = 0,
 		Bypass = 1,
@@ -51,12 +55,16 @@ namespace AudioToolbox {
 	[TV (16, 0)]
 	[Mac (13, 0)]
 	[iOS (16, 0)]
+	[MacCatalyst (16, 0)]
 	public enum AUSpatialMixerPersonalizedHrtfMode : uint {
 		[NoiOS, NoTV]
+		[NoMacCatalyst]
 		Off = 0,
 		[NoiOS, NoTV]
+		[NoMacCatalyst]
 		On = 1,
 		[NoiOS, NoTV]
+		[NoMacCatalyst]
 		Auto = 2,
 	}
 

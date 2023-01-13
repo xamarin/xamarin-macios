@@ -22,6 +22,7 @@ namespace SoundAnalysis {
 
 	[ErrorDomain ("SNErrorDomain")]
 	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	enum SNErrorCode : long {
 		UnknownError = 1,
@@ -39,6 +40,7 @@ namespace SoundAnalysis {
 	}
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SNAudioStreamAnalyzer {
@@ -66,6 +68,7 @@ namespace SoundAnalysis {
 	delegate void SNAudioFileAnalyzerAnalyzeHandler (bool didReachEndOfFile);
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SNAudioFileAnalyzer {
@@ -95,6 +98,7 @@ namespace SoundAnalysis {
 	}
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SNClassification {
@@ -107,6 +111,7 @@ namespace SoundAnalysis {
 	}
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SNClassificationResult : SNResult {
@@ -124,6 +129,7 @@ namespace SoundAnalysis {
 	}
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SNClassifySoundRequest : SNRequest {
@@ -154,18 +160,21 @@ namespace SoundAnalysis {
 	interface ISNRequest { }
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface SNRequest { }
 
 	interface ISNResult { }
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface SNResult { }
 
 	interface ISNResultsObserving { }
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface SNResultsObserving {
 

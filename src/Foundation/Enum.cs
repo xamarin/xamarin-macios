@@ -230,6 +230,7 @@ namespace Foundation {
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		Week = 256,
 		Weekday = 512,
 		WeekdayOrdinal = 1024,
@@ -264,14 +265,19 @@ namespace Foundation {
 
 		WithoutOverwriting = 2,
 		[Mac (11, 0)]
+		[MacCatalyst (13, 1)]
 		FileProtectionNone = 0x10000000,
 		[Mac (11, 0)]
+		[MacCatalyst (13, 1)]
 		FileProtectionComplete = 0x20000000,
 		[Mac (11, 0)]
+		[MacCatalyst (13, 1)]
 		FileProtectionMask = 0xf0000000,
 		[Mac (11, 0)]
+		[MacCatalyst (13, 1)]
 		FileProtectionCompleteUnlessOpen = 0x30000000,
 		[Mac (11, 0)]
+		[MacCatalyst (13, 1)]
 		FileProtectionCompleteUntilFirstUserAuthentication = 0x40000000,
 	}
 
@@ -580,8 +586,10 @@ namespace Foundation {
 		SkipsPackageDescendants = 1 << 1,
 		SkipsHiddenFiles = 1 << 2,
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		IncludesDirectoriesPostOrder = 1 << 3,
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		ProducesRelativePathUrls = 1 << 4,
 	}
 
@@ -620,11 +628,13 @@ namespace Foundation {
 		[NoWatch]
 		[NoiOS]
 		[NoTV]
+		[NoMacCatalyst]
 		ApplicationScriptsDirectory = 23,
 		ItemReplacementDirectory = 99,
 		AllApplicationsDirectory = 100,
 		AllLibrariesDirectory = 101,
 		[NoTV, NoWatch]
+		[MacCatalyst (13, 1)]
 		TrashDirectory = 102,
 	}
 
@@ -679,12 +689,16 @@ namespace Foundation {
 		Scientific = 4,
 		SpellOut = 5,
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		OrdinalStyle = 6,
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		CurrencyIsoCodeStyle = 8,
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		CurrencyPluralStyle = 9,
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		CurrencyAccountingStyle = 10,
 	}
 
@@ -728,9 +742,11 @@ namespace Foundation {
 		ResolvesSymbolicLink = 1 << 1,
 		[Mac (10, 10)]
 		[iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		ImmediatelyAvailableMetadataOnly = 1 << 2,
 		[Mac (10, 10)]
 		[iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		ForUploading = 1 << 3
 	}
 
@@ -743,6 +759,7 @@ namespace Foundation {
 		ForReplacing = 8,
 		[iOS (8, 0)]
 		[Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		ContentIndependentMetadataOnly = 16,
 	}
 
@@ -782,10 +799,13 @@ namespace Foundation {
 	public enum NSJsonWritingOptions : ulong {
 		PrettyPrinted = 1,
 		[Mac (10, 13), iOS (11, 0), TV (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		SortedKeys = (1 << 1),
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		FragmentsAllowed = (1 << 2),
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		WithoutEscapingSlashes = (1 << 3),
 	}
 
@@ -901,8 +921,10 @@ namespace Foundation {
 		MinimalBookmark = 1 << 9,
 		SuitableForBookmarkFile = 1 << 10,
 		[NoiOS, NoTV, NoWatch]
+		[NoMacCatalyst]
 		WithSecurityScope = 1 << 11,
 		[NoiOS, NoTV, NoWatch]
+		[NoMacCatalyst]
 		SecurityScopeAllowOnlyReadAccess = 1 << 12,
 		[Mac (12, 0), iOS (15, 0), TV (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
 		CreationWithoutImplicitSecurityScope = 1 << 29,
@@ -914,6 +936,7 @@ namespace Foundation {
 		WithoutUI = 1 << 8,
 		WithoutMounting = 1 << 9,
 		[NoiOS, NoTV, NoWatch]
+		[NoMacCatalyst]
 		WithSecurityScope = 1 << 10,
 		[Mac (12, 0), iOS (15, 0), TV (15, 0), Watch (8, 0), MacCatalyst (15, 0)]
 		WithoutImplicitStartAccessing = 1 << 15,
@@ -942,20 +965,27 @@ namespace Foundation {
 		WrapCalendarComponents = 1 << 0,
 
 		[Mac (10, 9)]
+		[MacCatalyst (13, 1)]
 		MatchStrictly = 1 << 1,
 		[Mac (10, 9)]
+		[MacCatalyst (13, 1)]
 		SearchBackwards = 1 << 2,
 
 		[Mac (10, 9)]
+		[MacCatalyst (13, 1)]
 		MatchPreviousTimePreservingSmallerUnits = 1 << 8,
 		[Mac (10, 9)]
+		[MacCatalyst (13, 1)]
 		MatchNextTimePreservingSmallerUnits = 1 << 9,
 		[Mac (10, 9)]
+		[MacCatalyst (13, 1)]
 		MatchNextTime = 1 << 10,
 
 		[Mac (10, 9)]
+		[MacCatalyst (13, 1)]
 		MatchFirst = 1 << 12,
 		[Mac (10, 9)]
+		[MacCatalyst (13, 1)]
 		MatchLast = 1 << 13,
 	}
 
@@ -966,6 +996,7 @@ namespace Foundation {
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'PushKit' framework instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'PushKit' framework instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'PushKit' framework instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'PushKit' framework instead.")]
 		VoIP,
 		Video,
 		Background,
@@ -974,15 +1005,19 @@ namespace Foundation {
 		[iOS (12, 0)]
 		[Watch (5, 0)]
 		[TV (12, 0)]
+		[MacCatalyst (13, 1)]
 		ResponsiveData = 6,
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		AVStreaming = 8,
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		ResponsiveAV = 9,
 		[Mac (10, 12)]
 		[iOS (10, 0)]
 		[Watch (3, 0)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		CallSignaling = 11,
 	}
 
@@ -1012,6 +1047,7 @@ namespace Foundation {
 
 #if !XAMCORE_3_0
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'NSWritingDirectionFormatType'.")]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'NSWritingDirectionFormatType'.")]
 	[Flags]
 	[Native]
 	public enum NSTextWritingDirection : long {
@@ -1077,6 +1113,7 @@ namespace Foundation {
 
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSItemProviderErrorCode : long {
 		Unknown = -1,
@@ -1089,6 +1126,7 @@ namespace Foundation {
 	[Native]
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NSDateComponentsFormatterUnitsStyle : long {
 		Positional = 0,
 		Abbreviated,
@@ -1099,6 +1137,7 @@ namespace Foundation {
 		[TV (10, 0)]
 		[Watch (3, 0)]
 		[Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		Brief,
 	}
 
@@ -1106,6 +1145,7 @@ namespace Foundation {
 	[Native]
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NSDateComponentsFormatterZeroFormattingBehavior : ulong {
 		None = (0),
 		Default = (1 << 0),
@@ -1119,6 +1159,7 @@ namespace Foundation {
 	[Native]
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NSFormattingContext : long {
 		Unknown = 0,
 		Dynamic = 1,
@@ -1130,6 +1171,7 @@ namespace Foundation {
 
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSDateIntervalFormatterStyle : ulong {
 		None = 0,
@@ -1141,6 +1183,7 @@ namespace Foundation {
 
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSEnergyFormatterUnit : long {
 		Joule = 11,
@@ -1151,6 +1194,7 @@ namespace Foundation {
 
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSFormattingUnitStyle : long {
 		Short = 1,
@@ -1160,6 +1204,7 @@ namespace Foundation {
 
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSMassFormatterUnit : long {
 		Gram = 11,
@@ -1171,6 +1216,7 @@ namespace Foundation {
 
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSLengthFormatterUnit : long {
 		Millimeter = 8,
@@ -1185,6 +1231,7 @@ namespace Foundation {
 
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSQualityOfService : long {
 		UserInteractive = 33,
@@ -1198,6 +1245,7 @@ namespace Foundation {
 	[Watch (4, 0)]
 	[TV (11, 0)]
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSProcessInfoThermalState : long {
 		Nominal, Fair, Serious, Critical
@@ -1266,6 +1314,7 @@ namespace Foundation {
 	}
 
 	[Mac (10, 11), iOS (9, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
 	public enum NSPersonNameComponentsFormatterOptions : ulong {
@@ -1273,6 +1322,7 @@ namespace Foundation {
 	}
 
 	[Mac (10, 11), iOS (9, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSPersonNameComponentsFormatterStyle : long {
 		Default = 0,
@@ -1284,6 +1334,7 @@ namespace Foundation {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSDecodingFailurePolicy : long {
 		RaiseException,
@@ -1294,6 +1345,7 @@ namespace Foundation {
 	[TV (10, 0)]
 	[Watch (3, 0)]
 	[Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
 	public enum NSIso8601DateFormatOptions : ulong {
@@ -1308,6 +1360,7 @@ namespace Foundation {
 		ColonSeparatorInTime = 1 << 9,
 		ColonSeparatorInTimeZone = 1 << 10,
 		[Mac (10, 13), iOS (11, 0), TV (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		FractionalSeconds = 1 << 11,
 		FullDate = Year | Month | Day | DashSeparatorInDate,
 		FullTime = Time | ColonSeparatorInTime | TimeZone | ColonSeparatorInTimeZone,
@@ -1318,6 +1371,7 @@ namespace Foundation {
 	[TV (10, 0)]
 	[Mac (10, 12)]
 	[iOS (10, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSUrlSessionTaskMetricsResourceFetchType : long {
 		Unknown,
@@ -1330,6 +1384,7 @@ namespace Foundation {
 	[TV (10, 0)]
 	[Mac (10, 12)]
 	[iOS (10, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
 	public enum NSMeasurementFormatterUnitOptions : ulong {
@@ -1340,23 +1395,28 @@ namespace Foundation {
 
 
 	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSItemProviderRepresentationVisibility : long {
 		All = 0,
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		Team = 1,
 		[NoiOS, NoTV, NoWatch]
+		[NoMacCatalyst]
 		Group = 2,
 		OwnProcess = 3,
 	}
 
 	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSItemProviderFileOptions : long {
 		OpenInPlace = 1,
 	}
 
 	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSLinguisticTaggerUnit : long {
 		Word,
@@ -1366,6 +1426,7 @@ namespace Foundation {
 	}
 
 	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSUrlSessionDelayedRequestDisposition : long {
 		ContinueLoading = 0,
