@@ -2,6 +2,8 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AudioToolbox {
 	[NoWatch]
 	[TV (10, 0)]

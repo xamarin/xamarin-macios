@@ -39,6 +39,8 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
+#nullable enable
+
 namespace AudioUnit {
 	public enum AudioUnitStatus { // Implictly cast to OSType
 		NoError = 0,
