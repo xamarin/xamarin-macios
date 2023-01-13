@@ -128,7 +128,10 @@ namespace ContactsUI {
 #endif
 		CNContact Contact {
 			get;
-			[NoiOS][NoTV][NoWatch][NoMacCatalyst]
+			[NoiOS]
+			[NoTV]
+			[NoWatch]
+			[NoMacCatalyst]
 			set;
 		}
 
