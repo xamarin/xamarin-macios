@@ -732,9 +732,30 @@ namespace ObjCRuntime {
 		internal static bool class_addProperty (IntPtr cls, string name, objc_attribute_prop [] attributes, int count)
 		{
 			using var namePtr = new TransientString (name, TransientString.Encoding.Ansi);
-			var handle = GCHandle.Alloc (attributes);
-			var retval = class_addProperty (cls, namePtr, GCHandle.ToIntPtr (handle), count);
+			var ptrs = PropertyStringsToPtrs (attributes);
+			var ptrsHandle = GCHandle.Alloc (ptrs);
+			var retval = class_addProperty (cls, namePtr, GCHandle.ToIntPtr (ptrsHandle), count);
+			ptrsHandle.Free ();
+			FreeStringPtrs (ptrs);
 			return retval;
+		}
+
+		internal static IntPtr [] PropertyStringsToPtrs (objc_attribute_prop [] props)
+		{
+			var ptrs = new IntPtr [props.Length];
+			var index = 0;
+			foreach (var prop in props) {
+				ptrs [index++] = Marshal.StringToHGlobalAnsi (prop.name);
+				ptrs [index++] = Marshal.StringToHGlobalAnsi (prop.value);
+			}
+			return ptrs;
+		}
+
+		internal static void FreeStringPtrs (IntPtr [] ptrs)
+		{
+			foreach (var ptr in ptrs) {
+				Marshal.FreeHGlobal (ptr);
+			}
 		}
 
 		[StructLayout (LayoutKind.Sequential, CharSet = CharSet.Ansi)]
