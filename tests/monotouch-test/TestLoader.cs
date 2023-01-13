@@ -5,17 +5,20 @@ using System.Reflection;
 
 using NUnit.Framework;
 
+using Foundation;
+
 #nullable enable
 
 public static partial class TestLoader {
 	static partial void AddTestAssembliesImpl (HashSet<Assembly> assemblies)
 	{
-		assemblies.Add (typeof (Xamarin.BindingTests2.BindingTest).Assembly);
+		assemblies.Add (typeof (EmbeddedResources.ResourcesTest).Assembly);
 		assemblies.Add (typeof (Xamarin.BindingTests.ProtocolTest).Assembly);
 	}
 }
 
 [TestFixture]
+[Preserve (AllMembers = true)]
 public class LoaderTest {
 	public void TestAssemblyCount ()
 	{
