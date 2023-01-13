@@ -1705,6 +1705,12 @@ namespace WebKit {
 
 		[Export ("click")]
 		void Click ();
+
+		[Export ("form", ArgumentSemantic.Retain)]
+		DomHtmlFormElement Form { get; }
+
+		[Export ("files", ArgumentSemantic.Retain), Mac (10, 9)]
+		DomFileList Files { get; set; }
 	}
 
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
@@ -1754,6 +1760,9 @@ namespace WebKit {
 
 		[Export ("select")]
 		void Select ();
+
+		[Export ("form", ArgumentSemantic.Retain)]
+		DomHtmlFormElement Form { get; }
 	}
 
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
@@ -2290,6 +2299,21 @@ namespace WebKit {
 
 		[Export ("webView:unableToImplementPolicyWithError:frame:"), EventArgs ("WebFailureToImplementPolicy")]
 		void UnableToImplementPolicy (WebView webView, NSError error, WebFrame frame);
+
+		[Field ("WebActionNavigationTypeKey")]
+		NSString WebActionNavigationTypeKey { get; }
+
+		[Field ("WebActionElementKey")]
+		NSString WebActionElementKey { get; }
+
+		[Field ("WebActionButtonKey")]
+		NSString WebActionButtonKey { get; }
+
+		[Field ("WebActionModifierFlagsKey")]
+		NSString WebActionModifierFlagsKey { get; }
+
+		[Field ("WebActionOriginalURLKey")]
+		NSString WebActionOriginalUrlKey { get; }
 	}
 
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
@@ -3030,25 +3054,6 @@ namespace WebKit {
 	}
 
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
-	partial interface WebPolicyDelegate {
-
-		[Field ("WebActionNavigationTypeKey")]
-		NSString WebActionNavigationTypeKey { get; }
-
-		[Field ("WebActionElementKey")]
-		NSString WebActionElementKey { get; }
-
-		[Field ("WebActionButtonKey")]
-		NSString WebActionButtonKey { get; }
-
-		[Field ("WebActionModifierFlagsKey")]
-		NSString WebActionModifierFlagsKey { get; }
-
-		[Field ("WebActionOriginalURLKey")]
-		NSString WebActionOriginalUrlKey { get; }
-	}
-
-	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomObject), Name = "DOMBlob")]
 	[DisableDefaultCtor]
@@ -3115,19 +3120,6 @@ namespace WebKit {
 
 		[Export ("reset")]
 		void Reset ();
-	}
-
-	partial interface DomHtmlTextAreaElement {
-		[Export ("form", ArgumentSemantic.Retain)]
-		DomHtmlFormElement Form { get; }
-	}
-
-	partial interface DomHtmlInputElement {
-		[Export ("form", ArgumentSemantic.Retain)]
-		DomHtmlFormElement Form { get; }
-
-		[Export ("files", ArgumentSemantic.Retain), Mac (10, 9)]
-		DomFileList Files { get; set; }
 	}
 
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
