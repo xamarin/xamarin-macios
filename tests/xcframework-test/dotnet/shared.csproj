@@ -28,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="$(FrameworkTestDirectory)\iOS\AppDelegate.cs" Condition="!$(TargetFramework.EndsWith('-macos'))" />
     <Compile Include="$(RootTestsDirectory)\common\AppDelegate.cs" Condition="!$(TargetFramework.EndsWith('-macos'))" />
     <Compile Include="$(FrameworkTestDirectory)\iOS\XCFrameworkTests.cs" />
     <Compile Include="$(RootTestsDirectory)\common\mac\MacMain.cs" Condition="$(TargetFramework.EndsWith('-macos'))" Link="MacMain.cs" />
