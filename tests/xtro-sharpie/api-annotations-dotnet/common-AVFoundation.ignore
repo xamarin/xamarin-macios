@@ -52,3 +52,6 @@
 
 # no tests/samples
 !missing-pinvoke! AVSampleBufferAttachContentKey is not bound
+
+# intro says it does not
+!missing-protocol-conformance! AVPlayerInterstitialEvent should conform to NSCopying

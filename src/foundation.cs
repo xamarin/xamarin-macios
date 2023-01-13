@@ -31,6 +31,7 @@
 //
 //
 #define DOUBLE_BLOCKS
+using AVFoundation;
 using ObjCRuntime;
 using CloudKit;
 using CoreData;
@@ -11426,6 +11427,19 @@ namespace Foundation
 		[iOS (8,0)][Mac (10,10)]
 		[Export ("SCNMatrix4Value")]
 		SCNMatrix4 SCNMatrix4Value { get; }
+
+		#endregion
+
+		#region AVFoundation additions
+
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Static]
+		[Export ("valueWithCMVideoDimensions:")]
+		NSValue FromCMVideoDimensions (CMVideoDimensions dimensions);
+
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("CMVideoDimensionsValue")]
+		CMVideoDimensions CMVideoDimensionsValue { get; }
 
 		#endregion
 	}

@@ -242,6 +242,10 @@ namespace AVFoundation {
 		RosettaNotInstalled = -11877,
 		OperationCancelled = -11878,
 		RequestCancelled = -11879,
+
+		InvalidSampleCursor = -11880,
+		FailedToLoadSampleData = -11881,
+		AirPlayReceiverTemporarilyUnavailable = -11882,
 	}
 
 	[Watch (6, 0)]
@@ -666,7 +670,8 @@ namespace AVFoundation {
 	[Native]
 	public enum AVSpeechSynthesisVoiceQuality : long {
 		Default = 1,
-		Enhanced
+		Enhanced,
+		Premium,
 	}
 
 	[iOS (9, 0)]
@@ -1025,6 +1030,7 @@ namespace AVFoundation {
 	[Native]
 	public enum AVAudioSessionRouteSharingPolicy : ulong {
 		Default = 0,
+		[Deprecated (PlatformName.MacOSX, 13, 0)]
 		LongForm = 1,
 		Independent = 2,
 		[iOS (14, 0)]
@@ -1236,8 +1242,7 @@ namespace AVFoundation {
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
-	[NoMac]
-	[iOS (13, 0)]
+	[iOS (13, 0), Mac (13, 0)]
 	[Native]
 	public enum AVCapturePhotoQualityPrioritization : long {
 		Speed = 1,

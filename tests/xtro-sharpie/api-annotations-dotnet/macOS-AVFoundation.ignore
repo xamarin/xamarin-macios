@@ -43,3 +43,11 @@
 
 # not used on macOS
 !missing-enum! AVAudioSessionInterruptionReason not bound
+
+# removed on xcode 14.1
+!extra-enum-value! Managed value -11837 for AVError.DeviceIsNotAvailableInBackground not found in native headers
+
+# xtro complains but is not present in the headers or in the apple docs
+!missing-selector! +AVCaptureDevice::setUserAVCaptureDevice: not bound
+!missing-selector! +AVCaptureDevice::systemAVCaptureDevice not bound
+!missing-selector! +AVCaptureDevice::userAVCaptureDevice not bound

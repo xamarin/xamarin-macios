@@ -289,6 +289,12 @@ namespace Cecil.Tests {
 				"GameController.GCGearShifterElement.get_SfSymbolsName",
 				"GameController.GCRacingWheelInput",
 				"GameController.GCSteeringWheelElemen",
+				"AVFoundation.AVCaptureDevice.IsStudioLightActive",
+				"AVFoundation.AVCaptureDevice.IsStudioLightEnabled",
+				"AVFoundation.AVAudioUnitMidiInstrument.SendMIDIEventList",
+				"AVFoundation.AVCaptureDeviceFormat.VideoFrameRateRangeForStudioLight",
+				"AVFoundation.AVAudioUnitMidiInstrument.SendMIDIEventLis",
+				"AVFoundation.AVCaptureDeviceFormat.IsStudioLightSupported",
 			};
 
 			if (inlineProtocols.Any ((p) => member.StartsWith (p))) {

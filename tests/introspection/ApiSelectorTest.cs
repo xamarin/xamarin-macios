@@ -947,6 +947,13 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "AVSpeechUtterance":
+				switch (selectorName) {
+					case "initWithString:":
+					case "initWithSSMLRepresentation:":
+						return true;
+				}
+				break;
 #if NET
 			// Incorrect attributes in inlined protocol selectors - https://github.com/xamarin/xamarin-macios/issues/14802
 			case "NSTextAttachment":
