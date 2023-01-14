@@ -836,13 +836,16 @@ namespace CoreMidi {
 
 		public IntPtr Bytes {
 			get {
+				byte* value = byteptr;
 				if (bytes is null || bytes.Length < 1)
-					return byteptr;
+					return value;
+				
 				unsafe {
 					fixed (byte* p = &bytes [start]) {
-						return (IntPtr) p;
+						value =(IntPtr) p;
 					}
 				}
+				return value;
 			}
 		}
 
