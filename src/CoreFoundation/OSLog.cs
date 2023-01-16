@@ -84,7 +84,7 @@ namespace CoreFoundation {
 		extern static void os_release (IntPtr handle);
 
 		[DllImport ("__Internal")]
-		extern static void xamarin_os_log (IntPtr logHandle, OSLogLevel level, string message);
+		extern static void xamarin_os_log (IntPtr logHandle, OSLogLevel level, IntPtr message);
 
 		[Preserve (Conditional = true)]
 		internal OSLog (NativeHandle handle, bool owns)
@@ -112,7 +112,8 @@ namespace CoreFoundation {
 			if (message is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (message));
 
-			xamarin_os_log (Handle, level, message);
+			using var messagePtr = new TransientString (message);
+			xamarin_os_log (Handle, level, messagePtr);
 		}
 	}
 }

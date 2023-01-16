@@ -5,9 +5,6 @@
 ## unsorted
 
 !unknown-field! item bound
-!missing-field! NSCharacterEncodingDocumentOption not bound
-!missing-field! NSDefaultAttributesDocumentOption not bound
-!missing-field! NSDocumentTypeDocumentOption not bound
 !missing-field! NSImageNameColumnViewTemplate not bound
 !missing-field! NSImageNameGoBackTemplate not bound
 !missing-field! NSImageNameGoForwardTemplate not bound

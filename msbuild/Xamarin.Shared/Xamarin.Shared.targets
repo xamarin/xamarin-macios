@@ -164,8 +164,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		Outputs="$(BindingResourcePath).stamp">
 
 		<!-- CompressBindingResourcePackage specifies whether the package should be compressed (zipped) or not
-			true: compressed (we produce an Assembly.resources directory)
-			false: not compressed (we produce an Assembly.resources.zip file)
+			true: compressed (we produce an Assembly.resources.zip file)
+			false: not compressed (we produce an Assembly.resources directory)
 			auto: compressed if there are any symlinks
 			The default is 'false' for legacy Xamarin projects (for compatibility) and 'auto' for .NET projects (NuGet doesn't handle symlinks properly, so this way it's not necessary to set this property to create NuGets that work)
 		-->
@@ -2639,6 +2639,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true'"
 			DSymDir="%(_GenerateDSymItems.DSymDir)"
 			Executable="$(_AppContainerDir)%(_GenerateDSymItems.Identity)"
+			SdkDevPath="$(_SdkDevPath)"
 		/>
 
 		<!-- There's no need to touch the stamp file, because it's a file created by dsymutil -->

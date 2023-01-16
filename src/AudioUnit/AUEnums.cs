@@ -39,6 +39,8 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
+#nullable enable
+
 namespace AudioUnit {
 	public enum AudioUnitStatus { // Implictly cast to OSType
 		NoError = 0,
@@ -563,8 +565,11 @@ namespace AudioUnit {
 		AULowShelfCutoffFrequency = 0,
 		AULowShelfGain = 1,
 
+#if !XAMCORE_5_0 // I can't find this value in the headers anymore
 		[Obsoleted (PlatformName.iOS, 7, 0)]
+		[Obsoleted (PlatformName.MacCatalyst, 13, 1)]
 		AUDCFilterDecayTime = 0,
+#endif
 
 		// AUParametricEQ
 		ParametricEQCenterFreq = 0,

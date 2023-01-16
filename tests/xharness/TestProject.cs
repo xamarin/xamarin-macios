@@ -237,7 +237,7 @@ namespace Xharness {
 				var sharedProjectPath = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (original_path), project);
 				// Check for variables that won't work correctly if the shared code is moved to a different file
 				var xml = File.ReadAllText (sharedProjectPath);
-				xml = xml.Replace ("$(MSBuildThisFileDirectory)", System.IO.Path.GetDirectoryName (sharedProjectPath));
+				xml = xml.Replace ("$(MSBuildThisFileDirectory)", System.IO.Path.GetDirectoryName (sharedProjectPath) + System.IO.Path.DirectorySeparatorChar);
 				if (xml.Contains ("$(MSBuildThis"))
 					throw new InvalidOperationException ($"Can't use MSBuildThis* variables in shared MSBuild test code: {sharedProjectPath}");
 
