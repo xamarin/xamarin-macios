@@ -12,6 +12,8 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreMedia {
 
 	// FourCharCode -> CMFormatDescription.h

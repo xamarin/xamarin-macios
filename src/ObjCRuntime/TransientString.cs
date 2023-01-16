@@ -11,6 +11,13 @@ namespace ObjCRuntime {
 	//
 	// If SomePInvoke doesn't make a copy, this is not the right tool
 	// for you.
+	//
+	// It can also allocate a chunk of memory to be used as a parameter
+	// for a method that will write a string to a pointer:
+	// using var outstr = new NativeString (255); // 255 bytes of memory
+	// SomePInvoke (outstr);
+	// var str = (string) outstr; // convert the returned native string
+	// to a managed string.
 	internal struct TransientString : IDisposable {
 		IntPtr ptr;
 		public enum Encoding {
@@ -20,6 +27,10 @@ namespace ObjCRuntime {
 			Unicode,
 		};
 
+		public TransientString (nint size)
+		{
+			ptr = Marshal.AllocHGlobal ((IntPtr) size);
+		}
 
 		public TransientString (string? str, Encoding encoding = Encoding.Auto)
 		{
@@ -50,7 +61,7 @@ namespace ObjCRuntime {
 		}
 
 		public static implicit operator IntPtr (TransientString str) => str.ptr;
-
+		public static explicit operator string? (TransientString str) => Marshal.PtrToStringAuto (str.ptr);
 
 		public static string? ToStringAndFree (IntPtr ptr, Encoding encoding = Encoding.Auto)
 		{
