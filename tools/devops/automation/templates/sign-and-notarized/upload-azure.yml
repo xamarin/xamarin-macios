@@ -48,7 +48,7 @@ steps:
 - task: DownloadPipelineArtifact@2
   displayName: Download packages
   inputs:
-    patterns: '**'
+    patterns: '!(*binlogs*|*DropMetadata*/**|*HtmlReport*/**|*TestSummary*/**|*agent-logs*/**|mac-test-package/**|crash-reports*/**)' # downlod all except some data we re not interested in 
     allowFailedBuilds: true
     path: $(Build.SourcesDirectory)/artifacts
 

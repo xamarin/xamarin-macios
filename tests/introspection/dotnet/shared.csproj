@@ -41,7 +41,6 @@
   </ItemGroup>
 
   <ItemGroup Condition="!$(TargetFramework.EndsWith('-macos'))">
-    <Compile Include="$(IntrospectionTestDirectory)\iOS\AppDelegate.cs" />
     <Compile Include="$(RootTestsDirectory)\common\AppDelegate.cs" />
     <Compile Include="$(IntrospectionTestDirectory)\iOS\iOSApiCtorInitTest.cs" />
     <Compile Include="$(IntrospectionTestDirectory)\iOS\iOSApiFieldTest.cs" />
@@ -138,6 +137,9 @@
     </Compile>
     <Compile Include="$(IntrospectionTestDirectory)\..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
+    </Compile>
+    <Compile Include="$(IntrospectionTestDirectory)\..\..\tests\common\TestAssemblyLoader.cs">
+      <Link>TestAssemblyLoader.cs</Link>
     </Compile>
     <Compile Include="$(IntrospectionTestDirectory)\ApiFrameworkTest.cs">
       <Link>ApiFrameworkTest.cs</Link>

@@ -206,6 +206,9 @@
     <Compile Include="..\common\Extensions.cs">
       <Link>Extensions.cs</Link>
     </Compile>
+    <Compile Include="..\common\TestAssemblyLoader.cs">
+      <Link>TestAssemblyLoader.cs</Link>
+    </Compile>
     <Compile Include="..\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>
     </Compile>
@@ -351,6 +354,18 @@
   <ItemGroup>
     <EmbeddedResource Include="Security\openssl_crt.der">
         <LogicalName>monotouchtest.Security.openssl_crt.der</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Welcome.resx">
+      <LogicalName>monotouchtest.Welcome.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Welcome.en-AU.resx">
+      <LogicalName>monotouchtest.Welcome.en-AU.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Welcome.es.resx">
+      <LogicalName>monotouchtest.Welcome.es.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Welcome.de.resx">
+      <LogicalName>monotouchtest.Welcome.de.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
