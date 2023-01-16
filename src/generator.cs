@@ -5283,6 +5283,18 @@ public partial class Generator : IMemberGatherer {
 		bool use_underscore = minfo.is_unified_internal;
 		var mod = minfo.GetVisibility ();
 		minfo.protocolize = Protocolize (pi);
+		MethodInfo getter = null;
+		MethodInfo setter = null;
+		var generate_getter = false;
+		var generate_setter = false;
+		if (pi.CanRead) {
+			getter = pi.GetGetMethod ();
+			generate_getter = !getter.IsUnavailable (this);
+		}
+		if (pi.CanWrite) {
+			setter = pi.GetSetMethod ();
+			generate_setter = !setter.IsUnavailable (this);
+		}
 
 		var nullable = !pi.PropertyType.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
 
@@ -5322,7 +5334,7 @@ public partial class Generator : IMemberGatherer {
 					pi.Name.GetSafeParamName (),
 				   use_underscore ? "_" : "");
 			indent++;
-			if (pi.CanRead) {
+			if (generate_getter) {
 #if !NET
 				PrintAttributes (pi, platform: true);
 #endif
@@ -5344,7 +5356,7 @@ public partial class Generator : IMemberGatherer {
 				indent--;
 				print ("}");
 			}
-			if (pi.CanWrite) {
+			if (generate_setter) {
 #if !NET
 				PrintAttributes (pi, platform: true);
 #endif
@@ -5422,7 +5434,7 @@ public partial class Generator : IMemberGatherer {
 
 		if (minfo.has_inner_wrap_attribute) {
 			// If property getter or setter has its own WrapAttribute we let the user do whatever their heart desires
-			if (pi.CanRead) {
+			if (generate_getter) {
 				PrintAttributes (pi, platform: true);
 				PrintAttributes (pi.GetGetMethod (), platform: true, preserve: true, advice: true);
 				print ("get {");
@@ -5433,8 +5445,7 @@ public partial class Generator : IMemberGatherer {
 				indent--;
 				print ("}");
 			}
-			if (pi.CanWrite) {
-				var setter = pi.GetSetMethod ();
+			if (generate_setter) {
 				var not_implemented_attr = AttributeManager.GetCustomAttribute<NotImplementedAttribute> (setter);
 
 				PrintAttributes (pi, platform: true);
@@ -5455,8 +5466,7 @@ public partial class Generator : IMemberGatherer {
 			return;
 		}
 
-		if (pi.CanRead) {
-			var getter = pi.GetGetMethod ();
+		if (generate_getter) {
 			var ba = GetBindAttribute (getter);
 			string sel = ba != null ? ba.Selector : export.Selector;
 
@@ -5517,8 +5527,7 @@ public partial class Generator : IMemberGatherer {
 				print ("}\n");
 			}
 		}
-		if (pi.CanWrite) {
-			var setter = pi.GetSetMethod ();
+		if (generate_setter) {
 			var ba = GetBindAttribute (setter);
 			bool null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (setter);
 			if (null_allowed)
