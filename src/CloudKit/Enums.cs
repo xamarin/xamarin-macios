@@ -3,6 +3,8 @@ using ObjCRuntime;
 using Foundation;
 using System;
 
+#nullable enable
+
 namespace CloudKit {
 	// NSInteger -> CKContainer.h
 	[Watch (3, 0)]

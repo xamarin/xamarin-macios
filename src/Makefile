@@ -72,6 +72,7 @@ DOTNET_REFERENCES = \
 	/r:$(DOTNET_BCL_DIR)/System.Runtime.CompilerServices.Unsafe.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Runtime.Extensions.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Runtime.InteropServices.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Runtime.Loader.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Security.Cryptography.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Security.Cryptography.X509Certificates.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Text.RegularExpressions.dll \
