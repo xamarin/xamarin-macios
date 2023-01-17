@@ -1285,12 +1285,7 @@ namespace SceneKit {
 #endif
 		[NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
-#if XAMCORE_5_0
 		[NoMacCatalyst]
-#else
-		[MacCatalyst (13, 1)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Do not use; this method only exist in macOS, not in MacCatalyst.")]
-#endif
 		[Export ("attributeForKey:")]
 		[return: NullAllowed]
 		NSObject GetAttribute (NSString lightAttribute);
@@ -1302,12 +1297,7 @@ namespace SceneKit {
 #endif
 		[NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
-#if XAMCORE_5_0
 		[NoMacCatalyst]
-#else
-		[MacCatalyst (13, 1)]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Do not use; this method only exist in macOS, not in MacCatalyst.")]
-#endif
 		[Export ("setAttribute:forKey:")]
 		void SetAttribute ([NullAllowed] NSObject value, NSString attribuetKey);
 
