@@ -3699,8 +3699,12 @@ public partial class Generator : IMemberGatherer {
 			List<AvailabilityBaseAttribute> availabilityToConsider = new List<AvailabilityBaseAttribute> ();
 			if (inlinedTypeAvailability != null) {
 				availabilityToConsider.AddRange (inlinedTypeAvailability);
+				// Don't copy parent attributes if the conflict with the type we're inlining members into
+				// Example: don't copy Introduced on top of Unavailable.
+				CopyValidAttributes (availabilityToConsider, parentContextAvailability);
+			} else {
+				availabilityToConsider.AddRange (parentContextAvailability);
 			}
-			availabilityToConsider.AddRange (parentContextAvailability);
 
 			// We do not support Watch, so strip from both our input sources before any processing
 			memberAvailability = memberAvailability.Where (x => x.Platform != PlatformName.WatchOS).ToList ();
@@ -3711,6 +3715,23 @@ public partial class Generator : IMemberGatherer {
 
 			// Copy down any unavailable from the parent before expanding, since a [NoMacCatalyst] on the type trumps [iOS] on a member
 			CopyValidAttributes (memberAvailability, availabilityToConsider.Where (attr => attr.AvailabilityKind != AvailabilityKind.Introduced));
+
+			if (inlinedType is not null && inlinedType != mi.DeclaringType && memberAvailability.Count > 1) {
+				// We might have gotten conflicting availability attributes for inlined members, where the inlined member
+				// might be available on a platform the target type isn't. The target type's unavailability will come
+				// later in the list, which means that if we have an unavailable attribute after an introduced attribute,
+				// then we need to remove the introduced attribute.
+				for (var i = memberAvailability.Count - 1; i >= 0; i--) {
+					if (memberAvailability [i].AvailabilityKind != AvailabilityKind.Unavailable)
+						continue;
+					for (var k = i - 1; k >= 0; k--) {
+						if (memberAvailability [k].AvailabilityKind == AvailabilityKind.Introduced && memberAvailability [k].Platform == memberAvailability [i].Platform) {
+							memberAvailability.RemoveAt (k);
+							i--;
+						}
+					}
+				}
+			}
 
 			// Add implied catalyst\TVOS from [iOS] _before_ copying down from parent if no catalyst\TVOS attributes
 			// As those take precedent. We will do this a second time later in a moment..
