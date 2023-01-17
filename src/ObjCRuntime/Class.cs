@@ -742,7 +742,7 @@ namespace ObjCRuntime {
 
 		internal static IntPtr [] PropertyStringsToPtrs (objc_attribute_prop [] props)
 		{
-			var ptrs = new IntPtr [props.Length];
+			var ptrs = new IntPtr [props.Length * 2];
 			var index = 0;
 			foreach (var prop in props) {
 				ptrs [index++] = Marshal.StringToHGlobalAnsi (prop.name);
