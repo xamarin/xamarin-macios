@@ -69,6 +69,9 @@
     <Compile Include="..\..\common\mac\MacMain.cs">
       <Link>MacMain.cs</Link>
     </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\TestAssemblyLoader.cs">
+      <Link>TestAssemblyLoader.cs</Link>
+    </Compile>
     <Compile Include="$(RootTestsDirectory)\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>

@@ -185,6 +185,7 @@
     </Compile>
     <Compile Include="SerializationTest.cs" />
     <Compile Include="..\..\ILReader.cs" />
+    <Compile Include="..\..\..\common\TestAssemblyLoader.cs" />
     <Compile Include="..\..\..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>
