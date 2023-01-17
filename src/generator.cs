@@ -5283,18 +5283,7 @@ public partial class Generator : IMemberGatherer {
 		bool use_underscore = minfo.is_unified_internal;
 		var mod = minfo.GetVisibility ();
 		minfo.protocolize = Protocolize (pi);
-		MethodInfo getter = null;
-		MethodInfo setter = null;
-		var generate_getter = false;
-		var generate_setter = false;
-		if (pi.CanRead) {
-			getter = pi.GetGetMethod ();
-			generate_getter = !getter.IsUnavailable (this);
-		}
-		if (pi.CanWrite) {
-			setter = pi.GetSetMethod ();
-			generate_setter = !setter.IsUnavailable (this);
-		}
+		GetAccessorInfo (pi, out var getter, out var setter, out var generate_getter, out var generate_setter);
 
 		var nullable = !pi.PropertyType.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
 
@@ -6402,11 +6391,11 @@ public partial class Generator : IMemberGatherer {
 				mod = "unsafe ";
 			// IsValueType check needed for `IntPtr` signatures (which can't become `IntPtr?`)
 			var nullable = !pi.PropertyType.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (pi) ? "?" : String.Empty;
-			print ("{0}{1}{2} {3} {{", mod, FormatType (type, pi.PropertyType), nullable, pi.Name, pi.CanRead ? "get;" : string.Empty, pi.CanWrite ? "set;" : string.Empty);
+			GetAccessorInfo (pi, out var getMethod, out var setMethod, out var generate_getter, out var generate_setter);
+			print ("{0}{1}{2} {3} {{", mod, FormatType (type, pi.PropertyType), nullable, pi.Name, generate_getter ? "get;" : string.Empty, generate_setter ? "set;" : string.Empty);
 			indent++;
-			if (pi.CanRead) {
+			if (generate_getter) {
 				var ea = GetGetterExportAttribute (pi);
-				var getMethod = pi.GetGetMethod ();
 				// there can be a [Bind] there that override the selector name to be used
 				// e.g. IMTLTexture.FramebufferOnly
 				var ba = GetBindAttribute (getMethod);
@@ -6420,8 +6409,7 @@ public partial class Generator : IMemberGatherer {
 				PrintAttributes (getMethod, notImplemented: true);
 				print ("get;");
 			}
-			if (pi.CanWrite) {
-				var setMethod = pi.GetSetMethod ();
+			if (generate_setter) {
 				PrintBlockProxy (pi.PropertyType);
 				PrintAttributes (setMethod, notImplemented: true);
 				if (!AttributeManager.HasAttribute<NotImplementedAttribute> (setMethod))
@@ -6459,15 +6447,14 @@ public partial class Generator : IMemberGatherer {
 
 			// C# does not support extension properties, so create Get* and Set* accessors instead.
 			foreach (var pi in optionalInstanceProperties) {
+				GetAccessorInfo (pi, out var getter, out var setter, out var generate_getter, out var generate_setter);
 				var attrib = GetExportAttribute (pi);
-				var getter = pi.GetGetMethod ();
-				if (getter != null) {
+				if (generate_getter) {
 					PrintAttributes (pi, preserve: true, advice: true);
 					var ba = GetBindAttribute (getter);
 					GenerateMethod (type, getter, false, null, false, false, true, ba?.Selector ?? attrib.ToGetter (pi).Selector);
 				}
-				var setter = pi.GetSetMethod ();
-				if (setter != null) {
+				if (generate_setter) {
 					PrintAttributes (pi, preserve: true, advice: true);
 					var ba = GetBindAttribute (setter);
 					GenerateMethod (type, setter, false, null, false, false, true, ba?.Selector ?? attrib.ToSetter (pi).Selector);
@@ -6603,6 +6590,22 @@ public partial class Generator : IMemberGatherer {
 		if (type.Namespace != null) {
 			indent--;
 			print ("}");
+		}
+	}
+
+	void GetAccessorInfo (PropertyInfo pi, out MethodInfo getter, out MethodInfo setter, out bool generate_getter, out bool generate_setter)
+	{
+		getter = null;
+		setter = null;
+		generate_getter = false;
+		generate_setter = false;
+		if (pi.CanRead) {
+		        getter = pi.GetGetMethod ();
+		        generate_getter = !getter.IsUnavailable (this);
+		}
+		if (pi.CanWrite) {
+		        setter = pi.GetSetMethod ();
+		        generate_setter = !setter.IsUnavailable (this);
 		}
 	}
 
