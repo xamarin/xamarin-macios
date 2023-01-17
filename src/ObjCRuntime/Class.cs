@@ -727,15 +727,18 @@ namespace ObjCRuntime {
 
 		[DllImport (Messaging.LIBOBJC_DYLIB, CharSet = CharSet.Ansi)]
 		[return: MarshalAs (UnmanagedType.U1)]
-		extern static bool class_addProperty (IntPtr cls, IntPtr name, IntPtr attributes, int count);
+		extern unsafe static bool class_addProperty (IntPtr cls, IntPtr name, IntPtr* attributes, int count);
 
 		internal static bool class_addProperty (IntPtr cls, string name, objc_attribute_prop [] attributes, int count)
 		{
 			using var namePtr = new TransientString (name, TransientString.Encoding.Ansi);
 			var ptrs = PropertyStringsToPtrs (attributes);
-			var ptrsHandle = GCHandle.Alloc (ptrs);
-			var retval = class_addProperty (cls, namePtr, GCHandle.ToIntPtr (ptrsHandle), count);
-			ptrsHandle.Free ();
+			bool retval = false;
+			unsafe {
+				fixed (IntPtr* ptrsPtr = ptrs) {
+					retval = class_addProperty (cls, namePtr, ptrsPtr, count);
+				}
+			}
 			FreeStringPtrs (ptrs);
 			return retval;
 		}

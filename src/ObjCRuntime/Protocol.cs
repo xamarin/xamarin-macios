@@ -83,15 +83,17 @@ namespace ObjCRuntime {
 		internal extern static void objc_registerProtocol (IntPtr protocol);
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		extern static void protocol_addProperty (IntPtr protocol, IntPtr name, IntPtr attributes, int count, [MarshalAs (UnmanagedType.I1)] bool isRequired, [MarshalAs (UnmanagedType.I1)] bool isInstance);
+		extern static unsafe void protocol_addProperty (IntPtr protocol, IntPtr name, IntPtr* attributes, int count, [MarshalAs (UnmanagedType.I1)] bool isRequired, [MarshalAs (UnmanagedType.I1)] bool isInstance);
 
 		internal static void protocol_addProperty (IntPtr protocol, string name, Class.objc_attribute_prop [] attributes, int count, [MarshalAs (UnmanagedType.I1)] bool isRequired, [MarshalAs (UnmanagedType.I1)] bool isInstance)
 		{
 			using var namePtr = new TransientString (name);
 			var propArr = Class.PropertyStringsToPtrs (attributes);
-			var propArrHandle = GCHandle.Alloc (propArr);
-			protocol_addProperty (protocol, namePtr, GCHandle.ToIntPtr (propArrHandle), count, isRequired, isInstance);
-			propArrHandle.Free ();
+			unsafe {
+				fixed (IntPtr* propArrPtr = propArr) {
+					protocol_addProperty (protocol, namePtr, propArrPtr, count, isRequired, isInstance);
+				}
+			}
 			Class.FreeStringPtrs (propArr);
 		}
 
