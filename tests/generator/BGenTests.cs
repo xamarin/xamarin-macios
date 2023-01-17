@@ -1020,6 +1020,42 @@ namespace GeneratorTests {
 			Assert.IsNotNull (pinvoke, "PInvoke");
 		}
 
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void NoAvailabilityForAccessors (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
+			bgen.AddTestApiDefinition ("tests/no-availability-for-accessors.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
+
+			bgen.AssertMethod ("NS.Whatever", "get_PropA");
+			bgen.AssertNoMethod ("NS.Whatever", "set_PropA", parameterTypes: "Foundation.NSObject");
+			bgen.AssertMethod ("NS.Whatever", "set_PropB", parameterTypes: "Foundation.NSObject");
+			bgen.AssertNoMethod ("NS.Whatever", "get_PropB");
+			bgen.AssertMethod ("NS.Whatever", "get_IPropA");
+			bgen.AssertNoMethod ("NS.Whatever", "set_IPropA", parameterTypes: "Foundation.NSObject");
+			bgen.AssertMethod ("NS.Whatever", "set_IPropB", parameterTypes: "Foundation.NSObject");
+			bgen.AssertNoMethod ("NS.Whatever", "get_IPropB");
+			bgen.AssertMethod ("NS.Whatever", "get_IPropAOpt");
+			bgen.AssertNoMethod ("NS.Whatever", "set_IPropAOpt", parameterTypes: "Foundation.NSObject");
+			bgen.AssertMethod ("NS.Whatever", "set_IPropBOpt", parameterTypes: "Foundation.NSObject");
+			bgen.AssertNoMethod ("NS.Whatever", "get_IPropBOpt");
+			bgen.AssertPublicMethodCount ("NS.Whatever", 9); // 6 accessors + 2 constructors + ClassHandle getter
+
+			bgen.AssertMethod ("NS.IIProtocol", "get_IPropA");
+			bgen.AssertNoMethod ("NS.IIProtocol", "set_IPropA", parameterTypes: "Foundation.NSObject");
+			bgen.AssertMethod ("NS.IIProtocol", "set_IPropB", parameterTypes: "Foundation.NSObject");
+			bgen.AssertNoMethod ("NS.IIProtocol", "get_IPropB");
+			bgen.AssertPublicMethodCount ("NS.IIProtocol", 2);
+			
+			bgen.AssertMethod ("NS.IProtocol_Extensions", "GetIPropAOpt", parameterTypes: "NS.IIProtocol");
+			bgen.AssertMethod ("NS.IProtocol_Extensions", "SetIPropBOpt", parameterTypes: new string [] { "NS.IIProtocol", "Foundation.NSObject" });
+			bgen.AssertPublicMethodCount ("NS.IProtocol_Extensions", 2);
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);
