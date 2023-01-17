@@ -6600,12 +6600,12 @@ public partial class Generator : IMemberGatherer {
 		generate_getter = false;
 		generate_setter = false;
 		if (pi.CanRead) {
-		        getter = pi.GetGetMethod ();
-		        generate_getter = !getter.IsUnavailable (this);
+			getter = pi.GetGetMethod ();
+			generate_getter = !getter.IsUnavailable (this);
 		}
 		if (pi.CanWrite) {
-		        setter = pi.GetSetMethod ();
-		        generate_setter = !setter.IsUnavailable (this);
+			setter = pi.GetSetMethod ();
+			generate_setter = !setter.IsUnavailable (this);
 		}
 	}
 

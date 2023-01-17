@@ -1050,7 +1050,7 @@ namespace GeneratorTests {
 			bgen.AssertMethod ("NS.IIProtocol", "set_IPropB", parameterTypes: "Foundation.NSObject");
 			bgen.AssertNoMethod ("NS.IIProtocol", "get_IPropB");
 			bgen.AssertPublicMethodCount ("NS.IIProtocol", 2);
-			
+
 			bgen.AssertMethod ("NS.IProtocol_Extensions", "GetIPropAOpt", parameterTypes: "NS.IIProtocol");
 			bgen.AssertMethod ("NS.IProtocol_Extensions", "SetIPropBOpt", parameterTypes: new string [] { "NS.IIProtocol", "Foundation.NSObject" });
 			bgen.AssertPublicMethodCount ("NS.IProtocol_Extensions", 2);
