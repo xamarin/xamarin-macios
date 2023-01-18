@@ -43,3 +43,7 @@
 
 # not used on macOS
 !missing-enum! AVAudioSessionInterruptionReason not bound
+
+## https://github.com/xamarin/xamarin-macios/issues/16229 prevents crashing instead of return null
+!missing-selector! AVAudioPlayer::initWithContentsOfURL:error: not bound
+!missing-selector! AVAudioPlayer::initWithData:error: not bound
