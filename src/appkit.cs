@@ -20649,6 +20649,12 @@ namespace AppKit {
 		[PostSnippet ("InitializeReleasedWhenClosed ();", Optimizable = true)]
 		NativeHandle Constructor (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation, NSScreen screen);
 
+#if NET
+		[Export ("initWithWindowRef:")]
+		[PostSnippet ("InitializeReleasedWhenClosed ();", Optimizable = true)]
+		NativeHandle Constructor (IntPtr windowRef);
+#endif
+
 		[Export ("title")]
 		string Title { get; set; }
 

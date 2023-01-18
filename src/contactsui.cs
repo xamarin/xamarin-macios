@@ -121,12 +121,19 @@ namespace ContactsUI {
 		ICNKeyDescriptor DescriptorForRequiredKeys { get; }
 
 #if MONOMAC
-		[NullAllowed, Export ("contact", ArgumentSemantic.Copy)]
-		CNContact Contact { get; [NoiOS]set; }
+		[NullAllowed]
+		[Export ("contact", ArgumentSemantic.Copy)]
 #else
 		[Export ("contact", ArgumentSemantic.Strong)]
-		CNContact Contact { get; }
 #endif
+		CNContact Contact {
+			get;
+			[NoiOS]
+			[NoTV]
+			[NoWatch]
+			[NoMacCatalyst]
+			set;
+		}
 
 		[NoMac]
 		[Static]

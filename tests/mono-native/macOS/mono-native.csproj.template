@@ -52,6 +52,9 @@
     <Compile Include="..\..\common\MonoNativeConfig.cs">
       <Link>MonoNativeConfig.cs</Link>
     </Compile>
+    <Compile Include="..\..\common\TestAssemblyLoader.cs">
+      <Link>TestAssemblyLoader.cs</Link>
+    </Compile>
     <Compile Include="..\NativePlatformConfig.cs" />
     <Compile Include="..\..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\MonoNativePlatform.cs">
       <Link>MonoNativePlatform.cs</Link>

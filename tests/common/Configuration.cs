@@ -715,6 +715,13 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		public static string GetBaseLibrary (ApplePlatform platform, bool isDotNet)
+		{
+			if (isDotNet)
+				return Path.Combine (GetRefDirectory (platform), GetBaseLibraryName (platform, isDotNet));
+			return GetBaseLibrary (platform.AsProfile ());
+		}
+
 		static string GetBaseLibraryName (TargetFramework targetFramework)
 		{
 			return GetBaseLibraryName (targetFramework.Platform, targetFramework.IsDotNet);
