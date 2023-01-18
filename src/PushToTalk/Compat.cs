@@ -11,11 +11,11 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace PushToTalk {
-	public partial class PTChannelManagerDelegate  {
+	public partial class PTChannelManagerDelegate {
 		public override NativeHandle ClassHandle { get => base.ClassHandle; }
 	}
 
-	public partial class PTChannelRestorationDelegate  {
+	public partial class PTChannelRestorationDelegate {
 		public override NativeHandle ClassHandle { get => base.ClassHandle; }
 	}
 }
