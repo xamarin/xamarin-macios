@@ -1155,6 +1155,35 @@ namespace GeneratorTests {
 			Assert.AreEqual (string.Empty, RenderSupportedOSPlatformAttributes (getter), "Getter Attributes");
 		}
 
+#if !NET
+		[Ignore ("This test only applies to .NET")]
+#endif
+		[Test]
+		public void GeneratedAttributeOnPropertyAccessors2 ()
+		{
+			var bgen = BuildFile (Profile.MacCatalyst, "tests/generated-attribute-on-property-accessors2.cs");
+
+			var messaging = bgen.ApiAssembly.MainModule.Types.First (v => v.Name == "ISomething");
+			var property = messaging.Properties.First (v => v.Name == "MicrophoneEnabled");
+			var getter = messaging.Methods.First (v => v.Name == "get_MicrophoneEnabled");
+			var setter = messaging.Methods.First (v => v.Name == "set_MicrophoneEnabled");
+
+			var expectedPropertyAttributes =
+@"[SupportedOSPlatform(""ios"")]
+[SupportedOSPlatform(""maccatalyst"")]
+[SupportedOSPlatform(""macos11.0"")]
+[UnsupportedOSPlatform(""tvos"")]";
+			var expectedSetterAttributes =
+@"[SupportedOSPlatform(""ios"")]
+[SupportedOSPlatform(""maccatalyst"")]
+[SupportedOSPlatform(""macos11.0"")]
+[UnsupportedOSPlatform(""tvos"")]";
+
+			Assert.AreEqual (expectedPropertyAttributes, RenderSupportedOSPlatformAttributes (property), "Property attributes");
+			Assert.AreEqual (string.Empty, RenderSupportedOSPlatformAttributes (getter), "Getter Attributes");
+			Assert.AreEqual (expectedSetterAttributes, RenderSupportedOSPlatformAttributes (setter), "Setter Attributes");
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);
