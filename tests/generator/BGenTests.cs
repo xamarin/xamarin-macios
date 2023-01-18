@@ -1011,6 +1011,9 @@ namespace GeneratorTests {
 
 		[Test]
 		[TestCase (Profile.iOS)]
+#if !NET
+		[Ignore ("This only applies to .NET")]
+#endif
 		public void AttributesFromInlinedProtocols (Profile profile)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
@@ -1032,8 +1035,6 @@ namespace GeneratorTests {
 			var renderedSomeMethod3 = string.Join ("\n", someMethod3.CustomAttributes.Select (ca => RenderSupportedOSPlatformAttribute (ca)).OrderBy (v => v));
 			var renderedSomeMethod4 = string.Join ("\n", someMethod4.CustomAttributes.Select (ca => RenderSupportedOSPlatformAttribute (ca)).OrderBy (v => v));
 
-			// FIXME IN PROGRESS
-#if NET
 			const string expectedAttributes1 =
 @"[BindingImpl(3)]
 [Export(""someMethod1:"")]
@@ -1058,12 +1059,7 @@ namespace GeneratorTests {
 [SupportedOSPlatform(""ios11.0"")]
 [SupportedOSPlatform(""maccatalyst"")]
 [UnsupportedOSPlatform(""tvos"")]";
-#endif
 
-			Console.WriteLine ($"1\n{renderedSomeMethod1}");
-			Console.WriteLine ($"2\n{renderedSomeMethod2}");
-			Console.WriteLine ($"3\n{renderedSomeMethod3}");
-			Console.WriteLine ($"4\n{renderedSomeMethod4}");
 			Assert.AreEqual (expectedAttributes1, renderedSomeMethod1, "SomeMethod1");
 			Assert.AreEqual (expectedAttributes2, renderedSomeMethod2, "SomeMethod2");
 			Assert.AreEqual (expectedAttributes3, renderedSomeMethod3, "SomeMethod3");
