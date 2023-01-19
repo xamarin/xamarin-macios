@@ -15466,6 +15466,7 @@ namespace Foundation {
 #else
 #if MACCATALYST
 		[Obsolete ("Do not use; this method is not available on Mac Catalyst.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 #endif // MACCATALYST
 #endif // XAMCORE_5_0
 		[Export ("launchedTaskWithLaunchPath:arguments:")]
