@@ -289,8 +289,7 @@ namespace Foundation {
 #if MONOMAC
 		, NSPasteboardReading, NSPasteboardWriting
 #endif
-		, NSItemProviderReading, NSItemProviderWriting
-	{
+		, NSItemProviderReading, NSItemProviderWriting {
 #if !WATCH
 		[Static, Export ("attributedStringWithAttachment:")]
 		NSAttributedString FromAttachment (NSTextAttachment attachment);
