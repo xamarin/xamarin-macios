@@ -10980,10 +10980,8 @@ namespace Foundation {
 		[Export ("preferredPresentationSize")]
 		CGSize PreferredPresentationSize {
 			get;
-#if !MONOMAC
 			[NoMac]
 			set;
-#endif
 		}
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
