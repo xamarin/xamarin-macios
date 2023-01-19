@@ -11630,23 +11630,23 @@ namespace AVFoundation {
 		[iOS (16, 0)]
 		[MacCatalyst (16, 0)]
 		[Mac (13, 0)]
-		[BindAs (typeof (CMVideoDimensions[]))]
+		[BindAs (typeof (CMVideoDimensions []))]
 		[Export ("supportedMaxPhotoDimensions")]
-		NSValue[] SupportedMaxPhotoDimensions { get; }
+		NSValue [] SupportedMaxPhotoDimensions { get; }
 
 		[iOS (16, 0)]
 		[MacCatalyst (16, 0)]
 		[Mac (13, 0)]
-		[BindAs (typeof (nfloat[]))]
+		[BindAs (typeof (nfloat []))]
 		[Export ("secondaryNativeResolutionZoomFactors")]
-		NSNumber[] SecondaryNativeResolutionZoomFactors { get; }
+		NSNumber [] SecondaryNativeResolutionZoomFactors { get; }
 
 		[iOS (16, 0)]
 		[MacCatalyst (16, 0)]
 		[Mac (13, 0)]
-		[BindAs (typeof (nfloat[]))]
+		[BindAs (typeof (nfloat []))]
 		[Export ("supportedVideoZoomFactorsForDepthDataDelivery")]
-		NSNumber[] SupportedVideoZoomFactorsForDepthDataDelivery { get; }
+		NSNumber [] SupportedVideoZoomFactorsForDepthDataDelivery { get; }
 	}
 
 	delegate void AVCaptureCompletionHandler (CMSampleBuffer imageDataSampleBuffer, NSError error);
