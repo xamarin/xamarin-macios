@@ -20,7 +20,7 @@ namespace monotouchtest.CoreGraphics {
 			using (var url = NSUrl.FromFilename (file))
 			using (var ci = CIImage.FromUrl (url)) {
 				var gpsA = ci.Properties.Gps;
-				Assert.AreEqual(gpsA.Latitude, 47.64248f);
+				Assert.AreEqual (gpsA.Latitude, 47.64248f);
 				Assert.AreEqual (gpsA.Longitude, 122.136986f);
 				Assert.AreEqual (gpsA.LatitudeRef, "N");
 				Assert.AreEqual (gpsA.LongitudeRef, "W");
