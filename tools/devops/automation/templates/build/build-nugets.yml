@@ -20,6 +20,7 @@ steps:
     -bl:$(Build.ArtifactStagingDirectory)/build-binlogs/generate-bar-manifest.binlog
   displayName: Generate and Upload Build Asset Registry Manifest
   condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
+  continueOnError: true
 
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: build-binlogs'
