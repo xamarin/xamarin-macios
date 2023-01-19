@@ -14,7 +14,7 @@ namespace monotouchtest.CoreGraphics {
 	[TestFixture]
 	public class CGImagePropertiesGPSTest {
 		[Test]
-		public void LongitudeRefAndLattitudeRefTest ()
+		public void LongitudeRefAndLatitudeRefTest ()
 		{
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08_with_loc.png");
 			using (var url = NSUrl.FromFilename (file))
