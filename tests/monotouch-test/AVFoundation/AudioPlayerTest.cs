@@ -13,6 +13,7 @@ using System.IO;
 using Foundation;
 using AVFoundation;
 using NUnit.Framework;
+using System;
 
 namespace MonoTouchFixtures.AVFoundation {
 
@@ -49,14 +50,14 @@ namespace MonoTouchFixtures.AVFoundation {
 			using (NSData data = NSData.FromFile (NSBundle.MainBundle.PathForResource ("Hand", "wav")))
 			using (AVAudioPlayer player = AVAudioPlayer.FromData (data, out NSError error)) {
 				Assert.NotNull (player, "AVAudioPlayer");
-				Assert.NotNull (error, "NSError");
+				Assert.Null (error, "NSError");
 			}
 		}
 
 		[Test]
 		public void FromDataWithNullData ()
 		{
-			Assert.DoesNotThrow (() => {
+			Assert.Throws<ArgumentNullException> (() => {
 				using (var player = AVAudioPlayer.FromData (null, out NSError error)) {
 					Assert.Null (player, "AVAudioPlayer");
 					Assert.NotNull (error, "NSError");
