@@ -22,7 +22,7 @@ namespace Metal {
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos14.5")]
 #else
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[iOS (12, 0)]
 		[TV (14, 5)]
 		[NoWatch]
@@ -30,7 +30,7 @@ namespace Metal {
 		public unsafe static void SetViewports (this IMTLRenderCommandEncoder This, MTLViewport [] viewports)
 		{
 			fixed (void* handle = viewports)
-				This.SetViewports ((IntPtr)handle, (nuint)(viewports?.Length ?? 0));
+				This.SetViewports ((IntPtr) handle, (nuint) (viewports?.Length ?? 0));
 		}
 #endif // !WATCH
 
@@ -41,7 +41,7 @@ namespace Metal {
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos14.5")]
 #else
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[iOS (12, 0)]
 		[TV (14, 5)]
 		[NoWatch]
@@ -49,7 +49,7 @@ namespace Metal {
 		public unsafe static void SetScissorRects (this IMTLRenderCommandEncoder This, MTLScissorRect [] scissorRects)
 		{
 			fixed (void* handle = scissorRects)
-				This.SetScissorRects ((IntPtr)handle, (nuint)(scissorRects?.Length ?? 0));
+				This.SetScissorRects ((IntPtr) handle, (nuint) (scissorRects?.Length ?? 0));
 		}
 #endif // !WATCH
 
@@ -60,15 +60,15 @@ namespace Metal {
 		[SupportedOSPlatform ("tvos14.5")]
 		[SupportedOSPlatform ("macos11.0")]
 #else
-		[iOS (11,0)]
+		[iOS (11, 0)]
 		[TV (14, 5)]
 		[Mac (11, 0)]
 		[NoWatch]
 #endif
-		public unsafe static void SetTileBuffers (this IMTLRenderCommandEncoder This, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)
+		public unsafe static void SetTileBuffers (this IMTLRenderCommandEncoder This, IMTLBuffer [] buffers, nuint [] offsets, NSRange range)
 		{
 			fixed (void* handle = offsets)
-				This.SetTileBuffers (buffers, (IntPtr)handle, range);
+				This.SetTileBuffers (buffers, (IntPtr) handle, range);
 		}
 #endif // !WATCH
 
@@ -79,16 +79,16 @@ namespace Metal {
 		[SupportedOSPlatform ("tvos14.5")]
 		[SupportedOSPlatform ("macos11.0")]
 #else
-		[iOS (11,0)]
+		[iOS (11, 0)]
 		[TV (14, 5)]
 		[Mac (11, 0)]
 		[NoWatch]
 #endif
-		public unsafe static void SetTileSamplerStates (this IMTLRenderCommandEncoder This, IMTLSamplerState[] samplers, float[] lodMinClamps, float[] lodMaxClamps, NSRange range)
+		public unsafe static void SetTileSamplerStates (this IMTLRenderCommandEncoder This, IMTLSamplerState [] samplers, float [] lodMinClamps, float [] lodMaxClamps, NSRange range)
 		{
 			fixed (void* minHandle = lodMinClamps) {
 				fixed (void* maxHandle = lodMaxClamps) {
-					This.SetTileSamplerStates (samplers, (IntPtr)minHandle, (IntPtr)maxHandle, range);
+					This.SetTileSamplerStates (samplers, (IntPtr) minHandle, (IntPtr) maxHandle, range);
 				}
 			}
 		}
