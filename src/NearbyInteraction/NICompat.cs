@@ -31,6 +31,7 @@ using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 #nullable enable
 namespace NearbyInteraction {
 
+#if !__MACOS__ && !__TVOS__
 	public partial class NISession {
 
 #if WATCH
@@ -49,6 +50,7 @@ namespace NearbyInteraction {
 		public virtual void SetARSession (NSObject session) => throw new InvalidOperationException (Constants.ApiRemovedGeneral);
 #endif
 	}
+#endif // !__MACOS__ && !__TVOS__
 }
 
 #endif // !XAMCORE_5_0
