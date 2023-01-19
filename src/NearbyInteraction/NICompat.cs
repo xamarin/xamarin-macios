@@ -4,6 +4,8 @@
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //
 
+#if !XAMCORE_5_0
+
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -29,19 +31,24 @@ using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 #nullable enable
 namespace NearbyInteraction {
 
-#if WATCH
 	public partial class NISession {
 
-#if !NET
+#if WATCH
 		[Obsolete ("This method was removed and will always throw a InvalidOperationException.")]
-#endif
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public virtual void SetARSession (ARSession session) => throw new InvalidOperationException (Constants.ApiRemovedGeneral);
 
-#if !NET
 		[Obsolete ("This method was removed and will always throw a InvalidOperationException.")]
-#endif
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public virtual MatrixFloat4x4 GetWorldTransform (NINearbyObject @object) => throw new InvalidOperationException (Constants.ApiRemovedGeneral);
+#endif // WATCH
 
-	}
+#if __MACCATALYST__
+		[Obsolete ("This method was removed and will always throw a InvalidOperationException.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		public virtual void SetARSession (NSObject session) => throw new InvalidOperationException (Constants.ApiRemovedGeneral);
 #endif
+	}
 }
+
+#endif // !XAMCORE_5_0
