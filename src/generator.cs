@@ -7157,7 +7157,8 @@ public partial class Generator : IMemberGatherer {
 				if (default_ctor_visibility != null) {
 					switch (default_ctor_visibility.Visibility) {
 					case Visibility.Public:
-						break; // default
+						ctor_visibility = "public";
+						break;
 					case Visibility.Internal:
 						ctor_visibility = "internal";
 						break;
@@ -7179,7 +7180,7 @@ public partial class Generator : IMemberGatherer {
 				if (TypeName != "NSObject") {
 					var initSelector = (InlineSelectors || BindThirdPartyLibrary) ? "Selector.GetHandle (\"init\")" : "Selector.Init";
 					var initWithCoderSelector = (InlineSelectors || BindThirdPartyLibrary) ? "Selector.GetHandle (\"initWithCoder:\")" : "Selector.InitWithCoder";
-					string v = class_mod == "abstract " ? "protected" : ctor_visibility;
+					string v = (class_mod == "abstract " && default_ctor_visibility is null) ? "protected" : ctor_visibility;
 					var is32BitNotSupported = Is64BitiOSOnly (type);
 					if (external) {
 						if (!disable_default_ctor) {

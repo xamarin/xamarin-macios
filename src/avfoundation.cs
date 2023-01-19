@@ -7434,17 +7434,17 @@ namespace AVFoundation {
 		AVMovieTrack [] GetTracks (AVMediaCharacteristics mediaCharacteristic);
 
 		[Async]
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Watch (8, 0), NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("loadTrackWithTrackID:completionHandler:")]
 		void LoadTrack (int trackId, Action<AVMutableCompositionTrack, NSError> completionHandler);
 
 		[Async]
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Watch (8, 0), NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("loadTracksWithMediaType:completionHandler:")]
 		void LoadTracksWithMediaType (string mediaType, Action<NSArray<AVMutableCompositionTrack>, NSError> completionHandler);
 
 		[Async]
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Watch (8, 0), NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("loadTracksWithMediaCharacteristic:completionHandler:")]
 		void LoadTracksWithMediaCharacteristic (string mediaCharacteristic, Action<NSArray<AVMutableCompositionTrack>, NSError> completionHandler);
 	}
@@ -7509,17 +7509,17 @@ namespace AVFoundation {
 		CMTime InterleavingPeriod { get; set; }
 
 		[Async]
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Watch (8, 0), NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("loadTrackWithTrackID:completionHandler:")]
 		void LoadTrack (int trackId, Action<AVMovieTrack, NSError> completionHandler);
 
 		[Async]
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Watch (8, 0), NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("loadTracksWithMediaType:completionHandler:")]
 		void LoadTracksWithMediaType (string mediaType, Action<NSArray<AVMovieTrack>, NSError> completionHandler);
 
 		[Async]
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Watch (8, 0), NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("loadTracksWithMediaCharacteristic:completionHandler:")]
 		void LoadTracksWithMediaCharacteristic (string mediaCharacteristic, Action<NSArray<AVMovieTrack>, NSError> completionHandler);
 	}
