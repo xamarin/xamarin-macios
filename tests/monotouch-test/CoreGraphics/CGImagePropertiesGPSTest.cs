@@ -8,6 +8,7 @@ using UIKit;
 using CoreGraphics;
 using NUnit.Framework;
 using System.IO;
+using CoreImage;
 
 namespace monotouchtest.CoreGraphics {
 	[TestFixture]
@@ -15,23 +16,15 @@ namespace monotouchtest.CoreGraphics {
 		[Test]
 		public void LongitudeRefAndLattitudeRefTest ()
 		{
-			var keys = new NSString [] {
-				new NSString ("LatitudeRef"),
-				new NSString ("Latitude"),
-				new NSString ("LongitudeRef"),
-				new NSString ("Longitude")
-			};
-			var values = new object [] {
-				new NSString ("N"),
-				47.6422f,
-				new NSString ("W"),
-				-122.1367f
-			};
-			CGImagePropertiesGps gps = new (NSDictionary.FromObjectsAndKeys (values, keys));
-			Assert.AreEqual (gps.LatitudeRef, values [0]);
-			Assert.AreEqual (gps.Latitude, values [1]);
-			Assert.AreEqual (gps.LongitudeRef, values [2]);
-			Assert.AreEqual (gps.Longitude, values [3]);
+			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08_with_loc.png");
+			using (var url = NSUrl.FromFilename (file))
+			using (var ci = CIImage.FromUrl (url)) {
+				var gpsA = ci.Properties.Gps;
+				Assert.AreEqual(gpsA.Latitude, 47.64248f);
+				Assert.AreEqual (gpsA.Longitude, 122.136986f);
+				Assert.AreEqual (gpsA.LatitudeRef, "N");
+				Assert.AreEqual (gpsA.LongitudeRef, "W");
+			}
 		}
 	}
 }

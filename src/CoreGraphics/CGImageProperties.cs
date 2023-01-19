@@ -654,9 +654,9 @@ namespace CoreGraphics {
 			}
 		}
 
-		public NSString? LatitudeRef {
+		public string? LatitudeRef {
 			get {
-				return GetNSStringValue (Keys.GPSLatitudeRef);
+				return GetStringValue (Keys.GPSLatitudeRef);
 			}
 			set {
 				SetStringValue (Keys.GPSLatitudeRef, value);
@@ -672,9 +672,9 @@ namespace CoreGraphics {
 			}
 		}
 
-		public NSString? LongitudeRef {
+		public string? LongitudeRef {
 			get {
-				return GetNSStringValue (Keys.GPSLongitudeRef);
+				return GetStringValue (Keys.GPSLongitudeRef);
 			}
 			set {
 				SetStringValue (Keys.GPSLongitudeRef, value);
