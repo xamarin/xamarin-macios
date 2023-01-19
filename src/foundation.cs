@@ -11890,6 +11890,23 @@ namespace Foundation {
 		CoreAnimation.CATransform3D CATransform3DValue { get; }
 #endif
 
+		[iOS (16, 0)]
+		[Mac (13, 0)]
+		[MacCatalyst (16, 0)]
+		[TV (16, 0)]
+		[Watch (9, 0)]
+		[Export ("CMVideoDimensionsValue")]
+		CMVideoDimensions CMVideoDimensionsValue { get; }
+
+		[iOS (16, 0)]
+		[Mac (13, 0)]
+		[MacCatalyst (16, 0)]
+		[TV (16, 0)]
+		[Watch (9, 0)]
+		[Export ("valueWithCMVideoDimensions:")]
+		[Static]
+		NSValue FromCMVideoDimensions (CMVideoDimensions value);
+
 		#region SceneKit Additions
 
 		[iOS (8, 0)]

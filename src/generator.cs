@@ -1345,6 +1345,7 @@ public partial class Generator : IMemberGatherer {
 					nsvalue_create_map [TypeManager.CMTimeRange] = "CMTimeRange";
 					nsvalue_create_map [TypeManager.CMTime] = "CMTime";
 					nsvalue_create_map [TypeManager.CMTimeMapping] = "CMTimeMapping";
+					nsvalue_create_map [TypeManager.CMVideoDimensions] = "CMVideoDimensions";
 				}
 
 				if (Frameworks.HaveCoreAnimation)
@@ -1493,6 +1494,7 @@ public partial class Generator : IMemberGatherer {
 					nsvalue_return_map [TypeManager.CMTimeRange] = ".CMTimeRangeValue";
 					nsvalue_return_map [TypeManager.CMTime] = ".CMTimeValue";
 					nsvalue_return_map [TypeManager.CMTimeMapping] = ".CMTimeMappingValue";
+					nsvalue_return_map [TypeManager.CMVideoDimensions] = ".CMVideoDimensionsValue";
 				}
 
 				if (Frameworks.HaveCoreAnimation)
