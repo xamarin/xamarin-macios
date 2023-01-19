@@ -11,6 +11,8 @@ using System;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace CoreSpotlight {
 	// NSInteger -> CNContact.h
 	[NoTV] // CS_TVOS_UNAVAILABLE

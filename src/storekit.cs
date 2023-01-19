@@ -652,11 +652,11 @@ namespace StoreKit {
 		[iOS (11, 0)]
 		[TV (11, 0)]
 		[Export ("ProductIdentifier")]
-		string ProductIdentifier { get; }
+		string ProductIdentifier { get; set; }
 
 		[iOS (8, 3)]
 		[Export ("ProviderToken")]
-		string ProviderToken { get; }
+		string ProviderToken { get; set; }
 
 		[iOS (11, 3), TV (11, 3), NoMac]
 		[Export ("AdNetworkAttributionSignature")]
@@ -680,11 +680,11 @@ namespace StoreKit {
 
 		[NoWatch, NoMac, TV (14, 0), iOS (14, 0)]
 		[Export ("AdNetworkSourceAppStoreIdentifier")]
-		string AdNetworkSourceAppStoreIdentifier { get; }
+		string AdNetworkSourceAppStoreIdentifier { get; set; }
 
 		[NoWatch, NoMac, TV (14, 0), iOS (14, 0)]
 		[Export ("AdNetworkVersion")]
-		string AdNetworkVersion { get; }
+		string AdNetworkVersion { get; set; }
 	}
 
 	[NoWatch]

@@ -3699,8 +3699,12 @@ public partial class Generator : IMemberGatherer {
 			List<AvailabilityBaseAttribute> availabilityToConsider = new List<AvailabilityBaseAttribute> ();
 			if (inlinedTypeAvailability != null) {
 				availabilityToConsider.AddRange (inlinedTypeAvailability);
+				// Don't copy parent attributes if the conflict with the type we're inlining members into
+				// Example: don't copy Introduced on top of Unavailable.
+				CopyValidAttributes (availabilityToConsider, parentContextAvailability);
+			} else {
+				availabilityToConsider.AddRange (parentContextAvailability);
 			}
-			availabilityToConsider.AddRange (parentContextAvailability);
 
 			// We do not support Watch, so strip from both our input sources before any processing
 			memberAvailability = memberAvailability.Where (x => x.Platform != PlatformName.WatchOS).ToList ();
@@ -3711,6 +3715,23 @@ public partial class Generator : IMemberGatherer {
 
 			// Copy down any unavailable from the parent before expanding, since a [NoMacCatalyst] on the type trumps [iOS] on a member
 			CopyValidAttributes (memberAvailability, availabilityToConsider.Where (attr => attr.AvailabilityKind != AvailabilityKind.Introduced));
+
+			if (inlinedType is not null && inlinedType != mi.DeclaringType && memberAvailability.Count > 1) {
+				// We might have gotten conflicting availability attributes for inlined members, where the inlined member
+				// might be available on a platform the target type isn't. The target type's unavailability will come
+				// later in the list, which means that if we have an unavailable attribute after an introduced attribute,
+				// then we need to remove the introduced attribute.
+				for (var i = memberAvailability.Count - 1; i >= 0; i--) {
+					if (memberAvailability [i].AvailabilityKind != AvailabilityKind.Unavailable)
+						continue;
+					for (var k = i - 1; k >= 0; k--) {
+						if (memberAvailability [k].AvailabilityKind == AvailabilityKind.Introduced && memberAvailability [k].Platform == memberAvailability [i].Platform) {
+							memberAvailability.RemoveAt (k);
+							i--;
+						}
+					}
+				}
+			}
 
 			// Add implied catalyst\TVOS from [iOS] _before_ copying down from parent if no catalyst\TVOS attributes
 			// As those take precedent. We will do this a second time later in a moment..
@@ -5283,6 +5304,7 @@ public partial class Generator : IMemberGatherer {
 		bool use_underscore = minfo.is_unified_internal;
 		var mod = minfo.GetVisibility ();
 		minfo.protocolize = Protocolize (pi);
+		GetAccessorInfo (pi, out var getter, out var setter, out var generate_getter, out var generate_setter);
 
 		var nullable = !pi.PropertyType.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
 
@@ -5322,7 +5344,7 @@ public partial class Generator : IMemberGatherer {
 					pi.Name.GetSafeParamName (),
 				   use_underscore ? "_" : "");
 			indent++;
-			if (pi.CanRead) {
+			if (generate_getter) {
 #if !NET
 				PrintAttributes (pi, platform: true);
 #endif
@@ -5344,7 +5366,7 @@ public partial class Generator : IMemberGatherer {
 				indent--;
 				print ("}");
 			}
-			if (pi.CanWrite) {
+			if (generate_setter) {
 #if !NET
 				PrintAttributes (pi, platform: true);
 #endif
@@ -5422,7 +5444,7 @@ public partial class Generator : IMemberGatherer {
 
 		if (minfo.has_inner_wrap_attribute) {
 			// If property getter or setter has its own WrapAttribute we let the user do whatever their heart desires
-			if (pi.CanRead) {
+			if (generate_getter) {
 				PrintAttributes (pi, platform: true);
 				PrintAttributes (pi.GetGetMethod (), platform: true, preserve: true, advice: true);
 				print ("get {");
@@ -5433,8 +5455,7 @@ public partial class Generator : IMemberGatherer {
 				indent--;
 				print ("}");
 			}
-			if (pi.CanWrite) {
-				var setter = pi.GetSetMethod ();
+			if (generate_setter) {
 				var not_implemented_attr = AttributeManager.GetCustomAttribute<NotImplementedAttribute> (setter);
 
 				PrintAttributes (pi, platform: true);
@@ -5455,8 +5476,7 @@ public partial class Generator : IMemberGatherer {
 			return;
 		}
 
-		if (pi.CanRead) {
-			var getter = pi.GetGetMethod ();
+		if (generate_getter) {
 			var ba = GetBindAttribute (getter);
 			string sel = ba != null ? ba.Selector : export.Selector;
 
@@ -5517,8 +5537,7 @@ public partial class Generator : IMemberGatherer {
 				print ("}\n");
 			}
 		}
-		if (pi.CanWrite) {
-			var setter = pi.GetSetMethod ();
+		if (generate_setter) {
 			var ba = GetBindAttribute (setter);
 			bool null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (setter);
 			if (null_allowed)
@@ -6393,11 +6412,11 @@ public partial class Generator : IMemberGatherer {
 				mod = "unsafe ";
 			// IsValueType check needed for `IntPtr` signatures (which can't become `IntPtr?`)
 			var nullable = !pi.PropertyType.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (pi) ? "?" : String.Empty;
-			print ("{0}{1}{2} {3} {{", mod, FormatType (type, pi.PropertyType), nullable, pi.Name, pi.CanRead ? "get;" : string.Empty, pi.CanWrite ? "set;" : string.Empty);
+			GetAccessorInfo (pi, out var getMethod, out var setMethod, out var generate_getter, out var generate_setter);
+			print ("{0}{1}{2} {3} {{", mod, FormatType (type, pi.PropertyType), nullable, pi.Name, generate_getter ? "get;" : string.Empty, generate_setter ? "set;" : string.Empty);
 			indent++;
-			if (pi.CanRead) {
+			if (generate_getter) {
 				var ea = GetGetterExportAttribute (pi);
-				var getMethod = pi.GetGetMethod ();
 				// there can be a [Bind] there that override the selector name to be used
 				// e.g. IMTLTexture.FramebufferOnly
 				var ba = GetBindAttribute (getMethod);
@@ -6411,8 +6430,7 @@ public partial class Generator : IMemberGatherer {
 				PrintAttributes (getMethod, notImplemented: true);
 				print ("get;");
 			}
-			if (pi.CanWrite) {
-				var setMethod = pi.GetSetMethod ();
+			if (generate_setter) {
 				PrintBlockProxy (pi.PropertyType);
 				PrintAttributes (setMethod, notImplemented: true);
 				if (!AttributeManager.HasAttribute<NotImplementedAttribute> (setMethod))
@@ -6450,15 +6468,14 @@ public partial class Generator : IMemberGatherer {
 
 			// C# does not support extension properties, so create Get* and Set* accessors instead.
 			foreach (var pi in optionalInstanceProperties) {
+				GetAccessorInfo (pi, out var getter, out var setter, out var generate_getter, out var generate_setter);
 				var attrib = GetExportAttribute (pi);
-				var getter = pi.GetGetMethod ();
-				if (getter != null) {
+				if (generate_getter) {
 					PrintAttributes (pi, preserve: true, advice: true);
 					var ba = GetBindAttribute (getter);
 					GenerateMethod (type, getter, false, null, false, false, true, ba?.Selector ?? attrib.ToGetter (pi).Selector);
 				}
-				var setter = pi.GetSetMethod ();
-				if (setter != null) {
+				if (generate_setter) {
 					PrintAttributes (pi, preserve: true, advice: true);
 					var ba = GetBindAttribute (setter);
 					GenerateMethod (type, setter, false, null, false, false, true, ba?.Selector ?? attrib.ToSetter (pi).Selector);
@@ -6594,6 +6611,22 @@ public partial class Generator : IMemberGatherer {
 		if (type.Namespace != null) {
 			indent--;
 			print ("}");
+		}
+	}
+
+	void GetAccessorInfo (PropertyInfo pi, out MethodInfo getter, out MethodInfo setter, out bool generate_getter, out bool generate_setter)
+	{
+		getter = null;
+		setter = null;
+		generate_getter = false;
+		generate_setter = false;
+		if (pi.CanRead) {
+			getter = pi.GetGetMethod ();
+			generate_getter = !getter.IsUnavailable (this);
+		}
+		if (pi.CanWrite) {
+			setter = pi.GetSetMethod ();
+			generate_setter = !setter.IsUnavailable (this);
 		}
 	}
 
@@ -7124,7 +7157,8 @@ public partial class Generator : IMemberGatherer {
 				if (default_ctor_visibility != null) {
 					switch (default_ctor_visibility.Visibility) {
 					case Visibility.Public:
-						break; // default
+						ctor_visibility = "public";
+						break;
 					case Visibility.Internal:
 						ctor_visibility = "internal";
 						break;
@@ -7146,7 +7180,7 @@ public partial class Generator : IMemberGatherer {
 				if (TypeName != "NSObject") {
 					var initSelector = (InlineSelectors || BindThirdPartyLibrary) ? "Selector.GetHandle (\"init\")" : "Selector.Init";
 					var initWithCoderSelector = (InlineSelectors || BindThirdPartyLibrary) ? "Selector.GetHandle (\"initWithCoder:\")" : "Selector.InitWithCoder";
-					string v = class_mod == "abstract " ? "protected" : ctor_visibility;
+					string v = (class_mod == "abstract " && default_ctor_visibility is null) ? "protected" : ctor_visibility;
 					var is32BitNotSupported = Is64BitiOSOnly (type);
 					if (external) {
 						if (!disable_default_ctor) {
