@@ -16,14 +16,19 @@ namespace monotouchtest.CoreGraphics {
 		[Test]
 		public void LongitudeRefAndLatitudeRefTest ()
 		{
+			float expectedLatitude = 47.64248f;
+			float expectedLongitude = 122.136986f;
+			string expectedLatitudeRef = "N";
+			string expectedLongitudeRef = "W";
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08_with_loc.png");
+
 			using (var url = NSUrl.FromFilename (file))
 			using (var ci = CIImage.FromUrl (url)) {
-				var gpsA = ci.Properties.Gps;
-				Assert.AreEqual (gpsA.Latitude, 47.64248f);
-				Assert.AreEqual (gpsA.Longitude, 122.136986f);
-				Assert.AreEqual (gpsA.LatitudeRef, "N");
-				Assert.AreEqual (gpsA.LongitudeRef, "W");
+				var gps = ci.Properties.Gps;
+				Assert.AreEqual (expectedLatitude, gps.Latitude, "Invalid or no Latitude value found.");
+				Assert.AreEqual (expectedLongitude, gps.Longitude, "Invalid or no Longitude value found.");
+				Assert.AreEqual (expectedLatitudeRef, gps.LatitudeRef, "Invalid or no LatitudeRef value found.");
+				Assert.AreEqual (expectedLongitudeRef, gps.LongitudeRef, "Invalid or no LongitudeRef value found.");
 			}
 		}
 	}
