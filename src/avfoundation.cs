@@ -9969,6 +9969,9 @@ namespace AVFoundation {
 		[Export ("autoStillImageStabilizationEnabled")]
 		bool IsAutoStillImageStabilizationEnabled { [Bind ("isAutoStillImageStabilizationEnabled")] get; set; }
 
+		[Deprecated (PlatformName.iOS, 16, 0, message: "Use 'MaxPhotoDimensions' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use 'MaxPhotoDimensions' instead.")]
+		[Deprecated (PlatformName.MacOSX, 13, 0, message: "Use 'MaxPhotoDimensions' instead.")]
 		[Export ("highResolutionPhotoEnabled")]
 		bool IsHighResolutionPhotoEnabled { [Bind ("isHighResolutionPhotoEnabled")] get; set; }
 
@@ -10106,6 +10109,12 @@ namespace AVFoundation {
 		[NoMac]
 		[Export ("autoContentAwareDistortionCorrectionEnabled")]
 		bool AutoContentAwareDistortionCorrectionEnabled { [Bind ("isAutoContentAwareDistortionCorrectionEnabled")] get; set; }
+
+		[iOS (16, 0)]
+		[MacCatalyst (16, 0)]
+		[Mac (13, 0)]
+		[Export ("maxPhotoDimensions")]
+		CMVideoDimensions MaxPhotoDimensions { get; set; }
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -10312,7 +10321,10 @@ namespace AVFoundation {
 		[NullAllowed, Export ("photoSettingsForSceneMonitoring", ArgumentSemantic.Copy)]
 		AVCapturePhotoSettings PhotoSettingsForSceneMonitoring { get; set; }
 
-		[NoMac]
+		[Mac (10, 15)]
+		[Deprecated (PlatformName.iOS, 16, 0, message: "Use 'MaxPhotoDimensions' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use 'MaxPhotoDimensions' instead.")]
+		[Deprecated (PlatformName.MacOSX, 13, 0, message: "Use 'MaxPhotoDimensions' instead.")]
 		[Export ("highResolutionCaptureEnabled")]
 		bool IsHighResolutionCaptureEnabled { [Bind ("isHighResolutionCaptureEnabled")] get; set; }
 
@@ -10480,6 +10492,18 @@ namespace AVFoundation {
 		[NoMac]
 		[Export ("contentAwareDistortionCorrectionEnabled")]
 		bool ContentAwareDistortionCorrectionEnabled { [Bind ("isContentAwareDistortionCorrectionEnabled")] get; set; }
+
+		[iOS (16, 0)]
+		[MacCatalyst (16, 0)]
+		[Mac (13, 0)]
+		[Export ("maxPhotoDimensions")]
+		CMVideoDimensions MaxPhotoDimensions { get; set; }
+
+		[iOS (16, 0)]
+		[MacCatalyst (16, 0)]
+		[Mac (13, 0)]
+		[Export ("preservesLivePhotoCaptureSuspendedOnSessionStop")]
+		bool PreservesLivePhotoCaptureSuspendedOnSessionStop { get; set; }
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -11509,14 +11533,20 @@ namespace AVFoundation {
 #endif
 
 		[iOS (8, 0), NoMac]
+		[Deprecated (PlatformName.iOS, 16, 0, message: "Use 'SupportedMaxPhotoDimension' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use 'SupportedMaxPhotoDimension' instead.")]
 		[Export ("highResolutionStillImageDimensions")]
 		CMVideoDimensions HighResolutionStillImageDimensions { get; }
 
 		[iOS (11, 0), NoMac]
+		[Deprecated (PlatformName.iOS, 16, 0, message: "Use 'SupportedVideoZoomFactorsForDepthDataDelivery' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use 'SupportedVideoZoomFactorsForDepthDataDelivery' instead.")]
 		[Export ("videoMinZoomFactorForDepthDataDelivery")]
 		nfloat VideoMinZoomFactorForDepthDataDelivery { get; }
 
 		[iOS (11, 0), NoMac]
+		[Deprecated (PlatformName.iOS, 16, 0, message: "Use 'SupportedVideoZoomFactorsForDepthDataDelivery' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use 'SupportedVideoZoomFactorsForDepthDataDelivery' instead.")]
 		[Export ("videoMaxZoomFactorForDepthDataDelivery")]
 		nfloat VideoMaxZoomFactorForDepthDataDelivery { get; }
 
@@ -11596,6 +11626,27 @@ namespace AVFoundation {
 		[NoWatch, NoTV, MacCatalyst (15, 0), Mac (12, 0), iOS (15, 0)]
 		[Export ("videoFrameRateRangeForPortraitEffect")]
 		AVFrameRateRange VideoFrameRateRangeForPortraitEffect { get; }
+
+		[iOS (16, 0)]
+		[MacCatalyst (16, 0)]
+		[Mac (13, 0)]
+		[BindAs (typeof (CMVideoDimensions[]))]
+		[Export ("supportedMaxPhotoDimensions")]
+		NSValue[] SupportedMaxPhotoDimensions { get; }
+
+		[iOS (16, 0)]
+		[MacCatalyst (16, 0)]
+		[Mac (13, 0)]
+		[BindAs (typeof (nfloat[]))]
+		[Export ("secondaryNativeResolutionZoomFactors")]
+		NSNumber[] SecondaryNativeResolutionZoomFactors { get; }
+
+		[iOS (16, 0)]
+		[MacCatalyst (16, 0)]
+		[Mac (13, 0)]
+		[BindAs (typeof (nfloat[]))]
+		[Export ("supportedVideoZoomFactorsForDepthDataDelivery")]
+		NSNumber[] SupportedVideoZoomFactorsForDepthDataDelivery { get; }
 	}
 
 	delegate void AVCaptureCompletionHandler (CMSampleBuffer imageDataSampleBuffer, NSError error);
