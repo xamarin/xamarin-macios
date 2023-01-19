@@ -4,7 +4,6 @@ using CloudKit;
 using ObjCRuntime;
 
 namespace Foundation {
-#if MONOMAC || IOS
 	public partial class NSItemProvider
 	{
 #if !NET && MONOMAC
@@ -96,5 +95,4 @@ namespace Foundation {
 			});
 		}
 	}
-#endif // MONOMAC || IOS
 }
