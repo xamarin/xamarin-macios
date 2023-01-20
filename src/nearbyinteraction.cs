@@ -125,7 +125,8 @@ namespace NearbyInteraction {
 		[Export ("invalidate")]
 		void Invalidate ();
 
-		[NoWatch, NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
+		[NoMacCatalyst] // We don't have ARKit bindings for Mac Catalyst (because ARKit doesn't work on Mac Catalyst), so we can't bind this method.
+		[NoWatch, NoTV, NoMac, iOS (16, 0)]
 		[Export ("setARSession:")]
 		void SetARSession (ARSession session);
 
