@@ -950,10 +950,10 @@ namespace LinkSdk {
 #endif
 			path = TestFolder (Environment.SpecialFolder.MyMusic, exists: myExists);
 
-#if __MACOS__
+#if __MACOS__ && !NET8_0_OR_GREATER
 			path = TestFolder (Environment.SpecialFolder.MyVideos, supported: false);
 #else
-			path = TestFolder (Environment.SpecialFolder.MyVideos, exists: false);
+			path = TestFolder (Environment.SpecialFolder.MyVideos, exists: myExists);
 #endif
 
 			path = TestFolder (Environment.SpecialFolder.DesktopDirectory, exists: myExists);
@@ -1032,7 +1032,7 @@ namespace LinkSdk {
 
 			// and some stuff is read/write
 			path = TestFolder (Environment.SpecialFolder.MyDocuments);
-#if __MACOS__
+#if __MACOS__ && !NET8_0_OR_GREATER
 			Assert.That (path, Is.EqualTo (home), "path - MyDocuments");
 #else
 			Assert.That (path, Is.EqualTo (docs), "path - MyDocuments");
@@ -1044,14 +1044,22 @@ namespace LinkSdk {
 			path = TestFolder (Environment.SpecialFolder.ApplicationData);
 #endif
 #if __MACOS__
+#if NET8_0_OR_GREATER
+			Assert.That (path, Is.EqualTo (Path.Combine (home, "Library", "Application Support")), "path - ApplicationData");
+#else
 			Assert.That (path, Is.EqualTo (Path.Combine (home, ".config")), "path - ApplicationData");
+#endif
 #else
 			Assert.That (path, Is.EqualTo (docs + "/.config"), "path - ApplicationData");
 #endif
 
 			path = TestFolder (Environment.SpecialFolder.LocalApplicationData);
 #if __MACOS__
+#if NET8_0_OR_GREATER
+			Assert.That (path, Is.EqualTo (Path.Combine (home, "Library", "Application Support")), "path - ApplicationData");
+#else
 			Assert.That (path, Is.EqualTo (Path.Combine (home, ".local", "share")), "path - LocalApplicationData");
+#endif
 #else
 			Assert.That (path, Is.EqualTo (docs), "path - LocalApplicationData");
 #endif

@@ -978,6 +978,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		[Ignore ("This test will fail until https://github.com/xamarin/xamarin-macios/commit/69b8b5a17d4d00d1d993aa0b38912d982455c780 (or something equivalent) has been backported to .NET 6")]
 		public void BuildNet6_0App (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "Net6_0SimpleApp";
@@ -1179,6 +1180,25 @@ namespace Xamarin.Tests {
 				var jitNotAllowed = !foundEntitlements || !entitlements!.ContainsKey ("com.apple.security.cs.allow-jit");
 				Assert.True (jitNotAllowed, "Jit Not Allowed");
 			}
+		}
+
+		// [TestCase (ApplePlatform.MacCatalyst, null, "Release")]
+		[TestCase (ApplePlatform.MacOSX, null, "Release")]
+		public void NoWarnCodesign (ApplePlatform platform, string runtimeIdentifiers, string configuration)
+		{
+			var project = "Entitlements";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
+			Clean (project_path);
+
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["Configuration"] = configuration;
+			properties ["EnableCodeSigning"] = "true";
+			properties ["ExcludeNUnitLiteReference"] = "true";
+			properties ["ExcludeTouchUnitReference"] = "true";
+			var rv = DotNet.AssertBuild (project_path, properties);
+			rv.AssertNoWarnings ();
 		}
 
 		[Test]
