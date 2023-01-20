@@ -33,5 +33,6 @@
 !missing-protocol-member! AVAudioRecorderDelegate::audioRecorderEndInterruption:withOptions: not found
 
 ## https://github.com/xamarin/xamarin-macios/issues/16229 prevents crashing instead of return null
+## so these selectors have been bound manually
 !missing-selector! AVAudioPlayer::initWithContentsOfURL:error: not bound
 !missing-selector! AVAudioPlayer::initWithData:error: not bound
