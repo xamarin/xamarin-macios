@@ -1,5 +1,6 @@
 <Project>
 	<ImportGroup Condition=" '$(TargetPlatformIdentifier)' == 'MacCatalyst' ">
+		<Import Project="Sdk.props" Sdk="Microsoft.$(TargetPlatformIdentifier).Sdk.net8" Condition=" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '8.0')) " />
 		<Import Project="Sdk.props" Sdk="Microsoft.$(TargetPlatformIdentifier).Sdk.net7" Condition=" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '7.0')) " />
 		<Import Project="Sdk.props" Sdk="Microsoft.$(TargetPlatformIdentifier).Sdk.net6" Condition=" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0')) " />
 	</ImportGroup>
