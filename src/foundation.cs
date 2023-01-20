@@ -288,8 +288,10 @@ namespace Foundation {
 	partial interface NSAttributedString : NSCoding, NSMutableCopying, NSSecureCoding
 #if MONOMAC
 		, NSPasteboardReading, NSPasteboardWriting
+#else
+		, NSItemProviderReading, NSItemProviderWriting
 #endif
-		, NSItemProviderReading, NSItemProviderWriting {
+		{
 #if !WATCH
 		[Static, Export ("attributedStringWithAttachment:")]
 		NSAttributedString FromAttachment (NSTextAttachment attachment);
