@@ -1,7 +1,9 @@
 <Project>
 	<ImportGroup Condition=" '$(TargetPlatformIdentifier)' == 'iOS' ">
+		<Import Project="Sdk.props" Sdk="Microsoft.$(TargetPlatformIdentifier).Sdk.net8" Condition=" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '8.0')) " />
 		<Import Project="Sdk.props" Sdk="Microsoft.$(TargetPlatformIdentifier).Sdk.net7" Condition=" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '7.0')) " />
 		<Import Project="Sdk.props" Sdk="Microsoft.$(TargetPlatformIdentifier).Sdk.net6" Condition=" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0')) " />
+		<Import Project="Sdk.props" Sdk="Microsoft.$(TargetPlatformIdentifier).Windows.Sdk.Aliased.net8" Condition=" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '8.0')) And $([MSBuild]::IsOSPlatform('windows'))" />
 		<Import Project="Sdk.props" Sdk="Microsoft.$(TargetPlatformIdentifier).Windows.Sdk.Aliased.net7" Condition=" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '7.0')) And $([MSBuild]::IsOSPlatform('windows'))" />
 		<Import Project="Sdk.props" Sdk="Microsoft.$(TargetPlatformIdentifier).Windows.Sdk.Aliased.net6" Condition=" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0')) And $([MSBuild]::IsOSPlatform('windows'))" />
 	</ImportGroup>
