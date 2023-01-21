@@ -1589,13 +1589,6 @@ namespace AVFoundation {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVAudioPlayer {
-		[Export ("initWithContentsOfURL:error:")]
-		[Internal]
-		NativeHandle Constructor (NSUrl url, IntPtr outError);
-
-		[Export ("initWithData:error:")]
-		[Internal]
-		NativeHandle Constructor (NSData data, IntPtr outError);
 
 		[Export ("prepareToPlay")]
 		bool PrepareToPlay ();
