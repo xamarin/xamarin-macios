@@ -205,9 +205,9 @@ namespace CoreText {
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCollectionCreateMatchingFontDescriptorsSortedWithCallback (
 				IntPtr collection, CTFontCollectionSortDescriptorsCallback sortCallback, IntPtr refCon);
-#endif
 
 		delegate CFIndex CTFontCollectionSortDescriptorsCallback (IntPtr first, IntPtr second, IntPtr refCon);
+#endif
 
 #if NET
 		[UnmanagedCallersOnly]
