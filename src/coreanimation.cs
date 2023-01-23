@@ -38,7 +38,6 @@ using CoreVideo;
 using OpenGL;
 #else
 using UIKit;
-using CAEdrMetadata = Foundation.NSObject;
 #endif
 #if HAS_OPENGLES
 using OpenGLES;
@@ -49,6 +48,10 @@ using CoreGraphics;
 using ObjCRuntime;
 using Metal;
 using SceneKit; // For SCNAnimationEvent
+
+#if __WATCHOS__ || __TVOS__
+using CAEdrMetadata = Foundation.NSObject;
+#endif
 
 #if !MONOMAC
 using CGLPixelFormat = Foundation.NSObject;
@@ -754,12 +757,30 @@ namespace CoreAnimation {
 		IMTLDevice PreferredDevice { get; }
 
 		[NoWatch]
-		[NoiOS]
+		[iOS (16, 0)]
 		[NoTV]
 		[Mac (10, 15)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (16, 0)]
 		[NullAllowed, Export ("EDRMetadata", ArgumentSemantic.Strong)]
 		CAEdrMetadata EdrMetadata { get; set; }
+
+		[NoWatch]
+		[NoTV]
+		[iOS (16, 0)]
+		[MacCatalyst (16, 0)]
+		[Mac (11, 0)]
+		[Export ("wantsExtendedDynamicRangeContent")]
+		bool WantsExtendedDynamicRangeContent { get; set; }
+
+		[NoWatch]
+		[TV (16, 0)]
+		[iOS (16, 0)]
+		[MacCatalyst (16, 0)]
+		[Mac (13, 0)]
+		[Export ("developerHUDProperties", ArgumentSemantic.Copy)]
+		[NullAllowed]
+		// There's no documentation about which values are valid in this dictionary, so we can't create any strong bindings for it.
+		NSDictionary DeveloperHudProperties { get; set; }
 	}
 
 	[BaseType (typeof (CALayer))]
@@ -2038,9 +2059,9 @@ namespace CoreAnimation {
 	}
 
 	[NoWatch]
-	[NoiOS]
+	[iOS (16, 0)]
 	[NoTV]
-	[MacCatalyst (13, 1)]
+	[MacCatalyst (16, 0)]
 	[Mac (10, 15)]
 	[BaseType (typeof (NSObject), Name = "CAEDRMetadata")]
 	[DisableDefaultCtor]
@@ -2057,5 +2078,9 @@ namespace CoreAnimation {
 		[Static]
 		[Export ("HLGMetadata", ArgumentSemantic.Retain)]
 		CAEdrMetadata HlgMetadata { get; }
+
+		[Static]
+		[Export ("available")]
+		bool Available { [Bind ("isAvailable")] get; }
 	}
 }
