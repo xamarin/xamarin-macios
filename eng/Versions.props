@@ -10,9 +10,9 @@
     <MicrosoftNETWorkloadEmscriptennet7Manifest80100Version>8.0.0-alpha.1.23061.1</MicrosoftNETWorkloadEmscriptennet7Manifest80100Version>
     <MicrosoftTemplateEngineTasksVersion>7.0.100-alpha.1.21601.1</MicrosoftTemplateEngineTasksVersion>
     <!-- This is a subscription of the .NET 7 versions of our packages -->
-    <MicrosoftMacCatalystSdkPackageVersion>16.2.1017</MicrosoftMacCatalystSdkPackageVersion>
-    <MicrosoftmacOSSdkPackageVersion>13.1.1017</MicrosoftmacOSSdkPackageVersion>
-    <MicrosoftiOSSdkPackageVersion>16.2.1017</MicrosoftiOSSdkPackageVersion>
-    <MicrosofttvOSSdkPackageVersion>16.1.1514</MicrosofttvOSSdkPackageVersion>
+    <MicrosoftMacCatalystSdkPackageVersion>16.2.1018</MicrosoftMacCatalystSdkPackageVersion>
+    <MicrosoftmacOSSdkPackageVersion>13.1.1018</MicrosoftmacOSSdkPackageVersion>
+    <MicrosoftiOSSdkPackageVersion>16.2.1018</MicrosoftiOSSdkPackageVersion>
+    <MicrosofttvOSSdkPackageVersion>16.1.1515</MicrosofttvOSSdkPackageVersion>
   </PropertyGroup>
 </Project>
