@@ -12,6 +12,7 @@ using CoreImage;
 
 namespace monotouchtest.CoreGraphics {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class CGImagePropertiesGPSTest {
 		[Test]
 		public void LongitudeRefAndLatitudeRefTest ()
