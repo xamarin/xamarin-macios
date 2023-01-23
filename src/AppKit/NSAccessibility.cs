@@ -93,11 +93,7 @@ namespace AppKit {
 			if (role is null)
 				throw new ArgumentNullException ("role");
 
-			IntPtr subroleHandle;
-			if (subrole is null)
-				subroleHandle = IntPtr.Zero;
-			else
-				subroleHandle = subrole.Handle;
+			var subroleHandle = subrole.GetHandle ();
 
 			IntPtr handle = NSAccessibilityRoleDescription (role.Handle, subroleHandle);
 			return CFString.FromHandle (handle);
@@ -155,7 +151,7 @@ namespace AppKit {
 		[DllImport (Constants.AppKitLibrary)]
 		static extern IntPtr NSAccessibilityUnignoredChildren (IntPtr originalChildren);
 
-		public static NSObject [] GetUnignoredChildren (NSArray originalChildren)
+		public static NSObject []? GetUnignoredChildren (NSArray originalChildren)
 		{
 			if (originalChildren is null)
 				throw new ArgumentNullException ("originalChildren");
@@ -168,7 +164,7 @@ namespace AppKit {
 		[DllImport (Constants.AppKitLibrary)]
 		static extern IntPtr NSAccessibilityUnignoredChildrenForOnlyChild (IntPtr originalChild);
 
-		public static NSObject [] GetUnignoredChildren (NSObject originalChild)
+		public static NSObject []? GetUnignoredChildren (NSObject originalChild)
 		{
 			if (originalChild is null)
 				throw new ArgumentNullException ("originalChild");
