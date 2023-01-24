@@ -14,8 +14,14 @@ namespace Xamarin.BindingTests {
 	public class ProtocolTest {
 		bool HasProtocolAttributes {
 			get {
-				if (TestRuntime.IsLinkAll && !Runtime.DynamicRegistrationSupported)
+				if (TestRuntime.IsLinkAll) {
+#if OPTIMIZEALL && __MACOS__
 					return false;
+#endif
+					if (!Runtime.DynamicRegistrationSupported)
+						return false;
+				}
+
 
 				return true;
 			}

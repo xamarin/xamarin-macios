@@ -10980,10 +10980,8 @@ namespace Foundation {
 		[Export ("preferredPresentationSize")]
 		CGSize PreferredPresentationSize {
 			get;
-#if !MONOMAC
 			[NoMac]
 			set;
-#endif
 		}
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
@@ -15461,6 +15459,14 @@ namespace Foundation {
 
 		[Static]
 		[Deprecated (PlatformName.MacOSX, 10, 15)]
+#if XAMCORE_5_0
+		[NoMacCatalyst]
+#else
+#if MACCATALYST
+		[Obsolete ("Do not use; this method is not available on Mac Catalyst.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+#endif // MACCATALYST
+#endif // XAMCORE_5_0
 		[Export ("launchedTaskWithLaunchPath:arguments:")]
 		NSTask LaunchFromPath (string path, string [] arguments);
 
