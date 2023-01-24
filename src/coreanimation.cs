@@ -2079,6 +2079,7 @@ namespace CoreAnimation {
 		[Export ("HLGMetadata", ArgumentSemantic.Retain)]
 		CAEdrMetadata HlgMetadata { get; }
 
+		[Mac (13, 0)]
 		[Static]
 		[Export ("available")]
 		bool Available { [Bind ("isAvailable")] get; }
