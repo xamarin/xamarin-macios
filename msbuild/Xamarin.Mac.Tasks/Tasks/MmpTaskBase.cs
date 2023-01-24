@@ -19,7 +19,7 @@ using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.Mac.Tasks {
-	public abstract class MmpTaskBase : BundlerToolTaskBase {
+	public class Mmp : BundlerToolTaskBase {
 		protected override string ToolName {
 			get { return "mmp"; }
 		}

@@ -39,6 +39,8 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
+#nullable enable
+
 namespace AudioUnit {
 	public enum AudioUnitStatus { // Implictly cast to OSType
 		NoError = 0,
@@ -170,7 +172,11 @@ namespace AudioUnit {
 		System = 0,
 	}
 
-#if !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
+	[MacCatalyst (13, 1)]
+	[NoTV, NoWatch]
+#if NET
+	[NoiOS]
+#endif
 	public enum AudioObjectPropertySelector : uint {
 		PropertyDevices = 1684370979, // 'dev#'
 		Devices = 1684370979, // 'dev#'
@@ -187,20 +193,16 @@ namespace AudioUnit {
 		TranslateUIDToBox = 1969841250, // 'uidb'
 		ClockDeviceList = 1668049699, //'clk#'
 		TranslateUidToClockDevice = 1969841251, // 'uidc',
-#if XAMCORE_3_0
-		[NoiOS][NoTV]
-#endif
+#if !XAMCORE_5_0
 		[MacCatalyst (13, 1)] // This is required for .NET, because otherwise the generator thinks it's not available because it's not available on iOS.
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the 'ProcessIsMain' element instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use the 'ProcessIsMain' element instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the 'ProcessIsMain' element instead.")]
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the 'ProcessIsMain' element instead.")]
 		[Obsolete ("Use the 'ProcessIsMain' element instead.")]
 		ProcessIsMaster = 1835103092, // 'mast'
-#if !XAMCORE_3_0
-		[iOS (15, 0)]
-#else
+#endif // !XAMCORE_5_0
 		[NoiOS]
-#endif
 		[MacCatalyst (15, 0), Mac (12, 0), NoTV, NoWatch]
 		ProcessIsMain = 1835100526, // 'main'
 		IsInitingOrExiting = 1768845172, // 'inot'
@@ -215,15 +217,16 @@ namespace AudioUnit {
 		ActualSampleRate = 1634955892,// 'asrt',
 		ClockDevice = 1634755428, // 'apcd',
 		IOThreadOSWorkgroup = 1869838183, // 'oswg'
-#if !XAMCORE_3_0
-		[iOS (15, 0)]
-#else
 		[NoiOS]
-#endif
 		[MacCatalyst (15, 0), Mac (12, 0), NoTV, NoWatch]
 		ProcessMute = 1634758765, // 'appm'
 	}
 
+	[MacCatalyst (13, 1)]
+	[NoTV, NoWatch]
+#if NET
+	[NoiOS]
+#endif
 	public enum AudioObjectPropertyScope : uint {
 		Global = 1735159650, // 'glob'
 		Input = 1768845428, // 'inpt'
@@ -231,6 +234,11 @@ namespace AudioUnit {
 		PlayThrough = 1886679669, // 'ptru'
 	}
 
+	[MacCatalyst (13, 1)]
+	[NoTV, NoWatch]
+#if NET
+	[NoiOS]
+#endif
 	public enum AudioObjectPropertyElement : uint {
 #if !NET
 		[Obsolete ("Use the 'Main' element instead.")]
@@ -238,7 +246,6 @@ namespace AudioUnit {
 #endif
 		Main = 0, // 0
 	}
-#endif // !XAMCORE_3_0 || MONOMAC
 
 #if XAMCORE_3_0
 	[Internal]
@@ -563,8 +570,11 @@ namespace AudioUnit {
 		AULowShelfCutoffFrequency = 0,
 		AULowShelfGain = 1,
 
+#if !XAMCORE_5_0 // I can't find this value in the headers anymore
 		[Obsoleted (PlatformName.iOS, 7, 0)]
+		[Obsoleted (PlatformName.MacCatalyst, 13, 1)]
 		AUDCFilterDecayTime = 0,
+#endif
 
 		// AUParametricEQ
 		ParametricEQCenterFreq = 0,

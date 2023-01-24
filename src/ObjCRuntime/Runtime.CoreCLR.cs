@@ -30,6 +30,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ObjectiveC;
+using System.Runtime.Loader;
 using System.Text;
 
 using Foundation;
@@ -142,6 +143,33 @@ namespace ObjCRuntime {
 			delegate* unmanaged<IntPtr, int> isReferencedCallback = (delegate* unmanaged<IntPtr, int>) options->reference_tracking_is_referenced_callback;
 			delegate* unmanaged<IntPtr, void> trackedObjectEnteredFinalization = (delegate* unmanaged<IntPtr, void>) options->reference_tracking_tracked_object_entered_finalization;
 			ObjectiveCMarshal.Initialize (beginEndCallback, isReferencedCallback, trackedObjectEnteredFinalization, UnhandledExceptionPropagationHandler);
+
+			AssemblyLoadContext.Default.Resolving += ResolvingEventHandler;
+		}
+
+		[DllImport ("__Internal")]
+		static extern byte xamarin_locate_assembly_resource (IntPtr assembly_name, IntPtr culture, IntPtr resource, IntPtr path, nint pathlen);
+
+		static bool xamarin_locate_assembly_resource (string assembly_name, string? culture, string resource, [NotNullWhen (true)] out string? path)
+		{
+			path = null;
+
+			const int path_size = 1024;
+			using var assembly_name_ptr = new TransientString (assembly_name);
+			using var culture_ptr = new TransientString (culture);
+			using var resource_ptr = new TransientString (resource);
+			using var path_ptr = new TransientString (path_size);
+			var rv = xamarin_locate_assembly_resource (assembly_name_ptr, culture_ptr, resource_ptr, path_ptr, path_size) != 0;
+			if (rv)
+				path = (string?) path_ptr;
+			return path is not null;
+		}
+
+		static Assembly? ResolvingEventHandler (AssemblyLoadContext sender, AssemblyName assemblyName)
+		{
+			if (xamarin_locate_assembly_resource (assemblyName.Name!, assemblyName.CultureName, assemblyName.Name + ".dll", out var path))
+				return sender.LoadFromAssemblyPath (path);
+			return null;
 		}
 
 		static unsafe delegate* unmanaged<IntPtr, void> UnhandledExceptionPropagationHandler (Exception exception, RuntimeMethodHandle lastMethod, out IntPtr context)

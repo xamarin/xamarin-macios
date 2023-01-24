@@ -1010,6 +1010,63 @@ namespace GeneratorTests {
 		}
 
 		[Test]
+		[TestCase (Profile.iOS)]
+#if !NET
+		[Ignore ("This only applies to .NET")]
+#endif
+		public void AttributesFromInlinedProtocols (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
+			bgen.AddTestApiDefinition ("tests/attributes-from-inlined-protocols.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
+
+			var type = bgen.ApiAssembly.MainModule.GetType ("NS", "TypeA");
+			var someMethod1 = type.Methods.Single (v => v.Name == "SomeMethod1");
+			var someMethod2 = type.Methods.Single (v => v.Name == "SomeMethod2");
+			var someMethod3 = type.Methods.Single (v => v.Name == "SomeMethod3");
+			var someMethod4 = type.Methods.Single (v => v.Name == "SomeMethod4");
+
+			var renderedSomeMethod1 = string.Join ("\n", someMethod1.CustomAttributes.Select (ca => RenderSupportedOSPlatformAttribute (ca)).OrderBy (v => v));
+			var renderedSomeMethod2 = string.Join ("\n", someMethod2.CustomAttributes.Select (ca => RenderSupportedOSPlatformAttribute (ca)).OrderBy (v => v));
+			var renderedSomeMethod3 = string.Join ("\n", someMethod3.CustomAttributes.Select (ca => RenderSupportedOSPlatformAttribute (ca)).OrderBy (v => v));
+			var renderedSomeMethod4 = string.Join ("\n", someMethod4.CustomAttributes.Select (ca => RenderSupportedOSPlatformAttribute (ca)).OrderBy (v => v));
+
+			const string expectedAttributes1 =
+@"[BindingImpl(3)]
+[Export(""someMethod1:"")]
+[SupportedOSPlatform(""ios12.0"")]
+[SupportedOSPlatform(""maccatalyst"")]
+[UnsupportedOSPlatform(""tvos"")]";
+			const string expectedAttributes2 =
+@"[BindingImpl(3)]
+[Export(""someMethod2:"")]
+[SupportedOSPlatform(""ios12.0"")]
+[SupportedOSPlatform(""maccatalyst"")]
+[UnsupportedOSPlatform(""tvos"")]";
+			const string expectedAttributes3 =
+@"[BindingImpl(3)]
+[Export(""someMethod3:"")]
+[SupportedOSPlatform(""ios11.0"")]
+[SupportedOSPlatform(""maccatalyst"")]
+[UnsupportedOSPlatform(""tvos"")]";
+			const string expectedAttributes4 =
+@"[BindingImpl(3)]
+[Export(""someMethod4:"")]
+[SupportedOSPlatform(""ios11.0"")]
+[SupportedOSPlatform(""maccatalyst"")]
+[UnsupportedOSPlatform(""tvos"")]";
+
+			Assert.AreEqual (expectedAttributes1, renderedSomeMethod1, "SomeMethod1");
+			Assert.AreEqual (expectedAttributes2, renderedSomeMethod2, "SomeMethod2");
+			Assert.AreEqual (expectedAttributes3, renderedSomeMethod3, "SomeMethod3");
+			Assert.AreEqual (expectedAttributes4, renderedSomeMethod4, "SomeMethod4");
+		}
+
+		[Test]
 		public void NFloatType ()
 		{
 			var bgen = BuildFile (Profile.iOS, "tests/nfloat.cs");
@@ -1018,6 +1075,42 @@ namespace GeneratorTests {
 			Assert.IsNotNull (messaging, "Messaging");
 			var pinvoke = messaging.Methods.FirstOrDefault (v => v.Name == "xamarin_nfloat_objc_msgSend_exception");
 			Assert.IsNotNull (pinvoke, "PInvoke");
+		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void NoAvailabilityForAccessors (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
+			bgen.AddTestApiDefinition ("tests/no-availability-for-accessors.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
+
+			bgen.AssertMethod ("NS.Whatever", "get_PropA");
+			bgen.AssertNoMethod ("NS.Whatever", "set_PropA", parameterTypes: "Foundation.NSObject");
+			bgen.AssertMethod ("NS.Whatever", "set_PropB", parameterTypes: "Foundation.NSObject");
+			bgen.AssertNoMethod ("NS.Whatever", "get_PropB");
+			bgen.AssertMethod ("NS.Whatever", "get_IPropA");
+			bgen.AssertNoMethod ("NS.Whatever", "set_IPropA", parameterTypes: "Foundation.NSObject");
+			bgen.AssertMethod ("NS.Whatever", "set_IPropB", parameterTypes: "Foundation.NSObject");
+			bgen.AssertNoMethod ("NS.Whatever", "get_IPropB");
+			bgen.AssertMethod ("NS.Whatever", "get_IPropAOpt");
+			bgen.AssertNoMethod ("NS.Whatever", "set_IPropAOpt", parameterTypes: "Foundation.NSObject");
+			bgen.AssertMethod ("NS.Whatever", "set_IPropBOpt", parameterTypes: "Foundation.NSObject");
+			bgen.AssertNoMethod ("NS.Whatever", "get_IPropBOpt");
+			bgen.AssertPublicMethodCount ("NS.Whatever", 9); // 6 accessors + 2 constructors + ClassHandle getter
+
+			bgen.AssertMethod ("NS.IIProtocol", "get_IPropA");
+			bgen.AssertNoMethod ("NS.IIProtocol", "set_IPropA", parameterTypes: "Foundation.NSObject");
+			bgen.AssertMethod ("NS.IIProtocol", "set_IPropB", parameterTypes: "Foundation.NSObject");
+			bgen.AssertNoMethod ("NS.IIProtocol", "get_IPropB");
+			bgen.AssertPublicMethodCount ("NS.IIProtocol", 2);
+
+			bgen.AssertMethod ("NS.IProtocol_Extensions", "GetIPropAOpt", parameterTypes: "NS.IIProtocol");
+			bgen.AssertMethod ("NS.IProtocol_Extensions", "SetIPropBOpt", parameterTypes: new string [] { "NS.IIProtocol", "Foundation.NSObject" });
+			bgen.AssertPublicMethodCount ("NS.IProtocol_Extensions", 2);
 		}
 
 		BGenTool BuildFile (Profile profile, params string [] filenames)

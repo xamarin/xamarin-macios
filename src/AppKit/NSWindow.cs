@@ -61,6 +61,7 @@ namespace AppKit {
 			}
 		}
 
+#if !NET
 		static IntPtr selInitWithWindowRef = Selector.GetHandle ("initWithWindowRef:");
 
 		// Do not actually export because NSObjectFlag is not exportable.
@@ -76,10 +77,15 @@ namespace AppKit {
 			}
 			InitializeReleasedWhenClosed ();
 		}
+#endif
 
 		static public NSWindow FromWindowRef (IntPtr windowRef)
 		{
+#if NET
+			return new NSWindow (windowRef);
+#else
 			return new NSWindow (windowRef, NSObjectFlag.Empty);
+#endif
 		}
 
 		void InitializeReleasedWhenClosed ()
