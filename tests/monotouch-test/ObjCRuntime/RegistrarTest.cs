@@ -287,7 +287,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			NativeHandle ptr;
 			CGPath path;
 
-			if ((CurrentRegistrar & Registrars.AllStatic) == 0)
+			if (!global::XamarinTests.ObjCRuntime.Registrar.IsStaticRegistrar)
 				Assert.Ignore ("This test only passes with the static registrars.");
 
 			Assert.False (Messaging.bool_objc_msgSend_IntPtr (receiver, new Selector ("INativeObject1:").Handle, NativeHandle.Zero), "#a1");

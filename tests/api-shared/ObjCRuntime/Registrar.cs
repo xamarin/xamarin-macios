@@ -16,6 +16,7 @@ using ObjCRuntime;
 
 namespace XamarinTests.ObjCRuntime {
 
+	[Flags]
 	public enum Registrars {
 		Static = 1,
 		ManagedStatic = Static | 2,
@@ -27,6 +28,18 @@ namespace XamarinTests.ObjCRuntime {
 	public class Registrar {
 		[Register ("__registration_test_CLASS")]
 		class RegistrationTestClass : NSObject { }
+
+		public static bool IsStaticRegistrar {
+			get {
+				return (CurrentRegistrar & Registrars.Static) == Registrars.Static;
+			}
+		}
+
+		public static bool IsDynamicRegistrar {
+			get {
+				return (CurrentRegistrar & Registrars.Dynamic) == Registrars.Dynamic;
+			}
+		}
 
 		public static Registrars CurrentRegistrar {
 			get {
