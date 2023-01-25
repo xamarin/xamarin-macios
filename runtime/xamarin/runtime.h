@@ -297,6 +297,15 @@ void			xamarin_vprintf (const char *format, va_list args);
 void			xamarin_install_log_callbacks ();
 
 /*
+ * Looks up a native function pointer for a managed [UnmanagedCallersOnly] method.
+ *     function_pointer: the return value, lookup will only be performed if this points to NULL.
+ *     assembly: the assembly to look in. Might be NULL if the app was not built with support for loading additional assemblies at runtime.
+ *     symbol: the symbol to loop up. Can be NULL to save space (this value isn't used except in error messages).
+ *     id: a numerical id for faster lookup (than doing string comparisons on the symbol name).
+ */
+void			xamarin_registrar_dlsym (void **function_pointer, const char *assembly, const char *symbol, int32_t id);
+
+/*
  * Wrapper GCHandle functions that takes pointer sized handles instead of ints,
  * so that we can adapt our code incrementally to use pointers instead of ints
  * until Mono's pointer-sized API is available for us.
