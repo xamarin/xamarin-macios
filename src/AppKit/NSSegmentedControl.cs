@@ -11,10 +11,12 @@ using System;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace AppKit {
 
 	public partial class NSSegmentedControl {
-		NSActionDispatcher dispatcher;
+		NSActionDispatcher? dispatcher;
 
 		public new NSSegmentedCell Cell {
 			get { return (NSSegmentedCell) base.Cell; }

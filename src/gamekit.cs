@@ -818,12 +818,12 @@ namespace GameKit {
 
 		[NullAllowed] // by default this property is null
 		[Export ("authenticateHandler", ArgumentSemantic.Copy)]
+		[Mac (10, 9)]
 #if WATCH
 		Action<NSError> AuthenticateHandler { get; set; }
 #elif !MONOMAC
 		Action<UIViewController, NSError> AuthenticateHandler { get; set; }
 #else
-		[Mac (10,9)]
 		Action<NSViewController, NSError> AuthenticateHandler { get; set; }
 #endif
 

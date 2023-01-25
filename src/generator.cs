@@ -1345,6 +1345,7 @@ public partial class Generator : IMemberGatherer {
 					nsvalue_create_map [TypeManager.CMTimeRange] = "CMTimeRange";
 					nsvalue_create_map [TypeManager.CMTime] = "CMTime";
 					nsvalue_create_map [TypeManager.CMTimeMapping] = "CMTimeMapping";
+					nsvalue_create_map [TypeManager.CMVideoDimensions] = "CMVideoDimensions";
 				}
 
 				if (Frameworks.HaveCoreAnimation)
@@ -1493,6 +1494,7 @@ public partial class Generator : IMemberGatherer {
 					nsvalue_return_map [TypeManager.CMTimeRange] = ".CMTimeRangeValue";
 					nsvalue_return_map [TypeManager.CMTime] = ".CMTimeValue";
 					nsvalue_return_map [TypeManager.CMTimeMapping] = ".CMTimeMappingValue";
+					nsvalue_return_map [TypeManager.CMVideoDimensions] = ".CMVideoDimensionsValue";
 				}
 
 				if (Frameworks.HaveCoreAnimation)
@@ -3677,7 +3679,7 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	AvailabilityBaseAttribute [] GetPlatformAttributesToPrint (MemberInfo mi, Type type, MemberInfo inlinedType)
+	AvailabilityBaseAttribute [] GetPlatformAttributesToPrint (MemberInfo mi, MemberInfo context, MemberInfo inlinedType)
 	{
 		// Attributes are directly on the member
 		List<AvailabilityBaseAttribute> memberAvailability = AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (mi).ToList ();
@@ -3685,7 +3687,8 @@ public partial class Generator : IMemberGatherer {
 		// Due to differences between Xamarin and NET6 availability attributes, we have to synthesize many duplicates for NET6
 		// See https://github.com/xamarin/xamarin-macios/issues/10170 for details
 #if NET
-		MemberInfo context = type ?? FindContainingContext (mi);
+		if (context is null)
+			context = FindContainingContext (mi);
 		// Attributes on the _target_ context, the class itself or the target of the protocol inlining
 		List<AvailabilityBaseAttribute> parentContextAvailability = GetAllParentAttributes (context);
 		// (Optional) Attributes from the inlined protocol type itself
@@ -3699,8 +3702,12 @@ public partial class Generator : IMemberGatherer {
 			List<AvailabilityBaseAttribute> availabilityToConsider = new List<AvailabilityBaseAttribute> ();
 			if (inlinedTypeAvailability != null) {
 				availabilityToConsider.AddRange (inlinedTypeAvailability);
+				// Don't copy parent attributes if the conflict with the type we're inlining members into
+				// Example: don't copy Introduced on top of Unavailable.
+				CopyValidAttributes (availabilityToConsider, parentContextAvailability);
+			} else {
+				availabilityToConsider.AddRange (parentContextAvailability);
 			}
-			availabilityToConsider.AddRange (parentContextAvailability);
 
 			// We do not support Watch, so strip from both our input sources before any processing
 			memberAvailability = memberAvailability.Where (x => x.Platform != PlatformName.WatchOS).ToList ();
@@ -3711,6 +3718,23 @@ public partial class Generator : IMemberGatherer {
 
 			// Copy down any unavailable from the parent before expanding, since a [NoMacCatalyst] on the type trumps [iOS] on a member
 			CopyValidAttributes (memberAvailability, availabilityToConsider.Where (attr => attr.AvailabilityKind != AvailabilityKind.Introduced));
+
+			if (inlinedType is not null && inlinedType != mi.DeclaringType && memberAvailability.Count > 1) {
+				// We might have gotten conflicting availability attributes for inlined members, where the inlined member
+				// might be available on a platform the target type isn't. The target type's unavailability will come
+				// later in the list, which means that if we have an unavailable attribute after an introduced attribute,
+				// then we need to remove the introduced attribute.
+				for (var i = memberAvailability.Count - 1; i >= 0; i--) {
+					if (memberAvailability [i].AvailabilityKind != AvailabilityKind.Unavailable)
+						continue;
+					for (var k = i - 1; k >= 0; k--) {
+						if (memberAvailability [k].AvailabilityKind == AvailabilityKind.Introduced && memberAvailability [k].Platform == memberAvailability [i].Platform) {
+							memberAvailability.RemoveAt (k);
+							i--;
+						}
+					}
+				}
+			}
 
 			// Add implied catalyst\TVOS from [iOS] _before_ copying down from parent if no catalyst\TVOS attributes
 			// As those take precedent. We will do this a second time later in a moment..
@@ -3740,7 +3764,7 @@ public partial class Generator : IMemberGatherer {
 		return memberAvailability.ToArray ();
 	}
 
-	public bool PrintPlatformAttributes (MemberInfo mi, Type type = null, bool is_enum = false)
+	public bool PrintPlatformAttributes (MemberInfo mi, Type inlinedType = null)
 	{
 		bool printed = false;
 		if (mi == null)
@@ -3748,8 +3772,8 @@ public partial class Generator : IMemberGatherer {
 
 		AvailabilityBaseAttribute [] type_ca = null;
 
-		foreach (var availability in GetPlatformAttributesToPrint (mi, is_enum ? mi.DeclaringType : type, is_enum ? null : mi.DeclaringType)) {
-			var t = type ?? (mi as TypeInfo) ?? mi.DeclaringType;
+		foreach (var availability in GetPlatformAttributesToPrint (mi, null, inlinedType)) {
+			var t = inlinedType ?? (mi as TypeInfo) ?? mi.DeclaringType;
 			if (type_ca == null) {
 				if (t != null)
 					type_ca = AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (t);
@@ -5268,7 +5292,7 @@ public partial class Generator : IMemberGatherer {
 				PrintPlatformAttributes (pi.DeclaringType, type);
 			}
 		} else {
-			PrintPlatformAttributes (pi, type);
+			PrintPlatformAttributes (pi);
 		}
 
 		foreach (var sa in AttributeManager.GetCustomAttributes<ThreadSafeAttribute> (pi))
@@ -7136,7 +7160,8 @@ public partial class Generator : IMemberGatherer {
 				if (default_ctor_visibility != null) {
 					switch (default_ctor_visibility.Visibility) {
 					case Visibility.Public:
-						break; // default
+						ctor_visibility = "public";
+						break;
 					case Visibility.Internal:
 						ctor_visibility = "internal";
 						break;
@@ -7158,7 +7183,7 @@ public partial class Generator : IMemberGatherer {
 				if (TypeName != "NSObject") {
 					var initSelector = (InlineSelectors || BindThirdPartyLibrary) ? "Selector.GetHandle (\"init\")" : "Selector.Init";
 					var initWithCoderSelector = (InlineSelectors || BindThirdPartyLibrary) ? "Selector.GetHandle (\"initWithCoder:\")" : "Selector.InitWithCoder";
-					string v = class_mod == "abstract " ? "protected" : ctor_visibility;
+					string v = (class_mod == "abstract " && default_ctor_visibility is null) ? "protected" : ctor_visibility;
 					var is32BitNotSupported = Is64BitiOSOnly (type);
 					if (external) {
 						if (!disable_default_ctor) {

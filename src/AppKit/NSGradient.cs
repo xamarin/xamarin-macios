@@ -12,6 +12,8 @@ using Foundation;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSGradient : NSObject {
 		static IntPtr selInitWithColorsAtLocationsColorSpace = Selector.GetHandle ("initWithColors:atLocations:colorSpace:");
@@ -62,11 +64,11 @@ namespace AppKit {
 
 		unsafe void Initialize (NSColor [] colors, void* locationPtr, NSColorSpace colorSpace)
 		{
-			if (colors == null)
+			if (colors is null)
 				throw new ArgumentNullException ("colors");
-			if (locationPtr == null)
+			if (locationPtr is null)
 				throw new ArgumentNullException ("locationPtr");
-			if (colorSpace == null)
+			if (colorSpace is null)
 				throw new ArgumentNullException ("colorSpace");
 
 			var nsa_colorArray = NSArray.FromNSObjects (colors);

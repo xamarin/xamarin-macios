@@ -81,6 +81,8 @@ namespace Xamarin.Tests {
 				return TargetFramework.DotNet_tvOS_String;
 			case Profile.watchOS:
 				return TargetFramework.DotNet_watchOS_String;
+			case Profile.MacCatalyst:
+				return TargetFramework.DotNet_MacCatalyst_String;
 			case Profile.macOSMobile:
 				return TargetFramework.DotNet_macOS_String;
 			case Profile.macOSFull:
@@ -380,7 +382,11 @@ namespace Xamarin.Tests {
 			if (assembly is null) {
 				var parameters = new ReaderParameters ();
 				var resolver = new DefaultAssemblyResolver ();
+#if NET
+				var searchdir = Path.GetDirectoryName (Configuration.GetBaseLibrary (Profile.AsPlatform (), true));
+#else
 				var searchdir = Path.GetDirectoryName (Configuration.GetBaseLibrary (Profile));
+#endif
 				resolver.AddSearchDirectory (searchdir);
 				parameters.AssemblyResolver = resolver;
 				assembly = AssemblyDefinition.ReadAssembly (Out ?? (Path.Combine (TmpDirectory, Path.GetFileNameWithoutExtension (ApiDefinitions [0]).Replace ('-', '_') + ".dll")), parameters);
@@ -417,6 +423,8 @@ namespace Xamarin.Tests {
 				return new string [] { "MONOMAC" };
 			case Profile.iOS:
 				return new string [] { "IOS", "XAMCORE_2_0" };
+			case Profile.MacCatalyst:
+				return new string [] { "MACCATALYST" };
 			default:
 				throw new NotImplementedException (profile.ToString ());
 			}
