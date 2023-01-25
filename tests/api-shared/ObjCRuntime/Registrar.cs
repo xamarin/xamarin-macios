@@ -18,8 +18,9 @@ namespace XamarinTests.ObjCRuntime {
 
 	public enum Registrars {
 		Static = 1,
+		ManagedStatic = Static | 2,
 		Dynamic = 4,
-		AllStatic = Static,
+		AllStatic = Static | ManagedStatic,
 		AllDynamic = Dynamic,
 	}
 
