@@ -41,6 +41,8 @@ using CoreFoundation;
 using CoreServices;
 using Foundation;
 
+#nullable enable
+
 namespace CFNetwork {
 
 	[Obsolete ("Use 'System.Net.Http.CFNetworkHandler' or the more recent 'Foundation.NSUrlSessionHandler' instead.")]
@@ -54,7 +56,7 @@ namespace CFNetwork {
 			WorkerThread = worker;
 		}
 
-		public WorkerThread WorkerThread {
+		public WorkerThread? WorkerThread {
 			get;
 			private set;
 		}
@@ -77,7 +79,7 @@ namespace CFNetwork {
 		 *    request.
 		 * 
 		 */
-		CFHTTPAuthentication auth;
+		CFHTTPAuthentication? auth;
 
 		#region implemented abstract members of HttpMessageHandler
 #if MONOMAC && !NET
@@ -121,15 +123,15 @@ namespace CFNetwork {
 
 		void SetupRequest (HttpRequestMessage request, CFHTTPMessage message, bool isFirstRequest)
 		{
-			string accept_encoding = null;
+			string? accept_encoding = null;
 			if ((AutomaticDecompression & DecompressionMethods.GZip) != 0)
 				accept_encoding = "gzip";
 			if ((AutomaticDecompression & DecompressionMethods.Deflate) != 0)
-				accept_encoding = accept_encoding != null ? "gzip, deflate" : "deflate";
-			if (accept_encoding != null)
+				accept_encoding = accept_encoding is not null ? "gzip, deflate" : "deflate";
+			if (accept_encoding is not null)
 				message.SetHeaderFieldValue ("Accept-Encoding", accept_encoding);
 
-			if (request.Content != null) {
+			if (request.Content is not null) {
 				foreach (var header in request.Content.Headers) {
 					if (!isFirstRequest && header.Key == "Authorization")
 						continue;
@@ -139,23 +141,23 @@ namespace CFNetwork {
 			}
 
 			foreach (var header in request.Headers) {
-				if ((accept_encoding != null) && header.Key.Equals ("Accept-Encoding"))
+				if ((accept_encoding is not null) && header.Key.Equals ("Accept-Encoding"))
 					continue;
 				var value = string.Join (",", header.Value);
 				message.SetHeaderFieldValue (header.Key, value);
 			}
 
-			if (UseCookies && (CookieContainer != null)) {
+			if (UseCookies && (CookieContainer is not null)) {
 				string cookieHeader = CookieContainer.GetCookieHeader (request.RequestUri);
 				if (cookieHeader != "")
 					message.SetHeaderFieldValue ("Cookie", cookieHeader);
 			}
 		}
 
-		async Task<WebRequestStream> CreateBody (HttpRequestMessage request, CFHTTPMessage message,
+		async Task<WebRequestStream?> CreateBody (HttpRequestMessage request, CFHTTPMessage message,
 												 CancellationToken cancellationToken)
 		{
-			if (request.Content == null)
+			if (request.Content is null)
 				return null;
 
 			/*
@@ -174,7 +176,7 @@ namespace CFNetwork {
 			 *
 			 */
 			var length = request.Content.Headers.ContentLength;
-			if ((request.Content is StreamContent) || (length == null)) {
+			if ((request.Content is StreamContent) || (length is null)) {
 				var stream = await request.Content.ReadAsStreamAsync ().ConfigureAwait (false);
 				return new WebRequestStream (stream, cancellationToken);
 			}
@@ -210,31 +212,33 @@ namespace CFNetwork {
 
 		async Task<HttpResponseMessage> ProcessRequest (HttpRequestMessage request,
 														CFHTTPMessage message,
-														WebRequestStream body,
+														WebRequestStream? body,
 														bool retryWithCredentials,
 														CancellationToken cancellationToken, bool isFirstRequest)
 		{
 			cancellationToken.ThrowIfCancellationRequested ();
 
-			WebResponseStream stream;
-			if (body != null)
+			WebResponseStream? stream;
+			if (body is not null)
 				stream = WebResponseStream.Create (message, body);
 			else
 				stream = WebResponseStream.Create (message);
-			if (stream == null)
+			if (stream is null)
 				throw new HttpRequestException (string.Format (
 					"Failed to create web request for '{0}'.",
 					request.RequestUri)
 				);
 
-			if (!isFirstRequest)
-				stream.Stream.ShouldAutoredirect = AllowAutoRedirect;
-			stream.Stream.AttemptPersistentConnection = GetKeepAlive (request);
+			if (stream.Stream is not null) {
+				if (!isFirstRequest)
+					stream.Stream.ShouldAutoredirect = AllowAutoRedirect;
+				stream.Stream.AttemptPersistentConnection = GetKeepAlive (request);
+			}
 
 			var response = await stream.Open (
-				WorkerThread, cancellationToken).ConfigureAwait (true); // with false, we will have a deadlock.
+				WorkerThread!, cancellationToken).ConfigureAwait (true); // with false, we will have a deadlock.
 
-			var status = (HttpStatusCode) response.ResponseStatusCode;
+			var status = (HttpStatusCode) response!.ResponseStatusCode;
 
 			if (IsRedirect (status)) {
 				request.Headers.Authorization = null;
@@ -247,7 +251,7 @@ namespace CFNetwork {
 				}
 
 			}
-			if (retryWithCredentials && (body == null) &&
+			if (retryWithCredentials && (body is null) &&
 				(status == HttpStatusCode.Unauthorized) ||
 				(status == HttpStatusCode.ProxyAuthenticationRequired)) {
 				if (HandleAuthentication (request.RequestUri, message, response)) {
@@ -274,7 +278,7 @@ namespace CFNetwork {
 			return retval;
 		}
 
-		string GetReasonPhrase (CFHTTPMessage response)
+		string? GetReasonPhrase (CFHTTPMessage response)
 		{
 			var line = response.ResponseStatusLine;
 			var match = Regex.Match (line, "HTTP/1.(0|1) (\\d+) (.*)");
@@ -286,7 +290,7 @@ namespace CFNetwork {
 
 		bool HandleAuthentication (Uri uri, CFHTTPMessage request, CFHTTPMessage response)
 		{
-			if (Credentials == null)
+			if (Credentials is null)
 				return false;
 
 			if (PreAuthenticate) {
@@ -298,10 +302,10 @@ namespace CFNetwork {
 			var digest = Credentials.GetCredential (uri, "Digest");
 
 			bool ok = false;
-			if ((basic != null) && (digest == null))
+			if ((basic is not null) && (digest is null))
 				ok = HandleAuthentication (
 					request, response, CFHTTPMessage.AuthenticationScheme.Basic, basic);
-			if ((digest != null) && (basic == null))
+			if ((digest is not null) && (basic is null))
 				ok = HandleAuthentication (
 					request, response, CFHTTPMessage.AuthenticationScheme.Digest, digest);
 			if (ok)
@@ -313,9 +317,9 @@ namespace CFNetwork {
 
 		bool HandlePreAuthentication (Uri uri, CFHTTPMessage message)
 		{
-			var method = auth.GetMethod ();
+			var method = auth?.GetMethod ();
 			var credential = Credentials.GetCredential (uri, method);
-			if (credential == null)
+			if (credential is null)
 				return false;
 
 			message.ApplyCredentials (auth, credential);
@@ -335,16 +339,16 @@ namespace CFNetwork {
 
 		void FindAuthenticationObject (CFHTTPMessage response)
 		{
-			if (auth != null) {
+			if (auth is not null) {
 				if (auth.IsValid)
 					return;
 				auth.Dispose ();
 				auth = null;
 			}
 
-			if (auth == null) {
+			if (auth is null) {
 				auth = CFHTTPAuthentication.CreateFromResponse (response);
-				if (auth == null)
+				if (auth is null)
 					throw new HttpRequestException ("Failed to create CFHTTPAuthentication");
 			}
 
@@ -354,10 +358,11 @@ namespace CFNetwork {
 
 		void DecodeHeaders (CFHTTPMessage message, HttpResponseMessage response, Content content)
 		{
-			using (var dict = message.GetAllHeaderFields ()) {
-				foreach (var entry in dict) {
-					DecodeHeader (response, content, entry);
-				}
+			using var dict = message.GetAllHeaderFields ();
+			if (dict is null)
+				return;
+			foreach (var entry in dict) {
+				DecodeHeader (response, content, entry);
 			}
 		}
 
@@ -388,7 +393,7 @@ namespace CFNetwork {
 		protected override void Dispose (bool disposing)
 		{
 			if (disposing) {
-				if (auth != null) {
+				if (auth is not null) {
 					auth.Dispose ();
 					auth = null;
 				}

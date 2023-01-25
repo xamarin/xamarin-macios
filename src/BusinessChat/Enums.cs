@@ -1,6 +1,8 @@
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace BusinessChat {
 
 	[Mac (10, 13, 4), iOS (11, 3)]

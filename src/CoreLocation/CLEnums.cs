@@ -32,6 +32,8 @@
 using System;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreLocation {
 
 	// NSInteger -> CLError.h

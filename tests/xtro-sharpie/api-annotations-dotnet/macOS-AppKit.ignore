@@ -1697,7 +1697,6 @@
 !missing-selector! NSWindow::handleSaveScriptCommand: not bound
 !missing-selector! NSWindow::hasCloseBox not bound
 !missing-selector! NSWindow::hasTitleBar not bound
-!missing-selector! NSWindow::initWithWindowRef: not bound
 !missing-selector! NSWindow::isFloatingPanel not bound
 !missing-selector! NSWindow::isMiniaturizable not bound
 !missing-selector! NSWindow::isModalPanel not bound
