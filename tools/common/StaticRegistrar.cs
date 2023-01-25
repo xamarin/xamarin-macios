@@ -5202,6 +5202,26 @@ namespace Registrar {
 			pinfo.EntryPoint = wrapperName;
 		}
 
+		public void Register (IEnumerable<AssemblyDefinition> assemblies)
+		{
+			Register (null, assemblies);
+		}
+
+		public void Register (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies)
+		{
+			this.resolver = resolver;
+
+			if (Target?.CachedLink == true)
+				throw ErrorHelper.CreateError (99, Errors.MX0099, "the static registrar should not execute unless the linker also executed (or was disabled). A potential workaround is to pass '-f' as an additional " + Driver.NAME + " argument to force a full build");
+
+			this.input_assemblies = assemblies;
+
+			foreach (var assembly in assemblies) {
+				Driver.Log (3, "Generating static registrar for {0}", assembly.Name);
+				RegisterAssembly (assembly);
+			}
+		}
+
 		public void GenerateSingleAssembly (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly, out string initialization_method, string type_map_path)
 		{
 			single_assembly = assembly;
@@ -5215,22 +5235,11 @@ namespace Registrar {
 
 		public void Generate (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method, string type_map_path)
 		{
-			this.resolver = resolver;
-
-			if (Target?.CachedLink == true)
-				throw ErrorHelper.CreateError (99, Errors.MX0099, "the static registrar should not execute unless the linker also executed (or was disabled). A potential workaround is to pass '-f' as an additional " + Driver.NAME + " argument to force a full build");
-
-			this.input_assemblies = assemblies;
-
-			foreach (var assembly in assemblies) {
-				Driver.Log (3, "Generating static registrar for {0}", assembly.Name);
-				RegisterAssembly (assembly);
-			}
-
+			Register (resolver, assemblies);
 			Generate (header_path, source_path, out initialization_method, type_map_path);
 		}
 
-		void Generate (string header_path, string source_path, out string initialization_method, string type_map_path)
+		public void Generate (string header_path, string source_path, out string initialization_method, string type_map_path)
 		{
 			var sb = new AutoIndentStringBuilder ();
 			header = new AutoIndentStringBuilder ();
