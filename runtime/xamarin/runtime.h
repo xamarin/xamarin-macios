@@ -254,6 +254,7 @@ void			xamarin_check_objc_type (id obj, Class expected_class, SEL sel, id self, 
 #endif
 
 void			xamarin_set_gc_pump_enabled (bool value);
+void			xamarin_set_is_managed_static_registrar (bool value);
 
 void			xamarin_process_nsexception (NSException *exc);
 void			xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault, GCHandle *output_exception);

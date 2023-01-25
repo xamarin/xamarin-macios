@@ -149,7 +149,7 @@ namespace ObjCRuntime {
 		[Flags]
 		internal enum InitializationFlags : int {
 			IsPartialStaticRegistrar = 0x01,
-			/* unused				= 0x02,*/
+			IsManagedStaticRegistrar = 0x02,
 			/* unused				= 0x04,*/
 			/* unused				= 0x08,*/
 			IsSimulator = 0x10,
@@ -219,6 +219,14 @@ namespace ObjCRuntime {
 			}
 		}
 #endif
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		internal unsafe static bool IsManagedStaticRegistrar {
+			get {
+				// The linker may turn calls to this property into a constant
+				return (options->Flags.HasFlag (InitializationFlags.IsManagedStaticRegistrar));
+			}
+		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static bool DynamicRegistrationSupported {
