@@ -10745,8 +10745,12 @@ namespace UIKit {
 		UIMenuController SharedMenuController { get; }
 
 		[Export ("menuVisible")]
-		bool MenuVisible { [Bind ("isMenuVisible")] get; [Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ShowMenu' or 'HideMenu' instead.")]
-[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ShowMenu' or 'HideMenu' instead.")] set; }
+		bool MenuVisible {
+			[Bind ("isMenuVisible")]
+			get; [Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ShowMenu' or 'HideMenu' instead.")]
+			[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ShowMenu' or 'HideMenu' instead.")]
+			set;
+		}
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ShowMenu' or 'HideMenu' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ShowMenu' or 'HideMenu' instead.")]

@@ -98,8 +98,11 @@ namespace GameplayKit {
 		float Radius { get; set; }
 
 		[Export ("speed")]
-		float Speed { get; [MacCatalyst (13, 1)]
-[iOS (10, 0), TV (10, 0), Mac (10, 12)] set; }
+		float Speed {
+			get; [MacCatalyst (13, 1)]
+			[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+			set;
+		}
 
 		[Export ("maxAcceleration")]
 		float MaxAcceleration { get; set; }

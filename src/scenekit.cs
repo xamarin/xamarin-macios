@@ -2042,8 +2042,11 @@ namespace SceneKit {
 		SCNMatrix4 Pivot { get; set; }
 
 		[Export ("worldTransform")]
-		SCNMatrix4 WorldTransform { get; [MacCatalyst (13, 1)]
-[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)] set; }
+		SCNMatrix4 WorldTransform {
+			get; [MacCatalyst (13, 1)]
+			[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+			set;
+		}
 
 		[Export ("hidden")]
 		bool Hidden { [Bind ("isHidden")] get; set; }
@@ -4169,8 +4172,11 @@ namespace SceneKit {
 	[DisableDefaultCtor]
 	interface SCNLookAtConstraint {
 		[Export ("target", ArgumentSemantic.Retain), NullAllowed]
-		SCNNode Target { get; [MacCatalyst (13, 1)]
-[Mac (10, 12), iOS (10, 0), TV (10, 0)] set; }
+		SCNNode Target {
+			get; [MacCatalyst (13, 1)]
+			[Mac (10, 12), iOS (10, 0), TV (10, 0)]
+			set;
+		}
 
 		[Export ("gimbalLockEnabled")]
 		bool GimbalLockEnabled { get; set; }
