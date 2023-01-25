@@ -3677,7 +3677,7 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	AvailabilityBaseAttribute [] GetPlatformAttributesToPrint (MemberInfo mi, Type type, MemberInfo inlinedType)
+	AvailabilityBaseAttribute [] GetPlatformAttributesToPrint (MemberInfo mi, MemberInfo context, MemberInfo inlinedType)
 	{
 		// Attributes are directly on the member
 		List<AvailabilityBaseAttribute> memberAvailability = AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (mi).ToList ();
@@ -3685,7 +3685,8 @@ public partial class Generator : IMemberGatherer {
 		// Due to differences between Xamarin and NET6 availability attributes, we have to synthesize many duplicates for NET6
 		// See https://github.com/xamarin/xamarin-macios/issues/10170 for details
 #if NET
-		MemberInfo context = type ?? FindContainingContext (mi);
+		if (context is null)
+			context = FindContainingContext (mi);
 		// Attributes on the _target_ context, the class itself or the target of the protocol inlining
 		List<AvailabilityBaseAttribute> parentContextAvailability = GetAllParentAttributes (context);
 		// (Optional) Attributes from the inlined protocol type itself
@@ -3761,7 +3762,7 @@ public partial class Generator : IMemberGatherer {
 		return memberAvailability.ToArray ();
 	}
 
-	public bool PrintPlatformAttributes (MemberInfo mi, Type type = null, bool is_enum = false)
+	public bool PrintPlatformAttributes (MemberInfo mi, Type inlinedType = null)
 	{
 		bool printed = false;
 		if (mi == null)
@@ -3769,8 +3770,8 @@ public partial class Generator : IMemberGatherer {
 
 		AvailabilityBaseAttribute [] type_ca = null;
 
-		foreach (var availability in GetPlatformAttributesToPrint (mi, is_enum ? mi.DeclaringType : type, is_enum ? null : mi.DeclaringType)) {
-			var t = type ?? (mi as TypeInfo) ?? mi.DeclaringType;
+		foreach (var availability in GetPlatformAttributesToPrint (mi, null, inlinedType)) {
+			var t = inlinedType ?? (mi as TypeInfo) ?? mi.DeclaringType;
 			if (type_ca == null) {
 				if (t != null)
 					type_ca = AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (t);
@@ -5289,7 +5290,7 @@ public partial class Generator : IMemberGatherer {
 				PrintPlatformAttributes (pi.DeclaringType, type);
 			}
 		} else {
-			PrintPlatformAttributes (pi, type);
+			PrintPlatformAttributes (pi);
 		}
 
 		foreach (var sa in AttributeManager.GetCustomAttributes<ThreadSafeAttribute> (pi))
