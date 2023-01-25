@@ -1376,6 +1376,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					//     <System.ArgumentException: Object of type 'Foundation.NSObject' cannot be converted to type 'Foundation.NSSet'.
 					// or a RuntimeException:
 					//     <ObjCRuntime.RuntimeException: Failed to marshal the value at index 0.
+					// or an InvalidCastException
+					//    System.InvalidCastException: Unable to cast object of type 'Foundation.NSObject' to type 'Foundation.NSSet'.
 					var noException = false;
 					try {
 						code ();
@@ -1383,6 +1385,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					} catch (ArgumentException) {
 						// OK
 					} catch (RuntimeException) {
+						// OK
+					} catch (InvalidCastException) {
 						// OK
 					} catch (Exception e) {
 						Assert.Fail ($"Unexpectedly failed with exception of type {e.GetType ()} - expected either ArgumentException or RuntimeException: {message}");
