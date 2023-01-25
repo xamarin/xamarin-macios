@@ -221,7 +221,7 @@ namespace Cecil.Tests {
 					var errorMessage = $"{member} did not have the same number of SupportedOSPlatformAttribute in every assembly:\n\t{detailedPlatformBreakdown}";
 					if (failures.TryGetValue (member, out var existingFailure)) {
 						failures [member] = existingFailure + "\n" + errorMessage;
-					}  else {
+					} else {
 						failures [member] = errorMessage;
 					}
 				}
