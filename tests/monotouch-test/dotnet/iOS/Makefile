@@ -14,3 +14,8 @@ norm:
 
 run-norm:
 	$(Q) $(MAKE) build BUILD_ARGUMENTS="/p:RuntimeIdentifier=ios-arm64                       /p:MtouchLink=SdkOnly /p:Configuration=Release-norm /bl:$@.binlog /t:Run"
+
+msr-dev:
+	$(Q) rm -rf bin obj
+	$(Q) $(MAKE) build BUILD_ARGMENTS="/p:RuntimeIdentifier=ios-arm64 /p:Configuration=ios-arm64"
+	$(Q) $(MAKE) 

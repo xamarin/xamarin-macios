@@ -145,7 +145,8 @@ run: prepare
 	$(Q) $(DOTNET) build "/bl:$(abspath $@-$(BINLOG_TIMESTAMP).binlog)" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS) $(CONFIG_ARGUMENT) $(UNIVERSAL_ARGUMENT) -t:Run
 
 run-bare:
-	$(Q) $(EXECUTABLE) --autostart --autoexit
+	@echo "Executing: $(EXECUTABLE) --autostart --autoexit $(TEST)"
+	$(Q) $(EXECUTABLE) --autostart --autoexit $(TEST)
 
 print-executable:
 	@echo $(EXECUTABLE)

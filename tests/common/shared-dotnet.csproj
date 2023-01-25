@@ -58,6 +58,9 @@
 		<NoWarn Condition="'$(IncludeCS1416Warnigs)' != 'true'">CA1416;$(NoWarn)</NoWarn>
 
 		<CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
+
+		<Registrar Condition="'$(Configuration)' == 'ManagedStaticRegistrar'">managed-static</Registrar>
+		<Registrar Condition="'$(Configuration)' == 'StaticRegistrar'">static</Registrar>
 	</PropertyGroup>
 
 	<ItemGroup>

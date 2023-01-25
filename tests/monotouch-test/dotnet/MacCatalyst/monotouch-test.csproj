@@ -4,6 +4,13 @@
     <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-maccatalyst</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(AllOptimizations)' == 'true'">
+    <MtouchExtraArgs>$(MtouchExtraArgs) --optimize:all</MtouchExtraArgs>
+    <MtouchDebug>false</MtouchDebug>
+    <MtouchLink>Full</MtouchLink>
+    <DefineConstants>$(DefineConstants);OPTIMIZEALL</DefineConstants>
+  </PropertyGroup>
+
   <!-- Imports of the form '../shared.csproj' will be inlined by xharness -->
   <Import Project="../shared.csproj" />
 
