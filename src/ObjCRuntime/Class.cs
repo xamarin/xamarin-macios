@@ -308,7 +308,7 @@ namespace ObjCRuntime {
 
 				// then the module token
 				var module_token = entry.module_token;
-				if (mod_token != module_token)
+				if (unchecked((uint) mod_token) != module_token)
 					return false;
 
 				// leave the assembly name for the end, since it's the most expensive comparison (string comparison)
@@ -615,7 +615,7 @@ namespace ObjCRuntime {
 				if (token != metadata_token)
 					continue;
 				var mod_token = ftr.module_token;
-				if (mod_token != module_token)
+				if (unchecked((int) mod_token) != module_token)
 					continue;
 				var assembly_index = ftr.assembly_index;
 				var assembly = map->assemblies [assembly_index];
