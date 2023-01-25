@@ -30,15 +30,13 @@ namespace Xamarin.Linker {
 				Configuration.CompilerFlags.AddLinkWith (Configuration.PartialStaticRegistrarLibrary);
 				break;
 			case RegistrarMode.Static:
+				Configuration.Target.StaticRegistrar.Register (Configuration.GetNonDeletedAssemblies (this));
+				goto case RegistrarMode.ManagedStatic;
+			case RegistrarMode.ManagedStatic:
 				var dir = Configuration.CacheDirectory;
 				var header = Path.Combine (dir, "registrar.h");
 				var code = Path.Combine (dir, "registrar.mm");
-				var bundled_assemblies = new List<AssemblyDefinition> ();
-				foreach (var assembly in Configuration.Assemblies) {
-					if (Annotations.GetAction (assembly) != Mono.Linker.AssemblyAction.Delete)
-						bundled_assemblies.Add (assembly);
-				}
-				Configuration.Target.StaticRegistrar.Generate (bundled_assemblies, header, code, out var initialization_method, app.ClassMapPath);
+				Configuration.Target.StaticRegistrar.Generate (header, code, out var initialization_method, app.ClassMapPath);
 
 				var items = new List<MSBuildItem> ();
 				foreach (var abi in Configuration.Abis) {

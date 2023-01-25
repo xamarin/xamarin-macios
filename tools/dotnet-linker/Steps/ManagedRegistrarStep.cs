@@ -30,6 +30,8 @@ namespace Xamarin.Linker {
 			App.SelectRegistrar ();
 			if (App.Registrar != RegistrarMode.ManagedStatic)
 				return;
+
+			Configuration.Target.StaticRegistrar.Register (Configuration.GetNonDeletedAssemblies (this));
 		}
 
 		protected override void TryEndProcess (out List<Exception>? exceptions)
