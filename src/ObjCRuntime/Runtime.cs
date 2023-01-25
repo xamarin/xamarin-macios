@@ -1820,7 +1820,7 @@ namespace ObjCRuntime {
 			unsafe {
 				if (options->RegistrationMap is not null && options->RegistrationMap->map_count > 0) {
 					var map = options->RegistrationMap->map;
-					var idx = FindUserTypeIndex (map, 0, options->RegistrationMap->map_count - 1, cls);
+					var idx = Class.FindMapIndex (map, 0, options->RegistrationMap->map_count - 1, cls);
 					if (idx >= 0)
 						return (map [idx].flags & MTTypeFlags.UserType) == MTTypeFlags.UserType;
 					// If using the partial static registrar, we need to continue
@@ -1834,23 +1834,6 @@ namespace ObjCRuntime {
 #else
 			return Class.class_getInstanceMethod (cls, Selector.GetHandle ("xamarinSetGCHandle:flags:")) != IntPtr.Zero;
 #endif
-		}
-
-		static unsafe int FindUserTypeIndex (MTClassMap* map, int lo, int hi, IntPtr cls)
-		{
-			if (hi >= lo) {
-				int mid = lo + (hi - lo) / 2;
-
-				if (map [mid].handle == cls)
-					return mid;
-
-				if ((long) map [mid].handle > (long) cls)
-					return FindUserTypeIndex (map, lo, mid - 1, cls);
-
-				return FindUserTypeIndex (map, mid + 1, hi, cls);
-			}
-
-			return -1;
 		}
 
 		public static void ConnectMethod (Type type, MethodInfo method, Selector selector)
