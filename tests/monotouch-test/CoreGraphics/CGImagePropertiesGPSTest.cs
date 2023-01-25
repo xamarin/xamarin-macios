@@ -1,3 +1,5 @@
+#if !__WATCHOS__
+
 using System;
 using Foundation;
 #if MONOMAC
@@ -35,3 +37,4 @@ namespace monotouchtest.CoreGraphics {
 	}
 }
 
+#endif // !__WATCHOS__

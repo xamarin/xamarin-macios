@@ -43,7 +43,7 @@ namespace BundledResources {
 			} else {
 				Assert.That (resources.Length, Is.GreaterThanOrEqualTo (2), "Resources");
 				Assert.That (resources, Contains.Item ("__monotouch_content_basn3p08.png"), "res-basn3p08.png");
-				Assert.That (resources, Contains.Item ("__monotouch_content_basn3p08_with_loc.png"), "res-basn3p08_with_loc.png");
+				Assert.That (resources, Contains.Item ("__monotouch_content_basn3p08__with__loc.png"), "res-basn3p08_with_loc.png");
 				Assert.That (resources, Contains.Item ("__monotouch_content_xamvideotest.mp4"), "res-xamvideotest.mp4");
 			}
 		}
