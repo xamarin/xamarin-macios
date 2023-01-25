@@ -3298,7 +3298,7 @@ namespace Registrar {
 			return false;
 		}
 
-		void Specialize (AutoIndentStringBuilder sb, ObjCMethod method, List<Exception> exceptions)
+		bool SpecializeTrampoline (AutoIndentStringBuilder sb, ObjCMethod method, List<Exception> exceptions)
 		{
 			var isGeneric = method.DeclaringType.IsGeneric;
 
@@ -3309,21 +3309,21 @@ namespace Registrar {
 				sb.WriteLine ("return xamarin_retain_trampoline (self, _cmd);");
 				sb.WriteLine ("}");
 				sb.WriteLine ();
-				return;
+				return true;
 			case Trampoline.Release:
 				sb.WriteLine ("-(void) release");
 				sb.WriteLine ("{");
 				sb.WriteLine ("xamarin_release_trampoline (self, _cmd);");
 				sb.WriteLine ("}");
 				sb.WriteLine ();
-				return;
+				return true;
 			case Trampoline.GetGCHandle:
 				sb.WriteLine ("-(GCHandle) xamarinGetGCHandle");
 				sb.WriteLine ("{");
 				sb.WriteLine ("return __monoObjectGCHandle.gc_handle;");
 				sb.WriteLine ("}");
 				sb.WriteLine ();
-				return;
+				return true;
 			case Trampoline.SetGCHandle:
 				sb.WriteLine ("-(bool) xamarinSetGCHandle: (GCHandle) gc_handle flags: (enum XamarinGCHandleFlags) flags");
 				sb.WriteLine ("{");
@@ -3337,21 +3337,21 @@ namespace Registrar {
 				sb.WriteLine ("return true;");
 				sb.WriteLine ("}");
 				sb.WriteLine ();
-				return;
+				return true;
 			case Trampoline.GetFlags:
 				sb.WriteLine ("-(enum XamarinGCHandleFlags) xamarinGetFlags");
 				sb.WriteLine ("{");
 				sb.WriteLine ("return __monoObjectGCHandle.flags;");
 				sb.WriteLine ("}");
 				sb.WriteLine ();
-				return;
+				return true;
 			case Trampoline.SetFlags:
 				sb.WriteLine ("-(void) xamarinSetFlags: (enum XamarinGCHandleFlags) flags");
 				sb.WriteLine ("{");
 				sb.WriteLine ("__monoObjectGCHandle.flags = flags;");
 				sb.WriteLine ("}");
 				sb.WriteLine ();
-				return;
+				return true;
 			case Trampoline.Constructor:
 				if (isGeneric) {
 					sb.WriteLine (GetObjCSignature (method, exceptions));
@@ -3359,7 +3359,7 @@ namespace Registrar {
 					sb.WriteLine ("xamarin_throw_product_exception (4126, \"Cannot construct an instance of the type '{0}' from Objective-C because the type is generic.\");\n", method.DeclaringType.Type.FullName.Replace ("/", "+"));
 					sb.WriteLine ("return self;");
 					sb.WriteLine ("}");
-					return;
+					return true;
 				}
 				break;
 			case Trampoline.CopyWithZone1:
@@ -3380,13 +3380,13 @@ namespace Registrar {
 				sb.AppendLine ();
 				sb.AppendLine ("return rv;");
 				sb.AppendLine ("}");
-				return;
+				return true;
 			case Trampoline.CopyWithZone2:
 				sb.AppendLine ("-(id) copyWithZone: (NSZone *) zone");
 				sb.AppendLine ("{");
 				sb.AppendLine ("return xamarin_copyWithZone_trampoline2 (self, _cmd, zone);");
 				sb.AppendLine ("}");
-				return;
+				return true;
 			}
 
 			var customConformsToProtocol = method.Selector == "conformsToProtocol:" && method.Method.DeclaringType.Is ("Foundation", "NSObject") && method.Method.Name == "InvokeConformsToProtocol" && method.Parameters.Length == 1;
@@ -3404,20 +3404,17 @@ namespace Registrar {
 					sb.AppendLine ("xamarin_process_managed_exception_gchandle (exception_gchandle);");
 					sb.AppendLine ("return rv;");
 					sb.AppendLine ("}");
-					return;
+					return true;
 				}
 			}
 
-			var rettype = string.Empty;
-			var returntype = method.ReturnType;
-			var isStatic = method.IsStatic;
-			var isInstanceCategory = method.IsCategoryInstance;
-			var isCtor = false;
-			var num_arg = method.Method.HasParameters ? method.Method.Parameters.Count : 0;
-			var descriptiveMethodName = method.DescriptiveMethodName;
-			var name = GetUniqueTrampolineName ("native_to_managed_trampoline_" + descriptiveMethodName);
-			var isVoid = returntype.FullName == "System.Void";
-			var merge_bodies = true;
+			return false;
+		}
+
+		bool TryGetReturnType (ObjCMethod method, string descriptiveMethodName, List<Exception> exceptions, out string rettype, out bool isCtor)
+		{
+			rettype = string.Empty;
+			isCtor = false;
 
 			switch (method.CurrentTrampoline) {
 			case Trampoline.None:
@@ -3436,145 +3433,32 @@ namespace Registrar {
 				switch (method.NativeReturnType.FullName) {
 				case "System.Int64":
 					rettype = "long long";
-					break;
+					return true;
 				case "System.UInt64":
 					rettype = "unsigned long long";
-					break;
+					return true;
 				case "System.Single":
 					rettype = "float";
-					break;
+					return true;
 				case "System.Double":
 					rettype = "double";
-					break;
+					return true;
 				default:
 					rettype = ToSimpleObjCParameterType (method.NativeReturnType, descriptiveMethodName, exceptions, method.Method);
-					break;
+					return true;
 				}
-				break;
 			case Trampoline.Constructor:
 				rettype = "id";
 				isCtor = true;
-				break;
+				return true;
 			default:
-				return;
+				return false;
 			}
+		}
 
-			comment.Clear ();
-			nslog_start.Clear ();
-			nslog_end.Clear ();
-			copyback.Clear ();
-			invoke.Clear ();
-			setup_call_stack.Clear ();
-			body.Clear ();
-			body_setup.Clear ();
-			setup_return.Clear ();
-			cleanup.Clear ();
 
-			counter++;
-
-			body.WriteLine ("{");
-
-			var indent = merge_bodies ? sb.Indentation : sb.Indentation + 1;
-			body.Indentation = indent;
-			body_setup.Indentation = indent;
-			copyback.Indentation = indent;
-			invoke.Indentation = indent;
-			setup_call_stack.Indentation = indent;
-			setup_return.Indentation = indent;
-			cleanup.Indentation = indent;
-
-			if (!TryCreateTokenReference (method.Method, TokenType.Method, out var token_ref, exceptions))
-				return;
-
-			// A comment describing the managed signature
-			if (trace) {
-				nslog_start.Indentation = sb.Indentation;
-				comment.Indentation = sb.Indentation;
-				nslog_end.Indentation = sb.Indentation;
-
-				comment.AppendFormat ("// {2} {0}.{1} (", method.Method.DeclaringType.FullName, method.Method.Name, method.Method.ReturnType.FullName);
-				for (int i = 0; i < num_arg; i++) {
-					var param = method.Method.Parameters [i];
-					if (i > 0)
-						comment.Append (", ");
-					comment.AppendFormat ("{0} {1}", param.ParameterType.FullName, param.Name);
-				}
-				comment.AppendLine (")");
-				comment.AppendLine ("// ArgumentSemantic: {0} IsStatic: {1} Selector: '{2}' Signature: '{3}'", method.ArgumentSemantic, method.IsStatic, method.Selector, method.Signature);
-			}
-
-			// a couple of debug printfs
-			if (trace) {
-				StringBuilder args = new StringBuilder ();
-				nslog_start.AppendFormat ("NSLog (@\"{0} (this: %@, sel: %@", name);
-				for (int i = 0; i < num_arg; i++) {
-					var type = method.Method.Parameters [i].ParameterType;
-					bool isRef = type.IsByReference;
-					if (isRef)
-						type = type.GetElementType ();
-					var td = type.Resolve ();
-
-					nslog_start.AppendFormat (", {0}: ", method.Method.Parameters [i].Name);
-					args.Append (", ");
-					switch (type.FullName) {
-					case "System.Drawing.RectangleF":
-						var rectFunc = App.Platform == ApplePlatform.MacOSX ? "NSStringFromRect" : "NSStringFromCGRect";
-						if (isRef) {
-							nslog_start.Append ("%p : %@");
-							args.AppendFormat ("p{0}, p{0} ? {1} (*p{0}) : @\"NULL\"", i, rectFunc);
-						} else {
-							nslog_start.Append ("%@");
-							args.AppendFormat ("{1} (p{0})", i, rectFunc);
-						}
-						break;
-					case "System.Drawing.PointF":
-						var pointFunc = App.Platform == ApplePlatform.MacOSX ? "NSStringFromPoint" : "NSStringFromCGPoint";
-						if (isRef) {
-							nslog_start.Append ("%p: %@");
-							args.AppendFormat ("p{0}, p{0} ? {1} (*p{0}) : @\"NULL\"", i, pointFunc);
-						} else {
-							nslog_start.Append ("%@");
-							args.AppendFormat ("{1} (p{0})", i, pointFunc);
-						}
-						break;
-					default:
-						bool unknown;
-						var spec = GetPrintfFormatSpecifier (td, out unknown);
-						if (unknown) {
-							nslog_start.AppendFormat ("%{0}", spec);
-							args.AppendFormat ("&p{0}", i);
-						} else if (isRef) {
-							nslog_start.AppendFormat ("%p *= %{0}", spec);
-							args.AppendFormat ("p{0}, *p{0}", i);
-						} else {
-							nslog_start.AppendFormat ("%{0}", spec);
-							args.AppendFormat ("p{0}", i);
-						}
-						break;
-					}
-				}
-
-				string ret_arg = string.Empty;
-				nslog_end.Append (nslog_start.ToString ());
-				if (!isVoid) {
-					bool unknown;
-					var spec = GetPrintfFormatSpecifier (method.Method.ReturnType.Resolve (), out unknown);
-					if (!unknown) {
-						nslog_end.Append (" ret: %");
-						nslog_end.Append (spec);
-						ret_arg = ", res";
-					}
-				}
-				nslog_end.Append (") END\", self, NSStringFromSelector (_cmd)");
-				nslog_end.Append (args.ToString ());
-				nslog_end.Append (ret_arg);
-				nslog_end.AppendLine (");");
-
-				nslog_start.Append (") START\", self, NSStringFromSelector (_cmd)");
-				nslog_start.Append (args.ToString ());
-				nslog_start.AppendLine (");");
-			}
-
+		void SpecializePrepareParameters (AutoIndentStringBuilder sb, ObjCMethod method, int num_arg, string descriptiveMethodName, List<Exception> exceptions)
+		{
 			// prepare the parameters
 			var baseMethod = GetBaseMethodInTypeHierarchy (method.Method);
 			for (int i = 0; i < num_arg; i++) {
@@ -3985,6 +3869,143 @@ namespace Registrar {
 					break;
 				}
 			}
+		}
+
+		void Specialize (AutoIndentStringBuilder sb, ObjCMethod method, List<Exception> exceptions)
+		{
+			if (SpecializeTrampoline (sb, method, exceptions))
+				return;
+
+			var isGeneric = method.DeclaringType.IsGeneric;
+			var returntype = method.ReturnType;
+			var isStatic = method.IsStatic;
+			var isInstanceCategory = method.IsCategoryInstance;
+			var num_arg = method.Method.HasParameters ? method.Method.Parameters.Count : 0;
+			var descriptiveMethodName = method.DescriptiveMethodName;
+			var name = GetUniqueTrampolineName ("native_to_managed_trampoline_" + descriptiveMethodName);
+			var isVoid = returntype.FullName == "System.Void";
+			var merge_bodies = true;
+
+			if (!TryGetReturnType (method, descriptiveMethodName, exceptions, out var rettype, out var isCtor))
+				return;
+
+			comment.Clear ();
+			nslog_start.Clear ();
+			nslog_end.Clear ();
+			copyback.Clear ();
+			invoke.Clear ();
+			setup_call_stack.Clear ();
+			body.Clear ();
+			body_setup.Clear ();
+			setup_return.Clear ();
+			cleanup.Clear ();
+
+			counter++;
+
+			body.WriteLine ("{");
+
+			var indent = merge_bodies ? sb.Indentation : sb.Indentation + 1;
+			body.Indentation = indent;
+			body_setup.Indentation = indent;
+			copyback.Indentation = indent;
+			invoke.Indentation = indent;
+			setup_call_stack.Indentation = indent;
+			setup_return.Indentation = indent;
+			cleanup.Indentation = indent;
+
+			if (!TryCreateTokenReference (method.Method, TokenType.Method, out var token_ref, exceptions))
+				return;
+
+			// A comment describing the managed signature
+			if (trace) {
+				nslog_start.Indentation = sb.Indentation;
+				comment.Indentation = sb.Indentation;
+				nslog_end.Indentation = sb.Indentation;
+
+				comment.AppendFormat ("// {2} {0}.{1} (", method.Method.DeclaringType.FullName, method.Method.Name, method.Method.ReturnType.FullName);
+				for (int i = 0; i < num_arg; i++) {
+					var param = method.Method.Parameters [i];
+					if (i > 0)
+						comment.Append (", ");
+					comment.AppendFormat ("{0} {1}", param.ParameterType.FullName, param.Name);
+				}
+				comment.AppendLine (")");
+				comment.AppendLine ("// ArgumentSemantic: {0} IsStatic: {1} Selector: '{2}' Signature: '{3}'", method.ArgumentSemantic, method.IsStatic, method.Selector, method.Signature);
+			}
+
+			// a couple of debug printfs
+			if (trace) {
+				StringBuilder args = new StringBuilder ();
+				nslog_start.AppendFormat ("NSLog (@\"{0} (this: %@, sel: %@", name);
+				for (int i = 0; i < num_arg; i++) {
+					var type = method.Method.Parameters [i].ParameterType;
+					bool isRef = type.IsByReference;
+					if (isRef)
+						type = type.GetElementType ();
+					var td = type.Resolve ();
+
+					nslog_start.AppendFormat (", {0}: ", method.Method.Parameters [i].Name);
+					args.Append (", ");
+					switch (type.FullName) {
+					case "System.Drawing.RectangleF":
+						var rectFunc = App.Platform == ApplePlatform.MacOSX ? "NSStringFromRect" : "NSStringFromCGRect";
+						if (isRef) {
+							nslog_start.Append ("%p : %@");
+							args.AppendFormat ("p{0}, p{0} ? {1} (*p{0}) : @\"NULL\"", i, rectFunc);
+						} else {
+							nslog_start.Append ("%@");
+							args.AppendFormat ("{1} (p{0})", i, rectFunc);
+						}
+						break;
+					case "System.Drawing.PointF":
+						var pointFunc = App.Platform == ApplePlatform.MacOSX ? "NSStringFromPoint" : "NSStringFromCGPoint";
+						if (isRef) {
+							nslog_start.Append ("%p: %@");
+							args.AppendFormat ("p{0}, p{0} ? {1} (*p{0}) : @\"NULL\"", i, pointFunc);
+						} else {
+							nslog_start.Append ("%@");
+							args.AppendFormat ("{1} (p{0})", i, pointFunc);
+						}
+						break;
+					default:
+						bool unknown;
+						var spec = GetPrintfFormatSpecifier (td, out unknown);
+						if (unknown) {
+							nslog_start.AppendFormat ("%{0}", spec);
+							args.AppendFormat ("&p{0}", i);
+						} else if (isRef) {
+							nslog_start.AppendFormat ("%p *= %{0}", spec);
+							args.AppendFormat ("p{0}, *p{0}", i);
+						} else {
+							nslog_start.AppendFormat ("%{0}", spec);
+							args.AppendFormat ("p{0}", i);
+						}
+						break;
+					}
+				}
+
+				string ret_arg = string.Empty;
+				nslog_end.Append (nslog_start.ToString ());
+				if (!isVoid) {
+					bool unknown;
+					var spec = GetPrintfFormatSpecifier (method.Method.ReturnType.Resolve (), out unknown);
+					if (!unknown) {
+						nslog_end.Append (" ret: %");
+						nslog_end.Append (spec);
+						ret_arg = ", res";
+					}
+				}
+				nslog_end.Append (") END\", self, NSStringFromSelector (_cmd)");
+				nslog_end.Append (args.ToString ());
+				nslog_end.Append (ret_arg);
+				nslog_end.AppendLine (");");
+
+				nslog_start.Append (") START\", self, NSStringFromSelector (_cmd)");
+				nslog_start.Append (args.ToString ());
+				nslog_start.AppendLine (");");
+			}
+
+			SpecializePrepareParameters (sb, method, num_arg, descriptiveMethodName, exceptions);
 
 			// the actual invoke
 			if (isCtor) {
@@ -4021,125 +4042,8 @@ namespace Registrar {
 				invoke.AppendLine (post_invoke_check);
 
 			body_setup.AppendLine ("GCHandle exception_gchandle = INVALID_GCHANDLE;");
-			// prepare the return value
-			if (!isVoid) {
-				switch (rettype) {
-				case "CGRect":
-					body_setup.AppendLine ("{0} res = {{{{0}}}};", rettype);
-					break;
-				default:
-					body_setup.AppendLine ("{0} res = {{0}};", rettype);
-					break;
-				}
-				var isArray = returntype is ArrayType;
-				var type = returntype.Resolve () ?? returntype;
-				var retain = method.RetainReturnValue;
 
-				if (returntype != method.NativeReturnType) {
-					body_setup.AppendLine ("MonoClass *retparamclass = NULL;");
-					cleanup.AppendLine ("xamarin_mono_object_release (&retparamclass);");
-					body_setup.AppendLine ("MonoType *retparamtype = NULL;");
-					cleanup.AppendLine ("xamarin_mono_object_release (&retparamtype);");
-					setup_call_stack.AppendLine ("retparamtype = xamarin_get_parameter_type (managed_method, -1);");
-					setup_call_stack.AppendLine ("retparamclass = mono_class_from_mono_type (retparamtype);");
-					GenerateConversionToNative (returntype, method.NativeReturnType, setup_return, descriptiveMethodName, ref exceptions, method, "retval", "res", "retparamclass");
-				} else if (returntype.IsValueType) {
-					setup_return.AppendLine ("res = *({0} *) mono_object_unbox ((MonoObject *) retval);", rettype);
-				} else if (isArray) {
-					var elementType = ((ArrayType) returntype).ElementType;
-					var conversion_func = string.Empty;
-					if (elementType.FullName == "System.String") {
-						conversion_func = "xamarin_managed_string_array_to_nsarray";
-					} else if (IsNSObject (elementType)) {
-						conversion_func = "xamarin_managed_nsobject_array_to_nsarray";
-					} else if (IsINativeObject (elementType)) {
-						conversion_func = "xamarin_managed_inativeobject_array_to_nsarray";
-					} else {
-						throw ErrorHelper.CreateError (App, 4111, method.Method, Errors.MT4111, method.NativeReturnType.FullName, descriptiveMethodName);
-					}
-					setup_return.AppendLine ("res = {0} ((MonoArray *) retval, &exception_gchandle);", conversion_func);
-					if (retain)
-						setup_return.AppendLine ("[res retain];");
-					setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
-					setup_return.AppendLine ("xamarin_framework_peer_waypoint ();");
-					setup_return.AppendLine ("mt_dummy_use (retval);");
-				} else {
-					setup_return.AppendLine ("if (!retval) {");
-					setup_return.AppendLine ("res = NULL;");
-					setup_return.AppendLine ("} else {");
-
-					if (IsNSObject (type)) {
-						setup_return.AppendLine ("id retobj;");
-						setup_return.AppendLine ("retobj = xamarin_get_nsobject_handle (retval);");
-						setup_return.AppendLine ("xamarin_framework_peer_waypoint ();");
-						setup_return.AppendLine ("[retobj retain];");
-						if (!retain)
-							setup_return.AppendLine ("[retobj autorelease];");
-						setup_return.AppendLine ("mt_dummy_use (retval);");
-						setup_return.AppendLine ("res = retobj;");
-					} else if (IsPlatformType (type, "ObjCRuntime", "Selector")) {
-						setup_return.AppendLine ("res = (SEL) xamarin_get_handle_for_inativeobject (retval, &exception_gchandle);");
-						setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
-					} else if (IsPlatformType (type, "ObjCRuntime", "Class")) {
-						setup_return.AppendLine ("res = (Class) xamarin_get_handle_for_inativeobject (retval, &exception_gchandle);");
-						setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
-					} else if (IsNativeObject (type)) {
-						setup_return.AppendLine ("{0} retobj;", rettype);
-						setup_return.AppendLine ("retobj = xamarin_get_handle_for_inativeobject ((MonoObject *) retval, &exception_gchandle);");
-						setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
-						setup_return.AppendLine ("xamarin_framework_peer_waypoint ();");
-						setup_return.AppendLine ("if (retobj != NULL) {");
-						if (retain) {
-							setup_return.AppendLine ("xamarin_retain_nativeobject (retval, &exception_gchandle);");
-							setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
-						} else {
-							// If xamarin_attempt_retain_nsobject returns true, the input is an NSObject, so it's safe to call the 'autorelease' selector on it.
-							// We don't retain retval if it's not an NSObject, because we'd have to immediately release it,
-							// and that serves no purpose.
-							setup_return.AppendLine ("bool retained = xamarin_attempt_retain_nsobject (retval, &exception_gchandle);");
-							setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
-							setup_return.AppendLine ("if (retained) {");
-							setup_return.AppendLine ("[retobj autorelease];");
-							setup_return.AppendLine ("}");
-						}
-						setup_return.AppendLine ("mt_dummy_use (retval);");
-						setup_return.AppendLine ("res = retobj;");
-						setup_return.AppendLine ("} else {");
-						setup_return.AppendLine ("res = NULL;");
-						setup_return.AppendLine ("}");
-					} else if (type.FullName == "System.String") {
-						// This should always be an NSString and never char*
-						setup_return.AppendLine ("res = xamarin_string_to_nsstring ((MonoString *) retval, {0});", retain ? "true" : "false");
-					} else if (IsDelegate (type.Resolve ())) {
-						var signature = "NULL";
-						var token = "INVALID_TOKEN_REF";
-						if (App.Optimizations.OptimizeBlockLiteralSetupBlock == true) {
-							if (type.Is ("System", "Delegate") || type.Is ("System", "MulticastDelegate")) {
-								ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4173, method.Method, Errors.MT4173, type.FullName, descriptiveMethodName));
-							} else {
-								var delegateMethod = type.Resolve ().GetMethods ().FirstOrDefault ((v) => v.Name == "Invoke");
-								if (delegateMethod is null) {
-									ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4173, method.Method, Errors.MT4173_A, type.FullName, descriptiveMethodName));
-								} else {
-									signature = "\"" + ComputeSignature (method.DeclaringType.Type, null, method, isBlockSignature: true) + "\"";
-								}
-							}
-							var delegateProxyType = GetDelegateProxyType (method);
-							if (delegateProxyType is null) {
-								exceptions.Add (ErrorHelper.CreateWarning (App, 4176, method.Method, "Unable to locate the delegate to block conversion type for the return value of the method {0}.", method.DescriptiveMethodName));
-							} else if (TryCreateTokenReference (delegateProxyType, TokenType.TypeDef, out var delegate_proxy_type_token_ref, out _)) {
-								token = $"0x{delegate_proxy_type_token_ref:X} /* {delegateProxyType.FullName} */ ";
-							}
-						}
-						setup_return.AppendLine ("res = xamarin_get_block_for_delegate (managed_method, retval, {0}, {1}, &exception_gchandle);", signature, token);
-						setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
-					} else {
-						throw ErrorHelper.CreateError (4104, Errors.MT4104, returntype.FullName, descriptiveMethodName);
-					}
-
-					setup_return.AppendLine ("}");
-				}
-			}
+			SpecializePrepareReturnValue (sb, method, descriptiveMethodName, rettype, exceptions);
 
 			if (App.Embeddinator)
 				body.WriteLine ("xamarin_embeddinator_initialize ();");
@@ -4345,6 +4249,132 @@ namespace Registrar {
 				sb.WriteLine ("}");
 			} else {
 				sb.WriteLine (body);
+			}
+		}
+
+		void SpecializePrepareReturnValue (AutoIndentStringBuilder sb, ObjCMethod method, string descriptiveMethodName, string rettype, List<Exception> exceptions)
+		{
+			var returntype = method.ReturnType;
+			var isVoid = returntype.FullName == "System.Void";
+
+			if (isVoid)
+				return;
+
+			switch (rettype) {
+			case "CGRect":
+				body_setup.AppendLine ("{0} res = {{{{0}}}};", rettype);
+				break;
+			default:
+				body_setup.AppendLine ("{0} res = {{0}};", rettype);
+				break;
+			}
+			var isArray = returntype is ArrayType;
+			var type = returntype.Resolve () ?? returntype;
+			var retain = method.RetainReturnValue;
+
+			if (returntype != method.NativeReturnType) {
+				body_setup.AppendLine ("MonoClass *retparamclass = NULL;");
+				cleanup.AppendLine ("xamarin_mono_object_release (&retparamclass);");
+				body_setup.AppendLine ("MonoType *retparamtype = NULL;");
+				cleanup.AppendLine ("xamarin_mono_object_release (&retparamtype);");
+				setup_call_stack.AppendLine ("retparamtype = xamarin_get_parameter_type (managed_method, -1);");
+				setup_call_stack.AppendLine ("retparamclass = mono_class_from_mono_type (retparamtype);");
+				GenerateConversionToNative (returntype, method.NativeReturnType, setup_return, descriptiveMethodName, ref exceptions, method, "retval", "res", "retparamclass");
+			} else if (returntype.IsValueType) {
+				setup_return.AppendLine ("res = *({0} *) mono_object_unbox ((MonoObject *) retval);", rettype);
+			} else if (isArray) {
+				var elementType = ((ArrayType) returntype).ElementType;
+				var conversion_func = string.Empty;
+				if (elementType.FullName == "System.String") {
+					conversion_func = "xamarin_managed_string_array_to_nsarray";
+				} else if (IsNSObject (elementType)) {
+					conversion_func = "xamarin_managed_nsobject_array_to_nsarray";
+				} else if (IsINativeObject (elementType)) {
+					conversion_func = "xamarin_managed_inativeobject_array_to_nsarray";
+				} else {
+					throw ErrorHelper.CreateError (App, 4111, method.Method, Errors.MT4111, method.NativeReturnType.FullName, descriptiveMethodName);
+				}
+				setup_return.AppendLine ("res = {0} ((MonoArray *) retval, &exception_gchandle);", conversion_func);
+				if (retain)
+					setup_return.AppendLine ("[res retain];");
+				setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
+				setup_return.AppendLine ("xamarin_framework_peer_waypoint ();");
+				setup_return.AppendLine ("mt_dummy_use (retval);");
+			} else {
+				setup_return.AppendLine ("if (!retval) {");
+				setup_return.AppendLine ("res = NULL;");
+				setup_return.AppendLine ("} else {");
+
+				if (IsNSObject (type)) {
+					setup_return.AppendLine ("id retobj;");
+					setup_return.AppendLine ("retobj = xamarin_get_nsobject_handle (retval);");
+					setup_return.AppendLine ("xamarin_framework_peer_waypoint ();");
+					setup_return.AppendLine ("[retobj retain];");
+					if (!retain)
+						setup_return.AppendLine ("[retobj autorelease];");
+					setup_return.AppendLine ("mt_dummy_use (retval);");
+					setup_return.AppendLine ("res = retobj;");
+				} else if (IsPlatformType (type, "ObjCRuntime", "Selector")) {
+					setup_return.AppendLine ("res = (SEL) xamarin_get_handle_for_inativeobject (retval, &exception_gchandle);");
+					setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
+				} else if (IsPlatformType (type, "ObjCRuntime", "Class")) {
+					setup_return.AppendLine ("res = (Class) xamarin_get_handle_for_inativeobject (retval, &exception_gchandle);");
+					setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
+				} else if (IsNativeObject (type)) {
+					setup_return.AppendLine ("{0} retobj;", rettype);
+					setup_return.AppendLine ("retobj = xamarin_get_handle_for_inativeobject ((MonoObject *) retval, &exception_gchandle);");
+					setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
+					setup_return.AppendLine ("xamarin_framework_peer_waypoint ();");
+					setup_return.AppendLine ("if (retobj != NULL) {");
+					if (retain) {
+						setup_return.AppendLine ("xamarin_retain_nativeobject (retval, &exception_gchandle);");
+						setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
+					} else {
+						// If xamarin_attempt_retain_nsobject returns true, the input is an NSObject, so it's safe to call the 'autorelease' selector on it.
+						// We don't retain retval if it's not an NSObject, because we'd have to immediately release it,
+						// and that serves no purpose.
+						setup_return.AppendLine ("bool retained = xamarin_attempt_retain_nsobject (retval, &exception_gchandle);");
+						setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
+						setup_return.AppendLine ("if (retained) {");
+						setup_return.AppendLine ("[retobj autorelease];");
+						setup_return.AppendLine ("}");
+					}
+					setup_return.AppendLine ("mt_dummy_use (retval);");
+					setup_return.AppendLine ("res = retobj;");
+					setup_return.AppendLine ("} else {");
+					setup_return.AppendLine ("res = NULL;");
+					setup_return.AppendLine ("}");
+				} else if (type.FullName == "System.String") {
+					// This should always be an NSString and never char*
+					setup_return.AppendLine ("res = xamarin_string_to_nsstring ((MonoString *) retval, {0});", retain ? "true" : "false");
+				} else if (IsDelegate (type.Resolve ())) {
+					var signature = "NULL";
+					var token = "INVALID_TOKEN_REF";
+					if (App.Optimizations.OptimizeBlockLiteralSetupBlock == true) {
+						if (type.Is ("System", "Delegate") || type.Is ("System", "MulticastDelegate")) {
+							ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4173, method.Method, Errors.MT4173, type.FullName, descriptiveMethodName));
+						} else {
+							var delegateMethod = type.Resolve ().GetMethods ().FirstOrDefault ((v) => v.Name == "Invoke");
+							if (delegateMethod is null) {
+								ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4173, method.Method, Errors.MT4173_A, type.FullName, descriptiveMethodName));
+							} else {
+								signature = "\"" + ComputeSignature (method.DeclaringType.Type, null, method, isBlockSignature: true) + "\"";
+							}
+						}
+						var delegateProxyType = GetDelegateProxyType (method);
+						if (delegateProxyType is null) {
+							exceptions.Add (ErrorHelper.CreateWarning (App, 4176, method.Method, "Unable to locate the delegate to block conversion type for the return value of the method {0}.", method.DescriptiveMethodName));
+						} else if (TryCreateTokenReference (delegateProxyType, TokenType.TypeDef, out var delegate_proxy_type_token_ref, out _)) {
+							token = $"0x{delegate_proxy_type_token_ref:X} /* {delegateProxyType.FullName} */ ";
+						}
+					}
+					setup_return.AppendLine ("res = xamarin_get_block_for_delegate (managed_method, retval, {0}, {1}, &exception_gchandle);", signature, token);
+					setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
+				} else {
+					throw ErrorHelper.CreateError (4104, Errors.MT4104, returntype.FullName, descriptiveMethodName);
+				}
+
+				setup_return.AppendLine ("}");
 			}
 		}
 
