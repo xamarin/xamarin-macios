@@ -390,7 +390,6 @@ namespace Xamarin.Bundler {
 					}
 				} else {
 					Driver.Log (3, $"The assembly {FullPath} does not have any resources.");
-
 				}
 			} else {
 				if (!Directory.Exists (path))
