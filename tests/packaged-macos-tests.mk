@@ -26,7 +26,7 @@ LAUNCH_ARGUMENTS=--autostart --autoexit
 
 # Time test runs out after 5 minutes (300 seconds)
 RUN_WITH_TIMEOUT=./run-with-timeout.csharp 300
-# Some tests need a bit more time... (introspection)
+# Some tests need a bit more time... (introspection, monotouch-test/xammac_tests)
 RUN_WITH_TIMEOUT_LONGER=./run-with-timeout.csharp 600
 
 .stamp-configure-projects-mac: Makefile xharness/xharness.exe
@@ -94,7 +94,7 @@ build-mac-modern-xammac_tests: xammac_tests/xammac_tests.csproj .stamp-nuget-res
 
 exec-mac-modern-xammac_tests:
 	@echo "ℹ️  Executing the 'xammac' test for Xamarin.Mac (Modern profile) ℹ️"
-	$(Q) $(RUN_WITH_TIMEOUT) xammac_tests/bin/x86/$(CONFIG)/xammac_tests.app/Contents/MacOS/xammac_tests
+	$(Q) $(RUN_WITH_TIMEOUT_LONGER) xammac_tests/bin/x86/$(CONFIG)/xammac_tests.app/Contents/MacOS/xammac_tests
 
 #
 # link all
@@ -221,7 +221,7 @@ endif
 	$$(Q) if test -e ".$$@-failure.stamp"; then cat ".$$@-failure.stamp"; rm ".$$@-failure.stamp"; exit 1; fi
 endef
 
-$(eval $(call DotNetNormalTest,monotouch-test,monotouchtest))
+$(eval $(call DotNetNormalTest,monotouch-test,monotouchtest,_LONGER))
 $(eval $(call DotNetNormalTest,introspection,introspection,_LONGER))
 
 ### .NET linker tests

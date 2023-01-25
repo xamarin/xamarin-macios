@@ -380,7 +380,11 @@ namespace Xamarin.Tests {
 			if (assembly is null) {
 				var parameters = new ReaderParameters ();
 				var resolver = new DefaultAssemblyResolver ();
+#if NET
+				var searchdir = Path.GetDirectoryName (Configuration.GetBaseLibrary (Profile.AsPlatform (), true));
+#else
 				var searchdir = Path.GetDirectoryName (Configuration.GetBaseLibrary (Profile));
+#endif
 				resolver.AddSearchDirectory (searchdir);
 				parameters.AssemblyResolver = resolver;
 				assembly = AssemblyDefinition.ReadAssembly (Out ?? (Path.Combine (TmpDirectory, Path.GetFileNameWithoutExtension (ApiDefinitions [0]).Replace ('-', '_') + ".dll")), parameters);
