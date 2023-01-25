@@ -43,6 +43,9 @@ namespace XamarinTests.ObjCRuntime {
 
 		public static Registrars CurrentRegistrar {
 			get {
+				var __registrar__ = typeof (Class).Assembly.GetType ("ObjCRuntime.__Registrar__");
+				if (__registrar__ is not null)
+					return Registrars.ManagedStatic;
 #if NET
 				var types = new Type [] { typeof (NativeHandle), typeof (bool).MakeByRefType () };
 #else
