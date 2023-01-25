@@ -856,6 +856,8 @@ namespace Xamarin.Bundler {
 #if NET
 			sw.WriteLine ("\txamarin_runtime_configuration_name = {0};", string.IsNullOrEmpty (app.RuntimeConfigurationFile) ? "NULL" : $"\"{app.RuntimeConfigurationFile}\"");
 #endif
+			if (app.Registrar == RegistrarMode.ManagedStatic)
+				sw.WriteLine ("\txamarin_set_is_managed_static_registrar (true);");
 			sw.WriteLine ("}");
 			sw.WriteLine ();
 			sw.Write ("int ");
