@@ -6,11 +6,11 @@ namespace ImageCaptureCore {
 	partial class ICCameraDevice {
 
 		public delegate void DidReadDataDelegate (NSData data, ICCameraFile file, NSError error);
-		
+
 		public void RequestReadDataFromFile (ICCameraFile file, long offset, long length, DidReadDataDelegate callback)
 		{
 			var actionObject = new DidReadDataFromFileAction (callback);
-			RequestReadDataFromFile (file, offset, length, actionObject, Selector.FromHandle(Selector.GetHandle("didReadData:fromFile:error:contextInfo:")), IntPtr.Zero);
+			RequestReadDataFromFile (file, offset, length, actionObject, Selector.FromHandle (Selector.GetHandle ("didReadData:fromFile:error:contextInfo:")), IntPtr.Zero);
 		}
 
 		class DidReadDataFromFileAction : NSObject {
@@ -31,13 +31,13 @@ namespace ImageCaptureCore {
 		}
 
 		public delegate void DidDownloadDataDelegate (ICCameraFile file, NSError error, NSDictionary<NSString, NSObject> options);
-		
+
 		public void RequestDownloadFile (ICCameraFile file, NSDictionary<NSString, NSObject> options, DidDownloadDataDelegate callback)
 		{
 			var actionObject = new DidDownloadDataFromFileAction (callback);
-			RequestDownloadFile (file, options, actionObject, Selector.FromHandle(Selector.GetHandle("didDownloadFile:error:options:contextInfo:")), IntPtr.Zero);
+			RequestDownloadFile (file, options, actionObject, Selector.FromHandle (Selector.GetHandle ("didDownloadFile:error:options:contextInfo:")), IntPtr.Zero);
 		}
-		
+
 		class DidDownloadDataFromFileAction : ICCameraDeviceDownloadDelegate {
 			DidDownloadDataDelegate Callback;
 			public const string CallbackSelector = "didDownloadFile:error:options:contextInfo:";
@@ -56,13 +56,13 @@ namespace ImageCaptureCore {
 		}
 
 		public delegate void DidSendPTPDelegate (NSData command, NSData data, NSData response, ICCameraFile file, NSError error);
-		
+
 		public void RequestSendPtpCommand (NSData command, NSData data, DidSendPTPDelegate callback)
 		{
 			var actionObject = new DidSendPTPAction (callback);
-			RequestSendPtpCommand (command, data, actionObject, Selector.FromHandle(Selector.GetHandle("didSendPTPCommand:inData:response:error:contextInfo:")), IntPtr.Zero);
+			RequestSendPtpCommand (command, data, actionObject, Selector.FromHandle (Selector.GetHandle ("didSendPTPCommand:inData:response:error:contextInfo:")), IntPtr.Zero);
 		}
-		
+
 		class DidSendPTPAction : NSObject {
 			DidSendPTPDelegate Callback;
 			public const string CallbackSelector = "didSendPTPCommand:inData:response:error:contextInfo:";
