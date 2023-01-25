@@ -1370,7 +1370,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		void ThrowsICEIfDebug (TestDelegate code, string message, bool execute_release_mode = true)
 		{
 #if NET
-			if (TestRuntime.IsCoreCLR) {
+			if (TestRuntime.IsCoreCLR || global::XamarinTests.ObjCRuntime.Registrar.CurrentRegistrar == Registrars.ManagedStatic) {
 				if (execute_release_mode) {
 					// In CoreCLR will either throw an ArgumentException:
 					//     <System.ArgumentException: Object of type 'Foundation.NSObject' cannot be converted to type 'Foundation.NSSet'.
