@@ -308,7 +308,7 @@ namespace Xamarin.Bundler {
 		{
 			// We can't add -dead_strip if there are any LinkWith attributes where smart linking is disabled.
 			if (!metadata.SmartLink) {
-				Driver.Log (3, $"The library '{metadata.LibraryName}', shipped with the assembly '{FullName}', sets SmartLink=false, which will disable passing -dead_strip to the native linker (and make the app bigger).");
+				Driver.Log (3, $"The library '{metadata.LibraryName}', shipped with the assembly '{FullPath}', sets SmartLink=false, which will disable passing -dead_strip to the native linker (and make the app bigger).");
 				App.DeadStrip = false;
 			}
 
