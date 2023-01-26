@@ -384,7 +384,15 @@ namespace Xamarin.Bundler {
 			}
 
 			if (!File.Exists (zipPath)) {
-				ErrorHelper.Warning (1302, Errors.MT1302, metadata.LibraryName, zipPath);
+				ErrorHelper.Warning (1302, Errors.MT1302, metadata.LibraryName, FullPath);
+				if (assembly.MainModule.HasResources) {
+					Driver.Log (3, $"The assembly {FullPath} has {assembly.MainModule.Resources.Count} resources:");
+					foreach (var res in assembly.MainModule.Resources) {
+						Driver.Log (3, $"    {res.ResourceType}: {res.Name}");
+					}
+				} else {
+					Driver.Log (3, $"The assembly {FullPath} does not have any resources.");
+				}
 			} else {
 				if (!Directory.Exists (path))
 					Directory.CreateDirectory (path);
