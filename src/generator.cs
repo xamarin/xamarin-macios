@@ -3634,6 +3634,36 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
+	// Find the introduced attribute with the highest version between the target list and the additions.
+	// If the destination list has an introduced attribute, replace it if it's not the one with the highest version
+	// If the destination list does not have an introduced attribute, then add one if there's one in the additions and there's not already an unavailable attribute.
+	static void FindHighestIntroducedAttributes (List<AvailabilityBaseAttribute> dest, IEnumerable<AvailabilityBaseAttribute> additions)
+	{
+		if (!additions.Any ())
+			return;
+
+		foreach (var platform in BindingTouch.AllPlatformNames) {
+			// find the availability attribute with the highest version we're trying to add
+			var latestAddition = additions
+				.Where (v => v.AvailabilityKind == AvailabilityKind.Introduced && v.Platform == platform)
+				.OrderBy (v => v.Version)
+				.LastOrDefault ();
+			if (latestAddition is null)
+				continue;
+
+			var added = CloneFromOtherPlatform (latestAddition, latestAddition.Platform);
+			var idx = dest.FindIndex (v => v.Platform == platform && v.AvailabilityKind == AvailabilityKind.Introduced);
+			if (idx == -1) {
+				// no existing introduced attribute: add it unless there's already an unavailable attribute
+				if (!dest.Any (v => v.Platform == platform && v.AvailabilityKind == AvailabilityKind.Unavailable))
+					dest.Add (added);
+			} else if (added.Version > dest [idx].Version) {
+				// replace any existing introduced attribute if the existing version is lower than the added one
+				dest [idx] = added;
+			}
+		}
+	}
+
 	// This assumes the compiler implements property methods as get_ or set_ prefixes
 	static PropertyInfo GetProperyFromGetSetMethod (MethodInfo method)
 	{
@@ -3705,6 +3735,7 @@ public partial class Generator : IMemberGatherer {
 				// Don't copy parent attributes if the conflict with the type we're inlining members into
 				// Example: don't copy Introduced on top of Unavailable.
 				CopyValidAttributes (availabilityToConsider, parentContextAvailability);
+				FindHighestIntroducedAttributes (availabilityToConsider, parentContextAvailability);
 			} else {
 				availabilityToConsider.AddRange (parentContextAvailability);
 			}
@@ -3741,7 +3772,7 @@ public partial class Generator : IMemberGatherer {
 			AddImpliedPlatforms (memberAvailability);
 
 			// Now copy it down introduced from the parent
-			CopyValidAttributes (memberAvailability, availabilityToConsider.Where (attr => attr.AvailabilityKind == AvailabilityKind.Introduced));
+			FindHighestIntroducedAttributes (memberAvailability, availabilityToConsider.Where (attr => attr.AvailabilityKind == AvailabilityKind.Introduced));
 
 			// Now expand the implied catalyst\TVOS from [iOS] a second time
 			// This is needed in some cases where the only iOS information is in the
@@ -5306,6 +5337,7 @@ public partial class Generator : IMemberGatherer {
 		var minfo = new MemberInformation (this, this, pi, type, is_interface_impl);
 		bool use_underscore = minfo.is_unified_internal;
 		var mod = minfo.GetVisibility ();
+		Type inlinedType = pi.DeclaringType == type ? null : type;
 		minfo.protocolize = Protocolize (pi);
 		GetAccessorInfo (pi, out var getter, out var setter, out var generate_getter, out var generate_setter);
 
@@ -5494,7 +5526,7 @@ public partial class Generator : IMemberGatherer {
 				PrintExport (minfo, sel, export.ArgumentSemantic);
 			}
 
-			PrintAttributes (pi.GetGetMethod (), platform: true, preserve: true, advice: true, notImplemented: true);
+			PrintAttributes (pi.GetGetMethod (), platform: true, preserve: true, advice: true, notImplemented: true, inlinedType: inlinedType);
 #if NET
 			if (false) {
 #else
@@ -5566,7 +5598,7 @@ public partial class Generator : IMemberGatherer {
 			if (not_implemented_attr == null && (!minfo.is_sealed || !minfo.is_wrapper))
 				PrintExport (minfo, sel, export.ArgumentSemantic);
 
-			PrintAttributes (pi.GetSetMethod (), platform: true, preserve: true, advice: true, notImplemented: true);
+			PrintAttributes (pi.GetSetMethod (), platform: true, preserve: true, advice: true, notImplemented: true, inlinedType: inlinedType);
 #if NET
 			if (false) {
 #else
@@ -6410,6 +6442,7 @@ public partial class Generator : IMemberGatherer {
 			minfo.is_export = true;
 
 			print ("[Preserve (Conditional = true)]");
+			PrintAttributes (pi, platform: true);
 
 			if (minfo.is_unsafe)
 				mod = "unsafe ";
@@ -6430,12 +6463,12 @@ public partial class Generator : IMemberGatherer {
 					else
 						PrintExport (minfo, ea);
 				}
-				PrintAttributes (getMethod, notImplemented: true);
+				PrintAttributes (getMethod, notImplemented: true, platform: true);
 				print ("get;");
 			}
 			if (generate_setter) {
 				PrintBlockProxy (pi.PropertyType);
-				PrintAttributes (setMethod, notImplemented: true);
+				PrintAttributes (setMethod, notImplemented: true, platform: true);
 				if (!AttributeManager.HasAttribute<NotImplementedAttribute> (setMethod))
 					PrintExport (minfo, GetSetterExportAttribute (pi));
 				print ("set;");
@@ -6767,10 +6800,10 @@ public partial class Generator : IMemberGatherer {
 			print (attribstr);
 	}
 
-	public void PrintAttributes (ICustomAttributeProvider mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false, bool bindAs = false, bool requiresSuper = false)
+	public void PrintAttributes (ICustomAttributeProvider mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false, bool bindAs = false, bool requiresSuper = false, Type inlinedType = null)
 	{
 		if (platform)
-			PrintPlatformAttributes (mi as MemberInfo);
+			PrintPlatformAttributes (mi as MemberInfo, inlinedType);
 		if (preserve)
 			PrintPreserveAttribute (mi);
 		if (advice)
