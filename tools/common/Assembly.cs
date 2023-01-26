@@ -307,8 +307,10 @@ namespace Xamarin.Bundler {
 		void ProcessNativeReferenceOptions (NativeReferenceMetadata metadata)
 		{
 			// We can't add -dead_strip if there are any LinkWith attributes where smart linking is disabled.
-			if (!metadata.SmartLink)
+			if (!metadata.SmartLink) {
+				Driver.Log (3, $"The library '{metadata.LibraryName}', shipped with the assembly '{FullPath}', sets SmartLink=false, which will disable passing -dead_strip to the native linker (and make the app bigger).");
 				App.DeadStrip = false;
+			}
 
 			// Don't add -force_load if the binding's SmartLink value is set and the static registrar is being used.
 			if (metadata.ForceLoad && !(metadata.SmartLink && App.Registrar == RegistrarMode.Static))
