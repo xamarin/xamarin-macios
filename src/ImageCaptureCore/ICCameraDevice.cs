@@ -55,8 +55,8 @@ namespace ImageCaptureCore {
 			}
 		}
 
-		public delegate void DidSendPTPDelegate (NSData command, NSData data, NSData response, ICCameraFile file, NSError error);
-
+		public delegate void DidSendPTPDelegate (NSData command, NSData data, NSData response, NSError error);
+		
 		public void RequestSendPtpCommand (NSData command, NSData data, DidSendPTPDelegate callback)
 		{
 			var actionObject = new DidSendPTPAction (callback);
@@ -74,9 +74,9 @@ namespace ImageCaptureCore {
 			}
 
 			[Export (CallbackSelector)]
-			void DidSendPTPDelegate (NSData command, NSData data, NSData response, ICCameraFile file, NSError error, IntPtr contextInfo)
+			void DidSendPTPDelegate (NSData command, NSData data, NSData response, NSError error, IntPtr contextInfo)
 			{
-				Callback (command, data, response, file, error);
+				Callback (command, data, response, error);
 			}
 		}
 
