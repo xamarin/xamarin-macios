@@ -1,6 +1,7 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+#nullable enable
 
 namespace ImageCaptureCore {
 	partial class ICCameraDevice {
@@ -10,7 +11,9 @@ namespace ImageCaptureCore {
 		public void RequestReadDataFromFile (ICCameraFile file, long offset, long length, DidReadDataDelegate callback)
 		{
 			var actionObject = new DidReadDataFromFileAction (callback);
-			RequestReadDataFromFile (file, offset, length, actionObject, Selector.FromHandle (Selector.GetHandle ("didReadData:fromFile:error:contextInfo:")), IntPtr.Zero);
+			var sel = Selector.FromHandle(Selector.GetHandle(DidReadDataFromFileAction.CallbackSelector));
+			if (sel is not null)
+				RequestReadDataFromFile (file, offset, length, actionObject, sel, IntPtr.Zero);
 		}
 
 		class DidReadDataFromFileAction : NSObject {
@@ -35,7 +38,9 @@ namespace ImageCaptureCore {
 		public void RequestDownloadFile (ICCameraFile file, NSDictionary<NSString, NSObject> options, DidDownloadDataDelegate callback)
 		{
 			var actionObject = new DidDownloadDataFromFileAction (callback);
-			RequestDownloadFile (file, options, actionObject, Selector.FromHandle (Selector.GetHandle ("didDownloadFile:error:options:contextInfo:")), IntPtr.Zero);
+			var sel = Selector.FromHandle(Selector.GetHandle(DidDownloadDataFromFileAction.CallbackSelector));
+			if (sel is not null)
+				RequestDownloadFile (file, options, actionObject, sel, IntPtr.Zero);
 		}
 
 		class DidDownloadDataFromFileAction : ICCameraDeviceDownloadDelegate {
@@ -60,7 +65,9 @@ namespace ImageCaptureCore {
 		public void RequestSendPtpCommand (NSData command, NSData data, DidSendPTPDelegate callback)
 		{
 			var actionObject = new DidSendPTPAction (callback);
-			RequestSendPtpCommand (command, data, actionObject, Selector.FromHandle (Selector.GetHandle ("didSendPTPCommand:inData:response:error:contextInfo:")), IntPtr.Zero);
+			var sel = Selector.FromHandle(Selector.GetHandle(DidSendPTPAction.CallbackSelector));
+			if (sel is not null)
+				RequestSendPtpCommand (command, data, actionObject, sel, IntPtr.Zero);
 		}
 
 		class DidSendPTPAction : NSObject {
