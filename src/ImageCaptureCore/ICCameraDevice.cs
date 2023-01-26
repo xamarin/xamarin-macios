@@ -56,7 +56,7 @@ namespace ImageCaptureCore {
 		}
 
 		public delegate void DidSendPTPDelegate (NSData command, NSData data, NSData response, NSError error);
-		
+
 		public void RequestSendPtpCommand (NSData command, NSData data, DidSendPTPDelegate callback)
 		{
 			var actionObject = new DidSendPTPAction (callback);
