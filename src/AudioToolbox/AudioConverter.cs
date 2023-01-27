@@ -544,7 +544,7 @@ namespace AudioToolbox {
 		//
 #if NET
 		[UnmanagedCallersOnly]
-		static AudioConverterError FillComplexBufferShared (IntPtr inAudioConverter, IntPtr ioNumberDataPackets, IntPtr ioData,
+		static AudioConverterError FillComplexBufferShared (IntPtr inAudioConverter, IntPtr ioNumberDataPacketsPtr, IntPtr ioData,
 															IntPtr outDataPacketDescription, IntPtr inUserData)
 #else
 		[MonoPInvokeCallback (typeof (AudioConverterComplexInputDataShared))]
@@ -576,11 +576,14 @@ namespace AudioToolbox {
 				//
 				var data = outDataPacketDescription == IntPtr.Zero ? null : new AudioStreamPacketDescription [0];
 #if NET
-				var packetCount = Marshal.ReadInt32 (ioNumberDataPackets);
+				// tricky - this in !NET this is an argument
+				// in NET it's a local so all the other code
+				// flows
+				var ioNumberDataPackets = Marshal.ReadInt32 (ioNumberDataPacketsPtr);
 				var res = inst.InputData is not null ?
-					inst.InputData (ref packetCount, buffers, ref data) :
-					callback! (ref packetCount, buffers, ref data);
-				Marshal.WriteInt32 (ioNumberDataPackets, packetCount);
+					inst.InputData (ref ioNumberDataPackets, buffers, ref data) :
+					callback! (ref ioNumberDataPackets, buffers, ref data);
+				Marshal.WriteInt32 (ioNumberDataPacketsPtr, ioNumberDataPackets);
 #else
 				var res = inst.InputData is not null ?
 					inst.InputData (ref ioNumberDataPackets, buffers, ref data) :
