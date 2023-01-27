@@ -375,14 +375,6 @@ namespace GeneratorTests {
 			Assert.AreEqual (returnTypeIsNull, info.IsNullable ());
 		}
 		
-		/*
-		 * 
-			public void GenericNotNullParameterConstrain<T> (T param) where T: notnull {}
-			public void GenericNullableClassParameterConstrain<T> (T param) where T : class? { }
-			public void GenericNullableRefTypeParameterConstrain<T> (T? param) where T : ObjectTest { }
-			public void GenericNullableInterfaceParameterConstrain<T> (T? param) where T : IInterfaceTest => default;
-		 */
-		
 		[TestCase("GenericNotNullParameterConstrain", false)]
 		[TestCase("GenericNullableClassParameterConstrain", true)]
 		[TestCase("GenericNullableRefTypeParameterConstrain", true)] 
