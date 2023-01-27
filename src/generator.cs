@@ -5487,7 +5487,6 @@ public partial class Generator : IMemberGatherer {
 #if !NET
 			PrintPlatformAttributes (pi, type);
 #endif
-			PrintAttributes (pi, platform: false);
 
 			if (!minfo.is_sealed || !minfo.is_wrapper) {
 				PrintDelegateProxy (pi.GetGetMethod ());
@@ -5561,7 +5560,6 @@ public partial class Generator : IMemberGatherer {
 #if !NET
 			PrintPlatformAttributes (pi, type);
 #endif
-			PrintAttributes (pi, platform: false);
 
 			if (not_implemented_attr == null && (!minfo.is_sealed || !minfo.is_wrapper))
 				PrintExport (minfo, sel, export.ArgumentSemantic);
