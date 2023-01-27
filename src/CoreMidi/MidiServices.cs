@@ -839,10 +839,10 @@ namespace CoreMidi {
 				byte* value = byteptr;
 				if (bytes is null || bytes.Length < 1)
 					return value;
-				
+
 				unsafe {
 					fixed (byte* p = &bytes [start]) {
-						value =(IntPtr) p;
+						value = (IntPtr) p;
 					}
 				}
 				return value;
