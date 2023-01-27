@@ -32,16 +32,16 @@ namespace UIKit {
 		}
 
 		public UIBarButtonItem (UIImage image, UIBarButtonItemStyle style, EventHandler handler)
-		: this (image, style, new Callback () , actionSel)
+		: this (image, style, new Callback (), actionSel)
 		{
 			callback = (Callback) Target;
 			callback.container = this;
 			clicked += handler;
 			MarkDirty ();
 		}
-		
-		
-		public UIBarButtonItem  (string title, UIBarButtonItemStyle style, EventHandler handler)
+
+
+		public UIBarButtonItem (string title, UIBarButtonItemStyle style, EventHandler handler)
 		: this (title, style, new Callback (), actionSel)
 		{
 			callback = (Callback) Target;
@@ -49,7 +49,7 @@ namespace UIKit {
 			clicked += handler;
 			MarkDirty ();
 		}
-						
+
 
 		public UIBarButtonItem (UIBarButtonSystemItem systemItem, EventHandler handler)
 		: this (systemItem, new Callback (), actionSel)
@@ -66,17 +66,17 @@ namespace UIKit {
 
 		internal EventHandler clicked;
 		internal Callback callback;
-		
+
 		public event EventHandler Clicked {
 			add {
-				if (clicked == null){
+				if (clicked == null) {
 					callback = new Callback ();
 					callback.container = this;
 					this.Target = callback;
 					this.Action = actionSel;
 					MarkDirty ();
 				}
-				
+
 				clicked += value;
 			}
 

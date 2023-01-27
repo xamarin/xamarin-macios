@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Mono.Cecil;
 using MonoMod.Utils;
@@ -26,7 +26,7 @@ namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 					var typeElements = typeStack.Pop ();
 					moduleElements.Types.Add (typeElements.DeclaringType.FullName, typeElements);
 				} else {
-					throw new Exception (String.Format(Errors.E0008, e.Kind.ToString()));
+					throw new Exception (String.Format (Errors.E0008, e.Kind.ToString ()));
 				}
 			};
 

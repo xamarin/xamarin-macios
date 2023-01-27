@@ -13,10 +13,8 @@ using Mono.Cecil.Cil;
 
 using Xamarin.Utils;
 
-namespace Xamarin.Tests
-{
-	class BGenTool : Tool
-	{
+namespace Xamarin.Tests {
+	class BGenTool : Tool {
 		public const string None = "None";
 		AssemblyDefinition assembly;
 
@@ -83,6 +81,8 @@ namespace Xamarin.Tests
 				return TargetFramework.DotNet_tvOS_String;
 			case Profile.watchOS:
 				return TargetFramework.DotNet_watchOS_String;
+			case Profile.MacCatalyst:
+				return TargetFramework.DotNet_MacCatalyst_String;
 			case Profile.macOSMobile:
 				return TargetFramework.DotNet_macOS_String;
 			case Profile.macOSFull:
@@ -306,14 +306,15 @@ namespace Xamarin.Tests
 		{
 			LoadAssembly ();
 
-			var t = assembly.MainModule.Types.FirstOrDefault ((v) => v.FullName == typename);
-			var actual = t.Methods.Count ((v) => {
+			var t = assembly.MainModule.Types.First ((v) => v.FullName == typename);
+			var actual = t.Methods.Where ((v) => {
 				if (v.IsPrivate || v.IsFamily || v.IsFamilyAndAssembly)
 					return false;
 				return true;
 			});
-			if (actual != count)
-				Assert.Fail ($"Expected {count} publicly accessible method(s) in {typename}, found {actual} publicly accessible method(s). {message}");
+			if (actual.Count () != count) {
+				Assert.Fail ($"Expected {count} publicly accessible method(s) in {typename}, found {actual} publicly accessible method(s): {message}\n\t{string.Join ("\n\t", actual.Select (v => v.FullName).OrderBy (v => v))}");
+			}
 		}
 
 		public void AssertType (string fullname, TypeAttributes? attributes = null, string message = null)
@@ -328,6 +329,11 @@ namespace Xamarin.Tests
 				Assert.AreEqual (attributes.Value, t.Attributes, $"Incorrect attributes for type {fullname}.");
 		}
 
+		public void AssertMethod (string typename, string method, params string [] parameterTypes)
+		{
+			AssertMethod (typename, method, null, null, parameterTypes);
+		}
+
 		public void AssertMethod (string typename, string method, string returnType = null, params string [] parameterTypes)
 		{
 			AssertMethod (typename, method, null, returnType, parameterTypes);
@@ -335,9 +341,29 @@ namespace Xamarin.Tests
 
 		public void AssertMethod (string typename, string method, MethodAttributes? attributes = null, string returnType = null, params string [] parameterTypes)
 		{
-			LoadAssembly ();
+			var m = FindMethod (typename, method, returnType, parameterTypes);
+			if (m is null) {
+				Assert.Fail ($"No method '{method}' with signature '{string.Join ("', '", parameterTypes)}' on the type '{typename}' was found.");
+				return;
+			}
+			if (attributes.HasValue)
+				Assert.AreEqual (attributes.Value, m.Attributes, "Attributes for {0}", m.FullName);
+		}
 
-			var t = assembly.MainModule.Types.First ((v) => v.FullName == typename);
+		public void AssertNoMethod (string typename, string method, string returnType = null, params string [] parameterTypes)
+		{
+			var m = FindMethod (typename, method, returnType, parameterTypes);
+			if (m is not null)
+				Assert.Fail ($"Unexpectedly found method '{method}' with signature '{string.Join ("', '", parameterTypes)}' on the type '{typename}'.");
+		}
+
+		MethodDefinition FindMethod (string typename, string method, string returnType, params string [] parameterTypes)
+		{
+			var assembly = LoadAssembly ();
+			var t = assembly.MainModule.Types.FirstOrDefault ((v) => v.FullName == typename);
+			if (t is null)
+				return null;
+
 			var m = t.Methods.FirstOrDefault ((v) => {
 				if (v.Name != method)
 					return false;
@@ -348,16 +374,24 @@ namespace Xamarin.Tests
 						return false;
 				return true;
 			});
-			if (m == null)
-				Assert.Fail ($"No method '{method}' with signature '{string.Join ("', '", parameterTypes)}' was found.");
-			if (attributes.HasValue)
-				Assert.AreEqual (attributes.Value, m.Attributes, "Attributes for {0}", m.FullName);
+			return m;
 		}
 
-		void LoadAssembly ()
+		AssemblyDefinition LoadAssembly ()
 		{
-			if (assembly == null)
-				assembly = AssemblyDefinition.ReadAssembly (Out ?? (Path.Combine (TmpDirectory, Path.GetFileNameWithoutExtension (ApiDefinitions [0]).Replace ('-', '_') + ".dll")));
+			if (assembly is null) {
+				var parameters = new ReaderParameters ();
+				var resolver = new DefaultAssemblyResolver ();
+#if NET
+				var searchdir = Path.GetDirectoryName (Configuration.GetBaseLibrary (Profile.AsPlatform (), true));
+#else
+				var searchdir = Path.GetDirectoryName (Configuration.GetBaseLibrary (Profile));
+#endif
+				resolver.AddSearchDirectory (searchdir);
+				parameters.AssemblyResolver = resolver;
+				assembly = AssemblyDefinition.ReadAssembly (Out ?? (Path.Combine (TmpDirectory, Path.GetFileNameWithoutExtension (ApiDefinitions [0]).Replace ('-', '_') + ".dll")), parameters);
+			}
+			return assembly;
 		}
 
 		void EnsureTempDir ()
@@ -389,6 +423,8 @@ namespace Xamarin.Tests
 				return new string [] { "MONOMAC" };
 			case Profile.iOS:
 				return new string [] { "IOS", "XAMCORE_2_0" };
+			case Profile.MacCatalyst:
+				return new string [] { "MACCATALYST" };
 			default:
 				throw new NotImplementedException (profile.ToString ());
 			}
@@ -397,8 +433,7 @@ namespace Xamarin.Tests
 
 	// This class will replace stdout/stderr with its own thread-static storage for stdout/stderr.
 	// This means we're capturing stdout/stderr per thread.
-	class ThreadStaticTextWriter : TextWriter
-	{
+	class ThreadStaticTextWriter : TextWriter {
 		[ThreadStatic]
 		static TextWriter current_writer;
 
@@ -411,7 +446,7 @@ namespace Xamarin.Tests
 
 		public static void ReplaceConsole (StringBuilder sb)
 		{
-			lock (lock_obj) { 
+			lock (lock_obj) {
 				if (counter == 0) {
 					original_stdout = Console.Out;
 					original_stderr = Console.Error;
@@ -424,7 +459,7 @@ namespace Xamarin.Tests
 		}
 
 		public static void RestoreConsole ()
-		{ 
+		{
 			lock (lock_obj) {
 				current_writer.Dispose ();
 				current_writer = null;

@@ -31,7 +31,7 @@ namespace VideoToolbox {
 	[SupportedOSPlatform ("watchos9.0")]
 	[SupportedOSPlatform ("tvos16.0")]
 #else
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), Watch (9,0), TV (16,0)]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), TV (16, 0)]
 #endif
 	public class VTPixelRotationSession : VTSession {
 
@@ -45,8 +45,8 @@ namespace VideoToolbox {
 		{
 		}
 #endif
-		
-		[Preserve (Conditional=true)]
+
+		[Preserve (Conditional = true)]
 		internal VTPixelRotationSession (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
@@ -68,7 +68,7 @@ namespace VideoToolbox {
 			/* VTPixelRotationSessionRef* */ out IntPtr pixelRotationSessionOut);
 
 		public static VTPixelRotationSession? Create () => Create (null);
-		
+
 		public static VTPixelRotationSession? Create (CFAllocator? allocator)
 		{
 			var result = VTPixelRotationSessionCreate (allocator.GetHandle (), out var ret);
@@ -81,8 +81,8 @@ namespace VideoToolbox {
 
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTPixelRotationSessionRotateImage (
-			/* VTPixelRotationSessionRef */ IntPtr session, 
-			/* CVPixelBuffer */ IntPtr sourceBuffer, 
+			/* VTPixelRotationSessionRef */ IntPtr session,
+			/* CVPixelBuffer */ IntPtr sourceBuffer,
 			/* CVPixelBuffer */ IntPtr destinationBuffer);
 
 		public VTStatus RotateImage (CVPixelBuffer sourceBuffer, CVPixelBuffer destinationBuffer)
@@ -103,5 +103,5 @@ namespace VideoToolbox {
 
 			return VTSessionSetProperties (Handle, options.Dictionary.Handle);
 		}
-	}	
+	}
 }

@@ -45,6 +45,9 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ("\t<ItemGroup>");
 	writer.WriteLine ($"\t\t<SdkSupportedTargetPlatformVersion Condition=\"'$(TargetPlatformIdentifier)' == '{platform}'\" Include=\"@({platform}SdkSupportedTargetPlatformVersion)\" />");
 	writer.WriteLine ("\t</ItemGroup>");
+	writer.WriteLine ("\t<PropertyGroup>");
+	writer.WriteLine ($"\t\t<{platform}MinSupportedOSPlatformVersion>{minSdkVersionString}</{platform}MinSupportedOSPlatformVersion>");
+	writer.WriteLine ("\t</PropertyGroup>");
 	writer.WriteLine ("</Project>");
 }
 

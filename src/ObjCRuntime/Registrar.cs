@@ -33,16 +33,16 @@ using TProperty = Mono.Cecil.PropertyDefinition;
 using TField = Mono.Cecil.FieldDefinition;
 using R = Registrar.Registrar;
 #else
-using TAssembly=System.Reflection.Assembly;
-using TType=System.Type;
-using TMethod=System.Reflection.MethodBase;
-using TProperty=System.Reflection.PropertyInfo;
-using TField=System.Reflection.FieldInfo;
-using R=ObjCRuntime.Runtime;
+using TAssembly = System.Reflection.Assembly;
+using TType = System.Type;
+using TMethod = System.Reflection.MethodBase;
+using TProperty = System.Reflection.PropertyInfo;
+using TField = System.Reflection.FieldInfo;
+using R = ObjCRuntime.Runtime;
 #endif
 
 #if !(MTOUCH || MMP || BUNDLER)
-using ProductException=ObjCRuntime.RuntimeException;
+using ProductException = ObjCRuntime.RuntimeException;
 #endif
 
 #if !MTOUCH && !MMP && !BUNDLER
@@ -760,6 +760,7 @@ namespace Registrar {
 					case "CoreMedia.CMTime":
 					case "CoreMedia.CMTimeMapping":
 					case "CoreMedia.CMTimeRange":
+					case "CoreMedia.CMVideoDimensions":
 					case "MapKit.MKCoordinateSpan":
 					case "Foundation.NSRange":
 					case "SceneKit.SCNMatrix4":
@@ -894,7 +895,7 @@ namespace Registrar {
 
 					if (is_value_type && Registrar.IsGenericType (NativeReturnType))
 						throw Registrar.CreateException (4104, Method, "The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.", Registrar.GetTypeFullName (NativeReturnType), Registrar.GetTypeFullName (DeclaringType.Type), Registrar.GetDescriptiveMethodName (Method));
-					
+
 					if (is_stret) {
 						if (Registrar.IsSimulatorOrDesktop && !Registrar.Is64Bits) {
 							trampoline = is_static_trampoline ? Trampoline.X86_DoubleABI_StaticStretTrampoline : Trampoline.X86_DoubleABI_StretTrampoline;
@@ -918,7 +919,7 @@ namespace Registrar {
 							break;
 						}
 					}
-					
+
 					return trampoline;
 #endif
 				}

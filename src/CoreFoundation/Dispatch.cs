@@ -165,7 +165,7 @@ namespace CoreFoundation {
 		internal extern static void dispatch_suspend (IntPtr o);
 
 #if NET
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -181,7 +181,7 @@ namespace CoreFoundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -239,7 +239,7 @@ namespace CoreFoundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -265,12 +265,10 @@ namespace CoreFoundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public static string? CurrentQueueLabel {
 			get {
@@ -311,8 +309,6 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios6.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios6.0")]
 #else
@@ -527,7 +523,7 @@ namespace CoreFoundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -544,7 +540,7 @@ namespace CoreFoundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -560,14 +556,19 @@ namespace CoreFoundation {
 			}
 		}
 
+		static IntPtr dispatch_queue_create (string label, IntPtr attr)
+		{
+			using var labelPtr = new TransientString (label);
+			return dispatch_queue_create (labelPtr, attr);
+		}
 		//
 		// Native methods
 		//
 		[DllImport (Constants.libcLibrary)]
-		extern static IntPtr dispatch_queue_create (string label, IntPtr attr);
+		extern static IntPtr dispatch_queue_create (IntPtr label, IntPtr attr);
 
 #if NET
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -577,8 +578,14 @@ namespace CoreFoundation {
 		[TV (10, 0)]
 		[Watch (3, 0)]
 #endif
+		static IntPtr dispatch_queue_create_with_target (string label, IntPtr attr, IntPtr target)
+		{
+			using var labelPtr = new TransientString (label);
+			return dispatch_queue_create_with_target (labelPtr, attr, target);
+		}
+
 		[DllImport (Constants.libcLibrary, EntryPoint = "dispatch_queue_create_with_target$V2")]
-		extern static IntPtr dispatch_queue_create_with_target (string label, IntPtr attr, IntPtr target);
+		extern static IntPtr dispatch_queue_create_with_target (IntPtr label, IntPtr attr, IntPtr target);
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_async_f (IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
@@ -615,8 +622,6 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios6.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios6.0")]
 #else
@@ -641,7 +646,7 @@ namespace CoreFoundation {
 		extern static IntPtr dispatch_queue_get_specific (IntPtr queue, /* const void* */ IntPtr key);
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -702,7 +707,7 @@ namespace CoreFoundation {
 			public bool Concurrent { get; set; }
 
 #if NET
-			[SupportedOSPlatform ("macos10.12")]
+			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("maccatalyst")]
 			[SupportedOSPlatform ("ios10.0")]
 			[SupportedOSPlatform ("tvos10.0")]
@@ -715,7 +720,7 @@ namespace CoreFoundation {
 			public bool IsInitiallyInactive { get; set; }
 
 #if NET
-			[SupportedOSPlatform ("macos10.12")]
+			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("maccatalyst")]
 			[SupportedOSPlatform ("ios10.0")]
 			[SupportedOSPlatform ("tvos10.0")]
@@ -728,7 +733,7 @@ namespace CoreFoundation {
 			public AutoreleaseFrequency? AutoreleaseFrequency { get; set; }
 
 #if NET
-			[SupportedOSPlatform ("macos10.10")]
+			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("ios8.0")]
 			[SupportedOSPlatform ("tvos")]
 			[SupportedOSPlatform ("maccatalyst")]
@@ -739,7 +744,7 @@ namespace CoreFoundation {
 			public int RelativePriority { get; set; }
 
 #if NET
-			[SupportedOSPlatform ("macos10.10")]
+			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("ios8.0")]
 			[SupportedOSPlatform ("tvos")]
 			[SupportedOSPlatform ("maccatalyst")]
@@ -769,7 +774,7 @@ namespace CoreFoundation {
 			}
 
 #if NET
-			[SupportedOSPlatform ("macos10.12")]
+			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("ios10.0")]
 			[SupportedOSPlatform ("tvos10.0")]
 #else
@@ -782,7 +787,7 @@ namespace CoreFoundation {
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_initially_inactive (/* dispatch_queue_attr_t _Nullable */ IntPtr attr);
 
 #if NET
-			[SupportedOSPlatform ("macos10.12")]
+			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("ios10.0")]
 			[SupportedOSPlatform ("tvos10.0")]
 #else
@@ -795,7 +800,7 @@ namespace CoreFoundation {
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_with_autorelease_frequency (/* dispatch_queue_attr_t _Nullable */ IntPtr attr, /* dispatch_autorelease_frequency_t */ nuint frequency);
 
 #if NET
-			[SupportedOSPlatform ("macos10.10")]
+			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("ios8.0")]
 #else
 			[Mac (10, 10)]
@@ -806,7 +811,7 @@ namespace CoreFoundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("maccatalyst")]

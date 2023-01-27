@@ -34,6 +34,7 @@ namespace GameKit {
 	// untyped enum -> GKPublicConstants.h
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 7, 0)]
+	[Deprecated (PlatformName.TvOS, 9, 0)]
 	[ErrorDomain ("GKVoiceChatServiceErrorDomain")]
 	public enum GKVoiceChatServiceError {
 		Internal = 32000,
@@ -57,6 +58,7 @@ namespace GameKit {
 
 	// untyped enum -> GKPublicConstants.h
 	[Deprecated (PlatformName.iOS, 7, 0)]
+	[Deprecated (PlatformName.TvOS, 9, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
 	public enum GKSendDataMode {
 		Reliable,
@@ -65,6 +67,7 @@ namespace GameKit {
 
 	// untyped enum -> GKPublicConstants.h
 	[Deprecated (PlatformName.iOS, 7, 0)]
+	[Deprecated (PlatformName.TvOS, 9, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
 	public enum GKSessionMode {
 		Server,
@@ -74,6 +77,7 @@ namespace GameKit {
 
 	// untyped enum -> GKPublicConstants.h
 	[Deprecated (PlatformName.iOS, 7, 0)]
+	[Deprecated (PlatformName.TvOS, 9, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
 	public enum GKPeerConnectionState {
 		Available,
@@ -196,6 +200,7 @@ namespace GameKit {
 
 	// NSInteger -> GKMatch.h
 	[Deprecated (PlatformName.iOS, 7, 0)]
+	[Deprecated (PlatformName.TvOS, 9, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
 	[Native]
 	public enum GKMatchSendDataMode : long {
@@ -295,7 +300,6 @@ namespace GameKit {
 	}
 
 	// uint8_t -> GKTurnBasedMatch.h
-	[iOS (7, 0)]
 	public enum GKTurnBasedExchangeStatus : sbyte {
 		Unknown,
 		Active,

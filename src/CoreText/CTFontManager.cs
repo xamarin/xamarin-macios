@@ -85,7 +85,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.13")]
 		[ObsoletedOSPlatform ("macos10.13", "It's now treated as 'Default'.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "It's now treated as 'Default'.")]
@@ -105,7 +104,6 @@ namespace CoreText {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.6")]
 		[ObsoletedOSPlatform ("macos10.6")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 6)]
@@ -119,7 +117,6 @@ namespace CoreText {
 		}
 #elif !XAMCORE_3_0
 #if NET
-		[UnsupportedOSPlatform ("macos10.6")]
 		[ObsoletedOSPlatform ("macos10.6")]
 		[UnsupportedOSPlatform ("ios")]
 #else
@@ -185,9 +182,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.15")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
 		[ObsoletedOSPlatform ("macos10.15")]
 		[ObsoletedOSPlatform ("tvos13.0")]
 		[ObsoletedOSPlatform ("ios13.0")]
@@ -206,9 +200,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.15")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'RegisterFonts' instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'RegisterFonts' instead.")]
 		[ObsoletedOSPlatform ("ios13.0", "Use 'RegisterFonts' instead.")]
@@ -332,9 +323,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.15")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
 		[ObsoletedOSPlatform ("macos10.15")]
 		[ObsoletedOSPlatform ("tvos13.0")]
 		[ObsoletedOSPlatform ("ios13.0")]
@@ -353,9 +341,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.15")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'UnregisterFonts' instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'UnregisterFonts' instead.")]
 		[ObsoletedOSPlatform ("ios13.0", "Use 'UnregisterFonts' instead.")]
@@ -430,23 +415,19 @@ namespace CoreText {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CFArrayRef */ IntPtr CTFontManagerCreateFontDescriptorsFromURL (/* CFURLRef */ IntPtr fileURL);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public static CTFontDescriptor [] GetFonts (NSUrl url)
 		{
@@ -528,12 +509,10 @@ namespace CoreText {
 		static NSString? _RegisteredFontsChangedNotification;
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		static NSString? RegisteredFontsChangedNotification {
 			get {
@@ -698,7 +677,6 @@ namespace CoreText {
 		}
 #endif
 
-		// [Watch (2,0), TV (9,0), Mac (10,7), iOS (7,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern unsafe /* CTFontDescriptorRef _Nullable */ IntPtr CTFontManagerCreateFontDescriptorFromData (/* CFDataRef */ IntPtr data);
 

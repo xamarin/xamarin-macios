@@ -4,10 +4,8 @@ using MonoMac.Foundation;
 using MonoMac.AppKit;
 using MonoMac.ObjCRuntime;
 
-namespace EndSheet
-{
-	class MainClass
-	{
+namespace EndSheet {
+	class MainClass {
 		static void Main (string [] args)
 		{
 			NSApplication.Init ();

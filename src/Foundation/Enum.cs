@@ -229,6 +229,7 @@ namespace Foundation {
 		Second = 128,
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
 		Week = 256,
 		Weekday = 512,
 		WeekdayOrdinal = 1024,
@@ -486,7 +487,12 @@ namespace Foundation {
 	[Flags]
 	[Native]
 	public enum NSKeyValueObservingOptions : ulong {
-		New = 1, Old = 2, OldNew = 3, Initial = 4, Prior = 8,
+		None = 0,
+		New = 1,
+		Old = 2,
+		OldNew = 3,
+		Initial = 4,
+		Prior = 8,
 	}
 
 	[Native]
@@ -852,9 +858,7 @@ namespace Foundation {
 	public enum NSUnderlineStyle : long {
 		None = 0x00,
 		Single = 0x01,
-		[iOS (7, 0)]
 		Thick = 0x02,
-		[iOS (7, 0)]
 		Double = 0x09,
 		PatternSolid = 0x0000,
 		PatternDot = 0x0100,
@@ -943,27 +947,20 @@ namespace Foundation {
 		WrapCalendarComponents = 1 << 0,
 
 		[Mac (10, 9)]
-		[iOS (7, 0)]
 		MatchStrictly = 1 << 1,
 		[Mac (10, 9)]
-		[iOS (7, 0)]
 		SearchBackwards = 1 << 2,
 
 		[Mac (10, 9)]
-		[iOS (7, 0)]
 		MatchPreviousTimePreservingSmallerUnits = 1 << 8,
 		[Mac (10, 9)]
-		[iOS (7, 0)]
 		MatchNextTimePreservingSmallerUnits = 1 << 9,
 		[Mac (10, 9)]
-		[iOS (7, 0)]
 		MatchNextTime = 1 << 10,
 
 		[Mac (10, 9)]
-		[iOS (7, 0)]
 		MatchFirst = 1 << 12,
 		[Mac (10, 9)]
-		[iOS (7, 0)]
 		MatchLast = 1 << 13,
 	}
 
@@ -1001,7 +998,6 @@ namespace Foundation {
 		Stable = 1 << 4
 	}
 
-	[iOS (7, 0)]
 	[Flags]
 	[Native]
 	public enum NSDataBase64DecodingOptions : ulong {
@@ -1009,7 +1005,6 @@ namespace Foundation {
 		IgnoreUnknownCharacters = 1
 	}
 
-	[iOS (7, 0)]
 	[Flags]
 	[Native]
 	public enum NSDataBase64EncodingOptions : ulong {
@@ -1021,7 +1016,6 @@ namespace Foundation {
 	}
 
 #if !XAMCORE_3_0
-	[iOS (7, 0)]
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'NSWritingDirectionFormatType'.")]
 	[Flags]
 	[Native]

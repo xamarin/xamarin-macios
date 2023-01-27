@@ -35,6 +35,8 @@ using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSBezierPath {
 
@@ -52,7 +54,7 @@ namespace AppKit {
 
 		public unsafe void SetLineDash (nfloat [] pattern, nfloat phase)
 		{
-			if (pattern == null)
+			if (pattern is null)
 				throw new ArgumentNullException ("pattern");
 
 			fixed (nfloat* ptr = &pattern [0])
@@ -80,7 +82,7 @@ namespace AppKit {
 
 		public unsafe void SetAssociatedPointsAtIndex (CGPoint [] points, nint index)
 		{
-			if (points == null)
+			if (points is null)
 				throw new ArgumentNullException ("points");
 
 			if (points.Length < 1)
@@ -92,7 +94,7 @@ namespace AppKit {
 
 		public unsafe void Append (CGPoint [] points)
 		{
-			if (points == null)
+			if (points is null)
 				throw new ArgumentNullException ("points");
 			if (points.Length < 1)
 				throw new ArgumentException ("points array is empty");
@@ -111,7 +113,7 @@ namespace AppKit {
 		[Obsolete ("Use 'Append (uint[], NSFont)' instead.")]
 		public unsafe void AppendPathWithGlyphs (uint [] glyphs, NSFont font)
 		{
-			if (glyphs == null)
+			if (glyphs is null)
 				throw new ArgumentNullException ("glyphs");
 			if (glyphs.Length < 1)
 				throw new ArgumentException ("glyphs array is empty");
@@ -122,14 +124,14 @@ namespace AppKit {
 #endif
 
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 13)]
 #endif
 		public unsafe void Append (uint [] glyphs, NSFont font)
 		{
-			if (glyphs == null)
+			if (glyphs is null)
 				throw new ArgumentNullException ("glyphs");
 			if (glyphs.Length < 1)
 				throw new ArgumentException ("glyphs array is empty");

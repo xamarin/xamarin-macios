@@ -9,8 +9,10 @@ using NativeHandle = System.IntPtr;
 
 namespace MediaSetup {
 
-	[NoTV][NoWatch][NoMac]
-	[iOS (14,0)]
+	[NoTV]
+	[NoWatch]
+	[NoMac]
+	[iOS (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MSServiceAccount {
@@ -41,10 +43,12 @@ namespace MediaSetup {
 		string AuthorizationScope { get; set; }
 	}
 
-	interface IMSAuthenticationPresentationContext {}
+	interface IMSAuthenticationPresentationContext { }
 
-	[NoTV][NoWatch][NoMac]
-	[iOS (14,0)]
+	[NoTV]
+	[NoWatch]
+	[NoMac]
+	[iOS (14, 0)]
 	[Protocol]
 	interface MSAuthenticationPresentationContext {
 
@@ -53,8 +57,10 @@ namespace MediaSetup {
 		UIWindow PresentationAnchor { get; }
 	}
 
-	[NoTV][NoWatch][NoMac]
-	[iOS (14,0)]
+	[NoTV]
+	[NoWatch]
+	[NoMac]
+	[iOS (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MSSetupSession {

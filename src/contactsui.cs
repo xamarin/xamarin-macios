@@ -27,7 +27,8 @@ using NativeHandle = System.IntPtr;
 namespace ContactsUI {
 
 #if !MONOMAC
-	[iOS (9,0)][NoMac]
+	[iOS (9, 0)]
+	[NoMac]
 	[BaseType (typeof (UIViewController))]
 	interface CNContactPickerViewController {
 		[Export ("initWithNibName:bundle:")]
@@ -38,7 +39,8 @@ namespace ContactsUI {
 		[Export ("displayedPropertyKeys")]
 		NSString [] DisplayedPropertyKeys { get; set; }
 
-		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Weak)]
+		[NullAllowed]
 		ICNContactPickerDelegate Delegate { get; set; }
 
 		[NullAllowed]
@@ -55,7 +57,7 @@ namespace ContactsUI {
 	}
 #endif
 
-	interface ICNContactPickerDelegate {}
+	interface ICNContactPickerDelegate { }
 
 #if MONOMAC
 	[NoiOS][NoMacCatalyst][NoTV]
@@ -78,7 +80,7 @@ namespace ContactsUI {
 	}
 #else
 	[NoMac]
-	[iOS (9,0)]
+	[iOS (9, 0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface CNContactPickerDelegate {
@@ -100,8 +102,8 @@ namespace ContactsUI {
 	}
 #endif // MONOMAC
 
-	[Mac (10,11)]
-	[iOS (9,0)]
+	[Mac (10, 11)]
+	[iOS (9, 0)]
 #if MONOMAC
 	[BaseType (typeof (NSViewController))]
 #else
@@ -119,12 +121,19 @@ namespace ContactsUI {
 		ICNKeyDescriptor DescriptorForRequiredKeys { get; }
 
 #if MONOMAC
-		[NullAllowed, Export ("contact", ArgumentSemantic.Copy)]
-		CNContact Contact { get; [NoiOS]set; }
+		[NullAllowed]
+		[Export ("contact", ArgumentSemantic.Copy)]
 #else
 		[Export ("contact", ArgumentSemantic.Strong)]
-		CNContact Contact { get; }
 #endif
+		CNContact Contact {
+			get;
+			[NoiOS]
+			[NoTV]
+			[NoWatch]
+			[NoMacCatalyst]
+			set;
+		}
 
 		[NoMac]
 		[Static]
@@ -147,7 +156,8 @@ namespace ContactsUI {
 		NSString [] DisplayedPropertyKeys { get; set; }
 
 		[NoMac]
-		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Weak)]
+		[NullAllowed]
 		ICNContactViewControllerDelegate Delegate { get; set; }
 
 		[NoMac]
@@ -192,9 +202,9 @@ namespace ContactsUI {
 		void HighlightProperty (NSString key, [NullAllowed] string identifier);
 	}
 
-	interface ICNContactViewControllerDelegate {}
+	interface ICNContactViewControllerDelegate { }
 
-	[iOS (9,0)]
+	[iOS (9, 0)]
 	[NoMac]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -207,13 +217,14 @@ namespace ContactsUI {
 		void DidComplete (CNContactViewController viewController, [NullAllowed] CNContact contact);
 	}
 
-	[Mac (10,11)]
-	[NoiOS][NoTV][NoMacCatalyst]
+	[Mac (10, 11)]
+	[NoiOS]
+	[NoTV]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
-	interface CNContactPicker
-	{
+	interface CNContactPicker {
 		[Export ("displayedKeys", ArgumentSemantic.Copy)]
-		string[] DisplayedKeys { get; set; }
+		string [] DisplayedKeys { get; set; }
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		[Protocolize]

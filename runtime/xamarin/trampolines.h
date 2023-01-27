@@ -151,6 +151,7 @@ void *xamarin_nsvalue_to_cllocationcoordinate2d (NSValue *value, void *ptr, Mono
 void *xamarin_nsvalue_to_cmtime                 (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle);
 void *xamarin_nsvalue_to_cmtimemapping          (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle);
 void *xamarin_nsvalue_to_cmtimerange            (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle);
+void *xamarin_nsvalue_to_cmvideodimensions      (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle);
 void *xamarin_nsvalue_to_mkcoordinatespan       (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle);
 void *xamarin_nsvalue_to_scnmatrix4             (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle);
 void *xamarin_nsvalue_to_scnvector3             (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle);
@@ -186,6 +187,7 @@ id xamarin_cllocationcoordinate2d_to_nsvalue (MonoObject *value, void *context, 
 id xamarin_cmtime_to_nsvalue                 (MonoObject *value, void *context, GCHandle *exception_gchandle);
 id xamarin_cmtimemapping_to_nsvalue          (MonoObject *value, void *context, GCHandle *exception_gchandle);
 id xamarin_cmtimerange_to_nsvalue            (MonoObject *value, void *context, GCHandle *exception_gchandle);
+id xamarin_cmvideodimensions_to_nsvalue      (MonoObject *value, void *context, GCHandle *exception_gchandle);
 id xamarin_mkcoordinatespan_to_nsvalue       (MonoObject *value, void *context, GCHandle *exception_gchandle);
 id xamarin_scnmatrix4_to_nsvalue             (MonoObject *value, void *context, GCHandle *exception_gchandle);
 id xamarin_scnvector3_to_nsvalue             (MonoObject *value, void *context, GCHandle *exception_gchandle);

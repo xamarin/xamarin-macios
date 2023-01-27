@@ -11,12 +11,10 @@ using ObjCRuntime;
 
 using NUnit.Framework;
 
-namespace LinkAllTests
-{
+namespace LinkAllTests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class LinkAllTest
-	{
+	public class LinkAllTest {
 
 		static void Check (string calendarName, bool present)
 		{

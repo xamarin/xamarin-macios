@@ -614,7 +614,7 @@ public static class AttributeConversionManager {
 				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], null };
 				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (string) };
 #else
-				ctorValues = new object [] { (byte)platform, (int)(byte)constructorArguments [0], (int)(byte)constructorArguments [1], (byte)0xff, null };
+				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], (byte) 0xff, null };
 				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
 #endif
 				break;
@@ -628,17 +628,17 @@ public static class AttributeConversionManager {
 				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], (int) (byte) constructorArguments [2], null };
 				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (int), typeof (string) };
 #else
-				ctorValues = new object [] { (byte) platform, (int)(byte)constructorArguments [0], (int)(byte)constructorArguments [1], (int)(byte)constructorArguments [2], (byte) 0xff, null };
+				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], (int) (byte) constructorArguments [2], (byte) 0xff, null };
 				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
 #endif
 				break;
 			}
 #if !NET
 			if (constructorArguments [0].GetType () == typeof (byte) &&
-			    constructorArguments [1].GetType () == typeof (byte) &&
-			    constructorArguments [2].GetType () == typeof (bool)) {
+				constructorArguments [1].GetType () == typeof (byte) &&
+				constructorArguments [2].GetType () == typeof (bool)) {
 				byte arch = (bool) constructorArguments [2] ? (byte) 2 : (byte) 0xff;
-				ctorValues = new object [] { (byte)platform, (int)(byte) constructorArguments [0], (int)(byte)constructorArguments [1], arch, null };
+				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], arch, null };
 				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
 				break;
 			}
@@ -647,19 +647,19 @@ public static class AttributeConversionManager {
 #if !NET
 		case 4:
 			if (constructorArguments [0].GetType () == typeof (byte) &&
-			    constructorArguments [1].GetType () == typeof (byte) &&
-			    constructorArguments [2].GetType () == typeof (byte) &&
-			    constructorArguments [3].GetType () == typeof (bool)) {
+				constructorArguments [1].GetType () == typeof (byte) &&
+				constructorArguments [2].GetType () == typeof (byte) &&
+				constructorArguments [3].GetType () == typeof (bool)) {
 				byte arch = (bool) constructorArguments [3] ? (byte) 2 : (byte) 0xff;
-				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int)(byte) constructorArguments [1], (int)(byte) constructorArguments [2], arch, null };
+				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], (int) (byte) constructorArguments [2], arch, null };
 				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
 				break;
 			}
 			if (constructorArguments [0].GetType () == typeof (byte) &&
-			    constructorArguments [1].GetType () == typeof (byte) &&
-			    constructorArguments [2].GetType () == typeof (byte) &&
-			    constructorArguments [3].GetType () == typeof (byte) /* ObjCRuntime.PlatformArchitecture */) {
-				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int)(byte) constructorArguments [1], (int)(byte) constructorArguments [2], constructorArguments [3], null };
+				constructorArguments [1].GetType () == typeof (byte) &&
+				constructorArguments [2].GetType () == typeof (byte) &&
+				constructorArguments [3].GetType () == typeof (byte) /* ObjCRuntime.PlatformArchitecture */) {
+				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], (int) (byte) constructorArguments [2], constructorArguments [3], null };
 				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
 				break;
 			}
@@ -809,7 +809,7 @@ static class AttributeFactory {
 		var ctorValues = new object [] { (byte) platform, major, minor, message };
 		var ctorTypes = new System.Type [] { PlatformEnum, typeof (int), typeof (int), typeof (string) };
 #else
-		var ctorValues = new object [] { (byte)platform, major, minor, (byte) 0xff, message };
+		var ctorValues = new object [] { (byte) platform, major, minor, (byte) 0xff, message };
 		var ctorTypes = new System.Type [] { PlatformEnum, typeof (int), typeof (int), PlatformArch, typeof (string) };
 #endif
 		return CreateNewAttribute (type, ctorTypes, ctorValues);
@@ -821,7 +821,7 @@ static class AttributeFactory {
 		var ctorValues = new object [] { (byte) platform, message };
 		var ctorTypes = new System.Type [] { PlatformEnum, typeof (string) };
 #else
-		var ctorValues = new object [] { (byte)platform, (byte) 0xff, message };
+		var ctorValues = new object [] { (byte) platform, (byte) 0xff, message };
 		var ctorTypes = new System.Type [] { PlatformEnum, PlatformArch, typeof (string) };
 #endif
 		return CreateNewAttribute (type, ctorTypes, ctorValues);
@@ -853,7 +853,7 @@ static class AttributeFactory {
 		var ctorValues = new object [] { (byte) platformName, message };
 		var ctorTypes = new System.Type [] { PlatformEnum, typeof (string) };
 #else
-		var ctorValues = new object [] { (byte)platformName, (byte) 0xff, message };
+		var ctorValues = new object [] { (byte) platformName, (byte) 0xff, message };
 		var ctorTypes = new System.Type [] { PlatformEnum, PlatformArch, typeof (string) };
 #endif
 		return CreateNewAttribute (UnavailableAttributeType, ctorTypes, ctorValues);
@@ -874,7 +874,7 @@ public static class CustomAttributeDataExtensions {
 
 	static CustomAttributeDataExtensions ()
 	{
-		roCustomAttributeDataType = typeof(MetadataLoadContext).Assembly.GetType ("System.Reflection.TypeLoading.RoCustomAttributeData");
+		roCustomAttributeDataType = typeof (MetadataLoadContext).Assembly.GetType ("System.Reflection.TypeLoading.RoCustomAttributeData");
 		attributeTypeProperty = roCustomAttributeDataType.GetProperty ("AttributeType");
 	}
 

@@ -42,7 +42,7 @@ namespace ObjCRuntime {
 		// We use the last significant bit of the IntPtr to store if this is a custom class or not.
 #pragma warning disable CS8618 // "Non-nullable field must contain a non-null value when exiting constructor." - we ensure these fields are non-null in other ways
 		static Dictionary<Type, IntPtr> type_to_class; // accessed from multiple threads, locking required.
-		static Type?[] class_to_type;
+		static Type? [] class_to_type;
 #pragma warning restore CS8618
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -59,7 +59,7 @@ namespace ObjCRuntime {
 			if (!Runtime.DynamicRegistrationSupported)
 				return; // Only the dynamic registrar needs the list of registered assemblies.
 
-			
+
 			for (int i = 0; i < map->assembly_count; i++) {
 				var assembly = map->assemblies [i];
 				Runtime.Registrar.SetAssemblyRegistered (Marshal.PtrToStringAuto (assembly.name));
@@ -138,11 +138,13 @@ namespace ObjCRuntime {
 		// class (it will be faster than GetHandle, but it will
 		// not compile unless the class in question actually exists
 		// as an ObjectiveC class in the binary).
-		public static NativeHandle GetHandleIntrinsic (string name) {
+		public static NativeHandle GetHandleIntrinsic (string name)
+		{
 			return objc_getClass (name);
 		}
 
-		public static NativeHandle GetHandle (Type type) {
+		public static NativeHandle GetHandle (Type type)
+		{
 			return GetClassHandle (type, true, out _);
 		}
 
@@ -323,7 +325,7 @@ namespace ObjCRuntime {
 			return Runtime.StringEquals (assembly_name, asm_name);
 		}
 
-		static unsafe int FindMapIndex (Runtime.MTClassMap *array, int lo, int hi, IntPtr @class)
+		static unsafe int FindMapIndex (Runtime.MTClassMap* array, int lo, int hi, IntPtr @class)
 		{
 			if (hi >= lo) {
 				int mid = lo + (hi - lo) / 2;
@@ -480,7 +482,7 @@ namespace ObjCRuntime {
 			throw ErrorHelper.CreateError (8020, $"Could not find the module with MetadataToken 0x{token:X} in the assembly {assembly}.");
 		}
 
-// Restrict this code to desktop for now, which is where most of the problems with outdated generated static registrar code occur.
+		// Restrict this code to desktop for now, which is where most of the problems with outdated generated static registrar code occur.
 #if __MACOS__ || __MACCATALYST__
 		static bool? verify_static_registrar_code;
 		static object? verification_lock;
@@ -574,7 +576,7 @@ namespace ObjCRuntime {
 					return Runtime.INVALID_TOKEN_REF;
 				throw ErrorHelper.CreateError (8025, $"Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because its module's metadata token is {type.Module.MetadataToken} when expected 1.");
 			}
-			
+
 			var map = Runtime.options->RegistrationMap;
 
 			// Find the assembly index in our list of registered assemblies.
@@ -600,7 +602,7 @@ namespace ObjCRuntime {
 			}
 
 			return (uint) ((type.MetadataToken << 8) + (assembly_index << 1));
-			
+
 		}
 
 		// Look for the specified metadata token in the table of full token references.
@@ -636,7 +638,7 @@ namespace ObjCRuntime {
 			var @class = GetClassHandle (type, false, out is_custom_type);
 			if (@class != IntPtr.Zero)
 				return is_custom_type;
-			
+
 			if (Runtime.DynamicRegistrationSupported)
 				return Runtime.Registrar.IsCustomType (type);
 
@@ -644,25 +646,56 @@ namespace ObjCRuntime {
 		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		internal static extern IntPtr objc_allocateClassPair (IntPtr superclass, string name, IntPtr extraBytes);
+		static extern IntPtr objc_allocateClassPair (IntPtr superclass, IntPtr name, IntPtr extraBytes);
+
+		internal static IntPtr objc_allocateClassPair (IntPtr superclass, string name, IntPtr extraBytes)
+		{
+			using var namePtr = new TransientString (name);
+			return objc_allocateClassPair (superclass, namePtr, extraBytes);
+		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		internal static extern IntPtr objc_getClass (string name);
+		static extern IntPtr objc_getClass (IntPtr name);
+
+		internal static IntPtr objc_getClass (string name)
+		{
+			using var namePtr = new TransientString (name);
+			return objc_getClass (namePtr);
+		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal static extern void objc_registerClassPair (IntPtr cls);
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		[return: MarshalAs (UnmanagedType.U1)]
-		internal static extern bool class_addIvar (IntPtr cls, string name, IntPtr size, byte alignment, string types);
+		static extern bool class_addIvar (IntPtr cls, IntPtr name, IntPtr size, byte alignment, IntPtr types);
+
+		internal static bool class_addIvar (IntPtr cls, string name, IntPtr size, byte alignment, string types)
+		{
+			using var namePtr = new TransientString (name);
+			using var typesPtr = new TransientString (types);
+			return class_addIvar (cls, namePtr, size, alignment, typesPtr);
+		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		[return: MarshalAs (UnmanagedType.U1)]
-		internal static extern bool class_addMethod (IntPtr cls, IntPtr name, IntPtr imp, string types);
+		static extern bool class_addMethod (IntPtr cls, IntPtr name, IntPtr imp, IntPtr types);
+
+		internal static bool class_addMethod (IntPtr cls, IntPtr name, IntPtr imp, string types)
+		{
+			using var typesPtr = new TransientString (types);
+			return class_addMethod (cls, name, imp, typesPtr);
+		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		[return: MarshalAs (UnmanagedType.U1)]
-		internal extern static bool class_addMethod (IntPtr cls, IntPtr name, Delegate imp, string types);
+		internal extern static bool class_addMethod (IntPtr cls, IntPtr name, Delegate imp, IntPtr types);
+
+		internal static bool class_addMethod (IntPtr cls, IntPtr name, Delegate imp, string types)
+		{
+			using var typesPtr = new TransientString (types);
+			return class_addMethod (cls, name, imp, typesPtr);
+		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		[return: MarshalAs (UnmanagedType.U1)]
@@ -681,16 +714,54 @@ namespace ObjCRuntime {
 		internal extern static IntPtr class_getMethodImplementation (IntPtr cls, IntPtr sel);
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		internal extern static IntPtr class_getInstanceVariable (IntPtr cls, string name);
+		internal extern static IntPtr class_getInstanceVariable (IntPtr cls, IntPtr name);
+
+		internal static IntPtr class_getInstanceVariable (IntPtr cls, string name)
+		{
+			using var namePtr = new TransientString (name);
+			return class_getInstanceVariable (cls, namePtr);
+		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal extern static IntPtr class_getInstanceMethod (IntPtr cls, IntPtr sel);
 
-		[DllImport (Messaging.LIBOBJC_DYLIB, CharSet=CharSet.Ansi)]
+		[DllImport (Messaging.LIBOBJC_DYLIB, CharSet = CharSet.Ansi)]
 		[return: MarshalAs (UnmanagedType.U1)]
-		internal extern static bool class_addProperty (IntPtr cls, string name, objc_attribute_prop [] attributes, int count);
+		extern unsafe static bool class_addProperty (IntPtr cls, IntPtr name, IntPtr* attributes, int count);
 
-		[StructLayout (LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+		internal static bool class_addProperty (IntPtr cls, string name, objc_attribute_prop [] attributes, int count)
+		{
+			using var namePtr = new TransientString (name, TransientString.Encoding.Ansi);
+			var ptrs = PropertyStringsToPtrs (attributes);
+			bool retval = false;
+			unsafe {
+				fixed (IntPtr* ptrsPtr = ptrs) {
+					retval = class_addProperty (cls, namePtr, ptrsPtr, count);
+				}
+			}
+			FreeStringPtrs (ptrs);
+			return retval;
+		}
+
+		internal static IntPtr [] PropertyStringsToPtrs (objc_attribute_prop [] props)
+		{
+			var ptrs = new IntPtr [props.Length * 2];
+			var index = 0;
+			foreach (var prop in props) {
+				ptrs [index++] = Marshal.StringToHGlobalAnsi (prop.name);
+				ptrs [index++] = Marshal.StringToHGlobalAnsi (prop.value);
+			}
+			return ptrs;
+		}
+
+		internal static void FreeStringPtrs (IntPtr [] ptrs)
+		{
+			foreach (var ptr in ptrs) {
+				Marshal.FreeHGlobal (ptr);
+			}
+		}
+
+		[StructLayout (LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 		internal struct objc_attribute_prop {
 			[MarshalAs (UnmanagedType.LPStr)] internal string name;
 			[MarshalAs (UnmanagedType.LPStr)] internal string value;

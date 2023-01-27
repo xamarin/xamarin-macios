@@ -24,6 +24,43 @@ namespace Xamarin.Tests {
 		public string? File;
 		public string? ProjectFile;
 		public string? Message;
+
+		public override string ToString ()
+		{
+			var rv = new StringBuilder ();
+
+			if (!string.IsNullOrEmpty (File)) {
+				rv.Append (File);
+				if (LineNumber > 0) {
+					rv.Append ('(');
+					rv.Append (LineNumber.ToString ());
+					if (EndLineNumber > 0) {
+						rv.Append (',');
+						rv.Append (EndLineNumber.ToString ());
+					}
+					rv.Append ("): ");
+				}
+			}
+			switch (Type) {
+			case BuildLogEventType.Error:
+				rv.Append ("error");
+				break;
+			case BuildLogEventType.Warning:
+				rv.Append ("warning");
+				break;
+			case BuildLogEventType.Message:
+				rv.Append ("message");
+				break;
+			}
+			if (!string.IsNullOrEmpty (Code)) {
+				rv.Append (' ');
+				rv.Append (Code);
+			}
+			rv.Append (": ");
+			if (!string.IsNullOrEmpty (Message))
+				rv.Append (Message);
+			return rv.ToString ();
+		}
 	}
 
 	public enum BuildLogEventType {

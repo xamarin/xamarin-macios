@@ -46,42 +46,41 @@ namespace ImageIO {
 #if !COREBUILD
 	// untyped enum -> CGImageSource.h
 	public enum CGImageSourceStatus {
-		Complete      = 0,
-		Incomplete    = -1,
+		Complete = 0,
+		Incomplete = -1,
 		ReadingHeader = -2,
-		UnknownType   = -3,
-		InvalidData   = -4,
+		UnknownType = -3,
+		InvalidData = -4,
 		UnexpectedEOF = -5,
 	}
-	
+
 	public partial class CGImageOptions {
 
 		public CGImageOptions ()
 		{
 			ShouldCache = true;
 		}
-		
+
 		public string? BestGuessTypeIdentifier { get; set; }
 
 		public bool ShouldCache { get; set; }
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
-		[Mac (10,9)]
+		[Mac (10, 9)]
 #endif
 		public bool ShouldCacheImmediately { get; set; }
 
 		public bool ShouldAllowFloat { get; set; }
-		
+
 		internal virtual NSMutableDictionary ToDictionary ()
 		{
 			var dict = new NSMutableDictionary ();
-			
+
 			if (BestGuessTypeIdentifier is not null)
 				dict.LowlevelSetObject (BestGuessTypeIdentifier, kTypeIdentifierHint);
 			if (!ShouldCache)
@@ -104,12 +103,12 @@ namespace ImageIO {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (9,0)]
-		[Mac (10,11)]
+		[iOS (9, 0)]
+		[Mac (10, 11)]
 #endif
 		public int? SubsampleFactor { get; set; }
 
@@ -128,16 +127,15 @@ namespace ImageIO {
 				dict.LowlevelSetObject (thandle, kCreateThumbnailWithTransform);
 			if (SubsampleFactor.HasValue)
 				dict.LowlevelSetObject (new NSNumber (SubsampleFactor.Value), kCGImageSourceSubsampleFactor);
-			
+
 			return dict;
 		}
 	}
 #endif
 
-	public partial class CGImageSource : NativeObject
-	{
+	public partial class CGImageSource : NativeObject {
 #if !COREBUILD
-		[DllImport (Constants.ImageIOLibrary, EntryPoint="CGImageSourceGetTypeID")]
+		[DllImport (Constants.ImageIOLibrary, EntryPoint = "CGImageSourceGetTypeID")]
 		public extern static nint GetTypeID ();
 
 		[DllImport (Constants.ImageIOLibrary)]
@@ -150,7 +148,7 @@ namespace ImageIO {
 			}
 		}
 #endif
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGImageSource (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -165,7 +163,7 @@ namespace ImageIO {
 		{
 			return FromUrl (url, null);
 		}
-		
+
 		public static CGImageSource? FromUrl (NSUrl url, CGImageOptions? options)
 		{
 			if (url is null)
@@ -185,7 +183,7 @@ namespace ImageIO {
 		{
 			return FromDataProvider (provider, null);
 		}
-		
+
 		public static CGImageSource? FromDataProvider (CGDataProvider provider, CGImageOptions? options)
 		{
 			if (provider is null)
@@ -205,7 +203,7 @@ namespace ImageIO {
 		{
 			return FromData (data, null);
 		}
-		
+
 		public static CGImageSource? FromData (NSData data, CGImageOptions? options)
 		{
 			if (data is null)
@@ -220,7 +218,7 @@ namespace ImageIO {
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static /* CFStringRef __nullable */ IntPtr CGImageSourceGetType (
 			/* CGImageSourceRef __nonnull */ IntPtr handle);
-		
+
 		public string? TypeIdentifier {
 			get {
 				return CFString.FromHandle (CGImageSourceGetType (Handle));
@@ -229,7 +227,7 @@ namespace ImageIO {
 
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static /* size_t */ nint CGImageSourceGetCount (/* CGImageSourceRef __nonnull */ IntPtr handle);
-		
+
 		public nint ImageCount {
 			get {
 				return CGImageSourceGetCount (Handle);
@@ -330,7 +328,7 @@ namespace ImageIO {
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static void CGImageSourceUpdateData (/* CGImageSourceRef __nonnull */ IntPtr isrc,
 			/* CFDataRef __nonnull */ IntPtr data, [MarshalAs (UnmanagedType.I1)] bool final);
-		
+
 		public void UpdateData (NSData data, bool final)
 		{
 			if (data is null)
@@ -353,7 +351,7 @@ namespace ImageIO {
 		// note: CGImageSourceStatus is always an int (4 bytes) so it's ok to use in the pinvoke declaration
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static CGImageSourceStatus CGImageSourceGetStatus (/* CGImageSourceRef __nonnull */ IntPtr isrc);
-		
+
 		public CGImageSourceStatus GetStatus ()
 		{
 			return CGImageSourceGetStatus (Handle);
@@ -362,7 +360,7 @@ namespace ImageIO {
 		// note: CGImageSourceStatus is always an int (4 bytes) so it's ok to use in the pinvoke declaration
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static CGImageSourceStatus CGImageSourceGetStatusAtIndex (
-			/* CGImageSourceRef __nonnull */ IntPtr handle, /* size_t */ nint idx);		
+			/* CGImageSourceRef __nonnull */ IntPtr handle, /* size_t */ nint idx);
 
 		public CGImageSourceStatus GetStatus (int index)
 		{
@@ -371,7 +369,7 @@ namespace ImageIO {
 
 #if NET
 		[SupportedOSPlatform ("tvos11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -385,7 +383,7 @@ namespace ImageIO {
 
 #if NET
 		[SupportedOSPlatform ("tvos11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -405,29 +403,29 @@ namespace ImageIO {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,14)]
-		[iOS (12,0)]
-		[TV (12,0)]
-		[Watch (5,0)]
+		[Mac (10, 14)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static nuint CGImageSourceGetPrimaryImageIndex (IntPtr /* CGImageSource */ src);
 
 #if NET
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,14)]
-		[iOS (12,0)]
-		[TV (12,0)]
-		[Watch (5,0)]
+		[Mac (10, 14)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
 #endif
 		public nuint GetPrimaryImageIndex ()
 		{

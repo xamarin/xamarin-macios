@@ -10,6 +10,8 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace BackgroundTasks {
 
 	[TV (13, 0), NoWatch, NoMac, iOS (13, 0)]

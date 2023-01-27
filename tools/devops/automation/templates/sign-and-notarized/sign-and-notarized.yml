@@ -42,6 +42,11 @@ steps:
   - ${{ each pair in step }}:
       ${{ pair.key }}: ${{ pair.value }}
 
+- bash: |
+    sudo rm -Rf $(Build.SourcesDirectory)/package
+  displayName: "Remove artifacts"
+  condition: always()
+
 - task: DownloadPipelineArtifact@2
   displayName: Download not notarized build
   inputs:
