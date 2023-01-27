@@ -5,6 +5,8 @@ using Foundation;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSColor {
 
@@ -183,9 +185,9 @@ namespace AppKit {
 			return FromCalibratedHsb ((byte) hue, (byte) saturation, (byte) brightness);
 		}
 
-		public static NSColor FromColorSpace (NSColorSpace space, nfloat [] components)
+		public static NSColor FromColorSpace (NSColorSpace space, nfloat []? components)
 		{
-			if (components == null)
+			if (components is null)
 				throw new ArgumentNullException ("components");
 
 			unsafe {

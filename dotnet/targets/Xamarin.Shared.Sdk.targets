@@ -198,7 +198,6 @@
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
 			_CollectBundleResources;
 			_RunRidSpecificBuild;
-			_CompileEntitlements;
 			_DetectAppManifest;
 			_ReadAppManifest;
 			_WriteAppManifest;
@@ -221,7 +220,6 @@
 			_CreatePkgInfo;
 			_SmeltMetal;
 			_TemperMetal;
-			_CompileEntitlements;
 			_DetectAppManifest;
 			_ReadAppManifest;
 			_WriteAppManifest;
@@ -248,13 +246,13 @@
 		<CreateAppBundleDependsOn Condition="'$(_IsMultiRidBuild)' != 'true'">
 			_CreateDebugSettings;
 			_CreateDebugConfiguration;
+			_CompileEntitlements;
 			$(CreateAppBundleDependsOn);
 		</CreateAppBundleDependsOn>
 
 		<!-- outer build for multi-rid build -->
 		<CreateAppBundleDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
 			$(CreateAppBundleDependsOn);
-			_CompileEntitlements;
 			_CreateMergedAppBundle;
 			_PostProcessAppBundle;
 		</CreateAppBundleDependsOn>
@@ -330,6 +328,7 @@
 				_ProcessedColladaAssetsPath=$(_ProcessedColladaAssetsPath);
 				_ProcessedTextureAtlasesPath=$(_ProcessedTextureAtlasesPath);
 				_ProcessedCoreMLModelsPath=$(_ProcessedCoreMLModelsPath);
+				_CompiledEntitlementsPath=$(_CompiledEntitlementsPath);
 			</_RidSpecificProperties>
 		</PropertyGroup>
 
@@ -606,9 +605,10 @@
 			<!--
 				pre-output custom steps
 			-->
-			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="OutputStep" Type="Xamarin.Linker.Steps.ListExportedSymbols" />
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="OutputStep" Type="Xamarin.Linker.LoadNonSkippedAssembliesStep" />
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="OutputStep" Type="Xamarin.Linker.ExtractBindingLibrariesStep" />
+			<!-- The ListExportedSymbols must run after ExtractBindingLibrariesStep, otherwise we won't properly list exported Objective-C classes from binding libraries -->
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="OutputStep" Type="Xamarin.Linker.Steps.ListExportedSymbols" />
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="OutputStep" Type="Xamarin.Linker.Steps.PreOutputDispatcher" />
 
 			<!--
@@ -1579,7 +1579,7 @@
 			<_CreateDumpExecutableToSign Include="@(_CreateDumpExecutable -> '$(_DylibPublishDir)%(RelativePath)')" KeepMetadata="false">
 				<CodesignAllocate>$(_CodesignAllocate)</CodesignAllocate>
 				<CodesignDisableTimestamp Condition="'$(_BundlerDebug)' == 'true'">true</CodesignDisableTimestamp>
-				<CodesignEntitlements>$(IntermediateOutputPath)Entitlements.xcent</CodesignEntitlements>
+				<CodesignEntitlements>$(_CompiledEntitlementsPath)</CodesignEntitlements>
 				<CodesignExtraArgs>$(CodesignExtraArgs)</CodesignExtraArgs>
 				<CodesignKeychain>$(CodesignKeychain)</CodesignKeychain>
 				<CodesignResourceRules>$(_PreparedResourceRules)</CodesignResourceRules>

@@ -1156,6 +1156,7 @@ void *xamarin_nsvalue_to_cllocationcoordinate2d (NSValue *value, void *ptr, Mono
 void *xamarin_nsvalue_to_cmtime                 (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle) {                 CMTime *valueptr =                 (CMTime *) (ptr ? ptr : xamarin_calloc (sizeof (CMTime)));                 *valueptr = [value CMTimeValue];            return valueptr; }
 void *xamarin_nsvalue_to_cmtimemapping          (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle) {          CMTimeMapping *valueptr =          (CMTimeMapping *) (ptr ? ptr : xamarin_calloc (sizeof (CMTimeMapping)));          *valueptr = [value CMTimeMappingValue];     return valueptr; }
 void *xamarin_nsvalue_to_cmtimerange            (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle) {            CMTimeRange *valueptr =            (CMTimeRange *) (ptr ? ptr : xamarin_calloc (sizeof (CMTimeRange)));            *valueptr = [value CMTimeRangeValue];       return valueptr; }
+void *xamarin_nsvalue_to_cmvideodimensions      (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle) {      CMVideoDimensions *valueptr =      (CMVideoDimensions *) (ptr ? ptr : xamarin_calloc (sizeof (CMVideoDimensions)));      *valueptr = [value CMVideoDimensionsValue]; return valueptr; }
 #endif
 #if HAVE_MAPKIT
 void *xamarin_nsvalue_to_mkcoordinatespan       (NSValue *value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle) {       MKCoordinateSpan *valueptr =       (MKCoordinateSpan *) (ptr ? ptr : xamarin_calloc (sizeof (MKCoordinateSpan)));       *valueptr = [value MKCoordinateSpanValue];  return valueptr; }
@@ -1246,6 +1247,7 @@ id xamarin_cllocationcoordinate2d_to_nsvalue (MonoObject *value, void *context, 
 id xamarin_cmtime_to_nsvalue                 (MonoObject *value, void *context, GCHandle *exception_gchandle) { return [NSValue valueWithCMTime:              *(CMTime *)                 mono_object_unbox (value)]; }
 id xamarin_cmtimemapping_to_nsvalue          (MonoObject *value, void *context, GCHandle *exception_gchandle) { return [NSValue valueWithCMTimeMapping:       *(CMTimeMapping *)          mono_object_unbox (value)]; }
 id xamarin_cmtimerange_to_nsvalue            (MonoObject *value, void *context, GCHandle *exception_gchandle) { return [NSValue valueWithCMTimeRange:         *(CMTimeRange *)            mono_object_unbox (value)]; }
+id xamarin_cmvideodimensions_to_nsvalue      (MonoObject *value, void *context, GCHandle *exception_gchandle) { return [NSValue valueWithCMVideoDimensions:   *(CMVideoDimensions *)      mono_object_unbox (value)]; }
 #endif
 #if HAVE_MAPKIT
 id xamarin_mkcoordinatespan_to_nsvalue       (MonoObject *value, void *context, GCHandle *exception_gchandle) { return [NSValue valueWithMKCoordinateSpan:    *(MKCoordinateSpan *)       mono_object_unbox (value)]; }
@@ -1612,6 +1614,8 @@ xamarin_get_nsvalue_converter (MonoClass *managedType, MonoMethod *method, bool 
 		func = to_managed ? (void *) xamarin_nsvalue_to_cmtimemapping : (void *) xamarin_cmtimemapping_to_nsvalue;
 	} else if (!strcmp (fullname, "CoreMedia.CMTimeRange")) {
 		func = to_managed ? (void *) xamarin_nsvalue_to_cmtimerange : (void *) xamarin_cmtimerange_to_nsvalue;
+	} else if (!strcmp (fullname, "CoreMedia.CMVideoDimensions")) {
+		func = to_managed ? (void *) xamarin_nsvalue_to_cmvideodimensions : (void *) xamarin_cmvideodimensions_to_nsvalue;
 #endif
 #if HAVE_MAPKIT
 	} else if (!strcmp (fullname, "MapKit.MKCoordinateSpan")) {
