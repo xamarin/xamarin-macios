@@ -107,7 +107,7 @@ namespace bgen {
 			var nullable = customAttributes?.FirstOrDefault(
 				x => x.AttributeType.FullName == NullableAttributeName);
 
-			NullabilityState flag = NullabilityState.Unknown;
+			var flag = NullabilityState.Unknown;
 			if (nullable is not  null && nullable.ConstructorArguments.Count == 1)
 			{
 				var attributeArgument = nullable.ConstructorArguments[0];
