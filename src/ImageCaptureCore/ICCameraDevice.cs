@@ -11,7 +11,7 @@ namespace ImageCaptureCore {
 		public void RequestReadDataFromFile (ICCameraFile file, long offset, long length, DidReadDataDelegate callback)
 		{
 			var actionObject = new DidReadDataFromFileAction (callback);
-			RequestReadDataFromFile (file, offset, length, actionObject, new Selector(DidReadDataFromFileAction.CallbackSelector), IntPtr.Zero);
+			RequestReadDataFromFile (file, offset, length, actionObject, new Selector (DidReadDataFromFileAction.CallbackSelector), IntPtr.Zero);
 		}
 
 		class DidReadDataFromFileAction : NSObject {
@@ -36,7 +36,7 @@ namespace ImageCaptureCore {
 		public void RequestDownloadFile (ICCameraFile file, NSDictionary<NSString, NSObject> options, DidDownloadDataDelegate callback)
 		{
 			var actionObject = new DidDownloadDataFromFileAction (callback);
-			RequestDownloadFile (file, options, actionObject, new Selector(DidDownloadDataFromFileAction.CallbackSelector), IntPtr.Zero);
+			RequestDownloadFile (file, options, actionObject, new Selector (DidDownloadDataFromFileAction.CallbackSelector), IntPtr.Zero);
 		}
 
 		class DidDownloadDataFromFileAction : ICCameraDeviceDownloadDelegate {
@@ -61,7 +61,7 @@ namespace ImageCaptureCore {
 		public void RequestSendPtpCommand (NSData command, NSData data, DidSendPtpDelegate callback)
 		{
 			var actionObject = new DidSendPtpAction (callback);
-			RequestSendPtpCommand (command, data, actionObject, new Selector(DidSendPtpAction.CallbackSelector), IntPtr.Zero);
+			RequestSendPtpCommand (command, data, actionObject, new Selector (DidSendPtpAction.CallbackSelector), IntPtr.Zero);
 		}
 
 		class DidSendPtpAction : NSObject {
