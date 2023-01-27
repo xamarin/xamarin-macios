@@ -32,10 +32,12 @@ using System;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace AppKit {
 
 	public partial class NSButton {
-		NSActionDispatcher dispatcher;
+		NSActionDispatcher? dispatcher;
 
 		public new NSButtonCell Cell {
 			get { return (NSButtonCell) base.Cell; }
