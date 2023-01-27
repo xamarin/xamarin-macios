@@ -19,6 +19,9 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public ITaskItem [] Executable { get; set; } = Array.Empty<ITaskItem> ();
 
+		[Required]
+		public string SdkDevPath { get; set; } = string.Empty;
+
 		#endregion
 
 		#region Outputs
@@ -64,7 +67,7 @@ namespace Xamarin.MacDev.Tasks {
 			args.Add (dSymDir);
 
 			args.Add (Path.GetFullPath (item.ItemSpec));
-			ExecuteAsync ("xcrun", args).Wait ();
+			ExecuteAsync ("xcrun", args, sdkDevPath: SdkDevPath).Wait ();
 
 			var contentsDir = Path.Combine (dSymDir, "Contents");
 			if (Directory.Exists (contentsDir))

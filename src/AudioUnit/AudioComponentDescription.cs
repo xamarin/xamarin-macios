@@ -50,12 +50,10 @@ namespace AudioUnit {
 		OfflineEffect = 0x61756f6c, // 'auol'
 		Generator = 0x6175676e, // 'augn'
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		MIDIProcessor = 0x61756d69, // 'aumi'
 #if NET
@@ -70,35 +68,27 @@ namespace AudioUnit {
 
 #if !MONOMAC
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		RemoteEffect = 0x61757278, // 'aurx',
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		RemoteGenerator = 0x61757267, // 'aurg',
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		RemoteInstrument = 0x61757269, // 'auri',
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		RemoteMusicEffect = 0x6174726d, // 'aurm'
 #endif
@@ -158,10 +148,9 @@ namespace AudioUnit {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'AudioTypeConverter.NewTimePitch' instead.")]
 		[ObsoletedOSPlatform ("ios13.0", "Use 'AudioTypeConverter.NewTimePitch' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'AudioTypeConverter.NewTimePitch' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
@@ -214,8 +203,6 @@ namespace AudioUnit {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("macos")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'AudioTypeEffect.GraphicEQ' instead.")]
 		[ObsoletedOSPlatform ("ios13.0", "Use 'AudioTypeEffect.GraphicEQ' instead.")]
@@ -252,7 +239,6 @@ namespace AudioUnit {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.10")]
 		[ObsoletedOSPlatform ("macos10.10", "Use 'Spacial' instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'Spacial' instead.")]
@@ -261,7 +247,6 @@ namespace AudioUnit {
 #else
 #if NET
 		[SupportedOSPlatform ("ios")]
-		[UnsupportedOSPlatform ("ios8.0")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]

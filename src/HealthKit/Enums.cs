@@ -5,7 +5,6 @@ using System;
 
 namespace HealthKit {
 	// NSInteger -> HKDefines.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[Native]
@@ -17,7 +16,6 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKDefines.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[Native]
@@ -28,7 +26,6 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKDefines.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[Native]
@@ -41,7 +38,6 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKDefines.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[Native]
@@ -58,7 +54,6 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKMetadata.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[Native]
@@ -78,7 +73,6 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKMetadata.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[Native]
@@ -93,7 +87,6 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKObjectType.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[Native]
@@ -111,7 +104,6 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKObjectType.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[Native]
@@ -129,7 +121,6 @@ namespace HealthKit {
 	}
 
 	// NSUInteger -> HKQuery.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[Native]
@@ -141,7 +132,6 @@ namespace HealthKit {
 	}
 
 	// NSUInteger -> HKStatistics.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[Native]
@@ -160,7 +150,6 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKUnit.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[Native]
@@ -183,7 +172,6 @@ namespace HealthKit {
 	}
 
 	[Native]
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	public enum HKWorkoutActivityType : ulong {
@@ -307,7 +295,6 @@ namespace HealthKit {
 	}
 
 	[Native]
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
 	public enum HKWorkoutEventType : long {
@@ -327,7 +314,6 @@ namespace HealthKit {
 		PauseOrResumeRequest,
 	}
 
-	[Watch (2, 0)]
 	[iOS (9, 0)]
 	[Mac (13, 0)]
 	[Native]
@@ -335,7 +321,6 @@ namespace HealthKit {
 		NotApplicable = 0
 	}
 
-	[Watch (2, 0)]
 	[iOS (9, 0)]
 	[Mac (13, 0)]
 	[Native]
@@ -348,7 +333,6 @@ namespace HealthKit {
 		EggWhite
 	}
 
-	[Watch (2, 0)]
 	[iOS (9, 0)]
 	[Mac (13, 0)]
 	[Native]
@@ -363,7 +347,6 @@ namespace HealthKit {
 		None,
 	}
 
-	[Watch (2, 0)]
 	[iOS (9, 0)]
 	[Mac (13, 0)]
 	[Native]
@@ -380,7 +363,6 @@ namespace HealthKit {
 		EstrogenSurge = 4,
 	}
 
-	[Watch (2, 0)]
 	[iOS (9, 0)]
 	[Mac (13, 0)]
 	[Native]
@@ -397,7 +379,6 @@ namespace HealthKit {
 		LoudEnvironment = 1,
 	}
 
-	[Watch (2, 0)]
 	[iOS (9, 0)]
 	[Mac (13, 0)]
 	[Native]

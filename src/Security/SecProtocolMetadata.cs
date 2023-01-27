@@ -16,8 +16,8 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 using Security;
-using sec_protocol_metadata_t=System.IntPtr;
-using dispatch_queue_t=System.IntPtr;
+using sec_protocol_metadata_t = System.IntPtr;
+using dispatch_queue_t = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -26,24 +26,24 @@ using NativeHandle = System.IntPtr;
 namespace Security {
 #if NET
 	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
-	[Watch (5,0)]
+	[TV (12, 0)]
+	[Mac (10, 14)]
+	[iOS (12, 0)]
+	[Watch (5, 0)]
 #endif
 	public class SecProtocolMetadata : NativeObject {
 #if !NET
-		internal SecProtocolMetadata (NativeHandle handle) : base (handle, false) {}
+		internal SecProtocolMetadata (NativeHandle handle) : base (handle, false) { }
 #endif
 
 		// This type is only ever surfaced in response to callbacks in TLS/Network and documented as read-only
 		// if this ever changes, make this public[tv
 		[Preserve (Conditional = true)]
-		internal SecProtocolMetadata (NativeHandle handle, bool owns) : base (handle, owns) {}
+		internal SecProtocolMetadata (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 #if !COREBUILD
 		[DllImport (Constants.SecurityLibrary)]
@@ -58,32 +58,26 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("macos10.15")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'NegotiatedTlsProtocolVersion' instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'NegotiatedTlsProtocolVersion' instead.")]
 		[ObsoletedOSPlatform ("ios13.0", "Use 'NegotiatedTlsProtocolVersion' instead.")]
 #else
-		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
-		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
-		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SslProtocol sec_protocol_metadata_get_negotiated_protocol_version (IntPtr handle);
 
 #if NET
 		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("macos10.15")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'NegotiatedTlsProtocolVersion' instead.")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'NegotiatedTlsProtocolVersion' instead.")]
 		[ObsoletedOSPlatform ("ios13.0", "Use 'NegotiatedTlsProtocolVersion' instead.")]
@@ -101,10 +95,10 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
-		[Watch (6,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
+		[Watch (6, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern TlsProtocolVersion sec_protocol_metadata_get_negotiated_tls_protocol_version (IntPtr handle);
@@ -115,10 +109,10 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
-		[Watch (6,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
+		[Watch (6, 0)]
 #endif
 		public TlsProtocolVersion NegotiatedTlsProtocolVersion => sec_protocol_metadata_get_negotiated_tls_protocol_version (GetCheckedHandle ());
 
@@ -128,10 +122,10 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
-		[Watch (6,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
+		[Watch (6, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern TlsCipherSuite sec_protocol_metadata_get_negotiated_tls_ciphersuite (IntPtr handle);
@@ -142,27 +136,27 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
-		[Watch (6,0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
+		[Watch (6, 0)]
 #endif
 		public TlsCipherSuite NegotiatedTlsCipherSuite => sec_protocol_metadata_get_negotiated_tls_ciphersuite (GetCheckedHandle ());
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
-		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SslCipherSuite sec_protocol_metadata_get_negotiated_ciphersuite (IntPtr handle);
 #endif
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
-		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
 		public SslCipherSuite NegotiatedCipherSuite => sec_protocol_metadata_get_negotiated_ciphersuite (GetCheckedHandle ());
 #endif
 
@@ -171,7 +165,7 @@ namespace Security {
 
 		public bool EarlyDataAccepted => sec_protocol_metadata_get_early_data_accepted (GetCheckedHandle ()) != 0;
 
- 		[DllImport (Constants.SecurityLibrary)]
+		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool sec_protocol_metadata_challenge_parameters_are_equal (IntPtr metadataA, IntPtr metadataB);
 
@@ -184,7 +178,7 @@ namespace Security {
 			return sec_protocol_metadata_challenge_parameters_are_equal (metadataA.GetCheckedHandle (), metadataB.GetCheckedHandle ());
 		}
 
- 		[DllImport (Constants.SecurityLibrary)]
+		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool sec_protocol_metadata_peers_are_equal (IntPtr metadataA, IntPtr metadataB);
 
@@ -198,25 +192,25 @@ namespace Security {
 		}
 
 		delegate void sec_protocol_metadata_access_distinguished_names_handler_t (IntPtr block, IntPtr dispatchData);
- 		static sec_protocol_metadata_access_distinguished_names_handler_t static_DistinguishedNamesForPeer = TrampolineDistinguishedNamesForPeer;
+		static sec_protocol_metadata_access_distinguished_names_handler_t static_DistinguishedNamesForPeer = TrampolineDistinguishedNamesForPeer;
 
- 		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_distinguished_names_handler_t))]
- 		static void TrampolineDistinguishedNamesForPeer (IntPtr block, IntPtr data)
- 		{
- 			var del = BlockLiteral.GetTarget<Action<DispatchData>> (block);
+		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_distinguished_names_handler_t))]
+		static void TrampolineDistinguishedNamesForPeer (IntPtr block, IntPtr data)
+		{
+			var del = BlockLiteral.GetTarget<Action<DispatchData>> (block);
 			if (del is not null) {
- 				var dispatchData = new DispatchData (data, owns: false);
- 				del (dispatchData);
- 			}
- 		}
+				var dispatchData = new DispatchData (data, owns: false);
+				del (dispatchData);
+			}
+		}
 
- 		[DllImport (Constants.SecurityLibrary)]
+		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
- 		static extern bool sec_protocol_metadata_access_distinguished_names (IntPtr handle, ref BlockLiteral callback);
+		static extern bool sec_protocol_metadata_access_distinguished_names (IntPtr handle, ref BlockLiteral callback);
 
- 		[BindingImpl (BindingImplOptions.Optimizable)]
- 		public void SetDistinguishedNamesForPeerHandler (Action<DispatchData> callback)
- 		{
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public void SetDistinguishedNamesForPeerHandler (Action<DispatchData> callback)
+		{
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
@@ -230,28 +224,28 @@ namespace Security {
 			} finally {
 				block_handler.CleanupBlock ();
 			}
- 		}
+		}
 
 		delegate void sec_protocol_metadata_access_ocsp_response_handler_t (IntPtr block, IntPtr dispatchData);
- 		static sec_protocol_metadata_access_ocsp_response_handler_t static_OcspReposeForPeer = TrampolineOcspReposeForPeer;
+		static sec_protocol_metadata_access_ocsp_response_handler_t static_OcspReposeForPeer = TrampolineOcspReposeForPeer;
 
- 		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_ocsp_response_handler_t))]
- 		static void TrampolineOcspReposeForPeer (IntPtr block, IntPtr data)
- 		{
- 			var del = BlockLiteral.GetTarget<Action<DispatchData>> (block);
+		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_ocsp_response_handler_t))]
+		static void TrampolineOcspReposeForPeer (IntPtr block, IntPtr data)
+		{
+			var del = BlockLiteral.GetTarget<Action<DispatchData>> (block);
 			if (del is not null) {
- 				var dispatchData = new DispatchData (data, owns: false);
- 				del (dispatchData);
- 			}
- 		}
+				var dispatchData = new DispatchData (data, owns: false);
+				del (dispatchData);
+			}
+		}
 
- 		[DllImport (Constants.SecurityLibrary)]
+		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
- 		static extern bool sec_protocol_metadata_access_ocsp_response (IntPtr handle, ref BlockLiteral callback);
+		static extern bool sec_protocol_metadata_access_ocsp_response (IntPtr handle, ref BlockLiteral callback);
 
- 		[BindingImpl (BindingImplOptions.Optimizable)]
- 		public void SetOcspResponseForPeerHandler (Action<DispatchData> callback)
- 		{
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public void SetOcspResponseForPeerHandler (Action<DispatchData> callback)
+		{
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
@@ -265,28 +259,28 @@ namespace Security {
 			} finally {
 				block_handler.CleanupBlock ();
 			}
- 		}
+		}
 
 		delegate void sec_protocol_metadata_access_peer_certificate_chain_handler_t (IntPtr block, IntPtr certificate);
- 		static sec_protocol_metadata_access_peer_certificate_chain_handler_t static_CertificateChainForPeer = TrampolineCertificateChainForPeer;
+		static sec_protocol_metadata_access_peer_certificate_chain_handler_t static_CertificateChainForPeer = TrampolineCertificateChainForPeer;
 
- 		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_peer_certificate_chain_handler_t))]
- 		static void TrampolineCertificateChainForPeer (IntPtr block, IntPtr certificate)
- 		{
- 			var del = BlockLiteral.GetTarget<Action<SecCertificate>> (block);
+		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_peer_certificate_chain_handler_t))]
+		static void TrampolineCertificateChainForPeer (IntPtr block, IntPtr certificate)
+		{
+			var del = BlockLiteral.GetTarget<Action<SecCertificate>> (block);
 			if (del is not null) {
- 				var secCertificate = new SecCertificate (certificate, owns: false);
- 				del (secCertificate);
- 			}
- 		}
+				var secCertificate = new SecCertificate (certificate, owns: false);
+				del (secCertificate);
+			}
+		}
 
- 		[DllImport (Constants.SecurityLibrary)]
+		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
- 		static extern bool sec_protocol_metadata_access_peer_certificate_chain (IntPtr handle, ref BlockLiteral callback);
+		static extern bool sec_protocol_metadata_access_peer_certificate_chain (IntPtr handle, ref BlockLiteral callback);
 
- 		[BindingImpl (BindingImplOptions.Optimizable)]
- 		public void SetCertificateChainForPeerHandler (Action<SecCertificate> callback)
- 		{
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public void SetCertificateChainForPeerHandler (Action<SecCertificate> callback)
+		{
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
@@ -300,27 +294,27 @@ namespace Security {
 			} finally {
 				block_handler.CleanupBlock ();
 			}
- 		}
+		}
 
 		delegate void sec_protocol_metadata_access_supported_signature_algorithms_handler_t (IntPtr block, ushort signatureAlgorithm);
- 		static sec_protocol_metadata_access_supported_signature_algorithms_handler_t static_SignatureAlgorithmsForPeer = TrampolineSignatureAlgorithmsForPeer;
+		static sec_protocol_metadata_access_supported_signature_algorithms_handler_t static_SignatureAlgorithmsForPeer = TrampolineSignatureAlgorithmsForPeer;
 
- 		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_supported_signature_algorithms_handler_t))]
- 		static void TrampolineSignatureAlgorithmsForPeer (IntPtr block, ushort signatureAlgorithm)
- 		{
- 			var del = BlockLiteral.GetTarget<Action<ushort>> (block);
+		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_supported_signature_algorithms_handler_t))]
+		static void TrampolineSignatureAlgorithmsForPeer (IntPtr block, ushort signatureAlgorithm)
+		{
+			var del = BlockLiteral.GetTarget<Action<ushort>> (block);
 			if (del is not null) {
- 				del (signatureAlgorithm);
- 			}
- 		}
+				del (signatureAlgorithm);
+			}
+		}
 
- 		[DllImport (Constants.SecurityLibrary)]
+		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
- 		static extern bool sec_protocol_metadata_access_supported_signature_algorithms (IntPtr handle, ref BlockLiteral callback);
+		static extern bool sec_protocol_metadata_access_supported_signature_algorithms (IntPtr handle, ref BlockLiteral callback);
 
- 		[BindingImpl (BindingImplOptions.Optimizable)]
- 		public void SetSignatureAlgorithmsForPeerHandler (Action<ushort> callback)
- 		{
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public void SetSignatureAlgorithmsForPeerHandler (Action<ushort> callback)
+		{
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
@@ -334,29 +328,31 @@ namespace Security {
 			} finally {
 				block_handler.CleanupBlock ();
 			}
- 		}
+		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		static extern /* OS_dispatch_data */ IntPtr sec_protocol_metadata_create_secret (/* OS_sec_protocol_metadata */ IntPtr metadata, /* size_t */ nuint label_len, /* const char*/ [MarshalAs(UnmanagedType.LPStr)] string label, /* size_t */ nuint exporter_length);
+		static extern /* OS_dispatch_data */ IntPtr sec_protocol_metadata_create_secret (/* OS_sec_protocol_metadata */ IntPtr metadata, /* size_t */ nuint label_len, /* const char*/ IntPtr label, /* size_t */ nuint exporter_length);
 
 		public DispatchData? CreateSecret (string label, nuint exporterLength)
 		{
 			if (label is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (label));
-			return CreateDispatchData (sec_protocol_metadata_create_secret (GetCheckedHandle (), (nuint) label.Length, label, exporterLength));
+			using var labelPtr = new TransientString (label, TransientString.Encoding.Ansi);
+			return CreateDispatchData (sec_protocol_metadata_create_secret (GetCheckedHandle (), (nuint) label.Length, labelPtr, exporterLength));
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		static unsafe extern /* OS_dispatch_data */ IntPtr sec_protocol_metadata_create_secret_with_context (/* OS_sec_protocol_metadata */ IntPtr metadata, /* size_t */ nuint label_len, /* const char*/ [MarshalAs(UnmanagedType.LPStr)] string label, /* size_t */  nuint context_len, byte* context, /* size_t */ nuint exporter_length);
+		static unsafe extern /* OS_dispatch_data */ IntPtr sec_protocol_metadata_create_secret_with_context (/* OS_sec_protocol_metadata */ IntPtr metadata, /* size_t */ nuint label_len, /* const char*/ IntPtr label, /* size_t */  nuint context_len, byte* context, /* size_t */ nuint exporter_length);
 
-		public unsafe DispatchData? CreateSecret (string label, byte[] context, nuint exporterLength)
+		public unsafe DispatchData? CreateSecret (string label, byte [] context, nuint exporterLength)
 		{
 			if (label is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (label));
 			if (context is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
+			using var labelPtr = new TransientString (label, TransientString.Encoding.Ansi);
 			fixed (byte* p = context)
-				return CreateDispatchData (sec_protocol_metadata_create_secret_with_context (GetCheckedHandle (), (nuint) label.Length, label, (nuint) context.Length, p, exporterLength));
+				return CreateDispatchData (sec_protocol_metadata_create_secret_with_context (GetCheckedHandle (), (nuint) label.Length, labelPtr, (nuint) context.Length, p, exporterLength));
 		}
 
 		// API returning `OS_dispatch_data` can also return `null` and
@@ -372,10 +368,10 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6,0)]
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[Watch (6, 0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* const char* */ IntPtr sec_protocol_metadata_get_server_name (IntPtr /* sec_protocol_metadata_t */ handle);
@@ -386,10 +382,10 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6,0)]
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[Watch (6, 0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		public string? ServerName => Marshal.PtrToStringAnsi (sec_protocol_metadata_get_server_name (GetCheckedHandle ()));
 
@@ -399,10 +395,10 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6,0)]
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[Watch (6, 0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
@@ -416,7 +412,7 @@ namespace Security {
 		[MonoPInvokeCallback (typeof (AccessPreSharedKeysHandler))]
 		static void TrampolineAccessPreSharedKeys (IntPtr block, IntPtr psk, IntPtr psk_identity)
 		{
-			var del = BlockLiteral.GetTarget<Action<DispatchData?,DispatchData?>> (block);
+			var del = BlockLiteral.GetTarget<Action<DispatchData?, DispatchData?>> (block);
 			if (del is not null)
 				del (CreateDispatchData (psk), CreateDispatchData (psk_identity));
 		}
@@ -427,10 +423,10 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Watch (6,0)]
-		[TV (13,0)]
-		[Mac (10,15)]
-		[iOS (13,0)]
+		[Watch (6, 0)]
+		[TV (13, 0)]
+		[Mac (10, 15)]
+		[iOS (13, 0)]
 #endif
 		// no [Async] as it can be called multiple times
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -443,8 +439,7 @@ namespace Security {
 			try {
 				block_handler.SetupBlockUnsafe (presharedkeys, handler);
 				return sec_protocol_metadata_access_pre_shared_keys (GetCheckedHandle (), ref block_handler);
-			}
-			finally {
+			} finally {
 				block_handler.CleanupBlock ();
 			}
 		}

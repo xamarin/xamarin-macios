@@ -7,6 +7,8 @@ using NUnit.Framework;
 
 using Mono.Cecil;
 
+using Xamarin.Utils;
+
 #nullable enable
 
 namespace Cecil.Tests {
@@ -16,36 +18,19 @@ namespace Cecil.Tests {
 		// This test verifies that we don't have any obsolete API in .NET that we don't expect to be there
 		// in particular that we don't start out with obsolete APIs from the very beginning (such API should have been removed).
 		// Any obsoleted API after the first stable .NET release should likely be skipped (until XAMCORE_5_0)
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblies))] // call this method with every .net6 library
-		public void GetAllObsoletedThings (string assemblyPath)
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblyDefinitions))] // call this method with every .net6 library
+		public void GetAllObsoletedThings (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath, readSymbols: true);
+			var assembly = info.Assembly;
 
 			// Make a list of Obsolete things
 			var found = new HashSet<string> ();
 
-			foreach (var prop in Helper.FilterProperties (assembly, a => FilterMember (a))) {
-				if (Skip (prop))
-					continue;
-				Console.WriteLine ($"{GetLocation (prop.GetMethod ?? prop.SetMethod)} {prop.FullName}");
-				found.Add (prop.FullName);
+			foreach (var prop in assembly.EnumerateAttributeProviders (a => FilterMember (a))) {
+				Console.WriteLine ($"{prop.RenderLocation ()} {prop.AsFullName ()}: add '[EditorBrowsable (EditorBrowsableState.Never)]' for newly obsoleted API to pass this test.");
+				found.Add (prop.AsFullName ());
 			}
 
-			foreach (var meth in Helper.FilterMethods (assembly, a => FilterMember (a))) {
-				if (Skip (meth))
-					continue;
-				Console.WriteLine ($"{GetLocation (meth)} {meth.FullName}");
-				found.Add (meth.FullName);
-			}
-
-			foreach (var type in Helper.FilterTypes (assembly, a => FilterMember (a))) {
-				if (Skip (type))
-					continue;
-				Console.WriteLine ($"{GetLocation (type.Methods.FirstOrDefault ())} {type.FullName}");
-				found.Add (type.FullName);
-			}
-
-			// TODO: Events?
 			Assert.That (found, Is.Empty, "Obsolete API: add '[EditorBrowsable (EditorBrowsableState.Never)]' for newly obsoleted API to pass this test.");
 		}
 
@@ -97,7 +82,7 @@ namespace Cecil.Tests {
 			return false;
 		}
 
-		bool HasEditorBrowseableNeverAttribute (ICustomAttributeProvider provider)
+		public static bool HasEditorBrowseableNeverAttribute (ICustomAttributeProvider provider)
 		{
 			if (provider?.HasCustomAttributes != true)
 				return false;
@@ -111,33 +96,6 @@ namespace Cecil.Tests {
 			}
 
 			return false;
-		}
-
-		bool Skip (MemberReference member)
-		{
-			var fullname = member.FullName;
-
-			switch (fullname) {
-			case "GameKit.IGKPeerPickerControllerDelegate":
-			case "GameKit.GKPeerPickerControllerDelegate_Extensions":
-			case "GameKit.GKPeerPickerControllerDelegate":
-			case "GameKit.GKPeerPickerController":
-				return true;
-			default:
-				return false;
-			}
-		}
-
-		static string GetLocation (MethodDefinition method)
-		{
-			if (method is null)
-				return "<no location> ";
-
-			if (method.DebugInformation.HasSequencePoints) {
-				var seq = method.DebugInformation.SequencePoints [0];
-				return seq.Document.Url + ":" + seq.StartLine + " ";
-			}
-			return string.Empty;
 		}
 	}
 }

@@ -13,25 +13,24 @@ using NotificationCenter;
 using UIKit;
 
 [Register ("TodayViewController")]
-public partial class TodayViewController : UIViewController, INCWidgetProviding
-{
+public partial class TodayViewController : UIViewController, INCWidgetProviding {
 	bool running;
 	TestRunner runner;
 
-	protected TodayViewController (IntPtr handle) : base (handle) {}
-	
+	protected TodayViewController (IntPtr handle) : base (handle) { }
+
 	internal static IEnumerable<TestAssemblyInfo> GetTestAssemblies ()
- 	{
+	{
 		// var t = Path.GetFileName (typeof (ActivatorCas).Assembly.Location);
 		foreach (var name in RegisterType.TypesToRegister.Keys) {
 			var a = Assembly.Load (name);
 			if (a == null) {
 				Console.WriteLine ($"# WARNING: Unable to load assembly {name}.");
- 				continue;
+				continue;
 			}
 			yield return new TestAssemblyInfo (a, name);
 		}
- 	}
+	}
 
 	[Export ("widgetPerformUpdateWithCompletionHandler:")]
 	public void WidgetPerformUpdate (Action<NCUpdateResult> completionHandler)
@@ -49,7 +48,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 		var testAssemblies = GetTestAssemblies ();
 		runner = RegisterType.IsXUnit ? (TestRunner) new XUnitTestRunner (logger) : new NUnitTestRunner (logger);
 		var categories = RegisterType.IsXUnit ?
-			new List<string> { 
+			new List<string> {
 				"failing",
 				"nonmonotests",
 				"outerloop",
@@ -75,19 +74,17 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 		}
 		// add category filters if they have been added
 		runner.SkipCategories (categories);
-		
+
 		// if we have ignore files, ignore those tests
 		var skippedTests = IgnoreFileParser.ParseContentFiles (NSBundle.MainBundle.BundlePath);
 		if (skippedTests.Any ()) {
 			// ensure that we skip those tests that have been passed via the ignore files
 			runner.SkipTests (skippedTests);
 		}
-		
-		ThreadPool.QueueUserWorkItem ((v) =>
-		{
-			BeginInvokeOnMainThread (async () =>
-			{
-				await runner.Run (testAssemblies).ConfigureAwait (false);;
+
+		ThreadPool.QueueUserWorkItem ((v) => {
+			BeginInvokeOnMainThread (async () => {
+				await runner.Run (testAssemblies).ConfigureAwait (false); ;
 			});
 		});
 

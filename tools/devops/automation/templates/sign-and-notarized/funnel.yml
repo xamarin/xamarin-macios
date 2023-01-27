@@ -18,7 +18,6 @@ parameters:
   type: string
   default: HEAD
 
-
 - name: azureStorage
   type: string
 
@@ -75,6 +74,13 @@ jobs:
 
   - checkout: release-scripts
     clean: true
+
+  - bash: |
+      sudo rm -Rf $(Build.SourcesDirectory)/package
+      sudo rm -Rf $(Build.SourcesDirectory)/classic-*-signed
+      sudo rm -Rf $(Build.SourcesDirectory)/package-internal
+    displayName: "Remove artifacts"
+    condition: always()
 
   - bash: |
       mkdir -p $(Build.SourcesDirectory)/package/notarized
@@ -150,7 +156,7 @@ jobs:
     SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip_nugets'] ]
 
   pool:
-    vmImage: 'windows-latest'
+    vmImage: windows-latest
     workspace:
       clean: all
   steps:

@@ -123,19 +123,6 @@
     <MtouchArch>ARM64</MtouchArch>
     <DefineConstants>MONOTOUCH;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
-    <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchExtraArgs>-v -v --bitcode:full</MtouchExtraArgs>
-    <MtouchUseLlvm>true</MtouchUseLlvm>
-    <MtouchLink>None</MtouchLink>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <DefineConstants>MONOTOUCH;$(DefineConstants)</DefineConstants>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -153,7 +140,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppDelegate.cs" />
+    <Compile Include="..\..\AppDelegate.cs" />
+    <Compile Include="..\..\..\common\AppDelegate.cs" />
+    <Compile Include="..\..\..\common\TestAssemblyLoader.cs" />
     <Compile Include="DontLinkRegressionTests.cs" />
     <Compile Include="TableViewSourceTest.cs" />
     <Compile Include="CalendarTest.cs" />

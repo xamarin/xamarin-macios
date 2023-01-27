@@ -37,8 +37,7 @@ namespace ObjCRuntime {
 	// It's not supposed to be used by manually written code.
 	[EditorBrowsable (EditorBrowsableState.Never)]
 	[AttributeUsage (AttributeTargets.Delegate, AllowMultiple = false)]
-	public sealed class UserDelegateTypeAttribute : Attribute
-	{
+	public sealed class UserDelegateTypeAttribute : Attribute {
 		public UserDelegateTypeAttribute (Type userDelegateType)
 		{
 			UserDelegateType = userDelegateType;

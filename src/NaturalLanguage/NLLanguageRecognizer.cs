@@ -37,12 +37,11 @@ namespace NaturalLanguage {
 			try {
 				using (var nslang = _GetDominantLanguage (nsstring))
 					return NLLanguageExtensions.GetValue (nslang);
-			}
-			finally {
+			} finally {
 				NSString.ReleaseNative (nsstring);
 			}
 		}
-	
+
 		public Dictionary<NLLanguage, double> GetLanguageHypotheses (nuint maxHypotheses)
 		{
 			using (var hypo = GetNativeLanguageHypotheses (maxHypotheses)) {
@@ -50,16 +49,15 @@ namespace NaturalLanguage {
 			}
 		}
 
-		public Dictionary<NLLanguage, double> LanguageHints
-		{
+		public Dictionary<NLLanguage, double> LanguageHints {
 			get {
 				return NLLanguageExtensions.Convert (NativeLanguageHints);
 			}
 			set {
 				var i = 0;
 				var skipCount = 0;
-				var nsKeys = new NSString[value.Keys.Count];
-				var nsValues = new NSNumber[value.Keys.Count];
+				var nsKeys = new NSString [value.Keys.Count];
+				var nsValues = new NSNumber [value.Keys.Count];
 				foreach (var item in value) {
 					var constant = NLLanguageExtensions.GetConstant (item.Key);
 					if (constant is null) {
@@ -67,7 +65,7 @@ namespace NaturalLanguage {
 						continue;
 					}
 					nsKeys [i] = constant;
-					nsValues[i] = new NSNumber (item.Value);
+					nsValues [i] = new NSNumber (item.Value);
 					i++;
 				}
 				NativeLanguageHints = NSDictionary<NSString, NSNumber>.FromObjectsAndKeys (nsValues, nsKeys, nsKeys.Length - skipCount);

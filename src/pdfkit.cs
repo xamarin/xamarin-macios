@@ -66,8 +66,8 @@ using NativeHandle = System.IntPtr;
 
 namespace PdfKit {
 
-	[Mac (10,13)]
-	[iOS (11,0)]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
 	enum PdfAnnotationKey {
 
 		[Field ("PDFAnnotationKeyAppearanceDictionary", "+PDFKit")]
@@ -197,8 +197,8 @@ namespace PdfKit {
 		WidgetValue,
 	}
 
-	[Mac (10,13)]
-	[iOS (11,0)]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
 	enum PdfAnnotationSubtype {
 
 		[Field ("PDFAnnotationSubtypeText", "+PDFKit")]
@@ -241,8 +241,8 @@ namespace PdfKit {
 		Widget,
 	}
 
-	[Mac (10,13)]
-	[iOS (11,0)]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
 	enum PdfAnnotationWidgetSubtype {
 
 		[Field ("PDFAnnotationWidgetSubtypeButton", "+PDFKit")]
@@ -258,8 +258,8 @@ namespace PdfKit {
 		Text,
 	}
 
-	[Mac (10,13)]
-	[iOS (11,0)]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
 	enum PdfAnnotationLineEndingStyle {
 
 		[Field ("PDFAnnotationLineEndingStyleNone", "+PDFKit")]
@@ -281,8 +281,8 @@ namespace PdfKit {
 		ClosedArrow,
 	}
 
-	[Mac (10,13)]
-	[iOS (11,0)]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
 	enum PdfAnnotationTextIconType {
 
 		[Field ("PDFAnnotationTextIconTypeComment", "+PDFKit")]
@@ -307,8 +307,8 @@ namespace PdfKit {
 		Insert,
 	}
 
-	[Mac (10,13)]
-	[iOS (11,0)]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
 	enum PdfAnnotationHighlightingMode {
 
 		[Field ("PDFAnnotationHighlightingModeNone", "+PDFKit")]
@@ -325,9 +325,8 @@ namespace PdfKit {
 	}
 
 	[Native]
-	[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
-	public enum PdfAccessPermissions : ulong
-	{
+	[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+	public enum PdfAccessPermissions : ulong {
 		LowQualityPrinting = (1uL << 0),
 		HighQualityPrinting = (1uL << 1),
 		DocumentChanges = (1uL << 2),
@@ -338,8 +337,8 @@ namespace PdfKit {
 		FormFieldEntry = (1uL << 7),
 	}
 
-	[Mac (10,13)]
-	[iOS (11,0)]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
 	[Static]
 	interface PdfAppearanceCharacteristicsKeys {
 
@@ -362,8 +361,8 @@ namespace PdfKit {
 		NSString DownCaptionKey { get; }
 	}
 
-	[Mac (10,13)]
-	[iOS (11,0)]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
 	[Static]
 	interface PdfBorderKeys {
 
@@ -377,7 +376,7 @@ namespace PdfKit {
 		NSString DashPatternKey { get; }
 	}
 
-	[iOS (11,0)]
+	[iOS (11, 0)]
 	[Internal]
 	[Static]
 	interface PdfDocumentAttributeKeys {
@@ -407,7 +406,7 @@ namespace PdfKit {
 		NSString KeywordsKey { get; }
 	}
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[StrongDictionary ("PdfPageImageInitializationOptionKeys")]
 	interface PdfPageImageInitializationOption {
 		CGRect MediaBox { get; set; }
@@ -416,7 +415,7 @@ namespace PdfKit {
 		double CompressionQuality { get; set; }
 	}
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[Static]
 	interface PdfPageImageInitializationOptionKeys {
 		[Field ("PDFPageImageInitializationOptionMediaBox")]
@@ -432,7 +431,7 @@ namespace PdfKit {
 		NSString CompressionQualityKey { get; }
 	}
 
-	[iOS (11,0)]
+	[iOS (11, 0)]
 	[StrongDictionary ("PdfDocumentAttributeKeys")]
 	interface PdfDocumentAttributes {
 
@@ -446,8 +445,8 @@ namespace PdfKit {
 		string [] Keywords { get; set; }
 	}
 
-	[Mac (10,13)]
-	[iOS (11,0)]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
 	[Internal]
 	[Static]
 	interface PdfDocumentWriteOptionKeys {
@@ -458,33 +457,33 @@ namespace PdfKit {
 		[Field ("PDFDocumentUserPasswordOption", "+PDFKit")]
 		NSString UserPasswordKey { get; }
 
-		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
 		[Field ("PDFDocumentAccessPermissionsOption", "+PDFKit")]
 		NSString AccessPermissionsKey { get; }
 
-		[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
 		[Field ("PDFDocumentBurnInAnnotationsOption", "+PDFKit")]
 		NSString BurnInAnnotationsKey { get; }
 
-		[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
 		[Field ("PDFDocumentSaveTextFromOCROption", "+PDFKit")]
 		NSString SaveTextFromOcrKey { get; }
 	}
 
-	[Mac (10,13)]
-	[iOS (11,0)]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
 	[StrongDictionary ("PdfDocumentWriteOptionKeys")]
 	interface PdfDocumentWriteOptions {
 
 		string OwnerPassword { get; set; }
 		string UserPassword { get; set; }
 
-		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
 		string AccessPermissions { get; set; }
 	}
 
-	[Mac (10,13)]
-	[iOS (11,0)]
+	[Mac (10, 13)]
+	[iOS (11, 0)]
 	[BaseType (typeof (NSObject), Name = "PDFAppearanceCharacteristics")]
 	interface PdfAppearanceCharacteristics : NSCopying {
 
@@ -513,7 +512,7 @@ namespace PdfKit {
 		NSDictionary WeakAppearanceCharacteristicsKeyValues { get; }
 	}
 
-	[iOS (11,0)]
+	[iOS (11, 0)]
 	[BaseType (typeof (NSObject), Name = "PDFAction")]
 	[Abstract]
 	interface PdfAction : NSCopying {
@@ -525,8 +524,8 @@ namespace PdfKit {
 		string Type { get; }
 	}
 
-	[iOS (11,0)]
-	[BaseType (typeof (PdfAction), Name="PDFActionGoTo")]
+	[iOS (11, 0)]
+	[BaseType (typeof (PdfAction), Name = "PDFActionGoTo")]
 	interface PdfActionGoTo {
 
 		[DesignatedInitializer]
@@ -537,7 +536,7 @@ namespace PdfKit {
 		PdfDestination Destination { get; set; }
 	}
 
-	[iOS (11,0)]
+	[iOS (11, 0)]
 	[BaseType (typeof (PdfAction), Name = "PDFActionNamed")]
 	interface PdfActionNamed {
 
@@ -549,7 +548,7 @@ namespace PdfKit {
 		PdfActionNamedName Name { get; set; }
 	}
 
-	[iOS (11,0)]
+	[iOS (11, 0)]
 	[BaseType (typeof (PdfAction), Name = "PDFActionRemoteGoTo")]
 	interface PdfActionRemoteGoTo {
 
@@ -567,7 +566,7 @@ namespace PdfKit {
 		NSUrl Url { get; set; }
 	}
 
-	[iOS (11,0)]
+	[iOS (11, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (PdfAction), Name = "PDFActionResetForm")]
 	interface PdfActionResetForm {
@@ -575,7 +574,7 @@ namespace PdfKit {
 		[Export ("init")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ();
-		
+
 		//NSArray of NSString
 		[Export ("fields"), NullAllowed]
 		string [] Fields { get; set; }
@@ -584,7 +583,7 @@ namespace PdfKit {
 		bool FieldsIncludedAreCleared { get; set; }
 	}
 
-	[iOS (11,0)]
+	[iOS (11, 0)]
 	[BaseType (typeof (PdfAction), Name = "PDFActionURL")]
 	interface PdfActionUrl {
 
@@ -596,16 +595,16 @@ namespace PdfKit {
 		NSUrl Url { get; set; }
 	}
 
-	[iOS (11,0)]
+	[iOS (11, 0)]
 	[BaseType (typeof (NSObject), Name = "PDFAnnotation")]
 	interface PdfAnnotation : NSCoding, NSCopying {
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("initWithBounds:forType:withProperties:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (CGRect bounds, NSString annotationType, [NullAllowed] NSDictionary properties);
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Wrap ("this (bounds, annotationType.GetConstant ()!, properties)")]
 		NativeHandle Constructor (CGRect bounds, PdfAnnotationKey annotationType, [NullAllowed] NSDictionary properties);
 
@@ -632,7 +631,7 @@ namespace PdfKit {
 
 		[Export ("bounds")]
 		CGRect Bounds { get; set; }
-		
+
 		[Export ("modificationDate")]
 		[NullAllowed]
 		NSDate ModificationDate { get; set; }
@@ -651,7 +650,7 @@ namespace PdfKit {
 
 		[Export ("shouldDisplay")]
 		bool ShouldDisplay { get; set; }
-		
+
 		[Export ("shouldPrint")]
 		bool ShouldPrint { get; set; }
 
@@ -671,7 +670,7 @@ namespace PdfKit {
 		[Export ("contents")]
 		[NullAllowed]
 		string Contents { get; set; }
-		
+
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("toolTip")]
@@ -691,218 +690,218 @@ namespace PdfKit {
 		[Export ("drawWithBox:")]
 		void Draw (PdfDisplayBox box);
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("action", ArgumentSemantic.Strong), NullAllowed]
 		PdfAction Action { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("highlighted")]
 		bool Highlighted { [Bind ("isHighlighted")] get; set; }
 
-		[Mac (10,12)]
+		[Mac (10, 12)]
 		[Export ("drawWithBox:inContext:")]
 		void Draw (PdfDisplayBox box, CGContext context);
 
 		[Internal]
-		[Mac (10,12)]
+		[Mac (10, 12)]
 		[Export ("setValue:forAnnotationKey:")]
 		bool _SetValue (IntPtr value, NSString key);
 
 		[Internal]
-		[Mac (10,12)]
+		[Mac (10, 12)]
 		[Export ("valueForAnnotationKey:")]
 		[return: NullAllowed]
 		IntPtr _GetValue (NSString key);
 
 		[Protected]
-		[Mac (10,12)]
+		[Mac (10, 12)]
 		[Export ("setBoolean:forAnnotationKey:")]
 		bool SetValue (bool boolean, NSString key);
 
-		[Mac (10,12)]
+		[Mac (10, 12)]
 		[Wrap ("SetValue (boolean, key.GetConstant ()!)")]
 		bool SetValue (bool boolean, PdfAnnotationKey key);
 
 		[Protected]
-		[Mac (10,12)]
+		[Mac (10, 12)]
 		[Export ("setRect:forAnnotationKey:")]
 		bool SetValue (CGRect rect, NSString key);
 
-		[Mac (10,12)]
+		[Mac (10, 12)]
 		[Wrap ("SetValue (rect, key.GetConstant ()!)")]
 		bool SetValue (CGRect rect, PdfAnnotationKey key);
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("annotationKeyValues", ArgumentSemantic.Copy)]
 		NSDictionary AnnotationKeyValues { get; }
 
 		[Protected]
-		[Mac (10,12)]
+		[Mac (10, 12)]
 		[Export ("removeValueForAnnotationKey:")]
 		void RemoveValue (NSString key);
 
-		[Mac (10,12)]
+		[Mac (10, 12)]
 		[Wrap ("RemoveValue (key.GetConstant ()!)")]
 		void RemoveValue (PdfAnnotationKey key);
 
 		// PDFAnnotation (PDFAnnotationUtilities) Category
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[NullAllowed, Export ("font", ArgumentSemantic.Copy)]
 		NSFont Font { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[NullAllowed, Export ("fontColor", ArgumentSemantic.Copy)]
 		NSColor FontColor { get; set; }
 
-		[Mac (10,13,2), iOS (11,2)]
+		[Mac (10, 13, 2), iOS (11, 2)]
 		[NullAllowed, Export ("interiorColor", ArgumentSemantic.Copy)]
 		NSColor InteriorColor { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("alignment", ArgumentSemantic.Assign)]
 		NSTextAlignment Alignment { get; set; }
-		
-		[Mac (10,13)]
+
+		[Mac (10, 13)]
 		[Export ("startPoint", ArgumentSemantic.Assign)]
 		CGPoint StartPoint { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("endPoint", ArgumentSemantic.Assign)]
 		CGPoint EndPoint { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("startLineStyle", ArgumentSemantic.Assign)]
 		PdfLineStyle StartLineStyle { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("endLineStyle", ArgumentSemantic.Assign)]
 		PdfLineStyle EndLineStyle { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Static]
 		[Export ("lineStyleFromName:")]
 		PdfLineStyle GetLineStyle (string fromName);
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Static]
 		[Export ("nameForLineStyle:")]
 		string GetName (PdfLineStyle style);
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("iconType", ArgumentSemantic.Assign)]
 		PdfTextAnnotationIconType IconType { get; set; }
 
 		[Internal]
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[NullAllowed, Export ("quadrilateralPoints", ArgumentSemantic.Copy)]
 		IntPtr _QuadrilateralPoints { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("markupType", ArgumentSemantic.Assign)]
 		PdfMarkupType MarkupType { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("widgetFieldType")]
 		string WidgetFieldType { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("widgetControlType", ArgumentSemantic.Assign)]
 		PdfWidgetControlType WidgetControlType { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("multiline")]
 		bool Multiline { [Bind ("isMultiline")] get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("isPasswordField")]
 		bool IsPasswordField { get; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("comb")]
 		bool Comb { [Bind ("hasComb")] get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("maximumLength")]
 		nint MaximumLength { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[NullAllowed, Export ("widgetStringValue")]
 		string WidgetStringValue { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[NullAllowed, Export ("widgetDefaultStringValue")]
 		string WidgetDefaultStringValue { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("allowsToggleToOff")]
 		bool AllowsToggleToOff { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("radiosInUnison")]
 		bool RadiosInUnison { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("readOnly")]
 		bool ReadOnly { [Bind ("isReadOnly")] get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("listChoice")]
 		bool ListChoice { [Bind ("isListChoice")] get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[NullAllowed, Export ("choices", ArgumentSemantic.Copy)]
 		string [] Choices { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[NullAllowed, Export ("values", ArgumentSemantic.Copy)]
 		string [] Values { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("buttonWidgetState", ArgumentSemantic.Assign)]
 		PdfWidgetCellState ButtonWidgetState { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("buttonWidgetStateString")]
 		string ButtonWidgetStateString { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("open")]
 		bool Open { [Bind ("isOpen")] get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[NullAllowed, Export ("paths")]
 		NSBezierPath [] Paths { get; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("addBezierPath:")]
 		void AddBezierPath (NSBezierPath path);
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("removeBezierPath:")]
 		void RemoveBezierPath (NSBezierPath path);
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[NullAllowed, Export ("destination", ArgumentSemantic.Strong)]
 		PdfDestination Destination { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[NullAllowed, Export ("URL", ArgumentSemantic.Copy)]
 		NSUrl Url { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[NullAllowed, Export ("fieldName")]
 		string FieldName { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[NullAllowed, Export ("caption")]
 		string Caption { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[NullAllowed, Export ("backgroundColor", ArgumentSemantic.Copy)]
 		NSColor BackgroundColor { get; set; }
 
-		[Mac (10,13,2), iOS (11,2)]
+		[Mac (10, 13, 2), iOS (11, 2)]
 		[NullAllowed, Export ("stampName")]
 		string StampName { get; set; }
 	}
@@ -913,7 +912,7 @@ namespace PdfKit {
 	interface PdfAnnotationButtonWidget {
 		[Export ("controlType")]
 		PdfWidgetControlType ControlType { get; set; }
-		
+
 		[Export ("state")]
 		nint State { get; set; }
 
@@ -922,7 +921,7 @@ namespace PdfKit {
 
 		[Export ("backgroundColor")]
 		NSColor BackgroundColor { get; set; }
-		
+
 		[Export ("allowsToggleToOff")]
 		bool AllowsToggleToOff { get; set; }
 
@@ -963,7 +962,7 @@ namespace PdfKit {
 
 		[Export ("isListChoice")]
 		bool IsListChoice { get; set; }
-		
+
 		// NSArray of NSString
 		[Export ("choices")]
 		string [] Choices { get; set; }
@@ -1042,7 +1041,7 @@ namespace PdfKit {
 
 		[Export ("URL")]
 		NSUrl Url { get; set; }
-		
+
 		[Export ("setHighlighted:")]
 		void SetHighlighted (bool highlighted);
 	}
@@ -1111,7 +1110,7 @@ namespace PdfKit {
 
 		[Export ("alignment")]
 		NSTextAlignment Alignment { get; set; }
-		
+
 		[Export ("maximumLength")]
 		nint MaximumLength { get; set; }
 
@@ -1125,7 +1124,7 @@ namespace PdfKit {
 		bool IsMultiline { get; set; }
 	}
 
-	[iOS (11,0)]
+	[iOS (11, 0)]
 	[BaseType (typeof (NSObject), Name = "PDFBorder")]
 	interface PdfBorder : NSCoding, NSCopying {
 		[Export ("style")]
@@ -1137,7 +1136,7 @@ namespace PdfKit {
 		[Export ("dashPattern", ArgumentSemantic.Assign), NullAllowed]
 		NSArray WeakDashPattern { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("borderKeyValues", ArgumentSemantic.Copy)]
 		NSDictionary WeakBorderKeyValues { get; }
 
@@ -1145,11 +1144,11 @@ namespace PdfKit {
 		void Draw (CGRect rect);
 	}
 
-	[iOS (11,0)]
+	[iOS (11, 0)]
 	[BaseType (typeof (NSObject), Name = "PDFDestination")]
 	interface PdfDestination : NSCopying {
 
-		[Mac (10,13)] // This used to be a calculated macro and promoted to an actual field in 10.13.
+		[Mac (10, 13)] // This used to be a calculated macro and promoted to an actual field in 10.13.
 		[Field ("kPDFDestinationUnspecifiedValue")]
 		nfloat UnspecifiedValue { get; }
 
@@ -1173,7 +1172,7 @@ namespace PdfKit {
 	}
 
 	//Add attributes for delegates/events
-	[iOS (11,0)]
+	[iOS (11, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "PDFDocument", Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (PdfDocumentDelegate) })]
 	interface PdfDocument : NSCopying {
@@ -1218,11 +1217,11 @@ namespace PdfKit {
 		[Notification]
 		NSString DidEndPageWriteNotification { get; }
 
-		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
 		[Field ("PDFDocumentFoundSelectionKey")]
 		NSString FoundSelectionKey { get; }
 
-		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
 		[Field ("PDFDocumentPageIndexKey")]
 		NSString PageIndexKey { get; }
 
@@ -1252,7 +1251,7 @@ namespace PdfKit {
 		[NullAllowed]
 		NSDictionary DocumentAttributes { get; set; }
 
-		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
 		[Export ("accessPermissions")]
 		PdfAccessPermissions AccessPermissions { get; }
 
@@ -1293,23 +1292,23 @@ namespace PdfKit {
 		[Export ("allowsCopying")]
 		bool AllowsCopying { get; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("allowsDocumentChanges")]
 		bool AllowsDocumentChanges { get; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("allowsDocumentAssembly")]
 		bool AllowsDocumentAssembly { get; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("allowsContentAccessibility")]
 		bool AllowsContentAccessibility { get; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("allowsCommenting")]
 		bool AllowsCommenting { get; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("allowsFormFieldEntry")]
 		bool AllowsFormFieldEntry { get; }
 
@@ -1319,14 +1318,14 @@ namespace PdfKit {
 		[Export ("string")]
 		[NullAllowed]
 		string Text { get; }
-		
+
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
 		PdfDocumentDelegate Delegate { get; set; }
-		
+
 		[Export ("dataRepresentation")]
 		[return: NullAllowed]
 		NSData GetDataRepresentation ();
@@ -1341,7 +1340,7 @@ namespace PdfKit {
 		[Export ("writeToFile:withOptions:")]
 		bool Write (string path, [NullAllowed] NSDictionary options);
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Wrap ("Write (path, options.GetDictionary ()!)")]
 		bool Write (string path, PdfDocumentWriteOptions options);
 
@@ -1351,7 +1350,7 @@ namespace PdfKit {
 		[Export ("writeToURL:withOptions:")]
 		bool Write (NSUrl url, [NullAllowed] NSDictionary options);
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Wrap ("Write (url, options.GetDictionary ()!)")]
 		bool Write (NSUrl url, PdfDocumentWriteOptions options);
 
@@ -1451,10 +1450,12 @@ namespace PdfKit {
 		[NoiOS]
 		[Export ("printOperationForPrintInfo:scalingMode:autoRotate:")]
 		[return: NullAllowed]
+#pragma warning disable 0618 // 'PdfPrintScalingMode' is obsolete: 'This type is not available on iOS.'
 		NSPrintOperation GetPrintOperation ([NullAllowed] NSPrintInfo printInfo, PdfPrintScalingMode scaleMode, bool doRotate);
+#pragma warning restore
 	}
 
-	[iOS (11,0)]
+	[iOS (11, 0)]
 	[BaseType (typeof (NSObject), Name = "PDFDocumentDelegate")]
 #if IOS
 	[Protocol]
@@ -1476,13 +1477,13 @@ namespace PdfKit {
 		[Export ("classForPage"), IgnoredInDelegate]
 		Class GetClassForPage ();
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[DelegateName ("ClassForAnnotationTypeDelegate"), DefaultValue (null)]
 		[Export ("classForAnnotationType:")]
 		Class GetClassForAnnotationType (string annotationType);
 
 		[NoiOS]
-		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'GetClassForAnnotationType' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'GetClassForAnnotationType' instead.")]
 		[Export ("classForAnnotationClass:"), DelegateName ("ClassForAnnotationClassDelegate"), DefaultValue (null)]
 #if NET
 		Class GetClassForAnnotationClass (Class sender);
@@ -1503,7 +1504,7 @@ namespace PdfKit {
 		void MatchFound (NSNotification notification);
 	}
 
-	[iOS (11,0)]
+	[iOS (11, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "PDFOutline")]
 	interface PdfOutline {
@@ -1546,12 +1547,12 @@ namespace PdfKit {
 		[Export ("destination"), NullAllowed]
 		PdfDestination Destination { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("action"), NullAllowed]
 		PdfAction Action { get; set; }
 	}
 
-	[iOS (11,0)]
+	[iOS (11, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "PDFPage")]
 	interface PdfPage : NSCopying {
@@ -1565,12 +1566,12 @@ namespace PdfKit {
 		NativeHandle Constructor (NSImage image);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[DesignatedInitializer]
 		[Export ("initWithImage:options:")]
 		NativeHandle Constructor (NSImage image, NSDictionary options);
 
-		[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Wrap ("this (image, options.GetDictionary ()!)")]
 		NativeHandle Constructor (NSImage image, PdfPageImageInitializationOption options);
 
@@ -1611,7 +1612,7 @@ namespace PdfKit {
 		[return: NullAllowed]
 		PdfAnnotation GetAnnotation (CGPoint point);
 
-		[Mac (10,12)]
+		[Mac (10, 12)]
 		[Export ("transformForBox:")]
 		CGAffineTransform GetTransform (PdfDisplayBox box);
 
@@ -1620,15 +1621,15 @@ namespace PdfKit {
 		[Export ("drawWithBox:")]
 		void Draw (PdfDisplayBox box);
 
-		[Mac (10,12)]
+		[Mac (10, 12)]
 		[Export ("drawWithBox:toContext:")]
 		void Draw (PdfDisplayBox box, CGContext context);
 
-		[Mac (10,12)]
+		[Mac (10, 12)]
 		[Export ("transformContext:forBox:")]
 		void TransformContext (CGContext context, PdfDisplayBox box);
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("thumbnailOfSize:forBox:")]
 		NSImage GetThumbnail (CGSize size, PdfDisplayBox box);
 
@@ -1678,7 +1679,7 @@ namespace PdfKit {
 		NSData DataRepresentation { get; }
 	}
 
-	[iOS (11,0)]
+	[iOS (11, 0)]
 	[BaseType (typeof (NSObject), Name = "PDFSelection")]
 	[DisableDefaultCtor] // An uncaught exception was raised: init: not a valid initializer for PDFSelection
 	interface PdfSelection : NSCopying {
@@ -1723,7 +1724,7 @@ namespace PdfKit {
 		[Export ("extendSelectionAtStart:")]
 		void ExtendSelectionAtStart (nint precede);
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("extendSelectionForLineBoundaries")]
 		void ExtendSelectionForLineBoundaries ();
 
@@ -1734,7 +1735,7 @@ namespace PdfKit {
 		void Draw (PdfPage page, PdfDisplayBox box, bool active);
 	}
 
-	[iOS (11,0)]
+	[iOS (11, 0)]
 	[BaseType (typeof (NSView), Name = "PDFThumbnailView")]
 	interface PdfThumbnailView : NSCoding {
 
@@ -1785,7 +1786,7 @@ namespace PdfKit {
 		PdfPage [] SelectedPages { get; }
 	}
 
-	[iOS (11,0)]
+	[iOS (11, 0)]
 	[BaseType (typeof (NSView), Name = "PDFView", Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (PdfViewDelegate) })]
 	interface PdfView :
 #if IOS
@@ -1802,7 +1803,7 @@ namespace PdfKit {
 
 		[Export ("canGoToFirstPage")]
 		bool CanGoToFirstPage { get; }
-	
+
 		//Verify
 		[Export ("goToFirstPage:")]
 		void GoToFirstPage ([NullAllowed] NSObject sender);
@@ -1860,14 +1861,14 @@ namespace PdfKit {
 		[Export ("displayMode")]
 		PdfDisplayMode DisplayMode { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("displayDirection")]
 		PdfDisplayDirection DisplayDirection { get; set; }
 
 		[Export ("displaysPageBreaks")]
 		bool DisplaysPageBreaks { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("pageBreakMargins")]
 		NSEdgeInsets PageBreakMargins { get; set; }
 
@@ -1877,7 +1878,7 @@ namespace PdfKit {
 		[Export ("displaysAsBook")]
 		bool DisplaysAsBook { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("displaysRTL")]
 		bool DisplaysRtl { get; set; }
 
@@ -1902,7 +1903,7 @@ namespace PdfKit {
 		[Export ("interpolationQuality", ArgumentSemantic.Assign)]
 		PdfInterpolationQuality InterpolationQuality { get; set; }
 
-		[iOS (12,0), Mac (10,14)]
+		[iOS (12, 0), Mac (10, 14)]
 		[Export ("pageShadowsEnabled")]
 		bool PageShadowsEnabled { get; [Bind ("enablePageShadows:")] set; }
 
@@ -1913,7 +1914,7 @@ namespace PdfKit {
 		[NoMac]
 		[Export ("isUsingPageViewController")]
 		bool IsUsingPageViewController { get; }
-	
+
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
@@ -1924,11 +1925,11 @@ namespace PdfKit {
 		[Export ("scaleFactor")]
 		nfloat ScaleFactor { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("minScaleFactor")]
 		nfloat MinScaleFactor { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("maxScaleFactor")]
 		nfloat MaxScaleFactor { get; set; }
 
@@ -1947,14 +1948,14 @@ namespace PdfKit {
 		[Export ("autoScales")]
 		bool AutoScales { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("scaleFactorForSizeToFit")]
 		nfloat ScaleFactorForSizeToFit { get; }
 
 		[Export ("areaOfInterestForMouse:")]
 		PdfAreaOfInterest GetAreaOfInterest (NSEvent mouseEvent);
 
-		[Mac (10,10,3)]
+		[Mac (10, 10, 3)]
 		[Export ("areaOfInterestForPoint:")]
 		PdfAreaOfInterest GetAreaOfInterest (CGPoint point);
 
@@ -1980,7 +1981,7 @@ namespace PdfKit {
 
 		[Export ("scrollSelectionToVisible:")]
 		void ScrollSelectionToVisible ([NullAllowed] NSObject sender);
-	
+
 		[Export ("highlightedSelections")]
 		[NullAllowed]
 		PdfSelection [] HighlightedSelections { get; set; }
@@ -1995,11 +1996,11 @@ namespace PdfKit {
 		[Export ("drawPage:")]
 		void DrawPage (PdfPage page);
 
-		[Mac (10,12)]
+		[Mac (10, 12)]
 		[Export ("drawPage:toContext:")]
 		void DrawPage (PdfPage page, CGContext context);
 
-		[Mac (10,12)]
+		[Mac (10, 12)]
 		[Export ("drawPagePost:toContext:")]
 		void DrawPagePost (PdfPage page, CGContext context);
 
@@ -2017,7 +2018,9 @@ namespace PdfKit {
 
 		[NoiOS]
 		[Export ("printWithInfo:autoRotate:pageScaling:")]
+#pragma warning disable // 0618: 'PdfPrintScalingMode' is obsolete: 'This type is not available on iOS.'
 		void Print (NSPrintInfo printInfo, bool doRotate, PdfPrintScalingMode scaleMode);
+#pragma warning restore
 
 		[Export ("pageForPoint:nearest:")]
 		[return: NullAllowed]
@@ -2052,18 +2055,18 @@ namespace PdfKit {
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Export ("allowsDragging")]
 		bool AllowsDragging { get; set; }
-	
+
 		[Export ("visiblePages")]
 		PdfPage [] VisiblePages { get; }
 
 		[Export ("enableDataDetectors")]
 		bool EnableDataDetectors { get; set; }
 
-		[Field("PDFViewChangedHistoryNotification", "+PDFKit")]
+		[Field ("PDFViewChangedHistoryNotification", "+PDFKit")]
 		[Notification]
 		NSString ChangedHistoryNotification { get; }
 
-		[Field("PDFViewDocumentChangedNotification", "+PDFKit")]
+		[Field ("PDFViewDocumentChangedNotification", "+PDFKit")]
 		[Notification]
 		NSString DocumentChangedNotification { get; }
 
@@ -2108,36 +2111,36 @@ namespace PdfKit {
 		NSString VisiblePagesChangedNotification { get; }
 
 		[NoiOS]
-		[Mac (10,13)]
+		[Mac (10, 13)]
 		[Export ("acceptsDraggedFiles")]
 		bool AcceptsDraggedFiles { get; set; }
 
-		[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
 		[NullAllowed, Export ("pageOverlayViewProvider", ArgumentSemantic.Weak)]
 		IPdfPageOverlayViewProvider PageOverlayViewProvider { get; set; }
 
-		[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
 		[Export ("inMarkupMode")]
 		bool InMarkupMode { [Bind ("isInMarkupMode")] get; set; }
 
-		[iOS (16,0), NoMac, MacCatalyst (16,0)]
+		[iOS (16, 0), NoMac, MacCatalyst (16, 0)]
 		[Export ("findInteraction")]
 		UIFindInteraction FindInteraction { get; }
 
-		[iOS (16,0), NoMac, MacCatalyst (16,0)]
+		[iOS (16, 0), NoMac, MacCatalyst (16, 0)]
 		[Export ("findInteractionEnabled")]
 		bool FindInteractionEnabled { [Bind ("isFindInteractionEnabled")] get; set; }
 	}
-	
+
 	[NoiOS]
 	interface PdfViewAnnotationHitEventArgs {
 		[Export ("PDFAnnotationHit")]
 		PdfAnnotation AnnotationHit { get; }
 	}
-	
+
 	//Verify delegate methods.  There are default actions (not just return null ) that should occur
 	//if the delegate does not implement the method.
-	[iOS (11,0)]
+	[iOS (11, 0)]
 	[BaseType (typeof (NSObject), Name = "PDFViewDelegate")]
 #if IOS
 	[Protocol]
@@ -2174,19 +2177,18 @@ namespace PdfKit {
 		[Export ("PDFViewOpenPDF:forRemoteGoToAction:"), EventArgs ("PdfViewAction")]
 		void OpenPdf (PdfView sender, PdfActionRemoteGoTo action);
 
-		[iOS (13,0)]
+		[iOS (13, 0)]
 		[NoMac]
 		[Export ("PDFViewParentViewController")]
 		UIViewController ParentViewController { get; }
 	}
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
-	interface IPdfPageOverlayViewProvider {}
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	interface IPdfPageOverlayViewProvider { }
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[Protocol (Name = "PDFPageOverlayViewProvider")]
-	interface PdfPageOverlayViewProvider
-	{
+	interface PdfPageOverlayViewProvider {
 		[Abstract]
 		[Export ("pdfView:overlayViewForPage:")]
 		[return: NullAllowed]

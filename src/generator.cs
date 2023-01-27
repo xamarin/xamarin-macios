@@ -1345,6 +1345,7 @@ public partial class Generator : IMemberGatherer {
 					nsvalue_create_map [TypeManager.CMTimeRange] = "CMTimeRange";
 					nsvalue_create_map [TypeManager.CMTime] = "CMTime";
 					nsvalue_create_map [TypeManager.CMTimeMapping] = "CMTimeMapping";
+					nsvalue_create_map [TypeManager.CMVideoDimensions] = "CMVideoDimensions";
 				}
 
 				if (Frameworks.HaveCoreAnimation)
@@ -1493,6 +1494,7 @@ public partial class Generator : IMemberGatherer {
 					nsvalue_return_map [TypeManager.CMTimeRange] = ".CMTimeRangeValue";
 					nsvalue_return_map [TypeManager.CMTime] = ".CMTimeValue";
 					nsvalue_return_map [TypeManager.CMTimeMapping] = ".CMTimeMappingValue";
+					nsvalue_return_map [TypeManager.CMVideoDimensions] = ".CMVideoDimensionsValue";
 				}
 
 				if (Frameworks.HaveCoreAnimation)
@@ -3397,6 +3399,26 @@ public partial class Generator : IMemberGatherer {
 #endif
 	}
 
+	public static ApplePlatform AsApplePlatform (PlatformName platform)
+	{
+		switch (platform) {
+		case PlatformName.iOS:
+			return ApplePlatform.iOS;
+		case PlatformName.TvOS:
+			return ApplePlatform.TVOS;
+		case PlatformName.MacCatalyst:
+			return ApplePlatform.MacCatalyst;
+		case PlatformName.MacOSX:
+			return ApplePlatform.MacOSX;
+		case PlatformName.WatchOS:
+			return ApplePlatform.WatchOS;
+		case PlatformName.None:
+			return ApplePlatform.None;
+		default:
+			throw new ArgumentOutOfRangeException (nameof (platform), platform, $"Unknown platform: {platform}");
+		}
+	}
+
 	static AvailabilityBaseAttribute CloneFromOtherPlatform (AvailabilityBaseAttribute attr, PlatformName platform)
 	{
 		if (attr.Version is null) {
@@ -3416,14 +3438,18 @@ public partial class Generator : IMemberGatherer {
 			// Due to the absurd API of Version, you can not pass a -1 to the revision constructor
 			// nor can you coerse to 0, as that will fail with "16.0.0 <= 16.0" => false in the registrar
 			// So determine if the revision is -1, and use the 2 or 3 param ctor...
-			if (attr.Version.Revision == -1) {
+			var version = attr.Version;
+			var minimum = Xamarin.SdkVersions.GetMinVersion (AsApplePlatform (platform));
+			if (version < minimum)
+				version = minimum;
+			if (version.Revision == -1) {
 				switch (attr.AvailabilityKind) {
 				case AvailabilityKind.Introduced:
-					return new IntroducedAttribute (platform, attr.Version.Major, attr.Version.Minor, message: attr.Message);
+					return new IntroducedAttribute (platform, version.Major, version.Minor, message: attr.Message);
 				case AvailabilityKind.Deprecated:
-					return new DeprecatedAttribute (platform, attr.Version.Major, attr.Version.Minor, message: attr.Message);
+					return new DeprecatedAttribute (platform, version.Major, version.Minor, message: attr.Message);
 				case AvailabilityKind.Obsoleted:
-					return new ObsoletedAttribute (platform, attr.Version.Major, attr.Version.Minor, message: attr.Message);
+					return new ObsoletedAttribute (platform, version.Major, version.Minor, message: attr.Message);
 				case AvailabilityKind.Unavailable:
 					return new UnavailableAttribute (platform, message: attr.Message);
 				default:
@@ -3432,11 +3458,11 @@ public partial class Generator : IMemberGatherer {
 			} else {
 				switch (attr.AvailabilityKind) {
 				case AvailabilityKind.Introduced:
-					return new IntroducedAttribute (platform, attr.Version.Major, attr.Version.Minor, attr.Version.Revision, message: attr.Message);
+					return new IntroducedAttribute (platform, version.Major, version.Minor, version.Revision, message: attr.Message);
 				case AvailabilityKind.Deprecated:
-					return new DeprecatedAttribute (platform, attr.Version.Major, attr.Version.Minor, attr.Version.Revision, message: attr.Message);
+					return new DeprecatedAttribute (platform, version.Major, version.Minor, version.Revision, message: attr.Message);
 				case AvailabilityKind.Obsoleted:
-					return new ObsoletedAttribute (platform, attr.Version.Major, attr.Version.Minor, attr.Version.Revision, message: attr.Message);
+					return new ObsoletedAttribute (platform, version.Major, version.Minor, version.Revision, message: attr.Message);
 				case AvailabilityKind.Unavailable:
 					return new UnavailableAttribute (platform, message: attr.Message);
 				default:
@@ -3534,7 +3560,7 @@ public partial class Generator : IMemberGatherer {
 
 	static void AddImpliedPlatforms (List<AvailabilityBaseAttribute> memberAvailability)
 	{
-		foreach (var platform in new [] { PlatformName.MacCatalyst, PlatformName.TvOS }) {
+		foreach (var platform in new [] { PlatformName.MacCatalyst }) {
 			if (!PlatformMarkedUnavailable (platform, memberAvailability) &&
 				!PlatformHasIntroduced (platform, memberAvailability)) {
 				foreach (var attr in memberAvailability.Where (v => v.Platform == PlatformName.iOS).ToList ()) {
@@ -3653,7 +3679,7 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	AvailabilityBaseAttribute [] GetPlatformAttributesToPrint (MemberInfo mi, Type type, MemberInfo inlinedType)
+	AvailabilityBaseAttribute [] GetPlatformAttributesToPrint (MemberInfo mi, MemberInfo context, MemberInfo inlinedType)
 	{
 		// Attributes are directly on the member
 		List<AvailabilityBaseAttribute> memberAvailability = AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (mi).ToList ();
@@ -3661,7 +3687,8 @@ public partial class Generator : IMemberGatherer {
 		// Due to differences between Xamarin and NET6 availability attributes, we have to synthesize many duplicates for NET6
 		// See https://github.com/xamarin/xamarin-macios/issues/10170 for details
 #if NET
-		MemberInfo context = type ?? FindContainingContext (mi);
+		if (context is null)
+			context = FindContainingContext (mi);
 		// Attributes on the _target_ context, the class itself or the target of the protocol inlining
 		List<AvailabilityBaseAttribute> parentContextAvailability = GetAllParentAttributes (context);
 		// (Optional) Attributes from the inlined protocol type itself
@@ -3675,8 +3702,12 @@ public partial class Generator : IMemberGatherer {
 			List<AvailabilityBaseAttribute> availabilityToConsider = new List<AvailabilityBaseAttribute> ();
 			if (inlinedTypeAvailability != null) {
 				availabilityToConsider.AddRange (inlinedTypeAvailability);
+				// Don't copy parent attributes if the conflict with the type we're inlining members into
+				// Example: don't copy Introduced on top of Unavailable.
+				CopyValidAttributes (availabilityToConsider, parentContextAvailability);
+			} else {
+				availabilityToConsider.AddRange (parentContextAvailability);
 			}
-			availabilityToConsider.AddRange (parentContextAvailability);
 
 			// We do not support Watch, so strip from both our input sources before any processing
 			memberAvailability = memberAvailability.Where (x => x.Platform != PlatformName.WatchOS).ToList ();
@@ -3687,6 +3718,23 @@ public partial class Generator : IMemberGatherer {
 
 			// Copy down any unavailable from the parent before expanding, since a [NoMacCatalyst] on the type trumps [iOS] on a member
 			CopyValidAttributes (memberAvailability, availabilityToConsider.Where (attr => attr.AvailabilityKind != AvailabilityKind.Introduced));
+
+			if (inlinedType is not null && inlinedType != mi.DeclaringType && memberAvailability.Count > 1) {
+				// We might have gotten conflicting availability attributes for inlined members, where the inlined member
+				// might be available on a platform the target type isn't. The target type's unavailability will come
+				// later in the list, which means that if we have an unavailable attribute after an introduced attribute,
+				// then we need to remove the introduced attribute.
+				for (var i = memberAvailability.Count - 1; i >= 0; i--) {
+					if (memberAvailability [i].AvailabilityKind != AvailabilityKind.Unavailable)
+						continue;
+					for (var k = i - 1; k >= 0; k--) {
+						if (memberAvailability [k].AvailabilityKind == AvailabilityKind.Introduced && memberAvailability [k].Platform == memberAvailability [i].Platform) {
+							memberAvailability.RemoveAt (k);
+							i--;
+						}
+					}
+				}
+			}
 
 			// Add implied catalyst\TVOS from [iOS] _before_ copying down from parent if no catalyst\TVOS attributes
 			// As those take precedent. We will do this a second time later in a moment..
@@ -3716,7 +3764,7 @@ public partial class Generator : IMemberGatherer {
 		return memberAvailability.ToArray ();
 	}
 
-	public bool PrintPlatformAttributes (MemberInfo mi, Type type = null, bool is_enum = false)
+	public bool PrintPlatformAttributes (MemberInfo mi, Type inlinedType = null)
 	{
 		bool printed = false;
 		if (mi == null)
@@ -3724,8 +3772,8 @@ public partial class Generator : IMemberGatherer {
 
 		AvailabilityBaseAttribute [] type_ca = null;
 
-		foreach (var availability in GetPlatformAttributesToPrint (mi, is_enum ? mi.DeclaringType : type, is_enum ? null : mi.DeclaringType)) {
-			var t = type ?? (mi as TypeInfo) ?? mi.DeclaringType;
+		foreach (var availability in GetPlatformAttributesToPrint (mi, null, inlinedType)) {
+			var t = inlinedType ?? (mi as TypeInfo) ?? mi.DeclaringType;
 			if (type_ca == null) {
 				if (t != null)
 					type_ca = AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (t);
@@ -5207,12 +5255,21 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
+	void PrintObsoleteAttributes (ICustomAttributeProvider provider, bool already_has_editor_browsable_attribute = false)
+	{
+		var obsoleteAttributes = AttributeManager.GetCustomAttributes<ObsoleteAttribute> (provider);
+
+		foreach (var oa in obsoleteAttributes) {
+			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
+		}
+
+		if (!already_has_editor_browsable_attribute && obsoleteAttributes.Any ())
+			print ("[EditorBrowsable (EditorBrowsableState.Never)]");
+	}
+
 	void PrintPropertyAttributes (PropertyInfo pi, Type type, bool skipTypeInjection = false)
 	{
-		foreach (var oa in AttributeManager.GetCustomAttributes<ObsoleteAttribute> (pi)) {
-			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
-			print ("[EditorBrowsable (EditorBrowsableState.Never)]");
-		}
+		PrintObsoleteAttributes (pi);
 
 		foreach (var ba in AttributeManager.GetCustomAttributes<DebuggerBrowsableAttribute> (pi))
 			print ("[DebuggerBrowsable (DebuggerBrowsableState.{0})]", ba.State);
@@ -5235,7 +5292,7 @@ public partial class Generator : IMemberGatherer {
 				PrintPlatformAttributes (pi.DeclaringType, type);
 			}
 		} else {
-			PrintPlatformAttributes (pi, type);
+			PrintPlatformAttributes (pi);
 		}
 
 		foreach (var sa in AttributeManager.GetCustomAttributes<ThreadSafeAttribute> (pi))
@@ -5250,6 +5307,7 @@ public partial class Generator : IMemberGatherer {
 		bool use_underscore = minfo.is_unified_internal;
 		var mod = minfo.GetVisibility ();
 		minfo.protocolize = Protocolize (pi);
+		GetAccessorInfo (pi, out var getter, out var setter, out var generate_getter, out var generate_setter);
 
 		var nullable = !pi.PropertyType.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
 
@@ -5289,9 +5347,9 @@ public partial class Generator : IMemberGatherer {
 					pi.Name.GetSafeParamName (),
 				   use_underscore ? "_" : "");
 			indent++;
-			if (pi.CanRead) {
+			if (generate_getter) {
 #if !NET
-				PrintAttributes (pi, platform:true);
+				PrintAttributes (pi, platform: true);
 #endif
 				PrintAttributes (pi.GetGetMethod (), platform: true, preserve: true, advice: true);
 				print ("get {");
@@ -5311,9 +5369,9 @@ public partial class Generator : IMemberGatherer {
 				indent--;
 				print ("}");
 			}
-			if (pi.CanWrite) {
+			if (generate_setter) {
 #if !NET
-				PrintAttributes (pi, platform:true);
+				PrintAttributes (pi, platform: true);
 #endif
 				PrintAttributes (pi.GetSetMethod (), platform: true, preserve: true, advice: true);
 				print ("set {");
@@ -5389,7 +5447,7 @@ public partial class Generator : IMemberGatherer {
 
 		if (minfo.has_inner_wrap_attribute) {
 			// If property getter or setter has its own WrapAttribute we let the user do whatever their heart desires
-			if (pi.CanRead) {
+			if (generate_getter) {
 				PrintAttributes (pi, platform: true);
 				PrintAttributes (pi.GetGetMethod (), platform: true, preserve: true, advice: true);
 				print ("get {");
@@ -5400,8 +5458,7 @@ public partial class Generator : IMemberGatherer {
 				indent--;
 				print ("}");
 			}
-			if (pi.CanWrite) {
-				var setter = pi.GetSetMethod ();
+			if (generate_setter) {
 				var not_implemented_attr = AttributeManager.GetCustomAttribute<NotImplementedAttribute> (setter);
 
 				PrintAttributes (pi, platform: true);
@@ -5422,8 +5479,7 @@ public partial class Generator : IMemberGatherer {
 			return;
 		}
 
-		if (pi.CanRead) {
-			var getter = pi.GetGetMethod ();
+		if (generate_getter) {
 			var ba = GetBindAttribute (getter);
 			string sel = ba != null ? ba.Selector : export.Selector;
 
@@ -5431,7 +5487,6 @@ public partial class Generator : IMemberGatherer {
 #if !NET
 			PrintPlatformAttributes (pi, type);
 #endif
-			PrintAttributes (pi, platform: false);
 
 			if (!minfo.is_sealed || !minfo.is_wrapper) {
 				PrintDelegateProxy (pi.GetGetMethod ());
@@ -5442,7 +5497,7 @@ public partial class Generator : IMemberGatherer {
 #if NET
 			if (false) {
 #else
-			if (minfo.is_abstract){
+			if (minfo.is_abstract) {
 				print ("get; ");
 #endif
 			} else {
@@ -5484,8 +5539,7 @@ public partial class Generator : IMemberGatherer {
 				print ("}\n");
 			}
 		}
-		if (pi.CanWrite) {
-			var setter = pi.GetSetMethod ();
+		if (generate_setter) {
 			var ba = GetBindAttribute (setter);
 			bool null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (setter);
 			if (null_allowed)
@@ -5506,7 +5560,6 @@ public partial class Generator : IMemberGatherer {
 #if !NET
 			PrintPlatformAttributes (pi, type);
 #endif
-			PrintAttributes (pi, platform: false);
 
 			if (not_implemented_attr == null && (!minfo.is_sealed || !minfo.is_wrapper))
 				PrintExport (minfo, sel, export.ArgumentSemantic);
@@ -5515,7 +5568,7 @@ public partial class Generator : IMemberGatherer {
 #if NET
 			if (false) {
 #else
-			if (minfo.is_abstract){
+			if (minfo.is_abstract) {
 				print ("set; ");
 #endif
 			} else {
@@ -5808,11 +5861,7 @@ public partial class Generator : IMemberGatherer {
 			editor_browsable_attribute = true;
 		}
 
-		foreach (var oa in AttributeManager.GetCustomAttributes<ObsoleteAttribute> (mi)) {
-			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
-			if (!editor_browsable_attribute)
-				print ("[EditorBrowsable (EditorBrowsableState.Never)]");
-		}
+		PrintObsoleteAttributes (mi, editor_browsable_attribute);
 
 		if (minfo.is_return_release)
 			print ("[return: ReleaseAttribute ()]");
@@ -6364,11 +6413,11 @@ public partial class Generator : IMemberGatherer {
 				mod = "unsafe ";
 			// IsValueType check needed for `IntPtr` signatures (which can't become `IntPtr?`)
 			var nullable = !pi.PropertyType.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (pi) ? "?" : String.Empty;
-			print ("{0}{1}{2} {3} {{", mod, FormatType (type, pi.PropertyType), nullable, pi.Name, pi.CanRead ? "get;" : string.Empty, pi.CanWrite ? "set;" : string.Empty);
+			GetAccessorInfo (pi, out var getMethod, out var setMethod, out var generate_getter, out var generate_setter);
+			print ("{0}{1}{2} {3} {{", mod, FormatType (type, pi.PropertyType), nullable, pi.Name, generate_getter ? "get;" : string.Empty, generate_setter ? "set;" : string.Empty);
 			indent++;
-			if (pi.CanRead) {
+			if (generate_getter) {
 				var ea = GetGetterExportAttribute (pi);
-				var getMethod = pi.GetGetMethod ();
 				// there can be a [Bind] there that override the selector name to be used
 				// e.g. IMTLTexture.FramebufferOnly
 				var ba = GetBindAttribute (getMethod);
@@ -6382,8 +6431,7 @@ public partial class Generator : IMemberGatherer {
 				PrintAttributes (getMethod, notImplemented: true);
 				print ("get;");
 			}
-			if (pi.CanWrite) {
-				var setMethod = pi.GetSetMethod ();
+			if (generate_setter) {
 				PrintBlockProxy (pi.PropertyType);
 				PrintAttributes (setMethod, notImplemented: true);
 				if (!AttributeManager.HasAttribute<NotImplementedAttribute> (setMethod))
@@ -6421,15 +6469,14 @@ public partial class Generator : IMemberGatherer {
 
 			// C# does not support extension properties, so create Get* and Set* accessors instead.
 			foreach (var pi in optionalInstanceProperties) {
+				GetAccessorInfo (pi, out var getter, out var setter, out var generate_getter, out var generate_setter);
 				var attrib = GetExportAttribute (pi);
-				var getter = pi.GetGetMethod ();
-				if (getter != null) {
+				if (generate_getter) {
 					PrintAttributes (pi, preserve: true, advice: true);
 					var ba = GetBindAttribute (getter);
 					GenerateMethod (type, getter, false, null, false, false, true, ba?.Selector ?? attrib.ToGetter (pi).Selector);
 				}
-				var setter = pi.GetSetMethod ();
-				if (setter != null) {
+				if (generate_setter) {
 					PrintAttributes (pi, preserve: true, advice: true);
 					var ba = GetBindAttribute (setter);
 					GenerateMethod (type, setter, false, null, false, false, true, ba?.Selector ?? attrib.ToSetter (pi).Selector);
@@ -6565,6 +6612,22 @@ public partial class Generator : IMemberGatherer {
 		if (type.Namespace != null) {
 			indent--;
 			print ("}");
+		}
+	}
+
+	void GetAccessorInfo (PropertyInfo pi, out MethodInfo getter, out MethodInfo setter, out bool generate_getter, out bool generate_setter)
+	{
+		getter = null;
+		setter = null;
+		generate_getter = false;
+		generate_setter = false;
+		if (pi.CanRead) {
+			getter = pi.GetGetMethod ();
+			generate_getter = !getter.IsUnavailable (this);
+		}
+		if (pi.CanWrite) {
+			setter = pi.GetSetMethod ();
+			generate_setter = !setter.IsUnavailable (this);
 		}
 	}
 
@@ -7095,7 +7158,8 @@ public partial class Generator : IMemberGatherer {
 				if (default_ctor_visibility != null) {
 					switch (default_ctor_visibility.Visibility) {
 					case Visibility.Public:
-						break; // default
+						ctor_visibility = "public";
+						break;
 					case Visibility.Internal:
 						ctor_visibility = "internal";
 						break;
@@ -7117,7 +7181,7 @@ public partial class Generator : IMemberGatherer {
 				if (TypeName != "NSObject") {
 					var initSelector = (InlineSelectors || BindThirdPartyLibrary) ? "Selector.GetHandle (\"init\")" : "Selector.Init";
 					var initWithCoderSelector = (InlineSelectors || BindThirdPartyLibrary) ? "Selector.GetHandle (\"initWithCoder:\")" : "Selector.InitWithCoder";
-					string v = class_mod == "abstract " ? "protected" : ctor_visibility;
+					string v = (class_mod == "abstract " && default_ctor_visibility is null) ? "protected" : ctor_visibility;
 					var is32BitNotSupported = Is64BitiOSOnly (type);
 					if (external) {
 						if (!disable_default_ctor) {
@@ -7370,6 +7434,7 @@ public partial class Generator : IMemberGatherer {
 					}
 
 					PrintAttributes (field_pi, preserve: true, advice: true);
+					PrintObsoleteAttributes (field_pi);
 					print ("[Field (\"{0}\",  \"{1}\")]", fieldAttr.SymbolName, library_path ?? library_name);
 					PrintPlatformAttributes (field_pi);
 					if (AttributeManager.HasAttribute<AdvancedAttribute> (field_pi)) {
@@ -7873,8 +7938,7 @@ public partial class Generator : IMemberGatherer {
 							prev_miname = miname;
 
 						if (mi.ReturnType == TypeManager.System_Void) {
-							foreach (var oa in AttributeManager.GetCustomAttributes<ObsoleteAttribute> (mi))
-								print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
+							PrintObsoleteAttributes (mi);
 
 							if (bta.Singleton && mi.GetParameters ().Length == 0 || mi.GetParameters ().Length == 1)
 								print ("public event EventHandler {0} {{", CamelCase (GetEventName (mi)));

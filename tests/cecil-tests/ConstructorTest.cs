@@ -255,6 +255,7 @@ namespace Cecil.Tests {
 						case "NSConditionLock": // has a nint (i.e. IntPtr) constructor (condition) - not a mistake
 						case "NSScrubberProportionalLayout": // has a nint (i.e. IntPtr) constructor (numberOfVisibleItems) - not a mistake
 						case "NSIndexSet": // has a nuint (i.e. UIntPtr) constructor (index) - not a mistake
+						case "NSWindow": // has an actual IntPtr constructor (initWithWindowRef:) - not a mistake
 							continue;
 						}
 
@@ -280,8 +281,8 @@ namespace Cecil.Tests {
 								Console.WriteLine ($"{GetLocation (intptrCtor)}{msg}");
 								failures.Add (msg);
 							} else {
-								var msg = $"{type}: private (IntPtr) constructor found. It should probably not exist.";
-								Console.WriteLine ($"{GetLocation (intptrCtor)}{msg}");
+								var msg = $"{type}: private (IntPtr) constructor found. It should probably not exist. If it should, add an exception to this test.";
+								failures.Add ($"{GetLocation (intptrCtor)}{msg}");
 							}
 						}
 
@@ -320,6 +321,7 @@ namespace Cecil.Tests {
 						case "CFNotificationCenter": // needs a custom ctor implementation
 						case "AUGraph": // needs a custom ctor implementation
 						case "ABMultiValue`1": // has a custom ctor implementation
+						case "NWPathMonitor": // has a custom ctor implementation
 							skipILVerification = true;
 							break;
 						}

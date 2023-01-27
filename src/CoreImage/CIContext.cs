@@ -95,7 +95,7 @@ namespace CoreImage {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -121,12 +121,10 @@ namespace CoreImage {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public bool? OutputPremultiplied {
 			get {
@@ -139,7 +137,7 @@ namespace CoreImage {
 
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -241,7 +239,6 @@ namespace CoreImage {
 #if NET
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.11")]
 		[ObsoletedOSPlatform ("macos10.11")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 11)]

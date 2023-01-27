@@ -75,7 +75,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGColorRef */ IntPtr CGColorCreate (/* CGColorSpaceRef */ IntPtr space, /* CGFloat */ nfloat [] components);
+		extern unsafe static /* CGColorRef */ IntPtr CGColorCreate (/* CGColorSpaceRef */ IntPtr space, /* CGFloat */ nfloat* components);
 
 		static IntPtr Create (CGColorSpace colorspace, nfloat [] components)
 		{
@@ -83,7 +83,11 @@ namespace CoreGraphics {
 				global::ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (components));
 			var colorspace_handle = colorspace.GetNonNullHandle (nameof (colorspace));
 
-			return CGColorCreate (colorspace_handle, components);
+			unsafe {
+				fixed (nfloat* componentsPtr = components) {
+					return CGColorCreate (colorspace_handle, componentsPtr);
+				}
+			}
 		}
 
 		public CGColor (CGColorSpace colorspace, nfloat [] components)
@@ -167,7 +171,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGColorRef */ IntPtr CGColorCreateWithPattern (/* CGColorSpaceRef */ IntPtr space, /* CGPatternRef */ IntPtr pattern, /* const CGFloat[] */ nfloat [] components);
+		extern unsafe static /* CGColorRef */ IntPtr CGColorCreateWithPattern (/* CGColorSpaceRef */ IntPtr space, /* CGPatternRef */ IntPtr pattern, /* const CGFloat[] */ nfloat* components);
 
 		static IntPtr Create (CGColorSpace colorspace, CGPattern pattern, nfloat [] components)
 		{
@@ -176,10 +180,14 @@ namespace CoreGraphics {
 			var colorspace_handle = colorspace.GetNonNullHandle (nameof (colorspace));
 			var pattern_handle = pattern.GetNonNullHandle (nameof (pattern));
 
-			var handle = CGColorCreateWithPattern (colorspace_handle, pattern_handle, components);
-			if (handle == IntPtr.Zero)
-				throw new ArgumentException ();
-			return handle;
+			unsafe {
+				fixed (nfloat* componentsPtr = components) {
+					var handle = CGColorCreateWithPattern (colorspace_handle, pattern_handle, componentsPtr);
+					if (handle == IntPtr.Zero)
+						throw new ArgumentException ();
+					return handle;
+				}
+			}
 		}
 
 		public CGColor (CGColorSpace colorspace, CGPattern pattern, nfloat [] components)
@@ -301,7 +309,7 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -315,7 +323,7 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else

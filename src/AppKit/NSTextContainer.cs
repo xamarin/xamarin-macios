@@ -3,6 +3,8 @@ using System;
 using CoreGraphics;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSTextContainer {
 #if !NET
@@ -22,8 +24,8 @@ namespace AppKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.11")]
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -35,11 +37,10 @@ namespace AppKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.11")]
 		[ObsoletedOSPlatform ("macos10.11", "Use NSTextContainer.FromSize instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use NSTextContainer.FromSize instead.")]

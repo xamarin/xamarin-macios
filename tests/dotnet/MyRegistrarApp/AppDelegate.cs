@@ -4,11 +4,9 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
-namespace MySimpleApp
-{
-	public class Program
-	{
-		static int Main (string[] args)
+namespace MySimpleApp {
+	public class Program {
+		static int Main (string [] args)
 		{
 			Console.WriteLine (Environment.GetEnvironmentVariable ("MAGIC_WORD"));
 
@@ -45,8 +43,7 @@ namespace MySimpleApp
 		static extern IntPtr xamarin_IntPtr_objc_msgSend_IntPtr_ref_IntPtr_exception (IntPtr handle, IntPtr selector, IntPtr p0, IntPtr p1, out IntPtr gchandle);
 	}
 
-	public class SomeObj : NSObject
-	{
+	public class SomeObj : NSObject {
 		[Export ("whatever")]
 		public IntPtr Whatever ()
 		{
@@ -54,7 +51,7 @@ namespace MySimpleApp
 		}
 	}
 
-	public class DeadClass {} // Some code for the linker to remove
+	public class DeadClass { } // Some code for the linker to remove
 
 #if INCLUDED_ADDITIONAL_CODE
 	public class AdditionalClass {

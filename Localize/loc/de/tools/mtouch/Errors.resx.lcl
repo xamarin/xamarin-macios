@@ -3355,6 +3355,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";MX0186" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Bitcode is enabled, but bitcode is not supported in Xcode 14+ and has been disabled. Please disable bitcode by removing the 'MtouchEnableBitcode' property from the project file.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Bitcode ist aktiviert, Bitcode wird jedoch in Xcode 14 und höher nicht unterstützt und wurde deaktiviert. Deaktivieren Sie Bitcode, indem Sie die Eigenschaft "MtouchEnableBitcode" aus der Projektdatei entfernen.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";MX1009" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Could not copy the assembly '{0}' to '{1}': {2}]D;]A;		]]></Val>
@@ -3645,9 +3654,30 @@
       </Item>
       <Item ItemId=";MX8042" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[An exception occurred while trying to invoke the function {0}: {1}.]]></Val>
+          <Val><![CDATA[An exception occurred while trying to invoke the function {0}: {1}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Ausnahme beim Aufrufen der Funktion {0}: {1}.]]></Val>
+            <Val><![CDATA[Ausnahme beim Aufrufen der Funktion {0}: {1}]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[An exception occurred while trying to invoke the function {0}: {1}.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8043" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An exception occurred while validating the static registrar code for {0}: {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Beim Überprüfen des statischen Registrierungscodes ist eine Ausnahme aufgetreten für: {0}:{1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8044" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The assembly {0} has been modified since the app was built, invalidating the generated static registrar code. The MVID for the loaded assembly is {1}, while the MVID for the assembly the generated static registrar code corresponds to is {2}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Die Assembly {0} wurde geändert, seit die App erstellt wurde, wodurch der generierte statische Registrierungscode ungültig wird. Die MVID für die geladene Assembly ist {1}, während die MVID für die Assembly, der der generierte statische Registrierungscode entspricht, {2}ist.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

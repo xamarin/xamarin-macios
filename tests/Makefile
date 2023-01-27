@@ -20,11 +20,7 @@ export XAMMAC_FRAMEWORK_PATH=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.frame
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 
 ifneq ($(RELEASE),)
-ifneq ($(BITCODE),)
-CONFIG=Release-bitcode
-else
 CONFIG=Release
-endif
 else
 CONFIG=Debug
 endif
@@ -83,6 +79,7 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.De
 	@echo "DOTNET_DIR=$(DOTNET_DIR)" >> $@
 	@echo "INCLUDE_MAC=$(INCLUDE_MAC)" >> $@
 	@echo "INCLUDE_MACCATALYST=$(INCLUDE_MACCATALYST)" >> $@
+	@echo "IOS_SUPPORTS_32BIT_ARCHITECTURES=$(IOS_SUPPORTS_32BIT_ARCHITECTURES)" >> $@
 
 test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.Details.xml
 	@rm -f $@
@@ -110,6 +107,7 @@ test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Ver
 	@echo "DOTNET_DIR=$(DOTNET_DIR)" >> $@
 	@echo "INCLUDE_MAC=$(INCLUDE_MAC)" >> $@
 	@echo "INCLUDE_MACCATALYST=$(INCLUDE_MACCATALYST)" >> $@
+	@echo "IOS_SUPPORTS_32BIT_ARCHITECTURES=$(IOS_SUPPORTS_32BIT_ARCHITECTURES)" >> $@
 
 clean-local::
 	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhoneSimulator /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests.sln
@@ -183,7 +181,7 @@ build-test-libraries:
 
 all-local:: .stamp-xharness-configure
 
-$(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
+$(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.in.cs
 	@$(MAKE) -C $(TOP)/tools/mtouch ../common/SdkVersions.cs
 
 .stamp-src-project-files:

@@ -58,7 +58,11 @@ if test -n "$INCLUDE_XAMARIN_LEGACY"; then
 fi
 TEST_SUITES+=(build-monotouch-test)
 
-make -f packaged-macos-tests.mk "${TEST_SUITES[@]}" -j
+if test -n "$BUILD_REVISION"; then
+	MAKE_FLAGS=-j
+fi
+
+make -f packaged-macos-tests.mk "${TEST_SUITES[@]}" $MAKE_FLAGS
 
 if test -n "$INCLUDE_XAMARIN_LEGACY"; then
 	for app in */bin/x86/*/*.app linker/mac/*/bin/x86/*/*.app linker/mac/*/generated-projects/*/bin/x86/*/*.app introspection/Mac/bin/x86/*/*.app; do
@@ -73,7 +77,7 @@ for app in linker/*/*/dotnet/*/bin/*/*/*/*.app */dotnet/*/bin/*/*/*/*.app; do
 done
 
 $CP -p packaged-macos-tests.mk "$DIR/tests"
-$CP -p run-with-timeout.sh "$DIR/tests"
+$CP -p run-with-timeout.* "$DIR/tests"
 $CP -p ../Make.config "$DIR"
 $CP -p ../Make.versions "$DIR"
 $CP -p test-dependencies.sh "$DIR"

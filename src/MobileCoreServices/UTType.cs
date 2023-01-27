@@ -39,37 +39,31 @@ namespace MobileCoreServices {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos14.0")]
-		[UnsupportedOSPlatform ("macos11.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 #else
-		[iOS (8,0)]
-		[Mac (10,10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool /* Boolean */ UTTypeIsDynamic (IntPtr /* CFStringRef */ handle);
-		
+
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos14.0")]
-		[UnsupportedOSPlatform ("macos11.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 #else
-		[iOS (8,0)]
-		[Mac (10,10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -77,18 +71,15 @@ namespace MobileCoreServices {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos14.0")]
-		[UnsupportedOSPlatform ("macos11.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 #else
-		[iOS (8,0)]
-		[Mac (10,10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 #endif
 		public static bool IsDynamic (string utType)
 		{
@@ -103,18 +94,15 @@ namespace MobileCoreServices {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos14.0")]
-		[UnsupportedOSPlatform ("macos11.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 #else
-		[iOS (8,0)]
-		[Mac (10,10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 #endif
 		public static bool IsDeclared (string utType)
 		{
@@ -161,39 +149,33 @@ namespace MobileCoreServices {
 			CFString.ReleaseNative (c);
 			return ret;
 		}
-		
+
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos14.0")]
-		[UnsupportedOSPlatform ("macos11.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 #else
-		[iOS (8,0)]
-		[Mac (10,10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		extern static IntPtr /* NSString Array */ UTTypeCopyAllTagsWithClass (IntPtr /* CFStringRef */ utiStr, IntPtr /* CFStringRef */ tagClassStr);
-		
+
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos14.0")]
-		[UnsupportedOSPlatform ("macos11.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 #else
-		[iOS (8,0)]
-		[Mac (10,10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 #endif
 		public static string? []? CopyAllTags (string uti, string tagClass)
 		{
@@ -270,7 +252,7 @@ namespace MobileCoreServices {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (uti));
 
 			var a = CFString.CreateNative (uti);
-			var ret = Runtime.GetNSObject <NSDictionary> (UTTypeCopyDeclaration (a));
+			var ret = Runtime.GetNSObject<NSDictionary> (UTTypeCopyDeclaration (a));
 			CFString.ReleaseNative (a);
 			return ret;
 		}
@@ -288,7 +270,7 @@ namespace MobileCoreServices {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (uti));
 
 			var a = CFString.CreateNative (uti);
-			var ret = Runtime.GetNSObject <NSUrl> (UTTypeCopyDeclaringBundleURL (a));
+			var ret = Runtime.GetNSObject<NSUrl> (UTTypeCopyDeclaringBundleURL (a));
 			CFString.ReleaseNative (a);
 			return ret;
 		}
@@ -302,16 +284,13 @@ namespace MobileCoreServices {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("tvos14.0")]
-		[UnsupportedOSPlatform ("macos11.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 #else
-		[iOS (12,0)]
-		[TV (12,0)]
-		[Watch (5,0)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
 #endif
 		public static bool Equals (NSString uti1, NSString uti2)
 		{
