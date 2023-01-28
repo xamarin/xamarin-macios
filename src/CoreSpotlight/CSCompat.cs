@@ -4,6 +4,8 @@ using System;
 using System.ComponentModel;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreSpotlight {
 
 #if !NET && IOS
@@ -27,7 +29,7 @@ namespace CoreSpotlight {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
 #endif
-		public virtual string [] ProtectionClasses {
+		public virtual string []? ProtectionClasses {
 			get => null;
 			set => throw new InvalidOperationException (Constants.ApiRemovedGeneral);
 		}

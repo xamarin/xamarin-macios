@@ -1471,6 +1471,10 @@ PHOTOSUI_API_SOURCES = \
 PRINTCORE_SOURCES = \
 	PrintCore/Defs.cs	\
 	PrintCore/PrintCore.cs
+
+# PushToTalk
+PUSHTOTALK_SOURCES = \
+	PushToTalk/Compat.cs \
 	
 # QTKit
 

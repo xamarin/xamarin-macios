@@ -1747,7 +1747,7 @@
 		<value>Impossible de créer une instance du type {0}.</value>
 	</data>
   <data name="MX8042" xml:space="preserve">
-		<value>An exception occurred while trying to invoke the function {0}: {1}</value>
+		<value>Une exception s’est produite lors de la tentative d’appel de la fonction {0} : {1}.</value>
 		<comment>
 			0: name of function
 			1: exception info
