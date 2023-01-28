@@ -65,7 +65,7 @@ namespace Foundation {
 		public new TKey? this [nint idx] {
 			get {
 				var ret = _GetObject (idx);
-				return Runtime.GetINativeObject <TKey> (ret, false);
+				return Runtime.GetINativeObject<TKey> (ret, false);
 			}
 		}
 
@@ -93,19 +93,19 @@ namespace Foundation {
 		public TKey? FirstObject ()
 		{
 			var ret = _FirstObject ();
-			return Runtime.GetINativeObject <TKey> (ret, false);
+			return Runtime.GetINativeObject<TKey> (ret, false);
 		}
 
 		public TKey? LastObject ()
 		{
 			var ret = _LastObject ();
-			return Runtime.GetINativeObject <TKey> (ret, false);
+			return Runtime.GetINativeObject<TKey> (ret, false);
 		}
 
 		public NSSet<TKey>? AsSet ()
 		{
 			var ret = _AsSet ();
-			return Runtime.GetINativeObject <NSSet<TKey>> (ret, false);
+			return Runtime.GetINativeObject<NSSet<TKey>> (ret, false);
 		}
 
 		#region IEnumerable<TKey>

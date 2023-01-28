@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
-using System.IO;
 using System.Text;
 using System.Threading;
 using System.Xml;
-
 using Mono.Options;
 
 namespace xsiminstaller {
@@ -46,16 +45,14 @@ namespace xsiminstaller {
 				var error = new StringBuilder ();
 				var outputDone = new ManualResetEvent (false);
 				var errorDone = new ManualResetEvent (false);
-				p.OutputDataReceived += (sender, args) =>
-				{
+				p.OutputDataReceived += (sender, args) => {
 					if (args.Data == null) {
 						outputDone.Set ();
 					} else {
 						output.AppendLine (args.Data);
 					}
 				};
-				p.ErrorDataReceived += (sender, args) =>
-				{
+				p.ErrorDataReceived += (sender, args) => {
 					if (args.Data == null) {
 						errorDone.Set ();
 					} else {
@@ -167,7 +164,7 @@ namespace xsiminstaller {
 						wc.DownloadFile (uri, tmpfile);
 					} catch (Exception ex) {
 						File.Delete (tmpfile); // Make sure there are no downloaded remnants
-						// 403 means 404
+											   // 403 means 404
 						if (ex is WebException we && (we.Response as HttpWebResponse)?.StatusCode == HttpStatusCode.Forbidden) {
 							Console.WriteLine ($"Failed to download {url}: Not found"); // Apple's servers return a 403 if the file doesn't exist, which can be quite confusing, so show a better error.
 						} else {
@@ -344,7 +341,7 @@ namespace xsiminstaller {
 			if (download) {
 				var downloadDone = new ManualResetEvent (false);
 				var wc = new WebClient ();
-				long lastProgress =  0;
+				long lastProgress = 0;
 				var watch = Stopwatch.StartNew ();
 				wc.DownloadProgressChanged += (sender, progress_args) => {
 					var progress = progress_args.BytesReceived * 100 / fileSize;
@@ -442,7 +439,7 @@ namespace xsiminstaller {
 		}
 
 		[return: NotNullIfNotNull ("value")]
-		static string? Replace ( string? value, Dictionary<string, string> replacements)
+		static string? Replace (string? value, Dictionary<string, string> replacements)
 		{
 			if (value is null)
 				return null;

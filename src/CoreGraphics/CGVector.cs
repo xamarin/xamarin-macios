@@ -70,7 +70,7 @@ namespace CoreGraphics {
 			return HashCode.Combine (dx, dy);
 #else
 			unchecked {
-				return ((int)dx) ^ ((int)dy);
+				return ((int) dx) ^ ((int) dy);
 			}
 #endif
 		}

@@ -31,10 +31,9 @@ namespace SoundAnalysis {
 		InvalidFile,
 	}
 
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
-	public enum SNTimeDurationConstraintType : long
-	{
+	public enum SNTimeDurationConstraintType : long {
 		Enumerated = 1,
 		Range = 2,
 	}
@@ -118,7 +117,7 @@ namespace SoundAnalysis {
 		[Export ("timeRange")]
 		CMTimeRange TimeRange { get; }
 
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("classificationForIdentifier:")]
 		[return: NullAllowed]
 		SNClassification GetClassification (string identifier);
@@ -135,36 +134,36 @@ namespace SoundAnalysis {
 		[Export ("initWithMLModel:error:")]
 		NativeHandle Constructor (MLModel mlModel, [NullAllowed] out NSError error);
 
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("initWithClassifierIdentifier:error:")]
 		NativeHandle Constructor (string classifierIdentifier, [NullAllowed] out NSError error);
 
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("knownClassifications", ArgumentSemantic.Copy)]
-		string[] KnownClassifications { get; }
+		string [] KnownClassifications { get; }
 
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("windowDuration", ArgumentSemantic.Assign)]
 		CMTime WindowDuration { get; set; }
 
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("windowDurationConstraint", ArgumentSemantic.Strong)]
 		SNTimeDurationConstraint WindowDurationConstraint { get; }
 	}
 
-	interface ISNRequest {}
+	interface ISNRequest { }
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 	[Protocol]
-	interface SNRequest {}
+	interface SNRequest { }
 
-	interface ISNResult {}
+	interface ISNResult { }
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 	[Protocol]
-	interface SNResult {}
+	interface SNResult { }
 
-	interface ISNResultsObserving {}
+	interface ISNResultsObserving { }
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 	[Protocol]
@@ -181,19 +180,19 @@ namespace SoundAnalysis {
 		void DidComplete (ISNRequest request);
 	}
 
-	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+	[iOS (15, 0), Mac (12, 0), Watch (8, 0), TV (15, 0), MacCatalyst (15, 0)]
 	enum SNClassifierIdentifier {
 		[Field ("SNClassifierIdentifierVersion1")]
 		Version1,
 	}
 
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SNTimeDurationConstraint /* privately conforms to NSCoding, NSCopying, and NSSecureCoding */
 	{
 		[Export ("initWithEnumeratedDurations:")]
-		NativeHandle Constructor ([BindAs (typeof (CMTime[]))] NSValue[] enumeratedDurations);
+		NativeHandle Constructor ([BindAs (typeof (CMTime []))] NSValue [] enumeratedDurations);
 
 		[Export ("initWithDurationRange:")]
 		NativeHandle Constructor (CMTimeRange durationRange);
@@ -203,11 +202,9 @@ namespace SoundAnalysis {
 
 #if NET
 		[BindAs (typeof (CMTime[]))]
-#else
-		[return: BindAs (typeof (CMTime[]))]
 #endif
 		[Export ("enumeratedDurations", ArgumentSemantic.Strong)]
-		NSValue[] EnumeratedDurations { get; }
+		NSValue [] EnumeratedDurations { get; }
 
 		[Export ("durationRange", ArgumentSemantic.Assign)]
 		CMTimeRange DurationRange { get; }

@@ -1051,6 +1051,11 @@ compare_mtclassmap (const void *a, const void *b)
 void
 xamarin_add_registration_map (struct MTRegistrationMap *map, bool partial)
 {
+	if (strcmp (map->product_hash, PRODUCT_HASH) != 0) {
+		fprintf (stderr, PRODUCT ": The static registrar map for %s (and %i other assemblies) is invalid. It was built using a runtime with hash %s, but the current runtime was built with hash %s.\n", map->assemblies [0].name, map->assembly_count - 1, map->product_hash, PRODUCT_HASH);
+		return;
+	}
+
 	// COOP: no managed memory access: any mode
 	options.RegistrationData = map;
 	if (partial)
@@ -2824,6 +2829,16 @@ xamarin_locate_assembly_resource_for_root (const char *root, const char *culture
 		return false;
 	} else if (xamarin_file_exists (path)) {
 		return true;
+	}
+
+	if (culture != NULL && *culture != 0) {
+		// culture-specific directory
+		if (snprintf (path, pathlen, "%s/%s/.xamarin/%s/%s", root, culture, RUNTIMEIDENTIFIER, resource) < 0) {
+			LOG (PRODUCT ": Failed to construct path for assembly resource (root directory: '%s', culture: '%s', resource: '%s', runtimeidentifier: %s): %s", root, culture, resource, RUNTIMEIDENTIFIER, strerror (errno));
+			return false;
+		} else if (xamarin_file_exists (path)) {
+			return true;
+		}
 	}
 #endif
 

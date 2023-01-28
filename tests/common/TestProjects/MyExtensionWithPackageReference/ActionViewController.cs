@@ -4,10 +4,8 @@ using System.Drawing;
 using Foundation;
 using UIKit;
 
-namespace MyExtensionWithPackageReference
-{
-	public partial class ActionViewController : UIViewController
-	{
+namespace MyExtensionWithPackageReference {
+	public partial class ActionViewController : UIViewController {
 		public ActionViewController (IntPtr handle) : base (handle)
 		{
 			Console.WriteLine (typeof (Newtonsoft.Json.JsonReader));

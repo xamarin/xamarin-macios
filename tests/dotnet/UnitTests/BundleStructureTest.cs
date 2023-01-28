@@ -37,6 +37,7 @@ namespace Xamarin.Tests {
 				var fn = Path.GetFileName (v!);
 
 				switch (fn) {
+				case "libclrgc.dylib":
 				case "libclrjit.dylib":
 				case "libcoreclr.dylib":
 				case "libdbgshim.dylib":
@@ -48,6 +49,7 @@ namespace Xamarin.Tests {
 				case "libmono-component-debugger.dylib":
 				case "libmono-component-diagnostics_tracing.dylib":
 				case "libmono-component-hot_reload.dylib":
+				case "libmono-component-marshal-ilgen.dylib":
 				case "libmonosgen-2.0.dylib":
 					return platform != ApplePlatform.MacOSX;
 				case "libSystem.Native.dylib":
@@ -527,6 +529,7 @@ namespace Xamarin.Tests {
 
 		[Test]
 		// Debug
+		[TestCase (ApplePlatform.iOS, "ios-arm64", CodeSignature.All, "Debug")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm", CodeSignature.All, "Debug")]
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64", CodeSignature.Frameworks, "Debug")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", CodeSignature.All, "Debug")]
@@ -543,6 +546,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "BundleStructure";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
 			var project_dir = Path.GetDirectoryName (Path.GetDirectoryName (project_path))!;

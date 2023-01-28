@@ -750,6 +750,9 @@
   <data name="MX0185" xml:space="preserve">
 		<value>Quando si usa CoreCLR, l'opzione '{0}' non può accettare il valore '{1}'.</value>
 	</data>
+  <data name="MX0186" xml:space="preserve">
+		<value>Il bitcode è abilitato, ma non è supportato in Xcode 14+ ed è stato disabilitato. Disabilitare bitcode rimuovendo la proprietà 'MtouchEnableBitcode' dal file di progetto.</value>
+	</data>
   <data name="MX1009" xml:space="preserve">
 		<value>Non è stato possibile copiare l'assembly '{0}' in '{1}': {2}
 		</value>
@@ -1233,7 +1236,7 @@
 		</value>
 	</data>
   <data name="MT4124_I" xml:space="preserve">
-		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+		<value>Trovato {0} non valido in '{1}'. Inviare un report di bug all'indirizzo https://github.com/xamarin/xamarin-macios/issues/new</value>
 	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>Il registrar ha trovato un tipo non valido '{0}' nella firma per il metodo '{1}': L'interfaccia deve includere un attributo Protocol che ne specifica il tipo di wrapper.
@@ -1744,10 +1747,20 @@
 		<value>Impossibile creare un'istanza del tipo di {0}.</value>
 	</data>
   <data name="MX8042" xml:space="preserve">
-		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<value>È stata rilevata un'eccezione durante un tentativo di richiamare la funzione {0}: {1}</value>
 		<comment>
 			0: name of function
 			1: exception info
 		</comment>
+	</data>
+  <data name="MX8043" xml:space="preserve">
+		<value>Si è verificata un’eccezione durante la convalida del codice del registrar statico per {0}: {1}</value>
+		<comment>
+			0: name of an assembly
+			1: exception info
+		</comment>
+	</data>
+  <data name="MX8044" xml:space="preserve">
+		<value>L'assembly {0} è stato modificato dopo la compilazione dell'app, invalidando il codice del registrar statico generato. L'oggetto MVID per l'assembly caricato è {1}, mentre il valore MVID per l'assembly a cui corrisponde il codice del registrar statico generato è {2}.</value>
 	</data>
 </root>

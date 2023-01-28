@@ -27,16 +27,16 @@ namespace MonoTouchFixtures.Metal {
 		{
 #if __MACCATALYST__
 			TestRuntime.AssertXcodeVersion (13, 0);
-#endif 
-			NSObject refObj = new NSObject();
-			var devices = MTLDevice.GetAllDevices();
+#endif
+			NSObject refObj = new NSObject ();
+			var devices = MTLDevice.GetAllDevices ();
 
 			// It's possible to run on a system that does not support metal,
 			// in which case we'll get an empty array of devices.
 			Assert.IsNotNull (devices, "MTLDevices.GetAllDevices not null");
 		}
 #endif
-		
+
 #if __MACOS__
 		[Test]
 		public void GetAllDevicesTestOutObserver ()
@@ -154,7 +154,7 @@ namespace MonoTouchFixtures.Metal {
 			}
 
 			buffer_mem = AllocPageAligned (1, out buffer_length);
-			using (var buffer = device.CreateBuffer (buffer_mem, (nuint)buffer_length, MTLResourceOptions.CpuCacheModeDefault)) {
+			using (var buffer = device.CreateBuffer (buffer_mem, (nuint) buffer_length, MTLResourceOptions.CpuCacheModeDefault)) {
 				Assert.IsNotNull (buffer, "CreateBuffer: NonNull 2");
 			}
 			FreePageAligned (buffer_mem, buffer_length);
@@ -171,7 +171,7 @@ namespace MonoTouchFixtures.Metal {
 #else
 			var resourceOptions7 = MTLResourceOptions.CpuCacheModeDefault;
 #endif
-			using (var buffer = device.CreateBufferNoCopy (buffer_mem, (nuint)buffer_length, resourceOptions7, (pointer, length) => { FreePageAligned (pointer, (int)length); freed = true; })) {
+			using (var buffer = device.CreateBufferNoCopy (buffer_mem, (nuint) buffer_length, resourceOptions7, (pointer, length) => { FreePageAligned (pointer, (int) length); freed = true; })) {
 				Assert.IsNotNull (buffer, "CreateBufferNoCopy: NonNull 1");
 			}
 			Assert.IsTrue (freed, "CreateBufferNoCopy: Freed 1");
@@ -347,7 +347,7 @@ namespace MonoTouchFixtures.Metal {
 			using (var texture = buffer.CreateTexture (descriptor, 0, 256)) {
 				Assert.IsNotNull (buffer, "MTLBuffer.CreateTexture (MTLTextureDescriptor, nuint, nuint): NonNull");
 			}
-			
+
 			using (var descriptor = MTLTextureDescriptor.CreateTexture2DDescriptor (MTLPixelFormat.RGBA8Unorm, 64, 64, false))
 			using (var texture = device.CreateTexture (descriptor)) {
 				using (var view = texture.CreateTextureView (MTLPixelFormat.RGBA8Unorm)) {

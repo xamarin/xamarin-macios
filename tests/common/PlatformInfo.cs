@@ -21,10 +21,8 @@ using UIKit;
 
 using Xamarin.Utils;
 
-namespace Xamarin.Tests 
-{
-	public sealed class PlatformInfo
-	{
+namespace Xamarin.Tests {
+	public sealed class PlatformInfo {
 		static PlatformInfo GetHostPlatformInfo ()
 		{
 			string name;
@@ -40,8 +38,8 @@ namespace Xamarin.Tests
 			version = WatchKit.WKInterfaceDevice.CurrentDevice.SystemVersion;
 #elif MONOMAC || __MACOS__
 			using (var plist = NSDictionary.FromFile ("/System/Library/CoreServices/SystemVersion.plist")) {
-				name = (NSString)plist ["ProductName"];
-				version = (NSString)plist ["ProductVersion"];
+				name = (NSString) plist ["ProductName"];
+				version = (NSString) plist ["ProductVersion"];
 			}
 #else
 #error Unknown platform
@@ -133,8 +131,7 @@ namespace Xamarin.Tests
 		}
 	}
 
-	public static class AvailabilityExtensions
-	{
+	public static class AvailabilityExtensions {
 		public static bool IsAvailableOnHostPlatform (this ICustomAttributeProvider attributeProvider)
 		{
 			return attributeProvider.IsAvailable (PlatformInfo.Host);
@@ -216,11 +213,11 @@ namespace Xamarin.Tests
 				if (platform != attributePlatform)
 					continue;
 
-				if (attr is UnsupportedOSPlatformAttribute) {
+				// At this point we can't ascertain that the API is available, only that it's unavailable,
+				// so only return in that case. We need to check the SupportedOSPlatform attributes
+				// to see if the API is available.
+				if (attr is UnsupportedOSPlatformAttribute || attr is ObsoletedOSPlatformAttribute) {
 					var isUnsupported = version is not null && targetPlatform.Version >= version;
-					// At this point we can't ascertain that the API is available, only that it's unavailable,
-					// so only return in that case. We need to check the SupportedOSPlatform attributes
-					// to see if the API is available.
 					if (isUnsupported)
 						return false;
 				}

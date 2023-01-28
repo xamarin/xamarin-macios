@@ -36,15 +36,15 @@ using NativeHandle = System.IntPtr;
 namespace CoreFoundation {
 
 #if NET
-	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[Mac (10,12)]
-	[iOS (10,0)]
-	[Watch (3,0)]
-	[TV (10,0)]
+	[Mac (10, 12)]
+	[iOS (10, 0)]
+	[Watch (3, 0)]
+	[TV (10, 0)]
 #endif
 	public sealed class OSLog : NativeObject {
 
@@ -84,7 +84,7 @@ namespace CoreFoundation {
 		extern static void os_release (IntPtr handle);
 
 		[DllImport ("__Internal")]
-		extern static void xamarin_os_log (IntPtr logHandle, OSLogLevel level, string message);
+		extern static void xamarin_os_log (IntPtr logHandle, OSLogLevel level, IntPtr message);
 
 		[Preserve (Conditional = true)]
 		internal OSLog (NativeHandle handle, bool owns)
@@ -112,7 +112,8 @@ namespace CoreFoundation {
 			if (message is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (message));
 
-			xamarin_os_log (Handle, level, message);
+			using var messagePtr = new TransientString (message);
+			xamarin_os_log (Handle, level, messagePtr);
 		}
 	}
 }

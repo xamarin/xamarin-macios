@@ -7,12 +7,10 @@ using Darwin;
 
 using NUnit.Framework;
 
-namespace apitest
-{
+namespace apitest {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class KernelNotificationTest
-	{
+	public class KernelNotificationTest {
 		KernelEvent [] CreateEvents (Process process)
 		{
 			return new KernelEvent [] {
@@ -65,8 +63,7 @@ namespace apitest
 			using (var sleep = Process.Start ("/bin/sleep", sleep_duration)) {
 				using (var kqueue = new KernelQueue ()) {
 					var events = CreateEvents (sleep);
-					TimeSpec ts = new TimeSpec
-					{
+					TimeSpec ts = new TimeSpec {
 						Seconds = 5,
 					};
 					Assert.AreEqual (1, kqueue.KEvent (events, events.Length, events, events.Length, ts), "kevent");
@@ -85,8 +82,7 @@ namespace apitest
 			using (var sleep = Process.Start ("/bin/sleep", sleep_duration)) {
 				using (var kqueue = new KernelQueue ()) {
 					var events = CreateEvents (sleep);
-					TimeSpec ts = new TimeSpec
-					{
+					TimeSpec ts = new TimeSpec {
 						Seconds = 5,
 					};
 #if NET

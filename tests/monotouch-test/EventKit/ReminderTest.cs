@@ -17,12 +17,11 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.EventKit {
-	
+
 	[Ignore ("default EKReminder constructor fails in xcode 11 beta 3 - https://github.com/xamarin/maccore/issues/1832")]
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class ReminderTest
-	{
+	public class ReminderTest {
 		[SetUp]
 		public void Setup ()
 		{
@@ -83,12 +82,12 @@ namespace MonoTouchFixtures.EventKit {
 				Assert.That (rem.Priority, Is.EqualTo ((nint) 10), "10");
 
 				// The following tests fail randomly.
-//				// at some point values are ?normalized? but no exception is thrown
-//				rem.Priority = nint.MinValue;
-//				Assert.That (rem.Priority, Is.EqualTo ((nint) 0), "MinValue");
-//				// exposed as an NSInteger but internal storage looks different
-//				rem.Priority = nint.MaxValue;
-//				Assert.That (rem.Priority, Is.EqualTo ((nint) (-1)), "MaxValue");
+				//				// at some point values are ?normalized? but no exception is thrown
+				//				rem.Priority = nint.MinValue;
+				//				Assert.That (rem.Priority, Is.EqualTo ((nint) 0), "MinValue");
+				//				// exposed as an NSInteger but internal storage looks different
+				//				rem.Priority = nint.MaxValue;
+				//				Assert.That (rem.Priority, Is.EqualTo ((nint) (-1)), "MaxValue");
 			}
 		}
 	}

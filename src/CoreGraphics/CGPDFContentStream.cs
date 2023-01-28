@@ -35,7 +35,7 @@ namespace CoreGraphics {
 		extern static /* CGPDFContentStreamRef */ IntPtr CGPDFContentStreamCreateWithPage (/* CGPDFPageRef */ IntPtr page);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGPDFContentStreamRef */ IntPtr CGPDFContentStreamCreateWithStream (/* CGPDFStreamRef */ IntPtr stream, 
+		extern static /* CGPDFContentStreamRef */ IntPtr CGPDFContentStreamCreateWithStream (/* CGPDFStreamRef */ IntPtr stream,
 			/* CGPDFDictionaryRef */ IntPtr streamResources, /* CGPDFContentStreamRef */ IntPtr parent);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -51,7 +51,7 @@ namespace CoreGraphics {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGPDFContentStream (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
@@ -88,14 +88,14 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CFArrayRef */ IntPtr CGPDFContentStreamGetStreams (/* CGPDFContentStreamRef */ IntPtr cs);
 
-		public CGPDFStream?[]? GetStreams ()
+		public CGPDFStream? []? GetStreams ()
 		{
 			var rv = CGPDFContentStreamGetStreams (Handle);
 			return CFArray.ArrayFromHandleFunc (rv, (handle) => new CGPDFStream (handle));
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGPDFObjectRef */ IntPtr CGPDFContentStreamGetResource (/* CGPDFContentStreamRef */ IntPtr cs, /* const char* */ string category, /* const char* */ string name);
+		extern static /* CGPDFObjectRef */ IntPtr CGPDFContentStreamGetResource (/* CGPDFContentStreamRef */ IntPtr cs, /* const char* */ IntPtr category, /* const char* */ IntPtr name);
 
 		public CGPDFObject? GetResource (string category, string name)
 		{
@@ -104,7 +104,9 @@ namespace CoreGraphics {
 			if (name is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 
-			var h = CGPDFContentStreamGetResource (Handle, category, name);
+			using var categoryPtr = new TransientString (category);
+			using var namePtr = new TransientString (name);
+			var h = CGPDFContentStreamGetResource (Handle, categoryPtr, namePtr);
 			return (h == IntPtr.Zero) ? null : new CGPDFObject (h);
 		}
 	}

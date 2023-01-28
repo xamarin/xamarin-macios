@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if __MACOS__
+
 #nullable enable
 
 using System;
@@ -38,15 +40,15 @@ namespace WebKit {
 		}
 		public DomEvent Event { get; set; }
 	}
-	
+
 	public delegate void DomEventListenerHandler (object sender, DomEventArgs args);
-	
+
 	public partial class DomNode {
 
 		internal class DomNodeEventProxy : DomEventListener {
 			DomEventListenerHandler handler;
 			DomNode root;
-			
+
 			public DomNodeEventProxy (DomNode root, DomEventListenerHandler handler)
 			{
 				this.root = root;
@@ -61,7 +63,7 @@ namespace WebKit {
 
 		internal class DomNodeEventProxy2 : DomEventListener {
 			Action<DomEvent> callback;
-			
+
 			public DomNodeEventProxy2 (Action<DomEvent> callback)
 			{
 				this.callback = callback;
@@ -100,3 +102,5 @@ namespace WebKit {
 		}
 	}
 }
+
+#endif // __MACOS__

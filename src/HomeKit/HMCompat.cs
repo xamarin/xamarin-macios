@@ -56,16 +56,16 @@ namespace HomeKit {
 		protected HMChipServiceTopology (IntPtr handle) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 		public HMChipServiceTopology (NSCoder coder) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 		protected HMChipServiceTopology (NSObjectFlag t) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
-		public HMChipServiceTopology (HMChipServiceHome[] homes) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
+		public HMChipServiceTopology (HMChipServiceHome [] homes) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 
 		public virtual NSObject Copy (NSZone? zone) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 		public virtual void EncodeTo (NSCoder encoder) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
-		public virtual HMChipServiceHome[] Homes => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
+		public virtual HMChipServiceHome [] Homes => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 
 	} /* class HMChipServiceTopology */
 
 	[Obsolete ("This class is removed, use 'HMMatterRoom' instead.")]
-	[Register("HMCHIPServiceRoom", SkipRegistration = true)]
+	[Register ("HMCHIPServiceRoom", SkipRegistration = true)]
 	public class HMChipServiceRoom : NSObject, INSCoding, INSCopying, INSSecureCoding {
 
 		public override IntPtr ClassHandle => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
@@ -75,7 +75,7 @@ namespace HomeKit {
 		protected HMChipServiceRoom (NSObjectFlag t) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 		public HMChipServiceRoom (NSUuid uuid, string name) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 
-		public virtual NSObject Copy (NSZone? zone)=> throw new InvalidOperationException (Constants.RemovedFromHomeKit);
+		public virtual NSObject Copy (NSZone? zone) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 		public virtual void EncodeTo (NSCoder encoder) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 		public virtual string Name => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 		public virtual NSUuid Uuid => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
@@ -83,7 +83,7 @@ namespace HomeKit {
 	} /* class HMChipServiceRoom */
 
 	[Obsolete ("This class is removed.")]
-	[Register("HMCHIPServiceHome", SkipRegistration = true)]
+	[Register ("HMCHIPServiceHome", SkipRegistration = true)]
 	public partial class HMChipServiceHome : NSObject, INSCoding, INSCopying, INSSecureCoding {
 
 		public override IntPtr ClassHandle => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
@@ -112,7 +112,7 @@ namespace HomeKit {
 		[Obsolete (Constants.RemovedFromHomeKit)]
 		public virtual Task AddAndSetUpAccessoriesAsync (HMChipServiceTopology topology) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 #pragma warning restore CS0618 // HMChipServiceTopology and HMErrorHandler is obsolete
-	}	
+	}
 #endif // !NET
 
 #if !XAMCORE_5_0
@@ -138,13 +138,13 @@ namespace HomeKit {
 
 #endif
 
-#if !NET
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("This class is removed.")]
-#else
-	[UnsupportedOSPlatform ("ios16.1")]
-	[UnsupportedOSPlatform ("tvos16.1")]
-	[UnsupportedOSPlatform ("maccatalyst16.1")]
-	[UnsupportedOSPlatform ("macos13.0")]
+#if NET
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("macos")]
 #endif
 	[Register ("HMMatterRoom", SkipRegistration = true)]
 	public partial class HMMatterRoom : NSObject, INSCoding, INSCopying, INSSecureCoding {
@@ -157,20 +157,20 @@ namespace HomeKit {
 		public virtual string Name => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 		public virtual NSUuid Uuid => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 
-		public virtual NSObject Copy (NSZone? zone)=> throw new InvalidOperationException (Constants.RemovedFromHomeKit);
+		public virtual NSObject Copy (NSZone? zone) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 		public virtual void EncodeTo (NSCoder encoder) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 
 	}
 
-#if !NET
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("This class is removed.")]
-#else
-	[UnsupportedOSPlatform ("ios16.1")]
-	[UnsupportedOSPlatform ("tvos16.1")]
-	[UnsupportedOSPlatform ("maccatalyst16.1")]
-	[UnsupportedOSPlatform ("macos13.0")]
+#if NET
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("macos")]
 #endif
-	[Register("HMMatterHome", SkipRegistration = true)]
+	[Register ("HMMatterHome", SkipRegistration = true)]
 	public partial class HMMatterHome : NSObject, INSCoding, INSCopying, INSSecureCoding {
 
 		public override NativeHandle ClassHandle => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
@@ -188,15 +188,15 @@ namespace HomeKit {
 
 	}
 
-#if !NET
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("This class is removed.")]
-#else
-	[UnsupportedOSPlatform ("ios16.1")]
-	[UnsupportedOSPlatform ("tvos16.1")]
-	[UnsupportedOSPlatform ("maccatalyst16.1")]
-	[UnsupportedOSPlatform ("macos13.0")]
+#if NET
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("macos")]
 #endif
-	[Register("HMMatterTopology", SkipRegistration = true)]
+	[Register ("HMMatterTopology", SkipRegistration = true)]
 	public partial class HMMatterTopology : NSObject, INSCoding, INSCopying, INSSecureCoding {
 
 		public override NativeHandle ClassHandle => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
@@ -208,21 +208,21 @@ namespace HomeKit {
 		public HMMatterTopology (HMMatterHome [] homes) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 
 		public virtual HMMatterHome [] Homes => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
-		public virtual NSObject Copy (NSZone? zone)=> throw new InvalidOperationException (Constants.RemovedFromHomeKit);
+		public virtual NSObject Copy (NSZone? zone) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 		public virtual void EncodeTo (NSCoder encoder) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 	}
 
-	public delegate void HMFetchRoomHandler (HMMatterRoom [] rooms, NSError error); 
+	public delegate void HMFetchRoomHandler (HMMatterRoom [] rooms, NSError error);
 
-#if !NET
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("This class is removed.")]
-#else
-	[UnsupportedOSPlatform ("ios16.1")]
-	[UnsupportedOSPlatform ("tvos16.1")]
-	[UnsupportedOSPlatform ("maccatalyst16.1")]
-	[UnsupportedOSPlatform ("macos13.0")]
+#if NET
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("macos")]
 #endif
-	[Register("HMMatterRequestHandler", SkipRegistration = true)]
+	[Register ("HMMatterRequestHandler", SkipRegistration = true)]
 	public partial class HMMatterRequestHandler : NSObject, INSExtensionRequestHandling {
 		public override NativeHandle ClassHandle => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 
@@ -231,7 +231,7 @@ namespace HomeKit {
 		protected HMMatterRequestHandler (NSObjectFlag t) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 
 		public virtual void FetchRooms (HMMatterHome home, HMFetchRoomHandler completion) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
-		public virtual Task<HMMatterRoom[]> FetchRoomsAsync (HMMatterHome home) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
+		public virtual Task<HMMatterRoom []> FetchRoomsAsync (HMMatterHome home) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 
 		public virtual void PairAccessory (HMMatterHome home, string onboardingPayload, Action<NSError> completion) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 		public virtual Task PairAccessoryAsync (HMMatterHome home, string onboardingPayload) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);

@@ -21,7 +21,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class UrlTest {
@@ -32,7 +32,7 @@ namespace MonoTouchFixtures.Foundation {
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 			Assert.That (NSUrl.IsExcludedFromBackupKey.ToString (), Is.EqualTo ("NSURLIsExcludedFromBackupKey"), "IsExcludedFromBackupKey");
 		}
-		
+
 		[Test]
 		public void IsExcludedFromBackupKey ()
 		{
@@ -43,21 +43,21 @@ namespace MonoTouchFixtures.Foundation {
 			// NOTE: this test was failing with either NullReferenceException or InvalidCastException
 			// when we used CFBoolean as a NSObject (i.e. CFBoolean.TrueObject). The test order execution
 			// was important to track this down
-			
+
 			NSObject value;
 			Assert.True (NSBundle.MainBundle.ExecutableUrl.TryGetResource (NSUrl.IsExcludedFromBackupKey, out value), "MainBundle");
 			Assert.That (value, Is.TypeOf (typeof (NSNumber)), "NSNumber");
 			Assert.That ((int) (value as NSNumber), Is.EqualTo (0), "0");
-			
+
 			string filename = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), $"DoNotBackupMe-NSUrl-{Process.GetCurrentProcess ().Id}");
 			try {
 				File.WriteAllText (filename, "not worth a bit");
 				using (NSUrl url = NSUrl.FromFilename (filename)) {
 					Assert.True (url.TryGetResource (NSUrl.IsExcludedFromBackupKey, out value));
 					Assert.That ((int) (value as NSNumber), Is.EqualTo (0), "DoNotBackupMe-0");
-					
+
 					url.SetResource (NSUrl.IsExcludedFromBackupKey, (NSNumber) 1);
-					
+
 					Assert.True (url.TryGetResource (NSUrl.IsExcludedFromBackupKey, out value));
 					Assert.That ((int) (value as NSNumber), Is.EqualTo (1), "DoNotBackupMe-1");
 
@@ -67,24 +67,23 @@ namespace MonoTouchFixtures.Foundation {
 					Assert.That (dict.Keys [0], Is.EqualTo (NSUrl.IsExcludedFromBackupKey), "Key");
 					Assert.That ((int) (dict.Values [0] as NSNumber), Is.EqualTo (1), "Value");
 				}
-			}
-			finally {
+			} finally {
 				// otherwise the attribute won't reset even if the file is overwritten
 				File.Delete (filename);
 			}
 		}
-		
+
 		const string bad_uri = "http://localhost/page?query={bad}";
 		const string good_uri = "http://localhost/page?query=%7Bgood%7D";
-		
+
 		[Test]
 		public void FromString ()
 		{
 			Assert.Null (NSUrl.FromString (bad_uri), "invalid");
-			
+
 			using (var url = NSUrl.FromString (good_uri)) {
 				Assert.That (url.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
-				
+
 				Assert.That (url.PathExtension, Is.EqualTo (String.Empty), "PathExtension-1");
 
 				Assert.NotNull (url.ToString (), "ToString"); // see #4763
@@ -94,17 +93,17 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.That (url.PathExtension, Is.EqualTo ("extension"), "PathExtension-2");
 			}
 		}
-		
+
 		[Test]
 		public void Ctor_string ()
 		{
 			Assert.Throws<Exception> (() => new NSUrl (bad_uri), "exception");
-			
+
 			using (var url = new NSUrl (good_uri)) {
 				Assert.That (url.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 			}
 		}
-		
+
 		[Test]
 		public void Unicode_6597 ()
 		{
@@ -159,7 +158,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			using (var url = NSUrl.FromString ("http://www.xamarin.com")) {
 				// NSObject.Copy works because NSUrl conforms to NSCopying
-				using (var copy = (NSUrl)url.Copy ()) {
+				using (var copy = (NSUrl) url.Copy ()) {
 					Assert.That (copy.AbsoluteString, Is.EqualTo ("http://www.xamarin.com"), "AbsoluteString");
 				}
 			}
@@ -170,7 +169,8 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			using (var url = NSUrl.FromString ("http://www.xamarin.com")) {
 				// NSObject.MutableCopy does NOT works because NSUrl does NOT conforms to NSMutableCopying
-				Assert.Throws<InvalidOperationException> (delegate {
+				Assert.Throws<InvalidOperationException> (delegate
+				{
 					url.MutableCopy ();
 				}, "MutableCopy");
 			}
@@ -179,8 +179,8 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Equals ()
 		{
-			using (var url1 = NSUrl.FromString ("http://www.xamarin.com/ios")) 
-			using (var url2 = NSUrl.FromString ("http://www.xamarin.com")) 
+			using (var url1 = NSUrl.FromString ("http://www.xamarin.com/ios"))
+			using (var url2 = NSUrl.FromString ("http://www.xamarin.com"))
 			using (var url3 = new NSUrl ("http://www.xamarin.com")) {
 				Assert.That (url1.GetHashCode (), Is.Not.EqualTo (url2.GetHashCode ()), "GetHashCode 1-2");
 				// created differently but still identical
@@ -242,7 +242,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void SubclassEquality ()
 		{
-			using (var url1 = NSUrl.FromString ("http://www.xamarin.com")) 
+			using (var url1 = NSUrl.FromString ("http://www.xamarin.com"))
 			using (var url2 = new BadCustomUrl ("http://www.xamarin.com"))
 			using (var url3 = new GoodCustomUrl ("http://www.xamarin.com")) {
 				Assert.That (url1.GetHashCode (), Is.Not.EqualTo (url2.GetHashCode ()), "GetHashCode 1-2");
@@ -339,7 +339,8 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
-		public void FromNullString () {
+		public void FromNullString ()
+		{
 			Assert.IsNull (NSUrl.FromString (null));
 		}
 	}

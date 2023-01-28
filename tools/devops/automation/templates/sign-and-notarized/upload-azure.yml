@@ -7,23 +7,53 @@ parameters:
   type: string
   default: '*'            # Supports multiple filters separated by semi-colon such as *.msi;*.nupkg
 
+- name: azureStorage
+  type: string
+
+- name: azureContainer
+  type: string
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
 steps:
 # Do not use the templates/common/checkout.yaml for this job else the azure upload tool will fail because 
 # it cannot find the correct branch to be used. 
-- checkout: self
-  persistCredentials: true
-  path: s/xamarin-macios
+- template:  sdk-unified/steps/checkout/v1.yml@yaml-templates
+  parameters:
+    resource: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+    clean: true
+    persistCredentials: true
+    path: s/xamarin-macios
+
+# checkout an extra repo to ensure that we have the same tree structure in the working directory in all pipelines.
+# if you delete this checkout the unified pipeline will have issues.
+- checkout: yaml-templates
+  clean: true
+
+- pwsh: |
+    if (Test-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/artifacts" -PathType Container) {
+      Remove-Item -Path "$Env:BUILD_SOURCESDIRECTORY/artifacts" -Force -Recurse
+    }
+  displayName: "Remove artifacts"
+  condition: always()
 
 # Download the Html Report that was added by the tests job.
 - task: DownloadPipelineArtifact@2
   displayName: Download packages
   inputs:
-    patterns: '**'
+    patterns: '!(*binlogs*|*DropMetadata*/**|*HtmlReport*/**|*TestSummary*/**|*agent-logs*/**|mac-test-package/**|crash-reports*/**)' # downlod all except some data we re not interested in 
     allowFailedBuilds: true
     path: $(Build.SourcesDirectory)/artifacts
 
 - pwsh: |
-    $packagePrefix = "https://dl.internalx.com/wrench/$Env:VIRTUAL_PATH/package"
+    $packagePrefix = "https://dl.internalx.com/$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/package"
     $files =  Get-ChildItem -Path "$(Build.SourcesDirectory)\artifacts\package" -File -Force -Name
     $manifestFile = "$(Build.SourcesDirectory)\artifacts\package\manifest"
     foreach ($f in $files) {
@@ -33,10 +63,11 @@ steps:
     Add-Content -Path "$manifestFile" -Value "$packagePrefix/manifest"
   env:
     VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
+    AZURE_CONTAINER: ${{ parameters.azureContainer }}
   displayName: "Build manifest"
 
 # Important needed for the next step
-- template: generate-workspace-info.yml@templates
+- template: generate-workspace-info.yml@yaml-templates
   parameters:
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
@@ -48,10 +79,9 @@ steps:
     SourcePath: $(Build.SourcesDirectory)/artifacts/package
     azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
     Destination: AzureBlob
-    storage: bosstoragemirror
-    ContainerName: wrench
+    storage: ${{ parameters.azureStorage }}
+    ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/package  # ideally, we would use a variable for this
-    outputStorageUri: Parameters.outputStorageUri
     outputStorageContainerSasToken: PackageSasToken
 
 - task: AzureFileCopy@3
@@ -60,10 +90,9 @@ steps:
     SourcePath: $(Build.SourcesDirectory)/artifacts/package/manifest
     azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
     Destination: AzureBlob
-    storage: bosstoragemirror
-    ContainerName: wrench
+    storage: ${{ parameters.azureStorage }}
+    ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: jenkins/$(Build.SourceBranchName)/$(Build.SourceVersion)
-    outputStorageUri: Parameters.outputStorageUri
     outputStorageContainerSasToken: PackageSasToken
 
 - task: AzureFileCopy@3
@@ -72,10 +101,9 @@ steps:
     SourcePath: $(Build.SourcesDirectory)/artifacts/package/manifest
     azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
     Destination: AzureBlob
-    storage: bosstoragemirror
-    ContainerName: wrench
+    storage: ${{ parameters.azureStorage }}
+    ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: jenkins/$(Build.SourceBranchName)/latest
-    outputStorageUri: Parameters.outputStorageUri
     outputStorageContainerSasToken: PackageSasToken
 
 - task: AzureFileCopy@3
@@ -84,10 +112,9 @@ steps:
     SourcePath: $(Build.SourcesDirectory)/artifacts/package/manifest
     azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
     Destination: AzureBlob
-    storage: bosstoragemirror
-    ContainerName: wrench
+    storage: ${{ parameters.azureStorage }}
+    ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: jenkins/$(Build.SourceVersion)
-    outputStorageUri: Parameters.outputStorageUri
     outputStorageContainerSasToken: PackageSasToken
 
 - pwsh: |
@@ -97,18 +124,20 @@ steps:
         Write-Host "Build task not found at $execPath!"
     }
 
-    $maciosPath="$Env:BUILD_SOURCESDIRECTORY"
+    $maciosPath="$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios"
 
     Write-Host "Exect path is $execPath"
     Write-Host "Macios path is $maciosPath"
     Write-Host "$Env:VIRTUAL_PATH"
-    Write-Host "Artifacts url wrench/$Env:VIRTUAL_PATH/package"
+    Write-Host "Artifacts url $Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/package"
 
-    Invoke-Expression "$execPath artifacts -s `"$maciosPath`" -a bosstoragemirror -c $Env:STORAGE_PASS -u `"wrench/$Env:VIRTUAL_PATH/package`" -d `"$(Build.SourcesDirectory)\artifacts\package`" -o `"$(Build.SourcesDirectory)\artifacts\package`""
+    Invoke-Expression "$execPath artifacts -s `"$maciosPath`" -a $Env:AZURE_STORAGE -c $Env:STORAGE_PASS -u `"$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/package`" -d `"$(Build.SourcesDirectory)\artifacts\package`" -o `"$(Build.SourcesDirectory)\artifacts\package`""
   env:
     VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
     GITHUB_AUTH_TOKEN: $(GitHub.Token)
     STORAGE_PASS: $(auth-xamarin-bosstoragemirror-account-key)
+    AZURE_STORAGE: ${{ parameters.azureStorage }}
+    AZURE_CONTAINER: ${{ parameters.azureContainer }}
   displayName: 'Generate artifacts.json'
 
 # upload the artifacts.json to the build pipeline artifacts so that it can be consumed by other jobs to
@@ -121,13 +150,14 @@ steps:
   continueOnError: true
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\MaciosCI.psd1
-    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
 
     Dir "$(Build.SourcesDirectory)\\artifacts\\package"
 
-    # $Env:STORAGE_URI/ ends with a /, annoying
-    $pkgsVirtualUrl = "$Env:STORAGE_URI" +"$(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/package"
+    # the azure step sets the env variable, but it points to the wrong url since it uses the one in bosstorage, we
+    # need to use the dl version.
+    $pkgsVirtualUrl =  "https://dl.internalx.com/$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/package"
     Write-Host "Urls is $pkgsVirtualUrl"
 
     $pkgsPath = "$(Build.SourcesDirectory)\artifacts\package"
@@ -234,10 +264,10 @@ steps:
     Write-Host "Setting SBOM.PackagesPath: ${pkgsPath}"
     Write-Host "##vso[task.setvariable variable=SBOM.PackagesPath]$pkgsPath"
   env:
-    BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
     ACCESSTOKEN: $(System.AccessToken)
-    STORAGE_URI: $(Parameters.outputStorageUri)
+    AZURE_CONTAINER: ${{ parameters.azureContainer }}
+    VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
     ${{ if eq(parameters.enableDotnet, true) }}:
       ENABLE_DOTNET: "True"
   displayName: 'Set GithubStatus'

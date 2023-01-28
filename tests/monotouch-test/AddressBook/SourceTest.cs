@@ -18,11 +18,11 @@ using NUnit.Framework;
 using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AddressBook {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class SourceTest {
-		
+
 		[SetUp]
 		public void Setup ()
 		{
@@ -35,7 +35,7 @@ namespace MonoTouchFixtures.AddressBook {
 		{
 			if (Runtime.Arch != Arch.SIMULATOR)
 				return;
-			
+
 			// we assume the simulator defaults (e.g. after a reset)
 			ABSource source = new ABAddressBook ().GetDefaultSource ();
 			Assert.Null (source.Name, "Name");

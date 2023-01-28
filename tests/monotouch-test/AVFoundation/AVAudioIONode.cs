@@ -8,12 +8,10 @@ using AudioUnit;
 using AUUnit = AudioUnit.AudioUnit;
 using AVFoundation;
 
-namespace Xamarin.Mac.Tests
-{
+namespace Xamarin.Mac.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AVAudioIONodeTests
-	{
+	public class AVAudioIONodeTests {
 		[Test]
 		public void AVAudioIONodeTests_AudioUnitTest ()
 		{

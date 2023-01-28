@@ -41,8 +41,7 @@ namespace MonoTouchFixtures.ARKit {
 			}
 		}
 
-		protected unsafe override IntPtr RawJointLandmarks
-		{
+		protected unsafe override IntPtr RawJointLandmarks {
 			get {
 				vectorArray = new Vector2 [] { new Vector2 (1, 2), new Vector2 (3, 4) };
 				if (!vectorArrayHandle.IsAllocated)

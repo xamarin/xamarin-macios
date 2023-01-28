@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "iOS Tabbed Application",
+  "name": "Aplikacja z kartami dla systemu iOS",
   "description": "Projekt służący do tworzenia aplikacji z kartami platformy .NET dla systemu iOS",
   "symbols/bundleId/description": "Nadpisuje element CFBundleIdentifier w pliku Info.plist",
   "symbols/minOSVersion/description": "Nadpisuje element SupportedOSPlatformVersion w pliku projektu",

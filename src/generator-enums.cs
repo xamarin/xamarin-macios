@@ -35,12 +35,6 @@ public partial class Generator {
 		}
 	}
 
-	void CopyObsolete (ICustomAttributeProvider provider)
-	{
-		foreach (var oa in AttributeManager.GetCustomAttributes<ObsoleteAttribute> (provider))
-			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
-	}
-
 	void CopyNativeName (ICustomAttributeProvider provider)
 	{
 		foreach (var oa in AttributeManager.GetCustomAttributes<NativeNameAttribute> (provider))
@@ -62,7 +56,7 @@ public partial class Generator {
 			var hasNativeName = !string.IsNullOrEmpty (native.NativeName);
 			var hasConvertToManaged = !string.IsNullOrEmpty (native.ConvertToManaged);
 			var hasConvertToNative = !string.IsNullOrEmpty (native.ConvertToNative);
-			if (hasNativeName || hasConvertToManaged || hasConvertToNative ) {
+			if (hasNativeName || hasConvertToManaged || hasConvertToNative) {
 				sb.Append (" (");
 				if (hasNativeName)
 					sb.Append ('"').Append (native.NativeName).Append ('"');
@@ -85,7 +79,7 @@ public partial class Generator {
 			sb.Append ("]");
 			print (sb.ToString ());
 		}
-		CopyObsolete (type);
+		PrintObsoleteAttributes (type);
 		CopyNativeName (type);
 
 		var unique_constants = new HashSet<string> ();
@@ -93,14 +87,16 @@ public partial class Generator {
 		Tuple<FieldInfo, FieldAttribute> null_field = null;
 		Tuple<FieldInfo, FieldAttribute> default_symbol = null;
 		var underlying_type = GetCSharpTypeName (TypeManager.GetUnderlyingEnumType (type));
-		print ("{0} enum {1} : {2} {{", AttributeManager.HasAttribute<InternalAttribute> (type) ? "internal" : "public", type.Name, underlying_type);
+		var is_internal = AttributeManager.HasAttribute<InternalAttribute> (type);
+		var visibility = is_internal ? "internal" : "public";
+		print ("{0} enum {1} : {2} {{", visibility, type.Name, underlying_type);
 		indent++;
 		foreach (var f in type.GetFields ()) {
 			// skip value__ field 
 			if (f.IsSpecialName)
 				continue;
-			PrintPlatformAttributes (f, is_enum: true);
-			CopyObsolete (f);
+			PrintPlatformAttributes (f);
+			PrintObsoleteAttributes (f);
 			print ("{0} = {1},", f.Name, f.GetRawConstantValue ());
 			var fa = AttributeManager.GetCustomAttribute<FieldAttribute> (f);
 			if (fa == null)
@@ -132,7 +128,7 @@ public partial class Generator {
 			// the *Extensions has the same version requirement as the enum itself
 			PrintPlatformAttributes (type);
 			print_generated_code ();
-			print ("static public partial class {0}Extensions {{", type.Name);
+			print ("static {1} partial class {0}Extensions {{", type.Name, visibility);
 			indent++;
 
 			var field = fields.FirstOrDefault ();
@@ -190,7 +186,7 @@ public partial class Generator {
 				print ("}");
 				print ("");
 			}
-			
+
 			print ("public static NSString? GetConstant (this {0} self)", type.Name);
 			print ("{");
 			indent++;
@@ -215,7 +211,7 @@ public partial class Generator {
 			print ("return (NSString?) Runtime.GetNSObject (ptr);");
 			indent--;
 			print ("}");
-			
+
 			print ("");
 
 			var nullable = null_field != null;
@@ -244,7 +240,7 @@ public partial class Generator {
 			indent--;
 			print ("}");
 		}
-			
+
 		if ((fields.Count > 0) || (error != null) || (null_field != null)) {
 			indent--;
 			print ("}");

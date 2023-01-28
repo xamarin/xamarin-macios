@@ -21,7 +21,7 @@ using UIKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreAnimation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ShapeLayerTest {

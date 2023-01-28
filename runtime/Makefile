@@ -32,6 +32,13 @@ SHARED_FILES = $(SHARED_SOURCES) $(SHARED_HEADERS) $(SHARED_I386_SOURCES) $(SHAR
 
 EXTRA_DEPENDENCIES = $(SHARED_HEADERS) $(TOP)/Make.config $(TOP)/mk/mono.mk
 
+ifdef IOS_SUPPORTS_32BIT_ARCHITECTURES
+IOS_SIMULATOR_ARCHITECTURES=x86
+IOS_DEVICE_ARCHITECTURES=armv7 armv7s
+endif
+IOS_SIMULATOR_ARCHITECTURES+=x86_64
+IOS_DEVICE_ARCHITECTURES+=arm64
+
 coreclrhost.h: Makefile
 	$(Q_CURL) curl -L --fail --output "$@.tmp" https://raw.githubusercontent.com/dotnet/runtime/6c8f9fff6adcf6c661072646dbdafabed5267ec5/src/coreclr/hosts/inc/coreclrhost.h
 	$(Q) mv "$@.tmp" "$@"
@@ -64,6 +71,9 @@ bindings-generated.m: bindings-generator.exe
 app-main.m watchextension-main.m tvextension-main.m: extension-main.m
 	$(Q_LN) ln -fs $< $@
 
+product.h: product.in.h Makefile
+	$(Q) sed -e 's/@PRODUCT_HASH@/$(CURRENT_HASH_LONG)/' $< > $@.tmp
+	$(Q) mv $@.tmp $@
 #
 # MonoTouch defines (used for all MonoTouch platforms: iOS, WatchOS and TVOS)
 #
@@ -150,9 +160,9 @@ endef
 # 3: architectures
 ifdef INCLUDE_IOS
 ifdef INCLUDE_DEVICE
-$(eval $(call FrameworkTemplate,iphoneos,IPHONEOS,armv7 armv7s arm64))
+$(eval $(call FrameworkTemplate,iphoneos,IPHONEOS,$(IOS_DEVICE_ARCHITECTURES)))
 endif
-$(eval $(call FrameworkTemplate,iphonesimulator,IOSSIMULATOR,x86 x86_64))
+$(eval $(call FrameworkTemplate,iphonesimulator,IOSSIMULATOR,$(IOS_SIMULATOR_ARCHITECTURES)))
 endif
 
 ifdef INCLUDE_WATCH
@@ -218,9 +228,9 @@ endef
 # 3: architectures
 ifdef INCLUDE_IOS
 ifdef INCLUDE_DEVICE
-$(eval $(call PlatformTemplate,iphoneos,IPHONEOS,armv7 armv7s arm64))
+$(eval $(call PlatformTemplate,iphoneos,IPHONEOS,$(IOS_DEVICE_ARCHITECTURES)))
 endif
-$(eval $(call PlatformTemplate,iphonesimulator,IOSSIMULATOR,x86 x86_64))
+$(eval $(call PlatformTemplate,iphonesimulator,IOSSIMULATOR,$(IOS_SIMULATOR_ARCHITECTURES)))
 endif
 ifdef INCLUDE_MACCATALYST
 $(eval $(call PlatformTemplate,maccatalyst,MACCATALYST,x86_64))

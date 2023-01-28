@@ -16,13 +16,12 @@ using ObjCRuntime;
 
 namespace Foundation {
 	internal class NSFastEnumerator {
-		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		public unsafe extern static nuint objc_msgSend (IntPtr receiver, IntPtr selector, NSFastEnumerationState* arg1, IntPtr* arg2, nuint arg3);
 	}
 
 	internal class NSFastEnumerator<T> : IEnumerator<T>
-		where T: class, INativeObject
-	{
+		where T : class, INativeObject {
 		unsafe NSFastEnumerationState* state;
 		NSObject collection;
 		nuint count;
@@ -69,7 +68,7 @@ namespace Foundation {
 				throw new InvalidOperationException ("Collection was modified");
 		}
 
-#region IEnumerator implementation
+		#region IEnumerator implementation
 		bool System.Collections.IEnumerator.MoveNext ()
 		{
 			if (!started || current == count - 1) {
@@ -97,9 +96,9 @@ namespace Foundation {
 				return Current;
 			}
 		}
-#endregion
+		#endregion
 
-#region IDisposable implementation
+		#region IDisposable implementation
 		void IDisposable.Dispose ()
 		{
 			unsafe {
@@ -107,9 +106,9 @@ namespace Foundation {
 				state = null;
 			}
 		}
-#endregion
+		#endregion
 
-#region IEnumerator<T> implementation
+		#region IEnumerator<T> implementation
 		public unsafe T Current {
 			get {
 				IntPtr ptr;
@@ -119,6 +118,6 @@ namespace Foundation {
 				return Runtime.GetINativeObject<T> (ptr, false);
 			}
 		}
-#endregion
+		#endregion
 	}
 }

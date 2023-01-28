@@ -15,6 +15,6 @@ namespace Bug52570ClassInternal {
 
 	[BaseType (typeof (NSObject))]
 	interface FooObject {
-	
+
 	}
 }

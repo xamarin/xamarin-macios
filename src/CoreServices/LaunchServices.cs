@@ -91,10 +91,10 @@ namespace CoreServices
 #endif
 	public static class LaunchServices
 	{
-		#region Locating an Application
+#region Locating an Application
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[Mac (10, 10)]
 #endif
@@ -102,7 +102,7 @@ namespace CoreServices
 		static extern IntPtr LSCopyDefaultApplicationURLForURL (IntPtr inUrl, LSRoles inRole, /*out*/ IntPtr outError);
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[Mac (10, 10)]
 #endif
@@ -117,7 +117,7 @@ namespace CoreServices
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[Mac (10, 10)]
 #endif
@@ -125,7 +125,7 @@ namespace CoreServices
 		static extern IntPtr LSCopyDefaultApplicationURLForContentType (IntPtr inContentType, LSRoles inRole, /*out*/ IntPtr outError);
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[Mac (10, 10)]
 #endif
@@ -179,7 +179,7 @@ namespace CoreServices
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[Mac (10, 10)]
 #endif
@@ -187,7 +187,7 @@ namespace CoreServices
 		static extern IntPtr LSCopyApplicationURLsForBundleIdentifier (IntPtr inBundleIdentifier, /*out*/ IntPtr outError);
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[Mac (10, 10)]
 #endif
@@ -201,9 +201,9 @@ namespace CoreServices
 			);
 		}
 
-		#endregion
+#endregion
 
-		#region Opening Items
+#region Opening Items
 
 		[DllImport (Constants.CoreServicesLibrary)]
 		unsafe static extern LSResult LSOpenCFURLRef (IntPtr inUrl, void **outLaunchedUrl);
@@ -227,9 +227,9 @@ namespace CoreServices
 			return result;
 		}
 
-		#endregion
+#endregion
 
-		#region Registering an Application
+#region Registering an Application
 
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern LSResult LSRegisterURL (IntPtr inUrl, byte inUpdate);
@@ -242,9 +242,9 @@ namespace CoreServices
 			return LSRegisterURL (url.Handle, (byte)(update ? 1 : 0));
 		}
 
-		#endregion
+#endregion
 
-		#region Working with Role Handlers
+#region Working with Role Handlers
 
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyAllRoleHandlersForContentType (IntPtr inContentType, LSRoles inRole);
@@ -294,10 +294,7 @@ namespace CoreServices
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.15")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.15.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.15")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,15)]
 #endif
@@ -306,10 +303,7 @@ namespace CoreServices
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.15")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.15 use 'GetApplicationUrlsForUrl' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.15", "Use 'GetApplicationUrlsForUrl' instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'GetApplicationUrlsForUrl' instead.")]
 #endif
@@ -325,10 +319,7 @@ namespace CoreServices
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.15")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.15.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.15")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,15)]
 #endif
@@ -337,10 +328,7 @@ namespace CoreServices
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.15")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.15 use 'GetDefaultApplicationUrlForUrl' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.15", "Use 'GetDefaultApplicationUrlForUrl' instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'GetDefaultApplicationUrlForUrl' instead.")]
 #endif
@@ -370,7 +358,7 @@ namespace CoreServices
 			);
 		}
 
-		#endregion
+#endregion
 	}
 }
 

@@ -21,8 +21,15 @@ endif
 ifndef SKIP_XAMARIN_VS_DOTNET
 INCLUDE_XAMARIN_VS_DOTNET=1
 endif
+
+ifdef ENABLE_DOTNET
+ifdef INCLUDE_IOS
+ifdef INCLUDE_MACCATALYST
 ifndef SKIP_IOS_VS_MACCATALYST
 INCLUDE_IOS_VS_MACCATALYST=1
+endif
+endif
+endif
 endif
 
 MONO_API_INFO = $(API_TOOLS_PATH)/mono-api-info/bin/Debug/net6.0/mono-api-info.dll
@@ -206,14 +213,10 @@ ifdef INCLUDE_TVOS
 API_DIFF_DEPENDENCIES += $(OUTPUT_DIR)/tvos-api-diff.html
 endif
 endif
-ifdef INCLUDE_MACCATALYST
-ifdef ENABLE_DOTNET
+endif # INCLUDE_IOS
 ifdef INCLUDE_IOS_VS_MACCATALYST
 API_DIFF_DEPENDENCIES += $(OUTPUT_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst.html
-endif
-endif
-endif
-endif # INCLUDE_IOS
+endif # INCLUDE_IOS_VS_MACCATALYST
 ifdef ENABLE_DOTNET
 API_DIFF_DEPENDENCIES += $(foreach assembly,$(DOTNET_ASSEMBLIES),$(OUTPUT_DIR)/diff/dotnet/$(assembly).html)
 ifdef INCLUDE_XAMARIN_VS_DOTNET
@@ -234,7 +237,15 @@ define ApiDiffReportHtml
 endef
 
 $(OUTPUT_DIR)/api-diff.html: $(API_DIFF_DEPENDENCIES)
-	$(QF_GEN) echo "<h1>API diffs</h1>" > $@
+	$(Q) rm -f $@
+	$(QF_GEN) echo "<!DOCTYPE html>" >> $@
+	$(QF_GEN) echo "<html>" >> $@
+	$(QF_GEN) echo "<head>" >> $@
+	$(QF_GEN) echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>' >> $@
+	$(QF_GEN) echo "<title>API diffs</title>" >> $@
+	$(QF_GEN) echo "</head>" >> $@
+	$(QF_GEN) echo "<body>" >> $@
+	$(QF_GEN) echo "<h1>API diffs</h1>" >> $@
 
 ifdef INCLUDE_XAMARIN_LEGACY
 	$(Q) if $(foreach html,$(wildcard $(OUTPUT_DIR)/*-api-diff.html),! test -s "$(html)" &&) true; then \
@@ -274,12 +285,8 @@ ifdef ENABLE_DOTNET
 	$(Q) $(foreach platform,$(DOTNET_PLATFORMS),$(call ApiDiffReportHtml,$(platform),$@))
 
 	@# .NET: Microsoft.iOS vs Microsoft.MacCatalyst
-ifdef INCLUDE_IOS
-ifdef INCLUDE_MACCATALYST
 ifdef INCLUDE_IOS_VS_MACCATALYST
 	$(Q) echo "<li>Microsoft.iOS vs Microsoft.MacCatalyst: <a href='diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst.html'>html</a> <a href='diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst.md'>markdown</a></li>" >> $@
-endif
-endif
 endif
 	$(Q) echo "</ul>" >> $@
 
@@ -300,6 +307,8 @@ endif
 	$(Q) echo "</ul>" >> $@
 endif # INCLUDE_XAMARIN_VS_DOTNET
 endif # INCLUDE_XAMARIN_LEGACY
+	$(QF_GEN) echo "</body>" >> $@
+	$(QF_GEN) echo "</html>" >> $@
 
 endif # DOTNET
 	$(Q) if grep "$(HTML_BREAKING_CHANGES_MESSAGE)" $@ >/dev/null 2>&1; then \
@@ -316,6 +325,8 @@ define ApiDiffReportMarkdown
 	$(Q) ./report-status.sh "$(1)" "$(OUTPUT_DIR)" markdown "diff/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).html" "diff/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).md" "$(2)"
 
 endef
+
+all-markdowns:: $(OUTPUT_DIR)/api-diff.md
 
 $(OUTPUT_DIR)/api-diff.md: $(API_DIFF_DEPENDENCIES)
 ifdef INCLUDE_XAMARIN_LEGACY
@@ -358,13 +369,9 @@ ifdef ENABLE_DOTNET
 	$(Q) $(foreach platform,$(DOTNET_PLATFORMS),$(call ApiDiffReportMarkdown,$(platform),$@))
 
 	@# .NET: Microsoft.iOS vs Microsoft.MacCatalyst
-ifdef INCLUDE_IOS
-ifdef INCLUDE_MACCATALYST
 ifdef INCLUDE_IOS_VS_MACCATALYST
 	$(Q) echo "* Microsoft.iOS vs Microsoft.MacCatalyst: [vsdrops](diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst.html) [gist](diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst.md)" >> $@
 endif # INCLUDE_IOS_VS_MACCATALYST
-endif # INCLUDE_MACCATALYST
-endif # INCLUDE_IOS
 	$(Q) echo "" >> $@
 	$(Q) echo "</details>" >> "$@"
 	$(Q) echo "" >> $@

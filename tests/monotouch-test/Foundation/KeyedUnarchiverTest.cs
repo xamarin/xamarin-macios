@@ -16,23 +16,23 @@ using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 #if NET
-using PlatformException=ObjCRuntime.ObjCException;
+using PlatformException = ObjCRuntime.ObjCException;
 #else
 using PlatformException=Foundation.ObjCException;
 #endif
 #else
 using UIKit;
 #if NET
-using PlatformException=ObjCRuntime.ObjCException;
+using PlatformException = ObjCRuntime.ObjCException;
 #else
-using PlatformException=Foundation.MonoTouchException;
+using PlatformException = Foundation.MonoTouchException;
 #endif
 #endif
 
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class KeyedUnarchiverTest {

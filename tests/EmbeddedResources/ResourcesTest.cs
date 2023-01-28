@@ -35,10 +35,10 @@ namespace EmbeddedResources {
 
 #endif
 
-#if MONOMAC
+#if MONOMAC && !NET
 			var manager = new ResourceManager ("xammac_tests.EmbeddedResources.Welcome", typeof (ResourcesTest).Assembly);
 #else
-			var manager = new ResourceManager ("EmbeddedResources.Welcome", typeof(ResourcesTest).Assembly);
+			var manager = new ResourceManager ("EmbeddedResources.Welcome", typeof (ResourcesTest).Assembly);
 #endif
 
 			Assert.AreEqual ("Welcome", manager.GetString ("String1", new CultureInfo ("en")), "en");

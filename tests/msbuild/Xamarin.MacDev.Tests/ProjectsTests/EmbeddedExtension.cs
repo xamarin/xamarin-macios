@@ -25,7 +25,7 @@ namespace Xamarin.MacDev.Tasks {
 			var proj = SetupProjectPaths ("NativeExtensionEmbedding/managed/ManagedContainer");
 			MonoTouchProject = proj;
 
-			var xcodeProjectFolder = Path.Combine (proj.ProjectPath , "..", "..", "native");
+			var xcodeProjectFolder = Path.Combine (proj.ProjectPath, "..", "..", "native");
 			string [] xcodeBuildArgs = new [] { "-configuration", "Debug", "-target", "NativeTodayExtension", "-sdk", Platform == "iPhoneSimulator" ? "iphonesimulator" : "iphoneos" };
 			var env = new System.Collections.Generic.Dictionary<string, string> { { "DEVELOPER_DIR", Configuration.XcodeLocation } };
 			Assert.AreEqual (0, ExecutionHelper.Execute ("/usr/bin/xcodebuild", xcodeBuildArgs.Concat (new [] { "clean" }).ToList (), xcodeProjectFolder, Console.WriteLine, Console.Error.WriteLine));

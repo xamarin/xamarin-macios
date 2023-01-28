@@ -188,8 +188,6 @@
 /src/watchkit.cs @rolfbjarne
 /src/WebKit
 /src/webkit.cs
-/src/WKWebKit
-/src/wkwebkit.cs
 
 /tests/xharness @rolfbjarne @mandel-macaque
 /tests/xtro-sharpie

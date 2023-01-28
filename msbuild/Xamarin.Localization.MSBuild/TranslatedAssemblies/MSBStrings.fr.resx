@@ -424,7 +424,7 @@
         </value>
     </data>
   <data name="E0118" xml:space="preserve">
-        <value>{0} exited with code {1}:
+        <value>{0} a quitté avec le code {1}:
 {2}</value>
     </data>
   <data name="M0119" xml:space="preserve">
@@ -997,6 +997,7 @@
         <value>Set : l'entrée "{0}" n'existe pas
         </value>
     </data>
+  <!-- E7068: not in use anymore -->
   <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14+ ne prend pas en charge les applications Watchos 1. Effectuez la migration de votre projet vers Watchos 2+.</value>
     </data>
@@ -1145,5 +1146,35 @@
     </data>
   <data name="E7101" xml:space="preserve">
         <value>Propriété inconnue '{0}' avec la valeur '{1}'.</value>
+    </data>
+  <data name="E7102" xml:space="preserve">
+        <value>Valeur «{0}» non valide pour le droit «{1}» de type «{2}» spécifié dans le groupe d’éléments CustomEntitlements. Aucune valeur attendue.</value>
+        <comment>
+            Don't translate: CustomEntitlements (name of option in project file)
+        </comment>
+    </data>
+  <data name="E7103" xml:space="preserve">
+        <value>Valeur «{0}» non valide pour le droit «{1}» de type «{2}» spécifié dans le groupe d’éléments CustomEntitlements. 'true' ou 'false' attendu.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'true', 'false'
+        </comment>
+    </data>
+  <data name="E7104" xml:space="preserve">
+        <value>Type inconnu '{0}' pour le droit '{1}' spécifié dans le groupe d’éléments CustomEntitlements. 'Remove', 'Boolean', 'String' ou 'StringArray' attendu.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'Remove', 'Boolean', 'String', 'StringArray'
+        </comment>
+    </data>
+  <data name="W7105" xml:space="preserve">
+        <value>Extension inattendue '{0}' pour la référence native '{1}' dans le manifeste '{2}'.</value>
+        <comment>
+            {0}: file extension
+            {1}: path to a file
+            {2}: path to a file
+        </comment>
     </data>
 </root>

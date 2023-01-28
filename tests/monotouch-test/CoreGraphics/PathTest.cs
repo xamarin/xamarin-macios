@@ -38,7 +38,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		{
 			var identity = CGAffineTransform.MakeIdentity ();
 			using (var path = CGPath.EllipseFromRect (CGRect.Empty, identity)) {
-				var lengths = new nfloat[] { 10, 10 };
+				var lengths = new nfloat [] { 10, 10 };
 				var phase = 2;
 				using (var d1 = path.CopyByDashingPath (lengths)) {
 					Assert.That (d1.Handle, Is.Not.EqualTo (IntPtr.Zero), "d1");
@@ -363,7 +363,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			using (CGPath p1 = new CGPath ()) {
 				p1.MoveToPoint (0, 0);
 				p1.AddLineToPoint (1, 1);
-				Assert.IsNotNull (p1.CreateByFlattening (new nfloat(0.5)));
+				Assert.IsNotNull (p1.CreateByFlattening (new nfloat (0.5)));
 			}
 		}
 
@@ -400,11 +400,9 @@ namespace MonoTouchFixtures.CoreGraphics {
 		public void IncreaseRetainCountMakeMutable ()
 		{
 			// ensure that we do not crash and that the retain count is changed.
-			using (CGPath p1 = new CGPath ())
-			{
+			using (CGPath p1 = new CGPath ()) {
 				var count = CFGetRetainCount (p1.Handle);
-				using (var copy = p1.Copy ())
-				{
+				using (var copy = p1.Copy ()) {
 					var newRetainCount = CFGetRetainCount (copy.Handle);
 					Assert.AreEqual (count, newRetainCount, "Ref count should not have changed.");
 					Assert.AreEqual ((nint) 1, count, "Original count.");

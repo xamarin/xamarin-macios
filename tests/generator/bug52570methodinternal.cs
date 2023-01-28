@@ -15,6 +15,6 @@ namespace bug52570MethodInternal {
 
 	[BaseType (typeof (NSObject))]
 	interface FooObject {
-	
+
 	}
 }

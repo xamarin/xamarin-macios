@@ -46,6 +46,7 @@ namespace Xamarin.Tests {
 		public static bool include_device;
 		public static bool include_dotnet;
 		public static bool include_legacy_xamarin;
+		public static bool iOSSupports32BitArchitectures;
 
 		static Version xcode_version;
 		public static Version XcodeVersion {
@@ -221,7 +222,7 @@ namespace Xamarin.Tests {
 		public static string EvaluateVariable (string variable)
 		{
 			var output = new StringBuilder ();
-			var rv = ExecutionHelper.Execute ("/usr/bin/make", new string [] { "-C", Path.Combine (SourceRoot, "jenkins"), "print-abspath-variable", $"VARIABLE={variable}" }, environmentVariables: null, stdout: output, stderr: output, timeout: TimeSpan.FromSeconds (5));
+			var rv = ExecutionHelper.Execute ("/usr/bin/make", new string [] { "-C", Path.Combine (SourceRoot, "tools", "devops"), "print-abspath-variable", $"VARIABLE={variable}" }, environmentVariables: null, stdout: output, stderr: output, timeout: TimeSpan.FromSeconds (5));
 			if (rv != 0)
 				throw new Exception ($"Failed to evaluate variable '{variable}'. Exit code: {rv}. Output:\n{output}");
 			var result = output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Where (v => v.StartsWith (variable + "=", StringComparison.Ordinal)).SingleOrDefault ();
@@ -293,11 +294,12 @@ namespace Xamarin.Tests {
 			include_maccatalyst = !string.IsNullOrEmpty (GetVariable ("INCLUDE_MACCATALYST", ""));
 			include_device = !string.IsNullOrEmpty (GetVariable ("INCLUDE_DEVICE", ""));
 			include_dotnet = !string.IsNullOrEmpty (GetVariable ("ENABLE_DOTNET", ""));
-			include_legacy_xamarin = !string.IsNullOrEmpty (GetVariable ("INCLUDE_LEGACY_XAMARIN", ""));
+			include_legacy_xamarin = !string.IsNullOrEmpty (GetVariable ("INCLUDE_XAMARIN_LEGACY", ""));
 			DotNetBclDir = GetVariable ("DOTNET_BCL_DIR", null);
 			DotNetCscCommand = GetVariable ("DOTNET_CSC_COMMAND", null)?.Trim ('\'');
 			DotNetExecutable = GetVariable ("DOTNET", null);
 			DotNetTfm = GetVariable ("DOTNET_TFM", null);
+			iOSSupports32BitArchitectures = !string.IsNullOrEmpty (GetVariable ("IOS_SUPPORTS_32BIT_ARCHITECTURES", ""));
 
 			XcodeVersionString = GetXcodeVersion (xcode_root);
 #if MONOMAC
@@ -496,6 +498,8 @@ namespace Xamarin.Tests {
 				return "Microsoft.watchOS.Sdk";
 			case ApplePlatform.MacOSX:
 				return "Microsoft.macOS.Sdk";
+			case ApplePlatform.MacCatalyst:
+				return "Microsoft.MacCatalyst.Sdk";
 			default:
 				throw new InvalidOperationException (platform.ToString ());
 			}
@@ -674,6 +678,26 @@ namespace Xamarin.Tests {
 		}
 
 #if !XAMMAC_TESTS
+		public static void AssertRuntimeIdentifierAvailable (ApplePlatform platform, string runtimeIdentifier)
+		{
+			if (string.IsNullOrEmpty (runtimeIdentifier))
+				return;
+
+			if (GetRuntimeIdentifiers (platform).Contains (runtimeIdentifier))
+				return;
+
+			Assert.Ignore ($"The runtime identifier {runtimeIdentifier} is not available on {platform}");
+		}
+
+		public static void AssertRuntimeIdentifiersAvailable (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			if (string.IsNullOrEmpty (runtimeIdentifiers))
+				return;
+
+			foreach (var rid in runtimeIdentifiers.Split (new char [] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+				AssertRuntimeIdentifierAvailable (platform, rid);
+		}
+
 		public static string GetBaseLibrary (Profile profile)
 		{
 			switch (profile) {
@@ -686,10 +710,18 @@ namespace Xamarin.Tests {
 			case Profile.macOSMobile:
 				return XamarinMacMobileDll;
 			case Profile.macOSFull:
+			case Profile.macOSSystem:
 				return XamarinMacFullDll;
 			default:
 				throw new NotImplementedException ();
 			}
+		}
+
+		public static string GetBaseLibrary (ApplePlatform platform, bool isDotNet)
+		{
+			if (isDotNet)
+				return Path.Combine (GetRefDirectory (platform), GetBaseLibraryName (platform, isDotNet));
+			return GetBaseLibrary (platform.AsProfile ());
 		}
 
 		static string GetBaseLibraryName (TargetFramework targetFramework)
@@ -767,32 +799,6 @@ namespace Xamarin.Tests {
 			}
 
 			throw new InvalidOperationException (targetFramework.ToString ());
-		}
-
-		public static IEnumerable<string> GetBaseLibraryImplementations (Profile profile)
-		{
-			switch (profile) {
-			case Profile.iOS:
-				yield return Path.Combine (mt_root, "lib", "32bits", "Xamarin.iOS.dll");
-				yield return Path.Combine (mt_root, "lib", "64bits", "Xamarin.iOS.dll");
-				break;
-			case Profile.macOSMobile:
-				yield return Path.Combine (SdkRootXM, "lib", "x86_64", "mobile", "Xamarin.Mac.dll");
-				yield return Path.Combine (SdkRootXM, "lib", "i386", "mobile", "Xamarin.Mac.dll");
-				break;
-			case Profile.macOSFull:
-				yield return Path.Combine (SdkRootXM, "lib", "x86_64", "full", "Xamarin.Mac.dll");
-				yield return Path.Combine (SdkRootXM, "lib", "i386", "full", "Xamarin.Mac.dll");
-				break;
-			case Profile.tvOS:
-				yield return Path.Combine (mt_root, "lib", "64bits", "Xamarin.TVOS.dll");
-				break;
-			case Profile.watchOS:
-				yield return Path.Combine (mt_root, "lib", "32bits", "Xamarin.WatchOS.dll");
-				break;
-			default:
-				throw new NotImplementedException ();
-			}
 		}
 
 		public static IList<string> GetRuntimeIdentifiers (ApplePlatform platform)
@@ -897,6 +903,13 @@ namespace Xamarin.Tests {
 			args.Add ($"-lib:{Path.GetDirectoryName (GetBaseLibrary (profile))}");
 			return "/Library/Frameworks/Mono.framework/Commands/csc";
 		}
+
+		public static void AssertiOS32BitAvailable ()
+		{
+			if (iOSSupports32BitArchitectures)
+				return;
+			Assert.Ignore ($"32-bit iOS support is not available in the current build.");
+		}
 #endif // !XAMMAC_TESTS
 
 		public static IEnumerable<ApplePlatform> GetIncludedPlatforms (bool dotnet)
@@ -973,6 +986,12 @@ namespace Xamarin.Tests {
 				var tgtDir = Path.GetDirectoryName (tgt);
 				Directory.CreateDirectory (tgtDir);
 				File.Copy (src, tgt);
+				if (tgt.EndsWith (".csproj", StringComparison.OrdinalIgnoreCase)) {
+					var initialContents = File.ReadAllText (tgt);
+					var fixedContents = initialContents.Replace ($"$(MSBuildThisFileDirectory)", Path.GetDirectoryName (src) + Path.DirectorySeparatorChar);
+					if (initialContents != fixedContents)
+						File.WriteAllText (tgt, fixedContents);
+				}
 			}
 
 			return testsTemporaryDirectory;

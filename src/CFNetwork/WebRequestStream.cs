@@ -37,16 +37,18 @@ using CoreFoundation;
 using CoreServices;
 using Foundation;
 
+#nullable enable
+
 namespace CFNetwork {
 
 	class WebRequestStream {
 		Stream stream;
 		CFReadStream readStream;
 		CFWriteStream writeStream;
-		TaskCompletionSource<object> openTcs;
+		TaskCompletionSource<object?> openTcs;
 		CancellationTokenSource cts;
 
-		byte[] buffer;
+		byte [] buffer;
 		bool canWrite;
 		bool open, completed, closed;
 		int start, position;
@@ -61,7 +63,7 @@ namespace CFNetwork {
 			buffer = new byte [BufferSize];
 			cts = CancellationTokenSource.CreateLinkedTokenSource (cancellationToken);
 
-			openTcs = new TaskCompletionSource<object> ();
+			openTcs = new TaskCompletionSource<object?> ();
 
 			cts.Token.Register (() => Close ());
 

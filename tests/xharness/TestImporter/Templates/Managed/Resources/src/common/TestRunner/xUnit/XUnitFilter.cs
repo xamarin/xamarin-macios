@@ -1,10 +1,8 @@
 using System;
 using System.Text;
 
-namespace Xamarin.iOS.UnitTests.XUnit
-{
-	public class XUnitFilter
-	{
+namespace Xamarin.iOS.UnitTests.XUnit {
+	public class XUnitFilter {
 		public string AssemblyName { get; private set; }
 		public string SelectorName { get; private set; }
 		public string SelectorValue { get; private set; }
@@ -15,7 +13,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		public static XUnitFilter CreateSingleFilter (string singleTestName, bool exclude, string assemblyName = null)
 		{
 			if (String.IsNullOrEmpty (singleTestName))
-				throw new ArgumentException("must not be null or empty", nameof (singleTestName));
+				throw new ArgumentException ("must not be null or empty", nameof (singleTestName));
 
 			return new XUnitFilter {
 				AssemblyName = assemblyName,
@@ -28,7 +26,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		public static XUnitFilter CreateAssemblyFilter (string assemblyName, bool exclude)
 		{
 			if (String.IsNullOrEmpty (assemblyName))
-				throw new ArgumentException("must not be null or empty", nameof (assemblyName));
+				throw new ArgumentException ("must not be null or empty", nameof (assemblyName));
 
 			return new XUnitFilter {
 				AssemblyName = assemblyName,
@@ -40,7 +38,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		public static XUnitFilter CreateNamespaceFilter (string namespaceName, bool exclude, string assemblyName = null)
 		{
 			if (String.IsNullOrEmpty (namespaceName))
-				throw new ArgumentException("must not be null or empty", nameof (namespaceName));
+				throw new ArgumentException ("must not be null or empty", nameof (namespaceName));
 
 			return new XUnitFilter {
 				AssemblyName = assemblyName,
@@ -53,7 +51,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		public static XUnitFilter CreateClassFilter (string className, bool exclude, string assemblyName = null)
 		{
 			if (String.IsNullOrEmpty (className))
-				throw new ArgumentException("must not be null or empty", nameof (className));
+				throw new ArgumentException ("must not be null or empty", nameof (className));
 
 			return new XUnitFilter {
 				AssemblyName = assemblyName,
@@ -66,7 +64,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		public static XUnitFilter CreateTraitFilter (string traitName, string traitValue, bool exclude)
 		{
 			if (String.IsNullOrEmpty (traitName))
-				throw new ArgumentException("must not be null or empty", nameof (traitName));
+				throw new ArgumentException ("must not be null or empty", nameof (traitName));
 
 			return new XUnitFilter {
 				AssemblyName = null,
@@ -88,29 +86,29 @@ namespace Xamarin.iOS.UnitTests.XUnit
 				sb.Append ($"; AssemblyName: {AssemblyName}");
 
 			switch (FilterType) {
-				case XUnitFilterType.Assembly:
-					break;
+			case XUnitFilterType.Assembly:
+				break;
 
-				case XUnitFilterType.Namespace:
-					AppendDesc ("Namespace", SelectorValue);
-					break;
+			case XUnitFilterType.Namespace:
+				AppendDesc ("Namespace", SelectorValue);
+				break;
 
-				case XUnitFilterType.Single:
-					AppendDesc ("Method", SelectorValue);
-					break;
+			case XUnitFilterType.Single:
+				AppendDesc ("Method", SelectorValue);
+				break;
 
-				case XUnitFilterType.Trait:
-					AppendDesc ("Trait name", SelectorName);
-					AppendDesc ("Trait value", SelectorValue);
-					break;
+			case XUnitFilterType.Trait:
+				AppendDesc ("Trait name", SelectorName);
+				AppendDesc ("Trait value", SelectorValue);
+				break;
 
-				case XUnitFilterType.TypeName:
-					AppendDesc ("Class", SelectorValue);
-					break;
+			case XUnitFilterType.TypeName:
+				AppendDesc ("Class", SelectorValue);
+				break;
 
-				default:
-					sb.Append ("; Unknown filter type");
-					break;
+			default:
+				sb.Append ("; Unknown filter type");
+				break;
 			}
 			sb.Append (']');
 

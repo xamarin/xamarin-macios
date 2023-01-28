@@ -12,8 +12,8 @@ namespace HomeKit {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos10.0")]
 #else
-	[iOS (8,0)]
-	[TV (10,0)]
+	[iOS (8, 0)]
+	[TV (10, 0)]
 #endif
 	public class HMCharacteristicProperties {
 

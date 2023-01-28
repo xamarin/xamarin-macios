@@ -24,7 +24,7 @@ namespace PerfTest {
 
 		string s;
 
-		public IEnumerable<object[]> Handles ()
+		public IEnumerable<object []> Handles ()
 		{
 			yield return new object [] { "nil", IntPtr.Zero };
 			yield return new object [] { "empty", empty.Handle };
@@ -61,7 +61,7 @@ namespace PerfTest {
 			return s = d;
 		}
 
-		public IEnumerable<object[]> Strings ()
+		public IEnumerable<object []> Strings ()
 		{
 			yield return new object [] { "empty", "" };
 			yield return new object [] { "short_7bits", "Bonjour" };
@@ -99,16 +99,16 @@ namespace PerfTest {
 		{
 			yield return new object [] { "null", null };
 			yield return new object [] { "empty", new NSArray () };
-			yield return new object [] { "one",  NSArray.FromStrings ("1") };
+			yield return new object [] { "one", NSArray.FromStrings ("1") };
 			yield return new object [] { "few", NSArray.FromStrings ("Bonjour", "Québec", "汉语 漢語", "I'm feeling 🤪 tonight.") };
 			yield return new object [] { "small_mutable", new NSMutableArray<NSString> (new NSString ("Québec"), new NSString ("汉语 漢語")) };
 			var lot = new NSMutableArray ();
 			for (int i = 0; i < 255; i++) // used to fit under the stackalloc limit of the new implementation
-				lot.Add (new NSString (new string ('!', i) ));
+				lot.Add (new NSString (new string ('!', i)));
 			yield return new object [] { "lot_mutable", lot };
 			var large = new NSMutableArray ();
 			for (int i = 0; i < 4096; i++)
-				large.Add (new NSString (new string ('#', i) ));
+				large.Add (new NSString (new string ('#', i)));
 			yield return new object [] { "large_mutable", large };
 		}
 

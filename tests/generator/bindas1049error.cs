@@ -12,6 +12,6 @@ namespace BindAs1049ErrorTests {
 		[return: BindAs (typeof (string))]
 		[Export ("stringMethod:")]
 		NSNumber StringMethod (int arg1);
-		
+
 	}
 }

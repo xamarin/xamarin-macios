@@ -6,10 +6,8 @@ using PhotosUI;
 using Photos;
 using UIKit;
 
-namespace MyPhotoEditingExtension
-{
-	public partial class PhotoEditingViewController : UIViewController, IPHContentEditingController
-	{
+namespace MyPhotoEditingExtension {
+	public partial class PhotoEditingViewController : UIViewController, IPHContentEditingController {
 		PHContentEditingInput input;
 
 		public PhotoEditingViewController (IntPtr handle) : base (handle)

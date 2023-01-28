@@ -25,12 +25,10 @@ using VectorFloat3 = global::OpenTK.NVector3;
 using NUnit.Framework;
 using Bindings.Test;
 
-namespace MonoTouchFixtures.SpriteKit
-{
+namespace MonoTouchFixtures.SpriteKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class UniformTest
-	{
+	public class UniformTest {
 		[OneTimeSetUp]
 		public void Setup ()
 		{

@@ -41,10 +41,6 @@ namespace ObjCRuntime {
 		internal const string Retain = "retain";
 		internal const string Autorelease = "autorelease";
 		internal const string PerformSelectorOnMainThreadWithObjectWaitUntilDone = "performSelectorOnMainThread:withObject:waitUntilDone:";
-#if MONOMAC
-		internal const string DoesNotRecognizeSelector = "doesNotRecognizeSelector:";
-		internal const string PerformSelectorWithObjectAfterDelay = "performSelector:withObject:afterDelay:";
-#endif
 
 		NativeHandle handle;
 		string? name;
@@ -83,11 +79,13 @@ namespace ObjCRuntime {
 			}
 		}
 
-		public static bool operator!= (Selector left, Selector right) {
+		public static bool operator != (Selector left, Selector right)
+		{
 			return !(left == right);
 		}
 
-		public static bool operator== (Selector left, Selector right) {
+		public static bool operator == (Selector left, Selector right)
+		{
 			if (left is null)
 				return (right is null);
 			if (right is null)
@@ -142,7 +140,7 @@ namespace ObjCRuntime {
 
 		// objc/runtime.h
 		// Selector.GetHandle is optimized by the AOT compiler, and the current implementation only supports IntPtr, so we can't switch to NativeHandle quite yet (the AOT compiler crashes).
-		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint="sel_registerName")]
+		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint = "sel_registerName")]
 		public extern static /* SEL */ IntPtr GetHandle (/* const char* */ string name);
 
 		// objc/objc.h

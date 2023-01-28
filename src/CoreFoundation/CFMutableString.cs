@@ -31,7 +31,7 @@ namespace CoreFoundation {
 		{
 		}
 #endif
-		
+
 		[Preserve (Conditional = true)]
 #if NET
 		internal CFMutableString (NativeHandle handle, bool owns)
@@ -54,8 +54,10 @@ namespace CoreFoundation {
 			if (maxLength < 0)
 				throw new ArgumentException (nameof (maxLength));
 			Handle = CFStringCreateMutable (IntPtr.Zero, maxLength);
-			if (@string is not null)
-				CFStringAppendCharacters (Handle, @string, @string.Length);
+			if (@string is not null) {
+				using var stringPtr = new TransientString (@string, TransientString.Encoding.Unicode);
+				CFStringAppendCharacters (Handle, stringPtr, @string.Length);
+			}
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -71,15 +73,16 @@ namespace CoreFoundation {
 			Handle = CFStringCreateMutableCopy (IntPtr.Zero, maxLength, theString.GetHandle ());
 		}
 
-		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
-		static extern void CFStringAppendCharacters (/* CFMutableStringRef* */ IntPtr theString, string chars, nint numChars);
+		[DllImport (Constants.CoreFoundationLibrary, CharSet = CharSet.Unicode)]
+		static extern void CFStringAppendCharacters (/* CFMutableStringRef* */ IntPtr theString, IntPtr chars, nint numChars);
 
 		public void Append (string @string)
 		{
 			if (@string is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (@string));
 			str = null; // destroy any cached value
-			CFStringAppendCharacters (Handle, @string, @string.Length);
+			using var stringPtr = new TransientString (@string, TransientString.Encoding.Unicode);
+			CFStringAppendCharacters (Handle, stringPtr, @string.Length);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]

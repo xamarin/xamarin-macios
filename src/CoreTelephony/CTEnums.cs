@@ -1,6 +1,8 @@
 using ObjCRuntime;
 using System;
 
+#nullable enable
+
 namespace CoreTelephony {
 
 	// untyped enum -> CoreTelephonyDefines.h
@@ -12,7 +14,7 @@ namespace CoreTelephony {
 	}
 
 	[NoMacCatalyst]
-	[iOS (9,0)]
+	[iOS (9, 0)]
 	[Native]
 	public enum CTCellularDataRestrictedState : ulong {
 		Unknown,
@@ -21,7 +23,7 @@ namespace CoreTelephony {
 	}
 
 	[NoMacCatalyst]
-	[iOS (12,0)]
+	[iOS (12, 0)]
 	[Native]
 	public enum CTCellularPlanProvisioningAddPlanResult : long {
 		Unknown,

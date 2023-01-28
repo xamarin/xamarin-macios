@@ -64,7 +64,6 @@ MAC_PACKAGE_VERSION=9.1.0.$(MAC_COMMIT_DISTANCE)
 # numbers (major.minor) changes.
 
 # WARNING: Do **not** use versions higher than the available Xcode SDK or else we will have issues with mtouch (See https://github.com/xamarin/xamarin-macios/issues/7705)
-# When bumping the major macOS version in MACOS_NUGET_VERSION also update the macOS version where we execute on bots in jenkins/Jenkinsfile (in the 'node' element)
 
 IOS_NUGET_OS_VERSION=16.2
 TVOS_NUGET_OS_VERSION=16.1
@@ -85,3 +84,10 @@ DEFAULT_TARGET_PLATFORM_VERSION_TVOS=16.1
 DEFAULT_TARGET_PLATFORM_VERSION_WATCHOS=9.1
 DEFAULT_TARGET_PLATFORM_VERSION_MACOS=13.0
 DEFAULT_TARGET_PLATFORM_VERSION_MACCATALYST=16.1
+
+# These variables must be updated whenever we release a new stable version into .NET 6
+NET6_IOS_NUGET_VERSION_NO_METADATA=16.0.527
+NET6_TVOS_NUGET_VERSION_NO_METADATA=16.0.527
+NET6_WATCHOS_NUGET_VERSION_NO_METADATA=8.5.447
+NET6_MACOS_NUGET_VERSION_NO_METADATA=12.3.470
+NET6_MACCATALYST_NUGET_VERSION_NO_METADATA=15.4.470

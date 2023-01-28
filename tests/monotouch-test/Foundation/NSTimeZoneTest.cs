@@ -14,11 +14,11 @@ using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NSTimeZoneTest {
-		
+
 		[Test]
 		public void KnownTimeZoneNames ()
 		{

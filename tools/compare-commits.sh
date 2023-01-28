@@ -203,7 +203,7 @@ if test -z "${BUILD_REVISION:-}"; then
 	GIT_COLOR_P=(-c "color.status=always")
 else
 	GIT_COLOR=
-	GIT_COLOR_P=()
+	GIT_COLOR_P=(-c "color.status=auto")
 fi
 
 GENERATOR_DIFF_FILE=

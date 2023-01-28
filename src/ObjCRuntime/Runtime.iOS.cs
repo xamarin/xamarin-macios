@@ -29,7 +29,7 @@ namespace ObjCRuntime {
 #elif IOS
 		internal const string ProductName = "Microsoft.iOS";
 #else
-		#error Unknown platform
+#error Unknown platform
 #endif
 #if WATCH
 		internal const string AssemblyName = "Microsoft.watchOS.dll";
@@ -38,7 +38,7 @@ namespace ObjCRuntime {
 #elif IOS
 		internal const string AssemblyName = "Microsoft.iOS.dll";
 #else
-		#error Unknown platform
+#error Unknown platform
 #endif
 #else
 #if WATCH
@@ -48,7 +48,7 @@ namespace ObjCRuntime {
 #elif IOS
 		internal const string ProductName = "Xamarin.iOS";
 #else
-		#error Unknown platform
+#error Unknown platform
 #endif
 #if WATCH
 		internal const string AssemblyName = "Xamarin.Watch.dll";
@@ -57,7 +57,7 @@ namespace ObjCRuntime {
 #elif IOS
 		internal const string AssemblyName = "Xamarin.iOS.dll";
 #else
-		#error Unknown platform
+#error Unknown platform
 #endif
 #endif
 
@@ -100,7 +100,7 @@ namespace ObjCRuntime {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		static public List<WeakReference> GetSurfacedObjects ()
 		{
-			lock (lock_obj){
+			lock (lock_obj) {
 				var list = new List<WeakReference> (object_map.Count);
 
 				foreach (var kv in object_map)
@@ -110,7 +110,7 @@ namespace ObjCRuntime {
 			}
 		}
 #endif
-			
+
 #if TVOS || WATCH || __MACCATALYST__
 		[Advice ("This method is present only to help porting code.")]
 		public static void StartWWAN (Uri uri, Action<Exception?> callback)
@@ -131,8 +131,7 @@ namespace ObjCRuntime {
 			if (callback is null)
 				throw new ArgumentNullException (nameof (callback));
 
-			DispatchQueue.DefaultGlobalQueue.DispatchAsync (() => 
-			{
+			DispatchQueue.DefaultGlobalQueue.DispatchAsync (() => {
 				Exception? ex = null;
 				try {
 					StartWWAN (uri);
@@ -145,7 +144,7 @@ namespace ObjCRuntime {
 		}
 
 		[DllImport ("__Internal")]
-		static extern void xamarin_start_wwan (string uri);
+		static extern void xamarin_start_wwan (IntPtr uri);
 
 		public static void StartWWAN (Uri uri)
 		{
@@ -158,7 +157,8 @@ namespace ObjCRuntime {
 			if (Runtime.Arch == Arch.SIMULATOR)
 				return;
 
-			xamarin_start_wwan (uri.ToString ());
+			using var uriPtr = new TransientString (uri.ToString ());
+			xamarin_start_wwan (uriPtr);
 		}
 #endif // !TVOS && !WATCH
 #endif // !COREBUILD

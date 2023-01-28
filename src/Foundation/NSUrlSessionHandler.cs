@@ -27,6 +27,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -63,8 +64,7 @@ namespace Foundation {
 	public delegate bool NSUrlSessionHandlerTrustOverrideForUrlCallback (NSUrlSessionHandler sender, string url, SecTrust trust);
 
 	// useful extensions for the class in order to set it in a header
-	static class NSHttpCookieExtensions
-	{
+	static class NSHttpCookieExtensions {
 		static void AppendSegment (StringBuilder builder, string name, string? value)
 		{
 			if (builder.Length > 0)
@@ -78,34 +78,34 @@ namespace Foundation {
 		// returns the header for a cookie
 		public static string GetHeaderValue (this NSHttpCookie cookie)
 		{
-			var header = new StringBuilder();
+			var header = new StringBuilder ();
 			AppendSegment (header, cookie.Name, cookie.Value);
 			AppendSegment (header, NSHttpCookie.KeyPath.ToString (), cookie.Path.ToString ());
 			AppendSegment (header, NSHttpCookie.KeyDomain.ToString (), cookie.Domain.ToString ());
 			AppendSegment (header, NSHttpCookie.KeyVersion.ToString (), cookie.Version.ToString ());
 
 			if (cookie.Comment is not null)
-				AppendSegment (header, NSHttpCookie.KeyComment.ToString (), cookie.Comment.ToString());
+				AppendSegment (header, NSHttpCookie.KeyComment.ToString (), cookie.Comment.ToString ());
 
 			if (cookie.CommentUrl is not null)
-				AppendSegment (header, NSHttpCookie.KeyCommentUrl.ToString (), cookie.CommentUrl.ToString());
+				AppendSegment (header, NSHttpCookie.KeyCommentUrl.ToString (), cookie.CommentUrl.ToString ());
 
 			if (cookie.Properties.ContainsKey (NSHttpCookie.KeyDiscard))
 				AppendSegment (header, NSHttpCookie.KeyDiscard.ToString (), null);
 
 			if (cookie.ExpiresDate is not null) {
 				// Format according to RFC1123; 'r' uses invariant info (DateTimeFormatInfo.InvariantInfo)
-				var dateStr = ((DateTime) cookie.ExpiresDate).ToUniversalTime ().ToString("r", CultureInfo.InvariantCulture);
+				var dateStr = ((DateTime) cookie.ExpiresDate).ToUniversalTime ().ToString ("r", CultureInfo.InvariantCulture);
 				AppendSegment (header, NSHttpCookie.KeyExpires.ToString (), dateStr);
 			}
 
 			if (cookie.Properties.ContainsKey (NSHttpCookie.KeyMaximumAge)) {
-				var timeStampString = (NSString) cookie.Properties[NSHttpCookie.KeyMaximumAge];
+				var timeStampString = (NSString) cookie.Properties [NSHttpCookie.KeyMaximumAge];
 				AppendSegment (header, NSHttpCookie.KeyMaximumAge.ToString (), timeStampString);
 			}
 
 			if (cookie.IsSecure)
-				AppendSegment (header, NSHttpCookie.KeySecure.ToString(), null);
+				AppendSegment (header, NSHttpCookie.KeySecure.ToString (), null);
 
 			if (cookie.IsHttpOnly)
 				AppendSegment (header, "httponly", null); // Apple does not show the key for the httponly
@@ -114,8 +114,7 @@ namespace Foundation {
 		}
 	}
 
-	public partial class NSUrlSessionHandler : HttpMessageHandler
-	{
+	public partial class NSUrlSessionHandler : HttpMessageHandler {
 		private const string SetCookie = "Set-Cookie";
 		private const string Cookie = "Cookie";
 		private CookieContainer? cookieContainer;
@@ -175,7 +174,7 @@ namespace Foundation {
 			inflightRequests = new Dictionary<NSUrlSessionTask, InflightData> ();
 		}
 
-#if !MONOMAC  && !__WATCHOS__
+#if !MONOMAC && !__WATCHOS__ && !NET8_0
 
 		void AddNotification ()
 		{
@@ -205,7 +204,7 @@ namespace Foundation {
 			// runtime issue, this is dull but safe. 
 			List<TaskCompletionSource<HttpResponseMessage>> sources;
 			lock (inflightRequestsLock) { // just lock when we iterate
-				sources = new List <TaskCompletionSource<HttpResponseMessage>> (inflightRequests.Count);
+				sources = new List<TaskCompletionSource<HttpResponseMessage>> (inflightRequests.Count);
 				foreach (var r in inflightRequests.Values) {
 					sources.Add (r.CompletionSource);
 				}
@@ -225,7 +224,7 @@ namespace Foundation {
 					data.Dispose ();
 					inflightRequests.Remove (task);
 				}
-#if !MONOMAC  && !__WATCHOS__
+#if !MONOMAC && !__WATCHOS__ && !NET8_0
 				// do we need to be notified? If we have not inflightData, we do not
 				if (inflightRequests.Count == 0)
 					RemoveNotification ();
@@ -241,9 +240,9 @@ namespace Foundation {
 		protected override void Dispose (bool disposing)
 		{
 			lock (inflightRequestsLock) {
-#if !MONOMAC  && !__WATCHOS__
-			// remove the notification if present, method checks against null
-			RemoveNotification ();
+#if !MONOMAC && !__WATCHOS__ && !NET8_0
+				// remove the notification if present, method checks against null
+				RemoveNotification ();
 #endif
 				foreach (var pair in inflightRequests) {
 					pair.Key?.Cancel ();
@@ -330,21 +329,37 @@ namespace Foundation {
 				trustOverrideForUrl = value;
 			}
 		}
+#if !NET8_0
 		// we do check if a user does a request and the application goes to the background, but
 		// in certain cases the user does that on purpose (BeingBackgroundTask) and wants to be able
 		// to use the network. In those cases, which are few, we want the developer to explicitly 
 		// bypass the check when there are not request in flight 
 		bool bypassBackgroundCheck = true;
+#endif
 
+#if !XAMCORE_5_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
+#if NET8_0
+		[Obsolete ("This property is ignored.")]
+#else
+		[Obsolete ("This property will be ignored in .NET 8.")]
+#endif
 		public bool BypassBackgroundSessionCheck {
 			get {
+#if NET8_0
+				return true;
+#else
 				return bypassBackgroundCheck;
+#endif
 			}
 			set {
+#if !NET8_0
 				EnsureModifiability ();
 				bypassBackgroundCheck = value;
+#endif
 			}
 		}
+#endif // !XAMCORE_5_0
 
 		public CookieContainer? CookieContainer {
 			get {
@@ -398,9 +413,9 @@ namespace Foundation {
 					"Properties can only be modified before sending the first request.");
 		}
 
-		static Exception createExceptionForNSError(NSError error)
+		static Exception createExceptionForNSError (NSError error)
 		{
-			var innerException = new NSErrorException(error);
+			var innerException = new NSErrorException (error);
 
 			// errors that exists in both share the same error code, so we can use a single switch/case
 			// this also ease watchOS integration as if does not expose CFNetwork but (I would not be 
@@ -419,12 +434,12 @@ namespace Foundation {
 				case (NSUrlError) NSNetServicesStatus.CancelledError:
 #endif
 					// No more processing is required so just return.
-					return new OperationCanceledException(error.LocalizedDescription, innerException);
+					return new OperationCanceledException (error.LocalizedDescription, innerException);
 				}
 			}
 
 			return new HttpRequestException (error.LocalizedDescription, innerException);
- 		}
+		}
 
 		string GetHeaderSeparator (string name)
 		{
@@ -493,13 +508,13 @@ namespace Foundation {
 		{
 			Volatile.Write (ref sentRequest, true);
 
-			var nsrequest = await CreateRequest (request).ConfigureAwait(false);
+			var nsrequest = await CreateRequest (request).ConfigureAwait (false);
 			var dataTask = session.CreateDataTask (nsrequest);
 
 			var inflightData = new InflightData (request.RequestUri?.AbsoluteUri!, cancellationToken, request);
 
 			lock (inflightRequestsLock) {
-#if !MONOMAC  && !__WATCHOS__
+#if !MONOMAC && !__WATCHOS__ && !NET8_0
 				// Add the notification whenever needed
 				AddNotification ();
 #endif
@@ -708,7 +723,7 @@ namespace Foundation {
 #elif IOS || TVOS || MACCATALYST
 						isSecTrustGetCertificateChainSupported = ObjCRuntime.SystemVersion.CheckiOS (15, 0);
 #else
-						#error Unknown platform
+#error Unknown platform
 #endif
 					}
 
@@ -775,8 +790,7 @@ namespace Foundation {
 		}
 #endif // NET
 
-		partial class NSUrlSessionHandlerDelegate : NSUrlSessionDataDelegate
-		{
+		partial class NSUrlSessionHandlerDelegate : NSUrlSessionDataDelegate {
 			readonly NSUrlSessionHandler sessionHandler;
 
 			public NSUrlSessionHandlerDelegate (NSUrlSessionHandler handler)
@@ -812,11 +826,11 @@ namespace Foundation {
 				return null;
 			}
 
-			void UpdateManagedCookieContainer (Uri absoluteUri, NSHttpCookie[] cookies)
+			void UpdateManagedCookieContainer (Uri absoluteUri, NSHttpCookie [] cookies)
 			{
 				if (sessionHandler.cookieContainer is not null && cookies.Length > 0)
 					lock (sessionHandler.inflightRequestsLock) { // ensure we lock when writing to the collection
-						var cookiesContents = Array.ConvertAll(cookies, static cookie => cookie.GetHeaderValue());
+						var cookiesContents = Array.ConvertAll (cookies, static cookie => cookie.GetHeaderValue ());
 						sessionHandler.cookieContainer.SetCookies (absoluteUri, string.Join (',', cookiesContents)); //  as per docs: The contents of an HTTP set-cookie header as returned by a HTTP server, with Cookie instances delimited by commas.
 					}
 			}
@@ -830,9 +844,9 @@ namespace Foundation {
 					return;
 
 				try {
-					var urlResponse = (NSHttpUrlResponse)response;
-					var status = (int)urlResponse.StatusCode;
-					var absoluteUri = new Uri(urlResponse.Url.AbsoluteString!);
+					var urlResponse = (NSHttpUrlResponse) response;
+					var status = (int) urlResponse.StatusCode;
+					var absoluteUri = new Uri (urlResponse.Url.AbsoluteString!);
 
 					var content = new NSUrlSessionDataTaskStreamContent (inflight.Stream, () => {
 						if (!inflight.Completed) {
@@ -846,7 +860,7 @@ namespace Foundation {
 					}, inflight.CancellationTokenSource.Token);
 
 					// NB: The double cast is because of a Xamarin compiler bug
-					var httpResponse = new HttpResponseMessage ((HttpStatusCode)status) {
+					var httpResponse = new HttpResponseMessage ((HttpStatusCode) status) {
 						Content = content,
 						RequestMessage = inflight.Request
 					};
@@ -917,7 +931,7 @@ namespace Foundation {
 					// send the error or send the response back
 					if (error is not null || serverError is not null) {
 						// got an error, cancel the stream operatios before we do anything
-						inflight.CancellationTokenSource.Cancel (); 
+						inflight.CancellationTokenSource.Cancel ();
 						inflight.Errored = true;
 
 						var exc = inflight.Exception ?? createExceptionForNSError (error ?? serverError!);  // client errors wont happen if we get server errors
@@ -989,7 +1003,7 @@ namespace Foundation {
 				if (hasCallBack && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodServerTrust) {
 					// if one of the delegates allows to ignore the cert, do it. We check first the one that takes the url because is more precisse, later the
 					// more general one. Since we are using nullables, if the delegate is not present, by default is false
-					trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false) || 
+					trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false) ||
 						(trustCallback?.Invoke (sessionHandler, challenge.ProtectionSpace.ServerSecTrust) ?? false);
 					usedCallback = true;
 				}
@@ -1101,8 +1115,7 @@ namespace Foundation {
 			}
 		}
 
-		class InflightData : IDisposable
-		{
+		class InflightData : IDisposable {
 			public readonly object Lock = new object ();
 			public string RequestUrl { get; set; }
 
@@ -1127,10 +1140,10 @@ namespace Foundation {
 				Request = request;
 			}
 
-			public void Dispose()
+			public void Dispose ()
 			{
 				Dispose (true);
-				GC.SuppressFinalize(this);
+				GC.SuppressFinalize (this);
 			}
 
 			// The bulk of the clean-up code is implemented in Dispose(bool)
@@ -1143,8 +1156,7 @@ namespace Foundation {
 
 		}
 
-		class NSUrlSessionDataTaskStreamContent : MonoStreamContent
-		{
+		class NSUrlSessionDataTaskStreamContent : MonoStreamContent {
 			Action? disposed;
 
 			public NSUrlSessionDataTaskStreamContent (NSUrlSessionDataTaskStream source, Action onDisposed, CancellationToken token) : base (source, token)
@@ -1172,8 +1184,7 @@ namespace Foundation {
 		// By copying Mono's old implementation here, we ensure that we're compatible with both HttpClient implementations,
 		// so when we eventually adopt the CoreFX version in all of Mono's profiles, we don't regress here.
 		//
-		class MonoStreamContent : HttpContent
-		{
+		class MonoStreamContent : HttpContent {
 			readonly Stream content;
 			readonly int bufferSize;
 			readonly CancellationToken cancellationToken;
@@ -1256,8 +1267,7 @@ namespace Foundation {
 			}
 		}
 
-		class NSUrlSessionDataTaskStream : Stream
-		{
+		class NSUrlSessionDataTaskStream : Stream {
 			readonly Queue<NSData> data;
 			readonly object dataLock = new object ();
 
@@ -1279,7 +1289,7 @@ namespace Foundation {
 			{
 				lock (dataLock) {
 					data.Enqueue (d);
-					length += (int)d.Length;
+					length += (int) d.Length;
 				}
 			}
 
@@ -1337,7 +1347,7 @@ namespace Foundation {
 				ThrowIfNeeded (cancellationToken);
 
 				var d = currentStream!;
-				var bufferCount = Math.Min (count, (int)(d.Length - d.Position));
+				var bufferCount = Math.Min (count, (int) (d.Length - d.Position));
 				var bytesRead = await d.ReadAsync (buffer, offset, bufferCount, cancellationToken).ConfigureAwait (false);
 
 				// add the bytes read from the pointer to the position
@@ -1401,8 +1411,7 @@ namespace Foundation {
 			}
 		}
 
-		class WrappedNSInputStream : NSInputStream
-		{
+		class WrappedNSInputStream : NSInputStream {
 			NSStreamStatus status;
 			CFRunLoopSource source;
 			readonly Stream stream;
@@ -1431,8 +1440,8 @@ namespace Foundation {
 			public override nint Read (IntPtr buffer, nuint len)
 			{
 				var sourceBytes = new byte [len];
-				var read = stream.Read (sourceBytes, 0, (int)len);
-				Marshal.Copy (sourceBytes, 0, buffer, (int)len);
+				var read = stream.Read (sourceBytes, 0, (int) len);
+				Marshal.Copy (sourceBytes, 0, buffer, (int) len);
 
 				if (notifying)
 					return read;

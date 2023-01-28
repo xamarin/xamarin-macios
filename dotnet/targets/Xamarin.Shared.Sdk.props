@@ -39,10 +39,19 @@
 		<!-- Ref: https://github.com/xamarin/xamarin-macios/issues/16193 -->
 		<!-- Ref: https://github.com/dotnet/sdk/issues/28419 -->
 		<GenerateSatelliteAssembliesForCore Condition="'$(GenerateSatelliteAssembliesForCore)' == ''">true</GenerateSatelliteAssembliesForCore>
+
+		<!-- This will ensure any trimmer components are restored by the framework reference logic. As such it must happen before Microsoft.NET.Publish.targets is included.
+			Ref:
+			* https://github.com/dotnet/sdk/pull/29441
+			* https://github.com/dotnet/sdk/blob/c5a58bc6c3eb2b236b314e6d17a89a537459890c/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Publish.targets#L20-L21
+			* https://github.com/dotnet/sdk/blob/c5a58bc6c3eb2b236b314e6d17a89a537459890c/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Sdk.FrameworkReferenceResolution.targets#L102
+		-->
+		<_IsTrimmingEnabled>true</_IsTrimmingEnabled>
 	</PropertyGroup>
 
 	<!-- Set the default RuntimeIdentifier if not already specified. -->
 	<PropertyGroup Condition="'$(_RuntimeIdentifierIsRequired)' == 'true' And '$(RuntimeIdentifier)' == '' And '$(RuntimeIdentifiers)' == '' ">
+		<!-- The _<platform>RuntimeIdentifier values are set from the IDE -->
 		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'iOS'">$(_iOSRuntimeIdentifier)</RuntimeIdentifier>
 		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'tvOS'">$(_tvOSRuntimeIdentifier)</RuntimeIdentifier>
 		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'macOS'">$(_macOSRuntimeIdentifier)</RuntimeIdentifier>
@@ -52,21 +61,13 @@
 		
 		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'iOS'">iossimulator-x64</RuntimeIdentifier>
 		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'tvOS'">tvossimulator-x64</RuntimeIdentifier>
-		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'macOS'">osx-x64</RuntimeIdentifier>
-		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'MacCatalyst'">maccatalyst-x64</RuntimeIdentifier>
-		<!--
-			Workaround/hack:
 
-			The Microsoft.NET.RuntimeIdentifierInference.targets file is loaded
-			before this file, and executes some logic depending on whether the
-			RuntimeIdentifier is set or not. Since RuntimeIdentifier isn't set at
-			that point (we're setting it here), we need to replicate the logic in
-			the Microsoft.NET.RuntimeIdentifierInference.targets file to make sure
-			things work as expected.
+		<!-- For release desktop builds we default to universal apps in .NET 7+ -->
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' != 'Release' And '$(_PlatformName)' == 'macOS'">osx-x64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' != 'Release' And '$(_PlatformName)' == 'MacCatalyst'">maccatalyst-x64</RuntimeIdentifier>
+		<RuntimeIdentifiers Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' == 'Release' And '$(_PlatformName)' == 'macOS'">osx-x64;osx-arm64</RuntimeIdentifiers>
+		<RuntimeIdentifiers Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' == 'Release' And '$(_PlatformName)' == 'MacCatalyst'">maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers>
 
-			Ref: https://github.com/dotnet/runtime/issues/54406
-		-->
-		<SelfContained>true</SelfContained>
 	</PropertyGroup>
 
 	<!-- We're never using any app hosts -->
@@ -76,7 +77,7 @@
 	</PropertyGroup>
 
 	<!-- App extensions are self-contained, even though their OutputType=Library. This must be done here and not targets as it is checked before targets are invoked. -->
-	<PropertyGroup Condition="'$(IsAppExtension)' == 'true'">
+	<PropertyGroup Condition="'$(IsAppExtension)' == 'true' And '$(RuntimeIdentifier)' != ''">
 		<SelfContained>true</SelfContained>
 	</PropertyGroup>
 
