@@ -760,6 +760,7 @@ namespace Registrar {
 					case "CoreMedia.CMTime":
 					case "CoreMedia.CMTimeMapping":
 					case "CoreMedia.CMTimeRange":
+					case "CoreMedia.CMVideoDimensions":
 					case "MapKit.MKCoordinateSpan":
 					case "Foundation.NSRange":
 					case "SceneKit.SCNMatrix4":

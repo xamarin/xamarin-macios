@@ -1285,6 +1285,7 @@ namespace SceneKit {
 #endif
 		[NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
+		[NoMacCatalyst]
 		[Export ("attributeForKey:")]
 		[return: NullAllowed]
 		NSObject GetAttribute (NSString lightAttribute);
@@ -1296,6 +1297,7 @@ namespace SceneKit {
 #endif
 		[NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
+		[NoMacCatalyst]
 		[Export ("setAttribute:forKey:")]
 		void SetAttribute ([NullAllowed] NSObject value, NSString attribuetKey);
 

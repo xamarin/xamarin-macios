@@ -26,6 +26,8 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using System.Runtime.Versioning;
 
+#nullable enable
+
 namespace AppKit {
 #if NET
 	[SupportedOSPlatform ("macos")]

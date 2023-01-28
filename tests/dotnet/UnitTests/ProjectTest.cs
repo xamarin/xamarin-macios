@@ -1181,6 +1181,25 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		// [TestCase (ApplePlatform.MacCatalyst, null, "Release")]
+		[TestCase (ApplePlatform.MacOSX, null, "Release")]
+		public void NoWarnCodesign (ApplePlatform platform, string runtimeIdentifiers, string configuration)
+		{
+			var project = "Entitlements";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
+			Clean (project_path);
+
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["Configuration"] = configuration;
+			properties ["EnableCodeSigning"] = "true";
+			properties ["ExcludeNUnitLiteReference"] = "true";
+			properties ["ExcludeTouchUnitReference"] = "true";
+			var rv = DotNet.AssertBuild (project_path, properties);
+			rv.AssertNoWarnings ();
+		}
+
 		[Test]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
 		public void BuildAndExecuteAppWithNativeDynamicLibrariesInPackageReference (ApplePlatform platform, string runtimeIdentifier)
