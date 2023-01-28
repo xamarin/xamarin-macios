@@ -514,11 +514,130 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "UIAccessibilityContentSizeCategoryImageAdjusting":
+				switch (type.Name) {
+				// Ventura / Xcode 14.2
+				case "PKPaymentButton":
+					return true;
+				}
+				break;
+			case "UIActivityItemsConfigurationProviding":
+				switch (type.Name) {
+				// Ventura / Xcode 14.2
+				case "PKPaymentAuthorizationViewController":
+				// Ventura / Xcode 14.2
+				case "PKPaymentButton":
+					return true;
+				}
+				break;
+			case "UIAppearance":
+				switch (type.Name) {
+				// Ventura / Xcode 14.2
+				case "PKPaymentButton":
+					return true;
+				}
+				break;
+			case "UIAppearanceContainer":
+				switch (type.Name) {
+				// Ventura / Xcode 14.2
+				case "PKPaymentAuthorizationViewController":
+				// Ventura / Xcode 14.2
+				case "PKPaymentButton":
+					return true;
+				}
+				break;
+			case "UIContentContainer":
+				switch (type.Name) {
+				// Ventura / Xcode 14.2
+				case "PKPaymentAuthorizationViewController":
+					return true;
+				}
+				break;
+			case "UIContextMenuInteractionDelegate":
+				switch (type.Name) {
+				// Ventura / Xcode 14.2
+				case "PKPaymentButton":
+					return true;
+				}
+				break;
+			case "UICoordinateSpace":
+				switch (type.Name) {
+				// Ventura / Xcode 14.2
+				case "PKPaymentButton":
+					return true;
+				}
+				break;
+			case "UIDynamicItem":
+				switch (type.Name) {
+				// Ventura / Xcode 14.2
+				case "PKPaymentButton":
+					return true;
+				}
+				break;
+			case "UIFocusButton":
+				switch (type.Name) {
+				// Ventura / Xcode 14.2
+				case "PKPaymentButton":
+					return true;
+				}
+				break;
+			case "UIFocusItem":
+				switch (type.Name) {
+				// Ventura / Xcode 14.2
+				case "PKPaymentButton":
+					return true;
+				}
+				break;
+			case "UIFocusItemContainer":
+				switch (type.Name) {
+				// Ventura / Xcode 14.2
+				case "PKPaymentButton":
+					return true;
+				}
+				break;
+			case "UILargeContentViewerItem":
+				switch (type.Name) {
+				// Ventura / Xcode 14.2
+				case "PKPaymentButton":
+					return true;
+				}
+				break;
+			case "UIPopoverPresentationControllerSourceItem":
+				switch (type.Name) {
+				// Ventura / Xcode 14.2
+				case "PKPaymentButton":
+					return true;
+				}
+				break;
+			case "UIResponderStandardEditActions":
+				switch (type.Name) {
+				// Ventura / Xcode 14.2
+				case "PKPaymentAuthorizationViewController":
+					return true;
+				// Ventura / Xcode 14.2
+				case "PKPaymentButton":
+					return true;
+				}
+				break;
+			case "UITraitEnvironment":
+				switch (type.Name) {
+				// Ventura / Xcode 14.2
+				case "PKPaymentAuthorizationViewController":
+					return true;
+				// Ventura / Xcode 14.2
+				case "PKPaymentButton":
+					return true;
+				}
+				break;
 			case "UIUserActivityRestoring":
 				if (!TestRuntime.CheckXcodeVersion (10, 0))
 					return true;
 
 				switch (type.Name) {
+				// Ventura / Xcode 14.2
+				case "PKPaymentAuthorizationViewController":
+				// Ventura / Xcode 14.2
+				case "PKPaymentButton":
 				// UIKit.framework/Headers/UIDocument.h
 				case "UIDocument":
 				// inherits it from UIDocument
