@@ -32,11 +32,13 @@ using System;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace AppKit {
 
 	public partial class NSActionCell {
-		NSObject target;
-		Selector action;
+		NSObject? target;
+		Selector? action;
 
 		public event EventHandler Activated {
 			add {
