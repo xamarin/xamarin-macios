@@ -202,7 +202,6 @@ namespace Cecil.Tests {
 			"MediaPlayer.MPVolumeSettings.AlertHide()",
 			"MediaPlayer.MPVolumeSettings.AlertIsVisible()",
 			"MediaPlayer.MPVolumeSettings.AlertShow()",
-			"Metal.IMTLResource Metal.MTLTextureWrapper::RootResource()",
 			"MetalPerformanceShaders.MPSCnnConvolutionDescriptor.GetConvolutionDescriptor(System.UIntPtr, System.UIntPtr, System.UIntPtr, System.UIntPtr, MetalPerformanceShaders.MPSCnnNeuron)",
 			"MetalPerformanceShaders.MPSCnnFullyConnected..ctor(Metal.IMTLDevice, MetalPerformanceShaders.MPSCnnConvolutionDescriptor, System.Single[], System.Single[], MetalPerformanceShaders.MPSCnnConvolutionFlags)",
 			"MetalPerformanceShaders.MPSCnnNeuron MetalPerformanceShaders.MPSCnnConvolution::Neuron()",
@@ -404,6 +403,16 @@ namespace Cecil.Tests {
 		bool SkipSupportedAndObsoleteAtTheSameTime (ICustomAttributeProvider api, ApplePlatform platform, Version version)
 		{
 			var fullname = api.AsFullName ();
+
+			switch (fullname) {
+			case "SceneKit.SCNAnimationPlayer.SetSpeed(System.Runtime.InteropServices.NFloat, Foundation.NSString)":
+				// SetSpeed is in the SCNAnimatable protocol, which was added in iOS 8.0.
+				// The SetSpeed method was added in iOS 10.0, and deprecated in iOS 11.
+				// The SCNAnimatable protocol is implemented by the SCNAnimationPlayer class, which was added in iOS 11.
+				// Thus it's expected that the method was introduced and deprecated in the same OS version.
+				return true;
+			}
+
 			switch (platform) {
 			case ApplePlatform.iOS:
 				switch (fullname) {
