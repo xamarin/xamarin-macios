@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace bgen {
 
-	// extension shared between NET and !NET make our lifes a little easier
+	// extension shared between NET and !NET make our lives a little easier
 	public static class NullabilityInfoExtensions {
 		public static bool IsNullable (this NullabilityInfo self)
 			=> self.ReadState == NullabilityState.Nullable;
