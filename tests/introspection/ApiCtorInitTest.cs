@@ -134,6 +134,8 @@ namespace Introspection {
 				return true;
 			case "HMMatterRequestHandler": // got removed and the current API throws an exception at run time.
 				return true;
+			case "PKIdentityButton":
+				return true;
 			}
 
 #if !NET
