@@ -128,6 +128,7 @@
     <Compile Include="..\tools\common\Execution.cs">
       <Link>Execution.cs</Link>
     </Compile>
+    <Compile Include="generator-nullability-info-context.cs" />
     <Compile Include="Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>

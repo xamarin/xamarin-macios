@@ -3,6 +3,8 @@ using System;
 using CoreGraphics;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSTextContainer {
 #if !NET

@@ -68,7 +68,6 @@
 !missing-selector! +AVSpeechUtterance::speechUtteranceWithSSMLRepresentation: not bound
 !missing-selector! +AVVideoComposition::videoCompositionWithAsset:applyingCIFiltersWithHandler:completionHandler: not bound
 !missing-selector! +AVVideoComposition::videoCompositionWithPropertiesOfAsset:completionHandler: not bound
-!missing-selector! +NSValue::valueWithCMVideoDimensions: not bound
 !missing-selector! AVAssetExportSession::audioTrackGroupHandling not bound
 !missing-selector! AVAssetExportSession::setAudioTrackGroupHandling: not bound
 !missing-selector! AVAssetImageGenerator::generateCGImageAsynchronouslyForTime:completionHandler: not bound
@@ -286,7 +285,6 @@
 !missing-selector! AVSpeechUtterance::initWithSSMLRepresentation: not bound
 !missing-selector! AVURLAsset::httpSessionIdentifier not bound
 !missing-selector! AVVideoComposition::determineValidityForAsset:timeRange:validationDelegate:completionHandler: not bound
-!missing-selector! NSValue::CMVideoDimensionsValue not bound
 !missing-type! AVAssetPlaybackAssistant not bound
 !missing-type! AVAUPresetEvent not bound
 !missing-type! AVExtendedNoteOnEvent not bound
@@ -313,19 +311,3 @@
 !missing-type! AVSpeechSynthesisProviderVoice not bound
 !missing-enum-value! AVSpeechSynthesisVoiceQuality native value AVSpeechSynthesisVoiceQualityPremium = 3 not bound
 !missing-selector! AVPlayerLayer::copyDisplayedPixelBuffer not bound
-!missing-selector! AVCapturePhotoOutput::preservesLivePhotoCaptureSuspendedOnSessionStop not bound
-!missing-selector! AVCapturePhotoOutput::setPreservesLivePhotoCaptureSuspendedOnSessionStop: not bound
-!deprecated-attribute-missing! AVCaptureDeviceFormat::highResolutionStillImageDimensions missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVCaptureDeviceFormat::videoMaxZoomFactorForDepthDataDelivery missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVCaptureDeviceFormat::videoMinZoomFactorForDepthDataDelivery missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVCapturePhotoOutput::isHighResolutionCaptureEnabled missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVCapturePhotoOutput::setHighResolutionCaptureEnabled: missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVCapturePhotoSettings::isHighResolutionPhotoEnabled missing a [Deprecated] attribute
-!deprecated-attribute-missing! AVCapturePhotoSettings::setHighResolutionPhotoEnabled: missing a [Deprecated] attribute
-!missing-selector! AVCaptureDeviceFormat::secondaryNativeResolutionZoomFactors not bound
-!missing-selector! AVCaptureDeviceFormat::supportedMaxPhotoDimensions not bound
-!missing-selector! AVCaptureDeviceFormat::supportedVideoZoomFactorsForDepthDataDelivery not bound
-!missing-selector! AVCapturePhotoOutput::maxPhotoDimensions not bound
-!missing-selector! AVCapturePhotoOutput::setMaxPhotoDimensions: not bound
-!missing-selector! AVCapturePhotoSettings::maxPhotoDimensions not bound
-!missing-selector! AVCapturePhotoSettings::setMaxPhotoDimensions: not bound

@@ -82,7 +82,7 @@ namespace Cecil.Tests {
 			return false;
 		}
 
-		bool HasEditorBrowseableNeverAttribute (ICustomAttributeProvider provider)
+		public static bool HasEditorBrowseableNeverAttribute (ICustomAttributeProvider provider)
 		{
 			if (provider?.HasCustomAttributes != true)
 				return false;
