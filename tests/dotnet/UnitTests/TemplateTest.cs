@@ -94,20 +94,20 @@ namespace Xamarin.Tests {
 			new TemplateInfo (ApplePlatform.iOS, "ios", TemplateLanguage.CSharp),
 			new TemplateInfo (ApplePlatform.iOS, "ios", TemplateLanguage.FSharp),
 			new TemplateInfo (ApplePlatform.iOS, "ios-tabbed"),
-			new TemplateInfo (ApplePlatform.iOS, "ioslib"),
-			new TemplateInfo (ApplePlatform.iOS, "iosbinding"),
+			new TemplateInfo (ApplePlatform.iOS, "ioslib", TemplateLanguage.CSharp),
+			new TemplateInfo (ApplePlatform.iOS, "iosbinding", TemplateLanguage.CSharp),
 
-			new TemplateInfo (ApplePlatform.TVOS, "tvos"),
-			new TemplateInfo (ApplePlatform.TVOS, "tvoslib"),
-			new TemplateInfo (ApplePlatform.TVOS, "tvosbinding"),
+			new TemplateInfo (ApplePlatform.TVOS, "tvos", TemplateLanguage.CSharp),
+			new TemplateInfo (ApplePlatform.TVOS, "tvoslib", TemplateLanguage.CSharp),
+			new TemplateInfo (ApplePlatform.TVOS, "tvosbinding", TemplateLanguage.CSharp),
 
-			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalyst", execute: true),
-			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalystlib"),
-			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalystbinding"),
+			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalyst", TemplateLanguage.CSharp, execute: true),
+			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalystlib", TemplateLanguage.CSharp),
+			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalystbinding", TemplateLanguage.CSharp),
 
-			new TemplateInfo (ApplePlatform.MacOSX, "macos", execute: true),
-			new TemplateInfo (ApplePlatform.MacOSX, "macoslib"),
-			new TemplateInfo (ApplePlatform.MacOSX, "macosbinding"),
+			new TemplateInfo (ApplePlatform.MacOSX, "macos", TemplateLanguage.CSharp, execute: true),
+			new TemplateInfo (ApplePlatform.MacOSX, "macoslib", TemplateLanguage.CSharp),
+			new TemplateInfo (ApplePlatform.MacOSX, "macosbinding", TemplateLanguage.CSharp),
 
 			/* item templates */
 			new TemplateInfo (ApplePlatform.iOS, "ios-controller"),
