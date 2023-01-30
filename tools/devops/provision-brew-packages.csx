@@ -1,5 +1,6 @@
 BrewPackages (
     "shellcheck",
+    "dos2unix",
     "yamllint",
     "cmake", 
     "autoconf",
