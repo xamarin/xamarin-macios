@@ -228,9 +228,11 @@ namespace GeneratorTests {
 			// If it's an enum value, try to find the enum field name and return that.
 			if (td?.BaseType?.Name == "Enum") {
 				if (arg.Value is byte b2) {
-					var field = td.Fields.SingleOrDefault (f => f.HasConstant && (byte) f.Constant == b2);
-					if (field is not null)
-						return td.FullName + "." + field.Name;
+					var fields = td.Fields
+									.Where (f => f.HasConstant && (byte) f.Constant == b2)
+									.OrderBy (f => f.Name);
+					if (fields.Any ())
+						return td.FullName + "." + fields.First ().Name;
 				}
 			}
 			var obj = arg.Value;
@@ -332,15 +334,21 @@ namespace GeneratorTests {
 #else
 			const string expectedAttributes =
 @"	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.iOS, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
+	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
 	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.MacOSX, 11, 2, ObjCRuntime.PlatformArchitecture.None, null)]
 	UIKit.UIView Bug35176.BarObject::BarView(): [Introduced(ObjCRuntime.PlatformName.iOS, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::BarView(): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
 	UIKit.UIView Bug35176.BarObject::BarView(): [Introduced(ObjCRuntime.PlatformName.MacOSX, 11, 2, ObjCRuntime.PlatformArchitecture.None, null)]
 	UIKit.UIView Bug35176.BarObject::FooView(): [Introduced(ObjCRuntime.PlatformName.iOS, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::FooView(): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
 	UIKit.UIView Bug35176.BarObject::FooView(): [Introduced(ObjCRuntime.PlatformName.MacOSX, 11, 2, ObjCRuntime.PlatformArchitecture.None, null)]
 	UIKit.UIView Bug35176.BarObject::get_BarView(): [Introduced(ObjCRuntime.PlatformName.iOS, 14, 4, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::get_BarView(): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 4, ObjCRuntime.PlatformArchitecture.None, null)]
 	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [Introduced(ObjCRuntime.PlatformName.iOS, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
 	UIKit.UIView Bug35176.BarObject::GetBarMember(System.Int32): [Introduced(ObjCRuntime.PlatformName.MacOSX, 11, 2, ObjCRuntime.PlatformArchitecture.None, null)]
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [Introduced(ObjCRuntime.PlatformName.iOS, 14, 4, ObjCRuntime.PlatformArchitecture.None, null)]
+	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 4, ObjCRuntime.PlatformArchitecture.None, null)]
 ";
 #endif
 
@@ -352,13 +360,6 @@ namespace GeneratorTests {
 			}
 
 			Assert.AreEqual (expectedAttributes, renderedAttributes, "Introduced attributes");
-			Assert.AreEqual (
-#if NET
-				18, // This number should be lower - https://github.com/xamarin/xamarin-macios/issues/14802
-#else
-				10,
-#endif
-				 preserves, $"Introduced attribute count:\n{renderedAttributes}"); // If you modified code that generates IntroducedAttributes please update the attribute count
 		}
 
 		[Test]
