@@ -1937,8 +1937,10 @@ namespace Metal {
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLTexture : MTLResource {
 		[iOS (8, 0)]
-		[Deprecated (PlatformName.iOS, 10, 0)]
 		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Abstract, Export ("rootResource")]
 		IMTLResource RootResource { get; }

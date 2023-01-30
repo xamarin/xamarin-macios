@@ -131,6 +131,7 @@ namespace Xamarin.Tests {
 			expectedFiles.Add ($"{assemblyDirectory}libSkipInstallNameTool.dylib");
 
 			expectedFiles.Add ($"{resourcesDirectory}basn3p08.png");
+			expectedFiles.Add ($"{resourcesDirectory}basn3p08_with_loc.png");
 			expectedFiles.Add ($"{resourcesDirectory}iTunesArtwork.jpg");
 
 			// UnknownA.bin: None
