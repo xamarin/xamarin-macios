@@ -60,6 +60,9 @@
     <Compile Include="$(RepositoryPath)\tools\common\Execution.cs">
       <Link>Execution.cs</Link>
     </Compile>
+    <Compile Include="..\generator-extension-methods.cs">
+      <Link>src\generator-extension-methods.cs</Link>
+    </Compile>
     <Compile Include="..\generator-nullability-info-context.cs">
       <Link>src\generator-nullability-info-context.cs</Link>
     </Compile>
