@@ -60,6 +60,9 @@
     <Compile Include="$(RepositoryPath)\tools\common\Execution.cs">
       <Link>Execution.cs</Link>
     </Compile>
+    <Compile Include="..\generator-nullability-info-context.cs">
+      <Link>src\generator-nullability-info-context.cs</Link>
+    </Compile>
     <Compile Include="..\Resources.Designer.cs">
       <DependentUpon>..\Resources.resx</DependentUpon>
     </Compile>
@@ -121,6 +124,16 @@
     <StartWorkingDirectory>..</StartWorkingDirectory>
     <ExternalConsole>false</ExternalConsole>
     <EnvironmentVariables>
+      <Variable name="XamarinMacFrameworkRoot" value="../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current" />
+    </EnvironmentVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'maccatalyst' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>@build/dotnet/$(RunConfiguration)/$(RunConfiguration).rsp</StartArguments>
+    <StartWorkingDirectory>..</StartWorkingDirectory>
+    <ExternalConsole>false</ExternalConsole>
+    <EnvironmentVariables>
+      <Variable name="MD_MTOUCH_SDK_ROOT" value="../../_ios-build//Library/Frameworks/Xamarin.iOS.framework/Versions/git" />
       <Variable name="XamarinMacFrameworkRoot" value="../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current" />
     </EnvironmentVariables>
   </PropertyGroup>

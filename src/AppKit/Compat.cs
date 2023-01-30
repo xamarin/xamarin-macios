@@ -5,6 +5,8 @@ using System.ComponentModel;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AppKit {
 	partial class NSMutableParagraphStyle {
 
@@ -13,7 +15,7 @@ namespace AppKit {
 		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
 		public virtual void SetTextBlocks (NSTextBlock [] array)
 		{
-			if (array == null)
+			if (array is null)
 				throw new ArgumentNullException (nameof (array));
 			var nsa_array = NSArray.FromNSObjects (array);
 			if (IsDirectBinding) {
@@ -29,7 +31,7 @@ namespace AppKit {
 		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
 		public virtual void SetTextLists (NSTextList [] array)
 		{
-			if (array == null)
+			if (array is null)
 				throw new ArgumentNullException (nameof (array));
 			var nsa_array = NSArray.FromNSObjects (array);
 			if (IsDirectBinding) {

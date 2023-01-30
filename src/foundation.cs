@@ -10980,10 +10980,8 @@ namespace Foundation {
 		[Export ("preferredPresentationSize")]
 		CGSize PreferredPresentationSize {
 			get;
-#if !MONOMAC
 			[NoMac]
 			set;
-#endif
 		}
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
@@ -11889,6 +11887,23 @@ namespace Foundation {
 		[Export ("CATransform3DValue")]
 		CoreAnimation.CATransform3D CATransform3DValue { get; }
 #endif
+
+		[iOS (16, 0)]
+		[Mac (13, 0)]
+		[MacCatalyst (16, 0)]
+		[TV (16, 0)]
+		[Watch (9, 0)]
+		[Export ("CMVideoDimensionsValue")]
+		CMVideoDimensions CMVideoDimensionsValue { get; }
+
+		[iOS (16, 0)]
+		[Mac (13, 0)]
+		[MacCatalyst (16, 0)]
+		[TV (16, 0)]
+		[Watch (9, 0)]
+		[Export ("valueWithCMVideoDimensions:")]
+		[Static]
+		NSValue FromCMVideoDimensions (CMVideoDimensions value);
 
 		#region SceneKit Additions
 
@@ -15461,6 +15476,14 @@ namespace Foundation {
 
 		[Static]
 		[Deprecated (PlatformName.MacOSX, 10, 15)]
+#if XAMCORE_5_0
+		[NoMacCatalyst]
+#else
+#if MACCATALYST
+		[Obsolete ("Do not use; this method is not available on Mac Catalyst.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+#endif // MACCATALYST
+#endif // XAMCORE_5_0
 		[Export ("launchedTaskWithLaunchPath:arguments:")]
 		NSTask LaunchFromPath (string path, string [] arguments);
 

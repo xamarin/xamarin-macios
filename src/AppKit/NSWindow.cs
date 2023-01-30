@@ -30,6 +30,8 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AppKit {
 
 	public partial class NSWindow {
@@ -59,6 +61,7 @@ namespace AppKit {
 			}
 		}
 
+#if !NET
 		static IntPtr selInitWithWindowRef = Selector.GetHandle ("initWithWindowRef:");
 
 		// Do not actually export because NSObjectFlag is not exportable.
@@ -74,10 +77,15 @@ namespace AppKit {
 			}
 			InitializeReleasedWhenClosed ();
 		}
+#endif
 
 		static public NSWindow FromWindowRef (IntPtr windowRef)
 		{
+#if NET
+			return new NSWindow (windowRef);
+#else
 			return new NSWindow (windowRef, NSObjectFlag.Empty);
+#endif
 		}
 
 		void InitializeReleasedWhenClosed ()
@@ -121,7 +129,7 @@ namespace AppKit {
 			//
 			// If that is the case, we take a reference first, and to keep the behavior
 			// we call Dispose after that.
-			if (WindowController == null) {
+			if (WindowController is null) {
 				bool released_when_closed = DangerousReleasedWhenClosed;
 				if (released_when_closed)
 					CFObject.CFRetain (Handle);

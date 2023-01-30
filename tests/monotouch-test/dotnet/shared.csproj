@@ -55,6 +55,9 @@
     <Compile Include="$(RootTestsDirectory)\common\Extensions.cs">
       <Link>Extensions.cs</Link>
     </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\TestAssemblyLoader.cs">
+      <Link>TestAssemblyLoader.cs</Link>
+    </Compile>
     <Compile Include="$(RootTestsDirectory)\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>
     </Compile>
@@ -70,6 +73,9 @@
     </Content>
     <Content Include="$(MonoTouchTestDirectory)\basn3p08.png">
       <Link>basn3p08.png</Link>
+    </Content>
+        <Content Include="$(MonoTouchTestDirectory)\basn3p08_with_loc.png">
+      <Link>basn3p08_with_loc.png</Link>
     </Content>
     <Content Include="$(MonoTouchTestDirectory)\BoardingPass.pkpass">
       <Link>BoardingPass.pkpass</Link>
@@ -155,6 +161,18 @@
   <ItemGroup>
     <EmbeddedResource Include="$(MonoTouchTestDirectory)\Security\openssl_crt.der">
         <LogicalName>monotouchtest.Security.openssl_crt.der</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MonoTouchTestDirectory)\Resources\Welcome.resx">
+      <LogicalName>monotouchtest.Welcome.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MonoTouchTestDirectory)\Resources\Welcome.en-AU.resx">
+      <LogicalName>monotouchtest.Welcome.en-AU.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MonoTouchTestDirectory)\Resources\Welcome.es.resx">
+      <LogicalName>monotouchtest.Welcome.es.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MonoTouchTestDirectory)\Resources\Welcome.de.resx">
+      <LogicalName>monotouchtest.Welcome.de.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
 

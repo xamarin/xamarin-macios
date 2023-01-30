@@ -12,4 +12,8 @@
       <Name>MyWatchKit2IntentsExtension</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Info.plist" />
+    <None Update="Info-dotnet.plist" Link="Info.plist" />
+  </ItemGroup>
 </Project>

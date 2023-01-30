@@ -487,7 +487,12 @@ namespace Foundation {
 	[Flags]
 	[Native]
 	public enum NSKeyValueObservingOptions : ulong {
-		New = 1, Old = 2, OldNew = 3, Initial = 4, Prior = 8,
+		None = 0,
+		New = 1,
+		Old = 2,
+		OldNew = 3,
+		Initial = 4,
+		Prior = 8,
 	}
 
 	[Native]

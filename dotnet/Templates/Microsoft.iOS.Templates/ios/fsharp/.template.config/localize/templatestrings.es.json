@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "author": "Microsoft",
   "name": "iOS Application",
@@ -7,4 +8,15 @@
   "symbols/deviceFamily/choices/universal/description": "Support both iPhone and iPad devices",
   "symbols/deviceFamily/choices/iphone/description": "Support only iPhone devices",
   "symbols/deviceFamily/choices/ipad/description": "Support only iPad devices"
+=======
+{
+  "author": "Microsoft",
+  "name": "Aplicación de iOS",
+  "description": "Proyecto para crear una aplicación de iOS de .NET",
+  "symbols/bundleId/description": "Invalida CFBundleIdentifier en Info.plist",
+  "symbols/minOSVersion/description": "Invalida SupportedOSPlatformVersion en el archivo de proyecto",
+  "symbols/deviceFamily/choices/universal/description": "Compatibilidad con dispositivos iPhone y iPad",
+  "symbols/deviceFamily/choices/iphone/description": "Admitir solo dispositivos iPhone",
+  "symbols/deviceFamily/choices/ipad/description": "Admitir solo dispositivos iPad"
+>>>>>>> xamarin/main
 }

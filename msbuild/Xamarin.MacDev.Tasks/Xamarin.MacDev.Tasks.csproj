@@ -65,6 +65,7 @@
     <Compile Include="..\Versions.dotnet.g.cs">
       <Link>Versions.dotnet.g.cs</Link>
     </Compile>
+    <Compile Remove="Errors.designer.cs" /> <!-- The 'CoreResGen' target will add it again from the EmbeddedResource item, this avoids a warning about the file being compiled twice -->
   </ItemGroup>
 
   <ItemGroup>
