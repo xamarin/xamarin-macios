@@ -128,6 +128,7 @@
     <Compile Include="..\tools\common\Execution.cs">
       <Link>Execution.cs</Link>
     </Compile>
+    <Compile Include="generator-namespace-manager.cs" />
     <Compile Include="generator-nullability-info-context.cs" />
     <Compile Include="Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
@@ -148,7 +149,7 @@
   </ItemGroup>
   <Target Name="AfterBuild">
     <!-- Only run 'make bgen' if we're not executed as part of 'make' (i.e. MAKEFLAGS is empty) -->
-    <Exec Command="make bgen" Condition="'$(MAKEFLAGS)' == ''"/>
+    <Exec Command="make bgen" Condition="'$(MAKEFLAGS)' == ''" />
   </Target>
   <Import Project="..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.targets" Condition="Exists('..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.targets')" />
 </Project>
