@@ -1794,24 +1794,21 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public abstract class AudioSource : AudioFile {
+		GCHandle gch;
 #if !NET
 		static ReadProc dRead;
 		static WriteProc dWrite;
 		static GetSizeProc dGetSize;
 		static SetSizeProc dSetSize;
-#endif
-
-		GCHandle gch;
 
 		static AudioSource ()
 		{
-#if !NET
 			dRead = SourceRead;
 			dWrite = SourceWrite;
 			dGetSize = SourceGetSize;
 			dSetSize = SourceSetSize;
-#endif
 		}
+#endif
 
 #if NET
 		[UnmanagedCallersOnly]
