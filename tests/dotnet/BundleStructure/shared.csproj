@@ -110,6 +110,10 @@
 		<!-- bundled -->
 		<None Include="$(RootTestsDirectory)/monotouch-test/basn3p08.png" CopyToOutputDirectory="PreserveNewest" />
 
+		<!-- png image -->
+		<!-- bundled -->
+		<None Include="$(RootTestsDirectory)/monotouch-test/basn3p08_with_loc.png" CopyToOutputDirectory="PreserveNewest" />
+
 		<!-- jpg image -->
 		<!-- bundled -->
 		<None Include="$(RootTestsDirectory)/msbuild/Xamarin.MacDev.Tasks.Tests/Resources/iTunesArtwork.jpg" CopyToOutputDirectory="PreserveNewest" />

@@ -49,6 +49,9 @@
     <BundleResource Include="..\monotouch-test\basn3p08.png">
       <Link>basn3p08.png</Link>
     </BundleResource>
+    <BundleResource Include="..\monotouch-test\basn3p08_with_loc.png">
+      <Link>basn3p08_with_loc.png</Link>
+    </BundleResource>
     <BundleResource Include="..\monotouch-test\xamvideotest.mp4">
       <Link>xamvideotest.mp4</Link>
     </BundleResource>
