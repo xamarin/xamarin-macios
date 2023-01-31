@@ -273,43 +273,6 @@ public static class StringExtensions {
 }
 
 //
-// Used to encapsulate flags about types in either the parameter or the return value
-// For now, it only supports the [PlainString] attribute on strings.
-//
-public class MarshalInfo {
-	public Generator Generator;
-	public bool PlainString;
-	public Type Type;
-	public bool IsOut;
-
-	// This is set on a string parameter if the argument parameters are set to
-	// Copy.   This means that we can do fast string passing.
-	public bool ZeroCopyStringMarshal;
-
-	public bool IsAligned;
-
-	// Used for parameters
-	public MarshalInfo (Generator generator, MethodInfo mi, ParameterInfo pi)
-	{
-		this.Generator = generator;
-		PlainString = Generator.AttributeManager.HasAttribute<PlainStringAttribute> (pi);
-		Type = pi.ParameterType;
-		ZeroCopyStringMarshal = (Type == Generator.TypeManager.System_String) && PlainString == false && !Generator.AttributeManager.HasAttribute<DisableZeroCopyAttribute> (pi) && generator.type_wants_zero_copy;
-		if (ZeroCopyStringMarshal && Generator.AttributeManager.HasAttribute<DisableZeroCopyAttribute> (mi))
-			ZeroCopyStringMarshal = false;
-		IsOut = TypeManager.IsOutParameter (pi);
-	}
-
-	// Used to return values
-	public MarshalInfo (Generator generator, MethodInfo mi)
-	{
-		this.Generator = generator;
-		PlainString = Generator.AttributeManager.HasAttribute<PlainStringAttribute> (AttributeManager.GetReturnTypeCustomAttributes (mi));
-		Type = mi.ReturnType;
-	}
-}
-
-//
 // Encapsulates the information necessary to create a block delegate
 //
 // FIXME: We do not really need this class, we should just move all this
