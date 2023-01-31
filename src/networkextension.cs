@@ -30,6 +30,7 @@ namespace NetworkExtension {
 	[ErrorDomain ("NEDNSProxyErrorDomain")]
 	[iOS (11, 0)]
 	[Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	enum NEDnsProxyManagerError : long {
 		Invalid = 1,
@@ -40,6 +41,7 @@ namespace NetworkExtension {
 
 	[iOS (11, 0)]
 	[Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	enum NEFilterAction : long {
 		Invalid = 0,
@@ -50,6 +52,7 @@ namespace NetworkExtension {
 	}
 
 	[iOS (11, 0), Mac (10, 13)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	enum NEVpnIkev2TlsVersion : long {
 		Default = 0,
@@ -59,6 +62,7 @@ namespace NetworkExtension {
 	}
 
 	[iOS (11, 0), NoMac]
+	[MacCatalyst (13, 1)]
 	[Native]
 	enum NEHotspotConfigurationEapType : long {
 		Tls = 13,
@@ -68,6 +72,7 @@ namespace NetworkExtension {
 	}
 
 	[iOS (11, 0), NoMac]
+	[MacCatalyst (13, 1)]
 	[Native]
 	enum NEHotspotConfigurationTtlsInnerAuthenticationType : long {
 		Pap = 0,
@@ -78,6 +83,7 @@ namespace NetworkExtension {
 	}
 
 	[iOS (11, 0), NoMac]
+	[MacCatalyst (13, 1)]
 	[Native]
 	enum NEHotspotConfigurationEapTlsVersion : long {
 		Tls1_0 = 0,
@@ -86,6 +92,7 @@ namespace NetworkExtension {
 	}
 
 	[iOS (11, 0), NoMac]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[ErrorDomain ("NEHotspotConfigurationErrorDomain")]
 	public enum NEHotspotConfigurationError : long {
@@ -117,6 +124,7 @@ namespace NetworkExtension {
 
 	[Mac (10, 15)]
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	enum NETrafficDirection : long {
 		Any = 0,
@@ -144,6 +152,7 @@ namespace NetworkExtension {
 
 	[Mac (10, 15)]
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	enum NEFilterReportEvent : long {
 		NewFlow = 1,
@@ -151,6 +160,7 @@ namespace NetworkExtension {
 		FlowClosed = 3,
 		[Mac (10, 15, 4)]
 		[NoiOS]
+		[NoMacCatalyst]
 		Statistics = 4,
 	}
 
@@ -207,6 +217,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // documented as such and ...
 	[DisableDefaultCtor] // can't be created (with `init`) without crashing introspection tests
@@ -235,10 +246,12 @@ namespace NetworkExtension {
 
 		[Internal]
 		[NoWatch, NoTV, Mac (10, 15, 4), iOS (13, 4)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("networkInterface", ArgumentSemantic.Copy)]
 		OS_nw_interface WeakNetworkInterface { get; set; }
 
 		[NoWatch, NoTV, Mac (10, 15, 4), iOS (13, 4)]
+		[MacCatalyst (13, 1)]
 		NWInterface NetworkInterface {
 			[Wrap ("Runtime.GetINativeObject<NWInterface> (WeakNetworkInterface, false)!")]
 			get;
@@ -266,6 +279,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NETunnelProvider))]
 	[DisableDefaultCtor] // no valid handle when `init` is called
 	interface NEAppProxyProvider {
@@ -285,12 +299,14 @@ namespace NetworkExtension {
 
 		[Mac (10, 15)]
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("handleNewUDPFlow:initialRemoteEndpoint:")]
 		bool HandleNewUdpFlow (NEAppProxyUdpFlow flow, NWEndpoint remoteEndpoint);
 	}
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NETunnelProviderManager))]
 	[DisableDefaultCtor] // no valid handle when `init` is called
 	interface NEAppProxyProviderManager {
@@ -302,6 +318,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEAppProxyFlow), Name = "NEAppProxyTCPFlow")]
 	[DisableDefaultCtor]
 	interface NEAppProxyTcpFlow {
@@ -321,6 +338,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEAppProxyFlow), Name = "NEAppProxyUDPFlow")]
 	[DisableDefaultCtor]
 	interface NEAppProxyUdpFlow {
@@ -338,6 +356,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NEAppRule : NSSecureCoding, NSCopying {
@@ -361,6 +380,7 @@ namespace NetworkExtension {
 		string MatchDesignatedRequirement { get; }
 
 		[iOS (9, 3)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("matchPath")]
 		string MatchPath { get; set; }
 
@@ -377,6 +397,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "NEDNSSettings")]
 	[DisableDefaultCtor]
 	interface NEDnsSettings : NSSecureCoding, NSCopying {
@@ -412,6 +433,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[NoMac]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEFilterProvider))]
 	[DisableDefaultCtor] // no valid handle when `init` is called
 	interface NEFilterControlProvider {
@@ -422,6 +444,7 @@ namespace NetworkExtension {
 		NSDictionary<NSString, NSString> UrlAppendStringMap { get; set; }
 
 		[iOS (11, 0)] // also in base type - but only on iOS13+ (so we rre-define it here)
+		[MacCatalyst (13, 1)]
 		[Export ("handleReport:")]
 		void HandleReport (NEFilterReport report);
 
@@ -439,6 +462,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[NoMac]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEFilterNewFlowVerdict))]
 	interface NEFilterControlVerdict : NSSecureCoding, NSCopying {
 		[Static]
@@ -456,6 +480,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEFilterProvider))]
 	[DisableDefaultCtor] // no valid handle when `init` is called
 	interface NEFilterDataProvider {
@@ -475,10 +500,12 @@ namespace NetworkExtension {
 		NEFilterDataVerdict HandleOutboundDataCompleteForFlow (NEFilterFlow flow);
 
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		[Export ("handleRemediationForFlow:")]
 		NEFilterRemediationVerdict HandleRemediationForFlow (NEFilterFlow flow);
 
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		[Export ("handleRulesChanged")]
 		void HandleRulesChanged ();
 
@@ -498,6 +525,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEFilterVerdict))]
 	interface NEFilterDataVerdict : NSSecureCoding, NSCopying {
 		[NoWatch, NoTV, NoiOS, Mac (10, 15, 4), NoMacCatalyst]
@@ -532,24 +560,29 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NEFilterFlow : NSSecureCoding, NSCopying {
 		[NullAllowed, Export ("URL")]
 		NSUrl Url { get; }
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("sourceAppUniqueIdentifier")]
 		NSData SourceAppUniqueIdentifier { get; }
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("sourceAppIdentifier")]
 		string SourceAppIdentifier { get; }
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("sourceAppVersion")]
 		string SourceAppVersion { get; }
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("direction")]
 		NETrafficDirection Direction { get; }
 
@@ -563,6 +596,7 @@ namespace NetworkExtension {
 		NSData SourceProcessAuditToken { get; }
 
 		[iOS (13, 1)]
+		[MacCatalyst (13, 1)]
 		[Export ("identifier")]
 		NSUuid Identifier { get; }
 	}
@@ -570,6 +604,7 @@ namespace NetworkExtension {
 	// according to Xcode7 SDK this was available (in parts) in iOS8
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NEFilterManager {
@@ -594,6 +629,7 @@ namespace NetworkExtension {
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("providerConfiguration", ArgumentSemantic.Strong)]
 		NEFilterProviderConfiguration ProviderConfiguration { get; set; }
 
@@ -617,6 +653,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEFilterVerdict))]
 	interface NEFilterNewFlowVerdict : NSSecureCoding, NSCopying {
 		[NoWatch, NoTV, NoiOS, Mac (10, 15, 4), NoMacCatalyst]
@@ -655,6 +692,7 @@ namespace NetworkExtension {
 
 	[Mac (10, 15)]
 	[iOS (9, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEProvider))]
 	[Abstract] // documented as such
 	interface NEFilterProvider {
@@ -667,6 +705,7 @@ namespace NetworkExtension {
 		void StopFilter (NEProviderStopReason reason, Action completionHandler);
 
 		[iOS (13, 0)] // new in this (base) type
+		[MacCatalyst (13, 1)]
 		[Export ("handleReport:")]
 		void HandleReport (NEFilterReport report);
 
@@ -675,12 +714,14 @@ namespace NetworkExtension {
 
 #if NET
 		[NoMac]
+		[MacCatalyst (13, 1)]
 #endif
 		[Field ("NEFilterProviderRemediationMapRemediationButtonTexts")]
 		NSString RemediationMapRemediationButtonTexts { get; }
 
 #if NET
 		[NoMac]
+		[MacCatalyst (13, 1)]
 #endif
 		[Field ("NEFilterProviderRemediationMapRemediationURLs")]
 		NSString RemediationMapRemediationUrls { get; }
@@ -688,6 +729,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NEFilterProviderConfiguration : NSSecureCoding, NSCopying {
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Not supported on the platform.")]
@@ -733,6 +775,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[NoMac]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEFilterVerdict))]
 	interface NEFilterRemediationVerdict : NSSecureCoding, NSCopying {
 		[Static]
@@ -750,15 +793,18 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NEFilterVerdict : NSSecureCoding, NSCopying {
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("shouldReport")]
 		bool ShouldReport { get; set; }
 	}
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NEFlowMetaData : NSCopying, NSSecureCoding {
 		[Export ("sourceAppUniqueIdentifier")]
@@ -779,10 +825,12 @@ namespace NetworkExtension {
 
 	[NoMac]
 	[iOS (9, 0)]
+	[MacCatalyst (13, 1)]
 	delegate void NEHotspotHelperHandler (NEHotspotHelperCommand cmd);
 
 	[NoMac]
 	[iOS (9, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NEHotspotHelper {
 		[Static]
@@ -806,6 +854,7 @@ namespace NetworkExtension {
 	[Static]
 	[NoMac]
 	[iOS (9, 0)]
+	[MacCatalyst (13, 1)]
 	interface NEHotspotHelperOptionInternal {
 		[Field ("kNEHotspotHelperOptionDisplayName")]
 		NSString DisplayName { get; }
@@ -813,6 +862,7 @@ namespace NetworkExtension {
 
 	[NoMac]
 	[iOS (9, 0)]
+	[MacCatalyst (13, 1)]
 	[Category]
 	[BaseType (typeof (NSMutableUrlRequest))]
 	interface NSMutableURLRequest_NEHotspotHelper {
@@ -822,6 +872,7 @@ namespace NetworkExtension {
 
 	[NoMac]
 	[iOS (9, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NEHotspotHelperCommand {
 		[Export ("commandType")]
@@ -845,6 +896,7 @@ namespace NetworkExtension {
 
 	[NoMac]
 	[iOS (9, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NEHotspotHelperResponse {
 		[Export ("setNetwork:")]
@@ -859,6 +911,7 @@ namespace NetworkExtension {
 
 	[NoMac]
 	[iOS (9, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NEHotspotNetwork {
 		[Export ("SSID")]
@@ -902,6 +955,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NEIPv4Route : NSSecureCoding, NSCopying {
@@ -924,6 +978,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NEIPv6Route : NSSecureCoding, NSCopying {
@@ -946,6 +1001,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NEIPv4Settings : NSSecureCoding, NSCopying {
@@ -965,6 +1021,7 @@ namespace NetworkExtension {
 		NEIPv4Route [] ExcludedRoutes { get; set; }
 
 		[NoWatch, NoTV, NoiOS, Mac (13, 0)]
+		[NoMacCatalyst]
 		[Export ("router")]
 		[NullAllowed]
 		string Router { get; set; }
@@ -972,6 +1029,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NEIPv6Settings : NSSecureCoding, NSCopying {
@@ -993,6 +1051,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // init returns nil
 	interface NEProvider {
@@ -1016,6 +1075,8 @@ namespace NetworkExtension {
 		[Mac (10, 12)]
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Export ("displayMessage:completionHandler:")]
 		[Async]
 		void DisplayMessage (string message, Action<bool> completionHandler);
@@ -1029,6 +1090,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NEProxySettings : NSSecureCoding, NSCopying {
 		[Export ("autoProxyConfigurationEnabled")]
@@ -1064,6 +1126,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NEProxyServer : NSSecureCoding, NSCopying {
@@ -1088,6 +1151,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NETunnelNetworkSettings : NSSecureCoding, NSCopying {
@@ -1106,6 +1170,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEProvider))]
 	[DisableDefaultCtor] // init returns nil
 	interface NETunnelProvider {
@@ -1132,6 +1197,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEVpnManager))]
 	interface NETunnelProviderManager {
 		[Static]
@@ -1194,6 +1260,7 @@ namespace NetworkExtension {
 
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "NEVPNManager")]
 	[DisableDefaultCtor] // Assertion failed: (0), function -[NEVPNManager init], file /SourceCache/NetworkExtension_Sim/NetworkExtension-168.1.8/Framework/NEVPNManager.m, line 41.
 	interface NEVpnManager {
@@ -1213,10 +1280,12 @@ namespace NetworkExtension {
 		[Export ("protocol", ArgumentSemantic.Retain)]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'ProtocolConfiguration' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'ProtocolConfiguration' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ProtocolConfiguration' instead.")]
 		NEVpnProtocol Protocol { get; set; }
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed]
 		[Export ("protocolConfiguration", ArgumentSemantic.Retain)]
 		NEVpnProtocol ProtocolConfiguration { get; set; }
@@ -1243,6 +1312,7 @@ namespace NetworkExtension {
 		void SaveToPreferences ([NullAllowed] Action<NSError> completionHandler);
 
 		[Mac (10, 11), NoiOS]
+		[NoMacCatalyst]
 		[Internal]
 		[Export ("setAuthorization:")]
 		void _SetAuthorization (IntPtr auth);
@@ -1259,11 +1329,13 @@ namespace NetworkExtension {
 
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "NEVPNConnection")]
 	interface NEVpnConnection {
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("connectedDate")]
 		NSDate ConnectedDate { get; }
 
@@ -1275,12 +1347,14 @@ namespace NetworkExtension {
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Export ("startVPNTunnelWithOptions:andReturnError:")]
 		bool StartVpnTunnel ([NullAllowed] NSDictionary options, out NSError error);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Wrap ("StartVpnTunnel (options.GetDictionary (), out error);")]
 		bool StartVpnTunnel ([NullAllowed] NEVpnConnectionStartOptions options, out NSError error);
 
@@ -1289,6 +1363,7 @@ namespace NetworkExtension {
 
 		[iOS (10, 0)]
 		[Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Export ("manager")]
 		NEVpnManager Manager { get; }
 
@@ -1306,6 +1381,7 @@ namespace NetworkExtension {
 	[Internal]
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	interface NEVpnConnectionStartOptionInternal {
 		[Field ("NEVPNConnectionStartOptionPassword")]
 		NSString Password { get; }
@@ -1316,6 +1392,7 @@ namespace NetworkExtension {
 
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[Abstract]
 	[BaseType (typeof (NSObject), Name = "NEVPNProtocol")]
 	interface NEVpnProtocol : NSCopying, NSSecureCoding {
@@ -1333,15 +1410,18 @@ namespace NetworkExtension {
 		NSData PasswordReference { get; set; }
 
 		[iOS (9, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("identityReference", ArgumentSemantic.Copy)]
 		NSData IdentityReference { get; set; }
 
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("identityData", ArgumentSemantic.Copy)]
 		NSData IdentityData { get; set; }
 
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("identityDataPassword")]
 		string IdentityDataPassword { get; set; }
@@ -1350,6 +1430,7 @@ namespace NetworkExtension {
 		bool DisconnectOnSleep { get; set; }
 
 		[iOS (9, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("proxySettings", ArgumentSemantic.Copy)]
 		NEProxySettings ProxySettings { get; set; }
 
@@ -1373,6 +1454,7 @@ namespace NetworkExtension {
 
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEVpnProtocol), Name = "NEVPNProtocolIPSec")]
 	interface NEVpnProtocolIpSec {
 
@@ -1397,6 +1479,7 @@ namespace NetworkExtension {
 
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "NEVPNIKEv2SecurityAssociationParameters")]
 	interface NEVpnIke2SecurityAssociationParameters : NSSecureCoding, NSCopying {
 
@@ -1415,6 +1498,7 @@ namespace NetworkExtension {
 
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEVpnProtocolIpSec), Name = "NEVPNProtocolIKEv2")]
 	interface NEVpnProtocolIke2 {
 
@@ -1437,49 +1521,59 @@ namespace NetworkExtension {
 
 		[iOS (8, 3)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("certificateType")]
 		NEVpnIke2CertificateType CertificateType { get; set; }
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("useConfigurationAttributeInternalIPSubnet")]
 		bool UseConfigurationAttributeInternalIPSubnet { get; set; }
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("disableMOBIKE")]
 		bool DisableMobike { get; set; }
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("disableRedirect")]
 		bool DisableRedirect { get; set; }
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("enablePFS")]
 		bool EnablePfs { get; set; }
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("enableRevocationCheck")]
 		bool EnableRevocationCheck { get; set; }
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("strictRevocationCheck")]
 		bool StrictRevocationCheck { get; set; }
 
 		[iOS (11, 0), Mac (10, 13)]
+		[MacCatalyst (13, 1)]
 		[Export ("minimumTLSVersion", ArgumentSemantic.Assign)]
 		NEVpnIkev2TlsVersion MinimumTlsVersion { get; set; }
 
 		[iOS (11, 0), Mac (10, 13)]
+		[MacCatalyst (13, 1)]
 		[Export ("maximumTLSVersion", ArgumentSemantic.Assign)]
 		NEVpnIkev2TlsVersion MaximumTlsVersion { get; set; }
 
 		[NoMac]
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("enableFallback")]
 		bool EnableFallback { get; set; }
 
@@ -1491,6 +1585,7 @@ namespace NetworkExtension {
 
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[Abstract]
 	[BaseType (typeof (NSObject))]
 	interface NEOnDemandRule : NSSecureCoding, NSCopying {
@@ -1520,24 +1615,28 @@ namespace NetworkExtension {
 
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEOnDemandRule))]
 	interface NEOnDemandRuleConnect {
 	}
 
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEOnDemandRule))]
 	interface NEOnDemandRuleDisconnect {
 	}
 
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEOnDemandRule))]
 	interface NEOnDemandRuleIgnore {
 	}
 
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEOnDemandRule))]
 	interface NEOnDemandRuleEvaluateConnection {
 
@@ -1548,6 +1647,7 @@ namespace NetworkExtension {
 
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NEEvaluateConnectionRule : NSSecureCoding, NSCopying {
 
@@ -1571,6 +1671,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Abstract]
 	interface NWEndpoint : NSSecureCoding, NSCopying {
@@ -1578,6 +1679,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NWEndpoint))]
 	[DisableDefaultCtor]
 	interface NWHostEndpoint {
@@ -1594,6 +1696,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NWEndpoint))]
 	[DisableDefaultCtor]
 	interface NWBonjourServiceEndpoint {
@@ -1614,6 +1717,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NWPath {
@@ -1634,6 +1738,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "NWTCPConnection")]
 	interface NWTcpConnection {
 		[Export ("initWithUpgradeForConnection:")]
@@ -1689,6 +1794,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject), Name = "NWTCPConnectionAuthenticationDelegate")]
 	interface NWTcpConnectionAuthenticationDelegate {
@@ -1710,6 +1816,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "NWTLSParameters")]
 	interface NWTlsParameters {
 		[NullAllowed, Export ("TLSSessionID", ArgumentSemantic.Copy)]
@@ -1727,6 +1834,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "NWUDPSession")]
 	interface NWUdpSession {
 		[Export ("initWithUpgradeForSession:")]
@@ -1773,6 +1881,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[NoMac]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEFilterFlow))]
 	interface NEFilterBrowserFlow {
 
@@ -1791,6 +1900,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEFilterFlow))]
 	interface NEFilterSocketFlow {
 		[NullAllowed]
@@ -1837,6 +1947,7 @@ namespace NetworkExtension {
 
 	[iOS (11, 0)]
 	[Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NEFilterReport : NSSecureCoding, NSCopying {
 
@@ -1847,20 +1958,24 @@ namespace NetworkExtension {
 		NEFilterAction Action { get; }
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("event")]
 		NEFilterReportEvent Event { get; }
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("bytesInboundCount")]
 		nuint BytesInboundCount { get; }
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("bytesOutboundCount")]
 		nuint BytesOutboundCount { get; }
 	}
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NETunnelNetworkSettings))]
 	[DisableDefaultCtor]
 	interface NEPacketTunnelNetworkSettings {
@@ -1886,6 +2001,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NEPacketTunnelFlow {
 		[Export ("readPacketsWithCompletionHandler:")]
@@ -1897,18 +2013,21 @@ namespace NetworkExtension {
 
 		[iOS (10, 0)]
 		[Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("readPacketObjectsWithCompletionHandler:")]
 		void ReadPacketObjects (Action<NEPacket []> completionHandler);
 
 		[iOS (10, 0)]
 		[Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Export ("writePacketObjects:")]
 		bool WritePacketObjects (NEPacket [] packets);
 	}
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NETunnelProvider))]
 	interface NEPacketTunnelProvider {
 		[Export ("startTunnelWithOptions:completionHandler:")]
@@ -1934,6 +2053,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEVpnProtocol))]
 	interface NETunnelProviderProtocol {
 		[NullAllowed, Export ("providerConfiguration", ArgumentSemantic.Copy)]
@@ -1945,6 +2065,7 @@ namespace NetworkExtension {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEVpnConnection))]
 	interface NETunnelProviderSession {
 		[Export ("startTunnelWithOptions:andReturnError:")]
@@ -1961,6 +2082,7 @@ namespace NetworkExtension {
 	[TV (10, 0)]
 	[Mac (10, 12)]
 	[iOS (10, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NEPacket : NSCopying, NSSecureCoding {
 		[Export ("initWithData:protocolFamily:")]
@@ -1983,6 +2105,7 @@ namespace NetworkExtension {
 
 	[iOS (11, 0)]
 	[Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "NEDNSProxyManager")]
 	interface NEDnsProxyManager {
@@ -2019,6 +2142,7 @@ namespace NetworkExtension {
 
 	[iOS (11, 0)]
 	[Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NEProvider), Name = "NEDNSProxyProvider")]
 	interface NEDnsProxyProvider {
@@ -2041,11 +2165,13 @@ namespace NetworkExtension {
 		NEDnsSettings [] SystemDnsSettings { get; }
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("handleNewUDPFlow:initialRemoteEndpoint:")]
 		bool HandleNewUdpFlow (NEAppProxyUdpFlow flow, NWEndpoint remoteEndpoint);
 	}
 
 	[iOS (11, 0), Mac (10, 13)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NEVpnProtocol), Name = "NEDNSProxyProviderProtocol")]
 	interface NEDnsProxyProviderProtocol {
 
@@ -2057,6 +2183,7 @@ namespace NetworkExtension {
 	}
 
 	[iOS (11, 0), NoMac]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NEHotspotHS20Settings : NSCopying, NSSecureCoding {
 
@@ -2080,6 +2207,7 @@ namespace NetworkExtension {
 	}
 
 	[iOS (11, 0), NoMac]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "NEHotspotEAPSettings")]
 	interface NEHotspotEapSettings : NSCopying, NSSecureCoding {
 
@@ -2116,6 +2244,7 @@ namespace NetworkExtension {
 	}
 
 	[iOS (11, 0), NoMac]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface NEHotspotConfiguration : NSCopying, NSSecureCoding {
@@ -2145,24 +2274,29 @@ namespace NetworkExtension {
 
 		[Internal]
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithSSIDPrefix:")]
 		IntPtr initWithSsidPrefix (string ssidPrefix);
 
 		[Internal]
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithSSIDPrefix:passphrase:isWEP:")]
 		IntPtr initWithSsidPrefix (string ssidPrefix, string passphrase, bool isWep);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("hidden")]
 		bool Hidden { get; set; }
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("SSIDPrefix")]
 		string SsidPrefix { get; }
 	}
 
 	[iOS (11, 0), NoMac]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NEHotspotConfigurationManager {
 
@@ -2259,6 +2393,7 @@ namespace NetworkExtension {
 
 	[NoiOS]
 	[Mac (10, 15)]
+	[NoMacCatalyst]
 	delegate NEFilterPacketProviderVerdict NEFilterPacketHandler (NEFilterPacketContext context, IntPtr @interface, NETrafficDirection directiom, IntPtr packetBytes, nuint packetLength);
 
 	[NoiOS]
@@ -2488,12 +2623,14 @@ namespace NetworkExtension {
 	}
 
 	[NoWatch, NoTV, NoiOS, Mac (13, 0)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NEPacketTunnelProvider))]
 	[DisableDefaultCtor]
 	interface NEEthernetTunnelProvider {
 	}
 
 	[NoWatch, NoTV, NoiOS, Mac (13, 0)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NEPacketTunnelNetworkSettings))]
 	interface NEEthernetTunnelNetworkSettings {
 		[Export ("initWithTunnelRemoteAddress:ethernetAddress:mtu:")]
