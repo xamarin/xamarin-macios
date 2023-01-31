@@ -231,6 +231,18 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "HMAccessory":
+				switch (selectorName) {
+				case "matterNodeId": // Ventura error.
+					return true;
+				}
+				break;
+			case "EKParticipant":
+				switch (selectorName) {
+				case "ABRecordWithAddressBook:": // Ventura error.
+					return true;
+				}
+				break;
 			}
 			// This ctors needs to be manually bound
 			switch (type.Name) {
@@ -310,6 +322,12 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "SKAdImpression":
+				switch (selectorName) {
+				case "initWithSourceAppStoreItemIdentifier:advertisedAppStoreItemIdentifier:adNetworkIdentifier:adCampaignIdentifier:adImpressionIdentifier:timestamp:signature:version:":
+					return true;
+				}
+				break;
 			case "SKAttribute":
 			case "SKAttributeValue":
 				switch (selectorName) {
@@ -380,7 +398,7 @@ namespace Introspection {
 					return true;
 				}
 				break;
-#if __WATCHOS__
+#if (__WATCHOS__ || __MACOS__)
 			case "AVPlayerItem":
 				switch (selectorName) {
 				case "nowPlayingInfo":
