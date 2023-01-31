@@ -40,8 +40,10 @@ dotnet format whitespace "$SRC_DIR/tests/xtro-sharpie/xtro-report/xtro-report.cs
 dotnet format whitespace "$SRC_DIR/tests/xtro-sharpie/xtro-sanity/xtro-sanity.csproj"
 dotnet format whitespace --folder "$SRC_DIR"
 
-dos2unix dotnet/Templates/Microsoft.*.Templates/*/*/.template.config/localize/*.json
-dos2unix dotnet/Templates/Microsoft.*.Templates/*/.template.config/localize/*.json
+for file in dotnet/Templates/Microsoft.*.Templates/*/*/.template.config/localize/*.json dotnet/Templates/Microsoft.*.Templates/*/.template.config/localize/*.json; do
+	tr -d $'\r' < "$file" > "$file".tmp
+	mv "$file".tmp "$file"
+done
 
 # dotnet format "$SRC_DIR/[...]"
 # add more projects here...
