@@ -41,7 +41,7 @@ namespace AppKit {
 			var data = GCHandle.FromIntPtr (context).Target as SortData;
 			// should never happend, but we must be ready and not crash
 			if (data is null)
-				return  (nint) (long) NSComparisonResult.Same;
+				return (nint) (long) NSComparisonResult.Same;
 
 			try {
 				var a = Runtime.GetNSObject (view1) as NSView;
