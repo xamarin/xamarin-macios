@@ -3,9 +3,8 @@ using NUnit.Framework;
 
 namespace GeneratorTests {
 	public class StringExtensionTests {
-		
-		public class KeywordsDataSource : IEnumerable
-		{
+
+		public class KeywordsDataSource : IEnumerable {
 			static string [] keywords = {
 				"abstract","event","new","struct","as","explicit","null","switch","base","extern",
 				"this","false","operator","throw","break","finally","out","true",
@@ -20,17 +19,17 @@ namespace GeneratorTests {
 				"decimal","int","sbyte","short","double","long","string","void",
 				"partial", "yield", "where"
 			};
-			
-			public IEnumerator GetEnumerator()
+
+			public IEnumerator GetEnumerator ()
 			{
 				foreach (var key in keywords) {
 					yield return key;
 				}
 			}
 		}
-		
-		[TestCaseSource(typeof(KeywordsDataSource))]
-		public void KeywordsTest(string keyword)
+
+		[TestCaseSource (typeof (KeywordsDataSource))]
+		public void KeywordsTest (string keyword)
 			=> Assert.AreNotEqual (keyword, keyword.GetSafeParamName (), "keyword");
 
 		[TestCase ("😀OhOh")]
