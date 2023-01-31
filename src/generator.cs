@@ -309,15 +309,6 @@ public class MarshalInfo {
 	}
 }
 
-public class Tuple<A, B> {
-	public Tuple (A a, B b)
-	{
-		Item1 = a;
-		Item2 = b;
-	}
-	public A Item1;
-	public B Item2;
-}
 //
 // Encapsulates the information necessary to create a block delegate
 //
