@@ -37,7 +37,7 @@ public class NamespaceManager {
 
 		if (Frameworks is null)
 			// we are in a bad state
-			throw ErrorHelper.CreateError (0, "Frameworks were not loaded from platform {0}.", CurrentPlatform);
+			throw ErrorHelper.CreateError (3, CurrentPlatform);
 
 		UINamespaces = new HashSet<string> ();
 		if (Frameworks.HaveAppKit)
