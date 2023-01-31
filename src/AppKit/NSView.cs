@@ -39,7 +39,7 @@ namespace AppKit {
 		static nint view_compare (IntPtr view1, IntPtr view2, IntPtr context)
 		{
 			var data = GCHandle.FromIntPtr (context).Target as SortData;
-			// should never happend, but we must be ready and not crash
+			// should never happen, but we must be ready and not crash
 			if (data is null)
 				return (nint) (long) NSComparisonResult.Same;
 
