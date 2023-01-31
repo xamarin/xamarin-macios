@@ -14,6 +14,7 @@ namespace CloudKit {
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You must call -[CKAsset initWithFileURL:] or -[CKAsset initWithData:]
 	[BaseType (typeof (NSObject))]
 	interface CKAsset : NSCoding, NSSecureCoding, CKRecordValue {
@@ -27,6 +28,7 @@ namespace CloudKit {
 	}
 
 	[iOS (10, 0), Watch (3, 0), TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CKUserIdentityLookupInfo : NSSecureCoding, NSCopying {
@@ -62,6 +64,7 @@ namespace CloudKit {
 	}
 
 	[iOS (10, 0), Watch (3, 0), TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CKUserIdentity : NSSecureCoding, NSCopying {
@@ -78,11 +81,13 @@ namespace CloudKit {
 		bool HasICloudAccount { get; }
 
 		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("contactIdentifiers", ArgumentSemantic.Copy)]
 		string [] ContactIdentifiers { get; }
 	}
 
 	[iOS (10, 0), Watch (3, 0), TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CKShareMetadata : NSCopying, NSSecureCoding {
 		[Export ("containerIdentifier")]
@@ -100,6 +105,7 @@ namespace CloudKit {
 		CKRecordID RootRecordID { get; }
 
 		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("participantRole", ArgumentSemantic.Assign)]
 		CKShareParticipantRole ParticipantRole { get; }
 
@@ -107,6 +113,7 @@ namespace CloudKit {
 		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'ParticipantRole' instead.")]
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'ParticipantRole' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'ParticipantRole' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ParticipantRole' instead.")]
 		[Export ("participantType", ArgumentSemantic.Assign)]
 		CKShareParticipantType Type { get; }
 
@@ -128,6 +135,7 @@ namespace CloudKit {
 	}
 
 	[iOS (10, 0), Watch (3, 0), TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CKRecord))]
 	[DisableDefaultCtor]
 	interface CKShare {
@@ -168,6 +176,7 @@ namespace CloudKit {
 
 	[Static]
 	[iOS (10, 0), Watch (3, 0), TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	partial interface CKShareKeys {
 
 		[Field ("CKShareTitleKey")]
@@ -181,6 +190,7 @@ namespace CloudKit {
 	}
 
 	[iOS (10, 0), Watch (3, 0), TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CKShareParticipant : NSSecureCoding, NSCopying {
@@ -188,6 +198,7 @@ namespace CloudKit {
 		CKUserIdentity UserIdentity { get; }
 
 		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("role", ArgumentSemantic.Assign)]
 		CKShareParticipantRole Role { get; set; }
 
@@ -195,6 +206,7 @@ namespace CloudKit {
 		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Role' instead.")]
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Role' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Role' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'Role' instead.")]
 		[Export ("type", ArgumentSemantic.Assign)]
 		CKShareParticipantType Type { get; set; }
 
@@ -207,6 +219,7 @@ namespace CloudKit {
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: Use +[CKContainer privateCloudDatabase] or +[CKContainer publicCloudDatabase] instead of creating your own
 	[BaseType (typeof (NSObject))]
 	interface CKContainer {
@@ -215,10 +228,13 @@ namespace CloudKit {
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CurrentUserDefaultName' instead.")]
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use 'CurrentUserDefaultName' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'CurrentUserDefaultName' instead.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CurrentUserDefaultName' instead.")]
 		[Field ("CKOwnerDefaultName")]
 		NSString OwnerDefaultName { get; }
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Field ("CKCurrentUserDefaultName")]
 		NSString CurrentUserDefaultName { get; }
 
@@ -244,10 +260,12 @@ namespace CloudKit {
 
 		[iOS (10, 0)]
 		[Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Export ("sharedCloudDatabase")]
 		CKDatabase SharedCloudDatabase { get; }
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Export ("databaseWithDatabaseScope:")]
 		CKDatabase GetDatabase (CKDatabaseScope databaseScope);
 
@@ -270,27 +288,32 @@ namespace CloudKit {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[NoTV]
+		[MacCatalyst (13, 1)]
 		[Export ("discoverAllIdentitiesWithCompletionHandler:")]
 		[Async]
 		void DiscoverAllIdentities (Action<CKUserIdentity [], NSError> completionHandler);
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Export ("discoverUserIdentityWithEmailAddress:completionHandler:")]
 		[Async]
 		void DiscoverUserIdentityWithEmailAddress (string email, Action<CKUserIdentity, NSError> completionHandler);
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Export ("discoverUserIdentityWithPhoneNumber:completionHandler:")]
 		[Async]
 		void DiscoverUserIdentityWithPhoneNumber (string phoneNumber, Action<CKUserIdentity, NSError> completionHandler);
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Export ("discoverUserIdentityWithUserRecordID:completionHandler:")]
 		[Async]
 		void DiscoverUserIdentity (CKRecordID userRecordID, Action<CKUserIdentity, NSError> completionHandler);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Field ("CKAccountChangedNotification")]
 		[Notification]
 		NSString AccountChangedNotification { get; }
@@ -298,6 +321,7 @@ namespace CloudKit {
 		[iOS (9, 3)]
 		[Mac (10, 11, 4)]
 		[NoTV] // does not answer on devices
+		[MacCatalyst (13, 1)]
 		[Export ("fetchAllLongLivedOperationIDsWithCompletionHandler:")]
 		[Async]
 		void FetchAllLongLivedOperationIDs (Action<NSDictionary<NSString, NSOperation>, NSError> completionHandler);
@@ -305,31 +329,37 @@ namespace CloudKit {
 		[iOS (9, 3)]
 		[Mac (10, 11, 4)]
 		[NoTV] // does not answer on devices
+		[MacCatalyst (13, 1)]
 		[Export ("fetchLongLivedOperationWithID:completionHandler:")]
 		[Async]
 		void FetchLongLivedOperation (string [] operationID, Action<NSDictionary<NSString, NSOperation>, NSError> completionHandler);
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Export ("fetchShareParticipantWithEmailAddress:completionHandler:")]
 		[Async]
 		void FetchShareParticipantWithEmailAddress (string emailAddress, Action<CKShareParticipant, NSError> completionHandler);
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Export ("fetchShareParticipantWithPhoneNumber:completionHandler:")]
 		[Async]
 		void FetchShareParticipantWithPhoneNumber (string phoneNumber, Action<CKShareParticipant, NSError> completionHandler);
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Export ("fetchShareParticipantWithUserRecordID:completionHandler:")]
 		[Async]
 		void FetchShareParticipant (CKRecordID userRecordID, Action<CKShareParticipant, NSError> completionHandler);
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Export ("fetchShareMetadataWithURL:completionHandler:")]
 		[Async]
 		void FetchShareMetadata (NSUrl url, Action<CKShareMetadata, NSError> completionHandler);
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Export ("acceptShareMetadata:completionHandler:")]
 		[Async]
 		void AcceptShareMetadata (CKShareMetadata metadata, Action<CKShare, NSError> completionHandler);
@@ -339,6 +369,7 @@ namespace CloudKit {
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // *** Assertion failure in -[CKDatabase init]
 	[BaseType (typeof (NSObject))]
 	interface CKDatabase {
@@ -346,6 +377,7 @@ namespace CloudKit {
 		void AddOperation (CKDatabaseOperation operation);
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Export ("databaseScope", ArgumentSemantic.Assign)]
 		CKDatabaseScope DatabaseScope { get; }
 
@@ -383,27 +415,32 @@ namespace CloudKit {
 
 		[Export ("fetchSubscriptionWithID:completionHandler:")]
 		[Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		[Async]
 		void FetchSubscription (string subscriptionId, Action<CKSubscription, NSError> completionHandler);
 
 		[Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("fetchAllSubscriptionsWithCompletionHandler:")]
 		[Async]
 		void FetchAllSubscriptions (Action<CKSubscription [], NSError> completionHandler);
 
 		[Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("saveSubscription:completionHandler:")]
 		[Async]
 		void SaveSubscription (CKSubscription subscription, Action<CKSubscription, NSError> completionHandler);
 
 		[Export ("deleteSubscriptionWithID:completionHandler:")]
 		[Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		[Async]
 		void DeleteSubscription (string subscriptionID, CKDatabaseDeleteSubscriptionHandler completionHandler);
 	}
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CKOperation))]
 	[DisableDefaultCtor]
 #if NET || WATCH
@@ -459,6 +496,7 @@ namespace CloudKit {
 	// CKError.h Fields
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[Static]
 	interface CKErrorFields {
 #if !XAMCORE_3_0
@@ -493,6 +531,8 @@ namespace CloudKit {
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
 	[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
 	[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
 	[DisableDefaultCtor] // designated
 	interface CKFetchNotificationChangesOperation {
 
@@ -530,6 +570,7 @@ namespace CloudKit {
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // Objective-C exception thrown.  Name: CKException Reason: You can't call init on CKServerChangeToken
 	[BaseType (typeof (NSObject))]
 	interface CKServerChangeToken : NSCopying, NSSecureCoding {
@@ -538,6 +579,7 @@ namespace CloudKit {
 
 	[NoWatch]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	delegate void CKFetchRecordChangesHandler (CKServerChangeToken serverChangeToken, NSData clientChangeTokenData, NSError operationError);
 
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CKFetchRecordZoneChangesOperation' instead.")]
@@ -545,6 +587,8 @@ namespace CloudKit {
 	[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'CKFetchRecordZoneChangesOperation' instead.")]
 	[iOS (8, 0), Mac (10, 10)]
 	[NoWatch]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CKFetchRecordZoneChangesOperation' instead.")]
 	[BaseType (typeof (CKDatabaseOperation))]
 	[DisableDefaultCtor] // designated
 	interface CKFetchRecordChangesOperation {
@@ -597,18 +641,22 @@ namespace CloudKit {
 	}
 
 	[iOS (10, 0), Watch (3, 0), TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	delegate void CKFetchRecordZoneChangesWithIDWasDeletedHandler (CKRecordID recordID, NSString recordType);
 
 	[iOS (10, 0), Watch (3, 0), TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	delegate void CKFetchRecordZoneChangesTokensUpdatedHandler (CKRecordZoneID recordZoneID, CKServerChangeToken serverChangeToken, NSData clientChangeTokenData);
 
 	[iOS (10, 0), Watch (3, 0), TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	delegate void CKFetchRecordZoneChangesFetchCompletedHandler (CKRecordZoneID recordZoneID, CKServerChangeToken serverChangeToken, NSData clientChangeTokenData, bool moreComing, NSError recordZoneError);
 
 	[iOS (15, 0), Watch (8, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
 	delegate void CKFetchRecordZoneChangesRecordWasChangedHandler (CKRecordID recordId, CKRecord record, NSError error);
 
 	[iOS (10, 0), Watch (3, 0), TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CKDatabaseOperation))]
 	[DisableDefaultCtor] // designated
 	interface CKFetchRecordZoneChangesOperation {
@@ -620,10 +668,12 @@ namespace CloudKit {
 		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use the overload with the 'NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration>' parameter instead.")]
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload with the 'NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration>' parameter instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use the overload with the 'NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration>' parameter instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the overload with the 'NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration>' parameter instead.")]
 		[Export ("initWithRecordZoneIDs:optionsByRecordZoneID:")]
 		NativeHandle Constructor (CKRecordZoneID [] recordZoneIDs, [NullAllowed] NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesOptions> optionsByRecordZoneID);
 
 		[iOS (12, 0), Watch (5, 0), TV (12, 0), Mac (10, 14)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithRecordZoneIDs:configurationsByRecordZoneID:")]
 		NativeHandle Constructor (CKRecordZoneID [] recordZoneIDs, [NullAllowed] NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration> configurationsByRecordZoneID);
 
@@ -635,10 +685,12 @@ namespace CloudKit {
 		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'ConfigurationsByRecordZoneID' instead.")]
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'ConfigurationsByRecordZoneID' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'ConfigurationsByRecordZoneID' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ConfigurationsByRecordZoneID' instead.")]
 		[NullAllowed, Export ("optionsByRecordZoneID", ArgumentSemantic.Copy)]
 		NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesOptions> OptionsByRecordZoneID { get; set; }
 
 		[iOS (12, 0), Watch (5, 0), TV (12, 0), Mac (10, 14)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("configurationsByRecordZoneID", ArgumentSemantic.Copy)]
 		NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration> ConfigurationsByRecordZoneID { get; set; }
 
@@ -676,6 +728,8 @@ namespace CloudKit {
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'CKFetchRecordZoneChangesConfiguration' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'CKFetchRecordZoneChangesConfiguration' instead.")]
 	[iOS (10, 0), Watch (3, 0), TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CKFetchRecordZoneChangesConfiguration' instead.")]
 	[BaseType (typeof (NSObject))]
 	interface CKFetchRecordZoneChangesOptions : NSSecureCoding, NSCopying {
 		[NullAllowed, Export ("previousServerChangeToken", ArgumentSemantic.Copy)]
@@ -689,6 +743,7 @@ namespace CloudKit {
 	}
 
 	[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CKFetchRecordZoneChangesConfiguration : NSSecureCoding, NSCopying {
 
@@ -703,9 +758,11 @@ namespace CloudKit {
 	}
 
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	delegate void CKFetchRecordsCompletedHandler (NSDictionary recordsByRecordId, NSError error);
 
 	[iOS (8, 0), Watch (3, 0), TV (10, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 #if WATCH
 	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
 #else
@@ -752,12 +809,14 @@ namespace CloudKit {
 	}
 
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	delegate void CKRecordZoneCompleteHandler (NSDictionary recordZonesByZoneId, NSError operationError);
 
 	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	delegate void CKRecordZonePerRecordZoneCompletionHandler (CKRecordZoneID recordZoneId, CKRecordZone recordZone, NSError error);
 
 	[iOS (8, 0), Watch (3, 0), TV (10, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CKDatabaseOperation))]
 #if WATCH
 	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
@@ -792,6 +851,7 @@ namespace CloudKit {
 
 	[NoWatch]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	delegate void CKFetchSubscriptionsCompleteHandler (NSDictionary subscriptionsBySubscriptionId, NSError operationError);
 
 	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
@@ -799,6 +859,7 @@ namespace CloudKit {
 
 	[iOS (8, 0), Mac (10, 10)]
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CKDatabaseOperation))]
 	[DisableDefaultCtor] // designated
 	interface CKFetchSubscriptionsOperation {
@@ -832,6 +893,7 @@ namespace CloudKit {
 	}
 
 	[iOS (8, 0), Watch (3, 0), TV (10, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 #if NET || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
 	[DisableDefaultCtor]
 #endif
@@ -846,6 +908,7 @@ namespace CloudKit {
 	}
 
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	delegate void CKMarkNotificationsReadHandler (CKNotificationID [] notificationIDsMarkedRead, NSError operationError);
 
 	[Watch (3, 0)]
@@ -856,6 +919,8 @@ namespace CloudKit {
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
 	[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
 	[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
 	interface CKMarkNotificationsReadOperation {
 
 		[DesignatedInitializer]
@@ -885,6 +950,8 @@ namespace CloudKit {
 	[Deprecated (PlatformName.MacOSX, 10, 13)]
 	[Deprecated (PlatformName.WatchOS, 4, 0)]
 	[Deprecated (PlatformName.TvOS, 11, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	interface CKModifyBadgeOperation {
 
 		[Export ("initWithBadgeValue:")]
@@ -902,6 +969,7 @@ namespace CloudKit {
 	}
 
 	[iOS (8, 0), Mac (10, 10), Watch (3, 0)]
+	[MacCatalyst (13, 1)]
 	delegate void CKModifyRecordsOperationHandler (CKRecord [] savedRecords, CKRecordID [] deletedRecordIds, NSError operationError);
 
 	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
@@ -911,6 +979,7 @@ namespace CloudKit {
 	delegate void CKModifyRecordsOperationPerRecordDeleteHandler (CKRecordID recordId, NSError error);
 
 	[iOS (8, 0), Watch (3, 0), TV (10, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 #if WATCH
 	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
 #else
@@ -979,6 +1048,7 @@ namespace CloudKit {
 	}
 
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	delegate void CKModifyRecordZonesHandler (CKRecordZone [] savedRecordZones, CKRecordZoneID [] deletedRecordZoneIds, NSError operationError);
 
 	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
@@ -988,6 +1058,7 @@ namespace CloudKit {
 	delegate void CKModifyRecordZonesPerRecordZoneDeleteHandler (CKRecordZoneID zoneId, NSError error);
 
 	[iOS (8, 0), Watch (3, 0), TV (10, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 #if WATCH
 	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
 #else
@@ -1026,6 +1097,7 @@ namespace CloudKit {
 	}
 
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	delegate void CKModifySubscriptionsHandler (CKSubscription [] savedSubscriptions, string [] deletedSubscriptionIds, NSError operationError);
 
 	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
@@ -1036,6 +1108,7 @@ namespace CloudKit {
 
 	[iOS (8, 0), Mac (10, 10)]
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CKDatabaseOperation))]
 	[DisableDefaultCtor] // designated
 	interface CKModifySubscriptionsOperation {
@@ -1074,6 +1147,7 @@ namespace CloudKit {
 	}
 
 	[iOS (8, 0), Watch (3, 0), TV (10, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // doc: <quote>You do not create notification IDs directly.</quote>
 	[BaseType (typeof (NSObject))]
 	interface CKNotificationID : NSCopying, NSSecureCoding, NSCoding {
@@ -1082,6 +1156,7 @@ namespace CloudKit {
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: CKNotification is not meant for direct instantiation
 	[BaseType (typeof (NSObject))]
 #if NET || WATCH
@@ -1103,30 +1178,37 @@ namespace CloudKit {
 		bool IsPruned { get; }
 
 		[NoTV]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("alertBody")]
 		string AlertBody { get; }
 
 		[NoTV]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("alertLocalizationKey")]
 		string AlertLocalizationKey { get; }
 
 		[NoTV]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("alertLocalizationArgs", ArgumentSemantic.Copy)]
 		string [] AlertLocalizationArgs { get; }
 
 		[NoTV]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("alertActionLocalizationKey")]
 		string AlertActionLocalizationKey { get; }
 
 		[NoTV]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("alertLaunchImage")]
 		string AlertLaunchImage { get; }
 
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("badge", ArgumentSemantic.Copy)]
 		NSNumber Badge { get; }
 
 		[NoTV]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("soundName")]
 		string SoundName { get; }
 
@@ -1137,46 +1219,56 @@ namespace CloudKit {
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("subscriptionID")]
 		string SubscriptionID { get; }
 
 		[NoTV]
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("category")]
 		string Category { get; }
 
 		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("title")]
 		string Title { get; }
 
 		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("titleLocalizationKey")]
 		string TitleLocalizationKey { get; }
 
 		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("titleLocalizationArgs", ArgumentSemantic.Copy)]
 		string [] TitleLocalizationArgs { get; }
 
 		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("subtitle")]
 		string Subtitle { get; }
 
 		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("subtitleLocalizationKey")]
 		string SubtitleLocalizationKey { get; }
 
 		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("subtitleLocalizationArgs", ArgumentSemantic.Copy)]
 		string [] SubtitleLocalizationArgs { get; }
 
 		[Watch (7, 0), TV (14, 0), Mac (10, 16), iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("subscriptionOwnerUserRecordID", ArgumentSemantic.Copy)]
 		CKRecordID SubscriptionOwnerUserRecordId { get; }
 	}
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: CKQueryNotification is not meant for direct instantiation
 	[BaseType (typeof (CKNotification))]
 	interface CKQueryNotification : NSCoding, NSSecureCoding {
@@ -1195,12 +1287,14 @@ namespace CloudKit {
 		CKRecordID RecordId { get; }
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Export ("databaseScope", ArgumentSemantic.Assign)]
 		CKDatabaseScope DatabaseScope { get; }
 	}
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // objc_exception_throw on CKNotification init
 	[BaseType (typeof (CKNotification))]
 	interface CKRecordZoneNotification : NSCoding, NSSecureCoding {
@@ -1210,11 +1304,13 @@ namespace CloudKit {
 		CKRecordZoneID RecordZoneId { get; }
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Export ("databaseScope", ArgumentSemantic.Assign)]
 		CKDatabaseScope DatabaseScope { get; }
 	}
 
 	[iOS (10, 0), Watch (3, 0), TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // objc_exception_throw on CKNotification init
 	[BaseType (typeof (CKNotification))]
 	interface CKDatabaseNotification {
@@ -1223,6 +1319,7 @@ namespace CloudKit {
 	}
 
 	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CKOperationConfiguration : NSSecureCoding, NSCopying {
 		[NullAllowed, Export ("container", ArgumentSemantic.Strong)]
@@ -1246,6 +1343,7 @@ namespace CloudKit {
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSOperation))]
 	[DisableDefaultCtor]
 #if NET || WATCH
@@ -1267,6 +1365,7 @@ namespace CloudKit {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CKOperationConfiguration' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CKOperationConfiguration' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CKOperationConfiguration' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CKOperationConfiguration' instead.")]
 		[NullAllowed, Export ("container", ArgumentSemantic.Retain)]
 		CKContainer Container { get; set; }
 
@@ -1274,12 +1373,14 @@ namespace CloudKit {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CKOperationConfiguration' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CKOperationConfiguration' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CKOperationConfiguration' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CKOperationConfiguration' instead.")]
 		[Export ("allowsCellularAccess", ArgumentSemantic.UnsafeUnretained)]
 		bool AllowsCellularAccess { get; set; }
 
 		[iOS (9, 3)]
 		[Mac (10, 11, 4)]
 		[TV (9, 2)]
+		[MacCatalyst (13, 1)]
 		[Export ("operationID")]
 		string OperationID { get; }
 
@@ -1291,6 +1392,8 @@ namespace CloudKit {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CKOperationConfiguration' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CKOperationConfiguration' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CKOperationConfiguration' instead.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CKOperationConfiguration' instead.")]
 		bool LongLived { [Bind ("isLongLived")] get; set; }
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
@@ -1299,6 +1402,8 @@ namespace CloudKit {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CKOperationConfiguration' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CKOperationConfiguration' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CKOperationConfiguration' instead.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CKOperationConfiguration' instead.")]
 		double TimeoutIntervalForRequest { get; set; }
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
@@ -1307,26 +1412,32 @@ namespace CloudKit {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CKOperationConfiguration' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CKOperationConfiguration' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CKOperationConfiguration' instead.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CKOperationConfiguration' instead.")]
 		double TimeoutIntervalForResource { get; set; }
 
 		[iOS (9, 3)]
 		[Mac (10, 11, 4)]
 		[TV (9, 2)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed]
 		[Export ("longLivedOperationWasPersistedBlock", ArgumentSemantic.Strong)]
 		Action LongLivedOperationWasPersistedCallback { get; set; }
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed]
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		CKOperationConfiguration Configuration { get; set; }
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("group", ArgumentSemantic.Strong)]
 		CKOperationGroup Group { get; set; }
 	}
 
 	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
 	interface CKOperationGroup : NSSecureCoding {
@@ -1353,6 +1464,7 @@ namespace CloudKit {
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You must call -[CKQuery initWithRecordType:predicate:sortDescriptors:]
 	[BaseType (typeof (NSObject))]
 	interface CKQuery : NSSecureCoding, NSCopying {
@@ -1375,6 +1487,7 @@ namespace CloudKit {
 	delegate void CKQueryOperationRecordMatchedHandler (CKRecordID recordId, CKRecord record, NSError error);
 
 	[iOS (8, 0), Watch (3, 0), TV (10, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CKDatabaseOperation))]
 #if WATCH
 	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
@@ -1439,6 +1552,7 @@ namespace CloudKit {
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -1450,6 +1564,7 @@ namespace CloudKit {
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // Crashes [CKRecord init] objc_exception_throw
 	[BaseType (typeof (NSObject))]
 	interface CKRecord : NSSecureCoding, NSCopying {
@@ -1458,14 +1573,17 @@ namespace CloudKit {
 		NSString TypeUserRecord { get; }
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Field ("CKRecordParentKey")]
 		NSString ParentKey { get; }
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Field ("CKRecordShareKey")]
 		NSString ShareKey { get; }
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Field ("CKRecordTypeShare")]
 		NSString TypeShare { get; }
 
@@ -1532,24 +1650,29 @@ namespace CloudKit {
 		void EncodeSystemFields (NSCoder coder);
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("share", ArgumentSemantic.Copy)]
 		CKReference Share { get; }
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("parent", ArgumentSemantic.Copy)]
 		CKReference Parent { get; set; }
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Export ("setParentReferenceFromRecord:")]
 		void SetParent ([NullAllowed] CKRecord parentRecord);
 
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Export ("setParentReferenceFromRecordID:")]
 		void SetParent ([NullAllowed] CKRecordID parentRecordID);
 	}
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException You must call -[CKRecordID initWithRecordName:] or -[CKRecordID initWithRecordName:zoneID:]
 	interface CKRecordID : NSSecureCoding, NSCopying {
@@ -1570,6 +1693,7 @@ namespace CloudKit {
 
 	[iOS (8, 0), Mac (10, 10)]
 	[Watch (3, 0)]
+	[MacCatalyst (13, 1)]
 #if NET || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
 	[DisableDefaultCtor]
 #endif
@@ -1602,6 +1726,7 @@ namespace CloudKit {
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException You must call -[CKRecordZoneID initWithZoneName:ownerName:]
 	interface CKRecordZoneID : NSSecureCoding, NSCopying {
@@ -1619,6 +1744,7 @@ namespace CloudKit {
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You must call -[CKReference initWithRecordID:] or -[CKReference initWithRecord:] or -[CKReference initWithAsset:]
 	[BaseType (typeof (NSObject))]
 	interface CKReference : NSSecureCoding, NSCopying, CKRecordValue {
@@ -1640,6 +1766,7 @@ namespace CloudKit {
 	[Watch (6, 0)]
 	[iOS (10, 0)]
 	[TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CKSubscription))]
 	interface CKQuerySubscription : NSSecureCoding, NSCopying {
@@ -1666,6 +1793,7 @@ namespace CloudKit {
 	[Watch (6, 0)]
 	[iOS (10, 0)]
 	[TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CKSubscription))]
 	interface CKRecordZoneSubscription : NSSecureCoding, NSCopying {
@@ -1687,6 +1815,7 @@ namespace CloudKit {
 	[Watch (6, 0)]
 	[iOS (10, 0)]
 	[TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CKSubscription))]
 	interface CKDatabaseSubscription : NSSecureCoding, NSCopying {
 		[Export ("initWithSubscriptionID:")]
@@ -1699,6 +1828,7 @@ namespace CloudKit {
 
 	[Watch (6, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // objc_exception_throw on [CKSubscription init]
 	[BaseType (typeof (NSObject))]
 	interface CKSubscription : NSSecureCoding, NSCopying {
@@ -1729,6 +1859,8 @@ namespace CloudKit {
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CKQuerySubscription'.")]
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use 'CKQuerySubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'CKQuerySubscription'.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CKQuerySubscription'.")]
 		[NullAllowed]
 		[Export ("recordType")]
 		string RecordType { get; }
@@ -1737,11 +1869,14 @@ namespace CloudKit {
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CKQuerySubscription'.")]
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use 'CKQuerySubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'CKQuerySubscription'.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CKQuerySubscription'.")]
 		[NullAllowed]
 		[Export ("predicate", ArgumentSemantic.Copy)]
 		NSPredicate Predicate { get; }
 
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed]
 		[Export ("notificationInfo", ArgumentSemantic.Copy)]
 		CKNotificationInfo NotificationInfo { get; set; }
@@ -1751,6 +1886,7 @@ namespace CloudKit {
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use 'CKRecordZoneSubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'CKRecordZoneSubscription'.")]
 		[NoMacCatalyst]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CKRecordZoneSubscription'.")]
 		[NullAllowed]
 		[Export ("zoneID", ArgumentSemantic.Copy)]
 		CKRecordZoneID ZoneID { get; set; }
@@ -1759,35 +1895,42 @@ namespace CloudKit {
 	[Watch (6, 0)]
 	[iOS (8, 0)]
 	[TV (10, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CKNotificationInfo : NSSecureCoding, NSCopying, NSCoding {
 
 		[NoTV]
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("alertBody")]
 		string AlertBody { get; set; }
 
 		[NoTV]
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("alertLocalizationKey")]
 		string AlertLocalizationKey { get; set; }
 
 		[NoTV]
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("alertLocalizationArgs", ArgumentSemantic.Copy)]
 		string [] AlertLocalizationArgs { get; set; }
 
 		[NoTV]
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("alertActionLocalizationKey")]
 		string AlertActionLocalizationKey { get; set; }
 
 		[NoTV]
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("alertLaunchImage")]
 		string AlertLaunchImage { get; set; }
 
 		[NoTV]
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("soundName")]
 		string SoundName { get; set; }
@@ -1805,46 +1948,56 @@ namespace CloudKit {
 		[NoTV]
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("category")]
 		string Category { get; set; }
 
 		[NoTV, Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("title")]
 		string Title { get; set; }
 
 		[NoTV, Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("titleLocalizationKey")]
 		string TitleLocalizationKey { get; set; }
 
 		[NoTV, Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("titleLocalizationArgs", ArgumentSemantic.Copy)]
 		string [] TitleLocalizationArgs { get; set; }
 
 		[NoTV, Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("subtitle")]
 		string Subtitle { get; set; }
 
 		[NoTV, Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("subtitleLocalizationKey")]
 		string SubtitleLocalizationKey { get; set; }
 
 		[NoTV, Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("subtitleLocalizationArgs", ArgumentSemantic.Copy)]
 		string [] SubtitleLocalizationArgs { get; set; }
 
 		[Mac (10, 13), iOS (11, 0)]
 		[TV (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("shouldSendMutableContent")]
 		bool ShouldSendMutableContent { get; set; }
 
 		[Mac (10, 13), iOS (11, 0)]
 		[TV (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("collapseIDKey")]
 		string CollapseIdKey { get; set; }
 	}
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // Name: CKException Reason: You can't call init on CKQueryCursor
 	[BaseType (typeof (NSObject))]
 	interface CKQueryCursor : NSCopying, NSSecureCoding {
@@ -1856,6 +2009,7 @@ namespace CloudKit {
 	[iOS (9, 2), Mac (10, 11, 2)]
 	[TV (9, 1)]
 	[Watch (3, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CKDatabaseOperation))]
 	[DisableDefaultCtor] // designated
 	interface CKFetchWebAuthTokenOperation {
@@ -1877,6 +2031,7 @@ namespace CloudKit {
 	}
 
 	[iOS (10, 0), TV (10, 0), Watch (3, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CKOperation))]
 	[DisableDefaultCtor] // designated
 	interface CKDiscoverUserIdentitiesOperation {
@@ -1898,6 +2053,7 @@ namespace CloudKit {
 	}
 
 	[NoTV, iOS (10, 0), Watch (3, 0), TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CKOperation))]
 	[DisableDefaultCtor] // designated
 	interface CKDiscoverAllUserIdentitiesOperation {
@@ -1916,6 +2072,7 @@ namespace CloudKit {
 	delegate void CKFetchShareParticipantsOperationPerShareParticipantCompletionHandler (CKUserIdentityLookupInfo identityLookupInfo, CKShareParticipant participant, NSError error);
 
 	[iOS (10, 0), Watch (3, 0), TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CKOperation))]
 	[DisableDefaultCtor] // designated
 	interface CKFetchShareParticipantsOperation {
@@ -1948,9 +2105,11 @@ namespace CloudKit {
 	}
 
 	[iOS (10, 0), Watch (3, 0), TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	delegate void CKAcceptPerShareCompletionHandler (CKShareMetadata shareMetadata, CKShare acceptedShare, NSError error);
 
 	[iOS (10, 0), Watch (3, 0), TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CKOperation))]
 	[DisableDefaultCtor] // designated
 	interface CKAcceptSharesOperation {
@@ -1973,9 +2132,11 @@ namespace CloudKit {
 	}
 
 	[iOS (10, 0), Watch (3, 0), TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	delegate void CKFetchPerShareMetadataHandler (NSUrl shareURL, CKShareMetadata shareMetadata, NSError error);
 
 	[iOS (10, 0), Watch (3, 0), TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CKOperation))]
 	[DisableDefaultCtor] // designated
 	interface CKFetchShareMetadataOperation {
@@ -2004,9 +2165,11 @@ namespace CloudKit {
 	}
 
 	[iOS (10, 0), Watch (3, 0), TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	delegate void CKFetchDatabaseChangesCompletionHandler (CKServerChangeToken serverChangeToken, bool moreComing, NSError operationError);
 
 	[iOS (10, 0), Watch (3, 0), TV (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CKDatabaseOperation))]
 	[DisableDefaultCtor] // designated
 	interface CKFetchDatabaseChangesOperation {
@@ -2037,6 +2200,7 @@ namespace CloudKit {
 		Action<CKServerChangeToken> ChangeTokenUpdated { get; set; }
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("recordZoneWithIDWasPurgedBlock", ArgumentSemantic.Copy)]
 		Action<CKRecordZoneID> WasPurged { get; set; }
 
