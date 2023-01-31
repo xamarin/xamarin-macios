@@ -54,7 +54,6 @@ namespace MediaPlayer {
 	[MacCatalyst (13, 1)]
 	interface MPMediaEntity : NSSecureCoding {
 #else
-	[Mac (10, 12, 2)] // type exists only to expose fields
 	interface MPMediaItem : NSSecureCoding {
 #endif // !MONOMAC
 		[Static]
@@ -68,7 +67,6 @@ namespace MediaPlayer {
 		[Export ("enumerateValuesForProperties:usingBlock:")]
 		void EnumerateValues (NSSet propertiesToEnumerate, MPMediaItemEnumerator enumerator);
 
-		[iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		[return: NullAllowed]
 		[Export ("objectForKeyedSubscript:")]
@@ -91,7 +89,6 @@ namespace MediaPlayer {
 #if IOS || WATCH || TVOS
 	}
 #if MONOMAC || WATCH
-	[Mac (10,12,2)]
 	[Watch (5,0)]
 	[Static]
 #else
@@ -191,7 +188,6 @@ namespace MediaPlayer {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString DiscCountProperty { get; }
 
-		[Mac (10, 13, 1)]
 		[MacCatalyst (13, 1)]
 		[Field ("MPMediaItemPropertyArtwork")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -257,21 +253,16 @@ namespace MediaPlayer {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString IsCloudItemProperty { get; }
 
-		[iOS (9, 2)]
-		[TV (9, 2)]
 		[MacCatalyst (13, 1)]
 		[Field ("MPMediaItemPropertyHasProtectedAsset")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString HasProtectedAssetProperty { get; }
 
-		[iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("MPMediaItemPropertyDateAdded")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString DateAddedProperty { get; }
 
-		[iOS (10, 3)]
-		[TV (10, 3)]
 		[MacCatalyst (13, 1)]
 		[Field ("MPMediaItemPropertyPlaybackStoreID")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -284,14 +275,11 @@ namespace MediaPlayer {
 		NSString IsPreorderProperty { get; }
 	}
 
-	[Mac (10, 12, 2)]
 	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MPMediaItemArtwork {
-		[iOS (10, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithBoundsSize:requestHandler:")]
 		[DesignatedInitializer]
@@ -383,20 +371,17 @@ namespace MediaPlayer {
 		[Notification]
 		NSString DidChangeNotification { get; }
 
-		[iOS (9, 3)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("authorizationStatus")]
 		MPMediaLibraryAuthorizationStatus AuthorizationStatus { get; }
 
-		[iOS (9, 3)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Async]
 		[Export ("requestAuthorization:")]
 		void RequestAuthorization (Action<MPMediaLibraryAuthorizationStatus> handler);
 
-		[iOS (9, 3)]
 		[MacCatalyst (13, 1)]
 		[Export ("addItemWithProductID:completionHandler:")]
 		[Async]
@@ -406,7 +391,6 @@ namespace MediaPlayer {
 		void AddItem (string productID, [NullAllowed] Action<MPMediaItem [], NSError> completionHandler);
 #endif
 
-		[iOS (9, 3)]
 		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("getPlaylistWithUUID:creationMetadata:completionHandler:")]
@@ -443,7 +427,6 @@ namespace MediaPlayer {
 		[Export ("showsCloudItems")]
 		bool ShowsCloudItems { get; set; }
 
-		[iOS (9, 2)]
 		[MacCatalyst (13, 1)]
 		[Export ("showsItemsWithProtectedAssets")]
 		bool ShowsItemsWithProtectedAssets { get; set; }
@@ -491,29 +474,24 @@ namespace MediaPlayer {
 		[Export ("playlistAttributes")]
 		MPMediaPlaylistAttribute PlaylistAttributes { get; }
 
-		[iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("seedItems")]
 		[NullAllowed]
 		MPMediaItem [] SeedItems { get; }
 
-		[iOS (9, 3)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("descriptionText")]
 		string DescriptionText { get; }
 
-		[iOS (9, 3)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("authorDisplayName")]
 		string AuthorDisplayName { get; }
 
-		[iOS (9, 3)]
 		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addItemWithProductID:completionHandler:")]
 		void AddItem (string productID, [NullAllowed] Action<NSError> completionHandler);
 
-		[iOS (9, 3)]
 		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addMediaItems:completionHandler:")]
@@ -542,13 +520,11 @@ namespace MediaPlayer {
 		[Field ("MPMediaPlaylistPropertySeedItems")]
 		NSString SeedItems { get; }
 
-		[iOS (9, 3)]
 		[NoTV] // do not work on AppleTV devices (only in simulator)
 		[MacCatalyst (13, 1)]
 		[Field ("MPMediaPlaylistPropertyDescriptionText")]
 		NSString DescriptionText { get; }
 
-		[iOS (9, 3)]
 		[NoTV] // do not work on AppleTV devices (only in simulator)
 		[MacCatalyst (13, 1)]
 		[Field ("MPMediaPlaylistPropertyAuthorDisplayName")]
@@ -1379,7 +1355,6 @@ namespace MediaPlayer {
 		[Static, Export ("applicationMusicPlayer")]
 		MPMusicPlayerController ApplicationMusicPlayer { get; }
 
-		[iOS (10, 3)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("applicationQueuePlayer")]
@@ -1392,7 +1367,6 @@ namespace MediaPlayer {
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'SystemMusicPlayer' instead.")]
 		MPMusicPlayerController iPodMusicPlayer { get; }
 
-		[iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		[Static, Export ("systemMusicPlayer")]
 		MPMusicPlayerController SystemMusicPlayer { get; }
@@ -1429,27 +1403,22 @@ namespace MediaPlayer {
 		[Export ("setQueueWithItemCollection:")]
 		void SetQueue (MPMediaItemCollection collection);
 
-		[iOS (9, 3)]
 		[MacCatalyst (13, 1)]
 		[Export ("setQueueWithStoreIDs:")]
 		void SetQueue (string [] storeIDs);
 
-		[iOS (10, 1)]
 		[MacCatalyst (13, 1)]
 		[Export ("setQueueWithDescriptor:")]
 		void SetQueue (MPMusicPlayerQueueDescriptor descriptor);
 
-		[iOS (10, 3)]
 		[MacCatalyst (13, 1)]
 		[Export ("prependQueueDescriptor:")]
 		void Prepend (MPMusicPlayerQueueDescriptor descriptor);
 
-		[iOS (10, 3)]
 		[MacCatalyst (13, 1)]
 		[Export ("appendQueueDescriptor:")]
 		void Append (MPMusicPlayerQueueDescriptor descriptor);
 
-		[iOS (10, 1)]
 		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("prepareToPlayWithCompletionHandler:")]
@@ -1601,7 +1570,7 @@ namespace MediaPlayer {
 		string Title { get; }
 	}
 
-	[Mac (10, 12, 2), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -init is not supported, use +defaultCenter
@@ -1644,76 +1613,54 @@ namespace MediaPlayer {
 		[Field ("MPNowPlayingInfoPropertyChapterCount")]
 		NSString PropertyChapterCount { get; }
 
-		[iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		[Internal]
 		[Field ("MPNowPlayingInfoPropertyDefaultPlaybackRate")]
 		NSString PropertyDefaultPlaybackRate { get; }
 
-		[iOS (9, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Internal]
 		[Field ("MPNowPlayingInfoPropertyAvailableLanguageOptions")]
 		NSString PropertyAvailableLanguageOptions { get; }
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Internal]
 		[Field ("MPNowPlayingInfoPropertyCurrentLanguageOptions")]
 		NSString PropertyCurrentLanguageOptions { get; }
 
-		[iOS (10, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("MPNowPlayingInfoCollectionIdentifier")]
 		NSString PropertyCollectionIdentifier { get; }
 
-		[iOS (10, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("MPNowPlayingInfoPropertyExternalContentIdentifier")]
 		NSString PropertyExternalContentIdentifier { get; }
 
-		[iOS (10, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("MPNowPlayingInfoPropertyExternalUserProfileIdentifier")]
 		NSString PropertyExternalUserProfileIdentifier { get; }
 
-		[iOS (11, 0)]
-		[TV (11, 0)]
-		[Mac (10, 13)]
 		[MacCatalyst (13, 1)]
 		[Field ("MPNowPlayingInfoPropertyServiceIdentifier")]
 		NSString PropertyServiceIdentifier { get; }
 
-		[iOS (10, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("MPNowPlayingInfoPropertyPlaybackProgress")]
 		NSString PropertyPlaybackProgress { get; }
 
-		[iOS (10, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("MPNowPlayingInfoPropertyMediaType")]
 		NSString PropertyMediaType { get; }
 
-		[iOS (10, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("MPNowPlayingInfoPropertyIsLiveStream")]
 		NSString PropertyIsLiveStream { get; }
 
-		[iOS (10, 3)]
-		[TV (10, 2)]
-		[Mac (10, 12, 3)]
 		[MacCatalyst (13, 1)]
 		[Field ("MPNowPlayingInfoPropertyAssetURL")]
 		NSString PropertyAssetUrl { get; }
 
-		[iOS (11, 1), TV (11, 1), Mac (10, 13, 1)]
+		[iOS (11, 1), TV (11, 1)]
 		[MacCatalyst (13, 1)]
 		[Internal]
 		[Field ("MPNowPlayingInfoPropertyCurrentPlaybackDate")]
@@ -1728,8 +1675,6 @@ namespace MediaPlayer {
 		NSString PropertyCreditsStartTime { get; }
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (7, 1)]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -1758,14 +1703,10 @@ namespace MediaPlayer {
 		[Export ("title")]
 		string Title { get; set; }
 
-		[iOS (10, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("streamingContent")]
 		bool StreamingContent { [Bind ("isStreamingContent")] get; set; }
 
-		[iOS (10, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("explicitContent")]
 		bool ExplicitContent { [Bind ("isExplicitContent")] get; set; }
@@ -1780,7 +1721,6 @@ namespace MediaPlayer {
 	[NoMac]
 	[NoTV]
 	[NoWatch]
-	[iOS (7, 1)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -1807,7 +1747,6 @@ namespace MediaPlayer {
 		nint NumberOfChildItems (NSIndexPath indexPath);
 
 		[NoMac]
-		[iOS (10, 0)]
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'CarPlay' API instead.")]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'CarPlay' API instead.")]
@@ -1822,7 +1761,6 @@ namespace MediaPlayer {
 	[NoMac]
 	[NoTV]
 	[NoWatch]
-	[iOS (7, 1)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -1834,21 +1772,18 @@ namespace MediaPlayer {
 		[Export ("playableContentManager:initiatePlaybackOfContentItemAtIndexPath:completionHandler:")]
 		void InitiatePlaybackOfContentItem (MPPlayableContentManager contentManager, NSIndexPath indexPath, Action<NSError> completionHandler);
 
-		[iOS (8, 4)]
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'CarPlay' API instead.")]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'CarPlay' API instead.")]
 		[Export ("playableContentManager:didUpdateContext:")]
 		void ContextUpdated (MPPlayableContentManager contentManager, MPPlayableContentManagerContext context);
 
-		[iOS (9, 0)]
 		[Deprecated (PlatformName.iOS, 9, 3, message: "Use 'InitializePlaybackQueue (MPPlayableContentManager, MPContentItem[], Action<NSError>)' instead.")]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'InitializePlaybackQueue (MPPlayableContentManager, MPContentItem[], Action<NSError>)' instead.")]
 		[Export ("playableContentManager:initializePlaybackQueueWithCompletionHandler:")]
 		void InitializePlaybackQueue (MPPlayableContentManager contentManager, Action<NSError> completionHandler);
 
-		[iOS (9, 3)]
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the Intents framework API instead.")]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the Intents framework API instead.")]
@@ -1859,7 +1794,6 @@ namespace MediaPlayer {
 	[NoMac]
 	[NoTV]
 	[NoWatch]
-	[iOS (7, 1)]
 	[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'CarPlay' API instead.")]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'CarPlay' API instead.")]
@@ -1896,12 +1830,10 @@ namespace MediaPlayer {
 		[Export ("reloadData")]
 		void ReloadData ();
 
-		[iOS (8, 4)]
 		[MacCatalyst (13, 1)]
 		[Export ("context")]
 		MPPlayableContentManagerContext Context { get; }
 
-		[iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("nowPlayingIdentifiers", ArgumentSemantic.Copy)]
 		string [] NowPlayingIdentifiers { get; set; }
@@ -1910,7 +1842,6 @@ namespace MediaPlayer {
 	[NoMac]
 	[NoTV]
 	[NoWatch]
-	[iOS (8, 4)]
 	[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'CarPlay' API instead.")]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'CarPlay' API instead.")]
@@ -1923,7 +1854,6 @@ namespace MediaPlayer {
 		nint EnforcedContentTreeDepth { get; }
 
 		// iOS 9 beta 2 changed this from contentLimitsEnabled - but the final iOS8.4 release used contentLimitsEnabled
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("contentLimitsEnforced")]
 		bool ContentLimitsEnforced { get; }
@@ -1937,8 +1867,7 @@ namespace MediaPlayer {
 		bool EndpointAvailable { get; }
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (7, 1), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRemoteCommands cannot be initialized externally.
@@ -1960,8 +1889,7 @@ namespace MediaPlayer {
 		void RemoveTarget ([NullAllowed] NSObject target, [NullAllowed] Selector action);
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (7, 1), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangePlaybackRateCommands cannot be initialized externally.
@@ -1971,8 +1899,7 @@ namespace MediaPlayer {
 		NSNumber [] SupportedPlaybackRates { get; set; }
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (8, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeShuffleModeCommand cannot be initialized externally.
@@ -1981,8 +1908,7 @@ namespace MediaPlayer {
 		MPShuffleType CurrentShuffleType { get; set; }
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (8, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeRepeatModeCommand cannot be initialized externally.
@@ -1991,8 +1917,7 @@ namespace MediaPlayer {
 		MPRepeatType CurrentRepeatType { get; set; }
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (7, 1), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPFeedbackCommands cannot be initialized externally.
@@ -2004,14 +1929,12 @@ namespace MediaPlayer {
 		[Export ("localizedTitle")]
 		string LocalizedTitle { get; set; }
 
-		[iOS (8, 2)] // added in 8.2, shown as NS_AVAILABLE_IOS(8_0)
 		[MacCatalyst (13, 1)]
 		[Export ("localizedShortTitle")]
 		string LocalizedShortTitle { get; set; }
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (7, 1), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRatingCommands cannot be initialized externally.
@@ -2024,8 +1947,7 @@ namespace MediaPlayer {
 		float MinimumRating { get; set; } /* float, not CGFloat */
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (7, 1), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPSkipIntervalCommands cannot be initialized externally.
@@ -2036,8 +1958,7 @@ namespace MediaPlayer {
 		NSArray _PreferredIntervals { get; set; }
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (7, 1), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -2053,12 +1974,10 @@ namespace MediaPlayer {
 		[Export ("changePlaybackRateCommand")]
 		MPChangePlaybackRateCommand ChangePlaybackRateCommand { get; }
 
-		[iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("changeRepeatModeCommand")]
 		MPChangeRepeatModeCommand ChangeRepeatModeCommand { get; }
 
-		[iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("changeShuffleModeCommand")]
 		MPChangeShuffleModeCommand ChangeShuffleModeCommand { get; }
@@ -2102,24 +2021,20 @@ namespace MediaPlayer {
 		[Export ("togglePlayPauseCommand")]
 		MPRemoteCommand TogglePlayPauseCommand { get; }
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("enableLanguageOptionCommand")]
 		MPRemoteCommand EnableLanguageOptionCommand { get; }
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("disableLanguageOptionCommand")]
 		MPRemoteCommand DisableLanguageOptionCommand { get; }
 
-		[iOS (9, 1)]
 		[MacCatalyst (13, 1)]
 		[Export ("changePlaybackPositionCommand")]
 		MPChangePlaybackPositionCommand ChangePlaybackPositionCommand { get; }
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (7, 1), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRemoteCommandEvents cannot be initialized externally.
@@ -2132,8 +2047,7 @@ namespace MediaPlayer {
 		double /* NSTimeInterval */ Timestamp { get; }
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (7, 1), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangePlaybackRateCommandEvents cannot be initialized externally.
@@ -2143,8 +2057,7 @@ namespace MediaPlayer {
 		float PlaybackRate { get; } // float, not CGFloat
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (7, 1), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRatingCommandEvents cannot be initialized externally.
@@ -2154,8 +2067,7 @@ namespace MediaPlayer {
 		float Rating { get; } // float, not CGFloat
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (7, 1), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // Name: NSGenericException Reason: MPSeekCommandEvents cannot be initialized externally.
@@ -2165,8 +2077,7 @@ namespace MediaPlayer {
 		MPSeekCommandEventType Type { get; }
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (7, 1), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPSkipIntervalCommandEvents cannot be initialized externally.
@@ -2176,8 +2087,7 @@ namespace MediaPlayer {
 		double /* NSTimeInterval */ Interval { get; }
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (7, 1), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor]
@@ -2187,8 +2097,7 @@ namespace MediaPlayer {
 		bool Negative { [Bind ("isNegative")] get; }
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (9, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeLanguageOptionCommandEvents cannot be initialized externally.
@@ -2196,15 +2105,12 @@ namespace MediaPlayer {
 		[Export ("languageOption")]
 		MPNowPlayingInfoLanguageOption LanguageOption { get; }
 
-		[iOS (10, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("setting")]
 		MPChangeLanguageOptionSetting Setting { get; }
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (8, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeShuffleModeCommandEvent cannot be initialized externally.
@@ -2212,15 +2118,12 @@ namespace MediaPlayer {
 		[Export ("shuffleType")]
 		MPShuffleType ShuffleType { get; }
 
-		[iOS (10, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("preservesShuffleMode")]
 		bool PreservesShuffleMode { get; }
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (8, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeRepeatModeCommandEvent cannot be initialized externally.
@@ -2228,15 +2131,12 @@ namespace MediaPlayer {
 		[Export ("repeatType")]
 		MPRepeatType RepeatType { get; }
 
-		[iOS (10, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("preservesRepeatMode")]
 		bool PreservesRepeatMode { get; }
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (9, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // pre-emptive
@@ -2264,14 +2164,12 @@ namespace MediaPlayer {
 		[Export ("isAutomaticLegibleLanguageOption")]
 		bool IsAutomaticLegibleLanguageOption { get; }
 
-		[iOS (9, 1)]
 		[MacCatalyst (13, 1)]
 		[Export ("isAutomaticAudibleLanguageOption")]
 		bool IsAutomaticAudibleLanguageOption { get; }
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (9, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // pre-emptive
@@ -2289,8 +2187,6 @@ namespace MediaPlayer {
 		bool AllowEmptySelection { get; }
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (9, 0)]
 	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Static]
@@ -2327,16 +2223,14 @@ namespace MediaPlayer {
 		NSString VoiceOverTranslation { get; }
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (9, 1), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // Objective-C exception thrown.  Name: NSGenericException Reason: MPChangePlaybackPositionCommands cannot be initialized externally.
 	interface MPChangePlaybackPositionCommand {
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (9, 1), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // Objective-C exception thrown.  Name: NSGenericException Reason: MPChangePlaybackPositionCommandEvents cannot be initialized externally.
@@ -2347,7 +2241,6 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
-	[iOS (9, 3)]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -2370,7 +2263,6 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoWatch]
-	[iOS (10, 1)]
 	[TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
@@ -2387,7 +2279,6 @@ namespace MediaPlayer {
 	[NoMac]
 	[NoTV]
 	[NoWatch]
-	[iOS (10, 1)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPMusicPlayerQueueDescriptor))]
 	interface MPMusicPlayerMediaItemQueueDescriptor {
@@ -2415,7 +2306,6 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoWatch]
-	[iOS (10, 1)]
 	[TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPMusicPlayerQueueDescriptor))]
@@ -2438,7 +2328,6 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoWatch]
-	[iOS (10, 3)]
 	[TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -2454,7 +2343,6 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoWatch]
-	[iOS (10, 3)]
 	[TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPMusicPlayerControllerQueue))]
@@ -2468,7 +2356,6 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoWatch]
-	[iOS (10, 3)]
 	[TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPMusicPlayerController))]
@@ -2479,7 +2366,6 @@ namespace MediaPlayer {
 	}
 
 	[NoMac]
-	[iOS (11, 0)]
 	[TV (14, 0)]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -2495,7 +2381,6 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoWatch]
-	[iOS (11, 0)]
 	[TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MPMusicPlayerQueueDescriptor))]
@@ -2521,7 +2406,7 @@ namespace MediaPlayer {
 
 	[NoTV]
 	[NoMac] // headers have no availability macros on the protocol itself but the only member is not available on macOS
-	[iOS (11, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface MPSystemMusicPlayerController {
@@ -2534,8 +2419,6 @@ namespace MediaPlayer {
 
 	[Category]
 	[BaseType (typeof (NSUserActivity))]
-	[TV (10, 0, 1)]
-	[iOS (10, 1)]
 	[NoWatch]
 	[NoMac]
 	[MacCatalyst (13, 1)]
@@ -2548,8 +2431,6 @@ namespace MediaPlayer {
 		void SetExternalMediaContentIdentifier ([NullAllowed] NSString identifier);
 	}
 
-	[iOS (9, 0)]
-	[Mac (10, 12, 1)]
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Category]
@@ -2560,8 +2441,6 @@ namespace MediaPlayer {
 		MPNowPlayingInfoLanguageOption CreateNowPlayingInfoLanguageOption ();
 	}
 
-	[iOS (9, 0)]
-	[Mac (10, 12, 1)]
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Category]

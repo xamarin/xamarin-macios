@@ -456,13 +456,11 @@ namespace CoreWlan {
 		[Export ("commitConfiguration:authorization:error:")]
 		bool CommitConfiguration (CWConfiguration configuration, [NullAllowed] NSObject authorization, out NSError error);
 
-		[Mac (10, 13)]
 		[Export ("scanForNetworksWithSSID:includeHidden:error:")]
 		[return: NullAllowed]
 		[Internal]
 		NSSet _ScanForNetworksWithSsid ([NullAllowed] NSData ssid, bool includeHidden, [NullAllowed] out NSError error);
 
-		[Mac (10, 13)]
 		[Export ("scanForNetworksWithName:includeHidden:error:")]
 		[return: NullAllowed]
 		[Internal]
@@ -624,7 +622,7 @@ namespace CoreWlan {
 		CWSecurity Security { get; set; }
 	}
 
-	[Mac (10, 10), NoMacCatalyst]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface CWWiFiClient {
 		[Export ("delegate", ArgumentSemantic.Weak)]

@@ -135,25 +135,18 @@ namespace MediaPlayer {
 		AudioITunesU = 1 << 3,
 		AnyAudio = 0x00ff,
 
-		[Mac (10, 12, 2)]
 		[MacCatalyst (13, 1)]
 		Movie = 1 << 8,
-		[Mac (10, 12, 2)]
 		[MacCatalyst (13, 1)]
 		TVShow = 1 << 9,
-		[Mac (10, 12, 2)]
 		[MacCatalyst (13, 1)]
 		VideoPodcast = 1 << 10,
-		[Mac (10, 12, 2)]
 		[MacCatalyst (13, 1)]
 		MusicVideo = 1 << 11,
-		[Mac (10, 12, 2)]
 		[MacCatalyst (13, 1)]
 		VideoITunesU = 1 << 12,
-		[Mac (10, 12, 2)]
 		[MacCatalyst (13, 1)]
 		HomeVideo = 1 << 13,
-		[Mac (10, 12, 2)]
 		[MacCatalyst (13, 1)]
 		TypeAnyVideo = 0xff00,
 		Any = 0xFFFFFFFFFFFFFFFF
@@ -268,7 +261,6 @@ namespace MediaPlayer {
 
 	public delegate void MPMediaItemEnumerator (string property, NSObject value, ref bool stop);
 
-	[Mac (10, 12, 2)]
 	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -278,7 +270,6 @@ namespace MediaPlayer {
 		Collections
 	}
 
-	[Mac (10, 12, 2)]
 	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -288,8 +279,6 @@ namespace MediaPlayer {
 		All
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (10, 0)]
 	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -300,28 +289,20 @@ namespace MediaPlayer {
 	}
 
 	// NSInteger -> MPRemoteCommand.h
-	[Mac (10, 12, 2)]
-	[iOS (7, 1)]
 	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPRemoteCommandHandlerStatus : long {
 		Success = 0,
 		NoSuchContent = 100,
-		[iOS (9, 1)]
 		[MacCatalyst (13, 1)]
 		NoActionableNowPlayingItem = 110,
-		[iOS (11, 0)]
-		[TV (11, 0)]
-		[Mac (10, 13)]
 		[MacCatalyst (13, 1)]
 		DeviceNotFound = 120,
 		CommandFailed = 200
 	}
 
 	// NSUInteger -> MPRemoteCommandEvent.h
-	[Mac (10, 12, 2)]
-	[iOS (7, 1)]
 	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -330,8 +311,6 @@ namespace MediaPlayer {
 		EndSeeking
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (9, 0)]
 	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -340,9 +319,7 @@ namespace MediaPlayer {
 		Legible
 	}
 
-	[Mac (10, 14, 2)]
 	[Watch (7, 0)]
-	[iOS (9, 3)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	[ErrorDomain ("MPErrorDomain")]
@@ -360,7 +337,6 @@ namespace MediaPlayer {
 	[NoMac]
 	[NoTV]
 	[NoWatch]
-	[iOS (9, 3)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPMediaLibraryAuthorizationStatus : long {
@@ -370,9 +346,6 @@ namespace MediaPlayer {
 		Authorized
 	}
 
-	[Mac (10, 12, 2)]
-	[iOS (10, 0)]
-	[TV (10, 0)]
 	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -382,10 +355,7 @@ namespace MediaPlayer {
 		Video
 	}
 
-	[Mac (10, 12, 2)]
 	[Watch (5, 0)]
-	[iOS (11, 0)]
-	[TV (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MPNowPlayingPlaybackState : ulong {

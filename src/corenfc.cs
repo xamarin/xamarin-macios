@@ -25,7 +25,6 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreNFC {
 
-	[iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[ErrorDomain ("NFCErrorDomain")]
 	[Native]
@@ -58,8 +57,7 @@ namespace CoreNFC {
 		NdefReaderSessionErrorZeroLengthMessage = 403,
 	}
 
-	//[iOS (11,0), NoTV, NoWatch, NoMac]
-	[iOS (11, 0)]
+	//[NoTV, NoWatch, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NFCTagType : ulong {
@@ -75,8 +73,7 @@ namespace CoreNFC {
 		MiFare = 4,
 	}
 
-	//[iOS (11,0), NoTV, NoWatch, NoMac]
-	[iOS (11, 0)]
+	//[NoTV, NoWatch, NoMac]
 	[MacCatalyst (13, 1)]
 	public enum NFCTypeNameFormat : byte { // uint8_t
 		Empty = 0x00,
@@ -88,8 +85,7 @@ namespace CoreNFC {
 		Unchanged = 0x06,
 	}
 
-	//[iOS (11,0), NoTV, NoWatch, NoMac]
-	[iOS (11, 0)]
+	//[NoTV, NoWatch, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NFCReaderSession), Name = "NFCISO15693ReaderSession")]
 	[DisableDefaultCtor]
@@ -110,8 +106,7 @@ namespace CoreNFC {
 		void RestartPolling ();
 	}
 
-	//[iOS (11,0), NoTV, NoWatch, NoMac]
-	[iOS (11, 0)]
+	//[NoTV, NoWatch, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NFCTagCommandConfiguration), Name = "NFCISO15693CustomCommandConfiguration")]
 	interface NFCIso15693CustomCommandConfiguration {
@@ -132,8 +127,7 @@ namespace CoreNFC {
 		NativeHandle Constructor (nuint manufacturerCode, nuint customCommandCode, [NullAllowed] NSData requestParameters, nuint maximumRetries, double retryInterval);
 	}
 
-	//[iOS (11,0), NoTV, NoWatch, NoMac]
-	[iOS (11, 0)]
+	//[NoTV, NoWatch, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NFCTagCommandConfiguration), Name = "NFCISO15693ReadMultipleBlocksConfiguration")]
 	interface NFCIso15693ReadMultipleBlocksConfiguration {
@@ -160,8 +154,7 @@ namespace CoreNFC {
 	delegate void NFCIso15693TagGetMultipleBlockSecurityStatusCallback (NSNumber [] securityStatus, NSError error);
 	delegate void NFCIso15693TagGetSystemInfoAndUidCallback (NSData uid, nint dsfid, nint afi, nint blockSize, nint blockCount, nint icReference, NSError error);
 
-	//[iOS (11,0), NoTV, NoWatch, NoMac]
-	[iOS (11, 0)]
+	//[NoTV, NoWatch, NoMac]
 	[MacCatalyst (13, 1)]
 	[Protocol (Name = "NFCISO15693Tag")]
 	interface NFCIso15693Tag : NFCTag, NFCNdefTag {
@@ -428,7 +421,6 @@ namespace CoreNFC {
 
 	}
 
-	[iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "NFCNDEFPayload")]
 	[DisableDefaultCtor]
@@ -489,7 +481,6 @@ namespace CoreNFC {
 		NativeHandle Constructor (NFCTypeNameFormat format, NSData type, NSData identifier, NSData payload, nuint chunkSize);
 	}
 
-	[iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "NFCNDEFMessage")]
 	[DisableDefaultCtor]
@@ -518,7 +509,6 @@ namespace CoreNFC {
 
 	interface INFCNdefReaderSessionDelegate { }
 
-	[iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject), Name = "NFCNDEFReaderSessionDelegate")]
@@ -543,7 +533,6 @@ namespace CoreNFC {
 		void DidBecomeActive (NFCNdefReaderSession session);
 	}
 
-	[iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NFCReaderSession), Name = "NFCNDEFReaderSession")]
 	[DisableDefaultCtor]
@@ -569,7 +558,6 @@ namespace CoreNFC {
 		void ConnectToTag (INFCNdefTag tag, Action<NSError> completionHandler);
 	}
 
-	[iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -590,7 +578,6 @@ namespace CoreNFC {
 
 	interface INFCReaderSessionContract { }
 
-	[iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol (Name = "NFCReaderSession")]
 	interface NFCReaderSessionContract {
@@ -622,8 +609,7 @@ namespace CoreNFC {
 
 	interface INFCReaderSessionDelegate { }
 
-	//[iOS (11,0), NoTV, NoWatch, NoMac]
-	[iOS (11, 0)]
+	//[NoTV, NoWatch, NoMac]
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -646,7 +632,6 @@ namespace CoreNFC {
 
 	interface INFCTag { }
 
-	[iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface NFCTag : NSSecureCoding, NSCopying {
@@ -712,8 +697,7 @@ namespace CoreNFC {
 #endif
 	}
 
-	//[iOS (11,0), NoTV, NoWatch, NoMac]
-	[iOS (11, 0)]
+	//[NoTV, NoWatch, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NFCTagCommandConfiguration : NSCopying {

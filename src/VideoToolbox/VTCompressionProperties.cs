@@ -289,11 +289,9 @@ namespace VideoToolbox {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public VTH264EntropyMode H264EntropyMode {
 			get {
@@ -501,12 +499,11 @@ namespace VideoToolbox {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Introduced (PlatformName.MacOSX, 10, 15)]
 		[Introduced (PlatformName.iOS, 13, 0)]
 		[Introduced (PlatformName.TvOS, 13, 0)]
 #endif

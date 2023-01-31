@@ -50,7 +50,6 @@ namespace iAd {
 		Manual,
 	}
 
-	[iOS (9, 0)]
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
 	[Native]
 	[ErrorDomain ("ADClientErrorDomain")]

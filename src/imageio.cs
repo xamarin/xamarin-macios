@@ -66,7 +66,6 @@ namespace ImageIO {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyHEICSDictionary")]
 		NSString HeicsDictionary { get; }
@@ -87,26 +86,18 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyMakerNikonDictionary")]
 		NSString MakerNikonDictionary { get; }
 
-		[iOS (8, 3)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyMakerMinoltaDictionary")]
 		NSString MakerMinoltaDictionary { get; }
 
-		[iOS (8, 3)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyMakerFujiDictionary")]
 		NSString MakerFujiDictionary { get; }
 
-		[iOS (8, 3)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyMakerOlympusDictionary")]
 		NSString MakerOlympusDictionary { get; }
 
-		[iOS (8, 3)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyMakerPentaxDictionary")]
 		NSString MakerPentaxDictionary { get; }
@@ -204,10 +195,6 @@ namespace ImageIO {
 		NSString ExifSubsecTime { get; }
 		[Field ("kCGImagePropertyExifSubsecTimeOrginal")]
 		NSString ExifSubsecTimeOrginal { get; }
-		[iOS (10, 0)]
-		[Mac (10, 11)]
-		[TV (10, 0)]
-		[Watch (3, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyExifSubsecTimeOriginal")]
 		NSString ExifSubsecTimeOriginal { get; }
@@ -274,17 +261,17 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyExifGamma")]
 		NSString ExifGamma { get; }
 
-		[Mac (10, 15, 1), iOS (13, 1), TV (13, 1), Watch (6, 1)]
+		[iOS (13, 1), TV (13, 1), Watch (6, 1)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyExifCompositeImage")]
 		NSString ExifCompositeImage { get; }
 
-		[Mac (10, 15, 1), iOS (13, 1), TV (13, 1), Watch (6, 1)]
+		[iOS (13, 1), TV (13, 1), Watch (6, 1)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyExifSourceImageNumberOfCompositeImage")]
 		NSString ExifSourceImageNumberOfCompositeImage { get; }
 
-		[Mac (10, 15, 1), iOS (13, 1), TV (13, 1), Watch (6, 1)]
+		[iOS (13, 1), TV (13, 1), Watch (6, 1)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyExifSourceExposureTimesOfCompositeImage")]
 		NSString ExifSourceExposureTimesOfCompositeImage { get; }
@@ -292,32 +279,26 @@ namespace ImageIO {
 		// misdocumented (first 4.3, then 5.0) but the constants were not present until 6.x
 
 		[Field ("kCGImagePropertyExifCameraOwnerName")]
-		[Mac (10, 9)] // Really introduced in 10.8 (according to header), but as a private symbol in the framework (nm shows it as 's'), so we can't access it.
 		[MacCatalyst (13, 1)]
 		NSString ExifCameraOwnerName { get; }
 
 		[Field ("kCGImagePropertyExifBodySerialNumber")]
-		[Mac (10, 9)] // Really introduced in 10.8 (according to header), but as a private symbol in the framework (nm shows it as 's'), so we can't access it.
 		[MacCatalyst (13, 1)]
 		NSString ExifBodySerialNumber { get; }
 
 		[Field ("kCGImagePropertyExifLensSpecification")]
-		[Mac (10, 9)] // Really introduced in 10.8 (according to header), but as a private symbol in the framework (nm shows it as 's'), so we can't access it.
 		[MacCatalyst (13, 1)]
 		NSString ExifLensSpecification { get; }
 
 		[Field ("kCGImagePropertyExifLensMake")]
-		[Mac (10, 9)] // Really introduced in 10.8 (according to header), but as a private symbol in the framework (nm shows it as 's'), so we can't access it.
 		[MacCatalyst (13, 1)]
 		NSString ExifLensMake { get; }
 
 		[Field ("kCGImagePropertyExifLensModel")]
-		[Mac (10, 9)] // Really introduced in 10.8 (according to header), but as a private symbol in the framework (nm shows it as 's'), so we can't access it.
 		[MacCatalyst (13, 1)]
 		NSString ExifLensModel { get; }
 
 		[Field ("kCGImagePropertyExifLensSerialNumber")]
-		[Mac (10, 9)] // Really introduced in 10.8 (according to header), but as a private symbol in the framework (nm shows it as 's'), so we can't access it.
 		[MacCatalyst (13, 1)]
 		NSString ExifLensSerialNumber { get; }
 
@@ -358,7 +339,6 @@ namespace ImageIO {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyGIFCanvasPixelWidth")]
 		NSString GifCanvasPixelWidth { get; }
@@ -366,7 +346,6 @@ namespace ImageIO {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyGIFCanvasPixelHeight")]
 		NSString GifCanvasPixelHeight { get; }
@@ -374,7 +353,6 @@ namespace ImageIO {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyGIFFrameInfoArray")]
 		NSString GifFrameInfoArray { get; }
@@ -442,7 +420,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyGPSDifferental")]
 		NSString GPSDifferental { get; }
 
-		[iOS (8, 0), Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyGPSHPositioningError")]
 		NSString GPSHPositioningError { get; }
@@ -616,26 +593,18 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyPNGPixelsAspectRatio")]
 		NSString PNGPixelsAspectRatio { get; }
 
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyPNGCompressionFilter")]
 		NSString PNGCompressionFilter { get; }
 
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyAPNGLoopCount")]
 		NSString PNGLoopCount { get; }
 
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyAPNGDelayTime")]
 		NSString PNGDelayTime { get; }
 
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyAPNGUnclampedDelayTime")]
 		NSString PNGUnclampedDelayTime { get; }
@@ -643,7 +612,6 @@ namespace ImageIO {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyAPNGFrameInfoArray")]
 		NSString ApngFrameInfoArray { get; }
@@ -651,7 +619,6 @@ namespace ImageIO {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyAPNGCanvasPixelWidth")]
 		NSString ApngCanvasPixelWidth { get; }
@@ -659,27 +626,26 @@ namespace ImageIO {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyAPNGCanvasPixelHeight")]
 		NSString ApngCanvasPixelHeight { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyPNGComment")]
 		NSString PNGComment { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyPNGDisclaimer")]
 		NSString PNGDisclaimer { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyPNGSource")]
 		NSString PNGSource { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyPNGWarning")]
 		NSString PNGWarning { get; }
@@ -726,13 +692,9 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyTIFFPrimaryChromaticities")]
 		NSString TIFFPrimaryChromaticities { get; }
 
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyTIFFTileLength")]
 		NSString TIFFTileLength { get; }
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyTIFFTileWidth")]
 		NSString TIFFTileWidth { get; }
@@ -752,492 +714,412 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyDNGLensInfo")]
 		NSString DNGLensInfo { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGBlackLevel")]
 		NSString DNGBlackLevel { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGWhiteLevel")]
 		NSString DNGWhiteLevel { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGCalibrationIlluminant1")]
 		NSString DNGCalibrationIlluminant1 { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGCalibrationIlluminant2")]
 		NSString DNGCalibrationIlluminant2 { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGColorMatrix1")]
 		NSString DNGColorMatrix1 { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGColorMatrix2")]
 		NSString DNGColorMatrix2 { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGCameraCalibration1")]
 		NSString DNGCameraCalibration1 { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGCameraCalibration2")]
 		NSString DNGCameraCalibration2 { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGAsShotNeutral")]
 		NSString DNGAsShotNeutral { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGAsShotWhiteXY")]
 		NSString DNGAsShotWhiteXY { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGBaselineExposure")]
 		NSString DNGBaselineExposure { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGBaselineNoise")]
 		NSString DNGBaselineNoise { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGBaselineSharpness")]
 		NSString DNGBaselineSharpness { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGPrivateData")]
 		NSString DNGPrivateData { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGCameraCalibrationSignature")]
 		NSString DNGCameraCalibrationSignature { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGProfileCalibrationSignature")]
 		NSString DNGProfileCalibrationSignature { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGNoiseProfile")]
 		NSString DNGNoiseProfile { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGWarpRectilinear")]
 		NSString DNGWarpRectilinear { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGWarpFisheye")]
 		NSString DNGWarpFisheye { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGFixVignetteRadial")]
 		NSString DNGFixVignetteRadial { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGActiveArea")]
 		NSString DNGActiveArea { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGAnalogBalance")]
 		NSString DNGAnalogBalance { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGAntiAliasStrength")]
 		NSString DNGAntiAliasStrength { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGAsShotICCProfile")]
 		NSString DNGAsShotICCProfile { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGAsShotPreProfileMatrix")]
 		NSString DNGAsShotPreProfileMatrix { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGAsShotProfileName")]
 		NSString DNGAsShotProfileName { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGBaselineExposureOffset")]
 		NSString DNGBaselineExposureOffset { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGBayerGreenSplit")]
 		NSString DNGBayerGreenSplit { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGBestQualityScale")]
 		NSString DNGBestQualityScale { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGBlackLevelDeltaH")]
 		NSString DNGBlackLevelDeltaHorizontal { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGBlackLevelDeltaV")]
 		NSString DNGBlackLevelDeltaVertical { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGBlackLevelRepeatDim")]
 		NSString DNGBlackLevelRepeatDim { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGCFALayout")]
 		NSString DNGCfaLayout { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGCFAPlaneColor")]
 		NSString DNGCfaPlaneColor { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGChromaBlurRadius")]
 		NSString DNGChromaBlurRadius { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGColorimetricReference")]
 		NSString DNGColorimetricReference { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGCurrentICCProfile")]
 		NSString DNGCurrentICCProfile { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGCurrentPreProfileMatrix")]
 		NSString DNGCurrentPreProfileMatrix { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGDefaultBlackRender")]
 		NSString DNGDefaultBlackRender { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGDefaultCropOrigin")]
 		NSString DNGDefaultCropOrigin { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGDefaultCropSize")]
 		NSString DNGDefaultCropSize { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGDefaultScale")]
 		NSString DNGDefaultScale { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGDefaultUserCrop")]
 		NSString DNGDefaultUserCrop { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGExtraCameraProfiles")]
 		NSString DNGExtraCameraProfiles { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGForwardMatrix1")]
 		NSString DNGForwardMatrix1 { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGForwardMatrix2")]
 		NSString DNGForwardMatrix2 { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGLinearizationTable")]
 		NSString DNGLinearizationTable { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGLinearResponseLimit")]
 		NSString DNGLinearResponseLimit { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGMakerNoteSafety")]
 		NSString DNGMakerNoteSafety { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGMaskedAreas")]
 		NSString DNGMaskedAreas { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGNewRawImageDigest")]
 		NSString DNGNewRawImageDigest { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGNoiseReductionApplied")]
 		NSString DNGNoiseReductionApplied { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGOpcodeList1")]
 		NSString DNGOpcodeList1 { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGOpcodeList2")]
 		NSString DNGOpcodeList2 { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGOpcodeList3")]
 		NSString DNGOpcodeList3 { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGOriginalBestQualityFinalSize")]
 		NSString DNGOriginalBestQualityFinalSize { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGOriginalDefaultCropSize")]
 		NSString DNGOriginalDefaultCropSize { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGOriginalDefaultFinalSize")]
 		NSString DNGOriginalDefaultFinalSize { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGOriginalRawFileData")]
 		NSString DNGOriginalRawFileData { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGOriginalRawFileDigest")]
 		NSString DNGOriginalRawFileDigest { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGOriginalRawFileName")]
 		NSString DNGOriginalRawFileName { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGPreviewApplicationName")]
 		NSString DNGPreviewApplicationName { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGPreviewApplicationVersion")]
 		NSString DNGPreviewApplicationVersion { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGPreviewColorSpace")]
 		NSString DNGPreviewColorSpace { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGPreviewDateTime")]
 		NSString DNGPreviewDateTime { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGPreviewSettingsDigest")]
 		NSString DNGPreviewSettingsDigest { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGPreviewSettingsName")]
 		NSString DNGPreviewSettingsName { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGProfileCopyright")]
 		NSString DNGProfileCopyright { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGProfileEmbedPolicy")]
 		NSString DNGProfileEmbedPolicy { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGProfileHueSatMapData1")]
 		NSString DNGProfileHueSatMapData1 { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGProfileHueSatMapData2")]
 		NSString DNGProfileHueSatMapData2 { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGProfileHueSatMapDims")]
 		NSString DNGProfileHueSatMapDims { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGProfileHueSatMapEncoding")]
 		NSString DNGProfileHueSatMapEncoding { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGProfileLookTableData")]
 		NSString DNGProfileLookTableData { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGProfileLookTableDims")]
 		NSString DNGProfileLookTableDims { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGProfileLookTableEncoding")]
 		NSString DNGProfileLookTableEncoding { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGProfileName")]
 		NSString DNGProfileName { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGProfileToneCurve")]
 		NSString DNGProfileToneCurve { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGRawDataUniqueID")]
 		NSString DNGRawDataUniqueId { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGRawImageDigest")]
 		NSString DNGRawImageDigest { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGRawToPreviewGain")]
 		NSString DNGRawToPreviewGain { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGReductionMatrix1")]
 		NSString DNGReductionMatrix1 { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGReductionMatrix2")]
 		NSString DNGReductionMatrix2 { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGRowInterleaveFactor")]
 		NSString DNGRowInterleaveFactor { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGShadowScale")]
 		NSString DNGShadowScale { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyDNGSubTileBlockSize")]
 		NSString DNGSubTileBlockSize { get; }
@@ -1297,7 +1179,6 @@ namespace ImageIO {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyHEICSLoopCount")]
 		NSString HeicsLoopCount { get; }
@@ -1305,7 +1186,6 @@ namespace ImageIO {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyHEICSDelayTime")]
 		NSString HeicsDelayTime { get; }
@@ -1313,7 +1193,6 @@ namespace ImageIO {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyHEICSUnclampedDelayTime")]
 		NSString HeicsSUnclampedDelayTime { get; }
@@ -1321,7 +1200,6 @@ namespace ImageIO {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyHEICSCanvasPixelWidth")]
 		NSString HeicsCanvasPixelWidth { get; }
@@ -1329,7 +1207,6 @@ namespace ImageIO {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyHEICSCanvasPixelHeight")]
 		NSString HeicsCanvasPixelHeight { get; }
@@ -1337,7 +1214,6 @@ namespace ImageIO {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyHEICSFrameInfoArray")]
 		NSString HeicsFrameInfoArray { get; }
@@ -1400,27 +1276,21 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyMakerCanonAspectRatioInfo")]
 		NSString MakerCanonAspectRatioInfo { get; }
 
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyExifISOSpeed")]
 		NSString ExifISOSpeed { get; }
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyExifISOSpeedLatitudeyyy")]
 		NSString ExifISOSpeedLatitudeYyy { get; }
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyExifISOSpeedLatitudezzz")]
 		NSString ExifISOSpeedLatitudeZzz { get; }
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyExifRecommendedExposureIndex")]
 		NSString ExifRecommendedExposureIndex { get; }
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyExifSensitivityType")]
 		NSString ExifSensitivityType { get; }
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyExifStandardOutputSensitivity")]
 		NSString ExifStandardOutputSensitivity { get; }
@@ -1428,7 +1298,6 @@ namespace ImageIO {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyExifOffsetTime")]
 		NSString ExifOffsetTime { get; }
@@ -1436,7 +1305,6 @@ namespace ImageIO {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyExifOffsetTimeOriginal")]
 		NSString ExifOffsetTimeOriginal { get; }
@@ -1444,7 +1312,6 @@ namespace ImageIO {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyExifOffsetTimeDigitized")]
 		NSString ExifOffsetTimeDigitized { get; }
@@ -1454,7 +1321,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyMakerAppleDictionary")]
 		NSString MakerAppleDictionary { get; }
 
-		[Mac (10, 13), iOS (11, 0), TV (11, 0), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyImageCount")]
 		NSString ImageCount { get; }
@@ -1463,57 +1329,46 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyImageIndex")]
 		NSString ImageIndex { get; }
 
-		[Mac (10, 13), iOS (11, 0), TV (11, 0), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyWidth")]
 		NSString Width { get; }
 
-		[Mac (10, 13), iOS (11, 0), TV (11, 0), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyHeight")]
 		NSString Height { get; }
 
-		[Mac (10, 13), iOS (11, 0), TV (11, 0), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyBytesPerRow")]
 		NSString BytesPerRow { get; }
 
-		[Mac (10, 13), iOS (11, 0), TV (11, 0), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyNamedColorSpace")]
 		NSString NamedColorSpace { get; }
 
-		[Mac (10, 13), iOS (11, 0), TV (11, 0), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyPixelFormat")]
 		NSString PixelFormat { get; }
 
-		[Mac (10, 13), iOS (11, 0), TV (11, 0), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyImages")]
 		NSString Images { get; }
 
-		[Mac (10, 13), iOS (11, 0), TV (11, 0), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyThumbnailImages")]
 		NSString ThumbnailImages { get; }
 
-		[Mac (10, 13), iOS (11, 0), TV (11, 0), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyAuxiliaryData")]
 		NSString AuxiliaryData { get; }
 
-		[Mac (10, 13), iOS (11, 0), TV (11, 0), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyAuxiliaryDataType")]
 		NSString AuxiliaryDataType { get; }
 
-		[Mac (10, 13), iOS (11, 0), TV (11, 0), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyFileContentsDictionary")]
 		NSString FileContentsDictionary { get; }
 
-		[Mac (10, 9)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1521,7 +1376,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyOpenEXRDictionary")]
 		NSString OpenExrDictionary { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1529,7 +1383,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtAboutCvTerm")]
 		NSString IPTCExtAboutCvTerm { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1537,7 +1390,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtAboutCvTermCvId")]
 		NSString IPTCExtAboutCvTermCvId { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1545,7 +1397,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtAboutCvTermId")]
 		NSString IPTCExtAboutCvTermId { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1553,7 +1404,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtAboutCvTermName")]
 		NSString IPTCExtAboutCvTermName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1561,7 +1411,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtAboutCvTermRefinedAbout")]
 		NSString IPTCExtAboutCvTermRefinedAbout { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1569,7 +1418,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtAddlModelInfo")]
 		NSString IPTCExtAddlModelInfo { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1577,7 +1425,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtArtworkOrObject")]
 		NSString IPTCExtArtworkOrObject { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1585,7 +1432,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtArtworkCircaDateCreated")]
 		NSString IPTCExtArtworkCircaDateCreated { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1593,7 +1439,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtArtworkContentDescription")]
 		NSString IPTCExtArtworkContentDescription { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1601,7 +1446,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtArtworkContributionDescription")]
 		NSString IPTCExtArtworkContributionDescription { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1609,7 +1453,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtArtworkCopyrightNotice")]
 		NSString IPTCExtArtworkCopyrightNotice { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1617,7 +1460,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtArtworkCreator")]
 		NSString IPTCExtArtworkCreator { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1625,7 +1467,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtArtworkCreatorID")]
 		NSString IPTCExtArtworkCreatorId { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1633,7 +1474,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtArtworkCopyrightOwnerID")]
 		NSString IPTCExtArtworkCopyrightOwnerId { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1641,7 +1481,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtArtworkCopyrightOwnerName")]
 		NSString IPTCExtArtworkCopyrightOwnerName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1649,7 +1488,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtArtworkLicensorID")]
 		NSString IPTCExtArtworkLicensorId { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1657,7 +1495,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtArtworkLicensorName")]
 		NSString IPTCExtArtworkLicensorName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1665,7 +1502,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtArtworkDateCreated")]
 		NSString IPTCExtArtworkDateCreated { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1673,7 +1509,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtArtworkPhysicalDescription")]
 		NSString IPTCExtArtworkPhysicalDescription { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1681,7 +1516,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtArtworkSource")]
 		NSString IPTCExtArtworkSource { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1689,7 +1523,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtArtworkSourceInventoryNo")]
 		NSString IPTCExtArtworkSourceInventoryNo { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1697,7 +1530,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtArtworkSourceInvURL")]
 		NSString IPTCExtArtworkSourceInvUrl { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1705,7 +1537,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtArtworkStylePeriod")]
 		NSString IPTCExtArtworkStylePeriod { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1713,7 +1544,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtArtworkTitle")]
 		NSString IPTCExtArtworkTitle { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1721,7 +1551,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtAudioBitrate")]
 		NSString IPTCExtAudioBitrate { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1729,7 +1558,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtAudioBitrateMode")]
 		NSString IPTCExtAudioBitrateMode { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1737,7 +1565,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtAudioChannelCount")]
 		NSString IPTCExtAudioChannelCount { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1745,7 +1572,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtCircaDateCreated")]
 		NSString IPTCExtCircaDateCreated { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1753,7 +1579,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtContainerFormat")]
 		NSString IPTCExtContainerFormat { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1761,7 +1586,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtContainerFormatIdentifier")]
 		NSString IPTCExtContainerFormatIdentifier { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1769,7 +1593,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtContainerFormatName")]
 		NSString IPTCExtContainerFormatName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1777,7 +1600,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtContributor")]
 		NSString IPTCExtContributor { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1785,7 +1607,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtContributorIdentifier")]
 		NSString IPTCExtContributorIdentifier { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1793,7 +1614,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtContributorName")]
 		NSString IPTCExtContributorName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1801,7 +1621,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtContributorRole")]
 		NSString IPTCExtContributorRole { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1809,7 +1628,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtCopyrightYear")]
 		NSString IPTCExtCopyrightYear { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1817,7 +1635,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtCreator")]
 		NSString IPTCExtCreator { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1825,7 +1642,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtCreatorIdentifier")]
 		NSString IPTCExtCreatorIdentifier { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1833,7 +1649,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtCreatorName")]
 		NSString IPTCExtCreatorName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1841,7 +1656,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtCreatorRole")]
 		NSString IPTCExtCreatorRole { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1849,7 +1663,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtControlledVocabularyTerm")]
 		NSString IPTCExtControlledVocabularyTerm { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1857,7 +1670,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtDataOnScreen")]
 		NSString IPTCExtDataOnScreen { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1865,7 +1677,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtDataOnScreenRegion")]
 		NSString IPTCExtDataOnScreenRegion { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1873,7 +1684,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtDataOnScreenRegionD")]
 		NSString IPTCExtDataOnScreenRegionD { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1881,7 +1691,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtDataOnScreenRegionH")]
 		NSString IPTCExtDataOnScreenRegionH { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1889,7 +1698,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtDataOnScreenRegionText")]
 		NSString IPTCExtDataOnScreenRegionText { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1897,7 +1705,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtDataOnScreenRegionUnit")]
 		NSString IPTCExtDataOnScreenRegionUnit { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1905,7 +1712,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtDataOnScreenRegionW")]
 		NSString IPTCExtDataOnScreenRegionW { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1913,7 +1719,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtDataOnScreenRegionX")]
 		NSString IPTCExtDataOnScreenRegionX { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1921,7 +1726,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtDataOnScreenRegionY")]
 		NSString IPTCExtDataOnScreenRegionY { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1929,7 +1733,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtDigitalImageGUID")]
 		NSString IPTCExtDigitalImageGuid { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1937,7 +1740,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtDigitalSourceFileType")]
 		NSString IPTCExtDigitalSourceFileType { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1945,7 +1747,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtDigitalSourceType")]
 		NSString IPTCExtDigitalSourceType { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1953,7 +1754,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtDopesheet")]
 		NSString IPTCExtDopesheet { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1961,7 +1761,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtDopesheetLink")]
 		NSString IPTCExtDopesheetLink { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1969,7 +1768,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtDopesheetLinkLink")]
 		NSString IPTCExtDopesheetLinkLink { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1977,7 +1775,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtDopesheetLinkLinkQualifier")]
 		NSString IPTCExtDopesheetLinkLinkQualifier { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1985,7 +1782,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtEmbdEncRightsExpr")]
 		NSString IPTCExtEmbdEncRightsExpr { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -1993,7 +1789,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtEmbeddedEncodedRightsExpr")]
 		NSString IPTCExtEmbeddedEncodedRightsExpr { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2001,7 +1796,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtEmbeddedEncodedRightsExprType")]
 		NSString IPTCExtEmbeddedEncodedRightsExprType { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2009,7 +1803,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtEmbeddedEncodedRightsExprLangID")]
 		NSString IPTCExtEmbeddedEncodedRightsExprLangId { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2017,7 +1810,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtEpisode")]
 		NSString IPTCExtEpisode { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2025,7 +1817,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtEpisodeIdentifier")]
 		NSString IPTCExtEpisodeIdentifier { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2033,7 +1824,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtEpisodeName")]
 		NSString IPTCExtEpisodeName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2041,7 +1831,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtEpisodeNumber")]
 		NSString IPTCExtEpisodeNumber { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2049,7 +1838,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtEvent")]
 		NSString IPTCExtEvent { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2057,7 +1845,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtShownEvent")]
 		NSString IPTCExtShownEvent { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2065,7 +1852,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtShownEventIdentifier")]
 		NSString IPTCExtShownEventIdentifier { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2073,7 +1859,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtShownEventName")]
 		NSString IPTCExtShownEventName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2081,7 +1866,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtExternalMetadataLink")]
 		NSString IPTCExtExternalMetadataLink { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2089,7 +1873,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtFeedIdentifier")]
 		NSString IPTCExtFeedIdentifier { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2097,7 +1880,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtGenre")]
 		NSString IPTCExtGenre { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2105,7 +1887,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtGenreCvId")]
 		NSString IPTCExtGenreCvId { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2113,7 +1894,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtGenreCvTermId")]
 		NSString IPTCExtGenreCvTermId { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2121,7 +1901,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtGenreCvTermName")]
 		NSString IPTCExtGenreCvTermName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2129,7 +1908,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtGenreCvTermRefinedAbout")]
 		NSString IPTCExtGenreCvTermRefinedAbout { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2137,7 +1915,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtHeadline")]
 		NSString IPTCExtHeadline { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2145,7 +1922,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtIPTCLastEdited")]
 		NSString IPTCExtIPTCLastEdited { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2153,7 +1929,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtLinkedEncRightsExpr")]
 		NSString IPTCExtLinkedEncRightsExpr { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2161,7 +1936,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtLinkedEncodedRightsExpr")]
 		NSString IPTCExtLinkedEncodedRightsExpr { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2169,7 +1943,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtLinkedEncodedRightsExprType")]
 		NSString IPTCExtLinkedEncodedRightsExprType { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2177,7 +1950,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtLinkedEncodedRightsExprLangID")]
 		NSString IPTCExtLinkedEncodedRightsExprLangId { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2185,7 +1957,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtLocationCreated")]
 		NSString IPTCExtLocationCreated { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2193,7 +1964,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtLocationCity")]
 		NSString IPTCExtLocationCity { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2201,7 +1971,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtLocationCountryCode")]
 		NSString IPTCExtLocationCountryCode { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2209,7 +1978,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtLocationCountryName")]
 		NSString IPTCExtLocationCountryName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2217,7 +1985,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtLocationGPSAltitude")]
 		NSString IPTCExtLocationGpsAltitude { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2225,7 +1992,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtLocationGPSLatitude")]
 		NSString IPTCExtLocationGpsLatitude { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2233,7 +1999,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtLocationGPSLongitude")]
 		NSString IPTCExtLocationGpsLongitude { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2241,7 +2006,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtLocationIdentifier")]
 		NSString IPTCExtLocationIdentifier { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2249,7 +2013,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtLocationLocationId")]
 		NSString IPTCExtLocationLocationId { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2257,7 +2020,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtLocationLocationName")]
 		NSString IPTCExtLocationLocationName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2265,7 +2027,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtLocationProvinceState")]
 		NSString IPTCExtLocationProvinceState { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2273,7 +2034,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtLocationSublocation")]
 		NSString IPTCExtLocationSublocation { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2281,7 +2041,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtLocationWorldRegion")]
 		NSString IPTCExtLocationWorldRegion { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2289,7 +2048,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtLocationShown")]
 		NSString IPTCExtLocationShown { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2297,7 +2055,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtMaxAvailHeight")]
 		NSString IPTCExtMaxAvailHeight { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2305,7 +2062,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtMaxAvailWidth")]
 		NSString IPTCExtMaxAvailWidth { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2313,7 +2069,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtModelAge")]
 		NSString IPTCExtModelAge { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2321,7 +2076,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtOrganisationInImageCode")]
 		NSString IPTCExtOrganisationInImageCode { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2329,7 +2083,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtOrganisationInImageName")]
 		NSString IPTCExtOrganisationInImageName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2337,7 +2090,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtPersonHeard")]
 		NSString IPTCExtPersonHeard { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2345,7 +2097,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtPersonHeardIdentifier")]
 		NSString IPTCExtPersonHeardIdentifier { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2353,7 +2104,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtPersonHeardName")]
 		NSString IPTCExtPersonHeardName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2361,7 +2111,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtPersonInImage")]
 		NSString IPTCExtPersonInImage { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2369,7 +2118,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtPersonInImageWDetails")]
 		NSString IPTCExtPersonInImageWDetails { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2377,7 +2125,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtPersonInImageCharacteristic")]
 		NSString IPTCExtPersonInImageCharacteristic { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2385,7 +2132,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtPersonInImageCvTermCvId")]
 		NSString IPTCExtPersonInImageCvTermCvId { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2393,7 +2139,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtPersonInImageCvTermId")]
 		NSString IPTCExtPersonInImageCvTermId { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2401,7 +2146,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtPersonInImageCvTermName")]
 		NSString IPTCExtPersonInImageCvTermName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2409,7 +2153,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtPersonInImageCvTermRefinedAbout")]
 		NSString IPTCExtPersonInImageCvTermRefinedAbout { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2417,7 +2160,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtPersonInImageDescription")]
 		NSString IPTCExtPersonInImageDescription { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2425,7 +2167,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtPersonInImageId")]
 		NSString IPTCExtPersonInImageId { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2433,7 +2174,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtPersonInImageName")]
 		NSString IPTCExtPersonInImageName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2441,7 +2181,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtProductInImage")]
 		NSString IPTCExtProductInImage { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2449,7 +2188,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtProductInImageDescription")]
 		NSString IPTCExtProductInImageDescription { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2457,7 +2195,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtProductInImageGTIN")]
 		NSString IPTCExtProductInImageGtin { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2465,7 +2202,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtProductInImageName")]
 		NSString IPTCExtProductInImageName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2473,7 +2209,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtPublicationEvent")]
 		NSString IPTCExtPublicationEvent { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2481,7 +2216,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtPublicationEventDate")]
 		NSString IPTCExtPublicationEventDate { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2489,7 +2223,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtPublicationEventIdentifier")]
 		NSString IPTCExtPublicationEventIdentifier { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2497,7 +2230,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtPublicationEventName")]
 		NSString IPTCExtPublicationEventName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2505,7 +2237,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRating")]
 		NSString IPTCExtRating { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2513,7 +2244,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRatingRatingRegion")]
 		NSString IPTCExtRatingRatingRegion { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2521,7 +2251,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRatingRegionCity")]
 		NSString IPTCExtRatingRegionCity { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2529,7 +2258,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRatingRegionCountryCode")]
 		NSString IPTCExtRatingRegionCountryCode { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2537,7 +2265,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRatingRegionCountryName")]
 		NSString IPTCExtRatingRegionCountryName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2545,7 +2272,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRatingRegionGPSAltitude")]
 		NSString IPTCExtRatingRegionGpsAltitude { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2553,7 +2279,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRatingRegionGPSLatitude")]
 		NSString IPTCExtRatingRegionGpsLatitude { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2561,7 +2286,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRatingRegionGPSLongitude")]
 		NSString IPTCExtRatingRegionGpsLongitude { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2569,7 +2293,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRatingRegionIdentifier")]
 		NSString IPTCExtRatingRegionIdentifier { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2577,7 +2300,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRatingRegionLocationId")]
 		NSString IPTCExtRatingRegionLocationId { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2585,7 +2307,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRatingRegionLocationName")]
 		NSString IPTCExtRatingRegionLocationName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2593,7 +2314,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRatingRegionProvinceState")]
 		NSString IPTCExtRatingRegionProvinceState { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2601,7 +2321,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRatingRegionSublocation")]
 		NSString IPTCExtRatingRegionSublocation { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2609,7 +2328,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRatingRegionWorldRegion")]
 		NSString IPTCExtRatingRegionWorldRegion { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2617,7 +2335,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRatingScaleMaxValue")]
 		NSString IPTCExtRatingScaleMaxValue { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2625,7 +2342,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRatingScaleMinValue")]
 		NSString IPTCExtRatingScaleMinValue { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2633,7 +2349,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRatingSourceLink")]
 		NSString IPTCExtRatingSourceLink { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2641,7 +2356,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRatingValue")]
 		NSString IPTCExtRatingValue { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2649,7 +2363,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRatingValueLogoLink")]
 		NSString IPTCExtRatingValueLogoLink { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2657,7 +2370,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRegistryID")]
 		NSString IPTCExtRegistryId { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2665,7 +2377,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRegistryEntryRole")]
 		NSString IPTCExtRegistryEntryRole { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2673,7 +2384,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRegistryItemID")]
 		NSString IPTCExtRegistryItemId { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2681,7 +2391,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtRegistryOrganisationID")]
 		NSString IPTCExtRegistryOrganisationId { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2689,7 +2398,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtReleaseReady")]
 		NSString IPTCExtReleaseReady { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2697,7 +2405,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtSeason")]
 		NSString IPTCExtSeason { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2705,7 +2412,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtSeasonIdentifier")]
 		NSString IPTCExtSeasonIdentifier { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2713,7 +2419,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtSeasonName")]
 		NSString IPTCExtSeasonName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2721,7 +2426,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtSeasonNumber")]
 		NSString IPTCExtSeasonNumber { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2729,7 +2433,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtSeries")]
 		NSString IPTCExtSeries { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2737,7 +2440,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtSeriesIdentifier")]
 		NSString IPTCExtSeriesIdentifier { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2745,7 +2447,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtSeriesName")]
 		NSString IPTCExtSeriesName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2753,7 +2454,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtStorylineIdentifier")]
 		NSString IPTCExtStorylineIdentifier { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2761,7 +2461,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtStreamReady")]
 		NSString IPTCExtStreamReady { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2769,7 +2468,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtStylePeriod")]
 		NSString IPTCExtStylePeriod { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2777,7 +2475,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtSupplyChainSource")]
 		NSString IPTCExtSupplyChainSource { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2785,7 +2482,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtSupplyChainSourceIdentifier")]
 		NSString IPTCExtSupplyChainSourceIdentifier { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2793,7 +2489,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtSupplyChainSourceName")]
 		NSString IPTCExtSupplyChainSourceName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2801,7 +2496,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtTemporalCoverage")]
 		NSString IPTCExtTemporalCoverage { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2809,7 +2503,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtTemporalCoverageFrom")]
 		NSString IPTCExtTemporalCoverageFrom { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2817,7 +2510,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtTemporalCoverageTo")]
 		NSString IPTCExtTemporalCoverageTo { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2825,7 +2517,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtTranscript")]
 		NSString IPTCExtTranscript { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2833,7 +2524,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtTranscriptLink")]
 		NSString IPTCExtTranscriptLink { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2841,7 +2531,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtTranscriptLinkLink")]
 		NSString IPTCExtTranscriptLinkLink { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2849,7 +2538,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtTranscriptLinkLinkQualifier")]
 		NSString IPTCExtTranscriptLinkLinkQualifier { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2857,7 +2545,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtVideoBitrate")]
 		NSString IPTCExtVideoBitrate { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2865,7 +2552,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtVideoBitrateMode")]
 		NSString IPTCExtVideoBitrateMode { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2873,7 +2559,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtVideoDisplayAspectRatio")]
 		NSString IPTCExtVideoDisplayAspectRatio { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2881,7 +2566,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtVideoEncodingProfile")]
 		NSString IPTCExtVideoEncodingProfile { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2889,7 +2573,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtVideoShotType")]
 		NSString IPTCExtVideoShotType { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2897,7 +2580,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtVideoShotTypeIdentifier")]
 		NSString IPTCExtVideoShotTypeIdentifier { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2905,7 +2587,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtVideoShotTypeName")]
 		NSString IPTCExtVideoShotTypeName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2913,7 +2594,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtVideoStreamsCount")]
 		NSString IPTCExtVideoStreamsCount { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2921,7 +2601,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtVisualColor")]
 		NSString IPTCExtVisualColor { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2929,7 +2608,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtWorkflowTag")]
 		NSString IPTCExtWorkflowTag { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2937,7 +2615,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtWorkflowTagCvId")]
 		NSString IPTCExtWorkflowTagCvId { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2945,7 +2622,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtWorkflowTagCvTermId")]
 		NSString IPTCExtWorkflowTagCvTermId { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2953,7 +2629,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtWorkflowTagCvTermName")]
 		NSString IPTCExtWorkflowTagCvTermName { get; }
 
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2961,7 +2636,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyIPTCExtWorkflowTagCvTermRefinedAbout")]
 		NSString IPTCExtWorkflowTagCvTermRefinedAbout { get; }
 
-		[Mac (10, 9)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -2969,7 +2643,6 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyOpenEXRAspectRatio")]
 		NSString OpenExrAspectRatio { get; }
 
-		[Watch (4, 0), Mac (10, 13), iOS (11, 0), TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImagePropertyPrimaryImage")]
 		NSString PrimaryImage { get; }
@@ -3092,7 +2765,7 @@ namespace ImageIO {
 		NSString Exif { get; }
 		[Field ("kCGImageMetadataNamespaceExifAux")]
 		NSString ExifAux { get; }
-		[Mac (10, 9), Field ("kCGImageMetadataNamespaceExifEX")]
+		[Field ("kCGImageMetadataNamespaceExifEX")]
 		[MacCatalyst (13, 1)]
 		NSString ExifEx { get; }
 		[Field ("kCGImageMetadataNamespaceDublinCore")]
@@ -3107,7 +2780,6 @@ namespace ImageIO {
 		NSString XMPBasic { get; }
 		[Field ("kCGImageMetadataNamespaceXMPRights")]
 		NSString XMPRights { get; }
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -3122,7 +2794,7 @@ namespace ImageIO {
 		NSString Exif { get; }
 		[Field ("kCGImageMetadataPrefixExifAux")]
 		NSString ExifAux { get; }
-		[Mac (10, 9), Field ("kCGImageMetadataPrefixExifEX")]
+		[Field ("kCGImageMetadataPrefixExifEX")]
 		[MacCatalyst (13, 1)]
 		NSString ExifEx { get; }
 		[Field ("kCGImageMetadataPrefixDublinCore")]
@@ -3137,7 +2809,6 @@ namespace ImageIO {
 		NSString XMPBasic { get; }
 		[Field ("kCGImageMetadataPrefixXMPRights")]
 		NSString XMPRights { get; }
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 		[TV (11, 3)]
 		[Watch (4, 3)]
@@ -3161,7 +2832,6 @@ namespace ImageIO {
 		[Field ("kCGImageSourceShouldCache")]
 		IntPtr kShouldCache { get; }
 
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		[Internal]
 		[Field ("kCGImageSourceShouldCacheImmediately")]
@@ -3190,8 +2860,6 @@ namespace ImageIO {
 		[Field ("kCGImageSourceCreateThumbnailWithTransform")]
 		IntPtr kCreateThumbnailWithTransform { get; }
 
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		[Internal]
 		[Field ("kCGImageSourceSubsampleFactor")]
@@ -3219,21 +2887,14 @@ namespace ImageIO {
 		[Export ("LossyCompressionQuality")]
 		float LossyCompressionQuality { get; set; }
 
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[Export ("ImageMaxPixelSize")]
 		int ImageMaxPixelSize { get; set; }
 
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[Export ("EmbedThumbnail")]
 		bool EmbedThumbnail { get; set; }
 
-		[iOS (9, 3)]
-		[Mac (10, 12)]
-		[Watch (2, 3)]
 		[MacCatalyst (13, 1)]
 		[Export ("OptimizeColorForSharing")]
 		bool OptimizeColorForSharing { get; set; }
@@ -3307,22 +2968,14 @@ namespace ImageIO {
 		[Field ("kCGImageDestinationBackgroundColor")]
 		NSString BackgroundColor { get; }
 
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImageDestinationImageMaxPixelSize")]
 		NSString ImageMaxPixelSize { get; }
 
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImageDestinationEmbedThumbnail")]
 		NSString EmbedThumbnail { get; }
 
-		[iOS (9, 3)]
-		[Mac (10, 12)]
-		[TV (9, 2)]
-		[Watch (2, 3)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImageDestinationOptimizeColorForSharing")]
 		NSString OptimizeColorForSharing { get; }
@@ -3423,8 +3076,6 @@ namespace ImageIO {
 		[Field ("kCGImageMetadataShouldExcludeXMP")]
 		IntPtr kShouldExcludeXMP { get; }
 
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[Internal]
 		[Field ("kCGImageMetadataShouldExcludeGPS")]
@@ -3439,7 +3090,6 @@ namespace ImageIO {
 		IntPtr kOrientation { get; }
 	}
 
-	[Mac (10, 13), iOS (11, 0), TV (11, 0), Watch (4, 0)]
 	[MacCatalyst (13, 1)]
 	enum CGImageAuxiliaryDataType {
 		[Field ("kCGImageAuxiliaryDataTypeDepth")]
@@ -3448,7 +3098,7 @@ namespace ImageIO {
 		[Field ("kCGImageAuxiliaryDataTypeDisparity")]
 		Disparity,
 
-		[Watch (5, 0), Mac (10, 14), iOS (12, 0), TV (12, 0)]
+		[Watch (5, 0), iOS (12, 0), TV (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImageAuxiliaryDataTypePortraitEffectsMatte")]
 		PortraitEffectsMatte,
@@ -3456,7 +3106,6 @@ namespace ImageIO {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImageAuxiliaryDataTypeSemanticSegmentationHairMatte")]
 		SemanticSegmentationHairMatte,
@@ -3464,7 +3113,6 @@ namespace ImageIO {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImageAuxiliaryDataTypeSemanticSegmentationSkinMatte")]
 		SemanticSegmentationSkinMatte,
@@ -3472,7 +3120,6 @@ namespace ImageIO {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCGImageAuxiliaryDataTypeSemanticSegmentationTeethMatte")]
 		SemanticSegmentationTeethMatte,
@@ -3502,7 +3149,6 @@ namespace ImageIO {
 		SemanticSegmentationSkyMatte,
 	}
 
-	[Mac (10, 13), iOS (11, 0), TV (11, 0), Watch (4, 0)]
 	[MacCatalyst (13, 1)]
 	[Static]
 	[Internal]
@@ -3517,7 +3163,6 @@ namespace ImageIO {
 		NSString MetadataKey { get; }
 	}
 
-	[Mac (10, 13), iOS (11, 0), TV (11, 0), Watch (4, 0)]
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("CGImageAuxiliaryDataInfoKeys")]
 	interface CGImageAuxiliaryDataInfo {
@@ -3526,7 +3171,7 @@ namespace ImageIO {
 		NSDictionary DataDescription { get; set; }
 	}
 
-	[Mac (10, 15), iOS (13, 0), TV (13, 0), Watch (6, 0)]
+	[iOS (13, 0), TV (13, 0), Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Static]
 	[Internal]
@@ -3541,7 +3186,7 @@ namespace ImageIO {
 		NSString StartIndexKey { get; }
 	}
 
-	[Mac (10, 15), iOS (13, 0), TV (13, 0), Watch (6, 0)]
+	[iOS (13, 0), TV (13, 0), Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("CGImageAnimationOptionsKeys")]
 	interface CGImageAnimationOptions {

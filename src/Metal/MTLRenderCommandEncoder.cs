@@ -22,7 +22,6 @@ namespace Metal {
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos14.5")]
 #else
-		[Mac (10, 13)]
 		[iOS (12, 0)]
 		[TV (14, 5)]
 		[NoWatch]
@@ -41,7 +40,6 @@ namespace Metal {
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos14.5")]
 #else
-		[Mac (10, 13)]
 		[iOS (12, 0)]
 		[TV (14, 5)]
 		[NoWatch]
@@ -55,12 +53,11 @@ namespace Metal {
 
 #if !WATCH
 #if NET
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos14.5")]
 		[SupportedOSPlatform ("macos11.0")]
 #else
-		[iOS (11, 0)]
 		[TV (14, 5)]
 		[Mac (11, 0)]
 		[NoWatch]
@@ -74,12 +71,11 @@ namespace Metal {
 
 #if !WATCH
 #if NET
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos14.5")]
 		[SupportedOSPlatform ("macos11.0")]
 #else
-		[iOS (11, 0)]
 		[TV (14, 5)]
 		[Mac (11, 0)]
 		[NoWatch]

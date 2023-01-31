@@ -59,22 +59,16 @@ namespace Foundation {
 		EthiopicAmeteMihret,
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 10)]
-		[iOS (8, 0)]
 #endif
 		IslamicTabular,
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 10)]
-		[iOS (8, 0)]
 #endif
 		IslamicUmmAlQura,
 	}

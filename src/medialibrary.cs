@@ -31,7 +31,6 @@ using NativeHandle = System.IntPtr;
 
 namespace MediaLibrary {
 	[Static]
-	[Mac (10, 9)]
 	[Deprecated (PlatformName.MacOSX, 10, 15)]
 	interface MediaLibraryTypeIdentifierKey {
 		[Field ("MLFolderRootGroupTypeIdentifier")]
@@ -52,7 +51,6 @@ namespace MediaLibrary {
 		[Field ("MLiTunesPodcastPlaylistTypeIdentifier")]
 		NSString ITunesPodcastPlaylistTypeIdentifier { get; }
 
-		[Mac (10, 10, 3)]
 		[Field ("MLiTunesVideoPlaylistTypeIdentifier")]
 		NSString ITunesVideoPlaylistTypeIdentifier { get; }
 
@@ -74,7 +72,6 @@ namespace MediaLibrary {
 		[Field ("MLiTunesMusicPlaylistTypeIdentifier")]
 		NSString ITunesMusicPlaylistTypeIdentifier { get; }
 
-		[Mac (10, 10, 3)]
 		[Field ("MLiTunesMusicVideosPlaylistTypeIdentifier")]
 		NSString ITunesMusicVideosPlaylistTypeIdentifier { get; }
 
@@ -87,129 +84,99 @@ namespace MediaLibrary {
 		[Field ("MLiTunesiTunesUPlaylistTypeIdentifier")]
 		NSString ITunesiTunesUPlaylistTypeIdentifier { get; }
 
-		[Mac (10, 10)]
 		[Field ("MLPhotosRootGroupTypeIdentifier")]
 		NSString PhotosRootGroupTypeIdentifier { get; }
 
-		[Mac (10, 10)]
 		[Field ("MLPhotosSharedGroupTypeIdentifier")]
 		NSString PhotosSharedGroupTypeIdentifier { get; }
 
-		[Mac (10, 10)]
 		[Field ("MLPhotosAlbumsGroupTypeIdentifier")]
 		NSString PhotosAlbumsGroupTypeIdentifier { get; }
 
-		[Mac (10, 10)]
 		[Field ("MLPhotosAlbumTypeIdentifier")]
 		NSString PhotosAlbumTypeIdentifier { get; }
 
-		[Mac (10, 10, 3)]
 		[Field ("MLPhotosFolderTypeIdentifier")]
 		NSString PhotosFolderTypeIdentifier { get; }
 
-		[Mac (10, 10)]
 		[Field ("MLPhotosSmartAlbumTypeIdentifier")]
 		NSString PhotosSmartAlbumTypeIdentifier { get; }
 
-		[Mac (10, 10)]
 		[Field ("MLPhotosPublishedAlbumTypeIdentifier")]
 		NSString PhotosPublishedAlbumTypeIdentifier { get; }
 
-		[Mac (10, 10)]
 		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		[Field ("MLPhotosAllMomentsGroupTypeIdentifier")]
 		NSString PhotosAllMomentsGroupTypeIdentifier { get; }
 
-		[Mac (10, 10)]
 		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		[Field ("MLPhotosMomentGroupTypeIdentifier")]
 		NSString PhotosMomentGroupTypeIdentifier { get; }
 
-		[Mac (10, 10)]
 		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		[Field ("MLPhotosAllCollectionsGroupTypeIdentifier")]
 		NSString PhotosAllCollectionsGroupTypeIdentifier { get; }
 
-		[Mac (10, 10)]
 		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		[Field ("MLPhotosCollectionGroupTypeIdentifier")]
 		NSString PhotosCollectionGroupTypeIdentifier { get; }
 
-		[Mac (10, 10)]
 		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		[Field ("MLPhotosAllYearsGroupTypeIdentifier")]
 		NSString PhotosAllYearsGroupTypeIdentifier { get; }
 
-		[Mac (10, 10)]
 		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		[Field ("MLPhotosYearGroupTypeIdentifier")]
 		NSString PhotosYearGroupTypeIdentifier { get; }
 
-		[Mac (10, 10)]
 		[Field ("MLPhotosLastImportGroupTypeIdentifier")]
 		NSString PhotosLastImportGroupTypeIdentifier { get; }
 
-		[Mac (10, 10)]
 		[Field ("MLPhotosMyPhotoStreamTypeIdentifier")]
 		NSString PhotosMyPhotoStreamTypeIdentifier { get; }
 
-		[Mac (10, 10)]
 		[Field ("MLPhotosSharedPhotoStreamTypeIdentifier")]
 		NSString PhotosSharedPhotoStreamTypeIdentifier { get; }
 
-		[Mac (10, 10)]
 		[Field ("MLPhotosFavoritesGroupTypeIdentifier")]
 		NSString PhotosFavoritesGroupTypeIdentifier { get; }
 
-		[Mac (10, 11)]
 		[Field ("MLPhotosFrontCameraGroupTypeIdentifier")]
 		NSString PhotosFrontCameraGroupTypeIdentifier { get; }
 
-		[Mac (10, 13)]
 		[Field ("MLPhotosLivePhotosGroupTypeIdentifier")]
 		NSString PhotosLivePhotosGroupTypeIdentifier { get; }
 
-		[Mac (10, 13)]
 		[Field ("MLPhotosLongExposureGroupTypeIdentifier")]
 		NSString PhotosLongExposureGroupTypeIdentifier { get; }
 
-		[Mac (10, 13)]
 		[Field ("MLPhotosAnimatedGroupTypeIdentifier")]
 		NSString PhotosAnimatedGroupTypeIdentifier { get; }
 
-		[Mac (10, 10)]
 		[Field ("MLPhotosPanoramasGroupTypeIdentifier")]
 		NSString PhotosPanoramasGroupTypeIdentifier { get; }
 
-		[Mac (10, 10)]
 		[Field ("MLPhotosVideosGroupTypeIdentifier")]
 		NSString PhotosVideosGroupTypeIdentifier { get; }
 
-		[Mac (10, 10, 3)]
 		[Field ("MLPhotosSloMoGroupTypeIdentifier")]
 		NSString PhotosSloMoGroupTypeIdentifier { get; }
 
-		[Mac (10, 10, 3)]
 		[Field ("MLPhotosTimelapseGroupTypeIdentifier")]
 		NSString PhotosTimelapseGroupTypeIdentifier { get; }
 
-		[Mac (10, 10, 3)]
 		[Field ("MLPhotosBurstGroupTypeIdentifier")]
 		NSString PhotosBurstGroupTypeIdentifier { get; }
 
-		[Mac (10, 11)]
 		[Field ("MLPhotosScreenshotGroupTypeIdentifier")]
 		NSString PhotosScreenshotGroupTypeIdentifier { get; }
 
-		[Mac (10, 10, 3)]
 		[Field ("MLPhotosFacesAlbumTypeIdentifier")]
 		NSString PhotosFacesAlbumTypeIdentifier { get; }
 
-		[Mac (10, 10, 3)]
 		[Field ("MLPhotosAllPhotosAlbumTypeIdentifier")]
 		NSString PhotosAllPhotosAlbumTypeIdentifier { get; }
 
-		[Mac (10, 12, 1)]
 		[Field ("MLPhotosDepthEffectGroupTypeIdentifier")]
 		NSString PhotosDepthEffectGroupTypeIdentifier { get; }
 
@@ -421,7 +388,6 @@ namespace MediaLibrary {
 		NSString FinalCutFolderGroupTypeIdentifier { get; }
 	}
 
-	[Mac (10, 9)]
 	[Deprecated (PlatformName.MacOSX, 10, 15)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -455,7 +421,6 @@ namespace MediaLibrary {
 		NSString MediaLoadAppFoldersKey { get; }
 	}
 
-	[Mac (10, 9)]
 	[Deprecated (PlatformName.MacOSX, 10, 15)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -486,7 +451,6 @@ namespace MediaLibrary {
 		[Export ("mediaObjectsForIdentifiers:")]
 		NSDictionary<NSString, MLMediaObject> MediaObjectsForIdentifiers (NSString [] mediaObjectIdentifiers);
 
-		[Mac (10, 10)]
 		[Field ("MLMediaSourcePhotosIdentifier")]
 		NSString MediaSourcePhotosIdentifier { get; }
 
@@ -524,7 +488,6 @@ namespace MediaLibrary {
 		NSString MediaSourceAppDefinedFoldersIdentifier { get; }
 	}
 
-	[Mac (10, 9)]
 	[Deprecated (PlatformName.MacOSX, 10, 15)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -566,7 +529,6 @@ namespace MediaLibrary {
 		MLMediaObject [] MediaObjects { get; }
 	}
 
-	[Mac (10, 9)]
 	[Deprecated (PlatformName.MacOSX, 10, 15)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]

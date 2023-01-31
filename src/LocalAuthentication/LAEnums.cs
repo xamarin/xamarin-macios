@@ -4,29 +4,24 @@ using Foundation;
 
 namespace LocalAuthentication {
 
-	[iOS (8, 0)]
-	[Mac (10, 10)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum LAPolicy : long {
-		[Mac (10, 12, 2), NoWatch]
+		[NoWatch]
 		[MacCatalyst (13, 1)]
 		DeviceOwnerAuthenticationWithBiometrics = 1,
 		DeviceOwnerAuthentication = 2,
 		[NoiOS]
-		[Mac (10, 15)]
 		[NoWatch]
 		[NoMacCatalyst]
 		DeviceOwnerAuthenticationWithWatch = 3,
 		[NoiOS]
-		[Mac (10, 15)]
 		[NoWatch]
 		[NoMacCatalyst]
 		DeviceOwnerAuthenticationWithBiometricsOrWatch = 4,
 		[Obsolete ("Use DeviceOwnerAuthenticationWithBiometricsOrWatch enum value instead.")]
 		[NoiOS]
-		[Mac (10, 15)]
 		[NoWatch]
 		[NoMacCatalyst]
 		OwnerAuthenticationWithBiometricsOrWatch = DeviceOwnerAuthenticationWithBiometricsOrWatch,
@@ -34,8 +29,6 @@ namespace LocalAuthentication {
 		DeviceOwnerAuthenticationWithWristDetection = 5,
 	}
 
-	[iOS (8, 0)]
-	[Mac (10, 10)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native ("LAError")]
@@ -90,18 +83,16 @@ namespace LocalAuthentication {
 		NotInteractive = -1004,
 	}
 
-	[iOS (9, 0), Mac (10, 11), Watch (3, 0), NoTV]
+	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum LACredentialType : long {
 		ApplicationPassword = 0,
-		[iOS (13, 4), Mac (10, 15, 4), NoWatch, NoTV]
+		[iOS (13, 4), NoWatch, NoTV]
 		[MacCatalyst (13, 1)]
 		SmartCardPin = -3,
 	}
 
-	[iOS (9, 0)]
-	[Mac (10, 11)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -110,12 +101,8 @@ namespace LocalAuthentication {
 		UseItem,
 		CreateKey,
 		UseKeySign,
-		[iOS (10, 0)]
-		[Mac (10, 12)]
 		[MacCatalyst (13, 1)]
 		UseKeyDecrypt,
-		[iOS (10, 0)]
-		[Mac (10, 12)]
 		[MacCatalyst (13, 1)]
 		UseKeyKeyExchange,
 	}

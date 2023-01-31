@@ -17,7 +17,6 @@ namespace iAd {
 	// Xcode 13 (beta1) removed most of the API
 	// AppStore also started to reject apps using those API
 
-	[iOS (7, 1)]
 	[Deprecated (PlatformName.iOS, 14, 5, message: "Use 'AAAttribution' instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -26,12 +25,10 @@ namespace iAd {
 		[Export ("sharedClient")]
 		ADClient SharedClient { get; }
 
-		[iOS (8, 0)]
 		[Deprecated (PlatformName.iOS, 13, 0)]
 		[Export ("addClientToSegments:replaceExisting:")]
 		void AddClientToSegments (string [] segmentIdentifiers, bool replaceExisting);
 
-		[iOS (9, 0)]
 		[Export ("requestAttributionDetailsWithBlock:")]
 		[Async]
 		void RequestAttributionDetails (Action<NSDictionary, NSError> completionHandler);

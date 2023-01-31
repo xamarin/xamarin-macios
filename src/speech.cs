@@ -22,7 +22,6 @@ using NativeHandle = System.IntPtr;
 namespace Speech {
 
 	[Native]
-	[iOS (10, 0), Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	public enum SFSpeechRecognitionTaskState : long {
 		Starting = 0,
@@ -33,7 +32,6 @@ namespace Speech {
 	}
 
 	[Native]
-	[iOS (10, 0), Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	public enum SFSpeechRecognitionTaskHint : long {
 		Unspecified = 0,
@@ -43,7 +41,6 @@ namespace Speech {
 	}
 
 	[Native]
-	[iOS (10, 0), Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	public enum SFSpeechRecognizerAuthorizationStatus : long {
 		NotDetermined,
@@ -52,7 +49,6 @@ namespace Speech {
 		Authorized,
 	}
 
-	[iOS (10, 0), Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[Abstract] // no docs (yet) but it has no means (init*) to create it, unlike its subclasses
@@ -83,7 +79,6 @@ namespace Speech {
 		bool AddsPunctuation { get; set; }
 	}
 
-	[iOS (10, 0), Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SFSpeechRecognitionRequest), Name = "SFSpeechURLRecognitionRequest")]
 	[DisableDefaultCtor]
@@ -97,7 +92,6 @@ namespace Speech {
 		NSUrl Url { get; }
 	}
 
-	[iOS (10, 0), Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SFSpeechRecognitionRequest))]
 	interface SFSpeechAudioBufferRecognitionRequest {
@@ -115,7 +109,6 @@ namespace Speech {
 		void EndAudio ();
 	}
 
-	[iOS (10, 0), Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognitionResult : NSCopying, NSSecureCoding {
@@ -135,7 +128,6 @@ namespace Speech {
 		SFSpeechRecognitionMetadata SpeechRecognitionMetadata { get; }
 	}
 
-	[iOS (10, 0), Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognitionTask {
@@ -161,7 +153,6 @@ namespace Speech {
 
 	interface ISFSpeechRecognitionTaskDelegate { }
 
-	[iOS (10, 0), Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -188,7 +179,6 @@ namespace Speech {
 
 	interface ISFSpeechRecognizerDelegate { }
 
-	[iOS (10, 0), Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -198,7 +188,6 @@ namespace Speech {
 		void AvailabilityDidChange (SFSpeechRecognizer speechRecognizer, bool available);
 	}
 
-	[iOS (10, 0), Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognizer {
@@ -269,7 +258,6 @@ namespace Speech {
 		SFVoiceAnalytics VoiceAnalytics { get; }
 	}
 
-	[iOS (10, 0), Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SFTranscription : NSCopying, NSSecureCoding {
@@ -297,7 +285,6 @@ namespace Speech {
 		double AveragePauseDuration { get; }
 	}
 
-	[iOS (10, 0), Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SFTranscriptionSegment : NSCopying, NSSecureCoding {
@@ -329,7 +316,7 @@ namespace Speech {
 		SFVoiceAnalytics VoiceAnalytics { get; }
 	}
 
-	[iOS (13, 0), Mac (10, 15)]
+	[iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -342,7 +329,7 @@ namespace Speech {
 		double FrameDuration { get; }
 	}
 
-	[iOS (13, 0), Mac (10, 15)]
+	[iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
