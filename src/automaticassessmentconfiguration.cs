@@ -42,38 +42,47 @@ namespace AutomaticAssessmentConfiguration {
 	interface AEAssessmentConfiguration : NSCopying {
 
 		[NoMac, iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("autocorrectMode")]
 		AEAutocorrectMode AutocorrectMode { get; set; }
 
 		[NoMac, iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("allowsSpellCheck")]
 		bool AllowsSpellCheck { get; set; }
 
 		[NoMac, iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("allowsPredictiveKeyboard")]
 		bool AllowsPredictiveKeyboard { get; set; }
 
 		[NoMac, iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("allowsKeyboardShortcuts")]
 		bool AllowsKeyboardShortcuts { get; set; }
 
 		[NoMac, iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("allowsActivityContinuation")]
 		bool AllowsActivityContinuation { get; set; }
 
 		[NoMac, iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("allowsDictation")]
 		bool AllowsDictation { get; set; }
 
 		[NoMac, iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("allowsAccessibilitySpeech")]
 		bool AllowsAccessibilitySpeech { get; set; }
 
 		[NoMac, iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("allowsPasswordAutoFill")]
 		bool AllowsPasswordAutoFill { get; set; }
 
 		[NoMac, iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("allowsContinuousPathKeyboard")]
 		bool AllowsContinuousPathKeyboard { get; set; }
 

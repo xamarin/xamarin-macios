@@ -104,14 +104,6 @@ public static class ReflectionExtensions {
 		if (attributes.Any (attr => attr.AvailabilityKind == AvailabilityKind.Unavailable && attr.Platform == platform))
 			return true;
 
-		if (platform == PlatformName.MacCatalyst) {
-			// If we're targetting Mac Catalyst, and we don't have any availability information for Mac Catalyst,
-			// then use the availability for iOS
-			var anyCatalyst = attributes.Any (v => v.Platform == PlatformName.MacCatalyst);
-			if (!anyCatalyst)
-				return IsUnavailable (attributes, PlatformName.iOS);
-		}
-
 		return false;
 	}
 
@@ -3478,11 +3470,10 @@ public partial class Generator : IMemberGatherer {
 		case PlatformName.iOS:
 		case PlatformName.TvOS:
 		case PlatformName.MacOSX:
+		case PlatformName.MacCatalyst:
 			return new IntroducedAttribute (platform);
 		case PlatformName.WatchOS:
 			throw new InvalidOperationException ("CreateNoVersionSupportedAttribute for WatchOS never makes sense");
-		case PlatformName.MacCatalyst:
-			throw new InvalidOperationException ("CreateNoVersionSupportedAttribute for Catalyst never makes sense");
 		default:
 			throw new NotImplementedException ();
 		}
@@ -3550,25 +3541,10 @@ public partial class Generator : IMemberGatherer {
 	void AddUnlistedAvailability (MemberInfo containingClass, List<AvailabilityBaseAttribute> availability)
 	{
 		// If there are no unavailable attributes for a platform on a type
-		// add a supported introduced (without version) since it was "unlisted" (for non-catalyst platforms)
-		foreach (var platform in new [] { PlatformName.iOS, PlatformName.TvOS, PlatformName.MacOSX }) {
+		// add a supported introduced (without version) since it was "unlisted"
+		foreach (var platform in BindingTouch.AllPlatformNames) {
 			if (!PlatformMarkedUnavailable (platform, availability) && IsInSupportedFramework (containingClass, platform)) {
 				availability.Add (CreateNoVersionSupportedAttribute (platform));
-			}
-		}
-	}
-
-	static void AddImpliedPlatforms (List<AvailabilityBaseAttribute> memberAvailability)
-	{
-		foreach (var platform in new [] { PlatformName.MacCatalyst }) {
-			if (!PlatformMarkedUnavailable (platform, memberAvailability) &&
-				!PlatformHasIntroduced (platform, memberAvailability)) {
-				foreach (var attr in memberAvailability.Where (v => v.Platform == PlatformName.iOS).ToList ()) {
-					var newAttribute = CloneFromOtherPlatform (attr, platform);
-					if (IsValidToCopyTo (memberAvailability, newAttribute, allowIntroducedOnUnavailable: true)) {
-						memberAvailability.Add (newAttribute);
-					}
-				}
 			}
 		}
 	}
@@ -3584,8 +3560,6 @@ public partial class Generator : IMemberGatherer {
 	}
 
 	// Especially for TV and Catalyst some entire namespaces are removed via framework_sources.
-	// However, almost all of those bindings are [iOS] which AddImpliedPlatforms and other places
-	// happily turn into other platforms.
 	// As a final step, if we are on a namespace that flatly doesn't exist, drop it. Then if we don't have a not supported, add it
 	void StripIntroducedOnNamespaceNotIncluded (List<AvailabilityBaseAttribute> memberAvailability, MemberInfo context)
 	{
@@ -3767,17 +3741,8 @@ public partial class Generator : IMemberGatherer {
 				}
 			}
 
-			// Add implied catalyst\TVOS from [iOS] _before_ copying down from parent if no catalyst\TVOS attributes
-			// As those take precedent. We will do this a second time later in a moment..
-			AddImpliedPlatforms (memberAvailability);
-
 			// Now copy it down introduced from the parent
 			FindHighestIntroducedAttributes (memberAvailability, availabilityToConsider.Where (attr => attr.AvailabilityKind == AvailabilityKind.Introduced));
-
-			// Now expand the implied catalyst\TVOS from [iOS] a second time
-			// This is needed in some cases where the only iOS information is in the
-			// parent context, but we want to let any local iOS override a catalyst\TVOS on the parent
-			AddImpliedPlatforms (memberAvailability);
 
 			if (!BindThirdPartyLibrary) {
 				// If all of this implication gives us something silly, like being introduced

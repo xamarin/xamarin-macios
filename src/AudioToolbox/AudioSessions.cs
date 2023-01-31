@@ -91,6 +91,7 @@ namespace AudioToolbox {
 		PreferredHardwareIOBufferDuration = 0x696f6264,
 		AudioCategory = 0x61636174, // 'acat'
 		[Deprecated (PlatformName.iOS, 5, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		AudioRoute = 0x726f7574,
 		AudioRouteChange = 0x726f6368,
 		CurrentHardwareSampleRate = 0x63687372,
@@ -105,6 +106,7 @@ namespace AudioToolbox {
 		AudioInputAvailable = 0x61696176,
 		ServerDied = 0x64696564,
 		[Deprecated (PlatformName.iOS, 7, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		OtherMixableAudioShouldDuck = 0x6475636b,
 		OverrideCategoryMixWithOthers = 0x636d6978,
 		OverrideCategoryDefaultToSpeaker = 0x6373706b, //'cspk'
@@ -129,6 +131,7 @@ namespace AudioToolbox {
 	}
 
 	[Deprecated (PlatformName.iOS, 6, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	public enum AudioSessionActiveFlags : uint // UInt32 in AudioSessionSetActiveWithFlags
 	{
 		NotifyOthersOnDeactivation = (1 << 0)

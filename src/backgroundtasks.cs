@@ -19,6 +19,7 @@ using NativeHandle = System.IntPtr;
 namespace BackgroundTasks {
 
 	[TV (13, 0), NoWatch, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (BGTaskRequest))]
 	[DisableDefaultCtor]
 	interface BGAppRefreshTaskRequest {
@@ -27,6 +28,7 @@ namespace BackgroundTasks {
 	}
 
 	[TV (13, 0), NoWatch, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (BGTaskRequest))]
 	[DisableDefaultCtor]
 	interface BGProcessingTaskRequest {
@@ -42,6 +44,7 @@ namespace BackgroundTasks {
 
 	[Abstract]
 	[TV (13, 0), NoWatch, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface BGTaskRequest : NSCopying {
@@ -53,6 +56,7 @@ namespace BackgroundTasks {
 	}
 
 	[TV (13, 0), NoWatch, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface BGTask {
@@ -67,18 +71,21 @@ namespace BackgroundTasks {
 	}
 
 	[TV (13, 0), NoWatch, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (BGTask))]
 	[DisableDefaultCtor]
 	interface BGAppRefreshTask {
 	}
 
 	[TV (13, 0), NoWatch, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (BGTask))]
 	[DisableDefaultCtor]
 	interface BGProcessingTask {
 	}
 
 	[TV (13, 0), NoWatch, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface BGTaskScheduler {

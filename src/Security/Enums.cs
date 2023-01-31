@@ -407,30 +407,38 @@ namespace Security {
 		[NoMac]
 		[TV (10, 0)]
 		[Watch (3, 0)]
+		[MacCatalyst (13, 1)]
 		OAEP = 2,
 
 		[iOS (8, 3)]
+		[MacCatalyst (13, 1)]
 		Raw = 0x4000,
 
 		[Obsolete ("Don't use hash algorithm.")]
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		PKCS1MD2 = 0x8000,
 
 		[Obsolete ("Don't use hash algorithm.")]
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		PKCS1MD5 = 0x8001,
 
 		PKCS1SHA1 = 0x8002,
 
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		PKCS1SHA224 = 0x8003,
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		PKCS1SHA256 = 0x8004,
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		PKCS1SHA384 = 0x8005,
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		PKCS1SHA512 = 0x8006,
 	}
 
@@ -444,6 +452,7 @@ namespace Security {
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		Confirm,
 		Deny,
 		Unspecified,
@@ -455,6 +464,7 @@ namespace Security {
 	// convenience enum mapping to kSecUseAuthenticationUI* fields
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	public enum SecAuthenticationUI {
 		NotSet = -1,
 
@@ -462,6 +472,7 @@ namespace Security {
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Field ("kSecUseAuthenticationUIAllow")]
 		Allow,
 
@@ -469,6 +480,7 @@ namespace Security {
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Field ("kSecUseAuthenticationUIFail")]
 		Fail,
 
@@ -478,6 +490,7 @@ namespace Security {
 
 	[iOS (9, 0)]
 	[Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	public enum SecTokenID {
 		None = 0,
 
@@ -489,6 +502,7 @@ namespace Security {
 	[TV (10, 0)]
 	[Mac (10, 12)]
 	[iOS (10, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SecKeyOperationType : long {
 		Sign = 0,
