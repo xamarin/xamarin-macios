@@ -7,6 +7,7 @@ namespace MobileCoreServices {
 	[Deprecated (PlatformName.TvOS, 14, 0, message: "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 	[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 	[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 	[Partial]
 	interface UTType {
 		[Field ("kUTTypeItem", "+CoreServices")]
@@ -44,6 +45,7 @@ namespace MobileCoreServices {
 
 		[Field ("kUTTypeExecutable", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)] // Symbol not found: _kUTTypeExecutable in 10.9
+		[MacCatalyst (13, 1)]
 		NSString Executable { get; }
 
 		[Field ("kUTTypeMountPoint", "+CoreServices")]
@@ -57,6 +59,7 @@ namespace MobileCoreServices {
 
 		[Field ("kUTTypeURLBookmarkData", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString URLBookmarkData { get; }
 
 		[Field ("kUTTypeURL", "+CoreServices")]
@@ -82,18 +85,22 @@ namespace MobileCoreServices {
 
 		[Field ("kUTTypeDelimitedText", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString DelimitedText { get; }
 
 		[Field ("kUTTypeCommaSeparatedText", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString CommaSeparatedText { get; }
 
 		[Field ("kUTTypeTabSeparatedText", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString TabSeparatedText { get; }
 
 		[Field ("kUTTypeUTF8TabSeparatedText", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString UTF8TabSeparatedText { get; }
 
 		[Field ("kUTTypeRTF", "+CoreServices")]
@@ -110,6 +117,7 @@ namespace MobileCoreServices {
 
 		[Field ("kUTTypeAssemblyLanguageSource", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString AssemblyLanguageSource { get; }
 
 		[Field ("kUTTypeCSource", "+CoreServices")]
@@ -135,58 +143,72 @@ namespace MobileCoreServices {
 
 		[Field ("kUTTypeScript", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString Script { get; }
 
 		[Field ("kUTTypeAppleScript", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString AppleScript { get; }
 
 		[Field ("kUTTypeOSAScript", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString OSAScript { get; }
 
 		[Field ("kUTTypeOSAScriptBundle", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString OSAScriptBundle { get; }
 
 		[Field ("kUTTypeJavaScript", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString JavaScript { get; }
 
 		[Field ("kUTTypeShellScript", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString ShellScript { get; }
 
 		[Field ("kUTTypePerlScript", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString PerlScript { get; }
 
 		[Field ("kUTTypePythonScript", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString PythonScript { get; }
 
 		[Field ("kUTTypeRubyScript", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString RubyScript { get; }
 
 		[Field ("kUTTypePHPScript", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString PHPScript { get; }
 
 		[Field ("kUTTypeJSON", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString JSON { get; }
 
 		[Field ("kUTTypePropertyList", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString PropertyList { get; }
 
 		[Field ("kUTTypeXMLPropertyList", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString XMLPropertyList { get; }
 
 		[Field ("kUTTypeBinaryPropertyList", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString BinaryPropertyList { get; }
 
 		[Field ("kUTTypePDF", "+CoreServices")]
@@ -239,10 +261,12 @@ namespace MobileCoreServices {
 
 		[Field ("kUTTypeRawImage", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString RawImage { get; }
 
 		[Field ("kUTTypeScalableVectorGraphics", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString ScalableVectorGraphics { get; }
 
 		[Field ("kUTTypeAudiovisualContent", "+CoreServices")]
@@ -265,10 +289,12 @@ namespace MobileCoreServices {
 
 		[Field ("kUTTypeMPEG2Video", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString MPEG2Video { get; }
 
 		[Field ("kUTTypeMPEG2TransportStream", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString MPEG2TransportStream { get; }
 
 		[Field ("kUTTypeMP3", "+CoreServices")]
@@ -285,30 +311,37 @@ namespace MobileCoreServices {
 
 		[Field ("kUTTypeAppleProtectedMPEG4Video", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString AppleProtectedMPEG4Video { get; }
 
 		[Field ("kUTTypeAVIMovie", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString AVIMovie { get; }
 
 		[Field ("kUTTypeAudioInterchangeFileFormat", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString AudioInterchangeFileFormat { get; }
 
 		[Field ("kUTTypeWaveformAudio", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString WaveformAudio { get; }
 
 		[Field ("kUTTypeMIDIAudio", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString MIDIAudio { get; }
 
 		[Field ("kUTTypePlaylist", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString Playlist { get; }
 
 		[Field ("kUTTypeM3UPlaylist", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString M3UPlaylist { get; }
 
 		[Field ("kUTTypeFolder", "+CoreServices")]
@@ -325,18 +358,22 @@ namespace MobileCoreServices {
 
 		[Field ("kUTTypePluginBundle", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString PluginBundle { get; }
 
 		[Field ("kUTTypeSpotlightImporter", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString SpotlightImporter { get; }
 
 		[Field ("kUTTypeQuickLookGenerator", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString QuickLookGenerator { get; }
 
 		[Field ("kUTTypeXPCService", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString XPCService { get; }
 
 		[Field ("kUTTypeFramework", "+CoreServices")]
@@ -353,46 +390,57 @@ namespace MobileCoreServices {
 
 		[Field ("kUTTypeUnixExecutable", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString UnixExecutable { get; }
 
 		[Field ("kUTTypeWindowsExecutable", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString WindowsExecutable { get; }
 
 		[Field ("kUTTypeJavaClass", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString JavaClass { get; }
 
 		[Field ("kUTTypeJavaArchive", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString JavaArchive { get; }
 
 		[Field ("kUTTypeSystemPreferencesPane", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString SystemPreferencesPane { get; }
 
 		[Field ("kUTTypeGNUZipArchive", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString GNUZipArchive { get; }
 
 		[Field ("kUTTypeBzip2Archive", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString Bzip2Archive { get; }
 
 		[Field ("kUTTypeZipArchive", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString ZipArchive { get; }
 
 		[Field ("kUTTypeSpreadsheet", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString Spreadsheet { get; }
 
 		[Field ("kUTTypePresentation", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString Presentation { get; }
 
 		[Field ("kUTTypeDatabase", "+CoreServices")]
 		[iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString Database { get; }
 
 		[Field ("kUTTypeVCard", "+CoreServices")]
@@ -400,18 +448,22 @@ namespace MobileCoreServices {
 
 		[Field ("kUTTypeToDoItem", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString ToDoItem { get; }
 
 		[Field ("kUTTypeCalendarEvent", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString CalendarEvent { get; }
 
 		[Field ("kUTTypeEmailMessage", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString EmailMessage { get; }
 
 		[Field ("kUTTypeInternetLocation", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString InternetLocation { get; }
 
 		[Field ("kUTTypeInkText", "+CoreServices")]
@@ -419,30 +471,37 @@ namespace MobileCoreServices {
 
 		[Field ("kUTTypeFont", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString Font { get; }
 
 		[Field ("kUTTypeBookmark", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString Bookmark { get; }
 
 		[Field ("kUTType3DContent", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString ThreeDContent { get; }
 
 		[Field ("kUTTypePKCS12", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString PKCS12 { get; }
 
 		[Field ("kUTTypeX509Certificate", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString X509Certificate { get; }
 
 		[Field ("kUTTypeElectronicPublication", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString ElectronicPublication { get; }
 
 		[Field ("kUTTypeLog", "+CoreServices")]
 		[Mac (10, 10), iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		NSString Log { get; }
 
 		[Field ("kUTExportedTypeDeclarationsKey", "+CoreServices")]
@@ -493,30 +552,35 @@ namespace MobileCoreServices {
 		NSString TagClassOSType { get; }
 
 		[Mac (10, 11), iOS (9, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kUTTypeSwiftSource", "+CoreServices")]
 		NSString SwiftSource { get; }
 
 		[NoWatch]
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Field ("kUTTypeAlembic", "ModelIO")]
 		NSString Alembic { get; }
 
 		[NoWatch]
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Field ("kUTType3dObject", "ModelIO")]
 		NSString k3dObject { get; }
 
 		[NoWatch]
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Field ("kUTTypePolygon", "ModelIO")]
 		NSString Polygon { get; }
 
 		[NoWatch]
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Field ("kUTTypeStereolithography", "ModelIO")]
 		NSString Stereolithography { get; }
 
@@ -524,6 +588,7 @@ namespace MobileCoreServices {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kUTTypeUniversalSceneDescription", "ModelIO")]
 		NSString UniversalSceneDescription { get; }
 
@@ -535,6 +600,7 @@ namespace MobileCoreServices {
 		[Watch (2, 2)]
 		[iOS (9, 1)]
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		[Field ("kUTTypeLivePhoto", "+CoreServices")]
 		NSString LivePhoto { get; }
 	}

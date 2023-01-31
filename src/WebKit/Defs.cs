@@ -16,6 +16,7 @@ using ObjCRuntime;
 namespace WebKit {
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum WKNavigationType : long {
 		LinkActivated,
@@ -28,28 +29,33 @@ namespace WebKit {
 
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum WKNavigationActionPolicy : long {
 		Cancel,
 		Allow,
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		Download,
 	}
 
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum WKNavigationResponsePolicy : long {
 		Cancel,
 		Allow,
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		Download,
 	}
 
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum WKUserScriptInjectionTime : long {
 		AtDocumentStart,
@@ -58,6 +64,7 @@ namespace WebKit {
 
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[ErrorDomain ("WKErrorDomain")]
 	public enum WKErrorCode : long {
@@ -89,6 +96,7 @@ namespace WebKit {
 	[NoMac]
 #endif
 	[iOS (8, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum WKSelectionGranularity : long {
 		Dynamic, Character
@@ -96,6 +104,7 @@ namespace WebKit {
 
 	[iOS (10, 0)]
 	[NoMac]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
 	public enum WKDataDetectorTypes : ulong {
@@ -113,6 +122,7 @@ namespace WebKit {
 
 	[iOS (10, 0)]
 	[Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
 	public enum WKAudiovisualMediaTypes : ulong {

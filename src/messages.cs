@@ -128,6 +128,7 @@ namespace Messages {
 		void DidTransition (MSMessagesAppPresentationStyle presentationStyle);
 
 		[iOS (12, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("presentationContext")]
 		MSMessagesAppPresentationContext PresentationContext { get; }
 	}
@@ -162,21 +163,25 @@ namespace Messages {
 		void InsertAttachment (NSUrl url, [NullAllowed] string filename, [NullAllowed] Action<NSError> completionHandler);
 
 		[iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("sendMessage:completionHandler:")]
 		[Async]
 		void SendMessage (MSMessage message, [NullAllowed] Action<NSError> completionHandler);
 
 		[iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("sendSticker:completionHandler:")]
 		[Async]
 		void SendSticker (MSSticker sticker, [NullAllowed] Action<NSError> completionHandler);
 
 		[iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("sendText:completionHandler:")]
 		[Async]
 		void SendText (string text, [NullAllowed] Action<NSError> completionHandler);
 
 		[iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("sendAttachment:withAlternateFilename:completionHandler:")]
 		[Async]
 		void SendAttachment (NSUrl url, [NullAllowed] string filename, [NullAllowed] Action<NSError> completionHandler);
@@ -199,6 +204,7 @@ namespace Messages {
 		MSSession Session { get; }
 
 		[iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("pending")]
 		bool Pending { [Bind ("isPending")] get; }
 

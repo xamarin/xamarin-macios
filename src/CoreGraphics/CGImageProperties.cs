@@ -654,12 +654,30 @@ namespace CoreGraphics {
 			}
 		}
 
+		public string? LatitudeRef {
+			get {
+				return GetStringValue (Keys.GPSLatitudeRef);
+			}
+			set {
+				SetStringValue (Keys.GPSLatitudeRef, value);
+			}
+		}
+
 		public float? Longitude {
 			get {
 				return GetFloatValue (Keys.GPSLongitude);
 			}
 			set {
 				SetNumberValue (Keys.GPSLongitude, value);
+			}
+		}
+
+		public string? LongitudeRef {
+			get {
+				return GetStringValue (Keys.GPSLongitudeRef);
+			}
+			set {
+				SetStringValue (Keys.GPSLongitudeRef, value);
 			}
 		}
 
