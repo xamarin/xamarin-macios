@@ -107,7 +107,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos12.0")]
 		[SupportedOSPlatform ("ios15.0")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Watch (8, 0)]
 		[TV (15, 0)]
@@ -122,7 +122,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos12.0")]
 		[SupportedOSPlatform ("ios15.0")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Watch (8, 0)]
 		[TV (15, 0)]
