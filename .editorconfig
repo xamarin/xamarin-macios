@@ -226,3 +226,17 @@ dotnet_diagnostic.CA1309.severity = error
 [*.g.cs]
 generated_code = true
 dotnet_diagnostic.BI1234.severity = silent
+
+# Visual Basic files
+[*.vb]
+max_line_length = 120
+charset = utf-8
+
+# Indentation and spacing
+indent_style = tab
+indent_size = 4
+tab_width = 4
+
+# New line preferences
+end_of_line = lf
+insert_final_newline = true
