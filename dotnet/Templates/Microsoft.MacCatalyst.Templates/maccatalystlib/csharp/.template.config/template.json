@@ -1,0 +1,20 @@
+﻿{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Microsoft",
+  "classifications": [ "macOS", "Mac Catalyst" ],
+  "groupIdentity": "Microsoft.MacCatalyst.MacCatalystLib",
+  "identity": "Microsoft.MacCatalyst.MacCatalystLib.CSharp",
+  "name": "Mac Catalyst Class Library",
+  "description": "A project for creating a .NET Mac Catalyst class library",
+  "shortName": "maccatalystlib",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "MacCatalystLib1",
+  "preferNameDirectory": true,
+  "primaryOutputs": [
+    { "path": "MacCatalystLib1.csproj" }
+  ],
+  "defaultName": "MacCatalystLib1"
+}
