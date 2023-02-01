@@ -235,6 +235,7 @@ namespace OSLog {
 		OSLogStore CreateStore (NSUrl url, [NullAllowed] out NSError error);
 
 		[Mac (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("storeWithScope:error:")]
 		[return: NullAllowed]

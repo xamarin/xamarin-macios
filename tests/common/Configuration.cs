@@ -498,6 +498,8 @@ namespace Xamarin.Tests {
 				return "Microsoft.watchOS.Sdk";
 			case ApplePlatform.MacOSX:
 				return "Microsoft.macOS.Sdk";
+			case ApplePlatform.MacCatalyst:
+				return "Microsoft.MacCatalyst.Sdk";
 			default:
 				throw new InvalidOperationException (platform.ToString ());
 			}
