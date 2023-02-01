@@ -25,7 +25,6 @@
     <None Include="$(RepositoryPath)\docs\website\generator-errors.md">
       <Link>generator-errors.md</Link>
     </None>
-    <Compile Include="$(RepositoryPath)\src\btouch.cs" />
     <Compile Include="$(RepositoryPath)\src\error.cs" />
     <Compile Include="$(RepositoryPath)\src\ObjCRuntime\Stret.cs" />
     <Compile Include="$(RepositoryPath)\tools\common\ApplePlatform.cs" />

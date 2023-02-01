@@ -92,11 +92,11 @@
     <None Include="..\docs\website\generator-errors.md">
       <Link>generator-errors.md</Link>
     </None>
-    <Compile Include="..\src\btouch.cs" />
     <Compile Include="..\src\error.cs" />
     <Compile Include="..\src\ObjCRuntime\Stret.cs" />
     <Compile Include="..\src\bgen\AttributeManager.cs" />
     <Compile Include="..\src\bgen\Attributes.cs" />
+    <Compile Include="..\src\bgen\BindingTouch.cs" />
     <Compile Include="..\src\bgen\Enums.cs" />
     <Compile Include="..\src\bgen\ExtensionMethods.cs" />
     <Compile Include="..\src\bgen\Filters.cs" />
