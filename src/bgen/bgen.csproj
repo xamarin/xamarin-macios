@@ -60,6 +60,9 @@
     <Compile Include="$(RepositoryPath)\tools\common\Execution.cs">
       <Link>Execution.cs</Link>
     </Compile>
+    <Compile Include="..\generator-namespace-manager.cs">
+      <Link>src\generator-namespace-manager.cs</Link>
+    </Compile>
     <Compile Include="..\generator-extension-methods.cs">
       <Link>src\generator-extension-methods.cs</Link>
     </Compile>
