@@ -10,6 +10,7 @@ namespace CloudKit {
 	[Watch (3, 0)]
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKAccountStatus : long {
 		CouldNotDetermine = 0,
@@ -24,6 +25,7 @@ namespace CloudKit {
 	[Watch (3, 0)]
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
 	public enum CKApplicationPermissions : ulong {
@@ -34,6 +36,7 @@ namespace CloudKit {
 	[Watch (3, 0)]
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKApplicationPermissionStatus : long {
 		InitialState = 0,
@@ -46,6 +49,7 @@ namespace CloudKit {
 	[Watch (3, 0)]
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[ErrorDomain ("CKErrorDomain")]
 	public enum CKErrorCode : long {
@@ -92,6 +96,7 @@ namespace CloudKit {
 	[Watch (3, 0)]
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKRecordSavePolicy : long {
 		SaveIfServerRecordUnchanged = 0,
@@ -103,11 +108,13 @@ namespace CloudKit {
 	[Watch (3, 0)]
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKNotificationType : long {
 		Query = 1,
 		RecordZone = 2,
 		ReadNotification = 3,
+		[MacCatalyst (13, 1)]
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)] Database = 4,
 	}
 
@@ -115,6 +122,7 @@ namespace CloudKit {
 	[Watch (3, 0)]
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKQueryNotificationReason : long {
 		RecordCreated = 1,
@@ -126,14 +134,17 @@ namespace CloudKit {
 	[Watch (3, 0)]
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]
 	public enum CKRecordZoneCapabilities : ulong {
 		FetchChanges = 1 << 0,
 		Atomic = 1 << 1,
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		Sharing = 1 << 2,
 		[Mac (12, 0), iOS (15, 0), TV (15, 0)]
+		[MacCatalyst (15, 0)]
 		ZoneWideSharing = 1 << 3,
 
 	}
@@ -142,6 +153,7 @@ namespace CloudKit {
 	[Watch (3, 0)]
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKReferenceAction : ulong {
 		None = 0,
@@ -152,10 +164,12 @@ namespace CloudKit {
 	[Watch (6, 0)]
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKSubscriptionType : long {
 		Query = 1,
 		RecordZone = 2,
+		[MacCatalyst (13, 1)]
 		[iOS (10, 0), TV (10, 0), Mac (10, 12)] Database = 3,
 	}
 
@@ -181,6 +195,7 @@ namespace CloudKit {
 
 	[Watch (3, 0)]
 	[iOS (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKDatabaseScope : long {
 		Public = 1,
@@ -190,6 +205,7 @@ namespace CloudKit {
 
 	[Watch (3, 0)]
 	[iOS (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKShareParticipantAcceptanceStatus : long {
 		Unknown,
@@ -200,6 +216,7 @@ namespace CloudKit {
 
 	[Watch (3, 0)]
 	[iOS (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKShareParticipantPermission : long {
 		Unknown,
@@ -216,6 +233,8 @@ namespace CloudKit {
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'CKShareParticipantRole' instead.")]
 	[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'CKShareParticipantRole' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'CKShareParticipantRole' instead.")]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CKShareParticipantRole' instead.")]
 	[Native]
 	public enum CKShareParticipantType : long {
 		Unknown = 0,
@@ -226,6 +245,7 @@ namespace CloudKit {
 
 	[Watch (6, 0)]
 	[iOS (10, 0), Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKQuerySubscriptionOptions : ulong {
 		RecordCreation = 1 << 0,
@@ -235,6 +255,7 @@ namespace CloudKit {
 	}
 
 	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKOperationGroupTransferSize : long {
 		Unknown,
@@ -248,6 +269,7 @@ namespace CloudKit {
 	}
 
 	[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CKShareParticipantRole : long {
 		Unknown = 0,

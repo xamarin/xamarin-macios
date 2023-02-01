@@ -81,6 +81,7 @@ public class TypeManager {
 	public Type CMTimeMapping;
 	public Type CMTimeRange;
 	public Type CMVideoFormatDescription;
+	public Type CMVideoDimensions;
 	public Type CVImageBuffer;
 	public Type CVPixelBuffer;
 	public Type CVPixelBufferPool;
@@ -266,6 +267,7 @@ public class TypeManager {
 			CMTimeMapping = Lookup (platform_assembly, "CoreMedia", "CMTimeMapping");
 			CMTimeRange = Lookup (platform_assembly, "CoreMedia", "CMTimeRange");
 			CMVideoFormatDescription = Lookup (platform_assembly, "CoreMedia", "CMVideoFormatDescription");
+			CMVideoDimensions = Lookup (platform_assembly, "CoreMedia", "CMVideoDimensions");
 		}
 		if (Frameworks.HaveCoreVideo) {
 			CVImageBuffer = Lookup (platform_assembly, "CoreVideo", "CVImageBuffer");

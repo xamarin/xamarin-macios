@@ -10,6 +10,8 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AppKit {
 
 	public partial class NSView {
@@ -20,8 +22,13 @@ namespace AppKit {
 #endif
 
 		sealed class SortData {
-			public Exception Exception;
-			public Func<NSView, NSView, NSComparisonResult> Comparer;
+			public Exception? Exception;
+			public Func<NSView?, NSView?, NSComparisonResult> Comparer;
+
+			public SortData (Func<NSView?, NSView?, NSComparisonResult> comparer)
+			{
+				Comparer = comparer;
+			}
 		}
 
 #if NET
@@ -31,10 +38,14 @@ namespace AppKit {
 #endif
 		static nint view_compare (IntPtr view1, IntPtr view2, IntPtr context)
 		{
-			var data = (SortData) GCHandle.FromIntPtr (context).Target;
+			var data = GCHandle.FromIntPtr (context).Target as SortData;
+			// should never happen, but we must be ready and not crash
+			if (data is null)
+				return (nint) (long) NSComparisonResult.Same;
+
 			try {
-				var a = (NSView) Runtime.GetNSObject (view1);
-				var b = (NSView) Runtime.GetNSObject (view2);
+				var a = Runtime.GetNSObject (view1) as NSView;
+				var b = Runtime.GetNSObject (view2) as NSView;
 				return (nint) (long) data.Comparer (a, b);
 			} catch (Exception e) {
 				data.Exception = e;
@@ -42,7 +53,7 @@ namespace AppKit {
 			}
 		}
 
-		public unsafe void SortSubviews (Func<NSView, NSView, NSComparisonResult> comparer)
+		public unsafe void SortSubviews (Func<NSView?, NSView?, NSComparisonResult> comparer)
 		{
 			if (comparer == null)
 				throw new ArgumentNullException (nameof (comparer));
@@ -53,7 +64,7 @@ namespace AppKit {
 #else
 			var func = Marshal.GetFunctionPointerForDelegate (view_comparer);
 #endif
-			var context = new SortData () { Comparer = comparer };
+			var context = new SortData (comparer);
 			var handle = GCHandle.Alloc (context);
 			try {
 				SortSubviews (func, GCHandle.ToIntPtr (handle));

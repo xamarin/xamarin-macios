@@ -8,6 +8,8 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AppKit {
 
 #if !__MACCATALYST__
