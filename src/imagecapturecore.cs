@@ -456,8 +456,14 @@ namespace ImageCaptureCore {
 		void DidChangeCapability (ICCameraDevice camera);
 
 		[Abstract]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'DidReceiveThumbnailForItem (ICCameraDevice, CGImageRef, ICCameraItem, NSError)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'DidReceiveThumbnailForItem (ICCameraDevice, CGImageRef, ICCameraItem, NSError)' instead.")]
 		[Export ("cameraDevice:didReceiveThumbnailForItem:")]
 		void DidReceiveThumbnail (ICCameraDevice camera, ICCameraItem forItem);
+
+		[Abstract]
+		[Export ("cameraDevice:didReceiveThumbnail:forItem:error:")]
+		void DidReceiveThumbnailForItem (ICCameraDevice camera, /* CGImageRef */ IntPtr thumbnail, ICCameraItem forItem, [NullAllowed] NSError error);
 
 		[Abstract]
 		[Export ("cameraDevice:didReceiveMetadataForItem:")]
