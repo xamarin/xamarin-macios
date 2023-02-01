@@ -94,17 +94,17 @@
     </None>
     <Compile Include="..\src\btouch.cs" />
     <Compile Include="..\src\error.cs" />
-    <Compile Include="..\src\generator.cs" />
-    <Compile Include="..\src\generator-attributes.cs" />
-    <Compile Include="..\src\generator-attribute-manager.cs" />
-    <Compile Include="..\src\generator-enums.cs" />
-    <Compile Include="..\src\generator-extension-methods.cs" />
-    <Compile Include="..\src\generator-filters.cs" />
-    <Compile Include="..\src\generator-marshal-info.cs" />
-    <Compile Include="..\src\generator-namespace-manager.cs" />
-    <Compile Include="..\src\generator-nullability-info-context.cs" />
-    <Compile Include="..\src\generator-typemanager.cs" />
     <Compile Include="..\src\ObjCRuntime\Stret.cs" />
+    <Compile Include="..\src\bgen\AttributeManager.cs" />
+    <Compile Include="..\src\bgen\Attributes.cs" />
+    <Compile Include="..\src\bgen\Enums.cs" />
+    <Compile Include="..\src\bgen\ExtensionMethods.cs" />
+    <Compile Include="..\src\bgen\Filters.cs" />
+    <Compile Include="..\src\bgen\Generator.cs" />
+    <Compile Include="..\src\bgen\MarshalInfo.cs" />
+    <Compile Include="..\src\bgen\NamespaceManager.cs" />
+    <Compile Include="..\src\bgen\NullabilityInfoContext.cs" />
+    <Compile Include="..\src\bgen\TypeManager.cs" />
     <Compile Include="..\tools\common\ApplePlatform.cs" />
     <Compile Include="..\tools\common\TargetFramework.cs" />
     <Compile Include="..\tools\common\StringUtils.cs" />
