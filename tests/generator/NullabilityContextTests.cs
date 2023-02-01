@@ -152,7 +152,7 @@ namespace GeneratorTests {
 			Assert.NotNull (memberInfo, "memberInfo != null");
 			return memberInfo!;
 		}
-		
+
 		[TestCase ("NotNullableValueTypeField", typeof (int))]
 		[TestCase ("NotNullableRefTypeField", typeof (string))]
 		public void NotNullableFieldTest (string fieldName, Type expectedType)
