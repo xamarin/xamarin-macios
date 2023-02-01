@@ -1,0 +1,10 @@
+{
+  "author": "Microsoft",
+  "name": "iOS Uygulaması",
+  "description": "Bir .NET iOS uygulaması oluşturmaya yönelik proje",
+  "symbols/bundleId/description": "Info.plist dosyasındaki CFBundleIdentifier öğesini geçersiz kılar",
+  "symbols/minOSVersion/description": "Proje dosyasındaki SupportedOSPlatformVersion öğesini geçersiz kılar",
+  "symbols/deviceFamily/choices/universal/description": "Hem iPhone hem de iPad cihazları için destek",
+  "symbols/deviceFamily/choices/iphone/description": "Yalnızca iPhone cihazları için destek",
+  "symbols/deviceFamily/choices/ipad/description": "Yalnızca iPad cihazları için destek"
+}

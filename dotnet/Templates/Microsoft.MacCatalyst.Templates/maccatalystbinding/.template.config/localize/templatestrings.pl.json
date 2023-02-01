@@ -1,5 +1,5 @@
 {
   "author": "Microsoft",
-  "name": "Mac Catalyst Binding Library",
-  "description": "Projekt służący do tworzenia biblioteki powiązań MacCatalyst platformy .NET 6"
+  "name": "Biblioteka powiązań programu Mac Catalyst",
+  "description": "Projekt służący do tworzenia biblioteki powiązań dla programu .NET Mac Catalyst"
 }

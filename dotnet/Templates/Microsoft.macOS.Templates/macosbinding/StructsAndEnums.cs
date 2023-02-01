@@ -1,4 +1,3 @@
-namespace macOSBinding1
-{
+namespace macOSBinding1 {
 
 }
