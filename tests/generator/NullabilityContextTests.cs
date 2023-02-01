@@ -158,7 +158,6 @@ namespace GeneratorTests {
 		public void NotNullableFieldTest (string fieldName, Type expectedType)
 		{
 			var fieldInfo = GetField (fieldName);
-			Assert.NotNull (fieldInfo, "fieldInfo != null");
 			var info = context.Create (fieldInfo);
 			Assert.False (info.IsNullable (), "isNullable");
 			Assert.AreEqual (expectedType, info.Type);
@@ -169,7 +168,6 @@ namespace GeneratorTests {
 		public void NullableFieldTest (string fieldName, Type expectedType)
 		{
 			var fieldInfo = GetField (fieldName);
-			Assert.NotNull (fieldInfo);
 			var info = context.Create (fieldInfo);
 			Assert.True (info.IsNullable (), "isNullable");
 			Assert.AreEqual (expectedType, info.Type);
@@ -180,7 +178,6 @@ namespace GeneratorTests {
 		public void NotNullablePropertyTest (string propertyName, Type expectedType)
 		{
 			var propertyInfo = GetProperty (propertyName);
-			Assert.NotNull (propertyInfo, "propertyInto != null");
 			var info = context.Create (propertyInfo);
 			Assert.False (info.IsNullable (), "isNullable");
 			Assert.AreEqual (expectedType, info.Type);
@@ -210,7 +207,6 @@ namespace GeneratorTests {
 		public void NullablePropertyTest (string propertyName, Type expectedType)
 		{
 			var propertyInfo = GetProperty (propertyName);
-			Assert.NotNull (propertyInfo, "propertyInfo != null");
 			var info = context.Create (propertyInfo);
 			Assert.True (info.IsNullable (), "isNullable");
 			Assert.AreEqual (expectedType, info.Type);
@@ -221,7 +217,6 @@ namespace GeneratorTests {
 		public void NotNullableParameterTest (string methodName, Type expectedType)
 		{
 			var memberInfo = GetMethod (methodName);
-			Assert.NotNull (memberInfo, "memberInfo != null");
 			var paramInfo = memberInfo.GetParameters () [0];
 			var info = context.Create (paramInfo);
 			Assert.False (info.IsNullable (), "isNullable");
@@ -235,7 +230,6 @@ namespace GeneratorTests {
 		public void NotNullableRefParameterTest (string methodName, Type expectedType)
 		{
 			var memberInfo = GetMethod (methodName);
-			Assert.NotNull (memberInfo, "memberInfo != null");
 			var paramInfo = memberInfo.GetParameters () [0];
 			var info = context.Create (paramInfo);
 			Assert.False (info.IsNullable (), "isNullable");
@@ -247,7 +241,6 @@ namespace GeneratorTests {
 		public void NullableParameterTest (string methdName, Type expectedType)
 		{
 			var memberInfo = GetMethod (methdName);
-			Assert.NotNull (memberInfo, "memberInfo != null");
 			var paramInfo = memberInfo.GetParameters () [0];
 			var info = context.Create (paramInfo);
 			Assert.True (info.IsNullable (), "isNullable");
@@ -261,7 +254,6 @@ namespace GeneratorTests {
 		public void NullableRefParameterTest (string methdName, Type expectedType)
 		{
 			var memberInfo = GetMethod (methdName);
-			Assert.NotNull (memberInfo, "memberInfo != null");
 			var paramInfo = memberInfo.GetParameters () [0];
 			var info = context.Create (paramInfo);
 			Assert.True (info.IsNullable (), "isNullable");
@@ -273,7 +265,6 @@ namespace GeneratorTests {
 		public void NotNullableReturnTypeTest (string methodName, Type expectedType)
 		{
 			var memberInfo = GetMethod (methodName);
-			Assert.NotNull (memberInfo, "memberInfo != null");
 			var info = context.Create (memberInfo.ReturnParameter!);
 			Assert.IsFalse (info.IsNullable (), "isNullable");
 			Assert.AreEqual (expectedType, info.Type);
@@ -284,7 +275,6 @@ namespace GeneratorTests {
 		public void NullableReturnTypeTest (string methodName, Type expectedType)
 		{
 			var memberInfo = GetMethod (methodName);
-			Assert.NotNull (memberInfo, "memberInfo != null");
 			var info = context.Create (memberInfo.ReturnParameter!);
 			Assert.IsTrue (info.IsNullable (), "isNullable");
 			Assert.AreEqual (expectedType, info.Type);
@@ -299,7 +289,6 @@ namespace GeneratorTests {
 		public void ReturnTypeArrayTests (string methodName, Type? expectedType, bool arrayIsNullable, Type expectedElementType, bool elementTypeIsNullable)
 		{
 			var memberInfo = GetMethod (methodName);
-			Assert.NotNull (memberInfo, "memberInfo != null");
 			var info = context.Create (memberInfo.ReturnParameter!);
 			Assert.AreEqual (arrayIsNullable, info.IsNullable (), "info.IsNullable");
 			Assert.AreEqual (expectedElementType, info.ElementType!.Type, "info.ElementType.Type");
@@ -318,7 +307,6 @@ namespace GeneratorTests {
 			bool isNestedArrayNullable, Type nestedArrayType, bool isNestedArrayElementNullable)
 		{
 			var memberInfo = GetMethod (methodName);
-			Assert.NotNull (memberInfo, "memberInfo != null");
 			var info = context.Create (memberInfo.ReturnParameter!);
 			Assert.AreEqual (isArrayNullable, info.IsNullable (), "isArrayNullable");
 			Assert.AreEqual (isNestedArrayNullable, info.ElementType!.IsNullable (), "isNestedArrayNullable");
@@ -336,7 +324,6 @@ namespace GeneratorTests {
 			Type? genericParameterType, bool isGenericParameterNull)
 		{
 			var memberInfo = GetMethod (methodName);
-			Assert.NotNull (memberInfo, "memberInfo != null");
 			var info = context.Create (memberInfo.ReturnParameter!);
 			Assert.AreEqual (expectedType, info.Type, "info.Type");
 			Assert.AreEqual (isGenericTypeNullable, info.IsNullable (), "info.IsNullable");
@@ -357,7 +344,6 @@ namespace GeneratorTests {
 			bool isNullableNestedGenericArgument)
 		{
 			var memberInfo = GetMethod (methodName);
-			Assert.NotNull (memberInfo, "memberInfo != null");
 			var info = context.Create (memberInfo.ReturnParameter!);
 			Assert.AreEqual (expectedType, info.Type, "info.Type");
 			Assert.AreEqual (isGenericNullable, info.IsNullable (), "info.IsNullable");
@@ -375,7 +361,6 @@ namespace GeneratorTests {
 			bool isKeyNullable, Type? valueType, bool isValueNullable)
 		{
 			var memberInfo = GetMethod (methodName);
-			Assert.NotNull (memberInfo, "memberInfo != null");
 			var info = context.Create (memberInfo.ReturnParameter!);
 			Assert.AreEqual (dictionaryType, info.Type, "info.Type");
 			Assert.AreEqual (isDictionaryNullable, info.IsNullable (), "info.IsNullable");
@@ -392,7 +377,6 @@ namespace GeneratorTests {
 		public void GenericReturnConstrainTests (string methodName, bool returnTypeIsNull)
 		{
 			var memberInfo = GetMethod (methodName);
-			Assert.NotNull (memberInfo, "memberInfo != null");
 			var info = context.Create (memberInfo.ReturnParameter!);
 			Assert.AreEqual (returnTypeIsNull, info.IsNullable ());
 		}
@@ -404,7 +388,6 @@ namespace GeneratorTests {
 		public void GenericParamConstrainTests (string methodName, bool returnTypeIsNull)
 		{
 			var memberInfo = GetMethod (methodName);
-			Assert.NotNull (memberInfo, "memberInfo != null");
 			var info = context.Create (memberInfo.GetParameters () [0]);
 			Assert.AreEqual (returnTypeIsNull, info.IsNullable ());
 		}
