@@ -13,7 +13,7 @@ include $(TOP)/src/touch-unit.sources
 export MD_MTOUCH_SDK_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 
-MAC_BUILD_DIR=$(BUILD_DIR)/mac
+MACOS_BUILD_DIR=$(BUILD_DIR)/mac
 IOS_BUILD_DIR=$(BUILD_DIR)/ios
 WATCH_BUILD_DIR=$(BUILD_DIR)/watch
 TVOS_BUILD_DIR=$(BUILD_DIR)/tvos
@@ -176,7 +176,7 @@ IOS_DOTNET_SOURCES += $(IOS_DOTNET_EXTRA_SOURCES) $(IOS_DOTNET_HTTP_SOURCES)
 IOS_SOURCES += $(IOS_EXTRA_SOURCES) $(IOS_HTTP_SOURCES)
 
 IOS_GENERATOR_FLAGS = -inline-selectors -d:IOS -process-enums -warnaserror:$(IOS_GENERATOR_WARNASERROR)
-IOS_DEFINES = -define:IPHONE -define:IOS -define:MONOTOUCH -d:__IOS__ $(APPLETLS_DEFINES) -d:SYSTEM_NET_HTTP
+IOS_DEFINES = -define:IPHONE -define:IOS -define:MONOTOUCH -d:__IOS__ -d:SYSTEM_NET_HTTP
 IOS_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 IOS_GENERATE=$(SYSTEM_MONO) --debug $(IOS_GENERATOR)
 
@@ -263,7 +263,7 @@ $(BUILD_DIR)/ios.rsp: Makefile Makefile.generator frameworks.sources
 $(IOS_DOTNET_BUILD_DIR)/ios.rsp: Makefile Makefile.generator frameworks.sources $(DOTNET_COMPILER) | $(IOS_DOTNET_BUILD_DIR)
 	$(Q) echo \
 		$(IOS_GENERATOR_FLAGS) \
-		$(DOTNET_GENERATOR_FLAGS) -inline-selectors \
+		$(DOTNET_GENERATOR_FLAGS) \
 		-warnaserror:$(IOS_GENERATOR_WARNASERROR) \
 		-sourceonly=$(IOS_DOTNET_BUILD_DIR)/ios-generated-sources \
 		-tmpdir=$(IOS_DOTNET_BUILD_DIR)/generated-sources \
@@ -500,21 +500,20 @@ endif
 MAC_COMMON_DEFINES = -define:MONOMAC -d:__MACOS__
 MAC_full_ARGS = -define:NO_SYSTEM_DRAWING -define:XAMMAC_SYSTEM_MONO
 MAC_mobile_ARGS = 
-MAC_BOOTSTRAP_DEFINES = $(MAC_COMMON_DEFINES),COREBUILD
-MAC_GENERATED_DEFINES = -d:MONOMAC -d:__MACOS__
+MACOS_GENERATOR_FLAGS = -d:MONOMAC -d:__MACOS__
+MACOS_CORE_DEFINES = $(MAC_COMMON_DEFINES),COREBUILD
+MACOS_DEFINES = $(MAC_COMMON_DEFINES) -D:XAMARIN_MODERN
 
-MAC_CORE_DEFINES = $(MAC_BOOTSTRAP_DEFINES)
-
-$(MAC_BUILD_DIR)/$(1)/$(3).pdb: $(MAC_BUILD_DIR)/$(1)/$(3).dll
+$(MACOS_BUILD_DIR)/$(1)/$(3).pdb: $(MACOS_BUILD_DIR)/$(1)/$(3).dll
 
 SN_KEY = $(PRODUCT_KEY_PATH)
 
 MAC_DOTNET_EXTRA_CORE_SOURCES += \
-	$(MAC_BUILD_DIR)/Constants.cs \
+	$(MACOS_BUILD_DIR)/Constants.cs \
 	$(DOTNET_BUILD_DIR)/Constants.macos.generated.cs \
 
 MAC_EXTRA_CORE_SOURCES += \
-	$(MAC_BUILD_DIR)/Constants.cs \
+	$(MACOS_BUILD_DIR)/Constants.cs \
 	$(BUILD_DIR)/Constants.macos.generated.cs \
 
 # Add new bindings + source files in frameworks.sources, not here.
@@ -527,14 +526,14 @@ MACOS_CORE_SOURCES += \
 
 MACOS_DOTNET_SOURCES += \
 	$(MAC_DOTNET_EXTRA_CORE_SOURCES) \
-	$(MAC_BUILD_DIR)/AssemblyInfo.cs \
+	$(MACOS_BUILD_DIR)/AssemblyInfo.cs \
 	Darwin/KernelNotification.cs \
 	Darwin/SystemLog.cs \
 	$(SHARED_DESIGNER_CS) \
 
 MACOS_SOURCES += \
 	$(MAC_EXTRA_CORE_SOURCES) \
-	$(MAC_BUILD_DIR)/AssemblyInfo.cs \
+	$(MACOS_BUILD_DIR)/AssemblyInfo.cs \
 	Darwin/KernelNotification.cs \
 	Darwin/SystemLog.cs \
 	$(SHARED_DESIGNER_CS) \
@@ -560,7 +559,7 @@ MACOS_DOTNET_SOURCES += \
 	$(MAC_CFNETWORK_SOURCES) \
 	$(MAC_HTTP_SOURCES) \
 
-$(MAC_BUILD_DIR)/Constants.cs: Constants.mac.cs.in Makefile $(TOP)/Make.config.inc | $(MAC_BUILD_DIR)
+$(MACOS_BUILD_DIR)/Constants.cs: Constants.mac.cs.in Makefile $(TOP)/Make.config.inc | $(MACOS_BUILD_DIR)
 	$(Q) sed \
 			-e "s/@VERSION@/$(MAC_PACKAGE_VERSION_MAJOR).$(MAC_PACKAGE_VERSION_MINOR).$(MAC_PACKAGE_VERSION_REV)/g" \
 			-e 's/@REVISION@/$(MAC_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
@@ -573,7 +572,7 @@ $(PROJECT_DIR)/xammac.csproj: xammac.tmpl.csproj Makefile $(wildcard $(TOP)/src/
 
 PROJECT_FILES += $(PROJECT_DIR)/xammac.csproj
 
-$(MAC_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in | $(MAC_BUILD_DIR)
+$(MACOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in | $(MACOS_BUILD_DIR)
 	$(call Q_PROF_GEN,mac) sed \
 		-e 's|@PRODUCT_NAME@|$(MAC_PRODUCT)|g' \
 		-e 's|@PACKAGE_HEAD_REV@|$(PACKAGE_HEAD_REV)|g' \
@@ -608,31 +607,31 @@ MAC_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 MAC_GENERATE=$(SYSTEM_MONO) --debug $(MAC_GENERATOR)
 
 define MAC_GENERATOR_template
-$(MAC_BUILD_DIR)/$(1)/core.dll: $(MACOS_CORE_SOURCES) frameworks.sources $(BUILD_DIR)/macos-defines.rsp
-	@mkdir -p $(MAC_BUILD_DIR)/$(1)
+$(MACOS_BUILD_DIR)/$(1)/core.dll: $(MACOS_CORE_SOURCES) frameworks.sources $(BUILD_DIR)/macos-defines.rsp
+	@mkdir -p $(MACOS_BUILD_DIR)/$(1)
 	$$(call Q_PROF_CSC,mac/$(1)) \
 		$$(MAC_$(1)_CSC) -nologo -out:$$@ -target:library -debug -unsafe $(CORE_WARNINGS_TO_FIX) \
 		@$(BUILD_DIR)/macos-defines.rsp \
-		$$(MAC_BOOTSTRAP_DEFINES) \
+		$$(MACOS_CORE_DEFINES) \
 		$(2) \
 		$$(MACOS_CORE_SOURCES)
 
-$(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_GENERATOR) $(MACOS_APIS) $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_BUILD_DIR)/Xamarin.Mac-$(1).BindingAttributes.dll $(BUILD_DIR)/mac-$(1).rsp
+$(MACOS_BUILD_DIR)/$(1)/generated-sources: $$(MAC_GENERATOR) $(MACOS_APIS) $(MACOS_BUILD_DIR)/$(1)/core.dll $(MACOS_BUILD_DIR)/Xamarin.Mac-$(1).BindingAttributes.dll $(BUILD_DIR)/mac-$(1).rsp
 	$$(call Q_PROF_GEN,mac/$(1)) $$(MAC_GENERATE) @$(BUILD_DIR)/mac-$(1).rsp
 
 $(BUILD_DIR)/mac-$(1).rsp: Makefile Makefile.generator frameworks.sources
 	$$(Q_GEN) echo \
-		$(MAC_GENERATED_DEFINES) \
+		$(MACOS_GENERATOR_FLAGS) \
 		-compiler:$$(MAC_$(1)_CSC) \
 		-nologo \
 		-process-enums \
 		-warnaserror:$(MACOS_GENERATOR_WARNASERROR) \
 		-native-exception-marshalling \
 		-core \
-		-sourceonly:$(MAC_BUILD_DIR)/$(1)/generated-sources \
-		-tmpdir:$(MAC_BUILD_DIR)/$(1) \
-		-baselib:$(MAC_BUILD_DIR)/$(1)/core.dll \
-		-attributelib:$(MAC_BUILD_DIR)/Xamarin.Mac-$(1).BindingAttributes.dll \
+		-sourceonly:$(MACOS_BUILD_DIR)/$(1)/generated-sources \
+		-tmpdir:$(MACOS_BUILD_DIR)/$(1) \
+		-baselib:$(MACOS_BUILD_DIR)/$(1)/core.dll \
+		-attributelib:$(MACOS_BUILD_DIR)/Xamarin.Mac-$(1).BindingAttributes.dll \
 		-d:NO_SYSTEM_DRAWING \
 		--ns=ObjCRuntime \
 		$(2) \
@@ -645,9 +644,9 @@ endef
 $(eval $(call MAC_GENERATOR_template,full,-d:NO_SYSTEM_DRAWING))
 $(eval $(call MAC_GENERATOR_template,mobile,$(SHARED_SYSTEM_DRAWING_SOURCES)))
 
-define MAC_TARGETS_template
-$(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac%dll $(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac%pdb: $(MAC_BUILD_DIR)/$(1)/generated-sources $(MACOS_SOURCES) $(MAC_CFNETWORK_SOURCES) $(MAC_CLASSIC_SOURCES) $(SN_KEY)
-	@mkdir -p $(MAC_BUILD_DIR)/$(1)-64
+define MACOS_TARGETS_template
+$(MACOS_BUILD_DIR)/$(1)-64/Xamarin.Mac%dll $(MACOS_BUILD_DIR)/$(1)-64/Xamarin.Mac%pdb: $(MACOS_BUILD_DIR)/$(1)/generated-sources $(MACOS_SOURCES) $(MAC_CFNETWORK_SOURCES) $(MAC_CLASSIC_SOURCES) $(SN_KEY)
+	@mkdir -p $(MACOS_BUILD_DIR)/$(1)-64
 	$$(call Q_PROF_CSC,mac/$(1)-64) \
 		$$(MAC_$(1)_CSC) -nologo -out:$$(basename $$@).dll -target:library -debug -unsafe \
 		-deterministic \
@@ -666,14 +665,14 @@ $(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac%dll $(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac%pd
 
 endef
 
-$(eval $(call MAC_TARGETS_template,mobile,$(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES)))
-$(eval $(call MAC_TARGETS_template,full,))
+$(eval $(call MACOS_TARGETS_template,mobile,$(SHARED_SYSTEM_DRAWING_SOURCES)))
+$(eval $(call MACOS_TARGETS_template,full,))
 
-$(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/%-64/Xamarin.Mac.dll
+$(MACOS_BUILD_DIR)/%-reference/Xamarin.Mac.dll: $(MACOS_BUILD_DIR)/%-64/Xamarin.Mac.dll
 	@mkdir -p $(@D)
 	$(Q) $(CP) $^ $@
 
-$(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.pdb: $(MAC_BUILD_DIR)/%-64/Xamarin.Mac.pdb
+$(MACOS_BUILD_DIR)/%-reference/Xamarin.Mac.pdb: $(MACOS_BUILD_DIR)/%-64/Xamarin.Mac.pdb
 	@mkdir -p $(@D)
 	$(Q) $(CP) $^ $@
 
@@ -687,7 +686,7 @@ $(MACOS_DOTNET_BUILD_DIR)/core-macos.dll: $(MACOS_DOTNET_CORE_SOURCES) framework
 		$(DOTNET_CSC) $(DOTNET_FLAGS) -out:$@ \
 		$(DOTNET_CORE_WARNINGS_TO_FIX) \
 		@$(DOTNET_BUILD_DIR)/macos-defines-dotnet.rsp \
-		$(MAC_CORE_DEFINES) \
+		$(MACOS_CORE_DEFINES) \
 		$(MACOS_DOTNET_CORE_SOURCES) \
 		-out:$@ \
 
@@ -696,7 +695,7 @@ $(MACOS_DOTNET_BUILD_DIR)/macos-generated-sources: $(DOTNET_GENERATOR) $(MACOS_D
 
 $(MACOS_DOTNET_BUILD_DIR)/macos.rsp: Makefile Makefile.generator frameworks.sources $(DOTNET_COMPILER) | $(MACOS_DOTNET_BUILD_DIR)
 	$(Q) echo \
-		$(MAC_GENERATED_DEFINES) \
+		$(MACOS_GENERATOR_FLAGS) \
 		$(DOTNET_GENERATOR_FLAGS) \
 		-warnaserror:$(MACOS_GENERATOR_WARNASERROR) \
 		-sourceonly:$(MACOS_DOTNET_BUILD_DIR)/macos-generated-sources \
@@ -712,11 +711,10 @@ $(MACOS_DOTNET_BUILD_DIR)/64/Microsoft.macOS%dll $(MACOS_DOTNET_BUILD_DIR)/64/Mi
 		$(DOTNET_CSC) $(DOTNET_FLAGS) -out:$(MACOS_DOTNET_BUILD_DIR)/64/Microsoft.macOS.dll -optimize \
 		-publicsign -keyfile:$(SN_KEY) \
 		-refout:$(MACOS_DOTNET_BUILD_DIR)/ref/Microsoft.macOS.dll \
-		$(MAC_COMMON_DEFINES) \
+		$(MACOS_DEFINES) \
 		$(ARGS_64) \
 		$(WARNINGS_TO_FIX) \
 		$(MAC_CSC_FLAGS_XM) \
-		$(APPLETLS_DEFINES) -D:XAMARIN_MODERN \
 		$(MACOS_DOTNET_SOURCES) \
 		@$(DOTNET_BUILD_DIR)/macos-defines-dotnet.rsp \
 		-res:$(MACOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
@@ -742,10 +740,10 @@ DOTNET_TARGETS_DIRS += \
 endif
 
 MAC_VARIANTS_TARGETS = \
-	$(MAC_BUILD_DIR)/mobile-64/Xamarin.Mac.dll \
-	$(MAC_BUILD_DIR)/full-64/Xamarin.Mac.dll \
-	$(MAC_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll \
-	$(MAC_BUILD_DIR)/full-reference/Xamarin.Mac.dll \
+	$(MACOS_BUILD_DIR)/mobile-64/Xamarin.Mac.dll \
+	$(MACOS_BUILD_DIR)/full-64/Xamarin.Mac.dll \
+	$(MACOS_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll \
+	$(MACOS_BUILD_DIR)/full-reference/Xamarin.Mac.dll \
 
 ifdef INCLUDE_XAMARIN_LEGACY
 ifdef INCLUDE_MAC
@@ -754,12 +752,12 @@ ALL_TARGETS+=all-mac
 endif
 endif
 
-MAC_TARGETS_DIRS += \
-	$(MAC_BUILD_DIR) \
-	$(MAC_BUILD_DIR)/mobile \
-	$(MAC_BUILD_DIR)/mobile/Facades \
-	$(MAC_BUILD_DIR)/full \
-	$(MAC_BUILD_DIR)/compat \
+MACOS_TARGETS_DIRS += \
+	$(MACOS_BUILD_DIR) \
+	$(MACOS_BUILD_DIR)/mobile \
+	$(MACOS_BUILD_DIR)/mobile/Facades \
+	$(MACOS_BUILD_DIR)/full \
+	$(MACOS_BUILD_DIR)/compat \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/mobile    \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/full      \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile \
@@ -771,7 +769,7 @@ MAC_TARGETS_DIRS += \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin                  \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig        \
 
-MAC_TARGETS += \
+MACOS_TARGETS += \
 	$(PROJECT_DIR)/xammac.csproj                                                        \
 	$(MAC_VARIANTS_TARGETS)                                                             \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMac.dll                      \
@@ -793,28 +791,28 @@ MAC_TARGETS += \
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMac.dll: $(MACIOS_BINARIES_PATH)/XamMac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono
 	$(Q) install -m 0755 $< $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile/Xamarin.Mac.dll: $(MACOS_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile
 	$(Q) install -m 0755 $< $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile/Xamarin.Mac.pdb: $(MAC_BUILD_DIR)/mobile-reference/Xamarin.Mac.pdb | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile/Xamarin.Mac.pdb: $(MACOS_BUILD_DIR)/mobile-reference/Xamarin.Mac.pdb | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile
 	$(Q) install -m 0644 $< $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/mobile/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/mobile-64/Xamarin.Mac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/mobile
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/mobile/Xamarin.Mac.dll: $(MACOS_BUILD_DIR)/mobile-64/Xamarin.Mac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/mobile
 	$(Q) install -m 0755 $< $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/mobile/Xamarin.Mac.pdb: $(MAC_BUILD_DIR)/mobile-64/Xamarin.Mac.pdb | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/mobile
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/mobile/Xamarin.Mac.pdb: $(MACOS_BUILD_DIR)/mobile-64/Xamarin.Mac.pdb | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/mobile
 	$(Q) install -m 0644 $< $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/full-reference/Xamarin.Mac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full/Xamarin.Mac.dll: $(MACOS_BUILD_DIR)/full-reference/Xamarin.Mac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full
 	$(Q) install -m 0755 $< $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full/Xamarin.Mac.pdb : $(MAC_BUILD_DIR)/full-reference/Xamarin.Mac.pdb | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full/Xamarin.Mac.pdb : $(MACOS_BUILD_DIR)/full-reference/Xamarin.Mac.pdb | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full
 	$(Q) install -m 0644 $< $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/full/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/full-64/Xamarin.Mac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/full
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/full/Xamarin.Mac.dll: $(MACOS_BUILD_DIR)/full-64/Xamarin.Mac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/full
 	$(Q) install -m 0755 $< $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/full/Xamarin.Mac.pdb: $(MAC_BUILD_DIR)/full-64/Xamarin.Mac.pdb | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/full
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/full/Xamarin.Mac.pdb: $(MACOS_BUILD_DIR)/full-64/Xamarin.Mac.pdb | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/full
 	$(Q) install -m 0644 $< $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.pdb: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac
@@ -833,12 +831,12 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/xammac.pc: $(TOP)/Make.
 	$(Q) sed -e "s/@PACKAGE_VERSION@/$(MAC_PACKAGE_VERSION)/g" xammac.pc.in > $@
 	$(Q) chmod 0644 $@
 
-$(MAC_TARGETS_DIRS):
+$(MACOS_TARGETS_DIRS):
 	$(Q) mkdir -p $@
 
 ifdef INCLUDE_MAC
-install-mac: $(MAC_TARGETS)
-all-mac: $(MAC_TARGETS)
+install-mac: $(MACOS_TARGETS)
+all-mac: $(MACOS_TARGETS)
 endif
 
 #
@@ -1127,13 +1125,12 @@ endif
 # Xamarin.TVOS
 #
 
-TVOS_DEFINES = -define:IPHONE -define:MONOTOUCH -d:TVOS -d:XAMCORE_3_0 -d:__TVOS__ $(APPLETLS_DEFINES) -d:SYSTEM_NET_HTTP
+TVOS_DEFINES = -define:IPHONE -define:MONOTOUCH -d:TVOS -d:XAMCORE_3_0 -d:__TVOS__ -d:SYSTEM_NET_HTTP
 TVOS_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 TVOS_GENERATE=$(SYSTEM_MONO) --debug $(TVOS_GENERATOR)
-TVOS_GENERATED_DEFINES= -d:TVOS -d:XAMCORE_3_0
 
 TVOS_CORE_DEFINES=$(TVOS_DEFINES) -d:COREBUILD
-TVOS_GENERATOR_DEFINES = $(TVOS_GENERATED_DEFINES)
+TVOS_GENERATOR_FLAGS = -d:TVOS -d:XAMCORE_3_0 -inline-selectors
 
 TVOS_DOTNET_EXTRA_CORE_SOURCES = \
 	$(TVOS_BUILD_DIR)/Constants.cs    \
@@ -1231,7 +1228,7 @@ $(BUILD_DIR)/tvos.rsp: Makefile Makefile.generator frameworks.sources
 		-tmpdir=$(TVOS_BUILD_DIR)/tvos                         \
 		-baselib=$(TVOS_BUILD_DIR)/tvos/core.dll               \
 		-attributelib=$(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll \
-		$(TVOS_GENERATED_DEFINES)				\
+		$(TVOS_GENERATOR_FLAGS)				\
 		-native-exception-marshalling                            \
 		--ns:ObjCRuntime                                         \
 		$(TVOS_APIS)                                            \
@@ -1255,8 +1252,8 @@ $(TVOS_DOTNET_BUILD_DIR)/tvos-generated-sources: $(DOTNET_GENERATOR) $(TVOS_DOTN
 
 $(TVOS_DOTNET_BUILD_DIR)/tvos.rsp: Makefile Makefile.generator frameworks.sources $(DOTNET_COMPILER) | $(TVOS_DOTNET_BUILD_DIR)
 	$(Q) echo \
-		$(TVOS_GENERATOR_DEFINES) \
-		$(DOTNET_GENERATOR_FLAGS) -inline-selectors \
+		$(TVOS_GENERATOR_FLAGS) \
+		$(DOTNET_GENERATOR_FLAGS) \
 		-warnaserror:$(TVOS_GENERATOR_WARNASERROR) \
 		-sourceonly=$(TVOS_DOTNET_BUILD_DIR)/tvos-generated-sources \
 		-tmpdir=$(TVOS_DOTNET_BUILD_DIR)/generated-sources \
@@ -1354,13 +1351,12 @@ TVOS_TARGETS += \
 #
 
 # MacCatalyst is a variant of iOS, so it defines the iOS variables as well.
-MACCATALYST_DEFINES = -define:IPHONE -define:IOS -define:MONOTOUCH -d:__IOS__ -d:__MACCATALYST__ $(APPLETLS_DEFINES) -d:SYSTEM_NET_HTTP
+MACCATALYST_DEFINES = -define:IPHONE -define:IOS -define:MONOTOUCH -d:__IOS__ -d:__MACCATALYST__ -d:SYSTEM_NET_HTTP
 MACCATALYST_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 MACCATALYST_GENERATE=$(SYSTEM_MONO) --debug $(MACCATALYST_GENERATOR)
-MACCATALYST_GENERATED_DEFINES= -d:__MACCATALYST__ -d:IOS
 
 MACCATALYST_CORE_DEFINES=$(MACCATALYST_DEFINES) -d:COREBUILD
-MACCATALYST_GENERATOR_DEFINES = $(MACCATALYST_GENERATED_DEFINES)
+MACCATALYST_GENERATOR_FLAGS = -d:__MACCATALYST__ -d:IOS -inline-selectors
 
 MACCATALYST_DOTNET_EXTRA_CORE_SOURCES = \
 	$(MACCATALYST_BUILD_DIR)/Constants.cs    \
@@ -1440,8 +1436,8 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst-generated-sources: $(DOTNET_GENERATO
 
 $(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst.rsp: Makefile Makefile.generator frameworks.sources $(DOTNET_COMPILER) | $(MACCATALYST_DOTNET_BUILD_DIR)
 	$(Q) echo \
-		$(MACCATALYST_GENERATOR_DEFINES) \
-		$(DOTNET_GENERATOR_FLAGS) -inline-selectors \
+		$(MACCATALYST_GENERATOR_FLAGS) \
+		$(DOTNET_GENERATOR_FLAGS) \
 		-warnaserror:$(MACCATALYST_GENERATOR_WARNASERROR) \
 		-sourceonly=$(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst-generated-sources \
 		-tmpdir=$(MACCATALYST_DOTNET_BUILD_DIR)/generated-sources \
