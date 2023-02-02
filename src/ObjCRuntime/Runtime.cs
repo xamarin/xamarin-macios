@@ -1700,10 +1700,17 @@ namespace ObjCRuntime {
 			if (obj is null)
 				return;
 
-			if (!(obj is NativeObject nobj))
-				throw new InvalidOperationException ($"Unable to call release on an instance of the type {obj.GetType ()}");
+			if (obj is NativeObject nobj) {
+				nobj.Release ();
+				return;
+			}
 
-			nobj.Release ();
+			if (obj is NSObject nsobj) {
+				nsobj.DangerousRelease ();
+				return;
+			}
+
+			throw new InvalidOperationException ($"Unable to call release on an instance of the type {obj.GetType ()}");
 		}
 
 		static Type? FindProtocolWrapperType (Type? type)
