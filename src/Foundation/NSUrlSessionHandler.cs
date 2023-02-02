@@ -561,6 +561,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public bool CheckCertificateRevocationList { get; set; } = false;
 
 		// We're ignoring this property, just like Xamarin.Android does:
@@ -570,6 +571,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public X509CertificateCollection ClientCertificates { get { return new X509CertificateCollection (); } }
 
 		// We're ignoring this property, just like Xamarin.Android does:
@@ -578,6 +580,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public ClientCertificateOption ClientCertificateOptions { get; set; }
 
 		// We're ignoring this property, just like Xamarin.Android does:
@@ -586,6 +589,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public ICredentials? DefaultProxyCredentials { get; set; }
 
 		public int MaxAutomaticRedirections {
@@ -603,6 +607,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public int MaxConnectionsPerServer { get; set; } = int.MaxValue;
 
 		// We're ignoring this property, just like Xamarin.Android does:
@@ -611,6 +616,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public int MaxResponseHeadersLength { get; set; } = 64; // Units in K (1024) bytes.
 
 		// We don't support PreAuthenticate, so always return false, and ignore any attempts to change it.
@@ -618,6 +624,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public bool PreAuthenticate {
 			get => false;
 			set { }
@@ -629,6 +636,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public IDictionary<string, object>? Properties { get { return null; } }
 
 		// We dont support any custom proxies, and don't let anybody wonder why their proxy isn't
@@ -637,6 +645,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public IWebProxy? Proxy {
 			get => null;
 			set => throw new PlatformNotSupportedException ();
@@ -652,6 +661,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public SslProtocols SslProtocols { get; set; } = SslProtocols.Tls12 | SslProtocols.Tls13;
 
 		private ServerCertificateCustomValidationCallbackHelper? _serverCertificateCustomValidationCallbackHelper;
