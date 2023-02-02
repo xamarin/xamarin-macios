@@ -205,7 +205,6 @@ namespace Introspection {
 #if __MACCATALYST__
 			case "BCChatButton":
 			case "PKAddPassButton":
-			case "PKPaymentButton":
 			case "UIButton":
 			case "UIControl":
 			case "UISegmentedControl":
