@@ -34,6 +34,7 @@ namespace ThreadNetwork {
 		void RetrieveCredentialsForExtendedPanId (NSData extendedPanId, Action<THCredentials, NSError> completion);
 
 		[iOS (16, 0)] // was added in xcode14 targeting iOS 15, intro says otherthings.
+		[MacCatalyst (16, 1)]
 		[Async]
 		[Export ("checkPreferredNetworkForActiveOperationalDataset:completion:")]
 		void CheckPreferredNetwork (NSData activeOperationalDataSet, Action<bool> completion);

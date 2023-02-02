@@ -1,18 +1,18 @@
 <Project>
   <!--Package versions-->
   <PropertyGroup>
-    <MicrosoftDotnetSdkInternalPackageVersion>8.0.100-alpha.1.23074.25</MicrosoftDotnetSdkInternalPackageVersion>
+    <MicrosoftDotnetSdkInternalPackageVersion>8.0.100-alpha.1.23077.6</MicrosoftDotnetSdkInternalPackageVersion>
     <MicrosoftNETILLinkTasksPackageVersion>8.0.100-1.23067.1</MicrosoftNETILLinkTasksPackageVersion>
     <MicrosoftDotNetBuildTasksFeedPackageVersion>6.0.0-beta.21212.6</MicrosoftDotNetBuildTasksFeedPackageVersion>
     <MicrosoftNETILStripTasksPackageVersion>6.0.0-rc.2.21468.3</MicrosoftNETILStripTasksPackageVersion>
-    <MicrosoftNETCoreAppRefPackageVersion>8.0.0-alpha.1.23073.1</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>8.0.0-alpha.1.23076.9</MicrosoftNETCoreAppRefPackageVersion>
     <MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion>8.0.0-alpha.1.22510.1</MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion>
-    <MicrosoftNETWorkloadEmscriptennet7Manifest80100Version>8.0.0-alpha.1.23066.1</MicrosoftNETWorkloadEmscriptennet7Manifest80100Version>
+    <MicrosoftNETWorkloadEmscriptennet7Manifest80100Version>8.0.0-alpha.1.23073.2</MicrosoftNETWorkloadEmscriptennet7Manifest80100Version>
     <MicrosoftTemplateEngineTasksVersion>7.0.100-alpha.1.21601.1</MicrosoftTemplateEngineTasksVersion>
     <!-- This is a subscription of the .NET 7 versions of our packages -->
-    <MicrosoftMacCatalystSdkPackageVersion>16.2.1023</MicrosoftMacCatalystSdkPackageVersion>
-    <MicrosoftmacOSSdkPackageVersion>13.1.1023</MicrosoftmacOSSdkPackageVersion>
-    <MicrosoftiOSSdkPackageVersion>16.2.1023</MicrosoftiOSSdkPackageVersion>
-    <MicrosofttvOSSdkPackageVersion>16.1.1520</MicrosofttvOSSdkPackageVersion>
+    <MicrosoftMacCatalystSdkPackageVersion>16.2.1024</MicrosoftMacCatalystSdkPackageVersion>
+    <MicrosoftmacOSSdkPackageVersion>13.1.1024</MicrosoftmacOSSdkPackageVersion>
+    <MicrosoftiOSSdkPackageVersion>16.2.1024</MicrosoftiOSSdkPackageVersion>
+    <MicrosofttvOSSdkPackageVersion>16.1.1521</MicrosofttvOSSdkPackageVersion>
   </PropertyGroup>
 </Project>

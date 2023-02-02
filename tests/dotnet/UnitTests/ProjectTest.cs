@@ -251,11 +251,12 @@ namespace Xamarin.Tests {
 
 			// Verify that there's one resource in the binding assembly, and its name
 			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
-			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (2), "2 resources");
+			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (3), "3 resources");
 			// Sort the resources before we assert, since we don't care about the order, and sorted order makes the asserts simpler.
 			var resources = ad.MainModule.Resources.OrderBy (v => v.Name).ToArray ();
-			Assert.That (resources [0].Name, Is.EqualTo ($"__{prefix}_content_basn3p08.png"), $"__{prefix}_content_basn3p08.png");
-			Assert.That (resources [1].Name, Is.EqualTo ($"__{prefix}_content_xamvideotest.mp4"), $"__{prefix}_content_xamvideotest.mp4");
+			Assert.That (resources [0].Name, Is.EqualTo ($"__{prefix}_content_basn3p08__with__loc.png"), $"__{prefix}_content_basn3p08__with__loc.png");
+			Assert.That (resources [1].Name, Is.EqualTo ($"__{prefix}_content_basn3p08.png"), $"__{prefix}_content_basn3p08.png");
+			Assert.That (resources [2].Name, Is.EqualTo ($"__{prefix}_content_xamvideotest.mp4"), $"__{prefix}_content_xamvideotest.mp4");
 		}
 
 		[TestCase ("iOS")]
@@ -978,7 +979,6 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
-		[Ignore ("This test will fail until https://github.com/xamarin/xamarin-macios/commit/69b8b5a17d4d00d1d993aa0b38912d982455c780 (or something equivalent) has been backported to .NET 6")]
 		public void BuildNet6_0App (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "Net6_0SimpleApp";

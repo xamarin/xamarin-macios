@@ -58,6 +58,7 @@
 		-e "s/@PRODUCT_HASH@/$(CURRENT_HASH_LONG)/g" \
 		$< > $@.tmp
 	$(Q) if ! diff $@ $@.tmp >/dev/null; then $(CP) $@.tmp $@; echo "The file $(TOP)/tools/common/SdkVersions.cs has been automatically re-generated; please commit the changes."; fi
+	$(Q) touch $@
 
 ../common/ProductConstants.cs: ../common/ProductConstants.in.cs Makefile $(TOP)/Make.config
 	$(Q_GEN) sed \
