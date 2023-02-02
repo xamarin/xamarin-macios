@@ -391,7 +391,7 @@ namespace Cecil.Tests {
 
 					// Check that the member isn't supported before the type.
 					if (apiSupportedVersion is not null && memberSupportedVersion is not null && memberSupportedVersion < apiSupportedVersion)
-						failures.Add($"[FAIL] in {member.AsFullName()} is marked available with '{memberSupportedVersion}', but the declaring type {type.FullName} is only available in '{apiSupportedVersion}'");
+						failures.Add ($"[FAIL] in {member.AsFullName ()} is marked available with '{memberSupportedVersion}', but the declaring type {type.FullName} is only available in '{apiSupportedVersion}'");
 				}
 			}
 
