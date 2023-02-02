@@ -104,6 +104,7 @@
     <Compile Include="..\src\bgen\GeneratedTypes.cs" />
     <Compile Include="..\src\bgen\Generator.cs" />
     <Compile Include="..\src\bgen\MarshalInfo.cs" />
+    <Compile Include="..\src\bgen\IMemberGatherer.cs" />
     <Compile Include="..\src\bgen\NamespaceManager.cs" />
     <Compile Include="..\src\bgen\NullabilityInfoContext.cs" />
     <Compile Include="..\src\bgen\TrampolineInfo.cs" />

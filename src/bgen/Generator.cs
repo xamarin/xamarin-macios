@@ -54,10 +54,6 @@ using ObjCRuntime;
 using Foundation;
 using Xamarin.Utils;
 
-public interface IMemberGatherer {
-	IEnumerable<MethodInfo> GetTypeContractMethods (Type source);
-}
-
 class WrapPropMemberInformation {
 	public bool HasWrapOnGetter { get => WrapGetter != null; }
 	public bool HasWrapOnSetter { get => WrapSetter != null; }
