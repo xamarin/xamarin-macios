@@ -48,6 +48,7 @@ using NativeHandle = System.IntPtr;
 namespace QuickLook {
 #if !MONOMAC
 	[NoMac]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (QLPreviewControllerDelegate) })]
 	interface QLPreviewController {
 		[Export ("initWithNibName:bundle:")]
@@ -91,6 +92,7 @@ namespace QuickLook {
 	[Model]
 	[Protocol]
 	[NoMac]
+	[MacCatalyst (13, 1)]
 	interface QLPreviewControllerDataSource {
 		[Abstract]
 		[Export ("numberOfPreviewItemsInPreviewController:")]
@@ -104,6 +106,7 @@ namespace QuickLook {
 
 	[NoMac]
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum QLPreviewItemEditingMode : long {
 		Disabled = 0,
@@ -112,6 +115,7 @@ namespace QuickLook {
 	}
 
 	[NoMac]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -136,19 +140,23 @@ namespace QuickLook {
 		UIImage TransitionImageForPreviewItem (QLPreviewController controller, [Protocolize] QLPreviewItem item, CGRect contentRect);
 
 		[iOS (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("previewController:transitionViewForPreviewItem:"), DelegateName ("QLTransitionView"), DefaultValue (null)]
 		[return: NullAllowed]
 		UIView TransitionViewForPreviewItem (QLPreviewController controller, IQLPreviewItem item);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("previewController:editingModeForPreviewItem:"), DelegateName ("QLEditingMode"), DefaultValue ("QLPreviewItemEditingMode.Disabled")]
 		QLPreviewItemEditingMode GetEditingMode (QLPreviewController controller, IQLPreviewItem previewItem);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("previewController:didUpdateContentsOfPreviewItem:"), EventArgs ("QLPreviewControllerDelegateDidUpdate")]
 		void DidUpdateContents (QLPreviewController controller, IQLPreviewItem previewItem);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("previewController:didSaveEditedCopyOfPreviewItem:atURL:"), EventArgs ("QLPreviewControllerDelegateDidSave")]
 		void DidSaveEditedCopy (QLPreviewController controller, IQLPreviewItem previewItem, NSUrl modifiedContentsUrl);
 
@@ -158,6 +166,7 @@ namespace QuickLook {
 	interface IQLPreviewItem { }
 
 	[NoMac]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -269,6 +278,7 @@ namespace QuickLook {
 
 	[NoMac]
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface QLPreviewingController {
 		[Export ("preparePreviewOfSearchableItemWithIdentifier:queryString:completionHandler:")]
@@ -277,7 +287,7 @@ namespace QuickLook {
 		[Export ("preparePreviewOfFileAtURL:completionHandler:")]
 		void PreparePreviewOfFile (NSUrl url, Action<NSError> handler);
 
-		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("providePreviewForFileRequest:completionHandler:")]
 		void ProvidePreview (QLFilePreviewRequest request, Action<QLPreviewReply, NSError> handler);
 	}

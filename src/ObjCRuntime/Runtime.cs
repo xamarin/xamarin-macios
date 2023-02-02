@@ -1871,8 +1871,8 @@ namespace ObjCRuntime {
 			ConnectMethod (method.DeclaringType!, method, selector);
 		}
 
-		[DllImport ("__Internal", CharSet = CharSet.Unicode)]
-		extern static void xamarin_log (string s);
+		[DllImport ("__Internal")]
+		extern static void xamarin_log (IntPtr s);
 
 		[DllImport (Constants.libcLibrary)]
 		extern static nint write (int filedes, byte [] buf, nint nbyte);
@@ -1880,7 +1880,8 @@ namespace ObjCRuntime {
 		internal static void NSLog (string value)
 		{
 			try {
-				xamarin_log (value);
+				using var valuePtr = new TransientString (value, TransientString.Encoding.Unicode);
+				xamarin_log (valuePtr);
 			} catch {
 				// Append a newline like NSLog does
 				if (!value.EndsWith ('\n'))

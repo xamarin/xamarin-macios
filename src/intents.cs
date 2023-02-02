@@ -50,6 +50,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INBookRestaurantReservationIntentCode : long {
 		Success = 0,
@@ -64,6 +65,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
 	public enum INCallCapabilityOptions : ulong {
@@ -74,6 +76,7 @@ namespace Intents {
 	[Mac (12, 0)] // used in interface with new Mac (12,0) avilability
 	[iOS (10, 0)]
 	[Watch (3, 2)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INCallRecordType : long {
 		Unknown = 0,
@@ -81,14 +84,19 @@ namespace Intents {
 		Missed,
 		Received,
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		Latest,
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		Voicemail,
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		Ringing,
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		InProgress,
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		OnHold,
 	}
 
@@ -96,20 +104,24 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INCancelWorkoutIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'HandleInApp' instead.")] // yup just iOS
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'HandleInApp' instead.")]
 		ContinueInApp,
 		Failure,
 		FailureRequiringAppLaunch,
 		FailureNoMatchingWorkout,
 		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 7, which is now defined as 'Success').")]
 		[NoWatch, iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		HandleInApp,
 		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 6, which is now defined as 'HandleInApp').")]
 		[NoWatch, iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		Success,
 	}
 
@@ -117,6 +129,8 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INCarAirCirculationMode bound
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INCarAirCirculationMode : long {
 		Unknown = 0,
@@ -128,6 +142,8 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INCarAudioSource bound
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INCarAudioSource : long {
 		Unknown = 0,
@@ -146,6 +162,8 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INCarDefroster bound
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INCarDefroster : long {
 		Unknown = 0,
@@ -158,6 +176,8 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INCarSeat bound
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INCarSeat : long {
 		Unknown = 0,
@@ -183,6 +203,7 @@ namespace Intents {
 	[NoTV]
 	[iOS (10, 0)]
 	[Watch (3, 2)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INConditionalOperator : long {
 		All = 0,
@@ -194,25 +215,30 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INEndWorkoutIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'HandleInApp' instead.")] // yup just iOS
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'HandleInApp' instead.")]
 		ContinueInApp,
 		Failure,
 		FailureRequiringAppLaunch,
 		FailureNoMatchingWorkout,
 		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 7, which is now defined as 'Success').")]
 		[NoWatch, iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		HandleInApp,
 		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 6, which is now defined as 'HandleInApp').")]
 		[NoWatch, iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		Success,
 	}
 
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INGetAvailableRestaurantReservationBookingDefaultsIntentResponseCode : long {
 		Success,
@@ -222,6 +248,7 @@ namespace Intents {
 
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INGetAvailableRestaurantReservationBookingsIntentCode : long {
 		Success,
@@ -232,6 +259,7 @@ namespace Intents {
 
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INGetRestaurantGuestIntentResponseCode : long {
 		Success,
@@ -242,12 +270,14 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INGetRideStatusIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		InProgress,
 		Success,
 		Failure,
@@ -258,6 +288,7 @@ namespace Intents {
 
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INGetUserCurrentRestaurantReservationBookingsIntentResponseCode : long {
 		Success,
@@ -270,6 +301,7 @@ namespace Intents {
 	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[ErrorDomain ("INIntentErrorDomain")]
 	public enum INIntentErrorCode : long {
@@ -311,6 +343,7 @@ namespace Intents {
 	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INIntentHandlingStatus : long {
 		Unspecified = 0,
@@ -320,6 +353,7 @@ namespace Intents {
 		Failure,
 		DeferredToApplication,
 		[Watch (5, 0), Mac (10, 14), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		UserConfirmationRequired,
 	}
 
@@ -327,6 +361,7 @@ namespace Intents {
 	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INInteractionDirection : long {
 		Unspecified = 0,
@@ -338,12 +373,14 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INListRideOptionsIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		InProgress,
 		Success,
 		Failure,
@@ -353,6 +390,7 @@ namespace Intents {
 		FailureRequiringAppLaunchServiceTemporarilyUnavailable,
 		FailureRequiringAppLaunchPreviousRideNeedsCompletion,
 		[iOS (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		FailurePreviousRideNeedsFeedback,
 	}
 
@@ -364,6 +402,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INMessageAttribute : long {
 		Unknown = 0,
@@ -377,6 +416,7 @@ namespace Intents {
 		[Mac (10, 13)]
 #endif
 		[iOS (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		Played,
 	}
 
@@ -388,6 +428,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
 	public enum INMessageAttributeOptions : ulong {
@@ -401,6 +442,7 @@ namespace Intents {
 		[Mac (10, 13)]
 #endif
 		[iOS (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		Played = (1UL << 4),
 	}
 
@@ -408,26 +450,31 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INPauseWorkoutIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'HandleInApp' instead.")] // yup just iOS
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'HandleInApp' instead.")]
 		ContinueInApp,
 		Failure,
 		FailureRequiringAppLaunch,
 		FailureNoMatchingWorkout,
 		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 7, which is now defined as 'Success').")]
 		[NoWatch, iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		HandleInApp,
 		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 6, which is now defined as 'HandleInApp').")]
 		[NoWatch, iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		Success,
 	}
 
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV, Mac (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INPaymentMethodType : long {
 		Unknown = 0,
@@ -445,6 +492,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INPaymentStatus : long {
 		Unknown = 0,
@@ -458,9 +506,11 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[Mac (11, 0), NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INPersonSuggestionType : long {
 		[iOS (12, 0), Watch (5, 0)]
+		[MacCatalyst (13, 1)]
 		None = 0,
 		SocialProfile = 1,
 		InstantMessageAddress,
@@ -472,6 +522,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INPhotoAttributeOptions bound
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	[Flags]
 	public enum INPhotoAttributeOptions : ulong {
@@ -500,14 +552,19 @@ namespace Intents {
 		FadeFilter = (1 << 22),
 		ProcessFilter = (1 << 23),
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		PortraitPhoto = (1uL << 24),
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		LivePhoto = (1uL << 25),
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		LoopPhoto = (1uL << 26),
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		BouncePhoto = (1uL << 27),
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		LongExposurePhoto = (1uL << 28),
 	}
 
@@ -515,6 +572,8 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INRadioType bound
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INRadioType : long {
 		Unknown = 0,
@@ -529,6 +588,8 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INRelativeReference : long {
 		Unknown = 0,
@@ -540,6 +601,8 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INRelativeSetting : long {
 		Unknown = 0,
@@ -553,6 +616,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INRequestPaymentIntentResponseCode : long {
 		Unspecified = 0,
@@ -568,9 +632,11 @@ namespace Intents {
 		FailureNoBankAccount,
 		[iOS (11, 0), Watch (4, 0)]
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		FailureNotEligible,
 		[iOS (11, 1), Watch (4, 1)]
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		FailureTermsAndConditionsAcceptanceRequired,
 	}
 
@@ -578,12 +644,14 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INRequestRideIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		InProgress,
 		Success,
 		Failure,
@@ -593,11 +661,13 @@ namespace Intents {
 		FailureRequiringAppLaunchServiceTemporarilyUnavailable,
 		FailureRequiringAppLaunchPreviousRideNeedsCompletion,
 		[iOS (13, 0), Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		FailureRequiringAppLaunchRideScheduledTooFar,
 	}
 
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INRestaurantReservationUserBookingStatus : ulong {
 		Pending,
@@ -609,20 +679,24 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INResumeWorkoutIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'HandleInApp' instead.")] // yup just iOS
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'HandleInApp' instead.")]
 		ContinueInApp,
 		Failure,
 		FailureRequiringAppLaunch,
 		FailureNoMatchingWorkout,
 		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 7, which is now defined as 'Success').")]
 		[NoWatch, iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		HandleInApp,
 		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 6, which is now defined as 'HandleInApp').")]
 		[NoWatch, iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		Success,
 	}
 
@@ -630,6 +704,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INRidePhase : long {
 		Unknown = 0,
@@ -646,6 +721,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INSaveProfileInCarIntentResponseCode : long {
 		Unspecified = 0,
@@ -666,6 +743,8 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INSearchCallHistoryIntentResponseCode : long {
 		Unspecified = 0,
@@ -674,10 +753,13 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		[iOS (10, 2)]
+		[MacCatalyst (13, 1)]
 		FailureAppConfigurationRequired,
 		[iOS (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		InProgress,
 		[iOS (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		Success,
 	}
 
@@ -689,6 +771,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INSearchForMessagesIntentResponseCode : long {
 		Unspecified = 0,
@@ -699,6 +782,7 @@ namespace Intents {
 		FailureRequiringAppLaunch,
 		FailureMessageServiceNotAvailable,
 		[iOS (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		FailureMessageTooManyResults,
 	}
 
@@ -708,6 +792,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INSearchForPhotosIntentResponseCode : long {
 		Unspecified = 0,
@@ -716,6 +802,7 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		[iOS (10, 2)]
+		[MacCatalyst (13, 1)]
 		FailureAppConfigurationRequired,
 	}
 
@@ -723,6 +810,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INSendMessageIntentResponseCode : long {
 		Unspecified = 0,
@@ -738,6 +826,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INSendPaymentIntentResponseCode : long {
 		Unspecified = 0,
@@ -754,8 +843,10 @@ namespace Intents {
 		FailureNoBankAccount,
 		[iOS (11, 0)]
 		[Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		FailureNotEligible,
 		[iOS (11, 1), Watch (4, 1)]
+		[MacCatalyst (13, 1)]
 		FailureTermsAndConditionsAcceptanceRequired,
 	}
 
@@ -764,6 +855,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INSetAudioSourceInCarIntentResponseCode : long {
 		Unspecified = 0,
@@ -779,6 +872,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INSetClimateSettingsInCarIntentResponseCode : long {
 		Unspecified = 0,
@@ -794,6 +889,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INSetDefrosterSettingsInCarIntentResponseCode : long {
 		Unspecified = 0,
@@ -812,6 +909,7 @@ namespace Intents {
 #endif
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INSetMessageAttributeIntentResponseCode : long {
 		Unspecified = 0,
@@ -829,6 +927,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INSetProfileInCarIntentResponseCode : long {
 		Unspecified = 0,
@@ -844,6 +944,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INSetRadioStationIntentResponseCode : long {
 		Unspecified = 0,
@@ -860,6 +962,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INSetSeatSettingsInCarIntentResponseCode : long {
 		Unspecified = 0,
@@ -873,6 +977,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INSiriAuthorizationStatus : long {
 		NotDetermined = 0,
@@ -891,6 +996,8 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'INStartCallIntentResponseCode' instead.")]
 	[Native]
 	public enum INStartAudioCallIntentResponseCode : long {
 		Unspecified = 0,
@@ -899,12 +1006,16 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		[iOS (10, 2)]
+		[MacCatalyst (13, 1)]
 		FailureAppConfigurationRequired,
 		[iOS (10, 2)]
+		[MacCatalyst (13, 1)]
 		FailureCallingServiceNotAvailable,
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		FailureContactNotSupportedByApp,
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		FailureNoValidNumber,
 	}
 
@@ -914,6 +1025,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INStartPhotoPlaybackIntentResponseCode : long {
 		Unspecified = 0,
@@ -922,6 +1035,7 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		[iOS (10, 2)]
+		[MacCatalyst (13, 1)]
 		FailureAppConfigurationRequired,
 	}
 
@@ -935,6 +1049,8 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'INStartCallIntentResponseCode' instead.")]
 	[Native]
 	public enum INStartVideoCallIntentResponseCode : long {
 		Unspecified = 0,
@@ -943,12 +1059,16 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		[iOS (10, 2)]
+		[MacCatalyst (13, 1)]
 		FailureAppConfigurationRequired,
 		[iOS (10, 2)]
+		[MacCatalyst (13, 1)]
 		FailureCallingServiceNotAvailable,
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		FailureContactNotSupportedByApp,
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		FailureInvalidNumber,
 	}
 
@@ -956,6 +1076,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INStartWorkoutIntentResponseCode : long {
 		Unspecified = 0,
@@ -967,9 +1088,11 @@ namespace Intents {
 		FailureNoMatchingWorkout,
 		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 7, which is now defined as 'Success').")]
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		HandleInApp,
 		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 6, which is now defined as 'HandleInApp').")]
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		Success,
 	}
 
@@ -977,6 +1100,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Watch (6, 0)]
 	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INVocabularyStringType : long {
 		ContactName = 1,
@@ -986,24 +1110,34 @@ namespace Intents {
 		WorkoutActivityName = 200,
 		CarProfileName = 300,
 		[iOS (10, 3)]
+		[MacCatalyst (13, 1)]
 		CarName,
 		[iOS (10, 3)]
+		[MacCatalyst (13, 1)]
 		PaymentsOrganizationName = 400,
 		[iOS (10, 3)]
+		[MacCatalyst (13, 1)]
 		PaymentsAccountNickname,
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		NotebookItemTitle = 500,
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		NotebookItemGroupName,
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		MediaPlaylistTitle = 700,
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		MediaMusicArtistName,
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		MediaAudiobookTitle,
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		MediaAudiobookAuthorName,
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		MediaShowTitle,
 	}
 
@@ -1011,6 +1145,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INWorkoutGoalUnitType bound
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INWorkoutGoalUnitType : long {
 		Unknown = 0,
@@ -1030,6 +1165,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INWorkoutLocationType bound
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INWorkoutLocationType : long {
 		Unknown = 0,
@@ -1041,6 +1177,7 @@ namespace Intents {
 	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INPersonHandleType : long {
 		Unknown = 0,
@@ -1052,6 +1189,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INAccountType : long {
 		Unknown = 0,
@@ -1068,6 +1206,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INActivateCarSignalIntentResponseCode : long {
 		Unspecified = 0,
@@ -1082,6 +1221,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INAmountType : long {
 		Unknown = 0,
@@ -1089,10 +1229,13 @@ namespace Intents {
 		AmountDue,
 		CurrentBalance,
 		[iOS (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		MaximumTransferAmount,
 		[iOS (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		MinimumTransferAmount,
 		[iOS (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		StatementBalance,
 	}
 
@@ -1102,6 +1245,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INBillType : long {
 		Unknown = 0,
@@ -1133,6 +1278,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
 	public enum INCarSignalOptions : ulong {
@@ -1144,6 +1290,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INGetCarLockStatusIntentResponseCode : long {
 		Unspecified = 0,
@@ -1158,6 +1305,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INGetCarPowerLevelStatusIntentResponseCode : long {
 		Unspecified = 0,
@@ -1174,6 +1322,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INPayBillIntentResponseCode : long {
 		Unspecified = 0,
@@ -1192,6 +1342,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INSearchForBillsIntentResponseCode : long {
 		Unspecified = 0,
@@ -1208,6 +1360,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INSetCarLockStatusIntentResponseCode : long {
 		Unspecified = 0,
@@ -1219,6 +1372,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INAddTasksIntentResponseCode : long {
 		Unspecified = 0,
@@ -1232,6 +1386,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INAppendToNoteIntentResponseCode : long {
 		Unspecified = 0,
@@ -1244,6 +1400,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INBalanceType : long {
 		Unknown = 0,
@@ -1254,6 +1411,7 @@ namespace Intents {
 
 	[Mac (12, 0)]
 	[Watch (3, 2), NoTV, iOS (10, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INCallCapability : long {
 		Unknown = 0,
@@ -1263,6 +1421,7 @@ namespace Intents {
 
 	[Mac (12, 0)]
 	[Watch (4, 0), NoTV, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INCallDestinationType : long {
 		Unknown = 0,
@@ -1271,11 +1430,13 @@ namespace Intents {
 		Voicemail,
 		Redial,
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		CallBack,
 	}
 
 	[Mac (12, 0)]
 	[Watch (3, 2), NoTV, iOS (10, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
 	public enum INCallRecordTypeOptions : ulong {
@@ -1285,14 +1446,18 @@ namespace Intents {
 		Latest = (1 << 3),
 		Voicemail = (1 << 4),
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		Ringing = (1 << 5),
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		InProgress = (1 << 6),
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		OnHold = (1 << 7),
 	}
 
 	[NoWatch, NoMac, NoTV, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INCancelRideIntentResponseCode : long {
 		Unspecified = 0,
@@ -1302,6 +1467,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INCreateNoteIntentResponseCode : long {
 		Unspecified = 0,
@@ -1313,6 +1479,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INCreateTaskListIntentResponseCode : long {
 		Unspecified = 0,
@@ -1324,6 +1491,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INDateSearchType : long {
 		Unknown = 0,
@@ -1335,6 +1503,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INGetVisualCodeIntentResponseCode : long {
 		Unspecified = 0,
@@ -1348,6 +1518,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INLocationSearchType : long {
 		Unknown = 0,
@@ -1360,6 +1531,7 @@ namespace Intents {
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4, 0), NoTV, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INMessageType : long {
 		Unspecified = 0,
@@ -1382,22 +1554,30 @@ namespace Intents {
 		MediaPass,
 		MediaAudio,
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		PaymentSent,
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		PaymentRequest,
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		PaymentNote,
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		Animoji,
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		ActivitySnippet,
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		File,
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		Link,
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INNoteContentType : long {
 		Unknown = 0,
@@ -1406,6 +1586,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INNotebookItemType : long {
 		Unknown = 0,
@@ -1415,6 +1596,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), Mac (10, 13), iOS (11, 0), NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INRecurrenceFrequency : long {
 		Unknown = 0,
@@ -1427,6 +1609,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INRequestPaymentCurrencyAmountUnsupportedReason : long {
 		AmountBelowMinimum = 1,
@@ -1435,15 +1618,18 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INRequestPaymentPayerUnsupportedReason : long {
 		CredentialsUnverified = 1,
 		NoAccount,
 		[Watch (4, 1), iOS (11, 1)]
+		[MacCatalyst (13, 1)]
 		NoValidHandle,
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INRideFeedbackTypeOptions : ulong {
 		Rate = (1 << 0),
@@ -1451,6 +1637,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INSearchForAccountsIntentResponseCode : long {
 		Unspecified = 0,
@@ -1466,6 +1653,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INSearchForNotebookItemsIntentResponseCode : long {
 		Unspecified = 0,
@@ -1478,6 +1666,7 @@ namespace Intents {
 
 	[Mac (12, 0)]
 	[Watch (4, 0), NoTV, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INSendMessageRecipientUnsupportedReason : long {
 		NoAccount = 1,
@@ -1489,6 +1678,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INSendPaymentCurrencyAmountUnsupportedReason : long {
 		AmountBelowMinimum = 1,
@@ -1497,16 +1687,19 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INSendPaymentPayeeUnsupportedReason : long {
 		CredentialsUnverified = 1,
 		InsufficientFunds,
 		NoAccount,
 		[Watch (4, 1), iOS (11, 1)]
+		[MacCatalyst (13, 1)]
 		NoValidHandle,
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INSendRideFeedbackIntentResponseCode : long {
 		Unspecified = 0,
@@ -1516,6 +1709,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INSetTaskAttributeIntentResponseCode : long {
 		Unspecified = 0,
@@ -1527,6 +1721,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INSortType : long {
 		Unknown = 0,
@@ -1535,6 +1730,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INSpatialEvent : long {
 		Unknown = 0,
@@ -1543,6 +1739,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INTaskStatus : long {
 		Unknown = 0,
@@ -1551,6 +1748,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INTaskType : long {
 		Unknown = 0,
@@ -1561,6 +1759,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INTransferMoneyIntentResponseCode : long {
 		Unspecified = 0,
@@ -1576,6 +1776,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INVisualCodeType : long {
 		Unknown = 0,
@@ -1583,14 +1785,18 @@ namespace Intents {
 		RequestPayment,
 		SendPayment,
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		Transit,
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		Bus,
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		Subway,
 	}
 
 	[Watch (5, 0), TV (14, 0), NoMac, iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INMediaItemType : long {
 		Unknown = 0,
@@ -1609,20 +1815,27 @@ namespace Intents {
 		TVShowEpisode,
 		MusicVideo,
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		PodcastStation,
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		RadioStation,
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		Station,
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		Music,
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		AlgorithmicRadioStation,
 		[Watch (6, 2, 1), iOS (13, 4, 1)]
+		[MacCatalyst (13, 1)]
 		News,
 	}
 
 	[Watch (5, 0), TV (14, 0), NoMac, iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INPlayMediaIntentResponseCode : long {
 		Unspecified = 0,
@@ -1640,6 +1853,7 @@ namespace Intents {
 	}
 
 	[Watch (5, 0), TV (14, 0), NoMac, iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INPlaybackRepeatMode : long {
 		Unknown = 0,
@@ -1649,6 +1863,7 @@ namespace Intents {
 	}
 
 	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INDailyRoutineSituation : long {
 		Morning,
@@ -1658,16 +1873,21 @@ namespace Intents {
 		School,
 		Gym,
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		Commute,
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		HeadphonesConnected,
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		ActiveWorkout,
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		PhysicalActivityIncomplete,
 	}
 
 	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INUpcomingMediaPredictionMode : long {
 		Default = 0,
@@ -1675,6 +1895,7 @@ namespace Intents {
 	}
 
 	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INRelevantShortcutRole : long {
 		Action,
@@ -1682,6 +1903,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INAddMediaIntentResponseCode : long {
 		Unspecified = 0,
@@ -1694,6 +1916,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INAddMediaMediaItemUnsupportedReason : long {
 		LoginRequired = 1,
@@ -1711,12 +1934,14 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INAddTasksTargetTaskListConfirmationReason : long {
 		ListShouldBeCreated = 1,
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INAddTasksTemporalEventTriggerUnsupportedReason : long {
 		TimeInPast = 1,
@@ -1724,6 +1949,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (12, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INCallAudioRoute : long {
 		Unknown = 0,
@@ -1734,6 +1960,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INDeleteTasksIntentResponseCode : long {
 		Unspecified = 0,
@@ -1747,6 +1975,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INDeleteTasksTaskListUnsupportedReason : long {
 		NoTaskListFound = 1,
@@ -1755,6 +1985,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Native]
 	public enum INDeleteTasksTaskUnsupportedReason : long {
 		Found = 1,
@@ -1762,6 +1994,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INGetReservationDetailsIntentResponseCode : long {
 		Unspecified = 0,
@@ -1773,6 +2006,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INMediaAffinityType : long {
 		Unknown = 0,
@@ -1781,6 +2015,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INMediaDestinationType : long {
 		Unknown = 0,
@@ -1789,6 +2024,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INMediaReference : long {
 		Unknown = 0,
@@ -1799,6 +2035,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INMediaSortOrder : long {
 		Unknown = 0,
@@ -1813,6 +2050,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INMediaUserContextSubscriptionStatus : long {
 		Unknown = 0,
@@ -1821,6 +2059,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INPlayMediaMediaItemUnsupportedReason : long {
 		LoginRequired = 1,
@@ -1838,6 +2077,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INPlayMediaPlaybackSpeedUnsupportedReason : long {
 		BelowMinimum = 1,
@@ -1845,6 +2085,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INPlaybackQueueLocation : long {
 		Unknown = 0,
@@ -1854,6 +2095,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INReservationActionType : long {
 		Unknown = 0,
@@ -1861,6 +2103,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INReservationStatus : long {
 		Unknown = 0,
@@ -1871,6 +2114,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INSearchForMediaIntentResponseCode : long {
 		Unspecified = 0,
@@ -1883,6 +2127,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INSearchForMediaMediaItemUnsupportedReason : long {
 		LoginRequired = 1,
@@ -1900,6 +2145,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INSetTaskAttributeTemporalEventTriggerUnsupportedReason : long {
 		TimeInPast = 1,
@@ -1907,6 +2153,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INSnoozeTasksIntentResponseCode : long {
 		Unspecified = 0,
@@ -1918,12 +2165,14 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INSnoozeTasksTaskUnsupportedReason : long {
 		NoTasksFound = 1,
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INStartCallCallCapabilityUnsupportedReason : long {
 		VideoCallUnsupported = 1,
@@ -1932,6 +2181,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INStartCallContactUnsupportedReason : long {
 		NoContactFound = 1,
@@ -1944,6 +2194,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INStartCallIntentResponseCode : long {
 		Unspecified = 0,
@@ -1965,6 +2216,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INTaskPriority : long {
 		Unknown = 0,
@@ -1973,6 +2225,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INTemporalEventTriggerTypeOptions : ulong {
 		NotScheduled = (1uL << 0),
@@ -1981,6 +2234,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INTicketedEventCategory : long {
 		Unknown = 0,
@@ -1988,6 +2242,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INUpdateMediaAffinityIntentResponseCode : long {
 		Unspecified = 0,
@@ -1999,6 +2254,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INUpdateMediaAffinityMediaItemUnsupportedReason : long {
 		LoginRequired = 1,
@@ -2016,6 +2272,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INAddMediaMediaDestinationUnsupportedReason : long {
 		PlaylistNameNotFound = 1,
@@ -2024,6 +2281,7 @@ namespace Intents {
 
 	[Flags]
 	[Watch (7, 0), NoTV, NoMac, iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum INDayOfWeekOptions : ulong {
 		Monday = (1uL << 0),
@@ -2036,6 +2294,7 @@ namespace Intents {
 	}
 
 	[Watch (7, 0), NoTV, NoMac, iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum INListCarsIntentResponseCode : long {
 		Unspecified = 0,
@@ -2047,6 +2306,7 @@ namespace Intents {
 	}
 
 	[Watch (7, 0), NoTV, Mac (12, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum INOutgoingMessageType : long {
 		Unknown = 0,
@@ -2056,6 +2316,7 @@ namespace Intents {
 
 	[Flags]
 	[Watch (7, 0), NoTV, NoMac, iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum INShortcutAvailabilityOptions : ulong {
 		Mindfulness = (1uL << 0),
@@ -2068,6 +2329,7 @@ namespace Intents {
 	}
 
 	[Watch (7, 0), NoTV, Mac (12, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum INStartCallCallRecordToCallBackUnsupportedReason : long {
 		NoMatchingCall = 1,
@@ -2101,6 +2363,7 @@ namespace Intents {
 	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	public enum INIntentIdentifier {
 		[Field (null)]
 		None = -1,
@@ -2108,12 +2371,14 @@ namespace Intents {
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'StartCall' instead.")]
 		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'StartCall' instead.")]
 		[Unavailable (PlatformName.MacOSX)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'StartCall' instead.")]
 		[Field ("INStartAudioCallIntentIdentifier")]
 		StartAudioCall,
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'StartCall' instead.")]
 		[Unavailable (PlatformName.MacOSX)]
 		[Unavailable (PlatformName.WatchOS)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'StartCall' instead.")]
 		[Field ("INStartVideoCallIntentIdentifier")]
 		StartVideoCall,
 
@@ -2235,6 +2500,7 @@ namespace Intents {
 	[Mac (10, 12, 2)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	enum INPersonHandleLabel {
 		[Field (null)]
 		None,
@@ -2276,12 +2542,14 @@ namespace Intents {
 	[iOS (10, 2)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	enum INPersonRelationship {
 		[Field (null)]
 		None,
 
 #if NET
 		[NoMac]
+		[MacCatalyst (13, 1)]
 #else
 		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
@@ -2290,6 +2558,7 @@ namespace Intents {
 
 #if NET
 		[NoMac]
+		[MacCatalyst (13, 1)]
 #else
 		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
@@ -2298,6 +2567,7 @@ namespace Intents {
 
 #if NET
 		[NoMac]
+		[MacCatalyst (13, 1)]
 #else
 		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
@@ -2306,6 +2576,7 @@ namespace Intents {
 
 #if NET
 		[NoMac]
+		[MacCatalyst (13, 1)]
 #else
 		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
@@ -2314,6 +2585,7 @@ namespace Intents {
 
 #if NET
 		[NoMac]
+		[MacCatalyst (13, 1)]
 #else
 		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
@@ -2322,6 +2594,7 @@ namespace Intents {
 
 #if NET
 		[NoMac]
+		[MacCatalyst (13, 1)]
 #else
 		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
@@ -2330,6 +2603,7 @@ namespace Intents {
 
 #if NET
 		[NoMac]
+		[MacCatalyst (13, 1)]
 #else
 		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
@@ -2338,6 +2612,7 @@ namespace Intents {
 
 #if NET
 		[NoMac]
+		[MacCatalyst (13, 1)]
 #else
 		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
@@ -2346,6 +2621,7 @@ namespace Intents {
 
 #if NET
 		[NoMac]
+		[MacCatalyst (13, 1)]
 #else
 		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
@@ -2354,6 +2630,7 @@ namespace Intents {
 
 #if NET
 		[NoMac]
+		[MacCatalyst (13, 1)]
 #else
 		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
@@ -2362,6 +2639,7 @@ namespace Intents {
 
 #if NET
 		[NoMac]
+		[MacCatalyst (13, 1)]
 #else
 		[Obsoleted (PlatformName.MacOSX, 10, 0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
@@ -2369,10 +2647,12 @@ namespace Intents {
 		Manager,
 
 		[Watch (6, 0), NoTV, Mac (10, 15), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("INPersonRelationshipSon")]
 		Son,
 
 		[Watch (6, 0), NoTV, Mac (10, 15), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("INPersonRelationshipDaughter")]
 		Daughter,
 	}
@@ -2381,6 +2661,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[NoTV]
 	[Unavailable (PlatformName.MacOSX)]
+	[MacCatalyst (13, 1)]
 	enum INWorkoutNameIdentifier {
 		[Field ("INWorkoutNameIdentifierRun")]
 		Run,
@@ -2437,14 +2718,17 @@ namespace Intents {
 		Exercise,
 
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("INWorkoutNameIdentifierHike")]
 		Hike,
 
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("INWorkoutNameIdentifierHighIntensityIntervalTraining")]
 		HighIntensityIntervalTraining,
 
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("INWorkoutNameIdentifierSwim")]
 		Swim,
 	}
@@ -2487,6 +2771,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Mac (11, 0)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Internal]
 	[Category]
 	[BaseType (typeof (CLPlacemark))]
@@ -2501,9 +2786,11 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INBookRestaurantReservationIntent : NSCopying {
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithRestaurant:bookingDateComponents:partySize:bookingIdentifier:guest:selectedOffer:guestProvidedSpecialRequestText:")]
 #if NET
 		NativeHandle Constructor (INRestaurant restaurant, NSDateComponents bookingDateComponents, nuint partySize, [NullAllowed] string bookingIdentifier, [NullAllowed] INRestaurantGuest guest, [NullAllowed] INRestaurantOffer selectedOffer, [NullAllowed] string guestProvidedSpecialRequestText);
@@ -2537,6 +2824,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INBookRestaurantReservationIntentHandling {
 
@@ -2573,6 +2861,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	interface INBookRestaurantReservationIntentResponse {
 
@@ -2590,6 +2879,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Mac (11, 0)]
 	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INBooleanResolutionResult {
@@ -2622,12 +2912,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INBooleanResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INBooleanResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -2637,11 +2929,13 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INCallRecordTypeResolutionResult {
 
 		[Watch (4, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedCallRecordType:")]
@@ -2651,11 +2945,13 @@ namespace Intents {
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
 		INCallRecordTypeResolutionResult SuccessWithResolvedValue (INCallRecordType resolvedValue);
 
 		[Watch (4, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithCallRecordTypeToConfirm:")]
@@ -2665,6 +2961,7 @@ namespace Intents {
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INCallRecordTypeResolutionResult ConfirmationRequiredWithValueToConfirm (INCallRecordType valueToConfirm);
@@ -2689,12 +2986,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INCallRecordTypeResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INCallRecordTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -2704,6 +3003,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INCancelWorkoutIntent {
 
@@ -2719,6 +3019,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INCancelWorkoutIntentHandling {
 
@@ -2744,6 +3045,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (INIntentResponse))]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	interface INCancelWorkoutIntentResponse {
 
@@ -2760,28 +3062,34 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INCarAirCirculationModeResolutionResult bound
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INCarAirCirculationModeResolutionResult {
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedCarAirCirculationMode:")]
 		INCarAirCirculationModeResolutionResult SuccessWithResolvedCarAirCirculationMode (INCarAirCirculationMode resolvedCarAirCirculationMode);
 
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedValue:")]
 		INCarAirCirculationModeResolutionResult SuccessWithResolvedValue (INCarAirCirculationMode resolvedValue);
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithCarAirCirculationModeToConfirm:")]
 		INCarAirCirculationModeResolutionResult ConfirmationRequiredWithCarAirCirculationModeToConfirm (INCarAirCirculationMode carAirCirculationModeToConfirm);
 
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
@@ -2807,12 +3115,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INCarAirCirculationModeResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INCarAirCirculationModeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -2824,10 +3134,13 @@ namespace Intents {
 	[BaseType (typeof (INIntentResolutionResult))]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[DisableDefaultCtor]
 	interface INCarAudioSourceResolutionResult {
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedCarAudioSource:")]
@@ -2835,11 +3148,13 @@ namespace Intents {
 
 		[Internal]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
 		INCarAudioSourceResolutionResult SuccessWithResolvedValue (INCarAudioSource resolvedValue);
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithCarAudioSourceToConfirm:")]
@@ -2847,6 +3162,7 @@ namespace Intents {
 
 		[Internal]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INCarAudioSourceResolutionResult ConfirmationRequiredWithValueToConfirm (INCarAudioSource valueToConfirm);
@@ -2871,12 +3187,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INCarAudioSourceResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INCarAudioSourceResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -2888,10 +3206,13 @@ namespace Intents {
 	[BaseType (typeof (INIntentResolutionResult))]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[DisableDefaultCtor]
 	interface INCarDefrosterResolutionResult {
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedCarDefroster:")]
@@ -2899,11 +3220,13 @@ namespace Intents {
 
 		[Internal]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
 		INCarDefrosterResolutionResult SuccessWithResolvedValue (INCarDefroster resolvedValue);
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithCarDefrosterToConfirm:")]
@@ -2911,6 +3234,7 @@ namespace Intents {
 
 		[Internal]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INCarDefrosterResolutionResult ConfirmationRequiredWithValueToConfirm (INCarDefroster valueToConfirm);
@@ -2935,12 +3259,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INCarDefrosterResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INCarDefrosterResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -2952,10 +3278,13 @@ namespace Intents {
 	[BaseType (typeof (INIntentResolutionResult))]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[DisableDefaultCtor]
 	interface INCarSeatResolutionResult {
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedCarSeat:")]
@@ -2963,11 +3292,13 @@ namespace Intents {
 
 		[Internal]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
 		INCarSeatResolutionResult SuccessWithResolvedValue (INCarSeat resolvedValue);
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithCarSeatToConfirm:")]
@@ -2975,6 +3306,7 @@ namespace Intents {
 
 		[Internal]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INCarSeatResolutionResult ConfirmationRequiredWithValueToConfirm (INCarSeat valueToConfirm);
@@ -2999,12 +3331,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INCarSeatResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INCarSeatResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -3014,6 +3348,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INCurrencyAmount : NSCopying, NSSecureCoding {
@@ -3033,6 +3368,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoMac]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INCurrencyAmountResolutionResult {
@@ -3069,12 +3405,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INCurrencyAmountResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INCurrencyAmountResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -3084,6 +3422,7 @@ namespace Intents {
 	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INDateComponentsRange : NSCopying, NSSecureCoding {
@@ -3092,6 +3431,7 @@ namespace Intents {
 		NativeHandle Constructor ([NullAllowed] NSDateComponents startDateComponents, [NullAllowed] NSDateComponents endDateComponents);
 
 		[Watch (4, 0), Mac (10, 13), iOS (11, 0), NoTV]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithEKRecurrenceRule:")]
 		NativeHandle Constructor (EKRecurrenceRule recurrenceRule);
 
@@ -3102,6 +3442,7 @@ namespace Intents {
 		[Mac (10, 13)]
 #endif
 		[Watch (4, 0), iOS (11, 0), NoTV]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithStartDateComponents:endDateComponents:recurrenceRule:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] NSDateComponents startDateComponents, [NullAllowed] NSDateComponents endDateComponents, [NullAllowed] INRecurrenceRule recurrenceRule);
@@ -3119,10 +3460,12 @@ namespace Intents {
 		[Mac (10, 13)]
 #endif
 		[Watch (4, 0), iOS (11, 0), NoTV]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("recurrenceRule", ArgumentSemantic.Copy)]
 		INRecurrenceRule RecurrenceRule { get; }
 
 		[Watch (4, 0), Mac (10, 13), iOS (11, 0), NoTV]
+		[MacCatalyst (13, 1)]
 		[Export ("EKRecurrenceRule")]
 		[NullAllowed]
 		EKRecurrenceRule EKRecurrenceRule { get; }
@@ -3136,6 +3479,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INDateComponentsRangeResolutionResult {
@@ -3172,12 +3516,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INDateComponentsRangeResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INDateComponentsRangeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -3193,6 +3539,8 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Implement 'INStartAudioCallIntentHandling, INStartVideoCallIntentHandling and INSearchCallHistoryIntentHandling' instead.")]
 	[Protocol]
 	interface INCallsDomainHandling : INStartAudioCallIntentHandling, INSearchCallHistoryIntentHandling
 #if !WATCH
@@ -3208,6 +3556,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Implement 'INActivateCarSignalIntentHandling, INSetCarLockStatusIntentHandling, INGetCarLockStatusIntentHandling and INGetCarPowerLevelStatusIntentHandling' instead.")]
 	[Protocol]
 	interface INCarCommandsDomainHandling : INActivateCarSignalIntentHandling, INSetCarLockStatusIntentHandling, INGetCarLockStatusIntentHandling, INGetCarPowerLevelStatusIntentHandling {
 	}
@@ -3217,6 +3567,8 @@ namespace Intents {
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Implement 'INSetAudioSourceInCarIntentHandling, INSetClimateSettingsInCarIntentHandling, INSetDefrosterSettingsInCarIntentHandling, INSetSeatSettingsInCarIntentHandling, INSetProfileInCarIntentHandling and INSaveProfileInCarIntentHandling' instead.")]
 	[Protocol]
 	interface INCarPlayDomainHandling : INSetAudioSourceInCarIntentHandling, INSetClimateSettingsInCarIntentHandling, INSetDefrosterSettingsInCarIntentHandling, INSetSeatSettingsInCarIntentHandling, INSetProfileInCarIntentHandling, INSaveProfileInCarIntentHandling {
 	}
@@ -3227,6 +3579,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Implement 'INStartWorkoutIntentHandling, INPauseWorkoutIntentHandling, INEndWorkoutIntentHandling, INCancelWorkoutIntentHandling and INResumeWorkoutIntentHandling' instead.")]
 	[Protocol]
 	interface INWorkoutsDomainHandling : INStartWorkoutIntentHandling, INPauseWorkoutIntentHandling, INEndWorkoutIntentHandling, INCancelWorkoutIntentHandling, INResumeWorkoutIntentHandling {
 	}
@@ -3236,6 +3590,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Implement 'INSetRadioStationIntentHandling' instead.")]
 	[Protocol]
 	interface INRadioDomainHandling : INSetRadioStationIntentHandling {
 	}
@@ -3246,6 +3602,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Implement 'INSendMessageIntentHandling, INSearchForMessagesIntentHandling and INSetMessageAttributeIntentHandling' instead.")]
 	[Protocol]
 	interface INMessagesDomainHandling : INSendMessageIntentHandling, INSearchForMessagesIntentHandling
 #if !WATCH
@@ -3261,6 +3619,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Implement 'INSendPaymentIntentHandling, INRequestPaymentIntentHandling, INPayBillIntentHandling, INSearchForBillsIntentHandling, INSearchForAccountsIntentHandling and INTransferMoneyIntentHandling' instead.")]
 	[Protocol]
 	interface INPaymentsDomainHandling : INSendPaymentIntentHandling, INRequestPaymentIntentHandling, INPayBillIntentHandling, INSearchForBillsIntentHandling
 #if NET // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
@@ -3275,6 +3635,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Implement 'INSearchForPhotosIntentHandling and INStartPhotoPlaybackIntentHandling' instead.")]
 	[Protocol]
 	interface INPhotosDomainHandling : INSearchForPhotosIntentHandling, INStartPhotoPlaybackIntentHandling {
 	}
@@ -3285,6 +3647,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Implement 'INListRideOptionsIntentHandling, INRequestRideIntentHandling, INGetRideStatusIntentHandling, INCancelRideIntentHandling and INSendRideFeedbackIntentHandling' instead.")]
 	[Protocol]
 	interface INRidesharingDomainHandling : INListRideOptionsIntentHandling, INRequestRideIntentHandling, INGetRideStatusIntentHandling
 #if NET // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
@@ -3296,6 +3660,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Implement 'INCreateNoteIntentHandling, INAppendToNoteIntentHandling, INAddTasksIntentHandling, INCreateTaskListIntentHandling, INSetTaskAttributeIntentHandling and INSearchForNotebookItemsIntentHandling' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Implement 'INCreateNoteIntentHandling, INAppendToNoteIntentHandling, INAddTasksIntentHandling, INCreateTaskListIntentHandling, INSetTaskAttributeIntentHandling and INSearchForNotebookItemsIntentHandling' instead.")]
 	[Watch (4, 0), NoMac, iOS (11, 0), NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Implement 'INCreateNoteIntentHandling, INAppendToNoteIntentHandling, INAddTasksIntentHandling, INCreateTaskListIntentHandling, INSetTaskAttributeIntentHandling and INSearchForNotebookItemsIntentHandling' instead.")]
 	[Protocol]
 	interface INNotebookDomainHandling : INCreateNoteIntentHandling, INAppendToNoteIntentHandling, INAddTasksIntentHandling, INCreateTaskListIntentHandling, INSetTaskAttributeIntentHandling, INSearchForNotebookItemsIntentHandling {
 	}
@@ -3303,6 +3669,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Implement 'INGetVisualCodeIntentHandling' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Implement 'INGetVisualCodeIntentHandling' instead.")]
 	[Watch (4, 0), NoMac, iOS (11, 0), NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Implement 'INGetVisualCodeIntentHandling' instead.")]
 	[Protocol]
 	interface INVisualCodeDomainHandling : INGetVisualCodeIntentHandling {
 	}
@@ -3311,6 +3679,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Mac (11, 0), TV (14, 0)]
 	[Unavailable (PlatformName.MacOSX)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INDoubleResolutionResult {
@@ -3343,12 +3712,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INDoubleResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INDoubleResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -3358,6 +3729,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Mac (11, 0)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INDateComponentsResolutionResult {
@@ -3394,12 +3766,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INDateComponentsResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INDateComponentsResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -3409,6 +3783,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INEndWorkoutIntent {
 
@@ -3424,6 +3799,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INEndWorkoutIntentHandling {
 
@@ -3448,6 +3824,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INEndWorkoutIntentResponse {
@@ -3463,6 +3840,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[TV (14, 0), Mac (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INIntentHandlerProviding {
 
@@ -3475,6 +3853,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[Mac (11, 0), TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface INExtension : INIntentHandlerProviding {
 	}
@@ -3483,10 +3862,12 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INGetAvailableRestaurantReservationBookingDefaultsIntent {
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithRestaurant:")]
 		NativeHandle Constructor ([NullAllowed] INRestaurant restaurant);
 
@@ -3498,6 +3879,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INGetAvailableRestaurantReservationBookingDefaultsIntentHandling {
 
@@ -3522,6 +3904,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	interface INGetAvailableRestaurantReservationBookingDefaultsIntentResponse {
 
@@ -3552,10 +3935,12 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INGetAvailableRestaurantReservationBookingsIntent : NSCopying {
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithRestaurant:partySize:preferredBookingDateComponents:maximumNumberOfResults:earliestBookingDateForResults:latestBookingDateForResults:")]
 		NativeHandle Constructor (INRestaurant restaurant, nuint partySize, [NullAllowed] NSDateComponents preferredBookingDateComponents, [NullAllowed] NSNumber maximumNumberOfResults, [NullAllowed] NSDate earliestBookingDateForResults, [NullAllowed] NSDate latestBookingDateForResults);
 
@@ -3582,6 +3967,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INGetAvailableRestaurantReservationBookingsIntentHandling {
 
@@ -3612,6 +3998,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	interface INGetAvailableRestaurantReservationBookingsIntentResponse {
 
@@ -3639,6 +4026,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INGetRestaurantGuestIntent {
 	}
@@ -3647,6 +4035,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INGetRestaurantGuestIntentHandling {
 
@@ -3668,6 +4057,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	interface INGetRestaurantGuestIntentResponse {
 
@@ -3689,6 +4079,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	[DisableDefaultCtor] // DesignatedInitializer below
 	interface INGetRideStatusIntent {
@@ -3702,6 +4093,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INGetRideStatusIntentHandling {
 
@@ -3733,6 +4125,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INGetRideStatusIntentResponseObserver {
 
@@ -3745,6 +4138,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INGetRideStatusIntentResponse {
@@ -3764,14 +4158,17 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INGetUserCurrentRestaurantReservationBookingsIntent : NSCopying {
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithRestaurant:reservationIdentifier:maximumNumberOfResults:earliestBookingDateForResults:")]
 		NativeHandle Constructor ([NullAllowed] INRestaurant restaurant, [NullAllowed] string reservationIdentifier, [NullAllowed] NSNumber maximumNumberOfResults, [NullAllowed] NSDate earliestBookingDateForResults);
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Wrap ("this (restaurant, reservationIdentifier, NSNumber.FromNInt (maximumNumberOfResults), earliestBookingDateForResults)")]
 		NativeHandle Constructor ([NullAllowed] INRestaurant restaurant, [NullAllowed] string reservationIdentifier, nint maximumNumberOfResults, [NullAllowed] NSDate earliestBookingDateForResults);
 
@@ -3792,6 +4189,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INGetUserCurrentRestaurantReservationBookingsIntentHandling {
 
@@ -3816,6 +4214,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	interface INGetUserCurrentRestaurantReservationBookingsIntentResponse {
 
@@ -3834,6 +4233,7 @@ namespace Intents {
 	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INImage : NSCopying, NSSecureCoding {
@@ -3843,6 +4243,7 @@ namespace Intents {
 		INImage FromName (string name);
 
 		[NoWatch, NoTV, NoiOS, Mac (13, 0)]
+		[NoMacCatalyst]
 		[Static]
 		[Export ("imageWithNSImage:")]
 		INImage FromImage (NSImage image);
@@ -3864,6 +4265,7 @@ namespace Intents {
 		INImage FromUrl (NSUrl url);
 
 		[Watch (4, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("imageWithURL:width:height:")]
 		[return: NullAllowed]
@@ -3899,6 +4301,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[TV (14, 0), Mac (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INIntegerResolutionResult {
@@ -3931,12 +4334,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INIntegerResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INIntegerResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -3946,6 +4351,7 @@ namespace Intents {
 	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[Abstract]
 	[BaseType (typeof (NSObject))]
 	interface INIntent : NSCopying, NSSecureCoding {
@@ -3955,15 +4361,18 @@ namespace Intents {
 
 		[Unavailable (PlatformName.MacOSX)]
 		[NoTV]
+		[MacCatalyst (13, 1)]
 		[Wrap ("INIntentIdentifierExtensions.GetValue (IdentifierString)")]
 		[NullAllowed]
 		INIntentIdentifier? Identifier { get; }
 
 		[Watch (4, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("intentDescription")]
 		string IntentDescription { get; }
 
 		[Watch (5, 0), Mac (11, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("suggestedInvocationPhrase")]
 		string SuggestedInvocationPhrase { get; set; }
 
@@ -3977,15 +4386,18 @@ namespace Intents {
 		INIntentDonationMetadata DonationMetadata { get; set; }
 
 		[Watch (5, 0), Mac (10, 14), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("setImage:forParameterNamed:")]
 		void SetImage ([NullAllowed] INImage image, string parameterName);
 
 		[Watch (5, 0), Mac (10, 14), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("imageForParameterNamed:")]
 		[return: NullAllowed]
 		INImage GetImage (string parameterName);
 
 		[Watch (5, 0), Mac (10, 14), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[return: NullAllowed]
 		[Export ("keyImage")]
 		INImage GetKeyImage ();
@@ -4003,6 +4415,7 @@ namespace Intents {
 	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[Abstract]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -4038,6 +4451,7 @@ namespace Intents {
 	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[Abstract]
 	[BaseType (typeof (NSObject))]
 	interface INIntentResponse : NSCopying, NSSecureCoding {
@@ -4047,6 +4461,7 @@ namespace Intents {
 			get;
 
 			[Watch (5, 0), Mac (10, 14), iOS (12, 0)]
+			[MacCatalyst (13, 1)]
 			set;
 		}
 	}
@@ -4055,6 +4470,7 @@ namespace Intents {
 	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INInteraction : NSSecureCoding, NSCopying {
@@ -4107,6 +4523,7 @@ namespace Intents {
 
 		[Internal]
 		[iOS (11, 0), Watch (4, 0), NoMac, NoTV]
+		[MacCatalyst (13, 1)]
 		[Export ("parameterValueForParameter:")]
 		IntPtr _GetParameterValue (INParameter parameter);
 	}
@@ -4115,6 +4532,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INListRideOptionsIntent {
 
@@ -4133,6 +4551,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INListRideOptionsIntentHandling {
 
@@ -4160,6 +4579,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INListRideOptionsIntentResponse {
@@ -4189,6 +4609,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INMessage : NSCopying, NSSecureCoding {
@@ -4199,16 +4620,19 @@ namespace Intents {
 		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, [NullAllowed] INSpeakableString groupName, INMessageType messageType, [NullAllowed] string serviceName, [NullAllowed] INFile audioMessageFile);
 
 		[Watch (6, 1), NoMac, iOS (13, 2)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:messageType:serviceName:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, [NullAllowed] INSpeakableString groupName, INMessageType messageType, [NullAllowed] string serviceName);
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:messageType:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, [NullAllowed] INSpeakableString groupName, INMessageType messageType);
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:messageType:")]
 		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, INMessageType messageType);
 
@@ -4219,6 +4643,7 @@ namespace Intents {
 		string Identifier { get; }
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("conversationIdentifier")]
 		string ConversationIdentifier { get; }
 
@@ -4235,14 +4660,17 @@ namespace Intents {
 		INPerson [] Recipients { get; }
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("groupName", ArgumentSemantic.Copy)]
 		INSpeakableString GroupName { get; }
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("messageType")]
 		INMessageType MessageType { get; }
 
 		[Watch (6, 1), NoMac, iOS (13, 2)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("serviceName")]
 		string ServiceName { get; }
 
@@ -4259,11 +4687,13 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INMessageAttributeOptionsResolutionResult {
 
 		[Watch (4, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedMessageAttributeOptions:")]
@@ -4273,11 +4703,13 @@ namespace Intents {
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
 		INMessageAttributeOptionsResolutionResult SuccessWithResolvedValue (INMessageAttributeOptions resolvedValue);
 
 		[Watch (4, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithMessageAttributeOptionsToConfirm:")]
@@ -4287,6 +4719,7 @@ namespace Intents {
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INMessageAttributeOptionsResolutionResult ConfirmationRequiredWithValueToConfirm (INMessageAttributeOptions valueToConfirm);
@@ -4311,12 +4744,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INMessageAttributeOptionsResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INMessageAttributeOptionsResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -4330,11 +4765,13 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INMessageAttributeResolutionResult {
 
 		[Watch (4, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedMessageAttribute:")]
@@ -4344,11 +4781,13 @@ namespace Intents {
 		[Mac (10, 12)]
 		[Watch (3, 2)]
 		[iOS (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
 		INMessageAttributeResolutionResult SuccessWithResolvedValue (INMessageAttribute resolvedValue);
 
 		[Watch (4, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithMessageAttributeToConfirm:")]
@@ -4358,6 +4797,7 @@ namespace Intents {
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INMessageAttributeResolutionResult ConfirmationRequiredWithValueToConfirm (INMessageAttribute valueToConfirm);
@@ -4382,12 +4822,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INMessageAttributeResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INMessageAttributeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -4397,6 +4839,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INPauseWorkoutIntent {
 
@@ -4412,6 +4855,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INPauseWorkoutIntentHandling {
 
@@ -4436,6 +4880,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INPauseWorkoutIntentResponse {
@@ -4451,6 +4896,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV, Mac (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INPaymentMethod : NSCopying, NSSecureCoding {
@@ -4480,6 +4926,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INPaymentRecord : NSCopying, NSSecureCoding {
@@ -4517,6 +4964,7 @@ namespace Intents {
 	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INPerson : NSCopying, NSSecureCoding, INSpeakable {
@@ -4530,6 +4978,7 @@ namespace Intents {
 		NativeHandle Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string contactIdentifier, [NullAllowed] string customIdentifier, [NullAllowed] string relationship);
 
 		[Watch (5, 0), Mac (10, 14), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:isMe:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string contactIdentifier, [NullAllowed] string customIdentifier, bool isMe);
@@ -4583,10 +5032,12 @@ namespace Intents {
 
 		[iOS (10, 3)]
 		[Unavailable (PlatformName.MacOSX)]
+		[MacCatalyst (13, 1)]
 		[Export ("siriMatches", ArgumentSemantic.Copy), NullAllowed]
 		INPerson [] SiriMatches { get; }
 
 		[Mac (10, 13), iOS (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("isMe")]
 		bool IsMe { get; }
 
@@ -4599,6 +5050,7 @@ namespace Intents {
 	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INPersonHandle : NSCopying, NSSecureCoding {
@@ -4611,22 +5063,26 @@ namespace Intents {
 
 		[iOS (10, 2)]
 		[Mac (10, 12, 2)]
+		[MacCatalyst (13, 1)]
 		[Export ("label"), NullAllowed, Protected]
 		NSString WeakLabel { get; }
 
 		[iOS (10, 2)]
 		[Mac (10, 12, 2)]
+		[MacCatalyst (13, 1)]
 		[Wrap ("INPersonHandleLabelExtensions.GetValue (WeakLabel)")]
 		INPersonHandleLabel Label { get; }
 
 		[iOS (10, 2)]
 		[Mac (10, 12, 2)]
+		[MacCatalyst (13, 1)]
 		[Wrap ("this (value, type, label.GetConstant ())")]
 		NativeHandle Constructor (string value, INPersonHandleType type, INPersonHandleLabel label);
 
 		[DesignatedInitializer]
 		[iOS (10, 2)]
 		[Mac (10, 12, 2)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithValue:type:label:"), Protected]
 		NativeHandle Constructor ([NullAllowed] string value, INPersonHandleType type, [NullAllowed] NSString stringLabel);
 
@@ -4638,6 +5094,7 @@ namespace Intents {
 	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INPersonResolutionResult {
@@ -4674,12 +5131,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INPersonResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INPersonResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -4689,6 +5148,7 @@ namespace Intents {
 	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INPlacemarkResolutionResult {
@@ -4725,12 +5185,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INPlacemarkResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INPlacemarkResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -4743,15 +5205,18 @@ namespace Intents {
 	[DisableDefaultCtor]
 #endif
 	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface INPreferences {
 
 		[Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("siriAuthorizationStatus")]
 		INSiriAuthorizationStatus SiriAuthorizationStatus { get; }
 
 		[Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Async]
 		[Export ("requestSiriAuthorization:")]
@@ -4766,6 +5231,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INPriceRange : NSCopying, NSSecureCoding {
@@ -4800,11 +5266,14 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INRadioTypeResolutionResult bound
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INRadioTypeResolutionResult {
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedRadioType:")]
@@ -4812,11 +5281,13 @@ namespace Intents {
 
 		[Internal]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
 		INRadioTypeResolutionResult SuccessWithResolvedValue (INRadioType resolvedValue);
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithRadioTypeToConfirm:")]
@@ -4824,6 +5295,7 @@ namespace Intents {
 
 		[Internal]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INRadioTypeResolutionResult ConfirmationRequiredWithValueToConfirm (INRadioType valueToConfirm);
@@ -4848,12 +5320,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INRadioTypeResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INRadioTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -4864,11 +5338,14 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INRelativeReferenceResolutionResult {
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedRelativeReference:")]
@@ -4876,11 +5353,13 @@ namespace Intents {
 
 		[Internal]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
 		INRelativeReferenceResolutionResult SuccessWithResolvedValue (INRelativeReference resolvedValue);
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithRelativeReferenceToConfirm:")]
@@ -4888,6 +5367,7 @@ namespace Intents {
 
 		[Internal]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INRelativeReferenceResolutionResult ConfirmationRequiredWithValueToConfirm (INRelativeReference valueToConfirm);
@@ -4912,12 +5392,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INRelativeReferenceResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INRelativeReferenceResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -4928,11 +5410,14 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INRelativeSettingResolutionResult {
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedRelativeSetting:")]
@@ -4940,11 +5425,13 @@ namespace Intents {
 
 		[Internal]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
 		INRelativeSettingResolutionResult SuccessWithResolvedValue (INRelativeSetting resolvedValue);
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithRelativeSettingToConfirm:")]
@@ -4952,6 +5439,7 @@ namespace Intents {
 
 		[Internal]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INRelativeSettingResolutionResult ConfirmationRequiredWithValueToConfirm (INRelativeSetting valueToConfirm);
@@ -4976,12 +5464,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INRelativeSettingResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INRelativeSettingResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -4991,6 +5481,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INRequestPaymentIntent {
 
@@ -5012,6 +5503,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INRequestPaymentIntentHandling {
 
@@ -5030,19 +5522,23 @@ namespace Intents {
 
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ResolvePayer (INRequestPaymentIntent, Action<INRequestPaymentPayerResolutionResult>)' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolvePayer (INRequestPaymentIntent, Action<INRequestPaymentPayerResolutionResult>)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ResolvePayer (INRequestPaymentIntent, Action<INRequestPaymentPayerResolutionResult>)' instead.")]
 		[Export ("resolvePayerForRequestPayment:withCompletion:")]
 		void ResolvePayer (INRequestPaymentIntent intent, Action<INPersonResolutionResult> completion);
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolvePayerForRequestPayment:completion:")]
 		void ResolvePayer (INRequestPaymentIntent intent, Action<INRequestPaymentPayerResolutionResult> completion);
 
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ResolveCurrencyAmount (INRequestPaymentIntent, Action<INRequestPaymentCurrencyAmountResolutionResult>)' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolveCurrencyAmount (INRequestPaymentIntent, Action<INRequestPaymentCurrencyAmountResolutionResult>)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ResolveCurrencyAmount (INRequestPaymentIntent, Action<INRequestPaymentCurrencyAmountResolutionResult>)' instead.")]
 		[Export ("resolveCurrencyAmountForRequestPayment:withCompletion:")]
 		void ResolveCurrencyAmount (INRequestPaymentIntent intent, Action<INCurrencyAmountResolutionResult> completion);
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveCurrencyAmountForRequestPayment:completion:")]
 		void ResolveCurrencyAmount (INRequestPaymentIntent intent, Action<INRequestPaymentCurrencyAmountResolutionResult> completion);
 
@@ -5054,6 +5550,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INRequestPaymentIntentResponse {
@@ -5073,15 +5570,18 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INRequestRideIntent {
 
 		[Deprecated (PlatformName.iOS, 10, 3, message: "Use the INDateComponentsRange overload")]
 		[Unavailable (PlatformName.WatchOS)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the INDateComponentsRange overload")]
 		[Export ("initWithPickupLocation:dropOffLocation:rideOptionName:partySize:paymentMethod:")]
 		NativeHandle Constructor ([NullAllowed] CLPlacemark pickupLocation, [NullAllowed] CLPlacemark dropOffLocation, [NullAllowed] INSpeakableString rideOptionName, [NullAllowed] NSNumber partySize, [NullAllowed] INPaymentMethod paymentMethod);
 
 		[iOS (10, 3)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithPickupLocation:dropOffLocation:rideOptionName:partySize:paymentMethod:scheduledPickupTime:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] CLPlacemark pickupLocation, [NullAllowed] CLPlacemark dropOffLocation, [NullAllowed] INSpeakableString rideOptionName, [NullAllowed] NSNumber partySize, [NullAllowed] INPaymentMethod paymentMethod, [NullAllowed] INDateComponentsRange scheduledPickupTime);
@@ -5102,6 +5602,7 @@ namespace Intents {
 		INPaymentMethod PaymentMethod { get; }
 
 		[iOS (10, 3)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("scheduledPickupTime", ArgumentSemantic.Copy)]
 		INDateComponentsRange ScheduledPickupTime { get; }
 	}
@@ -5110,6 +5611,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INRequestRideIntentHandling {
 
@@ -5139,6 +5641,7 @@ namespace Intents {
 		void ResolvePartySize (INRequestRideIntent intent, Action<INIntegerResolutionResult> completion);
 
 		[iOS (10, 3)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveScheduledPickupTimeForRequestRide:withCompletion:")]
 		void ResolveScheduledPickupTime (INRequestRideIntent intent, Action<INDateComponentsRangeResolutionResult> completion);
 	}
@@ -5147,6 +5650,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INRequestRideIntentResponse {
@@ -5166,6 +5670,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface INRestaurant : NSSecureCoding, NSCopying {
 
@@ -5190,6 +5695,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INPerson))]
 	[DisableDefaultCtor] // The base type, INPerson, has no default ctor.
 	interface INRestaurantGuest {
@@ -5209,6 +5715,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface INRestaurantGuestDisplayPreferences : NSSecureCoding, NSCopying {
 
@@ -5241,6 +5748,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INRestaurantGuestResolutionResult {
@@ -5277,12 +5785,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INRestaurantGuestResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INRestaurantGuestResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -5292,6 +5802,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface INRestaurantOffer : NSSecureCoding, NSCopying {
 
@@ -5309,6 +5820,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface INRestaurantReservationBooking : NSSecureCoding, NSCopying {
 
@@ -5354,6 +5866,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INRestaurantReservationBooking))]
 	interface INRestaurantReservationUserBooking : NSCopying {
 
@@ -5387,6 +5900,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INRestaurantResolutionResult {
@@ -5423,12 +5937,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INRestaurantResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INRestaurantResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -5438,6 +5954,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INResumeWorkoutIntent {
 
@@ -5453,6 +5970,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INResumeWorkoutIntentHandling {
 
@@ -5477,6 +5995,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INResumeWorkoutIntentResponse {
@@ -5493,6 +6012,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INRideCompletionStatus : NSCopying, NSSecureCoding {
@@ -5510,6 +6030,7 @@ namespace Intents {
 		INRideCompletionStatus GetOutstandingPaymentAmount (INCurrencyAmount outstandingPaymentAmount);
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("completedWithOutstandingFeedbackType:")]
 		INRideCompletionStatus GetCompleted (INRideFeedbackTypeOptions feedbackType);
@@ -5542,6 +6063,7 @@ namespace Intents {
 		INCurrencyAmount PaymentAmount { get; }
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("feedbackType", ArgumentSemantic.Assign)]
 		INRideFeedbackTypeOptions FeedbackType { get; }
 
@@ -5549,6 +6071,7 @@ namespace Intents {
 		bool Outstanding { [Bind ("isOutstanding")] get; }
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("defaultTippingOptions", ArgumentSemantic.Strong)]
 		NSSet<INCurrencyAmount> DefaultTippingOptions { get; set; }
 	}
@@ -5557,6 +6080,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INRideDriver bound
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INPerson))]
 	[DisableDefaultCtor] // xcode 8.2 beta 1 -> NSInvalidArgumentException Reason: *** -[__NSPlaceholderDictionary initWithObjects:forKeys:count:]: attempt to insert nil object from objects[1]
 	interface INRideDriver : NSCopying, NSSecureCoding {
@@ -5564,10 +6088,12 @@ namespace Intents {
 		[Export ("initWithPersonHandle:nameComponents:displayName:image:rating:phoneNumber:")]
 		[Deprecated (PlatformName.iOS, 10, 2, message: "Use the overload signature instead.")]
 		[Unavailable (PlatformName.WatchOS)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the overload signature instead.")]
 		NativeHandle Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string rating, [NullAllowed] string phoneNumber);
 
 		[Export ("initWithPhoneNumber:nameComponents:displayName:image:rating:")]
 		[iOS (10, 2)]
+		[MacCatalyst (13, 1)]
 		[DesignatedInitializer]
 		NativeHandle Constructor (string phoneNumber, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string rating);
 
@@ -5582,6 +6108,7 @@ namespace Intents {
 	[Watch (3, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INRideFareLineItem : NSCopying, NSSecureCoding {
@@ -5604,6 +6131,7 @@ namespace Intents {
 	[Watch (3, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INRideOption : NSCopying, NSSecureCoding {
@@ -5651,6 +6179,7 @@ namespace Intents {
 	[Watch (3, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INRidePartySizeOption : NSCopying, NSSecureCoding {
@@ -5673,6 +6202,7 @@ namespace Intents {
 	[Watch (3, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // xcode 8.2 beta 1 -> NSInvalidArgumentException Reason: *** -[__NSPlaceholderDictionary initWithObjects:forKeys:count:]: attempt to insert nil object from objects[1]
 	interface INRideStatus : NSCopying, NSSecureCoding {
@@ -5703,6 +6233,7 @@ namespace Intents {
 
 		[iOS (10, 3)]
 		[Watch (3, 2)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("scheduledPickupTime", ArgumentSemantic.Copy)]
 		INDateComponentsRange ScheduledPickupTime { get; set; }
 
@@ -5729,6 +6260,7 @@ namespace Intents {
 	[Watch (3, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface INRideVehicle : NSCopying, NSSecureCoding {
 
@@ -5753,14 +6285,18 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntent))]
 	interface INSaveProfileInCarIntent {
 
 		[Deprecated (PlatformName.iOS, 10, 2)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Export ("initWithProfileNumber:profileLabel:"), Internal]
 		IntPtr InitWithProfileNumberLabel ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileLabel);
 
 		[iOS (10, 2)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithProfileNumber:profileName:"), Internal]
 		IntPtr InitWithProfileNumberName ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileName);
 
@@ -5768,10 +6304,12 @@ namespace Intents {
 		NSNumber ProfileNumber { get; }
 
 		[Deprecated (PlatformName.iOS, 10, 2, message: "Use 'ProfileName' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ProfileName' instead.")]
 		[NullAllowed, Export ("profileLabel")]
 		string ProfileLabel { get; }
 
 		[iOS (10, 2)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("profileName")]
 		string ProfileName { get; }
 	}
@@ -5781,6 +6319,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Protocol]
 	interface INSaveProfileInCarIntentHandling {
 
@@ -5801,6 +6341,7 @@ namespace Intents {
 		void ResolveProfileNumber (INSaveProfileInCarIntent intent, Action<INIntegerResolutionResult> completion);
 
 		[iOS (10, 2)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveProfileNameForSaveProfileInCar:withCompletion:")]
 		void ResolveProfileName (INSaveProfileInCarIntent intent, Action<INStringResolutionResult> completion);
 	}
@@ -5810,6 +6351,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSaveProfileInCarIntentResponse {
@@ -5832,25 +6375,31 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntent))]
 	interface INSearchCallHistoryIntent {
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithDateCreated:recipient:callCapabilities:callTypes:unseen:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] INPerson recipient, INCallCapabilityOptions callCapabilities, INCallRecordTypeOptions callTypes, [NullAllowed] NSNumber unseen);
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Wrap ("this (dateCreated, recipient, callCapabilities, callTypes, new NSNumber (unseen))")]
 		NativeHandle Constructor ([NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] INPerson recipient, INCallCapabilityOptions callCapabilities, INCallRecordTypeOptions callTypes, bool unseen);
 
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use '.ctor (INDateComponentsRange, INPerson, INCallCapabilityOptions, INCallRecordTypeOptions, NSNumber)' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (INDateComponentsRange, INPerson, INCallCapabilityOptions, INCallRecordTypeOptions, NSNumber)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use '.ctor (INDateComponentsRange, INPerson, INCallCapabilityOptions, INCallRecordTypeOptions, NSNumber)' instead.")]
 		[Export ("initWithCallType:dateCreated:recipient:callCapabilities:")]
 		NativeHandle Constructor (INCallRecordType callType, [NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] INPerson recipient, INCallCapabilityOptions callCapabilities);
 
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CallTypes' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CallTypes' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CallTypes' instead.")]
 		[Export ("callType", ArgumentSemantic.Assign)]
 		INCallRecordType CallType { get; }
 
@@ -5864,11 +6413,13 @@ namespace Intents {
 		INCallCapabilityOptions CallCapabilities { get; }
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("callTypes", ArgumentSemantic.Assign)]
 		INCallRecordTypeOptions CallTypes { get; }
 
 		[Protected]
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("unseen", ArgumentSemantic.Copy)]
 		NSNumber WeakUnseen { get; }
 	}
@@ -5883,6 +6434,8 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Protocol]
 	interface INSearchCallHistoryIntentHandling {
 
@@ -5902,6 +6455,7 @@ namespace Intents {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'ResolveCallTypes' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ResolveCallTypes' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolveCallTypes' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ResolveCallTypes' instead.")]
 		[Export ("resolveCallTypeForSearchCallHistory:withCompletion:")]
 		void ResolveCallType (INSearchCallHistoryIntent intent, Action<INCallRecordTypeResolutionResult> completion);
 
@@ -5915,10 +6469,12 @@ namespace Intents {
 		[Mac (10, 13)]
 #endif
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveCallTypesForSearchCallHistory:withCompletion:")]
 		void ResolveCallTypes (INSearchCallHistoryIntent intent, Action<INCallRecordTypeOptionsResolutionResult> completion);
 
 		[Watch (4, 0), NoMac, iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveUnseenForSearchCallHistory:withCompletion:")]
 		void ResolveUnseen (INSearchCallHistoryIntent intent, Action<INBooleanResolutionResult> completion);
 	}
@@ -5933,6 +6489,8 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSearchCallHistoryIntentResponse {
@@ -5945,6 +6503,7 @@ namespace Intents {
 		INSearchCallHistoryIntentResponseCode Code { get; }
 
 		[iOS (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("callRecords", ArgumentSemantic.Copy)]
 		INCallRecord [] CallRecords { get; set; }
 	}
@@ -5957,6 +6516,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INSearchForMessagesIntent {
 
@@ -5964,10 +6524,13 @@ namespace Intents {
 		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use the overload that takes 'conversationIdentifiers' instead.")]
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload that takes 'conversationIdentifiers' instead.")]
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the overload that takes 'conversationIdentifiers' instead.")]
 		[Export ("initWithRecipients:senders:searchTerms:attributes:dateTimeRange:identifiers:notificationIdentifiers:speakableGroupNames:")]
 		NativeHandle Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] INPerson [] senders, [NullAllowed] string [] searchTerms, INMessageAttributeOptions attributes, [NullAllowed] INDateComponentsRange dateTimeRange, [NullAllowed] string [] identifiers, [NullAllowed] string [] notificationIdentifiers, [NullAllowed] INSpeakableString [] speakableGroupNames);
 
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithRecipients:senders:searchTerms:attributes:dateTimeRange:identifiers:notificationIdentifiers:speakableGroupNames:conversationIdentifiers:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] INPerson [] senders, [NullAllowed] string [] searchTerms, INMessageAttributeOptions attributes, [NullAllowed] INDateComponentsRange dateTimeRange, [NullAllowed] string [] identifiers, [NullAllowed] string [] notificationIdentifiers, [NullAllowed] INSpeakableString [] speakableGroupNames, [NullAllowed] string [] conversationIdentifiers);
@@ -5975,6 +6538,7 @@ namespace Intents {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use '.ctor (INPerson [], INPerson [], string [], INMessageAttributeOptions, INDateComponentsRange, string [], string [], INSpeakableString [])' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use '.ctor (INPerson [], INPerson [], string [], INMessageAttributeOptions, INDateComponentsRange, string [], string [], INSpeakableString [])' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (INPerson [], INPerson [], string [], INMessageAttributeOptions, INDateComponentsRange, string [], string [], INSpeakableString [])' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use '.ctor (INPerson [], INPerson [], string [], INMessageAttributeOptions, INDateComponentsRange, string [], string [], INSpeakableString [])' instead.")]
 		[Export ("initWithRecipients:senders:searchTerms:attributes:dateTimeRange:identifiers:notificationIdentifiers:groupNames:")]
 		NativeHandle Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] INPerson [] senders, [NullAllowed] string [] searchTerms, INMessageAttributeOptions attributes, [NullAllowed] INDateComponentsRange dateTimeRange, [NullAllowed] string [] identifiers, [NullAllowed] string [] notificationIdentifiers, [NullAllowed] string [] groupNames);
 
@@ -6017,28 +6581,34 @@ namespace Intents {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'SpeakableGroupNames' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'SpeakableGroupNames' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'SpeakableGroupNames' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'SpeakableGroupNames' instead.")]
 		[NullAllowed, Export ("groupNames", ArgumentSemantic.Copy)]
 		string [] GroupNames { get; }
 
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'SpeakableGroupNamesOperator' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'SpeakableGroupNamesOperator' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'SpeakableGroupNamesOperator' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'SpeakableGroupNamesOperator' instead.")]
 		[Export ("groupNamesOperator", ArgumentSemantic.Assign)]
 		INConditionalOperator GroupNamesOperator { get; }
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("speakableGroupNames", ArgumentSemantic.Copy)]
 		INSpeakableString [] SpeakableGroupNames { get; }
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("speakableGroupNamesOperator", ArgumentSemantic.Assign)]
 		INConditionalOperator SpeakableGroupNamesOperator { get; }
 
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("conversationIdentifiers", ArgumentSemantic.Copy)]
 		string [] ConversationIdentifiers { get; }
 
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("conversationIdentifiersOperator", ArgumentSemantic.Assign)]
 		INConditionalOperator ConversationIdentifiersOperator { get; }
 	}
@@ -6051,6 +6621,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INSearchForMessagesIntentHandling {
 
@@ -6082,6 +6653,7 @@ namespace Intents {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'ResolveSpeakableGroupNames' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ResolveSpeakableGroupNames' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolveSpeakableGroupNames' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ResolveSpeakableGroupNames' instead.")]
 		[Export ("resolveGroupNamesForSearchForMessages:withCompletion:")]
 		void ResolveGroupNames (INSearchForMessagesIntent intent, Action<INStringResolutionResult []> completion);
 
@@ -6089,6 +6661,7 @@ namespace Intents {
 		[Mac (10, 13)]
 #endif
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveSpeakableGroupNamesForSearchForMessages:withCompletion:")]
 		void ResolveSpeakableGroupNames (INSearchForMessagesIntent intent, Action<INSpeakableStringResolutionResult []> completion);
 	}
@@ -6101,6 +6674,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSearchForMessagesIntentResponse {
@@ -6122,6 +6696,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntent))]
 	interface INSearchForPhotosIntent {
 
@@ -6163,6 +6739,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Protocol]
 	interface INSearchForPhotosIntentHandling {
 
@@ -6189,6 +6767,7 @@ namespace Intents {
 		void ResolveAlbumName (INSearchForPhotosIntent intent, Action<INStringResolutionResult> completion);
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveSearchTermsForSearchForPhotos:withCompletion:")]
 		void ResolveSearchTerms (INSearchForPhotosIntent intent, Action<INStringResolutionResult []> completion);
 
@@ -6202,6 +6781,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSearchForPhotosIntentResponse {
@@ -6221,6 +6802,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INSendMessageIntent : UNNotificationContentProviding {
 
@@ -6234,12 +6816,15 @@ namespace Intents {
 		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use '.ctor (INPerson[], INOutgoingMessageType, string, INSpeakableString, string, string, INPerson, INSendMessageAttachment[])' instead.")]
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use '.ctor (INPerson[], INOutgoingMessageType, string, INSpeakableString, string, string, INPerson, INSendMessageAttachment[])' instead.")]
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use '.ctor (INPerson[], INOutgoingMessageType, string, INSpeakableString, string, string, INPerson, INSendMessageAttachment[])' instead.")]
 		[Export ("initWithRecipients:content:speakableGroupName:conversationIdentifier:serviceName:sender:")]
 		NativeHandle Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] string content, [NullAllowed] INSpeakableString speakableGroupName, [NullAllowed] string conversationIdentifier, [NullAllowed] string serviceName, [NullAllowed] INPerson sender);
 
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use '.ctor (INPerson [], string, INSpeakableString, string, string, INPerson)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use '.ctor (INPerson [], string, INSpeakableString, string, string, INPerson)' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (INPerson [], string, INSpeakableString, string, string, INPerson)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use '.ctor (INPerson [], string, INSpeakableString, string, string, INPerson)' instead.")]
 		[Export ("initWithRecipients:content:groupName:serviceName:sender:")]
 		NativeHandle Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] string content, [NullAllowed] string groupName, [NullAllowed] string serviceName, [NullAllowed] INPerson sender);
 
@@ -6255,16 +6840,19 @@ namespace Intents {
 		string Content { get; }
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("speakableGroupName", ArgumentSemantic.Copy)]
 		INSpeakableString SpeakableGroupName { get; }
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("conversationIdentifier")]
 		string ConversationIdentifier { get; }
 
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'SpeakableGroupNames' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'SpeakableGroupNames' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'SpeakableGroupNames' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'SpeakableGroupNames' instead.")]
 		[NullAllowed, Export ("groupName")]
 		string GroupName { get; }
 
@@ -6306,6 +6894,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INSendMessageIntentHandling {
 
@@ -6325,10 +6914,12 @@ namespace Intents {
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ResolveRecipients (INSendMessageIntent, Action<INSendMessageRecipientResolutionResult []>)' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolveRecipients (INSendMessageIntent, Action<INSendMessageRecipientResolutionResult []>)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'ResolveRecipients (INSendMessageIntent, Action<INSendMessageRecipientResolutionResult []>)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ResolveRecipients (INSendMessageIntent, Action<INSendMessageRecipientResolutionResult []>)' instead.")]
 		[Export ("resolveRecipientsForSendMessage:withCompletion:")]
 		void ResolveRecipients (INSendMessageIntent intent, Action<INPersonResolutionResult []> completion);
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveRecipientsForSendMessage:completion:")]
 		void ResolveRecipients (INSendMessageIntent intent, Action<INSendMessageRecipientResolutionResult []> completion);
 
@@ -6338,6 +6929,7 @@ namespace Intents {
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'ResolveSpeakableGroupName' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ResolveSpeakableGroupName' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolveSpeakableGroupName' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ResolveSpeakableGroupName' instead.")]
 		[Export ("resolveGroupNameForSendMessage:withCompletion:")]
 		void ResolveGroupName (INSendMessageIntent intent, Action<INStringResolutionResult> completion);
 
@@ -6350,6 +6942,7 @@ namespace Intents {
 		[NoMac] // The INSpeakableStringResolutionResult used as a parameter type is not available in macOS
 #endif
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveSpeakableGroupNameForSendMessage:withCompletion:")]
 		void ResolveSpeakableGroupName (INSendMessageIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
@@ -6358,6 +6951,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSendMessageIntentResponse {
@@ -6376,11 +6970,13 @@ namespace Intents {
 		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use the 'SentMessages' property instead.")]
 		[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use the 'SentMessages' property instead.")]
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("sentMessage", ArgumentSemantic.Copy)]
 		INMessage SentMessage { get; set; }
 
 		[NoMac]
 		[Watch (9, 0), iOS (16, 0)]
+		[MacCatalyst (16, 0)]
 		[NullAllowed, Export ("sentMessages", ArgumentSemantic.Copy)]
 		INMessage [] SentMessages { get; set; }
 	}
@@ -6389,6 +6985,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[NoTV]
 	[Unavailable (PlatformName.MacOSX)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INSendPaymentIntent {
 
@@ -6410,6 +7007,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INSendPaymentIntentHandling {
 
@@ -6428,19 +7026,23 @@ namespace Intents {
 
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ResolvePayee (INSendPaymentIntent, Action<INSendPaymentPayeeResolutionResult>)' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolvePayee (INSendPaymentIntent, Action<INSendPaymentPayeeResolutionResult>)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ResolvePayee (INSendPaymentIntent, Action<INSendPaymentPayeeResolutionResult>)' instead.")]
 		[Export ("resolvePayeeForSendPayment:withCompletion:")]
 		void ResolvePayee (INSendPaymentIntent intent, Action<INPersonResolutionResult> completion);
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolvePayeeForSendPayment:completion:")]
 		void ResolvePayee (INSendPaymentIntent intent, Action<INSendPaymentPayeeResolutionResult> completion);
 
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ResolveCurrencyAmount (INSendPaymentIntent, Action<INSendPaymentCurrencyAmountResolutionResult>)' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolveCurrencyAmount (INSendPaymentIntent, Action<INSendPaymentCurrencyAmountResolutionResult>)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ResolveCurrencyAmount (INSendPaymentIntent, Action<INSendPaymentCurrencyAmountResolutionResult>)' instead.")]
 		[Export ("resolveCurrencyAmountForSendPayment:withCompletion:")]
 		void ResolveCurrencyAmount (INSendPaymentIntent intent, Action<INCurrencyAmountResolutionResult> completion);
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveCurrencyAmountForSendPayment:completion:")]
 		void ResolveCurrencyAmount (INSendPaymentIntent intent, Action<INSendPaymentCurrencyAmountResolutionResult> completion);
 
@@ -6452,6 +7054,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSendPaymentIntentResponse {
@@ -6472,6 +7075,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntent))]
 	interface INSetAudioSourceInCarIntent {
 
@@ -6491,6 +7096,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Protocol]
 	interface INSetAudioSourceInCarIntentHandling {
 
@@ -6519,6 +7126,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSetAudioSourceInCarIntentResponse {
@@ -6536,15 +7145,19 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntent))]
 	interface INSetClimateSettingsInCarIntent {
 
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload that takes 'INSpeakableString carName'.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the overload that takes 'INSpeakableString carName'.")]
 		[Protected]
 		[Export ("initWithEnableFan:enableAirConditioner:enableClimateControl:enableAutoMode:airCirculationMode:fanSpeedIndex:fanSpeedPercentage:relativeFanSpeedSetting:temperature:relativeTemperatureSetting:climateZone:")]
 		NativeHandle Constructor ([NullAllowed] NSNumber enableFan, [NullAllowed] NSNumber enableAirConditioner, [NullAllowed] NSNumber enableClimateControl, [NullAllowed] NSNumber enableAutoMode, INCarAirCirculationMode airCirculationMode, [NullAllowed] NSNumber fanSpeedIndex, [NullAllowed] NSNumber fanSpeedPercentage, INRelativeSetting relativeFanSpeedSetting, [NullAllowed] NSMeasurement<NSUnitTemperature> temperature, INRelativeSetting relativeTemperatureSetting, INCarSeat climateZone);
 
 		[iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithEnableFan:enableAirConditioner:enableClimateControl:enableAutoMode:airCirculationMode:fanSpeedIndex:fanSpeedPercentage:relativeFanSpeedSetting:temperature:relativeTemperatureSetting:climateZone:carName:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed][BindAs (typeof (bool?))] NSNumber enableFan, [NullAllowed][BindAs (typeof (bool?))] NSNumber enableAirConditioner, [NullAllowed][BindAs (typeof (bool?))] NSNumber enableClimateControl, [NullAllowed][BindAs (typeof (bool?))] NSNumber enableAutoMode, INCarAirCirculationMode airCirculationMode, [NullAllowed][BindAs (typeof (int?))] NSNumber fanSpeedIndex, [NullAllowed][BindAs (typeof (double?))] NSNumber fanSpeedPercentage, INRelativeSetting relativeFanSpeedSetting, [NullAllowed] NSMeasurement<NSUnitTemperature> temperature, INRelativeSetting relativeTemperatureSetting, INCarSeat climateZone, [NullAllowed] INSpeakableString carName);
@@ -6593,6 +7206,7 @@ namespace Intents {
 		INCarSeat ClimateZone { get; }
 
 		[iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("carName", ArgumentSemantic.Copy)]
 		INSpeakableString CarName { get; }
 	}
@@ -6602,6 +7216,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Protocol]
 	interface INSetClimateSettingsInCarIntentHandling {
 
@@ -6652,6 +7268,7 @@ namespace Intents {
 		void ResolveClimateZone (INSetClimateSettingsInCarIntent intent, Action<INCarSeatResolutionResult> completion);
 
 		[iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveCarNameForSetClimateSettingsInCar:withCompletion:")]
 		void ResolveCarName (INSetClimateSettingsInCarIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
@@ -6661,6 +7278,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSetClimateSettingsInCarIntentResponse {
@@ -6678,15 +7297,19 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntent))]
 	interface INSetDefrosterSettingsInCarIntent {
 
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload that takes 'INSpeakableString carName'.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the overload that takes 'INSpeakableString carName'.")]
 		[Protected]
 		[Export ("initWithEnable:defroster:")]
 		NativeHandle Constructor ([NullAllowed] NSNumber enable, INCarDefroster defroster);
 
 		[iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithEnable:defroster:carName:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed][BindAs (typeof (bool?))] NSNumber enable, INCarDefroster defroster, [NullAllowed] INSpeakableString carName);
@@ -6699,6 +7322,7 @@ namespace Intents {
 		INCarDefroster Defroster { get; }
 
 		[iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("carName", ArgumentSemantic.Copy)]
 		INSpeakableString CarName { get; }
 	}
@@ -6708,6 +7332,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Protocol]
 	interface INSetDefrosterSettingsInCarIntentHandling {
 
@@ -6731,6 +7357,7 @@ namespace Intents {
 		void ResolveDefroster (INSetDefrosterSettingsInCarIntent intent, Action<INCarDefrosterResolutionResult> completion);
 
 		[iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveCarNameForSetDefrosterSettingsInCar:withCompletion:")]
 		void ResolveCarName (INSetDefrosterSettingsInCarIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
@@ -6740,6 +7367,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSetDefrosterSettingsInCarIntentResponse {
@@ -6756,6 +7385,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INSetMessageAttributeIntent {
 
@@ -6774,6 +7404,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INSetMessageAttributeIntentHandling {
 
@@ -6798,6 +7429,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSetMessageAttributeIntentResponse {
@@ -6815,19 +7447,25 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntent))]
 	interface INSetProfileInCarIntent {
 
 		[Deprecated (PlatformName.iOS, 10, 2)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Export ("initWithProfileNumber:profileLabel:defaultProfile:"), Internal]
 		IntPtr InitWithProfileNumberLabel ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileLabel, [NullAllowed] NSNumber defaultProfile);
 
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload that takes 'INSpeakableString carName'.")]
 		[iOS (10, 2)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the overload that takes 'INSpeakableString carName'.")]
 		[Export ("initWithProfileNumber:profileName:defaultProfile:"), Internal]
 		IntPtr InitWithProfileNumberName ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileName, [NullAllowed] NSNumber defaultProfile);
 
 		[iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithProfileNumber:profileName:defaultProfile:carName:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed][BindAs (typeof (int?))] NSNumber profileNumber, [NullAllowed] string profileName, [NullAllowed][BindAs (typeof (bool?))] NSNumber defaultProfile, [NullAllowed] INSpeakableString carName);
@@ -6839,10 +7477,12 @@ namespace Intents {
 		NSNumber ProfileNumber { get; }
 
 		[Deprecated (PlatformName.iOS, 10, 2, message: "Use 'ProfileName' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ProfileName' instead.")]
 		[NullAllowed, Export ("profileLabel")]
 		string ProfileLabel { get; }
 
 		[iOS (10, 2)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("profileName")]
 		string ProfileName { get; }
 
@@ -6851,6 +7491,7 @@ namespace Intents {
 		NSNumber DefaultProfile { get; }
 
 		[iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("carName", ArgumentSemantic.Copy)]
 		INSpeakableString CarName { get; }
 	}
@@ -6860,6 +7501,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Protocol]
 	interface INSetProfileInCarIntentHandling {
 
@@ -6880,14 +7523,17 @@ namespace Intents {
 		void ResolveProfileNumber (INSetProfileInCarIntent intent, Action<INIntegerResolutionResult> completion);
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "The property doesn't need to be resolved.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "The property doesn't need to be resolved.")]
 		[Export ("resolveDefaultProfileForSetProfileInCar:withCompletion:")]
 		void ResolveDefaultProfile (INSetProfileInCarIntent intent, Action<INBooleanResolutionResult> completion);
 
 		[iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveCarNameForSetProfileInCar:withCompletion:")]
 		void ResolveCarName (INSetProfileInCarIntent intent, Action<INSpeakableStringResolutionResult> completion);
 
 		[iOS (10, 2)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveProfileNameForSetProfileInCar:withCompletion:")]
 		void ResolveProfileName (INSetProfileInCarIntent intent, Action<INStringResolutionResult> completion);
 	}
@@ -6897,6 +7543,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSetProfileInCarIntentResponse {
@@ -6914,6 +7562,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntent))]
 	interface INSetRadioStationIntent {
 
@@ -6942,6 +7592,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Protocol]
 	interface INSetRadioStationIntentHandling {
 
@@ -6979,6 +7631,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSetRadioStationIntentResponse {
@@ -6996,15 +7650,19 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntent))]
 	interface INSetSeatSettingsInCarIntent {
 
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload that takes 'INSpeakableString carName'.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the overload that takes 'INSpeakableString carName'.")]
 		[Protected] // allow subclassing
 		[Export ("initWithEnableHeating:enableCooling:enableMassage:seat:level:relativeLevelSetting:")]
 		NativeHandle Constructor ([NullAllowed] NSNumber enableHeating, [NullAllowed] NSNumber enableCooling, [NullAllowed] NSNumber enableMassage, INCarSeat seat, [NullAllowed] NSNumber level, INRelativeSetting relativeLevelSetting);
 
 		[iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithEnableHeating:enableCooling:enableMassage:seat:level:relativeLevelSetting:carName:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed][BindAs (typeof (bool?))] NSNumber enableHeating, [NullAllowed][BindAs (typeof (bool?))] NSNumber enableCooling, [NullAllowed][BindAs (typeof (bool?))] NSNumber enableMassage, INCarSeat seat, [NullAllowed][BindAs (typeof (int?))] NSNumber level, INRelativeSetting relativeLevelSetting, [NullAllowed] INSpeakableString carName);
@@ -7034,6 +7692,7 @@ namespace Intents {
 		INRelativeSetting RelativeLevelSetting { get; }
 
 		[iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("carName", ArgumentSemantic.Copy)]
 		INSpeakableString CarName { get; }
 	}
@@ -7043,6 +7702,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Protocol]
 	interface INSetSeatSettingsInCarIntentHandling {
 
@@ -7078,6 +7739,7 @@ namespace Intents {
 		void ResolveRelativeLevelSetting (INSetSeatSettingsInCarIntent intent, Action<INRelativeSettingResolutionResult> completion);
 
 		[iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveCarNameForSetSeatSettingsInCar:withCompletion:")]
 		void ResolveCarName (INSetSeatSettingsInCarIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
@@ -7087,6 +7749,8 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSetSeatSettingsInCarIntentResponse {
@@ -7151,6 +7815,7 @@ namespace Intents {
 	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INSpeakable {
 
@@ -7163,6 +7828,7 @@ namespace Intents {
 		string PronunciationHint { get; }
 
 		[Watch (4, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -7170,6 +7836,7 @@ namespace Intents {
 		string VocabularyIdentifier { get; }
 
 		[Watch (4, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -7180,6 +7847,7 @@ namespace Intents {
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'VocabularyIdentifier' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'VocabularyIdentifier' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'VocabularyIdentifier' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'VocabularyIdentifier' instead.")]
 #if !NET
 		[Abstract]
 #endif
@@ -7191,22 +7859,26 @@ namespace Intents {
 	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INSpeakableString : INSpeakable, NSCopying, NSSecureCoding {
 
 		[Watch (4, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Export ("initWithVocabularyIdentifier:spokenPhrase:pronunciationHint:")]
 		IntPtr InitWithVocabularyIdentifier (string vocabularyIdentifier, string spokenPhrase, [NullAllowed] string pronunciationHint);
 
 		[NoTV]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Export ("initWithIdentifier:spokenPhrase:pronunciationHint:")]
 		IntPtr InitWithIdentifier (string identifier, string spokenPhrase, [NullAllowed] string pronunciationHint);
 
 		[iOS (10, 2)]
 		[Mac (10, 12, 2)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithSpokenPhrase:")]
 		NativeHandle Constructor (string spokenPhrase);
 	}
@@ -7219,6 +7891,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INSpeakableStringResolutionResult {
@@ -7255,12 +7928,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INSpeakableStringResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INSpeakableStringResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -7276,21 +7951,26 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'INStartCallIntent' instead.")]
 	[BaseType (typeof (INIntent))]
 	interface INStartAudioCallIntent {
 
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use '.ctor (INCallDestinationType, INPerson [])' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use '.ctor (INCallDestinationType, INPerson [])' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (INCallDestinationType, INPerson [])' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use '.ctor (INCallDestinationType, INPerson [])' instead.")]
 		[Export ("initWithContacts:")]
 		NativeHandle Constructor ([NullAllowed] INPerson [] contacts);
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithDestinationType:contacts:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (INCallDestinationType destinationType, [NullAllowed] INPerson [] contacts);
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("destinationType", ArgumentSemantic.Assign)]
 		INCallDestinationType DestinationType { get; }
 
@@ -7308,6 +7988,8 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'INStartCallIntentHandling' instead.")]
 	[Protocol]
 	interface INStartAudioCallIntentHandling {
 
@@ -7324,7 +8006,11 @@ namespace Intents {
 #endif
 		(INStartAudioCallIntent intent, Action<INStartAudioCallIntentResponse> completion);
 
-		[Watch (4, 0), Mac (10, 13), iOS (11, 0)]
+#if !NET
+		[Mac (10, 13)]
+#endif
+		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveDestinationTypeForStartAudioCall:withCompletion:")]
 		void ResolveDestinationType (INStartAudioCallIntent intent, Action<INCallDestinationTypeResolutionResult> completion);
 
@@ -7342,6 +8028,8 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'INStartCallIntentResponse' instead.")]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INStartAudioCallIntentResponse {
@@ -7360,6 +8048,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntent))]
 	interface INStartPhotoPlaybackIntent {
 
@@ -7401,6 +8091,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Protocol]
 	interface INStartPhotoPlaybackIntentHandling {
 
@@ -7436,6 +8128,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INStartPhotoPlaybackIntentResponse {
@@ -7461,6 +8155,8 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'INStartCallIntent' instead.")]
 	[BaseType (typeof (INIntent))]
 	interface INStartVideoCallIntent {
 
@@ -7483,6 +8179,8 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'INStartCallIntentHandling' instead.")]
 	[Protocol]
 	interface INStartVideoCallIntentHandling {
 
@@ -7513,6 +8211,8 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'INStartCallIntentResponse' instead.")]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INStartVideoCallIntentResponse {
@@ -7529,6 +8229,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INStartWorkoutIntent {
 
@@ -7558,6 +8259,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INStartWorkoutIntentHandling {
 
@@ -7594,6 +8296,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INStartWorkoutIntentResponse {
@@ -7610,6 +8313,7 @@ namespace Intents {
 	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INStringResolutionResult {
@@ -7646,12 +8350,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INStringResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INStringResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -7663,6 +8369,7 @@ namespace Intents {
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[iOS (10, 0)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INTemperatureResolutionResult {
@@ -7699,12 +8406,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INTemperatureResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INTemperatureResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -7714,6 +8423,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface INTermsAndConditions : NSSecureCoding, NSCopying {
 
@@ -7735,6 +8445,7 @@ namespace Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Watch (6, 0)]
 	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INVocabulary {
@@ -7747,6 +8458,7 @@ namespace Intents {
 		void SetVocabularyStrings (NSOrderedSet<NSString> vocabulary, INVocabularyStringType type);
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("setVocabulary:ofType:")]
 		void SetVocabulary (NSOrderedSet<IINSpeakable> vocabulary, INVocabularyStringType type);
 
@@ -7758,11 +8470,13 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INWorkoutGoalUnitTypeResolutionResult bound
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INWorkoutGoalUnitTypeResolutionResult {
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedWorkoutGoalUnitType:")]
@@ -7771,11 +8485,13 @@ namespace Intents {
 		[Internal]
 		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
 		INWorkoutGoalUnitTypeResolutionResult SuccessWithResolvedValue (INWorkoutGoalUnitType resolvedValue);
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithWorkoutGoalUnitTypeToConfirm:")]
@@ -7784,6 +8500,7 @@ namespace Intents {
 		[Internal]
 		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INWorkoutGoalUnitTypeResolutionResult ConfirmationRequiredWithValueToConfirm (INWorkoutGoalUnitType valueToConfirm);
@@ -7808,12 +8525,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INWorkoutGoalUnitTypeResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INWorkoutGoalUnitTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -7823,11 +8542,13 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INWorkoutLocationTypeResolutionResult bound
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INWorkoutLocationTypeResolutionResult {
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedWorkoutLocationType:")]
@@ -7836,11 +8557,13 @@ namespace Intents {
 		[Internal]
 		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
 		INWorkoutLocationTypeResolutionResult SuccessWithResolvedValue (INWorkoutLocationType resolvedValue);
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithWorkoutLocationTypeToConfirm:")]
@@ -7849,6 +8572,7 @@ namespace Intents {
 		[Internal]
 		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INWorkoutLocationTypeResolutionResult ConfirmationRequiredWithValueToConfirm (INWorkoutLocationType valueToConfirm);
@@ -7873,12 +8597,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INWorkoutLocationTypeResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INWorkoutLocationTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -7888,21 +8614,25 @@ namespace Intents {
 	[Mac (10, 12, 0)]
 	[Watch (3, 2)]
 	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[Category]
 	[BaseType (typeof (NSUserActivity))]
 	interface NSUserActivity_IntentsAdditions {
 
 		[Mac (12, 0)]
+		[MacCatalyst (13, 1)]
 		[return: NullAllowed]
 		[Export ("interaction")]
 		INInteraction GetInteraction ();
 
 		[Watch (5, 0), NoTV, Mac (12, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("suggestedInvocationPhrase")]
 		[return: NullAllowed]
 		string GetSuggestedInvocationPhrase ();
 
 		[Watch (5, 0), NoTV, Mac (12, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("setSuggestedInvocationPhrase:")]
 		void SetSuggestedInvocationPhrase ([NullAllowed] string suggestedInvocationPhrase);
 
@@ -7921,6 +8651,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntent))]
 	interface INActivateCarSignalIntent {
@@ -7940,6 +8671,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INActivateCarSignalIntentHandling {
 
@@ -7969,6 +8701,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface INBillDetails : NSCopying, NSSecureCoding {
@@ -8008,6 +8742,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface INBillPayee : NSCopying, NSSecureCoding {
@@ -8032,6 +8768,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INBillPayeeResolutionResult {
@@ -8068,12 +8806,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INBillPayeeResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INBillPayeeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -8085,18 +8825,22 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INBillTypeResolutionResult {
 
 		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedValue:")]
 		INBillTypeResolutionResult SuccessWithResolvedValue (INBillType resolvedValue);
 
 		[iOS (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedBillType:")]
@@ -8104,12 +8848,14 @@ namespace Intents {
 
 		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INBillTypeResolutionResult ConfirmationRequiredWithValueToConfirm (INBillType valueToConfirm);
 
 		[iOS (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithBillTypeToConfirm:")]
@@ -8135,12 +8881,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INBillTypeResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INBillTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -8150,11 +8898,13 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INCarSignalOptionsResolutionResult {
 
 		[iOS (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedCarSignalOptions:")]
@@ -8162,12 +8912,14 @@ namespace Intents {
 
 		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedValue:")]
 		INCarSignalOptionsResolutionResult SuccessWithResolvedValue (INCarSignalOptions resolvedValue);
 
 		[iOS (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithCarSignalOptionsToConfirm:")]
@@ -8175,6 +8927,7 @@ namespace Intents {
 
 		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
@@ -8200,12 +8953,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INCarSignalOptionsResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INCarSignalOptionsResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -8215,6 +8970,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntent))]
 	interface INGetCarLockStatusIntent {
@@ -8231,6 +8987,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INGetCarLockStatusIntentHandling {
 
@@ -8255,6 +9012,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntentResponse))]
 	interface INGetCarLockStatusIntentResponse {
@@ -8278,6 +9036,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntent))]
 	interface INGetCarPowerLevelStatusIntent {
@@ -8294,6 +9053,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INGetCarPowerLevelStatusIntentHandling {
 
@@ -8343,6 +9103,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntentResponse))]
 	interface INGetCarPowerLevelStatusIntentResponse {
@@ -8377,11 +9138,13 @@ namespace Intents {
 		NSMeasurement<NSUnitLength> DistanceRemaining { get; set; }
 
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("charging", ArgumentSemantic.Copy)]
 		NSNumber Charging { get; set; }
 
 		[Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[BindAs (typeof (double?))]
 		[NullAllowed, Export ("minutesToFull", ArgumentSemantic.Copy)]
 		NSNumber MinutesToFull { get; set; }
@@ -8454,6 +9217,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntent))]
 	interface INPayBillIntent {
@@ -8490,6 +9255,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Protocol]
 	interface INPayBillIntentHandling {
 
@@ -8536,6 +9303,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntentResponse))]
 	interface INPayBillIntentResponse {
@@ -8567,16 +9336,19 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface INPaymentAccount : NSCopying, NSSecureCoding {
 
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Please use '.ctor (INSpeakableString, string, INAccountType, INSpeakableString, INBalanceAmount, INBalanceAmount)' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Please use '.ctor (INSpeakableString, string, INAccountType, INSpeakableString, INBalanceAmount, INBalanceAmount)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Please use '.ctor (INSpeakableString, string, INAccountType, INSpeakableString, INBalanceAmount, INBalanceAmount)' instead.")]
 		[Export ("initWithNickname:number:accountType:organizationName:")]
 		NativeHandle Constructor (INSpeakableString nickname, [NullAllowed] string accountNumber, INAccountType accountType, [NullAllowed] INSpeakableString organizationName);
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithNickname:number:accountType:organizationName:balance:secondaryBalance:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (INSpeakableString nickname, [NullAllowed] string accountNumber, INAccountType accountType, [NullAllowed] INSpeakableString organizationName, [NullAllowed] INBalanceAmount balance, [NullAllowed] INBalanceAmount secondaryBalance);
@@ -8594,10 +9366,12 @@ namespace Intents {
 		INSpeakableString OrganizationName { get; }
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("balance", ArgumentSemantic.Copy)]
 		INBalanceAmount Balance { get; }
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("secondaryBalance", ArgumentSemantic.Copy)]
 		INBalanceAmount SecondaryBalance { get; }
 	}
@@ -8606,6 +9380,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INPaymentAccountResolutionResult {
@@ -8642,12 +9417,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INPaymentAccountResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INPaymentAccountResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -8657,6 +9434,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface INPaymentAmount : NSCopying, NSSecureCoding {
@@ -8676,6 +9454,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INPaymentAmountResolutionResult {
@@ -8712,12 +9491,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INPaymentAmountResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INPaymentAmountResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -8727,11 +9508,13 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INPaymentStatusResolutionResult {
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedPaymentStatus:")]
@@ -8740,11 +9523,13 @@ namespace Intents {
 		[Internal]
 		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
 		INPaymentStatusResolutionResult SuccessWithResolvedValue (INPaymentStatus resolvedValue);
 
 		[Watch (4, 0), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithPaymentStatusToConfirm:")]
@@ -8753,6 +9538,7 @@ namespace Intents {
 		[Internal]
 		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INPaymentStatusResolutionResult ConfirmationRequiredWithValueToConfirm (INPaymentStatus valueToConfirm);
@@ -8777,12 +9563,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INPaymentStatusResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INPaymentStatusResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -8794,6 +9582,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntent))]
 	interface INSearchForBillsIntent {
@@ -8824,6 +9614,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Protocol]
 	interface INSearchForBillsIntentHandling {
 
@@ -8864,6 +9656,8 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntentResponse))]
 	interface INSearchForBillsIntentResponse {
@@ -8883,6 +9677,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntent))]
 	interface INSetCarLockStatusIntent {
@@ -8907,6 +9702,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INSetCarLockStatusIntentHandling {
 
@@ -8934,6 +9730,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntentResponse))]
 	interface INSetCarLockStatusIntentResponse {
@@ -8950,6 +9747,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntentResponse))]
 	interface INActivateCarSignalIntentResponse {
@@ -8966,6 +9764,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INAccountTypeResolutionResult {
@@ -8998,28 +9797,33 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INAccountTypeResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INAccountTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
 	[Watch (4, 0), NoMac, iOS (11, 0), NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INAddTasksIntent {
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithTargetTaskList:taskTitles:spatialEventTrigger:temporalEventTrigger:priority:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] INTaskList targetTaskList, [NullAllowed] INSpeakableString [] taskTitles, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger, INTaskPriority priority);
 
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use the constructor with 'INTaskPriority priority' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the constructor with 'INTaskPriority priority' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the constructor with 'INTaskPriority priority' instead.")]
 		[Export ("initWithTargetTaskList:taskTitles:spatialEventTrigger:temporalEventTrigger:")]
 		NativeHandle Constructor ([NullAllowed] INTaskList targetTaskList, [NullAllowed] INSpeakableString [] taskTitles, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger);
 
@@ -9036,11 +9840,13 @@ namespace Intents {
 		INTemporalEventTrigger TemporalEventTrigger { get; }
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("priority", ArgumentSemantic.Assign)]
 		INTaskPriority Priority { get; }
 	}
 
 	[Watch (4, 0), NoMac, iOS (11, 0), NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INAddTasksIntentHandling {
 
@@ -9053,10 +9859,12 @@ namespace Intents {
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ResolveTargetTaskList (Action<INAddTasksTargetTaskListResolutionResult>)' overload instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'ResolveTargetTaskList (Action<INAddTasksTargetTaskListResolutionResult>)' overload instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ResolveTargetTaskList (Action<INAddTasksTargetTaskListResolutionResult>)' overload instead.")]
 		[Export ("resolveTargetTaskListForAddTasks:withCompletion:")]
 		void ResolveTargetTaskList (INAddTasksIntent intent, Action<INTaskListResolutionResult> completion);
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveTargetTaskListForAddTasks:completion:")]
 		void ResolveTargetTaskList (INAddTasksIntent intent, Action<INAddTasksTargetTaskListResolutionResult> completionHandler);
 
@@ -9068,19 +9876,23 @@ namespace Intents {
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ResolveTemporalEventTrigger (Action<INAddTasksTemporalEventTriggerResolutionResult>)' overload instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'ResolveTemporalEventTrigger (Action<INAddTasksTemporalEventTriggerResolutionResult>)' overload instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ResolveTemporalEventTrigger (Action<INAddTasksTemporalEventTriggerResolutionResult>)' overload instead.")]
 		[Export ("resolveTemporalEventTriggerForAddTasks:withCompletion:")]
 		void ResolveTemporalEventTrigger (INAddTasksIntent intent, Action<INTemporalEventTriggerResolutionResult> completion);
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveTemporalEventTriggerForAddTasks:completion:")]
 		void ResolveTemporalEventTrigger (INAddTasksIntent intent, Action<INAddTasksTemporalEventTriggerResolutionResult> completionHandler);
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolvePriorityForAddTasks:withCompletion:")]
 		void ResolvePriority (INAddTasksIntent intent, Action<INTaskPriorityResolutionResult> completion);
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INAddTasksIntentResponse {
@@ -9102,6 +9914,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (4, 0), NoMac, iOS (11, 0), NoTV]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntent))]
 	interface INAppendToNoteIntent {
 
@@ -9119,6 +9933,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Protocol]
 	interface INAppendToNoteIntentHandling {
 
@@ -9139,6 +9955,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INAppendToNoteIntentResponse {
@@ -9155,6 +9973,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INBalanceAmount : NSCopying, NSSecureCoding {
@@ -9178,6 +9997,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INBalanceTypeResolutionResult {
@@ -9210,12 +10030,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INBalanceTypeResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INBalanceTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -9223,6 +10045,7 @@ namespace Intents {
 
 	[Mac (12, 0)]
 	[Watch (4, 0), NoTV, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INCallDestinationTypeResolutionResult {
@@ -9255,12 +10078,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INCallDestinationTypeResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INCallDestinationTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -9268,6 +10093,7 @@ namespace Intents {
 
 	[Mac (12, 0)]
 	[Watch (4, 0), iOS (11, 0), NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INCallRecord : NSCopying, NSSecureCoding {
@@ -9282,6 +10108,7 @@ namespace Intents {
 		[Deprecated (PlatformName.MacCatalyst, 14, 5, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?, int?)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 7, 4, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?, int?)' instead.")]
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen:numberOfCalls:")]
 		NativeHandle Constructor (string identifier, [NullAllowed] NSDate dateCreated, [NullAllowed] INPerson caller, INCallRecordType callRecordType, INCallCapability callCapability, [NullAllowed][BindAs (typeof (double?))] NSNumber callDuration, [NullAllowed][BindAs (typeof (bool?))] NSNumber unseen, [NullAllowed][BindAs (typeof (int?))] NSNumber numberOfCalls);
 
@@ -9331,6 +10158,7 @@ namespace Intents {
 
 		[BindAs (typeof (int?))]
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("numberOfCalls", ArgumentSemantic.Copy)]
 		NSNumber NumberOfCalls { get; }
 
@@ -9349,6 +10177,7 @@ namespace Intents {
 
 	[Mac (12, 0)]
 	[Watch (4, 0), NoTV, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INCallRecordTypeOptionsResolutionResult {
@@ -9381,18 +10210,21 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INCallRecordTypeOptionsResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INCallRecordTypeOptionsResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
 	[NoWatch, NoMac, iOS (11, 0), NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	[DisableDefaultCtor]
 	interface INCancelRideIntent {
@@ -9406,6 +10238,7 @@ namespace Intents {
 	}
 
 	[NoWatch, NoMac, NoTV, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INCancelRideIntentHandling {
 
@@ -9418,6 +10251,7 @@ namespace Intents {
 	}
 
 	[NoWatch, NoMac, NoTV, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INCancelRideIntentResponse {
@@ -9437,6 +10271,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	[DisableDefaultCtor]
 	interface INCreateNoteIntent {
@@ -9456,6 +10291,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INCreateNoteIntentHandling {
 
@@ -9477,6 +10313,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INCreateNoteIntentResponse {
@@ -9495,6 +10332,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntent))]
 	[DisableDefaultCtor]
 	interface INCreateTaskListIntent {
@@ -9516,6 +10355,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Protocol]
 	interface INCreateTaskListIntentHandling {
 
@@ -9539,6 +10380,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INCreateTaskListIntentResponse {
@@ -9555,6 +10398,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INDateSearchTypeResolutionResult {
@@ -9587,12 +10431,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INDateSearchTypeResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INDateSearchTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -9601,6 +10447,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntent))]
 	[DisableDefaultCtor]
 	interface INGetVisualCodeIntent {
@@ -9616,6 +10464,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Protocol]
 	interface INGetVisualCodeIntentHandling {
 
@@ -9633,6 +10483,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INGetVisualCodeIntentResponse {
@@ -9649,6 +10501,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INNoteContent))]
 	interface INImageNoteContent : NSSecureCoding, NSCopying {
 
@@ -9660,6 +10513,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INLocationSearchTypeResolutionResult {
@@ -9692,18 +10546,21 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INLocationSearchTypeResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INLocationSearchTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface INNote : NSCopying, NSSecureCoding {
 
@@ -9731,11 +10588,13 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface INNoteContent : NSSecureCoding, NSCopying {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INNoteContentResolutionResult {
@@ -9772,12 +10631,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INNoteContentResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INNoteContentResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -9786,6 +10647,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Not used anymore.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Not used anymore.")]
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Not used anymore.")]
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INNoteContentTypeResolutionResult {
 
@@ -9817,18 +10680,21 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INNoteContentTypeResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INNoteContentTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INNoteResolutionResult {
 
@@ -9864,18 +10730,21 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INNoteResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INNoteResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INNotebookItemTypeResolutionResult {
 
@@ -9911,12 +10780,14 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INNotebookItemTypeResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INNotebookItemTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
@@ -9928,6 +10799,7 @@ namespace Intents {
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4, 0), iOS (11, 0), NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INParameter : NSCopying, NSSecureCoding {
@@ -9965,6 +10837,7 @@ namespace Intents {
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4, 0), NoTV, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INRecurrenceRule : NSCopying, NSSecureCoding {
@@ -9991,6 +10864,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INCurrencyAmountResolutionResult))]
 	[DisableDefaultCtor]
 	interface INRequestPaymentCurrencyAmountResolutionResult {
@@ -10022,18 +10896,21 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INRequestPaymentCurrencyAmountResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INRequestPaymentCurrencyAmountResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INPersonResolutionResult))]
 	[DisableDefaultCtor]
 	interface INRequestPaymentPayerResolutionResult {
@@ -10081,18 +10958,21 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INRequestPaymentPayerResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INRequestPaymentPayerResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INSearchForAccountsIntent {
 
@@ -10114,6 +10994,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INSearchForAccountsIntentHandling {
 
@@ -10138,6 +11019,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSearchForAccountsIntentResponse {
@@ -10154,17 +11036,21 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INSearchForNotebookItemsIntent {
 
 		[Deprecated (PlatformName.WatchOS, 4, 2, message: "Use the constructor with 'string notebookItemIdentifier' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 2, message: "Use the constructor with 'string notebookItemIdentifier' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the constructor with 'string notebookItemIdentifier' instead.")]
 		[Export ("initWithTitle:content:itemType:status:location:locationSearchType:dateTime:dateSearchType:")]
 		NativeHandle Constructor ([NullAllowed] INSpeakableString title, [NullAllowed] string content, INNotebookItemType itemType, INTaskStatus status, [NullAllowed] CLPlacemark location, INLocationSearchType locationSearchType, [NullAllowed] INDateComponentsRange dateTime, INDateSearchType dateSearchType);
 
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use the constructor with 'INTemporalEventTriggerTypeOptions temporalEventTriggerTypes' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the constructor with 'INTemporalEventTriggerTypeOptions temporalEventTriggerTypes' instead.")]
 		[Watch (4, 2), iOS (11, 2)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the constructor with 'INTemporalEventTriggerTypeOptions temporalEventTriggerTypes' instead.")]
 		[Export ("initWithTitle:content:itemType:status:location:locationSearchType:dateTime:dateSearchType:notebookItemIdentifier:")]
 		NativeHandle Constructor ([NullAllowed] INSpeakableString title, [NullAllowed] string content, INNotebookItemType itemType, INTaskStatus status, [NullAllowed] CLPlacemark location, INLocationSearchType locationSearchType, [NullAllowed] INDateComponentsRange dateTime, INDateSearchType dateSearchType, [NullAllowed] string notebookItemIdentifier);
 
@@ -10172,6 +11058,7 @@ namespace Intents {
 		[Mac (10, 15)]
 #endif
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithTitle:content:itemType:status:location:locationSearchType:dateTime:dateSearchType:temporalEventTriggerTypes:taskPriority:notebookItemIdentifier:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] INSpeakableString title, [NullAllowed] string content, INNotebookItemType itemType, INTaskStatus status, [NullAllowed] CLPlacemark location, INLocationSearchType locationSearchType, [NullAllowed] INDateComponentsRange dateTime, INDateSearchType dateSearchType, INTemporalEventTriggerTypeOptions temporalEventTriggerTypes, INTaskPriority taskPriority, [NullAllowed] string notebookItemIdentifier);
@@ -10201,19 +11088,23 @@ namespace Intents {
 		INDateSearchType DateSearchType { get; }
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("temporalEventTriggerTypes", ArgumentSemantic.Assign)]
 		INTemporalEventTriggerTypeOptions TemporalEventTriggerTypes { get; }
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("taskPriority", ArgumentSemantic.Assign)]
 		INTaskPriority TaskPriority { get; }
 
 		[Watch (4, 2), iOS (11, 2)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("notebookItemIdentifier")]
 		string NotebookItemIdentifier { get; }
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INSearchForNotebookItemsIntentHandling {
 
@@ -10249,15 +11140,18 @@ namespace Intents {
 		void ResolveDateSearchType (INSearchForNotebookItemsIntent intent, Action<INDateSearchTypeResolutionResult> completion);
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveTemporalEventTriggerTypesForSearchForNotebookItems:withCompletion:")]
 		void ResolveTemporalEventTriggerTypes (INSearchForNotebookItemsIntent intent, Action<INTemporalEventTriggerTypeOptionsResolutionResult> completion);
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveTaskPriorityForSearchForNotebookItems:withCompletion:")]
 		void ResolveTaskPriority (INSearchForNotebookItemsIntent intent, Action<INTaskPriorityResolutionResult> completion);
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSearchForNotebookItemsIntentResponse {
@@ -10284,6 +11178,7 @@ namespace Intents {
 
 	[Mac (12, 0)]
 	[Watch (4, 0), NoTV, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INPersonResolutionResult))]
 	[DisableDefaultCtor]
 	interface INSendMessageRecipientResolutionResult {
@@ -10331,18 +11226,21 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INSendMessageRecipientResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INSendMessageRecipientResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INCurrencyAmountResolutionResult))]
 	[DisableDefaultCtor]
 	interface INSendPaymentCurrencyAmountResolutionResult {
@@ -10374,18 +11272,21 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INSendPaymentCurrencyAmountResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INSendPaymentCurrencyAmountResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INPersonResolutionResult))]
 	[DisableDefaultCtor]
 	interface INSendPaymentPayeeResolutionResult {
@@ -10433,18 +11334,21 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INSendPaymentPayeeResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INSendPaymentPayeeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	[DisableDefaultCtor]
 	interface INSendRideFeedbackIntent {
@@ -10464,6 +11368,7 @@ namespace Intents {
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INSendRideFeedbackIntentHandling {
 
@@ -10476,6 +11381,7 @@ namespace Intents {
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSendRideFeedbackIntentResponse {
@@ -10489,16 +11395,19 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	interface INSetTaskAttributeIntent {
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithTargetTask:taskTitle:status:priority:spatialEventTrigger:temporalEventTrigger:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] INTask targetTask, [NullAllowed] INSpeakableString taskTitle, INTaskStatus status, INTaskPriority priority, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger);
 
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use the 'INTaskPriority priority' overload instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the 'INTaskPriority priority' overload instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the 'INTaskPriority priority' overload instead.")]
 		[Export ("initWithTargetTask:status:spatialEventTrigger:temporalEventTrigger:")]
 		NativeHandle Constructor ([NullAllowed] INTask targetTask, INTaskStatus status, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger);
 
@@ -10506,6 +11415,7 @@ namespace Intents {
 		INTask TargetTask { get; }
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("taskTitle", ArgumentSemantic.Copy)]
 		INSpeakableString TaskTitle { get; }
 
@@ -10513,6 +11423,7 @@ namespace Intents {
 		INTaskStatus Status { get; }
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("priority", ArgumentSemantic.Assign)]
 		INTaskPriority Priority { get; }
 
@@ -10524,6 +11435,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INSetTaskAttributeIntentHandling {
 
@@ -10538,6 +11450,7 @@ namespace Intents {
 		void ResolveTargetTask (INSetTaskAttributeIntent intent, Action<INTaskResolutionResult> completion);
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveTaskTitleForSetTaskAttribute:withCompletion:")]
 		void ResolveTaskTitle (INSetTaskAttributeIntent intent, Action<INSpeakableStringResolutionResult> completion);
 
@@ -10545,6 +11458,7 @@ namespace Intents {
 		void ResolveStatus (INSetTaskAttributeIntent intent, Action<INTaskStatusResolutionResult> completion);
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolvePriorityForSetTaskAttribute:withCompletion:")]
 		void ResolvePriority (INSetTaskAttributeIntent intent, Action<INTaskPriorityResolutionResult> completion);
 
@@ -10553,15 +11467,18 @@ namespace Intents {
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ResolveTemporalEventTrigger (INSetTaskAttributeIntent Action<INSetTaskAttributeTemporalEventTriggerResolutionResult>)' overload instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'ResolveTemporalEventTrigger (INSetTaskAttributeIntent Action<INSetTaskAttributeTemporalEventTriggerResolutionResult>)' overload instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ResolveTemporalEventTrigger (INSetTaskAttributeIntent Action<INSetTaskAttributeTemporalEventTriggerResolutionResult>)' overload instead.")]
 		[Export ("resolveTemporalEventTriggerForSetTaskAttribute:withCompletion:")]
 		void ResolveTemporalEventTrigger (INSetTaskAttributeIntent intent, Action<INTemporalEventTriggerResolutionResult> completion);
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveTemporalEventTriggerForSetTaskAttribute:completion:")]
 		void ResolveTemporalEventTrigger (INSetTaskAttributeIntent intent, Action<INSetTaskAttributeTemporalEventTriggerResolutionResult> completionHandler);
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSetTaskAttributeIntentResponse {
@@ -10578,6 +11495,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INSpatialEventTrigger : NSCopying, NSSecureCoding {
@@ -10594,6 +11512,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INSpatialEventTriggerResolutionResult {
@@ -10630,23 +11549,27 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INSpatialEventTriggerResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INSpatialEventTriggerResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INTask : NSCopying, NSSecureCoding {
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithTitle:status:taskType:spatialEventTrigger:temporalEventTrigger:createdDateComponents:modifiedDateComponents:identifier:priority:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (INSpeakableString title, INTaskStatus status, INTaskType taskType, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger, [NullAllowed] NSDateComponents createdDateComponents, [NullAllowed] NSDateComponents modifiedDateComponents, [NullAllowed] string identifier, INTaskPriority priority);
@@ -10679,11 +11602,13 @@ namespace Intents {
 		string Identifier { get; }
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("priority", ArgumentSemantic.Assign)]
 		INTaskPriority Priority { get; }
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INTaskList : NSCopying, NSSecureCoding {
@@ -10712,6 +11637,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INTaskListResolutionResult {
@@ -10748,18 +11674,21 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INTaskListResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INTaskListResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INTaskResolutionResult {
@@ -10796,18 +11725,21 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INTaskResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INTaskResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INTaskStatusResolutionResult {
@@ -10840,18 +11772,21 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INTaskStatusResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INTaskStatusResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INTemporalEventTrigger : NSCopying, NSSecureCoding {
@@ -10865,6 +11800,7 @@ namespace Intents {
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INTemporalEventTriggerResolutionResult {
@@ -10901,18 +11837,21 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INTemporalEventTriggerResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INTemporalEventTriggerResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INNoteContent))]
 	[DisableDefaultCtor]
 	interface INTextNoteContent : NSSecureCoding, NSCopying {
@@ -10927,6 +11866,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntent))]
 	[DisableDefaultCtor]
 	interface INTransferMoneyIntent {
@@ -10954,6 +11895,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Protocol]
 	interface INTransferMoneyIntentHandling {
 
@@ -10983,6 +11926,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INTransferMoneyIntentResponse {
@@ -11016,6 +11961,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (4, 0), NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INVisualCodeTypeResolutionResult {
@@ -11048,18 +11995,21 @@ namespace Intents {
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("unsupportedWithReason:")]
 		INVisualCodeTypeResolutionResult GetUnsupported (nint reason);
 
 		[New]
 		[Watch (6, 0), iOS (13, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("confirmationRequiredWithItemToConfirm:forReason:")]
 		INVisualCodeTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
 	[Watch (5, 0), NoMac, NoTV, iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INDefaultCardTemplate : NSCopying, NSSecureCoding {
@@ -11079,11 +12029,13 @@ namespace Intents {
 	}
 
 	[Watch (5, 0), TV (14, 0), NoMac, iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INMediaItem : NSCopying, NSSecureCoding {
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithIdentifier:title:type:artwork:artist:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] string identifier, [NullAllowed] string title, INMediaItemType type, [NullAllowed] INImage artwork, [NullAllowed] string artist);
@@ -11104,11 +12056,13 @@ namespace Intents {
 		INImage Artwork { get; }
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("artist")]
 		string Artist { get; }
 	}
 
 	[Watch (5, 0), NoTV, Mac (11, 0), iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INObject : INSpeakable, NSCopying, NSSecureCoding {
@@ -11143,6 +12097,7 @@ namespace Intents {
 
 		[Sealed]
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("alternativeSpeakableMatches")]
 		[return: NullAllowed]
 		INSpeakableString [] GetAlternativeSpeakableMatches ();
@@ -11159,16 +12114,19 @@ namespace Intents {
 
 		// Not [Sealed] since the 'AlternativeSpeakableMatches' inlined property is read-only
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("setAlternativeSpeakableMatches:")]
 		void SetAlternativeSpeakableMatches ([NullAllowed] INSpeakableString [] alternativeSpeakableMatches);
 	}
 
 	[Watch (5, 0), TV (14, 0), NoMac, iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	[DisableDefaultCtor]
 	interface INPlayMediaIntent {
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithMediaItems:mediaContainer:playShuffled:playbackRepeatMode:resumePlayback:playbackQueueLocation:playbackSpeed:mediaSearch:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] INMediaItem [] mediaItems, [NullAllowed] INMediaItem mediaContainer, [NullAllowed, BindAs (typeof (bool?))] NSNumber playShuffled, INPlaybackRepeatMode playbackRepeatMode, [NullAllowed, BindAs (typeof (bool?))] NSNumber resumePlayback, INPlaybackQueueLocation playbackQueueLocation, [NullAllowed, BindAs (typeof (double?))] NSNumber playbackSpeed, [NullAllowed] INMediaSearch mediaSearch);
@@ -11176,6 +12134,7 @@ namespace Intents {
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the '.ctor (INMediaItem [], INMediaItem, bool?, INPlaybackRepeatMode, bool?, INPlaybackQueueLocation, double?, INMediaSearch)' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use the '.ctor (INMediaItem [], INMediaItem, bool?, INPlaybackRepeatMode, bool?, INPlaybackQueueLocation, double?, INMediaSearch)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use the '.ctor (INMediaItem [], INMediaItem, bool?, INPlaybackRepeatMode, bool?, INPlaybackQueueLocation, double?, INMediaSearch)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the '.ctor (INMediaItem [], INMediaItem, bool?, INPlaybackRepeatMode, bool?, INPlaybackQueueLocation, double?, INMediaSearch)' instead.")]
 		[Export ("initWithMediaItems:mediaContainer:playShuffled:playbackRepeatMode:resumePlayback:")]
 		NativeHandle Constructor ([NullAllowed] INMediaItem [] mediaItems, [NullAllowed] INMediaItem mediaContainer, [NullAllowed, BindAs (typeof (bool?))] NSNumber playShuffled, INPlaybackRepeatMode playbackRepeatMode, [NullAllowed, BindAs (typeof (bool?))] NSNumber resumePlayback);
 
@@ -11197,20 +12156,24 @@ namespace Intents {
 		NSNumber ResumePlayback { get; }
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("playbackQueueLocation", ArgumentSemantic.Assign)]
 		INPlaybackQueueLocation PlaybackQueueLocation { get; }
 
 		[BindAs (typeof (double?))]
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("playbackSpeed", ArgumentSemantic.Copy)]
 		NSNumber PlaybackSpeed { get; }
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("mediaSearch", ArgumentSemantic.Copy)]
 		INMediaSearch MediaSearch { get; }
 	}
 
 	[Watch (5, 0), TV (14, 0), NoMac, iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INPlayMediaIntentHandling {
 
@@ -11222,31 +12185,38 @@ namespace Intents {
 		void Confirm (INPlayMediaIntent intent, Action<INPlayMediaIntentResponse> completion);
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveMediaItemsForPlayMedia:withCompletion:")]
 		void ResolveMediaItems (INPlayMediaIntent intent, Action<NSArray<INPlayMediaMediaItemResolutionResult>> completion);
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolvePlayShuffledForPlayMedia:withCompletion:")]
 		void ResolvePlayShuffled (INPlayMediaIntent intent, Action<INBooleanResolutionResult> completion);
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolvePlaybackRepeatModeForPlayMedia:withCompletion:")]
 		void ResolvePlaybackRepeatMode (INPlayMediaIntent intent, Action<INPlaybackRepeatModeResolutionResult> completion);
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolveResumePlaybackForPlayMedia:withCompletion:")]
 		void ResolveResumePlayback (INPlayMediaIntent intent, Action<INBooleanResolutionResult> completion);
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolvePlaybackQueueLocationForPlayMedia:withCompletion:")]
 		void ResolvePlaybackQueueLocation (INPlayMediaIntent intent, Action<INPlaybackQueueLocationResolutionResult> completion);
 
 		[Watch (6, 0), iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("resolvePlaybackSpeedForPlayMedia:withCompletion:")]
 		void ResolvePlaybackSpeed (INPlayMediaIntent intent, Action<INPlayMediaPlaybackSpeedResolutionResult> completion);
 	}
 
 	[Watch (5, 0), TV (14, 0), NoMac, iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INPlayMediaIntentResponse {
@@ -11265,12 +12235,14 @@ namespace Intents {
 
 	[Abstract]
 	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INRelevanceProvider : NSCopying, NSSecureCoding {
 	}
 
 	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INRelevanceProvider))]
 	[DisableDefaultCtor]
 	interface INDateRelevanceProvider {
@@ -11287,6 +12259,7 @@ namespace Intents {
 	}
 
 	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INRelevanceProvider))]
 	[DisableDefaultCtor]
 	interface INLocationRelevanceProvider {
@@ -11300,6 +12273,7 @@ namespace Intents {
 	}
 
 	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INRelevanceProvider))]
 	[DisableDefaultCtor]
 	interface INDailyRoutineRelevanceProvider {
@@ -11313,6 +12287,7 @@ namespace Intents {
 	}
 
 	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INRelevantShortcut : NSSecureCoding, NSCopying {
@@ -11339,6 +12314,7 @@ namespace Intents {
 	}
 
 	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INRelevantShortcutStore {
@@ -11353,6 +12329,7 @@ namespace Intents {
 	}
 
 	[Watch (5, 0), NoTV, Mac (11, 0), iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INShortcut : NSSecureCoding, NSCopying {
@@ -11371,6 +12348,7 @@ namespace Intents {
 	}
 
 	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INUpcomingMediaManager {
@@ -11387,6 +12365,7 @@ namespace Intents {
 	}
 
 	[Watch (5, 0), NoTV, Mac (12, 0), iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INVoiceShortcut : NSSecureCoding, NSCopying {
@@ -11404,6 +12383,7 @@ namespace Intents {
 	delegate void INVoiceShortcutCenterGetVoiceShortcutsHandler ([NullAllowed] INVoiceShortcut [] voiceShortcuts, NSError error);
 
 	[Watch (5, 0), NoTV, Mac (12, 0), iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INVoiceShortcutCenter {
@@ -11446,6 +12426,7 @@ namespace Intents {
 	//}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	[DisableDefaultCtor]
 	interface INAddMediaIntent {
@@ -11465,6 +12446,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INAddMediaIntentHandling {
 
@@ -11483,6 +12465,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INAddMediaIntentResponse {
@@ -11496,6 +12479,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INMediaItemResolutionResult))]
 	[DisableDefaultCtor]
 	interface INAddMediaMediaItemResolutionResult {
@@ -11559,6 +12543,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INTaskListResolutionResult))]
 	[DisableDefaultCtor]
 	interface INAddTasksTargetTaskListResolutionResult {
@@ -11616,6 +12601,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INTemporalEventTriggerResolutionResult))]
 	[DisableDefaultCtor]
 	interface INAddTasksTemporalEventTriggerResolutionResult {
@@ -11674,6 +12660,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INAirline : NSCopying, NSSecureCoding {
@@ -11693,6 +12680,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INAirport : NSCopying, NSSecureCoding {
@@ -11712,6 +12700,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INAirportGate : NSCopying, NSSecureCoding {
@@ -11731,6 +12720,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (12, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INCallCapabilityResolutionResult {
@@ -11775,6 +12765,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntent))]
 	[DisableDefaultCtor]
 	interface INDeleteTasksIntent {
@@ -11797,6 +12789,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[Protocol]
 	interface INDeleteTasksIntentHandling {
 
@@ -11817,6 +12811,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INDeleteTasksIntentResponse {
@@ -11835,6 +12831,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INTaskListResolutionResult))]
 	[DisableDefaultCtor]
 	interface INDeleteTasksTaskListResolutionResult {
@@ -11894,6 +12892,8 @@ namespace Intents {
 	[Deprecated (PlatformName.iOS, 15, 0)]
 	[Deprecated (PlatformName.WatchOS, 8, 0)]
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 	[BaseType (typeof (INTaskResolutionResult))]
 	[DisableDefaultCtor]
 	interface INDeleteTasksTaskResolutionResult {
@@ -11951,6 +12951,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), Mac (11, 0), iOS (13, 0), NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INEnergyResolutionResult {
@@ -11997,6 +12998,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), Mac (11, 0), iOS (13, 0), NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INEnumResolutionResult {
@@ -12039,6 +13041,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INFile : NSSecureCoding {
@@ -12064,11 +13067,13 @@ namespace Intents {
 		NSUrl FileUrl { get; }
 
 		[Watch (8, 3), Mac (12, 1), iOS (15, 2)]
+		[MacCatalyst (15, 2)]
 		[Export ("removedOnCompletion")]
 		bool RemovedOnCompletion { get; set; }
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INFileResolutionResult {
@@ -12115,6 +13120,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INFlight : NSCopying, NSSecureCoding {
@@ -12143,6 +13149,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INReservation))]
 	[DisableDefaultCtor]
 	interface INFlightReservation : NSCopying, NSSecureCoding {
@@ -12205,6 +13212,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	[DisableDefaultCtor]
 	interface INGetReservationDetailsIntent {
@@ -12221,6 +13229,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INGetReservationDetailsIntentResponse {
@@ -12237,6 +13246,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INLengthResolutionResult {
@@ -12283,6 +13293,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INReservation))]
 	[DisableDefaultCtor]
 	interface INLodgingReservation : NSCopying, NSSecureCoding {
@@ -12312,6 +13323,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INMassResolutionResult {
@@ -12358,6 +13370,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INMediaAffinityTypeResolutionResult {
@@ -12400,6 +13413,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INMediaDestination : NSCopying, NSSecureCoding {
@@ -12420,6 +13434,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INMediaDestinationResolutionResult {
@@ -12466,6 +13481,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INMediaItemResolutionResult {
@@ -12516,6 +13532,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INMediaSearch : NSCopying, NSSecureCoding {
@@ -12556,6 +13573,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INUserContext))]
 	interface INMediaUserContext {
 
@@ -12568,6 +13586,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INObjectResolutionResult {
@@ -12614,6 +13633,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INPaymentMethodResolutionResult {
@@ -12660,6 +13680,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INMediaItemResolutionResult))]
 	[DisableDefaultCtor]
 	interface INPlayMediaMediaItemResolutionResult {
@@ -12723,6 +13744,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INDoubleResolutionResult))]
 	[DisableDefaultCtor]
 	interface INPlayMediaPlaybackSpeedResolutionResult {
@@ -12775,6 +13797,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INPlaybackQueueLocationResolutionResult {
 
@@ -12816,6 +13839,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INPlaybackRepeatModeResolutionResult {
@@ -12858,6 +13882,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INRentalCar : NSCopying, NSSecureCoding {
@@ -12883,6 +13908,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INReservation))]
 	[DisableDefaultCtor]
 	interface INRentalCarReservation : NSCopying, NSSecureCoding {
@@ -12910,6 +13936,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INReservation : NSCopying, NSSecureCoding {
@@ -12939,6 +13966,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INReservationAction : NSCopying, NSSecureCoding {
@@ -12958,6 +13986,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INReservation))]
 	[DisableDefaultCtor]
 	interface INRestaurantReservation : NSCopying, NSSecureCoding {
@@ -12983,6 +14012,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	[DisableDefaultCtor]
 	interface INSearchForMediaIntent {
@@ -12999,6 +14029,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INSearchForMediaIntentHandling {
 
@@ -13014,6 +14045,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSearchForMediaIntentResponse {
@@ -13030,6 +14062,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INSeat : NSCopying, NSSecureCoding {
@@ -13052,6 +14085,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INTemporalEventTriggerResolutionResult))]
 	[DisableDefaultCtor]
 	interface INSetTaskAttributeTemporalEventTriggerResolutionResult {
@@ -13110,6 +14144,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	[DisableDefaultCtor]
 	interface INSnoozeTasksIntent {
@@ -13130,6 +14165,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INSnoozeTasksIntentHandling {
 
@@ -13148,6 +14184,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSnoozeTasksIntentResponse {
@@ -13164,6 +14201,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INTaskResolutionResult))]
 	[DisableDefaultCtor]
 	interface INSnoozeTasksTaskResolutionResult {
@@ -13221,6 +14259,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INSpeedResolutionResult {
@@ -13267,6 +14306,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INCallCapabilityResolutionResult))]
 	[DisableDefaultCtor]
 	interface INStartCallCallCapabilityResolutionResult {
@@ -13319,6 +14359,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INPersonResolutionResult))]
 	[DisableDefaultCtor]
 	interface INStartCallContactResolutionResult {
@@ -13376,6 +14417,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (12, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	[DisableDefaultCtor]
 	interface INStartCallIntent : UNNotificationContentProviding {
@@ -13388,6 +14430,7 @@ namespace Intents {
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use '.ctor (INCallRecordFilter, INCallRecord, INCallAudioRoute, INCallDestinationType, INPerson[], INCallCapability)' overload instead.")]
 		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use '.ctor (INCallRecordFilter, INCallRecord, INCallAudioRoute, INCallDestinationType, INPerson[], INCallCapability)' overload instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use '.ctor (INCallRecordFilter, INCallRecord, INCallAudioRoute, INCallDestinationType, INPerson[], INCallCapability)' overload instead.")]
 		[Export ("initWithAudioRoute:destinationType:contacts:recordTypeForRedialing:callCapability:")]
 		NativeHandle Constructor (INCallAudioRoute audioRoute, INCallDestinationType destinationType, [NullAllowed] INPerson [] contacts, INCallRecordType recordTypeForRedialing, INCallCapability callCapability);
 
@@ -13414,6 +14457,7 @@ namespace Intents {
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
 		[Deprecated (PlatformName.WatchOS, 7, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[Export ("recordTypeForRedialing", ArgumentSemantic.Assign)]
 		INCallRecordType RecordTypeForRedialing { get; }
 
@@ -13422,6 +14466,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INStartCallIntentHandling {
 
@@ -13448,6 +14493,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INStartCallIntentResponse {
@@ -13461,6 +14507,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INTaskPriorityResolutionResult {
@@ -13503,6 +14550,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INTemporalEventTriggerTypeOptionsResolutionResult {
@@ -13545,6 +14593,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INTicketedEvent : NSCopying, NSSecureCoding {
@@ -13567,6 +14616,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INReservation))]
 	[DisableDefaultCtor]
 	interface INTicketedEventReservation : NSCopying, NSSecureCoding {
@@ -13588,6 +14638,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INTimeIntervalResolutionResult {
@@ -13630,6 +14681,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INReservation))]
 	[DisableDefaultCtor]
 	interface INTrainReservation : NSCopying, NSSecureCoding {
@@ -13651,6 +14703,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INTrainTrip : NSCopying, NSSecureCoding {
@@ -13685,6 +14738,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult), Name = "INURLResolutionResult")]
 	[DisableDefaultCtor]
 	interface INUrlResolutionResult {
@@ -13731,6 +14785,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	[DisableDefaultCtor]
 	interface INUpdateMediaAffinityIntent {
@@ -13750,6 +14805,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INUpdateMediaAffinityIntentHandling {
 
@@ -13768,6 +14824,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INUpdateMediaAffinityIntentResponse {
@@ -13781,6 +14838,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INMediaItemResolutionResult))]
 	[DisableDefaultCtor]
 	interface INUpdateMediaAffinityMediaItemResolutionResult {
@@ -13844,6 +14902,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INUserContext : NSSecureCoding {
@@ -13853,6 +14912,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), NoTV, Mac (11, 0), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INVolumeResolutionResult {
@@ -13899,6 +14959,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INMediaDestinationResolutionResult))]
 	[DisableDefaultCtor]
 	interface INAddMediaMediaDestinationResolutionResult {
@@ -13957,6 +15018,7 @@ namespace Intents {
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INMediaItemResolutionResult))]
 	interface INSearchForMediaMediaItemResolutionResult {
 
@@ -14021,6 +15083,7 @@ namespace Intents {
 
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Category]
 	[BaseType (typeof (NSExtensionContext))]
 	interface NSExtensionContext_ShareExtension {
@@ -14473,10 +15536,12 @@ namespace Intents {
 		IntPtr Constructor (INCallAudioRoute audioRoute, [NullAllowed] string callIdentifier);
 
 		[NoTV, NoMac, NoiOS]
+		[NoMacCatalyst]
 		[Export ("audioRoute", ArgumentSemantic.Assign)]
 		INCallAudioRoute AudioRoute { get; }
 
 		[NoWatch, NoTV, NoMac, NoiOS]
+		[NoMacCatalyst]
 		[NullAllowed, Export ("callIdentifier")]
 		string CallIdentifier { get; }
 	}
@@ -14506,6 +15571,7 @@ namespace Intents {
 		INAnswerCallIntentResponseCode Code { get; }
 
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		[NullAllowed]
 		[Export ("callRecords", ArgumentSemantic.Copy)]
 		INCallRecord [] CallRecords { get; set; }
@@ -14516,11 +15582,13 @@ namespace Intents {
 	interface INHangUpCallIntent {
 
 		[NoWatch, Mac (13, 1), iOS (16, 2)]
+		[MacCatalyst (16, 2)]
 		[Export ("initWithCallIdentifier:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] string callIdentifier);
 
 		[NoWatch, NoMac, NoiOS]
+		[NoMacCatalyst]
 		[NullAllowed, Export ("callIdentifier")]
 		string CallIdentifier { get; }
 	}

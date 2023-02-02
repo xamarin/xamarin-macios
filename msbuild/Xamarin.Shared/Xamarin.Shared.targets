@@ -164,8 +164,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		Outputs="$(BindingResourcePath).stamp">
 
 		<!-- CompressBindingResourcePackage specifies whether the package should be compressed (zipped) or not
-			true: compressed (we produce an Assembly.resources directory)
-			false: not compressed (we produce an Assembly.resources.zip file)
+			true: compressed (we produce an Assembly.resources.zip file)
+			false: not compressed (we produce an Assembly.resources directory)
 			auto: compressed if there are any symlinks
 			The default is 'false' for legacy Xamarin projects (for compatibility) and 'auto' for .NET projects (NuGet doesn't handle symlinks properly, so this way it's not necessary to set this property to create NuGets that work)
 		-->
@@ -644,7 +644,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_CompileEntitlements"
 		Condition="'$(_RequireCodeSigning)' == 'true' Or '$(CodesignEntitlements)' != ''"
 		DependsOnTargets="$(_CompileEntitlementsDependsOn)"
-		Outputs="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent">
+		Outputs="$(_CompiledEntitlementsPath)">
 		<!-- Automatically add the 'allow-jit' entitlement for desktop release builds in .NET -->
 		<ItemGroup Condition="'$(Configuration)' == 'Release' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst') And '$(UsingAppleNETSdk)' == 'true'">
 			<!-- We need to compare the result of AnyHaveMetadataValue to 'true', because if it's empty, the return value is not a boolean, it's an empty string -->
@@ -658,7 +658,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			BundleIdentifier="$(_BundleIdentifier)"
 			CustomEntitlements="@(CustomEntitlements)"
 			Entitlements="$(CodesignEntitlements)"
-			CompiledEntitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
+			CompiledEntitlements="$(_CompiledEntitlementsPath)"
 			IsAppExtension="$(IsAppExtension)"
 			ProvisioningProfile="$(_ProvisioningProfile)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
@@ -685,6 +685,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(_CompiledCodesignEntitlements)' != ''" RelativePath="$(_CompiledCodesignEntitlements)">
 			<Output TaskParameter="FullPath" PropertyName="_CompiledCodesignEntitlements" />
 		</GetFullPath>
+
+		<ItemGroup>
+			<FileWrites Include="$(_CompiledEntitlementsPath)" />
+		</ItemGroup>
 	</Target>
 
 	<!-- Compilation of InterfaceDefinition assets (*.xib, *.storyboard) -->
@@ -1132,6 +1136,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_ProcessedColladaAssetsPath Condition="'$(_ProcessedColladaAssetsPath)' == ''">$(DeviceSpecificIntermediateOutputPath)collada\_ProcessedColladaAssetsPath.items</_ProcessedColladaAssetsPath>
 			<_ProcessedTextureAtlasesPath Condition="'$(_ProcessedTextureAtlasesPath)' == ''">$(DeviceSpecificIntermediateOutputPath)atlas\_ProcessedTextureAtlasesPath.items</_ProcessedTextureAtlasesPath>
 			<_ProcessedCoreMLModelsPath Condition="'$(_ProcessedCoreMLModelsPath)' == ''">$(DeviceSpecificIntermediateOutputPath)coremlc\_ProcessedCoreMLModelsPath.items</_ProcessedCoreMLModelsPath>
+			<_CompiledEntitlementsPath Condition="'$(_CompiledEntitlementsPath)' == ''">$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent</_CompiledEntitlementsPath>
 			<_SaveProcessedItems Condition="'$(RuntimeIdentifiers)' != '' And '$(UsingAppleNETSdk)' == 'true'">true</_SaveProcessedItems>
 		</PropertyGroup>
 	</Target>
@@ -2639,6 +2644,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true'"
 			DSymDir="%(_GenerateDSymItems.DSymDir)"
 			Executable="$(_AppContainerDir)%(_GenerateDSymItems.Identity)"
+			SdkDevPath="$(_SdkDevPath)"
 		/>
 
 		<!-- There's no need to touch the stamp file, because it's a file created by dsymutil -->

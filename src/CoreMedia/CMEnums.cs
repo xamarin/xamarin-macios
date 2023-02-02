@@ -12,10 +12,13 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreMedia {
 
 	// FourCharCode -> CMFormatDescription.h
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CMMediaType : uint {
 		Video = 1986618469, // 'vide'
 		Audio = 1936684398, // 'soun'
@@ -30,6 +33,7 @@ namespace CoreMedia {
 
 	// FourCharCode -> CMFormatDescription.h
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CMClosedCaptionFormatType : uint {
 		CEA608 = 0x63363038, // 'c608',
 		CEA708 = 0x63373038, // 'c708',
@@ -38,6 +42,7 @@ namespace CoreMedia {
 
 	// FourCharCode -> CMFormatDescription.h
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CMMuxedStreamType : uint {
 		MPEG1System = 0x6D703173, // 'mp1s',
 		MPEG2Transport = 0x6D703274, // 'mp2t',
@@ -47,6 +52,7 @@ namespace CoreMedia {
 
 	// FourCharCode -> CMFormatDescription.h
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CMSubtitleFormatType : uint {
 		Text3G = 0x74783367, // 'tx3g'
 		WebVTT = 0x77767474, // 'wvtt'
@@ -54,6 +60,7 @@ namespace CoreMedia {
 
 	// FourCharCode -> CMFormatDescription.h
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CMMetadataFormatType : uint {
 		ICY = 0x69637920, // 'icy '
 		ID3 = 0x69643320, // 'id3 '
@@ -63,6 +70,7 @@ namespace CoreMedia {
 
 	// FourCharCode -> CMFormatDescription.h
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CMTimeCodeFormatType : uint {
 		TimeCode32 = 0x746D6364, // 'tmcd',
 		TimeCode64 = 0x74633634, // 'tc64',
@@ -72,6 +80,7 @@ namespace CoreMedia {
 
 	// uint32_t -> CMTime.h
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CMTimeRoundingMethod : uint {
 		RoundHalfAwayFromZero = 1,
 		RoundTowardZero = 2,
@@ -84,6 +93,7 @@ namespace CoreMedia {
 
 	// FourCharCode -> CMFormatDescription.h
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CMVideoCodecType : uint {
 		YUV422YpCbCr8 = 0x32767579,
 		Animation = 0x726c6520,
@@ -98,6 +108,7 @@ namespace CoreMedia {
 		Mpeg2Video = 0x6d703276,
 		Mpeg1Video = 0x6d703176,
 		[iOS (14, 0), TV (14, 0), Watch (7, 0), Mac (11, 0)]
+		[MacCatalyst (14, 0)]
 		VP9 = 0x76703039,
 		DvcNtsc = 0x64766320,
 		DvcPal = 0x64766370,
@@ -120,6 +131,7 @@ namespace CoreMedia {
 		[TV (14, 5)]
 		[Watch (7, 4)]
 		[Mac (11, 3)]
+		[MacCatalyst (14, 5)]
 		DolbyVisionHevc = 0x64766831,
 		DisparityHevc = 0x64697368,
 		DepthHevc = 0x64657068,
@@ -127,6 +139,7 @@ namespace CoreMedia {
 
 	// UInt32 enum => CMFormatDescription.h
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CMPixelFormat : uint {
 		AlphaRedGreenBlue32bits = 32,
 		BlueGreenRedAlpha32bits = 1111970369,
@@ -147,6 +160,7 @@ namespace CoreMedia {
 	}
 
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CMAttachmentMode : uint {
 		ShouldNotPropagate = 0,
 		ShouldPropagate = 1,
@@ -154,6 +168,7 @@ namespace CoreMedia {
 
 	// untyped enum (used as OSStatus) -> CMBlockBuffer.h
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CMBlockBufferError : int {
 		None = 0,
 		StructureAllocationFailed = -12700,
@@ -170,6 +185,7 @@ namespace CoreMedia {
 	// uint32_t -> CMBlockBuffer.h
 	[Flags]
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CMBlockBufferFlags : uint {
 		AssureMemoryNow = (1 << 0),
 		AlwaysCopyData = (1 << 1),
@@ -179,6 +195,7 @@ namespace CoreMedia {
 
 	// untyped enum (uses as OSStatus) -> CMFormatDescription.h
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CMFormatDescriptionError : int {
 		None = 0,
 		InvalidParameter = -12710,
@@ -188,6 +205,7 @@ namespace CoreMedia {
 
 	// untyped enum (used as an OSStatus) -> CMSampleBuffer.h
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CMSampleBufferError : int {
 		None = 0,
 		AllocationFailed = -12730,
@@ -219,6 +237,7 @@ namespace CoreMedia {
 
 	// untyped enum (used as OSStatus) -> CMSync.h
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CMClockError : int {
 		None = 0,
 		MissingRequiredParameter = -12745,
@@ -229,6 +248,7 @@ namespace CoreMedia {
 
 	// untyped enum (used as OSStatus) -> CMSync.h
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CMTimebaseError : int {
 		None = 0,
 		MissingRequiredParameter = -12748,
@@ -240,6 +260,7 @@ namespace CoreMedia {
 
 	// untyped enum (used as OSStatus) -> CMSync.h
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CMSyncError : int {
 		None = 0,
 		MissingRequiredParameter = -12752,

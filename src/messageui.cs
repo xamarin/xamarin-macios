@@ -49,6 +49,7 @@ namespace MessageUI {
 		void AddAttachmentData (NSData attachment, string mimeType, string fileName);
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("setPreferredSendingEmailAddress:")]
 		void SetPreferredSendingEmailAddress (string emailAddress);
 	}
@@ -112,6 +113,7 @@ namespace MessageUI {
 		NSDictionary [] GetAttachments ();
 
 		[iOS (10, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("message", ArgumentSemantic.Copy)]
 		MSMessage Message { get; set; }
 

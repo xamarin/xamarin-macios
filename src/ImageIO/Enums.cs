@@ -51,6 +51,7 @@ namespace ImageIO {
 	// used with kCGImagePropertyPNGCompressionFilter
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[Flags]
 	public enum CGImagePropertyPngFilters {
 		No = 0,
@@ -62,6 +63,7 @@ namespace ImageIO {
 	}
 
 	[Mac (10, 15), iOS (13, 0), TV (13, 0), Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CGImageAnimationStatus {
 		Ok = 0,
 		ParameterError = -22140,
@@ -73,6 +75,7 @@ namespace ImageIO {
 
 	// Yes, no [Native] here
 	[Mac (11, 0), iOS (14, 1), TV (14, 2), Watch (7, 1)]
+	[MacCatalyst (14, 1)]
 	public enum CGImagePropertyTgaCompression : uint {
 		None = 0,
 		Rle,

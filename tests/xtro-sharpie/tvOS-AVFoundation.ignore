@@ -24,3 +24,8 @@
 !incorrect-protocol-member! AVAudio3DMixing::sourceMode is REQUIRED and should be abstract
 !extra-null-allowed! 'Foundation.NSNumber[] AVFoundation.AVVideoCompositionInstruction::get_RequiredSourceTrackIDs()' has a extraneous [NullAllowed] on return type
 !missing-field! AVPlayerItemTimeJumpedOriginatingParticipantKey not bound
+
+## https://github.com/xamarin/xamarin-macios/issues/16229 prevents crashing instead of return null
+## so these selectors have been bound manually
+!missing-selector! AVAudioPlayer::initWithContentsOfURL:error: not bound
+!missing-selector! AVAudioPlayer::initWithData:error: not bound

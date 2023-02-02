@@ -54,278 +54,6 @@ using ObjCRuntime;
 using Foundation;
 using Xamarin.Utils;
 
-public static class GeneratorExtensions {
-	public static StreamWriter Write (this StreamWriter sw, char c, int count)
-	{
-		for (int i = 0; i < count; i++)
-			sw.Write (c);
-		return sw;
-	}
-}
-
-public static class ReflectionExtensions {
-	public static BaseTypeAttribute GetBaseTypeAttribute (Type type, Generator generator)
-	{
-		return generator.AttributeManager.GetCustomAttribute<BaseTypeAttribute> (type);
-	}
-
-	public static Type GetBaseType (Type type, Generator generator)
-	{
-		BaseTypeAttribute bta = GetBaseTypeAttribute (type, generator);
-		Type base_type = bta != null ? bta.BaseType : generator.TypeManager.System_Object;
-
-		return base_type;
-	}
-
-	public static List<PropertyInfo> GatherProperties (this Type type, Generator generator)
-	{
-		return type.GatherProperties (BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, generator);
-	}
-
-	//
-	// Returns true if the specified method info or property info is not
-	// available in the current platform (because it has the attribute
-	// [Unavailable (ThisPlatform) or because the shorthand versions
-	// of [NoiOS] or [NoMac] are applied.
-	//
-	// This needs to merge, because we might have multiple attributes in
-	// use, for example, the availability (iOS (7,0)) and the fact that this
-	// is not available on Mac (NoMac).
-	//
-	public static bool IsUnavailable (this ICustomAttributeProvider provider, Generator generator)
-	{
-		var attributes = generator.AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (provider);
-		var platform = generator.CurrentPlatform;
-		return IsUnavailable (attributes, platform);
-	}
-
-	public static bool IsUnavailable (AvailabilityBaseAttribute [] attributes, PlatformName platform)
-	{
-		if (attributes.Any (attr => attr.AvailabilityKind == AvailabilityKind.Unavailable && attr.Platform == platform))
-			return true;
-
-		if (platform == PlatformName.MacCatalyst) {
-			// If we're targetting Mac Catalyst, and we don't have any availability information for Mac Catalyst,
-			// then use the availability for iOS
-			var anyCatalyst = attributes.Any (v => v.Platform == PlatformName.MacCatalyst);
-			if (!anyCatalyst)
-				return IsUnavailable (attributes, PlatformName.iOS);
-		}
-
-		return false;
-	}
-
-	public static AvailabilityBaseAttribute GetAvailability (this ICustomAttributeProvider attrProvider, AvailabilityKind availabilityKind, Generator generator)
-	{
-		return generator.AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (attrProvider)
-			.FirstOrDefault (attr =>
-				attr.AvailabilityKind == availabilityKind &&
-					attr.Platform == generator.CurrentPlatform
-			);
-	}
-
-	public static List<PropertyInfo> GatherProperties (this Type type, BindingFlags flags, Generator generator)
-	{
-		List<PropertyInfo> properties = new List<PropertyInfo> (type.GetProperties (flags));
-
-		if (generator.IsPublicMode)
-			return properties;
-
-		Type parent_type = GetBaseType (type, generator);
-		string owrap;
-		string nwrap;
-
-		if (parent_type != generator.TypeManager.NSObject) {
-			if (generator.AttributeManager.HasAttribute<ModelAttribute> (parent_type)) {
-				foreach (PropertyInfo pinfo in parent_type.GetProperties (flags)) {
-					bool toadd = true;
-					var modelea = generator.GetExportAttribute (pinfo, out nwrap);
-
-					if (modelea == null)
-						continue;
-
-					foreach (PropertyInfo exists in properties) {
-						var origea = generator.GetExportAttribute (exists, out owrap);
-						if (origea.Selector == modelea.Selector)
-							toadd = false;
-					}
-
-					if (toadd)
-						properties.Add (pinfo);
-				}
-			}
-		}
-
-		return properties;
-	}
-
-	public static List<MethodInfo> GatherMethods (this Type type, Generator generator)
-	{
-		return type.GatherMethods (BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, generator);
-	}
-
-	public static bool IsInternal (this MemberInfo mi, Generator generator)
-	{
-		return generator.AttributeManager.HasAttribute<InternalAttribute> (mi)
-			|| (generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (mi));
-	}
-
-	public static bool IsUnifiedInternal (this MemberInfo mi, Generator generator)
-	{
-		return (generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (mi));
-	}
-
-	public static bool IsInternal (this PropertyInfo pi, Generator generator)
-	{
-		return generator.AttributeManager.HasAttribute<InternalAttribute> (pi)
-			|| (generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (pi));
-	}
-
-	public static bool IsInternal (this Type type, Generator generator)
-	{
-		return generator.AttributeManager.HasAttribute<InternalAttribute> (type)
-			|| (generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (type));
-	}
-
-	public static List<MethodInfo> GatherMethods (this Type type, BindingFlags flags, Generator generator)
-	{
-		List<MethodInfo> methods = new List<MethodInfo> (type.GetMethods (flags));
-
-		if (generator.IsPublicMode)
-			return methods;
-
-		Type parent_type = GetBaseType (type, generator);
-
-		if (parent_type != generator.TypeManager.NSObject) {
-			if (generator.AttributeManager.HasAttribute<ModelAttribute> (parent_type))
-				foreach (MethodInfo minfo in parent_type.GetMethods ())
-					if (generator.AttributeManager.HasAttribute<ExportAttribute> (minfo))
-						methods.Add (minfo);
-		}
-
-		return methods;
-	}
-}
-
-// Fixes bug 27430 - btouch doesn't escape identifiers with the same name as C# keywords
-public static class StringExtensions {
-	public static string GetSafeParamName (this string paramName)
-	{
-		if (paramName == null)
-			return paramName;
-
-		return IsValidIdentifier (paramName) ? paramName : "@" + paramName;
-	}
-
-	// Since we're building against the iOS assemblies and there's no code generation there,
-	// I'm bringing the implementation from:
-	// mono/mcs/class//System/Microsoft.CSharp/CSharpCodeGenerator.cs
-	static bool IsValidIdentifier (string identifier)
-	{
-		if (identifier == null || identifier.Length == 0)
-			return false;
-
-		if (keywordsTable == null)
-			FillKeywordTable ();
-
-		if (keywordsTable.Contains (identifier))
-			return false;
-
-		if (!is_identifier_start_character (identifier [0]))
-			return false;
-
-		for (int i = 1; i < identifier.Length; i++)
-			if (!is_identifier_part_character (identifier [i]))
-				return false;
-
-		return true;
-	}
-
-	static bool is_identifier_start_character (char c)
-	{
-		return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' || c == '@' || Char.IsLetter (c);
-	}
-
-	static bool is_identifier_part_character (char c)
-	{
-		return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' || (c >= '0' && c <= '9') || Char.IsLetter (c);
-	}
-
-	static void FillKeywordTable ()
-	{
-		lock (keywords) {
-			if (keywordsTable == null) {
-				keywordsTable = new Hashtable ();
-				foreach (string keyword in keywords) {
-					keywordsTable.Add (keyword, keyword);
-				}
-			}
-		}
-	}
-
-	private static Hashtable keywordsTable;
-	private static string [] keywords = new string [] {
-		"abstract","event","new","struct","as","explicit","null","switch","base","extern",
-		"this","false","operator","throw","break","finally","out","true",
-		"fixed","override","try","case","params","typeof","catch","for",
-		"private","foreach","protected","checked","goto","public",
-		"unchecked","class","if","readonly","unsafe","const","implicit","ref",
-		"continue","in","return","using","virtual","default",
-		"interface","sealed","volatile","delegate","internal","do","is",
-		"sizeof","while","lock","stackalloc","else","static","enum",
-		"namespace",
-		"object","bool","byte","float","uint","char","ulong","ushort",
-		"decimal","int","sbyte","short","double","long","string","void",
-		"partial", "yield", "where"
-	};
-}
-
-//
-// Used to encapsulate flags about types in either the parameter or the return value
-// For now, it only supports the [PlainString] attribute on strings.
-//
-public class MarshalInfo {
-	public Generator Generator;
-	public bool PlainString;
-	public Type Type;
-	public bool IsOut;
-
-	// This is set on a string parameter if the argument parameters are set to
-	// Copy.   This means that we can do fast string passing.
-	public bool ZeroCopyStringMarshal;
-
-	public bool IsAligned;
-
-	// Used for parameters
-	public MarshalInfo (Generator generator, MethodInfo mi, ParameterInfo pi)
-	{
-		this.Generator = generator;
-		PlainString = Generator.AttributeManager.HasAttribute<PlainStringAttribute> (pi);
-		Type = pi.ParameterType;
-		ZeroCopyStringMarshal = (Type == Generator.TypeManager.System_String) && PlainString == false && !Generator.AttributeManager.HasAttribute<DisableZeroCopyAttribute> (pi) && generator.type_wants_zero_copy;
-		if (ZeroCopyStringMarshal && Generator.AttributeManager.HasAttribute<DisableZeroCopyAttribute> (mi))
-			ZeroCopyStringMarshal = false;
-		IsOut = TypeManager.IsOutParameter (pi);
-	}
-
-	// Used to return values
-	public MarshalInfo (Generator generator, MethodInfo mi)
-	{
-		this.Generator = generator;
-		PlainString = Generator.AttributeManager.HasAttribute<PlainStringAttribute> (AttributeManager.GetReturnTypeCustomAttributes (mi));
-		Type = mi.ReturnType;
-	}
-}
-
-public class Tuple<A, B> {
-	public Tuple (A a, B b)
-	{
-		Item1 = a;
-		Item2 = b;
-	}
-	public A Item1;
-	public B Item2;
-}
 //
 // Encapsulates the information necessary to create a block delegate
 //
@@ -664,160 +392,6 @@ public class MemberInformation {
 		}
 
 		return mods;
-	}
-}
-
-public class NamespaceManager {
-	public BindingTouch BindingTouch;
-	PlatformName CurrentPlatform { get { return BindingTouch.CurrentPlatform; } }
-	Frameworks Frameworks { get { return BindingTouch.Frameworks; } }
-
-	// Where user-overrideable messaging may live
-	public string ObjCRuntime { get; private set; }
-
-	public string Messaging { get; private set; }
-
-	public ICollection<string> StandardNamespaces { get; private set; }
-	public ICollection<string> UINamespaces { get; private set; }
-	public ICollection<string> ImplicitNamespaces { get; private set; }
-	public ICollection<string> NamespacesThatConflictWithTypes { get; private set; }
-
-	public NamespaceManager (BindingTouch binding_touch, string customObjCRuntimeNS, bool skipSystemDrawing)
-	{
-		BindingTouch = binding_touch;
-
-		ObjCRuntime = String.IsNullOrEmpty (customObjCRuntimeNS)
-			? "ObjCRuntime"
-			: customObjCRuntimeNS;
-
-		Messaging = ObjCRuntime + ".Messaging";
-
-		StandardNamespaces = new HashSet<string> {
-			"Foundation",
-			"ObjCRuntime",
-			"CoreGraphics",
-		};
-
-		UINamespaces = new HashSet<string> ();
-		if (Frameworks.HaveAppKit)
-			UINamespaces.Add ("AppKit");
-		if (Frameworks.HaveUIKit)
-			UINamespaces.Add ("UIKit");
-		if (Frameworks.HaveTwitter)
-			UINamespaces.Add ("Twitter");
-		if (Frameworks.HaveGameKit && CurrentPlatform != PlatformName.MacOSX && CurrentPlatform != PlatformName.WatchOS)
-			UINamespaces.Add ("GameKit");
-		if (Frameworks.HaveNewsstandKit)
-			UINamespaces.Add ("NewsstandKit");
-		if (Frameworks.HaveiAd)
-			UINamespaces.Add ("iAd");
-		if (Frameworks.HaveQuickLook)
-			UINamespaces.Add ("QuickLook");
-		if (Frameworks.HaveEventKitUI)
-			UINamespaces.Add ("EventKitUI");
-		if (Frameworks.HaveAddressBookUI)
-			UINamespaces.Add ("AddressBookUI");
-		if (Frameworks.HaveMapKit && CurrentPlatform != PlatformName.MacOSX && CurrentPlatform != PlatformName.TvOS && CurrentPlatform != PlatformName.WatchOS)
-			UINamespaces.Add ("MapKit");
-		if (Frameworks.HaveMessageUI)
-			UINamespaces.Add ("MessageUI");
-		if (Frameworks.HavePhotosUI)
-			UINamespaces.Add ("PhotosUI");
-		if (Frameworks.HaveHealthKitUI)
-			UINamespaces.Add ("HealthKitUI");
-
-		ImplicitNamespaces = new HashSet<string> ();
-		ImplicitNamespaces.Add ("System");
-		ImplicitNamespaces.Add ("System.Runtime.InteropServices");
-		ImplicitNamespaces.Add ("System.Diagnostics");
-		ImplicitNamespaces.Add ("System.Diagnostics.CodeAnalysis");
-		ImplicitNamespaces.Add ("System.ComponentModel");
-#if NET
-		ImplicitNamespaces.Add ("System.Runtime.Versioning");
-#endif
-		ImplicitNamespaces.Add ("System.Threading.Tasks");
-		ImplicitNamespaces.Add ("CoreFoundation");
-		ImplicitNamespaces.Add ("Foundation");
-		ImplicitNamespaces.Add ("ObjCRuntime");
-		ImplicitNamespaces.Add ("CoreGraphics");
-		ImplicitNamespaces.Add ("CoreML");
-		ImplicitNamespaces.Add ("SceneKit");
-
-		if (Frameworks.HaveAudioUnit)
-			ImplicitNamespaces.Add ("AudioUnit");
-		if (Frameworks.HaveContacts)
-			ImplicitNamespaces.Add ("Contacts");
-		if (Frameworks.HaveCoreAnimation)
-			ImplicitNamespaces.Add ("CoreAnimation");
-		if (Frameworks.HaveCoreLocation)
-			ImplicitNamespaces.Add ("CoreLocation");
-		if (Frameworks.HaveCoreVideo)
-			ImplicitNamespaces.Add ("CoreVideo");
-		if (Frameworks.HaveCoreMedia)
-			ImplicitNamespaces.Add ("CoreMedia");
-		if (Frameworks.HaveSecurity && CurrentPlatform != PlatformName.WatchOS)
-			ImplicitNamespaces.Add ("Security");
-		if (Frameworks.HaveAVFoundation)
-			ImplicitNamespaces.Add ("AVFoundation");
-		if (Frameworks.HaveOpenGL)
-			ImplicitNamespaces.Add ("OpenGL");
-#if !NET
-		if (Frameworks.HaveQTKit)
-			ImplicitNamespaces.Add ("QTKit");
-#endif
-		if (Frameworks.HaveAppKit)
-			ImplicitNamespaces.Add ("AppKit");
-		if (Frameworks.HaveCloudKit && CurrentPlatform != PlatformName.WatchOS && CurrentPlatform != PlatformName.TvOS && CurrentPlatform != PlatformName.iOS)
-			ImplicitNamespaces.Add ("CloudKit");
-		if (Frameworks.HaveCoreMotion && CurrentPlatform != PlatformName.WatchOS && CurrentPlatform != PlatformName.TvOS && CurrentPlatform != PlatformName.MacOSX)
-			ImplicitNamespaces.Add ("CoreMotion");
-		if (Frameworks.HaveMapKit && CurrentPlatform != PlatformName.WatchOS && CurrentPlatform != PlatformName.TvOS && CurrentPlatform != PlatformName.MacOSX)
-			ImplicitNamespaces.Add ("MapKit");
-		if (Frameworks.HaveUIKit)
-			ImplicitNamespaces.Add ("UIKit");
-		if (Frameworks.HaveNewsstandKit)
-			ImplicitNamespaces.Add ("NewsstandKit");
-		if (Frameworks.HaveGLKit && CurrentPlatform != PlatformName.WatchOS && CurrentPlatform != PlatformName.MacOSX)
-			ImplicitNamespaces.Add ("GLKit");
-		if (Frameworks.HaveQuickLook && CurrentPlatform != PlatformName.WatchOS && CurrentPlatform != PlatformName.TvOS && CurrentPlatform != PlatformName.MacOSX)
-			ImplicitNamespaces.Add ("QuickLook");
-		if (Frameworks.HaveAddressBook)
-			ImplicitNamespaces.Add ("AddressBook");
-
-		if (Frameworks.HaveModelIO)
-			ImplicitNamespaces.Add ("ModelIO");
-		if (Frameworks.HaveMetal)
-			ImplicitNamespaces.Add ("Metal");
-		if (Frameworks.HaveMetalPerformanceShadersGraph)
-			ImplicitNamespaces.Add ("MetalPerformanceShadersGraph");
-
-		if (Frameworks.HaveCoreImage)
-			ImplicitNamespaces.Add ("CoreImage");
-		if (Frameworks.HavePhotos)
-			ImplicitNamespaces.Add ("Photos");
-		if (Frameworks.HaveMediaPlayer)
-			ImplicitNamespaces.Add ("MediaPlayer");
-		if (Frameworks.HaveMessages)
-			ImplicitNamespaces.Add ("Messages");
-		if (Frameworks.HaveGameplayKit)
-			ImplicitNamespaces.Add ("GameplayKit");
-		if (Frameworks.HaveSpriteKit)
-			ImplicitNamespaces.Add ("SpriteKit");
-		if (Frameworks.HaveFileProvider)
-			ImplicitNamespaces.Add ("FileProvider");
-		if (Frameworks.HaveNetworkExtension)
-			ImplicitNamespaces.Add ("NetworkExtension");
-		if (Frameworks.HaveNetwork)
-			ImplicitNamespaces.Add ("Network");
-
-		// These are both types and namespaces
-		NamespacesThatConflictWithTypes = new HashSet<string> {
-			"AudioUnit",
-		};
-
-
-		if (!skipSystemDrawing)
-			ImplicitNamespaces.Add ("System.Drawing");
 	}
 }
 
@@ -1345,6 +919,7 @@ public partial class Generator : IMemberGatherer {
 					nsvalue_create_map [TypeManager.CMTimeRange] = "CMTimeRange";
 					nsvalue_create_map [TypeManager.CMTime] = "CMTime";
 					nsvalue_create_map [TypeManager.CMTimeMapping] = "CMTimeMapping";
+					nsvalue_create_map [TypeManager.CMVideoDimensions] = "CMVideoDimensions";
 				}
 
 				if (Frameworks.HaveCoreAnimation)
@@ -1493,6 +1068,7 @@ public partial class Generator : IMemberGatherer {
 					nsvalue_return_map [TypeManager.CMTimeRange] = ".CMTimeRangeValue";
 					nsvalue_return_map [TypeManager.CMTime] = ".CMTimeValue";
 					nsvalue_return_map [TypeManager.CMTimeMapping] = ".CMTimeMappingValue";
+					nsvalue_return_map [TypeManager.CMVideoDimensions] = ".CMVideoDimensionsValue";
 				}
 
 				if (Frameworks.HaveCoreAnimation)
@@ -3476,11 +3052,10 @@ public partial class Generator : IMemberGatherer {
 		case PlatformName.iOS:
 		case PlatformName.TvOS:
 		case PlatformName.MacOSX:
+		case PlatformName.MacCatalyst:
 			return new IntroducedAttribute (platform);
 		case PlatformName.WatchOS:
 			throw new InvalidOperationException ("CreateNoVersionSupportedAttribute for WatchOS never makes sense");
-		case PlatformName.MacCatalyst:
-			throw new InvalidOperationException ("CreateNoVersionSupportedAttribute for Catalyst never makes sense");
 		default:
 			throw new NotImplementedException ();
 		}
@@ -3548,25 +3123,10 @@ public partial class Generator : IMemberGatherer {
 	void AddUnlistedAvailability (MemberInfo containingClass, List<AvailabilityBaseAttribute> availability)
 	{
 		// If there are no unavailable attributes for a platform on a type
-		// add a supported introduced (without version) since it was "unlisted" (for non-catalyst platforms)
-		foreach (var platform in new [] { PlatformName.iOS, PlatformName.TvOS, PlatformName.MacOSX }) {
+		// add a supported introduced (without version) since it was "unlisted"
+		foreach (var platform in BindingTouch.AllPlatformNames) {
 			if (!PlatformMarkedUnavailable (platform, availability) && IsInSupportedFramework (containingClass, platform)) {
 				availability.Add (CreateNoVersionSupportedAttribute (platform));
-			}
-		}
-	}
-
-	static void AddImpliedPlatforms (List<AvailabilityBaseAttribute> memberAvailability)
-	{
-		foreach (var platform in new [] { PlatformName.MacCatalyst }) {
-			if (!PlatformMarkedUnavailable (platform, memberAvailability) &&
-				!PlatformHasIntroduced (platform, memberAvailability)) {
-				foreach (var attr in memberAvailability.Where (v => v.Platform == PlatformName.iOS).ToList ()) {
-					var newAttribute = CloneFromOtherPlatform (attr, platform);
-					if (IsValidToCopyTo (memberAvailability, newAttribute, allowIntroducedOnUnavailable: true)) {
-						memberAvailability.Add (newAttribute);
-					}
-				}
 			}
 		}
 	}
@@ -3582,8 +3142,6 @@ public partial class Generator : IMemberGatherer {
 	}
 
 	// Especially for TV and Catalyst some entire namespaces are removed via framework_sources.
-	// However, almost all of those bindings are [iOS] which AddImpliedPlatforms and other places
-	// happily turn into other platforms.
 	// As a final step, if we are on a namespace that flatly doesn't exist, drop it. Then if we don't have a not supported, add it
 	void StripIntroducedOnNamespaceNotIncluded (List<AvailabilityBaseAttribute> memberAvailability, MemberInfo context)
 	{
@@ -3632,6 +3190,36 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
+	// Find the introduced attribute with the highest version between the target list and the additions.
+	// If the destination list has an introduced attribute, replace it if it's not the one with the highest version
+	// If the destination list does not have an introduced attribute, then add one if there's one in the additions and there's not already an unavailable attribute.
+	static void FindHighestIntroducedAttributes (List<AvailabilityBaseAttribute> dest, IEnumerable<AvailabilityBaseAttribute> additions)
+	{
+		if (!additions.Any ())
+			return;
+
+		foreach (var platform in BindingTouch.AllPlatformNames) {
+			// find the availability attribute with the highest version we're trying to add
+			var latestAddition = additions
+				.Where (v => v.AvailabilityKind == AvailabilityKind.Introduced && v.Platform == platform)
+				.OrderBy (v => v.Version)
+				.LastOrDefault ();
+			if (latestAddition is null)
+				continue;
+
+			var added = CloneFromOtherPlatform (latestAddition, latestAddition.Platform);
+			var idx = dest.FindIndex (v => v.Platform == platform && v.AvailabilityKind == AvailabilityKind.Introduced);
+			if (idx == -1) {
+				// no existing introduced attribute: add it unless there's already an unavailable attribute
+				if (!dest.Any (v => v.Platform == platform && v.AvailabilityKind == AvailabilityKind.Unavailable))
+					dest.Add (added);
+			} else if (added.Version > dest [idx].Version) {
+				// replace any existing introduced attribute if the existing version is lower than the added one
+				dest [idx] = added;
+			}
+		}
+	}
+
 	// This assumes the compiler implements property methods as get_ or set_ prefixes
 	static PropertyInfo GetProperyFromGetSetMethod (MethodInfo method)
 	{
@@ -3677,7 +3265,7 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	AvailabilityBaseAttribute [] GetPlatformAttributesToPrint (MemberInfo mi, Type type, MemberInfo inlinedType)
+	AvailabilityBaseAttribute [] GetPlatformAttributesToPrint (MemberInfo mi, MemberInfo context, MemberInfo inlinedType)
 	{
 		// Attributes are directly on the member
 		List<AvailabilityBaseAttribute> memberAvailability = AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (mi).ToList ();
@@ -3685,7 +3273,8 @@ public partial class Generator : IMemberGatherer {
 		// Due to differences between Xamarin and NET6 availability attributes, we have to synthesize many duplicates for NET6
 		// See https://github.com/xamarin/xamarin-macios/issues/10170 for details
 #if NET
-		MemberInfo context = type ?? FindContainingContext (mi);
+		if (context is null)
+			context = FindContainingContext (mi);
 		// Attributes on the _target_ context, the class itself or the target of the protocol inlining
 		List<AvailabilityBaseAttribute> parentContextAvailability = GetAllParentAttributes (context);
 		// (Optional) Attributes from the inlined protocol type itself
@@ -3699,8 +3288,13 @@ public partial class Generator : IMemberGatherer {
 			List<AvailabilityBaseAttribute> availabilityToConsider = new List<AvailabilityBaseAttribute> ();
 			if (inlinedTypeAvailability != null) {
 				availabilityToConsider.AddRange (inlinedTypeAvailability);
+				// Don't copy parent attributes if the conflict with the type we're inlining members into
+				// Example: don't copy Introduced on top of Unavailable.
+				CopyValidAttributes (availabilityToConsider, parentContextAvailability);
+				FindHighestIntroducedAttributes (availabilityToConsider, parentContextAvailability);
+			} else {
+				availabilityToConsider.AddRange (parentContextAvailability);
 			}
-			availabilityToConsider.AddRange (parentContextAvailability);
 
 			// We do not support Watch, so strip from both our input sources before any processing
 			memberAvailability = memberAvailability.Where (x => x.Platform != PlatformName.WatchOS).ToList ();
@@ -3712,17 +3306,25 @@ public partial class Generator : IMemberGatherer {
 			// Copy down any unavailable from the parent before expanding, since a [NoMacCatalyst] on the type trumps [iOS] on a member
 			CopyValidAttributes (memberAvailability, availabilityToConsider.Where (attr => attr.AvailabilityKind != AvailabilityKind.Introduced));
 
-			// Add implied catalyst\TVOS from [iOS] _before_ copying down from parent if no catalyst\TVOS attributes
-			// As those take precedent. We will do this a second time later in a moment..
-			AddImpliedPlatforms (memberAvailability);
+			if (inlinedType is not null && inlinedType != mi.DeclaringType && memberAvailability.Count > 1) {
+				// We might have gotten conflicting availability attributes for inlined members, where the inlined member
+				// might be available on a platform the target type isn't. The target type's unavailability will come
+				// later in the list, which means that if we have an unavailable attribute after an introduced attribute,
+				// then we need to remove the introduced attribute.
+				for (var i = memberAvailability.Count - 1; i >= 0; i--) {
+					if (memberAvailability [i].AvailabilityKind != AvailabilityKind.Unavailable)
+						continue;
+					for (var k = i - 1; k >= 0; k--) {
+						if (memberAvailability [k].AvailabilityKind == AvailabilityKind.Introduced && memberAvailability [k].Platform == memberAvailability [i].Platform) {
+							memberAvailability.RemoveAt (k);
+							i--;
+						}
+					}
+				}
+			}
 
 			// Now copy it down introduced from the parent
-			CopyValidAttributes (memberAvailability, availabilityToConsider.Where (attr => attr.AvailabilityKind == AvailabilityKind.Introduced));
-
-			// Now expand the implied catalyst\TVOS from [iOS] a second time
-			// This is needed in some cases where the only iOS information is in the
-			// parent context, but we want to let any local iOS override a catalyst\TVOS on the parent
-			AddImpliedPlatforms (memberAvailability);
+			FindHighestIntroducedAttributes (memberAvailability, availabilityToConsider.Where (attr => attr.AvailabilityKind == AvailabilityKind.Introduced));
 
 			if (!BindThirdPartyLibrary) {
 				// If all of this implication gives us something silly, like being introduced
@@ -3740,7 +3342,7 @@ public partial class Generator : IMemberGatherer {
 		return memberAvailability.ToArray ();
 	}
 
-	public bool PrintPlatformAttributes (MemberInfo mi, Type type = null, bool is_enum = false)
+	public bool PrintPlatformAttributes (MemberInfo mi, Type inlinedType = null)
 	{
 		bool printed = false;
 		if (mi == null)
@@ -3748,8 +3350,8 @@ public partial class Generator : IMemberGatherer {
 
 		AvailabilityBaseAttribute [] type_ca = null;
 
-		foreach (var availability in GetPlatformAttributesToPrint (mi, is_enum ? mi.DeclaringType : type, is_enum ? null : mi.DeclaringType)) {
-			var t = type ?? (mi as TypeInfo) ?? mi.DeclaringType;
+		foreach (var availability in GetPlatformAttributesToPrint (mi, null, inlinedType)) {
+			var t = inlinedType ?? (mi as TypeInfo) ?? mi.DeclaringType;
 			if (type_ca == null) {
 				if (t != null)
 					type_ca = AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (t);
@@ -5268,7 +4870,7 @@ public partial class Generator : IMemberGatherer {
 				PrintPlatformAttributes (pi.DeclaringType, type);
 			}
 		} else {
-			PrintPlatformAttributes (pi, type);
+			PrintPlatformAttributes (pi);
 		}
 
 		foreach (var sa in AttributeManager.GetCustomAttributes<ThreadSafeAttribute> (pi))
@@ -5282,7 +4884,9 @@ public partial class Generator : IMemberGatherer {
 		var minfo = new MemberInformation (this, this, pi, type, is_interface_impl);
 		bool use_underscore = minfo.is_unified_internal;
 		var mod = minfo.GetVisibility ();
+		Type inlinedType = pi.DeclaringType == type ? null : type;
 		minfo.protocolize = Protocolize (pi);
+		GetAccessorInfo (pi, out var getter, out var setter, out var generate_getter, out var generate_setter);
 
 		var nullable = !pi.PropertyType.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
 
@@ -5322,7 +4926,7 @@ public partial class Generator : IMemberGatherer {
 					pi.Name.GetSafeParamName (),
 				   use_underscore ? "_" : "");
 			indent++;
-			if (pi.CanRead) {
+			if (generate_getter) {
 #if !NET
 				PrintAttributes (pi, platform: true);
 #endif
@@ -5344,7 +4948,7 @@ public partial class Generator : IMemberGatherer {
 				indent--;
 				print ("}");
 			}
-			if (pi.CanWrite) {
+			if (generate_setter) {
 #if !NET
 				PrintAttributes (pi, platform: true);
 #endif
@@ -5422,7 +5026,7 @@ public partial class Generator : IMemberGatherer {
 
 		if (minfo.has_inner_wrap_attribute) {
 			// If property getter or setter has its own WrapAttribute we let the user do whatever their heart desires
-			if (pi.CanRead) {
+			if (generate_getter) {
 				PrintAttributes (pi, platform: true);
 				PrintAttributes (pi.GetGetMethod (), platform: true, preserve: true, advice: true);
 				print ("get {");
@@ -5433,8 +5037,7 @@ public partial class Generator : IMemberGatherer {
 				indent--;
 				print ("}");
 			}
-			if (pi.CanWrite) {
-				var setter = pi.GetSetMethod ();
+			if (generate_setter) {
 				var not_implemented_attr = AttributeManager.GetCustomAttribute<NotImplementedAttribute> (setter);
 
 				PrintAttributes (pi, platform: true);
@@ -5455,8 +5058,7 @@ public partial class Generator : IMemberGatherer {
 			return;
 		}
 
-		if (pi.CanRead) {
-			var getter = pi.GetGetMethod ();
+		if (generate_getter) {
 			var ba = GetBindAttribute (getter);
 			string sel = ba != null ? ba.Selector : export.Selector;
 
@@ -5464,14 +5066,13 @@ public partial class Generator : IMemberGatherer {
 #if !NET
 			PrintPlatformAttributes (pi, type);
 #endif
-			PrintAttributes (pi, platform: false);
 
 			if (!minfo.is_sealed || !minfo.is_wrapper) {
 				PrintDelegateProxy (pi.GetGetMethod ());
 				PrintExport (minfo, sel, export.ArgumentSemantic);
 			}
 
-			PrintAttributes (pi.GetGetMethod (), platform: true, preserve: true, advice: true, notImplemented: true);
+			PrintAttributes (pi.GetGetMethod (), platform: true, preserve: true, advice: true, notImplemented: true, inlinedType: inlinedType);
 #if NET
 			if (false) {
 #else
@@ -5517,8 +5118,7 @@ public partial class Generator : IMemberGatherer {
 				print ("}\n");
 			}
 		}
-		if (pi.CanWrite) {
-			var setter = pi.GetSetMethod ();
+		if (generate_setter) {
 			var ba = GetBindAttribute (setter);
 			bool null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (setter);
 			if (null_allowed)
@@ -5539,12 +5139,11 @@ public partial class Generator : IMemberGatherer {
 #if !NET
 			PrintPlatformAttributes (pi, type);
 #endif
-			PrintAttributes (pi, platform: false);
 
 			if (not_implemented_attr == null && (!minfo.is_sealed || !minfo.is_wrapper))
 				PrintExport (minfo, sel, export.ArgumentSemantic);
 
-			PrintAttributes (pi.GetSetMethod (), platform: true, preserve: true, advice: true, notImplemented: true);
+			PrintAttributes (pi.GetSetMethod (), platform: true, preserve: true, advice: true, notImplemented: true, inlinedType: inlinedType);
 #if NET
 			if (false) {
 #else
@@ -6388,16 +5987,17 @@ public partial class Generator : IMemberGatherer {
 			minfo.is_export = true;
 
 			print ("[Preserve (Conditional = true)]");
+			PrintAttributes (pi, platform: true);
 
 			if (minfo.is_unsafe)
 				mod = "unsafe ";
 			// IsValueType check needed for `IntPtr` signatures (which can't become `IntPtr?`)
 			var nullable = !pi.PropertyType.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (pi) ? "?" : String.Empty;
-			print ("{0}{1}{2} {3} {{", mod, FormatType (type, pi.PropertyType), nullable, pi.Name, pi.CanRead ? "get;" : string.Empty, pi.CanWrite ? "set;" : string.Empty);
+			GetAccessorInfo (pi, out var getMethod, out var setMethod, out var generate_getter, out var generate_setter);
+			print ("{0}{1}{2} {3} {{", mod, FormatType (type, pi.PropertyType), nullable, pi.Name, generate_getter ? "get;" : string.Empty, generate_setter ? "set;" : string.Empty);
 			indent++;
-			if (pi.CanRead) {
+			if (generate_getter) {
 				var ea = GetGetterExportAttribute (pi);
-				var getMethod = pi.GetGetMethod ();
 				// there can be a [Bind] there that override the selector name to be used
 				// e.g. IMTLTexture.FramebufferOnly
 				var ba = GetBindAttribute (getMethod);
@@ -6408,13 +6008,12 @@ public partial class Generator : IMemberGatherer {
 					else
 						PrintExport (minfo, ea);
 				}
-				PrintAttributes (getMethod, notImplemented: true);
+				PrintAttributes (getMethod, notImplemented: true, platform: true);
 				print ("get;");
 			}
-			if (pi.CanWrite) {
-				var setMethod = pi.GetSetMethod ();
+			if (generate_setter) {
 				PrintBlockProxy (pi.PropertyType);
-				PrintAttributes (setMethod, notImplemented: true);
+				PrintAttributes (setMethod, notImplemented: true, platform: true);
 				if (!AttributeManager.HasAttribute<NotImplementedAttribute> (setMethod))
 					PrintExport (minfo, GetSetterExportAttribute (pi));
 				print ("set;");
@@ -6450,15 +6049,14 @@ public partial class Generator : IMemberGatherer {
 
 			// C# does not support extension properties, so create Get* and Set* accessors instead.
 			foreach (var pi in optionalInstanceProperties) {
+				GetAccessorInfo (pi, out var getter, out var setter, out var generate_getter, out var generate_setter);
 				var attrib = GetExportAttribute (pi);
-				var getter = pi.GetGetMethod ();
-				if (getter != null) {
+				if (generate_getter) {
 					PrintAttributes (pi, preserve: true, advice: true);
 					var ba = GetBindAttribute (getter);
 					GenerateMethod (type, getter, false, null, false, false, true, ba?.Selector ?? attrib.ToGetter (pi).Selector);
 				}
-				var setter = pi.GetSetMethod ();
-				if (setter != null) {
+				if (generate_setter) {
 					PrintAttributes (pi, preserve: true, advice: true);
 					var ba = GetBindAttribute (setter);
 					GenerateMethod (type, setter, false, null, false, false, true, ba?.Selector ?? attrib.ToSetter (pi).Selector);
@@ -6597,6 +6195,22 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
+	void GetAccessorInfo (PropertyInfo pi, out MethodInfo getter, out MethodInfo setter, out bool generate_getter, out bool generate_setter)
+	{
+		getter = null;
+		setter = null;
+		generate_getter = false;
+		generate_setter = false;
+		if (pi.CanRead) {
+			getter = pi.GetGetMethod ();
+			generate_getter = !getter.IsUnavailable (this);
+		}
+		if (pi.CanWrite) {
+			setter = pi.GetSetMethod ();
+			generate_setter = !setter.IsUnavailable (this);
+		}
+	}
+
 	class MethodData {
 		public MethodInfo Method;
 		public ExportAttribute ExportAttribute;
@@ -6731,10 +6345,10 @@ public partial class Generator : IMemberGatherer {
 			print (attribstr);
 	}
 
-	public void PrintAttributes (ICustomAttributeProvider mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false, bool bindAs = false, bool requiresSuper = false)
+	public void PrintAttributes (ICustomAttributeProvider mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false, bool bindAs = false, bool requiresSuper = false, Type inlinedType = null)
 	{
 		if (platform)
-			PrintPlatformAttributes (mi as MemberInfo);
+			PrintPlatformAttributes (mi as MemberInfo, inlinedType);
 		if (preserve)
 			PrintPreserveAttribute (mi);
 		if (advice)
@@ -7124,7 +6738,8 @@ public partial class Generator : IMemberGatherer {
 				if (default_ctor_visibility != null) {
 					switch (default_ctor_visibility.Visibility) {
 					case Visibility.Public:
-						break; // default
+						ctor_visibility = "public";
+						break;
 					case Visibility.Internal:
 						ctor_visibility = "internal";
 						break;
@@ -7146,7 +6761,7 @@ public partial class Generator : IMemberGatherer {
 				if (TypeName != "NSObject") {
 					var initSelector = (InlineSelectors || BindThirdPartyLibrary) ? "Selector.GetHandle (\"init\")" : "Selector.Init";
 					var initWithCoderSelector = (InlineSelectors || BindThirdPartyLibrary) ? "Selector.GetHandle (\"initWithCoder:\")" : "Selector.InitWithCoder";
-					string v = class_mod == "abstract " ? "protected" : ctor_visibility;
+					string v = (class_mod == "abstract " && default_ctor_visibility is null) ? "protected" : ctor_visibility;
 					var is32BitNotSupported = Is64BitiOSOnly (type);
 					if (external) {
 						if (!disable_default_ctor) {

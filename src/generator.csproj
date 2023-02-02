@@ -98,7 +98,11 @@
     <Compile Include="..\src\generator-attributes.cs" />
     <Compile Include="..\src\generator-attribute-manager.cs" />
     <Compile Include="..\src\generator-enums.cs" />
+    <Compile Include="..\src\generator-extension-methods.cs" />
     <Compile Include="..\src\generator-filters.cs" />
+    <Compile Include="..\src\generator-marshal-info.cs" />
+    <Compile Include="..\src\generator-namespace-manager.cs" />
+    <Compile Include="..\src\generator-nullability-info-context.cs" />
     <Compile Include="..\src\generator-typemanager.cs" />
     <Compile Include="..\src\ObjCRuntime\Stret.cs" />
     <Compile Include="..\tools\common\ApplePlatform.cs" />
@@ -147,7 +151,7 @@
   </ItemGroup>
   <Target Name="AfterBuild">
     <!-- Only run 'make bgen' if we're not executed as part of 'make' (i.e. MAKEFLAGS is empty) -->
-    <Exec Command="make bgen" Condition="'$(MAKEFLAGS)' == ''"/>
+    <Exec Command="make bgen" Condition="'$(MAKEFLAGS)' == ''" />
   </Target>
   <Import Project="..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.targets" Condition="Exists('..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.targets')" />
 </Project>

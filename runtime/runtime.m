@@ -2830,6 +2830,16 @@ xamarin_locate_assembly_resource_for_root (const char *root, const char *culture
 	} else if (xamarin_file_exists (path)) {
 		return true;
 	}
+
+	if (culture != NULL && *culture != 0) {
+		// culture-specific directory
+		if (snprintf (path, pathlen, "%s/%s/.xamarin/%s/%s", root, culture, RUNTIMEIDENTIFIER, resource) < 0) {
+			LOG (PRODUCT ": Failed to construct path for assembly resource (root directory: '%s', culture: '%s', resource: '%s', runtimeidentifier: %s): %s", root, culture, resource, RUNTIMEIDENTIFIER, strerror (errno));
+			return false;
+		} else if (xamarin_file_exists (path)) {
+			return true;
+		}
+	}
 #endif
 
 	// just the file, no extensions, etc.

@@ -498,6 +498,8 @@ namespace Xamarin.Tests {
 				return "Microsoft.watchOS.Sdk";
 			case ApplePlatform.MacOSX:
 				return "Microsoft.macOS.Sdk";
+			case ApplePlatform.MacCatalyst:
+				return "Microsoft.MacCatalyst.Sdk";
 			default:
 				throw new InvalidOperationException (platform.ToString ());
 			}
@@ -713,6 +715,13 @@ namespace Xamarin.Tests {
 			default:
 				throw new NotImplementedException ();
 			}
+		}
+
+		public static string GetBaseLibrary (ApplePlatform platform, bool isDotNet)
+		{
+			if (isDotNet)
+				return Path.Combine (GetRefDirectory (platform), GetBaseLibraryName (platform, isDotNet));
+			return GetBaseLibrary (platform.AsProfile ());
 		}
 
 		static string GetBaseLibraryName (TargetFramework targetFramework)
@@ -977,6 +986,12 @@ namespace Xamarin.Tests {
 				var tgtDir = Path.GetDirectoryName (tgt);
 				Directory.CreateDirectory (tgtDir);
 				File.Copy (src, tgt);
+				if (tgt.EndsWith (".csproj", StringComparison.OrdinalIgnoreCase)) {
+					var initialContents = File.ReadAllText (tgt);
+					var fixedContents = initialContents.Replace ($"$(MSBuildThisFileDirectory)", Path.GetDirectoryName (src) + Path.DirectorySeparatorChar);
+					if (initialContents != fixedContents)
+						File.WriteAllText (tgt, fixedContents);
+				}
 			}
 
 			return testsTemporaryDirectory;
