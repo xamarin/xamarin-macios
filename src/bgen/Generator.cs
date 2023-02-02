@@ -54,26 +54,6 @@ using ObjCRuntime;
 using Foundation;
 using Xamarin.Utils;
 
-public class GeneratedTypes {
-	public Generator Generator;
-
-	Dictionary<Type, GeneratedType> knownTypes = new Dictionary<Type, GeneratedType> ();
-
-	public GeneratedTypes (Generator generator)
-	{
-		this.Generator = generator;
-	}
-
-	public GeneratedType Lookup (Type t)
-	{
-		if (knownTypes.ContainsKey (t))
-			return knownTypes [t];
-		var n = new GeneratedType (t, this);
-		knownTypes [t] = n;
-		return n;
-	}
-}
-
 public interface IMemberGatherer {
 	IEnumerable<MethodInfo> GetTypeContractMethods (Type source);
 }
