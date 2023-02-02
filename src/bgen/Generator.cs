@@ -54,19 +54,6 @@ using ObjCRuntime;
 using Foundation;
 using Xamarin.Utils;
 
-class WrapPropMemberInformation {
-	public bool HasWrapOnGetter { get => WrapGetter != null; }
-	public bool HasWrapOnSetter { get => WrapSetter != null; }
-	public string WrapGetter { get; private set; }
-	public string WrapSetter { get; private set; }
-
-	public WrapPropMemberInformation (PropertyInfo pi, Generator generator)
-	{
-		WrapGetter = generator.AttributeManager.GetCustomAttribute<WrapAttribute> (pi?.GetMethod)?.MethodName;
-		WrapSetter = generator.AttributeManager.GetCustomAttribute<WrapAttribute> (pi?.SetMethod)?.MethodName;
-	}
-}
-
 
 public class MemberInformation {
 	Generator Generator;
