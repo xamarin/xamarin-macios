@@ -55,54 +55,6 @@ using Foundation;
 using Xamarin.Utils;
 
 //
-// Encapsulates the information necessary to create a block delegate
-//
-// FIXME: We do not really need this class, we should just move all this
-// pre-processing to the generation stage, instead of decoupling it in two places.
-//
-// The Name is the internal generated name we use for the delegate
-// The Parameters is used for the internal delegate signature
-// The Invoke contains the invocation steps necessary to invoke the method
-//
-public class TrampolineInfo {
-	public string UserDelegate, DelegateName, TrampolineName, Parameters, Convert, Invoke, ReturnType, DelegateReturnType, ReturnFormat, Clear, OutReturnType, PostConvert;
-	public string UserDelegateTypeAttribute;
-	public Type Type;
-
-	public TrampolineInfo (string userDelegate, string delegateName, string trampolineName, string pars, string convert, string invoke, string returnType, string delegateReturnType, string returnFormat, string clear, string postConvert, Type type)
-	{
-		UserDelegate = userDelegate;
-		DelegateName = delegateName;
-		Parameters = pars;
-		TrampolineName = trampolineName;
-		Convert = convert;
-		Invoke = invoke;
-		ReturnType = returnType;
-		DelegateReturnType = delegateReturnType;
-		ReturnFormat = returnFormat;
-		Clear = clear;
-		PostConvert = postConvert;
-		this.Type = type;
-
-		TrampolineName = "Invoke";
-	}
-
-	// Name for the static class generated that contains the Objective-C to C# block bridge
-	public string StaticName {
-		get {
-			return "S" + DelegateName;
-		}
-	}
-
-	// Name for the class generated that allows C# to invoke an Objective-C block
-	public string NativeInvokerName {
-		get {
-			return "NI" + DelegateName;
-		}
-	}
-}
-
-//
 // This class is used to generate a graph of the type hierarchy of the
 // generated types and required by the UIApperance support to determine
 // which types need to have Appearance methods created
