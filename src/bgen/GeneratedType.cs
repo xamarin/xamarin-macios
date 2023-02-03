@@ -47,6 +47,6 @@ public class GeneratedType {
 	List<MemberInfo>? appearance_selectors;
 
 	public List<MemberInfo> AppearanceSelectors {
-		get { return appearance_selectors ??= new(); }
+		get { return appearance_selectors ??= new (); }
 	}
 }
