@@ -949,7 +949,7 @@ Additional information:
 		[Test]
 		public void GetINativeObjectTest_NSObject_Owns ()
 		{
-			var handle  = CreateNativeNSObject ();
+			var handle = CreateNativeNSObject ();
 			Assert.AreEqual (1, GetRetainCount (handle), "A 1");
 			using var obj = Runtime.GetINativeObject<NSObject> (handle, false, true);
 			Assert.AreEqual (1, GetRetainCount (handle), "A 2");
@@ -985,7 +985,7 @@ Additional information:
 		[Test]
 		public void GetINativeObjectTest_INativeObject_Owns ()
 		{
-			var handle  = CreateNativeBitmapContext ();
+			var handle = CreateNativeBitmapContext ();
 			Assert.AreEqual (1, CFGetRetainCount (handle), "A 1");
 			using var obj = Runtime.GetINativeObject<CGBitmapContext> (handle, false, true);
 			Assert.AreEqual (1, CFGetRetainCount (handle), "A 2");
@@ -1045,7 +1045,7 @@ Additional information:
 		{
 			if (handle == IntPtr.Zero)
 				return -1;
-			return (long) Messaging.IntPtr_objc_msgSend (handle, Selector.GetHandle ("retainCount"));	
+			return (long) Messaging.IntPtr_objc_msgSend (handle, Selector.GetHandle ("retainCount"));
 		}
 
 		static long CFGetRetainCount (IntPtr handle)
