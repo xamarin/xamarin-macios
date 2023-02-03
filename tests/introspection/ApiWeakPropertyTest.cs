@@ -41,9 +41,6 @@ namespace Introspection {
 			// this is a weakly typed API (not a weak reference) with a [NotImplemented] so there's no [Export]
 			case "WeakSignificantEvent":
 				return property.DeclaringType.Name == "HMSignificantTimeEvent";
-			// Api binding mistake so there's no [Export]
-			case "WeakNowPlayingInfo":
-				return property.DeclaringType.Name == "AVPlayerItem";
 			}
 			return false;
 		}

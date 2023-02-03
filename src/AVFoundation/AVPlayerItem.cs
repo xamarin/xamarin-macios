@@ -4,7 +4,6 @@ using System;
 
 using Foundation;
 using ObjCRuntime;
-using System.ComponentModel;
 
 #nullable enable
 
@@ -30,15 +29,6 @@ namespace AVFoundation {
 					_VideoApertureMode = val;
 			}
 		}
-
-#if !XAMCORE_5_0
-		[Obsolete (Constants.ApiRemovedGeneral)]
-		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		public NSDictionary WeakNowPlayingInfo {
-			get => throw new NotImplementedException ();
-			set => throw new NotImplementedException ();
-		}
-#endif
 	}
 }
 

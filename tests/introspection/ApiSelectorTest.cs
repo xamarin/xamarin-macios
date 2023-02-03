@@ -398,6 +398,15 @@ namespace Introspection {
 					return true;
 				}
 				break;
+#if (__WATCHOS__ || __MACOS__ || __MACCATALYST__)
+			case "AVPlayerItem":
+				switch (selectorName) { // comes from AVPlayerItem+MPAdditions.h
+				case "nowPlayingInfo":
+				case "setNowPlayingInfo:":
+					return TestRuntime.IsSimulatorOrDesktop;
+				}
+				break;
+#endif
 			case "AVPlayerItemVideoOutput":
 				switch (selectorName) {
 				case "initWithOutputSettings:":
