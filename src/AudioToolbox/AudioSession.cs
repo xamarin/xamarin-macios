@@ -486,7 +486,12 @@ namespace AudioToolbox {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("maccatalyst13.1", "Use 'InputRoute' or 'OutputRoute' instead.")]
+		[ObsoletedOSPlatform ("macos10.7", "Use 'InputRoute' or 'OutputRoute' instead.")]
 		[ObsoletedOSPlatform ("ios5.0", "Use 'InputRoute' or 'OutputRoute' instead.")]
+		[ObsoletedOSPlatform ("tvos9.0", "Use 'InputRoute' or 'OutputRoute' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 5, 0, message: "Use 'InputRoute' or 'OutputRoute' instead.")]
 #endif
