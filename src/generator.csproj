@@ -102,6 +102,7 @@
     <Compile Include="..\src\bgen\Filters.cs" />
     <Compile Include="..\src\bgen\Generator.cs" />
     <Compile Include="..\src\bgen\MarshalInfo.cs" />
+    <Compile Include="..\src\bgen\MemberInformation.cs" />
     <Compile Include="..\src\bgen\NamespaceManager.cs" />
     <Compile Include="..\src\bgen\NullabilityInfoContext.cs" />
     <Compile Include="..\src\bgen\TypeManager.cs" />
