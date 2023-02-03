@@ -137,7 +137,7 @@ namespace MonoTests.System.Net.Http {
 				}
 			}, () => completed);
 
-			if (!completed || !managedCookieResult)
+			if (!completed || !managedCookieResult || !nativeCookieResult)
 				TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
 			Assert.IsTrue (completed, "Network request completed");
 			Assert.IsNull (ex, "Exception");
