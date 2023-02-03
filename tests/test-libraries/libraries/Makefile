@@ -35,6 +35,7 @@ $(1)_$(3)_TARGETS += \
 	.libs/$(3)/lib$(1).a \
 	.libs/$(3)/lib$(1).o \
 	.libs/$(3)/lib$(1).dylib \
+	.libs/$(3)/lib$(1).so \
 
 $(3)_TARGETS += \
 	$$($(1)_$(3)_TARGETS) \
@@ -55,6 +56,9 @@ endif
 
 .libs/$(3)/lib$(1).a: .libs/$(3)/lib$(1).o
 	$$(call Q_2,AR     [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cru $$@ $$<
+
+.libs/$(3)/lib$(1).so: .libs/$(3)/lib$(1).dylib
+	$$(Q) $(CP) .libs/$(3)/lib$(1).dylib .libs/$(3)/lib$(1).so
 
 $$($(3)_$(1)_DIRECTORIES):
 	$$(Q) mkdir -p $$@
