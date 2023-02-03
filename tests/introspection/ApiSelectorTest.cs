@@ -231,12 +231,6 @@ namespace Introspection {
 					return true;
 				}
 				break;
-			case "HMAccessory":
-				switch (selectorName) {
-				case "matterNodeId": // Ventura error.
-					return true;
-				}
-				break;
 			case "EKParticipant":
 				switch (selectorName) {
 				case "ABRecordWithAddressBook:": // Ventura error.
