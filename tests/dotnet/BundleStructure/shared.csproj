@@ -54,6 +54,10 @@
 			<!-- Bundled, linked with -->
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+		<None Include="$(RootTestsDirectory)/test-libraries/libraries/.libs/$(RuntimeIdentifier)/libNoneE.so">
+			<!-- Bundled, not linked with -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 		<None Include="$(RootTestsDirectory)/test-libraries/libraries/.libs/$(RuntimeIdentifier)/libNoneF.a">
 			<!-- Not bundled; linked with -->
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -101,6 +105,10 @@
 
 		<None Include="$(RootTestsDirectory)/test-libraries/libraries/.libs/$(RuntimeIdentifier)/libSkipInstallNameTool.dylib">
 			<!-- Bundled, linked with, install_name_tool must have been executed -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Include="$(RootTestsDirectory)/test-libraries/libraries/.libs/$(RuntimeIdentifier)/libSkipInstallNameTool.so">
+			<!-- Bundled, not linked with, install_name_tool must have been executed -->
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>

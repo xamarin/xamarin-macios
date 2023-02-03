@@ -3,15 +3,21 @@
 #nullable enable
 
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
 
 namespace FileProvider {
 
+#if !(XAMCORE_5_0 && __MACCATALYST__)
+
 #if NET
 	[SupportedOSPlatform ("macos12.0")]
 	[SupportedOSPlatform ("ios16.0")]
 	[UnsupportedOSPlatform ("maccatalyst")]
+#if __MACCATALYST__
+	[EditorBrowsable (EditorBrowsableState.Never)]
+#endif
 #else
 	[iOS (16,0)]
 	[NoMacCatalyst]
@@ -31,6 +37,8 @@ namespace FileProvider {
 			=> Runtime.ToFourCCString (Creator);
 #endif
 	}
+
+#endif // !(XAMCORE_5_0 && __MACCATALYST__)
 
 }
 #endif

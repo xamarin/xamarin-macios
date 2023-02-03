@@ -1212,7 +1212,7 @@
 		</PropertyGroup>
 		<ItemGroup>
 			<!-- Create the ComputedRelativePath metadata from RelativePath -->
-			<_DynamicLibraryToReidentify Include="@(_FileNativeReference)" Condition="'%(Extension)' == '.dylib'">
+			<_DynamicLibraryToReidentify Include="@(_FileNativeReference)" Condition="'%(Kind)' == 'Dynamic'">
 				<SourceItemGroup>_FileNativeReference</SourceItemGroup>
 				<ComputedRelativePath>%(_FileNativeReference.RelativePath)</ComputedRelativePath>
 			</_DynamicLibraryToReidentify>
@@ -1257,6 +1257,12 @@
 			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName);$(_MtouchSymbolsList)"
 		>
 
+		<ItemGroup Condition="'$(IsMacEnabled)' == 'true'">
+			<_NativeReferences Include="@(_FrameworkNativeReference)" />
+			<!-- Do not link native references with LinkToExecutable='false' such as PluginLibrary files -->
+			<_NativeReferences Include="@(_FileNativeReference)" Condition="'%(_FileNativeReference.LinkToExecutable)' != 'false'" />
+		</ItemGroup>
+
 		<LinkNativeCode
 			SessionId="$(BuildSessionId)"
 			DylibRPath="$(_DylibRPath)"
@@ -1266,7 +1272,7 @@
 			LinkerFlags="@(_AssemblyLinkerFlags);@(_ReferencesLinkerFlags);@(_MainLinkerFlags);@(_CustomLinkFlags)"
 			LinkWithLibraries="@(_XamarinMainLibraries);@(_BindingLibraryLinkWith);@(_MainLinkWith)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
-			NativeReferences="@(_FileNativeReference);@(_FrameworkNativeReference)"
+			NativeReferences="@(_NativeReferences)"
 			ObjectFiles="@(_NativeExecutableObjectFiles)"
 			OutputFile="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
 			SdkDevPath="$(_SdkDevPath)"
@@ -1393,11 +1399,11 @@
 				Update="@(ResolvedFileToPublish)"
 				RelativePath="$(_AssemblyPublishDir)\%(ResolvedFileToPublish.DestinationSubDirectory)\%(ResolvedFileToPublish.TargetPath)"
 				Condition="'$(AppConfig)' != '' And '%(ResolvedFileToPublish.OriginalItemSpec)' == '$(AppConfig)' And '%(ResolvedFileToPublish.Link)' == 'app.config' And '%(ResolvedFileToPublish.TargetPath)' != ''" />
-			<!-- .dylib are never needed (nor allowed) for fully AOT'ed applications FIXME https://github.com/xamarin/xamarin-macios/issues/11145 -->
+			<!-- .dylib and .so are never needed (nor allowed) for fully AOT'ed applications FIXME https://github.com/xamarin/xamarin-macios/issues/11145 -->
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
 				RelativePath="$(_DylibPublishDir)\%(Filename)%(Extension)"
-				Condition="('$(_SdkIsSimulator)' != 'false' Or '$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst') And '%(Extension)' == '.dylib'" />
+				Condition="('$(_SdkIsSimulator)' != 'false' Or '$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst') And ('%(Extension)' == '.dylib' Or '%(Extension)' == '.so') " />
 
 			<!-- Don't publish any icu*dat file (by setting PublishFolderType = None) -->
 			<ResolvedFileToPublish
@@ -1543,7 +1549,11 @@
 			<!-- we link with dynamic libraries, and we copy them to the app bundle (the copying part is handled in _ComputeDynamicLibrariesToPublish) -->
 			<_ResolvedFileToPublish_DynamicLibrary Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'DynamicLibrary'" />
 			<_FileNativeReference Include="@(_ResolvedFileToPublish_DynamicLibrary)" Kind="Dynamic" />
+			<!-- we link with dynamic libraries, and we copy them to the app bundle (the copying part is handled in _ComputeDynamicLibrariesToPublish) -->
+			<_ResolvedFileToPublish_PluginLibrary Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'PluginLibrary'" />
+			<_FileNativeReference Include="@(_ResolvedFileToPublish_PluginLibrary)" Kind="Dynamic" LinkToExecutable="false" />
 			<ResolvedFileToPublish Remove="@(_ResolvedFileToPublish_DynamicLibrary)" />
+			<ResolvedFileToPublish Remove="@(_ResolvedFileToPublish_PluginLibrary)" />
 
 			<!-- we link with the contents of binding resource packages, but the packages themselves aren't copied to the app bundle, so remove them here -->
 			<_AppleBindingResourcePackage Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'AppleBindingResourcePackage'" />
