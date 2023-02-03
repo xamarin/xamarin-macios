@@ -110,4 +110,3 @@
 ## new @required on existing protocols are breaking changes
 !incorrect-protocol-member! ICCameraDeviceDelegate::cameraDevice:didReceiveThumbnail:forItem:error: is REQUIRED and should be abstract
 !incorrect-protocol-member! ICCameraDeviceDelegate::cameraDevice:didReceiveThumbnailForItem: is OPTIONAL and should NOT be abstract
-
