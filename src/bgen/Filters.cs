@@ -120,7 +120,7 @@ public partial class Generator {
 		GenerateProperties (type, type);
 
 		// protocols
-		GenerateProtocolProperties (type, new HashSet<string> ());
+		GenerateProtocolProperties (type, type, new HashSet<string> ());
 
 		indent--;
 		print ("}");
@@ -132,7 +132,7 @@ public partial class Generator {
 		}
 	}
 
-	void GenerateProtocolProperties (Type type, HashSet<string> processed)
+	void GenerateProtocolProperties (Type type, Type originalType, HashSet<string> processed)
 	{
 		foreach (var i in type.GetInterfaces ()) {
 			if (!IsProtocolInterface (i, false, out var protocol))
@@ -146,10 +146,10 @@ public partial class Generator {
 
 			print ("");
 			print ($"// {pname} protocol members ");
-			GenerateProperties (i, type, fromProtocol: true);
+			GenerateProperties (i, originalType, fromProtocol: true);
 
 			// also include base interfaces/protocols
-			GenerateProtocolProperties (i, processed);
+			GenerateProtocolProperties (i, originalType, processed);
 		}
 	}
 

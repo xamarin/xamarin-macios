@@ -362,6 +362,15 @@ namespace Cecil.Tests {
 						failures.Add ($"[FAIL] {api.AsFullName ()} is marked unsupported: \"{unsupportedPlatformName}\" {api.RenderLocation ()}");
 				}
 
+				// If an API has any availabily attributes, it must have at least a SupportedOSPlatform attribute (no API can be only obsoleted or unsupported, it must also have been supported at some point).
+				// Exceptions:
+				// * If the API is obsolete, or has EditorBrowsable (Never), then we skip this check (it's likely a mistake of some sort).
+				// * We expose enum values that aren't supported on a given platform for error enums.
+				if (apiSupportedAttribute is null && (apiObsoletedAttribute is not null || apiUnsupportedAttribute is not null) && !(api.IsObsolete () || api.HasEditorBrowseableNeverAttribute ())) {
+					if (!IsEnumField (api))
+						failures.Add ($"[FAIL] {api.AsFullName ()} does not have a SupportedOSPlatform attribute for {platform}, but it's still: {string.Join (", ", new [] { apiObsoletedAttribute, apiUnsupportedAttribute }.Where (v => v is not null).Select (v => v!.AsOSPlatformAttributeString ()))}");
+				}
+
 				// The subsequent tests are limited to members of the current API, so just continue looping if we're not a type.
 				if (!(api is TypeDefinition type))
 					continue;
@@ -381,9 +390,8 @@ namespace Cecil.Tests {
 						failures.Add ($"[FAIL] {member.AsFullName ()} is marked available in {memberSupportedVersion} with '{memberSupportedAttribute.AsOSPlatformAttributeString ()}', but the declaring type {type.FullName} is marked unavailable in {apiUnsupportedVersion} with '{apiUnsupportedAttribute.AsOSPlatformAttributeString ()}'");
 
 					// Check that the member isn't supported before the type.
-					// FIXME: we hit this a lot with inlined protocol members, so it's disabled for now.
-					//if (apiSupportedVersion is not null && memberSupportedVersion is not null && memberSupportedVersion < apiSupportedVersion)
-					//	failures.Add($"[FAIL] in {member.AsFullName()} is marked available with '{memberSupportedVersion}', but the declaring type {type.FullName} is only available in '{apiSupportedVersion}'");
+					if (apiSupportedVersion is not null && memberSupportedVersion is not null && memberSupportedVersion < apiSupportedVersion)
+						failures.Add ($"[FAIL] in {member.AsFullName ()} is marked available with '{memberSupportedVersion}', but the declaring type {type.FullName} is only available in '{apiSupportedVersion}'");
 				}
 			}
 

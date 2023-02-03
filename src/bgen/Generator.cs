@@ -3009,14 +3009,14 @@ public partial class Generator : IMemberGatherer {
 				throw new NotImplementedException ();
 			}
 		} else {
-			// Due to the absurd API of Version, you can not pass a -1 to the revision constructor
+			// Due to the absurd API of Version, you can not pass a -1 to the build constructor
 			// nor can you coerse to 0, as that will fail with "16.0.0 <= 16.0" => false in the registrar
-			// So determine if the revision is -1, and use the 2 or 3 param ctor...
+			// So determine if the build is -1, and use the 2 or 3 param ctor...
 			var version = attr.Version;
 			var minimum = Xamarin.SdkVersions.GetMinVersion (AsApplePlatform (platform));
 			if (version < minimum)
 				version = minimum;
-			if (version.Revision == -1) {
+			if (version.Build == -1) {
 				switch (attr.AvailabilityKind) {
 				case AvailabilityKind.Introduced:
 					return new IntroducedAttribute (platform, version.Major, version.Minor, message: attr.Message);
@@ -3032,11 +3032,11 @@ public partial class Generator : IMemberGatherer {
 			} else {
 				switch (attr.AvailabilityKind) {
 				case AvailabilityKind.Introduced:
-					return new IntroducedAttribute (platform, version.Major, version.Minor, version.Revision, message: attr.Message);
+					return new IntroducedAttribute (platform, version.Major, version.Minor, version.Build, message: attr.Message);
 				case AvailabilityKind.Deprecated:
-					return new DeprecatedAttribute (platform, version.Major, version.Minor, version.Revision, message: attr.Message);
+					return new DeprecatedAttribute (platform, version.Major, version.Minor, version.Build, message: attr.Message);
 				case AvailabilityKind.Obsoleted:
-					return new ObsoletedAttribute (platform, version.Major, version.Minor, version.Revision, message: attr.Message);
+					return new ObsoletedAttribute (platform, version.Major, version.Minor, version.Build, message: attr.Message);
 				case AvailabilityKind.Unavailable:
 					return new UnavailableAttribute (platform, message: attr.Message);
 				default:
