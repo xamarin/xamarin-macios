@@ -1710,7 +1710,7 @@ namespace ObjCRuntime {
 				return;
 			}
 
-			throw new InvalidOperationException ($"Unable to call release on an instance of the type {obj.GetType ()}");
+			throw ErrorHelper.CreateError (8045, Xamarin.Bundler.Errors.MX8045 /* Unable to call release on an instance of the type {0}" */, obj.GetType ().FullName);
 		}
 
 		static Type? FindProtocolWrapperType (Type? type)
