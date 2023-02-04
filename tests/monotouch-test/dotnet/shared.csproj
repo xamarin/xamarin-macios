@@ -74,6 +74,9 @@
     <Content Include="$(MonoTouchTestDirectory)\basn3p08.png">
       <Link>basn3p08.png</Link>
     </Content>
+        <Content Include="$(MonoTouchTestDirectory)\basn3p08_with_loc.png">
+      <Link>basn3p08_with_loc.png</Link>
+    </Content>
     <Content Include="$(MonoTouchTestDirectory)\BoardingPass.pkpass">
       <Link>BoardingPass.pkpass</Link>
     </Content>

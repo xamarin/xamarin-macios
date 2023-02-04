@@ -270,10 +270,13 @@ namespace Cecil.Tests {
 					"Foundation.NSUserActivity.LoadDataAsync (System.String, Foundation.NSProgress&)",
 					"Foundation.NSUserActivity.WritableTypeIdentifiers",
 					"Foundation.NSUserActivity.WritableTypeIdentifiersForItemProvider",
+					"Foundation.NSUserActivity.get_WritableTypeIdentifiers ()",
+					"Foundation.NSUserActivity.get_WritableTypeIdentifiersForItemProvider ()",
 
 					// This is from the NSItemProviderReading protocol: NSUserActivity does not implement NSItemProviderReading on tvOS and macOS.
 					"Foundation.NSUserActivity.GetObject (Foundation.NSData, System.String, Foundation.NSError&)",
 					"Foundation.NSUserActivity.ReadableTypeIdentifiers",
+					"Foundation.NSUserActivity.get_ReadableTypeIdentifiers ()",
 
 					// This is from the NSItemProviderWriting protocol: MKMapItem does not implement NSItemProviderWriting on tvOS and macOS.
 					"MapKit.MKMapItem.GetItemProviderVisibilityForTypeIdentifier (System.String)",
@@ -282,14 +285,18 @@ namespace Cecil.Tests {
 					"MapKit.MKMapItem.LoadDataAsync (System.String, Foundation.NSProgress&)",
 					"MapKit.MKMapItem.WritableTypeIdentifiers",
 					"MapKit.MKMapItem.WritableTypeIdentifiersForItemProvider",
+					"MapKit.MKMapItem.get_WritableTypeIdentifiers ()",
+					"MapKit.MKMapItem.get_WritableTypeIdentifiersForItemProvider ()",
 
 					// This is from the NSItemProviderReading protocol: MKMapItem does not implement NSItemProviderReading on tvOS and macOS.
 					"MapKit.MKMapItem.GetObject (Foundation.NSData, System.String, Foundation.NSError&)",
 					"MapKit.MKMapItem.ReadableTypeIdentifiers",
+					"MapKit.MKMapItem.get_ReadableTypeIdentifiers ()",
 
 					// This is from the NSItemProviderReading protocol: PHLivePhoto does not implement NSItemProviderReading on tvOS and macOS.
 					"Photos.PHLivePhoto.GetObject (Foundation.NSData, System.String, Foundation.NSError&)",
 					"Photos.PHLivePhoto.ReadableTypeIdentifiers",
+					"Photos.PHLivePhoto.get_ReadableTypeIdentifiers ()",
 
 
 					// This is from the NSSecureCoding protocol: SKView only implements NSSecureCoding on macOS.
@@ -305,6 +312,9 @@ namespace Cecil.Tests {
 					"Metal.MTLTextureWrapper.FirstMipmapInTail",
 					"Metal.MTLTextureWrapper.IsSparse",
 					"Metal.MTLTextureWrapper.TailSizeInBytes",
+					"Metal.IMTLTexture.FirstMipmapInTail",
+					"Metal.IMTLTexture.IsSparse",
+					"Metal.IMTLTexture.TailSizeInBytes",
 
 
 					// HKSeriesBuilder doesn't implement the ISNCopying protocol on all platforms (and shouldn't on any according to the headers, so removed for XAMCORE_5_0).
