@@ -38,7 +38,11 @@ namespace AppKit {
 #endif
 		static nint view_compare (IntPtr view1, IntPtr view2, IntPtr context)
 		{
-			var data = (SortData) GCHandle.FromIntPtr (context).Target;
+			var data = GCHandle.FromIntPtr (context).Target as SortData;
+			// should never happen, but we must be ready and not crash
+			if (data is null)
+				return (nint) (long) NSComparisonResult.Same;
+
 			try {
 				var a = Runtime.GetNSObject (view1) as NSView;
 				var b = Runtime.GetNSObject (view2) as NSView;
