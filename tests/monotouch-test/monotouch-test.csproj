@@ -304,6 +304,7 @@
     <Content Include="AudioToolbox\1.caf" />
     <Content Include="Tamarin.pdf" />
     <Content Include="basn3p08.png" />
+    <Content Include="basn3p08_with_loc.png" />
     <Content Include="BoardingPass.pkpass" />
     <Content Include="Hand.wav" />
     <Content Include="Pacifico.ttf" />

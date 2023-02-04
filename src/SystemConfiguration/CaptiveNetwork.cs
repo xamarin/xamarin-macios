@@ -106,7 +106,8 @@ namespace SystemConfiguration {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("maccatalyst13.1", "Use 'NEHotspotNetwork.FetchCurrent' instead.")]
 		[ObsoletedOSPlatform ("ios14.0", "Use 'NEHotspotNetwork.FetchCurrent' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'NEHotspotNetwork.FetchCurrent' instead.")]
@@ -127,8 +128,9 @@ namespace SystemConfiguration {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("ios9.0")]
+		[ObsoletedOSPlatform ("maccatalyst13.1")]
 #else
 		[Deprecated (PlatformName.iOS, 9, 0)]
 #endif
@@ -139,8 +141,9 @@ namespace SystemConfiguration {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("ios9.0")]
+		[ObsoletedOSPlatform ("maccatalyst13.1")]
 #else
 		[Deprecated (PlatformName.iOS, 9, 0)]
 #endif
@@ -151,7 +154,8 @@ namespace SystemConfiguration {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("maccatalyst13.1")]
 		[ObsoletedOSPlatform ("ios9.0")]
 #else
 		[Deprecated (PlatformName.iOS, 9, 0)]
@@ -166,7 +170,8 @@ namespace SystemConfiguration {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("maccatalyst13.1")]
 		[ObsoletedOSPlatform ("ios9.0")]
 #else
 		[Deprecated (PlatformName.iOS, 9, 0)]
@@ -181,7 +186,8 @@ namespace SystemConfiguration {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("maccatalyst13.1")]
 		[ObsoletedOSPlatform ("ios9.0")]
 #else
 		[Deprecated (PlatformName.iOS, 9, 0)]
@@ -193,7 +199,8 @@ namespace SystemConfiguration {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("maccatalyst13.1")]
 		[ObsoletedOSPlatform ("ios9.0")]
 #else
 		[Deprecated (PlatformName.iOS, 9, 0)]

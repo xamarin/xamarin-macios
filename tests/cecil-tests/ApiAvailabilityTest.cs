@@ -129,7 +129,6 @@ namespace Cecil.Tests {
 			"CoreGraphics.CGImage PassKit.PKShareablePassMetadata::PassThumbnailImage()",
 			"CoreGraphics.CGSize AppKit.NSToolbarItem::MaxSize()",
 			"CoreGraphics.CGSize AppKit.NSToolbarItem::MinSize()",
-			"CoreImage.CIRawFilterKeys.get_InputLocalToneMapAmountKey()",
 			"CoreLocation.CLAuthorizationStatus CoreLocation.CLAuthorizationStatus::Authorized",
 			"CoreLocation.CLAuthorizationStatus CoreLocation.CLAuthorizationStatus::AuthorizedWhenInUse",
 			"CoreLocation.CLLocationManagerDelegate.UpdatedLocation(CoreLocation.CLLocationManager, CoreLocation.CLLocation, CoreLocation.CLLocation)",
@@ -148,16 +147,14 @@ namespace Cecil.Tests {
 			"CoreText.CTFontManagerAutoActivation CoreText.CTFontManagerAutoActivation::PromptUser",
 			"CoreText.CTTypesetterOptionKey.get_DisableBidiProcessing()",
 			"CoreText.FontFeatureGroup CoreText.FontFeatureGroup::LetterCase",
-			"EventKit.EKParticipant.GetRecord(AddressBook.ABAddressBook)",
 			"Foundation.NSData HealthKit.HKVerifiableClinicalRecord::JwsRepresentation()",
 			"Foundation.NSDate HealthKit.HKWorkoutEvent::Date()",
 			"Foundation.NSString CoreData.NSPersistentStoreCoordinator::DidImportUbiquitousContentChangesNotification()",
 			"Foundation.NSString CoreData.NSPersistentStoreCoordinator::PersistentStoreUbiquitousContentNameKey()",
 			"Foundation.NSString CoreData.NSPersistentStoreCoordinator::PersistentStoreUbiquitousContentUrlKey()",
-			"Foundation.NSString CoreImage.CIRawFilterKeys::InputLocalToneMapAmountKey()",
 			"Foundation.NSString CoreText.CTTypesetterOptionKey::DisableBidiProcessing()",
 			"Foundation.NSString Foundation.NSUrl::UbiquitousItemIsDownloadingKey()",
-			"Foundation.NSString MobileCoreServices.UTType::UniversalSceneDescriptionMobile()",
+			"Foundation.NSTask.LaunchFromPath(System.String, System.String[])",
 			"Foundation.NSUrl.get_UbiquitousItemIsDownloadingKey()",
 			"Foundation.NSUrlSessionConfiguration.BackgroundSessionConfiguration(System.String)",
 			"Foundation.NSUserDefaults..ctor(System.String)",
@@ -167,7 +164,6 @@ namespace Cecil.Tests {
 			"GameController.GCMicroGamepadSnapshotData",
 			"GameController.GCMicroGamepadSnapshotData.ToNSData()",
 			"GameController.GCMicroGamepadSnapShotDataV100",
-			"GameKit.GKVoiceChatService",
 			"HealthKit.HKAnchoredObjectQuery..ctor(HealthKit.HKSampleType, Foundation.NSPredicate, System.UIntPtr, System.UIntPtr, HealthKit.HKAnchoredObjectResultHandler)",
 			"HealthKit.HKCategoryValueOvulationTestResult HealthKit.HKCategoryValueOvulationTestResult::Positive",
 			"HealthKit.HKCumulativeQuantitySeriesSample",
@@ -197,12 +193,9 @@ namespace Cecil.Tests {
 			"Intents.INStartCallIntent..ctor(Intents.INCallAudioRoute, Intents.INCallDestinationType, Intents.INPerson[], Intents.INCallRecordType, Intents.INCallCapability)",
 			"MapKit.MKOverlayView",
 			"MapKit.MKPinAnnotationColor",
-			"MediaPlayer.MPMoviePlayerController",
-			"MediaPlayer.MPMoviePlayerViewController",
 			"MediaPlayer.MPVolumeSettings.AlertHide()",
 			"MediaPlayer.MPVolumeSettings.AlertIsVisible()",
 			"MediaPlayer.MPVolumeSettings.AlertShow()",
-			"Metal.IMTLResource Metal.MTLTextureWrapper::RootResource()",
 			"MetalPerformanceShaders.MPSCnnConvolutionDescriptor.GetConvolutionDescriptor(System.UIntPtr, System.UIntPtr, System.UIntPtr, System.UIntPtr, MetalPerformanceShaders.MPSCnnNeuron)",
 			"MetalPerformanceShaders.MPSCnnFullyConnected..ctor(Metal.IMTLDevice, MetalPerformanceShaders.MPSCnnConvolutionDescriptor, System.Single[], System.Single[], MetalPerformanceShaders.MPSCnnConvolutionFlags)",
 			"MetalPerformanceShaders.MPSCnnNeuron MetalPerformanceShaders.MPSCnnConvolution::Neuron()",
@@ -212,7 +205,6 @@ namespace Cecil.Tests {
 			"MetalPerformanceShaders.MPSMatrixDescriptor.GetRowBytesFromColumns(System.UIntPtr, MetalPerformanceShaders.MPSDataType)",
 			"MobileCoreServices.UTType.CopyAllTags(System.String, System.String)",
 			"MobileCoreServices.UTType.Equals(Foundation.NSString, Foundation.NSString)",
-			"MobileCoreServices.UTType.get_UniversalSceneDescriptionMobile()",
 			"MobileCoreServices.UTType.IsDeclared(System.String)",
 			"MobileCoreServices.UTType.IsDynamic(System.String)",
 			"PassKit.PKShareablePassMetadata..ctor(System.String, System.String, CoreGraphics.CGImage, System.String, System.String, System.String, System.String, System.String, System.Boolean)",
@@ -226,7 +218,6 @@ namespace Cecil.Tests {
 			"Security.SecKey.RawSign(Security.SecPadding, System.IntPtr, System.Int32, out System.Byte[]&)",
 			"Security.SecKey.RawVerify(Security.SecPadding, System.IntPtr, System.Int32, System.IntPtr, System.Int32)",
 			"Security.SecProtocolOptions.AddTlsCipherSuiteGroup(Security.SslCipherSuiteGroup)",
-			"Security.SecProtocolOptions.SetTlsDiffieHellmanParameters(CoreFoundation.DispatchData)",
 			"Security.SecSharedCredential.RequestSharedWebCredential(System.String, System.String, System.Action`2<Security.SecSharedCredentialInfo[],Foundation.NSError>)",
 			"Security.SecTrust.Evaluate()",
 			"Security.SecTrust.Evaluate(CoreFoundation.DispatchQueue, Security.SecTrustCallback)",
@@ -242,14 +233,11 @@ namespace Cecil.Tests {
 			"Security.SslContext.SetOcspResponse(Foundation.NSData)",
 			"Security.SslContext.SetSessionConfig(Foundation.NSString)",
 			"Security.SslContext.SetSessionConfig(Security.SslSessionConfig)",
-			"Security.SslContext.SetSessionStrengthPolicy(Security.SslSessionStrengthPolicy)",
 			"Security.SslContext.SetSessionTickets(System.Boolean)",
 			"Security.SslProtocol Security.SecProtocolMetadata::NegotiatedProtocolVersion()",
 			"Speech.SFVoiceAnalytics Speech.SFTranscriptionSegment::VoiceAnalytics()",
 			"StoreKit.SKCloudServiceController.RequestPersonalizationToken(System.String, System.Action`2<Foundation.NSString,Foundation.NSError>)",
 			"StoreKit.SKCloudServiceController.RequestPersonalizationTokenAsync(System.String)",
-			"StoreKit.SKDownload.DeleteContentForProduct(System.String)",
-			"StoreKit.SKDownload.GetContentUrlForProduct(System.String)",
 			"StoreKit.SKMutablePayment.PaymentWithProduct(System.String)",
 			"StoreKit.SKStoreReviewController.RequestReview()",
 			"System.Boolean AppKit.NSImage::Flipped()",
@@ -366,8 +354,22 @@ namespace Cecil.Tests {
 
 				// If an API is just unavailable, it shouldn't be here in the first place.
 				//     [UnsupportedOSPlatform ("ios")]
-				if (apiUnsupportedAttribute is not null && string.IsNullOrEmpty (unsupportedPlatformName))
-					failures.Add ($"[FAIL] {api.AsFullName ()} is marked unsupported");
+				// Exceptions:
+				// * If the API is obsolete, or has EditorBrowsable (Never), then we skip this check (it's likely a mistake of some sort).
+				// * We expose enum values that aren't supported on a given platform for error enums.
+				if (apiUnsupportedAttribute is not null && apiUnsupportedVersion is null && !(api.IsObsolete () || api.HasEditorBrowseableNeverAttribute ())) {
+					if (!IsEnumField (api))
+						failures.Add ($"[FAIL] {api.AsFullName ()} is marked unsupported: \"{unsupportedPlatformName}\" {api.RenderLocation ()}");
+				}
+
+				// If an API has any availabily attributes, it must have at least a SupportedOSPlatform attribute (no API can be only obsoleted or unsupported, it must also have been supported at some point).
+				// Exceptions:
+				// * If the API is obsolete, or has EditorBrowsable (Never), then we skip this check (it's likely a mistake of some sort).
+				// * We expose enum values that aren't supported on a given platform for error enums.
+				if (apiSupportedAttribute is null && (apiObsoletedAttribute is not null || apiUnsupportedAttribute is not null) && !(api.IsObsolete () || api.HasEditorBrowseableNeverAttribute ())) {
+					if (!IsEnumField (api))
+						failures.Add ($"[FAIL] {api.AsFullName ()} does not have a SupportedOSPlatform attribute for {platform}, but it's still: {string.Join (", ", new [] { apiObsoletedAttribute, apiUnsupportedAttribute }.Where (v => v is not null).Select (v => v!.AsOSPlatformAttributeString ()))}");
+				}
 
 				// The subsequent tests are limited to members of the current API, so just continue looping if we're not a type.
 				if (!(api is TypeDefinition type))
@@ -388,9 +390,8 @@ namespace Cecil.Tests {
 						failures.Add ($"[FAIL] {member.AsFullName ()} is marked available in {memberSupportedVersion} with '{memberSupportedAttribute.AsOSPlatformAttributeString ()}', but the declaring type {type.FullName} is marked unavailable in {apiUnsupportedVersion} with '{apiUnsupportedAttribute.AsOSPlatformAttributeString ()}'");
 
 					// Check that the member isn't supported before the type.
-					// FIXME: we hit this a lot with inlined protocol members, so it's disabled for now.
-					//if (apiSupportedVersion is not null && memberSupportedVersion is not null && memberSupportedVersion < apiSupportedVersion)
-					//	failures.Add($"[FAIL] in {member.AsFullName()} is marked available with '{memberSupportedVersion}', but the declaring type {type.FullName} is only available in '{apiSupportedVersion}'");
+					if (apiSupportedVersion is not null && memberSupportedVersion is not null && memberSupportedVersion < apiSupportedVersion)
+						failures.Add ($"[FAIL] in {member.AsFullName ()} is marked available with '{memberSupportedVersion}', but the declaring type {type.FullName} is only available in '{apiSupportedVersion}'");
 				}
 			}
 
@@ -401,9 +402,27 @@ namespace Cecil.Tests {
 			Assert.Fail (msg);
 		}
 
+		static bool IsEnumField (ICustomAttributeProvider api)
+		{
+			if (!(api is FieldDefinition fd))
+				return false;
+
+			return fd.DeclaringType.BaseType.Is ("System", "Enum");
+		}
+
 		bool SkipSupportedAndObsoleteAtTheSameTime (ICustomAttributeProvider api, ApplePlatform platform, Version version)
 		{
 			var fullname = api.AsFullName ();
+
+			switch (fullname) {
+			case "SceneKit.SCNAnimationPlayer.SetSpeed(System.Runtime.InteropServices.NFloat, Foundation.NSString)":
+				// SetSpeed is in the SCNAnimatable protocol, which was added in iOS 8.0.
+				// The SetSpeed method was added in iOS 10.0, and deprecated in iOS 11.
+				// The SCNAnimatable protocol is implemented by the SCNAnimationPlayer class, which was added in iOS 11.
+				// Thus it's expected that the method was introduced and deprecated in the same OS version.
+				return true;
+			}
+
 			switch (platform) {
 			case ApplePlatform.iOS:
 				switch (fullname) {
