@@ -20,42 +20,49 @@ namespace CoreServices {
 
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Internal]
 		[Field ("kCFStreamPropertyHTTPAttemptPersistentConnection", "CFNetwork")]
 		NSString _AttemptPersistentConnection { get; }
 
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Internal]
 		[Field ("kCFStreamPropertyHTTPFinalURL", "CFNetwork")]
 		NSString _FinalURL { get; }
 
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Internal]
 		[Field ("kCFStreamPropertyHTTPFinalRequest", "CFNetwork")]
 		NSString _FinalRequest { get; }
 
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Internal]
 		[Field ("kCFStreamPropertyHTTPProxy", "CFNetwork")]
 		NSString _Proxy { get; }
 
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Internal]
 		[Field ("kCFStreamPropertyHTTPRequestBytesWrittenCount", "CFNetwork")]
 		NSString _RequestBytesWrittenCount { get; }
 
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Internal]
 		[Field ("kCFStreamPropertyHTTPResponseHeader", "CFNetwork")]
 		NSString _ResponseHeader { get; }
 
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Internal]
 		[Field ("kCFStreamPropertyHTTPShouldAutoredirect", "CFNetwork")]
 		NSString _ShouldAutoredirect { get; }
@@ -74,6 +81,7 @@ namespace CoreServices {
 
 		[Mac (10, 11)]
 		[iOS (9, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Field ("kCFHTTPVersion2_0", "CFNetwork")]
 		IntPtr _HTTPVersion2_0 { get; }
@@ -117,6 +125,7 @@ namespace CoreServices {
 		// iOS headers says it's iOS 7.0 only (but comments talks about OSX)
 		// yet both 7.0+ and 10.9 returns null
 		[Mac (10, 9)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Field ("kCFHTTPAuthenticationSchemeOAuth1", "CFNetwork")]
 		IntPtr _AuthenticationSchemeOAuth1 { get; }

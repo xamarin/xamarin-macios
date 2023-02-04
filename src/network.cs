@@ -9,6 +9,7 @@ namespace Network {
 
 	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWErrorDomain {
 		Invalid = 0,
 		[Field ("kNWErrorDomainPOSIX")]
@@ -21,6 +22,7 @@ namespace Network {
 
 	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	[Static]
 	[Internal]
 	partial interface NWContentContextConstants {
@@ -36,6 +38,7 @@ namespace Network {
 
 	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	[Static]
 	[Internal]
 	partial interface NWConnectionConstants {
@@ -46,6 +49,7 @@ namespace Network {
 
 	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	[Static]
 	[Internal]
 	partial interface NWParametersConstants {
@@ -58,6 +62,7 @@ namespace Network {
 	}
 
 	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Static]
 	[Internal]
 	partial interface NWPrivacyContextConstants {
@@ -70,6 +75,7 @@ namespace Network {
 	[TV (14, 2)]
 	[Watch (7, 1)]
 	[Mac (11, 0)]
+	[MacCatalyst (14, 2)]
 	// untyped `nw_path_unsatisfied_reason_t` enum
 	enum NWPathUnsatisfiedReason {
 		NotAvailable = 0,

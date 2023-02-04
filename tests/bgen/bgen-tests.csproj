@@ -43,6 +43,12 @@
     <Compile Include="..\common\Profile.cs">
       <Link>Profile.cs</Link>
     </Compile>
+    <Compile Include="..\generator\NullabilityContextTests.cs">
+      <Link>NullabilityContextTests.cs</Link>
+    </Compile>
+    <Compile Include="..\generator\StringExtensionTests.cs">
+      <Link>StringExtensionTests.cs</Link>
+    </Compile>
     <Compile Include="..\mtouch\Cache.cs">
       <Link>Cache.cs</Link>
     </Compile>
