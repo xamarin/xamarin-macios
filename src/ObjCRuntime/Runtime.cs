@@ -36,6 +36,7 @@ namespace ObjCRuntime {
 		static Dictionary<Type, ConstructorInfo> intptr_ctor_cache;
 		static Dictionary<Type, ConstructorInfo> intptr_bool_ctor_cache;
 		internal static Dictionary<IntPtr, Dictionary<IntPtr, bool>> protocol_cache;
+		static ConditionalWeakTable<Delegate, BlockCollector> block_lifetime_table;
 
 		static List<object> delegates;
 		static List<Assembly> assemblies;
@@ -289,6 +290,7 @@ namespace ObjCRuntime {
 			usertype_cache = new Dictionary<IntPtr, bool> (IntPtrEqualityComparer);
 			intptr_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
 			intptr_bool_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
+			block_lifetime_table = new ConditionalWeakTable<Delegate, BlockCollector> ();
 			lock_obj = new object ();
 
 			NSObjectClass = NSObject.Initialize ();
@@ -1006,10 +1008,17 @@ namespace ObjCRuntime {
 		// Used to call the Create(IntPtr) method on the proxy classes that turn
 		// objective c blocks into strongly typed delegates.
 		//
+		// The block will be kept alive until the delegate is collected by the GC.
 		[EditorBrowsable (EditorBrowsableState.Never)]
-		static Delegate CreateBlockProxy (MethodInfo method, IntPtr block)
+		static Delegate? CreateBlockProxy (MethodInfo method, IntPtr block)
 		{
-			return (Delegate) method.Invoke (null, new object [] { block })!;
+			var del = (Delegate?) method.Invoke (null, new object [] { block });
+			if (del is not null) {
+				ReleaseBlockWhenDelegateIsCollected (block, del);
+			} else {
+				ReleaseBlockOnMainThread (block);
+			}
+			return del;
 		}
 
 		internal static Delegate? GetDelegateForBlock (IntPtr methodPtr, Type type)
@@ -2020,6 +2029,20 @@ namespace ObjCRuntime {
 		[DllImport ("__Internal", EntryPoint = "xamarin_release_block_on_main_thread")]
 		public static extern void ReleaseBlockOnMainThread (IntPtr block);
 #endif
+
+		// This method will release the specified block, but not while the delegate is still alive.
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		static Delegate ReleaseBlockWhenDelegateIsCollected (IntPtr block, Delegate @delegate)
+		{
+			if (@delegate is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (@delegate));
+
+			if (block == IntPtr.Zero)
+				return @delegate;
+
+			block_lifetime_table.Add (@delegate, new BlockCollector (block));
+			return @delegate;
+		}
 
 		// Throws an ArgumentNullException if 'obj' is null.
 		// This method is particularly helpful when calling another constructor from a constructor, where you can't add any statements before calling the other constructor:

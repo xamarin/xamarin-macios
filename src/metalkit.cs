@@ -256,7 +256,7 @@ namespace MetalKit {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[MacCatalyst (13, 1)]
-		bool GenerateMipmaps { get; }
+		bool GenerateMipmaps { get; set; }
 
 		bool Srgb { get; set; }
 	}

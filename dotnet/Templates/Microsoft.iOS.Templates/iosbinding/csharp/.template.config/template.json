@@ -1,0 +1,20 @@
+﻿{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Microsoft",
+  "classifications": [ "iOS", "Mobile" ],
+  "groupIdentity": "Microsoft.iOS.iOSBinding",
+  "identity": "Microsoft.iOS.iOSBinding.CSharp",
+  "name": "iOS Binding Library",
+  "description": "A project for creating a .NET iOS binding library",
+  "shortName": "iosbinding",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "iOSBinding1",
+  "preferNameDirectory": true,
+  "primaryOutputs": [
+    { "path": "iOSBinding1.csproj" }
+  ],
+  "defaultName": "iOSBinding1"
+}

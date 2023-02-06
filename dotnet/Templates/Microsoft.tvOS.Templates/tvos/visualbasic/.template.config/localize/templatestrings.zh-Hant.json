@@ -1,0 +1,7 @@
+{
+  "author": "Microsoft",
+  "name": "tvOS 應用程式",
+  "description": "用於建立 .NET 6 tvOS 應用程式的專案",
+  "symbols/bundleId/description": "覆寫 Info.plist 中的 CFBundleIdentifier",
+  "symbols/minOSVersion/description": "覆寫專案檔中的 SupportedOSPlatformVersion"
+}
