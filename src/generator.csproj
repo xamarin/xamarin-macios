@@ -99,6 +99,7 @@
     <Compile Include="..\src\bgen\BindingTouch.cs" />
     <Compile Include="..\src\bgen\Enums.cs" />
     <Compile Include="..\src\bgen\ExtensionMethods.cs" />
+    <Compile Include="..\src\bgen\Frameworks.cs" />
     <Compile Include="..\src\bgen\Filters.cs" />
     <Compile Include="..\src\bgen\GeneratedType.cs" />
     <Compile Include="..\src\bgen\GeneratedTypes.cs" />
