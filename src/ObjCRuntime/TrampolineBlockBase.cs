@@ -13,12 +13,18 @@ namespace ObjCRuntime {
 
 		readonly IntPtr blockPtr;
 
-		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		static extern IntPtr _Block_copy (IntPtr ptr);
+		internal TrampolineBlockBase (IntPtr block, bool owns)
+		{
+			if (owns) {
+				blockPtr = block;
+			} else {
+				blockPtr = BlockLiteral.Copy (block);
+			}
+		}
 
 		protected unsafe TrampolineBlockBase (BlockLiteral* block)
+			: this ((IntPtr) block, false)
 		{
-			blockPtr = _Block_copy ((IntPtr) block);
 		}
 
 		~TrampolineBlockBase ()

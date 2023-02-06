@@ -5,7 +5,6 @@
 # initial results
 !deprecated-attribute-missing! ICCameraDeviceDelegate::cameraDevice:didAddItem: missing a [Deprecated] attribute
 !deprecated-attribute-missing! ICCameraDeviceDelegate::cameraDevice:didReceiveMetadataForItem: missing a [Deprecated] attribute
-!deprecated-attribute-missing! ICCameraDeviceDelegate::cameraDevice:didReceiveThumbnailForItem: missing a [Deprecated] attribute
 !deprecated-attribute-missing! ICCameraDeviceDelegate::cameraDevice:didRemoveItem: missing a [Deprecated] attribute
 !deprecated-attribute-missing! ICCameraItem::largeThumbnailIfAvailable missing a [Deprecated] attribute
 !deprecated-attribute-missing! ICCameraItem::metadataIfAvailable missing a [Deprecated] attribute
@@ -28,7 +27,6 @@
 !incorrect-protocol-member! ICCameraDeviceDelegate::cameraDevice:didAddItems: is REQUIRED and should be abstract
 !incorrect-protocol-member! ICCameraDeviceDelegate::cameraDevice:didCompleteDeleteFilesWithError: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! ICCameraDeviceDelegate::cameraDevice:didReceiveMetadataForItem: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! ICCameraDeviceDelegate::cameraDevice:didReceiveThumbnailForItem: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! ICCameraDeviceDelegate::cameraDevice:didRemoveItem: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! ICCameraDeviceDelegate::cameraDevice:didRemoveItems: is REQUIRED and should be abstract
 !incorrect-protocol-member! ICDeviceDelegate::device:didCloseSessionWithError: is REQUIRED and should be abstract
@@ -59,7 +57,6 @@
 !missing-field! ICImageSourceThumbnailMaxPixelSize not bound
 !missing-field! ICTruncateAfterSuccessfulDownload not bound
 !missing-protocol-member! ICCameraDeviceDelegate::cameraDevice:didReceiveMetadata:forItem:error: not found
-!missing-protocol-member! ICCameraDeviceDelegate::cameraDevice:didReceiveThumbnail:forItem:error: not found
 !missing-protocol-member! ICCameraDeviceDelegate::cameraDeviceDidEnableAccessRestriction: not found
 !missing-protocol-member! ICCameraDeviceDelegate::cameraDeviceDidRemoveAccessRestriction: not found
 !missing-protocol-member! ICDeviceDelegate::device:didEjectWithError: not found
@@ -109,3 +106,7 @@
 !missing-selector! ICDevice::systemSymbolName not bound
 !unknown-native-enum! ICBrowsedDeviceType bound
 !wrong-enum-size! ICScannerFunctionalUnitState managed 4 vs native 8
+
+## new @required on existing protocols are breaking changes
+!incorrect-protocol-member! ICCameraDeviceDelegate::cameraDevice:didReceiveThumbnail:forItem:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! ICCameraDeviceDelegate::cameraDevice:didReceiveThumbnailForItem: is OPTIONAL and should NOT be abstract
