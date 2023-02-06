@@ -1375,7 +1375,7 @@ public partial class Generator : IMemberGatherer {
 			if (nullable != null) {
 				return "converted";
 			} else if (et.IsValueType)
-				return (TypeManager.IsOutParameter (pi) ? "out " : "ref ") + safe_name;
+				return (pi.IsOut ? "out " : "ref ") + safe_name;
 		}
 
 		if (pi.ParameterType.IsSubclassOf (TypeManager.System_Delegate)) {
@@ -3669,7 +3669,7 @@ public partial class Generator : IMemberGatherer {
 				sb.Append ("[Transient] ");
 
 			if (parType.IsByRef) {
-				string reftype = TypeManager.IsOutParameter (pi) ? "out " : "ref ";
+				string reftype = pi.IsOut ? "out " : "ref ";
 				sb.Append (reftype);
 				parType = parType.GetElementType ();
 			}

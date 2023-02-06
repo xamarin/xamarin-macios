@@ -152,11 +152,6 @@ public class TypeManager {
 		return type.GenericTypeArguments [0];
 	}
 
-	public static bool IsOutParameter (ParameterInfo pi)
-	{
-		return pi.IsOut;
-	}
-
 	public static Type GetUnderlyingEnumType (Type type)
 	{
 		return type.GetEnumUnderlyingType ();
