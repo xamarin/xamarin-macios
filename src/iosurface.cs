@@ -21,17 +21,14 @@ namespace IOSurface {
 
 	[Static]
 	[Internal]
-	// See bug #59201 [iOS (10,0)]
-	[iOS (11, 0)]
-	[TV (11, 0)]
-	[Mac (10, 12)]
+	// See bug #59201 
 	[MacCatalyst (13, 1)]
 	interface IOSurfacePropertyKey {
 		[Internal]
 		[Field ("IOSurfacePropertyAllocSizeKey")]
 		NSString _DeprecatedAllocSizeKey { get; }
 
-		[iOS (12, 0), TV (12, 0), Mac (10, 14)]
+		[iOS (12, 0), TV (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Internal]
 		[Field ("IOSurfacePropertyKeyAllocSize")]
@@ -129,9 +126,6 @@ namespace IOSurface {
 		string Name { get; set; }
 	}
 
-	[iOS (11, 0)]
-	[TV (11, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface IOSurface : NSSecureCoding {
@@ -237,8 +231,6 @@ namespace IOSurface {
 		[Export ("allowsPixelSizeCasting")]
 		bool AllowsPixelSizeCasting { get; }
 
-		[iOS (11, 0)]
-		[Mac (10, 13)]
 		[MacCatalyst (13, 1)]
 		[Internal, Export ("setPurgeable:oldState:")]
 		int _SetPurgeable (IOSurfacePurgeabilityState newState, IntPtr oldStatePtr);

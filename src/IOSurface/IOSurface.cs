@@ -34,7 +34,7 @@ namespace IOSurface {
 	public partial class IOSurface {
 
 		// kern_return_t
-		// See bug #59201 [iOS (10,0)]
+		// See bug #59201 
 		public int Lock (IOSurfaceLockOptions options, ref int seed)
 		{
 			unsafe {
@@ -45,14 +45,14 @@ namespace IOSurface {
 		}
 
 		// kern_return_t
-		// See bug #59201 [iOS (10,0)]
+		// See bug #59201 
 		public int Lock (IOSurfaceLockOptions options)
 		{
 			return _Lock (options, IntPtr.Zero);
 		}
 
 		// kern_return_t
-		// See bug #59201 [iOS (10,0)]
+		// See bug #59201 
 		public int Unlock (IOSurfaceLockOptions options, ref int seed)
 		{
 			unsafe {
@@ -63,7 +63,7 @@ namespace IOSurface {
 		}
 
 		// kern_return_t
-		// See bug #59201 [iOS (10,0)]
+		// See bug #59201 
 		public int Unlock (IOSurfaceLockOptions options)
 		{
 			return _Unlock (options, IntPtr.Zero);

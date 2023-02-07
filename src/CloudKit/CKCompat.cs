@@ -86,7 +86,6 @@ namespace CloudKit {
 	}
 #endif
 
-	[iOS (8, 0), Mac (10, 10)]
 	public delegate void CKDiscoverUserInfosCompletionHandler (NSDictionary emailsToUserInfos, NSDictionary userRecordIdsToUserInfos, NSError operationError);
 
 #if !WATCH
@@ -103,7 +102,6 @@ namespace CloudKit {
 		protected CKDiscoverUserInfosOperation (NativeHandle handle)
 			=> throw new NotSupportedException ();
 
-		[iOS (8, 0), Mac (10, 10)]
 		[Obsolete ("Empty stub (not a public API).")]
 		public virtual CKDiscoverUserInfosCompletionHandler? Completed { get; set; }
 
@@ -140,7 +138,6 @@ namespace CloudKit {
 
 #if MONOMAC || IOS
 	public partial class CKDiscoveredUserInfo {
-		[iOS (9,0)][Mac (10,11)]
 		[Obsolete ("Empty stub (not public API).")]
 		public virtual CNContact? DisplayContact { get; }
 

@@ -24,8 +24,6 @@ namespace AppKit {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 13)]
 #endif
 		public unsafe CGRect [] GetBoundingRects (CGGlyph [] glyphs)
 		{
@@ -46,8 +44,6 @@ namespace AppKit {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 13)]
 #endif
 		public unsafe CGSize [] GetAdvancements (CGGlyph [] glyphs)
 		{
@@ -205,8 +201,6 @@ namespace AppKit {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 11)]
 #endif
 		public static NSFont? SystemFontOfSize (nfloat fontSize, nfloat weight)
 		{
@@ -229,8 +223,6 @@ namespace AppKit {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 11)]
 #endif
 		public static NSFont? MonospacedDigitSystemFontOfSize (nfloat fontSize, nfloat weight)
 		{
@@ -239,10 +231,8 @@ namespace AppKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 15)]
 #endif
 		public static NSFont? MonospacedSystemFont (nfloat fontSize, nfloat weight)
 		{

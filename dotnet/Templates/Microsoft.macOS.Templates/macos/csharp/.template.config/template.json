@@ -35,7 +35,7 @@
       "description": "Overrides SupportedOSPlatformVersion in the project file",
       "replaces": "minOSVersion",
       "datatype": "string",
-      "defaultValue": "10.14"
+      "defaultValue": "10.15"
     }
   },
   "defaultName": "macOSApp1"

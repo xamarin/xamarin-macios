@@ -19,8 +19,6 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace NotificationCenter {
-	[iOS (8, 0)]
-	[Mac (10, 10)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // not meant to be user created
 	[Deprecated (PlatformName.iOS, 14, 0)]
@@ -35,8 +33,6 @@ namespace NotificationCenter {
 		void SetHasContent (bool flag, string bundleID);
 	}
 
-	[iOS (8, 0)]
-	[Mac (10, 10)]
 	[Deprecated (PlatformName.iOS, 14, 0)]
 	[Deprecated (PlatformName.MacOSX, 11, 0)]
 	[Protocol, Model]
@@ -69,13 +65,11 @@ namespace NotificationCenter {
 		void WidgetDidEndEditing ();
 
 		[NoMac]
-		[iOS (10, 0)]
 		[Export ("widgetActiveDisplayModeDidChange:withMaximumSize:")]
 		void WidgetActiveDisplayModeDidChange (NCWidgetDisplayMode activeDisplayMode, CGSize maxSize);
 	}
 
 	[NoMac]
-	[iOS (8, 0)]
 	[BaseType (typeof (UIVibrancyEffect))]
 #if NET
 	[Internal]
@@ -97,19 +91,15 @@ namespace NotificationCenter {
 	[Category]
 	[BaseType (typeof (NSExtensionContext))]
 	interface NSExtensionContext_NCWidgetAdditions {
-		[iOS (10, 0)]
 		[Export ("widgetLargestAvailableDisplayMode")]
 		NCWidgetDisplayMode GetWidgetLargestAvailableDisplayMode ();
 
-		[iOS (10, 0)]
 		[Export ("setWidgetLargestAvailableDisplayMode:")]
 		void SetWidgetLargestAvailableDisplayMode (NCWidgetDisplayMode mode);
 
-		[iOS (10, 0)]
 		[Export ("widgetActiveDisplayMode")]
 		NCWidgetDisplayMode GetWidgetActiveDisplayMode ();
 
-		[iOS (10, 0)]
 		[Export ("widgetMaximumSizeForDisplayMode:")]
 		CGSize GetWidgetMaximumSize (NCWidgetDisplayMode displayMode);
 	}
@@ -120,13 +110,11 @@ namespace NotificationCenter {
 	[Deprecated (PlatformName.iOS, 14, 0)]
 	[BaseType (typeof (UIVibrancyEffect))]
 	interface UIVibrancyEffect_NCWidgetAdditions {
-		[iOS (10, 0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'UIVibrancyEffect.GetWidgetEffect' instead.")]
 		[Static]
 		[Export ("widgetPrimaryVibrancyEffect")]
 		UIVibrancyEffect GetWidgetPrimaryVibrancyEffect ();
 
-		[iOS (10, 0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'UIVibrancyEffect.GetWidgetEffect' instead.")]
 		[Static]
 		[Export ("widgetSecondaryVibrancyEffect")]
@@ -139,7 +127,6 @@ namespace NotificationCenter {
 	}
 
 	[NoiOS]
-	[Mac (10, 10)]
 	[Deprecated (PlatformName.MacOSX, 11, 0)]
 	[BaseType (typeof (NSViewController), Delegates = new string [] { "Delegate" }, Events = new Type [] { typeof (NCWidgetListViewDelegate) })]
 	interface NCWidgetListViewController {
@@ -175,7 +162,6 @@ namespace NotificationCenter {
 	interface INCWidgetListViewDelegate { }
 
 	[NoiOS]
-	[Mac (10, 10)]
 	[Deprecated (PlatformName.MacOSX, 11, 0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -201,7 +187,6 @@ namespace NotificationCenter {
 	}
 
 	[NoiOS]
-	[Mac (10, 10)]
 	[Deprecated (PlatformName.MacOSX, 11, 0)]
 	[BaseType (typeof (NSViewController), Delegates = new string [] { "Delegate" }, Events = new Type [] { typeof (NCWidgetSearchViewDelegate) })]
 	interface NCWidgetSearchViewController {
@@ -232,7 +217,6 @@ namespace NotificationCenter {
 	interface INCWidgetSearchViewDelegate { }
 
 	[NoiOS]
-	[Mac (10, 10)]
 	[Deprecated (PlatformName.MacOSX, 11, 0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]

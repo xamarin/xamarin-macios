@@ -551,7 +551,6 @@ namespace iAd {
 	[Obsoleted (PlatformName.iOS, 12, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
 	public static class IAdPreroll {
 
-		[Introduced (PlatformName.iOS, 8, 0, PlatformArchitecture.All, null)]
 		public static void CancelPreroll (this MPMoviePlayerController This)
 		{
 		}

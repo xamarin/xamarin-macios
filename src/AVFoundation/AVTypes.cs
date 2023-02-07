@@ -305,7 +305,6 @@ namespace AVFoundation {
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
-	[Mac (10, 10)]
 	[NoiOS]
 	[NoWatch]
 	[NoTV]
@@ -331,7 +330,6 @@ namespace AVFoundation {
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
-	[Mac (10, 10)]
 	[NoiOS]
 	[NoWatch]
 	[NoTV]
@@ -366,7 +364,6 @@ namespace AVFoundation {
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
-	[Mac (10, 10)]
 	[NoiOS]
 	[NoWatch]
 	[NoTV]
@@ -386,7 +383,6 @@ namespace AVFoundation {
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
-	[Mac (10, 10)]
 	[NoiOS]
 	[NoWatch]
 	[NoTV]
@@ -412,10 +408,8 @@ namespace AVFoundation {
 #if MONOMAC || __MACCATALYST__
 
 #if NET
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst15.0")]
-#else
-	[Mac (10,15)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorAudioDependencyInfo {

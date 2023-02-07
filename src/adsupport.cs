@@ -13,7 +13,6 @@ using System;
 
 namespace AdSupport {
 
-	[Mac (10, 14)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]

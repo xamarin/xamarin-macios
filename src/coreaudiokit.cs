@@ -35,7 +35,6 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreAudioKit {
 	[NoiOS]
-	[Mac (10, 11)]
 	[NoMacCatalyst]
 	[Flags]
 	public enum AUGenericViewDisplayFlags : uint {
@@ -44,8 +43,6 @@ namespace CoreAudioKit {
 		ParametersDisplay = 1u << 2,
 	}
 
-	[iOS (9, 0)]
-	[Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (AUViewControllerBase))]
 	interface AUViewController {
@@ -54,8 +51,6 @@ namespace CoreAudioKit {
 		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 	}
 
-	[iOS (11, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface AUAudioUnitViewConfiguration : NSSecureCoding {
@@ -73,8 +68,6 @@ namespace CoreAudioKit {
 	}
 
 	[Category]
-	[iOS (11, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (AUAudioUnit))]
 	interface AUAudioUnitViewControllerExtensions {
@@ -86,7 +79,6 @@ namespace CoreAudioKit {
 	}
 
 	[NoiOS]
-	[Mac (10, 13)]
 	[NoMacCatalyst]
 	[Protocol]
 	interface AUCustomViewPersistentData {
@@ -97,7 +89,6 @@ namespace CoreAudioKit {
 	}
 
 	[NoiOS]
-	[Mac (10, 13)]
 	[NoMacCatalyst]
 	[DisableDefaultCtor] // Crashes
 	[BaseType (typeof (NSView))]
@@ -117,7 +108,6 @@ namespace CoreAudioKit {
 	}
 
 	[NoiOS]
-	[Mac (10, 13)]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSView))]
 	[DisableDefaultCtor]
@@ -132,7 +122,6 @@ namespace CoreAudioKit {
 	}
 
 	[NoiOS]
-	[Mac (10, 13)]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSWindowController), Name = "CABTLEMIDIWindowController")]
 	interface CABtleMidiWindowController {
@@ -142,7 +131,6 @@ namespace CoreAudioKit {
 	}
 
 	[NoiOS]
-	[Mac (10, 13)]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSViewController))]
 	interface CAInterDeviceAudioViewController {
@@ -152,7 +140,6 @@ namespace CoreAudioKit {
 	}
 
 	[NoiOS]
-	[Mac (10, 13)]
 	[NoMacCatalyst]
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSWindowController))]
@@ -167,7 +154,6 @@ namespace CoreAudioKit {
 	}
 
 #if !MONOMAC
-	[iOS (8, 0)]
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	// in iOS 8.3 (Xcode 6.3 SDK) the base type was changed from UIViewController to UITableViewController
@@ -177,13 +163,11 @@ namespace CoreAudioKit {
 		[PostGet ("NibBundle")]
 		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
-		[iOS (8, 3)]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithStyle:")]
 		NativeHandle Constructor (UITableViewStyle withStyle);
 	}
 
-	[iOS (8, 0)]
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController), Name = "CABTMIDILocalPeripheralViewController")]
@@ -193,7 +177,6 @@ namespace CoreAudioKit {
 		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 	}
 
-	[iOS (8, 0)]
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AudioUnit' instead.")]
 	[NoMacCatalyst]
@@ -213,7 +196,6 @@ namespace CoreAudioKit {
 		nfloat ContentWidth ();
 	}
 
-	[iOS (8, 0)]
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AudioUnit' instead.")]
 	[NoMacCatalyst]

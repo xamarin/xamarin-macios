@@ -28,7 +28,6 @@ namespace TVServices {
 		Sectioned = 2
 	}
 
-	[TV (11, 0)]
 	[Native]
 	[Flags]
 	public enum TVContentItemImageTrait : ulong {

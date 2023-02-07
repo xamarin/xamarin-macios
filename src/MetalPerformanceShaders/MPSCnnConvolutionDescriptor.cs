@@ -7,13 +7,12 @@ namespace MetalPerformanceShaders {
 	public partial class MPSCnnConvolutionDescriptor {
 
 #if NET
-		[SupportedOSPlatform ("tvos11.0")]
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Introduced (PlatformName.TvOS, 11, 0, PlatformArchitecture.All, null)]
-		[Introduced (PlatformName.iOS, 11, 0, PlatformArchitecture.All, null)]
 #endif
 		public unsafe void SetBatchNormalizationParameters (float [] mean, float [] variance, float [] gamma, float [] beta, float epsilon)
 		{

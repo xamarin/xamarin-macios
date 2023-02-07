@@ -31,23 +31,20 @@ using NativeHandle = System.IntPtr;
 namespace Network {
 
 #if NET
-	// [SupportedOSPlatform ("macos10.15")]  -  Not valid on Delegates
+	// [SupportedOSPlatform ("macos")]  -  Not valid on Delegates
 	// [UnsupportedOSPlatform ("tvos")]
 	// [UnsupportedOSPlatform ("ios")]
 #else
 	[NoWatch]
 	[NoTV]
 	[NoiOS]
-	[Mac (10,15)]
 #endif
 	public delegate void NWEthernetChannelReceiveDelegate (DispatchData? content, ushort vlanTag, string? localAddress, string? remoteAddress);
 
 #if NET
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("tvos")]
 	[UnsupportedOSPlatform ("ios")]
-#else
-	[Mac (10,15)]
 #endif
 	public class NWEthernetChannel : NativeObject {
 

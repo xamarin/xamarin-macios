@@ -297,7 +297,6 @@ namespace CoreServices {
 			[ObsoletedOSPlatform ("macos10.14", "Not available anymore.")]
 			[ObsoletedOSPlatform ("ios12.0", "Not available anymore.")]
 #else
-			[Mac (10, 9)]
 			[Deprecated (PlatformName.iOS, 12, 0, message: "Not available anymore.")]
 			[Deprecated (PlatformName.TvOS, 12, 0, message: "Not available anymore.")]
 			[Deprecated (PlatformName.MacOSX, 10, 14, message: "Not available anymore.")]
