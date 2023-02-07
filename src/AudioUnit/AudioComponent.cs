@@ -471,7 +471,7 @@ namespace AudioUnit {
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos11.0")]
 #else
 		[Deprecated (PlatformName.MacOSX, 11, 0)]
 #endif

@@ -962,26 +962,6 @@ xamarin_bridge_free_mono_signature (MonoMethodSignature **psig)
 	*psig = NULL;
 }
 
-MonoReferenceQueue *
-mono_gc_reference_queue_new (mono_reference_queue_callback callback)
-{
-	MonoReferenceQueue *rv = xamarin_bridge_gc_reference_queue_new (callback);
-
-	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, callback, rv);
-
-	return rv;
-}
-
-gboolean
-mono_gc_reference_queue_add (MonoReferenceQueue *queue, MonoObject *obj, void *user_data)
-{
-	LOG_CORECLR (stderr, "%s (%p, %p, %p)\n", __func__, queue, obj, user_data);
-
-	xamarin_bridge_gc_reference_queue_add (queue, obj, user_data);
-
-	return true;
-}
-
 void
 mono_free (void *ptr)
 {

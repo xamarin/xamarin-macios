@@ -5273,27 +5273,57 @@ namespace AppKit {
 		[Export ("set")]
 		void Set ();
 
+#if XAMCORE_5_0
+		[NoMacCatalyst]
+#else
+		[Obsoleted (PlatformName.MacCatalyst, 13, 1, message: "Do not use; this API does not exist on this platform.")]
+#endif
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Export ("setOnMouseExited:")]
 		void SetOnMouseExited (bool flag);
 
+#if XAMCORE_5_0
+		[NoMacCatalyst]
+#else
+		[Obsoleted (PlatformName.MacCatalyst, 13, 1, message: "Do not use; this API does not exist on this platform.")]
+#endif
 		[Export ("setOnMouseEntered:")]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		void SetOnMouseEntered (bool flag);
 
+#if XAMCORE_5_0
+		[NoMacCatalyst]
+#else
+		[Obsoleted (PlatformName.MacCatalyst, 13, 1, message: "Do not use; this API does not exist on this platform.")]
+#endif
 		[Export ("isSetOnMouseExited")]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		bool IsSetOnMouseExited ();
 
+#if XAMCORE_5_0
+		[NoMacCatalyst]
+#else
+		[Obsoleted (PlatformName.MacCatalyst, 13, 1, message: "Do not use; this API does not exist on this platform.")]
+#endif
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Export ("isSetOnMouseEntered")]
 		bool IsSetOnMouseEntered ();
 
+#if XAMCORE_5_0
+		[NoMacCatalyst]
+#else
+		[Obsoleted (PlatformName.MacCatalyst, 13, 1, message: "Do not use; this API does not exist on this platform.")]
+#endif
 		[Export ("mouseEntered:")]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[NoMacCatalyst]
 		void MouseEntered (NSEvent theEvent);
 
+#if XAMCORE_5_0
+		[NoMacCatalyst]
+#else
+		[Obsoleted (PlatformName.MacCatalyst, 13, 1, message: "Do not use; this API does not exist on this platform.")]
+#endif
 		[Export ("mouseExited:")]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[NoMacCatalyst]
@@ -9526,6 +9556,11 @@ namespace AppKit {
 		[Export ("bestRepresentationForDevice:")]
 		NSImageRep BestRepresentationForDevice ([NullAllowed] NSDictionary deviceDescription);
 
+#if XAMCORE_5_0
+		[NoMacCatalyst]
+#else
+		[Obsoleted (PlatformName.MacCatalyst, 13, 1, message: "Do not use; this API does not exist on this platform.")]
+#endif
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Static]
 		[Export ("imageUnfilteredFileTypes")]
@@ -9537,6 +9572,11 @@ namespace AppKit {
 		[Export ("imageUnfilteredPasteboardTypes")]
 		string [] ImageUnfilteredPasteboardTypes ();
 
+#if XAMCORE_5_0
+		[NoMacCatalyst]
+#else
+		[Obsoleted (PlatformName.MacCatalyst, 13, 1, message: "Do not use; this API does not exist on this platform.")]
+#endif
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Static]
 		[Export ("imageFileTypes")]
@@ -9635,6 +9675,11 @@ namespace AppKit {
 		void DrawInRect (CGRect dstRect, CGRect srcRect, NSCompositingOperation operation, nfloat delta);
 #endif
 
+#if XAMCORE_5_0
+		[NoMacCatalyst]
+#else
+		[Obsoleted (PlatformName.MacCatalyst, 13, 1, message: "Do not use; this API does not exist on this platform.")]
+#endif
 		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use DrawInRect with respectContextIsFlipped instead.")]
 		[Export ("flipped")]
 		bool Flipped { [Bind ("isFlipped")] get; set; }
@@ -19616,10 +19661,20 @@ namespace AppKit {
 		[Export ("view", ArgumentSemantic.Retain)]
 		NSView View { get; set; }
 
+#if XAMCORE_5_0
+		[NoMacCatalyst]
+#else
+		[Obsoleted (PlatformName.MacCatalyst, 13, 1, message: "Do not use; this API does not exist on this platform.")]
+#endif
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use system constraints instead.")]
 		[Export ("minSize")]
 		CGSize MinSize { get; set; }
 
+#if XAMCORE_5_0
+		[NoMacCatalyst]
+#else
+		[Obsoleted (PlatformName.MacCatalyst, 13, 1, message: "Do not use; this API does not exist on this platform.")]
+#endif
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use system constraints instead.")]
 		[Export ("maxSize")]
 		CGSize MaxSize { get; set; }

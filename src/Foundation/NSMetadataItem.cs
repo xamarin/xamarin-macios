@@ -93,7 +93,7 @@ namespace Foundation {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #endif
 		public NSString? ContentType {
@@ -105,7 +105,7 @@ namespace Foundation {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #endif
 		public NSString? []? ContentTypeTree {
@@ -146,7 +146,7 @@ namespace Foundation {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #endif
 #if NET
@@ -232,7 +232,7 @@ namespace Foundation {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #endif
 		public NSError? UbiquitousItemDownloadingError {
@@ -244,7 +244,7 @@ namespace Foundation {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #endif
 		public NSError? UbiquitousItemUploadingError {
@@ -256,7 +256,7 @@ namespace Foundation {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #endif
 #if NET
@@ -276,7 +276,7 @@ namespace Foundation {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #endif
 #if NET
@@ -296,7 +296,7 @@ namespace Foundation {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #endif
 		public NSString? UbiquitousItemContainerDisplayName {
@@ -308,7 +308,7 @@ namespace Foundation {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #endif
 		public NSUrl? UbiquitousItemUrlInLocalContainer {

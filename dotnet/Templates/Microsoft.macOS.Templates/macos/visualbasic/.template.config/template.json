@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Microsoft",
+  "classifications": [ "macOS" ],
+  "groupIdentity": "Microsoft.macOS.macOSApp",
+  "identity": "Microsoft.macOS.macOSApp.VisualBasic",
+  "name": "macOS Application",
+  "description": "A project for creating a .NET macOS application",
+  "shortName": "macos",
+  "tags": {
+    "language": "VB",
+    "type": "project"
+  },
+  "sourceName": "macOSApp1",
+  "sources": [
+    {
+      "source": "./",
+      "target": "./",
+      "copyOnly": "**/*.png"
+    }
+  ],
+  "preferNameDirectory": true,
+  "primaryOutputs": [
+    { "path": "macOSApp1.vbproj" }
+  ],
+  "symbols": {
+    "bundleId": {
+      "type": "parameter",
+      "description": "Overrides CFBundleIdentifier in the Info.plist",
+      "datatype": "string",
+      "replaces": "com.companyname.macOSApp1"
+    },
+    "minOSVersion": {
+      "type": "parameter",
+      "description": "Overrides SupportedOSPlatformVersion in the project file",
+      "replaces": "minOSVersion",
+      "datatype": "string",
+      "defaultValue": "10.15"
+    }
+  },
+  "defaultName": "macOSApp1"
+}

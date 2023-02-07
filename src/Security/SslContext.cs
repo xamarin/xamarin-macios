@@ -33,6 +33,7 @@ namespace Security {
 	[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
 	[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
 	[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+	[ObsoletedOSPlatform ("maccatalyst13.0", "Use 'Network.framework' instead.")]
 #else
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'Network.framework' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'Network.framework' instead.")]
@@ -561,23 +562,25 @@ namespace Security {
 		// Plus they added new members to SslSessionStrengthPolicy enum opened radar://23379052 https://trello.com/c/NbdTLVD3
 		// Xcode 8 beta 1: the P/Invoke was removed completely.
 
+#if !XAMCORE_5_0
 #if NET
-		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("tvos")]
-		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos")]
 #else
 		[Unavailable (PlatformName.iOS, message: "'SetSessionStrengthPolicy' is not available anymore.")]
 		[Unavailable (PlatformName.MacOSX, message: "'SetSessionStrengthPolicy' is not available anymore.")]
-		[Obsolete ("'SetSessionStrengthPolicy' is not available anymore.")]
 #endif
+		[Obsolete ("'SetSessionStrengthPolicy' is not available anymore.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public SslStatus SetSessionStrengthPolicy (SslSessionStrengthPolicy policyStrength)
 		{
 			Runtime.NSLog ("SetSessionStrengthPolicy is not available anymore.");
 			return SslStatus.Success;
 		}
 #endif
+#endif // !XAMCORE_5_0
 
 #if NET
 		[SupportedOSPlatform ("ios")]

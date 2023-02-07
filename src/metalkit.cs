@@ -220,7 +220,7 @@ namespace MetalKit {
 		bool AllocateMipmaps { get; set; }
 
 		[MacCatalyst (13, 1)]
-		bool GenerateMipmaps { get; }
+		bool GenerateMipmaps { get; set; }
 
 		bool Srgb { get; set; }
 	}
