@@ -221,6 +221,32 @@ namespace Introspection {
 				if (protocolName == "UIContextMenuInteractionDelegate")
 					return !TestRuntime.CheckXcodeVersion (12, 0);
 				break;
+
+			// We have to special case the following PKPayment* in MacCatalyst
+			// since it gets all of these via inheritance from UIView
+			case "PKPaymentButton":
+			case "PKPaymentAuthorizationViewController":
+				switch (protocolName) {
+				case "UIUserActivityRestoring":
+				case "UIAppearanceContainer":
+				case "UIFocusItem":
+				case "UICoordinateSpace":
+				case "UIPopoverPresentationControllerSourceItem":
+				case "UIContextMenuInteractionDelegate":
+				case "UIFocusItemContainer":
+				case "UITraitEnvironment":
+				case "UIActivityItemsConfigurationProviding":
+				case "UIResponderStandardEditActions":
+				case "UILargeContentViewerItem":
+				case "UIDynamicItem":
+				case "UIAppearance":
+				case "UIAccessibilityContentSizeCategoryImageAdjusting":
+				case "UIContentContainer":
+					if (TestRuntime.CheckXcodeVersion (14, 0))
+						return true;
+					break;
+				}
+				break;
 #endif
 			}
 
