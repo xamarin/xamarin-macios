@@ -1225,7 +1225,6 @@ $(2)_DOTNET_PLATFORM_ASSEMBLY_DEPENDENCIES = \
 	$($(2)_DOTNET_SOURCES) \
 	$($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources \
 	$($(2)_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
-	$(TOP)/src/ILLink.Descriptors.xml \
 	$($(2)_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
 	$(PRODUCT_KEY_PATH) \
 
@@ -1246,7 +1245,6 @@ $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%dll $($(2)_DOTNET_BUILD_DIR)/$(4)/M
 		$(ARGS_$(4)) \
 		$$(DOTNET_WARNINGS_TO_FIX) \
 		@$(DOTNET_BUILD_DIR)/$(3)-defines-dotnet.rsp \
-		-res:$(TOP)/src/ILLink.Descriptors.xml \
 		-res:$($(2)_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
 		-res:$($(2)_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
 		-warnaserror:$(NULLABILITY_WARNINGS) \

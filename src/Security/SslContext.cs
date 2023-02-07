@@ -33,6 +33,7 @@ namespace Security {
 	[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
 	[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
 	[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+	[ObsoletedOSPlatform ("maccatalyst13.0", "Use 'Network.framework' instead.")]
 #else
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'Network.framework' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'Network.framework' instead.")]

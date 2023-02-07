@@ -376,6 +376,10 @@ namespace ObjCRuntime {
 			}
 		}
 
+		internal static IntPtr Copy (IntPtr block)
+		{
+			return _Block_copy (block);
+		}
 #endif
 	}
 
@@ -396,6 +400,14 @@ namespace ObjCRuntime {
 		}
 
 		internal static dispatch_block_t static_dispatch_block = TrampolineDispatchBlock;
+	}
+
+	// This class will free the specified block when it's collected by the GC.
+	internal class BlockCollector : TrampolineBlockBase {
+		public BlockCollector (IntPtr block)
+			: base (block, owns: true)
+		{
+		}
 	}
 #endif
 

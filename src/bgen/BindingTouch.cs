@@ -31,8 +31,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 using System.Reflection;
 using Mono.Options;
 
@@ -282,10 +280,10 @@ public class BindingTouch : IDisposable {
 			{ "process-enums", "Process enums as bindings, not external, types.", v => process_enums = true },
 			{ "link-with=,", "Link with a native library {0:FILE} to the binding, embedded as a resource named {1:ID}",
 				(path, id) => {
-					if (path == null || path.Length == 0)
+					if (path is null || path.Length == 0)
 						throw new Exception ("-link-with=FILE,ID requires a filename.");
 
-					if (id == null || id.Length == 0)
+					if (id is null || id.Length == 0)
 						id = Path.GetFileName (path);
 
 					if (linkwith.Contains (id))
@@ -435,12 +433,12 @@ public class BindingTouch : IDisposable {
 			return 1;
 		}
 
-		if (tmpdir == null)
+		if (tmpdir is null)
 			tmpdir = GetWorkDir ();
 
 		string firstApiDefinitionName = Path.GetFileNameWithoutExtension (api_sources [0]);
 		firstApiDefinitionName = firstApiDefinitionName.Replace ('-', '_'); // This is not exhaustive, but common.
-		if (outfile == null)
+		if (outfile is null)
 			outfile = firstApiDefinitionName + ".dll";
 
 		var refs = references.Select ((v) => "-r:" + v);
@@ -569,19 +567,19 @@ public class BindingTouch : IDisposable {
 
 			var nsManager = new NamespaceManager (
 				this,
-				ns == null ? firstApiDefinitionName : ns,
+				ns ?? firstApiDefinitionName,
 				skipSystemDrawing
 			);
 
 			var g = new Generator (this, nsManager, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()) {
-				BaseDir = basedir != null ? basedir : tmpdir,
+				BaseDir = basedir ?? tmpdir,
 				ZeroCopyStrings = zero_copy,
 				InlineSelectors = inline_selectors ?? (CurrentPlatform != PlatformName.MacOSX),
 			};
 
 			g.Go ();
 
-			if (generate_file_list != null) {
+			if (generate_file_list is not null) {
 				using (var f = File.CreateText (generate_file_list)) {
 					foreach (var x in g.GeneratedFiles.OrderBy ((v) => v))
 						f.WriteLine (x);
@@ -725,7 +723,7 @@ class SearchPathsAssemblyResolver : MetadataAssemblyResolver {
 	public override Assembly? Resolve (MetadataLoadContext context, AssemblyName assemblyName)
 	{
 		string? name = assemblyName.Name;
-		if (name != null) {
+		if (name is not null) {
 			foreach (var asm in context.GetAssemblies ()) {
 				if (asm.GetName ().Name == name)
 					return asm;
