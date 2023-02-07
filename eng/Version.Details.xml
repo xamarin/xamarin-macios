@@ -17,9 +17,9 @@
       <Uri>https://github.com/dotnet/aspnetcore</Uri>
       <Sha>6a9cef3fa2f5c7c2695a2141a8aa098294736d4e</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.net7.Manifest-8.0.100" Version="8.0.0-alpha.1.23066.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100-preview.1" Version="8.0.0-preview.1.23081.2" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>5b46122b31036064483ce2e55b5e2240e5548204</Sha>
+      <Sha>75ccb6879a3a4710558b28491f19555eb15fe40f</Sha>
     </Dependency>
     <!-- This is a subscription of the .NET 7 versions of our packages -->
     <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.2.1024">
