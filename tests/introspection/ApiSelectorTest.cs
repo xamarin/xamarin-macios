@@ -231,12 +231,6 @@ namespace Introspection {
 					return true;
 				}
 				break;
-			case "EKParticipant":
-				switch (selectorName) {
-				case "ABRecordWithAddressBook:": // Ventura error.
-					return true;
-				}
-				break;
 			}
 			// This ctors needs to be manually bound
 			switch (type.Name) {
@@ -313,12 +307,6 @@ namespace Introspection {
 				switch (selectorName) {
 				case "setSubdivisionLevels:":
 				case "setWarpGeometry:":
-					return true;
-				}
-				break;
-			case "SKAdImpression":
-				switch (selectorName) {
-				case "initWithSourceAppStoreItemIdentifier:advertisedAppStoreItemIdentifier:adNetworkIdentifier:adCampaignIdentifier:adImpressionIdentifier:timestamp:signature:version:":
 					return true;
 				}
 				break;
@@ -948,6 +936,26 @@ namespace Introspection {
 				switch (selectorName) {
 				case "shortcutItem":
 					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+#endif
+				break;
+			case "SKAdImpression":
+#if __MACCATALYST__
+				switch (selectorName) {
+				case "initWithSourceAppStoreItemIdentifier:advertisedAppStoreItemIdentifier:adNetworkIdentifier:adCampaignIdentifier:adImpressionIdentifier:timestamp:signature:version:":
+					if (TestRuntime.CheckXcodeVersion (14, 0))
+						return true;
+					break;
+				}
+#endif
+				break;
+			case "EKParticipant":
+#if __MACCATALYST__
+				switch (selectorName) {
+				case "ABRecordWithAddressBook:": // Deprecated in 13.1
+					if (TestRuntime.CheckXcodeVersion (14, 0))
 						return true;
 					break;
 				}
