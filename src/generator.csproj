@@ -100,8 +100,11 @@
     <Compile Include="..\src\bgen\Enums.cs" />
     <Compile Include="..\src\bgen\ExtensionMethods.cs" />
     <Compile Include="..\src\bgen\Filters.cs" />
+    <Compile Include="..\src\bgen\GeneratedType.cs" />
+    <Compile Include="..\src\bgen\GeneratedTypes.cs" />
     <Compile Include="..\src\bgen\Generator.cs" />
     <Compile Include="..\src\bgen\MarshalInfo.cs" />
+    <Compile Include="..\src\bgen\IMemberGatherer.cs" />
     <Compile Include="..\src\bgen\NamespaceManager.cs" />
     <Compile Include="..\src\bgen\NullabilityInfoContext.cs" />
     <Compile Include="..\src\bgen\TrampolineInfo.cs" />

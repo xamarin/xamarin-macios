@@ -941,4 +941,129 @@ Additional information:
 		}
 #endif
 	}
+
+	[TestFixture]
+	[Preserve (AllMembers = true)]
+	public class RuntimeTest_GetINativeObjectTest {
+
+		[Test]
+		public void GetINativeObjectTest_NSObject_Owns ()
+		{
+			var handle = CreateNativeNSObject ();
+			Assert.AreEqual (1, GetRetainCount (handle), "A 1");
+			using var obj = Runtime.GetINativeObject<NSObject> (handle, false, true);
+			Assert.AreEqual (1, GetRetainCount (handle), "A 2");
+			obj.DangerousRetain ();
+			Assert.AreEqual (2, GetRetainCount (handle), "A 3");
+			using var obj2 = Runtime.GetINativeObject<NSObject> (handle, false, true);
+			Assert.AreEqual (1, GetRetainCount (handle), "A 4");
+			using var obj3 = Runtime.GetINativeObject<NSObject> (handle, false, false);
+			Assert.AreEqual (1, GetRetainCount (handle), "A 5");
+			Assert.AreSame (obj, obj2, "A 6");
+			Assert.AreSame (obj, obj3, "A 7");
+		}
+
+		[Test]
+		public void GetINativeObjectTest_NSObject_Unowned ()
+		{
+			var handle = CreateNativeNSObject ();
+			Assert.AreEqual (1, GetRetainCount (handle), "A 1");
+			using var obj = Runtime.GetINativeObject<NSObject> (handle, false, false);
+			Assert.AreEqual (2, GetRetainCount (handle), "A 2");
+			obj.DangerousRelease ();
+			Assert.AreEqual (1, GetRetainCount (handle), "A 3");
+			obj.DangerousRetain ();
+			Assert.AreEqual (2, GetRetainCount (handle), "A 4");
+			using var obj2 = Runtime.GetINativeObject<NSObject> (handle, false, true);
+			Assert.AreEqual (1, GetRetainCount (handle), "A 5");
+			using var obj3 = Runtime.GetINativeObject<NSObject> (handle, false, false);
+			Assert.AreEqual (1, GetRetainCount (handle), "A 6");
+			Assert.AreSame (obj, obj2, "A 7");
+			Assert.AreSame (obj, obj3, "A 8");
+		}
+
+		[Test]
+		public void GetINativeObjectTest_INativeObject_Owns ()
+		{
+			var handle = CreateNativeBitmapContext ();
+			Assert.AreEqual (1, CFGetRetainCount (handle), "A 1");
+			using var obj = Runtime.GetINativeObject<CGBitmapContext> (handle, false, true);
+			Assert.AreEqual (1, CFGetRetainCount (handle), "A 2");
+			CGContextRetain (obj.Handle);
+			Assert.AreEqual (2, CFGetRetainCount (handle), "A 3");
+			using var obj2 = Runtime.GetINativeObject<CGBitmapContext> (handle, false, true); // does not decrease refcount because we return a new instance
+			Assert.AreEqual (2, CFGetRetainCount (handle), "A 4");
+			using var obj3 = Runtime.GetINativeObject<CGBitmapContext> (handle, false, false);
+			Assert.AreEqual (3, CFGetRetainCount (handle), "A 5");
+			Assert.AreNotSame (obj, obj2, "A 6");
+			Assert.AreNotSame (obj, obj3, "A 7");
+			obj3.Dispose ();
+			Assert.AreEqual (2, CFGetRetainCount (handle), "A 8");
+			obj2.Dispose ();
+			Assert.AreEqual (1, CFGetRetainCount (handle), "A 9");
+		}
+
+		[Test]
+		public void GetINativeObjectTest_INativeObject_Unowned ()
+		{
+			var handle = CreateNativeBitmapContext ();
+			Assert.AreEqual (1, CFGetRetainCount (handle), "A 1");
+			using var obj = Runtime.GetINativeObject<CGBitmapContext> (handle, false, false);
+			Assert.AreEqual (2, CFGetRetainCount (handle), "A 2");
+			CGContextRelease (obj.Handle);
+			Assert.AreEqual (1, CFGetRetainCount (handle), "A 3");
+			CGContextRetain (obj.Handle);
+			Assert.AreEqual (2, CFGetRetainCount (handle), "A 4");
+			using var obj2 = Runtime.GetINativeObject<CGBitmapContext> (handle, false, true); // does not decrease refcount because we return a new instance
+			Assert.AreEqual (2, CFGetRetainCount (handle), "A 5");
+			using var obj3 = Runtime.GetINativeObject<CGBitmapContext> (handle, false, false);
+			Assert.AreEqual (3, CFGetRetainCount (handle), "A 6");
+			Assert.AreNotSame (obj, obj2, "A 7");
+			Assert.AreNotSame (obj, obj3, "A 8");
+			obj3.Dispose ();
+			Assert.AreEqual (2, CFGetRetainCount (handle), "A 9");
+			obj2.Dispose ();
+			Assert.AreEqual (1, CFGetRetainCount (handle), "A 10");
+		}
+
+		static IntPtr CreateNativeNSObject ()
+		{
+			var handle = Messaging.IntPtr_objc_msgSend (Class.GetHandle (typeof (NSObject)), Selector.GetHandle ("alloc"));
+			return Messaging.IntPtr_objc_msgSend (handle, Selector.GetHandle ("init"));
+		}
+
+		static IntPtr CreateNativeBitmapContext ()
+		{
+			using var cs = CGColorSpace.CreateDeviceRGB ();
+			var handle = CGBitmapContextCreate (IntPtr.Zero, 10, 10, 8, 40, cs.Handle, /* PremultipliedLast */ 1);
+			if (handle == IntPtr.Zero)
+				throw new InvalidOperationException ($"Unable to create CGBitmapContext.");
+			return handle;
+		}
+
+		static long GetRetainCount (IntPtr handle)
+		{
+			if (handle == IntPtr.Zero)
+				return -1;
+			return (long) Messaging.IntPtr_objc_msgSend (handle, Selector.GetHandle ("retainCount"));
+		}
+
+		static long CFGetRetainCount (IntPtr handle)
+		{
+			if (handle == IntPtr.Zero)
+				return -1;
+			return (long) global::MonoTouchFixtures.CoreFoundation.ArrayTest.CFGetRetainCount (handle);
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static void CGContextRelease (/* CGImageRef */ IntPtr image);
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static /* CGImageRef */ IntPtr CGContextRetain (/* CGImageRef */ IntPtr image);
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static IntPtr CGBitmapContextCreate (/* void* */ IntPtr data, /* size_t */ nint width, /* size_t */ nint height, /* size_t */ nint bitsPerComponent,
+			/* size_t */ nint bytesPerRow, /* CGColorSpaceRef */ IntPtr colorSpace, /* CGBitmapInfo = uint32_t */ uint bitmapInfo);
+
+	}
 }
