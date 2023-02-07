@@ -106,7 +106,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10, 14)]
 		[iOS (12, 0)]
 		[TV (12, 0)]
 		[Watch (5, 0)]
@@ -120,7 +119,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10, 14)]
 		[iOS (12, 0)]
 		[TV (12, 0)]
 		[Watch (5, 0)]

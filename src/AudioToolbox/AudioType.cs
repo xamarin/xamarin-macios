@@ -84,13 +84,12 @@ namespace AudioToolbox {
 		Flac = 0x666c6163, // 'flac'
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[NoWatch]
 		[iOS (13, 0)]
-		[Mac (10, 15)]
 		[TV (13, 0)]
 #endif
 		LatmInLoas = 0x6c6f6173, // 'loas'
@@ -375,9 +374,6 @@ namespace AudioToolbox {
 		}
 	}
 
-#if !NET
-	[Watch (3, 0)]
-#endif
 	[Flags]
 	public enum AudioChannelFlags : uint { // UInt32 in AudioPanningInfo -- AudioFormat.h
 		AllOff = 0,
@@ -1169,9 +1165,6 @@ namespace AudioToolbox {
 		TimeRunning = 1 << 1
 	}
 
-#if !NET
-	[Watch (3, 0)]
-#endif
 	public enum MPEG4ObjectID { // long
 		AacMain = 1,
 		AacLc = 2,

@@ -24,13 +24,10 @@ namespace CoreFoundation {
 #if !COREBUILD
 
 #if NET
-	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[iOS (8, 0)]
-	[Mac (10, 10)]
 #endif
 	public sealed class DispatchBlock : NativeObject {
 		[Preserve (Conditional = true)]

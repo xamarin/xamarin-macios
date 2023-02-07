@@ -76,9 +76,6 @@ namespace CoreImage {
 		RGf = 22
 	}
 
-	[iOS (11, 0)]
-	[Mac (10, 13)]
-	[TV (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CIQRCodeErrorCorrectionLevel : long {
@@ -88,9 +85,6 @@ namespace CoreImage {
 		H = 72,
 	}
 
-	[iOS (11, 0)]
-	[Mac (10, 13)]
-	[TV (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CIDataMatrixCodeEccVersion : long {
@@ -102,9 +96,6 @@ namespace CoreImage {
 		V200 = 200,
 	}
 
-	[iOS (11, 0)]
-	[Mac (10, 13)]
-	[TV (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CIRenderDestinationAlphaMode : ulong {

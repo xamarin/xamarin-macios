@@ -26,9 +26,8 @@ namespace CoreMedia {
 	public delegate int CMBufferCompare (INativeObject first, INativeObject second);
 
 #if NET
-	// [SupportedOSPlatform ("ios7.1")] -  SupportedOSPlatform is not valid on this declaration type "delegate" 
+	// [SupportedOSPlatform ("ios")] -  SupportedOSPlatform is not valid on this declaration type "delegate" 
 #else
-	[iOS (7, 1)]
 	[Watch (6, 0)]
 #endif
 	public delegate nint CMBufferGetSize (INativeObject buffer);
@@ -320,25 +319,19 @@ namespace CoreMedia {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.1")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 1)]
-		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* size_t */ nint CMBufferQueueGetTotalSize (/* CMBufferQueueRef */ IntPtr queue);
 
 #if NET
-		[SupportedOSPlatform ("ios7.1")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 1)]
-		[Mac (10, 10)]
 #endif
 		public nint GetTotalSize ()
 		{

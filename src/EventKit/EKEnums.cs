@@ -94,8 +94,6 @@ namespace EventKit {
 		Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
 	}
 
-	[iOS (9, 0)]
-	[Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[Native] // NSInteger (size change from previously untyped enum)
 	public enum EKWeekday : long {

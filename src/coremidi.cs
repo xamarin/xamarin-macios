@@ -40,7 +40,6 @@ using NativeHandle = System.IntPtr;
 namespace CoreMidi {
 
 
-	[Mac (10, 14)]
 	[Watch (8, 0)]
 	[TV (15, 0)]
 	[MacCatalyst (13, 1)]
@@ -159,7 +158,6 @@ namespace CoreMidi {
 
 	[NoTV]
 	[NoWatch]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "MIDINetworkHost")]
 	[DisableDefaultCtor]
@@ -199,7 +197,6 @@ namespace CoreMidi {
 
 	[NoTV]
 	[NoWatch]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface Midi {
@@ -217,7 +214,6 @@ namespace CoreMidi {
 
 	[NoTV]
 	[NoWatch]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "MIDINetworkConnection")]
@@ -231,7 +227,6 @@ namespace CoreMidi {
 
 	[NoTV]
 	[NoWatch]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "MIDINetworkSession")]
 	// default 'init' crash the application
@@ -300,7 +295,7 @@ namespace CoreMidi {
 
 	}
 
-	[NoWatch, NoTV, Mac (10, 14), iOS (12, 0)]
+	[NoWatch, NoTV, iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "MIDICIProfile")]
 	[DisableDefaultCtor]
@@ -320,7 +315,7 @@ namespace CoreMidi {
 		NativeHandle Constructor (NSData data);
 	}
 
-	[NoWatch, NoTV, Mac (10, 14), iOS (12, 0)]
+	[NoWatch, NoTV, iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "MIDICIProfileState")]
 	[DisableDefaultCtor]
@@ -354,7 +349,7 @@ namespace CoreMidi {
 	delegate void MidiCIProfileSpecificDataHandler (MidiCISession session, byte channel, MidiCIProfile profile, NSData data);
 	delegate void MidiCISessionDisconnectHandler (MidiCISession session, NSError error);
 
-	[NoWatch, NoTV, Mac (10, 14), iOS (12, 0)]
+	[NoWatch, NoTV, iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "MIDICISession")]
 	[DisableDefaultCtor]

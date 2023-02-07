@@ -914,11 +914,9 @@ namespace ImageCaptureCore {
 		[Export ("documentUTI")]
 		string DocumentUti { get; set; }
 
-		[Mac (10, 13)]
 		[Export ("defaultUsername")]
 		string DefaultUsername { get; set; }
 
-		[Mac (10, 13)]
 		[Export ("requestOpenSessionWithCredentials:password:")]
 		void RequestOpenSession (string username, string password);
 

@@ -68,8 +68,6 @@ namespace MapKit {
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Mac (10, 9)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MKCoordinateRegion {
@@ -102,8 +100,6 @@ namespace MapKit {
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Mac (10, 9)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MKMapPoint {
@@ -174,12 +170,10 @@ namespace MapKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos9.2")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-#else
-		[TV (9, 2)]
 #endif
 		public static MKMapSize World { get { return new MKMapSize (0x10000000, 0x10000000); } }
 
@@ -222,18 +216,14 @@ namespace MapKit {
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Mac (10, 9)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MKMapRect {
 #if NET
-		[SupportedOSPlatform ("tvos9.2")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[TV (9, 2)]
 #endif
 		public static readonly MKMapRect Null = new MKMapRect (double.PositiveInfinity, double.PositiveInfinity, 0, 0);
 
@@ -326,12 +316,10 @@ namespace MapKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos9.2")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[TV (9, 2)]
 #endif
 		public MKMapRect World {
 			get {
@@ -448,8 +436,6 @@ namespace MapKit {
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Mac (10, 9)]
 #endif
 	public static class MKGeometry {
 

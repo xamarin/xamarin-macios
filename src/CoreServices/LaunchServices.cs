@@ -95,16 +95,12 @@ namespace CoreServices
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-#else
-		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyDefaultApplicationURLForURL (IntPtr inUrl, LSRoles inRole, /*out*/ IntPtr outError);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-#else
-		[Mac (10, 10)]
 #endif
 		public static NSUrl? GetDefaultApplicationUrlForUrl (NSUrl url, LSRoles roles = LSRoles.All)
 		{
@@ -118,16 +114,12 @@ namespace CoreServices
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-#else
-		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyDefaultApplicationURLForContentType (IntPtr inContentType, LSRoles inRole, /*out*/ IntPtr outError);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-#else
-		[Mac (10, 10)]
 #endif
 		public static NSUrl? GetDefaultApplicationUrlForContentType (string contentType, LSRoles roles = LSRoles.All)
 		{
@@ -180,16 +172,12 @@ namespace CoreServices
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-#else
-		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyApplicationURLsForBundleIdentifier (IntPtr inBundleIdentifier, /*out*/ IntPtr outError);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-#else
-		[Mac (10, 10)]
 #endif
 		public static NSUrl [] GetApplicationUrlsForBundleIdentifier (string bundleIdentifier)
 		{
