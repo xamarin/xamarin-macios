@@ -7,7 +7,10 @@
 	<Import Project="Microsoft.$(_PlatformName).Sdk.SupportedTargetPlatforms.props" />
 
 	<Import Project="Xamarin.Shared.Sdk.TargetFrameworkInference.props" />
-
+	
+	<!-- Imports the .user.env file if exists and the build is from VS -->
+	<Import Project="$(MSBuildProjectFullPath).user.env" Condition="Exists('$(MSBuildProjectFullPath).user.env') And '$(BuildingInsideVisualStudio)' == 'true'" />
+	
 	<PropertyGroup>
 		<!-- Set to true when using the Microsoft.<platform>.Sdk NuGet. This is used by pre-existing/shared targets to tweak behavior depending on build system -->
 		<UsingAppleNETSdk>true</UsingAppleNETSdk>

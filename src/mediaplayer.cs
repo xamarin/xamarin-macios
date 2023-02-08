@@ -891,6 +891,7 @@ namespace MediaPlayer {
 	[NoMac]
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'AVPlayerViewController' (AVKit) instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'AVPlayerViewController' (AVKit) instead.")]
 	[MacCatalyst (14, 0)] // docs says 13.0 but this throws: NSInvalidArgumentException Reason: MPMoviePlayerController is no longer available. Use AVPlayerViewController in AVKit.
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'AVPlayerViewController' (AVKit) instead.")]
 #if WATCH

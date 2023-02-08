@@ -111,6 +111,7 @@ namespace MapKit {
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'MKPinAnnotationView.PinTintColor' instead.")]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'MKPinAnnotationView.PinTintColor' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'MKPinAnnotationView.PinTintColor' instead.")]
 	public enum MKPinAnnotationColor : ulong {
 		Red, Green, Purple
 	}
