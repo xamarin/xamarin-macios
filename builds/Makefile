@@ -138,7 +138,7 @@ endif
 	@# emscripten, which mono depens on
 	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.emscripten.net7.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(EMSCRIPTEN_MANIFEST_PACKAGE_VERSION)/data/WorkloadManifest.* ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten.net7/
 	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.emscripten.net6.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(EMSCRIPTEN_MANIFEST_PACKAGE_VERSION)/data/WorkloadManifest.* ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten.net6/
-	#$(Q) make .stamp-copy-stuff-everywhere
+	$(Q) make .stamp-copy-stuff-everywhere
 	$(Q) touch $@
 
 .stamp-copy-stuff-everywhere:
