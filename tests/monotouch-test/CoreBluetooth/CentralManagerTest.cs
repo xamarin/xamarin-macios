@@ -76,6 +76,8 @@ namespace MonoTouchFixtures.CoreBluetooth {
 		[SetUp]
 		public void SetUp ()
 		{
+			if (TestRuntime.IsInCI)
+				TestRuntime.AssertNotARM64Desktop (); // Looks like this particular test doesn't like Desktop + M1 due to permissions
 			// iOS 13 and friends require bluetooth permission
 			if (TestRuntime.CheckXcodeVersion (11, 0))
 				TestRuntime.CheckBluetoothPermission (true);
