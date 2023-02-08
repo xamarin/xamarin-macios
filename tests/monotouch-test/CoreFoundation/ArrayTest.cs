@@ -120,12 +120,12 @@ namespace MonoTouchFixtures.CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static nint CFGetRetainCount (IntPtr handle);
+		internal extern static nint CFGetRetainCount (IntPtr handle);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static void CFRetain (IntPtr obj);
+		internal extern static void CFRetain (IntPtr obj);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static void CFRelease (IntPtr obj);
+		internal extern static void CFRelease (IntPtr obj);
 	}
 }
