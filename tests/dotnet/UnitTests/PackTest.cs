@@ -149,7 +149,7 @@ namespace Xamarin.Tests {
 			var project = "MyClassLibrary";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
-			var project_path = GetProjectPath (project, runtimeIdentifiers: string.Empty, platform: platform, out var appPath);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: string.Empty, platform: platform, out var appPath, configuration: "Release");
 			Clean (project_path);
 			var properties = GetDefaultProperties ();
 
