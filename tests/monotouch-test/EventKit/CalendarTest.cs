@@ -78,7 +78,7 @@ namespace MonoTouchFixtures.EventKit {
 			Assert.Null (c.Source, "Source");
 			Assert.False (c.Subscribed, "Subscribed");
 #if MONOMAC || __MACCATALYST__
-			if (TestRuntime.CheckXcodeVersion (14,0))
+			if (TestRuntime.CheckXcodeVersion (14, 0))
 				Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.None), "SupportedEventAvailabilities");
 			else
 				Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.Busy | EKCalendarEventAvailability.Free), "SupportedEventAvailabilities");
@@ -124,7 +124,7 @@ namespace MonoTouchFixtures.EventKit {
 			Assert.Null (c.Source, "Source");
 			Assert.False (c.Subscribed, "Subscribed");
 #if MONOMAC || __MACCATALYST__
-			if (TestRuntime.CheckXcodeVersion (14,0))
+			if (TestRuntime.CheckXcodeVersion (14, 0))
 				Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.None), "SupportedEventAvailabilities");
 			else
 				Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.Busy | EKCalendarEventAvailability.Free), "SupportedEventAvailabilities");
