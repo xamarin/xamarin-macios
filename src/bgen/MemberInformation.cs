@@ -9,17 +9,40 @@ public class MemberInformation {
 	AttributeManager AttributeManager { get { return Generator.AttributeManager; } }
 	public readonly MemberInfo mi;
 	public readonly Type type;
-	public readonly Type category_extension_type;
-	internal readonly WrapPropMemberInformation wpmi;
-	public readonly bool is_abstract, is_protected, is_internal, is_unified_internal, is_override, is_new, is_sealed, is_static, is_thread_static, is_autorelease, is_wrapper, is_forced;
-	public readonly bool ignore_category_static_warnings, is_basewrapper_protocol_method;
+	public readonly Type? category_extension_type;
+	internal readonly WrapPropMemberInformation? wpmi;
+	public readonly bool is_abstract;
+	public readonly bool is_protected;
+	public readonly bool is_internal;
+	public readonly bool is_unified_internal;
+	public readonly bool is_override;
+	public readonly bool is_new;
+	public readonly bool is_sealed;
+	public readonly bool is_static;
+	public readonly bool is_thread_static;
+	public readonly bool is_autorelease;
+	public readonly bool is_wrapper;
+	public readonly bool is_forced;
+	public readonly bool ignore_category_static_warnings;
+	public readonly bool is_basewrapper_protocol_method;
 	public readonly bool has_inner_wrap_attribute;
 	public readonly Generator.ThreadCheck threadCheck;
-	public bool is_unsafe, is_virtual_method, is_export, is_category_extension, is_variadic, is_interface_impl, is_extension_method, is_appearance, is_model, is_ctor;
+	public bool is_unsafe;
+	public bool is_virtual_method;
+	public bool is_export;
+	public bool is_category_extension;
+	public bool is_variadic;
+	public bool is_interface_impl;
+	public bool is_extension_method;
+	public bool is_appearance;
+	public bool is_model;
+	public bool is_ctor;
 	public bool is_return_release;
 	public bool is_type_sealed;
 	public bool protocolize;
-	public string selector, wrap_method, is_forced_owns;
+	public string? selector;
+	public string? wrap_method;
+	public string is_forced_owns;
 	public bool is_bindAs => Generator.HasBindAsAttribute (mi);
 
 	public MethodInfo? Method { get { return mi as MethodInfo; } }
