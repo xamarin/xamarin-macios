@@ -5,9 +5,9 @@ using ObjCRuntime;
 
 public partial class Frameworks {
 	HashSet<string>? frameworks;
-	
+
 	public PlatformName CurrentPlatform { get; private set; }
-	
+
 	public Frameworks (PlatformName currentPlatform)
 	{
 		CurrentPlatform = currentPlatform;
