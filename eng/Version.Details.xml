@@ -1,25 +1,25 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.100-preview.1.23103.1">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.100-preview.1.23108.16">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>f1f6336d592aa1a3e72d32a5e51aaf99a0cbfefa</Sha>
+      <Sha>d837e5d69e9d2999dcaf278fe8e4b1164098cc65</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="8.0.100-1.23067.1" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/linker</Uri>
       <Sha>c790896f128957acd2999208f44f09ae1e826c8c</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.0-preview.1.23081.6" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.0-preview.1.23106.5" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>1b2c4a998d0a03fa99b0bf341cb40fc188e0b3f0</Sha>
+      <Sha>9f654effb17265a137695bf38f0a782d274791cd</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
-    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="8.0.0-preview.1.23080.16" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="8.0.0-preview.1.23107.3" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/aspnetcore</Uri>
-      <Sha>6a9cef3fa2f5c7c2695a2141a8aa098294736d4e</Sha>
+      <Sha>da9cc7f21fd15df83c6f3c061dd020ddafdd5a41</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100-preview.1" Version="8.0.0-preview.1.23081.2" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100-preview.1" Version="8.0.0-preview.1.23101.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>75ccb6879a3a4710558b28491f19555eb15fe40f</Sha>
+      <Sha>c47bbefece200e429f8ed33494121fa9945f0ef9</Sha>
     </Dependency>
     <!-- This is a subscription of the .NET 7 versions of our packages -->
     <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.2.1024">
