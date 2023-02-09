@@ -27,7 +27,7 @@ namespace Xamarin.iOS.Tasks {
 				LogTaskProperty ("SessionId", SessionId);
 
 				var connection = BuildConnection.GetAsync (BuildEngine4).Result;
-				var buildClient = connection.Client as BuildClient;
+				var buildClient = connection.GetClient (SessionId) as BuildClient;
 
 				if (!connection.IsConnected || buildClient == null) {
 					Log.LogWarning (MSBStrings.E0179, nameof (ResolveUniversalTypeIdentifiers));
