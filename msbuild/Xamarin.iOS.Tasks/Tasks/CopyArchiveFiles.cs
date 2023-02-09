@@ -64,7 +64,7 @@ namespace Xamarin.iOS.Tasks {
 				.GetAsync (BuildEngine4)
 				.ConfigureAwait (continueOnCapturedContext: false);
 
-			return connection.GetClient(SessionId);
+			return connection.GetClient (SessionId);
 		}
 
 		async System.Threading.Tasks.Task CopyArchiveAsync (ISshCommands sshCommands)
