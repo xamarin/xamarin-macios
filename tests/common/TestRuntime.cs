@@ -201,7 +201,7 @@ partial class TestRuntime {
 #endif
 	}
 
-	public static void AssertARM64Desktop (string message = "This test only runs on an ARM64 desktops.")
+	public static void AssertNotX64Desktop (string message = "This test does not run on x64 desktops.")
 	{
 #if __MACOS__ || __MACCATALYST__
 		if (!IsARM64)

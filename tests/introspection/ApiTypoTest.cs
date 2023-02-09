@@ -1072,7 +1072,7 @@ namespace Introspection {
 					Assert.True (CheckLibrary (s), fi.Name);
 					break;
 #endif
-				case "ChipLibrary": // Chip is removed entirely begining Xcode 14
+				case "ChipLibrary": // Chip is removed entirely beginning Xcode 14
 					if (!TestRuntime.CheckXcodeVersion (14, 0))
 						if (TestRuntime.IsDevice)
 							Assert.True (CheckLibrary (s), fi.Name);
