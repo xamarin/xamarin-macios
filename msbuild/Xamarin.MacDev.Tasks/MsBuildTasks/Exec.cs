@@ -34,7 +34,7 @@ namespace Microsoft.Build.Tasks {
 				var client = BuildConnection
 					.GetAsync (BuildEngine4)
 					.Result
-					.Client;
+					.GetClient (SessionId);
 				var sshCommands = client
 					.MessagingService
 					.Ssh
