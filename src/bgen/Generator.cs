@@ -307,7 +307,7 @@ public partial class Generator : IMemberGatherer {
 		if (t.IsEnum) {
 			var enumType = t;
 
-			t = TypeManager.GetUnderlyingEnumType (t);
+			t = t.GetEnumUnderlyingType ();
 
 			if (IsNativeEnum (enumType, out var _, out var nativeType))
 				return nativeType;
@@ -722,7 +722,7 @@ public partial class Generator : IMemberGatherer {
 		if (originalReturnType == TypeManager.NSNumber) {
 			if (!NSNumberReturnMap.TryGetValue (retType, out append)) {
 				if (retType.IsEnum) {
-					var enumType = TypeManager.GetUnderlyingEnumType (retType);
+					var enumType = retType.GetEnumUnderlyingType ();
 					if (!NSNumberReturnMap.TryGetValue (enumType, out append))
 						throw GetBindAsException ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi);
 				} else
@@ -1314,7 +1314,7 @@ public partial class Generator : IMemberGatherer {
 			return false;
 
 		var renderedEnumType = RenderType (enumType);
-		var underlyingEnumType = TypeManager.GetUnderlyingEnumType (enumType);
+		var underlyingEnumType = enumType.GetEnumUnderlyingType ();
 		var underlyingTypeName = RenderType (underlyingEnumType);
 		string itype;
 		string intermediateType;
@@ -1382,7 +1382,7 @@ public partial class Generator : IMemberGatherer {
 		if (attrib is null)
 			return false;
 
-		var underlyingEnumType = TypeManager.GetUnderlyingEnumType (enumType);
+		var underlyingEnumType = enumType.GetEnumUnderlyingType ();
 		if (TypeManager.System_Int64 == underlyingEnumType) {
 			nativeType = "IntPtr";
 		} else if (TypeManager.System_UInt64 == underlyingEnumType) {
@@ -2131,7 +2131,7 @@ public partial class Generator : IMemberGatherer {
 					bool isNativeEnum = false;
 
 					if (pi.PropertyType.IsEnum) {
-						fetchType = TypeManager.GetUnderlyingEnumType (pi.PropertyType);
+						fetchType = pi.PropertyType.GetEnumUnderlyingType ();
 						castToUnderlying = "(" + fetchType + "?)";
 						castToEnum = "(" + FormatType (dictType, pi.PropertyType) + "?)";
 						isNativeEnum = IsNativeEnum (pi.PropertyType);
@@ -2404,7 +2404,7 @@ public partial class Generator : IMemberGatherer {
 					else if (propertyType == TypeManager.System_String_Array) {
 						print ("return CFArray.StringArrayFromHandle (value)!;");
 					} else {
-						Type underlying = propertyType.IsEnum ? TypeManager.GetUnderlyingEnumType (propertyType) : propertyType;
+						Type underlying = propertyType.IsEnum ? propertyType.GetEnumUnderlyingType () : propertyType;
 						string cast = propertyType.IsEnum ? "(" + propertyType.FullName + ") " : "";
 
 						if (underlying == TypeManager.System_Int32)
