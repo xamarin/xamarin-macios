@@ -54,284 +54,6 @@ using ObjCRuntime;
 using Foundation;
 using Xamarin.Utils;
 
-public class GeneratedTypes {
-	public Generator Generator;
-
-	Dictionary<Type, GeneratedType> knownTypes = new Dictionary<Type, GeneratedType> ();
-
-	public GeneratedTypes (Generator generator)
-	{
-		this.Generator = generator;
-	}
-
-	public GeneratedType Lookup (Type t)
-	{
-		if (knownTypes.ContainsKey (t))
-			return knownTypes [t];
-		var n = new GeneratedType (t, this);
-		knownTypes [t] = n;
-		return n;
-	}
-}
-
-public interface IMemberGatherer {
-	IEnumerable<MethodInfo> GetTypeContractMethods (Type source);
-}
-
-class WrapPropMemberInformation {
-	public bool HasWrapOnGetter { get => WrapGetter != null; }
-	public bool HasWrapOnSetter { get => WrapSetter != null; }
-	public string WrapGetter { get; private set; }
-	public string WrapSetter { get; private set; }
-
-	public WrapPropMemberInformation (PropertyInfo pi, Generator generator)
-	{
-		WrapGetter = generator.AttributeManager.GetCustomAttribute<WrapAttribute> (pi?.GetMethod)?.MethodName;
-		WrapSetter = generator.AttributeManager.GetCustomAttribute<WrapAttribute> (pi?.SetMethod)?.MethodName;
-	}
-}
-
-
-public class MemberInformation {
-	Generator Generator;
-	AttributeManager AttributeManager { get { return Generator.AttributeManager; } }
-	public readonly MemberInfo mi;
-	public readonly Type type;
-	public readonly Type category_extension_type;
-	internal readonly WrapPropMemberInformation wpmi;
-	public readonly bool is_abstract, is_protected, is_internal, is_unified_internal, is_override, is_new, is_sealed, is_static, is_thread_static, is_autorelease, is_wrapper, is_forced;
-	public readonly bool ignore_category_static_warnings, is_basewrapper_protocol_method;
-	public readonly bool has_inner_wrap_attribute;
-	public readonly Generator.ThreadCheck threadCheck;
-	public bool is_unsafe, is_virtual_method, is_export, is_category_extension, is_variadic, is_interface_impl, is_extension_method, is_appearance, is_model, is_ctor;
-	public bool is_return_release;
-	public bool is_type_sealed;
-	public bool protocolize;
-	public string selector, wrap_method, is_forced_owns;
-	public bool is_bindAs => Generator.HasBindAsAttribute (mi);
-
-	public MethodInfo method { get { return (MethodInfo) mi; } }
-	public PropertyInfo property { get { return (PropertyInfo) mi; } }
-
-	MemberInformation (Generator generator, IMemberGatherer gather, MemberInfo mi, Type type, bool is_interface_impl, bool is_extension_method, bool is_appearance, bool is_model)
-	{
-		Generator = generator;
-		var method = mi as MethodInfo;
-
-		is_ctor = mi is MethodInfo && mi.Name == "Constructor";
-		is_abstract = AttributeManager.HasAttribute<AbstractAttribute> (mi) && mi.DeclaringType == type;
-		is_protected = AttributeManager.HasAttribute<ProtectedAttribute> (mi);
-		is_internal = mi.IsInternal (generator);
-		is_unified_internal = AttributeManager.HasAttribute<UnifiedInternalAttribute> (mi);
-		is_override = AttributeManager.HasAttribute<OverrideAttribute> (mi) || !Generator.MemberBelongsToType (mi.DeclaringType, type);
-		is_new = AttributeManager.HasAttribute<NewAttribute> (mi);
-		is_sealed = AttributeManager.HasAttribute<SealedAttribute> (mi);
-		is_static = AttributeManager.HasAttribute<StaticAttribute> (mi);
-		is_thread_static = AttributeManager.HasAttribute<IsThreadStaticAttribute> (mi);
-		is_autorelease = AttributeManager.HasAttribute<AutoreleaseAttribute> (mi);
-		is_wrapper = !AttributeManager.HasAttribute<SyntheticAttribute> (mi.DeclaringType);
-		is_type_sealed = AttributeManager.HasAttribute<SealedAttribute> (mi.DeclaringType);
-		is_return_release = method != null && AttributeManager.HasAttribute<ReleaseAttribute> (AttributeManager.GetReturnTypeCustomAttributes (method));
-		is_forced = Generator.HasForcedAttribute (mi, out is_forced_owns);
-
-		var tsa = AttributeManager.GetCustomAttribute<ThreadSafeAttribute> (mi);
-		// if there's an attribute then it overrides the parent (e.g. type attribute) or namespace default
-		if (tsa != null) {
-			threadCheck = tsa.Safe ? Generator.ThreadCheck.Off : Generator.ThreadCheck.On;
-		} else {
-			threadCheck = Generator.ThreadCheck.Default; // will be based on the type decision
-		}
-		this.is_interface_impl = is_interface_impl;
-		this.is_extension_method = is_extension_method;
-		this.type = type;
-		this.is_appearance = is_appearance;
-		this.is_model = is_model;
-		this.mi = mi;
-
-		if (is_interface_impl || is_extension_method || is_type_sealed) {
-			is_abstract = false;
-			is_virtual_method = false;
-		}
-
-		// To avoid a warning, we should determine whether we should insert a "new" in the 
-		// declaration.  If this is an inlined method, then we need to see if this was
-		// also inlined in any of the base classes.
-		if (mi.DeclaringType != type) {
-			for (var baseType = ReflectionExtensions.GetBaseType (type, generator); baseType != null && baseType != Generator.TypeManager.System_Object; baseType = ReflectionExtensions.GetBaseType (baseType, generator)) {
-				foreach (var baseMethod in gather.GetTypeContractMethods (baseType)) {
-					if (baseMethod.DeclaringType != baseType && baseMethod == mi) {
-						// We found a case, we need to flag it as new.
-						is_new = true;
-					}
-				}
-			}
-		}
-
-	}
-
-	public MemberInformation (Generator generator, IMemberGatherer gather, MethodInfo mi, Type type, Type category_extension_type, bool is_interface_impl = false, bool is_extension_method = false, bool is_appearance = false, bool is_model = false, string selector = null, bool isBaseWrapperProtocolMethod = false)
-		: this (generator, gather, (MemberInfo) mi, type, is_interface_impl, is_extension_method, is_appearance, is_model)
-	{
-		is_basewrapper_protocol_method = isBaseWrapperProtocolMethod;
-		foreach (ParameterInfo pi in mi.GetParameters ())
-			if (pi.ParameterType.IsSubclassOf (Generator.TypeManager.System_Delegate))
-				is_unsafe = true;
-
-		if (!is_unsafe && mi.ReturnType.IsSubclassOf (Generator.TypeManager.System_Delegate))
-			is_unsafe = true;
-
-		if (selector != null) {
-			this.selector = selector;
-			if (!is_sealed && !is_wrapper) {
-				is_export = !is_extension_method;
-				is_virtual_method = !is_ctor;
-			}
-		} else {
-			object [] attr = AttributeManager.GetCustomAttributes<ExportAttribute> (mi);
-			if (attr.Length != 1) {
-				attr = AttributeManager.GetCustomAttributes<BindAttribute> (mi);
-				if (attr.Length != 1) {
-					attr = AttributeManager.GetCustomAttributes<WrapAttribute> (mi);
-					if (attr.Length != 1)
-						throw new BindingException (1012, true, type, mi.Name);
-
-					var wrapAtt = (WrapAttribute) attr [0];
-					wrap_method = wrapAtt.MethodName;
-					is_virtual_method = wrapAtt.IsVirtual;
-				} else {
-					BindAttribute ba = (BindAttribute) attr [0];
-					this.selector = ba.Selector;
-					is_virtual_method = ba.Virtual;
-				}
-			} else {
-				ExportAttribute ea = (ExportAttribute) attr [0];
-				this.selector = ea.Selector;
-				is_variadic = ea.IsVariadic;
-
-				if (!is_sealed || !is_wrapper) {
-					is_virtual_method = !is_ctor;
-					is_export = !is_extension_method;
-				}
-			}
-		}
-
-		this.category_extension_type = category_extension_type;
-		if (category_extension_type != null) {
-			is_category_extension = true;
-#if NET
-			ignore_category_static_warnings = is_internal || type.IsInternal (generator);
-#else
-			ignore_category_static_warnings = is_internal || type.IsInternal (generator) || Generator.AttributeManager.GetCustomAttribute<CategoryAttribute> (type).AllowStaticMembers;
-#endif
-		}
-
-		if (is_static || is_category_extension || is_interface_impl || is_extension_method || is_type_sealed)
-			is_virtual_method = false;
-	}
-
-	public MemberInformation (Generator generator, IMemberGatherer gather, PropertyInfo pi, Type type, bool is_interface_impl = false)
-		: this (generator, gather, (MemberInfo) pi, type, is_interface_impl, false, false, false)
-	{
-		if (pi.PropertyType.IsSubclassOf (Generator.TypeManager.System_Delegate))
-			is_unsafe = true;
-
-		var export = Generator.GetExportAttribute (pi, out wrap_method);
-		if (export != null)
-			selector = export.Selector;
-
-		if (wrap_method != null) {
-			var wrapAtt = Generator.AttributeManager.GetCustomAttribute<WrapAttribute> (pi);
-			is_virtual_method = wrapAtt?.IsVirtual ?? false;
-		} else if (is_interface_impl || is_type_sealed)
-			is_virtual_method = false;
-		else
-			is_virtual_method = !is_static;
-
-		// Properties can have WrapAttribute on getter/setter so we need to check for this
-		// but only if no Export is already found on property level.
-		if (export is null) {
-			wpmi = new WrapPropMemberInformation (pi, generator);
-			has_inner_wrap_attribute = wpmi.HasWrapOnGetter || wpmi.HasWrapOnSetter;
-
-			// Wrap can only be used either at property level or getter/setter level at a given time.
-			if (wrap_method != null && has_inner_wrap_attribute)
-				throw new BindingException (1063, true, pi.DeclaringType, pi.Name);
-		}
-	}
-
-	public string GetVisibility ()
-	{
-		if (is_interface_impl || is_extension_method)
-			return "public";
-
-		var mod = is_protected ? "protected" : null;
-		mod += is_internal ? "internal" : null;
-		if (string.IsNullOrEmpty (mod))
-			mod = "public";
-		return mod;
-	}
-
-	public string GetModifiers ()
-	{
-		string mods = "";
-
-		mods += is_unsafe ? "unsafe " : null;
-		mods += is_new ? "new " : "";
-
-		if (is_sealed) {
-			mods += "";
-		} else if (is_static || is_category_extension || is_extension_method) {
-			mods += "static ";
-		} else if (is_abstract) {
-#if NET
-			mods += "virtual ";
-#else
-			mods += "abstract ";
-#endif
-		} else if (is_virtual_method && !is_type_sealed) {
-			mods += is_override ? "override " : "virtual ";
-		}
-
-		return mods;
-	}
-}
-
-public partial class Frameworks {
-	HashSet<string> frameworks;
-	readonly PlatformName CurrentPlatform;
-	public Frameworks (PlatformName current_platform)
-	{
-		CurrentPlatform = current_platform;
-	}
-
-	bool GetValue (string framework)
-	{
-		if (frameworks == null) {
-			switch (CurrentPlatform) {
-			case PlatformName.iOS:
-				frameworks = iosframeworks;
-				break;
-			case PlatformName.WatchOS:
-				frameworks = watchosframeworks;
-				break;
-			case PlatformName.TvOS:
-				frameworks = tvosframeworks;
-				break;
-			case PlatformName.MacOSX:
-				frameworks = macosframeworks;
-				break;
-			case PlatformName.MacCatalyst:
-				frameworks = maccatalystframeworks;
-				break;
-			default:
-				throw new BindingException (1047, CurrentPlatform);
-			}
-		}
-
-		return frameworks.Contains (framework);
-	}
-}
-
 public partial class Generator : IMemberGatherer {
 	internal bool IsPublicMode;
 	internal static string NativeHandleType;
@@ -585,7 +307,7 @@ public partial class Generator : IMemberGatherer {
 		if (t.IsEnum) {
 			var enumType = t;
 
-			t = TypeManager.GetUnderlyingEnumType (t);
+			t = t.GetEnumUnderlyingType ();
 
 			if (IsNativeEnum (enumType, out var _, out var nativeType))
 				return nativeType;
@@ -1000,7 +722,7 @@ public partial class Generator : IMemberGatherer {
 		if (originalReturnType == TypeManager.NSNumber) {
 			if (!NSNumberReturnMap.TryGetValue (retType, out append)) {
 				if (retType.IsEnum) {
-					var enumType = TypeManager.GetUnderlyingEnumType (retType);
+					var enumType = retType.GetEnumUnderlyingType ();
 					if (!NSNumberReturnMap.TryGetValue (enumType, out append))
 						throw GetBindAsException ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi);
 				} else
@@ -1592,7 +1314,7 @@ public partial class Generator : IMemberGatherer {
 			return false;
 
 		var renderedEnumType = RenderType (enumType);
-		var underlyingEnumType = TypeManager.GetUnderlyingEnumType (enumType);
+		var underlyingEnumType = enumType.GetEnumUnderlyingType ();
 		var underlyingTypeName = RenderType (underlyingEnumType);
 		string itype;
 		string intermediateType;
@@ -1660,7 +1382,7 @@ public partial class Generator : IMemberGatherer {
 		if (attrib is null)
 			return false;
 
-		var underlyingEnumType = TypeManager.GetUnderlyingEnumType (enumType);
+		var underlyingEnumType = enumType.GetEnumUnderlyingType ();
 		if (TypeManager.System_Int64 == underlyingEnumType) {
 			nativeType = "IntPtr";
 		} else if (TypeManager.System_UInt64 == underlyingEnumType) {
@@ -2409,7 +2131,7 @@ public partial class Generator : IMemberGatherer {
 					bool isNativeEnum = false;
 
 					if (pi.PropertyType.IsEnum) {
-						fetchType = TypeManager.GetUnderlyingEnumType (pi.PropertyType);
+						fetchType = pi.PropertyType.GetEnumUnderlyingType ();
 						castToUnderlying = "(" + fetchType + "?)";
 						castToEnum = "(" + FormatType (dictType, pi.PropertyType) + "?)";
 						isNativeEnum = IsNativeEnum (pi.PropertyType);
@@ -2682,7 +2404,7 @@ public partial class Generator : IMemberGatherer {
 					else if (propertyType == TypeManager.System_String_Array) {
 						print ("return CFArray.StringArrayFromHandle (value)!;");
 					} else {
-						Type underlying = propertyType.IsEnum ? TypeManager.GetUnderlyingEnumType (propertyType) : propertyType;
+						Type underlying = propertyType.IsEnum ? propertyType.GetEnumUnderlyingType () : propertyType;
 						string cast = propertyType.IsEnum ? "(" + propertyType.FullName + ") " : "";
 
 						if (underlying == TypeManager.System_Int32)
@@ -3527,7 +3249,7 @@ public partial class Generator : IMemberGatherer {
 	//
 	public string MakeSignature (MemberInformation minfo)
 	{
-		return MakeSignature (minfo, false, minfo.method.GetParameters ());
+		return MakeSignature (minfo, false, minfo.Method.GetParameters ());
 	}
 
 	//
@@ -3535,7 +3257,7 @@ public partial class Generator : IMemberGatherer {
 	//
 	public string MakeSignature (MemberInformation minfo, bool alreadyPreserved)
 	{
-		return MakeSignature (minfo, false, minfo.method.GetParameters (), "", alreadyPreserved);
+		return MakeSignature (minfo, false, minfo.Method.GetParameters (), "", alreadyPreserved);
 	}
 
 	public string GetAsyncName (MethodInfo mi)
@@ -3568,7 +3290,7 @@ public partial class Generator : IMemberGatherer {
 
 	public string MakeSignature (MemberInformation minfo, bool is_async, ParameterInfo [] parameters, string extra = "", bool alreadyPreserved = false)
 	{
-		var mi = minfo.method;
+		var mi = minfo.Method;
 		var category_class = minfo.category_extension_type;
 		StringBuilder sb = new StringBuilder ();
 		string name = minfo.is_ctor ? GetGeneratedTypeName (mi.DeclaringType) : is_async ? GetAsyncName (mi) : mi.Name;
@@ -3579,21 +3301,21 @@ public partial class Generator : IMemberGatherer {
 		if (!minfo.is_ctor && !is_async) {
 			var prefix = "";
 			if (!BindThirdPartyLibrary) {
-				var hasReturnTypeProtocolize = Protocolize (AttributeManager.GetReturnTypeCustomAttributes (minfo.method));
+				var hasReturnTypeProtocolize = Protocolize (AttributeManager.GetReturnTypeCustomAttributes (minfo.Method));
 				if (hasReturnTypeProtocolize) {
-					if (!IsProtocol (minfo.method.ReturnType)) {
-						ErrorHelper.Warning (1108, minfo.method.DeclaringType, minfo.method, minfo.method.ReturnType.FullName);
+					if (!IsProtocol (minfo.Method.ReturnType)) {
+						ErrorHelper.Warning (1108, minfo.Method.DeclaringType, minfo.Method, minfo.Method.ReturnType.FullName);
 					} else {
 						prefix = "I";
 					}
 				}
-				if (minfo.method.ReturnType.IsArray) {
-					var et = minfo.method.ReturnType.GetElementType ();
+				if (minfo.Method.ReturnType.IsArray) {
+					var et = minfo.Method.ReturnType.GetElementType ();
 					if (IsModel (et))
-						ErrorHelper.Warning (1109, minfo.method.DeclaringType, minfo.method.Name, et, et.Namespace, et.Name);
+						ErrorHelper.Warning (1109, minfo.Method.DeclaringType, minfo.Method.Name, et, et.Namespace, et.Name);
 				}
-				if (IsModel (minfo.method.ReturnType) && !hasReturnTypeProtocolize)
-					ErrorHelper.Warning (1107, minfo.method.DeclaringType, minfo.method.Name, minfo.method.ReturnType, minfo.method.ReturnType.Namespace, minfo.method.ReturnType.Name);
+				if (IsModel (minfo.Method.ReturnType) && !hasReturnTypeProtocolize)
+					ErrorHelper.Warning (1107, minfo.Method.DeclaringType, minfo.Method.Name, minfo.Method.ReturnType, minfo.Method.ReturnType.Namespace, minfo.Method.ReturnType.Name);
 			}
 
 			if (minfo.is_bindAs) {
@@ -3614,7 +3336,7 @@ public partial class Generator : IMemberGatherer {
 			sb.Append (" ");
 		}
 		// Unified internal methods automatically get a _ appended
-		if (minfo.is_extension_method && minfo.method.IsSpecialName) {
+		if (minfo.is_extension_method && minfo.Method.IsSpecialName) {
 			if (name.StartsWith ("get_", StringComparison.Ordinal))
 				name = "Get" + name.Substring (4);
 			else if (name.StartsWith ("set_", StringComparison.Ordinal))
@@ -5215,7 +4937,7 @@ public partial class Generator : IMemberGatherer {
 		string extra = "";
 
 		if (asyncKind == AsyncMethodKind.WithResultOutParameter) {
-			if (minfo.method.GetParameters ().Count () > 1)
+			if (minfo.Method.GetParameters ().Count () > 1)
 				extra = ", ";
 			extra += "out " + FormatType (minfo.MethodInfo.DeclaringType, minfo.MethodInfo.ReturnType) + " " + minfo.GetUniqueParamName ("result");
 		}
@@ -5233,7 +4955,7 @@ public partial class Generator : IMemberGatherer {
 
 	void GenerateAsyncMethod (MemberInformation original_minfo, AsyncMethodKind asyncKind)
 	{
-		var mi = original_minfo.method;
+		var mi = original_minfo.Method;
 		var minfo = new AsyncMethodInfo (this, this, original_minfo.type, mi, original_minfo.category_extension_type, original_minfo.is_extension_method);
 		var is_void = mi.ReturnType == TypeManager.System_Void;
 
@@ -5326,7 +5048,7 @@ public partial class Generator : IMemberGatherer {
 
 	void PrintMethodAttributes (MemberInformation minfo)
 	{
-		MethodInfo mi = minfo.method;
+		MethodInfo mi = minfo.Method;
 		var editor_browsable_attribute = false;
 
 		foreach (var sa in AttributeManager.GetCustomAttributes<ThreadSafeAttribute> (mi))
@@ -5347,12 +5069,12 @@ public partial class Generator : IMemberGatherer {
 			print ("[return: ReleaseAttribute ()]");
 
 		// when we inline methods (e.g. from a protocol) 
-		if (minfo.type != minfo.method.DeclaringType) {
+		if (minfo.type != minfo.Method.DeclaringType) {
 			// we must look if the type has an [Availability] attribute
 			// but we must not duplicate existing attributes for a platform, see https://github.com/xamarin/xamarin-macios/issues/7194
-			PrintPlatformAttributesNoDuplicates (minfo.type, minfo.method);
+			PrintPlatformAttributesNoDuplicates (minfo.type, minfo.Method);
 		} else {
-			PrintPlatformAttributes (minfo.method);
+			PrintPlatformAttributes (minfo.Method);
 		}
 
 		// in theory we could check for `minfo.is_ctor` but some manual bindings are using methods for `init*`
@@ -5369,7 +5091,7 @@ public partial class Generator : IMemberGatherer {
 
 	void PrintDelegateProxy (MemberInformation minfo)
 	{
-		PrintDelegateProxy (minfo.method);
+		PrintDelegateProxy (minfo.Method);
 	}
 
 	void PrintDelegateProxy (MethodInfo mi)
@@ -5405,7 +5127,7 @@ public partial class Generator : IMemberGatherer {
 		bool output_semantics = semantic != ArgumentSemantic.None;
 		// it does not make sense on every properties, depending on the their types
 		if (output_semantics && (minfo.mi is PropertyInfo)) {
-			var t = minfo.property.PropertyType;
+			var t = minfo.Property.PropertyType;
 			output_semantics = !t.IsPrimitive || t == TypeManager.System_IntPtr;
 		}
 
@@ -5417,7 +5139,7 @@ public partial class Generator : IMemberGatherer {
 
 	void GenerateMethod (MemberInformation minfo)
 	{
-		var mi = minfo.method;
+		var mi = minfo.Method;
 
 		// skip if we provide a manual implementation that would conflict with the generated code
 		if (AttributeManager.HasAttribute<ManualAttribute> (mi))
@@ -5436,9 +5158,9 @@ public partial class Generator : IMemberGatherer {
 				if (c == ':')
 					argCount++;
 			}
-			if (minfo.method.GetParameters ().Length != argCount) {
+			if (minfo.Method.GetParameters ().Length != argCount) {
 				ErrorHelper.Warning (1105,
-					minfo.selector, argCount, minfo.method, minfo.method.GetParameters ().Length);
+					minfo.selector, argCount, minfo.Method, minfo.Method.GetParameters ().Length);
 			}
 		}
 
@@ -5484,7 +5206,7 @@ public partial class Generator : IMemberGatherer {
 
 			print ("{");
 
-			var is32BitNotSupported = Is64BitiOSOnly ((ICustomAttributeProvider) minfo.method ?? minfo.property);
+			var is32BitNotSupported = Is64BitiOSOnly ((ICustomAttributeProvider) minfo.Method ?? minfo.Property);
 			if (is32BitNotSupported) {
 				print ("#if ARCH_32");
 				print ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
@@ -5509,7 +5231,7 @@ public partial class Generator : IMemberGatherer {
 					print ("using (var autorelease_pool = new NSAutoreleasePool ()) {");
 				}
 				PropertyInfo pinfo = null;
-				MethodInfo method = minfo.method;
+				MethodInfo method = minfo.Method;
 				bool null_allowed = false;
 				if (method.IsSpecialName) {
 					// could be a property setter where [NullAllowed] is _allowed_
@@ -5518,7 +5240,7 @@ public partial class Generator : IMemberGatherer {
 					if (pinfo != null)
 						null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (pinfo);
 				}
-				GenerateMethodBody (minfo, minfo.method, minfo.selector, null_allowed, null, BodyOption.None, pinfo);
+				GenerateMethodBody (minfo, minfo.Method, minfo.selector, null_allowed, null, BodyOption.None, pinfo);
 				if (minfo.is_autorelease) {
 					print ("}");
 					indent--;
@@ -5539,7 +5261,7 @@ public partial class Generator : IMemberGatherer {
 			GenerateAsyncMethod (minfo, AsyncMethodKind.Plain);
 
 			// Generate the overload with the out parameter
-			if (minfo.method.ReturnType != TypeManager.System_Void) {
+			if (minfo.Method.ReturnType != TypeManager.System_Void) {
 				GenerateAsyncMethod (minfo, AsyncMethodKind.WithResultOutParameter);
 			}
 		}
@@ -5940,11 +5662,11 @@ public partial class Generator : IMemberGatherer {
 
 			// Generate Extension Methods of required [Async] decorated methods (we already do optional) 
 			foreach (var ami in requiredInstanceAsyncMethods) {
-				var minfo = new MemberInformation (this, this, ami, type, null, is_extension_method: true);
+				var minfo = new MemberInformation (this, this, ami, type, null, isExtensionMethod: true);
 				GenerateAsyncMethod (minfo, AsyncMethodKind.Plain);
 
 				// Generate the overload with the out parameter
-				if (minfo.method.ReturnType != TypeManager.System_Void)
+				if (minfo.Method.ReturnType != TypeManager.System_Void)
 					GenerateAsyncMethod (minfo, AsyncMethodKind.WithResultOutParameter);
 			}
 
@@ -6789,7 +6511,7 @@ public partial class Generator : IMemberGatherer {
 				if (appearance_selectors != null && AttributeManager.HasAttribute<AppearanceAttribute> (mi))
 					appearance_selectors.Add (mi);
 
-				var minfo = new MemberInformation (this, this, mi, type, is_category_class ? bta.BaseType : null, is_model: is_model);
+				var minfo = new MemberInformation (this, this, mi, type, is_category_class ? bta.BaseType : null, isModel: is_model);
 				// the type above is not the the we're generating, e.g. it would be `NSCopying` for `Copy(NSZone?)`
 				minfo.is_type_sealed = is_sealed;
 

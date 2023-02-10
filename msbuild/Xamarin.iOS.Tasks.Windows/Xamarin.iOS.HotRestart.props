@@ -13,8 +13,5 @@
 		<HotRestartIPAPath>$(HotRestartSignedAppOutputDir)$(_AppBundleName).ipa</HotRestartIPAPath>
 
 		<UnpackHotRestartFrameworks Condition="'$(UnpackHotRestartFrameworks)' == ''">true</UnpackHotRestartFrameworks>
-
-		<_IsHotRestartDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)HOTRESTART($|;)'))</_IsHotRestartDefined>
-		<DefineConstants Condition="!$(_IsHotRestartDefined) And '$(IsHotRestartBuild)' == 'true'">HOTRESTART;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 </Project>

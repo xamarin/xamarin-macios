@@ -1669,6 +1669,8 @@ namespace ObjCRuntime {
 			var t = o as T;
 			if (t is not null) {
 				// found an existing object with the right type.
+				if (owns)
+					TryReleaseINativeObject (t);
 				return t;
 			}
 
@@ -1693,10 +1695,31 @@ namespace ObjCRuntime {
 					// native objects and NSObject instances.
 					throw ErrorHelper.CreateError (8004, $"Cannot create an instance of {implementation.FullName} for the native object 0x{ptr:x} (of type '{Class.class_getName (Class.GetClassForObject (ptr))}'), because another instance already exists for this native object (of type {o.GetType ().FullName}).");
 				}
-				return (T?) ConstructNSObject<T> (ptr, implementation, MissingCtorResolution.ThrowConstructor1NotFound);
+				var rv = (T?) ConstructNSObject<T> (ptr, implementation, MissingCtorResolution.ThrowConstructor1NotFound);
+				if (owns)
+					TryReleaseINativeObject (rv);
+				return rv;
 			}
 
 			return ConstructINativeObject<T> (ptr, owns, implementation, MissingCtorResolution.ThrowConstructor2NotFound);
+		}
+
+		static void TryReleaseINativeObject (INativeObject? obj)
+		{
+			if (obj is null)
+				return;
+
+			if (obj is NativeObject nobj) {
+				nobj.Release ();
+				return;
+			}
+
+			if (obj is NSObject nsobj) {
+				nsobj.DangerousRelease ();
+				return;
+			}
+
+			throw ErrorHelper.CreateError (8045, Xamarin.Bundler.Errors.MX8045 /* Unable to call release on an instance of the type {0}" */, obj.GetType ().FullName);
 		}
 
 		static Type? FindProtocolWrapperType (Type? type)
