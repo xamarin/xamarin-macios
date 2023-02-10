@@ -41,7 +41,7 @@ namespace Cecil.Tests {
 			public string Reason;
 		}
 
-		[Ignore ("work in progress - there are 25 failures, mostly due to delegates")]
+		[Ignore ("work in progress - there are 6 failures, mostly due to delegates")]
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblyDefinitions))]
 		public void CheckForNonBlittablePInvokes (AssemblyInfo info)
 		{
