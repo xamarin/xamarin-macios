@@ -54,42 +54,6 @@ using ObjCRuntime;
 using Foundation;
 using Xamarin.Utils;
 
-public partial class Frameworks {
-	HashSet<string> frameworks;
-	readonly PlatformName CurrentPlatform;
-	public Frameworks (PlatformName current_platform)
-	{
-		CurrentPlatform = current_platform;
-	}
-
-	bool GetValue (string framework)
-	{
-		if (frameworks == null) {
-			switch (CurrentPlatform) {
-			case PlatformName.iOS:
-				frameworks = iosframeworks;
-				break;
-			case PlatformName.WatchOS:
-				frameworks = watchosframeworks;
-				break;
-			case PlatformName.TvOS:
-				frameworks = tvosframeworks;
-				break;
-			case PlatformName.MacOSX:
-				frameworks = macosframeworks;
-				break;
-			case PlatformName.MacCatalyst:
-				frameworks = maccatalystframeworks;
-				break;
-			default:
-				throw new BindingException (1047, CurrentPlatform);
-			}
-		}
-
-		return frameworks.Contains (framework);
-	}
-}
-
 public partial class Generator : IMemberGatherer {
 	internal bool IsPublicMode;
 	internal static string NativeHandleType;
