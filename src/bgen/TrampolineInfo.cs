@@ -24,9 +24,9 @@ public class TrampolineInfo {
 	public string DelegateReturnType;
 	public string ReturnFormat;
 	public string Clear;
-	public string OutReturnType;
+	public string? OutReturnType;
 	public string PostConvert;
-	public string UserDelegateTypeAttribute;
+	public string? UserDelegateTypeAttribute;
 	public Type Type;
 
 	public TrampolineInfo (string userDelegate, string delegateName, string trampolineName, string pars,

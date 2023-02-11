@@ -4140,5 +4140,14 @@ namespace Xamarin.Bundler {
                 return ResourceManager.GetString("MX8044", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to call release on an instance of the type {0}.
+        /// </summary>
+        public static string MX8045 {
+            get {
+                return ResourceManager.GetString("MX8045", resourceCulture);
+            }
+        }
     }
 }
