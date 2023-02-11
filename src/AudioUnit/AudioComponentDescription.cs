@@ -150,7 +150,7 @@ namespace AudioUnit {
 		[UnsupportedOSPlatform ("macos")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'AudioTypeConverter.NewTimePitch' instead.")]
 		[ObsoletedOSPlatform ("ios13.0", "Use 'AudioTypeConverter.NewTimePitch' instead.")]
-		[ObsoletedOSPlatform ("tvos13.0", "Use 'AudioTypeConverter.NewTimePitch' instead.")]
+		[ObsoletedOSPlatform ("maccatalyst13.1", "Use 'AudioTypeConverter.NewTimePitch' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
@@ -173,6 +173,9 @@ namespace AudioUnit {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[ObsoletedOSPlatform ("ios7.0")]
+		[ObsoletedOSPlatform ("maccatalyst13.1")]
+		[ObsoletedOSPlatform ("tvos9.0")]
+		[ObsoletedOSPlatform ("macos10.9")]
 #else
 		[Obsoleted (PlatformName.iOS, 7, 0)]
 #endif

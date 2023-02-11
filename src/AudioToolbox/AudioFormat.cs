@@ -415,6 +415,8 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[ObsoletedOSPlatform ("ios8.0")]
+		[ObsoletedOSPlatform ("maccatalyst13.1")]
+		[ObsoletedOSPlatform ("tvos9.0")]
 #else
 		[Deprecated (PlatformName.iOS, 8, 0)]
 #endif
