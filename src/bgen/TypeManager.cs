@@ -157,11 +157,6 @@ public class TypeManager {
 		return pi.IsOut;
 	}
 
-	public static Type GetUnderlyingEnumType (Type type)
-	{
-		return type.GetEnumUnderlyingType ();
-	}
-
 	public void Initialize (BindingTouch binding_touch, Assembly api, Assembly corlib, Assembly platform)
 	{
 		BindingTouch = binding_touch;

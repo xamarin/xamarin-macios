@@ -69,6 +69,7 @@ namespace AudioUnit {
 	[ObsoletedOSPlatform ("tvos14.0", "Use 'AVAudioEngine' instead.")]
 	[ObsoletedOSPlatform ("macos11.0", "Use 'AVAudioEngine' instead.")]
 	[ObsoletedOSPlatform ("ios14.0", "Use 'AVAudioEngine' instead.")]
+	[ObsoletedOSPlatform ("maccatalyst14.0", "Use 'AVAudioEngine' instead.")]
 #else
 	[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'AVAudioEngine' instead.")]
 	[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'AVAudioEngine' instead.")]

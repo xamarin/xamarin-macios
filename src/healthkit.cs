@@ -4188,6 +4188,7 @@ namespace HealthKit {
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use HKCumulativeQuantitySample instead.")]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use HKCumulativeQuantitySample instead.")]
+	[Deprecated (PlatformName.MacOSX, 13, 0, message: "Use HKCumulativeQuantitySample instead.")]
 	[DisableDefaultCtor]
 	[BaseType (typeof (HKCumulativeQuantitySample))]
 	interface HKCumulativeQuantitySeriesSample {
