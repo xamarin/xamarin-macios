@@ -416,13 +416,19 @@ namespace AudioUnit {
 		UsesInternalReverb = 1005,
 		SpatializationAlgorithm = 3000,
 		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		DistanceParams = 3010,
 		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		AttenuationCurve = 3013,
 		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		RenderingFlags = 3003,
 
 		// AUScheduledSoundPlayer
@@ -707,7 +713,9 @@ namespace AudioUnit {
 	public enum SpatialMixerRenderingFlags {
 		InterAuralDelay = (1 << 0),
 		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		DistanceAttenuation = (1 << 2),
 	}
 
