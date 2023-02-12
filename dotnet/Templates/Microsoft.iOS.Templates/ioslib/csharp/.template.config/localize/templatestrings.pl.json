@@ -1,5 +1,5 @@
-{
+﻿{
   "author": "Microsoft",
-  "name": "Biblioteka klas systemy iOS",
-  "description": "Projekt służący do tworzenia biblioteki klas platformy .NET 6 dla systemu iOS"
+  "name": "iOS Class Library",
+  "description": "A project for creating a .NET iOS class library"
 }

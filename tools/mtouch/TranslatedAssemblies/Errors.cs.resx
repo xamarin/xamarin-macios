@@ -1763,4 +1763,7 @@
   <data name="MX8044" xml:space="preserve">
 		<value>Sestavení {0} bylo od vytvoření aplikace změněno a byl zrušena platnost vygenerovaného kódu statického registrátora. MVID načteného sestavení je {1}, zatímco MVID pro sestavení, kterému vygenerovaný kód statického registrátora odpovídá, je {2}.</value>
 	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>Unable to call release on an instance of the type {0}</value>
+	</data>
 </root>
