@@ -333,11 +333,20 @@ namespace MapKit {
 #else
 		[TV (9, 2)]
 #endif
+
+#if XAMCORE_5_0
+		public static MKMapRect World {
+			get {
+				return new MKMapRect (0, 0, 0x10000000, 0x10000000);
+			}
+		}
+#else
 		public MKMapRect World {
 			get {
 				return new MKMapRect (0, 0, 0x10000000, 0x10000000);
 			}
 		}
+#endif
 
 		// MKMapRectEqualToRect
 		public static bool operator == (MKMapRect a, MKMapRect b)
