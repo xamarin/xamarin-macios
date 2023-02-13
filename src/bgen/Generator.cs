@@ -131,7 +131,7 @@ public partial class Generator : IMemberGatherer {
 	public NamespaceManager NamespaceManager {
 		get { return ns; }
 	}
-	
+
 	public bool LookupMarshal (Type t, out MarshalType res)
 	{
 		res = null;
