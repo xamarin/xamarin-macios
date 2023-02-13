@@ -11,8 +11,8 @@ public static class CustomAttributeDataExtensions {
 	static CustomAttributeDataExtensions ()
 	{
 		roCustomAttributeDataType = typeof (MetadataLoadContext).Assembly.GetType ("System.Reflection.TypeLoading.RoCustomAttributeData");
-		attributeTypeProperty = roCustomAttributeDataType.GetProperty ("AttributeType") 
-		                        ?? throw new InvalidOperationException ("Could not retrieve property 'AttributeType'.");
+		attributeTypeProperty = roCustomAttributeDataType.GetProperty ("AttributeType")
+								?? throw new InvalidOperationException ("Could not retrieve property 'AttributeType'.");
 	}
 
 	public static Type GetAttributeType (this CustomAttributeData data)
