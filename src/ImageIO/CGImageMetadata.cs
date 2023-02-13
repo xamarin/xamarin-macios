@@ -118,15 +118,52 @@ namespace ImageIO {
 			return (result == IntPtr.Zero) ? null : new CGImageMetadataTag (result, true);
 		}
 
+#if NET
+		[DllImport (Constants.ImageIOLibrary)]
+		extern unsafe static void CGImageMetadataEnumerateTagsUsingBlock (/* CGImageMetadataRef __nonnull */ IntPtr metadata,
+			/* CFStringRef __nullable */ IntPtr rootPath, /* CFDictionaryRef __nullable */ IntPtr options,
+			/* __nonnull */ delegate* unmanaged<NativeHandle, NativeHandle, bool> block);
+#else
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static void CGImageMetadataEnumerateTagsUsingBlock (/* CGImageMetadataRef __nonnull */ IntPtr metadata,
 			/* CFStringRef __nullable */ IntPtr rootPath, /* CFDictionaryRef __nullable */ IntPtr options,
 			/* __nonnull */ CGImageMetadataTagBlock block);
+#endif
+
+#if NET
+		static CGImageMetadataTagBlock? callbackBlock;
+		static object callbackLock = new object ();
+
+		[UnmanagedCallersOnly]
+		static bool TagEnumerator (NativeHandle key, NativeHandle value)
+		{
+			if (callbackBlock is null)
+				return false;
+			var nsKey = Runtime.GetNSObject<NSString> (key, true)!;
+			var nsValue = Runtime.GetINativeObject<CGImageMetadataTag> (value, true)!;
+			return callbackBlock (nsKey, nsValue);	
+		}
+#endif
 
 		public void EnumerateTags (NSString? rootPath, CGImageMetadataEnumerateOptions? options, CGImageMetadataTagBlock block)
 		{
 			using var o = options?.ToDictionary ();
+#if NET
+			unsafe {
+				lock (callbackLock) {
+					if (callbackBlock is not null)
+						throw new NotSupportedException ("can't enumerate CGImageMetadataTag objects re-entrantly.");
+					callbackBlock = block;
+					try {
+						CGImageMetadataEnumerateTagsUsingBlock (Handle, rootPath.GetHandle (), o.GetHandle (), &TagEnumerator);
+					} finally {
+						callbackBlock = null;
+					}
+				}
+			}
+#else
 			CGImageMetadataEnumerateTagsUsingBlock (Handle, rootPath.GetHandle (), o.GetHandle (), block);
+#endif
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]
