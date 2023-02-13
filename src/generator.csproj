@@ -97,6 +97,7 @@
     <Compile Include="..\src\bgen\AttributeManager.cs" />
     <Compile Include="..\src\bgen\Attributes.cs" />
     <Compile Include="..\src\bgen\BindingTouch.cs" />
+    <Compile Include="..\src\bgen\CustomAttributeDataExtensions.cs" />
     <Compile Include="..\src\bgen\Enums.cs" />
     <Compile Include="..\src\bgen\ExtensionMethods.cs" />
     <Compile Include="..\src\bgen\Frameworks.cs" />
