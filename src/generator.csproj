@@ -105,6 +105,7 @@
     <Compile Include="..\src\bgen\GeneratedTypes.cs" />
     <Compile Include="..\src\bgen\Generator.cs" />
     <Compile Include="..\src\bgen\MarshalInfo.cs" />
+    <Compile Include="..\src\bgen\MarshalType.cs" />
     <Compile Include="..\src\bgen\IMemberGatherer.cs" />
     <Compile Include="..\src\bgen\MemberInformation.cs" />
     <Compile Include="..\src\bgen\NamespaceManager.cs" />
