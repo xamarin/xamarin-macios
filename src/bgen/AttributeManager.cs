@@ -390,7 +390,7 @@ public class AttributeManager {
 			return convertedAttributes.OfType<T> ();
 
 		var expectedType = ConvertTypeToMeta (typeof (T), provider);
-		if (attribute.GetAttributeType () != expectedType && !IsSubclassOf (expectedType, attribute.GetAttributeType ()))
+		if (attribute.GetAttributeType () != expectedType && !attribute.GetAttributeType ().IsSubclassOf (expectedType))
 			return Enumerable.Empty<T> ();
 
 		System.Type attribType = ConvertTypeFromMeta (attribute.GetAttributeType (), provider);
@@ -538,7 +538,7 @@ public class AttributeManager {
 			var attrib = attribs [i];
 			if (attrib.GetAttributeType () == attribute_type)
 				return true;
-			if (IsSubclassOf (attribute_type, attrib.GetAttributeType ()))
+			if (attrib.GetAttributeType ().IsSubclassOf (attribute_type))
 				return true;
 		}
 
@@ -580,10 +580,6 @@ public class AttributeManager {
 		return method.ReturnParameter;
 	}
 
-	static bool IsSubclassOf (Type base_class, Type derived_class)
-	{
-		return derived_class.IsSubclassOf (base_class);
-	}
 }
 
 public static class AttributeConversionManager {
