@@ -152,11 +152,6 @@ public class TypeManager {
 		return type.GenericTypeArguments [0];
 	}
 
-	public static bool IsOutParameter (ParameterInfo pi)
-	{
-		return pi.IsOut;
-	}
-
 	public void Initialize (BindingTouch binding_touch, Assembly api, Assembly corlib, Assembly platform)
 	{
 		BindingTouch = binding_touch;
