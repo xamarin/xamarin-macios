@@ -169,6 +169,29 @@ partial class TestRuntime
 #endif
 	}
 
+	public static void AssertDesktop (string message = "This test only runs on Desktops (macOS or MacCatalyst).")
+	{
+#if __MACOS__ || __MACCATALYST__
+		return;
+#endif
+		NUnit.Framework.Assert.Ignore (message);
+	}
+
+	public static void AssertNotDesktop (string message = "This test does not run on Desktops (macOS or MacCatalyst).")
+	{
+#if __MACOS__ || __MACCATALYST__
+		NUnit.Framework.Assert.Ignore (message);
+#endif
+	}
+
+	public static void AssertNotX64Desktop (string message = "This test does not run on x64 desktops.")
+	{
+#if __MACOS__ || __MACCATALYST__
+		if (!IsARM64)
+			NUnit.Framework.Assert.Ignore (message);
+#endif
+	}
+
 	public static void AssertNotARM64Desktop (string message = "This test does not run on an ARM64 desktop.")
 	{
 #if __MACOS__ || __MACCATALYST__

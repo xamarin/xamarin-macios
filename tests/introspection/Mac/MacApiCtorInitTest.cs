@@ -70,6 +70,7 @@ namespace Introspection {
 			case "Foundation.NSUnitPressure": // -init should never be called on NSUnit!
 			case "Foundation.NSUnitSpeed": // -init should never be called on NSUnit!
 			case "MonoMac.EventKit.EKParticipant":
+			case "EventKit.EKCalendarItem":
 			case "EventKit.EKParticipant":
 			case "XamCore.CoreImage.CISampler":
 			case "CoreImage.CISampler":
