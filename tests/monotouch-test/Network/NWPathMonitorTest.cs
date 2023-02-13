@@ -126,6 +126,7 @@ namespace monotouchtest.Network
 			});
 		}
 #if MONOMAC
+		[Ignore ("Unusable nil instance returned, verified with ObjC project. Filled rdar://FB11984039.")]
 		[Test]
 		public void CreateForEthernetChannelTest ()
 		{
