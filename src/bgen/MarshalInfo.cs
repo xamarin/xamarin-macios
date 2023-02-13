@@ -35,7 +35,7 @@ public class MarshalInfo {
 	public MarshalInfo (Generator generator, MethodInfo mi)
 	{
 		this.Generator = generator;
-		PlainString = Generator.AttributeManager.HasAttribute<PlainStringAttribute> (AttributeManager.GetReturnTypeCustomAttributes (mi));
+		PlainString = Generator.AttributeManager.HasAttribute<PlainStringAttribute> (mi.ReturnParameter);
 		Type = mi.ReturnType;
 	}
 }

@@ -575,11 +575,6 @@ public class AttributeManager {
 		throw ErrorHelper.CreateError (1059, rv.Length, typeof (T).FullName, name);
 	}
 
-	public static ICustomAttributeProvider GetReturnTypeCustomAttributes (MethodInfo method)
-	{
-		return method.ReturnParameter;
-	}
-
 	static bool IsSubclassOf (Type base_class, Type derived_class)
 	{
 		return derived_class.IsSubclassOf (base_class);
