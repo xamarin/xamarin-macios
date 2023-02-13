@@ -109,6 +109,7 @@
     <Compile Include="..\src\bgen\MemberInformation.cs" />
     <Compile Include="..\src\bgen\NamespaceManager.cs" />
     <Compile Include="..\src\bgen\NullabilityInfoContext.cs" />
+    <Compile Include="..\src\bgen\StringExtensions.cs" />
     <Compile Include="..\src\bgen\TrampolineInfo.cs" />
     <Compile Include="..\src\bgen\TypeManager.cs" />
     <Compile Include="..\src\bgen\WrapPropMemberInformation.cs" />
