@@ -3627,21 +3627,6 @@ public partial class Generator : IMemberGatherer {
 		return optimizable;
 	}
 
-	[Flags]
-	public enum BodyOption {
-		None = 0x0,
-		NeedsTempReturn = 0x1,
-		CondStoreRet = 0x3,
-		MarkRetDirty = 0x5,
-		StoreRet = 0x7,
-	}
-
-	public enum ThreadCheck {
-		Default, // depends on the namespace
-		Off,
-		On,
-	}
-
 	//
 	// generates the code to marshal a string from C# to Objective-C:
 	//
@@ -4806,22 +4791,7 @@ public partial class Generator : IMemberGatherer {
 		}
 		return sb.ToString ();
 	}
-
-	//
-	// The kind of Async method we generate
-	// We typically generate a single one, but if the
-	// async method has a non-void return, we generate the second with the out parameter
-	// 
-	enum AsyncMethodKind {
-		// Plain Async method, original method return void
-		Plain,
-
-		// Async method generated when we had a return type from the method
-		// ie: [Async] string XyZ (Action completion), the "string" is the
-		// result
-		WithResultOutParameter,
-	}
-
+	
 	void PrintAsyncHeader (AsyncMethodInfo minfo, AsyncMethodKind asyncKind)
 	{
 		print_generated_code ();

@@ -95,9 +95,11 @@
     <Compile Include="..\src\error.cs" />
     <Compile Include="..\src\ObjCRuntime\Stret.cs" />
     <Compile Include="..\src\bgen\AttributeConversionManager.cs" />
+    <Compile Include="..\src\bgen\AsyncMethodKind.cs" />
     <Compile Include="..\src\bgen\AttributeManager.cs" />
     <Compile Include="..\src\bgen\Attributes.cs" />
     <Compile Include="..\src\bgen\AttributeFactory.cs" />
+    <Compile Include="..\src\bgen\BodyOption.cs" />
     <Compile Include="..\src\bgen\BindingTouch.cs" />
     <Compile Include="..\src\bgen\CustomAttributeDataExtensions.cs" />
     <Compile Include="..\src\bgen\Enums.cs" />
@@ -114,6 +116,7 @@
     <Compile Include="..\src\bgen\NamespaceManager.cs" />
     <Compile Include="..\src\bgen\NullabilityInfoContext.cs" />
     <Compile Include="..\src\bgen\PlatformNameExtensions.cs" />
+    <Compile Include="..\src\bgen\ThreadCheck.cs" />
     <Compile Include="..\src\bgen\TrampolineInfo.cs" />
     <Compile Include="..\src\bgen\TypeManager.cs" />
     <Compile Include="..\src\bgen\WrapPropMemberInformation.cs" />
