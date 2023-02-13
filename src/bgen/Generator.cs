@@ -7558,7 +7558,7 @@ public partial class Generator : IMemberGatherer {
 		}
 		return null;
 	}
-	
+
 	string GetNotificationCenter (PropertyInfo pi)
 	{
 		var a = AttributeManager.GetCustomAttributes<NotificationAttribute> (pi);
@@ -7633,7 +7633,7 @@ public partial class Generator : IMemberGatherer {
 	{
 		return parameters.Any (pi => pi.ParameterType.IsByRef);
 	}
-	
+
 	Dictionary<string, bool> skipGeneration = new Dictionary<string, bool> ();
 	string GetEventName (MethodInfo mi)
 	{
@@ -7810,7 +7810,7 @@ public partial class Generator : IMemberGatherer {
 			return t.FullName;
 
 	}
-	
+
 	private static string FormatPropertyInfo (PropertyInfo pi)
 	{
 		return pi.DeclaringType.FullName + " " + pi.Name;
