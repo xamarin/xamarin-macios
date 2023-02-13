@@ -380,9 +380,9 @@ namespace Introspection {
 					return true;
 				}
 				break;
-#if __WATCHOS__
+#if (__WATCHOS__ || __MACOS__ || __MACCATALYST__)
 			case "AVPlayerItem":
-				switch (selectorName) {
+				switch (selectorName) { // comes from AVPlayerItem+MPAdditions.h
 				case "nowPlayingInfo":
 				case "setNowPlayingInfo:":
 					return TestRuntime.IsSimulatorOrDesktop;
@@ -936,6 +936,26 @@ namespace Introspection {
 				switch (selectorName) {
 				case "shortcutItem":
 					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+#endif
+				break;
+			case "SKAdImpression":
+#if __MACCATALYST__
+				switch (selectorName) {
+				case "initWithSourceAppStoreItemIdentifier:advertisedAppStoreItemIdentifier:adNetworkIdentifier:adCampaignIdentifier:adImpressionIdentifier:timestamp:signature:version:":
+					if (TestRuntime.CheckXcodeVersion (14, 0))
+						return true;
+					break;
+				}
+#endif
+				break;
+			case "EKParticipant":
+#if __MACCATALYST__
+				switch (selectorName) {
+				case "ABRecordWithAddressBook:": // Deprecated in 13.1
+					if (TestRuntime.CheckXcodeVersion (14, 0))
 						return true;
 					break;
 				}
