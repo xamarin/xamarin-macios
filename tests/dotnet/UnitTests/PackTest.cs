@@ -147,15 +147,16 @@ namespace Xamarin.Tests {
 		public void LibraryProject (ApplePlatform platform)
 		{
 			var project = "MyClassLibrary";
+			var configuration = "Release";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
-			var project_path = GetProjectPath (project, runtimeIdentifiers: string.Empty, platform: platform, out var appPath);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: string.Empty, platform: platform, out var appPath, configuration: configuration);
 			Clean (project_path);
 			var properties = GetDefaultProperties ();
 
 			DotNet.AssertPack (project_path, properties);
 
-			var nupkg = Path.Combine (Path.GetDirectoryName (project_path)!, "bin", "Debug", project + ".1.0.0.nupkg");
+			var nupkg = Path.Combine (Path.GetDirectoryName (project_path)!, "bin", configuration, project + ".1.0.0.nupkg");
 			Assert.That (nupkg, Does.Exist, "nupkg existence");
 
 			var archive = ZipFile.OpenRead (nupkg);
