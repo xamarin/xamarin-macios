@@ -1,8 +1,9 @@
 using ObjCRuntime;
 
 public static class PlatformNameExtensions {
-	
-	public static string GetApplicationClassName (this PlatformName currentPlatform){
+
+	public static string GetApplicationClassName (this PlatformName currentPlatform)
+	{
 		switch (currentPlatform) {
 		case PlatformName.iOS:
 		case PlatformName.WatchOS:
@@ -16,7 +17,8 @@ public static class PlatformNameExtensions {
 		}
 	}
 
-	public static int GetXamcoreVersion (this PlatformName currentPlatform) {
+	public static int GetXamcoreVersion (this PlatformName currentPlatform)
+	{
 #if NET
 		return 4;
 #else
@@ -32,8 +34,9 @@ public static class PlatformNameExtensions {
 		}
 #endif
 	}
-	
-	public static string GetCoreImageMap (this PlatformName currentPlatform){
+
+	public static string GetCoreImageMap (this PlatformName currentPlatform)
+	{
 		switch (currentPlatform) {
 		case PlatformName.iOS:
 		case PlatformName.WatchOS:
@@ -47,7 +50,8 @@ public static class PlatformNameExtensions {
 		}
 	}
 
-	public static string GetCoreServicesMap (this PlatformName currentPlatform){
+	public static string GetCoreServicesMap (this PlatformName currentPlatform)
+	{
 		switch (currentPlatform) {
 		case PlatformName.iOS:
 		case PlatformName.WatchOS:
@@ -61,7 +65,8 @@ public static class PlatformNameExtensions {
 		}
 	}
 
-	public static string GetPDFKitMap (this PlatformName currentPlatform){
+	public static string GetPDFKitMap (this PlatformName currentPlatform)
+	{
 		switch (currentPlatform) {
 		case PlatformName.iOS:
 		case PlatformName.MacCatalyst:

@@ -133,7 +133,7 @@ public partial class Generator : IMemberGatherer {
 	public string BaseDir { get { return basedir; } set { basedir = value; } }
 	string basedir;
 	HashSet<string> generated_files = new HashSet<string> ();
-	
+
 	//
 	// We inject thread checks to MonoTouch.UIKit types, unless there is a [ThreadSafe] attribuet on the type.
 	// Set on every call to Generate
