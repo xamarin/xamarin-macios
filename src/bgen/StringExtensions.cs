@@ -5,7 +5,7 @@ using System.Collections;
 
 // Fixes bug 27430 - btouch doesn't escape identifiers with the same name as C# keywords
 public static class StringExtensions {
-	
+
 	public static string Quote (this string? self)
 	{
 		return self switch {
@@ -14,7 +14,7 @@ public static class StringExtensions {
 			_ => $"@\"{self.Replace ("\"", "\"\"")}\""
 		};
 	}
-	
+
 	public static string CamelCase (this string ins)
 	{
 		return Char.ToUpper (ins [0]) + ins.Substring (1);
@@ -24,7 +24,7 @@ public static class StringExtensions {
 	{
 		return Char.ToLower (ins [0]) + ins.Substring (1);
 	}
-	
+
 	public static string Capitalize (this string str)
 	{
 		if (str.StartsWith ("@", StringComparison.Ordinal))
@@ -32,7 +32,7 @@ public static class StringExtensions {
 
 		return char.ToUpper (str [0]) + str.Substring (1);
 	}
-	
+
 	public static string? GetSafeParamName (this string? paramName)
 	{
 		if (paramName is null)
