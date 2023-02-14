@@ -195,6 +195,19 @@ stages:
           repositoryAlias: ${{ parameters.repositoryAlias }}
           commit: ${{ parameters.commit }}
 
+    - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+      - job: translations
+        displayName: 'Loc translations'
+        pool:
+          vmImage: windows-latest
+        steps:
+        - template: loc-translations.yml
+          parameters:
+            isPR: ${{ parameters.isPR }}
+            repositoryAlias: ${{ parameters.repositoryAlias }}
+            commit: ${{ parameters.commit }}
+
+
 - ${{ if parameters.isPR }}:
   - stage: clean
     displayName: '${{ parameters.stageDisplayNamePrefix }}Clean up'
