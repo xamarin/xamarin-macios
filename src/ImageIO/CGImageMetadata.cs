@@ -131,8 +131,8 @@ namespace ImageIO {
 #endif
 
 #if NET
+		[ThreadStatic]
 		static CGImageMetadataTagBlock? callbackBlock;
-		static object callbackLock = new object ();
 
 		[UnmanagedCallersOnly]
 		static bool TagEnumerator (NativeHandle key, NativeHandle value)
@@ -150,15 +150,13 @@ namespace ImageIO {
 			using var o = options?.ToDictionary ();
 #if NET
 			unsafe {
-				lock (callbackLock) {
-					if (callbackBlock is not null)
-						throw new NotSupportedException ("can't enumerate CGImageMetadataTag objects re-entrantly.");
-					callbackBlock = block;
-					try {
-						CGImageMetadataEnumerateTagsUsingBlock (Handle, rootPath.GetHandle (), o.GetHandle (), &TagEnumerator);
-					} finally {
-						callbackBlock = null;
-					}
+				if (callbackBlock is not null)
+					throw new NotSupportedException ("can't enumerate CGImageMetadataTag objects re-entrantly.");
+				callbackBlock = block;
+				try {
+					CGImageMetadataEnumerateTagsUsingBlock (Handle, rootPath.GetHandle (), o.GetHandle (), &TagEnumerator);
+				} finally {
+					callbackBlock = null;
 				}
 			}
 #else
