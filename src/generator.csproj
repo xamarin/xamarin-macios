@@ -96,6 +96,7 @@
     <Compile Include="..\src\ObjCRuntime\Stret.cs" />
     <Compile Include="..\src\bgen\AttributeManager.cs" />
     <Compile Include="..\src\bgen\Attributes.cs" />
+    <Compile Include="..\src\bgen\AttributeFactory.cs" />
     <Compile Include="..\src\bgen\BindingTouch.cs" />
     <Compile Include="..\src\bgen\CustomAttributeDataExtensions.cs" />
     <Compile Include="..\src\bgen\Enums.cs" />
