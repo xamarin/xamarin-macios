@@ -84,7 +84,7 @@ namespace GeneratorTests {
 			Assert.AreEqual ("camelCaseExample", str.PascalCase ());
 		}
 
-		[TestCase ("@thisIsNotCapitalized", "@ThisIsNotCapitalized")]
+		[TestCase ("@thisIsNotCapitalized", "ThisIsNotCapitalized")]
 		[TestCase ("thisIsNotCapitalized", "ThisIsNotCapitalized")]
 		[TestCase ("t", "T")]
 		public void CapitalizeTest (string input, string output)
