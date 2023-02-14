@@ -575,11 +575,6 @@ public class AttributeManager {
 		throw ErrorHelper.CreateError (1059, rv.Length, typeof (T).FullName, name);
 	}
 
-	public static ICustomAttributeProvider GetReturnTypeCustomAttributes (MethodInfo method)
-	{
-		return method.ReturnParameter;
-	}
-
 }
 
 public static class AttributeConversionManager {
