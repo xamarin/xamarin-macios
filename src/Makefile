@@ -112,6 +112,11 @@ BGEN_WARNINGS_TO_FIX=BI1234
 #
 CSC_WARNINGS_TO_FIX=108,219,618,114,414,1635,3021,4014
 
+# warning CS1591: Missing XML comment for publicly visible type or member
+# We (will) post-process xml documentation to add missing members, so
+# we can ignore this warning.
+CSC_WARNINGS_TO_FIX:=$(CSC_WARNINGS_TO_FIX),1591
+
 WARNINGS_TO_FIX = -nowarn:$(CSC_WARNINGS_TO_FIX)
 CORE_WARNINGS_TO_FIX = -nowarn:$(CSC_WARNINGS_TO_FIX),$(BGEN_WARNINGS_TO_FIX)
 
@@ -1183,12 +1188,15 @@ $($(2)_DOTNET_BUILD_DIR)/$(3).rsp: Makefile Makefile.generator frameworks.source
 DOTNET_TARGETS += \
 	$($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll \
 	$(DOTNET_DESTDIR)/$($(2)_NUGET).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).dll \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).xml \
 
 DOTNET_TARGETS_DIRS += \
 	$($(2)_DOTNET_BUILD_DIR) \
 	$($(2)_DOTNET_BUILD_DIR)/generated-sources \
 	$($(2)_DOTNET_BUILD_DIR)/ref \
+	$($(2)_DOTNET_BUILD_DIR)/doc \
 	$(DOTNET_DESTDIR)/$($(2)_NUGET).Ref/ref/$(DOTNET_TFM) \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET).Ref/doc/$(DOTNET_TFM) \
 
 dotnet-gen-$(3):: $($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources
 dotnet-gen:: dotnet-gen-$(3)
@@ -1202,6 +1210,11 @@ $($(2)_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutio
 $(DOTNET_DESTDIR)/$($(2)_NUGET).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).dll: $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll | $(DOTNET_DESTDIR)/$($(2)_NUGET).Ref/ref/$(DOTNET_TFM)
 	$(Q) $(CP) $$< $$@
 
+$(DOTNET_DESTDIR)/$($(2)_NUGET).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).xml: $($(2)_DOTNET_BUILD_DIR)/doc/Microsoft.$(1).xml | $(DOTNET_DESTDIR)/$($(2)_NUGET).Ref/ref/$(DOTNET_TFM)
+	$(Q) $(CP) $$< $$@
+
+$($(2)_DOTNET_BUILD_DIR)/doc/Microsoft.$(1).xml: $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll | $($(2)_DOTNET_BUILD_DIR)/doc
+	$$(Q_GEN) $(TOP)/tools/add-apple-links-to-docs.sh --assembly $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll --input $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml --output $$@
 endef
 
 # Template variables:
@@ -1219,6 +1232,8 @@ define BuildDotNetPlatformAssembly
 ifeq ($(4),64)
 $(2)_$(4)_REFOUT_ARG = -refout:$($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll
 $(2)_$(4)_REF_TARGET = $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1)%dll
+$(2)_$(4)_DOC_ARG = -doc:$($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml
+$(2)_$(4)_DOC_TARGET = $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1)%xml
 endif
 
 $(2)_DOTNET_PLATFORM_ASSEMBLY_DEPENDENCIES = \
@@ -1232,7 +1247,7 @@ $(2)_DOTNET_PLATFORM_ASSEMBLY_DIR_DEPENDENCIES = \
 	$($(2)_DOTNET_BUILD_DIR)/$(4) \
 	$($(2)_DOTNET_BUILD_DIR)/ref \
 
-$($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%dll $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%pdb $$($(2)_$(4)_REF_TARGET): $$($(2)_DOTNET_PLATFORM_ASSEMBLY_DEPENDENCIES) | $$($(2)_DOTNET_PLATFORM_ASSEMBLY_DIR_DEPENDENCIES)
+$($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%dll $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%pdb $$($(2)_$(4)_REF_TARGET) $$($(2)_$(4)_DOC_TARGET): $$($(2)_DOTNET_PLATFORM_ASSEMBLY_DEPENDENCIES) | $$($(2)_DOTNET_PLATFORM_ASSEMBLY_DIR_DEPENDENCIES)
 	$$(call Q_PROF_CSC,dotnet/$(4)-bit) \
 		$(DOTNET_CSC)  \
 		$(DOTNET_FLAGS) \
@@ -1241,6 +1256,7 @@ $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%dll $($(2)_DOTNET_BUILD_DIR)/$(4)/M
 		$$(ARGS_$(1)) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
 		$$($(2)_$(4)_REFOUT_ARG) \
+		$$($(2)_$(4)_DOC_ARG) \
 		$$($(2)_DEFINES) \
 		$(ARGS_$(4)) \
 		$$(DOTNET_WARNINGS_TO_FIX) \
