@@ -133,7 +133,7 @@ public static class AttributeConversionManager {
 	{
 		var enumName = Enum.GetName (typeof (Platform), (ulong) arg.TypedValue.Value!);
 		if (enumName is null)
-			throw new NotImplementedException ($"Unknown version format \"{enumName}\" in DetermineOldAvailabilityVersion. Are there two values | togeather?");
+			throw new NotImplementedException ($"Unknown version format \"{enumName}\" in DetermineOldAvailabilityVersion. Are there two values | together?");
 
 		string [] enumParts = enumName.Split ('_');
 		switch (enumParts.Length) {
