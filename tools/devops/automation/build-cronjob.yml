@@ -44,6 +44,13 @@ resources:
     ref: refs/heads/only_codesign
     endpoint: xamarin
 
+variables:
+- template: templates/variables.yml
+- name: MicrobuildConnector
+  value: ''
+- name: Codeql.Enabled  # do not add the the shared variables.yml because it will force other pipelines
+  value: false  # is a slow process and not needed for translations
+
 trigger: none
 
 schedules:

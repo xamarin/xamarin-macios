@@ -10,6 +10,9 @@ steps:
   parameters:
     CleanseProcesses: true
 
+- task: CodeQL3000Init@0
+  displayName: Initialize CodeQL
+
 - bash: cd $(System.DefaultWorkingDirectory)/xamarin-macios/ && git clean -xdf
   displayName: 'Clean workspace'
 

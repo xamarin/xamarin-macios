@@ -47,6 +47,7 @@ stages:
   condition: and(succeeded(), eq(dependencies.build_packages.outputs['configure.decisions.RUN_MAC_TESTS'], 'true'))
   variables:
     GITHUB_FAILURE_COMMENT_FILE: $(System.DefaultWorkingDirectory)/github-comment-file.md
+    Codeql.SkipTaskAutoInjection: true
 
   jobs:
   - job: configure
@@ -84,6 +85,7 @@ stages:
     variables:
       PR_ID: $[ dependencies.configure.outputs['labels.pr_number'] ]
       GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
+      Codeql.SkipTaskAutoInjection: true
 
     steps:
     - template: build.yml

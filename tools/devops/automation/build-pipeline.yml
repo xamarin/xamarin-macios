@@ -176,6 +176,8 @@ variables:
 - template: templates/variables.yml
 - name: MicrobuildConnector
   value: 'MicroBuild Signing Task (DevDiv)'
+- name: Codeql.Enabled  # do not add the the shared variables.yml because it will force other pipelines
+  value: true # it is a slow process, do not enable on pipelines
 
 trigger:
   branches:
