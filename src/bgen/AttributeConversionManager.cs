@@ -166,7 +166,7 @@ public static class AttributeConversionManager {
 	public static IEnumerable<Attribute> ConvertAvailability (CustomAttributeData attribute)
 	{
 		string? message = null;
-		if (attribute.NamedArguments is null) 
+		if (attribute.NamedArguments is null)
 			yield break;
 
 		if (attribute.NamedArguments.Any (x => x.MemberName == "Message"))
