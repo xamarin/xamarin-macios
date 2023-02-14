@@ -64,6 +64,7 @@
       <Link>BinLog.cs</Link>
     </Compile>
     <Compile Include="NullabilityContextTests.cs" />
+    <Compile Include="PlatformNameExtensionsTests.cs" />
     <Compile Include="StringExtensionTests.cs" />
   </ItemGroup>
   <ItemGroup>

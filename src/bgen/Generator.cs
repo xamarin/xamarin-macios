@@ -87,41 +87,12 @@ public partial class Generator : IMemberGatherer {
 	Dictionary<string, MethodInfo> delegate_types = new Dictionary<string, MethodInfo> ();
 
 	public PlatformName CurrentPlatform { get { return BindingTouch.CurrentPlatform; } }
+	public int XamcoreVersion => CurrentPlatform.GetXamcoreVersion ();
+	public string ApplicationClassName => CurrentPlatform.GetApplicationClassName ();
+	public string CoreImageMap => CurrentPlatform.GetCoreImageMap ();
+	public string CoreServicesMap => CurrentPlatform.GetCoreServicesMap ();
+	public string PDFKitMap => CurrentPlatform.GetPDFKitMap ();
 
-	public string ApplicationClassName {
-		get {
-			switch (CurrentPlatform) {
-			case PlatformName.iOS:
-			case PlatformName.WatchOS:
-			case PlatformName.TvOS:
-			case PlatformName.MacCatalyst:
-				return "UIApplication";
-			case PlatformName.MacOSX:
-				return "NSApplication";
-			default:
-				throw new BindingException (1047, CurrentPlatform);
-			}
-		}
-	}
-
-	public int XamcoreVersion {
-		get {
-#if NET
-			return 4;
-#else
-			switch (CurrentPlatform) {
-			case PlatformName.MacOSX:
-			case PlatformName.iOS:
-				return 2;
-			case PlatformName.TvOS:
-			case PlatformName.WatchOS:
-				return 3;
-			default:
-				return 4;
-			}
-#endif
-		}
-	}
 	Type [] types, strong_dictionaries;
 	bool debug;
 	bool external;
@@ -162,53 +133,7 @@ public partial class Generator : IMemberGatherer {
 	public string BaseDir { get { return basedir; } set { basedir = value; } }
 	string basedir;
 	HashSet<string> generated_files = new HashSet<string> ();
-
-	string CoreImageMap {
-		get {
-			switch (CurrentPlatform) {
-			case PlatformName.iOS:
-			case PlatformName.WatchOS:
-			case PlatformName.TvOS:
-			case PlatformName.MacCatalyst:
-				return "CoreImage";
-			case PlatformName.MacOSX:
-				return "Quartz";
-			default:
-				throw new BindingException (1047, CurrentPlatform);
-			}
-		}
-	}
-
-	string CoreServicesMap {
-		get {
-			switch (CurrentPlatform) {
-			case PlatformName.iOS:
-			case PlatformName.WatchOS:
-			case PlatformName.TvOS:
-			case PlatformName.MacCatalyst:
-				return "MobileCoreServices";
-			case PlatformName.MacOSX:
-				return "CoreServices";
-			default:
-				throw new BindingException (1047, CurrentPlatform);
-			}
-		}
-	}
-
-	string PDFKitMap {
-		get {
-			switch (CurrentPlatform) {
-			case PlatformName.iOS:
-			case PlatformName.MacCatalyst:
-				return "PDFKit";
-			case PlatformName.MacOSX:
-				return "Quartz";
-			default:
-				throw new BindingException (1047, CurrentPlatform);
-			}
-		}
-	}
-
+	
 	//
 	// We inject thread checks to MonoTouch.UIKit types, unless there is a [ThreadSafe] attribuet on the type.
 	// Set on every call to Generate
