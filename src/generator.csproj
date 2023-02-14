@@ -94,11 +94,13 @@
     </None>
     <Compile Include="..\src\error.cs" />
     <Compile Include="..\src\ObjCRuntime\Stret.cs" />
+    <Compile Include="..\src\bgen\AsyncMethodInfo.cs" />
     <Compile Include="..\src\bgen\AttributeConversionManager.cs" />
     <Compile Include="..\src\bgen\AttributeManager.cs" />
     <Compile Include="..\src\bgen\Attributes.cs" />
     <Compile Include="..\src\bgen\AttributeFactory.cs" />
     <Compile Include="..\src\bgen\BindingTouch.cs" />
+    <Compile Include="..\src\bgen\CollectionsExtensions.cs" />
     <Compile Include="..\src\bgen\CustomAttributeDataExtensions.cs" />
     <Compile Include="..\src\bgen\Enums.cs" />
     <Compile Include="..\src\bgen\ExtensionMethods.cs" />

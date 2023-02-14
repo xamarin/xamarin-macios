@@ -4707,77 +4707,21 @@ public partial class Generator : IMemberGatherer {
 		indent--;
 		print ("}}\n", pi.Name.GetSafeParamName ());
 	}
-
-	class AsyncMethodInfo : MemberInformation {
-		public ParameterInfo [] async_initial_params, async_completion_params;
-		public bool has_nserror, is_void_async, is_single_arg_async;
-		public MethodInfo MethodInfo;
-
-		public AsyncMethodInfo (Generator generator, IMemberGatherer gather, Type type, MethodInfo mi, Type category_extension_type, bool is_extension_method)
-			: base (generator, gather, mi, type, category_extension_type, false, is_extension_method)
-		{
-			this.MethodInfo = mi;
-			this.async_initial_params = Generator.DropLast (mi.GetParameters ());
-
-			var lastType = mi.GetParameters ().Last ().ParameterType;
-			if (!lastType.IsSubclassOf (generator.TypeManager.System_Delegate))
-				throw new BindingException (1036, true, mi.DeclaringType.FullName, mi.Name, lastType.FullName);
-			var cbParams = lastType.GetMethod ("Invoke").GetParameters ();
-			async_completion_params = cbParams;
-
-			// ?!? this fails: cbParams.Last ().ParameterType.Name == TypeManager.NSError
-			if (cbParams.Length > 0 && cbParams.Last ().ParameterType.Name == "NSError") {
-				has_nserror = true;
-				cbParams = Generator.DropLast (cbParams);
-			}
-			if (cbParams.Length == 0)
-				is_void_async = true;
-			if (cbParams.Length == 1)
-				is_single_arg_async = true;
-		}
-
-		public string GetUniqueParamName (string suggestion)
-		{
-			while (true) {
-				bool next = false;
-
-				foreach (var pi in async_completion_params) {
-					if (pi.Name == suggestion) {
-						next = true;
-						break;
-					}
-				}
-
-				if (!next)
-					return suggestion;
-
-				suggestion = "_" + suggestion;
-			}
-		}
-
-	}
-
-	public static T [] DropLast<T> (T [] arr)
-	{
-		T [] res = new T [arr.Length - 1];
-		Array.Copy (arr, res, res.Length);
-		return res;
-	}
-
+	
 	string GetReturnType (AsyncMethodInfo minfo)
 	{
-		if (minfo.is_void_async)
+		if (minfo.IsVoidAsync)
 			return "Task";
 		var ttype = GetAsyncTaskType (minfo);
-		if (minfo.has_nserror && (ttype == "bool"))
+		if (minfo.HasNSError && (ttype == "bool"))
 			ttype = "Tuple<bool,NSError>";
 		return "Task<" + ttype + ">";
 	}
 
 	string GetAsyncTaskType (AsyncMethodInfo minfo)
 	{
-		if (minfo.is_single_arg_async)
-			return FormatType (minfo.type, minfo.async_completion_params [0].ParameterType);
+		if (minfo.IsSingleArgAsync)
+			return FormatType (minfo.type, minfo.AsyncCompletionParams [0].ParameterType);
 
 		var attr = AttributeManager.GetCustomAttribute<AsyncAttribute> (minfo.mi);
 		if (attr.ResultTypeName != null)
@@ -4840,7 +4784,7 @@ public partial class Generator : IMemberGatherer {
 			   minfo.GetVisibility (),
 			   modifier,
 			   GetReturnType (minfo),
-			   MakeSignature (minfo, true, minfo.async_initial_params, extra),
+			   MakeSignature (minfo, true, minfo.AsyncInitialParams, extra),
 			   minfo.is_abstract ? ";" : "");
 	}
 
@@ -4851,14 +4795,14 @@ public partial class Generator : IMemberGatherer {
 		var is_void = mi.ReturnType == TypeManager.System_Void;
 
 		// Print a error if any of the method parameters or handler parameters is ref/out, it should not be asyncified.
-		if (minfo.async_initial_params != null) {
-			foreach (var param in minfo.async_initial_params) {
+		if (minfo.AsyncInitialParams != null) {
+			foreach (var param in minfo.AsyncInitialParams) {
 				if (param.ParameterType.IsByRef) {
 					throw new BindingException (1062, true, original_minfo.type.Name, mi.Name);
 				}
 			}
 		}
-		foreach (var param in minfo.async_completion_params) {
+		foreach (var param in minfo.AsyncCompletionParams) {
 			if (param.ParameterType.IsByRef) {
 				throw new BindingException (1062, true, original_minfo.type.Name, mi.Name);
 			}
@@ -4873,9 +4817,9 @@ public partial class Generator : IMemberGatherer {
 
 		var ttype = "bool";
 		var tuple = false;
-		if (!minfo.is_void_async) {
+		if (!minfo.IsVoidAsync) {
 			ttype = GetAsyncTaskType (minfo);
-			tuple = (minfo.has_nserror && (ttype == "bool"));
+			tuple = (minfo.HasNSError && (ttype == "bool"));
 			if (tuple)
 				ttype = "Tuple<bool,NSError>";
 		}
@@ -4885,9 +4829,9 @@ public partial class Generator : IMemberGatherer {
 			AttributeManager.GetCustomAttribute<AsyncAttribute> (mi).PostNonResultSnippet == null;
 		print ("{6}{5}{4}{0}({1}{2}({3}) => {{",
 			mi.Name,
-			GetInvokeParamList (minfo.async_initial_params, false),
-			minfo.async_initial_params.Length > 0 ? ", " : "",
-			GetInvokeParamList (minfo.async_completion_params),
+			GetInvokeParamList (minfo.AsyncInitialParams, false),
+			minfo.AsyncInitialParams.Length > 0 ? ", " : "",
+			GetInvokeParamList (minfo.AsyncCompletionParams),
 			minfo.is_extension_method || minfo.is_category_extension ? "This." : string.Empty,
 			is_void || ignoreResult ? string.Empty : minfo.GetUniqueParamName ("result") + " = ",
 			is_void || ignoreResult ? string.Empty : (asyncKind == AsyncMethodKind.WithResultOutParameter ? string.Empty : "var ")
@@ -4896,26 +4840,26 @@ public partial class Generator : IMemberGatherer {
 		indent++;
 
 		int nesting_level = 1;
-		if (minfo.has_nserror && !tuple) {
-			var var_name = minfo.async_completion_params.Last ().Name.GetSafeParamName (); ;
+		if (minfo.HasNSError && !tuple) {
+			var var_name = minfo.AsyncCompletionParams.Last ().Name.GetSafeParamName (); ;
 			print ("if ({0}_ != null)", var_name);
 			print ("\ttcs.SetException (new NSErrorException({0}_));", var_name);
 			print ("else");
 			++nesting_level; ++indent;
 		}
 
-		if (minfo.is_void_async)
+		if (minfo.IsVoidAsync)
 			print ("tcs.SetResult (true);");
 		else if (tuple) {
-			var cond_name = minfo.async_completion_params [0].Name;
-			var var_name = minfo.async_completion_params.Last ().Name;
+			var cond_name = minfo.AsyncCompletionParams [0].Name;
+			var var_name = minfo.AsyncCompletionParams.Last ().Name;
 			print ("tcs.SetResult (new Tuple<bool,NSError> ({0}_, {1}_));", cond_name, var_name);
-		} else if (minfo.is_single_arg_async)
-			print ("tcs.SetResult ({0}_!);", minfo.async_completion_params [0].Name);
+		} else if (minfo.IsSingleArgAsync)
+			print ("tcs.SetResult ({0}_!);", minfo.AsyncCompletionParams [0].Name);
 		else
 			print ("tcs.SetResult (new {0} ({1}));",
 				GetAsyncTaskType (minfo),
-				GetInvokeParamList (minfo.has_nserror ? DropLast (minfo.async_completion_params) : minfo.async_completion_params, true, true));
+				GetInvokeParamList (minfo.HasNSError ? minfo.AsyncCompletionParams.DropLast () : minfo.AsyncCompletionParams, true, true));
 		indent -= nesting_level;
 		if (is_void || ignoreResult)
 			print ("});");
@@ -4930,10 +4874,10 @@ public partial class Generator : IMemberGatherer {
 
 
 		if (attr.ResultTypeName != null) {
-			if (minfo.has_nserror)
-				async_result_types.Add (new Tuple<string, ParameterInfo []> (attr.ResultTypeName, DropLast (minfo.async_completion_params)));
+			if (minfo.HasNSError)
+				async_result_types.Add (new Tuple<string, ParameterInfo []> (attr.ResultTypeName, minfo.AsyncCompletionParams.DropLast ()));
 			else
-				async_result_types.Add (new Tuple<string, ParameterInfo []> (attr.ResultTypeName, minfo.async_completion_params));
+				async_result_types.Add (new Tuple<string, ParameterInfo []> (attr.ResultTypeName, minfo.AsyncCompletionParams));
 		}
 	}
 
