@@ -24,7 +24,7 @@ class AsyncMethodInfo : MemberInformation {
 		var cbParams = lastType.GetMethod ("Invoke")?.GetParameters () ?? Array.Empty<ParameterInfo> ();
 		AsyncCompletionParams = cbParams;
 
-		if (cbParams.LastOrDefault()?.ParameterType.Name == "NSError") {
+		if (cbParams.LastOrDefault ()?.ParameterType.Name == "NSError") {
 			HasNSError = true;
 			cbParams = cbParams.DropLast ();
 		}

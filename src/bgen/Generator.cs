@@ -4707,7 +4707,7 @@ public partial class Generator : IMemberGatherer {
 		indent--;
 		print ("}}\n", pi.Name.GetSafeParamName ());
 	}
-	
+
 	string GetReturnType (AsyncMethodInfo minfo)
 	{
 		if (minfo.IsVoidAsync)

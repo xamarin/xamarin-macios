@@ -14,7 +14,7 @@ public static class CollectionsExtensions {
 		Array.Copy (arr, res, res.Length);
 		return res;
 	}
-	
+
 	public static IEnumerable<T> Yield<T> (this T item)
 	{
 		yield return item;
