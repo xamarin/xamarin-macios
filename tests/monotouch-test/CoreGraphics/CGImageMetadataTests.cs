@@ -15,9 +15,9 @@ using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreGraphics {
 
-        [TestFixture]
-        [Preserve (AllMembers = true)]
-        public class CGImageTest {
+	[TestFixture]
+	[Preserve (AllMembers = true)]
+	public class CGImageTest {
 
 		CGImageMetadata SampleMetadata ()
 		{
@@ -34,10 +34,10 @@ namespace MonoTouchFixtures.CoreGraphics {
 			var keys = new List<NSString> ();
 			var tags = new List<CGImageMetadataTag> ();
 			data.EnumerateTags (null, (key, tag) => {
-					keys.Add (key);
-					tags.Add (tags);
-					return true;
-				});
+				keys.Add (key);
+				tags.Add (tags);
+				return true;
+			});
 			Assert.AreEqual (2, keys.Count (), "key count mismatch");
 			Assert.AreEqual (2, tags.Count (), "tag count mistmatch");
 		}
