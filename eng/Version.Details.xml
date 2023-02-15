@@ -8,18 +8,22 @@
       <Uri>https://github.com/dotnet/linker</Uri>
       <Sha>19fa656d35252ccf926e6a6d783b16a2f094aaef</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="7.0.3">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="7.0.4">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>a79086876caca5e38693e0a2ebfefdedf5d9b915</Sha>
+      <Sha>b68fd882623b528fd4ef78b122209710f17bacdb</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
     <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="7.0.3" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspnetcore</Uri>
       <Sha>febee99db845fd8766a13bdb391a07c3ee90b4ba</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.net7.Manifest-7.0.100" Version="7.0.2" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.net6.Manifest-7.0.100" Version="7.0.4" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>d71ea7cbed84152a921c7b7b4b4439c306bf9130</Sha>
+      <Sha>ba16583f6b055e5a0623d817a48f1f2f15629e6b</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.net7.Manifest-7.0.100" Version="7.0.4" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+      <Uri>https://github.com/dotnet/emsdk</Uri>
+      <Sha>ba16583f6b055e5a0623d817a48f1f2f15629e6b</Sha>
     </Dependency>
     <!-- This is a subscription of the .NET 6 versions of our packages -->
     <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.2.3">
