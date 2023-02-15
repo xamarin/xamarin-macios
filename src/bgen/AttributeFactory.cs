@@ -26,7 +26,7 @@ public static class AttributeFactory {
 	static Attribute CreateMajorMinorAttribute (Type type, PlatformName platform, int major, int minor, string? message)
 	{
 #if NET
-		var ctorValues = new object [] { (byte) platform, major, minor, message };
+		var ctorValues = new object? [] { (byte) platform, major, minor, message };
 		var ctorTypes = new [] { PlatformEnum, typeof (int), typeof (int), typeof (string) };
 #else
 		var ctorValues = new object? [] { (byte) platform, major, minor, (byte) 0xff, message };
@@ -38,7 +38,7 @@ public static class AttributeFactory {
 	static Attribute CreateUnspecifiedAttribute (Type type, PlatformName platform, string? message)
 	{
 #if NET
-		var ctorValues = new object [] { (byte) platform, message };
+		var ctorValues = new object? [] { (byte) platform, message };
 		var ctorTypes = new [] { PlatformEnum, typeof (string) };
 #else
 		var ctorValues = new object? [] { (byte) platform, (byte) 0xff, message };
@@ -70,7 +70,7 @@ public static class AttributeFactory {
 	public static Attribute CreateUnavailableAttribute (PlatformName platformName, string? message = null)
 	{
 #if NET
-		var ctorValues = new object [] { (byte) platformName, message };
+		var ctorValues = new object? [] { (byte) platformName, message };
 		var ctorTypes = new [] { PlatformEnum, typeof (string) };
 #else
 		var ctorValues = new object [] { (byte) platformName, (byte) 0xff, message };

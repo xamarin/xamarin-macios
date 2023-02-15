@@ -94,6 +94,7 @@
     </None>
     <Compile Include="..\src\error.cs" />
     <Compile Include="..\src\ObjCRuntime\Stret.cs" />
+    <Compile Include="..\src\bgen\AttributeConversionManager.cs" />
     <Compile Include="..\src\bgen\AttributeManager.cs" />
     <Compile Include="..\src\bgen\Attributes.cs" />
     <Compile Include="..\src\bgen\AttributeFactory.cs" />
