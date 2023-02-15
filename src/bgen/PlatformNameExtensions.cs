@@ -79,7 +79,7 @@ public static class PlatformNameExtensions {
 			throw new BindingException (1047, currentPlatform);
 		}
 	}
-	
+
 	public static ApplePlatform AsApplePlatform (this PlatformName platform)
 	{
 		switch (platform) {
