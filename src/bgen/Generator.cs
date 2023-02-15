@@ -4791,7 +4791,7 @@ public partial class Generator : IMemberGatherer {
 		}
 		return sb.ToString ();
 	}
-	
+
 	void PrintAsyncHeader (AsyncMethodInfo minfo, AsyncMethodKind asyncKind)
 	{
 		print_generated_code ();
