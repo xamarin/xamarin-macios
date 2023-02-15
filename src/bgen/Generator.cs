@@ -2486,27 +2486,7 @@ public partial class Generator : IMemberGatherer {
 		return aa.Version > min;
 #endif
 	}
-
-	public static ApplePlatform AsApplePlatform (PlatformName platform)
-	{
-		switch (platform) {
-		case PlatformName.iOS:
-			return ApplePlatform.iOS;
-		case PlatformName.TvOS:
-			return ApplePlatform.TVOS;
-		case PlatformName.MacCatalyst:
-			return ApplePlatform.MacCatalyst;
-		case PlatformName.MacOSX:
-			return ApplePlatform.MacOSX;
-		case PlatformName.WatchOS:
-			return ApplePlatform.WatchOS;
-		case PlatformName.None:
-			return ApplePlatform.None;
-		default:
-			throw new ArgumentOutOfRangeException (nameof (platform), platform, $"Unknown platform: {platform}");
-		}
-	}
-
+	
 	static AvailabilityBaseAttribute CloneFromOtherPlatform (AvailabilityBaseAttribute attr, PlatformName platform)
 	{
 		if (attr.Version is null) {
@@ -2527,7 +2507,7 @@ public partial class Generator : IMemberGatherer {
 			// nor can you coerse to 0, as that will fail with "16.0.0 <= 16.0" => false in the registrar
 			// So determine if the build is -1, and use the 2 or 3 param ctor...
 			var version = attr.Version;
-			var minimum = Xamarin.SdkVersions.GetMinVersion (AsApplePlatform (platform));
+			var minimum = Xamarin.SdkVersions.GetMinVersion (platform.AsApplePlatform ());
 			if (version < minimum)
 				version = minimum;
 			if (version.Build == -1) {

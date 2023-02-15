@@ -1,4 +1,6 @@
+using System;
 using ObjCRuntime;
+using Xamarin.Utils;
 
 public static class PlatformNameExtensions {
 
@@ -75,6 +77,26 @@ public static class PlatformNameExtensions {
 			return "Quartz";
 		default:
 			throw new BindingException (1047, currentPlatform);
+		}
+	}
+	
+	public static ApplePlatform AsApplePlatform (this PlatformName platform)
+	{
+		switch (platform) {
+		case PlatformName.iOS:
+			return ApplePlatform.iOS;
+		case PlatformName.TvOS:
+			return ApplePlatform.TVOS;
+		case PlatformName.MacCatalyst:
+			return ApplePlatform.MacCatalyst;
+		case PlatformName.MacOSX:
+			return ApplePlatform.MacOSX;
+		case PlatformName.WatchOS:
+			return ApplePlatform.WatchOS;
+		case PlatformName.None:
+			return ApplePlatform.None;
+		default:
+			throw new ArgumentOutOfRangeException (nameof (platform), platform, $"Unknown platform: {platform}");
 		}
 	}
 }
