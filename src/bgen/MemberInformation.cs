@@ -66,7 +66,7 @@ public class MemberInformation {
 		is_autorelease = AttributeManager.HasAttribute<AutoreleaseAttribute> (mi);
 		is_wrapper = !AttributeManager.HasAttribute<SyntheticAttribute> (mi.DeclaringType);
 		is_type_sealed = AttributeManager.HasAttribute<SealedAttribute> (mi.DeclaringType);
-		is_return_release = methodInfo is not null && AttributeManager.HasAttribute<ReleaseAttribute> (AttributeManager.GetReturnTypeCustomAttributes (methodInfo));
+		is_return_release = methodInfo is not null && AttributeManager.HasAttribute<ReleaseAttribute> (methodInfo.ReturnParameter);
 		is_forced = Generator.HasForcedAttribute (mi, out is_forced_owns);
 
 		var tsa = AttributeManager.GetCustomAttribute<ThreadSafeAttribute> (mi);

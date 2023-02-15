@@ -87,41 +87,12 @@ public partial class Generator : IMemberGatherer {
 	Dictionary<string, MethodInfo> delegate_types = new Dictionary<string, MethodInfo> ();
 
 	public PlatformName CurrentPlatform { get { return BindingTouch.CurrentPlatform; } }
+	public int XamcoreVersion => CurrentPlatform.GetXamcoreVersion ();
+	public string ApplicationClassName => CurrentPlatform.GetApplicationClassName ();
+	public string CoreImageMap => CurrentPlatform.GetCoreImageMap ();
+	public string CoreServicesMap => CurrentPlatform.GetCoreServicesMap ();
+	public string PDFKitMap => CurrentPlatform.GetPDFKitMap ();
 
-	public string ApplicationClassName {
-		get {
-			switch (CurrentPlatform) {
-			case PlatformName.iOS:
-			case PlatformName.WatchOS:
-			case PlatformName.TvOS:
-			case PlatformName.MacCatalyst:
-				return "UIApplication";
-			case PlatformName.MacOSX:
-				return "NSApplication";
-			default:
-				throw new BindingException (1047, CurrentPlatform);
-			}
-		}
-	}
-
-	public int XamcoreVersion {
-		get {
-#if NET
-			return 4;
-#else
-			switch (CurrentPlatform) {
-			case PlatformName.MacOSX:
-			case PlatformName.iOS:
-				return 2;
-			case PlatformName.TvOS:
-			case PlatformName.WatchOS:
-				return 3;
-			default:
-				return 4;
-			}
-#endif
-		}
-	}
 	Type [] types, strong_dictionaries;
 	bool debug;
 	bool external;
@@ -130,40 +101,6 @@ public partial class Generator : IMemberGatherer {
 
 	public NamespaceManager NamespaceManager {
 		get { return ns; }
-	}
-
-	public class MarshalType {
-		public Type Type;
-		public string Encoding;
-		public string ParameterMarshal;
-		public string CreateFromRet;
-		public string ClosingCreate;
-
-		public MarshalType (Type t, string encode = null, string fetch = null, string create = null, string closingCreate = ")")
-		{
-			Type = t;
-			Encoding = encode ?? Generator.NativeHandleType;
-			ParameterMarshal = fetch ?? "{0}.Handle";
-			if (create == null) {
-				CreateFromRet = $"Runtime.GetINativeObject<global::{t.FullName}> (";
-				ClosingCreate = ", false)!";
-			} else {
-				CreateFromRet = create;
-				ClosingCreate = closingCreate;
-			}
-		}
-
-		//
-		// When you use this constructor, the marshaling defaults to:
-		// Marshal type like this:
-		//   Encoding = IntPtr
-		//   Getting the underlying representation: using the .Handle property
-		//   Intantiating the object: creates a new object by passing the handle to the type.
-		//
-		public static implicit operator MarshalType (Type type)
-		{
-			return new MarshalType (type);
-		}
 	}
 
 	public bool LookupMarshal (Type t, out MarshalType res)
@@ -196,52 +133,6 @@ public partial class Generator : IMemberGatherer {
 	public string BaseDir { get { return basedir; } set { basedir = value; } }
 	string basedir;
 	HashSet<string> generated_files = new HashSet<string> ();
-
-	string CoreImageMap {
-		get {
-			switch (CurrentPlatform) {
-			case PlatformName.iOS:
-			case PlatformName.WatchOS:
-			case PlatformName.TvOS:
-			case PlatformName.MacCatalyst:
-				return "CoreImage";
-			case PlatformName.MacOSX:
-				return "Quartz";
-			default:
-				throw new BindingException (1047, CurrentPlatform);
-			}
-		}
-	}
-
-	string CoreServicesMap {
-		get {
-			switch (CurrentPlatform) {
-			case PlatformName.iOS:
-			case PlatformName.WatchOS:
-			case PlatformName.TvOS:
-			case PlatformName.MacCatalyst:
-				return "MobileCoreServices";
-			case PlatformName.MacOSX:
-				return "CoreServices";
-			default:
-				throw new BindingException (1047, CurrentPlatform);
-			}
-		}
-	}
-
-	string PDFKitMap {
-		get {
-			switch (CurrentPlatform) {
-			case PlatformName.iOS:
-			case PlatformName.MacCatalyst:
-				return "PDFKit";
-			case PlatformName.MacOSX:
-				return "Quartz";
-			default:
-				throw new BindingException (1047, CurrentPlatform);
-			}
-		}
-	}
 
 	//
 	// We inject thread checks to MonoTouch.UIKit types, unless there is a [ThreadSafe] attribuet on the type.
@@ -3301,7 +3192,7 @@ public partial class Generator : IMemberGatherer {
 		if (!minfo.is_ctor && !is_async) {
 			var prefix = "";
 			if (!BindThirdPartyLibrary) {
-				var hasReturnTypeProtocolize = Protocolize (AttributeManager.GetReturnTypeCustomAttributes (minfo.Method));
+				var hasReturnTypeProtocolize = Protocolize (minfo.Method.ReturnParameter);
 				if (hasReturnTypeProtocolize) {
 					if (!IsProtocol (minfo.Method.ReturnType)) {
 						ErrorHelper.Warning (1108, minfo.Method.DeclaringType, minfo.Method, minfo.Method.ReturnType.FullName);
@@ -4188,7 +4079,7 @@ public partial class Generator : IMemberGatherer {
 			(AttributeManager.HasAttribute<FactoryAttribute> (mi)) ||
 			((body_options & BodyOption.NeedsTempReturn) == BodyOption.NeedsTempReturn) ||
 			(mi.ReturnType.IsSubclassOf (TypeManager.System_Delegate)) ||
-			(AttributeManager.HasAttribute<ProxyAttribute> (AttributeManager.GetReturnTypeCustomAttributes (mi))) ||
+			(AttributeManager.HasAttribute<ProxyAttribute> (mi.ReturnParameter)) ||
 			(IsNativeEnum (mi.ReturnType)) ||
 			(mi.Name != "Constructor" && by_ref_processing.Length > 0 && mi.ReturnType != TypeManager.System_Void);
 
@@ -4317,7 +4208,7 @@ public partial class Generator : IMemberGatherer {
 		if (by_ref_processing.Length > 0)
 			print (sw, by_ref_processing.ToString ());
 		if (use_temp_return) {
-			if (AttributeManager.HasAttribute<ProxyAttribute> (AttributeManager.GetReturnTypeCustomAttributes (mi)))
+			if (AttributeManager.HasAttribute<ProxyAttribute> (mi.ReturnParameter))
 				print ("ret.IsDirectBinding = true;");
 
 			if (mi.ReturnType.IsSubclassOf (TypeManager.System_Delegate)) {
