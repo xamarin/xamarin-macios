@@ -81,9 +81,9 @@ public class MarshalTypeList : List<MarshalType> {
 			Add (typeManager.AURenderEventEnumerator);
 		}
 	}
-	
+
 #if NET
-	public bool TryGetMarshalType (Type t, [NotNullWhen (true)]out MarshalType? res)
+	public bool TryGetMarshalType (Type t, [NotNullWhen (true)] out MarshalType? res)
 #else
 	public bool TryGetMarshalType (Type t, out MarshalType? res)
 #endif

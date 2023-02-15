@@ -102,7 +102,7 @@ public partial class Generator : IMemberGatherer {
 	public NamespaceManager NamespaceManager {
 		get { return ns; }
 	}
-	
+
 	//
 	// Properties and definitions to support binding third-party Objective-C libraries
 	//
