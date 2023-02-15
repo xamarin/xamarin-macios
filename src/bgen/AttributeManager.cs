@@ -585,7 +585,7 @@ public class AttributeManager {
 
 	public bool HasAttribute<T> (ICustomAttributeProvider i, Attribute [] attributes) where T : Attribute
 	{
-		if (attributes == null)
+		if (attributes is null)
 			return HasAttribute<T> (i);
 
 		foreach (var a in attributes)
