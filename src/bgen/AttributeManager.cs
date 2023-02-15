@@ -574,7 +574,7 @@ public class AttributeManager {
 		}
 		throw ErrorHelper.CreateError (1059, rv.Length, typeof (T).FullName, name);
 	}
-	
+
 	public bool HasNativeAttribute (ICustomAttributeProvider provider)
 	{
 		if (provider is null)
@@ -582,12 +582,12 @@ public class AttributeManager {
 
 		return HasAttribute (provider, "NativeIntegerAttribute");
 	}
-	
+
 	public bool HasAttribute<T> (ICustomAttributeProvider i, Attribute [] attributes) where T : Attribute
 	{
 		if (attributes == null)
 			return HasAttribute<T> (i);
-		
+
 		foreach (var a in attributes)
 			if (a.GetType () == typeof (T))
 				return true;

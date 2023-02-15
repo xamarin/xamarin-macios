@@ -1042,7 +1042,7 @@ public partial class Generator : IMemberGatherer {
 	{
 		return AttributeManager.GetCustomAttribute<BindAttribute> (mi);
 	}
-	
+
 	public bool ShouldMarshalNativeExceptions (MethodInfo mi)
 	{
 		// [MarshalNativeExceptions] should work on a property and inside the get / set
@@ -7642,7 +7642,7 @@ public partial class Generator : IMemberGatherer {
 
 		return def;
 	}
-	
+
 	string RenderType (Type t, ICustomAttributeProvider provider = null)
 	{
 		t = GetCorrectGenericType (t);
