@@ -50,7 +50,7 @@ public static class StringExtensions {
 	static bool IsValidIdentifier (string? identifier, out bool hasIllegalChars)
 	{
 		hasIllegalChars = false;
-		if (String.IsNullOrEmpty(identifier))
+		if (String.IsNullOrEmpty (identifier))
 			return false;
 
 		if (keywordsTable is null)
