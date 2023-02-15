@@ -2486,7 +2486,7 @@ public partial class Generator : IMemberGatherer {
 		return aa.Version > min;
 #endif
 	}
-	
+
 	static AvailabilityBaseAttribute CloneFromOtherPlatform (AvailabilityBaseAttribute attr, PlatformName platform)
 	{
 		if (attr.Version is null) {
