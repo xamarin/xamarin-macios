@@ -17,15 +17,15 @@ namespace GeneratorTests {
 
 			[Export ("accelerometer:didAccelerate:"), EventArgs ("UIAccelerometer"), EventName ("Acceleration")]
 			void DidAccelerate (object accelerometer, object acceleration);
-			
+
 			[Export ("accelerometer:")]
 			void DidAccelerateSingle (object accelerometer);
-			
+
 			[Export ("accelerometer:")]
 			void DidAccelerateSeveral (object accelerometer, object second, object last);
 		}
 
-		interface GenericTrampoline<T> where T: class {
+		interface GenericTrampoline<T> where T : class {
 			[Export ("accelerometer:")]
 			void DidAccelerateSeveral (object accelerometer, object second, object last);
 		}
@@ -38,8 +38,8 @@ namespace GeneratorTests {
 		public void SetUp ()
 		{
 			testType = typeof (NSAnimationDelegate);
-			attributeManager = new();
-			nomenclator = new(attributeManager.Object);
+			attributeManager = new ();
+			nomenclator = new (attributeManager.Object);
 		}
 
 		[TestCase ("ComputeAnimationCurve")]
@@ -146,8 +146,8 @@ namespace GeneratorTests {
 			var method = GetMethod ("DidAccelerate", testType);
 			attributeManager.Setup (am => am.GetCustomAttribute<EventArgsAttribute> (method))
 				.Returns ((EventArgsAttribute) null);
-			Assert.Throws<BindingException>( () => nomenclator.GetEventArgName (method));
-			attributeManager.Verify();
+			Assert.Throws<BindingException> (() => nomenclator.GetEventArgName (method));
+			attributeManager.Verify ();
 		}
 
 		[Test]
@@ -157,10 +157,10 @@ namespace GeneratorTests {
 			var attr = new EventArgsAttribute ("ThisIsATestEventArgs");
 			attributeManager.Setup (am => am.GetCustomAttribute<EventArgsAttribute> (method))
 				.Returns (attr);
-			Assert.Throws<BindingException>( () => nomenclator.GetEventArgName (method));
-			attributeManager.Verify();
+			Assert.Throws<BindingException> (() => nomenclator.GetEventArgName (method));
+			attributeManager.Verify ();
 		}
-		
+
 		[Test]
 		public void GetEventArgsSkipGeneration ()
 		{
@@ -192,8 +192,8 @@ namespace GeneratorTests {
 		[Test]
 		public void GetTrampolineNameGeneric ()
 		{
-			var name1 = nomenclator.GetTrampolineName (typeof(GenericTrampoline<string>));
-			var name2 = nomenclator.GetTrampolineName (typeof(GenericTrampoline<object>));
+			var name1 = nomenclator.GetTrampolineName (typeof (GenericTrampoline<string>));
+			var name2 = nomenclator.GetTrampolineName (typeof (GenericTrampoline<object>));
 			Assert.AreEqual ("GenericTrampolineArity1V0", name1, "name1");
 			Assert.AreEqual ("GenericTrampolineArity1V1", name2, "name2");
 			Assert.AreNotEqual (name1, name2, "equal");

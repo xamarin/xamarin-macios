@@ -3,9 +3,9 @@ using System.Reflection;
 using NUnit.Framework;
 
 namespace GeneratorTests {
-	
+
 	public class ReflectionTest {
-		
+
 		protected FieldInfo GetField (string fieldName, Type testType)
 		{
 			var fieldInfo = testType.GetField (fieldName);

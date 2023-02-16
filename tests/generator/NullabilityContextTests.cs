@@ -131,7 +131,7 @@ namespace GeneratorTests {
 			context = new ();
 		}
 
-		
+
 		[TestCase ("NotNullableValueTypeField", typeof (int))]
 		[TestCase ("NotNullableRefTypeField", typeof (string))]
 		public void NotNullableFieldTest (string fieldName, Type expectedType)

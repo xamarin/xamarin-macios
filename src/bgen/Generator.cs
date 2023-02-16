@@ -64,11 +64,9 @@ public partial class Generator : IMemberGatherer {
 	public AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
 
 	Nomenclator nomenclator;
-	Nomenclator Nomenclator
-	{
-		get
-		{
-			nomenclator ??= new(AttributeManager);
+	Nomenclator Nomenclator {
+		get {
+			nomenclator ??= new (AttributeManager);
 			return nomenclator;
 		}
 	}
@@ -673,7 +671,7 @@ public partial class Generator : IMemberGatherer {
 		owns = att.Owns ? "true" : "false";
 		return true;
 	}
-	
+
 	//
 	// MakeTrampoline: processes a delegate type and registers a TrampolineInfo with all the information
 	// necessary to create trampolines that allow Objective-C blocks to call C# code, and C# code to call
@@ -7346,7 +7344,7 @@ public partial class Generator : IMemberGatherer {
 	{
 		return parameters.Any (pi => pi.ParameterType.IsByRef);
 	}
-	
+
 	object GetDefaultValue (MethodInfo mi)
 	{
 		Attribute a = AttributeManager.GetCustomAttribute<DefaultValueAttribute> (mi);

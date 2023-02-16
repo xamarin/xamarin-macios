@@ -7,9 +7,9 @@ using System.Reflection;
 // Noun. nomenclator (plural nomenclators) An assistant who specializes in providing timely and spatially relevant
 // reminders of the names of persons and other socially important information
 public class Nomenclator {
-	readonly Dictionary<string, bool> skipGeneration = new();
-	readonly HashSet<string> repeatedDelegateApiNames = new();
-	readonly Dictionary<Type, int> trampolinesGenericVersions = new();
+	readonly Dictionary<string, bool> skipGeneration = new ();
+	readonly HashSet<string> repeatedDelegateApiNames = new ();
+	readonly Dictionary<Type, int> trampolinesGenericVersions = new ();
 
 	readonly IAttributeManager attributeManager;
 
@@ -17,7 +17,7 @@ public class Nomenclator {
 	{
 		this.attributeManager = attributeManager;
 	}
-	
+
 	public string GetDelegateName (MethodInfo mi)
 	{
 		Attribute a = attributeManager.GetCustomAttribute<DelegateNameAttribute> (mi);
@@ -31,7 +31,7 @@ public class Nomenclator {
 		ErrorHelper.Warning (1102, mi.DeclaringType!.FullName, mi.Name);
 		return ((EventArgsAttribute) a).ArgName;
 	}
-	
+
 	public string GetEventName (MethodInfo mi)
 	{
 		var a = attributeManager.GetCustomAttribute<EventNameAttribute> (mi);
@@ -54,7 +54,7 @@ public class Nomenclator {
 
 		return apiName.Name;
 	}
-	
+
 	public string GetEventArgName (MethodInfo mi)
 	{
 		if (mi.GetParameters ().Length == 1)
@@ -80,7 +80,7 @@ public class Nomenclator {
 
 	public bool WasEventArgGenerated (string eaclass)
 		=> skipGeneration.ContainsKey (eaclass);
-	
+
 	public string GetTrampolineName (Type t)
 	{
 		var trampolineName = t.Name.Replace ("`", "Arity");
