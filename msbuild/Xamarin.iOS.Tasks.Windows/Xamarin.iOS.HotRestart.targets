@@ -271,9 +271,9 @@
 		<MakeDir Directories="@(_FilesToHotRestartContent -> '$(HotRestartContentStampDir)%(DestinationSubDirectory)')"/>
 		
 		<Touch AlwaysCreate="true" Files="@(_FilesToHotRestartContent -> '$(HotRestartContentStampDir)%(DestinationSubDirectory)%(FileName)%(Extension).stamp')" />
-		<Touch AlwaysCreate="true" Files="@(_FilesToHotRestartContent -> '$(HotRestartContentStampDir)$(AssemblyName).hotrestartapp.stamp')" />
-		<Touch AlwaysCreate="true" Files="@(_FilesToHotRestartContent -> '$(HotRestartContentDir)$(AssemblyName).hotrestartapp')" />
-		<Touch AlwaysCreate="true" Files="@(_FilesToHotRestartContent -> '$(HotRestartAppContentDir)$(AssemblyName).hotrestartapp')" />
+		<Touch AlwaysCreate="true" Files="$(HotRestartContentStampDir)$(AssemblyName).hotrestartapp.stamp" />
+		<Touch AlwaysCreate="true" Files="$(HotRestartContentDir)$(AssemblyName).hotrestartapp" />
+		<Touch AlwaysCreate="true" Files="$(HotRestartAppContentDir)$(AssemblyName).hotrestartapp" />
 	</Target>
 
 	<Target Name="_CopyFrameworksToHotRestartBundle"
