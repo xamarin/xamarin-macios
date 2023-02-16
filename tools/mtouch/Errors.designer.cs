@@ -3932,6 +3932,51 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the more than one method named &apos;{3}&apos; was found in the type &apos;{4}..
+        /// </summary>
+        public static string MX2106_E {
+            get {
+                return ResourceManager.GetString("MX2106_E", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the method &apos;{3}&apos; must have at least one parameter..
+        /// </summary>
+        public static string MX2106_F {
+            get {
+                return ResourceManager.GetString("MX2106_F", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the first parameter in the method &apos;{3}&apos; isn&apos;t &apos;System.IntPtr&apos;, &apos;void*&apos; or &apos;ObjCRuntime.BlockLiteral*&apos; (it&apos;s &apos;{4}&apos;).
+        /// </summary>
+        public static string MX2106_G {
+            get {
+                return ResourceManager.GetString("MX2106_G", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the method &apos;{3}&apos; does not have an [UnmanagedCallersOnly] attribute..
+        /// </summary>
+        public static string MX2106_H {
+            get {
+                return ResourceManager.GetString("MX2106_H", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the method &apos;{3}&apos; does not have an [UnmanagedCallersOnly] attribute..
+        /// </summary>
+        public static string MX2106_I {
+            get {
+                return ResourceManager.GetString("MX2106_I", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Can not find the corlib assembly &apos;{0}&apos; in the list of loaded assemblies.
         ///		.
         /// </summary>

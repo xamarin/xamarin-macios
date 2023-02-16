@@ -1298,7 +1298,27 @@
 		<value>Could not optimize the call to BlockLiteral.SetupBlock in {0} at offset {1}: {2}.
 		</value>
 	</data>
+
+	<data name="MX2106_E" xml:space="preserve">
+		<value>Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the more than one method named '{3}' was found in the type '{4}.</value>
+	</data>
 	
+	<data name="MX2106_F" xml:space="preserve">
+		<value>Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the method '{3}' must have at least one parameter.</value>
+	</data>
+
+	<data name="MX2106_G" xml:space="preserve">
+		<value>Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the first parameter in the method '{3}' isn't 'System.IntPtr', 'void*' or 'ObjCRuntime.BlockLiteral*' (it's '{4}')</value>
+	</data>
+
+	<data name="MX2106_H" xml:space="preserve">
+		<value>Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the method '{3}' does not have an [UnmanagedCallersOnly] attribute.</value>
+	</data>
+
+	<data name="MX2106_I" xml:space="preserve">
+		<value>Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the method '{3}' does not have an [UnmanagedCallersOnly] attribute.</value>
+	</data>
+
 	<data name="MM2107" xml:space="preserve">
 		<value>It's not safe to remove the dynamic registrar, because {0} references '{1}.{2} ({3})'.
 		</value>
