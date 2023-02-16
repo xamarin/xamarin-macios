@@ -7,7 +7,15 @@ using ObjCRuntime;
 using PlatformName = ObjCRuntime.PlatformName;
 #endif
 
-public class AttributeManager {
+public interface IAttributeManager {
+	T [] GetCustomAttributes<T> (ICustomAttributeProvider provider) where T : System.Attribute;
+	bool HasAttribute<T> (ICustomAttributeProvider provider) where T : Attribute;
+	bool HasAttribute<T> (ICustomAttributeProvider i, Attribute [] attributes) where T : Attribute;
+	T GetCustomAttribute<T> (ICustomAttributeProvider provider) where T : System.Attribute;
+	bool HasNativeAttribute (ICustomAttributeProvider provider);
+}
+
+public class AttributeManager : IAttributeManager {
 	public BindingTouch BindingTouch;
 	TypeManager TypeManager { get { return BindingTouch.TypeManager; } }
 
