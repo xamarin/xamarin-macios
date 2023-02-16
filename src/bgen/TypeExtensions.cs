@@ -10,7 +10,7 @@ public static class TypeExtensions {
 			return false;
 		if (parent is null)
 			return false;
-		
+
 		return type.IsSubclassOf (parent);
 	}
 }
