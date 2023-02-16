@@ -510,72 +510,6 @@ public partial class Generator : IMemberGatherer {
 		return temp;
 	}
 
-	Dictionary<Type, string> nsnumber_return_map;
-	Dictionary<Type, string> NSNumberReturnMap {
-		get {
-			if (nsnumber_return_map == null) {
-				nsnumber_return_map = new Dictionary<Type, string> {
-					{ TypeManager.System_Boolean, ".BoolValue" },
-					{ TypeManager.System_Byte, ".ByteValue" },
-					{ TypeManager.System_Double, ".DoubleValue" },
-					{ TypeManager.System_Float, ".FloatValue" },
-					{ TypeManager.System_Int16, ".Int16Value" },
-					{ TypeManager.System_Int32, ".Int32Value" },
-					{ TypeManager.System_Int64, ".Int64Value" },
-					{ TypeManager.System_SByte, ".SByteValue" },
-					{ TypeManager.System_UInt16, ".UInt16Value" },
-					{ TypeManager.System_UInt32, ".UInt32Value" },
-					{ TypeManager.System_UInt64, ".UInt64Value" },
-				};
-				nsnumber_return_map [TypeManager.System_nfloat] = ".NFloatValue";
-				nsnumber_return_map [TypeManager.System_nint] = ".NIntValue";
-				nsnumber_return_map [TypeManager.System_nuint] = ".NUIntValue";
-			}
-			return nsnumber_return_map;
-		}
-	}
-
-	Dictionary<Type, string> nsvalue_return_map;
-	Dictionary<Type, string> NSValueReturnMap {
-		get {
-			if (nsvalue_return_map == null) {
-				nsvalue_return_map = new Dictionary<Type, string> {
-					{ TypeManager.CGAffineTransform, ".CGAffineTransformValue" },
-					{ TypeManager.NSRange, ".RangeValue" },
-					{ TypeManager.CGVector, ".CGVectorValue" },
-					{ TypeManager.SCNMatrix4, ".SCNMatrix4Value" },
-					{ TypeManager.CLLocationCoordinate2D, ".CoordinateValue" },
-					{ TypeManager.SCNVector3, ".Vector3Value" },
-					{ TypeManager.SCNVector4, ".Vector4Value" }
-				};
-
-				nsvalue_return_map [TypeManager.CoreGraphics_CGPoint] = ".CGPointValue";
-				nsvalue_return_map [TypeManager.CoreGraphics_CGRect] = ".CGRectValue";
-				nsvalue_return_map [TypeManager.CoreGraphics_CGSize] = ".CGSizeValue";
-
-				if (Frameworks.HaveUIKit) {
-					nsvalue_return_map [TypeManager.UIEdgeInsets] = ".UIEdgeInsetsValue";
-					nsvalue_return_map [TypeManager.UIOffset] = ".UIOffsetValue";
-					nsvalue_return_map [TypeManager.NSDirectionalEdgeInsets] = ".DirectionalEdgeInsetsValue";
-				}
-
-				if (TypeManager.MKCoordinateSpan != null)
-					nsvalue_return_map [TypeManager.MKCoordinateSpan] = ".CoordinateSpanValue";
-
-				if (Frameworks.HaveCoreMedia) {
-					nsvalue_return_map [TypeManager.CMTimeRange] = ".CMTimeRangeValue";
-					nsvalue_return_map [TypeManager.CMTime] = ".CMTimeValue";
-					nsvalue_return_map [TypeManager.CMTimeMapping] = ".CMTimeMappingValue";
-					nsvalue_return_map [TypeManager.CMVideoDimensions] = ".CMVideoDimensionsValue";
-				}
-
-				if (Frameworks.HaveCoreAnimation)
-					nsvalue_return_map [TypeManager.CATransform3D] = ".CATransform3DValue";
-			}
-			return nsvalue_return_map;
-		}
-	}
-
 	string GetFromBindAsWrapper (MemberInformation minfo, out string suffix)
 	{
 		var declaringType = minfo.mi.DeclaringType;
@@ -595,10 +529,10 @@ public partial class Generator : IMemberGatherer {
 		var originalReturnType = method?.ReturnType ?? property?.PropertyType;
 
 		if (originalReturnType == TypeManager.NSNumber) {
-			if (!NSNumberReturnMap.TryGetValue (retType, out append)) {
+			if (!TypeManager.NSNumberReturnMap.TryGetValue (retType, out append)) {
 				if (retType.IsEnum) {
 					var enumType = retType.GetEnumUnderlyingType ();
-					if (!NSNumberReturnMap.TryGetValue (enumType, out append))
+					if (!TypeManager.NSNumberReturnMap.TryGetValue (enumType, out append))
 						throw GetBindAsException ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi);
 				} else
 					throw GetBindAsException ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi);
@@ -606,7 +540,7 @@ public partial class Generator : IMemberGatherer {
 			if (isNullable)
 				append = $"?{append}";
 		} else if (originalReturnType == TypeManager.NSValue) {
-			if (!NSValueReturnMap.TryGetValue (retType, out append)) {
+			if (!TypeManager.NSValueReturnMap.TryGetValue (retType, out append)) {
 				// HACK: These are problematic for X.M due to we do not ship System.Drawing for Full profile
 				if (retType.Name == "RectangleF" || retType.Name == "SizeF" || retType.Name == "PointF")
 					append = $".{retType.Name}Value";
@@ -627,7 +561,7 @@ public partial class Generator : IMemberGatherer {
 			if (arrType == TypeManager.NSString && !arrIsNullable)
 				append = $"ptr => {{\n\tusing (var str = Runtime.GetNSObject<NSString> (ptr)!) {{\n\t\treturn {FormatType (arrRetType.DeclaringType, arrRetType)}Extensions.GetValue (str);\n\t}}\n}}";
 			else if (arrType == TypeManager.NSNumber && !arrIsNullable) {
-				if (NSNumberReturnMap.TryGetValue (arrRetType, out valueFetcher) || arrRetType.IsEnum) {
+				if (TypeManager.NSNumberReturnMap.TryGetValue (arrRetType, out valueFetcher) || arrRetType.IsEnum) {
 					var getterStr = string.Format ("{0}{1}", arrIsNullable ? "?" : string.Empty, arrRetType.IsEnum ? ".Int32Value" : valueFetcher);
 					append = string.Format ("ptr => {{\n\tusing (var num = Runtime.GetNSObject<NSNumber> (ptr)!) {{\n\t\treturn ({1}) num{0};\n\t}}\n}}", getterStr, FormatType (arrRetType.DeclaringType, arrRetType));
 				} else
@@ -635,7 +569,7 @@ public partial class Generator : IMemberGatherer {
 			} else if (arrType == TypeManager.NSValue && !arrIsNullable) {
 				if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
 					valueFetcher = $"{(arrIsNullable ? "?" : string.Empty)}.{arrRetType.Name}Value";
-				else if (!NSValueReturnMap.TryGetValue (arrRetType, out valueFetcher))
+				else if (!TypeManager.NSValueReturnMap.TryGetValue (arrRetType, out valueFetcher))
 					throw GetBindAsException ("unbox", retType.Name, arrType.Name, "array", minfo.mi);
 
 				append = string.Format ("ptr => {{\n\tusing (var val = Runtime.GetNSObject<NSValue> (ptr)!) {{\n\t\treturn val{0};\n\t}}\n}}", valueFetcher);
