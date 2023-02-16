@@ -58,7 +58,7 @@ namespace ObjCRuntime {
 	}
 
 	[StructLayout (LayoutKind.Sequential)]
-	public unsafe struct BlockLiteral {
+	public unsafe struct BlockLiteral : IDisposable {
 #pragma warning disable 169
 		IntPtr isa;
 		BlockFlags flags;
@@ -202,17 +202,24 @@ namespace ObjCRuntime {
 
 		public void CleanupBlock ()
 		{
-			GCHandle.FromIntPtr (local_handle).Free ();
-			var xblock_descriptor = (XamarinBlockDescriptor*) block_descriptor;
-#pragma warning disable 420
-			// CS0420: A volatile field references will not be treated as volatile
-			// Documentation says: "A volatile field should not normally be passed using a ref or out parameter, since it will not be treated as volatile within the scope of the function. There are exceptions to this, such as when calling an interlocked API."
-			// So ignoring the warning, since it's a documented exception.
-			var rc = Interlocked.Decrement (ref xblock_descriptor->ref_count);
-#pragma warning restore 420
+			if (local_handle != IntPtr.Zero) {
+				GCHandle.FromIntPtr (local_handle).Free ();
+				local_handle = IntPtr.Zero;
+			}
 
-			if (rc == 0)
-				Marshal.FreeHGlobal (block_descriptor);
+			if (block_descriptor != IntPtr.Zero) {
+				var xblock_descriptor = (XamarinBlockDescriptor *) block_descriptor;
+	#pragma warning disable 420
+				// CS0420: A volatile field references will not be treated as volatile
+				// Documentation says: "A volatile field should not normally be passed using a ref or out parameter, since it will not be treated as volatile within the scope of the function. There are exceptions to this, such as when calling an interlocked API."
+				// So ignoring the warning, since it's a documented exception.
+				var rc = Interlocked.Decrement (ref xblock_descriptor->ref_count);
+	#pragma warning restore 420
+
+				if (rc == 0)
+					Marshal.FreeHGlobal (block_descriptor);
+				block_descriptor = IntPtr.Zero;
+			}
 		}
 
 		public object Target {
@@ -380,7 +387,20 @@ namespace ObjCRuntime {
 		{
 			return _Block_copy (block);
 		}
+
+#endif // !COREBUILD
+
+#if XAMCORE_5_0
+		public void Dispose ()
+#else
+		void IDisposable.Dispose ()
 #endif
+		{
+#if !COREBUILD
+			CleanupBlock ();
+#endif
+		}
+
 	}
 
 #if !COREBUILD
