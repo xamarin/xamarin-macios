@@ -8,10 +8,10 @@ using PlatformName = ObjCRuntime.PlatformName;
 #endif
 
 public interface IAttributeManager {
-	T [] GetCustomAttributes<T> (ICustomAttributeProvider provider) where T : System.Attribute;
+	T [] GetCustomAttributes<T> (ICustomAttributeProvider provider) where T : Attribute;
 	bool HasAttribute<T> (ICustomAttributeProvider provider) where T : Attribute;
 	bool HasAttribute<T> (ICustomAttributeProvider i, Attribute [] attributes) where T : Attribute;
-	T GetCustomAttribute<T> (ICustomAttributeProvider provider) where T : System.Attribute;
+	T GetCustomAttribute<T> (ICustomAttributeProvider provider) where T : Attribute;
 	bool HasNativeAttribute (ICustomAttributeProvider provider);
 }
 
