@@ -1043,17 +1043,6 @@ public partial class Generator : IMemberGatherer {
 		return AttributeManager.GetCustomAttribute<BindAttribute> (mi);
 	}
 
-	public bool HasAttribute<T> (ICustomAttributeProvider i, Attribute [] attributes) where T : Attribute
-	{
-		if (attributes == null)
-			return AttributeManager.HasAttribute<T> (i);
-		else
-			foreach (var a in attributes)
-				if (a.GetType () == typeof (T))
-					return true;
-		return false;
-	}
-
 	public bool ShouldMarshalNativeExceptions (MethodInfo mi)
 	{
 		// [MarshalNativeExceptions] should work on a property and inside the get / set
@@ -5259,7 +5248,7 @@ public partial class Generator : IMemberGatherer {
 	{
 		var type = provider.DeclaringType;
 		if (IsApiType (type)) {
-			return HasAttribute<AbstractAttribute> (provider, attributes);
+			return AttributeManager.HasAttribute<AbstractAttribute> (provider, attributes);
 		}
 		if (type.IsInterface)
 			return true;
@@ -7580,14 +7569,6 @@ public partial class Generator : IMemberGatherer {
 		return def;
 	}
 
-	bool HasNativeAttribute (ICustomAttributeProvider provider)
-	{
-		if (provider is null)
-			return false;
-
-		return AttributeManager.HasAttribute (provider, "NativeIntegerAttribute");
-	}
-
 	string RenderType (Type t, ICustomAttributeProvider provider = null)
 	{
 		t = GetCorrectGenericType (t);
@@ -7625,9 +7606,9 @@ public partial class Generator : IMemberGatherer {
 			return "void";
 
 		if (t == TypeManager.System_IntPtr) {
-			return HasNativeAttribute (provider) ? "nint" : "IntPtr";
+			return AttributeManager.HasNativeAttribute (provider) ? "nint" : "IntPtr";
 		} else if (t == TypeManager.System_UIntPtr) {
-			return HasNativeAttribute (provider) ? "nuint" : "UIntPtr";
+			return AttributeManager.HasNativeAttribute (provider) ? "nuint" : "UIntPtr";
 		}
 
 		string ns = t.Namespace;
