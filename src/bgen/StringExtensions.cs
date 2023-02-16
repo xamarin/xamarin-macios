@@ -59,7 +59,7 @@ public static class StringExtensions {
 		if (keywordsTable!.Contains (identifier))
 			return false;
 
-		if (!is_identifier_start_character (identifier [0])) {
+		if (!is_identifier_start_character (identifier! [0])) {
 			// if we are dealing with a number, we are ok, we can prepend @, else we have a problem
 			hasIllegalChars = !Char.IsNumber (identifier [0]);
 			return false;
