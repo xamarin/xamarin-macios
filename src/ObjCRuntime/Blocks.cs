@@ -58,7 +58,11 @@ namespace ObjCRuntime {
 	}
 
 	[StructLayout (LayoutKind.Sequential)]
+#if COREBUILD
 	public unsafe struct BlockLiteral {
+#else
+	public unsafe struct BlockLiteral : IDisposable {
+#endif
 #pragma warning disable 169
 		IntPtr isa;
 		BlockFlags flags;
@@ -202,17 +206,29 @@ namespace ObjCRuntime {
 
 		public void CleanupBlock ()
 		{
-			GCHandle.FromIntPtr (local_handle).Free ();
-			var xblock_descriptor = (XamarinBlockDescriptor*) block_descriptor;
-#pragma warning disable 420
-			// CS0420: A volatile field references will not be treated as volatile
-			// Documentation says: "A volatile field should not normally be passed using a ref or out parameter, since it will not be treated as volatile within the scope of the function. There are exceptions to this, such as when calling an interlocked API."
-			// So ignoring the warning, since it's a documented exception.
-			var rc = Interlocked.Decrement (ref xblock_descriptor->ref_count);
-#pragma warning restore 420
+			Dispose ();
+		}
 
-			if (rc == 0)
-				Marshal.FreeHGlobal (block_descriptor);
+		public void Dispose ()
+		{
+			if (local_handle != IntPtr.Zero) {
+				GCHandle.FromIntPtr (local_handle).Free ();
+				local_handle = IntPtr.Zero;
+			}
+
+			if (block_descriptor != IntPtr.Zero) {
+				var xblock_descriptor = (XamarinBlockDescriptor *) block_descriptor;
+	#pragma warning disable 420
+				// CS0420: A volatile field references will not be treated as volatile
+				// Documentation says: "A volatile field should not normally be passed using a ref or out parameter, since it will not be treated as volatile within the scope of the function. There are exceptions to this, such as when calling an interlocked API."
+				// So ignoring the warning, since it's a documented exception.
+				var rc = Interlocked.Decrement (ref xblock_descriptor->ref_count);
+	#pragma warning restore 420
+
+				if (rc == 0)
+					Marshal.FreeHGlobal (block_descriptor);
+				block_descriptor = IntPtr.Zero;
+			}
 		}
 
 		public object Target {
@@ -328,7 +344,7 @@ namespace ObjCRuntime {
 			// start off by creating a stack-allocated block, and then
 			// call _Block_copy, which will create a heap-allocated block
 			// with the proper reference count.
-			BlockLiteral block = new BlockLiteral ();
+			using var block = new BlockLiteral ();
 			if (signature is null) {
 				if (Runtime.DynamicRegistrationSupported) {
 					block.SetupBlock ((Delegate) handlerDelegate, (Delegate) @delegate);
@@ -338,13 +354,14 @@ namespace ObjCRuntime {
 			} else {
 				block.SetupBlockImpl ((Delegate) handlerDelegate, (Delegate) @delegate, true, signature);
 			}
-			var rv = _Block_copy (ref block);
-			block.CleanupBlock ();
-			return rv;
+
+			unsafe {
+				return _Block_copy (&block);
+			}
 		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		internal static extern IntPtr _Block_copy (ref BlockLiteral block);
+		internal static extern IntPtr _Block_copy (BlockLiteral* block);
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal static extern IntPtr _Block_copy (IntPtr block);
