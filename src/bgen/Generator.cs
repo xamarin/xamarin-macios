@@ -71,7 +71,7 @@ public partial class Generator : IMemberGatherer {
 	Dictionary<string, int> selector_use = new Dictionary<string, int> ();
 	Dictionary<string, string> selector_names = new Dictionary<string, string> ();
 	Dictionary<string, string> send_methods = new Dictionary<string, string> ();
-	List<MarshalType> marshal_types = new List<MarshalType> ();
+	readonly MarshalTypeList marshalTypes = new ();
 	Dictionary<Type, TrampolineInfo> trampolines = new Dictionary<Type, TrampolineInfo> ();
 	Dictionary<Type, int> trampolines_generic_versions = new Dictionary<Type, int> ();
 	Dictionary<Type, Type> notification_event_arg_types = new Dictionary<Type, Type> ();
@@ -101,22 +101,6 @@ public partial class Generator : IMemberGatherer {
 
 	public NamespaceManager NamespaceManager {
 		get { return ns; }
-	}
-
-	public bool LookupMarshal (Type t, out MarshalType res)
-	{
-		res = null;
-		// quick out for common (and easy to detect) cases
-		if (t.IsArray || t.IsByRef || t.IsPrimitive)
-			return false;
-		foreach (var mt in marshal_types) {
-			// full name is required because some types (e.g. CVPixelBuffer) are now also in core.dll
-			if (mt.Type.FullName == t.FullName) {
-				res = mt;
-				return true;
-			}
-		}
-		return false;
 	}
 
 	//
@@ -277,7 +261,7 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		MarshalType mt;
-		if (LookupMarshal (mai.Type, out mt))
+		if (marshalTypes.TryGetMarshalType (mai.Type, out mt))
 			return mt.Encoding;
 
 		if (mai.Type.IsValueType)
@@ -965,7 +949,7 @@ public partial class Generator : IMemberGatherer {
 			return safe_name;
 
 		MarshalType mt;
-		if (LookupMarshal (pi.ParameterType, out mt)) {
+		if (marshalTypes.TryGetMarshalType (pi.ParameterType, out mt)) {
 			if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi))
 				return safe_name + "__handle__";
 			return String.Format (mt.ParameterMarshal, safe_name);
@@ -1412,77 +1396,7 @@ public partial class Generator : IMemberGatherer {
 	public void Go ()
 	{
 		GeneratedTypes = new GeneratedTypes (this);
-
-		marshal_types.Add (new MarshalType (TypeManager.NSObject, create: "Runtime.GetNSObject (", closingCreate: ")!"));
-		marshal_types.Add (new MarshalType (TypeManager.Selector, create: "Selector.FromHandle (", closingCreate: ")!"));
-		marshal_types.Add (new MarshalType (TypeManager.BlockLiteral, "BlockLiteral", "{0}", "THIS_IS_BROKEN"));
-		if (TypeManager.MusicSequence != null)
-			marshal_types.Add (new MarshalType (TypeManager.MusicSequence, create: "global::AudioToolbox.MusicSequence.Lookup ("));
-		marshal_types.Add (TypeManager.CGColor);
-		marshal_types.Add (TypeManager.CGPath);
-		marshal_types.Add (TypeManager.CGGradient);
-		marshal_types.Add (TypeManager.CGContext);
-		marshal_types.Add (TypeManager.CGPDFDocument);
-		marshal_types.Add (TypeManager.CGPDFPage);
-		marshal_types.Add (TypeManager.CGImage);
-		marshal_types.Add (TypeManager.Class);
-		marshal_types.Add (TypeManager.CFRunLoop);
-		marshal_types.Add (TypeManager.CGColorSpace);
-		marshal_types.Add (TypeManager.CGImageSource);
-		marshal_types.Add (TypeManager.DispatchData);
-		marshal_types.Add (TypeManager.DispatchQueue);
-		marshal_types.Add (TypeManager.Protocol);
-		if (Frameworks.HaveCoreMidi)
-			marshal_types.Add (TypeManager.MidiEndpoint);
-		if (Frameworks.HaveCoreMedia) {
-			marshal_types.Add (TypeManager.CMTimebase);
-			marshal_types.Add (TypeManager.CMClock);
-		}
-		marshal_types.Add (TypeManager.NSZone);
-		if (Frameworks.HaveOpenGL) {
-			marshal_types.Add (TypeManager.CGLContext);
-			marshal_types.Add (TypeManager.CGLPixelFormat);
-			marshal_types.Add (TypeManager.CVImageBuffer);
-		}
-		if (Frameworks.HaveMediaToolbox)
-			marshal_types.Add (new MarshalType (TypeManager.MTAudioProcessingTap, create: "MediaToolbox.MTAudioProcessingTap.FromHandle("));
-		if (Frameworks.HaveAddressBook) {
-			marshal_types.Add (TypeManager.ABAddressBook);
-			marshal_types.Add (new MarshalType (TypeManager.ABPerson, create: "(ABPerson) ABRecord.FromHandle (", closingCreate: ")!"));
-			marshal_types.Add (new MarshalType (TypeManager.ABRecord, create: "ABRecord.FromHandle (", closingCreate: ")!"));
-		}
-		if (Frameworks.HaveCoreVideo) {
-			// owns `false` like ptr ctor https://github.com/xamarin/xamarin-macios/blob/6f68ab6f79c5f1d96d2cbb1e697330623164e46d/src/CoreVideo/CVBuffer.cs#L74-L90
-			marshal_types.Add (new MarshalType (TypeManager.CVPixelBuffer, create: "Runtime.GetINativeObject<CVPixelBuffer> (", closingCreate: ", false)!"));
-		}
-		marshal_types.Add (TypeManager.CGLayer);
-		if (Frameworks.HaveCoreMedia)
-			marshal_types.Add (TypeManager.CMSampleBuffer);
-
-		if (Frameworks.HaveCoreVideo) {
-			marshal_types.Add (TypeManager.CVImageBuffer);
-			marshal_types.Add (TypeManager.CVPixelBufferPool);
-		}
-		if (Frameworks.HaveAudioUnit)
-			marshal_types.Add (TypeManager.AudioComponent);
-		if (Frameworks.HaveCoreMedia) {
-			marshal_types.Add (new MarshalType (TypeManager.CMFormatDescription, create: "CMFormatDescription.Create (", closingCreate: ")!"));
-			marshal_types.Add (TypeManager.CMAudioFormatDescription);
-			marshal_types.Add (TypeManager.CMVideoFormatDescription);
-		}
-		if (Frameworks.HaveAudioUnit)
-			marshal_types.Add (TypeManager.AudioUnit);
-		marshal_types.Add (TypeManager.SecIdentity);
-		marshal_types.Add (TypeManager.SecIdentity2);
-		marshal_types.Add (TypeManager.SecTrust);
-		marshal_types.Add (TypeManager.SecTrust2);
-		marshal_types.Add (TypeManager.SecProtocolOptions);
-		marshal_types.Add (TypeManager.SecProtocolMetadata);
-		marshal_types.Add (TypeManager.SecAccessControl);
-		marshal_types.Add (TypeManager.AudioBuffers);
-		if (Frameworks.HaveAudioUnit) {
-			marshal_types.Add (TypeManager.AURenderEventEnumerator);
-		}
+		marshalTypes.Load (TypeManager, Frameworks);
 
 		m = GetOutputStream ("ObjCRuntime", "Messaging");
 		Header (m);
@@ -3323,7 +3237,7 @@ public partial class Generator : IMemberGatherer {
 		} else if (mi.ReturnType.IsEnum) {
 			cast_a = "(" + FormatType (mi.DeclaringType, mi.ReturnType) + ") ";
 			cast_b = "";
-		} else if (LookupMarshal (mai.Type, out mt)) {
+		} else if (marshalTypes.TryGetMarshalType (mai.Type, out mt)) {
 			cast_a = mt.CreateFromRet;
 			cast_b = mt.ClosingCreate;
 		} else if (IsWrappedType (mi.ReturnType)) {
