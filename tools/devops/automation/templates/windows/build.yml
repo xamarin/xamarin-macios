@@ -27,6 +27,88 @@ steps:
     gci env: | format-table -autosize -wrap
   displayName: 'Dump Environment'
 
+- task: DownloadPipelineArtifact@2
+  displayName: Download artifacts
+  inputs:
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/artifacts
+
+- pwsh: |
+    try {
+      Write-Host "Looking in '$(Build.SourcesDirectory)\artifacts"
+      Get-ChildItem "$(Build.SourcesDirectory)\artifacts" -Recurse
+    } catch {
+      Write-Host "Exception occured: $_"
+    }
+  displayName: 'List downloaded artifacts'
+  continueOnError: true
+
+- task: UseDotNet@2
+  inputs:
+    version: 7.0.102
+
+- pwsh: |
+    & dotnet --version
+    & dotnet --info
+    & dotnet workload list
+  displayName: 'Show .NET info'
+  continueOnError: true
+
+- pwsh: |
+    & dotnet build "$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/InstallDotNet.csproj" `
+    --verbosity quiet `
+    "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/install.binlog" `
+    -p:DisableImplicitNuGetFallbackFolder=true
+  displayName: 'Install custom .NET'
+  continueOnError: true
+
+- pwsh: |
+    $Env:DOTNET = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe"
+    & dotnet build "$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/InstallDotNet.csproj" `
+      --verbosity quiet `
+      "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/install-workloads.binlog" `
+      -p:DisableImplicitNuGetFallbackFolder=true `
+      -t:Install
+  displayName: 'Install workloads'
+  continueOnError: true
+
+# get and expand the needed libs for monotouch
+- task: DownloadPipelineArtifact@2
+  displayName: Download test libraries dependencies
+  inputs:
+    patterns: '**/package-test-libraries.zip'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/artifacts/tmp
+
+# this step replaces the test-libraries dir
+- pwsh: |
+    $zip = "$(Build.SourcesDirectory)/artifacts/tmp/package-test-libraries/package-test-libraries.zip"
+    $target = "$(Build.SourcesDirectory)/xamarin-macios/tests/test-libraries"
+    Expand-Archive -Force $zip -DestinationPath $target
+    Get-ChildItem "$target" -Recurse
+  workingDirectory: $(Build.SourcesDirectory)/xamarin-macios/tests
+  displayName: Expand test libraries.
+  timeoutInMinutes: 10
+
+- pwsh: |
+    & $(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe `
+        nuget push `
+        "$(Build.SourcesDirectory)\xamarin-macios\tests\test-libraries\nugets\FrameworksInRuntimesNativeDirectory\bin\Debug\Xamarin.Tests.FrameworksInRuntimesNativeDirectory.1.0.0.nupkg" `
+        --source "$(Build.SourcesDirectory)\xamarin-macios\tests\.nuget\packages"
+  displayName: 'Build dependencies for .NET tests'
+  continueOnError: true
+
+- pwsh: |
+    $Env:DOTNET = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe"
+    & $(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe `
+        test `
+        "$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/UnitTests/DotNetUnitTests.csproj" `
+        --filter Category=Windows `
+        --verbosity quiet `
+        "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/run-dotnet-tests.binlog"
+  displayName: 'Run .NET tests'
+  continueOnError: true
+
 - pwsh: |
     Write-Host "Run windows tests."
     Write-Host "Mac agent to be used:"
