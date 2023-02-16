@@ -5785,7 +5785,7 @@ public partial class Generator : IMemberGatherer {
 		if (p == null)
 			return;
 
-		print ($"[Advice ({Quote (p.Message)})]");
+		print ($"[Advice ({p.Message.Quote ()})]");
 	}
 
 	public void PrintRequiresSuperAttribute (ICustomAttributeProvider mi)
@@ -5803,7 +5803,7 @@ public partial class Generator : IMemberGatherer {
 		if (p == null)
 			return;
 
-		print ($"[NotImplemented ({Quote (p.Message)})]");
+		print ($"[NotImplemented ({p.Message.Quote ()})]");
 	}
 
 	public void PrintBindAsAttribute (ICustomAttributeProvider mi, StringBuilder sb = null)
@@ -6819,7 +6819,7 @@ public partial class Generator : IMemberGatherer {
 
 						var sender = pars.Length == 0 ? "this" : pars [0].Name;
 
-						var miname = PascalCase (mi.Name);
+						var miname = mi.Name.PascalCase ();
 						if (miname == previous_miname) {
 							// overloads, add a numbered suffix (it's internal)
 							previous_miname = miname;
@@ -6859,7 +6859,7 @@ public partial class Generator : IMemberGatherer {
 							} else
 								eaname = "<NOTREACHED>";
 
-							print ("var handler = {0};", PascalCase (miname));
+							print ("var handler = {0};", miname.PascalCase ());
 							print ("if (handler != null){");
 							indent++;
 							string eventArgs;
@@ -6896,7 +6896,7 @@ public partial class Generator : IMemberGatherer {
 							if (debug)
 								print ("Console.WriteLine (\"Method {0}.{1} invoked\");", dtype.Name, mi.Name);
 
-							print ("var handler = {0};", PascalCase (miname));
+							print ("var handler = {0};", miname.PascalCase ());
 							print ("if (handler != null)");
 							print ("	return handler ({0}{1});",
 								   sender,
@@ -6959,7 +6959,7 @@ public partial class Generator : IMemberGatherer {
 								print ("if (selHandle.Equals (sel{0}Handle))", mi.Name);
 							}
 							++indent;
-							print ("return {0} != null;", PascalCase (mi.Name));
+							print ("return {0} != null;", mi.Name.PascalCase ());
 							--indent;
 						}
 						print ("return global::" + ns.Messaging + ".bool_objc_msgSendSuper_IntPtr (SuperHandle, " + selRespondsToSelector + ", selHandle);");
@@ -6993,7 +6993,7 @@ public partial class Generator : IMemberGatherer {
 
 						string ensureArg = bta.KeepRefUntil == null ? "" : "this";
 
-						var miname = PascalCase (mi.Name);
+						var miname = mi.Name.PascalCase ();
 						if (miname == prev_miname) {
 							// overloads, add a numbered suffix (it's internal)
 							prev_miname = miname;
@@ -7005,14 +7005,14 @@ public partial class Generator : IMemberGatherer {
 							PrintObsoleteAttributes (mi);
 
 							if (bta.Singleton && mi.GetParameters ().Length == 0 || mi.GetParameters ().Length == 1)
-								print ("public event EventHandler {0} {{", CamelCase (GetEventName (mi)));
+								print ("public event EventHandler {0} {{", GetEventName (mi).CamelCase ());
 							else
-								print ("public event EventHandler<{0}> {1} {{", GetEventArgName (mi), CamelCase (GetEventName (mi)));
+								print ("public event EventHandler<{0}> {1} {{", GetEventArgName (mi), GetEventName (mi).CamelCase ());
 							print ("\tadd {{ Ensure{0} ({1})!.{2} += value; }}", dtype.Name, ensureArg, miname);
 							print ("\tremove {{ Ensure{0} ({1})!.{2} -= value; }}", dtype.Name, ensureArg, miname);
 							print ("}\n");
 						} else {
-							print ("public {0}? {1} {{", GetDelegateName (mi), CamelCase (GetDelegateApiName (mi)));
+							print ("public {0}? {1} {{", GetDelegateName (mi), GetDelegateApiName (mi).CamelCase ());
 							print ("\tget {{ return Ensure{0} ({1})!.{2}; }}", dtype.Name, ensureArg, miname);
 							print ("\tset {{ Ensure{0} ({1})!.{2} = value; }}", dtype.Name, ensureArg, miname);
 							print ("}\n");
@@ -7239,7 +7239,7 @@ public partial class Generator : IMemberGatherer {
 					var safe_name = pi.Name.GetSafeParamName ();
 					print ("public {0} {1} {{ get; set; }}",
 						FormatType (type, pi.ParameterType),
-						Capitalize (safe_name));
+						safe_name.Capitalize ());
 
 					if (comma)
 						ctor.Append (", ");
@@ -7252,7 +7252,7 @@ public partial class Generator : IMemberGatherer {
 				print ("\npublic {0} ({1}) {{", async_type.Item1, ctor); indent++;
 				foreach (var pi in async_type.Item2) {
 					var safe_name = pi.Name.GetSafeParamName ();
-					print ("this.{0} = {1};", Capitalize (safe_name), safe_name);
+					print ("this.{0} = {1};", safe_name.Capitalize (), safe_name);
 				}
 				print ("Initialize ();");
 				indent--; print ("}");
@@ -7420,14 +7420,6 @@ public partial class Generator : IMemberGatherer {
 		return null;
 	}
 
-	static string Capitalize (string str)
-	{
-		if (str.StartsWith ("@", StringComparison.Ordinal))
-			return char.ToUpper (str [1]) + str.Substring (2);
-
-		return char.ToUpper (str [0]) + str.Substring (1);
-	}
-
 	string GetNotificationCenter (PropertyInfo pi)
 	{
 		var a = AttributeManager.GetCustomAttributes<NotificationAttribute> (pi);
@@ -7482,10 +7474,10 @@ public partial class Generator : IMemberGatherer {
 	{
 		var attrs = AttributeManager.GetCustomAttributes<EventNameAttribute> (pi);
 		if (attrs.Length == 0)
-			return CamelCase (pi.Name).GetSafeParamName ();
+			return pi.Name.CamelCase ().GetSafeParamName ();
 
 		var a = attrs [0];
-		return CamelCase (a.EvtName).GetSafeParamName ();
+		return a.EvtName.CamelCase ().GetSafeParamName ();
 	}
 
 	string RenderArgs (IEnumerable<ParameterInfo> pi)
@@ -7501,16 +7493,6 @@ public partial class Generator : IMemberGatherer {
 	bool MustPullValuesBack (IEnumerable<ParameterInfo> parameters)
 	{
 		return parameters.Any (pi => pi.ParameterType.IsByRef);
-	}
-
-	string CamelCase (string ins)
-	{
-		return Char.ToUpper (ins [0]) + ins.Substring (1);
-	}
-
-	string PascalCase (string ins)
-	{
-		return Char.ToLower (ins [0]) + ins.Substring (1);
 	}
 
 	Dictionary<string, bool> skipGeneration = new Dictionary<string, bool> ();
@@ -7688,16 +7670,6 @@ public partial class Generator : IMemberGatherer {
 		else
 			return t.FullName;
 
-	}
-
-	public static string Quote (string s)
-	{
-		if (s == null)
-			return String.Empty;
-		if (s == string.Empty)
-			return @"""""";
-
-		return $"@\"{s.Replace ("\"", "\"\"")}\"";
 	}
 
 	private static string FormatPropertyInfo (PropertyInfo pi)
