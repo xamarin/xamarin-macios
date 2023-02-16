@@ -1,6 +1,7 @@
 #nullable enable
 using NUnit.Framework;
 using ObjCRuntime;
+using Xamarin.Utils;
 
 namespace GeneratorTests {
 
@@ -47,5 +48,14 @@ namespace GeneratorTests {
 		[TestCase (PlatformName.MacOSX, "Quartz")]
 		public void GetPDFKitMapTest (PlatformName platformName, string expected)
 			=> Assert.AreEqual (expected, platformName.GetPDFKitMap ());
+
+		[TestCase (PlatformName.iOS, ApplePlatform.iOS)]
+		[TestCase (PlatformName.TvOS, ApplePlatform.TVOS)]
+		[TestCase (PlatformName.MacCatalyst, ApplePlatform.MacCatalyst)]
+		[TestCase (PlatformName.MacOSX, ApplePlatform.MacOSX)]
+		[TestCase (PlatformName.WatchOS, ApplePlatform.WatchOS)]
+		[TestCase (PlatformName.None, ApplePlatform.None)]
+		public void AsApplePlatformTest (PlatformName platformName, ApplePlatform expected)
+			=> Assert.AreEqual (expected, platformName.AsApplePlatform ());
 	}
 }
