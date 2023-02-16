@@ -2191,4 +2191,12 @@
 	<data name="MX8045" xml:space="preserve">
 		<value>Unable to call release on an instance of the type {0}</value>
 	</data>
+
+	<data name="MX8046" xml:space="preserve">
+		<value>Unable to find the method '{0}' in the type '{1}'</value>
+	</data>
+
+	<data name="MX8047" xml:space="preserve">
+		<value>The 'trampoline' and the 'trampolineMethod' parameters refer to different methods.</value>
+	</data>
 </root>

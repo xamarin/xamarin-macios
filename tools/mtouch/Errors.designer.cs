@@ -4149,5 +4149,23 @@ namespace Xamarin.Bundler {
                 return ResourceManager.GetString("MX8045", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to find the method &apos;{0}&apos; in the type &apos;{1}&apos;.
+        /// </summary>
+        public static string MX8046 {
+            get {
+                return ResourceManager.GetString("MX8046", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The &apos;trampoline&apos; and the &apos;trampolineMethod&apos; parameters refer to different methods..
+        /// </summary>
+        public static string MX8047 {
+            get {
+                return ResourceManager.GetString("MX8047", resourceCulture);
+            }
+        }
     }
 }
