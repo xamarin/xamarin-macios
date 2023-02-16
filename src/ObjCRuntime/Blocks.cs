@@ -58,7 +58,13 @@ namespace ObjCRuntime {
 	}
 
 	[StructLayout (LayoutKind.Sequential)]
+#if XAMCORE_5_0
+	// The presence of this Dispose method is enough to be able to do a 'using var block = new BlockLiteral ()' in C# due to pattern-based using for 'ref structs':
+	// Ref: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-8.0/using#pattern-based-using
+	public unsafe ref struct BlockLiteral
+#else
 	public unsafe struct BlockLiteral : IDisposable {
+#endif
 #pragma warning disable 169
 		IntPtr isa;
 		BlockFlags flags;
