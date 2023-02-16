@@ -17,7 +17,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 
         [TestFixture]
         [Preserve (AllMembers = true)]
-        public class CGImageTest {
+        public class CGImageMetadataTest {
 
 		CGImageMetadata SampleMetadata ()
 		{
