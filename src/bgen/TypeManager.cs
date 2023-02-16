@@ -275,7 +275,7 @@ public class TypeManager {
 #if NET
 		System_nint = Lookup (corlibAssembly, "System", "IntPtr");
 		System_nuint = Lookup (corlibAssembly, "System", "UIntPtr");
-		var interopAssembly = binding_touch.universe.LoadFromAssemblyName ("System.Runtime.InteropServices");
+		var interopAssembly = bindingTouch.universe.LoadFromAssemblyName ("System.Runtime.InteropServices");
 		System_nfloat = Lookup (interopAssembly, "System.Runtime.InteropServices", "NFloat");
 #else
 		System_nint = Lookup (platformAssembly, "System", "nint");
