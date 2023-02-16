@@ -450,9 +450,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Content Remove="@(_ProcessedContent)" />
 		</ItemGroup>
 
+		<!-- This task may be executed locally on Windows (for Hot Restart) -->
 		<CollectBundleResources
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
 			OptimizePropertyLists="$(OptimizePropertyLists)"
 			OptimizePNGs="$(OptimizePNGs)"
 			BundleResources="@(Content);@(BundleResource)"
@@ -1806,9 +1807,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="ResolveReferences;_CollectBundleResources;_PrepareUnpackLibraryResources"
 		Inputs="@(_UnpackLibraryResourceItems)"
 		Outputs="@(_UnpackLibraryResourceItems->'$(_StampDirectory)%(StampFile)')">
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_StampDirectory)" />
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'" Directories="$(_StampDirectory)" />
+		<!-- This task may be executed locally on Windows (for Hot Restart) -->
 		<UnpackLibraryResources
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			Prefix="$(_EmbeddedResourcePrefix)"
 			NoOverwrite="@(_BundleResourceWithLogicalName)"
@@ -1819,7 +1821,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</UnpackLibraryResources>
 		<Touch
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
 			Files="@(_UnpackLibraryResourceItems->'$(_StampDirectory)%(StampFile)')"
 			AlwaysCreate="True"
 		>
