@@ -94,6 +94,7 @@
     </None>
     <Compile Include="..\src\error.cs" />
     <Compile Include="..\src\ObjCRuntime\Stret.cs" />
+    <Compile Include="..\src\bgen\AsyncMethodInfo.cs" />
     <Compile Include="..\src\bgen\AttributeConversionManager.cs" />
     <Compile Include="..\src\bgen\AsyncMethodKind.cs" />
     <Compile Include="..\src\bgen\AttributeManager.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="..\src\bgen\AttributeFactory.cs" />
     <Compile Include="..\src\bgen\BodyOption.cs" />
     <Compile Include="..\src\bgen\BindingTouch.cs" />
+    <Compile Include="..\src\bgen\CollectionsExtensions.cs" />
     <Compile Include="..\src\bgen\CustomAttributeDataExtensions.cs" />
     <Compile Include="..\src\bgen\Enums.cs" />
     <Compile Include="..\src\bgen\ExtensionMethods.cs" />
@@ -110,6 +112,7 @@
     <Compile Include="..\src\bgen\GeneratedTypes.cs" />
     <Compile Include="..\src\bgen\Generator.cs" />
     <Compile Include="..\src\bgen\MarshalInfo.cs" />
+    <Compile Include="..\src\bgen\MarshalTypeList.cs" />
     <Compile Include="..\src\bgen\MarshalType.cs" />
     <Compile Include="..\src\bgen\IMemberGatherer.cs" />
     <Compile Include="..\src\bgen\MemberInformation.cs" />
