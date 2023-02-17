@@ -7,6 +7,7 @@ using System.Linq;
 using NUnit.Framework;
 
 using Mono.Cecil;
+using Mono.Cecil.Cil;
 
 using Xamarin.Tests;
 using Xamarin.Utils;
@@ -348,7 +349,7 @@ namespace Cecil.Tests {
 			return rv;
 		}
 
-		public static string RenderLocation (this IMemberDefinition member)
+		public static string RenderLocation (this IMemberDefinition member, Instruction? instruction = null)
 		{
 			if (member is null)
 				return string.Empty;
@@ -369,6 +370,17 @@ namespace Cecil.Tests {
 
 			if (method.DebugInformation.HasSequencePoints) {
 				var seq = method.DebugInformation.SequencePoints [0];
+				if (instruction is not null) {
+					var instr = instruction;
+					while (instr is not null) {
+						var iseq = method.DebugInformation.GetSequencePoint (instr);
+						if (iseq is not null) {
+							seq = iseq;
+							break;
+						}
+						instr = instr.Previous;
+					}
+				}
 				return seq.Document.Url + ":" + seq.StartLine + " ";
 			}
 			return string.Empty;

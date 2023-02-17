@@ -1,10 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+
+using ObjCRuntime;
+
+using Xamarin.Tests;
+using Xamarin.Utils;
 
 #nullable enable
 
@@ -335,5 +341,119 @@ namespace Cecil.Tests {
 				return true;
 			}
 		}
+
+		[Test]
+		public void CheckForBlockLiterals ()
+		{
+			var failures = new HashSet<(string Message, string Location)> ();
+
+			foreach (var info in Helper.NetPlatformImplementationAssemblyDefinitions) {
+				var assembly = info.Assembly;
+				foreach (var type in assembly.EnumerateTypes ()) {
+					foreach (var method in type.EnumerateMethods (m => m.HasBody)) {
+						var body = method.Body;
+						foreach (var instr in body.Instructions) {
+							switch (instr.OpCode.Code) {
+							case Code.Call:
+							case Code.Calli:
+							case Code.Callvirt:
+								break;
+							default:
+								continue;
+							}
+
+							var targetMethod = (MethodReference) instr.Operand;
+							Assert.IsNotNull (targetMethod, "Null operand"); // If this ever fails, the code needs to be updated.
+
+							if (!targetMethod!.DeclaringType.Is ("ObjCRuntime", "BlockLiteral"))
+								continue;
+
+							switch (targetMethod.Name) {
+							case "SetupBlock":
+							case "SetupBlockUnsafe":
+								break;
+							default:
+								continue;
+							}
+
+							var location = method.RenderLocation (instr);
+							var message = $"The call to {targetMethod.Name} in {method.AsFullName ()} must be converted to new Block syntax.";
+							failures.Add (new (message, location));
+						}
+					}
+				}
+			}
+
+			var newFailures = failures.Where (v => !knownFailuresBlockLiterals.Contains (v.Message)).ToArray ();
+			var fixedFailures = knownFailuresBlockLiterals.Except (failures.Select (v => v.Message).ToHashSet ());
+
+			var printKnownFailures = newFailures.Any () || fixedFailures.Any ();
+			if (printKnownFailures) {
+				Console.WriteLine ("Printing all failures as known failures because they seem out of date:");
+				Console.WriteLine ("\t\tstatic HashSet<string> knownFailuresBlockLiterals = new HashSet<string> {");
+				foreach (var failure in failures.OrderBy (v => v))
+					Console.WriteLine ($"\t\t\t\"{failure.Message}\",");
+				Console.WriteLine ("\t\t};");
+			}
+
+			if (newFailures.Any ()) {
+				// Print any new failures with the local path for easy navigation (depending on the terminal and/or IDE you might just click on the path to open the corresponding file).
+				Console.WriteLine ($"Printing {newFailures.Count ()} new failures with local paths for easy navigation:");
+				foreach (var failure in newFailures.OrderBy (v => v))
+					Console.WriteLine ($"    {failure.Location}: {failure.Message}");
+			}
+
+			Assert.IsEmpty (newFailures, "Failures");
+			Assert.IsEmpty (fixedFailures, "Known failures that aren't failing anymore - remove these from the list of known failures");
+		}
+
+		static HashSet<string> knownFailuresBlockLiterals = new HashSet<string> {
+			"The call to SetupBlock in ObjCRuntime.BlockLiteral.GetBlockForDelegate(System.Reflection.MethodInfo, System.Object, System.UInt32, System.String) must be converted to new Block syntax.",
+			"The call to SetupBlock in ObjCRuntime.BlockLiteral.SetupBlock(System.Delegate, System.Delegate) must be converted to new Block syntax.",
+			"The call to SetupBlock in ObjCRuntime.BlockLiteral.SetupBlockUnsafe(System.Delegate, System.Delegate) must be converted to new Block syntax.",
+		};
+
+		[Test]
+		public void CheckForMonoPInvokeCallback ()
+		{
+			var failures = new HashSet<(string Message, string Location)> ();
+
+			foreach (var info in Helper.NetPlatformImplementationAssemblyDefinitions) {
+				var assembly = info.Assembly;
+				foreach (var type in assembly.EnumerateTypes ()) {
+					foreach (var method in type.EnumerateMethods (m => m.HasCustomAttributes)) {
+						foreach (var ca in method.CustomAttributes) {
+							if (ca.AttributeType.Name != "MonoPInvokeCallbackAttribute")
+								continue;
+
+							var location = method.RenderLocation ();
+							var message = $"The method {method.AsFullName ()} has a MonoPInvokeCallback attribute and must be converted to an UnmanagedCallersOnly method.";
+							failures.Add (new (message, location));
+
+							break;
+						}
+					}
+				}
+			}
+
+			var newFailures = failures.Where (v => !knownFailuresMonoPInvokeCallback.Contains (v.Message)).ToArray ();
+			var fixedFailures = knownFailuresMonoPInvokeCallback.Except (failures.Select (v => v.Message).ToHashSet ());
+
+			if (newFailures.Any ()) {
+				// Print any new failures with the local path for easy navigation (depending on the terminal and/or IDE you might just click on the path to open the corresponding file).
+				Console.WriteLine ($"Printing {newFailures.Count ()} failures with local path for easy navigation:");
+				foreach (var failure in newFailures.OrderBy (v => v))
+					Console.WriteLine ($"    {failure.Location}: {failure.Message}");
+			}
+
+			Assert.IsEmpty (newFailures, "New Failures");
+			Assert.IsEmpty (fixedFailures, "Known failures that aren't failing anymore - remove these from the list of known failures");
+		}
+
+		static HashSet<string> knownFailuresMonoPInvokeCallback = new HashSet<string> {
+#if !NET8_0_OR_GREATER
+			"The method CoreFoundation.CFStream.OnCallback(System.IntPtr, System.IntPtr, System.IntPtr) has a MonoPInvokeCallback attribute and must be converted to an UnmanagedCallersOnly method.",
+#endif
+		};
 	}
 }
