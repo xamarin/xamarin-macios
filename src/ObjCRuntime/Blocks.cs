@@ -99,7 +99,7 @@ namespace ObjCRuntime {
 		/// The 'trampolineType' and 'trampolineMethod' must uniquely define the trampoline method (it will be looked up using reflection).
 		/// If there are multiple methods with the same name, use the overload that takes a MethodInfo instead.
 		/// </remarks>
-		public BlockLiteral (void *trampoline, object context, Type trampolineType, string trampolineMethod)
+		public BlockLiteral (void* trampoline, object context, Type trampolineType, string trampolineMethod)
 			: this (trampoline, context, FindTrampoline (trampolineType, trampolineMethod))
 		{
 		}
@@ -110,7 +110,7 @@ namespace ObjCRuntime {
 		/// <param name="trampoline">A function pointer that will be called when the block is called. This function must have an [UnmanagedCallersOnly] attribute.</param>
 		/// <param name="context">A context object that can be retrieved from the trampoline. This is typically a delegate to the managed function to call.</param>
 		/// <param name="trampolineMethod">The MethodInfo instance corresponding with the trampoline method.</param>
-		public BlockLiteral (void *trampoline, object context, MethodInfo trampolineMethod)
+		public BlockLiteral (void* trampoline, object context, MethodInfo trampolineMethod)
 			: this (trampoline, context, GetBlockSignature (trampoline, trampolineMethod))
 		{
 		}
@@ -193,7 +193,7 @@ namespace ObjCRuntime {
 			SetupBlockImpl (trampoline, target, safe, System.Text.Encoding.UTF8.GetBytes (signature));
 		}
 
-		void SetupBlockImpl (Delegate trampoline, Delegate target, bool safe, byte[] utf8Signature)
+		void SetupBlockImpl (Delegate trampoline, Delegate target, bool safe, byte [] utf8Signature)
 		{
 			var invoke = Marshal.GetFunctionPointerForDelegate (trampoline);
 			SetupFunctionPointerBlock (invoke, GetContext (trampoline, target, safe), utf8Signature);
@@ -208,7 +208,7 @@ namespace ObjCRuntime {
 			}
 		}
 
-		void SetupFunctionPointerBlock (IntPtr invokeMethod, object context, byte[] utf8Signature)
+		void SetupFunctionPointerBlock (IntPtr invokeMethod, object context, byte [] utf8Signature)
 		{
 			isa = NSConcreteStackBlock;
 			invoke = invokeMethod;
@@ -297,13 +297,13 @@ namespace ObjCRuntime {
 			}
 
 			if (block_descriptor != IntPtr.Zero) {
-				var xblock_descriptor = (XamarinBlockDescriptor *) block_descriptor;
-	#pragma warning disable 420
+				var xblock_descriptor = (XamarinBlockDescriptor*) block_descriptor;
+#pragma warning disable 420
 				// CS0420: A volatile field references will not be treated as volatile
 				// Documentation says: "A volatile field should not normally be passed using a ref or out parameter, since it will not be treated as volatile within the scope of the function. There are exceptions to this, such as when calling an interlocked API."
 				// So ignoring the warning, since it's a documented exception.
 				var rc = Interlocked.Decrement (ref xblock_descriptor->ref_count);
-	#pragma warning restore 420
+#pragma warning restore 420
 
 				if (rc == 0)
 					Marshal.FreeHGlobal (block_descriptor);
