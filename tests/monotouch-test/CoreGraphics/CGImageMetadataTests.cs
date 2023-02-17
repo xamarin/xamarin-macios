@@ -33,7 +33,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			var tags = new List<CGImageMetadataTag> ();
 			data.EnumerateTags (null, (key, tag) => {
 				keys.Add (key);
-				tags.Add (tags);
+				tags.Add (tag);
 				return true;
 			});
 			Assert.AreEqual (2, keys.Count (), "key count mismatch");
