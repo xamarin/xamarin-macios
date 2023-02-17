@@ -241,7 +241,7 @@ public class TypeManager {
 			throw ErrorHelper.CreateError (3, bindingTouch.CurrentPlatform);
 
 		Frameworks = bindingTouch.Frameworks;
-		
+
 		/* corlib */
 		System_Attribute = Lookup (corlibAssembly, "System", "Attribute");
 		System_Boolean = Lookup (corlibAssembly, "System", "Boolean");
