@@ -5,119 +5,115 @@ using System.Reflection;
 #nullable enable
 
 public class TypeManager {
-	Frameworks? Frameworks { get; set; }
+	Frameworks Frameworks { get; }
 
-	public Type? System_Attribute { get; private set; }
-	public Type? System_Boolean { get; private set; }
-	public Type? System_Byte { get; private set; }
-	public Type? System_Char { get; private set; }
-	public Type? System_Delegate { get; private set; }
-	public Type? System_Double { get; private set; }
-	public Type? System_Float { get; private set; }
-	public Type? System_Int16 { get; private set; }
-	public Type? System_Int32 { get; private set; }
-	public Type? System_Int64 { get; private set; }
-	public Type? System_IntPtr { get; private set; }
-	public Type? System_Object { get; private set; }
-	public Type? System_SByte { get; private set; }
-	public Type? System_String { get; private set; }
-	public Type? System_String_Array { get; private set; }
-	public Type? System_UInt16 { get; private set; }
-	public Type? System_UInt32 { get; private set; }
-	public Type? System_UInt64 { get; private set; }
-	public Type? System_UIntPtr { get; private set; }
-	public Type? System_Void { get; private set; }
+	public Type? System_Attribute { get; }
+	public Type? System_Boolean { get; }
+	public Type? System_Byte { get; }
+	public Type? System_Char { get; }
+	public Type? System_Delegate { get; }
+	public Type? System_Double { get; }
+	public Type? System_Float { get; }
+	public Type? System_Int16 { get; }
+	public Type? System_Int32 { get; }
+	public Type? System_Int64 { get; }
+	public Type? System_IntPtr { get; }
+	public Type? System_Object { get; }
+	public Type? System_SByte { get; }
+	public Type? System_String { get; }
+	public Type? System_String_Array { get; }
+	public Type? System_UInt16 { get; }
+	public Type? System_UInt32 { get; }
+	public Type? System_UInt64 { get; }
+	public Type? System_UIntPtr { get; }
+	public Type? System_Void { get; }
 
-	public Type? System_nint { get; private set; }
-	public Type? System_nuint { get; private set; }
-	public Type? System_nfloat { get; private set; }
+	public Type? System_nint { get; }
+	public Type? System_nuint { get; }
+	public Type? System_nfloat { get; }
 
 	/* fundamental */
-	public Type? NSObject { get; private set; }
-	public Type? INativeObject { get; private set; }
+	public Type? NSObject { get; }
+	public Type? INativeObject { get; }
 
 	/* objcruntime */
-	public Type? BlockLiteral { get; private set; }
-	public Type? Class { get; private set; }
-	public Type? Protocol { get; private set; }
-	public Type? Selector { get; private set; }
+	public Type? BlockLiteral { get; }
+	public Type? Class { get; }
+	public Type? Protocol { get; }
+	public Type? Selector { get; }
 
-	public Type? Constants { get; private set; }
+	public Type? Constants { get; }
 
 	/* Different binding types */
 
-	public Type? DictionaryContainerType { get; private set; }
+	public Type? DictionaryContainerType { get; }
 
-	public Type? ABAddressBook { get; private set; }
-	public Type? ABPerson { get; private set; }
-	public Type? ABRecord { get; private set; }
-	public Type? AudioBuffers { get; private set; }
-	public Type? AudioComponent { get; private set; }
-	public Type? AudioUnit { get; private set; }
-	public Type? AURenderEventEnumerator { get; private set; }
-	public Type? AVCaptureWhiteBalanceGains { get; private set; }
-	public Type? CATransform3D { get; private set; }
-	public Type? CFRunLoop { get; private set; }
-	public Type? CGAffineTransform { get; private set; }
-	public Type? CGColor { get; private set; }
-	public Type? CGColorSpace { get; private set; }
-	public Type? CGContext { get; private set; }
-	public Type? CGPDFDocument { get; private set; }
-	public Type? CGPDFPage { get; private set; }
-	public Type? CGGradient { get; private set; }
-	public Type? CGImage { get; private set; }
-	public Type? CGImageSource { get; private set; }
-	public Type? CGLayer { get; private set; }
-	public Type? CGLContext { get; private set; }
-	public Type? CGLPixelFormat { get; private set; }
-	public Type? CGPath { get; private set; }
-	public Type? CGVector { get; private set; }
-	public Type? CLLocationCoordinate2D { get; private set; }
-	public Type? CMAudioFormatDescription { get; private set; }
-	public Type? CMClock { get; private set; }
-	public Type? CMFormatDescription { get; private set; }
-	public Type? CMSampleBuffer { get; private set; }
-	public Type? CMTime { get; private set; }
-	public Type? CMTimebase { get; private set; }
-	public Type? CMTimeMapping { get; private set; }
-	public Type? CMTimeRange { get; private set; }
-	public Type? CMVideoFormatDescription { get; private set; }
-	public Type? CMVideoDimensions { get; private set; }
-	public Type? CVImageBuffer { get; private set; }
-	public Type? CVPixelBuffer { get; private set; }
-	public Type? CVPixelBufferPool { get; private set; }
-	public Type? DispatchQueue { get; private set; }
-	public Type? DispatchData { get; private set; }
-	public Type? MidiEndpoint { get; private set; }
-	public Type? MKCoordinateSpan { get; private set; }
-	public Type? MTAudioProcessingTap { get; private set; }
-	public Type? MusicSequence { get; private set; }
-	public Type? NSNumber { get; private set; }
-	public Type? NSRange { get; private set; }
-	public Type? NSString { get; private set; }
-	public Type? NSValue { get; private set; }
-	public Type? NSZone { get; private set; }
-	public Type? SCNMatrix4 { get; private set; }
-	public Type? SCNVector3 { get; private set; }
-	public Type? SCNVector4 { get; private set; }
-	public Type? SecAccessControl { get; private set; }
-	public Type? SecIdentity { get; private set; }
-	public Type? SecTrust { get; private set; }
-	public Type? SecProtocolMetadata { get; private set; }
-	public Type? SecProtocolOptions { get; private set; }
-	public Type? SecTrust2 { get; private set; }
-	public Type? SecIdentity2 { get; private set; }
-	public Type? UIEdgeInsets { get; private set; }
-	public Type? UIOffset { get; private set; }
-	public Type? NSDirectionalEdgeInsets { get; private set; }
+	public Type? ABAddressBook { get; }
+	public Type? ABPerson { get; }
+	public Type? ABRecord { get; }
+	public Type? AudioBuffers { get; }
+	public Type? AudioComponent { get; }
+	public Type? AudioUnit { get; }
+	public Type? AURenderEventEnumerator { get; }
+	public Type? AVCaptureWhiteBalanceGains { get; }
+	public Type? CATransform3D { get; }
+	public Type? CFRunLoop { get; }
+	public Type? CGAffineTransform { get; }
+	public Type? CGColor { get; }
+	public Type? CGColorSpace { get; }
+	public Type? CGContext { get; }
+	public Type? CGPDFDocument { get; }
+	public Type? CGPDFPage { get; }
+	public Type? CGGradient { get; }
+	public Type? CGImage { get; }
+	public Type? CGImageSource { get; }
+	public Type? CGLayer { get; }
+	public Type? CGLContext { get; }
+	public Type? CGLPixelFormat { get; }
+	public Type? CGPath { get; }
+	public Type? CGVector { get; }
+	public Type? CLLocationCoordinate2D { get; }
+	public Type? CMAudioFormatDescription { get; }
+	public Type? CMClock { get; }
+	public Type? CMFormatDescription { get; }
+	public Type? CMSampleBuffer { get; }
+	public Type? CMTime { get; }
+	public Type? CMTimebase { get; }
+	public Type? CMTimeMapping { get; }
+	public Type? CMTimeRange { get; }
+	public Type? CMVideoFormatDescription { get; }
+	public Type? CMVideoDimensions { get; }
+	public Type? CVImageBuffer { get; }
+	public Type? CVPixelBuffer { get; }
+	public Type? CVPixelBufferPool { get; }
+	public Type? DispatchQueue { get; }
+	public Type? DispatchData { get; }
+	public Type? MidiEndpoint { get; }
+	public Type? MKCoordinateSpan { get; }
+	public Type? MTAudioProcessingTap { get; }
+	public Type? MusicSequence { get; }
+	public Type? NSNumber { get; }
+	public Type? NSRange { get; }
+	public Type? NSString { get; }
+	public Type? NSValue { get; }
+	public Type? NSZone { get; }
+	public Type? SCNMatrix4 { get; }
+	public Type? SCNVector3 { get; }
+	public Type? SCNVector4 { get; }
+	public Type? SecAccessControl { get; }
+	public Type? SecIdentity { get; }
+	public Type? SecTrust { get; }
+	public Type? SecProtocolMetadata { get; }
+	public Type? SecProtocolOptions { get; }
+	public Type? SecTrust2 { get; }
+	public Type? SecIdentity2 { get; }
+	public Type? UIEdgeInsets { get; }
+	public Type? UIOffset { get; }
+	public Type? NSDirectionalEdgeInsets { get; }
 
-	public Type? CoreGraphics_CGPoint { get; private set; }
-	public Type? CoreGraphics_CGRect { get; private set; }
-	public Type? CoreGraphics_CGSize { get; private set; }
-
-	Assembly? apiAssembly;
-	Assembly? corlibAssembly;
-	Assembly? platformAssembly;
+	public Type? CoreGraphics_CGPoint { get; }
+	public Type? CoreGraphics_CGRect { get; }
+	public Type? CoreGraphics_CGSize { get; }
 
 	Dictionary<Type, string>? nsnumberReturnMap;
 	public Dictionary<Type, string> NSNumberReturnMap {
@@ -237,7 +233,7 @@ public class TypeManager {
 		return type.GenericTypeArguments [0];
 	}
 
-	public void Initialize (BindingTouch bindingTouch, Assembly api, Assembly corlib, Assembly platform)
+	public TypeManager (BindingTouch bindingTouch, Assembly apiAssembly, Assembly corlibAssembly, Assembly platformAssembly)
 	{
 		if (bindingTouch.universe is null)
 			throw ErrorHelper.CreateError (4, bindingTouch.CurrentPlatform);
@@ -245,11 +241,7 @@ public class TypeManager {
 			throw ErrorHelper.CreateError (3, bindingTouch.CurrentPlatform);
 
 		Frameworks = bindingTouch.Frameworks;
-
-		apiAssembly = api;
-		corlibAssembly = corlib;
-		platformAssembly = platform;
-
+		
 		/* corlib */
 		System_Attribute = Lookup (corlibAssembly, "System", "Attribute");
 		System_Boolean = Lookup (corlibAssembly, "System", "Boolean");
