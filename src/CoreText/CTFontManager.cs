@@ -789,12 +789,18 @@ namespace CoreText {
 		[iOS (13,0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern unsafe void CTFontManagerRequestFonts (/* CFArrayRef */ IntPtr fontDescriptors, ref BlockLiteral completionHandler);
+		static extern unsafe void CTFontManagerRequestFonts (/* CFArrayRef */ IntPtr fontDescriptors, BlockLiteral* completionHandler);
 
+#if !NET
 		internal delegate void InnerRequestFontsHandler (IntPtr block, IntPtr fontDescriptors);
 		static readonly InnerRequestFontsHandler requestCallback = TrampolineRequestFonts;
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (InnerRequestFontsHandler))]
+#endif
 		static unsafe void TrampolineRequestFonts (IntPtr block, /* CFArray */ IntPtr fontDescriptors)
 		{
 			var del = BlockLiteral.GetTarget<CTFontManagerRequestFontsHandler> (block);
@@ -820,10 +826,18 @@ namespace CoreText {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (completionHandler));
 
 			using (var arr = EnsureNonNullArray (fontDescriptors, nameof (fontDescriptors))) {
-				BlockLiteral block_handler = new BlockLiteral ();
-				block_handler.SetupBlockUnsafe (requestCallback, completionHandler);
-				CTFontManagerRequestFonts (arr.Handle, ref block_handler);
-				block_handler.CleanupBlock ();
+				unsafe {
+#if NET
+					delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolineRequestFonts;
+					using var block = new BlockLiteral (trampoline, completionHandler, typeof (CTFontManager), nameof (TrampolineRequestFonts));
+					CTFontManagerRequestFonts (arr.Handle, &block);
+#else
+					BlockLiteral block_handler = new BlockLiteral ();
+					block_handler.SetupBlockUnsafe (requestCallback, completionHandler);
+					CTFontManagerRequestFonts (arr.Handle, &block_handler);
+					block_handler.CleanupBlock ();
+#endif
+				}
 			}
 		}
 #endif
