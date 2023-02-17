@@ -39,7 +39,7 @@ namespace GeneratorTests {
 		public void SetUp ()
 		{
 			testType = typeof (NSAnimationDelegate);
-			bindingTouch = new();
+			bindingTouch = new ();
 			attributeManager = new (bindingTouch.Object);
 			nomenclator = new (attributeManager.Object);
 		}
