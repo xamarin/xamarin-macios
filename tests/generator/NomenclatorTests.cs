@@ -31,14 +31,16 @@ namespace GeneratorTests {
 		}
 
 		Type testType = typeof (object);
-		Mock<IAttributeManager> attributeManager;
+		Mock<BindingTouch> bindingTouch;
+		Mock<AttributeManager> attributeManager;
 		Nomenclator nomenclator;
 
 		[SetUp]
 		public void SetUp ()
 		{
 			testType = typeof (NSAnimationDelegate);
-			attributeManager = new ();
+			bindingTouch = new();
+			attributeManager = new (bindingTouch.Object);
 			nomenclator = new (attributeManager.Object);
 		}
 

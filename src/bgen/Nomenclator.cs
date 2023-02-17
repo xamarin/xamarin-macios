@@ -11,9 +11,9 @@ public class Nomenclator {
 	readonly HashSet<string> repeatedDelegateApiNames = new ();
 	readonly Dictionary<Type, int> trampolinesGenericVersions = new ();
 
-	readonly IAttributeManager attributeManager;
+	readonly AttributeManager attributeManager;
 
-	public Nomenclator (IAttributeManager attributeManager)
+	public Nomenclator (AttributeManager attributeManager)
 	{
 		this.attributeManager = attributeManager;
 	}
