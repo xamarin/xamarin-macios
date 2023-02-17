@@ -2389,7 +2389,7 @@ public partial class Generator : IMemberGatherer {
 		return aa.Version > min;
 #endif
 	}
-	
+
 	HashSet<string> GetFrameworkListForPlatform (PlatformName platform)
 	{
 		HashSet<string> frameworkList = null;
@@ -2484,7 +2484,7 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 	}
-	
+
 	// This assumes the compiler implements property methods as get_ or set_ prefixes
 	static PropertyInfo GetProperyFromGetSetMethod (MethodInfo method)
 	{

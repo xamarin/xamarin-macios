@@ -80,7 +80,7 @@ public static class AttributeFactory {
 #endif
 		return CreateNewAttribute (UnavailableAttributeType, ctorTypes, ctorValues);
 	}
-	
+
 	public static AvailabilityBaseAttribute CreateNoVersionSupportedAttribute (PlatformName platform)
 	{
 		switch (platform) {
@@ -95,7 +95,7 @@ public static class AttributeFactory {
 			throw new NotImplementedException ();
 		}
 	}
-	
+
 	public static AvailabilityBaseAttribute CreateUnsupportedAttribute (PlatformName platform)
 	{
 		switch (platform) {
@@ -110,7 +110,7 @@ public static class AttributeFactory {
 			throw new NotImplementedException ();
 		}
 	}
-	
+
 	static AvailabilityBaseAttribute CloneFromOtherPlatform (AvailabilityBaseAttribute attr, PlatformName platform)
 	{
 		if (attr.Version is null) {
@@ -163,7 +163,7 @@ public static class AttributeFactory {
 			throw new NotImplementedException ();
 		}
 	}
-	
+
 	// Find the introduced attribute with the highest version between the target list and the additions.
 	// If the destination list has an introduced attribute, replace it if it's not the one with the highest version
 	// If the destination list does not have an introduced attribute, then add one if there's one in the additions and there's not already an unavailable attribute.
@@ -193,18 +193,18 @@ public static class AttributeFactory {
 			}
 		}
 	}
-	
+
 	static bool IsValidToCopyTo (List<AvailabilityBaseAttribute> dest, AvailabilityBaseAttribute addition, bool allowIntroducedOnUnavailable = false)
 	{
 		// If we are duplicating an existing attribute
 		if (dest.Any (d => d.Platform == addition.Platform && d.AvailabilityKind == addition.AvailabilityKind))
 			return false;
 		// If we are introduced and there is already an Unavailable 
-		return allowIntroducedOnUnavailable 
-		       || (addition is not IntroducedAttribute 
-		           || !dest.Any (d => d.Platform == addition.Platform && d.AvailabilityKind == AvailabilityKind.Unavailable));
+		return allowIntroducedOnUnavailable
+			   || (addition is not IntroducedAttribute
+				   || !dest.Any (d => d.Platform == addition.Platform && d.AvailabilityKind == AvailabilityKind.Unavailable));
 	}
-	
+
 	public static void CopyValidAttributes (List<AvailabilityBaseAttribute> dest, IEnumerable<AvailabilityBaseAttribute> additions)
 	{
 		foreach (var addition in additions.Where (a => IsValidToCopyTo (dest, a))) {

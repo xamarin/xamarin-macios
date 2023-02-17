@@ -8,7 +8,7 @@ using ObjCRuntime;
 #nullable enable
 
 public partial class Generator {
-	
+
 	AvailabilityBaseAttribute [] GetPlatformAttributesToPrint (MemberInfo mi, MemberInfo? context, MemberInfo? inlinedType)
 	{
 		// Attributes are directly on the member
