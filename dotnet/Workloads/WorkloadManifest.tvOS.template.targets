@@ -10,6 +10,7 @@
 	</ItemGroup>
 
 	<PropertyGroup Condition=" '$(TargetPlatformIdentifier)' == 'tvOS' and $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0')) ">
-		<AfterMicrosoftNETSdkTargets>$(AfterMicrosoftNETSdkTargets);$(_XamarinSdkRootDirectory)..\@NUGET_VERSION_NO_METADATA@\targets\Xamarin.Shared.Sdk.MultiTarget.targets</AfterMicrosoftNETSdkTargets>
+		<_MultiTargetTargetsFile>$(_XamarinSdkRootDirectory)..\@NUGET_VERSION_NO_METADATA@\targets\Xamarin.Shared.Sdk.MultiTarget.targets</_MultiTargetTargetsFile>
+		<AfterMicrosoftNETSdkTargets Condition="Exists('$(_MultiTargetTargetsFile)')">$(AfterMicrosoftNETSdkTargets);$(_MultiTargetTargetsFile)</AfterMicrosoftNETSdkTargets>
 	</PropertyGroup>
 </Project>

@@ -37,6 +37,7 @@
     <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.758" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CollectionsExtensionsTests.cs" />
     <Compile Include="ErrorTests.cs" />
     <Compile Include="BGenTool.cs" />
     <Compile Include="..\common\ExecutionHelper.cs">
@@ -64,6 +65,7 @@
       <Link>BinLog.cs</Link>
     </Compile>
     <Compile Include="NullabilityContextTests.cs" />
+    <Compile Include="PlatformNameExtensionsTests.cs" />
     <Compile Include="StringExtensionTests.cs" />
   </ItemGroup>
   <ItemGroup>

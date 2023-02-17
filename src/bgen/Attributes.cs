@@ -962,7 +962,7 @@ public abstract class AvailabilityBaseAttribute : Attribute {
 #if BGENERATOR
 		// If the version is less than or equal to the min version for the platform in question,
 		// the version is redundant, so just skip it.
-		if (Version is not null && Version <= Xamarin.SdkVersions.GetMinVersion (Generator.AsApplePlatform (Platform)))
+		if (Version is not null && Version <= Xamarin.SdkVersions.GetMinVersion (Platform.AsApplePlatform ()))
 			Version = null;
 #endif
 

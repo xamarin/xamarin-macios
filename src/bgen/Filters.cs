@@ -6,11 +6,12 @@ using System.Reflection;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 public partial class Generator {
+	readonly List<string> filters = new ();
 
-	List<string> filters = new List<string> ();
-
-	string GetVisibility (MethodAttributes attributes)
+	static string GetVisibility (MethodAttributes attributes)
 	{
 		if ((attributes & MethodAttributes.FamORAssem) == MethodAttributes.FamORAssem)
 			return "protected internal ";
@@ -153,7 +154,7 @@ public partial class Generator {
 		}
 	}
 
-	void GenerateProperties (Type type, Type originalType = null, bool fromProtocol = false)
+	void GenerateProperties (Type type, Type? originalType = null, bool fromProtocol = false)
 	{
 		foreach (var p in type.GetProperties (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)) {
 			if (p.IsUnavailable (this))
@@ -168,7 +169,7 @@ public partial class Generator {
 
 			// this is a bit special since CoreImage filter protocols are much newer than the our generated, key-based bindings
 			// so we do not want to advertise the protocol versions since most properties would be incorrectly advertised
-			PrintPropertyAttributes (p, originalType, skipTypeInjection: export != null);
+			PrintPropertyAttributes (p, originalType, skipTypeInjection: export is not null);
 			print_generated_code ();
 
 			var ptype = p.PropertyType.Name;
@@ -206,22 +207,22 @@ public partial class Generator {
 
 			var name = AttributeManager.GetCustomAttribute<CoreImageFilterPropertyAttribute> (p)?.Name;
 			// we can skip the name when it's identical to a protocol selector
-			if (name == null) {
-				if (export == null)
+			if (name is null) {
+				if (export is null)
 					throw new BindingException (1074, true, type.Name, p.Name);
 
 				var sel = export.Selector;
 				if (sel.StartsWith ("input", StringComparison.Ordinal))
 					name = sel;
 				else
-					name = "input" + Capitalize (sel);
+					name = "input" + sel.Capitalize ();
 			}
 
-			if (p.GetGetMethod () != null) {
+			if (p.GetGetMethod () is not null) {
 				PrintFilterExport (p, export, setter: false);
 				GenerateFilterGetter (ptype, name);
 			}
-			if (p.GetSetMethod () != null) {
+			if (p.GetSetMethod () is not null) {
 				PrintFilterExport (p, export, setter: true);
 				GenerateFilterSetter (ptype, name);
 			}
@@ -231,14 +232,14 @@ public partial class Generator {
 		}
 	}
 
-	void PrintFilterExport (PropertyInfo p, ExportAttribute export, bool setter)
+	void PrintFilterExport (PropertyInfo p, ExportAttribute? export, bool setter)
 	{
-		if (export == null)
+		if (export is null)
 			return;
 
 		var selector = export.Selector;
 		if (setter)
-			selector = "set" + Capitalize (selector) + ":";
+			selector = "set" + selector.Capitalize () + ":";
 
 		if (export.ArgumentSemantic != ArgumentSemantic.None && !p.PropertyType.IsPrimitive)
 			print ($"[Export (\"{selector}\", ArgumentSemantic.{export.ArgumentSemantic})]");
