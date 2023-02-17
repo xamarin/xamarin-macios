@@ -6825,7 +6825,7 @@ public partial class Generator : IMemberGatherer {
 							PrintObsoleteAttributes (mi);
 
 							if (bta.Singleton && mi.GetParameters ().Length == 0 || mi.GetParameters ().Length == 1)
-								print ("public event EventHandler {0} {{", nomenclator.GetEventName (mi).CamelCase ());
+								print ("public event EventHandler {0} {{", Nomenclator.GetEventName (mi).CamelCase ());
 							else
 								print ("public event EventHandler<{0}> {1} {{", Nomenclator.GetEventArgName (mi), Nomenclator.GetEventName (mi).CamelCase ());
 							print ("\tadd {{ Ensure{0} ({1})!.{2} += value; }}", dtype.Name, ensureArg, miname);
