@@ -111,6 +111,8 @@
     <Compile Include="..\src\bgen\GeneratedType.cs" />
     <Compile Include="..\src\bgen\GeneratedTypes.cs" />
     <Compile Include="..\src\bgen\Generator.cs" />
+    <Compile Include="..\src\bgen\Generator.Classic.cs" />
+    <Compile Include="..\src\bgen\Generator.NET.cs" />
     <Compile Include="..\src\bgen\MarshalInfo.cs" />
     <Compile Include="..\src\bgen\MarshalTypeList.cs" />
     <Compile Include="..\src\bgen\MarshalType.cs" />

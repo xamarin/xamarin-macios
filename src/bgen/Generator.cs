@@ -2389,90 +2389,7 @@ public partial class Generator : IMemberGatherer {
 		return aa.Version > min;
 #endif
 	}
-
-	static AvailabilityBaseAttribute CloneFromOtherPlatform (AvailabilityBaseAttribute attr, PlatformName platform)
-	{
-		if (attr.Version is null) {
-			switch (attr.AvailabilityKind) {
-			case AvailabilityKind.Introduced:
-				return new IntroducedAttribute (platform, message: attr.Message);
-			case AvailabilityKind.Deprecated:
-				return new DeprecatedAttribute (platform, message: attr.Message);
-			case AvailabilityKind.Obsoleted:
-				return new ObsoletedAttribute (platform, message: attr.Message);
-			case AvailabilityKind.Unavailable:
-				return new UnavailableAttribute (platform, message: attr.Message);
-			default:
-				throw new NotImplementedException ();
-			}
-		} else {
-			// Due to the absurd API of Version, you can not pass a -1 to the build constructor
-			// nor can you coerse to 0, as that will fail with "16.0.0 <= 16.0" => false in the registrar
-			// So determine if the build is -1, and use the 2 or 3 param ctor...
-			var version = attr.Version;
-			var minimum = Xamarin.SdkVersions.GetMinVersion (platform.AsApplePlatform ());
-			if (version < minimum)
-				version = minimum;
-			if (version.Build == -1) {
-				switch (attr.AvailabilityKind) {
-				case AvailabilityKind.Introduced:
-					return new IntroducedAttribute (platform, version.Major, version.Minor, message: attr.Message);
-				case AvailabilityKind.Deprecated:
-					return new DeprecatedAttribute (platform, version.Major, version.Minor, message: attr.Message);
-				case AvailabilityKind.Obsoleted:
-					return new ObsoletedAttribute (platform, version.Major, version.Minor, message: attr.Message);
-				case AvailabilityKind.Unavailable:
-					return new UnavailableAttribute (platform, message: attr.Message);
-				default:
-					throw new NotImplementedException ();
-				}
-			} else {
-				switch (attr.AvailabilityKind) {
-				case AvailabilityKind.Introduced:
-					return new IntroducedAttribute (platform, version.Major, version.Minor, version.Build, message: attr.Message);
-				case AvailabilityKind.Deprecated:
-					return new DeprecatedAttribute (platform, version.Major, version.Minor, version.Build, message: attr.Message);
-				case AvailabilityKind.Obsoleted:
-					return new ObsoletedAttribute (platform, version.Major, version.Minor, version.Build, message: attr.Message);
-				case AvailabilityKind.Unavailable:
-					return new UnavailableAttribute (platform, message: attr.Message);
-				default:
-					throw new NotImplementedException ();
-				}
-			}
-		}
-	}
-
-	static AvailabilityBaseAttribute CreateNoVersionSupportedAttribute (PlatformName platform)
-	{
-		switch (platform) {
-		case PlatformName.iOS:
-		case PlatformName.TvOS:
-		case PlatformName.MacOSX:
-		case PlatformName.MacCatalyst:
-			return new IntroducedAttribute (platform);
-		case PlatformName.WatchOS:
-			throw new InvalidOperationException ("CreateNoVersionSupportedAttribute for WatchOS never makes sense");
-		default:
-			throw new NotImplementedException ();
-		}
-	}
-
-	static AvailabilityBaseAttribute CreateUnsupportedAttribute (PlatformName platform)
-	{
-		switch (platform) {
-		case PlatformName.iOS:
-		case PlatformName.MacCatalyst:
-		case PlatformName.MacOSX:
-		case PlatformName.TvOS:
-			return new UnavailableAttribute (platform);
-		case PlatformName.WatchOS:
-			throw new InvalidOperationException ("CreateUnsupportedAttribute for WatchOS never makes sense");
-		default:
-			throw new NotImplementedException ();
-		}
-	}
-
+	
 	HashSet<string> GetFrameworkListForPlatform (PlatformName platform)
 	{
 		HashSet<string> frameworkList = null;
@@ -2523,7 +2440,7 @@ public partial class Generator : IMemberGatherer {
 		// add a supported introduced (without version) since it was "unlisted"
 		foreach (var platform in BindingTouch.AllPlatformNames) {
 			if (!PlatformMarkedUnavailable (platform, availability) && IsInSupportedFramework (containingClass, platform)) {
-				availability.Add (CreateNoVersionSupportedAttribute (platform));
+				availability.Add (AttributeFactory.CreateNoVersionSupportedAttribute (platform));
 			}
 		}
 	}
@@ -2562,61 +2479,12 @@ public partial class Generator : IMemberGatherer {
 			// For each attribute we dropped, if we don't have an existing non-introduced, create one
 			foreach (var platform in droppedPlatforms) {
 				if (!memberAvailability.Any (a => platform == a.Platform && a.AvailabilityKind != AvailabilityKind.Introduced)) {
-					memberAvailability.Add (CreateUnsupportedAttribute (platform));
+					memberAvailability.Add (AttributeFactory.CreateUnsupportedAttribute (platform));
 				}
 			}
 		}
 	}
-
-	static bool IsValidToCopyTo (List<AvailabilityBaseAttribute> dest, AvailabilityBaseAttribute addition, bool allowIntroducedOnUnavailable = false)
-	{
-		// If we are duplicating an existing attribute
-		if (dest.Any (d => d.Platform == addition.Platform && d.AvailabilityKind == addition.AvailabilityKind))
-			return false;
-		// If we are introduced and there is already an Unavailable 
-		if (!allowIntroducedOnUnavailable && (addition is IntroducedAttribute && dest.Any (d => d.Platform == addition.Platform && d.AvailabilityKind == AvailabilityKind.Unavailable)))
-			return false;
-		return true;
-	}
-
-
-	static void CopyValidAttributes (List<AvailabilityBaseAttribute> dest, IEnumerable<AvailabilityBaseAttribute> additions)
-	{
-		foreach (var addition in additions.Where (a => IsValidToCopyTo (dest, a))) {
-			dest.Add (CloneFromOtherPlatform (addition, addition.Platform));
-		}
-	}
-
-	// Find the introduced attribute with the highest version between the target list and the additions.
-	// If the destination list has an introduced attribute, replace it if it's not the one with the highest version
-	// If the destination list does not have an introduced attribute, then add one if there's one in the additions and there's not already an unavailable attribute.
-	static void FindHighestIntroducedAttributes (List<AvailabilityBaseAttribute> dest, IEnumerable<AvailabilityBaseAttribute> additions)
-	{
-		if (!additions.Any ())
-			return;
-
-		foreach (var platform in BindingTouch.AllPlatformNames) {
-			// find the availability attribute with the highest version we're trying to add
-			var latestAddition = additions
-				.Where (v => v.AvailabilityKind == AvailabilityKind.Introduced && v.Platform == platform)
-				.OrderBy (v => v.Version)
-				.LastOrDefault ();
-			if (latestAddition is null)
-				continue;
-
-			var added = CloneFromOtherPlatform (latestAddition, latestAddition.Platform);
-			var idx = dest.FindIndex (v => v.Platform == platform && v.AvailabilityKind == AvailabilityKind.Introduced);
-			if (idx == -1) {
-				// no existing introduced attribute: add it unless there's already an unavailable attribute
-				if (!dest.Any (v => v.Platform == platform && v.AvailabilityKind == AvailabilityKind.Unavailable))
-					dest.Add (added);
-			} else if (added.Version > dest [idx].Version) {
-				// replace any existing introduced attribute if the existing version is lower than the added one
-				dest [idx] = added;
-			}
-		}
-	}
-
+	
 	// This assumes the compiler implements property methods as get_ or set_ prefixes
 	static PropertyInfo GetProperyFromGetSetMethod (MethodInfo method)
 	{
@@ -2660,83 +2528,6 @@ public partial class Generator : IMemberGatherer {
 			}
 			context = parentContext;
 		}
-	}
-
-	AvailabilityBaseAttribute [] GetPlatformAttributesToPrint (MemberInfo mi, MemberInfo context, MemberInfo inlinedType)
-	{
-		// Attributes are directly on the member
-		List<AvailabilityBaseAttribute> memberAvailability = AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (mi).ToList ();
-
-		// Due to differences between Xamarin and NET6 availability attributes, we have to synthesize many duplicates for NET6
-		// See https://github.com/xamarin/xamarin-macios/issues/10170 for details
-#if NET
-		if (context is null)
-			context = FindContainingContext (mi);
-		// Attributes on the _target_ context, the class itself or the target of the protocol inlining
-		List<AvailabilityBaseAttribute> parentContextAvailability = GetAllParentAttributes (context);
-		// (Optional) Attributes from the inlined protocol type itself
-		List<AvailabilityBaseAttribute> inlinedTypeAvailability = inlinedType != null ? GetAllParentAttributes (inlinedType) : null;
-
-		// We must consider attributes if we have any on our type, or if we're inlining and that inlined type has attributes
-		// If neither are true, we have zero attributes that are relevant
-		bool shouldConsiderAttributes = memberAvailability.Any () || inlinedTypeAvailability != null && inlinedTypeAvailability.Any ();
-		if (shouldConsiderAttributes) {
-			// We will consider any inlinedType attributes first, if any, before any from our parent context
-			List<AvailabilityBaseAttribute> availabilityToConsider = new List<AvailabilityBaseAttribute> ();
-			if (inlinedTypeAvailability != null) {
-				availabilityToConsider.AddRange (inlinedTypeAvailability);
-				// Don't copy parent attributes if the conflict with the type we're inlining members into
-				// Example: don't copy Introduced on top of Unavailable.
-				CopyValidAttributes (availabilityToConsider, parentContextAvailability);
-				FindHighestIntroducedAttributes (availabilityToConsider, parentContextAvailability);
-			} else {
-				availabilityToConsider.AddRange (parentContextAvailability);
-			}
-
-			// We do not support Watch, so strip from both our input sources before any processing
-			memberAvailability = memberAvailability.Where (x => x.Platform != PlatformName.WatchOS).ToList ();
-			availabilityToConsider = availabilityToConsider.Where (x => x.Platform != PlatformName.WatchOS).ToList ();
-
-			// Add any implied non-catalyst introduced (Catalyst will come later)
-			AddUnlistedAvailability (context, availabilityToConsider);
-
-			// Copy down any unavailable from the parent before expanding, since a [NoMacCatalyst] on the type trumps [iOS] on a member
-			CopyValidAttributes (memberAvailability, availabilityToConsider.Where (attr => attr.AvailabilityKind != AvailabilityKind.Introduced));
-
-			if (inlinedType is not null && inlinedType != mi.DeclaringType && memberAvailability.Count > 1) {
-				// We might have gotten conflicting availability attributes for inlined members, where the inlined member
-				// might be available on a platform the target type isn't. The target type's unavailability will come
-				// later in the list, which means that if we have an unavailable attribute after an introduced attribute,
-				// then we need to remove the introduced attribute.
-				for (var i = memberAvailability.Count - 1; i >= 0; i--) {
-					if (memberAvailability [i].AvailabilityKind != AvailabilityKind.Unavailable)
-						continue;
-					for (var k = i - 1; k >= 0; k--) {
-						if (memberAvailability [k].AvailabilityKind == AvailabilityKind.Introduced && memberAvailability [k].Platform == memberAvailability [i].Platform) {
-							memberAvailability.RemoveAt (k);
-							i--;
-						}
-					}
-				}
-			}
-
-			// Now copy it down introduced from the parent
-			FindHighestIntroducedAttributes (memberAvailability, availabilityToConsider.Where (attr => attr.AvailabilityKind == AvailabilityKind.Introduced));
-
-			if (!BindThirdPartyLibrary) {
-				// If all of this implication gives us something silly, like being introduced
-				// on a type that is on a namespace we don't support, ignore those Supported
-				StripIntroducedOnNamespaceNotIncluded (memberAvailability, context);
-				if (inlinedType != null) {
-					StripIntroducedOnNamespaceNotIncluded (memberAvailability, inlinedType);
-				}
-			}
-
-			// Remove any duplicates attributes as well
-			memberAvailability = memberAvailability.Distinct ().ToList ();
-		}
-#endif
-		return memberAvailability.ToArray ();
 	}
 
 	public bool PrintPlatformAttributes (MemberInfo mi, Type inlinedType = null)
