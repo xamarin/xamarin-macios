@@ -28,14 +28,14 @@ public class MarshalInfo {
 		ZeroCopyStringMarshal = (Type == Generator.TypeManager.System_String) && PlainString == false && !Generator.AttributeManager.HasAttribute<DisableZeroCopyAttribute> (pi) && generator.type_wants_zero_copy;
 		if (ZeroCopyStringMarshal && Generator.AttributeManager.HasAttribute<DisableZeroCopyAttribute> (mi))
 			ZeroCopyStringMarshal = false;
-		IsOut = TypeManager.IsOutParameter (pi);
+		IsOut = pi.IsOut;
 	}
 
 	// Used to return values
 	public MarshalInfo (Generator generator, MethodInfo mi)
 	{
 		this.Generator = generator;
-		PlainString = Generator.AttributeManager.HasAttribute<PlainStringAttribute> (AttributeManager.GetReturnTypeCustomAttributes (mi));
+		PlainString = Generator.AttributeManager.HasAttribute<PlainStringAttribute> (mi.ReturnParameter);
 		Type = mi.ReturnType;
 	}
 }

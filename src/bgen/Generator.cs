@@ -62,6 +62,14 @@ public partial class Generator : IMemberGatherer {
 	Frameworks Frameworks { get { return BindingTouch.Frameworks; } }
 	public TypeManager TypeManager { get { return BindingTouch.TypeManager; } }
 	public AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
+
+	Nomenclator nomenclator;
+	Nomenclator Nomenclator {
+		get {
+			nomenclator ??= new (AttributeManager);
+			return nomenclator;
+		}
+	}
 	public GeneratedTypes GeneratedTypes;
 	List<Exception> exceptions = new List<Exception> ();
 
@@ -71,9 +79,8 @@ public partial class Generator : IMemberGatherer {
 	Dictionary<string, int> selector_use = new Dictionary<string, int> ();
 	Dictionary<string, string> selector_names = new Dictionary<string, string> ();
 	Dictionary<string, string> send_methods = new Dictionary<string, string> ();
-	List<MarshalType> marshal_types = new List<MarshalType> ();
+	readonly MarshalTypeList marshalTypes = new ();
 	Dictionary<Type, TrampolineInfo> trampolines = new Dictionary<Type, TrampolineInfo> ();
-	Dictionary<Type, int> trampolines_generic_versions = new Dictionary<Type, int> ();
 	Dictionary<Type, Type> notification_event_arg_types = new Dictionary<Type, Type> ();
 	Dictionary<string, string> libraries = new Dictionary<string, string> (); // <LibraryName, libraryPath>
 
@@ -87,41 +94,12 @@ public partial class Generator : IMemberGatherer {
 	Dictionary<string, MethodInfo> delegate_types = new Dictionary<string, MethodInfo> ();
 
 	public PlatformName CurrentPlatform { get { return BindingTouch.CurrentPlatform; } }
+	public int XamcoreVersion => CurrentPlatform.GetXamcoreVersion ();
+	public string ApplicationClassName => CurrentPlatform.GetApplicationClassName ();
+	public string CoreImageMap => CurrentPlatform.GetCoreImageMap ();
+	public string CoreServicesMap => CurrentPlatform.GetCoreServicesMap ();
+	public string PDFKitMap => CurrentPlatform.GetPDFKitMap ();
 
-	public string ApplicationClassName {
-		get {
-			switch (CurrentPlatform) {
-			case PlatformName.iOS:
-			case PlatformName.WatchOS:
-			case PlatformName.TvOS:
-			case PlatformName.MacCatalyst:
-				return "UIApplication";
-			case PlatformName.MacOSX:
-				return "NSApplication";
-			default:
-				throw new BindingException (1047, CurrentPlatform);
-			}
-		}
-	}
-
-	public int XamcoreVersion {
-		get {
-#if NET
-			return 4;
-#else
-			switch (CurrentPlatform) {
-			case PlatformName.MacOSX:
-			case PlatformName.iOS:
-				return 2;
-			case PlatformName.TvOS:
-			case PlatformName.WatchOS:
-				return 3;
-			default:
-				return 4;
-			}
-#endif
-		}
-	}
 	Type [] types, strong_dictionaries;
 	bool debug;
 	bool external;
@@ -130,56 +108,6 @@ public partial class Generator : IMemberGatherer {
 
 	public NamespaceManager NamespaceManager {
 		get { return ns; }
-	}
-
-	public class MarshalType {
-		public Type Type;
-		public string Encoding;
-		public string ParameterMarshal;
-		public string CreateFromRet;
-		public string ClosingCreate;
-
-		public MarshalType (Type t, string encode = null, string fetch = null, string create = null, string closingCreate = ")")
-		{
-			Type = t;
-			Encoding = encode ?? Generator.NativeHandleType;
-			ParameterMarshal = fetch ?? "{0}.Handle";
-			if (create == null) {
-				CreateFromRet = $"Runtime.GetINativeObject<global::{t.FullName}> (";
-				ClosingCreate = ", false)!";
-			} else {
-				CreateFromRet = create;
-				ClosingCreate = closingCreate;
-			}
-		}
-
-		//
-		// When you use this constructor, the marshaling defaults to:
-		// Marshal type like this:
-		//   Encoding = IntPtr
-		//   Getting the underlying representation: using the .Handle property
-		//   Intantiating the object: creates a new object by passing the handle to the type.
-		//
-		public static implicit operator MarshalType (Type type)
-		{
-			return new MarshalType (type);
-		}
-	}
-
-	public bool LookupMarshal (Type t, out MarshalType res)
-	{
-		res = null;
-		// quick out for common (and easy to detect) cases
-		if (t.IsArray || t.IsByRef || t.IsPrimitive)
-			return false;
-		foreach (var mt in marshal_types) {
-			// full name is required because some types (e.g. CVPixelBuffer) are now also in core.dll
-			if (mt.Type.FullName == t.FullName) {
-				res = mt;
-				return true;
-			}
-		}
-		return false;
 	}
 
 	//
@@ -196,52 +124,6 @@ public partial class Generator : IMemberGatherer {
 	public string BaseDir { get { return basedir; } set { basedir = value; } }
 	string basedir;
 	HashSet<string> generated_files = new HashSet<string> ();
-
-	string CoreImageMap {
-		get {
-			switch (CurrentPlatform) {
-			case PlatformName.iOS:
-			case PlatformName.WatchOS:
-			case PlatformName.TvOS:
-			case PlatformName.MacCatalyst:
-				return "CoreImage";
-			case PlatformName.MacOSX:
-				return "Quartz";
-			default:
-				throw new BindingException (1047, CurrentPlatform);
-			}
-		}
-	}
-
-	string CoreServicesMap {
-		get {
-			switch (CurrentPlatform) {
-			case PlatformName.iOS:
-			case PlatformName.WatchOS:
-			case PlatformName.TvOS:
-			case PlatformName.MacCatalyst:
-				return "MobileCoreServices";
-			case PlatformName.MacOSX:
-				return "CoreServices";
-			default:
-				throw new BindingException (1047, CurrentPlatform);
-			}
-		}
-	}
-
-	string PDFKitMap {
-		get {
-			switch (CurrentPlatform) {
-			case PlatformName.iOS:
-			case PlatformName.MacCatalyst:
-				return "PDFKit";
-			case PlatformName.MacOSX:
-				return "Quartz";
-			default:
-				throw new BindingException (1047, CurrentPlatform);
-			}
-		}
-	}
 
 	//
 	// We inject thread checks to MonoTouch.UIKit types, unless there is a [ThreadSafe] attribuet on the type.
@@ -386,7 +268,7 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		MarshalType mt;
-		if (LookupMarshal (mai.Type, out mt))
+		if (marshalTypes.TryGetMarshalType (mai.Type, out mt))
 			return mt.Encoding;
 
 		if (mai.Type.IsValueType)
@@ -790,20 +672,6 @@ public partial class Generator : IMemberGatherer {
 		return true;
 	}
 
-	public string MakeTrampolineName (Type t)
-	{
-		var trampoline_name = t.Name.Replace ("`", "Arity");
-		if (t.IsGenericType) {
-			var gdef = t.GetGenericTypeDefinition ();
-
-			if (!trampolines_generic_versions.ContainsKey (gdef))
-				trampolines_generic_versions.Add (gdef, 0);
-
-			trampoline_name = trampoline_name + "V" + trampolines_generic_versions [gdef]++;
-		}
-		return trampoline_name;
-	}
-
 	//
 	// MakeTrampoline: processes a delegate type and registers a TrampolineInfo with all the information
 	// necessary to create trampolines that allow Objective-C blocks to call C# code, and C# code to call
@@ -974,7 +842,7 @@ public partial class Generator : IMemberGatherer {
 				}
 				if (AttributeManager.HasAttribute<BlockCallbackAttribute> (pi)) {
 					pars.AppendFormat ("{1} {0}", safe_name, NativeHandleType);
-					invoke.AppendFormat ("NID{0}.Create ({1})!", MakeTrampolineName (pi.ParameterType), safe_name);
+					invoke.AppendFormat ("NID{0}.Create ({1})!", Nomenclator.GetTrampolineName (pi.ParameterType), safe_name);
 					// The trampoline will eventually be generated in the final loop
 				} else {
 					if (!AttributeManager.HasAttribute<CCallbackAttribute> (pi)) {
@@ -995,7 +863,7 @@ public partial class Generator : IMemberGatherer {
 
 		var rt = mi.ReturnType;
 		var rts = IsNativeEnum (rt) ? "var" : RenderType (rt);
-		var trampoline_name = MakeTrampolineName (t);
+		var trampoline_name = Nomenclator.GetTrampolineName (t);
 		var ti = new TrampolineInfo (userDelegate: FormatType (null, t),
 						 delegateName: "D" + trampoline_name,
 						 trampolineName: "T" + trampoline_name,
@@ -1074,7 +942,7 @@ public partial class Generator : IMemberGatherer {
 			return safe_name;
 
 		MarshalType mt;
-		if (LookupMarshal (pi.ParameterType, out mt)) {
+		if (marshalTypes.TryGetMarshalType (pi.ParameterType, out mt)) {
 			if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi))
 				return safe_name + "__handle__";
 			return String.Format (mt.ParameterMarshal, safe_name);
@@ -1097,7 +965,7 @@ public partial class Generator : IMemberGatherer {
 			if (nullable != null) {
 				return "converted";
 			} else if (et.IsValueType)
-				return (TypeManager.IsOutParameter (pi) ? "out " : "ref ") + safe_name;
+				return (pi.IsOut ? "out " : "ref ") + safe_name;
 		}
 
 		if (pi.ParameterType.IsSubclassOf (TypeManager.System_Delegate)) {
@@ -1150,17 +1018,6 @@ public partial class Generator : IMemberGatherer {
 	public BindAttribute GetBindAttribute (MethodInfo mi)
 	{
 		return AttributeManager.GetCustomAttribute<BindAttribute> (mi);
-	}
-
-	public bool HasAttribute<T> (ICustomAttributeProvider i, Attribute [] attributes) where T : Attribute
-	{
-		if (attributes == null)
-			return AttributeManager.HasAttribute<T> (i);
-		else
-			foreach (var a in attributes)
-				if (a.GetType () == typeof (T))
-					return true;
-		return false;
 	}
 
 	public bool ShouldMarshalNativeExceptions (MethodInfo mi)
@@ -1532,77 +1389,7 @@ public partial class Generator : IMemberGatherer {
 	public void Go ()
 	{
 		GeneratedTypes = new GeneratedTypes (this);
-
-		marshal_types.Add (new MarshalType (TypeManager.NSObject, create: "Runtime.GetNSObject (", closingCreate: ")!"));
-		marshal_types.Add (new MarshalType (TypeManager.Selector, create: "Selector.FromHandle (", closingCreate: ")!"));
-		marshal_types.Add (new MarshalType (TypeManager.BlockLiteral, "BlockLiteral", "{0}", "THIS_IS_BROKEN"));
-		if (TypeManager.MusicSequence != null)
-			marshal_types.Add (new MarshalType (TypeManager.MusicSequence, create: "global::AudioToolbox.MusicSequence.Lookup ("));
-		marshal_types.Add (TypeManager.CGColor);
-		marshal_types.Add (TypeManager.CGPath);
-		marshal_types.Add (TypeManager.CGGradient);
-		marshal_types.Add (TypeManager.CGContext);
-		marshal_types.Add (TypeManager.CGPDFDocument);
-		marshal_types.Add (TypeManager.CGPDFPage);
-		marshal_types.Add (TypeManager.CGImage);
-		marshal_types.Add (TypeManager.Class);
-		marshal_types.Add (TypeManager.CFRunLoop);
-		marshal_types.Add (TypeManager.CGColorSpace);
-		marshal_types.Add (TypeManager.CGImageSource);
-		marshal_types.Add (TypeManager.DispatchData);
-		marshal_types.Add (TypeManager.DispatchQueue);
-		marshal_types.Add (TypeManager.Protocol);
-		if (Frameworks.HaveCoreMidi)
-			marshal_types.Add (TypeManager.MidiEndpoint);
-		if (Frameworks.HaveCoreMedia) {
-			marshal_types.Add (TypeManager.CMTimebase);
-			marshal_types.Add (TypeManager.CMClock);
-		}
-		marshal_types.Add (TypeManager.NSZone);
-		if (Frameworks.HaveOpenGL) {
-			marshal_types.Add (TypeManager.CGLContext);
-			marshal_types.Add (TypeManager.CGLPixelFormat);
-			marshal_types.Add (TypeManager.CVImageBuffer);
-		}
-		if (Frameworks.HaveMediaToolbox)
-			marshal_types.Add (new MarshalType (TypeManager.MTAudioProcessingTap, create: "MediaToolbox.MTAudioProcessingTap.FromHandle("));
-		if (Frameworks.HaveAddressBook) {
-			marshal_types.Add (TypeManager.ABAddressBook);
-			marshal_types.Add (new MarshalType (TypeManager.ABPerson, create: "(ABPerson) ABRecord.FromHandle (", closingCreate: ")!"));
-			marshal_types.Add (new MarshalType (TypeManager.ABRecord, create: "ABRecord.FromHandle (", closingCreate: ")!"));
-		}
-		if (Frameworks.HaveCoreVideo) {
-			// owns `false` like ptr ctor https://github.com/xamarin/xamarin-macios/blob/6f68ab6f79c5f1d96d2cbb1e697330623164e46d/src/CoreVideo/CVBuffer.cs#L74-L90
-			marshal_types.Add (new MarshalType (TypeManager.CVPixelBuffer, create: "Runtime.GetINativeObject<CVPixelBuffer> (", closingCreate: ", false)!"));
-		}
-		marshal_types.Add (TypeManager.CGLayer);
-		if (Frameworks.HaveCoreMedia)
-			marshal_types.Add (TypeManager.CMSampleBuffer);
-
-		if (Frameworks.HaveCoreVideo) {
-			marshal_types.Add (TypeManager.CVImageBuffer);
-			marshal_types.Add (TypeManager.CVPixelBufferPool);
-		}
-		if (Frameworks.HaveAudioUnit)
-			marshal_types.Add (TypeManager.AudioComponent);
-		if (Frameworks.HaveCoreMedia) {
-			marshal_types.Add (new MarshalType (TypeManager.CMFormatDescription, create: "CMFormatDescription.Create (", closingCreate: ")!"));
-			marshal_types.Add (TypeManager.CMAudioFormatDescription);
-			marshal_types.Add (TypeManager.CMVideoFormatDescription);
-		}
-		if (Frameworks.HaveAudioUnit)
-			marshal_types.Add (TypeManager.AudioUnit);
-		marshal_types.Add (TypeManager.SecIdentity);
-		marshal_types.Add (TypeManager.SecIdentity2);
-		marshal_types.Add (TypeManager.SecTrust);
-		marshal_types.Add (TypeManager.SecTrust2);
-		marshal_types.Add (TypeManager.SecProtocolOptions);
-		marshal_types.Add (TypeManager.SecProtocolMetadata);
-		marshal_types.Add (TypeManager.SecAccessControl);
-		marshal_types.Add (TypeManager.AudioBuffers);
-		if (Frameworks.HaveAudioUnit) {
-			marshal_types.Add (TypeManager.AURenderEventEnumerator);
-		}
+		marshalTypes.Load (TypeManager, Frameworks);
 
 		m = GetOutputStream ("ObjCRuntime", "Messaging");
 		Header (m);
@@ -2596,26 +2383,6 @@ public partial class Generator : IMemberGatherer {
 #endif
 	}
 
-	public static ApplePlatform AsApplePlatform (PlatformName platform)
-	{
-		switch (platform) {
-		case PlatformName.iOS:
-			return ApplePlatform.iOS;
-		case PlatformName.TvOS:
-			return ApplePlatform.TVOS;
-		case PlatformName.MacCatalyst:
-			return ApplePlatform.MacCatalyst;
-		case PlatformName.MacOSX:
-			return ApplePlatform.MacOSX;
-		case PlatformName.WatchOS:
-			return ApplePlatform.WatchOS;
-		case PlatformName.None:
-			return ApplePlatform.None;
-		default:
-			throw new ArgumentOutOfRangeException (nameof (platform), platform, $"Unknown platform: {platform}");
-		}
-	}
-
 	static AvailabilityBaseAttribute CloneFromOtherPlatform (AvailabilityBaseAttribute attr, PlatformName platform)
 	{
 		if (attr.Version is null) {
@@ -2636,7 +2403,7 @@ public partial class Generator : IMemberGatherer {
 			// nor can you coerse to 0, as that will fail with "16.0.0 <= 16.0" => false in the registrar
 			// So determine if the build is -1, and use the 2 or 3 param ctor...
 			var version = attr.Version;
-			var minimum = Xamarin.SdkVersions.GetMinVersion (AsApplePlatform (platform));
+			var minimum = Xamarin.SdkVersions.GetMinVersion (platform.AsApplePlatform ());
 			if (version < minimum)
 				version = minimum;
 			if (version.Build == -1) {
@@ -3301,7 +3068,7 @@ public partial class Generator : IMemberGatherer {
 		if (!minfo.is_ctor && !is_async) {
 			var prefix = "";
 			if (!BindThirdPartyLibrary) {
-				var hasReturnTypeProtocolize = Protocolize (AttributeManager.GetReturnTypeCustomAttributes (minfo.Method));
+				var hasReturnTypeProtocolize = Protocolize (minfo.Method.ReturnParameter);
 				if (hasReturnTypeProtocolize) {
 					if (!IsProtocol (minfo.Method.ReturnType)) {
 						ErrorHelper.Warning (1108, minfo.Method.DeclaringType, minfo.Method, minfo.Method.ReturnType.FullName);
@@ -3391,7 +3158,7 @@ public partial class Generator : IMemberGatherer {
 				sb.Append ("[Transient] ");
 
 			if (parType.IsByRef) {
-				string reftype = TypeManager.IsOutParameter (pi) ? "out " : "ref ";
+				string reftype = pi.IsOut ? "out " : "ref ";
 				sb.Append (reftype);
 				parType = parType.GetElementType ();
 			}
@@ -3463,7 +3230,7 @@ public partial class Generator : IMemberGatherer {
 		} else if (mi.ReturnType.IsEnum) {
 			cast_a = "(" + FormatType (mi.DeclaringType, mi.ReturnType) + ") ";
 			cast_b = "";
-		} else if (LookupMarshal (mai.Type, out mt)) {
+		} else if (marshalTypes.TryGetMarshalType (mai.Type, out mt)) {
 			cast_a = mt.CreateFromRet;
 			cast_b = mt.ClosingCreate;
 		} else if (IsWrappedType (mi.ReturnType)) {
@@ -3734,21 +3501,6 @@ public partial class Generator : IMemberGatherer {
 				optimizable &= snippet.Optimizable;
 		}
 		return optimizable;
-	}
-
-	[Flags]
-	public enum BodyOption {
-		None = 0x0,
-		NeedsTempReturn = 0x1,
-		CondStoreRet = 0x3,
-		MarkRetDirty = 0x5,
-		StoreRet = 0x7,
-	}
-
-	public enum ThreadCheck {
-		Default, // depends on the namespace
-		Off,
-		On,
 	}
 
 	//
@@ -4188,7 +3940,7 @@ public partial class Generator : IMemberGatherer {
 			(AttributeManager.HasAttribute<FactoryAttribute> (mi)) ||
 			((body_options & BodyOption.NeedsTempReturn) == BodyOption.NeedsTempReturn) ||
 			(mi.ReturnType.IsSubclassOf (TypeManager.System_Delegate)) ||
-			(AttributeManager.HasAttribute<ProxyAttribute> (AttributeManager.GetReturnTypeCustomAttributes (mi))) ||
+			(AttributeManager.HasAttribute<ProxyAttribute> (mi.ReturnParameter)) ||
 			(IsNativeEnum (mi.ReturnType)) ||
 			(mi.Name != "Constructor" && by_ref_processing.Length > 0 && mi.ReturnType != TypeManager.System_Void);
 
@@ -4317,7 +4069,7 @@ public partial class Generator : IMemberGatherer {
 		if (by_ref_processing.Length > 0)
 			print (sw, by_ref_processing.ToString ());
 		if (use_temp_return) {
-			if (AttributeManager.HasAttribute<ProxyAttribute> (AttributeManager.GetReturnTypeCustomAttributes (mi)))
+			if (AttributeManager.HasAttribute<ProxyAttribute> (mi.ReturnParameter))
 				print ("ret.IsDirectBinding = true;");
 
 			if (mi.ReturnType.IsSubclassOf (TypeManager.System_Delegate)) {
@@ -4817,76 +4569,20 @@ public partial class Generator : IMemberGatherer {
 		print ("}}\n", pi.Name.GetSafeParamName ());
 	}
 
-	class AsyncMethodInfo : MemberInformation {
-		public ParameterInfo [] async_initial_params, async_completion_params;
-		public bool has_nserror, is_void_async, is_single_arg_async;
-		public MethodInfo MethodInfo;
-
-		public AsyncMethodInfo (Generator generator, IMemberGatherer gather, Type type, MethodInfo mi, Type category_extension_type, bool is_extension_method)
-			: base (generator, gather, mi, type, category_extension_type, false, is_extension_method)
-		{
-			this.MethodInfo = mi;
-			this.async_initial_params = Generator.DropLast (mi.GetParameters ());
-
-			var lastType = mi.GetParameters ().Last ().ParameterType;
-			if (!lastType.IsSubclassOf (generator.TypeManager.System_Delegate))
-				throw new BindingException (1036, true, mi.DeclaringType.FullName, mi.Name, lastType.FullName);
-			var cbParams = lastType.GetMethod ("Invoke").GetParameters ();
-			async_completion_params = cbParams;
-
-			// ?!? this fails: cbParams.Last ().ParameterType.Name == TypeManager.NSError
-			if (cbParams.Length > 0 && cbParams.Last ().ParameterType.Name == "NSError") {
-				has_nserror = true;
-				cbParams = Generator.DropLast (cbParams);
-			}
-			if (cbParams.Length == 0)
-				is_void_async = true;
-			if (cbParams.Length == 1)
-				is_single_arg_async = true;
-		}
-
-		public string GetUniqueParamName (string suggestion)
-		{
-			while (true) {
-				bool next = false;
-
-				foreach (var pi in async_completion_params) {
-					if (pi.Name == suggestion) {
-						next = true;
-						break;
-					}
-				}
-
-				if (!next)
-					return suggestion;
-
-				suggestion = "_" + suggestion;
-			}
-		}
-
-	}
-
-	public static T [] DropLast<T> (T [] arr)
-	{
-		T [] res = new T [arr.Length - 1];
-		Array.Copy (arr, res, res.Length);
-		return res;
-	}
-
 	string GetReturnType (AsyncMethodInfo minfo)
 	{
-		if (minfo.is_void_async)
+		if (minfo.IsVoidAsync)
 			return "Task";
 		var ttype = GetAsyncTaskType (minfo);
-		if (minfo.has_nserror && (ttype == "bool"))
+		if (minfo.HasNSError && (ttype == "bool"))
 			ttype = "Tuple<bool,NSError>";
 		return "Task<" + ttype + ">";
 	}
 
 	string GetAsyncTaskType (AsyncMethodInfo minfo)
 	{
-		if (minfo.is_single_arg_async)
-			return FormatType (minfo.type, minfo.async_completion_params [0].ParameterType);
+		if (minfo.IsSingleArgAsync)
+			return FormatType (minfo.type, minfo.AsyncCompletionParams [0].ParameterType);
 
 		var attr = AttributeManager.GetCustomAttribute<AsyncAttribute> (minfo.mi);
 		if (attr.ResultTypeName != null)
@@ -4916,21 +4612,6 @@ public partial class Generator : IMemberGatherer {
 		return sb.ToString ();
 	}
 
-	//
-	// The kind of Async method we generate
-	// We typically generate a single one, but if the
-	// async method has a non-void return, we generate the second with the out parameter
-	// 
-	enum AsyncMethodKind {
-		// Plain Async method, original method return void
-		Plain,
-
-		// Async method generated when we had a return type from the method
-		// ie: [Async] string XyZ (Action completion), the "string" is the
-		// result
-		WithResultOutParameter,
-	}
-
 	void PrintAsyncHeader (AsyncMethodInfo minfo, AsyncMethodKind asyncKind)
 	{
 		print_generated_code ();
@@ -4949,7 +4630,7 @@ public partial class Generator : IMemberGatherer {
 			   minfo.GetVisibility (),
 			   modifier,
 			   GetReturnType (minfo),
-			   MakeSignature (minfo, true, minfo.async_initial_params, extra),
+			   MakeSignature (minfo, true, minfo.AsyncInitialParams, extra),
 			   minfo.is_abstract ? ";" : "");
 	}
 
@@ -4960,14 +4641,14 @@ public partial class Generator : IMemberGatherer {
 		var is_void = mi.ReturnType == TypeManager.System_Void;
 
 		// Print a error if any of the method parameters or handler parameters is ref/out, it should not be asyncified.
-		if (minfo.async_initial_params != null) {
-			foreach (var param in minfo.async_initial_params) {
+		if (minfo.AsyncInitialParams != null) {
+			foreach (var param in minfo.AsyncInitialParams) {
 				if (param.ParameterType.IsByRef) {
 					throw new BindingException (1062, true, original_minfo.type.Name, mi.Name);
 				}
 			}
 		}
-		foreach (var param in minfo.async_completion_params) {
+		foreach (var param in minfo.AsyncCompletionParams) {
 			if (param.ParameterType.IsByRef) {
 				throw new BindingException (1062, true, original_minfo.type.Name, mi.Name);
 			}
@@ -4982,9 +4663,9 @@ public partial class Generator : IMemberGatherer {
 
 		var ttype = "bool";
 		var tuple = false;
-		if (!minfo.is_void_async) {
+		if (!minfo.IsVoidAsync) {
 			ttype = GetAsyncTaskType (minfo);
-			tuple = (minfo.has_nserror && (ttype == "bool"));
+			tuple = (minfo.HasNSError && (ttype == "bool"));
 			if (tuple)
 				ttype = "Tuple<bool,NSError>";
 		}
@@ -4994,9 +4675,9 @@ public partial class Generator : IMemberGatherer {
 			AttributeManager.GetCustomAttribute<AsyncAttribute> (mi).PostNonResultSnippet == null;
 		print ("{6}{5}{4}{0}({1}{2}({3}) => {{",
 			mi.Name,
-			GetInvokeParamList (minfo.async_initial_params, false),
-			minfo.async_initial_params.Length > 0 ? ", " : "",
-			GetInvokeParamList (minfo.async_completion_params),
+			GetInvokeParamList (minfo.AsyncInitialParams, false),
+			minfo.AsyncInitialParams.Length > 0 ? ", " : "",
+			GetInvokeParamList (minfo.AsyncCompletionParams),
 			minfo.is_extension_method || minfo.is_category_extension ? "This." : string.Empty,
 			is_void || ignoreResult ? string.Empty : minfo.GetUniqueParamName ("result") + " = ",
 			is_void || ignoreResult ? string.Empty : (asyncKind == AsyncMethodKind.WithResultOutParameter ? string.Empty : "var ")
@@ -5005,26 +4686,26 @@ public partial class Generator : IMemberGatherer {
 		indent++;
 
 		int nesting_level = 1;
-		if (minfo.has_nserror && !tuple) {
-			var var_name = minfo.async_completion_params.Last ().Name.GetSafeParamName (); ;
+		if (minfo.HasNSError && !tuple) {
+			var var_name = minfo.AsyncCompletionParams.Last ().Name.GetSafeParamName (); ;
 			print ("if ({0}_ != null)", var_name);
 			print ("\ttcs.SetException (new NSErrorException({0}_));", var_name);
 			print ("else");
 			++nesting_level; ++indent;
 		}
 
-		if (minfo.is_void_async)
+		if (minfo.IsVoidAsync)
 			print ("tcs.SetResult (true);");
 		else if (tuple) {
-			var cond_name = minfo.async_completion_params [0].Name;
-			var var_name = minfo.async_completion_params.Last ().Name;
+			var cond_name = minfo.AsyncCompletionParams [0].Name;
+			var var_name = minfo.AsyncCompletionParams.Last ().Name;
 			print ("tcs.SetResult (new Tuple<bool,NSError> ({0}_, {1}_));", cond_name, var_name);
-		} else if (minfo.is_single_arg_async)
-			print ("tcs.SetResult ({0}_!);", minfo.async_completion_params [0].Name);
+		} else if (minfo.IsSingleArgAsync)
+			print ("tcs.SetResult ({0}_!);", minfo.AsyncCompletionParams [0].Name);
 		else
 			print ("tcs.SetResult (new {0} ({1}));",
 				GetAsyncTaskType (minfo),
-				GetInvokeParamList (minfo.has_nserror ? DropLast (minfo.async_completion_params) : minfo.async_completion_params, true, true));
+				GetInvokeParamList (minfo.HasNSError ? minfo.AsyncCompletionParams.DropLast () : minfo.AsyncCompletionParams, true, true));
 		indent -= nesting_level;
 		if (is_void || ignoreResult)
 			print ("});");
@@ -5039,10 +4720,10 @@ public partial class Generator : IMemberGatherer {
 
 
 		if (attr.ResultTypeName != null) {
-			if (minfo.has_nserror)
-				async_result_types.Add (new Tuple<string, ParameterInfo []> (attr.ResultTypeName, DropLast (minfo.async_completion_params)));
+			if (minfo.HasNSError)
+				async_result_types.Add (new Tuple<string, ParameterInfo []> (attr.ResultTypeName, minfo.AsyncCompletionParams.DropLast ()));
 			else
-				async_result_types.Add (new Tuple<string, ParameterInfo []> (attr.ResultTypeName, minfo.async_completion_params));
+				async_result_types.Add (new Tuple<string, ParameterInfo []> (attr.ResultTypeName, minfo.AsyncCompletionParams));
 		}
 	}
 
@@ -5424,7 +5105,7 @@ public partial class Generator : IMemberGatherer {
 	{
 		var type = provider.DeclaringType;
 		if (IsApiType (type)) {
-			return HasAttribute<AbstractAttribute> (provider, attributes);
+			return AttributeManager.HasAttribute<AbstractAttribute> (provider, attributes);
 		}
 		if (type.IsInterface)
 			return true;
@@ -5924,7 +5605,7 @@ public partial class Generator : IMemberGatherer {
 		if (p == null)
 			return;
 
-		print ($"[Advice ({Quote (p.Message)})]");
+		print ($"[Advice ({p.Message.Quote ()})]");
 	}
 
 	public void PrintRequiresSuperAttribute (ICustomAttributeProvider mi)
@@ -5942,7 +5623,7 @@ public partial class Generator : IMemberGatherer {
 		if (p == null)
 			return;
 
-		print ($"[NotImplemented ({Quote (p.Message)})]");
+		print ($"[NotImplemented ({p.Message.Quote ()})]");
 	}
 
 	public void PrintBindAsAttribute (ICustomAttributeProvider mi, StringBuilder sb = null)
@@ -6958,7 +6639,7 @@ public partial class Generator : IMemberGatherer {
 
 						var sender = pars.Length == 0 ? "this" : pars [0].Name;
 
-						var miname = PascalCase (mi.Name);
+						var miname = mi.Name.PascalCase ();
 						if (miname == previous_miname) {
 							// overloads, add a numbered suffix (it's internal)
 							previous_miname = miname;
@@ -6970,9 +6651,9 @@ public partial class Generator : IMemberGatherer {
 							if (bta.Singleton || mi.GetParameters ().Length == 1)
 								print ("internal EventHandler? {0};", miname);
 							else
-								print ("internal EventHandler<{0}>? {1};", GetEventArgName (mi), miname);
+								print ("internal EventHandler<{0}>? {1};", Nomenclator.GetEventArgName (mi), miname);
 						} else
-							print ("internal {0}? {1};", GetDelegateName (mi), miname);
+							print ("internal {0}? {1};", Nomenclator.GetDelegateName (mi), miname);
 
 						print ("[Preserve (Conditional = true)]");
 						if (isProtocolizedEventBacked)
@@ -6990,7 +6671,7 @@ public partial class Generator : IMemberGatherer {
 							if (debug)
 								print ("Console.WriteLine (\"Method {0}.{1} invoked\");", dtype.Name, mi.Name);
 							if (pars.Length != minPars) {
-								eaname = GetEventArgName (mi);
+								eaname = Nomenclator.GetEventArgName (mi);
 								if (!generatedEvents.ContainsKey (eaname) && !eventArgTypes.ContainsKey (eaname)) {
 									eventArgTypes.Add (eaname, pars);
 									generatedEvents.Add (eaname, pars);
@@ -6998,7 +6679,7 @@ public partial class Generator : IMemberGatherer {
 							} else
 								eaname = "<NOTREACHED>";
 
-							print ("var handler = {0};", PascalCase (miname));
+							print ("var handler = {0};", miname.PascalCase ());
 							print ("if (handler != null){");
 							indent++;
 							string eventArgs;
@@ -7026,7 +6707,7 @@ public partial class Generator : IMemberGatherer {
 							indent--;
 							print ("}");
 						} else {
-							var delname = GetDelegateName (mi);
+							var delname = Nomenclator.GetDelegateName (mi);
 
 							if (!generatedDelegates.ContainsKey (delname) && !delegate_types.ContainsKey (delname)) {
 								generatedDelegates.Add (delname, null);
@@ -7035,7 +6716,7 @@ public partial class Generator : IMemberGatherer {
 							if (debug)
 								print ("Console.WriteLine (\"Method {0}.{1} invoked\");", dtype.Name, mi.Name);
 
-							print ("var handler = {0};", PascalCase (miname));
+							print ("var handler = {0};", miname.PascalCase ());
 							print ("if (handler != null)");
 							print ("	return handler ({0}{1});",
 								   sender,
@@ -7098,7 +6779,7 @@ public partial class Generator : IMemberGatherer {
 								print ("if (selHandle.Equals (sel{0}Handle))", mi.Name);
 							}
 							++indent;
-							print ("return {0} != null;", PascalCase (mi.Name));
+							print ("return {0} != null;", mi.Name.PascalCase ());
 							--indent;
 						}
 						print ("return global::" + ns.Messaging + ".bool_objc_msgSendSuper_IntPtr (SuperHandle, " + selRespondsToSelector + ", selHandle);");
@@ -7123,7 +6804,7 @@ public partial class Generator : IMemberGatherer {
 
 				string prev_miname = null;
 				int minameCount = 0;
-				repeatedDelegateApiNames.Clear ();
+				Nomenclator.ForgetDelegateApiNames ();
 				// Now add the instance vars and event handlers
 				foreach (var dtype in bta.Events.OrderBy (d => d.Name, StringComparer.Ordinal)) {
 					foreach (var mi in dtype.GatherMethods (this).OrderBy (m => m.Name, StringComparer.Ordinal)) {
@@ -7132,7 +6813,7 @@ public partial class Generator : IMemberGatherer {
 
 						string ensureArg = bta.KeepRefUntil == null ? "" : "this";
 
-						var miname = PascalCase (mi.Name);
+						var miname = mi.Name.PascalCase ();
 						if (miname == prev_miname) {
 							// overloads, add a numbered suffix (it's internal)
 							prev_miname = miname;
@@ -7144,14 +6825,14 @@ public partial class Generator : IMemberGatherer {
 							PrintObsoleteAttributes (mi);
 
 							if (bta.Singleton && mi.GetParameters ().Length == 0 || mi.GetParameters ().Length == 1)
-								print ("public event EventHandler {0} {{", CamelCase (GetEventName (mi)));
+								print ("public event EventHandler {0} {{", Nomenclator.GetEventName (mi).CamelCase ());
 							else
-								print ("public event EventHandler<{0}> {1} {{", GetEventArgName (mi), CamelCase (GetEventName (mi)));
+								print ("public event EventHandler<{0}> {1} {{", Nomenclator.GetEventArgName (mi), Nomenclator.GetEventName (mi).CamelCase ());
 							print ("\tadd {{ Ensure{0} ({1})!.{2} += value; }}", dtype.Name, ensureArg, miname);
 							print ("\tremove {{ Ensure{0} ({1})!.{2} -= value; }}", dtype.Name, ensureArg, miname);
 							print ("}\n");
 						} else {
-							print ("public {0}? {1} {{", GetDelegateName (mi), CamelCase (GetDelegateApiName (mi)));
+							print ("public {0}? {1} {{", Nomenclator.GetDelegateName (mi), Nomenclator.GetDelegateApiName (mi).CamelCase ());
 							print ("\tget {{ return Ensure{0} ({1})!.{2}; }}", dtype.Name, ensureArg, miname);
 							print ("\tset {{ Ensure{0} ({1})!.{2} = value; }}", dtype.Name, ensureArg, miname);
 							print ("}\n");
@@ -7329,7 +7010,7 @@ public partial class Generator : IMemberGatherer {
 			}
 			// Now add the EventArgs classes
 			foreach (var eaclass in eventArgTypes.Keys.OrderBy (e => e, StringComparer.Ordinal)) {
-				if (skipGeneration.ContainsKey (eaclass)) {
+				if (Nomenclator.WasEventArgGenerated (eaclass)) {
 					continue;
 				}
 				int minPars = bta.Singleton ? 0 : 1;
@@ -7378,7 +7059,7 @@ public partial class Generator : IMemberGatherer {
 					var safe_name = pi.Name.GetSafeParamName ();
 					print ("public {0} {1} {{ get; set; }}",
 						FormatType (type, pi.ParameterType),
-						Capitalize (safe_name));
+						safe_name.Capitalize ());
 
 					if (comma)
 						ctor.Append (", ");
@@ -7391,7 +7072,7 @@ public partial class Generator : IMemberGatherer {
 				print ("\npublic {0} ({1}) {{", async_type.Item1, ctor); indent++;
 				foreach (var pi in async_type.Item2) {
 					var safe_name = pi.Name.GetSafeParamName ();
-					print ("this.{0} = {1};", Capitalize (safe_name), safe_name);
+					print ("this.{0} = {1};", safe_name.Capitalize (), safe_name);
 				}
 				print ("Initialize ();");
 				indent--; print ("}");
@@ -7559,14 +7240,6 @@ public partial class Generator : IMemberGatherer {
 		return null;
 	}
 
-	static string Capitalize (string str)
-	{
-		if (str.StartsWith ("@", StringComparison.Ordinal))
-			return char.ToUpper (str [1]) + str.Substring (2);
-
-		return char.ToUpper (str [0]) + str.Substring (1);
-	}
-
 	string GetNotificationCenter (PropertyInfo pi)
 	{
 		var a = AttributeManager.GetCustomAttributes<NotificationAttribute> (pi);
@@ -7621,10 +7294,10 @@ public partial class Generator : IMemberGatherer {
 	{
 		var attrs = AttributeManager.GetCustomAttributes<EventNameAttribute> (pi);
 		if (attrs.Length == 0)
-			return CamelCase (pi.Name).GetSafeParamName ();
+			return pi.Name.CamelCase ().GetSafeParamName ();
 
 		var a = attrs [0];
-		return CamelCase (a.EvtName).GetSafeParamName ();
+		return a.EvtName.CamelCase ().GetSafeParamName ();
 	}
 
 	string RenderArgs (IEnumerable<ParameterInfo> pi)
@@ -7640,83 +7313,6 @@ public partial class Generator : IMemberGatherer {
 	bool MustPullValuesBack (IEnumerable<ParameterInfo> parameters)
 	{
 		return parameters.Any (pi => pi.ParameterType.IsByRef);
-	}
-
-	string CamelCase (string ins)
-	{
-		return Char.ToUpper (ins [0]) + ins.Substring (1);
-	}
-
-	string PascalCase (string ins)
-	{
-		return Char.ToLower (ins [0]) + ins.Substring (1);
-	}
-
-	Dictionary<string, bool> skipGeneration = new Dictionary<string, bool> ();
-	string GetEventName (MethodInfo mi)
-	{
-		var a = AttributeManager.GetCustomAttribute<EventNameAttribute> (mi);
-		if (a == null)
-			return mi.Name;
-		var ea = (EventNameAttribute) a;
-
-		return ea.EvtName;
-	}
-
-	HashSet<string> repeatedDelegateApiNames = new HashSet<string> ();
-	string GetDelegateApiName (MethodInfo mi)
-	{
-		var a = AttributeManager.GetCustomAttribute<DelegateApiNameAttribute> (mi);
-
-		if (repeatedDelegateApiNames.Contains (mi.Name) && a == null)
-			throw new BindingException (1043, true, mi.Name);
-		if (a == null) {
-			repeatedDelegateApiNames.Add (mi.Name);
-			return mi.Name;
-		}
-
-		var apiName = (DelegateApiNameAttribute) a;
-		if (repeatedDelegateApiNames.Contains (apiName.Name))
-			throw new BindingException (1044, true, apiName.Name);
-
-		return apiName.Name;
-	}
-
-	string GetEventArgName (MethodInfo mi)
-	{
-		if (mi.GetParameters ().Length == 1)
-			return "EventArgs";
-
-		var a = AttributeManager.GetCustomAttribute<EventArgsAttribute> (mi);
-		if (a == null)
-			throw new BindingException (1004, true, mi.DeclaringType.FullName, mi.Name, mi.GetParameters ().Length);
-
-		var ea = (EventArgsAttribute) a;
-		if (ea.ArgName.EndsWith ("EventArgs", StringComparison.Ordinal))
-			throw new BindingException (1005, true, mi.DeclaringType.FullName, mi.Name);
-
-		if (ea.SkipGeneration) {
-			skipGeneration [ea.FullName ? ea.ArgName : ea.ArgName + "EventArgs"] = true;
-		}
-
-		if (ea.FullName)
-			return ea.ArgName;
-
-		return ea.ArgName + "EventArgs";
-	}
-
-	string GetDelegateName (MethodInfo mi)
-	{
-		Attribute a = AttributeManager.GetCustomAttribute<DelegateNameAttribute> (mi);
-		if (a != null)
-			return ((DelegateNameAttribute) a).Name;
-
-		a = AttributeManager.GetCustomAttribute<EventArgsAttribute> (mi);
-		if (a == null)
-			throw new BindingException (1006, true, mi.DeclaringType.FullName, mi.Name);
-
-		ErrorHelper.Warning (1102, mi.DeclaringType.FullName, mi.Name);
-		return ((EventArgsAttribute) a).ArgName;
 	}
 
 	object GetDefaultValue (MethodInfo mi)
@@ -7763,14 +7359,6 @@ public partial class Generator : IMemberGatherer {
 		return def;
 	}
 
-	bool HasNativeAttribute (ICustomAttributeProvider provider)
-	{
-		if (provider is null)
-			return false;
-
-		return AttributeManager.HasAttribute (provider, "NativeIntegerAttribute");
-	}
-
 	string RenderType (Type t, ICustomAttributeProvider provider = null)
 	{
 		t = GetCorrectGenericType (t);
@@ -7808,9 +7396,9 @@ public partial class Generator : IMemberGatherer {
 			return "void";
 
 		if (t == TypeManager.System_IntPtr) {
-			return HasNativeAttribute (provider) ? "nint" : "IntPtr";
+			return AttributeManager.HasNativeAttribute (provider) ? "nint" : "IntPtr";
 		} else if (t == TypeManager.System_UIntPtr) {
-			return HasNativeAttribute (provider) ? "nuint" : "UIntPtr";
+			return AttributeManager.HasNativeAttribute (provider) ? "nuint" : "UIntPtr";
 		}
 
 		string ns = t.Namespace;
@@ -7827,16 +7415,6 @@ public partial class Generator : IMemberGatherer {
 		else
 			return t.FullName;
 
-	}
-
-	public static string Quote (string s)
-	{
-		if (s == null)
-			return String.Empty;
-		if (s == string.Empty)
-			return @"""""";
-
-		return $"@\"{s.Replace ("\"", "\"\"")}\"";
 	}
 
 	private static string FormatPropertyInfo (PropertyInfo pi)

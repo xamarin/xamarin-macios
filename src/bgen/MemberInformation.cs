@@ -26,7 +26,7 @@ public class MemberInformation {
 	public readonly bool ignore_category_static_warnings;
 	public readonly bool is_basewrapper_protocol_method;
 	public readonly bool has_inner_wrap_attribute;
-	public readonly Generator.ThreadCheck threadCheck;
+	public readonly ThreadCheck threadCheck;
 	public bool is_unsafe;
 	public bool is_virtual_method;
 	public bool is_export;
@@ -66,15 +66,15 @@ public class MemberInformation {
 		is_autorelease = AttributeManager.HasAttribute<AutoreleaseAttribute> (mi);
 		is_wrapper = !AttributeManager.HasAttribute<SyntheticAttribute> (mi.DeclaringType);
 		is_type_sealed = AttributeManager.HasAttribute<SealedAttribute> (mi.DeclaringType);
-		is_return_release = methodInfo is not null && AttributeManager.HasAttribute<ReleaseAttribute> (AttributeManager.GetReturnTypeCustomAttributes (methodInfo));
+		is_return_release = methodInfo is not null && AttributeManager.HasAttribute<ReleaseAttribute> (methodInfo.ReturnParameter);
 		is_forced = Generator.HasForcedAttribute (mi, out is_forced_owns);
 
 		var tsa = AttributeManager.GetCustomAttribute<ThreadSafeAttribute> (mi);
 		// if there's an attribute then it overrides the parent (e.g. type attribute) or namespace default
 		if (tsa is not null) {
-			threadCheck = tsa.Safe ? Generator.ThreadCheck.Off : Generator.ThreadCheck.On;
+			threadCheck = tsa.Safe ? ThreadCheck.Off : ThreadCheck.On;
 		} else {
-			threadCheck = Generator.ThreadCheck.Default; // will be based on the type decision
+			threadCheck = ThreadCheck.Default; // will be based on the type decision
 		}
 		this.is_interface_impl = is_interface_impl;
 		this.is_extension_method = is_extension_method;
