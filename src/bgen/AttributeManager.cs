@@ -16,7 +16,7 @@ public class AttributeManager {
 		BindingTouch = binding_touch;
 	}
 
-	System.Type LookupReflectionType (string fullname, ICustomAttributeProvider provider)
+	Type LookupReflectionType (string fullname, ICustomAttributeProvider provider)
 	{
 		switch (fullname) {
 		case "AbstractAttribute":
@@ -390,7 +390,7 @@ public class AttributeManager {
 			return convertedAttributes.OfType<T> ();
 
 		var expectedType = ConvertTypeToMeta (typeof (T), provider);
-		if (attribute.GetAttributeType () != expectedType && !IsSubclassOf (expectedType, attribute.GetAttributeType ()))
+		if (attribute.GetAttributeType () != expectedType && !attribute.GetAttributeType ().IsSubclassOf (expectedType))
 			return Enumerable.Empty<T> ();
 
 		System.Type attribType = ConvertTypeFromMeta (attribute.GetAttributeType (), provider);
@@ -498,7 +498,7 @@ public class AttributeManager {
 		return Array.Empty<T> ();
 	}
 
-	public T [] GetCustomAttributes<T> (ICustomAttributeProvider provider) where T : System.Attribute
+	public virtual T [] GetCustomAttributes<T> (ICustomAttributeProvider provider) where T : System.Attribute
 	{
 		return FilterAttributes<T> (GetIKVMAttributes (provider), provider);
 	}
@@ -527,7 +527,7 @@ public class AttributeManager {
 		return false;
 	}
 
-	public bool HasAttribute<T> (ICustomAttributeProvider provider) where T : Attribute
+	public virtual bool HasAttribute<T> (ICustomAttributeProvider provider) where T : Attribute
 	{
 		var attribute_type = ConvertTypeToMeta (typeof (T), provider);
 		var attribs = GetIKVMAttributes (provider);
@@ -538,14 +538,14 @@ public class AttributeManager {
 			var attrib = attribs [i];
 			if (attrib.GetAttributeType () == attribute_type)
 				return true;
-			if (IsSubclassOf (attribute_type, attrib.GetAttributeType ()))
+			if (attrib.GetAttributeType ().IsSubclassOf (attribute_type))
 				return true;
 		}
 
 		return false;
 	}
 
-	public T GetCustomAttribute<T> (ICustomAttributeProvider provider) where T : System.Attribute
+	public virtual T GetCustomAttribute<T> (ICustomAttributeProvider provider) where T : System.Attribute
 	{
 		if (provider is null)
 			return null;
@@ -575,317 +575,23 @@ public class AttributeManager {
 		throw ErrorHelper.CreateError (1059, rv.Length, typeof (T).FullName, name);
 	}
 
-	public static ICustomAttributeProvider GetReturnTypeCustomAttributes (MethodInfo method)
+	public virtual bool HasNativeAttribute (ICustomAttributeProvider provider)
 	{
-		return method.ReturnParameter;
+		if (provider is null)
+			return false;
+
+		return HasAttribute (provider, "NativeIntegerAttribute");
 	}
 
-	static bool IsSubclassOf (Type base_class, Type derived_class)
+	public virtual bool HasAttribute<T> (ICustomAttributeProvider i, Attribute [] attributes) where T : Attribute
 	{
-		return derived_class.IsSubclassOf (base_class);
-	}
-}
+		if (attributes is null)
+			return HasAttribute<T> (i);
 
-public static class AttributeConversionManager {
-	public static System.Attribute ConvertPlatformAttribute (CustomAttributeData attribute, PlatformName platform)
-	{
-		var constructorArguments = new object [attribute.ConstructorArguments.Count];
-		for (int i = 0; i < attribute.ConstructorArguments.Count; ++i)
-			constructorArguments [i] = attribute.ConstructorArguments [i].Value;
-
-		Func<string> createErrorMessage = () => {
-			var b = new System.Text.StringBuilder (" Types { ");
-			for (int i = 0; i < constructorArguments.Length; ++i)
-				b.Append (constructorArguments [i].GetType ().ToString () + " ");
-			b.Append ("}");
-			return b.ToString ();
-		};
-
-		Func<string> unknownFormatError = () => $"Unknown format for old style availability attribute {attribute.GetAttributeType ().FullName} {attribute.ConstructorArguments.Count} {createErrorMessage ()}";
-
-		object [] ctorValues;
-		System.Type [] ctorTypes;
-
-		switch (attribute.ConstructorArguments.Count) {
-		case 2:
-			if (constructorArguments [0].GetType () == typeof (byte) &&
-				constructorArguments [1].GetType () == typeof (byte)) {
-#if NET
-				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], null };
-				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (string) };
-#else
-				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], (byte) 0xff, null };
-				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
-#endif
-				break;
-			}
-			throw new NotImplementedException (unknownFormatError ());
-		case 3:
-			if (constructorArguments [0].GetType () == typeof (byte) &&
-				constructorArguments [1].GetType () == typeof (byte) &&
-				constructorArguments [2].GetType () == typeof (byte)) {
-#if NET
-				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], (int) (byte) constructorArguments [2], null };
-				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (int), typeof (string) };
-#else
-				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], (int) (byte) constructorArguments [2], (byte) 0xff, null };
-				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
-#endif
-				break;
-			}
-#if !NET
-			if (constructorArguments [0].GetType () == typeof (byte) &&
-				constructorArguments [1].GetType () == typeof (byte) &&
-				constructorArguments [2].GetType () == typeof (bool)) {
-				byte arch = (bool) constructorArguments [2] ? (byte) 2 : (byte) 0xff;
-				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], arch, null };
-				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
-				break;
-			}
-#endif
-			throw new NotImplementedException (unknownFormatError ());
-#if !NET
-		case 4:
-			if (constructorArguments [0].GetType () == typeof (byte) &&
-				constructorArguments [1].GetType () == typeof (byte) &&
-				constructorArguments [2].GetType () == typeof (byte) &&
-				constructorArguments [3].GetType () == typeof (bool)) {
-				byte arch = (bool) constructorArguments [3] ? (byte) 2 : (byte) 0xff;
-				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], (int) (byte) constructorArguments [2], arch, null };
-				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
-				break;
-			}
-			if (constructorArguments [0].GetType () == typeof (byte) &&
-				constructorArguments [1].GetType () == typeof (byte) &&
-				constructorArguments [2].GetType () == typeof (byte) &&
-				constructorArguments [3].GetType () == typeof (byte) /* ObjCRuntime.PlatformArchitecture */) {
-				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], (int) (byte) constructorArguments [2], constructorArguments [3], null };
-				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
-				break;
-			}
-
-			throw new NotImplementedException (unknownFormatError ());
-#endif
-		default:
-			throw new NotImplementedException ($"Unknown count {attribute.ConstructorArguments.Count} {createErrorMessage ()}");
-		}
-
-		return AttributeFactory.CreateNewAttribute (AttributeFactory.IntroducedAttributeType, ctorTypes, ctorValues);
+		foreach (var a in attributes)
+			if (a.GetType () == typeof (T))
+				return true;
+		return false;
 	}
 
-	struct ParsedAvailabilityInfo {
-		public PlatformName Platform;
-		public int Major;
-		public int Minor;
-
-		public ParsedAvailabilityInfo (PlatformName platform, int major, int minor)
-		{
-			Platform = platform;
-			Major = major;
-			Minor = minor;
-		}
-
-		public ParsedAvailabilityInfo (PlatformName platform)
-		{
-			Platform = platform;
-			Major = -1;
-			Minor = -1;
-		}
-	}
-
-	static PlatformName ParsePlatforName (string s)
-	{
-		switch (s) {
-		case "iOS":
-			return PlatformName.iOS;
-		case "Mac":
-			return PlatformName.MacOSX;
-		case "Watch":
-			return PlatformName.WatchOS;
-		case "TV":
-			return PlatformName.TvOS;
-		default:
-			return PlatformName.None;
-		}
-	}
-
-	static ParsedAvailabilityInfo DetermineOldAvailabilityVersion (CustomAttributeNamedArgument arg)
-	{
-		string enumName = Enum.GetName (typeof (Platform), (ulong) arg.TypedValue.Value);
-		if (enumName == null)
-			throw new NotImplementedException ($"Unknown version format \"{enumName}\" in DetermineOldAvailabilityVersion. Are there two values | togeather?");
-
-		string [] enumParts = enumName.Split (new char [] { '_' });
-		switch (enumParts.Count ()) {
-		case 1:
-			if (enumName == "None")
-				return new ParsedAvailabilityInfo (PlatformName.None);
-			break;
-		case 2: {
-			if (enumParts [1] != "Version")
-				break;
-
-			PlatformName platform = ParsePlatforName (enumParts [0]);
-			if (platform == PlatformName.None)
-				break;
-			return new ParsedAvailabilityInfo (platform);
-		}
-		case 3: {
-			PlatformName platform = ParsePlatforName (enumParts [0]);
-			if (platform == PlatformName.None)
-				break;
-			int major = int.Parse (enumParts [1]);
-			int minor = int.Parse (enumParts [2]);
-
-			return new ParsedAvailabilityInfo (platform, major, minor);
-		}
-		}
-		throw new NotImplementedException ($"Unknown version format \"{enumName}\" in DetermineOldAvailabilityVersion");
-	}
-
-
-
-	public static IEnumerable<System.Attribute> ConvertAvailability (CustomAttributeData attribute)
-	{
-		string message = null;
-		if (attribute.NamedArguments.Any (x => x.MemberName == "Message"))
-			message = (string) attribute.NamedArguments.First (x => x.MemberName == "Message").TypedValue.Value;
-
-		foreach (var arg in attribute.NamedArguments) {
-			switch (arg.MemberName) {
-			case "Introduced": {
-				ParsedAvailabilityInfo availInfo = DetermineOldAvailabilityVersion (arg);
-				yield return AttributeFactory.CreateNewIntroducedAttribute (availInfo.Platform, availInfo.Major, availInfo.Minor, message: message);
-				continue;
-			}
-			case "Deprecated": {
-				ParsedAvailabilityInfo availInfo = DetermineOldAvailabilityVersion (arg);
-				yield return AttributeFactory.CreateDeprecatedAttribute (availInfo.Platform, availInfo.Major, availInfo.Minor, message: message);
-				continue;
-			}
-			case "Obsoleted": {
-				ParsedAvailabilityInfo availInfo = DetermineOldAvailabilityVersion (arg);
-				yield return AttributeFactory.CreateObsoletedAttribute (availInfo.Platform, availInfo.Major, availInfo.Minor, message: message);
-				continue;
-			}
-			case "Unavailable": {
-				ParsedAvailabilityInfo availInfo = DetermineOldAvailabilityVersion (arg);
-				yield return AttributeFactory.CreateUnavailableAttribute (availInfo.Platform, message: message);
-				continue;
-			}
-			case "Message":
-				continue;
-			default:
-				throw new NotImplementedException ($"ConvertAvailability found unknown named argument {arg.MemberName}");
-			}
-		}
-	}
-}
-
-
-static class AttributeFactory {
-	public static System.Type PlatformEnum = typeof (PlatformName);
-#if !NET
-	public static System.Type PlatformArch = typeof (PlatformArchitecture);
-#endif
-
-	public static System.Type IntroducedAttributeType = typeof (IntroducedAttribute);
-	public static System.Type UnavailableAttributeType = typeof (UnavailableAttribute);
-	public static System.Type ObsoletedAttributeType = typeof (ObsoletedAttribute);
-	public static System.Type DeprecatedAttributeType = typeof (DeprecatedAttribute);
-
-	public static System.Attribute CreateNewAttribute (System.Type attribType, System.Type [] ctorTypes, object [] ctorValues)
-	{
-		var ctor = attribType.GetConstructor (ctorTypes);
-		if (ctor == null)
-			throw ErrorHelper.CreateError (1058, attribType.FullName);
-
-		return (System.Attribute) ctor.Invoke (ctorValues);
-	}
-
-	static Attribute CreateMajorMinorAttribute (System.Type type, PlatformName platform, int major, int minor, string message)
-	{
-#if NET
-		var ctorValues = new object [] { (byte) platform, major, minor, message };
-		var ctorTypes = new System.Type [] { PlatformEnum, typeof (int), typeof (int), typeof (string) };
-#else
-		var ctorValues = new object [] { (byte) platform, major, minor, (byte) 0xff, message };
-		var ctorTypes = new System.Type [] { PlatformEnum, typeof (int), typeof (int), PlatformArch, typeof (string) };
-#endif
-		return CreateNewAttribute (type, ctorTypes, ctorValues);
-	}
-
-	static Attribute CreateUnspecifiedAttribute (System.Type type, PlatformName platform, string message)
-	{
-#if NET
-		var ctorValues = new object [] { (byte) platform, message };
-		var ctorTypes = new System.Type [] { PlatformEnum, typeof (string) };
-#else
-		var ctorValues = new object [] { (byte) platform, (byte) 0xff, message };
-		var ctorTypes = new System.Type [] { PlatformEnum, PlatformArch, typeof (string) };
-#endif
-		return CreateNewAttribute (type, ctorTypes, ctorValues);
-	}
-
-	public static System.Attribute CreateNewIntroducedAttribute (PlatformName platform, int major, int minor, string message = null)
-	{
-		return CreateMajorMinorAttribute (IntroducedAttributeType, platform, major, minor, message);
-	}
-
-	public static System.Attribute CreateNewUnspecifiedIntroducedAttribute (PlatformName platform, string message = null)
-	{
-		return CreateUnspecifiedAttribute (IntroducedAttributeType, platform, message);
-	}
-
-	public static System.Attribute CreateObsoletedAttribute (PlatformName platform, int major, int minor, string message = null)
-	{
-		return CreateMajorMinorAttribute (ObsoletedAttributeType, platform, major, minor, message);
-	}
-
-	public static System.Attribute CreateDeprecatedAttribute (PlatformName platform, int major, int minor, string message = null)
-	{
-		return CreateMajorMinorAttribute (DeprecatedAttributeType, platform, major, minor, message);
-	}
-
-	public static System.Attribute CreateUnavailableAttribute (PlatformName platformName, string message = null)
-	{
-#if NET
-		var ctorValues = new object [] { (byte) platformName, message };
-		var ctorTypes = new System.Type [] { PlatformEnum, typeof (string) };
-#else
-		var ctorValues = new object [] { (byte) platformName, (byte) 0xff, message };
-		var ctorTypes = new System.Type [] { PlatformEnum, PlatformArch, typeof (string) };
-#endif
-		return CreateNewAttribute (UnavailableAttributeType, ctorTypes, ctorValues);
-	}
-}
-
-public static class EnumerableExtensions {
-	public static IEnumerable<T> Yield<T> (this T item)
-	{
-		yield return item;
-	}
-}
-
-public static class CustomAttributeDataExtensions {
-#if !NET
-	static Type roCustomAttributeDataType;
-	static PropertyInfo attributeTypeProperty;
-
-	static CustomAttributeDataExtensions ()
-	{
-		roCustomAttributeDataType = typeof (MetadataLoadContext).Assembly.GetType ("System.Reflection.TypeLoading.RoCustomAttributeData");
-		attributeTypeProperty = roCustomAttributeDataType.GetProperty ("AttributeType");
-	}
-
-	public static Type GetAttributeType (this CustomAttributeData data)
-	{
-		// Workaround for CustomAttributeData.AttributeType not being declared as virtual in Mono
-		if (data.GetType ().IsSubclassOf (roCustomAttributeDataType))
-			return (Type) attributeTypeProperty.GetValue (data);
-		return data.AttributeType;
-	}
-#else
-	public static Type GetAttributeType (this CustomAttributeData data) => data.AttributeType;
-#endif
 }

@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using NUnit.Framework;
+
+#nullable enable
 
 namespace GeneratorTests {
 	public class StringExtensionTests {
@@ -45,5 +48,46 @@ namespace GeneratorTests {
 			Assert.IsNotNull (legal, "legal != null");
 			Assert.AreEqual ("@" + illegal, legal, "legal");
 		}
+
+		[Test]
+		public void QuoteNullString ()
+		{
+			string? str = null;
+			Assert.AreEqual (string.Empty, str.Quote ());
+		}
+
+		[Test]
+		public void QuoteEmptyString ()
+		{
+			string str = String.Empty;
+			Assert.AreEqual (@"""""", str.Quote ());
+		}
+
+		[TestCase ("No quotes", "@\"No quotes\"")]
+		[TestCase ("\"quotes\"", "@\"\"\"quotes\"\"\"")]
+		public void QuoteString (string input, string output)
+		{
+			Assert.AreEqual (output, input.Quote ());
+		}
+
+		[Test]
+		public void CamelCaseTest ()
+		{
+			var str = "pascalCaseExample";
+			Assert.AreEqual ("PascalCaseExample", str.CamelCase ());
+		}
+
+		[Test]
+		public void PascalCaseTest ()
+		{
+			var str = "CamelCaseExample";
+			Assert.AreEqual ("camelCaseExample", str.PascalCase ());
+		}
+
+		[TestCase ("@thisIsNotCapitalized", "ThisIsNotCapitalized")]
+		[TestCase ("thisIsNotCapitalized", "ThisIsNotCapitalized")]
+		[TestCase ("t", "T")]
+		public void CapitalizeTest (string input, string output)
+			=> Assert.AreEqual (output, input.Capitalize ());
 	}
 }
