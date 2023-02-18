@@ -215,7 +215,7 @@ public partial class Generator {
 				if (sel.StartsWith ("input", StringComparison.Ordinal))
 					name = sel;
 				else
-					name = "input" + Capitalize (sel);
+					name = "input" + sel.Capitalize ();
 			}
 
 			if (p.GetGetMethod () is not null) {
@@ -239,7 +239,7 @@ public partial class Generator {
 
 		var selector = export.Selector;
 		if (setter)
-			selector = "set" + Capitalize (selector) + ":";
+			selector = "set" + selector.Capitalize () + ":";
 
 		if (export.ArgumentSemantic != ArgumentSemantic.None && !p.PropertyType.IsPrimitive)
 			print ($"[Export (\"{selector}\", ArgumentSemantic.{export.ArgumentSemantic})]");
