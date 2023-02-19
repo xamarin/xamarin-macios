@@ -1763,4 +1763,7 @@
   <data name="MX8044" xml:space="preserve">
 		<value>L'assembly {0} è stato modificato dopo la compilazione dell'app, invalidando il codice del registrar statico generato. L'oggetto MVID per l'assembly caricato è {1}, mentre il valore MVID per l'assembly a cui corrisponde il codice del registrar statico generato è {2}.</value>
 	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>Unable to call release on an instance of the type {0}</value>
+	</data>
 </root>

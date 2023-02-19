@@ -1763,4 +1763,7 @@
   <data name="MX8044" xml:space="preserve">
 		<value>自生成应用以来，已对程序集 {0} 进行了修改，从而使生成的静态注册器代码无效。已加载程序集的 MVID 为 {1}，而生成的静态注册器代码对应的程序集的 MVID 为 {2}。</value>
 	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>Unable to call release on an instance of the type {0}</value>
+	</data>
 </root>

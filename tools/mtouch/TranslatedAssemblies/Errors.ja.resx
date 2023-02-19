@@ -1764,4 +1764,7 @@
   <data name="MX8044" xml:space="preserve">
 		<value>アセンブリ {0} は、アプリのビルド後に変更されたため、生成された静的レジストラー コードを無効化します。読み込まれたアセンブリの MVID は {1} ですが、生成された静的レジストラー コードが対応するのは {2} です。</value>
 	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>Unable to call release on an instance of the type {0}</value>
+	</data>
 </root>

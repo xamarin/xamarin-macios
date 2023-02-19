@@ -1763,4 +1763,7 @@
   <data name="MX8044" xml:space="preserve">
 		<value>Сборка {0} была изменена с момента сборки приложения, что аннулирует созданный код статического регистратора. MVID для загруженной сборки — {1}, в то время как MVID для сборки, которой соответствует созданный код статического регистратора — {2}.</value>
 	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>Unable to call release on an instance of the type {0}</value>
+	</data>
 </root>
