@@ -117,7 +117,7 @@ namespace Foundation {
 			} catch {
 				return null;
 			} finally {
-				ArrayPool<byte>.Shared.Return(buffer);
+				ArrayPool<byte>.Shared.Return (buffer);
 			}
 			return ret;
 		}
