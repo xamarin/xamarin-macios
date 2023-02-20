@@ -105,7 +105,7 @@ namespace Foundation {
 			}
 
 			NSMutableData ret = NSMutableData.FromCapacity ((int) len);
-			byte [] buffer = new byte [32 * 1024];
+			byte [] buffer = ArrayPool<byte>.Shared.Rent (32 * 1024);
 			int n;
 			try {
 				unsafe {
@@ -116,6 +116,8 @@ namespace Foundation {
 				}
 			} catch {
 				return null;
+			} finally {
+				ArrayPool<byte>.Shared.Return(buffer);
 			}
 			return ret;
 		}
