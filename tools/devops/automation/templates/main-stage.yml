@@ -271,7 +271,7 @@ stages:
       isPR: ${{ parameters.isPR }}
       repositoryAlias: ${{ parameters.repositoryAlias }}
       commit: ${{ parameters.commit }}
-      pushNugets: ${{ parameters.commit }}
+      pushNugets: ${{ parameters.pushNugets }}
 
 - stage: funnel
   displayName: '${{ parameters.stageDisplayNamePrefix }}Collect signed artifacts'
