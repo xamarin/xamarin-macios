@@ -615,9 +615,15 @@ namespace CoreFoundation {
 			return new CFProxySettings (dict);
 		}
 
+#if !NET
 		delegate void CFProxyAutoConfigurationResultCallbackInternal (IntPtr client, IntPtr proxyList, IntPtr error);
 		// helper delegate to reuse code
+#endif
+#if NET
+		unsafe delegate IntPtr CreatePACCFRunLoopSource (delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> cb, ref CFStreamClientContext context);
+#else
 		delegate IntPtr CreatePACCFRunLoopSource (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context);
+#endif
 
 		static CFProxy []? ParseProxies (IntPtr proxyList)
 		{
@@ -659,7 +665,11 @@ namespace CoreFoundation {
 		}
 
 		// callback that will sent the client info
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (CFProxyAutoConfigurationResultCallbackInternal))]
+#endif
 		static void ExecutePacCallback (IntPtr client, IntPtr proxyList, IntPtr error)
 		{
 			// grab the required structure and set the data, according apple docs:
@@ -705,7 +715,12 @@ namespace CoreFoundation {
 					var clientContext = new CFStreamClientContext ();
 					clientContext.Info = pacDataPtr;
 
+#if NET
+					unsafe {
+					using (var loopSource = new CFRunLoopSource (factory (&ExecutePacCallback, ref clientContext), false))
+#else
 					using (var loopSource = new CFRunLoopSource (factory (ExecutePacCallback, ref clientContext), false))
+#endif
 					using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
 
 						if (cancellationToken.IsCancellationRequested)
@@ -723,6 +738,9 @@ namespace CoreFoundation {
 						// does not raise an error if source is not longer present, so no need to worry
 						runLoop.RemoveSource (loopSource, mode);
 					}
+#if NET
+					} // matches the unsafe block
+#endif
 
 					if (cancellationToken.IsCancellationRequested)
 						throw new OperationCanceledException ("Operation was cancelled.");
@@ -761,7 +779,12 @@ namespace CoreFoundation {
 				var clientContext = new CFStreamClientContext ();
 				clientContext.Info = pacDataPtr;
 
+#if NET
+				unsafe {
+				using (var loopSource = new CFRunLoopSource (factory (&ExecutePacCallback, ref clientContext), false))
+#else
 				using (var loopSource = new CFRunLoopSource (factory (ExecutePacCallback, ref clientContext), false))
+#endif
 				using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
 					runLoop.AddSource (loopSource, mode);
 					runLoop.RunInMode (mode, double.MaxValue, false);
@@ -770,6 +793,9 @@ namespace CoreFoundation {
 				pacCbData = (PACProxyCallbackData) Marshal.PtrToStructure (pacDataPtr, typeof (PACProxyCallbackData))!;
 				// get data from the struct
 				outError = pacCbData.Error;
+#if NET
+				} // unsafe
+#endif
 				return pacCbData.ProxyList;
 			} finally {
 				if (pacCbData.ProxyListPtr != IntPtr.Zero)
@@ -780,12 +806,21 @@ namespace CoreFoundation {
 			}
 		}
 
+#if NET
+		[DllImport (Constants.CFNetworkLibrary)]
+		extern unsafe static /* CFRunLoopSourceRef __nonnull */ IntPtr CFNetworkExecuteProxyAutoConfigurationScript (
+			/* CFStringRef __nonnull */ IntPtr proxyAutoConfigurationScript,
+			/* CFURLRef __nonnull */ IntPtr targetURL,
+			/* CFProxyAutoConfigurationResultCallback __nonnull */ delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> cb,
+			/* CFStreamClientContext * __nonnull */ ref CFStreamClientContext clientContext);
+#else
 		[DllImport (Constants.CFNetworkLibrary)]
 		extern static /* CFRunLoopSourceRef __nonnull */ IntPtr CFNetworkExecuteProxyAutoConfigurationScript (
 			/* CFStringRef __nonnull */ IntPtr proxyAutoConfigurationScript,
 			/* CFURLRef __nonnull */ IntPtr targetURL,
 			/* CFProxyAutoConfigurationResultCallback __nonnull */ CFProxyAutoConfigurationResultCallbackInternal cb,
 			/* CFStreamClientContext * __nonnull */ ref CFStreamClientContext clientContext);
+#endif
 
 		public static CFProxy []? ExecuteProxyAutoConfigurationScript (string proxyAutoConfigurationScript, Uri targetUrl, out NSError? outError)
 		{
@@ -798,10 +833,20 @@ namespace CoreFoundation {
 
 			using (var pacScript = new NSString (proxyAutoConfigurationScript))
 			using (var url = new NSUrl (targetUrl.AbsoluteUri)) {
+#if NET
+				CreatePACCFRunLoopSource factory;
+				unsafe {
+					factory = delegate (delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> cb, ref CFStreamClientContext context)
+					{
+						return CFNetworkExecuteProxyAutoConfigurationScript (pacScript.Handle, url.Handle, cb, ref context);
+					};
+				}
+#else
 				CreatePACCFRunLoopSource factory = delegate (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context)
 				{
 					return CFNetworkExecuteProxyAutoConfigurationScript (pacScript.Handle, url.Handle, cb, ref context);
 				};
+#endif
 				return ExecutePacCFRunLoopSourceBlocking (factory, out outError);
 			}
 		}
@@ -816,21 +861,40 @@ namespace CoreFoundation {
 
 			using (var pacScript = new NSString (proxyAutoConfigurationScript))
 			using (var url = new NSUrl (targetUrl.AbsoluteUri)) {
+#if NET
+				CreatePACCFRunLoopSource factory;
+				unsafe {
+					factory = delegate (delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> cb, ref CFStreamClientContext context)
+					{
+						return CFNetworkExecuteProxyAutoConfigurationScript (pacScript.Handle, url.Handle, cb, ref context);
+					};
+				}
+#else
 				CreatePACCFRunLoopSource factory = delegate (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context)
 				{
 					return CFNetworkExecuteProxyAutoConfigurationScript (pacScript.Handle, url.Handle, cb, ref context);
 				};
+#endif
 				// use the helper task with a factory for this method
 				return await ExecutePacCFRunLoopSourceAsync (factory, cancellationToken).ConfigureAwait (false);
 			}
 		}
 
+#if NET
+		[DllImport (Constants.CFNetworkLibrary)]
+		extern unsafe static /* CFRunLoopSourceRef __nonnull */ IntPtr CFNetworkExecuteProxyAutoConfigurationURL (
+			/* CFURLRef __nonnull */ IntPtr proxyAutoConfigurationURL,
+			/* CFURLRef __nonnull */ IntPtr targetURL,
+			/* CFProxyAutoConfigurationResultCallback __nonnull */ delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> cb,
+			/* CFStreamClientContext * __nonnull */ ref CFStreamClientContext clientContext);
+#else
 		[DllImport (Constants.CFNetworkLibrary)]
 		extern static /* CFRunLoopSourceRef __nonnull */ IntPtr CFNetworkExecuteProxyAutoConfigurationURL (
 			/* CFURLRef __nonnull */ IntPtr proxyAutoConfigurationURL,
 			/* CFURLRef __nonnull */ IntPtr targetURL,
 			/* CFProxyAutoConfigurationResultCallback __nonnull */ CFProxyAutoConfigurationResultCallbackInternal cb,
 			/* CFStreamClientContext * __nonnull */ ref CFStreamClientContext clientContext);
+#endif
 
 		public static CFProxy []? ExecuteProxyAutoConfigurationUrl (Uri proxyAutoConfigurationUrl, Uri targetUrl, out NSError? outError)
 		{
@@ -843,10 +907,20 @@ namespace CoreFoundation {
 
 			using (var pacUrl = new NSUrl (proxyAutoConfigurationUrl.AbsoluteUri)) // toll free bridge to CFUrl
 			using (var url = new NSUrl (targetUrl.AbsoluteUri)) {
+#if NET
+				CreatePACCFRunLoopSource factory;
+				unsafe {
+					factory = delegate (delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> cb, ref CFStreamClientContext context)
+					{
+						return CFNetworkExecuteProxyAutoConfigurationURL (pacUrl.Handle, url.Handle, cb, ref context);
+					};
+				}
+#else
 				CreatePACCFRunLoopSource factory = delegate (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context)
 				{
 					return CFNetworkExecuteProxyAutoConfigurationURL (pacUrl.Handle, url.Handle, cb, ref context);
 				};
+#endif
 				return ExecutePacCFRunLoopSourceBlocking (factory, out outError);
 			}
 		}
@@ -862,10 +936,20 @@ namespace CoreFoundation {
 
 			using (var pacUrl = new NSUrl (proxyAutoConfigurationUrl.AbsoluteUri)) // toll free bridge to CFUrl
 			using (var url = new NSUrl (targetUrl.AbsoluteUri)) {
+#if NET
+				CreatePACCFRunLoopSource factory;
+				unsafe {
+					factory = delegate (delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> cb, ref CFStreamClientContext context)
+					{
+						return CFNetworkExecuteProxyAutoConfigurationURL (pacUrl.Handle, url.Handle, cb, ref context);
+					};
+				}
+#else
 				CreatePACCFRunLoopSource factory = delegate (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context)
 				{
 					return CFNetworkExecuteProxyAutoConfigurationURL (pacUrl.Handle, url.Handle, cb, ref context);
 				};
+#endif
 				// use the helper task with a factory for this method
 				return await ExecutePacCFRunLoopSourceAsync (factory, cancellationToken).ConfigureAwait (false);
 			}
