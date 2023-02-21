@@ -22,9 +22,13 @@ parameters:
   type: boolean
   default: true
 
+- name: stageDisplayNamePrefix
+  type: string
+  default: ''
+
 stages:
 - stage: prepare_release
-  displayName: Prepare Release
+  displayName: '${{ parameters.stageDisplayNamePrefix }}Prepare Release'
   dependsOn: ${{ parameters.dependsOn }}
   condition: and(eq(${{ parameters.isPR }}, false), eq(${{ parameters.enableDotnet }}, true))
 
