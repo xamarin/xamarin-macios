@@ -525,7 +525,13 @@ namespace CoreFoundation {
 				return;
 			GetCheckedHandle ();
 			if (loop is not null) {
+#if NET8_OR_GREATER
+				unsafe {
+					DoSetClient ((delegate* unmanaged<IntPtr, nint, IntPtr, void>) null, (CFIndex) 0, IntPtr.Zero);
+				}
+#else
 				DoSetClient (null, (CFIndex) 0, IntPtr.Zero);
+#endif
 				UnscheduleFromRunLoop (loop, loopMode);
 				loop = null;
 				loopMode = null;
@@ -644,14 +650,20 @@ namespace CoreFoundation {
 
 		protected delegate void CFStreamCallback (IntPtr s, nint type, IntPtr info);
 
+#if NET8_OR_GREATER
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (CFStreamCallback))]
-		static void OnCallback (IntPtr s, nint type, IntPtr info)
+#endif
+		static void NativeCallback (IntPtr s, nint type, IntPtr info)
 		{
 			var stream = GCHandle.FromIntPtr (info).Target as CFStream;
 			stream?.OnCallback ((CFStreamEventType) (long) type);
 		}
 
-		static CFStreamCallback OnCallbackDelegate = OnCallback;
+#if !NET8_OR_GREATER
+		static CFStreamCallback OnCallbackDelegate = NativeCallback;
+#endif
 
 		protected virtual void OnCallback (CFStreamEventType type)
 		{
@@ -698,7 +710,15 @@ namespace CoreFoundation {
 			var ptr = Marshal.AllocHGlobal (Marshal.SizeOf (typeof (CFStreamClientContext)));
 			try {
 				Marshal.StructureToPtr (ctx, ptr, false);
-				if (!DoSetClient (OnCallbackDelegate, (CFIndex) (long) args, ptr))
+				bool clientSet;
+#if NET8_OR_GREATER
+				unsafe {
+					clientSet = DoSetClient (&NativeCallback, (CFIndex) (long) args, ptr) != 0;
+				}
+#else
+				clientSet = DoSetClient (OnCallbackDelegate, (CFIndex) (long) args, ptr);
+#endif
+				if (!clientSet)
 					throw new InvalidOperationException ("Stream does not support async events.");
 			} finally {
 				Marshal.FreeHGlobal (ptr);
@@ -707,8 +727,22 @@ namespace CoreFoundation {
 			ScheduleWithRunLoop (runLoop, runLoopMode);
 		}
 
+#if !XAMCORE_5_0
 		protected abstract bool DoSetClient (CFStreamCallback? callback, CFIndex eventTypes,
 											 IntPtr context);
+#endif
+
+#if NET8_OR_GREATER
+#if XAMCORE_5_0
+		unsafe protected abstract byte DoSetClient (delegate* unmanaged<IntPtr, nint, IntPtr, void> callback, CFIndex eventTypes, IntPtr context);
+#else
+		unsafe protected virtual byte DoSetClient (delegate* unmanaged<IntPtr, nint, IntPtr, void> callback, CFIndex eventTypes, IntPtr context)
+		{
+			throw new InvalidOperationException ($"This method must be overridden (and don't call base)");
+		}
+#endif // XAMCORE_5_0
+#endif // NET8_OR_GREATER
+
 
 #if !NET
 		[Obsolete ("Call 'GetCheckedHandle ()' instead.")]
