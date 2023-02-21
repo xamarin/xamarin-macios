@@ -29,12 +29,14 @@
 
 #nullable enable
 
-using System;
 using ObjCRuntime;
-using System.IO;
-using System.Runtime.InteropServices;
+
+using System;
+using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Foundation {
 	public partial class NSData : IEnumerable, IEnumerable<byte> {
