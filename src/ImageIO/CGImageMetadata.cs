@@ -120,7 +120,7 @@ namespace ImageIO {
 
 		[DllImport (Constants.ImageIOLibrary)]
 		extern unsafe static void CGImageMetadataEnumerateTagsUsingBlock (/* CGImageMetadataRef __nonnull */ IntPtr metadata,
-                        /* CFStringRef __nullable */ IntPtr rootPath, /* CFDictionaryRef __nullable */ IntPtr options, BlockLiteral* block);
+						/* CFStringRef __nullable */ IntPtr rootPath, /* CFDictionaryRef __nullable */ IntPtr options, BlockLiteral* block);
 
 		delegate bool TrampolineCallback (IntPtr blockPtr, NativeHandle key, NativeHandle value);
 
@@ -130,7 +130,7 @@ namespace ImageIO {
 			var nsKey = Runtime.GetNSObject<NSString> (key, true)!;
 			var nsValue = Runtime.GetINativeObject<CGImageMetadataTag> (value, true)!;
 			var del = BlockLiteral.GetTarget<CGImageMetadataTagBlock> (block);
-			return del (nsKey, nsValue);	
+			return del (nsKey, nsValue);
 		}
 
 		static unsafe readonly TrampolineCallback static_action = TagEnumerator;
