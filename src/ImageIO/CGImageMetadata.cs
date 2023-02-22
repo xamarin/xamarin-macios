@@ -143,9 +143,7 @@ namespace ImageIO {
 
 			unsafe {
 				try {
-					var rootHandle = rootPath is null ? NativeHandle.Zero : rootPath.Handle;
-					var oHandle = o is null ? NativeHandle.Zero : o.GetHandle ();
-					CGImageMetadataEnumerateTagsUsingBlock (Handle, rootHandle, oHandle, &block_handler);
+					CGImageMetadataEnumerateTagsUsingBlock (Handle, rootPath.GetHandle (), o.GetHandle (), &block_handler);
 				} finally {
 					block_handler.CleanupBlock ();
 				}
