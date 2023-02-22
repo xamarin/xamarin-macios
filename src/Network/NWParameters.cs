@@ -111,7 +111,21 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static unsafe extern nw_parameters_t nw_parameters_create_secure_tcp (void* configure_tls, void* configure_tcp);
+		static unsafe extern nw_parameters_t nw_parameters_create_secure_tcp (BlockLiteral* configure_tls, BlockLiteral* configure_tcp);
+
+		unsafe static BlockLiteral* CreateBlock (Action<NWProtocolOptions>? callback, BlockLiteral* callbackBlock, out bool disposeReturnValue)
+		{
+			if (callback is null) {
+				disposeReturnValue = false;
+				return DEFAULT_CONFIGURATION ();
+			}
+
+			var block = new BlockLiteral ();
+			block.SetupBlockUnsafe (static_ConfigureHandler, callback);
+			*callbackBlock = block;
+			disposeReturnValue = true;
+			return callbackBlock;
+		}
 
 		//
 		// If you pass null, to either configureTls, or configureTcp they will use the default options
@@ -119,28 +133,19 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe static NWParameters CreateSecureTcp (Action<NWProtocolOptions>? configureTls = null, Action<NWProtocolOptions>? configureTcp = null)
 		{
-			var tlsHandler = new BlockLiteral ();
-			var tcpHandler = new BlockLiteral ();
+			var tlsHandler = default (BlockLiteral);
+			var tcpHandler = default (BlockLiteral);;
 
-			var tlsPtr = &tlsHandler;
-			var tcpPtr = &tcpHandler;
-			if (configureTls is null)
-				tlsPtr = DEFAULT_CONFIGURATION ();
-			else
-				tlsHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTls);
-
-			if (configureTcp is null)
-				tcpPtr = DEFAULT_CONFIGURATION ();
-			else
-				tcpHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTcp);
+			var tlsPtr = CreateBlock (configureTls, &tlsHandler, out var disposeTlsPtr);
+			var tcpPtr = CreateBlock (configureTcp, &tcpHandler, out var disposeTcpPtr);
 
 			var ptr = nw_parameters_create_secure_tcp (tlsPtr, tcpPtr);
 
-			if (configureTls is not null)
-				tlsPtr->CleanupBlock ();
+			if (disposeTlsPtr)
+				tlsPtr->Dispose ();
 
-			if (configureTcp is not null)
-				tcpPtr->CleanupBlock ();
+			if (disposeTcpPtr)
+				tcpPtr->Dispose ();
 
 			return new NWParameters (ptr, owns: true);
 		}
@@ -149,19 +154,13 @@ namespace Network {
 		// If you pass null to configureTcp, it will use the default options
 		public unsafe static NWParameters CreateTcp (Action<NWProtocolOptions>? configureTcp = null)
 		{
-			var tcpHandler = new BlockLiteral ();
-
-			var tcpPtr = &tcpHandler;
-
-			if (configureTcp is null)
-				tcpPtr = DEFAULT_CONFIGURATION ();
-			else
-				tcpHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTcp);
+			var tcpHandler = default (BlockLiteral);
+			var tcpPtr = CreateBlock (configureTcp, &tcpHandler, out var disposeTcpPtr);
 
 			var ptr = nw_parameters_create_secure_tcp (DISABLE_PROTOCOL (), tcpPtr);
 
-			if (configureTcp is not null)
-				tcpPtr->CleanupBlock ();
+			if (disposeTcpPtr)
+				tcpPtr->Dispose ();
 
 			return new NWParameters (ptr, owns: true);
 		}
@@ -176,29 +175,19 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe static NWParameters CreateSecureUdp (Action<NWProtocolOptions>? configureTls = null, Action<NWProtocolOptions>? configureUdp = null)
 		{
-			var tlsHandler = new BlockLiteral ();
-			var udpHandler = new BlockLiteral ();
+			var tlsHandler = default (BlockLiteral);
+			var udpHandler = default (BlockLiteral);
 
-			BlockLiteral* tlsPtr = &tlsHandler;
-			BlockLiteral* udpPtr = &udpHandler;
-
-			if (configureTls is null)
-				tlsPtr = DEFAULT_CONFIGURATION ();
-			else
-				tlsHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTls);
-
-			if (configureUdp is null)
-				udpPtr = DEFAULT_CONFIGURATION ();
-			else
-				udpHandler.SetupBlockUnsafe (static_ConfigureHandler, configureUdp);
+			var tlsPtr = CreateBlock (configureTls, &tlsHandler, out var disposeTlsPtr);
+			var udpPtr = CreateBlock (configureUdp, &udpHandler, out var disposeUdpPtr);
 
 			var ptr = nw_parameters_create_secure_udp (tlsPtr, udpPtr);
 
-			if (configureTls is not null)
-				tlsPtr->CleanupBlock ();
+			if (disposeTlsPtr)
+				tlsPtr->Dispose ();
 
-			if (configureUdp is not null)
-				udpPtr->CleanupBlock ();
+			if (disposeUdpPtr)
+				udpPtr->Dispose ();
 
 			return new NWParameters (ptr, owns: true);
 		}
@@ -207,18 +196,13 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe static NWParameters CreateUdp (Action<NWProtocolOptions>? configureUdp = null)
 		{
-			var udpHandler = new BlockLiteral ();
-
-			var udpPtr = &udpHandler;
-			if (configureUdp is null)
-				udpPtr = DEFAULT_CONFIGURATION ();
-			else
-				udpHandler.SetupBlockUnsafe (static_ConfigureHandler, configureUdp);
+			var udpHandler = default (BlockLiteral);
+			var udpPtr = CreateBlock (configureUdp, &udpHandler, out var disposeUdpPtr);
 
 			var ptr = nw_parameters_create_secure_udp (DISABLE_PROTOCOL (), udpPtr);
 
-			if (configureUdp is not null)
-				udpPtr->CleanupBlock ();
+			if (disposeUdpPtr)
+				udpPtr->Dispose ();
 
 			return new NWParameters (ptr, owns: true);
 		}
@@ -252,18 +236,13 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe static NWParameters CreateCustomIP (byte protocolNumber, Action<NWProtocolOptions>? configureCustomIP = null)
 		{
-			var ipHandler = new BlockLiteral ();
-
-			var ipPtr = &ipHandler;
-			if (configureCustomIP is null)
-				ipPtr = DEFAULT_CONFIGURATION ();
-			else
-				ipHandler.SetupBlockUnsafe (static_ConfigureHandler, configureCustomIP);
+			var ipHandler = default (BlockLiteral);
+			var ipPtr = CreateBlock (configureCustomIP, &ipHandler, out var disposeIpPtr);
 
 			var ptr = nw_parameters_create_custom_ip (protocolNumber, ipPtr);
 
-			if (configureCustomIP is not null)
-				ipPtr->CleanupBlock ();
+			if (disposeIpPtr)
+				ipPtr->Dispose ();
 
 			return new NWParameters (ptr, owns: true);
 		}
@@ -420,18 +399,15 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_parameters_iterate_prohibited_interfaces (nw_parameters_t parameters, ref BlockLiteral callback);
+		unsafe static extern void nw_parameters_iterate_prohibited_interfaces (nw_parameters_t parameters, BlockLiteral* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void IterateProhibitedInterfaces (Func<NWInterface, bool> iterationCallback)
 		{
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_iterateProhibitedHandler, iterationCallback);
-
-			try {
-				nw_parameters_iterate_prohibited_interfaces (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_iterateProhibitedHandler, iterationCallback);
+				nw_parameters_iterate_prohibited_interfaces (GetCheckedHandle (), &block);
 			}
 		}
 
@@ -449,18 +425,15 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_parameters_iterate_prohibited_interface_types (IntPtr handle, ref BlockLiteral callback);
+		unsafe static extern void nw_parameters_iterate_prohibited_interface_types (IntPtr handle, BlockLiteral* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void IterateProhibitedInterfaces (Func<NWInterfaceType, bool> callback)
 		{
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_IterateProhibitedTypeHandler, callback);
-
-			try {
-				nw_parameters_iterate_prohibited_interface_types (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_IterateProhibitedTypeHandler, callback);
+				nw_parameters_iterate_prohibited_interface_types (GetCheckedHandle (), &block);
 			}
 		}
 
@@ -691,24 +664,17 @@ namespace Network {
 		[MacCatalyst (15, 0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public static NWParameters CreateQuic (Action<NWProtocolOptions>? configureQuic = null)
+		public unsafe static NWParameters CreateQuic (Action<NWProtocolOptions>? configureQuic = null)
 		{
-			var quicHandlers = new BlockLiteral ();
+			var quicHandlers = default (BlockLiteral);
+			var quicPtr = CreateBlock (configureQuic, &quicHandlers, out var disposeQuicPtr);
 
-			unsafe {
-				var quicPtr = &quicHandlers;
+			var ptr = nw_parameters_create_quic (quicPtr);
 
-				if (configureQuic is null)
-					quicPtr = DEFAULT_CONFIGURATION ();
-				else
-					quicHandlers.SetupBlockUnsafe (static_ConfigureHandler, configureQuic);
+			if (disposeQuicPtr)
+				quicPtr->Dispose ();
 
-				var ptr = nw_parameters_create_quic (quicPtr);
-
-				if (configureQuic is not null)
-					quicPtr->CleanupBlock ();
-				return new NWParameters (ptr, owns: true);
-			}
+			return new NWParameters (ptr, owns: true);
 		}
 
 #if NET
