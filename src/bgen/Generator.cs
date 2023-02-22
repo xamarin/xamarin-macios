@@ -287,6 +287,13 @@ public partial class Generator : IMemberGatherer {
 			return (mai.IsOut ? "out " : "ref ") + (formatted ? FormatType (null, elementType) : elementType.Name);
 		}
 
+		// Pass "ValueType*" directly
+		if (mai.Type.IsPointer) {
+			var elementType = mai.Type.GetElementType ();
+			if (elementType.IsValueType)
+				return (formatted ? FormatType (null, elementType) : elementType.Name) + "*";
+		}
+
 		if (mai.Type.IsSubclassOf (TypeManager.System_Delegate)) {
 			return NativeHandleType;
 		}
@@ -968,6 +975,13 @@ public partial class Generator : IMemberGatherer {
 				return (pi.IsOut ? "out " : "ref ") + safe_name;
 		}
 
+		// Handle 'ValueType* foo'
+		if (pi.ParameterType.IsPointer) {
+			var et = pi.ParameterType.GetElementType ();
+			if (et.IsValueType)
+				return safe_name;
+		}
+
 		if (pi.ParameterType.IsSubclassOf (TypeManager.System_Delegate)) {
 			return String.Format ("(IntPtr) block_ptr_{0}", pi.Name);
 		}
@@ -1077,7 +1091,7 @@ public partial class Generator : IMemberGatherer {
 				continue;
 			sb.Append ("_");
 			try {
-				sb.Append (ParameterGetMarshalType (new MarshalInfo (this, mi, pi)).Replace (' ', '_'));
+				sb.Append (ParameterGetMarshalType (new MarshalInfo (this, mi, pi)).Replace (' ', '_').Replace ('*', '_'));
 			} catch (BindingException ex) {
 				throw new BindingException (1079, ex.Error, ex, ex.Message, pi.Name.GetSafeParamName (), mi.DeclaringType, mi.Name);
 			}
@@ -1145,7 +1159,7 @@ public partial class Generator : IMemberGatherer {
 		else if (returnType == "char")
 			print (m, "\t\t[return: MarshalAs (UnmanagedType.U2)]");
 
-		print (m, "\t\tpublic extern static {0} {1} ({3}IntPtr receiver, IntPtr selector{2});",
+		print (m, "\t\tpublic unsafe extern static {0} {1} ({3}IntPtr receiver, IntPtr selector{2});",
 			   returnType, method_name, b.ToString (),
 			   need_stret ? (aligned ? "IntPtr" : "out " + FormatTypeUsedIn ("ObjCRuntime", mi.ReturnType)) + " retval, " : "");
 	}
@@ -3698,6 +3712,8 @@ public partial class Generator : IMemberGatherer {
 				//				convs.AppendFormat ("{0}.Handle", pi.Name.GetSafeParamName ());
 			} else if (HasBindAsAttribute (pi)) {
 				convs.AppendFormat ("var nsb_{0} = {1}\n", pi.Name, GetToBindAsWrapper (mi, null, pi));
+			} else if (mai.Type.IsPointer && mai.Type.GetElementType ().IsValueType) {
+				// nothing to do
 			} else {
 				if (mai.Type.IsClass && !mai.Type.IsByRef &&
 					(mai.Type != TypeManager.Selector && mai.Type != TypeManager.Class && mai.Type != TypeManager.System_String && !TypeManager.INativeObject.IsAssignableFrom (mai.Type)))

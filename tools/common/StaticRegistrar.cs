@@ -1105,6 +1105,11 @@ namespace Registrar {
 			return type.Resolve ()?.IsAbstract == true;
 		}
 
+		protected override bool IsPointer (TypeReference type)
+		{
+			return type is PointerType;
+		}
+
 		protected override TypeReference [] GetInterfaces (TypeReference type)
 		{
 			var td = type.Resolve ();
