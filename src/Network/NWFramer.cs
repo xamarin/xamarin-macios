@@ -337,19 +337,7 @@ namespace Network {
 		public NWEndpoint LocalEndpoint => new NWEndpoint (nw_framer_copy_local_endpoint (GetCheckedHandle ()), owns: true);
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_framer_async (OS_nw_framer framer, void* async_block);
-
-		delegate void nw_framer_async_t (IntPtr block);
-		static nw_framer_async_t static_ScheduleHandler = TrampolineScheduleHandler;
-
-		[MonoPInvokeCallback (typeof (nw_framer_async_t))]
-		static void TrampolineScheduleHandler (IntPtr block)
-		{
-			var del = BlockLiteral.GetTarget<Action> (block);
-			if (del is not null) {
-				del ();
-			}
-		}
+		unsafe static extern void nw_framer_async (OS_nw_framer framer, BlockLiteral* async_block);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void ScheduleAsync (Action handler)
@@ -359,14 +347,8 @@ namespace Network {
 					nw_framer_async (GetCheckedHandle (), null);
 					return;
 				}
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral* block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_ScheduleHandler, handler);
-				try {
-					nw_framer_async (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+				using var block = BlockStaticDispatchClass.CreateBlock (handler);
+				nw_framer_async (GetCheckedHandle (), &block);
 			}
 		}
 

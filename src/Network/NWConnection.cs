@@ -581,11 +581,14 @@ namespace Network {
 		public uint MaximumDatagramSize => nw_connection_get_maximum_datagram_size (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
-		extern static void nw_connection_batch (IntPtr handle, IntPtr callback_block);
+		unsafe extern static void nw_connection_batch (IntPtr handle, BlockLiteral* callback_block);
 
 		public void Batch (Action method)
 		{
-			BlockLiteral.SimpleCall (method, (arg) => nw_connection_batch (GetCheckedHandle (), arg));
+			unsafe {
+				using var block = BlockStaticDispatchClass.CreateBlock (method);
+				nw_connection_batch (GetCheckedHandle (), &block);
+			}
 		}
 
 #if NET
