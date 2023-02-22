@@ -530,10 +530,14 @@ namespace ObjCRuntime {
 	// first use of the class
 
 	internal class BlockStaticDispatchClass {
+#if !NET
 		internal delegate void dispatch_block_t (IntPtr block);
 
 		[MonoPInvokeCallback (typeof (dispatch_block_t))]
-		static unsafe void TrampolineDispatchBlock (IntPtr block)
+#else
+		[UnmanagedCallersOnly]
+#endif
+		internal static unsafe void TrampolineDispatchBlock (IntPtr block)
 		{
 			var del = BlockLiteral.GetTarget<Action> (block);
 			if (del != null) {
@@ -544,12 +548,19 @@ namespace ObjCRuntime {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		unsafe internal static BlockLiteral CreateBlock (Action action)
 		{
+#if NET
+			delegate* unmanaged<IntPtr, void> trampoline = &BlockStaticDispatchClass.TrampolineDispatchBlock;
+			return new BlockLiteral (trampoline, action, typeof (BlockStaticDispatchClass), nameof (TrampolineDispatchBlock));
+#else
 			var block = new BlockLiteral ();
 			block.SetupBlockUnsafe (static_dispatch_block, action);
 			return block;
+#endif
 		}
 
+#if !NET
 		internal static dispatch_block_t static_dispatch_block = TrampolineDispatchBlock;
+#endif
 	}
 
 	// This class will free the specified block when it's collected by the GC.

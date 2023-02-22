@@ -141,10 +141,14 @@ namespace Network {
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe OS_nw_protocol_definition nw_framer_create_definition (IntPtr identifier, NWFramerCreateFlags flags, BlockLiteral* start_handler);
+#if !NET
 		delegate NWFramerStartResult nw_framer_create_definition_t (IntPtr block, IntPtr framer);
 		static nw_framer_create_definition_t static_CreateFramerHandler = TrampolineCreateFramerHandler;
 
 		[MonoPInvokeCallback (typeof (nw_framer_create_definition_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static NWFramerStartResult TrampolineCreateFramerHandler (IntPtr block, IntPtr framer)
 		{
 			// get and call, this is internal and we are trying to do all the magic in the call
@@ -170,8 +174,13 @@ namespace Network {
 		public static NWProtocolDefinition CreateFramerDefinition (string identifier, NWFramerCreateFlags flags, Func<NWFramer, NWFramerStartResult> startCallback)
 		{
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, NWFramerStartResult> trampoline = &TrampolineCreateFramerHandler;
+				using var block = new BlockLiteral (trampoline, startCallback, typeof (NWProtocolDefinition), nameof (TrampolineCreateFramerHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_CreateFramerHandler, startCallback);
+#endif
 				using var identifierPtr = new TransientString (identifier);
 				return new NWProtocolDefinition (nw_framer_create_definition (identifierPtr, flags, &block), owns: true);
 			}
