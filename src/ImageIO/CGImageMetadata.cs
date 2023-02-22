@@ -118,50 +118,38 @@ namespace ImageIO {
 			return (result == IntPtr.Zero) ? null : new CGImageMetadataTag (result, true);
 		}
 
-#if NET
 		[DllImport (Constants.ImageIOLibrary)]
 		extern unsafe static void CGImageMetadataEnumerateTagsUsingBlock (/* CGImageMetadataRef __nonnull */ IntPtr metadata,
-			/* CFStringRef __nullable */ IntPtr rootPath, /* CFDictionaryRef __nullable */ IntPtr options,
-			/* __nonnull */ delegate* unmanaged<NativeHandle, NativeHandle, bool> block);
-#else
-		[DllImport (Constants.ImageIOLibrary)]
-		extern static void CGImageMetadataEnumerateTagsUsingBlock (/* CGImageMetadataRef __nonnull */ IntPtr metadata,
-			/* CFStringRef __nullable */ IntPtr rootPath, /* CFDictionaryRef __nullable */ IntPtr options,
-			/* __nonnull */ CGImageMetadataTagBlock block);
-#endif
+                        /* CFStringRef __nullable */ IntPtr rootPath, /* CFDictionaryRef __nullable */ IntPtr options, BlockLiteral* block);
 
-#if NET
-		[ThreadStatic]
-		static CGImageMetadataTagBlock? callbackBlock;
+		delegate bool TrampolineCallback (IntPtr blockPtr, NativeHandle key, NativeHandle value);
 
-		[UnmanagedCallersOnly]
-		static bool TagEnumerator (NativeHandle key, NativeHandle value)
+		[MonoPInvokeCallback (typeof (TrampolineCallback))]
+		static bool TagEnumerator (IntPtr block, NativeHandle key, NativeHandle value)
 		{
-			if (callbackBlock is null)
-				return false;
 			var nsKey = Runtime.GetNSObject<NSString> (key, true)!;
 			var nsValue = Runtime.GetINativeObject<CGImageMetadataTag> (value, true)!;
-			return callbackBlock (nsKey, nsValue);	
+			var del = BlockLiteral.GetTarget<CGImageMetadataTagBlock> (block);
+			return del (nsKey, nsValue);	
 		}
-#endif
+
+		static unsafe readonly TrampolineCallback static_action = TagEnumerator;
 
 		public void EnumerateTags (NSString? rootPath, CGImageMetadataEnumerateOptions? options, CGImageMetadataTagBlock block)
 		{
 			using var o = options?.ToDictionary ();
-#if NET
+			var block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_action, block);
+
 			unsafe {
-				if (callbackBlock is not null)
-					throw new NotSupportedException ("can't enumerate CGImageMetadataTag objects re-entrantly.");
-				callbackBlock = block;
 				try {
-					CGImageMetadataEnumerateTagsUsingBlock (Handle, rootPath.GetHandle (), o.GetHandle (), &TagEnumerator);
+					var rootHandle = rootPath is null ? NativeHandle.Zero : rootPath.Handle;
+					var oHandle = o is null ? NativeHandle.Zero : o.GetHandle ();
+					CGImageMetadataEnumerateTagsUsingBlock (Handle, rootHandle, oHandle, &block_handler);
 				} finally {
-					callbackBlock = null;
+					block_handler.CleanupBlock ();
 				}
 			}
-#else
-			CGImageMetadataEnumerateTagsUsingBlock (Handle, rootPath.GetHandle (), o.GetHandle (), block);
-#endif
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]

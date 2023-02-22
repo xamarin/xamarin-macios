@@ -12,6 +12,9 @@ using UIKit;
 #endif
 using CoreGraphics;
 using NUnit.Framework;
+using ImageIO;
+using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 namespace MonoTouchFixtures.CoreGraphics {
 	[TestFixture]
@@ -20,8 +23,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		CGImageMetadata SampleMetadata ()
 		{
 			var xmpString = "<x:xmpmeta xmlns:x=\"adobe:ns:meta/\" x:xmptk=\"XMP Core 5.4.0\"><rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"><rdf:Description rdf:about=\"\" xmlns:apple_desktop=\"http://ns.apple.com/namespace/1.0/\"><apple_desktop:solar>123</apple_desktop:solar></rdf:Description></rdf:RDF></x:xmpmeta>";
-			var xmpPointer = Marshal.StringToHGlobalAnsi (xmpString);
-			var xmpData = new NSData (xmpPointer);
+			var xmpData = NSData.FromString (xmpString);
 			return new CGImageMetadata (xmpData);
 		}
 
@@ -31,13 +33,13 @@ namespace MonoTouchFixtures.CoreGraphics {
 			var data = SampleMetadata ();
 			var keys = new List<NSString> ();
 			var tags = new List<CGImageMetadataTag> ();
-			data.EnumerateTags (null, (key, tag) => {
+			data.EnumerateTags (null, null, (key, tag) => {
 				keys.Add (key);
 				tags.Add (tag);
 				return true;
 			});
-			Assert.AreEqual (2, keys.Count (), "key count mismatch");
-			Assert.AreEqual (2, tags.Count (), "tag count mistmatch");
+			Assert.AreEqual (2, keys.Count, "key count mismatch");
+			Assert.AreEqual (2, tags.Count, "tag count mistmatch");
 		}
 	}
 }
