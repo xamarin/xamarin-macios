@@ -113,6 +113,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static unsafe extern nw_parameters_t nw_parameters_create_secure_tcp (BlockLiteral* configure_tls, BlockLiteral* configure_tcp);
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		unsafe static BlockLiteral* CreateBlock (Action<NWProtocolOptions>? callback, BlockLiteral* callbackBlock, out bool disposeReturnValue)
 		{
 			if (callback is null) {
