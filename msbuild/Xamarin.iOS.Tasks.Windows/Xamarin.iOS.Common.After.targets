@@ -312,13 +312,33 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		Outputs="$(_LinkSemaphore)">
 
 		<PropertyGroup>
-			<!-- We need to use netX.Y because when building from VS it sets MSBuildRuntimeType to Core and will pick net472 (which doesn't contain the illink assembly) -->
-			<_RemoteILLinkPath>$(ILLinkTasksAssembly.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)').Replace('net472', 'net$(BundledNETCoreAppTargetFrameworkVersion)').Replace('$([System.IO.Path]::GetFileName('$(ILLinkTasksAssembly)'))', 'illink.dll'))</_RemoteILLinkPath>
+			<_ILLinkContainedInSDK>$(ILLinkTasksAssembly.Contains('$(NetCoreRoot)'))</_ILLinkContainedInSDK>
 
 			<!-- The .NET 7 linker sets _TrimmerDefaultAction instead of TrimmerDefaultAction, so copy that value if it's set (and TrimmerDefaultAction is not set) -->
 			<TrimmerDefaultAction Condition="'$(TrimmerDefaultAction)' == ''">$(_TrimmerDefaultAction)</TrimmerDefaultAction>
 
 			<_RemoteExtraTrimmerArgs Condition="'$(_ExtraTrimmerArgs)' != ''">$(_ExtraTrimmerArgs.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)'))</_RemoteExtraTrimmerArgs>
+		</PropertyGroup>
+
+		<!-- This means that ILLink is still part of the dotnet SDK (< net8) -->
+		<PropertyGroup Condition="'$(_ILLinkContainedInSDK)' == 'true'">
+			<!-- We need to use netX.Y because when building from VS it sets MSBuildRuntimeType to Core and will pick net472 (which doesn't contain the illink assembly) -->
+			<_RemoteILLinkPath>$(ILLinkTasksAssembly.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)').Replace('net472', 'net$(BundledNETCoreAppTargetFrameworkVersion)').Replace('$([System.IO.Path]::GetFileName('$(ILLinkTasksAssembly)'))', 'illink.dll'))</_RemoteILLinkPath>
+		</PropertyGroup>
+
+		<!-- This means that now ILLink is not part of the dotnet SDK anymore but installed as a NuGet package (>= net8)-->
+		<PropertyGroup Condition="'$(_ILLinkContainedInSDK)' == 'false'">
+			<_FallbackBundledNETCoreAppTargetFrameworkVersion>7.0</_FallbackBundledNETCoreAppTargetFrameworkVersion>
+			<!-- .home folder used for remote dotnet installation purposes. e.g: ~/Libray/Caches/Xamarin/XMA/SDKs/.home/ -->
+			<_RemoteHomeDirectory>$(_DotNetRootRemoteDirectory)../.home/</_RemoteHomeDirectory>
+			<!-- We want to get rid of the Windows specific path and let only the path that is also a valid relative path on the Mac -->
+			<!-- e.g: go from `C:\Users\user1\.nuget\packages\microsoft.net.illink.tasks\8.0.100-1.23067.1\build\..\tools\net8.0\illink.dll` to `.nuget\packages\microsoft.net.illink.tasks\8.0.100-1.23067.1\build\..\tools\net8.0\illink.dll` -->
+			<_ILLinkTasksAssemblyRelativePath>$(ILLinkTasksAssembly.Substring($(ILLinkTasksAssembly.IndexOf('.nuget'))))</_ILLinkTasksAssemblyRelativePath>
+			<_RemoteILLinkPath>$(_RemoteHomeDirectory)$(_ILLinkTasksAssemblyRelativePath)</_RemoteILLinkPath>
+			<!-- We need to use netX.Y because when building from VS it sets MSBuildRuntimeType to Core and will pick net472 (which doesn't contain the illink assembly) -->
+			<_RemoteILLinkPath>$(_RemoteILLinkPath.Replace('net472', 'net$(BundledNETCoreAppTargetFrameworkVersion)').Replace('$([System.IO.Path]::GetFileName('$(ILLinkTasksAssembly)'))', 'illink.dll'))</_RemoteILLinkPath>
+			<!-- In case the inference logic fails and the NuGet package doesn't contain that target framework version, we use a fallback version that we know it will exist -->
+			<_RemoteILLinkPath Condition="!Exists('$(_RemoteILLinkPath)')">$(_RemoteILLinkPath.Replace('net$(BundledNETCoreAppTargetFrameworkVersion)', 'net$(_FallbackBundledNETCoreAppTargetFrameworkVersion)'))</_RemoteILLinkPath>
 		</PropertyGroup>
 
 		<!-- Include Debug symbols as input so those are copied to the server -->
@@ -358,6 +378,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 				RootDescriptorFiles="@(TrimmerRootDescriptor)"
 				OutputDirectory="$(IntermediateLinkDir)"
 				DumpDependencies="$(_TrimmerDumpDependencies)"
+				DependenciesFileFormat="$(_TrimmerDependenciesFileFormat)"
 				ExtraArgs="$(_RemoteExtraTrimmerArgs)"
 				ToolExe="$(_DotNetHostFileName)"
 				ToolPath="$(_DotNetHostDirectory)"
