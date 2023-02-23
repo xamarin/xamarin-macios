@@ -33,6 +33,7 @@
 #nullable enable
 
 using System;
+using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
@@ -728,6 +729,10 @@ namespace CoreFoundation {
 		}
 
 #if !XAMCORE_5_0
+#if NET8_OR_GREATER
+		[Obsolete ("Use the other overload.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+#endif
 		protected abstract bool DoSetClient (CFStreamCallback? callback, CFIndex eventTypes,
 											 IntPtr context);
 #endif

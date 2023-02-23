@@ -30,6 +30,7 @@
 #nullable enable
 
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using CoreFoundation;
@@ -150,6 +151,10 @@ namespace CoreFoundation {
 #endif
 
 #if !XAMCORE_5_0
+#if NET8_OR_GREATER
+		[Obsolete ("Use the other overload.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+#endif
 		protected override bool DoSetClient (CFStreamCallback? callback, CFIndex eventTypes,
 											 IntPtr context)
 		{
