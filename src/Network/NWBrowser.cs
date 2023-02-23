@@ -131,18 +131,18 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_browser_set_browse_results_changed_handler (OS_nw_browser browser, BlockLiteral* handler);
 
-		delegate void nw_browser_browse_results_changed_handler_t (IntPtr block, IntPtr oldResult, IntPtr newResult, bool completed);
+		delegate void nw_browser_browse_results_changed_handler_t (IntPtr block, IntPtr oldResult, IntPtr newResult, byte completed);
 		static nw_browser_browse_results_changed_handler_t static_ChangesHandler = TrampolineChangesHandler;
 
 		[MonoPInvokeCallback (typeof (nw_browser_browse_results_changed_handler_t))]
-		static void TrampolineChangesHandler (IntPtr block, IntPtr oldResult, IntPtr newResult, bool completed)
+		static void TrampolineChangesHandler (IntPtr block, IntPtr oldResult, IntPtr newResult, byte completed)
 		{
 			var del = BlockLiteral.GetTarget<NWBrowserChangesDelegate> (block);
 			if (del is not null) {
 				// we do the cleanup of the objs in the internal handlers
 				NWBrowseResult? nwOldResult = (oldResult == IntPtr.Zero) ? null : new NWBrowseResult (oldResult, owns: false);
 				NWBrowseResult? nwNewResult = (newResult == IntPtr.Zero) ? null : new NWBrowseResult (newResult, owns: false);
-				del (nwOldResult, nwNewResult, completed);
+				del (nwOldResult, nwNewResult, completed != 0);
 			}
 		}
 
