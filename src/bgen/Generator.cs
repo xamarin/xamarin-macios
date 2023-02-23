@@ -62,6 +62,14 @@ public partial class Generator : IMemberGatherer {
 	Frameworks Frameworks { get { return BindingTouch.Frameworks; } }
 	public TypeManager TypeManager { get { return BindingTouch.TypeManager; } }
 	public AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
+
+	Nomenclator nomenclator;
+	Nomenclator Nomenclator {
+		get {
+			nomenclator ??= new (AttributeManager);
+			return nomenclator;
+		}
+	}
 	public GeneratedTypes GeneratedTypes;
 	List<Exception> exceptions = new List<Exception> ();
 
@@ -73,7 +81,6 @@ public partial class Generator : IMemberGatherer {
 	Dictionary<string, string> send_methods = new Dictionary<string, string> ();
 	readonly MarshalTypeList marshalTypes = new ();
 	Dictionary<Type, TrampolineInfo> trampolines = new Dictionary<Type, TrampolineInfo> ();
-	Dictionary<Type, int> trampolines_generic_versions = new Dictionary<Type, int> ();
 	Dictionary<Type, Type> notification_event_arg_types = new Dictionary<Type, Type> ();
 	Dictionary<string, string> libraries = new Dictionary<string, string> (); // <LibraryName, libraryPath>
 
@@ -599,20 +606,6 @@ public partial class Generator : IMemberGatherer {
 		return true;
 	}
 
-	public string MakeTrampolineName (Type t)
-	{
-		var trampoline_name = t.Name.Replace ("`", "Arity");
-		if (t.IsGenericType) {
-			var gdef = t.GetGenericTypeDefinition ();
-
-			if (!trampolines_generic_versions.ContainsKey (gdef))
-				trampolines_generic_versions.Add (gdef, 0);
-
-			trampoline_name = trampoline_name + "V" + trampolines_generic_versions [gdef]++;
-		}
-		return trampoline_name;
-	}
-
 	//
 	// MakeTrampoline: processes a delegate type and registers a TrampolineInfo with all the information
 	// necessary to create trampolines that allow Objective-C blocks to call C# code, and C# code to call
@@ -783,7 +776,7 @@ public partial class Generator : IMemberGatherer {
 				}
 				if (AttributeManager.HasAttribute<BlockCallbackAttribute> (pi)) {
 					pars.AppendFormat ("{1} {0}", safe_name, NativeHandleType);
-					invoke.AppendFormat ("NID{0}.Create ({1})!", MakeTrampolineName (pi.ParameterType), safe_name);
+					invoke.AppendFormat ("NID{0}.Create ({1})!", Nomenclator.GetTrampolineName (pi.ParameterType), safe_name);
 					// The trampoline will eventually be generated in the final loop
 				} else {
 					if (!AttributeManager.HasAttribute<CCallbackAttribute> (pi)) {
@@ -804,7 +797,7 @@ public partial class Generator : IMemberGatherer {
 
 		var rt = mi.ReturnType;
 		var rts = IsNativeEnum (rt) ? "var" : RenderType (rt);
-		var trampoline_name = MakeTrampolineName (t);
+		var trampoline_name = Nomenclator.GetTrampolineName (t);
 		var ti = new TrampolineInfo (userDelegate: FormatType (null, t),
 						 delegateName: "D" + trampoline_name,
 						 trampolineName: "T" + trampoline_name,
@@ -3616,6 +3609,11 @@ public partial class Generator : IMemberGatherer {
 				string trampoline_name = MakeTrampoline (pi.ParameterType).StaticName;
 				string extra = "";
 				bool null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
+				if (!null_allowed) {
+					var property = GetProperty (mi);
+					if (property is not null)
+						null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (property);
+				}
 
 				convs.AppendFormat ("BlockLiteral *block_ptr_{0};\n", pi.Name);
 				convs.AppendFormat ("BlockLiteral block_{0};\n", pi.Name);
@@ -6592,9 +6590,9 @@ public partial class Generator : IMemberGatherer {
 							if (bta.Singleton || mi.GetParameters ().Length == 1)
 								print ("internal EventHandler? {0};", miname);
 							else
-								print ("internal EventHandler<{0}>? {1};", GetEventArgName (mi), miname);
+								print ("internal EventHandler<{0}>? {1};", Nomenclator.GetEventArgName (mi), miname);
 						} else
-							print ("internal {0}? {1};", GetDelegateName (mi), miname);
+							print ("internal {0}? {1};", Nomenclator.GetDelegateName (mi), miname);
 
 						print ("[Preserve (Conditional = true)]");
 						if (isProtocolizedEventBacked)
@@ -6612,7 +6610,7 @@ public partial class Generator : IMemberGatherer {
 							if (debug)
 								print ("Console.WriteLine (\"Method {0}.{1} invoked\");", dtype.Name, mi.Name);
 							if (pars.Length != minPars) {
-								eaname = GetEventArgName (mi);
+								eaname = Nomenclator.GetEventArgName (mi);
 								if (!generatedEvents.ContainsKey (eaname) && !eventArgTypes.ContainsKey (eaname)) {
 									eventArgTypes.Add (eaname, pars);
 									generatedEvents.Add (eaname, pars);
@@ -6648,7 +6646,7 @@ public partial class Generator : IMemberGatherer {
 							indent--;
 							print ("}");
 						} else {
-							var delname = GetDelegateName (mi);
+							var delname = Nomenclator.GetDelegateName (mi);
 
 							if (!generatedDelegates.ContainsKey (delname) && !delegate_types.ContainsKey (delname)) {
 								generatedDelegates.Add (delname, null);
@@ -6745,7 +6743,7 @@ public partial class Generator : IMemberGatherer {
 
 				string prev_miname = null;
 				int minameCount = 0;
-				repeatedDelegateApiNames.Clear ();
+				Nomenclator.ForgetDelegateApiNames ();
 				// Now add the instance vars and event handlers
 				foreach (var dtype in bta.Events.OrderBy (d => d.Name, StringComparer.Ordinal)) {
 					foreach (var mi in dtype.GatherMethods (this).OrderBy (m => m.Name, StringComparer.Ordinal)) {
@@ -6766,14 +6764,14 @@ public partial class Generator : IMemberGatherer {
 							PrintObsoleteAttributes (mi);
 
 							if (bta.Singleton && mi.GetParameters ().Length == 0 || mi.GetParameters ().Length == 1)
-								print ("public event EventHandler {0} {{", GetEventName (mi).CamelCase ());
+								print ("public event EventHandler {0} {{", Nomenclator.GetEventName (mi).CamelCase ());
 							else
-								print ("public event EventHandler<{0}> {1} {{", GetEventArgName (mi), GetEventName (mi).CamelCase ());
+								print ("public event EventHandler<{0}> {1} {{", Nomenclator.GetEventArgName (mi), Nomenclator.GetEventName (mi).CamelCase ());
 							print ("\tadd {{ Ensure{0} ({1})!.{2} += value; }}", dtype.Name, ensureArg, miname);
 							print ("\tremove {{ Ensure{0} ({1})!.{2} -= value; }}", dtype.Name, ensureArg, miname);
 							print ("}\n");
 						} else {
-							print ("public {0}? {1} {{", GetDelegateName (mi), GetDelegateApiName (mi).CamelCase ());
+							print ("public {0}? {1} {{", Nomenclator.GetDelegateName (mi), Nomenclator.GetDelegateApiName (mi).CamelCase ());
 							print ("\tget {{ return Ensure{0} ({1})!.{2}; }}", dtype.Name, ensureArg, miname);
 							print ("\tset {{ Ensure{0} ({1})!.{2} = value; }}", dtype.Name, ensureArg, miname);
 							print ("}\n");
@@ -6951,7 +6949,7 @@ public partial class Generator : IMemberGatherer {
 			}
 			// Now add the EventArgs classes
 			foreach (var eaclass in eventArgTypes.Keys.OrderBy (e => e, StringComparer.Ordinal)) {
-				if (skipGeneration.ContainsKey (eaclass)) {
+				if (Nomenclator.WasEventArgGenerated (eaclass)) {
 					continue;
 				}
 				int minPars = bta.Singleton ? 0 : 1;
@@ -7254,73 +7252,6 @@ public partial class Generator : IMemberGatherer {
 	bool MustPullValuesBack (IEnumerable<ParameterInfo> parameters)
 	{
 		return parameters.Any (pi => pi.ParameterType.IsByRef);
-	}
-
-	Dictionary<string, bool> skipGeneration = new Dictionary<string, bool> ();
-	string GetEventName (MethodInfo mi)
-	{
-		var a = AttributeManager.GetCustomAttribute<EventNameAttribute> (mi);
-		if (a == null)
-			return mi.Name;
-		var ea = (EventNameAttribute) a;
-
-		return ea.EvtName;
-	}
-
-	HashSet<string> repeatedDelegateApiNames = new HashSet<string> ();
-	string GetDelegateApiName (MethodInfo mi)
-	{
-		var a = AttributeManager.GetCustomAttribute<DelegateApiNameAttribute> (mi);
-
-		if (repeatedDelegateApiNames.Contains (mi.Name) && a == null)
-			throw new BindingException (1043, true, mi.Name);
-		if (a == null) {
-			repeatedDelegateApiNames.Add (mi.Name);
-			return mi.Name;
-		}
-
-		var apiName = (DelegateApiNameAttribute) a;
-		if (repeatedDelegateApiNames.Contains (apiName.Name))
-			throw new BindingException (1044, true, apiName.Name);
-
-		return apiName.Name;
-	}
-
-	string GetEventArgName (MethodInfo mi)
-	{
-		if (mi.GetParameters ().Length == 1)
-			return "EventArgs";
-
-		var a = AttributeManager.GetCustomAttribute<EventArgsAttribute> (mi);
-		if (a == null)
-			throw new BindingException (1004, true, mi.DeclaringType.FullName, mi.Name, mi.GetParameters ().Length);
-
-		var ea = (EventArgsAttribute) a;
-		if (ea.ArgName.EndsWith ("EventArgs", StringComparison.Ordinal))
-			throw new BindingException (1005, true, mi.DeclaringType.FullName, mi.Name);
-
-		if (ea.SkipGeneration) {
-			skipGeneration [ea.FullName ? ea.ArgName : ea.ArgName + "EventArgs"] = true;
-		}
-
-		if (ea.FullName)
-			return ea.ArgName;
-
-		return ea.ArgName + "EventArgs";
-	}
-
-	string GetDelegateName (MethodInfo mi)
-	{
-		Attribute a = AttributeManager.GetCustomAttribute<DelegateNameAttribute> (mi);
-		if (a != null)
-			return ((DelegateNameAttribute) a).Name;
-
-		a = AttributeManager.GetCustomAttribute<EventArgsAttribute> (mi);
-		if (a == null)
-			throw new BindingException (1006, true, mi.DeclaringType.FullName, mi.Name);
-
-		ErrorHelper.Warning (1102, mi.DeclaringType.FullName, mi.Name);
-		return ((EventArgsAttribute) a).ArgName;
 	}
 
 	object GetDefaultValue (MethodInfo mi)

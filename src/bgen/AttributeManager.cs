@@ -16,7 +16,7 @@ public class AttributeManager {
 		BindingTouch = binding_touch;
 	}
 
-	System.Type LookupReflectionType (string fullname, ICustomAttributeProvider provider)
+	Type LookupReflectionType (string fullname, ICustomAttributeProvider provider)
 	{
 		switch (fullname) {
 		case "AbstractAttribute":
@@ -498,7 +498,7 @@ public class AttributeManager {
 		return Array.Empty<T> ();
 	}
 
-	public T [] GetCustomAttributes<T> (ICustomAttributeProvider provider) where T : System.Attribute
+	public virtual T [] GetCustomAttributes<T> (ICustomAttributeProvider provider) where T : System.Attribute
 	{
 		return FilterAttributes<T> (GetIKVMAttributes (provider), provider);
 	}
@@ -527,7 +527,7 @@ public class AttributeManager {
 		return false;
 	}
 
-	public bool HasAttribute<T> (ICustomAttributeProvider provider) where T : Attribute
+	public virtual bool HasAttribute<T> (ICustomAttributeProvider provider) where T : Attribute
 	{
 		var attribute_type = ConvertTypeToMeta (typeof (T), provider);
 		var attribs = GetIKVMAttributes (provider);
@@ -545,7 +545,7 @@ public class AttributeManager {
 		return false;
 	}
 
-	public T GetCustomAttribute<T> (ICustomAttributeProvider provider) where T : System.Attribute
+	public virtual T GetCustomAttribute<T> (ICustomAttributeProvider provider) where T : System.Attribute
 	{
 		if (provider is null)
 			return null;
@@ -575,7 +575,7 @@ public class AttributeManager {
 		throw ErrorHelper.CreateError (1059, rv.Length, typeof (T).FullName, name);
 	}
 
-	public bool HasNativeAttribute (ICustomAttributeProvider provider)
+	public virtual bool HasNativeAttribute (ICustomAttributeProvider provider)
 	{
 		if (provider is null)
 			return false;
@@ -583,7 +583,7 @@ public class AttributeManager {
 		return HasAttribute (provider, "NativeIntegerAttribute");
 	}
 
-	public bool HasAttribute<T> (ICustomAttributeProvider i, Attribute [] attributes) where T : Attribute
+	public virtual bool HasAttribute<T> (ICustomAttributeProvider i, Attribute [] attributes) where T : Attribute
 	{
 		if (attributes is null)
 			return HasAttribute<T> (i);

@@ -117,6 +117,7 @@
     <Compile Include="..\src\bgen\IMemberGatherer.cs" />
     <Compile Include="..\src\bgen\MemberInformation.cs" />
     <Compile Include="..\src\bgen\NamespaceManager.cs" />
+    <Compile Include="..\src\bgen\Nomenclator.cs" />
     <Compile Include="..\src\bgen\NullabilityInfoContext.cs" />
     <Compile Include="..\src\bgen\PlatformNameExtensions.cs" />
     <Compile Include="..\src\bgen\StringExtensions.cs" />
