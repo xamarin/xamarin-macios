@@ -217,13 +217,13 @@ namespace ObjCRuntime {
 			}
 
 			if (block_descriptor != IntPtr.Zero) {
-				var xblock_descriptor = (XamarinBlockDescriptor *) block_descriptor;
-	#pragma warning disable 420
+				var xblock_descriptor = (XamarinBlockDescriptor*) block_descriptor;
+#pragma warning disable 420
 				// CS0420: A volatile field references will not be treated as volatile
 				// Documentation says: "A volatile field should not normally be passed using a ref or out parameter, since it will not be treated as volatile within the scope of the function. There are exceptions to this, such as when calling an interlocked API."
 				// So ignoring the warning, since it's a documented exception.
 				var rc = Interlocked.Decrement (ref xblock_descriptor->ref_count);
-	#pragma warning restore 420
+#pragma warning restore 420
 
 				if (rc == 0)
 					Marshal.FreeHGlobal (block_descriptor);

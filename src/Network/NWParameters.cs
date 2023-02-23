@@ -134,7 +134,7 @@ namespace Network {
 		public unsafe static NWParameters CreateSecureTcp (Action<NWProtocolOptions>? configureTls = null, Action<NWProtocolOptions>? configureTcp = null)
 		{
 			var tlsHandler = default (BlockLiteral);
-			var tcpHandler = default (BlockLiteral);;
+			var tcpHandler = default (BlockLiteral); ;
 
 			var tlsPtr = CreateBlock (configureTls, &tlsHandler, out var disposeTlsPtr);
 			var tcpPtr = CreateBlock (configureTcp, &tcpHandler, out var disposeTcpPtr);
