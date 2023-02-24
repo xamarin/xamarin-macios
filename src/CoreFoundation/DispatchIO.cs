@@ -81,7 +81,7 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		extern static void dispatch_read (int fd, nuint length, IntPtr dispatchQueue, ref BlockLiteral block);
+		unsafe extern static void dispatch_read (int fd, nuint length, IntPtr dispatchQueue, BlockLiteral* block);
 
 		//
 		// if size == nuint.MaxValue, reads as much data as is available
@@ -94,14 +94,15 @@ namespace CoreFoundation {
 			if (dispatchQueue is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dispatchQueue));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_DispatchReadWriteHandler, handler);
-			dispatch_read (fd, size, dispatchQueue.Handle, ref block_handler);
-			block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_DispatchReadWriteHandler, handler);
+				dispatch_read (fd, size, dispatchQueue.Handle, &block);
+			}
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		extern static void dispatch_write (int fd, IntPtr dispatchData, IntPtr dispatchQueue, ref BlockLiteral handler);
+		unsafe extern static void dispatch_write (int fd, IntPtr dispatchData, IntPtr dispatchQueue, BlockLiteral* handler);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void Write (int fd, DispatchData dispatchData, DispatchQueue dispatchQueue, DispatchIOHandler handler)
@@ -113,10 +114,11 @@ namespace CoreFoundation {
 			if (dispatchQueue is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dispatchQueue));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_DispatchReadWriteHandler, handler);
-			dispatch_write (fd, dispatchData.Handle, dispatchQueue.Handle, ref block_handler);
-			block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_DispatchReadWriteHandler, handler);
+				dispatch_write (fd, dispatchData.Handle, dispatchQueue.Handle, &block);
+			}
 		}
 	}
 }

@@ -220,7 +220,7 @@ namespace CoreText {
 		[Mac (10, 11)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern void CTLineEnumerateCaretOffsets (IntPtr line, ref BlockLiteral blockEnumerator);
+		unsafe static extern void CTLineEnumerateCaretOffsets (IntPtr line, BlockLiteral* blockEnumerator);
 
 		static unsafe readonly CaretEdgeEnumeratorProxy static_enumerate = TrampolineEnumerate;
 
@@ -247,10 +247,11 @@ namespace CoreText {
 			if (enumerator is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (enumerator));
 
-			var block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_enumerate, enumerator);
-			CTLineEnumerateCaretOffsets (Handle, ref block_handler);
-			block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_enumerate, enumerator);
+				CTLineEnumerateCaretOffsets (Handle, &block);
+			}
 		}
 		#endregion
 	}
