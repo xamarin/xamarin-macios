@@ -127,14 +127,15 @@ namespace ImageIO {
 		[MonoPInvokeCallback (typeof (TrampolineCallback))]
 		static bool TagEnumerator (IntPtr block, NativeHandle key, NativeHandle value)
 		{
-			var nsKey = Runtime.GetNSObject<NSString> (key, true)!;
-			var nsValue = Runtime.GetINativeObject<CGImageMetadataTag> (value, true)!;
+			var nsKey = Runtime.GetNSObject<NSString> (key, false)!;
+			var nsValue = Runtime.GetINativeObject<CGImageMetadataTag> (value, false)!;
 			var del = BlockLiteral.GetTarget<CGImageMetadataTagBlock> (block);
 			return del (nsKey, nsValue);
 		}
 
 		static unsafe readonly TrampolineCallback static_action = TagEnumerator;
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateTags (NSString? rootPath, CGImageMetadataEnumerateOptions? options, CGImageMetadataTagBlock block)
 		{
 			using var o = options?.ToDictionary ();
