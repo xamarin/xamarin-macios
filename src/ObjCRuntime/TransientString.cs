@@ -91,8 +91,10 @@ namespace ObjCRuntime {
 			if (arr is null)
 				return IntPtr.Zero;
 			var ptrArr = Marshal.AllocHGlobal (arr.Length * IntPtr.Size);
-			for (int i = 0; i < arr.Length; i++) {
-				Marshal.WriteIntPtr (ptrArr + 4 * i, new TransientString (arr [i], encoding));
+			var offset = 0;
+			var step = IntPtr.Size;
+			for (int i = 0; i < arr.Length; i++, offset += step) {
+				Marshal.WriteIntPtr (ptrArr + offset, new TransientString (arr [i], encoding));
 			}
 			return ptrArr;
 		}
@@ -101,8 +103,10 @@ namespace ObjCRuntime {
 		{
 			if (ptrArr == IntPtr.Zero)
 				return;
-			for (int i = 0; i < count; i++) {
-				Marshal.FreeHGlobal (Marshal.ReadIntPtr (ptrArr + 4 * i));
+			var offset = 0;
+			var step = IntPtr.Size;
+			for (int i = 0; i < count; i++, offset += step) {
+				Marshal.FreeHGlobal (Marshal.ReadIntPtr (ptrArr + offset));
 			}
 			Marshal.FreeHGlobal (ptrArr);
 		}
