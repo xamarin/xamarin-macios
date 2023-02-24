@@ -2485,6 +2485,9 @@ namespace Registrar {
 				return res + "*";
 			}
 
+			if (type is PointerType pt)
+				return ToObjCParameterType (pt.ElementType, descriptiveMethodName, exceptions, inMethod, delegateToBlockType) + "*";
+
 			ArrayType arrtype = type as ArrayType;
 			if (arrtype != null)
 				return "NSArray *";
@@ -3964,6 +3967,8 @@ namespace Registrar {
 						} else {
 							setup_call_stack.AppendLine ("arg_ptrs [{0}] = &p{0};", i);
 						}
+					} else if (type.IsPointer) {
+						setup_call_stack.AppendLine ("arg_ptrs [{0}] = p{0};", i);
 					} else if (td.BaseType.FullName == "System.MulticastDelegate") {
 						if (isRef) {
 							throw ErrorHelper.CreateError (4110, Errors.MT4110, type.FullName, descriptiveMethodName);
