@@ -42,7 +42,7 @@ namespace OpenTK.Graphics.OpenGL
     [Serializable]
     public struct Color4 : IEquatable<Color4>
     {
-        #region Fields
+#region Fields
 
         /// <summary>
         /// The red component of this Color4 structure.
@@ -64,9 +64,9 @@ namespace OpenTK.Graphics.OpenGL
         /// </summary>
         public float A;
 
-        #endregion
+#endregion
 
-        #region Constructors
+#region Constructors
 
         /// <summary>
         /// Constructs a new Color4 structure from the specified components.
@@ -107,9 +107,9 @@ namespace OpenTK.Graphics.OpenGL
             : this(color.R, color.G, color.B, color.A)
         { }
 
-        #endregion
+#endregion
 
-        #region Public Members
+#region Public Members
 
         /// <summary>
         /// Converts this color to an integer representation with 8 bits per channel.
@@ -118,13 +118,7 @@ namespace OpenTK.Graphics.OpenGL
         /// <remarks>This method is intended only for compatibility with System.Drawing. It compresses the color into 8 bits per channel, which means color information is lost.</remarks>
         public int ToArgb()
         {
-            uint value =
-                (uint)(A * Byte.MaxValue) << 24 |
-                (uint)(R * Byte.MaxValue) << 16 |
-                (uint)(G * Byte.MaxValue) << 8 |
-                (uint)(B * Byte.MaxValue);
-
-            return unchecked((int)value);
+			return HashCode.Combine(A, R, G, B);
         }
 
         /// <summary>
@@ -204,7 +198,7 @@ namespace OpenTK.Graphics.OpenGL
             return String.Format("{{(R, G, B, A) = ({0}, {1}, {2}, {3})}}", R.ToString(), G.ToString(), B.ToString(), A.ToString());
         }
 
-        #region System colors
+#region System colors
 
         /// <summary>
         /// Gets the system color with (R, G, B, A) = (255, 255, 255, 0).
@@ -911,11 +905,11 @@ namespace OpenTK.Graphics.OpenGL
         /// </summary>
         public static Color4 YellowGreen { get { return new Color4(154, 205, 50, 255); } }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region IEquatable<Color4> Members
+#region IEquatable<Color4> Members
 
         /// <summary>
         /// Compares whether this Color4 structure is equal to the specified Color4.
@@ -931,7 +925,7 @@ namespace OpenTK.Graphics.OpenGL
                 this.A == other.A;
         }
 
-        #endregion
+#endregion
     }
 }
 

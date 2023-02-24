@@ -9,7 +9,7 @@
     <key>CFBundleName</key>
     <string>TestApp</string>
     <key>MinimumOSVersion</key>
-    <string>2</string>
+    <string>%MINOSVERSION%</string>
     <key>NSAppTransportSecurity</key>
     <dict>
       <key>NSAllowsArbitraryLoads</key>

@@ -136,15 +136,10 @@ namespace CoreAnimation {
 		}
 #endif
 #if NET
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (3, 0)]
-		[TV (10, 0)]
-		[Mac (10, 12)]
-		[iOS (10, 0)]
 #endif
 		public CAContentsFormat ContentsFormat {
 			get { return CAContentsFormatExtensions.GetValue (_ContentsFormat); }

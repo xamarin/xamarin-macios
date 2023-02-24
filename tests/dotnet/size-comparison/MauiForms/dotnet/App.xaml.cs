@@ -1,11 +1,10 @@
 namespace MauiForms;
 
-public partial class App : Application
-{
-	public App()
+public partial class App : Application {
+	public App ()
 	{
-		InitializeComponent();
+		InitializeComponent ();
 
-		MainPage = new MainPage();
+		MainPage = new MainPage ();
 	}
 }

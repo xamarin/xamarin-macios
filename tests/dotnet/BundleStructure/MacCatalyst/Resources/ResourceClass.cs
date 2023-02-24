@@ -1,1 +1,1 @@
-class ResourceClass {}
+class ResourceClass { }

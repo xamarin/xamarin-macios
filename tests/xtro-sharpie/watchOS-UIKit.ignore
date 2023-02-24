@@ -25,7 +25,6 @@
 !missing-pinvoke! UIImageSymbolWeightForFontWeight is not bound
 
 # Initial result from new rule extra-null-allowed
-!extra-null-allowed! 'System.Void Foundation.NSAttributedString::.ctor(Foundation.NSData,Foundation.NSDictionary,Foundation.NSDictionary&,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void UIKit.UIBezierPath::set_CGPath(CoreGraphics.CGPath)' has a extraneous [NullAllowed] on parameter #0
 
 # Initial result from new rule missing-null-allowed

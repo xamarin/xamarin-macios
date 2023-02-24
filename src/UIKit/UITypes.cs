@@ -75,7 +75,7 @@ namespace UIKit {
 
 		public override int GetHashCode ()
 		{
-			return Top.GetHashCode () ^ Left.GetHashCode () ^ Right.GetHashCode () ^ Bottom.GetHashCode ();
+			return HashCode.Combine (Top, Left, Right, Bottom);
 		}
 
 		[DllImport (Constants.UIKitLibrary)]
@@ -104,11 +104,9 @@ namespace UIKit {
 
 #if !WATCH
 #if NET
-	[SupportedOSPlatform ("ios9.0")]
-	[SupportedOSPlatform ("tvos9.0")]
-	[SupportedOSPlatform ("maccatalyst13.0")]
-#else
-	[iOS (9, 0)]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("maccatalyst")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct UIFloatRange : IEquatable<UIFloatRange> {
@@ -146,7 +144,7 @@ namespace UIKit {
 
 		public override int GetHashCode ()
 		{
-			return Minimum.GetHashCode () ^ Maximum.GetHashCode ();
+			return HashCode.Combine (Minimum, Maximum);
 		}
 
 		[Field ("UIFloatRangeZero")] // fake (but helps testing and could also help documentation)

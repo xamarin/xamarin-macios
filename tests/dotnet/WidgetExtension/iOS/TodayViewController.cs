@@ -7,10 +7,8 @@ using ObjCRuntime;
 using Social;
 using UIKit;
 
-namespace MyTodayExtension
-{
-	public partial class TodayViewController : UIViewController, INCWidgetProviding
-	{
+namespace MyTodayExtension {
+	public partial class TodayViewController : UIViewController, INCWidgetProviding {
 		public TodayViewController (NativeHandle handle) : base (handle)
 		{
 		}

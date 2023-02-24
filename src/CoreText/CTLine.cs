@@ -211,13 +211,10 @@ namespace CoreText {
 		unsafe delegate void CaretEdgeEnumeratorProxy (IntPtr block, double offset, nint charIndex, [MarshalAs (UnmanagedType.I1)] bool leadingEdge, [MarshalAs (UnmanagedType.I1)] ref bool stop);
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern void CTLineEnumerateCaretOffsets (IntPtr line, ref BlockLiteral blockEnumerator);
@@ -233,13 +230,10 @@ namespace CoreText {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateCaretOffsets (CaretEdgeEnumerator enumerator)

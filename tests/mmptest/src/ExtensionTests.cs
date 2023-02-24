@@ -7,19 +7,16 @@ using System.Text;
 using NUnit.Framework;
 using System.Reflection;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	[TestFixture]
-	public class ExtensionTests 
-	{
+	public class ExtensionTests {
 		[Test]
 		public void TodayExtension_SmokeTest ()
 		{
 			if (!PlatformHelpers.CheckSystemVersion (10, 10))
 				return;
 
-			MMPTests.RunMMPTest (tmpDir =>
-			{
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.CopyDirectory (Path.Combine (TI.FindSourceDirectory (), @"Today"), tmpDir);
 				string project = Path.Combine (tmpDir, "Today/TodayExtensionTest.csproj");
 				string main = Path.Combine (tmpDir, "Today/TodayViewController.cs");
@@ -35,8 +32,7 @@ namespace Xamarin.MMP.Tests
 			if (!PlatformHelpers.CheckSystemVersion (10, 10))
 				return;
 
-			MMPTests.RunMMPTest (tmpDir =>
-			{
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.CopyDirectory (Path.Combine (TI.FindSourceDirectory (), @"Finder"), tmpDir);
 				TI.BuildProject (Path.Combine (tmpDir, "Finder/FinderExtensionTest.csproj"));
 			});
@@ -48,8 +44,7 @@ namespace Xamarin.MMP.Tests
 			if (!PlatformHelpers.CheckSystemVersion (10, 10))
 				return;
 
-			MMPTests.RunMMPTest (tmpDir =>
-			{
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.CopyDirectory (Path.Combine (TI.FindSourceDirectory (), @"Share"), tmpDir);
 				TI.BuildProject (Path.Combine (tmpDir, "Share/ShareExtensionTest.csproj"));
 			});

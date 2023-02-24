@@ -18,13 +18,10 @@ namespace GameController {
 	// GCGamepadSnapshot.h
 	// float_t are 4 bytes (at least for ARM64)
 #if NET
-	[SupportedOSPlatform ("ios7.0")]
-	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("macos10.15")]
-	[UnsupportedOSPlatform ("tvos13.0")]
-	[UnsupportedOSPlatform ("ios13.0")]
 	[ObsoletedOSPlatform ("macos10.15", "Use 'GCExtendedGamepad' instead.")]
 	[ObsoletedOSPlatform ("tvos13.0", "Use 'GCExtendedGamepad' instead.")]
 	[ObsoletedOSPlatform ("ios13.0", "Use 'GCExtendedGamepad' instead.")]
@@ -32,8 +29,6 @@ namespace GameController {
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCExtendedGamepad' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCExtendedGamepad' instead.")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCExtendedGamepad' instead.")]
-	[iOS (7, 0)]
-	[Mac (10, 9)]
 #endif
 	[StructLayout (LayoutKind.Sequential, Pack = 1)]
 	public struct GCGamepadSnapShotDataV100 {

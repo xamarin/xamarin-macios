@@ -20,7 +20,7 @@ using NativeHandle = System.IntPtr;
 
 namespace SharedWithYouCore {
 
-	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
 	interface SWAction : NSCopying, NSSecureCoding {
 		[Export ("uuid")]
@@ -36,9 +36,9 @@ namespace SharedWithYouCore {
 		void Fail ();
 	}
 
-	interface ISWCollaborationActionHandler {}
+	interface ISWCollaborationActionHandler { }
 
-	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[Protocol]
 	[DisableDefaultCtor]
 	interface SWCollaborationActionHandler {
@@ -51,7 +51,7 @@ namespace SharedWithYouCore {
 		void HandleUpdateCollaborationParticipantsAction (SWCollaborationCoordinator coordinator, SWUpdateCollaborationParticipantsAction action);
 	}
 
-	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SWCollaborationCoordinator {
@@ -63,7 +63,7 @@ namespace SharedWithYouCore {
 		ISWCollaborationActionHandler ActionHandler { get; set; }
 	}
 
-	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SWCollaborationOption : NSCopying, NSSecureCoding {
@@ -80,7 +80,7 @@ namespace SharedWithYouCore {
 		bool Selected { [Bind ("isSelected")] get; set; }
 
 		[Export ("requiredOptionsIdentifiers", ArgumentSemantic.Copy)]
-		string[] RequiredOptionsIdentifiers { get; set; }
+		string [] RequiredOptionsIdentifiers { get; set; }
 
 		[Export ("initWithTitle:identifier:")]
 		[DesignatedInitializer]
@@ -91,7 +91,7 @@ namespace SharedWithYouCore {
 		SWCollaborationOption Create (string title, string identifier);
 	}
 
-	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SWCollaborationOptionsGroup : NSCopying, NSSecureCoding {
@@ -109,59 +109,59 @@ namespace SharedWithYouCore {
 		string Footer { get; set; }
 
 		[Export ("options", ArgumentSemantic.Copy)]
-		SWCollaborationOption[] Options { get; set; }
+		SWCollaborationOption [] Options { get; set; }
 
 		[Export ("initWithIdentifier:options:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (string identifier, SWCollaborationOption[] options);
+		NativeHandle Constructor (string identifier, SWCollaborationOption [] options);
 
 		[Static]
 		[Export ("optionsGroupWithIdentifier:options:")]
-		SWCollaborationOptionsGroup Create (string identifier, SWCollaborationOption[] options);
+		SWCollaborationOptionsGroup Create (string identifier, SWCollaborationOption [] options);
 	}
 
-	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (SWCollaborationOptionsGroup))]
 	interface SWCollaborationOptionsPickerGroup {
 
 		[Export ("initWithIdentifier:options:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (string identifier, SWCollaborationOption[] options);
+		NativeHandle Constructor (string identifier, SWCollaborationOption [] options);
 
 		[Export ("selectedOptionIdentifier", ArgumentSemantic.Strong)]
 		string SelectedOptionIdentifier { get; set; }
 	}
 
-	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SWCollaborationShareOptions : NSCopying, NSSecureCoding {
 		[Export ("optionsGroups", ArgumentSemantic.Copy)]
-		SWCollaborationOptionsGroup[] OptionsGroups { get; set; }
+		SWCollaborationOptionsGroup [] OptionsGroups { get; set; }
 
 		[Export ("summary")]
 		string Summary { get; set; }
 
 		[Export ("initWithOptionsGroups:summary:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (SWCollaborationOptionsGroup[] optionsGroups, string summary);
+		NativeHandle Constructor (SWCollaborationOptionsGroup [] optionsGroups, string summary);
 
 		[Export ("initWithOptionsGroups:")]
-		NativeHandle Constructor (SWCollaborationOptionsGroup[] optionsGroups);
+		NativeHandle Constructor (SWCollaborationOptionsGroup [] optionsGroups);
 
 		[Static]
 		[Export ("shareOptionsWithOptionsGroups:summary:")]
-		SWCollaborationShareOptions Create (SWCollaborationOptionsGroup[] optionsGroups, string summary);
+		SWCollaborationShareOptions Create (SWCollaborationOptionsGroup [] optionsGroups, string summary);
 
 		[Static]
 		[Export ("shareOptionsWithOptionsGroups:")]
-		SWCollaborationShareOptions Create (SWCollaborationOptionsGroup[] optionsGroups);
+		SWCollaborationShareOptions Create (SWCollaborationOptionsGroup [] optionsGroups);
 	}
 
-	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface SWCollaborationMetadata : NSSecureCoding, NSCopying, NSMutableCopying 
+	interface SWCollaborationMetadata : NSSecureCoding, NSCopying, NSMutableCopying
 #if IOS || MONOMAC
 		, NSItemProviderReading
 		, NSItemProviderWriting
@@ -192,13 +192,13 @@ namespace SharedWithYouCore {
 		[Export ("initWithLocalIdentifier:")]
 		NativeHandle _InitWithLocalIdentifier (string localIdentifier);
 
-		[iOS (16,1), MacCatalyst (16,1)]
+		[iOS (16, 1), MacCatalyst (16, 1)]
 		[Internal]
 		[Export ("initWithCollaborationIdentifier:")]
 		NativeHandle _InitWithCollaborationIdentifier (string collaborationIdentifier);
 	}
 
-	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SWPerson : NSSecureCoding {
@@ -206,7 +206,7 @@ namespace SharedWithYouCore {
 		NativeHandle Constructor ([NullAllowed] string handle, [NullAllowed] SWPersonIdentity identity, string displayName, [NullAllowed] NSData thumbnailImageData);
 	}
 
-	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SWPersonIdentity : NSSecureCoding, NSCopying {
@@ -217,12 +217,12 @@ namespace SharedWithYouCore {
 		NativeHandle Constructor (NSData rootHash);
 	}
 
-	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SWPersonIdentityProof : NSSecureCoding, NSCopying {
 		[Export ("inclusionHashes", ArgumentSemantic.Copy)]
-		NSData[] InclusionHashes { get; }
+		NSData [] InclusionHashes { get; }
 
 		[Export ("publicKey", ArgumentSemantic.Copy)]
 		NSData PublicKey { get; }
@@ -231,7 +231,8 @@ namespace SharedWithYouCore {
 		nuint PublicKeyIndex { get; }
 	}
 
-	[NoWatch, NoTV, Mac (13,0), iOS (16,0)]
+	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0)]
+	[MacCatalyst (16, 0)]
 	[BaseType (typeof (SWPersonIdentityProof))]
 	interface SWSignedPersonIdentityProof {
 		[Export ("initWithPersonIdentityProof:signatureData:")]
@@ -241,7 +242,7 @@ namespace SharedWithYouCore {
 		NSData SignatureData { get; }
 	}
 
-	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (SWAction))]
 	[DisableDefaultCtor]
 	interface SWStartCollaborationAction : NSSecureCoding, NSCopying {
@@ -252,7 +253,8 @@ namespace SharedWithYouCore {
 		void Fulfill (NSUrl url, string collaborationIdentifier);
 	}
 
-	[NoWatch, NoTV, Mac (13,0), iOS (16,0)]
+	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0)]
+	[MacCatalyst (16, 0)]
 	[BaseType (typeof (SWAction))]
 	[DisableDefaultCtor]
 	interface SWUpdateCollaborationParticipantsAction : NSSecureCoding, NSCopying {
@@ -260,10 +262,10 @@ namespace SharedWithYouCore {
 		SWCollaborationMetadata CollaborationMetadata { get; }
 
 		[Export ("addedIdentities")]
-		SWPersonIdentity[] AddedIdentities { get; }
+		SWPersonIdentity [] AddedIdentities { get; }
 
 		[Export ("removedIdentities")]
-		SWPersonIdentity[] RemovedIdentities { get; }
+		SWPersonIdentity [] RemovedIdentities { get; }
 	}
 
 }

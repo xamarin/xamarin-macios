@@ -400,11 +400,10 @@ namespace Foundation {
 
 		public bool SetAttributes (NSFileAttributes attributes, string path)
 		{
-			NSError ignore;
 			if (attributes == null)
 				throw new ArgumentNullException ("attributes");
 
-			return SetAttributes (attributes.ToDictionary (), path, out ignore);
+			return SetAttributes (attributes.ToDictionary (), path, out _);
 		}
 
 		public bool CreateDirectory (string path, bool createIntermediates, NSFileAttributes attributes, out NSError error)

@@ -35,8 +35,8 @@ namespace MessageUI {
 	// Note: now used as a NSInteger in the API.
 	public enum MFMailComposeErrorCode {
 #endif
-	    SaveFailed,
-	    SendFailed
+		SaveFailed,
+		SendFailed
 	}
 
 #if NET

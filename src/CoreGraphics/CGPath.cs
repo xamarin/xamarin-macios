@@ -722,7 +722,7 @@ namespace CoreGraphics {
 			/* CGPathRef */ IntPtr path,
 			/* const CGAffineTransform * */ CGAffineTransform* transform,
 			/* CGFloat */ nfloat phase,
-			/* CGFloat */ nfloat [] lengths,
+			/* CGFloat */ nfloat* lengths,
 			/* size_t */ nint count);
 
 		public CGPath CopyByDashingPath (CGAffineTransform transform, nfloat [] lengths)
@@ -732,7 +732,9 @@ namespace CoreGraphics {
 
 		public unsafe CGPath CopyByDashingPath (CGAffineTransform transform, nfloat [] lengths, nfloat phase)
 		{
-			return MakeMutable (CGPathCreateCopyByDashingPath (Handle, &transform, phase, lengths, lengths is null ? 0 : lengths.Length), true);
+			fixed (nfloat* lengthsPtr = lengths) {
+				return MakeMutable (CGPathCreateCopyByDashingPath (Handle, &transform, phase, lengthsPtr, lengths is null ? 0 : lengths.Length), true);
+			}
 		}
 
 		public CGPath CopyByDashingPath (nfloat [] lengths)
@@ -742,8 +744,10 @@ namespace CoreGraphics {
 
 		public unsafe CGPath CopyByDashingPath (nfloat [] lengths, nfloat phase)
 		{
-			var path = CGPathCreateCopyByDashingPath (Handle, null, phase, lengths, lengths is null ? 0 : lengths.Length);
-			return MakeMutable (path, true);
+			fixed (nfloat* lengthsPtr = lengths) {
+				var path = CGPathCreateCopyByDashingPath (Handle, null, phase, lengthsPtr, lengths is null ? 0 : lengths.Length);
+				return MakeMutable (path, true);
+			}
 		}
 
 		public unsafe CGPath Copy ()
@@ -811,13 +815,10 @@ namespace CoreGraphics {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
-		[iOS (7, 0)]
 #endif
 		static unsafe public CGPath FromRoundedRect (CGRect rectangle, nfloat cornerWidth, nfloat cornerHeight)
 		{
@@ -825,13 +826,10 @@ namespace CoreGraphics {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
-		[iOS (7, 0)]
 #endif
 		static public unsafe CGPath FromRoundedRect (CGRect rectangle, nfloat cornerWidth, nfloat cornerHeight, CGAffineTransform transform)
 		{
@@ -842,13 +840,10 @@ namespace CoreGraphics {
 		unsafe extern static void CGPathAddRoundedRect (/* CGMutablePathRef */ IntPtr path, CGAffineTransform* transform, CGRect rect, /* CGFloat */ nfloat cornerWidth, /* CGFloat */ nfloat cornerHeight);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
-		[iOS (7, 0)]
 #endif
 		public unsafe void AddRoundedRect (CGAffineTransform transform, CGRect rect, nfloat cornerWidth, nfloat cornerHeight)
 		{
@@ -856,13 +851,10 @@ namespace CoreGraphics {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
-		[iOS (7, 0)]
 #endif
 		public unsafe void AddRoundedRect (CGRect rect, nfloat cornerWidth, nfloat cornerHeight)
 		{

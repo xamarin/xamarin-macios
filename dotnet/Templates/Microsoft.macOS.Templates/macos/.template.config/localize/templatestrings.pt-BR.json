@@ -1,7 +1,0 @@
-{
-  "author": "Microsoft",
-  "name": "macOS Application",
-  "description": "Um projeto para criar um aplicativo macOS .NET",
-  "symbols/bundleId/description": "Substitui o CFBundleIdentifier no Info.plist",
-  "symbols/minOSVersion/description": "Substitui o SupportedOSPlatformVersion no arquivo de projetos"
-}

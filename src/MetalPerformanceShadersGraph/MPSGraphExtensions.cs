@@ -9,16 +9,14 @@ using ObjCRuntime;
 using Metal;
 using MetalPerformanceShaders;
 
-namespace MetalPerformanceShadersGraph
-{
-	public static partial class MPSGraphMemoryOps_Extensions
-	{
+namespace MetalPerformanceShadersGraph {
+	public static partial class MPSGraphMemoryOps_Extensions {
 		public static unsafe MPSGraphTensor Constant (this MPSGraph graph, float scalar)
 		{
 			return graph.Constant ((double) scalar, new [] { 1 }, MPSDataType.Float32);
 		}
 
-		public static unsafe MPSGraphTensor Constant (this MPSGraph graph, ReadOnlySpan<float> values, int[] shape)
+		public static unsafe MPSGraphTensor Constant (this MPSGraph graph, ReadOnlySpan<float> values, int [] shape)
 		{
 			var length = 1;
 			for (var i = 0; i < shape.Length; i++)
@@ -31,7 +29,7 @@ namespace MetalPerformanceShadersGraph
 			}
 		}
 
-		public static MPSGraphTensor Variable (this MPSGraph graph, float initialValue, int[] shape, string? name = null)
+		public static MPSGraphTensor Variable (this MPSGraph graph, float initialValue, int [] shape, string? name = null)
 		{
 			var length = 1;
 			for (var i = 0; i < shape.Length; i++)
@@ -44,7 +42,7 @@ namespace MetalPerformanceShadersGraph
 			return v;
 		}
 
-		public static unsafe MPSGraphTensor Variable (this MPSGraph graph, ReadOnlySpan<float> initialValues, int[] shape, string? name = null)
+		public static unsafe MPSGraphTensor Variable (this MPSGraph graph, ReadOnlySpan<float> initialValues, int [] shape, string? name = null)
 		{
 			var length = 1;
 			for (var i = 0; i < shape.Length; i++)

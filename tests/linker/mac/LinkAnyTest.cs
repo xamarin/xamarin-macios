@@ -26,6 +26,15 @@ namespace LinkAnyTest {
 		static bool requestError;
 		static HttpStatusCode statusCode;
 
+		void TimedWait (Task task)
+		{
+			var rv = task.Wait (TimeSpan.FromMinutes (1));
+			if (rv)
+				return;
+
+			TestRuntime.IgnoreInCI ("This test times out randomly in CI due to bad network.");
+			Assert.Fail ("Test timed out");
+		}
 
 		// http://blogs.msdn.com/b/csharpfaq/archive/2012/06/26/understanding-a-simple-async-program.aspx
 		// ref: https://bugzilla.xamarin.com/show_bug.cgi?id=7114
@@ -33,8 +42,8 @@ namespace LinkAnyTest {
 		{
 			// do not use GetStringAsync, we are going to miss useful data, such as the resul code
 			using (var client = new HttpClient ()) {
-				HttpResponseMessage response = await client.GetAsync ("http://example.com"); 
-				if(!response.IsSuccessStatusCode) {
+				HttpResponseMessage response = await client.GetAsync ("http://example.com");
+				if (!response.IsSuccessStatusCode) {
 					requestError = true;
 					statusCode = response.StatusCode;
 				} else {
@@ -53,7 +62,7 @@ namespace LinkAnyTest {
 			try {
 				// we do not want the async code to get back to the AppKit thread, hanging the process
 				SynchronizationContext.SetSynchronizationContext (null);
-				GetWebPageAsync ().Wait ();
+				TimedWait (GetWebPageAsync ());
 				if (requestError) {
 					Assert.Inconclusive ($"Test cannot be trusted. Issues performing the request. Status code '{statusCode}'");
 				} else {
@@ -64,7 +73,7 @@ namespace LinkAnyTest {
 			}
 		}
 
-		void WebClientTest (string[] urls)
+		void WebClientTest (string [] urls)
 		{
 			var exceptions = new List<string> ();
 			foreach (var url in urls) {
@@ -115,7 +124,7 @@ namespace LinkAnyTest {
 							data = await task;
 						}
 
-						GetWebPage (url).Wait ();
+						TimedWait (GetWebPage (url));
 						Assert.That (data, Is.Not.Empty, "Downloaded content");
 						return; // one url succeeded, that's enough
 					} catch (Exception e) {

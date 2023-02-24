@@ -18,7 +18,7 @@ using MTouchRegistrar = Xamarin.Tests.RegistrarOption;
 
 namespace Xamarin.Tests {
 	static class TestTarget {
-		public static string ToolPath { 
+		public static string ToolPath {
 			get {
 				return Path.Combine (Configuration.SdkBinDir, "mtouch");
 			}
@@ -26,16 +26,14 @@ namespace Xamarin.Tests {
 	}
 }
 
-namespace Xamarin
-{
+namespace Xamarin {
 	public enum Target { Sim, Dev }
 	public enum Config { Debug, Release }
 	public enum PackageMdb { Default, WithMdb, WoutMdb }
 	public enum MSym { Default, WithMSym, WoutMSym }
 
 	[TestFixture]
-	public class MTouch
-	{
+	public class MTouch {
 		[Test]
 		//[TestCase (Profile.iOS)] // tested as part of the watchOS case below, since that builds both for iOS and watchOS.
 		[TestCase (Profile.tvOS)]
@@ -178,6 +176,7 @@ public class B : A {}
 		public void FatAppFiles ()
 		{
 			AssertDeviceAvailable ();
+			Configuration.AssertiOS32BitAvailable ();
 
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
@@ -234,10 +233,13 @@ public class B : A {}
 		[Test]
 		[TestCase ("code sharing 32-bit", "armv7+llvm", new string [] { "@sdk=framework=Xamarin.Sdk", "@all=staticobject" })]
 		[TestCase ("code sharing 64-bit", "arm64+llvm", new string [] { "@sdk=framework=Xamarin.Sdk", "@all=staticobject" })]
-		[TestCase ("32-bit", "armv7+llvm", new string [] { } )]
+		[TestCase ("32-bit", "armv7+llvm", new string [] { })]
 		[TestCase ("64-bit", "arm64+llvm", new string [] { })]
-		public void CodeSharingLLVM (string name, string abi, string[] assembly_build_targets)
+		public void CodeSharingLLVM (string name, string abi, string [] assembly_build_targets)
 		{
+			if (abi.Contains ("armv7"))
+				Configuration.AssertiOS32BitAvailable ();
+
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
 				mtouch.CreateTemporaryCacheDirectory ();
@@ -247,12 +249,12 @@ public class B : A {}
 				mtouch.NoStrip = true; // faster test
 				mtouch.NoSymbolStrip = string.Empty; // faster test
 				mtouch.Verbosity = 4; // This is needed to get mtouch to print the output we're verifying
-				mtouch.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
+				if (Configuration.iOSSupports32BitArchitectures)
+					mtouch.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
 				// Check that --llvm is passed to the AOT compiler for every assembly we AOT.
 				var assemblies_checked = 0;
-				mtouch.ForAllOutputLines ((line) =>
-				{
+				mtouch.ForAllOutputLines ((line) => {
 					if (!line.Contains ("arm-darwin-mono-sgen") && !line.Contains ("arm64-darwin-mono-sgen"))
 						return;
 					StringAssert.Contains (" --llvm ", line, "aot command must pass --llvm to the AOT compiler");
@@ -263,13 +265,16 @@ public class B : A {}
 		}
 
 		[Test]
-		[TestCase ("single", "",                   false)]
-		[TestCase ("dual",   "armv7,arm64", false)]
-		[TestCase ("llvm",   "armv7+llvm",  false)]
-		[TestCase ("debug",  "",                   true)]
+		[TestCase ("single", "", false)]
+		[TestCase ("dual", "armv7,arm64", false)]
+		[TestCase ("llvm", "armv7+llvm", false)]
+		[TestCase ("llvm", "arm64+llvm", false)]
+		[TestCase ("debug", "", true)]
 		public void RebuildTest (string name, string abi, bool debug)
 		{
 			AssertDeviceAvailable ();
+			if (abi.Contains ("armv7"))
+				Configuration.AssertiOS32BitAvailable ();
 
 			using (var mtouch = new MTouchTool ()) {
 				var codeA = "public class TestApp1 { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
@@ -278,7 +283,7 @@ public class B : A {}
 				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.Abi = abi;
 				mtouch.Debug = debug;
-				mtouch.TargetVer = "7.0";
+				mtouch.TargetVer = SdkVersions.MiniOS;
 				mtouch.NoStrip = true;
 				DateTime dt = DateTime.MinValue;
 
@@ -371,19 +376,23 @@ public class B : A {}
 			var max = files.Max ((v) => v.Length);
 
 			var format = "    {0,-" + max + "} {1}";
-			foreach (var file in  files) {
+			foreach (var file in files) {
 				Console.WriteLine (format, file, File.GetLastWriteTimeUtc (file).ToString ("HH:mm:ss.fffffff"));
 			}
 		}
 
 		[Test]
-		[TestCase ("single", "", false, new string [] { } )]
+		[TestCase ("single", "", false, new string [] { })]
 		[TestCase ("dual", "armv7,arm64", false, new string [] { })]
 		[TestCase ("llvm", "armv7+llvm", false, new string [] { })]
+		[TestCase ("llvm", "arm64+llvm", false, new string [] { })]
 		[TestCase ("debug", "", true, new string [] { })]
 		[TestCase ("single-framework", "", false, new string [] { "@sdk=framework=Xamarin.Sdk", "@all=staticobject" })]
-		public void RebuildTest_WithExtensions (string name, string abi, bool debug, string[] assembly_build_targets)
+		public void RebuildTest_WithExtensions (string name, string abi, bool debug, string [] assembly_build_targets)
 		{
+			if (abi.Contains ("armv7"))
+				Configuration.AssertiOS32BitAvailable ();
+
 			var codeA = "[Foundation.Preserve] public class TestApp1 { static void X () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
 			var codeB = "[Foundation.Preserve] public class TestApp2 { static void X () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
 
@@ -391,7 +400,8 @@ public class B : A {}
 				extension.CreateTemporaryServiceExtension (extraCode: codeA);
 				extension.CreateTemporaryCacheDirectory ();
 				extension.Abi = abi;
-				extension.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
+				if (Configuration.iOSSupports32BitArchitectures)
+					extension.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
 				extension.Debug = debug;
 				extension.AssemblyBuildTargets.AddRange (assembly_build_targets);
 				extension.DSym = false; // faster test
@@ -404,19 +414,20 @@ public class B : A {}
 					mtouch.CreateTemporaryApp (extraCode: codeA);
 					mtouch.CreateTemporaryCacheDirectory ();
 					mtouch.Abi = abi;
-					mtouch.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
+					if (Configuration.iOSSupports32BitArchitectures)
+						mtouch.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
 					mtouch.Debug = debug;
 					mtouch.AssemblyBuildTargets.AddRange (assembly_build_targets);
 					mtouch.DSym = false; // faster test
 					mtouch.MSym = false; // faster test
 					mtouch.NoStrip = true; // faster test
-					//mtouch.Verbosity = 20; // Set the mtouch verbosity to something to print the mtouch output to the terminal. This will also enable additional debug output.
+										   //mtouch.Verbosity = 20; // Set the mtouch verbosity to something to print the mtouch output to the terminal. This will also enable additional debug output.
 
 					System.Action assertSupportsDynamicRegistrar = () => {
 						// Assert that the xamarin_supports_dynamic_registration is identical between the app and the extension.
 						string [] abis;
 						if (string.IsNullOrEmpty (abi)) {
-							abis = new string [] { "armv7" };
+							abis = new string [] { Configuration.iOSSupports32BitArchitectures ? "armv7" : "arm64" };
 						} else {
 							abis = abi.Split (',').Select ((v) => v.Replace ("+llvm", "")).ToArray ();
 						}
@@ -559,18 +570,18 @@ public class B : A {}
 
 		[Test]
 		// Simulator
-		[TestCase (Target.Sim, Config.Release, PackageMdb.Default, MSym.Default,  false, false, "")]
-		[TestCase (Target.Sim, Config.Debug,   PackageMdb.Default, MSym.Default,  true,  false, "")]
-		[TestCase (Target.Sim, Config.Debug,   PackageMdb.WoutMdb, MSym.Default,  false, false, "")]
-		[TestCase (Target.Sim, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  false, "")]
-		[TestCase (Target.Sim, Config.Debug,   PackageMdb.WoutMdb, MSym.Default,  false, false, "--nofastsim --nolink")]
+		[TestCase (Target.Sim, Config.Release, PackageMdb.Default, MSym.Default, false, false, "")]
+		[TestCase (Target.Sim, Config.Debug, PackageMdb.Default, MSym.Default, true, false, "")]
+		[TestCase (Target.Sim, Config.Debug, PackageMdb.WoutMdb, MSym.Default, false, false, "")]
+		[TestCase (Target.Sim, Config.Release, PackageMdb.WithMdb, MSym.Default, true, false, "")]
+		[TestCase (Target.Sim, Config.Debug, PackageMdb.WoutMdb, MSym.Default, false, false, "--nofastsim --nolink")]
 		// Device
-		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  true,  "")]
-		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.WoutMSym, true,  false, "")]
-		[TestCase (Target.Dev, Config.Release, PackageMdb.Default, MSym.Default,  false, true,  "--abi:armv7,arm64")]
-		[TestCase (Target.Dev, Config.Debug,   PackageMdb.WoutMdb, MSym.Default,  false, false, "")]
-		[TestCase (Target.Dev, Config.Debug,   PackageMdb.WoutMdb, MSym.WithMSym, false, true,  "")]
-		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  true,  "--abi:armv7+llvm")]
+		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default, true, true, "")]
+		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.WoutMSym, true, false, "")]
+		[TestCase (Target.Dev, Config.Release, PackageMdb.Default, MSym.Default, false, true, "--abi:armv7,arm64")]
+		[TestCase (Target.Dev, Config.Debug, PackageMdb.WoutMdb, MSym.Default, false, false, "")]
+		[TestCase (Target.Dev, Config.Debug, PackageMdb.WoutMdb, MSym.WithMSym, false, true, "")]
+		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default, true, true, "--abi:armv7+llvm")]
 		public void SymbolicationData (Target target, Config configuration, PackageMdb package_mdb, MSym msym, bool has_mdb, bool has_msym, string extra_mtouch_args)
 		{
 			if (target == Target.Dev)
@@ -705,8 +716,8 @@ public class B : A {}
 		{
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Debug = false;
-				mtouch.CustomArguments = new string[] { "--debugtrack:true" };
-				mtouch.WarnAsError = new int[] { 32 };
+				mtouch.CustomArguments = new string [] { "--debugtrack:true" };
+				mtouch.WarnAsError = new int [] { 32 };
 				mtouch.CreateTemporaryApp ();
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
 				mtouch.AssertError (32, "The option '--debugtrack' is ignored unless '--debug' is also specified.");
@@ -747,19 +758,19 @@ public class B : A {}
 
 				mtouch.Abi = "armv7s,arm64";
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, $"build: {mtouch.Abi}");
-				mtouch.AssertErrorPattern (73, "Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 7.0.. Please select a newer deployment target in your project's Info.plist.");
+				mtouch.AssertErrorPattern (73, $"Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is {SdkVersions.MiniOS}.. Please select a newer deployment target in your project's Info.plist.");
 
 				mtouch.Abi = "armv7s";
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, $"build: {mtouch.Abi}");
-				mtouch.AssertErrorPattern (73, "Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 7.0.. Please select a newer deployment target in your project's Info.plist.");
+				mtouch.AssertErrorPattern (73, $"Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is {SdkVersions.MiniOS}.. Please select a newer deployment target in your project's Info.plist.");
 
 				mtouch.Abi = "arm64";
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, $"build: {mtouch.Abi}");
-				mtouch.AssertErrorPattern (73, "Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 7.0.. Please select a newer deployment target in your project's Info.plist.");
+				mtouch.AssertErrorPattern (73, $"Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is {SdkVersions.MiniOS}.. Please select a newer deployment target in your project's Info.plist.");
 
 				mtouch.Abi = "armv7";
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, $"build: {mtouch.Abi}");
-				mtouch.AssertErrorPattern (73, "Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 7.0.. Please select a newer deployment target in your project's Info.plist.");
+				mtouch.AssertErrorPattern (73, $"Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is {SdkVersions.MiniOS}.. Please select a newer deployment target in your project's Info.plist.");
 			}
 		}
 
@@ -786,7 +797,7 @@ public class B : A {}
 			using (var mtouch = new MTouchTool ()) {
 				var app = mtouch.CreateTemporaryAppDirectory ();
 				var testDir = Path.GetDirectoryName (app);
-			
+
 				string exe = Path.Combine (testDir, "testApp.exe");
 				string dll = Path.Combine (testDir, "testLib.dll");
 
@@ -804,7 +815,7 @@ public class B : A {}
 		System.Console.WriteLine (new TestLib ());
 	}
 }";
-				
+
 				CompileCSharpCode (dll_profile, dllCode, dll);
 				CompileCSharpCode (exe_profile, exeCode, exe, "-r:" + dll);
 
@@ -979,6 +990,9 @@ public class B : A {}
 		[Test]
 		public void MT0065_Custom ()
 		{
+			if (SdkVersions.MiniOSVersion.Major >= 8)
+				Assert.Ignore ("Can only be tested if can target iOS <8");
+
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
 				mtouch.TargetVer = "7.1";
@@ -991,6 +1005,9 @@ public class B : A {}
 		[Test]
 		public void MT0065_Mono ()
 		{
+			if (SdkVersions.MiniOSVersion.Major >= 8)
+				Assert.Ignore ("Can only be tested if can target iOS <8");
+
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
 				mtouch.TargetVer = "7.1";
@@ -1005,7 +1022,7 @@ public class B : A {}
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
 				mtouch.Abi = "armv7k";
-				mtouch.TargetVer = "10.3";
+				mtouch.TargetVer = SdkVersions.MiniOS;
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
 				mtouch.AssertError (75, "Invalid architecture 'ARMv7k' for iOS projects. Valid architectures are: ARMv7, ARMv7+Thumb, ARMv7+LLVM, ARMv7+LLVM+Thumb, ARMv7s, ARMv7s+Thumb, ARMv7s+LLVM, ARMv7s+LLVM+Thumb, ARM64, ARM64+LLVM");
 			}
@@ -1129,7 +1146,7 @@ public class B : A {}
 				}
 				mtouch.Abi = abi;
 				mtouch.Bitcode = mode;
-				mtouch.WarnAsError = new int[] { 186 };
+				mtouch.WarnAsError = new int [] { 186 };
 				if (Configuration.XcodeVersion.Major >= 14) {
 					Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildDev));
 					mtouch.AssertError (186, "Bitcode is enabled, but bitcode is not supported in Xcode 14+ and has been disabled. Please disable bitcode by removing the 'MtouchEnableBitcode' property from the project file.");
@@ -1161,15 +1178,15 @@ public class B : A {}
 					apptool.AppExtensions.Add (exttool);
 					apptool.Linker = MTouchLinker.LinkAll;
 					apptool.AssertExecute (MTouchAction.BuildDev, "build app");
-					
-					Assert.IsTrue(Directory.Exists(Path.Combine(apptool.Cache, "3-Build", "Msym")), "App Msym dir");
-					Assert.IsFalse(Directory.Exists(Path.Combine(exttool.Cache, "3-Build", "Msym")), "Extenson Msym dir");
-					exttool.AssertNoWarnings();
-					apptool.AssertNoWarnings();
+
+					Assert.IsTrue (Directory.Exists (Path.Combine (apptool.Cache, "3-Build", "Msym")), "App Msym dir");
+					Assert.IsFalse (Directory.Exists (Path.Combine (exttool.Cache, "3-Build", "Msym")), "Extenson Msym dir");
+					exttool.AssertNoWarnings ();
+					apptool.AssertNoWarnings ();
 				}
 			}
 		}
-		
+
 		[Test]
 		public void MT0095_NotSharedCode ()
 		{
@@ -1193,15 +1210,15 @@ public class B : A {}
 					apptool.Linker = MTouchLinker.LinkAll;
 					apptool.CustomArguments = new string [] { "--nodevcodeshare" };
 					apptool.AssertExecute (MTouchAction.BuildDev, "build app");
-					
-					Assert.IsTrue(Directory.Exists(Path.Combine(apptool.Cache, "3-Build", "Msym")), "App Msym dir");
-					Assert.IsTrue(Directory.Exists(Path.Combine(exttool.Cache, "3-Build", "Msym")), "Extenson Msym dir");
-					exttool.AssertNoWarnings();
-					apptool.AssertNoWarnings();
+
+					Assert.IsTrue (Directory.Exists (Path.Combine (apptool.Cache, "3-Build", "Msym")), "App Msym dir");
+					Assert.IsTrue (Directory.Exists (Path.Combine (exttool.Cache, "3-Build", "Msym")), "Extenson Msym dir");
+					exttool.AssertNoWarnings ();
+					apptool.AssertNoWarnings ();
 				}
 			}
 		}
-		
+
 		/* MT0100 is a consistency check, and should never be seen (and as such can never be tested either, since there's no known test cases that would produce it) */
 
 		[Test]
@@ -1268,7 +1285,7 @@ public class B : A {}
 				mtouch.CreateTemporaryApp ();
 				mtouch.Linker = MTouchLinker.DontLink; // the MT0106 check happens after linking, but before AOT-compiling, so not linking makes the test faster.
 
-				mtouch.AssemblyBuildTargets.Add ("@all=staticobject=a/b");;
+				mtouch.AssemblyBuildTargets.Add ("@all=staticobject=a/b"); ;
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
 				mtouch.AssertError (106, "The assembly build target name 'a/b' is invalid: the character '/' is not allowed.");
 
@@ -1297,6 +1314,9 @@ public class B : A {}
 		[Test]
 		public void MT0112_deploymenttarget ()
 		{
+			if (SdkVersions.MiniOSVersion.Major >= 8)
+				Assert.Ignore ("Can only be tested if can target iOS <8");
+
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
 				extension.CreateTemporaryCacheDirectory ();
@@ -1357,7 +1377,7 @@ public class B : A {}
 		[TestCase ("framework ext", null, new string [] { "@sdk=framework=Xamarin.Sdk" })]
 		[TestCase ("fastdev app", new string [] { "@all=dynamiclibrary" }, null)]
 		[TestCase ("fastdev ext", null, new string [] { "@all=dynamiclibrary" })]
-		public void MT0113_assemblybuildtarget (string name, string[] extension_abt, string[] app_abt)
+		public void MT0113_assemblybuildtarget (string name, string [] extension_abt, string [] app_abt)
 		{
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
@@ -1538,6 +1558,8 @@ public class B : A {}
 		[TestCase ("armv7", "armv7,arm64", "ARM64")]
 		public void MT0113_abi (string app_abi, string extension_abi, string error_abi)
 		{
+			Configuration.AssertiOS32BitAvailable ();
+
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
 				extension.CreateTemporaryCacheDirectory ();
@@ -1561,6 +1583,8 @@ public class B : A {}
 		[TestCase ("armv7+llvm+thumb2", "armv7+llvm", "ARMv7, Thumb, LLVM", "ARMv7, LLVM")]
 		public void MT0113_incompatible_abi (string app_abi, string extension_abi, string container_error_abi, string extension_error_abi)
 		{
+			Configuration.AssertiOS32BitAvailable ();
+
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
 				extension.CreateTemporaryCacheDirectory ();
@@ -1940,7 +1964,6 @@ public class TestApp {
 		}
 
 		[Test]
-		[TestCase (Profile.tvOS, MTouchBitcode.Marker)]
 		[TestCase (Profile.watchOS, MTouchBitcode.Marker)]
 		public void StripBitcodeFromFrameworks (Profile profile, MTouchBitcode bitcode)
 		{
@@ -2208,8 +2231,7 @@ public class TestApp {
 		public void FastDev_LinkWithTest (Profile profile)
 		{
 			// --fastdev with static registrar and linkwith library - this will fail to build if the linkwith dylib isn't linked with the corresponding native library.
-			using (var mtouch = new MTouchTool ()
-			{
+			using (var mtouch = new MTouchTool () {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
@@ -2235,9 +2257,8 @@ public class TestApp {
 		//[TestCase (Profile.WatchOS)] // needs testing improvement
 		public void FastDev_NoFastSim_NoLink (Profile profile)
 		{
-				// --sim --nofastsim --nolink --fastdev
-			using (var mtouch = new MTouchTool ()
-			{
+			// --sim --nofastsim --nolink --fastdev
+			using (var mtouch = new MTouchTool () {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
@@ -2249,7 +2270,7 @@ public class TestApp {
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildSim), "build");
 			}
 		}
-		
+
 		[Test]
 		[TestCase (Profile.iOS)]
 		[TestCase (Profile.tvOS)]
@@ -2257,8 +2278,7 @@ public class TestApp {
 		public void FastDev_NoFastSim_LinkAll (Profile profile)
 		{
 			// --sim --nofastsim --fastdev
-			using (var mtouch = new MTouchTool ()
-			{
+			using (var mtouch = new MTouchTool () {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
@@ -2269,7 +2289,7 @@ public class TestApp {
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildSim), "build");
 			}
 		}
-		
+
 		[Test]
 		[TestCase (Profile.iOS)]
 		[TestCase (Profile.tvOS)]
@@ -2277,8 +2297,7 @@ public class TestApp {
 		public void FastDev_NoFastSim_LinkSDK (Profile profile)
 		{
 			// --sim --nofastsim --linksdkonly --fastdev
-			using (var mtouch = new MTouchTool ()
-			{
+			using (var mtouch = new MTouchTool () {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
@@ -2298,8 +2317,7 @@ public class TestApp {
 		public void FastDev_Sim (Profile profile)
 		{
 			// --sim --fastdev
-			using (var mtouch = new MTouchTool ()
-			{
+			using (var mtouch = new MTouchTool () {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
@@ -2316,8 +2334,7 @@ public class TestApp {
 		//[TestCase (Profile.WatchOS)] // needs testing improvement
 		public void FastDev_LinkAll (Profile profile)
 		{
-			using (var mtouch = new MTouchTool ()
-			{
+			using (var mtouch = new MTouchTool () {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
@@ -2327,7 +2344,7 @@ public class TestApp {
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev), "build");
 			}
 		}
-		
+
 		[Test]
 		[TestCase (Profile.iOS)]
 		[TestCase (Profile.tvOS)]
@@ -2336,8 +2353,7 @@ public class TestApp {
 		{
 
 			// --fastdev w/no link
-			using (var mtouch = new MTouchTool ()
-			{
+			using (var mtouch = new MTouchTool () {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
@@ -2349,15 +2365,14 @@ public class TestApp {
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev), "build 1");
 			}
 		}
-		
+
 		[Test]
 		[TestCase (Profile.iOS)]
 		[TestCase (Profile.tvOS)]
 		//[TestCase (Profile.WatchOS)] // needs testing improvement
 		public void FastDev_LinkAll_Then_NoLink (Profile profile)
 		{
-			using (var mtouch = new MTouchTool
-			{
+			using (var mtouch = new MTouchTool {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
@@ -2381,8 +2396,7 @@ public class TestApp {
 		//[TestCase (Profile.WatchOS)] // needs testing improvement
 		public void FastDev_LinkSDK (Profile profile)
 		{
-			using (var mtouch = new MTouchTool
-			{
+			using (var mtouch = new MTouchTool {
 				Profile = profile,
 				Debug = true,
 				FastDev = true,
@@ -2400,8 +2414,9 @@ public class TestApp {
 		[Test]
 		public void FastDev_Dual ()
 		{
-			using (var mtouch = new MTouchTool ()
-			{
+			Configuration.AssertiOS32BitAvailable ();
+
+			using (var mtouch = new MTouchTool () {
 				Profile = Profile.iOS,
 				FastDev = true,
 				TargetVer = "10.3", // otherwise 32-bit build isn't possible
@@ -2476,6 +2491,9 @@ public class TestApp {
 		[TestCase (Target.Sim, "x86_64", null)]
 		public void Architectures_Unified (Target target, string abi, string deployment_target)
 		{
+			if (abi.IndexOf ("armv7", StringComparison.OrdinalIgnoreCase) >= 0 || abi.IndexOf ("i386", StringComparison.OrdinalIgnoreCase) >= 0)
+				Configuration.AssertiOS32BitAvailable ();
+
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = Profile.iOS;
 				mtouch.CreateTemporaryApp ();
@@ -2494,6 +2512,8 @@ public class TestApp {
 		[Test]
 		public void Architectures_Unified_FatSimulator ()
 		{
+			Configuration.AssertiOS32BitAvailable ();
+
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = Profile.iOS;
 				mtouch.CreateTemporaryApp ();
@@ -2520,7 +2540,7 @@ public class TestApp {
 				mtouch.Profile = Profile.iOS;
 				mtouch.CreateTemporaryApp ();
 
-				mtouch.TargetVer = "10.3";
+				mtouch.TargetVer = SdkVersions.MiniOS;
 				mtouch.Abi = "armv6";
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildDev));
 				mtouch.AssertError ("MT", 15, "Invalid ABI: armv6. Supported ABIs are: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, armv7k+llvm, arm64, arm64+llvm, arm64_32 and arm64_32+llvm.");
@@ -2543,11 +2563,11 @@ public class TestApp {
 				mtouch.Profile = Profile.tvOS;
 				mtouch.Abi = abi;
 				mtouch.CreateTemporaryApp ();
-				      
+
 				var bin = Path.Combine (mtouch.AppPath, Path.GetFileNameWithoutExtension (mtouch.RootAssembly));
 
 				Assert.AreEqual (0, mtouch.Execute (target == Target.Dev ? MTouchAction.BuildDev : MTouchAction.BuildSim), "build");
-				VerifyArchitectures (bin,  "arch",  target == Target.Dev ? "ARM64" : "x86_64");
+				VerifyArchitectures (bin, "arch", target == Target.Dev ? "ARM64" : "x86_64");
 			}
 		}
 
@@ -2607,11 +2627,12 @@ public class TestApp {
 		[Test]
 		public void MonoFrameworkArchitectures ()
 		{
+
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
 				extension.CreateTemporaryCacheDirectory ();
-				extension.Abi = "armv7,arm64";
-				extension.TargetVer = "10.3";
+				extension.Abi = "arm64";
+				extension.TargetVer = SdkVersions.MiniOS;
 				extension.Linker = MTouchLinker.LinkAll; // faster test
 				extension.NoStrip = true; // faster test
 				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
@@ -2627,7 +2648,7 @@ public class TestApp {
 					var mono_framework = Path.Combine (app.AppPath, "Frameworks", "Mono.framework", "Mono");
 					Assert.That (mono_framework, Does.Exist, "mono framework existence");
 					// Verify that mtouch removed armv7s from the framework.
-					Assert.That (MachO.GetArchitectures (mono_framework).Select ((v) => v.ToString ()), Is.EquivalentTo (new [] { "ARMv7", "ARM64" }), "mono framework architectures");
+					Assert.That (MachO.GetArchitectures (mono_framework).Select ((v) => v.ToString ()), Is.EquivalentTo (new [] { "ARM64" }), "mono framework architectures");
 				}
 			}
 		}
@@ -2658,18 +2679,18 @@ public class TestApp {
 		}
 
 		[Test]
-		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "dont link", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "link all", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "link sdk", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "", "monotouch-test", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "mscorlib Part 1", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "mscorlib Part 2", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "BCL tests group 1", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "dont link", "Release")]
+		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "link all", "Release")]
+		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "link sdk", "Release")]
+		[TestCase (Target.Dev, Profile.iOS, "", "monotouch-test", "Release")]
+		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "mscorlib Part 1", "Release")]
+		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "mscorlib Part 2", "Release")]
+		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "BCL tests group 1", "Release")]
 		public void BuildTestProject (Target target, Profile profile, string subdir, string testname, string configuration)
 		{
 			if (target == Target.Dev)
 				AssertDeviceAvailable ();
-			
+
 			var testDir = Path.Combine (Configuration.SourceRoot, "tests", subdir, testname);
 			var platform = target == Target.Dev ? "iPhone" : "iPhoneSimulator";
 			var csproj = Path.Combine (testDir, testname + GetProjectSuffix (profile) + ".csproj");
@@ -2688,10 +2709,12 @@ public class TestApp {
 		// fully linked + llvm (+thumb) + default registrar
 		[TestCase (Target.Dev, MTouchLinker.Unspecified, MTouchRegistrar.Static, "armv7+llvm")]
 		[TestCase (Target.Dev, MTouchLinker.Unspecified, MTouchRegistrar.Static, "armv7+llvm+thumb2")]
+		[TestCase (Target.Dev, MTouchLinker.Unspecified, MTouchRegistrar.Static, "arm64")]
+		[TestCase (Target.Dev, MTouchLinker.Unspecified, MTouchRegistrar.Static, "arm64+llvm")]
 		// non-linked device build
 		[TestCase (Target.Dev, MTouchLinker.DontLink, MTouchRegistrar.Static, "arm64")] // armv7 Xamarin.iOS.dll don't link builds are not possible anymore because we go over the code size limit,
 		[TestCase (Target.Dev, MTouchLinker.DontLink, MTouchRegistrar.Dynamic, "arm64")] // since this is out of our control we are now forcing this test to arm64. Ref. https://github.com/xamarin/xamarin-macios/issues/5512
-		// sdk device build
+																						 // sdk device build
 		[TestCase (Target.Dev, MTouchLinker.LinkSdk, MTouchRegistrar.Static, "")]
 		[TestCase (Target.Dev, MTouchLinker.LinkSdk, MTouchRegistrar.Dynamic, "")]
 		// fully linked device build
@@ -2703,13 +2726,16 @@ public class TestApp {
 		public void Registrar (Target target, MTouchLinker linker, MTouchRegistrar registrar, string abi)
 		{
 			AssertDeviceAvailable ();
+			if (abi.Contains ("armv7"))
+				Configuration.AssertiOS32BitAvailable ();
 
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
 				mtouch.Linker = linker;
 				mtouch.Registrar = registrar;
 				mtouch.Abi = abi;
-				mtouch.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
+				if (Configuration.iOSSupports32BitArchitectures)
+					mtouch.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
 				mtouch.Timeout = TimeSpan.FromMinutes (5);
 				mtouch.AssertExecute (target == Target.Dev ? MTouchAction.BuildDev : MTouchAction.BuildSim, "build");
 				var fi = new FileInfo (mtouch.NativeExecutablePath);
@@ -2855,18 +2881,13 @@ public class TestApp {
 			}
 
 			using (var mtouch = new MTouchTool ()) {
-				var lib = Path.Combine (Configuration.SourceRoot, "tests/test-libraries/.libs/iphonesimulator/libtest.x86_64.a");
+				var lib = Path.Combine (Configuration.SourceRoot, "tests/test-libraries/.libs/iphonesimulator/libtest.arm64.a");
 				mtouch.CreateTemporaryApp ();
 				mtouch.NoFastSim = true;
-				mtouch.Abi = "i386";
+				mtouch.Abi = "x86_64";
 				mtouch.GccFlags = lib;
-				mtouch.TargetVer = "10.3"; // otherwise 32-bit build isn't possible
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build a");
-				if (Configuration.XcodeVersion.Major >= 11) {
-					mtouch.AssertWarning (5203, $"Native linking warning: warning: ignoring file {lib}, building for iOS Simulator-i386 but attempting to link with file built for iOS Simulator-x86_64");
-				} else {
-					mtouch.AssertWarning (5203, $"Native linking warning: warning: ignoring file {lib}, file was built for archive which is not the architecture being linked (i386): {lib}");
-				}
+				mtouch.AssertWarning (5203, $"Native linking warning: warning: ignoring file {lib}, building for iOS Simulator-x86_64 but attempting to link with file built for iOS Simulator-arm64");
 			}
 		}
 
@@ -3058,7 +3079,7 @@ class TestClass {
 				ext.AssertError (2105, "The property TestClass.FilterClauseProperty contains a 'Filter' exception clause, which is currently not supported when compiling for bitcode. This property will throw an exception if called.", "testApp.cs", 19);
 				ext.AssertError (2105, "The property TestClass.FilterClauseProperty contains a 'Filter' exception clause, which is currently not supported when compiling for bitcode. This property will throw an exception if called.", "testApp.cs", 28);
 				ext.AssertErrorCount (3);
-		
+
 				ext.Optimize = new string [] { "remove-unsupported-il-for-bitcode" };
 				ext.AssertExecuteFailure (MTouchAction.BuildSim);
 				ext.AssertError (2105, "The method TestClass.FilterClause contains a 'Filter' exception clause, which is currently not supported when compiling for bitcode. This method will throw an exception if called.", "testApp.cs", 9);
@@ -3072,6 +3093,7 @@ class TestClass {
 		public void MT5107 ()
 		{
 			AssertDeviceAvailable ();
+			Configuration.AssertiOS32BitAvailable ();
 
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Verbosity = -10; // This test fails when verbosity is increased, because mtouch will not show the MT5108 error, so make sure that doesn't happen.
@@ -3111,8 +3133,7 @@ class Test {
 	}
 }
 ";
-				mtouch.Abi = "armv7,arm64";
-				mtouch.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
+				mtouch.Abi = "arm64";
 				mtouch.CreateTemporaryApp (code: code);
 				mtouch.CreateTemporaryCacheDirectory ();
 
@@ -3199,8 +3220,7 @@ class Test {
 
 				File.Move (dll, DLL);
 
-				Action<string> check = (v) =>
-				{
+				Action<string> check = (v) => {
 					var msg = new StringBuilder ();
 					int counter = 0;
 					foreach (var file in Directory.EnumerateFiles (app, "*", SearchOption.AllDirectories)) {
@@ -3215,16 +3235,15 @@ class Test {
 				};
 
 				var tests = new [] {
-					new { Name = "linkall", Abi = "armv7s", Link = MTouchLinker.Unspecified },
+					new { Name = "linkall", Abi = "arm64", Link = MTouchLinker.Unspecified },
 					new { Name = "dontlink", Abi = "arm64", Link = MTouchLinker.DontLink },
-					new { Name = "dual", Abi = "armv7,arm64", Link = MTouchLinker.Unspecified },
+					new { Name = "dual", Abi = "arm64", Link = MTouchLinker.Unspecified },
 				};
 
 				mtouch.AppPath = app;
 				mtouch.RootAssembly = exe;
 				mtouch.References = new [] { DLL };
 				mtouch.Timeout = TimeSpan.FromMinutes (5);
-				mtouch.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
 
 				foreach (var test in tests) {
 					mtouch.Abi = test.Abi;
@@ -3240,6 +3259,8 @@ class Test {
 		[Test]
 		public void TestDuplicatedFatApp ()
 		{
+			Configuration.AssertiOS32BitAvailable ();
+
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
 				mtouch.CreateTemporaryCacheDirectory ();
@@ -3258,8 +3279,7 @@ class Test {
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
 				mtouch.GccFlags = "-all_load";
-				mtouch.Abi = "armv7,arm64";
-				mtouch.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
+				mtouch.Abi = "arm64";
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
 			}
 		}
@@ -3690,7 +3710,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 				mtouch.CreateTemporaryApp ();
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.Debug = true; // makes simlauncher possible, which speeds up the build
-				mtouch.Optimize = new string [] { "all"};
+				mtouch.Optimize = new string [] { "all" };
 				mtouch.AssertExecute (MTouchAction.BuildSim);
 				mtouch.AssertWarning (2003, "Option '--optimize=remove-uithread-checks' will be ignored since linking is disabled");
 				mtouch.AssertWarning (2003, "Option '--optimize=dead-code-elimination' will be ignored since linking is disabled");
@@ -4013,8 +4033,7 @@ public class HandlerTest
 					mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build sim");
 					mtouch.AssertErrorPattern (2014, "Unable to link assembly .* as it is mixed-mode.");
 					mtouch.AssertErrorCount (1);
-				}
-				else {
+				} else {
 					mtouch.AssertExecute (MTouchAction.BuildSim, "build sim");
 					mtouch.AssertErrorCount (0);
 				}
@@ -4073,6 +4092,9 @@ public class HandlerTest
 		[TestCase ("x86_64", "64-sgen")]
 		public void SimlauncherSymbols (string arch, string simlauncher_suffix)
 		{
+			if (arch == "i386")
+				Configuration.AssertiOS32BitAvailable ();
+
 			var libxamarin_path = Path.Combine (Configuration.SdkRootXI, "SDKs", "MonoTouch.iphonesimulator.sdk", "lib", "libxamarin.a");
 			var simlauncher_path = Path.Combine (Configuration.BinDirXI, "simlauncher" + simlauncher_suffix);
 
@@ -4287,7 +4309,7 @@ class C {
 				"/p:_CodeSigningKey=-",
 			};
 			XBuild.BuildXM (csproj, "Release", "x86", arguments: arguments, timeout: TimeSpan.FromMinutes (15));
-			DirectoryAssert.Exists(Path.Combine (Configuration.SourceRoot, "tests", "framework-test", "macOS", "bin", "x86", "Release", "XTest.framework.dSYM"));
+			DirectoryAssert.Exists (Path.Combine (Configuration.SourceRoot, "tests", "framework-test", "macOS", "bin", "x86", "Release", "XTest.framework.dSYM"));
 		}
 
 		public void XamarinSdkAdjustLibs ()
@@ -4321,13 +4343,13 @@ class C {
 					var shared_libraries = ExecutionHelper.Execute ("otool", new [] { "-L", sdk }, hide_output: true);
 					Asserts.DoesNotContain ("Private", shared_libraries, "Private");
 
-					exttool.AssertNoWarnings();
-					apptool.AssertNoWarnings();
+					exttool.AssertNoWarnings ();
+					apptool.AssertNoWarnings ();
 				}
 			}
 		}
 
-#region Helper functions
+		#region Helper functions
 		static void RunUnitTest (Profile profile, string code, string csproj_configuration = "", string [] csproj_references = null, string configuration = "Debug", string platform = "iPhoneSimulator", bool clean_simulator = true)
 		{
 			if (profile != Profile.iOS)
@@ -4473,7 +4495,7 @@ public class Dummy {
 			return BundlerTool.CompileTestAppCode (target, targetDirectory, code, new [] { extraArg }, profile, appName);
 		}
 
-		static string CreateBindingLibrary (string targetDirectory, string nativeCode, string bindingCode, string linkWith = null, string extraCode = "", string name = "binding", string[] references = null, string arch = "armv7")
+		static string CreateBindingLibrary (string targetDirectory, string nativeCode, string bindingCode, string linkWith = null, string extraCode = "", string name = "binding", string [] references = null, string arch = "armv7")
 		{
 			var o = CompileNativeLibrary (targetDirectory, nativeCode, name: name, arch: arch);
 			var cs = Path.Combine (targetDirectory, $"{name}Code.cs");
@@ -4559,7 +4581,7 @@ using ObjCRuntime;
 			return o;
 		}
 
-		void CompileCSharpCode (Profile profile, string code, string outputPath, params string[] additional_arguments)
+		void CompileCSharpCode (Profile profile, string code, string outputPath, params string [] additional_arguments)
 		{
 			var tmpFile = Path.GetTempFileName ();
 			try {
@@ -4619,7 +4641,7 @@ public class TestApp {
 			compiled_linkwith_apps [profile] = exe;
 			return exe;
 		}
-	
+
 		static void VerifyGC (string file, string message)
 		{
 			var symbols = GetNativeSymbols (file);
@@ -4629,7 +4651,7 @@ public class TestApp {
 			}
 		}
 
-		static void VerifyArchitectures (string file, string message, params string[] expected)
+		static void VerifyArchitectures (string file, string message, params string [] expected)
 		{
 			var actual = MachO.GetArchitectures (file).Select ((v) => v.ToString ()).ToArray ();
 
@@ -4664,7 +4686,7 @@ public class TestApp {
 				return v.Substring (idx + 2);
 			});
 		}
-		
+
 		static bool? is_apfs;
 		public static bool IsAPFS {
 			get {
@@ -4682,7 +4704,7 @@ public class TestApp {
 				return;
 			System.Threading.Thread.Sleep (1000);
 		}
-#endregion
+		#endregion
 	}
 
 	class McsException : Exception {

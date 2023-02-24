@@ -4,7 +4,7 @@
 <dict>
 	<!-- We need this because some tests will build this project for 32-bit targets -->
 	<key>MinimumOSVersion</key>
-	<string>10.0</string></dict>
+	<string>11.0</string></dict>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

@@ -22,13 +22,14 @@ namespace Xamarin.Tests {
 			var platform = ApplePlatform.iOS;
 			var project_path = GetProjectPath ("MySingleView", runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifier);
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifier);
 			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerExecuted (result);
 			AssertAppContents (platform, appPath);
 			var infoPlistPath = Path.Combine (appPath, "Info.plist");
-			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			var infoPlist = PDictionary.FromFile (infoPlistPath)!;
 			Assert.AreEqual ("com.xamarin.mysingletitle", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
 			Assert.AreEqual ("MySingleTitle", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
 			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
@@ -44,6 +45,7 @@ namespace Xamarin.Tests {
 			var platform = ApplePlatform.MacOSX;
 			var project_path = GetProjectPath ("MyCocoaApp", runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifier);
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifier);
 			var result = DotNet.AssertBuild (project_path, properties);
@@ -61,6 +63,7 @@ namespace Xamarin.Tests {
 			var platform = ApplePlatform.TVOS;
 			var project_path = GetProjectPath ("MyTVApp", runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifier);
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifier);
 			var result = DotNet.AssertBuild (project_path, properties);
@@ -77,13 +80,14 @@ namespace Xamarin.Tests {
 			var platform = ApplePlatform.MacCatalyst;
 			var project_path = GetProjectPath ("MyCatalystApp", runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifier);
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifier);
 			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerExecuted (result);
 			AssertAppContents (platform, appPath);
 			var infoPlistPath = Path.Combine (appPath, "Contents", "Info.plist");
-			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			var infoPlist = PDictionary.FromFile (infoPlistPath)!;
 			Assert.AreEqual ("com.xamarin.mycatalystapp", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
 			Assert.AreEqual ("MyCatalystApp", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
 			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
@@ -247,11 +251,12 @@ namespace Xamarin.Tests {
 
 			// Verify that there's one resource in the binding assembly, and its name
 			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
-			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (2), "2 resources");
+			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (3), "3 resources");
 			// Sort the resources before we assert, since we don't care about the order, and sorted order makes the asserts simpler.
 			var resources = ad.MainModule.Resources.OrderBy (v => v.Name).ToArray ();
-			Assert.That (resources [0].Name, Is.EqualTo ($"__{prefix}_content_basn3p08.png"), $"__{prefix}_content_basn3p08.png");
-			Assert.That (resources [1].Name, Is.EqualTo ($"__{prefix}_content_xamvideotest.mp4"), $"__{prefix}_content_xamvideotest.mp4");
+			Assert.That (resources [0].Name, Is.EqualTo ($"__{prefix}_content_basn3p08__with__loc.png"), $"__{prefix}_content_basn3p08__with__loc.png");
+			Assert.That (resources [1].Name, Is.EqualTo ($"__{prefix}_content_basn3p08.png"), $"__{prefix}_content_basn3p08.png");
+			Assert.That (resources [2].Name, Is.EqualTo ($"__{prefix}_content_xamvideotest.mp4"), $"__{prefix}_content_xamvideotest.mp4");
 		}
 
 		[TestCase ("iOS")]
@@ -318,6 +323,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
@@ -326,7 +332,7 @@ namespace Xamarin.Tests {
 			AssertThatLinkerExecuted (result);
 			var infoPlistPath = GetInfoPListPath (platform, appPath);
 			Assert.That (infoPlistPath, Does.Exist, "Info.plist");
-			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			var infoPlist = PDictionary.FromFile (infoPlistPath)!;
 			Assert.AreEqual ("com.xamarin.mysimpleapp", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
 			Assert.AreEqual ("MySimpleApp", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
 			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
@@ -341,6 +347,7 @@ namespace Xamarin.Tests {
 		public void BuildFatMonoTouchTest (ApplePlatform platform, string runtimeIdentifiers, params string [] additionalProperties)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = Path.Combine (Configuration.SourceRoot, "tests", "monotouch-test", "dotnet", platform.AsString (), "monotouch-test.csproj");
 			Clean (project_path);
@@ -357,7 +364,7 @@ namespace Xamarin.Tests {
 			var appPath = Path.Combine (Path.GetDirectoryName (project_path)!, "bin", "Debug", platform.ToFramework (), "monotouchtest.app");
 			var infoPlistPath = GetInfoPListPath (platform, appPath);
 			Assert.That (infoPlistPath, Does.Exist, "Info.plist");
-			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			var infoPlist = PDictionary.FromFile (infoPlistPath)!;
 			Assert.AreEqual ("com.xamarin.monotouch-test", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
 			Assert.AreEqual ("MonoTouchTest", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
 		}
@@ -436,6 +443,7 @@ namespace Xamarin.Tests {
 		public void BuildAndExecuteNativeReferencesTestApp (string project, ApplePlatform platform, string runtimeIdentifier)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifier);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
 			Clean (project_path);
@@ -518,6 +526,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
@@ -567,6 +576,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
@@ -577,7 +587,7 @@ namespace Xamarin.Tests {
 			AssertThatLinkerExecuted (rv);
 			var infoPlistPath = GetInfoPListPath (platform, appPath);
 			Assert.That (infoPlistPath, Does.Exist, "Info.plist");
-			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			var infoPlist = PDictionary.FromFile (infoPlistPath)!;
 			Assert.AreEqual ("com.xamarin.mysimpleapp", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
 			Assert.AreEqual ("MySimpleApp", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
 			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
@@ -596,6 +606,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var outputPath = Cache.CreateTemporaryDirectory ();
 			var project_path = GetProjectPath (project, platform: platform);
@@ -618,6 +629,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "SimpleAppWithOldReferences";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
@@ -669,6 +681,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "AppWithResources";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
@@ -689,7 +702,7 @@ namespace Xamarin.Tests {
 			Assert.That (fontBFile, Does.Exist, "B.otf existence");
 			Assert.That (fontCFile, Does.Exist, "C.ttf existence");
 
-			var plist = PDictionary.FromFile (GetInfoPListPath (platform, appPath));
+			var plist = PDictionary.FromFile (GetInfoPListPath (platform, appPath))!;
 			switch (platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
@@ -745,6 +758,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "AppWithResources";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var projectPath = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out _);
 			Clean (projectPath);
@@ -872,6 +886,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "AppWithGenericLibraryReference";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 			if (platform == ApplePlatform.MacOSX) {
 				Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS); // This test requires iOS as well when testing macOS
 			} else {
@@ -892,6 +907,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifier);
 
 			var project_path = GetProjectPath (project, platform: platform);
 			Clean (project_path);
@@ -925,6 +941,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "CatalystAppOptimizedForMacOS";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifier);
 
 			var project_path = GetProjectPath (project, platform: platform);
 			Clean (project_path);
@@ -944,6 +961,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "CatalystAppOptimizedForMacOS";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifier);
 
 			var project_path = GetProjectPath (project, platform: platform);
 			Clean (project_path);
@@ -965,6 +983,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "Net6_0SimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, netVersion: "net6.0");
 			Clean (project_path);
@@ -974,7 +993,7 @@ namespace Xamarin.Tests {
 			AssertThatLinkerExecuted (result);
 			var infoPlistPath = GetInfoPListPath (platform, appPath);
 			Assert.That (infoPlistPath, Does.Exist, "Info.plist");
-			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			var infoPlist = PDictionary.FromFile (infoPlistPath)!;
 			Assert.AreEqual ("com.xamarin.mysimpleapp", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
 			Assert.AreEqual ("MySimpleApp", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
 			Assert.AreEqual ("6.0", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
@@ -994,6 +1013,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
@@ -1033,6 +1053,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
@@ -1048,6 +1069,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "CustomizedCodeSigning";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 
@@ -1140,6 +1162,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "Entitlements";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
 			Clean (project_path);
@@ -1157,6 +1180,75 @@ namespace Xamarin.Tests {
 				var jitNotAllowed = !foundEntitlements || !entitlements!.ContainsKey ("com.apple.security.cs.allow-jit");
 				Assert.True (jitNotAllowed, "Jit Not Allowed");
 			}
+		}
+
+		// [TestCase (ApplePlatform.MacCatalyst, null, "Release")]
+		[TestCase (ApplePlatform.MacOSX, null, "Release")]
+		public void NoWarnCodesign (ApplePlatform platform, string runtimeIdentifiers, string configuration)
+		{
+			var project = "Entitlements";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
+			Clean (project_path);
+
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["Configuration"] = configuration;
+			properties ["EnableCodeSigning"] = "true";
+			properties ["ExcludeNUnitLiteReference"] = "true";
+			properties ["ExcludeTouchUnitReference"] = "true";
+			var rv = DotNet.AssertBuild (project_path, properties);
+			rv.AssertNoWarnings ();
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		public void BuildAndExecuteAppWithNativeDynamicLibrariesInPackageReference (ApplePlatform platform, string runtimeIdentifier)
+		{
+			var project = "AppWithNativeDynamicLibrariesInPackageReference";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifier);
+			DotNet.AssertBuild (project_path, properties);
+
+			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
+			Assert.That (appExecutable, Does.Exist, "There is an executable");
+
+			AssertThatDylibExistsAndIsReidentified (appPath, "libtest.dylib");
+			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libtest.dylib");
+			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libtest.so");
+
+			ExecuteWithMagicWordAndAssert (appExecutable);
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		public void BuildAndExecuteAppWithWinExeOutputType (ApplePlatform platform, string runtimeIdentifier)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			var project = "AppWithWinExeOutputType";
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifier);
+
+			var rv = DotNet.AssertBuildFailure (project_path, properties);
+
+			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
+			Assert.AreEqual (1, errors.Length, "Error count");
+			Assert.AreEqual ($"WinExe is not a valid output type for macOS", errors [0].Message, "Error message");
+		}
+
+		void AssertThatDylibExistsAndIsReidentified (string appPath, string dylibRelPath)
+		{
+			var dylibPath = Path.Join (appPath, "Contents", "MonoBundle", dylibRelPath);
+			Assert.That (dylibPath, Does.Exist, "There is a library");
+
+			var shared_libraries = ExecutionHelper.Execute ("otool", new [] { "-L", dylibPath }, hide_output: true);
+			Assert.That (shared_libraries, Does.Contain (dylibPath), "The library ID is correct");
+			Assert.That (shared_libraries, Does.Contain ($"@executable_path/../../Contents/MonoBundle/{dylibRelPath}"),
+				"The dependent bundled shared library install name is relative to @executable_path");
 		}
 	}
 }

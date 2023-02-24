@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "iOS Tabbed Application",
+  "name": "Aplicativo com guias do iOS",
   "description": "Um projeto para criar um aplicativo iOS .NET com guias",
   "symbols/bundleId/description": "Substitui o CFBundleIdentifier no Info.plist",
   "symbols/minOSVersion/description": "Substitui o SupportedOSPlatformVersion no arquivo de projetos",

@@ -21,7 +21,7 @@ PROJECT_OLD_FILE?=./oldnet/$(PROJECT_OLD_NAME).csproj
 PROJECT_NEW_FILE?=./dotnet/$(PROJECT_NEW_NAME).csproj
 
 PROJECT_OLD_APP?=./oldnet/bin/iPhone/Release/$(PROJECT_NEW_NAME).app
-PROJECT_NEW_APP?=./dotnet/bin/iPhone/Release/net6.0-ios/ios-arm64/$(PROJECT).app
+PROJECT_NEW_APP?=./dotnet/bin/iPhone/Release/$(DOTNET_TFM)-ios/ios-arm64/$(PROJECT).app
 
 report:
 	appcompare \

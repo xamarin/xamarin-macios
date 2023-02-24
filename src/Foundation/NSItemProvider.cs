@@ -4,9 +4,7 @@ using CloudKit;
 using ObjCRuntime;
 
 namespace Foundation {
-#if MONOMAC || IOS
-	public partial class NSItemProvider
-	{
+	public partial class NSItemProvider {
 #if !NET && MONOMAC
 		[Obsolete ("Use RegisterCloudKitShare (CloudKitRegistrationPreparationAction) instead.")]
 		public virtual void RegisterCloudKitShare (Action<CloudKitRegistrationPreparationHandler> preparationHandler)
@@ -15,7 +13,7 @@ namespace Foundation {
 			RegisterCloudKitShare (action);
 		}
 #endif
-		
+
 #if MONOMAC
 		public virtual Task<CloudKitRegistrationPreparationHandler> RegisterCloudKitShareAsync ()
 		{
@@ -29,20 +27,14 @@ namespace Foundation {
 #endif
 
 #if NET
-		[SupportedOSPlatform ("tvos11.0")]
-		[SupportedOSPlatform ("macos10.13")]
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (4,0)]
-		[TV (11,0)]
-		[Mac (10,13)]
-		[iOS (11,0)]
 #endif
-		public NSProgress LoadObject<T> (Action<T, NSError> completionHandler) where T: NSObject, INSItemProviderReading
+		public NSProgress LoadObject<T> (Action<T, NSError> completionHandler) where T : NSObject, INSItemProviderReading
 		{
-			return LoadObject (new Class (typeof (T)), (rv, err) =>
-			{
+			return LoadObject (new Class (typeof (T)), (rv, err) => {
 				var obj = rv as T;
 				if (obj == null && rv != null)
 					obj = Runtime.ConstructNSObject<T> (rv.Handle);
@@ -51,21 +43,15 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos11.0")]
-		[SupportedOSPlatform ("macos10.13")]
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (4,0)]
-		[TV (11,0)]
-		[Mac (10,13)]
-		[iOS (11,0)]
 #endif
-		public Task<T> LoadObjectAsync<T> () where T: NSObject, INSItemProviderReading
+		public Task<T> LoadObjectAsync<T> () where T : NSObject, INSItemProviderReading
 		{
 			var rv = LoadObjectAsync (new Class (typeof (T)));
-			return rv.ContinueWith ((v) =>
-			{
+			return rv.ContinueWith ((v) => {
 				var obj = v.Result as T;
 				if (obj == null && v.Result != null)
 					obj = Runtime.ConstructNSObject<T> (v.Result.Handle);
@@ -74,21 +60,15 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos11.0")]
-		[SupportedOSPlatform ("macos10.13")]
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (4,0)]
-		[TV (11,0)]
-		[Mac (10,13)]
-		[iOS (11,0)]
 #endif
-		public Task<T> LoadObjectAsync<T> (out NSProgress result) where T: NSObject, INSItemProviderReading
+		public Task<T> LoadObjectAsync<T> (out NSProgress result) where T : NSObject, INSItemProviderReading
 		{
 			var rv = LoadObjectAsync (new Class (typeof (T)), out result);
-			return rv.ContinueWith ((v) =>
-			{
+			return rv.ContinueWith ((v) => {
 				var obj = v.Result as T;
 				if (obj == null && v.Result != null)
 					obj = Runtime.ConstructNSObject<T> (v.Result.Handle);
@@ -96,5 +76,4 @@ namespace Foundation {
 			});
 		}
 	}
-#endif // MONOMAC || IOS
 }

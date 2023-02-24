@@ -1,4 +1,0 @@
-namespace MacCatalystBinding1
-{
-
-}

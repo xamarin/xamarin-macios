@@ -158,32 +158,32 @@ namespace iAd {
 		{
 		}
 
-		public new static ADBannerViewAppearance? GetAppearance<T>() where T : ADBannerView
+		public new static ADBannerViewAppearance? GetAppearance<T> () where T : ADBannerView
 		{
 			return default (ADBannerViewAppearance);
 		}
 
-		public new static ADBannerViewAppearance? AppearanceWhenContainedIn(params Type[] containers)
+		public new static ADBannerViewAppearance? AppearanceWhenContainedIn (params Type [] containers)
 		{
 			return default (ADBannerViewAppearance);
 		}
 
-		public new static ADBannerViewAppearance? GetAppearance(UITraitCollection traits)
+		public new static ADBannerViewAppearance? GetAppearance (UITraitCollection traits)
 		{
 			return default (ADBannerViewAppearance);
 		}
 
-		public new static ADBannerViewAppearance? GetAppearance(UITraitCollection traits, params Type[] containers)
+		public new static ADBannerViewAppearance? GetAppearance (UITraitCollection traits, params Type [] containers)
 		{
 			return default (ADBannerViewAppearance);
 		}
 
-		public new static ADBannerViewAppearance? GetAppearance<T>(UITraitCollection traits) where T : ADBannerView
+		public new static ADBannerViewAppearance? GetAppearance<T> (UITraitCollection traits) where T : ADBannerView
 		{
 			return default (ADBannerViewAppearance);
 		}
 
-		public new static ADBannerViewAppearance? GetAppearance<T>(UITraitCollection traits, params Type[] containers) where T : ADBannerView
+		public new static ADBannerViewAppearance? GetAppearance<T> (UITraitCollection traits, params Type [] containers) where T : ADBannerView
 		{
 			return default (ADBannerViewAppearance);
 		}
@@ -257,15 +257,15 @@ namespace iAd {
 			return default (bool);
 		}
 
-		public virtual void AdLoaded(ADBannerView banner)
+		public virtual void AdLoaded (ADBannerView banner)
 		{
 		}
 
-		public virtual void FailedToReceiveAd(ADBannerView banner, NSError error)
+		public virtual void FailedToReceiveAd (ADBannerView banner, NSError error)
 		{
 		}
 
-		public virtual void WillLoad(ADBannerView bannerView)
+		public virtual void WillLoad (ADBannerView bannerView)
 		{
 		}
 	}
@@ -289,7 +289,7 @@ namespace iAd {
 		}
 
 		[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
-		public virtual Task<ADClientConversionDetailsResult>? LookupAdConversionDetailsAsync()
+		public virtual Task<ADClientConversionDetailsResult>? LookupAdConversionDetailsAsync ()
 		{
 			return default (Task<ADClientConversionDetailsResult>);
 		}
@@ -331,7 +331,7 @@ namespace iAd {
 
 		public IADInterstitialAdDelegate? Delegate {
 			get { return default (IADInterstitialAdDelegate); }
-			set	{ }
+			set { }
 		}
 
 		public virtual bool Loaded {
@@ -340,12 +340,12 @@ namespace iAd {
 
 		public virtual NSObject? WeakDelegate {
 			get { return default (NSObject); }
-			set	{ }
+			set { }
 		}
 
 		public ADPredicate? ActionShouldBegin {
 			get { return default (ADPredicate); }
-			set	{ }
+			set { }
 		}
 
 		public event EventHandler ActionFinished {
@@ -403,7 +403,7 @@ namespace iAd {
 	public class ADErrorEventArgs : EventArgs {
 		public NSError? Error {
 			get { return default (NSError); }
-			set	{ }
+			set { }
 		}
 
 		public ADErrorEventArgs (NSError error)
@@ -551,7 +551,6 @@ namespace iAd {
 	[Obsoleted (PlatformName.iOS, 12, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
 	public static class IAdPreroll {
 
-		[Introduced (PlatformName.iOS, 8, 0, PlatformArchitecture.All, null)]
 		public static void CancelPreroll (this MPMoviePlayerController This)
 		{
 		}
@@ -576,7 +575,7 @@ namespace iAd {
 	[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
 	public static class ADErrorExtensions {
 
-		public static NSString? GetDomain( this ADError self)
+		public static NSString? GetDomain (this ADError self)
 		{
 			return default (NSString?);
 		}

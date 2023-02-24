@@ -22,13 +22,13 @@ namespace BCLTests {
 				line = line.Remove (pos);
 			}
 			line = line.Trim ();
-			return line;	
+			return line;
 		}
 		public static async Task<IEnumerable<string>> ParseStreamAsync (TextReader textReader)
 		{
 			var ignoredMethods = new List<string> ();
 			string line;
-			while ((line = await textReader.ReadLineAsync()) != null) {
+			while ((line = await textReader.ReadLineAsync ()) != null) {
 				// we have to make sure of several things, first, lets
 				// remove any char after the first # which would mean
 				// we have comments:
@@ -57,7 +57,7 @@ namespace BCLTests {
 			}
 			return ignoredTests;
 		}
-		
+
 		public static async Task<IEnumerable<string>> ParseContentFilesAsync (string contentDir)
 		{
 			var ignoredTests = new List<string> ();
@@ -69,7 +69,7 @@ namespace BCLTests {
 			}
 			return ignoredTests;
 		}
-		
+
 		public static async Task<IEnumerable<string>> ParseTraitsContentFileAsync (string contentDir, bool isXUnit)
 		{
 			var ignoredTraits = new List<string> ();
@@ -84,7 +84,7 @@ namespace BCLTests {
 			}
 			return ignoredTraits;
 		}
-		
+
 		public static IEnumerable<string> ParseTraitsContentFile (string contentDir, bool isXUnit)
 		{
 			var ignoredTraits = new List<string> ();

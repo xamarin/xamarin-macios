@@ -19,12 +19,11 @@ namespace MetalPerformanceShaders {
 #if NET
 	[SupportedOSPlatform ("ios11.3")]
 	[SupportedOSPlatform ("tvos11.3")]
-	[SupportedOSPlatform ("macos10.13.4")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (11,3)]
-	[TV (11,3)]
-	[Mac (10,13,4)]
+	[iOS (11, 3)]
+	[TV (11, 3)]
 #endif
 	public static partial class MPSImageBatch {
 
@@ -57,12 +56,11 @@ namespace MetalPerformanceShaders {
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (12,0)]
-		[TV (12,0)]
-		[Mac (10,14)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
 #endif
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
 		static extern nuint MPSImageBatchResourceSize (IntPtr batch);
@@ -71,12 +69,11 @@ namespace MetalPerformanceShaders {
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (12,0)]
-		[TV (12,0)]
-		[Mac (10,14)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
 #endif
 		public static nuint GetResourceSize (NSArray<MPSImage> imageBatch)
 		{
@@ -87,11 +84,11 @@ namespace MetalPerformanceShaders {
 		}
 
 		// TODO: Disabled due to 'MPSImageBatchIterate' is not in the native library rdar://47282304.
-		//[iOS (12,0), TV (12,0), Mac (10,14)]
+		//[iOS (12,0), TV (12,0)]
 		//[DllImport (Constants.MetalPerformanceShadersLibrary)]
 		//static extern nint MPSImageBatchIterate (IntPtr batch, IntPtr iterator);
 
-		//[iOS (12,0), TV (12,0), Mac (10,14)]
+		//[iOS (12,0), TV (12,0)]
 		//public delegate nint MPSImageBatchIterator (MPSImage image, nuint index);
 
 		//[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
@@ -114,7 +111,7 @@ namespace MetalPerformanceShaders {
 		//	}
 		//}
 
-		//[iOS (12,0), TV (12,0), Mac (10,14)]
+		//[iOS (12,0), TV (12,0)]
 		//[BindingImpl (BindingImplOptions.Optimizable)]
 		//public static nint Iterate (NSArray<MPSImage> imageBatch, MPSImageBatchIterator iterator)
 		//{

@@ -16,15 +16,13 @@ namespace Microsoft.Build.Tasks {
 			var client = BuildConnection
 				.GetAsync (BuildEngine4)
 				.Result
-				.Client;
+				.GetClient (SessionId);
 
 			if (!client.IsConnected) {
 				return result;
 			}
 
-			foreach (var file in Files) {
-				client.DeleteFileAsync (file.ItemSpec).Wait ();
-			}
+			client.DeleteFilesAsync (Files.Select (x => x.ItemSpec).ToArray ()).Wait ();
 
 			return result;
 		}

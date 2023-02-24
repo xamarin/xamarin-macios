@@ -224,7 +224,7 @@ namespace PerfTest {
 		ObjCRegistrarTest obj = new ObjCRegistrarTest ();
 		IntPtr mutablearray_class = Class.GetHandle (typeof (NSMutableArray));
 		IntPtr nsobject_class = Class.GetHandle (typeof (NSObject));
-		NSObject[] managedArray;
+		NSObject [] managedArray;
 
 		[Params (0, 1, 100, 10000)]
 		public int ArraySize { get; set; }

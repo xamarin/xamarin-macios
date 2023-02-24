@@ -93,13 +93,10 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.11")]
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 11)]
-		[iOS (9, 0)]
 #endif
 		[Export ("trueExpression")]
 		public virtual NSExpression TrueExpression {
@@ -114,13 +111,10 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.11")]
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 11)]
-		[iOS (9, 0)]
 #endif
 		[Export ("falseExpression")]
 		public virtual NSExpression FalseExpression {

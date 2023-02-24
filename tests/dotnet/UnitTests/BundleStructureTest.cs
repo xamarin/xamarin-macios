@@ -120,6 +120,7 @@ namespace Xamarin.Tests {
 				expectedFiles.Add ($"{assemblyDirectory}NoneC.pdb");
 			expectedFiles.Add ($"{assemblyDirectory}NoneD.exe");
 			expectedFiles.Add ($"{assemblyDirectory}libNoneE.dylib");
+			expectedFiles.Add ($"{assemblyDirectory}libNoneE.so");
 			// NoneF.a is not bundled
 			// Sub/NoneG.txt is not bundled
 			// Sub/NoneH.txt is not bundled
@@ -129,8 +130,10 @@ namespace Xamarin.Tests {
 			expectedFiles.Add ($"{assemblyDirectory}NoneL.config");
 			// NoneM.unknown is not bundled
 			expectedFiles.Add ($"{assemblyDirectory}libSkipInstallNameTool.dylib");
+			expectedFiles.Add ($"{assemblyDirectory}libSkipInstallNameTool.so");
 
 			expectedFiles.Add ($"{resourcesDirectory}basn3p08.png");
+			expectedFiles.Add ($"{resourcesDirectory}basn3p08_with_loc.png");
 			expectedFiles.Add ($"{resourcesDirectory}iTunesArtwork.jpg");
 
 			// UnknownA.bin: None
@@ -334,6 +337,7 @@ namespace Xamarin.Tests {
 			Assert.That (missingFiles, Is.Empty, "No missing files");
 
 			AssertDynamicLibraryId (platform, appPath, assemblyDirectory, "libSkipInstallNameTool.dylib");
+			AssertDynamicLibraryId (platform, appPath, assemblyDirectory, "libSkipInstallNameTool.so");
 			AssertLibraryArchitectures (appPath, runtimeIdentifiers);
 		}
 
@@ -529,6 +533,7 @@ namespace Xamarin.Tests {
 
 		[Test]
 		// Debug
+		[TestCase (ApplePlatform.iOS, "ios-arm64", CodeSignature.All, "Debug")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm", CodeSignature.All, "Debug")]
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64", CodeSignature.Frameworks, "Debug")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", CodeSignature.All, "Debug")]
@@ -545,6 +550,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "BundleStructure";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
 			var project_dir = Path.GetDirectoryName (Path.GetDirectoryName (project_path))!;

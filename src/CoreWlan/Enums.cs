@@ -5,8 +5,6 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 using System;
-#if NET
-#endif
 
 namespace CoreWlan {
 
@@ -85,11 +83,8 @@ namespace CoreWlan {
 		WPAEnterpriseMixed = 8,
 		WPA2Enterprise = 9,
 		Enterprise = 10,
-		[Mac (10, 15)]
 		Wpa3Personal = 11,
-		[Mac (10, 15)]
 		Wpa3Enterprise = 12,
-		[Mac (10, 15)]
 		Wpa3Transition = 13,
 		[Mac (13, 0)]
 		Owe = 14,

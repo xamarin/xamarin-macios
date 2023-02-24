@@ -41,7 +41,6 @@ using NativeHandle = System.IntPtr;
 namespace OpenGL {
 #if NET
 	[SupportedOSPlatform ("macos")]
-	[UnsupportedOSPlatform ("macos10.14")]
 	[ObsoletedOSPlatform ("macos10.14", "Use 'Metal' Framework instead.")]
 #else
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' Framework instead.")]
@@ -55,7 +54,7 @@ namespace OpenGL {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGLContext (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
 		{
@@ -90,7 +89,7 @@ namespace OpenGL {
 		{
 			return CGLUnlockContext (Handle);
 		}
-	
+
 		[DllImport (Constants.OpenGLLibrary)]
 		extern static CGLErrorCode CGLSetCurrentContext (IntPtr ctx);
 
@@ -104,7 +103,7 @@ namespace OpenGL {
 					return new CGLContext (ctx, false);
 				else
 					return null;
-			} 
+			}
 
 			set {
 				var retValue = CGLSetCurrentContext (value.GetHandle ());

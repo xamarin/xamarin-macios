@@ -22,10 +22,10 @@ namespace XamarinTests.ObjCRuntime {
 		AllStatic = Static,
 		AllDynamic = Dynamic,
 	}
-		
+
 	public class Registrar {
 		[Register ("__registration_test_CLASS")]
-		class RegistrationTestClass : NSObject {}
+		class RegistrationTestClass : NSObject { }
 
 		public static Registrars CurrentRegistrar {
 			get {

@@ -44,16 +44,17 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 					throw new Exception (string.Format (Resources.CompileAppManifest_MissinInfoPList, preBuiltInfoPlistPath));
 				}
 
-				var infoPlist = PDictionary.FromFile (AppManifestPath);
-				var preBuiltInfoPlist = PDictionary.FromFile (preBuiltInfoPlistPath);
+				var infoPlist = PDictionary.FromFile (AppManifestPath)!;
+				var preBuiltInfoPlist = PDictionary.FromFile (preBuiltInfoPlistPath)!;
 
 				foreach (var item in infoPlist) {
-					if (!IgnorePlistKeys.Contains (item.Key)) {
-						if (preBuiltInfoPlist.ContainsKey (item.Key)) {
-							preBuiltInfoPlist.Remove (item.Key);
+					var key = item.Key!;
+					if (!IgnorePlistKeys.Contains (key)) {
+						if (preBuiltInfoPlist.ContainsKey (key)) {
+							preBuiltInfoPlist.Remove (key);
 						}
 
-						preBuiltInfoPlist.Add (item.Key, item.Value.Clone ());
+						preBuiltInfoPlist.Add (key, item.Value.Clone ());
 					}
 				}
 

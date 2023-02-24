@@ -22,8 +22,7 @@ namespace MapKit {
 	// NSUInteger -> MKDirectionsTypes.h
 	[NoWatch]
 	[Native]
-	[TV (9, 2)]
-	[iOS (7, 0)]
+	[MacCatalyst (13, 1)]
 	public enum MKDirectionsTransportType : ulong {
 		Automobile = 1 << 0,
 		Walking = 1 << 1,
@@ -32,8 +31,8 @@ namespace MapKit {
 	}
 
 	// NSUInteger -> MKTypes.h
-	[TV (9, 2)]
 	[NoWatch]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MKMapType : ulong {
 		Standard = 0,
@@ -41,16 +40,13 @@ namespace MapKit {
 		Hybrid,
 		SatelliteFlyover,
 		HybridFlyover,
-		[iOS (11, 0)]
-		[TV (11, 0)]
-		[Mac (10, 13)]
+		[MacCatalyst (13, 1)]
 		MutedStandard,
 	}
 
 	// NSUInteger -> MKDistanceFormatter.h
 	[Native]
-	[TV (9, 2)]
-	[iOS (7, 0)]
+	[MacCatalyst (13, 1)]
 	public enum MKDistanceFormatterUnits : ulong {
 		Default,
 		Metric,
@@ -60,8 +56,7 @@ namespace MapKit {
 
 	// NSUInteger -> MKDistanceFormatter.h
 	[Native]
-	[TV (9, 2)]
-	[iOS (7, 0)]
+	[MacCatalyst (13, 1)]
 	public enum MKDistanceFormatterUnitStyle : ulong {
 		Default = 0,
 		Abbreviated,
@@ -69,18 +64,17 @@ namespace MapKit {
 	}
 
 	// NSInteger -> MKMapView.h
-	[TV (9, 2)]
 	[NoWatch]
+	[MacCatalyst (13, 1)]
 	[Native]
-	[iOS (7, 0)]
 	public enum MKOverlayLevel : long {
 		AboveRoads = 0,
 		AboveLabels,
 	}
 
 	// NSUInteger -> MKTypes.h
-	[TV (9, 2)]
 	[NoWatch]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[ErrorDomain ("MKErrorDomain")]
 	public enum MKErrorCode : ulong {
@@ -95,6 +89,7 @@ namespace MapKit {
 	// NSUInteger -> MKTypes.h
 	[NoTV]
 	[NoWatch]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MKAnnotationViewDragState : ulong {
 		None, Starting, Dragging, Canceling, Ending
@@ -105,13 +100,16 @@ namespace MapKit {
 	[NoWatch]
 	[Native]
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'MKPinAnnotationView.PinTintColor' instead.")]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'MKPinAnnotationView.PinTintColor' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'MKPinAnnotationView.PinTintColor' instead.")]
 	public enum MKPinAnnotationColor : ulong {
 		Red, Green, Purple
 	}
 
 	// NSUInteger -> MKTypes.h
-	[TV (9, 2)]
 	[NoWatch]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MKUserTrackingMode : ulong {
 		None,
@@ -124,22 +122,20 @@ namespace MapKit {
 #endif
 	}
 
-	[TV (9, 2)]
 	[NoWatch]
-	[iOS (9, 3)]
 	[Native]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'MKLocalSearchCompleterResultType' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'MKLocalSearchCompleterResultType' instead.")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'MKLocalSearchCompleterResultType' instead.")]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'MKLocalSearchCompleterResultType' instead.")]
 	public enum MKSearchCompletionFilterType : long {
 		AndQueries = 0,
 		Only
 	}
 
-	[TV (11, 0)]
 	[NoWatch]
-	[iOS (11, 0)]
-	[Mac (10, 13)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MKAnnotationViewCollisionMode : long {
 		Rectangle,
@@ -147,23 +143,21 @@ namespace MapKit {
 		[TV (14, 0)]
 		[iOS (14, 0)]
 		[Mac (11, 0)]
+		[MacCatalyst (14, 0)]
 		None,
 	}
 
-	[TV (11, 0)]
 	[NoWatch]
-	[iOS (11, 0)]
 	[NoMac]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MKScaleViewAlignment : long {
 		Leading,
 		Trailing,
 	}
 
-	[TV (11, 0)]
 	[NoWatch]
-	[iOS (11, 0)]
-	[Mac (10, 13)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MKFeatureVisibility : long {
 		Adaptive,
@@ -172,7 +166,8 @@ namespace MapKit {
 	}
 
 	[Flags]
-	[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+	[TV (13, 0), NoWatch, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MKLocalSearchCompleterResultType : ulong {
 		Address = 1 << 0,
@@ -181,7 +176,8 @@ namespace MapKit {
 	}
 
 	[Flags]
-	[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+	[TV (13, 0), NoWatch, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MKLocalSearchResultType : ulong {
 		Address = 1 << 0,
@@ -235,7 +231,8 @@ namespace MapKit {
 	}
 
 #if !WATCH
-	[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+	[TV (13, 0), NoWatch, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum MKPointOfInterestCategory {
 
 		[Field ("MKPointOfInterestCategoryAirport")]

@@ -38,7 +38,13 @@ namespace Network {
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe OS_nw_privacy_context nw_privacy_context_create (string description);
+		static extern unsafe OS_nw_privacy_context nw_privacy_context_create (IntPtr description);
+
+		static unsafe OS_nw_privacy_context nw_privacy_context_create (string description)
+		{
+			using var descriptionPtr = new TransientString (description);
+			return nw_privacy_context_create (descriptionPtr);
+		}
 
 		public NWPrivacyContext (string description)
 			: base (nw_privacy_context_create (description), true) { }

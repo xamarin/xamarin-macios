@@ -424,7 +424,7 @@
         </value>
     </data>
   <data name="E0118" xml:space="preserve">
-        <value>{0} exited with code {1}:
+        <value>{0} terminato con codice {1}:
 {2}</value>
     </data>
   <data name="M0119" xml:space="preserve">
@@ -997,6 +997,7 @@
         <value>Impostazione: la voce "{0}" non esiste
         </value>
     </data>
+  <!-- E7068: not in use anymore -->
   <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14+ non supporta le app watchOS 1. Eseguire la migrazione del progetto a watchOS 2+.</value>
     </data>
@@ -1145,5 +1146,35 @@
     </data>
   <data name="E7101" xml:space="preserve">
         <value>Proprietà sconosciuta '{0}' con valore '{1}'.</value>
+    </data>
+  <data name="E7102" xml:space="preserve">
+        <value>Valore non valido '{0}' per l'entitlement '{1}' di tipo '{2}' specificato nel gruppo di elementi CustomEntitlements. Valore previsto: nessun valore.</value>
+        <comment>
+            Don't translate: CustomEntitlements (name of option in project file)
+        </comment>
+    </data>
+  <data name="E7103" xml:space="preserve">
+        <value>Valore non valido '{0}' per l'entitlement '{1}' di tipo '{2}' specificato nel gruppo di elementi CustomEntitlements. Valore previsto: 'true' o 'false'.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'true', 'false'
+        </comment>
+    </data>
+  <data name="E7104" xml:space="preserve">
+        <value>Tipo sconosciuto '{0}' per l'entitlement '{1}' specificato nel gruppo di elementi CustomEntitlements. Valore previsto: 'Remove', 'Boolean', 'String' o 'StringArray'.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'Remove', 'Boolean', 'String', 'StringArray'
+        </comment>
+    </data>
+  <data name="W7105" xml:space="preserve">
+        <value>Estensione imprevista '{0}' per il riferimento nativo '{1}' nel manifesto '{2}'.</value>
+        <comment>
+            {0}: file extension
+            {1}: path to a file
+            {2}: path to a file
+        </comment>
     </data>
 </root>

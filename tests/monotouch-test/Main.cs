@@ -25,7 +25,7 @@ partial class TestRuntime {
 
 		return true;
 #else
-		return MonoTouchFixtures.AppDelegate.RunAsync (timeout, action, check_completed, imageToShow);
+		return AppDelegate.RunAsync (timeout, action, check_completed, imageToShow);
 #endif
 	}
 }

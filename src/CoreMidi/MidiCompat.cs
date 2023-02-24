@@ -5,6 +5,8 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreMidi {
 #if !COREBUILD
 	public delegate void MidiCIPropertyChangedHandler (MidiCISession session, byte channel, NSData data);
@@ -27,7 +29,7 @@ namespace CoreMidi {
 			=> throw new NotSupportedException ();
 
 		[Obsolete ("Empty stub (not a public API).")]
-		public virtual MidiCIPropertyChangedHandler PropertyChangedCallback { get; set; }
+		public virtual MidiCIPropertyChangedHandler? PropertyChangedCallback { get; set; }
 
 		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
 		public virtual void SetProperty (NSData inquiry, byte channel, MidiCIPropertyResponseHandler handler)

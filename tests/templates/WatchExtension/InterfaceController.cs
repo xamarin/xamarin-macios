@@ -7,8 +7,7 @@ using Foundation;
 
 using MonoTouch.NUnit.UI;
 
-public static partial class TestLoader
-{
+public static partial class TestLoader {
 	static partial void AddTestAssembliesImpl (BaseTouchRunner runner);
 
 	public static void AddTestAssemblies (BaseTouchRunner runner)
@@ -17,11 +16,9 @@ public static partial class TestLoader
 	}
 }
 
-namespace monotouchtestWatchKitExtension
-{
+namespace monotouchtestWatchKitExtension {
 	[Register ("InterfaceController")]
-	public partial class InterfaceController : WKInterfaceController
-	{
+	public partial class InterfaceController : WKInterfaceController {
 		WatchOSRunner runner;
 		bool running;
 
@@ -45,12 +42,10 @@ namespace monotouchtestWatchKitExtension
 
 		static InterfaceController ()
 		{
-			ObjCRuntime.Runtime.MarshalManagedException += (object sender, ObjCRuntime.MarshalManagedExceptionEventArgs args) =>
-			{
+			ObjCRuntime.Runtime.MarshalManagedException += (object sender, ObjCRuntime.MarshalManagedExceptionEventArgs args) => {
 				Console.WriteLine ("Managed exception: {0}", args.Exception);
 			};
-			ObjCRuntime.Runtime.MarshalObjectiveCException += (object sender, ObjCRuntime.MarshalObjectiveCExceptionEventArgs args) =>
-			{
+			ObjCRuntime.Runtime.MarshalObjectiveCException += (object sender, ObjCRuntime.MarshalObjectiveCExceptionEventArgs args) => {
 				Console.WriteLine ("Objective-C exception: {0}", args.Exception);
 			};
 		}
@@ -83,11 +78,9 @@ namespace monotouchtestWatchKitExtension
 			runner.ExcludedCategories = new HashSet<string> (excludeCategories);
 			runner.Add (GetType ().Assembly);
 			TestLoader.AddTestAssemblies (runner);
-			ThreadPool.QueueUserWorkItem ((v) =>
-			{
+			ThreadPool.QueueUserWorkItem ((v) => {
 				runner.LoadSync ();
-				BeginInvokeOnMainThread (() =>
-				{
+				BeginInvokeOnMainThread (() => {
 					lblStatus.SetText (string.Format ("{0} tests", runner.TestCount));
 					RenderResults ();
 					cmdRun.SetEnabled (true);

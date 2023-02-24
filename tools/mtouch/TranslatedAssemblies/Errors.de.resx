@@ -750,6 +750,9 @@
   <data name="MX0185" xml:space="preserve">
 		<value>Bei Verwendung von CoreCLR kann die Option "{0}" nicht den Wert "{1}" annehmen.</value>
 	</data>
+  <data name="MX0186" xml:space="preserve">
+		<value>Bitcode ist aktiviert, Bitcode wird jedoch in Xcode 14 und höher nicht unterstützt und wurde deaktiviert. Deaktivieren Sie Bitcode, indem Sie die Eigenschaft "MtouchEnableBitcode" aus der Projektdatei entfernen.</value>
+	</data>
   <data name="MX1009" xml:space="preserve">
 		<value>Die Assembly "{0}" konnte nicht in "{1}" kopiert werden: {2}
 		</value>
@@ -1233,7 +1236,7 @@
 		</value>
 	</data>
   <data name="MT4124_I" xml:space="preserve">
-		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+		<value>Ungültig {0} auf '{1}' gefunden. Bitte reichen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new ein</value>
 	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>Der Registrar hat einen ungültigen Typ "{0}" in der Signatur für die Methode "{1}" gefunden: Die Schnittstelle muss ein Protokollattribut aufweisen, das den zugehörigen Wrappertyp angibt.
@@ -1744,10 +1747,20 @@
 		<value>Es kann keine Instanz des Typs {0}erstellt werden.</value>
 	</data>
   <data name="MX8042" xml:space="preserve">
-		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<value>Ausnahme beim Aufrufen der Funktion {0}: {1}</value>
 		<comment>
 			0: name of function
 			1: exception info
 		</comment>
+	</data>
+  <data name="MX8043" xml:space="preserve">
+		<value>Beim Überprüfen des statischen Registrierungscodes ist eine Ausnahme aufgetreten für: {0}:{1}</value>
+		<comment>
+			0: name of an assembly
+			1: exception info
+		</comment>
+	</data>
+  <data name="MX8044" xml:space="preserve">
+		<value>Die Assembly {0} wurde geändert, seit die App erstellt wurde, wodurch der generierte statische Registrierungscode ungültig wird. Die MVID für die geladene Assembly ist {1}, während die MVID für die Assembly, der der generierte statische Registrierungscode entspricht, {2}ist.</value>
 	</data>
 </root>

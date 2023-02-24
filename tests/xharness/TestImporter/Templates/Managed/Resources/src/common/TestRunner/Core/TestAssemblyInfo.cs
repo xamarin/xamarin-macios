@@ -1,10 +1,8 @@
 using System;
 using System.Reflection;
 
-namespace Xamarin.iOS.UnitTests
-{
-	public class TestAssemblyInfo
-	{
+namespace Xamarin.iOS.UnitTests {
+	public class TestAssemblyInfo {
 		public Assembly Assembly { get; }
 		public string FullPath { get; }
 

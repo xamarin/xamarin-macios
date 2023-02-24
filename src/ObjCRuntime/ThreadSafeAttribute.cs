@@ -29,7 +29,7 @@ using System;
 namespace ObjCRuntime {
 
 	public sealed class ThreadSafeAttribute : Attribute {
-	
+
 		public ThreadSafeAttribute ()
 		{
 			Safe = true;

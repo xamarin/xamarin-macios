@@ -45,6 +45,11 @@ jobs:
       repositoryAlias: ${{ parameters.repositoryAlias }}
       commit: ${{ parameters.commit }}
 
+  - bash: |
+      sudo rm -Rf $(Build.SourcesDirectory)/package
+    displayName: "Remove artifacts"
+    condition: always()
+
   - task: DownloadPipelineArtifact@2
     displayName: Download not notarized build
     inputs:
@@ -126,12 +131,6 @@ jobs:
       mv bundle.zip $(Build.SourcesDirectory)/package/bundle.zip
     displayName: 'Sign bundle.zip'
     workingDirectory: $(Build.ArtifactStagingDirectory)
-
-  - template: publish-nugets.yml
-    parameters:
-      isPR: ${{ parameters.isPR }}
-      repositoryAlias: ${{ parameters.repositoryAlias }}
-      commit: ${{ parameters.commit }}
 
   # always upload no matter what, since if we are not signing we need the artifact in the pipeline
   - task: PublishPipelineArtifact@1

@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "iOS Controller template",
+  "name": "iOS-Controller",
   "description": "iOS-Controllerklasse",
   "symbols/namespace/description": "Namespace für den generierten Code"
 }

@@ -40,15 +40,12 @@ using CF=CoreFoundation;
 #else
 using CoreServices;
 using CoreFoundation;
-using CF=CoreFoundation;
+using CF = CoreFoundation;
 #endif
 
-namespace System.Net.Http
-{
-	public class CFNetworkHandler : HttpMessageHandler
-	{
-		class StreamBucket
-		{
+namespace System.Net.Http {
+	public class CFNetworkHandler : HttpMessageHandler {
+		class StreamBucket {
 			public TaskCompletionSource<HttpResponseMessage> Response;
 			public HttpRequestMessage Request;
 			public CancellationTokenRegistration CancellationTokenRegistration;
@@ -150,23 +147,23 @@ namespace System.Net.Http
 			var req = CFHTTPMessage.CreateRequest (request.RequestUri, request.Method.Method, request.Version);
 
 			// TODO:
-/*
-			if (wr.ProtocolVersion == HttpVersion.Version10) {
-				wr.KeepAlive = request.Headers.ConnectionKeepAlive;
-			} else {
-				wr.KeepAlive = request.Headers.ConnectionClose != true;
-			}
+			/*
+						if (wr.ProtocolVersion == HttpVersion.Version10) {
+							wr.KeepAlive = request.Headers.ConnectionKeepAlive;
+						} else {
+							wr.KeepAlive = request.Headers.ConnectionClose != true;
+						}
 
-			if (useDefaultCredentials) {
-				wr.UseDefaultCredentials = true;
-			} else {
-				wr.Credentials = credentials;
-			}
+						if (useDefaultCredentials) {
+							wr.UseDefaultCredentials = true;
+						} else {
+							wr.Credentials = credentials;
+						}
 
-			if (useProxy) {
-				wr.Proxy = proxy;
-			}
-*/
+						if (useProxy) {
+							wr.Proxy = proxy;
+						}
+			*/
 			if (cookies != null) {
 				string cookieHeader = cookies.GetCookieHeader (request.RequestUri);
 				if (cookieHeader != "")
@@ -197,14 +194,13 @@ namespace System.Net.Http
 		{
 			return await SendAsync (request, cancellationToken, true).ConfigureAwait (false);
 		}
-		
+
 		internal async Task<HttpResponseMessage> SendAsync (HttpRequestMessage request, CancellationToken cancellationToken, bool isFirstRequest)
 		{
 			sentRequest = true;
 
 			CFHTTPStream stream;
-			using (var message = CreateWebRequestAsync (request))
-			{
+			using (var message = CreateWebRequestAsync (request)) {
 				if (request.Content != null) {
 					var data = await request.Content.ReadAsByteArrayAsync ().ConfigureAwait (false);
 					message.SetBody (data);
@@ -259,19 +255,19 @@ namespace System.Net.Http
 
 			if (isFirstRequest) {
 				var initialRequest = await response.Task;
- 				var status = initialRequest.StatusCode;
- 				if (IsRedirect (status) && allowAutoRedirect) {
- 					bucket.StreamCanBeDisposed = true;
- 					// we do not care about the first stream cbs
+				var status = initialRequest.StatusCode;
+				if (IsRedirect (status) && allowAutoRedirect) {
+					bucket.StreamCanBeDisposed = true;
+					// we do not care about the first stream cbs
 					stream.HasBytesAvailableEvent -= HandleHasBytesAvailableEvent;
 					stream.ErrorEvent -= HandleErrorEvent;
 					stream.ClosedEvent -= HandleClosedEvent;
 					// remove headers in a redirect for Authentication.
 					request.Headers.Authorization = null;
- 					return await SendAsync (request, cancellationToken, false).ConfigureAwait (false);
- 				}
- 				return initialRequest;
- 			} 
+					return await SendAsync (request, cancellationToken, false).ConfigureAwait (false);
+				}
+				return initialRequest;
+			}
 			return await response.Task;
 		}
 
@@ -285,10 +281,10 @@ namespace System.Net.Http
 				status == HttpStatusCode.RedirectMethod || // 303
 				status == HttpStatusCode.RedirectKeepVerb; // 307
 		}
-		
+
 		void HandleErrorEvent (object sender, CFStream.StreamEventArgs e)
 		{
-			var stream = (CFHTTPStream)sender;
+			var stream = (CFHTTPStream) sender;
 
 			StreamBucket bucket;
 			if (!streamBuckets.TryGetValue (stream.Handle, out bucket))
@@ -301,7 +297,7 @@ namespace System.Net.Http
 
 		void HandleClosedEvent (object sender, CFStream.StreamEventArgs e)
 		{
-			var stream = (CFHTTPStream)sender;
+			var stream = (CFHTTPStream) sender;
 			// might not have been called (e.g. no data) but initialize critical data
 			HandleHasBytesAvailableEvent (sender, e);
 			CloseStream (stream);
@@ -310,10 +306,10 @@ namespace System.Net.Http
 		void CloseStream (CFHTTPStream stream)
 		{
 			lock (streamBuckets) {
-			    if (streamBuckets.TryGetValue (stream.Handle, out var bucket)) {
-				    bucket.Close ();
-				    streamBuckets.Remove (stream.Handle);
-			    }
+				if (streamBuckets.TryGetValue (stream.Handle, out var bucket)) {
+					bucket.Close ();
+					streamBuckets.Remove (stream.Handle);
+				}
 			}
 			stream.Close ();
 		}
@@ -338,7 +334,7 @@ namespace System.Net.Http
 				throw new NotImplementedException ();
 
 			bucket.ContentStream = new CFContentStream (stream);
-				
+
 			var response_msg = new HttpResponseMessage (header.ResponseStatusCode);
 			response_msg.RequestMessage = bucket.Request;
 			response_msg.ReasonPhrase = header.ResponseStatusLine;
@@ -392,7 +388,7 @@ namespace System.Net.Http
 			} catch {
 			}
 
-			if (cookies1 != null && cookies1.Count != 0) 
+			if (cookies1 != null && cookies1.Count != 0)
 				cookies.Add (cookies1);
 #endif
 		}

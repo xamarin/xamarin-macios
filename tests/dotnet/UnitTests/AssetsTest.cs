@@ -40,6 +40,7 @@ namespace Xamarin.Tests {
 		[SetUp]
 		public void Init ()
 		{
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 			var project = "AppWithXCAssets";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			projectPath = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out appPath);

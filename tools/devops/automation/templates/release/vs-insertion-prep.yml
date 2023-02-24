@@ -18,6 +18,10 @@ parameters:
   type: string
   default: HEAD
 
+- name: pushNugets
+  type: boolean
+  default: true
+
 stages:
 - stage: prepare_release
   displayName: Prepare Release
@@ -42,87 +46,88 @@ stages:
       signType: Real
       useDateTimeVersion: true
 
-  # Check - "xamarin-macios (Prepare Release Push NuGets)"
-  - job: push_signed_nugets
-    displayName: Push NuGets
-    dependsOn: nuget_convert
-    variables:
-      skipNugetSecurityAnalysis: true
-    pool:
-      vmImage: windows-latest
-    steps:
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        artifactName: nuget-signed
-        downloadPath: $(Build.SourcesDirectory)/package
-        patterns: |
-          *.nupkg
+  - ${{ if eq(parameters.pushNugets, true) }}:
+    # Check - "xamarin-macios (Prepare Release Push NuGets)"
+    - job: push_signed_nugets
+      displayName: Push NuGets
+      dependsOn: nuget_convert
+      variables:
+        skipNugetSecurityAnalysis: true
+      pool:
+        vmImage: windows-latest
+      steps:
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          artifactName: nuget-signed
+          downloadPath: $(Build.SourcesDirectory)/package
+          patterns: |
+            *.nupkg
 
-    - task: NuGetCommand@2
-      displayName: Publish Nugets to dotnet8
-      inputs:
-        command: push
-        packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
-        nuGetFeedType: external
-        publishFeedCredentials: dnceng-dotnet8
+      - task: NuGetCommand@2
+        displayName: Publish Nugets to dotnet8
+        inputs:
+          command: push
+          packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
+          nuGetFeedType: external
+          publishFeedCredentials: dnceng-dotnet8
 
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        artifactName: vs-msi-nugets
-        downloadPath: $(Build.SourcesDirectory)/vs-msi-nugets
-        patterns: |
-          *.nupkg
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          artifactName: vs-msi-nugets
+          downloadPath: $(Build.SourcesDirectory)/vs-msi-nugets
+          patterns: |
+            *.nupkg
 
-    - task: NuGetCommand@2
-      displayName: Publish VS MSI Nugets to dotnet8
-      inputs:
-        command: push
-        packagesToPush: $(Build.SourcesDirectory)/vs-msi-nugets/*.nupkg
-        nuGetFeedType: external
-        publishFeedCredentials: dnceng-dotnet8
+      - task: NuGetCommand@2
+        displayName: Publish VS MSI Nugets to dotnet8
+        inputs:
+          command: push
+          packagesToPush: $(Build.SourcesDirectory)/vs-msi-nugets/*.nupkg
+          nuGetFeedType: external
+          publishFeedCredentials: dnceng-dotnet8
 
-    - pwsh: |
-        mkdir $(Build.SourcesDirectory)/nugets-blob
-        cp $(Build.SourcesDirectory)/package/* $(Build.SourcesDirectory)/nugets-blob
-        cp $(Build.SourcesDirectory)/vs-msi-nugets/* $(Build.SourcesDirectory)/nugets-blob
-      displayName: "Copy content for the nugets blob."
+      - pwsh: |
+          mkdir $(Build.SourcesDirectory)/nugets-blob
+          cp $(Build.SourcesDirectory)/package/* $(Build.SourcesDirectory)/nugets-blob
+          cp $(Build.SourcesDirectory)/vs-msi-nugets/* $(Build.SourcesDirectory)/nugets-blob
+        displayName: "Copy content for the nugets blob."
 
-    - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
-      parameters:
-        yamlResourceName: yaml-templates
-        githubToken: $(GitHub.Token)
-        githubContext: $(NupkgCommitStatusName)
-        blobName: $(NupkgCommitStatusName)
-        packagePrefix: xamarin-macios
-        artifactsPath: $(Build.SourcesDirectory)/nugets-blob
+      - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
+        parameters:
+          yamlResourceName: yaml-templates
+          githubToken: $(GitHub.Token)
+          githubContext: $(NupkgCommitStatusName)
+          blobName: $(NupkgCommitStatusName)
+          packagePrefix: xamarin-macios
+          artifactsPath: $(Build.SourcesDirectory)/nugets-blob
 
-    - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
-      parameters:
-        yamlResourceName: yaml-templates
-        githubToken: $(GitHub.Token)
-        githubContext: $(VSDropCommitStatusName)
-        blobName: $(VSDropCommitStatusName)
-        packagePrefix: xamarin-macios
-        artifactsPath: $(Build.SourcesDirectory)/vs-insertion
-        downloadSteps:
-        - task: DownloadPipelineArtifact@2
-          inputs:
-            artifactName: vsdrop-signed
-            downloadPath: $(Build.SourcesDirectory)/vs-insertion
+      - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
+        parameters:
+          yamlResourceName: yaml-templates
+          githubToken: $(GitHub.Token)
+          githubContext: $(VSDropCommitStatusName)
+          blobName: $(VSDropCommitStatusName)
+          packagePrefix: xamarin-macios
+          artifactsPath: $(Build.SourcesDirectory)/vs-insertion
+          downloadSteps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              artifactName: vsdrop-signed
+              downloadPath: $(Build.SourcesDirectory)/vs-insertion
 
-    - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
-      parameters:
-        yamlResourceName: yaml-templates
-        githubToken: $(GitHub.Token)
-        githubContext: $(MultiTargetVSDropCommitStatusName)
-        blobName: $(MultiTargetVSDropCommitStatusName)
-        packagePrefix: xamarin-macios
-        artifactsPath: $(Build.StagingDirectory)\$(MultiTargetVSDropCommitStatusName)
-        downloadSteps:
-        - task: DownloadPipelineArtifact@2
-          inputs:
-            artifactName: vsdrop-multitarget-signed
-            downloadPath: $(Build.StagingDirectory)\$(MultiTargetVSDropCommitStatusName)
+      - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
+        parameters:
+          yamlResourceName: yaml-templates
+          githubToken: $(GitHub.Token)
+          githubContext: $(MultiTargetVSDropCommitStatusName)
+          blobName: $(MultiTargetVSDropCommitStatusName)
+          packagePrefix: xamarin-macios
+          artifactsPath: $(Build.StagingDirectory)\$(MultiTargetVSDropCommitStatusName)
+          downloadSteps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              artifactName: vsdrop-multitarget-signed
+              downloadPath: $(Build.StagingDirectory)\$(MultiTargetVSDropCommitStatusName)
 
 # Check - "xamarin-macios (VS Insertion Wait For Approval)"
 # Check - "xamarin-macios (VS Insertion Create VS Drop and Open PR)"

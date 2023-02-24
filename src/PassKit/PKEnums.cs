@@ -22,6 +22,7 @@ namespace PassKit {
 
 	// NSInteger -> PKPass.h
 	[Mac (11, 0)]
+	[MacCatalyst (13, 1)]
 	[ErrorDomain ("PKPassKitErrorDomain")]
 	[Native]
 	public enum PKPassKitErrorCode : long {
@@ -34,8 +35,8 @@ namespace PassKit {
 	}
 
 	// NSInteger -> PKPassLibrary.h
-	[iOS (7, 0)]
 	[Mac (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKPassLibraryAddPassesStatus : long {
 		DidAddPasses,
@@ -44,6 +45,7 @@ namespace PassKit {
 	}
 
 	[Mac (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKPassType : ulong {
 		Barcode,
@@ -51,12 +53,14 @@ namespace PassKit {
 		[NoMac]
 		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'SecureElement' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'SecureElement' instead.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'SecureElement' instead.")]
 		Payment = SecureElement,
 		Any = ulong.MaxValue,
 	}
 
 	[Mac (11, 0)]
-	[Watch (3, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKPaymentAuthorizationStatus : long {
 		Success,
@@ -65,29 +69,37 @@ namespace PassKit {
 		[NoMac]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentBillingAddressInvalidError'.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentBillingAddressInvalidError'.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentBillingAddressInvalidError'.")]
 		InvalidBillingPostalAddress,
 
 		[NoMac]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentShippingAddressInvalidError'.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentShippingAddressInvalidError'.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentShippingAddressInvalidError'.")]
 		InvalidShippingPostalAddress,
 
 		[NoMac]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentContactInvalidError'.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentContactInvalidError'.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentContactInvalidError'.")]
 		InvalidShippingContact,
 
-		[iOS (9, 2)]
+		[MacCatalyst (13, 1)]
 		PinRequired,
-		[iOS (9, 2)]
+		[MacCatalyst (13, 1)]
 		PinIncorrect,
-		[iOS (9, 2)]
+		[MacCatalyst (13, 1)]
 		PinLockout
 	}
 
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'PKSecureElementPassActivationState' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 2, message: "Use 'PKSecureElementPassActivationState' instead.")]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'PKSecureElementPassActivationState' instead.")]
 	[Native]
 	public enum PKPaymentPassActivationState : ulong {
 		Activated, RequiresActivation, Activating, Suspended, Deactivated
@@ -95,6 +107,7 @@ namespace PassKit {
 
 	[Mac (11, 0)]
 	[Watch (6, 2), iOS (13, 4)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKSecureElementPassActivationState : long {
 		Activated,
@@ -105,7 +118,7 @@ namespace PassKit {
 	}
 
 	[Mac (11, 0)]
-	[Watch (3, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKMerchantCapability : ulong {
 		ThreeDS = 1 << 0,
@@ -115,9 +128,10 @@ namespace PassKit {
 	}
 
 	[NoMac]
-	[Watch (3, 0)]
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'PKContactField' instead.")]
 	[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'PKContactField' instead.")]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'PKContactField' instead.")]
 	[Native]
 	[Flags]
 	public enum PKAddressField : ulong {
@@ -125,40 +139,43 @@ namespace PassKit {
 		PostalAddress = 1 << 0,
 		Phone = 1 << 1,
 		Email = 1 << 2,
-		[iOS (8, 3)]
+		[MacCatalyst (13, 1)]
 		Name = 1 << 3,
 		All = PostalAddress | Phone | Email | Name
 	}
 
 	[Mac (11, 0)]
 	[NoWatch]
-	[iOS (8, 3)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKPaymentButtonStyle : long {
 		White,
 		WhiteOutline,
 		Black,
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		Automatic = 3,
 	}
 
 	[Mac (11, 0)]
 	[NoWatch]
-	[iOS (8, 3)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKPaymentButtonType : long {
 		Plain,
 		Buy,
-		[iOS (9, 0)]
+		[MacCatalyst (13, 1)]
 		SetUp,
-		[iOS (10, 0)]
+		[MacCatalyst (13, 1)]
 		InStore,
-		[iOS (10, 2)]
+		[MacCatalyst (13, 1)]
 		Donate,
 #if NET
 		[iOS (12,0)]
+		[MacCatalyst (13, 1)]
 		Checkout,
 		[iOS (12,0)]
+		[MacCatalyst (13, 1)]
 		Book,
 #else
 		[iOS (12, 0)]
@@ -169,24 +186,34 @@ namespace PassKit {
 		Checkout,
 #endif // !NET
 		[iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		Subscribe,
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		Reload = 8,
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		AddMoney = 9,
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		TopUp = 10,
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		Order = 11,
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		Rent = 12,
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		Support = 13,
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		Contribute = 14,
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		Tip = 15,
 		[Mac (12, 0), iOS (15, 0), Watch (8, 0)]
+		[MacCatalyst (15, 0)]
 		Continue = 16,
 #if !NET
 #pragma warning disable 0618 // warning CS0618: 'PKPaymentButtonType.[field]' is obsolete: 'Use '[replacement]'.'
@@ -199,8 +226,7 @@ namespace PassKit {
 	}
 
 	[Mac (11, 0)]
-	[Watch (3, 0)]
-	[iOS (8, 3)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKShippingType : ulong {
 		Shipping,
@@ -210,8 +236,8 @@ namespace PassKit {
 	}
 
 	[Watch (6, 0)]
-	[iOS (9, 0)]
 	[Mac (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKAddPaymentPassError : long {
 		Unsupported,
@@ -221,7 +247,7 @@ namespace PassKit {
 
 	[Mac (11, 0)]
 	[NoWatch]
-	[iOS (9, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKAutomaticPassPresentationSuppressionResult : ulong {
 		NotSupported = 0,
@@ -232,8 +258,7 @@ namespace PassKit {
 	}
 
 	[Mac (11, 0)]
-	[Watch (3, 0)]
-	[iOS (9, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKPaymentMethodType : ulong {
 		Unknown = 0,
@@ -245,8 +270,7 @@ namespace PassKit {
 	}
 
 	[Mac (11, 0)]
-	[Watch (3, 0)]
-	[iOS (9, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKPaymentSummaryItemType : ulong {
 		Final,
@@ -255,7 +279,7 @@ namespace PassKit {
 
 	[NoWatch]
 	[NoMac] // under `#if TARGET_OS_IOS`
-	[iOS (9, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKAddPassButtonStyle : long {
 		Black = 0,
@@ -263,8 +287,7 @@ namespace PassKit {
 	}
 
 	[Mac (11, 0)]
-	[Watch (4, 0)]
-	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[ErrorDomain ("PKPaymentErrorDomain")]
 	[Native]
 	public enum PKPaymentErrorCode : long {
@@ -279,6 +302,7 @@ namespace PassKit {
 	[iOS (12, 0)]
 	[Mac (11, 0)]
 	[NoWatch] // https://feedbackassistant.apple.com/feedback/6301809 https://github.com/xamarin/maccore/issues/1819
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKAddPaymentPassStyle : ulong {
 		Payment,
@@ -287,6 +311,7 @@ namespace PassKit {
 
 	[Watch (6, 2), iOS (13, 4)]
 	[Mac (11, 0)]
+	[MacCatalyst (13, 1)]
 	[ErrorDomain ("PKAddSecureElementPassErrorDomain")]
 	[Native]
 	public enum PKAddSecureElementPassErrorCode : long {

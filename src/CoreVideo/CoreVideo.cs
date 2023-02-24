@@ -41,8 +41,6 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4, 0)]
 #endif
 	public struct CVPlanarComponentInfo {
 		public /* int32_t */ int Offset;
@@ -55,8 +53,6 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4, 0)]
 #endif
 	public struct CVPlanarPixelBufferInfo {
 		public CVPlanarComponentInfo [] ComponentInfo;
@@ -68,8 +64,6 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4, 0)]
 #endif
 	public struct CVPlanarPixelBufferInfo_YCbCrPlanar {
 		public CVPlanarComponentInfo ComponentInfoY;
@@ -82,8 +76,6 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4, 0)]
 #endif
 	public struct CVPlanarPixelBufferInfo_YCbCrBiPlanar {
 		public CVPlanarComponentInfo ComponentInfoY;
@@ -95,8 +87,6 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4, 0)]
 #endif
 	public struct CVTimeStamp {
 		public UInt32 Version;
@@ -115,8 +105,6 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4, 0)]
 #endif
 	public struct CVSMPTETime {
 		public Int16 Subframes;
@@ -135,8 +123,6 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4, 0)]
 #endif
 	public struct CVFillExtendedPixelsCallBackData {
 		public nint /* CFIndex */ Version;
@@ -144,8 +130,5 @@ namespace CoreVideo {
 		public IntPtr UserInfo;
 	}
 
-#if !NET
-	[Watch (4, 0)]
-#endif
 	public delegate bool CVFillExtendedPixelsCallBack (IntPtr pixelBuffer, IntPtr refCon);
 }

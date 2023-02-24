@@ -40,8 +40,6 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4, 0)]
 #endif
 	public struct CVTime {
 
@@ -77,7 +75,7 @@ namespace CoreVideo {
 
 		public override int GetHashCode ()
 		{
-			return TimeValue.GetHashCode () ^ TimeScale.GetHashCode () ^ Flags;
+			return HashCode.Combine (TimeValue, TimeScale, Flags);
 		}
 
 		// CVHostTime.h

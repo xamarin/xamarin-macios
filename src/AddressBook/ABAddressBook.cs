@@ -47,8 +47,7 @@ using NativeHandle = System.IntPtr;
 namespace AddressBook {
 #if NET
 	[SupportedOSPlatform ("maccatalyst14.0")]
-	[UnsupportedOSPlatform ("maccatalyst14.0")]
-	[UnsupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
 #else
@@ -114,8 +113,7 @@ namespace AddressBook {
 
 #if NET
 	[SupportedOSPlatform ("maccatalyst14.0")]
-	[UnsupportedOSPlatform ("maccatalyst14.0")]
-	[UnsupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
 #else
@@ -134,8 +132,7 @@ namespace AddressBook {
 
 #if NET
 		[SupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("ios6.0")]
+		[SupportedOSPlatform ("ios")]
 		[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
 		[ObsoletedOSPlatform ("ios6.0", "Use the static Create method instead.")]
 #else
@@ -341,14 +338,27 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
+#if NET
+		extern unsafe static void ABAddressBookRegisterExternalChangeCallback (IntPtr addressBook,
+			delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> callback, IntPtr context);
+#else
 		extern static void ABAddressBookRegisterExternalChangeCallback (IntPtr addressBook, ABExternalChangeCallback callback, IntPtr context);
+#endif
 
 		[DllImport (Constants.AddressBookLibrary)]
+#if NET
+		extern unsafe static void ABAddressBookUnregisterExternalChangeCallback (IntPtr addressBook, delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> callback, IntPtr context);
+#else
 		extern static void ABAddressBookUnregisterExternalChangeCallback (IntPtr addressBook, ABExternalChangeCallback callback, IntPtr context);
+#endif
 
+#if !NET
 		delegate void ABExternalChangeCallback (IntPtr addressBook, IntPtr info, IntPtr context);
 
 		[MonoPInvokeCallback (typeof (ABExternalChangeCallback))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void ExternalChangeCallback (IntPtr addressBook, IntPtr info, IntPtr context)
 		{
 			GCHandle s = GCHandle.FromIntPtr (context);
@@ -377,7 +387,13 @@ namespace AddressBook {
 				lock (eventLock) {
 					if (externalChange is null) {
 						sender = GCHandle.Alloc (this);
+#if NET
+						unsafe {
+							ABAddressBookRegisterExternalChangeCallback (Handle, &ExternalChangeCallback, GCHandle.ToIntPtr (sender));
+						}
+#else
 						ABAddressBookRegisterExternalChangeCallback (Handle, ExternalChangeCallback, GCHandle.ToIntPtr (sender));
+#endif
 					}
 					externalChange += value;
 				}
@@ -386,7 +402,13 @@ namespace AddressBook {
 				lock (eventLock) {
 					externalChange -= value;
 					if (externalChange is null) {
+#if NET
+						unsafe {
+							ABAddressBookUnregisterExternalChangeCallback (Handle, &ExternalChangeCallback, GCHandle.ToIntPtr (sender));
+						}
+#else
 						ABAddressBookUnregisterExternalChangeCallback (Handle, ExternalChangeCallback, GCHandle.ToIntPtr (sender));
+#endif
 						sender.Free ();
 					}
 				}

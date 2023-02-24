@@ -424,7 +424,7 @@
         </value>
     </data>
   <data name="E0118" xml:space="preserve">
-        <value>{0} exited with code {1}:
+        <value>{0} 已結束，代碼為 {1}:
 {2}</value>
     </data>
   <data name="M0119" xml:space="preserve">
@@ -997,6 +997,7 @@
         <value>設定: 項目 "{0}" 不存在
         </value>
     </data>
+  <!-- E7068: not in use anymore -->
   <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14+ 不支援 watchOS 1 應用程式。請將您的專案遷移到 watchOS 2+。</value>
     </data>
@@ -1145,5 +1146,35 @@
     </data>
   <data name="E7101" xml:space="preserve">
         <value>值為 '{1}' 的未知屬性'{0}'。</value>
+    </data>
+  <data name="E7102" xml:space="preserve">
+        <value>CustomEntitlements 項目群組中指定之類型為 '{2}' 之權利 '{1}' 的值 '{0}' 無效。預期沒有任何值。</value>
+        <comment>
+            Don't translate: CustomEntitlements (name of option in project file)
+        </comment>
+    </data>
+  <data name="E7103" xml:space="preserve">
+        <value>CustomEntitlements 項目群組中指定之類型為 '{2}' 之權利 '{1}' 的值 '{0}' 無效。必須是 'true' 或 'false'。</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'true', 'false'
+        </comment>
+    </data>
+  <data name="E7104" xml:space="preserve">
+        <value>CustomEntitlements 項目群組中指定之權利 '{1}' 的未知類型 '{0}'。必須是 'Remove'、'Boolean'、'String' 或 'StringArray'。</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'Remove', 'Boolean', 'String', 'StringArray'
+        </comment>
+    </data>
+  <data name="W7105" xml:space="preserve">
+        <value>在資訊清單 '{2}' 中的原生參考 '{1}' 發生非預期的延伸模組 '{0}'。</value>
+        <comment>
+            {0}: file extension
+            {1}: path to a file
+            {2}: path to a file
+        </comment>
     </data>
 </root>

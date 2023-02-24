@@ -6,6 +6,7 @@
     <AssemblyName>cecil-tests</AssemblyName>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -44,6 +45,12 @@
     </Compile>
     <Compile Include="..\mtouch\Cache.cs">
       <Link>Cache.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\OSPlatformAttributeExtensions.cs">
+      <Link>OSPlatformAttributeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
     </Compile>
   </ItemGroup>
 </Project>

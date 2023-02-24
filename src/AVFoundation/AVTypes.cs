@@ -64,7 +64,7 @@ namespace AVFoundation {
 
 		public override int GetHashCode ()
 		{
-			return Forward.GetHashCode () ^ Up.GetHashCode ();
+			return HashCode.Combine (Forward, Up);
 		}
 #endif
 	}
@@ -114,7 +114,7 @@ namespace AVFoundation {
 
 		public override int GetHashCode ()
 		{
-			return Yaw.GetHashCode () ^ Pitch.GetHashCode () ^ Roll.GetHashCode ();
+			return HashCode.Combine (Yaw, Pitch, Roll);
 		}
 	}
 
@@ -169,7 +169,7 @@ namespace AVFoundation {
 
 		public override int GetHashCode ()
 		{
-			return RedGain.GetHashCode () ^ GreenGain.GetHashCode () ^ BlueGain.GetHashCode ();
+			return HashCode.Combine (RedGain, GreenGain, BlueGain);
 		}
 	}
 
@@ -219,7 +219,7 @@ namespace AVFoundation {
 
 		public override int GetHashCode ()
 		{
-			return X.GetHashCode () ^ Y.GetHashCode ();
+			return HashCode.Combine (X, Y);
 		}
 	}
 
@@ -269,7 +269,7 @@ namespace AVFoundation {
 
 		public override int GetHashCode ()
 		{
-			return Temperature.GetHashCode () ^ Tint.GetHashCode ();
+			return HashCode.Combine (Temperature, Tint);
 		}
 	}
 
@@ -300,12 +300,11 @@ namespace AVFoundation {
 #if MONOMAC || !NET
 
 #if NET
-	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
-	[Mac (10, 10)]
 	[NoiOS]
 	[NoWatch]
 	[NoTV]
@@ -326,12 +325,11 @@ namespace AVFoundation {
 	}
 
 #if NET
-	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
-	[Mac (10, 10)]
 	[NoiOS]
 	[NoWatch]
 	[NoTV]
@@ -361,12 +359,11 @@ namespace AVFoundation {
 	}
 
 #if NET
-	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
-	[Mac (10, 10)]
 	[NoiOS]
 	[NoWatch]
 	[NoTV]
@@ -381,12 +378,11 @@ namespace AVFoundation {
 	}
 
 #if NET
-	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
-	[Mac (10, 10)]
 	[NoiOS]
 	[NoWatch]
 	[NoTV]
@@ -412,10 +408,8 @@ namespace AVFoundation {
 #if MONOMAC || __MACCATALYST__
 
 #if NET
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst15.0")]
-#else
-	[Mac (10,15)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorAudioDependencyInfo {

@@ -21,9 +21,8 @@ using UserNotifications;
 
 namespace UserNotificationsUI {
 
-	[iOS (10, 0)]
-	[Mac (11,0)]
-	[Introduced (PlatformName.MacCatalyst, 14,0)]
+	[Mac (11, 0)]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
 	[Native]
@@ -33,9 +32,8 @@ namespace UserNotificationsUI {
 		Overlay
 	}
 
-	[iOS (10, 0)]
-	[Mac (11,0)]
-	[Introduced (PlatformName.MacCatalyst, 14,0)]
+	[Mac (11, 0)]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
 	[Native]
@@ -47,9 +45,8 @@ namespace UserNotificationsUI {
 
 	interface IUNNotificationContentExtension { }
 
-	[iOS (10, 0)]
-	[Mac (11,0)]
-	[Introduced (PlatformName.MacCatalyst, 14,0)]
+	[Mac (11, 0)]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
 	[Protocol]
@@ -78,9 +75,8 @@ namespace UserNotificationsUI {
 		void PauseMedia ();
 	}
 
-	[iOS (10, 0)]
-	[Mac (11,0)]
-	[Introduced (PlatformName.MacCatalyst, 14,0)]
+	[Mac (11, 0)]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
 	[Category]
@@ -93,21 +89,25 @@ namespace UserNotificationsUI {
 		[Export ("mediaPlayingPaused")]
 		void MediaPlayingPaused ();
 
-		[iOS (12,0)]
+		[iOS (12, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("performNotificationDefaultAction")]
 		void PerformNotificationDefaultAction ();
 
-		[iOS (12,0)]
+		[iOS (12, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("dismissNotificationContentExtension")]
 		void DismissNotificationContentExtension ();
 
 		// property, but we have to add the two methods since it is a category.
 		[iOS (12, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("notificationActions")]
-		UNNotificationAction[] GetNotificationActions ();
+		UNNotificationAction [] GetNotificationActions ();
 
 		[iOS (12, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("setNotificationActions:")]
-		void SetNotificationActions (UNNotificationAction[] actions);
+		void SetNotificationActions (UNNotificationAction [] actions);
 	}
 }

@@ -56,9 +56,9 @@ namespace Xamarin.MacDev.Tasks {
 	</PropertyGroup>
 	<Target Name=""ComputeAotCompilerPath"">
 		<PropertyGroup>
-			<_AOTCompiler>@(MonoAotCrossCompiler->WithMetadataValue(""RuntimeIdentifier"", ""$(RuntimeIdentifier)""))</_AOTCompiler>
+			<_XamarinAOTCompiler>@(MonoAotCrossCompiler->WithMetadataValue(""RuntimeIdentifier"", ""$(RuntimeIdentifier)""))</_XamarinAOTCompiler>
 		</PropertyGroup>
-		<WriteLinesToFile File=""$(OutputFilePath)"" Lines=""$(_AOTCompiler)"" />
+		<WriteLinesToFile File=""$(OutputFilePath)"" Lines=""$(_XamarinAOTCompiler)"" />
 	</Target>
 </Project>
 ";

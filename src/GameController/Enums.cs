@@ -16,6 +16,7 @@ namespace GameController {
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 	[Native]
 	public enum GCExtendedGamepadSnapshotDataVersion : long {
 		Version1 = 0x0100,
@@ -28,6 +29,7 @@ namespace GameController {
 	}
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum GCTouchState : long {
 		Up,
@@ -36,6 +38,7 @@ namespace GameController {
 	}
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum GCDeviceBatteryState : long {
 		Unknown = -1,
@@ -45,6 +48,7 @@ namespace GameController {
 	}
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum GCSystemGestureState : long {
 		Enabled = 0,
@@ -52,8 +56,7 @@ namespace GameController {
 		Disabled,
 	}
 
-	[iOS (9, 0)]
-	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum GCControllerPlayerIndex : long {
 		Unset = -1,

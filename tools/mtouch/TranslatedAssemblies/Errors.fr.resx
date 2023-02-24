@@ -750,6 +750,9 @@
   <data name="MX0185" xml:space="preserve">
 		<value>L’option « {0} » ne peut pas prendre la valeur « {1} » lorsque CoreCLR est utilisé.</value>
 	</data>
+  <data name="MX0186" xml:space="preserve">
+		<value>Bitcode est activé, mais bitcode n’est pas pris en charge dans Xcode 14+ et a été désactivé. Désactivez bitcode en supprimant la propriété 'MtouchEnableBitcode' du fichier projet.</value>
+	</data>
   <data name="MX1009" xml:space="preserve">
 		<value>Impossible de copier l'assembly '{0}' vers '{1}' : {2}
 		</value>
@@ -1233,7 +1236,7 @@
 		</value>
 	</data>
   <data name="MT4124_I" xml:space="preserve">
-		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+		<value>{0} non valides trouvées sur '{1}'. Veuillez créer un rapport de bogues à https://github.com/xamarin/xamarin-macios/issues/new</value>
 	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>Le registrar a trouvé un type non valide '{0}' dans la signature de la méthode '{1}' : l'interface doit avoir un attribut Protocol spécifiant son type de wrapper.
@@ -1744,10 +1747,20 @@
 		<value>Impossible de créer une instance du type {0}.</value>
 	</data>
   <data name="MX8042" xml:space="preserve">
-		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<value>Une exception s’est produite lors de la tentative d’appel de la fonction {0} : {1}.</value>
 		<comment>
 			0: name of function
 			1: exception info
 		</comment>
+	</data>
+  <data name="MX8043" xml:space="preserve">
+		<value>Une exception s’est produite lors de la validation du code de bureau d’enregistrement statique pour {0}: {1}</value>
+		<comment>
+			0: name of an assembly
+			1: exception info
+		</comment>
+	</data>
+  <data name="MX8044" xml:space="preserve">
+		<value>L’assembly {0} a été modifié depuis la création de l’application, invalidant ainsi le code du bureau d’enregistrement statique généré. Le MVID de l’assembly chargé est {1}, tandis que le MVID pour l’assembly auquel correspond le code de bureau d’enregistrement statique généré est {2}.</value>
 	</data>
 </root>

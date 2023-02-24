@@ -47,7 +47,6 @@ namespace Xharness.Targets {
 		protected virtual string TargetFrameworkIdentifier { get { throw new NotImplementedException (); } }
 		protected virtual string Imports { get { throw new NotImplementedException (); } }
 		protected virtual string BindingsImports { get { throw new NotImplementedException (); } }
-		protected virtual bool SupportsBitcode { get { return false; } }
 		public virtual bool IsMultiArchitecture { get { return false; } }
 		public virtual string SimulatorArchitectures { get { throw new NotImplementedException (); } }
 		public virtual string DeviceArchitectures { get { throw new NotImplementedException (); } }
@@ -137,17 +136,6 @@ namespace Xharness.Targets {
 
 		protected virtual void ProcessProject ()
 		{
-			if (SupportsBitcode) {
-				inputProject.CloneConfiguration ("iPhone", "Release", "Release-bitcode");
-				inputProject.AddExtraMtouchArgs ("--bitcode:full", "iPhone", "Release-bitcode");
-				inputProject.SetMtouchUseLlvm (true, "iPhone", "Release-bitcode");
-			}
-
-			if (!IsMultiArchitecture && IsExe) {
-				inputProject.DeleteConfiguration ("iPhone", "Debug32");
-				inputProject.DeleteConfiguration ("iPhone", "Debug64");
-			}
-
 			inputProject.SetOutputPath ("bin\\$(Platform)\\$(Configuration)" + Suffix);
 			inputProject.SetIntermediateOutputPath ("obj\\$(Platform)\\$(Configuration)" + Suffix);
 

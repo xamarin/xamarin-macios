@@ -299,12 +299,14 @@ namespace Xamarin.Bundler {
 		}
 #endif // !NET
 
+#if !NET
 		static int Jobs;
 		public static int Concurrency {
 			get {
 				return Jobs == 0 ? Environment.ProcessorCount : Jobs;
 			}
 		}
+#endif
 
 		public static int Verbosity {
 			get { return ErrorHelper.Verbosity; }

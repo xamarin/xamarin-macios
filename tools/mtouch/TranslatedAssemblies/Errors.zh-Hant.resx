@@ -750,6 +750,9 @@
   <data name="MX0185" xml:space="preserve">
 		<value>使用 CoreCLR 時，選項 '{0}' 不能採用值 '{1}'。</value>
 	</data>
+  <data name="MX0186" xml:space="preserve">
+		<value>已啟用 Bitcode，但 Xcode 14+ 中不支援 Bitcode，已停用。請從專案檔移除 'MtouchEnableBitcode' 屬性，以停用 Bitcode。</value>
+	</data>
   <data name="MX1009" xml:space="preserve">
 		<value>無法將組件 '{0}' 複製到 '{1}': {2}
 		</value>
@@ -1233,7 +1236,7 @@
 		</value>
 	</data>
   <data name="MT4124_I" xml:space="preserve">
-		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+		<value>在 '{0}' 中找到無效的 {1}。請前往 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 報告</value>
 	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>登錄器在方法 '{1}' 的簽章中找到無效的類型 '{0}': 該介面必須具有指定其包裝函式類型的 Protocol 屬性。
@@ -1744,10 +1747,20 @@
 		<value>無法建立 {0} 類型的執行個體。</value>
 	</data>
   <data name="MX8042" xml:space="preserve">
-		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<value>嘗試叫用函數 {0} 時發生例外狀況: {1}</value>
 		<comment>
 			0: name of function
 			1: exception info
 		</comment>
+	</data>
+  <data name="MX8043" xml:space="preserve">
+		<value>驗證 {0} 的靜態登錄器程式碼時發生例外狀況: {1}</value>
+		<comment>
+			0: name of an assembly
+			1: exception info
+		</comment>
+	</data>
+  <data name="MX8044" xml:space="preserve">
+		<value>自從建置應用程式後，組件 {0} 已經修改，這會使產生的靜態登錄器程式碼失效。載入之組件的 MVID 為 {1}，而產生之靜態登錄器程式碼對應之組件的 MVID 為 {2}。</value>
 	</data>
 </root>

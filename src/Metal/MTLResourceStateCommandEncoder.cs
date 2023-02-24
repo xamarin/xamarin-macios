@@ -4,7 +4,7 @@
 // Authors:
 //   Manuel de la Pena <mandel@microsoft.com>
 //
-#if IOS 
+#if IOS
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;

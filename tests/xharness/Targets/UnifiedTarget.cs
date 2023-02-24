@@ -53,16 +53,13 @@ namespace Xharness.Targets {
 
 		public override string SimulatorArchitectures {
 			get {
-				return "i386, x86_64";
+				return "x86_64";
 			}
 		}
 
 		public override string DeviceArchitectures {
 			get {
-				if (SupportsBitcode)
-					return "ARM64";
-				else
-					return "ARMv7, ARM64";
+				return "ARM64";
 			}
 		}
 
@@ -84,7 +81,7 @@ namespace Xharness.Targets {
 		{
 			if (MonoNativeInfo == null)
 				return templateMinimumOSVersion;
-			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.iOS, MonoNativeInfo.Flavor);
+			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.iOS);
 		}
 
 		protected override int [] UIDeviceFamily {
@@ -114,12 +111,6 @@ namespace Xharness.Targets {
 		public override string ProjectFileSuffix {
 			get {
 				return string.Empty;
-			}
-		}
-
-		protected override bool SupportsBitcode {
-			get {
-				return true;
 			}
 		}
 

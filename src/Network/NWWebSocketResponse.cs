@@ -26,12 +26,11 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (13, 0)]
-	[Mac (10, 15)]
 	[iOS (13, 0)]
 	[Watch (6, 0)]
 #endif
@@ -41,13 +40,25 @@ namespace Network {
 		internal NWWebSocketResponse (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-		static extern unsafe OS_nw_ws_response nw_ws_response_create (NWWebSocketResponseStatus status, string selected_subprotocol);
+		static extern unsafe OS_nw_ws_response nw_ws_response_create (NWWebSocketResponseStatus status, IntPtr selected_subprotocol);
+
+		static unsafe OS_nw_ws_response nw_ws_response_create (NWWebSocketResponseStatus status, string selected_subprotocol)
+		{
+			using var selected_subprotocolPtr = new TransientString (selected_subprotocol);
+			return nw_ws_response_create (status, selected_subprotocolPtr);
+		}
 
 		public NWWebSocketResponse (NWWebSocketResponseStatus status, string subprotocol)
 			=> InitializeHandle (nw_ws_response_create (status, subprotocol));
 
-		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-		static extern string nw_ws_response_get_selected_subprotocol (OS_nw_ws_response response);
+		[DllImport (Constants.NetworkLibrary, EntryPoint = "nw_ws_response_get_selected_subprotocol", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+		static extern IntPtr nw_ws_response_get_selected_subprotocol_ptr (OS_nw_ws_response response);
+
+		static string nw_ws_response_get_selected_subprotocol (OS_nw_ws_response response)
+		{
+			var ptr = nw_ws_response_get_selected_subprotocol_ptr (response);
+			return TransientString.ToStringAndFree (ptr, TransientString.Encoding.Ansi)!;
+		}
 
 		public string SelectedSubprotocol => nw_ws_response_get_selected_subprotocol (GetCheckedHandle ());
 
@@ -88,7 +99,14 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-		static extern void nw_ws_response_add_additional_header (OS_nw_ws_response response, string name, string value);
+		static extern void nw_ws_response_add_additional_header (OS_nw_ws_response response, IntPtr name, IntPtr value);
+
+		static void nw_ws_response_add_additional_header (OS_nw_ws_response response, string name, string value)
+		{
+			using var namePtr = new TransientString (name);
+			using var valuePtr = new TransientString (value);
+			nw_ws_response_add_additional_header (response, name, value);
+		}
 
 		public void SetHeader (string header, string value) => nw_ws_response_add_additional_header (GetCheckedHandle (), header, value);
 	}

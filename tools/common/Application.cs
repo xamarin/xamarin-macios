@@ -38,7 +38,6 @@ namespace Xamarin.Bundler {
 
 	public enum MonoNativeMode {
 		None,
-		Compat,
 		Unified,
 	}
 
@@ -433,7 +432,9 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+#if !NET
 		public static int Concurrency => Driver.Concurrency;
+#endif
 		public Version DeploymentTarget;
 		public Version SdkVersion; // for Mac Catalyst this is the iOS version
 		public Version NativeSdkVersion; // this is the same as SdkVersion, except that for Mac Catalyst it's the macOS SDK version.
@@ -886,11 +887,6 @@ namespace Xamarin.Bundler {
 
 		void InitializeDeploymentTarget ()
 		{
-#if ENABLE_BITCODE_ON_IOS
-			if (Platform == ApplePlatform.iOS)
-				DeploymentTarget = new Version (9, 0);
-#endif
-
 			if (DeploymentTarget == null)
 				DeploymentTarget = SdkVersions.GetVersion (this);
 
@@ -912,21 +908,8 @@ namespace Xamarin.Bundler {
 			switch (Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
-				MonoNativeMode = DeploymentTarget.Major >= 10 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
-				break;
 			case ApplePlatform.WatchOS:
-				if (IsArchEnabled (Abis, Abi.ARM64_32)) {
-					MonoNativeMode = MonoNativeMode.Unified;
-				} else {
-					MonoNativeMode = DeploymentTarget.Major >= 3 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
-				}
-				break;
 			case ApplePlatform.MacOSX:
-				if (DeploymentTarget >= new Version (10, 12))
-					MonoNativeMode = MonoNativeMode.Unified;
-				else
-					MonoNativeMode = MonoNativeMode.Compat;
-				break;
 			case ApplePlatform.MacCatalyst:
 				MonoNativeMode = MonoNativeMode.Unified;
 				break;
@@ -943,8 +926,6 @@ namespace Xamarin.Bundler {
 					return "libmono-native";
 
 				return "libmono-native-unified";
-			case MonoNativeMode.Compat:
-				return "libmono-native-compat";
 			default:
 				throw ErrorHelper.CreateError (99, Errors.MX0099, $"Invalid mono native type: '{MonoNativeMode}'");
 			}

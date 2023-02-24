@@ -1,8 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net6.0-tvos</TargetFramework>
-    <RootNamespace Condition="'$(name)' != '$(name{-VALUE-FORMS-}safe_namespace)'">tvOSLib1</RootNamespace>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>true</ImplicitUsings>
-  </PropertyGroup>
-</Project>

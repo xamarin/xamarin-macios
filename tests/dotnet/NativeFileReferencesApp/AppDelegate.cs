@@ -3,10 +3,8 @@ using System.Runtime.InteropServices;
 
 using Foundation;
 
-namespace NativeFileReferencesApp
-{
-	public class Program
-	{
+namespace NativeFileReferencesApp {
+	public class Program {
 		// This comes from libtest.a
 		[DllImport ("__Internal")]
 		static extern int theUltimateAnswer ();
@@ -15,7 +13,7 @@ namespace NativeFileReferencesApp
 		[DllImport ("__Internal")]
 		static extern int getIntOfChocolate ();
 
-		static int Main (string[] args)
+		static int Main (string [] args)
 		{
 			Console.WriteLine ($"libtest.a: {theUltimateAnswer ()}");
 			Console.WriteLine ($"libtest2.a: {getIntOfChocolate ()}");

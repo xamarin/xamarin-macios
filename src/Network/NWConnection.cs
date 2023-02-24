@@ -47,12 +47,11 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (12, 0)]
-	[Mac (10, 14)]
 	[iOS (12, 0)]
 	[Watch (6, 0)]
 #endif
@@ -529,8 +528,14 @@ namespace Network {
 			SendIdempotent (d, context, isComplete);
 		}
 
-		[DllImport (Constants.NetworkLibrary)]
-		extern static string nw_connection_copy_description (IntPtr handle);
+		[DllImport (Constants.NetworkLibrary, EntryPoint = "nw_connection_copy_description")]
+		extern static IntPtr nw_connection_copy_description_ptr (IntPtr handle);
+
+		static string nw_connection_copy_description (IntPtr handle)
+		{
+			var ptr = nw_connection_copy_description_ptr (handle);
+			return TransientString.ToStringAndFree (ptr)!;
+		}
 
 		public string Description => nw_connection_copy_description (GetCheckedHandle ());
 
@@ -584,12 +589,11 @@ namespace Network {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
@@ -611,12 +615,11 @@ namespace Network {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]

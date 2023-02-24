@@ -1,0 +1,3 @@
+## This was introduced on the 16.2 SDK so using that.
+!deprecated-attribute-wrong! BCChatAction has 16.2 not 16.1 on [Deprecated] attribute
+!deprecated-attribute-wrong! BCChatButton has 16.2 not 16.1 on [Deprecated] attribute

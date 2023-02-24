@@ -3,14 +3,12 @@ using System.Runtime.InteropServices;
 
 using Foundation;
 
-namespace NativeFrameworkReferencesApp
-{
-	public class Program
-	{
+namespace NativeFrameworkReferencesApp {
+	public class Program {
 		[DllImport ("XTest.framework/XTest")]
 		static extern int theUltimateAnswer ();
 
-		static int Main (string[] args)
+		static int Main (string [] args)
 		{
 			Console.WriteLine ($"XCFramework: {theUltimateAnswer ()}");
 

@@ -4,14 +4,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Reflection.Emit;
 
 using AVFoundation;
 using CoreBluetooth;
+using CoreFoundation;
 using Foundation;
 #if !__TVOS__
 using Contacts;
@@ -73,7 +76,7 @@ partial class TestRuntime {
 #elif MONOMAC
 		throw new Exception ("Can't get iOS Build version on OSX.");
 #else
-		return NSString.FromHandle (IntPtr_objc_msgSend (UIDevice.CurrentDevice.Handle, Selector.GetHandle ("buildVersion")));
+		return CFString.FromHandle (IntPtr_objc_msgSend (UIDevice.CurrentDevice.Handle, Selector.GetHandle ("buildVersion")));
 #endif
 	}
 
@@ -179,6 +182,29 @@ partial class TestRuntime {
 	{
 #if !MONOMAC && !__MACCATALYST__
 		if (ObjCRuntime.Runtime.Arch == Arch.DEVICE)
+			NUnit.Framework.Assert.Ignore (message);
+#endif
+	}
+
+	public static void AssertDesktop (string message = "This test only runs on Desktops (macOS or MacCatalyst).")
+	{
+#if __MACOS__ || __MACCATALYST__
+		return;
+#endif
+		NUnit.Framework.Assert.Ignore (message);
+	}
+
+	public static void AssertNotDesktop (string message = "This test does not run on Desktops (macOS or MacCatalyst).")
+	{
+#if __MACOS__ || __MACCATALYST__
+		NUnit.Framework.Assert.Ignore (message);
+#endif
+	}
+
+	public static void AssertNotX64Desktop (string message = "This test does not run on x64 desktops.")
+	{
+#if __MACOS__ || __MACCATALYST__
+		if (!IsARM64)
 			NUnit.Framework.Assert.Ignore (message);
 #endif
 	}
@@ -346,7 +372,11 @@ partial class TestRuntime {
 			 *
 			 * The above statement also applies to 'CheckExactmacOSSystemVersion' =S
 			 */
+#if NET
 			return NSProcessInfo.ProcessInfo.OperatingSystemVersionString.Contains (v.macOS.Build, StringComparison.Ordinal);
+#else
+			return NSProcessInfo.ProcessInfo.OperatingSystemVersionString.Contains (v.macOS.Build);
+#endif
 #else
 			throw new NotImplementedException ();
 #endif
@@ -1214,6 +1244,7 @@ partial class TestRuntime {
 #if __MACCATALYST__
 		NUnit.Framework.Assert.Ignore ("CheckAddressBookPermission -> Ignore in MacCat, it hangs since our TCC hack does not work on BS.");
 #endif
+#pragma warning disable CA1422 // warning CA1422: This call site is reachable on: 'MacCatalyst' 13.3 and later. 'ABAuthorizationStatus.*' is obsoleted on: 'maccatalyst' 9.0 and later (Use the 'Contacts' API instead.).
 		switch (ABAddressBook.GetAuthorizationStatus ()) {
 		case ABAuthorizationStatus.NotDetermined:
 			if (IgnoreTestThatRequiresSystemPermissions ())
@@ -1228,6 +1259,7 @@ partial class TestRuntime {
 			break;
 		}
 	}
+#pragma warning restore CA1422
 #endif // !MONOMAC && !__TVOS__ && !__WATCHOS__
 
 #if !__WATCHOS__
@@ -1314,9 +1346,9 @@ partial class TestRuntime {
 #else
 			if (TestRuntime.CheckMacSystemVersion (10, 10))
 				return; // Crossing fingers that this won't hang.
-#endif
 			NUnit.Framework.Assert.Ignore ("This test requires permission to access events, but there's no API to request access without potentially showing dialogs.");
 			break;
+#endif
 		case EKAuthorizationStatus.Denied:
 			if (assert_granted)
 				NUnit.Framework.Assert.Ignore ("This test requires permission to access events.");
@@ -1388,6 +1420,11 @@ partial class TestRuntime {
 		IgnoreInCIfHttpStatusCodes (ex, HttpStatusCode.BadGateway, HttpStatusCode.GatewayTimeout, HttpStatusCode.ServiceUnavailable);
 	}
 
+	public static void IgnoreInCIIfForbidden (Exception ex)
+	{
+		IgnoreInCIfHttpStatusCodes (ex, HttpStatusCode.BadGateway, HttpStatusCode.GatewayTimeout, HttpStatusCode.ServiceUnavailable, HttpStatusCode.Forbidden);
+	}
+
 	public static void IgnoreInCIIfBadNetwork (HttpStatusCode status)
 	{
 		IgnoreInCIfHttpStatusCodes (status, HttpStatusCode.BadGateway, HttpStatusCode.GatewayTimeout, HttpStatusCode.ServiceUnavailable);
@@ -1416,6 +1453,16 @@ partial class TestRuntime {
 	{
 		status = (HttpStatusCode) 0;
 
+#if NET // HttpRequestException.StatusCode only exists in .NET 5+
+		if (ex is HttpRequestException hre) {
+			if (hre.StatusCode.HasValue) {
+				status = hre.StatusCode.Value;
+				return true;
+			}
+			return false;
+		}
+#endif
+
 		var we = ex as WebException;
 		if (we is null)
 			return false;
@@ -1440,6 +1487,13 @@ partial class TestRuntime {
 		return false;
 	}
 
+	public static void NotifyLaunchCompleted ()
+	{
+		var env = Environment.GetEnvironmentVariable ("LAUNCH_SENTINEL_FILE");
+		if (!string.IsNullOrEmpty (env))
+			File.WriteAllText (env, "Launched!"); // content doesn't matter, the file just has to exist.
+	}
+
 	enum NXByteOrder /* unspecified in header, means most likely int */ {
 		Unknown,
 		LittleEndian,
@@ -1455,11 +1509,11 @@ partial class TestRuntime {
 		IntPtr description; // const char *
 
 		public string Name {
-			get { return Marshal.PtrToStringUTF8 (name)!; }
+			get { return Marshal.PtrToStringAuto (name)!; }
 		}
 
 		public string Description {
-			get { return Marshal.PtrToStringUTF8 (description)!; }
+			get { return Marshal.PtrToStringAuto (description)!; }
 		}
 	}
 

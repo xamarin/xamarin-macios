@@ -4115,7 +4115,7 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An exception occurred while trying to invoke the function {0}: {1}..
+        ///   Looks up a localized string similar to An exception occurred while trying to invoke the function {0}: {1}.
         /// </summary>
         public static string MX8042 {
             get {
@@ -4138,6 +4138,15 @@ namespace Xamarin.Bundler {
         public static string MX8044 {
             get {
                 return ResourceManager.GetString("MX8044", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to call release on an instance of the type {0}.
+        /// </summary>
+        public static string MX8045 {
+            get {
+                return ResourceManager.GetString("MX8045", resourceCulture);
             }
         }
     }

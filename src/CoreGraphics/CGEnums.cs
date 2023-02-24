@@ -57,7 +57,9 @@ namespace CoreGraphics {
 
 	// untyped enum -> CGContext.h
 	[Deprecated (PlatformName.iOS, 7, 0)]
+	[Deprecated (PlatformName.TvOS, 9, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 9)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	public enum CGTextEncoding {
 		FontSpecific,
 		MacRoman,
@@ -105,8 +107,8 @@ namespace CoreGraphics {
 		PlusLighter,
 	}
 
-	[Mac (10, 15)]
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CGPdfTagType /* int32_t */ {
 		Document = 100,
 		Part,
@@ -172,7 +174,7 @@ namespace CoreGraphics {
 		Stream,
 	};
 
-	[iOS (11, 0), Mac (10, 13)]
+	[MacCatalyst (13, 1)]
 	public enum CGPDFAccessPermissions : uint {
 		AllowsLowQualityPrinting = (1 << 0),
 		AllowsHighQualityPrinting = (1 << 1),
@@ -187,9 +189,7 @@ namespace CoreGraphics {
 #if !NET
 	// uint32_t enum -> CGColorConverter.h
 	// this enum does not exist in the headers anymore
-	[TV (9, 2)]
 	[Obsoleted (PlatformName.TvOS, 10, 0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]
-	[iOS (9, 3)]
 	[Obsoleted (PlatformName.iOS, 10, 0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]
 	[NoWatch]
 	[NoMac]
@@ -201,10 +201,7 @@ namespace CoreGraphics {
 #endif
 
 	// uint32_t enum -> CGColorConversionInfo.h
-	[iOS (10, 0)]
-	[TV (10, 0)]
-	[Watch (3, 0)]
-	[Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	public enum CGColorConversionInfoTransformType : uint {
 		FromSpace = 0,
 		ToSpace,

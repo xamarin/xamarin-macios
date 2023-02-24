@@ -6,13 +6,14 @@ using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AppKit {
 
 	public partial class NSWorkspace {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("macos11.0", "Use 'NSWorkspace.OpenUrls' with completion handler.")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
@@ -26,7 +27,6 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("macos11.0", "Use 'NSWorkspace.OpenUrls' with completion handler.")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else

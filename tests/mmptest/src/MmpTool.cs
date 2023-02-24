@@ -6,10 +6,8 @@ using Xamarin.Tests;
 
 using Xamarin.Utils;
 
-namespace Xamarin
-{
-	class MmpTool : BundlerTool, IDisposable
-	{
+namespace Xamarin {
+	class MmpTool : BundlerTool, IDisposable {
 		public string ApplicationName;
 		public string OutputPath;
 
@@ -67,7 +65,7 @@ namespace Xamarin
 			RootAssembly = CompileTestAppExecutable (OutputPath, code, extraArgs, profile, appName, extraCode, usings);
 		}
 
-		public override string GetAppAssembliesDirectory()
+		public override string GetAppAssembliesDirectory ()
 		{
 			return Path.Combine (OutputPath, ApplicationName + ".app", "Contents", "MonoBundle");
 		}

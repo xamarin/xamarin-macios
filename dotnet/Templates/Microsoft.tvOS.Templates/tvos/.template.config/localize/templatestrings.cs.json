@@ -1,7 +1,0 @@
-{
-  "author": "Microsoft",
-  "name": "tvOS Application",
-  "description": "Projekt pro vytvoření aplikace .NET pro tvOS",
-  "symbols/bundleId/description": "Přepíše CFBundleIdentifier v souboru Info.plist.",
-  "symbols/minOSVersion/description": "Přepíše SupportedOSPlatformVersion v souboru projektu."
-}

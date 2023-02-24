@@ -11,6 +11,13 @@ parameters:
 
 steps:
 
+- pwsh: |
+    if (Test-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Reports" -PathType Container) {
+      Remove-Item -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Reports" -Force -Recurse
+    }
+  displayName: "Remove artifacts"
+  condition: always()
+
 - ${{ if eq(parameters.runTests, true) }}:
   # Download the Html Report that was added by the tests job.
   - task: DownloadPipelineArtifact@2

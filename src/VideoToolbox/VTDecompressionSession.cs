@@ -25,13 +25,10 @@ using NativeHandle = System.IntPtr;
 namespace VideoToolbox {
 
 #if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("tvos10.2")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
-#else
-	[iOS (8, 0)]
-	[TV (10, 2)]
 #endif
 	public class VTDecompressionSession : VTSession {
 
@@ -163,7 +160,6 @@ namespace VideoToolbox {
 			/* VTDecompressionSessionRef* */ out IntPtr decompressionSessionOut);
 
 #if false // Disabling for now until we have some tests on this
-		[Mac (10,11), iOS (9,0)]
 		public static VTDecompressionSession Create (CMVideoFormatDescription formatDescription,
 			VTVideoDecoderSpecification decoderSpecification = null, // hardware acceleration is default behavior on iOS. no opt-in required.
 			NSDictionary destinationImageBufferAttributes = null) // Undocumented options, probably always null
@@ -274,7 +270,6 @@ namespace VideoToolbox {
 			return VTDecompressionSessionDecodeFrame (GetCheckedHandle (), sampleBuffer.Handle, decodeFlags, sourceFrame, out infoFlags);
 		}
 #if false // Disabling for now until we have some tests on this
-		[Mac (10,11), iOS (9,0)]
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTDecompressionSessionDecodeFrameWithOutputHandler (
 			/* VTDecompressionSessionRef */ IntPtr session,
@@ -301,7 +296,6 @@ namespace VideoToolbox {
 				del (status, infoFlags, new CVImageBuffer (imageBuffer, false), presentationTimeStamp, presentationDuration);
 		}
 
-		[Mac (10,11), iOS (9,0)]
 		public VTStatus DecodeFrame (CMSampleBuffer sampleBuffer, VTDecodeFrameFlags decodeFlags,
 			out VTDecodeInfoFlags infoFlags, VTDecompressionOutputHandler outputHandler)
 		{
@@ -366,28 +360,20 @@ namespace VideoToolbox {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 13)]
-		[iOS (11, 0)]
-		[TV (11, 0)]
 #endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		extern static bool VTIsHardwareDecodeSupported (CMVideoCodecType codecType);
 
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 13)]
-		[iOS (11, 0)]
-		[TV (11, 0)]
 #endif
 		public static bool IsHardwareDecodeSupported (CMVideoCodecType codecType)
 		{

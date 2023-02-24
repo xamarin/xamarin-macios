@@ -215,13 +215,10 @@ namespace AudioToolbox {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void PlayAlertSound (Action onCompletion)
@@ -241,13 +238,10 @@ namespace AudioToolbox {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		public Task PlayAlertSoundAsync ()
 		{
@@ -259,13 +253,10 @@ namespace AudioToolbox {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void PlaySystemSound (Action onCompletion)
@@ -285,13 +276,10 @@ namespace AudioToolbox {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		public Task PlaySystemSoundAsync ()
 		{
@@ -303,25 +291,19 @@ namespace AudioToolbox {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern void AudioServicesPlayAlertSoundWithCompletion (uint inSystemSoundID, ref BlockLiteral inCompletionBlock);
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern void AudioServicesPlaySystemSoundWithCompletion (uint inSystemSoundID, ref BlockLiteral inCompletionBlock);

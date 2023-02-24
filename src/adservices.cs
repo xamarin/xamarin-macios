@@ -4,9 +4,10 @@ using System;
 
 namespace AdServices {
 
-	[Mac (11,1), iOS (14,3)]
-	[MacCatalyst (14,3)]
-	[NoTV][NoWatch]
+	[Mac (11, 1), iOS (14, 3)]
+	[MacCatalyst (14, 3)]
+	[NoTV]
+	[NoWatch]
 	[Native]
 	[ErrorDomain ("AAAttributionErrorDomain")]
 	enum AAAttributionErrorCode : long {
@@ -15,9 +16,10 @@ namespace AdServices {
 		PlatformNotSupported = 3,
 	}
 
-	[Mac (11,1), iOS (14,3)]
-	[MacCatalyst (14,3)]
-	[NoTV][NoWatch]
+	[Mac (11, 1), iOS (14, 3)]
+	[MacCatalyst (14, 3)]
+	[NoTV]
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AAAttribution {

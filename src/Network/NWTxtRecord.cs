@@ -30,12 +30,11 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (13, 0)]
-	[Mac (10, 15)]
 	[iOS (13, 0)]
 	[Watch (6, 0)]
 #endif
@@ -75,25 +74,33 @@ namespace Network {
 		public NWTxtRecord Clone () => new NWTxtRecord (nw_txt_record_copy (GetCheckedHandle ()), owns: true);
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern NWTxtRecordFindKey nw_txt_record_find_key (IntPtr handle, string key);
+		static extern NWTxtRecordFindKey nw_txt_record_find_key (IntPtr handle, IntPtr key);
+
+		static NWTxtRecordFindKey nw_txt_record_find_key (IntPtr handle, string key)
+		{
+			using var keyPtr = new TransientString (key);
+			return nw_txt_record_find_key (handle, keyPtr);
+		}
 
 		public NWTxtRecordFindKey FindKey (string key) => nw_txt_record_find_key (GetCheckedHandle (), key);
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern byte nw_txt_record_set_key (IntPtr handle, string key, IntPtr value, nuint valueLen);
+		unsafe static extern byte nw_txt_record_set_key (IntPtr handle, IntPtr key, IntPtr value, nuint valueLen);
 
 		public bool Add (string key, ReadOnlySpan<byte> value)
 		{
 			unsafe {
+				using var keyPtr = new TransientString (key);
 				fixed (byte* mh = value)
-					return nw_txt_record_set_key (GetCheckedHandle (), key, (IntPtr) mh, (nuint) value.Length) != 0;
+					return nw_txt_record_set_key (GetCheckedHandle (), keyPtr, (IntPtr) mh, (nuint) value.Length) != 0;
 			}
 		}
 
 		public bool Add (string key)
 		{
 			unsafe {
-				return nw_txt_record_set_key (GetCheckedHandle (), key, IntPtr.Zero, 0) != 0;
+				using var keyPtr = new TransientString (key);
+				return nw_txt_record_set_key (GetCheckedHandle (), keyPtr, IntPtr.Zero, 0) != 0;
 			}
 		}
 
@@ -101,7 +108,13 @@ namespace Network {
 			=> Add (key, value is null ? null : Encoding.UTF8.GetBytes (value));
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern byte nw_txt_record_remove_key (IntPtr handle, string key);
+		static extern byte nw_txt_record_remove_key (IntPtr handle, IntPtr key);
+
+		static byte nw_txt_record_remove_key (IntPtr handle, string key)
+		{
+			using var keyPtr = new TransientString (key);
+			return nw_txt_record_remove_key (handle, keyPtr);
+		}
 
 		public bool Remove (string key) => nw_txt_record_remove_key (GetCheckedHandle (), key) != 0;
 
@@ -203,7 +216,7 @@ namespace Network {
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		static extern unsafe bool nw_txt_record_access_key (OS_nw_txt_record txt_record, string key, ref BlockLiteral access_value);
+		static extern unsafe bool nw_txt_record_access_key (OS_nw_txt_record txt_record, IntPtr key, ref BlockLiteral access_value);
 
 		unsafe delegate void nw_txt_record_access_key_t (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen);
 		unsafe static nw_txt_record_access_key_t static_AccessKeyHandler = TrampolineAccessKeyHandler;
@@ -233,7 +246,8 @@ namespace Network {
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_AccessKeyHandler, handler);
 			try {
-				return nw_txt_record_access_key (GetCheckedHandle (), key, ref block_handler);
+				using var keyPtr = new TransientString (key);
+				return nw_txt_record_access_key (GetCheckedHandle (), keyPtr, ref block_handler);
 			} finally {
 				block_handler.CleanupBlock ();
 			}

@@ -135,6 +135,9 @@ namespace Xamarin.MacDev.Tasks {
 				case PublishFolderType.DynamicLibrary:
 					relativePath = AssemblyDirectory;
 					break;
+				case PublishFolderType.PluginLibrary:
+					relativePath = AssemblyDirectory;
+					break;
 				case PublishFolderType.StaticLibrary:
 					// Nothing to do here.
 					continue;
@@ -320,11 +323,13 @@ namespace Xamarin.MacDev.Tasks {
 					return PublishFolderType.CompressedAppleFramework;
 			}
 
-			// *.a and *.dylib
+			// *.a, *.dylib and *.so
 			if (filename.EndsWith (".a", StringComparison.OrdinalIgnoreCase)) {
 				return PublishFolderType.StaticLibrary;
 			} else if (filename.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase)) {
 				return PublishFolderType.DynamicLibrary;
+			} else if (filename.EndsWith (".so", StringComparison.OrdinalIgnoreCase)) {
+				return PublishFolderType.PluginLibrary;
 			}
 
 			// no other files are copied
@@ -363,6 +368,7 @@ namespace Xamarin.MacDev.Tasks {
 			PlugIns,
 			CompressedPlugIns,
 			DynamicLibrary, // link with + copy to app bundle
+			PluginLibrary, // copy to app bundle (but not link with main executable)
 			StaticLibrary, // link with (but not copy to app bundle)
 			Unknown,
 		}

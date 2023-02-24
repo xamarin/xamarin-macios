@@ -45,8 +45,8 @@ export MARKDOWN_BREAKING_CHANGES_MESSAGE=:heavy_exclamation_mark: Breaking chang
 export MARKDOWN_NO_BREAKING_CHANGES_MESSAGE=No breaking changes
 
 ifeq ($(DOTNET_TFM_REFERENCE),)
-# Change the below to net7.0 once we have reference assemblies from net7.0 (i.e. once net7.0 goes stable).
-DOTNET_TFM_REFERENCE=net6.0
+# Change the below to net8.0 once we have reference assemblies from net8.0 (i.e. once net8.0 goes stable).
+DOTNET_TFM_REFERENCE=net7.0
 endif
 
 # I18N are excluded - but otherwise if should be like ../../builds/Makefile + what XI adds
@@ -237,7 +237,15 @@ define ApiDiffReportHtml
 endef
 
 $(OUTPUT_DIR)/api-diff.html: $(API_DIFF_DEPENDENCIES)
-	$(QF_GEN) echo "<h1>API diffs</h1>" > $@
+	$(Q) rm -f $@
+	$(QF_GEN) echo "<!DOCTYPE html>" >> $@
+	$(QF_GEN) echo "<html>" >> $@
+	$(QF_GEN) echo "<head>" >> $@
+	$(QF_GEN) echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>' >> $@
+	$(QF_GEN) echo "<title>API diffs</title>" >> $@
+	$(QF_GEN) echo "</head>" >> $@
+	$(QF_GEN) echo "<body>" >> $@
+	$(QF_GEN) echo "<h1>API diffs</h1>" >> $@
 
 ifdef INCLUDE_XAMARIN_LEGACY
 	$(Q) if $(foreach html,$(wildcard $(OUTPUT_DIR)/*-api-diff.html),! test -s "$(html)" &&) true; then \
@@ -299,6 +307,8 @@ endif
 	$(Q) echo "</ul>" >> $@
 endif # INCLUDE_XAMARIN_VS_DOTNET
 endif # INCLUDE_XAMARIN_LEGACY
+	$(QF_GEN) echo "</body>" >> $@
+	$(QF_GEN) echo "</html>" >> $@
 
 endif # DOTNET
 	$(Q) if grep "$(HTML_BREAKING_CHANGES_MESSAGE)" $@ >/dev/null 2>&1; then \

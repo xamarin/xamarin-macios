@@ -9,12 +9,10 @@ using Xamarin.Tests;
 using MTouchLinker = Xamarin.Tests.LinkerOption;
 using MTouchRegistrar = Xamarin.Tests.RegistrarOption;
 
-namespace Xamarin.Profiler
-{
+namespace Xamarin.Profiler {
 	[TestFixture (Profile.iOS)]
 	[TestFixture (Profile.tvOS)]
-	public class TimingTests
-	{
+	public class TimingTests {
 		Profile profile;
 		StringBuilder sb;
 		int starsLenght;

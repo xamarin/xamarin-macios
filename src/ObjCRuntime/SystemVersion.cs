@@ -29,7 +29,7 @@ namespace ObjCRuntime {
 
 		// Deprecated in OSX 10.8 - but no good alternative is (yet) available
 #if NET
-		[UnsupportedOSPlatform ("macos10.8")]
+		[SupportedOSPlatform ("macos")]
 		[ObsoletedOSPlatform ("macos10.8")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 8)]
@@ -70,7 +70,7 @@ namespace ObjCRuntime {
 			return WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (major, minor);
 		}
 #else
-		#error Unknown platform
+#error Unknown platform
 #endif
 	}
 }

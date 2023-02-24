@@ -333,7 +333,8 @@ class BuildConfiguration {
             "skip-nugets",
             "skip-signing",
             "run-sample-tests",
-            "skip-packaged-xamarin-mac-tests",
+            "skip-packaged-macos-tests",
+            "run-packaged-macos-tests",
             "skip-api-comparison",
             "skip-all-tests"
           )

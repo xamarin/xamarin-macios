@@ -28,7 +28,8 @@ namespace NaturalLanguage {
 
 	[Flags]
 	[Native]
-	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
+	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NLTaggerOptions : ulong {
 		OmitWords = 1uL << 0,
 		OmitPunctuation = 1uL << 1,
@@ -39,14 +40,16 @@ namespace NaturalLanguage {
 	}
 
 	[Native]
-	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
+	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NLModelType : long {
 		Classifier,
 		Sequence,
 	}
 
 	[Native]
-	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
+	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NLTokenUnit : long {
 		Word,
 		Sentence,
@@ -57,14 +60,16 @@ namespace NaturalLanguage {
 
 	[Flags]
 	[Native]
-	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
+	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NLTokenizerAttributes : ulong {
 		Numeric = 1uL << 0,
 		Symbolic = 1uL << 1,
 		Emoji = 1uL << 2,
 	}
 
-	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
+	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NLLanguage {
 		[DefaultEnumValue]
 		[Field (null)]
@@ -184,12 +189,13 @@ namespace NaturalLanguage {
 		[Field ("NLLanguageVietnamese")]
 		Vietnamese,
 
-		[iOS (16,0), Mac (13,0), Watch (9,0), TV (16,0), MacCatalyst (16,0)]
+		[iOS (16, 0), Mac (13, 0), Watch (9, 0), TV (16, 0), MacCatalyst (16, 0)]
 		[Field ("NLLanguageKazakh")]
 		Kazakh,
 	}
 
-	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
+	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NLTagScheme {
 		[Field ("NLTagSchemeTokenType")]
 		TokenType,
@@ -205,7 +211,8 @@ namespace NaturalLanguage {
 		Language,
 		[Field ("NLTagSchemeScript")]
 		Script,
-		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("NLTagSchemeSentimentScore")]
 		SentimentScore,
 	}

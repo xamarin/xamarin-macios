@@ -26,22 +26,24 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (12, 0)]
-	[Mac (10, 14)]
 	[iOS (12, 0)]
 	[Watch (6, 0)]
 #endif
 	public class NWPathMonitor : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
-		internal NWPathMonitor (NativeHandle handle, bool owns) : base (handle, owns) {}
+		internal NWPathMonitor (NativeHandle handle, bool owns) : base (handle, owns)
 #else
-		public NWPathMonitor (NativeHandle handle, bool owns) : base (handle, owns) { }
+		public NWPathMonitor (NativeHandle handle, bool owns) : base (handle, owns)
 #endif
+		{
+			_SetUpdatedSnapshotHandler (SetUpdatedSnapshotHandlerWrapper);
+		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_path_monitor_create ();
@@ -49,21 +51,17 @@ namespace Network {
 		NWPath? currentPath;
 		public NWPath? CurrentPath => currentPath;
 
-		internal NWPathMonitor (OS_nw_path_monitor monitor)
+		public NWPathMonitor ()
+			: this (nw_path_monitor_create (), true)
 		{
-			InitializeHandle (nw_path_monitor_create ());
-			_SetUpdatedSnapshotHandler (SetUpdatedSnapshotHandlerWrapper);
 		}
-
-		public NWPathMonitor () : this (nw_path_monitor_create ()) { }
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_path_monitor_create_with_type (NWInterfaceType interfaceType);
 
 		public NWPathMonitor (NWInterfaceType interfaceType)
+			: this (nw_path_monitor_create_with_type (interfaceType), true)
 		{
-			InitializeHandle (nw_path_monitor_create_with_type (interfaceType));
-			_SetUpdatedSnapshotHandler (SetUpdatedSnapshotHandlerWrapper);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -240,7 +238,7 @@ namespace Network {
 		[Mac (13,0)]
 #endif
 		public static NWPathMonitor CreateForEthernetChannel ()
-			=> new NWPathMonitor (nw_path_monitor_create_for_ethernet_channel ());
+			=> new NWPathMonitor (nw_path_monitor_create_for_ethernet_channel (), true);
 #endif
 	}
 

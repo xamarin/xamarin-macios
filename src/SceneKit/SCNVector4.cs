@@ -834,28 +834,34 @@ namespace SceneKit {
 
 		#region Transform
 
-		/// <summary>Transform a Vector by the given Matrix</summary>
 #if NET
+		/// <summary>Transform a Vector by the given Matrix</summary>
         /// <param name="vec">The column vector to transform</param>
-#else
-		/// <param name="vec">The row vector to transform</param>
-#endif
 		/// <param name="mat">The desired transformation</param>
 		/// <returns>The transformed vector</returns>
+#else
+		/// <summary>Transform a Vector by the given Matrix</summary>
+		/// <param name="vec">The row vector to transform</param>
+		/// <param name="mat">The desired transformation</param>
+		/// <returns>The transformed vector</returns>
+#endif
 		public static SCNVector4 Transform (SCNVector4 vec, SCNMatrix4 mat)
 		{
 			Transform (ref vec, ref mat, out var result);
 			return result;
 		}
 
-		/// <summary>Transform a Vector by the given Matrix.</summary>
 #if NET
+		/// <summary>Transform a Vector by the given Matrix.</summary>
         /// <param name="vec">The column vector to transform</param>
-#else
-		/// <param name="vec">The row vector to transform</param>
-#endif
 		/// <param name="mat">The desired transformation</param>
 		/// <param name="result">The transformed vector</param>
+#else
+		/// <summary>Transform a Vector by the given Matrix.</summary>
+		/// <param name="vec">The row vector to transform</param>
+		/// <param name="mat">The desired transformation</param>
+		/// <param name="result">The transformed vector</param>
+#endif
 		public static void Transform (ref SCNVector4 vec, ref SCNMatrix4 mat, out SCNVector4 result)
 		{
 #if NET
@@ -1083,7 +1089,7 @@ namespace SceneKit {
 		/// <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
 		public override int GetHashCode ()
 		{
-			return X.GetHashCode () ^ Y.GetHashCode () ^ Z.GetHashCode () ^ W.GetHashCode ();
+			return HashCode.Combine (X, Y, Z, W);
 		}
 
 		#endregion

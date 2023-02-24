@@ -8,12 +8,10 @@ using NUnit.Framework;
 
 using Bindings.Test;
 
-namespace Xamarin.Tests
-{
+namespace Xamarin.Tests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class RuntimeTest
-	{
+	public class RuntimeTest {
 		[Test]
 		public void WrapperTypeLookupTest ()
 		{

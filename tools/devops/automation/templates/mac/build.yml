@@ -128,6 +128,12 @@ steps:
   timeoutInMinutes: 30
   enabled: false
 
+- bash: |
+    sudo rm -Rf $(Build.SourcesDirectory)/package
+    sudo rm -Rf $(Build.SourcesDirectory)/artifacts
+  displayName: "Remove artifacts"
+  condition: always()
+
 - task: DownloadPipelineArtifact@2
   displayName: Download not notarized build
   inputs:

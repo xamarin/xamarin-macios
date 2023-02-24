@@ -7,11 +7,9 @@ using System.Runtime.InteropServices;
 using NUnit.Framework;
 using ObjCRuntime;
 
-namespace Xamarin.Tests
-{
+namespace Xamarin.Tests {
 	[TestFixture]
-	public class Introspection
-	{
+	public class Introspection {
 		public static string RootDirectory => Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location);
 
 		void AssertShouldExist (string name)
@@ -35,7 +33,6 @@ namespace Xamarin.Tests
 		void CheckDynamicLibrary ()
 		{
 			AssertShouldExist (MonoNativeConfig.DynamicLibraryName);
-			AssertShouldNotExist (MonoNativeConfig.GetDynamicLibraryName (!MonoNativeConfig.UsingCompat));
 			AssertShouldNotExist ("libmono-native.dylib");
 
 			var count = CountFiles ("libmono-native*");

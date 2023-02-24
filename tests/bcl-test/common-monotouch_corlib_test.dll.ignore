@@ -20,3 +20,5 @@ MonoTests.System.Runtime.Remoting.Messaging.CallContextTest.FreeNamedDataSlot_Sh
 MonoTests.System.Runtime.Remoting.Messaging.CallContextTest.FreeNamedDataSlot_ShouldClearLogicalData
 MonoTests.System.Runtime.Remoting.Metadata.W3cXsd2001.SoapHexBinaryTest.Parse_Value_Invalid
 
+# https://github.com/xamarin/maccore/issues/2629
+MonoTests.System.TimeZoneInfoTest+IsDaylightSavingTimeTests.Bug_16395

@@ -10,14 +10,13 @@ using Foundation;
 namespace CoreMidi {
 
 #if NET
-	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
 	[NoWatch]
 	[NoTV]
-	[Mac (10, 14)]
 	[iOS (12, 0)]
 #endif
 	[NativeName ("MIDICIDeviceIdentification")]

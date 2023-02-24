@@ -750,6 +750,9 @@
   <data name="MX0185" xml:space="preserve">
 		<value>La opción "{0}" no puede tomar el valor "{1}" cuando se usa CoreCLR.</value>
 	</data>
+  <data name="MX0186" xml:space="preserve">
+		<value>Bitcode está habilitado, pero bitcode no se admite en Xcode 14+ y se ha deshabilitado. Deshabilite bitcode quitando la propiedad "MtouchEnableBitcode" del archivo del proyecto.</value>
+	</data>
   <data name="MX1009" xml:space="preserve">
 		<value>No se pudo copiar el ensamblado "{0}" en "{1}": {2}
 		</value>
@@ -1233,7 +1236,7 @@
 		</value>
 	</data>
   <data name="MT4124_I" xml:space="preserve">
-		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+		<value>Se encontró un elemento {0} no válido en \"{1}\". Registre un informe de errores en https://github.com/xamarin/xamarin-macios/issues/new</value>
 	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>El registrador encontró un tipo "{0}" no válido en la signatura del método "{1}": la interfaz debe tener un atributo de protocolo que especifique su tipo de contenedor.
@@ -1744,10 +1747,20 @@
 		<value>No se puede crear una instancia de tipo {0}.</value>
 	</data>
   <data name="MX8042" xml:space="preserve">
-		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<value>Excepción al intentar invocar la función {0}: {1}.</value>
 		<comment>
 			0: name of function
 			1: exception info
 		</comment>
+	</data>
+  <data name="MX8043" xml:space="preserve">
+		<value>Excepción al validar el código del registrador estático para {0}: {1}</value>
+		<comment>
+			0: name of an assembly
+			1: exception info
+		</comment>
+	</data>
+  <data name="MX8044" xml:space="preserve">
+		<value>El ensamblado {0} se ha modificado desde que se compiló la aplicación, lo que invalida el código de registrador estático generado. El MVID del ensamblado cargado es {1}, mientras que el MVID del ensamblado al que corresponde el código del registrador estático generado es {2}.</value>
 	</data>
 </root>

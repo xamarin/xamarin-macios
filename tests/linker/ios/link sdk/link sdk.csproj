@@ -28,7 +28,7 @@
     <WarningLevel>4</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
     <MtouchExtraArgs>-v -v -disable-thread-check -xml=${ProjectDir}/extra-linker-defs.xml</MtouchExtraArgs>
-    <MtouchArch>i386, x86_64</MtouchArch>
+    <MtouchArch>x86_64</MtouchArch>
     <MtouchLink>SdkOnly</MtouchLink>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ExternalConsole>false</ExternalConsole>
@@ -40,41 +40,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchExtraArgs>-v -v -xml=${ProjectDir}/extra-linker-defs.xml</MtouchExtraArgs>
-    <MtouchArch>i386, x86_64</MtouchArch>
+    <MtouchArch>x86_64</MtouchArch>
     <DefineConstants>DO_NOT_REMOVE;;$(DefineConstants)</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
-    <DebugSymbols>True</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <MtouchDebug>True</MtouchDebug>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchExtraArgs>-v -v -xml=${ProjectDir}/extra-linker-defs.xml "--dlsym:-link sdk" -gcc_flags="-UhoItsB0rken"</MtouchExtraArgs>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug32|iPhone' ">
-    <DebugSymbols>True</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <MtouchDebug>True</MtouchDebug>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchExtraArgs>-v -v -xml=${ProjectDir}/extra-linker-defs.xml "--dlsym:-link sdk" -gcc_flags="-UhoItsB0rken"</MtouchExtraArgs>
-    <MtouchArch>ARMv7</MtouchArch>
-    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug64|iPhone' ">
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
@@ -98,46 +68,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -xml=${ProjectDir}/extra-linker-defs.xml "--dlsym:-link sdk"</MtouchExtraArgs>
     <MtouchUseLlvm>True</MtouchUseLlvm>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <DefineConstants>DO_NOT_REMOVE;$(DefineConstants)</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release32|iPhone' ">
-    <DebugType>none</DebugType>
-    <Optimize>True</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchExtraArgs>-v -v -xml=${ProjectDir}/extra-linker-defs.xml "--dlsym:-link sdk"</MtouchExtraArgs>
-    <MtouchUseLlvm>True</MtouchUseLlvm>
-    <MtouchArch>ARMv7</MtouchArch>
-    <DefineConstants>DO_NOT_REMOVE;$(DefineConstants)</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release64|iPhone' ">
-    <DebugType>none</DebugType>
-    <Optimize>True</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchExtraArgs>-v -v -xml=${ProjectDir}/extra-linker-defs.xml "--dlsym:-link sdk"</MtouchExtraArgs>
-    <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchArch>ARM64</MtouchArch>
-    <DefineConstants>DO_NOT_REMOVE;$(DefineConstants)</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
-    <DebugType>none</DebugType>
-    <Optimize>True</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchExtraArgs>-v -v -xml=${ProjectDir}/extra-linker-defs.xml "--dlsym:-link sdk" --bitcode:full</MtouchExtraArgs>
-    <MtouchUseLlvm>true</MtouchUseLlvm>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
     <DefineConstants>DO_NOT_REMOVE;$(DefineConstants)</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -172,7 +103,8 @@
     <None Include="extra-linker-defs.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppDelegate.cs" />
+    <Compile Include="..\..\AppDelegate.cs" />
+    <Compile Include="..\..\..\common\AppDelegate.cs" />
     <Compile Include="LinkSdkRegressionTest.cs" />
     <Compile Include="Bug1820Test.cs" />
     <Compile Include="Bug2096Test.cs" />
@@ -191,6 +123,7 @@
     <Compile Include="ReflectionTest.cs" />
     <Compile Include="HttpClientHandlerTest.cs" />
     <Compile Include="CanaryTest.cs" />
+    <Compile Include="..\..\..\common\TestAssemblyLoader.cs" />
     <Compile Include="..\..\..\common\TestRuntime.cs">
         <Link>TestRuntime.cs</Link>
     </Compile>

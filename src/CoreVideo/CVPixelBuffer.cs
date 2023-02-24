@@ -11,8 +11,6 @@ using System.Runtime.InteropServices;
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
-#if NET
-#endif
 
 using CFDictionaryRef = System.IntPtr;
 using CVPixelBufferRef = System.IntPtr;
@@ -30,8 +28,6 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4, 0)]
 #endif
 	public partial class CVPixelBuffer : CVImageBuffer {
 #if !COREBUILD
@@ -109,7 +105,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos12.0")]
 		[SupportedOSPlatform ("ios15.0")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Watch (8, 0)]
 		[TV (15, 0)]
@@ -124,7 +120,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos12.0")]
 		[SupportedOSPlatform ("ios15.0")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Watch (8, 0)]
 		[TV (15, 0)]

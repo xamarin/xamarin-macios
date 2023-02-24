@@ -2169,7 +2169,7 @@
 	</data>
 
 	<data name="MX8042" xml:space="preserve">
-		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<value>An exception occurred while trying to invoke the function {0}: {1}</value>
 		<comment>
 			0: name of function
 			1: exception info
@@ -2186,5 +2186,9 @@
 
 	<data name="MX8044" xml:space="preserve">
 		<value>The assembly {0} has been modified since the app was built, invalidating the generated static registrar code. The MVID for the loaded assembly is {1}, while the MVID for the assembly the generated static registrar code corresponds to is {2}.</value>
+	</data>
+
+	<data name="MX8045" xml:space="preserve">
+		<value>Unable to call release on an instance of the type {0}</value>
 	</data>
 </root>

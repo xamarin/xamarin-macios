@@ -216,7 +216,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			try {
-				var plist = PDictionary.FromFile (Path.Combine (xcframework, "Info.plist"));
+				var plist = PDictionary.FromFile (Path.Combine (xcframework, "Info.plist"))!;
 				var path = ResolveXCFramework (plist, platformName, variant, Architectures!);
 				if (!String.IsNullOrEmpty (path))
 					return Path.Combine (xcframework, path);
@@ -234,7 +234,7 @@ namespace Xamarin.MacDev.Tasks {
 		internal static string? ResolveXCFramework (PDictionary plist, string platformName, string? variant, string architectures)
 		{
 			// plist structure https://github.com/spouliot/xcframework#infoplist
-			var bundle_package_type = (PString) plist ["CFBundlePackageType"];
+			var bundle_package_type = (PString?) plist ["CFBundlePackageType"];
 			if (bundle_package_type?.Value != "XFWK")
 				return null;
 			var available_libraries = plist.GetArray ("AvailableLibraries");
@@ -244,19 +244,19 @@ namespace Xamarin.MacDev.Tasks {
 			var platform = platformName.ToLowerInvariant ();
 			var archs = architectures.Split (new char [] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 			foreach (PDictionary item in available_libraries) {
-				var supported_platform = (PString) item ["SupportedPlatform"];
-				if (supported_platform.Value != platform)
+				var supported_platform = (PString?) item ["SupportedPlatform"];
+				if (supported_platform?.Value != platform)
 					continue;
 				// optional key
-				var supported_platform_variant = (PString) item ["SupportedPlatformVariant"];
+				var supported_platform_variant = (PString?) item ["SupportedPlatformVariant"];
 				if (supported_platform_variant?.Value != variant)
 					continue;
-				var supported_architectures = (PArray) item ["SupportedArchitectures"];
+				var supported_architectures = (PArray?) item ["SupportedArchitectures"];
 				// each architecture we request must be present in the xcframework
 				// but extra architectures in the xcframework are perfectly fine
 				foreach (var arch in archs) {
 					bool found = false;
-					foreach (PString xarch in supported_architectures) {
+					foreach (PString xarch in supported_architectures!) {
 						found = String.Equals (arch, xarch.Value, StringComparison.OrdinalIgnoreCase);
 						if (found)
 							break;
@@ -264,9 +264,9 @@ namespace Xamarin.MacDev.Tasks {
 					if (!found)
 						return String.Empty;
 				}
-				var library_path = (PString) item ["LibraryPath"];
-				var library_identifier = (PString) item ["LibraryIdentifier"];
-				return GetActualLibrary (Path.Combine (library_identifier, library_path));
+				var library_path = (PString?) item ["LibraryPath"];
+				var library_identifier = (PString?) item ["LibraryIdentifier"];
+				return GetActualLibrary (Path.Combine (library_identifier!, library_path!));
 			}
 			return String.Empty;
 		}

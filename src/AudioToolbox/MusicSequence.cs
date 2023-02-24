@@ -57,7 +57,9 @@ namespace AudioToolbox {
 
 		static Dictionary<IntPtr, MusicSequenceUserCallback> userCallbackHandles = new Dictionary<IntPtr, MusicSequenceUserCallback> (Runtime.IntPtrEqualityComparer);
 
+#if !NET
 		static MusicSequenceUserCallbackProxy userCallbackProxy = new MusicSequenceUserCallbackProxy (UserCallbackProxy);
+#endif
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus NewMusicSequence (/* MusicSequence* */ out IntPtr outSequence);
@@ -86,7 +88,13 @@ namespace AudioToolbox {
 					userCallbackHandles.Remove (Handle);
 
 				// Remove native user callback
+#if NET
+				unsafe {
+					MusicSequenceSetUserCallback (Handle, null, IntPtr.Zero);
+				}
+#else
 				MusicSequenceSetUserCallback (Handle, null, IntPtr.Zero);
+#endif
 
 				DisposeMusicSequence (Handle);
 				lock (sequenceMap) {
@@ -263,19 +271,34 @@ namespace AudioToolbox {
 			return 0;
 		}
 
+#if NET
+		[DllImport (Constants.AudioToolboxLibrary)]
+		extern static unsafe /* OSStatus */ MusicPlayerStatus MusicSequenceSetUserCallback (/* MusicSequence */ IntPtr inSequence, delegate* unmanaged<IntPtr, IntPtr, IntPtr, double, IntPtr, double, double, void> inCallback, /* void * */ IntPtr inClientData);
+#else
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicSequenceSetUserCallback (/* MusicSequence */ IntPtr inSequence, MusicSequenceUserCallbackProxy? inCallback, /* void * */ IntPtr inClientData);
+#endif
 
 		public void SetUserCallback (MusicSequenceUserCallback callback)
 		{
 			lock (userCallbackHandles)
 				userCallbackHandles [Handle] = callback;
 
+#if NET
+			unsafe {
+				MusicSequenceSetUserCallback (Handle, &UserCallbackProxy, IntPtr.Zero);
+			}
+#else
 			MusicSequenceSetUserCallback (Handle, userCallbackProxy, IntPtr.Zero);
+#endif
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (MusicSequenceUserCallbackProxy))]
+#endif
 #endif
 		static void UserCallbackProxy (IntPtr inClientData, IntPtr inSequence, IntPtr inTrack, double inEventTime, IntPtr inEventData, double inStartSliceBeat, double inEndSliceBeat)
 		{

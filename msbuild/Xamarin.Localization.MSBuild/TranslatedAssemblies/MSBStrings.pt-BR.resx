@@ -424,7 +424,7 @@
         </value>
     </data>
   <data name="E0118" xml:space="preserve">
-        <value>{0} exited with code {1}:
+        <value>{0} saiu com código {1}:
 {2}</value>
     </data>
   <data name="M0119" xml:space="preserve">
@@ -997,6 +997,7 @@
         <value>Configurar: A Entrada, "{0}", Não Existe
         </value>
     </data>
+  <!-- E7068: not in use anymore -->
   <data name="E7069" xml:space="preserve">
         <value>O Xamarin.iOS 14+ não oferece suporte a aplicativos watchOS 1. Migre seu projeto para watchOS 2.</value>
     </data>
@@ -1145,5 +1146,35 @@
     </data>
   <data name="E7101" xml:space="preserve">
         <value>Propriedade desconhecida '{0}' com valor '{1}'.</value>
+    </data>
+  <data name="E7102" xml:space="preserve">
+        <value>Valor '{0}' inválido para o direito '{1}' do tipo '{2}' especificado no grupo de itens CustomEntitlements. Nenhum valor esperado.</value>
+        <comment>
+            Don't translate: CustomEntitlements (name of option in project file)
+        </comment>
+    </data>
+  <data name="E7103" xml:space="preserve">
+        <value>Valor '{0}' inválido para o direito '{1}' do tipo '{2}' especificado no grupo de itens CustomEntitlements. Esperado 'true' ou 'false'.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'true', 'false'
+        </comment>
+    </data>
+  <data name="E7104" xml:space="preserve">
+        <value>Tipo '{0}' desconhecido para o direito '{1}' especificado no grupo de itens CustomEntitlements. Esperado 'Remove', 'Boolean', 'String' ou 'StringArray'.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'Remove', 'Boolean', 'String', 'StringArray'
+        </comment>
+    </data>
+  <data name="W7105" xml:space="preserve">
+        <value>Extensão inesperada '{0}' para referência nativa '{1}' no manifesto '{2}'.</value>
+        <comment>
+            {0}: file extension
+            {1}: path to a file
+            {2}: path to a file
+        </comment>
     </data>
 </root>

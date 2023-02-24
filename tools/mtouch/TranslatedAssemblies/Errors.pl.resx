@@ -750,6 +750,9 @@
   <data name="MX0185" xml:space="preserve">
 		<value>Opcja "{0}" nie może przyjmować wartości "{1}" podczas korzystania z repozytorium CoreCLR.</value>
 	</data>
+  <data name="MX0186" xml:space="preserve">
+		<value>Kod bitowy jest włączony, ale kod bitowy nie jest obsługiwany w środowisku Xcode 14+ i został wyłączony. Wyłącz kod bitowy, usuwając właściwość „MtouchEnableBitcode” z pliku projektu.</value>
+	</data>
   <data name="MX1009" xml:space="preserve">
 		<value>Nie można skopiować zestawu „{0}” do lokalizacji „{1}”: {2}
 		</value>
@@ -1233,7 +1236,7 @@
 		</value>
 	</data>
   <data name="MT4124_I" xml:space="preserve">
-		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+		<value>W elemencie „{1}” znaleziono nieprawidłowy element {0}. Zgłoś raport o usterce na stronie https://github.com/xamarin/xamarin-macios/issues/new</value>
 	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>Rejestrator odnalazł nieprawidłowy typ „{0}” w sygnaturze dla metody „{1}”: interfejs musi mieć atrybut protokołu określający jego typ otoki.
@@ -1744,10 +1747,20 @@
 		<value>Nie można utworzyć wystąpienia typu {0}.</value>
 	</data>
   <data name="MX8042" xml:space="preserve">
-		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<value>Wystąpił wyjątek podczas próby wywołania funkcji {0}: {1}</value>
 		<comment>
 			0: name of function
 			1: exception info
 		</comment>
+	</data>
+  <data name="MX8043" xml:space="preserve">
+		<value>Wystąpił wyjątek podczas weryfikowania kodu rejestratora statycznego dla {0}: {1}</value>
+		<comment>
+			0: name of an assembly
+			1: exception info
+		</comment>
+	</data>
+  <data name="MX8044" xml:space="preserve">
+		<value>Zestaw {0} został zmodyfikowany od czasu utworzenia aplikacji, unieważniając wygenerowany kod rejestratora statycznego. MVID dla załadowanego zestawu jest {1}, a MVID dla zestawu, któremu odpowiada wygenerowany kod statycznego rejestratora, to {2}.</value>
 	</data>
 </root>

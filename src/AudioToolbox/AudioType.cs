@@ -84,13 +84,12 @@ namespace AudioToolbox {
 		Flac = 0x666c6163, // 'flac'
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[NoWatch]
 		[iOS (13, 0)]
-		[Mac (10, 15)]
 		[TV (13, 0)]
 #endif
 		LatmInLoas = 0x6c6f6173, // 'loas'
@@ -169,13 +168,13 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("ios8.0")]
-		[ObsoletedOSPlatform ("macos10.10", "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.")]
-		[ObsoletedOSPlatform ("ios8.0", "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.")]
+		[ObsoletedOSPlatform ("macos10.10", "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preferred instead.")]
+		[ObsoletedOSPlatform ("ios8.0", "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preferred instead.")]
+		[ObsoletedOSPlatform ("tvos9.0", "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preferred instead.")]
+		[ObsoletedOSPlatform ("maccatalyst13.1", "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preferred instead.")]
 #else
-		[Deprecated (PlatformName.iOS, 8, 0, message: "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preferred instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preferred instead.")]
 #endif
 		public static readonly AudioFormatFlags AudioFormatFlagsAudioUnitCanonical = AudioFormatFlags.IsSignedInteger | (BitConverter.IsLittleEndian ? 0 : AudioFormatFlags.IsBigEndian) |
 			AudioFormatFlags.IsPacked | AudioFormatFlags.IsNonInterleaved | (AudioFormatFlags) (AudioUnitSampleFractionBits << (int) AudioFormatFlags.LinearPCMSampleFractionShift);
@@ -377,9 +376,6 @@ namespace AudioToolbox {
 		}
 	}
 
-#if !NET
-	[Watch (3, 0)]
-#endif
 	[Flags]
 	public enum AudioChannelFlags : uint { // UInt32 in AudioPanningInfo -- AudioFormat.h
 		AllOff = 0,
@@ -1171,9 +1167,6 @@ namespace AudioToolbox {
 		TimeRunning = 1 << 1
 	}
 
-#if !NET
-	[Watch (3, 0)]
-#endif
 	public enum MPEG4ObjectID { // long
 		AacMain = 1,
 		AacLc = 2,

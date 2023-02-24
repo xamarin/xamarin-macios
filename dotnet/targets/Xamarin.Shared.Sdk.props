@@ -7,7 +7,10 @@
 	<Import Project="Microsoft.$(_PlatformName).Sdk.SupportedTargetPlatforms.props" />
 
 	<Import Project="Xamarin.Shared.Sdk.TargetFrameworkInference.props" />
-
+	
+	<!-- Imports the .user.env file if exists and the build is from VS -->
+	<Import Project="$(MSBuildProjectFullPath).user.env" Condition="Exists('$(MSBuildProjectFullPath).user.env') And '$(BuildingInsideVisualStudio)' == 'true'" />
+	
 	<PropertyGroup>
 		<!-- Set to true when using the Microsoft.<platform>.Sdk NuGet. This is used by pre-existing/shared targets to tweak behavior depending on build system -->
 		<UsingAppleNETSdk>true</UsingAppleNETSdk>
@@ -39,6 +42,14 @@
 		<!-- Ref: https://github.com/xamarin/xamarin-macios/issues/16193 -->
 		<!-- Ref: https://github.com/dotnet/sdk/issues/28419 -->
 		<GenerateSatelliteAssembliesForCore Condition="'$(GenerateSatelliteAssembliesForCore)' == ''">true</GenerateSatelliteAssembliesForCore>
+
+		<!-- This will ensure any trimmer components are restored by the framework reference logic. As such it must happen before Microsoft.NET.Publish.targets is included.
+			Ref:
+			* https://github.com/dotnet/sdk/pull/29441
+			* https://github.com/dotnet/sdk/blob/c5a58bc6c3eb2b236b314e6d17a89a537459890c/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Publish.targets#L20-L21
+			* https://github.com/dotnet/sdk/blob/c5a58bc6c3eb2b236b314e6d17a89a537459890c/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Sdk.FrameworkReferenceResolution.targets#L102
+		-->
+		<_IsTrimmingEnabled>true</_IsTrimmingEnabled>
 	</PropertyGroup>
 
 	<!-- Set the default RuntimeIdentifier if not already specified. -->

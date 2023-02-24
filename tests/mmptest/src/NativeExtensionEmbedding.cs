@@ -4,11 +4,9 @@ using System.Linq;
 using NUnit.Framework;
 using Xamarin.Tests;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	[TestFixture]
-	public class NativeExtensionEmbeddingTests
-	{
+	public class NativeExtensionEmbeddingTests {
 		[TestCase (true)]
 		[TestCase (false)]
 		public void NativeExtensionEmbedding (bool XM45)
@@ -30,7 +28,7 @@ namespace Xamarin.MMP.Tests
 	</AdditionalAppExtensions>
 </ItemGroup>";
 
-				var config = new TI.UnifiedTestConfig (tmpDir) { XM45 = XM45, ItemGroup = items};
+				var config = new TI.UnifiedTestConfig (tmpDir) { XM45 = XM45, ItemGroup = items };
 				string csprojTarget = TI.GenerateUnifiedExecutableProject (config);
 				TI.BuildProject (csprojTarget);
 

@@ -23,7 +23,7 @@ namespace LinkSdk {
 				sb.AppendLine ().Append ("* ").Append (m);
 			Assert.Fail (sb.ToString ());
 		}
-		
+
 		[Test]
 		public void Mscorlib ()
 		{

@@ -750,6 +750,9 @@
   <data name="MX0185" xml:space="preserve">
 		<value>A opção '{0}' não pode assumir o valor '{1}' ao usar CoreCLR.</value>
 	</data>
+  <data name="MX0186" xml:space="preserve">
+		<value>O bitcode está habilitado, mas o bitcode não é suportado no Xcode 14+ e foi desabilitado. Desabilite o bitcode removendo a propriedade 'MtouchEnableBitcode' do arquivo de projeto.</value>
+	</data>
   <data name="MX1009" xml:space="preserve">
 		<value>Não foi possível copiar o assembly '{0}' para '{1}': {2}
 		</value>
@@ -1233,7 +1236,7 @@
 		</value>
 	</data>
   <data name="MT4124_I" xml:space="preserve">
-		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+		<value>{0} inválido encontrado em '{1}'. Envie um relatório de bug em https://github.com/xamarin/xamarin-macios/issues/new</value>
 	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>O registrador encontrou um tipo '{0}' inválido na assinatura do método '{1}': a interface precisa ter um atributo de Protocolo especificando seu tipo de wrapper.
@@ -1744,10 +1747,20 @@
 		<value>Não foi possível criar uma instância do tipo {0}.</value>
 	</data>
   <data name="MX8042" xml:space="preserve">
-		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<value>Ocorreu uma exceção ao tentar invocar a função {0}: {1}</value>
 		<comment>
 			0: name of function
 			1: exception info
 		</comment>
+	</data>
+  <data name="MX8043" xml:space="preserve">
+		<value>Ocorreu uma exceção ao validar o código do registrador estático para {0}: {1}</value>
+		<comment>
+			0: name of an assembly
+			1: exception info
+		</comment>
+	</data>
+  <data name="MX8044" xml:space="preserve">
+		<value>O assembly {0} foi modificado desde que o aplicativo foi criado, invalidando o código do registrador estático gerado. O MVID para o assembly carregado é {1}, enquanto o MVID para o assembly ao qual o código do registrador estático gerado corresponde é {2}.</value>
 	</data>
 </root>

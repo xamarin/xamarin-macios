@@ -15,15 +15,15 @@ namespace Cecil.Tests {
 
 	[TestFixture]
 	public class MarshalAsTest {
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
-		public void TestAssembly (string assemblyPath)
+		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblyDefinitions))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
+		public void TestAssembly (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath);
+			var assembly = info.Assembly;
 			var failedMethods = new List<string> ();
 			List<string>? failures = null;
 			var checkedTypes = new List<TypeReference> ();
-			foreach (var m in Helper.FilterMethods (assembly!, (m) => m.HasPInvokeInfo)) {
+			foreach (var m in assembly.EnumerateMethods ((m) => m.HasPInvokeInfo)) {
 				failures = null;
 				checkedTypes.Clear ();
 				if (!CheckMarshalAs (checkedTypes, m, ref failures)) {
@@ -87,6 +87,9 @@ namespace Cecil.Tests {
 			// System.Runtime.InteropServices.NFloat is in a custom assembly in .NET 6, so add a special case.
 			if (type is null && tr.FullName == "System.Runtime.InteropServices.NFloat")
 				return true;
+
+			if (type is null)
+				throw new Exception ($"Unable to resolve {tr.FullName}");
 
 			if (type.IsEnum)
 				return true;

@@ -149,7 +149,6 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.7")]
 		[ObsoletedOSPlatform ("macos10.7", "Use the Service Management framework or the launchd-launched helper tool instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,7)]
@@ -169,7 +168,6 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.7")]
 		[ObsoletedOSPlatform ("macos10.7", "Use the Service Management framework or the launchd-launched helper tool instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,7)]

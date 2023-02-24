@@ -37,6 +37,8 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Foundation;
 
+#nullable enable
+
 namespace CFNetwork {
 
 	class Content : StreamContent {
@@ -61,9 +63,7 @@ namespace CFNetwork {
 		protected override void Dispose (bool disposing)
 		{
 			if (disposing) {
-				if (responseStream != null)
-					responseStream.Dispose ();
-				responseStream = null;
+				responseStream.Dispose ();
 			}
 		}
 

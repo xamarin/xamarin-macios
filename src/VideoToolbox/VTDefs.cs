@@ -52,8 +52,10 @@ namespace VideoToolbox {
 		VideoDecoderRemoved = -17690,
 		SessionMalfunction = -17691,
 		[Mac (11, 0)]
+		[MacCatalyst (13, 1)]
 		DecoderNeedsRosetta = -17692,
 		[Mac (11, 0)]
+		[MacCatalyst (13, 1)]
 		EncoderNeedsRosetta = -17693,
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), Watch (9, 0), TV (15, 0)]
 		VideoDecoderReferenceMissing = -17694,
@@ -144,9 +146,9 @@ namespace VideoToolbox {
 		H263Profile0Level10,
 		H263Profile0Level45,
 		H263Profile3Level45,
-		[Mac (10, 13), iOS (11, 0), TV (11, 0)]
+		[MacCatalyst (13, 1)]
 		HevcMainAutoLevel,
-		[Mac (10, 13), iOS (11, 0), TV (11, 0)]
+		[MacCatalyst (13, 1)]
 		HevcMain10AutoLevel,
 	}
 
@@ -249,7 +251,7 @@ namespace VideoToolbox {
 		}
 	}
 
-	[iOS (9, 0)]
+	[MacCatalyst (13, 1)]
 	public enum VTScalingMode {
 		Unset,
 		Normal,
@@ -258,7 +260,7 @@ namespace VideoToolbox {
 		Trim
 	}
 
-	[iOS (9, 0)]
+	[MacCatalyst (13, 1)]
 	public enum VTDownsamplingMode {
 		Unset,
 		Decimate,

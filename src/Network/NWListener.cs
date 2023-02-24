@@ -25,12 +25,11 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (12, 0)]
-	[Mac (10, 14)]
 	[iOS (12, 0)]
 	[Watch (6, 0)]
 #endif
@@ -47,7 +46,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		extern static IntPtr nw_listener_create_with_port (string port, IntPtr nwparameters);
+		extern static IntPtr nw_listener_create_with_port (IntPtr port, IntPtr nwparameters);
 
 		public static NWListener? Create (string port, NWParameters parameters)
 		{
@@ -58,7 +57,8 @@ namespace Network {
 			if (port is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (port));
 
-			handle = nw_listener_create_with_port (port, parameters.Handle);
+			using var portPtr = new TransientString (port);
+			handle = nw_listener_create_with_port (portPtr, parameters.Handle);
 			if (handle == IntPtr.Zero)
 				return null;
 			return new NWListener (handle, owns: true);
@@ -257,12 +257,11 @@ namespace Network {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
@@ -270,12 +269,11 @@ namespace Network {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
@@ -283,12 +281,11 @@ namespace Network {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		public uint ConnectionLimit {

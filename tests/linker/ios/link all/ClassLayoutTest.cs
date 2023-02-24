@@ -15,30 +15,30 @@ using NUnit.Framework;
 namespace LinkAll.Layout {
 
 	class DefaultClass {
-		public int never_used;		// the linker will remove this
+		public int never_used;      // the linker will remove this
 		public int used;
 	}
 
 	[StructLayout (LayoutKind.Auto)]
 	class AutoClass {
-		public int never_used;		// the linker will remove this
+		public int never_used;      // the linker will remove this
 		public int used;
 	}
 
 	[StructLayout (LayoutKind.Sequential)]
 	class SequentialClass {
-		public int never_used;		// the linker MUST NOT remove this
+		public int never_used;      // the linker MUST NOT remove this
 		public int used;
 	}
 
 	[StructLayout (LayoutKind.Explicit)]
 	class ExplicitClass {
 		[FieldOffset (0)]
-		public int never_used;		// the linker could remove this
+		public int never_used;      // the linker could remove this
 		[FieldOffset (4)]
 		public int used;
 		[FieldOffset (8)]
-		public int never_ever_used;	// the linker MUST NOT remove this
+		public int never_ever_used; // the linker MUST NOT remove this
 	}
 
 	[TestFixture]

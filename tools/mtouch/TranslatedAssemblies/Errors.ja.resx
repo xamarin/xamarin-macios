@@ -750,6 +750,9 @@
   <data name="MX0185" xml:space="preserve">
 		<value>CoreCLR を使用している場合、オプション '{0}' は値 '{1}' を取得できません。</value>
 	</data>
+  <data name="MX0186" xml:space="preserve">
+		<value>ビットコードは有効になっていますが、Xcode 14 以降では Bitcode がサポートされていないため、無効になっています。プロジェクト ファイルから 'MtouchEnableBitcode' プロパティを削除して、ビットコードを無効にしてください。</value>
+	</data>
   <data name="MX1009" xml:space="preserve">
 		<value>アセンブリ '{0}' を '{1}' にコピーできませんでした: {2}
 		</value>
@@ -1234,7 +1237,7 @@
 		</value>
 	</data>
   <data name="MT4124_I" xml:space="preserve">
-		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+		<value>'{1}' に無効な {0} が見つかりました。https://github.com/xamarin/xamarin-macios/issues/new にバグ報告をお寄せください</value>
 	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>レジストラーにより、メソッド '{1}' のシグネチャ内で無効な型 '{0}' が検出されました: インターフェイスには、それのラッパー型を指定するプロトコル属性が必要です。
@@ -1745,10 +1748,20 @@
 		<value>型 {0} のインスタンスを作成できません。</value>
 	</data>
   <data name="MX8042" xml:space="preserve">
-		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<value>関数 {0} の呼び出し中に例外が発生しました: {1}</value>
 		<comment>
 			0: name of function
 			1: exception info
 		</comment>
+	</data>
+  <data name="MX8043" xml:space="preserve">
+		<value>{0} の静的レジストラー コードの検証中に次の例外が発生しました: {1}</value>
+		<comment>
+			0: name of an assembly
+			1: exception info
+		</comment>
+	</data>
+  <data name="MX8044" xml:space="preserve">
+		<value>アセンブリ {0} は、アプリのビルド後に変更されたため、生成された静的レジストラー コードを無効化します。読み込まれたアセンブリの MVID は {1} ですが、生成された静的レジストラー コードが対応するのは {2} です。</value>
 	</data>
 </root>

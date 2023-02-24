@@ -32,8 +32,8 @@ namespace OpenTK.Graphics.OpenGL
     using System;
     using System.Text;
     using System.Runtime.InteropServices;
-    #pragma warning disable 3019
-    #pragma warning disable 1591
+#pragma warning disable 3019
+#pragma warning disable 1591
 
     partial class GL
     {

@@ -8,17 +8,21 @@ using ObjCRuntime;
 
 using NUnit.Framework;
 
-namespace Xamarin.BindingTests
-{
+namespace Xamarin.BindingTests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class ProtocolTest
-	{
+	public class ProtocolTest {
 		bool HasProtocolAttributes {
 			get {
-				if (TestRuntime.IsLinkAll && !Runtime.DynamicRegistrationSupported)
+				if (TestRuntime.IsLinkAll) {
+#if OPTIMIZEALL && __MACOS__
 					return false;
-			
+#endif
+					if (!Runtime.DynamicRegistrationSupported)
+						return false;
+				}
+
+
 				return true;
 			}
 		}
@@ -36,7 +40,7 @@ namespace Xamarin.BindingTests
 			var IP1Attributes = IP1.GetCustomAttributes (typeof (ProtocolAttribute), false);
 			if (HasProtocolAttributes) {
 				Assert.AreEqual (1, IP1Attributes.Length, "[Protocol] IP1");
-				var IP1Protocol = (ProtocolAttribute)IP1Attributes [0];
+				var IP1Protocol = (ProtocolAttribute) IP1Attributes [0];
 				Assert.AreEqual ("P1", IP1Protocol.Name, "Name");
 
 				// and a wrapper type
@@ -68,7 +72,7 @@ namespace Xamarin.BindingTests
 			var IP2Attributes = IP2.GetCustomAttributes (typeof (ProtocolAttribute), false);
 			if (HasProtocolAttributes) {
 				Assert.AreEqual (1, IP2Attributes.Length, "[Protocol] IP2");
-				var IP2Protocol = (ProtocolAttribute)IP2Attributes [0];
+				var IP2Protocol = (ProtocolAttribute) IP2Attributes [0];
 				Assert.AreEqual ("P2", IP2Protocol.Name, "Name");
 
 				// and a wrapper type
@@ -87,7 +91,7 @@ namespace Xamarin.BindingTests
 			var model = bindingAssembly.GetType ("Bindings.Test.Protocol.P2");
 			Assert.IsNotNull (model, "P2");
 			// but without the [Model] attribute
-			Assert.False (model.IsDefined (typeof(ModelAttribute), false), "model");
+			Assert.False (model.IsDefined (typeof (ModelAttribute), false), "model");
 		}
 
 		[Test]
@@ -104,7 +108,7 @@ namespace Xamarin.BindingTests
 			var IP3Attributes = IP3.GetCustomAttributes (typeof (ProtocolAttribute), false);
 			if (HasProtocolAttributes) {
 				Assert.AreEqual (1, IP3Attributes.Length, "[Protocol] IP3");
-				var IP3Protocol = (ProtocolAttribute)IP3Attributes [0];
+				var IP3Protocol = (ProtocolAttribute) IP3Attributes [0];
 				Assert.AreEqual ("P3", IP3Protocol.Name, "Name");
 
 				// and a wrapper type
@@ -123,11 +127,10 @@ namespace Xamarin.BindingTests
 			var model = bindingAssembly.GetType ("Bindings.Test.Protocol.P3");
 			Assert.IsNotNull (model, "P3");
 			// with a [Model] attribute
-			Assert.True (model.IsDefined (typeof(ModelAttribute), false), "model");
+			Assert.True (model.IsDefined (typeof (ModelAttribute), false), "model");
 		}
 
-		class MembersImplementation : NSObject, Bindings.Test.Protocol.IMemberAttributes
-		{
+		class MembersImplementation : NSObject, Bindings.Test.Protocol.IMemberAttributes {
 			public void RequiredInstanceMethod ()
 			{
 			}
@@ -155,7 +158,7 @@ namespace Xamarin.BindingTests
 			IntPtr protocol = objc_getProtocol ("MemberAttributes");
 			Assert.AreNotEqual (IntPtr.Zero, protocol, "a");
 
-			objc_method_description[] methods;
+			objc_method_description [] methods;
 
 			// Required instance methods
 			methods = protocol_copyMethodDescriptionList (protocol, true, true);
@@ -165,7 +168,7 @@ namespace Xamarin.BindingTests
 			Assert.That (methods, Contains.Item (new objc_method_description ("requiredInstanceProperty", "@@:")), "Required Instance Methods: requiredInstanceProperty");
 			Assert.That (methods, Contains.Item (new objc_method_description ("setRequiredInstanceProperty:", "v@:@")), "Required Instance Methods: setRequiredInstanceProperty");
 			Assert.That (methods, Contains.Item (new objc_method_description ("requiredReadonlyProperty", "@@:")), "Required Instance Methods: requiredReadonlyProperty:");
-			
+
 			// Required static methods
 			methods = protocol_copyMethodDescriptionList (protocol, true, false);
 			CleanupSignatures (methods);
@@ -173,7 +176,7 @@ namespace Xamarin.BindingTests
 			Assert.That (methods, Contains.Item (new objc_method_description ("requiredStaticMethod", "v@:")), "Required Static Methods: requiredStaticMethod");
 			Assert.That (methods, Contains.Item (new objc_method_description ("setRequiredStaticProperty:", "v@:@")), "Required Static Methods: setRequiredStaticProperty:");
 			Assert.That (methods, Contains.Item (new objc_method_description ("requiredStaticProperty", "@@:")), "Required Static Methods: requiredStaticProperty");
-			
+
 			// Optional instance methods
 			methods = protocol_copyMethodDescriptionList (protocol, false, true);
 			CleanupSignatures (methods);
@@ -206,7 +209,7 @@ namespace Xamarin.BindingTests
 			Assert.That (methods, Contains.Item (new objc_method_description ("optionalStaticProperty", "@@:")), "Optional Static Methods: optionalStaticProperty");
 			Assert.That (methods, Contains.Item (new objc_method_description ("setOptionalStaticProperty:", "v@:@")), "Optional Static Methods: setOptionalStaticProperty:");
 
-			objc_property[] properties;
+			objc_property [] properties;
 			properties = protocol_copyPropertyList (protocol);
 
 			// The ObjC runtime won't add optional properties dynamically (the code is commented out,
@@ -281,7 +284,7 @@ namespace Xamarin.BindingTests
 		[DllImport ("/usr/lib/libobjc.dylib", EntryPoint = "protocol_copyMethodDescriptionList")]
 		extern static IntPtr _protocol_copyMethodDescriptionList (IntPtr protocol, bool isRequiredMethod, bool isInstanceMethod, out int count);
 
-		static objc_method_description[] protocol_copyMethodDescriptionList (IntPtr protocol, bool isRequiredMethod, bool isInstanceMethod)
+		static objc_method_description [] protocol_copyMethodDescriptionList (IntPtr protocol, bool isRequiredMethod, bool isInstanceMethod)
 		{
 			int count;
 			IntPtr methods = _protocol_copyMethodDescriptionList (protocol, isRequiredMethod, isInstanceMethod, out count);
@@ -301,11 +304,11 @@ namespace Xamarin.BindingTests
 		[DllImport ("/usr/lib/libobjc.dylib", EntryPoint = "protocol_copyPropertyList")]
 		internal extern static IntPtr _protocol_copyPropertyList (IntPtr protocol, out int count);
 
-		static objc_property[] protocol_copyPropertyList (IntPtr protocol)
+		static objc_property [] protocol_copyPropertyList (IntPtr protocol)
 		{
 			int count;
 			IntPtr list = _protocol_copyPropertyList (protocol, out count);
-			var rv = new objc_property[count];
+			var rv = new objc_property [count];
 			try {
 				for (int i = 0; i < count; i++) {
 					var prop = new objc_property ();
@@ -344,7 +347,7 @@ namespace Xamarin.BindingTests
 		[DllImport ("/usr/lib/libobjc.dylib", EntryPoint = "property_copyAttributeList")]
 		extern static IntPtr _property_copyAttributeList (IntPtr property, out int outCount);
 
-		static objc_property_attribute[] property_copyAttributeList (IntPtr property)
+		static objc_property_attribute [] property_copyAttributeList (IntPtr property)
 		{
 			int count;
 			IntPtr list = _property_copyAttributeList (property, out count);
@@ -388,7 +391,7 @@ namespace Xamarin.BindingTests
 
 			public override bool Equals (object obj)
 			{
-				var other = (objc_property_attribute)obj;
+				var other = (objc_property_attribute) obj;
 				if (other == null)
 					return false;
 				return Name == other.Name && Value == other.Value;
@@ -396,7 +399,7 @@ namespace Xamarin.BindingTests
 
 			public override int GetHashCode ()
 			{
-				return Name.GetHashCode () ^ Value.GetHashCode ();
+				return HashCode.Combine (Name, Value);
 			}
 
 			public override string ToString ()
@@ -404,11 +407,11 @@ namespace Xamarin.BindingTests
 				return string.Format ("{0} = {1}", Name, Value);
 			}
 		}
-			
+
 		class objc_property : IEquatable<objc_property> {
 			public string Name;
 			public string Attributes;
-			public objc_property_attribute[] AttributeList;
+			public objc_property_attribute [] AttributeList;
 
 			public objc_property ()
 			{

@@ -14,53 +14,55 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSStringAttributes : DictionaryContainer {
-		static internal NSDictionary ToDictionary (
-			NSFont font,
-			NSColor foregroundColor,
-			NSColor backgroundColor,
-			NSColor strokeColor,
-			NSColor underlineColor,
-			NSColor strikethroughColor,
-			NSUnderlineStyle underlineStyle,
+		static internal NSDictionary? ToDictionary (
+			NSFont? font,
+			NSColor? foregroundColor,
+			NSColor? backgroundColor,
+			NSColor? strokeColor,
+			NSColor? underlineColor,
+			NSColor? strikethroughColor,
+			NSUnderlineStyle? underlineStyle,
 			NSUnderlineStyle strikethroughStyle,
-			NSParagraphStyle paragraphStyle,
+			NSParagraphStyle? paragraphStyle,
 			float strokeWidth,
-			NSShadow shadow,
-			NSUrl link,
+			NSShadow? shadow,
+			NSUrl? link,
 			bool superscript,
-			NSTextAttachment attachment,
+			NSTextAttachment? attachment,
 			NSLigatureType ligature,
 			float baselineOffset,
 			float kerningAdjustment,
 			float obliqueness,
 			float expansion,
-			NSCursor cursor,
-			string toolTip,
+			NSCursor? cursor,
+			string? toolTip,
 			int characterShape,
-			NSGlyphInfo glyphInfo,
-			NSArray writingDirection,
+			NSGlyphInfo? glyphInfo,
+			NSArray? writingDirection,
 			bool markedClauseSegment,
 			NSTextLayoutOrientation verticalGlyphForm,
-			NSTextAlternatives textAlternatives,
+			NSTextAlternatives? textAlternatives,
 			NSSpellingState spellingState)
 		{
 			var attr = new NSStringAttributes ();
 
-			if (font != null) {
+			if (font is not null) {
 				attr.Font = font;
 			}
 
-			if (paragraphStyle != null) {
+			if (paragraphStyle is not null) {
 				attr.ParagraphStyle = paragraphStyle;
 			}
 
-			if (foregroundColor != null) {
+			if (foregroundColor is not null) {
 				attr.ForegroundColor = foregroundColor;
 			}
 
-			if (underlineStyle != NSUnderlineStyle.None) {
+			if (underlineStyle is not NSUnderlineStyle.None) {
 				attr.UnderlineStyle = (int?) underlineStyle;
 			}
 
@@ -68,11 +70,11 @@ namespace AppKit {
 				attr.Superscript = true;
 			}
 
-			if (backgroundColor != null) {
+			if (backgroundColor is not null) {
 				attr.BackgroundColor = backgroundColor;
 			}
 
-			if (attachment != null) {
+			if (attachment is not null) {
 				attr.Attachment = attachment;
 			}
 
@@ -88,7 +90,7 @@ namespace AppKit {
 				attr.KerningAdjustment = kerningAdjustment;
 			}
 
-			if (link != null) {
+			if (link is not null) {
 				attr.Link = link;
 			}
 
@@ -96,11 +98,11 @@ namespace AppKit {
 				attr.StrokeWidth = strokeWidth;
 			}
 
-			if (strokeColor != null) {
+			if (strokeColor is not null) {
 				attr.StrokeColor = strokeColor;
 			}
 
-			if (underlineColor != null) {
+			if (underlineColor is not null) {
 				attr.UnderlineColor = underlineColor;
 			}
 
@@ -108,11 +110,11 @@ namespace AppKit {
 				attr.StrikethroughStyle = (int?) strikethroughStyle;
 			}
 
-			if (strikethroughColor != null) {
+			if (strikethroughColor is not null) {
 				attr.StrikethroughColor = strikethroughColor;
 			}
 
-			if (shadow != null) {
+			if (shadow is not null) {
 				attr.Shadow = shadow;
 			}
 
@@ -124,11 +126,11 @@ namespace AppKit {
 				attr.Expansion = expansion;
 			}
 
-			if (cursor != null) {
+			if (cursor is not null) {
 				attr.Cursor = cursor;
 			}
 
-			if (toolTip != null) {
+			if (toolTip is not null) {
 				attr.ToolTip = toolTip;
 			}
 
@@ -136,11 +138,11 @@ namespace AppKit {
 				attr.CharacterShape = 0;
 			}
 
-			if (glyphInfo != null) {
+			if (glyphInfo is not null) {
 				attr.GlyphInfo = glyphInfo;
 			}
 
-			if (writingDirection != null) {
+			if (writingDirection is not null) {
 				attr.WritingDirection = writingDirection;
 			}
 
@@ -152,7 +154,7 @@ namespace AppKit {
 				attr.VerticalGlyphForm = verticalGlyphForm;
 			}
 
-			if (textAlternatives != null) {
+			if (textAlternatives is not null) {
 				attr.TextAlternatives = textAlternatives;
 			}
 
@@ -177,7 +179,7 @@ namespace AppKit {
 			return CFDictionary.GetValue (Dictionary.Handle, key.Handle);
 		}
 
-		T Get<T> (NSString key, Func<IntPtr, T> ctor)
+		T? Get<T> (NSString key, Func<IntPtr, T> ctor)
 		{
 			var handle = Get (key);
 			if (handle == IntPtr.Zero) {
@@ -190,12 +192,12 @@ namespace AppKit {
 		bool? GetBool (NSString key)
 		{
 			var value = GetInt32Value (key);
-			return value == null ? null : (bool?) (value.Value != 0);
+			return value is null ? null : (bool?) (value.Value != 0);
 		}
 
 		void Set (NSString key, bool? value)
 		{
-			SetNumberValue (key, value == null ? null : (int?) (value.Value ? 1 : 0));
+			SetNumberValue (key, value is null ? null : (int?) (value.Value ? 1 : 0));
 		}
 
 		int SetUnderlineStyle (NSString attr, NSUnderlineStyle style,
@@ -210,27 +212,27 @@ namespace AppKit {
 			return value;
 		}
 
-		public NSUrl LinkUrl {
+		public NSUrl? LinkUrl {
 			get { return Link as NSUrl; }
 			set { Link = value; }
 		}
 
-		public NSString LinkString {
+		public NSString? LinkString {
 			get { return Link as NSString; }
 			set { Link = value; }
 		}
 
-		public NSFont Font {
+		public NSFont? Font {
 			get { return Get (NSStringAttributeKey.Font, handle => new NSFont (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.Font, value); }
 		}
 
-		public NSParagraphStyle ParagraphStyle {
+		public NSParagraphStyle? ParagraphStyle {
 			get { return Get (NSStringAttributeKey.ParagraphStyle, handle => new NSParagraphStyle (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.ParagraphStyle, value); }
 		}
 
-		public NSColor ForegroundColor {
+		public NSColor? ForegroundColor {
 			get { return Get (NSStringAttributeKey.ForegroundColor, handle => new NSColor (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.ForegroundColor, value); }
 		}
@@ -251,12 +253,12 @@ namespace AppKit {
 			set { Set (NSStringAttributeKey.Superscript, value); }
 		}
 
-		public NSColor BackgroundColor {
+		public NSColor? BackgroundColor {
 			get { return Get (NSStringAttributeKey.BackgroundColor, handle => new NSColor (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.BackgroundColor, value); }
 		}
 
-		public NSTextAttachment Attachment {
+		public NSTextAttachment? Attachment {
 			get { return Get (NSStringAttributeKey.Attachment, handle => new NSTextAttachment (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.Attachment, value); }
 		}
@@ -276,7 +278,7 @@ namespace AppKit {
 			set { SetNumberValue (NSStringAttributeKey.KerningAdjustment, value); }
 		}
 
-		NSObject Link {
+		NSObject? Link {
 			get {
 				var handle = Get (NSStringAttributeKey.Link);
 				return handle == IntPtr.Zero ? null : Runtime.GetNSObject (handle);
@@ -290,12 +292,12 @@ namespace AppKit {
 			set { SetNumberValue (NSStringAttributeKey.StrokeWidth, value); }
 		}
 
-		public NSColor StrokeColor {
+		public NSColor? StrokeColor {
 			get { return Get (NSStringAttributeKey.StrokeColor, handle => new NSColor (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.StrokeColor, value); }
 		}
 
-		public NSColor UnderlineColor {
+		public NSColor? UnderlineColor {
 			get { return Get (NSStringAttributeKey.UnderlineColor, handle => new NSColor (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.UnderlineColor, value); }
 		}
@@ -311,12 +313,12 @@ namespace AppKit {
 			return SetUnderlineStyle (NSStringAttributeKey.StrikethroughStyle, style, pattern, byWord);
 		}
 
-		public NSColor StrikethroughColor {
+		public NSColor? StrikethroughColor {
 			get { return Get (NSStringAttributeKey.StrikethroughColor, handle => new NSColor (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.StrikethroughColor, value); }
 		}
 
-		public NSShadow Shadow {
+		public NSShadow? Shadow {
 			get { return Get (NSStringAttributeKey.Shadow, handle => new NSShadow (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.Shadow, value); }
 		}
@@ -331,7 +333,7 @@ namespace AppKit {
 			set { SetNumberValue (NSStringAttributeKey.Expansion, value); }
 		}
 
-		public NSCursor Cursor {
+		public NSCursor? Cursor {
 			get { return Get (NSStringAttributeKey.Cursor, handle => new NSCursor (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.Cursor, value); }
 		}
@@ -346,12 +348,12 @@ namespace AppKit {
 			set { SetNumberValue (NSStringAttributeKey.CharacterShape, value); }
 		}
 
-		public NSGlyphInfo GlyphInfo {
+		public NSGlyphInfo? GlyphInfo {
 			get { return Get (NSStringAttributeKey.GlyphInfo, handle => new NSGlyphInfo (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.GlyphInfo, value); }
 		}
 
-		public NSArray WritingDirection {
+		public NSArray? WritingDirection {
 			get { return Get (NSStringAttributeKey.WritingDirection, handle => new NSArray (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.GlyphInfo, value); }
 		}
@@ -366,7 +368,7 @@ namespace AppKit {
 			set { SetNumberValue (NSStringAttributeKey.VerticalGlyphForm, (int?) value); }
 		}
 
-		public NSTextAlternatives TextAlternatives {
+		public NSTextAlternatives? TextAlternatives {
 			get { return Get (NSStringAttributeKey.TextAlternatives, handle => new NSTextAlternatives (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.TextAlternatives, value); }
 		}

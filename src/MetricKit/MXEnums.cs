@@ -12,11 +12,10 @@ using Foundation;
 using ObjCRuntime;
 
 namespace MetricKit {
-	[NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[NoMac, iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
 	[ErrorDomain ("MXErrorDomain")]
 	[Native]
-	public enum MXErrorCode : long
-	{
+	public enum MXErrorCode : long {
 		InvalidId,
 		MaxCount,
 		PastDeadline,

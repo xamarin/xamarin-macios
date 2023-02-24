@@ -4,12 +4,9 @@ using System.Text;
 using Xamarin.Utils;
 using Xamarin.Tests;
 
-namespace Xamarin
-{
-	class MLaunchTool : Tool
-	{
-		public enum MLaunchAction
-		{
+namespace Xamarin {
+	class MLaunchTool : Tool {
+		public enum MLaunchAction {
 			None,
 			Sim,
 			Dev,

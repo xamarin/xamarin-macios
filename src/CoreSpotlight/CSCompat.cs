@@ -1,7 +1,10 @@
 // Compatibility stubs
 
 using System;
+using System.ComponentModel;
 using ObjCRuntime;
+
+#nullable enable
 
 namespace CoreSpotlight {
 
@@ -18,16 +21,16 @@ namespace CoreSpotlight {
 #if !TV
 	public partial class CSSearchQueryContext {
 
-#if !NET
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("This property was removed. The getter always returns null and the setter throws and InvalidOperationException.")]
-#else
-		[UnsupportedOSPlatform ("ios16.1")]
-		[UnsupportedOSPlatform ("maccatalyst16.1")]
-		[UnsupportedOSPlatform ("macos13.0")]
+#if NET
+		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("macos")]
 #endif
-		public virtual string[] ProtectionClasses { 
-			get => null; 
+		public virtual string []? ProtectionClasses {
+			get => null;
 			set => throw new InvalidOperationException (Constants.ApiRemovedGeneral);
 		}
 	}

@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	[TestFixture]
-	public class WarningTests
-	{
+	public class WarningTests {
 		[Test]
 		public void MM0135 ()
 		{

@@ -208,25 +208,25 @@ namespace Foundation {
 #if false // https://github.com/xamarin/xamarin-macios/issues/15577
 
 #if !NET
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Watch (6,0), TV (13,0), iOS (13,0)]
 #else
-		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos")]
 #endif
 		public NSOrderedCollectionDifference<TKey> GetDifference (NSOrderedSet<TKey> other, NSOrderedCollectionDifferenceCalculationOptions options)
 			=> new NSOrderedCollectionDifference<TKey> (_GetDifference (other, options));
 
 #if !NET
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Watch (6,0), TV (13,0), iOS (13,0)]
 #else
-		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos")]
 #endif
 		public NSOrderedCollectionDifference<TKey> GetDifference (NSOrderedSet other)
 			=> new NSOrderedCollectionDifference<TKey> (_GetDifference (other));
 
 #if !NET
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Watch (6,0), TV (13,0), iOS (13,0)]
 #else
-		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos")]
 #endif
 		public NSOrderedSet<TKey>? GetOrderedSet (NSOrderedCollectionDifference difference)
 		{
@@ -249,9 +249,9 @@ namespace Foundation {
 		}
 
 #if !NET
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Watch (6,0), TV (13,0), iOS (13,0)]
 #else
-		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos")]
 #endif
 		public NSOrderedCollectionDifference<TKey>? GetDifference (NSOrderedSet<TKey> other, NSOrderedCollectionDifferenceCalculationOptions options, NSOrderedCollectionDifferenceEquivalenceTest<TKey> equivalenceTest) 
 		{

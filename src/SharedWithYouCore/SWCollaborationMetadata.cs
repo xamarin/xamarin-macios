@@ -23,7 +23,7 @@ namespace SharedWithYouCore {
 	[SupportedOSPlatform ("ios16.0")]
 	[SupportedOSPlatform ("maccatalyst16.0")]
 #else
-	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 #endif
 	public enum SWIdentifierType {
 		Local,
@@ -41,10 +41,11 @@ namespace SharedWithYouCore {
 		[SupportedOSPlatform ("ios16.1")]
 		[SupportedOSPlatform ("maccatalyst16.1")]
 #else
-		[iOS (16,1), MacCatalyst (16,1)]
-#endif  
-		public SWCollaborationMetadata (string identifier, SWIdentifierType identifierType) : base (NSObjectFlag.Empty) {
-			switch(identifierType) {
+		[iOS (16, 1), MacCatalyst (16, 1)]
+#endif
+		public SWCollaborationMetadata (string identifier, SWIdentifierType identifierType) : base (NSObjectFlag.Empty)
+		{
+			switch (identifierType) {
 			case SWIdentifierType.Local:
 				InitializeHandle (_InitWithLocalIdentifier (identifier), "initWithLocalIdentifier:");
 				break;

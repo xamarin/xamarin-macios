@@ -1,5 +1,7 @@
 // Copyright 2020, Microsoft Corp. All rights reserved,
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,13 +27,13 @@ namespace Xamarin.Bundler {
 			Disable = 1,
 		}
 
-		static Dictionary<int, WarningLevel> warning_levels;
+		static Dictionary<int, WarningLevel>? warning_levels;
 
 		public static WarningLevel GetWarningLevel (int code)
 		{
 			WarningLevel level;
 
-			if (warning_levels == null)
+			if (warning_levels is null)
 				return WarningLevel.Warning;
 
 			// code -1: all codes
@@ -46,7 +48,7 @@ namespace Xamarin.Bundler {
 
 		public static void SetWarningLevel (WarningLevel level, int? code = null /* if null, apply to all warnings */)
 		{
-			if (warning_levels == null)
+			if (warning_levels is null)
 				warning_levels = new Dictionary<int, WarningLevel> ();
 			if (code.HasValue) {
 				warning_levels [code.Value] = level;

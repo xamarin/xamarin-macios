@@ -142,8 +142,8 @@ namespace ObjCRuntime {
 			var descptr = Marshal.AllocHGlobal (desclen);
 
 			block_descriptor = descptr;
-			var xblock_descriptor = (XamarinBlockDescriptor *) block_descriptor;
-			xblock_descriptor->descriptor = * (BlockDescriptor *) xamarin_get_block_descriptor ();
+			var xblock_descriptor = (XamarinBlockDescriptor*) block_descriptor;
+			xblock_descriptor->descriptor = *(BlockDescriptor*) xamarin_get_block_descriptor ();
 			xblock_descriptor->descriptor.signature = descptr + sizeof (BlockDescriptor) + 4 /* signature_length */;
 			xblock_descriptor->ref_count = 1;
 			Marshal.Copy (bytes, 0, xblock_descriptor->descriptor.signature, bytes.Length);
@@ -203,7 +203,7 @@ namespace ObjCRuntime {
 		public void CleanupBlock ()
 		{
 			GCHandle.FromIntPtr (local_handle).Free ();
-			var xblock_descriptor = (XamarinBlockDescriptor *) block_descriptor;
+			var xblock_descriptor = (XamarinBlockDescriptor*) block_descriptor;
 #pragma warning disable 420
 			// CS0420: A volatile field references will not be treated as volatile
 			// Documentation says: "A volatile field should not normally be passed using a ref or out parameter, since it will not be treated as volatile within the scope of the function. There are exceptions to this, such as when calling an interlocked API."
@@ -229,7 +229,7 @@ namespace ObjCRuntime {
 #if NET
 		public T GetDelegateForBlock<T> () where T: System.MulticastDelegate
 #else
-		public T GetDelegateForBlock<T> () where T: class
+		public T GetDelegateForBlock<T> () where T : class
 #endif
 		{
 			return (T) (object) Runtime.GetDelegateForBlock (invoke, typeof (T));
@@ -238,10 +238,10 @@ namespace ObjCRuntime {
 #if NET
 		public unsafe static T GetTarget<T> (IntPtr block) where T: System.MulticastDelegate
 #else
-		public unsafe static T GetTarget<T> (IntPtr block) where T: class /* /* requires C# 7.3+: System.MulticastDelegate */
+		public unsafe static T GetTarget<T> (IntPtr block) where T : class /* /* requires C# 7.3+: System.MulticastDelegate */
 #endif
 		{
-			return (T) ((BlockLiteral *) block)->Target;
+			return (T) ((BlockLiteral*) block)->Target;
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Never)]
@@ -250,9 +250,9 @@ namespace ObjCRuntime {
 			if (block == IntPtr.Zero)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 
-			BlockLiteral* literal = (BlockLiteral *) block;
-			BlockDescriptor* descriptor = (BlockDescriptor *) xamarin_get_block_descriptor ();
-			return descriptor->copy_helper == ((BlockDescriptor *) literal->block_descriptor)->copy_helper;
+			BlockLiteral* literal = (BlockLiteral*) block;
+			BlockDescriptor* descriptor = (BlockDescriptor*) xamarin_get_block_descriptor ();
+			return descriptor->copy_helper == ((BlockDescriptor*) literal->block_descriptor)->copy_helper;
 		}
 
 		static Type GetDelegateProxyType (MethodInfo minfo, uint token_ref, out MethodInfo baseMethod)
@@ -297,7 +297,7 @@ namespace ObjCRuntime {
 			throw ErrorHelper.CreateError (8011, $"Unable to locate the delegate to block conversion attribute ([DelegateProxy]) for the return value for the method {baseMethod.DeclaringType.FullName}.{baseMethod.Name}. {Constants.PleaseFileBugReport}");
 		}
 
-		[BindingImpl(BindingImplOptions.Optimizable)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal static IntPtr GetBlockForDelegate (MethodInfo minfo, object @delegate, uint token_ref, string signature)
 		{
 			if (@delegate is null)
@@ -305,7 +305,7 @@ namespace ObjCRuntime {
 
 			if (!(@delegate is Delegate))
 				throw ErrorHelper.CreateError (8016, $"Unable to convert delegate to block for the return value for the method {minfo.DeclaringType.FullName}.{minfo.Name}, because the input isn't a delegate, it's a {@delegate.GetType ().FullName}. {Constants.PleaseFileBugReport}");
-				
+
 			Type delegateProxyType = GetDelegateProxyType (minfo, token_ref, out var baseMethod);
 			if (baseMethod is null)
 				baseMethod = minfo; // 'baseMethod' is only used in error messages, and if it's null, we just use the closest alternative we have (minfo).
@@ -322,7 +322,7 @@ namespace ObjCRuntime {
 
 			if (!(handlerDelegate is Delegate))
 				throw ErrorHelper.CreateError (8015, $"Invalid DelegateProxyAttribute for the return value for the method {baseMethod.DeclaringType.FullName}.{baseMethod.Name}: The DelegateType's ({delegateProxyType.FullName}) 'Handler' field is not a delegate, it's a {handlerDelegate.GetType ().FullName}. {Constants.PleaseFileBugReport}");
-			
+
 			// We now have the information we need to create the block.
 			// Note that we must create a heap-allocated block, so we 
 			// start off by creating a stack-allocated block, and then
@@ -361,12 +361,12 @@ namespace ObjCRuntime {
 		//  The above will call the unmanaged my_PINvokeThatTakesaBlock method with a block
 		// that when invoked will call MyCallback
 		//
-		internal unsafe static void SimpleCall  (Action callbackToInvoke, Action <IntPtr> pinvoke)
+		internal unsafe static void SimpleCall (Action callbackToInvoke, Action<IntPtr> pinvoke)
 		{
 			unsafe {
-			        BlockLiteral block_handler = new BlockLiteral ();
-			        BlockLiteral *block_ptr_handler = &block_handler;
-			        block_handler.SetupBlockUnsafe (BlockStaticDispatchClass.static_dispatch_block, callbackToInvoke);
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral* block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (BlockStaticDispatchClass.static_dispatch_block, callbackToInvoke);
 
 				try {
 					pinvoke ((IntPtr) block_ptr_handler);
@@ -375,14 +375,18 @@ namespace ObjCRuntime {
 				}
 			}
 		}
-		
+
+		internal static IntPtr Copy (IntPtr block)
+		{
+			return _Block_copy (block);
+		}
 #endif
 	}
 
 #if !COREBUILD
 	// This class sole purpose is to keep a static field that is initialized on
 	// first use of the class
-	
+
 	internal class BlockStaticDispatchClass {
 		internal delegate void dispatch_block_t (IntPtr block);
 
@@ -390,15 +394,23 @@ namespace ObjCRuntime {
 		static unsafe void TrampolineDispatchBlock (IntPtr block)
 		{
 			var del = BlockLiteral.GetTarget<Action> (block);
-			if (del != null){
-			        del ();
+			if (del != null) {
+				del ();
 			}
 		}
 
 		internal static dispatch_block_t static_dispatch_block = TrampolineDispatchBlock;
 	}
+
+	// This class will free the specified block when it's collected by the GC.
+	internal class BlockCollector : TrampolineBlockBase {
+		public BlockCollector (IntPtr block)
+			: base (block, owns: true)
+		{
+		}
+	}
 #endif
-	
+
 	[Flags]
 #if XAMCORE_3_0
 	internal
@@ -406,14 +418,14 @@ namespace ObjCRuntime {
 	public
 #endif
 	enum BlockFlags : int {
-		BLOCK_REFCOUNT_MASK =     (0xffff),
-		BLOCK_NEEDS_FREE =        (1 << 24),
-		BLOCK_HAS_COPY_DISPOSE =  (1 << 25),
-		BLOCK_HAS_CTOR =          (1 << 26), /* Helpers have C++ code. */
-		BLOCK_IS_GC =             (1 << 27),
-		BLOCK_IS_GLOBAL =         (1 << 28),
-		BLOCK_HAS_DESCRIPTOR =    (1 << 29), // This meaning was deprecated 
-		BLOCK_HAS_STRET =         (1 << 29),
-		BLOCK_HAS_SIGNATURE =     (1 << 30),
+		BLOCK_REFCOUNT_MASK = (0xffff),
+		BLOCK_NEEDS_FREE = (1 << 24),
+		BLOCK_HAS_COPY_DISPOSE = (1 << 25),
+		BLOCK_HAS_CTOR = (1 << 26), /* Helpers have C++ code. */
+		BLOCK_IS_GC = (1 << 27),
+		BLOCK_IS_GLOBAL = (1 << 28),
+		BLOCK_HAS_DESCRIPTOR = (1 << 29), // This meaning was deprecated 
+		BLOCK_HAS_STRET = (1 << 29),
+		BLOCK_HAS_SIGNATURE = (1 << 30),
 	}
 }

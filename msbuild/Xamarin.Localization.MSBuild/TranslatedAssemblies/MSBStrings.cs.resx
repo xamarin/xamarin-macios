@@ -424,7 +424,7 @@
         </value>
     </data>
   <data name="E0118" xml:space="preserve">
-        <value>{0} exited with code {1}:
+        <value>Program {0} se ukončil s kódem {1}:
 {2}</value>
     </data>
   <data name="M0119" xml:space="preserve">
@@ -997,6 +997,7 @@
         <value>Nastavení: Položka {0} neexistuje.
         </value>
     </data>
+  <!-- E7068: not in use anymore -->
   <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14+ nepodporuje aplikace watchOS 1. Migrujte projekt na watchOS 2+.</value>
     </data>
@@ -1145,5 +1146,35 @@
     </data>
   <data name="E7101" xml:space="preserve">
         <value>Neznámá vlastnost {0} s hodnotou {1}.</value>
+    </data>
+  <data name="E7102" xml:space="preserve">
+        <value>Neplatná hodnota {0} pro nárok {1} typu {2} zadaná ve skupině položek CustomEntitlements. Neočekávala se vůbec žádná hodnota.</value>
+        <comment>
+            Don't translate: CustomEntitlements (name of option in project file)
+        </comment>
+    </data>
+  <data name="E7103" xml:space="preserve">
+        <value>Neplatná hodnota {0} pro nárok {1} typu {2} zadaná ve skupině položek CustomEntitlements. Očekávala se hodnota true nebo false.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'true', 'false'
+        </comment>
+    </data>
+  <data name="E7104" xml:space="preserve">
+        <value>Neznámý typ {0} pro nárok {1} zadaný ve skupině položek CustomEntitlements Očekávala se hodnota Remove, Boolean, String nebo StringArray.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'Remove', 'Boolean', 'String', 'StringArray'
+        </comment>
+    </data>
+  <data name="W7105" xml:space="preserve">
+        <value>Neočekávané rozšíření{0}pro nativní odkaz{1}v manifestu{2}</value>
+        <comment>
+            {0}: file extension
+            {1}: path to a file
+            {2}: path to a file
+        </comment>
     </data>
 </root>
