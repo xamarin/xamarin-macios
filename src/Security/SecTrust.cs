@@ -179,7 +179,7 @@ namespace Security {
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode /* OSStatus */ SecTrustEvaluateAsync (IntPtr /* SecTrustRef */ trust, IntPtr /* dispatch_queue_t */ queue, ref BlockLiteral block);
+		unsafe extern static SecStatusCode /* OSStatus */ SecTrustEvaluateAsync (IntPtr /* SecTrustRef */ trust, IntPtr /* dispatch_queue_t */ queue, BlockLiteral* block);
 
 		internal delegate void TrustEvaluateHandler (IntPtr block, IntPtr trust, SecTrustResult trustResult);
 		static readonly TrustEvaluateHandler evaluate = TrampolineEvaluate;
@@ -217,12 +217,10 @@ namespace Security {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			try {
-				block_handler.SetupBlockUnsafe (evaluate, handler);
-				return SecTrustEvaluateAsync (Handle, queue.Handle, ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (evaluate, handler);
+				return SecTrustEvaluateAsync (Handle, queue.Handle, &block);
 			}
 		}
 
@@ -238,7 +236,7 @@ namespace Security {
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		static extern SecStatusCode SecTrustEvaluateAsyncWithError (IntPtr /* SecTrustRef */ trust, IntPtr /* dispatch_queue_t */ queue, ref BlockLiteral block);
+		unsafe static extern SecStatusCode SecTrustEvaluateAsyncWithError (IntPtr /* SecTrustRef */ trust, IntPtr /* dispatch_queue_t */ queue, BlockLiteral* block);
 
 		internal delegate void TrustEvaluateErrorHandler (IntPtr block, IntPtr trust, bool result, IntPtr /* CFErrorRef _Nullable */  error);
 		static readonly TrustEvaluateErrorHandler evaluate_error = TrampolineEvaluateError;
@@ -273,12 +271,10 @@ namespace Security {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			try {
-				block_handler.SetupBlockUnsafe (evaluate_error, handler);
-				return SecTrustEvaluateAsyncWithError (Handle, queue.Handle, ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (evaluate_error, handler);
+				return SecTrustEvaluateAsyncWithError (Handle, queue.Handle, &block);
 			}
 		}
 

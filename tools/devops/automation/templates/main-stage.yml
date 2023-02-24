@@ -268,6 +268,7 @@ stages:
     parameters:
       dependsOn:
       - sign_notarize_dotnet
+      stageDisplayNamePrefix: ${{ parameters.stageDisplayNamePrefix }}
       isPR: ${{ parameters.isPR }}
       repositoryAlias: ${{ parameters.repositoryAlias }}
       commit: ${{ parameters.commit }}

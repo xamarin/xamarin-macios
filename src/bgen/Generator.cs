@@ -3689,6 +3689,11 @@ public partial class Generator : IMemberGatherer {
 				string trampoline_name = MakeTrampoline (pi.ParameterType).StaticName;
 				string extra = "";
 				bool null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
+				if (!null_allowed) {
+					var property = GetProperty (mi);
+					if (property is not null)
+						null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (property);
+				}
 
 				convs.AppendFormat ("BlockLiteral *block_ptr_{0};\n", pi.Name);
 				convs.AppendFormat ("BlockLiteral block_{0};\n", pi.Name);
