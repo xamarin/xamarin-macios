@@ -105,7 +105,7 @@ namespace Security {
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool sec_identity_access_certificates (IntPtr identity, ref BlockLiteral block);
+		unsafe static extern bool sec_identity_access_certificates (IntPtr identity, BlockLiteral* block);
 
 		internal delegate void AccessCertificatesHandler (IntPtr block, IntPtr cert);
 		static readonly AccessCertificatesHandler access = TrampolineAccessCertificates;
@@ -136,12 +136,10 @@ namespace Security {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			try {
-				block_handler.SetupBlockUnsafe (access, handler);
-				return sec_identity_access_certificates (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (access, handler);
+				return sec_identity_access_certificates (GetCheckedHandle (), &block);
 			}
 		}
 #endif
