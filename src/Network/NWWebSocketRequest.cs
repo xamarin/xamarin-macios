@@ -41,7 +41,7 @@ namespace Network {
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		unsafe static extern bool nw_ws_request_enumerate_additional_headers (OS_nw_ws_request request, ref BlockLiteral enumerator);
+		unsafe static extern bool nw_ws_request_enumerate_additional_headers (OS_nw_ws_request request, BlockLiteral* enumerator);
 
 		delegate void nw_ws_request_enumerate_additional_headers_t (IntPtr block, string header, string value);
 		static nw_ws_request_enumerate_additional_headers_t static_EnumerateHeaderHandler = TrampolineEnumerateHeaderHandler;
@@ -61,18 +61,16 @@ namespace Network {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_EnumerateHeaderHandler, handler);
-			try {
-				nw_ws_request_enumerate_additional_headers (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_EnumerateHeaderHandler, handler);
+				nw_ws_request_enumerate_additional_headers (GetCheckedHandle (), &block);
 			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_ws_request_enumerate_subprotocols (OS_nw_ws_request request, ref BlockLiteral enumerator);
+		unsafe static extern bool nw_ws_request_enumerate_subprotocols (OS_nw_ws_request request, BlockLiteral* enumerator);
 
 		delegate void nw_ws_request_enumerate_subprotocols_t (IntPtr block, string subprotocol);
 		static nw_ws_request_enumerate_subprotocols_t static_EnumerateSubprotocolHandler = TrampolineEnumerateSubprotocolHandler;
@@ -92,12 +90,10 @@ namespace Network {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_EnumerateSubprotocolHandler, handler);
-			try {
-				nw_ws_request_enumerate_subprotocols (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_EnumerateSubprotocolHandler, handler);
+				nw_ws_request_enumerate_subprotocols (GetCheckedHandle (), &block);
 			}
 		}
 	}

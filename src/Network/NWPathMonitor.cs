@@ -99,7 +99,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_path_monitor_set_update_handler (IntPtr handle, void* callback);
+		static extern unsafe void nw_path_monitor_set_update_handler (IntPtr handle, BlockLiteral* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		void _SetUpdatedSnapshotHandler (Action<NWPath> callback)
@@ -110,15 +110,9 @@ namespace Network {
 					return;
 				}
 
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral* block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_UpdateSnapshot, callback);
-
-				try {
-					nw_path_monitor_set_update_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_UpdateSnapshot, callback);
+				nw_path_monitor_set_update_handler (GetCheckedHandle (), &block);
 			}
 		}
 
@@ -144,20 +138,8 @@ namespace Network {
 			}
 		}
 
-		delegate void nw_path_monitor_cancel_handler_t (IntPtr block);
-		static nw_path_monitor_cancel_handler_t static_MonitorCanceled = TrampolineMonitorCanceled;
-
-		[MonoPInvokeCallback (typeof (nw_path_monitor_cancel_handler_t))]
-		static void TrampolineMonitorCanceled (IntPtr block)
-		{
-			var del = BlockLiteral.GetTarget<Action> (block);
-			if (del is not null) {
-				del ();
-			}
-		}
-
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_path_monitor_set_cancel_handler (IntPtr handle, void* callback);
+		static extern unsafe void nw_path_monitor_set_cancel_handler (IntPtr handle, BlockLiteral* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetMonitorCanceledHandler (Action callback)
@@ -168,15 +150,8 @@ namespace Network {
 					return;
 				}
 
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral* block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_MonitorCanceled, callback);
-
-				try {
-					nw_path_monitor_set_cancel_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+				using var block = BlockStaticDispatchClass.CreateBlock (callback);
+				nw_path_monitor_set_cancel_handler (GetCheckedHandle (), &block);
 			}
 		}
 

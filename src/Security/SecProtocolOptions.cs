@@ -507,7 +507,7 @@ namespace Security {
 		public void SetPeerAuthenticationRequired (bool peerAuthenticationRequired) => sec_protocol_options_set_peer_authentication_required (GetCheckedHandle (), (byte) (peerAuthenticationRequired ? 1 : 0));
 
 		[DllImport (Constants.SecurityLibrary)]
-		static extern void sec_protocol_options_set_key_update_block (sec_protocol_options_t options, ref BlockLiteral key_update_block, dispatch_queue_t key_update_queue);
+		unsafe static extern void sec_protocol_options_set_key_update_block (sec_protocol_options_t options, BlockLiteral* key_update_block, dispatch_queue_t key_update_queue);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetKeyUpdateCallback (SecProtocolKeyUpdate keyUpdate, DispatchQueue keyUpdateQueue)
@@ -517,11 +517,11 @@ namespace Security {
 			if (keyUpdateQueue is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (keyUpdateQueue));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (Trampolines.SDSecProtocolKeyUpdate.Handler, keyUpdate);
-
-			sec_protocol_options_set_key_update_block (Handle, ref block_handler, keyUpdateQueue.Handle);
-			block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (Trampolines.SDSecProtocolKeyUpdate.Handler, keyUpdate);
+				sec_protocol_options_set_key_update_block (Handle, &block, keyUpdateQueue.Handle);
+			}
 		}
 
 #if NET
