@@ -119,14 +119,36 @@ namespace ImageIO {
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]
-		extern static void CGImageMetadataEnumerateTagsUsingBlock (/* CGImageMetadataRef __nonnull */ IntPtr metadata,
-			/* CFStringRef __nullable */ IntPtr rootPath, /* CFDictionaryRef __nullable */ IntPtr options,
-			/* __nonnull */ CGImageMetadataTagBlock block);
+		extern unsafe static void CGImageMetadataEnumerateTagsUsingBlock (/* CGImageMetadataRef __nonnull */ IntPtr metadata,
+						/* CFStringRef __nullable */ IntPtr rootPath, /* CFDictionaryRef __nullable */ IntPtr options, BlockLiteral* block);
 
+		delegate bool TrampolineCallback (IntPtr blockPtr, NativeHandle key, NativeHandle value);
+
+		[MonoPInvokeCallback (typeof (TrampolineCallback))]
+		static bool TagEnumerator (IntPtr block, NativeHandle key, NativeHandle value)
+		{
+			var nsKey = Runtime.GetNSObject<NSString> (key, false)!;
+			var nsValue = Runtime.GetINativeObject<CGImageMetadataTag> (value, false)!;
+			var del = BlockLiteral.GetTarget<CGImageMetadataTagBlock> (block);
+			return del (nsKey, nsValue);
+		}
+
+		static unsafe readonly TrampolineCallback static_action = TagEnumerator;
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateTags (NSString? rootPath, CGImageMetadataEnumerateOptions? options, CGImageMetadataTagBlock block)
 		{
 			using var o = options?.ToDictionary ();
-			CGImageMetadataEnumerateTagsUsingBlock (Handle, rootPath.GetHandle (), o.GetHandle (), block);
+			var block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_action, block);
+
+			unsafe {
+				try {
+					CGImageMetadataEnumerateTagsUsingBlock (Handle, rootPath.GetHandle (), o.GetHandle (), &block_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
+			}
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]

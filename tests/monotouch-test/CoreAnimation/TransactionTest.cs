@@ -22,10 +22,8 @@ namespace MonoTouchFixtures.CoreAnimation {
 		[Test]
 		public void CompletionBlock_Null ()
 		{
-			// NULL is not specified in Apple doc but googling returns a lot of  
-			// cases where stuff like "[self setCompletionBlock:nil];" is done
 			CATransaction.CompletionBlock = null;
-			Assert.NotNull (CATransaction.CompletionBlock, "CompletionBlock");
+			Assert.Null (CATransaction.CompletionBlock, "CompletionBlock");
 		}
 
 		[Test]

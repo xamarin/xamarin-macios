@@ -214,17 +214,13 @@ namespace Network {
 					return;
 				}
 
-				BlockLiteral block_handler = new BlockLiteral ();
-				block_handler.SetupBlockUnsafe (static_SendCompletion, handler);
-				try {
-					nw_connection_group_send_message (GetCheckedHandle (),
-						content.GetHandle (),
-						endpoint.GetHandle (),
-						context.GetCheckedHandle (),
-						&block_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_SendCompletion, handler);
+				nw_connection_group_send_message (GetCheckedHandle (),
+					content.GetHandle (),
+					endpoint.GetHandle (),
+					context.GetCheckedHandle (),
+					&block);
 			}
 		}
 
@@ -254,13 +250,9 @@ namespace Network {
 					return;
 				}
 
-				BlockLiteral block_handler = new BlockLiteral ();
-				block_handler.SetupBlockUnsafe (static_ReceiveHandler, handler);
-				try {
-					nw_connection_group_set_receive_handler (GetCheckedHandle (), maximumMessageSize, rejectOversizedMessages, &block_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_ReceiveHandler, handler);
+				nw_connection_group_set_receive_handler (GetCheckedHandle (), maximumMessageSize, rejectOversizedMessages, &block);
 			}
 		}
 
@@ -289,13 +281,9 @@ namespace Network {
 					return;
 				}
 
-				BlockLiteral block_handler = new BlockLiteral ();
-				block_handler.SetupBlockUnsafe (static_StateChangedHandler, handler);
-				try {
-					nw_connection_group_set_state_changed_handler (GetCheckedHandle (), &block_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_StateChangedHandler, handler);
+				nw_connection_group_set_state_changed_handler (GetCheckedHandle (), &block);
 			}
 		}
 
@@ -452,7 +440,7 @@ namespace Network {
 		[MacCatalyst (15, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_connection_group_set_new_connection_handler (OS_nw_connection_group group, ref BlockLiteral connectionHandler);
+		unsafe static extern void nw_connection_group_set_new_connection_handler (OS_nw_connection_group group, BlockLiteral* connectionHandler);
 
 		delegate void nw_connection_group_new_connection_handler_t (IntPtr block, IntPtr connection);
 		static nw_connection_group_new_connection_handler_t static_SetNewConnectionHandler = TrampolineSetNewConnectionHandler;
@@ -486,12 +474,10 @@ namespace Network {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			var block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_SetNewConnectionHandler, handler);
-			try {
-				nw_connection_group_set_new_connection_handler (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_SetNewConnectionHandler, handler);
+				nw_connection_group_set_new_connection_handler (GetCheckedHandle (), &block);
 			}
 		}
 	}
