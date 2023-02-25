@@ -59,7 +59,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_framer_message_set_value (OS_nw_protocol_metadata message, IntPtr key, IntPtr value, ref BlockLiteral dispose_value);
+		unsafe static extern void nw_framer_message_set_value (OS_nw_protocol_metadata message, IntPtr key, IntPtr value, BlockLiteral* dispose_value);
 		delegate void nw_framer_message_set_value_t (IntPtr block, IntPtr data);
 		static nw_framer_message_set_value_t static_SetDataHandler = TrampolineSetDataHandler;
 
@@ -85,19 +85,17 @@ namespace Network {
 			Action<IntPtr> callback = (_) => {
 				pinned.Free ();
 			};
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_SetDataHandler, callback);
-			try {
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_SetDataHandler, callback);
 				using var keyPtr = new TransientString (key);
-				nw_framer_message_set_value (GetCheckedHandle (), keyPtr, pinned.AddrOfPinnedObject (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+				nw_framer_message_set_value (GetCheckedHandle (), keyPtr, pinned.AddrOfPinnedObject (), &block);
 			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_framer_message_access_value (OS_nw_protocol_metadata message, IntPtr key, ref BlockLiteral access_value);
+		unsafe static extern bool nw_framer_message_access_value (OS_nw_protocol_metadata message, IntPtr key, BlockLiteral* access_value);
 		delegate bool nw_framer_message_access_value_t (IntPtr block, IntPtr data);
 		static nw_framer_message_access_value_t static_AccessValueHandler = TrampolineAccessValueHandler;
 
@@ -127,12 +125,12 @@ namespace Network {
 				}
 			};
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_AccessValueHandler, callback);
-			try {
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_AccessValueHandler, callback);
 				// the callback is inlined!!!
 				using var keyPtr = new TransientString (key);
-				var found = nw_framer_message_access_value (GetCheckedHandle (), keyPtr, ref block_handler);
+				var found = nw_framer_message_access_value (GetCheckedHandle (), keyPtr, &block);
 				if (found) {
 					unsafe {
 						outData = new ReadOnlySpan<byte> ((void*) outPointer, dataLength);
@@ -141,8 +139,6 @@ namespace Network {
 					outData = ReadOnlySpan<byte>.Empty;
 				}
 				return found;
-			} finally {
-				block_handler.CleanupBlock ();
 			}
 		}
 

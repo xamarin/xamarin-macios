@@ -99,14 +99,9 @@ namespace Network {
 						nw_framer_set_wakeup_handler (GetCheckedHandle (), null);
 						return;
 					}
-					BlockLiteral block_handler = new BlockLiteral ();
-					BlockLiteral* block_ptr_handler = &block_handler;
-					block_handler.SetupBlockUnsafe (static_WakeupHandler, value);
-					try {
-						nw_framer_set_wakeup_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-					} finally {
-						block_handler.CleanupBlock ();
-					}
+					using var block = new BlockLiteral ();
+					block.SetupBlockUnsafe (static_WakeupHandler, value);
+					nw_framer_set_wakeup_handler (GetCheckedHandle (), &block);
 				}
 			}
 		}
@@ -135,14 +130,9 @@ namespace Network {
 						nw_framer_set_stop_handler (GetCheckedHandle (), null);
 						return;
 					}
-					BlockLiteral block_handler = new BlockLiteral ();
-					BlockLiteral* block_ptr_handler = &block_handler;
-					block_handler.SetupBlockUnsafe (static_StopHandler, value);
-					try {
-						nw_framer_set_stop_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-					} finally {
-						block_handler.CleanupBlock ();
-					}
+					using var block = new BlockLiteral ();
+					block.SetupBlockUnsafe (static_StopHandler, value);
+					nw_framer_set_stop_handler (GetCheckedHandle (), &block);
 				}
 			}
 		}
@@ -172,14 +162,9 @@ namespace Network {
 						nw_framer_set_output_handler (GetCheckedHandle (), null);
 						return;
 					}
-					BlockLiteral block_handler = new BlockLiteral ();
-					BlockLiteral* block_ptr_handler = &block_handler;
-					block_handler.SetupBlockUnsafe (static_OutputHandler, value);
-					try {
-						nw_framer_set_output_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-					} finally {
-						block_handler.CleanupBlock ();
-					}
+					using var block = new BlockLiteral ();
+					block.SetupBlockUnsafe (static_OutputHandler, value);
+					nw_framer_set_output_handler (GetCheckedHandle (), &block);
 				}
 			}
 		}
@@ -209,14 +194,9 @@ namespace Network {
 						nw_framer_set_input_handler (GetCheckedHandle (), null);
 						return;
 					}
-					BlockLiteral block_handler = new BlockLiteral ();
-					BlockLiteral* block_ptr_handler = &block_handler;
-					block_handler.SetupBlockUnsafe (static_InputHandler, value);
-					try {
-						nw_framer_set_input_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-					} finally {
-						block_handler.CleanupBlock ();
-					}
+					using var block = new BlockLiteral ();
+					block.SetupBlockUnsafe (static_InputHandler, value);
+					nw_framer_set_input_handler (GetCheckedHandle (), &block);
 				}
 			}
 		}
@@ -245,14 +225,9 @@ namespace Network {
 						nw_framer_set_cleanup_handler (GetCheckedHandle (), null);
 						return;
 					}
-					BlockLiteral block_handler = new BlockLiteral ();
-					BlockLiteral* block_ptr_handler = &block_handler;
-					block_handler.SetupBlockUnsafe (static_InputHandler, value);
-					try {
-						nw_framer_set_cleanup_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-					} finally {
-						block_handler.CleanupBlock ();
-					}
+					using var block = new BlockLiteral ();
+					block.SetupBlockUnsafe (static_CleanupHandler, value);
+					nw_framer_set_cleanup_handler (GetCheckedHandle (), &block);
 				}
 			}
 		}
@@ -337,19 +312,7 @@ namespace Network {
 		public NWEndpoint LocalEndpoint => new NWEndpoint (nw_framer_copy_local_endpoint (GetCheckedHandle ()), owns: true);
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_framer_async (OS_nw_framer framer, void* async_block);
-
-		delegate void nw_framer_async_t (IntPtr block);
-		static nw_framer_async_t static_ScheduleHandler = TrampolineScheduleHandler;
-
-		[MonoPInvokeCallback (typeof (nw_framer_async_t))]
-		static void TrampolineScheduleHandler (IntPtr block)
-		{
-			var del = BlockLiteral.GetTarget<Action> (block);
-			if (del is not null) {
-				del ();
-			}
-		}
+		unsafe static extern void nw_framer_async (OS_nw_framer framer, BlockLiteral* async_block);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void ScheduleAsync (Action handler)
@@ -359,20 +322,14 @@ namespace Network {
 					nw_framer_async (GetCheckedHandle (), null);
 					return;
 				}
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral* block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_ScheduleHandler, handler);
-				try {
-					nw_framer_async (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+				using var block = BlockStaticDispatchClass.CreateBlock (handler);
+				nw_framer_async (GetCheckedHandle (), &block);
 			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		static extern unsafe bool nw_framer_parse_output (OS_nw_framer framer, nuint minimum_incomplete_length, nuint maximum_length, byte* temp_buffer, ref BlockLiteral parse);
+		static extern unsafe bool nw_framer_parse_output (OS_nw_framer framer, nuint minimum_incomplete_length, nuint maximum_length, byte* temp_buffer, BlockLiteral* parse);
 
 		delegate void nw_framer_parse_output_t (IntPtr block, IntPtr buffer, nuint buffer_length, bool is_complete);
 		static nw_framer_parse_output_t static_ParseOutputHandler = TrampolineParseOutputHandler;
@@ -395,20 +352,16 @@ namespace Network {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				block_handler.SetupBlockUnsafe (static_ParseOutputHandler, handler);
-				try {
-					using (var mh = tempBuffer.Pin ())
-						return nw_framer_parse_output (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (byte*) mh.Pointer, ref block_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_ParseOutputHandler, handler);
+				using (var mh = tempBuffer.Pin ())
+					return nw_framer_parse_output (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (byte*) mh.Pointer, &block);
 			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		static extern unsafe bool nw_framer_parse_input (OS_nw_framer framer, nuint minimum_incomplete_length, nuint maximum_length, byte* temp_buffer, ref BlockLiteral parse);
+		static extern unsafe bool nw_framer_parse_input (OS_nw_framer framer, nuint minimum_incomplete_length, nuint maximum_length, byte* temp_buffer, BlockLiteral* parse);
 
 		delegate nuint nw_framer_parse_input_t (IntPtr block, IntPtr buffer, nuint buffer_length, bool is_complete);
 		static nw_framer_parse_input_t static_ParseInputHandler = TrampolineParseInputHandler;
@@ -432,14 +385,10 @@ namespace Network {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				block_handler.SetupBlockUnsafe (static_ParseInputHandler, handler);
-				try {
-					using (var mh = tempBuffer.Pin ())
-						return nw_framer_parse_input (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (byte*) mh.Pointer, ref block_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_ParseInputHandler, handler);
+				using (var mh = tempBuffer.Pin ())
+					return nw_framer_parse_input (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (byte*) mh.Pointer, &block);
 			}
 		}
 

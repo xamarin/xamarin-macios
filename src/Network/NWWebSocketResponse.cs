@@ -70,7 +70,7 @@ namespace Network {
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		unsafe static extern bool nw_ws_response_enumerate_additional_headers (OS_nw_ws_response response, ref BlockLiteral enumerator);
+		unsafe static extern bool nw_ws_response_enumerate_additional_headers (OS_nw_ws_response response, BlockLiteral* enumerator);
 
 		delegate void nw_ws_response_enumerate_additional_headers_t (IntPtr block, string header, string value);
 		static nw_ws_response_enumerate_additional_headers_t static_EnumerateHeadersHandler = TrampolineEnumerateHeadersHandler;
@@ -90,12 +90,10 @@ namespace Network {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_EnumerateHeadersHandler, handler);
-			try {
-				return nw_ws_response_enumerate_additional_headers (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_EnumerateHeadersHandler, handler);
+				return nw_ws_response_enumerate_additional_headers (GetCheckedHandle (), &block);
 			}
 		}
 
