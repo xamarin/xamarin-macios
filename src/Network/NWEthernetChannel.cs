@@ -117,7 +117,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_ethernet_channel_send (OS_nw_ethernet_channel ethernet_channel, OS_dispatch_data content, ushort vlan_tag, string remote_address, ref BlockLiteral completion);
+		unsafe static extern void nw_ethernet_channel_send (OS_nw_ethernet_channel ethernet_channel, OS_dispatch_data content, ushort vlan_tag, string remote_address, BlockLiteral* completion);
 
 		delegate void nw_ethernet_channel_send_completion_t (IntPtr block, IntPtr error);
 		static nw_ethernet_channel_send_completion_t static_SendCompletion = TrampolineSendCompletion;
@@ -139,13 +139,10 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			using (var dispatchData = DispatchData.FromReadOnlySpan (content)) {
-				BlockLiteral block_handler = new BlockLiteral ();
-				block_handler.SetupBlockUnsafe (static_SendCompletion, callback);
-
-				try {
-					nw_ethernet_channel_send (GetCheckedHandle (), dispatchData.GetHandle (), vlanTag, remoteAddress, ref block_handler);
-				} finally {
-					block_handler.CleanupBlock ();
+				unsafe {
+					using var block = new BlockLiteral ();
+					block.SetupBlockUnsafe (static_SendCompletion, callback);
+					nw_ethernet_channel_send (GetCheckedHandle (), dispatchData.GetHandle (), vlanTag, remoteAddress, &block);
 				}
 			}
 		}
@@ -179,13 +176,9 @@ namespace Network {
 					return;
 				}
 
-				BlockLiteral block_handler = new BlockLiteral ();
-				block_handler.SetupBlockUnsafe (static_ReceiveHandler, handler);
-				try {
-					nw_ethernet_channel_set_receive_handler (GetCheckedHandle (), &block_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_ReceiveHandler, handler);
+				nw_ethernet_channel_set_receive_handler (GetCheckedHandle (), &block);
 			}
 		}
 
@@ -213,13 +206,10 @@ namespace Network {
 					nw_ethernet_channel_set_state_changed_handler (GetCheckedHandle (), null);
 					return;
 				}
-				BlockLiteral block_handler = new BlockLiteral ();
-				block_handler.SetupBlockUnsafe (static_StateChangesHandler, handler);
-				try {
-					nw_ethernet_channel_set_state_changed_handler (GetCheckedHandle (), &block_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_StateChangesHandler, handler);
+				nw_ethernet_channel_set_state_changed_handler (GetCheckedHandle (), &block);
 			}
 		}	
 

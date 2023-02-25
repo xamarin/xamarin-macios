@@ -142,7 +142,7 @@ namespace Network {
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		unsafe static extern bool nw_txt_record_apply (OS_nw_txt_record txt_record, ref BlockLiteral applier);
+		unsafe static extern bool nw_txt_record_apply (OS_nw_txt_record txt_record, BlockLiteral* applier);
 
 		delegate bool nw_txt_record_apply_t (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen);
 		unsafe static nw_txt_record_apply_t static_ApplyHandler = TrampolineApplyHandler;
@@ -189,12 +189,10 @@ namespace Network {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_ApplyHandler, handler);
-			try {
-				return nw_txt_record_apply (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_ApplyHandler, handler);
+				return nw_txt_record_apply (GetCheckedHandle (), &block);
 			}
 		}
 
@@ -205,19 +203,17 @@ namespace Network {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_ApplyHandler, handler);
-			try {
-				return nw_txt_record_apply (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_ApplyHandler, handler);
+				return nw_txt_record_apply (GetCheckedHandle (), &block);
 			}
 		}
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		static extern unsafe bool nw_txt_record_access_key (OS_nw_txt_record txt_record, IntPtr key, ref BlockLiteral access_value);
+		static extern unsafe bool nw_txt_record_access_key (OS_nw_txt_record txt_record, IntPtr key, BlockLiteral* access_value);
 
 		unsafe delegate void nw_txt_record_access_key_t (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen);
 		unsafe static nw_txt_record_access_key_t static_AccessKeyHandler = TrampolineAccessKeyHandler;
@@ -244,19 +240,17 @@ namespace Network {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_AccessKeyHandler, handler);
-			try {
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_AccessKeyHandler, handler);
 				using var keyPtr = new TransientString (key);
-				return nw_txt_record_access_key (GetCheckedHandle (), keyPtr, ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+				return nw_txt_record_access_key (GetCheckedHandle (), keyPtr, &block);
 			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		unsafe static extern bool nw_txt_record_access_bytes (OS_nw_txt_record txt_record, ref BlockLiteral access_bytes);
+		unsafe static extern bool nw_txt_record_access_bytes (OS_nw_txt_record txt_record, BlockLiteral* access_bytes);
 
 		unsafe delegate void nw_txt_record_access_bytes_t (IntPtr block, IntPtr value, nuint valueLen);
 		unsafe static nw_txt_record_access_bytes_t static_RawBytesHandler = TrampolineRawBytesHandler;
@@ -279,12 +273,10 @@ namespace Network {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_RawBytesHandler, handler);
-			try {
-				return nw_txt_record_access_bytes (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_RawBytesHandler, handler);
+				return nw_txt_record_access_bytes (GetCheckedHandle (), &block);
 			}
 		}
 	}
