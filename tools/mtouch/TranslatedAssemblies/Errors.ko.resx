@@ -1763,4 +1763,7 @@
   <data name="MX8044" xml:space="preserve">
 		<value>앱이 빌드된 이후 어셈블리 {0}이(가) 수정되어 생성된 정적 등록 대행자 코드가 무효화되었습니다. 로드된 어셈블리의 MVID는 {1}이고 생성된 정적 등록 대행자 코드가 해당하는 어셈블리의 MVID는 {2}입니다.</value>
 	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>Unable to call release on an instance of the type {0}</value>
+	</data>
 </root>

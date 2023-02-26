@@ -1,5 +1,5 @@
-{
+﻿{
   "author": "Microsoft",
-  "name": "iOS Bağlama Kitaplığı",
-  "description": "Bir .NET iOS bağlama kitaplığı oluşturmaya yönelik proje"
+  "name": "iOS Binding Library",
+  "description": "A project for creating a .NET iOS binding library"
 }
