@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 #nullable enable
@@ -7,72 +8,105 @@ using System.Reflection;
 public class TypeManager {
 	Frameworks Frameworks { get; }
 
-	public Type? System_Attribute { get; }
-	public Type? System_Boolean { get; }
-	public Type? System_Byte { get; }
-	public Type? System_Char { get; }
-	public Type? System_Delegate { get; }
-	public Type? System_Double { get; }
-	public Type? System_Float { get; }
-	public Type? System_Int16 { get; }
-	public Type? System_Int32 { get; }
-	public Type? System_Int64 { get; }
-	public Type? System_IntPtr { get; }
-	public Type? System_Object { get; }
-	public Type? System_SByte { get; }
-	public Type? System_String { get; }
-	public Type? System_String_Array { get; }
-	public Type? System_UInt16 { get; }
-	public Type? System_UInt32 { get; }
-	public Type? System_UInt64 { get; }
-	public Type? System_UIntPtr { get; }
-	public Type? System_Void { get; }
+	public Type System_Attribute { get; }
+	public Type System_Boolean { get; }
+	public Type System_Byte { get; }
+	public Type System_Char { get; }
+	public Type System_Delegate { get; }
+	public Type System_Double { get; }
+	public Type System_Float { get; }
+	public Type System_Int16 { get; }
+	public Type System_Int32 { get; }
+	public Type System_Int64 { get; }
+	public Type System_IntPtr { get; }
+	public Type System_Object { get; }
+	public Type System_SByte { get; }
+	public Type System_String { get; }
+	public Type System_String_Array { get; }
+	public Type System_UInt16 { get; }
+	public Type System_UInt32 { get; }
+	public Type System_UInt64 { get; }
+	public Type System_UIntPtr { get; }
+	public Type System_Void { get; }
 
-	public Type? System_nint { get; }
-	public Type? System_nuint { get; }
-	public Type? System_nfloat { get; }
+	public Type System_nint { get; }
+	public Type System_nuint { get; }
+	public Type System_nfloat { get; }
 
 	/* fundamental */
-	public Type? NSObject { get; }
-	public Type? INativeObject { get; }
+	public Type NSObject { get; }
+	public Type INativeObject { get; }
 
 	/* objcruntime */
-	public Type? BlockLiteral { get; }
-	public Type? Class { get; }
-	public Type? Protocol { get; }
-	public Type? Selector { get; }
+	public Type BlockLiteral { get; }
+	public Type Class { get; }
+	public Type Protocol { get; }
+	public Type Selector { get; }
 
-	public Type? Constants { get; }
+	public Type Constants { get; }
 
 	/* Different binding types */
-
-	public Type? DictionaryContainerType { get; }
-
+	public Type DictionaryContainerType { get; }
+	public Type AudioBuffers { get; }
+	public Type AVCaptureWhiteBalanceGains { get; }
+	public Type CFRunLoop { get; }
+	public Type CGAffineTransform { get; }
+	public Type CGColor { get; }
+	public Type CGColorSpace { get; }
+	public Type CGContext { get; }
+	public Type CGPDFDocument { get; }
+	public Type CGPDFPage { get; }
+	public Type CGGradient { get; }
+	public Type CGImage { get; }
+	public Type CGImageSource { get; }
+	public Type CGLayer { get; }
+	public Type CGPath { get; }
+	public Type CGVector { get; }
+	public Type DispatchQueue { get; }
+	public Type DispatchData { get; }
+	public Type NSNumber { get; }
+	public Type NSRange { get; }
+	public Type NSString { get; }
+	public Type NSValue { get; }
+	public Type NSZone { get; }
+	public Type SCNMatrix4 { get; }
+	public Type SCNVector3 { get; }
+	public Type SCNVector4 { get; }
+	public Type SecAccessControl { get; }
+	public Type SecIdentity { get; }
+	public Type SecTrust { get; }
+	public Type SecProtocolMetadata { get; }
+	public Type SecProtocolOptions { get; }
+	public Type SecTrust2 { get; }
+	public Type SecIdentity2 { get; }
+	public Type CoreGraphics_CGPoint { get; }
+	public Type CoreGraphics_CGRect { get; }
+	public Type CoreGraphics_CGSize { get; }
+	
+	// optional if AddressBook present
 	public Type? ABAddressBook { get; }
 	public Type? ABPerson { get; }
 	public Type? ABRecord { get; }
-	public Type? AudioBuffers { get; }
+	
+	// optional if AudioToolbox present
+	public Type? MusicSequence { get; }
+	
+	// optional if AudioUnit present 
 	public Type? AudioComponent { get; }
 	public Type? AudioUnit { get; }
 	public Type? AURenderEventEnumerator { get; }
-	public Type? AVCaptureWhiteBalanceGains { get; }
+	
+	// optional if CoreAnimation present
 	public Type? CATransform3D { get; }
-	public Type? CFRunLoop { get; }
-	public Type? CGAffineTransform { get; }
-	public Type? CGColor { get; }
-	public Type? CGColorSpace { get; }
-	public Type? CGContext { get; }
-	public Type? CGPDFDocument { get; }
-	public Type? CGPDFPage { get; }
-	public Type? CGGradient { get; }
-	public Type? CGImage { get; }
-	public Type? CGImageSource { get; }
-	public Type? CGLayer { get; }
+	
+	// optional if OpenGL present
 	public Type? CGLContext { get; }
 	public Type? CGLPixelFormat { get; }
-	public Type? CGPath { get; }
-	public Type? CGVector { get; }
+	
+	// optional if CoreLocation present
 	public Type? CLLocationCoordinate2D { get; }
+	
+	// optional if CoreMedia present
 	public Type? CMAudioFormatDescription { get; }
 	public Type? CMClock { get; }
 	public Type? CMFormatDescription { get; }
@@ -83,37 +117,25 @@ public class TypeManager {
 	public Type? CMTimeRange { get; }
 	public Type? CMVideoFormatDescription { get; }
 	public Type? CMVideoDimensions { get; }
+	
+	// optional if CoreVideo present
 	public Type? CVImageBuffer { get; }
 	public Type? CVPixelBuffer { get; }
 	public Type? CVPixelBufferPool { get; }
-	public Type? DispatchQueue { get; }
-	public Type? DispatchData { get; }
+	
+	// optional if CoreMidi present
 	public Type? MidiEndpoint { get; }
+	
+	// optional if MapKit present
 	public Type? MKCoordinateSpan { get; }
+	
+	// optional if MediaToolbox is present 
 	public Type? MTAudioProcessingTap { get; }
-	public Type? MusicSequence { get; }
-	public Type? NSNumber { get; }
-	public Type? NSRange { get; }
-	public Type? NSString { get; }
-	public Type? NSValue { get; }
-	public Type? NSZone { get; }
-	public Type? SCNMatrix4 { get; }
-	public Type? SCNVector3 { get; }
-	public Type? SCNVector4 { get; }
-	public Type? SecAccessControl { get; }
-	public Type? SecIdentity { get; }
-	public Type? SecTrust { get; }
-	public Type? SecProtocolMetadata { get; }
-	public Type? SecProtocolOptions { get; }
-	public Type? SecTrust2 { get; }
-	public Type? SecIdentity2 { get; }
-	public Type? UIEdgeInsets { get; }
+	
+	// optional if UIKit is present
 	public Type? UIOffset { get; }
+	public Type? UIEdgeInsets { get; }
 	public Type? NSDirectionalEdgeInsets { get; }
-
-	public Type? CoreGraphics_CGPoint { get; }
-	public Type? CoreGraphics_CGRect { get; }
-	public Type? CoreGraphics_CGSize { get; }
 
 	Dictionary<Type, string>? nsnumberReturnMap;
 	public Dictionary<Type, string> NSNumberReturnMap {
@@ -198,21 +220,34 @@ public class TypeManager {
 		}
 	}
 
-
-	Type? Lookup (Assembly assembly, string @namespace, string typename, bool inexistentOK = false)
+#if NET
+	bool TryGetType (Assembly assembly, string @namespace, string typename, out string fullname, [NotNullWhen (true)] out Type? type)
+#else
+	static bool TryGetType (Assembly assembly, string @namespace, string typename, out string fullname, out Type? type)
+#endif
 	{
-		string fullname;
-
 		if (string.IsNullOrEmpty (@namespace)) {
 			fullname = typename;
 		} else {
 			fullname = @namespace + "." + typename;
 		}
 
-		var rv = assembly.GetType (fullname);
-		if (rv is null && !inexistentOK)
+		type = assembly.GetType (fullname);
+		return type is not null;
+	}
+
+	static Type Lookup (Assembly assembly, string @namespace, string typename)
+	{
+		if (!TryGetType (assembly, @namespace, typename, out var fullname, out var rv))
 			throw new BindingException (1052, true, fullname, assembly);
-		return rv;
+		return rv!;
+	}
+
+	static Type? ConditionalLookup (Assembly assembly, string @namespace, string typename, bool inexistentOk = false)
+	{
+		if (!TryGetType (assembly, @namespace, typename, out var fullname, out var rv) && !inexistentOk)
+			throw new BindingException (1052, true, fullname, assembly);
+		return rv; // maybe null
 	}
 
 	public Type? GetUnderlyingNullableType (Type type)
@@ -290,26 +325,9 @@ public class TypeManager {
 		/* Different binding types */
 
 		DictionaryContainerType = Lookup (platformAssembly, "Foundation", "DictionaryContainer");
-
-		if (Frameworks.HaveAddressBook) {
-			ABAddressBook = Lookup (platformAssembly, "AddressBook", "ABAddressBook");
-			ABPerson = Lookup (platformAssembly, "AddressBook", "ABPerson");
-			ABRecord = Lookup (platformAssembly, "AddressBook", "ABRecord");
-		}
 		// misplaced API, it's really in CoreAudio (now available everywhere)
 		AudioBuffers = Lookup (platformAssembly, "AudioToolbox", "AudioBuffers");
-		if (Frameworks.HaveAudioToolbox) {
-			MusicSequence = Lookup (platformAssembly, "AudioToolbox", "MusicSequence", true /* may not be found */);
-		}
-		if (Frameworks.HaveAudioUnit) {
-			AudioComponent = Lookup (platformAssembly, "AudioUnit", "AudioComponent");
-			AudioUnit = Lookup (platformAssembly, "AudioUnit", "AudioUnit");
-			AURenderEventEnumerator = Lookup (platformAssembly, "AudioUnit", "AURenderEventEnumerator");
-		}
 		AVCaptureWhiteBalanceGains = Lookup (platformAssembly, "AVFoundation", "AVCaptureWhiteBalanceGains");
-		if (Frameworks.HaveCoreAnimation)
-			CATransform3D = Lookup (platformAssembly, "CoreAnimation", "CATransform3D");
-
 		CFRunLoop = Lookup (platformAssembly, "CoreFoundation", "CFRunLoop");
 		CGAffineTransform = Lookup (platformAssembly, "CoreGraphics", "CGAffineTransform");
 		CGColor = Lookup (platformAssembly, "CoreGraphics", "CGColor");
@@ -321,39 +339,10 @@ public class TypeManager {
 		CGImage = Lookup (platformAssembly, "CoreGraphics", "CGImage");
 		CGImageSource = Lookup (platformAssembly, "ImageIO", "CGImageSource");
 		CGLayer = Lookup (platformAssembly, "CoreGraphics", "CGLayer");
-		if (Frameworks.HaveOpenGL) {
-			CGLContext = Lookup (platformAssembly, "OpenGL", "CGLContext");
-			CGLPixelFormat = Lookup (platformAssembly, "OpenGL", "CGLPixelFormat");
-		}
 		CGPath = Lookup (platformAssembly, "CoreGraphics", "CGPath");
 		CGVector = Lookup (platformAssembly, "CoreGraphics", "CGVector");
-		if (Frameworks.HaveCoreLocation)
-			CLLocationCoordinate2D = Lookup (platformAssembly, "CoreLocation", "CLLocationCoordinate2D");
-		if (Frameworks.HaveCoreMedia) {
-			CMAudioFormatDescription = Lookup (platformAssembly, "CoreMedia", "CMAudioFormatDescription");
-			CMClock = Lookup (platformAssembly, "CoreMedia", "CMClock");
-			CMFormatDescription = Lookup (platformAssembly, "CoreMedia", "CMFormatDescription");
-			CMSampleBuffer = Lookup (platformAssembly, "CoreMedia", "CMSampleBuffer");
-			CMTime = Lookup (platformAssembly, "CoreMedia", "CMTime");
-			CMTimebase = Lookup (platformAssembly, "CoreMedia", "CMTimebase");
-			CMTimeMapping = Lookup (platformAssembly, "CoreMedia", "CMTimeMapping");
-			CMTimeRange = Lookup (platformAssembly, "CoreMedia", "CMTimeRange");
-			CMVideoFormatDescription = Lookup (platformAssembly, "CoreMedia", "CMVideoFormatDescription");
-			CMVideoDimensions = Lookup (platformAssembly, "CoreMedia", "CMVideoDimensions");
-		}
-		if (Frameworks.HaveCoreVideo) {
-			CVImageBuffer = Lookup (platformAssembly, "CoreVideo", "CVImageBuffer");
-			CVPixelBuffer = Lookup (platformAssembly, "CoreVideo", "CVPixelBuffer");
-			CVPixelBufferPool = Lookup (platformAssembly, "CoreVideo", "CVPixelBufferPool");
-		}
 		DispatchQueue = Lookup (platformAssembly, "CoreFoundation", "DispatchQueue");
 		DispatchData = Lookup (platformAssembly, "CoreFoundation", "DispatchData");
-		if (Frameworks.HaveCoreMidi)
-			MidiEndpoint = Lookup (platformAssembly, "CoreMidi", "MidiEndpoint");
-		if (Frameworks.HaveMapKit)
-			MKCoordinateSpan = Lookup (platformAssembly, "MapKit", "MKCoordinateSpan", true /* isn't in XM/Classic */);
-		if (Frameworks.HaveMediaToolbox)
-			MTAudioProcessingTap = Lookup (platformAssembly, "MediaToolbox", "MTAudioProcessingTap");
 		NSNumber = Lookup (bindingTouch.BindThirdPartyLibrary ? platformAssembly : apiAssembly, "Foundation", "NSNumber");
 		NSRange = Lookup (platformAssembly, "Foundation", "NSRange");
 		NSString = Lookup (platformAssembly, "Foundation", "NSString");
@@ -369,14 +358,59 @@ public class TypeManager {
 		SecProtocolMetadata = Lookup (platformAssembly, "Security", "SecProtocolMetadata");
 		SecTrust2 = Lookup (platformAssembly, "Security", "SecTrust2");
 		SecIdentity2 = Lookup (platformAssembly, "Security", "SecIdentity2");
-		if (Frameworks.HaveUIKit) {
-			UIOffset = Lookup (platformAssembly, "UIKit", "UIOffset");
-			UIEdgeInsets = Lookup (platformAssembly, "UIKit", "UIEdgeInsets");
-			NSDirectionalEdgeInsets = Lookup (platformAssembly, "UIKit", "NSDirectionalEdgeInsets");
-		}
-
 		CoreGraphics_CGRect = Lookup (platformAssembly, "CoreGraphics", "CGRect");
 		CoreGraphics_CGPoint = Lookup (platformAssembly, "CoreGraphics", "CGPoint");
 		CoreGraphics_CGSize = Lookup (platformAssembly, "CoreGraphics", "CGSize");
+		
+		// optional types per framework
+		if (Frameworks.HaveAddressBook) {
+			ABAddressBook = ConditionalLookup (platformAssembly, "AddressBook", "ABAddressBook");
+			ABPerson = ConditionalLookup (platformAssembly, "AddressBook", "ABPerson");
+			ABRecord = ConditionalLookup (platformAssembly, "AddressBook", "ABRecord");
+		}
+		if (Frameworks.HaveAudioToolbox) {
+			MusicSequence = ConditionalLookup (platformAssembly, "AudioToolbox", "MusicSequence", true /* may not be found */);
+		}
+		if (Frameworks.HaveAudioUnit) {
+			AudioComponent = ConditionalLookup (platformAssembly, "AudioUnit", "AudioComponent");
+			AudioUnit = ConditionalLookup (platformAssembly, "AudioUnit", "AudioUnit");
+			AURenderEventEnumerator = ConditionalLookup (platformAssembly, "AudioUnit", "AURenderEventEnumerator");
+		}
+		if (Frameworks.HaveCoreAnimation)
+			CATransform3D = ConditionalLookup (platformAssembly, "CoreAnimation", "CATransform3D");
+		if (Frameworks.HaveOpenGL) {
+			CGLContext = ConditionalLookup (platformAssembly, "OpenGL", "CGLContext");
+			CGLPixelFormat = ConditionalLookup (platformAssembly, "OpenGL", "CGLPixelFormat");
+		}
+		if (Frameworks.HaveCoreLocation)
+			CLLocationCoordinate2D = ConditionalLookup (platformAssembly, "CoreLocation", "CLLocationCoordinate2D");
+		if (Frameworks.HaveCoreMedia) {
+			CMAudioFormatDescription = ConditionalLookup (platformAssembly, "CoreMedia", "CMAudioFormatDescription");
+			CMClock = ConditionalLookup (platformAssembly, "CoreMedia", "CMClock");
+			CMFormatDescription = ConditionalLookup (platformAssembly, "CoreMedia", "CMFormatDescription");
+			CMSampleBuffer = ConditionalLookup (platformAssembly, "CoreMedia", "CMSampleBuffer");
+			CMTime = ConditionalLookup (platformAssembly, "CoreMedia", "CMTime");
+			CMTimebase = ConditionalLookup (platformAssembly, "CoreMedia", "CMTimebase");
+			CMTimeMapping = ConditionalLookup (platformAssembly, "CoreMedia", "CMTimeMapping");
+			CMTimeRange = ConditionalLookup (platformAssembly, "CoreMedia", "CMTimeRange");
+			CMVideoFormatDescription = ConditionalLookup (platformAssembly, "CoreMedia", "CMVideoFormatDescription");
+			CMVideoDimensions = ConditionalLookup (platformAssembly, "CoreMedia", "CMVideoDimensions");
+		}
+		if (Frameworks.HaveCoreVideo) {
+			CVImageBuffer = ConditionalLookup (platformAssembly, "CoreVideo", "CVImageBuffer");
+			CVPixelBuffer = ConditionalLookup (platformAssembly, "CoreVideo", "CVPixelBuffer");
+			CVPixelBufferPool = ConditionalLookup (platformAssembly, "CoreVideo", "CVPixelBufferPool");
+		}
+		if (Frameworks.HaveCoreMidi)
+			MidiEndpoint = ConditionalLookup (platformAssembly, "CoreMidi", "MidiEndpoint");
+		if (Frameworks.HaveMapKit)
+			MKCoordinateSpan = ConditionalLookup (platformAssembly, "MapKit", "MKCoordinateSpan", true /* isn't in XM/Classic */);
+		if (Frameworks.HaveMediaToolbox)
+			MTAudioProcessingTap = ConditionalLookup (platformAssembly, "MediaToolbox", "MTAudioProcessingTap");
+		if (Frameworks.HaveUIKit) {
+			UIOffset = ConditionalLookup (platformAssembly, "UIKit", "UIOffset");
+			UIEdgeInsets = ConditionalLookup (platformAssembly, "UIKit", "UIEdgeInsets");
+			NSDirectionalEdgeInsets = ConditionalLookup (platformAssembly, "UIKit", "NSDirectionalEdgeInsets");
+		}
 	}
 }
