@@ -221,7 +221,7 @@ public class TypeManager {
 	}
 
 #if NET
-	bool TryGetType (Assembly assembly, string @namespace, string typename, out string fullname, [NotNullWhen (true)] out Type? type)
+	static bool TryGetType (Assembly assembly, string @namespace, string typename, out string fullname, [NotNullWhen (true)] out Type? type)
 #else
 	static bool TryGetType (Assembly assembly, string @namespace, string typename, out string fullname, out Type? type)
 #endif
@@ -270,10 +270,10 @@ public class TypeManager {
 
 	public TypeManager (BindingTouch bindingTouch, Assembly apiAssembly, Assembly corlibAssembly, Assembly platformAssembly)
 	{
-		if (bindingTouch.universe is null)
-			throw ErrorHelper.CreateError (4, bindingTouch.CurrentPlatform);
 		if (bindingTouch.Frameworks is null)
 			throw ErrorHelper.CreateError (3, bindingTouch.CurrentPlatform);
+		if (bindingTouch.universe is null)
+			throw ErrorHelper.CreateError (4, bindingTouch.CurrentPlatform);
 
 		Frameworks = bindingTouch.Frameworks;
 
@@ -292,7 +292,7 @@ public class TypeManager {
 		System_Object = Lookup (corlibAssembly, "System", "Object");
 		System_SByte = Lookup (corlibAssembly, "System", "SByte");
 		System_String = Lookup (corlibAssembly, "System", "String");
-		System_String_Array = Lookup (corlibAssembly, "System", "String")?.MakeArrayType ();
+		System_String_Array = Lookup (corlibAssembly, "System", "String").MakeArrayType ();
 		System_UInt16 = Lookup (corlibAssembly, "System", "UInt16");
 		System_UInt32 = Lookup (corlibAssembly, "System", "UInt32");
 		System_UInt64 = Lookup (corlibAssembly, "System", "UInt64");
