@@ -41,7 +41,7 @@ namespace Cecil.Tests {
 			public string Reason;
 		}
 
-		[Ignore ("work in progress - there are 4 failures, mostly due to delegates")]
+		[Ignore ("work in progress - there are 17 failures in mac version, mostly due to delegates and strings")]
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblyDefinitions))]
 		public void CheckForNonBlittablePInvokes (AssemblyInfo info)
 		{
@@ -205,6 +205,12 @@ namespace Cecil.Tests {
 		{
 			var fullName = method.FullName;
 			switch (fullName) {
+			case "System.IntPtr ObjCRuntime.Selector::GetHandle(System.String)":
+#if !NET8_0_OR_GREATER
+			case "System.Boolean CoreFoundation.CFReadStream::CFReadStreamSetClient(System.IntPtr,System.IntPtr,CoreFoundation.CFStream/CFStreamCallback,System.IntPtr)":
+			case "System.Boolean CoreFoundation.CFWriteStream::CFWriteStreamSetClient(System.IntPtr,System.IntPtr,CoreFoundation.CFStream/CFStreamCallback,System.IntPtr)":
+#endif
+				return false;
 			default:
 				return true;
 			}
