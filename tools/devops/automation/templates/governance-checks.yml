@@ -19,7 +19,7 @@ steps:
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
 
-- task: CredScan@3
+- task: CredScan@4
   displayName: "Run CredScan"
   inputs:
     suppressionsFile: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/CredScanSuppressions.json'
