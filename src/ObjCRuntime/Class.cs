@@ -689,16 +689,6 @@ namespace ObjCRuntime {
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		[return: MarshalAs (UnmanagedType.U1)]
-		internal extern static bool class_addMethod (IntPtr cls, IntPtr name, Delegate imp, IntPtr types);
-
-		internal static bool class_addMethod (IntPtr cls, IntPtr name, Delegate imp, string types)
-		{
-			using var typesPtr = new TransientString (types);
-			return class_addMethod (cls, name, imp, typesPtr);
-		}
-
-		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		[return: MarshalAs (UnmanagedType.U1)]
 		internal extern static bool class_addProtocol (IntPtr cls, IntPtr protocol);
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
