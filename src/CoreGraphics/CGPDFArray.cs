@@ -248,7 +248,7 @@ namespace CoreGraphics {
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFArrayApplyBlock (/* CGPDFArrayRef */ IntPtr array, /* CGPDFArrayApplierBlock */ ref BlockLiteral block, /* void* */ IntPtr info);
+		unsafe extern static bool CGPDFArrayApplyBlock (/* CGPDFArrayRef */ IntPtr array, /* CGPDFArrayApplierBlock */ BlockLiteral* block, /* void* */ IntPtr info);
 
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
@@ -267,15 +267,16 @@ namespace CoreGraphics {
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (applyblock_handler, callback);
-			var gc_handle = info is null ? default (GCHandle) : GCHandle.Alloc (info);
-			try {
-				return CGPDFArrayApplyBlock (Handle, ref block_handler, info is null ? IntPtr.Zero : GCHandle.ToIntPtr (gc_handle));
-			} finally {
-				block_handler.CleanupBlock ();
-				if (info is not null)
-					gc_handle.Free ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (applyblock_handler, callback);
+				var gc_handle = info is null ? default (GCHandle) : GCHandle.Alloc (info);
+				try {
+					return CGPDFArrayApplyBlock (Handle, &block, info is null ? IntPtr.Zero : GCHandle.ToIntPtr (gc_handle));
+				} finally {
+					if (info is not null)
+						gc_handle.Free ();
+				}
 			}
 		}
 	}
