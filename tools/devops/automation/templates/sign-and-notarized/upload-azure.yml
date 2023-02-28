@@ -85,24 +85,24 @@ steps:
 - template: generate-workspace-info.yml@yaml-templates
   parameters:
     GitHubToken: $(GitHub.Token)
-    ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
+    ArtifactDirectory: $(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}package-internal
 
 - task: AzureFileCopy@3
   displayName: 'Publish package to Azure'
   name: upload
   inputs:
-    SourcePath: $(Build.SourcesDirectory)/artifacts/package
+    SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package
     azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
     Destination: AzureBlob
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
-    BlobPrefix: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/package  # ideally, we would use a variable for this
+    BlobPrefix: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/${{ parameters.uploadPrefix }}package  # ideally, we would use a variable for this
     outputStorageContainerSasToken: PackageSasToken
 
 - task: AzureFileCopy@3
   displayName: 'Publish manifest to Azure'
   inputs:
-    SourcePath: $(Build.SourcesDirectory)/artifacts/package/manifest
+    SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/manifest
     azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
     Destination: AzureBlob
     storage: ${{ parameters.azureStorage }}
@@ -113,7 +113,7 @@ steps:
 - task: AzureFileCopy@3
   displayName: 'Publish manifest to Azure as latest'
   inputs:
-    SourcePath: $(Build.SourcesDirectory)/artifacts/package/manifest
+    SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/manifest
     azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
     Destination: AzureBlob
     storage: ${{ parameters.azureStorage }}
@@ -124,7 +124,7 @@ steps:
 - task: AzureFileCopy@3
   displayName: 'Publish manifest to Azure per commit'
   inputs:
-    SourcePath: $(Build.SourcesDirectory)/artifacts/package/manifest
+    SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/manifest
     azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
     Destination: AzureBlob
     storage: ${{ parameters.azureStorage }}
@@ -144,7 +144,7 @@ steps:
     Write-Host "Exect path is $execPath"
     Write-Host "Macios path is $maciosPath"
     Write-Host "$Env:VIRTUAL_PATH"
-    Write-Host "Artifacts url $Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/package"
+    Write-Host "Artifacts url $Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/${{ parameters.uploadPrefix }}package"
 
     Invoke-Expression "$execPath artifacts -s `"$maciosPath`" -a $Env:AZURE_STORAGE -c $Env:STORAGE_PASS -u `"$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/${{ parameters.uploadPrefix }}package`" -d `"$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package`" -o `"$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package`""
   env:
@@ -160,19 +160,19 @@ steps:
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Build Artifacts'
   inputs:
-    targetPath: $(Build.SourcesDirectory)/artifacts/package/artifacts.json
-    artifactName: pkg-info
+    targetPath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/artifacts.json
+    artifactName: '${{ parameters.uploadPrefix }}pkg-info'
   continueOnError: true
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\xamarin-macios\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
     $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
 
-    Dir "$(Build.SourcesDirectory)\\artifacts\\package"
+    Dir "$(Build.SourcesDirectory)\\artifacts\\${{ parameters.uploadPrefix }}package"
 
     # the azure step sets the env variable, but it points to the wrong url since it uses the one in bosstorage, we
     # need to use the dl version.
-    $pkgsVirtualUrl =  "https://dl.internalx.com/$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/package"
+    $pkgsVirtualUrl =  "https://dl.internalx.com/$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/${{ parameters.uploadPrefix }}package"
     Write-Host "Urls is $pkgsVirtualUrl"
 
     $pkgsPath = "$(Build.SourcesDirectory)\\artifacts\\${{ parameters.uploadPrefix }}package"
@@ -392,6 +392,6 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: 'SBOM: Publish'
   inputs:
-    artifactName: sbom
+    artifactName: '${{ parameters.uploadPrefix }}sbom'
     pathToPublish: $(Build.ArtifactStagingDirectory)/sbom
   condition: succeeded()
