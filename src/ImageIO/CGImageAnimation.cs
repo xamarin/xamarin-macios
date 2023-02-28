@@ -129,8 +129,7 @@ namespace ImageIO {
 				if (del is not null) {
 					del (index, new CoreGraphics.CGImage (image, false), out var stopValue);
 					*stop = stopValue ? (byte) 1 : (byte) 0;
-				}
-				else
+				} else
 					*stop = 0;
 			}
 		} /* class SDCGImageSourceAnimationBlock */

@@ -175,7 +175,7 @@ namespace Network {
 				return (byte) 1;
 			}
 			if (del is NWTxtRecordApplyDelegate2 apply2)
-				return apply2 (key, found, mValue) ? (byte) 1 : (byte) 0;;
+				return apply2 (key, found, mValue) ? (byte) 1 : (byte) 0; ;
 
 			return (byte) 0;
 #endif
