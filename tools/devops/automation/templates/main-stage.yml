@@ -172,7 +172,7 @@ stages:
             isPR: ${{ parameters.isPR }}
 
 
-    - ${{ if: and(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['Build.DefinitionName'], 'xamarin-macios-ci')) }}:
+    - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
       - job: translations
         displayName: 'Loc translations'
         pool:
