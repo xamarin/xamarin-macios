@@ -25,8 +25,8 @@
     <PackageDownload Include="Microsoft.NET.Workload.Mono.ToolChain.net6.Manifest-$(ToolChainManifestVersionBand)" Version="[$(ActualPackageVersion)]" />
 
     <!-- and get the emscripten workload as well -->
-    <PackageDownload Include="Microsoft.NET.Workload.Emscripten.net7.Manifest-$(ToolChainManifestVersionBand)" Version="[$(EmscriptenWorkloadVersion)]" />
-    <PackageDownload Include="Microsoft.NET.Workload.Emscripten.net6.Manifest-$(ToolChainManifestVersionBand)" Version="[$(EmscriptenWorkloadVersion)]" />
+    <PackageDownload Include="Microsoft.NET.Workload.Emscripten.net7.Manifest-$(EmscriptenManifestVersionBand)" Version="[$(EmscriptenWorkloadVersion)]" />
+    <PackageDownload Include="Microsoft.NET.Workload.Emscripten.net6.Manifest-$(EmscriptenManifestVersionBand)" Version="[$(EmscriptenWorkloadVersion)]" />
   </ItemGroup>
 
   <Import Project="all-package-references.csproj" />
