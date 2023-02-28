@@ -19,6 +19,10 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if NET
+using System.Runtime.CompilerServices;
+#endif
+
 #if !NET
 using NativeHandle = System.IntPtr;
 #endif
@@ -35,15 +39,26 @@ namespace CoreGraphics {
 		public delegate IntPtr CGEventTapCallback (IntPtr tapProxyEvent, CGEventType eventType, IntPtr eventRef, IntPtr userInfo);
 
 #if NET
+		static ConditionalWeakTable<CFMachPort, TapData>? tap_table;
+		static object tap_lock = new object ();
+
 		class TapData {
+			GCHandle handle;
 			public TapData (CGEventTapCallback cb, IntPtr userInfo)
 			{
 				Callback = cb;
 				UserInfo = userInfo;
+				handle = GCHandle.Alloc (this, GCHandleType.Weak);
+			}
+
+			~TapData ()
+			{
+				handle.Free ();
 			}
 
 			public CGEventTapCallback Callback { get; private set; }
 			public IntPtr UserInfo { get; private set; }
+			public IntPtr Handle => GCHandle.ToIntPtr (handle);
 		}
 
 		[UnmanagedCallersOnly]
@@ -67,15 +82,23 @@ namespace CoreGraphics {
 			IntPtr r;
 			unsafe {
 				var tapData = new TapData (cback, data);
-				var gch = GCHandle.Alloc (tapData);
-				r = CGEventTapCreate (location, place, options, mask, &TapCallback, GCHandle.ToIntPtr (gch));
+				r = CGEventTapCreate (location, place, options, mask, &TapCallback, tapData.Handle);
+				if (r == IntPtr.Zero)
+					return null;
+
+				var rv = new CFMachPort (r, true);
+				lock (tap_lock) {
+					tap_table = tap_table ?? new ConditionalWeakTable<CFMachPort, TapData> ();
+					tap_table.Add (rv, tapData);
+				}
+				return rv;
 			}
 #else
 			var r = CGEventTapCreate (location, place, options, mask, cback, data);
-#endif
 			if (r == IntPtr.Zero)
 				return null;
 			return new CFMachPort (r, true);
+#endif
 		}
 
 #if NET
