@@ -170,7 +170,7 @@ public class TypeManager {
 	Dictionary<Type, string>? nsvalueReturnMap;
 	public Dictionary<Type, string> NSValueReturnMap {
 		get {
-			if (nsvalueReturnMap != null)
+			if (nsvalueReturnMap is not null)
 				return nsvalueReturnMap;
 			Tuple<Type?, string> [] general = {
 				new (CGAffineTransform, ".CGAffineTransformValue" ),
@@ -187,7 +187,7 @@ public class TypeManager {
 			};
 
 			Tuple<Type?, string> [] uiKitMap = Array.Empty<Tuple<Type?, string>> ();
-			if (Frameworks?.HaveUIKit == true)
+			if (Frameworks.HaveUIKit)
 				uiKitMap = new Tuple<Type?, string> [] {
 					new (UIEdgeInsets, ".UIEdgeInsetsValue"),
 					new (UIOffset, ".UIOffsetValue"),
@@ -195,7 +195,7 @@ public class TypeManager {
 				};
 
 			Tuple<Type?, string> [] coreMedia = Array.Empty<Tuple<Type?, string>> ();
-			if (Frameworks?.HaveCoreMedia == true)
+			if (Frameworks.HaveCoreMedia)
 				uiKitMap = new Tuple<Type?, string> [] {
 					new (CMTimeRange, ".CMTimeRangeValue"),
 					new (CMTime, ".CMTimeValue"),
@@ -204,7 +204,7 @@ public class TypeManager {
 				};
 
 			Tuple<Type?, string> [] animation = Array.Empty<Tuple<Type?, string>> ();
-			if (Frameworks?.HaveCoreAnimation == true)
+			if (Frameworks.HaveCoreAnimation)
 				animation = new Tuple<Type?, string> [] {
 					new (CATransform3D, ".CATransform3DValue"),
 				};
