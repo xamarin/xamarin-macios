@@ -32,6 +32,10 @@ parameters:
   type: boolean
   default: true
 
+- name: runTranslations
+  type: boolean
+  default: true
+
 - name: runSamples
   type: boolean
   default: false
@@ -172,7 +176,7 @@ stages:
             isPR: ${{ parameters.isPR }}
 
 
-    - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+    - ${{ if and(eq(parameters.runTranslations, true), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
       - job: translations
         displayName: 'Loc translations'
         pool:
