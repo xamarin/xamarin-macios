@@ -25,6 +25,10 @@ parameters:
   type: string
   default: 'vsts-device-tests' # target to be used to run the tests
 
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
 steps:
 
 - pwsh: |
@@ -73,7 +77,7 @@ steps:
     path: $(Build.SourcesDirectory)/artifacts
 
 - pwsh: |
-    $workloadPath = "$(Build.SourcesDirectory)/artifacts/WorkloadRollback/WorkloadRollback.json"
+    $workloadPath = "$(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}WorkloadRollback/WorkloadRollback.json"
     $versionData = Get-Content $workloadPath | ConvertFrom-Json
     $platforms = $("iOS", "tvOS", "macOS", "MacCatalyst")
     foreach ($platform in $platforms) {
@@ -94,6 +98,8 @@ steps:
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: 'Install dotnet workloads'
   timeoutInMinutes: 45
+  env:
+    MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}
 
 - bash: |
     set -x
@@ -130,7 +136,7 @@ steps:
 
 - bash: |
     ls -Rla $(Build.SourcesDirectory)/artifacts/tmp
-    mv $(Build.SourcesDirectory)/artifacts/tmp/package-introspection-dependencies/package-introspection-dependencies.zip .
+    mv $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}package-introspection-dependencies/package-introspection-dependencies.zip .
     unzip -o package-introspection-dependencies.zip
   workingDirectory: $(Build.SourcesDirectory)/xamarin-macios/tools/mtouch
   displayName: Expand introspection dependencies.
@@ -148,7 +154,7 @@ steps:
 - bash: |
     ls -Rla $(Build.SourcesDirectory)/artifacts/tmp
     rm -Rf test-libraries/*
-    mv $(Build.SourcesDirectory)/artifacts/tmp/package-test-libraries/package-test-libraries.zip .
+    mv $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip .
     unzip -o package-test-libraries.zip -d test-libraries
   workingDirectory: $(Build.SourcesDirectory)/xamarin-macios/tests
   displayName: Expand test libraries.
@@ -220,7 +226,7 @@ steps:
   displayName: 'Publish Artifact: Simulator diagnostic info'
   inputs:
     targetPath: $(System.DefaultWorkingDirectory)/diagnostic-sim-output
-    artifactName: diagnostic-simulator-info-$(Build.BuildId)-$(System.JobAttempt)-${{ parameters.label }}
+    artifactName: '${{ parameters.uploadPrefix }}diagnostic-simulator-info-$(Build.BuildId)-$(System.JobAttempt)-${{ parameters.label }}'
   condition: and(eq(variables['system.debug'], true), succeededOrFailed())
   continueOnError: true
 
@@ -246,7 +252,7 @@ steps:
   displayName: 'Publish Artifact: TestSummary'
   inputs:
     targetPath: 'xamarin-macios/tests/TestSummary.md'
-    artifactName: TestSummary-${{ parameters.testPrefix }}-$(System.JobAttempt)
+    artifactName: '${{ parameters.uploadPrefix }}TestSummary-${{ parameters.testPrefix }}-$(System.JobAttempt)'
   continueOnError: true
   condition: succeededOrFailed()
 
@@ -264,7 +270,7 @@ steps:
   displayName: 'Publish to Artifact Services Drop'
   inputs:
     dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
-    dropMetadataContainerName: 'DropMetadata-${{ parameters.testPrefix }}${{ parameters.label }}-$(System.JobAttempt)'
+    dropMetadataContainerName: '${{ parameters.uploadPrefix }}DropMetadata-${{ parameters.testPrefix }}${{ parameters.label }}-$(System.JobAttempt)'
     buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}-$(System.JobAttempt)'
     sourcePath: 'xamarin-macios/jenkins-results'
     detailedLog: true
@@ -311,7 +317,7 @@ steps:
   displayName: 'Publish Artifact: HtmlReport'
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
-    artifactName: HtmlReport-${{ parameters.testPrefix }}-$(System.JobAttempt)
+    artifactName: '${{ parameters.uploadPrefix }}HtmlReport-${{ parameters.testPrefix }}-$(System.JobAttempt)'
   continueOnError: true
   condition: succeededOrFailed()
 
@@ -330,7 +336,7 @@ steps:
   displayName: 'Publish Artifact: All binlogs'
   inputs:
     targetPath: $(Build.ArtifactStagingDirectory)/all-binlogs
-    artifactName: all-binlogs-test-${{ parameters.testPrefix }}-$(Build.BuildId)-$(System.JobAttempt)
+    artifactName: ${{ parameters.uploadPrefix }}all-binlogs-test-${{ parameters.testPrefix }}-$(Build.BuildId)-$(System.JobAttempt)'
   continueOnError: true
   condition: succeededOrFailed()
 

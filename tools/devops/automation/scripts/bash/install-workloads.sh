@@ -25,13 +25,13 @@ ARTIFACTS_PATH=$BUILD_SOURCESDIRECTORY/artifacts
 if ! test -d "$ARTIFACTS_PATH"; then
   echo "The path to the artifects ($ARTIFACTS_PATH) does not exist!"
   exit 1
-elif [[ $(find "$ARTIFACTS_PATH/not-signed-package" -type f -name '*.nupkg' -or -name '*.pkg' -or -name '*.zip' | wc -l) -lt 1 ]]; then
+elif [[ $(find "$ARTIFACTS_PATH/${MACIOS_UPLOAD_PREFIX}not-signed-package" -type f -name '*.nupkg' -or -name '*.pkg' -or -name '*.zip' | wc -l) -lt 1 ]]; then
   echo "No artifacts found in $ARTIFACTS_PATH/not-signed-package"
-  echo "If you're running this locally, download the 'not-signed-package' artifact and extract it into $ARTIFACTS_PATH/not-signed-package"
+  echo "If you're running this locally, download the '${MACIOS_UPLOAD_PREFIX}not-signed-package' artifact and extract it into $ARTIFACTS_PATH/${MACIOS_UPLOAD_PREFIX}not-signed-package"
   exit 1
 fi
 
-ROLLBACK_PATH="$ARTIFACTS_PATH/WorkloadRollback/WorkloadRollback.json"
+ROLLBACK_PATH="$ARTIFACTS_PATH/${MACIOS_UPLOAD_PREFIX}WorkloadRollback/WorkloadRollback.json"
 if ! test -f "$ROLLBACK_PATH"; then
   echo "The rollback file $ROLLBACK_PATH does not exist!"
   exit 1
@@ -57,10 +57,10 @@ echo "Rollback file contents:"
 cat "$ROLLBACK_PATH"
 
 mkdir -p "$DOTNET_NUPKG_DIR"
-ls -R "$ARTIFACTS_PATH/not-signed-package"
-cp "$ARTIFACTS_PATH/not-signed-package/"*.nupkg "$DOTNET_NUPKG_DIR"
-cp "$ARTIFACTS_PATH/not-signed-package/"*.pkg "$DOTNET_NUPKG_DIR"
-cp "$ARTIFACTS_PATH/not-signed-package/"*.zip "$DOTNET_NUPKG_DIR"
+ls -R "$ARTIFACTS_PATH/${MACIOS_UPLOAD_PREFIX}not-signed-package"
+cp "$ARTIFACTS_PATH/${MACIOS_UPLOAD_PREFIX}not-signed-package/"*.nupkg "$DOTNET_NUPKG_DIR"
+cp "$ARTIFACTS_PATH/${MACIOS_UPLOAD_PREFIX}not-signed-package/"*.pkg "$DOTNET_NUPKG_DIR"
+cp "$ARTIFACTS_PATH/${MACIOS_UPLOAD_PREFIX}not-signed-package/"*.zip "$DOTNET_NUPKG_DIR"
 ls -R "$DOTNET_NUPKG_DIR"
 
 NUGET_SOURCES=$(grep https://pkgs.dev.azure.com ./NuGet.config | sed -e 's/.*value="//'  -e 's/".*//')
