@@ -1753,6 +1753,7 @@ public partial class Generator : IMemberGatherer {
 			indent--;
 			print ("}");
 			print ("");
+			print ("[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]");
 			print ("internal static unsafe BlockLiteral CreateBlock ({0} callback)", ti.UserDelegate);
 			print ("{");
 			indent++;
