@@ -68,7 +68,7 @@ namespace ImageIO {
 		[Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public static CGImageAnimationStatus AnimateImage (NSUrl url, CGImageAnimationOptions options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationHandler handler)
+		public static CGImageAnimationStatus AnimateImage (NSUrl url, CGImageAnimationOptions options, CGImageSourceAnimationHandler handler)
 		{
 #if IOS && ARCH_32
             throw new PlatformNotSupportedException ("This API is not supported on this version of iOS");
@@ -98,7 +98,7 @@ namespace ImageIO {
 		[Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public static CGImageAnimationStatus AnimateImage (NSData data, CGImageAnimationOptions options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationHandler handler)
+		public static CGImageAnimationStatus AnimateImage (NSData data, CGImageAnimationOptions options, CGImageSourceAnimationHandler handler)
 		{
 #if IOS && ARCH_32
             throw new PlatformNotSupportedException ("This API is not supported on this version of iOS");
@@ -132,32 +132,6 @@ namespace ImageIO {
 					stop = false;
 			}
 		} /* class SDCGImageSourceAnimationBlock */
-
-		internal sealed class NIDCGImageSourceAnimationBlock : TrampolineBlockBase {
-			DCGImageSourceAnimationBlock invoker;
-
-			[BindingImpl (BindingImplOptions.Optimizable)]
-			public unsafe NIDCGImageSourceAnimationBlock (BlockLiteral* block) : base (block)
-			{
-				invoker = block->GetDelegateForBlock<DCGImageSourceAnimationBlock> ();
-			}
-
-			[Preserve (Conditional = true)]
-			[BindingImpl (BindingImplOptions.Optimizable)]
-			public unsafe static CGImageSourceAnimationHandler? Create (IntPtr block)
-			{
-				if (block == IntPtr.Zero)
-					return null;
-				var del = (CGImageSourceAnimationHandler) GetExistingManagedDelegate (block);
-				return del ?? new NIDCGImageSourceAnimationBlock ((BlockLiteral*) block).Invoke;
-			}
-
-			[BindingImpl (BindingImplOptions.Optimizable)]
-			void Invoke (nint index, CGImage image, out bool stop)
-			{
-				invoker (BlockPointer, index, image.GetHandle (), out stop);
-			}
-		} /* class NIDCGImageSourceAnimationBlock */
 
 		[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
 		[UserDelegateType (typeof (CGImageSourceAnimationHandler))]

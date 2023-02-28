@@ -1105,6 +1105,11 @@ namespace Registrar {
 			return type.Resolve ()?.IsAbstract == true;
 		}
 
+		protected override bool IsPointer (TypeReference type)
+		{
+			return type is PointerType;
+		}
+
 		protected override TypeReference [] GetInterfaces (TypeReference type)
 		{
 			var td = type.Resolve ();
@@ -2479,6 +2484,9 @@ namespace Registrar {
 					return null;
 				return res + "*";
 			}
+
+			if (type is PointerType pt)
+				return ToObjCParameterType (pt.ElementType, descriptiveMethodName, exceptions, inMethod, delegateToBlockType) + "*";
 
 			ArrayType arrtype = type as ArrayType;
 			if (arrtype != null)
@@ -3959,6 +3967,8 @@ namespace Registrar {
 						} else {
 							setup_call_stack.AppendLine ("arg_ptrs [{0}] = &p{0};", i);
 						}
+					} else if (type.IsPointer) {
+						setup_call_stack.AppendLine ("arg_ptrs [{0}] = p{0};", i);
 					} else if (td.BaseType.FullName == "System.MulticastDelegate") {
 						if (isRef) {
 							throw ErrorHelper.CreateError (4110, Errors.MT4110, type.FullName, descriptiveMethodName);

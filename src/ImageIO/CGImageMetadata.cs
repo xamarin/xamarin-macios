@@ -139,15 +139,10 @@ namespace ImageIO {
 		public void EnumerateTags (NSString? rootPath, CGImageMetadataEnumerateOptions? options, CGImageMetadataTagBlock block)
 		{
 			using var o = options?.ToDictionary ();
-			var block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_action, block);
-
 			unsafe {
-				try {
-					CGImageMetadataEnumerateTagsUsingBlock (Handle, rootPath.GetHandle (), o.GetHandle (), &block_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+				using var block_handler = new BlockLiteral ();
+				block_handler.SetupBlockUnsafe (static_action, block);
+				CGImageMetadataEnumerateTagsUsingBlock (Handle, rootPath.GetHandle (), o.GetHandle (), &block_handler);
 			}
 		}
 
