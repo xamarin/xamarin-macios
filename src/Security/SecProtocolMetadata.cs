@@ -201,7 +201,7 @@ namespace Security {
 
 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool sec_protocol_metadata_access_distinguished_names (IntPtr handle, ref BlockLiteral callback);
+		unsafe static extern bool sec_protocol_metadata_access_distinguished_names (IntPtr handle, BlockLiteral* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetDistinguishedNamesForPeerHandler (Action<DispatchData> callback)
@@ -209,15 +209,11 @@ namespace Security {
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
-			var block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_DistinguishedNamesForPeer, callback);
-
-			try {
-				if (!sec_protocol_metadata_access_distinguished_names (GetCheckedHandle (), ref block_handler)) {
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_DistinguishedNamesForPeer, callback);
+				if (!sec_protocol_metadata_access_distinguished_names (GetCheckedHandle (), &block))
 					throw new InvalidOperationException ("Distinguished names are not accessible.");
-				}
-			} finally {
-				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -236,7 +232,7 @@ namespace Security {
 
 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool sec_protocol_metadata_access_ocsp_response (IntPtr handle, ref BlockLiteral callback);
+		unsafe static extern bool sec_protocol_metadata_access_ocsp_response (IntPtr handle, BlockLiteral* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetOcspResponseForPeerHandler (Action<DispatchData> callback)
@@ -244,15 +240,11 @@ namespace Security {
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
-			var block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_OcspReposeForPeer, callback);
-
-			try {
-				if (!sec_protocol_metadata_access_ocsp_response (GetCheckedHandle (), ref block_handler)) {
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_OcspReposeForPeer, callback);
+				if (!sec_protocol_metadata_access_ocsp_response (GetCheckedHandle (), &block))
 					throw new InvalidOperationException ("The OSCP response is not accessible.");
-				}
-			} finally {
-				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -271,7 +263,7 @@ namespace Security {
 
 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool sec_protocol_metadata_access_peer_certificate_chain (IntPtr handle, ref BlockLiteral callback);
+		unsafe static extern bool sec_protocol_metadata_access_peer_certificate_chain (IntPtr handle, BlockLiteral* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetCertificateChainForPeerHandler (Action<SecCertificate> callback)
@@ -279,15 +271,11 @@ namespace Security {
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
-			var block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_CertificateChainForPeer, callback);
-
-			try {
-				if (!sec_protocol_metadata_access_peer_certificate_chain (GetCheckedHandle (), ref block_handler)) {
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_CertificateChainForPeer, callback);
+				if (!sec_protocol_metadata_access_peer_certificate_chain (GetCheckedHandle (), &block))
 					throw new InvalidOperationException ("The peer certificates are not accessible.");
-				}
-			} finally {
-				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -305,7 +293,7 @@ namespace Security {
 
 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool sec_protocol_metadata_access_supported_signature_algorithms (IntPtr handle, ref BlockLiteral callback);
+		unsafe static extern byte sec_protocol_metadata_access_supported_signature_algorithms (IntPtr handle, BlockLiteral* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetSignatureAlgorithmsForPeerHandler (Action<ushort> callback)
@@ -313,15 +301,11 @@ namespace Security {
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
-			var block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_SignatureAlgorithmsForPeer, callback);
-
-			try {
-				if (!sec_protocol_metadata_access_supported_signature_algorithms (GetCheckedHandle (), ref block_handler)) {
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_SignatureAlgorithmsForPeer, callback);
+				if (sec_protocol_metadata_access_supported_signature_algorithms (GetCheckedHandle (), &block) != 0)
 					throw new InvalidOperationException ("The supported signature list is not accessible.");
-				}
-			} finally {
-				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -394,7 +378,7 @@ namespace Security {
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
-		static extern bool sec_protocol_metadata_access_pre_shared_keys (IntPtr /* sec_protocol_metadata_t */ handle, ref BlockLiteral block);
+		unsafe static extern bool sec_protocol_metadata_access_pre_shared_keys (IntPtr /* sec_protocol_metadata_t */ handle, BlockLiteral* block);
 
 		public delegate void SecAccessPreSharedKeysHandler (DispatchData psk, DispatchData pskIdentity);
 
@@ -426,12 +410,10 @@ namespace Security {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			try {
-				block_handler.SetupBlockUnsafe (presharedkeys, handler);
-				return sec_protocol_metadata_access_pre_shared_keys (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (presharedkeys, handler);
+				return sec_protocol_metadata_access_pre_shared_keys (GetCheckedHandle (), &block);
 			}
 		}
 #endif

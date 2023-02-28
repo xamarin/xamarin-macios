@@ -252,20 +252,7 @@ namespace CoreText {
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern void CTFontManagerRegisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, [MarshalAs (UnmanagedType.I1)] bool enabled, IntPtr registrationHandler);
-
-#if NET
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (6, 0)]
-		[TV (13, 0)]
-		[iOS (13, 0)]
-#endif
-		[DllImport (Constants.CoreTextLibrary)]
-		static extern void CTFontManagerRegisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, [MarshalAs (UnmanagedType.I1)] bool enabled, ref BlockLiteral registrationHandler);
+		unsafe static extern void CTFontManagerRegisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, [MarshalAs (UnmanagedType.I1)] bool enabled, BlockLiteral* registrationHandler);
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
@@ -282,12 +269,15 @@ namespace CoreText {
 		{
 			using (var arr = EnsureNonNullArray (fontUrls, nameof (fontUrls))) {
 				if (registrationHandler is null) {
-					CTFontManagerRegisterFontURLs (arr.Handle, scope, enabled, IntPtr.Zero);
+					unsafe {
+						CTFontManagerRegisterFontURLs (arr.Handle, scope, enabled, null);
+					}
 				} else {
-					BlockLiteral block_handler = new BlockLiteral ();
-					block_handler.SetupBlockUnsafe (callback, registrationHandler);
-					CTFontManagerRegisterFontURLs (arr.Handle, scope, enabled, ref block_handler);
-					block_handler.CleanupBlock ();
+					unsafe {
+						using var block = new BlockLiteral ();
+						block.SetupBlockUnsafe (callback, registrationHandler);
+						CTFontManagerRegisterFontURLs (arr.Handle, scope, enabled, &block);
+					}
 				}
 			}
 		}
@@ -367,20 +357,7 @@ namespace CoreText {
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern unsafe void CTFontManagerUnregisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, IntPtr registrationHandler);
-
-#if NET
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (6, 0)]
-		[TV (13, 0)]
-		[iOS (13, 0)]
-#endif
-		[DllImport (Constants.CoreTextLibrary)]
-		static extern unsafe void CTFontManagerUnregisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, ref BlockLiteral registrationHandler);
+		static extern unsafe void CTFontManagerUnregisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, BlockLiteral* registrationHandler);
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
@@ -393,16 +370,15 @@ namespace CoreText {
 		[iOS (13, 0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public static void UnregisterFonts (NSUrl [] fontUrls, CTFontManagerScope scope, CTFontRegistrationHandler registrationHandler)
+		public unsafe static void UnregisterFonts (NSUrl [] fontUrls, CTFontManagerScope scope, CTFontRegistrationHandler registrationHandler)
 		{
 			using (var arr = EnsureNonNullArray (fontUrls, nameof (fontUrls))) {
 				if (registrationHandler is null) {
-					CTFontManagerUnregisterFontURLs (arr.Handle, scope, IntPtr.Zero);
+					CTFontManagerUnregisterFontURLs (arr.Handle, scope, null);
 				} else {
-					BlockLiteral block_handler = new BlockLiteral ();
-					block_handler.SetupBlockUnsafe (callback, registrationHandler);
-					CTFontManagerUnregisterFontURLs (arr.Handle, scope, ref block_handler);
-					block_handler.CleanupBlock ();
+					using var block = new BlockLiteral ();
+					block.SetupBlockUnsafe (callback, registrationHandler);
+					CTFontManagerUnregisterFontURLs (arr.Handle, scope, &block);
 				}
 			}
 		}
@@ -542,20 +518,7 @@ namespace CoreText {
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern unsafe void CTFontManagerRegisterFontDescriptors (/* CFArrayRef */ IntPtr fontDescriptors, CTFontManagerScope scope, [MarshalAs (UnmanagedType.I1)] bool enabled, IntPtr registrationHandler);
-
-#if NET
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (6, 0)]
-		[TV (13, 0)]
-		[iOS (13, 0)]
-#endif
-		[DllImport (Constants.CoreTextLibrary)]
-		static extern unsafe void CTFontManagerRegisterFontDescriptors (/* CFArrayRef */ IntPtr fontDescriptors, CTFontManagerScope scope, [MarshalAs (UnmanagedType.I1)] bool enabled, ref BlockLiteral registrationHandler);
+		static extern unsafe void CTFontManagerRegisterFontDescriptors (/* CFArrayRef */ IntPtr fontDescriptors, CTFontManagerScope scope, [MarshalAs (UnmanagedType.I1)] bool enabled, BlockLiteral* registrationHandler);
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
@@ -568,16 +531,15 @@ namespace CoreText {
 		[iOS (13, 0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public static void RegisterFontDescriptors (CTFontDescriptor [] fontDescriptors, CTFontManagerScope scope, bool enabled, CTFontRegistrationHandler registrationHandler)
+		public unsafe static void RegisterFontDescriptors (CTFontDescriptor [] fontDescriptors, CTFontManagerScope scope, bool enabled, CTFontRegistrationHandler registrationHandler)
 		{
 			using (var arr = EnsureNonNullArray (fontDescriptors, nameof (fontDescriptors))) {
 				if (registrationHandler is null) {
-					CTFontManagerRegisterFontDescriptors (arr.Handle, scope, enabled, IntPtr.Zero);
+					CTFontManagerRegisterFontDescriptors (arr.Handle, scope, enabled, null);
 				} else {
-					BlockLiteral block_handler = new BlockLiteral ();
-					block_handler.SetupBlockUnsafe (callback, registrationHandler);
-					CTFontManagerRegisterFontDescriptors (arr.Handle, scope, enabled, ref block_handler);
-					block_handler.CleanupBlock ();
+					using var block = new BlockLiteral ();
+					block.SetupBlockUnsafe (callback, registrationHandler);
+					CTFontManagerRegisterFontDescriptors (arr.Handle, scope, enabled, &block);
 				}
 			}
 		}
@@ -593,20 +555,7 @@ namespace CoreText {
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern unsafe void CTFontManagerUnregisterFontDescriptors (/* CFArrayRef */ IntPtr fontDescriptors, CTFontManagerScope scope, IntPtr registrationHandler);
-
-#if NET
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (6, 0)]
-		[TV (13, 0)]
-		[iOS (13, 0)]
-#endif
-		[DllImport (Constants.CoreTextLibrary)]
-		static extern unsafe void CTFontManagerUnregisterFontDescriptors (/* CFArrayRef */ IntPtr fontDescriptors, CTFontManagerScope scope, ref BlockLiteral registrationHandler);
+		static extern unsafe void CTFontManagerUnregisterFontDescriptors (/* CFArrayRef */ IntPtr fontDescriptors, CTFontManagerScope scope, BlockLiteral* registrationHandler);
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
@@ -619,16 +568,15 @@ namespace CoreText {
 		[iOS (13, 0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public static void UnregisterFontDescriptors (CTFontDescriptor [] fontDescriptors, CTFontManagerScope scope, CTFontRegistrationHandler registrationHandler)
+		public unsafe static void UnregisterFontDescriptors (CTFontDescriptor [] fontDescriptors, CTFontManagerScope scope, CTFontRegistrationHandler registrationHandler)
 		{
 			using (var arr = EnsureNonNullArray (fontDescriptors, nameof (fontDescriptors))) {
 				if (registrationHandler is null) {
-					CTFontManagerUnregisterFontDescriptors (arr.Handle, scope, IntPtr.Zero);
+					CTFontManagerUnregisterFontDescriptors (arr.Handle, scope, null);
 				} else {
-					BlockLiteral block_handler = new BlockLiteral ();
-					block_handler.SetupBlockUnsafe (callback, registrationHandler);
-					CTFontManagerUnregisterFontDescriptors (arr.Handle, scope, ref block_handler);
-					block_handler.CleanupBlock ();
+					using var block = new BlockLiteral ();
+					block.SetupBlockUnsafe (callback, registrationHandler);
+					CTFontManagerUnregisterFontDescriptors (arr.Handle, scope, &block);
 				}
 			}
 		}
@@ -725,21 +673,7 @@ namespace CoreText {
 		[iOS (13,0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern unsafe void CTFontManagerRegisterFontsWithAssetNames (/* CFArrayRef */ IntPtr fontAssetNames, /* CFBundleRef _Nullable */ IntPtr bundle, CTFontManagerScope scope, [MarshalAs (UnmanagedType.I1)] bool enabled, IntPtr registrationHandler);
-
-#if NET
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos")]
-#else
-		[NoWatch]
-		[NoTV]
-		[NoMac]
-		[iOS (13,0)]
-#endif
-		[DllImport (Constants.CoreTextLibrary)]
-		static extern unsafe void CTFontManagerRegisterFontsWithAssetNames (/* CFArrayRef */ IntPtr fontAssetNames, /* CFBundleRef _Nullable */ IntPtr bundle, CTFontManagerScope scope, [MarshalAs (UnmanagedType.I1)] bool enabled, ref BlockLiteral registrationHandler);
+		static extern unsafe void CTFontManagerRegisterFontsWithAssetNames (/* CFArrayRef */ IntPtr fontAssetNames, /* CFBundleRef _Nullable */ IntPtr bundle, CTFontManagerScope scope, [MarshalAs (UnmanagedType.I1)] bool enabled, BlockLiteral* registrationHandler);
 
 		// reminder that NSBundle and CFBundle are NOT toll-free bridged :(
 #if NET
@@ -754,16 +688,15 @@ namespace CoreText {
 		[iOS (13,0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public static void RegisterFonts (string[] assetNames, CFBundle bundle, CTFontManagerScope scope, bool enabled, CTFontRegistrationHandler registrationHandler)
+		public unsafe static void RegisterFonts (string[] assetNames, CFBundle bundle, CTFontManagerScope scope, bool enabled, CTFontRegistrationHandler registrationHandler)
 		{
 			using (var arr = EnsureNonNullArray (assetNames, nameof (assetNames))) {
 				if (registrationHandler is null) {
-					CTFontManagerRegisterFontsWithAssetNames (arr.Handle, bundle.GetHandle (), scope, enabled, IntPtr.Zero);
+					CTFontManagerRegisterFontsWithAssetNames (arr.Handle, bundle.GetHandle (), scope, enabled, null);
 				} else {
-					BlockLiteral block_handler = new BlockLiteral ();
-					block_handler.SetupBlockUnsafe (callback, registrationHandler);
-					CTFontManagerRegisterFontsWithAssetNames (arr.Handle, bundle.GetHandle (), scope, enabled, ref block_handler);
-					block_handler.CleanupBlock ();
+					using var block = new BlockLiteral ();
+					block.SetupBlockUnsafe (callback, registrationHandler);
+					CTFontManagerRegisterFontsWithAssetNames (arr.Handle, bundle.GetHandle (), scope, enabled, &block);
 				}
 			}
 		}
@@ -793,7 +726,7 @@ namespace CoreText {
 		[iOS (13,0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern unsafe void CTFontManagerRequestFonts (/* CFArrayRef */ IntPtr fontDescriptors, ref BlockLiteral completionHandler);
+		static extern unsafe void CTFontManagerRequestFonts (/* CFArrayRef */ IntPtr fontDescriptors, BlockLiteral* completionHandler);
 
 		internal delegate void InnerRequestFontsHandler (IntPtr block, IntPtr fontDescriptors);
 		static readonly InnerRequestFontsHandler requestCallback = TrampolineRequestFonts;
@@ -824,10 +757,11 @@ namespace CoreText {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (completionHandler));
 
 			using (var arr = EnsureNonNullArray (fontDescriptors, nameof (fontDescriptors))) {
-				BlockLiteral block_handler = new BlockLiteral ();
-				block_handler.SetupBlockUnsafe (requestCallback, completionHandler);
-				CTFontManagerRequestFonts (arr.Handle, ref block_handler);
-				block_handler.CleanupBlock ();
+				unsafe {
+					using var block = new BlockLiteral ();
+					block.SetupBlockUnsafe (requestCallback, completionHandler);
+					CTFontManagerRequestFonts (arr.Handle, &block);
+				}
 			}
 		}
 #endif

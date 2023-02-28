@@ -75,7 +75,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_group_descriptor_enumerate_endpoints (OS_nw_group_descriptor descriptor, ref BlockLiteral enumerate_block);
+		unsafe static extern void nw_group_descriptor_enumerate_endpoints (OS_nw_group_descriptor descriptor, BlockLiteral* enumerate_block);
 
 		delegate bool nw_group_descriptor_enumerate_endpoints_block_t (IntPtr block, OS_nw_endpoint endpoint);
 		static nw_group_descriptor_enumerate_endpoints_block_t static_EnumerateEndpointsHandler = TrampolineEnumerateEndpointsHandler;
@@ -97,12 +97,10 @@ namespace Network {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_EnumerateEndpointsHandler, handler);
-			try {
-				nw_group_descriptor_enumerate_endpoints (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_EnumerateEndpointsHandler, handler);
+				nw_group_descriptor_enumerate_endpoints (GetCheckedHandle (), &block);
 			}
 		}
 	}

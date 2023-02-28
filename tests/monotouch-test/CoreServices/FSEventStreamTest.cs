@@ -188,15 +188,29 @@ namespace MonoTouchFixtures.CoreServices {
 				}
 
 				while (true) {
+					int createdDirCount;
+					int createdFileCount;
+					int removedFileCount;
+					int createdThenRemovedFileCount;
+					lock (_monitor) {
+						createdDirCount = _createdDirectories.Count;
+						createdFileCount = _createdFiles.Count;
+						removedFileCount = _removedFiles.Count;
+						createdThenRemovedFileCount = _createdThenRemovedFiles.Count;
+
+					}
 					if (!_monitor.WaitOne (s_testTimeout))
 						throw new TimeoutException (
 							$"test has timed out at {s_testTimeout.TotalSeconds}s; " +
-							"increase the timeout or reduce the number of files created");
+							"increase the timeout or reduce the number of files created. " +
+							$"Created directories: {createdDirCount} Created files: {createdFileCount} Removed files: {removedFileCount} Created then removed files: {createdThenRemovedFileCount}");
 
-					if (_createdDirectories.Count == 0 &&
-						_createdFiles.Count == 0 &&
-						_removedFiles.Count == _createdThenRemovedFiles.Count)
-						break;
+					lock (_monitor) {
+						if (_createdDirectories.Count == 0 &&
+							_createdFiles.Count == 0 &&
+							_removedFiles.Count == _createdThenRemovedFiles.Count)
+							break;
+					}
 				}
 			}
 

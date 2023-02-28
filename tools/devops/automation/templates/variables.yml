@@ -41,4 +41,5 @@ variables:
   value: 'wrench'
 - name: BUILD_REVISION
   value: azure-devops-$(Build.SourceVersion)
-
+- name: MacPoolAccessToken
+  value: $(botdeploy--azdo--token--register--untrusted)

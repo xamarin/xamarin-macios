@@ -39,7 +39,7 @@ namespace ImageIO {
 		[Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
-		static extern /* OSStatus */ CGImageAnimationStatus CGAnimateImageAtURLWithBlock ( /* CFURLRef */ IntPtr url, /* CFDictionaryRef _iio_Nullable */ IntPtr options, /* CGImageSourceAnimationHandler */ ref BlockLiteral block);
+		unsafe static extern /* OSStatus */ CGImageAnimationStatus CGAnimateImageAtURLWithBlock ( /* CFURLRef */ IntPtr url, /* CFDictionaryRef _iio_Nullable */ IntPtr options, /* CGImageSourceAnimationHandler */ BlockLiteral* block);
 
 #if NET
         [SupportedOSPlatform ("macos")]
@@ -52,7 +52,7 @@ namespace ImageIO {
 		[Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
-		static extern /* OSStatus */ CGImageAnimationStatus CGAnimateImageDataWithBlock ( /* CFDataRef _Nonnull */ IntPtr data, /* CFDictionaryRef _Nullable */ IntPtr options, /* CGImageSourceAnimationHandler _Nonnull */ ref BlockLiteral block);
+		unsafe static extern /* OSStatus */ CGImageAnimationStatus CGAnimateImageDataWithBlock ( /* CFDataRef _Nonnull */ IntPtr data, /* CFDictionaryRef _Nullable */ IntPtr options, /* CGImageSourceAnimationHandler _Nonnull */ BlockLiteral* block);
 
 #if NET
         [SupportedOSPlatform ("macos")]
@@ -75,13 +75,10 @@ namespace ImageIO {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			var block = new BlockLiteral ();
-			block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, handler);
-
-			try {
-				return CGAnimateImageAtURLWithBlock (url.Handle, options.GetHandle (), ref block);
-			} finally {
-				block.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, handler);
+				return CGAnimateImageAtURLWithBlock (url.Handle, options.GetHandle (), &block);
 			}
 #endif
 		}
@@ -107,13 +104,10 @@ namespace ImageIO {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			var block = new BlockLiteral ();
-			block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, handler);
-
-			try {
-				return CGAnimateImageDataWithBlock (data.Handle, options.GetHandle (), ref block);
-			} finally {
-				block.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, handler);
+				return CGAnimateImageDataWithBlock (data.Handle, options.GetHandle (), &block);
 			}
 #endif
 		}

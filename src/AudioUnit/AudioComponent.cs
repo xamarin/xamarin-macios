@@ -602,7 +602,7 @@ namespace AudioUnit {
 		[iOS (16,0)]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
-		static extern int AudioComponentValidateWithResults (IntPtr /* AudioComponent* */ inComponent, IntPtr /* CFDictionaryRef* */ inValidationParameters, ref BlockLiteral inCompletionHandler);
+		unsafe static extern int AudioComponentValidateWithResults (IntPtr /* AudioComponent* */ inComponent, IntPtr /* CFDictionaryRef* */ inValidationParameters, BlockLiteral* inCompletionHandler);
 
 #if NET
 		[SupportedOSPlatform ("macos13.0")]
@@ -621,12 +621,10 @@ namespace AudioUnit {
 			if (onCompletion is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (onCompletion));
 			
-			var block_handler= new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_action, onCompletion);
-			try {
-				resultCode = AudioComponentValidateWithResults (GetCheckedHandle (), validationParameters.GetHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_action, onCompletion);
+				resultCode = AudioComponentValidateWithResults (GetCheckedHandle (), validationParameters.GetHandle (), &block);
 			}
 		}
 
