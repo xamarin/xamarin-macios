@@ -203,7 +203,7 @@ steps:
 
 - bash: |
     ls -Rla $(Build.SourcesDirectory)/artifacts
-    # no prefix, we do know hte path!
+    # no prefix, we do know the path!
     $(Build.SourcesDirectory)/artifacts/mac-test-package/test-dependencies.sh
   displayName: Install dependencies.
   timeoutInMinutes: 60
