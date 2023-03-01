@@ -167,6 +167,7 @@ namespace MonoTouchFixtures.Foundation {
 				}
 			}, () => completed);
 
+			TestRuntime.IgnoreInCIIfBadNetwork (ex);
 			Assert.IsNull (ex, "Exception");
 			Assert.AreEqual (-1, failed_iteration, "Failed");
 		}
