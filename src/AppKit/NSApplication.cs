@@ -46,13 +46,8 @@ namespace AppKit {
 
 		private static Thread? mainThread;
 
-#if NET
 		[DllImport (Constants.AppKitLibrary)]
 		extern static int /* int */ NSApplicationMain (int /* int */ argc, IntPtr argv);
-#else
-		[DllImport (Constants.AppKitLibrary)]
-		extern static int /* int */ NSApplicationMain (int /* int */ argc, string [] argv);
-#endif
 
 		static bool initialized;
 
@@ -120,14 +115,10 @@ namespace AppKit {
 			// with a call to Main, but this guarantees the right thread.
 			NSApplication.mainThread = Thread.CurrentThread;
 
-#if NET
 			var argsPtr = TransientString.AllocStringArray (args);
 			NSApplicationMain (args.Length, argsPtr);
 			if (argsPtr != IntPtr.Zero)
 				TransientString.FreeStringArray (argsPtr, args.Length);
-#else
-			NSApplicationMain (args.Length, args);
-#endif
 		}
 
 		public static void EnsureUIThread ()

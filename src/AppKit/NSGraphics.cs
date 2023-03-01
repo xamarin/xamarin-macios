@@ -160,7 +160,7 @@ namespace AppKit {
 
 		public static void ShowAnimationEffect (NSAnimationEffect animationEffect, CGPoint centerLocation, CGSize size, NSObject animationDelegate, Selector didEndSelector, IntPtr contextInfo)
 		{
-			NSShowAnimationEffect ((nuint) (ulong) animationEffect, centerLocation, size, animationDelegate.Handle, didEndSelector.Handle, contextInfo);
+			NSShowAnimationEffect ((nuint) (ulong) animationEffect, centerLocation, size, animationDelegate.GetHandle (), didEndSelector.Handle, contextInfo);
 		}
 
 		public static void ShowAnimationEffect (NSAnimationEffect animationEffect, CGPoint centerLocation, CGSize size, Action endedCallback)

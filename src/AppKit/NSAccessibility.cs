@@ -43,7 +43,7 @@ namespace AppKit {
 
 		public static CGRect GetFrameInView (NSView parentView, CGRect frame)
 		{
-			return NSAccessibilityFrameInView (parentView.Handle, frame);
+			return NSAccessibilityFrameInView (parentView.GetHandle (), frame);
 		}
 
 #if NET
@@ -56,7 +56,7 @@ namespace AppKit {
 
 		public static CGPoint GetPointInView (NSView parentView, CGPoint point)
 		{
-			return NSAccessibilityPointInView (parentView.Handle, point);
+			return NSAccessibilityPointInView (parentView.GetHandle (), point);
 		}
 
 		[DllImport (Constants.AppKitLibrary)]
