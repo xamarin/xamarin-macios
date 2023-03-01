@@ -116,8 +116,13 @@ namespace Network {
 			nw_ethernet_channel_set_queue (GetCheckedHandle (), queue.Handle);
 		}
 
+#if NET
+		[DllImport (Constants.NetworkLibrary)]
+		unsafe static extern void nw_ethernet_channel_send (OS_nw_ethernet_channel ethernet_channel, OS_dispatch_data content, ushort vlan_tag, IntPtr remote_address, BlockLiteral* completion);
+#else
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_ethernet_channel_send (OS_nw_ethernet_channel ethernet_channel, OS_dispatch_data content, ushort vlan_tag, string remote_address, BlockLiteral* completion);
+#endif
 
 		delegate void nw_ethernet_channel_send_completion_t (IntPtr block, IntPtr error);
 		static nw_ethernet_channel_send_completion_t static_SendCompletion = TrampolineSendCompletion;
@@ -142,7 +147,12 @@ namespace Network {
 				unsafe {
 					using var block = new BlockLiteral ();
 					block.SetupBlockUnsafe (static_SendCompletion, callback);
+#if NET
+					var remoteAddressStr = new TransientString (remoteAddress);
+					nw_ethernet_channel_send (GetCheckedHandle (), dispatchData.GetHandle (), vlanTag, remoteAddressStr, &block);
+#else
 					nw_ethernet_channel_send (GetCheckedHandle (), dispatchData.GetHandle (), vlanTag, remoteAddress, &block);
+#endif
 				}
 			}
 		}
