@@ -1623,15 +1623,20 @@
 		Outputs="@(_CompressedPlugIns -> '$(_IntermediateDecompressionDir)%(Filename)%(Extension).stamp')"
 		>
 
-		<Ditto
+		<ItemGroup>
+			<_CompressedPlugIns Update="@(_CompressedPlugIns)">
+				<ExtractionPath>$([MSBuild]::EnsureTrailingSlash('$(_IntermediateDecompressionDir)%(_CompressedPlugIns.Filename)%(_CompressedPlugIns.Extension)'))</ExtractionPath>
+			</_CompressedPlugIns>
+		</ItemGroup>
+
+		<Unzip
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			AdditionalArguments="-x -k"
-			CopyFromWindows="true"
-			Source="%(_CompressedPlugIns.Identity)"
-			Destination="$(_IntermediateDecompressionDir)%(Filename)%(Extension)"
+			ZipFilePath="%(_CompressedPlugIns.Identity)"
+			ExtractionPath="%(_CompressedPlugIns.ExtractionPath)"
 			>
-		</Ditto>
+			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
+		</Unzip>
 	</Target>
 
 	<Target Name="_CollectDecompressedPlugIns"
@@ -1640,23 +1645,14 @@
 
 		<ItemGroup>
 			<!-- Set TargetDirectory and SourceDirectory for all directories we have to publish -->
-			<_DecompressedPlugIns Include="@(_CompressedPlugIns -> '$(_IntermediateDecompressionDir)%(Filename)%(Extension)')" />
+			<_DecompressedPlugIns Include="@(_CompressedPlugIns -> '%(ExtractionPath)')" PublishFolderType="PlugIns" />
 		</ItemGroup>
 		<ItemGroup>
 			<_DecompressedPlugIns Update="@(_DecompressedPlugIns)">
 				<TargetDirectory>$(_RelativePublishDir)$(_RelativeAppBundlePath)$(_AppPlugInsRelativePath)</TargetDirectory>
-				<SourceDirectory>$(_IntermediateDecompressionDir)%(Filename)%(Extension)</SourceDirectory>
+				<SourceDirectory>$(ExtractionPath)</SourceDirectory>
 			</_DecompressedPlugIns>
 		</ItemGroup>
-
-		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AlwaysCreate="true"
-			Files="@(_CompressedPlugIns -> '$(_IntermediateDecompressionDir)%(Filename)%(Extension).stamp')"
-			>
-			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
-		</Touch>
 
 		<ItemGroup>
 			<_DirectoriesToPublish Include="@(_DecompressedPlugIns)" />
