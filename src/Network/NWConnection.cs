@@ -125,27 +125,21 @@ namespace Network {
 			}
 
 			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral* block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_stateChangeHandler, stateHandler);
-
-				try {
-					nw_connection_set_state_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_stateChangeHandler, stateHandler);
+				nw_connection_set_state_changed_handler (GetCheckedHandle (), &block);
 			}
 		}
 
-		delegate void nw_connection_boolean_event_handler_t (IntPtr block, [MarshalAs (UnmanagedType.U1)] bool value);
+		delegate void nw_connection_boolean_event_handler_t (IntPtr block, byte value);
 		static nw_connection_boolean_event_handler_t static_BooleanChangeHandler = TrampolineBooleanChangeHandler;
 
 		[MonoPInvokeCallback (typeof (nw_connection_boolean_event_handler_t))]
-		static void TrampolineBooleanChangeHandler (IntPtr block, bool value)
+		static void TrampolineBooleanChangeHandler (IntPtr block, byte value)
 		{
 			var del = BlockLiteral.GetTarget<Action<bool>> (block);
 			if (del is not null)
-				del (value);
+				del (value != 0);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -160,15 +154,9 @@ namespace Network {
 			}
 
 			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral* block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_BooleanChangeHandler, callback);
-
-				try {
-					nw_connection_set_viability_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_BooleanChangeHandler, callback);
+				nw_connection_set_viability_changed_handler (GetCheckedHandle (), &block);
 			}
 		}
 
@@ -184,15 +172,9 @@ namespace Network {
 			}
 
 			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral* block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_BooleanChangeHandler, callback);
-
-				try {
-					nw_connection_set_better_path_available_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_BooleanChangeHandler, callback);
+				nw_connection_set_better_path_available_handler (GetCheckedHandle (), &block);
 			}
 		}
 
@@ -210,18 +192,15 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_connection_set_path_changed_handler (IntPtr handle, ref BlockLiteral callback);
+		unsafe static extern void nw_connection_set_path_changed_handler (IntPtr handle, BlockLiteral* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetPathChangedHandler (Action<NWPath> callback)
 		{
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_PathChanged, callback);
-
-			try {
-				nw_connection_set_path_changed_handler (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_PathChanged, callback);
+				nw_connection_set_path_changed_handler (GetCheckedHandle (), &block);
 			}
 		}
 
@@ -263,7 +242,7 @@ namespace Network {
 		delegate void nw_connection_receive_completion_t (IntPtr block,
 								  IntPtr dispatchData,
 								  IntPtr contentContext,
-								  [MarshalAs (UnmanagedType.U1)] bool isComplete,
+								  byte isComplete,
 								  IntPtr error);
 
 		static nw_connection_receive_completion_t static_ReceiveCompletion = TrampolineReceiveCompletion;
@@ -271,7 +250,7 @@ namespace Network {
 		static nw_connection_receive_completion_t static_ReceiveCompletionDispatchReadnOnlyData = TrampolineReceiveCompletionReadOnlyData;
 
 		[MonoPInvokeCallback (typeof (nw_connection_receive_completion_t))]
-		static void TrampolineReceiveCompletion (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, bool isComplete, IntPtr error)
+		static void TrampolineReceiveCompletion (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, byte isComplete, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<NWConnectionReceiveCompletion> (block);
 			if (del is not null) {
@@ -287,7 +266,7 @@ namespace Network {
 				del (bufferAddress,
 					 bufferSize,
 					 contentContext == IntPtr.Zero ? null : new NWContentContext (contentContext, owns: false),
-					 isComplete,
+					 isComplete != 0,
 					 error == IntPtr.Zero ? null : new NWError (error, owns: false));
 
 				if (dispatchData is not null) {
@@ -298,7 +277,7 @@ namespace Network {
 		}
 
 		[MonoPInvokeCallback (typeof (nw_connection_receive_completion_t))]
-		static void TrampolineReceiveCompletionData (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, bool isComplete, IntPtr error)
+		static void TrampolineReceiveCompletionData (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, byte isComplete, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<NWConnectionReceiveDispatchDataCompletion> (block);
 			if (del is not null) {
@@ -310,7 +289,7 @@ namespace Network {
 
 				del (dispatchData,
 					 contentContext == IntPtr.Zero ? null : new NWContentContext (contentContext, owns: false),
-					 isComplete,
+					 isComplete != 0,
 					 error == IntPtr.Zero ? null : new NWError (error, owns: false));
 
 				if (dispatchData is not null)
@@ -319,7 +298,7 @@ namespace Network {
 		}
 
 		[MonoPInvokeCallback (typeof (nw_connection_receive_completion_t))]
-		static void TrampolineReceiveCompletionReadOnlyData (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, bool isComplete, IntPtr error)
+		static void TrampolineReceiveCompletionReadOnlyData (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, byte isComplete, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<NWConnectionReceiveReadOnlySpanCompletion> (block);
 			if (del is not null) {
@@ -328,7 +307,7 @@ namespace Network {
 				var spanData = new ReadOnlySpan<byte> (dispatchData?.ToArray () ?? Array.Empty<byte> ());
 				del (spanData,
 					contentContext == IntPtr.Zero ? null : new NWContentContext (contentContext, owns: false),
-					isComplete,
+					isComplete != 0,
 					error == IntPtr.Zero ? null : new NWError (error, owns: false));
 
 				if (dispatchData is not null) {
@@ -338,7 +317,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_connection_receive (IntPtr handle, /* uint32_t */ uint minimumIncompleteLength, /* uint32_t */ uint maximumLength, ref BlockLiteral callback);
+		unsafe static extern void nw_connection_receive (IntPtr handle, /* uint32_t */ uint minimumIncompleteLength, /* uint32_t */ uint maximumLength, BlockLiteral* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void Receive (uint minimumIncompleteLength, uint maximumLength, NWConnectionReceiveCompletion callback)
@@ -346,12 +325,10 @@ namespace Network {
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
-			try {
-				nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_ReceiveCompletion, callback);
+				nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, &block);
 			}
 		}
 
@@ -361,13 +338,10 @@ namespace Network {
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
-
-			try {
-				nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
+				nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, &block);
 			}
 		}
 
@@ -377,18 +351,15 @@ namespace Network {
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchReadnOnlyData, callback);
-
-			try {
-				nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_ReceiveCompletionDispatchReadnOnlyData, callback);
+				nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, &block);
 			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_connection_receive_message (IntPtr handle, ref BlockLiteral callback);
+		unsafe static extern void nw_connection_receive_message (IntPtr handle, BlockLiteral* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void ReceiveMessage (NWConnectionReceiveCompletion callback)
@@ -396,14 +367,12 @@ namespace Network {
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
-
-			try {
-				nw_connection_receive_message (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_ReceiveCompletion, callback);
+				nw_connection_receive_message (GetCheckedHandle (), &block);
 			}
+
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -412,13 +381,10 @@ namespace Network {
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
-
-			try {
-				nw_connection_receive_message (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
+				nw_connection_receive_message (GetCheckedHandle (), &block);
 			}
 		}
 
@@ -428,13 +394,10 @@ namespace Network {
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchReadnOnlyData, callback);
-
-			try {
-				nw_connection_receive_message (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_ReceiveCompletionDispatchReadnOnlyData, callback);
+				nw_connection_receive_message (GetCheckedHandle (), &block);
 			}
 		}
 
@@ -457,14 +420,14 @@ namespace Network {
 								  IntPtr dispatchData,
 								  IntPtr contentContext,
 								  [MarshalAs (UnmanagedType.U1)] bool isComplete,
-								  void* callback);
+								  BlockLiteral* callback);
 
 		//
 		// This has more uses than the current ones, we might want to introduce
 		// additional SendXxx methods to encode the few options that are currently
 		// configured via one of the three NWContentContext static properties
 		//
-		unsafe void LowLevelSend (IntPtr handle, DispatchData? buffer, IntPtr contentContext, bool isComplete, void* callback)
+		unsafe void LowLevelSend (IntPtr handle, DispatchData? buffer, IntPtr contentContext, bool isComplete, BlockLiteral* callback)
 		{
 			nw_connection_send (handle: GetCheckedHandle (),
 						dispatchData: buffer.GetHandle (),
@@ -500,15 +463,9 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral* block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_SendCompletion, callback);
-
-				try {
-					LowLevelSend (GetCheckedHandle (), buffer, context.Handle, isComplete, block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_SendCompletion, callback);
+				LowLevelSend (GetCheckedHandle (), buffer, context.Handle, isComplete, &block);
 			}
 		}
 
@@ -517,7 +474,7 @@ namespace Network {
 			if (context is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 
-			LowLevelSend (GetCheckedHandle (), buffer, context.Handle, isComplete, (void*) NWConnectionConstants._SendIdempotentContent);
+			LowLevelSend (GetCheckedHandle (), buffer, context.Handle, isComplete, (BlockLiteral*) NWConnectionConstants._SendIdempotentContent);
 		}
 
 		public void SendIdempotent (byte [] buffer, NWContentContext context, bool isComplete)
@@ -581,11 +538,14 @@ namespace Network {
 		public uint MaximumDatagramSize => nw_connection_get_maximum_datagram_size (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
-		extern static void nw_connection_batch (IntPtr handle, IntPtr callback_block);
+		unsafe extern static void nw_connection_batch (IntPtr handle, BlockLiteral* callback_block);
 
 		public void Batch (Action method)
 		{
-			BlockLiteral.SimpleCall (method, (arg) => nw_connection_batch (GetCheckedHandle (), arg));
+			unsafe {
+				using var block = BlockStaticDispatchClass.CreateBlock (method);
+				nw_connection_batch (GetCheckedHandle (), &block);
+			}
 		}
 
 #if NET
@@ -599,7 +559,7 @@ namespace Network {
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_connection_access_establishment_report (IntPtr connection, IntPtr queue, ref BlockLiteral access_block);
+		unsafe static extern void nw_connection_access_establishment_report (IntPtr connection, IntPtr queue, BlockLiteral* access_block);
 
 		delegate void nw_establishment_report_access_block_t (IntPtr block, nw_establishment_report_t report);
 		static nw_establishment_report_access_block_t static_GetEstablishmentReportHandler = TrampolineGetEstablishmentReportHandler;
@@ -633,12 +593,10 @@ namespace Network {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_GetEstablishmentReportHandler, handler);
-			try {
-				nw_connection_access_establishment_report (GetCheckedHandle (), queue.Handle, ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_GetEstablishmentReportHandler, handler);
+				nw_connection_access_establishment_report (GetCheckedHandle (), queue.Handle, &block);
 			}
 		}
 	}

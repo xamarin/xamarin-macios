@@ -262,7 +262,7 @@ typedef void (^outerBlock) (innerBlock callback);
 	-(void) testNSObject:      (int) action a:(id *)          refValue b:(id *)          outValue;
 	-(void) testNSValue:       (int) action a:(NSValue **)    refValue b:(NSValue **)    outValue;
 	-(void) testString:        (int) action a:(NSString **)   refValue b:(NSString **)   outValue;
-	-(void) testInt:           (int) action a:(int32_t *)     refValue b:(int32_t *)     outValue;
+	-(void) testInt:           (int) action a:(int32_t *)     refValue b:(int32_t *)     outValue c:(int32_t *) pointerValue;
 	-(void) testSelector:      (int) action a:(SEL *)         refValue b:(SEL *)         outValue;
 	-(void) testClass:         (int) action a:(Class *)       refValue b:(Class *)       outValue;
 

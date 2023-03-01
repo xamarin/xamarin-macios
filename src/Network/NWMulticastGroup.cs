@@ -75,20 +75,20 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_group_descriptor_enumerate_endpoints (OS_nw_group_descriptor descriptor, ref BlockLiteral enumerate_block);
+		unsafe static extern void nw_group_descriptor_enumerate_endpoints (OS_nw_group_descriptor descriptor, BlockLiteral* enumerate_block);
 
-		delegate bool nw_group_descriptor_enumerate_endpoints_block_t (IntPtr block, OS_nw_endpoint endpoint);
+		delegate byte nw_group_descriptor_enumerate_endpoints_block_t (IntPtr block, OS_nw_endpoint endpoint);
 		static nw_group_descriptor_enumerate_endpoints_block_t static_EnumerateEndpointsHandler = TrampolineEnumerateEndpointsHandler;
 
 		[MonoPInvokeCallback (typeof (nw_group_descriptor_enumerate_endpoints_block_t))]
-		static bool TrampolineEnumerateEndpointsHandler (IntPtr block, OS_nw_endpoint endpoint)
+		static byte TrampolineEnumerateEndpointsHandler (IntPtr block, OS_nw_endpoint endpoint)
 		{
 			var del = BlockLiteral.GetTarget<Func<NWEndpoint, bool>> (block);
 			if (del is not null) {
 				using var nsEndpoint = new NWEndpoint (endpoint, owns: false);
-				return del (nsEndpoint);
+				return del (nsEndpoint) ? (byte) 1 : (byte) 0;
 			}
-			return false;
+			return 0;
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -97,12 +97,10 @@ namespace Network {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_EnumerateEndpointsHandler, handler);
-			try {
-				nw_group_descriptor_enumerate_endpoints (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_EnumerateEndpointsHandler, handler);
+				nw_group_descriptor_enumerate_endpoints (GetCheckedHandle (), &block);
 			}
 		}
 	}

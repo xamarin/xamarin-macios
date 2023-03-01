@@ -32,6 +32,10 @@ parameters:
   type: string
   default: HEAD
 
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
 # build the source code (build.yml) and detect changes (the nested api-diff.yml)
 steps:
 - template: build.yml
@@ -61,6 +65,6 @@ steps:
   displayName: 'Publish change detection artifact'
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)/change-detection/change-detection.zip'
-    artifactName: change-detection
+    artifactName: ${{ parameters.uploadPrefix }}change-detection
   condition: succeededOrFailed() # we always want to upload the zip as an artifact
   continueOnError: true

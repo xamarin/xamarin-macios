@@ -127,7 +127,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_path_enumerate_interfaces (IntPtr handle, ref BlockLiteral callback);
+		unsafe static extern void nw_path_enumerate_interfaces (IntPtr handle, BlockLiteral* callback);
 
 
 #if !XAMCORE_5_0
@@ -152,13 +152,10 @@ namespace Network {
 			if (callback is null)
 				return;
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_Enumerator, callback);
-
-			try {
-				nw_path_enumerate_interfaces (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_Enumerator, callback);
+				nw_path_enumerate_interfaces (GetCheckedHandle (), &block);
 			}
 		}
 
@@ -199,7 +196,7 @@ namespace Network {
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_path_enumerate_gateways (IntPtr path, ref BlockLiteral enumerate_block);
+		unsafe static extern void nw_path_enumerate_gateways (IntPtr path, BlockLiteral* enumerate_block);
 
 		// Returning 'byte' since 'bool' isn't blittable
 		delegate byte nw_path_enumerate_gateways_t (IntPtr block, IntPtr endpoint);
@@ -255,13 +252,10 @@ namespace Network {
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_EnumerateGatewaysHandler, callback);
-
-			try {
-				nw_path_enumerate_gateways (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_EnumerateGatewaysHandler, callback);
+				nw_path_enumerate_gateways (GetCheckedHandle (), &block);
 			}
 		}
 
