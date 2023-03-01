@@ -211,6 +211,12 @@ namespace Xamarin.Linker {
 		// less risky to nop-ify if branches are pointing to this instruction
 		static protected void Nop (Instruction ins)
 		{
+			// Leave 'leave' instructions in place, they might be required for the resulting IL to be correct/verifiable.
+			switch (ins.OpCode.Code) {
+			case Code.Leave:
+			case Code.Leave_S:
+				return;
+			}
 			ins.OpCode = OpCodes.Nop;
 			ins.Operand = null;
 		}

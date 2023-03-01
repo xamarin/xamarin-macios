@@ -1755,6 +1755,27 @@ public partial class Generator : IMemberGatherer {
 			}
 			indent--;
 			print ("}");
+			print ("");
+			print ("internal static unsafe BlockLiteral CreateNullableBlock ({0}? callback)", ti.UserDelegate);
+			print ("{");
+			indent++;
+			print ("if (callback is null)");
+			indent++;
+			print ("return default (BlockLiteral);");
+			indent--;
+			print ("return CreateBlock (callback);");
+			indent--;
+			print ("}");
+			print ("");
+			print ("[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]");
+			print ("internal static unsafe BlockLiteral CreateBlock ({0} callback)", ti.UserDelegate);
+			print ("{");
+			indent++;
+			print ("var block = new BlockLiteral ();");
+			print ("block.SetupBlockUnsafe (Handler, callback);");
+			print ("return block;");
+			indent--;
+			print ("}");
 			indent--;
 			print ("}} /* class {0} */", ti.StaticName);
 
@@ -3632,6 +3653,7 @@ public partial class Generator : IMemberGatherer {
 		by_ref_init = new StringBuilder ();
 
 		foreach (var pi in mi.GetParameters ()) {
+			var safe_name = pi.Name.GetSafeParamName ();
 			MarshalInfo mai = new MarshalInfo (this, mi, pi);
 
 			if (!IsTarget (pi)) {
@@ -3687,32 +3709,21 @@ public partial class Generator : IMemberGatherer {
 				}
 			} else if (mai.Type.IsSubclassOf (TypeManager.System_Delegate)) {
 				string trampoline_name = MakeTrampoline (pi.ParameterType).StaticName;
-				string extra = "";
 				bool null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
 				if (!null_allowed) {
 					var property = GetProperty (mi);
 					if (property is not null)
 						null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (property);
 				}
-
-				convs.AppendFormat ("BlockLiteral *block_ptr_{0};\n", pi.Name);
-				convs.AppendFormat ("BlockLiteral block_{0};\n", pi.Name);
+				var createBlockMethod = null_allowed ? "CreateNullableBlock" : "CreateBlock";
+				convs.AppendFormat ("using var block_{0} = Trampolines.{1}.{3} ({2});\n", pi.Name, trampoline_name, safe_name, createBlockMethod);
 				if (null_allowed) {
-					convs.AppendFormat ("if ({0} is null){{\n", pi.Name.GetSafeParamName ());
-					convs.AppendFormat ("\tblock_ptr_{0} = null;\n", pi.Name);
-					convs.AppendFormat ("}} else {{\n");
-					extra = "\t";
+					convs.AppendFormat ("BlockLiteral *block_ptr_{0} = null;\n", pi.Name);
+					convs.AppendFormat ("if ({0} is not null)\n", safe_name);
+					convs.AppendFormat ("\tblock_ptr_{0} = &block_{0};\n", pi.Name);
+				} else {
+					convs.AppendFormat ("BlockLiteral *block_ptr_{0} = &block_{0};\n", pi.Name);
 				}
-				convs.AppendFormat (extra + "block_{0} = new BlockLiteral ();\n", pi.Name);
-				convs.AppendFormat (extra + "block_ptr_{0} = &block_{0};\n", pi.Name);
-				convs.AppendFormat (extra + "block_{0}.SetupBlockUnsafe (Trampolines.{1}.Handler, {2});\n", pi.Name, trampoline_name, pi.Name.GetSafeParamName ());
-				if (null_allowed)
-					convs.AppendFormat ("}}\n");
-
-				if (null_allowed) {
-					disposes.AppendFormat ("if (block_ptr_{0} != null)\n", pi.Name);
-				}
-				disposes.AppendFormat (extra + "block_ptr_{0}->CleanupBlock ();\n", pi.Name);
 			} else if (pi.ParameterType.IsGenericParameter) {
 				//				convs.AppendFormat ("{0}.Handle", pi.Name.GetSafeParamName ());
 			} else if (HasBindAsAttribute (pi)) {
