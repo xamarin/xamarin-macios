@@ -22,9 +22,13 @@ parameters:
   type: boolean
   default: true
 
+- name: stageDisplayNamePrefix
+  type: string
+  default: ''
+
 stages:
 - stage: prepare_release
-  displayName: Prepare Release
+  displayName: '${{ parameters.stageDisplayNamePrefix }}Prepare .NET Release'
   dependsOn: ${{ parameters.dependsOn }}
   condition: and(eq(${{ parameters.isPR }}, false), eq(${{ parameters.enableDotnet }}, true))
 
@@ -128,15 +132,3 @@ stages:
             inputs:
               artifactName: vsdrop-multitarget-signed
               downloadPath: $(Build.StagingDirectory)\$(MultiTargetVSDropCommitStatusName)
-
-# Check - "xamarin-macios (VS Insertion Wait For Approval)"
-# Check - "xamarin-macios (VS Insertion Create VS Drop and Open PR)"
-- template: vs-insertion/stage/v1.yml@yaml-templates
-  parameters:
-    dependsOn: prepare_release
-    symbolArtifactName: nuget-signed
-    symbolConversionFilters: '*mlaunch.app*'
-    pushToShippingFeed: true
-    nupkgArtifactName: nuget-signed
-    msiNupkgArtifactName: vs-msi-nugets
-    condition: eq(${{ parameters.isPR }}, false)

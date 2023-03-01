@@ -128,7 +128,7 @@ namespace Network {
 			=> new NWParameters (nw_browser_copy_parameters (GetCheckedHandle ()), owns: true);
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_browser_set_browse_results_changed_handler (OS_nw_browser browser, void* handler);
+		unsafe static extern void nw_browser_set_browse_results_changed_handler (OS_nw_browser browser, BlockLiteral* handler);
 
 		delegate void nw_browser_browse_results_changed_handler_t (IntPtr block, IntPtr oldResult, IntPtr newResult, bool completed);
 		static nw_browser_browse_results_changed_handler_t static_ChangesHandler = TrampolineChangesHandler;
@@ -197,14 +197,10 @@ namespace Network {
 					nw_browser_set_browse_results_changed_handler (GetCheckedHandle (), null);
 					return;
 				}
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral* block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_ChangesHandler, handler);
-				try {
-					nw_browser_set_browse_results_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_ChangesHandler, handler);
+				nw_browser_set_browse_results_changed_handler (GetCheckedHandle (), &block);
 			}
 		}
 
@@ -215,7 +211,7 @@ namespace Network {
 #endif
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_browser_set_state_changed_handler (OS_nw_browser browser, void* state_changed_handler);
+		unsafe static extern void nw_browser_set_state_changed_handler (OS_nw_browser browser, BlockLiteral* state_changed_handler);
 
 		delegate void nw_browser_set_state_changed_handler_t (IntPtr block, NWBrowserState state, IntPtr error);
 		static nw_browser_set_state_changed_handler_t static_StateChangesHandler = TrampolineStateChangesHandler;
@@ -238,14 +234,9 @@ namespace Network {
 					nw_browser_set_state_changed_handler (GetCheckedHandle (), null);
 					return;
 				}
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral* block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_StateChangesHandler, handler);
-				try {
-					nw_browser_set_state_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_StateChangesHandler, handler);
+				nw_browser_set_state_changed_handler (GetCheckedHandle (), &block);
 			}
 		}
 	}
