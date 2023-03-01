@@ -120,22 +120,23 @@ namespace ImageIO {
 		// This class bridges native block invocations that call into C#
 		//
 		static internal class SDCGImageSourceAnimationBlock {
-			static internal readonly DCGImageSourceAnimationBlock Handler = Invoke;
+			unsafe static internal readonly DCGImageSourceAnimationBlock Handler = Invoke;
 
 			[MonoPInvokeCallback (typeof (DCGImageSourceAnimationBlock))]
-			static void Invoke (IntPtr block, nint index, IntPtr image, [MarshalAs (UnmanagedType.I1)] out bool stop)
+			internal unsafe static void Invoke (IntPtr block, nint index, IntPtr image, byte* stop)
 			{
 				var del = BlockLiteral.GetTarget<CGImageSourceAnimationHandler> (block);
-				if (del is not null)
-					del (index, new CoreGraphics.CGImage (image, false), out stop);
-				else
-					stop = false;
+				if (del is not null) {
+					del (index, new CoreGraphics.CGImage (image, false), out var stopValue);
+					*stop = stopValue ? (byte) 1 : (byte) 0;
+				} else
+					*stop = 0;
 			}
 		} /* class SDCGImageSourceAnimationBlock */
 
 		[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
 		[UserDelegateType (typeof (CGImageSourceAnimationHandler))]
-		internal delegate void DCGImageSourceAnimationBlock (IntPtr block, nint index, IntPtr imageHandle, [MarshalAs (UnmanagedType.I1)] out bool stop);
+		unsafe internal delegate void DCGImageSourceAnimationBlock (IntPtr block, nint index, IntPtr imageHandle, byte* stop);
 	}
 
 }

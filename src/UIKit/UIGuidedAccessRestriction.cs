@@ -62,18 +62,18 @@ namespace UIKit {
 		public delegate void UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler (bool success, NSError error);
 
 		[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-		internal delegate void DUIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler (IntPtr block, bool success, IntPtr error);
+		internal delegate void DUIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler (IntPtr block, byte success, IntPtr error);
 
 		static internal class UIGuidedAccessConfigureAccessibilityFeaturesTrampoline {
 			static internal readonly DUIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler Handler = Invoke;
 
 			[MonoPInvokeCallback (typeof (DUIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler))]
-			static unsafe void Invoke (IntPtr block, bool success, IntPtr error)
+			static unsafe void Invoke (IntPtr block, byte success, IntPtr error)
 			{
 				var descriptor = (BlockLiteral*) block;
 				var del = (UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler) (descriptor->Target);
 				if (del != null)
-					del (success, Runtime.GetNSObject<NSError> (error));
+					del (success != 0, Runtime.GetNSObject<NSError> (error));
 			}
 		}
 

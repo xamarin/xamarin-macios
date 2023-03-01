@@ -150,18 +150,20 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_ethernet_channel_set_receive_handler (OS_nw_ethernet_channel ethernet_channel, /* [NullAllowed] */ BlockLiteral *handler);
 
-		delegate void nw_ethernet_channel_receive_handler_t (IntPtr block, OS_dispatch_data content, ushort vlan_tag, byte[] local_address, byte[] remote_address);
+		delegate void nw_ethernet_channel_receive_handler_t (IntPtr block, OS_dispatch_data content, ushort vlan_tag, IntPtr local_address, IntPtr remote_address);
 		static nw_ethernet_channel_receive_handler_t static_ReceiveHandler = TrampolineReceiveHandler;
 
 		[MonoPInvokeCallback (typeof (nw_ethernet_channel_receive_handler_t))]
-		static void TrampolineReceiveHandler (IntPtr block, OS_dispatch_data content, ushort vlanTag, byte[] localAddress, byte[] remoteAddress)
+		static void TrampolineReceiveHandler (IntPtr block, OS_dispatch_data content, ushort vlanTag, IntPtr localAddressArray, IntPtr remoteAddressArray)
 		{
+			// localAddress and remoteAddress are defined as:
+			// typedef unsigned char nw_ethernet_address_t[6];
 			var del = BlockLiteral.GetTarget<NWEthernetChannelReceiveDelegate> (block);
 			if (del is not null) {
 
 				var dispatchData = (content == IntPtr.Zero) ? null : new DispatchData (content, owns: false);
-				var local = (localAddress is null) ? null : Encoding.UTF8.GetString (localAddress);
-				var remote = (remoteAddress is null) ? null : Encoding.UTF8.GetString (remoteAddress);
+				var local = Marshal.PtrToStringAuto (localAddressArray, 6);
+				var remote = Marshal.PtrToStringAuto (remoteAddressArray, 6);
 
 				del (dispatchData, vlanTag, local, remote);
 			}

@@ -200,15 +200,15 @@ namespace AddressBook {
 			}
 		}
 
-		internal delegate void InnerCompleted (IntPtr block, bool success, IntPtr error);
+		internal delegate void InnerCompleted (IntPtr block, byte success, IntPtr error);
 		static readonly InnerCompleted static_completionHandler = TrampolineCompletionHandler;
 		[MonoPInvokeCallback (typeof (InnerCompleted))]
-		static unsafe void TrampolineCompletionHandler (IntPtr block, bool success, IntPtr error)
+		static unsafe void TrampolineCompletionHandler (IntPtr block, byte success, IntPtr error)
 		{
 			var descriptor = (BlockLiteral*) block;
 			var del = descriptor->Target as Action<bool, NSError?>;
 			if (del is not null)
-				del (success, Runtime.GetNSObject<NSError> (error));
+				del (success != 0, Runtime.GetNSObject<NSError> (error));
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
