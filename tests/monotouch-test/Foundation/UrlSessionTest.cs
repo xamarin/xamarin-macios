@@ -26,10 +26,13 @@ namespace MonoTouchFixtures.Foundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class UrlSessionTest {
-		void AssertTrueOrIgnoreInCI (bool value, string message)
+		void AssertTrueOrIgnoreInCI (bool value, ref Exception ex, string message)
 		{
-			if (value)
+			if (value) {
+				TestRuntime.IgnoreInCIIfBadNetwork (ex);
+				Assert.IsNull (ex, message + " Exception");
 				return;
+			}
 
 			TestRuntime.IgnoreInCI ($"This test times out randomly in CI due to bad network: {message}");
 			Assert.Fail (message);
@@ -67,8 +70,7 @@ namespace MonoTouchFixtures.Foundation {
 				} finally {
 					completed = true;
 				}
-			}, () => completed), "CreateDataTask a");
-			Assert.IsNull (ex, "CreateDataTask a Exception");
+			}, () => completed), ref ex, "CreateDataTask a");
 
 			completed = false;
 			AssertTrueOrIgnoreInCI (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
@@ -79,8 +81,7 @@ namespace MonoTouchFixtures.Foundation {
 				} finally {
 					completed = true;
 				}
-			}, () => completed), "CreateDataTask b");
-			Assert.IsNull (ex, "CreateDataTask b Exception");
+			}, () => completed), ref ex, "CreateDataTask b");
 
 			/* CreateDownloadTask */
 			completed = false;
@@ -92,8 +93,7 @@ namespace MonoTouchFixtures.Foundation {
 				} finally {
 					completed = true;
 				}
-			}, () => completed), "CreateDownloadTask a");
-			Assert.IsNull (ex, "CreateDownloadTask a Exception");
+			}, () => completed), ref ex, "CreateDownloadTask a");
 
 
 			completed = false;
@@ -105,8 +105,7 @@ namespace MonoTouchFixtures.Foundation {
 				} finally {
 					completed = true;
 				}
-			}, () => completed), "CreateDownloadTask b");
-			Assert.IsNull (ex, "CreateDownloadTask b Exception");
+			}, () => completed), ref ex, "CreateDownloadTask b");
 
 			/* CreateUploadTask */
 			completed = false;
@@ -120,8 +119,7 @@ namespace MonoTouchFixtures.Foundation {
 				} finally {
 					completed = true;
 				}
-			}, () => completed), "CreateUploadTask a");
-			Assert.IsNull (ex, "CreateUploadTask a Exception");
+			}, () => completed), ref ex, "CreateUploadTask a");
 
 			completed = false;
 			AssertTrueOrIgnoreInCI (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
@@ -134,8 +132,7 @@ namespace MonoTouchFixtures.Foundation {
 				} finally {
 					completed = true;
 				}
-			}, () => completed), "CreateUploadTask b");
-			Assert.IsNull (ex, "CreateUploadTask b Exception");
+			}, () => completed), ref ex, "CreateUploadTask b");
 		}
 
 		[Test]
