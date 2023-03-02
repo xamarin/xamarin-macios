@@ -260,16 +260,16 @@ namespace UIKit {
 			return tcs.Task;
 		}
 
-		internal delegate void InnerRequestGuidedAccessSession (IntPtr block, bool enable);
+		internal delegate void InnerRequestGuidedAccessSession (IntPtr block, byte enable);
 		static readonly InnerRequestGuidedAccessSession callback = TrampolineRequestGuidedAccessSession;
 
 		[MonoPInvokeCallback (typeof (InnerRequestGuidedAccessSession))]
-		static unsafe void TrampolineRequestGuidedAccessSession (IntPtr block, bool enable)
+		static unsafe void TrampolineRequestGuidedAccessSession (IntPtr block, byte enable)
 		{
 			var descriptor = (BlockLiteral*) block;
 			var del = (Action<bool>) (descriptor->Target);
 			if (del != null)
-				del (enable);
+				del (enable != 0);
 		}
 
 #if NET

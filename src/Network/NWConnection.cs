@@ -130,15 +130,15 @@ namespace Network {
 			}
 		}
 
-		delegate void nw_connection_boolean_event_handler_t (IntPtr block, [MarshalAs (UnmanagedType.U1)] bool value);
+		delegate void nw_connection_boolean_event_handler_t (IntPtr block, byte value);
 		static nw_connection_boolean_event_handler_t static_BooleanChangeHandler = TrampolineBooleanChangeHandler;
 
 		[MonoPInvokeCallback (typeof (nw_connection_boolean_event_handler_t))]
-		static void TrampolineBooleanChangeHandler (IntPtr block, bool value)
+		static void TrampolineBooleanChangeHandler (IntPtr block, byte value)
 		{
 			var del = BlockLiteral.GetTarget<Action<bool>> (block);
 			if (del is not null)
-				del (value);
+				del (value != 0);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -241,7 +241,7 @@ namespace Network {
 		delegate void nw_connection_receive_completion_t (IntPtr block,
 								  IntPtr dispatchData,
 								  IntPtr contentContext,
-								  [MarshalAs (UnmanagedType.U1)] bool isComplete,
+								  byte isComplete,
 								  IntPtr error);
 
 		static nw_connection_receive_completion_t static_ReceiveCompletion = TrampolineReceiveCompletion;
@@ -249,7 +249,7 @@ namespace Network {
 		static nw_connection_receive_completion_t static_ReceiveCompletionDispatchReadnOnlyData = TrampolineReceiveCompletionReadOnlyData;
 
 		[MonoPInvokeCallback (typeof (nw_connection_receive_completion_t))]
-		static void TrampolineReceiveCompletion (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, bool isComplete, IntPtr error)
+		static void TrampolineReceiveCompletion (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, byte isComplete, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<NWConnectionReceiveCompletion> (block);
 			if (del is not null) {
@@ -265,7 +265,7 @@ namespace Network {
 				del (bufferAddress,
 					 bufferSize,
 					 contentContext == IntPtr.Zero ? null : new NWContentContext (contentContext, owns: false),
-					 isComplete,
+					 isComplete != 0,
 					 error == IntPtr.Zero ? null : new NWError (error, owns: false));
 
 				if (dispatchData is not null) {
@@ -276,7 +276,7 @@ namespace Network {
 		}
 
 		[MonoPInvokeCallback (typeof (nw_connection_receive_completion_t))]
-		static void TrampolineReceiveCompletionData (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, bool isComplete, IntPtr error)
+		static void TrampolineReceiveCompletionData (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, byte isComplete, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<NWConnectionReceiveDispatchDataCompletion> (block);
 			if (del is not null) {
@@ -288,7 +288,7 @@ namespace Network {
 
 				del (dispatchData,
 					 contentContext == IntPtr.Zero ? null : new NWContentContext (contentContext, owns: false),
-					 isComplete,
+					 isComplete != 0,
 					 error == IntPtr.Zero ? null : new NWError (error, owns: false));
 
 				if (dispatchData is not null)
@@ -297,7 +297,7 @@ namespace Network {
 		}
 
 		[MonoPInvokeCallback (typeof (nw_connection_receive_completion_t))]
-		static void TrampolineReceiveCompletionReadOnlyData (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, bool isComplete, IntPtr error)
+		static void TrampolineReceiveCompletionReadOnlyData (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, byte isComplete, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<NWConnectionReceiveReadOnlySpanCompletion> (block);
 			if (del is not null) {
@@ -306,7 +306,7 @@ namespace Network {
 				var spanData = new ReadOnlySpan<byte> (dispatchData?.ToArray () ?? Array.Empty<byte> ());
 				del (spanData,
 					contentContext == IntPtr.Zero ? null : new NWContentContext (contentContext, owns: false),
-					isComplete,
+					isComplete != 0,
 					error == IntPtr.Zero ? null : new NWError (error, owns: false));
 
 				if (dispatchData is not null) {
