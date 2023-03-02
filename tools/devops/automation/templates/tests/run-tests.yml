@@ -83,6 +83,7 @@ steps:
         $platformUpper = $platform.ToUpperInvariant()
         $version = $versionData."microsoft.net.sdk.$platformLower"
         if (![string]::IsNullOrEmpty($version)) {
+            $version = $version.Substring(0, $version.IndexOf('/'))
             Write-Host "Platform: $platform has version $version"
             Write-Host "##vso[task.setvariable variable=$($platformUpper)_WORKLOAD_VERSION;]$version"
         } else {
