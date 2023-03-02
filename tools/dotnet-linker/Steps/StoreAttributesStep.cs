@@ -65,7 +65,10 @@ namespace Xamarin.Linker.Steps {
 				case "ModelAttribute":
 					store = remove = LinkContext.App.Optimizations.RemoveDynamicRegistrar == true;
 					break;
-				case "ProtocolAttribute":
+				// ProtocolAttribute could in theory be removed as well, but it currently
+				// makes the linker keep the wrapper type, and we need the wrapper type,
+				// so in order to remove ProtocolAttribute we'd need to add logic to keep
+				// the wrapper type somehow.
 				case "ProtocolMemberAttribute":
 					store = remove = LinkContext.App.Optimizations.RegisterProtocols == true;
 					break;
