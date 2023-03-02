@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="../../eng/Versions.props" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -56,22 +57,22 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'iOS (.NET)' ">
     <StartAction>Project</StartAction>
-    <StartArguments>$(iOS_PCH) --output-directory api-annotations-dotnet $(iOS_DLL)</StartArguments>
+    <StartArguments>$(iOS_PCH) --output-directory api-annotations-dotnet --lib ../../packages/microsoft.netcore.app.ref/$(MicrosoftNETCoreAppRefPackageVersion)/ref/$(DOTNET_TFM) $(iOS_DLL)</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'tvOS (.NET)' ">
     <StartAction>Project</StartAction>
-    <StartArguments>$(tvOS_PCH) --output-directory api-annotations-dotnet $(tvOS_DLL)</StartArguments>
+    <StartArguments>$(tvOS_PCH) --output-directory api-annotations-dotnet --lib ../../packages/microsoft.netcore.app.ref/$(MicrosoftNETCoreAppRefPackageVersion)/ref/$(DOTNET_TFM) $(tvOS_DLL)</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'macOS (.NET)' ">
     <StartAction>Project</StartAction>
-    <StartArguments>$(macOS_PCH) --output-directory api-annotations-dotnet $(macOS_DLL)</StartArguments>
+    <StartArguments>$(macOS_PCH) --output-directory api-annotations-dotnet --lib ../../packages/microsoft.netcore.app.ref/$(MicrosoftNETCoreAppRefPackageVersion)/ref/$(DOTNET_TFM) $(macOS_DLL)</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'MacCatalyst (.NET)' ">
     <StartAction>Project</StartAction>
-    <StartArguments>$(MacCatalyst_PCH) --output-directory api-annotations-dotnet $(MacCatalyst_DLL)</StartArguments>
+    <StartArguments>$(MacCatalyst_PCH) --output-directory api-annotations-dotnet --lib ../../packages/microsoft.netcore.app.ref/$(MicrosoftNETCoreAppRefPackageVersion)/ref/$(DOTNET_TFM) $(MacCatalyst_DLL)</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <ItemGroup>

@@ -27,7 +27,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<_CanDeployToDeviceOrSimulator Condition="('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true') And '$(IsWatchApp)' == 'false'">True</_CanDeployToDeviceOrSimulator>
 
 		<_PreparedResourceRules></_PreparedResourceRules>
-		<_AppBundleName>$(AssemblyName)</_AppBundleName>
 	</PropertyGroup>
 
 	<!-- Insert our app bundle generation step -->

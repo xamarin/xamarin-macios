@@ -20,8 +20,6 @@ public partial class AppDelegate : UIApplicationDelegate {
 	public override UIWindow Window { get; set; }
 #endif
 
-	public partial IEnumerable<Assembly> GetTestAssemblies ();
-
 	partial void PostFinishedLaunching ();
 
 	public override bool FinishedLaunching (UIApplication application, NSDictionary launchOptions)
@@ -32,7 +30,7 @@ public partial class AppDelegate : UIApplicationDelegate {
 		var window = new UIWindow (UIScreen.MainScreen.Bounds);
 
 		var runner = new TouchRunner (window);
-		foreach (var assembly in GetTestAssemblies ())
+		foreach (var assembly in TestLoader.GetTestAssemblies ())
 			runner.Add (assembly);
 
 		Window = window;

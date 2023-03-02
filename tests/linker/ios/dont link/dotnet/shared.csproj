@@ -46,6 +46,7 @@
     <Compile Include="$(ThisTestDirectory)\..\..\CommonDontLinkTest.cs">
       <Link>CommonDontLinkTest.cs</Link>
     </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\TestAssemblyLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="$(ThisTestDirectory)\LaunchScreen.storyboard" />

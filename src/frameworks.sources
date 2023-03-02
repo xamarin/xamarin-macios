@@ -568,7 +568,6 @@ CORELOCATION_API_SOURCES = \
 	CoreLocation/CLEnums.cs
 
 CORELOCATION_CORE_SOURCES = \
-	CoreLocation/CLLocationDistance.cs \
 	CoreLocation/CoreLocation.cs \
 
 CORELOCATION_SOURCES = \
@@ -985,7 +984,10 @@ IAD_SOURCES = \
 
 # ImageCaptureKit
 IMAGECAPTURECORE_API_SOURCES = \
-	ImageCaptureCore/Defs.cs
+	ImageCaptureCore/Defs.cs \
+
+IMAGECAPTURECORE_SOURCES = \
+	ImageCaptureCore/ICCameraDevice.cs \
 
 # ImageIO
 
@@ -1472,6 +1474,10 @@ PHOTOSUI_API_SOURCES = \
 PRINTCORE_SOURCES = \
 	PrintCore/Defs.cs	\
 	PrintCore/PrintCore.cs
+
+# PushToTalk
+PUSHTOTALK_SOURCES = \
+	PushToTalk/Compat.cs \
 	
 # QTKit
 

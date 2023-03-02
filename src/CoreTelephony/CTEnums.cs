@@ -1,6 +1,8 @@
 using ObjCRuntime;
 using System;
 
+#nullable enable
+
 namespace CoreTelephony {
 
 	// untyped enum -> CoreTelephonyDefines.h

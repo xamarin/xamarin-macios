@@ -14,8 +14,6 @@ namespace Foundation {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.10")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else

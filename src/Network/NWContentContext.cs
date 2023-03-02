@@ -68,13 +68,14 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		extern static IntPtr nw_content_context_create (string contextIdentifier);
+		extern static IntPtr nw_content_context_create (IntPtr contextIdentifier);
 
 		public NWContentContext (string contextIdentifier)
 		{
 			if (contextIdentifier is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (contextIdentifier));
-			InitializeHandle (nw_content_context_create (contextIdentifier));
+			using var contextIdentifierPtr = new TransientString (contextIdentifier);
+			InitializeHandle (nw_content_context_create (contextIdentifierPtr));
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -181,18 +182,15 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_content_context_foreach_protocol_metadata (IntPtr handle, ref BlockLiteral callback);
+		unsafe static extern void nw_content_context_foreach_protocol_metadata (IntPtr handle, BlockLiteral* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void IterateProtocolMetadata (Action<NWProtocolDefinition?, NWProtocolMetadata?> callback)
 		{
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_ProtocolIterator, callback);
-
-			try {
-				nw_content_context_foreach_protocol_metadata (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_ProtocolIterator, callback);
+				nw_content_context_foreach_protocol_metadata (GetCheckedHandle (), &block);
 			}
 		}
 

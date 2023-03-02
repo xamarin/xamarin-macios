@@ -24,6 +24,7 @@ namespace AVKit {
 #if NET
 	[NoMac]
 	[NoWatch]
+	[MacCatalyst (13, 1)]
 #endif
 	[Native]
 	[ErrorDomain ("AVKitErrorDomain")]
@@ -40,6 +41,7 @@ namespace AVKit {
 	[NoTV]
 	[NoMac]
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum AVAudioSessionRouteSelection : long {
 		None = 0,
@@ -51,6 +53,7 @@ namespace AVKit {
 	[NoWatch]
 	[NoTV]
 	[Mac (10, 15)]
+	[NoMacCatalyst]
 	[Native]
 	public enum AVRoutePickerViewButtonState : long {
 		Normal,

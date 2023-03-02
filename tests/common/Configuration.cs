@@ -498,6 +498,8 @@ namespace Xamarin.Tests {
 				return "Microsoft.watchOS.Sdk";
 			case ApplePlatform.MacOSX:
 				return "Microsoft.macOS.Sdk";
+			case ApplePlatform.MacCatalyst:
+				return "Microsoft.MacCatalyst.Sdk";
 			default:
 				throw new InvalidOperationException (platform.ToString ());
 			}
@@ -676,6 +678,26 @@ namespace Xamarin.Tests {
 		}
 
 #if !XAMMAC_TESTS
+		public static void AssertRuntimeIdentifierAvailable (ApplePlatform platform, string runtimeIdentifier)
+		{
+			if (string.IsNullOrEmpty (runtimeIdentifier))
+				return;
+
+			if (GetRuntimeIdentifiers (platform).Contains (runtimeIdentifier))
+				return;
+
+			Assert.Ignore ($"The runtime identifier {runtimeIdentifier} is not available on {platform}");
+		}
+
+		public static void AssertRuntimeIdentifiersAvailable (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			if (string.IsNullOrEmpty (runtimeIdentifiers))
+				return;
+
+			foreach (var rid in runtimeIdentifiers.Split (new char [] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+				AssertRuntimeIdentifierAvailable (platform, rid);
+		}
+
 		public static string GetBaseLibrary (Profile profile)
 		{
 			switch (profile) {
@@ -693,6 +715,13 @@ namespace Xamarin.Tests {
 			default:
 				throw new NotImplementedException ();
 			}
+		}
+
+		public static string GetBaseLibrary (ApplePlatform platform, bool isDotNet)
+		{
+			if (isDotNet)
+				return Path.Combine (GetRefDirectory (platform), GetBaseLibraryName (platform, isDotNet));
+			return GetBaseLibrary (platform.AsProfile ());
 		}
 
 		static string GetBaseLibraryName (TargetFramework targetFramework)
@@ -874,6 +903,13 @@ namespace Xamarin.Tests {
 			args.Add ($"-lib:{Path.GetDirectoryName (GetBaseLibrary (profile))}");
 			return "/Library/Frameworks/Mono.framework/Commands/csc";
 		}
+
+		public static void AssertiOS32BitAvailable ()
+		{
+			if (iOSSupports32BitArchitectures)
+				return;
+			Assert.Ignore ($"32-bit iOS support is not available in the current build.");
+		}
 #endif // !XAMMAC_TESTS
 
 		public static IEnumerable<ApplePlatform> GetIncludedPlatforms (bool dotnet)
@@ -950,6 +986,12 @@ namespace Xamarin.Tests {
 				var tgtDir = Path.GetDirectoryName (tgt);
 				Directory.CreateDirectory (tgtDir);
 				File.Copy (src, tgt);
+				if (tgt.EndsWith (".csproj", StringComparison.OrdinalIgnoreCase)) {
+					var initialContents = File.ReadAllText (tgt);
+					var fixedContents = initialContents.Replace ($"$(MSBuildThisFileDirectory)", Path.GetDirectoryName (src) + Path.DirectorySeparatorChar);
+					if (initialContents != fixedContents)
+						File.WriteAllText (tgt, fixedContents);
+				}
 			}
 
 			return testsTemporaryDirectory;

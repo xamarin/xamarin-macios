@@ -4,6 +4,10 @@
     <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
     <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
-    <SupportedOSPlatformVersion>11.0</SupportedOSPlatformVersion>
+    <CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Info.plist" />
+    <None Update="Info-dotnet.plist" Link="Info.plist" />
+  </ItemGroup>
 </Project>

@@ -139,6 +139,10 @@
 		</value>
 	</data>
 
+	<data name="BI0003" xml:space="preserve">
+		<value>Frameworks were not loaded for platform {0}.</value>
+	</data>
+
 	<data name="BI0026" xml:space="preserve">
 		<value>Could not parse the command line argument '--warnaserror': {0}</value>
 	</data>

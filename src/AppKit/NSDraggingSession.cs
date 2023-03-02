@@ -6,6 +6,8 @@ using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSDraggingSession {
 #if NET

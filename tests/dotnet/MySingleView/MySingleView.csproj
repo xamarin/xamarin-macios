@@ -7,6 +7,6 @@
 		<ApplicationTitle>MySingleTitle</ApplicationTitle>
 		<ApplicationId>com.xamarin.mysingletitle</ApplicationId>
 		<ApplicationVersion>3.14</ApplicationVersion>
-		<SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
+		<CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../common/SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
 	</PropertyGroup>
 </Project>

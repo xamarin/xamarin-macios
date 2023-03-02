@@ -255,6 +255,7 @@ namespace Cecil.Tests {
 						case "NSConditionLock": // has a nint (i.e. IntPtr) constructor (condition) - not a mistake
 						case "NSScrubberProportionalLayout": // has a nint (i.e. IntPtr) constructor (numberOfVisibleItems) - not a mistake
 						case "NSIndexSet": // has a nuint (i.e. UIntPtr) constructor (index) - not a mistake
+						case "NSWindow": // has an actual IntPtr constructor (initWithWindowRef:) - not a mistake
 							continue;
 						}
 

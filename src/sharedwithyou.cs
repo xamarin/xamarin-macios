@@ -62,6 +62,7 @@ namespace SharedWithYou {
 	}
 
 	[TV (16, 0), Mac (13, 0), iOS (16, 0)]
+	[MacCatalyst (16, 0)]
 	[Native]
 	public enum SWHighlightCenterErrorCode : long {
 		NoError = 0,
@@ -136,6 +137,7 @@ namespace SharedWithYou {
 	interface SWHighlight : NSSecureCoding, NSCopying {
 
 		[NoTV]
+		[MacCatalyst (13, 1)]
 		[Field ("SWCollaborationMetadataTypeIdentifier")]
 		NSString MetadataTypeIdentifier { get; }
 
@@ -187,24 +189,29 @@ namespace SharedWithYou {
 		void GetHighlight (NSUrl urL, Action<SWHighlight, NSError> completionHandler);
 
 		[NoTV]
+		[MacCatalyst (13, 1)]
 		[Export ("collaborationHighlightForIdentifier:error:")]
 		[return: NullAllowed]
 		SWCollaborationHighlight GetCollaborationHighlight (string collaborationIdentifier, [NullAllowed] out NSError error);
 
 		[NoTV]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("getCollaborationHighlightForURL:completionHandler:")]
 		void GetCollaborationHighlight (NSUrl url, Action<SWCollaborationHighlight, NSError> completionHandler);
 
 		[NoTV]
+		[MacCatalyst (13, 1)]
 		[Export ("postNoticeForHighlightEvent:")]
 		void PostNotice (ISWHighlightEvent @event);
 
 		[iOS (16, 1), NoTV]
+		[MacCatalyst (16, 1)]
 		[Export ("clearNoticesForHighlight:")]
 		void ClearNotices (SWCollaborationHighlight highlight);
 
 		[NoTV]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("getSignedIdentityProofForCollaborationHighlight:usingData:completionHandler:")]
 		void GetSignedIdentityProof (SWCollaborationHighlight collaborationHighlight, NSData data, Action<SWSignedPersonIdentityProof, NSError> completionHandler);
@@ -299,11 +306,13 @@ namespace SharedWithYou {
 		NSMenuItem MenuFormRepresentation { get; }
 
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		[Wrap ("WeakCloudSharingControllerDelegate")]
 		[NullAllowed]
 		ICloudSharingControllerDelegate CloudSharingControllerDelegate { get; set; }
 
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("cloudSharingControllerDelegate", ArgumentSemantic.Weak)]
 		NSObject WeakCloudSharingControllerDelegate { get; set; }
 

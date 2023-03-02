@@ -22,6 +22,7 @@ namespace IdentityLookup {
 	[NoMac]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum ILMessageFilterAction : long {
 		None = 0,
@@ -43,6 +44,7 @@ namespace IdentityLookup {
 	[NoMac]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[ErrorDomain ("ILMessageFilterErrorDomain")]
 	[Native]
 	public enum ILMessageFilterError : long {
@@ -57,6 +59,7 @@ namespace IdentityLookup {
 	[NoMac]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	enum ILClassificationAction : long {
 		None = 0,
@@ -87,6 +90,7 @@ namespace IdentityLookup {
 	[NoMac]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface ILMessageFilterExtension {
@@ -96,6 +100,7 @@ namespace IdentityLookup {
 	[NoMac]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSExtensionContext))]
 	interface ILMessageFilterExtensionContext {
@@ -111,6 +116,7 @@ namespace IdentityLookup {
 	[NoMac]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface ILMessageFilterQueryHandling {
 
@@ -123,6 +129,7 @@ namespace IdentityLookup {
 	[NoMac]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ILMessageFilterQueryRequest : NSSecureCoding {
@@ -142,6 +149,7 @@ namespace IdentityLookup {
 	[NoMac]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface ILMessageFilterQueryResponse : NSSecureCoding {
@@ -158,6 +166,7 @@ namespace IdentityLookup {
 	[NoMac]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ILNetworkResponse : NSSecureCoding {
@@ -173,6 +182,7 @@ namespace IdentityLookup {
 	[NoMac]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (ILClassificationRequest))]
 	[DisableDefaultCtor]
 	interface ILCallClassificationRequest : NSSecureCoding {
@@ -185,6 +195,7 @@ namespace IdentityLookup {
 	[NoMac]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (ILCommunication))]
 	[DisableDefaultCtor]
 	interface ILCallCommunication {
@@ -198,6 +209,7 @@ namespace IdentityLookup {
 	[NoMac]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ILClassificationRequest : NSSecureCoding {
@@ -208,6 +220,7 @@ namespace IdentityLookup {
 	[NoMac]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ILClassificationResponse : NSSecureCoding {
@@ -216,6 +229,7 @@ namespace IdentityLookup {
 		ILClassificationAction Action { get; }
 
 		[iOS (12, 1)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("userString")]
 		string UserString { get; set; }
 
@@ -233,6 +247,7 @@ namespace IdentityLookup {
 	[NoMac]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ILCommunication : NSSecureCoding {
@@ -251,6 +266,7 @@ namespace IdentityLookup {
 	[NoMac]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (ILClassificationRequest))]
 	[DisableDefaultCtor]
 	interface ILMessageClassificationRequest : NSSecureCoding {
@@ -263,6 +279,7 @@ namespace IdentityLookup {
 	[NoMac]
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (ILCommunication))]
 	[DisableDefaultCtor]
 	interface ILMessageCommunication {

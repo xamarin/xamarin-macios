@@ -27,7 +27,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<PropertyGroup>
 		<_PreparedResourceRules></_PreparedResourceRules>
-		<_AppBundleName>$(AssemblyName)</_AppBundleName>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">

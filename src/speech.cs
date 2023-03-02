@@ -23,6 +23,7 @@ namespace Speech {
 
 	[Native]
 	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	public enum SFSpeechRecognitionTaskState : long {
 		Starting = 0,
 		Running = 1,
@@ -33,6 +34,7 @@ namespace Speech {
 
 	[Native]
 	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	public enum SFSpeechRecognitionTaskHint : long {
 		Unspecified = 0,
 		Dictation = 1,
@@ -42,6 +44,7 @@ namespace Speech {
 
 	[Native]
 	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	public enum SFSpeechRecognizerAuthorizationStatus : long {
 		NotDetermined,
 		Denied,
@@ -50,6 +53,7 @@ namespace Speech {
 	}
 
 	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[Abstract] // no docs (yet) but it has no means (init*) to create it, unlike its subclasses
 	[BaseType (typeof (NSObject))]
@@ -65,10 +69,12 @@ namespace Speech {
 		string [] ContextualStrings { get; set; }
 
 		[Deprecated (PlatformName.iOS, 15, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 		[NullAllowed, Export ("interactionIdentifier")]
 		string InteractionIdentifier { get; set; }
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("requiresOnDeviceRecognition")]
 		bool RequiresOnDeviceRecognition { get; set; }
 
@@ -78,6 +84,7 @@ namespace Speech {
 	}
 
 	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SFSpeechRecognitionRequest), Name = "SFSpeechURLRecognitionRequest")]
 	[DisableDefaultCtor]
 	interface SFSpeechUrlRecognitionRequest {
@@ -91,6 +98,7 @@ namespace Speech {
 	}
 
 	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SFSpeechRecognitionRequest))]
 	interface SFSpeechAudioBufferRecognitionRequest {
 
@@ -108,6 +116,7 @@ namespace Speech {
 	}
 
 	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognitionResult : NSCopying, NSSecureCoding {
 
@@ -127,6 +136,7 @@ namespace Speech {
 	}
 
 	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognitionTask {
 
@@ -152,6 +162,7 @@ namespace Speech {
 	interface ISFSpeechRecognitionTaskDelegate { }
 
 	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognitionTaskDelegate {
@@ -178,6 +189,7 @@ namespace Speech {
 	interface ISFSpeechRecognizerDelegate { }
 
 	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognizerDelegate {
@@ -187,6 +199,7 @@ namespace Speech {
 	}
 
 	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognizer {
 
@@ -213,6 +226,7 @@ namespace Speech {
 		NSLocale Locale { get; }
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("supportsOnDeviceRecognition")]
 		bool SupportsOnDeviceRecognition { get; set; }
 
@@ -256,6 +270,7 @@ namespace Speech {
 	}
 
 	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SFTranscription : NSCopying, NSSecureCoding {
 
@@ -268,17 +283,22 @@ namespace Speech {
 		[iOS (13, 0)]
 		[Export ("speakingRate")]
 		[Deprecated (PlatformName.iOS, 14, 5)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 5)]
 		[Advice ("Use 'SpeakingRate' from 'SFSpeechRecognitionMetadata' instead.")]
 		double SpeakingRate { get; }
 
 		[iOS (13, 0)]
 		[Export ("averagePauseDuration")]
 		[Deprecated (PlatformName.iOS, 14, 5)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 5)]
 		[Advice ("Use 'AveragePauseDuration' from 'SFSpeechRecognitionMetadata' instead.")]
 		double AveragePauseDuration { get; }
 	}
 
 	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SFTranscriptionSegment : NSCopying, NSSecureCoding {
 
@@ -303,11 +323,14 @@ namespace Speech {
 		[iOS (13, 0)]
 		[NullAllowed, Export ("voiceAnalytics")]
 		[Deprecated (PlatformName.iOS, 14, 5)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 5)]
 		[Advice ("Use 'VoiceAnalytics' from 'SFSpeechRecognitionMetadata' instead.")]
 		SFVoiceAnalytics VoiceAnalytics { get; }
 	}
 
 	[iOS (13, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SFAcousticFeature : NSCopying, NSSecureCoding {
@@ -320,6 +343,7 @@ namespace Speech {
 	}
 
 	[iOS (13, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SFVoiceAnalytics : NSCopying, NSSecureCoding {

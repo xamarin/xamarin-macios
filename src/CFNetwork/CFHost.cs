@@ -32,19 +32,10 @@ namespace CoreServices {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("tvos15.0")]
-	[UnsupportedOSPlatform ("maccatalyst15.0")]
-	[UnsupportedOSPlatform ("macos12.0")]
-	[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-	[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-	[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-	[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-	[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+	[ObsoletedOSPlatform ("tvos15.0", Constants.UseNetworkInstead)]
+	[ObsoletedOSPlatform ("maccatalyst15.0", Constants.UseNetworkInstead)]
+	[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
+	[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
 	[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]

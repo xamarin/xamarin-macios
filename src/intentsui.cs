@@ -45,6 +45,7 @@ namespace IntentsUI {
 	}
 
 	[NoWatch, NoTV, Mac (12, 0), iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INUIAddVoiceShortcutButtonStyle : ulong {
 		White = 0,
@@ -52,13 +53,16 @@ namespace IntentsUI {
 		Black,
 		BlackOutline,
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		Automatic,
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		AutomaticOutLine,
 	}
 
 	[NoMac]
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	delegate void INUIHostedViewControllingConfigureViewHandler (bool success, NSSet<INParameter> configuredParameters, CGSize desiredSize);
 
 	[NoMac]
@@ -74,6 +78,7 @@ namespace IntentsUI {
 		void Configure (INInteraction interaction, INUIHostedViewContext context, Action<CGSize> completion);
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 0)]
 		[Export ("configureViewForParameters:ofInteraction:interactiveBehavior:context:completion:")]
 		void ConfigureView (NSSet<INParameter> parameters, INInteraction interaction, INUIInteractiveBehavior interactiveBehavior, INUIHostedViewContext context, INUIHostedViewControllingConfigureViewHandler completionHandler);
 	}
@@ -92,6 +97,7 @@ namespace IntentsUI {
 		CGSize GetHostedViewMaximumAllowedSize ();
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 0)]
 		[Export ("interfaceParametersDescription")]
 		string GetInterfaceParametersDescription ();
 	}
@@ -114,6 +120,7 @@ namespace IntentsUI {
 
 	[Mac (12, 0)]
 	[iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 #if MONOMAC
 	[BaseType (typeof (NSViewController))]
 #else
@@ -138,6 +145,7 @@ namespace IntentsUI {
 
 	[Mac (12, 0)]
 	[iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 #if NET
 	[Protocol, Model]
 #else
@@ -157,6 +165,7 @@ namespace IntentsUI {
 
 	[Mac (12, 0)]
 	[iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 #if MONOMAC
 	[BaseType (typeof (NSViewController))]
 #else
@@ -181,6 +190,7 @@ namespace IntentsUI {
 
 	[Mac (12, 0)]
 	[iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 #if NET
 	[Protocol, Model]
 #else
@@ -203,6 +213,7 @@ namespace IntentsUI {
 	}
 
 	[NoWatch, NoTV, Mac (12, 0), iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 #if MONOMAC
 	[BaseType (typeof (NSButton))]
 #else
@@ -230,10 +241,12 @@ namespace IntentsUI {
 		INShortcut Shortcut { get; set; }
 
 		[iOS (12, 2)]
+		[MacCatalyst (13, 1)]
 		[Export ("cornerRadius", ArgumentSemantic.Assign)]
 		nfloat CornerRadius { get; set; }
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("setStyle:")]
 		void SetStyle (INUIAddVoiceShortcutButtonStyle style);
 	}
@@ -241,6 +254,7 @@ namespace IntentsUI {
 	interface IINUIAddVoiceShortcutButtonDelegate { }
 
 	[NoWatch, NoTV, Mac (12, 0), iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 #if NET
 	[Protocol, Model]
 #else

@@ -1747,7 +1747,7 @@
 		<value>{0} 형식의 인스턴스를 만들 수 없습니다.</value>
 	</data>
   <data name="MX8042" xml:space="preserve">
-		<value>An exception occurred while trying to invoke the function {0}: {1}</value>
+		<value>함수 {0}: {1}을(를) 호출하는 동안 예외가 발생했습니다.</value>
 		<comment>
 			0: name of function
 			1: exception info

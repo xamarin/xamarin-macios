@@ -42,18 +42,22 @@ namespace FileProvider {
 	partial interface NSFileProviderExtension {
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'NSFileProviderManager' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'NSFileProviderManager' instead.")]
 		[Static, Export ("writePlaceholderAtURL:withMetadata:error:")]
 		bool WritePlaceholder (NSUrl placeholderUrl, NSDictionary metadata, ref NSError error);
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'NSFileProviderManager.GetPlaceholderUrl (NSUrl)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'NSFileProviderManager.GetPlaceholderUrl (NSUrl)' instead.")]
 		[Static, Export ("placeholderURLForURL:")]
 		NSUrl GetPlaceholderUrl (NSUrl url);
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'NSFileProviderManager.ProviderIdentifier' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'NSFileProviderManager.ProviderIdentifier' instead.")]
 		[Export ("providerIdentifier")]
 		string ProviderIdentifier { get; }
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'NSFileProviderManager.DocumentStorageUrl' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'NSFileProviderManager.DocumentStorageUrl' instead.")]
 		[Export ("documentStorageURL")]
 		NSUrl DocumentStorageUrl { get; }
 
@@ -215,6 +219,7 @@ namespace FileProvider {
 
 		[NoMac]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'NSFileProviderErrorItemKey' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'NSFileProviderErrorItemKey' instead.")]
 		[Field ("NSFileProviderErrorCollidingItemKey")]
 		NSString CollidingItemKey { get; }
 
@@ -256,6 +261,7 @@ namespace FileProvider {
 
 	[iOS (11, 0)]
 	[Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
 	enum NSFileProviderItemCapabilities : ulong {
@@ -268,11 +274,13 @@ namespace FileProvider {
 		[NoiOS]
 		[NoTV]
 		[NoWatch]
+		[NoMacCatalyst]
 		Evicting = 1 << 6,
 		[NoiOS]
 		[NoTV]
 		[NoWatch]
 		[Mac (11, 3)]
+		[NoMacCatalyst]
 		ExcludingFromSync = 1 << 7,
 		AddingSubItems = Writing,
 		ContentEnumerating = Reading,
@@ -498,6 +506,7 @@ namespace FileProvider {
 #endif
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'GetContentType' instead.")]
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'GetContentType' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'GetContentType' instead.")]
 		[Export ("typeIdentifier")]
 		string TypeIdentifier { get; }
 

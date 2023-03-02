@@ -10,6 +10,8 @@ using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
 
+#nullable enable
+
 #if MONOMAC
 namespace AppKit {
 #else
@@ -20,7 +22,7 @@ namespace UIKit {
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		public CGRect [] GetRectArray (NSRange glyphRange, NSRange selectedGlyphRange, NSTextContainer textContainer)
 		{
-			if (textContainer == null)
+			if (textContainer is null)
 				throw new ArgumentNullException ("textContainer");
 
 			nuint rectCount;

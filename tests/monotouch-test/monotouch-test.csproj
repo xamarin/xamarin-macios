@@ -206,6 +206,9 @@
     <Compile Include="..\common\Extensions.cs">
       <Link>Extensions.cs</Link>
     </Compile>
+    <Compile Include="..\common\TestAssemblyLoader.cs">
+      <Link>TestAssemblyLoader.cs</Link>
+    </Compile>
     <Compile Include="..\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>
     </Compile>
@@ -301,6 +304,7 @@
     <Content Include="AudioToolbox\1.caf" />
     <Content Include="Tamarin.pdf" />
     <Content Include="basn3p08.png" />
+    <Content Include="basn3p08_with_loc.png" />
     <Content Include="BoardingPass.pkpass" />
     <Content Include="Hand.wav" />
     <Content Include="Pacifico.ttf" />
@@ -351,6 +355,18 @@
   <ItemGroup>
     <EmbeddedResource Include="Security\openssl_crt.der">
         <LogicalName>monotouchtest.Security.openssl_crt.der</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Welcome.resx">
+      <LogicalName>monotouchtest.Welcome.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Welcome.en-AU.resx">
+      <LogicalName>monotouchtest.Welcome.en-AU.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Welcome.es.resx">
+      <LogicalName>monotouchtest.Welcome.es.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Welcome.de.resx">
+      <LogicalName>monotouchtest.Welcome.de.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -981,6 +981,7 @@ namespace Introspection {
 			"CGAffineTransform", "Range", "CGVector", "SCNMatrix4", "CLLocationCoordinate2D",
 			"SCNVector3", "Vector", "CGPoint", "CGRect", "CGSize", "UIEdgeInsets",
 			"UIOffset", "MKCoordinateSpan", "CMTimeRange", "CMTime", "CMTimeMapping",
+			"CMVideoDimensions",
 			"CATransform3D", "Boolean", "Byte", "Double", "Float", "Int16", "Int32",
 			"Int64", "SByte", "UInt16", "UInt32", "UInt64", "nfloat", "nint", "nuint",
 		};

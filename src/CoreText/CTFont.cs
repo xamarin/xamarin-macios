@@ -185,12 +185,11 @@ namespace CoreText {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("tvos16.0")]
-#if TVOS
-		[Obsolete ("Starting with tvos16.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios6.0")]
+		[ObsoletedOSPlatform ("maccatalyst13.1")]
+		[ObsoletedOSPlatform ("macos10.8")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Deprecated (PlatformName.TvOS, 16, 0)]
 		[Deprecated (PlatformName.WatchOS, 9, 0)]
@@ -208,8 +207,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.7")]
-		[UnsupportedOSPlatform ("ios6.0")]
 		[ObsoletedOSPlatform ("macos10.7")]
 		[ObsoletedOSPlatform ("ios6.0")]
 #else
@@ -532,8 +529,6 @@ namespace CoreText {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("macos10.7")]
-	[UnsupportedOSPlatform ("ios6.0")]
 	[ObsoletedOSPlatform ("macos10.7")]
 	[ObsoletedOSPlatform ("ios6.0")]
 #else
@@ -1210,8 +1205,8 @@ namespace CoreText {
 	public class CTFontFeatureRubyKana : CTFontFeatureSelectors {
 		public enum Selector {
 #if NET
-			[UnsupportedOSPlatform ("macos10.8")]
-			[UnsupportedOSPlatform ("ios5.1")]
+			[SupportedOSPlatform ("ios")]
+			[SupportedOSPlatform ("macos")]
 			[UnsupportedOSPlatform ("tvos")]
 			[UnsupportedOSPlatform ("maccatalyst")]
 			[ObsoletedOSPlatform ("macos10.8")]
@@ -1222,8 +1217,8 @@ namespace CoreText {
 #endif
 			NoRubyKana = 0,
 #if NET
-			[UnsupportedOSPlatform ("macos10.8")]
-			[UnsupportedOSPlatform ("ios5.1")]
+			[SupportedOSPlatform ("ios")]
+			[SupportedOSPlatform ("macos")]
 			[UnsupportedOSPlatform ("tvos")]
 			[UnsupportedOSPlatform ("maccatalyst")]
 			[ObsoletedOSPlatform ("macos10.8")]
@@ -1338,8 +1333,8 @@ namespace CoreText {
 	public class CTFontFeatureItalicCJKRoman : CTFontFeatureSelectors {
 		public enum Selector {
 #if NET
-			[UnsupportedOSPlatform ("macos10.8")]
-			[UnsupportedOSPlatform ("ios5.1")]
+			[SupportedOSPlatform ("ios")]
+			[SupportedOSPlatform ("macos")]
 			[UnsupportedOSPlatform ("tvos")]
 			[UnsupportedOSPlatform ("maccatalyst")]
 			[ObsoletedOSPlatform ("macos10.8")]
@@ -1350,8 +1345,8 @@ namespace CoreText {
 #endif
 			NoCJKItalicRoman = 0,
 #if NET
-			[UnsupportedOSPlatform ("macos10.8")]
-			[UnsupportedOSPlatform ("ios5.1")]
+			[SupportedOSPlatform ("ios")]
+			[SupportedOSPlatform ("macos")]
 			[UnsupportedOSPlatform ("tvos")]
 			[UnsupportedOSPlatform ("maccatalyst")]
 			[ObsoletedOSPlatform ("macos10.8")]

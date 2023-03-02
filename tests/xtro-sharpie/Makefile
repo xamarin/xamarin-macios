@@ -40,6 +40,7 @@ bin/Debug/xtro-sharpie.exe xtro-report/bin/Debug/xtro-report.exe xtro-sanity/bin
 	$(Q) touch $@
 
 XIOS ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/iOS/Xamarin.iOS.dll
+XIOS_LIBDIR ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS
 XIOS_GL ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll
 XIOS_ARCH = arm64
 XIOS_PCH = iphoneos$(IOS_SDK_VERSION)-$(XIOS_ARCH).pch
@@ -53,6 +54,7 @@ $(XIOS_PCH): .stamp-check-sharpie
 
 
 XWATCHOS ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/32bits/watchOS/Xamarin.WatchOS.dll
+XWATCHOS_LIBDIR ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.WatchOS
 
 XWATCHOS_ARCH = armv7
 XWATCHOS_PCH = watchos$(WATCH_SDK_VERSION)-$(XWATCHOS_ARCH).pch
@@ -62,6 +64,7 @@ $(XWATCHOS_PCH): .stamp-check-sharpie
 		-exclude RealityKit \
 
 XTVOS ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/tvOS/Xamarin.TVOS.dll
+XTVOS_LIBDIR ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.TVOS/
 XTVOS_GL ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll
 XTVOS_ARCH = arm64
 XTVOS_PCH = appletvos$(TVOS_SDK_VERSION)-$(XTVOS_ARCH).pch
@@ -72,6 +75,7 @@ $(XTVOS_PCH): .stamp-check-sharpie
 		-exclude RealityKit \
 
 XMACOS ?= $(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/64bits/mobile/Xamarin.Mac.dll
+XMACOS_LIBDIR ?= $(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac
 XMACOS_ARCH = x86_64
 XMACOS_PCH = macosx$(MACOS_SDK_VERSION)-$(XMACOS_ARCH).pch
 XMACOS_RID = osx-x64
@@ -209,7 +213,7 @@ report-short:
 define DotNetClassify
 .stamp-dotnet-classify-$(1): bin/Debug/xtro-sharpie.exe $$(X$(2)_PCH) $$(X$(2)_DOTNET)
 	rm -f $$(DOTNET_ANNOTATIONS_DIR)/$(1)-*.raw
-	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $$(DOTNET_ANNOTATIONS_DIR) $$(X$(2)_PCH) $$(X$(2)_DOTNET)
+	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $$(DOTNET_ANNOTATIONS_DIR) --lib $(DOTNET_BCL_DIR) $$(X$(2)_PCH) $$(X$(2)_DOTNET)
 	touch $$@
 
 dotnet-classify-$(1): .stamp-dotnet-classify-$(1)
@@ -222,7 +226,7 @@ INCLUDED_PLATFORMS+=iOS
 CLASSIFY+=.stamp-classify-ios
 .stamp-classify-ios: bin/Debug/xtro-sharpie.exe $(XIOS_PCH) $(XIOS) $(XIOS_GL)
 	rm -f $(ANNOTATIONS_DIR)/iOS-*.raw
-	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XIOS_PCH) $(XIOS) $(XIOS_GL)
+	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) --lib $(XIOS_LIBDIR) $(XIOS_PCH) $(XIOS) $(XIOS_GL)
 	$(Q) touch $@
 endif
 
@@ -231,7 +235,7 @@ INCLUDED_PLATFORMS+=tvOS
 CLASSIFY+=.stamp-classify-tvos
 .stamp-classify-tvos: bin/Debug/xtro-sharpie.exe $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
 	rm -f $(ANNOTATIONS_DIR)/tvOS-*.raw
-	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
+	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) --lib $(XTVOS_LIBDIR) $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
 	$(Q) touch $@
 endif
 
@@ -240,7 +244,7 @@ INCLUDED_PLATFORMS+=watchOS
 CLASSIFY+=.stamp-classify-watchos
 .stamp-classify-watchos: bin/Debug/xtro-sharpie.exe $(XWATCHOS_PCH) $(XWATCHOS)
 	rm -f $(ANNOTATIONS_DIR)/watchOS-*.raw
-	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XWATCHOS_PCH) $(XWATCHOS)
+	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) --lib $(XWATCHOS_LIBDIR) $(XWATCHOS_PCH) $(XWATCHOS)
 	$(Q) touch $@
 endif
 
@@ -249,7 +253,7 @@ INCLUDED_PLATFORMS+=macOS
 CLASSIFY+=.stamp-classify-macos
 .stamp-classify-macos: bin/Debug/xtro-sharpie.exe $(XMACOS_PCH) $(XMACOS)
 	rm -f $(ANNOTATIONS_DIR)/macOS-*.raw
-	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XMACOS_PCH) $(XMACOS)
+	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) --lib $(XMACOS_LIBDIR) $(XMACOS_PCH) $(XMACOS)
 	$(Q) touch $@
 endif
 

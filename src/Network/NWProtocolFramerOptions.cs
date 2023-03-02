@@ -45,17 +45,24 @@ namespace Network {
 		internal NSProtocolFramerOptions (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_framer_options_set_object_value (OS_nw_protocol_options options, string key, NativeHandle value);
+		static extern void nw_framer_options_set_object_value (OS_nw_protocol_options options, IntPtr key, NativeHandle value);
+
+		static void nw_framer_options_set_object_value (OS_nw_protocol_options options, string key, NativeHandle value)
+		{
+			using var keyPtr = new TransientString (key);
+			nw_framer_options_set_object_value (options, keyPtr, value);
+		}
 
 		public void SetValue<T> (string key, T? value) where T : NSObject
 			=> nw_framer_options_set_object_value (GetCheckedHandle (), key, value.GetHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern NativeHandle nw_framer_options_copy_object_value (OS_nw_protocol_options options, string key);
+		static extern NativeHandle nw_framer_options_copy_object_value (OS_nw_protocol_options options, IntPtr key);
 
 		public T? GetValue<T> (string key) where T : NSObject
 		{
-			var value = nw_framer_options_copy_object_value (GetCheckedHandle (), key);
+			using var keyPtr = new TransientString (key);
+			var value = nw_framer_options_copy_object_value (GetCheckedHandle (), keyPtr);
 			return Runtime.GetNSObject<T> (value, owns: true);
 		}
 

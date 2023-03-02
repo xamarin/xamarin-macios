@@ -28,6 +28,7 @@ namespace LinkPresentation {
 	[ErrorDomain ("LPErrorDomain")]
 	[Mac (10, 15), iOS (13, 0)]
 	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum LPErrorCode : long {
 		Unknown = 1,
@@ -38,6 +39,7 @@ namespace LinkPresentation {
 
 	[Mac (10, 15), iOS (13, 0)]
 	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface LPLinkMetadata : NSCopying, NSSecureCoding {
 
@@ -65,6 +67,7 @@ namespace LinkPresentation {
 
 	[Mac (10, 15), iOS (13, 0)]
 	[TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIView))]
 	interface LPLinkView {
 
@@ -84,6 +87,7 @@ namespace LinkPresentation {
 
 	[Mac (10, 15), iOS (13, 0)]
 	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface LPMetadataProvider {
 

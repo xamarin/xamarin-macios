@@ -1,5 +1,7 @@
 using System;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSTouch {
 #if !NET

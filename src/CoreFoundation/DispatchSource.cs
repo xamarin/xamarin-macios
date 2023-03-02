@@ -94,13 +94,13 @@ namespace CoreFoundation {
 		extern static IntPtr dispatch_source_merge_data (dispatch_source_t source, IntPtr data);
 
 		[DllImport (Constants.libcLibrary)]
-		unsafe extern static IntPtr dispatch_source_set_event_handler (dispatch_source_t source, IntPtr handler);
+		unsafe extern static IntPtr dispatch_source_set_event_handler (dispatch_source_t source, BlockLiteral* handler);
 
 		[DllImport (Constants.libcLibrary)]
-		unsafe extern static IntPtr dispatch_source_set_registration_handler (dispatch_source_t source, IntPtr handler);
+		unsafe extern static IntPtr dispatch_source_set_registration_handler (dispatch_source_t source, BlockLiteral* handler);
 
 		[DllImport (Constants.libcLibrary)]
-		unsafe extern static IntPtr dispatch_source_set_cancel_handler (dispatch_source_t source, IntPtr handler);
+		unsafe extern static IntPtr dispatch_source_set_cancel_handler (dispatch_source_t source, BlockLiteral* handler);
 
 		[DllImport (Constants.libcLibrary)]
 		unsafe extern static IntPtr dispatch_source_set_event_handler_f (dispatch_source_t source, IntPtr handler);
@@ -118,7 +118,7 @@ namespace CoreFoundation {
 				return;
 			}
 
-			DispatchBlock.Invoke (
+			Action callback =
 				delegate
 				{
 					var sc = SynchronizationContext.Current;
@@ -133,7 +133,11 @@ namespace CoreFoundation {
 						if (sc is null)
 							SynchronizationContext.SetSynchronizationContext (null);
 					}
-				}, block => dispatch_source_set_event_handler (GetCheckedHandle (), block));
+				};
+			unsafe {
+				using var block = BlockStaticDispatchClass.CreateBlock (callback);
+				dispatch_source_set_event_handler (GetCheckedHandle (), &block);
+			}
 		}
 
 		public void Suspend ()
@@ -151,7 +155,7 @@ namespace CoreFoundation {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			DispatchBlock.Invoke (
+			Action callback =
 				delegate
 				{
 					var sc = SynchronizationContext.Current;
@@ -166,7 +170,11 @@ namespace CoreFoundation {
 						if (sc is null)
 							SynchronizationContext.SetSynchronizationContext (null);
 					}
-				}, block => dispatch_source_set_registration_handler (GetCheckedHandle (), block));
+				};
+			unsafe {
+				using var block = BlockStaticDispatchClass.CreateBlock (callback);
+				dispatch_source_set_registration_handler (GetCheckedHandle (), &block);
+			}
 		}
 
 		public void SetCancelHandler (Action handler)
@@ -174,7 +182,7 @@ namespace CoreFoundation {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			DispatchBlock.Invoke (
+			Action callback =
 				delegate
 				{
 					var sc = SynchronizationContext.Current;
@@ -189,7 +197,11 @@ namespace CoreFoundation {
 						if (sc is null)
 							SynchronizationContext.SetSynchronizationContext (null);
 					}
-				}, block => dispatch_source_set_cancel_handler (GetCheckedHandle (), block));
+				};
+			unsafe {
+				using var block = BlockStaticDispatchClass.CreateBlock (callback);
+				dispatch_source_set_cancel_handler (GetCheckedHandle (), &block);
+			}
 		}
 
 		public void Cancel ()
@@ -575,7 +587,7 @@ namespace CoreFoundation {
 
 			const int O_EVTONLY = 0x8000;
 			[DllImport (Constants.libcLibrary, SetLastError = true)]
-			extern static int open (string path, int flags);
+			extern static int open (IntPtr path, int flags);
 
 			[DllImport (Constants.libcLibrary)]
 			internal extern static int close (int fd);
@@ -585,7 +597,8 @@ namespace CoreFoundation {
 				if (path is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path));
 
-				fd = open (path, O_EVTONLY);
+				using var pathPtr = new TransientString (path);
+				fd = open (pathPtr, O_EVTONLY);
 				if (fd == -1)
 					throw new IOException ("Failure to open the file", Marshal.GetLastWin32Error ());
 				if (type_vnode == IntPtr.Zero)

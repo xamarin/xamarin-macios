@@ -2006,7 +2006,6 @@ method_and_par_hash (gconstpointer l)
 }
 
 static pthread_mutex_t wrapper_hash_lock = PTHREAD_MUTEX_INITIALIZER;
-static MonoReferenceQueue *block_wrapper_queue;
 /*
  * Given a MonoMethod and a parameter, lookup the MethodInfo (MonoReflectionMethod)
  * that can be used to create a new delegate, this returns the method that can
@@ -2119,16 +2118,6 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref,
 		goto cleanup;
 	}
 
-	MONO_ENTER_GC_SAFE;
-	pthread_mutex_lock (&wrapper_hash_lock);
-	MONO_EXIT_GC_SAFE;
-
-	if (block_wrapper_queue == NULL)
-		block_wrapper_queue = mono_gc_reference_queue_new (xamarin_release_block_on_main_thread);
-
-	mono_gc_reference_queue_add (block_wrapper_queue, delegate, nativeBlock);
-	pthread_mutex_unlock (&wrapper_hash_lock);
-
 cleanup:
 	xamarin_gchandle_free (obj_handle);
 	return delegate;
@@ -2154,7 +2143,6 @@ xamarin_release_static_dictionaries ()
 	// shouldn't be a problem, because at this point the process is about to
 	// exit anyway.
 	pthread_mutex_lock (&wrapper_hash_lock);
-	xamarin_mono_object_release (&block_wrapper_queue);
 	xamarin_mono_object_release (&xamarin_wrapper_hash);
 	pthread_mutex_unlock (&wrapper_hash_lock);
 #endif
@@ -2829,6 +2817,16 @@ xamarin_locate_assembly_resource_for_root (const char *root, const char *culture
 		return false;
 	} else if (xamarin_file_exists (path)) {
 		return true;
+	}
+
+	if (culture != NULL && *culture != 0) {
+		// culture-specific directory
+		if (snprintf (path, pathlen, "%s/%s/.xamarin/%s/%s", root, culture, RUNTIMEIDENTIFIER, resource) < 0) {
+			LOG (PRODUCT ": Failed to construct path for assembly resource (root directory: '%s', culture: '%s', resource: '%s', runtimeidentifier: %s): %s", root, culture, resource, RUNTIMEIDENTIFIER, strerror (errno));
+			return false;
+		} else if (xamarin_file_exists (path)) {
+			return true;
+		}
 	}
 #endif
 

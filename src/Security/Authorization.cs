@@ -149,13 +149,17 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.7")]
 		[ObsoletedOSPlatform ("macos10.7", "Use the Service Management framework or the launchd-launched helper tool instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,7)]
 #endif
+#if NET
+		[DllImport (Constants.SecurityLibrary)]
+		extern static int /* OSStatus = int */ AuthorizationExecuteWithPrivileges (IntPtr handle, string pathToTool, AuthorizationFlags flags, IntPtr args, IntPtr FILEPtr);
+#else
 		[DllImport (Constants.SecurityLibrary)]
 		extern static int /* OSStatus = int */ AuthorizationExecuteWithPrivileges (IntPtr handle, string pathToTool, AuthorizationFlags flags, string? []? args, IntPtr FILEPtr);
+#endif
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static int /* OSStatus = int */ AuthorizationFree (IntPtr handle, AuthorizationFlags flags);
@@ -169,7 +173,6 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.7")]
 		[ObsoletedOSPlatform ("macos10.7", "Use the Service Management framework or the launchd-launched helper tool instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,7)]
@@ -188,8 +191,14 @@ namespace Security {
 					arguments = array;
 				}
 			}
-
+#if NET
+			var argsPtr = TransientString.AllocStringArray (arguments);
+			var retval = AuthorizationExecuteWithPrivileges (Handle, pathToTool, flags, argsPtr, IntPtr.Zero);
+			TransientString.FreeStringArray (argsPtr, args is null ? 0 : args.Length);
+			return retval;
+#else
 			return AuthorizationExecuteWithPrivileges (Handle, pathToTool, flags, arguments, IntPtr.Zero);
+#endif
 		}
 
 		protected override void Dispose (bool disposing)

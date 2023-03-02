@@ -50,23 +50,26 @@ namespace Network {
 		public NWWebSocketOptions (NWWebSocketVersion version) : base (nw_ws_create_options (version), true) { }
 
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-		static extern void nw_ws_options_add_additional_header (OS_nw_protocol_options options, string name, string value);
+		static extern void nw_ws_options_add_additional_header (OS_nw_protocol_options options, IntPtr name, IntPtr value);
 
 		public void SetHeader (string header, string value)
 		{
 			if (header is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (header));
-			nw_ws_options_add_additional_header (GetCheckedHandle (), header, value);
+			using var headerPtr = new TransientString (header);
+			using var valuePtr = new TransientString (value);
+			nw_ws_options_add_additional_header (GetCheckedHandle (), headerPtr, valuePtr);
 		}
 
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-		static extern void nw_ws_options_add_subprotocol (OS_nw_protocol_options options, string subprotocol);
+		static extern void nw_ws_options_add_subprotocol (OS_nw_protocol_options options, IntPtr subprotocol);
 
 		public void AddSubprotocol (string subprotocol)
 		{
 			if (subprotocol is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (subprotocol));
-			nw_ws_options_add_subprotocol (GetCheckedHandle (), subprotocol);
+			using var subprotocolPtr = new TransientString (subprotocol);
+			nw_ws_options_add_subprotocol (GetCheckedHandle (), subprotocolPtr);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -103,7 +106,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_ws_options_set_client_request_handler (OS_nw_protocol_options options, IntPtr client_queue, ref BlockLiteral handler);
+		unsafe static extern void nw_ws_options_set_client_request_handler (OS_nw_protocol_options options, IntPtr client_queue, BlockLiteral* handler);
 
 		delegate void nw_ws_options_set_client_request_handler_t (IntPtr block, nw_ws_request_t request);
 		static nw_ws_options_set_client_request_handler_t static_ClientRequestHandler = TrampolineClientRequestHandler;
@@ -125,14 +128,11 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
+
 			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				block_handler.SetupBlockUnsafe (static_ClientRequestHandler, handler);
-				try {
-					nw_ws_options_set_client_request_handler (GetCheckedHandle (), queue.Handle, ref block_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_ClientRequestHandler, handler);
+				nw_ws_options_set_client_request_handler (GetCheckedHandle (), queue.Handle, &block);
 			}
 		}
 	}

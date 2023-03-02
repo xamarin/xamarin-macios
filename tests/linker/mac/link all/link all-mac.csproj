@@ -75,6 +75,9 @@
     <Compile Include="..\..\..\common\mac\Mac.cs">
       <Link>Mac.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\common\TestAssemblyLoader.cs">
+      <Link>TestAssemblyLoader.cs</Link>
+    </Compile>
     <Compile Include="..\..\ios\link all\DataContractTest.cs">
       <Link>DataContractTest.cs</Link>
     </Compile>

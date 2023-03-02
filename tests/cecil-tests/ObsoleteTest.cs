@@ -7,6 +7,8 @@ using NUnit.Framework;
 
 using Mono.Cecil;
 
+using Xamarin.Utils;
+
 #nullable enable
 
 namespace Cecil.Tests {
@@ -24,35 +26,18 @@ namespace Cecil.Tests {
 			// Make a list of Obsolete things
 			var found = new HashSet<string> ();
 
-			foreach (var prop in assembly.EnumerateProperties (a => FilterMember (a))) {
-				if (Skip (prop))
-					continue;
-				Console.WriteLine ($"{GetLocation (prop.GetMethod ?? prop.SetMethod)} {prop.FullName}");
-				found.Add (prop.FullName);
+			foreach (var prop in assembly.EnumerateAttributeProviders (a => FilterMember (a))) {
+				Console.WriteLine ($"{prop.RenderLocation ()} {prop.AsFullName ()}: add '[EditorBrowsable (EditorBrowsableState.Never)]' for newly obsoleted API to pass this test.");
+				found.Add (prop.AsFullName ());
 			}
 
-			foreach (var meth in assembly.EnumerateMethods (a => FilterMember (a))) {
-				if (Skip (meth))
-					continue;
-				Console.WriteLine ($"{GetLocation (meth)} {meth.FullName}");
-				found.Add (meth.FullName);
-			}
-
-			foreach (var type in assembly.EnumerateTypes (a => FilterMember (a))) {
-				if (Skip (type))
-					continue;
-				Console.WriteLine ($"{GetLocation (type.Methods.FirstOrDefault ())} {type.FullName}");
-				found.Add (type.FullName);
-			}
-
-			// TODO: Events?
 			Assert.That (found, Is.Empty, "Obsolete API: add '[EditorBrowsable (EditorBrowsableState.Never)]' for newly obsoleted API to pass this test.");
 		}
 
 		bool FilterMember (ICustomAttributeProvider provider)
 		{
 			// If an API isn't obsolete, it's not under scrutiny from this test.
-			if (!HasObsoleteAttribute (provider))
+			if (!provider.IsObsolete ())
 				return false;
 
 			// If the API has an UnsupportedOSPlatform attribute with a version, it means the API is available
@@ -63,19 +48,13 @@ namespace Cecil.Tests {
 #if !XAMCORE_5_0
 			// If we've hidden an API from the IDE, assume we've decided to keep the API for binary compatibility
 			// At least until the next time we can do breaking changes.
-			if (HasEditorBrowseableNeverAttribute (provider))
+			if (provider.HasEditorBrowseableNeverAttribute ())
 				return false;
 #endif
 
 			// I'm bad!
 			return true;
 		}
-
-		bool HasObsoleteAttribute (ICustomAttributeProvider provider) => HasObsoleteAttribute (provider.CustomAttributes);
-
-		bool HasObsoleteAttribute (IEnumerable<CustomAttribute> attributes) => attributes.Any (a => IsObsoleteAttribute (a));
-
-		bool IsObsoleteAttribute (CustomAttribute attribute) => attribute.AttributeType.Name == "Obsolete" || (attribute.AttributeType.Name == "ObsoleteAttribute");
 
 		bool HasVersionedUnsupportedOSPlatformAttribute (ICustomAttributeProvider provider)
 		{
@@ -97,7 +76,7 @@ namespace Cecil.Tests {
 			return false;
 		}
 
-		bool HasEditorBrowseableNeverAttribute (ICustomAttributeProvider provider)
+		public static bool HasEditorBrowseableNeverAttribute (ICustomAttributeProvider provider)
 		{
 			if (provider?.HasCustomAttributes != true)
 				return false;
@@ -111,28 +90,6 @@ namespace Cecil.Tests {
 			}
 
 			return false;
-		}
-
-		bool Skip (MemberReference member)
-		{
-			var fullname = member.FullName;
-
-			switch (fullname) {
-#if !XAMCORE_5_0 // these exceptions should be fixed in XAMCORE_5_0
-			case "GameKit.IGKPeerPickerControllerDelegate":
-			case "GameKit.GKPeerPickerControllerDelegate_Extensions":
-			case "GameKit.GKPeerPickerControllerDelegate":
-			case "GameKit.GKPeerPickerController":
-				return true;
-#endif
-			default:
-				return false;
-			}
-		}
-
-		static string GetLocation (MethodDefinition method)
-		{
-			return method.RenderLocation ();
 		}
 	}
 }

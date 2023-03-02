@@ -207,7 +207,7 @@ namespace CoreServices
 		/// The service will supply events that have happened after the given event ID. To ask for
 		/// events "since now," set to <c>null</c> or <see cref="FSEvent.SinceNowId"/>. Often, clients
 		/// will supply the highest-numbered event ID they have received in a callback, which they can
-		/// obtain via <see cref="FSEventStream.LatestEventId">. Do not set to zero, unless you want to
+		/// obtain via <see cref="FSEventStream.LatestEventId"/>. Do not set to zero, unless you want to
 		/// receive events for every directory modified since "the beginning of time" -- an unlikely scenario.
 		/// </summary>
 		public ulong? SinceWhenId { get; set; }
@@ -505,8 +505,8 @@ namespace CoreServices
 			IntPtr runLoop, IntPtr runLoopMode);
 
 #if NET
-		[Obsolete ("Starting with macOS13.0 use 'SetDispatchQueue' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-		[UnsupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos13.0", "Use 'SetDispatchQueue' instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 13,0, message: "Use 'SetDispatchQueue' instead.")]
 #endif
@@ -535,8 +535,8 @@ namespace CoreServices
 			IntPtr runLoop, IntPtr runLoopMode);
 
 #if NET
-		[Obsolete ("Starting with macOS13.0 use 'SetDispatchQueue' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-		[UnsupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos13.0", "Use 'SetDispatchQueue' instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 13,0, message: "Use 'SetDispatchQueue' instead.")]
 #endif

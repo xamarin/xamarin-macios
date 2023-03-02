@@ -16,6 +16,7 @@ namespace DeviceCheck {
 
 	[TV (11, 0), Watch (9, 0), iOS (11, 0)]
 	[Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[ErrorDomain ("DCErrorDomain")]
 	[Native]
 	public enum DCError : long {
@@ -28,10 +29,12 @@ namespace DeviceCheck {
 
 	[TV (11, 0), Watch (9, 0), iOS (11, 0)]
 	[Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	delegate void DCDeviceGenerateTokenCompletionHandler ([NullAllowed] NSData token, [NullAllowed] NSError error);
 
 	[TV (11, 0), Watch (9, 0), iOS (11, 0)]
 	[Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // From the documentation it seems the only way to create a usable instance is to use the static CurrentDevice property.
 	[BaseType (typeof (NSObject))]
 	interface DCDevice {

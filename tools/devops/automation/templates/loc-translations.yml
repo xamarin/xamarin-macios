@@ -86,6 +86,7 @@ steps:
     packageSourceAuth: patAuth
     patVariable: '$(OneLocBuild--PAT)'
     isAutoCompletePrSelected: false
+    isUseLfLineEndingsSelected: true
     prSourceBranchPrefix: 'locfiles'
     repoType: gitHub
     gitHubPatVariable: '$(GitHub.Token)'

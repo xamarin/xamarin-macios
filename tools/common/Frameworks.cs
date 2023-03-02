@@ -454,7 +454,7 @@ public class Frameworks : Dictionary<string, Framework> {
 
 				{ "AVRouting", "AVRouting", 16,0},
 				{ "BackgroundAssets", "BackgroundAssets", 16,0},
-				{ "PushToTalk", "PushToTalk", new Version (16,0), NotAvailableInSimulator},
+				{ "PushToTalk", "PushToTalk", new Version (16,0), new Version (16, 2) /* available to build with, although it's unusable */},
 				{ "SharedWithYou", "SharedWithYou", 16, 0 },
 				{ "SharedWithYouCore", "SharedWithYouCore", 16, 0 },
 

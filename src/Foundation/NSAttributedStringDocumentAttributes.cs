@@ -217,10 +217,10 @@ namespace Foundation {
 #endif
 		public NSUrl? ReadAccessUrl {
 			get {
-				return GetNativeValue<NSUrl> (NSAttributedStringDocumentReadingOptionKeys.ReadAccessUrlKey);
+				return GetNativeValue<NSUrl> (NSAttributedStringDocumentReadingOptionKey.NSReadAccessUrlDocumentOption);
 			}
 			set {
-				SetNativeValue (NSAttributedStringDocumentReadingOptionKeys.ReadAccessUrlKey, value);
+				SetNativeValue (NSAttributedStringDocumentReadingOptionKey.NSReadAccessUrlDocumentOption, value);
 			}
 		}
 #endif // !TVOS && !WATCH

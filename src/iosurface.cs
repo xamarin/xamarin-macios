@@ -25,12 +25,14 @@ namespace IOSurface {
 	[iOS (11, 0)]
 	[TV (11, 0)]
 	[Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	interface IOSurfacePropertyKey {
 		[Internal]
 		[Field ("IOSurfacePropertyAllocSizeKey")]
 		NSString _DeprecatedAllocSizeKey { get; }
 
 		[iOS (12, 0), TV (12, 0), Mac (10, 14)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Field ("IOSurfacePropertyKeyAllocSize")]
 		NSString _NewAllocSizeKey { get; }
@@ -130,6 +132,7 @@ namespace IOSurface {
 	[iOS (11, 0)]
 	[TV (11, 0)]
 	[Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface IOSurface : NSSecureCoding {
 		[Internal, Export ("initWithProperties:")]
@@ -236,6 +239,7 @@ namespace IOSurface {
 
 		[iOS (11, 0)]
 		[Mac (10, 13)]
+		[MacCatalyst (13, 1)]
 		[Internal, Export ("setPurgeable:oldState:")]
 		int _SetPurgeable (IOSurfacePurgeabilityState newState, IntPtr oldStatePtr);
 	}

@@ -525,8 +525,6 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos11.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
@@ -580,8 +578,6 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos11.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
@@ -606,8 +602,6 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos11.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
@@ -958,8 +952,6 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos11.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
@@ -1094,8 +1086,6 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos11.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
@@ -1109,8 +1099,6 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos11.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
@@ -1562,8 +1550,6 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos11.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
@@ -1587,7 +1573,6 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
 		[Deprecated (PlatformName.iOS, 14, 0)]
@@ -2134,8 +2119,6 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos11.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
@@ -2157,8 +2140,6 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos11.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
@@ -2280,8 +2261,6 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos11.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else

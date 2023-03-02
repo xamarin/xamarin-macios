@@ -1,18 +1,21 @@
-#if !__WATCHOS__
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Linq;
 
-using Foundation;
+using NUnit.Framework;
 
-public partial class AppDelegate {
-	public partial IEnumerable<Assembly> GetTestAssemblies ()
+public static partial class TestLoader {
+	static partial void AddTestAssembliesImpl (HashSet<Assembly> assemblies)
 	{
-		return new Assembly [] {
-			Assembly.GetExecutingAssembly (),
-			typeof (BundledResources.ResourcesTest).Assembly,
-		};
+		assemblies.Add (typeof (BundledResources.ResourcesTest).Assembly);
 	}
 }
 
-#endif // !__WATCHOS__
+[TestFixture]
+public class LoaderTest {
+	public void TestAssemblyCount ()
+	{
+		Assert.AreEqual (2, TestLoader.GetTestAssemblies ().Count (), "Test assembly count");
+	}
+}

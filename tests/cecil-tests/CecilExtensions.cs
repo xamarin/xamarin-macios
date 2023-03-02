@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Text;
 
 using Mono.Cecil;
@@ -109,6 +110,40 @@ namespace Xamarin.Utils {
 		public static string GetOSPlatformAttributePlatformName (this CustomAttribute ca)
 		{
 			return (string) ca.ConstructorArguments [0].Value;
+		}
+
+		public static bool IsObsolete (this ICustomAttributeProvider? provider)
+		{
+			if (provider?.HasCustomAttributes != true)
+				return false;
+
+			foreach (var attrib in provider.CustomAttributes)
+				if (IsObsoleteAttribute (attrib))
+					return true;
+
+			return false;
+		}
+
+		public static bool IsObsoleteAttribute (this CustomAttribute attribute)
+		{
+			return attribute.AttributeType.Is ("System", "ObsoleteAttribute");
+		}
+
+
+		public static bool HasEditorBrowseableNeverAttribute (this ICustomAttributeProvider? provider)
+		{
+			if (provider?.HasCustomAttributes != true)
+				return false;
+
+			foreach (var attr in provider.CustomAttributes) {
+				if (!attr.AttributeType.Is ("System.ComponentModel", "EditorBrowsableAttribute"))
+					continue;
+				var state = (EditorBrowsableState) attr.ConstructorArguments [0].Value;
+				if (state == EditorBrowsableState.Never)
+					return true;
+			}
+
+			return false;
 		}
 	}
 }

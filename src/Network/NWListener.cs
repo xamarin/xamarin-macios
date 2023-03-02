@@ -47,7 +47,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		extern static IntPtr nw_listener_create_with_port (string port, IntPtr nwparameters);
+		extern static IntPtr nw_listener_create_with_port (IntPtr port, IntPtr nwparameters);
 
 		public static NWListener? Create (string port, NWParameters parameters)
 		{
@@ -58,7 +58,8 @@ namespace Network {
 			if (port is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (port));
 
-			handle = nw_listener_create_with_port (port, parameters.Handle);
+			using var portPtr = new TransientString (port);
+			handle = nw_listener_create_with_port (portPtr, parameters.Handle);
 			if (handle == IntPtr.Zero)
 				return null;
 			return new NWListener (handle, owns: true);
@@ -145,7 +146,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_listener_set_state_changed_handler (IntPtr handle, void* callback);
+		static extern unsafe void nw_listener_set_state_changed_handler (IntPtr handle, BlockLiteral* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetStateChangedHandler (Action<NWListenerState, NWError?> callback)
@@ -156,15 +157,9 @@ namespace Network {
 					return;
 				}
 
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral* block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_ListenerStateChanged, callback);
-
-				try {
-					nw_listener_set_state_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+				var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_ListenerStateChanged, callback);
+				nw_listener_set_state_changed_handler (GetCheckedHandle (), &block);
 			}
 		}
 
@@ -182,7 +177,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_listener_set_new_connection_handler (IntPtr handle, void* callback);
+		static extern unsafe void nw_listener_set_new_connection_handler (IntPtr handle, BlockLiteral* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetNewConnectionHandler (Action<NWConnection> callback)
@@ -194,16 +189,10 @@ namespace Network {
 						return;
 					}
 
-					BlockLiteral block_handler = new BlockLiteral ();
-					BlockLiteral* block_ptr_handler = &block_handler;
-					block_handler.SetupBlockUnsafe (static_NewConnection, callback);
-
-					try {
-						nw_listener_set_new_connection_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-						connectionHandlerWasSet = true;
-					} finally {
-						block_handler.CleanupBlock ();
-					}
+					using var block = new BlockLiteral ();
+					block.SetupBlockUnsafe (static_NewConnection, callback);
+					nw_listener_set_new_connection_handler (GetCheckedHandle (), &block);
+					connectionHandlerWasSet = true;
 				}
 			}
 		}
@@ -224,7 +213,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_listener_set_advertised_endpoint_changed_handler (IntPtr handle, void* callback);
+		static extern unsafe void nw_listener_set_advertised_endpoint_changed_handler (IntPtr handle, BlockLiteral* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetAdvertisedEndpointChangedHandler (AdvertisedEndpointChanged callback)
@@ -235,15 +224,9 @@ namespace Network {
 					return;
 				}
 
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral* block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_AdvertisedEndpointChangedHandler, callback);
-
-				try {
-					nw_listener_set_advertised_endpoint_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_AdvertisedEndpointChangedHandler, callback);
+				nw_listener_set_advertised_endpoint_changed_handler (GetCheckedHandle (), &block);
 			}
 		}
 
@@ -309,7 +292,7 @@ namespace Network {
 		[MacCatalyst (15, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_listener_set_new_connection_group_handler (IntPtr listener, /* [NullAllowed] */ ref BlockLiteral handler);
+		unsafe static extern void nw_listener_set_new_connection_group_handler (IntPtr listener, /* [NullAllowed] */ BlockLiteral* handler);
 
 		delegate void nw_listener_new_connection_group_handler_t (IntPtr block, nw_connection_group_t group);
 		static nw_listener_new_connection_group_handler_t static_NewConnectionGroup = TrampolineNewConnectionGroup;
@@ -339,12 +322,10 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetNewConnectionGroupHandler (Action<NWConnectionGroup> handler)
 		{
-			BlockLiteral blockHandler = new ();
-			blockHandler.SetupBlockUnsafe (static_NewConnectionGroup, handler);
-			try {
-				nw_listener_set_new_connection_group_handler (GetCheckedHandle (), ref blockHandler);
-			} finally {
-				blockHandler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_NewConnectionGroup, handler);
+				nw_listener_set_new_connection_group_handler (GetCheckedHandle (), &block);
 			}
 		}
 	}

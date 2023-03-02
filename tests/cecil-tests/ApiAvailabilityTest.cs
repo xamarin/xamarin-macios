@@ -85,48 +85,10 @@ namespace Cecil.Tests {
 		}
 
 		static HashSet<string> knownFailuresInMissingObsoleteAttributes = new HashSet<string> {
-			"AppKit.NSCursor.IsSetOnMouseEntered()",
-			"AppKit.NSCursor.IsSetOnMouseExited()",
-			"AppKit.NSCursor.SetOnMouseEntered(System.Boolean)",
-			"AppKit.NSCursor.SetOnMouseExited(System.Boolean)",
-			"AppKit.NSImage.get_Flipped()",
-			"AppKit.NSImage.get_ImageFileTypes()",
-			"AppKit.NSImage.ImageUnfilteredFileTypes()",
-			"AppKit.NSImage.set_Flipped(System.Boolean)",
-			"AppKit.NSToolbarItem.get_MaxSize()",
-			"AppKit.NSToolbarItem.get_MinSize()",
-			"AppKit.NSToolbarItem.set_MaxSize(CoreGraphics.CGSize)",
-			"AppKit.NSToolbarItem.set_MinSize(CoreGraphics.CGSize)",
-			"AudioToolbox.AudioFormatFlags AudioToolbox.AudioStreamBasicDescription::AudioFormatFlagsAudioUnitCanonical",
-			"AudioToolbox.AudioFormatProperty AudioToolbox.AudioFormatProperty::HardwareCodecCapabilities",
 			"AudioToolbox.AudioSessionActiveFlags",
-			"AudioToolbox.AudioSessionProperty AudioToolbox.AudioSessionProperty::AudioRoute",
-			"AudioToolbox.AudioSessionProperty AudioToolbox.AudioSessionProperty::OtherMixableAudioShouldDuck",
-			"AudioUnit.AudioTypeConverter AudioUnit.AudioTypeConverter::AUiPodTime",
-			"AudioUnit.AudioTypeEffect AudioUnit.AudioTypeEffect::DCFilter",
-			"AudioUnit.AudioUnitPropertyIDType AudioUnit.AudioUnitPropertyIDType::AttenuationCurve",
-			"AudioUnit.AudioUnitPropertyIDType AudioUnit.AudioUnitPropertyIDType::DistanceParams",
-			"AudioUnit.AudioUnitPropertyIDType AudioUnit.AudioUnitPropertyIDType::RenderingFlags",
-			"AudioUnit.AUGraph",
-			"AudioUnit.SpatialMixerRenderingFlags AudioUnit.SpatialMixerRenderingFlags::DistanceAttenuation",
 			"AVFoundation.AVAssetDownloadUrlSession.GetAssetDownloadTask(AVFoundation.AVUrlAsset, Foundation.NSUrl, Foundation.NSDictionary)",
-			"AVFoundation.AVCaptureConnection.get_SupportsVideoMaxFrameDuration()",
-			"AVFoundation.AVCaptureConnection.get_SupportsVideoMinFrameDuration()",
-			"AVFoundation.AVCaptureConnection.get_VideoMaxFrameDuration()",
-			"AVFoundation.AVCaptureConnection.get_VideoMinFrameDuration()",
-			"AVFoundation.AVCaptureConnection.set_VideoMaxFrameDuration(CoreMedia.CMTime)",
-			"AVFoundation.AVCaptureConnection.set_VideoMinFrameDuration(CoreMedia.CMTime)",
-			"AVFoundation.AVCaptureDevice.get_FlashMode()",
 			"AVFoundation.AVCaptureDevice.IsFlashModeSupported(AVFoundation.AVCaptureFlashMode)",
-			"AVFoundation.AVCaptureDevice.set_FlashMode(AVFoundation.AVCaptureFlashMode)",
 			"AVFoundation.AVCaptureFlashMode AVFoundation.AVCaptureDevice::FlashMode()",
-			"AVFoundation.AVCapturePhotoSettings.get_AutoDualCameraFusionEnabled()",
-			"AVFoundation.AVCapturePhotoSettings.get_DualCameraDualPhotoDeliveryEnabled()",
-			"AVFoundation.AVCapturePhotoSettings.set_AutoDualCameraFusionEnabled(System.Boolean)",
-			"AVFoundation.AVCapturePhotoSettings.set_DualCameraDualPhotoDeliveryEnabled(System.Boolean)",
-			"AVFoundation.AVCaptureResolvedPhotoSettings.get_DualCameraFusionEnabled()",
-			"AVFoundation.AVCaptureVideoDataOutput.get_MinFrameDuration()",
-			"AVFoundation.AVCaptureVideoDataOutput.set_MinFrameDuration(CoreMedia.CMTime)",
 			"CFNetwork.CFHTTPStream",
 			"CoreBluetooth.CBCentralManagerState",
 			"CoreBluetooth.CBPeripheralManagerState",
@@ -149,9 +111,6 @@ namespace Cecil.Tests {
 			"CoreGraphics.CGContext.ShowTextAtPoint(System.Runtime.InteropServices.NFloat, System.Runtime.InteropServices.NFloat, System.String)",
 			"CoreGraphics.CGContext.ShowTextAtPoint(System.Runtime.InteropServices.NFloat, System.Runtime.InteropServices.NFloat, System.String, System.Int32)",
 			"CoreGraphics.CGImage PassKit.PKShareablePassMetadata::PassThumbnailImage()",
-			"CoreGraphics.CGSize AppKit.NSToolbarItem::MaxSize()",
-			"CoreGraphics.CGSize AppKit.NSToolbarItem::MinSize()",
-			"CoreImage.CIRawFilterKeys.get_InputLocalToneMapAmountKey()",
 			"CoreLocation.CLAuthorizationStatus CoreLocation.CLAuthorizationStatus::Authorized",
 			"CoreLocation.CLAuthorizationStatus CoreLocation.CLAuthorizationStatus::AuthorizedWhenInUse",
 			"CoreLocation.CLLocationManagerDelegate.UpdatedLocation(CoreLocation.CLLocationManager, CoreLocation.CLLocation, CoreLocation.CLLocation)",
@@ -168,19 +127,16 @@ namespace Cecil.Tests {
 			"CoreText.CTFontManager.RegisterFontsForUrl(Foundation.NSUrl[], CoreText.CTFontManagerScope)",
 			"CoreText.CTFontManager.UnregisterFontsForUrl(Foundation.NSUrl[], CoreText.CTFontManagerScope)",
 			"CoreText.CTFontManagerAutoActivation CoreText.CTFontManagerAutoActivation::PromptUser",
-			"CoreText.CTParagraphStyleSpecifier CoreText.CTParagraphStyleSpecifier::LineSpacing",
 			"CoreText.CTTypesetterOptionKey.get_DisableBidiProcessing()",
 			"CoreText.FontFeatureGroup CoreText.FontFeatureGroup::LetterCase",
-			"EventKit.EKParticipant.GetRecord(AddressBook.ABAddressBook)",
 			"Foundation.NSData HealthKit.HKVerifiableClinicalRecord::JwsRepresentation()",
 			"Foundation.NSDate HealthKit.HKWorkoutEvent::Date()",
 			"Foundation.NSString CoreData.NSPersistentStoreCoordinator::DidImportUbiquitousContentChangesNotification()",
 			"Foundation.NSString CoreData.NSPersistentStoreCoordinator::PersistentStoreUbiquitousContentNameKey()",
 			"Foundation.NSString CoreData.NSPersistentStoreCoordinator::PersistentStoreUbiquitousContentUrlKey()",
-			"Foundation.NSString CoreImage.CIRawFilterKeys::InputLocalToneMapAmountKey()",
 			"Foundation.NSString CoreText.CTTypesetterOptionKey::DisableBidiProcessing()",
 			"Foundation.NSString Foundation.NSUrl::UbiquitousItemIsDownloadingKey()",
-			"Foundation.NSString MobileCoreServices.UTType::UniversalSceneDescriptionMobile()",
+			"Foundation.NSTask.LaunchFromPath(System.String, System.String[])",
 			"Foundation.NSUrl.get_UbiquitousItemIsDownloadingKey()",
 			"Foundation.NSUrlSessionConfiguration.BackgroundSessionConfiguration(System.String)",
 			"Foundation.NSUserDefaults..ctor(System.String)",
@@ -190,35 +146,22 @@ namespace Cecil.Tests {
 			"GameController.GCMicroGamepadSnapshotData",
 			"GameController.GCMicroGamepadSnapshotData.ToNSData()",
 			"GameController.GCMicroGamepadSnapShotDataV100",
-			"GameKit.GKVoiceChatService",
-			"HealthKit.HKActivitySummary.get_AppleExerciseTimeGoal()",
-			"HealthKit.HKActivitySummary.get_AppleStandHoursGoal()",
-			"HealthKit.HKActivitySummary.set_AppleExerciseTimeGoal(HealthKit.HKQuantity)",
-			"HealthKit.HKActivitySummary.set_AppleStandHoursGoal(HealthKit.HKQuantity)",
 			"HealthKit.HKAnchoredObjectQuery..ctor(HealthKit.HKSampleType, Foundation.NSPredicate, System.UIntPtr, System.UIntPtr, HealthKit.HKAnchoredObjectResultHandler)",
 			"HealthKit.HKCategoryValueOvulationTestResult HealthKit.HKCategoryValueOvulationTestResult::Positive",
-			"HealthKit.HKCumulativeQuantitySeriesSample",
-			"HealthKit.HKCumulativeQuantitySeriesSample.get_Sum()",
 			"HealthKit.HKHealthStore.GetDateOfBirth(out Foundation.NSError&)",
 			"HealthKit.HKHealthStore.SplitTotalEnergy(HealthKit.HKQuantity, Foundation.NSDate, Foundation.NSDate, System.Action`3<HealthKit.HKQuantity,HealthKit.HKQuantity,Foundation.NSError>)",
-			"HealthKit.HKObject.get_Source()",
 			"HealthKit.HKQuantity HealthKit.HKActivitySummary::AppleExerciseTimeGoal()",
 			"HealthKit.HKQuantity HealthKit.HKActivitySummary::AppleStandHoursGoal()",
-			"HealthKit.HKQuantity HealthKit.HKCumulativeQuantitySeriesSample::Sum()",
 			"HealthKit.HKQuantityAggregationStyle HealthKit.HKQuantityAggregationStyle::Discrete",
 			"HealthKit.HKQuantitySeriesSampleQuery..ctor(HealthKit.HKQuantitySample, HealthKit.HKQuantitySeriesSampleQueryQuantityDelegate)",
-			"HealthKit.HKQuery.get_SampleType()",
 			"HealthKit.HKSampleType HealthKit.HKQuery::SampleType()",
 			"HealthKit.HKSource HealthKit.HKObject::Source()",
 			"HealthKit.HKUnit HealthKit.HKUnit::Calorie()",
-			"HealthKit.HKUnit.get_Calorie()",
-			"HealthKit.HKVerifiableClinicalRecord.get_JwsRepresentation()",
 			"HealthKit.HKWorkoutActivityType HealthKit.HKWorkoutActivityType::DanceInspiredTraining",
 			"HealthKit.HKWorkoutActivityType HealthKit.HKWorkoutActivityType::MixedMetabolicCardioTraining",
 			"HealthKit.HKWorkoutEvent.Create(HealthKit.HKWorkoutEventType, Foundation.NSDate)",
 			"HealthKit.HKWorkoutEvent.Create(HealthKit.HKWorkoutEventType, Foundation.NSDate, Foundation.NSDictionary)",
 			"HealthKit.HKWorkoutEvent.Create(HealthKit.HKWorkoutEventType, Foundation.NSDate, HealthKit.HKMetadata)",
-			"HealthKit.HKWorkoutEvent.get_Date()",
 			"HomeKit.HMEventTrigger.CreatePredicateForEvaluatingTriggerOccurringAfterSignificantEvent(HomeKit.HMSignificantEvent, Foundation.NSDateComponents)",
 			"HomeKit.HMEventTrigger.CreatePredicateForEvaluatingTriggerOccurringBeforeSignificantEvent(HomeKit.HMSignificantEvent, Foundation.NSDateComponents)",
 			"Intents.INCallRecord..ctor(System.String, Foundation.NSDate, Intents.INPerson, Intents.INCallRecordType, Intents.INCallCapability, System.Nullable`1<System.Double>, System.Nullable`1<System.Boolean>, System.Nullable`1<System.Int32>)",
@@ -229,20 +172,11 @@ namespace Cecil.Tests {
 			"Intents.INSetProfileInCarIntent..ctor(Foundation.NSNumber, System.String, System.Nullable`1<System.Boolean>)",
 			"Intents.INSetSeatSettingsInCarIntent..ctor(System.Nullable`1<System.Boolean>, System.Nullable`1<System.Boolean>, System.Nullable`1<System.Boolean>, Intents.INCarSeat, Foundation.NSNumber, Intents.INRelativeSetting)",
 			"Intents.INStartCallIntent..ctor(Intents.INCallAudioRoute, Intents.INCallDestinationType, Intents.INPerson[], Intents.INCallRecordType, Intents.INCallCapability)",
-			"Intents.INStartCallIntent.get_RecordTypeForRedialing()",
 			"MapKit.MKOverlayView",
-			"MapKit.MKPinAnnotationColor",
-			"MediaPlayer.MPMoviePlayerController",
-			"MediaPlayer.MPMoviePlayerViewController",
 			"MediaPlayer.MPVolumeSettings.AlertHide()",
 			"MediaPlayer.MPVolumeSettings.AlertIsVisible()",
 			"MediaPlayer.MPVolumeSettings.AlertShow()",
-			"Metal.IMTLResource Metal.MTLTextureWrapper::RootResource()",
-			"Metal.MTLTextureWrapper.get_RootResource()",
-			"MetalPerformanceShaders.MPSCnnConvolution.get_Neuron()",
-			"MetalPerformanceShaders.MPSCnnConvolutionDescriptor.get_Neuron()",
 			"MetalPerformanceShaders.MPSCnnConvolutionDescriptor.GetConvolutionDescriptor(System.UIntPtr, System.UIntPtr, System.UIntPtr, System.UIntPtr, MetalPerformanceShaders.MPSCnnNeuron)",
-			"MetalPerformanceShaders.MPSCnnConvolutionDescriptor.set_Neuron(MetalPerformanceShaders.MPSCnnNeuron)",
 			"MetalPerformanceShaders.MPSCnnFullyConnected..ctor(Metal.IMTLDevice, MetalPerformanceShaders.MPSCnnConvolutionDescriptor, System.Single[], System.Single[], MetalPerformanceShaders.MPSCnnConvolutionFlags)",
 			"MetalPerformanceShaders.MPSCnnNeuron MetalPerformanceShaders.MPSCnnConvolution::Neuron()",
 			"MetalPerformanceShaders.MPSCnnNeuron MetalPerformanceShaders.MPSCnnConvolutionDescriptor::Neuron()",
@@ -251,18 +185,10 @@ namespace Cecil.Tests {
 			"MetalPerformanceShaders.MPSMatrixDescriptor.GetRowBytesFromColumns(System.UIntPtr, MetalPerformanceShaders.MPSDataType)",
 			"MobileCoreServices.UTType.CopyAllTags(System.String, System.String)",
 			"MobileCoreServices.UTType.Equals(Foundation.NSString, Foundation.NSString)",
-			"MobileCoreServices.UTType.get_UniversalSceneDescriptionMobile()",
 			"MobileCoreServices.UTType.IsDeclared(System.String)",
 			"MobileCoreServices.UTType.IsDynamic(System.String)",
-			"NetworkExtension.NEFilterProviderConfiguration.get_FilterBrowsers()",
-			"NetworkExtension.NEFilterProviderConfiguration.set_FilterBrowsers(System.Boolean)",
-			"PassKit.PKAddShareablePassConfiguration.get_ProvisioningPolicyIdentifier()",
 			"PassKit.PKShareablePassMetadata..ctor(System.String, System.String, CoreGraphics.CGImage, System.String, System.String, System.String, System.String, System.String, System.Boolean)",
 			"PassKit.PKShareablePassMetadata..ctor(System.String, System.String, System.String, CoreGraphics.CGImage, System.String, System.String)",
-			"PassKit.PKShareablePassMetadata.get_LocalizedDescription()",
-			"PassKit.PKShareablePassMetadata.get_OwnerDisplayName()",
-			"PassKit.PKShareablePassMetadata.get_PassThumbnailImage()",
-			"PassKit.PKShareablePassMetadata.get_TemplateIdentifier()",
 			"Security.Authorization.ExecuteWithPrivileges(System.String, Security.AuthorizationFlags, System.String[])",
 			"Security.SecAccessible Security.SecAccessible::Always",
 			"Security.SecAccessible Security.SecAccessible::AlwaysThisDeviceOnly",
@@ -272,12 +198,10 @@ namespace Cecil.Tests {
 			"Security.SecKey.RawSign(Security.SecPadding, System.IntPtr, System.Int32, out System.Byte[]&)",
 			"Security.SecKey.RawVerify(Security.SecPadding, System.IntPtr, System.Int32, System.IntPtr, System.Int32)",
 			"Security.SecProtocolOptions.AddTlsCipherSuiteGroup(Security.SslCipherSuiteGroup)",
-			"Security.SecProtocolOptions.SetTlsDiffieHellmanParameters(CoreFoundation.DispatchData)",
 			"Security.SecSharedCredential.RequestSharedWebCredential(System.String, System.String, System.Action`2<Security.SecSharedCredentialInfo[],Foundation.NSError>)",
 			"Security.SecTrust.Evaluate()",
 			"Security.SecTrust.Evaluate(CoreFoundation.DispatchQueue, Security.SecTrustCallback)",
 			"Security.SecTrust.GetPublicKey()",
-			"Security.SslContext",
 			"Security.SslContext.GetAlpnProtocols()",
 			"Security.SslContext.GetAlpnProtocols(out System.Int32&)",
 			"Security.SslContext.GetRequestedPeerName()",
@@ -288,23 +212,13 @@ namespace Cecil.Tests {
 			"Security.SslContext.SetOcspResponse(Foundation.NSData)",
 			"Security.SslContext.SetSessionConfig(Foundation.NSString)",
 			"Security.SslContext.SetSessionConfig(Security.SslSessionConfig)",
-			"Security.SslContext.SetSessionStrengthPolicy(Security.SslSessionStrengthPolicy)",
 			"Security.SslContext.SetSessionTickets(System.Boolean)",
 			"Security.SslProtocol Security.SecProtocolMetadata::NegotiatedProtocolVersion()",
-			"Speech.SFSpeechRecognitionRequest.get_InteractionIdentifier()",
-			"Speech.SFSpeechRecognitionRequest.set_InteractionIdentifier(System.String)",
-			"Speech.SFTranscription.get_AveragePauseDuration()",
-			"Speech.SFTranscription.get_SpeakingRate()",
-			"Speech.SFTranscriptionSegment.get_VoiceAnalytics()",
 			"Speech.SFVoiceAnalytics Speech.SFTranscriptionSegment::VoiceAnalytics()",
 			"StoreKit.SKCloudServiceController.RequestPersonalizationToken(System.String, System.Action`2<Foundation.NSString,Foundation.NSError>)",
 			"StoreKit.SKCloudServiceController.RequestPersonalizationTokenAsync(System.String)",
-			"StoreKit.SKDownload.DeleteContentForProduct(System.String)",
-			"StoreKit.SKDownload.GetContentUrlForProduct(System.String)",
 			"StoreKit.SKMutablePayment.PaymentWithProduct(System.String)",
-			"StoreKit.SKProduct.get_ContentVersion()",
 			"StoreKit.SKStoreReviewController.RequestReview()",
-			"System.Boolean AppKit.NSImage::Flipped()",
 			"System.Boolean AVFoundation.AVCaptureConnection::SupportsVideoMaxFrameDuration()",
 			"System.Boolean AVFoundation.AVCaptureConnection::SupportsVideoMinFrameDuration()",
 			"System.Boolean AVFoundation.AVCapturePhotoSettings::AutoDualCameraFusionEnabled()",
@@ -316,13 +230,6 @@ namespace Cecil.Tests {
 			"System.Boolean Security.SecRecord::UseNoAuthenticationUI()",
 			"System.Double Speech.SFTranscription::AveragePauseDuration()",
 			"System.Double Speech.SFTranscription::SpeakingRate()",
-			"System.EventHandler AVFoundation.AVAudioSession::BeginInterruption (event)",
-			"System.EventHandler AVFoundation.AVAudioSession::EndInterruption (event)",
-			"System.EventHandler`1<AVFoundation.AVCategoryEventArgs> AVFoundation.AVAudioSession::CategoryChanged (event)",
-			"System.EventHandler`1<AVFoundation.AVChannelsEventArgs> AVFoundation.AVAudioSession::InputChannelsChanged (event)",
-			"System.EventHandler`1<AVFoundation.AVChannelsEventArgs> AVFoundation.AVAudioSession::OutputChannelsChanged (event)",
-			"System.EventHandler`1<AVFoundation.AVSampleRateEventArgs> AVFoundation.AVAudioSession::SampleRateChanged (event)",
-			"System.EventHandler`1<AVFoundation.AVStatusEventArgs> AVFoundation.AVAudioSession::InputAvailabilityChanged (event)",
 			"System.String PassKit.PKAddShareablePassConfiguration::ProvisioningPolicyIdentifier()",
 			"System.String PassKit.PKShareablePassMetadata::LocalizedDescription()",
 			"System.String PassKit.PKShareablePassMetadata::OwnerDisplayName()",
@@ -331,7 +238,6 @@ namespace Cecil.Tests {
 			"System.String StoreKit.SKProduct::ContentVersion()",
 			"System.String UserNotifications.UNMutableNotificationContent::SummaryArgument()",
 			"System.String UserNotifications.UNNotificationContent::SummaryArgument()",
-			"System.String[] AppKit.NSImage::ImageFileTypes()",
 			"System.UIntPtr UserNotifications.UNMutableNotificationContent::SummaryArgumentCount()",
 			"System.UIntPtr UserNotifications.UNNotificationContent::SummaryArgumentCount()",
 			"SystemConfiguration.CaptiveNetwork.MarkPortalOffline(System.String)",
@@ -340,8 +246,6 @@ namespace Cecil.Tests {
 			"SystemConfiguration.CaptiveNetwork.TryGetSupportedInterfaces(out System.String[]&)",
 			"UIKit.UIGestureRecognizer UIKit.UIScrollView::DirectionalPressGestureRecognizer()",
 			"UIKit.UIGraphicsRendererFormat UIKit.UIGraphicsRendererFormat::DefaultFormat()",
-			"UIKit.UIGraphicsRendererFormat.get_DefaultFormat()",
-			"UIKit.UIScrollView.get_DirectionalPressGestureRecognizer()",
 			"UIKit.UIStringDrawing.DrawString(System.String, CoreGraphics.CGPoint, System.Runtime.InteropServices.NFloat, UIKit.UIFont, System.Runtime.InteropServices.NFloat, System.Runtime.InteropServices.NFloat&, UIKit.UILineBreakMode, UIKit.UIBaselineAdjustment)",
 			"UIKit.UIStringDrawing.DrawString(System.String, CoreGraphics.CGPoint, System.Runtime.InteropServices.NFloat, UIKit.UIFont, System.Runtime.InteropServices.NFloat, UIKit.UILineBreakMode, UIKit.UIBaselineAdjustment)",
 			"UIKit.UIStringDrawing.DrawString(System.String, CoreGraphics.CGPoint, System.Runtime.InteropServices.NFloat, UIKit.UIFont, UIKit.UILineBreakMode)",
@@ -354,12 +258,6 @@ namespace Cecil.Tests {
 			"UIKit.UIStringDrawing.StringSize(System.String, UIKit.UIFont, CoreGraphics.CGSize, UIKit.UILineBreakMode)",
 			"UIKit.UIStringDrawing.StringSize(System.String, UIKit.UIFont, System.Runtime.InteropServices.NFloat, System.Runtime.InteropServices.NFloat&, System.Runtime.InteropServices.NFloat, UIKit.UILineBreakMode)",
 			"UIKit.UIStringDrawing.StringSize(System.String, UIKit.UIFont, System.Runtime.InteropServices.NFloat, UIKit.UILineBreakMode)",
-			"UserNotifications.UNMutableNotificationContent.get_SummaryArgument()",
-			"UserNotifications.UNMutableNotificationContent.get_SummaryArgumentCount()",
-			"UserNotifications.UNMutableNotificationContent.set_SummaryArgument(System.String)",
-			"UserNotifications.UNMutableNotificationContent.set_SummaryArgumentCount(System.UIntPtr)",
-			"UserNotifications.UNNotificationContent.get_SummaryArgument()",
-			"UserNotifications.UNNotificationContent.get_SummaryArgumentCount()",
 		};
 
 		// This test verifies that the SupportedOSPlatform and UnavailableOSPlatform/ObsoletedOSplatform attributes are consistent.
@@ -395,45 +293,60 @@ namespace Cecil.Tests {
 						failures.Add ($"[FAIL] {apiSupportedVersion} > {maximum} (Max) on '{api.AsFullName ()}'.");
 				}
 
-				// FIXME: This is a big change to fix, and should be fixed in a different PR.
-				//// APIs shouldn't become unsupported in the same version they become supported.
-				////     [SupportedOSPlatform ("ios12.0")]
-				////     [UnsupportedOSPlatform ("ios12.0")]
-				//if (apiSupportedVersion is not null && apiUnsupportedVersion is not null && supportedPlatformName == unsupportedPlatformName)
-				//	failures.Add ($"[FAIL] {api.AsFullName ()} is marked both supported and unsupported in the same version ({supportedPlatformName})");
+				// APIs shouldn't become unsupported in the same version they become supported.
+				//     [SupportedOSPlatform ("ios12.0")]
+				//     [UnsupportedOSPlatform ("ios12.0")]
+				// Exceptions:
+				// * Apple introduced numerous already deprecated frameworks in Mac Catalyst 13.* and Mac Catalyst 14.0, so it's correct to declare those
+				//   both supported and unsupported in the same version - so we skip any APIs introduced in Mac Catalyst 14.0 or earlier.
+				if (apiSupportedVersion is not null && apiUnsupportedVersion is not null && supportedPlatformName == unsupportedPlatformName) {
+					var macCatalystEarlyBirds = platform == ApplePlatform.MacCatalyst && apiUnsupportedVersion == new Version (14, 0);
+					if (!macCatalystEarlyBirds)
+						failures.Add ($"[FAIL] {api.AsFullName ()} is marked both supported and unsupported in the same version ({supportedPlatformName})");
+				}
 
-				// FIXME: This is a big change to fix, and should be fixed in a different PR.
-				//// APIs shouldn't become obsolete in the same version they become supported, although Apple does that somewhat frequently, so we have an escape hatch here.
-				////     [SupportedOSPlatform("ios12.0")]
-				////     [ObsoletedOSPlatform("ios12.0")]
-				//if (apiSupportedVersion is not null && apiObsoletedVersion is not null && supportedPlatformName == obsoletedPlatformName && !SkipSupportedAndObsoleteAtTheSameTime(api, platform, apiObsoletedVersion))
-				//	failures.Add($"[FAIL] {api.AsFullName ()} is marked both supported and obsoleted in the same version ({supportedPlatformName})");
+				// APIs shouldn't become obsolete in the same version they become supported, although Apple does that somewhat frequently, so we have an escape hatch here.
+				//     [SupportedOSPlatform("ios12.0")]
+				//     [ObsoletedOSPlatform("ios12.0")]
+				if (apiSupportedVersion is not null && apiObsoletedVersion is not null && supportedPlatformName == obsoletedPlatformName && !SkipSupportedAndObsoleteAtTheSameTime (api, platform, apiObsoletedVersion))
+					failures.Add ($"[FAIL] {api.AsFullName ()} is marked both supported and obsoleted in the same version ({supportedPlatformName})");
 
-				// FIXME: This is a big change to fix, and should be fixed in a different PR.
-				//// If there's an ObsoleteOSPlatform, there must also be a SupportedOSPlatform.
-				//if (apiSupportedAttribute is null && apiObsoletedAttribute is not null)
-				//	failures.Add ($"[FAIL] {api.AsFullName ()} is obsoleted (in {obsoletedPlatformName}), but does not have a SupportedOSPlatform attribute.");
+				// If there's an ObsoleteOSPlatform, there must also be a SupportedOSPlatform.
+				if (apiSupportedAttribute is null && apiObsoletedAttribute is not null)
+					failures.Add ($"[FAIL] {api.AsFullName ()} is obsoleted (in {obsoletedPlatformName}), but does not have a SupportedOSPlatform attribute.");
 
-				// FIXME: This is a big change to fix, and should be fixed in a different PR.
-				//// If there's an UnsupportedOSPlatform with version, there must also be a SupportedOSPlatform.
-				//if (apiSupportedAttribute is null && apiUnsupportedVersion is not null)
-				//	failures.Add ($"[FAIL] {api.AsFullName ()} is unsupported (in {apiUnsupportedVersion}), but does not have a SupportedOSPlatform attribute.");
+				// If there's an UnsupportedOSPlatform with version, there must also be a SupportedOSPlatform.
+				if (apiSupportedAttribute is null && apiUnsupportedVersion is not null)
+					failures.Add ($"[FAIL] {api.AsFullName ()} is unsupported (in {apiUnsupportedVersion}), but does not have a SupportedOSPlatform attribute.");
 
-				// FIXME: This is a big change to fix, and should be fixed in a different PR.
-				//// APIs are first obsoleted, then unsupported.
-				//// Invalid (unsupported before obsoleted)
-				////     [ObsoletedOSPlatform ("ios12.0")]
-				////     [UnsupportedOSPlatform ("ios11.0")]
-				//// or (unsupported at the same time as obsoleted)
-				////     [ObsoletedOSPlatform ("ios12.0")]
-				////     [UnsupportedOSPlatform ("ios12.0")]
-				//if (apiUnsupportedVersion is not null && apiObsoletedVersion is not null && apiUnsupportedVersion <= apiObsoletedVersion)
-				//	failures.Add ($"[FAIL] {api.AsFullName ()} can only be marked unsupported (in {unsupportedPlatformName}) after it's obsoleted (in {obsoletedPlatformName})");
+				// APIs are first obsoleted, then unsupported.
+				// Invalid (unsupported before obsoleted)
+				//     [ObsoletedOSPlatform ("ios12.0")]
+				//     [UnsupportedOSPlatform ("ios11.0")]
+				// or (unsupported at the same time as obsoleted)
+				//     [ObsoletedOSPlatform ("ios12.0")]
+				//     [UnsupportedOSPlatform ("ios12.0")]
+				if (apiUnsupportedVersion is not null && apiObsoletedVersion is not null && apiUnsupportedVersion <= apiObsoletedVersion)
+					failures.Add ($"[FAIL] {api.AsFullName ()} can only be marked unsupported (in {unsupportedPlatformName}) after it's obsoleted (in {obsoletedPlatformName})");
 
 				// If an API is just unavailable, it shouldn't be here in the first place.
 				//     [UnsupportedOSPlatform ("ios")]
-				if (apiUnsupportedAttribute is not null && string.IsNullOrEmpty (unsupportedPlatformName))
-					failures.Add ($"[FAIL] {api.AsFullName ()} is marked unsupported");
+				// Exceptions:
+				// * If the API is obsolete, or has EditorBrowsable (Never), then we skip this check (it's likely a mistake of some sort).
+				// * We expose enum values that aren't supported on a given platform for error enums.
+				if (apiUnsupportedAttribute is not null && apiUnsupportedVersion is null && !(api.IsObsolete () || api.HasEditorBrowseableNeverAttribute ())) {
+					if (!IsEnumField (api))
+						failures.Add ($"[FAIL] {api.AsFullName ()} is marked unsupported: \"{unsupportedPlatformName}\" {api.RenderLocation ()}");
+				}
+
+				// If an API has any availabily attributes, it must have at least a SupportedOSPlatform attribute (no API can be only obsoleted or unsupported, it must also have been supported at some point).
+				// Exceptions:
+				// * If the API is obsolete, or has EditorBrowsable (Never), then we skip this check (it's likely a mistake of some sort).
+				// * We expose enum values that aren't supported on a given platform for error enums.
+				if (apiSupportedAttribute is null && (apiObsoletedAttribute is not null || apiUnsupportedAttribute is not null) && !(api.IsObsolete () || api.HasEditorBrowseableNeverAttribute ())) {
+					if (!IsEnumField (api))
+						failures.Add ($"[FAIL] {api.AsFullName ()} does not have a SupportedOSPlatform attribute for {platform}, but it's still: {string.Join (", ", new [] { apiObsoletedAttribute, apiUnsupportedAttribute }.Where (v => v is not null).Select (v => v!.AsOSPlatformAttributeString ()))}");
+				}
 
 				// The subsequent tests are limited to members of the current API, so just continue looping if we're not a type.
 				if (!(api is TypeDefinition type))
@@ -454,9 +367,8 @@ namespace Cecil.Tests {
 						failures.Add ($"[FAIL] {member.AsFullName ()} is marked available in {memberSupportedVersion} with '{memberSupportedAttribute.AsOSPlatformAttributeString ()}', but the declaring type {type.FullName} is marked unavailable in {apiUnsupportedVersion} with '{apiUnsupportedAttribute.AsOSPlatformAttributeString ()}'");
 
 					// Check that the member isn't supported before the type.
-					// FIXME: we hit this a lot with inlined protocol members, so it's disabled for now.
-					//if (apiSupportedVersion is not null && memberSupportedVersion is not null && memberSupportedVersion < apiSupportedVersion)
-					//	failures.Add($"[FAIL] in {member.AsFullName()} is marked available with '{memberSupportedVersion}', but the declaring type {type.FullName} is only available in '{apiSupportedVersion}'");
+					if (apiSupportedVersion is not null && memberSupportedVersion is not null && memberSupportedVersion < apiSupportedVersion)
+						failures.Add ($"[FAIL] in {member.AsFullName ()} is marked available with '{memberSupportedVersion}', but the declaring type {type.FullName} is only available in '{apiSupportedVersion}'");
 				}
 			}
 
@@ -467,9 +379,27 @@ namespace Cecil.Tests {
 			Assert.Fail (msg);
 		}
 
+		static bool IsEnumField (ICustomAttributeProvider api)
+		{
+			if (!(api is FieldDefinition fd))
+				return false;
+
+			return fd.DeclaringType.BaseType.Is ("System", "Enum");
+		}
+
 		bool SkipSupportedAndObsoleteAtTheSameTime (ICustomAttributeProvider api, ApplePlatform platform, Version version)
 		{
 			var fullname = api.AsFullName ();
+
+			switch (fullname) {
+			case "SceneKit.SCNAnimationPlayer.SetSpeed(System.Runtime.InteropServices.NFloat, Foundation.NSString)":
+				// SetSpeed is in the SCNAnimatable protocol, which was added in iOS 8.0.
+				// The SetSpeed method was added in iOS 10.0, and deprecated in iOS 11.
+				// The SCNAnimatable protocol is implemented by the SCNAnimationPlayer class, which was added in iOS 11.
+				// Thus it's expected that the method was introduced and deprecated in the same OS version.
+				return true;
+			}
+
 			switch (platform) {
 			case ApplePlatform.iOS:
 				switch (fullname) {
