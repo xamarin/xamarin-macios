@@ -254,6 +254,9 @@ namespace ObjCRuntime {
 		public extern static void void_objc_msgSend_int_int_int (IntPtr receiver, IntPtr selector, int p1, ref int p2, out int p3);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
+		public unsafe extern static void void_objc_msgSend_int_int_int_int (IntPtr receiver, IntPtr selector, int p1, ref int p2, out int p3, int* p4);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		public extern static void void_objc_msgSend_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr (IntPtr receiver, IntPtr selector, ref IntPtr p1, ref IntPtr p2, ref IntPtr p3, ref IntPtr p4, ref IntPtr p5, ref IntPtr p6, ref IntPtr p7);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]

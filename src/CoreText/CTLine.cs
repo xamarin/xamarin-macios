@@ -208,7 +208,7 @@ namespace CoreText {
 		}
 
 		public delegate void CaretEdgeEnumerator (double offset, nint charIndex, bool leadingEdge, ref bool stop);
-		unsafe delegate void CaretEdgeEnumeratorProxy (IntPtr block, double offset, nint charIndex, [MarshalAs (UnmanagedType.I1)] bool leadingEdge, [MarshalAs (UnmanagedType.I1)] ref bool stop);
+		unsafe delegate void CaretEdgeEnumeratorProxy (IntPtr block, double offset, nint charIndex, byte leadingEdge, byte* stop);
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
@@ -225,11 +225,14 @@ namespace CoreText {
 		static unsafe readonly CaretEdgeEnumeratorProxy static_enumerate = TrampolineEnumerate;
 
 		[MonoPInvokeCallback (typeof (CaretEdgeEnumeratorProxy))]
-		static void TrampolineEnumerate (IntPtr blockPtr, double offset, nint charIndex, bool leadingEdge, ref bool stop)
+		unsafe static void TrampolineEnumerate (IntPtr blockPtr, double offset, nint charIndex, byte leadingEdge, byte* stopPointer)
 		{
 			var del = BlockLiteral.GetTarget<CaretEdgeEnumerator> (blockPtr);
-			if (del is not null)
-				del (offset, charIndex, leadingEdge, ref stop);
+			if (del is not null) {
+				bool stop = *stopPointer != 0;
+				del (offset, charIndex, leadingEdge != 0, ref stop);
+				*stopPointer = stop ? (byte) 1 : (byte) 0;
+			}
 		}
 
 #if NET

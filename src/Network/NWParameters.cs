@@ -382,21 +382,20 @@ namespace Network {
 			nw_parameters_clear_prohibited_interface_types (GetCheckedHandle ());
 		}
 
-		delegate bool nw_parameters_iterate_interfaces_block_t (IntPtr block, IntPtr iface);
+		delegate byte nw_parameters_iterate_interfaces_block_t (IntPtr block, IntPtr iface);
 		static nw_parameters_iterate_interfaces_block_t static_iterateProhibitedHandler = TrampolineIterateProhibitedHandler;
 
 		[MonoPInvokeCallback (typeof (nw_parameters_iterate_interfaces_block_t))]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static bool TrampolineIterateProhibitedHandler (IntPtr block, IntPtr iface)
+		static byte TrampolineIterateProhibitedHandler (IntPtr block, IntPtr iface)
 		{
 			var del = BlockLiteral.GetTarget<Func<NWInterface, bool>> (block);
 			if (del is not null) {
 				var x = new NWInterface (iface, owns: false);
 				var ret = del (x);
 				x.Dispose ();
-				return ret;
+				return ret ? (byte) 1 : (byte) 0;
 			}
-			return false;
+			return 0;
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -412,17 +411,16 @@ namespace Network {
 			}
 		}
 
-		delegate bool nw_parameters_iterate_interface_types_block_t (IntPtr block, NWInterfaceType type);
+		delegate byte nw_parameters_iterate_interface_types_block_t (IntPtr block, NWInterfaceType type);
 		static nw_parameters_iterate_interface_types_block_t static_IterateProhibitedTypeHandler = TrampolineIterateProhibitedTypeHandler;
 
 		[MonoPInvokeCallback (typeof (nw_parameters_iterate_interface_types_block_t))]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static bool TrampolineIterateProhibitedTypeHandler (IntPtr block, NWInterfaceType type)
+		static byte TrampolineIterateProhibitedTypeHandler (IntPtr block, NWInterfaceType type)
 		{
 			var del = BlockLiteral.GetTarget<Func<NWInterfaceType, bool>> (block);
 			if (del is not null)
-				return del (type);
-			return false;
+				return del (type) ? (byte) 1 : (byte) 0;
+			return 0;
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
