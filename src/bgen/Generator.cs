@@ -873,7 +873,6 @@ public partial class Generator : IMemberGatherer {
 		var trampoline_name = Nomenclator.GetTrampolineName (t);
 		var ti = new TrampolineInfo (userDelegate: FormatType (null, t),
 						 delegateName: "D" + trampoline_name,
-						 trampolineName: "T" + trampoline_name,
 						 pars: pars.ToString (),
 									 convert: convert.ToString (),
 						 invoke: invoke.ToString (),
@@ -1720,14 +1719,14 @@ public partial class Generator : IMemberGatherer {
 			// but we have a workaround in place because we can't fix old, binary bindings so...
 			// print ("[Preserve (Conditional=true)]");
 			// For .NET we fix it using the DynamicDependency attribute below
-			print ("static internal readonly {0} Handler = {1};", ti.DelegateName, ti.TrampolineName);
+			print ("static internal readonly {0} Handler = Invoke;", ti.DelegateName);
 			print ("");
 #if NET
 			print ("[Preserve (Conditional = true)]");
 			print ("[global::System.Diagnostics.CodeAnalysis.DynamicDependency (\"Handler\")]");
 #endif
 			print ("[MonoPInvokeCallback (typeof ({0}))]", ti.DelegateName);
-			print ("static unsafe {0} {1} ({2}) {{", ti.ReturnType, ti.TrampolineName, ti.Parameters);
+			print ("static unsafe {0} Invoke ({1}) {{", ti.ReturnType, ti.Parameters);
 			indent++;
 			print ("var descriptor = (BlockLiteral *) block;");
 			print ("var del = ({0}) (descriptor->Target);", ti.UserDelegate);
