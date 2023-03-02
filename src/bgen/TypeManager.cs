@@ -82,30 +82,30 @@ public class TypeManager {
 	public Type CoreGraphics_CGPoint { get; }
 	public Type CoreGraphics_CGRect { get; }
 	public Type CoreGraphics_CGSize { get; }
-	
+
 	// optional if AddressBook present
 	public Type? ABAddressBook { get; }
 	public Type? ABPerson { get; }
 	public Type? ABRecord { get; }
-	
+
 	// optional if AudioToolbox present
 	public Type? MusicSequence { get; }
-	
+
 	// optional if AudioUnit present 
 	public Type? AudioComponent { get; }
 	public Type? AudioUnit { get; }
 	public Type? AURenderEventEnumerator { get; }
-	
+
 	// optional if CoreAnimation present
 	public Type? CATransform3D { get; }
-	
+
 	// optional if OpenGL present
 	public Type? CGLContext { get; }
 	public Type? CGLPixelFormat { get; }
-	
+
 	// optional if CoreLocation present
 	public Type? CLLocationCoordinate2D { get; }
-	
+
 	// optional if CoreMedia present
 	public Type? CMAudioFormatDescription { get; }
 	public Type? CMClock { get; }
@@ -117,21 +117,21 @@ public class TypeManager {
 	public Type? CMTimeRange { get; }
 	public Type? CMVideoFormatDescription { get; }
 	public Type? CMVideoDimensions { get; }
-	
+
 	// optional if CoreVideo present
 	public Type? CVImageBuffer { get; }
 	public Type? CVPixelBuffer { get; }
 	public Type? CVPixelBufferPool { get; }
-	
+
 	// optional if CoreMidi present
 	public Type? MidiEndpoint { get; }
-	
+
 	// optional if MapKit present
 	public Type? MKCoordinateSpan { get; }
-	
+
 	// optional if MediaToolbox is present 
 	public Type? MTAudioProcessingTap { get; }
-	
+
 	// optional if UIKit is present
 	public Type? UIOffset { get; }
 	public Type? UIEdgeInsets { get; }
@@ -143,17 +143,17 @@ public class TypeManager {
 			if (nsnumberReturnMap is not null)
 				return nsnumberReturnMap;
 			Tuple<Type?, string> [] typeMap = {
-				new ( System_Boolean, ".BoolValue" ),
-				new ( System_Byte, ".ByteValue" ),
-				new ( System_Double, ".DoubleValue" ),
-				new ( System_Float, ".FloatValue" ),
-				new ( System_Int16, ".Int16Value" ),
-				new ( System_Int32, ".Int32Value" ),
-				new ( System_Int64, ".Int64Value" ),
-				new ( System_SByte, ".SByteValue" ),
-				new ( System_UInt16, ".UInt16Value" ),
-				new ( System_UInt32, ".UInt32Value" ),
-				new ( System_UInt64, ".UInt64Value" ),
+				new (System_Boolean, ".BoolValue"),
+				new (System_Byte, ".ByteValue"),
+				new (System_Double, ".DoubleValue"),
+				new (System_Float, ".FloatValue"),
+				new (System_Int16, ".Int16Value"),
+				new (System_Int32, ".Int32Value"),
+				new (System_Int64, ".Int64Value"),
+				new (System_SByte, ".SByteValue"),
+				new (System_UInt16, ".UInt16Value"),
+				new (System_UInt32, ".UInt32Value"),
+				new (System_UInt64, ".UInt64Value"),
 				new (System_nfloat, ".NFloatValue"),
 				new (System_nint, ".NIntValue"),
 				new (System_nuint, ".NUIntValue"),
@@ -170,7 +170,7 @@ public class TypeManager {
 	Dictionary<Type, string>? nsvalueReturnMap;
 	public Dictionary<Type, string> NSValueReturnMap {
 		get {
-			if (nsvalueReturnMap != null)
+			if (nsvalueReturnMap is not null)
 				return nsvalueReturnMap;
 			Tuple<Type?, string> [] general = {
 				new (CGAffineTransform, ".CGAffineTransformValue" ),
@@ -187,7 +187,7 @@ public class TypeManager {
 			};
 
 			Tuple<Type?, string> [] uiKitMap = Array.Empty<Tuple<Type?, string>> ();
-			if (Frameworks?.HaveUIKit == true)
+			if (Frameworks.HaveUIKit)
 				uiKitMap = new Tuple<Type?, string> [] {
 					new (UIEdgeInsets, ".UIEdgeInsetsValue"),
 					new (UIOffset, ".UIOffsetValue"),
@@ -195,7 +195,7 @@ public class TypeManager {
 				};
 
 			Tuple<Type?, string> [] coreMedia = Array.Empty<Tuple<Type?, string>> ();
-			if (Frameworks?.HaveCoreMedia == true)
+			if (Frameworks.HaveCoreMedia)
 				coreMedia = new Tuple<Type?, string> [] {
 					new (CMTimeRange, ".CMTimeRangeValue"),
 					new (CMTime, ".CMTimeValue"),
@@ -204,7 +204,7 @@ public class TypeManager {
 				};
 
 			Tuple<Type?, string> [] animation = Array.Empty<Tuple<Type?, string>> ();
-			if (Frameworks?.HaveCoreAnimation == true)
+			if (Frameworks.HaveCoreAnimation)
 				animation = new Tuple<Type?, string> [] {
 					new (CATransform3D, ".CATransform3DValue"),
 				};
@@ -361,7 +361,7 @@ public class TypeManager {
 		CoreGraphics_CGRect = Lookup (platformAssembly, "CoreGraphics", "CGRect");
 		CoreGraphics_CGPoint = Lookup (platformAssembly, "CoreGraphics", "CGPoint");
 		CoreGraphics_CGSize = Lookup (platformAssembly, "CoreGraphics", "CGSize");
-		
+
 		// optional types per framework
 		if (Frameworks.HaveAddressBook) {
 			ABAddressBook = ConditionalLookup (platformAssembly, "AddressBook", "ABAddressBook");
