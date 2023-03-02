@@ -196,7 +196,7 @@ public class TypeManager {
 
 			Tuple<Type?, string> [] coreMedia = Array.Empty<Tuple<Type?, string>> ();
 			if (Frameworks?.HaveCoreMedia == true)
-				uiKitMap = new Tuple<Type?, string> [] {
+				coreMedia = new Tuple<Type?, string> [] {
 					new (CMTimeRange, ".CMTimeRangeValue"),
 					new (CMTime, ".CMTimeValue"),
 					new (CMTimeMapping, ".CMTimeMappingValue"),
