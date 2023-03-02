@@ -143,7 +143,7 @@ namespace Network {
 			=> nw_data_transfer_report_get_sent_ip_packet_count (GetCheckedHandle (), pathIndex);
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_data_transfer_report_collect (OS_nw_data_transfer_report report, IntPtr queue, ref BlockLiteral collect_block);
+		unsafe static extern void nw_data_transfer_report_collect (OS_nw_data_transfer_report report, IntPtr queue, BlockLiteral* collect_block);
 
 		delegate void nw_data_transfer_report_collect_t (IntPtr block, IntPtr report);
 		static nw_data_transfer_report_collect_t static_CollectHandler = TrampolineCollectHandler;
@@ -165,12 +165,11 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_CollectHandler, handler);
-			try {
-				nw_data_transfer_report_collect (GetCheckedHandle (), queue.Handle, ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_CollectHandler, handler);
+				nw_data_transfer_report_collect (GetCheckedHandle (), queue.Handle, &block);
 			}
 		}
 

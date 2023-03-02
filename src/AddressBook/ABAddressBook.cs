@@ -185,7 +185,7 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
-		extern static void ABAddressBookRequestAccessWithCompletion (IntPtr addressbook, ref BlockLiteral completion);
+		unsafe extern static void ABAddressBookRequestAccessWithCompletion (IntPtr addressbook, BlockLiteral* completion);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void RequestAccess (Action<bool, NSError?> onCompleted)
@@ -193,10 +193,11 @@ namespace AddressBook {
 			if (onCompleted is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (onCompleted));
 
-			var block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_completionHandler, onCompleted);
-			ABAddressBookRequestAccessWithCompletion (Handle, ref block_handler);
-			block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_completionHandler, onCompleted);
+				ABAddressBookRequestAccessWithCompletion (Handle, &block);
+			}
 		}
 
 		internal delegate void InnerCompleted (IntPtr block, bool success, IntPtr error);
@@ -338,14 +339,27 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
+#if NET
+		extern unsafe static void ABAddressBookRegisterExternalChangeCallback (IntPtr addressBook,
+			delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> callback, IntPtr context);
+#else
 		extern static void ABAddressBookRegisterExternalChangeCallback (IntPtr addressBook, ABExternalChangeCallback callback, IntPtr context);
+#endif
 
 		[DllImport (Constants.AddressBookLibrary)]
+#if NET
+		extern unsafe static void ABAddressBookUnregisterExternalChangeCallback (IntPtr addressBook, delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> callback, IntPtr context);
+#else
 		extern static void ABAddressBookUnregisterExternalChangeCallback (IntPtr addressBook, ABExternalChangeCallback callback, IntPtr context);
+#endif
 
+#if !NET
 		delegate void ABExternalChangeCallback (IntPtr addressBook, IntPtr info, IntPtr context);
 
 		[MonoPInvokeCallback (typeof (ABExternalChangeCallback))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void ExternalChangeCallback (IntPtr addressBook, IntPtr info, IntPtr context)
 		{
 			GCHandle s = GCHandle.FromIntPtr (context);
@@ -374,7 +388,13 @@ namespace AddressBook {
 				lock (eventLock) {
 					if (externalChange is null) {
 						sender = GCHandle.Alloc (this);
+#if NET
+						unsafe {
+							ABAddressBookRegisterExternalChangeCallback (Handle, &ExternalChangeCallback, GCHandle.ToIntPtr (sender));
+						}
+#else
 						ABAddressBookRegisterExternalChangeCallback (Handle, ExternalChangeCallback, GCHandle.ToIntPtr (sender));
+#endif
 					}
 					externalChange += value;
 				}
@@ -383,7 +403,13 @@ namespace AddressBook {
 				lock (eventLock) {
 					externalChange -= value;
 					if (externalChange is null) {
+#if NET
+						unsafe {
+							ABAddressBookUnregisterExternalChangeCallback (Handle, &ExternalChangeCallback, GCHandle.ToIntPtr (sender));
+						}
+#else
 						ABAddressBookUnregisterExternalChangeCallback (Handle, ExternalChangeCallback, GCHandle.ToIntPtr (sender));
+#endif
 						sender.Free ();
 					}
 				}

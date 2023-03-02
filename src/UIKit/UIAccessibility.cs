@@ -229,7 +229,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		extern unsafe static void UIAccessibilityRequestGuidedAccessSession (/* BOOL */ [MarshalAs (UnmanagedType.I1)] bool enable, /* void(^completionHandler)(BOOL didSucceed) */ void* completionHandler);
+		extern unsafe static void UIAccessibilityRequestGuidedAccessSession (/* BOOL */ [MarshalAs (UnmanagedType.I1)] bool enable, /* void(^completionHandler)(BOOL didSucceed) */ BlockLiteral* completionHandler);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -240,14 +240,9 @@ namespace UIKit {
 		public static void RequestGuidedAccessSession (bool enable, Action<bool> completionHandler)
 		{
 			unsafe {
-				BlockLiteral* block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
-				block_handler.SetupBlock (callback, completionHandler);
-
-				UIAccessibilityRequestGuidedAccessSession (enable, (void*) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+				using var block = new BlockLiteral ();
+				block.SetupBlock (callback, completionHandler);
+				UIAccessibilityRequestGuidedAccessSession (enable, &block);
 			}
 		}
 

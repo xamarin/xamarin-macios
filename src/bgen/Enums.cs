@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -86,7 +85,7 @@ public partial class Generator {
 		var fields = new Dictionary<FieldInfo, FieldAttribute> ();
 		Tuple<FieldInfo, FieldAttribute> null_field = null;
 		Tuple<FieldInfo, FieldAttribute> default_symbol = null;
-		var underlying_type = GetCSharpTypeName (TypeManager.GetUnderlyingEnumType (type));
+		var underlying_type = GetCSharpTypeName (type.GetEnumUnderlyingType ());
 		var is_internal = AttributeManager.HasAttribute<InternalAttribute> (type);
 		var visibility = is_internal ? "internal" : "public";
 		print ("{0} enum {1} : {2} {{", visibility, type.Name, underlying_type);
