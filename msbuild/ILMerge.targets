@@ -33,6 +33,8 @@
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'ILStrip'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Newtonsoft.Json'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Renci.SshNet'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Merq'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Merq.Core'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'SshNet.Security.Cryptography'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.ComponentModel.Annotations'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.ComponentModel.Composition'" />
