@@ -256,7 +256,7 @@ namespace Darwin {
 				if (key is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 				using var keyStr = new TransientString (key);
-				return TransientString.ToStringAndFree (asl_get (Handle, keyStr))!;
+				return Marshal.PtrToStringAuto (asl_get (Handle, keyStr))!;
 			}
 			set {
 				if (key is null)
