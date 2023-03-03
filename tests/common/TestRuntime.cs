@@ -12,6 +12,7 @@ using System.Reflection.Emit;
 
 using AVFoundation;
 using CoreBluetooth;
+using CoreFoundation;
 using Foundation;
 #if !__TVOS__
 using Contacts;
@@ -1371,9 +1372,13 @@ partial class TestRuntime
 		}
 	}
 
-	public static void IgnoreInCIIfBadNetwork (Exception ex)
+	public static void IgnoreInCIIfBadNetwork (Exception? ex)
 	{
+		if (ex is null)
+			return;
+
 		IgnoreInCIfHttpStatusCodes (ex, HttpStatusCode.BadGateway, HttpStatusCode.GatewayTimeout, HttpStatusCode.ServiceUnavailable);
+		IgnoreInCIIfNetworkConnectionLost (ex);
 	}
 
 	public static void IgnoreInCIIfBadNetwork (HttpStatusCode status)
@@ -1398,6 +1403,18 @@ partial class TestRuntime
 			return;
 
 		IgnoreInCI ($"Ignored due to http status code '{status}': {ex.Message}");
+	}
+
+	public static void IgnoreInCIIfNetworkConnectionLost (Exception ex)
+	{
+		// <Foundation.NSErrorException: Error Domain=NSURLErrorDomain Code=-1005 "The network connection was lost." UserInfo ...
+		if (!(ex is NSErrorException nex))
+			return;
+
+		if (nex.Code != (nint) (long) CFNetworkErrors.NetworkConnectionLost)
+			return;
+
+		IgnoreInCI ($"Ignored due to CFNetwork error {(CFNetworkErrors) (long) nex.Code}");
 	}
 
 	static bool TryGetHttpStatusCode (Exception ex, out HttpStatusCode status)
