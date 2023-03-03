@@ -1453,7 +1453,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			var cl = new Class (typeof (TestTypeEncodingsClass));
 			var sig = Runtime.GetNSObject<NSMethodSignature> (Messaging.IntPtr_objc_msgSend_IntPtr (cl.Handle, Selector.GetHandle ("methodSignatureForSelector:"), Selector.GetHandle ("foo::::::::::::::::")));
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 			var boolEncoding = TrampolineTest.IsArm64CallingConvention ? "B" : "c";
 #else
 			var boolEncoding = (IntPtr.Size == 8 || TrampolineTest.IsArmv7k || TrampolineTest.IsArm64CallingConvention) ? "B" : "c";
