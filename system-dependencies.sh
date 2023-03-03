@@ -335,9 +335,15 @@ function download_xcode_platforms ()
 		return
 	fi
 
-	log "Executing '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
-	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
-	log "Executed '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
+	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
+	if ! "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms; then
+		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" runtime list -v
+		# Don't exit here, just hope for the best instead.
+		set +x
+		echo "##vso[task.logissue type=warning;sourcepath=system-dependencies.sh]Failed to download all simulator platforms, this may result in problems executing tests in the simulator."
+		set -x
+	fi
+	log "Executed '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
 }
 
 function run_xcode_first_launch ()
