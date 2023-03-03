@@ -178,8 +178,6 @@ variables:
   value: 'MicroBuild Signing Task (DevDiv)'
 - name: MaciosUploadPrefix
   value: ''
-- name: MaciosJobPrefix
-  value: ''
 
 trigger:
   branches:
