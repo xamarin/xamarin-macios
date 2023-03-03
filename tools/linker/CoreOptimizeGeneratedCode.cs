@@ -759,6 +759,7 @@ namespace Xamarin.Linker {
 			for (int i = 0; i < instructions.Count; i++) {
 				var ins = instructions [i];
 				switch (ins.OpCode.Code) {
+				case Code.Newobj:
 				case Code.Call:
 					i += ProcessCalls (method, ins);
 					break;
