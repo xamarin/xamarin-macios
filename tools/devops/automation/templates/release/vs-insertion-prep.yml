@@ -4,7 +4,7 @@ parameters:
   default: true
 
 - name: dependsOn
-  type: object
+  type: object 
   default: []
 
 - name: isPR
@@ -30,10 +30,6 @@ parameters:
   type: string
   default: '$(MaciosUploadPrefix)'
 
-- name: jobPrefix
-  type: string
-  default: '$(MaciosJobPrefix)'
-
 stages:
 - stage: prepare_release
   displayName: '${{ parameters.stageDisplayNamePrefix }}Prepare .NET Release'
@@ -52,7 +48,6 @@ stages:
   # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
   - template: nuget-msi-convert/job/v3.yml@yaml-templates
     parameters:
-      jobName: '${{ parameters.jobPrefix}}nuget_convert'
       yamlResourceName: yaml-templates
       dependsOn: signing
       artifactName: '${{ parameters.uploadPrefix }}nuget-signed'
@@ -68,7 +63,7 @@ stages:
     # Check - "xamarin-macios (Prepare Release Push NuGets)"
     - job: push_signed_nugets
       displayName: Push NuGets
-      dependsOn: '${{ parameters.jobPrefix}}nuget_convert'
+      dependsOn: nuget_convert
       variables:
         skipNugetSecurityAnalysis: true
       pool:
