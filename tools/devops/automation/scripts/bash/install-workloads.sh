@@ -39,7 +39,7 @@ fi
 
 #  Start working
 make global.json
-make -C builds dotnet CUSTOM_DOTNET_RUNTIME_INSTALL=1
+make -C builds dotnet
 
 var=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable VARIABLE=DOTNET)
 DOTNET=${var#*=}
