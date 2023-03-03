@@ -227,17 +227,17 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_connection_group_set_receive_handler (OS_nw_connection_group group, uint maximum_message_size, [MarshalAs (UnmanagedType.I1)] bool reject_oversized_messages, BlockLiteral* handler);
 
-		delegate void nw_connection_group_receive_handler_t (IntPtr block, IntPtr content, IntPtr context, bool isCompleted);
+		delegate void nw_connection_group_receive_handler_t (IntPtr block, IntPtr content, IntPtr context, byte isCompleted);
 		static nw_connection_group_receive_handler_t static_ReceiveHandler = TrampolineReceiveHandler;
 
 		[MonoPInvokeCallback (typeof (nw_connection_group_receive_handler_t))]
-		static void TrampolineReceiveHandler (IntPtr block, IntPtr content, IntPtr context, bool isCompleted)
+		static void TrampolineReceiveHandler (IntPtr block, IntPtr content, IntPtr context, byte isCompleted)
 		{
 			var del = BlockLiteral.GetTarget<NWConnectionGroupReceiveDelegate> (block);
 			if (del is not null) {
 				using var nsContent = new DispatchData (content, owns: false);
 				using var nsContext = new NWContentContext (context, owns: false);
-				del (nsContent, nsContext, isCompleted);
+				del (nsContent, nsContext, isCompleted != 0);
 			}
 		}
 

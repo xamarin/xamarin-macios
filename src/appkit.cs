@@ -2236,6 +2236,7 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	[BaseType (typeof (NSControl))]
+	[Dispose ("dispatcher = null;", Optimizable = true)]
 	interface NSButton : NSAccessibilityButton, NSUserInterfaceCompression, NSUserInterfaceValidations {
 		[Export ("initWithFrame:")]
 		NativeHandle Constructor (CGRect frameRect);

@@ -231,14 +231,18 @@ namespace CoreText {
 #endif
 		public delegate bool CTFontRegistrationHandler (NSError [] errors, bool done);
 
-		internal delegate bool InnerRegistrationHandler (IntPtr block, IntPtr errors, bool done);
+		internal delegate byte InnerRegistrationHandler (IntPtr block, IntPtr errors, byte done);
 		static readonly InnerRegistrationHandler callback = TrampolineRegistrationHandler;
 
 		[MonoPInvokeCallback (typeof (InnerRegistrationHandler))]
-		static unsafe bool TrampolineRegistrationHandler (IntPtr block, /* NSArray */ IntPtr errors, bool done)
+		static unsafe byte TrampolineRegistrationHandler (IntPtr block, /* NSArray */ IntPtr errors, byte done)
 		{
 			var del = BlockLiteral.GetTarget<CTFontRegistrationHandler> (block);
-			return del is not null ? del (NSArray.ArrayFromHandle<NSError> (errors), done) : true;
+			if (del is null)
+				return 0;
+
+			var rv = del (NSArray.ArrayFromHandle<NSError> (errors), done == 0 ? false : true);
+			return rv ? (byte) 1 : (byte) 0;
 		}
 
 #if NET
