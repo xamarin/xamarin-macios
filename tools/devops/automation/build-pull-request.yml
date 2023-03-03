@@ -161,8 +161,6 @@ variables:
   value: ''
 - name: MaciosUploadPrefix
   value: ''
-- name: MaciosJobPrefix
-  value: ''
 
 trigger: none
 
