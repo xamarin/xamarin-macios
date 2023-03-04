@@ -85,5 +85,33 @@ namespace ObjCRuntime {
 			Marshal.FreeHGlobal (ptr);
 			return result;
 		}
+
+		public static IntPtr AllocStringArray (string? []? arr, Encoding encoding = Encoding.Auto)
+		{
+			if (arr is null)
+				return IntPtr.Zero;
+			var ptrArr = Marshal.AllocHGlobal (arr.Length * IntPtr.Size);
+			var offset = 0;
+			var step = IntPtr.Size;
+			for (int i = 0; i < arr.Length; i++, offset += step) {
+				var str = arr [i] is null ? IntPtr.Zero : new TransientString (arr [i], encoding);
+				Marshal.WriteIntPtr (ptrArr + offset, str);
+			}
+			return ptrArr;
+		}
+
+		public static void FreeStringArray (IntPtr ptrArr, int count)
+		{
+			if (ptrArr == IntPtr.Zero)
+				return;
+			var offset = 0;
+			var step = IntPtr.Size;
+			for (int i = 0; i < count; i++, offset += step) {
+				var str = Marshal.ReadIntPtr (ptrArr + offset);
+				if (str != IntPtr.Zero)
+					Marshal.FreeHGlobal (Marshal.ReadIntPtr (ptrArr + offset));
+			}
+			Marshal.FreeHGlobal (ptrArr);
+		}
 	}
 }

@@ -69,7 +69,7 @@ CONFIG_ARGUMENT=/p:Configuration=$(CONFIG)
 endif
 
 ifeq ($(PLATFORM),)
-PLATFORM=$(notdir $(CURDIR))
+PLATFORM=$(shell basename "$(CURDIR)")
 endif
 
 ifeq ($(RUNTIMEIDENTIFIERS),)
@@ -118,7 +118,7 @@ EXECUTABLE="$(abspath .)/bin/$(CONFIG)/$(TEST_TFM)-maccatalyst/$(PATH_RID)$(TEST
 else ifeq ($(PLATFORM),macOS)
 EXECUTABLE="$(abspath .)/bin/$(CONFIG)/$(TEST_TFM)-macos/$(PATH_RID)$(TESTNAME).app/Contents/MacOS/$(TESTNAME)"
 else
-EXECUTABLE=unknown-platform-$(PLATFORM)
+EXECUTABLE="unknown-executable-platform-$(PLATFORM)"
 endif
 
 prepare:
@@ -145,7 +145,7 @@ run: prepare
 	$(Q) $(DOTNET) build "/bl:$(abspath $@-$(BINLOG_TIMESTAMP).binlog)" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS) $(CONFIG_ARGUMENT) $(UNIVERSAL_ARGUMENT) -t:Run
 
 run-bare:
-	$(Q) "$(EXECUTABLE)" --autostart --autoexit
+	$(Q) $(EXECUTABLE) --autostart --autoexit
 
 print-executable:
 	@echo $(EXECUTABLE)
