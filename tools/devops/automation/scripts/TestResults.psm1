@@ -395,7 +395,9 @@ function New-TestSummaryResults {
         [string[]]
         $Labels,
         [string]
-        $TestPrefix
+        $TestPrefix,
+        [string]
+        $UploadPrefix=""
     )
 
     $testResults = [System.Collections.ArrayList]@()
@@ -406,7 +408,7 @@ function New-TestSummaryResults {
 
         Write-Debug "Test results for $label is '$status'"
 
-        $testSummaryDirectoryExpression = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports\TestSummary-$TestPrefix$label-*"
+        $testSummaryDirectoryExpression = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports\${UploadPrefix}TestSummary-$TestPrefix$label-*"
 
         # Get the list of directories
         $directoryFilter = "TestSummary-$TestPrefix$label-*"

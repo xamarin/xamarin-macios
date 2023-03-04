@@ -66,7 +66,14 @@ namespace Darwin {
 		extern static void asl_close (IntPtr handle);
 		
 		[DllImport (Constants.SystemLibrary)]
-		extern static IntPtr asl_open (string ident, string facility, Option /* uint32_t */ options);
+		extern static IntPtr asl_open (IntPtr ident, IntPtr facility, Option /* uint32_t */ options);
+
+		static IntPtr asl_open (string ident, string facility, Option options)
+		{
+			using var identStr = new TransientString (ident);
+			using var facilityStr = new TransientString (facility);
+			return asl_open (identStr, facilityStr, options);
+		}
 
 		SystemLog ()
 			: base (IntPtr.Zero, false, false)
@@ -91,7 +98,14 @@ namespace Darwin {
 		}
 
 		[DllImport (Constants.SystemLibrary)]
-		extern static IntPtr asl_open_from_file (int /* int */ fd, string ident, string facility);
+		extern static IntPtr asl_open_from_file (int /* int */ fd, IntPtr ident, IntPtr facility);
+
+		static IntPtr asl_open_from_file (int /* int */ fd, string ident, string facility)
+		{
+			using var identStr = new TransientString (ident);
+			using var facilityStr = new TransientString (facility);
+			return asl_open_from_file (fd, identStr, facilityStr);
+		}
 		
 		public SystemLog (int fileDescriptor, string ident, string facility)
 			: base (
@@ -121,7 +135,13 @@ namespace Darwin {
 		}
 
 		[DllImport (Constants.SystemLibrary)]
-		extern static int asl_log (IntPtr handle, IntPtr msgHandle, string text);
+		extern static int asl_log (IntPtr handle, IntPtr msgHandle, IntPtr text);
+
+		static int asl_log (IntPtr handle, IntPtr msgHandle, string text)
+		{
+			using var textStr = new TransientString (text);
+			return asl_log (handle, msgHandle, textStr);
+		}
 
 		public int Log (Message msg, string text, params object [] args)
 		{
@@ -226,32 +246,36 @@ namespace Darwin {
 		extern static IntPtr asl_new (Kind kind);
 
 		[DllImport (Constants.SystemLibrary)]
-		extern static string asl_get (IntPtr handle, string key);
+		extern static string asl_get (IntPtr handle, IntPtr key);
 		
 		[DllImport (Constants.SystemLibrary)]
-		extern static int asl_set (IntPtr handle, string key, string value);
+		extern static int asl_set (IntPtr handle, IntPtr key, IntPtr value);
 
 		public string this [string key] {
 			get {
 				if (key is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
-				return asl_get (Handle, key);
+				using var keyStr = new TransientString (key);
+				return asl_get (Handle, keyStr);
 			}
 			set {
 				if (key is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
-				asl_set (Handle, key, value);
+				using var keyStr = new TransientString (key);
+				using var valueStr = new TransientString (value);
+				asl_set (Handle, keyStr, valueStr);
 			}
 		}
 
 		[DllImport (Constants.SystemLibrary)]
-		extern static int asl_unset (IntPtr handle, string key);
+		extern static int asl_unset (IntPtr handle, IntPtr key);
 		
 		public void Remove (string key)
 		{
 			if (key is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
-			asl_unset (Handle, key);
+			using var keyStr = new TransientString (key);
+			asl_unset (Handle, keyStr);
 		}
 		
 		[DllImport (Constants.SystemLibrary)]

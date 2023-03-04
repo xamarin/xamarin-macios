@@ -8,6 +8,8 @@
     <MicrosoftNETCoreAppRefPackageVersion>7.0.4</MicrosoftNETCoreAppRefPackageVersion>
     <MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion>7.0.4</MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion>
     <MicrosoftTemplateEngineTasksVersion>7.0.100-alpha.1.21601.1</MicrosoftTemplateEngineTasksVersion>
+    <!-- Manually updated versions -->
+    <EmscriptenWorkloadVersion>$(MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion)</EmscriptenWorkloadVersion>
     <!-- custom variables -->
     <DOTNET_TFM>net7.0</DOTNET_TFM>
   </PropertyGroup>
