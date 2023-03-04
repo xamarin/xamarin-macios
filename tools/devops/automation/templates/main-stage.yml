@@ -266,8 +266,7 @@ stages:
 - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release-test/'), eq(variables['Build.SourceBranch'], 'refs/heads/net7.0'), eq(variables['Build.SourceBranch'], 'refs/heads/net8.0'), eq(parameters.forceInsertion, true))) }}:
   - template: ./release/vs-insertion-prep.yml
     parameters:
-      dependsOn:
-      - sign_notarize_dotnet
+      dependsOn: sign_notarize_dotnet
       stageDisplayNamePrefix: ${{ parameters.stageDisplayNamePrefix }}
       isPR: ${{ parameters.isPR }}
       repositoryAlias: ${{ parameters.repositoryAlias }}
