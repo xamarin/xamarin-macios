@@ -29,6 +29,10 @@ parameters:
   type: boolean
   default: true
 
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
 steps:
 
 - pwsh: |
@@ -83,5 +87,5 @@ steps:
         targetPath: ${{ parameters.outputPath }}
       ${{ else }}:
         targetPath: ${{ parameters.workingDirectory }}/${{ parameters.outputPath }} 
-      artifactName: $(Agent.Name)-$(System.JobName)-$(System.JobId)-${{ parameters.outputPath }} 
+      artifactName: '${{ parameters.uploadPrefix }}$(Agent.Name)-$(System.JobName)-$(System.JobId)-${{ parameters.outputPath }}'
     continueOnError: true

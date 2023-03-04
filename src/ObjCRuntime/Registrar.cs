@@ -1126,6 +1126,7 @@ namespace Registrar {
 		protected abstract bool IsGenericMethod (TMethod method);
 		protected abstract bool IsInterface (TType type);
 		protected abstract bool IsAbstract (TType type);
+		protected abstract bool IsPointer (TType type);
 		protected abstract TType GetGenericTypeDefinition (TType type);
 		protected abstract bool VerifyIsConstrainedToNSObject (TType type, out TType constrained_type);
 		protected abstract TType GetEnumUnderlyingType (TType type);
@@ -2714,6 +2715,9 @@ namespace Registrar {
 				ToSignature (GetElementType (type), member, ref success); // this validates that the element type is a type we support.
 				return "@"; // But we don't care about the actual type, we'll just return '@'. We only support NSArrays of the element type, so '@' is always right.
 			}
+
+			if (IsPointer (type))
+				return "^" + ToSignature (GetElementType (type), member, ref success);
 
 			success = false;
 			return string.Empty;

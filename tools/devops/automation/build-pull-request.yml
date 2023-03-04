@@ -159,6 +159,8 @@ variables:
 - template: templates/variables.yml
 - name: MicrobuildConnector
   value: ''
+- name: MaciosUploadPrefix
+  value: ''
 
 trigger: none
 

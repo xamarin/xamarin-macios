@@ -72,20 +72,22 @@ namespace Network {
 		[return: MarshalAs (UnmanagedType.I1)]
 		unsafe static extern bool nw_ws_response_enumerate_additional_headers (OS_nw_ws_response response, BlockLiteral* enumerator);
 
-		delegate void nw_ws_response_enumerate_additional_headers_t (IntPtr block, string header, string value);
+		delegate void nw_ws_response_enumerate_additional_headers_t (IntPtr block, IntPtr header, IntPtr value);
 		static nw_ws_response_enumerate_additional_headers_t static_EnumerateHeadersHandler = TrampolineEnumerateHeadersHandler;
 
 		[MonoPInvokeCallback (typeof (nw_ws_response_enumerate_additional_headers_t))]
-		static void TrampolineEnumerateHeadersHandler (IntPtr block, string header, string value)
+		static void TrampolineEnumerateHeadersHandler (IntPtr block, IntPtr headerPointer, IntPtr valuePointer)
 		{
-			var del = BlockLiteral.GetTarget<Action<string, string>> (block);
+			var del = BlockLiteral.GetTarget<Action<string?, string?>> (block);
 			if (del is not null) {
+				var header = Marshal.PtrToStringAuto (headerPointer);
+				var value = Marshal.PtrToStringAuto (valuePointer);
 				del (header, value);
 			}
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public bool EnumerateAdditionalHeaders (Action<string, string> handler)
+		public bool EnumerateAdditionalHeaders (Action<string?, string?> handler)
 		{
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));

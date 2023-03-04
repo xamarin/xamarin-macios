@@ -96,19 +96,19 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		unsafe static extern bool nw_framer_message_access_value (OS_nw_protocol_metadata message, IntPtr key, BlockLiteral* access_value);
-		delegate bool nw_framer_message_access_value_t (IntPtr block, IntPtr data);
+		delegate byte nw_framer_message_access_value_t (IntPtr block, IntPtr data);
 		static nw_framer_message_access_value_t static_AccessValueHandler = TrampolineAccessValueHandler;
 
 
 		[MonoPInvokeCallback (typeof (nw_framer_message_access_value_t))]
-		static bool TrampolineAccessValueHandler (IntPtr block, IntPtr data)
+		static byte TrampolineAccessValueHandler (IntPtr block, IntPtr data)
 		{
 			// get and call, this is internal and we are trying to do all the magic in the call
 			var del = BlockLiteral.GetTarget<Func<IntPtr, bool>> (block);
 			if (del is not null) {
-				return del (data);
+				return del (data) ? (byte) 1 : (byte) 0;
 			}
-			return false;
+			return 0;
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
