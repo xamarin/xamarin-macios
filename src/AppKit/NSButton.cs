@@ -37,7 +37,14 @@ using Foundation;
 namespace AppKit {
 
 	public partial class NSButton {
-		NSActionDispatcher? dispatcher;
+		NSObject? dispatcher;
+
+		NSObject? Dispatcher {
+			set {
+				dispatcher = value;
+				MarkDirty ();
+			}
+		}
 
 		public new NSButtonCell Cell {
 			get { return (NSButtonCell) base.Cell; }
@@ -54,7 +61,7 @@ namespace AppKit {
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _CreateButton (title, image, dispatcher, NSActionDispatcher.Selector);
-			control.dispatcher = dispatcher;
+			control.Dispatcher = dispatcher;
 			return control;
 		}
 
@@ -68,7 +75,7 @@ namespace AppKit {
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _CreateButton (title, dispatcher, NSActionDispatcher.Selector);
-			control.dispatcher = dispatcher;
+			control.Dispatcher = dispatcher;
 			return control;
 		}
 
@@ -82,7 +89,7 @@ namespace AppKit {
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _CreateButton (image, dispatcher, NSActionDispatcher.Selector);
-			control.dispatcher = dispatcher;
+			control.Dispatcher = dispatcher;
 			return control;
 		}
 
@@ -96,7 +103,7 @@ namespace AppKit {
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _CreateCheckbox (title, dispatcher, NSActionDispatcher.Selector);
-			control.dispatcher = dispatcher;
+			control.Dispatcher = dispatcher;
 			return control;
 		}
 
@@ -110,7 +117,7 @@ namespace AppKit {
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _CreateRadioButton (title, dispatcher, NSActionDispatcher.Selector);
-			control.dispatcher = dispatcher;
+			control.Dispatcher = dispatcher;
 			return control;
 		}
 	}

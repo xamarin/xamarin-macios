@@ -21,8 +21,8 @@ namespace BI1064 {
 		[Export ("testString:a:b:")]
 		void TestString (int action, ref string refValue, out string outValue);
 
-		[Export ("testInt:a:b:")]
-		void TestInt (int action, ref int refValue, out int outValue);
+		[Export ("testInt:a:b:c:")]
+		unsafe void TestInt (int action, ref int refValue, out int outValue, int* ptrValue);
 
 		[Export ("testSelector:a:b:")]
 		void TestSelector (int action, ref Selector refValue, out Selector outValue);

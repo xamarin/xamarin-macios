@@ -176,6 +176,8 @@ variables:
 - template: templates/variables.yml
 - name: MicrobuildConnector
   value: 'MicroBuild Signing Task (DevDiv)'
+- name: MaciosUploadPrefix
+  value: ''
 
 trigger:
   branches:

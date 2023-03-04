@@ -15,6 +15,10 @@ parameters:
   type: string
   default: HEAD
 
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
 jobs:
 - job: configure
   displayName: 'Configure build'
@@ -53,7 +57,7 @@ jobs:
   - task: DownloadPipelineArtifact@2
     displayName: Download not notarized build
     inputs:
-      artifact: 'not-signed-package'
+      artifact: '${{ parameters.uploadPrefix }}not-signed-package'
       patterns: '!*.pkg'
       allowFailedBuilds: true
       path: $(Build.SourcesDirectory)/package
@@ -137,5 +141,5 @@ jobs:
     displayName: 'Publish Notarized Dotnet Artifacts'
     inputs:
       targetPath: $(Build.SourcesDirectory)/package
-      artifactName: dotnet-signed
+      artifactName: '${{ parameters.uploadPrefix }}dotnet-signed'
     continueOnError: true

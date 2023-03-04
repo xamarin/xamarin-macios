@@ -3688,13 +3688,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
-		public void RefOutTest_Int ()
+		public unsafe void RefOutTest_Int ()
 		{
 			using (var obj = new RefOutParametersSubclass ()) {
-				var sel = Selector.GetHandle ("testInt:a:b:");
+				var sel = Selector.GetHandle ("testInt:a:b:c:");
 				var dummyObj = 314;
 				int refObj = 0;
 				int outObj = 0;
+				int ptrObj = 0;
 				int action;
 
 				/// 1: set both to 0
@@ -3703,30 +3704,38 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				// native
 				refObj = dummyObj; // set to non-null
 				outObj = dummyObj; // set to non-null
-				obj.TestInt (action << 0, ref refObj, out outObj);
+				ptrObj = dummyObj; // set to non-null
+				obj.TestInt (action << 0, ref refObj, out outObj, &ptrObj);
 				Assert.AreEqual (0, refObj, "Int-1A-ref");
 				Assert.AreEqual (0, outObj, "Int-1A-out");
+				Assert.AreEqual (0, ptrObj, "Int-1A-ptr");
 
 				// managed
 				refObj = dummyObj; // set to non-null
 				outObj = dummyObj; // set to non-null
-				obj.TestInt (action << 8, ref refObj, out outObj);
+				ptrObj = dummyObj; // set to non-null
+				obj.TestInt (action << 8, ref refObj, out outObj, &ptrObj);
 				Assert.AreEqual (0, refObj, "Int-1M-ref");
 				Assert.AreEqual (0, outObj, "Int-1M-out");
+				Assert.AreEqual (0, ptrObj, "Int-1M-ptr");
 
 				// direct native
 				refObj = dummyObj; // set to non-null
 				outObj = dummyObj; // set to non-null
-				Messaging.void_objc_msgSend_int_int_int (obj.Handle, sel, action << 0, ref refObj, out outObj);
+				ptrObj = dummyObj; // set to non-null
+				Messaging.void_objc_msgSend_int_int_int_int (obj.Handle, sel, action << 0, ref refObj, out outObj, &ptrObj);
 				Assert.AreEqual (0, refObj, "Int-1DA-ref");
 				Assert.AreEqual (0, outObj, "Int-1DA-out");
+				Assert.AreEqual (0, ptrObj, "Int-1DA-ptr");
 
 				// direct managed
 				refObj = dummyObj; // set to non-null
 				outObj = dummyObj; // set to non-null
-				Messaging.void_objc_msgSend_int_int_int (obj.Handle, sel, action << 8, ref refObj, out outObj);
+				ptrObj = dummyObj; // set to non-null
+				Messaging.void_objc_msgSend_int_int_int_int (obj.Handle, sel, action << 8, ref refObj, out outObj, &ptrObj);
 				Assert.AreEqual (0, refObj, "Int-1DM-ref");
 				Assert.AreEqual (0, outObj, "Int-1DM-out");
+				Assert.AreEqual (0, ptrObj, "Int-1DM-ptr");
 
 				/// 2: N/A for testInt
 
@@ -3736,34 +3745,46 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				// native
 				refObj = dummyObj; // set to non-null
 				outObj = dummyObj; // set to non-null
-				obj.TestInt (action << 0, ref refObj, out outObj);
+				ptrObj = dummyObj; // set to non-null
+				obj.TestInt (action << 0, ref refObj, out outObj, &ptrObj);
 				Assert.AreNotEqual (dummyObj, refObj, "Int-3A-ref");
 				Assert.AreNotEqual (dummyObj, outObj, "Int-3A-out");
+				Assert.AreNotEqual (dummyObj, ptrObj, "Int-3A-ptr");
 				Assert.AreEqual (refObj, outObj, "Int-3A-out-ref-eq");
+				Assert.AreEqual (refObj, ptrObj, "Int-3A-out-ptr-eq");
 
 				// managed
 				refObj = dummyObj; // set to non-null
 				outObj = dummyObj; // set to non-null
-				obj.TestInt (action << 8, ref refObj, out outObj);
+				ptrObj = dummyObj; // set to non-null
+				obj.TestInt (action << 8, ref refObj, out outObj, &ptrObj);
 				Assert.AreNotEqual (dummyObj, refObj, "Int-3M-ref");
 				Assert.AreNotEqual (dummyObj, outObj, "Int-3M-out");
+				Assert.AreNotEqual (dummyObj, ptrObj, "Int-3M-ptr");
 				Assert.AreEqual (refObj, outObj, "Int-3M-out-ref-eq");
+				Assert.AreEqual (refObj, ptrObj, "Int-3M-out-ptr-eq");
 
 				// direct native
 				refObj = dummyObj; // set to non-null
 				outObj = dummyObj; // set to non-null
-				Messaging.void_objc_msgSend_int_int_int (obj.Handle, sel, action << 0, ref refObj, out outObj);
+				ptrObj = dummyObj; // set to non-null
+				Messaging.void_objc_msgSend_int_int_int_int (obj.Handle, sel, action << 0, ref refObj, out outObj, &ptrObj);
 				Assert.AreNotEqual (dummyObj, refObj, "Int-3DA-ref");
 				Assert.AreNotEqual (dummyObj, outObj, "Int-3DA-out");
+				Assert.AreNotEqual (dummyObj, ptrObj, "Int-3DA-ptr");
 				Assert.AreEqual (refObj, outObj, "Int-3DA-out-ref-same");
+				Assert.AreEqual (refObj, ptrObj, "Int-3DA-out-ptr-same");
 
 				// direct managed
 				refObj = dummyObj; // set to non-null
 				outObj = dummyObj; // set to non-null
-				Messaging.void_objc_msgSend_int_int_int (obj.Handle, sel, action << 8, ref refObj, out outObj);
+				ptrObj = dummyObj; // set to non-null
+				Messaging.void_objc_msgSend_int_int_int_int (obj.Handle, sel, action << 8, ref refObj, out outObj, &ptrObj);
 				Assert.AreNotEqual (dummyObj, refObj, "Int-3DM-ref");
 				Assert.AreNotEqual (dummyObj, outObj, "Int-3DM-out");
+				Assert.AreNotEqual (dummyObj, ptrObj, "Int-3DM-ptr");
 				Assert.AreEqual (refObj, outObj, "Int-3DM-out-ref-eq");
+				Assert.AreEqual (refObj, ptrObj, "Int-3DM-out-ptr-eq");
 
 
 				/// 4 set both parameteres to different pointers of a Int
@@ -3772,38 +3793,52 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				// native
 				refObj = 0; // set to 0
 				outObj = 0; // set to 0
-				obj.TestInt (action << 0, ref refObj, out outObj);
+				ptrObj = 0; // set to 0
+				obj.TestInt (action << 0, ref refObj, out outObj, &ptrObj);
 				Assert.AreNotEqual (0, refObj, "Int-4A-ref");
 				Assert.AreNotEqual (0, outObj, "Int-4A-out");
+				Assert.AreNotEqual (0, ptrObj, "Int-4A-ptr");
 				Assert.AreNotEqual (refObj, outObj, "Int-4A-ref-distinct");
+				Assert.AreNotEqual (refObj, ptrObj, "Int-4A-ptr-distinct");
 
 				// managed
 				refObj = 0; // set to 0
 				outObj = 0; // set to 0
-				obj.TestInt (action << 8, ref refObj, out outObj);
+				ptrObj = 0; // set to 0
+				obj.TestInt (action << 8, ref refObj, out outObj, &ptrObj);
 				Assert.AreNotEqual (0, refObj, "Int-4M-ref");
 				Assert.AreNotEqual (0, outObj, "Int-4M-out");
+				Assert.AreNotEqual (0, ptrObj, "Int-4M-ptr");
 				Assert.AreNotEqual (refObj, outObj, "Int-4M-ref-distinct");
+				Assert.AreNotEqual (refObj, ptrObj, "Int-4M-ptr-distinct");
 
 				// direct native
 				refObj = 0; // set to 0
 				outObj = 0; // set to 0
-				Messaging.void_objc_msgSend_int_int_int (obj.Handle, sel, action << 0, ref refObj, out outObj);
+				ptrObj = 0; // set to 0
+				Messaging.void_objc_msgSend_int_int_int_int (obj.Handle, sel, action << 0, ref refObj, out outObj, &ptrObj);
 				Assert.AreNotEqual (0, refObj, "Int-4DA-ref");
 				Assert.AreNotEqual (0, outObj, "Int-4DA-out");
+				Assert.AreNotEqual (0, ptrObj, "Int-4DA-ptr");
 				Assert.AreNotEqual (refObj, outObj, "Int-4DA-ref-distinct");
+				Assert.AreNotEqual (refObj, ptrObj, "Int-4DA-ptr-distinct");
 				Assert.AreEqual (3141592, refObj, "Int-4DA-ref-value");
 				Assert.AreEqual (2718282, outObj, "Int-4DA-out-value");
+				Assert.AreEqual (5772156, ptrObj, "Int-4DA-ptr-value");
 
 				// direct managed
 				refObj = 0; // set to 0
 				outObj = 0; // set to 0
-				Messaging.void_objc_msgSend_int_int_int (obj.Handle, sel, action << 8, ref refObj, out outObj);
+				ptrObj = 0; // set to 0
+				Messaging.void_objc_msgSend_int_int_int_int (obj.Handle, sel, action << 8, ref refObj, out outObj, &ptrObj);
 				Assert.AreNotEqual (0, refObj, "Int-4DM-ref");
 				Assert.AreNotEqual (0, outObj, "Int-4DM-out");
+				Assert.AreNotEqual (0, ptrObj, "Int-4DM-ptr");
 				Assert.AreNotEqual (refObj, outObj, "Int-4DM-ref-distinct");
+				Assert.AreNotEqual (refObj, ptrObj, "Int-4DM-ptr-distinct");
 				Assert.AreEqual (3141592, refObj, "Int-4DM-ref-value");
 				Assert.AreEqual (2718282, outObj, "Int-4DM-out-value");
+				Assert.AreEqual (5772156, ptrObj, "Int-4DM-ptr-value");
 			}
 		}
 
@@ -5174,24 +5209,27 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				}
 			}
 
-			public override void TestInt (int action, ref int refValue, out int outValue)
+			public unsafe override void TestInt (int action, ref int refValue, out int outValue, int* ptrValue)
 			{
 				var managedAction = (action & 0xFF00) >> 8;
 				switch (managedAction) {
 				case 0: // call native
-					base.TestInt (action, ref refValue, out outValue);
+					base.TestInt (action, ref refValue, out outValue, ptrValue);
 					break;
 				case 1: // set both to null
 					refValue = 0;
 					outValue = 0;
+					*ptrValue = 0;
 					break;
 				case 3: // set both parameteres to the same value
 					refValue = 314159;
 					outValue = 314159;
+					*ptrValue = 314159;
 					break;
 				case 4: // set both parameteres to different values
 					refValue = 3141592;
 					outValue = 2718282;
+					*ptrValue = 5772156;
 					break;
 				default:
 					throw new NotImplementedException ();
