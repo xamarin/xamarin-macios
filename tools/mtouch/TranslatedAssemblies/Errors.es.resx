@@ -1763,4 +1763,7 @@
   <data name="MX8044" xml:space="preserve">
 		<value>El ensamblado {0} se ha modificado desde que se compiló la aplicación, lo que invalida el código de registrador estático generado. El MVID del ensamblado cargado es {1}, mientras que el MVID del ensamblado al que corresponde el código del registrador estático generado es {2}.</value>
 	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>Unable to call release on an instance of the type {0}</value>
+	</data>
 </root>
