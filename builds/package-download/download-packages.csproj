@@ -20,13 +20,13 @@
     <!-- download the reference assemblies -->
     <PackageDownload Include="microsoft.netcore.app.ref" Version="[$(ActualPackageVersion)]" />
 
-    <!-- and get the mono workload as well -->
-    <PackageDownload Include="Microsoft.NET.Workload.Mono.ToolChain.net7.Manifest-$(ToolChainManifestVersionBand)" Version="[$(ActualPackageVersion)]" />
-    <PackageDownload Include="Microsoft.NET.Workload.Mono.ToolChain.net6.Manifest-$(ToolChainManifestVersionBand)" Version="[$(ActualPackageVersion)]" />
+    <!-- and get the mono workload(s) as well -->
+    <PackageDownload Include="Microsoft.NET.Workload.Mono.ToolChain.net7.Manifest-$(MonoToolChainManifestVersionBand)" Version="[$(ActualPackageVersion)]" />
+    <PackageDownload Include="Microsoft.NET.Workload.Mono.ToolChain.net6.Manifest-$(MonoToolChainManifestVersionBand)" Version="[$(ActualPackageVersion)]" />
 
-    <!-- and get the emscripten workload as well -->
-    <PackageDownload Include="Microsoft.NET.Workload.Emscripten.net7.Manifest-$(ToolChainManifestVersionBand)" Version="[$(EmscriptenWorkloadVersion)]" />
-    <PackageDownload Include="Microsoft.NET.Workload.Emscripten.net6.Manifest-$(ToolChainManifestVersionBand)" Version="[$(EmscriptenWorkloadVersion)]" />
+    <!-- and get the emscripten workload(s) as well -->
+    <PackageDownload Include="Microsoft.NET.Workload.Emscripten.net7.Manifest-$(EmscriptenManifestVersionBand)" Version="[$(EmscriptenWorkloadVersion)]" />
+    <PackageDownload Include="Microsoft.NET.Workload.Emscripten.net6.Manifest-$(EmscriptenManifestVersionBand)" Version="[$(EmscriptenWorkloadVersion)]" />
   </ItemGroup>
 
   <Import Project="all-package-references.csproj" />
