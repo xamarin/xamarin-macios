@@ -697,7 +697,7 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		var mi = t.GetMethod ("Invoke");
-		var pars = new StringBuilder ();
+		var pars = new List<TrampolineParameterInfo> ();
 		var convert = new StringBuilder ();
 		var invoke = new StringBuilder ();
 		var clear = new StringBuilder ();
@@ -720,24 +720,26 @@ public partial class Generator : IMemberGatherer {
 		} else if (TypeManager.INativeObject.IsAssignableFrom (mi.ReturnType)) {
 			returntype = Generator.NativeHandleType;
 			returnformat = "return {0}.GetHandle ();";
+		} else if (mi.ReturnType == TypeManager.System_Boolean) {
+			returntype = "byte";
+			returnformat = "return {0} ? (byte) 1 : (byte) 0;";
 		} else {
 			returntype = FormatType (mi.DeclaringType, mi.ReturnType);
 		}
 
-		pars.Append ($"IntPtr block");
+		pars.Add (new TrampolineParameterInfo ("IntPtr", "block"));
 		var parameters = mi.GetParameters ();
 		foreach (var pi in parameters) {
 			string isForcedOwns;
 			var isForced = HasForcedAttribute (pi, out isForcedOwns);
 
-			pars.Append (", ");
 			if (pi != parameters [0])
 				invoke.Append (", ");
 
 			var safe_name = pi.Name.GetSafeParamName ();
 
 			if (IsWrappedType (pi.ParameterType)) {
-				pars.AppendFormat ("{1} {0}", safe_name, NativeHandleType);
+				pars.Add (new TrampolineParameterInfo (NativeHandleType, safe_name));
 				if (IsProtocolInterface (pi.ParameterType)) {
 					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, false)!", safe_name, pi.ParameterType);
 				} else if (isForced) {
@@ -751,7 +753,7 @@ public partial class Generator : IMemberGatherer {
 			if (Frameworks.HaveCoreMedia) {
 				// special case (false) so it needs to be before the _real_ INativeObject check
 				if (pi.ParameterType == TypeManager.CMSampleBuffer) {
-					pars.AppendFormat ("{1} {0}", safe_name, NativeHandleType);
+					pars.Add (new TrampolineParameterInfo (NativeHandleType, safe_name));
 					if (BindThirdPartyLibrary)
 						invoke.AppendFormat ("{0} == IntPtr.Zero ? null! : Runtime.GetINativeObject<CMSampleBuffer> ({0}, false)!", safe_name);
 					else
@@ -762,14 +764,14 @@ public partial class Generator : IMemberGatherer {
 
 			if (Frameworks.HaveAudioToolbox) {
 				if (pi.ParameterType == TypeManager.AudioBuffers) {
-					pars.AppendFormat ("{1} {0}", safe_name, NativeHandleType);
+					pars.Add (new TrampolineParameterInfo (NativeHandleType, safe_name));
 					invoke.AppendFormat ("new global::AudioToolbox.AudioBuffers ({0})", safe_name);
 					continue;
 				}
 			}
 
 			if (TypeManager.INativeObject.IsAssignableFrom (pi.ParameterType)) {
-				pars.AppendFormat ("{1} {0}", safe_name, NativeHandleType);
+				pars.Add (new TrampolineParameterInfo (NativeHandleType, safe_name));
 				invoke.AppendFormat ("new {0} ({1}, false)", pi.ParameterType, safe_name);
 				continue;
 			}
@@ -777,59 +779,69 @@ public partial class Generator : IMemberGatherer {
 			if (pi.ParameterType.IsByRef) {
 				var nt = pi.ParameterType.GetElementType ();
 				if (pi.IsOut) {
-					clear.AppendFormat ("{0} = {1};", safe_name, nt.IsValueType ? "default (" + FormatType (null, nt) + ")" : "null");
+					if (nt == TypeManager.System_Boolean) {
+						clear.AppendFormat ("*{0} = 0;", safe_name);
+					} else {
+						clear.AppendFormat ("*{0} = {1};", safe_name, nt.IsValueType ? "default (" + FormatType (null, nt) + ")" : "null");
+					}
 				}
+				var outOrRef = pi.IsOut ? "out" : "ref";
 				if (nt.IsValueType) {
-					string marshal = string.Empty;
-					if (nt == TypeManager.System_Boolean)
-						marshal = "[System.Runtime.InteropServices.MarshalAs (System.Runtime.InteropServices.UnmanagedType.I1)] ";
 					string fnt;
 					string invoke_name;
-					string arg_byref = pi.IsOut ? "out " : "ref ";
 					var nullable = TypeManager.GetUnderlyingNullableType (nt);
 					if (nullable != null) {
-						fnt = "IntPtr";
+						fnt = FormatType (null, nullable);
 						invoke_name = $"__xamarin_nullified__{pi.Position}";
-						arg_byref = String.Empty;
 						convert.AppendLine ($"{nullable.Name}? {invoke_name} = null;");
-						convert.AppendLine ("if (value != IntPtr.Zero)");
-						convert.Append ($"\t{invoke_name} = * ({nullable.Name} *) value;");
+						convert.AppendLine ("if (value != null)");
+						convert.AppendLine ($"\t{invoke_name} =  *value;");
+						postConvert.AppendLine ($"if (value != null && {invoke_name}.HasValue)");
+						postConvert.AppendLine ($"\t*value = {invoke_name}.Value;");
+					} else if (nt == TypeManager.System_Boolean) {
+						fnt = "byte";
+						invoke_name = $"__xamarin_bool__{pi.Position}";
+						convert.AppendLine ($"bool {invoke_name} = *{safe_name} != 0;");
+						postConvert.AppendLine ($"*{safe_name} = {invoke_name} ? (byte) 1 : (byte) 0;");
 					} else {
 						fnt = FormatType (null, nt);
-						invoke_name = safe_name;
+						invoke_name = $"global::System.Runtime.CompilerServices.Unsafe.AsRef<{fnt}> ({safe_name})";
 					}
-					pars.AppendFormat ("{3}{0}{1} {2}", arg_byref, fnt, safe_name, marshal);
-					invoke.AppendFormat ("{0} {1}", pi.IsOut ? "out" : "ref", invoke_name);
+					pars.Add (new TrampolineParameterInfo (fnt + "*", safe_name));
+					invoke.AppendFormat ("{0} {1}", outOrRef, invoke_name);
 					continue;
-				} else if (pi.ParameterType.IsByRef) {
+				} else {
 					var refname = $"__xamarin_pref{pi.Position}";
-					convert.Append ($"var {refname} = Runtime.GetINativeObject<{RenderType (nt)}> ({safe_name}, false)!;");
-					pars.Append ($"ref {NativeHandleType} {safe_name}");
-					postConvert.Append ($"{safe_name} = {refname}.GetHandle ();");
-					if (pi.IsOut)
-						invoke.Append ("out ");
-					else
-						invoke.Append ("ref ");
+					convert.Append ($"var {refname} = Runtime.GetINativeObject<{RenderType (nt)}> ({safe_name} != null ? *{safe_name} : NativeHandle.Zero, false)!;");
+					pars.Add (new TrampolineParameterInfo ($"{NativeHandleType}*", safe_name));
+					postConvert.AppendLine ($"if ({safe_name} != null)");
+					postConvert.Append ($"\t*{safe_name} = {refname}.GetHandle ();");
+					invoke.Append (outOrRef);
+					invoke.Append (" ");
 					invoke.Append (refname);
 					continue;
 				}
 			} else if (GetNativeEnumToManagedExpression (pi.ParameterType, out var preExpression, out var postExpression, out var nativeType)) {
-				pars.AppendFormat ("{0} {1}", nativeType, safe_name);
+				pars.Add (new TrampolineParameterInfo (nativeType, safe_name));
 				invoke.Append (preExpression).Append (safe_name).Append (postExpression);
 				continue;
+			} else if (pi.ParameterType == TypeManager.System_Boolean) {
+				pars.Add (new TrampolineParameterInfo ("byte", safe_name));
+				invoke.AppendFormat ("{0} != 0", safe_name);
+				continue;
 			} else if (pi.ParameterType.IsValueType) {
-				pars.AppendFormat ("{0} {1}", FormatType (null, pi.ParameterType), safe_name);
+				pars.Add (new TrampolineParameterInfo (FormatType (null, pi.ParameterType), safe_name));
 				invoke.AppendFormat ("{0}", safe_name);
 				continue;
 			}
 
 			if (pi.ParameterType == TypeManager.System_String_Array) {
-				pars.AppendFormat ("{1} {0}", safe_name, NativeHandleType);
+				pars.Add (new TrampolineParameterInfo (NativeHandleType, safe_name));
 				invoke.AppendFormat ("CFArray.StringArrayFromHandle ({0})!", safe_name);
 				continue;
 			}
 			if (pi.ParameterType == TypeManager.System_String) {
-				pars.AppendFormat ("{1} {0}", safe_name, NativeHandleType);
+				pars.Add (new TrampolineParameterInfo (NativeHandleType, safe_name));
 				invoke.AppendFormat ("CFString.FromHandle ({0})!", safe_name);
 				continue;
 			}
@@ -837,7 +849,7 @@ public partial class Generator : IMemberGatherer {
 			if (pi.ParameterType.IsArray) {
 				Type et = pi.ParameterType.GetElementType ();
 				if (IsWrappedType (et)) {
-					pars.AppendFormat ("{1} {0}", safe_name, NativeHandleType);
+					pars.Add (new TrampolineParameterInfo (NativeHandleType, safe_name));
 					invoke.AppendFormat ("CFArray.ArrayFromHandle<{0}> ({1})!", FormatType (null, et), safe_name);
 					continue;
 				}
@@ -848,7 +860,7 @@ public partial class Generator : IMemberGatherer {
 					delegate_types [pi.ParameterType.FullName] = pi.ParameterType.GetMethod ("Invoke");
 				}
 				if (AttributeManager.HasAttribute<BlockCallbackAttribute> (pi)) {
-					pars.AppendFormat ("{1} {0}", safe_name, NativeHandleType);
+					pars.Add (new TrampolineParameterInfo (NativeHandleType, safe_name));
 					invoke.AppendFormat ("NID{0}.Create ({1})!", Nomenclator.GetTrampolineName (pi.ParameterType), safe_name);
 					// The trampoline will eventually be generated in the final loop
 				} else {
@@ -859,7 +871,7 @@ public partial class Generator : IMemberGatherer {
 							ErrorHelper.Warning (1115, safe_name, t.FullName);
 						}
 					}
-					pars.AppendFormat ("{1} {0}", safe_name, NativeHandleType);
+					pars.Add (new TrampolineParameterInfo (NativeHandleType, safe_name));
 					invoke.AppendFormat ("({0}) Marshal.GetDelegateForFunctionPointer ({1}, typeof ({0}))", pi.ParameterType, safe_name);
 				}
 				continue;
@@ -873,7 +885,7 @@ public partial class Generator : IMemberGatherer {
 		var trampoline_name = Nomenclator.GetTrampolineName (t);
 		var ti = new TrampolineInfo (userDelegate: FormatType (null, t),
 						 delegateName: "D" + trampoline_name,
-						 pars: pars.ToString (),
+						 pars: string.Join (", ", pars.Select (v => v.Type + " " + v.ParameterName)),
 									 convert: convert.ToString (),
 						 invoke: invoke.ToString (),
 						 returnType: returntype,
@@ -894,9 +906,11 @@ public partial class Generator : IMemberGatherer {
 	// Returns the actual way in which the type t must be marshalled
 	// for example "UIView foo" is generated as  "foo.Handle"
 	//
-	public string MarshalParameter (MethodInfo mi, ParameterInfo pi, bool null_allowed_override, PropertyInfo propInfo = null, bool castEnum = true)
+	public string MarshalParameter (MethodInfo mi, ParameterInfo pi, bool null_allowed_override, PropertyInfo propInfo = null, bool castEnum = true, bool usingBlittableNativeTypes = false, StringBuilder convs = null)
 	{
 		if (pi.ParameterType.IsByRef && pi.ParameterType.GetElementType ().IsValueType == false) {
+			if (usingBlittableNativeTypes)
+				return "&" + pi.Name + "Value";
 			return "ref " + pi.Name + "Value";
 		}
 
@@ -944,8 +958,11 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 
-		if (pi.ParameterType.IsValueType)
+		if (pi.ParameterType.IsValueType) {
+			if (usingBlittableNativeTypes && pi.ParameterType == TypeManager.System_Boolean)
+				return safe_name + " ? (byte) 1 : (byte) 0";
 			return safe_name;
+		}
 
 		MarshalType mt;
 		if (marshalTypes.TryGetMarshalType (pi.ParameterType, out mt)) {
@@ -969,9 +986,20 @@ public partial class Generator : IMemberGatherer {
 			var et = pi.ParameterType.GetElementType ();
 			var nullable = TypeManager.GetUnderlyingNullableType (et);
 			if (nullable != null) {
-				return "converted";
+				return $"converted_{safe_name}";
 			} else if (et.IsValueType)
-				return (pi.IsOut ? "out " : "ref ") + safe_name;
+				if (usingBlittableNativeTypes) {
+					if (et == TypeManager.System_Boolean) {
+						if (pi.IsOut)
+							convs!.Append ($"{safe_name} = false;");
+						return $"(byte*) global::System.Runtime.CompilerServices.Unsafe.AsPointer<bool> (ref {safe_name})";
+					}
+					var blittableType = FormatType (mi.DeclaringType, et);
+					if (pi.IsOut)
+						convs!.Append ($"{safe_name} = default ({blittableType});");
+					return $"({blittableType}*) global::System.Runtime.CompilerServices.Unsafe.AsPointer<{blittableType}> (ref {safe_name})";
+				}
+			return (pi.IsOut ? "out " : "ref ") + safe_name;
 		}
 
 		// Handle 'ValueType* foo'
@@ -1711,7 +1739,7 @@ public partial class Generator : IMemberGatherer {
 			print ("");
 			print ("[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]");
 			print ("[UserDelegateType (typeof ({0}))]", ti.UserDelegate);
-			print ("internal delegate {0} {1} ({2});", ti.ReturnType, ti.DelegateName, ti.Parameters);
+			print ("unsafe internal delegate {0} {1} ({2});", ti.ReturnType, ti.DelegateName, ti.Parameters);
 			print ("");
 			print ("//\n// This class bridges native block invocations that call into C#\n//");
 			print ("static internal class {0} {{", ti.StaticName); indent++;
@@ -1719,7 +1747,7 @@ public partial class Generator : IMemberGatherer {
 			// but we have a workaround in place because we can't fix old, binary bindings so...
 			// print ("[Preserve (Conditional=true)]");
 			// For .NET we fix it using the DynamicDependency attribute below
-			print ("static internal readonly {0} Handler = Invoke;", ti.DelegateName);
+			print ("unsafe static internal readonly {0} Handler = Invoke;", ti.DelegateName);
 			print ("");
 #if NET
 			print ("[Preserve (Conditional = true)]");
@@ -1734,16 +1762,21 @@ public partial class Generator : IMemberGatherer {
 			// FIXME: right now we only support 'null' when the delegate does not return a value
 			// otherwise we will need to know the default value to be returned (likely uncommon)
 			if (is_void) {
-				print ("if (del != null)");
+				print ("if (del != null) {");
 				indent++;
+				if (ti.Convert.Length > 0)
+					print (ti.Convert);
 				print ("del ({0});", ti.Invoke);
+				if (ti.PostConvert.Length > 0)
+					print (ti.PostConvert);
 				indent--;
 				if (ti.Clear.Length > 0) {
-					print ("else");
+					print ("} else {");
 					indent++;
 					print (ti.Clear);
 					indent--;
 				}
+				print ("}");
 			} else {
 				if (ti.Convert.Length > 0)
 					print (ti.Convert);
@@ -1819,7 +1852,8 @@ public partial class Generator : IMemberGatherer {
 						  convs: out convs,
 						  disposes: out disposes,
 						  by_ref_processing: out by_ref_processing,
-						  by_ref_init: out by_ref_init);
+						  by_ref_init: out by_ref_init,
+						  usingBlittableNativeTypes: true);
 
 			if (by_ref_init.Length > 0)
 				print (by_ref_init.ToString ());
@@ -1839,8 +1873,13 @@ public partial class Generator : IMemberGatherer {
 				print (disposes.ToString ());
 			if (by_ref_processing.Length > 0)
 				print (sw, by_ref_processing.ToString ());
-			if (use_temp_return)
-				print ("return ret!;");
+			if (use_temp_return) {
+				if (mi.ReturnType == TypeManager.System_Boolean) {
+					print ("return ret != 0;");
+				} else {
+					print ("return ret!;");
+				}
+			}
 			indent--; print ("}");
 			indent--;
 			print ("}} /* class {0} */", ti.NativeInvokerName);
@@ -3643,7 +3682,7 @@ public partial class Generator : IMemberGatherer {
 	// @convs: conversions to perform before the invocation
 	// @disposes: dispose operations to perform after the invocation
 	// @by_ref_processing
-	void GenerateTypeLowering (MethodInfo mi, bool null_allowed_override, out StringBuilder args, out StringBuilder convs, out StringBuilder disposes, out StringBuilder by_ref_processing, out StringBuilder by_ref_init, PropertyInfo propInfo = null, bool castEnum = true)
+	void GenerateTypeLowering (MethodInfo mi, bool null_allowed_override, out StringBuilder args, out StringBuilder convs, out StringBuilder disposes, out StringBuilder by_ref_processing, out StringBuilder by_ref_init, PropertyInfo propInfo = null, bool castEnum = true, bool usingBlittableNativeTypes = false)
 	{
 		args = new StringBuilder ();
 		convs = new StringBuilder ();
@@ -3658,18 +3697,21 @@ public partial class Generator : IMemberGatherer {
 			if (!IsTarget (pi)) {
 				// Construct invocation
 				args.Append (", ");
-				args.Append (MarshalParameter (mi, pi, null_allowed_override, propInfo, castEnum));
+				args.Append (MarshalParameter (mi, pi, null_allowed_override, propInfo, castEnum, usingBlittableNativeTypes, convs));
 
 				if (pi.ParameterType.IsByRef) {
 					var et = pi.ParameterType.GetElementType ();
 					var nullable = TypeManager.GetUnderlyingNullableType (et);
 					if (nullable != null) {
-						convs.Append ("var converted = IntPtr.Zero;\n");
-						convs.Append ($"var v = default ({FormatType (mi.DeclaringType, nullable)});\n");
-						convs.Append ("if (value.HasValue) {\n");
-						convs.Append ("\tv = value.Value;\n");
-						convs.Append ("\tconverted = new IntPtr (&v);\n");
+						var nt = FormatType (mi.DeclaringType, nullable);
+						convs.Append ($"{nt}* converted_{safe_name} = null;\n");
+						convs.Append ($"{nt} converted_{safe_name}_v = default ({nt});\n");
+						convs.Append ($"if ({safe_name}.HasValue) {{\n");
+						convs.Append ($"\tconverted_{safe_name}_v = {safe_name}.Value;\n");
+						convs.Append ($"\tconverted_{safe_name} = &converted_{safe_name}_v;\n");
 						convs.Append ("}\n");
+						by_ref_processing.AppendLine ($"if ({safe_name}.HasValue)");
+						by_ref_processing.AppendLine ($"\t{safe_name} = *converted_{safe_name};");
 					}
 				}
 			}
