@@ -490,29 +490,19 @@ namespace CoreGraphics {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (11, 0)]
-		[Mac (10, 13)]
-		[TV (11, 0)]
-		[Watch (4, 0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextResetClip (/* CGContextRef */ IntPtr c);
 
 #if NET
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (11, 0)]
-		[Mac (10, 13)]
-		[TV (11, 0)]
-		[Watch (4, 0)]
 #endif
 		public void ResetClip ()
 		{

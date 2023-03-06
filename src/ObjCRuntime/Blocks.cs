@@ -58,7 +58,16 @@ namespace ObjCRuntime {
 	}
 
 	[StructLayout (LayoutKind.Sequential)]
+#if XAMCORE_5_0
+	// Let's try to make this a ref struct in XAMCORE_5_0, that will mean blocks can't be boxed (which is good, because it would most likely result in broken code).
+	// Note that the presence of a Dispose method is enough to be able to do a 'using var block = new BlockLiteral ()' in C# due to pattern-based using for 'ref structs':
+	// Ref: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-8.0/using#pattern-based-using
+	public unsafe ref struct BlockLiteral
+#elif COREBUILD
 	public unsafe struct BlockLiteral {
+#else
+	public unsafe struct BlockLiteral : IDisposable {
+#endif
 #pragma warning disable 169
 		IntPtr isa;
 		BlockFlags flags;
@@ -202,17 +211,29 @@ namespace ObjCRuntime {
 
 		public void CleanupBlock ()
 		{
-			GCHandle.FromIntPtr (local_handle).Free ();
-			var xblock_descriptor = (XamarinBlockDescriptor*) block_descriptor;
+			Dispose ();
+		}
+
+		public void Dispose ()
+		{
+			if (local_handle != IntPtr.Zero) {
+				GCHandle.FromIntPtr (local_handle).Free ();
+				local_handle = IntPtr.Zero;
+			}
+
+			if (block_descriptor != IntPtr.Zero) {
+				var xblock_descriptor = (XamarinBlockDescriptor*) block_descriptor;
 #pragma warning disable 420
-			// CS0420: A volatile field references will not be treated as volatile
-			// Documentation says: "A volatile field should not normally be passed using a ref or out parameter, since it will not be treated as volatile within the scope of the function. There are exceptions to this, such as when calling an interlocked API."
-			// So ignoring the warning, since it's a documented exception.
-			var rc = Interlocked.Decrement (ref xblock_descriptor->ref_count);
+				// CS0420: A volatile field references will not be treated as volatile
+				// Documentation says: "A volatile field should not normally be passed using a ref or out parameter, since it will not be treated as volatile within the scope of the function. There are exceptions to this, such as when calling an interlocked API."
+				// So ignoring the warning, since it's a documented exception.
+				var rc = Interlocked.Decrement (ref xblock_descriptor->ref_count);
 #pragma warning restore 420
 
-			if (rc == 0)
-				Marshal.FreeHGlobal (block_descriptor);
+				if (rc == 0)
+					Marshal.FreeHGlobal (block_descriptor);
+				block_descriptor = IntPtr.Zero;
+			}
 		}
 
 		public object Target {
@@ -328,7 +349,7 @@ namespace ObjCRuntime {
 			// start off by creating a stack-allocated block, and then
 			// call _Block_copy, which will create a heap-allocated block
 			// with the proper reference count.
-			BlockLiteral block = new BlockLiteral ();
+			using var block = new BlockLiteral ();
 			if (signature is null) {
 				if (Runtime.DynamicRegistrationSupported) {
 					block.SetupBlock ((Delegate) handlerDelegate, (Delegate) @delegate);
@@ -338,13 +359,14 @@ namespace ObjCRuntime {
 			} else {
 				block.SetupBlockImpl ((Delegate) handlerDelegate, (Delegate) @delegate, true, signature);
 			}
-			var rv = _Block_copy (ref block);
-			block.CleanupBlock ();
-			return rv;
+
+			unsafe {
+				return _Block_copy (&block);
+			}
 		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		internal static extern IntPtr _Block_copy (ref BlockLiteral block);
+		internal static extern IntPtr _Block_copy (BlockLiteral* block);
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal static extern IntPtr _Block_copy (IntPtr block);
@@ -352,30 +374,10 @@ namespace ObjCRuntime {
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal static extern void _Block_release (IntPtr block);
 
-		//
-		// Simple method that we can use to wrap methods that need to call a block
-		//
-		// usage:
-		// void MyCallBack () {} 
-		// BlockLiteral.SimpleCall (MyCallBack, (x) => my_PINvokeThatTakesaBlock (x));
-		//  The above will call the unmanaged my_PINvokeThatTakesaBlock method with a block
-		// that when invoked will call MyCallback
-		//
-		internal unsafe static void SimpleCall (Action callbackToInvoke, Action<IntPtr> pinvoke)
+		internal static IntPtr Copy (IntPtr block)
 		{
-			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral* block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (BlockStaticDispatchClass.static_dispatch_block, callbackToInvoke);
-
-				try {
-					pinvoke ((IntPtr) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
-			}
+			return _Block_copy (block);
 		}
-
 #endif
 	}
 
@@ -395,7 +397,23 @@ namespace ObjCRuntime {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		unsafe internal static BlockLiteral CreateBlock (Action action)
+		{
+			var block = new BlockLiteral ();
+			block.SetupBlockUnsafe (static_dispatch_block, action);
+			return block;
+		}
+
 		internal static dispatch_block_t static_dispatch_block = TrampolineDispatchBlock;
+	}
+
+	// This class will free the specified block when it's collected by the GC.
+	internal class BlockCollector : TrampolineBlockBase {
+		public BlockCollector (IntPtr block)
+			: base (block, owns: true)
+		{
+		}
 	}
 #endif
 

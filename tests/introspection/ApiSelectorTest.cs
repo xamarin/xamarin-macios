@@ -380,9 +380,9 @@ namespace Introspection {
 					return true;
 				}
 				break;
-#if __WATCHOS__
+#if (__WATCHOS__ || __MACOS__ || __MACCATALYST__)
 			case "AVPlayerItem":
-				switch (selectorName) {
+				switch (selectorName) { // comes from AVPlayerItem+MPAdditions.h
 				case "nowPlayingInfo":
 				case "setNowPlayingInfo:":
 					return TestRuntime.IsSimulatorOrDesktop;
@@ -941,50 +941,32 @@ namespace Introspection {
 				}
 #endif
 				break;
+			case "SKAdImpression":
+#if __MACCATALYST__
+				switch (selectorName) {
+				case "initWithSourceAppStoreItemIdentifier:advertisedAppStoreItemIdentifier:adNetworkIdentifier:adCampaignIdentifier:adImpressionIdentifier:timestamp:signature:version:":
+					if (TestRuntime.CheckXcodeVersion (14, 0))
+						return true;
+					break;
+				}
+#endif
+				break;
+			case "EKParticipant":
+#if __MACCATALYST__
+				switch (selectorName) {
+				case "ABRecordWithAddressBook:": // Deprecated in 13.1
+					if (TestRuntime.CheckXcodeVersion (14, 0))
+						return true;
+					break;
+				}
+#endif
+				break;
 			case "SWRemoveParticipantAlertController":
 				switch (selectorName) {
 				case "initWithFrame:":
 					return true;
 				}
 				break;
-#if NET
-			// Incorrect attributes in inlined protocol selectors - https://github.com/xamarin/xamarin-macios/issues/14802
-			case "NSTextAttachment":
-				switch (selectorName) {
-				case "attachmentBoundsForAttributes:location:textContainer:proposedLineFragment:position:":
-				case "imageForBounds:attributes:location:textContainer:":
-				case "viewProviderForParentView:location:textContainer:":
-					return true;
-				}
-				break;
-			// Incorrect attributes in get/set selectors - https://github.com/xamarin/xamarin-macios/issues/14802
-			case "CBManager":
-				switch (selectorName) {
-				case "authorization":
-				case "authorizations":
-					return true;
-				}
-				break;
-			case "NEAppProxyFlow":
-				switch (selectorName) {
-				case "networkInterface":
-				case "setNetworkInterface:":
-					return true;
-				}
-				break;
-			case "WKPreferences":
-				switch (selectorName) {
-				case "setTextInteractionEnabled:":
-					return true;
-				}
-				break;
-			case "MidiCISession":
-				switch (selectorName) {
-				case "midiDestination":
-					return true;
-				}
-				break;
-#endif
 			}
 
 			// old binding mistake

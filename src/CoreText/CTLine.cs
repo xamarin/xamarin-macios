@@ -208,38 +208,35 @@ namespace CoreText {
 		}
 
 		public delegate void CaretEdgeEnumerator (double offset, nint charIndex, bool leadingEdge, ref bool stop);
-		unsafe delegate void CaretEdgeEnumeratorProxy (IntPtr block, double offset, nint charIndex, [MarshalAs (UnmanagedType.I1)] bool leadingEdge, [MarshalAs (UnmanagedType.I1)] ref bool stop);
+		unsafe delegate void CaretEdgeEnumeratorProxy (IntPtr block, double offset, nint charIndex, byte leadingEdge, byte* stop);
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern void CTLineEnumerateCaretOffsets (IntPtr line, ref BlockLiteral blockEnumerator);
+		unsafe static extern void CTLineEnumerateCaretOffsets (IntPtr line, BlockLiteral* blockEnumerator);
 
 		static unsafe readonly CaretEdgeEnumeratorProxy static_enumerate = TrampolineEnumerate;
 
 		[MonoPInvokeCallback (typeof (CaretEdgeEnumeratorProxy))]
-		static void TrampolineEnumerate (IntPtr blockPtr, double offset, nint charIndex, bool leadingEdge, ref bool stop)
+		unsafe static void TrampolineEnumerate (IntPtr blockPtr, double offset, nint charIndex, byte leadingEdge, byte* stopPointer)
 		{
 			var del = BlockLiteral.GetTarget<CaretEdgeEnumerator> (blockPtr);
-			if (del is not null)
-				del (offset, charIndex, leadingEdge, ref stop);
+			if (del is not null) {
+				bool stop = *stopPointer != 0;
+				del (offset, charIndex, leadingEdge != 0, ref stop);
+				*stopPointer = stop ? (byte) 1 : (byte) 0;
+			}
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateCaretOffsets (CaretEdgeEnumerator enumerator)
@@ -247,10 +244,11 @@ namespace CoreText {
 			if (enumerator is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (enumerator));
 
-			var block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_enumerate, enumerator);
-			CTLineEnumerateCaretOffsets (Handle, ref block_handler);
-			block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_enumerate, enumerator);
+				CTLineEnumerateCaretOffsets (Handle, &block);
+			}
 		}
 		#endregion
 	}

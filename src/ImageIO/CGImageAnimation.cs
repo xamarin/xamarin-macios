@@ -29,46 +29,43 @@ namespace ImageIO {
 		public delegate void CGImageSourceAnimationHandler (nint index, CGImage image, out bool stop);
 
 #if NET
-        [SupportedOSPlatform ("macos10.15")]
+        [SupportedOSPlatform ("macos")]
         [SupportedOSPlatform ("ios13.0")]
         [SupportedOSPlatform ("tvos13.0")]
         [SupportedOSPlatform ("maccatalyst")]
 #else
-		[Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
 		[Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
-		static extern /* OSStatus */ CGImageAnimationStatus CGAnimateImageAtURLWithBlock ( /* CFURLRef */ IntPtr url, /* CFDictionaryRef _iio_Nullable */ IntPtr options, /* CGImageSourceAnimationHandler */ ref BlockLiteral block);
+		unsafe static extern /* OSStatus */ CGImageAnimationStatus CGAnimateImageAtURLWithBlock ( /* CFURLRef */ IntPtr url, /* CFDictionaryRef _iio_Nullable */ IntPtr options, /* CGImageSourceAnimationHandler */ BlockLiteral* block);
 
 #if NET
-        [SupportedOSPlatform ("macos10.15")]
+        [SupportedOSPlatform ("macos")]
         [SupportedOSPlatform ("ios13.0")]
         [SupportedOSPlatform ("tvos13.0")]
         [SupportedOSPlatform ("maccatalyst")]
 #else
-		[Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
 		[Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
-		static extern /* OSStatus */ CGImageAnimationStatus CGAnimateImageDataWithBlock ( /* CFDataRef _Nonnull */ IntPtr data, /* CFDictionaryRef _Nullable */ IntPtr options, /* CGImageSourceAnimationHandler _Nonnull */ ref BlockLiteral block);
+		unsafe static extern /* OSStatus */ CGImageAnimationStatus CGAnimateImageDataWithBlock ( /* CFDataRef _Nonnull */ IntPtr data, /* CFDictionaryRef _Nullable */ IntPtr options, /* CGImageSourceAnimationHandler _Nonnull */ BlockLiteral* block);
 
 #if NET
-        [SupportedOSPlatform ("macos10.15")]
+        [SupportedOSPlatform ("macos")]
         [SupportedOSPlatform ("ios13.0")]
         [SupportedOSPlatform ("tvos13.0")]
         [SupportedOSPlatform ("maccatalyst")]
 #else
-		[Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
 		[Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public static CGImageAnimationStatus AnimateImage (NSUrl url, CGImageAnimationOptions options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationHandler handler)
+		public static CGImageAnimationStatus AnimateImage (NSUrl url, CGImageAnimationOptions options, CGImageSourceAnimationHandler handler)
 		{
 #if IOS && ARCH_32
             throw new PlatformNotSupportedException ("This API is not supported on this version of iOS");
@@ -78,30 +75,26 @@ namespace ImageIO {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			var block = new BlockLiteral ();
-			block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, handler);
-
-			try {
-				return CGAnimateImageAtURLWithBlock (url.Handle, options.GetHandle (), ref block);
-			} finally {
-				block.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, handler);
+				return CGAnimateImageAtURLWithBlock (url.Handle, options.GetHandle (), &block);
 			}
 #endif
 		}
 
 #if NET
-        [SupportedOSPlatform ("macos10.15")]
+        [SupportedOSPlatform ("macos")]
         [SupportedOSPlatform ("ios13.0")]
         [SupportedOSPlatform ("tvos13.0")]
         [SupportedOSPlatform ("maccatalyst")]
 #else
-		[Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
 		[Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public static CGImageAnimationStatus AnimateImage (NSData data, CGImageAnimationOptions options, [BlockProxy (typeof (NIDCGImageSourceAnimationBlock))] CGImageSourceAnimationHandler handler)
+		public static CGImageAnimationStatus AnimateImage (NSData data, CGImageAnimationOptions options, CGImageSourceAnimationHandler handler)
 		{
 #if IOS && ARCH_32
             throw new PlatformNotSupportedException ("This API is not supported on this version of iOS");
@@ -111,13 +104,10 @@ namespace ImageIO {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			var block = new BlockLiteral ();
-			block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, handler);
-
-			try {
-				return CGAnimateImageDataWithBlock (data.Handle, options.GetHandle (), ref block);
-			} finally {
-				block.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, handler);
+				return CGAnimateImageDataWithBlock (data.Handle, options.GetHandle (), &block);
 			}
 #endif
 		}
@@ -126,48 +116,23 @@ namespace ImageIO {
 		// This class bridges native block invocations that call into C#
 		//
 		static internal class SDCGImageSourceAnimationBlock {
-			static internal readonly DCGImageSourceAnimationBlock Handler = Invoke;
+			unsafe static internal readonly DCGImageSourceAnimationBlock Handler = Invoke;
 
 			[MonoPInvokeCallback (typeof (DCGImageSourceAnimationBlock))]
-			static void Invoke (IntPtr block, nint index, IntPtr image, [MarshalAs (UnmanagedType.I1)] out bool stop)
+			internal unsafe static void Invoke (IntPtr block, nint index, IntPtr image, byte* stop)
 			{
 				var del = BlockLiteral.GetTarget<CGImageSourceAnimationHandler> (block);
-				if (del is not null)
-					del (index, new CoreGraphics.CGImage (image, false), out stop);
-				else
-					stop = false;
+				if (del is not null) {
+					del (index, new CoreGraphics.CGImage (image, false), out var stopValue);
+					*stop = stopValue ? (byte) 1 : (byte) 0;
+				} else
+					*stop = 0;
 			}
 		} /* class SDCGImageSourceAnimationBlock */
 
-		internal sealed class NIDCGImageSourceAnimationBlock : TrampolineBlockBase {
-			DCGImageSourceAnimationBlock invoker;
-
-			[BindingImpl (BindingImplOptions.Optimizable)]
-			public unsafe NIDCGImageSourceAnimationBlock (BlockLiteral* block) : base (block)
-			{
-				invoker = block->GetDelegateForBlock<DCGImageSourceAnimationBlock> ();
-			}
-
-			[Preserve (Conditional = true)]
-			[BindingImpl (BindingImplOptions.Optimizable)]
-			public unsafe static CGImageSourceAnimationHandler? Create (IntPtr block)
-			{
-				if (block == IntPtr.Zero)
-					return null;
-				var del = (CGImageSourceAnimationHandler) GetExistingManagedDelegate (block);
-				return del ?? new NIDCGImageSourceAnimationBlock ((BlockLiteral*) block).Invoke;
-			}
-
-			[BindingImpl (BindingImplOptions.Optimizable)]
-			void Invoke (nint index, CGImage image, out bool stop)
-			{
-				invoker (BlockPointer, index, image.GetHandle (), out stop);
-			}
-		} /* class NIDCGImageSourceAnimationBlock */
-
 		[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
 		[UserDelegateType (typeof (CGImageSourceAnimationHandler))]
-		internal delegate void DCGImageSourceAnimationBlock (IntPtr block, nint index, IntPtr imageHandle, [MarshalAs (UnmanagedType.I1)] out bool stop);
+		unsafe internal delegate void DCGImageSourceAnimationBlock (IntPtr block, nint index, IntPtr imageHandle, byte* stop);
 	}
 
 }

@@ -689,6 +689,11 @@ namespace ObjCRuntime {
 						parameters [i] = nativeParam == IntPtr.Zero ? IntPtr.Zero : Marshal.ReadIntPtr (nativeParam);
 					}
 					log_coreclr_render ("            => {0}", parameters [i]);
+				} else if (paramType.IsPointer) {
+					log_coreclr ($"        IsPointer nativeParam: 0x{nativeParam.ToString ("x")} ParameterType: {paramType}");
+					if (nativeParam != IntPtr.Zero)
+						parameters [i] = nativeParam;
+					log_coreclr_render ("            => {0}", parameters [i]);
 				} else if (paramType.IsClass || paramType.IsInterface || (paramType.IsValueType && IsNullable (paramType))) {
 					log_coreclr ($"        IsClass/IsInterface/IsNullable IsByRef: {isByRef} IsOut: {p.IsOut} ParameterType: {paramType}");
 					if (nativeParam != IntPtr.Zero) {
@@ -936,57 +941,6 @@ namespace ObjCRuntime {
 				return Marshal.ReadByte (ptr) != 0;
 
 			return Marshal.PtrToStructure (ptr, type);
-		}
-
-		/* Managed version of a mono_reference_queue */
-		/* The semantics are:
-		 * - Adding an object to the queue will not prevent the GC from collecting it (it's a weak reference)
-		 * - A native callback will be called when the object is collected.
-		 * This can be accomplished with a ConditionalWeakTable: the object in question is the key, and then
-		 * we add a wrapper object as the value, and we call the native callback when the wrapper object is
-		 * collected.
-		 */
-		delegate void mono_reference_queue_callback (IntPtr user_data);
-
-		class ReferenceQueue {
-			public mono_reference_queue_callback Callback;
-			public ConditionalWeakTable<object, object?> Table = new ConditionalWeakTable<object, object?> ();
-
-			public ReferenceQueue (mono_reference_queue_callback callback)
-			{
-				Callback = callback;
-			}
-		}
-
-		class ReferenceQueueEntry {
-			public ReferenceQueue Queue;
-			public IntPtr UserData;
-
-			public ReferenceQueueEntry (ReferenceQueue queue)
-			{
-				Queue = queue;
-			}
-
-			~ReferenceQueueEntry ()
-			{
-				Queue.Callback (UserData);
-			}
-		}
-
-		unsafe static MonoObject* CreateGCReferenceQueue (IntPtr callback)
-		{
-			var queue = new ReferenceQueue (Marshal.GetDelegateForFunctionPointer<mono_reference_queue_callback> (callback));
-			return (MonoObject *) GetMonoObject (queue);
-		}
-
-		unsafe static void GCReferenceQueueAdd (MonoObject* mqueue, MonoObject* mobj, IntPtr user_data)
-		{
-			var queue = (ReferenceQueue) GetMonoObjectTarget (mqueue)!;
-			var obj = GetMonoObjectTarget (mobj)!;
-			var entry = new ReferenceQueueEntry (queue) {
-				UserData = user_data,
-			};
-			queue.Table.Add (obj, entry);
 		}
 
 		/* Managed version of mono_g_hash_table The mono_g_hash_table can be configured

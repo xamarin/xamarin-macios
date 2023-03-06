@@ -130,7 +130,7 @@ namespace PencilKit {
 		PKCanvasViewDrawingPolicy DrawingPolicy { get; set; }
 	}
 
-	[iOS (13, 0), Mac (10, 15)]
+	[iOS (13, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]

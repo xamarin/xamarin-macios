@@ -50,7 +50,7 @@ namespace UIKit {
 		[iOS (12,2)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		static extern void UIGuidedAccessConfigureAccessibilityFeatures (/* UIGuidedAccessAccessibilityFeature */ nuint features, [MarshalAs (UnmanagedType.I1)] bool enabled, IntPtr completion);
+		static unsafe extern void UIGuidedAccessConfigureAccessibilityFeatures (/* UIGuidedAccessAccessibilityFeature */ nuint features, [MarshalAs (UnmanagedType.I1)] bool enabled, BlockLiteral* completion);
 
 #if NET
 		// [SupportedOSPlatform ("ios12.2")] -- Not valid for Delegates
@@ -62,18 +62,18 @@ namespace UIKit {
 		public delegate void UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler (bool success, NSError error);
 
 		[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-		internal delegate void DUIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler (IntPtr block, bool success, IntPtr error);
+		internal delegate void DUIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler (IntPtr block, byte success, IntPtr error);
 
 		static internal class UIGuidedAccessConfigureAccessibilityFeaturesTrampoline {
 			static internal readonly DUIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler Handler = Invoke;
 
 			[MonoPInvokeCallback (typeof (DUIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler))]
-			static unsafe void Invoke (IntPtr block, bool success, IntPtr error)
+			static unsafe void Invoke (IntPtr block, byte success, IntPtr error)
 			{
 				var descriptor = (BlockLiteral*) block;
 				var del = (UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler) (descriptor->Target);
 				if (del != null)
-					del (success, Runtime.GetNSObject<NSError> (error));
+					del (success != 0, Runtime.GetNSObject<NSError> (error));
 			}
 		}
 
@@ -91,14 +91,9 @@ namespace UIKit {
 				throw new ArgumentNullException (nameof (completionHandler));
 
 			unsafe {
-				BlockLiteral* block_ptr_completionHandler;
-				BlockLiteral block_completionHandler;
-				block_completionHandler = new BlockLiteral ();
-				block_ptr_completionHandler = &block_completionHandler;
-				block_completionHandler.SetupBlockUnsafe (UIGuidedAccessConfigureAccessibilityFeaturesTrampoline.Handler, completionHandler);
-
-				UIGuidedAccessConfigureAccessibilityFeatures ((nuint) (ulong) features, enabled, (IntPtr) block_ptr_completionHandler);
-				block_ptr_completionHandler->CleanupBlock ();
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (UIGuidedAccessConfigureAccessibilityFeaturesTrampoline.Handler, completionHandler);
+				UIGuidedAccessConfigureAccessibilityFeatures ((nuint) (ulong) features, enabled, &block);
 			}
 		}
 

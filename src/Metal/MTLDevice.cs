@@ -27,13 +27,10 @@ namespace Metal {
 #endif
 
 #if NET
-	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[iOS (8, 0)]
-	[Mac (10, 11)]
 #endif
 	public static partial class MTLDevice {
 		[DllImport (Constants.MetalLibrary)]
@@ -96,31 +93,31 @@ namespace Metal {
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 13)]
 #endif
 		[DllImport (Constants.MetalLibrary)]
-		static extern IntPtr MTLCopyAllDevicesWithObserver (out IntPtr observer, ref BlockLiteral handler);
+		unsafe static extern IntPtr MTLCopyAllDevicesWithObserver (out IntPtr observer, BlockLiteral* handler);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 13)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IMTLDevice [] GetAllDevices (MTLDeviceNotificationHandler handler, out NSObject? observer)
 		{
-			var block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_notificationHandler, handler);
+			IntPtr rv;
+			IntPtr observer_handle;
 
-			var rv = MTLCopyAllDevicesWithObserver (out var observer_handle, ref block_handler);
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_notificationHandler, handler);
+
+				rv = MTLCopyAllDevicesWithObserver (out observer_handle, &block);
+			}
+
 			var obj = NSArray.ArrayFromHandle<IMTLDevice> (rv);
 			NSObject.DangerousRelease (rv);
-
-			block_handler.CleanupBlock ();
 
 			observer = Runtime.GetNSObject (observer_handle);
 			NSObject.DangerousRelease (observer_handle); // Apple's documentation says "The observer out parameter is returned with a +1 retain count [...]."
@@ -129,7 +126,6 @@ namespace Metal {
 		}
 
 #if !NET
-		[Mac (10, 13)]
 		[Obsolete ("Use the overload that takes an 'out NSObject' instead.")]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IMTLDevice [] GetAllDevices (ref NSObject? observer, MTLDeviceNotificationHandler handler)
@@ -156,8 +152,6 @@ namespace Metal {
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 13)]
 #endif
 		[DllImport (Constants.MetalLibrary)]
 		static extern void MTLRemoveDeviceObserver (IntPtr observer);
@@ -168,7 +162,6 @@ namespace Metal {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10, 13)]
 		[NoiOS]
 		[NoWatch]
 		[NoTV]

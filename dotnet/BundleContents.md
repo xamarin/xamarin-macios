@@ -63,6 +63,7 @@ wrong, then developers can override the target location by:
 * \*.framework.zip and \*.xcframework.zip:
   `PublishFolderType=CompressedAppleFramework`
 * \*.dylib: `PublishFolderType=DynamicLibrary`
+* \*.so: `PublishFolderType=PluginLibrary`
 * \*.a: `PublishFolderType=StaticLibrary`
 * No other files are copied. We show a warning if we find any such files.
 
@@ -173,6 +174,20 @@ The target directory is the same as for `Assembly`:
 
 *Warning*: The App Store will reject any apps with \*.dylib files (for iOS and
 tvOS, not for macOS or Mac Catalyst).
+
+### PluginLibrary
+
+These are plugins provided as un-versioned dynamic library (\*.so or \*.dylib) files.
+
+An example are GStreamer plugins: `libgstogg.dylib`
+
+We will _not_ link with these libraries when linking the native executable since
+this type of plugins are loaded on demand at runtime.
+
+The target directory is the same as for `DynamicLibrary`
+
+*Warning*: The App Store will reject any apps with dynamic library files, for iOS and
+tvOS plugins must be provided as static libraries.
 
 ### StaticLibrary
 

@@ -1374,13 +1374,10 @@ namespace AudioUnit {
 	}
 
 #if NET
-	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[iOS (10, 0)]
-	[Mac (10, 12)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AUParameterAutomationEvent {

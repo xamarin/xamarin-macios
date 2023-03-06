@@ -330,7 +330,6 @@ namespace Cecil.Tests {
 					"MediaPlayer.MPMediaEntity.GetObject (Foundation.NSObject)",
 					"MediaPlayer.MPMediaEntity.PropertyPersistentID",
 					"MediaPlayer.MPMediaItem.DateAdded",
-					"MediaPlayer.MPMediaItem.EncodeTo (Foundation.NSCoder)",
 					"MediaPlayer.MPMediaItem.get_PropertyPersistentID ()",
 					"MediaPlayer.MPMediaItem.GetObject (Foundation.NSObject)",
 					"MediaPlayer.MPMediaItem.HasProtectedAsset",

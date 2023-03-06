@@ -23,9 +23,7 @@ namespace ClockKit {
 		UtilitarianLarge,
 		CircularSmall,
 		// nothing has the value of 5
-		[Watch (3, 0)]
 		UtilitarianSmallFlat = 6,
-		[Watch (3, 0)]
 		ExtraLarge = 7,
 		[Watch (5, 0)]
 		GraphicCorner,

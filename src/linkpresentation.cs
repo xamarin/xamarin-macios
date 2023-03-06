@@ -26,7 +26,7 @@ using NativeHandle = System.IntPtr;
 namespace LinkPresentation {
 
 	[ErrorDomain ("LPErrorDomain")]
-	[Mac (10, 15), iOS (13, 0)]
+	[iOS (13, 0)]
 	[TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -37,7 +37,7 @@ namespace LinkPresentation {
 		MetadataFetchTimedOut,
 	}
 
-	[Mac (10, 15), iOS (13, 0)]
+	[iOS (13, 0)]
 	[TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -65,7 +65,7 @@ namespace LinkPresentation {
 		NSUrl RemoteVideoUrl { get; set; }
 	}
 
-	[Mac (10, 15), iOS (13, 0)]
+	[iOS (13, 0)]
 	[TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIView))]
@@ -85,7 +85,7 @@ namespace LinkPresentation {
 		LPLinkMetadata Metadata { get; set; }
 	}
 
-	[Mac (10, 15), iOS (13, 0)]
+	[iOS (13, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]

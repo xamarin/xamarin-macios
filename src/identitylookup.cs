@@ -18,7 +18,6 @@ using NativeHandle = System.IntPtr;
 
 namespace IdentityLookup {
 
-	[iOS (11, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -40,7 +39,6 @@ namespace IdentityLookup {
 		Transaction = 4,
 	}
 
-	[iOS (11, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -86,7 +84,6 @@ namespace IdentityLookup {
 		PromotionalCoupons = 20002,
 	}
 
-	[iOS (11, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -96,7 +93,6 @@ namespace IdentityLookup {
 	interface ILMessageFilterExtension {
 	}
 
-	[iOS (11, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -112,7 +108,6 @@ namespace IdentityLookup {
 
 	interface IILMessageFilterQueryHandling { }
 
-	[iOS (11, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -125,7 +120,6 @@ namespace IdentityLookup {
 		void HandleQueryRequest (ILMessageFilterQueryRequest queryRequest, ILMessageFilterExtensionContext context, Action<ILMessageFilterQueryResponse> completion);
 	}
 
-	[iOS (11, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -145,7 +139,6 @@ namespace IdentityLookup {
 		string ReceiverIsoCountryCode { get; }
 	}
 
-	[iOS (11, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -162,7 +155,6 @@ namespace IdentityLookup {
 		ILMessageFilterSubAction SubAction { get; set; }
 	}
 
-	[iOS (11, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]

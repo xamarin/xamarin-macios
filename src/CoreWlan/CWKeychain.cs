@@ -25,8 +25,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.CoreWlanLibrary)]
 		static extern OSStatus CWKeychainCopyWiFiEAPIdentity (/* CWKeychainDomain */ nint domain, NSDataRef ssid, out SecIdentityRef identity);
@@ -34,8 +32,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TryFindWiFiEAPIdentity (CWKeychainDomain domain, NSData ssid, out SecIdentity? identity, out OSStatus status)
 		{
@@ -52,8 +48,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TryFindWiFiEAPIdentity (CWKeychainDomain domain, NSData ssid, out SecIdentity? identity)
 			=> TryFindWiFiEAPIdentity (domain, ssid, out identity, out var _);
@@ -61,8 +55,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.CoreWlanLibrary)]
 		static extern OSStatus CWKeychainDeleteWiFiEAPUsernameAndPassword (/* CWKeychainDomain */ nint domain, NSDataRef ssid);
@@ -70,8 +62,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TryDeleteWiFiEAPUsernameAndPassword (CWKeychainDomain domain, NSData ssid, out OSStatus status)
 		{
@@ -82,8 +72,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TryDeleteWiFiEAPUsernameAndPassword (CWKeychainDomain domain, NSData ssid)
 			=> TryDeleteWiFiEAPUsernameAndPassword (domain, ssid, out var _);
@@ -91,8 +79,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.CoreWlanLibrary)]
 		static extern OSStatus CWKeychainDeleteWiFiPassword (/* CWKeychainDomain */ nint domain, NSDataRef ssid);
@@ -100,8 +86,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TryDeleteWiFiPassword (CWKeychainDomain domain, NSData ssid, out OSStatus status)
 		{
@@ -112,8 +96,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TryDeleteWiFiPassword (CWKeychainDomain domain, NSData ssid)
 			=> TryDeleteWiFiPassword (domain, ssid, out var _);
@@ -121,8 +103,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.CoreWlanLibrary)]
 		static extern OSStatus CWKeychainFindWiFiEAPUsernameAndPassword (/* CWKeychainDomain */ nint domain, NSDataRef ssid, out NSStringRef username, out NSStringRef password);
@@ -130,8 +110,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TryFindWiFiEAPUsernameAndPassword (CWKeychainDomain domain, NSData ssid, out NSString? username, out NSString? password, out OSStatus status)
 		{
@@ -152,8 +130,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TryFindWiFiEAPUsernameAndPassword (CWKeychainDomain domain, NSData ssid, out NSString? username, out NSString? password)
 			=> TryFindWiFiEAPUsernameAndPassword (domain, ssid, out username, out password, out var _);
@@ -161,8 +137,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TryFindWiFiEAPUsernameAndPassword (CWKeychainDomain domain, NSData ssid, out string? username, out string? password, out OSStatus status)
 		{
@@ -175,8 +149,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TryFindWiFiEAPUsernameAndPassword (CWKeychainDomain domain, NSData ssid, out string? username, out string? password)
 			=> TryFindWiFiEAPUsernameAndPassword (domain, ssid, out username, out password, out var _);
@@ -184,8 +156,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.CoreWlanLibrary)]
 		static extern OSStatus CWKeychainFindWiFiPassword (/* CWKeychainDomain */ nint domain, NSDataRef ssid, out NSStringRef password);
@@ -193,8 +163,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TryFindWiFiPassword (CWKeychainDomain domain, NSData ssid, out NSString? password, out OSStatus status)
 		{
@@ -210,8 +178,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TryFindWiFiPassword (CWKeychainDomain domain, NSData ssid, out NSString? password)
 			=> TryFindWiFiPassword (domain, ssid, out password, out var _);
@@ -219,8 +185,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TryFindWiFiPassword (CWKeychainDomain domain, NSData ssid, out string? password, out OSStatus status)
 		{
@@ -232,8 +196,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TryFindWiFiPassword (CWKeychainDomain domain, NSData ssid, out string? password)
 			=> TryFindWiFiPassword (domain, ssid, out password, out var _);
@@ -241,8 +203,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.CoreWlanLibrary)]
 		static extern OSStatus CWKeychainSetWiFiEAPIdentity (/* CWKeychainDomain */ nint domain, NSDataRef ssid, SecIdentityRef identity);
@@ -250,8 +210,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TrySetWiFiEAPIdentity (CWKeychainDomain domain, NSData ssid, SecIdentity? identity, out OSStatus status)
 		{
@@ -262,8 +220,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TrySetWiFiEAPIdentity (CWKeychainDomain domain, NSData ssid, SecIdentity? identity)
 			=> TrySetWiFiEAPIdentity (domain, ssid, identity, out var _);
@@ -271,8 +227,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.CoreWlanLibrary)]
 		static extern OSStatus CWKeychainSetWiFiEAPUsernameAndPassword (/* CWKeychainDomain */ nint domain, NSDataRef ssid, NSStringRef username, NSStringRef password);
@@ -280,8 +234,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TrySetWiFiEAPUsernameAndPassword (CWKeychainDomain domain, NSData ssid, NSString? username, NSString? password, out OSStatus status)
 		{
@@ -292,8 +244,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TrySetWiFiEAPUsernameAndPassword (CWKeychainDomain domain, NSData ssid, NSString? username, NSString? password)
 			=> TrySetWiFiEAPUsernameAndPassword (domain, ssid, username, password, out var _);
@@ -301,8 +251,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TrySetWiFiEAPUsernameAndPassword (CWKeychainDomain domain, NSData ssid, string? username, string? password, out OSStatus status)
 		{
@@ -317,8 +265,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TrySetWiFiEAPUsernameAndPassword (CWKeychainDomain domain, NSData ssid, string? username, string? password)
 			=> TrySetWiFiEAPUsernameAndPassword (domain, ssid, username, password, out var _);
@@ -326,8 +272,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.CoreWlanLibrary)]
 		static extern OSStatus CWKeychainSetWiFiPassword (/* CWKeychainDomain */ nint domain, NSDataRef ssid, NSStringRef password);
@@ -335,8 +279,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TrySetWiFiPassword (CWKeychainDomain domain, NSData ssid, NSString password, out OSStatus status)
 		{
@@ -347,8 +289,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TrySetWiFiPassword (CWKeychainDomain domain, NSData ssid, NSString password)
 			=> TrySetWiFiPassword (domain, ssid, password, out var _);
@@ -356,8 +296,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TrySetWiFiPassword (CWKeychainDomain domain, NSData ssid, string password, out OSStatus status)
 		{
@@ -370,8 +308,6 @@ namespace CoreWlan {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool TrySetWiFiPassword (CWKeychainDomain domain, NSData ssid, string password)
 			=> TrySetWiFiPassword (domain, ssid, password, out var _);

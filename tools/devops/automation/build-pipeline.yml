@@ -124,6 +124,20 @@ parameters:
         "Agent.HasDevices -equals False",
         "Agent.IsPaired -equals False"
       ]
+    },
+    {
+      stageName: 'mac_13_0_m1',
+      displayName: 'M1 - Mac Ventura (13.0)',
+      macPool: 'VSEng-VSMac-Xamarin-Shared',
+      useImage: false,
+      statusContext: 'M1 - Mac Ventura (13.0)',
+      demands: [
+        "Agent.OS -equals Darwin",
+        "macOS.Name -equals Ventura",
+        "macOS.Architecture -equals arm64",
+        "Agent.HasDevices -equals False",
+        "Agent.IsPaired -equals False"
+      ]
     }]
 
 resources:
@@ -162,6 +176,8 @@ variables:
 - template: templates/variables.yml
 - name: MicrobuildConnector
   value: 'MicroBuild Signing Task (DevDiv)'
+- name: MaciosUploadPrefix
+  value: ''
 
 trigger:
   branches:

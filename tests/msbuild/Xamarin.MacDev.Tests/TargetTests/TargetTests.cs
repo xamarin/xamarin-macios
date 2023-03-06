@@ -33,11 +33,6 @@ namespace Xamarin.MacDev.Tasks {
 					"FolderView.nib",
 					"iPhoneView.nib",
 					"image.png",
-					"AppIcons29x29.png",
-					"AppIcons29x29@2x.png",
-					"AppIcons40x40@2x.png",
-					"AppIcons57x57.png",
-					"AppIcons57x57@2x.png",
 					"AppIcons60x60@2x.png",
 					"LaunchImage-568h@2x.png",
 					"LaunchImage.png",
@@ -136,7 +131,7 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			}
 
-			Assert.IsTrue (File.Exists (path), $"Existence of {path}");
+			Assert.That (path, Does.Exist, $"Existence of {path}");
 		}
 
 		[Test]
@@ -224,7 +219,7 @@ namespace Xamarin.MacDev.Tasks {
 			RunTarget (MonoTouchProject, TargetName.CopyResourcesToBundle);
 
 			foreach (var v in ExpectedExecutableBundleResources)
-				Assert.IsTrue (File.Exists (v) || Directory.Exists (v), string.Format ("{0} was not copied to the bundle", Path.GetFullPath (v)));
+				Assert.That (v, Does.Exist, string.Format ("{0} was not copied to the bundle", Path.GetFullPath (v)));
 		}
 
 		[Test]
@@ -503,7 +498,7 @@ namespace Xamarin.MacDev.Tasks {
 			// We unpack 4 embedded resources from the library project into BundleResources
 			RunTarget (MonoTouchProject, TargetName.Build);
 			var bundleResources = MonoTouchProjectInstance.GetItems ("_BundleResourceWithLogicalName").ToArray ();
-			Assert.IsTrue (bundleResources.Length >= 33, "#1");
+			Assert.That (bundleResources.Length, Is.GreaterThanOrEqualTo (30), "#1\n\t" + string.Join ("\n\t", bundleResources.Select (v => v.EvaluatedInclude)));
 		}
 
 		[Test]
@@ -535,32 +530,24 @@ namespace Xamarin.MacDev.Tasks {
 			RunTarget (MonoTouchProject, TargetName.CollectBundleResources);
 
 			var bundleItems = MonoTouchProjectInstance.GetItems ("_BundleResourceWithLogicalName").ToArray ();
-			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine ("Folder", "BundleResource.txt") && i.GetMetadataValue ("LogicalName") == "Folder/BundleResource.txt"), "#1");
-			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine ("Folder", "Content.txt") && i.GetMetadataValue ("LogicalName") == "Folder/Content.txt"), "#2");
-			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == "LinkedBundleResource.txt" && i.GetMetadataValue ("LogicalName") == "Folder/LinkedBundleResource.txt"), "#3");
-			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == "LinkedContent.txt" && i.GetMetadataValue ("LogicalName") == "Folder/LinkedContent.txt"), "#4");
-			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (actool, "AppIcons29x29.png") && i.GetMetadataValue ("LogicalName") == "AppIcons29x29.png"), "#5");
-			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (actool, "AppIcons29x29@2x.png") && i.GetMetadataValue ("LogicalName") == "AppIcons29x29@2x.png"), "#6");
-			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (actool, "AppIcons40x40@2x.png") && i.GetMetadataValue ("LogicalName") == "AppIcons40x40@2x.png"), "#7");
-			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (actool, "AppIcons57x57.png") && i.GetMetadataValue ("LogicalName") == "AppIcons57x57.png"), "#8");
-			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (actool, "AppIcons57x57@2x.png") && i.GetMetadataValue ("LogicalName") == "AppIcons57x57@2x.png"), "#9");
-			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (actool, "AppIcons60x60@2x.png") && i.GetMetadataValue ("LogicalName") == "AppIcons60x60@2x.png"), "#10");
-			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (actool, "LaunchImage-568h@2x.png") && i.GetMetadataValue ("LogicalName") == "LaunchImage-568h@2x.png"), "#11");
-			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (actool, "LaunchImage.png") && i.GetMetadataValue ("LogicalName") == "LaunchImage.png"), "#12");
-			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (actool, "LaunchImage@2x.png") && i.GetMetadataValue ("LogicalName") == "LaunchImage@2x.png"), "#13");
-			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "MainStoryboard.storyboardc", "1-view-2.nib") && i.GetMetadataValue ("LogicalName") == "MainStoryboard.storyboardc/1-view-2.nib"), "#14");
-			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "MainStoryboard.storyboardc", "Info.plist") && i.GetMetadataValue ("LogicalName") == "MainStoryboard.storyboardc/Info.plist"), "#15");
-			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "MainStoryboard.storyboardc", "UIViewController-1.nib") && i.GetMetadataValue ("LogicalName") == "MainStoryboard.storyboardc/UIViewController-1.nib"), "#16");
-			if (bundleItems.Length > ExpectedExecutableBundleResources.Length) {
-				Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "en.lproj", "TranslatedView.nib", "runtime.nib") && i.GetMetadataValue ("LogicalName") == "en.lproj/TranslatedView.nib/runtime.nib"), "#17");
-				Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "FolderView.nib", "runtime.nib") && i.GetMetadataValue ("LogicalName") == "FolderView.nib/runtime.nib"), "#18");
-				Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "iPhoneView.nib", "runtime.nib") && i.GetMetadataValue ("LogicalName") == "iPhoneView.nib/runtime.nib"), "#19");
-			} else {
-				Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "en.lproj", "TranslatedView.nib") && i.GetMetadataValue ("LogicalName") == "en.lproj/TranslatedView.nib"), "#17");
-				Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "FolderView.nib") && i.GetMetadataValue ("LogicalName") == "FolderView.nib"), "#18");
-				Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "iPhoneView.nib") && i.GetMetadataValue ("LogicalName") == "iPhoneView.nib"), "#19");
-			}
-			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine ("Resources", "image.png") && i.GetMetadataValue ("LogicalName") == "image.png"), "#20");
+
+			var allBundleItems = "\n\t" + string.Join ("\n\t", bundleItems.Select (v => v.EvaluatedInclude));
+
+			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine ("Folder", "BundleResource.txt") && i.GetMetadataValue ("LogicalName") == "Folder/BundleResource.txt"), "#1" + allBundleItems);
+			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine ("Folder", "Content.txt") && i.GetMetadataValue ("LogicalName") == "Folder/Content.txt"), "#2" + allBundleItems);
+			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == "LinkedBundleResource.txt" && i.GetMetadataValue ("LogicalName") == "Folder/LinkedBundleResource.txt"), "#3" + allBundleItems);
+			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == "LinkedContent.txt" && i.GetMetadataValue ("LogicalName") == "Folder/LinkedContent.txt"), "#4" + allBundleItems);
+			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (actool, "AppIcons60x60@2x.png") && i.GetMetadataValue ("LogicalName") == "AppIcons60x60@2x.png"), "#10" + allBundleItems);
+			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (actool, "LaunchImage-568h@2x.png") && i.GetMetadataValue ("LogicalName") == "LaunchImage-568h@2x.png"), "#11" + allBundleItems);
+			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (actool, "LaunchImage.png") && i.GetMetadataValue ("LogicalName") == "LaunchImage.png"), "#12" + allBundleItems);
+			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (actool, "LaunchImage@2x.png") && i.GetMetadataValue ("LogicalName") == "LaunchImage@2x.png"), "#13" + allBundleItems);
+			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "MainStoryboard.storyboardc", "1-view-2.nib") && i.GetMetadataValue ("LogicalName") == "MainStoryboard.storyboardc/1-view-2.nib"), "#14" + allBundleItems);
+			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "MainStoryboard.storyboardc", "Info.plist") && i.GetMetadataValue ("LogicalName") == "MainStoryboard.storyboardc/Info.plist"), "#15" + allBundleItems);
+			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "MainStoryboard.storyboardc", "UIViewController-1.nib") && i.GetMetadataValue ("LogicalName") == "MainStoryboard.storyboardc/UIViewController-1.nib"), "#16" + allBundleItems);
+			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "en.lproj", "TranslatedView.nib") && i.GetMetadataValue ("LogicalName") == "en.lproj/TranslatedView.nib"), "#17" + allBundleItems);
+			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "FolderView.nib") && i.GetMetadataValue ("LogicalName") == "FolderView.nib"), "#18" + allBundleItems);
+			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "iPhoneView.nib") && i.GetMetadataValue ("LogicalName") == "iPhoneView.nib"), "#19" + allBundleItems);
+			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine ("Resources", "image.png") && i.GetMetadataValue ("LogicalName") == "image.png"), "#20" + allBundleItems);
 		}
 
 		[Test (Description = "Xambug #39137")]

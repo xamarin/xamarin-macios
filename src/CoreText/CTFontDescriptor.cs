@@ -737,8 +737,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
 #if NET
 		[DllImport (Constants.CoreTextLibrary)]
@@ -757,8 +755,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static bool MatchFontDescriptors (CTFontDescriptor [] descriptors, NSSet mandatoryAttributes, Func<CTFontDescriptorMatchingState, IntPtr, bool> progressHandler)
 		{

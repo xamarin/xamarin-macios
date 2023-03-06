@@ -23,8 +23,6 @@ namespace NetworkExtension {
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
-#else
-		[Mac (10,11)]
 #endif
 		public void SetAuthorization (Authorization authorization)
 		{

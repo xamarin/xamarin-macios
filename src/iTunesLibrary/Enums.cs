@@ -26,7 +26,6 @@ using ObjCRuntime;
 
 namespace iTunesLibrary {
 
-	[Mac (10, 14)]
 	[Native]
 	public enum ITLibArtworkFormat : ulong {
 		None = 0,
@@ -40,7 +39,6 @@ namespace iTunesLibrary {
 		Pict = 8,
 	}
 
-	[Mac (10, 14)]
 	[Native]
 	public enum ITLibMediaItemMediaKind : ulong {
 		Unknown = 1,
@@ -63,7 +61,6 @@ namespace iTunesLibrary {
 		AlertTone = 21,
 	}
 
-	[Mac (10, 14)]
 	[Native]
 	public enum ITLibMediaItemLyricsContentRating : ulong {
 		None = 0,
@@ -71,7 +68,6 @@ namespace iTunesLibrary {
 		Clean = 2,
 	}
 
-	[Mac (10, 14)]
 	[Native]
 	public enum ITLibMediaItemLocationType : ulong {
 		Unknown = 0,
@@ -80,7 +76,6 @@ namespace iTunesLibrary {
 		Remote = 3,
 	}
 
-	[Mac (10, 14)]
 	[Native]
 	public enum ITLibMediaItemPlayStatus : ulong {
 		None = 0,
@@ -88,7 +83,6 @@ namespace iTunesLibrary {
 		Unplayed = 2,
 	}
 
-	[Mac (10, 14)]
 	[Native]
 	public enum ITLibDistinguishedPlaylistKind : ulong {
 		None = 0,
@@ -116,7 +110,6 @@ namespace iTunesLibrary {
 		MusicShowsAndMovies = 53,
 	}
 
-	[Mac (10, 14)]
 	[Native]
 	public enum ITLibPlaylistKind : ulong {
 		Regular,
@@ -126,20 +119,17 @@ namespace iTunesLibrary {
 		GeniusMix,
 	}
 
-	[Mac (10, 14)]
 	[Native]
 	public enum ITLibExportFeature : ulong {
 		ITLibExportFeatureNone = 0,
 	}
 
-	[Mac (10, 14)]
 	[Native]
 	public enum ITLibInitOptions : ulong {
 		None = 0,
 		LazyLoadData = 1,
 	}
 
-	[Mac (10, 14)]
 	public enum MediaItemProperty {
 		[Field ("ITLibMediaItemPropertyAlbumTitle")]
 		AlbumTitle,
@@ -283,7 +273,6 @@ namespace iTunesLibrary {
 		Artwork,
 	}
 
-	[Mac (10, 14)]
 	public enum ITLibPlaylistProperty {
 		[Field ("ITLibPlaylistPropertyName")]
 		Name,
@@ -307,7 +296,6 @@ namespace iTunesLibrary {
 		Kind,
 	}
 
-	[Mac (10, 14)]
 	public enum ITLibMediaEntityProperty {
 		[Field ("ITLibMediaEntityPropertyPersistentID")]
 		PersistentId,

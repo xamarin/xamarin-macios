@@ -15,9 +15,6 @@ using ObjCRuntime;
 
 namespace CoreBluetooth {
 
-	[Mac (10, 13)]
-	[Watch (4, 0)]
-	[iOS (10, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CBManagerState : long {
@@ -60,22 +57,18 @@ namespace CoreBluetooth {
 	}
 
 	// NSInteger -> CBPeripheralManager.h
-	[Watch (4, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CBPeripheralState : long {
 		Disconnected,
 		Connecting,
 		Connected,
-		[iOS (9, 0)]
-		[Mac (10, 13)]
 		[MacCatalyst (13, 1)]
 		Disconnecting,
 	}
 
 #if !NET
 	// NSInteger -> CBPeripheralManager.h
-	[Watch (4, 0)]
 	[Native]
 	public enum CBPeripheralManagerAuthorizationStatus : long {
 		NotDetermined,
@@ -86,7 +79,6 @@ namespace CoreBluetooth {
 #endif // !NET
 
 	// NSUInteger -> CBCharacteristic.h
-	[Watch (4, 0)]
 	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]
@@ -99,15 +91,12 @@ namespace CoreBluetooth {
 		Indicate = 32,
 		AuthenticatedSignedWrites = 64,
 		ExtendedProperties = 128,
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		NotifyEncryptionRequired = 0x100,
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		IndicateEncryptionRequired = 0x200
 	}
 
-	[Watch (4, 0)]
 	[MacCatalyst (13, 1)]
 	[ErrorDomain ("CBErrorDomain")]
 	[Native] // NSInteger -> CBError.h
@@ -134,7 +123,6 @@ namespace CoreBluetooth {
 		LEGattNearBackgroundNotificationLimit = 18,
 	}
 
-	[Watch (4, 0)]
 	[MacCatalyst (13, 1)]
 	[ErrorDomain ("CBATTErrorDomain")]
 	[Native] // NSInteger -> CBError.h
@@ -160,7 +148,6 @@ namespace CoreBluetooth {
 	}
 
 	// NSInteger -> CBPeripheral.h
-	[Watch (4, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CBCharacteristicWriteType : long {
@@ -169,8 +156,6 @@ namespace CoreBluetooth {
 	}
 
 	// NSUInteger -> CBCharacteristic.h
-	[Mac (10, 9)]
-	[Watch (4, 0)]
 	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]
@@ -182,7 +167,6 @@ namespace CoreBluetooth {
 	}
 
 	// NSInteger -> CBPeripheralManager.h
-	[Watch (4, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CBPeripheralManagerConnectionLatency : long {
@@ -191,7 +175,7 @@ namespace CoreBluetooth {
 		High
 	}
 
-	[iOS (13, 0), TV (13, 0), Watch (6, 0), Mac (10, 15)]
+	[iOS (13, 0), TV (13, 0), Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CBConnectionEvent : long {
@@ -206,7 +190,7 @@ namespace CoreBluetooth {
 		ExtendedScanAndConnect = 1uL << 0,
 	}
 
-	[iOS (13, 0), TV (13, 0), Watch (6, 0), Mac (10, 15)]
+	[iOS (13, 0), TV (13, 0), Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CBManagerAuthorization : long {

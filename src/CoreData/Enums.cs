@@ -53,10 +53,8 @@ namespace CoreData {
 		Boolean = 800,
 		Date = 900,
 		Binary = 1000,
-		[iOS (11, 0), TV (11, 0), Mac (10, 13), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		Uuid = 1100,
-		[iOS (11, 0), TV (11, 0), Mac (10, 13), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		Uri = 1200,
 		Transformable = 1800,
@@ -90,7 +88,6 @@ namespace CoreData {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		BatchInsert = 5,
 		BatchUpdate = 6,
@@ -125,7 +122,6 @@ namespace CoreData {
 		UpdatedObjectsCount = 2
 	}
 
-	[iOS (9, 0), Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSBatchDeleteRequestResultType : ulong {
@@ -150,7 +146,6 @@ namespace CoreData {
 		StringTooLong = 1660,
 		StringTooShort = 1670,
 		StringPatternMatching = 1680,
-		[iOS (11, 0), TV (11, 0), Mac (10, 13), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		InvalidUri = 1690,
 	}
@@ -189,12 +184,10 @@ namespace CoreData {
 		EntityMigrationPolicy = 134170,
 		InferredMappingModel = 134190,
 		ExternalRecordImport = 134200,
-		[iOS (11, 0), TV (11, 0), Mac (10, 13), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		HistoryTokenExpired = 134301,
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSFetchIndexElementType : ulong {
@@ -202,7 +195,6 @@ namespace CoreData {
 		RTree
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSPersistentHistoryChangeType : long {
@@ -211,7 +203,6 @@ namespace CoreData {
 		Delete
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSPersistentHistoryResultType : long {
@@ -223,7 +214,7 @@ namespace CoreData {
 		TransactionsAndChanges = 5
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSBatchInsertRequestResultType : ulong {
@@ -232,7 +223,7 @@ namespace CoreData {
 		Count = 2,
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]

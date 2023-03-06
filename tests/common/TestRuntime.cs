@@ -186,6 +186,29 @@ partial class TestRuntime {
 #endif
 	}
 
+	public static void AssertDesktop (string message = "This test only runs on Desktops (macOS or MacCatalyst).")
+	{
+#if __MACOS__ || __MACCATALYST__
+		return;
+#endif
+		NUnit.Framework.Assert.Ignore (message);
+	}
+
+	public static void AssertNotDesktop (string message = "This test does not run on Desktops (macOS or MacCatalyst).")
+	{
+#if __MACOS__ || __MACCATALYST__
+		NUnit.Framework.Assert.Ignore (message);
+#endif
+	}
+
+	public static void AssertNotX64Desktop (string message = "This test does not run on x64 desktops.")
+	{
+#if __MACOS__ || __MACCATALYST__
+		if (!IsARM64)
+			NUnit.Framework.Assert.Ignore (message);
+#endif
+	}
+
 	public static void AssertNotARM64Desktop (string message = "This test does not run on an ARM64 desktop.")
 	{
 #if __MACOS__ || __MACCATALYST__
@@ -1392,9 +1415,13 @@ partial class TestRuntime {
 		}
 	}
 
-	public static void IgnoreInCIIfBadNetwork (Exception ex)
+	public static void IgnoreInCIIfBadNetwork (Exception? ex)
 	{
+		if (ex is null)
+			return;
+
 		IgnoreInCIfHttpStatusCodes (ex, HttpStatusCode.BadGateway, HttpStatusCode.GatewayTimeout, HttpStatusCode.ServiceUnavailable);
+		IgnoreInCIIfNetworkConnectionLost (ex);
 	}
 
 	public static void IgnoreInCIIfForbidden (Exception ex)
@@ -1424,6 +1451,18 @@ partial class TestRuntime {
 			return;
 
 		IgnoreInCI ($"Ignored due to http status code '{status}': {ex.Message}");
+	}
+
+	public static void IgnoreInCIIfNetworkConnectionLost (Exception ex)
+	{
+		// <Foundation.NSErrorException: Error Domain=NSURLErrorDomain Code=-1005 "The network connection was lost." UserInfo ...
+		if (!(ex is NSErrorException nex))
+			return;
+
+		if (nex.Code != (nint) (long) CFNetworkErrors.NetworkConnectionLost)
+			return;
+
+		IgnoreInCI ($"Ignored due to CFNetwork error {(CFNetworkErrors) (long) nex.Code}");
 	}
 
 	static bool TryGetHttpStatusCode (Exception ex, out HttpStatusCode status)

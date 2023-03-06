@@ -26,19 +26,15 @@ namespace CoreMedia {
 		DisplayImmediately,
 		[Field ("kCMSampleAttachmentKey_DoNotDisplay")]
 		DoNotDisplay,
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleAttachmentKey_HEVCTemporalLevelInfo")]
 		HevcTemporalLevelInfo,
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleAttachmentKey_HEVCTemporalSubLayerAccess")]
 		HevcTemporalSubLayerAccess,
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleAttachmentKey_HEVCStepwiseTemporalSubLayerAccess")]
 		HevcStepwiseTemporalSubLayerAccess,
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleAttachmentKey_HEVCSyncSampleNALUnitType")]
 		HevcSyncSampleNalUnitType,
@@ -76,24 +72,18 @@ namespace CoreMedia {
 		SampleReferenceByteOffset,
 		[Field ("kCMSampleBufferAttachmentKey_GradualDecoderRefresh")]
 		GradualDecoderRefresh,
-		[Mac (10, 14)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferAttachmentKey_DroppedFrameReason")]
 		DroppedFrameReason,
-		[iOS (9, 0)]
-		[Mac (10, 14)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferAttachmentKey_StillImageLensStabilizationInfo")]
 		StillImageLensStabilizationInfo,
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix")]
 		CameraIntrinsicMatrix,
-		[Mac (10, 14)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferAttachmentKey_DroppedFrameReasonInfo")]
 		DroppedFrameReasonInfo,
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferAttachmentKey_ForceKeyFrame")]
 		ForceKeyFrame,

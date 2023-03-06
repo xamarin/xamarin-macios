@@ -164,12 +164,11 @@ namespace CoreText {
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (13, 0)]
-		[Mac (10, 15)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
 #endif
@@ -178,12 +177,11 @@ namespace CoreText {
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (13, 0)]
-		[Mac (10, 15)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
 #endif

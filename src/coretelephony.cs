@@ -17,7 +17,6 @@ namespace CoreTelephony {
 	}
 
 	[NoMacCatalyst]
-	[iOS (9, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CTCellularData {
 		[NullAllowed, Export ("cellularDataRestrictionDidUpdateNotifier", ArgumentSemantic.Copy)]

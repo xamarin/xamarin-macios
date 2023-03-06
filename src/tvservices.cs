@@ -78,12 +78,10 @@ namespace TVServices {
 		[DesignatedInitializer]
 		NativeHandle Constructor (TVContentIdentifier ident);
 
-		[TV (11, 0)]
 		[Export ("imageURLForTraits:")]
 		[return: NullAllowed]
 		NSUrl GetImageUrl (TVContentItemImageTrait traits);
 
-		[TV (11, 0)]
 		[Export ("setImageURL:forTraits:")]
 		void SetImageUrl ([NullAllowed] NSUrl aUrl, TVContentItemImageTrait traits);
 	}

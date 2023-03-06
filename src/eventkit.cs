@@ -40,7 +40,7 @@ using NativeHandle = System.IntPtr;
 
 namespace EventKit {
 
-	[Mac (10, 8), iOS (13, 0), MacCatalyst (13, 1), Watch (6, 0), NoTV]
+	[iOS (13, 0), MacCatalyst (13, 1), Watch (6, 0), NoTV]
 	[BaseType (typeof (NSObject))]
 	[Abstract]
 	interface EKObject {
@@ -189,7 +189,6 @@ namespace EventKit {
 		[Export ("locationWithTitle:"), Static]
 		EKStructuredLocation FromTitle (string title);
 
-		[iOS (9, 0), Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("locationWithMapItem:")]
@@ -273,7 +272,6 @@ namespace EventKit {
 		[Export ("color", ArgumentSemantic.Copy)]
 		NSColor Color { get; set; }
 
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Export ("CGColor")]
 		CGColor CGColor { get; set; }
@@ -346,12 +344,10 @@ namespace EventKit {
 		[Export ("status")]
 		EKEventStatus Status { get; }
 
-		[iOS (9, 0), Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("structuredLocation", ArgumentSemantic.Copy)]
 		EKStructuredLocation StructuredLocation { get; set; }
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("occurrenceDate")]
 		NSDate OccurrenceDate { get; }
@@ -372,8 +368,6 @@ namespace EventKit {
 		[Export ("birthdayPersonID")]
 		nint BirthdayPersonID { get; }
 
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("birthdayContactIdentifier")]
 		string BirthdayContactIdentifier { get; }
@@ -409,13 +403,10 @@ namespace EventKit {
 		[Export ("ABRecordWithAddressBook:")]
 		ABRecord GetRecord (ABAddressBook addressBook);
 
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		[Export ("isCurrentUser")]
 		bool IsCurrentUser { get; }
 
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		[Export ("contactPredicate")]
 		NSPredicate ContactPredicate { get; }
@@ -539,7 +530,7 @@ namespace EventKit {
 
 	[BaseType (typeof (NSObject))]
 	interface EKEventStore {
-		[Mac (10, 11), iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), NoTV]
+		[iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), NoTV]
 		[Export ("initWithSources:")]
 		NativeHandle Constructor (EKSource [] sources);
 
@@ -556,12 +547,12 @@ namespace EventKit {
 		[Export ("defaultCalendarForNewEvents"), NullAllowed]
 		EKCalendar DefaultCalendarForNewEvents { get; }
 
-		[NoWatch, Mac (10, 15)]
+		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("saveEvent:span:error:")]
 		bool SaveEvent (EKEvent theEvent, EKSpan span, out NSError error);
 
-		[NoWatch, Mac (10, 15)]
+		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("removeEvent:span:error:")]
 		bool RemoveEvents (EKEvent theEvent, EKSpan span, out NSError error);
@@ -675,18 +666,16 @@ namespace EventKit {
 		[Export ("initWithAccessToEntityTypes:")]
 		NativeHandle Constructor (EKEntityMask accessToEntityTypes);
 
-		[Mac (10, 11), Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("delegateSources")]
 		EKSource [] DelegateSources { get; }
 
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		[Export ("requestAccessToEntityType:completion:")]
 		[Async]
 		void RequestAccess (EKEntityType entityType, Action<bool, NSError> completionHandler);
 
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("authorizationStatusForEntityType:")]
@@ -714,7 +703,6 @@ namespace EventKit {
 		NSDate CompletionDate { get; set; }
 
 		[Export ("priority")]
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		nint Priority { get; set; }
 		// note: changed to NUInteger in Xcode 7 SDK

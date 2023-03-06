@@ -32,7 +32,6 @@ using NativeHandle = System.IntPtr;
 
 namespace iTunesLibrary {
 
-	[Mac (10, 14)]
 	[BaseType (typeof (NSObject))]
 	interface ITLibAlbum {
 		[NullAllowed, Export ("title")]
@@ -75,7 +74,6 @@ namespace iTunesLibrary {
 		NSNumber PersistentId { get; }
 	}
 
-	[Mac (10, 14)]
 	[BaseType (typeof (NSObject))]
 	interface ITLibArtist {
 		[NullAllowed, Export ("name")]
@@ -88,7 +86,6 @@ namespace iTunesLibrary {
 		NSNumber PersistentId { get; }
 	}
 
-	[Mac (10, 14)]
 	[BaseType (typeof (NSObject))]
 	interface ITLibArtwork {
 		[NullAllowed, Export ("image", ArgumentSemantic.Retain)]
@@ -103,7 +100,6 @@ namespace iTunesLibrary {
 
 	delegate void ITLibMediaEntityEnumerateValuesHandler (NSString property, NSObject value, out bool stop);
 
-	[Mac (10, 14)]
 	[BaseType (typeof (NSObject))]
 	interface ITLibMediaEntity {
 		[Export ("persistentID", ArgumentSemantic.Retain)]
@@ -120,7 +116,6 @@ namespace iTunesLibrary {
 		void EnumerateValuesExcept ([NullAllowed] NSSet<NSString> properties, ITLibMediaEntityEnumerateValuesHandler handler);
 	}
 
-	[Mac (10, 14)]
 	[BaseType (typeof (ITLibMediaEntity))]
 	interface ITLibMediaItem {
 		[Export ("title")]
@@ -271,7 +266,6 @@ namespace iTunesLibrary {
 		ITLibMediaItemLocationType LocationType { get; }
 	}
 
-	[Mac (10, 14)]
 	[BaseType (typeof (NSObject))]
 	interface ITLibMediaItemVideoInfo {
 		[NullAllowed, Export ("series")]
@@ -299,7 +293,6 @@ namespace iTunesLibrary {
 		nuint VideoHeight { get; }
 	}
 
-	[Mac (10, 14)]
 	[BaseType (typeof (ITLibMediaEntity))]
 	interface ITLibPlaylist {
 		[Export ("name")]
@@ -332,7 +325,6 @@ namespace iTunesLibrary {
 		ITLibPlaylistKind Kind { get; }
 	}
 
-	[Mac (10, 14)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ITLibrary {

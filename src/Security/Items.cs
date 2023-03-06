@@ -838,12 +838,10 @@ namespace Security {
 
 #if !MONOMAC
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-#else
-		[iOS (9, 0)]
 #endif
 		public string? SyncViewHint {
 			get {
@@ -855,12 +853,10 @@ namespace Security {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
 #endif
 		public SecTokenID TokenID {
 			get {
@@ -998,13 +994,12 @@ namespace Security {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[ObsoletedOSPlatform ("ios9.0", "Use 'AuthenticationUI' property instead.")]
 #else
-		[iOS (8, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'AuthenticationUI' property instead.")]
 #endif
 		public bool UseNoAuthenticationUI {
@@ -1017,13 +1012,10 @@ namespace Security {
 		}
 #endif
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		public SecAuthenticationUI AuthenticationUI {
 			get {
@@ -1037,13 +1029,10 @@ namespace Security {
 
 #if !WATCH && !TVOS
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		public LocalAuthentication.LAContext? AuthenticationContext {
 			get {
@@ -1383,15 +1372,10 @@ namespace Security {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (11, 0)]
-		[TV (11, 0)]
-		[Watch (4, 0)]
-		[Mac (10, 13)]
 #endif
 		public bool PersistentReference {
 			get {
@@ -1405,13 +1389,12 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
-		[Mac (10, 15)]
 #endif
 		public bool UseDataProtectionKeychain {
 			get {
@@ -1821,13 +1804,10 @@ namespace Security {
 		SecAccessControl? _secAccessControl;
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 		public SecAccessControl AccessControl {
 			get {
@@ -1863,13 +1843,10 @@ namespace Security {
 		SecAccessControl? _secAccessControl;
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 		public SecAccessControl AccessControl {
 			get {
@@ -1885,13 +1862,10 @@ namespace Security {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 12)]
 #endif
 		public SecTokenID TokenID {
 			get {

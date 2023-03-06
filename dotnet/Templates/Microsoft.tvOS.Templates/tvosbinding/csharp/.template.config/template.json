@@ -1,0 +1,20 @@
+﻿{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Microsoft",
+  "classifications": [ "tvOS", "Mobile" ],
+  "groupIdentity": "Microsoft.tvOS.tvOSBinding",
+  "identity": "Microsoft.tvOS.tvOSBinding.CSharp",
+  "name": "tvOS Binding Library",
+  "description": "A project for creating a .NET tvOS binding library",
+  "shortName": "tvosbinding",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "tvOSBinding1",
+  "preferNameDirectory": true,
+  "primaryOutputs": [
+    { "path": "tvOSBinding1.csproj" }
+  ],
+  "defaultName": "tvOSBinding1"
+}

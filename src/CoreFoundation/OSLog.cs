@@ -37,14 +37,9 @@ namespace CoreFoundation {
 
 #if NET
 	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("ios10.0")]
-	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[Mac (10, 12)]
-	[iOS (10, 0)]
-	[Watch (3, 0)]
-	[TV (10, 0)]
 #endif
 	public sealed class OSLog : NativeObject {
 
@@ -74,8 +69,13 @@ namespace CoreFoundation {
 				os_release (Handle);
 		}
 
+#if NET
+		[DllImport (Constants.libSystemLibrary)]
+		extern static IntPtr os_log_create (IntPtr subsystem, IntPtr category);
+#else
 		[DllImport (Constants.libSystemLibrary)]
 		extern static IntPtr os_log_create (string subsystem, string category);
+#endif
 
 		[DllImport (Constants.libSystemLibrary)]
 		extern static IntPtr os_retain (IntPtr handle);
@@ -98,8 +98,13 @@ namespace CoreFoundation {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (subsystem));
 			if (category is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (category));
-
+#if NET
+			using var subsystemPtr = new TransientString (subsystem);
+			using var categoryPtr = new TransientString (category);
+			Handle = os_log_create (subsystemPtr, categoryPtr);
+#else
 			Handle = os_log_create (subsystem, category);
+#endif
 		}
 
 		public void Log (string message)

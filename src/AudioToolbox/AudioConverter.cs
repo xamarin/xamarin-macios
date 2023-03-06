@@ -103,12 +103,14 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public class AudioConverter : DisposableObject {
+#if !NET
 		delegate AudioConverterError AudioConverterComplexInputDataShared (IntPtr inAudioConverter, ref int ioNumberDataPackets, IntPtr ioData,
 			IntPtr outDataPacketDescription, IntPtr inUserData);
+		static readonly AudioConverterComplexInputDataShared ComplexInputDataShared = FillComplexBufferShared;
+#endif
 
 		IntPtr packetDescriptions;
 		int packetDescriptionSize;
-		static readonly AudioConverterComplexInputDataShared ComplexInputDataShared = FillComplexBufferShared;
 
 		public event AudioConverterComplexInputData? InputData;
 
@@ -506,7 +508,23 @@ namespace AudioToolbox {
 
 			try {
 				var this_ptr = GCHandle.ToIntPtr (this_handle);
+#if NET
+				unsafe {
+					var packetSize = outputDataPacketSize;
+					int* packetSizePtr = &packetSize;
+					if (packetDescription is null) {
+						var returnOne = AudioConverterFillComplexBuffer (Handle, &FillComplexBufferShared, this_ptr, (IntPtr)packetSizePtr, (IntPtr) outputData, IntPtr.Zero);
+						outputDataPacketSize = packetSize;
+						return returnOne;
+					}
 
+					fixed (AudioStreamPacketDescription* pdesc = &packetDescription [0]) {
+						var returnTwo = AudioConverterFillComplexBuffer (Handle, &FillComplexBufferShared, this_ptr, (IntPtr)packetSizePtr, (IntPtr) outputData, (IntPtr) pdesc);
+						outputDataPacketSize = packetSize;
+						return returnTwo;
+					}
+				}
+#else
 				if (packetDescription is null)
 					return AudioConverterFillComplexBuffer (Handle, ComplexInputDataShared, this_ptr, ref outputDataPacketSize, (IntPtr) outputData, IntPtr.Zero);
 
@@ -515,6 +533,7 @@ namespace AudioToolbox {
 						return AudioConverterFillComplexBuffer (Handle, ComplexInputDataShared, this_ptr, ref outputDataPacketSize, (IntPtr) outputData, (IntPtr) pdesc);
 					}
 				}
+#endif
 			} finally {
 				this_handle.Free ();
 			}
@@ -523,9 +542,15 @@ namespace AudioToolbox {
 		//
 		// outDataPacketDescription should be `ref IntPtr' but using IntPtr we get easier access to pointer address
 		//
+#if NET
+		[UnmanagedCallersOnly]
+		static AudioConverterError FillComplexBufferShared (IntPtr inAudioConverter, IntPtr ioNumberDataPacketsPtr, IntPtr ioData,
+															IntPtr outDataPacketDescription, IntPtr inUserData)
+#else
 		[MonoPInvokeCallback (typeof (AudioConverterComplexInputDataShared))]
 		static AudioConverterError FillComplexBufferShared (IntPtr inAudioConverter, ref int ioNumberDataPackets, IntPtr ioData,
 															IntPtr outDataPacketDescription, IntPtr inUserData)
+#endif
 		{
 			var handler = GCHandle.FromIntPtr (inUserData);
 			var instanceData = handler.Target as Tuple<AudioConverter, AudioConverterComplexInputData?>;
@@ -550,10 +575,20 @@ namespace AudioToolbox {
 				// Using 0-size array as marker because the size of pre-allocated memory is not known
 				//
 				var data = outDataPacketDescription == IntPtr.Zero ? null : new AudioStreamPacketDescription [0];
-
+#if NET
+				// tricky - this in !NET this is an argument
+				// in NET it's a local so all the other code
+				// flows
+				var ioNumberDataPackets = Marshal.ReadInt32 (ioNumberDataPacketsPtr);
 				var res = inst.InputData is not null ?
 					inst.InputData (ref ioNumberDataPackets, buffers, ref data) :
 					callback! (ref ioNumberDataPackets, buffers, ref data);
+				Marshal.WriteInt32 (ioNumberDataPacketsPtr, ioNumberDataPackets);
+#else
+				var res = inst.InputData is not null ?
+					inst.InputData (ref ioNumberDataPackets, buffers, ref data) :
+					callback! (ref ioNumberDataPackets, buffers, ref data);
+#endif
 
 				if (outDataPacketDescription != IntPtr.Zero) {
 					if (ioNumberDataPackets > 0) {
@@ -752,10 +787,17 @@ namespace AudioToolbox {
 			ref int ioOutputDataSize, byte [] outOutputData);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
+#if NET
+		static unsafe extern AudioConverterError AudioConverterFillComplexBuffer (IntPtr inAudioConverter,
+			delegate* unmanaged<IntPtr, IntPtr, IntPtr, IntPtr, IntPtr, AudioConverterError> inInputDataProc, IntPtr inInputDataProcUserData,
+			IntPtr ioOutputDataPacketSize, IntPtr outOutputData,
+			IntPtr outPacketDescription);
+#else
 		static extern AudioConverterError AudioConverterFillComplexBuffer (IntPtr inAudioConverter,
 			AudioConverterComplexInputDataShared inInputDataProc, IntPtr inInputDataProcUserData,
 			ref int ioOutputDataPacketSize, IntPtr outOutputData,
 			IntPtr outPacketDescription);
+#endif
 	}
 
 	enum AudioConverterPropertyID // typedef UInt32 AudioConverterPropertyID

@@ -21,7 +21,6 @@ using UserNotifications;
 
 namespace UserNotificationsUI {
 
-	[iOS (10, 0)]
 	[Mac (11, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -33,7 +32,6 @@ namespace UserNotificationsUI {
 		Overlay
 	}
 
-	[iOS (10, 0)]
 	[Mac (11, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -47,7 +45,6 @@ namespace UserNotificationsUI {
 
 	interface IUNNotificationContentExtension { }
 
-	[iOS (10, 0)]
 	[Mac (11, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Unavailable (PlatformName.WatchOS)]
@@ -78,7 +75,6 @@ namespace UserNotificationsUI {
 		void PauseMedia ();
 	}
 
-	[iOS (10, 0)]
 	[Mac (11, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Unavailable (PlatformName.WatchOS)]

@@ -42,7 +42,6 @@ namespace CoreLocation {
 		Outside
 	}
 
-	[Mac (10, 15)]
 	[NoTV]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -111,23 +110,21 @@ namespace CoreLocation {
 		double VerticalAccuracy { get; }
 
 		[TV (13, 0)] // API_UNAVAILABLE(tvos) removed in Xcode 11 beta 1
-		[Watch (3, 0)] // __WATCHOS_PROHIBITED removed in Xcode 8 beta 3
 		[MacCatalyst (13, 1)]
 		[Export ("course")]
 		double Course { get; }
 
-		[Watch (6, 2), TV (13, 4), Mac (10, 15, 4), iOS (13, 4)]
+		[Watch (6, 2), TV (13, 4), iOS (13, 4)]
 		[MacCatalyst (13, 1)]
 		[Export ("courseAccuracy")]
 		double CourseAccuracy { get; }
 
 		[TV (13, 0)] // API_UNAVAILABLE(tvos) removed in Xcode 11 beta 1
-		[Watch (3, 0)] // __WATCHOS_PROHIBITED removed in Xcode 8 beta 3
 		[MacCatalyst (13, 1)]
 		[Export ("speed")]
 		double Speed { get; }
 
-		[Watch (6, 2), TV (13, 4), Mac (10, 15, 4), iOS (13, 4)]
+		[Watch (6, 2), TV (13, 4), iOS (13, 4)]
 		[MacCatalyst (13, 1)]
 		[Export ("speedAccuracy")]
 		double SpeedAccuracy { get; }
@@ -147,7 +144,7 @@ namespace CoreLocation {
 		[Export ("initWithCoordinate:altitude:horizontalAccuracy:verticalAccuracy:course:speed:timestamp:")]
 		NativeHandle Constructor (CLLocationCoordinate2D coordinate, double altitude, double hAccuracy, double vAccuracy, double course, double speed, NSDate timestamp);
 
-		[Watch (6, 2), TV (13, 4), Mac (10, 15, 4), iOS (13, 4)]
+		[Watch (6, 2), TV (13, 4), iOS (13, 4)]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithCoordinate:altitude:horizontalAccuracy:verticalAccuracy:course:courseAccuracy:speed:speedAccuracy:timestamp:")]
 		NativeHandle Constructor (CLLocationCoordinate2D coordinate, double altitude, double hAccuracy, double vAccuracy, double course, double courseAccuracy, double speed, double speedAccuracy, NSDate timestamp);
@@ -160,7 +157,6 @@ namespace CoreLocation {
 		// nor in 7.0 - but it works on my iPad3 running iOS 7.1
 		[NoTV]
 		[NoWatch]
-		[iOS (7, 1)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCLErrorUserInfoAlternateRegionKey")]
 		NSString ErrorUserInfoAlternateRegionKey { get; }
@@ -188,8 +184,6 @@ namespace CoreLocation {
 		[Field ("kCLLocationAccuracyReduced")]
 		double AccuracyReduced { get; }
 
-		[Mac (10, 15)]
-		[iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("floor", ArgumentSemantic.Copy)]
 		CLFloor Floor { get; }
@@ -203,8 +197,6 @@ namespace CoreLocation {
 		CLLocationSourceInformation SourceInformation { get; }
 	}
 
-	[Mac (10, 15)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	partial interface CLFloor : NSSecureCoding, NSCopying {
@@ -234,7 +226,6 @@ namespace CoreLocation {
 		CLLocation Location { get; }
 
 		// __WATCHOS_PROHIBITED removed in Xcode 8.0 beta 2, assuming it's valid for 3.0+
-		[Watch (3, 0)]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("startUpdatingLocation")]
@@ -384,7 +375,7 @@ namespace CoreLocation {
 		void StartMonitoring (CLRegion region);
 
 		[NoTV]
-		[Watch (4, 0), Mac (11, 0)]
+		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("activityType", ArgumentSemantic.Assign)]
 		CLActivityType ActivityType { get; set; }
@@ -416,7 +407,6 @@ namespace CoreLocation {
 
 		[NoWatch]
 		[NoTV]
-		[Mac (10, 9)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Not used anymore. It will always return 'false'.")]
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Not used anymore. It will always return 'false'.")]
 		[MacCatalyst (13, 1)]
@@ -425,14 +415,12 @@ namespace CoreLocation {
 		[Export ("deferredLocationUpdatesAvailable")]
 		bool DeferredLocationUpdatesAvailable { get; }
 
-		[Mac (10, 14)]
 		[MacCatalyst (13, 1)]
 		[Field ("CLTimeIntervalMax")]
 		double MaxTimeInterval { get; }
 
 		[NoWatch]
 		[NoTV]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[Static, Export ("isMonitoringAvailableForClass:")]
 		bool IsMonitoringAvailable (Class regionClass);
@@ -451,7 +439,6 @@ namespace CoreLocation {
 		[Export ("rangedBeaconConstraints", ArgumentSemantic.Copy)]
 		NSSet<CLBeaconIdentityConstraint> RangedBeaconConstraints { get; }
 
-		[Mac (10, 10)]
 		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
@@ -494,45 +481,41 @@ namespace CoreLocation {
 		[Export ("isRangingAvailable")]
 		bool IsRangingAvailable { get; }
 
-		[iOS (8, 0), Mac (11, 0)]
+		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("requestWhenInUseAuthorization")]
 		void RequestWhenInUseAuthorization ();
 
 		[NoTV]
-		[iOS (8, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Export ("requestAlwaysAuthorization")]
 		void RequestAlwaysAuthorization ();
 
 		[NoWatch]
 		[NoTV]
-		[iOS (8, 0), Mac (11, 0)]
+		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("startMonitoringVisits")]
 		void StartMonitoringVisits ();
 
 		[NoWatch]
 		[NoTV]
-		[iOS (8, 0), Mac (11, 0)]
+		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("stopMonitoringVisits")]
 		void StopMonitoringVisits ();
 
 		[NoTV]
-		[iOS (9, 0), Watch (4, 0), Mac (11, 0)]
+		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("allowsBackgroundLocationUpdates")]
 		bool AllowsBackgroundLocationUpdates { get; set; }
 
-		[NoWatch, NoTV, Mac (11, 0), iOS (11, 0)]
+		[NoWatch, NoTV, Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("showsBackgroundLocationIndicator")]
 		bool ShowsBackgroundLocationIndicator { get; set; }
 
-		[iOS (9, 0)]
-		[Mac (10, 14)]
 		[MacCatalyst (13, 1)]
 		[Export ("requestLocation")]
 		void RequestLocation ();
@@ -592,7 +575,6 @@ namespace CoreLocation {
 		[Export ("locationManager:didUpdateHeading:"), EventArgs ("CLHeadingUpdated")]
 		void UpdatedHeading (CLLocationManager manager, CLHeading newHeading);
 
-		[Mac (10, 15)]
 		[NoTV]
 		[Watch (6, 0)]
 		[MacCatalyst (13, 1)]
@@ -628,7 +610,6 @@ namespace CoreLocation {
 
 		[NoWatch]
 		[NoTV]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[Export ("locationManager:didDetermineState:forRegion:"), EventArgs ("CLRegionStateDetermined")]
 		void DidDetermineState (CLLocationManager manager, CLRegionState state, CLRegion region);
@@ -665,7 +646,7 @@ namespace CoreLocation {
 
 		[NoWatch]
 		[NoTV]
-		[iOS (8, 0), Mac (11, 0)]
+		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("locationManager:didVisit:"), EventArgs ("CLVisited")]
 		void DidVisit (CLLocationManager manager, CLVisit visit);
@@ -681,14 +662,12 @@ namespace CoreLocation {
 		[Export ("locationManager:didUpdateLocations:"), EventArgs ("CLLocationsUpdated")]
 		void LocationsUpdated (CLLocationManager manager, CLLocation [] locations);
 
-		[Mac (10, 15)]
 		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("locationManagerDidPauseLocationUpdates:"), EventArgs ("")]
 		void LocationUpdatesPaused (CLLocationManager manager);
 
-		[Mac (10, 15)]
 		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
@@ -711,7 +690,6 @@ namespace CoreLocation {
 	[Static]
 	partial interface CLLocationDistance {
 
-		[Mac (10, 14)]
 		[MacCatalyst (13, 1)]
 		[Field ("CLLocationDistanceMax")]
 		double MaxDistance { get; }
@@ -759,12 +737,10 @@ namespace CoreLocation {
 		bool Contains (CLLocationCoordinate2D coordinate);
 
 		[Export ("notifyOnEntry", ArgumentSemantic.Assign)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		bool NotifyOnEntry { get; set; }
 
 		[Export ("notifyOnExit", ArgumentSemantic.Assign)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		bool NotifyOnExit { get; set; }
 	}
@@ -829,18 +805,16 @@ namespace CoreLocation {
 		CLRegion Region { get; }
 
 		[NullAllowed, Export ("timeZone")]
-		[iOS (9, 0), Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		NSTimeZone TimeZone { get; }
 
 		// From CLPlacemark (ContactsAdditions) category.
-		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[NoTV]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("postalAddress")]
 		CNPostalAddress PostalAddress { get; }
 	}
 
-	[Mac (10, 10)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CLRegion))]
 #if MONOMAC
@@ -995,7 +969,6 @@ namespace CoreLocation {
 		[Async]
 		void ReverseGeocodeLocation (CLLocation location, CLGeocodeCompletionHandler completionHandler);
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("reverseGeocodeLocation:preferredLocale:completionHandler:")]
 		[Async]
@@ -1018,7 +991,6 @@ namespace CoreLocation {
 		[Async]
 		void GeocodeAddress (string addressString, [NullAllowed] CLRegion region, CLGeocodeCompletionHandler completionHandler);
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("geocodeAddressString:inRegion:preferredLocale:completionHandler:")]
@@ -1027,13 +999,13 @@ namespace CoreLocation {
 		[Export ("cancelGeocode")]
 		void CancelGeocode ();
 
-		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("geocodePostalAddress:completionHandler:")]
 		[Async]
 		void GeocodePostalAddress (CNPostalAddress postalAddress, CLGeocodeCompletionHandler completionHandler);
 
-		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("geocodePostalAddress:preferredLocale:completionHandler:")]
 		[Async]
@@ -1042,7 +1014,7 @@ namespace CoreLocation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (8, 0), Mac (11, 0)]
+	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CLVisit : NSSecureCoding, NSCopying {

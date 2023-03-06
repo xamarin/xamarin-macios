@@ -30,7 +30,6 @@ namespace Network {
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (12, 0)]
-	[Mac (10, 14)]
 	[iOS (12, 0)]
 	[Watch (6, 0)]
 #endif
@@ -127,7 +126,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_path_enumerate_interfaces (IntPtr handle, ref BlockLiteral callback);
+		unsafe static extern void nw_path_enumerate_interfaces (IntPtr handle, BlockLiteral* callback);
 
 
 #if !XAMCORE_5_0
@@ -152,24 +151,20 @@ namespace Network {
 			if (callback is null)
 				return;
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_Enumerator, callback);
-
-			try {
-				nw_path_enumerate_interfaces (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_Enumerator, callback);
+				nw_path_enumerate_interfaces (GetCheckedHandle (), &block);
 			}
 		}
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
@@ -178,28 +173,26 @@ namespace Network {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		public bool IsConstrained => nw_path_is_constrained (GetCheckedHandle ());
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_path_enumerate_gateways (IntPtr path, ref BlockLiteral enumerate_block);
+		unsafe static extern void nw_path_enumerate_gateways (IntPtr path, BlockLiteral* enumerate_block);
 
 		// Returning 'byte' since 'bool' isn't blittable
 		delegate byte nw_path_enumerate_gateways_t (IntPtr block, IntPtr endpoint);
@@ -219,12 +212,11 @@ namespace Network {
 #if !XAMCORE_5_0
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[Obsolete ("Use the overload that takes a 'Func<NWEndpoint, bool>' instead.")]
@@ -241,12 +233,11 @@ namespace Network {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -255,13 +246,10 @@ namespace Network {
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_EnumerateGatewaysHandler, callback);
-
-			try {
-				nw_path_enumerate_gateways (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_EnumerateGatewaysHandler, callback);
+				nw_path_enumerate_gateways (GetCheckedHandle (), &block);
 			}
 		}
 

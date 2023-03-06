@@ -33,7 +33,6 @@ namespace Xamarin.Tests {
 		void CheckDynamicLibrary ()
 		{
 			AssertShouldExist (MonoNativeConfig.DynamicLibraryName);
-			AssertShouldNotExist (MonoNativeConfig.GetDynamicLibraryName (!MonoNativeConfig.UsingCompat));
 			AssertShouldNotExist ("libmono-native.dylib");
 
 			var count = CountFiles ("libmono-native*");

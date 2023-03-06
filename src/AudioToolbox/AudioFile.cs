@@ -53,15 +53,12 @@ namespace AudioToolbox {
 		AIFC = 0x41494643, // AIFC
 		WAVE = 0x57415645, // WAVE
 #if NET
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[NoWatch]
-		[iOS (11, 0)]
-		[Mac (10, 13)]
-		[TV (11, 0)]
 #endif
 		RF64 = 0x52463634, // RF64
 		SoundDesigner2 = 0x53643266, // Sd2f
@@ -79,26 +76,22 @@ namespace AudioToolbox {
 		ThreeGP2 = 0x33677032, // 3gp2
 		AMR = 0x616d7266, // amrf
 #if NET
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[NoWatch]
-		[iOS (11, 0)]
-		[Mac (10, 13)]
-		[TV (11, 0)]
 #endif
 		FLAC = 0x666c6163, // flac
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[NoWatch]
 		[iOS (13, 0)]
-		[Mac (10, 15)]
 		[TV (13, 0)]
 #endif
 		LatmInLoas = 0x6c6f6173, // loas
@@ -263,13 +256,12 @@ namespace AudioToolbox {
 
 #if NET
 	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[NoWatch]
 	[iOS (13, 0)]
-	[Mac (10, 15)]
 	[TV (13, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
@@ -281,13 +273,12 @@ namespace AudioToolbox {
 
 #if NET
 	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[NoWatch]
 	[iOS (13, 0)]
-	[Mac (10, 15)]
 	[TV (13, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
@@ -298,13 +289,12 @@ namespace AudioToolbox {
 
 #if NET
 	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[NoWatch]
 	[iOS (13, 0)]
-	[Mac (10, 15)]
 	[TV (13, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
@@ -315,13 +305,12 @@ namespace AudioToolbox {
 
 #if NET
 	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[NoWatch]
 	[iOS (13, 0)]
-	[Mac (10, 15)]
 	[TV (13, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
@@ -1794,12 +1783,12 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public abstract class AudioSource : AudioFile {
+		GCHandle gch;
+#if !NET
 		static ReadProc dRead;
 		static WriteProc dWrite;
 		static GetSizeProc dGetSize;
 		static SetSizeProc dSetSize;
-
-		GCHandle gch;
 
 		static AudioSource ()
 		{
@@ -1808,29 +1797,58 @@ namespace AudioToolbox {
 			dGetSize = SourceGetSize;
 			dSetSize = SourceSetSize;
 		}
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+		static unsafe int SourceRead (IntPtr clientData, long inPosition, int requestCount, IntPtr buffer, int* actualCount)
+#else
 		[MonoPInvokeCallback (typeof (ReadProc))]
 		static int SourceRead (IntPtr clientData, long inPosition, int requestCount, IntPtr buffer, out int actualCount)
+#endif
 		{
 			GCHandle handle = GCHandle.FromIntPtr (clientData);
 			var audioSource = handle.Target as AudioSource;
+#if NET
+			var localCount = 0;
+			var result = audioSource?.Read (inPosition, requestCount, buffer, out localCount) == true ? 0 : 1;
+			*actualCount = localCount;
+			return result;
+#else
 			actualCount = 0;
 			return audioSource?.Read (inPosition, requestCount, buffer, out actualCount) == true ? 0 : 1;
+#endif
 		}
 
 		public abstract bool Read (long position, int requestCount, IntPtr buffer, out int actualCount);
 
+#if NET
+		[UnmanagedCallersOnly]
+		static unsafe int SourceWrite (IntPtr clientData, long position, int requestCount, IntPtr buffer, int* actualCount)
+#else
 		[MonoPInvokeCallback (typeof (WriteProc))]
 		static int SourceWrite (IntPtr clientData, long position, int requestCount, IntPtr buffer, out int actualCount)
+#endif
 		{
 			GCHandle handle = GCHandle.FromIntPtr (clientData);
 			var audioSource = handle.Target as AudioSource;
+#if NET
+			var localCount = 0;
+			var result = audioSource?.Write (position, requestCount, buffer, out localCount) == true ? 0 : 1;
+			*actualCount = localCount;
+			return result;
+#else
 			actualCount = 0;
 			return audioSource?.Write (position, requestCount, buffer, out actualCount) == true ? 0 : 1;
+#endif
 		}
 		public abstract bool Write (long position, int requestCount, IntPtr buffer, out int actualCount);
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (GetSizeProc))]
+#endif
 		static long SourceGetSize (IntPtr clientData)
 		{
 			GCHandle handle = GCHandle.FromIntPtr (clientData);
@@ -1838,7 +1856,11 @@ namespace AudioToolbox {
 			return audioSource?.Size ?? 0;
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (SetSizeProc))]
+#endif
 		static int SourceSetSize (IntPtr clientData, long size)
 		{
 			GCHandle handle = GCHandle.FromIntPtr (clientData);
@@ -1858,9 +1880,19 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
+#if NET
+		extern unsafe static OSStatus AudioFileInitializeWithCallbacks (
+			IntPtr inClientData,
+			delegate* unmanaged<IntPtr, long, int, IntPtr, int*, int> inReadFunc,
+			delegate* unmanaged<IntPtr, long, int, IntPtr, int*, int> inWriteFunc,
+			delegate* unmanaged<IntPtr, long> inGetSizeFunc,
+			delegate* unmanaged<IntPtr, long, int> inSetSizeFunc,
+			AudioFileType inFileType, AudioStreamBasicDescription* format, uint flags, IntPtr* id);
+#else
 		extern static OSStatus AudioFileInitializeWithCallbacks (
 			IntPtr inClientData, ReadProc inReadFunc, WriteProc inWriteFunc, GetSizeProc inGetSizeFunc, SetSizeProc inSetSizeFunc,
 			AudioFileType inFileType, ref AudioStreamBasicDescription format, uint flags, out IntPtr id);
+#endif
 
 		public AudioSource (AudioFileType inFileType, AudioStreamBasicDescription format)
 		{
@@ -1874,7 +1906,15 @@ namespace AudioToolbox {
 		protected void Initialize (AudioFileType inFileType, AudioStreamBasicDescription format)
 		{
 			gch = GCHandle.Alloc (this);
+#if NET
+			int code = 0;
+			IntPtr handle = IntPtr.Zero;
+			unsafe {
+				code = AudioFileInitializeWithCallbacks (GCHandle.ToIntPtr (gch), &SourceRead, &SourceWrite, &SourceGetSize, &SourceSetSize, inFileType, &format, 0, &handle);
+			}
+#else
 			var code = AudioFileInitializeWithCallbacks (GCHandle.ToIntPtr (gch), dRead, dWrite, dGetSize, dSetSize, inFileType, ref format, 0, out var handle);
+#endif
 			if (code == 0) {
 				InitializeHandle (handle);
 				return;
@@ -1882,10 +1922,21 @@ namespace AudioToolbox {
 			throw new Exception (String.Format ("Unable to create AudioSource, code: 0x{0:x}", code));
 		}
 
+#if NET
+		[DllImport (Constants.AudioToolboxLibrary)]
+		extern static unsafe int AudioFileOpenWithCallbacks (
+			IntPtr inClientData,
+			delegate* unmanaged<IntPtr, long, int, IntPtr, int*, int> inReadFunc,
+			delegate* unmanaged<IntPtr, long, int, IntPtr, int*, int> inWriteFunc,
+			delegate* unmanaged<IntPtr, long> inGetSizeFunc,
+			delegate* unmanaged<IntPtr, long, int> inSetSizeFunc,
+			AudioFileType inFileTypeHint, IntPtr* outAudioFile);
+#else
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static int AudioFileOpenWithCallbacks (
 			IntPtr inClientData, ReadProc inReadFunc, WriteProc inWriteFunc,
 			GetSizeProc inGetSizeFunc, SetSizeProc inSetSizeFunc, AudioFileType inFileTypeHint, out IntPtr outAudioFile);
+#endif
 
 		public AudioSource (AudioFileType fileTypeHint)
 		{
@@ -1895,7 +1946,15 @@ namespace AudioToolbox {
 		protected void Open (AudioFileType fileTypeHint)
 		{
 			gch = GCHandle.Alloc (this);
+#if NET
+			int code = 0;
+			IntPtr handle = IntPtr.Zero;
+			unsafe {
+				code = AudioFileOpenWithCallbacks (GCHandle.ToIntPtr (gch), &SourceRead, &SourceWrite, &SourceGetSize, &SourceSetSize, fileTypeHint, &handle);
+			}
+#else
 			var code = AudioFileOpenWithCallbacks (GCHandle.ToIntPtr (gch), dRead, dWrite, dGetSize, dSetSize, fileTypeHint, out var handle);
+#endif
 			if (code == 0) {
 				InitializeHandle (handle);
 				return;

@@ -18,14 +18,11 @@ using NativeHandle = System.IntPtr;
 namespace Intents {
 
 #if NET
-	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos14.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
-	[Watch (3, 2)]
 	[TV (14, 0)]
 #endif
 	[Register ("INIntentResolutionResult", SkipRegistration = true)]

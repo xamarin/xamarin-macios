@@ -31,23 +31,20 @@ using NativeHandle = System.IntPtr;
 namespace Network {
 
 #if NET
-	// [SupportedOSPlatform ("macos10.15")]  -  Not valid on Delegates
+	// [SupportedOSPlatform ("macos")]  -  Not valid on Delegates
 	// [UnsupportedOSPlatform ("tvos")]
 	// [UnsupportedOSPlatform ("ios")]
 #else
 	[NoWatch]
 	[NoTV]
 	[NoiOS]
-	[Mac (10,15)]
 #endif
 	public delegate void NWEthernetChannelReceiveDelegate (DispatchData? content, ushort vlanTag, string? localAddress, string? remoteAddress);
 
 #if NET
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("tvos")]
 	[UnsupportedOSPlatform ("ios")]
-#else
-	[Mac (10,15)]
 #endif
 	public class NWEthernetChannel : NativeObject {
 
@@ -116,8 +113,13 @@ namespace Network {
 			nw_ethernet_channel_set_queue (GetCheckedHandle (), queue.Handle);
 		}
 
+#if NET
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_ethernet_channel_send (OS_nw_ethernet_channel ethernet_channel, OS_dispatch_data content, ushort vlan_tag, string remote_address, ref BlockLiteral completion);
+		unsafe static extern void nw_ethernet_channel_send (OS_nw_ethernet_channel ethernet_channel, OS_dispatch_data content, ushort vlan_tag, IntPtr remote_address, BlockLiteral* completion);
+#else
+		[DllImport (Constants.NetworkLibrary)]
+		unsafe static extern void nw_ethernet_channel_send (OS_nw_ethernet_channel ethernet_channel, OS_dispatch_data content, ushort vlan_tag, string remote_address, BlockLiteral* completion);
+#endif
 
 		delegate void nw_ethernet_channel_send_completion_t (IntPtr block, IntPtr error);
 		static nw_ethernet_channel_send_completion_t static_SendCompletion = TrampolineSendCompletion;
@@ -139,13 +141,15 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			using (var dispatchData = DispatchData.FromReadOnlySpan (content)) {
-				BlockLiteral block_handler = new BlockLiteral ();
-				block_handler.SetupBlockUnsafe (static_SendCompletion, callback);
-
-				try {
-					nw_ethernet_channel_send (GetCheckedHandle (), dispatchData.GetHandle (), vlanTag, remoteAddress, ref block_handler);
-				} finally {
-					block_handler.CleanupBlock ();
+				unsafe {
+					using var block = new BlockLiteral ();
+					block.SetupBlockUnsafe (static_SendCompletion, callback);
+#if NET
+					var remoteAddressStr = new TransientString (remoteAddress);
+					nw_ethernet_channel_send (GetCheckedHandle (), dispatchData.GetHandle (), vlanTag, remoteAddressStr, &block);
+#else
+					nw_ethernet_channel_send (GetCheckedHandle (), dispatchData.GetHandle (), vlanTag, remoteAddress, &block);
+#endif
 				}
 			}
 		}
@@ -153,18 +157,20 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_ethernet_channel_set_receive_handler (OS_nw_ethernet_channel ethernet_channel, /* [NullAllowed] */ BlockLiteral *handler);
 
-		delegate void nw_ethernet_channel_receive_handler_t (IntPtr block, OS_dispatch_data content, ushort vlan_tag, byte[] local_address, byte[] remote_address);
+		delegate void nw_ethernet_channel_receive_handler_t (IntPtr block, OS_dispatch_data content, ushort vlan_tag, IntPtr local_address, IntPtr remote_address);
 		static nw_ethernet_channel_receive_handler_t static_ReceiveHandler = TrampolineReceiveHandler;
 
 		[MonoPInvokeCallback (typeof (nw_ethernet_channel_receive_handler_t))]
-		static void TrampolineReceiveHandler (IntPtr block, OS_dispatch_data content, ushort vlanTag, byte[] localAddress, byte[] remoteAddress)
+		static void TrampolineReceiveHandler (IntPtr block, OS_dispatch_data content, ushort vlanTag, IntPtr localAddressArray, IntPtr remoteAddressArray)
 		{
+			// localAddress and remoteAddress are defined as:
+			// typedef unsigned char nw_ethernet_address_t[6];
 			var del = BlockLiteral.GetTarget<NWEthernetChannelReceiveDelegate> (block);
 			if (del is not null) {
 
 				var dispatchData = (content == IntPtr.Zero) ? null : new DispatchData (content, owns: false);
-				var local = (localAddress is null) ? null : Encoding.UTF8.GetString (localAddress);
-				var remote = (remoteAddress is null) ? null : Encoding.UTF8.GetString (remoteAddress);
+				var local = Marshal.PtrToStringAuto (localAddressArray, 6);
+				var remote = Marshal.PtrToStringAuto (remoteAddressArray, 6);
 
 				del (dispatchData, vlanTag, local, remote);
 			}
@@ -179,13 +185,9 @@ namespace Network {
 					return;
 				}
 
-				BlockLiteral block_handler = new BlockLiteral ();
-				block_handler.SetupBlockUnsafe (static_ReceiveHandler, handler);
-				try {
-					nw_ethernet_channel_set_receive_handler (GetCheckedHandle (), &block_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_ReceiveHandler, handler);
+				nw_ethernet_channel_set_receive_handler (GetCheckedHandle (), &block);
 			}
 		}
 
@@ -213,13 +215,10 @@ namespace Network {
 					nw_ethernet_channel_set_state_changed_handler (GetCheckedHandle (), null);
 					return;
 				}
-				BlockLiteral block_handler = new BlockLiteral ();
-				block_handler.SetupBlockUnsafe (static_StateChangesHandler, handler);
-				try {
-					nw_ethernet_channel_set_state_changed_handler (GetCheckedHandle (), &block_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_StateChangesHandler, handler);
+				nw_ethernet_channel_set_state_changed_handler (GetCheckedHandle (), &block);
 			}
 		}	
 

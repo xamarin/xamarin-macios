@@ -28,8 +28,6 @@ namespace AppKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 11)]
 #endif
 		public static NSTextContainer FromSize (CGSize size)
 		{

@@ -32,6 +32,10 @@ parameters:
   type: boolean
   default: true
 
+- name: runTranslations
+  type: boolean
+  default: true
+
 - name: runSamples
   type: boolean
   default: false
@@ -51,6 +55,10 @@ parameters:
 - name: skipESRP
   type: boolean
   default: false # only to be used when testing the CI and we do not need a signed pkg
+
+- name: pushNugets
+  type: boolean
+  default: true # default to true until otherwhise
 
 - name: isPR
   type: boolean
@@ -191,7 +199,7 @@ stages:
           repositoryAlias: ${{ parameters.repositoryAlias }}
           commit: ${{ parameters.commit }}
 
-    - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+    - ${{ if and(eq(parameters.runTranslations, true), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
       - job: translations
         displayName: 'Loc translations'
         pool:
@@ -270,14 +278,17 @@ stages:
 
 # .NET Release Prep and VS Insertion Stages, only execute them when the build comes from an official branch and is not a schedule build from OneLoc
 # setting the stage at this level makes the graph of the UI look better, else the lines overlap and is not clear.
+# Got to disable the lint check because azp yaml template engine does not allow use to do a multiline if :/ 
+# yamllint disable-line rule: line-length
 - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release-test/'), eq(variables['Build.SourceBranch'], 'refs/heads/net7.0'), eq(variables['Build.SourceBranch'], 'refs/heads/net8.0'), eq(parameters.forceInsertion, true))) }}:
   - template: ./release/vs-insertion-prep.yml
     parameters:
-      dependsOn:
-      - sign_notarize_dotnet
+      dependsOn: sign_notarize_dotnet
+      stageDisplayNamePrefix: ${{ parameters.stageDisplayNamePrefix }}
       isPR: ${{ parameters.isPR }}
       repositoryAlias: ${{ parameters.repositoryAlias }}
       commit: ${{ parameters.commit }}
+      pushNugets: ${{ parameters.pushNugets }}
 
 - stage: funnel
   displayName: '${{ parameters.stageDisplayNamePrefix }}Collect signed artifacts'

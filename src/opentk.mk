@@ -46,7 +46,7 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/%: $(MACIOS_BINARIES_PATH)/OpenTK
 	$(Q) mkdir -p $(dir $@)
 	$(Q) $(CP) $^ $@
 
-MAC_TARGETS += \
+MACOS_TARGETS += \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile/OpenTK.dll     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile/OpenTK.pdb     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/mobile/OpenTK.dll        \

@@ -27,12 +27,11 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (13, 0)]
-	[Mac (10, 15)]
 	[iOS (13, 0)]
 	[Watch (6, 0)]
 #endif
@@ -63,7 +62,7 @@ namespace Network {
 			=> nw_browse_result_get_changes (oldResult.GetHandle (), newResult.GetHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_browse_result_enumerate_interfaces (OS_nw_browse_result result, ref BlockLiteral enumerator);
+		unsafe static extern void nw_browse_result_enumerate_interfaces (OS_nw_browse_result result, BlockLiteral* enumerator);
 
 		delegate void nw_browse_result_enumerate_interfaces_t (IntPtr block, IntPtr nwInterface);
 		static nw_browse_result_enumerate_interfaces_t static_EnumerateInterfacesHandler = TrampolineEnumerateInterfacesHandler;
@@ -84,12 +83,10 @@ namespace Network {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_EnumerateInterfacesHandler, handler);
-			try {
-				nw_browse_result_enumerate_interfaces (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_EnumerateInterfacesHandler, handler);
+				nw_browse_result_enumerate_interfaces (GetCheckedHandle (), &block);
 			}
 		}
 	}

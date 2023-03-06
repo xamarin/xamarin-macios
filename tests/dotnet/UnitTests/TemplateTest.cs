@@ -6,6 +6,7 @@ namespace Xamarin.Tests {
 	public enum TemplateLanguage {
 		CSharp,
 		FSharp,
+		VisualBasic,
 	}
 
 	public static class TemplateLanguageExtensions {
@@ -14,6 +15,7 @@ namespace Xamarin.Tests {
 			return @this switch {
 				TemplateLanguage.CSharp => "csharp",
 				TemplateLanguage.FSharp => "fsharp",
+				TemplateLanguage.VisualBasic => "visualbasic",
 				_ => throw new NotImplementedException ($"'{@this} is not implemented.'")
 			};
 		}
@@ -23,6 +25,7 @@ namespace Xamarin.Tests {
 			return @this switch {
 				TemplateLanguage.CSharp => "csproj",
 				TemplateLanguage.FSharp => "fsproj",
+				TemplateLanguage.VisualBasic => "vbproj",
 				_ => throw new NotImplementedException ($"'{@this} is not implemented.'")
 			};
 		}
@@ -32,6 +35,7 @@ namespace Xamarin.Tests {
 			return @this switch {
 				TemplateLanguage.CSharp => "C#",
 				TemplateLanguage.FSharp => "F#",
+				TemplateLanguage.VisualBasic => "VB",
 				_ => throw new NotImplementedException ($"'{@this} is not implemented.'")
 			};
 		}
@@ -93,21 +97,29 @@ namespace Xamarin.Tests {
 			/* project templates */
 			new TemplateInfo (ApplePlatform.iOS, "ios", TemplateLanguage.CSharp),
 			new TemplateInfo (ApplePlatform.iOS, "ios", TemplateLanguage.FSharp),
+			new TemplateInfo (ApplePlatform.iOS, "ios", TemplateLanguage.VisualBasic),
 			new TemplateInfo (ApplePlatform.iOS, "ios-tabbed"),
-			new TemplateInfo (ApplePlatform.iOS, "ioslib"),
-			new TemplateInfo (ApplePlatform.iOS, "iosbinding"),
+			new TemplateInfo (ApplePlatform.iOS, "ioslib", TemplateLanguage.CSharp),
+			new TemplateInfo (ApplePlatform.iOS, "ioslib", TemplateLanguage.VisualBasic),
+			new TemplateInfo (ApplePlatform.iOS, "iosbinding", TemplateLanguage.CSharp),
 
-			new TemplateInfo (ApplePlatform.TVOS, "tvos"),
-			new TemplateInfo (ApplePlatform.TVOS, "tvoslib"),
-			new TemplateInfo (ApplePlatform.TVOS, "tvosbinding"),
+			new TemplateInfo (ApplePlatform.TVOS, "tvos", TemplateLanguage.CSharp),
+			new TemplateInfo (ApplePlatform.TVOS, "tvos", TemplateLanguage.VisualBasic),
+			new TemplateInfo (ApplePlatform.TVOS, "tvoslib", TemplateLanguage.CSharp),
+			new TemplateInfo (ApplePlatform.TVOS, "tvoslib", TemplateLanguage.VisualBasic),
+			new TemplateInfo (ApplePlatform.TVOS, "tvosbinding", TemplateLanguage.CSharp),
 
-			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalyst", execute: true),
-			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalystlib"),
-			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalystbinding"),
+			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalyst", TemplateLanguage.CSharp, execute: true),
+			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalyst", TemplateLanguage.VisualBasic, execute: true),
+			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalystlib", TemplateLanguage.CSharp),
+			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalystlib", TemplateLanguage.VisualBasic),
+			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalystbinding", TemplateLanguage.CSharp),
 
-			new TemplateInfo (ApplePlatform.MacOSX, "macos", execute: true),
-			new TemplateInfo (ApplePlatform.MacOSX, "macoslib"),
-			new TemplateInfo (ApplePlatform.MacOSX, "macosbinding"),
+			new TemplateInfo (ApplePlatform.MacOSX, "macos", TemplateLanguage.CSharp, execute: true),
+			new TemplateInfo (ApplePlatform.MacOSX, "macos", TemplateLanguage.VisualBasic, execute: true),
+			new TemplateInfo (ApplePlatform.MacOSX, "macoslib", TemplateLanguage.CSharp),
+			new TemplateInfo (ApplePlatform.MacOSX, "macoslib", TemplateLanguage.VisualBasic),
+			new TemplateInfo (ApplePlatform.MacOSX, "macosbinding", TemplateLanguage.CSharp),
 
 			/* item templates */
 			new TemplateInfo (ApplePlatform.iOS, "ios-controller"),
@@ -215,16 +227,7 @@ namespace Xamarin.Tests {
 				Assert.IsTrue (CanExecute (info.Platform, runtimeIdentifiers), "Must be executable to execute!");
 
 				// First add some code to exit the template if it launches successfully.
-				switch (language) {
-				case TemplateLanguage.CSharp:
-					InsertCSharpCodeToExitAppAfterLaunch (outputDir);
-					break;
-				case TemplateLanguage.FSharp:
-					InsertFSharpCodeToExitAppAfterLaunch (outputDir);
-					break;
-				default:
-					throw new NotImplementedException ($"'Inserting {language} code is not implemented.'");
-				}
+				InsertCodeToExitAppAfterLaunch (language, outputDir);
 
 				// Build the sample
 				rv = DotNet.AssertBuild (proj);
@@ -282,16 +285,7 @@ namespace Xamarin.Tests {
 				Assert.IsTrue (CanExecute (info.Platform, runtimeIdentifiers), "Must be executable to execute!");
 
 				// First add some code to exit the template if it launches successfully.
-				switch (language) {
-				case TemplateLanguage.CSharp:
-					InsertCSharpCodeToExitAppAfterLaunch (outputDir);
-					break;
-				case TemplateLanguage.FSharp:
-					InsertFSharpCodeToExitAppAfterLaunch (outputDir);
-					break;
-				default:
-					throw new NotImplementedException ($"'Inserting {language} code is not implemented.'");
-				}
+				InsertCodeToExitAppAfterLaunch (language, outputDir);
 
 				// Build the sample
 				rv = DotNet.AssertBuild (proj);
@@ -303,6 +297,23 @@ namespace Xamarin.Tests {
 				var appPath = GetAppPath (proj, platform, runtimeIdentifiers);
 				var appExecutable = GetNativeExecutable (platform, appPath);
 				ExecuteWithMagicWordAndAssert (appExecutable);
+			}
+		}
+
+		static void InsertCodeToExitAppAfterLaunch (TemplateLanguage language, string outputDir)
+		{
+			switch (language) {
+			case TemplateLanguage.CSharp:
+				InsertCSharpCodeToExitAppAfterLaunch (outputDir);
+				break;
+			case TemplateLanguage.FSharp:
+				InsertFSharpCodeToExitAppAfterLaunch (outputDir);
+				break;
+			case TemplateLanguage.VisualBasic:
+				InsertVBCodeToExitAppAfterLaunch (outputDir);
+				break;
+			default:
+				throw new NotImplementedException ($"'Inserting {language} code is not implemented.'");
 			}
 		}
 
@@ -333,6 +344,24 @@ Environment.Exit (0);
 
 			var modifiedMainContents =
 				mainContents.Replace ("// This is the main entry point of the application.",
+					exitSampleWithSuccess);
+			Assert.AreNotEqual (modifiedMainContents, mainContents, "Failed to modify the main content");
+			File.WriteAllText (mainFile, modifiedMainContents);
+		}
+
+		static void InsertVBCodeToExitAppAfterLaunch (string outputDir)
+		{
+			var mainFile = Path.Combine (outputDir, "Main.vb");
+			var mainContents = File.ReadAllText (mainFile);
+			var exitSampleWithSuccess = @"Foundation.NSTimer.CreateScheduledTimer (1,
+Sub (ByVal v)
+	Console.WriteLine (Environment.GetEnvironmentVariable (""MAGIC_WORD""))
+	Environment.Exit (0)
+End Sub
+	)
+		";
+			var modifiedMainContents =
+				mainContents.Replace ("' This is the main entry point of the application.",
 					exitSampleWithSuccess);
 			Assert.AreNotEqual (modifiedMainContents, mainContents, "Failed to modify the main content");
 			File.WriteAllText (mainFile, modifiedMainContents);

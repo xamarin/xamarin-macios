@@ -42,7 +42,6 @@ using NativeHandle = System.IntPtr;
 
 namespace ARKit {
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
 	public enum ARTrackingState : long {
@@ -51,7 +50,6 @@ namespace ARKit {
 		Normal,
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
 	public enum ARTrackingStateReason : long {
@@ -63,7 +61,6 @@ namespace ARKit {
 		Relocalizing,
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[ErrorDomain ("ARErrorDomain")]
 	[Native]
@@ -94,7 +91,6 @@ namespace ARKit {
 		RequestFailed = 501,
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[Flags]
 	[Native]
@@ -109,7 +105,6 @@ namespace ARKit {
 		ExistingPlaneUsingGeometry = 1 << 5,
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
 	public enum ARPlaneAnchorAlignment : long {
@@ -118,7 +113,6 @@ namespace ARKit {
 		Vertical,
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[Flags]
 	[Native]
@@ -131,7 +125,6 @@ namespace ARKit {
 		ResetSceneReconstruction = (1 << 3),
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
 	public enum ARWorldAlignment : long {
@@ -140,7 +133,6 @@ namespace ARKit {
 		Camera,
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[Flags]
 	[Native]
@@ -324,7 +316,6 @@ namespace ARKit {
 		// @required -(instancetype _Nonnull)initWithAnchor:(ARAnchor * _Nonnull)anchor;
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -362,7 +353,6 @@ namespace ARKit {
 		NativeHandle Constructor (ARAnchor anchor);
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -433,7 +423,6 @@ namespace ARKit {
 		Matrix4 GetViewMatrix (UIInterfaceOrientation orientation);
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -516,7 +505,6 @@ namespace ARKit {
 		NSDictionary<NSString, NSObject> ExifData { get; }
 	}
 
-	[iOS (11, 0)]
 	[Deprecated (PlatformName.iOS, 14, 0, message: "Use Raycasting methods over HitTestResult ones.")]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
@@ -545,7 +533,6 @@ namespace ARKit {
 		ARAnchor Anchor { get; }
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -558,7 +545,6 @@ namespace ARKit {
 		nfloat AmbientColorTemperature { get; }
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (ARAnchor))]
 	[DisableDefaultCtor]
@@ -654,7 +640,6 @@ namespace ARKit {
 		void Update (ARPlaneGeometry planeGeometry);
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -735,7 +720,6 @@ namespace ARKit {
 		bool IsVideoHdrSupported { [Bind ("isVideoHDRSupported")] get; }
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (SCNView))]
 	interface ARSCNView : ARSessionProviding {
@@ -786,7 +770,6 @@ namespace ARKit {
 
 	interface IARSCNViewDelegate { }
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -809,7 +792,6 @@ namespace ARKit {
 		void DidRemoveNode (ISCNSceneRenderer renderer, SCNNode node, ARAnchor anchor);
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (SKView))]
 	interface ARSKView : ARSessionProviding {
@@ -836,7 +818,6 @@ namespace ARKit {
 
 	interface IARSKViewDelegate { }
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -861,7 +842,6 @@ namespace ARKit {
 
 	delegate void GetGeolocationCallback (CLLocationCoordinate2D coordinate, double altitude, NSError error);
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	interface ARSession {
@@ -939,7 +919,6 @@ namespace ARKit {
 		void CaptureHighResolutionFrame (Action<ARFrame, NSError> handler);
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[Protocol]
 	interface ARSessionObserver {
@@ -974,7 +953,6 @@ namespace ARKit {
 
 	interface IARSessionDelegate { }
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -993,7 +971,6 @@ namespace ARKit {
 		void DidRemoveAnchors (ARSession session, ARAnchor [] anchors);
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[Abstract]
@@ -1058,7 +1035,6 @@ namespace ARKit {
 		bool VideoHdrAllowed { get; set; }
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (ARConfiguration))]
 	interface ARWorldTrackingConfiguration {
@@ -1141,7 +1117,6 @@ namespace ARKit {
 		bool SupportsFrameSemantics (ARFrameSemantics frameSemantics);
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (ARConfiguration))]
 	interface AROrientationTrackingConfiguration {
@@ -1161,7 +1136,6 @@ namespace ARKit {
 		bool SupportsFrameSemantics (ARFrameSemantics frameSemantics);
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[Static]
 	interface ARSCNDebugOptions {
@@ -1173,7 +1147,6 @@ namespace ARKit {
 		SCNDebugOptions ShowFeaturePoints { get; }
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[Protocol]
 	interface ARTrackable {
@@ -1182,7 +1155,6 @@ namespace ARKit {
 		bool IsTracked { get; }
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (ARConfiguration))]
 	interface ARFaceTrackingConfiguration {
@@ -1215,7 +1187,6 @@ namespace ARKit {
 		bool SupportsFrameSemantics (ARFrameSemantics frameSemantics);
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[StrongDictionary ("ARBlendShapeLocationKeys")]
 	interface ARBlendShapeLocationOptions {
@@ -1326,7 +1297,6 @@ namespace ARKit {
 		float TongueOut { get; set; }
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[Static]
 	[Internal]
@@ -1490,7 +1460,6 @@ namespace ARKit {
 		NSString TongueOutKey { get; }
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (ARAnchor))]
 	[DisableDefaultCtor]
@@ -1538,7 +1507,6 @@ namespace ARKit {
 		ARBlendShapeLocationOptions BlendShapes { get; }
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1572,7 +1540,6 @@ namespace ARKit {
 		IntPtr GetRawTriangleIndices ();
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (SCNGeometry))]
 	[DisableDefaultCtor]
@@ -1625,7 +1592,6 @@ namespace ARKit {
 		nfloat EstimatedScaleFactor { get; }
 	}
 
-	[iOS (11, 0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (ARLightEstimate))]
 	[DisableDefaultCtor]
