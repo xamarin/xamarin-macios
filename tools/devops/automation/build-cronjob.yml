@@ -13,6 +13,8 @@ parameters:
 
 variables:
 - template: templates/variables.yml
+- name: MaciosUploadPrefix
+  value: ''
 
 resources:
   repositories:

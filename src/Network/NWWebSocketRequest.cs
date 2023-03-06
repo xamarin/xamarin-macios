@@ -42,20 +42,22 @@ namespace Network {
 		[return: MarshalAs (UnmanagedType.I1)]
 		unsafe static extern bool nw_ws_request_enumerate_additional_headers (OS_nw_ws_request request, BlockLiteral* enumerator);
 
-		delegate void nw_ws_request_enumerate_additional_headers_t (IntPtr block, string header, string value);
+		delegate void nw_ws_request_enumerate_additional_headers_t (IntPtr block, IntPtr header, IntPtr value);
 		static nw_ws_request_enumerate_additional_headers_t static_EnumerateHeaderHandler = TrampolineEnumerateHeaderHandler;
 
 		[MonoPInvokeCallback (typeof (nw_ws_request_enumerate_additional_headers_t))]
-		static void TrampolineEnumerateHeaderHandler (IntPtr block, string header, string value)
+		static void TrampolineEnumerateHeaderHandler (IntPtr block, IntPtr headerPointer, IntPtr valuePointer)
 		{
-			var del = BlockLiteral.GetTarget<Action<string, string>> (block);
+			var del = BlockLiteral.GetTarget<Action<string?, string?>> (block);
 			if (del is not null) {
+				var header = Marshal.PtrToStringAuto (headerPointer);
+				var value = Marshal.PtrToStringAuto (valuePointer);
 				del (header, value);
 			}
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void EnumerateAdditionalHeaders (Action<string, string> handler)
+		public void EnumerateAdditionalHeaders (Action<string?, string?> handler)
 		{
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
@@ -71,20 +73,21 @@ namespace Network {
 		[return: MarshalAs (UnmanagedType.I1)]
 		unsafe static extern bool nw_ws_request_enumerate_subprotocols (OS_nw_ws_request request, BlockLiteral* enumerator);
 
-		delegate void nw_ws_request_enumerate_subprotocols_t (IntPtr block, string subprotocol);
+		delegate void nw_ws_request_enumerate_subprotocols_t (IntPtr block, IntPtr subprotocol);
 		static nw_ws_request_enumerate_subprotocols_t static_EnumerateSubprotocolHandler = TrampolineEnumerateSubprotocolHandler;
 
 		[MonoPInvokeCallback (typeof (nw_ws_request_enumerate_subprotocols_t))]
-		static void TrampolineEnumerateSubprotocolHandler (IntPtr block, string subprotocol)
+		static void TrampolineEnumerateSubprotocolHandler (IntPtr block, IntPtr subprotocolPointer)
 		{
-			var del = BlockLiteral.GetTarget<Action<string>> (block);
+			var del = BlockLiteral.GetTarget<Action<string?>> (block);
 			if (del is not null) {
+				var subprotocol = Marshal.PtrToStringAuto (subprotocolPointer);
 				del (subprotocol);
 			}
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void EnumerateSubprotocols (Action<string> handler)
+		public void EnumerateSubprotocols (Action<string?> handler)
 		{
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));

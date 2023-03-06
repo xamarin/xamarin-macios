@@ -689,6 +689,11 @@ namespace ObjCRuntime {
 						parameters [i] = nativeParam == IntPtr.Zero ? IntPtr.Zero : Marshal.ReadIntPtr (nativeParam);
 					}
 					log_coreclr_render ("            => {0}", parameters [i]);
+				} else if (paramType.IsPointer) {
+					log_coreclr ($"        IsPointer nativeParam: 0x{nativeParam.ToString ("x")} ParameterType: {paramType}");
+					if (nativeParam != IntPtr.Zero)
+						parameters [i] = nativeParam;
+					log_coreclr_render ("            => {0}", parameters [i]);
 				} else if (paramType.IsClass || paramType.IsInterface || (paramType.IsValueType && IsNullable (paramType))) {
 					log_coreclr ($"        IsClass/IsInterface/IsNullable IsByRef: {isByRef} IsOut: {p.IsOut} ParameterType: {paramType}");
 					if (nativeParam != IntPtr.Zero) {

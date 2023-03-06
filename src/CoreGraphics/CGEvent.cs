@@ -19,6 +19,10 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if NET
+using System.Runtime.CompilerServices;
+#endif
+
 #if !NET
 using NativeHandle = System.IntPtr;
 #endif
@@ -34,23 +38,89 @@ namespace CoreGraphics {
 	public sealed class CGEvent : NativeObject {
 		public delegate IntPtr CGEventTapCallback (IntPtr tapProxyEvent, CGEventType eventType, IntPtr eventRef, IntPtr userInfo);
 
+#if NET
+		static ConditionalWeakTable<CFMachPort, TapData>? tap_table;
+		static object tap_lock = new object ();
+
+		class TapData {
+			GCHandle handle;
+			public TapData (CGEventTapCallback cb, IntPtr userInfo)
+			{
+				Callback = cb;
+				UserInfo = userInfo;
+				handle = GCHandle.Alloc (this, GCHandleType.Weak);
+			}
+
+			~TapData ()
+			{
+				handle.Free ();
+			}
+
+			public CGEventTapCallback Callback { get; private set; }
+			public IntPtr UserInfo { get; private set; }
+			public IntPtr Handle => GCHandle.ToIntPtr (handle);
+		}
+
+		[UnmanagedCallersOnly]
+		static IntPtr TapCallback (IntPtr tapProxyEvent, CGEventType eventType, IntPtr eventRef, IntPtr userInfo)
+		{
+			var gch = GCHandle.FromIntPtr (userInfo);
+			var tapData = (TapData)gch.Target!;
+			return tapData.Callback (tapProxyEvent, eventType, eventRef, tapData.UserInfo);
+		}
+		
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
+		extern static unsafe IntPtr CGEventTapCreate (CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, delegate* unmanaged<IntPtr, CGEventType, IntPtr, IntPtr, IntPtr> cback, IntPtr data);
+#else
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static IntPtr CGEventTapCreate (CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data);
+#endif
 
 		public static CFMachPort? CreateTap (CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data)
 		{
+#if NET
+			IntPtr r;
+			unsafe {
+				var tapData = new TapData (cback, data);
+				r = CGEventTapCreate (location, place, options, mask, &TapCallback, tapData.Handle);
+				if (r == IntPtr.Zero)
+					return null;
+
+				var rv = new CFMachPort (r, true);
+				lock (tap_lock) {
+					tap_table = tap_table ?? new ConditionalWeakTable<CFMachPort, TapData> ();
+					tap_table.Add (rv, tapData);
+				}
+				return rv;
+			}
+#else
 			var r = CGEventTapCreate (location, place, options, mask, cback, data);
 			if (r == IntPtr.Zero)
 				return null;
 			return new CFMachPort (r, true);
+#endif
 		}
 
+#if NET
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
+		extern static unsafe IntPtr CGEventTapCreateForPSN (IntPtr processSerialNumer, CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, delegate* unmanaged<IntPtr, CGEventType, IntPtr, IntPtr, IntPtr> cback, IntPtr data);
+#else
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static IntPtr CGEventTapCreateForPSN (IntPtr processSerialNumer, CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data);
+#endif
 		
 		public static CFMachPort? CreateTap (IntPtr processSerialNumber, CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data)
 		{
+#if NET
+			IntPtr r;
+			unsafe {
+				var tapData = new TapData (cback, data);
+				var gch = GCHandle.Alloc (tapData);
+				r = CGEventTapCreateForPSN (processSerialNumber, location, place, options, mask, &TapCallback, GCHandle.ToIntPtr (gch));
+			}
+#else
 			var r = CGEventTapCreateForPSN (processSerialNumber, location, place, options, mask, cback, data);
+#endif
 			if (r == IntPtr.Zero)
 				return null;
 			return new CFMachPort (r, true);

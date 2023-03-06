@@ -218,19 +218,21 @@ namespace CoreGraphics {
 		}
 #endif
 
-		delegate bool ApplyBlockHandlerDelegate (IntPtr block, nint index, IntPtr value, IntPtr info);
+		delegate byte ApplyBlockHandlerDelegate (IntPtr block, nint index, IntPtr value, IntPtr info);
 		static readonly ApplyBlockHandlerDelegate applyblock_handler = ApplyBlockHandler;
 
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (ApplyBlockHandlerDelegate))]
 #endif
-		static bool ApplyBlockHandler (IntPtr block, nint index, IntPtr value, IntPtr info)
+		static byte ApplyBlockHandler (IntPtr block, nint index, IntPtr value, IntPtr info)
 		{
 			var del = BlockLiteral.GetTarget<ApplyCallback> (block);
-			if (del is not null)
-				return del (index, CGPDFObject.FromHandle (value), info == IntPtr.Zero ? null : GCHandle.FromIntPtr (info).Target);
+			if (del is not null) {
+				var context = info == IntPtr.Zero ? null : GCHandle.FromIntPtr (info).Target;
+				return del (index, CGPDFObject.FromHandle (value), context) ? (byte) 1 : (byte) 0;
+			}
 
-			return false;
+			return 0;
 		}
 
 		public delegate bool ApplyCallback (nint index, object? value, object? info);

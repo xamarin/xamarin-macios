@@ -58,7 +58,12 @@ namespace ObjCRuntime {
 	}
 
 	[StructLayout (LayoutKind.Sequential)]
-#if COREBUILD
+#if XAMCORE_5_0
+	// Let's try to make this a ref struct in XAMCORE_5_0, that will mean blocks can't be boxed (which is good, because it would most likely result in broken code).
+	// Note that the presence of a Dispose method is enough to be able to do a 'using var block = new BlockLiteral ()' in C# due to pattern-based using for 'ref structs':
+	// Ref: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-8.0/using#pattern-based-using
+	public unsafe ref struct BlockLiteral
+#elif COREBUILD
 	public unsafe struct BlockLiteral {
 #else
 	public unsafe struct BlockLiteral : IDisposable {
