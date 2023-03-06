@@ -278,12 +278,21 @@ namespace Darwin {
 			asl_unset (Handle, keyStr);
 		}
 		
+#if NET
+		[DllImport (Constants.SystemLibrary)]
+		extern static IntPtr asl_key (IntPtr handle, int /* uint32_t */ key);
+#else
 		[DllImport (Constants.SystemLibrary)]
 		extern static string asl_key (IntPtr handle, int /* uint32_t */ key);
+#endif
 		
 		public string this [int key]{
 			get {
+#if NET
+				return Marshal.PtrToStringAuto (asl_key (Handle, key))!;
+#else
 				return asl_key (Handle, key);
+#endif
 			}
 		}
 

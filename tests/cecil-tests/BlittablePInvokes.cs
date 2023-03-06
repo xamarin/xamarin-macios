@@ -41,7 +41,6 @@ namespace Cecil.Tests {
 			public string Reason;
 		}
 
-		[Ignore ("work in progress - there are 3 failures in mac version, mostly due to delegates and strings")]
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblyDefinitions))]
 		public void CheckForNonBlittablePInvokes (AssemblyInfo info)
 		{
