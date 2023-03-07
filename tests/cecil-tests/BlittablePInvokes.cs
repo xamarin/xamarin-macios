@@ -107,7 +107,7 @@ namespace Cecil.Tests {
 	//        return new Point (x, y);
 	//    }
 	//
-	//    5. structs with non-blittable types. I don't think I ran into any of these
+	//    4. structs with non-blittable types. I don't think I ran into any of these
 	//       *except* for structs with delegate callbacks. In that case, you need to
 	//       rewrite the type to have delegate* unmanaged<> *AND* change the callback
 	//       implementation to have [UnmanagedCallersOnly]
