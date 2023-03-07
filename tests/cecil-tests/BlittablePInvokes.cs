@@ -112,7 +112,7 @@ namespace Cecil.Tests {
 	//       rewrite the type to have delegate* unmanaged<> *AND* change the callback
 	//       implementation to have [UnmanagedCallersOnly]
 	//
-	//    6. arrays. These are uncommon and fall into two broad categories:
+	//    5. arrays. These are uncommon and fall into two broad categories:
 	//       an array of blittable types and and array of non-blittable types.
 	//       for the first you can change the array type in the pinvoke to be a pointer:
 	//       extern static void SomeCall (int[] arr, int length);
