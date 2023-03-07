@@ -40,6 +40,7 @@ steps:
 - pwsh: |
     $sourceDir = '$(Build.SourcesDirectory)\xamarin-macios'
     $targetDir = '$(Build.ArtifactStagingDirectory)\windows-binlogs'
+    New-Item -Path "$targetDir" -ItemType "directory" -Force
 
     $binlogs = Get-ChildItem $sourceDir -Recurse -Include "*.binlog"
     foreach ($binlog in $binlogs) {
