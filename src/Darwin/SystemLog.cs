@@ -246,7 +246,7 @@ namespace Darwin {
 		extern static IntPtr asl_new (Kind kind);
 
 		[DllImport (Constants.SystemLibrary)]
-		extern static string asl_get (IntPtr handle, IntPtr key);
+		extern static IntPtr asl_get (IntPtr handle, IntPtr key);
 		
 		[DllImport (Constants.SystemLibrary)]
 		extern static int asl_set (IntPtr handle, IntPtr key, IntPtr value);
@@ -256,7 +256,7 @@ namespace Darwin {
 				if (key is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 				using var keyStr = new TransientString (key);
-				return asl_get (Handle, keyStr);
+				return Marshal.PtrToStringAuto (asl_get (Handle, keyStr))!;
 			}
 			set {
 				if (key is null)
@@ -333,11 +333,13 @@ namespace Darwin {
 		}
 
 		[DllImport (Constants.SystemLibrary)]
-		extern static int asl_set_query (IntPtr handle, string key, string value, int /* uint32_t */ op);
+		extern static int asl_set_query (IntPtr handle, IntPtr key, IntPtr value, int /* uint32_t */ op);
 		
 		public bool SetQuery (string key, Op op, string value)
 		{
-			return asl_set_query (Handle, key, value, (int) op) == 0;
+			using var keyStr = new TransientString (key);
+			using var valueStr = new TransientString (value);
+			return asl_set_query (Handle, keyStr, valueStr, (int) op) == 0;
 		}
 	}
 }
