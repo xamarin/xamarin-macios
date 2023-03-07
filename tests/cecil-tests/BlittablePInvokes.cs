@@ -79,7 +79,7 @@ namespace Cecil.Tests {
 	//        AssignSomeCallback (SomeCallImpl, someHandle);
 	//    #endif
 	//
-	//    4. ref/out types - these are disallowed. Replace them with pointers and
+	//    3. ref/out types - these are disallowed. Replace them with pointers and
 	//       make the pinvoke unsafe. Can you use an IntPtr instead of unsafe? Yes.
 	//       BUT you lose type safety. I'd rather have typed pointers than untyped
 	//       if I have a choice.
