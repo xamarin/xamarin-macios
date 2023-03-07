@@ -204,7 +204,7 @@
 			CompiledEntitlements="$(HotRestartAppBundlePath)\Entitlements.plist"
 			IsAppExtension="$(IsAppExtension)"
 			ProvisioningProfile="$(_ProvisioningProfileId)"
-			SdkIsSimulator="False"
+			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkPlatform="iPhoneOS"
 			SdkVersion="12.2"
 			SdkDevPath=" "
