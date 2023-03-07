@@ -13,7 +13,7 @@ namespace Cecil.Tests {
 	// Guide to when this test fails.
 	//
 	// What does this test do?
-	// It ensures that every type in a p/invoke is blittalble. This means that
+	// It ensures that every type in a p/invoke is blittable. This means that
 	//    the number of allowed types gets cut down to a narrow set: pointers and
 	//    scalars.
 	// What are common failing types?
