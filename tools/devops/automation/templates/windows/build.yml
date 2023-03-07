@@ -69,7 +69,7 @@ steps:
     if (Test-Path -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -PathType Leaf)  {
       $statuses.SetStatus("error", "${{ parameters.statusContext }} failed.", "${{ parameters.statusContext }}")
       $githubComments.NewCommentFromFile("${{ parameters.statusContext }} failed", ":x:", "$Env:GITHUB_FAILURE_COMMENT_FILE")
-    } elseif ("$($Env:AGENT_JOBSTATUS)" != "Succeeded") {
+    } elseif ("$($Env:AGENT_JOBSTATUS)" -ne "Succeeded") {
       $statuses.SetStatus("error", "${{ parameters.statusContext }} did not succeed.", "${{ parameters.statusContext }}")
       $message = ":x: ${{ parameters.statusContext }} did not succeed, status: $($Env:AGENT_JOBSTATUS)."
       $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} passed", ":x:", $message)
