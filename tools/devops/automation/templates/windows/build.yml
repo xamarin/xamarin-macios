@@ -70,9 +70,9 @@ steps:
       $statuses.SetStatus("error", "${{ parameters.statusContext }} failed.", "${{ parameters.statusContext }}")
       $githubComments.NewCommentFromFile("${{ parameters.statusContext }} failed", ":x:", "$Env:GITHUB_FAILURE_COMMENT_FILE")
     } elseif ("$($Env:AGENT_JOBSTATUS)" -ne "Succeeded") {
-      $statuses.SetStatus("error", "${{ parameters.statusContext }} did not succeed.", "${{ parameters.statusContext }}")
-      $message = ":x: ${{ parameters.statusContext }} did not succeed, status: $($Env:AGENT_JOBSTATUS)."
-      $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} passed", ":x:", $message)
+      $statuses.SetStatus("error", "${{ parameters.statusContext }} failed.", "${{ parameters.statusContext }}")
+      $message = ":x: $($Env:AGENT_JOBSTATUS) :x:"
+      $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} failed", ":x:", $message)
     } else {
       $statuses.SetStatus("success", "${{ parameters.statusContext }} passed.", "${{ parameters.statusContext }}")
       $message = ":white_check_mark: **All** ${{ parameters.statusContext }} passed."
@@ -88,7 +88,7 @@ steps:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     TEST_BOT: $(Agent.Name)
     ${{ if eq(parameters.repositoryAlias, 'self') }}:
-      COMMENT_HASH: $(GIT_HASH)
+      COMMENT_HASH: $(fix_commit.GIT_HASH)
     ${{ else }}:
       COMMENT_HASH: $(Build.SourceVersion)
 
