@@ -18,10 +18,10 @@ namespace Cecil.Tests {
 	//    scalars.
 	// What are common failing types?
 	//    1. string
-	//    3. delegate
-	//    4. ref/out types
-	//    5. structs with non-blittable types
-	//    6. arrays
+	//    2. delegate
+	//    3. ref/out types
+	//    4. structs with non-blittable types
+	//    5. arrays
 	// How do I fix these?
 	//    1. use a TransientString from ObjCRuntime. This is an IDisposable type
 	//       that will allocate an unmanaged string in the appropriate encoding.
