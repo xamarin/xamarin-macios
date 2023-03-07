@@ -34,7 +34,7 @@ namespace Cecil.Tests {
 	//    SomePinvoke (valueTransient);
 	//    NOTE: You need to understand the lifespace of the string. If the call
 	//    holds onto the pointer forever instead of making a copy, you can't use
-	//    TransientString. Instead use Marhsal to allocate the string once.
+	//    TransientString. Instead use Marshal to allocate the string once.
 	//
 	//    2. Don't use the delegate type as declared, instead use
 	//    delegate* unamanged<...>
