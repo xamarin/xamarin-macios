@@ -130,10 +130,14 @@ namespace Network {
 
 		public void Cancel () => nw_listener_cancel (GetCheckedHandle ());
 
+#if !NET
 		delegate void nw_listener_state_changed_handler_t (IntPtr block, NWListenerState state, IntPtr nwerror);
 		static nw_listener_state_changed_handler_t static_ListenerStateChanged = TrampolineListenerStateChanged;
 
 		[MonoPInvokeCallback (typeof (nw_listener_state_changed_handler_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineListenerStateChanged (IntPtr block, NWListenerState state, IntPtr nwerror)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWListenerState, NWError?>> (block);
@@ -156,16 +160,25 @@ namespace Network {
 					return;
 				}
 
+#if NET
+				delegate* unmanaged<IntPtr, NWListenerState, IntPtr, void> trampoline = &TrampolineListenerStateChanged;
+				using var block = new BlockLiteral (trampoline, callback, typeof (NWListener), nameof (TrampolineListenerStateChanged));
+#else
 				var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_ListenerStateChanged, callback);
+#endif
 				nw_listener_set_state_changed_handler (GetCheckedHandle (), &block);
 			}
 		}
 
+#if !NET
 		delegate void nw_listener_new_connection_handler_t (IntPtr block, IntPtr connection);
 		static nw_listener_new_connection_handler_t static_NewConnection = TrampolineNewConnection;
 
 		[MonoPInvokeCallback (typeof (nw_listener_new_connection_handler_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineNewConnection (IntPtr block, IntPtr connection)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWConnection>> (block);
@@ -188,20 +201,31 @@ namespace Network {
 						return;
 					}
 
+#if NET
+					delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolineNewConnection;
+					using var block = new BlockLiteral (trampoline, callback, typeof (NWListener), nameof (TrampolineNewConnection));
+#else
 					using var block = new BlockLiteral ();
 					block.SetupBlockUnsafe (static_NewConnection, callback);
+#endif
 					nw_listener_set_new_connection_handler (GetCheckedHandle (), &block);
 					connectionHandlerWasSet = true;
 				}
 			}
 		}
 
+#if !NET
 		delegate void nw_listener_advertised_endpoint_changed_handler_t (IntPtr block, IntPtr endpoint, byte added);
 		static nw_listener_advertised_endpoint_changed_handler_t static_AdvertisedEndpointChangedHandler = TrampolineAdvertisedEndpointChangedHandler;
+#endif
 
 		public delegate void AdvertisedEndpointChanged (NWEndpoint endpoint, bool added);
 
+#if !NET
 		[MonoPInvokeCallback (typeof (nw_listener_advertised_endpoint_changed_handler_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineAdvertisedEndpointChangedHandler (IntPtr block, IntPtr endpoint, byte added)
 		{
 			var del = BlockLiteral.GetTarget<AdvertisedEndpointChanged> (block);
@@ -223,8 +247,13 @@ namespace Network {
 					return;
 				}
 
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, byte, void> trampoline = &TrampolineAdvertisedEndpointChangedHandler;
+				using var block = new BlockLiteral (trampoline, callback, typeof (NWListener), nameof (TrampolineAdvertisedEndpointChangedHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_AdvertisedEndpointChangedHandler, callback);
+#endif
 				nw_listener_set_advertised_endpoint_changed_handler (GetCheckedHandle (), &block);
 			}
 		}
@@ -290,10 +319,14 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_listener_set_new_connection_group_handler (IntPtr listener, /* [NullAllowed] */ BlockLiteral* handler);
 
+#if !NET
 		delegate void nw_listener_new_connection_group_handler_t (IntPtr block, nw_connection_group_t group);
 		static nw_listener_new_connection_group_handler_t static_NewConnectionGroup = TrampolineNewConnectionGroup;
 
 		[MonoPInvokeCallback (typeof (nw_listener_new_connection_group_handler_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineNewConnectionGroup (IntPtr block, nw_connection_group_t connectionGroup)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWConnectionGroup>> (block);
@@ -319,8 +352,13 @@ namespace Network {
 		public void SetNewConnectionGroupHandler (Action<NWConnectionGroup> handler)
 		{
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, nw_connection_group_t, void> trampoline = &TrampolineNewConnectionGroup;
+				using var block = new BlockLiteral (trampoline, handler, typeof (NWListener), nameof (TrampolineNewConnectionGroup));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_NewConnectionGroup, handler);
+#endif
 				nw_listener_set_new_connection_group_handler (GetCheckedHandle (), &block);
 			}
 		}

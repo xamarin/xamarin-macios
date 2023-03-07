@@ -76,8 +76,13 @@ namespace ImageIO {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, nint, IntPtr, byte*, void> trampoline = &SDCGImageSourceAnimationBlock.Invoke;
+				using var block = new BlockLiteral (trampoline, handler, typeof (SDCGImageSourceAnimationBlock), nameof (SDCGImageSourceAnimationBlock.Invoke));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, handler);
+#endif
 				return CGAnimateImageAtURLWithBlock (url.Handle, options.GetHandle (), &block);
 			}
 #endif
@@ -105,8 +110,13 @@ namespace ImageIO {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, nint, IntPtr, byte*, void> trampoline = &SDCGImageSourceAnimationBlock.Invoke;
+				using var block = new BlockLiteral (trampoline, handler, typeof (SDCGImageSourceAnimationBlock), nameof (SDCGImageSourceAnimationBlock.Invoke));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, handler);
+#endif
 				return CGAnimateImageDataWithBlock (data.Handle, options.GetHandle (), &block);
 			}
 #endif
@@ -116,9 +126,13 @@ namespace ImageIO {
 		// This class bridges native block invocations that call into C#
 		//
 		static internal class SDCGImageSourceAnimationBlock {
+#if !NET
 			unsafe static internal readonly DCGImageSourceAnimationBlock Handler = Invoke;
 
 			[MonoPInvokeCallback (typeof (DCGImageSourceAnimationBlock))]
+#else
+			[UnmanagedCallersOnly]
+#endif
 			internal unsafe static void Invoke (IntPtr block, nint index, IntPtr image, byte* stop)
 			{
 				var del = BlockLiteral.GetTarget<CGImageSourceAnimationHandler> (block);
@@ -130,9 +144,11 @@ namespace ImageIO {
 			}
 		} /* class SDCGImageSourceAnimationBlock */
 
+#if !NET
 		[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
 		[UserDelegateType (typeof (CGImageSourceAnimationHandler))]
 		unsafe internal delegate void DCGImageSourceAnimationBlock (IntPtr block, nint index, IntPtr imageHandle, byte* stop);
+#endif
 	}
 
 }

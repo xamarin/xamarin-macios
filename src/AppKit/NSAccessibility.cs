@@ -19,6 +19,10 @@ using ObjCRuntime;
 
 #nullable enable
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AppKit {
 	public partial interface INSAccessibility { }
 
@@ -31,22 +35,22 @@ namespace AppKit {
 		[SupportedOSPlatform ("macos")]
 #endif
 		[DllImport (Constants.AppKitLibrary)]
-		static extern CGRect NSAccessibilityFrameInView (NSView parentView, CGRect frame);
+		static extern CGRect NSAccessibilityFrameInView (NativeHandle parentView, CGRect frame);
 
 		public static CGRect GetFrameInView (NSView parentView, CGRect frame)
 		{
-			return NSAccessibilityFrameInView (parentView, frame);
+			return NSAccessibilityFrameInView (parentView.GetHandle (), frame);
 		}
 
 #if NET
 		[SupportedOSPlatform ("macos")]
 #endif
 		[DllImport (Constants.AppKitLibrary)]
-		static extern CGPoint NSAccessibilityPointInView (NSView parentView, CGPoint point);
+		static extern CGPoint NSAccessibilityPointInView (NativeHandle parentView, CGPoint point);
 
 		public static CGPoint GetPointInView (NSView parentView, CGPoint point)
 		{
-			return NSAccessibilityPointInView (parentView, point);
+			return NSAccessibilityPointInView (parentView.GetHandle (), point);
 		}
 
 		[DllImport (Constants.AppKitLibrary)]

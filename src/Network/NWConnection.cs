@@ -99,10 +99,14 @@ namespace Network {
 			}
 		}
 
+#if !NET
 		delegate void StateChangeCallback (IntPtr block, NWConnectionState state, IntPtr error);
 		static StateChangeCallback static_stateChangeHandler = Trampoline_StateChangeCallback;
 
 		[MonoPInvokeCallback (typeof (StateChangeCallback))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void Trampoline_StateChangeCallback (IntPtr block, NWConnectionState state, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWConnectionState, NWError?>> (block);
@@ -124,16 +128,25 @@ namespace Network {
 			}
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, NWConnectionState, IntPtr, void> trampoline = &Trampoline_StateChangeCallback;
+				using var block = new BlockLiteral (trampoline, stateHandler, typeof (NWConnection), nameof (Trampoline_StateChangeCallback));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_stateChangeHandler, stateHandler);
+#endif
 				nw_connection_set_state_changed_handler (GetCheckedHandle (), &block);
 			}
 		}
 
+#if !NET
 		delegate void nw_connection_boolean_event_handler_t (IntPtr block, byte value);
 		static nw_connection_boolean_event_handler_t static_BooleanChangeHandler = TrampolineBooleanChangeHandler;
 
 		[MonoPInvokeCallback (typeof (nw_connection_boolean_event_handler_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineBooleanChangeHandler (IntPtr block, byte value)
 		{
 			var del = BlockLiteral.GetTarget<Action<bool>> (block);
@@ -153,8 +166,13 @@ namespace Network {
 			}
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, byte, void> trampoline = &TrampolineBooleanChangeHandler;
+				using var block = new BlockLiteral (trampoline, callback, typeof (NWConnection), nameof (TrampolineBooleanChangeHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_BooleanChangeHandler, callback);
+#endif
 				nw_connection_set_viability_changed_handler (GetCheckedHandle (), &block);
 			}
 		}
@@ -171,16 +189,25 @@ namespace Network {
 			}
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, byte, void> trampoline = &TrampolineBooleanChangeHandler;
+				using var block = new BlockLiteral (trampoline, callback, typeof (NWConnection), nameof (TrampolineBooleanChangeHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_BooleanChangeHandler, callback);
+#endif
 				nw_connection_set_better_path_available_handler (GetCheckedHandle (), &block);
 			}
 		}
 
+#if !NET
 		delegate void nw_connection_path_event_handler_t (IntPtr block, IntPtr path);
 		static nw_connection_path_event_handler_t static_PathChanged = TrampolinePathChanged;
 
 		[MonoPInvokeCallback (typeof (nw_connection_path_event_handler_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolinePathChanged (IntPtr block, IntPtr path)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWPath>> (block);
@@ -197,8 +224,13 @@ namespace Network {
 		public void SetPathChangedHandler (Action<NWPath> callback)
 		{
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolinePathChanged;
+				using var block = new BlockLiteral (trampoline, callback, typeof (NWConnection), nameof (TrampolinePathChanged));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_PathChanged, callback);
+#endif
 				nw_connection_set_path_changed_handler (GetCheckedHandle (), &block);
 			}
 		}
@@ -238,6 +270,7 @@ namespace Network {
 
 		public void CancelCurrentEndpoint () => nw_connection_cancel_current_endpoint (GetCheckedHandle ());
 
+#if !NET
 		delegate void nw_connection_receive_completion_t (IntPtr block,
 								  IntPtr dispatchData,
 								  IntPtr contentContext,
@@ -247,8 +280,13 @@ namespace Network {
 		static nw_connection_receive_completion_t static_ReceiveCompletion = TrampolineReceiveCompletion;
 		static nw_connection_receive_completion_t static_ReceiveCompletionDispatchData = TrampolineReceiveCompletionData;
 		static nw_connection_receive_completion_t static_ReceiveCompletionDispatchReadnOnlyData = TrampolineReceiveCompletionReadOnlyData;
+#endif
 
+#if !NET
 		[MonoPInvokeCallback (typeof (nw_connection_receive_completion_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineReceiveCompletion (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, byte isComplete, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<NWConnectionReceiveCompletion> (block);
@@ -275,7 +313,11 @@ namespace Network {
 			}
 		}
 
+#if !NET
 		[MonoPInvokeCallback (typeof (nw_connection_receive_completion_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineReceiveCompletionData (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, byte isComplete, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<NWConnectionReceiveDispatchDataCompletion> (block);
@@ -296,7 +338,11 @@ namespace Network {
 			}
 		}
 
+#if !NET
 		[MonoPInvokeCallback (typeof (nw_connection_receive_completion_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineReceiveCompletionReadOnlyData (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, byte isComplete, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<NWConnectionReceiveReadOnlySpanCompletion> (block);
@@ -325,8 +371,13 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, IntPtr, byte, IntPtr, void> trampoline = &TrampolineReceiveCompletion;
+				using var block = new BlockLiteral (trampoline, callback, typeof (NWConnection), nameof (TrampolineReceiveCompletion));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_ReceiveCompletion, callback);
+#endif
 				nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, &block);
 			}
 		}
@@ -338,8 +389,13 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, IntPtr, byte, IntPtr, void> trampoline = &TrampolineReceiveCompletionData;
+				using var block = new BlockLiteral (trampoline, callback, typeof (NWConnection), nameof (TrampolineReceiveCompletionData));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
+#endif
 				nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, &block);
 			}
 		}
@@ -351,8 +407,13 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, IntPtr, byte, IntPtr, void> trampoline = &TrampolineReceiveCompletionReadOnlyData;
+				using var block = new BlockLiteral (trampoline, callback, typeof (NWConnection), nameof (TrampolineReceiveCompletionReadOnlyData));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_ReceiveCompletionDispatchReadnOnlyData, callback);
+#endif
 				nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, &block);
 			}
 		}
@@ -367,8 +428,13 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, IntPtr, byte, IntPtr, void> trampoline = &TrampolineReceiveCompletion;
+				using var block = new BlockLiteral (trampoline, callback, typeof (NWConnection), nameof (TrampolineReceiveCompletion));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_ReceiveCompletion, callback);
+#endif
 				nw_connection_receive_message (GetCheckedHandle (), &block);
 			}
 
@@ -381,8 +447,13 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, IntPtr, byte, IntPtr, void> trampoline = &TrampolineReceiveCompletionData;
+				using var block = new BlockLiteral (trampoline, callback, typeof (NWConnection), nameof (TrampolineReceiveCompletionData));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
+#endif
 				nw_connection_receive_message (GetCheckedHandle (), &block);
 			}
 		}
@@ -394,16 +465,25 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, IntPtr, byte, IntPtr, void> trampoline = &TrampolineReceiveCompletionReadOnlyData;
+				using var block = new BlockLiteral (trampoline, callback, typeof (NWConnection), nameof (TrampolineReceiveCompletionReadOnlyData));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_ReceiveCompletionDispatchReadnOnlyData, callback);
+#endif
 				nw_connection_receive_message (GetCheckedHandle (), &block);
 			}
 		}
 
+#if !NET
 		delegate void nw_connection_send_completion_t (IntPtr block, IntPtr error);
 		static nw_connection_send_completion_t static_SendCompletion = TrampolineSendCompletion;
 
 		[MonoPInvokeCallback (typeof (nw_connection_send_completion_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineSendCompletion (IntPtr block, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWError?>> (block);
@@ -462,8 +542,13 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolineSendCompletion;
+				using var block = new BlockLiteral (trampoline, callback, typeof (NWConnection), nameof (TrampolineSendCompletion));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_SendCompletion, callback);
+#endif
 				LowLevelSend (GetCheckedHandle (), buffer, context.Handle, isComplete, &block);
 			}
 		}
@@ -559,10 +644,14 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_connection_access_establishment_report (IntPtr connection, IntPtr queue, BlockLiteral* access_block);
 
+#if !NET
 		delegate void nw_establishment_report_access_block_t (IntPtr block, nw_establishment_report_t report);
 		static nw_establishment_report_access_block_t static_GetEstablishmentReportHandler = TrampolineGetEstablishmentReportHandler;
 
 		[MonoPInvokeCallback (typeof (nw_establishment_report_access_block_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineGetEstablishmentReportHandler (IntPtr block, nw_establishment_report_t report)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWEstablishmentReport>> (block);
@@ -591,8 +680,13 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, nw_establishment_report_t, void> trampoline = &TrampolineGetEstablishmentReportHandler;
+				using var block = new BlockLiteral (trampoline, handler, typeof (NWConnection), nameof (TrampolineGetEstablishmentReportHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_GetEstablishmentReportHandler, handler);
+#endif
 				nw_connection_access_establishment_report (GetCheckedHandle (), queue.Handle, &block);
 			}
 		}

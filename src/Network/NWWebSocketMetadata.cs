@@ -65,10 +65,14 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_ws_metadata_set_pong_handler (OS_nw_protocol_metadata metadata, dispatch_queue_t client_queue, BlockLiteral* pong_handler);
 
+#if !NET
 		delegate void nw_ws_metadata_set_pong_handler_t (IntPtr block, IntPtr error);
 		static nw_ws_metadata_set_pong_handler_t static_PongHandler = TrampolinePongHandler;
 
 		[MonoPInvokeCallback (typeof (nw_ws_metadata_set_pong_handler_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolinePongHandler (IntPtr block, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWError?>> (block);
@@ -88,8 +92,13 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolinePongHandler;
+				using var block = new BlockLiteral (trampoline, handler, typeof (NWWebSocketMetadata), nameof (TrampolinePongHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_PongHandler, handler);
+#endif
 				nw_ws_metadata_set_pong_handler (GetCheckedHandle (), queue.Handle, &block);
 			}
 		}

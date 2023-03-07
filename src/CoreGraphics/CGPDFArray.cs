@@ -218,11 +218,15 @@ namespace CoreGraphics {
 		}
 #endif
 
+#if !NET
 		delegate byte ApplyBlockHandlerDelegate (IntPtr block, nint index, IntPtr value, IntPtr info);
 		static readonly ApplyBlockHandlerDelegate applyblock_handler = ApplyBlockHandler;
 
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (ApplyBlockHandlerDelegate))]
+#endif
+#else
+		[UnmanagedCallersOnly]
 #endif
 		static byte ApplyBlockHandler (IntPtr block, nint index, IntPtr value, IntPtr info)
 		{
@@ -268,8 +272,13 @@ namespace CoreGraphics {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, nint, IntPtr, IntPtr, byte> trampoline = &ApplyBlockHandler;
+				using var block = new BlockLiteral (trampoline, callback, typeof (CGPDFArray), nameof (ApplyBlockHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (applyblock_handler, callback);
+#endif
 				var gc_handle = info is null ? default (GCHandle) : GCHandle.Alloc (info);
 				try {
 					return CGPDFArrayApplyBlock (Handle, &block, info is null ? IntPtr.Zero : GCHandle.ToIntPtr (gc_handle));

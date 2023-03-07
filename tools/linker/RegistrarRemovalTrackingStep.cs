@@ -122,21 +122,37 @@ namespace MonoTouch.Tuner {
 						}
 						break;
 					case "BlockLiteral":
+						// Req 2:
+						// * Nobody must call BlockLiteral.SetupBlock[Unsafe].
+						// * Nobody must call BlockLiteral..ctor (void*, object, Type, string)
+						//
+						// Fortunately the linker is able to rewrite:
+						//
+						// * Calls to SetupBlock[Unsafe] to call SetupBlockImpl
+						// * Calls to .ctor(void*, object, Type, string) to call .ctor(void*, object, string)
+						//
+						// and these overloads don't need the dynamic registrar, which means we only have
+						// to look in assemblies that aren't linked.
+						if (Annotations.GetAction (assembly) == AssemblyAction.Link && Optimizations.OptimizeBlockLiteralSetupBlock == true)
+							break;
+
 						switch (mr.Name) {
 						case "SetupBlock":
 						case "SetupBlockUnsafe":
-							// Req 2: Nobody must call BlockLiteral.SetupBlock[Unsafe].
-							//
-							// Fortunately the linker is able to rewrite calls to SetupBlock[Unsafe] to call
-							// SetupBlockImpl (which doesn't need the dynamic registrar), which means we only have
-							// to look in assemblies that aren't linked.
-							if (Annotations.GetAction (assembly) == AssemblyAction.Link && Optimizations.OptimizeBlockLiteralSetupBlock == true)
-								break;
-
 							if (warnIfRequired)
 								Warn (assembly, mr);
 
 							requires = true;
+							break;
+						case ".ctor":
+							var md = mr.Resolve () as MethodDefinition;
+#if NET
+							requires |= Xamarin.Linker.OptimizeGeneratedCodeHandler.IsBlockLiteralCtor_Type_String (md);
+#else
+							requires |= Xamarin.Linker.OptimizeGeneratedCodeSubStep.IsBlockLiteralCtor_Type_String (md);
+#endif
+							if (requires && warnIfRequired)
+								Warn (assembly, mr);
 							break;
 						}
 						break;

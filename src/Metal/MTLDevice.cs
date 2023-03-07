@@ -110,8 +110,13 @@ namespace Metal {
 			IntPtr observer_handle;
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> trampoline = &TrampolineNotificationHandler;
+				using var block = new BlockLiteral (trampoline, handler, typeof (MTLDevice), nameof (TrampolineNotificationHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_notificationHandler, handler);
+#endif
 
 				rv = MTLCopyAllDevicesWithObserver (out observer_handle, &block);
 			}
@@ -136,9 +141,13 @@ namespace Metal {
 		}
 #endif // !NET
 
+#if !NET
 		internal delegate void InnerNotification (IntPtr block, IntPtr device, IntPtr notifyName);
 		static readonly InnerNotification static_notificationHandler = TrampolineNotificationHandler;
 		[MonoPInvokeCallback (typeof (InnerNotification))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		public static unsafe void TrampolineNotificationHandler (IntPtr block, IntPtr device, IntPtr notifyName)
 		{
 			var descriptor = (BlockLiteral*) block;

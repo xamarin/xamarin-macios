@@ -77,10 +77,14 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_framer_set_wakeup_handler (OS_nw_framer framer, void* wakeup_handler);
 
+#if !NET
 		delegate void nw_framer_set_wakeup_handler_t (IntPtr block, OS_nw_framer framer);
 		static nw_framer_set_wakeup_handler_t static_WakeupHandler = TrampolineWakeupHandler;
 
 		[MonoPInvokeCallback (typeof (nw_framer_set_wakeup_handler_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineWakeupHandler (IntPtr block, OS_nw_framer framer)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWFramer>> (block);
@@ -98,8 +102,13 @@ namespace Network {
 						nw_framer_set_wakeup_handler (GetCheckedHandle (), null);
 						return;
 					}
+#if NET
+					delegate* unmanaged<IntPtr, OS_nw_framer, void> trampoline = &TrampolineWakeupHandler;
+					using var block = new BlockLiteral (trampoline, value, typeof (NWFramer), nameof (TrampolineWakeupHandler));
+#else
 					using var block = new BlockLiteral ();
 					block.SetupBlockUnsafe (static_WakeupHandler, value);
+#endif
 					nw_framer_set_wakeup_handler (GetCheckedHandle (), &block);
 				}
 			}
@@ -108,10 +117,14 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_framer_set_stop_handler (OS_nw_framer framer, void* stop_handler);
 
+#if !NET
 		delegate void nw_framer_set_stop_handler_t (IntPtr block, OS_nw_framer framer);
 		static nw_framer_set_stop_handler_t static_StopHandler = TrampolineStopHandler;
 
 		[MonoPInvokeCallback (typeof (nw_framer_set_stop_handler_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineStopHandler (IntPtr block, OS_nw_framer framer)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWFramer>> (block);
@@ -129,8 +142,13 @@ namespace Network {
 						nw_framer_set_stop_handler (GetCheckedHandle (), null);
 						return;
 					}
+#if NET
+					delegate* unmanaged<IntPtr, OS_nw_framer, void> trampoline = &TrampolineStopHandler;
+					using var block = new BlockLiteral (trampoline, value, typeof (NWFramer), nameof (TrampolineStopHandler));
+#else
 					using var block = new BlockLiteral ();
 					block.SetupBlockUnsafe (static_StopHandler, value);
+#endif
 					nw_framer_set_stop_handler (GetCheckedHandle (), &block);
 				}
 			}
@@ -139,10 +157,14 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_framer_set_output_handler (OS_nw_framer framer, void* output_handler);
 
+#if !NET
 		delegate void nw_framer_set_output_handler_t (IntPtr block, OS_nw_framer framer, OS_nw_protocol_metadata message, nuint message_length, byte is_complete);
 		static nw_framer_set_output_handler_t static_OutputHandler = TrampolineOutputHandler;
 
 		[MonoPInvokeCallback (typeof (nw_framer_set_output_handler_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineOutputHandler (IntPtr block, OS_nw_framer framer, OS_nw_protocol_metadata message, nuint message_length, byte is_complete)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWFramer, NWProtocolMetadata, nuint, bool>> (block);
@@ -161,8 +183,13 @@ namespace Network {
 						nw_framer_set_output_handler (GetCheckedHandle (), null);
 						return;
 					}
+#if NET
+					delegate* unmanaged<IntPtr, OS_nw_framer, OS_nw_protocol_metadata, nuint, byte, void> trampoline = &TrampolineOutputHandler;
+					using var block = new BlockLiteral (trampoline, value, typeof (NWFramer), nameof (TrampolineOutputHandler));
+#else
 					using var block = new BlockLiteral ();
 					block.SetupBlockUnsafe (static_OutputHandler, value);
+#endif
 					nw_framer_set_output_handler (GetCheckedHandle (), &block);
 				}
 			}
@@ -171,10 +198,14 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_framer_set_input_handler (OS_nw_framer framer, void* input_handler);
 
+#if !NET
 		delegate nuint nw_framer_set_input_handler_t (IntPtr block, OS_nw_framer framer);
 		static nw_framer_set_input_handler_t static_InputHandler = TrampolineInputHandler;
 
 		[MonoPInvokeCallback (typeof (nw_framer_set_input_handler_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static nuint TrampolineInputHandler (IntPtr block, OS_nw_framer framer)
 		{
 			var del = BlockLiteral.GetTarget<NWFramerInputDelegate> (block);
@@ -193,8 +224,13 @@ namespace Network {
 						nw_framer_set_input_handler (GetCheckedHandle (), null);
 						return;
 					}
+#if NET
+					delegate* unmanaged<IntPtr, OS_nw_framer, nuint> trampoline = &TrampolineInputHandler;
+					using var block = new BlockLiteral (trampoline, value, typeof (NWFramer), nameof (TrampolineInputHandler));
+#else
 					using var block = new BlockLiteral ();
 					block.SetupBlockUnsafe (static_InputHandler, value);
+#endif
 					nw_framer_set_input_handler (GetCheckedHandle (), &block);
 				}
 			}
@@ -203,10 +239,14 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_framer_set_cleanup_handler (OS_nw_framer framer, void* cleanup_handler);
 
+#if !NET
 		delegate void nw_framer_set_cleanup_handler_t (IntPtr block, OS_nw_framer framer);
 		static nw_framer_set_cleanup_handler_t static_CleanupHandler = TrampolineCleanupHandler;
 
 		[MonoPInvokeCallback (typeof (nw_framer_set_cleanup_handler_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineCleanupHandler (IntPtr block, OS_nw_framer framer)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWFramer>> (block);
@@ -224,8 +264,13 @@ namespace Network {
 						nw_framer_set_cleanup_handler (GetCheckedHandle (), null);
 						return;
 					}
+#if NET
+					delegate* unmanaged<IntPtr, OS_nw_framer, void> trampoline = &TrampolineCleanupHandler;
+					using var block = new BlockLiteral (trampoline, value, typeof (NWFramer), nameof (TrampolineCleanupHandler));
+#else
 					using var block = new BlockLiteral ();
 					block.SetupBlockUnsafe (static_CleanupHandler, value);
+#endif
 					nw_framer_set_cleanup_handler (GetCheckedHandle (), &block);
 				}
 			}
@@ -330,10 +375,14 @@ namespace Network {
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern unsafe bool nw_framer_parse_output (OS_nw_framer framer, nuint minimum_incomplete_length, nuint maximum_length, byte* temp_buffer, BlockLiteral* parse);
 
+#if !NET
 		delegate void nw_framer_parse_output_t (IntPtr block, IntPtr buffer, nuint buffer_length, byte is_complete);
 		static nw_framer_parse_output_t static_ParseOutputHandler = TrampolineParseOutputHandler;
 
 		[MonoPInvokeCallback (typeof (nw_framer_parse_output_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineParseOutputHandler (IntPtr block, IntPtr buffer, nuint buffer_length, byte is_complete)
 		{
 			var del = BlockLiteral.GetTarget<Action<Memory<byte>, bool>> (block);
@@ -351,8 +400,13 @@ namespace Network {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, nuint, byte, void> trampoline = &TrampolineParseOutputHandler;
+				using var block = new BlockLiteral (trampoline, handler, typeof (NWFramer), nameof (TrampolineParseOutputHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_ParseOutputHandler, handler);
+#endif
 				using (var mh = tempBuffer.Pin ())
 					return nw_framer_parse_output (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (byte*) mh.Pointer, &block);
 			}
@@ -362,10 +416,14 @@ namespace Network {
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern unsafe bool nw_framer_parse_input (OS_nw_framer framer, nuint minimum_incomplete_length, nuint maximum_length, byte* temp_buffer, BlockLiteral* parse);
 
+#if !NET
 		delegate nuint nw_framer_parse_input_t (IntPtr block, IntPtr buffer, nuint buffer_length, byte is_complete);
 		static nw_framer_parse_input_t static_ParseInputHandler = TrampolineParseInputHandler;
 
 		[MonoPInvokeCallback (typeof (nw_framer_parse_input_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static nuint TrampolineParseInputHandler (IntPtr block, IntPtr buffer, nuint buffer_length, byte is_complete)
 		{
 			var del = BlockLiteral.GetTarget<NWFramerParseCompletionDelegate> (block);
@@ -384,8 +442,13 @@ namespace Network {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, nuint, byte, nuint> trampoline = &TrampolineParseInputHandler;
+				using var block = new BlockLiteral (trampoline, handler, typeof (NWFramer), nameof (TrampolineParseInputHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_ParseInputHandler, handler);
+#endif
 				using (var mh = tempBuffer.Pin ())
 					return nw_framer_parse_input (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (byte*) mh.Pointer, &block);
 			}

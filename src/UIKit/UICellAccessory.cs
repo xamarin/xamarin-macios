@@ -62,9 +62,13 @@ namespace UIKit {
 	// This class bridges native block invocations that call into C#
 	//
 	static internal class SDUICellAccessoryPosition {
+#if !NET
 		static internal readonly DUICellAccessoryPosition Handler = Invoke;
 
 		[MonoPInvokeCallback (typeof (DUICellAccessoryPosition))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static unsafe nuint Invoke (IntPtr block, IntPtr accessories)
 		{
 			var descriptor = (BlockLiteral*) block;
