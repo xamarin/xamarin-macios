@@ -59,3 +59,14 @@ public class TrampolineInfo {
 		}
 	}
 }
+
+class TrampolineParameterInfo {
+	public string Type;
+	public string ParameterName;
+
+	public TrampolineParameterInfo (string type, string parameterName)
+	{
+		Type = type;
+		ParameterName = parameterName;
+	}
+}

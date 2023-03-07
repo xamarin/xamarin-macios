@@ -42,15 +42,15 @@ public class MarshalTypeList : List<MarshalType> {
 			Add (typeManager.CVImageBuffer);
 		}
 		if (frameworks.HaveMediaToolbox)
-			Add (new MarshalType (typeManager.MTAudioProcessingTap, create: "MediaToolbox.MTAudioProcessingTap.FromHandle("));
+			Add (new MarshalType (typeManager.MTAudioProcessingTap!, create: "MediaToolbox.MTAudioProcessingTap.FromHandle("));
 		if (frameworks.HaveAddressBook) {
 			Add (typeManager.ABAddressBook);
-			Add (new MarshalType (typeManager.ABPerson, create: "(ABPerson) ABRecord.FromHandle (", closingCreate: ")!"));
-			Add (new MarshalType (typeManager.ABRecord, create: "ABRecord.FromHandle (", closingCreate: ")!"));
+			Add (new MarshalType (typeManager.ABPerson!, create: "(ABPerson) ABRecord.FromHandle (", closingCreate: ")!"));
+			Add (new MarshalType (typeManager.ABRecord!, create: "ABRecord.FromHandle (", closingCreate: ")!"));
 		}
 		if (frameworks.HaveCoreVideo) {
 			// owns `false` like ptr ctor https://github.com/xamarin/xamarin-macios/blob/6f68ab6f79c5f1d96d2cbb1e697330623164e46d/src/CoreVideo/CVBuffer.cs#L74-L90
-			Add (new MarshalType (typeManager.CVPixelBuffer, create: "Runtime.GetINativeObject<CVPixelBuffer> (", closingCreate: ", false)!"));
+			Add (new MarshalType (typeManager.CVPixelBuffer!, create: "Runtime.GetINativeObject<CVPixelBuffer> (", closingCreate: ", false)!"));
 		}
 		Add (typeManager.CGLayer);
 		if (frameworks.HaveCoreMedia)
@@ -63,7 +63,7 @@ public class MarshalTypeList : List<MarshalType> {
 		if (frameworks.HaveAudioUnit)
 			Add (typeManager.AudioComponent);
 		if (frameworks.HaveCoreMedia) {
-			Add (new MarshalType (typeManager.CMFormatDescription, create: "CMFormatDescription.Create (", closingCreate: ")!"));
+			Add (new MarshalType (typeManager.CMFormatDescription!, create: "CMFormatDescription.Create (", closingCreate: ")!"));
 			Add (typeManager.CMAudioFormatDescription);
 			Add (typeManager.CMVideoFormatDescription);
 		}
@@ -80,6 +80,12 @@ public class MarshalTypeList : List<MarshalType> {
 		if (frameworks.HaveAudioUnit) {
 			Add (typeManager.AURenderEventEnumerator);
 		}
+	}
+
+	void Add (Type? type)
+	{
+		if (type is not null)
+			base.Add (type);
 	}
 
 #if NET
