@@ -53,9 +53,11 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	if (platform == "macOS") {
 		writer.WriteLine ($"				\"microsoft-net-runtime-mono-tooling\",");
 		writer.WriteLine ($"				\"microsoft-net-runtime-mono-tooling-net6\",");
+		writer.WriteLine ($"				\"microsoft-net-runtime-mono-tooling-net7\",");
 	} else {
 		writer.WriteLine ($"				\"microsoft-net-runtime-{platformLowerCase}\",");
 		writer.WriteLine ($"				\"microsoft-net-runtime-{platformLowerCase}-net6\",");
+		writer.WriteLine ($"				\"microsoft-net-runtime-{platformLowerCase}-net7\",");
 	}
 	writer.WriteLine ($"			]");
 	writer.WriteLine ($"		}},");
