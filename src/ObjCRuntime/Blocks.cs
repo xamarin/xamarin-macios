@@ -34,6 +34,10 @@ using System.Threading;
 using Foundation;
 using ObjCRuntime;
 
+#if !COREBUILD
+using Xamarin.Bundler;
+#endif
+
 // http://clang.llvm.org/docs/Block-ABI-Apple.html
 
 namespace ObjCRuntime {
@@ -58,7 +62,12 @@ namespace ObjCRuntime {
 	}
 
 	[StructLayout (LayoutKind.Sequential)]
-#if COREBUILD
+#if XAMCORE_5_0
+	// Let's try to make this a ref struct in XAMCORE_5_0, that will mean blocks can't be boxed (which is good, because it would most likely result in broken code).
+	// Note that the presence of a Dispose method is enough to be able to do a 'using var block = new BlockLiteral ()' in C# due to pattern-based using for 'ref structs':
+	// Ref: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-8.0/using#pattern-based-using
+	public unsafe ref struct BlockLiteral
+#elif COREBUILD
 	public unsafe struct BlockLiteral {
 #else
 	public unsafe struct BlockLiteral : IDisposable {
@@ -86,8 +95,95 @@ namespace ObjCRuntime {
 		[DllImport ("__Internal")]
 		static extern IntPtr xamarin_get_block_descriptor ();
 
+#if NET
+		/// <summary>
+		/// Creates a block literal.
+		/// </summary>
+		/// <param name="trampoline">A function pointer that will be called when the block is called. This function must have an [UnmanagedCallersOnly] attribute.</param>
+		/// <param name="context">A context object that can be retrieved from the trampoline. This is typically a delegate to the managed function to call.</param>
+		/// <param name="trampolineType">The type where the trampoline is located.</param>
+		/// <param name="trampolineMethod">The name of the trampoline method.</param>
+		/// <remarks>
+		/// The 'trampolineType' and 'trampolineMethod' must uniquely define the trampoline method (it will be looked up using reflection).
+		/// If there are multiple methods with the same name, use the overload that takes a MethodInfo instead.
+		/// </remarks>
+		public BlockLiteral (void* trampoline, object context, Type trampolineType, string trampolineMethod)
+			: this (trampoline, context, FindTrampoline (trampolineType, trampolineMethod))
+		{
+		}
+
+		/// <summary>
+		/// Creates a block literal.
+		/// </summary>
+		/// <param name="trampoline">A function pointer that will be called when the block is called. This function must have an [UnmanagedCallersOnly] attribute.</param>
+		/// <param name="context">A context object that can be retrieved from the trampoline. This is typically a delegate to the managed function to call.</param>
+		/// <param name="trampolineMethod">The MethodInfo instance corresponding with the trampoline method.</param>
+		public BlockLiteral (void* trampoline, object context, MethodInfo trampolineMethod)
+			: this (trampoline, context, GetBlockSignature (trampoline, trampolineMethod))
+		{
+		}
+
+		/// <summary>
+		/// Creates a block literal.
+		/// </summary>
+		/// <param name="trampoline">A function pointer that will be called when the block is called. This function must have an [UnmanagedCallersOnly] attribute.</param>
+		/// <param name="context">A context object that can be retrieved from the trampoline. This is typically a delegate to the managed function to call.</param>
+		/// <param name="trampolineSignature">The Objective-C signature of the trampoline method.</param>
+		public BlockLiteral (void* trampoline, object context, string trampolineSignature)
+		{
+			isa = IntPtr.Zero;
+			flags = (BlockFlags) 0;
+			reserved = 0;
+			invoke = IntPtr.Zero;
+			block_descriptor = IntPtr.Zero;
+			local_handle = IntPtr.Zero;
+			global_handle = IntPtr.Zero;
+			SetupFunctionPointerBlock ((IntPtr) trampoline, context, System.Text.Encoding.UTF8.GetBytes (trampolineSignature));
+		}
+
+		static MethodInfo FindTrampoline (Type trampolineType, string trampolineMethod)
+		{
+			var rv = trampolineType.GetMethod (trampolineMethod, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+
+			if (rv is null)
+				throw ErrorHelper.CreateError (8046, Errors.MX8046 /* Unable to find the method '{0}' in the type '{1}' */, trampolineMethod, trampolineType.FullName);
+
+			return rv;
+		}
+
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		void SetupBlock (Delegate trampoline, Delegate userDelegate, bool safe)
+		static string GetBlockSignature (void* trampoline, MethodInfo trampolineMethod)
+		{
+			if (!Runtime.DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8050, Errors.MX8050 /* BlockLiteral.GetBlockSignature is not supported when the dynamic registrar has been linked away. */);
+
+			// Verify that the function pointer matches the trampoline
+			var functionPointer = trampolineMethod.MethodHandle.GetFunctionPointer ();
+			if (functionPointer != (IntPtr) trampoline)
+				throw ErrorHelper.CreateError (8047, Errors.MX8047 /* The trampoline method {0} does not match the function pointer 0x{1} for the trampolineMethod argument (they're don't refer to the same method) */, trampolineMethod.DeclaringType.FullName + "." + trampolineMethod.Name, ((IntPtr) trampoline).ToString ("x"));
+
+			// Verify that there's at least one parameter, and it must be System.IntPtr, void* or ObjCRuntime.BlockLiteral*.
+			var parameters = trampolineMethod.GetParameters ();
+			if (parameters.Length < 1)
+				throw ErrorHelper.CreateError (8048, Errors.MX8048 /* The trampoline method {0} must have at least one parameter. */, trampolineMethod.DeclaringType.FullName + "." + trampolineMethod.Name);
+			var firstParameterType = parameters [0].ParameterType;
+			if (firstParameterType != typeof (IntPtr) &&
+				firstParameterType != typeof (void*) &&
+				firstParameterType != typeof (BlockLiteral*)) {
+				throw ErrorHelper.CreateError (8049, Errors.MX8049 /* The first parameter in the trampoline method {0} must be either 'System.IntPtr', 'void*' or 'ObjCRuntime.BlockLiteral*'. */, trampolineMethod.DeclaringType.FullName + "." + trampolineMethod.Name);
+			}
+
+			// Verify that the method as an [UnmanagedCallersOnly] attribute
+			if (!trampolineMethod.IsDefined (typeof (UnmanagedCallersOnlyAttribute), false))
+				throw ErrorHelper.CreateError (8051, Errors.MX8051 /* The trampoline method {0} must have an [UnmanagedCallersOnly] attribute. */, trampolineMethod.DeclaringType.FullName + "." + trampolineMethod.Name);
+
+			// We're good to go!
+			return Runtime.ComputeSignature (trampolineMethod, true);
+		}
+#endif // NET
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		void SetupBlock (Delegate trampoline, Delegate target, bool safe)
 		{
 			if (!Runtime.DynamicRegistrationSupported)
 				throw ErrorHelper.CreateError (8026, "BlockLiteral.SetupBlock is not supported when the dynamic registrar has been linked away.");
@@ -114,23 +210,40 @@ namespace ObjCRuntime {
 			}
 
 			var signature = Runtime.ComputeSignature (userMethod, blockSignature);
-			SetupBlockImpl (trampoline, userDelegate, safe, signature);
+			SetupBlockImpl (trampoline, target, safe, System.Text.Encoding.UTF8.GetBytes (signature));
 		}
 
-		// This method is not to be called manually by user code.
-		// This is enforced by making it private. If the SetupBlock optimization is enabled,
-		// the linker will make it public so that it's callable from optimized user code.
-		unsafe void SetupBlockImpl (Delegate trampoline, Delegate userDelegate, bool safe, string signature)
+		void SetupBlockImpl (Delegate trampoline, Delegate target, bool safe, string signature)
 		{
-			isa = NSConcreteStackBlock;
-			invoke = Marshal.GetFunctionPointerForDelegate (trampoline);
-			object delegates;
+			SetupBlockImpl (trampoline, target, safe, System.Text.Encoding.UTF8.GetBytes (signature));
+		}
+
+		void SetupBlockImpl (Delegate trampoline, Delegate target, bool safe, byte [] utf8Signature)
+		{
+			var invoke = Marshal.GetFunctionPointerForDelegate (trampoline);
+			SetupFunctionPointerBlock (invoke, GetContext (trampoline, target, safe), utf8Signature);
+		}
+
+		static object GetContext (Delegate trampoline, Delegate target, bool safe)
+		{
 			if (safe) {
-				delegates = new Tuple<Delegate, Delegate> (trampoline, userDelegate);
+				return new Tuple<Delegate, Delegate> (trampoline, target);
 			} else {
-				delegates = userDelegate;
+				return target;
 			}
-			local_handle = (IntPtr) GCHandle.Alloc (delegates);
+		}
+
+		void SetupFunctionPointerBlock (IntPtr invokeMethod, object context, byte [] utf8Signature)
+		{
+			if (utf8Signature is null)
+				ThrowHelper.ThrowArgumentNullException (nameof (utf8Signature));
+
+			if (utf8Signature.Length == 0)
+				ThrowHelper.ThrowArgumentException (nameof (utf8Signature), Errors.MX8052 /* The signature must be a non-empty string. */);
+
+			isa = NSConcreteStackBlock;
+			invoke = invokeMethod;
+			local_handle = (IntPtr) GCHandle.Alloc (context);
 			global_handle = IntPtr.Zero;
 			flags = BlockFlags.BLOCK_HAS_COPY_DISPOSE | BlockFlags.BLOCK_HAS_SIGNATURE;
 
@@ -141,8 +254,9 @@ namespace ObjCRuntime {
 			// for the signature if we can avoid it). One descriptor is allocated for every 
 			// Block; this is potentially something the static registrar can fix, since it
 			// should know every possible trampoline signature.
-			var bytes = System.Text.Encoding.UTF8.GetBytes (signature);
-			var desclen = sizeof (XamarinBlockDescriptor) + bytes.Length + 1 /* null character */;
+			var bytes = utf8Signature;
+			var hasNull = utf8Signature [utf8Signature.Length - 1] == 0;
+			var desclen = sizeof (XamarinBlockDescriptor) + bytes.Length + (hasNull ? 0 : 1 /* null character */);
 			var descptr = Marshal.AllocHGlobal (desclen);
 
 			block_descriptor = descptr;
@@ -151,7 +265,8 @@ namespace ObjCRuntime {
 			xblock_descriptor->descriptor.signature = descptr + sizeof (BlockDescriptor) + 4 /* signature_length */;
 			xblock_descriptor->ref_count = 1;
 			Marshal.Copy (bytes, 0, xblock_descriptor->descriptor.signature, bytes.Length);
-			Marshal.WriteByte (xblock_descriptor->descriptor.signature + bytes.Length, 0); // null terminate string
+			if (!hasNull)
+				Marshal.WriteByte (xblock_descriptor->descriptor.signature + bytes.Length, 0); // null terminate string
 		}
 
 		// trampoline must be static, and someone else needs to keep a ref to it
@@ -162,6 +277,7 @@ namespace ObjCRuntime {
 		}
 
 		// trampoline must be static, but it's not necessary to keep a ref to it
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public void SetupBlock (Delegate trampoline, Delegate userDelegate)
 		{
 			if (trampoline is null)
@@ -231,10 +347,19 @@ namespace ObjCRuntime {
 			}
 		}
 
-		public object Target {
+		/// <summary>
+		/// This is the 'context' value that was specified when creating the BlockLiteral.
+		/// </summary>
+		public object Context {
 			get {
 				var handle = global_handle != IntPtr.Zero ? global_handle : local_handle;
-				var target = GCHandle.FromIntPtr (handle).Target;
+				return GCHandle.FromIntPtr (handle).Target;
+			}
+		}
+
+		public object Target {
+			get {
+				var target = Context;
 				var tuple = target as Tuple<Delegate, Delegate>;
 				if (tuple != null)
 					return tuple.Item2;
@@ -313,6 +438,24 @@ namespace ObjCRuntime {
 			throw ErrorHelper.CreateError (8011, $"Unable to locate the delegate to block conversion attribute ([DelegateProxy]) for the return value for the method {baseMethod.DeclaringType.FullName}.{baseMethod.Name}. {Constants.PleaseFileBugReport}");
 		}
 
+#if NET
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		unsafe static IntPtr GetBlockForFunctionPointer (MethodInfo delegateInvokeMethod, object @delegate, string signature)
+		{
+			void* invokeFunctionPointer = (void *) delegateInvokeMethod.MethodHandle.GetFunctionPointer ();
+			if (signature is null) {
+				if (!Runtime.DynamicRegistrationSupported)
+					throw ErrorHelper.CreateError (8026, $"BlockLiteral.GetBlockForDelegate with a null signature is not supported when the dynamic registrar has been linked away (delegate type: {@delegate.GetType ().FullName}).");
+
+				using (var block = new BlockLiteral (invokeFunctionPointer, @delegate, delegateInvokeMethod))
+					return _Block_copy (&block);
+			} else {
+				using (var block = new BlockLiteral (invokeFunctionPointer, @delegate, signature))
+					return _Block_copy (&block);
+			}
+		}
+#endif // NET
+
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal static IntPtr GetBlockForDelegate (MethodInfo minfo, object @delegate, uint token_ref, string signature)
 		{
@@ -327,6 +470,12 @@ namespace ObjCRuntime {
 				baseMethod = minfo; // 'baseMethod' is only used in error messages, and if it's null, we just use the closest alternative we have (minfo).
 			if (delegateProxyType == null)
 				throw ErrorHelper.CreateError (8012, $"Invalid DelegateProxyAttribute for the return value for the method {baseMethod.DeclaringType.FullName}.{baseMethod.Name}: DelegateType is null. {Constants.PleaseFileBugReport}");
+
+#if NET
+			var delegateInvokeMethod = delegateProxyType.GetMethod ("Invoke", BindingFlags.NonPublic | BindingFlags.Static);
+			if (delegateInvokeMethod is not null && delegateInvokeMethod.IsDefined (typeof (UnmanagedCallersOnlyAttribute), false))
+				return GetBlockForFunctionPointer (delegateInvokeMethod, @delegate, signature);
+#endif
 
 			var delegateProxyField = delegateProxyType.GetField ("Handler", BindingFlags.NonPublic | BindingFlags.Static);
 			if (delegateProxyField is null)
@@ -381,10 +530,14 @@ namespace ObjCRuntime {
 	// first use of the class
 
 	internal class BlockStaticDispatchClass {
+#if !NET
 		internal delegate void dispatch_block_t (IntPtr block);
 
 		[MonoPInvokeCallback (typeof (dispatch_block_t))]
-		static unsafe void TrampolineDispatchBlock (IntPtr block)
+#else
+		[UnmanagedCallersOnly]
+#endif
+		internal static unsafe void TrampolineDispatchBlock (IntPtr block)
 		{
 			var del = BlockLiteral.GetTarget<Action> (block);
 			if (del != null) {
@@ -395,12 +548,19 @@ namespace ObjCRuntime {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		unsafe internal static BlockLiteral CreateBlock (Action action)
 		{
+#if NET
+			delegate* unmanaged<IntPtr, void> trampoline = &BlockStaticDispatchClass.TrampolineDispatchBlock;
+			return new BlockLiteral (trampoline, action, typeof (BlockStaticDispatchClass), nameof (TrampolineDispatchBlock));
+#else
 			var block = new BlockLiteral ();
 			block.SetupBlockUnsafe (static_dispatch_block, action);
 			return block;
+#endif
 		}
 
+#if !NET
 		internal static dispatch_block_t static_dispatch_block = TrampolineDispatchBlock;
+#endif
 	}
 
 	// This class will free the specified block when it's collected by the GC.

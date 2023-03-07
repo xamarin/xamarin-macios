@@ -153,8 +153,13 @@ namespace Security {
 #else
 		[Deprecated (PlatformName.MacOSX, 10,7)]
 #endif
+#if NET
+		[DllImport (Constants.SecurityLibrary)]
+		extern static int /* OSStatus = int */ AuthorizationExecuteWithPrivileges (IntPtr handle, IntPtr pathToTool, AuthorizationFlags flags, IntPtr args, IntPtr FILEPtr);
+#else
 		[DllImport (Constants.SecurityLibrary)]
 		extern static int /* OSStatus = int */ AuthorizationExecuteWithPrivileges (IntPtr handle, string pathToTool, AuthorizationFlags flags, string? []? args, IntPtr FILEPtr);
+#endif
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static int /* OSStatus = int */ AuthorizationFree (IntPtr handle, AuthorizationFlags flags);
@@ -186,8 +191,15 @@ namespace Security {
 					arguments = array;
 				}
 			}
-
+#if NET
+			using var pathToToolStr = new TransientString (pathToTool);
+			var argsPtr = TransientString.AllocStringArray (arguments);
+			var retval = AuthorizationExecuteWithPrivileges (Handle, pathToToolStr, flags, argsPtr, IntPtr.Zero);
+			TransientString.FreeStringArray (argsPtr, args is null ? 0 : args.Length);
+			return retval;
+#else
 			return AuthorizationExecuteWithPrivileges (Handle, pathToTool, flags, arguments, IntPtr.Zero);
+#endif
 		}
 
 		protected override void Dispose (bool disposing)

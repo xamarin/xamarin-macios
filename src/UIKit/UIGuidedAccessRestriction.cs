@@ -61,19 +61,27 @@ namespace UIKit {
 #endif
 		public delegate void UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler (bool success, NSError error);
 
+#if !NET
 		[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-		internal delegate void DUIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler (IntPtr block, bool success, IntPtr error);
+		internal delegate void DUIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler (IntPtr block, byte success, IntPtr error);
+#endif
 
 		static internal class UIGuidedAccessConfigureAccessibilityFeaturesTrampoline {
+#if !NET
 			static internal readonly DUIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler Handler = Invoke;
+#endif
 
+#if NET
+			[UnmanagedCallersOnlyAttribute]
+#else
 			[MonoPInvokeCallback (typeof (DUIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler))]
-			static unsafe void Invoke (IntPtr block, bool success, IntPtr error)
+#endif
+			internal static unsafe void Invoke (IntPtr block, byte success, IntPtr error)
 			{
 				var descriptor = (BlockLiteral*) block;
 				var del = (UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler) (descriptor->Target);
 				if (del != null)
-					del (success, Runtime.GetNSObject<NSError> (error));
+					del (success != 0, Runtime.GetNSObject<NSError> (error));
 			}
 		}
 
@@ -91,8 +99,13 @@ namespace UIKit {
 				throw new ArgumentNullException (nameof (completionHandler));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, byte, IntPtr, void> trampoline = &UIGuidedAccessConfigureAccessibilityFeaturesTrampoline.Invoke;
+				using var block = new BlockLiteral (trampoline, completionHandler, typeof (UIGuidedAccessConfigureAccessibilityFeaturesTrampoline), nameof (UIGuidedAccessConfigureAccessibilityFeaturesTrampoline.Invoke));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (UIGuidedAccessConfigureAccessibilityFeaturesTrampoline.Handler, completionHandler);
+#endif
 				UIGuidedAccessConfigureAccessibilityFeatures ((nuint) (ulong) features, enabled, &block);
 			}
 		}

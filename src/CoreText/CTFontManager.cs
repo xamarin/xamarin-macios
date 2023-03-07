@@ -232,14 +232,22 @@ namespace CoreText {
 #endif
 		public delegate bool CTFontRegistrationHandler (NSError [] errors, bool done);
 
-		internal delegate bool InnerRegistrationHandler (IntPtr block, IntPtr errors, bool done);
+#if !NET
+		internal delegate byte InnerRegistrationHandler (IntPtr block, IntPtr errors, byte done);
 		static readonly InnerRegistrationHandler callback = TrampolineRegistrationHandler;
 
 		[MonoPInvokeCallback (typeof (InnerRegistrationHandler))]
-		static unsafe bool TrampolineRegistrationHandler (IntPtr block, /* NSArray */ IntPtr errors, bool done)
+#else
+		[UnmanagedCallersOnly]
+#endif
+		static unsafe byte TrampolineRegistrationHandler (IntPtr block, /* NSArray */ IntPtr errors, byte done)
 		{
 			var del = BlockLiteral.GetTarget<CTFontRegistrationHandler> (block);
-			return del is not null ? del (NSArray.ArrayFromHandle<NSError> (errors), done) : true;
+			if (del is null)
+				return 0;
+
+			var rv = del (NSArray.ArrayFromHandle<NSError> (errors), done == 0 ? false : true);
+			return rv ? (byte) 1 : (byte) 0;
 		}
 
 #if NET
@@ -277,8 +285,13 @@ namespace CoreText {
 					}
 				} else {
 					unsafe {
+#if NET
+						delegate* unmanaged<IntPtr, IntPtr, byte, byte> trampoline = &TrampolineRegistrationHandler;
+						using var block = new BlockLiteral (trampoline, registrationHandler, typeof (CTFontManager), nameof (TrampolineRegistrationHandler));
+#else
 						using var block = new BlockLiteral ();
 						block.SetupBlockUnsafe (callback, registrationHandler);
+#endif
 						CTFontManagerRegisterFontURLs (arr.Handle, scope, enabled, &block);
 					}
 				}
@@ -381,8 +394,13 @@ namespace CoreText {
 				if (registrationHandler is null) {
 					CTFontManagerUnregisterFontURLs (arr.Handle, scope, null);
 				} else {
+#if NET
+					delegate* unmanaged<IntPtr, IntPtr, byte, byte> trampoline = &TrampolineRegistrationHandler;
+					using var block = new BlockLiteral (trampoline, registrationHandler, typeof (CTFontManager), nameof (TrampolineRegistrationHandler));
+#else
 					using var block = new BlockLiteral ();
 					block.SetupBlockUnsafe (callback, registrationHandler);
+#endif
 					CTFontManagerUnregisterFontURLs (arr.Handle, scope, &block);
 				}
 			}
@@ -544,8 +562,13 @@ namespace CoreText {
 				if (registrationHandler is null) {
 					CTFontManagerRegisterFontDescriptors (arr.Handle, scope, enabled, null);
 				} else {
+#if NET
+					delegate* unmanaged<IntPtr, IntPtr, byte, byte> trampoline = &TrampolineRegistrationHandler;
+					using var block = new BlockLiteral (trampoline, registrationHandler, typeof (CTFontManager), nameof (TrampolineRegistrationHandler));
+#else
 					using var block = new BlockLiteral ();
 					block.SetupBlockUnsafe (callback, registrationHandler);
+#endif
 					CTFontManagerRegisterFontDescriptors (arr.Handle, scope, enabled, &block);
 				}
 			}
@@ -583,8 +606,13 @@ namespace CoreText {
 				if (registrationHandler is null) {
 					CTFontManagerUnregisterFontDescriptors (arr.Handle, scope, null);
 				} else {
+#if NET
+					delegate* unmanaged<IntPtr, IntPtr, byte, byte> trampoline = &TrampolineRegistrationHandler;
+					using var block = new BlockLiteral (trampoline, registrationHandler, typeof (CTFontManager), nameof (TrampolineRegistrationHandler));
+#else
 					using var block = new BlockLiteral ();
 					block.SetupBlockUnsafe (callback, registrationHandler);
+#endif
 					CTFontManagerUnregisterFontDescriptors (arr.Handle, scope, &block);
 				}
 			}
@@ -705,8 +733,13 @@ namespace CoreText {
 				if (registrationHandler is null) {
 					CTFontManagerRegisterFontsWithAssetNames (arr.Handle, bundle.GetHandle (), scope, enabled, null);
 				} else {
+#if NET
+					delegate* unmanaged<IntPtr, IntPtr, byte, byte> trampoline = &TrampolineRegistrationHandler;
+					using var block = new BlockLiteral (trampoline, registrationHandler, typeof (CTFontManager), nameof (TrampolineRegistrationHandler));
+#else
 					using var block = new BlockLiteral ();
 					block.SetupBlockUnsafe (callback, registrationHandler);
+#endif
 					CTFontManagerRegisterFontsWithAssetNames (arr.Handle, bundle.GetHandle (), scope, enabled, &block);
 				}
 			}
@@ -739,10 +772,16 @@ namespace CoreText {
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern unsafe void CTFontManagerRequestFonts (/* CFArrayRef */ IntPtr fontDescriptors, BlockLiteral* completionHandler);
 
+#if !NET
 		internal delegate void InnerRequestFontsHandler (IntPtr block, IntPtr fontDescriptors);
 		static readonly InnerRequestFontsHandler requestCallback = TrampolineRequestFonts;
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (InnerRequestFontsHandler))]
+#endif
 		static unsafe void TrampolineRequestFonts (IntPtr block, /* CFArray */ IntPtr fontDescriptors)
 		{
 			var del = BlockLiteral.GetTarget<CTFontManagerRequestFontsHandler> (block);
@@ -769,8 +808,13 @@ namespace CoreText {
 
 			using (var arr = EnsureNonNullArray (fontDescriptors, nameof (fontDescriptors))) {
 				unsafe {
+#if NET
+					delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolineRequestFonts;
+					using var block = new BlockLiteral (trampoline, completionHandler, typeof (CTFontManager), nameof (TrampolineRequestFonts));
+#else
 					using var block = new BlockLiteral ();
 					block.SetupBlockUnsafe (requestCallback, completionHandler);
+#endif
 					CTFontManagerRequestFonts (arr.Handle, &block);
 				}
 			}

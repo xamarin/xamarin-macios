@@ -79,8 +79,13 @@ namespace ImageIO {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, nint, IntPtr, byte*, void> trampoline = &SDCGImageSourceAnimationBlock.Invoke;
+				using var block = new BlockLiteral (trampoline, handler, typeof (SDCGImageSourceAnimationBlock), nameof (SDCGImageSourceAnimationBlock.Invoke));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, handler);
+#endif
 				return CGAnimateImageAtURLWithBlock (url.Handle, options.GetHandle (), &block);
 			}
 #endif
@@ -109,8 +114,13 @@ namespace ImageIO {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, nint, IntPtr, byte*, void> trampoline = &SDCGImageSourceAnimationBlock.Invoke;
+				using var block = new BlockLiteral (trampoline, handler, typeof (SDCGImageSourceAnimationBlock), nameof (SDCGImageSourceAnimationBlock.Invoke));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, handler);
+#endif
 				return CGAnimateImageDataWithBlock (data.Handle, options.GetHandle (), &block);
 			}
 #endif
@@ -120,22 +130,29 @@ namespace ImageIO {
 		// This class bridges native block invocations that call into C#
 		//
 		static internal class SDCGImageSourceAnimationBlock {
-			static internal readonly DCGImageSourceAnimationBlock Handler = Invoke;
+#if !NET
+			unsafe static internal readonly DCGImageSourceAnimationBlock Handler = Invoke;
 
 			[MonoPInvokeCallback (typeof (DCGImageSourceAnimationBlock))]
-			static void Invoke (IntPtr block, nint index, IntPtr image, [MarshalAs (UnmanagedType.I1)] out bool stop)
+#else
+			[UnmanagedCallersOnly]
+#endif
+			internal unsafe static void Invoke (IntPtr block, nint index, IntPtr image, byte* stop)
 			{
 				var del = BlockLiteral.GetTarget<CGImageSourceAnimationHandler> (block);
-				if (del is not null)
-					del (index, new CoreGraphics.CGImage (image, false), out stop);
-				else
-					stop = false;
+				if (del is not null) {
+					del (index, new CoreGraphics.CGImage (image, false), out var stopValue);
+					*stop = stopValue ? (byte) 1 : (byte) 0;
+				} else
+					*stop = 0;
 			}
 		} /* class SDCGImageSourceAnimationBlock */
 
+#if !NET
 		[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
 		[UserDelegateType (typeof (CGImageSourceAnimationHandler))]
-		internal delegate void DCGImageSourceAnimationBlock (IntPtr block, nint index, IntPtr imageHandle, [MarshalAs (UnmanagedType.I1)] out bool stop);
+		unsafe internal delegate void DCGImageSourceAnimationBlock (IntPtr block, nint index, IntPtr imageHandle, byte* stop);
+#endif
 	}
 
 }

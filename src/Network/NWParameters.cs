@@ -77,10 +77,14 @@ namespace Network {
 
 		static unsafe BlockLiteral* DISABLE_PROTOCOL () => (BlockLiteral*) NWParametersConstants._ProtocolDisable;
 
+#if !NET
 		delegate void nw_parameters_configure_protocol_block_t (IntPtr block, IntPtr iface);
 		static nw_parameters_configure_protocol_block_t static_ConfigureHandler = TrampolineConfigureHandler;
 
 		[MonoPInvokeCallback (typeof (nw_parameters_configure_protocol_block_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineConfigureHandler (IntPtr block, IntPtr iface)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWProtocolOptions>> (block);
@@ -121,8 +125,13 @@ namespace Network {
 				return DEFAULT_CONFIGURATION ();
 			}
 
+#if NET
+			delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolineConfigureHandler;
+			var block = new BlockLiteral (trampoline, callback, typeof (NWParameters), nameof (TrampolineConfigureHandler));
+#else
 			var block = new BlockLiteral ();
 			block.SetupBlockUnsafe (static_ConfigureHandler, callback);
+#endif
 			*callbackBlock = block;
 			disposeReturnValue = true;
 			return callbackBlock;
@@ -382,21 +391,24 @@ namespace Network {
 			nw_parameters_clear_prohibited_interface_types (GetCheckedHandle ());
 		}
 
-		delegate bool nw_parameters_iterate_interfaces_block_t (IntPtr block, IntPtr iface);
+#if !NET
+		delegate byte nw_parameters_iterate_interfaces_block_t (IntPtr block, IntPtr iface);
 		static nw_parameters_iterate_interfaces_block_t static_iterateProhibitedHandler = TrampolineIterateProhibitedHandler;
 
 		[MonoPInvokeCallback (typeof (nw_parameters_iterate_interfaces_block_t))]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static bool TrampolineIterateProhibitedHandler (IntPtr block, IntPtr iface)
+#else
+		[UnmanagedCallersOnly]
+#endif
+		static byte TrampolineIterateProhibitedHandler (IntPtr block, IntPtr iface)
 		{
 			var del = BlockLiteral.GetTarget<Func<NWInterface, bool>> (block);
 			if (del is not null) {
 				var x = new NWInterface (iface, owns: false);
 				var ret = del (x);
 				x.Dispose ();
-				return ret;
+				return ret ? (byte) 1 : (byte) 0;
 			}
-			return false;
+			return 0;
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -406,23 +418,31 @@ namespace Network {
 		public void IterateProhibitedInterfaces (Func<NWInterface, bool> iterationCallback)
 		{
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, byte> trampoline = &TrampolineIterateProhibitedHandler;
+				using var block = new BlockLiteral (trampoline, iterationCallback, typeof (NWParameters), nameof (TrampolineIterateProhibitedHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_iterateProhibitedHandler, iterationCallback);
+#endif
 				nw_parameters_iterate_prohibited_interfaces (GetCheckedHandle (), &block);
 			}
 		}
 
-		delegate bool nw_parameters_iterate_interface_types_block_t (IntPtr block, NWInterfaceType type);
+#if !NET
+		delegate byte nw_parameters_iterate_interface_types_block_t (IntPtr block, NWInterfaceType type);
 		static nw_parameters_iterate_interface_types_block_t static_IterateProhibitedTypeHandler = TrampolineIterateProhibitedTypeHandler;
 
 		[MonoPInvokeCallback (typeof (nw_parameters_iterate_interface_types_block_t))]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static bool TrampolineIterateProhibitedTypeHandler (IntPtr block, NWInterfaceType type)
+#else
+		[UnmanagedCallersOnly]
+#endif
+		static byte TrampolineIterateProhibitedTypeHandler (IntPtr block, NWInterfaceType type)
 		{
 			var del = BlockLiteral.GetTarget<Func<NWInterfaceType, bool>> (block);
 			if (del is not null)
-				return del (type);
-			return false;
+				return del (type) ? (byte) 1 : (byte) 0;
+			return 0;
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -432,8 +452,13 @@ namespace Network {
 		public void IterateProhibitedInterfaces (Func<NWInterfaceType, bool> callback)
 		{
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, NWInterfaceType, byte> trampoline = &TrampolineIterateProhibitedTypeHandler;
+				using var block = new BlockLiteral (trampoline, callback, typeof (NWParameters), nameof (TrampolineIterateProhibitedTypeHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_IterateProhibitedTypeHandler, callback);
+#endif
 				nw_parameters_iterate_prohibited_interface_types (GetCheckedHandle (), &block);
 			}
 		}

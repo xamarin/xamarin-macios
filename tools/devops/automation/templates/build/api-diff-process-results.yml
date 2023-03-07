@@ -15,6 +15,10 @@ parameters:
   type: string
   default: HEAD
 
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
 steps:
 
 - template: ../common/checkout.yml
@@ -48,7 +52,7 @@ steps:
 - task: DownloadPipelineArtifact@2
   displayName: 'Download change detection artifacts'
   inputs:
-    patterns: 'change-detection/change-detection.zip'
+    patterns: '${{ parameters.uploadPrefix }}change-detection/change-detection.zip'
     allowFailedBuilds: true
     path: $(System.DefaultWorkingDirectory)/Artifacts
 
@@ -56,7 +60,7 @@ steps:
 - task: ExtractFiles@1
   displayName: 'Decompress change detection artifacts'
   inputs:
-    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Artifacts/change-detection/change-detection.zip'
+    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Artifacts/${{ parameters.uploadPrefix }}change-detection/change-detection.zip'
     destinationFolder: '$(System.DefaultWorkingDirectory)/change-detection'
 
 # Upload the change detection results to vsdrops
@@ -65,7 +69,7 @@ steps:
   continueOnError: true # don't let any failures here stop us
   inputs:
     dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
-    dropMetadataContainerName: 'DropMetadata-ChangeDetection-$(System.JobAttempt)'
+    dropMetadataContainerName: '${{ parameters.uploadPrefix }}DropMetadata-ChangeDetection-$(System.JobAttempt)'
     buildNumber: 'xamarin-macios/detected-changes/$(Build.BuildNumber)/$(Build.BuildId)-$(System.JobAttempt)'
     sourcePath: '$(System.DefaultWorkingDirectory)/change-detection/results/'
     detailedLog: true

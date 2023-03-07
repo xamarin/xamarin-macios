@@ -336,6 +336,8 @@ class BuildConfiguration {
             "skip-packaged-macos-tests",
             "run-packaged-macos-tests",
             "skip-api-comparison",
+            "run-windows-tests",
+            "skip-windows-tests",
             "skip-all-tests"
           )
 
