@@ -4,8 +4,8 @@ parameters:
   default: true
 
 - name: dependsOn
-  type: object 
-  default: []
+  type: object
+  default: null
 
 - name: isPR
   type: boolean
@@ -29,8 +29,21 @@ parameters:
 stages:
 - stage: prepare_release
   displayName: '${{ parameters.stageDisplayNamePrefix }}Prepare .NET Release'
-  dependsOn: ${{ parameters.dependsOn }}
-  condition: and(eq(${{ parameters.isPR }}, false), eq(${{ parameters.enableDotnet }}, true))
+  ${{ if parameters.dependsOn }}:
+    dependsOn: ${{ parameters.dependsOn }}
+    condition: and(
+        or(
+          eq(dependencies.${{ parameters.dependsOn }}.result, 'Succeeded'),
+          eq(dependencies.${{ parameters.dependsOn }}.result, 'SucceededWithIssues')
+        ),
+        eq(${{ parameters.isPR }}, false),
+        eq(${{ parameters.enableDotnet }}, true)
+      )
+  ${{ else }}:
+    condition: and(
+        eq(${{ parameters.isPR }}, false),
+        eq(${{ parameters.enableDotnet }}, true)
+      )
 
   jobs:
   # Check - "xamarin-macios (Prepare Release Sign NuGets)"
