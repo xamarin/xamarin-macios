@@ -10,126 +10,126 @@ using Mono.Cecil.Cil;
 
 namespace Cecil.Tests {
 
-// Guide to when this test fails.
-//
-// What does this test do?
-// It ensures that every type in a p/invoke is blittalble. This means that
-//    the number of allowed types gets cut down to a narrow set: pointers and
-//    scalars.
-// What are common failing types?
-//    1. string
-//    3. delegate
-//    4. ref/out types
-//    5. structs with non-blittable types
-//    6. arrays
-// How do I fix these?
-//    1. use a TransientString from ObjCRuntime. This is an IDisposable type
-//       that will allocate an unmanaged string in the appropriate encoding.
-//    Former typical case:
-//    extern static void SomePinvoke (string value);
-//    SomePinvoke (valueStr);
-//    Fix:
-//    extern void SomePinvoke (IntPtr value);
-//    using var valueTransient = new TransientString (valueStr);
-//    SomePinvoke (valueTransient);
-//    NOTE: You need to understand the lifespace of the string. If the call
-//    holds onto the pointer forever instead of making a copy, you can't use
-//    TransientString. Instead use Marhsal to allocate the string once.
-//
-//    2. Don't use the delegate type as declared, instead use
-//    delegate* unamanged<...>
-//    Former typical case:
-//    delegate void SomeCall (int a, IntPtr someHandle);
-//    extern static void AssignSomeCallback (SomeCall f, IntPtr someHandle);
-//    [MonoPInvokeCallback (typeof (SomeCall))]
-//    static void SomeCallImpl (int a, IntPtr someHandle)
-//    { /* ... */ }
-//    public void SetSomeCallback (SomeCall callMe)
-//    {
-//         var handle = GCHandle.Alloc (callMe);
-//         AssignSomeCallback (SomeCallImpl, someHandle);
-//    }
-//    Fix:
-//    #if NET
-//    // note that this call is now unsafe in addition to the delegate*
-//    extern unsafe static void AssignSomeCallback (delegate* unmanaged<int, IntPtr, void>, IntPtr someHandle);
-//    #else
-//    ...old pinvoke goes here...
-//    #endif
-//    // you have to change the callback decoration. You *must* have a single
-//    // callback implementation that calls out to the actual callback because
-//    // the UnmanagedCallersOnly is strict. If you try to call it from C# you
-//    // get a compiler error.
-//    #if NET
-//    [UnmanagedCallersOnly]
-//    #else   
-//    [MonoPInvokeCallback (typeof (SomeCall))]
-//    #endif
-//    static void SomeCallImpl (int a, IntPtr someHandle)
-//    { /* ... */ }
-//    public void SetSomeCallback (SomeCall callMe)
-//    {
-//        var handle = GCHandle.Alloc (callMe);
-//    #if NET
-//        // calling code is now also unsafe because of the & operator
-//        unsafe {
-//            AssignSomeCallback (&SomeCallImpl, someHandle);
-//        }
-//    #else
-//        AssignSomeCallback (SomeCallImpl, someHandle);
-//    #endif
-//
-//    4. ref/out types - these are disallowed. Replace them with pointers and
-//       make the pinvoke unsafe. Can you use an IntPtr instead of unsafe? Yes.
-//       BUT you lose type safety. I'd rather have typed pointers than untyped
-//       if I have a choice.
-//
-//    extern static void TPGetCoordinates (NativeHandle obj, out int x, out int y);
-//    public Point GetCoordinates ()
-//    {
-//         int x = 0, y = 0;
-//         TPGetCoordinates (this.GetHandle (), out x, out y);
-//         return new Point (x, y);
-//    }
-//    Fix:
-//    #if NET
-//    extern unsafe static void TPGetCoordinates (NativeHandle obj, int* x, int* y);
-//    public Point GetCoordingates ()
-//    {
-//        int x = 0, y = 0;
-//    #if NET
-//        unsafe {
-//            TPGetCoordinates (this.GetHandle (), &x, &y);
-//        }
-//    #else
-//        TPGetCoordinates (this.GetHandle (), out x, out y);
-//    #endif
-//        return new Point (x, y);
-//    }
-//
-//    5. structs with non-blittable types. I don't think I ran into any of these
-//       *except* for structs with delegate callbacks. In that case, you need to
-//       rewrite the type to have delegate* unmanaged<> *AND* change the callback
-//       implementation to have [UnmanagedCallersOnly]
-//
-//    6. arrays. These are uncommon and fall into two broad categories:
-//       an array of blittable types and and array of non-blittable types.
-//       for the first you can change the array type in the pinvoke to be a pointer:
-//       extern static void SomeCall (int[] arr, int length);
-//    becomes:
-//       extern unsafe static void SomeCall (int* arr, int length);
-//    and then use a fixed block to get a pointer to the first element.
-//    for non-blittable types, you need to allocate a block of memory that can
-//    hold the entire array and then marshal the type into each element.
-//    On call return, you need to free each element and free the array UNLESS
-//    the call does NOT make a copy of each element.
-//    The only case that I ran into that had an array of non-blittables was
-//    arrays of strings.
-//    Because of this, there are two helpers in TransientString:
-//    IntPtr AllocStringArray (string? []? arr, Encoding encoding = Encoding.Auto);
-//    and:
-//    FreeStringArray (IntPtr arr, int count);
-//    both can handle a null array or null strings in the array.
+	// Guide to when this test fails.
+	//
+	// What does this test do?
+	// It ensures that every type in a p/invoke is blittalble. This means that
+	//    the number of allowed types gets cut down to a narrow set: pointers and
+	//    scalars.
+	// What are common failing types?
+	//    1. string
+	//    3. delegate
+	//    4. ref/out types
+	//    5. structs with non-blittable types
+	//    6. arrays
+	// How do I fix these?
+	//    1. use a TransientString from ObjCRuntime. This is an IDisposable type
+	//       that will allocate an unmanaged string in the appropriate encoding.
+	//    Former typical case:
+	//    extern static void SomePinvoke (string value);
+	//    SomePinvoke (valueStr);
+	//    Fix:
+	//    extern void SomePinvoke (IntPtr value);
+	//    using var valueTransient = new TransientString (valueStr);
+	//    SomePinvoke (valueTransient);
+	//    NOTE: You need to understand the lifespace of the string. If the call
+	//    holds onto the pointer forever instead of making a copy, you can't use
+	//    TransientString. Instead use Marhsal to allocate the string once.
+	//
+	//    2. Don't use the delegate type as declared, instead use
+	//    delegate* unamanged<...>
+	//    Former typical case:
+	//    delegate void SomeCall (int a, IntPtr someHandle);
+	//    extern static void AssignSomeCallback (SomeCall f, IntPtr someHandle);
+	//    [MonoPInvokeCallback (typeof (SomeCall))]
+	//    static void SomeCallImpl (int a, IntPtr someHandle)
+	//    { /* ... */ }
+	//    public void SetSomeCallback (SomeCall callMe)
+	//    {
+	//         var handle = GCHandle.Alloc (callMe);
+	//         AssignSomeCallback (SomeCallImpl, someHandle);
+	//    }
+	//    Fix:
+	//    #if NET
+	//    // note that this call is now unsafe in addition to the delegate*
+	//    extern unsafe static void AssignSomeCallback (delegate* unmanaged<int, IntPtr, void>, IntPtr someHandle);
+	//    #else
+	//    ...old pinvoke goes here...
+	//    #endif
+	//    // you have to change the callback decoration. You *must* have a single
+	//    // callback implementation that calls out to the actual callback because
+	//    // the UnmanagedCallersOnly is strict. If you try to call it from C# you
+	//    // get a compiler error.
+	//    #if NET
+	//    [UnmanagedCallersOnly]
+	//    #else   
+	//    [MonoPInvokeCallback (typeof (SomeCall))]
+	//    #endif
+	//    static void SomeCallImpl (int a, IntPtr someHandle)
+	//    { /* ... */ }
+	//    public void SetSomeCallback (SomeCall callMe)
+	//    {
+	//        var handle = GCHandle.Alloc (callMe);
+	//    #if NET
+	//        // calling code is now also unsafe because of the & operator
+	//        unsafe {
+	//            AssignSomeCallback (&SomeCallImpl, someHandle);
+	//        }
+	//    #else
+	//        AssignSomeCallback (SomeCallImpl, someHandle);
+	//    #endif
+	//
+	//    4. ref/out types - these are disallowed. Replace them with pointers and
+	//       make the pinvoke unsafe. Can you use an IntPtr instead of unsafe? Yes.
+	//       BUT you lose type safety. I'd rather have typed pointers than untyped
+	//       if I have a choice.
+	//
+	//    extern static void TPGetCoordinates (NativeHandle obj, out int x, out int y);
+	//    public Point GetCoordinates ()
+	//    {
+	//         int x = 0, y = 0;
+	//         TPGetCoordinates (this.GetHandle (), out x, out y);
+	//         return new Point (x, y);
+	//    }
+	//    Fix:
+	//    #if NET
+	//    extern unsafe static void TPGetCoordinates (NativeHandle obj, int* x, int* y);
+	//    public Point GetCoordingates ()
+	//    {
+	//        int x = 0, y = 0;
+	//    #if NET
+	//        unsafe {
+	//            TPGetCoordinates (this.GetHandle (), &x, &y);
+	//        }
+	//    #else
+	//        TPGetCoordinates (this.GetHandle (), out x, out y);
+	//    #endif
+	//        return new Point (x, y);
+	//    }
+	//
+	//    5. structs with non-blittable types. I don't think I ran into any of these
+	//       *except* for structs with delegate callbacks. In that case, you need to
+	//       rewrite the type to have delegate* unmanaged<> *AND* change the callback
+	//       implementation to have [UnmanagedCallersOnly]
+	//
+	//    6. arrays. These are uncommon and fall into two broad categories:
+	//       an array of blittable types and and array of non-blittable types.
+	//       for the first you can change the array type in the pinvoke to be a pointer:
+	//       extern static void SomeCall (int[] arr, int length);
+	//    becomes:
+	//       extern unsafe static void SomeCall (int* arr, int length);
+	//    and then use a fixed block to get a pointer to the first element.
+	//    for non-blittable types, you need to allocate a block of memory that can
+	//    hold the entire array and then marshal the type into each element.
+	//    On call return, you need to free each element and free the array UNLESS
+	//    the call does NOT make a copy of each element.
+	//    The only case that I ran into that had an array of non-blittables was
+	//    arrays of strings.
+	//    Because of this, there are two helpers in TransientString:
+	//    IntPtr AllocStringArray (string? []? arr, Encoding encoding = Encoding.Auto);
+	//    and:
+	//    FreeStringArray (IntPtr arr, int count);
+	//    both can handle a null array or null strings in the array.
 	[TestFixture]
 	public class BlittablePInvokes {
 		struct MethodBlitResult {
