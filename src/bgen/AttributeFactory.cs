@@ -43,7 +43,7 @@ public static partial class AttributeFactory {
 	}
 
 	public static T CreateNewAttribute<T> (PlatformName platform, int major, int minor, string? message = null)
-		where T: Attribute
+		where T : Attribute
 	{
 		var args = new ConstructorArguments (platform, major, minor, message);
 		return CreateNewAttribute<T> (args.GetCtorTypes (), args.GetCtorValues ());

@@ -23,25 +23,25 @@ namespace GeneratorTests {
 		[Test]
 		public void CreateNoVersionSupportedAttributeTest ()
 		{
-			Assert.Fail("Not implemented.");
+			Assert.Fail ("Not implemented.");
 		}
 
 		[Test]
 		public void CreateUnsupportedAttributeTest ()
 		{
-			Assert.Fail("Not implemented.");
+			Assert.Fail ("Not implemented.");
 		}
 
 		[Test]
 		public void FindHighestIntroducedAttributesTest ()
 		{
-			Assert.Fail("Not implemented.");
+			Assert.Fail ("Not implemented.");
 		}
 
 		[Test]
 		public void CopyValidAttributesTest ()
 		{
-			Assert.Fail("Not implemented.");
+			Assert.Fail ("Not implemented.");
 		}
 	}
 }

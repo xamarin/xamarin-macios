@@ -7,7 +7,7 @@ using ObjCRuntime;
 
 public static partial class AttributeFactory {
 	public static readonly Type PlatformArch = typeof (PlatformArchitecture);
-	
+
 	readonly partial struct ConstructorArguments {
 		public object? [] GetCtorValues ()
 		{
@@ -27,6 +27,6 @@ public static partial class AttributeFactory {
 			return new [] { PlatformEnum, typeof (int), typeof (int), PlatformArch, typeof (string) };
 		}
 	}
-	
+
 }
 #endif
