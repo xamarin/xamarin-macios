@@ -155,7 +155,7 @@ namespace Security {
 #endif
 #if NET
 		[DllImport (Constants.SecurityLibrary)]
-		extern static int /* OSStatus = int */ AuthorizationExecuteWithPrivileges (IntPtr handle, string pathToTool, AuthorizationFlags flags, IntPtr args, IntPtr FILEPtr);
+		extern static int /* OSStatus = int */ AuthorizationExecuteWithPrivileges (IntPtr handle, IntPtr pathToTool, AuthorizationFlags flags, IntPtr args, IntPtr FILEPtr);
 #else
 		[DllImport (Constants.SecurityLibrary)]
 		extern static int /* OSStatus = int */ AuthorizationExecuteWithPrivileges (IntPtr handle, string pathToTool, AuthorizationFlags flags, string? []? args, IntPtr FILEPtr);
@@ -192,8 +192,9 @@ namespace Security {
 				}
 			}
 #if NET
+			using var pathToToolStr = new TransientString (pathToTool);
 			var argsPtr = TransientString.AllocStringArray (arguments);
-			var retval = AuthorizationExecuteWithPrivileges (Handle, pathToTool, flags, argsPtr, IntPtr.Zero);
+			var retval = AuthorizationExecuteWithPrivileges (Handle, pathToToolStr, flags, argsPtr, IntPtr.Zero);
 			TransientString.FreeStringArray (argsPtr, args is null ? 0 : args.Length);
 			return retval;
 #else
