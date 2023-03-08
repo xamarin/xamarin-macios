@@ -179,12 +179,16 @@ namespace Security {
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode /* OSStatus */ SecTrustEvaluateAsync (IntPtr /* SecTrustRef */ trust, IntPtr /* dispatch_queue_t */ queue, ref BlockLiteral block);
+		unsafe extern static SecStatusCode /* OSStatus */ SecTrustEvaluateAsync (IntPtr /* SecTrustRef */ trust, IntPtr /* dispatch_queue_t */ queue, BlockLiteral* block);
 
+#if !NET
 		internal delegate void TrustEvaluateHandler (IntPtr block, IntPtr trust, SecTrustResult trustResult);
 		static readonly TrustEvaluateHandler evaluate = TrampolineEvaluate;
 
 		[MonoPInvokeCallback (typeof (TrustEvaluateHandler))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineEvaluate (IntPtr block, IntPtr trust, SecTrustResult trustResult)
 		{
 			var del = BlockLiteral.GetTarget<SecTrustCallback> (block);
@@ -217,12 +221,15 @@ namespace Security {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			try {
-				block_handler.SetupBlockUnsafe (evaluate, handler);
-				return SecTrustEvaluateAsync (Handle, queue.Handle, ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, SecTrustResult, void> trampoline = &TrampolineEvaluate;
+				using var block = new BlockLiteral (trampoline, handler, typeof (SecTrust), nameof (TrampolineEvaluate));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (evaluate, handler);
+#endif
+				return SecTrustEvaluateAsync (Handle, queue.Handle, &block);
 			}
 		}
 
@@ -238,19 +245,23 @@ namespace Security {
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		static extern SecStatusCode SecTrustEvaluateAsyncWithError (IntPtr /* SecTrustRef */ trust, IntPtr /* dispatch_queue_t */ queue, ref BlockLiteral block);
+		unsafe static extern SecStatusCode SecTrustEvaluateAsyncWithError (IntPtr /* SecTrustRef */ trust, IntPtr /* dispatch_queue_t */ queue, BlockLiteral* block);
 
-		internal delegate void TrustEvaluateErrorHandler (IntPtr block, IntPtr trust, bool result, IntPtr /* CFErrorRef _Nullable */  error);
+#if !NET
+		internal delegate void TrustEvaluateErrorHandler (IntPtr block, IntPtr trust, byte result, IntPtr /* CFErrorRef _Nullable */  error);
 		static readonly TrustEvaluateErrorHandler evaluate_error = TrampolineEvaluateError;
 
 		[MonoPInvokeCallback (typeof (TrustEvaluateErrorHandler))]
-		static void TrampolineEvaluateError (IntPtr block, IntPtr trust, bool result, IntPtr /* CFErrorRef _Nullable */  error)
+#else
+		[UnmanagedCallersOnly]
+#endif
+		static void TrampolineEvaluateError (IntPtr block, IntPtr trust, byte result, IntPtr /* CFErrorRef _Nullable */  error)
 		{
 			var del = BlockLiteral.GetTarget<SecTrustWithErrorCallback> (block);
 			if (del is not null) {
 				var t = trust == IntPtr.Zero ? null : new SecTrust (trust, false);
 				var e = error == IntPtr.Zero ? null : new NSError (error);
-				del (t, result, e);
+				del (t, result != 0, e);
 			}
 		}
 
@@ -273,12 +284,15 @@ namespace Security {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			try {
-				block_handler.SetupBlockUnsafe (evaluate_error, handler);
-				return SecTrustEvaluateAsyncWithError (Handle, queue.Handle, ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, byte, IntPtr, void> trampoline = &TrampolineEvaluateError;
+				using var block = new BlockLiteral (trampoline, handler, typeof (SecTrust), nameof (TrampolineEvaluateError));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (evaluate_error, handler);
+#endif
+				return SecTrustEvaluateAsyncWithError (Handle, queue.Handle, &block);
 			}
 		}
 

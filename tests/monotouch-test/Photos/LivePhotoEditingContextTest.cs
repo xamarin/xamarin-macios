@@ -2,6 +2,7 @@
 
 using System;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
@@ -17,7 +18,7 @@ namespace MonoTouchFixtures.Photos {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class PHLivePhotoEditingContextTest {
+	public unsafe class PHLivePhotoEditingContextTest {
 
 		[SetUp]
 		public void Setup ()
@@ -37,7 +38,7 @@ namespace MonoTouchFixtures.Photos {
 			return null;
 		};
 
-		delegate NativeHandle DPHLivePhotoFrameProcessingBlock2 (IntPtr block, NativeHandle frame, ref NativeHandle error);
+		delegate NativeHandle DPHLivePhotoFrameProcessingBlock2 (IntPtr block, NativeHandle frame, NativeHandle* error);
 
 #if !MONOMAC
 		// on macOS `initWithLivePhotoEditingInput:` returns `nil` and we throw
@@ -82,14 +83,17 @@ namespace MonoTouchFixtures.Photos {
 				var b = (IntPtr) block;
 
 				// simulate a call that does not produce an error
-				var args = new object [] { b, NativeHandle.Zero, NativeHandle.Zero };
+				var args = new object [] { b, NativeHandle.Zero, IntPtr.Zero };
 				error_faker = null;
 				Assert.That (m.Invoke (null, args), Is.EqualTo (NativeHandle.Zero), "1");
 
 				// simulate a call that does produce an error
 				error_faker = new NSError ((NSString) "domain", 42);
+				IntPtr ptr = IntPtr.Zero;
+				args [2] = (IntPtr) (IntPtr*) &ptr;
 				Assert.That (m.Invoke (null, args), Is.EqualTo (NativeHandle.Zero), "2");
-				Assert.That (args [2], Is.EqualTo (error_faker.Handle), "error");
+				Assert.That (Marshal.ReadIntPtr ((IntPtr) args [2]), Is.EqualTo ((IntPtr) error_faker.Handle), "error 1");
+				Assert.That (ptr, Is.EqualTo ((IntPtr) error_faker.Handle), "error 2");
 			} finally {
 				bl.CleanupBlock ();
 			}

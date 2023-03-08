@@ -61,6 +61,10 @@ parameters:
   type: string
   default: HEAD
 
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
 steps:
 
 - template: ../common/checkout.yml
@@ -137,15 +141,15 @@ steps:
 
 - pwsh: |
     $dir = "$(Build.SourcesDirectory)/artifacts"
-    $versionsPath = "$dir/PkgsVersions/PkgsVersions.json"
+    $versionsPath = "$dir/${{ parameters.uploadPrefix }}PkgsVersions/PkgsVersions.json"
     $versionData = Get-Content $versionsPath | ConvertFrom-Json
 
     $iOSVersion = $versionData | Select-Object -ExpandProperty "iOS"
-    $iOSPath = "$dir/not-signed-package/xamarin.ios-$iOSVersion.pkg"
+    $iOSPath = "$dir/${{ parameters.uploadPrefix }}not-signed-package/xamarin.ios-$iOSVersion.pkg"
     Write-Host "##vso[task.setvariable variable=XI_PACKAGE;]$iOSPath"
 
     $macOSVersion = $versionData | Select-Object -ExpandProperty "macOS"
-    $macOSPath = "$dir/not-signed-package/xamarin.mac-$macOSVersion.pkg"
+    $macOSPath = "$dir/${{ parameters.uploadPrefix }}not-signed-package/xamarin.mac-$macOSVersion.pkg"
     Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$macOSPath"
 
   displayName: 'Set pkgs url'

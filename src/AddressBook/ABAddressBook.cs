@@ -185,7 +185,7 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
-		extern static void ABAddressBookRequestAccessWithCompletion (IntPtr addressbook, ref BlockLiteral completion);
+		unsafe extern static void ABAddressBookRequestAccessWithCompletion (IntPtr addressbook, BlockLiteral* completion);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void RequestAccess (Action<bool, NSError?> onCompleted)
@@ -193,21 +193,31 @@ namespace AddressBook {
 			if (onCompleted is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (onCompleted));
 
-			var block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_completionHandler, onCompleted);
-			ABAddressBookRequestAccessWithCompletion (Handle, ref block_handler);
-			block_handler.CleanupBlock ();
+			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, byte, IntPtr, void> trampoline = &TrampolineCompletionHandler;
+				using var block = new BlockLiteral (trampoline, onCompleted, typeof (ABAddressBook), nameof (TrampolineCompletionHandler));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_completionHandler, onCompleted);
+#endif
+				ABAddressBookRequestAccessWithCompletion (Handle, &block);
+			}
 		}
 
-		internal delegate void InnerCompleted (IntPtr block, bool success, IntPtr error);
+#if !NET
+		internal delegate void InnerCompleted (IntPtr block, byte success, IntPtr error);
 		static readonly InnerCompleted static_completionHandler = TrampolineCompletionHandler;
 		[MonoPInvokeCallback (typeof (InnerCompleted))]
-		static unsafe void TrampolineCompletionHandler (IntPtr block, bool success, IntPtr error)
+#else
+		[UnmanagedCallersOnly]
+#endif
+		static unsafe void TrampolineCompletionHandler (IntPtr block, byte success, IntPtr error)
 		{
 			var descriptor = (BlockLiteral*) block;
 			var del = descriptor->Target as Action<bool, NSError?>;
 			if (del is not null)
-				del (success, Runtime.GetNSObject<NSError> (error));
+				del (success != 0, Runtime.GetNSObject<NSError> (error));
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]

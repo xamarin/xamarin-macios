@@ -16,7 +16,6 @@ using System;
 public class TrampolineInfo {
 	public string UserDelegate;
 	public string DelegateName;
-	public string TrampolineName;
 	public string Parameters;
 	public string Convert;
 	public string Invoke;
@@ -29,14 +28,13 @@ public class TrampolineInfo {
 	public string? UserDelegateTypeAttribute;
 	public Type Type;
 
-	public TrampolineInfo (string userDelegate, string delegateName, string trampolineName, string pars,
+	public TrampolineInfo (string userDelegate, string delegateName, string pars,
 		string convert, string invoke, string returnType, string delegateReturnType, string returnFormat,
 		string clear, string postConvert, Type type)
 	{
 		UserDelegate = userDelegate;
 		DelegateName = delegateName;
 		Parameters = pars;
-		TrampolineName = trampolineName;
 		Convert = convert;
 		Invoke = invoke;
 		ReturnType = returnType;
@@ -45,8 +43,6 @@ public class TrampolineInfo {
 		Clear = clear;
 		PostConvert = postConvert;
 		Type = type;
-
-		TrampolineName = "Invoke";
 	}
 
 	// Name for the static class generated that contains the Objective-C to C# block bridge
@@ -61,5 +57,16 @@ public class TrampolineInfo {
 		get {
 			return "NI" + DelegateName;
 		}
+	}
+}
+
+class TrampolineParameterInfo {
+	public string Type;
+	public string ParameterName;
+
+	public TrampolineParameterInfo (string type, string parameterName)
+	{
+		Type = type;
+		ParameterName = parameterName;
 	}
 }

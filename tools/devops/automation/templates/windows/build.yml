@@ -35,9 +35,34 @@ steps:
     Write-Host "Mac agent IP: $Env:MAC_AGENT_IP"
   displayName: Run tests
 
+# Upload all the binlogs
+# Copy all the binlogs to a separate directory, keeping directory structure.
+- pwsh: |
+    $sourceDir = '$(Build.SourcesDirectory)\xamarin-macios'
+    $targetDir = '$(Build.ArtifactStagingDirectory)\windows-binlogs'
+
+    $binlogs = Get-ChildItem $sourceDir -Recurse -Include "*.binlog"
+    foreach ($binlog in $binlogs) {
+        $targetFile = $targetDir + $binlog.FullName.SubString($sourceDir.Length);
+        New-Item -ItemType File -Path $targetFile -Force
+        Copy-Item $binlog.FullName -destination $targetFile
+    }
+  displayName: Copy all binlogs
+  continueOnError: true
+  condition: succeededOrFailed()
+
+# Publish all the binlogs we collected in the previous step
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: Windows binlogs'
+  inputs:
+    targetPath: $(Build.ArtifactStagingDirectory)/windows-binlogs
+    artifactName: windows-binlogs-test-$(Build.BuildId)-$(System.JobAttempt)
+  continueOnError: true
+  condition: succeededOrFailed()
+
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $vsts = New-VSTS -Org "devdiv" -Project "DevDiv" -Token $(DropsPAT)
+    $vsts = New-VSTS -Org "devdiv" -Project "DevDiv" -Token $(MacPoolAccessToken)
 
     # get the pool and the agent objects and disable the bot
     $pool = $vsts.Pools.GetPool("$Env:MAC_AGENT_POOL")

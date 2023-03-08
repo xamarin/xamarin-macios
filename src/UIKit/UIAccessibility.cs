@@ -237,7 +237,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		extern unsafe static void UIAccessibilityRequestGuidedAccessSession (/* BOOL */ [MarshalAs (UnmanagedType.I1)] bool enable, /* void(^completionHandler)(BOOL didSucceed) */ void* completionHandler);
+		extern unsafe static void UIAccessibilityRequestGuidedAccessSession (/* BOOL */ [MarshalAs (UnmanagedType.I1)] bool enable, /* void(^completionHandler)(BOOL didSucceed) */ BlockLiteral* completionHandler);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -248,14 +248,14 @@ namespace UIKit {
 		public static void RequestGuidedAccessSession (bool enable, Action<bool> completionHandler)
 		{
 			unsafe {
-				BlockLiteral* block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
-				block_handler.SetupBlock (callback, completionHandler);
-
-				UIAccessibilityRequestGuidedAccessSession (enable, (void*) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+#if NET
+				delegate* unmanaged<IntPtr, byte, void> trampoline = &TrampolineRequestGuidedAccessSession;
+				using var block = new BlockLiteral (trampoline, completionHandler, typeof (UIAccessibility), nameof (TrampolineRequestGuidedAccessSession));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlock (callback, completionHandler);
+#endif
+				UIAccessibilityRequestGuidedAccessSession (enable, &block);
 			}
 		}
 
@@ -273,16 +273,20 @@ namespace UIKit {
 			return tcs.Task;
 		}
 
-		internal delegate void InnerRequestGuidedAccessSession (IntPtr block, bool enable);
+#if !NET
+		internal delegate void InnerRequestGuidedAccessSession (IntPtr block, byte enable);
 		static readonly InnerRequestGuidedAccessSession callback = TrampolineRequestGuidedAccessSession;
 
 		[MonoPInvokeCallback (typeof (InnerRequestGuidedAccessSession))]
-		static unsafe void TrampolineRequestGuidedAccessSession (IntPtr block, bool enable)
+#else
+		[UnmanagedCallersOnly]
+#endif
+		static unsafe void TrampolineRequestGuidedAccessSession (IntPtr block, byte enable)
 		{
 			var descriptor = (BlockLiteral*) block;
 			var del = (Action<bool>) (descriptor->Target);
 			if (del != null)
-				del (enable);
+				del (enable != 0);
 		}
 
 #if NET

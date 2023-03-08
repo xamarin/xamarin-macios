@@ -41,63 +41,80 @@ namespace Network {
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		unsafe static extern bool nw_ws_request_enumerate_additional_headers (OS_nw_ws_request request, ref BlockLiteral enumerator);
+		unsafe static extern bool nw_ws_request_enumerate_additional_headers (OS_nw_ws_request request, BlockLiteral* enumerator);
 
-		delegate void nw_ws_request_enumerate_additional_headers_t (IntPtr block, string header, string value);
+#if !NET
+		delegate void nw_ws_request_enumerate_additional_headers_t (IntPtr block, IntPtr header, IntPtr value);
 		static nw_ws_request_enumerate_additional_headers_t static_EnumerateHeaderHandler = TrampolineEnumerateHeaderHandler;
 
 		[MonoPInvokeCallback (typeof (nw_ws_request_enumerate_additional_headers_t))]
-		static void TrampolineEnumerateHeaderHandler (IntPtr block, string header, string value)
+#else
+		[UnmanagedCallersOnly]
+#endif
+		static void TrampolineEnumerateHeaderHandler (IntPtr block, IntPtr headerPointer, IntPtr valuePointer)
 		{
-			var del = BlockLiteral.GetTarget<Action<string, string>> (block);
+			var del = BlockLiteral.GetTarget<Action<string?, string?>> (block);
 			if (del is not null) {
+				var header = Marshal.PtrToStringAuto (headerPointer);
+				var value = Marshal.PtrToStringAuto (valuePointer);
 				del (header, value);
 			}
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void EnumerateAdditionalHeaders (Action<string, string> handler)
+		public void EnumerateAdditionalHeaders (Action<string?, string?> handler)
 		{
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_EnumerateHeaderHandler, handler);
-			try {
-				nw_ws_request_enumerate_additional_headers (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> trampoline = &TrampolineEnumerateHeaderHandler;
+				using var block = new BlockLiteral (trampoline, handler, typeof (NWWebSocketRequest), nameof (TrampolineEnumerateHeaderHandler));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_EnumerateHeaderHandler, handler);
+#endif
+				nw_ws_request_enumerate_additional_headers (GetCheckedHandle (), &block);
 			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool nw_ws_request_enumerate_subprotocols (OS_nw_ws_request request, ref BlockLiteral enumerator);
+		unsafe static extern bool nw_ws_request_enumerate_subprotocols (OS_nw_ws_request request, BlockLiteral* enumerator);
 
-		delegate void nw_ws_request_enumerate_subprotocols_t (IntPtr block, string subprotocol);
+#if !NET
+		delegate void nw_ws_request_enumerate_subprotocols_t (IntPtr block, IntPtr subprotocol);
 		static nw_ws_request_enumerate_subprotocols_t static_EnumerateSubprotocolHandler = TrampolineEnumerateSubprotocolHandler;
 
 		[MonoPInvokeCallback (typeof (nw_ws_request_enumerate_subprotocols_t))]
-		static void TrampolineEnumerateSubprotocolHandler (IntPtr block, string subprotocol)
+#else
+		[UnmanagedCallersOnly]
+#endif
+		static void TrampolineEnumerateSubprotocolHandler (IntPtr block, IntPtr subprotocolPointer)
 		{
-			var del = BlockLiteral.GetTarget<Action<string>> (block);
+			var del = BlockLiteral.GetTarget<Action<string?>> (block);
 			if (del is not null) {
+				var subprotocol = Marshal.PtrToStringAuto (subprotocolPointer);
 				del (subprotocol);
 			}
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void EnumerateSubprotocols (Action<string> handler)
+		public void EnumerateSubprotocols (Action<string?> handler)
 		{
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_EnumerateSubprotocolHandler, handler);
-			try {
-				nw_ws_request_enumerate_subprotocols (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolineEnumerateSubprotocolHandler;
+				using var block = new BlockLiteral (trampoline, handler, typeof (NWWebSocketRequest), nameof (TrampolineEnumerateSubprotocolHandler));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_EnumerateSubprotocolHandler, handler);
+#endif
+				nw_ws_request_enumerate_subprotocols (GetCheckedHandle (), &block);
 			}
 		}
 	}

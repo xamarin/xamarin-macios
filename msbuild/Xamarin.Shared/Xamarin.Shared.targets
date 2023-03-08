@@ -1763,6 +1763,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="XamarinSdkRoot" PropertyName="_XamarinSdkRoot" />
 			<Output TaskParameter="XcodeVersion" PropertyName="_XcodeVersion" />
 		</DetectSdkLocations>
+
+		<PropertyGroup Condition="'$(IsHotRestartBuild)' == 'true'">
+			<!-- hot restart builds are always for device -->
+			<_SdkIsSimulator>false</_SdkIsSimulator>
+		</PropertyGroup>
 	</Target>
 
 	<Target Name="_EmbedProvisionProfile" Condition="'$(_ProvisioningProfile)' != ''" DependsOnTargets="_GenerateBundleName;_DetectSigningIdentity"

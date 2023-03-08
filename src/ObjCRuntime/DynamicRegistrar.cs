@@ -620,6 +620,11 @@ namespace Registrar {
 			return type.IsAbstract;
 		}
 
+		protected override bool IsPointer (Type type)
+		{
+			return type.IsPointer;
+		}
+
 		protected override bool IsINativeObject (Type type)
 		{
 			return typeof (INativeObject).IsAssignableFrom (type);
