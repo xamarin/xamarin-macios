@@ -18,8 +18,11 @@ using NativeHandle = System.IntPtr;
 
 namespace IdentityLookup {
 
-	[iOS (11,0)]
-	[NoMac][NoWatch][NoTV]
+	[iOS (11, 0)]
+	[NoMac]
+	[NoWatch]
+	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum ILMessageFilterAction : long {
 		None = 0,
@@ -29,16 +32,19 @@ namespace IdentityLookup {
 		[Obsolete ("Use 'Junk' instead.")]
 		Filter = Junk,
 #endif
-		[iOS (14,0)]
-		[Introduced (PlatformName.MacCatalyst, 14,0)]
+		[iOS (14, 0)]
+		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		Promotion = 3,
-		[iOS (14,0)]
-		[Introduced (PlatformName.MacCatalyst, 14,0)]
+		[iOS (14, 0)]
+		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		Transaction = 4,
 	}
 
-	[iOS (11,0)]
-	[NoMac][NoWatch][NoTV]
+	[iOS (11, 0)]
+	[NoMac]
+	[NoWatch]
+	[NoTV]
+	[MacCatalyst (13, 1)]
 	[ErrorDomain ("ILMessageFilterErrorDomain")]
 	[Native]
 	public enum ILMessageFilterError : long {
@@ -50,7 +56,10 @@ namespace IdentityLookup {
 	}
 
 	[iOS (12, 0)]
-	[NoMac][NoWatch][NoTV]
+	[NoMac]
+	[NoWatch]
+	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	enum ILClassificationAction : long {
 		None = 0,
@@ -59,10 +68,9 @@ namespace IdentityLookup {
 		ReportJunkAndBlockSender = 3,
 	}
 
-	[NoWatch, NoTV, NoMac, MacCatalyst (16,0), iOS (16,0)]
+	[NoWatch, NoTV, NoMac, MacCatalyst (16, 0), iOS (16, 0)]
 	[Native]
-	public enum ILMessageFilterSubAction : long
-	{
+	public enum ILMessageFilterSubAction : long {
 		None = 0,
 		TransactionalOthers = 10000,
 		TransactionalFinance = 10001,
@@ -78,15 +86,21 @@ namespace IdentityLookup {
 		PromotionalCoupons = 20002,
 	}
 
-	[iOS (11,0)]
-	[NoMac][NoWatch][NoTV]
+	[iOS (11, 0)]
+	[NoMac]
+	[NoWatch]
+	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface ILMessageFilterExtension {
 	}
 
-	[iOS (11,0)]
-	[NoMac][NoWatch][NoTV]
+	[iOS (11, 0)]
+	[NoMac]
+	[NoWatch]
+	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSExtensionContext))]
 	interface ILMessageFilterExtensionContext {
@@ -98,8 +112,11 @@ namespace IdentityLookup {
 
 	interface IILMessageFilterQueryHandling { }
 
-	[iOS (11,0)]
-	[NoMac][NoWatch][NoTV]
+	[iOS (11, 0)]
+	[NoMac]
+	[NoWatch]
+	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface ILMessageFilterQueryHandling {
 
@@ -108,8 +125,11 @@ namespace IdentityLookup {
 		void HandleQueryRequest (ILMessageFilterQueryRequest queryRequest, ILMessageFilterExtensionContext context, Action<ILMessageFilterQueryResponse> completion);
 	}
 
-	[iOS (11,0)]
-	[NoMac][NoWatch][NoTV]
+	[iOS (11, 0)]
+	[NoMac]
+	[NoWatch]
+	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ILMessageFilterQueryRequest : NSSecureCoding {
@@ -120,13 +140,16 @@ namespace IdentityLookup {
 		[NullAllowed, Export ("messageBody")]
 		string MessageBody { get; }
 
-		[NoWatch, NoTV, NoMac, MacCatalyst (16,0), iOS (16,0)]
+		[NoWatch, NoTV, NoMac, MacCatalyst (16, 0), iOS (16, 0)]
 		[NullAllowed, Export ("receiverISOCountryCode")]
 		string ReceiverIsoCountryCode { get; }
 	}
 
-	[iOS (11,0)]
-	[NoMac][NoWatch][NoTV]
+	[iOS (11, 0)]
+	[NoMac]
+	[NoWatch]
+	[NoTV]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface ILMessageFilterQueryResponse : NSSecureCoding {
@@ -134,13 +157,16 @@ namespace IdentityLookup {
 		[Export ("action", ArgumentSemantic.Assign)]
 		ILMessageFilterAction Action { get; set; }
 
-		[NoWatch, NoTV, NoMac, MacCatalyst (16,0), iOS (16,0)]
+		[NoWatch, NoTV, NoMac, MacCatalyst (16, 0), iOS (16, 0)]
 		[Export ("subAction", ArgumentSemantic.Assign)]
 		ILMessageFilterSubAction SubAction { get; set; }
 	}
 
-	[iOS (11,0)]
-	[NoMac][NoWatch][NoTV]
+	[iOS (11, 0)]
+	[NoMac]
+	[NoWatch]
+	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ILNetworkResponse : NSSecureCoding {
@@ -152,8 +178,11 @@ namespace IdentityLookup {
 		NSData Data { get; }
 	}
 
-	[iOS (12,0)]
-	[NoMac][NoWatch][NoTV]
+	[iOS (12, 0)]
+	[NoMac]
+	[NoWatch]
+	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (ILClassificationRequest))]
 	[DisableDefaultCtor]
 	interface ILCallClassificationRequest : NSSecureCoding {
@@ -162,8 +191,11 @@ namespace IdentityLookup {
 		ILCallCommunication [] CallCommunications { get; }
 	}
 
-	[iOS (12,0)]
-	[NoMac][NoWatch][NoTV]
+	[iOS (12, 0)]
+	[NoMac]
+	[NoWatch]
+	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (ILCommunication))]
 	[DisableDefaultCtor]
 	interface ILCallCommunication {
@@ -173,16 +205,22 @@ namespace IdentityLookup {
 	}
 
 	[Abstract]
-	[iOS (12,0)]
-	[NoMac][NoWatch][NoTV]
+	[iOS (12, 0)]
+	[NoMac]
+	[NoWatch]
+	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ILClassificationRequest : NSSecureCoding {
 
 	}
 
-	[iOS (12,0)]
-	[NoMac][NoWatch][NoTV]
+	[iOS (12, 0)]
+	[NoMac]
+	[NoWatch]
+	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ILClassificationResponse : NSSecureCoding {
@@ -190,7 +228,8 @@ namespace IdentityLookup {
 		[Export ("action", ArgumentSemantic.Assign)]
 		ILClassificationAction Action { get; }
 
-		[iOS (12,1)]
+		[iOS (12, 1)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("userString")]
 		string UserString { get; set; }
 
@@ -204,8 +243,11 @@ namespace IdentityLookup {
 	}
 
 	[Abstract]
-	[iOS (12,0)]
-	[NoMac][NoWatch][NoTV]
+	[iOS (12, 0)]
+	[NoMac]
+	[NoWatch]
+	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ILCommunication : NSSecureCoding {
@@ -220,8 +262,11 @@ namespace IdentityLookup {
 		bool IsEqualTo (ILCommunication communication);
 	}
 
-	[iOS (12,0)]
-	[NoMac][NoWatch][NoTV]
+	[iOS (12, 0)]
+	[NoMac]
+	[NoWatch]
+	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (ILClassificationRequest))]
 	[DisableDefaultCtor]
 	interface ILMessageClassificationRequest : NSSecureCoding {
@@ -230,8 +275,11 @@ namespace IdentityLookup {
 		ILMessageCommunication [] MessageCommunications { get; }
 	}
 
-	[iOS (12,0)]
-	[NoMac][NoWatch][NoTV]
+	[iOS (12, 0)]
+	[NoMac]
+	[NoWatch]
+	[NoTV]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (ILCommunication))]
 	[DisableDefaultCtor]
 	interface ILMessageCommunication {
@@ -243,29 +291,27 @@ namespace IdentityLookup {
 		bool IsEqualTo (ILMessageCommunication communication);
 	}
 
-	[NoWatch, NoTV, NoMac, MacCatalyst (16,0), iOS (16,0)]
+	[NoWatch, NoTV, NoMac, MacCatalyst (16, 0), iOS (16, 0)]
 	[Protocol]
-	interface ILMessageFilterCapabilitiesQueryHandling
-	{
+	interface ILMessageFilterCapabilitiesQueryHandling {
 		[Abstract]
 		[Export ("handleCapabilitiesQueryRequest:context:completion:")]
 		void HandleQueryRequest (ILMessageFilterCapabilitiesQueryRequest capabilitiesQueryRequest, ILMessageFilterExtensionContext context, Action<ILMessageFilterCapabilitiesQueryResponse> completion);
 	}
 
-	[NoWatch, NoTV, NoMac, MacCatalyst (16,0), iOS (16,0)]
+	[NoWatch, NoTV, NoMac, MacCatalyst (16, 0), iOS (16, 0)]
 	[BaseType (typeof (NSObject))]
-	interface ILMessageFilterCapabilitiesQueryResponse : NSSecureCoding
-	{
+	interface ILMessageFilterCapabilitiesQueryResponse : NSSecureCoding {
 		[BindAs (typeof (ILMessageFilterSubAction []))]
 		[Export ("transactionalSubActions", ArgumentSemantic.Copy)]
-		NSNumber[] TransactionalSubActions { get; set; }
+		NSNumber [] TransactionalSubActions { get; set; }
 
 		[BindAs (typeof (ILMessageFilterSubAction []))]
 		[Export ("promotionalSubActions", ArgumentSemantic.Copy)]
-		NSNumber[] PromotionalSubActions { get; set; }
+		NSNumber [] PromotionalSubActions { get; set; }
 	}
 
-	[NoWatch, NoTV, NoMac, MacCatalyst (16,0), iOS (16,0)]
+	[NoWatch, NoTV, NoMac, MacCatalyst (16, 0), iOS (16, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ILMessageFilterCapabilitiesQueryRequest : NSSecureCoding {

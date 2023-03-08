@@ -29,8 +29,6 @@
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
-#if NET
-#endif
 
 #nullable enable
 
@@ -142,13 +140,13 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos12.0")]
 		[SupportedOSPlatform ("ios15.0")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Watch (8, 0)]
 		[TV (15, 0)]
 		[Mac (12, 0)]
 		[iOS (15, 0)]
-		[NoMacCatalyst]
+		[MacCatalyst (15, 0)]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -158,13 +156,13 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos12.0")]
 		[SupportedOSPlatform ("ios15.0")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[Watch (8, 0)]
 		[TV (15, 0)]
 		[Mac (12, 0)]
 		[iOS (15, 0)]
-		[NoMacCatalyst]
+		[MacCatalyst (15, 0)]
 #endif
 		public static bool IsCompressedPixelFormatAvailable (this CVPixelFormatType type)
 			=> CVIsCompressedPixelFormatAvailable ((uint) type);

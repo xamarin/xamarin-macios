@@ -1,4 +1,0 @@
-namespace tvOSBinding1
-{
-
-}

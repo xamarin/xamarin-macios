@@ -5,11 +5,9 @@ using NUnitLite;
 using AppKit;
 using Foundation;
 
-namespace Mono.Native.Tests
-{
+namespace Mono.Native.Tests {
 	[Register ("AppDelegate")]
-	public class MacAppDelegate : NSApplicationDelegate
-	{
+	public class MacAppDelegate : NSApplicationDelegate {
 		public override void DidFinishLaunching (NSNotification notification)
 		{
 		}

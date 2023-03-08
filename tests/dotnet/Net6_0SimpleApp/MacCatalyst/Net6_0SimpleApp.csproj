@@ -2,6 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net6.0-maccatalyst</TargetFramework>
+		<SupportedOSPlatformVersion>14.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
 	<Import Project="..\shared.csproj" />
 </Project>

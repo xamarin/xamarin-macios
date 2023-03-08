@@ -29,7 +29,7 @@ namespace Security {
 
 #if NET
 	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -105,12 +105,16 @@ namespace Security {
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool sec_identity_access_certificates (IntPtr identity, ref BlockLiteral block);
+		unsafe static extern bool sec_identity_access_certificates (IntPtr identity, BlockLiteral* block);
 
+#if !NET
 		internal delegate void AccessCertificatesHandler (IntPtr block, IntPtr cert);
 		static readonly AccessCertificatesHandler access = TrampolineAccessCertificates;
 
 		[MonoPInvokeCallback (typeof (AccessCertificatesHandler))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineAccessCertificates (IntPtr block, IntPtr cert)
 		{
 			var del = BlockLiteral.GetTarget<Action<SecCertificate2>> (block);
@@ -136,12 +140,15 @@ namespace Security {
 			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			try {
-				block_handler.SetupBlockUnsafe (access, handler);
-				return sec_identity_access_certificates (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolineAccessCertificates;
+				using var block = new BlockLiteral (trampoline, handler, typeof (SecIdentity2), nameof (TrampolineAccessCertificates));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (access, handler);
+#endif
+				return sec_identity_access_certificates (GetCheckedHandle (), &block);
 			}
 		}
 #endif

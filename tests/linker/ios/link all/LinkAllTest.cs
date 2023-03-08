@@ -37,14 +37,14 @@ using NUnit.Framework;
 using MonoTests.System.Net.Http;
 
 namespace LinkAll {
-	
+
 	// we DO NOT want the code to be "fully" available
 	public class NotPreserved {
-		
+
 		public byte One {
 			get; set;
 		}
-	
+
 		[DefaultValue (2)]
 		public int Two {
 			get; set;
@@ -56,10 +56,10 @@ namespace LinkAll {
 		// but the nested type is a subclass of NSObject and gets preserved (as it's not part of monotouch.dll)
 		public class Derived : NSObject {
 			[Export ("foo")]
-			public void Foo () {}
+			public void Foo () { }
 		}
 
-		public void UnusedMethod () {}
+		public void UnusedMethod () { }
 	}
 
 	[TestFixture]
@@ -102,14 +102,14 @@ namespace LinkAll {
 		public const string AssemblyName = "Xamarin.Mac";
 #endif
 #else
-	#error Unknown platform
+#error Unknown platform
 #endif
 
 		Type not_preserved_type = typeof (NotPreserved);
 
 
 		class TypeAttribute : Attribute {
-			public TypeAttribute (Type type) {}
+			public TypeAttribute (Type type) { }
 		}
 
 		[Type (null)]
@@ -132,7 +132,7 @@ namespace LinkAll {
 			Assert.NotNull (pi.GetGetMethod (), "getter");
 			Assert.Null (pi.GetSetMethod (), "setter");
 		}
-		
+
 		[Test]
 		public void SetterOnly ()
 		{
@@ -240,7 +240,7 @@ namespace LinkAll {
 			}
 		}
 #endif
-		
+
 #if !__MACOS__
 		[Test]
 		public void DetectPlatform ()
@@ -374,7 +374,7 @@ namespace LinkAll {
 #endif
 		}
 #endif
-		
+
 #if !__TVOS__ && !__WATCHOS__ && !__MACOS__
 		[Test]
 		public void Pasteboard_ImagesTest ()
@@ -383,13 +383,13 @@ namespace LinkAll {
 			using (var dp = new CGDataProvider (file)) {
 				using (var cgimg = CGImage.FromPNG (dp, null, false, CGColorRenderingIntent.Default)) {
 					using (var img = new UIImage (cgimg)) {
-						UIPasteboard.General.Images = new UIImage[] { img };
-						if (TestRuntime.CheckXcodeVersion (8,0))
+						UIPasteboard.General.Images = new UIImage [] { img };
+						if (TestRuntime.CheckXcodeVersion (8, 0))
 							Assert.True (UIPasteboard.General.HasImages, "HasImages");
 
 						Assert.AreEqual (1, UIPasteboard.General.Images.Length, "a - length");
 
-						UIPasteboard.General.Images = new UIImage[] { img, img };
+						UIPasteboard.General.Images = new UIImage [] { img, img };
 						Assert.AreEqual (2, UIPasteboard.General.Images.Length, "b - length");
 						Assert.IsNotNull (UIPasteboard.General.Images [0], "b - nonnull[0]");
 						Assert.IsNotNull (UIPasteboard.General.Images [1], "b - nonnull[0]");
@@ -409,7 +409,7 @@ namespace LinkAll {
 
 		[TypeConverter (typeof (TestEnumTypeConverter))]
 		public enum TestEnum {
-			One,Two
+			One, Two
 		}
 
 		[Preserve (AllMembers = true)]
@@ -580,7 +580,7 @@ namespace LinkAll {
 			using (var pr = new SKProductsRequest ()) {
 				Assert.Null (pr.WeakDelegate, "none");
 				// event on SKProductsRequest itself
-				pr.ReceivedResponse += (object sender, SKProductsRequestResponseEventArgs e) => {};
+				pr.ReceivedResponse += (object sender, SKProductsRequestResponseEventArgs e) => { };
 
 				var t = pr.WeakDelegate.GetType ();
 				Assert.That (t.Name, Is.EqualTo ("_SKProductsRequestDelegate"), "delegate");
@@ -591,7 +591,7 @@ namespace LinkAll {
 				Assert.NotNull (value, "value");
 
 				// and on the SKRequest defined one
-				pr.RequestFailed += (object sender, SKRequestErrorEventArgs e) => {};
+				pr.RequestFailed += (object sender, SKRequestErrorEventArgs e) => { };
 				// and the existing (initial field) is still set
 				fi = t.GetField ("receivedResponse", BindingFlags.NonPublic | BindingFlags.Instance);
 				Assert.NotNull (fi, "receivedResponse/SKRequest");
@@ -603,7 +603,8 @@ namespace LinkAll {
 		public void Aot_27116 ()
 		{
 			var nix = (from nic in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces ()
-				where nic.Id.StartsWith ("en") || nic.Id.StartsWith ("pdp_ip") select nic);
+					   where nic.Id.StartsWith ("en") || nic.Id.StartsWith ("pdp_ip")
+					   select nic);
 			Assert.NotNull (nix);
 		}
 
@@ -650,7 +651,7 @@ namespace LinkAll {
 			Assert.NotNull (oifd,  atmb.FullName + ".ObjectIdForDebugger");
 #else
 			Assert.Null (snfwc, atmb.FullName + ".SetNotificationForWaitCompletion");
-			Assert.Null (oifd,  atmb.FullName + ".ObjectIdForDebugger");
+			Assert.Null (oifd, atmb.FullName + ".ObjectIdForDebugger");
 #endif
 		}
 
@@ -669,8 +670,7 @@ namespace LinkAll {
 		[ProtocolMember (IsRequired = false, IsProperty = false, IsStatic = false, Name = "ConfigureView", Selector = "configureViewForParameters:", ParameterType = new Type [] { typeof (global::Foundation.NSSet<global::Foundation.NSString>) }, ParameterByRef = new bool [] { false })]
 		public interface IProtocolWithGenericsInOptionalMember : INativeObject, IDisposable { }
 
-		internal sealed class ProtocolWithGenericsInOptionalMemberWrapper : BaseWrapper, IProtocolWithGenericsInOptionalMember
-		{
+		internal sealed class ProtocolWithGenericsInOptionalMemberWrapper : BaseWrapper, IProtocolWithGenericsInOptionalMember {
 			public ProtocolWithGenericsInOptionalMemberWrapper (IntPtr handle, bool owns) : base (handle, owns) { }
 		}
 
@@ -725,8 +725,7 @@ namespace LinkAll {
 	[Introduced (PlatformName.WatchOS, 1, 0)]
 #endif
 	[Preserve]
-	public class ClassFromThePast : NSObject
-	{
+	public class ClassFromThePast : NSObject {
 		[Export ("foo:")]
 		public void Foo (ClassFromThePast obj)
 		{

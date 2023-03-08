@@ -74,7 +74,7 @@ namespace CoreVideo {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -84,7 +84,7 @@ namespace CoreVideo {
 		public static readonly NSString ContainsRgb;
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -95,7 +95,7 @@ namespace CoreVideo {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -105,7 +105,7 @@ namespace CoreVideo {
 		public static readonly NSString ComponentRangeKey;
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -115,7 +115,7 @@ namespace CoreVideo {
 		public static readonly NSString ComponentRangeFullRangeKey;
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -125,7 +125,7 @@ namespace CoreVideo {
 		public static readonly NSString ComponentRangeVideoRangeKey;
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -137,7 +137,7 @@ namespace CoreVideo {
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (12, 0)]

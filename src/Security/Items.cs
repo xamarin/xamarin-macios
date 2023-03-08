@@ -67,8 +67,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.14")]
-		[UnsupportedOSPlatform ("ios12.0")]
 		[ObsoletedOSPlatform ("macos10.14", "Use 'AfterFirstUnlock' or a better suited option instead.")]
 		[ObsoletedOSPlatform ("ios12.0", "Use 'AfterFirstUnlock' or a better suited option instead.")]
 #else
@@ -83,8 +81,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.14")]
-		[UnsupportedOSPlatform ("ios12.0")]
 		[ObsoletedOSPlatform ("macos10.14", "Use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.")]
 		[ObsoletedOSPlatform ("ios12.0", "Use 'AfterFirstUnlockThisDeviceOnly' or a better suited option instead.")]
 #else
@@ -1006,7 +1002,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("ios9.0")]
 		[ObsoletedOSPlatform ("ios9.0", "Use 'AuthenticationUI' property instead.")]
 #else
 		[iOS (8, 0)]
@@ -1023,7 +1018,7 @@ namespace Security {
 #endif
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -1043,7 +1038,7 @@ namespace Security {
 #if !WATCH && !TVOS
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
@@ -1390,7 +1385,7 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11, 0)]
@@ -1411,7 +1406,7 @@ namespace Security {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
-		[SupportedOSPlatform ("maccatalyst13.1")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
@@ -1827,7 +1822,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -1869,7 +1864,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -1891,7 +1886,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else

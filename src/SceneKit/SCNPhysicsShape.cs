@@ -95,7 +95,7 @@ namespace SceneKit {
 	}
 
 #if NET
-	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios8.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]

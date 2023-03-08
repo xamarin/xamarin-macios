@@ -1,3 +1,5 @@
+#if __MACOS__
+
 #nullable enable
 
 using System;
@@ -138,3 +140,5 @@ namespace WebKit {
 		}
 	}
 }
+
+#endif // __MACOS__

@@ -1,25 +1,25 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="7.0.101-servicing.22571.1">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="7.0.104-servicing.23153.1">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>d02d33e069bf59d00b6374e304d39d6ceb20e18a</Sha>
+      <Sha>a4ecf7bfc012e282bb2f1c81081328098dcb9b35</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="7.0.100-1.22471.3" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="7.0.100-1.23062.2" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/linker</Uri>
-      <Sha>219e84c88def8276179f66282b2f7cb5f1d0d126</Sha>
+      <Sha>19fa656d35252ccf926e6a6d783b16a2f094aaef</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="7.0.1">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="7.0.4">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>de84cf9f723f5d4342e95c692d088ed2af63fdbe</Sha>
+      <Sha>b68fd882623b528fd4ef78b122209710f17bacdb</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
-    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="7.0.0" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="7.0.3" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspnetcore</Uri>
-      <Sha>bb01bbf4433e27289b99001b7de6a582879d1835</Sha>
+      <Sha>febee99db845fd8766a13bdb391a07c3ee90b4ba</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.net7.Manifest-7.0.100" Version="7.0.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.net7.Manifest-7.0.100" Version="7.0.4" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>73eb13444bdee019ec91191f96fd866661acbc78</Sha>
+      <Sha>ba16583f6b055e5a0623d817a48f1f2f15629e6b</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>

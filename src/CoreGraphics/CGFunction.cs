@@ -122,7 +122,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static IntPtr CGFunctionCreate (/* void* */ IntPtr data, /* size_t */ nint domainDimension, /* CGFloat* */ nfloat []? domain, nint rangeDimension, /* CGFloat* */ nfloat []? range, ref CGFunctionCallbacks callbacks);
+		extern static unsafe IntPtr CGFunctionCreate (/* void* */ IntPtr data, /* size_t */ nint domainDimension, /* CGFloat* */ nfloat* domain, nint rangeDimension, /* CGFloat* */ nfloat* range, ref CGFunctionCallbacks callbacks);
 
 		unsafe public delegate void CGFunctionEvaluate (nfloat* data, nfloat* outData);
 
@@ -143,8 +143,12 @@ namespace CoreGraphics {
 			this.evaluate = callback;
 
 			var gch = GCHandle.Alloc (this);
-			var handle = CGFunctionCreate (GCHandle.ToIntPtr (gch), domain is not null ? domain.Length / 2 : 0, domain, range is not null ? range.Length / 2 : 0, range, ref cbacks);
-			InitializeHandle (handle);
+			unsafe {
+				fixed (nfloat* domainPtr = domain, rangePtr = range) {
+					var handle = CGFunctionCreate (GCHandle.ToIntPtr (gch), domain is not null ? domain.Length / 2 : 0, domainPtr, range is not null ? range.Length / 2 : 0, rangePtr, ref cbacks);
+					InitializeHandle (handle);
+				}
+			}
 		}
 #if NET
 		[UnmanagedCallersOnly]

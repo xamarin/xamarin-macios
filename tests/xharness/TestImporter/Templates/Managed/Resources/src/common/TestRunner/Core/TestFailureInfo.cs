@@ -1,15 +1,13 @@
 using System;
 
-namespace Xamarin.iOS.UnitTests
-{
+namespace Xamarin.iOS.UnitTests {
 	/// <summary>
 	/// Contains information about a single test failure. Information is used at the end of the run to print
 	/// summary of failures to logcat as well as put them in the results Bundle. <see cref="TestName"/> is used
 	/// only to generate unique index when storing information in the Bundle, so <see cref="Message"/> must contain
 	/// the test name.
 	/// </summary>
-	public class TestFailureInfo
-	{
+	public class TestFailureInfo {
 		/// <summary>
 		/// Gets or sets the name of the test. Must not be null or empty (all whitespace isn't allowed either)
 		/// </summary>

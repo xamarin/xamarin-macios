@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using NUnit.Framework;
 
@@ -12,16 +13,12 @@ namespace Cecil.Tests {
 	[TestFixture]
 	public class EnumTest {
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblyDefinitions))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
 		// https://github.com/xamarin/xamarin-macios/issues/9724
-		public void NoAvailabilityOnError (string assemblyPath)
+		public void NoAvailabilityOnError (AssemblyInfo info)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath);
-			if (assembly == null) {
-				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
-				return; // just to help nullability
-			}
+			var assembly = info.Assembly;
 			HashSet<string> found = new HashSet<string> ();
 			foreach (var type in assembly.MainModule.Types)
 				NoAvailabilityOnError (type, found);
@@ -61,6 +58,14 @@ namespace Cecil.Tests {
 			foreach (var f in type.Fields) {
 				if (!f.HasCustomAttributes)
 					continue;
+
+				// If there are any ObsoletedOSPlatform attributes, then we must add other availability attributes for supported platforms,
+				// because otherwise they're implicitly not supported. This means that we can't assert that there aren't any other
+				// availability attributes if there's any ObsoletedOSPlatform attributes.
+				var hasAnyObsoletedOSPlatformAttributes = f.CustomAttributes.Any (v => v.AttributeType.Name == "ObsoletedOSPlatformAttribute");
+				if (hasAnyObsoletedOSPlatformAttributes)
+					continue;
+
 				foreach (var ca in f.CustomAttributes) {
 					switch (ca.AttributeType.Name) {
 					case "ObsoleteAttribute":
@@ -76,7 +81,9 @@ namespace Cecil.Tests {
 					case "NoMacAttribute":
 					case "NoTVAttribute":
 					case "NoWatchAttribute":
-						found.Add ($"{type.FullName}.{f.Name}");
+					case "SupportedOSPlatformAttribute":
+					case "UnsupportedOSPlatformAttribute":
+						found.Add ($"{type.FullName}.{f.Name}: {ca.AttributeType.Name}");
 						break;
 					default:
 						break;

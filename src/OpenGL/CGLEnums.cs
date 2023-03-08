@@ -29,7 +29,7 @@ using ObjCRuntime;
 namespace OpenGL {
 
 #if NET
-	[UnsupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("macos")]
 	[ObsoletedOSPlatform ("macos10.14", "Use 'Metal' Framework instead.")]
 #else
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' Framework instead.")]
@@ -58,7 +58,7 @@ namespace OpenGL {
 	}
 
 #if NET
-	[UnsupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("macos")]
 	[ObsoletedOSPlatform ("macos10.14", "Use 'Metal' Framework instead.")]
 #else
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' Framework instead.")]

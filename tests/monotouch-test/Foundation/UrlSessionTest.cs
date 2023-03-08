@@ -26,6 +26,17 @@ namespace MonoTouchFixtures.Foundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class UrlSessionTest {
+		void AssertTrueOrIgnoreInCI (bool value, ref Exception ex, string message)
+		{
+			if (value) {
+				TestRuntime.IgnoreInCIIfBadNetwork (ex);
+				Assert.IsNull (ex, message + " Exception");
+				return;
+			}
+
+			TestRuntime.IgnoreInCI ($"This test times out randomly in CI due to bad network: {message}");
+			Assert.Fail (message);
+		}
 
 		//TODO: TestRuntime.RunAsync is not on mac currently
 #if !MONOMAC
@@ -47,37 +58,58 @@ namespace MonoTouchFixtures.Foundation {
 
 			var completed = false;
 			var timeout = 30;
+			Exception ex = null;
 
 			/* CreateDataTask */
 			completed = false;
-			Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
-				await session.CreateDataTaskAsync (request);
-				completed = true;
-			}, () => completed), "CreateDataTask a");
+			AssertTrueOrIgnoreInCI (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
+				try {
+					await session.CreateDataTaskAsync (request);
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					completed = true;
+				}
+			}, () => completed), ref ex, "CreateDataTask a");
 
 			completed = false;
-			Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
-				await session.CreateDataTaskAsync (url);
-				completed = true;
-			}, () => completed), "CreateDataTask b");
+			AssertTrueOrIgnoreInCI (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
+				try {
+					await session.CreateDataTaskAsync (url);
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					completed = true;
+				}
+			}, () => completed), ref ex, "CreateDataTask b");
 
 			/* CreateDownloadTask */
 			completed = false;
-			Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
-				await session.CreateDownloadTaskAsync (request);
-				completed = true;
-			}, () => completed), "CreateDownloadTask a");
+			AssertTrueOrIgnoreInCI (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
+				try {
+					await session.CreateDownloadTaskAsync (request);
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					completed = true;
+				}
+			}, () => completed), ref ex, "CreateDownloadTask a");
 
 
 			completed = false;
-			Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
-				await session.CreateDownloadTaskAsync (url);
-				completed = true;
-			}, () => completed), "CreateDownloadTask b");
+			AssertTrueOrIgnoreInCI (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
+				try {
+					await session.CreateDownloadTaskAsync (url);
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					completed = true;
+				}
+			}, () => completed), ref ex, "CreateDownloadTask b");
 
 			/* CreateUploadTask */
 			completed = false;
-			Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
+			AssertTrueOrIgnoreInCI (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
 				try {
 					var uploadRequest = new NSMutableUrlRequest (url);
 					uploadRequest.HttpMethod = "POST";
@@ -87,10 +119,10 @@ namespace MonoTouchFixtures.Foundation {
 				} finally {
 					completed = true;
 				}
-			}, () => completed), "CreateUploadTask a");
+			}, () => completed), ref ex, "CreateUploadTask a");
 
 			completed = false;
-			Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
+			AssertTrueOrIgnoreInCI (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
 				try {
 					var uploadRequest = new NSMutableUrlRequest (url);
 					uploadRequest.HttpMethod = "POST";
@@ -100,7 +132,7 @@ namespace MonoTouchFixtures.Foundation {
 				} finally {
 					completed = true;
 				}
-			}, () => completed), "CreateUploadTask b");
+			}, () => completed), ref ex, "CreateUploadTask b");
 		}
 
 		[Test]
@@ -135,6 +167,7 @@ namespace MonoTouchFixtures.Foundation {
 				}
 			}, () => completed);
 
+			TestRuntime.IgnoreInCIIfBadNetwork (ex);
 			Assert.IsNull (ex, "Exception");
 			Assert.AreEqual (-1, failed_iteration, "Failed");
 		}

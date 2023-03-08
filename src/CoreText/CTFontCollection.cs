@@ -196,13 +196,24 @@ namespace CoreText {
 			return CFArray.ArrayFromHandleFunc (cfArrayRef, fd => new CTFontDescriptor (fd, false), true)!;
 		}
 
+#if NET
+		[DllImport (Constants.CoreTextLibrary)]
+		static unsafe extern IntPtr CTFontCollectionCreateMatchingFontDescriptorsSortedWithCallback (
+				IntPtr collection, delegate* unmanaged<IntPtr, IntPtr, IntPtr, CFIndex> sortCallback, 
+				IntPtr refCon);
+#else
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCollectionCreateMatchingFontDescriptorsSortedWithCallback (
 				IntPtr collection, CTFontCollectionSortDescriptorsCallback sortCallback, IntPtr refCon);
 
 		delegate CFIndex CTFontCollectionSortDescriptorsCallback (IntPtr first, IntPtr second, IntPtr refCon);
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (CTFontCollectionSortDescriptorsCallback))]
+#endif
 		static CFIndex CompareDescriptors (IntPtr first, IntPtr second, IntPtr context)
 		{
 			GCHandle c = GCHandle.FromIntPtr (context);
@@ -217,10 +228,20 @@ namespace CoreText {
 		{
 			GCHandle comparison = GCHandle.Alloc (comparer);
 			try {
-				var cfArrayRef = CTFontCollectionCreateMatchingFontDescriptorsSortedWithCallback (
+				IntPtr cfArrayRef;
+#if NET
+				unsafe {
+					cfArrayRef = CTFontCollectionCreateMatchingFontDescriptorsSortedWithCallback (
+						Handle,
+						&CompareDescriptors,
+						GCHandle.ToIntPtr (comparison));
+				}
+#else
+				cfArrayRef = CTFontCollectionCreateMatchingFontDescriptorsSortedWithCallback (
 						Handle,
 						new CTFontCollectionSortDescriptorsCallback (CompareDescriptors),
 						GCHandle.ToIntPtr (comparison));
+#endif
 				if (cfArrayRef == IntPtr.Zero)
 					return Array.Empty<CTFontDescriptor> ();
 				return CFArray.ArrayFromHandleFunc (cfArrayRef, fd => new CTFontDescriptor (fd, false), true)!;

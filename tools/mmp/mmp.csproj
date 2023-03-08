@@ -57,6 +57,9 @@
     <Compile Include="..\common\SdkVersions.cs">
       <Link>tools\common\SdkVersions.cs</Link>
     </Compile>
+    <Compile Include="..\common\ProductConstants.cs">
+      <Link>tools\common\ProductConstants.cs</Link>
+    </Compile>
     <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\tuner\Mono.Tuner\ApplyPreserveAttributeBase.cs">
       <Link>mono-archive\Mono.Tuner\ApplyPreserveAttributeBase.cs</Link>
     </Compile>
@@ -565,7 +568,7 @@
       <Link>docs\website\mmp-errors.md</Link>
     </None>
   </ItemGroup>
-  <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.cs.in" Outputs="../common/SdkVersions.cs">
-    <Exec Command="make ../common/SdkVersions.cs" />
+  <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.in.cs;../common/ProductConstants.in.cs" Outputs="../common/SdkVersions.cs;../common/ProductConstants.cs">
+    <Exec Command="make ../common/SdkVersions.cs ../common/ProductConstants.cs" />
   </Target>
 </Project>

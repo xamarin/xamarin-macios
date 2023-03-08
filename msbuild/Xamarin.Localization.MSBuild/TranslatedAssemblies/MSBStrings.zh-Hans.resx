@@ -1148,13 +1148,13 @@
         <value>值为“{1}”的未知属性“{0}”。</value>
     </data>
   <data name="E7102" xml:space="preserve">
-        <value>Invalid value '{0}' for the entitlement '{1}' of type '{2}' specified in the CustomEntitlements item group. Expected no value at all.</value>
+        <value>在 CustomEntitlements 项组中为类型为“{2}”的权利“{1}”指定的值“{0}”无效。根本不应为任何值。</value>
         <comment>
             Don't translate: CustomEntitlements (name of option in project file)
         </comment>
     </data>
   <data name="E7103" xml:space="preserve">
-        <value>Invalid value '{0}' for the entitlement '{1}' of type '{2}' specified in the CustomEntitlements item group. Expected 'true' or 'false'.</value>
+        <value>在 CustomEntitlements 项组中为类型为“{2}”的权利“{1}”指定的值“{0}”无效。应为 “true” 或 “false”。</value>
         <comment>
             Don't translate:
                 * CustomEntitlements (name of option in project file)
@@ -1162,7 +1162,7 @@
         </comment>
     </data>
   <data name="E7104" xml:space="preserve">
-        <value>Unknown type '{0}' for the entitlement '{1}' specified in the CustomEntitlements item group. Expected 'Remove', 'Boolean', 'String', or 'StringArray'.</value>
+        <value>在 CustomEntitlements 项组中指定的权利“{1}”的类型“{0}”未知。应为 “Remove”、“Boolean”、“String” 或“StringArray”。</value>
         <comment>
             Don't translate:
                 * CustomEntitlements (name of option in project file)
@@ -1170,7 +1170,7 @@
         </comment>
     </data>
   <data name="W7105" xml:space="preserve">
-        <value>Unexpected extension '{0}' for native reference '{1}' in manifest '{2}'.</value>
+        <value>清单“{2}”中本机引用“{1}”的意外扩展“{0}”。</value>
         <comment>
             {0}: file extension
             {1}: path to a file

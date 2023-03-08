@@ -244,7 +244,7 @@ namespace Xamarin.MacDev.Tasks {
 					value = value.Clone ();
 
 				if (value is not null)
-					result.Add (item.Key, value);
+					result.Add (item.Key!, value);
 			}
 
 			return result;
@@ -352,12 +352,13 @@ namespace Xamarin.MacDev.Tasks {
 			if (profile is not null) {
 				// start off with the settings from the provisioning profile
 				foreach (var item in profile.Entitlements) {
-					if (!AllowedProvisioningKeys.Contains (item.Key))
+					var key = item.Key!;
+					if (!AllowedProvisioningKeys.Contains (key))
 						continue;
 
 					var value = item.Value;
 
-					if (item.Key == "com.apple.developer.icloud-container-environment")
+					if (key == "com.apple.developer.icloud-container-environment")
 						value = new PString ("Development");
 					else if (value is PDictionary)
 						value = MergeEntitlementDictionary ((PDictionary) value, profile);
@@ -369,23 +370,24 @@ namespace Xamarin.MacDev.Tasks {
 						value = value.Clone ();
 
 					if (value is not null)
-						entitlements.Add (item.Key, value);
+						entitlements.Add (key, value);
 				}
 			}
 
 			// merge in the user's values
 			foreach (var item in template) {
 				var value = item.Value;
+				var key = item.Key!;
 
-				if (item.Key == "com.apple.developer.ubiquity-container-identifiers" ||
-					item.Key == "com.apple.developer.icloud-container-identifiers" ||
-					item.Key == "com.apple.developer.icloud-container-environment" ||
-					item.Key == "com.apple.developer.icloud-services") {
+				if (key == "com.apple.developer.ubiquity-container-identifiers" ||
+					key == "com.apple.developer.icloud-container-identifiers" ||
+					key == "com.apple.developer.icloud-container-environment" ||
+					key == "com.apple.developer.icloud-services") {
 					if (profile is null)
-						Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0110, item.Key);
-					else if (!profile.Entitlements.ContainsKey (item.Key))
-						Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0111, item.Key);
-				} else if (item.Key == ApplicationIdentifierKey) {
+						Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0110, key);
+					else if (!profile.Entitlements.ContainsKey (key))
+						Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0111, key);
+				} else if (key == ApplicationIdentifierKey) {
 					var str = value as PString;
 
 					// Ignore ONLY if it is empty, otherwise take the user's value
@@ -396,20 +398,20 @@ namespace Xamarin.MacDev.Tasks {
 				if (value is PDictionary)
 					value = MergeEntitlementDictionary ((PDictionary) value, profile);
 				else if (value is PString)
-					value = MergeEntitlementString ((PString) value, profile, item.Key == ApplicationIdentifierKey);
+					value = MergeEntitlementString ((PString) value, profile, key == ApplicationIdentifierKey);
 				else if (value is PArray)
 					value = MergeEntitlementArray ((PArray) value, profile);
 				else
 					value = value.Clone ();
 
 				if (value is not null)
-					entitlements [item.Key] = value;
+					entitlements [key] = value;
 			}
 
 			switch (Platform) {
 			case ApplePlatform.MacOSX:
 			case ApplePlatform.MacCatalyst:
-				if (Debug && entitlements.TryGetValue ("com.apple.security.app-sandbox", out PBoolean sandbox) && sandbox.Value)
+				if (Debug && entitlements.TryGetValue ("com.apple.security.app-sandbox", out PBoolean? sandbox) && sandbox.Value)
 					entitlements ["com.apple.security.network.client"] = new PBoolean (true);
 				break;
 			}
@@ -426,14 +428,15 @@ namespace Xamarin.MacDev.Tasks {
 			// the template (user-supplied Entitlements.plist file) is used to create a whitelist of keys
 			allowed.Add ("com.apple.developer.icloud-container-environment");
 			foreach (var item in template)
-				allowed.Add (item.Key);
+				allowed.Add (item.Key!);
 
 			// now we duplicate the allowed keys from the compiled xcent file
 			var archived = new PDictionary ();
 
 			foreach (var item in compiled) {
-				if (allowed.Contains (item.Key))
-					archived.Add (item.Key, item.Value.Clone ());
+				var key = item.Key!;
+				if (allowed.Contains (key))
+					archived.Add (key, item.Value.Clone ());
 			}
 
 			return archived;
@@ -496,7 +499,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			try {
-				template = PDictionary.FromFile (path);
+				template = PDictionary.FromFile (path)!;
 			} catch (Exception ex) {
 				Log.LogError (MSBStrings.E0113, path, ex.Message);
 				return false;
@@ -538,7 +541,7 @@ namespace Xamarin.MacDev.Tasks {
 			var path = Path.Combine (EntitlementBundlePath, "archived-expanded-entitlements.xcent");
 
 			if (File.Exists (path)) {
-				var plist = PDictionary.FromFile (path);
+				var plist = PDictionary.FromFile (path)!;
 				var src = archived.ToXml ();
 				var dest = plist.ToXml ();
 

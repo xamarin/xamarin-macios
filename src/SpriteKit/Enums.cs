@@ -113,6 +113,7 @@ namespace SpriteKit {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKAttributeType : long {
 		None = 0,
@@ -128,6 +129,7 @@ namespace SpriteKit {
 
 	[iOS (10, 0)]
 	[Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKTileDefinitionRotation : ulong {
 		Angle0 = 0,
@@ -138,6 +140,7 @@ namespace SpriteKit {
 
 	[iOS (10, 0)]
 	[Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKTileSetType : ulong {
 		Grid,
@@ -148,6 +151,7 @@ namespace SpriteKit {
 
 	[iOS (10, 0)]
 	[Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKTileAdjacencyMask : ulong {
 		Up = 1 << 0,
@@ -189,6 +193,7 @@ namespace SpriteKit {
 
 	[NoMac]
 	[TV (11, 0), iOS (11, 0), Watch (9, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKNodeFocusBehavior : long {
 		None = 0,

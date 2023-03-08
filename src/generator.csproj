@@ -92,15 +92,40 @@
     <None Include="..\docs\website\generator-errors.md">
       <Link>generator-errors.md</Link>
     </None>
-    <Compile Include="..\src\btouch.cs" />
     <Compile Include="..\src\error.cs" />
-    <Compile Include="..\src\generator.cs" />
-    <Compile Include="..\src\generator-attributes.cs" />
-    <Compile Include="..\src\generator-attribute-manager.cs" />
-    <Compile Include="..\src\generator-enums.cs" />
-    <Compile Include="..\src\generator-filters.cs" />
-    <Compile Include="..\src\generator-typemanager.cs" />
     <Compile Include="..\src\ObjCRuntime\Stret.cs" />
+    <Compile Include="..\src\bgen\AsyncMethodInfo.cs" />
+    <Compile Include="..\src\bgen\AttributeConversionManager.cs" />
+    <Compile Include="..\src\bgen\AsyncMethodKind.cs" />
+    <Compile Include="..\src\bgen\AttributeManager.cs" />
+    <Compile Include="..\src\bgen\Attributes.cs" />
+    <Compile Include="..\src\bgen\AttributeFactory.cs" />
+    <Compile Include="..\src\bgen\BodyOption.cs" />
+    <Compile Include="..\src\bgen\BindingTouch.cs" />
+    <Compile Include="..\src\bgen\CollectionsExtensions.cs" />
+    <Compile Include="..\src\bgen\CustomAttributeDataExtensions.cs" />
+    <Compile Include="..\src\bgen\Enums.cs" />
+    <Compile Include="..\src\bgen\ExtensionMethods.cs" />
+    <Compile Include="..\src\bgen\Frameworks.cs" />
+    <Compile Include="..\src\bgen\Filters.cs" />
+    <Compile Include="..\src\bgen\GeneratedType.cs" />
+    <Compile Include="..\src\bgen\GeneratedTypes.cs" />
+    <Compile Include="..\src\bgen\Generator.cs" />
+    <Compile Include="..\src\bgen\MarshalInfo.cs" />
+    <Compile Include="..\src\bgen\MarshalTypeList.cs" />
+    <Compile Include="..\src\bgen\MarshalType.cs" />
+    <Compile Include="..\src\bgen\IMemberGatherer.cs" />
+    <Compile Include="..\src\bgen\MemberInformation.cs" />
+    <Compile Include="..\src\bgen\NamespaceManager.cs" />
+    <Compile Include="..\src\bgen\Nomenclator.cs" />
+    <Compile Include="..\src\bgen\NullabilityInfoContext.cs" />
+    <Compile Include="..\src\bgen\PlatformNameExtensions.cs" />
+    <Compile Include="..\src\bgen\StringExtensions.cs" />
+    <Compile Include="..\src\bgen\ThreadCheck.cs" />
+    <Compile Include="..\src\bgen\TrampolineInfo.cs" />
+    <Compile Include="..\src\bgen\TypeExtensions.cs" />
+    <Compile Include="..\src\bgen\TypeManager.cs" />
+    <Compile Include="..\src\bgen\WrapPropMemberInformation.cs" />
     <Compile Include="..\tools\common\ApplePlatform.cs" />
     <Compile Include="..\tools\common\TargetFramework.cs" />
     <Compile Include="..\tools\common\StringUtils.cs" />
@@ -147,7 +172,7 @@
   </ItemGroup>
   <Target Name="AfterBuild">
     <!-- Only run 'make bgen' if we're not executed as part of 'make' (i.e. MAKEFLAGS is empty) -->
-    <Exec Command="make bgen" Condition="'$(MAKEFLAGS)' == ''"/>
+    <Exec Command="make bgen" Condition="'$(MAKEFLAGS)' == ''" />
   </Target>
   <Import Project="..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.targets" Condition="Exists('..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.targets')" />
 </Project>

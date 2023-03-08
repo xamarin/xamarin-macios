@@ -23,7 +23,7 @@ namespace CoreWlan {
 	public static partial class CWKeychain {
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -32,7 +32,7 @@ namespace CoreWlan {
 		static extern OSStatus CWKeychainCopyWiFiEAPIdentity (/* CWKeychainDomain */ nint domain, NSDataRef ssid, out SecIdentityRef identity);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -50,7 +50,7 @@ namespace CoreWlan {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -59,7 +59,7 @@ namespace CoreWlan {
 			=> TryFindWiFiEAPIdentity (domain, ssid, out identity, out var _);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -68,7 +68,7 @@ namespace CoreWlan {
 		static extern OSStatus CWKeychainDeleteWiFiEAPUsernameAndPassword (/* CWKeychainDomain */ nint domain, NSDataRef ssid);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -80,7 +80,7 @@ namespace CoreWlan {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -89,7 +89,7 @@ namespace CoreWlan {
 			=> TryDeleteWiFiEAPUsernameAndPassword (domain, ssid, out var _);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -98,7 +98,7 @@ namespace CoreWlan {
 		static extern OSStatus CWKeychainDeleteWiFiPassword (/* CWKeychainDomain */ nint domain, NSDataRef ssid);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -110,7 +110,7 @@ namespace CoreWlan {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -119,7 +119,7 @@ namespace CoreWlan {
 			=> TryDeleteWiFiPassword (domain, ssid, out var _);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -128,7 +128,7 @@ namespace CoreWlan {
 		static extern OSStatus CWKeychainFindWiFiEAPUsernameAndPassword (/* CWKeychainDomain */ nint domain, NSDataRef ssid, out NSStringRef username, out NSStringRef password);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -150,7 +150,7 @@ namespace CoreWlan {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -159,7 +159,7 @@ namespace CoreWlan {
 			=> TryFindWiFiEAPUsernameAndPassword (domain, ssid, out username, out password, out var _);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -173,7 +173,7 @@ namespace CoreWlan {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -182,7 +182,7 @@ namespace CoreWlan {
 			=> TryFindWiFiEAPUsernameAndPassword (domain, ssid, out username, out password, out var _);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -191,7 +191,7 @@ namespace CoreWlan {
 		static extern OSStatus CWKeychainFindWiFiPassword (/* CWKeychainDomain */ nint domain, NSDataRef ssid, out NSStringRef password);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -208,7 +208,7 @@ namespace CoreWlan {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -217,7 +217,7 @@ namespace CoreWlan {
 			=> TryFindWiFiPassword (domain, ssid, out password, out var _);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -230,7 +230,7 @@ namespace CoreWlan {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -239,7 +239,7 @@ namespace CoreWlan {
 			=> TryFindWiFiPassword (domain, ssid, out password, out var _);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -248,7 +248,7 @@ namespace CoreWlan {
 		static extern OSStatus CWKeychainSetWiFiEAPIdentity (/* CWKeychainDomain */ nint domain, NSDataRef ssid, SecIdentityRef identity);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -260,7 +260,7 @@ namespace CoreWlan {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -269,7 +269,7 @@ namespace CoreWlan {
 			=> TrySetWiFiEAPIdentity (domain, ssid, identity, out var _);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -278,7 +278,7 @@ namespace CoreWlan {
 		static extern OSStatus CWKeychainSetWiFiEAPUsernameAndPassword (/* CWKeychainDomain */ nint domain, NSDataRef ssid, NSStringRef username, NSStringRef password);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -290,7 +290,7 @@ namespace CoreWlan {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -299,7 +299,7 @@ namespace CoreWlan {
 			=> TrySetWiFiEAPUsernameAndPassword (domain, ssid, username, password, out var _);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -315,7 +315,7 @@ namespace CoreWlan {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -324,7 +324,7 @@ namespace CoreWlan {
 			=> TrySetWiFiEAPUsernameAndPassword (domain, ssid, username, password, out var _);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -333,7 +333,7 @@ namespace CoreWlan {
 		static extern OSStatus CWKeychainSetWiFiPassword (/* CWKeychainDomain */ nint domain, NSDataRef ssid, NSStringRef password);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -345,7 +345,7 @@ namespace CoreWlan {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -354,7 +354,7 @@ namespace CoreWlan {
 			=> TrySetWiFiPassword (domain, ssid, password, out var _);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]
@@ -368,7 +368,7 @@ namespace CoreWlan {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 9)]

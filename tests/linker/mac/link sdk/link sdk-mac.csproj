@@ -73,6 +73,9 @@
     <Compile Include="..\..\..\common\mac\Mac.cs">
       <Link>Mac.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\common\TestAssemblyLoader.cs">
+      <Link>TestAssemblyLoader.cs</Link>
+    </Compile>
     <Compile Include="LinkSdkTest.cs" />
     <Compile Include="..\..\..\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>

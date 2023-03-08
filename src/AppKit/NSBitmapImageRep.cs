@@ -27,6 +27,8 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AppKit {
 
 	public partial class NSBitmapImageRep {

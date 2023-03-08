@@ -24,7 +24,7 @@ jobs:
         branches: Localization
         soft_fail: true
 
-    - uses: peterjgrainger/action-create-branch@v2.2.0
+    - uses: peterjgrainger/action-create-branch@v2.4.0
       name: 'Create Localization Branch'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

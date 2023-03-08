@@ -12,7 +12,7 @@
   "shortName": "ios-storyboard",
   "sourceName": "Storyboard1",
   "primaryOutputs": [
-    { "path": "Stortboard1.storyboard" }
+    { "path": "Storyboard1.storyboard" }
   ],
   "defaultName": "Storyboard1"
 }

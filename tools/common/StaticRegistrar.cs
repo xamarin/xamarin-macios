@@ -1105,6 +1105,11 @@ namespace Registrar {
 			return type.Resolve ()?.IsAbstract == true;
 		}
 
+		protected override bool IsPointer (TypeReference type)
+		{
+			return type is PointerType;
+		}
+
 		protected override TypeReference [] GetInterfaces (TypeReference type)
 		{
 			var td = type.Resolve ();
@@ -2479,6 +2484,9 @@ namespace Registrar {
 					return null;
 				return res + "*";
 			}
+
+			if (type is PointerType pt)
+				return ToObjCParameterType (pt.ElementType, descriptiveMethodName, exceptions, inMethod, delegateToBlockType) + "*";
 
 			ArrayType arrtype = type as ArrayType;
 			if (arrtype != null)
@@ -3959,6 +3967,8 @@ namespace Registrar {
 						} else {
 							setup_call_stack.AppendLine ("arg_ptrs [{0}] = &p{0};", i);
 						}
+					} else if (type.IsPointer) {
+						setup_call_stack.AppendLine ("arg_ptrs [{0}] = p{0};", i);
 					} else if (td.BaseType.FullName == "System.MulticastDelegate") {
 						if (isRef) {
 							throw ErrorHelper.CreateError (4110, Errors.MT4110, type.FullName, descriptiveMethodName);
@@ -4654,6 +4664,7 @@ namespace Registrar {
 			case "CoreMedia.CMTime": nativeType = "CMTime"; return "xamarin_nsvalue_to_cmtime";
 			case "CoreMedia.CMTimeMapping": nativeType = "CMTimeMapping"; return "xamarin_nsvalue_to_cmtimemapping";
 			case "CoreMedia.CMTimeRange": nativeType = "CMTimeRange"; return "xamarin_nsvalue_to_cmtimerange";
+			case "CoreMedia.CMVideoDimensions": nativeType = "CMVideoDimensions"; return "xamarin_nsvalue_to_cmvideodimensions";
 			case "MapKit.MKCoordinateSpan": nativeType = "MKCoordinateSpan"; return "xamarin_nsvalue_to_mkcoordinatespan";
 			case "SceneKit.SCNMatrix4": nativeType = "SCNMatrix4"; return "xamarin_nsvalue_to_scnmatrix4";
 			case "SceneKit.SCNVector3": nativeType = "SCNVector3"; return "xamarin_nsvalue_to_scnvector3";
@@ -4682,6 +4693,7 @@ namespace Registrar {
 			case "CoreMedia.CMTime": return "xamarin_cmtime_to_nsvalue";
 			case "CoreMedia.CMTimeMapping": return "xamarin_cmtimemapping_to_nsvalue";
 			case "CoreMedia.CMTimeRange": return "xamarin_cmtimerange_to_nsvalue";
+			case "CoreMedia.CMVideoDimensions": return "xamarin_cmvideodimensions_to_nsvalue";
 			case "MapKit.MKCoordinateSpan": return "xamarin_mkcoordinatespan_to_nsvalue";
 			case "SceneKit.SCNMatrix4": return "xamarin_scnmatrix4_to_nsvalue";
 			case "SceneKit.SCNVector3": return "xamarin_scnvector3_to_nsvalue";

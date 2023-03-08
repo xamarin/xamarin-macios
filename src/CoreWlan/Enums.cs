@@ -5,8 +5,6 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 using System;
-#if NET
-#endif
 
 namespace CoreWlan {
 

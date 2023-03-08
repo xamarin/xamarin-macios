@@ -32,7 +32,6 @@
 
 #if !NET
 #define NATIVE_APPLE_CERTIFICATE
-#else
 #endif
 
 using System;
@@ -228,10 +227,8 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.14")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.14", "Use 'GetKey' instead.")]
 #else
@@ -262,8 +259,6 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.3")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("tvos12.0")]
-		[UnsupportedOSPlatform ("ios12.0")]
 		[ObsoletedOSPlatform ("tvos12.0")]
 		[ObsoletedOSPlatform ("ios12.0")]
 #else
@@ -281,8 +276,6 @@ namespace Security {
 		[SupportedOSPlatform ("tvos10.3")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("tvos12.0")]
-		[UnsupportedOSPlatform ("ios12.0")]
 		[ObsoletedOSPlatform ("tvos12.0", "Use 'GetKey' instead.")]
 		[ObsoletedOSPlatform ("ios12.0", "Use 'GetKey' instead.")]
 #else
@@ -302,7 +295,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -316,7 +309,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -337,7 +330,7 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 #else
-		[iOS (10, 3)] // [Mac (10,5)]
+		[iOS (10, 3)] // 
 		[TV (10, 3)]
 		[Watch (3, 3)]
 #endif
@@ -367,7 +360,7 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 #else
-		[iOS (10, 3)] // [Mac (10,5)]
+		[iOS (10, 3)] // 
 		[TV (10, 3)]
 		[Watch (3, 3)]
 #endif
@@ -393,7 +386,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
-		[SupportedOSPlatform ("macos10.12.4")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos10.3")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -407,7 +400,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
-		[SupportedOSPlatform ("macos10.12.4")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos10.3")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -424,7 +417,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
-		[SupportedOSPlatform ("macos10.12.4")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos10.3")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -438,7 +431,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
-		[SupportedOSPlatform ("macos10.12.4")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos10.3")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -456,7 +449,7 @@ namespace Security {
 #if MONOMAC
 #if NET
 		[SupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[ObsoletedOSPlatform ("macos10.13", "Use 'GetSerialNumber' instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'GetSerialNumber' instead.")]
@@ -470,9 +463,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.13")]
-		[UnsupportedOSPlatform ("tvos11.0")]
-		[UnsupportedOSPlatform ("ios11.0")]
 		[ObsoletedOSPlatform ("macos10.13", "Use 'GetSerialNumber' instead.")]
 		[ObsoletedOSPlatform ("tvos11.0", "Use 'GetSerialNumber' instead.")]
 		[ObsoletedOSPlatform ("ios11.0", "Use 'GetSerialNumber' instead.")]
@@ -491,9 +481,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.13")]
-		[UnsupportedOSPlatform ("tvos11.0")]
-		[UnsupportedOSPlatform ("ios11.0")]
 		[ObsoletedOSPlatform ("macos10.13", "Use 'GetSerialNumber(out NSError)' instead.")]
 		[ObsoletedOSPlatform ("tvos11.0", "Use 'GetSerialNumber(out NSError)' instead.")]
 		[ObsoletedOSPlatform ("ios11.0", "Use 'GetSerialNumber(out NSError)' instead.")]
@@ -517,7 +504,7 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11, 0)]
@@ -531,7 +518,7 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11, 0)]
@@ -642,10 +629,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
 		[ObsoletedOSPlatform ("macos12.0", "Use 'SecKeyCreateRandomKey' instead.")]
 		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'SecKeyCreateRandomKey' instead.")]
 		[ObsoletedOSPlatform ("tvos15.0", "Use 'SecKeyCreateRandomKey' instead.")]
@@ -667,10 +650,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
 		[ObsoletedOSPlatform ("macos12.0", "Use 'CreateRandomKey' instead.")]
 		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'CreateRandomKey' instead.")]
 		[ObsoletedOSPlatform ("tvos15.0", "Use 'CreateRandomKey' instead.")]
@@ -753,9 +732,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
 		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'SecKeyCreateSignature' instead.")]
 		[ObsoletedOSPlatform ("tvos15.0", "Use 'SecKeyCreateSignature' instead.")]
 		[ObsoletedOSPlatform ("ios15.0", "Use 'SecKeyCreateSignature' instead.")]
@@ -773,9 +749,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
 		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'CreateSignature' instead.")]
 		[ObsoletedOSPlatform ("tvos15.0", "Use 'CreateSignature' instead.")]
 		[ObsoletedOSPlatform ("ios15.0", "Use 'CreateSignature' instead.")]
@@ -819,9 +792,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
 		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'SecKeyVerifySignature' instead.")]
 		[ObsoletedOSPlatform ("tvos15.0", "Use 'SecKeyVerifySignature' instead.")]
 		[ObsoletedOSPlatform ("ios15.0", "Use 'SecKeyVerifySignature' instead.")]
@@ -839,9 +809,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
 		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'VerifySignature' instead.")]
 		[ObsoletedOSPlatform ("tvos15.0", "Use 'VerifySignature' instead.")]
 		[ObsoletedOSPlatform ("ios15.0", "Use 'VerifySignature' instead.")]
@@ -880,9 +847,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
 		[ObsoletedOSPlatform ("tvos15.0", "Use 'SecKeyCreateEncryptedData' instead.")]
 		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'SecKeyCreateEncryptedData' instead.")]
 		[ObsoletedOSPlatform ("ios15.0", "Use 'SecKeyCreateEncryptedData' instead.")]
@@ -900,9 +864,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
 		[ObsoletedOSPlatform ("tvos15.0", "Use 'CreateEncryptedData' instead.")]
 		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'CreateEncryptedData' instead.")]
 		[ObsoletedOSPlatform ("ios15.0", "Use 'CreateEncryptedData' instead.")]
@@ -943,9 +904,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
 		[ObsoletedOSPlatform ("tvos15.0", "Use 'SecKeyCreateDecryptedData' instead.")]
 		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'SecKeyCreateDecryptedData' instead.")]
 		[ObsoletedOSPlatform ("ios15.0", "Use 'SecKeyCreateDecryptedData' instead.")]
@@ -963,9 +921,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
 		[ObsoletedOSPlatform ("tvos15.0", "Use 'CreateDecryptedData' instead.")]
 		[ObsoletedOSPlatform ("maccatalyst15.0", "Use 'CreateDecryptedData' instead.")]
 		[ObsoletedOSPlatform ("ios15.0", "Use 'CreateDecryptedData' instead.")]
@@ -1008,7 +963,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1022,7 +977,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1044,7 +999,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1065,7 +1020,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1088,7 +1043,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1102,7 +1057,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1126,7 +1081,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1148,7 +1103,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1162,7 +1117,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1180,7 +1135,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1197,7 +1152,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1211,7 +1166,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1228,7 +1183,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1242,7 +1197,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1259,7 +1214,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1274,7 +1229,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1290,7 +1245,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1304,7 +1259,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1325,7 +1280,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1340,7 +1295,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1363,7 +1318,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1377,7 +1332,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1398,7 +1353,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1412,7 +1367,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1433,7 +1388,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1447,7 +1402,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -1470,7 +1425,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else

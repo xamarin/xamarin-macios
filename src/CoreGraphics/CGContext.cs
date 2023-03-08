@@ -164,12 +164,16 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetLineDash (/* CGContextRef */ IntPtr c, /* CGFloat */ nfloat phase, /* CGFloat[] */ nfloat []? lengths, /* size_t */ nint count);
+		extern static unsafe void CGContextSetLineDash (/* CGContextRef */ IntPtr c, /* CGFloat */ nfloat phase, /* CGFloat[] */ nfloat* lengths, /* size_t */ nint count);
 
 		public void SetLineDash (nfloat phase, nfloat []? lengths)
 		{
 			int n = lengths is null ? 0 : lengths.Length;
-			CGContextSetLineDash (Handle, phase, lengths, n);
+			unsafe {
+				fixed (nfloat* lengthsPtr = lengths) {
+					CGContextSetLineDash (Handle, phase, lengthsPtr, n);
+				}
+			}
 		}
 
 		public void SetLineDash (nfloat phase, nfloat []? lengths, int n)
@@ -178,7 +182,11 @@ namespace CoreGraphics {
 				n = 0;
 			else if (n < 0 || n > lengths.Length)
 				throw new ArgumentException (nameof (n));
-			CGContextSetLineDash (Handle, phase, lengths, n);
+			unsafe {
+				fixed (nfloat* lengthsPtr = lengths) {
+					CGContextSetLineDash (Handle, phase, lengthsPtr, n);
+				}
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -483,7 +491,7 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -497,7 +505,7 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -583,39 +591,55 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetFillColor (/* CGContextRef */ IntPtr context,
-			/* const CGFloat * __nullable */ nfloat []? components);
+		extern static unsafe void CGContextSetFillColor (/* CGContextRef */ IntPtr context,
+			/* const CGFloat * __nullable */ nfloat* components);
 
 		public void SetFillColor (nfloat []? components)
 		{
-			CGContextSetFillColor (Handle, components);
+			unsafe {
+				fixed (nfloat* componentsPtr = components) {
+					CGContextSetFillColor (Handle, componentsPtr);
+				}
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetStrokeColor (/* CGContextRef */ IntPtr context,
-			/* const CGFloat * __nullable */ nfloat []? components);
+		extern static unsafe void CGContextSetStrokeColor (/* CGContextRef */ IntPtr context,
+			/* const CGFloat * __nullable */ nfloat* components);
 
 		public void SetStrokeColor (nfloat []? components)
 		{
-			CGContextSetStrokeColor (Handle, components);
+			unsafe {
+				fixed (nfloat* componentsPtr = components) {
+					CGContextSetStrokeColor (Handle, componentsPtr);
+				}
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetFillPattern (/* CGContextRef */ IntPtr context,
-			/* CGPatternRef __nullable */ IntPtr pattern, /* const CGFloat * __nullable */ nfloat []? components);
+		extern static unsafe void CGContextSetFillPattern (/* CGContextRef */ IntPtr context,
+			/* CGPatternRef __nullable */ IntPtr pattern, /* const CGFloat * __nullable */ nfloat* components);
 
 		public void SetFillPattern (CGPattern pattern, nfloat []? components)
 		{
-			CGContextSetFillPattern (Handle, pattern.GetHandle (), components);
+			unsafe {
+				fixed (nfloat* componentsPtr = components) {
+					CGContextSetFillPattern (Handle, pattern.GetHandle (), componentsPtr);
+				}
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetStrokePattern (/* CGContextRef */ IntPtr context,
-			/* CGPatternRef __nullable */ IntPtr pattern, /* const CGFloat * __nullable */ nfloat []? components);
+		extern static unsafe void CGContextSetStrokePattern (/* CGContextRef */ IntPtr context,
+			/* CGPatternRef __nullable */ IntPtr pattern, /* const CGFloat * __nullable */ nfloat* components);
 
 		public void SetStrokePattern (CGPattern? pattern, nfloat []? components)
 		{
-			CGContextSetStrokePattern (Handle, pattern.GetHandle (), components);
+			unsafe {
+				fixed (nfloat* componentsPtr = components) {
+					CGContextSetStrokePattern (Handle, pattern.GetHandle (), componentsPtr);
+				}
+			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -828,8 +852,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -838,15 +860,13 @@ namespace CoreGraphics {
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextSelectFont (/* CGContextRef */ IntPtr c,
-			/* const char* __nullable */ string? name, /* CGFloat */ nfloat size, CGTextEncoding textEncoding);
+			/* const char* __nullable */ IntPtr name, /* CGFloat */ nfloat size, CGTextEncoding textEncoding);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -855,7 +875,8 @@ namespace CoreGraphics {
 #endif
 		public void SelectFont (string? name, nfloat size, CGTextEncoding textEncoding)
 		{
-			CGContextSelectFont (Handle, name, size, textEncoding);
+			using var namePtr = new TransientString (name);
+			CGContextSelectFont (Handle, namePtr, size, textEncoding);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -877,8 +898,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -886,15 +905,13 @@ namespace CoreGraphics {
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextShowText (/* CGContextRef */ IntPtr c, /* const char* __nullable */ string? s, /* size_t */ nint length);
+		extern static void CGContextShowText (/* CGContextRef */ IntPtr c, /* const char* __nullable */ IntPtr s, /* size_t */ nint length);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -907,7 +924,8 @@ namespace CoreGraphics {
 				count = 0;
 			else if (count > str.Length)
 				throw new ArgumentException (nameof (count));
-			CGContextShowText (Handle, str, count);
+			using var strPtr = new TransientString (str);
+			CGContextShowText (Handle, strPtr, count);
 		}
 
 #if NET
@@ -915,8 +933,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -925,7 +941,8 @@ namespace CoreGraphics {
 #endif
 		public void ShowText (string? str)
 		{
-			CGContextShowText (Handle, str, str is null ? 0 : str.Length);
+			using var strPtr = new TransientString (str);
+			CGContextShowText (Handle, strPtr, str is null ? 0 : str.Length);
 		}
 
 #if NET
@@ -933,8 +950,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -949,8 +964,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -971,8 +984,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -989,8 +1000,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -999,15 +1008,13 @@ namespace CoreGraphics {
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextShowTextAtPoint (/* CGContextRef __nullable */ IntPtr c, /* CGFloat */ nfloat x,
-			/* CGFloat */ nfloat y, /* const char* __nullable */ string? str, /* size_t */ nint length);
+			/* CGFloat */ nfloat y, /* const char* __nullable */ IntPtr str, /* size_t */ nint length);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -1016,7 +1023,8 @@ namespace CoreGraphics {
 #endif
 		public void ShowTextAtPoint (nfloat x, nfloat y, string? str, int length)
 		{
-			CGContextShowTextAtPoint (Handle, x, y, str, length);
+			using var strPtr = new TransientString (str);
+			CGContextShowTextAtPoint (Handle, x, y, strPtr, length);
 		}
 
 #if NET
@@ -1024,8 +1032,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -1034,7 +1040,8 @@ namespace CoreGraphics {
 #endif
 		public void ShowTextAtPoint (nfloat x, nfloat y, string? str)
 		{
-			CGContextShowTextAtPoint (Handle, x, y, str, str is null ? 0 : str.Length);
+			using var strPtr = new TransientString (str);
+			CGContextShowTextAtPoint (Handle, x, y, strPtr, str is null ? 0 : str.Length);
 		}
 
 #if NET
@@ -1042,8 +1049,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -1068,8 +1073,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -1085,8 +1088,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -1103,8 +1104,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -1125,8 +1124,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -1142,8 +1139,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -1164,8 +1159,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
@@ -1182,8 +1175,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
@@ -1200,8 +1191,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios7.0")]
 		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
 		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else

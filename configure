@@ -148,11 +148,6 @@ while test "x$1" != x; do
     echo "ENABLE_XAMARIN=" >> $CONFIGURED_FILE
         shift
         ;;
-    --enable-bitcode-on-ios)
-        # Private option
-        echo "ENABLE_BITCODE_ON_IOS=1" >> $CONFIGURED_FILE
-        shift
-        ;;
     --disable-packaged-llvm)
         echo "DISABLE_DOWNLOAD_LLVM=1" >> $CONFIGURED_FILE
         shift

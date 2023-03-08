@@ -401,3 +401,4 @@
 !missing-field! UIListSeparatorAutomaticInsets not bound
 
 !incorrect-protocol-member! UISearchSuggestion::localizedAttributedSuggestion is REQUIRED and should be abstract
+!incorrect-protocol-member! UICalendarViewDelegate::calendarView:decorationForDateComponents: is OPTIONAL and should NOT be abstract

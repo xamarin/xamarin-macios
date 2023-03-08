@@ -28,7 +28,7 @@ namespace Metal {
 
 #if NET
 	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("macos10.11")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
 #else
@@ -62,7 +62,7 @@ namespace Metal {
 
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
@@ -73,7 +73,7 @@ namespace Metal {
 
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
@@ -92,7 +92,7 @@ namespace Metal {
 #if MONOMAC
 
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
@@ -100,10 +100,10 @@ namespace Metal {
 		[Mac (10, 13)]
 #endif
 		[DllImport (Constants.MetalLibrary)]
-		static extern IntPtr MTLCopyAllDevicesWithObserver (out IntPtr observer, ref BlockLiteral handler);
+		unsafe static extern IntPtr MTLCopyAllDevicesWithObserver (out IntPtr observer, BlockLiteral* handler);
 
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
@@ -113,14 +113,23 @@ namespace Metal {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IMTLDevice [] GetAllDevices (MTLDeviceNotificationHandler handler, out NSObject? observer)
 		{
-			var block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_notificationHandler, handler);
+			IntPtr rv;
+			IntPtr observer_handle;
 
-			var rv = MTLCopyAllDevicesWithObserver (out var observer_handle, ref block_handler);
+			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> trampoline = &TrampolineNotificationHandler;
+				using var block = new BlockLiteral (trampoline, handler, typeof (MTLDevice), nameof (TrampolineNotificationHandler));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_notificationHandler, handler);
+#endif
+
+				rv = MTLCopyAllDevicesWithObserver (out observer_handle, &block);
+			}
+
 			var obj = NSArray.ArrayFromHandle<IMTLDevice> (rv);
 			NSObject.DangerousRelease (rv);
-
-			block_handler.CleanupBlock ();
 
 			observer = Runtime.GetNSObject (observer_handle);
 			NSObject.DangerousRelease (observer_handle); // Apple's documentation says "The observer out parameter is returned with a +1 retain count [...]."
@@ -140,9 +149,13 @@ namespace Metal {
 		}
 #endif // !NET
 
+#if !NET
 		internal delegate void InnerNotification (IntPtr block, IntPtr device, IntPtr notifyName);
 		static readonly InnerNotification static_notificationHandler = TrampolineNotificationHandler;
 		[MonoPInvokeCallback (typeof (InnerNotification))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		public static unsafe void TrampolineNotificationHandler (IntPtr block, IntPtr device, IntPtr notifyName)
 		{
 			var descriptor = (BlockLiteral*) block;
@@ -152,7 +165,7 @@ namespace Metal {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
@@ -163,7 +176,7 @@ namespace Metal {
 		static extern void MTLRemoveDeviceObserver (IntPtr observer);
 
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]

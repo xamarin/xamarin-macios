@@ -86,12 +86,6 @@ namespace Xharness.Targets {
 			}
 		}
 
-		protected override bool SupportsBitcode {
-			get {
-				return true;
-			}
-		}
-
 		public override string DotNetSdk => "Microsoft.tvOS.Sdk";
 		public override string RuntimeIdentifier => "tvossimulator-x64";
 		public override DevicePlatform ApplePlatform => DevicePlatform.tvOS;

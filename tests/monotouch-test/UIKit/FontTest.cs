@@ -37,6 +37,13 @@ namespace MonoTouchFixtures.UIKit {
 		}
 
 		[Test]
+		public void GetWeight ()
+		{
+			var weight = UIFontWeight.Semibold;
+			Assert.AreEqual (weight.GetWeight (), UIFontWeightConstants.Semibold);
+		}
+
+		[Test]
 		public void TestDescriptors ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);

@@ -7,7 +7,7 @@ namespace Compression {
 
 	// this enum as per the headers is an int NOT an NSInteger
 #if !NET
-	[iOS (9, 0), TV (9, 0), Mac (10, 11)]
+	[iOS (9, 0), Mac (10, 11)]
 #endif
 	public enum CompressionAlgorithm {
 		LZ4 = 0x100,

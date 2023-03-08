@@ -14,6 +14,13 @@
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Messaging.Build.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Messaging.Build.targets') And '$(MessagingBuildTargetsImported)' != 'true'" />
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Messaging.Apple.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Messaging.Apple.targets') And '$(MessagingAppleTargetsImported)' != 'true'" />
 	
+	<Target Name="AddHotRestartDefineConstants" BeforeTargets="AddImplicitDefineConstants">
+		<PropertyGroup>
+			<_IsHotRestartDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)HOTRESTART($|;)'))</_IsHotRestartDefined>
+			<DefineConstants Condition="!$(_IsHotRestartDefined) And '$(IsHotRestartBuild)' == 'true'">HOTRESTART;$(DefineConstants)</DefineConstants>
+		</PropertyGroup>
+	</Target>
+	
 	<Target Name="_DetectHotRestartSigningIdentity" AfterTargets="_DetectAppManifest" 
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true' And '$(IsHotRestartEnvironmentReady)' == 'true'" >
 		
@@ -197,7 +204,7 @@
 			CompiledEntitlements="$(HotRestartAppBundlePath)\Entitlements.plist"
 			IsAppExtension="$(IsAppExtension)"
 			ProvisioningProfile="$(_ProvisioningProfileId)"
-			SdkIsSimulator="False"
+			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkPlatform="iPhoneOS"
 			SdkVersion="12.2"
 			SdkDevPath=" "
@@ -264,9 +271,9 @@
 		<MakeDir Directories="@(_FilesToHotRestartContent -> '$(HotRestartContentStampDir)%(DestinationSubDirectory)')"/>
 		
 		<Touch AlwaysCreate="true" Files="@(_FilesToHotRestartContent -> '$(HotRestartContentStampDir)%(DestinationSubDirectory)%(FileName)%(Extension).stamp')" />
-		<Touch AlwaysCreate="true" Files="@(_FilesToHotRestartContent -> '$(HotRestartContentStampDir)$(AssemblyName).hotrestartapp.stamp')" />
-		<Touch AlwaysCreate="true" Files="@(_FilesToHotRestartContent -> '$(HotRestartContentDir)$(AssemblyName).hotrestartapp')" />
-		<Touch AlwaysCreate="true" Files="@(_FilesToHotRestartContent -> '$(HotRestartAppContentDir)$(AssemblyName).hotrestartapp')" />
+		<Touch AlwaysCreate="true" Files="$(HotRestartContentStampDir)$(AssemblyName).hotrestartapp.stamp" />
+		<Touch AlwaysCreate="true" Files="$(HotRestartContentDir)$(AssemblyName).hotrestartapp" />
+		<Touch AlwaysCreate="true" Files="$(HotRestartAppContentDir)$(AssemblyName).hotrestartapp" />
 	</Target>
 
 	<Target Name="_CopyFrameworksToHotRestartBundle"

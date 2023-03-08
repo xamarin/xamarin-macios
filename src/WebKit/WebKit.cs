@@ -1,3 +1,5 @@
+#if __MACOS__
+
 #nullable enable
 
 using Foundation;
@@ -11,3 +13,5 @@ namespace WebKit {
 		}
 	}
 }
+
+#endif // __MACOS__

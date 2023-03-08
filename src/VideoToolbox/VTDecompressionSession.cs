@@ -366,7 +366,7 @@ namespace VideoToolbox {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -380,7 +380,7 @@ namespace VideoToolbox {
 		extern static bool VTIsHardwareDecodeSupported (CMVideoCodecType codecType);
 
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]

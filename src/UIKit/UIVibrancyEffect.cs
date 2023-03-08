@@ -22,7 +22,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("ios10.0")]
 		[ObsoletedOSPlatform ("ios10.0", "Use 'CreatePrimaryVibrancyEffectForNotificationCenter' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CreatePrimaryVibrancyEffectForNotificationCenter' instead.")]
@@ -36,7 +35,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("ios13.0")]
 		[ObsoletedOSPlatform ("ios13.0", "Use 'UIVibrancyEffect.CreateWidgetEffectForNotificationCenter' instead.")]
 #else
 		[iOS (10,0)]
@@ -51,7 +49,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("ios13.0")]
 		[ObsoletedOSPlatform ("ios13.0", "Use 'UIVibrancyEffect.CreateWidgetEffectForNotificationCenter' instead.")]
 #else
 		[iOS (10,0)]

@@ -1,7 +1,0 @@
-{
-  "author": "Microsoft",
-  "name": "Mac Catalyst Application",
-  "description": "A project for creating a .NET Mac Catalyst application",
-  "symbols/bundleId/description": "在 Info.plist 中替代 CFBundleIdentifier",
-  "symbols/minOSVersion/description": "替代项目文件中的 SupportedOSPlatformVersion"
-}

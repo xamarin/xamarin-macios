@@ -2,6 +2,8 @@ using System.Collections.Generic;
 
 using Microsoft.Build.Logging.StructuredLogger;
 
+#nullable enable
+
 namespace Xamarin.Tests {
 	[TestFixture]
 	public class ExtensionsTest : TestBaseClass {
@@ -18,7 +20,7 @@ namespace Xamarin.Tests {
 			var project_path = GetProjectPath (project, runtimeIdentifiers, platform, out var appPath);
 
 			// Manually build the native extension project first using xcodebuild
-			var xcodeProjectFolder = Path.Combine (Path.GetDirectoryName (Path.GetDirectoryName (project_path)), "nativeextension", platform.AsString ());
+			var xcodeProjectFolder = Path.Combine (Path.GetDirectoryName (Path.GetDirectoryName (project_path))!, "nativeextension", platform.AsString ());
 			var xcodeBuildArgs = new [] {
 				"-configuration", configuration,
 				"-target", "NativeIntentsExtension",

@@ -1591,15 +1591,6 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";E7068" ItemType="0;.resx" PsrId="211" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Can't create a binding resource package unless there are native references in the binding project.]D;]A;        ]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[바인딩 프로젝트에 네이티브 참조가 없으면 바인딩 리소스 패키지를 생성할 수 없습니다.]D;]A;        ]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
       <Item ItemId=";E7069" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Xamarin.iOS 14+ does not support watchOS 1 apps. Please migrate your project to watchOS 2+.]]></Val>
@@ -1830,6 +1821,33 @@
           <Val><![CDATA[Unknown property '{0}' with value '{1}'.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[알 수 없는 속성 '{0}'과(와) 값 '{1}'입니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7102" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid value '{0}' for the entitlement '{1}' of type '{2}' specified in the CustomEntitlements item group. Expected no value at all.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[CustomEntitlements 항목 그룹에 지정된 '{2}' 유형의 인타이틀먼트 '{1}'에 대한 값 '{0}'이(가) 잘못되었습니다. 값이 전혀 필요되지 않습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7103" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid value '{0}' for the entitlement '{1}' of type '{2}' specified in the CustomEntitlements item group. Expected 'true' or 'false'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[CustomEntitlements 항목 그룹에 지정된 '{2}' 유형의 인타이틀먼트 '{1}'에 대한 값 '{0}'이(가) 잘못되었습니다. 'true' 또는 'false'가 필요합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7104" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unknown type '{0}' for the entitlement '{1}' specified in the CustomEntitlements item group. Expected 'Remove', 'Boolean', 'String', or 'StringArray'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[CustomEntitlements 항목 그룹에 지정된 인타이틀먼트 '{1}'에 대해 알 수 없는 유형 '{0}'. 'Remove', 'Boolean', 'String' 또는 'StringArray'가 필요합니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -2445,6 +2463,15 @@
           <Val><![CDATA[Could not find the binding resource package: {0}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[바인딩 리소스 패키지를 찾을 수 없습니다. {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W7105" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unexpected extension '{0}' for native reference '{1}' in manifest '{2}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[매니페스트 '{2}'의 네이티브 참조 '{1}'에 대한 예기치 않은 확장 '{0}'.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

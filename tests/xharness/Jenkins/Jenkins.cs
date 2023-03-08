@@ -226,7 +226,7 @@ namespace Xharness.Jenkins {
 				TestProject = buildDotNetTestsProject,
 				Platform = TestPlatform.All,
 				TestName = "DotNet tests",
-				Timeout = TimeSpan.FromMinutes (240),
+				Timeout = TimeSpan.FromMinutes (360),
 				Ignored = !TestSelection.IsEnabled (TestLabel.DotnetTest),
 			};
 			Tasks.Add (runDotNetTests);

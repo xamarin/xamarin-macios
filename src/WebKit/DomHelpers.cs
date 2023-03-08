@@ -1,3 +1,5 @@
+#if __MACOS__
+
 #nullable enable
 
 using System;
@@ -14,3 +16,5 @@ namespace WebKit {
 		public DomNode this [uint index] { get { return this.GetItem (index); } }
 	}
 }
+
+#endif // __MACOS__

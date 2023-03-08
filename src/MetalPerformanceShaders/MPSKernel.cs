@@ -74,7 +74,7 @@ namespace MetalPerformanceShaders {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -87,7 +87,7 @@ namespace MetalPerformanceShaders {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -99,7 +99,7 @@ namespace MetalPerformanceShaders {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -112,7 +112,7 @@ namespace MetalPerformanceShaders {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -305,10 +305,8 @@ namespace MetalPerformanceShaders {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("tvos11.0")]
-		[UnsupportedOSPlatform ("ios11.0")]
 		[ObsoletedOSPlatform ("tvos11.0", "Use any of the other 'DesignatedInitializer' ctors.")]
 		[ObsoletedOSPlatform ("ios11.0", "Use any of the other 'DesignatedInitializer' ctors.")]
 #else
@@ -423,7 +421,7 @@ namespace MetalPerformanceShaders {
 	public partial class MPSCnnBinaryConvolutionNode {
 #if NET
 		[SupportedOSPlatform ("tvos11.3")]
-		[SupportedOSPlatform ("macos10.13.4")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios11.3")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -444,7 +442,7 @@ namespace MetalPerformanceShaders {
 
 #if NET
 		[SupportedOSPlatform ("tvos11.3")]
-		[SupportedOSPlatform ("macos10.13.4")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios11.3")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -467,7 +465,7 @@ namespace MetalPerformanceShaders {
 	public partial class MPSCnnBinaryFullyConnectedNode {
 #if NET
 		[SupportedOSPlatform ("tvos11.3")]
-		[SupportedOSPlatform ("macos10.13.4")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios11.3")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -488,7 +486,7 @@ namespace MetalPerformanceShaders {
 
 #if NET
 		[SupportedOSPlatform ("tvos11.3")]
-		[SupportedOSPlatform ("macos10.13.4")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios11.3")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else

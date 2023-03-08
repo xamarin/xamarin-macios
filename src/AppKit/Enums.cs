@@ -25,6 +25,8 @@ using System;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace AppKit {
 
 	[NoMacCatalyst]
@@ -630,10 +632,12 @@ namespace AppKit {
 		CapsLock = 0x39,
 		Option = 0x3A,
 		Control = 0x3B,
+		RightCommand = 0x36,
 		RightShift = 0x3C,
 		RightOption = 0x3D,
 		RightControl = 0x3E,
 		Function = 0x3F,
+		F17 = 0x40,
 		VolumeUp = 0x48,
 		VolumeDown = 0x49,
 		Mute = 0x4A,

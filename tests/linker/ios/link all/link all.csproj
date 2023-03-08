@@ -140,21 +140,6 @@
     <DefineConstants>$(DefineConstants)</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
-    <DebugType>none</DebugType>
-    <Optimize>True</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-bitcode-unified</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchLink>Full</MtouchLink>
-    <MtouchI18n>mideast,other</MtouchI18n>
-    <MtouchUseLlvm>true</MtouchUseLlvm>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <MtouchExtraArgs>--bitcode:full --optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
-    <DefineConstants>$(DefineConstants)</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -176,7 +161,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppDelegate.cs" />
+    <Compile Include="..\..\AppDelegate.cs" />
+    <Compile Include="..\..\..\common\AppDelegate.cs" />
     <Compile Include="LinkAllTest.cs" />
     <Compile Include="ClassLayoutTest.cs" />
     <Compile Include="StructLayoutTest.cs" />
@@ -199,6 +185,7 @@
     </Compile>
     <Compile Include="SerializationTest.cs" />
     <Compile Include="..\..\ILReader.cs" />
+    <Compile Include="..\..\..\common\TestAssemblyLoader.cs" />
     <Compile Include="..\..\..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>

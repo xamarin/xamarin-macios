@@ -227,7 +227,7 @@ namespace VideoToolbox {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -238,7 +238,7 @@ namespace VideoToolbox {
 		extern static VTStatus VTCompressionSessionPrepareToEncodeFrames (IntPtr handle);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -351,7 +351,7 @@ namespace VideoToolbox {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -362,7 +362,7 @@ namespace VideoToolbox {
 		extern static VTStatus VTCompressionSessionBeginPass (IntPtr session, VTCompressionSessionOptionFlags flags, IntPtr reserved);
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -375,7 +375,7 @@ namespace VideoToolbox {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -386,7 +386,7 @@ namespace VideoToolbox {
 		extern static VTStatus VTCompressionSessionEndPass (IntPtr session, out byte furtherPassesRequestedOut, IntPtr reserved);
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -397,7 +397,7 @@ namespace VideoToolbox {
 		extern static VTStatus VTCompressionSessionEndPass (IntPtr session, IntPtr ptrByte, IntPtr reserved);
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -418,7 +418,7 @@ namespace VideoToolbox {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -432,7 +432,7 @@ namespace VideoToolbox {
 			/* const CMTimeRange** */ out IntPtr target);
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
 		[SupportedOSPlatform ("maccatalyst")]

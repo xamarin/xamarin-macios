@@ -568,7 +568,6 @@ CORELOCATION_API_SOURCES = \
 	CoreLocation/CLEnums.cs
 
 CORELOCATION_CORE_SOURCES = \
-	CoreLocation/CLLocationDistance.cs \
 	CoreLocation/CoreLocation.cs \
 
 CORELOCATION_SOURCES = \
@@ -786,7 +785,7 @@ FOUNDATION_CORE_SOURCES = \
 	Foundation/ProtocolAttribute.cs \
 	Foundation/RegisterAttribute.cs \
 	Foundation/NSObject.iOS.cs \
-	Foundation/NSAttributedString.iOS.cs \
+	Foundation/NSAttributedStringDocumentAttributes.cs  \
 	Foundation/NSObject.mac.cs \
 	Foundation/NSDateComponents.cs \
 	Foundation/XpcInterfaceAttribute.cs \
@@ -985,7 +984,10 @@ IAD_SOURCES = \
 
 # ImageCaptureKit
 IMAGECAPTURECORE_API_SOURCES = \
-	ImageCaptureCore/Defs.cs
+	ImageCaptureCore/Defs.cs \
+
+IMAGECAPTURECORE_SOURCES = \
+	ImageCaptureCore/ICCameraDevice.cs \
 
 # ImageIO
 
@@ -1099,6 +1101,7 @@ MAPKIT_SOURCES = \
 	MapKit/MKMapCameraZoomRange.cs \
 	MapKit/MKMapItem.cs \
 	MapKit/MKMultiPoint.cs \
+	MapKit/MKOverlayRenderer.cs \
 	MapKit/MKOverlayView.cs \
 	MapKit/MKPointOfInterestFilter.cs \
 	MapKit/MKPolygon.cs \
@@ -1471,6 +1474,10 @@ PHOTOSUI_API_SOURCES = \
 PRINTCORE_SOURCES = \
 	PrintCore/Defs.cs	\
 	PrintCore/PrintCore.cs
+
+# PushToTalk
+PUSHTOTALK_SOURCES = \
+	PushToTalk/Compat.cs \
 	
 # QTKit
 
@@ -1858,10 +1865,11 @@ WATCHKIT_SOURCES = \
 	WatchKit/iOS/WKUserNotificationInterfaceController.cs \
 	WatchKit/iOS/WKUserNotificationInterfaceType.cs \
 
-# WebKit (Mac version)
+# WebKit
 
 WEBKIT_API_SOURCES = \
 	WebKit/Enums.cs \
+	WebKit/Defs.cs \
 
 WEBKIT_SOURCES = \
 	WebKit/DomNode.cs \
@@ -1872,20 +1880,9 @@ WEBKIT_SOURCES = \
 	WebKit/WebNavigationPolicyEventArgs.cs \
 	WebKit/WebPolicyDelegate.cs \
 	WebKit/WebView.cs \
-
-# WebKit (iOS version)
-#
-# Here we're cheating a bit; the WebKit shipped with iOS is
-# bound in wkwebkit.cs, so the variable need to be named
-# accordingly.
-
-WKWEBKIT_API_SOURCES = \
-	WKWebKit/Defs.cs \
-
-WKWEBKIT_SOURCES = \
-	WKWebKit/WKCompat.cs \
-	WKWebKit/WKPreferences.cs \
-	WKWebKit/WKWindowFeatures.cs \
+	WebKit/WKCompat.cs \
+	WebKit/WKPreferences.cs \
+	WebKit/WKWindowFeatures.cs \
 
 #
 # SHARED_[CORE_]SOURCES: source code needed in core.dll or the platform assembly
@@ -1914,6 +1911,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/NativeAttribute.cs \
 	ObjCRuntime/NativeHandle.cs \
 	ObjCRuntime/NativeNameAttribute.cs \
+	ObjCRuntime/TransientString.cs \
 	ObjCRuntime/NFloat.cs \
 	ObjCRuntime/ObsoleteConstants.cs \
 	ObjCRuntime/PlatformAvailability.cs \
@@ -1983,9 +1981,6 @@ SHARED_SOURCES = \
 #
 # Each framework listed needs a corresponding <framework>.cs (all lower case)
 # file in src/
-#
-# Exceptions: iOS' WebKit is listed as WKWebKit, because the bindings are in
-# wkwebkit.cs (webkit.cs is already used for Mac bindings)
 #
 
 COMMON_FRAMEWORKS =         \
@@ -2118,7 +2113,6 @@ MACOS_FRAMEWORKS =          \
 	VideoToolbox            \
 	Vision                  \
 	WebKit                  \
-	WKWebKit                \
 
 IOS_FRAMEWORKS =         \
 	$(COMMON_FRAMEWORKS) \
@@ -2232,7 +2226,7 @@ IOS_FRAMEWORKS =         \
 	VisionKit \
 	WatchConnectivity \
 	WatchKit \
-	WKWebKit \
+	WebKit \
 	iAd \
 
 WATCHOS_FRAMEWORKS =        \
@@ -2420,7 +2414,7 @@ MACCATALYST_FRAMEWORKS = \
 	VideoToolbox \
 	Vision \
 	VisionKit \
-	WKWebKit \
+	WebKit \
 
 # List frameworks that have been removed in .NET
 

@@ -16,19 +16,19 @@ interface UIView {}
 
 namespace HomeKit {
 
-	[TV (10,0)]
-	[iOS (8,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
 	[Static]
 	partial interface HMErrors {
 		[Field ("HMErrorDomain")]
 		NSString HMErrorDomain { get; }
 	}
 
-	[TV (10,0)]
-	[iOS (8,0)]
-	[MacCatalyst (14,0)]
-	[BaseType (typeof (NSObject), Delegates=new string[] {"WeakDelegate"}, Events=new Type[] {typeof(HMHomeManagerDelegate)})]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
+	[BaseType (typeof (NSObject), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (HMHomeManagerDelegate) })]
 	partial interface HMHomeManager {
 
 		[Export ("delegate", ArgumentSemantic.Weak)]
@@ -39,11 +39,11 @@ namespace HomeKit {
 		[Protocolize]
 		HMHomeManagerDelegate Delegate { get; set; }
 
-		[Deprecated (PlatformName.MacOSX, 13,0, message: "No longer supported.")]
-		[Deprecated (PlatformName.iOS, 16,1, message: "No longer supported.")]
-		[Deprecated (PlatformName.MacCatalyst, 16,1, message: "No longer supported.")]
-		[Deprecated (PlatformName.WatchOS, 9,1, message: "No longer supported.")]
-		[Deprecated (PlatformName.TvOS, 16,1, message: "No longer supported.")]
+		[Deprecated (PlatformName.MacOSX, 13, 0, message: "No longer supported.")]
+		[Deprecated (PlatformName.iOS, 16, 1, message: "No longer supported.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 1, message: "No longer supported.")]
+		[Deprecated (PlatformName.WatchOS, 9, 1, message: "No longer supported.")]
+		[Deprecated (PlatformName.TvOS, 16, 1, message: "No longer supported.")]
 		[NullAllowed, Export ("primaryHome", ArgumentSemantic.Retain)]
 		HMHome PrimaryHome { get; }
 
@@ -53,32 +53,36 @@ namespace HomeKit {
 		[NoTV]
 		[NoWatch]
 		[Deprecated (PlatformName.MacOSX, 13, 0, message: "No longer supported.")]
-		[Deprecated (PlatformName.iOS, 16,1, message: "No longer supported.")]
-		[Deprecated (PlatformName.MacCatalyst, 16,1, message: "No longer supported.")]
+		[Deprecated (PlatformName.iOS, 16, 1, message: "No longer supported.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 1, message: "No longer supported.")]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updatePrimaryHome:completionHandler:")]
 		void UpdatePrimaryHome (HMHome home, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addHomeWithName:completionHandler:")]
 		void AddHome (string homeName, Action<HMHome, NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeHome:completionHandler:")]
 		void RemoveHome (HMHome home, Action<NSError> completion);
-		
-		[iOS (13,0), Watch (6,0), TV (13,0), NoMac]
+
+		[iOS (13, 0), Watch (6, 0), TV (13, 0), NoMac]
+		[MacCatalyst (14, 0)]
 		[Export ("authorizationStatus")]
 		HMHomeManagerAuthorizationStatus AuthorizationStatus { get; }
 	}
 
-	[TV (10,0)]
-	[iOS (8,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
 	partial interface HMHomeManagerDelegate {
@@ -95,21 +99,23 @@ namespace HomeKit {
 		[Export ("homeManager:didRemoveHome:"), EventArgs ("HMHomeManager")]
 		void DidRemoveHome (HMHomeManager manager, HMHome home);
 
-		[iOS (13,0), NoWatch, NoTV, NoMac]
+		[iOS (13, 0), NoWatch, NoTV, NoMac]
 		[NoMacCatalyst]
 		[Deprecated (PlatformName.iOS, 15, 0, message: "This method is no longer supported.")]
-		[Export("homeManager:didReceiveAddAccessoryRequest:"), EventArgs ("HMHomeManagerAddAccessoryRequest")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "This method is no longer supported.")]
+		[Export ("homeManager:didReceiveAddAccessoryRequest:"), EventArgs ("HMHomeManagerAddAccessoryRequest")]
 		void DidReceiveAddAccessoryRequest (HMHomeManager manager, HMAddAccessoryRequest request);
-		
-		[iOS (13,0), Watch (6,0), TV (13,0), NoMac]
-		[Export("homeManager:didUpdateAuthorizationStatus:"), EventArgs ("HMHomeManagerAuthorizationStatus")]
+
+		[iOS (13, 0), Watch (6, 0), TV (13, 0), NoMac]
+		[MacCatalyst (14, 0)]
+		[Export ("homeManager:didUpdateAuthorizationStatus:"), EventArgs ("HMHomeManagerAuthorizationStatus")]
 		void DidUpdateAuthorizationStatus (HMHomeManager manager, HMHomeManagerAuthorizationStatus status);
 	}
 
-	[TV (10,0)]
-	[iOS (8,0)]
-	[MacCatalyst (14,0)]
-	[BaseType (typeof (NSObject), Delegates=new string[] {"WeakDelegate"}, Events=new Type[] {typeof(HMAccessoryDelegate)})]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
+	[BaseType (typeof (NSObject), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (HMAccessoryDelegate) })]
 	partial interface HMAccessory {
 
 		[Export ("name")]
@@ -118,10 +124,13 @@ namespace HomeKit {
 		[NoTV]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 9, 0)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Export ("identifier", ArgumentSemantic.Copy)]
 		NSUuid Identifier { get; }
 
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 
@@ -142,12 +151,15 @@ namespace HomeKit {
 		[NoTV]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 9, 0)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Export ("identifiersForBridgedAccessories", ArgumentSemantic.Copy)]
 		NSUuid [] IdentifiersForBridgedAccessories { get; }
 
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("uniqueIdentifiersForBridgedAccessories", ArgumentSemantic.Copy)]
-		NSUuid[] UniqueIdentifiersForBridgedAccessories { get; }
+		NSUuid [] UniqueIdentifiersForBridgedAccessories { get; }
 
 		[Export ("room", ArgumentSemantic.Weak)]
 		HMRoom Room { get; }
@@ -155,32 +167,37 @@ namespace HomeKit {
 		[Export ("services", ArgumentSemantic.Copy)]
 		HMService [] Services { get; }
 
-		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("profiles", ArgumentSemantic.Copy)]
-		HMAccessoryProfile[] Profiles { get; }
+		HMAccessoryProfile [] Profiles { get; }
 
 		[Export ("blocked")]
 		bool Blocked { [Bind ("isBlocked")] get; }
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("model")]
 		string Model { get; }
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("manufacturer")]
 		string Manufacturer { get; }
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("firmwareVersion")]
 		string FirmwareVersion { get; }
 
 		[NullAllowed]
-		[Mac (13,0), iOS (16,1), MacCatalyst (16,1), Watch (9,1), TV (16,1)]
+		[Mac (13, 0), iOS (16, 1), MacCatalyst (16, 2), Watch (9, 1), TV (16, 1)]
 		[Export ("matterNodeID", ArgumentSemantic.Copy)]
 		NSNumber MatterNodeId { get; }
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
@@ -189,24 +206,27 @@ namespace HomeKit {
 		[Export ("identifyWithCompletionHandler:")]
 		void Identify (Action<NSError> completion);
 
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("category", ArgumentSemantic.Strong)]
 		HMAccessoryCategory Category { get; }
 
 		// HMAccessory(Camera)
 
-		[Watch (3,0), iOS (10,0)]
+		[Watch (3, 0), iOS (10, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("cameraProfiles", ArgumentSemantic.Copy)]
 		HMCameraProfile [] CameraProfiles { get; }
 
-		[Watch (4,3), TV (11,3), iOS (11,3)]
+		[Watch (4, 3), TV (11, 3), iOS (11, 3)]
+		[MacCatalyst (14, 0)]
 		[Export ("supportsIdentify")]
 		bool SupportsIdentify { get; }
 	}
 
-	[TV (10,0)]
-	[iOS (8,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
 	partial interface HMAccessoryDelegate {
@@ -223,11 +243,13 @@ namespace HomeKit {
 		[Export ("accessoryDidUpdateServices:")]
 		void DidUpdateServices (HMAccessory accessory);
 
-		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("accessory:didAddProfile:"), EventArgs ("HMAccessoryProfile")]
 		void DidAddProfile (HMAccessory accessory, HMAccessoryProfile profile);
 
-		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("accessory:didRemoveProfile:"), EventArgs ("HMAccessoryProfile")]
 		void DidRemoveProfile (HMAccessory accessory, HMAccessoryProfile profile);
 
@@ -237,7 +259,8 @@ namespace HomeKit {
 		[Export ("accessory:service:didUpdateValueForCharacteristic:"), EventArgs ("HMAccessoryServiceUpdateCharacteristic")]
 		void DidUpdateValueForCharacteristic (HMAccessory accessory, HMService service, HMCharacteristic characteristic);
 
-		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("accessory:didUpdateFirmwareVersion:"), EventArgs ("HMAccessoryFirmwareVersion")]
 		void DidUpdateFirmwareVersion (HMAccessory accessory, string firmwareVersion);
 	}
@@ -245,9 +268,9 @@ namespace HomeKit {
 #if !WATCH
 	// __WATCHOS_PROHIBITED
 	[NoTV]
-	[iOS (8,0)]
+	[iOS (8, 0)]
 	[NoMacCatalyst]
-	[BaseType (typeof (NSObject), Delegates=new string[] {"WeakDelegate"}, Events=new Type[] {typeof(HMAccessoryBrowserDelegate)})]
+	[BaseType (typeof (NSObject), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (HMAccessoryBrowserDelegate) })]
 	partial interface HMAccessoryBrowser {
 
 		[Export ("delegate", ArgumentSemantic.Weak)]
@@ -269,7 +292,7 @@ namespace HomeKit {
 	}
 
 	[NoTV]
-	[iOS (8,0)]
+	[iOS (8, 0)]
 	[NoMacCatalyst]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
@@ -283,36 +306,36 @@ namespace HomeKit {
 	}
 #endif // !WATCH
 
-	[Watch (3,0), TV (10,0), iOS (10,0)]
-	[MacCatalyst(14,0)]
-	[BaseType (typeof(NSObject))]
+	[Watch (3, 0), TV (10, 0), iOS (10, 0)]
+	[MacCatalyst (14, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface HMAccessoryProfile
-	{
+	interface HMAccessoryProfile {
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 
 		[Export ("services", ArgumentSemantic.Strong)]
-		HMService[] Services { get; }
+		HMService [] Services { get; }
 
 		[NullAllowed, Export ("accessory", ArgumentSemantic.Weak)]
 		HMAccessory Accessory { get; }
 	}
 
-	[TV (10,0)]
-	[iOS (8,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	partial interface HMAction {
 
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 	}
 
-	[TV (10,0)]
-	[iOS (8,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	partial interface HMActionSet {
@@ -328,40 +351,46 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addAction:completionHandler:")]
 		void AddAction (HMAction action, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeAction:completionHandler:")]
 		void RemoveAction (HMAction action, Action<NSError> completion);
 
 		[Internal]
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("actionSetType")]
 		NSString _ActionSetType { get; }
 
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 
-		[Watch (3,0), iOS (10,0)]
+		[Watch (3, 0), iOS (10, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed]
 		[Export ("lastExecutionDate", ArgumentSemantic.Copy)]
 		NSDate LastExecutionDate { get; }
 	}
 
-	[TV (10,0)]
-	[iOS (9,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (9, 0)]
+	[MacCatalyst (14, 0)]
 	[Static]
 	[Internal]
 	interface HMActionSetTypesInternal {
@@ -380,14 +409,15 @@ namespace HomeKit {
 		[Field ("HMActionSetTypeUserDefined")]
 		NSString UserDefined { get; }
 
-		[Watch (3,0), iOS (10,0)]
+		[Watch (3, 0), iOS (10, 0)]
+		[MacCatalyst (14, 0)]
 		[Field ("HMActionSetTypeTriggerOwned")]
 		NSString TriggerOwned { get; }
 	}
 
-	[TV (10,0)]
-	[iOS (8,0)]	
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	partial interface HMCharacteristic {
 
@@ -427,32 +457,35 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateAuthorizationData:completionHandler:")]
 		void UpdateAuthorizationData ([NullAllowed] NSData data, Action<NSError> completion);
 
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("localizedDescription")]
 		string LocalizedDescription { get; }
 
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 
-		[iOS (9,0)]
-		[MacCatalyst (14,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicKeyPath")]
 		NSString KeyPath { get; }
 
-		[iOS (9,0)]
-		[MacCatalyst (14,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicValueKeyPath")]
 		NSString ValueKeyPath { get; }
 	}
 
-	[TV (10,0)]
-	[iOS(8,0)]
-	[MacCatalyst(14,0)]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
 	[Static]
 	[Internal]
 	interface HMCharacteristicPropertyInternal {
@@ -463,18 +496,20 @@ namespace HomeKit {
 		[Field ("HMCharacteristicPropertyWritable")]
 		NSString Writable { get; }
 
-		[iOS (9,3)][Watch (2,2)]
+		[iOS (9, 3)]
+		[Watch (2, 2)]
+		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicPropertyHidden")]
 		NSString Hidden { get; }
 
 		[Notification]
 		[Field ("HMCharacteristicPropertySupportsEventNotification")]
-		NSString SupportsEventNotification { get; }		
+		NSString SupportsEventNotification { get; }
 	}
 
-	[TV (10,0)]
-	[iOS (8,0)]
-	[MacCatalyst(14,0)]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
 	[Static]
 	[Internal]
 	interface HMCharacteristicMetadataUnitsInternal {
@@ -490,26 +525,31 @@ namespace HomeKit {
 		[Field ("HMCharacteristicMetadataUnitsArcDegree")]
 		NSString ArcDegree { get; }
 
-		[iOS (8,3)]
+		[iOS (8, 3)]
+		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicMetadataUnitsSeconds")]
 		NSString Seconds { get; }
 
-		[iOS (9,3)][Watch (2,2)]
+		[iOS (9, 3)]
+		[Watch (2, 2)]
+		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicMetadataUnitsLux")]
 		NSString Lux { get; }
 
-		[Watch (3,0), iOS (10,0)]
+		[Watch (3, 0), iOS (10, 0)]
+		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicMetadataUnitsPartsPerMillion")]
 		NSString PartsPerMillion { get; }
 
-		[Watch (3,0), iOS (10,0)]
+		[Watch (3, 0), iOS (10, 0)]
+		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicMetadataUnitsMicrogramsPerCubicMeter")]
 		NSString MicrogramsPerCubicMeter { get; }
 	}
 
-	[TV (10,0)]
-	[iOS (8,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	partial interface HMCharacteristicMetadata {
 
@@ -536,20 +576,22 @@ namespace HomeKit {
 		[NullAllowed, Export ("manufacturerDescription")]
 		string ManufacturerDescription { get; }
 
-		[Watch (3,0), iOS (10,0)]
+		[Watch (3, 0), iOS (10, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("validValues", ArgumentSemantic.Copy)]
-		NSNumber[] ValidValues { get; }
+		NSNumber [] ValidValues { get; }
 	}
 
-	[TV (10,0)]
-	[iOS (8,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (HMAction))]
 	partial interface HMCharacteristicWriteAction {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithCharacteristic:targetValue:")]
 #if XAMCORE_3_0
 		NativeHandle Constructor (HMCharacteristic characteristic, INSCopying targetValue);
@@ -569,6 +611,7 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateTargetValue:completionHandler:")]
 #if XAMCORE_3_0
@@ -578,12 +621,12 @@ namespace HomeKit {
 #endif
 	}
 
-	[TV (10,0)]
-	[iOS (8,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
-	[BaseType (typeof (NSObject), Delegates=new string[] {"WeakDelegate"}, Events=new Type[] {typeof(HMHomeDelegate)})]
-	partial interface HMHome { 
+	[BaseType (typeof (NSObject), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (HMHomeDelegate) })]
+	partial interface HMHome {
 
 		[Export ("delegate", ArgumentSemantic.Weak)]
 		[NullAllowed]
@@ -599,17 +642,20 @@ namespace HomeKit {
 		[Export ("primary")]
 		bool Primary { [Bind ("isPrimary")] get; }
 
-		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("homeHubState")]
 		HMHomeHubState HomeHubState { get; }
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
 
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 
@@ -620,18 +666,21 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addAccessory:completionHandler:")]
 		void AddAccessory (HMAccessory accessory, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeAccessory:completionHandler:")]
 		void RemoveAccessory (HMAccessory accessory, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("assignAccessory:toRoom:completionHandler:")]
 		void AssignAccessory (HMAccessory accessory, HMRoom room, Action<NSError> completion);
@@ -643,21 +692,25 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("unblockAccessory:completionHandler:")]
 		void UnblockAccessory (HMAccessory accessory, Action<NSError> completion);
 
 		[Deprecated (PlatformName.iOS, 15, 4, message: "Use 'HMAccessorySetupManager.PerformAccessorySetup' instead.")]
-		[NoWatch, NoTV, iOS (10,0)][NoMacCatalyst]
+		[NoWatch, NoTV, iOS (10, 0)]
+		[NoMacCatalyst]
+		[Deprecated (PlatformName.MacCatalyst, 15, 4, message: "Use 'HMAccessorySetupManager.PerformAccessorySetup' instead.")]
 		[Async]
 		[Export ("addAndSetupAccessoriesWithCompletionHandler:")]
 		void AddAndSetupAccessories (Action<NSError> completion);
 
 		[Deprecated (PlatformName.iOS, 15, 4, message: "Use 'HMAccessorySetupManager.PerformAccessorySetup' instead.")]
-		[NoWatch, NoTV, iOS (11,3), NoMacCatalyst]
+		[NoWatch, NoTV, iOS (11, 3), NoMacCatalyst]
+		[Deprecated (PlatformName.MacCatalyst, 15, 4, message: "Use 'HMAccessorySetupManager.PerformAccessorySetup' instead.")]
 		[Async]
 		[Export ("addAndSetupAccessoriesWithPayload:completionHandler:")]
-		void AddAndSetupAccessories (HMAccessorySetupPayload payload, Action<HMAccessory[], NSError> completion);
+		void AddAndSetupAccessories (HMAccessorySetupPayload payload, Action<HMAccessory [], NSError> completion);
 
 		// HMHome(HMRoom)
 
@@ -666,12 +719,14 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addRoomWithName:completionHandler:")]
 		void AddRoom (string roomName, Action<HMRoom, NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeRoom:completionHandler:")]
 		void RemoveRoom (HMRoom room, Action<NSError> completion);
@@ -686,12 +741,14 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addZoneWithName:completionHandler:")]
 		void AddZone (string zoneName, Action<HMZone, NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeZone:completionHandler:")]
 		void RemoveZone (HMZone zone, Action<NSError> completion);
@@ -703,12 +760,14 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addServiceGroupWithName:completionHandler:")]
 		void AddServiceGroup (string serviceGroupName, Action<HMServiceGroup, NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeServiceGroup:completionHandler:")]
 		void RemoveServiceGroup (HMServiceGroup group, Action<NSError> completion);
@@ -720,12 +779,14 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addActionSetWithName:completionHandler:")]
 		void AddActionSet (string actionSetName, Action<HMActionSet, NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeActionSet:completionHandler:")]
 		void RemoveActionSet (HMActionSet actionSet, Action<NSError> completion);
@@ -734,7 +795,8 @@ namespace HomeKit {
 		[Export ("executeActionSet:completionHandler:")]
 		void ExecuteActionSet (HMActionSet actionSet, Action<NSError> completion);
 
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("builtinActionSetOfType:")]
 		[return: NullAllowed]
 		HMActionSet GetBuiltinActionSet (string actionSetType);
@@ -746,12 +808,14 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addTrigger:completionHandler:")]
 		void AddTrigger (HMTrigger trigger, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeTrigger:completionHandler:")]
 		void RemoveTrigger (HMTrigger trigger, Action<NSError> completion);
@@ -761,54 +825,62 @@ namespace HomeKit {
 		[NoTV]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 9, 0)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Export ("users")]
 		HMUser [] Users { get; }
 
 		[NoTV]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'ManageUsers' instead.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ManageUsers' instead.")]
 		[Async]
 		[Export ("addUserWithCompletionHandler:")]
-		void AddUser (Action<HMUser,NSError> completion);
+		void AddUser (Action<HMUser, NSError> completion);
 
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("currentUser", ArgumentSemantic.Strong)]
 		HMUser CurrentUser { get; }
 
 		[NoTV]
 		[NoWatch]
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Async]
 		[Export ("manageUsersWithCompletionHandler:")]
 		void ManageUsers (Action<NSError> completion);
 
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("homeAccessControlForUser:")]
 		HMHomeAccessControl GetHomeAccessControl (HMUser user);
 
 		// @interface Matter (HMHome)
-		[TV (16,1), iOS (16, 1), MacCatalyst (16,1), Watch (9,1)]
+		[TV (16, 1), iOS (16, 1), MacCatalyst (16, 1), Watch (9, 1)]
 		[Export ("matterControllerID")]
 		string MatterControllerId { get; }
 
-		[TV (16,1), iOS (16, 1), MacCatalyst (16,1), Watch (9,1)]
+		[TV (16, 1), iOS (16, 1), MacCatalyst (16, 1), Watch (9, 1)]
 		[Export ("matterControllerXPCConnectBlock", ArgumentSemantic.Strong)]
 		Func<NSXpcConnection> MatterControllerXPCConnectBlock { get; }
 
 		// constants
 
-		[MacCatalyst (14,0)]
+		[MacCatalyst (14, 0)]
 		[Field ("HMUserFailedAccessoriesKey")]
 		NSString UserFailedAccessoriesKey { get; }
 
 		[Watch (6, 1), TV (13, 2), iOS (13, 2)]
+		[MacCatalyst (14, 0)]
 		[Export ("supportsAddingNetworkRouter")]
 		bool SupportsAddingNetworkRouter { get; }
 	}
 
-	[TV (10,0)]
-	[iOS (8,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
 	partial interface HMHomeDelegate {
@@ -816,7 +888,8 @@ namespace HomeKit {
 		[Export ("homeDidUpdateName:")]
 		void DidUpdateNameForHome (HMHome home);
 
-		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("homeDidUpdateAccessControlForCurrentUser:")]
 		void DidUpdateAccessControlForCurrentUser (HMHome home);
 
@@ -904,18 +977,20 @@ namespace HomeKit {
 		[Export ("home:didEncounterError:forAccessory:"), EventArgs ("HMHomeErrorAccessory")]
 		void DidEncounterError (HMHome home, NSError error, HMAccessory accessory);
 
-		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("home:didUpdateHomeHubState:"), EventArgs ("HMHomeHubState")]
 		void DidUpdateHomeHubState (HMHome home, HMHomeHubState homeHubState);
 
-		[Watch (6,1), TV (13,2), iOS (13,2)]
+		[Watch (6, 1), TV (13, 2), iOS (13, 2)]
+		[MacCatalyst (14, 0)]
 		[Export ("homeDidUpdateSupportedFeatures:")]
 		void DidUpdateSupportedFeatures (HMHome home);
 	}
 
-	[TV (10,0)]
-	[iOS (8,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	partial interface HMRoom {
@@ -928,20 +1003,22 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
 
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 	}
 
-	[TV (10,0)]
-	[iOS (8,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
-	partial interface HMService { 
+	partial interface HMService {
 
 		[Export ("accessory", ArgumentSemantic.Weak)]
 		HMAccessory Accessory { get; }
@@ -964,41 +1041,48 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Async]
 		[Export ("updateAssociatedServiceType:completionHandler:")]
 		void UpdateAssociatedServiceType ([NullAllowed] string serviceType, Action<NSError> completion);
 
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("userInteractive")]
 		bool UserInteractive { [Bind ("isUserInteractive")] get; }
 
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("localizedDescription")]
 		string LocalizedDescription { get; }
 
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 
-		[Watch (3,0), iOS (10,0)]
+		[Watch (3, 0), iOS (10, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("primaryService")]
 		bool PrimaryService { [Bind ("isPrimaryService")] get; }
 
-		[Watch (3,0), iOS (10,0)]
+		[Watch (3, 0), iOS (10, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("linkedServices", ArgumentSemantic.Copy)]
-		HMService[] LinkedServices { get; }
+		HMService [] LinkedServices { get; }
 	}
 
-	[TV (10,0)]
-	[iOS (8,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	partial interface HMServiceGroup {
@@ -1011,36 +1095,41 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addService:completionHandler:")]
 		void AddService (HMService service, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeService:completionHandler:")]
 		void RemoveService (HMService service, Action<NSError> completion);
 
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 	}
 
-	[TV (10,0)]
-	[iOS (8,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (HMTrigger))]
-	partial interface HMTimerTrigger { 
+	partial interface HMTimerTrigger {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[DesignatedInitializer]
 		[Export ("initWithName:fireDate:timeZone:recurrence:recurrenceCalendar:")]
 		NativeHandle Constructor (string name, NSDate fireDate, [NullAllowed] NSTimeZone timeZone, [NullAllowed] NSDateComponents recurrence, [NullAllowed] NSCalendar recurrenceCalendar);
@@ -1059,29 +1148,32 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateFireDate:completionHandler:")]
 		void UpdateFireDate (NSDate fireDate, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateTimeZone:completionHandler:")]
 		void UpdateTimeZone ([NullAllowed] NSTimeZone timeZone, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateRecurrence:completionHandler:")]
 		void UpdateRecurrence ([NullAllowed] NSDateComponents recurrence, Action<NSError> completion);
 	}
 
-	[TV (10,0)]
-	[iOS (8,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	partial interface HMTrigger { 
+	partial interface HMTrigger {
 
 		[Export ("name")]
 		string Name { get; }
@@ -1097,39 +1189,44 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addActionSet:completionHandler:")]
 		void AddActionSet (HMActionSet actionSet, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeActionSet:completionHandler:")]
 		void RemoveActionSet (HMActionSet actionSet, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("enable:completionHandler:")]
 		void Enable (bool enable, Action<NSError> completion);
 
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 	}
 
-	[TV (10,0)]
-	[iOS (8,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	partial interface HMZone { 
+	partial interface HMZone {
 
 		[Export ("name")]
 		string Name { get; }
@@ -1139,31 +1236,35 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addRoom:completionHandler:")]
 		void AddRoom (HMRoom room, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeRoom:completionHandler:")]
 		void RemoveRoom (HMRoom room, Action<NSError> completion);
 
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 	}
 
 	[Static, Internal]
-	[iOS (8,0)]
-	[TV (10,0)]
-	[MacCatalyst (14,0)]
+	[iOS (8, 0)]
+	[TV (10, 0)]
+	[MacCatalyst (14, 0)]
 	interface HMCharacteristicMetadataFormatKeys {
 		[Field ("HMCharacteristicMetadataFormatBool")]
 		NSString _Bool { get; }
@@ -1176,7 +1277,7 @@ namespace HomeKit {
 
 		[Field ("HMCharacteristicMetadataFormatString")]
 		NSString _String { get; }
-		
+
 		[Field ("HMCharacteristicMetadataFormatArray")]
 		NSString _Array { get; }
 
@@ -1202,23 +1303,24 @@ namespace HomeKit {
 		NSString _Tlv8 { get; }
 	}
 
-	[TV (10,0)]
-	[iOS (8,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (8, 0)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface HMUser {
 		[Export ("name")]
 		string Name { get; }
 
-		[iOS (9,0)]
+		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 	}
 
-	[TV (10,0)]
-	[iOS (9,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (9, 0)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: init is unavailable
 	interface HMAccessoryCategory {
@@ -1233,14 +1335,15 @@ namespace HomeKit {
 		string LocalizedDescription { get; }
 	}
 
-	[TV (10,0)]
-	[iOS (9,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (9, 0)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (HMEvent))]
 	[DisableDefaultCtor]
 	interface HMCharacteristicEvent : NSMutableCopying {
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithCharacteristic:triggerValue:")]
 		NativeHandle Constructor (HMCharacteristic characteristic, [NullAllowed] INSCopying triggerValue);
 
@@ -1254,87 +1357,101 @@ namespace HomeKit {
 		[Deprecated (PlatformName.iOS, 11, 0)]
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Async]
 		[Export ("updateTriggerValue:completionHandler:")]
 		void UpdateTriggerValue ([NullAllowed] INSCopying triggerValue, Action<NSError> completion);
 	}
 
-	[TV (10,0)]
-	[iOS (9,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (9, 0)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	interface HMEvent {
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 
-		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("isSupportedForHome:")]
 		bool IsSupported (HMHome home);
 	}
 
-	[Watch (4,0), TV (11,0), iOS (11,0), MacCatalyst (14,0)]
+	[Watch (4, 0), TV (11, 0), iOS (11, 0), MacCatalyst (14, 0)]
 	[BaseType (typeof (HMEvent))]
-	interface HMTimeEvent {}
+	interface HMTimeEvent { }
 
-	[TV (10,0)]
-	[iOS (9,0)]
-	[MacCatalyst (14,0)]
+	[TV (10, 0)]
+	[iOS (9, 0)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (HMTrigger))]
 	[DisableDefaultCtor]
 	interface HMEventTrigger {
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithName:events:predicate:")]
-		NativeHandle Constructor (string name, HMEvent[] events, [NullAllowed] NSPredicate predicate);
+		NativeHandle Constructor (string name, HMEvent [] events, [NullAllowed] NSPredicate predicate);
 
 		[NoTV]
 		[NoWatch]
-		[iOS (11,0)]
+		[iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("initWithName:events:endEvents:recurrences:predicate:")]
-		NativeHandle Constructor (string name, HMEvent[] events, [NullAllowed] HMEvent[] endEvents, [NullAllowed] NSDateComponents[] recurrences, [NullAllowed] NSPredicate predicate);
+		NativeHandle Constructor (string name, HMEvent [] events, [NullAllowed] HMEvent [] endEvents, [NullAllowed] NSDateComponents [] recurrences, [NullAllowed] NSPredicate predicate);
 
 		[Export ("events", ArgumentSemantic.Copy)]
-		HMEvent[] Events { get; }
+		HMEvent [] Events { get; }
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("endEvents", ArgumentSemantic.Copy)]
-		HMEvent[] EndEvents { get; }
+		HMEvent [] EndEvents { get; }
 
 		[NullAllowed, Export ("predicate", ArgumentSemantic.Copy)]
 		NSPredicate Predicate { get; }
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("recurrences", ArgumentSemantic.Copy)]
-		NSDateComponents[] Recurrences { get; }
+		NSDateComponents [] Recurrences { get; }
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("executeOnce")]
 		bool ExecuteOnce { get; }
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("triggerActivationState", ArgumentSemantic.Assign)]
 		HMEventTriggerActivationState TriggerActivationState { get; }
 
-		[Static][Internal]
+		[Static]
+		[Internal]
 		[Export ("predicateForEvaluatingTriggerOccurringBeforeSignificantEvent:applyingOffset:")]
 		NSPredicate CreatePredicateForEvaluatingTriggerOccurringBeforeSignificantEvent (NSString significantEvent, [NullAllowed] NSDateComponents offset);
 
-		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("predicateForEvaluatingTriggerOccurringBeforeSignificantEvent:")]
 		NSPredicate CreatePredicateForEvaluatingTriggerOccurringBeforeSignificantEvent (HMSignificantTimeEvent significantEvent);
 
-		[Static][Internal]
+		[Static]
+		[Internal]
 		[Export ("predicateForEvaluatingTriggerOccurringAfterSignificantEvent:applyingOffset:")]
 		NSPredicate CreatePredicateForEvaluatingTriggerOccurringAfterSignificantEvent (NSString significantEvent, [NullAllowed] NSDateComponents offset);
 
-		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("predicateForEvaluatingTriggerOccurringAfterSignificantEvent:")]
 		NSPredicate CreatePredicateForEvaluatingTriggerOccurringAfterSignificantEvent (HMSignificantTimeEvent significantEvent);
 
-		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("predicateForEvaluatingTriggerOccurringBetweenSignificantEvent:secondSignificantEvent:")]
 		NSPredicate CreatePredicateForEvaluatingTriggerOccurringBetweenSignificantEvent (HMSignificantTimeEvent firstSignificantEvent, HMSignificantTimeEvent secondSignificantEvent);
@@ -1351,7 +1468,8 @@ namespace HomeKit {
 		[Export ("predicateForEvaluatingTriggerOccurringAfterDateWithComponents:")]
 		NSPredicate CreatePredicateForEvaluatingTriggerOccurringAfterDate (NSDateComponents dateComponents);
 
-		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("predicateForEvaluatingTriggerOccurringBetweenDateWithComponents:secondDateWithComponents:")]
 		NSPredicate CreatePredicateForEvaluatingTriggerOccurringBetweenDates (NSDateComponents firstDateComponents, NSDateComponents secondDateComponents);
@@ -1360,7 +1478,8 @@ namespace HomeKit {
 		[Export ("predicateForEvaluatingTriggerWithCharacteristic:relatedBy:toValue:")]
 		NSPredicate CreatePredicateForEvaluatingTrigger (HMCharacteristic characteristic, NSPredicateOperatorType operatorType, NSObject value);
 
-		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("predicateForEvaluatingTriggerWithPresence:")]
 		NSPredicate CreatePredicateForEvaluatingTrigger (HMPresenceEvent presenceEvent);
@@ -1368,6 +1487,8 @@ namespace HomeKit {
 		[NoTV]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'UpdateEvents' instead.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'UpdateEvents' instead.")]
 		[Async]
 		[Export ("addEvent:completionHandler:")]
 		void AddEvent (HMEvent @event, Action<NSError> completion);
@@ -1375,48 +1496,55 @@ namespace HomeKit {
 		[NoTV]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'UpdateEvents' instead.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'UpdateEvents' instead.")]
 		[Async]
 		[Export ("removeEvent:completionHandler:")]
 		void RemoveEvent (HMEvent @event, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
-		[iOS (11,0)]
+		[iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Async]
 		[Export ("updateEvents:completionHandler:")]
-		void UpdateEvents (HMEvent[] events, Action<NSError> completion);
+		void UpdateEvents (HMEvent [] events, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
-		[iOS (11,0)]
+		[iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Async]
 		[Export ("updateEndEvents:completionHandler:")]
-		void UpdateEndEvents (HMEvent[] endEvents, Action<NSError> completion);
+		void UpdateEndEvents (HMEvent [] endEvents, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updatePredicate:completionHandler:")]
 		void UpdatePredicate ([NullAllowed] NSPredicate predicate, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
-		[iOS (11,0)]
+		[iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Async]
 		[Export ("updateRecurrences:completionHandler:")]
-		void UpdateRecurrences ([NullAllowed] NSDateComponents[] recurrences, Action<NSError> completion);
+		void UpdateRecurrences ([NullAllowed] NSDateComponents [] recurrences, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
-		[iOS (11,0)]
+		[iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Async]
 		[Export ("updateExecuteOnce:completionHandler:")]
 		void UpdateExecuteOnce (bool executeOnce, Action<NSError> completion);
 	}
 
-	[iOS (9,0)]
-	[TV (10,0)]
-	[MacCatalyst (14,0)]
+	[iOS (9, 0)]
+	[TV (10, 0)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (HMAccessControl))]
 	[DisableDefaultCtor]
 	interface HMHomeAccessControl {
@@ -1424,14 +1552,15 @@ namespace HomeKit {
 		bool Administrator { [Bind ("isAdministrator")] get; }
 	}
 
-	[iOS (9,0)]
-	[TV (10,0)]
-	[MacCatalyst (14,0)]
+	[iOS (9, 0)]
+	[TV (10, 0)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (HMEvent))]
 	[DisableDefaultCtor]
 	interface HMLocationEvent : NSMutableCopying {
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithRegion:")]
 		NativeHandle Constructor (CLRegion region);
 
@@ -1441,13 +1570,15 @@ namespace HomeKit {
 		[NoTV]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Async]
 		[Export ("updateRegion:completionHandler:")]
 		void UpdateRegion (CLRegion region, Action<NSError> completion);
 	}
 
-	[Watch (4,0), TV (11,0), iOS (11,0), MacCatalyst (14,0)]
-	[BaseType (typeof(HMLocationEvent))]
+	[Watch (4, 0), TV (11, 0), iOS (11, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (HMLocationEvent))]
 	[DisableDefaultCtor]
 	interface HMMutableLocationEvent {
 
@@ -1460,10 +1591,9 @@ namespace HomeKit {
 	}
 
 	[NoWatch]
-	[TV (10,0), iOS (10,0), MacCatalyst (14,0)]
-	[BaseType (typeof(UIView))]
-	interface HMCameraView
-	{
+	[TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (UIView))]
+	interface HMCameraView {
 		// inlined ctor
 		[Export ("initWithFrame:")]
 		NativeHandle Constructor (CGRect frame);
@@ -1472,21 +1602,21 @@ namespace HomeKit {
 		HMCameraSource CameraSource { get; set; }
 	}
 
-	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
+	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
 	[Abstract] // documented as such in header file
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	interface HMCameraSource {
 
-		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[Watch (7, 4), TV (14, 5), Mac (11, 3), iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		[Export ("aspectRatio")]
 		double AspectRatio { get; }
 	}
 
-	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
-	[BaseType (typeof(HMAccessoryProfile))]
+	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (HMAccessoryProfile))]
 	[DisableDefaultCtor]
-	interface HMCameraProfile
-	{
+	interface HMCameraProfile {
 		[NullAllowed, Export ("streamControl", ArgumentSemantic.Strong)]
 		HMCameraStreamControl StreamControl { get; }
 
@@ -1503,14 +1633,13 @@ namespace HomeKit {
 		HMCameraAudioControl MicrophoneControl { get; }
 	}
 
-	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
-	[BaseType (typeof(NSObject))]
-	interface HMCameraControl {}
+	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (NSObject))]
+	interface HMCameraControl { }
 
-	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
-	[BaseType (typeof(HMCameraControl))]
-	interface HMCameraStreamControl
-	{
+	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (HMCameraControl))]
+	interface HMCameraStreamControl {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		IHMCameraStreamControlDelegate Delegate { get; set; }
 
@@ -1527,13 +1656,12 @@ namespace HomeKit {
 		void StopStream ();
 	}
 
-	interface IHMCameraStreamControlDelegate {}
+	interface IHMCameraStreamControlDelegate { }
 
-	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
+	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
 	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
-	interface HMCameraStreamControlDelegate
-	{
+	[BaseType (typeof (NSObject))]
+	interface HMCameraStreamControlDelegate {
 		[Export ("cameraStreamControlDidStartStream:")]
 		void DidStartStream (HMCameraStreamControl cameraStreamControl);
 
@@ -1542,24 +1670,24 @@ namespace HomeKit {
 	}
 
 	// TODO: Type still available for tvOS even if everything in it is __TVOS_PROHIBITED.
-	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
-	[BaseType (typeof(HMCameraSource))]
-	interface HMCameraStream
-	{
-		[TV (14,5)]
+	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (HMCameraSource))]
+	interface HMCameraStream {
+		[TV (14, 5)]
+		[MacCatalyst (13, 1)]
 		[Export ("audioStreamSetting", ArgumentSemantic.Assign)]
 		HMCameraAudioStreamSetting AudioStreamSetting { get; }
 
-		[TV (14,5)]
+		[TV (14, 5)]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateAudioStreamSetting:completionHandler:")]
 		void UpdateAudioStreamSetting (HMCameraAudioStreamSetting audioStreamSetting, Action<NSError> completion);
 	}
 
-	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
-	[BaseType (typeof(HMCameraControl))]
-	interface HMCameraSnapshotControl
-	{
+	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (HMCameraControl))]
+	interface HMCameraSnapshotControl {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		IHMCameraSnapshotControlDelegate Delegate { get; set; }
 
@@ -1570,34 +1698,34 @@ namespace HomeKit {
 		void TakeSnapshot ();
 	}
 
-	interface IHMCameraSnapshotControlDelegate {}
+	interface IHMCameraSnapshotControlDelegate { }
 
-	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
+	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
 	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
-	interface HMCameraSnapshotControlDelegate
-	{
+	[BaseType (typeof (NSObject))]
+	interface HMCameraSnapshotControlDelegate {
 		[Export ("cameraSnapshotControl:didTakeSnapshot:error:")]
 		void DidTakeSnapshot (HMCameraSnapshotControl cameraSnapshotControl, [NullAllowed] HMCameraSnapshot snapshot, [NullAllowed] NSError error);
 
-		[iOS (10,1)][Watch (3,1)][TV (10,1)]
+		[iOS (10, 1)]
+		[Watch (3, 1)]
+		[TV (10, 1)]
+		[MacCatalyst (14, 0)]
 		[Export ("cameraSnapshotControlDidUpdateMostRecentSnapshot:")]
 		void DidUpdateMostRecentSnapshot (HMCameraSnapshotControl cameraSnapshotControl);
 	}
 
-	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
-	[BaseType (typeof(HMCameraSource))]
-	interface HMCameraSnapshot
-	{
+	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (HMCameraSource))]
+	interface HMCameraSnapshot {
 		[Export ("captureDate", ArgumentSemantic.Copy)]
 		NSDate CaptureDate { get; }
 	}
 
-	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
-	[BaseType (typeof(HMCameraControl))]
+	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (HMCameraControl))]
 	[DisableDefaultCtor]
-	interface HMCameraSettingsControl
-	{
+	interface HMCameraSettingsControl {
 		[NullAllowed, Export ("nightVision", ArgumentSemantic.Strong)]
 		HMCharacteristic NightVision { get; }
 
@@ -1626,11 +1754,10 @@ namespace HomeKit {
 		HMCharacteristic ImageMirroring { get; }
 	}
 
-	[Watch (3,0), TV (10,0), iOS (10,0), MacCatalyst (14,0)]
-	[BaseType (typeof(HMCameraControl))]
+	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (HMCameraControl))]
 	[DisableDefaultCtor]
-	interface HMCameraAudioControl
-	{
+	interface HMCameraAudioControl {
 		[NullAllowed, Export ("mute", ArgumentSemantic.Strong)]
 		HMCharacteristic Mute { get; }
 
@@ -1638,8 +1765,8 @@ namespace HomeKit {
 		HMCharacteristic Volume { get; }
 	}
 
-	[Watch (4,0), TV (11,0), iOS (11,0), MacCatalyst (14,0)]
-	[BaseType (typeof(HMTimeEvent))]
+	[Watch (4, 0), TV (11, 0), iOS (11, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (HMTimeEvent))]
 	[DisableDefaultCtor]
 	interface HMCalendarEvent : NSMutableCopying {
 
@@ -1650,8 +1777,8 @@ namespace HomeKit {
 		NSDateComponents FireDateComponents { get; [NotImplemented] set; }
 	}
 
-	[Watch (4,0), TV (11,0), iOS (11,0), MacCatalyst (14,0)]
-	[BaseType (typeof(HMCalendarEvent))]
+	[Watch (4, 0), TV (11, 0), iOS (11, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (HMCalendarEvent))]
 	[DisableDefaultCtor]
 	interface HMMutableCalendarEvent {
 
@@ -1663,8 +1790,8 @@ namespace HomeKit {
 		NSDateComponents FireDateComponents { get; set; }
 	}
 
-	[Watch (4,0), TV (11,0), iOS (11,0), MacCatalyst (14,0)]
-	[BaseType (typeof(HMCharacteristicEvent))]
+	[Watch (4, 0), TV (11, 0), iOS (11, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (HMCharacteristicEvent))]
 	[DisableDefaultCtor]
 	interface HMMutableCharacteristicEvent : NSMutableCopying {
 
@@ -1680,8 +1807,8 @@ namespace HomeKit {
 		INSCopying TriggerValue { get; set; }
 	}
 
-	[Watch (4,0), TV (11,0), iOS (11,0), MacCatalyst (14,0)]
-	[BaseType (typeof(HMEvent))]
+	[Watch (4, 0), TV (11, 0), iOS (11, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (HMEvent))]
 	[DisableDefaultCtor]
 	interface HMCharacteristicThresholdRangeEvent : NSMutableCopying {
 
@@ -1695,8 +1822,8 @@ namespace HomeKit {
 		HMNumberRange ThresholdRange { get; [NotImplemented] set; }
 	}
 
-	[Watch (4,0), TV (11,0), iOS (11,0), MacCatalyst (14,0)]
-	[BaseType (typeof(HMCharacteristicThresholdRangeEvent))]
+	[Watch (4, 0), TV (11, 0), iOS (11, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (HMCharacteristicThresholdRangeEvent))]
 	[DisableDefaultCtor]
 	interface HMMutableCharacteristicThresholdRangeEvent {
 
@@ -1712,8 +1839,8 @@ namespace HomeKit {
 		HMNumberRange ThresholdRange { get; set; }
 	}
 
-	[Watch (4,0), TV (11,0), iOS (11,0), MacCatalyst (14,0)]
-	[BaseType (typeof(HMTimeEvent))]
+	[Watch (4, 0), TV (11, 0), iOS (11, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (HMTimeEvent))]
 	[DisableDefaultCtor]
 	interface HMDurationEvent : NSMutableCopying {
 
@@ -1724,8 +1851,8 @@ namespace HomeKit {
 		double Duration { get; [NotImplemented] set; }
 	}
 
-	[Watch (4,0), TV (11,0), iOS (11,0), MacCatalyst (14,0)]
-	[BaseType (typeof(HMDurationEvent))]
+	[Watch (4, 0), TV (11, 0), iOS (11, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (HMDurationEvent))]
 	[DisableDefaultCtor]
 	interface HMMutableDurationEvent {
 
@@ -1737,8 +1864,8 @@ namespace HomeKit {
 		double Duration { get; set; }
 	}
 
-	[Watch (4,0), TV (11,0), iOS (11,0), MacCatalyst (14,0)]
-	[BaseType (typeof(NSObject))]
+	[Watch (4, 0), TV (11, 0), iOS (11, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface HMNumberRange {
 
@@ -1761,32 +1888,33 @@ namespace HomeKit {
 		NSNumber Max { get; }
 	}
 
-	[iOS (13,0), NoWatch, NoMac, NoTV, NoMacCatalyst]
-	[BaseType (typeof(NSObject))]
+	[iOS (13, 0), NoWatch, NoMac, NoTV, NoMacCatalyst]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface HMAccessoryOwnershipToken {
-		[Export("initWithData:")]
+		[Export ("initWithData:")]
 		NativeHandle Constructor (NSData data);
 	}
 
-	[iOS (13,0), NoWatch, NoMac, NoTV]
+	[iOS (13, 0), NoWatch, NoMac, NoTV]
 	[NoMacCatalyst]
 	[Deprecated (PlatformName.iOS, 15, 0, message: "This class is no longer supported.")]
-	[BaseType (typeof(NSObject))]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "This class is no longer supported.")]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface HMAddAccessoryRequest {
 		[Export ("home", ArgumentSemantic.Strong)]
 		HMHome Home { get; }
-		
+
 		[Export ("accessoryCategory", ArgumentSemantic.Strong)]
 		HMAccessoryCategory AccessoryCategory { get; }
-		
+
 		[Export ("accessoryName")]
 		string AccessoryName { get; }
-		
+
 		[Export ("requiresSetupPayloadURL")]
 		bool RequiresSetupPayloadUrl { get; }
-		
+
 #if false
 		// marked as deprecated in tvOS headers (where the type does not exists)
 		// https://github.com/xamarin/maccore/issues/1959
@@ -1797,14 +1925,14 @@ namespace HomeKit {
 		[Export ("payloadWithOwnershipToken:")]
 		[return: NullAllowed]
 		HMAccessorySetupPayload GetPayload (HMAccessoryOwnershipToken ownershipToken);
-		
+
 		[Export ("payloadWithURL:ownershipToken:")]
 		[return: NullAllowed]
 		HMAccessorySetupPayload GetPayload (NSUrl setupPayloadUrl, HMAccessoryOwnershipToken ownershipToken);
 	}
 
-	[iOS (13,0), Watch (6,0), TV (13,0), NoMac, MacCatalyst (14,0)]
-	[BaseType (typeof(HMAccessoryProfile))]
+	[iOS (13, 0), Watch (6, 0), TV (13, 0), NoMac, MacCatalyst (14, 0)]
+	[BaseType (typeof (HMAccessoryProfile))]
 	[DisableDefaultCtor]
 	interface HMNetworkConfigurationProfile {
 		[Wrap ("WeakDelegate")]
@@ -1813,14 +1941,14 @@ namespace HomeKit {
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
-		
+
 		[Export ("networkAccessRestricted")]
 		bool NetworkAccessRestricted { [Bind ("isNetworkAccessRestricted")] get; }
 	}
 
-	interface IHMNetworkConfigurationProfileDelegate {}
+	interface IHMNetworkConfigurationProfileDelegate { }
 
-	[Watch (6,0), TV (13,0), NoMac, iOS (13,0), MacCatalyst (14,0)]
+	[Watch (6, 0), TV (13, 0), NoMac, iOS (13, 0), MacCatalyst (14, 0)]
 #if NET
 	[Protocol, Model]
 #else
@@ -1831,22 +1959,22 @@ namespace HomeKit {
 		[Export ("profileDidUpdateNetworkAccessMode:")]
 		void DidUpdateNetworkAccessMode (HMNetworkConfigurationProfile profile);
 	}
-	
-	[NoWatch, NoTV, iOS (11,3), NoMacCatalyst]
-	[BaseType (typeof(NSObject))]
+
+	[NoWatch, NoTV, iOS (11, 3), NoMacCatalyst]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface HMAccessorySetupPayload {
 		[Export ("initWithURL:")]
 		NativeHandle Constructor ([NullAllowed] NSUrl setupPayloadUrl);
-		
-		[iOS (13,0)]
+
+		[iOS (13, 0)]
 		[Export ("initWithURL:ownershipToken:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (NSUrl setupPayloadUrl, [NullAllowed] HMAccessoryOwnershipToken ownershipToken);
 	}
 
-	[Watch (4,0), TV (11,0), iOS (11,0), MacCatalyst (14,0)]
-	[BaseType (typeof(HMEvent))]
+	[Watch (4, 0), TV (11, 0), iOS (11, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (HMEvent))]
 	[DisableDefaultCtor]
 	interface HMPresenceEvent : NSMutableCopying {
 
@@ -1854,18 +1982,18 @@ namespace HomeKit {
 		NativeHandle Constructor (HMPresenceEventType presenceEventType, HMPresenceEventUserType presenceUserType);
 
 		[Export ("presenceEventType")]
-		HMPresenceEventType PresenceEventType { get;  [NotImplemented] set; }
+		HMPresenceEventType PresenceEventType { get; [NotImplemented] set; }
 
 		[Export ("presenceUserType")]
-		HMPresenceEventUserType PresenceUserType { get;  [NotImplemented] set; }
+		HMPresenceEventUserType PresenceUserType { get; [NotImplemented] set; }
 
-		[MacCatalyst (14,0)]
+		[MacCatalyst (14, 0)]
 		[Field ("HMPresenceKeyPath")]
 		NSString KeyPath { get; }
 	}
 
-	[Watch (4,0), TV (11,0), iOS (11,0), MacCatalyst (14,0)]
-	[BaseType (typeof(HMPresenceEvent))]
+	[Watch (4, 0), TV (11, 0), iOS (11, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (HMPresenceEvent))]
 	[DisableDefaultCtor]
 	interface HMMutablePresenceEvent {
 
@@ -1876,8 +2004,8 @@ namespace HomeKit {
 		HMPresenceEventUserType PresenceUserType { get; /* Radar 33883958: https://trello.com/c/TIlzWzrL*/ [NotImplemented] set; }
 	}
 
-	[Watch (4,0), TV (11,0), iOS (11,0), MacCatalyst (14,0)]
-	[BaseType (typeof(HMTimeEvent))]
+	[Watch (4, 0), TV (11, 0), iOS (11, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (HMTimeEvent))]
 	[DisableDefaultCtor]
 	interface HMSignificantTimeEvent : NSMutableCopying {
 
@@ -1904,8 +2032,8 @@ namespace HomeKit {
 		NSDateComponents Offset { get; [NotImplemented] set; }
 	}
 
-	[Watch (4,0), TV (11,0), iOS (11,0), MacCatalyst (14,0)]
-	[BaseType (typeof(HMSignificantTimeEvent))]
+	[Watch (4, 0), TV (11, 0), iOS (11, 0), MacCatalyst (14, 0)]
+	[BaseType (typeof (HMSignificantTimeEvent))]
 	interface HMMutableSignificantTimeEvent {
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -1935,14 +2063,14 @@ namespace HomeKit {
 		NSDateComponents Offset { get; set; }
 	}
 
-	[Watch (4,2), TV (11,2), iOS (11,2), MacCatalyst (14,0)]
+	[Watch (4, 2), TV (11, 2), iOS (11, 2), MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface HMAccessControl {
 
 	}
 
-	[NoWatch, NoTV, NoMacCatalyst, NoMac, iOS (15,4)]
+	[NoWatch, NoTV, NoMacCatalyst, NoMac, iOS (15, 4)]
 	[BaseType (typeof (NSObject))]
 	interface HMAccessorySetupRequest : NSCopying {
 
@@ -1959,7 +2087,7 @@ namespace HomeKit {
 		string SuggestedAccessoryName { get; set; }
 	}
 
-	[NoWatch, NoTV, NoMacCatalyst, NoMac, iOS (15,4)]
+	[NoWatch, NoTV, NoMacCatalyst, NoMac, iOS (15, 4)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface HMAccessorySetupResult : NSCopying {
@@ -1971,11 +2099,11 @@ namespace HomeKit {
 		NSUuid [] AccessoryUniqueIdentifiers { get; }
 	}
 
-	[iOS (15,2), NoWatch, NoTV, NoMacCatalyst]
+	[iOS (15, 2), NoWatch, NoTV, NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface HMAccessorySetupManager {
 		[Async]
-		[iOS (15,4)]
+		[iOS (15, 4)]
 		[Export ("performAccessorySetupUsingRequest:completionHandler:")]
 		void PerformAccessorySetup (HMAccessorySetupRequest request, Action<HMAccessorySetupResult, NSError> completion);
 	}

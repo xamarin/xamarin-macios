@@ -38,6 +38,9 @@ bin/Debug/mtouchtests.dll: $(mtouchtests_dependencies)
 $(abspath $(TOP)/tools/mtouch/Constants.cs):
 	$(Q) $(MAKE) $(notdir $@) -C $(dir $@)
 
+$(TOP)/tools/common/ProductConstants.cs:
+	$(Q) $(MAKE) -C $(TOP)/tools/mtouch ../common/ProductConstants.cs
+
 build: bin/Debug/mtouchtests.dll
 
 test.config: $(TOP)/Make.config Makefile

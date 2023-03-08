@@ -1,5 +1,7 @@
 // Copyright 2014, Xamarin Inc. All rights reserved,
 
+#nullable enable
+
 #if MTOUCH || MMP || MMP_TEST || MTOUCH_TESTS
 #define BUNDLER
 #endif

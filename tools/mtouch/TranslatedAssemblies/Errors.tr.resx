@@ -751,7 +751,7 @@
 		<value>CoreCLR kullanılırken '{0}' seçeneği '{1}' değerini alamaz.</value>
 	</data>
   <data name="MX0186" xml:space="preserve">
-		<value>Bitcode is enabled, but bitcode is not supported in Xcode 14+ and has been disabled. Please disable bitcode by removing the 'MtouchEnableBitcode' property from the project file.</value>
+		<value>Bitcode etkinleştirildi, ancak bitcode Xcode 14+'ta desteklenmiyor ve devre dışı bırakıldı. Lütfen 'MtouchEnableBitcode' özelliğini proje dosyasından kaldırarak bitcode'ı devre dışı bırakın.</value>
 	</data>
   <data name="MX1009" xml:space="preserve">
 		<value>'{0}' bütünleştirilmiş kodu '{1}' konumuna kopyalanamadı: {2}
@@ -1747,20 +1747,20 @@
 		<value>{0} türünde örnek oluşturulamıyor.</value>
 	</data>
   <data name="MX8042" xml:space="preserve">
-		<value>{0} işlevi çağrılmaya çalışılırken özel durum oluştu: {1}.</value>
+		<value>{0} işlevi çağrılmaya çalışılırken özel durum oluştu: {1}</value>
 		<comment>
 			0: name of function
 			1: exception info
 		</comment>
 	</data>
   <data name="MX8043" xml:space="preserve">
-		<value>An exception occurred while validating the static registrar code for {0}: {1}</value>
+		<value>{0} derlemesinin statik kaydedici kodu doğrulanırken bir özel durum oluştu: {1}</value>
 		<comment>
 			0: name of an assembly
 			1: exception info
 		</comment>
 	</data>
   <data name="MX8044" xml:space="preserve">
-		<value>The assembly {0} has been modified since the app was built, invalidating the generated static registrar code. The MVID for the loaded assembly is {1}, while the MVID for the assembly the generated static registrar code corresponds to is {2}.</value>
+		<value>Derleme {0}, uygulama oluşturulduktan sonra değiştirildi ve bunun sonucunda, oluşturulan statik kaydedici kodu geçersiz kılındı. Yüklenen derlemenin MVID'si {1} iken oluşturulan statik kaydedici kodunun karşılık geldiği derlemenin MVID'si {2}.</value>
 	</data>
 </root>

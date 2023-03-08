@@ -58,7 +58,7 @@ namespace AudioUnit {
 
 	// keys are not constants and had to be found in AudioToolbox.framework/Headers/AudioComponent.h
 #if NET
-	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios11.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("tvos")]
@@ -126,7 +126,7 @@ namespace AudioUnit {
 
 	// keys are not constants and had to be found in AudioToolbox.framework/Headers/AudioComponent.h
 #if NET
-	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios11.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("tvos")]
@@ -390,16 +390,13 @@ namespace AudioUnit {
 #if !MONOMAC
 #if !__MACCATALYST__
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("tvos14.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("tvos14.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
 #else
-		[iOS (7, 0)]
 		[Deprecated (PlatformName.iOS, 14, 0)]
 		[Deprecated (PlatformName.TvOS, 14, 0)]
 #endif
@@ -407,16 +404,13 @@ namespace AudioUnit {
 		static extern IntPtr AudioComponentGetIcon (IntPtr comp, float /* float */ desiredPointSize);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("tvos14.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("tvos14.0", "Use 'CopyIcon' instead.")]
 		[ObsoletedOSPlatform ("ios14.0", "Use 'CopyIcon' instead.")]
 #else
-		[iOS (7, 0)]
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'CopyIcon' instead.")]
 		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'CopyIcon' instead.")]
 #endif
@@ -427,18 +421,14 @@ namespace AudioUnit {
 #endif // !__MACCATALYST__
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("macos")]
 		[ObsoletedOSPlatform ("tvos13.0")]
 		[ObsoletedOSPlatform ("maccatalyst14.0")]
 		[ObsoletedOSPlatform ("ios13.0")]
 #else
-		[iOS (7, 0)]
 		[Deprecated (PlatformName.iOS, 13, 0)]
 		[Deprecated (PlatformName.TvOS, 13, 0)]
 		[MacCatalyst (14, 0)]
@@ -448,18 +438,14 @@ namespace AudioUnit {
 		static extern double AudioComponentGetLastActiveTime (IntPtr comp);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("maccatalyst14.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("macos")]
 		[ObsoletedOSPlatform ("tvos13.0", "Use 'AudioUnit' instead.")]
 		[ObsoletedOSPlatform ("maccatalyst14.0", "Use 'AudioUnit' instead.")]
 		[ObsoletedOSPlatform ("ios13.0", "Use 'AudioUnit' instead.")]
 #else
-		[iOS (7, 0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AudioUnit' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AudioUnit' instead.")]
 		[MacCatalyst (14, 0)]
@@ -473,11 +459,10 @@ namespace AudioUnit {
 #else
 		// extern NSImage * __nullable AudioComponentGetIcon (AudioComponent __nonnull comp) __attribute__((availability(macosx, introduced=10.11)));
 #if NET
-		[SupportedOSPlatform ("macos10.11")]
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
 		[ObsoletedOSPlatform ("macos11.0")]
 #else
 		[Mac (10,11)]
@@ -487,11 +472,10 @@ namespace AudioUnit {
 		static extern IntPtr AudioComponentGetIcon (IntPtr comp);
 
 #if NET
-		[SupportedOSPlatform ("macos10.11")]
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
 		[ObsoletedOSPlatform ("macos11.0")]
 #else
 		[Mac (10,11)]
@@ -600,11 +584,15 @@ namespace AudioUnit {
 #endif
 		public AudioComponentValidationResult Validate (NSDictionary? validationParameters = null) => Validate (validationParameters, out var _);
 
+#if !NET
 		delegate void TrampolineCallback (IntPtr blockPtr, AudioComponentValidationResult result, IntPtr dictionary);
 
 		static unsafe readonly TrampolineCallback static_action = TrampolineAction;
 
 		[MonoPInvokeCallback (typeof (TrampolineCallback))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineAction (IntPtr blockPtr, AudioComponentValidationResult result, IntPtr dictionary)
 		{
 			var del = BlockLiteral.GetTarget<Action<AudioComponentValidationResult, NSDictionary?>> (blockPtr);
@@ -624,7 +612,7 @@ namespace AudioUnit {
 		[iOS (16,0)]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
-		static extern int AudioComponentValidateWithResults (IntPtr /* AudioComponent* */ inComponent, IntPtr /* CFDictionaryRef* */ inValidationParameters, ref BlockLiteral inCompletionHandler);
+		unsafe static extern int AudioComponentValidateWithResults (IntPtr /* AudioComponent* */ inComponent, IntPtr /* CFDictionaryRef* */ inValidationParameters, BlockLiteral* inCompletionHandler);
 
 #if NET
 		[SupportedOSPlatform ("macos13.0")]
@@ -643,12 +631,15 @@ namespace AudioUnit {
 			if (onCompletion is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (onCompletion));
 			
-			var block_handler= new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_action, onCompletion);
-			try {
-				resultCode = AudioComponentValidateWithResults (GetCheckedHandle (), validationParameters.GetHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, AudioComponentValidationResult, IntPtr, void> trampoline = &TrampolineAction;
+				using var block = new BlockLiteral (trampoline, onCompletion, typeof (AudioComponent), nameof (TrampolineAction));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_action, onCompletion);
+#endif
+				resultCode = AudioComponentValidateWithResults (GetCheckedHandle (), validationParameters.GetHandle (), &block);
 			}
 		}
 
@@ -680,7 +671,7 @@ namespace AudioUnit {
 		public void ValidateAsync (Action<AudioComponentValidationResult, NSDictionary?> onCompletion) => ValidateAsync (null, onCompletion, out var _);
 
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
@@ -694,7 +685,7 @@ namespace AudioUnit {
 		static extern int /* OSStatus */ AudioUnitExtensionSetComponentList (IntPtr /* CFString */ extensionIdentifier, /* CFArrayRef */ IntPtr audioComponentInfo);
 
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
@@ -708,7 +699,7 @@ namespace AudioUnit {
 		static extern /* CFArrayRef */ IntPtr AudioUnitExtensionCopyComponentList (IntPtr /* CFString */ extensionIdentifier);
 
 #if NET
-		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]

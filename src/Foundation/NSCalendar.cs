@@ -27,6 +27,7 @@
 //
 //
 using System;
+using System.ComponentModel;
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
@@ -37,10 +38,27 @@ using CoreMedia;
 
 namespace Foundation {
 	public enum NSCalendarType {
-		Gregorian, Buddhist, Chinese, Hebrew, Islamic, IslamicCivil, Japanese, [Obsolete] RepublicOfChina, Persian, Indian, ISO8601,
-		Coptic, EthiopicAmeteAlem, EthiopicAmeteMihret,
+		Gregorian,
+		Buddhist,
+		Chinese,
+		Hebrew,
+		Islamic,
+		IslamicCivil,
+		Japanese,
+		Taiwan,
+#if !XAMCORE_5_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete]
+		RepublicOfChina = Taiwan,
+#endif
+		Persian,
+		Indian,
+		ISO8601,
+		Coptic,
+		EthiopicAmeteAlem,
+		EthiopicAmeteMihret,
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -50,7 +68,7 @@ namespace Foundation {
 #endif
 		IslamicTabular,
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -59,9 +77,6 @@ namespace Foundation {
 		[iOS (8, 0)]
 #endif
 		IslamicUmmAlQura,
-#pragma warning disable 612 // RepublicOfChina is obsolete
-		Taiwan = RepublicOfChina
-#pragma warning restore 612
 	}
 
 	public partial class NSCalendar {

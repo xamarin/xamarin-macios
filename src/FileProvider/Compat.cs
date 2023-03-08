@@ -3,6 +3,8 @@
 using System;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace FileProvider {
 
 #if MONOMAC

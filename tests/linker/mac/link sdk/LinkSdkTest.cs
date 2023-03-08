@@ -3,12 +3,10 @@ using Foundation;
 
 using NUnit.Framework;
 
-namespace LinkSdkTests
-{
+namespace LinkSdkTests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class LinkSdkTest
-	{
+	public class LinkSdkTest {
 		static void Check (string calendarName, bool present)
 		{
 			var type = Type.GetType ("System.Globalization." + calendarName);

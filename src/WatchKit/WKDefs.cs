@@ -110,7 +110,7 @@ namespace WatchKit {
 		Failed
 	}
 
-	[Watch (2, 0), NoiOS]
+	[NoiOS]
 	[Native]
 	public enum WKAudioRecorderPreset : long {
 		NarrowBandSpeech,
@@ -126,7 +126,7 @@ namespace WatchKit {
 		Destructive
 	}
 
-	[Watch (2, 0), NoiOS]
+	[NoiOS]
 	[Native]
 	public enum WKAlertControllerStyle : long {
 		Alert,
@@ -134,7 +134,7 @@ namespace WatchKit {
 		ActionSheet
 	}
 
-	[Watch (2, 0), NoiOS]
+	[NoiOS]
 	[Native]
 	public enum WKVideoGravity : long {
 		Aspect,

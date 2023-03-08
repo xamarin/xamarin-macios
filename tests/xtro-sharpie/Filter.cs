@@ -37,7 +37,6 @@ namespace Extrospection {
 			case "HIToolbox":
 			case "Hypervisor":
 			case "ICADevices":
-			case "ImageCaptureCore":
 			case "ImageCapture":
 			case "IMServicePlugIn":
 			case "Ink":

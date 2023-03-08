@@ -6,8 +6,8 @@ using Foundation;
 
 namespace AppClip {
 
-	[iOS (14,0)]
-	[MacCatalyst (14,0)]
+	[iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[ErrorDomain ("APActivationPayloadErrorDomain")]
 	[Native]
 	public enum APActivationPayloadErrorCode : long {
@@ -15,8 +15,8 @@ namespace AppClip {
 		DoesNotMatch = 2,
 	}
 
-	[iOS (14,0)]
-	[MacCatalyst (14,0)]
+	[iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface APActivationPayload : NSSecureCoding, NSCopying {

@@ -57,7 +57,9 @@ namespace CoreGraphics {
 
 	// untyped enum -> CGContext.h
 	[Deprecated (PlatformName.iOS, 7, 0)]
+	[Deprecated (PlatformName.TvOS, 9, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 9)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	public enum CGTextEncoding {
 		FontSpecific,
 		MacRoman,
@@ -107,6 +109,7 @@ namespace CoreGraphics {
 
 	[Mac (10, 15)]
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CGPdfTagType /* int32_t */ {
 		Document = 100,
 		Part,
@@ -173,6 +176,7 @@ namespace CoreGraphics {
 	};
 
 	[iOS (11, 0), Mac (10, 13)]
+	[MacCatalyst (13, 1)]
 	public enum CGPDFAccessPermissions : uint {
 		AllowsLowQualityPrinting = (1 << 0),
 		AllowsHighQualityPrinting = (1 << 1),
@@ -205,6 +209,7 @@ namespace CoreGraphics {
 	[TV (10, 0)]
 	[Watch (3, 0)]
 	[Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	public enum CGColorConversionInfoTransformType : uint {
 		FromSpace = 0,
 		ToSpace,

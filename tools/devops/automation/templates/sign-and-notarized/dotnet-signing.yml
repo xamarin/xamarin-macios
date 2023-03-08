@@ -15,6 +15,10 @@ parameters:
   type: string
   default: HEAD
 
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
 jobs:
 - job: configure
   displayName: 'Configure build'
@@ -45,10 +49,15 @@ jobs:
       repositoryAlias: ${{ parameters.repositoryAlias }}
       commit: ${{ parameters.commit }}
 
+  - bash: |
+      sudo rm -Rf $(Build.SourcesDirectory)/package
+    displayName: "Remove artifacts"
+    condition: always()
+
   - task: DownloadPipelineArtifact@2
     displayName: Download not notarized build
     inputs:
-      artifact: 'not-signed-package'
+      artifact: '${{ parameters.uploadPrefix }}not-signed-package'
       patterns: '!*.pkg'
       allowFailedBuilds: true
       path: $(Build.SourcesDirectory)/package
@@ -127,16 +136,10 @@ jobs:
     displayName: 'Sign bundle.zip'
     workingDirectory: $(Build.ArtifactStagingDirectory)
 
-  - template: publish-nugets.yml
-    parameters:
-      isPR: ${{ parameters.isPR }}
-      repositoryAlias: ${{ parameters.repositoryAlias }}
-      commit: ${{ parameters.commit }}
-
   # always upload no matter what, since if we are not signing we need the artifact in the pipeline
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Notarized Dotnet Artifacts'
     inputs:
       targetPath: $(Build.SourcesDirectory)/package
-      artifactName: dotnet-signed
+      artifactName: '${{ parameters.uploadPrefix }}dotnet-signed'
     continueOnError: true

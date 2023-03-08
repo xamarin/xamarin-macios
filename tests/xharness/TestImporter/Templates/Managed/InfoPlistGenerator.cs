@@ -8,8 +8,9 @@ namespace Xharness.TestImporter.Templates.Managed {
 		public static readonly string ApplicationNameReplacement = "%APPLICATION NAME%";
 		public static readonly string IndentifierReplacement = "%BUNDLE INDENTIFIER%";
 		public static readonly string WatchAppIndentifierReplacement = "%WATCHAPP INDENTIFIER%";
+		public static readonly string MinOSVersionReplacement = "%MINOSVERSION%";
 
-		public static string GenerateCode (string template, string projectName)
+		public static string GenerateCode (Platform platform, string template, string projectName)
 		{
 			if (template == null)
 				throw new ArgumentNullException (nameof (template));
@@ -20,6 +21,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 			result = result.Replace (ApplicationNameReplacement, projectName);
 			result = result.Replace (IndentifierReplacement, $"com.xamarin.bcltests.{projectName}");
 			result = result.Replace (WatchAppIndentifierReplacement, $"com.xamarin.bcltests.{projectName}.container");
+			result = result.Replace (MinOSVersionReplacement, platform.GetMinOSVersion ());
 			return result;
 		}
 	}

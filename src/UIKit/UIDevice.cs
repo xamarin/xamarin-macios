@@ -12,6 +12,11 @@ namespace UIKit {
 #endif
 	partial class UIDevice {
 
+#if NET
+		[SupportedOSPlatformGuard ("ios")]
+		[SupportedOSPlatformGuard ("tvos")]
+		[SupportedOSPlatformGuard ("maccatalyst")]
+#endif
 		public bool CheckSystemVersion (int major, int minor)
 		{
 #if WATCH

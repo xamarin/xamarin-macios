@@ -1148,13 +1148,13 @@
         <value>Unbekannte Eigenschaft „{0}“ mit dem Wert „{1}“.</value>
     </data>
   <data name="E7102" xml:space="preserve">
-        <value>Invalid value '{0}' for the entitlement '{1}' of type '{2}' specified in the CustomEntitlements item group. Expected no value at all.</value>
+        <value>Ungültiger Wert „{0}“ für die Berechtigung „{1}“ vom Typ „{2}“, die in der CustomEntitlements-Elementgruppe angegeben ist. Es wurde überhaupt kein Wert erwartet.</value>
         <comment>
             Don't translate: CustomEntitlements (name of option in project file)
         </comment>
     </data>
   <data name="E7103" xml:space="preserve">
-        <value>Invalid value '{0}' for the entitlement '{1}' of type '{2}' specified in the CustomEntitlements item group. Expected 'true' or 'false'.</value>
+        <value>Ungültiger Wert „{0}“ für die Berechtigung „{1}“ vom Typ „{2}“, die in der CustomEntitlements-Elementgruppe angegeben ist. Es wurde „true“ oder „false“ erwartet.</value>
         <comment>
             Don't translate:
                 * CustomEntitlements (name of option in project file)
@@ -1162,7 +1162,7 @@
         </comment>
     </data>
   <data name="E7104" xml:space="preserve">
-        <value>Unknown type '{0}' for the entitlement '{1}' specified in the CustomEntitlements item group. Expected 'Remove', 'Boolean', 'String', or 'StringArray'.</value>
+        <value>Unbekannter Typ „{0}“ für die Berechtigung „{1}“, die in der CustomEntitlements-Elementgruppe angegeben ist. „Remove“, „Boolean“, „String“ oder „StringArray“ wurden erwartet.</value>
         <comment>
             Don't translate:
                 * CustomEntitlements (name of option in project file)
@@ -1170,7 +1170,7 @@
         </comment>
     </data>
   <data name="W7105" xml:space="preserve">
-        <value>Unexpected extension '{0}' for native reference '{1}' in manifest '{2}'.</value>
+        <value>Unerwartete Erweiterung "{0}" für systemeigenen Verweis "{1}" im Manifest "{2}".</value>
         <comment>
             {0}: file extension
             {1}: path to a file

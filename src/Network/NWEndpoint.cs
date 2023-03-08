@@ -27,7 +27,7 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos12.0")]
-	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -51,7 +51,7 @@ namespace Network {
 		public NWEndpointType Type => nw_endpoint_get_type (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
-		extern static OS_nw_endpoint nw_endpoint_create_host (string hostname, string port);
+		extern static OS_nw_endpoint nw_endpoint_create_host (IntPtr hostname, IntPtr port);
 
 		public static NWEndpoint? Create (string hostname, string port)
 		{
@@ -59,7 +59,9 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (hostname));
 			if (port is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (port));
-			var handle = nw_endpoint_create_host (hostname, port);
+			using var hostnamePtr = new TransientString (hostname);
+			using var portPtr = new TransientString (port);
+			var handle = nw_endpoint_create_host (hostnamePtr, portPtr);
 			if (handle == IntPtr.Zero)
 				return null;
 			return new NWEndpoint (handle, owns: true);
@@ -70,8 +72,14 @@ namespace Network {
 
 		public string? Hostname => Marshal.PtrToStringAnsi (nw_endpoint_get_hostname (GetCheckedHandle ()));
 
-		[DllImport (Constants.NetworkLibrary)]
-		static extern string nw_endpoint_copy_port_string (OS_nw_endpoint endpoint);
+		[DllImport (Constants.NetworkLibrary, EntryPoint = "nw_endpoint_copy_port_string")]
+		static extern IntPtr nw_endpoint_copy_port_string_ptr (OS_nw_endpoint endpoint);
+
+		static string nw_endpoint_copy_port_string (OS_nw_endpoint endpoint)
+		{
+			var ptr = nw_endpoint_copy_port_string_ptr (endpoint);
+			return TransientString.ToStringAndFree (ptr)!;
+		}
 
 		public string Port => nw_endpoint_copy_port_string (GetCheckedHandle ());
 
@@ -87,8 +95,14 @@ namespace Network {
 		// address family would have to be mapped, and it does not look like a very useful
 		// type to begin with.
 
-		[DllImport (Constants.NetworkLibrary)]
-		static extern string nw_endpoint_copy_address_string (OS_nw_endpoint endpoint);
+		[DllImport (Constants.NetworkLibrary, EntryPoint = "nw_endpoint_copy_address_string")]
+		static extern IntPtr nw_endpoint_copy_address_string_ptr (OS_nw_endpoint endpoint);
+
+		static string nw_endpoint_copy_address_string (OS_nw_endpoint endpoint)
+		{
+			var ptr = nw_endpoint_copy_address_string_ptr (endpoint);
+			return TransientString.ToStringAndFree (ptr)!;
+		}
 
 		public string Address => nw_endpoint_copy_address_string (GetCheckedHandle ());
 
@@ -100,13 +114,16 @@ namespace Network {
 
 		// TODO: same
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe OS_nw_endpoint nw_endpoint_create_bonjour_service (string name, string type, string domain);
+		static extern unsafe OS_nw_endpoint nw_endpoint_create_bonjour_service (IntPtr name, IntPtr type, IntPtr domain);
 
 		public static NWEndpoint? CreateBonjourService (string name, string serviceType, string domain)
 		{
 			if (serviceType is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (serviceType));
-			var x = nw_endpoint_create_bonjour_service (name, serviceType, domain);
+			using var namePtr = new TransientString (name);
+			using var serviceTypePtr = new TransientString (serviceType);
+			using var domainPtr = new TransientString (domain);
+			var x = nw_endpoint_create_bonjour_service (namePtr, serviceTypePtr, domainPtr);
 			if (x == IntPtr.Zero)
 				return null;
 			return new NWEndpoint (x, owns: true);
@@ -138,7 +155,7 @@ namespace Network {
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-		static extern OS_nw_endpoint nw_endpoint_create_url (string url);
+		static extern OS_nw_endpoint nw_endpoint_create_url (IntPtr url);
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
@@ -154,7 +171,8 @@ namespace Network {
 		{
 			if (url is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
-			var handle = nw_endpoint_create_url (url);
+			using var urlPtr = new TransientString (url);
+			var handle = nw_endpoint_create_url (urlPtr);
 			if (handle == IntPtr.Zero)
 				return null;
 			return new NWEndpoint (handle, owns: true);

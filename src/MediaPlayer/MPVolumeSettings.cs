@@ -22,7 +22,6 @@ namespace MediaPlayer {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("ios11.3")]
 		[ObsoletedOSPlatform ("ios11.3", "Use 'MPVolumeView' to present volume controls.")]
 #else
 		[Deprecated (PlatformName.iOS, 11, 3, message: "Use 'MPVolumeView' to present volume controls.")]
@@ -33,7 +32,6 @@ namespace MediaPlayer {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("ios11.3")]
 		[ObsoletedOSPlatform ("ios11.3", "Use 'MPVolumeView' to present volume controls.")]
 #else
 		[Deprecated (PlatformName.iOS, 11, 3, message: "Use 'MPVolumeView' to present volume controls.")]
@@ -45,7 +43,6 @@ namespace MediaPlayer {
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("ios11.3")]
 		[ObsoletedOSPlatform ("ios11.3", "Use 'MPVolumeView' to present volume controls.")]
 #else
 		[Deprecated (PlatformName.iOS, 11, 3, message: "Use 'MPVolumeView' to present volume controls.")]

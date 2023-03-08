@@ -8,9 +8,9 @@ using AppKit;
 using Foundation;
 
 namespace Xamarin.Mac.Linker.Test {
-	
+
 	public static class Test {
-		
+
 		static TextWriter log;
 
 		public static TextWriter Log {
@@ -26,7 +26,7 @@ namespace Xamarin.Mac.Linker.Test {
 				return log;
 			}
 		}
-		
+
 		static string linker_removed_type = "CoreImage.CIColor, Xamarin.Mac";
 
 		public static void EnsureLinker (bool enabled)
@@ -36,7 +36,7 @@ namespace Xamarin.Mac.Linker.Test {
 				Log.WriteLine ("[FAIL]\tThe linker was {0}enabled on this build", enabled ? "not " : String.Empty);
 			}
 		}
-		
+
 		public static void Terminate ()
 		{
 			Log.Flush ();

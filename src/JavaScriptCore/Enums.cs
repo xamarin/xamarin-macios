@@ -21,6 +21,7 @@ namespace JavaScriptCore {
 		Object,
 		[iOS (13, 0)]
 		[Mac (10, 15)]
+		[MacCatalyst (13, 1)]
 		Symbol,
 	}
 

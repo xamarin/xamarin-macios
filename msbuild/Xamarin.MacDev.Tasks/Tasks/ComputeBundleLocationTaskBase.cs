@@ -91,7 +91,7 @@ namespace Xamarin.MacDev.Tasks {
 			var list = ResolvedFileToPublish.ToList ();
 			foreach (var item in list.ToArray ()) { // iterate over a copy of the list, because we might modify the original list
 													// Compute the publish folder type if it's not specified
-				var publishFolderType = ParsePublishFolderType (item);
+				var publishFolderType = item.GetPublishFolderType ();
 				if (publishFolderType == PublishFolderType.Unset) {
 					publishFolderType = ComputePublishFolderType (list, item);
 					item.SetMetadata ("PublishFolderType", publishFolderType.ToString ());
@@ -133,6 +133,9 @@ namespace Xamarin.MacDev.Tasks {
 				case PublishFolderType.RootDirectory:
 					break;
 				case PublishFolderType.DynamicLibrary:
+					relativePath = AssemblyDirectory;
+					break;
+				case PublishFolderType.PluginLibrary:
 					relativePath = AssemblyDirectory;
 					break;
 				case PublishFolderType.StaticLibrary:
@@ -320,11 +323,13 @@ namespace Xamarin.MacDev.Tasks {
 					return PublishFolderType.CompressedAppleFramework;
 			}
 
-			// *.a and *.dylib
+			// *.a, *.dylib and *.so
 			if (filename.EndsWith (".a", StringComparison.OrdinalIgnoreCase)) {
 				return PublishFolderType.StaticLibrary;
 			} else if (filename.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase)) {
 				return PublishFolderType.DynamicLibrary;
+			} else if (filename.EndsWith (".so", StringComparison.OrdinalIgnoreCase)) {
+				return PublishFolderType.PluginLibrary;
 			}
 
 			// no other files are copied
@@ -332,39 +337,6 @@ namespace Xamarin.MacDev.Tasks {
 			Log.LogWarning (MSBStrings.E7089 /* The file '{0}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle. */, item.ItemSpec);
 
 			return PublishFolderType.None;
-		}
-
-		static PublishFolderType ParsePublishFolderType (ITaskItem item)
-		{
-			return ParsePublishFolderType (item.GetMetadata ("PublishFolderType"));
-		}
-
-		static PublishFolderType ParsePublishFolderType (string value)
-		{
-			if (string.IsNullOrEmpty (value))
-				return PublishFolderType.Unset;
-
-			if (!Enum.TryParse<PublishFolderType> (value, out var result))
-				result = PublishFolderType.Unknown;
-
-			return result;
-		}
-
-		enum PublishFolderType {
-			Unset,
-			None,
-			RootDirectory,
-			Assembly,
-			Resource,
-			AppleBindingResourcePackage,
-			CompressedAppleBindingResourcePackage,
-			AppleFramework,
-			CompressedAppleFramework,
-			PlugIns,
-			CompressedPlugIns,
-			DynamicLibrary, // link with + copy to app bundle
-			StaticLibrary, // link with (but not copy to app bundle)
-			Unknown,
 		}
 	}
 }

@@ -257,7 +257,7 @@ namespace CoreServices {
 			/* CFHTTPAuthenticationRef */ IntPtr auth, /* CFString */ IntPtr username, /* CFString */ IntPtr password,
 			/* CFStreamError* */ out CFStreamError error);
 
-		public void ApplyCredentials (CFHTTPAuthentication auth, NetworkCredential credential)
+		public void ApplyCredentials (CFHTTPAuthentication? auth, NetworkCredential credential)
 		{
 			if (auth is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (auth));
@@ -289,18 +289,15 @@ namespace CoreServices {
 			NTLM,
 			Digest,
 #if NET
-			[SupportedOSPlatform ("macos10.9")]
-			[SupportedOSPlatform ("ios7.0")]
-			[UnsupportedOSPlatform ("tvos12.0")]
-			[UnsupportedOSPlatform ("macos10.14")]
-			[UnsupportedOSPlatform ("ios12.0")]
+			[SupportedOSPlatform ("macos")]
+			[SupportedOSPlatform ("ios")]
+			[SupportedOSPlatform ("tvos")]
 			[UnsupportedOSPlatform ("maccatalyst")]
 			[ObsoletedOSPlatform ("tvos12.0", "Not available anymore.")]
 			[ObsoletedOSPlatform ("macos10.14", "Not available anymore.")]
 			[ObsoletedOSPlatform ("ios12.0", "Not available anymore.")]
 #else
 			[Mac (10, 9)]
-			[iOS (7, 0)]
 			[Deprecated (PlatformName.iOS, 12, 0, message: "Not available anymore.")]
 			[Deprecated (PlatformName.TvOS, 12, 0, message: "Not available anymore.")]
 			[Deprecated (PlatformName.MacOSX, 10, 14, message: "Not available anymore.")]

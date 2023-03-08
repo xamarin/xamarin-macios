@@ -751,7 +751,7 @@
 		<value>Opcja "{0}" nie może przyjmować wartości "{1}" podczas korzystania z repozytorium CoreCLR.</value>
 	</data>
   <data name="MX0186" xml:space="preserve">
-		<value>Bitcode is enabled, but bitcode is not supported in Xcode 14+ and has been disabled. Please disable bitcode by removing the 'MtouchEnableBitcode' property from the project file.</value>
+		<value>Kod bitowy jest włączony, ale kod bitowy nie jest obsługiwany w środowisku Xcode 14+ i został wyłączony. Wyłącz kod bitowy, usuwając właściwość „MtouchEnableBitcode” z pliku projektu.</value>
 	</data>
   <data name="MX1009" xml:space="preserve">
 		<value>Nie można skopiować zestawu „{0}” do lokalizacji „{1}”: {2}
@@ -1747,20 +1747,20 @@
 		<value>Nie można utworzyć wystąpienia typu {0}.</value>
 	</data>
   <data name="MX8042" xml:space="preserve">
-		<value>Wystąpił wyjątek podczas próby wywołania funkcji {0}: {1}.</value>
+		<value>Wystąpił wyjątek podczas próby wywołania funkcji {0}: {1}</value>
 		<comment>
 			0: name of function
 			1: exception info
 		</comment>
 	</data>
   <data name="MX8043" xml:space="preserve">
-		<value>An exception occurred while validating the static registrar code for {0}: {1}</value>
+		<value>Wystąpił wyjątek podczas weryfikowania kodu rejestratora statycznego dla {0}: {1}</value>
 		<comment>
 			0: name of an assembly
 			1: exception info
 		</comment>
 	</data>
   <data name="MX8044" xml:space="preserve">
-		<value>The assembly {0} has been modified since the app was built, invalidating the generated static registrar code. The MVID for the loaded assembly is {1}, while the MVID for the assembly the generated static registrar code corresponds to is {2}.</value>
+		<value>Zestaw {0} został zmodyfikowany od czasu utworzenia aplikacji, unieważniając wygenerowany kod rejestratora statycznego. MVID dla załadowanego zestawu jest {1}, a MVID dla zestawu, któremu odpowiada wygenerowany kod statycznego rejestratora, to {2}.</value>
 	</data>
 </root>

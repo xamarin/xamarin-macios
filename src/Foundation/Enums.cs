@@ -3,8 +3,8 @@ using ObjCRuntime;
 
 namespace Foundation {
 
+#if !XAMCORE_5_0
 	// Utility enum, ObjC uses NSString
-	[iOS (7, 0)]
 	public enum NSDocumentType {
 		Unknown = -1,
 		PlainText,
@@ -24,10 +24,9 @@ namespace Foundation {
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		OpenDocument,
 	}
+#endif // !XAMCORE_5_0
 
 	// Utility enum, ObjC uses NSString
-	[NoMac]
-	[iOS (7, 0)]
 	public enum NSDocumentViewMode {
 		Normal,
 		PageLayout
@@ -63,7 +62,7 @@ namespace Foundation {
 	}
 
 	[Mac (10, 9)]
-	[iOS (7, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NSItemDownloadingStatus {
 		[Field (null)]
 		Unknown = -1,
@@ -80,6 +79,7 @@ namespace Foundation {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	public enum NSStringTransform {
 		[Field ("NSStringTransformLatinToKatakana")]
 		LatinToKatakana,
@@ -131,6 +131,7 @@ namespace Foundation {
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSUrlSessionMultipathServiceType : long {
 		None = 0,

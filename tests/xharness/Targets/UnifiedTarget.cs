@@ -59,10 +59,7 @@ namespace Xharness.Targets {
 
 		public override string DeviceArchitectures {
 			get {
-				if (SupportsBitcode)
-					return "ARM64";
-				else
-					return "ARMv7, ARM64";
+				return "ARMv7, ARM64";
 			}
 		}
 
@@ -114,12 +111,6 @@ namespace Xharness.Targets {
 		public override string ProjectFileSuffix {
 			get {
 				return string.Empty;
-			}
-		}
-
-		protected override bool SupportsBitcode {
-			get {
-				return true;
 			}
 		}
 

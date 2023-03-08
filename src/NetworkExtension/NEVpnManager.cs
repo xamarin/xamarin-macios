@@ -19,7 +19,7 @@ namespace NetworkExtension {
 	public partial class NEVpnManager {
 
 #if NET
-		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]

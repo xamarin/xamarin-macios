@@ -9,12 +9,17 @@ using NativeHandle = System.IntPtr;
 
 namespace LocalAuthentication {
 
-	[Mac (10,13,2)][iOS (11,0)][NoWatch][NoTV]
+	[Mac (10, 13, 2)]
+	[iOS (11, 0)]
+	[NoWatch]
+	[NoTV]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum LABiometryType : long {
 		None,
 		TouchId,
-		[Mac (10,15)]
+		[Mac (10, 15)]
+		[MacCatalyst (13, 1)]
 		FaceId,
 #if !NET
 		[NoMac]
@@ -23,19 +28,22 @@ namespace LocalAuthentication {
 #endif
 	}
 
-	[iOS (8,0), Mac (10,10)]
+	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	delegate void LAContextReplyHandler (bool success, NSError error);
 
-	[iOS (8,0), Mac (10,10), NoTV] // ".objc_class_name_LAContext", referenced from: '' not found
+	[iOS (8, 0), Mac (10, 10), NoTV] // ".objc_class_name_LAContext", referenced from: '' not found
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface LAContext {
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("localizedFallbackTitle")]
 		string LocalizedFallbackTitle { get; set; }
 
 #if !NET
-		[iOS (8,3), NoTV]
+		[iOS (8, 3), NoTV]
 		[Field ("LAErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif
@@ -47,66 +55,85 @@ namespace LocalAuthentication {
 		[Export ("evaluatePolicy:localizedReason:reply:")]
 		void EvaluatePolicy (LAPolicy policy, string localizedReason, LAContextReplyHandler reply);
 
-		[iOS (9,0), Mac(10,11)]
+		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("invalidate")]
 		void Invalidate ();
 
-		[iOS (9,0), Mac(10,11)]
+		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("setCredential:type:")]
 		bool SetCredentialType ([NullAllowed] NSData credential, LACredentialType type);
 
-		
-		[iOS (9,0), Mac(10,11)]
+
+		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("isCredentialSet:")]
 		bool IsCredentialSet (LACredentialType type);
 
-		
-		[iOS (9,0), Mac(10,11)]
+
+		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("evaluateAccessControl:operation:localizedReason:reply:")]
-		void EvaluateAccessControl (SecAccessControl accessControl, LAAccessControlOperation operation, string localizedReason, Action<bool,NSError> reply);
-		
-		
-		[iOS (9,0), Mac(10,11)]
+		void EvaluateAccessControl (SecAccessControl accessControl, LAAccessControlOperation operation, string localizedReason, Action<bool, NSError> reply);
+
+
+		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("evaluatedPolicyDomainState")]
 		[NullAllowed]
 		NSData EvaluatedPolicyDomainState { get; }
 
-		[iOS (10,0)][Mac (10,12)][NoWatch]
+		[iOS (10, 0)]
+		[Mac (10, 12)]
+		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("localizedCancelTitle")]
 		string LocalizedCancelTitle { get; set; }
 
-		[iOS (9,0)][Mac (10,12,4)][NoWatch]
+		[iOS (9, 0)]
+		[Mac (10, 12, 4)]
+		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Field ("LATouchIDAuthenticationMaximumAllowableReuseDuration")]
 		double /* NSTimeInterval */ TouchIdAuthenticationMaximumAllowableReuseDuration { get; }
 
-		[iOS (9,0)][Mac (10,12,4)]
+		[iOS (9, 0)]
+		[Mac (10, 12, 4)]
+		[MacCatalyst (13, 1)]
 		[Export ("touchIDAuthenticationAllowableReuseDuration")]
 		double /* NSTimeInterval */ TouchIdAuthenticationAllowableReuseDuration { get; set; }
 
 		[iOS (8, 3), Deprecated (PlatformName.iOS, 9, 0)]
 		[Mac (10, 10, 3), Deprecated (PlatformName.MacOSX, 10, 11)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[NullAllowed]
 		[Export ("maxBiometryFailures")]
 		NSNumber MaxBiometryFailures { get; set; }
 
 		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("localizedReason")]
 		string LocalizedReason { get; set; }
 
-		[Watch (9,0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[Watch (9, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("interactionNotAllowed")]
 		bool InteractionNotAllowed { get; set; }
 
-		[Mac (10,13,2)][iOS (11,0)][NoWatch]
+		[Mac (10, 13, 2)]
+		[iOS (11, 0)]
+		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("biometryType")]
 		LABiometryType BiometryType { get; }
 	}
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
 	[BaseType (typeof (LARight))]
 	[DisableDefaultCtor]
-	interface LAPersistedRight
-	{
+	interface LAPersistedRight {
 		[Export ("key")]
 		LAPrivateKey Key { get; }
 
@@ -116,11 +143,10 @@ namespace LocalAuthentication {
 
 	delegate void LAPrivateKeyCompletionHandler ([NullAllowed] NSData data, [NullAllowed] NSError error);
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface LAPrivateKey
-	{
+	interface LAPrivateKey {
 		[Export ("publicKey")]
 		LAPublicKey PublicKey { get; }
 
@@ -149,11 +175,10 @@ namespace LocalAuthentication {
 	delegate void LAPublicKeyCompletionHandler ([NullAllowed] NSData data, [NullAllowed] NSError error);
 	delegate void LAPublicKeyVerifyDataCompletionHandler ([NullAllowed] NSError error);
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface LAPublicKey
-	{
+	interface LAPublicKey {
 		[Async]
 		[Export ("exportBytesWithCompletion:")]
 		void ExportBytes (LAPublicKeyCompletionHandler handler);
@@ -173,10 +198,9 @@ namespace LocalAuthentication {
 		bool CanVerify (SecKeyAlgorithm algorithm);
 	}
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
-	interface LAAuthenticationRequirement
-	{
+	interface LAAuthenticationRequirement {
 		[Static]
 		[Export ("defaultRequirement")]
 		LAAuthenticationRequirement DefaultRequirement { get; }
@@ -194,10 +218,9 @@ namespace LocalAuthentication {
 		LAAuthenticationRequirement GetBiometryRequirement (LABiometryFallbackRequirement fallback);
 	}
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
-	interface LABiometryFallbackRequirement
-	{
+	interface LABiometryFallbackRequirement {
 		[Static]
 		[Export ("defaultRequirement")]
 		LABiometryFallbackRequirement DefaultRequirement { get; }
@@ -209,10 +232,9 @@ namespace LocalAuthentication {
 
 	delegate void LARightAuthorizeCompletionHandler ([NullAllowed] NSError error);
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
-	interface LARight
-	{
+	interface LARight {
 		[Export ("state")]
 		LARightState State { get; }
 
@@ -238,11 +260,10 @@ namespace LocalAuthentication {
 	delegate void LARightStoreCompletionHandler ([NullAllowed] LAPersistedRight right, [NullAllowed] NSError error);
 	delegate void LARightStoreRemoveRightCompletionHandler ([NullAllowed] NSError error);
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
-	[BaseType (typeof(NSObject))]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface LARightStore
-	{
+	interface LARightStore {
 		[Static]
 		[Export ("sharedStore")]
 		LARightStore SharedStore { get; }
@@ -274,11 +295,10 @@ namespace LocalAuthentication {
 
 	delegate void LASecretCompletionHandler ([NullAllowed] NSData data, [NullAllowed] NSError error);
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface LASecret
-	{
+	interface LASecret {
 		[Async]
 		[Export ("loadDataWithCompletion:")]
 		void LoadData (LASecretCompletionHandler handler);

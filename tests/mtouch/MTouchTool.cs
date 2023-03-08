@@ -10,18 +10,15 @@ using Xamarin.Utils;
 
 using NUnit.Framework;
 
-namespace Xamarin
-{
-	public enum MTouchAction
-	{
+namespace Xamarin {
+	public enum MTouchAction {
 		None,
 		BuildDev,
 		BuildSim,
 		LaunchSim,
 	}
 
-	public enum MTouchSymbolMode
-	{
+	public enum MTouchSymbolMode {
 		Unspecified,
 		Default,
 		Linker,
@@ -29,16 +26,14 @@ namespace Xamarin
 		Ignore,
 	}
 
-	public enum MTouchBitcode
-	{
+	public enum MTouchBitcode {
 		Unspecified,
 		ASMOnly,
 		Full, // LLVMOnly
 		Marker,
 	}
 
-	class MTouchTool : BundlerTool, IDisposable
-	{
+	class MTouchTool : BundlerTool, IDisposable {
 #pragma warning disable 649
 		// These map directly to mtouch options
 		public MTouchAction? Action; // --sim, --dev, --launchsim, etc
@@ -79,8 +74,7 @@ namespace Xamarin
 			Profile = Profile.iOS;
 		}
 
-		public class DeviceInfo
-		{
+		public class DeviceInfo {
 			public string UDID;
 			public string Name;
 			public string CompanionIdentifier;
@@ -225,7 +219,7 @@ namespace Xamarin
 			Assert.IsEmpty (failed, message);
 		}
 
-		protected override string GetDefaultAbi()
+		protected override string GetDefaultAbi ()
 		{
 			var isDevice = false;
 
@@ -363,7 +357,7 @@ namespace Xamarin
 
 			if (!string.IsNullOrEmpty (LLVMOptimizations))
 				sb.Add ($"--llvm-opt={LLVMOptimizations}");
-			
+
 			if (Bitcode != MTouchBitcode.Unspecified)
 				sb.Add ($"--bitcode:{Bitcode.ToString ().ToLower ()}");
 
@@ -561,7 +555,7 @@ namespace Xamarin
 				File.WriteAllText (Path.Combine (testDir, appName + ".cs"), CreateCode (code, usings, extraCode));
 				if (hasPlist)
 					File.WriteAllText (Path.Combine (testDir, "Info.plist"), CreatePlist (Profile, appName));
-			} else { 
+			} else {
 				AppPath = app;
 				RootAssembly = CompileTestAppExecutable (testDir, code, extraArgs, Profile, appName, extraCode, usings);
 
@@ -597,7 +591,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 			Extension = true;
 			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile, extraArgs: extraArgs, appName: appName);
 
-			var info_plist = 
+			var info_plist = string.Format (
 @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
 <plist version=""1.0"">
@@ -619,7 +613,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>MinimumOSVersion</key>
-	<string>10.0</string>
+	<string>{0}</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionPointIdentifier</key>
@@ -629,7 +623,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 	</dict>
 </dict>
 </plist>
-";
+", SdkVersions.MiniOS);
 			var plist_path = Path.Combine (app, "Info.plist");
 			if (!File.Exists (plist_path) || File.ReadAllText (plist_path) != info_plist)
 				File.WriteAllText (plist_path, info_plist);
@@ -675,6 +669,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile, extraArgs: extraArgs, appName: appName);
 
 			var info_plist = // FIXME: this includes a NSExtensionMainStoryboard key which points to a non-existent storyboard. This won't matter as long as we're only building, and not running the extension.
+string.Format (
 @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
 <plist version=""1.0"">
@@ -696,7 +691,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>MinimumOSVersion</key>
-	<string>10.0</string>
+	<string>{0}</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionPointIdentifier</key>
@@ -706,7 +701,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 	</dict>
 </dict>
 </plist>
-";
+", SdkVersions.MiniOS);
 			var plist_path = Path.Combine (app, "Info.plist");
 			if (!File.Exists (plist_path) || File.ReadAllText (plist_path) != info_plist)
 				File.WriteAllText (plist_path, info_plist);
@@ -739,7 +734,7 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 			Extension = true;
 			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, extraArgs: extraArgs, profile: Profile);
 
-			File.WriteAllText (Path.Combine (app, "Info.plist"), @"<?xml version=""1.0"" encoding=""UTF-8""?>
+			File.WriteAllText (Path.Combine (app, "Info.plist"), string.Format (@"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
 <plist version=""1.0"">
 <dict>
@@ -754,7 +749,7 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>MinimumOSVersion</key>
-	<string>2.0</string>
+	<string>{0}</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionAttributes</key>
@@ -771,7 +766,7 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 	<string>1.0</string>
 </dict>
 </plist>
-");
+", SdkVersions.MinWatchOS));
 		}
 
 		public void CreateTemporaryWatchOSIntentsExtension (string code = null, string appName = "intentsExtension")
@@ -834,7 +829,7 @@ public class IntentHandler : INExtension, IINRidesharingDomainHandling {
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>MinimumOSVersion</key>
-	<string>3.2</string>
+	<string>{SdkVersions.MinWatchOS}</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -889,7 +884,7 @@ public class IntentHandler : INExtension, IINRidesharingDomainHandling {
 		}
 
 		public IEnumerable<string> NativeSymbolsInExecutable {
-			get { 
+			get {
 				return GetNativeSymbolsInExecutable (NativeExecutablePath);
 			}
 		}
@@ -904,7 +899,7 @@ public class IntentHandler : INExtension, IINRidesharingDomainHandling {
 			args.Add ("-gUj");
 			args.Add (executable);
 			IEnumerable<string> rv = ExecutionHelper.Execute ("nm", args, hide_output: true).Split ('\n');
-			
+
 			rv = rv.Where ((v) => {
 				if (string.IsNullOrEmpty (v))
 					return false;

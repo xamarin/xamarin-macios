@@ -992,6 +992,11 @@ namespace Foundation {
 				}
 				if (!call_drain)
 					return;
+				ScheduleDrain ();
+			}
+
+			static void ScheduleDrain ()
+			{
 #if NET
 				Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (class_ptr, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), Selector.GetHandle ("drain:"), NativeHandle.Zero, false);
 #else
@@ -1003,12 +1008,24 @@ namespace Foundation {
 #endif
 			}
 
+			static bool draining;
+
 			[Export ("drain:")]
 			static void Drain (NSObject ctx)
 			{
 				List<NSObject> drainList;
 
 				lock (lock_obj) {
+					// This function isn't re-entrant safe, so protect against it. The only possibility I can
+					// see where this function would be re-entrant, is if in the call to ReleaseManagedRef below,
+					// the native dealloc method for a type ended up executing the run loop, and that runloop
+					// processed a drain request, ending up in this method (again).
+					if (draining) {
+						ScheduleDrain ();
+						return;
+					}
+					draining = true;
+
 					drainList = handles;
 					if (handles == drainList1)
 						handles = drainList2;
@@ -1019,6 +1036,10 @@ namespace Foundation {
 				foreach (NSObject x in drainList)
 					x.ReleaseManagedRef ();
 				drainList.Clear ();
+
+				lock (lock_obj) {
+					draining = false;
+				}
 			}
 		}
 

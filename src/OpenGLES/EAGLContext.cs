@@ -23,8 +23,6 @@ namespace OpenGLES {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("tvos12.0")]
-		[UnsupportedOSPlatform ("ios12.0")]
 		[ObsoletedOSPlatform ("tvos12.0", "Use 'Metal' instead.")]
 		[ObsoletedOSPlatform ("ios12.0", "Use 'Metal' instead.")]
 #else
@@ -40,8 +38,6 @@ namespace OpenGLES {
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("tvos10.2")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("tvos12.0")]
-		[UnsupportedOSPlatform ("ios12.0")]
 		[ObsoletedOSPlatform ("tvos12.0", "Use 'Metal' instead.")]
 		[ObsoletedOSPlatform ("ios12.0", "Use 'Metal' instead.")]
 #else

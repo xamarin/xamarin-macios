@@ -892,7 +892,7 @@ namespace Introspection {
 				message = ((ObsoleteAttribute) attribute).Message;
 #if !NET
 			if (attribute is AvailabilityBaseAttribute)
-				message = ((AvailabilityBaseAttribute)attribute).Message;
+				message = ((AvailabilityBaseAttribute) attribute).Message;
 #endif
 
 			return message;
@@ -1072,8 +1072,12 @@ namespace Introspection {
 					Assert.True (CheckLibrary (s), fi.Name);
 					break;
 #endif
+				case "ChipLibrary": // Chip is removed entirely beginning Xcode 14
+					if (!TestRuntime.CheckXcodeVersion (14, 0))
+						if (TestRuntime.IsDevice)
+							Assert.True (CheckLibrary (s), fi.Name);
+					break;
 #if !__MACOS__
-				case "ChipLibrary":
 				case "ThreadNetworkLibrary":
 				case "MediaSetupLibrary":
 				case "MLComputeLibrary":

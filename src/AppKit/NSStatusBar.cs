@@ -11,6 +11,8 @@
 
 using System;
 
+#nullable enable
+
 namespace AppKit {
 	public enum NSStatusItemLength {
 		Variable = -1,

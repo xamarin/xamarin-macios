@@ -12,11 +12,9 @@ using NUnit.Framework;
 using MTouchLinker = Xamarin.Tests.LinkerOption;
 using MTouchRegistrar = Xamarin.Tests.RegistrarOption;
 
-namespace Xamarin
-{
+namespace Xamarin {
 	[TestFixture]
-	public class Registrar
-	{
+	public class Registrar {
 		enum R {
 			Static = 4,
 			Dynamic = 8,
@@ -290,7 +288,7 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 			var xcodeRoot = Configuration.xcode83_root;
 			if (!Directory.Exists (xcodeRoot))
 				Assert.Ignore ("Xcode 8 ({0}) is required for this test.", xcodeRoot);
-			
+
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.SdkRoot = xcodeRoot;
@@ -387,7 +385,7 @@ class C : NSObject {
 				mtouch.AssertNoWarnings ();
 			}
 		}
-			
+
 		[Test]
 		public void MT4138 ()
 		{
@@ -740,7 +738,7 @@ public class Category
 				mtouch.AssertNoWarnings ();
 			}
 		}
-			
+
 		[Test]
 		public void MT4159 ()
 		{
@@ -765,7 +763,7 @@ public class Category
 		}
 
 		// This list is duplicated in src/ObjCRuntime/Registrar.cs
-		static readonly char[] invalidSelectorCharacters = { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n', '<', '>' };
+		static readonly char [] invalidSelectorCharacters = { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n', '<', '>' };
 
 		[Test]
 		public void MT4160 ()
@@ -793,7 +791,7 @@ public class Category
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
 				for (int i = 0; i < testInvalidCharacters.Length; i++) {
 					var c = testInvalidCharacters [i];
-					mtouch.AssertError (4160, $"Invalid character '{c}' (0x{((int)c).ToString ("x")}) found in selector 'X{c}' for 'TestInvalidChar.X{i}()'", "testApp.cs", 3 + i * 2);
+					mtouch.AssertError (4160, $"Invalid character '{c}' (0x{((int) c).ToString ("x")}) found in selector 'X{c}' for 'TestInvalidChar.X{i}()'", "testApp.cs", 3 + i * 2);
 				}
 			}
 		}
@@ -897,7 +895,7 @@ public struct FooF { public NSObject Obj; }
 	public enum FutureEnum {
 	}
 ";
-			
+
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = profile;
 				mtouch.Linker = linker;
@@ -962,7 +960,7 @@ public struct FooF { public NSObject Obj; }
 	public enum FutureEnum {
 	}
 ";
-			
+
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = profile;
 				mtouch.Linker = linker;
@@ -1028,7 +1026,7 @@ public struct FooF { public NSObject Obj; }
 	public enum FutureEnum {
 	}
 ";
-			
+
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.IsDotNet = true;
 				mtouch.Profile = profile;

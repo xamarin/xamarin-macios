@@ -18,16 +18,16 @@ using Foundation;
 namespace MediaAccessibility {
 
 	[Native]
-	[iOS (7, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	public enum MACaptionAppearanceDomain : long {
 		Default = 0,
 		User = 1,
 	}
 
 	[Native]
-	[iOS (7, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	public enum MACaptionAppearanceDisplayType : long {
 		ForcedOnly = 0,
 		Automatic = 1,
@@ -35,16 +35,16 @@ namespace MediaAccessibility {
 	}
 
 	[Native]
-	[iOS (7, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	public enum MACaptionAppearanceBehavior : long {
 		UseValue = 0,
 		UseContentIfAvailable = 1,
 	}
 
 	[Native]
-	[iOS (7, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	public enum MACaptionAppearanceFontStyle : long {
 		Default = 0,
 		MonospacedWithSerif = 1,
@@ -57,8 +57,8 @@ namespace MediaAccessibility {
 	}
 
 	[Native]
-	[iOS (7, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	public enum MACaptionAppearanceTextEdgeStyle : long {
 		Undefined = 0,
 		None = 1,

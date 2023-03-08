@@ -92,8 +92,8 @@ namespace Foundation {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8, 0)]
@@ -107,8 +107,8 @@ namespace Foundation {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8, 0)]
@@ -150,12 +150,11 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 #if NET
@@ -239,12 +238,11 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 		public NSError? UbiquitousItemDownloadingError {
@@ -254,12 +252,11 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 		public NSError? UbiquitousItemUploadingError {
@@ -270,8 +267,8 @@ namespace Foundation {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8, 0)]
@@ -293,8 +290,8 @@ namespace Foundation {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8, 0)]
@@ -316,8 +313,8 @@ namespace Foundation {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8, 0)]
@@ -331,8 +328,8 @@ namespace Foundation {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8, 0)]
@@ -346,7 +343,7 @@ namespace Foundation {
 
 #if MONOMAC
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -363,7 +360,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -380,7 +377,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -397,7 +394,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -414,7 +411,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -431,7 +428,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -448,7 +445,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -465,7 +462,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -482,7 +479,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -499,7 +496,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -516,7 +513,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -533,7 +530,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -550,7 +547,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -567,7 +564,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -584,7 +581,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -601,7 +598,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -618,7 +615,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -635,7 +632,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -652,7 +649,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -669,7 +666,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -686,7 +683,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -703,7 +700,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -720,7 +717,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -737,7 +734,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -754,7 +751,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -771,7 +768,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -788,7 +785,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -805,7 +802,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -822,7 +819,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -839,7 +836,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -856,7 +853,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -873,7 +870,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -890,7 +887,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -907,7 +904,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -924,7 +921,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -941,7 +938,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -958,7 +955,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -975,7 +972,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -992,7 +989,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1009,7 +1006,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1026,7 +1023,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1043,7 +1040,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1060,7 +1057,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1077,7 +1074,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1094,7 +1091,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1111,7 +1108,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1128,7 +1125,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1145,7 +1142,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1162,7 +1159,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1179,7 +1176,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1196,7 +1193,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1213,7 +1210,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1230,7 +1227,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1247,7 +1244,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1264,7 +1261,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1281,7 +1278,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1298,7 +1295,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1315,7 +1312,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1332,7 +1329,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1349,7 +1346,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1366,7 +1363,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1383,7 +1380,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1400,7 +1397,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1417,7 +1414,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1434,7 +1431,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1451,7 +1448,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1468,7 +1465,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1485,7 +1482,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1502,7 +1499,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1519,7 +1516,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1536,7 +1533,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1553,7 +1550,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1570,7 +1567,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1587,7 +1584,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1604,7 +1601,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1621,7 +1618,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1638,7 +1635,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1655,7 +1652,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1672,7 +1669,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1689,7 +1686,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1706,7 +1703,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1723,7 +1720,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1740,7 +1737,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1757,7 +1754,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1774,7 +1771,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1791,7 +1788,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1808,7 +1805,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1825,7 +1822,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1842,7 +1839,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1859,7 +1856,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1876,7 +1873,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1893,7 +1890,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1910,7 +1907,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1927,7 +1924,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1944,7 +1941,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1961,7 +1958,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1978,7 +1975,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -1995,7 +1992,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2012,7 +2009,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2029,7 +2026,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2046,7 +2043,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2063,7 +2060,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2080,7 +2077,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2097,7 +2094,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2114,7 +2111,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2131,7 +2128,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2148,7 +2145,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2165,7 +2162,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2182,7 +2179,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2199,7 +2196,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2216,7 +2213,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2233,7 +2230,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2250,7 +2247,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2267,7 +2264,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2284,7 +2281,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2301,7 +2298,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2318,7 +2315,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2335,7 +2332,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2352,7 +2349,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2369,7 +2366,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2386,7 +2383,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2403,7 +2400,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2420,7 +2417,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2437,7 +2434,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2454,7 +2451,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2471,7 +2468,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2488,7 +2485,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2505,7 +2502,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2522,7 +2519,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2539,7 +2536,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2556,7 +2553,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2573,7 +2570,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2590,7 +2587,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2607,7 +2604,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2624,7 +2621,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2641,7 +2638,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2658,7 +2655,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2675,7 +2672,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2692,7 +2689,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2709,7 +2706,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2726,7 +2723,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2743,7 +2740,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2760,7 +2757,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -2777,7 +2774,7 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]

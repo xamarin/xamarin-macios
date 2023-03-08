@@ -137,7 +137,7 @@ namespace CoreAnimation {
 #endif
 #if NET
 		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else

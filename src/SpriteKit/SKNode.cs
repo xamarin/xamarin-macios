@@ -21,7 +21,7 @@ namespace SpriteKit {
 	public partial class SKNode : IEnumerable, IEnumerable<SKNode> {
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -65,7 +65,7 @@ namespace SpriteKit {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -93,7 +93,7 @@ namespace SpriteKit {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else

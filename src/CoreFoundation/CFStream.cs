@@ -184,19 +184,10 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("maccatalyst15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
@@ -213,19 +204,10 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("maccatalyst15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
@@ -250,19 +232,10 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("maccatalyst15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
@@ -280,19 +253,10 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("maccatalyst15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
@@ -321,19 +285,10 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("maccatalyst15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
@@ -353,19 +308,10 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("maccatalyst15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
@@ -392,19 +338,10 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("maccatalyst15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
@@ -422,19 +359,10 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
-#if TVOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("tvos15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("maccatalyst15.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
+		[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
 #else
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
@@ -807,60 +735,55 @@ namespace CoreFoundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static void CFReadStreamSetDispatchQueue (/* CFReadStreamRef */ IntPtr stream, /* dispatch_queue_t */ IntPtr queue);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static void CFWriteStreamSetDispatchQueue (/* CFWriteStreamRef */ IntPtr stream, /* dispatch_queue_t */ IntPtr queue);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* dispatch_queue_t */ IntPtr CFReadStreamCopyDispatchQueue (/* CFReadStreamRef */ IntPtr stream);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* dispatch_queue_t */ IntPtr CFWriteStreamCopyDispatchQueue (/* CFWriteStreamRef */ IntPtr stream);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 		public DispatchQueue ReadDispatchQueue {
@@ -873,12 +796,11 @@ namespace CoreFoundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7, 0)]
 		[Mac (10, 9)]
 #endif
 		public DispatchQueue WriteDispatchQueue {

@@ -45,8 +45,8 @@ export MARKDOWN_BREAKING_CHANGES_MESSAGE=:heavy_exclamation_mark: Breaking chang
 export MARKDOWN_NO_BREAKING_CHANGES_MESSAGE=No breaking changes
 
 ifeq ($(DOTNET_TFM_REFERENCE),)
-# Change the below to net7.0 once we have reference assemblies from net7.0 (i.e. once net7.0 goes stable).
-DOTNET_TFM_REFERENCE=net6.0
+# Change the below to net8.0 once we have reference assemblies from net8.0 (i.e. once net8.0 goes stable).
+DOTNET_TFM_REFERENCE=net7.0
 endif
 
 # I18N are excluded - but otherwise if should be like ../../builds/Makefile + what XI adds

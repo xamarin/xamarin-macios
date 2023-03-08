@@ -17,7 +17,6 @@ namespace SafariServices {
 
 	// NSInteger -> SSReadingList.h
 	[NoMac]
-	[iOS (7, 0)]
 	[MacCatalyst (14, 0)]
 	[Native ("SSReadingListErrorCode")]
 	[ErrorDomain ("SSReadingListErrorDomain")]
@@ -52,6 +51,7 @@ namespace SafariServices {
 
 	[NoMac]
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SFSafariViewControllerDismissButtonStyle : long {
 		Done,
@@ -64,6 +64,8 @@ namespace SafariServices {
 	[Native]
 	[ErrorDomain ("SFAuthenticationErrorDomain")]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'ASWebAuthenticationSessionErrorCode' instead.")]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ASWebAuthenticationSessionErrorCode' instead.")]
 	public enum SFAuthenticationError : long {
 		CanceledLogin = 1,
 	}

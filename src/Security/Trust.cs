@@ -133,9 +133,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos12.1")]
-		[UnsupportedOSPlatform ("macos10.14.1")]
-		[UnsupportedOSPlatform ("ios12.1")]
 		[ObsoletedOSPlatform ("tvos12.1", "Use 'SecTrust.Evaluate (out NSError)' instead.")]
 		[ObsoletedOSPlatform ("macos10.14.1", "Use 'SecTrust.Evaluate (out NSError)' instead.")]
 		[ObsoletedOSPlatform ("ios12.1", "Use 'SecTrust.Evaluate (out NSError)' instead.")]
@@ -153,9 +150,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("tvos12.1")]
-		[UnsupportedOSPlatform ("macos10.14.1")]
-		[UnsupportedOSPlatform ("ios12.1")]
 		[ObsoletedOSPlatform ("tvos12.1", "Use 'SecTrust.Evaluate (out NSError)' instead.")]
 		[ObsoletedOSPlatform ("macos10.14.1", "Use 'SecTrust.Evaluate (out NSError)' instead.")]
 		[ObsoletedOSPlatform ("ios12.1", "Use 'SecTrust.Evaluate (out NSError)' instead.")]
@@ -190,10 +184,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
 		[ObsoletedOSPlatform ("macos12.0")]
 		[ObsoletedOSPlatform ("maccatalyst15.0")]
 		[ObsoletedOSPlatform ("tvos15.0")]
@@ -209,10 +199,10 @@ namespace Security {
 		extern static IntPtr /* SecCertificateRef */ SecTrustGetCertificateAtIndex (IntPtr /* SecTrustRef */ trust, nint /* CFIndex */ ix);
 
 #if NET
-		[UnsupportedOSPlatform ("macos12.0")]
-		[UnsupportedOSPlatform ("maccatalyst15.0")]
-		[UnsupportedOSPlatform ("tvos15.0")]
-		[UnsupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[ObsoletedOSPlatform ("macos12.0", "Use the 'GetCertificateChain' method instead.")]
 		[ObsoletedOSPlatform ("maccatalyst15.0", "Use the 'GetCertificateChain' method instead.")]
 		[ObsoletedOSPlatform ("tvos15.0", "Use the 'GetCertificateChain' method instead.")]
@@ -268,12 +258,10 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos11.0")]
-		[UnsupportedOSPlatform ("tvos14.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("macos11.0")]
 		[ObsoletedOSPlatform ("tvos14.0")]
 		[ObsoletedOSPlatform ("ios14.0")]
+		[ObsoletedOSPlatform ("maccatalyst14.0")]
 #else
 		[Deprecated (PlatformName.iOS, 14, 0)]
 		[Deprecated (PlatformName.MacOSX, 11, 0)]
@@ -288,9 +276,6 @@ namespace Security {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos11.0")]
-		[UnsupportedOSPlatform ("tvos14.0")]
-		[UnsupportedOSPlatform ("ios14.0")]
 		[ObsoletedOSPlatform ("macos11.0", "Use 'GetKey' instead.")]
 		[ObsoletedOSPlatform ("tvos14.0", "Use 'GetKey' instead.")]
 		[ObsoletedOSPlatform ("ios14.0", "Use 'GetKey' instead.")]
@@ -338,7 +323,7 @@ namespace Security {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -349,7 +334,7 @@ namespace Security {
 		extern static IntPtr /* CFDataRef */ SecTrustCopyExceptions (IntPtr /* SecTrustRef */ trust);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -362,7 +347,7 @@ namespace Security {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -374,7 +359,7 @@ namespace Security {
 		extern static bool SecTrustSetExceptions (IntPtr /* SecTrustRef */ trust, IntPtr /* __nullable CFDataRef */ exceptions);
 
 #if NET
-		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]

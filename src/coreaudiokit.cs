@@ -35,7 +35,8 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreAudioKit {
 	[NoiOS]
-	[Mac (10,11)]
+	[Mac (10, 11)]
+	[NoMacCatalyst]
 	[Flags]
 	public enum AUGenericViewDisplayFlags : uint {
 		TitleDisplay = 1u << 0,
@@ -43,15 +44,19 @@ namespace CoreAudioKit {
 		ParametersDisplay = 1u << 2,
 	}
 
-	[iOS (9,0)][Mac (10,11)]
-	[BaseType (typeof(AUViewControllerBase))]
+	[iOS (9, 0)]
+	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (AUViewControllerBase))]
 	interface AUViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
 		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 	}
 
-	[iOS (11,0)][Mac (10,13)]
+	[iOS (11, 0)]
+	[Mac (10, 13)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface AUAudioUnitViewConfiguration : NSSecureCoding {
 		[Export ("initWithWidth:height:hostHasController:")]
@@ -68,7 +73,9 @@ namespace CoreAudioKit {
 	}
 
 	[Category]
-	[iOS (11,0)][Mac (10,13)]
+	[iOS (11, 0)]
+	[Mac (10, 13)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (AUAudioUnit))]
 	interface AUAudioUnitViewControllerExtensions {
 		[Export ("supportedViewConfigurations:")]
@@ -79,7 +86,8 @@ namespace CoreAudioKit {
 	}
 
 	[NoiOS]
-	[Mac (10,13)]
+	[Mac (10, 13)]
+	[NoMacCatalyst]
 	[Protocol]
 	interface AUCustomViewPersistentData {
 
@@ -89,7 +97,8 @@ namespace CoreAudioKit {
 	}
 
 	[NoiOS]
-	[Mac (10,13)]
+	[Mac (10, 13)]
+	[NoMacCatalyst]
 	[DisableDefaultCtor] // Crashes
 	[BaseType (typeof (NSView))]
 	interface AUGenericView : AUCustomViewPersistentData {
@@ -108,7 +117,8 @@ namespace CoreAudioKit {
 	}
 
 	[NoiOS]
-	[Mac (10,13)]
+	[Mac (10, 13)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSView))]
 	[DisableDefaultCtor]
 	interface AUPannerView {
@@ -122,7 +132,8 @@ namespace CoreAudioKit {
 	}
 
 	[NoiOS]
-	[Mac (10,13)]
+	[Mac (10, 13)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSWindowController), Name = "CABTLEMIDIWindowController")]
 	interface CABtleMidiWindowController {
 
@@ -131,7 +142,8 @@ namespace CoreAudioKit {
 	}
 
 	[NoiOS]
-	[Mac (10,13)]
+	[Mac (10, 13)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSViewController))]
 	interface CAInterDeviceAudioViewController {
 
@@ -140,7 +152,8 @@ namespace CoreAudioKit {
 	}
 
 	[NoiOS]
-	[Mac (10,13)]
+	[Mac (10, 13)]
+	[NoMacCatalyst]
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSWindowController))]
 	interface CANetworkBrowserWindowController {
@@ -154,38 +167,42 @@ namespace CoreAudioKit {
 	}
 
 #if !MONOMAC
-	[iOS (8,0)]
+	[iOS (8, 0)]
 	[NoMac]
+	[MacCatalyst (13, 1)]
 	// in iOS 8.3 (Xcode 6.3 SDK) the base type was changed from UIViewController to UITableViewController
-	[BaseType (typeof (UITableViewController), Name="CABTMIDICentralViewController")]
+	[BaseType (typeof (UITableViewController), Name = "CABTMIDICentralViewController")]
 	interface CABTMidiCentralViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
 		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
-		[iOS (8,3)]
+		[iOS (8, 3)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithStyle:")]
 		NativeHandle Constructor (UITableViewStyle withStyle);
 	}
 
-	[iOS (8,0)]
+	[iOS (8, 0)]
 	[NoMac]
-	[BaseType (typeof (UIViewController), Name="CABTMIDILocalPeripheralViewController")]
+	[MacCatalyst (13, 1)]
+	[BaseType (typeof (UIViewController), Name = "CABTMIDILocalPeripheralViewController")]
 	interface CABTMidiLocalPeripheralViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
 		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 	}
 
-	[iOS (8,0)]
+	[iOS (8, 0)]
 	[NoMac]
-	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
+	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AudioUnit' instead.")]
 	[NoMacCatalyst]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'AudioUnit' instead.")]
 	[BaseType (typeof (UIView))]
 	interface CAInterAppAudioSwitcherView {
 		[Export ("initWithFrame:")]
 		NativeHandle Constructor (CGRect bounds);
-		
+
 		[Export ("showingAppNames")]
 		bool ShowingAppNames { [Bind ("isShowingAppNames")] get; set; }
 
@@ -196,15 +213,16 @@ namespace CoreAudioKit {
 		nfloat ContentWidth ();
 	}
 
-	[iOS (8,0)]
+	[iOS (8, 0)]
 	[NoMac]
-	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
+	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AudioUnit' instead.")]
 	[NoMacCatalyst]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'AudioUnit' instead.")]
 	[BaseType (typeof (UIView))]
 	interface CAInterAppAudioTransportView {
 		[Export ("initWithFrame:")]
 		NativeHandle Constructor (CGRect bounds);
-		
+
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 
@@ -242,10 +260,10 @@ namespace CoreAudioKit {
 	}
 #endif
 
-	[Mac (13,0), iOS (16,0)]
-	[BaseType (typeof(UIViewController))]
-	interface AUGenericViewController
-	{
+	[Mac (13, 0), iOS (16, 0)]
+	[MacCatalyst (16, 0)]
+	[BaseType (typeof (UIViewController))]
+	interface AUGenericViewController {
 
 		[DesignatedInitializer]
 		[Export ("initWithNibName:bundle:")]

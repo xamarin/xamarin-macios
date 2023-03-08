@@ -307,6 +307,8 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 
 		<!-- Accept 'UseInterpreter' as an alternative for 'MtouchInterpreter', so that we have the same variable name as Android -->
 		<MtouchInterpreter Condition="'$(MtouchInterpreter)' == '' And '$(UseInterpreter)' == 'True'">all</MtouchInterpreter>
+
+		<_AppBundleName>$(AssemblyName)</_AppBundleName>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(IsBindingProject)' == 'true'">

@@ -3,10 +3,8 @@ using System;
 using MonoMac.Foundation;
 using MonoMac.AppKit;
 
-namespace EndSheet
-{
-	public partial class MainSheetController : NSWindowController
-	{
+namespace EndSheet {
+	public partial class MainSheetController : NSWindowController {
 		public MainSheetController (IntPtr handle) : base (handle)
 		{
 		}
@@ -19,7 +17,7 @@ namespace EndSheet
 		public MainSheetController () : base ("MainSheet")
 		{
 		}
-		
+
 		public override void AwakeFromNib ()
 		{
 			dismissSheetButton.Activated += (sender, e) => {

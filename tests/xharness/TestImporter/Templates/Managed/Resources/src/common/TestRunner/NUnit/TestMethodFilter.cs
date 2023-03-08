@@ -5,11 +5,9 @@ using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Filters;
 
-namespace Xamarin.iOS.UnitTests.NUnit
-{
-	public class TestMethodFilter : TestFilter
-	{
-		HashSet <string> methods = new HashSet<string> ();
+namespace Xamarin.iOS.UnitTests.NUnit {
+	public class TestMethodFilter : TestFilter {
+		HashSet<string> methods = new HashSet<string> ();
 
 		public TestMethodFilter (string method)
 		{
@@ -33,7 +31,7 @@ namespace Xamarin.iOS.UnitTests.NUnit
 
 			methods.Add (method);
 		}
-		
+
 		public void AddRange (IEnumerable<string> ignoredMethods)
 		{
 			if (methods == null)

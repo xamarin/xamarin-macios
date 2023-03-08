@@ -751,7 +751,7 @@
 		<value>'{0}' 옵션은 CoreCLR을 사용할 때 '{1}' 값을 가져올 수 없습니다.</value>
 	</data>
   <data name="MX0186" xml:space="preserve">
-		<value>Bitcode is enabled, but bitcode is not supported in Xcode 14+ and has been disabled. Please disable bitcode by removing the 'MtouchEnableBitcode' property from the project file.</value>
+		<value>비트코드는 활성화되었지만 비트코드는 Xcode 14+에서 지원되지 않으며 비활성화되었습니다. 프로젝트 파일에서 'MtouchEnableBitcode' 속성을 제거하여 비트코드를 비활성화하세요.</value>
 	</data>
   <data name="MX1009" xml:space="preserve">
 		<value>'{0}' 어셈블리를 '{1}'(으)로 복사할 수 없습니다. {2}
@@ -1754,13 +1754,13 @@
 		</comment>
 	</data>
   <data name="MX8043" xml:space="preserve">
-		<value>An exception occurred while validating the static registrar code for {0}: {1}</value>
+		<value>{0}에 대한 정적 등록 기관 코드의 유효성을 검사하는 동안 예외가 발생했습니다. {1}</value>
 		<comment>
 			0: name of an assembly
 			1: exception info
 		</comment>
 	</data>
   <data name="MX8044" xml:space="preserve">
-		<value>The assembly {0} has been modified since the app was built, invalidating the generated static registrar code. The MVID for the loaded assembly is {1}, while the MVID for the assembly the generated static registrar code corresponds to is {2}.</value>
+		<value>앱이 빌드된 이후 어셈블리 {0}이(가) 수정되어 생성된 정적 등록 대행자 코드가 무효화되었습니다. 로드된 어셈블리의 MVID는 {1}이고 생성된 정적 등록 대행자 코드가 해당하는 어셈블리의 MVID는 {2}입니다.</value>
 	</data>
 </root>

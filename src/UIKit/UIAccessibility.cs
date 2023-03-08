@@ -186,21 +186,17 @@ namespace UIKit {
 
 		// UIAccessibility.h
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		extern static /* UIBezierPath* */ IntPtr UIAccessibilityConvertPathToScreenCoordinates (/* UIBezierPath* */ IntPtr path, /* UIView* */ IntPtr view);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public static UIBezierPath ConvertPathToScreenCoordinates (UIBezierPath path, UIView view)
 		{
@@ -214,21 +210,17 @@ namespace UIKit {
 
 		// UIAccessibility.h
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		extern static CGRect UIAccessibilityConvertFrameToScreenCoordinates (CGRect rect, /* UIView* */ IntPtr view);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public static CGRect ConvertFrameToScreenCoordinates (CGRect rect, UIView view)
 		{
@@ -240,43 +232,37 @@ namespace UIKit {
 
 		// UIAccessibility.h
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		extern unsafe static void UIAccessibilityRequestGuidedAccessSession (/* BOOL */ [MarshalAs (UnmanagedType.I1)] bool enable, /* void(^completionHandler)(BOOL didSucceed) */ void* completionHandler);
+		extern unsafe static void UIAccessibilityRequestGuidedAccessSession (/* BOOL */ [MarshalAs (UnmanagedType.I1)] bool enable, /* void(^completionHandler)(BOOL didSucceed) */ BlockLiteral* completionHandler);
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void RequestGuidedAccessSession (bool enable, Action<bool> completionHandler)
 		{
 			unsafe {
-				BlockLiteral* block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
-				block_handler.SetupBlock (callback, completionHandler);
-
-				UIAccessibilityRequestGuidedAccessSession (enable, (void*) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+#if NET
+				delegate* unmanaged<IntPtr, byte, void> trampoline = &TrampolineRequestGuidedAccessSession;
+				using var block = new BlockLiteral (trampoline, completionHandler, typeof (UIAccessibility), nameof (TrampolineRequestGuidedAccessSession));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlock (callback, completionHandler);
+#endif
+				UIAccessibilityRequestGuidedAccessSession (enable, &block);
 			}
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (7, 0)]
 #endif
 		public static Task<bool> RequestGuidedAccessSessionAsync (bool enable)
 		{
@@ -287,16 +273,20 @@ namespace UIKit {
 			return tcs.Task;
 		}
 
-		internal delegate void InnerRequestGuidedAccessSession (IntPtr block, bool enable);
+#if !NET
+		internal delegate void InnerRequestGuidedAccessSession (IntPtr block, byte enable);
 		static readonly InnerRequestGuidedAccessSession callback = TrampolineRequestGuidedAccessSession;
 
 		[MonoPInvokeCallback (typeof (InnerRequestGuidedAccessSession))]
-		static unsafe void TrampolineRequestGuidedAccessSession (IntPtr block, bool enable)
+#else
+		[UnmanagedCallersOnly]
+#endif
+		static unsafe void TrampolineRequestGuidedAccessSession (IntPtr block, byte enable)
 		{
 			var descriptor = (BlockLiteral*) block;
 			var del = (Action<bool>) (descriptor->Target);
 			if (del != null)
-				del (enable);
+				del (enable != 0);
 		}
 
 #if NET

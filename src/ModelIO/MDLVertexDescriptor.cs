@@ -22,7 +22,7 @@ namespace ModelIO {
 
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -35,7 +35,7 @@ namespace ModelIO {
 
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else

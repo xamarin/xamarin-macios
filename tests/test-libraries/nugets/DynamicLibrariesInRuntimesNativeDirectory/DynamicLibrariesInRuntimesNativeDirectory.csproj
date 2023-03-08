@@ -1,0 +1,88 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>Xamarin.Tests.DynamicLibrariesInRuntimesNativeDirectory</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <RepositoryUrl>https://github.com/xamarin/xamarin-macios</RepositoryUrl>
+    <RepositoryBranch>main</RepositoryBranch>
+    <Authors>Microsoft</Authors>
+    <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
+    <PackageProjectUrl>https://github.com/xamarin/xamarin-macios</PackageProjectUrl>
+    <RootTestDirectory>../../..</RootTestDirectory>
+    <TestFrameworksDirectory>$(RootTestDirectory)/test-libraries/frameworks</TestFrameworksDirectory>
+  </PropertyGroup>
+
+  <Target Name="ComputeContent">
+    <ItemGroup>
+      <DotnetPlatforms Include="$(DOTNET_PLATFORMS)" />
+    </ItemGroup>
+    <PropertyGroup>
+      <iOS_Included Condition="@(DotnetPlatforms->AnyHaveMetadataValue('Identity', 'iOS'))">true</iOS_Included>
+      <tvOS_Included Condition="@(DotnetPlatforms->AnyHaveMetadataValue('Identity', 'tvOS'))">true</tvOS_Included>
+      <macOS_Included Condition="@(DotnetPlatforms->AnyHaveMetadataValue('Identity', 'macOS'))">true</macOS_Included>
+      <MacCatalyst_Included Condition="@(DotnetPlatforms->AnyHaveMetadataValue('Identity', 'MacCatalyst'))">true</MacCatalyst_Included>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <!-- Dynamic library in native directory -->
+      <Content Include="$(RootTestDirectory)\test-libraries\.libs\macos\libtest.x86_64.dylib" Condition="'$(macOS_Included)' == 'true'">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <Pack>true</Pack>
+        <PackagePath>runtimes/osx-x64/native/libtest.dylib</PackagePath>
+      </Content>
+      <Content Include="$(RootTestDirectory)\test-libraries\.libs\macos\libtest.arm64.dylib" Condition="'$(macOS_Included)' == 'true'">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <Pack>true</Pack>
+        <PackagePath>runtimes/osx-arm64/native/libtest.dylib</PackagePath>
+      </Content>
+      <Content Include="$(RootTestDirectory)\test-libraries\.libs\maccatalyst\libtest.x86_64.dylib" Condition="'$(MacCatalyst_Included)' == 'true'">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <Pack>true</Pack>
+        <PackagePath>runtimes/maccatalyst-x64/native/libtest.dylib</PackagePath>
+      </Content>
+      <Content Include="$(RootTestDirectory)\test-libraries\.libs\maccatalyst\libtest.arm64.dylib" Condition="'$(MacCatalyst_Included)' == 'true'">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <Pack>true</Pack>
+        <PackagePath>runtimes/maccatalyst-arm64/native/libtest.dylib</PackagePath>
+      </Content>
+      <!-- Dynamic library in native subdirectory -->
+      <Content Include="$(RootTestDirectory)\test-libraries\.libs\macos\libtest.x86_64.dylib" Condition="'$(macOS_Included)' == 'true'">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <Pack>true</Pack>
+        <PackagePath>bin/osx-x64/libtest.dylib</PackagePath>
+      </Content>
+      <Content Include="$(RootTestDirectory)\test-libraries\.libs\macos\libtest.arm64.dylib" Condition="'$(macOS_Included)' == 'true'">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <Pack>true</Pack>
+        <PackagePath>bin/osx-arm64/libtest.dylib</PackagePath>
+      </Content>
+      <Content Include="$(RootTestDirectory)\test-libraries\.libs\maccatalyst\libtest.x86_64.dylib" Condition="'$(MacCatalyst_Included)' == 'true'">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <Pack>true</Pack>
+        <PackagePath>bin/maccatalyst-x64/libtest.dylib</PackagePath>
+      </Content>
+      <Content Include="$(RootTestDirectory)\test-libraries\.libs\maccatalyst\libtest.arm64.dylib" Condition="'$(MacCatalyst_Included)' == 'true'">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <Pack>true</Pack>
+        <PackagePath>bin/maccatalyst-arm64/libtest.dylib</PackagePath>
+      </Content>
+      <Content Include="$(RootTestDirectory)\test-libraries\.libs\maccatalyst\libtest.arm64.dylib" Condition="'$(MacCatalyst_Included)' == 'true'">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <Pack>true</Pack>
+        <PackagePath>bin/maccatalyst-arm64/libtest2.dylib</PackagePath>
+      </Content>
+      <!-- Targets file -->
+      <Content Include="$(MSBuildThisFileDirectory)\Xamarin.Tests.DynamicLibrariesInRuntimesNativeDirectory.targets">
+        <Pack>true</Pack>
+        <PackagePath>build/Xamarin.Tests.DynamicLibrariesInRuntimesNativeDirectory.targets</PackagePath>
+      </Content>
+    </ItemGroup>
+  </Target>
+
+  <PropertyGroup>
+    <BeforePack>
+      ComputeContent;
+      $(BeforePack);
+    </BeforePack>
+  </PropertyGroup>
+</Project>

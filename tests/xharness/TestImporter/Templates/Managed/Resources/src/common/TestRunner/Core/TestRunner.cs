@@ -5,10 +5,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 
 
-namespace Xamarin.iOS.UnitTests
-{
-	public abstract class TestRunner
-	{
+namespace Xamarin.iOS.UnitTests {
+	public abstract class TestRunner {
 		public enum Jargon {
 			TouchUnit,
 			NUnitV2,

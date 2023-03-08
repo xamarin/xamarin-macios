@@ -5,9 +5,9 @@ using System;
 
 namespace HealthKit {
 	// NSInteger -> HKDefines.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKUpdateFrequency : long {
 		Immediate = 1,
@@ -17,9 +17,9 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKDefines.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKAuthorizationStatus : long {
 		NotDetermined = 0,
@@ -28,22 +28,23 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKDefines.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKBiologicalSex : long {
 		NotSet = 0,
 		Female,
 		Male,
 		[iOS (8, 2)]
+		[MacCatalyst (13, 1)]
 		Other
 	}
 
 	// NSInteger -> HKDefines.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKBloodType : long {
 		NotSet = 0,
@@ -58,9 +59,9 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKMetadata.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKBodyTemperatureSensorLocation : long {
 		Other = 0,
@@ -78,9 +79,9 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKMetadata.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKHeartRateSensorLocation : long {
 		Other = 0,
@@ -93,32 +94,37 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKObjectType.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKQuantityAggregationStyle : long {
 		Cumulative = 0,
 		[iOS (13, 0), Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		DiscreteArithmetic,
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'HKQuantityAggregationStyle.DiscreteArithmetic'.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'HKQuantityAggregationStyle.DiscreteArithmetic'.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'HKQuantityAggregationStyle.DiscreteArithmetic'.")]
 		Discrete = DiscreteArithmetic,
 		[iOS (13, 0), Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		DiscreteTemporallyWeighted,
 		[iOS (13, 0), Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		DiscreteEquivalentContinuousLevel,
 	}
 
 	// NSInteger -> HKObjectType.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKCategoryValueSleepAnalysis : long {
 		InBed,
 		Asleep,
 		[Watch (3, 0), iOS (10, 0)]
+		[MacCatalyst (13, 1)]
 		Awake,
 		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
 		AsleepCore = 3,
@@ -129,9 +135,9 @@ namespace HealthKit {
 	}
 
 	// NSUInteger -> HKQuery.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
 	public enum HKQueryOptions : ulong {
@@ -141,9 +147,9 @@ namespace HealthKit {
 	}
 
 	// NSUInteger -> HKStatistics.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
 	public enum HKStatisticsOptions : ulong {
@@ -154,15 +160,17 @@ namespace HealthKit {
 		DiscreteMax = 1 << 3,
 		CumulativeSum = 1 << 4,
 		[iOS (13, 0), Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		MostRecent = 1 << 5,
 		[iOS (13, 0), Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		Duration = 1 << 6,
 	}
 
 	// NSInteger -> HKUnit.h
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKMetricPrefix : long {
 		None = 0,
@@ -179,13 +187,14 @@ namespace HealthKit {
 		Giga,
 		Tera,
 		[iOS (13, 0), Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		Femto,
 	}
 
 	[Native]
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum HKWorkoutActivityType : ulong {
 		AmericanFootball = 1,
 		Archery,
@@ -203,6 +212,7 @@ namespace HealthKit {
 		Dance,
 		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'HKWorkoutActivityType.Dance', 'HKWorkoutActivityType.Barre', or 'HKWorkoutActivityType.Pilates'.")]
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'HKWorkoutActivityType.Dance', 'HKWorkoutActivityType.Barre', or 'HKWorkoutActivityType.Pilates'.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'HKWorkoutActivityType.Dance', 'HKWorkoutActivityType.Barre', or 'HKWorkoutActivityType.Pilates'.")]
 		DanceInspiredTraining,
 		Elliptical,
 		EquestrianSports,
@@ -220,6 +230,7 @@ namespace HealthKit {
 		MindAndBody,
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'MixedCardio' or 'HighIntensityIntervalTraining' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'MixedCardio' or 'HighIntensityIntervalTraining' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'MixedCardio' or 'HighIntensityIntervalTraining' instead.")]
 		MixedMetabolicCardioTraining,
 		PaddleSports,
 		Play,
@@ -249,95 +260,125 @@ namespace HealthKit {
 		Wrestling,
 		Yoga,
 		[iOS (10, 0), Watch (3, 0)]
+		[MacCatalyst (13, 1)]
 		Barre,
 		[iOS (10, 0), Watch (3, 0)]
+		[MacCatalyst (13, 1)]
 		CoreTraining,
 		[iOS (10, 0), Watch (3, 0)]
+		[MacCatalyst (13, 1)]
 		CrossCountrySkiing,
 		[iOS (10, 0), Watch (3, 0)]
+		[MacCatalyst (13, 1)]
 		DownhillSkiing,
 		[iOS (10, 0), Watch (3, 0)]
+		[MacCatalyst (13, 1)]
 		Flexibility,
 		[iOS (10, 0), Watch (3, 0)]
+		[MacCatalyst (13, 1)]
 		HighIntensityIntervalTraining,
 		[iOS (10, 0), Watch (3, 0)]
+		[MacCatalyst (13, 1)]
 		JumpRope,
 		[iOS (10, 0), Watch (3, 0)]
+		[MacCatalyst (13, 1)]
 		Kickboxing,
 		[iOS (10, 0), Watch (3, 0)]
+		[MacCatalyst (13, 1)]
 		Pilates,
 		[iOS (10, 0), Watch (3, 0)]
+		[MacCatalyst (13, 1)]
 		Snowboarding,
 		[iOS (10, 0), Watch (3, 0)]
+		[MacCatalyst (13, 1)]
 		Stairs,
 		[iOS (10, 0), Watch (3, 0)]
+		[MacCatalyst (13, 1)]
 		StepTraining,
 		[iOS (10, 0), Watch (3, 0)]
+		[MacCatalyst (13, 1)]
 		WheelchairWalkPace,
 		[iOS (10, 0), Watch (3, 0)]
+		[MacCatalyst (13, 1)]
 		WheelchairRunPace,
 		[iOS (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		TaiChi,
 		[iOS (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		MixedCardio,
 		[iOS (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		HandCycling,
 		[iOS (13, 0), Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		DiscSports,
 		[iOS (13, 0), Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		FitnessGaming,
 		[iOS (14, 0)]
 		[Watch (7, 0)]
+		[MacCatalyst (14, 0)]
 		CardioDance = 77,
 		[iOS (14, 0)]
 		[Watch (7, 0)]
+		[MacCatalyst (14, 0)]
 		SocialDance = 78,
 		[iOS (14, 0)]
 		[Watch (7, 0)]
+		[MacCatalyst (14, 0)]
 		Pickleball = 79,
 		[iOS (14, 0)]
 		[Watch (7, 0)]
+		[MacCatalyst (14, 0)]
 		Cooldown = 80,
 		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
 		SwimBikeRun = 82,
 		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
 		Transition = 83,
 		[iOS (8, 2)]
+		[MacCatalyst (13, 1)]
 		Other = 3000
 	}
 
 	[Native]
-	[Watch (2, 0)]
 	[iOS (8, 0)]
 	[Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum HKWorkoutEventType : long {
 		Pause = 1,
 		Resume,
 		[iOS (10, 0), Watch (3, 0)]
+		[MacCatalyst (13, 1)]
 		Lap,
 		[iOS (10, 0), Watch (3, 0)]
+		[MacCatalyst (13, 1)]
 		Marker,
 		[iOS (10, 0), Watch (3, 0)]
+		[MacCatalyst (13, 1)]
 		MotionPaused,
 		[iOS (10, 0), Watch (3, 0)]
+		[MacCatalyst (13, 1)]
 		MotionResumed,
 		[iOS (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		Segment,
 		[iOS (11, 0), Watch (4, 0)]
+		[MacCatalyst (13, 1)]
 		PauseOrResumeRequest,
 	}
 
-	[Watch (2, 0)]
 	[iOS (9, 0)]
 	[Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKCategoryValue : long {
 		NotApplicable = 0
 	}
 
-	[Watch (2, 0)]
 	[iOS (9, 0)]
 	[Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKCategoryValueCervicalMucusQuality : long {
 		NotApplicable = 0,
@@ -348,9 +389,9 @@ namespace HealthKit {
 		EggWhite
 	}
 
-	[Watch (2, 0)]
 	[iOS (9, 0)]
 	[Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKCategoryValueMenstrualFlow : long {
 		NotApplicable = 0,
@@ -360,29 +401,33 @@ namespace HealthKit {
 		Heavy,
 		[iOS (12, 0)]
 		[Watch (5, 0)]
+		[MacCatalyst (13, 1)]
 		None,
 	}
 
-	[Watch (2, 0)]
 	[iOS (9, 0)]
 	[Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKCategoryValueOvulationTestResult : long {
 		NotApplicable = 0,
 		Negative = 1,
 		[iOS (13, 0), Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		LuteinizingHormoneSurge = 2,
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'HKCategoryValueOvulationTestResult.LuteinizingHormoneSurge' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'HKCategoryValueOvulationTestResult.LuteinizingHormoneSurge' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'HKCategoryValueOvulationTestResult.LuteinizingHormoneSurge' instead.")]
 		Positive = LuteinizingHormoneSurge,
 		Indeterminate = 3,
 		[iOS (13, 0), Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		EstrogenSurge = 4,
 	}
 
-	[Watch (2, 0)]
 	[iOS (9, 0)]
 	[Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKCategoryValueAppleStandHour : long {
 		Stood = 0,
@@ -392,14 +437,15 @@ namespace HealthKit {
 	[iOS (13, 0)]
 	[Watch (6, 0)]
 	[Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKCategoryValueAudioExposureEvent : long {
 		LoudEnvironment = 1,
 	}
 
-	[Watch (2, 0)]
 	[iOS (9, 0)]
 	[Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKFitzpatrickSkinType : long {
 		NotSet = 0,
@@ -412,6 +458,7 @@ namespace HealthKit {
 	}
 
 	[Watch (3, 0), iOS (10, 0), Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKWheelchairUse : long {
 		NotSet = 0,
@@ -420,6 +467,7 @@ namespace HealthKit {
 	}
 
 	[Watch (3, 0), iOS (10, 0), Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKWeatherCondition : long {
 		None = 0,
@@ -453,6 +501,7 @@ namespace HealthKit {
 	}
 
 	[Watch (3, 0), iOS (10, 0), Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKWorkoutSwimmingLocationType : long {
 		Unknown = 0,
@@ -461,6 +510,7 @@ namespace HealthKit {
 	}
 
 	[Watch (3, 0), iOS (10, 0), Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKSwimmingStrokeStyle : long {
 		Unknown = 0,
@@ -474,6 +524,7 @@ namespace HealthKit {
 	}
 
 	[Watch (4, 0), iOS (11, 0), Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKInsulinDeliveryReason : long {
 		Basal = 1,
@@ -487,6 +538,7 @@ namespace HealthKit {
 	}
 
 	[Watch (4, 0), iOS (11, 0), Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKBloodGlucoseMealTime : long {
 		Preprandial = 1,
@@ -500,6 +552,7 @@ namespace HealthKit {
 	}
 
 	[Watch (4, 0), iOS (11, 0), Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKVO2MaxTestType : long {
 		MaxExercise = 1,
@@ -508,6 +561,7 @@ namespace HealthKit {
 	}
 
 	[NoWatch, iOS (12, 0), Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum HKFhirResourceType {
 		[Field ("HKFHIRResourceTypeAllergyIntolerance")]
 		AllergyIntolerance,
@@ -526,14 +580,17 @@ namespace HealthKit {
 		[Field ("HKFHIRResourceTypeProcedure")]
 		Procedure,
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Field ("HKFHIRResourceTypeMedicationRequest")]
 		MedicationRequest,
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Field ("HKFHIRResourceTypeCoverage")]
 		Coverage,
 	}
 
 	[Watch (5, 0), iOS (12, 0), Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum HKClinicalTypeIdentifier {
 
 		[Field ("HKClinicalTypeIdentifierAllergyRecord")]
@@ -551,11 +608,13 @@ namespace HealthKit {
 		[Field ("HKClinicalTypeIdentifierVitalSignRecord")]
 		VitalSignRecord,
 		[Watch (7, 0), iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Field ("HKClinicalTypeIdentifierCoverageRecord")]
 		CoverageRecord,
 	}
 
 	[Watch (5, 0), iOS (12, 0), Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKAuthorizationRequestStatus : long {
 		Unknown = 0,
@@ -564,6 +623,7 @@ namespace HealthKit {
 	}
 
 	[Watch (7, 0), iOS (13, 6), Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKCategoryValueAppetiteChanges : long {
 		Unspecified = 0,
@@ -573,6 +633,7 @@ namespace HealthKit {
 	}
 
 	[Watch (7, 0), iOS (14, 0), Mac (13, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HKAppleEcgAlgorithmVersion : long {
 		Version1 = 1,
@@ -580,12 +641,14 @@ namespace HealthKit {
 	}
 
 	[Watch (7, 0), iOS (14, 0), Mac (13, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HKCategoryValueEnvironmentalAudioExposureEvent : long {
 		MomentaryLimit = 1,
 	}
 
 	[Watch (7, 0), iOS (13, 6), Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKCategoryValuePresence : long {
 		Present = 0,
@@ -593,6 +656,7 @@ namespace HealthKit {
 	}
 
 	[Watch (7, 0), iOS (13, 6), Mac (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKCategoryValueSeverity : long {
 		Unspecified = 0,
@@ -603,6 +667,7 @@ namespace HealthKit {
 	}
 
 	[Watch (7, 0), iOS (14, 0), Mac (13, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HKDevicePlacementSide : long {
 		Unknown = 0,
@@ -612,6 +677,7 @@ namespace HealthKit {
 	}
 
 	[Watch (7, 0), iOS (14, 0), Mac (13, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HKElectrocardiogramClassification : long {
 		NotSet = 0,
@@ -625,12 +691,14 @@ namespace HealthKit {
 	}
 
 	[Watch (7, 0), iOS (14, 0), Mac (13, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HKElectrocardiogramLead : long {
 		AppleWatchSimilarToLeadI = 1,
 	}
 
 	[Watch (7, 0), iOS (14, 0), Mac (13, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HKElectrocardiogramSymptomsStatus : long {
 		NotSet = 0,
@@ -639,6 +707,7 @@ namespace HealthKit {
 	}
 
 	[NoWatch, iOS (14, 0), Mac (13, 0)]
+	[MacCatalyst (14, 0)]
 	public enum HKFhirRelease {
 		[Field ("HKFHIRReleaseDSTU2")]
 		Dstu2,

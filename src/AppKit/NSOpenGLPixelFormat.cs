@@ -32,13 +32,15 @@ using CoreGraphics;
 using CoreImage;
 using CoreAnimation;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSOpenGLPixelFormat {
 		static IntPtr selInitWithAttributes = Selector.GetHandle ("initWithAttributes:");
 
 		public NSOpenGLPixelFormat (NSOpenGLPixelFormatAttribute [] attribs) : base (NSObjectFlag.Empty)
 		{
-			if (attribs == null)
+			if (attribs is null)
 				throw new ArgumentNullException ("attribs");
 
 			unsafe {
@@ -58,7 +60,7 @@ namespace AppKit {
 
 		public NSOpenGLPixelFormat (uint [] attribs) : base (NSObjectFlag.Empty)
 		{
-			if (attribs == null)
+			if (attribs is null)
 				throw new ArgumentNullException ("attribs");
 
 			unsafe {
@@ -150,7 +152,7 @@ namespace AppKit {
 
 		public NSOpenGLPixelFormat (params object [] attribs) : this (ConvertToAttributes (attribs))
 		{
-			if (attribs == null)
+			if (attribs is null)
 				throw new ArgumentNullException ("attribs");
 
 			unsafe {

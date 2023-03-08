@@ -1,6 +1,8 @@
 #if !__MACCATALYST__
 using System;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSPopUpButtonCell {
 		public NSMenuItem this [nint idx] {

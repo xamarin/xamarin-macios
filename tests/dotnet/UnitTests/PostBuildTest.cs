@@ -18,6 +18,7 @@ namespace Xamarin.Tests {
 			var project = "MySimpleApp";
 			var configuration = "Release";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers, platform, out var appPath, configuration: configuration);
 			Clean (project_path);
@@ -45,6 +46,7 @@ namespace Xamarin.Tests {
 			var project = "MySimpleApp";
 			var configuration = "Release";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
 			Clean (project_path);
@@ -69,6 +71,7 @@ namespace Xamarin.Tests {
 		public void AssemblyStripping (string project, ApplePlatform platform, string runtimeIdentifiers, bool shouldStrip)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
@@ -97,6 +100,7 @@ namespace Xamarin.Tests {
 		{
 			var projectVersion = "3.14";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
@@ -120,6 +124,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
@@ -162,6 +167,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);

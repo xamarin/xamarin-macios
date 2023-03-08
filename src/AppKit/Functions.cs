@@ -29,6 +29,8 @@ using CoreGraphics;
 using CoreImage;
 using CoreAnimation;
 
+#nullable enable
+
 namespace AppKit {
 
 #if MONOMAC

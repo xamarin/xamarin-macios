@@ -9,7 +9,7 @@ namespace StoreKit {
 	partial class SKReceiptRefreshRequest {
 #if NET
 		[SupportedOSPlatform ("ios7.1")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else

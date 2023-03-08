@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AppKit {
 
 	public partial class NSDocument {
@@ -32,9 +34,9 @@ namespace AppKit {
 			}
 		}
 
-		public void DuplicateDocument (DuplicateCallback callback)
+		public void DuplicateDocument (DuplicateCallback? callback)
 		{
-			if (callback == null) {
+			if (callback is null) {
 				_DuplicateDocument (null, null, IntPtr.Zero);
 			} else {
 				_DuplicateDocument (new Callback (callback), new Selector ("document:didDuplicate:contextInfo:"), IntPtr.Zero);

@@ -15,7 +15,7 @@ namespace MediaToolbox {
 	static public class MTProfessionalVideoWorkflow {
 
 #if NET
-		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[Mac (10,10)]
 #endif

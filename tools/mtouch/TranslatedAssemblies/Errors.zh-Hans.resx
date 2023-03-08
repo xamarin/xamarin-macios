@@ -751,7 +751,7 @@
 		<value>使用 CoreCLR 时，选项“{0}”无法取值“{1}”。</value>
 	</data>
   <data name="MX0186" xml:space="preserve">
-		<value>Bitcode is enabled, but bitcode is not supported in Xcode 14+ and has been disabled. Please disable bitcode by removing the 'MtouchEnableBitcode' property from the project file.</value>
+		<value>已启用 Bitcode，但 Xcode 14+ 中不支持 Bitcode，并且已将其禁用。请通过从项目文件中删除 “MtouchEnableBitcode” 属性来禁用 Bitcode。</value>
 	</data>
   <data name="MX1009" xml:space="preserve">
 		<value>无法将程序集 "{0}" 复制到 "{1}": {2}
@@ -1747,20 +1747,20 @@
 		<value>无法创建类型 {0} 的实例。</value>
 	</data>
   <data name="MX8042" xml:space="preserve">
-		<value>尝试调用函数 {0} 时发生异常:{1}。</value>
+		<value>尝试调用函数 {0} 时发生异常: {1}。</value>
 		<comment>
 			0: name of function
 			1: exception info
 		</comment>
 	</data>
   <data name="MX8043" xml:space="preserve">
-		<value>An exception occurred while validating the static registrar code for {0}: {1}</value>
+		<value>验证 {0} 的静态注册器代码时发生异常: {1}</value>
 		<comment>
 			0: name of an assembly
 			1: exception info
 		</comment>
 	</data>
   <data name="MX8044" xml:space="preserve">
-		<value>The assembly {0} has been modified since the app was built, invalidating the generated static registrar code. The MVID for the loaded assembly is {1}, while the MVID for the assembly the generated static registrar code corresponds to is {2}.</value>
+		<value>自生成应用以来，已对程序集 {0} 进行了修改，从而使生成的静态注册器代码无效。已加载程序集的 MVID 为 {1}，而生成的静态注册器代码对应的程序集的 MVID 为 {2}。</value>
 	</data>
 </root>

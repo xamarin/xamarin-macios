@@ -13,8 +13,8 @@ using ObjCRuntime;
 namespace OpenGLES {
 
 #if NET
-	[UnsupportedOSPlatform ("tvos12.0")]
-	[UnsupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("tvos12.0", "Use 'Metal' instead.")]
 	[ObsoletedOSPlatform ("ios12.0", "Use 'Metal' instead.")]
 #else
@@ -36,8 +36,8 @@ namespace OpenGLES {
 	}
 
 #if NET
-	[UnsupportedOSPlatform ("tvos12.0")]
-	[UnsupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("ios")]
 	[ObsoletedOSPlatform ("tvos12.0", "Use 'Metal' instead.")]
 	[ObsoletedOSPlatform ("ios12.0", "Use 'Metal' instead.")]
 #else

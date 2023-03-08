@@ -12,7 +12,7 @@ namespace VideoSubscriberAccount {
 #if NET
 		[SupportedOSPlatform ("tvos10.1")]
 		[SupportedOSPlatform ("ios10.2")]
-		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (10, 1)]

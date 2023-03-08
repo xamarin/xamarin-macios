@@ -99,7 +99,7 @@ namespace Xamarin.MacDev.Tasks {
 			var appManifest = AppManifest?.ItemSpec;
 			if (appManifest is not null && File.Exists (appManifest)) {
 				try {
-					plist = PDictionary.FromFile (appManifest);
+					plist = PDictionary.FromFile (appManifest)!;
 				} catch (Exception ex) {
 					LogAppManifestError (MSBStrings.E0010, appManifest, ex.Message);
 					return false;
@@ -247,8 +247,10 @@ namespace Xamarin.MacDev.Tasks {
 			if (Platform == ApplePlatform.MacCatalyst && !string.IsNullOrEmpty (SupportedOSPlatformVersion)) {
 				// SupportedOSPlatformVersion is the iOS version for Mac Catalyst.
 				// But we need to store the macOS version in the app manifest, so convert it to the macOS version here.
-				if (!MacCatalystSupport.TryGetMacOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), SupportedOSPlatformVersion, out var convertedVersion, out var knowniOSVersions))
+				if (!MacCatalystSupport.TryGetMacOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), SupportedOSPlatformVersion, out var convertedVersion, out var knowniOSVersions)) {
 					Log.LogError (MSBStrings.E0188, SupportedOSPlatformVersion, string.Join (", ", knowniOSVersions));
+					return false;
+				}
 				convertedSupportedOSPlatformVersion = convertedVersion;
 			} else {
 				convertedSupportedOSPlatformVersion = SupportedOSPlatformVersion;
@@ -259,8 +261,10 @@ namespace Xamarin.MacDev.Tasks {
 				var minimumiOSVersionInManifest = plist.Get<PString> (ManifestKeys.MinimumOSVersion)?.Value;
 				if (!string.IsNullOrEmpty (minimumiOSVersionInManifest)) {
 					// Convert to the macOS version
-					if (!MacCatalystSupport.TryGetMacOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), minimumiOSVersionInManifest!, out var convertedVersion, out var knowniOSVersions))
+					if (!MacCatalystSupport.TryGetMacOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), minimumiOSVersionInManifest!, out var convertedVersion, out var knowniOSVersions)) {
 						Log.LogError (MSBStrings.E0188, minimumiOSVersionInManifest, string.Join (", ", knowniOSVersions));
+						return false;
+					}
 					minimumOSVersionInManifest = convertedVersion;
 				}
 			}
@@ -298,6 +302,15 @@ namespace Xamarin.MacDev.Tasks {
 
 		bool Compile (PDictionary plist)
 		{
+			var currentSDK = Sdks.GetAppleSdk (Platform);
+
+			sdkVersion = AppleSdkVersion.Parse (DefaultSdkVersion);
+			if (!currentSDK.SdkIsInstalled (sdkVersion, SdkIsSimulator)) {
+				Log.LogError (null, null, null, null, 0, 0, 0, 0, MSBStrings.E0013, Platform, sdkVersion);
+				return false;
+			}
+			SetXcodeValues (plist, currentSDK);
+
 			switch (Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
@@ -346,16 +359,17 @@ namespace Xamarin.MacDev.Tasks {
 		public static void MergePartialPlistDictionary (PDictionary plist, PDictionary partial)
 		{
 			foreach (var property in partial) {
-				if (plist.ContainsKey (property.Key)) {
-					var value = plist [property.Key];
+				var key = property.Key!;
+				if (plist.ContainsKey (key)) {
+					var value = plist [key];
 
 					if (value is PDictionary && property.Value is PDictionary) {
 						MergePartialPlistDictionary ((PDictionary) value, (PDictionary) property.Value);
 					} else {
-						plist [property.Key] = property.Value.Clone ();
+						plist [key] = property.Value.Clone ();
 					}
 				} else {
-					plist [property.Key] = property.Value.Clone ();
+					plist [key] = property.Value.Clone ();
 				}
 			}
 		}
@@ -369,7 +383,7 @@ namespace Xamarin.MacDev.Tasks {
 				PDictionary partial;
 
 				try {
-					partial = PDictionary.FromFile (template.ItemSpec);
+					partial = PDictionary.FromFile (template.ItemSpec)!;
 				} catch (Exception ex) {
 					task.Log.LogError (MSBStrings.E0107, template.ItemSpec, ex.Message);
 					continue;
@@ -447,20 +461,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		bool CompileMobile (PDictionary plist)
 		{
-			var currentSDK = Sdks.GetAppleSdk (Platform);
-
-			sdkVersion = AppleSdkVersion.Parse (DefaultSdkVersion);
-			if (!currentSDK.SdkIsInstalled (sdkVersion, SdkIsSimulator)) {
-				Log.LogError (null, null, null, null, 0, 0, 0, 0, MSBStrings.E0013, Platform, sdkVersion);
-				return false;
-			}
-
 			supportedDevices = plist.GetUIDeviceFamily ();
 
-			var sdkSettings = currentSDK.GetSdkSettings (sdkVersion, SdkIsSimulator);
-			var dtSettings = currentSDK.GetAppleDTSettings ();
-
-			SetValue (plist, ManifestKeys.BuildMachineOSBuild, dtSettings.BuildMachineOSBuild);
 			// We have an issue here, this is for consideration by the platform:
 			// CFLocaleCopyCurrent(), used in the mono code to get the current locale (locale.c line 421), will return the value of the application's CFBundleDevelopmentRegion Info.plist key if all of the following conditions are true:
 			// 
@@ -482,45 +484,6 @@ namespace Xamarin.MacDev.Tasks {
 			if (!plist.ContainsKey (ManifestKeys.CFBundleSupportedPlatforms))
 				plist [ManifestKeys.CFBundleSupportedPlatforms] = new PArray { SdkPlatform };
 
-			string? dtCompiler = null;
-			string? dtPlatformBuild = null;
-			string? dtSDKBuild = null;
-			string? dtPlatformName;
-			string? dtPlatformVersion = null;
-			string? dtXcode = null;
-			string? dtXcodeBuild = null;
-
-			if (!SdkIsSimulator) {
-				dtCompiler = sdkSettings.DTCompiler;
-				dtPlatformBuild = dtSettings.DTPlatformBuild;
-				dtSDKBuild = sdkSettings.DTSDKBuild;
-			}
-
-			dtPlatformName = SdkPlatform.ToLowerInvariant ();
-			if (!SdkIsSimulator)
-				dtPlatformVersion = dtSettings.DTPlatformVersion;
-
-			var dtSDKName = sdkSettings.CanonicalName;
-			// older sdksettings didn't have a canonicalname for sim
-			if (SdkIsSimulator && string.IsNullOrEmpty (dtSDKName)) {
-				var deviceSdkSettings = currentSDK.GetSdkSettings (sdkVersion, false);
-				dtSDKName = deviceSdkSettings.AlternateSDK;
-			}
-
-			if (!SdkIsSimulator) {
-				dtXcode = AppleSdkSettings.DTXcode;
-				dtXcodeBuild = dtSettings.DTXcodeBuild;
-			}
-
-			SetValueIfNotNull (plist, "DTCompiler", dtCompiler);
-			SetValueIfNotNull (plist, "DTPlatformBuild", dtPlatformBuild);
-			SetValueIfNotNull (plist, "DTSDKBuild", dtSDKBuild);
-			plist.SetIfNotPresent ("DTPlatformName", dtPlatformName);
-			SetValueIfNotNull (plist, "DTPlatformVersion", dtPlatformVersion);
-			SetValue (plist, "DTSDKName", dtSDKName);
-			SetValueIfNotNull (plist, "DTXcode", dtXcode);
-			SetValueIfNotNull (plist, "DTXcodeBuild", dtXcodeBuild);
-
 			SetDeviceFamily (plist);
 
 			if (IsWatchExtension) {
@@ -533,6 +496,22 @@ namespace Xamarin.MacDev.Tasks {
 			return !Log.HasLoggedErrors;
 		}
 
+		void SetXcodeValues (PDictionary plist, IAppleSdk currentSDK)
+		{
+			var sdkSettings = currentSDK.GetSdkSettings (sdkVersion, SdkIsSimulator);
+			var dtSettings = currentSDK.GetAppleDTSettings ();
+
+			SetValueIfNotNull (plist, ManifestKeys.BuildMachineOSBuild, dtSettings.BuildMachineOSBuild);
+			SetValueIfNotNull (plist, "DTCompiler", sdkSettings.DTCompiler);
+			SetValueIfNotNull (plist, "DTPlatformBuild", dtSettings.DTPlatformBuild);
+			SetValueIfNotNull (plist, "DTSDKBuild", sdkSettings.DTSDKBuild);
+			SetValueIfNotNull (plist, "DTPlatformName", SdkPlatform.ToLowerInvariant ());
+			SetValueIfNotNull (plist, "DTPlatformVersion", dtSettings.DTPlatformVersion);
+			SetValueIfNotNull (plist, "DTSDKName", sdkSettings.CanonicalName);
+			SetValueIfNotNull (plist, "DTXcode", AppleSdkSettings.DTXcode);
+			SetValueIfNotNull (plist, "DTXcodeBuild", dtSettings.DTXcodeBuild);
+		}
+
 		void SetValueIfNotNull (PDictionary dict, string key, string? value)
 		{
 			if (value is null)
@@ -542,7 +521,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		void SetRequiredArchitectures (PDictionary plist)
 		{
-			PObject capabilities;
+			PObject? capabilities;
 
 			if (plist.TryGetValue (ManifestKeys.UIRequiredDeviceCapabilities, out capabilities)) {
 				if (capabilities is PArray) {
@@ -644,7 +623,7 @@ namespace Xamarin.MacDev.Tasks {
 			// directly to IP addresses, which means we won't have to do this at all
 			// (sometime in the future).
 
-			PDictionary ats;
+			PDictionary? ats;
 
 			if (!plist.TryGetValue (ManifestKeys.NSAppTransportSecurity, out ats))
 				plist.Add (ManifestKeys.NSAppTransportSecurity, ats = new PDictionary ());

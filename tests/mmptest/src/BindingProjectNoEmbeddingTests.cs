@@ -6,10 +6,8 @@ using System.Text;
 using NUnit.Framework;
 using Xamarin.Utils;
 
-namespace Xamarin.MMP.Tests
-{
-	public class BindingProjectNoEmbeddingTests
-	{
+namespace Xamarin.MMP.Tests {
+	public class BindingProjectNoEmbeddingTests {
 		static void Touch (string projectPath) => File.SetLastWriteTimeUtc (projectPath, DateTime.UtcNow);
 
 		static void AssertNoResourceWithName (string tmpDir, string projectName, string resourceName)
@@ -120,9 +118,9 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig library = new TI.UnifiedTestConfig (tmpDir) { ProjectName = "UnifiedLibrary" };
 				library.TestCode = "public class MyClass { public static void Go () { var c = new ExampleBinding.SimpleClass (); c.DoIt (); } }";
 
-				if (useProjectReference) 
+				if (useProjectReference)
 					library.References = $@"<ProjectReference Include=""MobileBinding.csproj"" />";
-				else 
+				else
 					library.References = $@"<Reference Include=""MobileBinding""><HintPath>{Path.Combine (tmpDir, "bin/Debug", "MobileBinding.dll")}</HintPath></Reference>";
 
 				TI.GenerateUnifiedLibraryProject (library);
@@ -131,9 +129,9 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig project = new TI.UnifiedTestConfig (tmpDir) { ProjectName = "UnifiedExample.csproj" };
 				project.TestCode = "MyClass.Go ();";
 
-				if (useProjectReference) 
+				if (useProjectReference)
 					project.References = $@"<ProjectReference Include=""UnifiedLibrary.csproj"" />";
-				else 
+				else
 					project.References = $@"<Reference Include=""UnifiedLibrary""><HintPath>{Path.Combine (tmpDir, "bin/Debug", "UnifiedLibrary.dll")}</HintPath></Reference>";
 
 				TI.GenerateUnifiedExecutableProject (project);
@@ -147,7 +145,7 @@ namespace Xamarin.MMP.Tests
 			MMPTests.RunMMPTest (tmpDir => {
 				var projects = BindingProjectTests.GenerateTestProject (BindingProjectType.Modern, tmpDir);
 				BindingProjectTests.SetNoEmbedding (projects.Item1);
-				
+
 				BindingProjectTests.SetupAndBuildBindingProject (projects.Item1, true);
 
 				TI.CleanUnifiedProject (Path.Combine (tmpDir, projects.Item1.ProjectName));

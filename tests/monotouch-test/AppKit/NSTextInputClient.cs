@@ -79,9 +79,19 @@ namespace apitest {
 		{
 			NSRange range;
 			var rect = textView.GetFirstRect (new NSRange (12, 18), out range);
+#if NET
+			var zeroHeight = TestRuntime.CheckXcodeVersion (14, 0);
+#else
+			var zeroHeight = false;
+#endif
 
-			Assert.AreEqual (rect, new CGRect (0, 0, 12, 14), "NSTextInputClient_ShouldGetFirstRect - Returned wrong rect");
-			Assert.AreEqual (range, new NSRange (10, 4), "NSTextInputClient_ShouldGetFirstRect - Returned wrong Range");
+			if (zeroHeight) {
+				Assert.AreEqual (rect, new CGRect (0, 0, 0, 14), "NSTextInputClient_ShouldGetFirstRect - Returned wrong rect");
+				Assert.AreEqual (range, new NSRange (12, 0), "NSTextInputClient_ShouldGetFirstRect - Returned wrong Range");
+			} else {
+				Assert.AreEqual (rect, new CGRect (0, 0, 12, 14), "NSTextInputClient_ShouldGetFirstRect - Returned wrong rect");
+				Assert.AreEqual (range, new NSRange (10, 4), "NSTextInputClient_ShouldGetFirstRect - Returned wrong Range");
+			}
 		}
 
 		[Test]
@@ -99,7 +109,16 @@ namespace apitest {
 		[Test]
 		public void NSTextInputClient_ShouldGetBaselineDelta ()
 		{
-			Assert.IsTrue (textView.GetBaselineDelta (4) == 11, "NSTextInputClient_ShouldGetBaselineDelta - Returned wrong baseline delta value");
+#if NET
+			var zeroHeight = TestRuntime.CheckXcodeVersion (14, 0);
+#else
+			var zeroHeight = false;
+#endif
+
+			if (zeroHeight)
+				Assert.IsTrue (textView.GetBaselineDelta (4) == 0, "NSTextInputClient_ShouldGetBaselineDelta - Returned wrong baseline delta value");
+			else
+				Assert.IsTrue (textView.GetBaselineDelta (4) == 11, "NSTextInputClient_ShouldGetBaselineDelta - Returned wrong baseline delta value");
 		}
 
 		[Test]

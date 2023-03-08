@@ -751,7 +751,7 @@
 		<value>Параметр '{0}' не может иметь значение '{1}' при использовании CoreCLR.</value>
 	</data>
   <data name="MX0186" xml:space="preserve">
-		<value>Bitcode is enabled, but bitcode is not supported in Xcode 14+ and has been disabled. Please disable bitcode by removing the 'MtouchEnableBitcode' property from the project file.</value>
+		<value>Bitcode включен, но bitcode не поддерживается в Xcode 14+ и был отключен. Отключите bitcode, удалив свойство "MtouchEnableBitcode" из файла проекта.</value>
 	</data>
   <data name="MX1009" xml:space="preserve">
 		<value>Не удалось скопировать сборку "{0}" в "{1}": {2}.
@@ -1754,13 +1754,13 @@
 		</comment>
 	</data>
   <data name="MX8043" xml:space="preserve">
-		<value>An exception occurred while validating the static registrar code for {0}: {1}</value>
+		<value>Произошло исключение при проверке кода статического регистратора для {0}: {1}</value>
 		<comment>
 			0: name of an assembly
 			1: exception info
 		</comment>
 	</data>
   <data name="MX8044" xml:space="preserve">
-		<value>The assembly {0} has been modified since the app was built, invalidating the generated static registrar code. The MVID for the loaded assembly is {1}, while the MVID for the assembly the generated static registrar code corresponds to is {2}.</value>
+		<value>Сборка {0} была изменена с момента сборки приложения, что аннулирует созданный код статического регистратора. MVID для загруженной сборки — {1}, в то время как MVID для сборки, которой соответствует созданный код статического регистратора — {2}.</value>
 	</data>
 </root>

@@ -16,7 +16,7 @@ using ObjCRuntime;
 [assembly: Preserve]
 
 namespace Xamarin.Mac.Linker.Test {
-	
+
 	class PreserveAssembly {
 
 		static int UnusedProperty {
@@ -27,10 +27,10 @@ namespace Xamarin.Mac.Linker.Test {
 		{
 		}
 
-		static void Main (string[] args)
+		static void Main (string [] args)
 		{
 			NSApplication.Init ();
-			
+
 			Test.EnsureLinker (true);
 
 			int pcount = typeof (PreserveAssembly).GetProperties (BindingFlags.NonPublic | BindingFlags.Static).Length;

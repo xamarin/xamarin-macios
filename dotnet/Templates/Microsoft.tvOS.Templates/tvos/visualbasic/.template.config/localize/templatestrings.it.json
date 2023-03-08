@@ -1,0 +1,7 @@
+{
+  "author": "Microsoft",
+  "name": "Applicazione tvOS",
+  "description": "Progetto per la creazione di un'applicazione tvOS .NET",
+  "symbols/bundleId/description": "Esegue l'override di CFBundleIdentifier in Info.plist",
+  "symbols/minOSVersion/description": "Esegue l'override di SupportedOSPlatformVersion nel file di progetto"
+}
