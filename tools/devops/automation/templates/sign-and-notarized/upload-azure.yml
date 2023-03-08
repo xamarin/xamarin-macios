@@ -29,7 +29,6 @@ parameters:
   type: object
   default: [
     "package",
-    "pkg-info",
   ]
 
 steps:
