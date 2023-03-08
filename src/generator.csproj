@@ -100,6 +100,8 @@
     <Compile Include="..\src\bgen\AttributeManager.cs" />
     <Compile Include="..\src\bgen\Attributes.cs" />
     <Compile Include="..\src\bgen\AttributeFactory.cs" />
+    <Compile Include="..\src\bgen\AttributeFactory.Classic.cs" />
+    <Compile Include="..\src\bgen\AttributeFactory.NET.cs" />
     <Compile Include="..\src\bgen\BodyOption.cs" />
     <Compile Include="..\src\bgen\BindingTouch.cs" />
     <Compile Include="..\src\bgen\CollectionsExtensions.cs" />

@@ -90,7 +90,7 @@ public static class AttributeConversionManager {
 			throw new NotImplementedException ($"Unknown count {attribute.ConstructorArguments.Count} {createErrorMessage ()}");
 		}
 
-		return AttributeFactory.CreateNewAttribute (AttributeFactory.IntroducedAttributeType, ctorTypes, ctorValues);
+		return AttributeFactory.CreateNewAttribute<IntroducedAttribute> (ctorTypes, ctorValues);
 	}
 
 	struct ParsedAvailabilityInfo {
@@ -176,22 +176,22 @@ public static class AttributeConversionManager {
 			switch (arg.MemberName) {
 			case "Introduced": {
 				ParsedAvailabilityInfo availInfo = DetermineOldAvailabilityVersion (arg);
-				yield return AttributeFactory.CreateNewIntroducedAttribute (availInfo.Platform, availInfo.Major, availInfo.Minor, message: message);
+				yield return AttributeFactory.CreateNewAttribute<IntroducedAttribute> (availInfo.Platform, availInfo.Major, availInfo.Minor, message: message);
 				continue;
 			}
 			case "Deprecated": {
 				ParsedAvailabilityInfo availInfo = DetermineOldAvailabilityVersion (arg);
-				yield return AttributeFactory.CreateDeprecatedAttribute (availInfo.Platform, availInfo.Major, availInfo.Minor, message: message);
+				yield return AttributeFactory.CreateNewAttribute<DeprecatedAttribute> (availInfo.Platform, availInfo.Major, availInfo.Minor, message: message);
 				continue;
 			}
 			case "Obsoleted": {
 				ParsedAvailabilityInfo availInfo = DetermineOldAvailabilityVersion (arg);
-				yield return AttributeFactory.CreateObsoletedAttribute (availInfo.Platform, availInfo.Major, availInfo.Minor, message: message);
+				yield return AttributeFactory.CreateNewAttribute<ObsoletedAttribute> (availInfo.Platform, availInfo.Major, availInfo.Minor, message: message);
 				continue;
 			}
 			case "Unavailable": {
 				ParsedAvailabilityInfo availInfo = DetermineOldAvailabilityVersion (arg);
-				yield return AttributeFactory.CreateUnavailableAttribute (availInfo.Platform, message: message);
+				yield return AttributeFactory.CreateNewAttribute<UnavailableAttribute> (availInfo.Platform, message: message);
 				continue;
 			}
 			case "Message":

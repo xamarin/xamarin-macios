@@ -38,6 +38,7 @@
     <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.758" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttributeFactoryTests.cs" />
     <Compile Include="CollectionsExtensionsTests.cs" />
     <Compile Include="ErrorTests.cs" />
     <Compile Include="BGenTool.cs" />

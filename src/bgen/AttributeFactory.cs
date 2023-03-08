@@ -5,80 +5,54 @@ using ObjCRuntime;
 
 #nullable enable
 
-public static class AttributeFactory {
+public static partial class AttributeFactory {
 	public static readonly Type PlatformEnum = typeof (PlatformName);
-#if !NET
-	public static readonly Type PlatformArch = typeof (PlatformArchitecture);
-#endif
 
-	public static readonly Type IntroducedAttributeType = typeof (IntroducedAttribute);
-	public static readonly Type UnavailableAttributeType = typeof (UnavailableAttribute);
-	public static readonly Type ObsoletedAttributeType = typeof (ObsoletedAttribute);
-	public static readonly Type DeprecatedAttributeType = typeof (DeprecatedAttribute);
+	readonly partial struct ConstructorArguments {
+		readonly PlatformName platform;
+		readonly int? major;
+		readonly int? minor;
+		readonly string? message;
 
-	public static Attribute CreateNewAttribute (Type attribType, Type [] ctorTypes, object? [] ctorValues)
+		public ConstructorArguments (PlatformName platformIn, int majorIn, int minorIn, string? messageIn)
+		{
+			platform = platformIn;
+			major = majorIn;
+			minor = minorIn;
+			message = messageIn;
+		}
+
+		public ConstructorArguments (PlatformName platformIn, string? messageIn)
+		{
+			platform = platformIn;
+			major = null;
+			minor = null;
+			message = messageIn;
+		}
+	}
+
+	public static T CreateNewAttribute<T> (Type [] ctorTypes, object? [] ctorValues)
+		where T : Attribute
 	{
+		var attribType = typeof (T);
 		var ctor = attribType.GetConstructor (ctorTypes);
 		if (ctor is null)
 			throw ErrorHelper.CreateError (1058, attribType.FullName);
 
-		return (Attribute) ctor.Invoke (ctorValues);
+		return (T) ctor.Invoke (ctorValues);
 	}
 
-	static Attribute CreateMajorMinorAttribute (Type type, PlatformName platform, int major, int minor, string? message)
+	public static T CreateNewAttribute<T> (PlatformName platform, int major, int minor, string? message = null)
+		where T: Attribute
 	{
-#if NET
-		var ctorValues = new object? [] { (byte) platform, major, minor, message };
-		var ctorTypes = new [] { PlatformEnum, typeof (int), typeof (int), typeof (string) };
-#else
-		var ctorValues = new object? [] { (byte) platform, major, minor, (byte) 0xff, message };
-		var ctorTypes = new [] { PlatformEnum, typeof (int), typeof (int), PlatformArch, typeof (string) };
-#endif
-		return CreateNewAttribute (type, ctorTypes, ctorValues);
+		var args = new ConstructorArguments (platform, major, minor, message);
+		return CreateNewAttribute<T> (args.GetCtorTypes (), args.GetCtorValues ());
 	}
 
-	static Attribute CreateUnspecifiedAttribute (Type type, PlatformName platform, string? message)
+	public static T CreateNewAttribute<T> (PlatformName platform, string? message = null) where T : Attribute
 	{
-#if NET
-		var ctorValues = new object? [] { (byte) platform, message };
-		var ctorTypes = new [] { PlatformEnum, typeof (string) };
-#else
-		var ctorValues = new object? [] { (byte) platform, (byte) 0xff, message };
-		var ctorTypes = new [] { PlatformEnum, PlatformArch, typeof (string) };
-#endif
-		return CreateNewAttribute (type, ctorTypes, ctorValues);
-	}
-
-	public static Attribute CreateNewIntroducedAttribute (PlatformName platform, int major, int minor, string? message = null)
-	{
-		return CreateMajorMinorAttribute (IntroducedAttributeType, platform, major, minor, message);
-	}
-
-	public static Attribute CreateNewUnspecifiedIntroducedAttribute (PlatformName platform, string? message = null)
-	{
-		return CreateUnspecifiedAttribute (IntroducedAttributeType, platform, message);
-	}
-
-	public static Attribute CreateObsoletedAttribute (PlatformName platform, int major, int minor, string? message = null)
-	{
-		return CreateMajorMinorAttribute (ObsoletedAttributeType, platform, major, minor, message);
-	}
-
-	public static Attribute CreateDeprecatedAttribute (PlatformName platform, int major, int minor, string? message = null)
-	{
-		return CreateMajorMinorAttribute (DeprecatedAttributeType, platform, major, minor, message);
-	}
-
-	public static Attribute CreateUnavailableAttribute (PlatformName platformName, string? message = null)
-	{
-#if NET
-		var ctorValues = new object? [] { (byte) platformName, message };
-		var ctorTypes = new [] { PlatformEnum, typeof (string) };
-#else
-		var ctorValues = new object [] { (byte) platformName, (byte) 0xff, message };
-		var ctorTypes = new [] { PlatformEnum, PlatformArch, typeof (string) };
-#endif
-		return CreateNewAttribute (UnavailableAttributeType, ctorTypes, ctorValues);
+		var args = new ConstructorArguments (platform, message);
+		return CreateNewAttribute<T> (args.GetCtorTypes (), args.GetCtorValues ());
 	}
 
 	public static AvailabilityBaseAttribute CreateNoVersionSupportedAttribute (PlatformName platform)
