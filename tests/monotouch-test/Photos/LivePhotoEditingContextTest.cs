@@ -74,7 +74,8 @@ namespace MonoTouchFixtures.Photos {
 			Assert.NotNull (m, "Invoke");
 			var d = m.CreateDelegate (typeof (DPHLivePhotoFrameProcessingBlock2));
 #if NET
-			var del = (DPHLivePhotoFrameProcessingBlock2) Marshal.GetDelegateForFunctionPointer (m.MethodHandle.GetFunctionPointer (), typeof (DPHLivePhotoFrameProcessingBlock2));
+			var fptr = m.MethodHandle.GetFunctionPointer ();
+			var del = new DPHLivePhotoFrameProcessingBlock2 ((a, b, c) => (NativeHandle) global::Bindings.Test.CFunctions.x_call_func_3 (fptr, (IntPtr) a, (IntPtr) b, (IntPtr) c));
 #else
 			var del = (DPHLivePhotoFrameProcessingBlock2) d;
 #endif
