@@ -61,7 +61,11 @@ steps:
     inputs:
       artifactName: ${{ parameters.uploadPrefix }}${{ pkg }}
       allowFailedBuilds: true
-      path: $(Build.SourcesDirectory)/artifacts
+      path: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}${{ pkg }}
+
+- pwsh: |
+    Get-ChildItem -Path "$(Build.SourcesDirectory)\\artifacts
+  displayName: "Show downloaded artifacts"
 
 - pwsh: |
     $packagePrefix = "https://dl.internalx.com/$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/package"
