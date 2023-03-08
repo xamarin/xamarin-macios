@@ -1784,12 +1784,19 @@
 			<_MlaunchWaitForExit Condition="'$(_MlaunchWaitForExit)' == ''">true</_MlaunchWaitForExit>
 			<!-- don't set standard output/error path, mlaunch will by default write to stdout/stderr -->
 		</PropertyGroup>
+		<ItemGroup>
+			<MlaunchEnvironmentVariables Include="__XAMARIN_DEBUG_MODE__=$(XamarinDebugMode)" Condition="'$(XamarinDebugMode)' != ''" />
+			<MlaunchEnvironmentVariables Include="__XAMARIN_DEBUG_PORT__=$(XamarinDebugPort)" Condition="'$(XamarinDebugPort)' != ''" />
+			<MlaunchEnvironmentVariables Include="__XAMARIN_DEBUG_HOSTS__=$(XamarinDebugHosts.Replace(';', '%3B'))" Condition="'$(XamarinDebugHosts)' != ''" />
+		</ItemGroup>
 		<GetMlaunchArguments
 			SessionId="$(BuildSessionId)"
+			AdditionalArguments="@(MlaunchAdditionalArguments)"
 			AppBundlePath="$(_AppBundlePath)"
 			AppManifestPath="$(_AppBundleManifestPath)"
 			CaptureOutput="$(_MlaunchCaptureOutput)"
 			DeviceName="$(_DeviceName)"
+			EnvironmentVariables="@(MlaunchEnvironmentVariables)"
 			LaunchApp="$(_AppBundlePath)"
 			MlaunchPath="$(_MlaunchPath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
