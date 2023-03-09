@@ -69,8 +69,8 @@ steps:
 
 - pwsh: |
     $packagePrefix = "https://dl.internalx.com/$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/package"
-    $files =  Get-ChildItem -Path "$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package" -File -Force -Name
-    $manifestFile = "$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package\manifest"
+    $files =  Get-ChildItem -Path "$(Build.SourcesDirectory)\\artifacts\\${{ parameters.uploadPrefix }}package" -File -Force -Name
+    $manifestFile = "$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package\\manifest"
     foreach ($f in $files) {
       Add-Content -Path "$manifestFile" -Value "$packagePrefix/$f"
     }
@@ -175,7 +175,7 @@ steps:
     $pkgsVirtualUrl =  "https://dl.internalx.com/$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/package"
     Write-Host "Urls is $pkgsVirtualUrl"
 
-    $pkgsPath = "$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package"
+    $pkgsPath = "$(Build.SourcesDirectory)\\artifacts\\${{ parameters.uploadPrefix }}package"
 
     $iOSPkg = Get-ChildItem -Path $pkgsPath -File -Force -Name xamarin.ios-*.pkg
     Write-Host "iOS PKG is $iOSPkg"
