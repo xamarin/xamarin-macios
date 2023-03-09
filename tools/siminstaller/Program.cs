@@ -436,7 +436,7 @@ namespace xsiminstaller {
 				} catch (IOException ioex) {
 					Console.WriteLine ($"Unable to remove: {mount_point}");
 					Console.WriteLine ($"    with error: {ioex}");
-				}				
+				}
 			}
 
 			File.Delete (download_path);
