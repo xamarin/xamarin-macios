@@ -427,10 +427,16 @@ namespace xsiminstaller {
 						Directory.Delete (expanded_path, true);
 					}
 				} finally {
-					TryExecuteAndCapture ("hdiutil", $"detach '{mount_point}' -quiet", out _);
+					if (!TryExecuteAndCapture ("hdiutil", $"detach '{mount_point}' -quiet -force", out _))
+						Console.WriteLine ($"Failed to detach {mount_point}");
 				}
 			} finally {
-				Directory.Delete (mount_point, true);
+				try {
+					Directory.Delete (mount_point, true);
+				} catch (IOException ioex) {
+					Console.WriteLine ($"Unable to remove: {mount_point}");
+					Console.WriteLine ($"    with error: {ioex}");
+				}				
 			}
 
 			File.Delete (download_path);
