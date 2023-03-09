@@ -187,6 +187,7 @@ stages:
 - template: templates/main-stage.yml
   parameters:
     xcodeChannel: Stable
+    macOSName: Ventura # comes from the build agent demand named macOS.Name
     isPR: true
     provisionatorChannel: ${{ parameters.provisionatorChannel }}
     pool: ${{ parameters.pool }}

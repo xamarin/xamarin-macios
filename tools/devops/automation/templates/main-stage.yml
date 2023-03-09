@@ -74,6 +74,9 @@ parameters:
 - name: xcodeChannel
   type: string
 
+- name: macOSName
+  type: string
+
 - name: simTestsConfigurations
   type: object
   default: [
@@ -234,6 +237,7 @@ stages:
   - template: ./build/build-stage.yml
     parameters:
       xcodeChannel: ${{ parameters.xcodeChannel }}
+      macOSName: ${{ parameters.macOSName }}
       isPR: ${{ parameters.isPR }}
       repositoryAlias: ${{ parameters.repositoryAlias }}
       commit: ${{ parameters.commit }}
@@ -321,6 +325,7 @@ stages:
     - template: ./build/api-diff-stage.yml
       parameters:
         xcodeChannel: ${{ parameters.xcodeChannel }}
+        macOSName: ${{ parameters.macOSName }}
         isPR: ${{ parameters.isPR }}
         repositoryAlias: ${{ parameters.repositoryAlias }}
         commit: ${{ parameters.commit }}
@@ -337,6 +342,7 @@ stages:
 - template: ./tests/stage.yml
   parameters:
     xcodeChannel: ${{ parameters.xcodeChannel }}
+    macOSName: ${{ parameters.macOSName }}
     isPR: ${{ parameters.isPR }}
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}

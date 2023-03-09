@@ -87,6 +87,9 @@ parameters:
 - name: XcodeChannel
   type: string
 
+- name: macOSName
+  type: string
+
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
@@ -139,7 +142,7 @@ stages:
         name: $(AgentPoolComputed)
         demands:
         - Agent.OS -equals Darwin
-        - macOS.Name -equals Ventura
+        - macOS.Name -equals ${{ parameters.macOSName }}
         - XcodeChannel -equals ${{ parameters.XcodeChannel }}
         - ${{ each demand in parameters.extraBotDemands }}:
           - demand
