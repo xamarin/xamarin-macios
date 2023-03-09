@@ -64,7 +64,7 @@ steps:
       path: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}${{ pkg }}
 
 - pwsh: |
-    Get-ChildItem -Path "$(Build.SourcesDirectory)\\artifacts
+    Get-ChildItem -Path "$(Build.SourcesDirectory)\\artifacts"
   displayName: "Show downloaded artifacts"
 
 - pwsh: |
