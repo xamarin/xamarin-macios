@@ -3686,7 +3686,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Unable to call release on an instance of the type {0}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Yayın türündeki bir örnek üzerinde yayın çağrılamaz{0}]]></Val>
+            <Val><![CDATA[{0} yayın türündeki bir örnek üzerinde sürüm çağrılamaz]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
