@@ -14,6 +14,32 @@
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.MergeAppBundles" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ILStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
+	<UsingTask TaskName="CreateDedupItem" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+		<ParameterGroup>
+			<Assemblies ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+			<DedupAssembly ParameterType="System.String" Required="true" />
+			<OutAssemblies ParameterType="Microsoft.Build.Framework.ITaskItem[]" Output="true" />
+		</ParameterGroup>
+		<Task>
+			<Code Type="Fragment" Language="cs"><![CDATA[
+			if (Path.GetFileName (Assemblies [Assemblies.Length - 1].ItemSpec) == Path.GetFileName (DedupAssembly)) {
+						var sourceFileName = Path.GetFileNameWithoutExtension (Assemblies [Assemblies.Length - 2].ItemSpec);
+						var targetFileName = Path.GetFileNameWithoutExtension (Assemblies [Assemblies.Length - 1].ItemSpec);
+
+						Assemblies [Assemblies.Length - 1].SetMetadata ("Arguments", Assemblies [Assemblies.Length - 2].GetMetadata ("Arguments").Replace (sourceFileName, targetFileName));
+						Assemblies [Assemblies.Length - 1].SetMetadata ("ProcessArguments", Assemblies [Assemblies.Length - 2].GetMetadata ("ProcessArguments").Replace (sourceFileName, targetFileName));
+						Assemblies [Assemblies.Length - 1].SetMetadata ("Abi", Assemblies [Assemblies.Length - 2].GetMetadata ("Abi").Replace (sourceFileName, targetFileName));
+						Assemblies [Assemblies.Length - 1].SetMetadata ("Arch", Assemblies [Assemblies.Length - 2].GetMetadata ("Arch").Replace (sourceFileName, targetFileName));
+						Assemblies [Assemblies.Length - 1].SetMetadata ("AOTData", Assemblies [Assemblies.Length - 2].GetMetadata ("AOTData").Replace (sourceFileName, targetFileName));
+						Assemblies [Assemblies.Length - 1].SetMetadata ("AOTAssembly", Assemblies [Assemblies.Length - 2].GetMetadata ("AOTAssembly").Replace (sourceFileName, targetFileName));
+						Assemblies [Assemblies.Length - 1].SetMetadata ("LLVMFile", Assemblies [Assemblies.Length - 2].GetMetadata ("LLVMFile").Replace (sourceFileName, targetFileName));
+						Assemblies [Assemblies.Length - 1].SetMetadata ("ObjectFile", Assemblies [Assemblies.Length - 2].GetMetadata ("ObjectFile").Replace (sourceFileName, targetFileName));
+					}
+
+			OutAssemblies = Assemblies;
+			]]></Code>
+		</Task>
+	</UsingTask>
 
 	<!-- Project types and how do we distinguish between them
 
@@ -815,7 +841,7 @@
 		</ReadItemsFromFile>
 		<!-- Load _AssembliesToAOT -->
 		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_AssembliesToAOT.items" Condition="Exists('$(_LinkerItemsDirectory)/_AssembliesToAOT.items')">
-			<Output TaskParameter="Items" ItemName="_AssembliesToAOT" />
+			<Output TaskParameter="Items" ItemName="_Assemblies" />
 		</ReadItemsFromFile>
 		<!-- Load _FrameworkToPublish -->
 		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_FrameworkToPublish.items" Condition="Exists('$(_LinkerItemsDirectory)/_FrameworkToPublish.items')">
@@ -1022,6 +1048,39 @@
 		</ItemGroup>
 	</Target>
 
+	<Target Name="_CreateAOTDedupAssembly"
+			Condition="'$(_RunAotCompiler)' == 'true'">
+		<PropertyGroup>
+			<_DedupAssembly>$(IntermediateLinkDir)aot-instances.dll</_DedupAssembly>
+		</PropertyGroup>
+		<WriteLinesToFile File="$(_IntermediateNativeLibraryDir)/aot-instances.cs" Overwrite="true" Lines="" WriteOnlyWhenDifferent="true" />
+		<Csc Sources="$(_IntermediateNativeLibraryDir)\aot-instances.cs"
+		OutputAssembly="$(_DedupAssembly)"
+		TargetType="library"
+		Deterministic="true"
+		References="@(ReferencePath)"
+		ToolExe="$(CscToolExe)"
+		ToolPath="$(CscToolPath)" />
+		<Delete Files="$(_IntermediateNativeLibraryDir)aot-instances.cs" />
+
+		<ItemGroup>
+			<_Assemblies Include="$(_DedupAssembly)">
+				<AOTAssembly>_AOTAssembly</AOTAssembly>
+				<Arch>_Arch</Arch>
+				<Arguments>_Arguments</Arguments>
+				<ProcessArguments>_ProcessArguments</ProcessArguments>
+				<ObjectFile>_ObjectFile</ObjectFile>
+				<Abi>_Abi</Abi>
+				<LLVMFile>_LLVMFile</LLVMFile>
+				<AOTData>_AOTData</AOTData>
+			</_Assemblies>
+		</ItemGroup>
+
+		<CreateDedupItem Assemblies="@(_Assemblies)" DedupAssembly="$(_DedupAssembly)">
+			<Output ItemName="_AssembliesToAOT" TaskParameter="OutAssemblies" />
+		</CreateDedupItem>
+	</Target>
+
 	<PropertyGroup>
 		<_AOTCompileDependsOn>
 			$(_AOTCompileDependsOn);
@@ -1030,6 +1089,7 @@
 			_DetectAppManifest;
 			_ReadAppManifest;
 			_WriteAppManifest;
+			_CreateAOTDedupAssembly;
 		</_AOTCompileDependsOn>
 	</PropertyGroup>
 	<Target Name="_AOTCompile"
@@ -1041,6 +1101,7 @@
 		<AOTCompile
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			DedupAssembly="$(_DedupAssembly)"
 			Assemblies="@(_AssembliesToAOT)"
 			AOTCompilerPath="$(_XamarinAOTCompiler)"
 			InputDirectory="$(_AOTInputDirectory)"
