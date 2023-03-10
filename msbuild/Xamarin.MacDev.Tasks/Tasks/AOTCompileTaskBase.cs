@@ -107,13 +107,13 @@ namespace Xamarin.MacDev.Tasks {
 					dedupArgument = ",dedup-skip";
 				}
 				arguments.Add ($"{string.Join (",", parsedArguments)}{dedupArgument}");
-				if (globalAotArguments?.Any() == true)
+				if (globalAotArguments?.Any () == true)
 					arguments.Add ($"--aot={string.Join (",", globalAotArguments)}");
 				arguments.AddRange (parsedProcessArguments);
 				arguments.Add (input);
 				if (Path.GetFileName (input) == Path.GetFileName (DedupAssembly)) {
 					for (var j = 0; j < Assemblies.Length - 1; j++) {
-						arguments.Add (inputs[j]);
+						arguments.Add (inputs [j]);
 					}
 				}
 
