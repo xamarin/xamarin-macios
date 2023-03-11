@@ -8,6 +8,7 @@
     <DefineConstants>$(DefineConstants);MSBUILD_TASKS</DefineConstants>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../../../product.snk</AssemblyOriginatorKeyFile>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
 
   <!--

@@ -66,7 +66,8 @@ public class BindingTouch : IDisposable {
 	List<string> references = new List<string> ();
 
 	public MetadataLoadContext? universe;
-	public TypeManager TypeManager = new TypeManager ();
+	public TypeManager? typeManager;
+	public TypeManager TypeManager => typeManager!;
 	public Frameworks? Frameworks;
 	public AttributeManager? AttributeManager;
 	bool disposedValue;
@@ -521,7 +522,7 @@ public class BindingTouch : IDisposable {
 			// Explicitly load our attribute library so that IKVM doesn't try (and fail) to find it.
 			universe.LoadFromAssemblyPath (GetAttributeLibraryPath ());
 
-			TypeManager.Initialize (this, api, universe.CoreAssembly, baselib);
+			typeManager ??= new (this, api, universe.CoreAssembly, baselib);
 
 			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {
 				if (!linkwith.Contains (linkWith.LibraryName)) {

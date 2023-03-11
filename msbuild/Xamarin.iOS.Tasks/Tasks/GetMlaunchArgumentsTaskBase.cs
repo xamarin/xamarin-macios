@@ -31,7 +31,9 @@ namespace Xamarin.iOS.Tasks {
 		[Required]
 		public string SdkDevPath { get; set; }
 
+		public ITaskItem [] AdditionalArguments { get; set; } = Array.Empty<ITaskItem> ();
 		public string DeviceName { get; set; }
+		public ITaskItem [] EnvironmentVariables { get; set; } = Array.Empty<ITaskItem> ();
 		public string LaunchApp { get; set; }
 		public string InstallApp { get; set; }
 		public bool CaptureOutput { get; set; } // Set to true to capture output. If StandardOutput|ErrorPath is not set, write to the current terminal's stdout/stderr (requires WaitForExit)
@@ -180,6 +182,12 @@ namespace Xamarin.iOS.Tasks {
 				sb.Add ("--stderr");
 				sb.AddQuoted (StandardErrorPath);
 			}
+
+			foreach (var envvar in EnvironmentVariables)
+				sb.AddQuoted ("--setenv=" + envvar.ItemSpec);
+
+			foreach (var arg in AdditionalArguments)
+				sb.AddQuoted (arg.ItemSpec);
 
 			if (WaitForExit)
 				sb.Add ("--wait-for-exit");
