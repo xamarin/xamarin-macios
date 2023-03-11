@@ -248,8 +248,13 @@ namespace UIKit {
 		public static void RequestGuidedAccessSession (bool enable, Action<bool> completionHandler)
 		{
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, byte, void> trampoline = &TrampolineRequestGuidedAccessSession;
+				using var block = new BlockLiteral (trampoline, completionHandler, typeof (UIAccessibility), nameof (TrampolineRequestGuidedAccessSession));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlock (callback, completionHandler);
+#endif
 				UIAccessibilityRequestGuidedAccessSession (enable, &block);
 			}
 		}
@@ -268,10 +273,14 @@ namespace UIKit {
 			return tcs.Task;
 		}
 
+#if !NET
 		internal delegate void InnerRequestGuidedAccessSession (IntPtr block, byte enable);
 		static readonly InnerRequestGuidedAccessSession callback = TrampolineRequestGuidedAccessSession;
 
 		[MonoPInvokeCallback (typeof (InnerRequestGuidedAccessSession))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static unsafe void TrampolineRequestGuidedAccessSession (IntPtr block, byte enable)
 		{
 			var descriptor = (BlockLiteral*) block;

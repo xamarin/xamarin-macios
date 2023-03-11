@@ -194,15 +194,24 @@ namespace AddressBook {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (onCompleted));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, byte, IntPtr, void> trampoline = &TrampolineCompletionHandler;
+				using var block = new BlockLiteral (trampoline, onCompleted, typeof (ABAddressBook), nameof (TrampolineCompletionHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_completionHandler, onCompleted);
+#endif
 				ABAddressBookRequestAccessWithCompletion (Handle, &block);
 			}
 		}
 
+#if !NET
 		internal delegate void InnerCompleted (IntPtr block, byte success, IntPtr error);
 		static readonly InnerCompleted static_completionHandler = TrampolineCompletionHandler;
 		[MonoPInvokeCallback (typeof (InnerCompleted))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static unsafe void TrampolineCompletionHandler (IntPtr block, byte success, IntPtr error)
 		{
 			var descriptor = (BlockLiteral*) block;
