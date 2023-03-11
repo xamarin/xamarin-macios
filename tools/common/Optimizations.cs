@@ -241,7 +241,7 @@ namespace Xamarin.Bundler {
 					InlineRuntimeArch = true;
 			}
 
-			// We try to optimize calls to BlockLiteral.SetupBlock if the static registrar is enabled
+			// We try to optimize calls to BlockLiteral.SetupBlock and certain BlockLiteral constructors if the static registrar is enabled
 			if (!OptimizeBlockLiteralSetupBlock.HasValue) {
 				OptimizeBlockLiteralSetupBlock = app.Registrar == RegistrarMode.Static;
 			}

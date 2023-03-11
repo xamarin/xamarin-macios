@@ -46,9 +46,13 @@ namespace UIKit {
 	// This class bridges native block invocations that call into C#
 	//
 	static internal class SDUIConfigurationColorTransformerHandler {
+#if !NET
 		static internal readonly DUIConfigurationColorTransformerHandler Handler = Invoke;
 
 		[MonoPInvokeCallback (typeof (DUIConfigurationColorTransformerHandler))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static unsafe IntPtr Invoke (IntPtr block, IntPtr color)
 		{
 			var descriptor = (BlockLiteral*) block;

@@ -87,6 +87,7 @@ namespace MonoTouchFixtures.Network {
 			bool eventsDone = false;
 			bool listeningDone = false;
 			Exception ex = null;
+			NWError? errorState = null;
 			var changesEvent = new AutoResetEvent (false);
 			var browserReady = new AutoResetEvent (false);
 			var finalEvent = new AutoResetEvent (false);
@@ -94,7 +95,7 @@ namespace MonoTouchFixtures.Network {
 				// start the browser, before the listener
 				browser.SetStateChangesHandler ((st, er) => {
 					// assert here with a `st` of `Fail`
-					Assert.IsNull (er, "Error");
+					errorState ??= er;
 					if (st == NWBrowserState.Ready)
 						browserReady.Set ();
 				});
@@ -152,6 +153,7 @@ namespace MonoTouchFixtures.Network {
 			}, () => eventsDone);
 
 			finalEvent.WaitOne (30000);
+			Assert.IsNull (errorState, "Error");
 			Assert.IsTrue (eventsDone, "eventDone");
 			Assert.IsTrue (listeningDone, "listeningDone");
 			Assert.IsNull (ex, "Exception");
