@@ -436,14 +436,24 @@ namespace CoreGraphics {
 			return new String (buffer, 0, (int) actual);
 		}
 
+#if NET
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
+		unsafe extern static void CGEventKeyboardSetUnicodeString (IntPtr handle, nuint len, IntPtr buffer);
+#else
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		unsafe extern static void CGEventKeyboardSetUnicodeString (IntPtr handle, nuint len,  [MarshalAs(UnmanagedType.LPWStr)] string buffer);
+#endif
 
 		public void SetUnicodeString (string value)
 		{
 			if (value is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
+#if NET
+			using var valueStr = new TransientString (value, TransientString.Encoding.Unicode);
+			CGEventKeyboardSetUnicodeString (Handle, (nuint) value.Length, valueStr);
+#else
 			CGEventKeyboardSetUnicodeString (Handle, (nuint) value.Length, value);
+#endif
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]

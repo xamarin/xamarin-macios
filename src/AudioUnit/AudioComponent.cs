@@ -584,11 +584,15 @@ namespace AudioUnit {
 #endif
 		public AudioComponentValidationResult Validate (NSDictionary? validationParameters = null) => Validate (validationParameters, out var _);
 
+#if !NET
 		delegate void TrampolineCallback (IntPtr blockPtr, AudioComponentValidationResult result, IntPtr dictionary);
 
 		static unsafe readonly TrampolineCallback static_action = TrampolineAction;
 
 		[MonoPInvokeCallback (typeof (TrampolineCallback))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineAction (IntPtr blockPtr, AudioComponentValidationResult result, IntPtr dictionary)
 		{
 			var del = BlockLiteral.GetTarget<Action<AudioComponentValidationResult, NSDictionary?>> (blockPtr);
@@ -628,8 +632,13 @@ namespace AudioUnit {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (onCompletion));
 			
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, AudioComponentValidationResult, IntPtr, void> trampoline = &TrampolineAction;
+				using var block = new BlockLiteral (trampoline, onCompletion, typeof (AudioComponent), nameof (TrampolineAction));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_action, onCompletion);
+#endif
 				resultCode = AudioComponentValidateWithResults (GetCheckedHandle (), validationParameters.GetHandle (), &block);
 			}
 		}

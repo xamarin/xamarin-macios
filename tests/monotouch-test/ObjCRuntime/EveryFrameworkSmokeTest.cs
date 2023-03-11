@@ -88,6 +88,9 @@ namespace Xamarin.Mac.Tests {
 		[Test]
 		public void ExpectedLibrariesAreLoaded ()
 		{
+			if (TestRuntime.IsLinkAll)
+				Assert.Ignore ("This test will fail when all assemblies are linked, since we won't link with all frameworks in that case.");
+
 			List<string> failures = new List<string> ();
 
 			// In the past, we've missed frameworks in NSObject.mac.cs and shipped brokeness

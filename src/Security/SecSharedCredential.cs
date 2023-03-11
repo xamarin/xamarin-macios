@@ -18,15 +18,21 @@ namespace Security {
 		unsafe extern static void SecAddSharedWebCredential (IntPtr /* CFStringRef */ fqdn, IntPtr /* CFStringRef */ account, IntPtr /* CFStringRef */ password,
 			BlockLiteral* /* void (^completionHandler)( CFErrorRef error) ) */ completionHandler);
 			
+#if !NET
 		[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
 		internal delegate void DActionArity1V12 (IntPtr block, IntPtr obj);
+#endif
 		
 		// This class bridges native block invocations that call into C#
 		static internal class ActionTrampoline {
+#if !NET
 			static internal readonly DActionArity1V12 Handler = Invoke;
 			
 			[MonoPInvokeCallback (typeof (DActionArity1V12))]
-			static unsafe void Invoke (IntPtr block, IntPtr obj) {
+#else
+			[UnmanagedCallersOnly]
+#endif
+			internal static unsafe void Invoke (IntPtr block, IntPtr obj) {
 				var descriptor = (BlockLiteral *) block;
 				var del = (global::System.Action<NSError?>) (descriptor->Target);
 				if (del is not null) {
@@ -48,8 +54,14 @@ namespace Security {
 				using var nsDomain = new NSString (domainName);
 				using var nsAccount = new NSString (account);
 				using var nsPassword = (NSString?) password;
+
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &ActionTrampoline.Invoke;
+				using var block = new BlockLiteral (trampoline, handler, typeof (ActionTrampoline), nameof (ActionTrampoline.Invoke));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (ActionTrampoline.Handler, handler);
+#endif
 				SecAddSharedWebCredential (nsDomain.Handle, nsAccount.Handle, nsPassword.GetHandle (), &block);
 			}
 		}
@@ -69,18 +81,24 @@ namespace Security {
 		unsafe extern static void SecRequestSharedWebCredential ( IntPtr /* CFStringRef */ fqdn, IntPtr /* CFStringRef */ account,
 			BlockLiteral* /* void (^completionHandler)( CFArrayRef credentials, CFErrorRef error) */ completionHandler);
 
+#if !NET
 		[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
 		internal delegate void ArrayErrorAction (IntPtr block, IntPtr array, IntPtr err);
+#endif
 
 		//
 		// This class bridges native block invocations that call into C# because we cannot use the decorator, we have to create
 		// it for our use here.
 		//
 		static internal class ArrayErrorActionTrampoline {
+#if !NET
 			static internal readonly ArrayErrorAction Handler = Invoke;
 
 			[MonoPInvokeCallback (typeof (ArrayErrorAction))]
-			static unsafe void Invoke (IntPtr block, IntPtr array, IntPtr err) {
+#else
+			[UnmanagedCallersOnly]
+#endif
+			internal static unsafe void Invoke (IntPtr block, IntPtr array, IntPtr err) {
 				var descriptor = (BlockLiteral *) block;
 				var del = (global::System.Action<NSArray?, NSError?>) (descriptor->Target);
 				if (del is not null)
@@ -123,8 +141,13 @@ namespace Security {
 			using var nsAccount = (NSString?) account;
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> trampoline = &ArrayErrorActionTrampoline.Invoke;
+				using var block = new BlockLiteral (trampoline, handler, typeof (ArrayErrorActionTrampoline), nameof (ArrayErrorActionTrampoline.Invoke));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (ArrayErrorActionTrampoline.Handler, onComplete);
+#endif
 				SecRequestSharedWebCredential (nsDomain.GetHandle (), nsAccount.GetHandle (), &block);
 			}
 		}

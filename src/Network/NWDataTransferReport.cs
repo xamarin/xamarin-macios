@@ -146,10 +146,14 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_data_transfer_report_collect (OS_nw_data_transfer_report report, IntPtr queue, BlockLiteral* collect_block);
 
+#if !NET
 		delegate void nw_data_transfer_report_collect_t (IntPtr block, IntPtr report);
 		static nw_data_transfer_report_collect_t static_CollectHandler = TrampolineCollectHandler;
 
 		[MonoPInvokeCallback (typeof (nw_data_transfer_report_collect_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineCollectHandler (IntPtr block, IntPtr report)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWDataTransferReport>> (block);
@@ -168,8 +172,13 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolineCollectHandler;
+				using var block = new BlockLiteral (trampoline, handler, typeof (NWDataTransferReport), nameof (TrampolineCollectHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_CollectHandler, handler);
+#endif
 				nw_data_transfer_report_collect (GetCheckedHandle (), queue.Handle, &block);
 			}
 		}
