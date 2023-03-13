@@ -40,6 +40,7 @@ steps:
 - pwsh: |
     $sourceDir = '$(Build.SourcesDirectory)\xamarin-macios'
     $targetDir = '$(Build.ArtifactStagingDirectory)\windows-binlogs'
+    New-Item -Path "$targetDir" -ItemType "directory" -Force
 
     $binlogs = Get-ChildItem $sourceDir -Recurse -Include "*.binlog"
     foreach ($binlog in $binlogs) {
@@ -59,6 +60,38 @@ steps:
     artifactName: windows-binlogs-test-$(Build.BuildId)-$(System.JobAttempt)
   continueOnError: true
   condition: succeededOrFailed()
+
+# Make sure to report any errors
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
+    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
+
+    if (Test-Path -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -PathType Leaf)  {
+      $statuses.SetStatus("error", "${{ parameters.statusContext }} failed.", "${{ parameters.statusContext }}")
+      $githubComments.NewCommentFromFile("${{ parameters.statusContext }} failed", ":x:", "$Env:GITHUB_FAILURE_COMMENT_FILE")
+    } elseif ("$($Env:AGENT_JOBSTATUS)" -ne "Succeeded") {
+      $statuses.SetStatus("error", "${{ parameters.statusContext }} failed.", "${{ parameters.statusContext }}")
+      $message = ":x: $($Env:AGENT_JOBSTATUS) :x:"
+      $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} failed", ":x:", $message)
+    } else {
+      $statuses.SetStatus("success", "${{ parameters.statusContext }} passed.", "${{ parameters.statusContext }}")
+      $message = ":white_check_mark: **All** ${{ parameters.statusContext }} passed."
+      $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} passed", ":computer:", $message)
+    }
+  displayName: 'Report results to GitHub'
+  timeoutInMinutes: 5
+  condition: always() # in particular we care if something failed, but let's always run just in case
+  continueOnError: true
+  env:
+    CONTEXT: ${{ parameters.statusContext }}
+    GITHUB_TOKEN: $(GitHub.Token)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+    TEST_BOT: $(Agent.Name)
+    ${{ if eq(parameters.repositoryAlias, 'self') }}:
+      COMMENT_HASH: $(fix_commit.GIT_HASH)
+    ${{ else }}:
+      COMMENT_HASH: $(Build.SourceVersion)
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
