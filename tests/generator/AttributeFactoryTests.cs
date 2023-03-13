@@ -43,14 +43,14 @@ namespace GeneratorTests {
 			AssertAttributeCreation (AttributeFactory.CreateNewAttribute<DeprecatedAttribute>, platform, major, minor, message);
 			AssertAttributeCreation (AttributeFactory.CreateNewAttribute<ObsoletedAttribute>, platform, major, minor, message);
 		}
-		
+
 		[TestCase (PlatformName.iOS, "message")]
 		[TestCase (PlatformName.iOS, null)]
 		public void CreateAttributeNoVersionTest (PlatformName platform, string? message)
 		{
 			// call several times with diff types
 			AssertAttributeCreationNotVersion (AttributeFactory.CreateNewAttribute<IntroducedAttribute>, platform, message);
-			AssertAttributeCreationNotVersion (AttributeFactory.CreateNewAttribute<UnavailableAttribute>, platform,message);
+			AssertAttributeCreationNotVersion (AttributeFactory.CreateNewAttribute<UnavailableAttribute>, platform, message);
 			AssertAttributeCreationNotVersion (AttributeFactory.CreateNewAttribute<DeprecatedAttribute>, platform, message);
 			AssertAttributeCreationNotVersion (AttributeFactory.CreateNewAttribute<ObsoletedAttribute>, platform, message);
 		}
@@ -73,7 +73,7 @@ namespace GeneratorTests {
 		[TestCase (PlatformName.TvOS)]
 		public void CreateUnsupportedAttributeTest (PlatformName platform)
 			=> Assert.AreEqual (platform, AttributeFactory.CreateUnsupportedAttribute (platform).Platform);
-		
+
 		[TestCase (PlatformName.iOS)]
 		[TestCase (PlatformName.MacCatalyst)]
 		[TestCase (PlatformName.MacOSX)]
@@ -81,31 +81,30 @@ namespace GeneratorTests {
 		public void CreateUnsupportedAttributeWatchOSTest (PlatformName platform)
 			=> Assert.AreEqual (platform, AttributeFactory.CreateUnsupportedAttribute (platform).Platform);
 
-		class CloneCasesNoVersionClass : IEnumerable
-		{
-			public IEnumerator GetEnumerator()
+		class CloneCasesNoVersionClass : IEnumerable {
+			public IEnumerator GetEnumerator ()
 			{
-				yield return new object[] {
-					
+				yield return new object [] {
+
 					new IntroducedAttribute (PlatformName.iOS),
 					PlatformName.TvOS,
 				};
-				yield return new object[] {
+				yield return new object [] {
 					new DeprecatedAttribute (PlatformName.MacCatalyst),
 					PlatformName.iOS,
 				};
-				yield return new object[] {
+				yield return new object [] {
 					new ObsoletedAttribute(PlatformName.WatchOS),
 					PlatformName.iOS
 				};
-				yield return new object[] {
+				yield return new object [] {
 					new UnavailableAttribute (PlatformName.MacOSX),
 					PlatformName.MacCatalyst
 				};
 			}
 		}
-		
-		[TestCaseSource(typeof(CloneCasesNoVersionClass))]
+
+		[TestCaseSource (typeof (CloneCasesNoVersionClass))]
 		public void CloneNoVersionTest (AvailabilityBaseAttribute attributeToClone, PlatformName targetPlatform)
 		{
 			var clone = AttributeFactory.CloneFromOtherPlatform (attributeToClone, targetPlatform);
@@ -113,28 +112,27 @@ namespace GeneratorTests {
 			Assert.AreEqual (attributeToClone.Message, clone.Message, "message");
 			Assert.AreEqual (attributeToClone.GetType (), clone.GetType (), "type");
 		}
-		
-		class CloneCasesMinVersionClass : IEnumerable
-		{
-			public IEnumerator GetEnumerator()
+
+		class CloneCasesMinVersionClass : IEnumerable {
+			public IEnumerator GetEnumerator ()
 			{
-				yield return new object[] {
-					
+				yield return new object [] {
+
 					new IntroducedAttribute (PlatformName.iOS, 1, 0),
 					PlatformName.TvOS,
 				};
-				yield return new object[] {
+				yield return new object [] {
 					new DeprecatedAttribute (PlatformName.MacCatalyst, 1, 0),
 					PlatformName.iOS,
 				};
-				yield return new object[] {
+				yield return new object [] {
 					new ObsoletedAttribute(PlatformName.WatchOS, 1, 0),
 					PlatformName.iOS
 				};
 			}
 		}
 
-		[TestCaseSource(typeof(CloneCasesMinVersionClass))]
+		[TestCaseSource (typeof (CloneCasesMinVersionClass))]
 		public void CloneMinVersion (AvailabilityBaseAttribute attributeToClone, PlatformName targetPlatform)
 		{
 			var clone = AttributeFactory.CloneFromOtherPlatform (attributeToClone, targetPlatform);
@@ -143,31 +141,30 @@ namespace GeneratorTests {
 			Assert.AreEqual (attributeToClone.GetType (), clone.GetType (), "type");
 			Assert.AreEqual (Xamarin.SdkVersions.GetMinVersion (targetPlatform.AsApplePlatform ()), clone.Version, "Version");
 		}
-		
-		class CloneCasesBuildVersionClass : IEnumerable
-		{
-			public IEnumerator GetEnumerator()
+
+		class CloneCasesBuildVersionClass : IEnumerable {
+			public IEnumerator GetEnumerator ()
 			{
 				var tvOsMin = Xamarin.SdkVersions.GetMinVersion (ApplePlatform.TVOS);
 				tvOsMin = new Version (tvOsMin.Major, tvOsMin.Minor, tvOsMin.Build + 3);
 				var iOSMin = Xamarin.SdkVersions.GetMinVersion (ApplePlatform.iOS);
 				iOSMin = new Version (iOSMin.Major, iOSMin.Minor, iOSMin.Build + 3);
-				yield return new object[] {
+				yield return new object [] {
 					new IntroducedAttribute (PlatformName.iOS, tvOsMin.Major, tvOsMin.Minor, tvOsMin.Build),
 					PlatformName.TvOS,
 				};
-				yield return new object[] {
+				yield return new object [] {
 					new DeprecatedAttribute (PlatformName.MacCatalyst, iOSMin.Major, iOSMin.Minor, iOSMin.Build),
 					PlatformName.iOS,
 				};
-				yield return new object[] {
+				yield return new object [] {
 					new ObsoletedAttribute(PlatformName.WatchOS, iOSMin.Major, iOSMin.Minor, iOSMin.Build),
 					PlatformName.iOS
 				};
 			}
 		}
-		
-		[TestCaseSource(typeof(CloneCasesBuildVersionClass))]
+
+		[TestCaseSource (typeof (CloneCasesBuildVersionClass))]
 		public void CloneBuildVersion (AvailabilityBaseAttribute attributeToClone, PlatformName targetPlatform)
 		{
 			var clone = AttributeFactory.CloneFromOtherPlatform (attributeToClone, targetPlatform);
@@ -176,6 +173,6 @@ namespace GeneratorTests {
 			Assert.AreEqual (attributeToClone.GetType (), clone.GetType (), "type");
 			Assert.AreEqual (attributeToClone.Version, clone.Version);
 		}
-		
+
 	}
 }

@@ -28,7 +28,7 @@ public static partial class AttributeFactory {
 
 			if (build is null)
 				return new [] { PlatformEnum, typeof (int), typeof (int), PlatformArch, typeof (string) };
-			return new [] { PlatformEnum, typeof (int), typeof (int), typeof(int), PlatformArch, typeof (string) };
+			return new [] { PlatformEnum, typeof (int), typeof (int), typeof (int), PlatformArch, typeof (string) };
 		}
 	}
 

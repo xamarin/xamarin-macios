@@ -14,7 +14,7 @@ public static partial class AttributeFactory {
 		readonly int? minor;
 		readonly int? build;
 		readonly string? message;
-		
+
 		public ConstructorArguments (PlatformName platformIn, int majorIn, int minorIn, int buildIn, string? messageIn)
 		{
 			platform = platformIn;
@@ -60,7 +60,7 @@ public static partial class AttributeFactory {
 		var args = new ConstructorArguments (platform, major, minor, message);
 		return CreateNewAttribute<T> (args.GetCtorTypes (), args.GetCtorValues ());
 	}
-	
+
 	public static T CreateNewAttribute<T> (PlatformName platform, int major, int minor, int build, string? message = null)
 		where T : Attribute
 	{
