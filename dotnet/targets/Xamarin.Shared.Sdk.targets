@@ -909,7 +909,7 @@
 
 			<_IntermediateNativeLibraryDir>$(IntermediateOutputPath)nativelibraries/</_IntermediateNativeLibraryDir>
 			<_IntermediateFrameworksDir>$(DeviceSpecificIntermediateOutputPath)frameworks</_IntermediateFrameworksDir>
-			<_IntermediateDecompressionDir>$(DeviceSpecificIntermediateOutputPath)decompressed</_IntermediateDecompressionDir>
+			<_IntermediateDecompressionDir>$([MSBuild]::EnsureTrailingSlash('$(DeviceSpecificIntermediateOutputPath)decompressed'))</_IntermediateDecompressionDir>
 			<_NativeExecutableName>$(_AppBundleName)</_NativeExecutableName>
 			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(_RelativeAppBundlePath)\</_NativeExecutablePublishDir>
 			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(_RelativeAppBundlePath)\Contents\MacOS\</_NativeExecutablePublishDir>
@@ -1624,7 +1624,7 @@
 	<Target Name="_DecompressAppleBindingResourcePackages"
 		Inputs="@(_CompressedAppleBindingResourcePackage)"
 		DependsOnTargets="_ComputePublishLocation;_ComputeVariables"
-		Outputs="@(_CompressedAppleBindingResourcePackage -> '$(_IntermediateDecompressionDir)/%(Filename)%(Extension).stamp')"
+		Outputs="@(_CompressedAppleBindingResourcePackage -> '$(_IntermediateDecompressionDir)%(Filename)%(Extension).stamp')"
 		>
 
 		<Ditto
@@ -1633,7 +1633,7 @@
 			AdditionalArguments="-x -k"
 			CopyFromWindows="true"
 			Source="%(_CompressedAppleBindingResourcePackage.Identity)"
-			Destination="$(_IntermediateDecompressionDir)/%(Filename)"
+			Destination="$(_IntermediateDecompressionDir)%(Filename)"
 			>
 		</Ditto>
 	</Target>
@@ -1643,7 +1643,7 @@
 		>
 
 		<ItemGroup>
-			<_DecompressedAppleBindingResourcePackage Include="@(_CompressedAppleBindingResourcePackage -> '$(_IntermediateDecompressionDir)/%(Filename)')" />
+			<_DecompressedAppleBindingResourcePackage Include="@(_CompressedAppleBindingResourcePackage -> '$(_IntermediateDecompressionDir)%(Filename)')" />
 		</ItemGroup>
 
 		<!-- resolve any .xcframeworks and binding resource packages -->
@@ -1663,7 +1663,7 @@
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AlwaysCreate="true"
-			Files="@(_CompressedAppleBindingResourcePackage -> '$(_IntermediateDecompressionDir)/%(Filename)%(Extension).stamp')"
+			Files="@(_CompressedAppleBindingResourcePackage -> '$(_IntermediateDecompressionDir)%(Filename)%(Extension).stamp')"
 			>
 			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
 		</Touch>
@@ -1672,7 +1672,7 @@
 	<Target Name="_DecompressPlugIns"
 		Inputs="@(_CompressedPlugIns)"
 		DependsOnTargets="_ComputePublishLocation;_ComputeVariables"
-		Outputs="@(_CompressedPlugIns -> '$(_IntermediateDecompressionDir)/%(Filename)%(Extension).stamp')"
+		Outputs="@(_CompressedPlugIns -> '$(_IntermediateDecompressionDir)%(Filename)%(Extension).stamp')"
 		>
 
 		<Ditto
@@ -1681,7 +1681,7 @@
 			AdditionalArguments="-x -k"
 			CopyFromWindows="true"
 			Source="%(_CompressedPlugIns.Identity)"
-			Destination="$(_IntermediateDecompressionDir)/%(Filename)%(Extension)"
+			Destination="$(_IntermediateDecompressionDir)%(Filename)%(Extension)"
 			>
 		</Ditto>
 	</Target>
@@ -1692,12 +1692,12 @@
 
 		<ItemGroup>
 			<!-- Set TargetDirectory and SourceDirectory for all directories we have to publish -->
-			<_DecompressedPlugIns Include="@(_CompressedPlugIns -> '$(_IntermediateDecompressionDir)/%(Filename)%(Extension)')" />
+			<_DecompressedPlugIns Include="@(_CompressedPlugIns -> '$(_IntermediateDecompressionDir)%(Filename)%(Extension)')" />
 		</ItemGroup>
 		<ItemGroup>
 			<_DecompressedPlugIns Update="@(_DecompressedPlugIns)">
 				<TargetDirectory>$(_RelativePublishDir)$(_RelativeAppBundlePath)$(_AppPlugInsRelativePath)</TargetDirectory>
-				<SourceDirectory>$(_IntermediateDecompressionDir)/%(Filename)%(Extension)</SourceDirectory>
+				<SourceDirectory>$(_IntermediateDecompressionDir)%(Filename)%(Extension)</SourceDirectory>
 			</_DecompressedPlugIns>
 		</ItemGroup>
 
@@ -1705,7 +1705,7 @@
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AlwaysCreate="true"
-			Files="@(_CompressedPlugIns -> '$(_IntermediateDecompressionDir)/%(Filename)%(Extension).stamp')"
+			Files="@(_CompressedPlugIns -> '$(_IntermediateDecompressionDir)%(Filename)%(Extension).stamp')"
 			>
 			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
 		</Touch>
