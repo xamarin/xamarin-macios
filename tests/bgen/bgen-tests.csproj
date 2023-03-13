@@ -29,6 +29,9 @@
     <Compile Include="..\generator\BGenTool.cs">
       <Link>BGenTool.cs</Link>
     </Compile>
+    <Compile Include="..\generator\AttributeFactoryTests.cs">
+      <Link>AttributeFactoryTests.cs</Link>
+    </Compile>
     <Compile Include="..\generator\CollectionsExtensionsTests.cs">
       <Link>CollectionsExtensionsTests.cs</Link>
     </Compile>
@@ -73,6 +76,9 @@
     </Compile>
     <Compile Include="..\common\BinLog.cs">
       <Link>BinLog.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
     </Compile>
   </ItemGroup>
 </Project>

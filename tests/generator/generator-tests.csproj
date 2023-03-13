@@ -38,6 +38,9 @@
     <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.758" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
     <Compile Include="AttributeFactoryTests.cs" />
     <Compile Include="CollectionsExtensionsTests.cs" />
     <Compile Include="ErrorTests.cs" />

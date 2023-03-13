@@ -12,13 +12,24 @@ public static partial class AttributeFactory {
 		readonly PlatformName platform;
 		readonly int? major;
 		readonly int? minor;
+		readonly int? build;
 		readonly string? message;
+		
+		public ConstructorArguments (PlatformName platformIn, int majorIn, int minorIn, int buildIn, string? messageIn)
+		{
+			platform = platformIn;
+			major = majorIn;
+			minor = minorIn;
+			build = buildIn;
+			message = messageIn;
+		}
 
 		public ConstructorArguments (PlatformName platformIn, int majorIn, int minorIn, string? messageIn)
 		{
 			platform = platformIn;
 			major = majorIn;
 			minor = minorIn;
+			build = null;
 			message = messageIn;
 		}
 
@@ -27,6 +38,7 @@ public static partial class AttributeFactory {
 			platform = platformIn;
 			major = null;
 			minor = null;
+			build = null;
 			message = messageIn;
 		}
 	}
@@ -48,6 +60,13 @@ public static partial class AttributeFactory {
 		var args = new ConstructorArguments (platform, major, minor, message);
 		return CreateNewAttribute<T> (args.GetCtorTypes (), args.GetCtorValues ());
 	}
+	
+	public static T CreateNewAttribute<T> (PlatformName platform, int major, int minor, int build, string? message = null)
+		where T : Attribute
+	{
+		var args = new ConstructorArguments (platform, major, minor, build, message);
+		return CreateNewAttribute<T> (args.GetCtorTypes (), args.GetCtorValues ());
+	}
 
 	public static T CreateNewAttribute<T> (PlatformName platform, string? message = null) where T : Attribute
 	{
@@ -55,14 +74,14 @@ public static partial class AttributeFactory {
 		return CreateNewAttribute<T> (args.GetCtorTypes (), args.GetCtorValues ());
 	}
 
-	public static AvailabilityBaseAttribute CreateNoVersionSupportedAttribute (PlatformName platform)
+	public static IntroducedAttribute CreateNoVersionSupportedAttribute (PlatformName platform)
 	{
 		switch (platform) {
 		case PlatformName.iOS:
 		case PlatformName.TvOS:
 		case PlatformName.MacOSX:
 		case PlatformName.MacCatalyst:
-			return new IntroducedAttribute (platform);
+			return new (platform);
 		case PlatformName.WatchOS:
 			throw new InvalidOperationException ("CreateNoVersionSupportedAttribute for WatchOS never makes sense");
 		default:
@@ -70,14 +89,14 @@ public static partial class AttributeFactory {
 		}
 	}
 
-	public static AvailabilityBaseAttribute CreateUnsupportedAttribute (PlatformName platform)
+	public static UnavailableAttribute CreateUnsupportedAttribute (PlatformName platform)
 	{
 		switch (platform) {
 		case PlatformName.iOS:
 		case PlatformName.MacCatalyst:
 		case PlatformName.MacOSX:
 		case PlatformName.TvOS:
-			return new UnavailableAttribute (platform);
+			return new (platform);
 		case PlatformName.WatchOS:
 			throw new InvalidOperationException ("CreateUnsupportedAttribute for WatchOS never makes sense");
 		default:
@@ -85,7 +104,7 @@ public static partial class AttributeFactory {
 		}
 	}
 
-	static AvailabilityBaseAttribute CloneFromOtherPlatform (AvailabilityBaseAttribute attr, PlatformName platform)
+	public static AvailabilityBaseAttribute CloneFromOtherPlatform (AvailabilityBaseAttribute attr, PlatformName platform)
 	{
 		if (attr.Version is null) {
 			switch (attr.AvailabilityKind) {

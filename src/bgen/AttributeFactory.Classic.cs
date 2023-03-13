@@ -15,7 +15,9 @@ public static partial class AttributeFactory {
 				return new object? [] { (byte) platform, (byte) 0xff, message };
 			}
 
-			return new object? [] { (byte) platform, major, minor, (byte) 0xff, message };
+			if (build is null)
+				return new object? [] { (byte) platform, major, minor, (byte) 0xff, message };
+			return new object? [] { (byte) platform, major, minor, build, (byte) 0xff, message };
 		}
 
 		public Type [] GetCtorTypes ()
@@ -24,7 +26,9 @@ public static partial class AttributeFactory {
 				return new [] { PlatformEnum, PlatformArch, typeof (string) };
 			}
 
-			return new [] { PlatformEnum, typeof (int), typeof (int), PlatformArch, typeof (string) };
+			if (build is null)
+				return new [] { PlatformEnum, typeof (int), typeof (int), PlatformArch, typeof (string) };
+			return new [] { PlatformEnum, typeof (int), typeof (int), typeof(int), PlatformArch, typeof (string) };
 		}
 	}
 
