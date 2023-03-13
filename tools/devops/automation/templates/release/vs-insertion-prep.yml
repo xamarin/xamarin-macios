@@ -26,6 +26,10 @@ parameters:
   type: string
   default: ''
 
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
 stages:
 - stage: prepare_release
   displayName: '${{ parameters.stageDisplayNamePrefix }}Prepare .NET Release'
@@ -49,7 +53,8 @@ stages:
   # Check - "xamarin-macios (Prepare Release Sign NuGets)"
   - template: sign-artifacts/jobs/v2.yml@yaml-templates
     parameters:
-      artifactName: dotnet-signed
+      signedArtifactName: '${{ parameters.uploadPrefix }}nuget-signed'
+      artifactName: '${{ parameters.uploadPrefix }}dotnet-signed'
       signType: Real
       usePipelineArtifactTasks: true
 
@@ -58,8 +63,12 @@ stages:
     parameters:
       yamlResourceName: yaml-templates
       dependsOn: signing
-      artifactName: nuget-signed
-      propsArtifactName: dotnet-signed
+      artifactName: '${{ parameters.uploadPrefix }}nuget-signed'
+      propsArtifactName: ${{ parameters.uploadPrefix }}dotnet-signed
+      vsDropArtifactName: ${{ parameters.uploadPrefix }}vsdrop-signed
+      vsDropMultiTargetArtifactName: ${{ parameters.uploadPrefix }}vsdrop-multitarget-signed
+      msiNuGetArtifactName: ${{ parameters.uploadPrefix }}vs-msi-nugets
+      binlogsArtifactName: ${{ parameters.uploadPrefix }}nuget-msi-convert-binlogs
       signType: Real
       useDateTimeVersion: true
 
@@ -75,7 +84,7 @@ stages:
       steps:
       - task: DownloadPipelineArtifact@2
         inputs:
-          artifactName: nuget-signed
+          artifactName: '${{ parameters.uploadPrefix }}nuget-signed'
           downloadPath: $(Build.SourcesDirectory)/package
           patterns: |
             *.nupkg
@@ -84,14 +93,14 @@ stages:
         displayName: Publish Nugets to dotnet8
         inputs:
           command: push
-          packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
+          packagesToPush: '$(Build.SourcesDirectory)/package/*.nupkg'
           nuGetFeedType: external
           publishFeedCredentials: dnceng-dotnet8
 
       - task: DownloadPipelineArtifact@2
         inputs:
-          artifactName: vs-msi-nugets
-          downloadPath: $(Build.SourcesDirectory)/vs-msi-nugets
+          artifactName: '${{ parameters.uploadPrefix }}vs-msi-nugets'
+          downloadPath: '$(Build.SourcesDirectory)/${{ parameters.uploadPrefix}}vs-msi-nugets'
           patterns: |
             *.nupkg
 
@@ -99,14 +108,14 @@ stages:
         displayName: Publish VS MSI Nugets to dotnet8
         inputs:
           command: push
-          packagesToPush: $(Build.SourcesDirectory)/vs-msi-nugets/*.nupkg
+          packagesToPush: '$(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}vs-msi-nugets/*.nupkg'
           nuGetFeedType: external
           publishFeedCredentials: dnceng-dotnet8
 
       - pwsh: |
           mkdir $(Build.SourcesDirectory)/nugets-blob
           cp $(Build.SourcesDirectory)/package/* $(Build.SourcesDirectory)/nugets-blob
-          cp $(Build.SourcesDirectory)/vs-msi-nugets/* $(Build.SourcesDirectory)/nugets-blob
+          cp $(Build.SourcesDirectory)/${{ parameters.uploadPrefix}}vs-msi-nugets/* $(Build.SourcesDirectory)/nugets-blob
         displayName: "Copy content for the nugets blob."
 
       - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
@@ -129,7 +138,7 @@ stages:
           downloadSteps:
           - task: DownloadPipelineArtifact@2
             inputs:
-              artifactName: vsdrop-signed
+              artifactName: ${{ parameters.uploadPrefix }}vsdrop-signed
               downloadPath: $(Build.SourcesDirectory)/vs-insertion
 
       - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
@@ -143,5 +152,5 @@ stages:
           downloadSteps:
           - task: DownloadPipelineArtifact@2
             inputs:
-              artifactName: vsdrop-multitarget-signed
+              artifactName: ${{ parameters.uploadPrefix }}vsdrop-multitarget-signed
               downloadPath: $(Build.StagingDirectory)\$(MultiTargetVSDropCommitStatusName)
