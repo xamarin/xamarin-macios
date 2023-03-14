@@ -41,7 +41,7 @@ namespace Introspection {
 			// this is a weakly typed API (not a weak reference) with a [NotImplemented] so there's no [Export]
 			case "WeakSignificantEvent":
 				return property.DeclaringType.Name == "HMSignificantTimeEvent";
-			case "WeakMeasurementUnit":
+			case "WeakMeasurementUnits":
 				// this is a weakly typed API (not a weak reference), so there's no [Export]
 				return property.DeclaringType.Name == "NSRulerView";
 			}
