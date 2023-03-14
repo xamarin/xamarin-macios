@@ -3481,6 +3481,51 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";MX2106_E" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the more than one method named '{3}' was found in the type '{4}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{4}' 형식에 이름이 '{3}'인 메서드가 두 개 이상 있어 {1} 오프셋의 {0}에서 BlockLiteral.{2}에 대한 호출을 최적화할 수 없습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX2106_F" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the method '{3}' must have at least one parameter.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{3}' 메서드에 매개 변수가 하나 이상 있어야 하므로 {1} 오프셋의 {0}에서 BlockLiteral.{2}에 대한 호출을 최적화할 수 없습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX2106_G" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the first parameter in the method '{3}' isn't 'System.IntPtr', 'void*' or 'ObjCRuntime.BlockLiteral*' (it's '{4}')]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{3}' 메서드의 첫 번째 매개 변수가 'System.IntPtr', 'void*' 또는 'ObjCRuntime.BlockLiteral*'('{4}')이 아니므로 오프셋 {1}의 {0}에서 BlockLiteral.{2}에 대한 호출을 최적화할 수 없습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX2106_H" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the method '{3}' does not have an [UnmanagedCallersOnly]5D; attribute.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{3}' 메서드에 [UnmanagedCallersOnly]5D; 특성이 없어 오프셋 {1}의 {0}에서 BlockLiteral.{2}에 대한 호출을 최적화할 수 없습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX2106_I" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the method '{3}' does not have an [UnmanagedCallersOnly]5D; attribute.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{3}' 메서드에 [UnmanagedCallersOnly]5D; 특성이 없어 오프셋 {1}의 {0}에서 BlockLiteral.{2}에 대한 호출을 최적화할 수 없습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";MX2111" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Can not find the corlib assembly '{0}' in the list of loaded assemblies.]D;]A;		]]></Val>
@@ -3678,6 +3723,78 @@
           <Val><![CDATA[The assembly {0} has been modified since the app was built, invalidating the generated static registrar code. The MVID for the loaded assembly is {1}, while the MVID for the assembly the generated static registrar code corresponds to is {2}.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[앱이 빌드된 이후 어셈블리 {0}이(가) 수정되어 생성된 정적 등록 대행자 코드가 무효화되었습니다. 로드된 어셈블리의 MVID는 {1}이고 생성된 정적 등록 대행자 코드가 해당하는 어셈블리의 MVID는 {2}입니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8045" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to call release on an instance of the type {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} 형식의 인스턴스에서 릴리스를 호출할 수 없습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8046" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to find the method '{0}' in the type '{1}']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{1}' 형식에서 '{0}' 메서드를 찾을 수 없습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8047" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The trampoline method {0} does not match the function pointer 0x{1} for the trampolineMethod argument (they're don't refer to the same method).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} 트램펄린 메서드가 trampolineMethod 인수의 0x{1} 함수 포인터와 일치하지 않습니다(동일한 메서드를 참조하지 않음).]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8048" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The trampoline method {0} must have at least one parameter.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} 트램펄린 메서드에는 매개 변수가 한 개 이상 있어야 합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8049" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The first parameter in the trampoline method {0} must be either 'System.IntPtr', 'void*' or 'ObjCRuntime.BlockLiteral*'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} 트램펄린 메서드의 첫 번째 매개 변수는 'System.IntPtr', 'void*' 또는 'ObjCRuntime.BlockLiteral*'이어야 합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8050" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[BlockLiteral.GetBlockSignature is not supported when the dynamic registrar has been linked away.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[동적 등록자가 연결된 경우 BlockLiteral.GetBlockSignature가 지원되지 않습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8051" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The trampoline method {0} must have an [UnmanagedCallersOnly]5D; attribute.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} 트램펄린 메서드에는 [UnmanagedCallersOnly]5D; 특성이 있어야 합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8052" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The signature must be a non-empty string.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[서명은 비어 있지 않은 문자열이어야 합니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
