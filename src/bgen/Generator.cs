@@ -817,6 +817,7 @@ public partial class Generator : IMemberGatherer {
 		var rt = mi.ReturnType;
 		var rts = IsNativeEnum (rt) ? "var" : RenderType (rt);
 		var trampoline_name = Nomenclator.GetTrampolineName (t);
+		var functionPointerSignature = string.Join (", ", pars.Select (v => v.Type)) + ", " + returntype;
 		var ti = new TrampolineInfo (userDelegate: FormatType (null, t),
 						 delegateName: "D" + trampoline_name,
 						 pars: string.Join (", ", pars.Select (v => v.Type + " " + v.ParameterName)),
@@ -827,7 +828,8 @@ public partial class Generator : IMemberGatherer {
 						 returnFormat: returnformat,
 						 clear: clear.ToString (),
 									 postConvert: postConvert.ToString (),
-						 type: t);
+						 type: t,
+						 functionPointerSignature: functionPointerSignature);
 
 
 		ti.UserDelegateTypeAttribute = FormatType (null, t);
@@ -1681,14 +1683,17 @@ public partial class Generator : IMemberGatherer {
 			// but we have a workaround in place because we can't fix old, binary bindings so...
 			// print ("[Preserve (Conditional=true)]");
 			// For .NET we fix it using the DynamicDependency attribute below
+#if !NET
 			print ("unsafe static internal readonly {0} Handler = Invoke;", ti.DelegateName);
 			print ("");
+#endif
 #if NET
 			print ("[Preserve (Conditional = true)]");
-			print ("[global::System.Diagnostics.CodeAnalysis.DynamicDependency (\"Handler\")]");
-#endif
+			print ("[UnmanagedCallersOnly]");
+#else
 			print ("[MonoPInvokeCallback (typeof ({0}))]", ti.DelegateName);
-			print ("static unsafe {0} Invoke ({1}) {{", ti.ReturnType, ti.Parameters);
+#endif
+			print ("internal static unsafe {0} Invoke ({1}) {{", ti.ReturnType, ti.Parameters);
 			indent++;
 			print ("var descriptor = (BlockLiteral *) block;");
 			print ("var del = ({0}) (descriptor->Target);", ti.UserDelegate);
@@ -1737,9 +1742,14 @@ public partial class Generator : IMemberGatherer {
 			print ("internal static unsafe BlockLiteral CreateBlock ({0} callback)", ti.UserDelegate);
 			print ("{");
 			indent++;
+#if NET
+			print ("delegate* unmanaged<{0}> trampoline = &Invoke;", ti.FunctionPointerSignature);
+			print ("return new BlockLiteral (trampoline, callback, typeof ({0}), nameof (Invoke));", ti.StaticName);
+#else
 			print ("var block = new BlockLiteral ();");
 			print ("block.SetupBlockUnsafe (Handler, callback);");
 			print ("return block;");
+#endif
 			indent--;
 			print ("}");
 			indent--;

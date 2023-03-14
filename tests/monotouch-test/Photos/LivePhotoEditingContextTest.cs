@@ -73,30 +73,31 @@ namespace MonoTouchFixtures.Photos {
 			var m = t.GetMethod ("Invoke", BindingFlags.Static | BindingFlags.NonPublic);
 			Assert.NotNull (m, "Invoke");
 			var d = m.CreateDelegate (typeof (DPHLivePhotoFrameProcessingBlock2));
+#if NET
+			var fptr = m.MethodHandle.GetFunctionPointer ();
+			var del = new DPHLivePhotoFrameProcessingBlock2 ((IntPtr a, NativeHandle b, NativeHandle* c) => (NativeHandle) global::Bindings.Test.CFunctions.x_call_func_3 (fptr, (IntPtr) a, (IntPtr) b, (IntPtr) (void*) c));
+#else
+			var del = (DPHLivePhotoFrameProcessingBlock2) d;
+#endif
 
-			Action userDelegate = new Action (() => Console.WriteLine ("Hello world!"));
-
-			BlockLiteral bl = new BlockLiteral ();
+#if NET
+			using var bl = new BlockLiteral ((void*) fptr, managed, t, "Invoke");
+#else
+			using var bl = new BlockLiteral ();
 			bl.SetupBlock (d, managed);
-			try {
-				var block = &bl;
-				var b = (IntPtr) block;
+#endif
+			var block = &bl;
+			var b = (IntPtr) block;
 
-				// simulate a call that does not produce an error
-				var args = new object [] { b, NativeHandle.Zero, IntPtr.Zero };
-				error_faker = null;
-				Assert.That (m.Invoke (null, args), Is.EqualTo (NativeHandle.Zero), "1");
+			// simulate a call that does not produce an error
+			error_faker = null;
+			Assert.That (del (b, NativeHandle.Zero, null), Is.EqualTo (NativeHandle.Zero), "1");
 
-				// simulate a call that does produce an error
-				error_faker = new NSError ((NSString) "domain", 42);
-				IntPtr ptr = IntPtr.Zero;
-				args [2] = (IntPtr) (IntPtr*) &ptr;
-				Assert.That (m.Invoke (null, args), Is.EqualTo (NativeHandle.Zero), "2");
-				Assert.That (Marshal.ReadIntPtr ((IntPtr) args [2]), Is.EqualTo ((IntPtr) error_faker.Handle), "error 1");
-				Assert.That (ptr, Is.EqualTo ((IntPtr) error_faker.Handle), "error 2");
-			} finally {
-				bl.CleanupBlock ();
-			}
+			// simulate a call that does produce an error
+			error_faker = new NSError ((NSString) "domain", 42);
+			NativeHandle ptr = NativeHandle.Zero;
+			Assert.That (del (b, NativeHandle.Zero, &ptr), Is.EqualTo (NativeHandle.Zero), "2");
+			Assert.That ((IntPtr) ptr, Is.EqualTo ((IntPtr) error_faker.Handle), "error 2");
 		}
 	}
 }
