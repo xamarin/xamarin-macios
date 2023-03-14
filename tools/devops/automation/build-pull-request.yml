@@ -12,6 +12,11 @@ parameters:
   type: string
   default: 'latest'
 
+- name: macOSName # comes from the build agent demand named macOS.Name
+  displayName: Name of the version of macOS to use
+  type: string
+  default: 'Ventura'
+
 - name: pool
   type: string
   displayName: Bot pool to use
@@ -187,6 +192,7 @@ stages:
 - template: templates/main-stage.yml
   parameters:
     xcodeChannel: Stable
+    macOSName: ${{ parameters.macOSName }}
     isPR: true
     provisionatorChannel: ${{ parameters.provisionatorChannel }}
     pool: ${{ parameters.pool }}
