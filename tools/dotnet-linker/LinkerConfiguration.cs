@@ -21,6 +21,7 @@ namespace Xamarin.Linker {
 		public List<Abi> Abis;
 		public string AOTCompiler;
 		public string AOTOutputDirectory;
+		public string DedupAssembly;
 		public string CacheDirectory { get; private set; }
 		public Version DeploymentTarget { get; private set; }
 		public HashSet<string> FrameworkAssemblies { get; private set; } = new HashSet<string> ();
@@ -124,6 +125,9 @@ namespace Xamarin.Linker {
 					break;
 				case "AOTOutputDirectory":
 					AOTOutputDirectory = value;
+					break;
+				case "DedupAssembly":
+					DedupAssembly = value;
 					break;
 				case "CacheDirectory":
 					CacheDirectory = value;
@@ -386,6 +390,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    ABIs: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
 				Console.WriteLine ($"    AOTArguments: {string.Join (", ", Application.AotArguments)}");
 				Console.WriteLine ($"    AOTOutputDirectory: {AOTOutputDirectory}");
+				Console.WriteLine ($"    DedupAssembly: {DedupAssembly}");
 				Console.WriteLine ($"    AppBundleManifestPath: {Application.InfoPListPath}");
 				Console.WriteLine ($"    AreAnyAssembliesTrimmed: {Application.AreAnyAssembliesTrimmed}");
 				Console.WriteLine ($"    AssemblyName: {Application.AssemblyName}");

@@ -14,32 +14,6 @@
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.MergeAppBundles" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ILStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
-	<UsingTask TaskName="CreateDedupItem" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
-		<ParameterGroup>
-			<Assemblies ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
-			<DedupAssembly ParameterType="System.String" Required="true" />
-			<OutAssemblies ParameterType="Microsoft.Build.Framework.ITaskItem[]" Output="true" />
-		</ParameterGroup>
-		<Task>
-			<Code Type="Fragment" Language="cs"><![CDATA[
-			if (Path.GetFileName (Assemblies [Assemblies.Length - 1].ItemSpec) == Path.GetFileName (DedupAssembly)) {
-						var sourceFileName = Path.GetFileNameWithoutExtension (Assemblies [Assemblies.Length - 2].ItemSpec);
-						var targetFileName = Path.GetFileNameWithoutExtension (Assemblies [Assemblies.Length - 1].ItemSpec);
-
-						Assemblies [Assemblies.Length - 1].SetMetadata ("Arguments", Assemblies [Assemblies.Length - 2].GetMetadata ("Arguments").Replace (sourceFileName, targetFileName));
-						Assemblies [Assemblies.Length - 1].SetMetadata ("ProcessArguments", Assemblies [Assemblies.Length - 2].GetMetadata ("ProcessArguments").Replace (sourceFileName, targetFileName));
-						Assemblies [Assemblies.Length - 1].SetMetadata ("Abi", Assemblies [Assemblies.Length - 2].GetMetadata ("Abi").Replace (sourceFileName, targetFileName));
-						Assemblies [Assemblies.Length - 1].SetMetadata ("Arch", Assemblies [Assemblies.Length - 2].GetMetadata ("Arch").Replace (sourceFileName, targetFileName));
-						Assemblies [Assemblies.Length - 1].SetMetadata ("AOTData", Assemblies [Assemblies.Length - 2].GetMetadata ("AOTData").Replace (sourceFileName, targetFileName));
-						Assemblies [Assemblies.Length - 1].SetMetadata ("AOTAssembly", Assemblies [Assemblies.Length - 2].GetMetadata ("AOTAssembly").Replace (sourceFileName, targetFileName));
-						Assemblies [Assemblies.Length - 1].SetMetadata ("LLVMFile", Assemblies [Assemblies.Length - 2].GetMetadata ("LLVMFile").Replace (sourceFileName, targetFileName));
-						Assemblies [Assemblies.Length - 1].SetMetadata ("ObjectFile", Assemblies [Assemblies.Length - 2].GetMetadata ("ObjectFile").Replace (sourceFileName, targetFileName));
-					}
-
-			OutAssemblies = Assemblies;
-			]]></Code>
-		</Task>
-	</UsingTask>
 
 	<!-- Project types and how do we distinguish between them
 
@@ -501,6 +475,7 @@
 				@(_AotArguments -> 'AOTArgument=%(Identity)')
 				AOTCompiler=$(_XamarinAOTCompiler)
 				AOTOutputDirectory=$(_AOTOutputDirectory)
+				DedupAssembly=$(_DedupAssembly)
 				AppBundleManifestPath=$(_AppBundleManifestPath)
 				CacheDirectory=$(_LinkerCacheDirectory)
 				@(_BundlerDlsym -> 'Dlsym=%(Identity)')
@@ -841,7 +816,7 @@
 		</ReadItemsFromFile>
 		<!-- Load _AssembliesToAOT -->
 		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_AssembliesToAOT.items" Condition="Exists('$(_LinkerItemsDirectory)/_AssembliesToAOT.items')">
-			<Output TaskParameter="Items" ItemName="_Assemblies" />
+			<Output TaskParameter="Items" ItemName="_AssembliesToAOT" />
 		</ReadItemsFromFile>
 		<!-- Load _FrameworkToPublish -->
 		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_FrameworkToPublish.items" Condition="Exists('$(_LinkerItemsDirectory)/_FrameworkToPublish.items')">
@@ -944,6 +919,7 @@
 
 			<_AOTInputDirectory>$(_IntermediateNativeLibraryDir)aot-input/</_AOTInputDirectory>
 			<_AOTOutputDirectory>$(_IntermediateNativeLibraryDir)aot-output/</_AOTOutputDirectory>
+			<_DedupAssembly Condition="'$(_RunAotCompiler)' == 'true' And '$(IsMacEnabled)' == 'true'">$(IntermediateOutputPath)aot-instances.dll</_DedupAssembly>
 
 			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == '' And ('$(ComputedPlatform)' != 'iPhone' Or '$(_PlatformName)' == 'macOS')">dylib</_LibMonoLinkMode>
 			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == ''">static</_LibMonoLinkMode>
@@ -1049,12 +1025,14 @@
 	</Target>
 
 	<Target Name="_CreateAOTDedupAssembly"
-			Condition="'$(_RunAotCompiler)' == 'true'">
-		<PropertyGroup>
-			<_DedupAssembly>$(IntermediateLinkDir)aot-instances.dll</_DedupAssembly>
-		</PropertyGroup>
-		<WriteLinesToFile File="$(_IntermediateNativeLibraryDir)/aot-instances.cs" Overwrite="true" Lines="" WriteOnlyWhenDifferent="true" />
-		<Csc Sources="$(_IntermediateNativeLibraryDir)\aot-instances.cs"
+			Condition="'$(_RunAotCompiler)' == 'true' And '$(IsMacEnabled)' == 'true'"
+			DependsOnTargets="_ComputeManagedAssemblyToLink"
+			BeforeTargets="PrepareForILLink"
+			Inputs="$(MSBuildThisFileFullPath)"
+			Outputs="$(_DedupAssembly)">
+
+		<WriteLinesToFile File="$(_IntermediateNativeLibraryDir)aot-instances.cs" Overwrite="true" Lines="" WriteOnlyWhenDifferent="true" />
+		<Csc Sources="$(_IntermediateNativeLibraryDir)aot-instances.cs"
 		OutputAssembly="$(_DedupAssembly)"
 		TargetType="library"
 		Deterministic="true"
@@ -1064,21 +1042,9 @@
 		<Delete Files="$(_IntermediateNativeLibraryDir)aot-instances.cs" />
 
 		<ItemGroup>
-			<_Assemblies Include="$(_DedupAssembly)">
-				<AOTAssembly>_AOTAssembly</AOTAssembly>
-				<Arch>_Arch</Arch>
-				<Arguments>_Arguments</Arguments>
-				<ProcessArguments>_ProcessArguments</ProcessArguments>
-				<ObjectFile>_ObjectFile</ObjectFile>
-				<Abi>_Abi</Abi>
-				<LLVMFile>_LLVMFile</LLVMFile>
-				<AOTData>_AOTData</AOTData>
-			</_Assemblies>
+			<ManagedAssemblyToLink Include="$(_DedupAssembly)" />
+			<TrimmerRootAssembly Include="$(_DedupAssembly)" />
 		</ItemGroup>
-
-		<CreateDedupItem Assemblies="@(_Assemblies)" DedupAssembly="$(_DedupAssembly)">
-			<Output ItemName="_AssembliesToAOT" TaskParameter="OutAssemblies" />
-		</CreateDedupItem>
 	</Target>
 
 	<PropertyGroup>
@@ -1134,6 +1100,12 @@
 			<!-- copy the aotdata files to the .app -->
 			<ResolvedFileToPublish Include="%(_AssembliesToAOT.AOTData)" >
 				<RelativePath>$(_AssemblyPublishDir)\%(_AssembliesToAOT.Filename).aotdata.%(_AssembliesToAOT.Arch)</RelativePath>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			</ResolvedFileToPublish>
+
+			<!-- copy the dedup assembly to the .app -->
+			<ResolvedFileToPublish Include="$(_DedupAssembly)" >
+				<RelativePath>$(_AssemblyPublishDir)\$([System.IO.Path]::GetFileName('$(_DedupAssembly)'))</RelativePath>
 				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			</ResolvedFileToPublish>
 		</ItemGroup>

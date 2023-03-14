@@ -20,9 +20,6 @@ namespace Xamarin.MacDev.Tasks {
 		public string AOTCompilerPath { get; set; } = string.Empty;
 
 		[Required]
-		public string DedupAssembly { get; set; } = string.Empty;
-
-		[Required]
 		public ITaskItem [] Assemblies { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
@@ -36,6 +33,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Required]
 		public string SdkDevPath { get; set; } = string.Empty;
+
+		public string DedupAssembly { get; set; } = string.Empty;
 
 		#region Output
 		[Output]
@@ -100,21 +99,16 @@ namespace Xamarin.MacDev.Tasks {
 					Log.LogError (MSBStrings.E7071, /* Unable to parse the AOT compiler arguments: {0} ({1}) */ processArguments, ex2!.Message);
 					return false;
 				}
-				string dedupArgument = "";
-				if (Path.GetFileName (input) == Path.GetFileName (DedupAssembly)) {
-					dedupArgument = $",dedup-include={Path.GetFileName (DedupAssembly)}";
-				} else if (!string.IsNullOrEmpty (DedupAssembly)) {
-					dedupArgument = ",dedup-skip";
-				}
-				arguments.Add ($"{string.Join (",", parsedArguments)}{dedupArgument}");
+				arguments.Add ($"{string.Join (",", parsedArguments)}");
 				if (globalAotArguments?.Any () == true)
 					arguments.Add ($"--aot={string.Join (",", globalAotArguments)}");
 				arguments.AddRange (parsedProcessArguments);
-				arguments.Add (input);
 				if (Path.GetFileName (input) == Path.GetFileName (DedupAssembly)) {
-					for (var j = 0; j < Assemblies.Length - 1; j++) {
+					for (var j = 0; j < Assemblies.Length; j++) {
 						arguments.Add (inputs [j]);
 					}
+				} else {
+					arguments.Add (input);
 				}
 
 				processes [i] = ExecuteAsync (AOTCompilerPath, arguments, environment: environment, sdkDevPath: SdkDevPath, showErrorIfFailure: false /* we show our own error below */)
