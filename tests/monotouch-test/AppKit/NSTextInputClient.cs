@@ -103,7 +103,7 @@ namespace apitest {
 		[Test]
 		public void NSTextInputClient_ShouldGetBaselineDelta ()
 		{
-			Assert.That (textView.GetBaselineDelta (4), Is.EqualTo (11).Or.EqualTo (0), "NSTextInputClient_ShouldGetBaselineDelta - Returned wrong baseline delta value");
+			Assert.That ((double) textView.GetBaselineDelta (4), Is.EqualTo ((double) 11).Or.EqualTo ((double) 0), "NSTextInputClient_ShouldGetBaselineDelta - Returned wrong baseline delta value");
 		}
 
 		[Test]
