@@ -13,7 +13,7 @@ namespace Xamarin.MacDev.Tasks {
 		#region Inputs
 
 		[Required]
-		public ITaskItem[] DirectoryPath { get; set; } = Array.Empty<ITaskItem> ();
+		public ITaskItem [] DirectoryPath { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
 		public string Pattern { get; set; } = string.Empty;
