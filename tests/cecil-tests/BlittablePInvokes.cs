@@ -362,7 +362,7 @@ namespace Cecil.Tests {
 								continue;
 							}
 
-							var targetMethod = (MethodReference) instr.Operand;
+							var targetMethod = instr.Operand as MethodReference;
 							Assert.IsNotNull (targetMethod, "Null operand"); // If this ever fails, the code needs to be updated.
 
 							if (!targetMethod!.DeclaringType.Is ("ObjCRuntime", "BlockLiteral"))
