@@ -526,7 +526,7 @@ namespace CoreFoundation {
 				return;
 			GetCheckedHandle ();
 			if (loop is not null) {
-#if NET8_OR_GREATER
+#if NET8_0_OR_GREATER
 				unsafe {
 					DoSetClient ((delegate* unmanaged<IntPtr, nint, IntPtr, void>) null, (CFIndex) 0, IntPtr.Zero);
 				}
@@ -651,7 +651,7 @@ namespace CoreFoundation {
 
 		protected delegate void CFStreamCallback (IntPtr s, nint type, IntPtr info);
 
-#if NET8_OR_GREATER
+#if NET8_0_OR_GREATER
 		[UnmanagedCallersOnly]
 #else
 		[MonoPInvokeCallback (typeof (CFStreamCallback))]
@@ -662,7 +662,7 @@ namespace CoreFoundation {
 			stream?.OnCallback ((CFStreamEventType) (long) type);
 		}
 
-#if !NET8_OR_GREATER
+#if !NET8_0_OR_GREATER
 		static CFStreamCallback OnCallbackDelegate = NativeCallback;
 #endif
 
@@ -712,7 +712,7 @@ namespace CoreFoundation {
 			try {
 				Marshal.StructureToPtr (ctx, ptr, false);
 				bool clientSet;
-#if NET8_OR_GREATER
+#if NET8_0_OR_GREATER
 				unsafe {
 					clientSet = DoSetClient (&NativeCallback, (CFIndex) (long) args, ptr) != 0;
 				}
@@ -729,7 +729,7 @@ namespace CoreFoundation {
 		}
 
 #if !XAMCORE_5_0
-#if NET8_OR_GREATER
+#if NET8_0_OR_GREATER
 		[Obsolete ("Use the other overload.")]
 		[EditorBrowsable (EditorBrowsableState.Never)]
 #endif
@@ -737,7 +737,7 @@ namespace CoreFoundation {
 											 IntPtr context);
 #endif
 
-#if NET8_OR_GREATER
+#if NET8_0_OR_GREATER
 #if XAMCORE_5_0
 		unsafe protected abstract byte DoSetClient (delegate* unmanaged<IntPtr, nint, IntPtr, void> callback, CFIndex eventTypes, IntPtr context);
 #else
@@ -746,7 +746,7 @@ namespace CoreFoundation {
 			throw new InvalidOperationException ($"This method must be overridden (and don't call base)");
 		}
 #endif // XAMCORE_5_0
-#endif // NET8_OR_GREATER
+#endif // NET8_0_OR_GREATER
 
 
 #if !NET
