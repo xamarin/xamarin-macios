@@ -1351,6 +1351,7 @@ define DotNetProjectFiles
 $(DOTNET_BUILD_DIR)/projects/$(1)/$(1).csproj: dotnet.tmpl.csproj Makefile $$(wildcard $(CURDIR)/*.sources)
 	@mkdir -p $$(dir $$@)
 	@sed \
+		-e 's*%DOTNET_TFM%*$(DOTNET_TFM)*' \
 		-e 's*%PLATFORM%*$(1)*' \
 		-e 's*<!--%FILES%-->*$$(foreach file,$$($(2)_DOTNET_SOURCES),<Compile Include="../../../../$$(file)" Link="sources/$$(file)" />)*' \
 		-e 's*<!--%APIS%-->*$$(foreach file,$$($(2)_DOTNET_APIS),<None Include="../../../../$$(file)" Link="apis/$$(file)" />)*' \
