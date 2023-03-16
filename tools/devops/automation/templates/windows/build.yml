@@ -133,7 +133,6 @@ steps:
         --verbosity quiet `
         "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/run-dotnet-tests.binlog"
   displayName: 'Run .NET tests'
-  continueOnError: true
 
 - pwsh: |
     Write-Host "Run windows tests."
