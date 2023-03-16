@@ -2019,8 +2019,13 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 			<_BindingPackagesFromReferencedAssembliesWithDestinationDir Include="@(_BindingPackagesFromReferencedAssemblies)">
 				<DestinationSubDirectory>$([System.IO.Path]::GetFileName('%(OriginalItemSpec)'))\$([System.IO.Path]::GetDirectoryName('%(RecursiveDir)'))\</DestinationSubDirectory>
 			</_BindingPackagesFromReferencedAssembliesWithDestinationDir>
-			<ReferenceCopyLocalPaths Include="@(_CompressedBindingPackagesFromReferencedAssemblies)" />
-			<ReferenceCopyLocalPaths Include="@(_BindingPackagesFromReferencedAssembliesWithDestinationDir)" />
+			<!-- Add what we found to ReferenceCopyLocalPaths. Note that binding resource packages should generally not be published, so we're setting PublishFolderType=None -->
+			<ReferenceCopyLocalPaths Include="@(_CompressedBindingPackagesFromReferencedAssemblies)">
+				<PublishFolderType>None</PublishFolderType>
+			</ReferenceCopyLocalPaths>
+			<ReferenceCopyLocalPaths Include="@(_BindingPackagesFromReferencedAssembliesWithDestinationDir)">
+				<PublishFolderType>None</PublishFolderType>
+			</ReferenceCopyLocalPaths>
 		</ItemGroup>
 	</Target>
 
