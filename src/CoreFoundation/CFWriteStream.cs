@@ -133,7 +133,7 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-#if NET8_OR_GREATER
+#if NET8_0_OR_GREATER
 		unsafe static extern /* Boolean */ byte CFWriteStreamSetClient (/* CFWriteStreamRef */ IntPtr stream, /* CFOptionFlags */ nint streamEvents,
 			/* CFWriteStreamClientCallBack */ delegate* unmanaged<IntPtr, nint, IntPtr, void> clientCB, /* CFStreamClientContext* */ IntPtr clientContext);
 #else
@@ -143,14 +143,14 @@ namespace CoreFoundation {
 #endif
 
 #if !XAMCORE_5_0
-#if NET8_OR_GREATER
+#if NET8_0_OR_GREATER
 		[Obsolete ("Use the other overload.")]
 		[EditorBrowsable (EditorBrowsableState.Never)]
 #endif
 		protected override bool DoSetClient (CFStreamCallback? callback, CFIndex eventTypes,
 											 IntPtr context)
 		{
-#if NET8_OR_GREATER
+#if NET8_0_OR_GREATER
 			throw new InvalidOperationException ($"Use the other overload.");
 #else
 			return CFWriteStreamSetClient (Handle, (nint) eventTypes, callback, context);
@@ -158,7 +158,7 @@ namespace CoreFoundation {
 		}
 #endif // !XAMCORE_5_0
 
-#if NET8_OR_GREATER
+#if NET8_0_OR_GREATER
 		unsafe protected override byte DoSetClient (delegate* unmanaged<IntPtr, nint, IntPtr, void> callback, CFIndex eventTypes, IntPtr context)
 		{
 			return CFWriteStreamSetClient (Handle, (nint) eventTypes, callback, context);
