@@ -226,6 +226,7 @@ namespace Xharness.Jenkins {
 				TestProject = buildDotNetTestsProject,
 				Platform = TestPlatform.All,
 				TestName = "DotNet tests",
+				Filter = "Category!=Windows",
 				Timeout = TimeSpan.FromMinutes (360),
 				Ignored = !TestSelection.IsEnabled (TestLabel.DotnetTest),
 			};
