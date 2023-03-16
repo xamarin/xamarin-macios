@@ -103,27 +103,33 @@ namespace CoreGraphics {
 
 #if NET
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
-		extern static unsafe IntPtr CGEventTapCreateForPSN (IntPtr processSerialNumer, CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, delegate* unmanaged<IntPtr, CGEventType, IntPtr, IntPtr, IntPtr> cback, IntPtr data);
+		extern static unsafe IntPtr CGEventTapCreateForPSN (IntPtr processSerialNumer, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, delegate* unmanaged<IntPtr, CGEventType, IntPtr, IntPtr, IntPtr> cback, IntPtr data);
 #else
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
-		extern static IntPtr CGEventTapCreateForPSN (IntPtr processSerialNumer, CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data);
+		extern static IntPtr CGEventTapCreateForPSN (IntPtr processSerialNumer, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data);
 #endif
 		
+		[Obsolete ("The location parameter is not used. Consider using the overload without the location parameter.", false)]
 		public static CFMachPort? CreateTap (IntPtr processSerialNumber, CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data)
 		{
-#if NET
-			IntPtr r;
+			return CreateTap (processSerialNumber, place, options, mask, cback, data);
+		}
+
+		public static CFMachPort? CreateTap (IntPtr processSerialNumber, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data)
+		{
 			unsafe {
+				var psnPtr = new IntPtr (&processSerialNumber);
+#if NET
 				var tapData = new TapData (cback, data);
 				var gch = GCHandle.Alloc (tapData);
-				r = CGEventTapCreateForPSN (processSerialNumber, location, place, options, mask, &TapCallback, GCHandle.ToIntPtr (gch));
-			}
+				var r = CGEventTapCreateForPSN (psnPtr, place, options, mask, &TapCallback, GCHandle.ToIntPtr (gch));
 #else
-			var r = CGEventTapCreateForPSN (processSerialNumber, location, place, options, mask, cback, data);
+				var r = CGEventTapCreateForPSN (psnPtr, place, options, mask, cback, data);
 #endif
-			if (r == IntPtr.Zero)
-				return null;
-			return new CFMachPort (r, true);
+				if (r == IntPtr.Zero)
+					return null;
+				return new CFMachPort (r, true);
+			}
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
