@@ -69,26 +69,26 @@ stages:
           repositoryAlias: self
           commit: HEAD
 
-    - job: Copy over lcl
+    - job: BringLocChanges
       displayName: 'Copy over the lcl file changes from Localization branch'
       pool:
         vmImage: windows-latest
       steps:
 
-    - pwsh: |
-        git config remote.origin.fetch '+refs/pull/*:refs/remotes/origin/pull/*'
-        git fetch origin
-        $branch="$(Build.SourceBranch)".Replace("merge", "head")
-        $branch=$branch.Replace("refs", "origin")
-        # $branch=$branch.Replace("Localization", "main")
-        $branch=$branch.Replace("LocalizationCITest1", "main")
-        Write-Host "Checking out branch $branch"
-        git checkout $branch
-        git checkout -b localization-$(Build.BuildNumber)
-        # git cherry-pick $(Build.SourceVersion)
+      # ${{ eq(variables['Build.SourceVersionAuthor'], 'csigs') }}
+      ${{ eq(variables['Build.SourceVersionAuthor'], 'tj-devel709') }}
+        - pwsh: |
+            git config remote.origin.fetch '+refs/pull/*:refs/remotes/origin/pull/*'
+            git fetch origin
+            $branch="$(Build.SourceBranch)".Replace("merge", "head")
+            $branch=$branch.Replace("refs", "origin")
+            # $branch=$branch.Replace("Localization", "main")
+            $branch=$branch.Replace("LocalizationCITest1", "main")
+            Write-Host "Checking out branch $branch"
+            git checkout $branch
+            git checkout -b localization-$(Build.BuildNumber)
+            # git cherry-pick $(Build.SourceVersion)
 
-      name: BringLocChanges
-      displayName: "BringLocChanges"
-      workingDirectory: $(System.DefaultWorkingDirectory)
-      # if: ${{ eq(variables['Build.SourceVersionAuthor'], 'csigs') }}
-      if: ${{ eq(variables['Build.SourceVersionAuthor'], 'tj-devel709') }}
+          name: BringLocChanges
+          displayName: "BringLocChanges"
+          workingDirectory: $(System.DefaultWorkingDirectory)
