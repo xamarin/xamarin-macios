@@ -2,10 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
     <dict>
-        <!-- Uncomment the following lines when preparing for release builds.
-        <key>com.apple.security.app-sandbox</key>
+        <!-- app.sandbox is required by the App Store.-->
+        <!-- <key>com.apple.security.app-sandbox</key>
         <true/>
-        <key>com.apple.security.network.client</key>
+        -->
+
+        <!-- When sandbox is enabled, this value is required if app was created with Blazor.-->
+        <!--<key>com.apple.security.network.client</key>
         <true/>
         -->
     </dict>
