@@ -121,7 +121,7 @@ csharp_using_directive_placement = outside_namespace:suggestion
 
 dotnet_diagnostic.IDE0029.severity = error
 dotnet_diagnostic.IDE0031.severity = error
-dotnet_diagnostic.IDE0041.severity = erro
+dotnet_diagnostic.IDE0041.severity = error
 
 #### C# Formatting Rules ####
 
