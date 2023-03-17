@@ -875,6 +875,10 @@ namespace Xamarin.Tests {
 
 			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", platform.ToFramework (), GetDefaultRuntimeIdentifier (platform), "MySimpleApp.app", GetPlugInsRelativePath (platform), "ExtensionProject.appex");
 			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
+
+			var pathToSearch = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug");
+			string [] configFiles = Directory.GetFiles (pathToSearch, "*.runtimeconfig.*", SearchOption.AllDirectories);
+			Assert.That (configFiles.Length > 0, "runtimeconfig.json file does not exist");
 		}
 
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-arm64")]

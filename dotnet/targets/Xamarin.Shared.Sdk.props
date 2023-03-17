@@ -50,6 +50,7 @@
 			* https://github.com/dotnet/sdk/blob/c5a58bc6c3eb2b236b314e6d17a89a537459890c/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Sdk.FrameworkReferenceResolution.targets#L102
 		-->
 		<_IsTrimmingEnabled>true</_IsTrimmingEnabled>
+		<GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
 	</PropertyGroup>
 
 	<!-- Set the default RuntimeIdentifier if not already specified. -->
