@@ -2655,7 +2655,7 @@ namespace Registrar {
 			case "System.Double": return "d";
 			case "System.Boolean":
 				// map managed 'bool' to ObjC BOOL = 'unsigned char' in OSX and 32bit iOS architectures and 'bool' in 64bit iOS architectures
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 				return IsARM64 ? "B" : "c";
 #else
 				return Is64Bits ? "B" : "c";
