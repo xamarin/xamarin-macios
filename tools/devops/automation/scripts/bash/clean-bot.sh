@@ -124,7 +124,35 @@ for oldXcode in "${oldXcodes[@]}"; do
 	fi
 done
 
+# list simulator runtimes
+ls -lad /Library/Developer/CoreSimulator/Images/mnt/*/Library/Developer/CoreSimulator/Profiles/Runtimes/*.simruntime
 
+# find if there are any duplicated simulator runtimes for a given platform
+# here we look through all the simulator runtimes, and assign any to a variable whose name contains the platform
+# we also check if that variable already exists, in which case we assign the value 'delete'
+# at the end we loop over all the platforms, and delete all simulator runtimes whose platform variable we assigned the value 'delete'
+PLATFORMS=()
+for sr in /Library/Developer/CoreSimulator/Images/mnt/*/Library/Developer/CoreSimulator/Profiles/Runtimes/*.simruntime; do
+	PLATFORM=$(basename -s .simruntime "$sr")
+	PLATFORMS+=("$PLATFORM")
+	varname="simruntime_$PLATFORM"
+	EXISTING=${!varname}
+	if test -z "$EXISTING"; then
+		declare "$varname=$sr"
+	else
+		declare "$varname=delete"
+	fi
+done
+for PLATFORM in $(echo "${PLATFORMS[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '); do
+	varname="simruntime_$PLATFORM"
+	EXISTING=${!varname}
+	if [[ "$EXISTING" == "delete" ]]; then
+		for sr in /Library/Developer/CoreSimulator/Images/mnt/*/Library/Developer/CoreSimulator/Profiles/Runtimes/"$PLATFORM".simruntime; do
+			ID="$(basename "$(dirname "$(dirname "$(dirname "$(dirname "$(dirname "$(dirname "$sr")")")")")")")"
+			sudo xrun simctl runtime delete "$ID"
+		done
+	fi
+done
 
 # Print disk status after cleaning
 df -h
