@@ -125,6 +125,8 @@ for oldXcode in "${oldXcodes[@]}"; do
 done
 
 # list simulator runtimes
+ls -lad /Library/Developer/CoreSimulator/Images/mnt/
+ls -lad /Library/Developer/CoreSimulator/Images/mnt/*/Library/Developer/CoreSimulator/Profiles/Runtimes
 ls -lad /Library/Developer/CoreSimulator/Images/mnt/*/Library/Developer/CoreSimulator/Profiles/Runtimes/*.simruntime
 
 # find if there are any duplicated simulator runtimes for a given platform
@@ -133,6 +135,9 @@ ls -lad /Library/Developer/CoreSimulator/Images/mnt/*/Library/Developer/CoreSimu
 # at the end we loop over all the platforms, and delete all simulator runtimes whose platform variable we assigned the value 'delete'
 PLATFORMS=()
 for sr in /Library/Developer/CoreSimulator/Images/mnt/*/Library/Developer/CoreSimulator/Profiles/Runtimes/*.simruntime; do
+	if ! test -d "$sr"; then
+		continue
+	fi
 	PLATFORM=$(basename -s .simruntime "$sr")
 	PLATFORMS+=("$PLATFORM")
 	varname="simruntime_$PLATFORM"
