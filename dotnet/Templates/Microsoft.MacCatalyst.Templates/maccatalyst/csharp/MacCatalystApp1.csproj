@@ -1,4 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0-maccatalyst</TargetFramework>
+    <!--Both architectures:
+    <RuntimeIdentifier>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifier>-->
+    <!--Only x64. Please note that selecting only arm64 is not permitted.-->
+    <RuntimeIdentifier>maccatalyst-x64</RuntimeIdentifier>
+    <OutputType>Exe</OutputType>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <SupportedOSPlatformVersion>14.2</SupportedOSPlatformVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <CreatePackage>false</CreatePackage>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <CreatePackage>false</CreatePackage>
+  </PropertyGroup>
+
+  <!--
+  For Debug:
   <PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst')) and '$(Configuration)' == 'Debug'">
     <MtouchLink>none</MtouchLink>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -11,11 +31,12 @@
     <PackageSigningKey>3rd Party Mac Developer Installer: YOURNAME (*******)</PackageSigningKey>
     <UseHardenedRuntime>false</UseHardenedRuntime>
   </PropertyGroup>
+  -->
 
+  <!--
+  For Release:
   <PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst')) and '$(Configuration)' == 'Release'">
     <MtouchLink>Full</MtouchLink>
-    <!--You must specify both both architectures or only x64 as desired. arm64 only is not permitted.-->
-    <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers>
     <RootNamespace Condition="'$(name)' != '$(name{-VALUE-FORMS-}safe_namespace)'">MacCatalystApp1</RootNamespace>
     <OutputType>Exe</OutputType>
     <Nullable>enable</Nullable>
@@ -30,5 +51,6 @@
     <CodesignProvision>YOUR PROFILE NAME</CodesignProvision>
     <PackageSigningKey>3rd Party Mac Developer Installer: YOURNAME (*******)</PackageSigningKey>
     <UseHardenedRuntime>true</UseHardenedRuntime>
-  </PropertyGroup>
+  </PropertyGroup>-->
+
 </Project>
