@@ -4,17 +4,20 @@ using System.IO;
 using Microsoft.Build.Framework;
 
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
+#nullable enable
+
 namespace Xamarin.MacDev.Tasks {
-	public abstract class CodesignVerifyTaskBase : XamarinToolTask {
+	public class CodesignVerify : XamarinToolTask {
 		#region Inputs
 
 		[Required]
-		public string CodesignAllocate { get; set; }
+		public string CodesignAllocate { get; set; } = string.Empty;
 
 		[Required]
-		public string Resource { get; set; }
+		public string Resource { get; set; } = string.Empty;
 
 		#endregion
 
@@ -43,9 +46,9 @@ namespace Xamarin.MacDev.Tasks {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
 			case ApplePlatform.WatchOS:
-			case ApplePlatform.MacCatalyst:
 				args.AddQuoted ("-R=anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.1] exists and (certificate leaf[field.1.2.840.113635.100.6.1.2] exists or certificate leaf[field.1.2.840.113635.100.6.1.4] exists)");
 				break;
+			case ApplePlatform.MacCatalyst:
 			case ApplePlatform.MacOSX:
 				args.Add ("--deep");
 				break;
@@ -66,11 +69,22 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			EnvironmentVariables = new string [] {
 				"CODESIGN_ALLOCATE=" + CodesignAllocate
 			};
 
 			return base.Execute ();
+		}
+
+		public override void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+
+			base.Cancel ();
 		}
 	}
 }
