@@ -17,7 +17,7 @@ cat simruntime-runtimes.txt
 sort simruntime-runtimes.txt | uniq -c | sort -n | sed 's/^[[:blank:]]*//' > simruntime-runtimes-by-count.txt
 cat simruntime-runtimes-by-count.txt
 
-grep -v '^2 ' simruntime-runtimes-by-count.txt | sed 's/^[0-9 ]*//' > simruntime-duplicated-runtimes.txt
+grep -v '^1 ' simruntime-runtimes-by-count.txt | sed 's/^[0-9 ]*//' > simruntime-duplicated-runtimes.txt
 cat simruntime-duplicated-runtimes.txt
 
 while IFS= read -r simruntime
@@ -26,7 +26,11 @@ do
   grep "$simruntime" simruntime-lines.txt | sed 's/ .*//' | while IFS= read -r id
   do
     echo "    sudo xcrun simctl runtime delete $id"
-    sudo xcrun simctl runtime delete "$id"
+    if ! sudo xcrun simctl runtime delete "$id"; then
+      echo "    failed to delete runtime $id"
+    else
+      echo "    deleted runtime $id"
+    fi
   done
 done < simruntime-duplicated-runtimes.txt
 
