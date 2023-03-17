@@ -1,0 +1,94 @@
+# YAML pipeline build definition
+# https://devdiv.visualstudio.com/DevDiv/_apps/hub/ms.vss-ciworkflow.build-ci-hub?_a=edit-build-definition&id=13947&view=Tab_Tasks
+#
+# YAML build pipeline based on the Jenkins multi-stage (main branch) build workflow
+# https://jenkins.internalx.com/view/Xamarin.MaciOS/job/macios/job/main/
+# https://jenkins.internalx.com/view/Xamarin.MaciOS/job/macios/configure
+#
+parameters:
+
+- name: runGovernanceTests
+  type: boolean
+  default: true
+
+variables:
+- template: templates/variables.yml
+- name: MaciosUploadPrefix
+  value: ''
+
+resources:
+  repositories:
+  - repository: self
+    checkoutOptions:
+      submodules: true
+
+  - repository: yaml-templates
+    type: github
+    name: xamarin/yaml-templates
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: sdk-insertions
+    type: github
+    name: xamarin/sdk-insertions
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: maccore
+    type: github
+    name: xamarin/maccore
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: release-scripts
+    type: github
+    name: xamarin/release-scripts
+    ref: refs/heads/only_codesign
+    endpoint: xamarin
+
+trigger:
+  branches:
+    include:
+      - LocalizationCITest1
+      # - Localization
+
+stages:
+
+- ${{ if eq(parameters.runGovernanceTests, true) }}:
+  - stage: governance_checks
+    displayName: 'Governance Checks'
+    jobs:
+    - job: governance
+      displayName: 'Governance Checks'
+      pool:
+        vmImage: windows-latest
+      steps:
+      - template: templates/governance-checks.yml
+        parameters:
+          isPR: false
+          repositoryAlias: self
+          commit: HEAD
+
+    - job: Copy over lcl
+      displayName: 'Copy over the lcl file changes from Localization branch'
+      pool:
+        vmImage: windows-latest
+      steps:
+
+    - pwsh: |
+        git config remote.origin.fetch '+refs/pull/*:refs/remotes/origin/pull/*'
+        git fetch origin
+        $branch="$(Build.SourceBranch)".Replace("merge", "head")
+        $branch=$branch.Replace("refs", "origin")
+        # $branch=$branch.Replace("Localization", "main")
+        $branch=$branch.Replace("LocalizationCITest1", "main")
+        Write-Host "Checking out branch $branch"
+        git checkout $branch
+        git checkout -b localization-$(Build.BuildNumber)
+        # git cherry-pick $(Build.SourceVersion)
+
+      name: BringLocChanges
+      displayName: "BringLocChanges"
+      workingDirectory: $(System.DefaultWorkingDirectory)
+      # if: ${{ eq(variables['Build.SourceVersionAuthor'], 'csigs') }}
+      if: ${{ eq(variables['Build.SourceVersionAuthor'], 'tj-devel709') }}
