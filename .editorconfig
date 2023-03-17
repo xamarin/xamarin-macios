@@ -119,9 +119,9 @@ csharp_using_directive_placement = outside_namespace:suggestion
 
 # nullability checks
 
-dotnet_diagnostic.IDE0029.severity = error
-dotnet_diagnostic.IDE0031.severity = error
-dotnet_diagnostic.IDE0041.severity = error
+dotnet_style_coalesce_expression = true
+dotnet_style_null_propagation = true
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true
 
 #### C# Formatting Rules ####
 
