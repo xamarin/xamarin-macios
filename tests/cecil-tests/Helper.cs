@@ -233,7 +233,7 @@ namespace Cecil.Tests {
 				throw new NotImplementedException (assembly);
 			}
 
-			return rv;
+			return rv!;
 		}
 
 		static IEnumerable<string> PlatformAssemblies {
@@ -349,7 +349,7 @@ namespace Cecil.Tests {
 			return rv;
 		}
 
-		public static string RenderLocation (this IMemberDefinition member, Instruction? instruction = null)
+		public static string RenderLocation (this IMemberDefinition? member, Instruction? instruction = null)
 		{
 			if (member is null)
 				return string.Empty;
