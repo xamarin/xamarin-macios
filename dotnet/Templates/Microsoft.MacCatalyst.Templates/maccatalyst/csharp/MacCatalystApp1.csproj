@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <!--
-  For Debug:
+  For Debug: (Note: Replace placeholder information before building)
   <PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst')) and '$(Configuration)' == 'Debug'">
     <MtouchLink>none</MtouchLink>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -34,7 +34,7 @@
   -->
 
   <!--
-  For Release:
+  For Release: (Note: Replace placeholder information before building)
   <PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst')) and '$(Configuration)' == 'Release'">
     <MtouchLink>Full</MtouchLink>
     <RootNamespace Condition="'$(name)' != '$(name{-VALUE-FORMS-}safe_namespace)'">MacCatalystApp1</RootNamespace>
