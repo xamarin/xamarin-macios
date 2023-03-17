@@ -12,7 +12,7 @@
     <string>1.0</string>
     <key>ITSAppUsesNonExemptEncryption</key>
     <false/>
-    <--Specify the category for your app here.-->
+    <!--Specify the category for your app here.-->
     <key>LSApplicationCategoryType</key>
     <string>public.app-category.productivity</string>
     <key>UIDeviceFamily</key>

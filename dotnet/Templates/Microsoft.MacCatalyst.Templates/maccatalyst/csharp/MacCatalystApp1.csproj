@@ -13,7 +13,7 @@
 	</PropertyGroup>
 	<PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst')) and '$(Configuration)' == 'Release'">
 		<MtouchLink>Full</MtouchLink>
-    <--You must specify both both architectures or only x64 as desired. arm64 only is not permitted.-->
+    <!--You must specify both both architectures or only x64 as desired. arm64 only is not permitted.-->
 		<RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers>
     <RootNamespace Condition="'$(name)' != '$(name{-VALUE-FORMS-}safe_namespace)'">MacCatalystApp1</RootNamespace>
     <OutputType>Exe</OutputType>
