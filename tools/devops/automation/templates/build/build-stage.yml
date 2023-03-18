@@ -47,6 +47,9 @@ parameters:
 - name: xcodeChannel
   type: string
 
+- name: macOSName
+  type: string
+
 jobs:
 - job: configure
   displayName: 'Configure build'
@@ -133,7 +136,7 @@ jobs:
     name: $(AgentPoolComputed)
     demands:
     - Agent.OS -equals Darwin
-    - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
+    - macOS.Name -equals ${{ parameters.macOSName }}
     - XcodeChannel -equals ${{ parameters.xcodeChannel }}
   workspace:
     clean: all

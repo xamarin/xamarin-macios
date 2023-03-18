@@ -13423,6 +13423,10 @@ namespace AppKit {
 		string MeasurementUnits { get; set; }
 #endif
 
+		[Sealed]
+		[Export ("measurementUnits")]
+		NSString WeakMeasurementUnits { get; set; }
+
 		[Export ("originOffset")]
 		nfloat OriginOffset { get; set; }
 
