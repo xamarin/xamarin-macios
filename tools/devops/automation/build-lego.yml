@@ -96,8 +96,10 @@ stages:
           git config user.name "vs-mobiletools-engineering-service2"
 
           Write-Host "Checking out branch $branch"
+          git fetch origin
           git checkout main
-          git checkout -b localization-$(Build.BuildNumber)
+          # git checkout -b localization-$(Build.BuildNumber)
+          Write-Host "Would be cherry-picking hash: $(Build.SourceVersion)"
           # git cherry-pick $(Build.SourceVersion)
 
         name: BringLocChanges
