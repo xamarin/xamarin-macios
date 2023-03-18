@@ -76,19 +76,19 @@ stages:
       steps:
 
       # - ${{ eq(variables['Build.SourceVersionAuthor'], 'csigs') }}
-      - ${{ eq(variables['Build.SourceVersionAuthor'], 'tj-devel709') }}:
-        - pwsh: |
-            git config remote.origin.fetch '+refs/pull/*:refs/remotes/origin/pull/*'
-            git fetch origin
-            $branch="$(Build.SourceBranch)".Replace("merge", "head")
-            $branch=$branch.Replace("refs", "origin")
-            # $branch=$branch.Replace("Localization", "main")
-            $branch=$branch.Replace("LocalizationCITest1", "main")
-            Write-Host "Checking out branch $branch"
-            git checkout $branch
-            git checkout -b localization-$(Build.BuildNumber)
-            # git cherry-pick $(Build.SourceVersion)
+      # - ${{ eq(variables['Build.SourceVersionAuthor'], 'tj-devel709') }}:
+      - pwsh: |
+          git config remote.origin.fetch '+refs/pull/*:refs/remotes/origin/pull/*'
+          git fetch origin
+          $branch="$(Build.SourceBranch)".Replace("merge", "head")
+          $branch=$branch.Replace("refs", "origin")
+          # $branch=$branch.Replace("Localization", "main")
+          $branch=$branch.Replace("LocalizationCITest1", "main")
+          Write-Host "Checking out branch $branch"
+          git checkout $branch
+          git checkout -b localization-$(Build.BuildNumber)
+          # git cherry-pick $(Build.SourceVersion)
 
-          name: BringLocChanges
-          displayName: "BringLocChanges"
-          workingDirectory: $(System.DefaultWorkingDirectory)
+        name: BringLocChanges
+        displayName: "BringLocChanges"
+        workingDirectory: $(System.DefaultWorkingDirectory)
