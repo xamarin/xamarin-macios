@@ -69,9 +69,6 @@ stages:
           repositoryAlias: self
           commit: HEAD
 
-  # - stage: LocChanges
-  #   displayName: 'LocChanges'
-  #   jobs:
     - job: BringLocChanges
       displayName: 'Copy over the lcl file changes from Localization branch'
       pool:
@@ -79,43 +76,21 @@ stages:
       steps:
 
       # - ${{ eq(variables['Build.SourceVersionAuthor'], 'csigs') }}
-      # - ${{ eq(variables['Build.SourceVersionAuthor'], 'tj-devel709') }}:
-      - pwsh: |
-          # git config remote.origin.fetch '+refs/pull/*:refs/remotes/origin/pull/*'
-          # git fetch origin
-          # $branch="$(Build.SourceBranch)".Replace("merge", "head")
-          # $branch=$branch.Replace("refs", "origin")
-          # # $branch=$branch.Replace("Localization", "main")
-          # $branch=$branch.Replace("LocalizationCITest1", "main")
+      - ${{ eq(variables['Build.SourceVersionAuthor'], 'tj-devel709') }}:
+        - pwsh: |
+            git remote remove origin
+            git remote add origin https://$(GitHub.Token)@github.com/xamarin/xamarin-macios.git
+            git remote # don't add -v else we see the pat
 
-          git config --global hub.protocol https
+            git config user.email "valco@microsoft.com"
+            git config user.name "vs-mobiletools-engineering-service2"
 
-          git remote remove origin
-          git remote add origin https://$(GitHub.Token)@github.com/xamarin/xamarin-macios.git
-          git remote # don't add -v else we see the pat
+            git fetch origin
 
-          git config user.email "valco@microsoft.com"
-          git config user.name "vs-mobiletools-engineering-service2"
+            # gh pr create --title "Bring changes from Localization branch #$(Build.BuildNumber)" --body "This is a detailed description of the new feature" --base main --draft=true
 
-          Write-Host "Checking out branch $branch"
-          git fetch origin
-          # git checkout main
-          # git checkout -b localization-$(Build.BuildNumber)
-
-          git checkout LocalizationCITest1
-          # git checkout Localization
-
-          # Write-Host "Would be cherry-picking hash: $(Build.SourceVersion)"
-          # git cherry-pick $(Build.SourceVersion)
-
-          # hub version
-
-          # hub pull-request -b localization-$(Build.BuildNumber) -d -m "Bring changes from Localization branch #$(Build.BuildNumber)"
-          # gh auth login --with-token <<< "$(GitHub.Token)"
-          gh pr create --title "Bring changes from Localization branch #$(Build.BuildNumber)" --body "This is a detailed description of the new feature" --base main --draft=true
-
-        name: BringLocChanges
-        displayName: "BringLocChanges"
-        workingDirectory: $(System.DefaultWorkingDirectory)
-        env:
-          GITHUB_TOKEN: $(GitHub.Token)
+          name: BringLocChanges
+          displayName: "BringLocChanges"
+          workingDirectory: $(System.DefaultWorkingDirectory)
+          env:
+            GITHUB_TOKEN: $(GitHub.Token)
