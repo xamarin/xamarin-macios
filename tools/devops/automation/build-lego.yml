@@ -118,4 +118,4 @@ stages:
         displayName: "BringLocChanges"
         workingDirectory: $(System.DefaultWorkingDirectory)
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: $(GitHub.Token)
