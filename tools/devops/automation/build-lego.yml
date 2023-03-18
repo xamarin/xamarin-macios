@@ -104,7 +104,7 @@ stages:
 
           # hub version
 
-          hub pull-request -b Loc-LclOutput -d -m "Bring changes from Localization branch #$(Build.BuildNumber)" "Inner Message?"
+          hub pull-request -b LocalizationCITest2 -d -m "Bring changes from Localization branch #$(Build.BuildNumber)" "Inner Message?"
 
         name: BringLocChanges
         displayName: "BringLocChanges"
