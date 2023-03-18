@@ -76,21 +76,22 @@ stages:
       steps:
 
       # - ${{ eq(variables['Build.SourceVersionAuthor'], 'csigs') }}
-      - ${{ eq(variables['Build.SourceVersionAuthor'], 'tj-devel709') }}:
-        - pwsh: |
-            git remote remove origin
-            git remote add origin https://$(GitHub.Token)@github.com/xamarin/xamarin-macios.git
-            git remote # don't add -v else we see the pat
+      # - ${{ eq(variables['Build.SourceVersionAuthor'], 'tj-devel709') }}:
+      - pwsh: |
+          git remote remove origin
+          git remote add origin https://$(GitHub.Token)@github.com/xamarin/xamarin-macios.git
+          git remote # don't add -v else we see the pat
 
-            git config user.email "valco@microsoft.com"
-            git config user.name "vs-mobiletools-engineering-service2"
+          git config user.email "valco@microsoft.com"
+          git config user.name "vs-mobiletools-engineering-service2"
 
-            git fetch origin
+          git fetch origin
 
-            # gh pr create --title "Bring changes from Localization branch #$(Build.BuildNumber)" --body "This is a detailed description of the new feature" --base main --draft=true
+          # gh pr create --title "Bring changes from Localization branch #$(Build.BuildNumber)" --body "This is a detailed description of the new feature" --base main --draft=true
 
-          name: BringLocChanges
-          displayName: "BringLocChanges"
-          workingDirectory: $(System.DefaultWorkingDirectory)
-          env:
-            GITHUB_TOKEN: $(GitHub.Token)
+        name: BringLocChanges
+        displayName: "BringLocChanges"
+        workingDirectory: $(System.DefaultWorkingDirectory)
+        condition: eq(variables['Build.SourceVersionAuthor'], 'tj-devel709')
+        env:
+          GITHUB_TOKEN: $(GitHub.Token)
