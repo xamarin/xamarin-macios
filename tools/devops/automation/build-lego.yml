@@ -99,12 +99,16 @@ stages:
           git fetch origin
           git checkout main
           git checkout -b localization-$(Build.BuildNumber)
-          Write-Host "Would be cherry-picking hash: $(Build.SourceVersion)"
-          git cherry-pick $(Build.SourceVersion)
+
+          git checkout LocalizationCITest1
+          # git checkout Localization
+
+          # Write-Host "Would be cherry-picking hash: $(Build.SourceVersion)"
+          # git cherry-pick $(Build.SourceVersion)
 
           # hub version
 
-          hub pull-request -b LocalizationCITest2 -d -m "Bring changes from Localization branch #$(Build.BuildNumber)" "Inner Message?"
+          hub pull-request -b localization-$(Build.BuildNumber) -d -m "Bring changes from Localization branch #$(Build.BuildNumber)"
 
         name: BringLocChanges
         displayName: "BringLocChanges"
