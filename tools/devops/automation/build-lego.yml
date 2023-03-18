@@ -98,9 +98,13 @@ stages:
           Write-Host "Checking out branch $branch"
           git fetch origin
           git checkout main
-          # git checkout -b localization-$(Build.BuildNumber)
+          git checkout -b localization-$(Build.BuildNumber)
           Write-Host "Would be cherry-picking hash: $(Build.SourceVersion)"
           # git cherry-pick $(Build.SourceVersion)
+
+          hub version
+
+          # hub pull-request -b <target_branch> -h <new_branch_name>
 
         name: BringLocChanges
         displayName: "BringLocChanges"
