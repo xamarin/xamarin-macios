@@ -1,5 +1,5 @@
-{
+﻿{
   "author": "Microsoft",
-  "name": "Biblioteka powiązań systemu iOS",
-  "description": "Projekt służący do tworzenia biblioteki powiązań platformy .NET 6 dla systemu iOS"
+  "name": "iOS Binding Library",
+  "description": "A project for creating a .NET iOS binding library"
 }
