@@ -110,6 +110,7 @@ namespace CoreGraphics {
 #endif
 		
 		[Obsolete ("The location parameter is not used. Consider using the overload without the location parameter.", false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
 		public static CFMachPort? CreateTap (IntPtr processSerialNumber, CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data)
 		{
 			return CreateTap (processSerialNumber, place, options, mask, cback, data);
