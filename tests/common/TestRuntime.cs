@@ -113,11 +113,21 @@ partial class TestRuntime
 		return new Version (major, minor, build);
 	}
 
+	static bool? is_in_ci;
+	public static bool IsInCI {
+		get {
+			if (!is_in_ci.HasValue) {
+				var in_ci = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
+				in_ci |= !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")); // set by Azure DevOps
+				is_in_ci = in_ci;
+			}
+			return is_in_ci.Value;
+		}
+	}
+
 	public static void IgnoreInCI (string message)
 	{
-		var in_ci = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
-		in_ci |= !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")); // set by Azure DevOps
-		if (!in_ci) {
+		if (!IsInCI) {
 			Console.WriteLine ($"Not ignoring test ('{message}'), because not running in CI. BUILD_REVISION={Environment.GetEnvironmentVariable ("BUILD_REVISION")} BUILD_SOURCEVERSION={Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")}");
 			return;
 		}
@@ -165,6 +175,29 @@ partial class TestRuntime
 	{
 #if !MONOMAC && !__MACCATALYST__
 		if (ObjCRuntime.Runtime.Arch == Arch.DEVICE)
+			NUnit.Framework.Assert.Ignore (message);
+#endif
+	}
+
+	public static void AssertDesktop (string message = "This test only runs on Desktops (macOS or MacCatalyst).")
+	{
+#if __MACOS__ || __MACCATALYST__
+		return;
+#endif
+		NUnit.Framework.Assert.Ignore (message);
+	}
+
+	public static void AssertNotDesktop (string message = "This test does not run on Desktops (macOS or MacCatalyst).")
+	{
+#if __MACOS__ || __MACCATALYST__
+		NUnit.Framework.Assert.Ignore (message);
+#endif
+	}
+
+	public static void AssertNotX64Desktop (string message = "This test does not run on x64 desktops.")
+	{
+#if __MACOS__ || __MACCATALYST__
+		if (!IsARM64)
 			NUnit.Framework.Assert.Ignore (message);
 #endif
 	}
