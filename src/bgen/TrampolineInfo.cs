@@ -26,11 +26,12 @@ public class TrampolineInfo {
 	public string? OutReturnType;
 	public string PostConvert;
 	public string? UserDelegateTypeAttribute;
+	public string FunctionPointerSignature;
 	public Type Type;
 
 	public TrampolineInfo (string userDelegate, string delegateName, string pars,
 		string convert, string invoke, string returnType, string delegateReturnType, string returnFormat,
-		string clear, string postConvert, Type type)
+		string clear, string postConvert, Type type, string functionPointerSignature)
 	{
 		UserDelegate = userDelegate;
 		DelegateName = delegateName;
@@ -43,6 +44,7 @@ public class TrampolineInfo {
 		Clear = clear;
 		PostConvert = postConvert;
 		Type = type;
+		FunctionPointerSignature = functionPointerSignature;
 	}
 
 	// Name for the static class generated that contains the Objective-C to C# block bridge
