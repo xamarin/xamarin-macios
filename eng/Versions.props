@@ -18,7 +18,7 @@
     <EmscriptenWorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100preview2Version)</EmscriptenWorkloadVersion>
     <!-- This is a subscription of the .NET 7 versions of our packages -->
     <MicrosoftMacCatalystSdkPackageVersion>16.2.2041</MicrosoftMacCatalystSdkPackageVersion>
-    <MicrosoftmacOSSdkPackageVersion>13.1.2041</MicrosoftmacOSSdkPackageVersion>
+    <MicrosoftmacOSSdkPackageVersion>13.1.2043</MicrosoftmacOSSdkPackageVersion>
     <MicrosoftiOSSdkPackageVersion>16.2.2043</MicrosoftiOSSdkPackageVersion>
     <MicrosofttvOSSdkPackageVersion>16.1.2540</MicrosofttvOSSdkPackageVersion>
   </PropertyGroup>
