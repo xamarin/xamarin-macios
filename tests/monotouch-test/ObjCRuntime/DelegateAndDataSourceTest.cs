@@ -136,6 +136,9 @@ namespace Xamarin.Mac.Tests
 				// The default constructor doesn't work (it's also obsolete)
 				return true;
 #endif
+			case "SWCollaborationView":
+				// Crashes when calling setDelegate: with null.
+				return true;
 			}
 
 			switch (t.Namespace) {
