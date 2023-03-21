@@ -291,7 +291,7 @@ namespace MediaAccessibility {
 #endif
 	static partial class MAAudibleMedia {
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
