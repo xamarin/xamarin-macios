@@ -40,6 +40,35 @@ namespace Cecil.Tests {
 			return ad;
 		}
 
+		public static void AssertFailures (Dictionary<string, string> currentFailures, HashSet<string> knownFailures, string nameOfKnownFailureSet, string message)
+		{
+			AssertFailures<string> (currentFailures, knownFailures, nameOfKnownFailureSet, message, (v) => v);
+		}
+
+		public static void AssertFailures<T> (Dictionary<string, T> currentFailures, HashSet<string> knownFailures, string nameOfKnownFailureSet, string message, Func<T, string> failureToString)
+		{
+			var newFailures = currentFailures.Where (v => !knownFailures.Contains (v.Key)).Select (v => v.Value).ToArray ();
+			var fixedFailures = knownFailures.Except (currentFailures.Select (v => v.Key).ToHashSet ());
+
+			var printKnownFailures = newFailures.Any () || fixedFailures.Any ();
+			if (printKnownFailures) {
+				Console.WriteLine ($"Printing all failures as known failures because they seem out of date ({newFailures.Count ()} new failures, {fixedFailures.Count ()} fixed failures):");
+				Console.WriteLine ($"\t\tstatic HashSet<string> {nameOfKnownFailureSet} = new HashSet<string> {{");
+				foreach (var failure in currentFailures.OrderBy (v => v.Key))
+					Console.WriteLine ($"\t\t\t\"{failure.Key}\",");
+				Console.WriteLine ("\t\t};");
+			}
+
+			if (newFailures.Any ()) {
+				Console.WriteLine ($"Printing {newFailures.Count ()} new failures with local paths for easy navigation:");
+				foreach (var failure in newFailures.OrderBy (v => v))
+					Console.WriteLine ($"    {failureToString (failure)}");
+			}
+
+			Assert.IsEmpty (newFailures, $"Failures: {message}");
+			Assert.IsEmpty (fixedFailures, $"Known failures that aren't failing anymore - remove these from the list of known failures: {message}");
+		}
+
 		// Enumerates all the methods in the assembly, for all types (including nested types), potentially providing a custom filter function.
 		public static IEnumerable<MethodDefinition> EnumerateMethods (this AssemblyDefinition assembly, Func<MethodDefinition, bool>? filter = null)
 		{

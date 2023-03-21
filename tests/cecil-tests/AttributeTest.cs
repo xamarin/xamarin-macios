@@ -242,22 +242,7 @@ namespace Cecil.Tests {
 				}
 			}
 
-			var newFailures = failures.Where (v => !IgnoreElementsThatDoNotExistInThatAssembly.Contains (v.Key)).OrderBy (v => v.Key).ToList ();
-			var fixedFailures = IgnoreElementsThatDoNotExistInThatAssembly.Where (v => !failures.ContainsKey (v)).OrderBy (v => v).ToList ();
-
-#if DEBUG
-			if (newFailures.Any ()) {
-				Console.Error.WriteLine ("New failures:");
-				newFailures.ForEach ((v) => Console.Error.WriteLine ($"{v.Key}:{v.Value}"));
-			}
-			if (fixedFailures.Any ()) {
-				Console.Error.WriteLine ("Fixed failures:");
-				fixedFailures.ForEach (Console.Error.WriteLine);
-			}
-#endif
-
-			Assert.That (newFailures, Is.Empty, $"{newFailures.Count} new issues found");
-			Assert.That (fixedFailures, Is.Empty, $"{fixedFailures.Count} known failures not found (remove these from the {nameof (IgnoreElementsThatDoNotExistInThatAssembly)} hashset)");
+			Helper.AssertFailures (failures, IgnoreElementsThatDoNotExistInThatAssembly, nameof (IgnoreElementsThatDoNotExistInThatAssembly), "Supported inconsistencies");
 		}
 
 		static HashSet<string> IgnoreElementsThatDoNotExistInThatAssembly {
