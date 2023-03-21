@@ -32,6 +32,10 @@ parameters:
   type: boolean
   default: true
 
+- name: runTranslations
+  type: boolean
+  default: true
+
 - name: runSamples
   type: boolean
   default: false
