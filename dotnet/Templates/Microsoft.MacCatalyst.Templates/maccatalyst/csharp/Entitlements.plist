@@ -2,7 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
     <dict>
-        <!-- app.sandbox is required by the App Store.-->
+        <!-- app.sandbox is required by the App Store. See https://developer.apple.com/documentation/security/app_sandbox-->
         <!-- <key>com.apple.security.app-sandbox</key>
         <true/>
         -->
