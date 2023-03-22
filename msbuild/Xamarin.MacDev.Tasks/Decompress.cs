@@ -13,8 +13,7 @@ using Xamarin.MacDev.Tasks;
 
 #nullable enable
 
-namespace Xamarin.MacDev
-{
+namespace Xamarin.MacDev {
 	public static class CompressionHelper {
 		/// <summary>
 		/// Is the specified path a compressed file?
