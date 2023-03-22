@@ -157,7 +157,7 @@ namespace Xamarin.Tests {
 		static void ParseConfigFiles ()
 		{
 			var test_config = FindConfigFiles (UseSystem ? "test-system.config" : "test.config");
-			if (!test_config.Any ()) {
+			if (!test_config.Any () && Environment.OSVersion.Platform != PlatformID.Win32NT) {
 				// Run 'make test.config' in the tests/ directory
 				// First find the tests/ directory
 				var dir = TestAssemblyDirectory;
