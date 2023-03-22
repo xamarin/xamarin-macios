@@ -1946,7 +1946,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	-->
 	<Target
 		Name="_CodesignVerify"
-		Condition="'$(_CodesignAppBundleCondition)' == 'true' And '$(_RequireCodeSigning)' == 'true'"
+		Condition="'$(_CodesignAppBundleCondition)' == 'true' And '$(_RequireCodeSigning)' == 'true' And '$(DisableCodesignVerification)' != 'true'"
 		DependsOnTargets="_CodesignAppBundle"
 		>
 		<CodesignVerify
