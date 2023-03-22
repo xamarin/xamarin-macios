@@ -6,42 +6,6 @@ using ObjCRuntime;
 #nullable enable
 
 public static partial class AttributeFactory {
-	public static readonly Type PlatformEnum = typeof (PlatformName);
-
-	public readonly partial struct ConstructorArguments {
-		readonly PlatformName platform;
-		readonly int? major;
-		readonly int? minor;
-		readonly int? build;
-		readonly string? message;
-
-		public ConstructorArguments (PlatformName platformIn, int majorIn, int minorIn, int buildIn, string? messageIn)
-		{
-			platform = platformIn;
-			major = majorIn;
-			minor = minorIn;
-			build = buildIn;
-			message = messageIn;
-		}
-
-		public ConstructorArguments (PlatformName platformIn, int majorIn, int minorIn, string? messageIn)
-		{
-			platform = platformIn;
-			major = majorIn;
-			minor = minorIn;
-			build = null;
-			message = messageIn;
-		}
-
-		public ConstructorArguments (PlatformName platformIn, string? messageIn)
-		{
-			platform = platformIn;
-			major = null;
-			minor = null;
-			build = null;
-			message = messageIn;
-		}
-	}
 
 	public static T CreateNewAttribute<T> (Type [] ctorTypes, object? [] ctorValues)
 		where T : Attribute
