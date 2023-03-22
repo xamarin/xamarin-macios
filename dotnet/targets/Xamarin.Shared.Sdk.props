@@ -50,6 +50,7 @@
 			* https://github.com/dotnet/sdk/blob/c5a58bc6c3eb2b236b314e6d17a89a537459890c/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Sdk.FrameworkReferenceResolution.targets#L102
 		-->
 		<_IsTrimmingEnabled>true</_IsTrimmingEnabled>
+		<!-- The GRCF property is contingent upon the HasRuntimeOutput property, which is only defined for executable projects. So, explicitly define GRCF for extension projects to avoid warnings at build time. -->
 		<GenerateRuntimeConfigurationFiles Condition="'$(IsAppExtension)' == 'true'">true</GenerateRuntimeConfigurationFiles>
 	</PropertyGroup>
 
