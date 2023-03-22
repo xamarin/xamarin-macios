@@ -42,7 +42,7 @@ namespace MediaPlayer {
 		public ulong? PersistentID;
 		public double? PlaybackDuration;
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -52,7 +52,7 @@ namespace MediaPlayer {
 		public double? DefaultPlaybackRate;
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -61,7 +61,7 @@ namespace MediaPlayer {
 #endif
 		public MPNowPlayingInfoLanguageOptionGroup []? AvailableLanguageOptions { get; set; }
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -70,7 +70,7 @@ namespace MediaPlayer {
 #endif
 		public MPNowPlayingInfoLanguageOption []? CurrentLanguageOptions { get; set; }
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -79,7 +79,7 @@ namespace MediaPlayer {
 #endif
 		public string? CollectionIdentifier { get; set; }
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -88,7 +88,7 @@ namespace MediaPlayer {
 #endif
 		public string? ExternalContentIdentifier { get; set; }
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -97,7 +97,7 @@ namespace MediaPlayer {
 #endif
 		public string? ExternalUserProfileIdentifier { get; set; }
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -106,7 +106,7 @@ namespace MediaPlayer {
 #endif
 		public float? PlaybackProgress { get; set; }
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -115,7 +115,7 @@ namespace MediaPlayer {
 #endif
 		public MPNowPlayingInfoMediaType? MediaType { get; set; }
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -124,7 +124,7 @@ namespace MediaPlayer {
 #endif
 		public bool? IsLiveStream { get; set; }
 #if NET
-		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]

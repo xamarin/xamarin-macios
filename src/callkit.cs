@@ -97,7 +97,7 @@ namespace CallKit {
 	[Mac (11, 0)]
 	[Obsoleted (PlatformName.MacOSX, 12, 1)]
 #endif
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[iOS (10, 0)]
 	[Native]
 	public enum CXPlayDtmfCallActionType : long {
@@ -112,7 +112,7 @@ namespace CallKit {
 	[Mac (11, 0)]
 	[Obsoleted (PlatformName.MacOSX, 12, 1)]
 #endif
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[iOS (10, 0)]
 	[Native]
 	public enum CXCallEndedReason : long {
@@ -129,7 +129,7 @@ namespace CallKit {
 	[Mac (11, 0)]
 	[Obsoleted (PlatformName.MacOSX, 12, 1)]
 #endif
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[iOS (10, 0)]
 	[Native]
 	public enum CXHandleType : long {

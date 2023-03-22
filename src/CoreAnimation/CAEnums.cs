@@ -70,7 +70,7 @@ namespace CoreAnimation {
 	[NoiOS]
 	[NoTV]
 	[NoWatch]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CAAutoresizingMask : uint {
 		NotSizable = 0,
 		MinXMargin = 1 << 0,
@@ -85,7 +85,7 @@ namespace CoreAnimation {
 	[NoiOS]
 	[NoTV]
 	[NoWatch]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CAConstraintAttribute {
 		MinX,
 		MidX,
