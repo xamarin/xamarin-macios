@@ -2,7 +2,6 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">	
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileEntitlements" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.CodesignHotRestartApp" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
-	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.CollectDynamicFrameworks" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.CompileHotRestartAppManifest" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.ComputeHotRestartBundleContents" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.DetectHotRestartSigningIdentity" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
