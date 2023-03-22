@@ -7,15 +7,13 @@
     <MicrosoftDotNetBuildTasksFeedPackageVersion>6.0.0-beta.21212.6</MicrosoftDotNetBuildTasksFeedPackageVersion>
     <MicrosoftNETILStripTasksPackageVersion>6.0.0-rc.2.21468.3</MicrosoftNETILStripTasksPackageVersion>
     <MicrosoftNETCoreAppRefPackageVersion>8.0.0-preview.2.23127.4</MicrosoftNETCoreAppRefPackageVersion>
-    <MicrosoftNETWorkloadEmscriptennet6Manifest80100preview2Version>8.0.0-preview.2.23108.1</MicrosoftNETWorkloadEmscriptennet6Manifest80100preview2Version>
-    <MicrosoftNETWorkloadEmscriptennet7Manifest80100preview2Version>8.0.0-preview.2.23108.1</MicrosoftNETWorkloadEmscriptennet7Manifest80100preview2Version>
-    <MicrosoftNETWorkloadEmscriptenCurrentManifest80100preview2Version>8.0.0-preview.2.23113.1</MicrosoftNETWorkloadEmscriptenCurrentManifest80100preview2Version>
+    <MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>8.0.0-preview.2.23113.1</MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>
     <MicrosoftTemplateEngineTasksVersion>7.0.100-alpha.1.21601.1</MicrosoftTemplateEngineTasksVersion>
     <MicrosoftDotNetCecilPackageVersion>0.11.4-alpha.23113.1</MicrosoftDotNetCecilPackageVersion>
     <!-- Manually updated versions -->
-    <Emscriptennet6WorkloadVersion>$(MicrosoftNETWorkloadEmscriptennet6Manifest80100preview2Version)</Emscriptennet6WorkloadVersion>
-    <Emscriptennet7WorkloadVersion>$(MicrosoftNETWorkloadEmscriptennet7Manifest80100preview2Version)</Emscriptennet7WorkloadVersion>
-    <EmscriptenWorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100preview2Version)</EmscriptenWorkloadVersion>
+    <Emscriptennet6WorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion)</Emscriptennet6WorkloadVersion>
+    <Emscriptennet7WorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion)</Emscriptennet7WorkloadVersion>
+    <EmscriptenWorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion)</EmscriptenWorkloadVersion>
     <!-- This is a subscription of the .NET 7 versions of our packages -->
     <MicrosoftMacCatalystSdkPackageVersion>16.2.1054</MicrosoftMacCatalystSdkPackageVersion>
     <MicrosoftmacOSSdkPackageVersion>13.1.1054</MicrosoftmacOSSdkPackageVersion>
