@@ -29,11 +29,23 @@
     <Compile Include="..\generator\BGenTool.cs">
       <Link>BGenTool.cs</Link>
     </Compile>
+    <Compile Include="..\..\src\bgen\AttributeFactory.Classic.cs">
+      <Link>AttributeFactory.Classic.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\bgen\AttributeFactory.cs">
+      <Link>AttributeFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\bgen\AttributeFactory.NET.cs">
+      <Link>AttributeFactory.NET.cs</Link>
+    </Compile>
     <Compile Include="..\generator\AttributeFactoryTests.cs">
       <Link>AttributeFactoryTests.cs</Link>
     </Compile>
     <Compile Include="..\generator\CollectionsExtensionsTests.cs">
       <Link>CollectionsExtensionsTests.cs</Link>
+    </Compile>
+    <Compile Include="..\generator\ConstructorArgumentsTests.cs">
+      <Link>ConstructorArgumentsTests.cs</Link>
     </Compile>
     <Compile Include="..\generator\ErrorTests.cs">
       <Link>ErrorTests.cs</Link>

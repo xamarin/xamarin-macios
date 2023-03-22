@@ -8,7 +8,7 @@ using ObjCRuntime;
 public static partial class AttributeFactory {
 	public static readonly Type PlatformEnum = typeof (PlatformName);
 
-	readonly partial struct ConstructorArguments {
+	public readonly partial struct ConstructorArguments {
 		readonly PlatformName platform;
 		readonly int? major;
 		readonly int? minor;
@@ -128,6 +128,7 @@ public static partial class AttributeFactory {
 		var minimum = Xamarin.SdkVersions.GetMinVersion (platform.AsApplePlatform ());
 		if (version < minimum)
 			version = minimum;
+
 		if (version.Build == -1) {
 			switch (attr.AvailabilityKind) {
 			case AvailabilityKind.Introduced:

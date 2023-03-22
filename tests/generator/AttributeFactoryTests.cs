@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using NUnit.Framework;
-using NUnit.Framework.Interfaces;
 using ObjCRuntime;
 using Xamarin.Utils;
+
+#nullable enable
 
 namespace GeneratorTests {
 
@@ -117,7 +118,6 @@ namespace GeneratorTests {
 			public IEnumerator GetEnumerator ()
 			{
 				yield return new object [] {
-
 					new IntroducedAttribute (PlatformName.iOS, 1, 0),
 					PlatformName.TvOS,
 				};
@@ -139,7 +139,15 @@ namespace GeneratorTests {
 			Assert.AreEqual (targetPlatform, clone.Platform, "platform");
 			Assert.AreEqual (attributeToClone.Message, clone.Message, "message");
 			Assert.AreEqual (attributeToClone.GetType (), clone.GetType (), "type");
+#if NET
+			if (clone.AvailabilityKind == AvailabilityKind.Introduced) {
+				Assert.Null (clone.Version, "Version");
+			} else {
+				Assert.AreEqual (Xamarin.SdkVersions.GetMinVersion (targetPlatform.AsApplePlatform ()), clone.Version, "Version");
+			}
+#else
 			Assert.AreEqual (Xamarin.SdkVersions.GetMinVersion (targetPlatform.AsApplePlatform ()), clone.Version, "Version");
+#endif
 		}
 
 		class CloneCasesBuildVersionClass : IEnumerable {

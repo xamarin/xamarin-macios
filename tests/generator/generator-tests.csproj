@@ -38,11 +38,21 @@
     <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.758" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\src\bgen\AttributeFactory.Classic.cs">
+      <Link>AttributeFactory.Classic.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\bgen\AttributeFactory.cs">
+      <Link>AttributeFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\bgen\AttributeFactory.NET.cs">
+      <Link>AttributeFactory.NET.cs</Link>
+    </Compile>
     <Compile Include="..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
     <Compile Include="AttributeFactoryTests.cs" />
     <Compile Include="CollectionsExtensionsTests.cs" />
+    <Compile Include="ConstructorArgumentsTests.cs" />
     <Compile Include="ErrorTests.cs" />
     <Compile Include="BGenTool.cs" />
     <Compile Include="..\common\ExecutionHelper.cs">
