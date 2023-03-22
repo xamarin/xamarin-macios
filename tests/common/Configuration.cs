@@ -143,7 +143,7 @@ namespace Xamarin.Tests {
 		static IEnumerable<string> FindConfigFiles (string name)
 		{
 			var dir = TestAssemblyDirectory;
-			while (dir != "/") {
+			while (!string.IsNullOrEmpty (dir) && dir != "/") {
 				var file = Path.Combine (dir, name);
 				if (File.Exists (file))
 					yield return file;
