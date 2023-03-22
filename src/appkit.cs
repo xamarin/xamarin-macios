@@ -100,7 +100,7 @@ namespace AppKit {
 
 	}
 
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface NSAlignmentFeedbackToken {
@@ -5365,7 +5365,7 @@ namespace AppKit {
 		bool IsEditing { get; }
 	}
 
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NSCursor : NSCoding {
 		[Static]
@@ -9726,7 +9726,7 @@ namespace AppKit {
 		bool ContextHelpModeActive { [Bind ("isContextHelpModeActive")] get; set; }
 	}
 
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Delegates = new string [] { "WeakDelegate" }
 #if !__MACCATALYST__
 		, Events = new Type [] { typeof (NSImageDelegate) }
@@ -10011,7 +10011,7 @@ namespace AppKit {
 		NSImage GetImage (string systemSymbolName, double variableValue, [NullAllowed] string accessibilityDescription);
 	}
 
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NSImageName {
 		[Field ("NSImageNameQuickLookTemplate")]
 		QuickLookTemplate,
@@ -13423,6 +13423,10 @@ namespace AppKit {
 		string MeasurementUnits { get; set; }
 #endif
 
+		[Sealed]
+		[Export ("measurementUnits")]
+		NSString WeakMeasurementUnits { get; set; }
+
 		[Export ("originOffset")]
 		nfloat OriginOffset { get; set; }
 
@@ -14533,7 +14537,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 12, 2)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSTouchBarItem))]
 	[DisableDefaultCtor]
 	interface NSSliderTouchBarItem {
@@ -20035,7 +20039,7 @@ namespace AppKit {
 
 	}
 
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Delegates = new string [] { "Delegate" }, Events = new Type [] { typeof (NSToolbarDelegate) })]
 	[DisableDefaultCtor] // init was added in 10.13
 	partial interface NSToolbar {
@@ -20178,7 +20182,7 @@ namespace AppKit {
 		NSString NSToolbarItemKey { get; }
 	}
 
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model, Protocol]
 	interface NSToolbarDelegate {
@@ -20229,7 +20233,7 @@ namespace AppKit {
 		bool ValidateToolbarItem (NSToolbarItem item);
 	}
 
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NSToolbarItem : NSCopying, NSMenuItemValidation, NSValidatedUserInterfaceItem {
 		[DesignatedInitializer]
@@ -20343,7 +20347,7 @@ namespace AppKit {
 		bool Navigational { [Bind ("isNavigational")] get; set; }
 
 		[NoMac]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("itemMenuFormRepresentation", ArgumentSemantic.Copy)]
 		[NullAllowed]
 		UIMenuElement ItemMenuFormRepresentation { get; set; }
@@ -20354,7 +20358,7 @@ namespace AppKit {
 		NSSet<NSString> PossibleLabels { get; set; }
 	}
 
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSToolbarItem))]
 	interface NSToolbarItemGroup {
 		[Export ("initWithItemIdentifier:")]
@@ -20442,7 +20446,7 @@ namespace AppKit {
 
 	[DesignatedDefaultCtor]
 	[Mac (10, 12, 2)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Delegates = new string [] { "Delegate" }, Events = new Type [] { typeof (NSTouchBarDelegate) })]
 	interface NSTouchBar : NSCoding {
 		[NullAllowed, Export ("customizationIdentifier")]
@@ -20485,7 +20489,7 @@ namespace AppKit {
 
 	interface INSTouchBarDelegate { }
 
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface NSTouchBarDelegate {
@@ -20495,7 +20499,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 12, 2)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSTouchBarItem : NSCoding {
@@ -20530,19 +20534,19 @@ namespace AppKit {
 	[Mac (10, 12, 2)]
 	[MacCatalyst (13, 1)]
 	public enum NSTouchBarItemIdentifier {
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("NSTouchBarItemIdentifierFixedSpaceSmall")]
 		FixedSpaceSmall,
 
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("NSTouchBarItemIdentifierFixedSpaceLarge")]
 		FixedSpaceLarge,
 
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("NSTouchBarItemIdentifierFlexibleSpace")]
 		FlexibleSpace,
 
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("NSTouchBarItemIdentifierOtherItemsProxy")]
 		OtherItemsProxy,
 
@@ -20576,7 +20580,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 12, 2)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface NSTouchBarProvider {
 		[Abstract]
@@ -26837,7 +26841,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 12, 2)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSTouchBarItem))]
 	[DisableDefaultCtor]
 	interface NSColorPickerTouchBarItem {
@@ -26924,7 +26928,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 12, 2)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSTouchBarItem))]
 	[DisableDefaultCtor]
 	interface NSGroupTouchBarItem {
@@ -26982,7 +26986,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 12, 2)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSTouchBarItem))]
 	[DisableDefaultCtor]
 	interface NSPopoverTouchBarItem {
@@ -27342,7 +27346,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 12, 2)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSTouchBarItem))]
 	[DisableDefaultCtor]
 	interface NSSharingServicePickerTouchBarItem {
@@ -27365,7 +27369,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 12)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSSliderAccessory : NSCoding, NSAccessibility, NSAccessibilityElementProtocol {
@@ -27391,7 +27395,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 12)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NSSliderAccessoryBehavior : NSCoding, NSCopying {
 		[Static]
@@ -27699,7 +27703,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 15)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSTouchBarItem))]
 	[DisableDefaultCtor]
 	interface NSButtonTouchBarItem {
@@ -27755,7 +27759,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 15)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSPickerTouchBarItemControlRepresentation : long {
 		Automatic = 0,
@@ -27764,7 +27768,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 15)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSPickerTouchBarItemSelectionMode : long {
 		SelectOne = 0,
@@ -27782,7 +27786,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 15)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSToolbarItemGroupControlRepresentation : long {
 		Automatic,
@@ -27791,7 +27795,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 15)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSToolbarItemGroupSelectionMode : long {
 		SelectOne = 0,
@@ -27800,7 +27804,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 15)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSTouchBarItem))]
 	[DisableDefaultCtor]
 	interface NSPickerTouchBarItem {
@@ -27899,7 +27903,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 15)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSToolbarItem))]
 #if XAMCORE_5_0
 	[DisableDefaultCtor]
@@ -27916,7 +27920,7 @@ namespace AppKit {
 		[Export ("showsIndicator")]
 		bool ShowsIndicator { get; set; }
 
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NoMac]
 		[Export ("itemMenu", ArgumentSemantic.Copy)]
 		UIMenu ItemMenu { get; set; }
@@ -27947,7 +27951,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 15)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSTouchBarItem))]
 	[DisableDefaultCtor]
 	interface NSStepperTouchBarItem {
@@ -28273,7 +28277,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 15)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSToolbarItem))]
 #if XAMCORE_5_0
 	[DisableDefaultCtor]

@@ -124,7 +124,8 @@ for oldXcode in "${oldXcodes[@]}"; do
 	fi
 done
 
-
+DIR="$(dirname "${BASH_SOURCE[0]}")"
+"$DIR"/clean-simulator-runtime.sh
 
 # Print disk status after cleaning
 df -h
