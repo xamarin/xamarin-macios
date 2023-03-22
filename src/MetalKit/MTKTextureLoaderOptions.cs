@@ -18,7 +18,7 @@ namespace MetalKit {
 #if !COREBUILD
 
 #if NET
-	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
@@ -59,7 +59,7 @@ namespace MetalKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -83,7 +83,7 @@ namespace MetalKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -107,7 +107,7 @@ namespace MetalKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
