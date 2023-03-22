@@ -6,7 +6,7 @@ using NUnit.Framework;
 using ObjCRuntime;
 
 namespace GeneratorTests {
-	
+
 	[TestFixture]
 	[Parallelizable (ParallelScope.All)]
 	public class ConstructorArgumentsTests {
@@ -22,9 +22,9 @@ namespace GeneratorTests {
 			Assert.AreEqual ("test", values[1], "Message");
 #else
 			Assert.AreEqual (3, values.Length, "Length");
-			Assert.AreEqual ((byte)PlatformName.iOS, values[0], "Platform");
-			Assert.AreEqual ((byte)0xff, values[1], "Flag");
-			Assert.AreEqual ("test", values[2], "Message");
+			Assert.AreEqual ((byte) PlatformName.iOS, values [0], "Platform");
+			Assert.AreEqual ((byte) 0xff, values [1], "Flag");
+			Assert.AreEqual ("test", values [2], "Message");
 #endif
 		}
 
@@ -41,11 +41,11 @@ namespace GeneratorTests {
 			Assert.AreEqual ("test", values[3], "Message");
 #else
 			Assert.AreEqual (5, values.Length, "Length");
-			Assert.AreEqual ((byte)PlatformName.iOS, values[0], "Platform");
-			Assert.AreEqual (13, values[1], "Major");
-			Assert.AreEqual (0, values[2], "Minor");
-			Assert.AreEqual ((byte)0xff, values[3], "Flag");
-			Assert.AreEqual ("test", values[4], "Message");
+			Assert.AreEqual ((byte) PlatformName.iOS, values [0], "Platform");
+			Assert.AreEqual (13, values [1], "Major");
+			Assert.AreEqual (0, values [2], "Minor");
+			Assert.AreEqual ((byte) 0xff, values [3], "Flag");
+			Assert.AreEqual ("test", values [4], "Message");
 #endif
 		}
 
@@ -63,12 +63,12 @@ namespace GeneratorTests {
 			Assert.AreEqual ("test", values[4], "Message");
 #else
 			Assert.AreEqual (6, values.Length, "Length");
-			Assert.AreEqual ((byte)PlatformName.iOS, values[0], "Platform");
-			Assert.AreEqual (13, values[1], "Major");
-			Assert.AreEqual (0, values[2], "Minor");
-			Assert.AreEqual (1, values[3], "Build");
-			Assert.AreEqual ((byte)0xff, values[4], "Flag");
-			Assert.AreEqual ("test", values[5], "Message");
+			Assert.AreEqual ((byte) PlatformName.iOS, values [0], "Platform");
+			Assert.AreEqual (13, values [1], "Major");
+			Assert.AreEqual (0, values [2], "Minor");
+			Assert.AreEqual (1, values [3], "Build");
+			Assert.AreEqual ((byte) 0xff, values [4], "Flag");
+			Assert.AreEqual ("test", values [5], "Message");
 #endif
 		}
 
@@ -85,10 +85,10 @@ namespace GeneratorTests {
 			Assert.AreEqual (3, types.Length, "Length");
 			Assert.AreEqual (typeof (PlatformName), types [0], "Platform");
 			Assert.AreEqual (typeof (PlatformArchitecture), types [1], "Arch");
-			Assert.AreEqual(typeof(string), types[2], "Message");
+			Assert.AreEqual (typeof (string), types [2], "Message");
 #endif
 		}
-		
+
 		[Test]
 		public void GetCtorTypesNullBuild ()
 		{
@@ -106,10 +106,10 @@ namespace GeneratorTests {
 			Assert.AreEqual (typeof (int), types [1], "Major");
 			Assert.AreEqual (typeof (int), types [2], "Minor");
 			Assert.AreEqual (typeof (PlatformArchitecture), types [3], "Arch");
-			Assert.AreEqual(typeof(string), types[4], "Message");
+			Assert.AreEqual (typeof (string), types [4], "Message");
 #endif
 		}
-		
+
 		[Test]
 		public void GetCtorTypesFullVersion ()
 		{
@@ -129,13 +129,12 @@ namespace GeneratorTests {
 			Assert.AreEqual (typeof (int), types [2], "Minor");
 			Assert.AreEqual (typeof (int), types [3], "Build");
 			Assert.AreEqual (typeof (PlatformArchitecture), types [4], "Arch");
-			Assert.AreEqual(typeof(string), types[5], "Message");
+			Assert.AreEqual (typeof (string), types [5], "Message");
 #endif
 		}
 
-		class TryGetArgumentsData : IEnumerable
-		{
-			public IEnumerator GetEnumerator()
+		class TryGetArgumentsData : IEnumerable {
+			public IEnumerator GetEnumerator ()
 			{
 #if NET
 				yield return new TestCaseData (
@@ -153,55 +152,55 @@ namespace GeneratorTests {
 				);
 #else
 				yield return new TestCaseData (
-					new object [] { (byte)13, (byte)0 },
+					new object [] { (byte) 13, (byte) 0 },
 					PlatformName.iOS,
 					new object? [] { (byte) PlatformName.iOS, (int) (byte) 13, (int) (byte) 0, (byte) 0xff, null },
-					new [] {  typeof(PlatformName), typeof (int), typeof (int), typeof (PlatformArchitecture), typeof (string) }
+					new [] { typeof (PlatformName), typeof (int), typeof (int), typeof (PlatformArchitecture), typeof (string) }
 				);
 				yield return new TestCaseData (
-					new object [] { (byte)13, (byte)0 , (byte)1},
+					new object [] { (byte) 13, (byte) 0, (byte) 1 },
 					PlatformName.iOS,
-					new object? [] { (byte) PlatformName.iOS, (int) (byte) 13, (int) (byte) 0, (int)(byte)1,(byte) 0xff, null },
-					new [] {  typeof(PlatformName), typeof (int), typeof (int), typeof(int), typeof (PlatformArchitecture), typeof (string) }
+					new object? [] { (byte) PlatformName.iOS, (int) (byte) 13, (int) (byte) 0, (int) (byte) 1, (byte) 0xff, null },
+					new [] { typeof (PlatformName), typeof (int), typeof (int), typeof (int), typeof (PlatformArchitecture), typeof (string) }
 				);
 				yield return new TestCaseData (
-					new object [] { (byte)13, (byte)0 , true},
+					new object [] { (byte) 13, (byte) 0, true },
 					PlatformName.iOS,
 					new object? [] { (byte) PlatformName.iOS, (int) (byte) 13, (int) (byte) 0, (byte) 2, null },
-					new [] {  typeof(PlatformName), typeof (int), typeof (int), typeof (PlatformArchitecture), typeof (string) }
+					new [] { typeof (PlatformName), typeof (int), typeof (int), typeof (PlatformArchitecture), typeof (string) }
 				);
-				
+
 				yield return new TestCaseData (
-					new object [] { (byte)13, (byte)0 , (byte)1, true},
+					new object [] { (byte) 13, (byte) 0, (byte) 1, true },
 					PlatformName.iOS,
-					new object? [] { (byte) PlatformName.iOS, (int) (byte) 13, (int) (byte) 0, (int)(byte)1, (byte) 2, null },
-					new [] {  typeof(PlatformName), typeof (int), typeof (int), typeof (int), typeof (PlatformArchitecture), typeof (string) }
+					new object? [] { (byte) PlatformName.iOS, (int) (byte) 13, (int) (byte) 0, (int) (byte) 1, (byte) 2, null },
+					new [] { typeof (PlatformName), typeof (int), typeof (int), typeof (int), typeof (PlatformArchitecture), typeof (string) }
 				);
-				
+
 				yield return new TestCaseData (
-					new object [] { (byte)13, (byte)0 , (byte)1, (byte)2},
+					new object [] { (byte) 13, (byte) 0, (byte) 1, (byte) 2 },
 					PlatformName.iOS,
-					new object? [] { (byte) PlatformName.iOS, (int) (byte) 13, (int) (byte) 0, (int)(byte)1, (byte) 2, null },
-					new [] {  typeof(PlatformName), typeof (int), typeof (int), typeof (int), typeof (PlatformArchitecture), typeof (string) }
+					new object? [] { (byte) PlatformName.iOS, (int) (byte) 13, (int) (byte) 0, (int) (byte) 1, (byte) 2, null },
+					new [] { typeof (PlatformName), typeof (int), typeof (int), typeof (int), typeof (PlatformArchitecture), typeof (string) }
 				);
 #endif
 			}
 		}
-		
-		[TestCaseSource(typeof(TryGetArgumentsData))]
+
+		[TestCaseSource (typeof (TryGetArgumentsData))]
 		public void TryGetCtorArguments (object [] arguments, PlatformName platformName, object [] expectedValues,
 			Type [] expectedTypes)
 		{
 			var success = AttributeFactory.ConstructorArguments.TryGetCtorArguments (arguments, platformName,
 				out var actualValues, out var actualTypes);
 			Assert.True (success, "success");
-			Assert.AreEqual (expectedValues.Length,actualValues.Length, "Values Length");
+			Assert.AreEqual (expectedValues.Length, actualValues.Length, "Values Length");
 			for (int index = 0; index < expectedValues.Length; index++) {
-				Assert.AreEqual (expectedValues[index], actualValues[index], $"Values [{index}]");
+				Assert.AreEqual (expectedValues [index], actualValues [index], $"Values [{index}]");
 			}
 			Assert.AreEqual (expectedTypes.Length, actualTypes.Length, "Types Length");
 			for (int index = 0; index < expectedTypes.Length; index++) {
-				Assert.AreEqual (expectedTypes[index], actualTypes[index], $"Types [{index}]");
+				Assert.AreEqual (expectedTypes [index], actualTypes [index], $"Types [{index}]");
 			}
 		}
 

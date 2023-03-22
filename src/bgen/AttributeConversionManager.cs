@@ -24,7 +24,7 @@ public static class AttributeConversionManager {
 		Func<string> unknownFormatError = () => $"Unknown format for old style availability attribute {attribute.GetAttributeType ().FullName} {attribute.ConstructorArguments.Count} {createErrorMessage ()}";
 
 		if (AttributeFactory.ConstructorArguments.TryGetCtorArguments (
-			    constructorArguments, platform, out var ctorValues, out var ctorTypes)) {
+				constructorArguments, platform, out var ctorValues, out var ctorTypes)) {
 			return AttributeFactory.CreateNewAttribute<IntroducedAttribute> (ctorTypes!, ctorValues!);
 		}
 
