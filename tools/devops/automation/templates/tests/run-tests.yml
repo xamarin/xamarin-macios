@@ -333,6 +333,13 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/collect-and-upload-crash-reports.sh
+  displayName: 'Collect and upload crash reports'
+  condition: always() # who knows when crash reports can end up being useful
+  continueOnError: true
+  env:
+    MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}
+
 # Be nice and clean behind you
 - pwsh: |
     Import-Module ./MaciosCI.psd1
