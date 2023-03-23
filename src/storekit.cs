@@ -123,7 +123,7 @@ namespace StoreKit {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[return: NullAllowed]
 		[Export ("contentURLForProductID:")]
 		[Static]
@@ -132,7 +132,7 @@ namespace StoreKit {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("deleteContentForProductID:")]
 		[Static]
 		void DeleteContentForProduct (string productId);
