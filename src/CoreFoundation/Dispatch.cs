@@ -166,8 +166,8 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 12)]
@@ -182,8 +182,8 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 12)]
@@ -240,8 +240,8 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 12)]
@@ -583,7 +583,7 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -600,7 +600,7 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -628,8 +628,8 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 12)]
@@ -736,7 +736,7 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -798,8 +798,8 @@ namespace CoreFoundation {
 #if NET
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("maccatalyst")]
-			[SupportedOSPlatform ("ios10.0")]
-			[SupportedOSPlatform ("tvos10.0")]
+			[SupportedOSPlatform ("ios")]
+			[SupportedOSPlatform ("tvos")]
 #else
 			[Mac (10, 12)]
 			[iOS (10, 0)]
@@ -811,8 +811,8 @@ namespace CoreFoundation {
 #if NET
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("maccatalyst")]
-			[SupportedOSPlatform ("ios10.0")]
-			[SupportedOSPlatform ("tvos10.0")]
+			[SupportedOSPlatform ("ios")]
+			[SupportedOSPlatform ("tvos")]
 #else
 			[Mac (10, 12)]
 			[iOS (10, 0)]
@@ -823,7 +823,7 @@ namespace CoreFoundation {
 
 #if NET
 			[SupportedOSPlatform ("macos")]
-			[SupportedOSPlatform ("ios8.0")]
+			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("tvos")]
 			[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -834,7 +834,7 @@ namespace CoreFoundation {
 
 #if NET
 			[SupportedOSPlatform ("macos")]
-			[SupportedOSPlatform ("ios8.0")]
+			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("tvos")]
 			[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -864,8 +864,8 @@ namespace CoreFoundation {
 
 #if NET
 			[SupportedOSPlatform ("macos")]
-			[SupportedOSPlatform ("ios10.0")]
-			[SupportedOSPlatform ("tvos10.0")]
+			[SupportedOSPlatform ("ios")]
+			[SupportedOSPlatform ("tvos")]
 #else
 			[Mac (10, 12)]
 			[iOS (10, 0)]
@@ -877,8 +877,8 @@ namespace CoreFoundation {
 
 #if NET
 			[SupportedOSPlatform ("macos")]
-			[SupportedOSPlatform ("ios10.0")]
-			[SupportedOSPlatform ("tvos10.0")]
+			[SupportedOSPlatform ("ios")]
+			[SupportedOSPlatform ("tvos")]
 #else
 			[Mac (10, 12)]
 			[iOS (10, 0)]
@@ -890,7 +890,7 @@ namespace CoreFoundation {
 
 #if NET
 			[SupportedOSPlatform ("macos")]
-			[SupportedOSPlatform ("ios8.0")]
+			[SupportedOSPlatform ("ios")]
 #else
 			[Mac (10, 10)]
 			[iOS (8, 0)]
@@ -901,8 +901,8 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 12)]
