@@ -37,6 +37,7 @@ stages:
   displayName: ${{ parameters.displayName }}
   dependsOn:
   - build_packages
+  - sign_notarize_dotnet
   condition: and(succeeded(), eq(dependencies.build_packages.outputs['configure.decisions.RUN_WINDOWS_TESTS'], 'true'))
 
   jobs:

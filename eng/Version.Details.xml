@@ -51,6 +51,10 @@
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
       <Sha>76c2f4bb2207459fa4bf8885b9ed81136e2fe0ab</Sha>
     </Dependency>
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.net7.Manifest-7.0.100" Version="7.0.4" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+      <Uri>https://github.com/dotnet/emsdk</Uri>
+      <Sha>ba16583f6b055e5a0623d817a48f1f2f15629e6b</Sha>
+    </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
     <Dependency Name="Microsoft.DotNet.Build.Tasks.Feed" Version="6.0.0-beta.21212.6">

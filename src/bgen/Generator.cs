@@ -923,7 +923,7 @@ public partial class Generator : IMemberGatherer {
 			var nullable = TypeManager.GetUnderlyingNullableType (et);
 			if (nullable != null) {
 				return $"converted_{safe_name}";
-			} else if (et.IsValueType)
+			} else if (et.IsValueType) {
 				if (usingBlittableNativeTypes) {
 					if (et == TypeManager.System_Boolean) {
 						if (pi.IsOut)
@@ -935,6 +935,7 @@ public partial class Generator : IMemberGatherer {
 						convs!.Append ($"{safe_name} = default ({blittableType});");
 					return $"({blittableType}*) global::System.Runtime.CompilerServices.Unsafe.AsPointer<{blittableType}> (ref {safe_name})";
 				}
+			}
 			return (pi.IsOut ? "out " : "ref ") + safe_name;
 		}
 
@@ -1695,8 +1696,7 @@ public partial class Generator : IMemberGatherer {
 #endif
 			print ("internal static unsafe {0} Invoke ({1}) {{", ti.ReturnType, ti.Parameters);
 			indent++;
-			print ("var descriptor = (BlockLiteral *) block;");
-			print ("var del = ({0}) (descriptor->Target);", ti.UserDelegate);
+			print ("var del = BlockLiteral.GetTarget<{0}> (block);", ti.UserDelegate);
 			bool is_void = ti.ReturnType == "void";
 			// FIXME: right now we only support 'null' when the delegate does not return a value
 			// otherwise we will need to know the default value to be returned (likely uncommon)
