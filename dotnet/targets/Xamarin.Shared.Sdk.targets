@@ -1102,12 +1102,6 @@
 				<RelativePath>$(_AssemblyPublishDir)\%(_AssembliesToAOT.Filename).aotdata.%(_AssembliesToAOT.Arch)</RelativePath>
 				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			</ResolvedFileToPublish>
-
-			<!-- copy the dedup assembly to the .app -->
-			<ResolvedFileToPublish Include="$(_DedupAssembly)" >
-				<RelativePath>$(_AssemblyPublishDir)\$([System.IO.Path]::GetFileName('$(_DedupAssembly)'))</RelativePath>
-				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-			</ResolvedFileToPublish>
 		</ItemGroup>
 	</Target>
 
