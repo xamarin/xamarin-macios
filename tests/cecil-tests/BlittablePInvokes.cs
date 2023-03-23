@@ -345,7 +345,7 @@ namespace Cecil.Tests {
 		[Test]
 		public void CheckForBlockLiterals ()
 		{
-			var failures = new HashSet<(string Message, string Location)> ();
+			var failures = new Dictionary<string, (string Message, string Location)> ();
 
 			foreach (var info in Helper.NetPlatformImplementationAssemblyDefinitions) {
 				var assembly = info.Assembly;
@@ -378,33 +378,13 @@ namespace Cecil.Tests {
 
 							var location = method.RenderLocation (instr);
 							var message = $"The call to {targetMethod.Name} in {method.AsFullName ()} must be converted to new Block syntax.";
-							failures.Add (new (message, location));
+							failures [message] = new (message, location);
 						}
 					}
 				}
 			}
 
-			var newFailures = failures.Where (v => !knownFailuresBlockLiterals.Contains (v.Message)).ToArray ();
-			var fixedFailures = knownFailuresBlockLiterals.Except (failures.Select (v => v.Message).ToHashSet ());
-
-			var printKnownFailures = newFailures.Any () || fixedFailures.Any ();
-			if (printKnownFailures) {
-				Console.WriteLine ("Printing all failures as known failures because they seem out of date:");
-				Console.WriteLine ("\t\tstatic HashSet<string> knownFailuresBlockLiterals = new HashSet<string> {");
-				foreach (var failure in failures.OrderBy (v => v))
-					Console.WriteLine ($"\t\t\t\"{failure.Message}\",");
-				Console.WriteLine ("\t\t};");
-			}
-
-			if (newFailures.Any ()) {
-				// Print any new failures with the local path for easy navigation (depending on the terminal and/or IDE you might just click on the path to open the corresponding file).
-				Console.WriteLine ($"Printing {newFailures.Count ()} new failures with local paths for easy navigation:");
-				foreach (var failure in newFailures.OrderBy (v => v))
-					Console.WriteLine ($"    {failure.Location}: {failure.Message}");
-			}
-
-			Assert.IsEmpty (newFailures, "Failures");
-			Assert.IsEmpty (fixedFailures, "Known failures that aren't failing anymore - remove these from the list of known failures");
+			Helper.AssertFailures (failures, knownFailuresBlockLiterals, nameof (knownFailuresBlockLiterals), "Block literals", (v) => $"{v.Location}: {v.Message}");
 		}
 
 		static HashSet<string> knownFailuresBlockLiterals = new HashSet<string> {
@@ -416,7 +396,7 @@ namespace Cecil.Tests {
 		[Test]
 		public void CheckForMonoPInvokeCallback ()
 		{
-			var failures = new HashSet<(string Message, string Location)> ();
+			var failures = new Dictionary<string, (string Message, string Location)> ();
 
 			foreach (var info in Helper.NetPlatformImplementationAssemblyDefinitions) {
 				var assembly = info.Assembly;
@@ -428,7 +408,7 @@ namespace Cecil.Tests {
 
 							var location = method.RenderLocation ();
 							var message = $"The method {method.AsFullName ()} has a MonoPInvokeCallback attribute and must be converted to an UnmanagedCallersOnly method.";
-							failures.Add (new (message, location));
+							failures [message] = new (message, location);
 
 							break;
 						}
@@ -436,18 +416,7 @@ namespace Cecil.Tests {
 				}
 			}
 
-			var newFailures = failures.Where (v => !knownFailuresMonoPInvokeCallback.Contains (v.Message)).ToArray ();
-			var fixedFailures = knownFailuresMonoPInvokeCallback.Except (failures.Select (v => v.Message).ToHashSet ());
-
-			if (newFailures.Any ()) {
-				// Print any new failures with the local path for easy navigation (depending on the terminal and/or IDE you might just click on the path to open the corresponding file).
-				Console.WriteLine ($"Printing {newFailures.Count ()} failures with local path for easy navigation:");
-				foreach (var failure in newFailures.OrderBy (v => v))
-					Console.WriteLine ($"    {failure.Location}: {failure.Message}");
-			}
-
-			Assert.IsEmpty (newFailures, "New Failures");
-			Assert.IsEmpty (fixedFailures, "Known failures that aren't failing anymore - remove these from the list of known failures");
+			Helper.AssertFailures (failures, knownFailuresMonoPInvokeCallback, nameof (knownFailuresMonoPInvokeCallback), "MonoPInvokeCallback", (v) => $"{v.Location}: {v.Message}");
 		}
 
 		static HashSet<string> knownFailuresMonoPInvokeCallback = new HashSet<string> {

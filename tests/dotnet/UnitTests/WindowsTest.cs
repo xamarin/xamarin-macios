@@ -8,5 +8,12 @@ namespace Xamarin.Tests {
 		{
 			Assert.True (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform (System.Runtime.InteropServices.OSPlatform.Windows), "On Windows");
 		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		public void ConfigurationTestWhileDebugging (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+		}
 	}
 }
