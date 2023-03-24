@@ -18,7 +18,6 @@ steps:
   parameters:
     resource: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
-    persistCredentials: true
     clean: true
     submodules: recursive
     path: s/xamarin-macios
