@@ -210,7 +210,7 @@ steps:
 # the provisioning profiles.
 - bash: |
     set -ex
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset IN_CI=true
   name: resetDependencies
   displayName: 'Reset dependencies'
   timeoutInMinutes: 10

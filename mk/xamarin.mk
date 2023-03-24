@@ -12,7 +12,7 @@ NEEDED_MACCORE_BRANCH := main
 
 MACCORE_DIRECTORY := maccore
 # Use https to clone maccore during pipeline builds, avoiding broken SSH connections when GH changes RSA key
-ifdef SYSTEM_ACCESSTOKEN
+ifdef IN_CI
 MACCORE_MODULE    := https://github.com/xamarin/maccore.git
 else
 MACCORE_MODULE    := git@github.com:xamarin/maccore.git
