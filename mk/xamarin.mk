@@ -11,7 +11,12 @@ NEEDED_MACCORE_VERSION := 893e01ae00872bcf0458ca094a9beb3f6fda3709
 NEEDED_MACCORE_BRANCH := main
 
 MACCORE_DIRECTORY := maccore
+# Use https to clone maccore during pipeline builds, avoiding broken SSH connections when GH changes RSA key
+ifdef SYSTEM_ACCESSTOKEN
 MACCORE_MODULE    := git@github.com:xamarin/maccore.git
+else
+MACCORE_MODULE    := git@github.com:xamarin/maccore.git
+endif
 MACCORE_VERSION   := $(shell cd $(MACCORE_PATH) 2> /dev/null && git rev-parse HEAD 2> /dev/null)
 MACCORE_BRANCH    := $(shell cd $(MACCORE_PATH) 2> /dev/null && git symbolic-ref --short HEAD 2> /dev/null)
 endif
