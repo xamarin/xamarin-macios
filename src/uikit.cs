@@ -12492,14 +12492,14 @@ namespace UIKit {
 		[Export ("captureTextFromCamera:")]
 		void CaptureTextFromCamera ([NullAllowed] NSObject sender);
 
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NoWatch, NoTV, NoiOS]
 		[Export ("makeTouchBar")]
 		[return: NullAllowed]
 		NSTouchBar CreateTouchBar ();
 
 #pragma warning disable 0108 // warning CS0108: 'NSFontAssetRequest.Progress' hides inherited member 'NSProgressReporting.Progress'. Use the new keyword if hiding was intended.
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NoWatch, NoTV, NoiOS]
 		[Export ("touchBar", ArgumentSemantic.Strong)]
 		[NullAllowed]
@@ -17952,14 +17952,14 @@ namespace UIKit {
 		[NoiOS]
 		[NoTV]
 		[NoWatch]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("setNeedsTouchBarUpdate")]
 		void SetNeedsTouchBarUpdate ();
 
 		[NoiOS]
 		[NoTV]
 		[NoWatch]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed]
 		[Export ("childViewControllerForTouchBar")]
 		UIViewController ChildViewControllerForTouchBar { get; }
@@ -24162,7 +24162,7 @@ namespace UIKit {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("titlebar")]
 		[NullAllowed]
 		UITitlebar Titlebar { get; }
@@ -26511,7 +26511,7 @@ namespace UIKit {
 	[NoiOS]
 	[NoTV]
 	[NoWatch]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum UITitlebarTitleVisibility : long {
 		Visible,
@@ -26534,7 +26534,7 @@ namespace UIKit {
 	[NoiOS]
 	[NoTV]
 	[NoWatch]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface UITitlebar {
 		[Export ("titleVisibility", ArgumentSemantic.Assign)]

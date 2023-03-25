@@ -174,7 +174,7 @@ namespace MapKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos9.2")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -228,7 +228,7 @@ namespace MapKit {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MKMapRect {
 #if NET
-		[SupportedOSPlatform ("tvos9.2")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -326,7 +326,7 @@ namespace MapKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos9.2")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]

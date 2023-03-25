@@ -126,7 +126,7 @@ namespace GLKit {
 
 	// glVertexAttribPointer structure values, again, problems with definitions being in different namespaces
 #if NET
-	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]

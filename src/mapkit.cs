@@ -199,14 +199,14 @@ namespace MapKit {
 		[NoiOS]
 		[NoWatch]
 		[NoTV]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("leftCalloutOffset")]
 		CGPoint LeftCalloutOffset { get; set; }
 
 		[NoiOS]
 		[NoWatch]
 		[NoTV]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("rightCalloutOffset")]
 		CGPoint RightCallpoutOffset { get; set; }
 
@@ -756,7 +756,7 @@ namespace MapKit {
 		[NoiOS]
 		[NoWatch]
 		[NoTV]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("showsZoomControls")]
 		bool ShowsZoomControls { get; set; }
 
