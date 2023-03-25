@@ -9,13 +9,9 @@ if [[ $DEPENDENCY_MODULE =~ git@github.com ]]; then
 	# git@ url
 	DEPENDENCY_REMOTE=${DEPENDENCY_MODULE/git@github.com:/}
 	DEPENDENCY_REMOTE=${DEPENDENCY_REMOTE%%/*}
-elif [[ $DEPENDENCY_MODULE =~ https.*@github.com ]]; then
-	# https:// url with auth
-	DEPENDENCY_REMOTE=${DEPENDENCY_MODULE/https:\/\/[[:graph:]]*github.com\//}
-	DEPENDENCY_REMOTE=${DEPENDENCY_REMOTE%%/*}
 else 
-	# https:// url
-	DEPENDENCY_REMOTE=${DEPENDENCY_MODULE/https:\/\/github.com\//}
+	# https:// url with optional auth in front
+	DEPENDENCY_REMOTE=${DEPENDENCY_MODULE/https:\/\/[[:graph:]]*github.com\//}
 	DEPENDENCY_REMOTE=${DEPENDENCY_REMOTE%%/*}
 fi
 
