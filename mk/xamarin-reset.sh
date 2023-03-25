@@ -11,8 +11,8 @@ if [[ $DEPENDENCY_MODULE =~ git@github.com ]]; then
 	DEPENDENCY_REMOTE=${DEPENDENCY_REMOTE%%/*}
 elif [[ $DEPENDENCY_MODULE =~ https.*@github.com ]]; then
 	# https:// url with auth
-	DEPENDENCY_REMOTE=${DEPENDENCY_MODULE/https:\/\/github.com\//}
-	DEPENDENCY_REMOTE=${DEPENDENCY_REMOTE%%%/*}
+	DEPENDENCY_REMOTE=${DEPENDENCY_MODULE/https:.*github.com\//}
+	DEPENDENCY_REMOTE=${DEPENDENCY_REMOTE%%/*}
 else 
 	# https:// url
 	DEPENDENCY_REMOTE=${DEPENDENCY_MODULE/https:\/\/github.com\//}
