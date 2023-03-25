@@ -18,8 +18,8 @@ using CoreMedia;
 namespace VideoToolbox {
 
 #if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("tvos10.2")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #else

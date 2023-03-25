@@ -8,10 +8,11 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.iOS.Tasks {
-	public abstract class CollectITunesArtworkTaskBase : XamarinTask {
+	public class CollectITunesArtwork : XamarinTask, ITaskCallback, ICancelableTask {
 		#region Inputs
 
 		public ITaskItem [] ITunesArtwork { get; set; }
@@ -130,6 +131,9 @@ namespace Xamarin.iOS.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			var artworkWithLogicalNames = new List<ITaskItem> ();
 			var artwork = new HashSet<string> ();
 
@@ -173,6 +177,18 @@ namespace Xamarin.iOS.Tasks {
 			ITunesArtworkWithLogicalNames = artworkWithLogicalNames.ToArray ();
 
 			return !Log.HasLoggedErrors;
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => false;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

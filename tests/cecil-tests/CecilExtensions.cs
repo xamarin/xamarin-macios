@@ -60,7 +60,7 @@ namespace Xamarin.Utils {
 			if (member is PropertyDefinition pd)
 				return pd.Name;
 
-			return member.ToString ();
+			return member.ToString ()!;
 		}
 
 		public static string AsFullName (this ICustomAttributeProvider member)
@@ -107,7 +107,7 @@ namespace Xamarin.Utils {
 			if (member is IMemberDefinition imd)
 				return imd.FullName;
 
-			return member.ToString ();
+			return member.ToString ()!;
 		}
 
 		public static string GetOSPlatformAttributePlatformName (this CustomAttribute ca)

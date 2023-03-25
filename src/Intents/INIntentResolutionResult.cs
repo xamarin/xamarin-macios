@@ -18,7 +18,7 @@ using NativeHandle = System.IntPtr;
 namespace Intents {
 
 #if NET
-	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos14.0")]
 	[SupportedOSPlatform ("maccatalyst")]
