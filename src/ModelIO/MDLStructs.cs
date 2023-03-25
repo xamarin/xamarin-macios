@@ -38,7 +38,7 @@ namespace ModelIO {
 	public static class MDLVertexFormatExtensions {
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -50,7 +50,7 @@ namespace ModelIO {
 		static extern /* MTLVertexFormat */ nuint MTKMetalVertexFormatFromModelIO (/* MTLVertexFormat */ nuint vertexFormat);
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]

@@ -23,74 +23,12 @@ public static class AttributeConversionManager {
 
 		Func<string> unknownFormatError = () => $"Unknown format for old style availability attribute {attribute.GetAttributeType ().FullName} {attribute.ConstructorArguments.Count} {createErrorMessage ()}";
 
-		object? [] ctorValues;
-		Type [] ctorTypes;
-
-		switch (attribute.ConstructorArguments.Count) {
-		case 2:
-			if (constructorArguments [0] is byte &&
-				constructorArguments [1] is byte) {
-#if NET
-				ctorValues = new object? [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], null };
-				ctorTypes = new [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (string) };
-#else
-				ctorValues = new object? [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], (byte) 0xff, null };
-				ctorTypes = new [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
-#endif
-				break;
-			}
-			throw new NotImplementedException (unknownFormatError ());
-		case 3:
-			if (constructorArguments [0] is byte &&
-				constructorArguments [1] is byte &&
-				constructorArguments [2] is byte) {
-#if NET
-				ctorValues = new object? [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], (int) (byte) constructorArguments [2], null };
-				ctorTypes = new [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (int), typeof (string) };
-#else
-				ctorValues = new object? [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], (int) (byte) constructorArguments [2], (byte) 0xff, null };
-				ctorTypes = new [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
-#endif
-				break;
-			}
-#if !NET
-			if (constructorArguments [0] is byte &&
-				constructorArguments [1] is byte &&
-				constructorArguments [2] is bool) {
-				byte arch = (bool) constructorArguments [2] ? (byte) 2 : (byte) 0xff;
-				ctorValues = new object? [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], arch, null };
-				ctorTypes = new [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
-				break;
-			}
-#endif
-			throw new NotImplementedException (unknownFormatError ());
-#if !NET
-		case 4:
-			if (constructorArguments [0] is byte &&
-				constructorArguments [1] is byte &&
-				constructorArguments [2] is byte &&
-				constructorArguments [3] is bool) {
-				byte arch = (bool) constructorArguments [3] ? (byte) 2 : (byte) 0xff;
-				ctorValues = new object? [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], (int) (byte) constructorArguments [2], arch, null };
-				ctorTypes = new [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
-				break;
-			}
-			if (constructorArguments [0] is byte &&
-				constructorArguments [1] is byte &&
-				constructorArguments [2] is byte &&
-				constructorArguments [3] is byte /* ObjCRuntime.PlatformArchitecture */) {
-				ctorValues = new object? [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], (int) (byte) constructorArguments [2], constructorArguments [3], null };
-				ctorTypes = new [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
-				break;
-			}
-
-			throw new NotImplementedException (unknownFormatError ());
-#endif
-		default:
-			throw new NotImplementedException ($"Unknown count {attribute.ConstructorArguments.Count} {createErrorMessage ()}");
+		if (AttributeFactory.ConstructorArguments.TryGetCtorArguments (
+				constructorArguments, platform, out var ctorValues, out var ctorTypes)) {
+			return AttributeFactory.CreateNewAttribute<IntroducedAttribute> (ctorTypes!, ctorValues!);
 		}
 
-		return AttributeFactory.CreateNewAttribute (AttributeFactory.IntroducedAttributeType, ctorTypes, ctorValues);
+		throw new NotImplementedException (unknownFormatError ());
 	}
 
 	struct ParsedAvailabilityInfo {
@@ -176,22 +114,22 @@ public static class AttributeConversionManager {
 			switch (arg.MemberName) {
 			case "Introduced": {
 				ParsedAvailabilityInfo availInfo = DetermineOldAvailabilityVersion (arg);
-				yield return AttributeFactory.CreateNewIntroducedAttribute (availInfo.Platform, availInfo.Major, availInfo.Minor, message: message);
+				yield return AttributeFactory.CreateNewAttribute<IntroducedAttribute> (availInfo.Platform, availInfo.Major, availInfo.Minor, message: message);
 				continue;
 			}
 			case "Deprecated": {
 				ParsedAvailabilityInfo availInfo = DetermineOldAvailabilityVersion (arg);
-				yield return AttributeFactory.CreateDeprecatedAttribute (availInfo.Platform, availInfo.Major, availInfo.Minor, message: message);
+				yield return AttributeFactory.CreateNewAttribute<DeprecatedAttribute> (availInfo.Platform, availInfo.Major, availInfo.Minor, message: message);
 				continue;
 			}
 			case "Obsoleted": {
 				ParsedAvailabilityInfo availInfo = DetermineOldAvailabilityVersion (arg);
-				yield return AttributeFactory.CreateObsoletedAttribute (availInfo.Platform, availInfo.Major, availInfo.Minor, message: message);
+				yield return AttributeFactory.CreateNewAttribute<ObsoletedAttribute> (availInfo.Platform, availInfo.Major, availInfo.Minor, message: message);
 				continue;
 			}
 			case "Unavailable": {
 				ParsedAvailabilityInfo availInfo = DetermineOldAvailabilityVersion (arg);
-				yield return AttributeFactory.CreateUnavailableAttribute (availInfo.Platform, message: message);
+				yield return AttributeFactory.CreateNewAttribute<UnavailableAttribute> (availInfo.Platform, message: message);
 				continue;
 			}
 			case "Message":
