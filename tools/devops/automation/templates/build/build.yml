@@ -210,7 +210,8 @@ steps:
 # the provisioning profiles.
 - bash: |
     set -ex
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset CI_PAT=${{ parameters.gitHubToken }}
+    CI_PAT=${{ parameters.gitHubToken }}
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
   name: resetDependencies
   displayName: 'Reset dependencies'
   timeoutInMinutes: 10
