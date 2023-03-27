@@ -444,6 +444,10 @@ namespace VideoSubscriberAccount {
 		[Export ("deleted")]
 		bool Deleted { [Bind ("isDeleted")] get; set; }
 
+		[TV (16, 4), NoMacCatalyst, iOS (16, 4), Mac (13, 3)]
+		[Export ("signedOut")]
+		bool SignedOut { [Bind ("isSignedOut")] get; set; }
+
 		[NullAllowed, Export ("subscriptionBillingCycleEndDate", ArgumentSemantic.Copy)]
 		NSDate SubscriptionBillingCycleEndDate { get; set; }
 
