@@ -1,0 +1,7 @@
+!missing-field! HKClinicalTypeIdentifierClinicalNoteRecord not bound
+!missing-field! HKMetadataKeyHeadphoneGain not bound
+!missing-protocol-conformance! HKContactsPrescription should conform to NSCopying
+!missing-protocol-conformance! HKGlassesPrescription should conform to NSCopying
+!missing-protocol-conformance! HKVisionPrescription should conform to NSCopying
+!missing-protocol-conformance! HKWorkoutActivity should conform to NSCopying
+!missing-protocol-conformance! HKWorkoutActivity should conform to NSSecureCoding

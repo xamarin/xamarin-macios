@@ -1,0 +1,2 @@
+!missing-enum! ASAuthorizationWebBrowserPublicKeyCredentialManagerAuthorizationState not bound
+!missing-protocol! ASAuthorizationWebBrowserExternallyAuthenticatableRequest not bound
