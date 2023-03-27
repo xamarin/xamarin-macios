@@ -483,3 +483,13 @@
 !missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willExpandItemHandler not bound
 !missing-selector! NSDiffableDataSourceSectionTransaction::difference not bound
 !missing-selector! NSDiffableDataSourceTransaction::difference not bound
+
+# Not binding for now, API_AVAILABLE(ios(17.0), macos(14.0))
+!missing-selector! +UITextInputContext::current not bound
+!missing-selector! UITextInputContext::isDictationInputExpected not bound
+!missing-selector! UITextInputContext::isHardwareKeyboardInputExpected not bound
+!missing-selector! UITextInputContext::isPencilInputExpected not bound
+!missing-selector! UITextInputContext::setDictationInputExpected: not bound
+!missing-selector! UITextInputContext::setHardwareKeyboardInputExpected: not bound
+!missing-selector! UITextInputContext::setPencilInputExpected: not bound
+!missing-type! UITextInputContext not bound
