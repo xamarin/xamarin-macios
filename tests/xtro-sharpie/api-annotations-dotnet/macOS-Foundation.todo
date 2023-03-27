@@ -6,7 +6,3 @@
 !missing-selector! NSAppleEventDescriptor::initListDescriptor not bound
 !missing-selector! NSAppleEventDescriptor::initRecordDescriptor not bound
 !missing-selector! NSXMLNode::init not bound
-!missing-field! NSURLFileIdentifierKey not bound
-!missing-field! NSURLVolumeMountFromLocationKey not bound
-!missing-field! NSURLVolumeSubtypeKey not bound
-!missing-field! NSURLVolumeTypeNameKey not bound
