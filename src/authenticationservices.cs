@@ -21,6 +21,12 @@ using UIControl = Foundation.NSObject;
 using UIViewController = Foundation.NSObject;
 using UIWindow = Foundation.NSObject;
 #endif
+#if !TVOS
+using LocalAuthentication;
+#endif
+#if TVOS
+using LAContext = Foundation.NSObject;
+#endif
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -132,6 +138,14 @@ namespace AuthenticationServices {
 		None = 0x0,
 		UserInteractionEnabled = 1uL << 0,
 		RegistrationRepair = 1uL << 1,
+	}
+
+	[NoWatch, NoTV, NoiOS, MacCatalyst (16, 4), Mac (13, 3)]
+	[Native]
+	public enum ASAuthorizationWebBrowserPublicKeyCredentialManagerAuthorizationState : long  {
+		Authorized,
+		Denied,
+		NotDetermined
 	}
 
 	delegate void ASCredentialIdentityStoreCompletionHandler (bool success, NSError error);
@@ -1126,7 +1140,7 @@ namespace AuthenticationServices {
 		NSData Signature { get; }
 	}
 
-	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), TV (16,0)]
+	[NoWatch, Mac (13, 3), iOS (15, 0), MacCatalyst (15, 0), TV (16, 0)]
 	[BaseType (typeof (ASAuthorizationRequest))]
 	[DisableDefaultCtor]
 	interface ASAuthorizationPlatformPublicKeyCredentialAssertionRequest : ASAuthorizationPublicKeyCredentialAssertionRequest
@@ -1561,8 +1575,8 @@ namespace AuthenticationServices {
 		void PresentRegistrationViewController (Action<NSError> completion);
 	}
 
-	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (13,0)]
-	[Protocol]
+	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (13, 0)]
+	[Protocol][Model]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ASAuthorizationProviderExtensionRegistrationHandler
@@ -1579,6 +1593,52 @@ namespace AuthenticationServices {
 
 		[Export ("registrationDidComplete")]
 		void RegistrationDidComplete ();
+	}
+
+	interface IASAuthorizationWebBrowserExternallyAuthenticatableRequest { }
+
+	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (13, 3)]
+	[Protocol]
+	interface ASAuthorizationWebBrowserExternallyAuthenticatableRequest {
+
+		[Abstract]
+		[NullAllowed, Export ("authenticatedContext", ArgumentSemantic.Assign)]
+		LAContext AuthenticatedContext { get; set; }
+	}
+
+	[NoWatch, NoTV, NoiOS, MacCatalyst (16, 4), Mac (13, 3)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface ASAuthorizationWebBrowserPlatformPublicKeyCredential {
+
+		[Export ("name")]
+		string Name { get; }
+
+		[Export ("relyingParty")]
+		string RelyingParty { get; }
+
+		[Export ("credentialID")]
+		NSData CredentialId { get; }
+
+		[Export ("userHandle")]
+		NSData UserHandle { get; }
+	}
+
+	[NoWatch, NoTV, NoiOS, MacCatalyst (16, 4), Mac (13, 3)]
+	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
+	interface ASAuthorizationWebBrowserPublicKeyCredentialManager {
+
+		[Async]
+		[Export ("requestAuthorizationForPublicKeyCredentials:")]
+		void RequestAuthorization (Action<ASAuthorizationWebBrowserPublicKeyCredentialManagerAuthorizationState> completionHandler);
+
+		[Async]
+		[Export ("platformCredentialsForRelyingParty:completionHandler:")]
+		void GetPlatformCredentials (string relyingParty, Action<ASAuthorizationWebBrowserPlatformPublicKeyCredential []> completionHandler);
+
+		[Export ("authorizationStateForPlatformCredentials")]
+		ASAuthorizationWebBrowserPublicKeyCredentialManagerAuthorizationState AuthorizationStateForPlatformCredentials { get; }
 	}
 
 }
