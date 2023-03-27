@@ -96,7 +96,7 @@ namespace UIKit {
 	[Flags]
 	[NoWatch]
 	[Mac (10, 11)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NSControlCharacterAction : long {
 		ZeroAdvancement = (1 << 0),
 		Whitespace = (1 << 1),
@@ -136,7 +136,7 @@ namespace UIKit {
 	// NSInteger -> NSLayoutManager.h
 	[NoWatch]
 	[Mac (10, 11)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSGlyphProperty : long {
 		Null = (1 << 0),
@@ -148,7 +148,7 @@ namespace UIKit {
 	// NSInteger -> NSLayoutConstraint.h
 	[Native]
 	[NoWatch]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NSLayoutAttribute : long {
 		NoAttribute = 0,
 		Left = 1,
@@ -171,35 +171,35 @@ namespace UIKit {
 
 		[NoMac]
 		[iOS (8, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		LeftMargin,
 		[NoMac]
 		[iOS (8, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		RightMargin,
 		[NoMac]
 		[iOS (8, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		TopMargin,
 		[NoMac]
 		[iOS (8, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		BottomMargin,
 		[NoMac]
 		[iOS (8, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		LeadingMargin,
 		[NoMac]
 		[iOS (8, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		TrailingMargin,
 		[NoMac]
 		[iOS (8, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		CenterXWithinMargins,
 		[NoMac]
 		[iOS (8, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		CenterYWithinMargins,
 	}
 
@@ -207,7 +207,7 @@ namespace UIKit {
 	[Native]
 	[Flags]
 	[NoWatch]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NSLayoutFormatOptions : ulong {
 		None = 0,
 
@@ -251,7 +251,7 @@ namespace UIKit {
 	// NSInteger -> UITextInput.h
 	[Native]
 	[NoWatch]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NSLayoutRelation : long {
 		LessThanOrEqual = -1,
 		Equal = 0,
@@ -260,7 +260,7 @@ namespace UIKit {
 
 	[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 	[Mac (11, 0)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]
 	public enum NSLineBreakStrategy : ulong {
@@ -272,7 +272,7 @@ namespace UIKit {
 
 	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[Mac (10, 15)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSRectAlignment : long {
 		None = 0,
@@ -287,7 +287,7 @@ namespace UIKit {
 	}
 
 	[Mac (10, 15), iOS (13, 0), TV (13, 0)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSTextScalingType : long {
 		Standard = 0,
@@ -297,7 +297,7 @@ namespace UIKit {
 	// NSInteger -> NSLayoutManager.h
 	[Native]
 	[NoWatch]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NSTextLayoutOrientation : long {
 		Horizontal,
 		Vertical,
@@ -2081,7 +2081,7 @@ namespace UIKit {
 
 	[NoWatch, TV (13, 0), iOS (13, 0)]
 	[Mac (10, 15)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSCollectionLayoutGroupCustomItem : NSCopying {
@@ -2104,7 +2104,7 @@ namespace UIKit {
 
 	[NoWatch, TV (13, 0), iOS (13, 0)]
 	[Mac (10, 15)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface NSCollectionLayoutContainer {
 		[Abstract]
@@ -2128,7 +2128,7 @@ namespace UIKit {
 
 	[NoWatch, TV (13, 0), iOS (13, 0)]
 	[Mac (10, 15)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface NSCollectionLayoutEnvironment {
 
@@ -2147,7 +2147,7 @@ namespace UIKit {
 
 	[NoWatch, TV (13, 0), iOS (13, 0)]
 	[Mac (10, 15)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface NSCollectionLayoutVisibleItem
 #if !MONOMAC && !WATCH
@@ -2220,7 +2220,7 @@ namespace UIKit {
 	[NoWatch]
 	[iOS (9, 0)]
 	[Mac (10, 11)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // Handle is nil
 	interface NSLayoutAnchor<AnchorType> : NSCopying, NSCoding {
@@ -2303,13 +2303,13 @@ namespace UIKit {
 	[iOS (9, 0)]
 	[TV (10, 0)]
 	[Mac (10, 11)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSLayoutAnchor<NSLayoutXAxisAnchor>))]
 	[DisableDefaultCtor] // Handle is nil
 	interface NSLayoutXAxisAnchor {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("anchorWithOffsetToAnchor:")]
 #if MONOMAC && !NET
 		NSLayoutDimension GetAnchorWithOffset (NSLayoutXAxisAnchor otherAnchor);
@@ -2319,19 +2319,19 @@ namespace UIKit {
 
 		[TV (11, 0), iOS (11, 0)]
 		[Mac (11, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("constraintEqualToSystemSpacingAfterAnchor:multiplier:")]
 		NSLayoutConstraint ConstraintEqualToSystemSpacingAfterAnchor (NSLayoutXAxisAnchor anchor, nfloat multiplier);
 
 		[TV (11, 0), iOS (11, 0)]
 		[Mac (11, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("constraintGreaterThanOrEqualToSystemSpacingAfterAnchor:multiplier:")]
 		NSLayoutConstraint ConstraintGreaterThanOrEqualToSystemSpacingAfterAnchor (NSLayoutXAxisAnchor anchor, nfloat multiplier);
 
 		[TV (11, 0), iOS (11, 0)]
 		[Mac (11, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("constraintLessThanOrEqualToSystemSpacingAfterAnchor:multiplier:")]
 		NSLayoutConstraint ConstraintLessThanOrEqualToSystemSpacingAfterAnchor (NSLayoutXAxisAnchor anchor, nfloat multiplier);
 	}
@@ -2340,13 +2340,13 @@ namespace UIKit {
 	[iOS (9, 0)]
 	[TV (10, 0)]
 	[Mac (10, 11)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSLayoutAnchor<NSLayoutYAxisAnchor>))]
 	[DisableDefaultCtor] // Handle is nil
 	interface NSLayoutYAxisAnchor {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("anchorWithOffsetToAnchor:")]
 #if MONOMAC && !NET
 		NSLayoutDimension GetAnchorWithOffset (NSLayoutYAxisAnchor otherAnchor);
@@ -2356,19 +2356,19 @@ namespace UIKit {
 
 		[TV (11, 0), iOS (11, 0)]
 		[Mac (11, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("constraintEqualToSystemSpacingBelowAnchor:multiplier:")]
 		NSLayoutConstraint ConstraintEqualToSystemSpacingBelowAnchor (NSLayoutYAxisAnchor anchor, nfloat multiplier);
 
 		[TV (11, 0), iOS (11, 0)]
 		[Mac (11, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("constraintGreaterThanOrEqualToSystemSpacingBelowAnchor:multiplier:")]
 		NSLayoutConstraint ConstraintGreaterThanOrEqualToSystemSpacingBelowAnchor (NSLayoutYAxisAnchor anchor, nfloat multiplier);
 
 		[TV (11, 0), iOS (11, 0)]
 		[Mac (11, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("constraintLessThanOrEqualToSystemSpacingBelowAnchor:multiplier:")]
 		NSLayoutConstraint ConstraintLessThanOrEqualToSystemSpacingBelowAnchor (NSLayoutYAxisAnchor anchor, nfloat multiplier);
 	}
@@ -2536,7 +2536,7 @@ namespace UIKit {
 	[Watch (9, 0)]
 	[Introduced (PlatformName.iOS)]
 	[Mac (10, 11)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Model]
 	[Protocol]
 	[BaseType (typeof (NSObject))]
@@ -2671,7 +2671,7 @@ namespace UIKit {
 	}
 
 	[NoWatch]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSMutableAttributedString), Delegates = new string [] { "Delegate" }, Events = new Type [] { typeof (NSTextStorageDelegate) })]
 	partial interface NSTextStorage : NSSecureCoding {
 		[Export ("initWithString:")]
@@ -2770,7 +2770,7 @@ namespace UIKit {
 	interface INSTextStorageDelegate { }
 
 	[NoWatch]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Model]
 	[BaseType (typeof (NSObject))]
 	[Protocol]
@@ -2804,7 +2804,7 @@ namespace UIKit {
 
 	[NoWatch, TV (13, 0), iOS (13, 0)]
 	[Mac (10, 15)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSCollectionLayoutAnchor : NSCopying, INSCopying {
@@ -2835,7 +2835,7 @@ namespace UIKit {
 
 	[NoWatch, TV (13, 0), iOS (13, 0)]
 	[Mac (10, 15)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSCollectionLayoutDimension : NSCopying {
@@ -2889,7 +2889,7 @@ namespace UIKit {
 
 
 	[NoWatch, TV (13, 0), iOS (13, 0)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Mac (10, 15)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -2906,7 +2906,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (13, 0), iOS (13, 0)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Mac (10, 15)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -2938,7 +2938,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (13, 0), iOS (13, 0)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Mac (10, 15)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -2965,7 +2965,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (13, 0), iOS (13, 0)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Mac (10, 15)]
 	[BaseType (typeof (NSCollectionLayoutItem))]
 	[DisableDefaultCtor]
@@ -2992,7 +2992,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (13, 0), iOS (13, 0)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Mac (10, 15)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -3019,7 +3019,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (13, 0), iOS (13, 0)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Mac (10, 15)]
 	[BaseType (typeof (NSCollectionLayoutSupplementaryItem))]
 	[DisableDefaultCtor]
@@ -3045,7 +3045,7 @@ namespace UIKit {
 		CGPoint Offset { get; }
 	}
 
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[NoWatch, TV (13, 0), iOS (13, 0)]
 	[Mac (10, 15)]
 	[BaseType (typeof (NSCollectionLayoutItem))]
@@ -3063,7 +3063,7 @@ namespace UIKit {
 	}
 
 	[iOS (9, 0)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Mac (10, 11)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -3085,7 +3085,7 @@ namespace UIKit {
 		NSString TypeIdentifier { get; }
 	}
 
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Watch (6, 0)]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
@@ -3111,7 +3111,7 @@ namespace UIKit {
 		NSColor ShadowColor { get; set; }
 	}
 
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NSTextTab : NSSecureCoding, NSCopying {
 		[DesignatedInitializer]
@@ -3152,7 +3152,7 @@ namespace UIKit {
 		NSString ColumnTerminatorsAttributeName { get; }
 	}
 
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[NoWatch]
 	[Protocol]
 	// no [Model] since it's not exposed in any API
@@ -3170,7 +3170,7 @@ namespace UIKit {
 	}
 
 	[NoWatch]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	partial interface NSTextContainer : NSTextLayoutOrientationProvider, NSSecureCoding {
 		[NoMac]
@@ -3237,12 +3237,12 @@ namespace UIKit {
 		bool HeightTracksTextView { get; set; }
 
 		[iOS (9, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("replaceLayoutManager:")]
 		void ReplaceLayoutManager (NSLayoutManager newLayoutManager);
 
 		[iOS (9, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("simpleRectangularTextContainer")]
 		bool IsSimpleRectangularTextContainer { [Bind ("isSimpleRectangularTextContainer")] get; }
 

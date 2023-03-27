@@ -191,7 +191,7 @@ namespace AppKit {
 
 	}
 
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSRectEdge : ulong {
 		MinXEdge, MinYEdge, MaxXEdge, MaxYEdge
@@ -1698,13 +1698,13 @@ namespace AppKit {
 		WritingPromised = 1 << 9
 	}
 
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSToolbarDisplayMode : ulong {
 		Default, IconAndLabel, Icon, Label
 	}
 
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSToolbarSizeMode : ulong {
 		Default, Regular, Small
@@ -1999,7 +1999,7 @@ namespace AppKit {
 		AsDropTarget = 3
 	}
 
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Mac (10, 11)] // Not marked 10.11 in the headers, but doesn't exist in the 10.10 headers
 	[Native]
 	[Flags]

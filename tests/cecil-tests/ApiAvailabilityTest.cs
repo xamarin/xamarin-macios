@@ -23,7 +23,7 @@ namespace Cecil.Tests {
 
 			var harvestedInfo = Helper.MappedNetApi;
 
-			var failures = new List<(string Key, ICustomAttributeProvider Api, OSPlatformAttributes [] Obsoleted, OSPlatformAttributes [] Supported)> ();
+			var failures = new Dictionary<string, (string Key, ICustomAttributeProvider Api, OSPlatformAttributes [] Obsoleted, OSPlatformAttributes [] Supported)> ();
 			var mismatchedObsoleteMessages = new List<string> ();
 			foreach (var kvp in harvestedInfo) {
 				var attributes = kvp.Value.Select (v => v.Api.GetAvailabilityAttributes (v.Platform) ?? new OSPlatformAttributes (v.Api, v.Platform) ?? new OSPlatformAttributes (v.Api, v.Platform)).ToArray ();
@@ -43,7 +43,7 @@ namespace Cecil.Tests {
 					continue;
 
 				var failure = (kvp.Key, kvp.Value.First ().Api, obsoleted, notObsoletedNorUnsupported);
-				failures.Add (failure);
+				failures [failure.Key] = failure;
 
 				var obsoleteMessages = obsoleted.Select (v => v.Obsoleted?.Message).Distinct ().ToArray ();
 				if (obsoleteMessages.Length > 1) {
@@ -56,32 +56,15 @@ namespace Cecil.Tests {
 				}
 			}
 
-			var newFailures = failures.Where (v => !knownFailuresInMissingObsoleteAttributes.Contains (v.Key)).ToArray ();
-			var fixedFailures = knownFailuresInMissingObsoleteAttributes.Except (failures.Select (v => v.Key).ToHashSet ());
-
-			var sb = new StringBuilder ();
-			if (newFailures.Any ()) {
-				sb.AppendLine ($"Got {newFailures.Length} failures:");
-				foreach (var failure in newFailures.OrderBy (v => v.Key)) {
-					sb.AppendLine ($"{failure.Key}: {failure.Api.RenderLocation ()}");
-					sb.AppendLine ($"    Obsoleted in: {string.Join (", ", failure.Obsoleted.Select (v => v!.Obsoleted!.PlatformName))}");
-					sb.AppendLine ($"    Not obsoleted in: {string.Join (", ", failure.Supported.Select (v => v?.Supported?.PlatformName ?? v?.Platform.ToString ()))}");
-				}
-				Console.WriteLine (sb);
-			}
-
-			var printKnownFailures = newFailures.Any () || fixedFailures.Any ();
-			if (printKnownFailures) {
-				Console.WriteLine ("Printing all known failures because they seems out of date:");
-				Console.WriteLine ("\t\tstatic HashSet<string> knownFailuresInMissingObsoleteAttributes = new HashSet<string> {");
-				foreach (var failure in failures.OrderBy (v => v.Key))
-					Console.WriteLine ($"\t\t\t\"{failure.Key}\",");
-				Console.WriteLine ("\t\t};");
-			}
-
-			Assert.That (sb.ToString (), Is.Empty, "Failures");
-			Assert.IsEmpty (fixedFailures, "Known failures that aren't failing anymore - remove these from the list of known failures");
-			Assert.IsEmpty (mismatchedObsoleteMessages, "Mismatched obsolete messages");
+			Helper.AssertFailures (failures,
+				knownFailuresInMissingObsoleteAttributes,
+				nameof (knownFailuresInMissingObsoleteAttributes),
+				"Missing obsolete attributes",
+				(failure) => {
+					return $"{failure.Key}: {failure.Api.RenderLocation ()}\n" +
+						$"    Obsoleted in: {string.Join (", ", failure.Obsoleted.Select (v => v!.Obsoleted!.PlatformName))}\n" +
+						$"    Not obsoleted in: {string.Join (", ", failure.Supported.Select (v => v?.Supported?.PlatformName ?? v?.Platform.ToString ()))}\n";
+				});
 		}
 
 		static HashSet<string> knownFailuresInMissingObsoleteAttributes = new HashSet<string> {

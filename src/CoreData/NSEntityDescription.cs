@@ -14,7 +14,7 @@ using ObjCRuntime;
 namespace CoreData {
 	public partial class NSEntityDescription {
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
