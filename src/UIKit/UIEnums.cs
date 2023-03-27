@@ -2605,6 +2605,9 @@ namespace UIKit {
 	public enum UIActivityItemsConfigurationInteraction {
 		[Field ("UIActivityItemsConfigurationInteractionShare")]
 		Share,
+		[iOS (16, 4), MacCatalyst (16, 4)]
+		[Field ("UIActivityItemsConfigurationInteractionCopy")]
+		Copy,
 	}
 
 	[NoWatch, NoTV, iOS (13,0)]
