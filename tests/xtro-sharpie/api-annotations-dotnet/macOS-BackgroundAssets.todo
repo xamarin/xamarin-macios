@@ -1,7 +1,0 @@
-!extra-designated-initializer! BAURLDownload::initWithIdentifier:request:applicationGroupIdentifier:priority: is incorrectly decorated with an [DesignatedInitializer] attribute
-!missing-selector! BAAppExtensionInfo::restrictedEssentialDownloadSizeRemaining not bound
-!missing-selector! BADownload::copyAsNonEssential not bound
-!missing-selector! BADownload::isEssential not bound
-!missing-selector! BADownloadManager::fetchCurrentDownloads: not bound
-!missing-selector! BAURLDownload::initWithIdentifier:request:essential:fileSize:applicationGroupIdentifier:priority: not bound
-!missing-selector! BAURLDownload::initWithIdentifier:request:fileSize:applicationGroupIdentifier: not bound
