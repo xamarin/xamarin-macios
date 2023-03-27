@@ -3084,6 +3084,10 @@ namespace ImageIO {
 		[iOS (16, 0), Mac (13, 0), Watch (9, 0), TV (16, 0), MacCatalyst (16, 0)]
 		[Field ("kCGImagePropertyHEIFDictionary")]
 		NSString HeifDictionary { get; }
+
+		[iOS (16, 4), Mac (13, 3), Watch (9, 4), TV (16, 4), MacCatalyst (16, 4)]
+		[Field ("kCGImagePropertyOpenEXRCompression")]
+		NSString OpenExrCompression { get; }
 	}
 
 	[Static]

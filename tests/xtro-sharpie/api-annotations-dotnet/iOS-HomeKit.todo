@@ -1,9 +1,0 @@
-!deprecated-attribute-missing! HMAction::init missing a [Deprecated] attribute
-!deprecated-attribute-missing! HMEvent::init missing a [Deprecated] attribute
-!deprecated-attribute-missing! HMTimerTrigger::initWithName:fireDate:timeZone:recurrence:recurrenceCalendar: missing a [Deprecated] attribute
-!deprecated-attribute-missing! HMTimerTrigger::recurrenceCalendar missing a [Deprecated] attribute
-!deprecated-attribute-missing! HMTimerTrigger::timeZone missing a [Deprecated] attribute
-!deprecated-attribute-missing! HMTimerTrigger::updateTimeZone:completionHandler: missing a [Deprecated] attribute
-!extra-designated-initializer! HMAccessorySetupPayload::initWithURL:ownershipToken: is incorrectly decorated with an [DesignatedInitializer] attribute
-!extra-designated-initializer! HMTimerTrigger::initWithName:fireDate:timeZone:recurrence:recurrenceCalendar: is incorrectly decorated with an [DesignatedInitializer] attribute
-!missing-selector! HMTimerTrigger::initWithName:fireDate:recurrence: not bound
