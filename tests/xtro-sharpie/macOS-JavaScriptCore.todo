@@ -1,4 +1,0 @@
-!missing-pinvoke! JSGlobalContextIsInspectable is not bound
-!missing-pinvoke! JSGlobalContextSetInspectable is not bound
-!missing-selector! JSContext::isInspectable not bound
-!missing-selector! JSContext::setInspectable: not bound
