@@ -186,11 +186,12 @@ namespace Xamarin.iOS.Tasks {
 			foreach (var envvar in EnvironmentVariables)
 				sb.AddQuoted ("--setenv=" + envvar.ItemSpec);
 
+			sb.Add (WaitForExit ? "--wait-for-exit:true" : "--wait-for-exit:false");
+
+			// Add additional arguments at the end, so they can override any
+			// other argument.
 			foreach (var arg in AdditionalArguments)
 				sb.AddQuoted (arg.ItemSpec);
-
-			if (WaitForExit)
-				sb.Add ("--wait-for-exit");
 
 			return sb.ToString ();
 		}

@@ -12,7 +12,7 @@ namespace MapKit {
 	public partial class MKOverlayRenderer {
 
 #if NET
-		[SupportedOSPlatform ("tvos9.2")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]

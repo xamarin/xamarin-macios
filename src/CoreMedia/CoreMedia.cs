@@ -59,7 +59,7 @@ namespace CoreMedia {
 		public static readonly CMTimeRange InvalidRange;
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -70,7 +70,7 @@ namespace CoreMedia {
 		public static readonly CMTimeRange InvalidMapping;
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -81,7 +81,7 @@ namespace CoreMedia {
 		public static NSString? TimeMappingSourceKey { get; private set; }
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -131,7 +131,7 @@ namespace CoreMedia {
 
 #if !COREBUILD
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -145,7 +145,7 @@ namespace CoreMedia {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -159,7 +159,7 @@ namespace CoreMedia {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -173,7 +173,7 @@ namespace CoreMedia {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -187,7 +187,7 @@ namespace CoreMedia {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -202,7 +202,7 @@ namespace CoreMedia {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -214,7 +214,7 @@ namespace CoreMedia {
 		static extern CMTimeMapping CMTimeMappingMake (CMTimeRange source, CMTimeRange target);
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -226,7 +226,7 @@ namespace CoreMedia {
 		static extern CMTimeMapping CMTimeMappingMakeEmpty (CMTimeRange target);
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -238,7 +238,7 @@ namespace CoreMedia {
 		static extern IntPtr /* CFDictionaryRef* */ CMTimeMappingCopyAsDictionary (CMTimeMapping mapping, IntPtr allocator);
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -250,7 +250,7 @@ namespace CoreMedia {
 		static extern CMTimeMapping CMTimeMappingMakeFromDictionary (/* CFDictionaryRef* */ IntPtr dict);
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]

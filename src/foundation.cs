@@ -11481,7 +11481,7 @@ namespace Foundation {
 
 		[NoWatch, NoTV]
 		[iOS (11, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("preferredPresentationSize")]
 		CGSize PreferredPresentationSize {
 			get;
@@ -11581,14 +11581,14 @@ namespace Foundation {
 		[NoWatch, NoTV]
 		[NoMac]
 		[iOS (11, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("teamData", ArgumentSemantic.Copy)]
 		NSData TeamData { get; set; }
 
 		[NoWatch, NoTV]
 		[NoMac]
 		[iOS (11, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("preferredPresentationStyle", ArgumentSemantic.Assign)]
 		UIPreferredPresentationStyle PreferredPresentationStyle { get; set; }
 
@@ -15594,7 +15594,7 @@ namespace Foundation {
 	[NoiOS, NoTV, NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	interface NSAffineTransform : NSSecureCoding, NSCopying {
 		[Export ("initWithTransform:")]
 		NativeHandle Constructor (NSAffineTransform transform);
@@ -16388,7 +16388,7 @@ namespace Foundation {
 	}
 
 	[NoiOS, NoTV, NoWatch]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSAppleScript : NSCopying {

@@ -104,7 +104,7 @@ namespace UIKit {
 
 #if !WATCH
 #if NET
-	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else

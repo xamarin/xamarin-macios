@@ -20,8 +20,8 @@ namespace OpenGLES {
 #endif
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("tvos12.0", "Use 'Metal' instead.")]
 		[ObsoletedOSPlatform ("ios12.0", "Use 'Metal' instead.")]
@@ -35,8 +35,8 @@ namespace OpenGLES {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.3")]
-		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("tvos12.0", "Use 'Metal' instead.")]
 		[ObsoletedOSPlatform ("ios12.0", "Use 'Metal' instead.")]

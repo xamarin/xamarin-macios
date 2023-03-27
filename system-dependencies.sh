@@ -307,6 +307,8 @@ function install_mono () {
 
 function download_xcode_platforms ()
 {
+	if test -n "$IGNORE_SIMULATORS"; then return; fi
+
 	local XCODE_VERSION
 	local XCODE_DEVELOPER_ROOT="$1"
 	local TVOS_VERSION="$2"
@@ -340,8 +342,8 @@ function download_xcode_platforms ()
 		return
 	fi
 
-	if test -z "$PROVISION_XCODE"; then
-		fail "Xcode has additional platforms that must be downloaded. Execute './system-dependencies.sh --provision-xcode' to execute those tasks (or alternatively ${COLOR_MAGENTA}export IGNORE_XCODE=1${COLOR_RED} to skip this check)"
+	if test -z "$PROVISION_SIMULATORS"; then
+		fail "Xcode has additional platforms that must be downloaded. Execute './system-dependencies.sh --provision-simulators' to execute those tasks (or alternatively ${COLOR_MAGENTA}export IGNORE_SIMULATORS=1${COLOR_RED} to skip this check)"
 		echo "        ${COLOR_RED}Installed simulator runtimes:"
 		# shellcheck disable=SC2001
 		echo "$SIMULATOR_RUNTIMES" | sed 's/^/            /'

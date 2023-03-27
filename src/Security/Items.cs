@@ -838,7 +838,7 @@ namespace Security {
 
 #if !MONOMAC
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
@@ -855,7 +855,7 @@ namespace Security {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
@@ -998,7 +998,7 @@ namespace Security {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
@@ -1017,7 +1017,7 @@ namespace Security {
 		}
 #endif
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -1037,7 +1037,7 @@ namespace Security {
 
 #if !WATCH && !TVOS
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
@@ -1821,7 +1821,7 @@ namespace Security {
 		SecAccessControl? _secAccessControl;
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -1863,7 +1863,7 @@ namespace Security {
 		SecAccessControl? _secAccessControl;
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -1885,7 +1885,7 @@ namespace Security {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]

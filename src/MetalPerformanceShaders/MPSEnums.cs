@@ -17,13 +17,13 @@ namespace MetalPerformanceShaders {
 		SkipApiValidation = 1 << 0,
 		AllowReducedPrecision = 1 << 1,
 		[iOS (10, 0), TV (10, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		DisableInternalTiling = 1 << 2,
 		[iOS (10, 0), TV (10, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		InsertDebugGroups = 1 << 3,
 		[iOS (11, 0), TV (11, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		Verbose = 1 << 4,
 #if !NET
 		[Obsolete ("Use 'AllowReducedPrecision' instead.")]
@@ -39,13 +39,13 @@ namespace MetalPerformanceShaders {
 		Zero,
 		Clamp = 1,
 		[iOS (12, 1), TV (12, 1), Mac (10, 14, 1)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		Mirror,
 		[iOS (12, 1), TV (12, 1), Mac (10, 14, 1)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		MirrorWithEdge,
 		[iOS (12, 1), TV (12, 1), Mac (10, 14, 1)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		Constant,
 	}
 
@@ -91,13 +91,13 @@ namespace MetalPerformanceShaders {
 		UInt64 = 64,
 
 		[iOS (11, 0), TV (11, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		NormalizedBit = 0x40000000,
 		[iOS (11, 0), TV (11, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		Unorm1 = NormalizedBit | 1,
 		[iOS (11, 0), TV (11, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		Unorm8 = NormalizedBit | 8,
 	}
 

@@ -21,7 +21,7 @@ namespace MapKit {
 	public enum MKDirectionsMode {
 		Driving, Walking, Transit,
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
