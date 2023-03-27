@@ -4652,8 +4652,7 @@ namespace HealthKit {
 	[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
 	[BaseType (typeof (HKVisionPrescription))]
 	[DisableDefaultCtor]
-	interface HKContactsPrescription : NSSecureCoding, NSCopying
-	{
+	interface HKContactsPrescription : NSSecureCoding, NSCopying {
 		[NullAllowed, Export ("rightEye", ArgumentSemantic.Copy)]
 		HKContactsLensSpecification RightEye { get; }
 
@@ -4691,8 +4690,7 @@ namespace HealthKit {
 	[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
 	[BaseType (typeof (HKVisionPrescription))]
 	[DisableDefaultCtor]
-	interface HKGlassesPrescription : NSSecureCoding, NSCopying
-	{
+	interface HKGlassesPrescription : NSSecureCoding, NSCopying {
 		[NullAllowed, Export ("rightEye", ArgumentSemantic.Copy)]
 		HKGlassesLensSpecification RightEye { get; }
 
@@ -4724,8 +4722,7 @@ namespace HealthKit {
 	[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
 	[BaseType (typeof (HKSample))]
 	[DisableDefaultCtor]
-	interface HKVisionPrescription : NSSecureCoding, NSCopying
-	{
+	interface HKVisionPrescription : NSSecureCoding, NSCopying {
 		[Export ("prescriptionType", ArgumentSemantic.Assign)]
 		HKVisionPrescriptionType PrescriptionType { get; }
 
@@ -4779,8 +4776,7 @@ namespace HealthKit {
 	[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface HKWorkoutActivity : NSSecureCoding, NSCopying
-	{
+	interface HKWorkoutActivity : NSSecureCoding, NSCopying {
 		[Export ("initWithWorkoutConfiguration:startDate:endDate:metadata:")]
 		NativeHandle Constructor (HKWorkoutConfiguration workoutConfiguration, NSDate startDate, [NullAllowed] NSDate endDate, [NullAllowed] NSDictionary<NSString, NSObject> metadata);
 
