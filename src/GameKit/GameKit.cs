@@ -139,6 +139,7 @@ namespace GameKit {
 		NotAuthorized = 32,
 		ConnectionTimeout = 33,
 		ApiObsolete = 34,
+		OptedOutOfGameCenter = 35,
 
 		FriendListDescriptionMissing = 100,
 		FriendListRestricted = 101,
