@@ -44,6 +44,8 @@ namespace PencilKit {
 	enum PKEraserType : long {
 		Vector,
 		Bitmap,
+		[iOS (16, 4), Mac (13, 3), MacCatalyst (16, 4)]
+		FixedWidthBitmap,
 	}
 
 	[iOS (13, 0), Mac (11, 0)]
@@ -181,6 +183,30 @@ namespace PencilKit {
 		[DesignatedInitializer]
 		[Export ("initWithEraserType:")]
 		NativeHandle Constructor (PKEraserType eraserType);
+
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("initWithEraserType:width:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (PKEraserType eraserType, nfloat width);
+
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("width")]
+		nfloat Width { get; }
+
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[Static]
+		[Export ("defaultWidthForEraserType:")]
+		nfloat GetDefaultWidth (PKEraserType eraserType);
+
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[Static]
+		[Export ("minimumWidthForEraserType:")]
+		nfloat GetMinimumWidth (PKEraserType eraserType);
+
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[Static]
+		[Export ("maximumWidthForEraserType:")]
+		nfloat GetMaximumWidth (PKEraserType eraserType);
 	}
 
 	[iOS (13, 0), Mac (11, 0)]
