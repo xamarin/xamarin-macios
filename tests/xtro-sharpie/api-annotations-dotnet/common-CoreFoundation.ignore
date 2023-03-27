@@ -1,6 +1,10 @@
 ## we already expose the NSURLFileProtection* constants
 !missing-field! kCFURLVolumeSupportsFileProtectionKey not bound
 
+## variable argument and string manipulation more easily done in C#
+!missing-pinvoke! CFStringCreateStringWithValidatedFormat is not bound
+!missing-pinvoke! CFStringCreateStringWithValidatedFormatAndArguments is not bound
+
 ## unsorted
 
 !missing-enum! __CFByteOrder not bound
@@ -948,3 +952,7 @@
 !missing-field! kCFStreamSocketSecurityLevelTLSv1 not bound
 !missing-field! kCFStreamSocketSOCKSVersion4 not bound
 !missing-field! kCFStreamSocketSOCKSVersion5 not bound
+!missing-field! kCFURLFileIdentifierKey not bound
+!missing-field! kCFURLVolumeMountFromLocationKey not bound
+!missing-field! kCFURLVolumeSubtypeKey not bound
+!missing-field! kCFURLVolumeTypeNameKey not bound
