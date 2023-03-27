@@ -438,6 +438,9 @@ namespace VideoSubscriberAccount {
 		[Export ("accountType", ArgumentSemantic.Assign)]
 		VSUserAccountType AccountType { get; set; }
 
+		[Obsoleted (PlatformName.iOS, 16, 4, message: Constants.ApiRemovedGeneral)]
+		[Obsoleted (PlatformName.TvOS, 16, 4, message: Constants.ApiRemovedGeneral)]
+		[Obsoleted (PlatformName.MacOSX, 13, 3, message: Constants.ApiRemovedGeneral)]
 		[Export ("deleted")]
 		bool Deleted { [Bind ("isDeleted")] get; set; }
 

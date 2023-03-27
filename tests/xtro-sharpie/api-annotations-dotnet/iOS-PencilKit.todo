@@ -1,0 +1,6 @@
+!missing-enum-value! PKEraserType native value PKEraserTypeFixedWidthBitmap = 2 not bound
+!missing-selector! +PKEraserTool::defaultWidthForEraserType: not bound
+!missing-selector! +PKEraserTool::maximumWidthForEraserType: not bound
+!missing-selector! +PKEraserTool::minimumWidthForEraserType: not bound
+!missing-selector! PKEraserTool::initWithEraserType:width: not bound
+!missing-selector! PKEraserTool::width not bound

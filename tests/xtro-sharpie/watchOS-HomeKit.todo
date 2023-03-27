@@ -1,0 +1,5 @@
+!deprecated-attribute-missing! HMAction::init missing a [Deprecated] attribute
+!deprecated-attribute-missing! HMEvent::init missing a [Deprecated] attribute
+!deprecated-attribute-missing! HMTimerTrigger::recurrenceCalendar missing a [Deprecated] attribute
+!deprecated-attribute-missing! HMTimerTrigger::timeZone missing a [Deprecated] attribute
+!missing-selector! HMTimerTrigger::initWithName:fireDate:recurrence: not bound
