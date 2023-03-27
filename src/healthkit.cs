@@ -1274,6 +1274,10 @@ namespace HealthKit {
 		[Field ("HKMetadataKeyGlassesPrescriptionDescription")]
 		NSString GlassesPrescriptionDescription { get; }
 
+		[Watch (9, 4), MacCatalyst (16, 4), Mac (13, 3), iOS (16, 4)]
+		[Field ("HKMetadataKeyHeadphoneGain")]
+		NSString HeadphoneGain { get; }
+
 		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
 		[Field ("HKMetadataKeyHeartRateRecoveryTestType")]
 		NSString HeartRateRecoveryTestType { get; }
@@ -4648,7 +4652,7 @@ namespace HealthKit {
 	[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
 	[BaseType (typeof (HKVisionPrescription))]
 	[DisableDefaultCtor]
-	interface HKContactsPrescription // : NSCopying // https://github.com/xamarin/maccore/issues/2610
+	interface HKContactsPrescription : NSSecureCoding, NSCopying
 	{
 		[NullAllowed, Export ("rightEye", ArgumentSemantic.Copy)]
 		HKContactsLensSpecification RightEye { get; }
@@ -4687,7 +4691,7 @@ namespace HealthKit {
 	[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
 	[BaseType (typeof (HKVisionPrescription))]
 	[DisableDefaultCtor]
-	interface HKGlassesPrescription // : NSCopying // https://github.com/xamarin/maccore/issues/2610
+	interface HKGlassesPrescription : NSSecureCoding, NSCopying
 	{
 		[NullAllowed, Export ("rightEye", ArgumentSemantic.Copy)]
 		HKGlassesLensSpecification RightEye { get; }
@@ -4720,7 +4724,7 @@ namespace HealthKit {
 	[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
 	[BaseType (typeof (HKSample))]
 	[DisableDefaultCtor]
-	interface HKVisionPrescription // : NSCopying // https://github.com/xamarin/maccore/issues/2610
+	interface HKVisionPrescription : NSSecureCoding, NSCopying
 	{
 		[Export ("prescriptionType", ArgumentSemantic.Assign)]
 		HKVisionPrescriptionType PrescriptionType { get; }
@@ -4775,7 +4779,7 @@ namespace HealthKit {
 	[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface HKWorkoutActivity // : NSCoding, NSCopying, NSSecureCoding // https://github.com/xamarin/maccore/issues/2610
+	interface HKWorkoutActivity : NSSecureCoding, NSCopying
 	{
 		[Export ("initWithWorkoutConfiguration:startDate:endDate:metadata:")]
 		NativeHandle Constructor (HKWorkoutConfiguration workoutConfiguration, NSDate startDate, [NullAllowed] NSDate endDate, [NullAllowed] NSDictionary<NSString, NSObject> metadata);
