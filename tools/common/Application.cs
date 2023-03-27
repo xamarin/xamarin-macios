@@ -1536,6 +1536,11 @@ namespace Xamarin.Bundler {
 			aotArguments.Add ($"data-outfile={dataFile}");
 			aotArguments.Add ("static");
 			aotArguments.Add ("asmonly");
+			// This method is used in legacy build as well, where dedup is not supported. 
+			// Variable isDedupAssembly could have the following values:
+			// - NULL means that dedup is not enabled
+			// - FALSE means that dedup-skip flag should be passed for all assemblies except a container assemblt
+			// - TRUE means that dedup-include flag should be passed for the container assembly
 			if (isDedupAssembly.HasValue) {
 				if (isDedupAssembly.Value) {
 					aotArguments.Add ($"dedup-include={fname}");
