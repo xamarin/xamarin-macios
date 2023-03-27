@@ -614,6 +614,11 @@ namespace PassKit {
 		[NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoTV]
 		[NullAllowed, Export ("automaticReloadPaymentRequest", ArgumentSemantic.Strong)]
 		PKAutomaticReloadPaymentRequest AutomaticReloadPaymentRequest { get; set; }
+
+		[NullAllowed]
+		[NoWatch, Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4), NoTV]
+		[Export ("deferredPaymentRequest", ArgumentSemantic.Strong)]
+		PKDeferredPaymentRequest DeferredPaymentRequest { get; set; }
 	}
 
 	[Mac  (11,0)]
@@ -685,7 +690,12 @@ namespace PassKit {
 		[Export ("initWithPasses:")]
 		NativeHandle Constructor (PKPass[] pass);
 
-		[iOS (8,0)]
+		[iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("initWithIssuerData:signature:error:")]
+		NativeHandle Constructor (NSData issuerData, NSData signature, [NullAllowed] out NSError error);
+
+		[iOS (8, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("canAddPasses")]
 		bool CanAddPasses { get;}
@@ -1065,7 +1075,11 @@ namespace PassKit {
 		[Field ("PKPaymentNetworkNanaco")]
 		NSString Nanaco { get; }
 
-		[Watch (9,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Watch (9, 4), Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[Field ("PKPaymentNetworkPostFinance")]
+		NSString PKPaymentNetworkPostFinance { get; }
+
+		[Watch (9, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Field ("PKPaymentNetworkWaon")]
 		NSString Waon { get; }
 
@@ -1401,6 +1415,11 @@ namespace PassKit {
 		[NoWatch, Mac (13,0), iOS (16,0), NoTV, MacCatalyst (16,0)]
 		[NullAllowed, Export ("automaticReloadPaymentRequest", ArgumentSemantic.Strong)]
 		PKAutomaticReloadPaymentRequest AutomaticReloadPaymentRequest { get; set; }
+
+		[NullAllowed]
+		[NoWatch, Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4), NoTV]
+		[Export ("deferredPaymentRequest", ArgumentSemantic.Strong)]
+		PKDeferredPaymentRequest DeferredPaymentRequest { get; set; }
 	}
 
 	[Mac (11,0)]
@@ -2589,5 +2608,36 @@ namespace PassKit {
 
 		[Export ("invalidate")]
 		void Invalidate ();
+	}
+
+	[NoWatch, NoTV,  Mac (13, 3), iOS (16,4), MacCatalyst (16, 4)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface PKDeferredPaymentRequest {
+
+		[Export ("paymentDescription")]
+		string PaymentDescription { get; set; }
+
+		[Export ("deferredBilling", ArgumentSemantic.Strong)]
+		PKDeferredPaymentSummaryItem DeferredBilling { get; set; }
+
+		[NullAllowed, Export ("billingAgreement")]
+		string BillingAgreement { get; set; }
+
+		[Export ("managementURL", ArgumentSemantic.Strong)]
+		NSUrl ManagementUrl { get; set; }
+
+		[NullAllowed, Export ("tokenNotificationURL", ArgumentSemantic.Strong)]
+		NSUrl TokenNotificationUrl { get; set; }
+
+		[NullAllowed, Export ("freeCancellationDate", ArgumentSemantic.Strong)]
+		NSDate FreeCancellationDate { get; set; }
+
+		[NullAllowed, Export ("freeCancellationDateTimeZone", ArgumentSemantic.Strong)]
+		NSTimeZone FreeCancellationDateTimeZone { get; set; }
+
+		[Export ("initWithPaymentDescription:deferredBilling:managementURL:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (string paymentDescription, PKDeferredPaymentSummaryItem deferredBilling, NSUrl managementUrl);
 	}
 }
