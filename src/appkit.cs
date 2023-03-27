@@ -6135,6 +6135,11 @@ namespace AppKit {
 		[Mac (10,13)]
 		[Export ("prepareSharingServicePicker:")]
 		void Prepare (NSSharingServicePicker sharingServicePicker);
+
+		[Mac (13, 2)]
+		[NullAllowed]
+		[Export ("previewRepresentableActivityItems", ArgumentSemantic.Copy)]
+		INSPreviewRepresentableActivityItem [] PreviewRepresentableActivityItems { get; set; }
 	}
 
 	delegate void OpenDocumentCompletionHandler (NSDocument document, bool documentWasAlreadyOpen, NSError error);
@@ -21768,8 +21773,13 @@ namespace AppKit {
 		string WindowFrameAutosaveName { get; set; }
 	
 		[Export ("shouldCascadeWindows")]
-		bool ShouldCascadeWindows  { get; set; }
-	
+		bool ShouldCascadeWindows { get; set; }
+
+		[Mac (13, 2)]
+		[NullAllowed]
+		[Export ("previewRepresentableActivityItems", ArgumentSemantic.Copy)]
+		INSPreviewRepresentableActivityItem [] PreviewRepresentableActivityItems { get; set; }
+
 		[Export ("document")]
 		[NullAllowed]
 		NSDocument Document { get; set; }
@@ -21949,8 +21959,14 @@ namespace AppKit {
 		void WillEncodeRestorableState(NSWindow window, NSCoder coder);
 		
 		[Export ("window:didDecodeRestorableState:"), EventArgs ("NSWindowCoder")]
-		void DidDecodeRestorableState(NSWindow window, NSCoder coder);
-		
+		void DidDecodeRestorableState (NSWindow window, NSCoder coder);
+
+		[Mac (13, 2)]
+		[Export ("previewRepresentableActivityItemsForWindow:")]
+		[return: NullAllowed]
+		[IgnoredInDelegate]
+		INSPreviewRepresentableActivityItem [] GetPreviewRepresentableActivityItems (NSWindow window);
+
 		[Export ("window:willResizeForVersionBrowserWithMaxPreferredSize:maxAllowedSize:"), DelegateName ("NSWindowSizeSize"), DefaultValueFromArgument ("maxPreferredSize")]
 		CGSize WillResizeForVersionBrowser(NSWindow window, CGSize maxPreferredSize, CGSize maxAllowedSize);
 		
