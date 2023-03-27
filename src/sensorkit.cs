@@ -152,6 +152,13 @@ namespace SensorKit {
 		Dictation,
 	}
 
+	[NoWatch, NoTV, NoMac, iOS (16, 4), MacCatalyst (16, 4)]
+	[Native]
+	public enum SRMediaEventType : long {
+		OnScreen = 1,
+		OffScreen,
+	}
+
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
 	[MacCatalyst (14,0)]
@@ -280,7 +287,15 @@ namespace SensorKit {
 
 		[iOS (15,0), MacCatalyst (15,0)]
 		[Export ("textInputSessions", ArgumentSemantic.Copy)]
-		SRTextInputSession[] TextInputSessions { get; }
+		SRTextInputSession [] TextInputSessions { get; }
+
+		[iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("supplementalCategories", ArgumentSemantic.Copy)]
+		SRSupplementalCategory [] SupplementalCategories { get; }
+
+		[iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("relativeStartTime")]
+		double RelativeStartTime { get; }
 	}
 
 	[NoWatch, NoTV, NoMac]
@@ -350,6 +365,10 @@ namespace SensorKit {
 
 		[Export ("totalUnlockDuration")]
 		double /* NSTimeInterval */ TotalUnlockDuration { get; }
+
+		[iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("version")]
+		string Version { get; }
 	}
 
 	[NoWatch, NoTV, NoMac]
@@ -417,6 +436,10 @@ namespace SensorKit {
 		[iOS (15,0), MacCatalyst (15,0)]
 		[Export ("inputModes", ArgumentSemantic.Copy)]
 		string[] InputModes { get; }
+
+		[iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("sessionIdentifiers", ArgumentSemantic.Copy)]
+		string [] SessionIdentifiers { get; }
 
 		// SRKeyboardMetrics_ScalarMetrics
 
@@ -518,6 +541,10 @@ namespace SensorKit {
 		[Export ("touchDownDown", ArgumentSemantic.Strong)]
 		SRKeyboardProbabilityMetric<NSUnitDuration> TouchDownDown { get; }
 
+		[iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("touchUpDown", ArgumentSemantic.Strong)]
+		SRKeyboardProbabilityMetric<NSUnitDuration> TouchUpDown { get; }
+
 		[Export ("charKeyToPrediction", ArgumentSemantic.Strong)]
 		SRKeyboardProbabilityMetric<NSUnitDuration> CharKeyToPrediction { get; }
 
@@ -612,6 +639,10 @@ namespace SensorKit {
 
 		[Export ("longWordTouchDownDown", ArgumentSemantic.Strong)]
 		SRKeyboardProbabilityMetric<NSUnitDuration>[] LongWordTouchDownDown { get; }
+
+		[iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("longWordTouchUpDown", ArgumentSemantic.Strong)]
+		SRKeyboardProbabilityMetric<NSUnitDuration>[] LongWordTouchUpDown { get; }
 
 		[Export ("deleteToDeletes", ArgumentSemantic.Strong)]
 		SRKeyboardProbabilityMetric<NSUnitDuration>[] DeleteToDeletes { get; }
@@ -796,6 +827,10 @@ namespace SensorKit {
 		[iOS (15,4), MacCatalyst (15,4)]
 		[Field ("SRSensorAmbientPressure")]
 		AmbientPressure,
+
+		[iOS (16, 4), MacCatalyst (16, 4)]
+		[Field ("SRSensorMediaEvents")]
+		MediaEvents,
 	}
 
 	[NoWatch, NoTV, NoMac]
@@ -896,6 +931,16 @@ namespace SensorKit {
 
 		[Export ("crownOrientation")]
 		SRCrownOrientation CrownOrientation { get; }
+
+		[iOS (16, 4), MacCatalyst (16, 4)]
+		[NullAllowed]
+		[Export ("onWristDate", ArgumentSemantic.Strong)]
+		NSDate OnWristDate { get; }
+
+		[iOS (16, 4), MacCatalyst (16, 4)]
+		[NullAllowed]
+		[Export ("offWristDate", ArgumentSemantic.Strong)]
+		NSDate OffWristDate { get; }
 	}
 
 	[NoWatch, NoTV, NoMac]
@@ -919,5 +964,30 @@ namespace SensorKit {
 
 		[Export ("sessionType")]
 		SRTextInputSessionType SessionType { get; }
+
+		[iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("sessionIdentifier")]
+		string SessionIdentifier { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (16, 4), MacCatalyst (16, 4)]
+	[BaseType (typeof (NSObject))]
+	interface SRMediaEvent : NSCopying, NSSecureCoding {
+
+		[Export ("mediaIdentifier", ArgumentSemantic.Strong)]
+		string MediaIdentifier { get; }
+
+		[Export ("eventType", ArgumentSemantic.Assign)]
+		SRMediaEventType EventType { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (16, 4), MacCatalyst (16, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SRSupplementalCategory : NSCopying, NSSecureCoding {
+
+		[BindAs (typeof (SRDeviceUsageCategory))]
+		[Export ("identifier")]
+		NSString Identifier { get; }
 	}
 }
