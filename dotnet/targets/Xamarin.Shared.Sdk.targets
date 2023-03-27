@@ -1067,7 +1067,6 @@
 		<AOTCompile
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			DedupAssembly="$(_DedupAssembly)"
 			Assemblies="@(_AssembliesToAOT)"
 			AOTCompilerPath="$(_XamarinAOTCompiler)"
 			InputDirectory="$(_AOTInputDirectory)"

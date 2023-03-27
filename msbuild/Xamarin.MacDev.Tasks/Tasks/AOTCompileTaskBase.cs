@@ -34,8 +34,6 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string SdkDevPath { get; set; } = string.Empty;
 
-		public string DedupAssembly { get; set; } = string.Empty;
-
 		#region Output
 		[Output]
 		public ITaskItem []? AssemblyFiles { get; set; }
@@ -84,6 +82,7 @@ namespace Xamarin.MacDev.Tasks {
 				var processArguments = Assemblies [i].GetMetadata ("ProcessArguments");
 				var aotData = Assemblies [i].GetMetadata ("AOTData");
 				var aotAssembly = Assemblies [i].GetMetadata ("AOTAssembly");
+				Boolean.TryParse (Assemblies [i].GetMetadata ("IsDedupAssembly"), out var isDedupAssembly);
 
 				var aotAssemblyItem = new TaskItem (aotAssembly);
 				aotAssemblyItem.SetMetadata ("Arguments", "-Xlinker -rpath -Xlinker @executable_path/ -Qunused-arguments -x assembler -D DEBUG");
@@ -103,13 +102,10 @@ namespace Xamarin.MacDev.Tasks {
 				if (globalAotArguments?.Any () == true)
 					arguments.Add ($"--aot={string.Join (",", globalAotArguments)}");
 				arguments.AddRange (parsedProcessArguments);
-				if (Path.GetFileName (input) == Path.GetFileName (DedupAssembly)) {
-					for (var j = 0; j < Assemblies.Length; j++) {
-						arguments.Add (inputs [j]);
-					}
-				} else {
+				if (isDedupAssembly)
+					arguments.AddRange (inputs);
+				else
 					arguments.Add (input);
-				}
 
 				processes [i] = ExecuteAsync (AOTCompilerPath, arguments, environment: environment, sdkDevPath: SdkDevPath, showErrorIfFailure: false /* we show our own error below */)
 					.ContinueWith ((v) => {
