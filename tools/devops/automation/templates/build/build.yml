@@ -242,6 +242,7 @@ steps:
     set -e
     echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
     MAKE_FLAGS=""
+    IGNORE_SIMULATORS=1
 
     if [[ "$SYSTEM_DEBUG" == "true" ]]; then
       MAKE_FLAGS="V=1 -w"
