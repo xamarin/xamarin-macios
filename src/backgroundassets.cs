@@ -56,7 +56,7 @@ namespace BackgroundAssets {
 		[Export ("isEssential")]
 		bool IsEssential { get; }
 
-		[Mac (13,3), iOS (16,4), MacCatalyst (16, 4)]
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
 		[return: Release]
 		[Export ("copyAsNonEssential")]
 		BADownload CopyAsNonEssential ();
@@ -199,7 +199,7 @@ namespace BackgroundAssets {
 		[Export ("initWithIdentifier:request:fileSize:applicationGroupIdentifier:")]
 		NativeHandle Constructor (string identifier, NSUrlRequest request, nuint fileSize, string applicationGroupIdentifier);
 
-		[Mac (13 ,3), iOS (16, 4), MacCatalyst (16, 4)]
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
 		[Export ("initWithIdentifier:request:essential:fileSize:applicationGroupIdentifier:priority:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (string identifier, NSUrlRequest request, bool essential, nuint fileSize, string applicationGroupIdentifier, nint priority);
