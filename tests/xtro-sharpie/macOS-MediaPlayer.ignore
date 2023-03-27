@@ -8,8 +8,6 @@
 !missing-field! MPMediaPlaybackIsPreparedToPlayDidChangeNotification not bound
 
 ## intro says that it does not work
-!missing-selector! AVPlayerItem::nowPlayingInfo not bound
-!missing-selector! AVPlayerItem::setNowPlayingInfo: not bound
 
 ## unsorted
 

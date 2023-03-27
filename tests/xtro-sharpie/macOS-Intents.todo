@@ -1,2 +1,7 @@
 !missing-selector! INSendMessageIntentResponse::sentMessages not bound
 !missing-selector! INSendMessageIntentResponse::setSentMessages: not bound
+!missing-selector! INAnswerCallIntent::audioRoute not bound
+!missing-selector! INAnswerCallIntent::callIdentifier not bound
+!missing-selector! INAnswerCallIntentResponse::callRecords not bound
+!missing-selector! INAnswerCallIntentResponse::setCallRecords: not bound
+!missing-selector! INHangUpCallIntent::callIdentifier not bound

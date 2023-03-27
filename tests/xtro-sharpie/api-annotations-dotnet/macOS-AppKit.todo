@@ -27,3 +27,8 @@
 !deprecated-attribute-missing! NSToolbar::sizeMode missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSWindow::setShowsToolbarButton: missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSWindow::showsToolbarButton missing a [Deprecated] attribute
+!missing-protocol-member! NSWindowDelegate::previewRepresentableActivityItemsForWindow: not found
+!missing-selector! NSDocument::previewRepresentableActivityItems not bound
+!missing-selector! NSDocument::setPreviewRepresentableActivityItems: not bound
+!missing-selector! NSWindowController::previewRepresentableActivityItems not bound
+!missing-selector! NSWindowController::setPreviewRepresentableActivityItems: not bound
