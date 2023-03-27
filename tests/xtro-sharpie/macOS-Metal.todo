@@ -199,3 +199,6 @@
 !missing-selector! MTLCompileOptions::setAllowReferencingUndefinedSymbols: not bound
 !missing-selector! MTLCompileOptions::setCompileSymbolVisibility: not bound
 !missing-selector! MTLCompileOptions::setMaxTotalThreadsPerThreadgroup: not bound
+!missing-protocol-member! MTLDevice::maximumConcurrentCompilationTaskCount not found
+!missing-protocol-member! MTLDevice::setShouldMaximizeConcurrentCompilation: not found
+!missing-protocol-member! MTLDevice::shouldMaximizeConcurrentCompilation not found

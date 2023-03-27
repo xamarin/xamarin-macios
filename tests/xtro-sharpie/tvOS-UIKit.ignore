@@ -484,7 +484,7 @@
 !missing-selector! NSDiffableDataSourceSectionTransaction::difference not bound
 !missing-selector! NSDiffableDataSourceTransaction::difference not bound
 
-# Not binding for now, API_AVAILABLE(ios(17.0), macos(14.0))
+# Not binding for now, does not make sense on tvOS
 !missing-selector! +UITextInputContext::current not bound
 !missing-selector! UITextInputContext::isDictationInputExpected not bound
 !missing-selector! UITextInputContext::isHardwareKeyboardInputExpected not bound

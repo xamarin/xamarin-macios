@@ -1198,7 +1198,15 @@ namespace AuthenticationServices {
 		NSData Signature { get; }
 	}
 
+#if !XAMCORE_5_0 // Removed in Xcode 14.3 Beta 3
+	[Obsoleted (PlatformName.iOS, 16, 4, message: Constants.ApiRemovedGeneral)]
+	[Obsoleted (PlatformName.MacCatalyst, 16, 4, message: Constants.ApiRemovedGeneral)]
+	[Obsoleted (PlatformName.TvOS, 16, 4, message: Constants.ApiRemovedGeneral)]
+	[Obsoleted (PlatformName.WatchOS, 9, 4, message: Constants.ApiRemovedGeneral)]
 	[NoWatch, Mac (13, 3), iOS (15, 0), MacCatalyst (15, 0), TV (16, 0)]
+#else
+	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (13, 3)]
+#endif
 	[BaseType (typeof (ASAuthorizationRequest))]
 	[DisableDefaultCtor]
 	interface ASAuthorizationPlatformPublicKeyCredentialAssertionRequest : ASAuthorizationPublicKeyCredentialAssertionRequest {
@@ -1621,12 +1629,11 @@ namespace AuthenticationServices {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ASAuthorizationProviderExtensionRegistrationHandler {
-		[Async]
+
 		[Abstract]
 		[Export ("beginDeviceRegistrationUsingLoginManager:options:completion:")]
 		void BeginDeviceRegistration (ASAuthorizationProviderExtensionLoginManager loginManager, ASAuthorizationProviderExtensionRequestOptions options, Action<ASAuthorizationProviderExtensionRegistrationResult> handler);
 
-		[Async]
 		[Abstract]
 		[Export ("beginUserRegistrationUsingLoginManager:userName:authenticationMethod:options:completion:")]
 		void BeginUserRegistration (ASAuthorizationProviderExtensionLoginManager loginManager, [NullAllowed] string userName, ASAuthorizationProviderExtensionAuthenticationMethod authenticationMethod, ASAuthorizationProviderExtensionRequestOptions options, Action<ASAuthorizationProviderExtensionRegistrationResult> handler);
