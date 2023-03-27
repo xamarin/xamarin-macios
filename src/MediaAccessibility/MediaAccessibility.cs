@@ -331,8 +331,7 @@ namespace MediaAccessibility {
 		[Mac (13, 3), TV (16, 4), iOS (16, 4)]
 #endif
 		[DllImport (Constants.MediaAccessibilityLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool MADimFlashingLightsEnabled ();
+		static extern byte MADimFlashingLightsEnabled ();
 
 #if NET
 		[SupportedOSPlatform ("ios16.4")]
@@ -342,6 +341,6 @@ namespace MediaAccessibility {
 #else
 		[Mac (13, 3), TV (16, 4), iOS (16, 4)]
 #endif
-		public static bool IsDimFlashingLightsEnabled () => MADimFlashingLightsEnabled ();
+		public static bool IsDimFlashingLightsEnabled () => MADimFlashingLightsEnabled () != 0;
 	}
 }
