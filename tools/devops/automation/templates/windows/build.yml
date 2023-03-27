@@ -119,7 +119,7 @@ steps:
 - pwsh: |
     & $(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe `
         nuget push `
-        "$(Build.SourcesDirectory)\xamarin-macios\tests\test-libraries\nugets\FrameworksInRuntimesNativeDirectory\bin\Debug\Xamarin.Tests.FrameworksInRuntimesNativeDirectory.1.0.0.nupkg" `
+        "$(Build.SourcesDirectory)\xamarin-macios\tests\test-libraries\nugets\FrameworksInRuntimesNativeDirectory\bin\Release\Xamarin.Tests.FrameworksInRuntimesNativeDirectory.1.0.0.nupkg" `
         --source "$(Build.SourcesDirectory)\xamarin-macios\tests\.nuget\packages"
   displayName: 'Build dependencies for .NET tests'
   continueOnError: true
