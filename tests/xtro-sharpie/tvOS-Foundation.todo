@@ -1,6 +1,2 @@
 !missing-field! NSNetServicesErrorCode not bound
 !missing-selector! NSURLSession::getTasksWithCompletionHandler: not bound
-!missing-field! NSURLFileIdentifierKey not bound
-!missing-field! NSURLVolumeMountFromLocationKey not bound
-!missing-field! NSURLVolumeSubtypeKey not bound
-!missing-field! NSURLVolumeTypeNameKey not bound
