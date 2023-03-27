@@ -919,7 +919,8 @@
 
 			<_AOTInputDirectory>$(_IntermediateNativeLibraryDir)aot-input/</_AOTInputDirectory>
 			<_AOTOutputDirectory>$(_IntermediateNativeLibraryDir)aot-output/</_AOTOutputDirectory>
-			<_DedupAssembly Condition="'$(_RunAotCompiler)' == 'true' And '$(IsMacEnabled)' == 'true'">$(IntermediateOutputPath)aot-instances.dll</_DedupAssembly>
+			<_IsDedupEnabled>true</_IsDedupEnabled>
+			<_DedupAssembly Condition="'$(_RunAotCompiler)' == 'true' And '$(IsMacEnabled)' == 'true' And '$(_IsDedupEnabled)' == 'true'">$(IntermediateOutputPath)aot-instances.dll</_DedupAssembly>
 
 			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == '' And ('$(ComputedPlatform)' != 'iPhone' Or '$(_PlatformName)' == 'macOS')">dylib</_LibMonoLinkMode>
 			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == ''">static</_LibMonoLinkMode>
@@ -1033,12 +1034,12 @@
 
 		<WriteLinesToFile File="$(_IntermediateNativeLibraryDir)aot-instances.cs" Overwrite="true" Lines="" WriteOnlyWhenDifferent="true" />
 		<Csc Sources="$(_IntermediateNativeLibraryDir)aot-instances.cs"
-		OutputAssembly="$(_DedupAssembly)"
-		TargetType="library"
-		Deterministic="true"
-		References="@(ReferencePath)"
-		ToolExe="$(CscToolExe)"
-		ToolPath="$(CscToolPath)" />
+			OutputAssembly="$(_DedupAssembly)"
+			TargetType="library"
+			Deterministic="true"
+			References="@(ReferencePath)"
+			ToolExe="$(CscToolExe)"
+			ToolPath="$(CscToolPath)" />
 		<Delete Files="$(_IntermediateNativeLibraryDir)aot-instances.cs" />
 
 		<ItemGroup>
