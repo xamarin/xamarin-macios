@@ -82,6 +82,9 @@ namespace BackgroundAssets {
 	[Protocol]
 	interface BADownloaderExtension {
 
+		[Deprecated (PlatformName.iOS, 16, 4, message: "'WillTerminate' will not be called in all applicable scenarios, do not rely on it.")]
+		[Deprecated (PlatformName.MacOSX, 13, 3, message: "'WillTerminate' will not be invoked in all applicable scenarios, do not rely on it.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "'WillTerminate' will not be invoked in all applicable scenarios, do not rely on it.")]
 		[Export ("extensionWillTerminate")]
 		void WillTerminate ();
 
