@@ -1,4 +1,0 @@
-!missing-selector! NEVPNProtocol::excludeAPNs not bound
-!missing-selector! NEVPNProtocol::excludeCellularServices not bound
-!missing-selector! NEVPNProtocol::setExcludeAPNs: not bound
-!missing-selector! NEVPNProtocol::setExcludeCellularServices: not bound
