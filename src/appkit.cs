@@ -23428,6 +23428,15 @@ namespace AppKit {
 		[Mac (10, 13)]
 		[NullAllowed, Export ("tabGroup", ArgumentSemantic.Weak)]
 		NSWindowTabGroup TabGroup { get; }
+
+		[Mac (13, 3), MacCatalyst (16, 4)]
+		[Async]
+		[Export ("transferWindowSharingToWindow:completionHandler:")]
+		void TransferWindowSharing (NSWindow window, Action<NSError> completionHandler);
+
+		[Mac (13, 3), MacCatalyst (16, 4)]
+		[Export ("hasActiveWindowSharingSession")]
+		bool HasActiveWindowSharingSession { get; }
 	}
 
 	partial interface NSPrintOperation {

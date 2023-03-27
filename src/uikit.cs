@@ -21744,11 +21744,11 @@ namespace UIKit {
 		[Export ("zOffset")]
 		nfloat ZOffset { get; }
 
-		[iOS (16, 4), MacCatalyst (16, 4)]
+		[iOS (16, 4), NoMacCatalyst]
 		[Export ("azimuthAngleInView:")]
 		nfloat GetAzimuthAngle ([NullAllowed] UIView view);
 
-		[iOS (16, 4), MacCatalyst (16, 4)]
+		[iOS (16, 4), NoMacCatalyst]
 		[Export ("azimuthUnitVectorInView:")]
 		CGVector GetAzimuthUnitVector ([NullAllowed] UIView view);
 
@@ -25435,6 +25435,25 @@ namespace UIKit {
 
 		[Field ("UIFontWidthCompressed")]
 		nfloat Compressed { get; }
+	}
+
+	[NoWatch, NoTV, iOS (16, 4), NoMacCatalyst]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UITextInputContext {
+
+		[Export ("pencilInputExpected")]
+		bool PencilInputExpected { [Bind ("isPencilInputExpected")] get; set; }
+
+		[Export ("dictationInputExpected")]
+		bool DictationInputExpected { [Bind ("isDictationInputExpected")] get; set; }
+
+		[Export ("hardwareKeyboardInputExpected")]
+		bool HardwareKeyboardInputExpected { [Bind ("isHardwareKeyboardInputExpected")] get; set; }
+
+		[Static]
+		[Export ("current")]
+		UITextInputContext Current { get; }
 	}
 
 

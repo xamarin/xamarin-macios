@@ -54,7 +54,7 @@ namespace AVRouting {
 		string OverrideTitle { get; set; }
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (16, 1)]
+	[NoWatch, NoTV, NoMac, iOS (16, 4), MacCatalyst (16, 4)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVCustomRoutingPartialIP {
@@ -82,7 +82,7 @@ namespace AVRouting {
 		[Export ("authorizedRoutes")]
 		AVCustomDeviceRoute[] AuthorizedRoutes { get; }
 
-		[NoWatch, NoTV, NoMac, iOS (16, 1)]
+		[NoWatch, NoTV, NoMac, iOS (16, 4), MacCatalyst (16, 4)]
 		[Export ("knownRouteIPs", ArgumentSemantic.Strong)]
 		AVCustomRoutingPartialIP [] KnownRouteIPs { get; set; }
 

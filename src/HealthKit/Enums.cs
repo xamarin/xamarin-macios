@@ -527,10 +527,10 @@ namespace HealthKit
 		[iOS (14, 0)]
 		[Field ("HKFHIRResourceTypeCoverage")]
 		Coverage,
-		[iOS (14, 6), MacCatalyst (14, 6), Mac (13, 3)]
+		[iOS (16, 4), MacCatalyst (16, 4), Mac (13, 3)]
 		[Field ("HKFHIRResourceTypeDiagnosticReport")]
 		DiagnosticReport,
-		[iOS (14, 6), MacCatalyst (14, 6), Mac (13, 3)]
+		[iOS (16, 4), MacCatalyst (16, 4), Mac (13, 3)]
 		[Field ("HKFHIRResourceTypeDocumentReference")]
 		DocumentReference,
 	}

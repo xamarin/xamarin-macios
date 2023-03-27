@@ -230,6 +230,7 @@ AUDIOUNIT_SOURCES = \
 # AuthenticationServices
 
 AUTHENTICATIONSERVICES_SOURCES = \
+	AuthenticationServices/ASCompat.cs \
 	AuthenticationServices/ASAuthorization.cs \
 	AuthenticationServices/ASAuthorizationRequest.cs \
 	AuthenticationServices/PublicPrivateKeyAuthentication.cs \
