@@ -2610,8 +2610,8 @@ namespace PassKit {
 		void Invalidate ();
 	}
 
-	[NoWatch, NoTV,  Mac (13, 3), iOS (16,4), MacCatalyst (16, 4)]
-	[BaseType (typeof(NSObject))]
+	[NoWatch, NoTV, Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PKDeferredPaymentRequest {
 

@@ -642,7 +642,7 @@ namespace SensorKit {
 
 		[iOS (16, 4), MacCatalyst (16, 4)]
 		[Export ("longWordTouchUpDown", ArgumentSemantic.Strong)]
-		SRKeyboardProbabilityMetric<NSUnitDuration>[] LongWordTouchUpDown { get; }
+		SRKeyboardProbabilityMetric<NSUnitDuration> [] LongWordTouchUpDown { get; }
 
 		[Export ("deleteToDeletes", ArgumentSemantic.Strong)]
 		SRKeyboardProbabilityMetric<NSUnitDuration>[] DeleteToDeletes { get; }

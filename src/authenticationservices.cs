@@ -142,7 +142,7 @@ namespace AuthenticationServices {
 
 	[NoWatch, NoTV, NoiOS, MacCatalyst (16, 4), Mac (13, 3)]
 	[Native]
-	public enum ASAuthorizationWebBrowserPublicKeyCredentialManagerAuthorizationState : long  {
+	public enum ASAuthorizationWebBrowserPublicKeyCredentialManagerAuthorizationState : long {
 		Authorized,
 		Denied,
 		NotDetermined
@@ -1576,7 +1576,8 @@ namespace AuthenticationServices {
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (13, 0)]
-	[Protocol][Model]
+	[Protocol]
+	[Model]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ASAuthorizationProviderExtensionRegistrationHandler
