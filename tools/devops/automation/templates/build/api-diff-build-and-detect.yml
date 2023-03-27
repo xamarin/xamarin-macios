@@ -59,6 +59,7 @@ steps:
   env:
     PR_ID: ${{ parameters.prID }} # reusing jenkins vars, to be fixed
     AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+    CI_PAT: ${{ parameters.gitHubToken }}
 
 # publish the resulting artifact
 - task: PublishPipelineArtifact@1
