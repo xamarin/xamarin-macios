@@ -1,0 +1,4 @@
+!missing-selector! WKPreferences::setShouldPrintBackgrounds: not bound
+!missing-selector! WKPreferences::shouldPrintBackgrounds not bound
+!missing-selector! WKWebView::isInspectable not bound
+!missing-selector! WKWebView::setInspectable: not bound

@@ -1,0 +1,8 @@
+!deprecated-attribute-missing! MLModelCollection missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLModelCollection::deploymentID missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLModelCollection::entries missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLModelCollection::identifier missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLModelCollectionEntry missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLModelCollectionEntry::isEqualToModelCollectionEntry: missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLModelCollectionEntry::modelIdentifier missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLModelCollectionEntry::modelURL missing a [Deprecated] attribute

@@ -2,3 +2,24 @@
 !extra-enum-value! Managed value 5 for INPlayMediaIntentResponseCode.HandleInApp is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 7 for INStartWorkoutIntentResponseCode.HandleInApp is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 8 for INStartWorkoutIntentResponseCode.Success is available for the current platform while the value in the native header is not
+!missing-enum! INAnswerCallIntentResponseCode not bound
+!missing-enum! INHangUpCallIntentResponseCode not bound
+!missing-field! INAnswerCallIntentIdentifier not bound
+!missing-field! INHangUpCallIntentIdentifier not bound
+!missing-protocol! INAnswerCallIntentHandling not bound
+!missing-protocol! INHangUpCallIntentHandling not bound
+!missing-selector! INAnswerCallIntent::audioRoute not bound
+!missing-selector! INAnswerCallIntent::callIdentifier not bound
+!missing-selector! INAnswerCallIntent::initWithAudioRoute:callIdentifier: not bound
+!missing-selector! INAnswerCallIntentResponse::callRecords not bound
+!missing-selector! INAnswerCallIntentResponse::code not bound
+!missing-selector! INAnswerCallIntentResponse::initWithCode:userActivity: not bound
+!missing-selector! INAnswerCallIntentResponse::setCallRecords: not bound
+!missing-selector! INHangUpCallIntent::callIdentifier not bound
+!missing-selector! INHangUpCallIntent::initWithCallIdentifier: not bound
+!missing-selector! INHangUpCallIntentResponse::code not bound
+!missing-selector! INHangUpCallIntentResponse::initWithCode:userActivity: not bound
+!missing-type! INAnswerCallIntent not bound
+!missing-type! INAnswerCallIntentResponse not bound
+!missing-type! INHangUpCallIntent not bound
+!missing-type! INHangUpCallIntentResponse not bound

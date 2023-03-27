@@ -1,0 +1,2 @@
+!missing-selector! VSUserAccount::isSignedOut not bound
+!missing-selector! VSUserAccount::setSignedOut: not bound
