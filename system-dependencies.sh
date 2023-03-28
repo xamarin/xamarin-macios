@@ -307,6 +307,8 @@ function install_mono () {
 
 function download_xcode_platforms ()
 {
+	if test -n "$IGNORE_SIMULATORS"; then return; fi
+
 	local XCODE_VERSION
 	local XCODE_DEVELOPER_ROOT="$1"
 	local TVOS_VERSION="$2"
@@ -320,20 +322,43 @@ function download_xcode_platforms ()
 		return
 	fi
 
-	TVOS_SIMULATOR_VERSION=$(/usr/libexec/PlistBuddy -c 'Print :ProductBuildVersion' "$XCODE_DEVELOPER_ROOT"/Platforms/AppleTVSimulator.platform/version.plist)
-	WATCHOS_SIMULATOR_VERSION=$(/usr/libexec/PlistBuddy -c 'Print :ProductBuildVersion' "$XCODE_DEVELOPER_ROOT"/Platforms/WatchSimulator.platform/version.plist)
+	local SIMULATOR_RUNTIMES
+	SIMULATOR_RUNTIMES=$("$XCODE_DEVELOPER_ROOT"/usr/bin/simctl runtime list)
 
-	if test -d "/Library/Developer/CoreSimulator/Volumes/tvOS_$TVOS_SIMULATOR_VERSION/Library/Developer/CoreSimulator/Profiles/Runtimes/tvOS $TVOS_VERSION.simruntime"; then
-		if test -d "/Library/Developer/CoreSimulator/Volumes/watchOS_$WATCHOS_SIMULATOR_VERSION/Library/Developer/CoreSimulator/Profiles/Runtimes/watchOS $WATCHOS_VERSION.simruntime"; then
-			log "All the additional platforms have already been downloaded for this version of Xcode ($XCODE_VERSION)"
-			return
-		fi
+	TVOS_SIMULATOR_RUNTIME=$(echo "$SIMULATOR_RUNTIMES" | grep "^tvOS $TVOS_VERSION .*Ready" || true)
+	WATCHOS_SIMULATOR_RUNTIME=$(echo "$SIMULATOR_RUNTIMES" | grep "^watchOS $WATCHOS_VERSION .*Ready" || true)
+
+	MUST_INSTALL_RUNTIMES=
+	if test -z "$TVOS_SIMULATOR_RUNTIME"; then
+		MUST_INSTALL_RUNTIMES=1
 	fi
-
-	if ! test -z "$PROVISION_XCODE"; then
-		fail "Xcode has additional platforms that must be downloaded. Execute './system-dependencies.sh --provision-xcode' to execute those tasks."
+	if test -z "$WATCHOS_SIMULATOR_RUNTIME"; then
+		MUST_INSTALL_RUNTIMES=1
+	fi
+	if test -z "$MUST_INSTALL_RUNTIMES"; then
+		log "All the additional platforms have already been downloaded for this version of Xcode ($XCODE_VERSION)"
+		log "    $TVOS_SIMULATOR_RUNTIME"
+		log "    $WATCHOS_SIMULATOR_RUNTIME"
 		return
 	fi
+
+	if test -z "$PROVISION_SIMULATORS"; then
+		fail "Xcode has additional platforms that must be downloaded. Execute './system-dependencies.sh --provision-simulators' to execute those tasks (or alternatively ${COLOR_MAGENTA}export IGNORE_SIMULATORS=1${COLOR_RED} to skip this check)"
+		echo "        ${COLOR_RED}Installed simulator runtimes:"
+		# shellcheck disable=SC2001
+		echo "$SIMULATOR_RUNTIMES" | sed 's/^/            /'
+		echo "        Missing simulator runtimes:"
+		if test -z "$TVOS_SIMULATOR_RUNTIME"; then
+			fail "        tvOS $TVOS_VERSION"
+		fi
+		if test -z "$WATCHOS_SIMULATOR_RUNTIME"; then
+			fail "        watchOS $WATCHOS_VERSION"
+		fi
+		echo -n "${COLOR_CLEAR}"
+		return
+	fi
+
+	log "Xcode has additional platforms that must be downloaded ($MUST_INSTALL_RUNTIMES), so installing those."
 
 	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
 	if ! "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms; then

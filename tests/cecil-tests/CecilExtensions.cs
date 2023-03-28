@@ -1,8 +1,11 @@
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 
 using Mono.Cecil;
+
+using ObjCRuntime;
 
 namespace Xamarin.Utils {
 	public static partial class CecilExtensions {
@@ -57,7 +60,7 @@ namespace Xamarin.Utils {
 			if (member is PropertyDefinition pd)
 				return pd.Name;
 
-			return member.ToString ();
+			return member.ToString ()!;
 		}
 
 		public static string AsFullName (this ICustomAttributeProvider member)
@@ -104,7 +107,7 @@ namespace Xamarin.Utils {
 			if (member is IMemberDefinition imd)
 				return imd.FullName;
 
-			return member.ToString ();
+			return member.ToString ()!;
 		}
 
 		public static string GetOSPlatformAttributePlatformName (this CustomAttribute ca)
@@ -145,6 +148,60 @@ namespace Xamarin.Utils {
 
 			return false;
 		}
+
+		public static bool HasBindingImplAttribute (this ICustomAttributeProvider? provider, out BindingImplOptions options)
+		{
+			options = BindingImplOptions.None;
+			if (provider is null)
+				return false;
+
+			if (provider.HasCustomAttributes) {
+				foreach (var attr in provider.CustomAttributes) {
+					if (!attr.AttributeType.Is ("ObjCRuntime", "BindingImplAttribute"))
+						continue;
+					options = (BindingImplOptions) attr.ConstructorArguments [0].Value;
+					return true;
+				}
+			}
+
+			var property = FindProperty (provider as MethodDefinition);
+			if (property is not null)
+				return HasBindingImplAttribute (property, out options);
+
+			return false;
+		}
+
+		public static PropertyDefinition? FindProperty (this MethodDefinition? accessor)
+		{
+			if (accessor is null)
+				return null;
+
+			if (!accessor.IsSpecialName)
+				return null;
+
+			if (!accessor.DeclaringType.HasProperties)
+				return null;
+
+			if (!accessor.Name.StartsWith ("get_", StringComparison.Ordinal) && !accessor.Name.StartsWith ("set_", StringComparison.Ordinal))
+				return null;
+
+			var propertyName = accessor.Name.Substring (4);
+			var properties = accessor.DeclaringType.Properties.Where (v => v.Name == propertyName);
+			foreach (var property in properties) {
+				if (property.GetMethod == accessor || property.SetMethod == accessor)
+					return property;
+			}
+
+			return null;
+		}
 	}
 }
 
+namespace ObjCRuntime {
+	[Flags]
+	public enum BindingImplOptions {
+		None = 0,
+		GeneratedCode = 1,
+		Optimizable = 2,
+	}
+}
