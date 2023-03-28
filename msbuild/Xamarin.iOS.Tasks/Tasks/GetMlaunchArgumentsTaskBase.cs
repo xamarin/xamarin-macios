@@ -11,41 +11,44 @@ using Microsoft.Build.Framework;
 using Xamarin.Localization.MSBuild;
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
+#nullable enable
+
 namespace Xamarin.iOS.Tasks {
-	public abstract class GetMlaunchArgumentsTaskBase : XamarinTask {
+	public class GetMlaunchArguments : XamarinTask, ICancelableTask {
 
 		[Required]
 		public bool SdkIsSimulator { get; set; }
 
 		[Required]
-		public string SdkVersion { get; set; }
+		public string SdkVersion { get; set; } = string.Empty;
 
 		[Required]
-		public string AppBundlePath { get; set; }
+		public string AppBundlePath { get; set; } = string.Empty;
 
 		[Required]
-		public string AppManifestPath { get; set; }
+		public string AppManifestPath { get; set; } = string.Empty;
 
 		[Required]
-		public string SdkDevPath { get; set; }
+		public string SdkDevPath { get; set; } = string.Empty;
 
 		public ITaskItem [] AdditionalArguments { get; set; } = Array.Empty<ITaskItem> ();
-		public string DeviceName { get; set; }
+		public string DeviceName { get; set; } = string.Empty;
 		public ITaskItem [] EnvironmentVariables { get; set; } = Array.Empty<ITaskItem> ();
-		public string LaunchApp { get; set; }
-		public string InstallApp { get; set; }
+		public string LaunchApp { get; set; } = string.Empty;
+		public string InstallApp { get; set; } = string.Empty;
 		public bool CaptureOutput { get; set; } // Set to true to capture output. If StandardOutput|ErrorPath is not set, write to the current terminal's stdout/stderr (requires WaitForExit)
-		public string StandardOutputPath { get; set; } // Set to a path to capture output there
-		public string StandardErrorPath { get; set; } // Set to a path to capture output there
+		public string StandardOutputPath { get; set; } = string.Empty; // Set to a path to capture output there
+		public string StandardErrorPath { get; set; } = string.Empty;// Set to a path to capture output there
 		public bool WaitForExit { get; set; } // Required for capturing stdout/stderr output
 
 		[Required]
-		public string MlaunchPath { get; set; }
+		public string MlaunchPath { get; set; } = string.Empty;
 
 		[Output]
-		public string MlaunchArguments { get; set; }
+		public string MlaunchArguments { get; set; } = string.Empty;
 
 		public IPhoneDeviceType DeviceType {
 			get {
@@ -61,7 +64,7 @@ namespace Xamarin.iOS.Tasks {
 			}
 		}
 
-		List<string> GetDeviceTypes ()
+		List<string>? GetDeviceTypes ()
 		{
 			var tmpfile = Path.GetTempFileName ();
 			try {
@@ -199,15 +202,24 @@ namespace Xamarin.iOS.Tasks {
 		static string GetTerminalName (int fd)
 		{
 			if (isatty (fd) != 1)
-				return null;
+				return string.Empty;
 
 			return Marshal.PtrToStringAuto (ttyname (fd));
 		}
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			MlaunchArguments = GenerateCommandLineCommands ();
 			return !Log.HasLoggedErrors;
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 
 		[DllImport ("/usr/lib/libc.dylib")]
