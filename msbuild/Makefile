@@ -55,6 +55,7 @@ IOS_TARGETS =                                                      \
 	$(wildcard Xamarin.Shared/Xamarin.iOS.*.targets)       \
 	$(wildcard Xamarin.Shared/Xamarin.Shared*.props)       \
 	$(wildcard Xamarin.Shared/Xamarin.Shared*.targets)       \
+	$(wildcard Xamarin.Shared/Xamarin.ImplicitFacade.targets) \
 
 IOS_WINDOWS_TARGETS =                                                      \
 	$(wildcard Xamarin.iOS.Tasks.Windows/Xamarin.*.props)       \
@@ -118,6 +119,7 @@ endif
 MACCATALYST_TARGETS =                                                \
 	$(wildcard Xamarin.Shared/Xamarin.MacCatalyst.*.props)   \
 	$(wildcard Xamarin.Shared/Xamarin.MacCatalyst.*.targets) \
+	$(wildcard Xamarin.Shared/Xamarin.ImplicitFacade.targets) \
 
 MACCATALYST_DIRECTORIES = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.MacCatalyst/RedistList                                       \
@@ -151,6 +153,7 @@ WATCH_TARGETS =                                                  \
 	$(wildcard Xamarin.Shared/Xamarin.WatchOS.*.props)   \
 	$(wildcard Xamarin.Shared/Xamarin.WatchOS.*.targets) \
 	Xamarin.MacDev.Tasks/NoCode.cs                             \
+	$(wildcard Xamarin.Shared/Xamarin.ImplicitFacade.targets) \
 
 WATCH_DIRECTORIES =                                                                                             \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/RedistList                                       \
@@ -187,6 +190,7 @@ endif
 TVOS_TARGETS =                                                \
 	$(wildcard Xamarin.Shared/Xamarin.TVOS.*.props)   \
 	$(wildcard Xamarin.Shared/Xamarin.TVOS.*.targets) \
+	$(wildcard Xamarin.Shared/Xamarin.ImplicitFacade.targets) \
 
 TVOS_DIRECTORIES =                                                                                           \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/RedistList                                       \
@@ -225,6 +229,7 @@ MAC_TARGETS = \
 	$(wildcard Xamarin.Shared/Xamarin.Mac.*.targets) \
 	$(wildcard Xamarin.Shared/Xamarin.Shared*.props) \
 	$(wildcard Xamarin.Shared/Xamarin.Shared*.targets) \
+	$(wildcard Xamarin.Shared/Xamarin.ImplicitFacade.targets) \
 
 MAC_BINDING_TARGETS =
 
