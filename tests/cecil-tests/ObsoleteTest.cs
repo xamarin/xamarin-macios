@@ -18,6 +18,14 @@ namespace Cecil.Tests {
 		// This test verifies that we don't have any obsolete API in .NET that we don't expect to be there
 		// in particular that we don't start out with obsolete APIs from the very beginning (such API should have been removed).
 		// Any obsoleted API after the first stable .NET release should likely be skipped (until XAMCORE_5_0)
+		//
+		// If you have obsoleted a member and you're here wondering
+		// what you should do, you should add
+		// [EditorBrowsable (EditorBrowsableState.Never)]
+		// to the member in addition to the Obsolete. This will
+		// hide the member from intellisense but still allow it
+		// to compile (with errors/warnings).
+		//
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblyDefinitions))] // call this method with every .net6 library
 		public void GetAllObsoletedThings (AssemblyInfo info)
 		{

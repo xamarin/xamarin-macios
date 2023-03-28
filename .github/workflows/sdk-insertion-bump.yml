@@ -14,7 +14,7 @@ jobs:
         id: commit_title
         run: |
           Write-Host "Commit message is $Env:COMMIT_MESSAGE"
-          $title = ($Env:COMMIT_MESSAGE -split '\n')[0]
+          $title = ($Env:COMMIT_MESSAGE -split '\n')[0] | ConvertTo-Json
           "COMMIT_TITLE=$title" >> $env:GITHUB_OUTPUT
         env:
           COMMIT_MESSAGE: "${{ github.event.head_commit.message }}"
@@ -25,6 +25,6 @@ jobs:
           token: ${{ secrets.SERVICEACCOUNT_PAT }}
           event-type: 'sdk_insertion' 
           repository: 'xamarin/sdk-insertions'
-          client-payload: '{"repository": "xamarin/xamarin-macios", "branch": "${{ github.ref_name }}", "commit": "${{ github.sha }}", "commit_message": "${{ steps.commit_title.outputs.COMMIT_TITLE }}"}'
+          client-payload: '{"repository": "xamarin/xamarin-macios", "branch": "${{ github.ref_name }}", "commit": "${{ github.sha }}", "commit_message": ${{ steps.commit_title.outputs.COMMIT_TITLE }} }'
 
 
