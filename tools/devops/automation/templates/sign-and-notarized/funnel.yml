@@ -176,7 +176,7 @@ jobs:
     SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip_nugets'] ]
 
   pool:
-    vmImage: windows-latest
+    vmImage: azurepipelines-EO
     workspace:
       clean: all
   steps:
@@ -202,7 +202,7 @@ jobs:
     TESTS_BOT: $[ stageDependencies.build_packages.build.outputs['build.TESTS_BOT'] ]  # we build in a diff bot than the ones used for the comments
     GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
   pool:
-    vmImage: 'windows-latest'
+    vmImage: windows-latest
     workspace:
       clean: all
   steps:
