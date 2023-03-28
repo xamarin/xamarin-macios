@@ -54,7 +54,7 @@ namespace Xamarin.Linker {
 					item.Metadata.Add ("LLVMFile", llvmFile);
 					item.Metadata.Add ("ObjectFile", objectFile);
 					if (isDedupAssembly.HasValue && isDedupAssembly.Value)
-						item.Metadata.Add ("IsDedupAssembly", isDedupAssembly.Value.ToString());
+						item.Metadata.Add ("IsDedupAssembly", isDedupAssembly.Value.ToString ());
 				}
 
 				assembliesToAOT.Add (item);
