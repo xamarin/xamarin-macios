@@ -254,7 +254,6 @@ steps:
     echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
     MAKE_FLAGS=""
-    IGNORE_SIMULATORS=1
 
     if [[ "$SYSTEM_DEBUG" == "true" ]]; then
       MAKE_FLAGS="V=1 -w"
@@ -264,8 +263,8 @@ steps:
       makeParallelism=8
     fi
 
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j$makeParallelism $MAKE_FLAGS
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j$makeParallelism $MAKE_FLAGS
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j$makeParallelism $MAKE_FLAGS IGNORE_SIMULATORS=1
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j$makeParallelism $MAKE_FLAGS IGNORE_SIMULATORS=1
   name: build
   displayName: 'Build'
   timeoutInMinutes: 300
