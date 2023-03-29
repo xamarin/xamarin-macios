@@ -27,6 +27,113 @@ steps:
     gci env: | format-table -autosize -wrap
   displayName: 'Dump Environment'
 
+- task: DownloadPipelineArtifact@2
+  displayName: Download artifacts
+  inputs:
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/artifacts
+
+- pwsh: |
+    try {
+      Write-Host "Looking in '$(Build.SourcesDirectory)\artifacts"
+      Get-ChildItem "$(Build.SourcesDirectory)\artifacts" -Recurse
+    } catch {
+      Write-Host "Exception occured: $_"
+    }
+  displayName: 'List downloaded artifacts'
+  continueOnError: true
+
+- task: UseDotNet@2
+  inputs:
+    version: 7.0.102
+
+- pwsh: |
+    & dotnet --version
+    & dotnet --info
+    & dotnet workload list
+  displayName: 'Show .NET info'
+  continueOnError: true
+
+# This task fixes errors such as these:
+#     error MSB4242: SDK Resolver Failure: "The SDK resolver "NuGetSdkResolver" failed while attempting to resolve the SDK "Microsoft.Build.NoTargets/3.3.0". Exception: "NuGet.Packaging.Core.PackagingException: Unable to find fallback package folder 'D:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages'.
+- pwsh: |
+    try {
+      New-Item -Path "D:\Program Files (x86)\Microsoft SDKs\" -Name "NuGetPackages" -ItemType "directory"
+    } catch {
+      Write-Host "Exception occured: $_"
+    }
+    try {
+      New-Item -Path "D:\Program Files (x86)\Microsoft SDKs\" -Name "Shared" -ItemType "directory"
+    } catch {
+      Write-Host "Exception occured: $_"
+    }
+    try {
+      New-Item -Path "D:\Program Files (x86)\Microsoft SDKs\Shared\" -Name "NuGetPackages" -ItemType "directory"
+    } catch {
+      Write-Host "Exception occured: $_"
+    }
+    try {
+      New-Item -Path "D:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages" -Name "NuGetPackages" -ItemType "directory"
+    } catch {
+      Write-Host "Exception occured: $_"
+    }
+  displayName: 'Create directories for NuGet'
+  continueOnError: true
+
+- pwsh: |
+    & dotnet build "$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/InstallDotNet.csproj" `
+    --verbosity quiet `
+    "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/install.binlog" `
+    -p:DisableImplicitNuGetFallbackFolder=true
+  displayName: 'Install custom .NET'
+  continueOnError: true
+
+- pwsh: |
+    $Env:DOTNET = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe"
+    & dotnet build "$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/InstallDotNet.csproj" `
+      --verbosity quiet `
+      "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/install-workloads.binlog" `
+      -p:DisableImplicitNuGetFallbackFolder=true `
+      -t:Install
+  displayName: 'Install workloads'
+  continueOnError: true
+
+# get and expand the needed libs for monotouch
+- task: DownloadPipelineArtifact@2
+  displayName: Download test libraries dependencies
+  inputs:
+    patterns: '**/package-test-libraries.zip'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/artifacts/tmp
+
+# this step replaces the test-libraries dir
+- pwsh: |
+    $zip = "$(Build.SourcesDirectory)/artifacts/tmp/package-test-libraries/package-test-libraries.zip"
+    $target = "$(Build.SourcesDirectory)/xamarin-macios/tests/test-libraries"
+    Expand-Archive -Force $zip -DestinationPath $target
+    Get-ChildItem "$target" -Recurse
+  workingDirectory: $(Build.SourcesDirectory)/xamarin-macios/tests
+  displayName: Expand test libraries.
+  timeoutInMinutes: 10
+
+- pwsh: |
+    & $(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe `
+        nuget push `
+        "$(Build.SourcesDirectory)\xamarin-macios\tests\test-libraries\nugets\FrameworksInRuntimesNativeDirectory\bin\Release\Xamarin.Tests.FrameworksInRuntimesNativeDirectory.1.0.0.nupkg" `
+        --source "$(Build.SourcesDirectory)\xamarin-macios\tests\.nuget\packages"
+  displayName: 'Build dependencies for .NET tests'
+  continueOnError: true
+
+- pwsh: |
+    $Env:DOTNET = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe"
+    & $(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe `
+        test `
+        "$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/UnitTests/DotNetUnitTests.csproj" `
+        --filter Category=Windows `
+        --verbosity quiet `
+        "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/run-dotnet-tests.binlog"
+  displayName: 'Run .NET tests'
+
 - pwsh: |
     Write-Host "Run windows tests."
     Write-Host "Mac agent to be used:"
@@ -40,6 +147,7 @@ steps:
 - pwsh: |
     $sourceDir = '$(Build.SourcesDirectory)\xamarin-macios'
     $targetDir = '$(Build.ArtifactStagingDirectory)\windows-binlogs'
+    New-Item -Path "$targetDir" -ItemType "directory" -Force
 
     $binlogs = Get-ChildItem $sourceDir -Recurse -Include "*.binlog"
     foreach ($binlog in $binlogs) {
@@ -59,6 +167,38 @@ steps:
     artifactName: windows-binlogs-test-$(Build.BuildId)-$(System.JobAttempt)
   continueOnError: true
   condition: succeededOrFailed()
+
+# Make sure to report any errors
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
+    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
+
+    if (Test-Path -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -PathType Leaf)  {
+      $statuses.SetStatus("error", "${{ parameters.statusContext }} failed.", "${{ parameters.statusContext }}")
+      $githubComments.NewCommentFromFile("${{ parameters.statusContext }} failed", ":x:", "$Env:GITHUB_FAILURE_COMMENT_FILE")
+    } elseif ("$($Env:AGENT_JOBSTATUS)" -ne "Succeeded") {
+      $statuses.SetStatus("error", "${{ parameters.statusContext }} failed.", "${{ parameters.statusContext }}")
+      $message = ":x: $($Env:AGENT_JOBSTATUS) :x:"
+      $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} failed", ":x:", $message)
+    } else {
+      $statuses.SetStatus("success", "${{ parameters.statusContext }} passed.", "${{ parameters.statusContext }}")
+      $message = ":white_check_mark: **All** ${{ parameters.statusContext }} passed."
+      $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} passed", ":computer:", $message)
+    }
+  displayName: 'Report results to GitHub'
+  timeoutInMinutes: 5
+  condition: always() # in particular we care if something failed, but let's always run just in case
+  continueOnError: true
+  env:
+    CONTEXT: ${{ parameters.statusContext }}
+    GITHUB_TOKEN: $(GitHub.Token)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+    TEST_BOT: $(Agent.Name)
+    ${{ if eq(parameters.repositoryAlias, 'self') }}:
+      COMMENT_HASH: $(fix_commit.GIT_HASH)
+    ${{ else }}:
+      COMMENT_HASH: $(Build.SourceVersion)
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1

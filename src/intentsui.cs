@@ -33,7 +33,6 @@ namespace IntentsUI {
 	}
 
 	[NoMac]
-	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INUIInteractiveBehavior : ulong {
 		None,

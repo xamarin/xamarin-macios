@@ -3,10 +3,10 @@
   <!-- This is a project file to load in the IDE to get code completion, etc. It's not used for building the product assemblies, that happens in the makefile -->
   <PropertyGroup>
     <_TargetPlatform>%PLATFORM%</_TargetPlatform>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>%DOTNET_TFM%</TargetFramework>
     <TargetFrameworkIdentifier>.NETCoreApp</TargetFrameworkIdentifier> <!-- this line shouldn't be necessary, but VSMac on one of my machines won't load the project otherwise -->
     <OutputType>Library</OutputType>
-    <AssemblyName>Xamarin.iOS</AssemblyName>
+    <AssemblyName>Microsoft.%PLATFORM%</AssemblyName>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
     <LangVersion>latest</LangVersion>

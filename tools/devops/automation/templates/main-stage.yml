@@ -32,10 +32,6 @@ parameters:
   type: boolean
   default: true
 
-- name: runTranslations
-  type: boolean
-  default: true
-
 - name: runSamples
   type: boolean
   default: false
@@ -72,6 +68,9 @@ parameters:
   default: HEAD
 
 - name: xcodeChannel
+  type: string
+
+- name: macOSName
   type: string
 
 - name: simTestsConfigurations
@@ -199,18 +198,6 @@ stages:
           repositoryAlias: ${{ parameters.repositoryAlias }}
           commit: ${{ parameters.commit }}
 
-    - ${{ if and(eq(parameters.runTranslations, true), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
-      - job: translations
-        displayName: 'Loc translations'
-        pool:
-          vmImage: windows-latest
-        steps:
-        - template: loc-translations.yml
-          parameters:
-            isPR: ${{ parameters.isPR }}
-            repositoryAlias: ${{ parameters.repositoryAlias }}
-            commit: ${{ parameters.commit }}
-
 
 - ${{ if parameters.isPR }}:
   - stage: clean
@@ -234,6 +221,7 @@ stages:
   - template: ./build/build-stage.yml
     parameters:
       xcodeChannel: ${{ parameters.xcodeChannel }}
+      macOSName: ${{ parameters.macOSName }}
       isPR: ${{ parameters.isPR }}
       repositoryAlias: ${{ parameters.repositoryAlias }}
       commit: ${{ parameters.commit }}
@@ -321,6 +309,7 @@ stages:
     - template: ./build/api-diff-stage.yml
       parameters:
         xcodeChannel: ${{ parameters.xcodeChannel }}
+        macOSName: ${{ parameters.macOSName }}
         isPR: ${{ parameters.isPR }}
         repositoryAlias: ${{ parameters.repositoryAlias }}
         commit: ${{ parameters.commit }}
@@ -337,6 +326,7 @@ stages:
 - template: ./tests/stage.yml
   parameters:
     xcodeChannel: ${{ parameters.xcodeChannel }}
+    macOSName: ${{ parameters.macOSName }}
     isPR: ${{ parameters.isPR }}
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}

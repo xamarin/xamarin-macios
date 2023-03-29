@@ -16,7 +16,7 @@ DOTNET_DIRECTORIES += \
 # dotnet-linker.csproj.inc contains the dotnet_linker_dependencies variable used to determine if mtouch needs to be rebuilt or not.
 dotnet-linker.csproj.inc: export BUILD_EXECUTABLE=$(DOTNET) build
 dotnet-linker.csproj.inc: export BUILD_VERBOSITY=$(DOTNET_BUILD_VERBOSITY)
-dotnet-linker.csproj.inc:
+dotnet-linker.csproj.inc: dotnet-linker.csproj
 -include dotnet-linker.csproj.inc
 
 $(BUILD_DIR)/dotnet-linker%dll $(BUILD_DIR)/dotnet-linker%pdb: Makefile $(dotnet_linker_dependencies)
