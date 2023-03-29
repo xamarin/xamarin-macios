@@ -309,8 +309,6 @@ function download_xcode_platforms ()
 {
 	local XCODE_VERSION
 	local XCODE_DEVELOPER_ROOT="$1"
-	local TVOS_VERSION="$2"
-	local WATCHOS_VERSION="$3"
 
 	XCODE_VERSION=$(grep ^XCODE_VERSION= Make.config | sed 's/.*=//')
 
@@ -320,20 +318,12 @@ function download_xcode_platforms ()
 		return
 	fi
 
-	TVOS_SIMULATOR_VERSION=$(/usr/libexec/PlistBuddy -c 'Print :ProductBuildVersion' "$XCODE_DEVELOPER_ROOT"/Platforms/AppleTVSimulator.platform/version.plist)
-	WATCHOS_SIMULATOR_VERSION=$(/usr/libexec/PlistBuddy -c 'Print :ProductBuildVersion' "$XCODE_DEVELOPER_ROOT"/Platforms/WatchSimulator.platform/version.plist)
-
-	if test -d "/Library/Developer/CoreSimulator/Volumes/tvOS_$TVOS_SIMULATOR_VERSION/Library/Developer/CoreSimulator/Profiles/Runtimes/tvOS $TVOS_VERSION.simruntime"; then
-		if test -d "/Library/Developer/CoreSimulator/Volumes/watchOS_$WATCHOS_SIMULATOR_VERSION/Library/Developer/CoreSimulator/Profiles/Runtimes/watchOS $WATCHOS_VERSION.simruntime"; then
-			log "All the additional platforms have already been downloaded for this version of Xcode ($XCODE_VERSION)"
-			return
-		fi
-	fi
-
-	if ! test -z "$PROVISION_XCODE"; then
-		fail "Xcode has additional platforms that must be downloaded. Execute './system-dependencies.sh --provision-xcode' to execute those tasks."
+	if test -z "$PROVISION_SIMULATORS"; then
+		warn "    Xcode may have additional platforms that must be downloaded. Execute './system-dependencies.sh --provision-simulators' to install those platforms (or alternatively ${COLOR_MAGENTA}export IGNORE_SIMULATORS=1${COLOR_RESET} to skip this check)"
 		return
 	fi
+
+	log "Xcode has additional platforms that must be downloaded ($MUST_INSTALL_RUNTIMES), so installing those."
 
 	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
 	if ! "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms; then
