@@ -77,7 +77,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 				if (File.Exists (item.ItemSpec)) {
 					rv.Add (item);
 				} else if (Directory.Exists (item.ItemSpec)) {
-					var entries = Directory.GetFileSystemEntries (item.ItemSpec).ToArray ();
+					var entries = Directory.GetFileSystemEntries (item.ItemSpec, "*", SearchOption.AllDirectories).ToArray ();
 					Log.LogMessage (MessageImportance.Low, $"Expanding {item.ItemSpec} with {entries.Length} items:");
 					foreach (var entry in entries) {
 						if (Directory.Exists (entry)) {
