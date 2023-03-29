@@ -13,6 +13,10 @@ parameters:
 
 - name: commit
   type: string
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
   default: HEAD
 
 steps:
@@ -102,13 +106,13 @@ steps:
 - task: DownloadPipelineArtifact@2
   displayName: Download test libraries dependencies
   inputs:
-    patterns: '**/package-test-libraries.zip'
+    patterns: '**/${{ parameters.uploadPrefix }}package-test-libraries.zip'
     allowFailedBuilds: true
     path: $(Build.SourcesDirectory)/artifacts/tmp
 
 # this step replaces the test-libraries dir
 - pwsh: |
-    $zip = "$(Build.SourcesDirectory)/artifacts/tmp/package-test-libraries/package-test-libraries.zip"
+    $zip = "$(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip"
     $target = "$(Build.SourcesDirectory)/xamarin-macios/tests/test-libraries"
     Expand-Archive -Force $zip -DestinationPath $target
     Get-ChildItem "$target" -Recurse
