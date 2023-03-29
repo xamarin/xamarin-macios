@@ -305,21 +305,21 @@ public class AttributeManager {
 		case "MacCatalystAttribute":
 			return AttributeConversionManager.ConvertPlatformAttribute (attribute, PlatformName.MacCatalyst).Yield ();
 		case "LionAttribute":
-			return AttributeFactory.CreateNewIntroducedAttribute (PlatformName.MacOSX, 10, 7).Yield ();
+			return AttributeFactory.CreateNewAttribute<IntroducedAttribute> (PlatformName.MacOSX, 10, 7).Yield ();
 		case "MountainLionAttribute":
-			return AttributeFactory.CreateNewIntroducedAttribute (PlatformName.MacOSX, 10, 8).Yield ();
+			return AttributeFactory.CreateNewAttribute<IntroducedAttribute> (PlatformName.MacOSX, 10, 8).Yield ();
 		case "MavericksAttribute":
-			return AttributeFactory.CreateNewIntroducedAttribute (PlatformName.MacOSX, 10, 9).Yield ();
+			return AttributeFactory.CreateNewAttribute<IntroducedAttribute> (PlatformName.MacOSX, 10, 9).Yield ();
 		case "NoMacAttribute":
-			return AttributeFactory.CreateUnavailableAttribute (PlatformName.MacOSX).Yield ();
+			return AttributeFactory.CreateNewAttribute<UnavailableAttribute> (PlatformName.MacOSX).Yield ();
 		case "NoiOSAttribute":
-			return AttributeFactory.CreateUnavailableAttribute (PlatformName.iOS).Yield ();
+			return AttributeFactory.CreateNewAttribute<UnavailableAttribute> (PlatformName.iOS).Yield ();
 		case "NoWatchAttribute":
-			return AttributeFactory.CreateUnavailableAttribute (PlatformName.WatchOS).Yield ();
+			return AttributeFactory.CreateNewAttribute<UnavailableAttribute> (PlatformName.WatchOS).Yield ();
 		case "NoTVAttribute":
-			return AttributeFactory.CreateUnavailableAttribute (PlatformName.TvOS).Yield ();
+			return AttributeFactory.CreateNewAttribute<UnavailableAttribute> (PlatformName.TvOS).Yield ();
 		case "NoMacCatalystAttribute":
-			return AttributeFactory.CreateUnavailableAttribute (PlatformName.MacCatalyst).Yield ();
+			return AttributeFactory.CreateNewAttribute<UnavailableAttribute> (PlatformName.MacCatalyst).Yield ();
 		case "AvailabilityAttribute":
 			return AttributeConversionManager.ConvertAvailability (attribute);
 #if NET
@@ -327,15 +327,15 @@ public class AttributeManager {
 			var sarg = attribute.ConstructorArguments [0].Value as string;
 			(var sp, var sv) = ParseOSPlatformAttribute (sarg);
 			if (sv is null)
-				return AttributeFactory.CreateNewUnspecifiedIntroducedAttribute (sp).Yield ();
+				return AttributeFactory.CreateNewAttribute<IntroducedAttribute> (sp).Yield ();
 			else
-				return AttributeFactory.CreateNewIntroducedAttribute (sp, sv.Major, sv.Minor).Yield ();
+				return AttributeFactory.CreateNewAttribute<IntroducedAttribute> (sp, sv.Major, sv.Minor).Yield ();
 		case "UnsupportedOSPlatformAttribute":
 			var uarg = attribute.ConstructorArguments [0].Value as string;
 			(var up, var uv) = ParseOSPlatformAttribute (uarg);
 			// might have been available for a while...
 			if (uv == null)
-				return AttributeFactory.CreateUnavailableAttribute (up).Yield ();
+				return AttributeFactory.CreateNewAttribute<UnavailableAttribute> (up).Yield ();
 			else
 				return Enumerable.Empty<System.Attribute> ();
 #endif

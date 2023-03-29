@@ -3342,7 +3342,7 @@ namespace SceneKit {
 
 	[Watch (3, 0)]
 	[iOS (8, 0)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Mac (10, 8)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -3470,7 +3470,7 @@ namespace SceneKit {
 #endif
 		[iOS (9, 0)]
 		[Mac (10, 11)] // SKTransition -> SpriteKit -> only on 64 bits
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("presentScene:withTransition:incomingPointOfView:completionHandler:")]
 		void PresentScene (SCNScene scene, SKTransition transition, [NullAllowed] SCNNode pointOfView, [NullAllowed] Action completionHandler);
@@ -3480,7 +3480,7 @@ namespace SceneKit {
 #endif
 		[iOS (9, 0)]
 		[Mac (10, 11)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("nodesInsideFrustumWithPointOfView:")]
 		SCNNode [] GetNodesInsideFrustum (SCNNode pointOfView);
 
@@ -3489,7 +3489,7 @@ namespace SceneKit {
 #endif
 		[iOS (9, 0)]
 		[Mac (10, 11)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("debugOptions", ArgumentSemantic.Assign)]
 		SCNDebugOptions DebugOptions { get; set; }
 
@@ -3498,7 +3498,7 @@ namespace SceneKit {
 #endif
 		[iOS (9, 0)]
 		[Mac (10, 11)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("renderingAPI")]
 		SCNRenderingApi RenderingApi { get; }
 
@@ -3508,7 +3508,7 @@ namespace SceneKit {
 		[NoWatch]
 		[iOS (9, 0)]
 		[Mac (10, 11)] // IMTLRenderCommandEncoder -> Metal -> only on 64 bits
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("currentRenderCommandEncoder")]
 		IMTLRenderCommandEncoder CurrentRenderCommandEncoder { get; }
 
@@ -3518,7 +3518,7 @@ namespace SceneKit {
 		[NoWatch]
 		[iOS (9, 0)]
 		[Mac (10, 11)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("device")]
 		IMTLDevice Device { get; }
 
@@ -3528,7 +3528,7 @@ namespace SceneKit {
 		[NoWatch]
 		[iOS (9, 0)]
 		[Mac (10, 11)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("colorPixelFormat")]
 		MTLPixelFormat ColorPixelFormat { get; }
 
@@ -3538,7 +3538,7 @@ namespace SceneKit {
 		[NoWatch]
 		[iOS (9, 0)]
 		[Mac (10, 11)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("depthPixelFormat")]
 		MTLPixelFormat DepthPixelFormat { get; }
 
@@ -3548,7 +3548,7 @@ namespace SceneKit {
 		[NoWatch]
 		[iOS (9, 0)]
 		[Mac (10, 11)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("stencilPixelFormat")]
 		MTLPixelFormat StencilPixelFormat { get; }
 
@@ -3558,7 +3558,7 @@ namespace SceneKit {
 		[NoWatch]
 		[iOS (9, 0)]
 		[Mac (10, 11)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("commandQueue")]
 		IMTLCommandQueue CommandQueue { get; }
 
@@ -3567,7 +3567,7 @@ namespace SceneKit {
 #endif
 		[iOS (9, 0)]
 		[Mac (10, 11)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("audioEngine")]
 		AVAudioEngine AudioEngine { get; }
 
@@ -3577,7 +3577,7 @@ namespace SceneKit {
 		[NoWatch]
 		[iOS (9, 0)]
 		[Mac (10, 11)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("audioEnvironmentNode")]
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		AVAudioEnvironmentNode AudioEnvironmentNode { get; }
@@ -3587,7 +3587,7 @@ namespace SceneKit {
 #endif
 		[iOS (9, 0)]
 		[Mac (10, 11)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("audioListener", ArgumentSemantic.Retain)]
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		SCNNode AudioListener { get; set; }
