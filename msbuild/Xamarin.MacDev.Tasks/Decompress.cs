@@ -171,7 +171,9 @@ namespace Xamarin.MacDev {
 				if (entryPath.Length == 0)
 					continue;
 
-				if (entryPath.StartsWith (resourceAsDir, StringComparison.Ordinal)) {
+				if (string.IsNullOrEmpty (resource)) {
+					// an empty resource means extract everything, so we want this
+				} else if (entryPath.StartsWith (resourceAsDir, StringComparison.Ordinal)) {
 					// yep, we want this entry
 				} else if (entryPath == resource) {
 					// we want this one too
