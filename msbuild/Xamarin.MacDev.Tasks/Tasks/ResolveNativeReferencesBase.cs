@@ -21,7 +21,7 @@ namespace Xamarin.MacDev.Tasks {
 
 	// We can get numerous types of native references:
 	//
-	//	*.dylib
+	//  *.dylib
 	//  *.a
 	//  *.framework
 	//  *.xcframework
