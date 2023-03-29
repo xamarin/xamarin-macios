@@ -1032,18 +1032,10 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 
-			var result = DotNet.AssertBuild (project_path, properties);
-			AssertThatLinkerExecuted (result);
-			var infoPlistPath = GetInfoPListPath (platform, appPath);
-			Assert.That (infoPlistPath, Does.Exist, "Info.plist");
-			var infoPlist = PDictionary.FromFile (infoPlistPath)!;
-			Assert.AreEqual ("com.xamarin.mysimpleapp", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
-			Assert.AreEqual ("MySimpleApp", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
-			Assert.AreEqual ("6.0", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
-			Assert.AreEqual ("6.0", infoPlist.GetString ("CFBundleShortVersionString").Value, "CFBundleShortVersionString");
-
-			var appExecutable = GetNativeExecutable (platform, appPath);
-			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+			var result = DotNet.AssertBuildFailure (project_path, properties);
+			var errors = BinLog.GetBuildLogErrors (result.BinLogPath).ToList ();
+			Assert.AreEqual (1, errors.Count, "Error Count");
+			Assert.That (errors [0].Message, Does.Contain ("To build this project, the following workloads must be installed: "), "Error message");
 		}
 
 		[Test]

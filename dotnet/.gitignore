@@ -7,7 +7,6 @@ Microsoft.*.Sdk/targets/Microsoft.*.Sdk.ImplicitNamespaceImports.props
 Microsoft.*.Sdk/targets/Microsoft.*.Sdk.SupportedTargetPlatforms.props
 Microsoft.*.Sdk/targets/Microsoft.*.Sdk.DefaultItems.props
 Microsoft.*.Sdk/targets/Microsoft.*.Sdk.Versions.props
-Microsoft.*.Sdk/targets/Xamarin.Shared.Sdk.MultiTarget.targets
 Microsoft.*.Sdk/Sdk/AutoImport.props
 _pkg
 .stamp-*
