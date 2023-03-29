@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Reflection;
 
+using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.Bundler;
@@ -86,7 +87,7 @@ namespace Xamarin.MacDev {
 		{
 			decompressedResource = Path.Combine (decompressionDir, resource);
 
-			var stampFile = decompressedResource + ".stamp";
+			var stampFile = decompressedResource.TrimEnd ('\\', '/') + ".stamp";
 
 			if (FileCopier.IsUptodate (zip, stampFile, XamarinTask.GetFileCopierReportErrorCallback (log), XamarinTask.GetFileCopierLogCallback (log), check_stamp: false))
 				return true;
@@ -189,7 +190,7 @@ namespace Xamarin.MacDev {
 				}
 
 				var isDir = entryPath [entryPath.Length - 1] == zipDirectorySeparator;
-				var targetPath = Path.Combine (decompressionDir, entryPath);
+				var targetPath = Path.Combine (decompressionDir, entryPath.Replace (zipDirectorySeparator, Path.DirectorySeparatorChar));
 				if (isDir) {
 					Directory.CreateDirectory (targetPath);
 				} else {
