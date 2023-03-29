@@ -764,6 +764,48 @@ namespace Xamarin.Tests {
 			DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
 		}
 
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		[TestCase (ApplePlatform.MacOSX)]
+		public void LibraryReferencingBindingLibrary (ApplePlatform platform)
+		{
+			var project = "LibraryReferencingBindingLibrary";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var projectPath = GetProjectPath (project, runtimeIdentifiers: string.Empty, platform: platform, out _);
+			Clean (projectPath);
+
+			DotNet.AssertBuild (projectPath, GetDefaultProperties ());
+
+			var bindir = GetBinDir (projectPath, platform, string.Empty);
+			var bindingResourcePackages = new List<string> () {
+				"BindingWithDefaultCompileInclude.resources.zip",
+				Path.Combine ("BindingWithUncompressedResourceBundle.resources", "libtest.a"),
+				Path.Combine ("BindingWithUncompressedResourceBundle.resources", "manifest"),
+			};
+
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+				bindingResourcePackages.Add (Path.Combine ("bindings-framework-test.resources", "XStaticArTest.framework", "XStaticArTest"));
+				bindingResourcePackages.Add (Path.Combine ("bindings-framework-test.resources", "XStaticObjectTest.framework", "XStaticObjectTest"));
+				bindingResourcePackages.Add (Path.Combine ("bindings-framework-test.resources", "XTest.framework", "Info.plist"));
+				bindingResourcePackages.Add (Path.Combine ("bindings-framework-test.resources", "XTest.framework", "XTest"));
+				bindingResourcePackages.Add (Path.Combine ("bindings-framework-test.resources", "manifest"));
+				break;
+			case ApplePlatform.MacCatalyst:
+			case ApplePlatform.MacOSX:
+				bindingResourcePackages.Add ("bindings-framework-test.resources.zip");
+				break;
+			}
+
+			foreach (var brp in bindingResourcePackages) {
+				var file = Path.Combine (bindir, brp);
+				Assert.That (file, Does.Exist, "Existence");
+			}
+		}
+
 		void AssertThatLinkerExecuted (ExecutionResult result)
 		{
 			var output = BinLog.PrintToString (result.BinLogPath);
@@ -872,6 +914,10 @@ namespace Xamarin.Tests {
 
 			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", platform.ToFramework (), GetDefaultRuntimeIdentifier (platform), "MySimpleApp.app", GetPlugInsRelativePath (platform), "ExtensionProject.appex");
 			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
+
+			var pathToSearch = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug");
+			string [] configFiles = Directory.GetFiles (pathToSearch, "*.runtimeconfig.*", SearchOption.AllDirectories);
+			Assert.AreNotEqual (0, configFiles.Length, "runtimeconfig.json file does not exist");
 		}
 
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-arm64")]
@@ -986,18 +1032,10 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 
-			var result = DotNet.AssertBuild (project_path, properties);
-			AssertThatLinkerExecuted (result);
-			var infoPlistPath = GetInfoPListPath (platform, appPath);
-			Assert.That (infoPlistPath, Does.Exist, "Info.plist");
-			var infoPlist = PDictionary.FromFile (infoPlistPath)!;
-			Assert.AreEqual ("com.xamarin.mysimpleapp", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
-			Assert.AreEqual ("MySimpleApp", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
-			Assert.AreEqual ("6.0", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
-			Assert.AreEqual ("6.0", infoPlist.GetString ("CFBundleShortVersionString").Value, "CFBundleShortVersionString");
-
-			var appExecutable = GetNativeExecutable (platform, appPath);
-			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+			var result = DotNet.AssertBuildFailure (project_path, properties);
+			var errors = BinLog.GetBuildLogErrors (result.BinLogPath).ToList ();
+			Assert.AreEqual (1, errors.Count, "Error Count");
+			Assert.That (errors [0].Message, Does.Contain ("To build this project, the following workloads must be installed: "), "Error message");
 		}
 
 		[Test]

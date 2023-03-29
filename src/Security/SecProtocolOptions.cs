@@ -501,8 +501,13 @@ namespace Security {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (keyUpdateQueue));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, NativeHandle, NativeHandle, void> trampoline = &Trampolines.SDSecProtocolKeyUpdate.Invoke;
+				using var block = new BlockLiteral (trampoline, keyUpdate, typeof (Trampolines.SDSecProtocolKeyUpdate), nameof (Trampolines.SDSecProtocolKeyUpdate.Invoke));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (Trampolines.SDSecProtocolKeyUpdate.Handler, keyUpdate);
+#endif
 				sec_protocol_options_set_key_update_block (Handle, &block, keyUpdateQueue.Handle);
 			}
 		}
