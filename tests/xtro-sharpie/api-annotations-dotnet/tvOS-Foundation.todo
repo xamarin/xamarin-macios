@@ -3,3 +3,10 @@
 !missing-selector! NSAttributedString::initWithFormat:options:locale: not bound
 !missing-selector! NSAttributedString::initWithFormat:options:locale:arguments: not bound
 !missing-selector! NSMutableAttributedString::appendLocalizedFormat: not bound
+!deprecated-attribute-missing! NSDateComponents::setWeek: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSDateComponents::week missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSProcessInfo::operatingSystem missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSProcessInfo::operatingSystemName missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSURLConnection::initWithRequest:delegate: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSURLConnection::initWithRequest:delegate:startImmediately: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSUserDefaults::persistentDomainNames missing a [Deprecated] attribute
