@@ -126,7 +126,7 @@ steps:
 
 - pwsh: |
     $runsettings = @"
-    <?xml version='1.0' encoding='utf-8'?>"
+    <?xml version="1.0" encoding="utf-8"?>
     <RunSettings>
       <RunConfiguration>
         <DotNetHostPath>$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe</DotNetHostPath>
