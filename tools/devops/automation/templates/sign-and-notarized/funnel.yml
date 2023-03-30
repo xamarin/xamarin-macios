@@ -176,7 +176,9 @@ jobs:
     SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip_nugets'] ]
 
   pool:
-    vmImage: windows-latest
+    name: azurepipelines-EO
+    demands:
+    - ImageOverride -equals AzurePipelinesWindows2022compliant
     workspace:
       clean: all
   steps:
