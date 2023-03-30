@@ -13,11 +13,11 @@ parameters:
 
 - name: commit
   type: string
+  default: HEAD
 
 - name: uploadPrefix
   type: string
   default: '$(MaciosUploadPrefix)'
-  default: HEAD
 
 steps:
 
