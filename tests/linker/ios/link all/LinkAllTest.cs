@@ -276,7 +276,7 @@ namespace LinkAll {
 		public void RemovedAttributes ()
 		{
 			const string prefix = NamespacePrefix;
-			const string suffix = ", " + AssemblyName;
+			const string suffix = AssemblyName;
 
 			// since we're linking the attributes will NOT be available - even if they are used
 #if !XAMCORE_3_0
