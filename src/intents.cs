@@ -2070,7 +2070,7 @@ namespace Intents {
 		NoMatchingCall = 1,
 	}
 
-	[NoWatch, NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+	[Watch (9, 4), NoTV, Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
 	[Native]
 	public enum INAnswerCallIntentResponseCode : long {
 		Unspecified = 0,
@@ -2082,7 +2082,7 @@ namespace Intents {
 		FailureRequiringAppLaunch,
 	}
 
-	[NoWatch, NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+	[Watch (9, 4), NoTV, Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
 	[Native]
 	public enum INHangUpCallIntentResponseCode : long {
 		Unspecified = 0,
@@ -2219,11 +2219,11 @@ namespace Intents {
 		[Field ("INStartCallIntentIdentifier")]
 		StartCall,
 
-		[NoWatch, NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+		[Watch (9, 4), NoTV, Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
 		[Field ("INAnswerCallIntentIdentifier")]
 		AnswerCall,
 
-		[NoWatch, NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+		[Watch (9, 4), NoTV, Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
 		[Field ("INHangUpCallIntentIdentifier")]
 		HangUpCall,
 	}
@@ -14468,7 +14468,7 @@ namespace Intents {
 		string GroupId { get; }
 	}
 
-	[NoWatch, NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+	[Watch (9, 4), NoTV, Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
 	[BaseType (typeof (INIntent))]
 	interface INAnswerCallIntent {
 
@@ -14476,16 +14476,16 @@ namespace Intents {
 		[DesignatedInitializer]
 		IntPtr Constructor (INCallAudioRoute audioRoute, [NullAllowed] string callIdentifier);
 
-		[NoTV, NoMac, NoiOS]
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
 		[Export ("audioRoute", ArgumentSemantic.Assign)]
 		INCallAudioRoute AudioRoute { get; }
 
-		[NoWatch, NoTV, NoMac, NoiOS]
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
 		[NullAllowed, Export ("callIdentifier")]
 		string CallIdentifier { get; }
 	}
 
-	[NoWatch, NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+	[Watch (9, 4), NoTV, Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
 	[Protocol]
 	interface INAnswerCallIntentHandling {
 
@@ -14497,7 +14497,7 @@ namespace Intents {
 		void ConfirmAnswerCall (INAnswerCallIntent intent, Action<INAnswerCallIntentResponse> completion);
 	}
 
-	[NoWatch, NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+	[Watch (9, 4), NoTV, Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INAnswerCallIntentResponse {
@@ -14509,27 +14509,29 @@ namespace Intents {
 		[Export ("code")]
 		INAnswerCallIntentResponseCode Code { get; }
 
-		[NoMac]
+		[Mac (13, 3)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed]
 		[Export ("callRecords", ArgumentSemantic.Copy)]
 		INCallRecord[] CallRecords { get; set; }
 	}
 
-	[NoWatch, NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+	[Watch (9, 4), NoTV, Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
 	[BaseType (typeof (INIntent))]
 	interface INHangUpCallIntent {
 
-		[NoWatch, Mac (13,1), iOS (16,2)]
+		[Mac (13, 1), iOS (16, 2)]
+		[MacCatalyst (16, 2)]
 		[Export ("initWithCallIdentifier:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] string callIdentifier);
 
-		[NoWatch, NoMac, NoiOS]
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
 		[NullAllowed, Export ("callIdentifier")]
 		string CallIdentifier { get; }
 	}
 
-	[NoWatch, NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+	[Watch (9, 4), NoTV, Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
 	[Protocol]
 	interface INHangUpCallIntentHandling {
 
@@ -14541,7 +14543,7 @@ namespace Intents {
 		void ConfirmHangUpCall (INHangUpCallIntent intent, Action<INHangUpCallIntentResponse> completion);
 	}
 
-	[NoWatch, NoTV, Mac (13,1), iOS (16,2), MacCatalyst (16,2)]
+	[Watch (9, 4), NoTV, Mac (13, 1), iOS (16, 2), MacCatalyst (16, 2)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INHangUpCallIntentResponse {

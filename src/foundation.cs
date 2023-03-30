@@ -593,8 +593,9 @@ namespace Foundation
 
 		// inlined from NSAttributedStringWebKitAdditions category (since they are all static members)
 
-		[NoWatch][NoTV] // really inside WKWebKit
-		[Mac (10,15), iOS (13,0)]
+		[NoWatch]
+		[NoTV] // really inside WebKit
+		[Mac (10, 15), iOS (13, 0)]
 		[Static]
 		[Export ("loadFromHTMLWithRequest:options:completionHandler:")]
 		[PreSnippet ("GC.KeepAlive (WebKit.WKContentMode.Recommended); // no-op to ensure WebKit.framework is loaded into memory", Optimizable = true)]
@@ -602,15 +603,17 @@ namespace Foundation
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		void LoadFromHtml (NSUrlRequest request, NSDictionary options, NSAttributedStringCompletionHandler completionHandler);
 
-		[NoWatch][NoTV] // really inside WKWebKit
-		[Mac (10,15), iOS (13,0)]
+		[NoWatch]
+		[NoTV] // really inside WebKit
+		[Mac (10, 15), iOS (13, 0)]
 		[Static]
 		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
 		[Wrap ("LoadFromHtml (request, options.GetDictionary ()!, completionHandler)")]
 		void LoadFromHtml (NSUrlRequest request, NSAttributedStringDocumentAttributes options, NSAttributedStringCompletionHandler completionHandler);
 
-		[NoWatch][NoTV] // really inside WKWebKit
-		[Mac (10,15), iOS (13,0)]
+		[NoWatch]
+		[NoTV] // really inside WebKit
+		[Mac (10, 15), iOS (13, 0)]
 		[Static]
 		[Export ("loadFromHTMLWithFileURL:options:completionHandler:")]
 		[PreSnippet ("GC.KeepAlive (WebKit.WKContentMode.Recommended); // no-op to ensure WebKit.framework is loaded into memory", Optimizable = true)]
@@ -618,15 +621,17 @@ namespace Foundation
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		void LoadFromHtml (NSUrl fileUrl, NSDictionary options, NSAttributedStringCompletionHandler completionHandler);
 
-		[NoWatch][NoTV] // really inside WKWebKit
-		[Mac (10,15), iOS (13,0)]
+		[NoWatch]
+		[NoTV] // really inside WebKit
+		[Mac (10, 15), iOS (13, 0)]
 		[Static]
 		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
 		[Wrap ("LoadFromHtml (fileUrl, options.GetDictionary ()!, completionHandler)")]
 		void LoadFromHtml (NSUrl fileUrl, NSAttributedStringDocumentAttributes options, NSAttributedStringCompletionHandler completionHandler);
 
-		[NoWatch][NoTV] // really inside WKWebKit
-		[Mac (10,15), iOS (13,0)]
+		[NoWatch]
+		[NoTV] // really inside WebKit
+		[Mac (10, 15), iOS (13, 0)]
 		[Static]
 		[Export ("loadFromHTMLWithString:options:completionHandler:")]
 		[PreSnippet ("GC.KeepAlive (WebKit.WKContentMode.Recommended); // no-op to ensure WebKit.framework is loaded into memory", Optimizable = true)]
@@ -634,15 +639,17 @@ namespace Foundation
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		void LoadFromHtml (string @string, NSDictionary options, NSAttributedStringCompletionHandler completionHandler);
 
-		[NoWatch][NoTV] // really inside WKWebKit
-		[Mac (10,15), iOS (13,0)]
+		[NoWatch]
+		[NoTV] // really inside WebKit
+		[Mac (10, 15), iOS (13, 0)]
 		[Static]
 		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
 		[Wrap ("LoadFromHtml (@string, options.GetDictionary ()!, completionHandler)")]
 		void LoadFromHtml (string @string, NSAttributedStringDocumentAttributes options, NSAttributedStringCompletionHandler completionHandler);
 
-		[NoWatch][NoTV] // really inside WKWebKit
-		[Mac (10,15), iOS (13,0)]
+		[NoWatch]
+		[NoTV] // really inside WebKit
+		[Mac (10, 15), iOS (13, 0)]
 		[Static]
 		[Export ("loadFromHTMLWithData:options:completionHandler:")]
 		[PreSnippet ("GC.KeepAlive (WebKit.WKContentMode.Recommended); // no-op to ensure WebKit.framework is loaded into memory", Optimizable = true)]
@@ -650,8 +657,9 @@ namespace Foundation
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		void LoadFromHtml (NSData data, NSDictionary options, NSAttributedStringCompletionHandler completionHandler);
 
-		[NoWatch][NoTV] // really inside WKWebKit
-		[Mac (10,15), iOS (13,0)]
+		[NoWatch]
+		[NoTV] // really inside WebKit
+		[Mac (10, 15), iOS (13, 0)]
 		[Static]
 		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
 		[Wrap ("LoadFromHtml (data, options.GetDictionary ()!, completionHandler)")]
@@ -711,11 +719,13 @@ namespace Foundation
 		ReplacementIndex,
 	}
 
-	[NoWatch][NoTV] // really inside WKWebKit
-	[Mac (10,15), iOS (13,0)]
+	[NoWatch]
+	[NoTV] // really inside WebKit
+	[Mac (10, 15), iOS (13, 0)]
 	delegate void NSAttributedStringCompletionHandler ([NullAllowed] NSAttributedString attributedString, [NullAllowed] NSDictionary<NSString, NSObject> attributes, [NullAllowed] NSError error);
 
-	[NoWatch][NoTV] // really inside WKWebKit
+	[NoWatch]
+	[NoTV] // really inside WebKit
 	[Mac (10, 15), iOS (13, 0)]
 	[Static][Internal]
 	interface NSAttributedStringDocumentReadingOptionKeys {
@@ -6206,6 +6216,11 @@ namespace Foundation
 		[Field ("NSURLFileResourceTypeKey")]
 		NSString FileResourceTypeKey { get; }
 
+		[Watch (9, 4), TV (16, 4), Mac (13, 3), iOS (16, 4)]
+		[MacCatalyst (16, 4)]
+		[Field ("NSURLFileIdentifierKey")]
+		NSString FileIdentifierKey { get; }
+
 		[Field ("NSURLFileResourceTypeNamedPipe")]
 		NSString FileResourceTypeNamedPipe { get; }
 
@@ -6334,6 +6349,21 @@ namespace Foundation
 		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
 		[Field ("NSURLVolumeAvailableCapacityForOpportunisticUsageKey")]
 		NSString VolumeAvailableCapacityForOpportunisticUsageKey { get; }
+
+		[Watch (9, 4), TV (16, 4), Mac (13, 3), iOS (16, 4)]
+		[MacCatalyst (16, 4)]
+		[Field ("NSURLVolumeTypeNameKey")]
+		NSString VolumeTypeNameKey { get; }
+
+		[Watch (9, 4), TV (16, 4), Mac (13, 3), iOS (16, 4)]
+		[MacCatalyst (16, 4)]
+		[Field ("NSURLVolumeSubtypeKey")]
+		NSString VolumeSubtypeKey { get; }
+
+		[Watch (9, 4), TV (16, 4), Mac (13, 3), iOS (16, 4)]
+		[MacCatalyst (16, 4)]
+		[Field ("NSURLVolumeMountFromLocationKey")]
+		NSString VolumeMountFromLocationKey { get; }
 
 		[Field ("NSURLIsUbiquitousItemKey")]
 		NSString IsUbiquitousItemKey { get; }

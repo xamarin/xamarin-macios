@@ -485,7 +485,7 @@ namespace GameKit {
 		[Deprecated (PlatformName.iOS, 16, 0, message: "Use the GKPlayer.TeamPlayerId property to identify a player instead.")]
 		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use the GKPlayer.TeamPlayerId property to identify a player instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use the GKPlayer.TeamPlayerId property to identify a player instead.")]
-		[Deprecated (PlatformName.MacOSX, 13, 0, message: "Use the GKPlayer.TeamPlayerId property to identify a player instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the GKPlayer.TeamPlayerId property to identify a player instead.")]
 		[NullAllowed, Export ("playerID", ArgumentSemantic.Retain)]
 		string PlayerID { get; }
 

@@ -4,6 +4,7 @@ using ObjCRuntime;
 
 namespace WebKit {
 
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	public enum DomCssRuleType : ushort {
 		Unknown = 0,
@@ -19,6 +20,7 @@ namespace WebKit {
 		NamespaceRule = 10,
 	}
 
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	public enum DomCssValueType : ushort {
 		Inherit = 0,
@@ -27,6 +29,7 @@ namespace WebKit {
 		Custom = 3
 	}
 
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[Flags]
 	public enum DomDocumentPosition : ushort {
@@ -38,6 +41,7 @@ namespace WebKit {
 		ImplementationSpecific = 0x20
 	}
 
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	public enum DomNodeType : ushort {
 		Element = 1,
@@ -54,6 +58,7 @@ namespace WebKit {
 		Notation = 12
 	}
 
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	public enum DomRangeCompareHow : ushort {
 		StartToStart = 0, 
@@ -62,16 +67,19 @@ namespace WebKit {
 		EndToStart = 3
 	}
 
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Native]
 	public enum WebCacheModel : ulong {
 		DocumentViewer, DocumentBrowser, PrimaryWebBrowser
 	}
 
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	public enum DomEventPhase : ushort {
 		Capturing = 1, AtTarget, Bubbling
 	}
 
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[Flags]
 	public enum WebDragSourceAction : ulong {
@@ -83,6 +91,7 @@ namespace WebKit {
 		Any = UInt64.MaxValue
 	}
 
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[Flags]
 	public enum WebDragDestinationAction : ulong {
@@ -95,6 +104,7 @@ namespace WebKit {
 		Any = UInt64.MaxValue
 	}
 
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 #if !NET
 	public enum WebNavigationType : uint {
 #else
@@ -105,6 +115,7 @@ namespace WebKit {
 	}
 
 	// Used as an 'unsigned int' parameter 
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	public enum DomKeyLocation : uint {
 		Standard = 0,
@@ -114,6 +125,7 @@ namespace WebKit {
 	}
 
 	// Used as an 'int' parameter 
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	public enum DomDelta : int {
 		Pixel = 0,

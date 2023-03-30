@@ -288,3 +288,11 @@
 !missing-type! AVSpeechSynthesisProviderVoice not bound
 !missing-enum-value! AVSpeechSynthesisVoiceQuality native value AVSpeechSynthesisVoiceQualityPremium = 3 not bound
 !missing-selector! AVPlayerLayer::copyDisplayedPixelBuffer not bound
+!missing-enum! AVPlayerInterstitialEventAssetListResponseStatus not bound
+!missing-enum-value! AVError native value AVErrorEncodeFailed = -11883 not bound
+!missing-enum-value! AVError native value AVErrorSandboxExtensionDenied = -11884 not bound
+!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeErrorKey not bound
+!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeEventKey not bound
+!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeNotification not bound
+!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeStatusKey not bound
+!missing-selector! AVPlayerInterstitialEvent::assetListResponse not bound

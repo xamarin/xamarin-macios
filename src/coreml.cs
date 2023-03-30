@@ -1086,9 +1086,13 @@ namespace CoreML {
 		bool Write (NSUrl url, [NullAllowed] out NSError error);
 	}
 
-	[Mac (11,0), iOS (14,0)]
-	[MacCatalyst (14,0)]
-	[NoTV][NoWatch]
+	[Deprecated (PlatformName.MacOSX, 13, 3, message: "Use Background Assets or 'NSUrlSession' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
+	[Deprecated (PlatformName.iOS, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
+	[Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
+	[NoTV]
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLModelCollection {
@@ -1117,9 +1121,13 @@ namespace CoreML {
 		NSString DidChangeNotification { get; }
 	}
 
-	[Mac (11,0), iOS (14,0)]
-	[MacCatalyst (14,0)]
-	[NoTV][NoWatch]
+	[Deprecated (PlatformName.MacOSX, 13, 3, message: "Use Background Assets or 'NSUrlSession' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
+	[Deprecated (PlatformName.iOS, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
+	[Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
+	[NoTV]
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLModelCollectionEntry {

@@ -54,7 +54,22 @@ namespace AVRouting {
 		string OverrideTitle { get; set; }
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, NoMac, iOS (16, 4), MacCatalyst (16, 4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface AVCustomRoutingPartialIP {
+
+		[Export ("address", ArgumentSemantic.Copy)]
+		NSData Address { get; }
+
+		[Export ("mask", ArgumentSemantic.Copy)]
+		NSData Mask { get; }
+
+		[Export ("initWithAddress:mask:")]
+		NativeHandle Constructor (NSData address, NSData mask);
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
 	interface AVCustomRoutingController
 	{
@@ -66,6 +81,10 @@ namespace AVRouting {
 
 		[Export ("authorizedRoutes")]
 		AVCustomDeviceRoute[] AuthorizedRoutes { get; }
+
+		[NoWatch, NoTV, NoMac, iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("knownRouteIPs", ArgumentSemantic.Strong)]
+		AVCustomRoutingPartialIP [] KnownRouteIPs { get; set; }
 
 		[Export ("customActionItems", ArgumentSemantic.Strong)]
 		AVCustomRoutingActionItem[] CustomActionItems { get; set; }

@@ -967,44 +967,19 @@ namespace Introspection {
 					return true;
 				}
 				break;
-#if NET
-			// Incorrect attributes in inlined protocol selectors - https://github.com/xamarin/xamarin-macios/issues/14802
-			case "NSTextAttachment":
+			case "CAEdrMetadata":
 				switch (selectorName) {
-				case "attachmentBoundsForAttributes:location:textContainer:proposedLineFragment:position:":
-				case "imageForBounds:attributes:location:textContainer:":
-				case "viewProviderForParentView:location:textContainer:":
-					return true;
+				case "copyWithZone:":
+				case "encodeWithCoder:":
+					return !TestRuntime.CheckXcodeVersion (14, 3);
 				}
 				break;
-			// Incorrect attributes in get/set selectors - https://github.com/xamarin/xamarin-macios/issues/14802
-			case "CBManager":
+			case "GCKeyboard":
 				switch (selectorName) {
-				case "authorization":
-				case "authorizations":
-					return true;
+				case "encodeWithCoder:": // removed comformance
+					return TestRuntime.CheckXcodeVersion (14, 3);
 				}
 				break;
-			case "NEAppProxyFlow":
-				switch (selectorName) {
-				case "networkInterface":
-				case "setNetworkInterface:":
-					return true;
-				}
-				break;
-			case "WKPreferences":
-				switch (selectorName) {
-				case "setTextInteractionEnabled:":
-					return true;
-				}
-				break;
-			case "MidiCISession":
-				switch (selectorName) {
-				case "midiDestination":
-					return true;
-				}
-				break;
-#endif
 			}
 
 			// old binding mistake

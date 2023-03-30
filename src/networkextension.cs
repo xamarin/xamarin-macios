@@ -1352,8 +1352,17 @@ namespace NetworkExtension {
 		[Export ("excludeLocalNetworks")]
 		bool ExcludeLocalNetworks { get; set; }
 
-		[Mac (11,0)][iOS (14,2)]
-		[MacCatalyst (14,2)]
+		[NoWatch, NoTV, Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("excludeCellularServices")]
+		bool ExcludeCellularServices { get; set; }
+
+		[NoWatch, NoTV, Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("excludeAPNs")]
+		bool ExcludeApns { get; set; }
+
+		[Mac (11, 0)]
+		[iOS (14, 2)]
+		[MacCatalyst (14, 2)]
 		[Export ("enforceRoutes")]
 		bool EnforceRoutes { get; set; }
 	}
@@ -2329,6 +2338,10 @@ namespace NetworkExtension {
 
 		[Export ("reportIncomingCallWithUserInfo:")]
 		void ReportIncomingCall (NSDictionary userInfo);
+
+		[NoWatch, NoTV, NoMacCatalyst, NoMac, iOS (16, 4)]
+		[Export ("reportPushToTalkMessageWithUserInfo:")]
+		void ReportPushToTalkMessage (NSDictionary userInfo);
 
 		[Export ("handleTimerEvent")]
 		void HandleTimerEvent ();

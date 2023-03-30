@@ -1,6 +1,0 @@
-!missing-selector! AVCustomRoutingController::knownRouteIPs not bound
-!missing-selector! AVCustomRoutingController::setKnownRouteIPs: not bound
-!missing-selector! AVCustomRoutingPartialIP::address not bound
-!missing-selector! AVCustomRoutingPartialIP::initWithAddress:mask: not bound
-!missing-selector! AVCustomRoutingPartialIP::mask not bound
-!missing-type! AVCustomRoutingPartialIP not bound
