@@ -107,6 +107,10 @@ namespace Xamarin.Tests {
 				"__Z7isdigiti",
 				"__Z8__istypeim",
 				"__Z9__isctypeim",
+				"__Z15__libcpp_strchr",
+				"__Z16__libcpp_strrchr",
+				"__Z6strchr",
+				"__Z7strrchr",
 				// mono
 				"_mono_",
 				"_monoeg_",

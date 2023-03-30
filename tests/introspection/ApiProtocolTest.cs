@@ -166,6 +166,8 @@ namespace Introspection {
 				case "PKPaymentTokenContext":
 				case "PKRecurringPaymentRequest":
 				case "PKShareablePassMetadataPreview":
+				// Xcode 14.3, Conformance not in headers
+				case "PKDeferredPaymentRequest":
 					return true;
 				}
 				break;
@@ -322,6 +324,8 @@ namespace Introspection {
 				case "PKPaymentTokenContext":
 				case "PKRecurringPaymentRequest":
 				case "PKShareablePassMetadataPreview":
+				// Xcode 14.3, Conformance not in headers
+				case "PKDeferredPaymentRequest":
 					return true;
 				}
 				break;
@@ -475,6 +479,8 @@ namespace Introspection {
 				case "PKPaymentTokenContext":
 				case "PKRecurringPaymentRequest":
 				case "PKShareablePassMetadataPreview":
+				// Xcode 14.3, Conformance not in headers
+				case "PKDeferredPaymentRequest":
 					return true;
 				}
 				break;
