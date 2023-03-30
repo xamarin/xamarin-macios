@@ -1646,6 +1646,10 @@ namespace UIKit {
 		[NoTV, iOS (16, 0), MacCatalyst (16, 0)]
 		[Field ("UIActivityTypeCollaborationCopyLink")]
 		NSString CollaborationCopyLink { get; }
+
+		[NoTV, iOS (16, 4), MacCatalyst (16, 4)]
+		[Field ("UIActivityTypeAddToHomeScreen")]
+		NSString AddToHomeScreen { get; }
 	}
 
 	//
@@ -13217,6 +13221,10 @@ namespace UIKit {
 		[NullAllowed]
 		UIView InputAccessoryView { get; set; }
 
+		[TV (16, 4), iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+
 		[Appearance]
 		[Export ("setBackgroundImage:forBarPosition:barMetrics:")]
 		void SetBackgroundImage ([NullAllowed] UIImage backgroundImage, UIBarPosition barPosition, UIBarMetrics barMetrics);
@@ -23552,6 +23560,18 @@ namespace UIKit {
 		[MacCatalyst (16, 1)]
 		[Export ("zOffset")]
 		nfloat ZOffset { get; }
+
+		[iOS (16, 4), NoMacCatalyst]
+		[Export ("azimuthAngleInView:")]
+		nfloat GetAzimuthAngle ([NullAllowed] UIView view);
+
+		[iOS (16, 4), NoMacCatalyst]
+		[Export ("azimuthUnitVectorInView:")]
+		CGVector GetAzimuthUnitVector ([NullAllowed] UIView view);
+
+		[iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("altitudeAngle")]
+		nfloat AltitudeAngle { get; }
 	}
 
 	interface IUILargeContentViewerItem { }
@@ -26232,6 +26252,10 @@ namespace UIKit {
 		[NullAllowed, Export ("titleTextAttributesTransformer", ArgumentSemantic.Copy)]
 		UIConfigurationTextAttributesTransformerHandler TitleTextAttributesTransformer { get; set; }
 
+		[TV (16, 4), iOS (16, 4), MacCatalyst (16, 4)]
+		[NullAllowed, Export ("titleLineBreakMode", ArgumentSemantic.Assign)]
+		UILineBreakMode TitleLineBreakMode { get; set; }
+
 		[NullAllowed, Export ("subtitle")]
 		string Subtitle { get; set; }
 
@@ -26240,6 +26264,10 @@ namespace UIKit {
 
 		[NullAllowed, Export ("subtitleTextAttributesTransformer", ArgumentSemantic.Copy)]
 		UIConfigurationTextAttributesTransformerHandler SubtitleTextAttributesTransformer { get; set; }
+
+		[TV (16, 4), iOS (16, 4), MacCatalyst (16, 4)]
+		[NullAllowed, Export ("subtitleLineBreakMode", ArgumentSemantic.Assign)]
+		UILineBreakMode SubtitleLineBreakMode { get; set; }
 
 		[Export ("contentInsets", ArgumentSemantic.Assign)]
 		NSDirectionalEdgeInsets ContentInsets { get; set; }
@@ -27287,6 +27315,25 @@ namespace UIKit {
 
 		[Field ("UIFontWidthCompressed")]
 		nfloat Compressed { get; }
+	}
+
+	[NoWatch, NoTV, iOS (16, 4), NoMacCatalyst]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UITextInputContext {
+
+		[Export ("pencilInputExpected")]
+		bool PencilInputExpected { [Bind ("isPencilInputExpected")] get; set; }
+
+		[Export ("dictationInputExpected")]
+		bool DictationInputExpected { [Bind ("isDictationInputExpected")] get; set; }
+
+		[Export ("hardwareKeyboardInputExpected")]
+		bool HardwareKeyboardInputExpected { [Bind ("isHardwareKeyboardInputExpected")] get; set; }
+
+		[Static]
+		[Export ("current")]
+		UITextInputContext Current { get; }
 	}
 
 

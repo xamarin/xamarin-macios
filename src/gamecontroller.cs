@@ -868,7 +868,12 @@ namespace GameController {
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
+#if !XAMCORE_5_0
 	interface GCKeyboard : GCDevice, NSSecureCoding, NSCoding {
+#else
+	interface GCKeyboard : GCDevice {
+#endif
+
 		[NullAllowed, Export ("keyboardInput", ArgumentSemantic.Strong)]
 		GCKeyboardInput KeyboardInput { get; }
 
