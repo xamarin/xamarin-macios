@@ -125,12 +125,13 @@ steps:
   continueOnError: true
 
 - pwsh: |
-    $runsettings = @"<?xml version='1.0' encoding='utf-8'?>"
-          <RunSettings>
-            <RunConfiguration>
-              <DotNetHostPath>$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe</DotNetHostPath>
-            </RunConfiguration>
-          </RunSettings>
+    $runsettings = @"
+    <?xml version='1.0' encoding='utf-8'?>"
+    <RunSettings>
+      <RunConfiguration>
+        <DotNetHostPath>$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe</DotNetHostPath>
+      </RunConfiguration>
+    </RunSettings>
     "@
     Set-Content -Path $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/config.runsettings -Value $runsettings
     Get-Content -Path $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/config.runsettings | Write-Host
