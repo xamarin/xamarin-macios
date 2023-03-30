@@ -475,6 +475,7 @@
 				@(_AotArguments -> 'AOTArgument=%(Identity)')
 				AOTCompiler=$(_XamarinAOTCompiler)
 				AOTOutputDirectory=$(_AOTOutputDirectory)
+				DedupAssembly=$(_DedupAssembly)
 				AppBundleManifestPath=$(_AppBundleManifestPath)
 				CacheDirectory=$(_LinkerCacheDirectory)
 				@(_BundlerDlsym -> 'Dlsym=%(Identity)')
@@ -918,6 +919,8 @@
 
 			<_AOTInputDirectory>$(_IntermediateNativeLibraryDir)aot-input/</_AOTInputDirectory>
 			<_AOTOutputDirectory>$(_IntermediateNativeLibraryDir)aot-output/</_AOTOutputDirectory>
+			<_IsDedupEnabled Condition="'$(_IsDedupEnabled)' == ''">true</_IsDedupEnabled>
+			<_DedupAssembly Condition="'$(_RunAotCompiler)' == 'true' And '$(IsMacEnabled)' == 'true' And '$(_IsDedupEnabled)' == 'true'">$(IntermediateOutputPath)aot-instances.dll</_DedupAssembly>
 
 			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == '' And ('$(ComputedPlatform)' != 'iPhone' Or '$(_PlatformName)' == 'macOS')">dylib</_LibMonoLinkMode>
 			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == ''">static</_LibMonoLinkMode>
@@ -1022,6 +1025,29 @@
 		</ItemGroup>
 	</Target>
 
+	<Target Name="_CreateAOTDedupAssembly"
+			Condition="'$(_RunAotCompiler)' == 'true' And '$(IsMacEnabled)' == 'true'"
+			DependsOnTargets="_ComputeManagedAssemblyToLink"
+			BeforeTargets="PrepareForILLink"
+			Inputs="$(MSBuildThisFileFullPath)"
+			Outputs="$(_DedupAssembly)">
+
+		<WriteLinesToFile File="$(_IntermediateNativeLibraryDir)aot-instances.cs" Overwrite="true" Lines="" WriteOnlyWhenDifferent="true" />
+		<Csc Sources="$(_IntermediateNativeLibraryDir)aot-instances.cs"
+			OutputAssembly="$(_DedupAssembly)"
+			TargetType="library"
+			Deterministic="true"
+			References="@(ReferencePath)"
+			ToolExe="$(CscToolExe)"
+			ToolPath="$(CscToolPath)" />
+		<Delete Files="$(_IntermediateNativeLibraryDir)aot-instances.cs" />
+
+		<ItemGroup>
+			<ManagedAssemblyToLink Include="$(_DedupAssembly)" />
+			<TrimmerRootAssembly Include="$(_DedupAssembly)" />
+		</ItemGroup>
+	</Target>
+
 	<PropertyGroup>
 		<_AOTCompileDependsOn>
 			$(_AOTCompileDependsOn);
@@ -1030,6 +1056,7 @@
 			_DetectAppManifest;
 			_ReadAppManifest;
 			_WriteAppManifest;
+			_CreateAOTDedupAssembly;
 		</_AOTCompileDependsOn>
 	</PropertyGroup>
 	<Target Name="_AOTCompile"
