@@ -44,4 +44,12 @@ namespace MediaAccessibility {
 		[Field ("MAMediaCharacteristicTranscribesSpokenDialogForAccessibility")]
 		NSString TranscribesSpokenDialogForAccessibility { get; }
 	}
+
+	[Static]
+	interface MAVideoAccommodations {
+		[Mac (13, 3), TV (16, 4), iOS (16, 4), MacCatalyst (16, 4)]
+		[Notification]
+		[Field ("kMADimFlashingLightsChangedNotification")]
+		NSString DimFlashingLightsChangedNotification { get; }
+	}
 }

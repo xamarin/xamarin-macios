@@ -57,7 +57,6 @@
 !missing-protocol-conformance! AVPlayerInterstitialEvent should conform to NSCopying
 !missing-selector! +AVAssetPlaybackAssistant::assetPlaybackAssistantWithAsset: not bound
 !missing-selector! +AVCaptureDevice::isStudioLightEnabled not bound
-!missing-selector! +AVCaptureDevice::setStudioLightEnabled: not bound
 !missing-selector! +AVMutableVideoComposition::videoCompositionWithAsset:applyingCIFiltersWithHandler:completionHandler: not bound
 !missing-selector! +AVMutableVideoComposition::videoCompositionWithPropertiesOfAsset:completionHandler: not bound
 !missing-selector! +AVMutableVideoComposition::videoCompositionWithPropertiesOfAsset:prototypeInstruction:completionHandler: not bound
@@ -311,3 +310,13 @@
 !missing-type! AVSpeechSynthesisProviderVoice not bound
 !missing-enum-value! AVSpeechSynthesisVoiceQuality native value AVSpeechSynthesisVoiceQualityPremium = 3 not bound
 !missing-selector! AVPlayerLayer::copyDisplayedPixelBuffer not bound
+!missing-enum! AVPlayerInterstitialEventAssetListResponseStatus not bound
+!missing-enum-value! AVError native value AVErrorEncodeFailed = -11883 not bound
+!missing-enum-value! AVError native value AVErrorSandboxExtensionDenied = -11884 not bound
+!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeErrorKey not bound
+!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeEventKey not bound
+!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeNotification not bound
+!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeStatusKey not bound
+!missing-selector! AVCaptureDevice::centerStageRectOfInterest not bound
+!missing-selector! AVCaptureDevice::setCenterStageRectOfInterest: not bound
+!missing-selector! AVPlayerInterstitialEvent::assetListResponse not bound

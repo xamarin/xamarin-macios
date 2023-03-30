@@ -1530,7 +1530,7 @@ namespace CarPlay {
 	[NoWatch, NoTV, NoMac, iOS (14, 0)]
 	[BaseType (typeof (CPTemplate))]
 	[DisableDefaultCtor]
-	interface CPInformationTemplate {
+	interface CPInformationTemplate : CPBarButtonProviding {
 		[Export ("initWithTitle:layout:items:actions:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (string title, CPInformationTemplateLayout layout, CPInformationItem [] items, CPTextButton [] actions);
