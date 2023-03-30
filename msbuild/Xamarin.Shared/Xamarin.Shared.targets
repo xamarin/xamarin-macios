@@ -1851,6 +1851,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="PackageDebugSymbols" PropertyName="PackageDebugSymbols" />
 			<Output TaskParameter="Registrar" PropertyName="Registrar" />
 			<Output TaskParameter="RequirePInvokeWrappers" PropertyName="_RequirePInvokeWrappers" />
+			<Output TaskParameter="SkipMarkingNSObjectsInUserAssemblies" PropertyName="_SkipMarkingNSObjectsInUserAssemblies" />
 			<Output TaskParameter="Verbosity" PropertyName="_BundlerVerbosity" />
 			<Output TaskParameter="XmlDefinitions" ItemName="_BundlerXmlDefinitions" />
 			<Output TaskParameter="NoStrip" PropertyName="EnableAssemblyILStripping" />

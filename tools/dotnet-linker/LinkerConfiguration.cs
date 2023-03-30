@@ -257,6 +257,11 @@ namespace Xamarin.Linker {
 						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
 					SdkVersion = sdk_version;
 					break;
+				case "SkipMarkingNSObjectsInUserAssemblies":
+					if (!TryParseOptionalBoolean (value, out var skip_marking_nsobjects_in_user_assemblies))
+						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
+					Application.SkipMarkingNSObjectsInUserAssemblies = skip_marking_nsobjects_in_user_assemblies;
+					break;
 				case "TargetArchitectures":
 					if (!Enum.TryParse<Abi> (value, out var arch))
 						throw new InvalidOperationException ($"Unknown target architectures: {value} in {linker_file}");

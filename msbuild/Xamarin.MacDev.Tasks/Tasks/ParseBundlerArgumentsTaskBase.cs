@@ -54,6 +54,9 @@ namespace Xamarin.MacDev.Tasks {
 		public string NoStrip { get; set; }
 
 		[Output]
+		public string SkipMarkingNSObjectsInUserAssemblies { get; set; }
+
+		[Output]
 		public int Verbosity { get; set; }
 
 		[Output]
@@ -164,6 +167,9 @@ namespace Xamarin.MacDev.Tasks {
 						var item = new TaskItem (value.Substring (0, colon));
 						item.SetMetadata ("Value", value.Substring (colon + 1));
 						envVariables.Add (item);
+						break;
+					case "skip-marking-nsobjects-in-user-assemblies":
+						SkipMarkingNSObjectsInUserAssemblies = ParseBool (value) ? "false" : "true";
 						break;
 					case "xml":
 						if (xml == null)
