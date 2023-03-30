@@ -4,8 +4,7 @@ using System.Xml.Linq;
 
 #nullable enable
 
-namespace ClassRedirector
-{
+namespace ClassRedirector {
 	public class CSToObjCMap : Dictionary<string, ObjCNameIndex> {
 		const string objMapName = "CSToObjCMap";
 		const string elementName = "Element";
@@ -19,7 +18,7 @@ namespace ClassRedirector
 			return new XElement (objMapName, Elements (map));
 		}
 
-		static IEnumerable <XElement> Elements (CSToObjCMap map)
+		static IEnumerable<XElement> Elements (CSToObjCMap map)
 		{
 			return map.Select (kvp => new XElement (elementName, new XAttribute (csNameName, kvp.Key), ObjCNameIndex.ToXElement (kvp.Value)));
 		}

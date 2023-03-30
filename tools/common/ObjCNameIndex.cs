@@ -4,8 +4,7 @@ using System.Xml.Linq;
 
 #nullable enable
 
-namespace ClassRedirector
-{
+namespace ClassRedirector {
 	public class ObjCNameIndex {
 		public const string ObjNameIndexName = "ObjNameIndex";
 		const string nameName = "Name";

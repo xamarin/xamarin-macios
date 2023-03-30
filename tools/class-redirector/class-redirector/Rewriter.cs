@@ -4,10 +4,8 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
 
-namespace ClassRedirector
-{
-	public class Rewriter
-	{
+namespace ClassRedirector {
+	public class Rewriter {
 		const string classHandleName = "ObjRuntime.Runtime.ClassHandles";
 		const string mtClassMapName = "ObjCRuntime.Runtime.MTClassMap";
 		const string initClassHandlesName = "InitializeClassHandles";
@@ -18,7 +16,7 @@ namespace ClassRedirector
 		SimpleAssemblyResolver resolver;
 		Dictionary<string, FieldDefinition> csTypeToFieldDef = new Dictionary<string, FieldDefinition> ();
 
-		public Rewriter(CSToObjCMap map, string pathToXamarinAssembly, string [] assembliesToPatch)
+		public Rewriter (CSToObjCMap map, string pathToXamarinAssembly, string [] assembliesToPatch)
 		{
 			this.map = map;
 			this.pathToXamarinAssembly = pathToXamarinAssembly;
@@ -29,7 +27,7 @@ namespace ClassRedirector
 		public void Process ()
 		{
 			var classMap = CreateClassHandles ();
-			PatchClassPtrUsage (classMap); 
+			PatchClassPtrUsage (classMap);
 		}
 
 		Dictionary<string, FieldDefinition> CreateClassHandles ()
@@ -127,7 +125,7 @@ namespace ClassRedirector
 			return module.GetType (mtClassMapName);
 		}
 
-		void PatchClassPtrUsage (Dictionary <string, FieldDefinition> classMap)
+		void PatchClassPtrUsage (Dictionary<string, FieldDefinition> classMap)
 		{
 			foreach (var path in assembliesToPatch) {
 				using var module = ModuleDefinition.ReadModule (path);

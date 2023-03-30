@@ -3,8 +3,7 @@ using System.Xml.Linq;
 
 namespace ClassRedirectorTests;
 
-public class XmlTests
-{
+public class XmlTests {
 	[Test]
 	public void WritesCorrectXml ()
 	{

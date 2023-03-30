@@ -4,8 +4,7 @@ using System.Xml.Linq;
 
 #nullable enable
 
-namespace ClassRedirector
-{
+namespace ClassRedirector {
 	public class StaticRegistrarFile {
 		public const string Name = "static-registrar-map.xml";
 	}
