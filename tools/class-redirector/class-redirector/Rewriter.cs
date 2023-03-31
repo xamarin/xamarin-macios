@@ -10,6 +10,7 @@ namespace ClassRedirector
 	{
 		const string classHandleName = "ObjRuntime.Runtime.ClassHandles";
 		const string mtClassMapName = "ObjCRuntime.Runtime.MTClassMap";
+		const string nativeHandleName = "ObjCRuntime.NativeHandle";
 		const string initClassHandlesName = "InitializeClassHandles";
 		const string classPtrName = "class_ptr";
 		CSToObjCMap map;
@@ -39,29 +40,27 @@ namespace ClassRedirector
 
 			var classHandles = LocateClassHandles (module);
 			if (classHandles is null)
-				throw new Exception ($"Unable to find ClassHandles type in {pathToXamarinAssembly}");
+				throw new Exception ($"Unable to find {classHandleName} type in {pathToXamarinAssembly}");
 
 			var initMethod = classHandles.Methods.FirstOrDefault (m => m.Name == initClassHandlesName);
 			if (initMethod is null)
-				throw new Exception ($"Unable to find InitializeClassHandles method in {classHandles.Name}");
+				throw new Exception ($"Unable to find {initClassHandlesName} method in {classHandles.Name}");
 
 			var processor = initMethod.Body.GetILProcessor ();
 
 			var mtClassMapDef = LocateMTClassMap (module);
 			if (mtClassMapDef is null)
-				throw new Exception ($"Unable to find MTClassMap in {pathToXamarinAssembly}");
+				throw new Exception ($"Unable to find {mtClassMapName} in {pathToXamarinAssembly}");
 
-			var nativeHandle = module.Types.FirstOrDefault (t => t.Name == "ObjCRuntime.NativeHandle");
+			var nativeHandle = module.Types.FirstOrDefault (t => t.Name == nativeHandleName);
 			if (nativeHandle is null)
-				throw new Exception ($"Unable to find ObjCRuntime.NativeHandle in {pathToXamarinAssembly}");
+				throw new Exception ($"Unable to find {nativeHandleName} in {pathToXamarinAssembly}");
 
 			var nativeHandleOpImplicit = FindOpImplicit (nativeHandle);
 			if (nativeHandleOpImplicit is null)
-				throw new Exception ($"Unable to find ");
+				throw new Exception ($"Unable to find implicit cast in {nativeHandleName}");
 
-			foreach (var kvp in map) {
-				var csName = kvp.Key;
-				var nameIndex = kvp.Value;
+			foreach (var (csName, nameIndex) in map) {
 				var fieldDef = AddPublicStaticField (classHandles, nameIndex.ObjCName, nativeHandle);
 				AddInitializer (nativeHandleOpImplicit, processor, mtClassMapDef, nameIndex.MapIndex, fieldDef);
 				classMap [csName] = fieldDef;
@@ -74,7 +73,7 @@ namespace ClassRedirector
 		MethodDefinition? FindOpImplicit (TypeDefinition nativeHandle)
 		{
 			return nativeHandle.Methods.FirstOrDefault (m => m.Name == "op_Implicit" && m.ReturnType == nativeHandle &&
-			m.Parameters.Count == 1 && m.Parameters [0].ParameterType == nativeHandle.Module.TypeSystem.IntPtr);
+				m.Parameters.Count == 1 && m.Parameters [0].ParameterType == nativeHandle.Module.TypeSystem.IntPtr);
 		}
 
 		void AddInitializer (MethodReference nativeHandleOpImplicit, ILProcessor il, TypeDefinition mtClassMapDef, int index, FieldDefinition fieldDef)
@@ -106,7 +105,7 @@ namespace ClassRedirector
 			il.InsertBefore (last, Instruction.Create (OpCodes.Mul));
 			il.InsertBefore (last, Instruction.Create (OpCodes.Add));
 			il.InsertBefore (last, Instruction.Create (OpCodes.Ldfld, handleRef));
-			il.InsertAfter (last, Instruction.Create (OpCodes.Call, nativeHandleOpImplicit));
+			il.InsertBefore (last, Instruction.Create (OpCodes.Call, nativeHandleOpImplicit));
 			il.InsertBefore (last, Instruction.Create (OpCodes.Stsfld, fieldDef));
 		}
 
@@ -140,7 +139,7 @@ namespace ClassRedirector
 		{
 			foreach (var cl in module.Types) {
 				if (classMap.TryGetValue (cl.FullName, out var classPtrField)) {
-					PatchClassPtrUsage (cl, classPtrField!);
+					PatchClassPtrUsage (cl, classPtrField);
 				}
 			}
 		}
@@ -185,9 +184,9 @@ namespace ClassRedirector
 				return; // no static init - should never happen, but we can deal.
 
 			var il = cctor.Body.GetILProcessor ();
-			var i = 0;
 			Instruction? stsfld = null;
-			while (i < il.Body.Instructions.Count) {
+			int i = 0;
+			for (; i < il.Body.Instructions.Count; i++) {
 				var instr = il.Body.Instructions [i];
 				// look for
 				// stsfld class_ptr
@@ -195,7 +194,6 @@ namespace ClassRedirector
 					stsfld = instr;
 					break;
 				}
-				i++;
 			}
 			if (stsfld is null)
 				return;

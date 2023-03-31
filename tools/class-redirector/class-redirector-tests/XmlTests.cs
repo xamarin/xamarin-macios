@@ -8,9 +8,10 @@ public class XmlTests
 	[Test]
 	public void WritesCorrectXml ()
 	{
-		var map = new CSToObjCMap ();
-		map.Add ("Foo", new ObjCNameIndex ("Bar", 2));
-		map.Add ("Baz", new ObjCNameIndex ("Zed", 3));
+		var map = new CSToObjCMap () {
+			["Foo"] = new ObjCNameIndex ("Bar", 2),
+			["Baz"] = new ObjCNameIndex ("Zed", 3),
+		};
 
 		var doc = CSToObjCMap.ToXDocument (map);
 
@@ -56,26 +57,20 @@ public class XmlTests
   </Element>
 </CSToObjCMap>";
 
-		var reader = new StringReader (text);
+		using var reader = new StringReader (text);
 		var doc = XDocument.Load (reader);
 
 		var map = CSToObjCMap.FromXDocument (doc);
 		Assert.IsNotNull (map, "no map");
 		Assert.That (map.Count (), Is.EqualTo (2));
 
-		if (map.TryGetValue ("Foo", out var nameIndex)) {
-			Assert.That (nameIndex.ObjCName, Is.EqualTo ("Bar"), "no bar name");
-			Assert.That (nameIndex.MapIndex, Is.EqualTo (2), "no bar index");
-		} else {
-			Assert.Fail ("no Foo value");
-		}
+		Assert.True (map.TryGetValue ("Foo", out var nameIndex), "no nameIndex");
+		Assert.That (nameIndex.ObjCName, Is.EqualTo ("Bar"), "no bar name");
+		Assert.That (nameIndex.MapIndex, Is.EqualTo (2), "no bar index");
 
-		if (map.TryGetValue ("Baz", out var nameIndex1)) {
-			Assert.That (nameIndex1.ObjCName, Is.EqualTo ("Zed"), "no bar name");
-			Assert.That (nameIndex1.MapIndex, Is.EqualTo (3), "no bar index");
-		} else {
-			Assert.Fail ("no Foo value");
-		}
+		Assert.True (map.TryGetValue ("Baz", out var nameIndex1));
+		Assert.That (nameIndex1.ObjCName, Is.EqualTo ("Zed"), "no bar name");
+		Assert.That (nameIndex1.MapIndex, Is.EqualTo (3), "no bar index");
 	}
 
 
@@ -87,14 +82,13 @@ public class XmlTests
 		}).FirstOrDefault ();
 	}
 
-	static XElement? NameElem (XElement el)
-	{
-		return el.Descendants ().Where (e => e.Name == "Name").FirstOrDefault ();
-	}
+	static XElement? NameElem (XElement el) => FirstElementNamed (el, "Name");
 
-	static XElement? IndexElem (XElement el)
+	static XElement? IndexElem (XElement el) => FirstElementNamed (el, "Index");
+
+	static XElement? FirstElementNamed (XElement el, string name)
 	{
-		return el.Descendants ().Where (e => e.Name == "Index").FirstOrDefault ();
+		return el.Descendants ().Where (e => e.Name == name).FirstOrDefault ();
 	}
 }
 

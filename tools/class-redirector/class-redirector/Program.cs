@@ -70,7 +70,7 @@ namespace ClassRedirector {
 		static bool DirectoryIsWritable (string path)
 		{
 			var info = new DirectoryInfo (path);
-			return (info.Attributes & FileAttributes.ReadOnly) == 0;
+			return !info.Attributes.HasFlag (FileAttributes.ReadOnly);
 		}
 
 		static string [] CollectDlls (string dir)
