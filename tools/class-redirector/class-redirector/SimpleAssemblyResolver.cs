@@ -3,11 +3,9 @@ using Mono.Cecil;
 
 #nullable enable
 
-namespace ClassRedirector
-{
-	public class SimpleAssemblyResolver : DefaultAssemblyResolver
-	{
-		public SimpleAssemblyResolver(params string [] filesOrDirectories)
+namespace ClassRedirector {
+	public class SimpleAssemblyResolver : DefaultAssemblyResolver {
+		public SimpleAssemblyResolver (params string [] filesOrDirectories)
 			: base ()
 		{
 			foreach (var fileOrDirectory in filesOrDirectories) {
