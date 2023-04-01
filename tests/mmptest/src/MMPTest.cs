@@ -772,6 +772,14 @@ namespace Xamarin.MMP.Tests {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = "<MonoBundlingExtraArgs>-link_flags=-fobjc-arc</MonoBundlingExtraArgs>"
 				};
+				// Starting with Xcode 14.3, this happens if min OS <= 10.10:
+				// ld: file not found: /Applications/Xcode_14.3.0-rc.2.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/arc/libarclite_macosx.a
+				// clang: error: linker command failed with exit code 1 (use -v to see invocation)
+				if (Version.Parse (SdkVersions.MinOSX) < new Version (10, 10)) {
+					test.PlistReplaceStrings = new Dictionary<string, string> {
+						{ $"<string>{SdkVersions.MinOSX}</string>", "<string>10.11</string>"}
+					};
+				}
 				TI.TestUnifiedExecutable (test);
 				TI.BuildProject (Path.Combine (tmpDir, "UnifiedExample.csproj"));
 			});

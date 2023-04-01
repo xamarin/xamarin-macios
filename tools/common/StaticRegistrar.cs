@@ -3763,18 +3763,7 @@ namespace Registrar {
 						} else if (isINativeObject) {
 							TypeDefinition nativeObjType = elementType.Resolve ();
 							var isNativeObjectInterface = nativeObjType.IsInterface;
-
-							if (isNativeObjectInterface) {
-								var wrapper_type = GetProtocolAttributeWrapperType (nativeObjType);
-								if (wrapper_type == null)
-									throw ErrorHelper.CreateError (4125, Errors.MT4125, td.FullName, descriptiveMethodName);
-
-								nativeObjType = wrapper_type.Resolve ();
-							}
-
-							// verify that the type has a ctor with two parameters
-							if (!HasIntPtrBoolCtor (nativeObjType, exceptions))
-								throw ErrorHelper.CreateError (4103, Errors.MT4103, nativeObjType.FullName, descriptiveMethodName);
+							nativeObjType = GetInstantiableType (nativeObjType, exceptions, descriptiveMethodName);
 
 							body_setup.AppendLine ("MonoType *paramtype{0} = NULL;", i);
 							cleanup.AppendLine ("xamarin_mono_object_release (&paramtype{0});", i);
@@ -3890,20 +3879,7 @@ namespace Registrar {
 							}
 						}
 					} else if (IsNativeObject (td)) {
-						TypeDefinition nativeObjType = td;
-
-						if (td.IsInterface) {
-							var wrapper_type = GetProtocolAttributeWrapperType (td);
-							if (wrapper_type == null)
-								throw ErrorHelper.CreateError (4125, Errors.MT4125, td.FullName, descriptiveMethodName);
-
-							nativeObjType = wrapper_type.Resolve ();
-						}
-
-						// verify that the type has a ctor with two parameters
-						if (!HasIntPtrBoolCtor (nativeObjType, exceptions))
-							throw ErrorHelper.CreateError (4103, Errors.MT4103, nativeObjType.FullName, descriptiveMethodName);
-
+						var nativeObjType = GetInstantiableType (td, exceptions, descriptiveMethodName);
 						var findMonoClass = false;
 						var tdTokenRef = INVALID_TOKEN_REF;
 						var nativeObjectTypeTokenRef = INVALID_TOKEN_REF;
@@ -4360,6 +4336,25 @@ namespace Registrar {
 			} else {
 				sb.WriteLine (body);
 			}
+		}
+
+		public TypeDefinition GetInstantiableType (TypeDefinition td, List<Exception> exceptions, string descriptiveMethodName)
+		{
+			TypeDefinition nativeObjType = td;
+
+			if (td.IsInterface) {
+				var wrapper_type = GetProtocolAttributeWrapperType (td);
+				if (wrapper_type == null)
+					throw ErrorHelper.CreateError (4125, Errors.MT4125, td.FullName, descriptiveMethodName);
+
+				nativeObjType = wrapper_type.Resolve ();
+			}
+
+			// verify that the type has a ctor with two parameters
+			if (!HasIntPtrBoolCtor (nativeObjType, exceptions))
+				throw ErrorHelper.CreateError (4103, Errors.MT4103, nativeObjType.FullName, descriptiveMethodName);
+
+			return nativeObjType;
 		}
 
 		TypeDefinition GetDelegateProxyType (ObjCMethod obj_method)
