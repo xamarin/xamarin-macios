@@ -28,6 +28,7 @@ namespace Cecil.Tests {
 	//    3. ref/out types
 	//    4. structs with non-blittable types
 	//    5. arrays
+	//    6. any type with [MarshalAs]
 	// How do I fix these?
 	//    1. use a TransientString from ObjCRuntime. This is an IDisposable type
 	//       that will allocate an unmanaged string in the appropriate encoding.
@@ -136,26 +137,34 @@ namespace Cecil.Tests {
 	//    and:
 	//    FreeStringArray (IntPtr arr, int count);
 	//    both can handle a null array or null strings in the array.
+	//    6.  [MarshalAs] types - this depends on the declared type. This is typically
+	//        bool, which must be changed to 'byte' instead, and the consuming code has
+	//        to change to compare the parameter/return value to 0 (non-zero = true,
+	//        zero = false)
 	[TestFixture]
-	public class BlittablePInvokes {
+	public partial class BlittablePInvokes {
 		struct MethodBlitResult {
-			public MethodBlitResult (bool isBlittable)
+			public MethodBlitResult (bool isBlittable, MethodDefinition method)
 			{
 				IsBlittable = isBlittable;
 				Result = new StringBuilder ();
+				Method = method;
 			}
 			public bool IsBlittable;
 			public StringBuilder Result;
+			public MethodDefinition Method;
 		}
 
 		struct TypeAndIndex {
-			public TypeAndIndex (TypeReference type, int index)
+			public TypeAndIndex (TypeReference type, int index, IMarshalInfoProvider provider)
 			{
 				Type = type;
 				Index = index;
+				Provider = provider;
 			}
 			public TypeReference Type;
 			public int Index;
+			public IMarshalInfoProvider Provider;
 		}
 		struct BlitAndReason {
 			public BlitAndReason (bool isBlittable, string reason)
@@ -167,34 +176,33 @@ namespace Cecil.Tests {
 			public string Reason;
 		}
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblyDefinitions))]
-		public void CheckForNonBlittablePInvokes (AssemblyInfo info)
+		[Test]
+		public void CheckForNonBlittablePInvokes ()
 		{
-			var assembly = info.Assembly;
-			var pinvokes = AllPInvokes (assembly).Where (IsPInvokeOK);
-			Assert.IsTrue (pinvokes.Count () > 0);
+			var failures = new Dictionary<string, (string Message, string Location)> ();
+			var pinvokes = new List<(AssemblyDefinition Assembly, MethodDefinition Method)> ();
+
+			foreach (var info in Helper.NetPlatformImplementationAssemblyDefinitions)
+				pinvokes.AddRange (AllPInvokes (info.Assembly).Select (v => (info.Assembly, v)));
+
+			Assert.That (pinvokes.Count, Is.GreaterThan (0), "Must have some P/Invokes at least");
 
 			var blitCache = new Dictionary<string, BlitAndReason> ();
-			var results = pinvokes.Select (pi => IsMethodBlittable (assembly, pi, blitCache)).Where (r => !r.IsBlittable);
-			if (results.Count () > 0) {
-				var failString = new StringBuilder ();
-				failString.Append ($"There is an issue with {results.Count ()} pinvokes in {assembly.Name} ({info.Path}):\n");
-				foreach (var sb in results.Select (r => r.Result)) {
-					failString.Append (sb.ToString ());
-				}
-				failString.Append ("In the file tests/cecil-tests/BlittablePInvokes.cs, read the guide carefully.");
-				Assert.Fail (failString.ToString ());
+			var results = pinvokes.Select (pi => IsMethodBlittable (pi.Assembly, pi.Method, blitCache)).Where (r => !r.IsBlittable).ToArray ();
+			foreach (var result in results) {
+				failures [result.Method.FullName] = new (result.Method.FullName, result.Method.RenderLocation ());
 			}
 
+			Helper.AssertFailures (failures, knownFailuresPInvokes, nameof (knownFailuresPInvokes), "In the file tests/cecil-tests/BlittablePInvokes.cs, read the guide carefully.", (v) => $"{v.Location}: {v.Message}");
 		}
 
-		MethodBlitResult IsMethodBlittable (AssemblyDefinition assembly, MethodReference method, Dictionary<string, BlitAndReason> blitCache)
+		MethodBlitResult IsMethodBlittable (AssemblyDefinition assembly, MethodDefinition method, Dictionary<string, BlitAndReason> blitCache)
 		{
-			var result = new MethodBlitResult (true);
+			var result = new MethodBlitResult (true, method);
 			var localResult = new StringBuilder ();
 			var types = TypesFromMethod (method);
 			foreach (var typeIndex in types) {
-				if (!IsTypeBlittable (assembly, typeIndex.Type, localResult, blitCache)) {
+				if (!IsTypeBlittable (assembly, typeIndex.Type, typeIndex.Provider, localResult, blitCache)) {
 					if (result.IsBlittable) {
 						result.IsBlittable = false;
 						result.Result.Append ($"    The P/Invoke {method.FullName} has been marked as non-blittable for the following reasons:\n");
@@ -213,14 +221,19 @@ namespace Cecil.Tests {
 		IEnumerable<TypeAndIndex> TypesFromMethod (MethodReference method)
 		{
 			if (method.ReturnType is not null)
-				yield return new TypeAndIndex (method.ReturnType, -1);
+				yield return new TypeAndIndex (method.ReturnType, -1, method.MethodReturnType);
 			var i = 0;
 			foreach (var parameter in method.Parameters)
-				yield return new TypeAndIndex (parameter.ParameterType, i++);
+				yield return new TypeAndIndex (parameter.ParameterType, i++, parameter);
 		}
 
-		bool IsTypeBlittable (AssemblyDefinition assembly, TypeReference type, StringBuilder result, Dictionary<string, BlitAndReason> blitCache)
+		bool IsTypeBlittable (AssemblyDefinition assembly, TypeReference type, IMarshalInfoProvider provider, StringBuilder result, Dictionary<string, BlitAndReason> blitCache)
 		{
+			if (provider.HasMarshalInfo) {
+				result.Append ($" has a [MarshalAs] attribute");
+				return false;
+			}
+
 			if (blitCache.TryGetValue (type.Name, out var cachedResult)) {
 				if (!cachedResult.IsBlittable)
 					result.Append ($" {cachedResult.Reason}");
@@ -307,7 +320,7 @@ namespace Cecil.Tests {
 				if (f.IsStatic)
 					continue;
 				var localResult = new StringBuilder ();
-				if (!IsTypeBlittable (assembly, f.FieldType, localResult, blitCache)) {
+				if (!IsTypeBlittable (assembly, f.FieldType, f, localResult, blitCache)) {
 					if (!allBlittable)
 						fieldsResult.Append ($" {type.Name}:");
 					fieldsResult.Append ($" ({f.Name}: {localResult})");
@@ -325,21 +338,6 @@ namespace Cecil.Tests {
 		{
 			return assembly.EnumerateMethods (method =>
 				(method.Attributes & MethodAttributes.PInvokeImpl) != 0);
-		}
-
-		static bool IsPInvokeOK (MethodDefinition method)
-		{
-			var fullName = method.FullName;
-			switch (fullName) {
-			case "System.IntPtr ObjCRuntime.Selector::GetHandle(System.String)":
-#if !NET8_0_OR_GREATER
-			case "System.Boolean CoreFoundation.CFReadStream::CFReadStreamSetClient(System.IntPtr,System.IntPtr,CoreFoundation.CFStream/CFStreamCallback,System.IntPtr)":
-			case "System.Boolean CoreFoundation.CFWriteStream::CFWriteStreamSetClient(System.IntPtr,System.IntPtr,CoreFoundation.CFStream/CFStreamCallback,System.IntPtr)":
-#endif
-				return false;
-			default:
-				return true;
-			}
 		}
 
 		[Test]
