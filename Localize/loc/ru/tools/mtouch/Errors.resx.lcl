@@ -3795,7 +3795,6 @@
           <Val><![CDATA[The signature must be a non-empty string.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Подпись должна быть непустой строкой.]]></Val>
->>>>>>> aac0d779c (Juno: check in to lego/hb_2334f352-33a3-4aa6-b434-972a89595681_20230313144314295.)
           </Tgt>
         </Str>
         <Disp Icon="Str" />
