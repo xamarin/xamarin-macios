@@ -106,7 +106,7 @@ steps:
 - task: DownloadPipelineArtifact@2
   displayName: Download test libraries dependencies
   inputs:
-    patterns: '**/${{ parameters.uploadPrefix }}package-test-libraries.zip'
+    patterns: '**/package-test-libraries.zip'
     allowFailedBuilds: true
     path: $(Build.SourcesDirectory)/artifacts/tmp
 
