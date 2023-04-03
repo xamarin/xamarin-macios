@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 25.0.1705.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "class-redirector", "class-redirector\class-redirector.csproj", "{0723580E-2C56-4460-BDDD-DEF38E0F543F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "class-redirector-tests", "class-redirector-tests\class-redirector-tests.csproj", "{16FD4B5E-5537-46A2-B573-0424A51472AA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0723580E-2C56-4460-BDDD-DEF38E0F543F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0723580E-2C56-4460-BDDD-DEF38E0F543F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0723580E-2C56-4460-BDDD-DEF38E0F543F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0723580E-2C56-4460-BDDD-DEF38E0F543F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16FD4B5E-5537-46A2-B573-0424A51472AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16FD4B5E-5537-46A2-B573-0424A51472AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16FD4B5E-5537-46A2-B573-0424A51472AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16FD4B5E-5537-46A2-B573-0424A51472AA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ECD11F77-045E-4B88-BF92-28ED04BBD631}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.TextStylePolicy = $1
+		$1.FileWidth = 80
+		$1.TabWidth = 8
+		$1.IndentWidth = 8
+		$1.scope = text/x-csharp
+		$0.CSharpFormattingPolicy = $2
+		$2.IndentSwitchSection = False
+		$2.NewLinesForBracesInTypes = False
+		$2.NewLinesForBracesInProperties = False
+		$2.NewLinesForBracesInAccessors = False
+		$2.NewLinesForBracesInAnonymousMethods = False
+		$2.NewLinesForBracesInControlBlocks = False
+		$2.NewLinesForBracesInAnonymousTypes = False
+		$2.NewLinesForBracesInObjectCollectionArrayInitializers = False
+		$2.NewLinesForBracesInLambdaExpressionBody = False
+		$2.NewLineForElse = False
+		$2.NewLineForCatch = False
+		$2.NewLineForFinally = False
+		$2.NewLineForMembersInObjectInit = False
+		$2.NewLineForMembersInAnonymousTypes = False
+		$2.NewLineForClausesInQuery = False
+		$2.SpacingAfterMethodDeclarationName = True
+		$2.SpaceAfterMethodCallName = True
+		$2.SpaceBeforeOpenSquareBracket = True
+		$2.scope = text/x-csharp
+	EndGlobalSection
+EndGlobal
