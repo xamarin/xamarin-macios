@@ -11,6 +11,10 @@ parameters:
   type: string
   default: HEAD
 
+- name: createLocPR
+  type: boolean
+  default: false
+
 steps:
 
 - template: sdk-unified/steps/checkout/v1.yml@yaml-templates
@@ -79,7 +83,7 @@ steps:
   inputs:
     locProj: '$(Build.SourcesDirectory)\\Localize\\LocProject.json'
     outDir: '$(Build.ArtifactStagingDirectory)'
-    ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
+    ${{ if or(eq(variables['Build.Reason'], 'Schedule'), variables.createLocPR) }}:
       isCreatePrSelected: true
     ${{ else }}:
       isCreatePrSelected: false

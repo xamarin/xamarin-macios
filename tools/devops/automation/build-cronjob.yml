@@ -11,6 +11,10 @@ parameters:
   type: boolean
   default: true
 
+- name: createLocPR
+  type: boolean
+  default: false
+
 variables:
 - template: templates/variables.yml
 - name: MaciosUploadPrefix
@@ -50,14 +54,28 @@ trigger: none
 
 schedules:
 
-# the translations team wants a green build, we can do that on sundays even if 
-# the code did not change and without the device tests.
+# Create the PR into main with the newest usable localization strings once a week on Sundays
 - cron: "0 12 * * 0"
   displayName: Weekly Translations build (Sunday @ noon)
   branches:
     include:
     - main
   always: true
+  variables:
+    createLocPR: true
+
+# Run the OneLocTask everyday without setting the createLocPR var to true.
+# This will ensure that OneLoc gets our newly added error strings faster but we do not need
+# to look for new usable translation PRs everyday.
+# This will run around midnight in the US after each workday
+- cron: "0 5 * * 2-6"
+  displayName: Weekly Translations build (Sunday @ noon)
+  branches:
+    include:
+    - main
+  always: true
+  variables:
+    createLocPR: false
 
 stages:
 
@@ -86,3 +104,4 @@ stages:
           isPR: false
           repositoryAlias: self
           commit: HEAD
+          createLocPR: $(createLocPR)
