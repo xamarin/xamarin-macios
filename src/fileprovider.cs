@@ -375,6 +375,10 @@ namespace FileProvider {
 		[NoWatch, NoTV, NoMacCatalyst, NoiOS, Mac (13, 0)]
 		[Export ("supportsSyncingTrash")]
 		bool SupportsSyncingTrash { get; set; }
+
+		[NoWatch, NoTV, NoMacCatalyst, Mac (13, 3), iOS (16, 4)]
+		[NullAllowed, Export ("volumeUUID")]
+		NSUuid VolumeUuid { get; }
 	}
 
 	interface INSFileProviderEnumerationObserver { }

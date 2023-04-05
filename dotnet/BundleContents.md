@@ -53,6 +53,7 @@ wrong, then developers can override the target location by:
     * If the `PackageDebugSymbols` is set to something else: `PublishFolderType=None`.
     * If the `PackageDebugSymbols` is not set: `PublishFolderType=None` for
       release builds, `PublishFolderType=Assembly` otherwise.
+* \*.xml: if there's an assembly with the same name (\*.exe or \*.dll), then `PublishFolderType=None`
 * A \*.resources directory or a \*.resources.zip file next to an assembly with
   the same name is treated as a third-party binding
   (`PublishFolderType=AppleBindingResourcePackage`), and we handle it as such

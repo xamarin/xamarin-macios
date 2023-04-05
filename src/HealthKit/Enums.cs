@@ -542,6 +542,12 @@ namespace HealthKit {
 		[MacCatalyst (14, 0)]
 		[Field ("HKFHIRResourceTypeCoverage")]
 		Coverage,
+		[iOS (16, 4), MacCatalyst (16, 4), Mac (13, 3)]
+		[Field ("HKFHIRResourceTypeDiagnosticReport")]
+		DiagnosticReport,
+		[iOS (16, 4), MacCatalyst (16, 4), Mac (13, 3)]
+		[Field ("HKFHIRResourceTypeDocumentReference")]
+		DocumentReference,
 	}
 
 	[Watch (5, 0), iOS (12, 0), Mac (13, 0)]
@@ -566,6 +572,10 @@ namespace HealthKit {
 		[MacCatalyst (14, 0)]
 		[Field ("HKClinicalTypeIdentifierCoverageRecord")]
 		CoverageRecord,
+		[Watch (9, 4), iOS (16, 4), Mac (13, 3)]
+		[MacCatalyst (16, 4)]
+		[Field ("HKClinicalTypeIdentifierClinicalNoteRecord")]
+		ClinicalNoteRecord,
 	}
 
 	[Watch (5, 0), iOS (12, 0), Mac (13, 0)]

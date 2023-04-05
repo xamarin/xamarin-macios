@@ -299,11 +299,18 @@ namespace HomeKit {
 
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	partial interface HMAction {
 
 		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
+
+		[Deprecated (PlatformName.iOS, 16, 4, message: "Use subclasses instead.")]
+		[Deprecated (PlatformName.TvOS, 16, 4, message: "Use subclasses instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use subclasses instead.")]
+		[Export ("init")]
+		NativeHandle Constructor ();
 	}
 
 	[MacCatalyst (14, 0)]
@@ -1043,22 +1050,35 @@ namespace HomeKit {
 	[BaseType (typeof (HMTrigger))]
 	partial interface HMTimerTrigger {
 
+		[Watch (9, 4), TV (16, 4), MacCatalyst (16, 4), iOS (16, 4)]
+		[Export ("initWithName:fireDate:recurrence:")]
+		NativeHandle Constructor (string name, NSDate fireDate, [NullAllowed] NSDateComponents recurrence);
+
+		[Deprecated (PlatformName.iOS, 16, 4, message: "Use '.ctor (string, NSDate, NSDateComponents' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use '.ctor (string, NSDate, NSDateComponents' instead.")]
 		[NoTV]
 		[NoWatch]
 		[MacCatalyst (13, 1)]
-		[DesignatedInitializer]
 		[Export ("initWithName:fireDate:timeZone:recurrence:recurrenceCalendar:")]
 		NativeHandle Constructor (string name, NSDate fireDate, [NullAllowed] NSTimeZone timeZone, [NullAllowed] NSDateComponents recurrence, [NullAllowed] NSCalendar recurrenceCalendar);
 
 		[Export ("fireDate", ArgumentSemantic.Copy)]
 		NSDate FireDate { get; }
 
+		[Deprecated (PlatformName.iOS, 16, 4, message: "Use 'HMEventTrigger' with 'HMCalendarEvent' for triggers based on a time-zone-relative time of day.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use 'HMEventTrigger' with 'HMCalendarEvent' for triggers based on a time-zone-relative time of day.")]
+		[Deprecated (PlatformName.TvOS, 16, 4, message: "Use 'HMEventTrigger' with 'HMCalendarEvent' for triggers based on a time-zone-relative time of day.")]
+		[Deprecated (PlatformName.WatchOS, 9, 4, message: "Use 'HMEventTrigger' with 'HMCalendarEvent' for triggers based on a time-zone-relative time of day.")]
 		[NullAllowed, Export ("timeZone", ArgumentSemantic.Copy)]
 		NSTimeZone TimeZone { get; }
 
 		[NullAllowed, Export ("recurrence", ArgumentSemantic.Copy)]
 		NSDateComponents Recurrence { get; }
 
+		[Deprecated (PlatformName.iOS, 16, 4, message: "No longer supported.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "No longer supported.")]
+		[Deprecated (PlatformName.TvOS, 16, 4, message: "No longer supported.")]
+		[Deprecated (PlatformName.WatchOS, 9, 4, message: "No longer supported.")]
 		[NullAllowed, Export ("recurrenceCalendar", ArgumentSemantic.Copy)]
 		NSCalendar RecurrenceCalendar { get; }
 
@@ -1069,6 +1089,8 @@ namespace HomeKit {
 		[Export ("updateFireDate:completionHandler:")]
 		void UpdateFireDate (NSDate fireDate, Action<NSError> completion);
 
+		[Deprecated (PlatformName.iOS, 16, 4, message: "Use 'HMEventTrigger' with 'HMCalendarEvent' for triggers based on a time-zone-relative time of day.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use 'HMEventTrigger' with 'HMCalendarEvent' for triggers based on a time-zone-relative time of day.")]
 		[NoTV]
 		[NoWatch]
 		[MacCatalyst (13, 1)]
@@ -1267,6 +1289,7 @@ namespace HomeKit {
 
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface HMEvent {
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
@@ -1275,6 +1298,12 @@ namespace HomeKit {
 		[Static]
 		[Export ("isSupportedForHome:")]
 		bool IsSupported (HMHome home);
+
+		[Deprecated (PlatformName.iOS, 16, 4, message: "Use subclasses instead.")]
+		[Deprecated (PlatformName.TvOS, 16, 4, message: "Use subclasses instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use subclasses instead.")]
+		[Export ("init")]
+		NativeHandle Constructor ();
 	}
 
 	[MacCatalyst (14, 0)]
@@ -1844,7 +1873,6 @@ namespace HomeKit {
 
 		[iOS (13, 0)]
 		[Export ("initWithURL:ownershipToken:")]
-		[DesignatedInitializer]
 		NativeHandle Constructor (NSUrl setupPayloadUrl, [NullAllowed] HMAccessoryOwnershipToken ownershipToken);
 	}
 

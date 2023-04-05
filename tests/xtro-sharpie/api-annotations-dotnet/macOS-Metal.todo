@@ -192,3 +192,13 @@
 !missing-type! MTLMeshRenderPipelineDescriptor not bound
 !missing-pinvoke! MTLIOCompressionContextDefaultChunkSize is not bound
 !missing-protocol-member! MTLResourceStateCommandEncoder::moveTextureMappingsFromTexture:sourceSlice:sourceLevel:sourceOrigin:sourceSize:toTexture:destinationSlice:destinationLevel:destinationOrigin: not found
+!missing-enum! MTLCompileSymbolVisibility not bound
+!missing-selector! MTLCompileOptions::allowReferencingUndefinedSymbols not bound
+!missing-selector! MTLCompileOptions::compileSymbolVisibility not bound
+!missing-selector! MTLCompileOptions::maxTotalThreadsPerThreadgroup not bound
+!missing-selector! MTLCompileOptions::setAllowReferencingUndefinedSymbols: not bound
+!missing-selector! MTLCompileOptions::setCompileSymbolVisibility: not bound
+!missing-selector! MTLCompileOptions::setMaxTotalThreadsPerThreadgroup: not bound
+!missing-protocol-member! MTLDevice::maximumConcurrentCompilationTaskCount not found
+!missing-protocol-member! MTLDevice::setShouldMaximizeConcurrentCompilation: not found
+!missing-protocol-member! MTLDevice::shouldMaximizeConcurrentCompilation not found

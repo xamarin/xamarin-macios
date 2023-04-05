@@ -428,6 +428,15 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "UIHoverGestureRecognizer":
+				switch (name) {
+				case "azimuthAngleInView:": // Only works on iPad according to docs.
+				case "azimuthUnitVectorInView:":
+					if (TestRuntime.CheckXcodeVersion (14, 3) && UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone)
+						return true;
+					break;
+				}
+				break;
 #endif
 #if __WATCHOS__
 			case "INUserContext":

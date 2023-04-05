@@ -2040,7 +2040,7 @@ namespace CoreAnimation {
 	[MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject), Name = "CAEDRMetadata")]
 	[DisableDefaultCtor]
-	interface CAEdrMetadata {
+	interface CAEdrMetadata : NSCopying, NSSecureCoding {
 
 		[Static]
 		[Export ("HDR10MetadataWithDisplayInfo:contentInfo:opticalOutputScale:")]

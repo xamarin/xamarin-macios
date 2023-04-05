@@ -294,6 +294,23 @@ namespace Xamarin.MacDev.Tasks {
 					return PackageSymbols ? PublishFolderType.Assembly : PublishFolderType.None;
 			}
 
+			// If an xml file matches the filename of any assembly, then treat that xml file as PublishFolderType=None
+			if (filename.EndsWith (".xml", StringComparison.OrdinalIgnoreCase)) {
+				var baseName = Path.GetFileNameWithoutExtension (filename);
+				if (items.Any (v => {
+					var fn = Path.GetFileName (v.ItemSpec);
+					if (fn.Length != baseName.Length + 4)
+						return false;
+
+					if (!(fn.EndsWith (".exe", StringComparison.OrdinalIgnoreCase) || fn.EndsWith (".dll", StringComparison.OrdinalIgnoreCase)))
+						return false;
+
+					return fn.StartsWith (baseName, StringComparison.OrdinalIgnoreCase);
+				})) {
+					return PublishFolderType.None;
+				}
+			}
+
 			// Binding resource package (*.resources / *.resources.zip)
 			if (IsBindingResourcePackage (filename, out var type))
 				return type;
