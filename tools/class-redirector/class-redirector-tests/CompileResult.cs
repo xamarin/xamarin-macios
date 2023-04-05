@@ -4,11 +4,10 @@ using System.Linq;
 using System.Collections.Generic;
 
 namespace ClassRedirectorTests {
-	public class CompileResult : IDisposable
-	{
+	public class CompileResult : IDisposable {
 		bool disposedValue;
 
-		public CompileResult(string directoryPath, string outputFileName, string error)
+		public CompileResult (string directoryPath, string outputFileName, string error)
 		{
 			DirectoryPath = directoryPath;
 			OutputFileName = outputFileName;
