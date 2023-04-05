@@ -18,14 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\common\CSToObjCMap.cs">
-      <Link>CSToObjCMap.cs</Link>
-    </Compile>
-    <Compile Include="..\..\common\ObjCNameIndex.cs">
-      <Link>ObjCNameIndex.cs</Link>
-    </Compile>
-    <Compile Include="..\..\common\StaticRegistrarFile.cs">
-      <Link>StaticRegistrarFile.cs</Link>
-    </Compile>
+    <ProjectReference Include="..\class-redirector\class-redirector.csproj" />
   </ItemGroup>
 </Project>
