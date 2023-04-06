@@ -6509,6 +6509,11 @@ namespace Foundation {
 		[Field ("NSURLFileResourceTypeKey")]
 		NSString FileResourceTypeKey { get; }
 
+		[Watch (9, 4), TV (16, 4), Mac (13, 3), iOS (16, 4)]
+		[MacCatalyst (16, 4)]
+		[Field ("NSURLFileIdentifierKey")]
+		NSString FileIdentifierKey { get; }
+
 		[Field ("NSURLFileResourceTypeNamedPipe")]
 		NSString FileResourceTypeNamedPipe { get; }
 
@@ -6639,6 +6644,21 @@ namespace Foundation {
 		[MacCatalyst (13, 1)]
 		[Field ("NSURLVolumeAvailableCapacityForOpportunisticUsageKey")]
 		NSString VolumeAvailableCapacityForOpportunisticUsageKey { get; }
+
+		[Watch (9, 4), TV (16, 4), Mac (13, 3), iOS (16, 4)]
+		[MacCatalyst (16, 4)]
+		[Field ("NSURLVolumeTypeNameKey")]
+		NSString VolumeTypeNameKey { get; }
+
+		[Watch (9, 4), TV (16, 4), Mac (13, 3), iOS (16, 4)]
+		[MacCatalyst (16, 4)]
+		[Field ("NSURLVolumeSubtypeKey")]
+		NSString VolumeSubtypeKey { get; }
+
+		[Watch (9, 4), TV (16, 4), Mac (13, 3), iOS (16, 4)]
+		[MacCatalyst (16, 4)]
+		[Field ("NSURLVolumeMountFromLocationKey")]
+		NSString VolumeMountFromLocationKey { get; }
 
 		[Field ("NSURLIsUbiquitousItemKey")]
 		NSString IsUbiquitousItemKey { get; }

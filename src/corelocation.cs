@@ -65,6 +65,7 @@ namespace CoreLocation {
 		MissingPushExtension = 1,
 		MissingPushServerEnvironment = 2,
 		MissingEntitlement = 3,
+		UnsupportedPlatform = 4,
 	}
 
 	[NoTV]

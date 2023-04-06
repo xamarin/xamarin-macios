@@ -5930,6 +5930,11 @@ namespace AppKit {
 
 		[Export ("prepareSharingServicePicker:")]
 		void Prepare (NSSharingServicePicker sharingServicePicker);
+
+		[Mac (13, 2)]
+		[NullAllowed]
+		[Export ("previewRepresentableActivityItems", ArgumentSemantic.Copy)]
+		INSPreviewRepresentableActivityItem [] PreviewRepresentableActivityItems { get; set; }
 	}
 
 	delegate void OpenDocumentCompletionHandler (NSDocument document, bool documentWasAlreadyOpen, NSError error);
@@ -21191,6 +21196,11 @@ namespace AppKit {
 		[Export ("shouldCascadeWindows")]
 		bool ShouldCascadeWindows { get; set; }
 
+		[Mac (13, 2)]
+		[NullAllowed]
+		[Export ("previewRepresentableActivityItems", ArgumentSemantic.Copy)]
+		INSPreviewRepresentableActivityItem [] PreviewRepresentableActivityItems { get; set; }
+
 		[Export ("document")]
 		[NullAllowed]
 		NSDocument Document { get; set; }
@@ -21368,6 +21378,12 @@ namespace AppKit {
 
 		[Export ("window:didDecodeRestorableState:"), EventArgs ("NSWindowCoder")]
 		void DidDecodeRestorableState (NSWindow window, NSCoder coder);
+
+		[Mac (13, 2)]
+		[Export ("previewRepresentableActivityItemsForWindow:")]
+		[return: NullAllowed]
+		[IgnoredInDelegate]
+		INSPreviewRepresentableActivityItem [] GetPreviewRepresentableActivityItems (NSWindow window);
 
 		[Export ("window:willResizeForVersionBrowserWithMaxPreferredSize:maxAllowedSize:"), DelegateName ("NSWindowSizeSize"), DefaultValueFromArgument ("maxPreferredSize")]
 		CGSize WillResizeForVersionBrowser (NSWindow window, CGSize maxPreferredSize, CGSize maxAllowedSize);
@@ -22808,6 +22824,15 @@ namespace AppKit {
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("tabGroup", ArgumentSemantic.Weak)]
 		NSWindowTabGroup TabGroup { get; }
+
+		[Mac (13, 3), MacCatalyst (16, 4)]
+		[Async]
+		[Export ("transferWindowSharingToWindow:completionHandler:")]
+		void TransferWindowSharing (NSWindow window, Action<NSError> completionHandler);
+
+		[Mac (13, 3), MacCatalyst (16, 4)]
+		[Export ("hasActiveWindowSharingSession")]
+		bool HasActiveWindowSharingSession { get; }
 	}
 
 	partial interface NSPrintOperation {
