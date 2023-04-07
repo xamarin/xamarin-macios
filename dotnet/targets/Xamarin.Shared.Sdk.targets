@@ -2051,7 +2051,8 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 		<ItemGroup>
 			<!-- We need to set the 'DestinationSubDirectory' metadata to indicate the actual target directory for items we expanded using a wildcard -->
 			<_BindingPackagesFromReferencedAssembliesWithDestinationDir Include="@(_BindingPackagesFromReferencedAssemblies)">
-				<DestinationSubDirectory>$([System.IO.Path]::GetFileName('%(OriginalItemSpec)'))\$([System.IO.Path]::GetDirectoryName('%(RecursiveDir)'))\</DestinationSubDirectory>
+				<DestinationSubDirectory>$([System.IO.Path]::GetFileName('%(OriginalItemSpec)'))\</DestinationSubDirectory>
+				<DestinationSubDirectory Condition="'%(RecursiveDir)' != ''">$([System.IO.Path]::GetFileName('%(OriginalItemSpec)'))\$([System.IO.Path]::GetDirectoryName('%(RecursiveDir)'))\</DestinationSubDirectory>
 			</_BindingPackagesFromReferencedAssembliesWithDestinationDir>
 			<!-- Add what we found to ReferenceCopyLocalPaths. Note that binding resource packages should generally not be published, so we're setting PublishFolderType=None -->
 			<ReferenceCopyLocalPaths Include="@(_CompressedBindingPackagesFromReferencedAssemblies)">
