@@ -236,7 +236,7 @@ namespace CoreMedia {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios7.1")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -248,7 +248,7 @@ namespace CoreMedia {
 		extern static CMTime CMTimeMultiplyByRatio (CMTime time, /* int32_t */ int multiplier, /* int32_t */ int divisor);
 
 #if NET
-		[SupportedOSPlatform ("ios7.1")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]

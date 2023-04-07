@@ -11,6 +11,10 @@ parameters:
   type: boolean
   default: true
 
+- name: manuallyCreateLocPR
+  type: boolean
+  default: false
+
 variables:
 - template: templates/variables.yml
 - name: MaciosUploadPrefix
@@ -46,14 +50,14 @@ resources:
     ref: refs/heads/only_codesign
     endpoint: xamarin
 
-trigger: none
+trigger:
+- main
 
 schedules:
 
-# the translations team wants a green build, we can do that on sundays even if 
-# the code did not change and without the device tests.
+# Create the PR into main with the newest usable localization strings once a week on Sundays
 - cron: "0 12 * * 0"
-  displayName: Weekly Translations build (Sunday @ noon)
+  displayName: Sunday Build
   branches:
     include:
     - main
@@ -86,3 +90,4 @@ stages:
           isPR: false
           repositoryAlias: self
           commit: HEAD
+          createLocPR: ${{ or(eq(parameters.manuallyCreateLocPR, true), eq(variables['Build.Reason'], 'Schedule')) }}

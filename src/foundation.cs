@@ -6802,6 +6802,11 @@ namespace Foundation {
 		[Field ("NSURLFileResourceTypeKey")]
 		NSString FileResourceTypeKey { get; }
 
+		[Watch (9, 4), TV (16, 4), Mac (13, 3), iOS (16, 4)]
+		[MacCatalyst (16, 4)]
+		[Field ("NSURLFileIdentifierKey")]
+		NSString FileIdentifierKey { get; }
+
 		[Field ("NSURLFileResourceTypeNamedPipe")]
 		NSString FileResourceTypeNamedPipe { get; }
 
@@ -6940,6 +6945,21 @@ namespace Foundation {
 		[MacCatalyst (13, 1)]
 		[Field ("NSURLVolumeAvailableCapacityForOpportunisticUsageKey")]
 		NSString VolumeAvailableCapacityForOpportunisticUsageKey { get; }
+
+		[Watch (9, 4), TV (16, 4), Mac (13, 3), iOS (16, 4)]
+		[MacCatalyst (16, 4)]
+		[Field ("NSURLVolumeTypeNameKey")]
+		NSString VolumeTypeNameKey { get; }
+
+		[Watch (9, 4), TV (16, 4), Mac (13, 3), iOS (16, 4)]
+		[MacCatalyst (16, 4)]
+		[Field ("NSURLVolumeSubtypeKey")]
+		NSString VolumeSubtypeKey { get; }
+
+		[Watch (9, 4), TV (16, 4), Mac (13, 3), iOS (16, 4)]
+		[MacCatalyst (16, 4)]
+		[Field ("NSURLVolumeMountFromLocationKey")]
+		NSString VolumeMountFromLocationKey { get; }
 
 		[Field ("NSURLIsUbiquitousItemKey")]
 		NSString IsUbiquitousItemKey { get; }
@@ -11481,7 +11501,7 @@ namespace Foundation {
 
 		[NoWatch, NoTV]
 		[iOS (11, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("preferredPresentationSize")]
 		CGSize PreferredPresentationSize {
 			get;
@@ -11581,14 +11601,14 @@ namespace Foundation {
 		[NoWatch, NoTV]
 		[NoMac]
 		[iOS (11, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("teamData", ArgumentSemantic.Copy)]
 		NSData TeamData { get; set; }
 
 		[NoWatch, NoTV]
 		[NoMac]
 		[iOS (11, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("preferredPresentationStyle", ArgumentSemantic.Assign)]
 		UIPreferredPresentationStyle PreferredPresentationStyle { get; set; }
 
@@ -15594,7 +15614,7 @@ namespace Foundation {
 	[NoiOS, NoTV, NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	interface NSAffineTransform : NSSecureCoding, NSCopying {
 		[Export ("initWithTransform:")]
 		NativeHandle Constructor (NSAffineTransform transform);
@@ -16388,7 +16408,7 @@ namespace Foundation {
 	}
 
 	[NoiOS, NoTV, NoWatch]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSAppleScript : NSCopying {

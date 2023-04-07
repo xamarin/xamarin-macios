@@ -136,6 +136,12 @@ namespace Xamarin.Tests {
 			expectedFiles.Add (Path.Combine (resourcesDirectory, "basn3p08_with_loc.png"));
 			expectedFiles.Add (Path.Combine (resourcesDirectory, "iTunesArtwork.jpg"));
 
+			// NoneN.dll: bundled (assembly) - but the xml file next to it should not be bundled.
+			expectedFiles.Add (Path.Combine (assemblyDirectory, "NoneN.dll"));
+
+			// NoneP.dll: bundled (assembly) - but the xml file with the same base name should not be bundled.
+			expectedFiles.Add (Path.Combine (assemblyDirectory, "NoneP.dll"));
+
 			// UnknownA.bin: None
 			expectedFiles.Add (Path.Combine (assemblyDirectory, "UnknownB.bin")); // UnknownB.bin: Assembly
 			expectedFiles.Add (Path.Combine (resourcesDirectory, "UnknownC.bin")); // UnknownC.bin: Resource
@@ -578,6 +584,7 @@ namespace Xamarin.Tests {
 				$"The file '{Path.Combine (project_dir, platformString, "NoneM.unknown")}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.",
 				$"The file '{Path.Combine (project_dir, platformString, "Sub", "NoneG.txt")}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.",
 				$"The file '{Path.Combine (project_dir, "NoneH.txt")}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.",
+				$"The file '{Path.Combine (project_dir, "NoneO.xml")}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.",
 			}.ToList ();
 
 			var rids = runtimeIdentifiers.Split (';');

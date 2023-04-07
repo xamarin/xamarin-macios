@@ -291,7 +291,7 @@ namespace MediaAccessibility {
 #endif
 	static partial class MAAudibleMedia {
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -313,5 +313,34 @@ namespace MediaAccessibility {
 			CFObject.CFRelease (handle); // *Copy* API
 			return result;
 		}
+	}
+
+#if NET
+	[SupportedOSPlatform ("ios16.4")]
+	[SupportedOSPlatform ("maccatalyst16.4")]
+	[SupportedOSPlatform ("macos13.3")]
+	[SupportedOSPlatform ("tvos16.4")]
+#endif
+	public static partial class MAVideoAccommodations {
+#if NET
+		[SupportedOSPlatform ("ios16.4")]
+		[SupportedOSPlatform ("maccatalyst16.4")]
+		[SupportedOSPlatform ("macos13.3")]
+		[SupportedOSPlatform ("tvos16.4")]
+#else
+		[Mac (13, 3), TV (16, 4), iOS (16, 4)]
+#endif
+		[DllImport (Constants.MediaAccessibilityLibrary)]
+		static extern byte MADimFlashingLightsEnabled ();
+
+#if NET
+		[SupportedOSPlatform ("ios16.4")]
+		[SupportedOSPlatform ("maccatalyst16.4")]
+		[SupportedOSPlatform ("macos13.3")]
+		[SupportedOSPlatform ("tvos16.4")]
+#else
+		[Mac (13, 3), TV (16, 4), iOS (16, 4)]
+#endif
+		public static bool IsDimFlashingLightsEnabled () => MADimFlashingLightsEnabled () != 0;
 	}
 }

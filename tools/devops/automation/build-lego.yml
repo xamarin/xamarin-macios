@@ -49,7 +49,7 @@ resources:
 trigger:
   branches:
     include:
-      - Localization
+    - Localization
 
 stages:
 
@@ -84,7 +84,12 @@ stages:
 
           git fetch origin
 
-          gh pr create --title "Bring changes from Localization branch #$(Build.BuildNumber)" --body "The OneLoc team creates these translations to be consumed later on in the second step of the Localization process. We need to bring these into the main branch in order to continue the process." --base main --head Localization --draft=false
+          gh pr create \
+          --title "Bring changes from Localization branch #$(Build.BuildNumber)" \
+          --body "The OneLoc team creates these translations to be consumed later on in the second step of the Localization process. We need to bring these into the main branch in order to continue the process." \
+          --base main \
+          --head Localization \
+          --draft=false
 
         name: BringLocChanges
         displayName: "BringLocChanges"

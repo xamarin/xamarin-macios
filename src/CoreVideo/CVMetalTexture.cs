@@ -27,7 +27,7 @@ using NativeHandle = System.IntPtr;
 namespace CoreVideo {
 
 #if NET
-	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos12.0")]
 	[SupportedOSPlatform ("maccatalyst15.0")]
 	[SupportedOSPlatform ("tvos")]

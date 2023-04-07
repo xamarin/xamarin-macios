@@ -1851,6 +1851,8 @@
 			<MlaunchEnvironmentVariables Include="__XAMARIN_DEBUG_MODE__=$(XamarinDebugMode)" Condition="'$(XamarinDebugMode)' != ''" />
 			<MlaunchEnvironmentVariables Include="__XAMARIN_DEBUG_PORT__=$(XamarinDebugPort)" Condition="'$(XamarinDebugPort)' != ''" />
 			<MlaunchEnvironmentVariables Include="__XAMARIN_DEBUG_HOSTS__=$(XamarinDebugHosts.Replace(';', '%3B'))" Condition="'$(XamarinDebugHosts)' != ''" />
+			<!-- It's not possible to set an item group from the command line, so add support for setting a property (with semi-colon separated items) that we'll include into the item group -->
+			<MlaunchAdditionalArguments Include="$(MlaunchAdditionalArgumentsProperty)" Condition="'$(MlaunchAdditionalArgumentsProperty)' != ''" />
 		</ItemGroup>
 		<GetMlaunchArguments
 			SessionId="$(BuildSessionId)"
@@ -1953,6 +1955,84 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 	<Target Name="RemoveGlobalnfloatUsingItemGroup" BeforeTargets="PrepareForBuild">
 		<ItemGroup>
 			<Using Remove="System.Runtime.InteropServices.NFloat" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_CopyLocalBindingResources" AfterTargets="ResolveAssemblyReferences" BeforeTargets="CopyFilesToOutputDirectory">
+		<!--
+
+			We need to copy binding resource packages (either zipped or as a
+			.resources bundle) together with the binding assembly when the
+			binding assembly is copied around. This typically happens when
+			another library project references the binding project, in which
+			case the ResolveAssemblyReference task will add the binding
+			library to the ReferenceCopyLocalPaths item group (when building
+			the library project), which will cause the binding assembly to be
+			copied to the output directory for the other library project.
+
+			If this isn't done, then any projects referencing the library
+			project (and not the binding project), won't see any binding
+			resource packages from the binding project.
+
+			This is not good (https://github.com/xamarin/xamarin-macios/issues/13910).
+
+			This is a target that runs after the ReferenceCopyLocalPaths item
+			group has been populated by the ResolveAssemblyReferences target,
+			and will add any binding resource packages to the
+			ReferenceCopyLocalPaths item group.
+
+			This is somewhat complicated by the fact that we can have
+			.resources bundles (i.e. directories), so we need to expand those
+			to all their contained files.
+
+		-->
+
+		<ItemGroup>
+			<!-- List all potential compressed binding resource packages next to the assemblies we're copying to the output directory -->
+			<_CompressedBindingPackagesFromReferencedAssembliesCandidates Include="@(ReferenceCopyLocalPaths -> '%(RootDir)%(Directory)%(Filename).resources.zip')" />
+			<!-- We only care about those that actually exist, and we don't want duplicates either -->
+			<_CompressedBindingPackagesFromReferencedAssemblies Include="@(_CompressedBindingPackagesFromReferencedAssembliesCandidates->Distinct())" Condition="Exists('%(Identity)')" />
+
+			<!-- List all potential binding resource packages next to the assemblies we're copying to the output directory -->
+			<_BindingPackagesFromReferencedAssembliesDirectoriesCandidates Include="@(ReferenceCopyLocalPaths -> '%(RootDir)%(Directory)%(Filename).resources')" />
+			<!-- We only care about those that actually exist, and we don't want duplicates either -->
+			<_BindingPackagesFromReferencedAssembliesDirectoriesExists Include="@(_BindingPackagesFromReferencedAssembliesDirectoriesCandidates->Distinct())" Condition="Exists('%(Identity)')" />
+		</ItemGroup>
+
+		<!--
+			We need to expand items in an item group using globs, which is
+			kind of tricky, because globs in item transformations aren't
+			treated as globs. The workaround is to use a custom task for this.
+
+			Note that this task should run remotely from Windows when there's
+			a Mac connected, but locally when there's not a Mac connected (for
+			Hot Restart builds for instance), so we're not conditioning this
+			task on IsMacEnabled.
+
+		-->
+		<GetFileSystemEntries
+			SessionId="$(BuildSessionId)"
+			DirectoryPath="@(_BindingPackagesFromReferencedAssembliesDirectoriesExists)"
+			Pattern="*"
+			Recursive="true"
+			IncludeDirectories="false"
+			>
+			<Output TaskParameter="Entries" ItemName="_BindingPackagesFromReferencedAssemblies" />
+		</GetFileSystemEntries>
+
+		<ItemGroup>
+			<!-- We need to set the 'DestinationSubDirectory' metadata to indicate the actual target directory for items we expanded using a wildcard -->
+			<_BindingPackagesFromReferencedAssembliesWithDestinationDir Include="@(_BindingPackagesFromReferencedAssemblies)">
+				<DestinationSubDirectory>$([System.IO.Path]::GetFileName('%(OriginalItemSpec)'))\</DestinationSubDirectory>
+				<DestinationSubDirectory Condition="'%(RecursiveDir)' != ''">$([System.IO.Path]::GetFileName('%(OriginalItemSpec)'))\$([System.IO.Path]::GetDirectoryName('%(RecursiveDir)'))\</DestinationSubDirectory>
+			</_BindingPackagesFromReferencedAssembliesWithDestinationDir>
+			<!-- Add what we found to ReferenceCopyLocalPaths. Note that binding resource packages should generally not be published, so we're setting PublishFolderType=None -->
+			<ReferenceCopyLocalPaths Include="@(_CompressedBindingPackagesFromReferencedAssemblies)">
+				<PublishFolderType>None</PublishFolderType>
+			</ReferenceCopyLocalPaths>
+			<ReferenceCopyLocalPaths Include="@(_BindingPackagesFromReferencedAssembliesWithDestinationDir)">
+				<PublishFolderType>None</PublishFolderType>
+			</ReferenceCopyLocalPaths>
 		</ItemGroup>
 	</Target>
 

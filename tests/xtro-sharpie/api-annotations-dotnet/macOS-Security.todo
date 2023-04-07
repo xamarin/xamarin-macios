@@ -4,3 +4,4 @@
 !deprecated-attribute-missing! SecKeychainFindInternetPassword missing a [Deprecated] attribute
 !deprecated-attribute-missing! SecKeychainItemFreeContent missing a [Deprecated] attribute
 !missing-field! kSecCodeInfoDefaultDesignatedLightweightCodeRequirement not bound
+!missing-pinvoke! SecCodeValidateFileResource is not bound

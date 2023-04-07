@@ -99,6 +99,7 @@
     <Compile Include="..\src\bgen\AsyncMethodKind.cs" />
     <Compile Include="..\src\bgen\AttributeManager.cs" />
     <Compile Include="..\src\bgen\Attributes.cs" />
+    <Compile Include="..\src\bgen\AttributeFactory.ConstructorArguments.cs" />
     <Compile Include="..\src\bgen\AttributeFactory.cs" />
     <Compile Include="..\src\bgen\BodyOption.cs" />
     <Compile Include="..\src\bgen\BindingTouch.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="..\src\bgen\GeneratedType.cs" />
     <Compile Include="..\src\bgen\GeneratedTypes.cs" />
     <Compile Include="..\src\bgen\Generator.cs" />
+    <Compile Include="..\src\bgen\Generator.PrintAttributes.cs" />
     <Compile Include="..\src\bgen\MarshalInfo.cs" />
     <Compile Include="..\src\bgen\MarshalTypeList.cs" />
     <Compile Include="..\src\bgen\MarshalType.cs" />
