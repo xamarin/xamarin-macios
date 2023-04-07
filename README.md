@@ -44,4 +44,4 @@ However, we provide links to older Xamarin.iOS and Mac packages for macOS downgr
 ## License
 
 Copyright (c) .NET Foundation Contributors. All rights reserved.
-Licensed under the [MIT](https://github.com/xamarin/xamarin-macios/blob/main/LICENSE) License. 
+Licensed under the [MIT](https://github.com/xamarin/xamarin-macios/blob/main/LICENSE) License.  
