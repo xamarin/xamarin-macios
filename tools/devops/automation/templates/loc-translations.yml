@@ -83,7 +83,7 @@ steps:
   inputs:
     locProj: '$(Build.SourcesDirectory)\\Localize\\LocProject.json'
     outDir: '$(Build.ArtifactStagingDirectory)'
-    ${{ eq(variables['createLocPR'], true) }}:
+    ${{ if eq(parameters.createLocPR, true) }}:
       isCreatePrSelected: true
     ${{ else }}:
       isCreatePrSelected: false
