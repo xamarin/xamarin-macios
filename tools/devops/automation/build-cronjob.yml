@@ -11,7 +11,7 @@ parameters:
   type: boolean
   default: true
 
-- name: createLocPR
+- name: manuallyCreateLocPR
   type: boolean
   default: false
 
@@ -68,7 +68,7 @@ schedules:
 # to look for new usable translation PRs everyday.
 # This will run around midnight in the US after each workday
 # - cron: "0 5 * * 2-6"
-- cron: "50 1 * * *"
+- cron: "8 2 * * *"
   displayName: Daily Build # Do not change this string as it is used in the 'translations' job
   branches:
     include:
@@ -103,4 +103,4 @@ stages:
           isPR: false
           repositoryAlias: self
           commit: HEAD
-          createLocPR: or(eq(variables['createLocPR'], true), eq(variables['schedule.displayName'], 'Daily Build'))
+          createLocPR: ${{ or(eq(parameters.manuallyCreateLocPR, true), eq(variables['schedule.displayName'], 'Daily Build')) }}
