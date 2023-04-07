@@ -60,17 +60,20 @@ schedules:
   branches:
     include:
     - main
+    - LocalizationSchedule1Test
   always: true
 
 # Run the OneLocTask everyday without setting the createLocPR var to true.
 # This will ensure that OneLoc gets our newly added error strings faster but we do not need
 # to look for new usable translation PRs everyday.
 # This will run around midnight in the US after each workday
-- cron: "0 5 * * 2-6"
+# - cron: "0 5 * * 2-6"
+- cron: "50 1 * * *"
   displayName: Daily Build # Do not change this string as it is used in the 'translations' job
   branches:
     include:
     - main
+    - LocalizationSchedule1Test
   always: true
 
 stages:
