@@ -98,9 +98,16 @@ stages:
       pool:
         vmImage: windows-latest
       steps:
-      - template:  templates/loc-translations.yml
-        parameters:
-          isPR: false
-          repositoryAlias: self
-          commit: HEAD
-          createLocPR: ${{ or(eq(parameters.manuallyCreateLocPR, true), eq(variables['schedule.displayName'], 'Daily Build')) }}
+      # - template:  templates/loc-translations.yml
+      #   parameters:
+      #     isPR: false
+      #     repositoryAlias: self
+      #     commit: HEAD
+      #     createLocPR: ${{ or(eq(parameters.manuallyCreateLocPR, true), eq(variables['schedule.displayName'], 'Daily Build')) }}
+      - script: |
+          if [ ${{ or(eq(parameters.manuallyCreateLocPR, true), eq(variables['schedule.displayName'], 'Daily Build')) }} == true ]; then
+            echo "The parameter is true"
+          else
+            echo "The parameter is false"
+          fi
+          echo "The value of schedule.displayName = $schedule.displayName"
