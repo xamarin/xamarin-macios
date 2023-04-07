@@ -17,13 +17,18 @@ parameters:
 
 steps:
 
-- template: sdk-unified/steps/checkout/v1.yml@yaml-templates
-  parameters:
-    resource: ${{ parameters.repositoryAlias }}
-    commit: ${{ parameters.commit }}
-    clean: true
-    submodules: recursive
-    path: s/xamarin-macios
+- script: |
+    echo "Got into the template"
+    echo "createLocPR value is ${{ parameters.createLocPR }}}"
+    echo "going to use this conditional: ${{ eq(parameters.createLocPR, true) }}:"
+
+# - template: sdk-unified/steps/checkout/v1.yml@yaml-templates
+#   parameters:
+#     resource: ${{ parameters.repositoryAlias }}
+#     commit: ${{ parameters.commit }}
+#     clean: true
+#     submodules: recursive
+#     path: s/xamarin-macios
 
 # - ${{ if parameters.isPR }}:
 #   - pwsh: |
@@ -83,7 +88,7 @@ steps:
 #   inputs:
 #     locProj: '$(Build.SourcesDirectory)\\Localize\\LocProject.json'
 #     outDir: '$(Build.ArtifactStagingDirectory)'
-#     ${{ eq(parameters.createLocPR, true) }}:
+#     ${{ if eq(parameters.createLocPR, true) }}:
 #       isCreatePrSelected: true
 #     ${{ else }}:
 #       isCreatePrSelected: false
