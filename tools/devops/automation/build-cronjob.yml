@@ -4,7 +4,7 @@
 # YAML build pipeline based on the Jenkins multi-stage (main branch) build workflow
 # https://jenkins.internalx.com/view/Xamarin.MaciOS/job/macios/job/main/
 # https://jenkins.internalx.com/view/Xamarin.MaciOS/job/macios/configure
-# 
+#
 parameters:
 
 - name: runGovernanceTests

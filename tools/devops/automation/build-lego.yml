@@ -89,6 +89,8 @@ stages:
           --body "The OneLoc team creates these translations to be consumed later on in the second step of the Localization process. We need to bring these into the main branch in order to continue the process." `
           --base main `
           --head Localization `
+          --label not-notes-worthy `
+          --milestone Future `
           --draft=false
 
         name: BringLocChanges
