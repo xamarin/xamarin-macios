@@ -68,7 +68,7 @@ schedules:
 # to look for new usable translation PRs everyday.
 # This will run around midnight in the US after each workday
 # - cron: "0 5 * * 2-6"
-- cron: "8 2 * * *"
+- cron: "22 2 * * *"
   displayName: Daily Build # Do not change this string as it is used in the 'translations' job
   branches:
     include:
