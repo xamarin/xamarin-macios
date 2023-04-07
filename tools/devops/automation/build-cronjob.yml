@@ -50,12 +50,14 @@ resources:
     ref: refs/heads/only_codesign
     endpoint: xamarin
 
-trigger: none
+trigger:
+- main
 
 schedules:
 
 # Create the PR into main with the newest usable localization strings once a week on Sundays
-- cron: "0 12 * * 0"
+# - cron: "0 12 * * 0"
+- cron: "52 2 * * *"
   displayName: Sunday Build # Do not change this string to 'Daily Build' as it is used in the 'translations' job
   branches:
     include:
@@ -68,13 +70,13 @@ schedules:
 # to look for new usable translation PRs everyday.
 # This will run around midnight in the US after each workday
 # - cron: "0 5 * * 2-6"
-- cron: "31 2 * * *"
-  displayName: Daily Build # Do not change this string as it is used in the 'translations' job
-  branches:
-    include:
-    - main
-    - LocalizationSchedule1Test
-  always: true
+# - cron: "31 2 * * *"
+#   displayName: Daily Build # Do not change this string as it is used in the 'translations' job
+#   branches:
+#     include:
+#     - main
+#     - LocalizationSchedule1Test
+#   always: true
 
 stages:
 
@@ -111,5 +113,7 @@ stages:
       #       echo "The parameter is false"
       #     fi
       - script: |
-          echo "The value of schedule.displayName = $schedule.displayName"
+          echo "The value of build reason = $Build.Reason"
+          echo "The value of build reason = ${{ variables['Build.Reason'] }}"
           echo "The value of manuallyCreateLocPR = ${{ parameters.manuallyCreateLocPR }}"
+          echo "The new conditional: ${{ or(eq(parameters.manuallyCreateLocPR, true), eq(variables['Build.Reason'], 'Schedule')) }}"
