@@ -68,7 +68,7 @@ schedules:
 # to look for new usable translation PRs everyday.
 # This will run around midnight in the US after each workday
 # - cron: "0 5 * * 2-6"
-- cron: "22 2 * * *"
+- cron: "31 2 * * *"
   displayName: Daily Build # Do not change this string as it is used in the 'translations' job
   branches:
     include:
@@ -104,10 +104,12 @@ stages:
       #     repositoryAlias: self
       #     commit: HEAD
       #     createLocPR: ${{ or(eq(parameters.manuallyCreateLocPR, true), eq(variables['schedule.displayName'], 'Daily Build')) }}
+
+      #  if [ ${{ or(eq(parameters.manuallyCreateLocPR, true), eq(variables['schedule.displayName'], 'Daily Build')) }} == true ]; then
+      #       echo "The parameter is true"
+      #     else
+      #       echo "The parameter is false"
+      #     fi
       - script: |
-          if [ ${{ or(eq(parameters.manuallyCreateLocPR, true), eq(variables['schedule.displayName'], 'Daily Build')) }} == true ]; then
-            echo "The parameter is true"
-          else
-            echo "The parameter is false"
-          fi
           echo "The value of schedule.displayName = $schedule.displayName"
+          echo "The value of manuallyCreateLocPR = ${{ parameters.manuallyCreateLocPR }}"
