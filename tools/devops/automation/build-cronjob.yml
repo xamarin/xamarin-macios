@@ -57,7 +57,7 @@ schedules:
 
 # Create the PR into main with the newest usable localization strings once a week on Sundays
 - cron: "0 12 * * 0"
-  displayName: Sunday Build # Do not change this string to 'Daily Build' as it is used in the 'translations' job
+  displayName: Sunday Build
   branches:
     include:
     - main
