@@ -202,6 +202,15 @@ namespace ObjCRuntime {
 		internal static unsafe InitializationOptions* options;
 
 #if NET
+		public static class ClassHandles
+		{
+			internal static unsafe void InitializeClassHandles (MTClassMap* map)
+			{
+			}
+		}
+#endif
+
+#if NET
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal unsafe static bool IsCoreCLR {
 			get {
