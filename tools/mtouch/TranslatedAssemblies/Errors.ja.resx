@@ -1043,6 +1043,21 @@
 		<value>{0} のオフセット {1} にある BlockLiteral.SetupBlock への呼び出しを最適化できませんでした: {2}。
 		</value>
 	</data>
+  <data name="MX2106_E" xml:space="preserve">
+		<value>オフセット {1} の {0} で BlockLiteral.{2} への呼び出しを最適化できませんでした。'{3}' という名前のメソッドが型 '{4}' に複数見つかりました。</value>
+	</data>
+  <data name="MX2106_F" xml:space="preserve">
+		<value>メソッド '{3}' に少なくとも 1 つのパラメーターが必要なため、オフセット {1} の {0} で BlockLiteral.{2} への呼び出しを最適化できませんでした。</value>
+	</data>
+  <data name="MX2106_G" xml:space="preserve">
+		<value>オフセット {1} の{0} で BlockLiteral.{2} への呼び出しを最適化できませんでした。メソッド '{3}' の最初のパラメーター ('{4}') が 'System.IntPtr'、'void*'、または 'ObjCRuntime.BlockLiteral*' ではないためです。</value>
+	</data>
+  <data name="MX2106_H" xml:space="preserve">
+		<value>メソッド '{3}' に [UnmanagedCallersOnly] 属性がないため、オフセット {1} の {0} で BlockLiteral.{2} への呼び出しを最適化できませんでした。</value>
+	</data>
+  <data name="MX2106_I" xml:space="preserve">
+		<value>メソッド '{3}' に [UnmanagedCallersOnly] 属性がないため、オフセット {1} の {0} で BlockLiteral.{2} への呼び出しを最適化できませんでした。</value>
+	</data>
   <data name="MM2107" xml:space="preserve">
 		<value>{0} は '{1}.{2} ({3})' を参照しているため、動的レジストラーを削除することは安全ではありません。
 		</value>
@@ -1763,5 +1778,29 @@
 	</data>
   <data name="MX8044" xml:space="preserve">
 		<value>アセンブリ {0} は、アプリのビルド後に変更されたため、生成された静的レジストラー コードを無効化します。読み込まれたアセンブリの MVID は {1} ですが、生成された静的レジストラー コードが対応するのは {2} です。</value>
+	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>型 {0} のインスタンスでリリースを呼び出すことができません</value>
+	</data>
+  <data name="MX8046" xml:space="preserve">
+		<value>型 '{1}' にメソッド '{0}' が見つかりません</value>
+	</data>
+  <data name="MX8047" xml:space="preserve">
+		<value>トランポリン メソッド {0} が、トランポリン メソッド引数の関数ポインター 0x{1} と一致しません (それらは同じメソッドを参照していません)。</value>
+	</data>
+  <data name="MX8048" xml:space="preserve">
+		<value>トランポリン メソッド {0} には少なくとも 1 つのパラメーターが必要です。</value>
+	</data>
+  <data name="MX8049" xml:space="preserve">
+		<value>トランポリン メソッド {0} の最初のパラメーターは、'System.IntPtr'、'void*'、または 'ObjCRuntime.BlockLiteral*' のいずれかにする必要があります。</value>
+	</data>
+  <data name="MX8050" xml:space="preserve">
+		<value>動的レジストラーがリンクされている場合、BlockLiteral.GetBlockSignature はサポートされません。</value>
+	</data>
+  <data name="MX8051" xml:space="preserve">
+		<value>トランポリン メソッド {0} には [UnmanagedCallersOnly] 属性が必要です。</value>
+	</data>
+  <data name="MX8052" xml:space="preserve">
+		<value>シグネチャは、空でない文字列である必要があります。</value>
 	</data>
 </root>
