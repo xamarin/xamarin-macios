@@ -320,3 +320,13 @@
 !missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceInsetGrouped = 2 not bound
 !missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceSidebar = 3 not bound
 !missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceSidebarPlain = 4 not bound
+
+# Not binding for now, does not make sense on tvOS
+!missing-selector! +UITextInputContext::current not bound
+!missing-selector! UITextInputContext::isDictationInputExpected not bound
+!missing-selector! UITextInputContext::isHardwareKeyboardInputExpected not bound
+!missing-selector! UITextInputContext::isPencilInputExpected not bound
+!missing-selector! UITextInputContext::setDictationInputExpected: not bound
+!missing-selector! UITextInputContext::setHardwareKeyboardInputExpected: not bound
+!missing-selector! UITextInputContext::setPencilInputExpected: not bound
+!missing-type! UITextInputContext not bound

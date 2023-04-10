@@ -967,6 +967,19 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "CAEdrMetadata":
+				switch (selectorName) {
+				case "copyWithZone:":
+				case "encodeWithCoder:":
+					return !TestRuntime.CheckXcodeVersion (14, 3);
+				}
+				break;
+			case "GCKeyboard":
+				switch (selectorName) {
+				case "encodeWithCoder:": // removed comformance
+					return TestRuntime.CheckXcodeVersion (14, 3);
+				}
+				break;
 			}
 
 			// old binding mistake

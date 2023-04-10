@@ -1166,6 +1166,9 @@ namespace CoreML {
 		bool Write (NSUrl url, [NullAllowed] out NSError error);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 13, 3, message: "Use Background Assets or 'NSUrlSession' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
+	[Deprecated (PlatformName.iOS, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
 	[Mac (11, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[NoTV]
@@ -1198,6 +1201,9 @@ namespace CoreML {
 		NSString DidChangeNotification { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 13, 3, message: "Use Background Assets or 'NSUrlSession' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
+	[Deprecated (PlatformName.iOS, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
 	[Mac (11, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[NoTV]

@@ -111,6 +111,8 @@ namespace Cecil.Tests {
 			"ObjCRuntime.NativeHandle ObjCRuntime.Messaging::NativeHandle_objc_msgSend_IntPtr_NativeHandle_bool(System.IntPtr,System.IntPtr,System.IntPtr,ObjCRuntime.NativeHandle,System.Boolean)",
 			"ObjCRuntime.NativeHandle ObjCRuntime.Messaging::NativeHandle_objc_msgSend_IntPtr_UIntPtr_bool(System.IntPtr,System.IntPtr,System.IntPtr,System.UIntPtr,System.Boolean)",
 			"ObjCRuntime.NativeHandle ObjCRuntime.Messaging::NativeHandle_objc_msgSend_IntPtr_UIntPtr_float_bool(System.IntPtr,System.IntPtr,System.IntPtr,System.UIntPtr,System.Single,System.Boolean)",
+			"ObjCRuntime.NativeHandle ObjCRuntime.Messaging::NativeHandle_objc_msgSend_NativeHandle_NativeHandle_bool_UIntPtr_NativeHandle_IntPtr(System.IntPtr,System.IntPtr,ObjCRuntime.NativeHandle,ObjCRuntime.NativeHandle,System.Boolean,System.UIntPtr,ObjCRuntime.NativeHandle,System.IntPtr)",
+			"ObjCRuntime.NativeHandle ObjCRuntime.Messaging::NativeHandle_objc_msgSendSuper_NativeHandle_NativeHandle_bool_UIntPtr_NativeHandle_IntPtr(System.IntPtr,System.IntPtr,ObjCRuntime.NativeHandle,ObjCRuntime.NativeHandle,System.Boolean,System.UIntPtr,ObjCRuntime.NativeHandle,System.IntPtr)",
 			"ObjCRuntime.NativeHandle ObjCRuntime.Messaging::NativeHandle_objc_msgSend_NativeHandle_bool(System.IntPtr,System.IntPtr,ObjCRuntime.NativeHandle,System.Boolean)",
 			"ObjCRuntime.NativeHandle ObjCRuntime.Messaging::NativeHandle_objc_msgSend_NativeHandle_bool_bool(System.IntPtr,System.IntPtr,ObjCRuntime.NativeHandle,System.Boolean,System.Boolean)",
 			"ObjCRuntime.NativeHandle ObjCRuntime.Messaging::NativeHandle_objc_msgSend_NativeHandle_bool_bool_bool_bool(System.IntPtr,System.IntPtr,ObjCRuntime.NativeHandle,System.Boolean,System.Boolean,System.Boolean,System.Boolean)",
