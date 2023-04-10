@@ -260,7 +260,7 @@ namespace Xamarin.Linker {
 				case "SkipMarkingNSObjectsInUserAssemblies":
 					if (!TryParseOptionalBoolean (value, out var skip_marking_nsobjects_in_user_assemblies))
 						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
-					Application.SkipMarkingNSObjectsInUserAssemblies = skip_marking_nsobjects_in_user_assemblies;
+					Application.SkipMarkingNSObjectsInUserAssemblies = skip_marking_nsobjects_in_user_assemblies.Value;
 					break;
 				case "TargetArchitectures":
 					if (!Enum.TryParse<Abi> (value, out var arch))
