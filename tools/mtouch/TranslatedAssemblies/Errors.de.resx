@@ -1042,6 +1042,21 @@
 		<value>Der Aufruf von BlockLiteral.SetupBlock in {0} bei Offset {1} konnte nicht optimiert werden: {2}.
 		</value>
 	</data>
+  <data name="MX2106_E" xml:space="preserve">
+		<value>Der Aufruf von BlockLiteral.{2} in {0} bei Offset {1} konnte nicht optimiert werden, da mehrere Methoden mit dem Namen „{3}“ im Typ „{4}“ gefunden wurden.</value>
+	</data>
+  <data name="MX2106_F" xml:space="preserve">
+		<value>Der Aufruf von BlockLiteral.{2} in {0} bei Offset {1} konnte nicht optimiert werden, da die Methode „{3}“ mindestens einen Parameter aufweisen muss.</value>
+	</data>
+  <data name="MX2106_G" xml:space="preserve">
+		<value>Der Aufruf von BlockLiteral.{2} in {0} bei Offset {1} konnte nicht optimiert werden, da der erste Parameter in der Methode „{3}“ nicht „System.IntPtr“, „void*“ oder „ObjCRuntime.BlockLiteral*“ ist (sondern „{4}“).</value>
+	</data>
+  <data name="MX2106_H" xml:space="preserve">
+		<value>Der Aufruf von BlockLiteral.{2} in {0} bei Offset {1} konnte nicht optimiert werden, da die Methode „{3}“ kein [UnmanagedCallersOnly]-Attribut aufweist.</value>
+	</data>
+  <data name="MX2106_I" xml:space="preserve">
+		<value>Der Aufruf von BlockLiteral.{2} in {0} bei Offset {1} konnte nicht optimiert werden, da die Methode „{3}“ kein [UnmanagedCallersOnly]-Attribut aufweist.</value>
+	</data>
   <data name="MM2107" xml:space="preserve">
 		<value>Das Entfernen des dynamischen Registrars ist nicht sicher, weil "{0}" auf "{1}.{2} ({3})" verweist.
 		</value>
@@ -1762,5 +1777,29 @@
 	</data>
   <data name="MX8044" xml:space="preserve">
 		<value>Die Assembly {0} wurde geändert, seit die App erstellt wurde, wodurch der generierte statische Registrierungscode ungültig wird. Die MVID für die geladene Assembly ist {1}, während die MVID für die Assembly, der der generierte statische Registrierungscode entspricht, {2}ist.</value>
+	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>Release kann für eine Instanz des Typs „{0}“ nicht aufgerufen werden.</value>
+	</data>
+  <data name="MX8046" xml:space="preserve">
+		<value>Die Methode „{0}“ wurde im Typ „{1}“ nicht gefunden.</value>
+	</data>
+  <data name="MX8047" xml:space="preserve">
+		<value>Die Trampolinmethode {0} entspricht nicht dem Funktionszeiger 0x{1} für das „trampolineMethod“-Argument (sie verweisen nicht auf dieselbe Methode).</value>
+	</data>
+  <data name="MX8048" xml:space="preserve">
+		<value>Die Trampolinmethode {0} muss mindestens einen Parameter aufweisen.</value>
+	</data>
+  <data name="MX8049" xml:space="preserve">
+		<value>Der erste Parameter in der Trampolinmethode {0} muss entweder „System.IntPtr“, „void*“ oder „ObjCRuntime.BlockLiteral*“ sein.</value>
+	</data>
+  <data name="MX8050" xml:space="preserve">
+		<value>BlockLiteral.GetBlockSignature wird nicht unterstützt, wenn die dynamische Registrierungsstelle nicht verknüpft ist.</value>
+	</data>
+  <data name="MX8051" xml:space="preserve">
+		<value>Die Trampolinmethode {0} muss über ein [UnmanagedCallersOnly]-Attribut verfügen.</value>
+	</data>
+  <data name="MX8052" xml:space="preserve">
+		<value>Die Signatur darf keine leere Zeichenfolge sein.</value>
 	</data>
 </root>
