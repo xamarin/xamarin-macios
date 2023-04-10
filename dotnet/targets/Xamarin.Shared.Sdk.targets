@@ -639,10 +639,7 @@
 	<PropertyGroup>
 		<_ComputeFrameworkFilesToPublishDependsOn>
 			$(_ComputeFrameworkFilesToPublishDependsOn);
-			_DecompressAppleFrameworks;
-			_CollectDecompressedAppleFrameworks;
-			_DecompressAppleBindingResourcePackages;
-			_CollectDecompressedAppleBindingResourcePackages;
+			_ComputePublishLocation;
 			_ExpandNativeReferences;
 			_ComputeVariables;
 			_LoadLinkerOutput;
@@ -653,7 +650,7 @@
 	<Target Name="_ComputeFrameworkFilesToPublish" DependsOnTargets="$(_ComputeFrameworkFilesToPublishDependsOn)">
 		<ItemGroup>
 			<!-- Collect the list of frameworks to publish from _FrameworkNativeReference. The ExtractBindingLibrariesStep in the linker and
-			     the _DecompressAppleFrameworks and _DecompressAppleBindingResourcePackages targets might also add frameworks to _FrameworkToPublish -->
+			     the _ComputePublishLocation targets might also add frameworks to _FrameworkToPublish -->
 			<_FrameworkToPublish Include="@(_FrameworkNativeReference)" Condition="'%(_FrameworkNativeReference.Kind)' == 'Framework' And '%(_FrameworkNativeReference.CopyToAppBundle)' != 'false'" />
 
 			<!-- Set TargetDirectory and SourceDirectory for all frameworks we have to publish -->
@@ -1573,13 +1570,13 @@
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			Architectures="$(TargetArchitectures)"
-			BindingResourcePackages="@(_AppleBindingResourcePackage)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			NativeReferences="@(_UnresolvedXCFrameworks)"
+			NativeReferences="@(_UnresolvedXCFrameworks);@(_AppleBindingResourcePackage);@(_CompressedAppleFrameworks);@(_CompressedAppleBindingResourcePackage)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
 			<Output TaskParameter="NativeFrameworks" ItemName="_FrameworkNativeReference" />
+			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
 		</ResolveNativeReferences>
 	</Target>
 
@@ -1618,54 +1615,6 @@
 			<FileWrites Include="$(_CodesignItemsPath)" />
 		</ItemGroup>
 
-	</Target>
-
-	<Target Name="_DecompressAppleBindingResourcePackages"
-		Inputs="@(_CompressedAppleBindingResourcePackage)"
-		DependsOnTargets="_ComputePublishLocation;_ComputeVariables"
-		Outputs="@(_CompressedAppleBindingResourcePackage -> '$(_IntermediateDecompressionDir)%(Filename)%(Extension).stamp')"
-		>
-
-		<Ditto
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AdditionalArguments="-x -k"
-			CopyFromWindows="true"
-			Source="%(_CompressedAppleBindingResourcePackage.Identity)"
-			Destination="$(_IntermediateDecompressionDir)%(Filename)"
-			>
-		</Ditto>
-	</Target>
-
-	<Target Name="_CollectDecompressedAppleBindingResourcePackages"
-		DependsOnTargets="_DecompressAppleBindingResourcePackages"
-		>
-
-		<ItemGroup>
-			<_DecompressedAppleBindingResourcePackage Include="@(_CompressedAppleBindingResourcePackage -> '$(_IntermediateDecompressionDir)%(Filename)')" />
-		</ItemGroup>
-
-		<!-- resolve any .xcframeworks and binding resource packages -->
-		<ResolveNativeReferences
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			Architectures="$(TargetArchitectures)"
-			BindingResourcePackages="@(_DecompressedAppleBindingResourcePackage)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			SdkIsSimulator="$(_SdkIsSimulator)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			>
-			<Output TaskParameter="NativeFrameworks" ItemName="_FrameworkNativeReference" />
-		</ResolveNativeReferences>
-
-		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AlwaysCreate="true"
-			Files="@(_CompressedAppleBindingResourcePackage -> '$(_IntermediateDecompressionDir)%(Filename)%(Extension).stamp')"
-			>
-			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
-		</Touch>
 	</Target>
 
 	<Target Name="_DecompressPlugIns"
@@ -1712,81 +1661,6 @@
 		<ItemGroup>
 			<_DirectoriesToPublish Include="@(_DecompressedPlugIns)" />
 		</ItemGroup>
-	</Target>
-
-	<Target Name="_DecompressAppleFrameworks"
-		Inputs="@(_CompressedAppleFrameworks)"
-		Outputs="@(_CompressedAppleFrameworks -> '$(_IntermediateFrameworksDir)/%(Filename)%(Extension).stamp')"
-		DependsOnTargets="_ComputeVariables"
-		BeforeTargets="_ExpandNativeReferences"
-		>
-
-		<Ditto
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AdditionalArguments="-x -k"
-			CopyFromWindows="true"
-			Source="%(_CompressedAppleFrameworks.Identity)"
-			Destination="$(_IntermediateFrameworksDir)/%(Filename)%(Extension)"
-			>
-		</Ditto>
-
-		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AlwaysCreate="true"
-			Files="@(_CompressedAppleFrameworks -> '$(_IntermediateFrameworksDir)/%(Filename)%(Extension).stamp')"
-			>
-			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
-		</Touch>
-	</Target>
-
-	<Target Name="_CollectDecompressedAppleFrameworks"
-		DependsOnTargets="_DecompressAppleFrameworks"
-		Condition="@(_CompressedAppleFrameworks->Count()) &gt; 0"
-		>
-
-		<GetFileSystemEntries
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			DirectoryPath="$(_IntermediateFrameworksDir)/%(_CompressedAppleFrameworks.Filename)%(_CompressedAppleFrameworks.Extension)"
-			Pattern="*.framework"
-			Recursive="false"
-			IncludeDirectories="true"
-			>
-			<Output TaskParameter="Entries" ItemName="_DecompressedFramework" />
-		</GetFileSystemEntries>
-
-		<GetFileSystemEntries
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			DirectoryPath="$(_IntermediateFrameworksDir)/%(_CompressedAppleFrameworks.Filename)%(_CompressedAppleFrameworks.Extension)"
-			Pattern="*.xcframework"
-			Recursive="false"
-			IncludeDirectories="true"
-			>
-			<Output TaskParameter="Entries" ItemName="_DecompressedXCFramework" />
-		</GetFileSystemEntries>
-
-		<ItemGroup>
-			<!-- include any normal frameworks directly in _FrameworkNativeReference. -->
-			<!-- .xcframeworks need to be resolved to a platform-specific .framework below -->
-			<_DecompressedFramework Include="$([System.IO.Directory]::GetDirectories('$(_IntermediateFrameworksDir)/%(_CompressedAppleFrameworks.Filename)%(_CompressedAppleFrameworks.Extension)','*.framework'))" />
-			<_FrameworkNativeReference Include="@(_DecompressedFramework -> '%(Identity)/%(Filename)')" Kind="Framework" />
-		</ItemGroup>
-
-		<!-- resolve the .xcframeworks -->
-		<ResolveNativeReferences
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			Architectures="$(TargetArchitectures)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			NativeReferences="@(_DecompressedXCFramework)"
-			SdkIsSimulator="$(_SdkIsSimulator)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			>
-			<Output TaskParameter="NativeFrameworks" ItemName="_FrameworkNativeReference" />
-		</ResolveNativeReferences>
 	</Target>
 
 	<Target Name="_VerifyValidOutputType">
