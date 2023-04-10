@@ -23,6 +23,7 @@
 		Ref: https://github.com/dotnet/sdk/issues/19793#issuecomment-900620060
 	-->
 	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@'
+						And '$(@PLATFORM@DisableImplicitUsings' != 'true'
 						And '$(Language)' == 'C#'
 						And ('$(ImplicitUsings)' == 'true' Or '$(ImplicitUsings)' == 'enable')
 						And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '@TARGET_FRAMEWORK_VERSION@'))">@GLOBAL_USINGS@
