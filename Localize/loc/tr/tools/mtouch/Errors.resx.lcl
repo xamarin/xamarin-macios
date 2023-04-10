@@ -3731,14 +3731,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Unable to call release on an instance of the type {0}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-<<<<<<< HEAD
-<<<<<<< HEAD
-            <Val><![CDATA[{0} yayın türündeki bir örnek üzerinde sürüm çağrılamaz]]></Val>
-=======
             <Val><![CDATA[Yayın türündeki bir örnek üzerinde yayın çağrılamaz{0}]]></Val>
->>>>>>> d23a91a1d (LEGO: Merge pull request 17761)
-=======
-            <Val><![CDATA[{0} yayın türündeki bir örnek üzerinde sürüm çağrılamaz]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -3802,7 +3795,6 @@
           <Val><![CDATA[The signature must be a non-empty string.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[İmza, boş olmayan bir dize olmalıdır.]]></Val>
->>>>>>> 3374a2202 (Juno: check in to lego/hb_2334f352-33a3-4aa6-b434-972a89595681_20230314020957644.)
           </Tgt>
         </Str>
         <Disp Icon="Str" />
