@@ -11,7 +11,7 @@ parameters:
   type: boolean
   default: true
 
-- name: createLocPR
+- name: manuallyCreateLocPR
   type: boolean
   default: false
 
@@ -50,32 +50,18 @@ resources:
     ref: refs/heads/only_codesign
     endpoint: xamarin
 
-trigger: none
+trigger:
+- main
 
 schedules:
 
 # Create the PR into main with the newest usable localization strings once a week on Sundays
 - cron: "0 12 * * 0"
-  displayName: Weekly Translations build (Sunday @ noon)
+  displayName: Sunday Build
   branches:
     include:
     - main
   always: true
-  variables:
-    createLocPR: true
-
-# Run the OneLocTask everyday without setting the createLocPR var to true.
-# This will ensure that OneLoc gets our newly added error strings faster but we do not need
-# to look for new usable translation PRs everyday.
-# This will run around midnight in the US after each workday
-- cron: "0 5 * * 2-6"
-  displayName: Weekly Translations build (Sunday @ noon)
-  branches:
-    include:
-    - main
-  always: true
-  variables:
-    createLocPR: false
 
 stages:
 
@@ -104,4 +90,4 @@ stages:
           isPR: false
           repositoryAlias: self
           commit: HEAD
-          createLocPR: $(createLocPR)
+          createLocPR: ${{ or(eq(parameters.manuallyCreateLocPR, true), eq(variables['Build.Reason'], 'Schedule')) }}
