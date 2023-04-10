@@ -41,7 +41,6 @@ public class Compiler {
 		return path;
 	}
 
-
 	public static string Run (string path, string args, string? workingDirectory = null, bool verbose = false)
 	{
 		var output = new StringBuilder ();
@@ -82,15 +81,15 @@ public class Compiler {
 		info.RedirectStandardInput = false;
 		info.RedirectStandardOutput = true;
 		info.RedirectStandardError = true;
-		if (workingDirectory != null)
+		if (workingDirectory is not null)
 			info.WorkingDirectory = workingDirectory;
 
-		if (output == null)
+		if (output is null)
 			output = new StringBuilder ();
 
-		if (env != null) {
+		if (env is not null) {
 			foreach (var kvp in env) {
-				if (kvp.Value == null) {
+				if (kvp.Value is null) {
 					if (info.EnvironmentVariables.ContainsKey (kvp.Key))
 						info.EnvironmentVariables.Remove (kvp.Key);
 				} else {
