@@ -20,4 +20,15 @@
   <ItemGroup>
     <ProjectReference Include="..\class-redirector\class-redirector.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\tests\mtouch\Cache.cs">
+      <Link>Cache.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\Execution.cs">
+      <Link>Execution.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
+    </Compile>
+  </ItemGroup>
 </Project>

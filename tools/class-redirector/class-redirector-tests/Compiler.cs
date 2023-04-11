@@ -1,20 +1,19 @@
 using System;
 using System.Diagnostics;
 using System.Text;
+using Xamarin;
+using Xamarin.Utils;
 
 namespace ClassRedirectorTests;
 
 public class Compiler {
-	static int counter;
-	static readonly string root = Path.Combine (Path.GetTempPath (), "class-redirector");
-
 	public Compiler ()
 	{
 	}
 
 	public static CompileResult Compile (string code)
 	{
-		var directory = GetTempDirectory ();
+		var directory = Cache.CreateTemporaryDirectory ("class-redirector");
 		var file = "Code.cs";
 		var inputpath = Path.Combine (directory, file);
 		var outputpath = Path.Combine (directory, "Code.exe");
@@ -22,10 +21,21 @@ public class Compiler {
 		writer.Write (code);
 		writer.Flush ();
 
-		var args = "-unsafe -out:Code.exe " + inputpath;
+		//var args = "-unsafe -out:Code.exe " + inputpath;
 		string result = "";
 		try {
-			result = Run ("mcs", args, directory);
+			var args = new List<string> () {
+				"-unsafe",
+				"-out:Code.exe",
+				inputpath
+			};
+			var execTask = Execution.RunAsync ("mcs", args, environment: null, mergeOutput: false,
+				workingDirectory: directory, log: null, timeout: null, cancellationToken: null);
+			execTask.Wait ();
+			var execResult = execTask.Result;
+			if (execResult.ExitCode != 0) {
+				result = execResult.StandardError?.ToString () ?? "no error?!";
+			}
 		} catch (Exception e) {
 			result = e.Message;
 		}
@@ -33,109 +43,14 @@ public class Compiler {
 		return new CompileResult (directory, outputpath, result);
 	}
 
-	static string GetTempDirectory ()
+	public static string Run (string path, List<string> args, string? workingDirectory = null, bool verbose = false)
 	{
-		var unique = Interlocked.Increment (ref counter).ToString ();
-		var path = Path.Combine (root, unique);
-		Directory.CreateDirectory (path);
-		return path;
-	}
-
-	public static string Run (string path, string args, string? workingDirectory = null, bool verbose = false)
-	{
-		var output = new StringBuilder ();
-		var exitCode = RunCommand (path, args, output: output, verbose: verbose, workingDirectory: workingDirectory);
-		if (exitCode != 0)
-			throw new Exception ($"Failed to execute (exit code {exitCode}): {path} {string.Join (" ", args)}\n{output.ToString ()}");
-		return output.ToString ();
-	}
-
-	static void ReadStream (Stream stream, StringBuilder sb, ManualResetEvent completed)
-	{
-		var encoding = Encoding.UTF8;
-		var decoder = encoding.GetDecoder ();
-		var buffer = new byte [1024];
-		var characters = new char [encoding.GetMaxCharCount (buffer.Length)];
-
-		AsyncCallback? callback = null;
-		callback = new AsyncCallback ((IAsyncResult ar) => {
-			var read = stream.EndRead (ar);
-
-			var chars = decoder.GetChars (buffer, 0, read, characters, 0);
-			lock (sb)
-				sb.Append (characters, 0, chars);
-
-			if (read > 0) {
-				stream.BeginRead (buffer, 0, buffer.Length, callback, null);
-			} else {
-				completed.Set ();
-			}
-		});
-		stream.BeginRead (buffer, 0, buffer.Length, callback, null);
-	}
-
-	public static int RunCommand (string path, string args, IDictionary<string, string>? env = null, StringBuilder? output = null, bool verbose = false, string? workingDirectory = null)
-	{
-		var info = new ProcessStartInfo (path, args);
-		info.UseShellExecute = false;
-		info.RedirectStandardInput = false;
-		info.RedirectStandardOutput = true;
-		info.RedirectStandardError = true;
-		if (workingDirectory is not null)
-			info.WorkingDirectory = workingDirectory;
-
-		if (output is null)
-			output = new StringBuilder ();
-
-		if (env is not null) {
-			foreach (var kvp in env) {
-				if (kvp.Value is null) {
-					if (info.EnvironmentVariables.ContainsKey (kvp.Key))
-						info.EnvironmentVariables.Remove (kvp.Key);
-				} else {
-					info.EnvironmentVariables [kvp.Key] = kvp.Value;
-				}
-			}
-		}
-
-		if (verbose) {
-			var envOut = new StringBuilder ();
-			foreach (var k in info.EnvironmentVariables.Keys) {
-				if (k is string key) {
-					var value = info.EnvironmentVariables [key];
-					envOut.AppendLine ($"export {key}={value}");
-				}
-			}
-			envOut.AppendLine ($"{path} {args}");
-			Console.Write (envOut.ToString ());
-			Console.WriteLine ("{0} {1}", path, args);
-		}
-
-		using (var p = Process.Start (info)) {
-			var error_output = new StringBuilder ();
-			var stdout_completed = new ManualResetEvent (false);
-			var stderr_completed = new ManualResetEvent (false);
-
-			ReadStream (p.StandardOutput.BaseStream, output, stdout_completed);
-			ReadStream (p.StandardError.BaseStream, error_output, stderr_completed);
-
-			p.WaitForExit ();
-
-			stderr_completed.WaitOne (TimeSpan.FromMinutes (1));
-			stdout_completed.WaitOne (TimeSpan.FromMinutes (1));
-
-			if (verbose) {
-				if (output.Length > 0)
-					Console.WriteLine (output);
-				if (error_output.Length > 0)
-					Console.WriteLine (error_output);
-				if (p.ExitCode != 0)
-					Console.Error.WriteLine ($"Process exited with code {p.ExitCode}");
-			}
-			if (p.ExitCode != 0 && error_output.Length > 0)
-				output.Append (error_output);
-			return p.ExitCode;
-		}
+		var execTask = Execution.RunAsync (path, args, environment: null, mergeOutput: false);
+		execTask.Wait ();
+		var execResult = execTask.Result;
+		if (execResult.ExitCode != 0)
+			throw new Exception ($"Failed to execute (exit code {execResult.ExitCode}): {path} {string.Join (" ", args)}\n{execResult.StandardError?.ToString () ?? "".ToString ()}");
+		return execResult.StandardOutput?.ToString () ?? "";
 	}
 }
 

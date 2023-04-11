@@ -168,7 +168,7 @@ namespace ObjCRuntime {
 	public void CompilesOK ()
 	{
 		var testCode = commonCode + initTestCode;
-		using var result = Compiler.Compile (testCode);
+		var result = Compiler.Compile (testCode);
 		Assert.That (String.IsNullOrEmpty (result.Error), $"Compile failure: {result.Error}");
 	}
 
@@ -176,10 +176,10 @@ namespace ObjCRuntime {
 	public void CompliesRunWithDefaultOutput ()
 	{
 		var testCode = commonCode + initTestCode;
-		using var result = Compiler.Compile (testCode);
+		var result = Compiler.Compile (testCode);
 		Assert.That (String.IsNullOrEmpty (result.Error), $"Compile failure: {result.Error}");
 
-		var codeOutput = Compiler.Run ("mono", result.OutputFileName);
+		var codeOutput = Compiler.Run ("mono", new List<string> () { result.OutputFileName });
 		Assert.That (codeOutput, Is.EqualTo ("0x0\n"), "incorrect executable output");
 	}
 
@@ -187,7 +187,7 @@ namespace ObjCRuntime {
 	public void BasicProcessing ()
 	{
 		var testCode = commonCode + initTestCode;
-		using var result = Compiler.Compile (testCode);
+		var result = Compiler.Compile (testCode);
 		Assert.That (String.IsNullOrEmpty (result.Error), $"Compile failure: {result.Error}");
 
 		var map = new CSToObjCMap () {
@@ -197,7 +197,7 @@ namespace ObjCRuntime {
 
 		var rewriter = new Rewriter (map, result.OutputFileName, new string [] { result.OutputFileName });
 		rewriter.Process ();
-		var codeOutput = Compiler.Run ("mono", result.OutputFileName);
+		var codeOutput = Compiler.Run ("mono", new List<string> () { result.OutputFileName });
 		Assert.That (codeOutput, Is.EqualTo ("0x2a\n"), "incorrect executable output");
 	}
 
@@ -237,7 +237,7 @@ namespace ObjCRuntime {
 	public void LeavesBarAlone ()
 	{
 		var testCode = commonCode + noChangeTestCode;
-		using var result = Compiler.Compile (testCode);
+		var result = Compiler.Compile (testCode);
 		Assert.That (String.IsNullOrEmpty (result.Error), $"Compile failure: {result.Error}");
 
 		var map = new CSToObjCMap () {
@@ -247,7 +247,7 @@ namespace ObjCRuntime {
 
 		var rewriter = new Rewriter (map, result.OutputFileName, new string [] { result.OutputFileName });
 		rewriter.Process ();
-		var codeOutput = Compiler.Run ("mono", result.OutputFileName);
+		var codeOutput = Compiler.Run ("mono", new List<string> () { result.OutputFileName });
 		Assert.That (codeOutput, Is.EqualTo ("0x0\n"), "incorrect executable output");
 	}
 
@@ -287,7 +287,7 @@ namespace ObjCRuntime {
 	public void RemovesCCtor ()
 	{
 		var testCode = commonCode + noCCtorTestCode;
-		using var result = Compiler.Compile (testCode);
+		var result = Compiler.Compile (testCode);
 		Assert.That (String.IsNullOrEmpty (result.Error), $"Compile failure: {result.Error}");
 
 		var map = new CSToObjCMap () {
@@ -297,7 +297,7 @@ namespace ObjCRuntime {
 
 		var rewriter = new Rewriter (map, result.OutputFileName, new string [] { result.OutputFileName });
 		rewriter.Process ();
-		var codeOutput = Compiler.Run ("mono", result.OutputFileName);
+		var codeOutput = Compiler.Run ("mono", new List<string> () { result.OutputFileName });
 		Assert.That (codeOutput, Is.EqualTo ("0x2a\n"), "incorrect executable output");
 		var module = ModuleDefinition.ReadModule (result.OutputFileName);
 		var type = module.Types.FirstOrDefault (t => t.Name == "Foo");
