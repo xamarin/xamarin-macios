@@ -1413,21 +1413,26 @@ namespace Foundation {
 				status = NSStreamStatus.NotOpen;
 				stream = inputStream;
 				source = new CFRunLoopSource (Handle, false);
+				IsDirectBinding = false;
 			}
 
+			[Preserve (Conditional = true)]
 			public override NSStreamStatus Status => status;
 
+			[Preserve (Conditional = true)]
 			public override void Open ()
 			{
 				status = NSStreamStatus.Open;
 				Notify (CFStreamEventType.OpenCompleted);
 			}
 
+			[Preserve (Conditional = true)]
 			public override void Close ()
 			{
 				status = NSStreamStatus.Closed;
 			}
 
+			[Preserve (Conditional = true)]
 			public override nint Read (IntPtr buffer, nuint len)
 			{
 				var sourceBytes = new byte [len];
@@ -1447,11 +1452,13 @@ namespace Foundation {
 				return read;
 			}
 
+			[Preserve (Conditional = true)]
 			public override bool HasBytesAvailable ()
 			{
 				return true;
 			}
 
+			[Preserve (Conditional = true)]
 			protected override bool GetBuffer (out IntPtr buffer, out nuint len)
 			{
 				// Just call the base implemention (which will return false)
@@ -1459,22 +1466,26 @@ namespace Foundation {
 			}
 
 			// NSInvalidArgumentException Reason: *** -propertyForKey: only defined for abstract class.  Define -[System_Net_Http_NSUrlSessionHandler_WrappedNSInputStream propertyForKey:]!
+			[Preserve (Conditional = true)]
 			protected override NSObject? GetProperty (NSString key)
 			{
 				return null;
 			}
 
+			[Preserve (Conditional = true)]
 			protected override bool SetProperty (NSObject? property, NSString key)
 			{
 				return false;
 			}
 
+			[Preserve (Conditional = true)]
 			protected override bool SetCFClientFlags (CFStreamEventType inFlags, IntPtr inCallback, IntPtr inContextPtr)
 			{
 				// Just call the base implementation, which knows how to handle everything.
 				return base.SetCFClientFlags (inFlags, inCallback, inContextPtr);
 			}
 
+			[Preserve (Conditional = true)]
 #if NET
 			public override void Schedule (NSRunLoop aRunLoop, NSString nsMode)
 #else
@@ -1496,6 +1507,7 @@ namespace Foundation {
 				notifying = false;
 			}
 
+			[Preserve (Conditional = true)]
 #if NET
 			public override void Unschedule (NSRunLoop aRunLoop, NSString nsMode)
 #else
