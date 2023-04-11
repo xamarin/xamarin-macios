@@ -534,7 +534,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<CompileAppManifest
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
 			ApplicationId="$(ApplicationId)"
 			ApplicationTitle="$(ApplicationTitle)"
 			ApplicationVersion="$(ApplicationVersion)"
@@ -578,7 +578,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target Name="_ReadAppManifest" DependsOnTargets="$(_ReadAppManifestDependsOn)">
 		<ReadAppManifest
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			AppManifest="$(_TemporaryAppManifest)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
@@ -598,7 +598,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<!-- A bundle identifier is required when creating an app bundle. It's not when building a class library -->
 		<Error
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_BundleIdentifier)' == '' And '$(_CanOutputAppBundle)' == 'true'"
+			Condition="('$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true') And '$(_BundleIdentifier)' == '' And '$(_CanOutputAppBundle)' == 'true'"
 			Text="A bundle identifier is required. Either add an 'ApplicationId' property in the project file, or add a 'CFBundleIdentifier' entry in the project's Info.plist file."
 		/>
 	</Target>
@@ -621,7 +621,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<WriteAppManifest
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
 			AppBundleManifest="$(_AppBundleManifestPath)"
 			AppManifests="@(_PostCompilePartialAppManifest);$(_TemporaryAppManifest)"
 			>
