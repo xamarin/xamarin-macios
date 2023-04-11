@@ -10,7 +10,7 @@
     </Dependency>
     <Dependency Name="Microsoft.NETCore.App.Ref" Version="6.0.17">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>3e109839ddb415401a51574eb1e30455766ff57c</Sha>
+      <Sha>300ceb88348a1d9590ec942e1a77cb4ae2cdddef</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
     <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="6.0.15" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
