@@ -23,7 +23,7 @@ namespace Xamarin.MacDev.Tasks {
 	/// </summary>
 	public class Unzip : XamarinTask, ITaskCallback {
 		[Required]
-		public string ZipFilePath { get; set; } = string.Empty;
+		public ITaskItem? ZipFilePath { get; set; }
 
 		[Required]
 		public string ExtractionPath { get; set; } = string.Empty;
@@ -58,7 +58,7 @@ namespace Xamarin.MacDev.Tasks {
 		bool ExecuteLocally ()
 		{
 			var createdFiles = new List<string> ();
-			if (!CompressionHelper.TryDecompress (Log, ZipFilePath, Resource, ExtractionPath, createdFiles, out var _))
+			if (!CompressionHelper.TryDecompress (Log, ZipFilePath!.ItemSpec, Resource, ExtractionPath, createdFiles, out var _))
 				return false;
 
 			TouchedFiles = createdFiles.Select (v => new TaskItem (v)).ToArray ();
