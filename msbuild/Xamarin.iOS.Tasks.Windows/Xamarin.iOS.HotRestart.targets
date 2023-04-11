@@ -162,6 +162,7 @@
 		<!--Create app bundle dir and get its path-->
 		<PrepareAppBundle 
 			AppBundleName="$(_AppBundleName)"
+			AppBundlePath="$(HotRestartAppBundlePath)"
 			SessionId="$(HotRestartBuildSessionId)" 
 			ShouldExtract="true">
 
