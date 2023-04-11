@@ -82,6 +82,7 @@ namespace Xamarin.MacDev.Tasks {
 				var processArguments = Assemblies [i].GetMetadata ("ProcessArguments");
 				var aotData = Assemblies [i].GetMetadata ("AOTData");
 				var aotAssembly = Assemblies [i].GetMetadata ("AOTAssembly");
+				Boolean.TryParse (Assemblies [i].GetMetadata ("IsDedupAssembly"), out var isDedupAssembly);
 
 				var aotAssemblyItem = new TaskItem (aotAssembly);
 				aotAssemblyItem.SetMetadata ("Arguments", "-Xlinker -rpath -Xlinker @executable_path/ -Qunused-arguments -x assembler -D DEBUG");
@@ -98,10 +99,13 @@ namespace Xamarin.MacDev.Tasks {
 					return false;
 				}
 				arguments.Add ($"{string.Join (",", parsedArguments)}");
-				if (globalAotArguments is not null)
+				if (globalAotArguments?.Any () == true)
 					arguments.Add ($"--aot={string.Join (",", globalAotArguments)}");
 				arguments.AddRange (parsedProcessArguments);
-				arguments.Add (input);
+				if (isDedupAssembly)
+					arguments.AddRange (inputs);
+				else
+					arguments.Add (input);
 
 				processes [i] = ExecuteAsync (AOTCompilerPath, arguments, environment: environment, sdkDevPath: SdkDevPath, showErrorIfFailure: false /* we show our own error below */)
 					.ContinueWith ((v) => {

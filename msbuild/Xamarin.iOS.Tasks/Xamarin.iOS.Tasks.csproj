@@ -46,7 +46,7 @@
     <Folder Include="Contracts\" />
     <Compile Include="../Versions.ios.g.cs" />
 
-    <None Include="NoCode.cs">
+    <None Include="../Xamarin.Shared/NoCode.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="*.props">

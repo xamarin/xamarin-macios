@@ -311,8 +311,6 @@ function download_xcode_platforms ()
 
 	local XCODE_VERSION
 	local XCODE_DEVELOPER_ROOT="$1"
-	local TVOS_VERSION="$2"
-	local WATCHOS_VERSION="$3"
 
 	XCODE_VERSION=$(grep ^XCODE_VERSION= Make.config | sed 's/.*=//')
 
@@ -322,39 +320,8 @@ function download_xcode_platforms ()
 		return
 	fi
 
-	local SIMULATOR_RUNTIMES
-	SIMULATOR_RUNTIMES=$("$XCODE_DEVELOPER_ROOT"/usr/bin/simctl runtime list)
-
-	TVOS_SIMULATOR_RUNTIME=$(echo "$SIMULATOR_RUNTIMES" | grep "^tvOS $TVOS_VERSION .*Ready" || true)
-	WATCHOS_SIMULATOR_RUNTIME=$(echo "$SIMULATOR_RUNTIMES" | grep "^watchOS $WATCHOS_VERSION .*Ready" || true)
-
-	MUST_INSTALL_RUNTIMES=
-	if test -z "$TVOS_SIMULATOR_RUNTIME"; then
-		MUST_INSTALL_RUNTIMES=1
-	fi
-	if test -z "$WATCHOS_SIMULATOR_RUNTIME"; then
-		MUST_INSTALL_RUNTIMES=1
-	fi
-	if test -z "$MUST_INSTALL_RUNTIMES"; then
-		log "All the additional platforms have already been downloaded for this version of Xcode ($XCODE_VERSION)"
-		log "    $TVOS_SIMULATOR_RUNTIME"
-		log "    $WATCHOS_SIMULATOR_RUNTIME"
-		return
-	fi
-
 	if test -z "$PROVISION_SIMULATORS"; then
-		fail "Xcode has additional platforms that must be downloaded. Execute './system-dependencies.sh --provision-simulators' to execute those tasks (or alternatively ${COLOR_MAGENTA}export IGNORE_SIMULATORS=1${COLOR_RED} to skip this check)"
-		echo "        ${COLOR_RED}Installed simulator runtimes:"
-		# shellcheck disable=SC2001
-		echo "$SIMULATOR_RUNTIMES" | sed 's/^/            /'
-		echo "        Missing simulator runtimes:"
-		if test -z "$TVOS_SIMULATOR_RUNTIME"; then
-			fail "        tvOS $TVOS_VERSION"
-		fi
-		if test -z "$WATCHOS_SIMULATOR_RUNTIME"; then
-			fail "        watchOS $WATCHOS_VERSION"
-		fi
-		echo -n "${COLOR_CLEAR}"
+		warn "    Xcode may have additional platforms that must be downloaded. Execute './system-dependencies.sh --provision-simulators' to install those platforms (or alternatively ${COLOR_MAGENTA}export IGNORE_SIMULATORS=1${COLOR_RESET} to skip this check)"
 		return
 	fi
 

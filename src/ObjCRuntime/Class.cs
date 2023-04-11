@@ -325,7 +325,7 @@ namespace ObjCRuntime {
 			return Runtime.StringEquals (assembly_name, asm_name);
 		}
 
-		static unsafe int FindMapIndex (Runtime.MTClassMap* array, int lo, int hi, IntPtr @class)
+		internal static unsafe int FindMapIndex (Runtime.MTClassMap* array, int lo, int hi, IntPtr @class)
 		{
 			if (hi >= lo) {
 				int mid = lo + (hi - lo) / 2;

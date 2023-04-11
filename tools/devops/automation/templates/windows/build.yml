@@ -15,6 +15,10 @@ parameters:
   type: string
   default: HEAD
 
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
 steps:
 
 - template: ../common/checkout.yml
@@ -108,7 +112,7 @@ steps:
 
 # this step replaces the test-libraries dir
 - pwsh: |
-    $zip = "$(Build.SourcesDirectory)/artifacts/tmp/package-test-libraries/package-test-libraries.zip"
+    $zip = "$(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip"
     $target = "$(Build.SourcesDirectory)/xamarin-macios/tests/test-libraries"
     Expand-Archive -Force $zip -DestinationPath $target
     Get-ChildItem "$target" -Recurse
@@ -125,12 +129,26 @@ steps:
   continueOnError: true
 
 - pwsh: |
+    $runsettings = @"
+    <?xml version="1.0" encoding="utf-8"?>
+    <RunSettings>
+      <RunConfiguration>
+        <DotNetHostPath>$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe</DotNetHostPath>
+      </RunConfiguration>
+    </RunSettings>
+    "@
+    Set-Content -Path $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/config.runsettings -Value $runsettings
+    Get-Content -Path $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/config.runsettings | Write-Host
+  displayName: 'Create runsettings for .NET tests'
+
+- pwsh: |
     $Env:DOTNET = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe"
     & $(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe `
         test `
         "$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/UnitTests/DotNetUnitTests.csproj" `
         --filter Category=Windows `
         --verbosity quiet `
+        --settings $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/config.runsettings `
         "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/run-dotnet-tests.binlog"
   displayName: 'Run .NET tests'
 

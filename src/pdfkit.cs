@@ -459,6 +459,14 @@ namespace PdfKit {
 		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
 		[Field ("PDFDocumentSaveTextFromOCROption", "+PDFKit")]
 		NSString SaveTextFromOcrKey { get; }
+
+		[iOS (16, 4), Mac (13, 3), MacCatalyst (16, 4)]
+		[Field ("PDFDocumentSaveImagesAsJPEGOption", "+PDFKit")]
+		NSString SaveImagesAsJpegKey { get; }
+
+		[iOS (16, 4), Mac (13, 3), MacCatalyst (16, 4)]
+		[Field ("PDFDocumentOptimizeImagesForScreenOption", "+PDFKit")]
+		NSString OptimizeImagesForScreenKey { get; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -470,6 +478,18 @@ namespace PdfKit {
 
 		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
 		string AccessPermissions { get; set; }
+
+		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
+		bool BurnInAnnotations { get; set; }
+
+		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
+		bool SaveTextFromOcr { get; set; }
+
+		[iOS (16, 4), Mac (13, 3), MacCatalyst (16, 4)]
+		bool SaveImagesAsJpeg { get; set; }
+
+		[iOS (16, 4), Mac (13, 3), MacCatalyst (16, 4)]
+		bool OptimizeImagesForScreen { get; set; }
 	}
 
 	[MacCatalyst (13, 1)]
