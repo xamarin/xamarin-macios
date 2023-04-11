@@ -2150,12 +2150,6 @@ namespace AVFoundation {
 		[Export ("setActive:withFlags:error:")]
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'SetActive (bool, AVAudioSessionSetActiveOptions, out NSError)' instead.")]
 		bool SetActive (bool beActive, AVAudioSessionFlags flags, out NSError outError);
-
-		[return: NullAllowed]
-		[NoTV, NoMac]
-		[Wrap ("SetActive (beActive, flags, out var outError) ? null : outError")]
-		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'SetActive (bool, AVAudioSessionSetActiveOptions, out NSError)' instead.")]
-		NSError SetActive (bool beActive, AVAudioSessionFlags flags);
 #endif // !NET
 
 		[NoMac]
@@ -2201,6 +2195,11 @@ namespace AVFoundation {
 		[MacCatalyst (13, 1)]
 		[Export ("setMode:error:")]
 		bool SetMode (NSString mode, out NSError error);
+
+		[NoMac]
+		[MacCatalyst (13, 1)]
+		[Wrap ("SetMode (mode.GetConstant ()!, out error)")]
+		bool SetMode (AVAudioSessionMode mode, out NSError error);
 
 		[NoTV, NoMac]
 		[Export ("preferredHardwareSampleRate")]
@@ -2284,31 +2283,37 @@ namespace AVFoundation {
 		NSString CategoryAudioProcessing { get; }
 #endif // !XAMCORE_5_0
 
+		[Obsolete ("Use 'AVAudioSessionMode' enum values instead.")]
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Field ("AVAudioSessionModeDefault")]
 		NSString ModeDefault { get; }
 
+		[Obsolete ("Use 'AVAudioSessionMode' enum values instead.")]
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Field ("AVAudioSessionModeVoiceChat")]
 		NSString ModeVoiceChat { get; }
 
+		[Obsolete ("Use 'AVAudioSessionMode' enum values instead.")]
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Field ("AVAudioSessionModeVideoRecording")]
 		NSString ModeVideoRecording { get; }
 
+		[Obsolete ("Use 'AVAudioSessionMode' enum values instead.")]
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Field ("AVAudioSessionModeMeasurement")]
 		NSString ModeMeasurement { get; }
 
+		[Obsolete ("Use 'AVAudioSessionMode' enum values instead.")]
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Field ("AVAudioSessionModeGameChat")]
 		NSString ModeGameChat { get; }
 
+		[Obsolete ("Use 'AVAudioSessionMode' enum values instead.")]
 		[Watch (5, 0), TV (12, 0), NoMac, iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("AVAudioSessionModeVoicePrompt")]
@@ -2318,6 +2323,12 @@ namespace AVFoundation {
 		[MacCatalyst (13, 1)]
 		[Export ("setActive:withOptions:error:")]
 		bool SetActive (bool active, AVAudioSessionSetActiveOptions options, out NSError outError);
+
+		[return: NullAllowed]
+		[NoMac]
+		[MacCatalyst (13, 1)]
+		[Wrap ("SetActive (active, options, out var outError) ? null : outError")]
+		NSError SetActive (bool active, AVAudioSessionSetActiveOptions options);
 
 		[NoMac]
 		[iOS (9, 0)]
@@ -2359,6 +2370,19 @@ namespace AVFoundation {
 		[MacCatalyst (13, 1)]
 		[Wrap ("SetCategory (category.GetConstant ()!, mode, options, out var outError) ? null : outError")]
 		NSError SetCategory (AVAudioSessionCategory category, string mode, AVAudioSessionCategoryOptions options);
+
+		[NoMac]
+		[iOS (10, 0), TV (10, 0)]
+		[MacCatalyst (13, 1)]
+		[Wrap ("SetCategory (category.GetConstant ()!, mode.GetConstant ()!, options, out outError)")]
+		bool SetCategory (AVAudioSessionCategory category, AVAudioSessionMode mode, AVAudioSessionCategoryOptions options, out NSError outError);
+
+		[return: NullAllowed]
+		[NoMac]
+		[iOS (10, 0), TV (10, 0)]
+		[MacCatalyst (13, 1)]
+		[Wrap ("SetCategory (category.GetConstant ()!, mode.GetConstant ()!, options, out var outError) ? null : outError")]
+		NSError SetCategory (AVAudioSessionCategory category, AVAudioSessionMode mode, AVAudioSessionCategoryOptions options);
 
 		[NoMac]
 		[MacCatalyst (13, 1)]
@@ -2476,16 +2500,19 @@ namespace AVFoundation {
 		NSString CategoryMultiRoute { get; }
 #endif // !XAMCORE_5_0
 
+		[Obsolete ("Use 'AVAudioSessionMode' enum values instead.")]
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Field ("AVAudioSessionModeMoviePlayback")]
 		NSString ModeMoviePlayback { get; }
 
+		[Obsolete ("Use 'AVAudioSessionMode' enum values instead.")]
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Field ("AVAudioSessionModeVideoChat")]
 		NSString ModeVideoChat { get; }
 
+		[Obsolete ("Use 'AVAudioSessionMode' enum values instead.")]
 		[NoMac]
 		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
@@ -2753,6 +2780,11 @@ namespace AVFoundation {
 
 		[TV (11, 0), Watch (5, 0), iOS (11, 0), NoMac]
 		[MacCatalyst (13, 1)]
+		[Wrap ("SetCategory (category.GetConstant ()!, mode.GetConstant ()!, policy, options, out outError)")]
+		bool SetCategory (AVAudioSessionCategory category, AVAudioSessionMode mode, AVAudioSessionRouteSharingPolicy policy, AVAudioSessionCategoryOptions options, [NullAllowed] out NSError outError);
+
+		[TV (11, 0), Watch (5, 0), iOS (11, 0), NoMac]
+		[MacCatalyst (13, 1)]
 		[Export ("routeSharingPolicy")]
 		AVAudioSessionRouteSharingPolicy RouteSharingPolicy { get; }
 
@@ -2842,6 +2874,47 @@ namespace AVFoundation {
 
 		[Field ("AVAudioSessionCategoryMultiRoute")]
 		MultiRoute,
+	}
+
+	[NoMac] // Apple's documentation says the enum is available on macOS, but none of the individual values are, so just don't expose the enum on macOS.
+	enum AVAudioSessionMode {
+		[MacCatalyst (13, 1)]
+		[Field ("AVAudioSessionModeDefault")]
+		Default,
+
+		[MacCatalyst (13, 1)]
+		[Field ("AVAudioSessionModeVoiceChat")]
+		VoiceChat,
+
+		[MacCatalyst (13, 1)]
+		[Field ("AVAudioSessionModeVideoRecording")]
+		VideoRecording,
+
+		[MacCatalyst (13, 1)]
+		[Field ("AVAudioSessionModeMeasurement")]
+		Measurement,
+
+		[MacCatalyst (13, 1)]
+		[Field ("AVAudioSessionModeGameChat")]
+		GameChat,
+
+		[MacCatalyst (13, 1)]
+		[Field ("AVAudioSessionModeMoviePlayback")]
+		MoviePlayback,
+
+		[MacCatalyst (13, 1)]
+		[Field ("AVAudioSessionModeVideoChat")]
+		VideoChat,
+
+		[iOS (9, 0)]
+		[MacCatalyst (13, 1)]
+		[Field ("AVAudioSessionModeSpokenAudio")]
+		SpokenAudio,
+
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
+		[Field ("AVAudioSessionModeVoicePrompt")]
+		VoiceePrompt,
 	}
 
 	[NoMac]
