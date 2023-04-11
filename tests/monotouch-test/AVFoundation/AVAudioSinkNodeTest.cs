@@ -55,9 +55,12 @@ namespace MonoTouchFixtures.AVFoundation {
 
 #if !__MACOS__
 			using var session = AVAudioSession.SharedInstance ();
-			session.SetCategory (AVAudioSessionCategory.PlayAndRecord);
+			session.SetCategory (AVAudioSessionCategory.PlayAndRecord, AVAudioSessionCategoryOptions.DefaultToSpeaker, out var categoryError);
+			Assert.IsNull (categoryError, "Category Error");
 			session.SetPreferredSampleRate (48000, out var sampleRateError);
+			Assert.IsNull (sampleRateError, "Sample Rate Error");
 			session.SetPreferredInputNumberOfChannels (1, out var inputChannelCountError);
+			Assert.IsNull (inputChannelCountError, "Input Channel Count Error");
 			session.SetActive (true);
 #endif
 
