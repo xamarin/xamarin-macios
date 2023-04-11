@@ -1650,7 +1650,7 @@
 		<ItemGroup>
 			<_DecompressedPlugIns Update="@(_DecompressedPlugIns)">
 				<TargetDirectory>$(_RelativePublishDir)$(_RelativeAppBundlePath)$(_AppPlugInsRelativePath)</TargetDirectory>
-				<SourceDirectory>$(ExtractionPath)</SourceDirectory>
+				<SourceDirectory>%(ExtractionPath)</SourceDirectory>
 			</_DecompressedPlugIns>
 		</ItemGroup>
 
