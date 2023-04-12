@@ -95,6 +95,7 @@ steps:
     repoType: gitHub
     gitHubPatVariable: '$(GitHub.Token)'
     isDeletePrSourceBranchSelected: false
+    xLocCustomPowerShellScript: '$(Build.SourcesDirectory)\\tools\\devops\\automation\\scripts\\localizationBomRemoval.ps1'
 
 - task: PublishBuildArtifacts@1
   continueOnError: true
