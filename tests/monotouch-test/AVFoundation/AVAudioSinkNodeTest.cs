@@ -54,8 +54,16 @@ namespace MonoTouchFixtures.AVFoundation {
 		{
 			TestRuntime.AssertNotVirtualMachine ();
 
-#if !__MACOS__
+#if __MACOS__
+			var defaultCaptureDevice = AVCaptureDevice.GetDefaultDevice (AVMediaTypes.Audio);
+			if (defaultCaptureDevice is null)
+				Assert.Ignore ("The current system doesn't have a microphone.");
+			Console.WriteLine ($"Default Capture Device: {defaultCaptureDevice}");
+#else
 			using var session = AVAudioSession.SharedInstance ();
+			if (!session.InputAvailable)
+				Assert.Ignore ("The current system doesn't have a microphone.");
+
 			session.SetCategory (AVAudioSessionCategory.PlayAndRecord, AVAudioSessionCategoryOptions.DefaultToSpeaker, out var categoryError);
 			Assert.IsNull (categoryError, "Category Error");
 			session.SetPreferredSampleRate (48000, out var sampleRateError);
@@ -63,8 +71,6 @@ namespace MonoTouchFixtures.AVFoundation {
 			session.SetPreferredInputNumberOfChannels (1, out var inputChannelCountError);
 			Assert.IsNull (inputChannelCountError, "Input Channel Count Error");
 			session.SetActive (true);
-
-			Assert.IsTrue (session.InputAvailable, "Input Available");
 
 			Console.WriteLine ($"AVAudioSession: {session}");
 			Console.WriteLine ($"Mode: {session.Mode}");
