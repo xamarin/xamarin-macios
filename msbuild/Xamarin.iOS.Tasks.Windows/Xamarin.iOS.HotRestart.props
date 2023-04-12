@@ -4,7 +4,7 @@
 		<!-- Use single-project MSBuild properties to generate the application manifest by default -->
 		<GenerateApplicationManifest Condition="'$(GenerateApplicationManifest)' == ''">true</GenerateApplicationManifest>
 		
-		<HotRestartSignedAppOutputDir>$(TEMP)\Xamarin\HotRestart\Signing\$(_AppBundleName)$(AppBundleExtension)\out\</HotRestartSignedAppOutputDir>
+		<HotRestartSignedAppOutputDir Condition="'$(HotRestartSignedAppOutputDir)' == ''">$(TEMP)\Xamarin\HotRestart\Signing\$(_AppBundleName)$(AppBundleExtension)\out\</HotRestartSignedAppOutputDir>
 		<HotRestartPayloadDir>$(HotRestartSignedAppOutputDir)Payload\</HotRestartPayloadDir>
 		<HotRestartSignedAppDir>$(HotRestartPayloadDir)$(_AppBundleName).app\</HotRestartSignedAppDir>
 		<HotRestartContentDir>$(HotRestartSignedAppOutputDir)$(_AppBundleName).content\</HotRestartContentDir>

@@ -36,6 +36,7 @@
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true' And '$(IsHotRestartEnvironmentReady)' == 'true'" >
 		
 		<HotRestart.Tasks.DetectSigningIdentity 
+			Condition="'$(EnableCodeSigning)' != 'false'"
 			GenerateApplicationManifest="$(GenerateApplicationManifest)"
 			ApplicationId="$(ApplicationId)"
 			ApplicationTitle="$(ApplicationTitle)"
@@ -162,6 +163,7 @@
 		<!--Create app bundle dir and get its path-->
 		<PrepareAppBundle 
 			AppBundleName="$(_AppBundleName)"
+			AppBundlePath="$(HotRestartAppBundlePath)"
 			SessionId="$(HotRestartBuildSessionId)" 
 			ShouldExtract="true">
 
@@ -325,7 +327,7 @@
 					AfterTargets="_CodesignAppBundle" />
 	
 	<Target Name="_CodesignHotRestartAppBundle"
-		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true'"
+		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true' And '$(EnableCodeSigning)' != 'false'"
 		DependsOnTargets="_CreateHotRestartCachedBundle;_CopyFrameworksToHotRestartBundle;_CollectCodeSignHotRestartInputs"
 		Inputs="@(_CodeSignHotRestartInputs)"
 		Outputs="@(_CodeSignHotRestartInputs -> '%(Outputs)')">

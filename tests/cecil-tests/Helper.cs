@@ -66,7 +66,11 @@ namespace Cecil.Tests {
 			}
 
 			Assert.IsEmpty (newFailures, $"Failures: {message}");
-			Assert.IsEmpty (fixedFailures, $"Known failures that aren't failing anymore - remove these from the list of known failures: {message}");
+
+			// The list of known failures often doesn't separate based on platform, which means that we might not see all the known failures
+			// unless we're currently building for all platforms. As such, only verify the list of known failures if we're building for all platforms.
+			if (!Configuration.AnyIgnoredPlatforms ())
+				Assert.IsEmpty (fixedFailures, $"Known failures that aren't failing anymore - remove these from the list of known failures: {message}");
 		}
 
 		// Enumerates all the methods in the assembly, for all types (including nested types), potentially providing a custom filter function.
