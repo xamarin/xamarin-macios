@@ -169,7 +169,7 @@ namespace Xamarin.MacDev.Tasks {
 						envVariables.Add (item);
 						break;
 					case "skip-marking-nsobjects-in-user-assemblies":
-						SkipMarkingNSObjectsInUserAssemblies = ParseBool (value) ? "false" : "true";
+						SkipMarkingNSObjectsInUserAssemblies = ParseBool (value) ? "true" : "false";
 						break;
 					case "xml":
 						if (xml == null)
