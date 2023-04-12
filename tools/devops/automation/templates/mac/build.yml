@@ -73,9 +73,8 @@ steps:
 # download the packages that have been created, install them, later download the zip files that contain the already built
 # tests and execute them.
 
-- pwsh: |
-    gci env: | format-table -autosize -wrap
-  displayName: 'Dump Environment'
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
+  displayName: 'Show Environment'
 
 - bash: |
     ioreg -l | grep -e Manufacturer -e 'Vendor Name'
