@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "tvOS View Controller",
-  "description": "A tvOS View Controller class and xib",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "Kontroler zobrazení tvOS",
+  "description": "Třída kontroleru zobrazení tvOS a xib",
+  "symbols/namespace/description": "obor názvů pro vygenerovaný kód"
 }

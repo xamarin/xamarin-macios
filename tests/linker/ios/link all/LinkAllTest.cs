@@ -275,8 +275,9 @@ namespace LinkAll {
 		[ThreadSafe]
 		public void RemovedAttributes ()
 		{
-			const string prefix = NamespacePrefix;
-			const string suffix = ", " + AssemblyName;
+			// Don't use constants here, because the linker can see what we're trying to do and keeps what we're verifying has been removed.
+			string prefix = NamespacePrefix;
+			string suffix = AssemblyName;
 
 			// since we're linking the attributes will NOT be available - even if they are used
 #if !XAMCORE_3_0

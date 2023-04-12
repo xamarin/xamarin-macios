@@ -29,7 +29,8 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 
 		public override bool Execute ()
 		{
-			AppBundlePath = HotRestartContext.Default.GetAppBundlePath (AppBundleName, SessionId.Substring (0, 8));
+			if (string.IsNullOrEmpty (AppBundlePath))
+				AppBundlePath = HotRestartContext.Default.GetAppBundlePath (AppBundleName, SessionId.Substring (0, 8));
 
 			if (!Directory.Exists (AppBundlePath) && ShouldExtract) {
 				var preBuiltAppBundlePath = Path.Combine (

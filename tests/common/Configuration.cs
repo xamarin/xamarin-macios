@@ -1115,12 +1115,22 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		public static void IgnoreIfAnyIgnoredPlatforms (bool dotnet = true)
+		public static bool AnyIgnoredPlatforms (bool dotnet = true)
+		{
+			return AnyIgnoredPlatforms (dotnet, out var _);
+		}
+
+		public static bool AnyIgnoredPlatforms (bool dotnet, out IEnumerable<ApplePlatform> notIncluded)
 		{
 			var allPlatforms = GetAllPlatforms (dotnet);
 			var includedPlatforms = GetIncludedPlatforms (dotnet);
-			var notIncluded = allPlatforms.Where (v => !includedPlatforms.Contains (v));
-			if (notIncluded.Any ())
+			notIncluded = allPlatforms.Where (v => !includedPlatforms.Contains (v)).ToArray ();
+			return notIncluded.Any ();
+		}
+
+		public static void IgnoreIfAnyIgnoredPlatforms (bool dotnet = true)
+		{
+			if (AnyIgnoredPlatforms (dotnet, out var notIncluded))
 				Assert.Ignore ($"This test requires all platforms to be included, but the following platforms aren't included: {string.Join (", ", notIncluded.Select (v => v.AsString ()))}");
 		}
 

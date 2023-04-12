@@ -1042,6 +1042,21 @@
 		<value>Не удалось оптимизировать вызов BlockLiteral.SetupBlock в {0} со смещением {1}: {2}.
 		</value>
 	</data>
+  <data name="MX2106_E" xml:space="preserve">
+		<value>Не удалось оптимизировать вызов BlockLiteral.{2} в {0} со смещением {1}, так как в типе "{4}" найдено несколько методов с именем "{3}".</value>
+	</data>
+  <data name="MX2106_F" xml:space="preserve">
+		<value>Не удалось оптимизировать вызов BlockLiteral.{2} в {0} со смещением {1}, так как метод "{3}" должен содержать хотя бы один параметр.</value>
+	</data>
+  <data name="MX2106_G" xml:space="preserve">
+		<value>Не удалось оптимизировать вызов BlockLiteral.{2} в {0} со смещением {1}, так как первый параметр в методе "{3}" отличается от "System.IntPtr", "void*" или "ObjCRuntime.BlockLiteral*" (текущее значение: "{4}")</value>
+	</data>
+  <data name="MX2106_H" xml:space="preserve">
+		<value>Не удалось оптимизировать вызов BlockLiteral.{2} в {0} со смещением {1}, так как метод "{3}" не содержит атрибут [UnmanagedCallersOnly].</value>
+	</data>
+  <data name="MX2106_I" xml:space="preserve">
+		<value>Не удалось оптимизировать вызов BlockLiteral.{2} в {0} со смещением {1}, так как метод "{3}" не содержит атрибут [UnmanagedCallersOnly].</value>
+	</data>
   <data name="MM2107" xml:space="preserve">
 		<value>Удаление динамического регистратора небезопасно, так как {0} ссылается на "{1}.{2} ({3})".
 		</value>
@@ -1762,5 +1777,29 @@
 	</data>
   <data name="MX8044" xml:space="preserve">
 		<value>Сборка {0} была изменена с момента сборки приложения, что аннулирует созданный код статического регистратора. MVID для загруженной сборки — {1}, в то время как MVID для сборки, которой соответствует созданный код статического регистратора — {2}.</value>
+	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>Не удалось вызвать выпуск для экземпляра типа {0}</value>
+	</data>
+  <data name="MX8046" xml:space="preserve">
+		<value>Не удается найти метод "{0}" в типе "{1}"</value>
+	</data>
+  <data name="MX8047" xml:space="preserve">
+		<value>Метод трамплина {0} не совпадает с указателем функции 0x{1} для аргумента trampolineMethod (они не указывают одинаковый метод).</value>
+	</data>
+  <data name="MX8048" xml:space="preserve">
+		<value>Метод трамплина {0} должен содержать хотя бы один параметр.</value>
+	</data>
+  <data name="MX8049" xml:space="preserve">
+		<value>Первым параметром в методе трамплина {0} должен быть "System.IntPtr", "void*" или "ObjCRuntime.BlockLiteral*".</value>
+	</data>
+  <data name="MX8050" xml:space="preserve">
+		<value>BlockLiteral.GetBlockSignature не поддерживается, если динамический регистратор связан с внешним элементом.</value>
+	</data>
+  <data name="MX8051" xml:space="preserve">
+		<value>Метод трамплина {0} должен содержать атрибут [UnmanagedCallersOnly].</value>
+	</data>
+  <data name="MX8052" xml:space="preserve">
+		<value>Подпись должна быть непустой строкой.</value>
 	</data>
 </root>
