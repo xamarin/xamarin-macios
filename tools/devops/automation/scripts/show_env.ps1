@@ -10,5 +10,7 @@ if ($IsMacOS -or $IsLinux) {
 
 gci env: | format-table -autosize -wrap
 
-system_profiler SPSoftwareDataType SPHardwareDataType SPDeveloperToolsDataType
+if ($IsMacOS) {
+    system_profiler SPSoftwareDataType SPHardwareDataType SPDeveloperToolsDataType
+}
 
