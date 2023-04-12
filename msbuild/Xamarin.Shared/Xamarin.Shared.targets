@@ -2369,6 +2369,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(_AppResourcesPath)"
+			ConnectTimeout="$(IOSDebugConnectTimeout)"
 			DebugOverWiFi="$(IOSDebugOverWiFi)"
 			DebugIPAddresses="$(_DebugIPAddresses)"
 			DebuggerPort="$(IOSDebuggerPort)"
