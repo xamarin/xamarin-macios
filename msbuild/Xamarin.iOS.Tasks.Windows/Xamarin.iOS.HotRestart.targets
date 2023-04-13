@@ -6,7 +6,6 @@
 	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.ComputeHotRestartBundleContents" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.DetectHotRestartSigningIdentity" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.PrepareAppBundle" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
-	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.UnpackFrameworks" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	
 	<Import Project="Xamarin.iOS.HotRestart.props" />
 
