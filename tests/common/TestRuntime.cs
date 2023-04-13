@@ -1493,7 +1493,7 @@ partial class TestRuntime
 		IgnoreInCI ($"Ignored due to CFNetwork error {(CFNetworkErrors) (long) nex.Code}");
 	}
 
-	static T? FindInner<T> (Exception? ex) where T: Exception
+	static T? FindInner<T> (Exception? ex) where T : Exception
 	{
 		while (ex is not null) {
 			if (ex is T target)
