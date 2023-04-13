@@ -2973,35 +2973,34 @@ namespace Registrar {
 					iface.Write ("@interface {0} : {1}", class_name, EncodeNonAsciiCharacters (@class.SuperType.ExportedName));
 					declarations.AppendFormat ("@class {0};\n", class_name);
 				}
-				bool any_protocols = false;
+				var implementedProtocols = new HashSet<string> ();
 				ObjCType tp = @class;
 				while (tp != null && tp != tp.BaseType) {
 					if (tp.IsWrapper)
 						break; // no need to declare protocols for wrapper types, they do it already in their headers.
 					if (tp.Protocols != null) {
 						for (int p = 0; p < tp.Protocols.Length; p++) {
-							if (tp.Protocols [p].ProtocolName == "UIAppearance")
-								continue;
-							iface.Append (any_protocols ? ", " : "<");
-							any_protocols = true;
-							iface.Append (tp.Protocols [p].ProtocolName);
+							implementedProtocols.Add (tp.Protocols [p].ProtocolName);
 							var proto = tp.Protocols [p].Type;
 							CheckNamespace (proto, exceptions);
 						}
 					}
-					if (App.Optimizations.RegisterProtocols == true && tp.AdoptedProtocols != null) {
-						for (int p = 0; p < tp.AdoptedProtocols.Length; p++) {
-							if (tp.AdoptedProtocols [p] == "UIAppearance")
-								continue; // This is not a real protocol
-							iface.Append (any_protocols ? ", " : "<");
-							any_protocols = true;
-							iface.Append (tp.AdoptedProtocols [p]);
-						}
-					}
+					if (App.Optimizations.RegisterProtocols == true && tp.AdoptedProtocols != null)
+						implementedProtocols.UnionWith (tp.AdoptedProtocols);
 					tp = tp.BaseType;
 				}
-				if (any_protocols)
+				implementedProtocols.Remove ("UIAppearance"); // This is not a real protocol
+				if (implementedProtocols.Count > 0) {
+					iface.Append ("<");
+					var firstProtocol = true;
+					foreach (var ip in implementedProtocols.OrderBy (v => v)) {
+						if (!firstProtocol)
+							iface.Append (", ");
+						firstProtocol = false;
+						iface.Append (ip);
+					}
 					iface.Append (">");
+				}
 
 				AutoIndentStringBuilder implementation_fields = null;
 				if (is_protocol) {
