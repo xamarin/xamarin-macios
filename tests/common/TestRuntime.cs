@@ -1448,7 +1448,7 @@ partial class TestRuntime
 		var isDnsResolutionFailed = false;
 		if (se.ErrorCode == 8 /* EAI_NONAME: 'hostname or servname not provided, or not known' */) {
 			isDnsResolutionFailed = true;
-		} else if (se.Message.Contains ("hostname or servname not provided, or not known", StringComparison.Ordinal)) {
+		} else if (se.Message.Contains ("hostname or servname not provided, or not known")) {
 			isDnsResolutionFailed = true;
 		}
 		if (!isDnsResolutionFailed)
