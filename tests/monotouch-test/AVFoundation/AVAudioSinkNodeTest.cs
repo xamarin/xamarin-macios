@@ -6,7 +6,6 @@ using System.Threading;
 using NUnit.Framework;
 
 using AudioToolbox;
-using AudioUnit;
 using AVFoundation;
 using Foundation;
 
@@ -88,6 +87,8 @@ namespace MonoTouchFixtures.AVFoundation {
 			try {
 				var inputNode = engine.InputNode;
 				var inputFormat = inputNode.GetBusOutputFormat (0);
+				if (inputFormat.SampleRate == 0)
+					Assert.Ignore ("The current system can't record audio.");
 				Console.WriteLine ($"Input Format:");
 				Console.WriteLine ($"    Sample Rate: {inputFormat.SampleRate}");
 				Console.WriteLine ($"    ChannelCount: {inputFormat.ChannelCount}");
