@@ -165,6 +165,8 @@ namespace Xamarin.Bundler {
 		public bool EnableMarkerOnlyBitCode { get { return BitCodeMode == BitCodeMode.MarkerOnly; } }
 		public bool EnableBitCode { get { return BitCodeMode != BitCodeMode.None; } }
 
+		public bool SkipMarkingNSObjectsInUserAssemblies { get; set; }
+
 		// assembly_build_targets describes what kind of native code each assembly should be compiled into for mobile targets (iOS, tvOS, watchOS).
 		// An assembly can be compiled into: static object (.o), dynamic library (.dylib) or a framework (.framework).
 		// In the case of a framework, each framework may contain the native code for multiple assemblies.
