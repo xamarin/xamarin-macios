@@ -1436,6 +1436,25 @@ partial class TestRuntime
 
 		IgnoreInCIfHttpStatusCodes (ex, HttpStatusCode.BadGateway, HttpStatusCode.GatewayTimeout, HttpStatusCode.ServiceUnavailable);
 		IgnoreInCIIfNetworkConnectionLost (ex);
+		IgnoreInCIIfDnsResolutionFailed (ex);
+	}
+
+	public static void IgnoreInCIIfDnsResolutionFailed (Exception ex)
+	{
+		var se = FindInner<System.Net.Sockets.SocketException> (ex);
+		if (se is null)
+			return;
+
+		var isDnsResolutionFailed = false;
+		if (se.ErrorCode == 8 /* EAI_NONAME: 'hostname or servname not provided, or not known' */) {
+			isDnsResolutionFailed = true;
+		} else if (se.Message.Contains ("hostname or servname not provided, or not known", StringComparison.Ordinal)) {
+			isDnsResolutionFailed = true;
+		}
+		if (!isDnsResolutionFailed)
+			return;
+
+		IgnoreInCI ($"Ignored due to DNS resolution failure '{se.Message}'");
 	}
 
 	public static void IgnoreInCIIfBadNetwork (HttpStatusCode status)
@@ -1472,6 +1491,16 @@ partial class TestRuntime
 			return;
 
 		IgnoreInCI ($"Ignored due to CFNetwork error {(CFNetworkErrors) (long) nex.Code}");
+	}
+
+	static T? FindInner<T> (Exception? ex) where T: Exception
+	{
+		while (ex is not null) {
+			if (ex is T target)
+				return target;
+			ex = ex.InnerException;
+		}
+		return null;
 	}
 
 	static bool TryGetHttpStatusCode (Exception ex, out HttpStatusCode status)
