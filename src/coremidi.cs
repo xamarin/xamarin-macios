@@ -376,7 +376,7 @@ namespace CoreMidi {
 		[Export ("deviceIdentification")]
 		MidiCIDeviceIdentification_Blittable _DeviceIdentification { get; }
 
-		[Wrap ("_DeviceIdentification.ToMidiCIDeviceIdentification ()")]
+		[Wrap ("_DeviceIdentification.ToMidiCIDeviceIdentification ()", IsVirtual = true)]
 		MidiCIDeviceIdentification DeviceIdentification { get; }
 #endif
 
