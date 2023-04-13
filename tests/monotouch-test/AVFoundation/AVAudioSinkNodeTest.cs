@@ -65,22 +65,26 @@ namespace MonoTouchFixtures.AVFoundation {
 
 			session.SetCategory (AVAudioSessionCategory.PlayAndRecord, AVAudioSessionCategoryOptions.DefaultToSpeaker, out var categoryError);
 			Assert.IsNull (categoryError, "Category Error");
+#if !__WATCHOS__
 			session.SetPreferredSampleRate (48000, out var sampleRateError);
 			Assert.IsNull (sampleRateError, "Sample Rate Error");
 			session.SetPreferredInputNumberOfChannels (1, out var inputChannelCountError);
 			Assert.IsNull (inputChannelCountError, "Input Channel Count Error");
+#endif // !__WATCHOS__
 			session.SetActive (true);
 
 			Console.WriteLine ($"AVAudioSession: {session}");
 			Console.WriteLine ($"Mode: {session.Mode}");
+#if !__WATCHOS__
 			Console.WriteLine ($"Preferred Input: {session.PreferredInput}");
+#endif // !__WATCHOS__
 			var availableInputs = session.AvailableInputs;
 			Console.WriteLine ($"Available Inputs: {availableInputs.Length}");
 			foreach (var ai in availableInputs)
 				Console.WriteLine ($"    {ai}");
 			Console.WriteLine ($"Available Categories: {string.Join (", ", session.AvailableCategories)}");
 			Console.WriteLine ($"Available Modes: {string.Join (", ", session.AvailableModes)}");
-#endif
+#endif // __MACOS__
 
 			using var engine = new AVAudioEngine ();
 
