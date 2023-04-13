@@ -30,14 +30,12 @@
 		</PropertyGroup>
 	</Target>
 	
-	<Target Name="_DetectHotRestartSigningIdentity" AfterTargets="_DetectAppManifest" 
+	<Target Name="_DetectHotRestartSigningIdentity" AfterTargets="_ReadAppManifest" 
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true' And '$(IsHotRestartEnvironmentReady)' == 'true'" >
 		
 		<DetectHotRestartSigningIdentity
 			Condition="'$(EnableCodeSigning)' != 'false'"
-			GenerateApplicationManifest="$(GenerateApplicationManifest)"
-			ApplicationId="$(ApplicationId)"
-			AppManifest="$(AppBundleManifest)"
+			BundleIdentifier="$(_BundleIdentifier)"
 			ProvisioningProfile="$(CodesignProvision)"
 			SigningKey="$(CodesignKey)">
 
