@@ -780,7 +780,6 @@ namespace Xamarin.Tests {
 
 			var bindir = GetBinDir (projectPath, platform, string.Empty);
 			var bindingResourcePackages = new List<string> () {
-				"BindingWithDefaultCompileInclude.resources.zip",
 				Path.Combine ("BindingWithUncompressedResourceBundle.resources", "libtest.a"),
 				Path.Combine ("BindingWithUncompressedResourceBundle.resources", "manifest"),
 			};
@@ -804,6 +803,17 @@ namespace Xamarin.Tests {
 				var file = Path.Combine (bindir, brp);
 				Assert.That (file, Does.Exist, "Existence");
 			}
+
+			// Whether the binding project produces a compressed binding package or not depends on whether there are
+			// symlinks in the resources, which, for xcframeworks, depends not only on the current platform we're testing,
+			// but which platforms are included in the build: if the current build doesn't support neither macOS nor Mac Catalyst,
+			// then we won't create an xcframework with symlinks, which means that building the binding project for iOS and tvOS
+			// will produce a non-compressed binding package. Thus we assert that we either have a non-compressed or a compressed
+			// package here.
+			var hasCompressedResources = File.Exists (Path.Combine (bindir, "BindingWithDefaultCompileInclude.resources.zip"));
+			var hasDirectoryResources = Directory.Exists (Path.Combine (bindir, "BindingWithDefaultCompileInclude.resources"));
+			if (!hasDirectoryResources && !hasCompressedResources)
+				Assert.Fail ($"Could not find either BindingWithDefaultCompileInclude.resources.zip or BindingWithDefaultCompileInclude.resources in {bindir}");
 		}
 
 		void AssertThatLinkerExecuted (ExecutionResult result)
