@@ -381,6 +381,18 @@ namespace GeneratorTests {
 			bgen.AssertWarning (1103, "'FooType`1' does not live under a namespace; namespaces are a highly recommended .NET best practice");
 		}
 
+		[TestCase (Profile.iOS)]
+		public void Bug18035 (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
+			bgen.AddTestApiDefinition ("bug18025.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
+			bgen.AssertWarning (1103, "'FooType' does not live under a namespace; namespaces are a highly recommended .NET best practice");
+		}
+
 		[Test]
 		public void Bug40282 ()
 		{
