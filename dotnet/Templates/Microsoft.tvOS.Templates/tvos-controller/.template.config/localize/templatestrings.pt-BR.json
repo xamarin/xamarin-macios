@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "tvOS Controller",
-  "description": "A tvOS Controller class",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "Controlador do tvOS",
+  "description": "Uma classe do Controlador do tvOS",
+  "symbols/namespace/description": "namespace do código gerado"
 }

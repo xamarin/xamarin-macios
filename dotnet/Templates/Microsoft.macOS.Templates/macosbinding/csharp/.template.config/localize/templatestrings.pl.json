@@ -1,5 +1,5 @@
 {
   "author": "Microsoft",
-  "name": "macOS Binding Library",
-  "description": "A project for creating a .NET macOS binding library"
+  "name": "Biblioteka powiązań dla systemu macOS",
+  "description": "Projekt służący do tworzenia biblioteki powiązań platformy .NET dla systemu tvOS"
 }
