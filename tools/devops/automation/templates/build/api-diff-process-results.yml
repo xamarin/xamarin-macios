@@ -27,18 +27,7 @@ steps:
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
 
-- powershell: |
-    Write-Host "IsMacOS: ${IsMacOS}"
-    Write-Host "IsWindows: ${IsWindows}"
-    Write-Host "IsLinux: ${IsLinux}"
-
-    if ($IsMacOS -or $IsLinux) {
-        Write-Host "HOSTNAME: $(hostname)"
-    } else {
-        Write-Host "COMPUTERNAME: ${env:COMPUTERNAME}"
-    }
-
-    gci env: | format-table -autosize -wrap
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
   displayName: 'Show Environment'
 
 - pwsh: |
