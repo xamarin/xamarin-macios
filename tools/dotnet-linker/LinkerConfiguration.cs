@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
 using Mono.Cecil;
 using Mono.Linker;
+using Mono.Linker.Steps;
 
 using Xamarin.Bundler;
 using Xamarin.Utils;
@@ -437,6 +439,8 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    Verbosity: {Verbosity}");
 				Console.WriteLine ($"    XamarinNativeLibraryDirectory: {XamarinNativeLibraryDirectory}");
 				Console.WriteLine ($"    XamarinRuntime: {Application.XamarinRuntime}");
+
+				DumpSteps ();
 			}
 		}
 
@@ -497,6 +501,34 @@ namespace Xamarin.Linker {
 			}
 			// ErrorHelper.Show will print our errors and warnings to stderr.
 			ErrorHelper.Show (list);
+		}
+
+		public IEnumerable<AssemblyDefinition> GetNonDeletedAssemblies (BaseStep step)
+		{
+			foreach (var assembly in Assemblies) {
+				if (step.Annotations.GetAction (assembly) == Mono.Linker.AssemblyAction.Delete)
+					continue;
+				yield return assembly;
+			}
+		}
+
+		void DumpSteps ()
+		{
+			Console.WriteLine ();
+			Console.WriteLine ("Pipeline Steps:");
+			var pipeline = typeof (LinkContext).GetProperty ("Pipeline")?.GetGetMethod ()?.Invoke (Context, null);
+			var steps = (List<IStep>?) pipeline?.GetType ()?.GetField ("_steps", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue (pipeline);
+			foreach (var step in steps!) {
+				Console.WriteLine ($"    {step}");
+				if (step is SubStepsDispatcher) {
+					var substeps = typeof (SubStepsDispatcher).GetField ("substeps", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue (step) as IEnumerable<ISubStep>;
+					if (substeps is not null) {
+						foreach (var substep in substeps) {
+							Console.WriteLine ($"        {substep}");
+						}
+					}
+				}
+			}
 		}
 	}
 }
