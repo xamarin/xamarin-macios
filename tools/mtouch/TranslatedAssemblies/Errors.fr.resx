@@ -1042,6 +1042,21 @@
 		<value>Impossible d'optimiser l'appel à BlockLiteral.SetupBlock dans {0} à l'offset {1} : {2}.
 		</value>
 	</data>
+  <data name="MX2106_E" xml:space="preserve">
+		<value>Impossible d’optimiser l’appel à BlockLiteral.{2} dans {0} au décalage {1}, car plusieurs méthodes nommées « {3} » ont été trouvées dans le type « {4} ».</value>
+	</data>
+  <data name="MX2106_F" xml:space="preserve">
+		<value>Impossible d’optimiser l’appel à BlockLiteral : {2} dans {0} au décalage {1}, car la méthode « {3} » doit avoir au moins un paramètre.</value>
+	</data>
+  <data name="MX2106_G" xml:space="preserve">
+		<value>Impossible d’optimiser l’appel à BlockLiteral : {2} dans {0} au décalage {1}, car le premier paramètre de la méthode « {3} » n’est pas « System.IntPtr », « void* » ou « ObjCRuntime.BlockLiteral* » (il s’agit de « {4} »)</value>
+	</data>
+  <data name="MX2106_H" xml:space="preserve">
+		<value>Impossible d’optimiser l’appel à BlockLiteral : {2} dans {0} au décalage {1}, car la méthode « {3} » n’a pas d’attribut [UnmanagedCallersOnly].</value>
+	</data>
+  <data name="MX2106_I" xml:space="preserve">
+		<value>Impossible d’optimiser l’appel à BlockLiteral : {2} dans {0} au décalage {1}, car la méthode « {3} » n’a pas d’attribut [UnmanagedCallersOnly].</value>
+	</data>
   <data name="MM2107" xml:space="preserve">
 		<value>La suppression du registrar dynamique est une action risquée, car {0} référence '{1}.{2} ({3})'.
 		</value>
@@ -1762,5 +1777,29 @@
 	</data>
   <data name="MX8044" xml:space="preserve">
 		<value>L’assembly {0} a été modifié depuis la création de l’application, invalidant ainsi le code du bureau d’enregistrement statique généré. Le MVID de l’assembly chargé est {1}, tandis que le MVID pour l’assembly auquel correspond le code de bureau d’enregistrement statique généré est {2}.</value>
+	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>Impossible d'appeler release sur une instance du type {0}</value>
+	</data>
+  <data name="MX8046" xml:space="preserve">
+		<value>Impossible de trouver la méthode « {0} » dans le type « {1} »</value>
+	</data>
+  <data name="MX8047" xml:space="preserve">
+		<value>La méthode de trampoline {0} ne correspond pas au pointeur de fonction 0x{1} pour l’argument trampolineMethod (ils ne font pas référence à la même méthode).</value>
+	</data>
+  <data name="MX8048" xml:space="preserve">
+		<value>La méthode du trampoline {0} doit avoir au moins un paramètre.</value>
+	</data>
+  <data name="MX8049" xml:space="preserve">
+		<value>Le premier paramètre de la méthode du trampoline {0} doit être « System.IntPtr » », void* » ou « ObjCRuntime.BlockLiteral* ».</value>
+	</data>
+  <data name="MX8050" xml:space="preserve">
+		<value>La méthode BlockLiteral.GetBlockSignature n’est pas prise en charge lorsque le registrar dynamique a été lié.</value>
+	</data>
+  <data name="MX8051" xml:space="preserve">
+		<value>La méthode du trampoline {0} doit avoir un attribut [UnmanagedCallersOnly].</value>
+	</data>
+  <data name="MX8052" xml:space="preserve">
+		<value>La signature doit être une chaîne non vide.</value>
 	</data>
 </root>

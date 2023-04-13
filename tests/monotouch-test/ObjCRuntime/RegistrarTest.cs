@@ -34,9 +34,6 @@ using NativeException = Foundation.MonoTouchException;
 #endif
 #endif
 using ObjCRuntime;
-#if !__TVOS__
-using MapKit;
-#endif
 #if !__WATCHOS__
 using CoreAnimation;
 #endif

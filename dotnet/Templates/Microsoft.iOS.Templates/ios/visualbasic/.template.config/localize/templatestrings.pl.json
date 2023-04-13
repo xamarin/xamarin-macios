@@ -1,10 +1,10 @@
 {
   "author": "Microsoft",
-  "name": "iOS Application",
-  "description": "A project for creating a .NET iOS application",
-  "symbols/bundleId/description": "Overrides CFBundleIdentifier in the Info.plist",
-  "symbols/minOSVersion/description": "Overrides SupportedOSPlatformVersion in the project file",
-  "symbols/deviceFamily/choices/universal/description": "Support both iPhone and iPad devices",
-  "symbols/deviceFamily/choices/iphone/description": "Support only iPhone devices",
-  "symbols/deviceFamily/choices/ipad/description": "Support only iPad devices"
+  "name": "Aplikacja systemu iOS",
+  "description": "Projekt służący do tworzenia aplikacji platformy .NET 6 dla systemu iOS",
+  "symbols/bundleId/description": "Nadpisuje element CFBundleIdentifier w pliku Info.plist",
+  "symbols/minOSVersion/description": "Nadpisuje element SupportedOSPlatformVersion w pliku projektu",
+  "symbols/deviceFamily/choices/universal/description": "Obsługa urządzeń iPhone i iPad",
+  "symbols/deviceFamily/choices/iphone/description": "Obsługa tylko urządzeń iPhone",
+  "symbols/deviceFamily/choices/ipad/description": "Obsługa tylko urządzeń iPad"
 }

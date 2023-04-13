@@ -14,6 +14,17 @@
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Messaging.Build.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Messaging.Build.targets') And '$(MessagingBuildTargetsImported)' != 'true'" />
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Messaging.Apple.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Messaging.Apple.targets') And '$(MessagingAppleTargetsImported)' != 'true'" />
 	
+	<Target Name="_GenerateHotRestartBuildSessionId">
+		<GenerateBuildSessionId MessagingVersion="$(MessagingVersion)" 
+			TargetFramework="$(TargetFramework)" 
+			ProjectFullPath="$(MSBuildProjectFullPath)" 
+			ProjectName="$(MSBuildProjectName)"
+			VisualStudioProcessId="$(VisualStudioProcessId)">
+			<Output TaskParameter="BuildSessionId" PropertyName="HotRestartBuildSessionId" />
+			<Output TaskParameter="BuildAppName" PropertyName="BuildAppName" />
+		</GenerateBuildSessionId>
+	</Target>
+
 	<Target Name="AddHotRestartDefineConstants" BeforeTargets="AddImplicitDefineConstants">
 		<PropertyGroup>
 			<_IsHotRestartDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)HOTRESTART($|;)'))</_IsHotRestartDefined>
@@ -25,6 +36,7 @@
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true' And '$(IsHotRestartEnvironmentReady)' == 'true'" >
 		
 		<HotRestart.Tasks.DetectSigningIdentity 
+			Condition="'$(EnableCodeSigning)' != 'false'"
 			GenerateApplicationManifest="$(GenerateApplicationManifest)"
 			ApplicationId="$(ApplicationId)"
 			ApplicationTitle="$(ApplicationTitle)"
@@ -145,13 +157,14 @@
 	<Target Name="_CreateHotRestartCachedBundle" DependsOnTargets="$(_CreateHotRestartCachedBundleDependsOn)" />
 	
 	<!-- Creates HotRestart app bundle and collects files to copy -->
-	<Target Name="_PrepareHotRestartAppBundle" DependsOnTargets="_GenerateBuildSessionId" 
+	<Target Name="_PrepareHotRestartAppBundle" DependsOnTargets="_GenerateHotRestartBuildSessionId" 
 					Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true'">
 
 		<!--Create app bundle dir and get its path-->
 		<PrepareAppBundle 
 			AppBundleName="$(_AppBundleName)"
-			SessionId="$(BuildSessionId)" 
+			AppBundlePath="$(HotRestartAppBundlePath)"
+			SessionId="$(HotRestartBuildSessionId)" 
 			ShouldExtract="true">
 
 			<Output TaskParameter="AppBundlePath" PropertyName="HotRestartAppBundlePath" />
@@ -314,7 +327,7 @@
 					AfterTargets="_CodesignAppBundle" />
 	
 	<Target Name="_CodesignHotRestartAppBundle"
-		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true'"
+		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true' And '$(EnableCodeSigning)' != 'false'"
 		DependsOnTargets="_CreateHotRestartCachedBundle;_CopyFrameworksToHotRestartBundle;_CollectCodeSignHotRestartInputs"
 		Inputs="@(_CodeSignHotRestartInputs)"
 		Outputs="@(_CodeSignHotRestartInputs -> '%(Outputs)')">
@@ -333,12 +346,12 @@
 		</CleanDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CleanHotRestartBundle" DependsOnTargets="_GenerateBuildSessionId" >
+	<Target Name="_CleanHotRestartBundle" DependsOnTargets="_GenerateHotRestartBuildSessionId" >
 		<!-- Gets the bundle path -->
 		<PrepareAppBundle 
 			Condition="'$(IsHotRestartBuild)' == 'true'"
 			AppBundleName="$(_AppBundleName)"
-			SessionId="$(BuildSessionId)" 
+			SessionId="$(HotRestartBuildSessionId)" 
 			ShouldExtract="false">
 
 			<Output TaskParameter="AppBundlePath" PropertyName="HotRestartAppBundlePath" />
