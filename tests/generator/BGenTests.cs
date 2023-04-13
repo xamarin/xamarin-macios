@@ -381,6 +381,9 @@ namespace GeneratorTests {
 			bgen.AssertWarning (1103, "'FooType`1' does not live under a namespace; namespaces are a highly recommended .NET best practice");
 		}
 
+#if !NET
+		[Ignore ("This only applies to .NET")]
+#endif
 		[TestCase (Profile.iOS)]
 		public void Bug18035 (Profile profile)
 		{
