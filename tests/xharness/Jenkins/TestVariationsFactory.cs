@@ -158,6 +158,9 @@ namespace Xharness.Jenkins {
 						if (test.Platform == TestPlatform.Mac) {
 							yield return new TestData { Variation = "Release", Debug = false, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac) };
 						}
+						if (test.TestProject.IsDotNetProject) {
+							yield return new TestData { Variation = "Release (all optimizations)", BundlerArguments = "--optimize:all", Registrar = "static", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = ignore };
+						}
 					}
 					break;
 				case "xammac tests":
