@@ -305,5 +305,71 @@ namespace ObjCRuntime {
 		var cctor = type.Methods.FirstOrDefault (m => m.Name == ".cctor");
 		Assert.IsNull (cctor, "we had a cctor - oops");
 	}
+
+	const string multiObjectCode = @"
+namespace ObjCRuntime {
+	public class Program {
+		public static int Main (string[] args) {
+			var map = new Runtime.MTClassMap [] {
+				new Runtime.MTClassMap(new IntPtr (42), 0, Runtime.MTTypeFlags.None),
+				new Runtime.MTClassMap(new IntPtr (43), 1, Runtime.MTTypeFlags.None),
+				new Runtime.MTClassMap(new IntPtr (44), 2, Runtime.MTTypeFlags.None),
+			};
+			unsafe {
+				fixed (Runtime.MTClassMap* mapPtr = &map [0]) {
+					Runtime.ClassHandles.InitializeClassHandles (mapPtr);
+				}
+			}
+			var baz = new Baz ();
+			Console.WriteLine (baz.ClassHandle);
+			return 0;
+		}
+	}
+
+	public class Class {
+		public static NativeHandle GetHandle (string s) {
+			return NativeHandle.Zero;
+		}
+	}
+
+	public class Foo {
+		static NativeHandle class_ptr = Class.GetHandle (""nothing"");
+		public Foo () { }
+		public NativeHandle ClassHandle => class_ptr;
+	}
+
+	public class Bar {
+		static NativeHandle class_ptr = Class.GetHandle (""nothing"");
+		public Bar () { }
+		public NativeHandle ClassHandle => class_ptr;
+	}
+
+	public class Baz {
+		static NativeHandle class_ptr = Class.GetHandle (""nothing"");
+		public Baz () { }
+		public NativeHandle ClassHandle => class_ptr;
+	}
+}
+";
+
+	[Test]
+	public void MultiObjects ()
+	{
+		var testCode = commonCode + multiObjectCode;
+		var result = Compiler.Compile (testCode);
+		Assert.That (String.IsNullOrEmpty (result.Error), $"Compile failure: {result.Error}");
+
+		var map = new CSToObjCMap () {
+			["ObjCRuntime.Foo"] = new ObjCNameIndex ("xxx", 0),
+			["ObjCRuntime.Bar"] = new ObjCNameIndex ("yyy", 1),
+			["ObjCRuntime.Baz"] = new ObjCNameIndex ("zzz", 2),
+		};
+
+
+		var rewriter = new Rewriter (map, result.OutputFileName, new string [] { result.OutputFileName });
+		rewriter.Process ();
+		var codeOutput = Compiler.Run ("mono", new List<string> () { result.OutputFileName });
+		Assert.That (codeOutput, Is.EqualTo ("0x2c\n"), "incorrect executable output");
+	}
 }
 
