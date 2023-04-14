@@ -27,7 +27,7 @@ steps:
       commit: ${{ parameters.commit }}
 
 - pwsh: >-
-    clean_past_comments.ps1
+    ./clean_past_comments.ps1
     -GithubToken "$(GitHub.Token)"
     -RepositoryUri "$(Build.Repository.Uri)"
     -SourceBranch "$(Build.SourceBranch)"
