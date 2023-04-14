@@ -2914,7 +2914,7 @@ namespace AVFoundation {
 		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("AVAudioSessionModeVoicePrompt")]
-		VoiceePrompt,
+		VoicePrompt,
 	}
 
 	[NoMac]
