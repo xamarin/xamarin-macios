@@ -17,7 +17,6 @@ using System.Linq;
 using System.IO;
 
 using NUnit.Framework;
-using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Authentication;
 using System.Text;
