@@ -44,7 +44,7 @@ stages:
   displayName: ${{ parameters.displayName }}
   dependsOn:
   - build_macos_tests
-  condition: and(succeeded(), eq(dependencies.build_packages.outputs['configure.decisions.RUN_MAC_TESTS'], 'true'))
+  condition: and(succeeded(), eq(dependencies.build_macos_tests.outputs['configure.decisions.RUN_MAC_TESTS'], 'true'))
   variables:
     GITHUB_FAILURE_COMMENT_FILE: $(System.DefaultWorkingDirectory)/github-comment-file.md
 
@@ -83,7 +83,7 @@ stages:
 
     variables:
       PR_ID: $[ dependencies.configure.outputs['labels.pr_number'] ]
-      GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
+      GIT_HASH: $[ stageDependencies.build_macos_tests.build.outputs['fix_commit.GIT_HASH'] ]
 
     steps:
     - template: build.yml

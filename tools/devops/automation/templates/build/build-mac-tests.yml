@@ -81,8 +81,8 @@ steps:
       # Copy all the binlogs to a separate directory, keeping directory structure.
       - script: |
           set -x
-          mkdir -p $(Build.ArtifactStagingDirectory)/all-binlogs
-          rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/xamarin-macios $(Build.ArtifactStagingDirectory)/all-binlogs
+          mkdir -p $(Build.ArtifactStagingDirectory)/mactests-binlogs
+          rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/xamarin-macios $(Build.ArtifactStagingDirectory)/mactests-binlogs
         displayName: Copy all binlogs
         continueOnError: true
         condition: succeededOrFailed()
