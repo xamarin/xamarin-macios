@@ -13,7 +13,6 @@ param
     [String]
     $Output,
 
-    [Parameter(Mandatory)]
     [String]
     $Predicate
 )
