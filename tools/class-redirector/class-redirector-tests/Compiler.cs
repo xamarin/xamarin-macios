@@ -17,9 +17,7 @@ public class Compiler {
 		var file = "Code.cs";
 		var inputpath = Path.Combine (directory, file);
 		var outputpath = Path.Combine (directory, "Code.exe");
-		using var writer = new StreamWriter (inputpath);
-		writer.Write (code);
-		writer.Flush ();
+		File.WriteAllText (inputpath, code);
 
 		//var args = "-unsafe -out:Code.exe " + inputpath;
 		string result = "";
