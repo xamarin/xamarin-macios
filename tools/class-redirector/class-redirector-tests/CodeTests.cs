@@ -371,7 +371,5 @@ namespace ObjCRuntime {
 		var codeOutput = Compiler.Run ("mono", new List<string> () { result.OutputFileName });
 		Assert.That (codeOutput, Is.EqualTo ("0x2c\n"), "incorrect executable output");
 	}
-
-
 }
 
