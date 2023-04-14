@@ -138,39 +138,6 @@ steps:
   displayName: "Remove artifacts"
   condition: always()
 
-- task: DownloadPipelineArtifact@2
-  displayName: Download not notarized build
-  inputs:
-    artifact: '${{ parameters.uploadPrefix }}not-signed-package'
-    allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/package
-
-- pwsh: |
-    $dir = "$(Build.SourcesDirectory)/package"
-    Dir $dir
-    $items = Get-ChildItem $dir -Recurse
-    foreach ($i in $items) {
-      if ($i.Name -like "xamarin.mac-*.pkg") {
-        $path = $i.FullName
-        Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$path"
-      }
-    }
-  displayName: 'Set Mac pkgs url'
-  timeoutInMinutes: 5
-
-- bash: |
-    echo "Pkg uri is $XM_PACKAGE"
-    make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ mac-tests-provisioning.csx
-  displayName: 'Generate Provisionator csx file'
-
-- task: xamops.azdevex.provisionator-task.provisionator@2
-  displayName: 'Provision Products & Frameworks'
-  inputs:
-    provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/mac-tests-provisioning.csx
-    provisioning_extra_args: '-vvvv'
-    github_token: $(Github.Token)
-  timeoutInMinutes: 250
-
 # Executed ONLY if we want to clear the provisionator cache.
 - bash: rm -rf "$TOOLS_DIR/provisionator"
   env:
@@ -186,20 +153,13 @@ steps:
     allowFailedBuilds: true
     path: $(Build.SourcesDirectory)/artifacts/tmp
 
-# sometimes the make that creates the pkgs fails.
 - bash: |
     set -ex
-    if ! test -f $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}mac-test-package/mac-test-package.7z; then
-      echo "No test package could be found for tests on macOS $CONTEXT" > "$GITHUB_FAILURE_COMMENT_FILE"
-      exit 1
-    fi
     ls -Rla $(Build.SourcesDirectory)/artifacts/tmp
     7z x $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}mac-test-package/mac-test-package.7z -o$(Build.SourcesDirectory)/artifacts/ -bb1
     # no prefix! we did expand to the exact name we are using
     ls -Rla $(Build.SourcesDirectory)/artifacts/mac-test-package
   displayName: Expand tests.
-  env:
-    CONTEXT: ${{ parameters.statusContext }}
 
 - bash: |
     ls -Rla $(Build.SourcesDirectory)/artifacts
