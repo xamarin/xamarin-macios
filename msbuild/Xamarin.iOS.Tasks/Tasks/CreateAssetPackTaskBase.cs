@@ -4,16 +4,19 @@ using Microsoft.Build.Framework;
 using System.IO;
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
+using Xamarin.Messaging.Build.Client;
+
+#nullable enable
 
 namespace Xamarin.iOS.Tasks {
-	public abstract class CreateAssetPackTaskBase : XamarinToolTask {
+	public class CreateAssetPack : XamarinToolTask {
 		#region Inputs
 
 		[Required]
-		public ITaskItem OutputFile { get; set; }
+		public ITaskItem? OutputFile { get; set; }
 
 		[Required]
-		public ITaskItem Source { get; set; }
+		public ITaskItem? Source { get; set; }
 
 		#endregion
 
@@ -33,7 +36,7 @@ namespace Xamarin.iOS.Tasks {
 
 		protected override string GetWorkingDirectory ()
 		{
-			return Source.GetMetadata ("FullPath");
+			return Source!.GetMetadata ("FullPath");
 		}
 
 		protected override string GenerateCommandLineCommands ()
@@ -41,13 +44,13 @@ namespace Xamarin.iOS.Tasks {
 			var args = new CommandLineArgumentBuilder ();
 
 			args.Add ("-r", "-y");
-			args.AddQuoted (OutputFile.GetMetadata ("FullPath"));
+			args.AddQuoted (OutputFile!.GetMetadata ("FullPath"));
 			args.AddQuoted ("META-INF");
 
 			long size = 0;
 			int count = 0;
 
-			foreach (var path in Directory.EnumerateFileSystemEntries (Source.ItemSpec)) {
+			foreach (var path in Directory.EnumerateFileSystemEntries (Source!.ItemSpec)) {
 				if (Directory.Exists (path)) {
 					foreach (var item in Directory.EnumerateFiles (path)) {
 						var info = new FileInfo (item);
@@ -77,8 +80,11 @@ namespace Xamarin.iOS.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			// We need to delete any existing ipa files, zip will just add to it otherwise
-			if (File.Exists (OutputFile.ItemSpec))
+			if (File.Exists (OutputFile!.ItemSpec))
 				File.Delete (OutputFile.ItemSpec);
 
 			return base.Execute ();
@@ -94,8 +100,16 @@ namespace Xamarin.iOS.Tasks {
 			meta.Add ("TotalUncompressedBytes", new PNumber ((int) size));
 			meta.Add ("Version", new PNumber (2));
 
-			Directory.CreateDirectory (Path.Combine (Source.ItemSpec, "META-INF"));
+			Directory.CreateDirectory (Path.Combine (Source!.ItemSpec, "META-INF"));
 			meta.Save (Path.Combine (Source.ItemSpec, "META-INF", "com.apple.ZipMetadata.plist"), true, true);
+		}
+
+		public override void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+
+			base.Cancel ();
 		}
 	}
 }
