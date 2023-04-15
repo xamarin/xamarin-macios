@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "iOS View Controller",
-  "description": "An iOS View Controller class and xib",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "iOS 视图控制器",
+  "description": "iOS 视图控制器类和 xib",
+  "symbols/namespace/description": "生成的代码的命名空间"
 }

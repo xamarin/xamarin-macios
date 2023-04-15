@@ -3,6 +3,7 @@ using System.Xml.Linq;
 
 namespace ClassRedirectorTests;
 
+[TestFixture]
 public class XmlTests {
 	[Test]
 	public void WritesCorrectXml ()

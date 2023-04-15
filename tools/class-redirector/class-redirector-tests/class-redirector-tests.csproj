@@ -18,14 +18,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\common\CSToObjCMap.cs">
-      <Link>CSToObjCMap.cs</Link>
+    <ProjectReference Include="..\class-redirector\class-redirector.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\tests\mtouch\Cache.cs">
+      <Link>Cache.cs</Link>
     </Compile>
-    <Compile Include="..\..\common\ObjCNameIndex.cs">
-      <Link>ObjCNameIndex.cs</Link>
+    <Compile Include="..\..\common\Execution.cs">
+      <Link>Execution.cs</Link>
     </Compile>
-    <Compile Include="..\..\common\StaticRegistrarFile.cs">
-      <Link>StaticRegistrarFile.cs</Link>
+    <Compile Include="..\..\common\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
     </Compile>
   </ItemGroup>
 </Project>

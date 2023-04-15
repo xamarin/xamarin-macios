@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
   "name": "macOS View",
-  "description": "A macOS View with UI implemented in Xcode's Interface Builder (XIB file)",
-  "symbols/namespace/description": "namespace for the generated code"
+  "description": "Visualizzazione macOS con interfaccia utente implementata nell’Interface Builder di Xcode (file XIB)",
+  "symbols/namespace/description": "spazio dei nomi per il codice generato"
 }

@@ -1042,6 +1042,21 @@
 		<value>No se pudo optimizar la llamada a BlockLiteral.SetupBlock en {0} en el desplazamiento {1}: {2}.
 		</value>
 	</data>
+  <data name="MX2106_E" xml:space="preserve">
+		<value>No se pudo optimizar la llamada a BlockLiteral.{2} en {0} en desplazamiento {1} porque se encontró más de un método llamado "{3}" en el tipo {4}.</value>
+	</data>
+  <data name="MX2106_F" xml:space="preserve">
+		<value>No se ha podido optimizar la llamada a BlockLiteral.{2} en {0} en desplazamiento {1} porque el método "{3}" debe tener al menos un parámetro.</value>
+	</data>
+  <data name="MX2106_G" xml:space="preserve">
+		<value>No se ha podido optimizar la llamada a BlockLiteral.{2} en {0} en {1} desplazamiento porque el primer parámetro del método "{3}" no es "System.IntPtr", "void*" ni "ObjCRuntime.BlockLiteral*" (es "{4}")</value>
+	</data>
+  <data name="MX2106_H" xml:space="preserve">
+		<value>No se pudo optimizar la llamada a BlockLiteral.{2} en {0} en {1} desplazamiento porque el método "{3}optimizar" no tiene un atributo [UnmanagedCallersOnly].</value>
+	</data>
+  <data name="MX2106_I" xml:space="preserve">
+		<value>No se pudo optimizar la llamada a BlockLiteral.{2} en {0} en {1} desplazamiento porque el método "{3}optimizar" no tiene un atributo [UnmanagedCallersOnly].</value>
+	</data>
   <data name="MM2107" xml:space="preserve">
 		<value>No es seguro quitar el registrador dinámico, ya que {0} hace referencia a "{1}.{2} ({3})".
 		</value>
@@ -1762,5 +1777,29 @@
 	</data>
   <data name="MX8044" xml:space="preserve">
 		<value>El ensamblado {0} se ha modificado desde que se compiló la aplicación, lo que invalida el código de registrador estático generado. El MVID del ensamblado cargado es {1}, mientras que el MVID del ensamblado al que corresponde el código del registrador estático generado es {2}.</value>
+	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>No se puede llamar a la liberación en una instancia del tipo {0}</value>
+	</data>
+  <data name="MX8046" xml:space="preserve">
+		<value>No se puede encontrar el método "{0}" en el tipo "{1}"</value>
+	</data>
+  <data name="MX8047" xml:space="preserve">
+		<value>El método trampolín {0} no coincide con el puntero de función 0x{1} para el argumento trampolineMethod (no se refieren al mismo método).</value>
+	</data>
+  <data name="MX8048" xml:space="preserve">
+		<value>El método trampolín {0} debe tener al menos un parámetro.</value>
+	</data>
+  <data name="MX8049" xml:space="preserve">
+		<value>El primer parámetro del método trampolín {0} debe ser "System.IntPtr", "void*" u "ObjCRuntime.BlockLiteral*".</value>
+	</data>
+  <data name="MX8050" xml:space="preserve">
+		<value>BlockLiteral.GetBlockSignature no es compatible cuando el registrador dinámico se ha desvinculado.</value>
+	</data>
+  <data name="MX8051" xml:space="preserve">
+		<value>El método trampolín {0} debe tener un atributo [UnmanagedCallersOnly].</value>
+	</data>
+  <data name="MX8052" xml:space="preserve">
+		<value>La firma debe ser una cadena no vacía.</value>
 	</data>
 </root>
