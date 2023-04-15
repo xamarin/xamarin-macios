@@ -6,8 +6,9 @@ using Mono.Cecil.Rocks;
 
 namespace ClassRedirector {
 	public class Rewriter {
-		const string classHandleName = "ObjRuntime.Runtime.ClassHandles";
-		const string mtClassMapName = "ObjCRuntime.Runtime.MTClassMap";
+		const string runtimeName = "ObjCRuntime.Runtime";
+		const string classHandleName = "ObjCRuntime.Runtime/ClassHandles";
+		const string mtClassMapName = "ObjCRuntime.Runtime/MTClassMap";
 		const string nativeHandleName = "ObjCRuntime.NativeHandle";
 		const string initClassHandlesName = "InitializeClassHandles";
 		const string classPtrName = "class_ptr";
@@ -34,7 +35,8 @@ namespace ClassRedirector {
 		Dictionary<string, FieldDefinition> CreateClassHandles ()
 		{
 			var classMap = new Dictionary<string, FieldDefinition> ();
-			using var module = ModuleDefinition.ReadModule (pathToXamarinAssembly);
+			using var assemblyStm = new FileStream (pathToXamarinAssembly, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+			using var module = ModuleDefinition.ReadModule (assemblyStm);
 
 			var classHandles = LocateClassHandles (module);
 			if (classHandles is null)
@@ -50,7 +52,7 @@ namespace ClassRedirector {
 			if (mtClassMapDef is null)
 				throw new Exception ($"Unable to find {mtClassMapName} in {pathToXamarinAssembly}");
 
-			var nativeHandle = module.Types.FirstOrDefault (t => t.Name == nativeHandleName);
+			var nativeHandle = module.Types.FirstOrDefault (t => t.FullName == nativeHandleName);
 			if (nativeHandle is null)
 				throw new Exception ($"Unable to find {nativeHandleName} in {pathToXamarinAssembly}");
 
@@ -116,18 +118,19 @@ namespace ClassRedirector {
 
 		TypeDefinition? LocateClassHandles (ModuleDefinition module)
 		{
-			return module.GetType (classHandleName);
+			return AllTypes (module).FirstOrDefault (t => t.FullName == classHandleName);
 		}
 
 		TypeDefinition? LocateMTClassMap (ModuleDefinition module)
 		{
-			return module.GetType (mtClassMapName);
+			return AllTypes (module).FirstOrDefault (t => t.FullName == mtClassMapName);
 		}
 
 		void PatchClassPtrUsage (Dictionary<string, FieldDefinition> classMap)
 		{
 			foreach (var path in assembliesToPatch) {
-				using var module = ModuleDefinition.ReadModule (path);
+				using var stm = new FileStream (path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+				using var module = ModuleDefinition.ReadModule (stm);
 				PatchClassPtrUsage (classMap, module);
 				module.Write ();
 			}
@@ -135,7 +138,7 @@ namespace ClassRedirector {
 
 		void PatchClassPtrUsage (Dictionary<string, FieldDefinition> classMap, ModuleDefinition module)
 		{
-			foreach (var cl in module.Types) {
+			foreach (var cl in AllTypes (module)) {
 				if (classMap.TryGetValue (cl.FullName, out var classPtrField)) {
 					PatchClassPtrUsage (cl, classPtrField);
 				}
@@ -168,9 +171,11 @@ namespace ClassRedirector {
 
 		void PatchMethod (MethodDefinition method, FieldDefinition classPtr, FieldDefinition classPtrField)
 		{
-			foreach (var instr in method.Body.Instructions) {
+			var il = method.Body.GetILProcessor ();
+			for (int i = 0; i < method.Body.Instructions.Count; i++) {
+				var instr = method.Body.Instructions [i];
 				if (instr.OpCode == OpCodes.Ldsfld && instr.Operand == classPtr) {
-					instr.Operand = classPtrField;
+					il.Replace (instr, Instruction.Create (OpCodes.Ldsfld, method.Module.ImportReference (classPtrField)));
 				}
 			}
 		}
@@ -252,6 +257,26 @@ namespace ClassRedirector {
 				return false;
 			var instr = il.Body.Instructions [index]!;
 			return instr.OpCode == OpCodes.Ldstr;
+		}
+
+		IEnumerable<TypeDefinition> AllTypes (ModuleDefinition module)
+		{
+			foreach (var type in module.Types) {
+				yield return type;
+				foreach (var t in AllTypes (type))
+					yield return t;
+			}
+		}
+
+		IEnumerable<TypeDefinition> AllTypes (TypeDefinition type)
+		{
+			if (type.HasNestedTypes) {
+				foreach (var t in type.NestedTypes) {
+					yield return t;
+					foreach (var nt in AllTypes (t))
+						yield return nt;
+				}
+			}
 		}
 	}
 }

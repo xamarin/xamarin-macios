@@ -34,18 +34,7 @@ steps:
     Dir $(System.DefaultWorkingDirectory)
   displayName: Show directories
 
-- powershell: |
-    Write-Host "IsMacOS: ${IsMacOS}"
-    Write-Host "IsWindows: ${IsWindows}"
-    Write-Host "IsLinux: ${IsLinux}"
-
-    if ($IsMacOS -or $IsLinux) {
-        Write-Host "HOSTNAME: $(hostname)"
-    } else {
-        Write-Host "COMPUTERNAME: ${env:COMPUTERNAME}"
-    }
-
-    gci env: | format-table -autosize -wrap
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
   displayName: 'Show Environment'
 
 - task: ms.vss-governance-buildtask.governance-build-task-component-detection.ComponentGovernanceComponentDetection@0

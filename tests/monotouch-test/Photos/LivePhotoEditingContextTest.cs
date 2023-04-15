@@ -7,7 +7,6 @@ using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 using Photos;
-using CoreGraphics;
 using NUnit.Framework;
 
 #if !NET

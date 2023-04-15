@@ -1,5 +1,5 @@
 {
   "author": "Microsoft",
-  "name": "macOS Class Library",
-  "description": "A project for creating a .NET macOS class library"
+  "name": "macOS 클래스 라이브러리",
+  "description": ".NET macOS 클래스 라이브러리를 만들기 위한 프로젝트"
 }

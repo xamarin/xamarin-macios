@@ -1042,6 +1042,21 @@
 		<value>오프셋 {1}의 {0}에서 BlockLiteral.SetupBlock 호출을 최적화할 수 없습니다. {2}.
 		</value>
 	</data>
+  <data name="MX2106_E" xml:space="preserve">
+		<value>'{4}' 형식에 이름이 '{3}'인 메서드가 두 개 이상 있어 {1} 오프셋의 {0}에서 BlockLiteral.{2}에 대한 호출을 최적화할 수 없습니다.</value>
+	</data>
+  <data name="MX2106_F" xml:space="preserve">
+		<value>'{3}' 메서드에 매개 변수가 하나 이상 있어야 하므로 {1} 오프셋의 {0}에서 BlockLiteral.{2}에 대한 호출을 최적화할 수 없습니다.</value>
+	</data>
+  <data name="MX2106_G" xml:space="preserve">
+		<value>'{3}' 메서드의 첫 번째 매개 변수가 'System.IntPtr', 'void*' 또는 'ObjCRuntime.BlockLiteral*'('{4}')이 아니므로 오프셋 {1}의 {0}에서 BlockLiteral.{2}에 대한 호출을 최적화할 수 없습니다.</value>
+	</data>
+  <data name="MX2106_H" xml:space="preserve">
+		<value>'{3}' 메서드에 [UnmanagedCallersOnly] 특성이 없어 오프셋 {1}의 {0}에서 BlockLiteral.{2}에 대한 호출을 최적화할 수 없습니다.</value>
+	</data>
+  <data name="MX2106_I" xml:space="preserve">
+		<value>'{3}' 메서드에 [UnmanagedCallersOnly] 특성이 없어 오프셋 {1}의 {0}에서 BlockLiteral.{2}에 대한 호출을 최적화할 수 없습니다.</value>
+	</data>
   <data name="MM2107" xml:space="preserve">
 		<value>{0}이(가) '{1}.{2}({3})'을(를) 참조하므로 동적 등록자를 제거하는 것은 안전하지 않습니다.
 		</value>
@@ -1762,5 +1777,29 @@
 	</data>
   <data name="MX8044" xml:space="preserve">
 		<value>앱이 빌드된 이후 어셈블리 {0}이(가) 수정되어 생성된 정적 등록 대행자 코드가 무효화되었습니다. 로드된 어셈블리의 MVID는 {1}이고 생성된 정적 등록 대행자 코드가 해당하는 어셈블리의 MVID는 {2}입니다.</value>
+	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>{0} 형식의 인스턴스에서 릴리스를 호출할 수 없습니다.</value>
+	</data>
+  <data name="MX8046" xml:space="preserve">
+		<value>'{1}' 형식에서 '{0}' 메서드를 찾을 수 없습니다.</value>
+	</data>
+  <data name="MX8047" xml:space="preserve">
+		<value>{0} 트램펄린 메서드가 trampolineMethod 인수의 0x{1} 함수 포인터와 일치하지 않습니다(동일한 메서드를 참조하지 않음).</value>
+	</data>
+  <data name="MX8048" xml:space="preserve">
+		<value>{0} 트램펄린 메서드에는 매개 변수가 한 개 이상 있어야 합니다.</value>
+	</data>
+  <data name="MX8049" xml:space="preserve">
+		<value>{0} 트램펄린 메서드의 첫 번째 매개 변수는 'System.IntPtr', 'void*' 또는 'ObjCRuntime.BlockLiteral*'이어야 합니다.</value>
+	</data>
+  <data name="MX8050" xml:space="preserve">
+		<value>동적 등록자가 연결된 경우 BlockLiteral.GetBlockSignature가 지원되지 않습니다.</value>
+	</data>
+  <data name="MX8051" xml:space="preserve">
+		<value>{0} 트램펄린 메서드에는 [UnmanagedCallersOnly] 특성이 있어야 합니다.</value>
+	</data>
+  <data name="MX8052" xml:space="preserve">
+		<value>서명은 비어 있지 않은 문자열이어야 합니다.</value>
 	</data>
 </root>
