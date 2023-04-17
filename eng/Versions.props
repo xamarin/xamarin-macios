@@ -12,7 +12,7 @@
     <!-- This is a subscription of the .NET 6 versions of our packages -->
     <MicrosoftMacCatalystSdkPackageVersion>16.2.47</MicrosoftMacCatalystSdkPackageVersion>
     <MicrosoftmacOSSdkPackageVersion>13.1.47</MicrosoftmacOSSdkPackageVersion>
-    <MicrosoftiOSSdkPackageVersion>16.2.47</MicrosoftiOSSdkPackageVersion>
+    <MicrosoftiOSSdkPackageVersion>16.2.48</MicrosoftiOSSdkPackageVersion>
     <MicrosofttvOSSdkPackageVersion>16.1.285</MicrosofttvOSSdkPackageVersion>
   </PropertyGroup>
 </Project>
