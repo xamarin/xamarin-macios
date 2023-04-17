@@ -262,7 +262,6 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVAudioFormat.cs \
 	AVFoundation/AVAudioPlayer.cs \
 	AVFoundation/AVAudioRecorder.cs \
-	AVFoundation/AVAudioSession.cs \
 	AVFoundation/AVAudioSessionDataSourceDescription.cs \
 	AVFoundation/AVAudioSessionPortDescription.cs \
 	AVFoundation/AVCaptureConnection.cs \
