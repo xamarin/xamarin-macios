@@ -61,7 +61,7 @@ namespace Xamarin.Utils {
 			return QuoteForProcess (arguments.ToArray ());
 		}
 
-		[return: NotNullIfNotNull (nameof (array))]
+		[return: NotNullIfNotNull ("array")]
 		public static string []? QuoteForProcess (params string [] array)
 		{
 			if (array is null || array.Length == 0)

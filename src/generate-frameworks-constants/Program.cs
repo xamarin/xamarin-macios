@@ -37,7 +37,7 @@ namespace GenerateFrameworksConstants {
 			var frameworks = Frameworks.GetFrameworks (platform, false).Values.Where (v => !v.Unavailable);
 			var sb = new StringBuilder ();
 
-#if NET
+#if NET || DOTNET
 			sb.AppendLine ("#if NET");
 #else
 			sb.AppendLine ("#if !NET");
@@ -52,7 +52,7 @@ namespace GenerateFrameworksConstants {
 			}
 			sb.AppendLine ("\t}");
 			sb.AppendLine ("}");
-#if NET
+#if NET || DOTNET
 			sb.AppendLine ("#endif // NET");
 #else
 			sb.AppendLine ("#endif // !NET");
