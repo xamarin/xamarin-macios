@@ -27,8 +27,7 @@ steps:
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
 
-- pwsh: |
-    gci env: | format-table -autosize -wrap
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
   displayName: 'Dump Environment'
 
 - task: DownloadPipelineArtifact@2
