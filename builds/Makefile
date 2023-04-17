@@ -144,14 +144,17 @@ package-download/all-package-references.csproj: $(TOP)/.git/HEAD $(TOP)/.git/ind
 		/p:PackageRuntimeIdentifiers="$(DOTNET_RUNTIME_IDENTIFIERS)" \
 		/p:PackageRuntimeIdentifiersCoreCLR="$(DOTNET_CORECLR_RUNTIME_IDENTIFIERS)" \
 		/p:CustomDotNetVersion="$(DOWNLOAD_DOTNET_VERSION)" \
-		/p:DotNetManifestVersionBand="$(DOTNET_MANIFEST_VERSION_BAND)" \
-		/p:ToolChainManifestVersionBand="$(TOOLCHAIN_MANIFEST_VERSION_BAND)" \
+		/p:MonoToolChainManifestVersionBand="$(DOTNET_MANIFEST_VERSION_BAND)" \
+		/p:EmscriptenManifestVersionBand="$(TOOLCHAIN_MANIFEST_VERSION_BAND)" \
+		/p:TrackingDotNetRuntimeSeparately="$(TRACKING_DOTNET_RUNTIME_SEPARATELY)" \
 		/bl \
 		$(DOTNET_BUILD_VERBOSITY)
+ifneq ($(TRACKING_DOTNET_RUNTIME_SEPARATELY),)
 	$(Q) mkdir -p ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain/
 	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.mono.toolchain.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(DOWNLOAD_DOTNET_VERSION)/data/WorkloadManifest.* ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain/
 	$(Q) mkdir -p ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten/
 	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.emscripten.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(EMSCRIPTEN_MANIFEST_PACKAGE_VERSION)/data/WorkloadManifest.* ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten/
+endif
 	$(Q) touch $@
 
 .stamp-install-t4: $(TOP)/.config/dotnet-tools.json .stamp-download-dotnet-packages
