@@ -8,9 +8,10 @@
       <Uri>https://github.com/dotnet/linker</Uri>
       <Sha>19fa656d35252ccf926e6a6d783b16a2f094aaef</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="7.0.5">
-      <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>1e9466d9a2913f3a45893851f79b54da11ba3069</Sha>
+    <!-- Set TRACKING_DOTNET_RUNTIME_SEPARATELY to something in Make.config if removing the CoherentParentDependency on Microsoft.Dotnet.Sdk.Internal -->
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="7.0.4" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
+      <Sha>0a396acafe9a7d46bce11f4338dbb3dd0d99b1b4</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
     <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="7.0.5" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
@@ -26,21 +27,21 @@
       <Sha>3d7178d836ea32bb7bb51d8d1c714d52fe641ffa</Sha>
     </Dependency>
     <!-- This is a subscription of the .NET 6 versions of our packages -->
-    <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.2.46">
+    <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.2.47">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>6ba6383a4e49027112d4eefc2eb607ff48f02bd7</Sha>
+      <Sha>97664b121a66fd5713e9936525586c813202ebd1</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.macOS.Sdk" Version="13.1.46">
+    <Dependency Name="Microsoft.macOS.Sdk" Version="13.1.47">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>6ba6383a4e49027112d4eefc2eb607ff48f02bd7</Sha>
+      <Sha>97664b121a66fd5713e9936525586c813202ebd1</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.iOS.Sdk" Version="16.2.46">
+    <Dependency Name="Microsoft.iOS.Sdk" Version="16.2.47">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>6ba6383a4e49027112d4eefc2eb607ff48f02bd7</Sha>
+      <Sha>97664b121a66fd5713e9936525586c813202ebd1</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.tvOS.Sdk" Version="16.1.284">
+    <Dependency Name="Microsoft.tvOS.Sdk" Version="16.1.285">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>6ba6383a4e49027112d4eefc2eb607ff48f02bd7</Sha>
+      <Sha>97664b121a66fd5713e9936525586c813202ebd1</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
