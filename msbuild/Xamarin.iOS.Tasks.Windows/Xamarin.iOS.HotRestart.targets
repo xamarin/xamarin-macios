@@ -39,14 +39,12 @@
 			Condition="'$(EnableCodeSigning)' != 'false'"
 			GenerateApplicationManifest="$(GenerateApplicationManifest)"
 			ApplicationId="$(ApplicationId)"
-			ApplicationTitle="$(ApplicationTitle)"
 			AppManifest="$(AppBundleManifest)"
 			ProvisioningProfile="$(CodesignProvision)"
 			SigningKey="$(CodesignKey)">
 
 			<Output TaskParameter="DetectedAppId" PropertyName="_AppIdentifier" />
 			<Output TaskParameter="DetectedBundleId" PropertyName="_BundleIdentifier" />
-			<Output TaskParameter="DetectedAppDisplayName" PropertyName="_AppDisplayName" />
 			<Output TaskParameter="DetectedCodeSigningPath" PropertyName="_CodeSigningPath" />
 			<Output TaskParameter="DetectedProvisioningProfileId" PropertyName="_ProvisioningProfileId" />
 			<Output TaskParameter="DetectedProvisioningProfilePath" PropertyName="_ProvisioningProfilePath" />
