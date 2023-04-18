@@ -28,6 +28,14 @@ namespace Introspection {
 				// and if we call it then the .cctor is executed and we get the same failures :()
 				return ((IntPtr.Size == 4) || TestRuntime.IsSimulatorOrDesktop);
 #endif
+#if __MACCATALYST__
+			case "AddressBook":
+				// The AddressBook framework is sometimes missing from Mac Catalyst, causing:
+				//     [FAIL] AddressBook.InitConstants .cctor could not execute properly: System.TypeInitializationException: The type initializer for 'AddressBook.InitConstants' threw an exception.
+				//         ---> System.EntryPointNotFoundException: ABAddressBookCreate
+				// but I wasn't able to reproduce this locally, only on the bots (so only disable this in the tests, and not change the API, since it's still working for me).
+				return true;
+#endif
 			default:
 				return false;
 			}
