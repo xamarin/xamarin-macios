@@ -227,7 +227,7 @@
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true' And '$(EnableCodeSigning)' != 'false'"
 		DependsOnTargets="_CreateHotRestartCachedBundle;_CollectCodeSignHotRestartInputs"
 		Inputs="@(_CodeSignHotRestartInputs)"
-		Outputs="@(_CodeSignHotRestartInputs -> '%(Outputs)')">
+		Outputs="$(HotRestartAppBundlePath)\_CodeSignature\CodeResources">
 		
 		<CodesignHotRestartApp
 			AppBundlePath="$(HotRestartAppBundlePath)"
