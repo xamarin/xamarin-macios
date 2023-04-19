@@ -109,7 +109,7 @@
 	<Target Name="_CompileHotRestartEntitlements"
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true'"
 		Inputs="$(CodesignEntitlements);$(_ProvisioningProfilePath);$(HotRestartAppBundlePath)\Extracted"
-		Outputs="$(HotRestartSignedAppDir)archived-expanded-entitlements.xcent;$(HotRestartSignedAppDir)Extracted">
+		Outputs="$(HotRestartSignedAppDir)archived-expanded-entitlements.xcent;$(HotRestartAppBundlePath)\Entitlements.plist">
 
 		<PropertyGroup>
 			<_HotRestartEntitlementsFile>$(CodesignEntitlements)</_HotRestartEntitlementsFile>
