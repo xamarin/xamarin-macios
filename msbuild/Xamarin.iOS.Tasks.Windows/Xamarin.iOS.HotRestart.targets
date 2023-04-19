@@ -75,19 +75,39 @@
 
 	<Target Name="_CreateHotRestartCachedBundle" DependsOnTargets="$(_CreateHotRestartCachedBundleDependsOn)" />
 	
+	<Target Name="_ComputeHotRestartAppBundlePath"
+		DependsOnTargets="_GenerateHotRestartBuildSessionId"
+		Condition="'$(IsHotRestartBuild)' == 'true' And '$(HotRestartAppBundlePath)' == ''"
+		>
+
+		<PrepareAppBundle
+			Condition="'$(IsHotRestartBuild)' == 'true'"
+			AppBundleName="$(_AppBundleName)"
+			SessionId="$(HotRestartBuildSessionId)"
+			ShouldExtract="false"
+			>
+
+			<Output TaskParameter="AppBundlePath" PropertyName="HotRestartAppBundlePath" />
+		</PrepareAppBundle>
+	</Target>
+
 	<!-- Creates HotRestart app bundle -->
-	<Target Name="_PrepareHotRestartAppBundle" DependsOnTargets="_GenerateHotRestartBuildSessionId" 
-					Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true'">
+	<Target Name="_PrepareHotRestartAppBundle"
+			DependsOnTargets="_GenerateHotRestartBuildSessionId;_ComputeHotRestartAppBundlePath"
+			Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true'"
+			Inputs="$(HotRestartPreBuiltZipPath)"
+			Outputs="$(HotRestartAppBundlePath)\Extracted"
+			>
 
 		<!--Create app bundle dir and get its path-->
 		<PrepareAppBundle 
 			AppBundleName="$(_AppBundleName)"
 			AppBundlePath="$(HotRestartAppBundlePath)"
+			PreBuiltAppBundlePath="$(HotRestartPreBuiltZipPath)"
 			SessionId="$(HotRestartBuildSessionId)" 
-			ShouldExtract="true">
+			ShouldExtract="true" />
 
-			<Output TaskParameter="AppBundlePath" PropertyName="HotRestartAppBundlePath" />
-		</PrepareAppBundle>
+		<Touch AlwaysCreate="true" Files="$(HotRestartAppBundlePath)\Extracted" />
 
 		<!-- Delete the build signature to force XMA do a full build next time -->
 		<Delete Files="$(BuildSignatureFile)" Condition="Exists('$(BuildSignatureFile)')"	/>
@@ -243,17 +263,7 @@
 		</CleanDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CleanHotRestartBundle" DependsOnTargets="_GenerateHotRestartBuildSessionId" >
-		<!-- Gets the bundle path -->
-		<PrepareAppBundle 
-			Condition="'$(IsHotRestartBuild)' == 'true'"
-			AppBundleName="$(_AppBundleName)"
-			SessionId="$(HotRestartBuildSessionId)" 
-			ShouldExtract="false">
-
-			<Output TaskParameter="AppBundlePath" PropertyName="HotRestartAppBundlePath" />
-		</PrepareAppBundle>
-		
+	<Target Name="_CleanHotRestartBundle" DependsOnTargets="_GenerateHotRestartBuildSessionId;_ComputeHotRestartAppBundlePath" >
 		<RemoveDir Directories="$(HotRestartAppBundlePath)" />
 		<RemoveDir Directories="$(HotRestartSignedAppOutputDir)" />
 		<RemoveDir Directories="$(DeviceSpecificIntermediateOutputPath)UnpackedFrameworks" />
