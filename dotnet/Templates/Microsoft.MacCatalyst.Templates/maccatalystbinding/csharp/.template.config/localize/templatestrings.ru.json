@@ -1,5 +1,5 @@
-{
+﻿{
   "author": "Microsoft",
-  "name": "Библиотека привязок Mac Catalyst",
-  "description": "Проект для создания библиотеки привязок .NET Mac Catalyst"
+  "name": "Ð‘Ð¸Ð±Ð»Ð¸Ð¾Ñ‚ÐµÐºÐ° Ð¿Ñ€Ð¸Ð²ÑÐ·Ð¾Ðº Mac Catalyst",
+  "description": "ÐŸÑ€Ð¾ÐµÐºÑ‚ Ð´Ð»Ñ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ñ Ð±Ð¸Ð±Ð»Ð¸Ð¾Ñ‚ÐµÐºÐ¸ Ð¿Ñ€Ð¸Ð²ÑÐ·Ð¾Ðº .NET Mac Catalyst"
 }

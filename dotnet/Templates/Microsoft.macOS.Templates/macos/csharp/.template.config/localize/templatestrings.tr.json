@@ -1,7 +1,7 @@
-{
+﻿{
   "author": "Microsoft",
-  "name": "macOS Uygulaması",
-  "description": "Bir .NET macOS uygulaması oluşturmaya yönelik proje",
-  "symbols/bundleId/description": "Info.plist dosyasındaki CFBundleIdentifier öğesini geçersiz kılar",
-  "symbols/minOSVersion/description": "Proje dosyasındaki SupportedOSPlatformVersion öğesini geçersiz kılar"
+  "name": "macOS UygulamasÄ±",
+  "description": "Bir .NET macOS uygulamasÄ± oluÅŸturmaya yÃ¶nelik proje",
+  "symbols/bundleId/description": "Info.plist dosyasÄ±ndaki CFBundleIdentifier Ã¶ÄŸesini geÃ§ersiz kÄ±lar",
+  "symbols/minOSVersion/description": "Proje dosyasÄ±ndaki SupportedOSPlatformVersion Ã¶ÄŸesini geÃ§ersiz kÄ±lar"
 }
