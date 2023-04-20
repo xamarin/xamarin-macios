@@ -1,6 +1,6 @@
-{
+﻿{
   "author": "Microsoft",
-  "name": "Контроллер Mac Catalyst",
-  "description": "Класс контроллера MacCatalyst",
-  "symbols/namespace/description": "пространство имен для созданного кода"
+  "name": "ÐšÐ¾Ð½Ñ‚Ñ€Ð¾Ð»Ð»ÐµÑ€ Mac Catalyst",
+  "description": "ÐšÐ»Ð°ÑÑ ÐºÐ¾Ð½Ñ‚Ñ€Ð¾Ð»Ð»ÐµÑ€Ð° MacCatalyst",
+  "symbols/namespace/description": "Ð¿Ñ€Ð¾ÑÑ‚Ñ€Ð°Ð½ÑÑ‚Ð²Ð¾ Ð¸Ð¼ÐµÐ½ Ð´Ð»Ñ ÑÐ¾Ð·Ð´Ð°Ð½Ð½Ð¾Ð³Ð¾ ÐºÐ¾Ð´Ð°"
 }

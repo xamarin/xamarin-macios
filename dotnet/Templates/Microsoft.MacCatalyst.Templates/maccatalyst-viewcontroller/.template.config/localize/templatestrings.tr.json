@@ -1,6 +1,6 @@
-{
+﻿{
   "author": "Microsoft",
-  "name": "Mac Catalyst Görünüm Denetleyicisi",
-  "description": "MacCatalyst Görünüm Denetleyicisi sınıfı ve xib",
-  "symbols/namespace/description": "oluşturulan kod için ad alanı"
+  "name": "Mac Catalyst GÃ¶rÃ¼nÃ¼m Denetleyicisi",
+  "description": "MacCatalyst GÃ¶rÃ¼nÃ¼m Denetleyicisi sÄ±nÄ±fÄ± ve xib",
+  "symbols/namespace/description": "oluÅŸturulan kod iÃ§in ad alanÄ±"
 }
