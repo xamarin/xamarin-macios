@@ -1,7 +1,7 @@
-{
+﻿{
   "author": "Microsoft",
-  "name": "Приложение Mac Catalyst",
-  "description": "Проект для создания приложения .NET Mac Catalyst",
-  "symbols/bundleId/description": "Переопределяет CFBundleIdentifier в Info.plist",
-  "symbols/minOSVersion/description": "Переопределяет SupportedOSPlatformVersion в файле проекта"
+  "name": "ÐŸÑ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ðµ Mac Catalyst",
+  "description": "ÐŸÑ€Ð¾ÐµÐºÑ‚ Ð´Ð»Ñ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ñ Ð¿Ñ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ .NET Mac Catalyst",
+  "symbols/bundleId/description": "ÐŸÐµÑ€ÐµÐ¾Ð¿Ñ€ÐµÐ´ÐµÐ»ÑÐµÑ‚ CFBundleIdentifier Ð² Info.plist",
+  "symbols/minOSVersion/description": "ÐŸÐµÑ€ÐµÐ¾Ð¿Ñ€ÐµÐ´ÐµÐ»ÑÐµÑ‚ SupportedOSPlatformVersion Ð² Ñ„Ð°Ð¹Ð»Ðµ Ð¿Ñ€Ð¾ÐµÐºÑ‚Ð°"
 }
