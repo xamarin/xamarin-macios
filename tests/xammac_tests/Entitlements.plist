@@ -12,7 +12,5 @@
 	</array>
 	<key>com.apple.developer.ubiquity-kvstore-identifier</key>
 	<string>$(AppIdentifierPrefix)$(CFBundleIdentifier)</string>
-	<key>com.apple.security.device.audio-input</key>
-	<true />
 </dict>
 </plist>
