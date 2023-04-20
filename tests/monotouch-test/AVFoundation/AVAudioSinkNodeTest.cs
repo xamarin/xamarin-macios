@@ -57,7 +57,6 @@ namespace MonoTouchFixtures.AVFoundation {
 			var defaultCaptureDevice = AVCaptureDevice.GetDefaultDevice (AVMediaTypes.Audio);
 			if (defaultCaptureDevice is null)
 				Assert.Ignore ("The current system doesn't have a microphone.");
-			Console.WriteLine ($"Default Capture Device: {defaultCaptureDevice}");
 #else
 			using var session = AVAudioSession.SharedInstance ();
 			if (!session.InputAvailable)
@@ -72,18 +71,6 @@ namespace MonoTouchFixtures.AVFoundation {
 			Assert.IsNull (inputChannelCountError, "Input Channel Count Error");
 #endif // !__WATCHOS__
 			session.SetActive (true);
-
-			Console.WriteLine ($"AVAudioSession: {session}");
-			Console.WriteLine ($"Mode: {session.Mode}");
-#if !__WATCHOS__
-			Console.WriteLine ($"Preferred Input: {session.PreferredInput}");
-#endif // !__WATCHOS__
-			var availableInputs = session.AvailableInputs;
-			Console.WriteLine ($"Available Inputs: {availableInputs.Length}");
-			foreach (var ai in availableInputs)
-				Console.WriteLine ($"    {ai}");
-			Console.WriteLine ($"Available Categories: {string.Join (", ", session.AvailableCategories)}");
-			Console.WriteLine ($"Available Modes: {string.Join (", ", session.AvailableModes)}");
 #endif // __MACOS__
 
 			using var engine = new AVAudioEngine ();
@@ -93,17 +80,6 @@ namespace MonoTouchFixtures.AVFoundation {
 				var inputFormat = inputNode.GetBusOutputFormat (0);
 				if (inputFormat.SampleRate == 0)
 					Assert.Ignore ("The current system can't record audio.");
-				Console.WriteLine ($"Input Format:");
-				Console.WriteLine ($"    Sample Rate: {inputFormat.SampleRate}");
-				Console.WriteLine ($"    ChannelCount: {inputFormat.ChannelCount}");
-				Console.WriteLine ($"    ChannelLayout: {inputFormat.ChannelLayout}");
-				Console.WriteLine ($"    FormatDescription: {inputFormat.FormatDescription}");
-				Console.WriteLine ($"    FormatDescription.MediaType: {inputFormat.FormatDescription?.MediaType}");
-				Console.WriteLine ($"    FormatDescription.MediaSubType: {inputFormat.FormatDescription?.MediaSubType}");
-				Console.WriteLine ($"    FormatDescription.AudioStreamBasicDescription: {inputFormat.FormatDescription?.AudioStreamBasicDescription}");
-				Console.WriteLine ($"    FormatDescription.AudioChannelLayout: {inputFormat.FormatDescription?.AudioChannelLayout}");
-				Console.WriteLine ($"    FormatDescription.AudioFormats: {inputFormat.FormatDescription?.AudioFormats}");
-				Console.WriteLine ($"    FormatDescription.AudioMostCompatibleFormat: {inputFormat.FormatDescription?.AudioMostCompatibleFormat}");
 				var sinkNode = createSinkNode ();
 				engine.AttachNode (sinkNode);
 				engine.Connect (inputNode, sinkNode, inputFormat);
