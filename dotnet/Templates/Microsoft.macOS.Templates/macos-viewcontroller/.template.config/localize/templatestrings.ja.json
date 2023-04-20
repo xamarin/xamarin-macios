@@ -1,6 +1,6 @@
-{
+﻿{
   "author": "Microsoft",
-  "name": "macOS ビュー コントローラー",
-  "description": "Xcode の Interface Builder (XIB ファイル) に実装された UI を備えた macOS ビュー コントローラー",
-  "symbols/namespace/description": "生成されたコードの名前空間"
+  "name": "macOS ãƒ“ãƒ¥ãƒ¼ ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼",
+  "description": "Xcode ã® Interface Builder (XIB ãƒ•ã‚¡ã‚¤ãƒ«) ã«å®Ÿè£…ã•ã‚ŒãŸ UI ã‚’å‚™ãˆãŸ macOS ãƒ“ãƒ¥ãƒ¼ ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼",
+  "symbols/namespace/description": "ç”Ÿæˆã•ã‚ŒãŸã‚³ãƒ¼ãƒ‰ã®åå‰ç©ºé–“"
 }

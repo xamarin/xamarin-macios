@@ -1,6 +1,6 @@
-{
+﻿{
   "author": "Microsoft",
-  "name": "macOS 视图控制器",
-  "description": "在 Xcode 的 Interface Builder (XIB 文件)中实现的具有 UI 的 macOS 视图控制器",
-  "symbols/namespace/description": "生成的代码的命名空间"
+  "name": "macOS è§†å›¾æŽ§åˆ¶å™¨",
+  "description": "åœ¨ Xcode çš„ Interface Builder (XIB æ–‡ä»¶)ä¸­å®žçŽ°çš„å…·æœ‰ UI çš„ macOS è§†å›¾æŽ§åˆ¶å™¨",
+  "symbols/namespace/description": "ç”Ÿæˆçš„ä»£ç çš„å‘½åç©ºé—´"
 }

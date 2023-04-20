@@ -1,6 +1,6 @@
-{
+﻿{
   "author": "Microsoft",
-  "name": "macOS Görünüm Denetleyicisi",
-  "description": "Xcode'un Interface Builder’ında (XIB dosyası) uygulanan kullanıcı arabirimine sahip macOS Görünüm Denetleyicisi",
-  "symbols/namespace/description": "oluşturulan kod için ad alanı"
+  "name": "macOS GÃ¶rÃ¼nÃ¼m Denetleyicisi",
+  "description": "Xcode'un Interface Builderâ€™Ä±nda (XIB dosyasÄ±) uygulanan kullanÄ±cÄ± arabirimine sahip macOS GÃ¶rÃ¼nÃ¼m Denetleyicisi",
+  "symbols/namespace/description": "oluÅŸturulan kod iÃ§in ad alanÄ±"
 }
