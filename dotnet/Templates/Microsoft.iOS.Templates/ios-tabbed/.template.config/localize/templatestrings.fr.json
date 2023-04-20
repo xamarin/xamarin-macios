@@ -1,7 +1,7 @@
-{
+﻿{
   "author": "Microsoft",
-  "name": "Application à onglets iOS",
-  "description": "Projet de création d’une application à onglets .NET iOS",
+  "name": "Application Ã  onglets iOS",
+  "description": "Projet de crÃ©ation dâ€™une application Ã  onglets .NET iOS",
   "symbols/bundleId/description": "Remplace CFBundleIdentifier dans Info.plist",
   "symbols/minOSVersion/description": "Remplace SupportedOSPlatformVersion dans le fichier projet",
   "symbols/deviceFamily/choices/universal/description": "Prendre en charge les appareils iPhone et iPad",

@@ -1,10 +1,10 @@
-{
+﻿{
   "author": "Microsoft",
   "name": "iOS-Anwendung",
   "description": "Ein Projekt zum Erstellen einer .NET iOS-Anwendung",
-  "symbols/bundleId/description": "Überschreibt „CFBundleIdentifier“ in „Info.plist“",
-  "symbols/minOSVersion/description": "Überschreibt „SupportedOSPlatformVersion“ in der Projektdatei.",
-  "symbols/deviceFamily/choices/universal/description": "iPhone- und iPad-Geräte unterstützen",
-  "symbols/deviceFamily/choices/iphone/description": "Nur iPhone-Geräte unterstützen",
-  "symbols/deviceFamily/choices/ipad/description": "Nur iPad-Geräte unterstützen"
+  "symbols/bundleId/description": "Ãœberschreibt â€žCFBundleIdentifierâ€œ in â€žInfo.plistâ€œ",
+  "symbols/minOSVersion/description": "Ãœberschreibt â€žSupportedOSPlatformVersionâ€œ in der Projektdatei.",
+  "symbols/deviceFamily/choices/universal/description": "iPhone- und iPad-GerÃ¤te unterstÃ¼tzen",
+  "symbols/deviceFamily/choices/iphone/description": "Nur iPhone-GerÃ¤te unterstÃ¼tzen",
+  "symbols/deviceFamily/choices/ipad/description": "Nur iPad-GerÃ¤te unterstÃ¼tzen"
 }
