@@ -16493,7 +16493,7 @@ namespace AVFoundation {
 #endif
 	}
 
-	delegate int AVAudioSinkNodeReceiverHandler (AudioTimeStamp timestamp, uint frameCount, ref AudioBuffers inputData);
+	delegate int AVAudioSinkNodeReceiverHandlerRaw (IntPtr timestamp, uint frameCount, IntPtr inputData);
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
@@ -16502,7 +16502,7 @@ namespace AVFoundation {
 	interface AVAudioSinkNode {
 		[Export ("initWithReceiverBlock:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (AVAudioSinkNodeReceiverHandler receiverHandler);
+		NativeHandle Constructor (AVAudioSinkNodeReceiverHandlerRaw receiverHandler);
 	}
 
 	[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
