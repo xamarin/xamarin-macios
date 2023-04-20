@@ -1,10 +1,10 @@
-{
+﻿{
   "author": "Microsoft",
-  "name": "iOS Sekmeli Uygulaması",
-  "description": "Bir .NET iOS sekmeli uygulaması oluşturmaya yönelik proje",
-  "symbols/bundleId/description": "Info.plist dosyasındaki CFBundleIdentifier öğesini geçersiz kılar",
-  "symbols/minOSVersion/description": "Proje dosyasındaki SupportedOSPlatformVersion öğesini geçersiz kılar",
-  "symbols/deviceFamily/choices/universal/description": "Hem iPhone hem de iPad cihazları için destek",
-  "symbols/deviceFamily/choices/iphone/description": "Yalnızca iPhone cihazları için destek",
-  "symbols/deviceFamily/choices/ipad/description": "Yalnızca iPad cihazları için destek"
+  "name": "iOS Sekmeli UygulamasÄ±",
+  "description": "Bir .NET iOS sekmeli uygulamasÄ± oluÅŸturmaya yÃ¶nelik proje",
+  "symbols/bundleId/description": "Info.plist dosyasÄ±ndaki CFBundleIdentifier Ã¶ÄŸesini geÃ§ersiz kÄ±lar",
+  "symbols/minOSVersion/description": "Proje dosyasÄ±ndaki SupportedOSPlatformVersion Ã¶ÄŸesini geÃ§ersiz kÄ±lar",
+  "symbols/deviceFamily/choices/universal/description": "Hem iPhone hem de iPad cihazlarÄ± iÃ§in destek",
+  "symbols/deviceFamily/choices/iphone/description": "YalnÄ±zca iPhone cihazlarÄ± iÃ§in destek",
+  "symbols/deviceFamily/choices/ipad/description": "YalnÄ±zca iPad cihazlarÄ± iÃ§in destek"
 }

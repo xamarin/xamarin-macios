@@ -1,10 +1,10 @@
-{
+﻿{
   "author": "Microsoft",
-  "name": "iOS 选项卡式应用程序",
-  "description": "用于创建 .NET iOS 选项卡式应用程序的项目",
-  "symbols/bundleId/description": "在 Info.plist 中替代 CFBundleIdentifier",
-  "symbols/minOSVersion/description": "替代项目文件中的 SupportedOSPlatformVersion",
-  "symbols/deviceFamily/choices/universal/description": "同时支持 iPhone 和 iPad 设备",
-  "symbols/deviceFamily/choices/iphone/description": "仅支持 iPhone 设备",
-  "symbols/deviceFamily/choices/ipad/description": "仅支持 iPad 设备"
+  "name": "iOS é€‰é¡¹å¡å¼åº”ç”¨ç¨‹åº",
+  "description": "ç”¨äºŽåˆ›å»º .NET iOS é€‰é¡¹å¡å¼åº”ç”¨ç¨‹åºçš„é¡¹ç›®",
+  "symbols/bundleId/description": "åœ¨ Info.plist ä¸­æ›¿ä»£ CFBundleIdentifier",
+  "symbols/minOSVersion/description": "æ›¿ä»£é¡¹ç›®æ–‡ä»¶ä¸­çš„ SupportedOSPlatformVersion",
+  "symbols/deviceFamily/choices/universal/description": "åŒæ—¶æ”¯æŒ iPhone å’Œ iPad è®¾å¤‡",
+  "symbols/deviceFamily/choices/iphone/description": "ä»…æ”¯æŒ iPhone è®¾å¤‡",
+  "symbols/deviceFamily/choices/ipad/description": "ä»…æ”¯æŒ iPad è®¾å¤‡"
 }
