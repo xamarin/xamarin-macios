@@ -2,10 +2,10 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">	
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileEntitlements" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.UnpackLibraryResources" AssemblyFile="Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.Codesign" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
+	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.CodesignHotRestartApp" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.CollectDynamicFrameworks" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
-	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.CompileAppManifest" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
-	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.DetectSigningIdentity" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
+	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.CompileHotRestartAppManifest" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
+	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.DetectHotRestartSigningIdentity" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.PrepareAppBundle" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.UnpackFrameworks" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	
@@ -35,7 +35,7 @@
 	<Target Name="_DetectHotRestartSigningIdentity" AfterTargets="_DetectAppManifest" 
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true' And '$(IsHotRestartEnvironmentReady)' == 'true'" >
 		
-		<HotRestart.Tasks.DetectSigningIdentity 
+		<DetectHotRestartSigningIdentity
 			Condition="'$(EnableCodeSigning)' != 'false'"
 			GenerateApplicationManifest="$(GenerateApplicationManifest)"
 			ApplicationId="$(ApplicationId)"
@@ -48,7 +48,8 @@
 			<Output TaskParameter="DetectedCodeSigningPath" PropertyName="_CodeSigningPath" />
 			<Output TaskParameter="DetectedProvisioningProfileId" PropertyName="_ProvisioningProfileId" />
 			<Output TaskParameter="DetectedProvisioningProfilePath" PropertyName="_ProvisioningProfilePath" />
-		</HotRestart.Tasks.DetectSigningIdentity>
+		</DetectHotRestartSigningIdentity>
+
 	</Target>
 
 	<Target Name="_CollectHotRestartBundleResources" Condition="'$(IsHotRestartBuild)' == 'true'">
@@ -191,7 +192,7 @@
 		Inputs="$(AppBundleManifest);$(HotRestartAppBundlePath)\Extracted"
 		Outputs="$(HotRestartSignedAppDir)$([System.IO.Path]::GetFileName('$(AppBundleManifest)'));$(HotRestartSignedAppDir)Extracted">
 
-		<HotRestart.Tasks.CompileAppManifest
+		<CompileHotRestartAppManifest
 			AppBundlePath="$(HotRestartAppBundlePath)"
 			AppManifestPath="$(AppBundleManifest)" 
 			ApplicationTitle="$(ApplicationTitle)"/>
@@ -330,7 +331,7 @@
 		Inputs="@(_CodeSignHotRestartInputs)"
 		Outputs="@(_CodeSignHotRestartInputs -> '%(Outputs)')">
 		
-		<HotRestart.Tasks.Codesign
+		<CodesignHotRestartApp
 			AppBundlePath="$(HotRestartAppBundlePath)"
 			BundleIdentifier="$(_BundleIdentifier)"
 			CodeSigningPath="$(_CodeSigningPath)"
