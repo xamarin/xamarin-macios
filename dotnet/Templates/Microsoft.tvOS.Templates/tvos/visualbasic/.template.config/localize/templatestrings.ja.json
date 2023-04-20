@@ -1,7 +1,7 @@
-{
+﻿{
   "author": "Microsoft",
-  "name": "tvOS アプリケーション",
-  "description": ".NET tvOS アプリケーションを作成するためのプロジェクト",
-  "symbols/bundleId/description": "Info.plist の CFBundleIdentifier をオーバーライドします",
-  "symbols/minOSVersion/description": "プロジェクト ファイルの SupportedOSPlatformVersion をオーバーライドします"
+  "name": "tvOS ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³",
+  "description": ".NET tvOS ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ä½œæˆã™ã‚‹ãŸã‚ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆ",
+  "symbols/bundleId/description": "Info.plist ã® CFBundleIdentifier ã‚’ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã—ã¾ã™",
+  "symbols/minOSVersion/description": "ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆ ãƒ•ã‚¡ã‚¤ãƒ«ã® SupportedOSPlatformVersion ã‚’ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã—ã¾ã™"
 }
