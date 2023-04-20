@@ -190,7 +190,6 @@ namespace Xharness {
 				"CodesignEntitlements",
 				"TestLibrariesDirectory",
 				"HintPath",
-				"RootTestsDirectory",
 			};
 			var attributes_with_paths = new []
 			{
@@ -245,11 +244,24 @@ namespace Xharness {
 				if (makeFullPath) {
 					input = input.Replace ('\\', '/'); // make unix-style
 					input = Path.GetFullPath (Path.Combine (dir, input));
+					var root = HarnessConfiguration.RootDirectory;
+					if (input.Contains (root)) {
+						input = input.Replace (root, "$(RootTestsDirectory)");
+					} else if (input.Contains (Path.GetDirectoryName (root))) {
+						input = input.Replace (Path.GetDirectoryName (root), "$(RootTestsDirectory)/..");
+					}
+
+					if (input == "")
+						input = "./";
 					input = input.Replace ('/', '\\'); // make windows-style again
 				}
 
 				return input;
 			};
+
+			var rootTestsDirectoryNodes = csproj.SelectElementNodes ("RootTestsDirectory");
+			foreach (var node in rootTestsDirectoryNodes)
+				node.InnerText = HarnessConfiguration.RootDirectory;
 
 			foreach (var key in nodes_with_paths) {
 				var nodes = csproj.SelectElementNodes (key);
@@ -259,8 +271,9 @@ namespace Xharness {
 
 			foreach (var key in nodes_with_variables) {
 				var nodes = csproj.SelectElementNodes (key);
-				foreach (var node in nodes)
-					node.InnerText = node.InnerText.Replace ("${ProjectDir}", StringUtils.Quote (Path.GetDirectoryName (project_path)));
+				foreach (var node in nodes) {
+					node.InnerText = node.InnerText.Replace ("${ProjectDir}", StringUtils.Quote (HarnessConfiguration.InjectRootTestsDirectory (Path.GetFullPath (Path.GetDirectoryName (project_path)))));
+				}
 			}
 
 			foreach (var kvp in attributes_with_paths) {

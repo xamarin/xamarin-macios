@@ -29,6 +29,7 @@ namespace Xharness.Jenkins.TestTasks {
 				args.Add ($"/p:Platform={projectPlatform}");
 			if (SpecifyConfiguration)
 				args.Add ($"/p:Configuration={projectConfiguration}");
+			args.Add ($"/p:RootTestsDirectory={HarnessConfiguration.RootDirectory}");
 			if (Platform == TestPlatform.MacCatalyst)
 				args.Add ("/r");
 			args.Add (projectFile);

@@ -178,8 +178,9 @@ namespace Xharness {
 			var projectReferences = new List<TestProject> ();
 			foreach (var pr in doc.GetProjectReferences ()) {
 				var prPath = pr.Replace ('\\', '/');
+				prPath = HarnessConfiguration.EvaluateRootTestsDirectory (prPath);
 				if (!allProjectReferences.TryGetValue (prPath, out var tp)) {
-					tp = new TestProject (Label, pr.Replace ('\\', '/'));
+					tp = new TestProject (Label, prPath);
 					tp.TestPlatform = TestPlatform;
 					await tp.CreateCopyAsync (log, processManager, test, rootDirectory, allProjectReferences);
 					allProjectReferences.Add (prPath, tp);
