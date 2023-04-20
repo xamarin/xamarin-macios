@@ -1,6 +1,6 @@
-{
+﻿{
   "author": "Microsoft",
   "name": "Kontroler systemu macOS",
-  "description": "Kontroler widoku systemu macOS z interfejsem użytkownika zaimplementowanym w kodzie",
-  "symbols/namespace/description": "przestrzeń nazw wygenerowanego kodu."
+  "description": "Kontroler widoku systemu macOS z interfejsem uÅ¼ytkownika zaimplementowanym w kodzie",
+  "symbols/namespace/description": "przestrzeÅ„ nazw wygenerowanego kodu."
 }

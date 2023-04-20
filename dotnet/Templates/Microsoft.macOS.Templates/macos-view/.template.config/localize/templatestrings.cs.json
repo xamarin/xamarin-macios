@@ -1,6 +1,6 @@
-{
+﻿{
   "author": "Microsoft",
-  "name": "Zobrazení macOS",
-  "description": "Zobrazení macOS s uživatelským rozhraním implementované v Interface Builder Xcode (soubor XIB)",
-  "symbols/namespace/description": "obor názvů pro vygenerovaný kód"
+  "name": "ZobrazenÃ­ macOS",
+  "description": "ZobrazenÃ­ macOS s uÅ¾ivatelskÃ½m rozhranÃ­m implementovanÃ© v Interface Builder Xcode (soubor XIB)",
+  "symbols/namespace/description": "obor nÃ¡zvÅ¯ pro vygenerovanÃ½ kÃ³d"
 }

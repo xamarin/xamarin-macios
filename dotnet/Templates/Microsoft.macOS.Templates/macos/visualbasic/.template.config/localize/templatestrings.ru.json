@@ -1,7 +1,7 @@
-{
-  "author": "Майкрософт",
-  "name": "Приложение macOS",
-  "description": "Проект для создания приложения .NET для macOS",
-  "symbols/bundleId/description": "Переопределяет CFBundleIdentifier в Info.plist",
-  "symbols/minOSVersion/description": "Переопределяет SupportedOSPlatformVersion в файле проекта"
+﻿{
+  "author": "ÐœÐ°Ð¹ÐºÑ€Ð¾ÑÐ¾Ñ„Ñ‚",
+  "name": "ÐŸÑ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ðµ macOS",
+  "description": "ÐŸÑ€Ð¾ÐµÐºÑ‚ Ð´Ð»Ñ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ñ Ð¿Ñ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ .NET Ð´Ð»Ñ macOS",
+  "symbols/bundleId/description": "ÐŸÐµÑ€ÐµÐ¾Ð¿Ñ€ÐµÐ´ÐµÐ»ÑÐµÑ‚ CFBundleIdentifier Ð² Info.plist",
+  "symbols/minOSVersion/description": "ÐŸÐµÑ€ÐµÐ¾Ð¿Ñ€ÐµÐ´ÐµÐ»ÑÐµÑ‚ SupportedOSPlatformVersion Ð² Ñ„Ð°Ð¹Ð»Ðµ Ð¿Ñ€Ð¾ÐµÐºÑ‚Ð°"
 }

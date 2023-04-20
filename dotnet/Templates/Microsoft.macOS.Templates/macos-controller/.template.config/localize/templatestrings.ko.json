@@ -1,6 +1,6 @@
-{
+﻿{
   "author": "Microsoft",
-  "name": "macOS 컨트롤러",
-  "description": "코드에서 구현된 UI가 있는 macOS 뷰 컨트롤러",
-  "symbols/namespace/description": "생성된 코드의 네임스페이스"
+  "name": "macOS ì»¨íŠ¸ë¡¤ëŸ¬",
+  "description": "ì½”ë“œì—ì„œ êµ¬í˜„ëœ UIê°€ ìžˆëŠ” macOS ë·° ì»¨íŠ¸ë¡¤ëŸ¬",
+  "symbols/namespace/description": "ìƒì„±ëœ ì½”ë“œì˜ ë„¤ìž„ìŠ¤íŽ˜ì´ìŠ¤"
 }

@@ -1,7 +1,7 @@
-{
+﻿{
   "author": "Microsoft",
-  "name": "macOS 應用程式",
-  "description": "用於建立 .NET 6 macOS 應用程式的專案",
-  "symbols/bundleId/description": "覆寫 Info.plist 中的 CFBundleIdentifier",
-  "symbols/minOSVersion/description": "覆寫專案檔中的 SupportedOSPlatformVersion"
+  "name": "macOS æ‡‰ç”¨ç¨‹å¼",
+  "description": "ç”¨æ–¼å»ºç«‹ .NET 6 macOS æ‡‰ç”¨ç¨‹å¼çš„å°ˆæ¡ˆ",
+  "symbols/bundleId/description": "è¦†å¯« Info.plist ä¸­çš„ CFBundleIdentifier",
+  "symbols/minOSVersion/description": "è¦†å¯«å°ˆæ¡ˆæª”ä¸­çš„ SupportedOSPlatformVersion"
 }
