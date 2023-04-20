@@ -1,10 +1,10 @@
-{
+﻿{
   "author": "Microsoft",
-  "name": "iOS アプリケーション",
-  "description": ".NET iOS アプリケーションを作成するためのプロジェクト",
-  "symbols/bundleId/description": "Info.plist の CFBundleIdentifier をオーバーライドします",
-  "symbols/minOSVersion/description": "プロジェクト ファイルの SupportedOSPlatformVersion をオーバーライドします",
-  "symbols/deviceFamily/choices/universal/description": "iPhone デバイスと iPad デバイスの両方をサポートする",
-  "symbols/deviceFamily/choices/iphone/description": "iPhone デバイスのみをサポート",
-  "symbols/deviceFamily/choices/ipad/description": "iPad デバイスのみをサポート"
+  "name": "iOS ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³",
+  "description": ".NET iOS ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ä½œæˆã™ã‚‹ãŸã‚ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆ",
+  "symbols/bundleId/description": "Info.plist ã® CFBundleIdentifier ã‚’ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã—ã¾ã™",
+  "symbols/minOSVersion/description": "ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆ ãƒ•ã‚¡ã‚¤ãƒ«ã® SupportedOSPlatformVersion ã‚’ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã—ã¾ã™",
+  "symbols/deviceFamily/choices/universal/description": "iPhone ãƒ‡ãƒã‚¤ã‚¹ã¨ iPad ãƒ‡ãƒã‚¤ã‚¹ã®ä¸¡æ–¹ã‚’ã‚µãƒãƒ¼ãƒˆã™ã‚‹",
+  "symbols/deviceFamily/choices/iphone/description": "iPhone ãƒ‡ãƒã‚¤ã‚¹ã®ã¿ã‚’ã‚µãƒãƒ¼ãƒˆ",
+  "symbols/deviceFamily/choices/ipad/description": "iPad ãƒ‡ãƒã‚¤ã‚¹ã®ã¿ã‚’ã‚µãƒãƒ¼ãƒˆ"
 }

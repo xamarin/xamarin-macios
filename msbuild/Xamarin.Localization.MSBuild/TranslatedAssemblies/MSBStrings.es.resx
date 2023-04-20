@@ -672,12 +672,13 @@
         </value>
     </data>
   <data name="E0174" xml:space="preserve">
-        <value>{0} tiene un formato incorrecto o desconocido y no se puede procesar.
-        </value>
+        <value>The xcframework {0} has an incorrect or unknown format and cannot be processed.</value>
     </data>
   <data name="E0175" xml:space="preserve">
-        <value>No se ha encontrado ninguna estructura que empate dentro de '{0}".
-        </value>
+        <value>No matching framework found inside '{0}'. SupportedPlatform: '{0}', SupportedPlatformVariant: '{1}', SupportedArchitectures: '{2}'.</value>
+        <comment>
+            Do not translate: 'SupportedPlatform', 'SupportedPlatformVariant', 'SupportedArchitectures' (they're keys inside a file with key/value pairs))
+        </comment>
     </data>
   <data name="W0176" xml:space="preserve">
         <value>Opciones en conflicto '{0}" y "{1}" opciones. '{1}' será ignorado.
@@ -1170,11 +1171,35 @@
         </comment>
     </data>
   <data name="W7105" xml:space="preserve">
-        <value>Extensión inesperada '{0}' para la referencia nativa '{1}' en el manifiesto '{2}'.</value>
+        <value>Unexpected extension '{0}' for native reference '{1}' in binding resource package '{2}'.</value>
         <comment>
             {0}: file extension
             {1}: path to a file
             {2}: path to a file
         </comment>
+    </data>
+  <data name="W7106" xml:space="preserve">
+        <value>Expected a file named '{1}' in the zip file {0}.</value>
+    </data>
+  <data name="W7107" xml:space="preserve">
+        <value>The zip file '{0}' does not exist.</value>
+    </data>
+  <data name="W7108" xml:space="preserve">
+        <value>The file '{0}' does not exist.</value>
+    </data>
+  <data name="W7109" xml:space="preserve">
+        <value>Unable to process the item '{0}' as a native reference: unknown type.</value>
+    </data>
+  <data name="E7110" xml:space="preserve">
+        <value>Could not load Info.plist '{0}' from the xcframework '{1}'.</value>
+    </data>
+  <data name="W7111" xml:space="preserve">
+        <value>The directory '{0}' does not exist.</value>
+    </data>
+  <data name="E7112" xml:space="preserve">
+        <value>Could not find the file or directory '{0}' in the zip file '{1}'.</value>
+    </data>
+  <data name="E7113" xml:space="preserve">
+        <value>Can't process the zip file '{0}' on this platform: the file '{1}' is a symlink.</value>
     </data>
 </root>

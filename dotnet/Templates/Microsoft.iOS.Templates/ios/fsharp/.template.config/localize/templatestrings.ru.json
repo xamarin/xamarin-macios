@@ -1,10 +1,10 @@
-{
-  "author": "Майкрософт",
-  "name": "Приложение iOS",
-  "description": "Проект для создания приложения .NET для iOS",
-  "symbols/bundleId/description": "Переопределяет CFBundleIdentifier в Info.plist",
-  "symbols/minOSVersion/description": "Переопределяет SupportedOSPlatformVersion в файле проекта",
-  "symbols/deviceFamily/choices/universal/description": "Поддержка устройств iPhone и iPad",
-  "symbols/deviceFamily/choices/iphone/description": "Поддерживаются только устройства iPhone",
-  "symbols/deviceFamily/choices/ipad/description": "Поддерживаются только устройства iPad"
+﻿{
+  "author": "ÐœÐ°Ð¹ÐºÑ€Ð¾ÑÐ¾Ñ„Ñ‚",
+  "name": "ÐŸÑ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ðµ iOS",
+  "description": "ÐŸÑ€Ð¾ÐµÐºÑ‚ Ð´Ð»Ñ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ñ Ð¿Ñ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ .NET Ð´Ð»Ñ iOS",
+  "symbols/bundleId/description": "ÐŸÐµÑ€ÐµÐ¾Ð¿Ñ€ÐµÐ´ÐµÐ»ÑÐµÑ‚ CFBundleIdentifier Ð² Info.plist",
+  "symbols/minOSVersion/description": "ÐŸÐµÑ€ÐµÐ¾Ð¿Ñ€ÐµÐ´ÐµÐ»ÑÐµÑ‚ SupportedOSPlatformVersion Ð² Ñ„Ð°Ð¹Ð»Ðµ Ð¿Ñ€Ð¾ÐµÐºÑ‚Ð°",
+  "symbols/deviceFamily/choices/universal/description": "ÐŸÐ¾Ð´Ð´ÐµÑ€Ð¶ÐºÐ° ÑƒÑÑ‚Ñ€Ð¾Ð¹ÑÑ‚Ð² iPhone Ð¸ iPad",
+  "symbols/deviceFamily/choices/iphone/description": "ÐŸÐ¾Ð´Ð´ÐµÑ€Ð¶Ð¸Ð²Ð°ÑŽÑ‚ÑÑ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ ÑƒÑÑ‚Ñ€Ð¾Ð¹ÑÑ‚Ð²Ð° iPhone",
+  "symbols/deviceFamily/choices/ipad/description": "ÐŸÐ¾Ð´Ð´ÐµÑ€Ð¶Ð¸Ð²Ð°ÑŽÑ‚ÑÑ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ ÑƒÑÑ‚Ñ€Ð¾Ð¹ÑÑ‚Ð²Ð° iPad"
 }
