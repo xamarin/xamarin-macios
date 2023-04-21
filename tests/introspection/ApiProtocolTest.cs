@@ -59,6 +59,9 @@ namespace Introspection {
 			// was removed by apple and is a compat class.
 			case "HMMatterRequestHandler":
 				return true;
+			// CAEdrMetadata needs API updates available with Xcode 14.3 bindings.
+			case "CAEdrMetadata":
+				return true;
 			default:
 				return SkipDueToAttribute (type);
 			}

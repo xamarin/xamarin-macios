@@ -967,6 +967,29 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			// CAEdrMetadata needs API updates available with Xcode 14.3 bindings.
+			case "CAEdrMetadata":
+				switch (selectorName) {
+				case "copyWithZone:":
+				case "encodeWithCoder:":
+					return true;
+				}
+				break;
+			// GCKeyboard needs API updates available with Xcode 14.3 bindings.
+			case "GCKeyboard":
+				switch (selectorName) {
+				case "encodeWithCoder:": // removed comformance
+					return true;
+				}
+				break;
+			// VSUserAccount needs API updates available with Xcode 14.3 bindings.
+			case "VSUserAccount":
+				switch (selectorName) {
+				case "isDeleted":
+				case "setDeleted:":
+					return true;
+				}
+				break;
 #if NET
 			// Incorrect attributes in inlined protocol selectors - https://github.com/xamarin/xamarin-macios/issues/14802
 			case "NSTextAttachment":
