@@ -254,6 +254,9 @@ namespace Xamarin.Bundler {
 			options.Add ("require-pinvoke-wrappers:", v => {
 				app.RequiresPInvokeWrappers = ParseBool (v, "--require-pinvoke-wrappers");
 			});
+			options.Add ("skip-marking-nsobjects-in-user-assemblies:", "Don't mark NSObject (and any subclass of NSObject) in user assemblies in the linker. This may break your app, use at own risk.", v => {
+				app.SkipMarkingNSObjectsInUserAssemblies = ParseBool (v, "--skip-marking-nsobjects-in-user-assemblies");
+			});
 
 
 			// Keep the ResponseFileSource option at the end.

@@ -235,6 +235,26 @@ stages:
       skipESRP: ${{ parameters.skipESRP }}
       pool: ${{ parameters.pool }}
 
+- stage: build_macos_tests
+  displayName: '${{ parameters.stageDisplayNamePrefix }}Build macOS tests'
+  dependsOn: ${{ parameters.dependsOn }}
+  ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
+    condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
+  jobs:
+  - template: ./build/build-mac-tests-stage.yml
+    parameters:
+      xcodeChannel: ${{ parameters.xcodeChannel }}
+      macOSName: ${{ parameters.macOSName }}
+      isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
+      vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+      keyringPass: $(pass--lab--mac--builder--keychain)
+      gitHubToken: $(Github.Token)
+      xqaCertPass: $(xqa--certificates--password)
+      enableDotnet: ${{ parameters.enableDotnet }}
+      pool: ${{ parameters.pool }}
+
 - ${{ each pkg_obj in parameters.packages }}:
   - stage: ${{ pkg_obj.job }}
     displayName: '${{ parameters.stageDisplayNamePrefix }}${{ pkg_obj.displayName }}'

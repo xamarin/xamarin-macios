@@ -217,7 +217,6 @@ steps:
 
 # We'll need these profiles to build the hot restart prebuilt app during the build
 # (it's built for device, and thus needs a certificate available so that the app can be signed).
-# We do this again before running the tests further below.
 - bash: |
     set -x
     set -e

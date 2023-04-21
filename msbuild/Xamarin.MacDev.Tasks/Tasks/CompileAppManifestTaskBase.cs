@@ -73,9 +73,6 @@ namespace Xamarin.MacDev.Tasks {
 		public string ResourceRules { get; set; } = String.Empty;
 
 		[Required]
-		public string SdkPlatform { get; set; } = String.Empty;
-
-		[Required]
 		public bool SdkIsSimulator { get; set; }
 
 		[Required]
@@ -91,6 +88,12 @@ namespace Xamarin.MacDev.Tasks {
 		protected TargetArchitecture architectures;
 		IPhoneDeviceType supportedDevices;
 		AppleSdkVersion sdkVersion;
+
+		public string SdkPlatform {
+			get {
+				return GetSdkPlatform (SdkIsSimulator);
+			}
+		}
 
 		public override bool Execute ()
 		{

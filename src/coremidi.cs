@@ -363,8 +363,17 @@ namespace CoreMidi {
 		[Export ("supportsPropertyCapability")]
 		bool SupportsPropertyCapability { get; }
 
+#if XAMCORE_5_0
 		[Export ("deviceIdentification")]
 		MidiCIDeviceIdentification DeviceIdentification { get; }
+#else
+		[Internal]
+		[Export ("deviceIdentification")]
+		MidiCIDeviceIdentification_Blittable _DeviceIdentification { get; }
+
+		[Wrap ("_DeviceIdentification.ToMidiCIDeviceIdentification ()", IsVirtual = true)]
+		MidiCIDeviceIdentification DeviceIdentification { get; }
+#endif
 
 		[Export ("profileStateForChannel:")]
 		MidiCIProfileState GetProfileState (byte channel);
