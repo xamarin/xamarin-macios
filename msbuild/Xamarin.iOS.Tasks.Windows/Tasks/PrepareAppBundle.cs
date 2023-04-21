@@ -37,7 +37,8 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 				AppBundlePath = HotRestartContext.Default.GetAppBundlePath (AppBundleName, SessionId.Substring (0, 8));
 
 			if (ShouldExtract) {
-				Directory.Delete (AppBundlePath, true);
+				if (Directory.Exists (AppBundlePath))
+					Directory.Delete (AppBundlePath, true);
 
 				Log.LogMessage (MessageImportance.Low, $"Extracting '{PreBuiltAppBundlePath}' into {AppBundlePath}.");
 				ZipFile.ExtractToDirectory (PreBuiltAppBundlePath, AppBundlePath);
