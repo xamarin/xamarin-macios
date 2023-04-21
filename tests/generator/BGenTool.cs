@@ -308,7 +308,7 @@ namespace Xamarin.Tests {
 			var assembly = LoadAssembly ();
 
 			var t = assembly.MainModule.Types.First ((v) => v.FullName == typename);
-			var actual = t.Methods.Count ((v) => {
+			var actual = t.Methods.Where ((v) => {
 				if (v.IsPrivate || v.IsFamily || v.IsFamilyAndAssembly)
 					return false;
 				return true;
@@ -337,7 +337,7 @@ namespace Xamarin.Tests {
 			AssertMethod (typename, method, null, null, parameterTypes);
 		}
 
-		public void AssertMethod (string typename, string method, string returnType? = null, params string [] parameterTypes)
+		public void AssertMethod (string typename, string method, string? returnType = null, params string [] parameterTypes)
 		{
 			AssertMethod (typename, method, null, returnType, parameterTypes);
 		}
