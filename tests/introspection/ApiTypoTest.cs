@@ -791,16 +791,17 @@ namespace Introspection {
 		{
 			AttributesMessageTypoRules (t, t.Name, ref totalErrors);
 
-			foreach (var f in t.GetFields ())
+			var flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
+			foreach (var f in t.GetFields (flags))
 				AttributesMessageTypoRules (f, t.Name, ref totalErrors);
 
-			foreach (var p in t.GetProperties ())
+			foreach (var p in t.GetProperties (flags))
 				AttributesMessageTypoRules (p, t.Name, ref totalErrors);
 
-			foreach (var m in t.GetMethods ())
+			foreach (var m in t.GetMethods (flags))
 				AttributesMessageTypoRules (m, t.Name, ref totalErrors);
 
-			foreach (var e in t.GetEvents ())
+			foreach (var e in t.GetEvents (flags))
 				AttributesMessageTypoRules (e, t.Name, ref totalErrors);
 
 			foreach (var nt in t.GetNestedTypes ())
