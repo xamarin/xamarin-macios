@@ -18,17 +18,35 @@ namespace Extrospection {
 	}
 
 	public static partial class Helpers {
-		static Dictionary<string, string> map = new Dictionary<string, string> ();
+		static Dictionary<string, object> map = new Dictionary<string, object> ();
 
 		public static void MapNames (string nativeName, string managedName)
 		{
-			map.Add (nativeName, managedName);
+			if (map.TryGetValue (nativeName, out var value)) {
+				if (value is string str) {
+					var list = new List<string> ();
+					list.Add (str);
+					list.Add (managedName);
+					map [nativeName] = list;
+				} else if (value is List<string> list) {
+					list.Add (managedName);
+				} else {
+					throw new InvalidOperationException ($"Unexpected type in map: {value}");
+				}
+			} else {
+				map.Add (nativeName, managedName);
+			}
 		}
 
 		public static string GetManagedName (string nativeName)
 		{
-			map.TryGetValue (nativeName, out var result);
-			return result ?? nativeName;
+			if (!map.TryGetValue (nativeName, out var value))
+				return nativeName;
+			if (value is string str)
+				return str;
+			if (value is List<string> list)
+				throw new InvalidOperationException ($"The native name '{nativeName}' has multiple managed types: {string.Join (", ", list)}");
+			throw new InvalidOperationException ($"Unexpected type in map: {value}");
 		}
 
 		public static string ReplaceFirstInstance (this string source, string find, string replace)
