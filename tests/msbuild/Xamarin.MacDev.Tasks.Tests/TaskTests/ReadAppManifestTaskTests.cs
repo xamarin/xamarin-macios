@@ -24,7 +24,6 @@ namespace Xamarin.MacDev.Tasks {
 
 			var task = CreateTask<ReadAppManifest> ();
 			task.AppManifest = new TaskItem (plistPath);
-			task.SdkVersion = Sdks.GetAppleSdk (platform).GetInstalledSdkVersions (false).First ().ToString ();
 			task.TargetFrameworkMoniker = TargetFramework.GetTargetFramework (platform, true).ToString ();
 
 			return task;

@@ -194,11 +194,11 @@ namespace GeneratorTests {
 			var success = AttributeFactory.ConstructorArguments.TryGetCtorArguments (arguments, platformName,
 				out var actualValues, out var actualTypes);
 			Assert.True (success, "success");
-			Assert.AreEqual (expectedValues.Length, actualValues.Length, "Values Length");
+			Assert.AreEqual (expectedValues!.Length, actualValues!.Length, "Values Length");
 			for (int index = 0; index < expectedValues.Length; index++) {
 				Assert.AreEqual (expectedValues [index], actualValues [index], $"Values [{index}]");
 			}
-			Assert.AreEqual (expectedTypes.Length, actualTypes.Length, "Types Length");
+			Assert.AreEqual (expectedTypes!.Length, actualTypes!.Length, "Types Length");
 			for (int index = 0; index < expectedTypes.Length; index++) {
 				Assert.AreEqual (expectedTypes [index], actualTypes [index], $"Types [{index}]");
 			}

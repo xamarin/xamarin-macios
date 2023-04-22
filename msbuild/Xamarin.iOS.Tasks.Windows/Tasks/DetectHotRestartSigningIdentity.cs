@@ -36,9 +36,6 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 		// Single-project property that maps to CFBundleIdentifier
 		public string ApplicationId { get; set; }
 
-		// Single-project property that maps to CFBundleDisplayName
-		public string ApplicationTitle { get; set; }
-
 		[Required]
 		public string AppManifest { get; set; }
 
@@ -64,9 +61,6 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 
 		[Output]
 		public string DetectedBundleId { get; set; }
-
-		[Output]
-		public string DetectedAppDisplayName { get; set; }
 
 		#endregion
 
@@ -104,16 +98,6 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 			}
 
 			DetectedBundleId = identity.BundleId;
-
-			var appDisplayName = plist.GetCFBundleDisplayName ();
-
-			if (string.IsNullOrEmpty (appDisplayName)) {
-				if (GenerateApplicationManifest && !string.IsNullOrEmpty (ApplicationTitle)) {
-					appDisplayName = ApplicationTitle;
-				}
-			}
-
-			DetectedAppDisplayName = appDisplayName;
 
 			if (!TryGetSigningCertificates (out certs, false))
 				return false;

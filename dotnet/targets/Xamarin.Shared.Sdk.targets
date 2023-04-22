@@ -1381,10 +1381,16 @@
 			<_AssemblyPublishDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(_RelativeAppBundlePath)\Contents\$(_CustomBundleName)\</_AssemblyPublishDir>
 			<_DylibPublishDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(_RelativeAppBundlePath)\</_DylibPublishDir>
 			<_DylibPublishDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(_RelativeAppBundlePath)\Contents\$(_CustomBundleName)\</_DylibPublishDir>
-			<!-- _ParsedRuntimeConfigFilePath must be relative to the project directory, since it's not copied to the publish directory by the the CopyFilesToPublishDirectory targets -->
-			<_ParsedRuntimeConfigFilePath Condition="'$(_ParsedRuntimeConfigFilePath)' == ''">$([MSBuild]::MakeRelative($(MSBuildProjectDirectory),$(_AbsolutePublishDir)\$(_AssemblyPublishDir)\$(_RuntimeConfigurationFile)))</_ParsedRuntimeConfigFilePath>
+			<_ParsedRuntimeConfigFilePath Condition="'$(_ParsedRuntimeConfigFilePath)' == ''">$(DeviceSpecificIntermediateOutputPath)$(_RuntimeConfigurationFile)</_ParsedRuntimeConfigFilePath>
 		</PropertyGroup>
 		<ItemGroup>
+			<!-- Add runtimeconfig.bin to ResolvedFileToPublish so we process it in ComputeBundlePath and copy the file to the app bundle -->
+			<ResolvedFileToPublish Include="$(_ParsedRuntimeConfigFilePath)" Condition="'$(GenerateRuntimeConfigurationFiles)' == 'true'">
+				<RelativePath>$([System.IO.Path]::GetFileName('$(_ParsedRuntimeConfigFilePath)'))</RelativePath>
+				<PublishFolderType>Assembly</PublishFolderType>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			</ResolvedFileToPublish>
+
 			<!--
 				Remove any items we've already handled elsewhere
 			-->
