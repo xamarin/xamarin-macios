@@ -76,6 +76,8 @@ namespace Xharness {
 		Xtro = 1 << 27,
 		[Label ("packaged-macos")]
 		PackagedMacOS = 1 << 28,
+		[Label ("windows")]
+		Windows = 1 << 29,
 		[Label ("all")]
 		All = Int64.MaxValue,
 	}

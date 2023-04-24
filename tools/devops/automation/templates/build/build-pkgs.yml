@@ -126,37 +126,6 @@ steps:
         artifactName: '${{ parameters.uploadPrefix }}not-signed-package'
       continueOnError: true
 
-    # funny enough we need these profiles to build the mac tests
-    - bash: '"$BUILD_SOURCESDIRECTORY"/maccore/tools/install-qa-provisioning-profiles.sh -v'
-      displayName: 'Add tests provisioning profiles'
-      timeoutInMinutes: 30
-      continueOnError: true # should not stop the build will result in test failures but we do want the pkg
-      env:
-        AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
-        AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
-        AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
-        AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
-        AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
-        AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
-
-    - bash: |
-        set -x
-        set -e
-
-        make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-tests
-
-        if test -f "$(Build.SourcesDirectory)/xamarin-macios/tests/mac-test-package.7z"; then
-          set +x
-          echo "##vso[artifact.upload containerfolder=CrashReports;artifactname=${{ parameters.uploadPrefix }}mac-test-package]$(Build.SourcesDirectory)/xamarin-macios/tests/mac-test-package.7z"
-          set -x
-        fi
-
-      name: macTestPkg
-      displayName: 'Package macOS tests'
-      condition: and(succeeded(), contains(variables['RUN_MAC_TESTS'], 'true'))
-      continueOnError: true # not a terrible blocking issue
-      timeoutInMinutes: 60
-
     - bash: |
         set -x
         set -e

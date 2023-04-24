@@ -8,7 +8,7 @@ using Xamarin.iOS.Tasks.Windows.Properties;
 using Xamarin.iOS.Windows;
 
 namespace Xamarin.iOS.HotRestart.Tasks {
-	public class Codesign : Task, ICancelableTask {
+	public class CodesignHotRestartApp : Task, ICancelableTask {
 		#region Inputs
 
 		[Required]
