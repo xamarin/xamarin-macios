@@ -2537,6 +2537,9 @@ xamarin_compute_native_dll_search_directories ()
 
 	NSMutableArray<NSString *> *directories = [NSMutableArray array];
 
+	// Always check in the root directory first.
+	[directories addObject: @"/"];
+
 	// Native libraries might be in the app bundle
 	[directories addObject: [NSString stringWithUTF8String: bundle_path]];
 	// They won't be in the runtimeidentifier-specific directory (because they get lipo'ed into a fat file instead)
