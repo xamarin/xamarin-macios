@@ -9,7 +9,7 @@ using Xamarin.MacDev;
 #nullable enable
 
 namespace Xamarin.iOS.HotRestart.Tasks {
-	public class CompileAppManifest : Task {
+	public class CompileHotRestartAppManifest : Task {
 		static readonly string [] IgnorePlistKeys = {
 		   "XSAppIconAssets",
 		   "CFBundleIconName",

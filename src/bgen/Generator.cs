@@ -2440,6 +2440,8 @@ public partial class Generator : IMemberGatherer {
 	bool IsInSupportedFramework (MemberInfo klass, PlatformName platform)
 	{
 		string ns = FindNamespace (klass);
+		if (string.IsNullOrEmpty (ns))
+			return false;
 		var list = GetFrameworkListForPlatform (platform);
 		return list.Contains (ns.ToLower (CultureInfo.InvariantCulture));
 	}
