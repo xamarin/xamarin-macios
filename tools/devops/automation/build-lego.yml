@@ -79,8 +79,8 @@ stages:
           git remote add origin https://$(GitHub.Token)@github.com/xamarin/xamarin-macios.git
           git remote # don't add -v else we see the pat
 
-          git config user.email "valco@microsoft.com"
-          git config user.name "vs-mobiletools-engineering-service2"
+          git config user.email "release-manager@xamarin.com"
+          git config user.name "xamarin-release-manager"
 
           git fetch origin
 
