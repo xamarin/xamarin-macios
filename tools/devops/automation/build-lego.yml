@@ -69,7 +69,7 @@ stages:
           repositoryAlias: self
           commit: HEAD
 
-    - job: BringLocChanges
+    - job: BringLocChanges 
       displayName: 'Copy over the lcl file changes from Localization branch'
       pool:
         vmImage: windows-latest
