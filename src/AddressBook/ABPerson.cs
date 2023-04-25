@@ -908,7 +908,7 @@ namespace AddressBook {
 			SetValue (ABPersonPropertyId.Phone, value.GetHandle ());
 		}
 
-		[Advice ("Use GetInstantMessageServices")]
+		[Advice ("Use GetInstantMessageServices.")]
 		ABMultiValue<NSDictionary>? GetInstantMessages ()
 		{
 			return CreateDictionaryMultiValue (CopyValue (ABPersonPropertyId.InstantMessage));
@@ -930,7 +930,7 @@ namespace AddressBook {
 			SetValue (ABPersonPropertyId.InstantMessage, services.GetHandle ());
 		}
 
-		[Advice ("Use GetSocialProfiles")]
+		[Advice ("Use GetSocialProfiles.")]
 		ABMultiValue<NSDictionary>? GetSocialProfile ()
 		{
 			return CreateDictionaryMultiValue (CopyValue (ABPersonPropertyId.SocialProfile));
