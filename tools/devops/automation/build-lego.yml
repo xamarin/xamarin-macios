@@ -50,6 +50,7 @@ trigger:
   branches:
     include:
     - Localization
+    - LocalizationCITest3
 
 stages:
 
@@ -76,11 +77,11 @@ stages:
 
       - pwsh: |
           git remote remove origin
-          git remote add origin https://$(GitHub.Token)@github.com/xamarin/xamarin-macios.git
+          git remote add origin https://$(TJTestPAT)@github.com/xamarin/xamarin-macios.git
           git remote # don't add -v else we see the pat
 
-          git config user.email "release-manager@xamarin.com"
-          git config user.name "xamarin-release-manager"
+          git config user.email "tj.devel709@gmail.com"
+          git config user.name "tj-devel709"
 
           git fetch origin
 
@@ -98,4 +99,4 @@ stages:
         workingDirectory: $(System.DefaultWorkingDirectory)
         condition: startsWith(variables['Build.SourceVersionMessage'], 'LEGO')
         env:
-          GITHUB_TOKEN: $(GitHub.Token)
+          GITHUB_TOKEN: $(TJTestPAT)
