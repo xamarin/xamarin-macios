@@ -18124,7 +18124,7 @@ namespace AppKit {
 		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("selectText:")]
-		void SelectText (NSObject sender);
+		void SelectText ([NullAllowed] NSObject sender);
 
 		[Export ("textShouldBeginEditing:")]
 		bool ShouldBeginEditing (NSText textObject);
@@ -18145,12 +18145,14 @@ namespace AppKit {
 		bool AcceptsFirstResponder ();
 
 		//Detected properties
+		[NullAllowed]
 		[Export ("backgroundColor", ArgumentSemantic.Copy)]
 		NSColor BackgroundColor { get; set; }
 
 		[Export ("drawsBackground")]
 		bool DrawsBackground { get; set; }
 
+		[NullAllowed]
 		[Export ("textColor", ArgumentSemantic.Copy)]
 		NSColor TextColor { get; set; }
 
@@ -18185,9 +18187,11 @@ namespace AppKit {
 		[Export ("preferredMaxLayoutWidth")]
 		nfloat PreferredMaxLayoutWidth { get; set; }
 
+		[NullAllowed]
 		[Export ("placeholderString", ArgumentSemantic.Copy)]
 		string PlaceholderString { get; set; }
 
+		[NullAllowed]
 		[Export ("placeholderAttributedString", ArgumentSemantic.Copy)]
 		NSAttributedString PlaceholderAttributedString { get; set; }
 
@@ -18366,24 +18370,29 @@ namespace AppKit {
 		NSText SetUpFieldEditorAttributes (NSText textObj);
 
 		//Detected properties
+		[NullAllowed]
 		[Export ("backgroundColor", ArgumentSemantic.Copy)]
 		NSColor BackgroundColor { get; set; }
 
 		[Export ("drawsBackground")]
 		bool DrawsBackground { get; set; }
 
+		[NullAllowed]
 		[Export ("textColor", ArgumentSemantic.Copy)]
 		NSColor TextColor { get; set; }
 
 		[Export ("bezelStyle")]
 		NSTextFieldBezelStyle BezelStyle { get; set; }
 
+		[NullAllowed]
 		[Export ("placeholderString")]
 		string PlaceholderString { get; set; }
 
+		[NullAllowed]
 		[Export ("placeholderAttributedString", ArgumentSemantic.Copy)]
 		NSAttributedString PlaceholderAttributedString { get; set; }
 
+		[NullAllowed]
 		[Export ("allowedInputSourceLocales")]
 		string [] AllowedInputSourceLocales { get; set; }
 

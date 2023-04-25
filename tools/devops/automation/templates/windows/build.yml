@@ -54,6 +54,8 @@ steps:
     & dotnet --version
     & dotnet --info
     & dotnet workload list
+    # We don't care if anything went wrong here.
+    exit 0
   displayName: 'Show .NET info'
   continueOnError: true
 
