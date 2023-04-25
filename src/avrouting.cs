@@ -99,7 +99,7 @@ namespace AVRouting {
 		NSString AuthorizedRoutesDidChangeNotification { get; }
 	}
 
-// The AVCustomRoutingControllerDelegate type was incorrectly placed in the AVKit framework.
+	// The AVCustomRoutingControllerDelegate type was incorrectly placed in the AVKit framework.
 #if !XAMCORE_5_0
 }
 namespace AVKit {
