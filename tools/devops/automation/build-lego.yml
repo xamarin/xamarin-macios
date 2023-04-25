@@ -69,7 +69,7 @@ stages:
           repositoryAlias: self
           commit: HEAD
 
-    - job: BringLocChanges 
+    - job: BringLocChanges
       displayName: 'Copy over the lcl file changes from Localization branch'
       pool:
         vmImage: windows-latest
@@ -86,10 +86,10 @@ stages:
           git fetch origin
 
           gh pr create `
-          --title "Bring changes from Localization branch #$(Build.BuildNumber)" `
+          --title "TEST! Bring changes from Localization branch #$(Build.BuildNumber)" `
           --body "The OneLoc team creates these translations to be consumed later on in the second step of the Localization process. We need to bring these into the main branch in order to continue the process." `
           --base main `
-          --head Localization `
+          --head LocalizationCITest3 `
           --label not-notes-worthy `
           --milestone Future `
           --draft=false
