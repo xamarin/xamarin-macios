@@ -17,12 +17,28 @@ using Xamarin.Utils;
 
 namespace Xharness {
 	public static class EvolvedProjectFileExtensions {
+		public static void SetProperty (this XmlDocument csproj, string key, string value)
+		{
+			// Set all existing properties
+			var xmlNodeList = csproj.SelectNodes ("/*[local-name() = 'Project']/*[local-name() = 'PropertyGroup']/*[local-name() = '" + key + "']").Cast<XmlNode> ();
+			foreach (var item in xmlNodeList)
+				item.InnerText = value;
+
+			// Create a new one as well, in case any of the other ones are for a different configuration.
+			var propertyGroup = GetLastPropertyGroup (csproj);
+			var mea = csproj.CreateElement (key, csproj.GetNamespace ());
+			mea.InnerText = value;
+			propertyGroup.AppendChild (mea);
+			propertyGroup.InsertBefore (csproj.CreateComment ($" This property was created by xharness "), mea);
+		}
+
 		public static void AppendToProperty (this XmlDocument csproj, string node, string value, string separator)
 		{
 			var propertyGroup = GetLastPropertyGroup (csproj);
 			var newNode = csproj.CreateElement (node, csproj.GetNamespace ());
 			newNode.InnerText = $"$({node}){separator}{value}";
 			propertyGroup.AppendChild (newNode);
+			propertyGroup.InsertBefore (csproj.CreateComment ($" This property was created by xharness "), newNode);
 		}
 
 		public static void AppendExtraMtouchArgs (this XmlDocument csproj, string value)
