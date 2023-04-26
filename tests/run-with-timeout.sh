@@ -58,4 +58,11 @@ PID=$$
 
 ) 2> /dev/null &
 
+export DYLD_PRINT_APIS=1
+export DYLD_PRINT_BINDINGS=1
+export DYLD_PRINT_LIBRARIES=1
+export DYLD_PRINT_LOADERS=1
+export DYLD_PRINT_SEARCHING=1
+export DYLD_PRINT_INITIALIZERS=1
+
 exec "$@"

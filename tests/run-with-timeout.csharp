@@ -49,6 +49,12 @@ for (var attempt = 0; attempt < maxLaunchAttempts; attempt++) {
 		p.StartInfo.Arguments = string.Join (" ", commands.Skip (1));
 		p.StartInfo.UseShellExecute = false;
 		p.StartInfo.EnvironmentVariables ["LAUNCH_SENTINEL_FILE"] = launchTimeoutFile;
+		p.StartInfo.EnvironmentVariables ["DYLD_PRINT_APIS"] = "1";
+		p.StartInfo.EnvironmentVariables ["DYLD_PRINT_BINDINGS"] = "1";
+		p.StartInfo.EnvironmentVariables ["DYLD_PRINT_LIBRARIES"] = "1";
+		p.StartInfo.EnvironmentVariables ["DYLD_PRINT_LOADERS"] = "1";
+		p.StartInfo.EnvironmentVariables ["DYLD_PRINT_SEARCHING"] = "1";
+		p.StartInfo.EnvironmentVariables ["DYLD_PRINT_INITIALIZERS"] = "1";
 
 		Console.WriteLine ($"Launching (attempt #{attempt + 1}):");
 		Console.WriteLine ($"    {p.StartInfo.FileName} {p.StartInfo.Arguments}");
