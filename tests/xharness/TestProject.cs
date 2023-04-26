@@ -31,7 +31,6 @@ namespace Xharness {
 		public Func<Task>? Dependency;
 		public string? FailureMessage;
 		public bool RestoreNugetsInProject = true;
-		public string? MTouchExtraArgs;
 		public double TimeoutMultiplier = 1;
 		public bool? Ignore;
 
@@ -72,7 +71,6 @@ namespace Xharness {
 			rv.IsDotNetProject = IsDotNetProject;
 			rv.RestoreNugetsInProject = RestoreNugetsInProject;
 			rv.Name = Name;
-			rv.MTouchExtraArgs = MTouchExtraArgs;
 			rv.TimeoutMultiplier = TimeoutMultiplier;
 			rv.Ignore = Ignore;
 			rv.TestPlatform = TestPlatform;
