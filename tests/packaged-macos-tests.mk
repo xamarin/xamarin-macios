@@ -173,7 +173,7 @@ build-maccatalyst-dotnet-x64-$(1): .stamp-dotnet-dependency-MacCatalyst
 exec-maccatalyst-dotnet-x64-$(1):
 ifeq ($(SUPPORTS_MACCATALYST),1)
 	@echo "ℹ️  Executing the '$(1)' test for Mac Catalyst/.NET (x64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT$(3)) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-x64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
+	$$(Q) $(4) $(RUN_WITH_TIMEOUT$(3)) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-x64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
 else
 	@echo "⚠️  Not executing the '$(1)' test for Mac Catalyst/.NET (x64) - macOS version $(MACOS_VERSION) is too old ⚠️"
 endif
@@ -185,7 +185,7 @@ build-maccatalyst-dotnet-arm64-$(1):.stamp-dotnet-dependency-MacCatalyst
 exec-maccatalyst-dotnet-arm64-$(1):
 ifeq ($(IS_APPLE_SILICON),1)
 	@echo "ℹ️  Executing the '$(1)' test for Mac Catalyst/.NET (arm64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT$(3)) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-arm64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
+	$$(Q) $(4) $(RUN_WITH_TIMEOUT$(3)) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-arm64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
 else
 	@echo "⚠️  Not executing the '$(1)' test for Mac Catalyst/.NET (arm64) - not executing on Apple Silicon ⚠️"
 endif
@@ -221,7 +221,7 @@ endif
 	$$(Q) if test -e ".$$@-failure.stamp"; then cat ".$$@-failure.stamp"; rm ".$$@-failure.stamp"; exit 1; fi
 endef
 
-$(eval $(call DotNetNormalTest,monotouch-test,monotouchtest,_LONGER))
+$(eval $(call DotNetNormalTest,monotouch-test,monotouchtest,_LONGER,DYLD_PRINT_APIS=1 DYLD_PRINT_BINDINGS=1 DYLD_PRINT_LIBRARIES=1 DYLD_PRINT_LOADERS=1 DYLD_PRINT_SEARCHING=1 DYLD_PRINT_INITIALIZERS=1))
 $(eval $(call DotNetNormalTest,introspection,introspection,_LONGER))
 
 ### .NET linker tests
