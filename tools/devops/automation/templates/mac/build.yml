@@ -187,7 +187,7 @@ steps:
     foreach ($t in $macTest) {
       $testName = "exec-$t"
       Write-Host "Execution test $testName"
-      make -d -C $testsPath $testName -f packaged-macos-tests.mk
+      make -d -C $testsPath $testName -f packaged-macos-tests.mk V=1 DYLD_PRINT_APIS=1 DYLD_PRINT_BINDINGS=1 DYLD_PRINT_LIBRARIES=1 DYLD_PRINT_LOADERS=1 DYLD_PRINT_SEARCHING=1 DYLD_PRINT_INITIALIZERS=1
       if ($LastExitCode -eq 0) {
         Write-Host "$t succeeded"
       } else {
