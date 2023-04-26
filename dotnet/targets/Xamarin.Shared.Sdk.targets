@@ -634,7 +634,12 @@
 		</ItemGroup>
 
 		<!-- Create the file with our custom linker options -->
-		<WriteLinesToFile SessionId="$(BuildSessionId)" File="$(_CustomLinkerOptionsFile)" Lines="$(_CustomLinkerOptions)" Overwrite="true" />
+		<WriteLinesToFile
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			File="$(_CustomLinkerOptionsFile)"
+			Lines="$(_CustomLinkerOptions)"
+			Overwrite="true" />
 	</Target>
 
 	<PropertyGroup>
