@@ -2166,6 +2166,11 @@ namespace Registrar {
 
 			var ns = type.Namespace;
 
+#if !XAMCORE_5_0
+			// AVCustomRoutingControllerDelegate was incorrectly placed in AVKit
+			if (type.Is ("AVKit", "AVCustomRoutingControllerDelegate"))
+				ns = "AVRouting";
+#endif
 			Framework framework;
 			if (Driver.GetFrameworks (App).TryGetValue (ns, out framework)) {
 				if (framework.Version > App.SdkVersion) {
