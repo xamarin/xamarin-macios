@@ -175,6 +175,14 @@ steps:
     $testsPath = "$(Build.SourcesDirectory)/artifacts/mac-test-package/tests"
     Write-Host "Tests path is $testsPath"
 
+    [System.Environment]::SetEnvironmentVariable("V", "1")
+    [System.Environment]::SetEnvironmentVariable("DYLD_PRINT_APIS", "1")
+    [System.Environment]::SetEnvironmentVariable("DYLD_PRINT_BINDINGS", "1")
+    [System.Environment]::SetEnvironmentVariable("DYLD_PRINT_LIBRARIES", "1")
+    [System.Environment]::SetEnvironmentVariable("DYLD_PRINT_LOADERS", "1")
+    [System.Environment]::SetEnvironmentVariable("DYLD_PRINT_SEARCHING", "1")
+    [System.Environment]::SetEnvironmentVariable("DYLD_PRINT_INITIALIZERS", "1")
+
     # print enviroment
     dir env:
 
