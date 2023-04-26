@@ -216,11 +216,12 @@ test-install-sources:
 	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(NUNIT_MSBUILD_DIR)/TestResults_InstallSourcesTests.xml > $(TOP)/tests/index.html && echo "@MonkeyWrench: AddFile: $$PWD/index.html" )
 	@if test -e $(NUNIT_MSBUILD_DIR)/.failed-stamp; then rm $(NUNIT_MSBUILD_DIR)/.failed-stamp; exit 1; fi
 
-ifdef INCLUDE_MAC
 mac-test-package.zip:
+ifdef INCLUDE_MAC
+	./package-mac-tests.sh
+else ifdef INCLUDE_MACCATALYST
 	./package-mac-tests.sh
 else
-mac-test-package.zip:
 	@echo Not enabled
 endif
 
