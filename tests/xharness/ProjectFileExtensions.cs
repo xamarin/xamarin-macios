@@ -17,6 +17,76 @@ using Xamarin.Utils;
 
 namespace Xharness {
 	public static class EvolvedProjectFileExtensions {
+		public static void AppendToProperty (this XmlDocument csproj, string node, string value, string separator)
+		{
+			var propertyGroup = GetLastPropertyGroup (csproj);
+			var newNode = csproj.CreateElement (node, csproj.GetNamespace ());
+			newNode.InnerText = $"$({node}){separator}{value}";
+			propertyGroup.AppendChild (newNode);
+		}
+
+		public static void AppendExtraMtouchArgs (this XmlDocument csproj, string value)
+		{
+			csproj.AppendToProperty ("MtouchExtraArgs", value, " ");
+		}
+
+		public static void AppendMonoBundlingExtraArgs (this XmlDocument csproj, string value)
+		{
+			csproj.AppendToProperty ("MonoBundlingExtraArgs", value, " ");
+		}
+
+		static int IndexOf (this XmlNodeList @this, XmlNode node)
+		{
+			for (var i = 0; i < @this.Count; i++) {
+				if ((object) node == (object) @this [i])
+					return i;
+			}
+			return -1;
+		}
+
+		static XmlElement GetLastPropertyGroup (this XmlDocument csproj)
+		{
+			// Is the last property group Condition-less? If so, return it.
+			// Definition of last: the last PropertyGroup before an Import node (or last in file if there are no Import nodes)
+			var propertyGroups = csproj.SelectNodes ("/*[local-name() = 'Project']/*[local-name() = 'PropertyGroup']").Cast<XmlElement> ();
+			var imports = csproj.SelectNodes ("/*[local-name() = 'Project']/*[local-name() = 'Import']").Cast<XmlElement> ();
+			if (propertyGroups.Any ()) {
+				XmlElement? last = null;
+
+				if (imports.Any ()) {
+					var firstImport = imports.First ();
+					var firstImportIndex = firstImport.ParentNode.ChildNodes.IndexOf (firstImport);
+					foreach (var pg in propertyGroups) {
+						var pgIndex = pg.ParentNode.ChildNodes.IndexOf (pg);
+						if (pgIndex < firstImportIndex) {
+							last = pg;
+						} else {
+							break;
+						}
+					}
+				} else {
+					last = propertyGroups.Last ();
+				}
+
+				if (last?.HasAttribute ("Condition") == false)
+					return last;
+			}
+
+			// Create a new PropertyGroup, and add it either:
+			// * Just before the first Import node
+			// * If no Import node, then after the last PropertyGroup.
+			var projectNode = csproj.SelectSingleNode ("//*[local-name() = 'Project']");
+			var newPropertyGroup = csproj.CreateElement ("PropertyGroup", csproj.GetNamespace ());
+			if (imports.Any ()) {
+				projectNode.InsertBefore (newPropertyGroup, imports.First ());
+			} else {
+				var lastPropertyGroup = csproj.SelectNodes ("/*[local-name() = 'Project']/*[local-name() = 'PropertyGroup']").Cast<XmlNode> ().Last ();
+				projectNode.InsertAfter (newPropertyGroup, lastPropertyGroup);
+			}
+			projectNode.InsertBefore (csproj.CreateComment ($" This property group was created by xharness "), newPropertyGroup);
+			return newPropertyGroup;
+		}
+
 		// Evaluates a text and replaces '$(Variable)' with the property value specified in the 'properties' dictionary.
 		// Contrary to what MSBuild does, if the variable can't be found in the dictionary, it's not replaced with
 		// an empty string, instead the variable reference stays as-is.

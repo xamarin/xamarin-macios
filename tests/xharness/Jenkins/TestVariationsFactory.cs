@@ -225,9 +225,9 @@ namespace Xharness.Jenkins {
 						var canSymlink = task.Platform.CanSymlink ();
 
 						if (!string.IsNullOrEmpty (mtouch_extra_args))
-							clone.Xml.AddExtraMtouchArgs (mtouch_extra_args, task.ProjectPlatform, configuration);
+							clone.Xml.AppendExtraMtouchArgs (mtouch_extra_args);
 						if (!string.IsNullOrEmpty (bundling_extra_args))
-							clone.Xml.AddMonoBundlingExtraArgs (bundling_extra_args, task.ProjectPlatform, configuration);
+							clone.Xml.AppendMonoBundlingExtraArgs (bundling_extra_args);
 						if (!string.IsNullOrEmpty (link_mode))
 							clone.Xml.SetNode (isMac ? "LinkMode" : "MtouchLink", link_mode, task.ProjectPlatform, configuration);
 						if (!string.IsNullOrEmpty (defines)) {
