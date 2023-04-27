@@ -23,7 +23,7 @@ namespace UIKit {
 					var data = obj as NSData;
 					UIImage img;
 			
-					if (data != null) {
+					if (data is not null) {
 						img = new UIImage (data);
 					} else {
 						img = (UIImage) obj;

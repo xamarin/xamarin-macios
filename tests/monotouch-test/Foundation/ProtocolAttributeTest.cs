@@ -33,13 +33,13 @@ namespace MonoTouchFixtures.Foundation {
 					continue;
 
 				var register = (RegisterAttribute) Attribute.GetCustomAttribute (type, typeof (RegisterAttribute), false);
-				if (register != null && !register.IsWrapper)
+				if (register is not null && !register.IsWrapper)
 					continue;
 
-				if (Attribute.GetCustomAttribute (type, typeof (ModelAttribute), false) == null)
+				if (Attribute.GetCustomAttribute (type, typeof (ModelAttribute), false) is null)
 					continue;
 
-				if (Attribute.GetCustomAttribute (type, typeof (ProtocolAttribute), false) == null) {
+				if (Attribute.GetCustomAttribute (type, typeof (ProtocolAttribute), false) is null) {
 					Console.WriteLine ("{0} must have a [Protocol] attribute if it has a [Model] attribute", type.FullName);
 					count++;
 				}

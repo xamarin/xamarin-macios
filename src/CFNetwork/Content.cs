@@ -57,7 +57,7 @@ namespace CFNetwork {
 		protected override bool TryComputeLength (out long length)
 		{
 			length = contentLength ?? 0;
-			return contentLength != null;
+			return contentLength is not null;
 		}
 
 		protected override void Dispose (bool disposing)

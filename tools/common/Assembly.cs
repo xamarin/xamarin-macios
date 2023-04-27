@@ -142,7 +142,7 @@ namespace Xamarin.Bundler {
 
 		void AddResourceToBeRemoved (string resource)
 		{
-			if (link_with_resources == null)
+			if (link_with_resources is null)
 				link_with_resources = new List<string> ();
 			link_with_resources.Add (resource);
 		}
@@ -199,11 +199,11 @@ namespace Xamarin.Bundler {
 
 			// Make sure there are no duplicates between frameworks and weak frameworks.
 			// Keep the weak ones.
-			if (Frameworks != null && WeakFrameworks != null)
+			if (Frameworks is not null && WeakFrameworks is not null)
 				Frameworks.ExceptWith (WeakFrameworks);
 
 			if (NeedsGccExceptionHandling) {
-				if (LinkerFlags == null)
+				if (LinkerFlags is null)
 					LinkerFlags = new List<string> ();
 				LinkerFlags.Add ("-lgcc_eh");
 			}
@@ -255,7 +255,7 @@ namespace Xamarin.Bundler {
 			for (int i = 0; i < assembly.CustomAttributes.Count; i++) {
 				CustomAttribute attr = assembly.CustomAttributes [i];
 
-				if (attr.Constructor == null)
+				if (attr.Constructor is null)
 					continue;
 
 				TypeReference type = attr.Constructor.DeclaringType;
@@ -317,7 +317,7 @@ namespace Xamarin.Bundler {
 				ForceLoad = true;
 
 			if (!string.IsNullOrEmpty (metadata.LinkerFlags)) {
-				if (LinkerFlags == null)
+				if (LinkerFlags is null)
 					LinkerFlags = new List<string> ();
 				if (!StringUtils.TryParseArguments (metadata.LinkerFlags, out string [] args, out var ex))
 					throw ErrorHelper.CreateError (148, ex, Errors.MX0148, metadata.LinkerFlags, metadata.LibraryName, FileName, ex.Message);
@@ -326,7 +326,7 @@ namespace Xamarin.Bundler {
 
 			if (!string.IsNullOrEmpty (metadata.Frameworks)) {
 				foreach (var f in metadata.Frameworks.Split (new char [] { ' ' })) {
-					if (Frameworks == null)
+					if (Frameworks is null)
 						Frameworks = new HashSet<string> ();
 					Frameworks.Add (f);
 				}
@@ -334,7 +334,7 @@ namespace Xamarin.Bundler {
 
 			if (!string.IsNullOrEmpty (metadata.WeakFrameworks)) {
 				foreach (var f in metadata.WeakFrameworks.Split (new char [] { ' ' })) {
-					if (WeakFrameworks == null)
+					if (WeakFrameworks is null)
 						WeakFrameworks = new HashSet<string> ();
 					WeakFrameworks.Add (f);
 				}
@@ -407,7 +407,7 @@ namespace Xamarin.Bundler {
 		static void LogNativeReference (NativeReferenceMetadata metadata)
 		{
 			Driver.Log (3, "    LibraryName: {0}", metadata.LibraryName);
-			Driver.Log (3, "    From: {0}", metadata.Attribute != null ? "LinkWith" : "Binding Manifest");
+			Driver.Log (3, "    From: {0}", metadata.Attribute is not null ? "LinkWith" : "Binding Manifest");
 			Driver.Log (3, "    ForceLoad: {0}", metadata.ForceLoad);
 			Driver.Log (3, "    Frameworks: {0}", metadata.Frameworks);
 			Driver.Log (3, "    IsCxx: {0}", metadata.IsCxx);
@@ -490,7 +490,7 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			var strong = (framework == null) || (App.DeploymentTarget >= (App.IsSimulatorBuild ? framework.VersionAvailableInSimulator ?? framework.Version : framework.Version));
+			var strong = (framework is null) || (App.DeploymentTarget >= (App.IsSimulatorBuild ? framework.VersionAvailableInSimulator ?? framework.Version : framework.Version));
 			if (strong) {
 				if (Frameworks.Add (file))
 					Driver.Log (3, "Linking with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
@@ -612,7 +612,7 @@ namespace Xamarin.Bundler {
 						if (f > 0) {
 							AddFramework (file);
 						} else {
-							if (UnresolvedModuleReferences == null)
+							if (UnresolvedModuleReferences is null)
 								UnresolvedModuleReferences = new HashSet<ModuleReference> ();
 							UnresolvedModuleReferences.Add (mr);
 							Driver.Log (3, "Could not resolve the module reference {0} in {1}", file, FileName);
@@ -645,7 +645,7 @@ namespace Xamarin.Bundler {
 			var config = FullPath + ".config";
 			if (File.Exists (config))
 				yield return config;
-			if (Satellites != null) {
+			if (Satellites is not null) {
 				foreach (var satellite in Satellites)
 					yield return satellite;
 			}
@@ -657,7 +657,7 @@ namespace Xamarin.Bundler {
 			var path = Path.GetDirectoryName (FullPath);
 			// first look if satellites are located in subdirectories of the current location of the assembly
 			ComputeSatellites (satellite_name, path);
-			if (Satellites == null) {
+			if (Satellites is null) {
 				// 2nd chance: satellite assemblies can come from different nugets (as dependencies)
 				// they will be copied (at build time) into the destination directory (making them work at runtime)
 				// but they won't be side-by-side the original assembly (which breaks our build time assumptions)
@@ -693,12 +693,12 @@ namespace Xamarin.Bundler {
 					continue;
 				}
 
-				if (ci == null)
+				if (ci is null)
 					continue;
 
 				var satellite = Path.Combine (subdir, satellite_name);
 				if (File.Exists (satellite)) {
-					if (Satellites == null)
+					if (Satellites is null)
 						Satellites = new List<string> ();
 					Satellites.Add (satellite);
 				}
@@ -707,7 +707,7 @@ namespace Xamarin.Bundler {
 
 		public void CopySatellitesToDirectory (string directory)
 		{
-			if (Satellites == null)
+			if (Satellites is null)
 				return;
 
 			foreach (var a in Satellites) {
@@ -729,7 +729,7 @@ namespace Xamarin.Bundler {
 			var copied = false;
 
 			try {
-				var strip_assembly = strip != null && strip (source);
+				var strip_assembly = strip is not null && strip (source);
 				if (!Application.IsUptodate (source, target) && (strip_assembly || !Cache.CompareAssemblies (source, target))) {
 					copied = true;
 					if (strip_assembly) {
@@ -798,9 +798,9 @@ namespace Xamarin.Bundler {
 		{
 			// From what I gather it doesn't matter which normalization form
 			// is used, but I chose Form D because HFS normalizes to Form D.
-			if (x != null)
+			if (x is not null)
 				x = x.Normalize (System.Text.NormalizationForm.FormD);
-			if (y != null)
+			if (y is not null)
 				y = y.Normalize (System.Text.NormalizationForm.FormD);
 			return comparer.Equals (x, y);
 		}

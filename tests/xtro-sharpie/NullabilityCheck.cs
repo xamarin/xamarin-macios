@@ -44,7 +44,7 @@ namespace Extrospection {
 		public override void VisitManagedMethod (MethodDefinition method)
 		{
 			var key = method.GetName ();
-			if (key == null)
+			if (key is null)
 				return;
 
 			// we still have one case to fix with duplicate selectors :|
@@ -120,11 +120,11 @@ namespace Extrospection {
 
 			var method = GetMethod (decl);
 			// don't report missing nullability on types that are not bound - that's a different problem
-			if (method == null)
+			if (method is null)
 				return;
 
 			var framework = Helpers.GetFramework (decl);
-			if (framework == null)
+			if (framework is null)
 				return;
 
 			var t = method.DeclaringType;
@@ -203,7 +203,7 @@ namespace Extrospection {
 					var property = method.FindProperty ();
 					// also `null_resettable` will only show something (natively) on the setter (since it does not return null, but accept it)
 					// in this case we'll trust xtro checking the setter only (if it exists, if not then it can't be `null_resettable`)
-					if (property.SetMethod != null)
+					if (property.SetMethod is not null)
 						return;
 					cap = property;
 				} else {

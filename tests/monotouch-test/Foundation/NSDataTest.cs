@@ -63,7 +63,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void FromEmptyArrayTest ()
 		{
-			Assert.That (NSData.FromArray (new byte [0] { }) != null, "#1");
+			Assert.That (NSData.FromArray (new byte [0] { }) is not null, "#1");
 		}
 
 		[Test]
@@ -150,9 +150,9 @@ namespace MonoTouchFixtures.Foundation {
 				NSError error;
 				using (var nsUrl = new NSUrl (NetworkResources.RobotsUrls [i]))
 				using (var x = NSData.FromUrl (nsUrl, NSDataReadingOptions.Uncached, out error)) {
-					if (error != null)
+					if (error is not null)
 						continue;
-					Assert.That (x != null);
+					Assert.That (x is not null);
 					Assert.That (x.Length > 0);
 					return;
 				}

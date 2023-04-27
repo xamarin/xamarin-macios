@@ -36,12 +36,12 @@ namespace MonoTouchFixtures.AVFoundation {
 		public void TestEqualOperatorNull ()
 		{
 			using (var format = new AVAudioFormat ()) {
-				Assert.IsFalse (format == null, "format == null");
+				Assert.IsFalse (format is null, "format is null");
 				Assert.IsFalse (null == format, "null == format");
 			}
 			using (AVAudioFormat nullFormat = null) {
-				Assert.IsTrue (nullFormat == null, "nullFormat == null");
-				Assert.IsTrue (null == nullFormat, "null == nullFormat");
+				Assert.IsTrue (nullFormat is null, "nullFormat is null");
+				Assert.IsTrue (null is nullFormat, "null is nullFormat");
 			}
 		}
 
@@ -49,12 +49,12 @@ namespace MonoTouchFixtures.AVFoundation {
 		public void TestNotEqualOperatorNull ()
 		{
 			using (var format = new AVAudioFormat ()) {
-				Assert.IsTrue (format != null, "format != null");
+				Assert.IsTrue (format is not null, "format is not null");
 				Assert.IsTrue (null != format, "null != format");
 			}
 			using (AVAudioFormat nullFormat = null) {
-				Assert.IsFalse (nullFormat != null, "nullFormat != null");
-				Assert.IsFalse (null != nullFormat, "null != nullFormat");
+				Assert.IsFalse (nullFormat is not null, "nullFormat is not null");
+				Assert.IsFalse (null is not nullFormat, "null is not nullFormat");
 			}
 
 		}

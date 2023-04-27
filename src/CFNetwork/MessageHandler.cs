@@ -105,7 +105,7 @@ namespace CFNetwork {
 
 			SetupRequest (request, message, isFirstRequest);
 
-			if ((auth == null) || (Credentials == null) || !PreAuthenticate)
+			if ((auth is null) || (Credentials is null) || !PreAuthenticate)
 				return message;
 
 			if (!auth.AppliesToRequest (message))
@@ -113,7 +113,7 @@ namespace CFNetwork {
 
 			var method = auth.GetMethod ();
 			var credential = Credentials.GetCredential (request.RequestUri, method);
-			if (credential == null)
+			if (credential is null)
 				return message;
 
 			if (isFirstRequest)

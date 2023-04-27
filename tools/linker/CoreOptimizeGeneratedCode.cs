@@ -34,7 +34,7 @@ namespace Xamarin.Linker {
 		Dictionary<AssemblyDefinition, bool?> _hasOptimizableCode;
 		Dictionary<AssemblyDefinition, bool?> HasOptimizableCode {
 			get {
-				if (_hasOptimizableCode == null)
+				if (_hasOptimizableCode is null)
 					_hasOptimizableCode = new Dictionary<AssemblyDefinition, bool?> ();
 				return _hasOptimizableCode;
 			}
@@ -43,7 +43,7 @@ namespace Xamarin.Linker {
 		Dictionary<AssemblyDefinition, bool> _inlineIntPtrSize;
 		Dictionary<AssemblyDefinition, bool> InlineIntPtrSize {
 			get {
-				if (_inlineIntPtrSize == null)
+				if (_inlineIntPtrSize is null)
 					_inlineIntPtrSize = new Dictionary<AssemblyDefinition, bool> ();
 				return _inlineIntPtrSize;
 			}
@@ -135,7 +135,7 @@ namespace Xamarin.Linker {
 			if (HasOptimizableCode.TryGetValue (assembly, out bool? optimizable)) {
 				if (optimizable == true)
 					hasOptimizableCode = true;
-				return optimizable != null;
+				return optimizable is not null;
 			}
 #else
 			bool hasOptimizableCode = false;
@@ -246,7 +246,7 @@ namespace Xamarin.Linker {
 
 		static int? GetConstantValue (Instruction ins)
 		{
-			if (ins == null)
+			if (ins is null)
 				return null;
 
 			switch (ins.OpCode.Code) {
@@ -345,7 +345,7 @@ namespace Xamarin.Linker {
 						// Treat all branches of the switch statement as reachable.
 						// FIXME: calculate the potential constant branch (currently there are no optimizable methods where the switch condition is constant, so this is not needed for now)
 						var targets = ins.Operand as Instruction [];
-						if (targets == null) {
+						if (targets is null) {
 							Driver.Log (4, $"Can't optimize {0} because of unknown target of branch instruction {1} {2}", method, ins, ins.Operand);
 							return false;
 						}
@@ -357,7 +357,7 @@ namespace Xamarin.Linker {
 						return MarkInstructions (method, instructions, reachable, instructions.IndexOf (ins.Next), end);
 					}
 
-					if (cond_target == null) {
+					if (cond_target is null) {
 						Driver.Log (4, $"Can't optimize {0} because of unknown target of branch instruction {1} {2}", method, ins, ins.Operand);
 						return false;
 					}
@@ -507,7 +507,7 @@ namespace Xamarin.Linker {
 				case FlowControl.Branch:
 				case FlowControl.Cond_Branch:
 					var target = ins.Operand as Instruction;
-					if (target != null && target.Offset >= first.Offset && target.Offset <= last.Offset)
+					if (target is not null && target.Offset >= first.Offset && target.Offset <= last.Offset)
 						return true;
 					break;
 				}
@@ -592,7 +592,7 @@ namespace Xamarin.Linker {
 				if (ins.OpCode.Code != Code.Br && ins.OpCode.Code != Code.Br_S)
 					continue;
 				var target = ins.Operand as Instruction;
-				if (target == null)
+				if (target is null)
 					continue;
 				if (target.Offset < ins.Offset)
 					continue; // backwards branch, keep those
@@ -654,7 +654,7 @@ namespace Xamarin.Linker {
 			}
 
 			// Remove exception handlers
-			if (reachableExceptionHandlers != null) {
+			if (reachableExceptionHandlers is not null) {
 				for (int i = reachableExceptionHandlers.Length - 1; i >= 0; i--) {
 					if (reachableExceptionHandlers [i])
 						continue;
@@ -976,7 +976,7 @@ namespace Xamarin.Linker {
 
 				// Then find the type of the previous instruction (the first argument to SetupBlock[Unsafe])
 				var trampolineDelegateType = GetPushedType (caller, loadTrampolineInstruction);
-				if (trampolineDelegateType == null) {
+				if (trampolineDelegateType is null) {
 					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, caller, ins, Errors.MM2106_A, caller, ins.Offset, mr.Name, loadTrampolineInstruction));
 					return 0;
 				}
@@ -992,7 +992,7 @@ namespace Xamarin.Linker {
 
 				// First look for any [UserDelegateType] attributes on the trampoline delegate type.
 				var userDelegateType = GetUserDelegateType (trampolineDelegateType);
-				if (userDelegateType != null) {
+				if (userDelegateType is not null) {
 					var userMethodDefinition = GetDelegateInvoke (userDelegateType);
 					userMethod = InflateMethod (userDelegateType, userMethodDefinition);
 					blockSignature = true;
@@ -1004,7 +1004,7 @@ namespace Xamarin.Linker {
 				}
 
 				// No luck finding the signature, so give up.
-				if (userMethod == null) {
+				if (userMethod is null) {
 					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, caller, ins, Errors.MM2106_C, caller, ins.Offset, trampolineDelegateType.FullName));
 					return 0;
 				}
@@ -1335,7 +1335,7 @@ namespace Xamarin.Linker {
 		MethodDefinition setupblock_def;
 		MethodReference GetBlockSetupImpl (MethodDefinition caller, Instruction ins)
 		{
-			if (setupblock_def == null) {
+			if (setupblock_def is null) {
 				var type = LinkContext.GetAssembly (Driver.GetProductAssembly (LinkContext.Target.App)).MainModule.GetType (Namespaces.ObjCRuntime, "BlockLiteral");
 				foreach (var method in type.Methods) {
 					if (method.Name != "SetupBlockImpl")
@@ -1344,7 +1344,7 @@ namespace Xamarin.Linker {
 					setupblock_def.IsPublic = true; // Make sure the method is callable from the optimized code.
 					break;
 				}
-				if (setupblock_def == null)
+				if (setupblock_def is null)
 					throw ErrorHelper.CreateError (LinkContext.App, 99, caller, ins, Errors.MX0099, $"could not find the method {Namespaces.ObjCRuntime}.BlockLiteral.SetupBlockImpl");
 			}
 			return caller.Module.ImportReference (setupblock_def);
@@ -1380,7 +1380,7 @@ namespace Xamarin.Linker {
 		MethodReference InflateMethod (TypeReference inflatedDeclaringType, MethodDefinition openMethod)
 		{
 			var git = inflatedDeclaringType as GenericInstanceType;
-			if (git == null)
+			if (git is null)
 				return openMethod;
 
 			var inflatedReturnType = TypeReferenceExtensions.InflateGenericType (git, openMethod.ReturnType);

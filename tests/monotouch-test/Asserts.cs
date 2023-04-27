@@ -247,11 +247,11 @@ public static class Asserts {
 
 	public static void AreEqual (Quaternion [] expected, Quaternion [] actual, string message)
 	{
-		if (expected == null) {
-			if (actual == null)
+		if (expected is null) {
+			if (actual is null)
 				return;
 			Assert.Fail ($"Expected null, got {actual}. {message}");
-		} else if (actual == null) {
+		} else if (actual is null) {
 			Assert.Fail ($"Expected {expected}, got null. {message}");
 		}
 
@@ -263,11 +263,11 @@ public static class Asserts {
 
 	public static void AreEqual (Quaterniond expected, Quaterniond actual, string message)
 	{
-		if (expected == null) {
-			if (actual == null)
+		if (expected is null) {
+			if (actual is null)
 				return;
 			Assert.Fail ($"Expected null, got {actual}. {message}");
-		} else if (actual == null) {
+		} else if (actual is null) {
 			Assert.Fail ($"Expected {expected}, got null. {message}");
 		}
 

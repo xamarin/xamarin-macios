@@ -100,9 +100,9 @@ namespace Xharness.Jenkins.TestTasks {
 				var args = new List<string> ();
 				args.Add ("--");
 				args.Add ("/verbosity:diagnostic");
-				if (project_platform != null)
+				if (project_platform is not null)
 					args.Add ($"/p:Platform={project_platform}");
-				if (project_configuration != null)
+				if (project_configuration is not null)
 					args.Add ($"/p:Configuration={project_configuration}");
 				args.Add (project_file);
 				args.Add ("/t:Clean");

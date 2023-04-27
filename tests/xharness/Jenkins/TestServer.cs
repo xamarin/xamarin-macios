@@ -48,7 +48,7 @@ namespace Xharness.Jenkins {
 						var allTasks = jenkins.Tasks.SelectMany ((v) => {
 							var rv = new List<ITestTask> ();
 							var runsim = v as AggregatedRunSimulatorTask;
-							if (runsim != null)
+							if (runsim is not null)
 								rv.AddRange (runsim.Tasks);
 							rv.Add (v);
 							return rv;
@@ -76,9 +76,9 @@ namespace Xharness.Jenkins {
 								foreach (var id_input in id_inputs) {
 									if (int.TryParse (id_input, out var id)) {
 										var task = jenkins.Tasks.FirstOrDefault ((t) => t.ID == id);
-										if (task == null)
+										if (task is null)
 											task = jenkins.Tasks.Where ((v) => v is AggregatedRunSimulatorTask).Cast<AggregatedRunSimulatorTask> ().SelectMany ((v) => v.Tasks).FirstOrDefault ((t) => t.ID == id);
-										if (task == null) {
+										if (task is null) {
 											writer.WriteLine ($"Could not find test {id}");
 										} else {
 											rv.Add (task);
@@ -298,7 +298,7 @@ namespace Xharness.Jenkins {
 								jenkins.GenerateReport ();
 							}
 
-							if (serveFile == null)
+							if (serveFile is null)
 								serveFile = Path.Combine (Path.GetDirectoryName (jenkins.LogDirectory), request.Url.LocalPath.Substring (1));
 							var path = serveFile;
 							if (File.Exists (path)) {

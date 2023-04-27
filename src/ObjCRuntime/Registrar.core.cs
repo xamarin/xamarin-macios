@@ -30,18 +30,18 @@ namespace Registrar {
 				case '>':
 				case '$':
 				case '-':
-					if (sb == null)
+					if (sb is null)
 						sb = new StringBuilder (name, 0, i, name.Length);
 					sb.Append ('_');
 					break;
 				default:
-					if (sb != null)
+					if (sb is not null)
 						sb.Append (ch);
 					break;
 				}
 			}
 
-			if (sb != null)
+			if (sb is not null)
 				return sb.ToString ();
 
 			return name;

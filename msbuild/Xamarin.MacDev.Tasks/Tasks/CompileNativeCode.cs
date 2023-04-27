@@ -27,7 +27,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
 		{
-			if (IncludeDirectories != null) {
+			if (IncludeDirectories is not null) {
 				foreach (var dir in IncludeDirectories) {
 					foreach (var file in Directory.EnumerateFiles (dir.ItemSpec, "*.*", SearchOption.AllDirectories)) {
 						yield return new TaskItem (file);

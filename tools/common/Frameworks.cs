@@ -32,7 +32,7 @@ public class Framework {
 #if MTOUCH || MMP || BUNDLER
 	public bool IsFrameworkAvailableInSimulator (Application app)
 	{
-		if (VersionAvailableInSimulator == null)
+		if (VersionAvailableInSimulator is null)
 			return false;
 
 		if (VersionAvailableInSimulator > app.SdkVersion)
@@ -110,7 +110,7 @@ public class Frameworks : Dictionary<string, Framework> {
 	static Frameworks mac_frameworks;
 	public static Frameworks MacFrameworks {
 		get {
-			if (mac_frameworks == null) {
+			if (mac_frameworks is null) {
 				mac_frameworks = new Frameworks () {
 					{ "Accelerate", 10, 0 },
 					{ "AppKit", 10, 0 },
@@ -290,7 +290,7 @@ public class Frameworks : Dictionary<string, Framework> {
 	static Frameworks ios_frameworks;
 	public static Frameworks GetiOSFrameworks (bool is_simulator_build)
 	{
-		if (ios_frameworks == null)
+		if (ios_frameworks is null)
 			ios_frameworks = CreateiOSFrameworks (is_simulator_build);
 		return ios_frameworks;
 	}
@@ -471,7 +471,7 @@ public class Frameworks : Dictionary<string, Framework> {
 	static Frameworks watch_frameworks;
 	public static Frameworks GetwatchOSFrameworks (bool is_simulator_build)
 	{
-		if (watch_frameworks == null) {
+		if (watch_frameworks is null) {
 			watch_frameworks = new Frameworks {
 				{ "Accelerate", "Accelerate", 2 },
 				// The CFNetwork framework is in the SDK, but there are no headers inside the framework, so don't enable yet.
@@ -543,7 +543,7 @@ public class Frameworks : Dictionary<string, Framework> {
 	static Frameworks tvos_frameworks;
 	public static Frameworks TVOSFrameworks {
 		get {
-			if (tvos_frameworks == null) {
+			if (tvos_frameworks is null) {
 				tvos_frameworks = new Frameworks () {
 					{ "AVFoundation", "AVFoundation", 9 },
 					{ "AVKit", "AVKit", 9 },
@@ -641,7 +641,7 @@ public class Frameworks : Dictionary<string, Framework> {
 	static Frameworks catalyst_frameworks;
 	public static Frameworks GetMacCatalystFrameworks ()
 	{
-		if (catalyst_frameworks == null) {
+		if (catalyst_frameworks is null) {
 			catalyst_frameworks = CreateiOSFrameworks (false);
 			// not present in iOS but present in catalyst
 			catalyst_frameworks.Add ("CoreWlan", "CoreWLAN", 15, 0);

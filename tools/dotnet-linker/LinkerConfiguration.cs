@@ -396,7 +396,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    AssemblyName: {Application.AssemblyName}");
 				Console.WriteLine ($"    CacheDirectory: {CacheDirectory}");
 				Console.WriteLine ($"    Debug: {Application.EnableDebug}");
-				Console.WriteLine ($"    Dlsym: {Application.DlsymOptions} {(Application.DlsymAssemblies != null ? string.Join (" ", Application.DlsymAssemblies.Select (v => (v.Item2 ? "+" : "-") + v.Item1)) : string.Empty)}");
+				Console.WriteLine ($"    Dlsym: {Application.DlsymOptions} {(Application.DlsymAssemblies is not null ? string.Join (" ", Application.DlsymAssemblies.Select (v => (v.Item2 ? "+" : "-") + v.Item1)) : string.Empty)}");
 				Console.WriteLine ($"    DeploymentTarget: {DeploymentTarget}");
 				Console.WriteLine ($"    EnableSGenConc {Application.EnableSGenConc}");
 				Console.WriteLine ($"    IntermediateLinkDir: {IntermediateLinkDir}");

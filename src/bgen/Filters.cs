@@ -259,7 +259,7 @@ public partial class Generator {
 		case "CGAffineTransform":
 			print ("var val = ValueForKey (\"{0}\");", propertyName);
 			print ("var nsv = (val as NSValue);");
-			print ("if (nsv != null)");
+			print ("if (nsv is not null)");
 			indent++;
 			print ("return nsv.CGAffineTransformValue;");
 			indent--;

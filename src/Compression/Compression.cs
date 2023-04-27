@@ -133,7 +133,7 @@ namespace Compression {
 
 		private void EnsureBufferInitialized ()
 		{
-			if (_buffer == null) {
+			if (_buffer is null) {
 				InitializeBuffer ();
 			}
 		}

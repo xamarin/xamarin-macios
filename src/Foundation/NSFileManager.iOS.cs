@@ -16,7 +16,7 @@ namespace Foundation {
 
 		public static NSError SetSkipBackupAttribute (string filename, bool skipBackup)
 		{
-			if (filename == null)
+			if (filename is null)
 				throw new ArgumentNullException ("filename");
 
 			using (NSUrl url = NSUrl.FromFilename (filename)) {
@@ -35,13 +35,13 @@ namespace Foundation {
 
 		public static bool GetSkipBackupAttribute (string filename, out NSError error)
 		{
-			if (filename == null)
+			if (filename is null)
 				throw new ArgumentNullException ("filename");
 
 			using (NSUrl url = NSUrl.FromFilename (filename)) {
 				NSObject value;
 				url.TryGetResource (NSUrl.IsExcludedFromBackupKey, out value, out error);
-				return (error == null) && ((long) ((NSNumber) value) == 1);
+				return (error is null) && ((long) ((NSNumber) value) == 1);
 			}
 		}
 	}

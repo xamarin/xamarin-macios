@@ -78,7 +78,7 @@ namespace Xamarin.Bundler {
 			} catch {
 				var sb = new StringBuilder (message);
 				sb.Append (". String.Format failed! Arguments were:");
-				if (args != null) {
+				if (args is not null) {
 					foreach (var arg in args) {
 						sb.Append (" \"").Append (arg).Append ('"');
 					}

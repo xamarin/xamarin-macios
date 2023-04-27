@@ -382,7 +382,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 		{
 			// all the data is provided by the filter, if we have no filter, return an empty string so that the project does not have any
 			// includes.
-			if (ProjectFilter == null)
+			if (ProjectFilter is null)
 				return string.Empty;
 			var contentFiles = new StringBuilder ();
 			foreach (var path in ProjectFilter.GetIgnoreFiles (projectName, info.Assemblies, platform)) {
@@ -445,7 +445,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 				WriteReferenceFailure (sb, info.FailureMessage);
 			} else {
 				foreach (var assemblyInfo in info.Assemblies) {
-					if (ProjectFilter == null || !ProjectFilter.ExcludeDll (Platform.WatchOS, assemblyInfo.assembly))
+					if (ProjectFilter is null || !ProjectFilter.ExcludeDll (Platform.WatchOS, assemblyInfo.assembly))
 						sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
 				}
 			}
@@ -474,7 +474,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 				// 3. The extensions
 				// TODO: The following is very similar to what is done in the iOS generation. Must be grouped
 				var projectDefinition = new ProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.Assemblies, def.ExtraArgs);
-				if (ProjectFilter != null && ProjectFilter.ExludeProject (projectDefinition, Platform.WatchOS)) // if it is ignored, continue
+				if (ProjectFilter is not null && ProjectFilter.ExludeProject (projectDefinition, Platform.WatchOS)) // if it is ignored, continue
 					continue;
 
 				if (!projectDefinition.Validate ())
@@ -573,7 +573,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 				WriteReferenceFailure (sb, info.FailureMessage);
 			} else {
 				foreach (var assemblyInfo in info.Assemblies) {
-					if (ProjectFilter == null || !ProjectFilter.ExcludeDll (Platform.iOS, assemblyInfo.assembly))
+					if (ProjectFilter is null || !ProjectFilter.ExcludeDll (Platform.iOS, assemblyInfo.assembly))
 						sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
 				}
 			}
@@ -603,7 +603,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 				if (def.Assemblies.Length == 0)
 					continue;
 				var projectDefinition = new ProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.Assemblies, def.ExtraArgs);
-				if (ProjectFilter != null && ProjectFilter.ExludeProject (projectDefinition, Platform.WatchOS)) // if it is ignored, continue
+				if (ProjectFilter is not null && ProjectFilter.ExludeProject (projectDefinition, Platform.WatchOS)) // if it is ignored, continue
 					continue;
 
 				if (!projectDefinition.Validate ())
@@ -663,7 +663,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 				WriteReferenceFailure (sb, info.FailureMessage);
 			} else {
 				foreach (var assemblyInfo in info.Assemblies) {
-					if (ProjectFilter == null || !ProjectFilter.ExcludeDll (platform, assemblyInfo.assembly))
+					if (ProjectFilter is null || !ProjectFilter.ExcludeDll (platform, assemblyInfo.assembly))
 						sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
 				}
 			}
@@ -703,7 +703,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 				if (!def.Assemblies.Any ())
 					continue;
 				var projectDefinition = new ProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.Assemblies, def.ExtraArgs);
-				if (ProjectFilter != null && ProjectFilter.ExludeProject (projectDefinition, platform))
+				if (ProjectFilter is not null && ProjectFilter.ExludeProject (projectDefinition, platform))
 					continue;
 
 				if (!projectDefinition.Validate ())

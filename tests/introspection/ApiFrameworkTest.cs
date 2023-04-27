@@ -28,7 +28,7 @@ namespace Introspection {
 
 		public bool Skip (string @namespace)
 		{
-			if (@namespace == null)
+			if (@namespace is null)
 				return true;
 			if (namespaces.Contains (@namespace))
 				return true;

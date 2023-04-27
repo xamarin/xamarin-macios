@@ -132,17 +132,17 @@ namespace Xamarin.Tests {
 #endif
 
 			TargetFramework? tf = null;
-			if (targetFramework != null)
+			if (targetFramework is not null)
 				tf = TargetFramework.Parse (targetFramework);
 
-			if (BaseLibrary == null) {
+			if (BaseLibrary is null) {
 				if (tf.HasValue)
 					sb.Add ($"--baselib={Configuration.GetBaseLibrary (tf.Value)}");
 			} else if (BaseLibrary != None) {
 				sb.Add ($"--baselib={BaseLibrary}");
 			}
 
-			if (AttributeLibrary == null) {
+			if (AttributeLibrary is null) {
 				if (tf.HasValue)
 					sb.Add ($"--attributelib={Configuration.GetBindingAttributePath (tf.Value)}");
 			} else if (AttributeLibrary != None) {
@@ -159,7 +159,7 @@ namespace Xamarin.Tests {
 				sb.Add ($"-s={s}");
 
 			if (ReferenceBclByDefault) {
-				if (tf == null) {
+				if (tf is null) {
 					// do nothing
 				} else if (tf.Value.IsDotNet == true) {
 					References.AddRange (Directory.GetFiles (Configuration.DotNetBclDir, "*.dll"));
@@ -183,19 +183,19 @@ namespace Xamarin.Tests {
 			if (ProcessEnums)
 				sb.Add ("--process-enums");
 
-			if (Defines != null) {
+			if (Defines is not null) {
 				foreach (var d in Defines)
 					sb.Add ($"-d={d}");
 			}
 
-			if (WarnAsError != null) {
+			if (WarnAsError is not null) {
 				var arg = "--warnaserror";
 				if (WarnAsError.Length > 0)
 					arg += ":" + WarnAsError;
 				sb.Add (arg);
 			}
 
-			if (NoWarn != null) {
+			if (NoWarn is not null) {
 				var arg = "--nowarn";
 				if (NoWarn.Length > 0)
 					arg += ":" + NoWarn;
@@ -258,7 +258,7 @@ namespace Xamarin.Tests {
 				if (ins.OpCode.FlowControl != FlowControl.Call)
 					continue;
 				var mr = ins.Operand as MethodReference;
-				if (mr == null)
+				if (mr is null)
 					continue;
 				if (mr.Name == called_method)
 					return;
@@ -282,7 +282,7 @@ namespace Xamarin.Tests {
 				if (ins.OpCode.Code != Code.Ldsfld && ins.OpCode.Code != Code.Ldfld)
 					continue;
 				var fr = ins.Operand as FieldReference;
-				if (fr == null)
+				if (fr is null)
 					continue;
 				if (fr.DeclaringType.FullName != declaring_type)
 					continue;
@@ -323,9 +323,9 @@ namespace Xamarin.Tests {
 
 			var allTypes = assembly.MainModule.GetTypes ().ToArray ();
 			var t = allTypes.FirstOrDefault ((v) => v.FullName == fullname);
-			if (t == null)
+			if (t is null)
 				Assert.Fail ($"No type named '{fullname}' in the generated assembly. {message}\nList of types:\n\t{string.Join ("\n\t", allTypes.Select ((v) => v.FullName))}");
-			if (attributes != null)
+			if (attributes is not null)
 				Assert.AreEqual (attributes.Value, t.Attributes, $"Incorrect attributes for type {fullname}.");
 		}
 
@@ -396,7 +396,7 @@ namespace Xamarin.Tests {
 
 		void EnsureTempDir ()
 		{
-			if (TmpDirectory == null)
+			if (TmpDirectory is null)
 				TmpDirectory = Cache.CreateTemporaryDirectory ();
 		}
 
@@ -480,7 +480,7 @@ namespace Xamarin.Tests {
 		public TextWriter CurrentWriter {
 			get {
 				lock (lock_obj) {
-					if (current_writer == null)
+					if (current_writer is null)
 						return original_stdout;
 					return current_writer;
 				}

@@ -225,7 +225,7 @@ namespace Xharness {
 			}
 			set {
 				var locator = AssemblyLocator as AssemblyLocator;
-				if (locator != null)
+				if (locator is not null)
 					locator.iOSMonoSDKPath = value;
 			}
 		}
@@ -237,7 +237,7 @@ namespace Xharness {
 			}
 			set {
 				var locator = TemplatedProject.AssemblyLocator as AssemblyLocator;
-				if (locator != null)
+				if (locator is not null)
 					locator.MacMonoSDKPath = value;
 			}
 		}
@@ -249,7 +249,7 @@ namespace Xharness {
 
 		public BCLTestImportTargetFactory (IHarness harness) : this (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bcl-test")), harness.MONO_PATH)
 		{
-			if (harness == null)
+			if (harness is null)
 				throw new ArgumentNullException (nameof (harness));
 			iOSMonoSDKPath = harness.MONO_IOS_SDK_DESTDIR;
 			MacMonoSDKPath = harness.MONO_MAC_SDK_DESTDIR;
@@ -306,7 +306,7 @@ namespace Xharness {
 					var (ExtraArgs, TimeoutMultiplier, Projects) = definitions [groupName];
 					foreach (var (_, Assemblies) in Projects) {
 						foreach (var a in Assemblies) {
-							if (ProjectFilter == null || !ProjectFilter.ExcludeDll (platform, a))
+							if (ProjectFilter is null || !ProjectFilter.ExcludeDll (platform, a))
 								groupedAssemblies.AddRange (Assemblies);
 						}
 					}

@@ -93,7 +93,7 @@ namespace ObjCRuntime {
 		{
 			string handler;
 
-			if (options != null) {
+			if (options is not null) {
 				handler = options.http_message_handler;
 			} else if (app.Platform == Utils.ApplePlatform.WatchOS) {
 				handler = NSUrlSessionHandlerValue;
@@ -146,7 +146,7 @@ namespace ObjCRuntime {
 			default:
 				throw new InvalidOperationException (string.Format ("Unknown HttpMessageHandler `{0}`.", handler));
 			}
-			if (type == null)
+			if (type is null)
 				throw new InvalidOperationException (string.Format ("Cannot load HttpMessageHandler `{0}`.", handler));
 			return type;
 		}
@@ -185,12 +185,12 @@ namespace ObjCRuntime {
 			case CFNetworkHandlerValue:
 				return new CFNetworkHandler ();
 			default:
-				if (handler_name != null && handler_name != NSUrlSessionHandlerValue)
+				if (handler_name is not null && handler_name != NSUrlSessionHandlerValue)
 					Runtime.NSLog ($"{handler_name} is not a valid HttpMessageHandler, defaulting to System.Net.Http.NSUrlSessionHandlerValue");
 				return new NSUrlSessionHandler ();
 			}
 #elif __WATCHOS__
-			if (handler_name != null && handler_name != NSUrlSessionHandlerValue)
+			if (handler_name is not null && handler_name != NSUrlSessionHandlerValue)
 				Runtime.NSLog ($"{handler_name} is not a valid HttpMessageHandler, defaulting to NSUrlSessionHandler");
 			return new NSUrlSessionHandler ();
 #else
@@ -200,7 +200,7 @@ namespace ObjCRuntime {
 			case NSUrlSessionHandlerValue:
 				return new NSUrlSessionHandler ();
 			default:
-				if (handler_name != null && handler_name != HttpClientHandlerValue)
+				if (handler_name is not null && handler_name != HttpClientHandlerValue)
 					Runtime.NSLog ($"{handler_name} is not a valid HttpMessageHandler, defaulting to System.Net.Http.HttpClientHandler");
 				return new HttpClientHandler ();
 			}

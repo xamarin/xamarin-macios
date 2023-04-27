@@ -44,7 +44,7 @@ namespace Xamarin.MacDev.Tasks {
 			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 			var bundleResources = new List<ITaskItem> ();
 
-			if (BundleResources != null) {
+			if (BundleResources is not null) {
 				foreach (var item in BundleResources) {
 					// Skip anything with the PublishFolderType metadata, these are copied directly to the ResolvedFileToPublish item group instead.
 					var publishFolderType = item.GetMetadata ("PublishFolderType");

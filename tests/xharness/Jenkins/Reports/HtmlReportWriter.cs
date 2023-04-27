@@ -39,7 +39,7 @@ namespace Xharness.Jenkins.Reports {
 		}
 
 		string GetLinkFullPath (string path)
-			=> linksPrefix != null ? linksPrefix + LinkEncode (path) : LinkEncode (path); // vsdrops index paths are horrible, the use a ; and we cannot use combine, ex: https://vsdrop.corp.microsoft.com/file/v1/devdiv/20200612.13/3806978;/tests/index.html
+			=> linksPrefix is not null ? linksPrefix + LinkEncode (path) : LinkEncode (path); // vsdrops index paths are horrible, the use a ; and we cannot use combine, ex: https://vsdrop.corp.microsoft.com/file/v1/devdiv/20200612.13/3806978;/tests/index.html
 
 		string GetResourcePath (string resource)
 		{
@@ -54,7 +54,7 @@ namespace Xharness.Jenkins.Reports {
 				writer.WriteLine ("<script type='text/javascript'>");
 				using (var reader = new StreamReader (jsPath)) {
 					string? line = null;
-					while ((line = reader.ReadLine ()) != null) {
+					while ((line = reader.ReadLine ()) is not null) {
 						writer.WriteLine (line);
 					}
 				}
@@ -71,7 +71,7 @@ namespace Xharness.Jenkins.Reports {
 				writer.WriteLine ("<style>");
 				using (var reader = new StreamReader (cssPath)) {
 					string? line = null;
-					while ((line = reader.ReadLine ()) != null) {
+					while ((line = reader.ReadLine ()) is not null) {
 						writer.WriteLine (line);
 					}
 				}
@@ -209,7 +209,7 @@ namespace Xharness.Jenkins.Reports {
 				if (jenkins.IsServerMode) {
 					var include_system_permission_option = string.Empty;
 					var include_system_permission_icon = string.Empty;
-					if (Harness.IncludeSystemPermissionTests == null) {
+					if (Harness.IncludeSystemPermissionTests is null) {
 						include_system_permission_option = "include-permission-tests";
 						include_system_permission_icon = "2753";
 					} else if (Harness.IncludeSystemPermissionTests.Value) {
@@ -235,7 +235,7 @@ namespace Xharness.Jenkins.Reports {
 	</ul>
 </li>
 ");
-					if (previous_test_runs == null) {
+					if (previous_test_runs is null) {
 						previous_test_runs = "\t<li>Previous test runs\t\t<ul>Loading ...</ul></li>";
 						ThreadPool.QueueUserWorkItem ((v) => {
 							var sb = new StringBuilder ();
@@ -249,7 +249,7 @@ namespace Xharness.Jenkins.Reports {
 									var dir = Path.GetFileName (Path.GetDirectoryName (prev));
 									var ts = dir;
 									var description = File.ReadAllLines (prev).Where ((v) => v.StartsWith ("<h2", StringComparison.Ordinal)).FirstOrDefault ();
-									if (description != null) {
+									if (description is not null) {
 										description = description.Substring (description.IndexOf ('>') + 1); // <h2 ...>
 										description = description.Substring (description.IndexOf ('>') + 1); // <span id= ...>
 
@@ -400,14 +400,14 @@ namespace Xharness.Jenkins.Reports {
 						if (!string.IsNullOrEmpty (progressMessage))
 							writer.WriteLine (progressMessage.AsHtml () + " <br />");
 
-						if (runTest != null) {
+						if (runTest is not null) {
 							if (runTest.BuildTask.Duration.Ticks > 0) {
 								writer.WriteLine ($"Project file: {runTest.BuildTask.ProjectFile} <br />");
 								writer.WriteLine ($"Platform: {runTest.BuildTask.ProjectPlatform} Configuration: {runTest.BuildTask.ProjectConfiguration} <br />");
 								IEnumerable<IDevice>? candidates = (runTest as RunDeviceTask)?.Candidates;
-								if (candidates == null)
+								if (candidates is null)
 									candidates = (runTest as RunSimulatorTask)?.Candidates;
-								if (candidates != null) {
+								if (candidates is not null) {
 									writer.WriteLine ($"Candidate devices:<br />");
 									try {
 										foreach (var candidate in candidates)
@@ -421,8 +421,8 @@ namespace Xharness.Jenkins.Reports {
 							if (test.Duration.Ticks > 0)
 								writer.WriteLine ($"Time Elapsed:  {test.TestName} - (waiting time : {test.WaitingDuration} , running time : {test.Duration}) <br />");
 							var runDeviceTest = runTest as RunDeviceTask;
-							if (runDeviceTest?.Device != null) {
-								if (runDeviceTest.CompanionDevice != null) {
+							if (runDeviceTest?.Device is not null) {
+								if (runDeviceTest.CompanionDevice is not null) {
 									writer.WriteLine ($"Device: {runDeviceTest.Device.Name} ({runDeviceTest.CompanionDevice.Name}) <br />");
 								} else {
 									writer.WriteLine ($"Device: {runDeviceTest.Device.Name} <br />");
@@ -481,7 +481,7 @@ namespace Xharness.Jenkins.Reports {
 												fails = new List<string> ();
 												while (!reader.EndOfStream) {
 													string? line = reader.ReadLine ()?.Trim ();
-													if (line == null)
+													if (line is null)
 														continue;
 													// Skip any timestamps if the file is timestamped
 													if (log.Timestamp)
@@ -525,7 +525,7 @@ namespace Xharness.Jenkins.Reports {
 												errors = new HashSet<string> ();
 												while (!reader.EndOfStream) {
 													string? line = reader.ReadLine ()?.Trim ();
-													if (line == null)
+													if (line is null)
 														continue;
 													// Sometimes we put error messages in pull request descriptions
 													// Then Jenkins create environment variables containing the pull request descriptions (and other pull request data)
@@ -587,7 +587,7 @@ namespace Xharness.Jenkins.Reports {
 				if (failedTests.Count () == 0) {
 					foreach (var group in failedTests.GroupBy ((v) => v.TestName)) {
 						var enumerableGroup = group as IEnumerable<AppleTestTask>;
-						if (enumerableGroup != null) {
+						if (enumerableGroup is not null) {
 							writer.WriteLine ("<a href='#test_{2}'>{0}</a> ({1})<br />", group.Key, string.Join (", ", enumerableGroup.Select ((v) => string.Format ("<span style='color: {0}'>{1}</span>", v.GetTestColor (), string.IsNullOrEmpty (v.Mode) ? v.ExecutionResult.ToString () : v.Mode)).ToArray ()), group.Key.Replace (' ', '-'));
 							continue;
 						}
@@ -601,7 +601,7 @@ namespace Xharness.Jenkins.Reports {
 					foreach (var test in buildingTests) {
 						var runTask = test as RunTestTask;
 						var buildDuration = string.Empty;
-						if (runTask != null)
+						if (runTask is not null)
 							buildDuration = runTask.BuildTask.Duration.ToString ();
 						writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a> {buildDuration}<br />");
 					}

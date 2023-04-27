@@ -31,7 +31,7 @@ namespace Xamarin.Linker {
 			// Tell MSBuild about any additional linker flags we found
 			var linkerFlags = new List<MSBuildItem> ();
 			foreach (var asm in Configuration.Target.Assemblies) {
-				if (asm.LinkerFlags == null)
+				if (asm.LinkerFlags is null)
 					continue;
 				foreach (var arg in asm.LinkerFlags) {
 					var item = new MSBuildItem {
