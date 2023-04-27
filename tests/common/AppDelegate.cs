@@ -61,7 +61,7 @@ public static class MainClass {
 	}
 
 #if NET
-	static IntPtr DllImportResolver(string libraryName, global::System.Reflection.Assembly assembly, DllImportSearchPath? searchPath)
+	static IntPtr DllImportResolver (string libraryName, global::System.Reflection.Assembly assembly, DllImportSearchPath? searchPath)
 	{
 		switch (libraryName) {
 		case "/System/Library/Frameworks/SceneKit.framework/SceneKit":
