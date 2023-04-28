@@ -335,7 +335,7 @@ namespace Xamarin.Linker {
 				Application.NativeSdkVersion = SdkVersion;
 			}
 
-			Target.Abis.AddRange (Abis);
+			Target.Abis = Abis;
 			Target.LinkContext = DerivedLinkContext;
 			Application.Abis = Abis;
 
