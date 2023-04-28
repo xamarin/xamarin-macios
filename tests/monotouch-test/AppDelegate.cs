@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Foundation;
 using UIKit;
 using MonoTouch.NUnit.UI;
@@ -66,12 +67,33 @@ namespace MonoTouchFixtures {
 
 		static void Main (string[] args)
 		{
+#if __MACCATALYST__
+			NativeLibrary.SetDllImportResolver (typeof (NSObject).Assembly, DllImportResolver);
+			NativeLibrary.SetDllImportResolver (typeof (AppDelegate).Assembly, DllImportResolver);
+#endif
 			// Make sure we have at least one reference to the bindings project so that mcs doesn't strip the reference to it.
 			GC.KeepAlive (typeof(Bindings.Test.UltimateMachine));
 
 			UIApplication.Main (args, null, typeof (AppDelegate));
 		}
 
+#if __MACCATALYST__
+		// This is a workaround for a temporary issue in the .NET runtime
+		// See https://github.com/xamarin/maccore/issues/2668
+		// The issue is present in .NET 7.0.5, and will likely be fixed in .NET 7.0.6.
+		static IntPtr DllImportResolver (string libraryName, global::System.Reflection.Assembly assembly, DllImportSearchPath? searchPath)
+		{
+			switch (libraryName) {
+			case "/System/Library/Frameworks/SceneKit.framework/SceneKit":
+			case "/System/Library/Frameworks/SceneKit.framework/Versions/A/SceneKit":
+				var rv = NativeLibrary.Load (libraryName);
+				Console.WriteLine ($"DllImportResolver callback loaded library \"{libraryName}\" from a P/Invoke in \"{assembly}\" => 0x{rv.ToString ("x")}");
+				return rv;
+			default:
+				return IntPtr.Zero;
+			}
+		}
+#endif
 		public static void PresentModalViewController (UIViewController vc, double duration)
 		{
 			var bckp = window.RootViewController;
