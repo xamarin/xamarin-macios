@@ -1194,6 +1194,7 @@ namespace Xamarin.Tests {
 				Path.Combine (sharedSupportDir, "app2.app", dylibDir, "lib2.dylib"),
 			};
 			if (platform == ApplePlatform.MacCatalyst) {
+				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.Globalization.Native.dylib"));
 				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.IO.Compression.Native.dylib"));
 				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.Native.dylib"));
 				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.Net.Security.Native.dylib"));
