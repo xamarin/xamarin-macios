@@ -410,7 +410,7 @@ namespace ObjCRuntime {
 
 			var assembly = ResolveAssembly (assembly_name);
 			var module = ResolveModule (assembly, module_token);
-			return ResolveToken (module, token);
+			return ResolveToken (assembly, module, token);
 		}
 
 		internal static Type? ResolveTypeTokenReference (uint token_reference)
@@ -453,21 +453,29 @@ namespace ObjCRuntime {
 			var assembly = ResolveAssembly (assembly_name);
 			var module = ResolveModule (assembly, 0x1);
 
-			return ResolveToken (module, token | implicit_token_type);
+			return ResolveToken (assembly, module, token | implicit_token_type);
 		}
 
-		static MemberInfo? ResolveToken (Module module, uint token)
+		static MemberInfo? ResolveToken (Assembly assembly, Module? module, uint token)
 		{
 			// Finally resolve the token.
 			var token_type = token & 0xFF000000;
 			switch (token & 0xFF000000) {
 			case 0x02000000: // TypeDef
-				var type = module.ResolveType ((int) token);
+				Type type;
+				if (module is null) {
+					throw ErrorHelper.CreateError (8053, Errors.MX8053 /* Could not resolve the module in the assembly {0}. */, assembly.FullName);
+				} else {
+					type = module.ResolveType ((int) token);
+				}
 #if LOG_TYPELOAD
 				Runtime.NSLog ($"ResolveToken (0x{token:X}) => Type: {type.FullName}");
 #endif
 				return type;
 			case 0x06000000: // Method
+				if (module is null)
+					throw ErrorHelper.CreateError (8053, Errors.MX8053 /* Could not resolve the module in the assembly {0}. */, assembly.FullName);
+
 				var method = module.ResolveMethod ((int) token);
 #if LOG_TYPELOAD
 				Runtime.NSLog ($"ResolveToken (0x{token:X}) => Method: {method?.DeclaringType?.FullName}.{method?.Name}");
@@ -478,8 +486,11 @@ namespace ObjCRuntime {
 			}
 		}
 
-		static Module ResolveModule (Assembly assembly, uint token)
+		static Module? ResolveModule (Assembly assembly, uint token)
 		{
+			if (token == Runtime.INVALID_TOKEN_REF)
+				return null;
+
 			foreach (var mod in assembly.GetModules ()) {
 				if (mod.MetadataToken != token)
 					continue;
