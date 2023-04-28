@@ -4,6 +4,8 @@ using Mono.Cecil;
 using Mono.Linker;
 using Mono.Linker.Steps;
 
+#nullable enable
+
 namespace Xamarin.Linker {
 	public class MarkIProtocolHandler : ConfigurationAwareMarkHandler {
 
