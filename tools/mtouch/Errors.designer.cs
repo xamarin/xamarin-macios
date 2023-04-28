@@ -4265,5 +4265,14 @@ namespace Xamarin.Bundler {
                 return ResourceManager.GetString("MX8052", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not resolve the module in the assembly {0}..
+        /// </summary>
+        public static string MX8053 {
+            get {
+                return ResourceManager.GetString("MX8053", resourceCulture);
+            }
+        }
     }
 }

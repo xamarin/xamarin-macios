@@ -2243,4 +2243,7 @@
 		<value>The signature must be a non-empty string.</value>
 	</data>
 
+	<data name="MX8053" xml:space="preserve">
+		<value>Could not resolve the module in the assembly {0}.</value>
+	</data>
 </root>
