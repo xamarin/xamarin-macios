@@ -263,14 +263,6 @@ public static class Asserts {
 
 	public static void AreEqual (Quaterniond expected, Quaterniond actual, string message)
 	{
-		if (expected is null) {
-			if (actual is null)
-				return;
-			Assert.Fail ($"Expected null, got {actual}. {message}");
-		} else if (actual is null) {
-			Assert.Fail ($"Expected {expected}, got null. {message}");
-		}
-
 		Assert.AreEqual (expected.X, actual.X, $"{message} (X) expected: {expected} actual: {actual}");
 		Assert.AreEqual (expected.Y, actual.Y, $"{message} (Y) expected: {expected} actual: {actual}");
 		Assert.AreEqual (expected.Z, actual.Z, $"{message} (Z) expected: {expected} actual: {actual}");
