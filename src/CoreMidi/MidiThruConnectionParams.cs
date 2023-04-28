@@ -45,6 +45,7 @@ namespace CoreMidi {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #endif
+	[NativeName ("MIDITransform")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MidiTransform {
 		public MidiTransformType Transform;
@@ -62,6 +63,7 @@ namespace CoreMidi {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #endif
+	[NativeName ("MIDIValueMap")]
 	[StructLayout (LayoutKind.Sequential)]
 	public unsafe struct MidiValueMap {
 		byte [] map_value;
@@ -84,6 +86,7 @@ namespace CoreMidi {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #endif
+	[NativeName ("MIDIControlTransform")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MidiControlTransform {
 		public MidiTransformControlType ControlType;
@@ -110,6 +113,7 @@ namespace CoreMidi {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #endif
+	[NativeName ("MIDIThruConnectionEndpoint")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MidiThruConnectionEndpoint {
 		public MidiEndpointRef EndpointRef;
