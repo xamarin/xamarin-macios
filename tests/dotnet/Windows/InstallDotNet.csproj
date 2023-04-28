@@ -14,8 +14,8 @@
 
     <MacIosRootDirectory>$(RootSourceDirectory)</MacIosRootDirectory>
     <PackageOutputPath>$(RootSourceDirectory)..\artifacts\</PackageOutputPath>
-    <RollbackFile>$(PackageOutputPath)WorkloadRollback\WorkloadRollback.json</RollbackFile>
-    <RollbackSource>$(PackageOutputPath)not-signed-package</RollbackSource>
+    <RollbackFile>$(PackageOutputPath)$(MaciosUploadPrefix)WorkloadRollback\WorkloadRollback.json</RollbackFile>
+    <RollbackSource>$(PackageOutputPath)$(MaciosUploadPrefix)not-signed-package</RollbackSource>
   </PropertyGroup>
 
   <Target Name="GetNuGetSources">
