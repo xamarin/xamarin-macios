@@ -15,7 +15,7 @@
     <MacIosRootDirectory>$(RootSourceDirectory)</MacIosRootDirectory>
     <PackageOutputPath>$(RootSourceDirectory)..\artifacts\</PackageOutputPath>
     <RollbackFile>$(PackageOutputPath)WorkloadRollback\WorkloadRollback.json</RollbackFile>
-    <RollbackSource>$(PackageOutputPath)dotnet-signed</RollbackSource>
+    <RollbackSource>$(PackageOutputPath)not-signed-package</RollbackSource>
   </PropertyGroup>
 
   <Target Name="GetNuGetSources">

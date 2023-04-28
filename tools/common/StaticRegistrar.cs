@@ -33,6 +33,7 @@ using ObjCRuntime;
 using Mono.Cecil;
 using Mono.Linker;
 using Mono.Tuner;
+using ClassRedirector;
 
 namespace Registrar {
 	/*
@@ -2808,14 +2809,14 @@ namespace Registrar {
 			}
 		}
 
-		void Specialize (AutoIndentStringBuilder sb, out string initialization_method)
+		void Specialize (AutoIndentStringBuilder sb, out string initialization_method, string type_map_path)
 		{
 			List<Exception> exceptions = new List<Exception> ();
 			List<ObjCMember> skip = new List<ObjCMember> ();
 
 			var map = new AutoIndentStringBuilder (1);
 			var map_init = new AutoIndentStringBuilder ();
-			var map_dict = new Dictionary<ObjCType, int> (); // maps ObjCType to its index in the map
+			var map_dict = new CSToObjCMap (); // maps CS type to ObjC type name and index
 			var map_entries = 0;
 			var protocol_wrapper_map = new Dictionary<uint, Tuple<ObjCType, uint>> ();
 			var protocols = new List<ProtocolInfo> ();
@@ -2898,7 +2899,7 @@ namespace Registrar {
 									token_ref,
 									GetAssemblyQualifiedName (@class.Type), map_entries,
 									(int) flags, flags);
-					map_dict [@class] = map_entries++;
+					map_dict [GetAssemblyQualifiedName (@class.Type)] = new ObjCNameIndex (@class.ExportedName, map_entries++);
 
 					bool use_dynamic;
 
@@ -3260,6 +3261,11 @@ namespace Registrar {
 
 			sb.WriteLine (map.ToString ());
 			sb.WriteLine (map_init.ToString ());
+
+			if (!string.IsNullOrEmpty (type_map_path)) {
+				var doc = CSToObjCMap.ToXDocument (map_dict);
+				doc.Save (type_map_path);
+			}
 
 			ErrorHelper.ThrowIfErrors (exceptions);
 		}
@@ -5139,18 +5145,18 @@ namespace Registrar {
 			pinfo.EntryPoint = wrapperName;
 		}
 
-		public void GenerateSingleAssembly (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly, out string initialization_method)
+		public void GenerateSingleAssembly (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly, out string initialization_method, string type_map_path = null)
 		{
 			single_assembly = assembly;
-			Generate (resolver, assemblies, header_path, source_path, out initialization_method);
+			Generate (resolver, assemblies, header_path, source_path, out initialization_method, type_map_path);
 		}
 
-		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method)
+		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method, string type_map_path = null)
 		{
-			Generate (null, assemblies, header_path, source_path, out initialization_method);
+			Generate (null, assemblies, header_path, source_path, out initialization_method, type_map_path);
 		}
 
-		public void Generate (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method)
+		public void Generate (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method, string type_map_path = null)
 		{
 			this.resolver = resolver;
 
@@ -5164,10 +5170,10 @@ namespace Registrar {
 				RegisterAssembly (assembly);
 			}
 
-			Generate (header_path, source_path, out initialization_method);
+			Generate (header_path, source_path, out initialization_method, type_map_path);
 		}
 
-		void Generate (string header_path, string source_path, out string initialization_method)
+		void Generate (string header_path, string source_path, out string initialization_method, string type_map_path = null)
 		{
 			var sb = new AutoIndentStringBuilder ();
 			header = new AutoIndentStringBuilder ();
@@ -5202,7 +5208,7 @@ namespace Registrar {
 			if (App.Embeddinator)
 				methods.WriteLine ("void xamarin_embeddinator_initialize ();");
 
-			Specialize (sb, out initialization_method);
+			Specialize (sb, out initialization_method, type_map_path);
 
 			methods.WriteLine ();
 			methods.AppendLine ();
