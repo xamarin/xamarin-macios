@@ -54,7 +54,7 @@ stages:
   - template: sign-artifacts/jobs/v2.yml@yaml-templates
     parameters:
       signedArtifactName: '${{ parameters.uploadPrefix }}nuget-signed'
-      artifactName: '${{ parameters.uploadPrefix }}dotnet-signed'
+      artifactName: '${{ parameters.uploadPrefix }}not-signed-package'
       signType: Real
       usePipelineArtifactTasks: true
 
@@ -64,7 +64,7 @@ stages:
       yamlResourceName: yaml-templates
       dependsOn: signing
       artifactName: '${{ parameters.uploadPrefix }}nuget-signed'
-      propsArtifactName: ${{ parameters.uploadPrefix }}dotnet-signed
+      propsArtifactName: ${{ parameters.uploadPrefix }}not-signed-package
       vsDropArtifactName: ${{ parameters.uploadPrefix }}vsdrop-signed
       vsDropMultiTargetArtifactName: ${{ parameters.uploadPrefix }}vsdrop-multitarget-signed
       msiNuGetArtifactName: ${{ parameters.uploadPrefix }}vs-msi-nugets
