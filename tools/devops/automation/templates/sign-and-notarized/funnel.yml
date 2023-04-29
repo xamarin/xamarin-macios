@@ -93,13 +93,6 @@ jobs:
       mkdir -p $(Build.SourcesDirectory)/package/notarized
     displayName: 'Create target directories.'
 
-  - task: DownloadPipelineArtifact@2
-    displayName: Download notarized build dotnet
-    inputs:
-      artifact: '${{ parameters.uploadPrefix}}dotnet-signed'
-      allowFailedBuilds: true
-      path: $(Build.SourcesDirectory)/package
-
   - ${{ each pkg in parameters.packages }}:
     - task: DownloadPipelineArtifact@2
       displayName: Download notarized build ${{ pkg.name }}
@@ -159,7 +152,6 @@ jobs:
 
   variables:
     Parameters.outputStorageUri: ''
-    NUGETS_PUBLISHED: $[ stageDependencies.sign_notarize_dotnet.sign_notarize_dotnet.outputs['nugetPublishing.NUGETS_PUBLISHED'] ] # not a typo, stage and job have the same name
     SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip_nugets'] ]
 
   pool:

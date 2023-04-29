@@ -199,6 +199,12 @@ namespace Xamarin.Bundler {
 				foreach (TypeDefinition td in md.Types) {
 					// process only once each namespace (as we keep adding logic below)
 					string nspace = td.Namespace;
+#if !XAMCORE_5_0
+					// AVCustomRoutingControllerDelegate was incorrectly placed in AVKit
+					if (td.Is ("AVKit", "AVCustomRoutingControllerDelegate"))
+						nspace = "AVRouting";
+#endif
+
 					if (processed.Contains (nspace))
 						continue;
 					processed.Add (nspace);
