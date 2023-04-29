@@ -99,7 +99,6 @@
 !missing-selector! AVCaptureDevice::isStudioLightActive not bound
 !missing-selector! AVCaptureDeviceFormat::isStudioLightSupported not bound
 !missing-selector! AVCaptureDeviceFormat::videoFrameRateRangeForStudioLight not bound
-!missing-selector! AVCaptureSession::hardwareCost not bound
 !missing-selector! AVComposition::chapterMetadataGroupsBestMatchingPreferredLanguages: not bound
 !missing-selector! AVComposition::chapterMetadataGroupsWithTitleLocale:containingItemsWithCommonKeys: not bound
 !missing-selector! AVComposition::mediaSelectionGroupForMediaCharacteristic: not bound
