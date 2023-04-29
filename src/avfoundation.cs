@@ -9805,7 +9805,7 @@ namespace AVFoundation {
 		[Field ("AVCaptureSessionPreset3840x2160")]
 		NSString Preset3840x2160 { get; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
+		[MacCatalyst (14, 0)]
 		[Field ("AVCaptureSessionPresetiFrame960x540")]
 		NSString PresetiFrame960x540 { get; }
 
@@ -9925,6 +9925,21 @@ namespace AVFoundation {
 		[MacCatalyst (14, 0)]
 		[Export ("connections")]
 		AVCaptureConnection [] Connections { get; }
+
+		[NoWatch, NoTV, NoMac, NoMacCatalyst]
+		[iOS (16, 0)]
+		[Export ("multitaskingCameraAccessEnabled")]
+		bool MultitaskingCameraAccessEnabled { [Bind ("isMultitaskingCameraAccessEnabled")] get; set; }
+
+		[NoWatch, NoTV, NoMac, NoMacCatalyst]
+		[iOS (16, 0)]
+		[Export ("multitaskingCameraAccessSupported")]
+		bool MultitaskingCameraAccessSupported { [Bind ("isMultitaskingCameraAccessSupported")] get; }
+
+		[NoWatch, NoTV, NoMac]
+		[iOS (16, 0), MacCatalyst (16, 0)]
+		[Export ("hardwareCost")]
+		float HardwareCost { get; }
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]

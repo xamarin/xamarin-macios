@@ -736,9 +736,16 @@ public class Frameworks : Dictionary<string, Framework> {
 		var namespaces = new HashSet<string> ();
 
 		// Collect all the namespaces.
-		foreach (ModuleDefinition md in product_assembly.Modules)
-			foreach (TypeDefinition td in md.Types)
+		foreach (ModuleDefinition md in product_assembly.Modules) {
+			foreach (TypeDefinition td in md.Types) {
+#if !XAMCORE_5_0
+				// AVCustomRoutingControllerDelegate was incorrectly placed in AVKit
+				if (td.Namespace == "AVKit" && td.Name == "AVCustomRoutingControllerDelegate")
+					namespaces.Add ("AVRouting");
+#endif
 				namespaces.Add (td.Namespace);
+			}
+		}
 
 		// Iterate over all the namespaces and check which frameworks we need to link with.
 		var all_frameworks = GetFrameworks (app.Platform, app.IsSimulatorBuild);
