@@ -1088,16 +1088,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSTextBlock::SetBorderColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextBlock::SetBorderColor(AppKit.NSColor,AppKit.NSRectEdge)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextContainer::set_TextView(AppKit.NSTextView)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSTextField::SelectText(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSTextField::set_BackgroundColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSTextField::set_PlaceholderAttributedString(Foundation.NSAttributedString)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSTextField::set_PlaceholderString(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSTextField::set_TextColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSTextFieldCell::set_AllowedInputSourceLocales(System.String[])' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSTextFieldCell::set_BackgroundColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSTextFieldCell::set_PlaceholderAttributedString(Foundation.NSAttributedString)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSTextFieldCell::set_PlaceholderString(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSTextFieldCell::set_TextColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextFinder::set_Client(AppKit.INSTextFinderClient)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextFinder::set_FindBarContainer(AppKit.INSTextFinderBarContainer)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextFinderBarContainer::set_FindBarView(AppKit.NSView)' is missing an [NullAllowed] on parameter #0
