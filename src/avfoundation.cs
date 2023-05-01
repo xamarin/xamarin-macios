@@ -9805,7 +9805,7 @@ namespace AVFoundation {
 		[Field ("AVCaptureSessionPreset3840x2160")]
 		NSString Preset3840x2160 { get; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
+		[MacCatalyst (14, 0)]
 		[Field ("AVCaptureSessionPresetiFrame960x540")]
 		NSString PresetiFrame960x540 { get; }
 
@@ -9925,6 +9925,21 @@ namespace AVFoundation {
 		[MacCatalyst (14, 0)]
 		[Export ("connections")]
 		AVCaptureConnection [] Connections { get; }
+
+		[NoWatch, NoTV, NoMac, NoMacCatalyst]
+		[iOS (16, 0)]
+		[Export ("multitaskingCameraAccessEnabled")]
+		bool MultitaskingCameraAccessEnabled { [Bind ("isMultitaskingCameraAccessEnabled")] get; set; }
+
+		[NoWatch, NoTV, NoMac, NoMacCatalyst]
+		[iOS (16, 0)]
+		[Export ("multitaskingCameraAccessSupported")]
+		bool MultitaskingCameraAccessSupported { [Bind ("isMultitaskingCameraAccessSupported")] get; }
+
+		[NoWatch, NoTV, NoMac]
+		[iOS (16, 0), MacCatalyst (16, 0)]
+		[Export ("hardwareCost")]
+		float HardwareCost { get; }
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -16493,7 +16508,7 @@ namespace AVFoundation {
 #endif
 	}
 
-	delegate int AVAudioSinkNodeReceiverHandler (AudioTimeStamp timestamp, uint frameCount, ref AudioBuffers inputData);
+	delegate int AVAudioSinkNodeReceiverHandlerRaw (IntPtr timestamp, uint frameCount, IntPtr inputData);
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
@@ -16502,7 +16517,7 @@ namespace AVFoundation {
 	interface AVAudioSinkNode {
 		[Export ("initWithReceiverBlock:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (AVAudioSinkNodeReceiverHandler receiverHandler);
+		NativeHandle Constructor (AVAudioSinkNodeReceiverHandlerRaw receiverHandler);
 	}
 
 	[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]

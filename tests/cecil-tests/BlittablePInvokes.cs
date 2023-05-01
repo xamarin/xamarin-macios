@@ -353,7 +353,6 @@ namespace Cecil.Tests {
 						foreach (var instr in body.Instructions) {
 							switch (instr.OpCode.Code) {
 							case Code.Call:
-							case Code.Calli:
 							case Code.Callvirt:
 								break;
 							default:
