@@ -5145,18 +5145,18 @@ namespace Registrar {
 			pinfo.EntryPoint = wrapperName;
 		}
 
-		public void GenerateSingleAssembly (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly, out string initialization_method, string type_map_path = null)
+		public void GenerateSingleAssembly (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly, out string initialization_method, string type_map_path)
 		{
 			single_assembly = assembly;
 			Generate (resolver, assemblies, header_path, source_path, out initialization_method, type_map_path);
 		}
 
-		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method, string type_map_path = null)
+		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method, string type_map_path)
 		{
 			Generate (null, assemblies, header_path, source_path, out initialization_method, type_map_path);
 		}
 
-		public void Generate (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method, string type_map_path = null)
+		public void Generate (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method, string type_map_path)
 		{
 			this.resolver = resolver;
 
@@ -5173,7 +5173,7 @@ namespace Registrar {
 			Generate (header_path, source_path, out initialization_method, type_map_path);
 		}
 
-		void Generate (string header_path, string source_path, out string initialization_method, string type_map_path = null)
+		void Generate (string header_path, string source_path, out string initialization_method, string type_map_path)
 		{
 			var sb = new AutoIndentStringBuilder ();
 			header = new AutoIndentStringBuilder ();
