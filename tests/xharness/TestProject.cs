@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -83,29 +84,6 @@ namespace Xharness {
 			return CreateCopyAsync (log, processManager, test, rootDirectory, pr);
 		}
 
-		static SemaphoreSlim ls_files_semaphore = new SemaphoreSlim (1);
-
-		async Task<string []> ListFilesAsync (ILog log, string test_dir, IProcessManager processManager)
-		{
-			var acquired = await ls_files_semaphore.WaitAsync (TimeSpan.FromMinutes (5));
-			try {
-				if (!acquired)
-					log.WriteLine ($"Unable to acquire lock to run 'git ls-files {test_dir}' in 5 minutes; will try to run anyway.");
-				using var process = new Process ();
-				process.StartInfo.FileName = "git";
-				process.StartInfo.Arguments = "ls-files";
-				process.StartInfo.WorkingDirectory = test_dir;
-				var stdout = new MemoryLog () { Timestamp = false };
-				var result = await processManager.RunAsync (process, stdout, stdout, stdout, timeout: TimeSpan.FromSeconds (60));
-				if (!result.Succeeded)
-					throw new Exception ($"Failed to list the files in the directory {test_dir} (TimedOut: {result.TimedOut} ExitCode: {result.ExitCode}):\n{stdout}");
-				return stdout.ToString ().Split ('\n');
-			} finally {
-				if (acquired)
-					ls_files_semaphore.Release ();
-			}
-		}
-
 		async Task CreateCopyAsync (ILog log, IProcessManager processManager, ITestTask test, string rootDirectory, Dictionary<string, TestProject> allProjectReferences)
 		{
 			var directory = Cache.CreateTemporaryDirectory (test.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
@@ -162,7 +140,7 @@ namespace Xharness {
 					// because the cloned project is stored in a very different directory.
 					var test_dir = System.IO.Path.GetDirectoryName (original_path);
 
-					var files = await ListFilesAsync (log, test_dir, processManager);
+					var files = await HarnessConfiguration.ListFilesInGitAsync (log, test_dir, processManager);
 					foreach (var file in files) {
 						var ext = System.IO.Path.GetExtension (file);
 						var full_path = System.IO.Path.Combine (test_dir, file);
