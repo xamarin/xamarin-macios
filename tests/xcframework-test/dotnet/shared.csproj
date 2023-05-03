@@ -13,6 +13,7 @@
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
 
     <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DEBUG</DefineConstants>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
