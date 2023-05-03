@@ -8,7 +8,6 @@ namespace Xharness.TestImporter.Templates {
 		public string Name;
 		public string Path;
 		public bool XUnit;
-		public string ExtraArgs;
 		public string Failure;
 		public double TimeoutMultiplier;
 		public Task GenerationCompleted;
@@ -37,6 +36,6 @@ namespace Xharness.TestImporter.Templates {
 		/// has its own details.</param>
 		/// <param name="generatedDir">The dir where the projects will be saved.</param>
 		/// <returns></returns>
-		GeneratedProjects GenerateTestProjects (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform);
+		GeneratedProjects GenerateTestProjects (IEnumerable<(string Name, string [] Assemblies, double TimeoutMultiplier)> projects, Platform platform);
 	}
 }

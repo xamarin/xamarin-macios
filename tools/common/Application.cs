@@ -166,6 +166,7 @@ namespace Xamarin.Bundler {
 		public bool EnableBitCode { get { return BitCodeMode != BitCodeMode.None; } }
 
 		public bool SkipMarkingNSObjectsInUserAssemblies { get; set; }
+		public string ClassMapPath = "";
 
 		// assembly_build_targets describes what kind of native code each assembly should be compiled into for mobile targets (iOS, tvOS, watchOS).
 		// An assembly can be compiled into: static object (.o), dynamic library (.dylib) or a framework (.framework).
@@ -1028,9 +1029,9 @@ namespace Xamarin.Bundler {
 #endif
 			var registrar = new Registrar.StaticRegistrar (this);
 			if (RootAssemblies.Count == 1)
-				registrar.GenerateSingleAssembly (resolver, resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly), out var _);
+				registrar.GenerateSingleAssembly (resolver, resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly), out var _, ClassMapPath);
 			else
-				registrar.Generate (resolver, resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, out var _);
+				registrar.Generate (resolver, resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, out var _, ClassMapPath);
 		}
 
 		public IEnumerable<Abi> Abis {

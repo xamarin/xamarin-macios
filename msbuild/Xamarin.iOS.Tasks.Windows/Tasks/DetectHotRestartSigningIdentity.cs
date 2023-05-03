@@ -9,7 +9,7 @@ using Xamarin.iOS.Windows;
 using Xamarin.MacDev;
 
 namespace Xamarin.iOS.HotRestart.Tasks {
-	public class DetectSigningIdentity : Task {
+	public class DetectHotRestartSigningIdentity : Task {
 		static readonly string ProvisioningPath = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.LocalApplicationData), "Xamarin", "iOS", "Provisioning");
 		static readonly string ProfilesPath = Path.Combine (ProvisioningPath, "Profiles");
 		static readonly string CertificatesPath = Path.Combine (ProvisioningPath, "Certificates");
@@ -30,14 +30,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 
 		#region Inputs
 
-		// Single-project property that determines whether other single-project properties should have any effect
-		public bool GenerateApplicationManifest { get; set; }
-
-		// Single-project property that maps to CFBundleIdentifier
-		public string ApplicationId { get; set; }
-
-		[Required]
-		public string AppManifest { get; set; }
+		public string BundleIdentifier { get; set; }
 
 		public string SigningKey { get; set; }
 
@@ -66,7 +59,6 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 
 		public override bool Execute ()
 		{
-			PDictionary plist;
 			IList<MobileProvision> profiles;
 			IList<X509Certificate2> certs;
 			List<CodeSignIdentity> pairs;
@@ -77,25 +69,9 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 
 			hotRestartClient = new HotRestartClient ();
 
-			try {
-				plist = PDictionary.FromFile (AppManifest);
-			} catch (Exception ex) {
-				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, "Error loading '{0}': {1}", AppManifest, ex.Message);
-
-				return false;
-			}
-
-			identity.BundleId = plist.GetCFBundleIdentifier ();
-
-			if (string.IsNullOrEmpty (identity.BundleId)) {
-				if (GenerateApplicationManifest && !string.IsNullOrEmpty (ApplicationId)) {
-					identity.BundleId = ApplicationId;
-				} else {
-					Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, "{0} does not define CFBundleIdentifier", AppManifest);
-
-					return false;
-				}
-			}
+			identity.BundleId = BundleIdentifier;
+			if (string.IsNullOrEmpty (identity.BundleId))
+				Log.LogError ("Info.plist does not define CFBundleIdentifier");
 
 			DetectedBundleId = identity.BundleId;
 
@@ -127,8 +103,8 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 
 				identity.AppId = ConstructValidAppId (identity.Profile, identity.BundleId);
 
-				if (identity.AppId is null) {
-					Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, "Project bundle identifier '{0}' does not match specified provisioning profile '{1}'. Please enable Automatic Provisioning from the iOS Bundle Signing page.", identity.BundleId, ProvisioningProfile);
+				if (identity.AppId is not null) {
+					Log.LogError ("Project bundle identifier '{0}' does not match specified provisioning profile '{1}'. Please enable Automatic Provisioning from the iOS Bundle Signing page.", identity.BundleId, ProvisioningProfile);
 					return false;
 				}
 
@@ -459,7 +435,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 			}
 
 			if (matches.Count == 0) {
-				Log.LogWarning (null, null, null, AppManifest, 0, 0, 0, 0, "No installed provisioning profiles match the bundle identifier.");
+				Log.LogWarning ("No installed provisioning profiles match the bundle identifier {0}", identity.BundleId);
 
 				return identity;
 			}

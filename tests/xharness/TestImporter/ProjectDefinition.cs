@@ -12,7 +12,6 @@ namespace Xharness.TestImporter {
 	/// </summary>
 	public class ProjectDefinition {
 		public string Name { get; set; }
-		public string ExtraArgs { get; private set; }
 		public IAssemblyLocator AssemblyLocator { get; set; }
 		public ITestAssemblyDefinitionFactory AssemblyDefinitionFactory { get; set; }
 		public List<ITestAssemblyDefinition> TestAssemblies { get; private set; }
@@ -35,7 +34,7 @@ namespace Xharness.TestImporter {
 			}
 		}
 
-		public ProjectDefinition (string name, IAssemblyLocator locator, ITestAssemblyDefinitionFactory factory, string [] assemblies, string extraArgs)
+		public ProjectDefinition (string name, IAssemblyLocator locator, ITestAssemblyDefinitionFactory factory, string [] assemblies)
 		{
 			if (assemblies.Length == 0)
 				throw new ArgumentException ("Most provide at least an assembly.");
@@ -44,13 +43,12 @@ namespace Xharness.TestImporter {
 			TestAssemblies = new List<ITestAssemblyDefinition> (assemblies.Length);
 			AssemblyLocator = locator ?? throw new ArgumentNullException (nameof (locator));
 			AssemblyDefinitionFactory = factory ?? throw new ArgumentNullException (nameof (factory));
-			ExtraArgs = extraArgs;
 			foreach (var assembly in assemblies) {
 				TestAssemblies.Add (factory.Create (assembly, AssemblyLocator));
 			}
 		}
 
-		public ProjectDefinition (string name, IAssemblyLocator locator, ITestAssemblyDefinitionFactory factory, List<ITestAssemblyDefinition> assemblies, string extraArgs)
+		public ProjectDefinition (string name, IAssemblyLocator locator, ITestAssemblyDefinitionFactory factory, List<ITestAssemblyDefinition> assemblies)
 		{
 			Name = name ?? throw new ArgumentNullException (nameof (locator));
 			AssemblyLocator = locator ?? throw new ArgumentNullException (nameof (locator));
@@ -59,7 +57,6 @@ namespace Xharness.TestImporter {
 			foreach (var a in TestAssemblies) {
 				a.AssemblyLocator = AssemblyLocator;
 			}
-			ExtraArgs = extraArgs;
 		}
 
 		(string FailureMessage, IEnumerable<string> References) GetAssemblyReferences (string assemblyPath)
