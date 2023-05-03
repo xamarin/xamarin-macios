@@ -323,8 +323,9 @@
 		<!-- The bindings-framework-test project contains (next to the binding assembly):
 			*.resources/* files for iOS and tvOS
 			*.resources.zip for macOS and Mac Catalyst
+			It's only included when building on a Mac (remotely or locally), because we don't support building binding frameworks yet from Windows (without being connected to a Mac).
 		 -->
-		<ProjectReference Include="$(RootTestsDirectory)/bindings-framework-test/dotnet/$(_PlatformName)/bindings-framework-test.csproj" />
+		<ProjectReference Include="$(RootTestsDirectory)/bindings-framework-test/dotnet/$(_PlatformName)/bindings-framework-test.csproj" Condition="'$(IsMacEnabled)' == 'true'" />
 	</ItemGroup>
 
 	<!-- Adding resources using a custom target -->

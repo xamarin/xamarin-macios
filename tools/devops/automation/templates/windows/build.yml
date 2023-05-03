@@ -37,6 +37,10 @@ steps:
     path: $(Build.SourcesDirectory)/artifacts
 
 - pwsh: |
+    Get-ChildItem $(Build.SourcesDirectory)/artifacts -Recurse 
+  displayName: "Debug downloads"
+
+- pwsh: |
     try {
       Write-Host "Looking in '$(Build.SourcesDirectory)\artifacts"
       Get-ChildItem "$(Build.SourcesDirectory)\artifacts" -Recurse

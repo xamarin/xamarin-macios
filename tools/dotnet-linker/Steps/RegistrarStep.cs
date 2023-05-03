@@ -36,7 +36,7 @@ namespace Xamarin.Linker {
 					if (Annotations.GetAction (assembly) != Mono.Linker.AssemblyAction.Delete)
 						bundled_assemblies.Add (assembly);
 				}
-				Configuration.Target.StaticRegistrar.Generate (bundled_assemblies, header, code, out var initialization_method);
+				Configuration.Target.StaticRegistrar.Generate (bundled_assemblies, header, code, out var initialization_method, app.ClassMapPath);
 
 				var items = new List<MSBuildItem> ();
 				foreach (var abi in Configuration.Abis) {
