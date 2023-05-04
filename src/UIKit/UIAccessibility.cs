@@ -60,7 +60,7 @@ namespace UIKit {
 
 		// UIAccessibility.h
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -70,7 +70,7 @@ namespace UIKit {
 		extern static /* NSObject */ IntPtr UIAccessibilityFocusedElement (IntPtr assistiveTechnologyIdentifier);
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -84,7 +84,7 @@ namespace UIKit {
 
 		// UIAccessibility.h
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -95,7 +95,7 @@ namespace UIKit {
 		extern static /* BOOL */ bool UIAccessibilityIsShakeToUndoEnabled ();
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -237,7 +237,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		extern unsafe static void UIAccessibilityRequestGuidedAccessSession (/* BOOL */ [MarshalAs (UnmanagedType.I1)] bool enable, /* void(^completionHandler)(BOOL didSucceed) */ void* completionHandler);
+		extern unsafe static void UIAccessibilityRequestGuidedAccessSession (/* BOOL */ [MarshalAs (UnmanagedType.I1)] bool enable, /* void(^completionHandler)(BOOL didSucceed) */ BlockLiteral* completionHandler);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -248,14 +248,14 @@ namespace UIKit {
 		public static void RequestGuidedAccessSession (bool enable, Action<bool> completionHandler)
 		{
 			unsafe {
-				BlockLiteral* block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
-				block_handler.SetupBlock (callback, completionHandler);
-
-				UIAccessibilityRequestGuidedAccessSession (enable, (void*) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+#if NET
+				delegate* unmanaged<IntPtr, byte, void> trampoline = &TrampolineRequestGuidedAccessSession;
+				using var block = new BlockLiteral (trampoline, completionHandler, typeof (UIAccessibility), nameof (TrampolineRequestGuidedAccessSession));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlock (callback, completionHandler);
+#endif
+				UIAccessibilityRequestGuidedAccessSession (enable, &block);
 			}
 		}
 
@@ -273,20 +273,24 @@ namespace UIKit {
 			return tcs.Task;
 		}
 
-		internal delegate void InnerRequestGuidedAccessSession (IntPtr block, bool enable);
+#if !NET
+		internal delegate void InnerRequestGuidedAccessSession (IntPtr block, byte enable);
 		static readonly InnerRequestGuidedAccessSession callback = TrampolineRequestGuidedAccessSession;
 
 		[MonoPInvokeCallback (typeof (InnerRequestGuidedAccessSession))]
-		static unsafe void TrampolineRequestGuidedAccessSession (IntPtr block, bool enable)
+#else
+		[UnmanagedCallersOnly]
+#endif
+		static unsafe void TrampolineRequestGuidedAccessSession (IntPtr block, byte enable)
 		{
 			var descriptor = (BlockLiteral*) block;
 			var del = (Action<bool>) (descriptor->Target);
 			if (del != null)
-				del (enable);
+				del (enable != 0);
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -297,7 +301,7 @@ namespace UIKit {
 		static extern bool UIAccessibilityDarkerSystemColorsEnabled ();
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -320,7 +324,7 @@ namespace UIKit {
 #endif
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -331,7 +335,7 @@ namespace UIKit {
 		static extern bool UIAccessibilityIsBoldTextEnabled ();
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -368,7 +372,7 @@ namespace UIKit {
 		public static bool ButtonShapesEnabled => UIAccessibilityButtonShapesEnabled ();
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -379,7 +383,7 @@ namespace UIKit {
 		static extern bool UIAccessibilityIsGrayscaleEnabled ();
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -392,7 +396,7 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -403,7 +407,7 @@ namespace UIKit {
 		static extern bool UIAccessibilityIsReduceMotionEnabled ();
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -462,7 +466,7 @@ namespace UIKit {
 		static public bool IsVideoAutoplayEnabled => UIAccessibilityIsVideoAutoplayEnabled ();
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -473,7 +477,7 @@ namespace UIKit {
 		static extern bool UIAccessibilityIsReduceTransparencyEnabled ();
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -486,7 +490,7 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -497,7 +501,7 @@ namespace UIKit {
 		static extern bool UIAccessibilityIsSwitchControlRunning ();
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -510,7 +514,7 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -521,7 +525,7 @@ namespace UIKit {
 		static extern bool UIAccessibilityIsSpeakSelectionEnabled ();
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -534,7 +538,7 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -545,7 +549,7 @@ namespace UIKit {
 		static extern bool UIAccessibilityIsSpeakScreenEnabled ();
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -558,8 +562,8 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10, 0)]
@@ -570,8 +574,8 @@ namespace UIKit {
 		static extern bool UIAccessibilityIsAssistiveTouchRunning ();
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10, 0)]
@@ -629,7 +633,7 @@ namespace UIKit {
 
 #if !TVOS
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -639,7 +643,7 @@ namespace UIKit {
 		static extern nuint UIAccessibilityHearingDevicePairedEar ();
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else

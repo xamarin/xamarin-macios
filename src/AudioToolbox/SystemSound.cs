@@ -202,20 +202,8 @@ namespace AudioToolbox {
 			AudioServicesPlaySystemSound (soundId);
 		}
 
-		delegate void TrampolineCallback (IntPtr blockPtr);
-
-		static unsafe readonly TrampolineCallback static_action = TrampolineAction;
-
-		[MonoPInvokeCallback (typeof (TrampolineCallback))]
-		static void TrampolineAction (IntPtr blockPtr)
-		{
-			var del = BlockLiteral.GetTarget<Action> (blockPtr);
-			if (del is not null)
-				del ();
-		}
-
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -231,17 +219,14 @@ namespace AudioToolbox {
 
 			AssertNotDisposed ();
 
-			var block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_action, onCompletion);
-			try {
-				AudioServicesPlayAlertSoundWithCompletion (soundId, ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = BlockStaticDispatchClass.CreateBlock (onCompletion);
+				AudioServicesPlayAlertSoundWithCompletion (soundId, &block);
 			}
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -259,7 +244,7 @@ namespace AudioToolbox {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -275,17 +260,14 @@ namespace AudioToolbox {
 
 			AssertNotDisposed ();
 
-			var block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_action, onCompletion);
-			try {
-				AudioServicesPlaySystemSoundWithCompletion (soundId, ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = BlockStaticDispatchClass.CreateBlock (onCompletion);
+				AudioServicesPlaySystemSoundWithCompletion (soundId, &block);
 			}
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -303,7 +285,7 @@ namespace AudioToolbox {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -312,10 +294,10 @@ namespace AudioToolbox {
 		[Mac (10, 11)]
 #endif
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern void AudioServicesPlayAlertSoundWithCompletion (uint inSystemSoundID, ref BlockLiteral inCompletionBlock);
+		unsafe static extern void AudioServicesPlayAlertSoundWithCompletion (uint inSystemSoundID, BlockLiteral* inCompletionBlock);
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -324,7 +306,7 @@ namespace AudioToolbox {
 		[Mac (10, 11)]
 #endif
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern void AudioServicesPlaySystemSoundWithCompletion (uint inSystemSoundID, ref BlockLiteral inCompletionBlock);
+		unsafe static extern void AudioServicesPlaySystemSoundWithCompletion (uint inSystemSoundID, BlockLiteral* inCompletionBlock);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern AudioServicesError AudioServicesCreateSystemSoundID (IntPtr fileUrl, out uint soundId);

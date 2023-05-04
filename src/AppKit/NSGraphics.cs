@@ -30,6 +30,12 @@ using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
+#nullable enable
+
 namespace AppKit {
 #if NET
 	[SupportedOSPlatform ("macos")]
@@ -45,7 +51,7 @@ namespace AppKit {
 
 		public static NSWindowDepth BestDepth (NSString colorspace, nint bitsPerSample, nint bitsPerPixel, [MarshalAs (UnmanagedType.I1)] bool planar, [MarshalAs (UnmanagedType.I1)] ref bool exactMatch)
 		{
-			if (colorspace == null)
+			if (colorspace is null)
 				throw new ArgumentNullException ("colorspace");
 
 			return NSBestDepth (colorspace.Handle, bitsPerSample, bitsPerPixel, planar, ref exactMatch);
@@ -79,7 +85,7 @@ namespace AppKit {
 
 		public static nint NumberOfColorComponents (NSString colorspaceName)
 		{
-			if (colorspaceName == null)
+			if (colorspaceName is null)
 				throw new ArgumentNullException ("colorspaceName");
 			return NSNumberOfColorComponents (colorspaceName.Handle);
 		}
@@ -121,7 +127,7 @@ namespace AppKit {
 
 		public static void RectFill (CGRect [] rects)
 		{
-			if (rects == null)
+			if (rects is null)
 				throw new ArgumentNullException ("rects");
 			unsafe {
 				fixed (CGRect* ptr = &rects [0])
@@ -150,11 +156,11 @@ namespace AppKit {
 		}
 
 		[DllImport (Constants.AppKitLibrary, EntryPoint = "NSShowAnimationEffect")]
-		extern static void NSShowAnimationEffect (nuint animationEffect, CGPoint centerLocation, CGSize size, NSObject animationDelegate, Selector didEndSelector, IntPtr contextInfo);
+		extern static void NSShowAnimationEffect (nuint animationEffect, CGPoint centerLocation, CGSize size, NativeHandle animationDelegate, NativeHandle didEndSelector, IntPtr contextInfo);
 
 		public static void ShowAnimationEffect (NSAnimationEffect animationEffect, CGPoint centerLocation, CGSize size, NSObject animationDelegate, Selector didEndSelector, IntPtr contextInfo)
 		{
-			NSShowAnimationEffect ((nuint) (ulong) animationEffect, centerLocation, size, animationDelegate, didEndSelector, contextInfo);
+			NSShowAnimationEffect ((nuint) (ulong) animationEffect, centerLocation, size, animationDelegate.GetHandle (), didEndSelector.Handle, contextInfo);
 		}
 
 		public static void ShowAnimationEffect (NSAnimationEffect animationEffect, CGPoint centerLocation, CGSize size, Action endedCallback)
@@ -192,9 +198,9 @@ namespace AppKit {
 
 		public static CGRect DrawTiledRects (CGRect aRect, CGRect clipRect, NSRectEdge [] sides, nfloat [] grays)
 		{
-			if (sides == null)
+			if (sides is null)
 				throw new ArgumentNullException ("sides");
-			if (grays == null)
+			if (grays is null)
 				throw new ArgumentNullException ("grays");
 			if (sides.Length != grays.Length)
 				throw new ArgumentOutOfRangeException ("grays", "Both array parameters must have the same length");
@@ -210,7 +216,6 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.11")]
 		[ObsoletedOSPlatform ("macos10.11", "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
@@ -220,7 +225,6 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("macos10.11")]
 		[ObsoletedOSPlatform ("macos10.11", "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]

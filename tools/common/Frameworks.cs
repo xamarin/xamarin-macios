@@ -454,7 +454,7 @@ public class Frameworks : Dictionary<string, Framework> {
 
 				{ "AVRouting", "AVRouting", 16,0},
 				{ "BackgroundAssets", "BackgroundAssets", 16,0},
-				{ "PushToTalk", "PushToTalk", new Version (16,0), NotAvailableInSimulator},
+				{ "PushToTalk", "PushToTalk", new Version (16,0), new Version (16, 2) /* available to build with, although it's unusable */},
 				{ "SharedWithYou", "SharedWithYou", 16, 0 },
 				{ "SharedWithYouCore", "SharedWithYouCore", 16, 0 },
 
@@ -736,9 +736,16 @@ public class Frameworks : Dictionary<string, Framework> {
 		var namespaces = new HashSet<string> ();
 
 		// Collect all the namespaces.
-		foreach (ModuleDefinition md in product_assembly.Modules)
-			foreach (TypeDefinition td in md.Types)
+		foreach (ModuleDefinition md in product_assembly.Modules) {
+			foreach (TypeDefinition td in md.Types) {
+#if !XAMCORE_5_0
+				// AVCustomRoutingControllerDelegate was incorrectly placed in AVKit
+				if (td.Namespace == "AVKit" && td.Name == "AVCustomRoutingControllerDelegate")
+					namespaces.Add ("AVRouting");
+#endif
 				namespaces.Add (td.Namespace);
+			}
+		}
 
 		// Iterate over all the namespaces and check which frameworks we need to link with.
 		var all_frameworks = GetFrameworks (app.Platform, app.IsSimulatorBuild);

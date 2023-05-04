@@ -325,7 +325,7 @@ namespace ObjCRuntime {
 			return Runtime.StringEquals (assembly_name, asm_name);
 		}
 
-		static unsafe int FindMapIndex (Runtime.MTClassMap* array, int lo, int hi, IntPtr @class)
+		internal static unsafe int FindMapIndex (Runtime.MTClassMap* array, int lo, int hi, IntPtr @class)
 		{
 			if (hi >= lo) {
 				int mid = lo + (hi - lo) / 2;
@@ -646,25 +646,46 @@ namespace ObjCRuntime {
 		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		internal static extern IntPtr objc_allocateClassPair (IntPtr superclass, string name, IntPtr extraBytes);
+		static extern IntPtr objc_allocateClassPair (IntPtr superclass, IntPtr name, IntPtr extraBytes);
+
+		internal static IntPtr objc_allocateClassPair (IntPtr superclass, string name, IntPtr extraBytes)
+		{
+			using var namePtr = new TransientString (name);
+			return objc_allocateClassPair (superclass, namePtr, extraBytes);
+		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		internal static extern IntPtr objc_getClass (string name);
+		static extern IntPtr objc_getClass (IntPtr name);
+
+		internal static IntPtr objc_getClass (string name)
+		{
+			using var namePtr = new TransientString (name);
+			return objc_getClass (namePtr);
+		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal static extern void objc_registerClassPair (IntPtr cls);
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		[return: MarshalAs (UnmanagedType.U1)]
-		internal static extern bool class_addIvar (IntPtr cls, string name, IntPtr size, byte alignment, string types);
+		static extern bool class_addIvar (IntPtr cls, IntPtr name, IntPtr size, byte alignment, IntPtr types);
+
+		internal static bool class_addIvar (IntPtr cls, string name, IntPtr size, byte alignment, string types)
+		{
+			using var namePtr = new TransientString (name);
+			using var typesPtr = new TransientString (types);
+			return class_addIvar (cls, namePtr, size, alignment, typesPtr);
+		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		[return: MarshalAs (UnmanagedType.U1)]
-		internal static extern bool class_addMethod (IntPtr cls, IntPtr name, IntPtr imp, string types);
+		static extern bool class_addMethod (IntPtr cls, IntPtr name, IntPtr imp, IntPtr types);
 
-		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		[return: MarshalAs (UnmanagedType.U1)]
-		internal extern static bool class_addMethod (IntPtr cls, IntPtr name, Delegate imp, string types);
+		internal static bool class_addMethod (IntPtr cls, IntPtr name, IntPtr imp, string types)
+		{
+			using var typesPtr = new TransientString (types);
+			return class_addMethod (cls, name, imp, typesPtr);
+		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		[return: MarshalAs (UnmanagedType.U1)]
@@ -683,14 +704,52 @@ namespace ObjCRuntime {
 		internal extern static IntPtr class_getMethodImplementation (IntPtr cls, IntPtr sel);
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		internal extern static IntPtr class_getInstanceVariable (IntPtr cls, string name);
+		internal extern static IntPtr class_getInstanceVariable (IntPtr cls, IntPtr name);
+
+		internal static IntPtr class_getInstanceVariable (IntPtr cls, string name)
+		{
+			using var namePtr = new TransientString (name);
+			return class_getInstanceVariable (cls, namePtr);
+		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal extern static IntPtr class_getInstanceMethod (IntPtr cls, IntPtr sel);
 
 		[DllImport (Messaging.LIBOBJC_DYLIB, CharSet = CharSet.Ansi)]
 		[return: MarshalAs (UnmanagedType.U1)]
-		internal extern static bool class_addProperty (IntPtr cls, string name, objc_attribute_prop [] attributes, int count);
+		extern unsafe static bool class_addProperty (IntPtr cls, IntPtr name, IntPtr* attributes, int count);
+
+		internal static bool class_addProperty (IntPtr cls, string name, objc_attribute_prop [] attributes, int count)
+		{
+			using var namePtr = new TransientString (name, TransientString.Encoding.Ansi);
+			var ptrs = PropertyStringsToPtrs (attributes);
+			bool retval = false;
+			unsafe {
+				fixed (IntPtr* ptrsPtr = ptrs) {
+					retval = class_addProperty (cls, namePtr, ptrsPtr, count);
+				}
+			}
+			FreeStringPtrs (ptrs);
+			return retval;
+		}
+
+		internal static IntPtr [] PropertyStringsToPtrs (objc_attribute_prop [] props)
+		{
+			var ptrs = new IntPtr [props.Length * 2];
+			var index = 0;
+			foreach (var prop in props) {
+				ptrs [index++] = Marshal.StringToHGlobalAnsi (prop.name);
+				ptrs [index++] = Marshal.StringToHGlobalAnsi (prop.value);
+			}
+			return ptrs;
+		}
+
+		internal static void FreeStringPtrs (IntPtr [] ptrs)
+		{
+			foreach (var ptr in ptrs) {
+				Marshal.FreeHGlobal (ptr);
+			}
+		}
 
 		[StructLayout (LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 		internal struct objc_attribute_prop {

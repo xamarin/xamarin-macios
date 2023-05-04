@@ -44,6 +44,8 @@ namespace PencilKit {
 	enum PKEraserType : long {
 		Vector,
 		Bitmap,
+		[iOS (16, 4), Mac (13, 3), MacCatalyst (16, 4)]
+		FixedWidthBitmap,
 	}
 
 	[iOS (13, 0), Mac (11, 0)]
@@ -120,10 +122,12 @@ namespace PencilKit {
 		UIGestureRecognizer DrawingGestureRecognizer { get; }
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'DrawingPolicy' property instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'DrawingPolicy' property instead.")]
 		[Export ("allowsFingerDrawing")]
 		bool AllowsFingerDrawing { get; set; }
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("drawingPolicy", ArgumentSemantic.Assign)]
 		PKCanvasViewDrawingPolicy DrawingPolicy { get; set; }
 	}
@@ -142,6 +146,7 @@ namespace PencilKit {
 		NativeHandle Constructor (NSData data, [NullAllowed] out NSError error);
 
 		[Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("initWithStrokes:")]
 		NativeHandle Constructor (PKStroke [] strokes);
 
@@ -152,6 +157,7 @@ namespace PencilKit {
 		CGRect Bounds { get; }
 
 		[Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("strokes")]
 		PKStroke [] Strokes { get; }
 
@@ -165,6 +171,7 @@ namespace PencilKit {
 		PKDrawing GetDrawing (PKDrawing drawing);
 
 		[Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("drawingByAppendingStrokes:")]
 		PKDrawing GetDrawing (PKStroke [] strokes);
 	}
@@ -181,6 +188,30 @@ namespace PencilKit {
 		[DesignatedInitializer]
 		[Export ("initWithEraserType:")]
 		NativeHandle Constructor (PKEraserType eraserType);
+
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("initWithEraserType:width:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (PKEraserType eraserType, nfloat width);
+
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("width")]
+		nfloat Width { get; }
+
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[Static]
+		[Export ("defaultWidthForEraserType:")]
+		nfloat GetDefaultWidth (PKEraserType eraserType);
+
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[Static]
+		[Export ("minimumWidthForEraserType:")]
+		nfloat GetMinimumWidth (PKEraserType eraserType);
+
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[Static]
+		[Export ("maximumWidthForEraserType:")]
+		nfloat GetMaximumWidth (PKEraserType eraserType);
 	}
 
 	[iOS (13, 0), Mac (11, 0)]
@@ -197,6 +228,7 @@ namespace PencilKit {
 		NativeHandle Constructor ([BindAs (typeof (PKInkType))] NSString type, UIColor color);
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("initWithInk:width:")]
 		NativeHandle Constructor (PKInk ink, nfloat width);
 
@@ -217,6 +249,7 @@ namespace PencilKit {
 		NSString InkType { get; }
 
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("convertColor:fromUserInterfaceStyle:to:")]
 		UIColor ConvertColor (UIColor color, UIUserInterfaceStyle fromUserInterfaceStyle, UIUserInterfaceStyle toUserInterfaceStyle);
@@ -228,6 +261,7 @@ namespace PencilKit {
 		nfloat Width { get; }
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("ink")]
 		PKInk Ink { get; }
 	}
@@ -271,6 +305,7 @@ namespace PencilKit {
 	interface PKToolPicker {
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("init")]
 		NativeHandle Constructor ();
 
@@ -302,16 +337,19 @@ namespace PencilKit {
 		UIUserInterfaceStyle ColorUserInterfaceStyle { get; set; }
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Create individual instances instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Create individual instances instead.")]
 		[Static]
 		[return: NullAllowed]
 		[Export ("sharedToolPickerForWindow:")]
 		PKToolPicker GetSharedToolPicker (UIWindow window);
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("showsDrawingPolicyControls")]
 		bool ShowsDrawingPolicyControls { get; set; }
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed]
 		[Export ("stateAutosaveName")]
 		string StateAutosaveName { get; set; }

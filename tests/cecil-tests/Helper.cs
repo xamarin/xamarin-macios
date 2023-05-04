@@ -7,6 +7,7 @@ using System.Linq;
 using NUnit.Framework;
 
 using Mono.Cecil;
+using Mono.Cecil.Cil;
 
 using Xamarin.Tests;
 using Xamarin.Utils;
@@ -37,6 +38,39 @@ namespace Cecil.Tests {
 				cache.Add (assembly, ad);
 			}
 			return ad;
+		}
+
+		public static void AssertFailures (Dictionary<string, string> currentFailures, HashSet<string> knownFailures, string nameOfKnownFailureSet, string message)
+		{
+			AssertFailures<string> (currentFailures, knownFailures, nameOfKnownFailureSet, message, (v) => v);
+		}
+
+		public static void AssertFailures<T> (Dictionary<string, T> currentFailures, HashSet<string> knownFailures, string nameOfKnownFailureSet, string message, Func<T, string> failureToString)
+		{
+			var newFailures = currentFailures.Where (v => !knownFailures.Contains (v.Key)).Select (v => v.Value).ToArray ();
+			var fixedFailures = knownFailures.Except (currentFailures.Select (v => v.Key).ToHashSet ());
+
+			var printKnownFailures = newFailures.Any () || fixedFailures.Any ();
+			if (printKnownFailures) {
+				Console.WriteLine ($"Printing all failures as known failures because they seem out of date ({newFailures.Count ()} new failures, {fixedFailures.Count ()} fixed failures):");
+				Console.WriteLine ($"\t\tstatic HashSet<string> {nameOfKnownFailureSet} = new HashSet<string> {{");
+				foreach (var failure in currentFailures.OrderBy (v => v.Key))
+					Console.WriteLine ($"\t\t\t\"{failure.Key}\",");
+				Console.WriteLine ("\t\t};");
+			}
+
+			if (newFailures.Any ()) {
+				Console.WriteLine ($"Printing {newFailures.Count ()} new failures with local paths for easy navigation:");
+				foreach (var failure in newFailures.OrderBy (v => v))
+					Console.WriteLine ($"    {failureToString (failure)}");
+			}
+
+			Assert.IsEmpty (newFailures, $"Failures: {message}");
+
+			// The list of known failures often doesn't separate based on platform, which means that we might not see all the known failures
+			// unless we're currently building for all platforms. As such, only verify the list of known failures if we're building for all platforms.
+			if (!Configuration.AnyIgnoredPlatforms ())
+				Assert.IsEmpty (fixedFailures, $"Known failures that aren't failing anymore - remove these from the list of known failures: {message}");
 		}
 
 		// Enumerates all the methods in the assembly, for all types (including nested types), potentially providing a custom filter function.
@@ -232,7 +266,7 @@ namespace Cecil.Tests {
 				throw new NotImplementedException (assembly);
 			}
 
-			return rv;
+			return rv!;
 		}
 
 		static IEnumerable<string> PlatformAssemblies {
@@ -348,7 +382,7 @@ namespace Cecil.Tests {
 			return rv;
 		}
 
-		public static string RenderLocation (this IMemberDefinition member)
+		public static string RenderLocation (this IMemberDefinition? member, Instruction? instruction = null)
 		{
 			if (member is null)
 				return string.Empty;
@@ -369,6 +403,17 @@ namespace Cecil.Tests {
 
 			if (method.DebugInformation.HasSequencePoints) {
 				var seq = method.DebugInformation.SequencePoints [0];
+				if (instruction is not null) {
+					var instr = instruction;
+					while (instr is not null) {
+						var iseq = method.DebugInformation.GetSequencePoint (instr);
+						if (iseq is not null) {
+							seq = iseq;
+							break;
+						}
+						instr = instr.Previous;
+					}
+				}
 				return seq.Document.Url + ":" + seq.StartLine + " ";
 			}
 			return string.Empty;

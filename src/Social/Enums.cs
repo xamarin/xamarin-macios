@@ -21,6 +21,7 @@ namespace Social {
 	// NSInteger -> SLComposeViewController.h
 #if NET
 	[NoMac]
+	[MacCatalyst (13, 1)]
 #endif
 	[Native]
 	public enum SLComposeViewControllerResult : long {

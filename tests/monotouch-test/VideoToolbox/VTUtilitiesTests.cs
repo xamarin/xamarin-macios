@@ -22,7 +22,6 @@ using AppKit;
 #else
 using UIKit;
 #endif
-using CoreMedia;
 using AVFoundation;
 using CoreFoundation;
 using CoreVideo;

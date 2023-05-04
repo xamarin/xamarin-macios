@@ -198,7 +198,7 @@ namespace Xamarin.Bundler {
 					"    remove-dynamic-registrar: By default enabled when the static registrar is enabled and the interpreter is not used. Removes the dynamic registrar (makes the app smaller).\n" +
 					"    inline-runtime-arch: By default always enabled (requires the linker). Inlines calls to ObjCRuntime.Runtime.Arch to load a constant value. Makes the app smaller, and slightly faster at runtime.\n" +
 #endif
-					"    blockliteral-setupblock: By default enabled when using the static registrar. Optimizes calls to BlockLiteral.SetupBlock to avoid having to calculate the block signature at runtime.\n" +
+					"    blockliteral-setupblock: By default enabled when using the static registrar. Optimizes calls to BlockLiteral.SetupBlock and certain BlockLiteral constructors to avoid having to calculate the block signature at runtime.\n" +
 					"    inline-intptr-size: By default enabled for builds that target a single architecture (requires the linker). Inlines calls to IntPtr.Size to load a constant value. Makes the app smaller, and slightly faster at runtime.\n" +
 					"    inline-dynamic-registration-supported: By default always enabled (requires the linker). Optimizes calls to Runtime.DynamicRegistrationSupported to be a constant value. Makes the app smaller, and slightly faster at runtime.\n" +
 #if !MONOTOUCH
@@ -254,6 +254,10 @@ namespace Xamarin.Bundler {
 			options.Add ("require-pinvoke-wrappers:", v => {
 				app.RequiresPInvokeWrappers = ParseBool (v, "--require-pinvoke-wrappers");
 			});
+			options.Add ("skip-marking-nsobjects-in-user-assemblies:", "Don't mark NSObject (and any subclass of NSObject) in user assemblies in the linker. This may break your app, use at own risk.", v => {
+				app.SkipMarkingNSObjectsInUserAssemblies = ParseBool (v, "--skip-marking-nsobjects-in-user-assemblies");
+			});
+			options.Add ("class-map-path=", "Sets the path for an output path to generate a class map XML file used to optimize class handle access when the static registrar has been used.", v => { app.ClassMapPath = v; });
 
 
 			// Keep the ResponseFileSource option at the end.

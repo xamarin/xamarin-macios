@@ -26,6 +26,7 @@ namespace CoreHaptics {
 #endif
 
 	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CHHapticEventParameter {
@@ -42,6 +43,7 @@ namespace CoreHaptics {
 	}
 
 	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CHHapticDynamicParameter {
@@ -61,6 +63,7 @@ namespace CoreHaptics {
 	}
 
 	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CHHapticParameterCurveControlPoint {
@@ -76,6 +79,7 @@ namespace CoreHaptics {
 	}
 
 	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CHHapticParameterCurve {
@@ -95,6 +99,7 @@ namespace CoreHaptics {
 	}
 
 	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CHHapticEvent {
@@ -127,6 +132,7 @@ namespace CoreHaptics {
 	interface ICHHapticParameterAttributes { }
 
 	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface CHHapticParameterAttributes {
 		[Abstract]
@@ -146,6 +152,7 @@ namespace CoreHaptics {
 
 	[iOS (13, 0)]
 	[Mac (11, 0), TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface CHHapticDeviceCapability {
 		[Abstract]
@@ -172,6 +179,7 @@ namespace CoreHaptics {
 	interface ICHHapticPatternPlayer { }
 
 	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface CHHapticPatternPlayer {
 		[Abstract]
@@ -202,6 +210,7 @@ namespace CoreHaptics {
 	interface ICHHapticAdvancedPatternPlayer { }
 
 	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface CHHapticAdvancedPatternPlayer : CHHapticPatternPlayer {
 		[Abstract]
@@ -238,6 +247,7 @@ namespace CoreHaptics {
 	}
 
 	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CHHapticEngine {
@@ -272,6 +282,7 @@ namespace CoreHaptics {
 		NativeHandle Constructor ([NullAllowed] out NSError error);
 
 		[NoMac, NoTV]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithAudioSession:error:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] AVAudioSession audioSession, [NullAllowed] out NSError error);
@@ -319,6 +330,7 @@ namespace CoreHaptics {
 	[Static]
 	[Internal]
 	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	partial interface CHHapticPatternDefinitionKeys {
 		[Field ("CHHapticPatternKeyVersion")]
 		NSString VersionKey { get; }
@@ -369,6 +381,7 @@ namespace CoreHaptics {
 	}
 
 	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[StrongDictionary ("CHHapticPatternDefinitionKeys")]
 	partial interface CHHapticPatternDefinition {
 		double Version { get; set; }
@@ -396,6 +409,7 @@ namespace CoreHaptics {
 	}
 
 	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CHHapticPattern {

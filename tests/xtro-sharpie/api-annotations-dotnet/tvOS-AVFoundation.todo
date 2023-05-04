@@ -66,7 +66,6 @@
 !missing-selector! +AVSpeechUtterance::speechUtteranceWithSSMLRepresentation: not bound
 !missing-selector! +AVVideoComposition::videoCompositionWithAsset:applyingCIFiltersWithHandler:completionHandler: not bound
 !missing-selector! +AVVideoComposition::videoCompositionWithPropertiesOfAsset:completionHandler: not bound
-!missing-selector! +NSValue::valueWithCMVideoDimensions: not bound
 !missing-selector! AVAssetExportSession::audioTrackGroupHandling not bound
 !missing-selector! AVAssetExportSession::setAudioTrackGroupHandling: not bound
 !missing-selector! AVAssetImageGenerator::generateCGImageAsynchronouslyForTime:completionHandler: not bound
@@ -261,7 +260,6 @@
 !missing-selector! AVSpeechUtterance::initWithSSMLRepresentation: not bound
 !missing-selector! AVURLAsset::httpSessionIdentifier not bound
 !missing-selector! AVVideoComposition::determineValidityForAsset:timeRange:validationDelegate:completionHandler: not bound
-!missing-selector! NSValue::CMVideoDimensionsValue not bound
 !missing-type! AVAssetPlaybackAssistant not bound
 !missing-type! AVAUPresetEvent not bound
 !missing-type! AVExtendedNoteOnEvent not bound
@@ -288,3 +286,11 @@
 !missing-type! AVSpeechSynthesisProviderVoice not bound
 !missing-enum-value! AVSpeechSynthesisVoiceQuality native value AVSpeechSynthesisVoiceQualityPremium = 3 not bound
 !missing-selector! AVPlayerLayer::copyDisplayedPixelBuffer not bound
+!missing-enum! AVPlayerInterstitialEventAssetListResponseStatus not bound
+!missing-enum-value! AVError native value AVErrorEncodeFailed = -11883 not bound
+!missing-enum-value! AVError native value AVErrorSandboxExtensionDenied = -11884 not bound
+!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeErrorKey not bound
+!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeEventKey not bound
+!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeNotification not bound
+!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeStatusKey not bound
+!missing-selector! AVPlayerInterstitialEvent::assetListResponse not bound

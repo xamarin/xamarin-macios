@@ -946,11 +946,13 @@ namespace MetalPerformanceShadersGraph {
 
 		// @property (readwrite, nonatomic) BOOL ceilMode __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0)));
 		[TV (15, 0), Mac (12, 0), iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 		[Export ("ceilMode")]
 		bool CeilMode { get; set; }
 
 		// @property (readwrite, nonatomic) BOOL includeZeroPadToAverage __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0)));
 		[TV (15, 0), Mac (12, 0), iOS (15, 0)]
+		[MacCatalyst (15, 0)]
 		[Export ("includeZeroPadToAverage")]
 		bool IncludeZeroPadToAverage { get; set; }
 

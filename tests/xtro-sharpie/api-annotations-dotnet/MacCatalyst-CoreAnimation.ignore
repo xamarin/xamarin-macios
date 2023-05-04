@@ -14,5 +14,3 @@
 !missing-selector! CAConstraint::offset not bound
 !missing-selector! +CALayer::layerWithRemoteClientId: not bound
 !missing-selector! +CARemoteLayerServer::sharedServer not bound
-!missing-selector! CAMetalLayer::setWantsExtendedDynamicRangeContent: not bound
-!missing-selector! CAMetalLayer::wantsExtendedDynamicRangeContent not bound

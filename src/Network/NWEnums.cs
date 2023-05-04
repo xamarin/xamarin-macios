@@ -22,6 +22,7 @@ using OS_nw_txt_record = System.IntPtr;
 namespace Network {
 
 	[Flags, TV (13, 0), Mac (10, 15), iOS (13, 0), Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWBrowseResultChange : ulong {
 		Invalid = 0x00,
 		Identical = 0x01,
@@ -33,6 +34,7 @@ namespace Network {
 	}
 
 	[TV (13, 0), Mac (10, 15), iOS (13, 0), Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWBrowserState {
 		Invalid = 0,
 		Ready = 1,
@@ -42,6 +44,7 @@ namespace Network {
 
 	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWConnectionState {
 		Invalid = 0,
 		Waiting = 1,
@@ -62,6 +65,7 @@ namespace Network {
 	}
 
 	[TV (13, 0), Mac (10, 15), iOS (13, 0), Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWDataTransferReportState {
 		Collecting = 1,
 		Collected = 2,
@@ -69,16 +73,19 @@ namespace Network {
 
 	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWEndpointType {
 		Invalid = 0,
 		Address = 1,
 		Host = 2,
 		BonjourService = 3,
 		[TV (13, 0), Mac (10, 15), iOS (13, 0), Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		Url = 4,
 	}
 
 	[TV (13, 0), Mac (10, 15), iOS (13, 0), Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWReportResolutionSource {
 		Query = 1,
 		Cache = 2,
@@ -86,6 +93,7 @@ namespace Network {
 	}
 
 	[NoWatch, NoTV, NoiOS, Mac (10, 15)]
+	[NoMacCatalyst]
 	public enum NWEthernetChannelState {
 		Invalid = 0,
 		Waiting = 1,
@@ -98,12 +106,14 @@ namespace Network {
 	// from System/Library/Frameworks/Network.framework/Headers/framer_options.h:
 	[Flags]
 	[TV (13, 0), Mac (10, 15), iOS (13, 0), Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWFramerCreateFlags : uint {
 		Default = 0x00,
 	}
 
 	// from System/Library/Frameworks/Network.framework/Headers/framer_options.h:
 	[TV (13, 0), Mac (10, 15), iOS (13, 0), Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWFramerStartResult {
 		Unknown = 0,
 		Ready = 1,
@@ -111,6 +121,7 @@ namespace Network {
 	}
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWIPLocalAddressPreference {
 		Default = 0,
 		Temporary = 1,
@@ -118,6 +129,7 @@ namespace Network {
 	}
 
 	[Watch (6, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWIPVersion {
 		Any = 0,
 		Version4 = 1,
@@ -126,6 +138,7 @@ namespace Network {
 
 	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWInterfaceType {
 		Other = 0,
 		Wifi = 1,
@@ -136,6 +149,7 @@ namespace Network {
 
 	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWListenerState {
 		Invalid = 0,
 		Waiting = 1,
@@ -146,6 +160,7 @@ namespace Network {
 
 	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWMultiPathService {
 		Disabled = 0,
 		Handover = 1,
@@ -155,6 +170,7 @@ namespace Network {
 
 	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWParametersExpiredDnsBehavior {
 		Default = 0,
 		Allow = 1,
@@ -164,6 +180,7 @@ namespace Network {
 	// this maps to `nw_path_status_t` in Network/Headers/path.h (and not the enum from NetworkExtension)
 	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWPathStatus {
 		Invalid = 0,
 		Satisfied = 1,
@@ -188,6 +205,7 @@ namespace Network {
 	}
 
 	[TV (13, 0), Mac (10, 15), iOS (13, 0), Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWTxtRecordFindKey {
 		Invalid = 0,
 		NotPresent = 1,
@@ -197,6 +215,7 @@ namespace Network {
 	}
 
 	[TV (13, 0), Mac (10, 15), iOS (13, 0), Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWWebSocketOpCode : int {
 		Cont = 0x0,
 		Text = 0x1,
@@ -208,6 +227,7 @@ namespace Network {
 	}
 
 	[TV (13, 0), Mac (10, 15), iOS (13, 0), Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWWebSocketCloseCode : int {
 		NormalClosure = 1000,
 		GoingAway = 1001,
@@ -225,12 +245,14 @@ namespace Network {
 
 	// this maps to `nw_ws_version_t` in Network.framework/Headers/ws_options.h (and not the enum from NetworkExtension)
 	[TV (13, 0), Mac (10, 15), iOS (13, 0), Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWWebSocketVersion {
 		Invalid = 0,
 		Version13 = 1,
 	}
 
 	[TV (13, 0), Mac (10, 15), iOS (13, 0), Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NWWebSocketResponseStatus {
 		Invalid = 0,
 		Accept = 1,
@@ -247,12 +269,14 @@ namespace Network {
 	}
 
 	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	public enum NWResolverConfigEndpointType {
 		Https,
 		Tls,
 	}
 
 	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0)]
+	[MacCatalyst (15, 0)]
 	public enum NWMultipathVersion {
 		Unspecified = -1,
 		Version0 = 0,
@@ -260,6 +284,7 @@ namespace Network {
 	}
 
 	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0)]
+	[MacCatalyst (15, 0)]
 	public enum NWInterfaceRadioType {
 		Unknown = 0,
 		WifiB = 1,
@@ -281,6 +306,7 @@ namespace Network {
 	}
 
 	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0)]
+	[MacCatalyst (15, 0)]
 	public enum NWParametersAttribution {
 		Developer = 1,
 		User = 2,
@@ -291,5 +317,7 @@ namespace Network {
 		Unknown = 0,
 		Bidirectional = 1,
 		Unidirectional = 2,
+		[Watch (9, 4), TV (16, 4), Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		Datagram = 3,
 	}
 }

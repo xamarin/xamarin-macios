@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -1042,6 +1042,21 @@
 		<value>无法优化在 {0} 中偏移量 {1} 处对 BlockLiteral.SetupBlock 的调用: {2}。
 		</value>
 	</data>
+  <data name="MX2106_E" xml:space="preserve">
+		<value>无法优化对 BlockLiteral 的调用。{0} 中的 {2} 偏移量为 {1}，因为在类型“{4}”中找到了多个名为“{3}”的方法。</value>
+	</data>
+  <data name="MX2106_F" xml:space="preserve">
+		<value>无法优化对 BlockLiteral 的调用。{0} 中的 {2} 偏移量为 {1}，因为“{3}”必须至少具有一个参数，。</value>
+	</data>
+  <data name="MX2106_G" xml:space="preserve">
+		<value>无法优化对 BlockLiteral 的调用。{0} 中的 {2} 偏移量为 {1}，因为方法“{3}”中的第一个参数不是 “System.IntPtr”、“void*” 或 “ObjCRuntime.BlockLiteral*” (它是“{4}”)</value>
+	</data>
+  <data name="MX2106_H" xml:space="preserve">
+		<value>无法优化对 BlockLiteral 的调用。{0} 中的 {2} 偏移量为 {1}，因为方法“{3}”没有 [UnmanagedCallersOnly] 属性。</value>
+	</data>
+  <data name="MX2106_I" xml:space="preserve">
+		<value>无法优化对 BlockLiteral 的调用。{0} 中的 {2} 偏移量为 {1}，因为方法“{3}”没有 [UnmanagedCallersOnly] 属性。</value>
+	</data>
   <data name="MM2107" xml:space="preserve">
 		<value>删除动态注册器是不安全的，因为 {0} 引用 "{1}.{2} ({3})"。
 		</value>
@@ -1747,7 +1762,7 @@
 		<value>无法创建类型 {0} 的实例。</value>
 	</data>
   <data name="MX8042" xml:space="preserve">
-		<value>An exception occurred while trying to invoke the function {0}: {1}</value>
+		<value>尝试调用函数 {0} 时发生异常: {1}。</value>
 		<comment>
 			0: name of function
 			1: exception info
@@ -1762,5 +1777,29 @@
 	</data>
   <data name="MX8044" xml:space="preserve">
 		<value>自生成应用以来，已对程序集 {0} 进行了修改，从而使生成的静态注册器代码无效。已加载程序集的 MVID 为 {1}，而生成的静态注册器代码对应的程序集的 MVID 为 {2}。</value>
+	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>无法对类型 {0} 的实例调用发布</value>
+	</data>
+  <data name="MX8046" xml:space="preserve">
+		<value>无法在“{1}”中找到方法“{0}”</value>
+	</data>
+  <data name="MX8047" xml:space="preserve">
+		<value>蹦床方法 {0} 与 trampolineMethod 参数的函数指针 0x{1} 不匹配(它们不引用同一方法)。</value>
+	</data>
+  <data name="MX8048" xml:space="preserve">
+		<value>蹦床方法 {0} 必须至少具有一个参数。</value>
+	</data>
+  <data name="MX8049" xml:space="preserve">
+		<value>蹦床方法 {0} 中的第一个参数必须是 “System.IntPtr”、“void*” 或 “ObjCRuntime.BlockLiteral*”。</value>
+	</data>
+  <data name="MX8050" xml:space="preserve">
+		<value>当动态注册机构已链接到别处时，不支持 BlockLiteral.GetBlockSignature。</value>
+	</data>
+  <data name="MX8051" xml:space="preserve">
+		<value>蹦床方法 {0} 必须至少具有 [UnmanagedCallersOnly] 属性。</value>
+	</data>
+  <data name="MX8052" xml:space="preserve">
+		<value>签名必须是非空字符串。</value>
 	</data>
 </root>

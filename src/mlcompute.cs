@@ -14,6 +14,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	enum MLCActivationType {
 		None = 0,
 		ReLU = 1,
@@ -37,10 +38,12 @@ namespace MLCompute {
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		HardSwish = 19,
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		Clamp = 20,
 		// Count, // must be last, not available in swift
 	}
@@ -49,6 +52,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	enum MLCArithmeticOperation {
 		Add = 0,
 		Subtract = 1,
@@ -79,18 +83,22 @@ namespace MLCompute {
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		MultiplyNoNaN = 26,
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		DivideNoNaN = 27,
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		Min = 28,
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		Max = 29,
 		// Count, // must be last, not available in swift
 	}
@@ -99,6 +107,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	enum MLCConvolutionType {
 		Standard = 0,
 		Transposed = 1,
@@ -109,6 +118,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	enum MLCDataType {
 		Invalid = 0,
 		Float32 = 1,
@@ -128,6 +138,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	enum MLCDeviceType /* int32_t */ {
 		Cpu = 0,
 		Gpu = 1,
@@ -141,6 +152,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[Flags]
 	enum MLCExecutionOptions : ulong {
 		None = 0x0,
@@ -156,6 +168,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[Flags]
 	enum MLCGraphCompilationOptions : ulong {
 		None = 0x0,
@@ -169,6 +182,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	enum MLCLossType {
 		MeanAbsoluteError = 0,
 		MeanSquaredError = 1,
@@ -186,6 +200,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	enum MLCLstmResultMode : ulong /* uint64_t */ {
 		Output = 0,
 		OutputAndStates = 1,
@@ -195,6 +210,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	enum MLCPaddingPolicy {
 		Same = 0,
 		Valid = 1,
@@ -205,6 +221,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	enum MLCPaddingType {
 		Zero = 0,
 		Reflect = 1,
@@ -216,6 +233,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	enum MLCPoolingType {
 		Max = 1,
 		Average = 2,
@@ -227,6 +245,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	enum MLCRandomInitializerType {
 		Invalid = 0,
 		Uniform = 1,
@@ -239,6 +258,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	enum MLCReductionType {
 		None = 0,
 		Sum = 1,
@@ -250,14 +270,17 @@ namespace MLCompute {
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		L1Norm = 7,
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		Any = 8,
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		All = 9,
 		// Count, // must be last, not available in swift
 	}
@@ -266,6 +289,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	enum MLCRegularizationType {
 		None = 0,
 		L1 = 1,
@@ -276,6 +300,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	enum MLCSampleMode {
 		Nearest = 0,
 		Linear = 1,
@@ -285,6 +310,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	enum MLCSoftmaxOperation {
 		Softmax = 0,
 		LogSoftmax = 1,
@@ -302,6 +328,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLCActivationDescriptor : NSCopying {
@@ -343,6 +370,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLCLayer {
@@ -369,6 +397,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCActivationLayer {
@@ -487,6 +516,7 @@ namespace MLCompute {
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		[Static]
 		[Export ("hardSwishLayer")]
 		MLCActivationLayer CreateHardSwishLayer ();
@@ -494,6 +524,7 @@ namespace MLCompute {
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		[Static]
 		[Export ("clampLayerWithMinValue:maxValue:")]
 		MLCActivationLayer CreateClampLayer (float minValue, float maxValue);
@@ -503,6 +534,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLCOptimizer : NSCopying {
@@ -545,6 +577,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLCOptimizerDescriptor : NSCopying {
@@ -600,6 +633,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCOptimizer))]
 	[DisableDefaultCtor]
 	interface MLCAdamOptimizer : NSCopying {
@@ -638,6 +672,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLCDevice : NSCopying {
@@ -675,6 +710,7 @@ namespace MLCompute {
 
 		[iOS (14, 2)]
 		[TV (14, 2)]
+		[MacCatalyst (14, 2)]
 		[Static]
 		[Export ("deviceWithType:selectsMultipleComputeDevices:")]
 		[return: NullAllowed]
@@ -689,6 +725,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLCTensor : NSCopying {
@@ -846,6 +883,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLCTensorData {
@@ -867,6 +905,7 @@ namespace MLCompute {
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		[Static]
 		[Export ("dataWithBytesNoCopy:length:deallocator:")]
 		MLCTensorData CreateFromBytesNoCopy (IntPtr bytes, nuint length, Action<IntPtr, nuint> deallocator);
@@ -876,6 +915,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLCTensorDescriptor : NSCopying {
@@ -954,6 +994,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLCTensorParameter {
@@ -977,6 +1018,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCArithmeticLayer {
@@ -993,6 +1035,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCBatchNormalizationLayer {
@@ -1039,6 +1082,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCConcatenationLayer {
@@ -1059,6 +1103,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLCConvolutionDescriptor : NSCopying {
@@ -1153,6 +1198,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCConvolutionLayer {
@@ -1182,6 +1228,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCDropoutLayer {
@@ -1201,6 +1248,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLCEmbeddingDescriptor : NSCopying {
@@ -1246,6 +1294,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCEmbeddingLayer {
@@ -1268,6 +1317,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCFullyConnectedLayer {
@@ -1297,6 +1347,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCGramMatrixLayer {
@@ -1313,6 +1364,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCGroupNormalizationLayer {
@@ -1348,6 +1400,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCInstanceNormalizationLayer {
@@ -1376,12 +1429,14 @@ namespace MLCompute {
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		[NullAllowed, Export ("mean", ArgumentSemantic.Retain)]
 		MLCTensor Mean { get; }
 
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		[NullAllowed, Export ("variance", ArgumentSemantic.Retain)]
 		MLCTensor Variance { get; }
 
@@ -1398,6 +1453,7 @@ namespace MLCompute {
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		[Static]
 		[Export ("layerWithFeatureChannelCount:mean:variance:beta:gamma:varianceEpsilon:momentum:")]
 		[return: NullAllowed]
@@ -1408,6 +1464,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCLayerNormalizationLayer {
@@ -1441,6 +1498,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLCLossDescriptor : NSCopying {
@@ -1487,6 +1545,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCLossLayer {
@@ -1582,6 +1641,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject), Name = "MLCLSTMDescriptor")]
 	[DisableDefaultCtor]
 	interface MLCLstmDescriptor : NSCopying {
@@ -1638,6 +1698,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer), Name = "MLCLSTMLayer")]
 	[DisableDefaultCtor]
 	interface MLCLstmLayer {
@@ -1695,6 +1756,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLCMatMulDescriptor : NSCopying {
@@ -1722,6 +1784,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCMatMulLayer {
@@ -1739,6 +1802,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLCMultiheadAttentionDescriptor : NSCopying {
@@ -1781,6 +1845,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCMultiheadAttentionLayer {
@@ -1813,6 +1878,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCPaddingLayer : NSCopying {
@@ -1856,6 +1922,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLCPoolingDescriptor : NSCopying {
@@ -1926,6 +1993,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCPoolingLayer {
@@ -1942,6 +2010,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCReductionLayer {
@@ -1955,6 +2024,7 @@ namespace MLCompute {
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		[Export ("dimensions")]
 		[BindAs (typeof (nuint []))]
 		NSNumber [] Dimensions { get; }
@@ -1967,6 +2037,7 @@ namespace MLCompute {
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		[Static]
 		[Export ("layerWithReductionType:dimensions:")]
 		[return: NullAllowed]
@@ -1977,6 +2048,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCReshapeLayer {
@@ -1984,6 +2056,7 @@ namespace MLCompute {
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		[Export ("shape", ArgumentSemantic.Copy)]
 		[BindAs (typeof (nint []))]
 		NSNumber [] Shape { get; }
@@ -1999,6 +2072,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCOptimizer), Name = "MLCRMSPropOptimizer")]
 	interface MLCRmsPropOptimizer : NSCopying {
 
@@ -2027,6 +2101,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCOptimizer), Name = "MLCSGDOptimizer")]
 	[DisableDefaultCtor]
 	interface MLCSgdOptimizer : NSCopying {
@@ -2050,6 +2125,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCSliceLayer {
@@ -2077,6 +2153,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCSoftmaxLayer {
@@ -2100,6 +2177,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCSplitLayer {
@@ -2128,6 +2206,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCTransposeLayer {
@@ -2146,6 +2225,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCUpsampleLayer {
@@ -2175,6 +2255,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject), Name = "MLCYOLOLossDescriptor")]
 	[DisableDefaultCtor]
 	interface MLCYoloLossDescriptor : NSCopying {
@@ -2218,6 +2299,7 @@ namespace MLCompute {
 	[TV (14, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCLossLayer), Name = "MLCYOLOLossLayer")]
 	[DisableDefaultCtor]
 	interface MLCYoloLossLayer {
@@ -2234,6 +2316,7 @@ namespace MLCompute {
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLCTensorOptimizerDeviceData : NSCopying {
@@ -2241,6 +2324,7 @@ namespace MLCompute {
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MLCGraph {
@@ -2311,6 +2395,7 @@ namespace MLCompute {
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		[Export ("gatherWithDimension:source:indices:")]
 		[return: NullAllowed]
 		MLCTensor Gather (nuint dimension, MLCTensor source, MLCTensor indices);
@@ -2318,6 +2403,7 @@ namespace MLCompute {
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		[Export ("scatterWithDimension:source:indices:copyFrom:reductionType:")]
 		[return: NullAllowed]
 		MLCTensor Scatter (nuint dimension, MLCTensor source, MLCTensor indices, MLCTensor copyFrom, MLCReductionType reductionType);
@@ -2325,6 +2411,7 @@ namespace MLCompute {
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		[Export ("selectWithSources:condition:")]
 		[return: NullAllowed]
 		MLCTensor Select (MLCTensor [] sources, MLCTensor condition);
@@ -2332,6 +2419,7 @@ namespace MLCompute {
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCGraph))]
 	[DisableDefaultCtor]
 	interface MLCTrainingGraph {
@@ -2364,6 +2452,7 @@ namespace MLCompute {
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		[Export ("compileWithOptions:device:inputTensors:inputTensorsData:")]
 		bool Compile (MLCGraphCompilationOptions options, MLCDevice device, [NullAllowed] NSDictionary<NSString, MLCTensor> inputTensors, [NullAllowed] NSDictionary<NSString, MLCTensorData> inputTensorsData);
 
@@ -2427,12 +2516,14 @@ namespace MLCompute {
 
 		[iOS (14, 2)]
 		[TV (14, 2)]
+		[MacCatalyst (14, 2)]
 		[Export ("bindOptimizerData:deviceData:withTensor:")]
 		bool BindOptimizer (MLCTensorData [] data, [NullAllowed] MLCTensorOptimizerDeviceData [] deviceData, MLCTensor tensor);
 	}
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 	[NoWatch]
+	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MLCGraph))]
 	[DisableDefaultCtor]
 	interface MLCInferenceGraph {
@@ -2459,6 +2550,7 @@ namespace MLCompute {
 		[TV (14, 5)]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		[Export ("compileWithOptions:device:inputTensors:inputTensorsData:")]
 		bool Compile (MLCGraphCompilationOptions options, MLCDevice device, [NullAllowed] NSDictionary<NSString, MLCTensor> inputTensors, [NullAllowed] NSDictionary<NSString, MLCTensorData> inputTensorsData);
 
@@ -2485,6 +2577,7 @@ namespace MLCompute {
 	[TV (14, 5)]
 	[Mac (11, 3)]
 	[iOS (14, 5)]
+	[MacCatalyst (14, 5)]
 	enum MLCComparisonOperation {
 		Equal = 0,
 		NotEqual = 1,
@@ -2503,6 +2596,7 @@ namespace MLCompute {
 	[TV (14, 5)]
 	[Mac (11, 3)]
 	[iOS (14, 5)]
+	[MacCatalyst (14, 5)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCComparisonLayer {
@@ -2518,6 +2612,7 @@ namespace MLCompute {
 	[TV (14, 5)]
 	[Mac (11, 3)]
 	[iOS (14, 5)]
+	[MacCatalyst (14, 5)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCGatherLayer {
@@ -2533,6 +2628,7 @@ namespace MLCompute {
 	[TV (14, 5)]
 	[Mac (11, 3)]
 	[iOS (14, 5)]
+	[MacCatalyst (14, 5)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCScatterLayer {
@@ -2552,6 +2648,7 @@ namespace MLCompute {
 	[TV (14, 5)]
 	[Mac (11, 3)]
 	[iOS (14, 5)]
+	[MacCatalyst (14, 5)]
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCSelectionLayer {

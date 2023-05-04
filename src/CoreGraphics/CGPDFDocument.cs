@@ -151,11 +151,12 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFDocumentUnlockWithPassword (/* CGPDFDocumentRef */ IntPtr document, /* const char* */ string password);
+		extern static bool CGPDFDocumentUnlockWithPassword (/* CGPDFDocumentRef */ IntPtr document, /* const char* */ IntPtr password);
 
 		public bool Unlock (string password)
 		{
-			return CGPDFDocumentUnlockWithPassword (Handle, password);
+			using var passwordPtr = new TransientString (password);
+			return CGPDFDocumentUnlockWithPassword (Handle, passwordPtr);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]

@@ -43,6 +43,7 @@ namespace CoreMidi {
 	[Mac (10, 14)]
 	[Watch (8, 0)]
 	[TV (15, 0)]
+	[MacCatalyst (13, 1)]
 	// NSUInteger -> MIDINetworkSession.h
 	[Native]
 	public enum MidiNetworkConnectionPolicy : ulong {
@@ -52,6 +53,7 @@ namespace CoreMidi {
 	}
 
 	[Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[NativeName ("MIDIProtocolID")]
 	public enum MidiProtocolId {
 		Protocol_1_0 = 1,
@@ -59,6 +61,7 @@ namespace CoreMidi {
 	}
 
 	[Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[NativeName ("MIDICVStatus")]
 	public enum MidiCVStatus : uint {
 		RegisteredPnc = 0,
@@ -80,6 +83,7 @@ namespace CoreMidi {
 	}
 
 	[Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[NativeName ("MIDIMessageType")]
 	public enum MidiMessageType : uint {
 		Utility = 0,
@@ -92,6 +96,7 @@ namespace CoreMidi {
 	}
 
 	[Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[NativeName ("MIDISysExStatus")]
 	public enum MidiSysExStatus : uint {
 		Complete = 0,
@@ -103,6 +108,7 @@ namespace CoreMidi {
 	}
 
 	[Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	[NativeName ("MIDISystemStatus")]
 	public enum MidiSystemStatus : uint {
 		StartOfExclusive = 240,
@@ -154,6 +160,7 @@ namespace CoreMidi {
 	[NoTV]
 	[NoWatch]
 	[Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "MIDINetworkHost")]
 	[DisableDefaultCtor]
 	interface MidiNetworkHost {
@@ -193,6 +200,7 @@ namespace CoreMidi {
 	[NoTV]
 	[NoWatch]
 	[Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[Static]
 	interface Midi {
 		[Field ("MIDINetworkNotificationContactsDidChange")]
@@ -210,6 +218,7 @@ namespace CoreMidi {
 	[NoTV]
 	[NoWatch]
 	[Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "MIDINetworkConnection")]
 	interface MidiNetworkConnection {
@@ -223,6 +232,7 @@ namespace CoreMidi {
 	[NoTV]
 	[NoWatch]
 	[Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "MIDINetworkSession")]
 	// default 'init' crash the application
 	[DisableDefaultCtor]
@@ -291,6 +301,7 @@ namespace CoreMidi {
 	}
 
 	[NoWatch, NoTV, Mac (10, 14), iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "MIDICIProfile")]
 	[DisableDefaultCtor]
 	interface MidiCIProfile : NSSecureCoding {
@@ -310,6 +321,7 @@ namespace CoreMidi {
 	}
 
 	[NoWatch, NoTV, Mac (10, 14), iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "MIDICIProfileState")]
 	[DisableDefaultCtor]
 	interface MidiCIProfileState : NSSecureCoding {
@@ -321,6 +333,7 @@ namespace CoreMidi {
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use the '(byte midiChannel, MidiCIProfile[] enabled, MidiCIProfile[] disabled)' constructor instead.")]
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use the '(byte midiChannel, MidiCIProfile[] enabled, MidiCIProfile[] disabled)' constructor instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the '(byte midiChannel, MidiCIProfile[] enabled, MidiCIProfile[] disabled)' constructor instead.")]
 		[Export ("initWithEnabledProfiles:disabledProfiles:")]
 		NativeHandle Constructor (MidiCIProfile [] enabled, MidiCIProfile [] disabled);
 
@@ -342,6 +355,7 @@ namespace CoreMidi {
 	delegate void MidiCISessionDisconnectHandler (MidiCISession session, NSError error);
 
 	[NoWatch, NoTV, Mac (10, 14), iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "MIDICISession")]
 	[DisableDefaultCtor]
 	interface MidiCISession {
@@ -354,8 +368,17 @@ namespace CoreMidi {
 		[Export ("supportsPropertyCapability")]
 		bool SupportsPropertyCapability { get; }
 
+#if XAMCORE_5_0
 		[Export ("deviceIdentification")]
 		MidiCIDeviceIdentification DeviceIdentification { get; }
+#else
+		[Internal]
+		[Export ("deviceIdentification")]
+		MidiCIDeviceIdentification_Blittable _DeviceIdentification { get; }
+
+		[Wrap ("_DeviceIdentification.ToMidiCIDeviceIdentification ()", IsVirtual = true)]
+		MidiCIDeviceIdentification DeviceIdentification { get; }
+#endif
 
 		[Export ("profileStateForChannel:")]
 		MidiCIProfileState GetProfileState (byte channel);

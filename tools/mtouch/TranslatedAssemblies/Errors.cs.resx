@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -1042,6 +1042,21 @@
 		<value>Nepovedlo se optimalizovat volání BlockLiteral.SetupBlock v {0} na pozici {1}: {2}.
 		</value>
 	</data>
+  <data name="MX2106_E" xml:space="preserve">
+		<value>Nepovedlo se optimalizovat volání BlockLiteral.{2} v {0} s posunem {1}, protože byla nalezena více než jedna metoda s názvem „{3}“ v typu {4}.</value>
+	</data>
+  <data name="MX2106_F" xml:space="preserve">
+		<value>Nepovedlo se optimalizovat volání BlockLiteral.{2} v {0} s posunem {1}, protože metoda „{3}“ musí mít alespoň jeden parametr.</value>
+	</data>
+  <data name="MX2106_G" xml:space="preserve">
+		<value>Nepovedlo se optimalizovat volání BlockLiteral.{2} v {0} s posunem {1}, protože první parametr v metodě „{3}“ není 'System.IntPtr', 'void*' ani 'ObjCRuntime.BlockLiteral*' (je to{4}).</value>
+	</data>
+  <data name="MX2106_H" xml:space="preserve">
+		<value>Nepovedlo se optimalizovat volání BlockLiteral.{2} v {0} s posunem {1}, protože metoda {3} nemá atribut [UnmanagedCallersOnly].</value>
+	</data>
+  <data name="MX2106_I" xml:space="preserve">
+		<value>Nepovedlo se optimalizovat volání BlockLiteral.{2} v {0} s posunem {1}, protože metoda {3} nemá atribut [UnmanagedCallersOnly].</value>
+	</data>
   <data name="MM2107" xml:space="preserve">
 		<value>Odebrání dynamického registrátoru není bezpečné, protože {0} odkazuje na {1}.{2} ({3}).
 		</value>
@@ -1747,7 +1762,7 @@
 		<value>Nelze vytvořit instanci typu {0}.</value>
 	</data>
   <data name="MX8042" xml:space="preserve">
-		<value>An exception occurred while trying to invoke the function {0}: {1}</value>
+		<value>Při pokusu o vyvolání funkce {0} došlo k výjimce: {1}</value>
 		<comment>
 			0: name of function
 			1: exception info
@@ -1762,5 +1777,29 @@
 	</data>
   <data name="MX8044" xml:space="preserve">
 		<value>Sestavení {0} bylo od vytvoření aplikace změněno a byl zrušena platnost vygenerovaného kódu statického registrátora. MVID načteného sestavení je {1}, zatímco MVID pro sestavení, kterému vygenerovaný kód statického registrátora odpovídá, je {2}.</value>
+	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>Nelze volat uvolnění pro instanci typu {0}</value>
+	</data>
+  <data name="MX8046" xml:space="preserve">
+		<value>Nelze najít metodu „{0}“ v typu „{1}“</value>
+	</data>
+  <data name="MX8047" xml:space="preserve">
+		<value>Metoda trampolíny {0} se neshoduje s ukazatelem funkce 0x{1} pro argument trampolineMethod (neodkazují na stejnou metodu).</value>
+	</data>
+  <data name="MX8048" xml:space="preserve">
+		<value>Metoda trampolíny {0} musí mít alespoň jeden parametr.</value>
+	</data>
+  <data name="MX8049" xml:space="preserve">
+		<value>První parametr v metodě trampolíny {0} musí být 'System.IntPtr', 'void*' or 'ObjCRuntime.BlockLiteral*'.</value>
+	</data>
+  <data name="MX8050" xml:space="preserve">
+		<value>BlockLiteral.GetBlockSignature se nepodporuje, pokud je dynamický registrátor propojený pryč.</value>
+	</data>
+  <data name="MX8051" xml:space="preserve">
+		<value>Metoda trampolín{0} musí mít atribut [UnmanagedCallersOnly].</value>
+	</data>
+  <data name="MX8052" xml:space="preserve">
+		<value>Argument musí být neprázdný řetězec.</value>
 	</data>
 </root>

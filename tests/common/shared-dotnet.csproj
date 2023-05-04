@@ -8,8 +8,7 @@
 		<AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
 		<NativeLibName>ios-fat</NativeLibName>
 		<!-- We need this because we'd otherwise default to the latest OS version we support, and we'll want to execute on earlier versions -->
-		<SupportedOSPlatformVersion Condition="'$(SupportedOSPlatformVersion)' == ''">10.0</SupportedOSPlatformVersion>
-		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\ios-defines-dotnet.rsp</CompilerResponseFile>
+		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\rsp\dotnet\ios-defines-dotnet.rsp</CompilerResponseFile>
 	</PropertyGroup>
 	<ItemGroup Condition="'$(_PlatformName)' == 'iOS'">
 	</ItemGroup>
@@ -18,8 +17,7 @@
 	<PropertyGroup Condition="$(TargetFramework.EndsWith('-tvos'))">
 		<AssetTargetFallback>xamarintvos10;$(AssetTargetFallback)</AssetTargetFallback>
 		<NativeLibName>tvos-fat</NativeLibName>
-		<SupportedOSPlatformVersion Condition="'$(SupportedOSPlatformVersion)' == ''">10.0</SupportedOSPlatformVersion>
-		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\tvos-defines-dotnet.rsp</CompilerResponseFile>
+		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\rsp\dotnet\tvos-defines-dotnet.rsp</CompilerResponseFile>
 	</PropertyGroup>
 	<ItemGroup Condition="$(TargetFramework.EndsWith('-tvos'))">
 	</ItemGroup>
@@ -28,8 +26,8 @@
 	<PropertyGroup Condition="$(TargetFramework.EndsWith('-macos'))">
 		<DefineConstants>$(DefineConstants);MONOMAC</DefineConstants>
 		<NativeLibName>macos-fat</NativeLibName>
-		<SupportedOSPlatformVersion Condition="'$(SupportedOSPlatformVersion)' == ''">10.14</SupportedOSPlatformVersion>
-		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\macos-defines-dotnet.rsp</CompilerResponseFile>
+		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\rsp\dotnet\macos-defines-dotnet.rsp</CompilerResponseFile>
+		<RuntimeIdentifiers Condition="'$(UniversalBuild)' == 'true'">osx-x64;osx-arm64</RuntimeIdentifiers>
 		<RuntimeIdentifiers Condition="'$(Configuration)' == 'Release' And '$(SingleArchReleaseBuild)' == 'true'">osx-x64</RuntimeIdentifiers>
 	</PropertyGroup>
 
@@ -37,8 +35,8 @@
 	<PropertyGroup Condition="$(TargetFramework.EndsWith('-maccatalyst'))">
 		<AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
 		<NativeLibName>maccatalyst-fat</NativeLibName>
-		<SupportedOSPlatformVersion Condition="'$(SupportedOSPlatformVersion)' == ''">13.3</SupportedOSPlatformVersion>
-		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\maccatalyst-defines-dotnet.rsp</CompilerResponseFile>
+		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\rsp\dotnet\maccatalyst-defines-dotnet.rsp</CompilerResponseFile>
+		<RuntimeIdentifiers Condition="'$(UniversalBuild)' == 'true'">maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers>
 		<RuntimeIdentifiers Condition="'$(Configuration)' == 'Release' And '$(SingleArchReleaseBuild)' == 'true'">maccatalyst-x64</RuntimeIdentifiers>
 	</PropertyGroup>
 
@@ -58,6 +56,8 @@
 
 		<!-- Don't show warnings about platform availability -->
 		<NoWarn Condition="'$(IncludeCS1416Warnigs)' != 'true'">CA1416;$(NoWarn)</NoWarn>
+
+		<CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -66,7 +66,7 @@
 	</ItemGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)/../ComputeRegistrarConstant.targets" />
-	<Import Project="$(MSBuildThisFileDirectory)/../nunit.framework.targets" />
+	<Import Project="$(MSBuildThisFileDirectory)/../nunit.framework.targets" Condition="'$(ExcludeNUnitLiteReference)' != 'true'" />
 
 	<Import Project="$(GeneratedProjectFile)" Condition="'$(GeneratedProjectFile)' != ''" />
 </Project>

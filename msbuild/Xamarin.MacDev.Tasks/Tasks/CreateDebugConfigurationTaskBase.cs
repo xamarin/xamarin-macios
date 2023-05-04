@@ -26,6 +26,7 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public bool SdkIsSimulator { get; set; }
 
+		public string ConnectTimeout { get; set; }
 		#endregion
 
 		public override bool Execute ()
@@ -51,6 +52,11 @@ namespace Xamarin.MacDev.Tasks {
 
 			builder.Append ("Port: ");
 			builder.AppendLine (DebuggerPort);
+
+			if (!string.IsNullOrEmpty (ConnectTimeout)) {
+				builder.Append ("Connect Timeout: ");
+				builder.AppendLine (ConnectTimeout);
+			}
 
 			var text = builder.ToString ();
 

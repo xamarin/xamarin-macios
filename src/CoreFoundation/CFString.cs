@@ -130,7 +130,7 @@ namespace CoreFoundation {
 		protected CFString () { }
 
 		[DllImport (Constants.CoreFoundationLibrary, CharSet = CharSet.Unicode)]
-		extern static IntPtr CFStringCreateWithCharacters (IntPtr allocator, string str, nint count);
+		extern static IntPtr CFStringCreateWithCharacters (IntPtr allocator, IntPtr str, nint count);
 
 		[DllImport (Constants.CoreFoundationLibrary, CharSet = CharSet.Unicode)]
 		extern static nint CFStringGetLength (IntPtr handle);
@@ -146,7 +146,8 @@ namespace CoreFoundation {
 			if (value is null)
 				return NativeHandle.Zero;
 
-			return CFStringCreateWithCharacters (IntPtr.Zero, value, value.Length);
+			using var valuePtr = new TransientString (value, TransientString.Encoding.Unicode);
+			return CFStringCreateWithCharacters (IntPtr.Zero, valuePtr, value.Length);
 		}
 
 		public static void ReleaseNative (NativeHandle handle)
@@ -160,7 +161,8 @@ namespace CoreFoundation {
 			if (str is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (str));
 
-			Handle = CFStringCreateWithCharacters (IntPtr.Zero, str, str.Length);
+			using var strPtr = new TransientString (str, TransientString.Encoding.Unicode);
+			Handle = CFStringCreateWithCharacters (IntPtr.Zero, strPtr, str.Length);
 			this.str = str;
 		}
 

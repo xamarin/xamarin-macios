@@ -166,8 +166,8 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 12)]
@@ -182,8 +182,8 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 12)]
@@ -240,8 +240,8 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 12)]
@@ -292,8 +292,13 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_set_context (IntPtr o, IntPtr ctx);
 
+#if NET
+		[DllImport (Constants.libcLibrary)]
+		extern unsafe static void dispatch_apply_f (IntPtr iterations, IntPtr queue, IntPtr ctx, delegate* unmanaged<IntPtr, IntPtr, void> dispatch);
+#else
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_apply_f (IntPtr iterations, IntPtr queue, IntPtr ctx, dispatch_callback_iterations_t dispatch);
+#endif
 
 		public IntPtr Context {
 			get {
@@ -309,8 +314,6 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios6.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios6.0")]
 #else
@@ -356,14 +359,21 @@ namespace CoreFoundation {
 		//
 		// Dispatching
 		//
+#if !NET
 		internal delegate void dispatch_callback_t (IntPtr context);
 		internal static readonly dispatch_callback_t static_dispatch = static_dispatcher_to_managed;
 
 		internal delegate void dispatch_callback_iterations_t (IntPtr context, IntPtr count);
 		internal static readonly dispatch_callback_iterations_t static_dispatch_iterations = static_dispatcher_iterations_to_managed;
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+		internal static void static_dispatcher_to_managed (IntPtr context)
+#else
 		[MonoPInvokeCallback (typeof (dispatch_callback_t))]
 		static void static_dispatcher_to_managed (IntPtr context)
+#endif
 		{
 			GCHandle gch = GCHandle.FromIntPtr (context);
 			var obj = gch.Target as Tuple<Action, DispatchQueue>;
@@ -390,7 +400,11 @@ namespace CoreFoundation {
 
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (dispatch_callback_iterations_t))]
+#endif
 		static void static_dispatcher_iterations_to_managed (IntPtr context, IntPtr count)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (context);
@@ -417,10 +431,13 @@ namespace CoreFoundation {
 			}
 
 		}
-
+#if !NET
 		internal static readonly dispatch_callback_t free_gchandle = static_free_gchandle;
 
 		[MonoPInvokeCallback (typeof (dispatch_callback_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void static_free_gchandle (IntPtr context)
 		{
 			GCHandle.FromIntPtr (context).Free ();
@@ -430,8 +447,13 @@ namespace CoreFoundation {
 		{
 			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
-
+#if NET
+			unsafe {
+				dispatch_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), &static_dispatcher_to_managed);
+			}
+#else
 			dispatch_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
+#endif
 		}
 
 		public void DispatchAsync (DispatchBlock block)
@@ -447,7 +469,13 @@ namespace CoreFoundation {
 			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
+#if NET
+			unsafe {
+				dispatch_sync_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), &static_dispatcher_to_managed);
+			}
+#else
 			dispatch_sync_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
+#endif
 		}
 
 		public void DispatchSync (DispatchBlock block)
@@ -463,7 +491,13 @@ namespace CoreFoundation {
 			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
+#if NET
+			unsafe {
+				dispatch_barrier_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), &static_dispatcher_to_managed);
+			}
+#else
 			dispatch_barrier_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
+#endif
 		}
 
 		public void DispatchBarrierAsync (DispatchBlock block)
@@ -479,7 +513,13 @@ namespace CoreFoundation {
 			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
+#if NET
+			unsafe {
+				dispatch_barrier_sync_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), &static_dispatcher_to_managed);
+			}
+#else
 			dispatch_barrier_sync_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
+#endif
 		}
 
 		public void DispatchBarrierSync (DispatchBlock block)
@@ -494,8 +534,13 @@ namespace CoreFoundation {
 		{
 			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
-
+#if NET
+			unsafe {
+				dispatch_after_f (when.Nanoseconds, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), &static_dispatcher_to_managed);
+			}
+#else
 			dispatch_after_f (when.Nanoseconds, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
+#endif
 		}
 
 		public void DispatchAfter (DispatchTime when, DispatchBlock block)
@@ -510,12 +555,24 @@ namespace CoreFoundation {
 		{
 			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
+#if NET
+			unsafe {
+				dispatch_apply_f ((IntPtr) times, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), &static_dispatcher_iterations_to_managed);
+			}
+#else
 			dispatch_apply_f ((IntPtr) times, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch_iterations);
+#endif
 		}
 
 		public void SetSpecific (IntPtr key, object context)
 		{
+#if NET
+			unsafe {
+				dispatch_queue_set_specific (GetCheckedHandle (), key, (IntPtr) GCHandle.Alloc (context), &static_free_gchandle);
+			}
+#else
 			dispatch_queue_set_specific (GetCheckedHandle (), key, (IntPtr) GCHandle.Alloc (context), free_gchandle);
+#endif
 		}
 
 		public object? GetSpecific (IntPtr key)
@@ -526,7 +583,7 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -543,7 +600,7 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -558,16 +615,21 @@ namespace CoreFoundation {
 			}
 		}
 
+		static IntPtr dispatch_queue_create (string label, IntPtr attr)
+		{
+			using var labelPtr = new TransientString (label);
+			return dispatch_queue_create (labelPtr, attr);
+		}
 		//
 		// Native methods
 		//
 		[DllImport (Constants.libcLibrary)]
-		extern static IntPtr dispatch_queue_create (string label, IntPtr attr);
+		extern static IntPtr dispatch_queue_create (IntPtr label, IntPtr attr);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 12)]
@@ -575,35 +637,66 @@ namespace CoreFoundation {
 		[TV (10, 0)]
 		[Watch (3, 0)]
 #endif
-		[DllImport (Constants.libcLibrary, EntryPoint = "dispatch_queue_create_with_target$V2")]
-		extern static IntPtr dispatch_queue_create_with_target (string label, IntPtr attr, IntPtr target);
+		static IntPtr dispatch_queue_create_with_target (string label, IntPtr attr, IntPtr target)
+		{
+			using var labelPtr = new TransientString (label);
+			return dispatch_queue_create_with_target (labelPtr, attr, target);
+		}
 
+		[DllImport (Constants.libcLibrary, EntryPoint = "dispatch_queue_create_with_target$V2")]
+		extern static IntPtr dispatch_queue_create_with_target (IntPtr label, IntPtr attr, IntPtr target);
+
+#if NET
+		[DllImport (Constants.libcLibrary)]
+		extern unsafe static void dispatch_async_f (IntPtr queue, IntPtr context, delegate* unmanaged<IntPtr, void> dispatch);
+#else
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_async_f (IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
+#endif
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_async (IntPtr queue, IntPtr block);
 
+#if NET
+		[DllImport (Constants.libcLibrary)]
+		extern unsafe static void dispatch_sync_f (IntPtr queue, IntPtr context, delegate* unmanaged<IntPtr, void> dispatch);
+#else
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_sync_f (IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
+#endif
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_sync (IntPtr queue, IntPtr block);
 
+#if NET
+		[DllImport (Constants.libcLibrary)]
+		extern unsafe static void dispatch_barrier_async_f (IntPtr queue, IntPtr context, delegate* unmanaged<IntPtr, void> dispatch);
+#else
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_barrier_async_f (IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
+#endif
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_barrier_async (IntPtr queue, IntPtr block);
 
+#if NET
+		[DllImport (Constants.libcLibrary)]
+		extern unsafe static void dispatch_barrier_sync_f (IntPtr queue, IntPtr context, delegate* unmanaged<IntPtr, void> dispatch);
+#else
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_barrier_sync_f (IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
+#endif
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_barrier_sync (IntPtr queue, IntPtr block);
 
+#if NET
+		[DllImport (Constants.libcLibrary)]
+		extern unsafe static void dispatch_after_f (/* dispath_time_t */ ulong time, IntPtr queue, IntPtr context, delegate* unmanaged<IntPtr, void> dispatch);
+#else
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_after_f (/* dispath_time_t */ ulong time, IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
+#endif
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_after (/* dispath_time_t */ ulong time, IntPtr queue, IntPtr block);
@@ -613,8 +706,6 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos10.9")]
-		[UnsupportedOSPlatform ("ios6.0")]
 		[ObsoletedOSPlatform ("macos10.9")]
 		[ObsoletedOSPlatform ("ios6.0")]
 #else
@@ -632,15 +723,20 @@ namespace CoreFoundation {
 		// this returns a "const char*" so we cannot make a string out of it since it will be freed (and crash)
 		extern static IntPtr dispatch_queue_get_label (IntPtr queue);
 
+#if NET
+		[DllImport (Constants.libcLibrary)]
+		extern unsafe static void dispatch_queue_set_specific (IntPtr queue, /* const void* */ IntPtr key, /* void *_Nullable */ IntPtr context, delegate* unmanaged<IntPtr, void> /* _Nullable */ destructor);
+#else
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_queue_set_specific (IntPtr queue, /* const void* */ IntPtr key, /* void *_Nullable */ IntPtr context, dispatch_callback_t /* _Nullable */ destructor);
+#endif
 
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_queue_get_specific (IntPtr queue, /* const void* */ IntPtr key);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -702,8 +798,8 @@ namespace CoreFoundation {
 #if NET
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("maccatalyst")]
-			[SupportedOSPlatform ("ios10.0")]
-			[SupportedOSPlatform ("tvos10.0")]
+			[SupportedOSPlatform ("ios")]
+			[SupportedOSPlatform ("tvos")]
 #else
 			[Mac (10, 12)]
 			[iOS (10, 0)]
@@ -715,8 +811,8 @@ namespace CoreFoundation {
 #if NET
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("maccatalyst")]
-			[SupportedOSPlatform ("ios10.0")]
-			[SupportedOSPlatform ("tvos10.0")]
+			[SupportedOSPlatform ("ios")]
+			[SupportedOSPlatform ("tvos")]
 #else
 			[Mac (10, 12)]
 			[iOS (10, 0)]
@@ -727,7 +823,7 @@ namespace CoreFoundation {
 
 #if NET
 			[SupportedOSPlatform ("macos")]
-			[SupportedOSPlatform ("ios8.0")]
+			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("tvos")]
 			[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -738,7 +834,7 @@ namespace CoreFoundation {
 
 #if NET
 			[SupportedOSPlatform ("macos")]
-			[SupportedOSPlatform ("ios8.0")]
+			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("tvos")]
 			[SupportedOSPlatform ("maccatalyst")]
 #else
@@ -768,8 +864,8 @@ namespace CoreFoundation {
 
 #if NET
 			[SupportedOSPlatform ("macos")]
-			[SupportedOSPlatform ("ios10.0")]
-			[SupportedOSPlatform ("tvos10.0")]
+			[SupportedOSPlatform ("ios")]
+			[SupportedOSPlatform ("tvos")]
 #else
 			[Mac (10, 12)]
 			[iOS (10, 0)]
@@ -781,8 +877,8 @@ namespace CoreFoundation {
 
 #if NET
 			[SupportedOSPlatform ("macos")]
-			[SupportedOSPlatform ("ios10.0")]
-			[SupportedOSPlatform ("tvos10.0")]
+			[SupportedOSPlatform ("ios")]
+			[SupportedOSPlatform ("tvos")]
 #else
 			[Mac (10, 12)]
 			[iOS (10, 0)]
@@ -794,7 +890,7 @@ namespace CoreFoundation {
 
 #if NET
 			[SupportedOSPlatform ("macos")]
-			[SupportedOSPlatform ("ios8.0")]
+			[SupportedOSPlatform ("ios")]
 #else
 			[Mac (10, 10)]
 			[iOS (8, 0)]
@@ -805,8 +901,8 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 12)]
@@ -908,7 +1004,13 @@ namespace CoreFoundation {
 			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
+#if NET
+			unsafe {
+				dispatch_group_async_f (GetCheckedHandle (), queue.Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), &DispatchQueue.static_dispatcher_to_managed);
+			}
+#else
 			dispatch_group_async_f (GetCheckedHandle (), queue.Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
+#endif
 		}
 
 		public void Notify (DispatchQueue queue, DispatchBlock block)
@@ -926,8 +1028,13 @@ namespace CoreFoundation {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
-
+#if NET
+			unsafe {
+				dispatch_group_notify_f (GetCheckedHandle (), queue.Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), &DispatchQueue.static_dispatcher_to_managed);
+			}
+#else
 			dispatch_group_notify_f (GetCheckedHandle (), queue.Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
+#endif
 		}
 
 		public void Enter ()
@@ -953,11 +1060,21 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_group_create ();
 
+#if NET
+		[DllImport (Constants.libcLibrary)]
+		extern unsafe static void dispatch_group_async_f (IntPtr group, IntPtr queue, IntPtr context, delegate* unmanaged<IntPtr, void> block);
+#else
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_group_async_f (IntPtr group, IntPtr queue, IntPtr context, DispatchQueue.dispatch_callback_t block);
+#endif
 
+#if NET
+		[DllImport (Constants.libcLibrary)]
+		extern unsafe static void dispatch_group_notify_f (IntPtr group, IntPtr queue, IntPtr context, delegate* unmanaged<IntPtr, void> block);
+#else
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_group_notify_f (IntPtr group, IntPtr queue, IntPtr context, DispatchQueue.dispatch_callback_t block);
+#endif
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_group_notify (IntPtr group, IntPtr queue, IntPtr block);

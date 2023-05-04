@@ -186,6 +186,29 @@ partial class TestRuntime {
 #endif
 	}
 
+	public static void AssertDesktop (string message = "This test only runs on Desktops (macOS or MacCatalyst).")
+	{
+#if __MACOS__ || __MACCATALYST__
+		return;
+#endif
+		NUnit.Framework.Assert.Ignore (message);
+	}
+
+	public static void AssertNotDesktop (string message = "This test does not run on Desktops (macOS or MacCatalyst).")
+	{
+#if __MACOS__ || __MACCATALYST__
+		NUnit.Framework.Assert.Ignore (message);
+#endif
+	}
+
+	public static void AssertNotX64Desktop (string message = "This test does not run on x64 desktops.")
+	{
+#if __MACOS__ || __MACCATALYST__
+		if (!IsARM64)
+			NUnit.Framework.Assert.Ignore (message);
+#endif
+	}
+
 	public static void AssertNotARM64Desktop (string message = "This test does not run on an ARM64 desktop.")
 	{
 #if __MACOS__ || __MACCATALYST__
@@ -388,6 +411,30 @@ partial class TestRuntime {
 				return CheckiOSSystemVersion (16, 1);
 #elif MONOMAC
 				return CheckMacSystemVersion (13, 0);
+#else
+				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
+#endif
+			case 2:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (9, 1);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (16, 1);
+#elif __IOS__
+				return CheckiOSSystemVersion (16, 2);
+#elif MONOMAC
+				return CheckMacSystemVersion (13, 1);
+#else
+				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
+#endif
+			case 3:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (9, 4);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (16, 4);
+#elif __IOS__
+				return CheckiOSSystemVersion (16, 4);
+#elif MONOMAC
+				return CheckMacSystemVersion (13, 3);
 #else
 				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
 #endif
@@ -1392,9 +1439,32 @@ partial class TestRuntime {
 		}
 	}
 
-	public static void IgnoreInCIIfBadNetwork (Exception ex)
+	public static void IgnoreInCIIfBadNetwork (Exception? ex)
 	{
+		if (ex is null)
+			return;
+
 		IgnoreInCIfHttpStatusCodes (ex, HttpStatusCode.BadGateway, HttpStatusCode.GatewayTimeout, HttpStatusCode.ServiceUnavailable);
+		IgnoreInCIIfNetworkConnectionLost (ex);
+		IgnoreInCIIfDnsResolutionFailed (ex);
+	}
+
+	public static void IgnoreInCIIfDnsResolutionFailed (Exception ex)
+	{
+		var se = FindInner<System.Net.Sockets.SocketException> (ex);
+		if (se is null)
+			return;
+
+		var isDnsResolutionFailed = false;
+		if (se.ErrorCode == 8 /* EAI_NONAME: 'hostname or servname not provided, or not known' */) {
+			isDnsResolutionFailed = true;
+		} else if (se.Message.Contains ("hostname or servname not provided, or not known")) {
+			isDnsResolutionFailed = true;
+		}
+		if (!isDnsResolutionFailed)
+			return;
+
+		IgnoreInCI ($"Ignored due to DNS resolution failure '{se.Message}'");
 	}
 
 	public static void IgnoreInCIIfForbidden (Exception ex)
@@ -1424,6 +1494,28 @@ partial class TestRuntime {
 			return;
 
 		IgnoreInCI ($"Ignored due to http status code '{status}': {ex.Message}");
+	}
+
+	public static void IgnoreInCIIfNetworkConnectionLost (Exception ex)
+	{
+		// <Foundation.NSErrorException: Error Domain=NSURLErrorDomain Code=-1005 "The network connection was lost." UserInfo ...
+		if (!(ex is NSErrorException nex))
+			return;
+
+		if (nex.Code != (nint) (long) CFNetworkErrors.NetworkConnectionLost)
+			return;
+
+		IgnoreInCI ($"Ignored due to CFNetwork error {(CFNetworkErrors) (long) nex.Code}");
+	}
+
+	static T? FindInner<T> (Exception? ex) where T : Exception
+	{
+		while (ex is not null) {
+			if (ex is T target)
+				return target;
+			ex = ex.InnerException;
+		}
+		return null;
 	}
 
 	static bool TryGetHttpStatusCode (Exception ex, out HttpStatusCode status)

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -1042,6 +1042,21 @@
 		<value>Nie można zoptymalizować wywołania elementu BlockLiteral.SetupBlock w elemencie {0} przy przesunięciu {1}: {2}.
 		</value>
 	</data>
+  <data name="MX2106_E" xml:space="preserve">
+		<value>Nie można zoptymalizować wywołania wyrażenia BlockLiteral.{2} w {0} przy przesunięciu {1}, ponieważ w typie „{4}” znaleziono więcej niż jedną metodę o nazwie „{3}”.</value>
+	</data>
+  <data name="MX2106_F" xml:space="preserve">
+		<value>Nie można zoptymalizować wywołania wyrażenia BlockLiteral.{2} w {0} przy przesunięciu {1}, ponieważ metoda „{3}” musi mieć co najmniej jeden parametr.</value>
+	</data>
+  <data name="MX2106_G" xml:space="preserve">
+		<value>Nie można zoptymalizować wywołania wyrażenia BlockLiteral.{2} w {0} przy przesunięciu {1}, ponieważ pierwszy parametr w metodzie „{3}” nie ma wartości „System.IntPtr”, „void*” ani „ObjCRuntime.BlockLiteral*” (jest to „{4}”)</value>
+	</data>
+  <data name="MX2106_H" xml:space="preserve">
+		<value>Nie można zoptymalizować wywołania wyrażenia BlockLiteral.{2} w {0} przy przesunięciu {1}, ponieważ metoda „{3}” nie ma atrybutu [UnmanagedCallersOnly].</value>
+	</data>
+  <data name="MX2106_I" xml:space="preserve">
+		<value>Nie można zoptymalizować wywołania wyrażenia BlockLiteral.{2} w {0} przy przesunięciu {1}, ponieważ metoda „{3}” nie ma atrybutu [UnmanagedCallersOnly].</value>
+	</data>
   <data name="MM2107" xml:space="preserve">
 		<value>Nie można bezpiecznie usunąć rejestratora dynamicznego, ponieważ element {0} przywołuje element „{1}.{2} ({3})”.
 		</value>
@@ -1747,7 +1762,7 @@
 		<value>Nie można utworzyć wystąpienia typu {0}.</value>
 	</data>
   <data name="MX8042" xml:space="preserve">
-		<value>An exception occurred while trying to invoke the function {0}: {1}</value>
+		<value>Wystąpił wyjątek podczas próby wywołania funkcji {0}: {1}</value>
 		<comment>
 			0: name of function
 			1: exception info
@@ -1762,5 +1777,29 @@
 	</data>
   <data name="MX8044" xml:space="preserve">
 		<value>Zestaw {0} został zmodyfikowany od czasu utworzenia aplikacji, unieważniając wygenerowany kod rejestratora statycznego. MVID dla załadowanego zestawu jest {1}, a MVID dla zestawu, któremu odpowiada wygenerowany kod statycznego rejestratora, to {2}.</value>
+	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>Nie można wywołać zwolnienia w wystąpieniu typu {0}</value>
+	</data>
+  <data name="MX8046" xml:space="preserve">
+		<value>Nie można odnaleźć metody „{0}” w typie „{1}”</value>
+	</data>
+  <data name="MX8047" xml:space="preserve">
+		<value>Metoda trampoliny {0} nie jest zgodna ze wskaźnikiem funkcji 0x{1} dla argumentu trampolineMethod (nie odwołują się one do tej samej metody).</value>
+	</data>
+  <data name="MX8048" xml:space="preserve">
+		<value>Metoda trampoliny {0} musi mieć co najmniej jeden parametr.</value>
+	</data>
+  <data name="MX8049" xml:space="preserve">
+		<value>Pierwszy parametr w metodzie trampoliny {0} musi mieć wartość „System.IntPtr”, „void*” lub „ObjCRuntime.BlockLiteral*”.</value>
+	</data>
+  <data name="MX8050" xml:space="preserve">
+		<value>Wyrażenie BlockLiteral.GetBlockSignature nie jest obsługiwane, gdy rejestrator dynamiczny został połączony z dala od komputera.</value>
+	</data>
+  <data name="MX8051" xml:space="preserve">
+		<value>Metoda trampoliny {0} musi mieć atrybut [UnmanagedCallersOnly].</value>
+	</data>
+  <data name="MX8052" xml:space="preserve">
+		<value>Podpis musi być ciągiem niepustym.</value>
 	</data>
 </root>

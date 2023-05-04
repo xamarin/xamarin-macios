@@ -43,6 +43,14 @@ namespace Xamarin.Tuner {
 		// so we need a second dictionary
 		Dictionary<TypeDefinition, LinkedAwayTypeReference> LinkedAwayTypeMap = new Dictionary<TypeDefinition, LinkedAwayTypeReference> ();
 
+#if NET
+		public DerivedLinkContext (Xamarin.Linker.LinkerConfiguration configuration, Target target)
+			: base (configuration)
+		{
+			this.Target = target;
+		}
+#endif
+
 		public Application App {
 			get {
 				return Target.App;

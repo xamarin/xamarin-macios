@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -1042,6 +1042,21 @@
 		<value>無法將位移 {1} 之 {0} 中 BlockLiteral.SetupBlock 的呼叫最佳化: {2}。
 		</value>
 	</data>
+  <data name="MX2106_E" xml:space="preserve">
+		<value>因為在類型 '{4}' 中找到一個以上名稱為 '{3}' 的方法，所以無法最佳化在位移 {1} 的 {0} 中對 BlockLiteral.{2} 的呼叫。</value>
+	</data>
+  <data name="MX2106_F" xml:space="preserve">
+		<value>因為方法 '{3}' 至少必須有一個參數，所以無法最佳化在位移 {1} 的 {0} 中對 BlockLiteral.{2} 的呼叫。</value>
+	</data>
+  <data name="MX2106_G" xml:space="preserve">
+		<value>因為方法 '{3}' 中的第一個參數不是 'System.IntPtr'、'void*' 或 'ObjCRuntime.BlockLiteral*' (它是 '{4}')，所以無法最佳化在位移 {1} 的 {0} 中對 BlockLiteral.{2} 的呼叫</value>
+	</data>
+  <data name="MX2106_H" xml:space="preserve">
+		<value>因為方法 '{3}' 沒有 [UnmanagedCallersOnly] 屬性，所以無法最佳化在位移 {1} 的 {0} 中對 BlockLiteral.{2} 的呼叫。</value>
+	</data>
+  <data name="MX2106_I" xml:space="preserve">
+		<value>因為方法 '{3}' 沒有 [UnmanagedCallersOnly] 屬性，所以無法最佳化在位移 {1} 的 {0} 中對 BlockLiteral.{2} 的呼叫。</value>
+	</data>
   <data name="MM2107" xml:space="preserve">
 		<value>移除動態登錄器是不安全的，原因是 {0} 參考 '{1}.{2} ({3})'。
 		</value>
@@ -1747,7 +1762,7 @@
 		<value>無法建立 {0} 類型的執行個體。</value>
 	</data>
   <data name="MX8042" xml:space="preserve">
-		<value>An exception occurred while trying to invoke the function {0}: {1}</value>
+		<value>嘗試叫用函數 {0} 時發生例外狀況: {1}</value>
 		<comment>
 			0: name of function
 			1: exception info
@@ -1762,5 +1777,29 @@
 	</data>
   <data name="MX8044" xml:space="preserve">
 		<value>自從建置應用程式後，組件 {0} 已經修改，這會使產生的靜態登錄器程式碼失效。載入之組件的 MVID 為 {1}，而產生之靜態登錄器程式碼對應之組件的 MVID 為 {2}。</value>
+	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>無法在類型 {0} 的執行個體上呼叫 release</value>
+	</data>
+  <data name="MX8046" xml:space="preserve">
+		<value>在類型 '{1}' 中找不到方法 '{0}'</value>
+	</data>
+  <data name="MX8047" xml:space="preserve">
+		<value>trampoline 方法 {0} 不符合 trampolineMethod 引數的函數指標 0x{1} (未參考相同的方法)。</value>
+	</data>
+  <data name="MX8048" xml:space="preserve">
+		<value>trampoline 方法 {0}必 須至少有一個參數。</value>
+	</data>
+  <data name="MX8049" xml:space="preserve">
+		<value>trampoline 方法 {0} 中的第一個參數必須是 'System.IntPtr'、'void*' 或 'ObjCRuntime.BlockLiteral*'。</value>
+	</data>
+  <data name="MX8050" xml:space="preserve">
+		<value>當動態登錄器已連結離開時，不支援 BlockLiteral.GetBlockSignature。</value>
+	</data>
+  <data name="MX8051" xml:space="preserve">
+		<value>trampoline 方法 {0} 必須有 [UnmanagedCallersOnly] 屬性。</value>
+	</data>
+  <data name="MX8052" xml:space="preserve">
+		<value>簽章必須是非空白字串。</value>
 	</data>
 </root>

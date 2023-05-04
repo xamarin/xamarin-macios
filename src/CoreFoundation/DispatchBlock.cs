@@ -24,7 +24,7 @@ namespace CoreFoundation {
 #if !COREBUILD
 
 #if NET
-	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
@@ -91,7 +91,7 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		extern static IntPtr dispatch_block_create (/*DispatchBlockFlags*/ nuint flags, ref BlockLiteral block);
+		unsafe extern static IntPtr dispatch_block_create (/*DispatchBlockFlags*/ nuint flags, BlockLiteral* block);
 
 		// Returns a retained heap-allocated block
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -100,17 +100,14 @@ namespace CoreFoundation {
 			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			try {
-				block_handler.SetupBlockUnsafe (BlockStaticDispatchClass.static_dispatch_block, action);
-				return dispatch_block_create ((nuint) (ulong) flags, ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = BlockStaticDispatchClass.CreateBlock (action);
+				return dispatch_block_create ((nuint) (ulong) flags, &block);
 			}
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		extern static IntPtr dispatch_block_create_with_qos_class (/*DispatchBlockFlags*/ nuint flags, DispatchQualityOfService qosClass, int relative_priority, ref BlockLiteral dispatchBlock);
+		unsafe extern static IntPtr dispatch_block_create_with_qos_class (/*DispatchBlockFlags*/ nuint flags, DispatchQualityOfService qosClass, int relative_priority, BlockLiteral* dispatchBlock);
 
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_block_create_with_qos_class (/*DispatchBlockFlags*/ nuint flags, DispatchQualityOfService qosClass, int relative_priority, IntPtr dispatchBlock);
@@ -122,12 +119,9 @@ namespace CoreFoundation {
 			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			try {
-				block_handler.SetupBlockUnsafe (BlockStaticDispatchClass.static_dispatch_block, action);
-				return dispatch_block_create_with_qos_class ((nuint) (ulong) flags, qosClass, relative_priority, ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = BlockStaticDispatchClass.CreateBlock (action);
+				return dispatch_block_create_with_qos_class ((nuint) (ulong) flags, qosClass, relative_priority, &block);
 			}
 		}
 
@@ -202,23 +196,6 @@ namespace CoreFoundation {
 		public void Invoke ()
 		{
 			((Action) this!) ();
-		}
-
-		//
-		// You must invoke ->CleanupBlock after you have transferred ownership to
-		// the unmanaged code to release the resources allocated on the managed side
-		//
-		[BindingImpl (BindingImplOptions.Optimizable)]
-		internal static unsafe void Invoke (Action codeToRun, Action<IntPtr> invoker)
-		{
-			BlockLiteral* block_ptr;
-			BlockLiteral block;
-			block = new BlockLiteral ();
-			block_ptr = &block;
-
-			block.SetupBlockUnsafe (Trampolines.SDAction.Handler, codeToRun);
-			invoker ((IntPtr) block_ptr);
-			block_ptr->CleanupBlock ();
 		}
 	}
 

@@ -91,7 +91,7 @@ namespace Xamarin.MacDev.Tasks {
 			var list = ResolvedFileToPublish.ToList ();
 			foreach (var item in list.ToArray ()) { // iterate over a copy of the list, because we might modify the original list
 													// Compute the publish folder type if it's not specified
-				var publishFolderType = ParsePublishFolderType (item);
+				var publishFolderType = item.GetPublishFolderType ();
 				if (publishFolderType == PublishFolderType.Unset) {
 					publishFolderType = ComputePublishFolderType (list, item);
 					item.SetMetadata ("PublishFolderType", publishFolderType.ToString ());
@@ -99,6 +99,7 @@ namespace Xamarin.MacDev.Tasks {
 
 				// Figure out the relative directory inside the app bundle where the item is supposed to be placed.
 				var relativePath = string.Empty;
+				var virtualProjectPath = GetVirtualAppBundlePath (item);
 				switch (publishFolderType) {
 				case PublishFolderType.Assembly:
 					relativePath = AssemblyDirectory;
@@ -119,20 +120,30 @@ namespace Xamarin.MacDev.Tasks {
 					continue;
 				case PublishFolderType.CompressedAppleFramework:
 					relativePath = FrameworksDirectory;
+					virtualProjectPath = Path.GetFileNameWithoutExtension (item.ItemSpec);
+					if (virtualProjectPath.EndsWith (".xcframework", StringComparison.OrdinalIgnoreCase))
+						virtualProjectPath = Path.ChangeExtension (virtualProjectPath, ".framework");
 					break;
 				case PublishFolderType.AppleBindingResourcePackage:
+					// Nothing to do here, this is handled fully in the targets file
+					break;
 				case PublishFolderType.CompressedAppleBindingResourcePackage:
 					// Nothing to do here, this is handled fully in the targets file
+					virtualProjectPath = RemoveExtension (virtualProjectPath, ".zip");
 					break;
 				case PublishFolderType.PlugIns:
 					relativePath = PlugInsDirectory;
 					break;
 				case PublishFolderType.CompressedPlugIns:
 					relativePath = PlugInsDirectory;
+					virtualProjectPath = string.Empty;
 					break;
 				case PublishFolderType.RootDirectory:
 					break;
 				case PublishFolderType.DynamicLibrary:
+					relativePath = AssemblyDirectory;
+					break;
+				case PublishFolderType.PluginLibrary:
 					relativePath = AssemblyDirectory;
 					break;
 				case PublishFolderType.StaticLibrary:
@@ -148,7 +159,6 @@ namespace Xamarin.MacDev.Tasks {
 				}
 
 				// Compute the relative path of the item relative to the root of the app bundle
-				var virtualProjectPath = GetVirtualAppBundlePath (item);
 				relativePath = Path.Combine (relativePath, virtualProjectPath);
 				item.SetMetadata ("RelativePath", relativePath);
 			}
@@ -160,13 +170,20 @@ namespace Xamarin.MacDev.Tasks {
 				var items = entry.Value;
 				var item = new TaskItem (entry.Key);
 				item.SetMetadata ("PublishFolderType", "AppleFramework");
-				item.SetMetadata ("RelativePath", Path.Combine (FrameworksDirectory, Path.GetFileName (entry.Key)));
+				item.SetMetadata ("RelativePath", Path.Combine (FrameworksDirectory, Path.ChangeExtension (Path.GetFileName (entry.Key), "framework")));
 				list.Add (item);
 			}
 
 			UpdatedResolvedFileToPublish = list.ToArray ();
 
 			return !Log.HasLoggedErrors;
+		}
+
+		static string RemoveExtension (string path, string extension)
+		{
+			if (path.EndsWith (extension, StringComparison.OrdinalIgnoreCase))
+				return path.Substring (0, path.Length - extension.Length);
+			return path;
 		}
 
 		// Check if the input, or any of it's parent directories is either an *.xcframework, or a *.framework
@@ -291,6 +308,23 @@ namespace Xamarin.MacDev.Tasks {
 					return PackageSymbols ? PublishFolderType.Assembly : PublishFolderType.None;
 			}
 
+			// If an xml file matches the filename of any assembly, then treat that xml file as PublishFolderType=None
+			if (filename.EndsWith (".xml", StringComparison.OrdinalIgnoreCase)) {
+				var baseName = Path.GetFileNameWithoutExtension (filename);
+				if (items.Any (v => {
+					var fn = Path.GetFileName (v.ItemSpec);
+					if (fn.Length != baseName.Length + 4)
+						return false;
+
+					if (!(fn.EndsWith (".exe", StringComparison.OrdinalIgnoreCase) || fn.EndsWith (".dll", StringComparison.OrdinalIgnoreCase)))
+						return false;
+
+					return fn.StartsWith (baseName, StringComparison.OrdinalIgnoreCase);
+				})) {
+					return PublishFolderType.None;
+				}
+			}
+
 			// Binding resource package (*.resources / *.resources.zip)
 			if (IsBindingResourcePackage (filename, out var type))
 				return type;
@@ -320,11 +354,13 @@ namespace Xamarin.MacDev.Tasks {
 					return PublishFolderType.CompressedAppleFramework;
 			}
 
-			// *.a and *.dylib
+			// *.a, *.dylib and *.so
 			if (filename.EndsWith (".a", StringComparison.OrdinalIgnoreCase)) {
 				return PublishFolderType.StaticLibrary;
 			} else if (filename.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase)) {
 				return PublishFolderType.DynamicLibrary;
+			} else if (filename.EndsWith (".so", StringComparison.OrdinalIgnoreCase)) {
+				return PublishFolderType.PluginLibrary;
 			}
 
 			// no other files are copied
@@ -332,39 +368,6 @@ namespace Xamarin.MacDev.Tasks {
 			Log.LogWarning (MSBStrings.E7089 /* The file '{0}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle. */, item.ItemSpec);
 
 			return PublishFolderType.None;
-		}
-
-		static PublishFolderType ParsePublishFolderType (ITaskItem item)
-		{
-			return ParsePublishFolderType (item.GetMetadata ("PublishFolderType"));
-		}
-
-		static PublishFolderType ParsePublishFolderType (string value)
-		{
-			if (string.IsNullOrEmpty (value))
-				return PublishFolderType.Unset;
-
-			if (!Enum.TryParse<PublishFolderType> (value, out var result))
-				result = PublishFolderType.Unknown;
-
-			return result;
-		}
-
-		enum PublishFolderType {
-			Unset,
-			None,
-			RootDirectory,
-			Assembly,
-			Resource,
-			AppleBindingResourcePackage,
-			CompressedAppleBindingResourcePackage,
-			AppleFramework,
-			CompressedAppleFramework,
-			PlugIns,
-			CompressedPlugIns,
-			DynamicLibrary, // link with + copy to app bundle
-			StaticLibrary, // link with (but not copy to app bundle)
-			Unknown,
 		}
 	}
 }

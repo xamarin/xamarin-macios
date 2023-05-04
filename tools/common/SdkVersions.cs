@@ -14,12 +14,12 @@ using MonoTouch;
 
 namespace Xamarin {
 	static class SdkVersions {
-		public const string Xcode = "14.1";
-		public const string OSX = "13.0";
-		public const string iOS = "16.1";
-		public const string WatchOS = "9.1";
-		public const string TVOS = "16.1";
-		public const string MacCatalyst = "16.1";
+		public const string Xcode = "14.3";
+		public const string OSX = "13.3";
+		public const string iOS = "16.4";
+		public const string WatchOS = "9.4";
+		public const string TVOS = "16.4";
+		public const string MacCatalyst = "16.4";
 
 #if NET
 		public const string MinOSX = "10.14";
@@ -35,19 +35,19 @@ namespace Xamarin {
 		public const string MinMacCatalyst = "13.1";
 #endif
 
-		public const string MiniOSSimulator = "12.4";
+		public const string MiniOSSimulator = "13.7";
 		public const string MinWatchOSSimulator = "7.0";
 		public const string MinWatchOSCompanionSimulator = "14.5";
-		public const string MinTVOSSimulator = "12.4";
+		public const string MinTVOSSimulator = "13.4";
 
-		public const string MaxiOSSimulator = "16.1";
-		public const string MaxWatchOSSimulator = "9.1";
-		public const string MaxWatchOSCompanionSimulator = "16.1";
-		public const string MaxTVOSSimulator = "16.1";
+		public const string MaxiOSSimulator = "16.4";
+		public const string MaxWatchOSSimulator = "9.4";
+		public const string MaxWatchOSCompanionSimulator = "16.4";
+		public const string MaxTVOSSimulator = "16.4";
 
-		public const string MaxiOSDeploymentTarget = "16.1";
-		public const string MaxWatchDeploymentTarget = "9.1";
-		public const string MaxTVOSDeploymentTarget = "16.1";
+		public const string MaxiOSDeploymentTarget = "16.4";
+		public const string MaxWatchDeploymentTarget = "9.4";
+		public const string MaxTVOSDeploymentTarget = "16.4";
 
 		public const string DefaultTargetPlatformVersioniOS = "16.1";
 		public const string DefaultTargetPlatformVersiontvOS = "16.1";

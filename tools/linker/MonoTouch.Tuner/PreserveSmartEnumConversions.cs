@@ -61,8 +61,8 @@ namespace Xamarin.Linker.Steps {
 #if NET
 		void Mark (Tuple<MethodDefinition, MethodDefinition> pair)
 		{
-			context.Annotations.Mark (pair.Item1);
-			context.Annotations.Mark (pair.Item2);
+			Context.Annotations.Mark (pair.Item1);
+			Context.Annotations.Mark (pair.Item2);
 		}
 #else
 		void Preserve (Tuple<MethodDefinition, MethodDefinition> pair, MethodDefinition conditionA, MethodDefinition conditionB = null)

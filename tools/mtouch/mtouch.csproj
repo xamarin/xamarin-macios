@@ -338,6 +338,12 @@
     <Compile Include="..\common\OSPlatformAttributeExtensions.cs">
       <Link>tools\common\OSPlatformAttributeExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\common\CSToObjCMap.cs">
+      <Link>tools\common\CSToObjCMap.cs</Link>
+    </Compile>
+    <Compile Include="..\common\ObjCNameIndex.cs">
+      <Link>tools\common\ObjCNameIndex.cs</Link>
+    </Compile>
     <Compile Include="..\common\StaticRegistrar.cs">
       <Link>tools\common\StaticRegistrar.cs</Link>
     </Compile>
@@ -443,6 +449,9 @@
     </Compile>
     <Compile Include="..\common\StringUtils.cs">
       <Link>tools\common\StringUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\common\NullableAttributes.cs">
+      <Link>tools\common\NullableAttributes.cs</Link>
     </Compile>
     <Compile Include="..\common\CoreResolver.cs">
       <Link>tools\common\CoreResolver.cs</Link>
@@ -585,7 +594,7 @@
       <ManifestResourceName>Xamarin.Bundler.Errors.zh-Hant</ManifestResourceName>
     </EmbeddedResource>
   </ItemGroup>
-  <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.cs.in;../common/ProductConstants.cs.in" Outputs="../common/SdkVersions.cs;../common/ProductConstants.cs">
+  <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.in.cs;../common/ProductConstants.in.cs" Outputs="../common/SdkVersions.cs;../common/ProductConstants.cs">
     <Exec Command="make ../common/SdkVersions.cs ../common/ProductConstants.cs" />
   </Target>
   <Target Name="AfterBuild">

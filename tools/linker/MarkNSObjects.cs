@@ -143,8 +143,11 @@ namespace Xamarin.Linker.Steps {
 			return (method.DeclaringType.Module.Assembly.Name.Name == ProductAssembly);
 		}
 
-		static bool IsProductType (TypeDefinition type)
+		bool IsProductType (TypeDefinition type)
 		{
+			if (LinkContext.App.SkipMarkingNSObjectsInUserAssemblies)
+				return true;
+
 			var name = type.Module.Assembly.Name.Name;
 			switch (name) {
 			case "Xamarin.Forms.Platform.iOS":

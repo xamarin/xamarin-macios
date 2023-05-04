@@ -17,7 +17,6 @@ using System.Linq;
 using System.IO;
 
 using NUnit.Framework;
-using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Authentication;
 using System.Text;
@@ -137,7 +136,7 @@ namespace MonoTests.System.Net.Http {
 				}
 			}, () => completed);
 
-			if (!completed || !managedCookieResult)
+			if (!completed || !managedCookieResult || !nativeCookieResult)
 				TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
 			Assert.IsTrue (completed, "Network request completed");
 			Assert.IsNull (ex, "Exception");

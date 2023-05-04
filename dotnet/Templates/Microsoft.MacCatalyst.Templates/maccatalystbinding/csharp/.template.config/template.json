@@ -1,0 +1,20 @@
+﻿{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Microsoft",
+  "classifications": [ "macOS", "Mac Catalyst" ],
+  "groupIdentity": "Microsoft.MacCatalyst.MacCatalystBinding",
+  "identity": "Microsoft.MacCatalyst.MacCatalystBinding.CSharp",
+  "name": "Mac Catalyst Binding Library",
+  "description": "A project for creating a .NET Mac Catalyst binding library",
+  "shortName": "maccatalystbinding",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "MacCatalystBinding1",
+  "preferNameDirectory": true,
+  "primaryOutputs": [
+    { "path": "MacCatalystBinding1.csproj" }
+  ],
+  "defaultName": "MacCatalystBinding1"
+}

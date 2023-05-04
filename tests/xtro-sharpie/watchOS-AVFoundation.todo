@@ -33,7 +33,6 @@
 !missing-selector! +AVSampleBufferGenerator::notifyOfDataReadyForSampleBuffer:completionHandler: not bound
 !missing-selector! +AVSpeechSynthesisProviderVoice::updateSpeechVoices not bound
 !missing-selector! +AVSpeechUtterance::speechUtteranceWithSSMLRepresentation: not bound
-!missing-selector! +NSValue::valueWithCMVideoDimensions: not bound
 !missing-selector! AVAssetPlaybackAssistant::loadPlaybackConfigurationOptionsWithCompletionHandler: not bound
 !missing-selector! AVAssetTrack::canProvideSampleCursors not bound
 !missing-selector! AVAssetTrack::makeSampleCursorAtFirstSampleInDecodeOrder not bound
@@ -146,7 +145,6 @@
 !missing-selector! AVSpeechUtterance::initWithSSMLRepresentation: not bound
 !missing-selector! AVURLAsset::httpSessionIdentifier not bound
 !missing-selector! AVURLAsset::mayRequireContentKeysForMediaDataProcessing not bound
-!missing-selector! NSValue::CMVideoDimensionsValue not bound
 !missing-type! AVAssetPlaybackAssistant not bound
 !missing-type! AVSampleBufferGenerator not bound
 !missing-type! AVSampleBufferGeneratorBatch not bound
@@ -157,3 +155,11 @@
 !missing-type! AVSpeechSynthesisProviderVoice not bound
 !unknown-field! AVCaptureLensPositionCurrent bound
 !missing-enum-value! AVSpeechSynthesisVoiceQuality native value AVSpeechSynthesisVoiceQualityPremium = 3 not bound
+!missing-enum! AVPlayerInterstitialEventAssetListResponseStatus not bound
+!missing-enum-value! AVError native value AVErrorEncodeFailed = -11883 not bound
+!missing-enum-value! AVError native value AVErrorSandboxExtensionDenied = -11884 not bound
+!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeErrorKey not bound
+!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeEventKey not bound
+!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeNotification not bound
+!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeStatusKey not bound
+!missing-selector! AVPlayerInterstitialEvent::assetListResponse not bound

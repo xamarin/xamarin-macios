@@ -27,6 +27,7 @@ namespace ClassKit {
 		PassFail,
 		YesNo,
 		[iOS (12, 2)]
+		[MacCatalyst (14, 0)]
 		CorrectIncorrect,
 	}
 
@@ -51,8 +52,10 @@ namespace ClassKit {
 		Audio,
 		Video,
 		[iOS (13, 4)]
+		[MacCatalyst (14, 0)]
 		Course,
 		[iOS (13, 4)]
+		[MacCatalyst (14, 0)]
 		Custom,
 	}
 
@@ -243,6 +246,7 @@ namespace ClassKit {
 	interface CLSContext {
 
 		[iOS (13, 4)]
+		[MacCatalyst (14, 0)]
 		[Export ("identifierPath", ArgumentSemantic.Copy)]
 		string [] IdentifierPath { get; }
 
@@ -256,6 +260,7 @@ namespace ClassKit {
 		CLSContextType Type { get; }
 
 		[iOS (13, 4)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("customTypeName")]
 		string CustomTypeName { get; set; }
 
@@ -266,10 +271,12 @@ namespace ClassKit {
 		nint DisplayOrder { get; set; }
 
 		[iOS (13, 4)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("summary")]
 		string Summary { get; set; }
 
 		[iOS (13, 4)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("thumbnail", ArgumentSemantic.Assign)]
 		CGImage Thumbnail { get; set; }
 
@@ -291,30 +298,37 @@ namespace ClassKit {
 		void ResignActive ();
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("assignable")]
 		bool Assignable { [Bind ("isAssignable")] get; set; }
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("suggestedAge", ArgumentSemantic.Assign)]
 		NSRange SuggestedAge { get; set; }
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("suggestedCompletionTime", ArgumentSemantic.Assign)]
 		NSRange SuggestedCompletionTime { get; set; }
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("progressReportingCapabilities", ArgumentSemantic.Copy)]
 		NSSet<CLSProgressReportingCapability> ProgressReportingCapabilities { get; }
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("setType:")]
 		void SetType (CLSContextType type);
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("addProgressReportingCapabilities:")]
 		void AddProgressReportingCapabilities (NSSet<CLSProgressReportingCapability> capabilities);
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("resetProgressReportingCapabilities")]
 		void ResetProgressReportingCapabilities ();
 
@@ -405,6 +419,7 @@ namespace ClassKit {
 		void Save ([NullAllowed] Action<NSError> completion);
 
 		[iOS (12, 2)]
+		[MacCatalyst (14, 0)]
 		[Export ("completeAllAssignedActivitiesMatching:")]
 		void CompleteAllAssignedActivitiesMatching (string [] contextPath);
 

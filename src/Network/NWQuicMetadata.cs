@@ -54,8 +54,14 @@ namespace Network {
 			set => nw_quic_set_keepalive_interval (GetCheckedHandle (), value);
 		}
 
-		[DllImport (Constants.NetworkLibrary)]
-		static extern string nw_quic_get_application_error_reason (OS_nw_protocol_metadata metadata);
+		[DllImport (Constants.NetworkLibrary, EntryPoint = "nw_quic_get_application_error_reason")]
+		static extern IntPtr nw_quic_get_application_error_reason_ptr (OS_nw_protocol_metadata metadata);
+
+		static string nw_quic_get_application_error_reason (OS_nw_protocol_metadata metadata)
+		{
+			var ptr = nw_quic_get_application_error_reason_ptr (metadata);
+			return TransientString.ToStringAndFree (ptr)!;
+		}
 
 		public string? ApplicationErrorReason
 			=> nw_quic_get_application_error_reason (GetCheckedHandle ());
@@ -67,7 +73,13 @@ namespace Network {
 			nw_quic_get_application_error (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_quic_set_application_error (OS_nw_protocol_metadata metadata, ulong application_error, string? reason);
+		static extern void nw_quic_set_application_error (OS_nw_protocol_metadata metadata, ulong application_error, IntPtr reason);
+
+		static void nw_quic_set_application_error (OS_nw_protocol_metadata metadata, ulong application_error, string? reason)
+		{
+			using var reasonPtr = new TransientString (reason);
+			nw_quic_set_application_error (metadata, application_error, reasonPtr);
+		}
 
 		public (ulong error, string? reason) ApplicationError {
 			get => (ApplicationErrorCode, ApplicationErrorReason);

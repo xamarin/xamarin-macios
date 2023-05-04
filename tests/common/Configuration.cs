@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -143,7 +144,7 @@ namespace Xamarin.Tests {
 		static IEnumerable<string> FindConfigFiles (string name)
 		{
 			var dir = TestAssemblyDirectory;
-			while (dir != "/") {
+			while (!string.IsNullOrEmpty (dir) && dir != "/") {
 				var file = Path.Combine (dir, name);
 				if (File.Exists (file))
 					yield return file;
@@ -157,7 +158,7 @@ namespace Xamarin.Tests {
 		static void ParseConfigFiles ()
 		{
 			var test_config = FindConfigFiles (UseSystem ? "test-system.config" : "test.config");
-			if (!test_config.Any ()) {
+			if (!test_config.Any () && Environment.OSVersion.Platform != PlatformID.Win32NT) {
 				// Run 'make test.config' in the tests/ directory
 				// First find the tests/ directory
 				var dir = TestAssemblyDirectory;
@@ -176,7 +177,8 @@ namespace Xamarin.Tests {
 				ExecutionHelper.Execute ("make", new string [] { "-C", tests_dir, "test.config" });
 				test_config = FindConfigFiles ("test.config");
 			}
-			ParseConfigFiles (test_config);
+			if (test_config.Any ())
+				ParseConfigFiles (test_config);
 			ParseConfigFiles (FindConfigFiles ("Make.config.local"));
 			ParseConfigFiles (FindConfigFiles ("Make.config"));
 		}
@@ -498,6 +500,8 @@ namespace Xamarin.Tests {
 				return "Microsoft.watchOS.Sdk";
 			case ApplePlatform.MacOSX:
 				return "Microsoft.macOS.Sdk";
+			case ApplePlatform.MacCatalyst:
+				return "Microsoft.MacCatalyst.Sdk";
 			default:
 				throw new InvalidOperationException (platform.ToString ());
 			}
@@ -676,6 +680,26 @@ namespace Xamarin.Tests {
 		}
 
 #if !XAMMAC_TESTS
+		public static void AssertRuntimeIdentifierAvailable (ApplePlatform platform, string runtimeIdentifier)
+		{
+			if (string.IsNullOrEmpty (runtimeIdentifier))
+				return;
+
+			if (GetRuntimeIdentifiers (platform).Contains (runtimeIdentifier))
+				return;
+
+			Assert.Ignore ($"The runtime identifier {runtimeIdentifier} is not available on {platform}");
+		}
+
+		public static void AssertRuntimeIdentifiersAvailable (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			if (string.IsNullOrEmpty (runtimeIdentifiers))
+				return;
+
+			foreach (var rid in runtimeIdentifiers.Split (new char [] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+				AssertRuntimeIdentifierAvailable (platform, rid);
+		}
+
 		public static string GetBaseLibrary (Profile profile)
 		{
 			switch (profile) {
@@ -693,6 +717,13 @@ namespace Xamarin.Tests {
 			default:
 				throw new NotImplementedException ();
 			}
+		}
+
+		public static string GetBaseLibrary (ApplePlatform platform, bool isDotNet)
+		{
+			if (isDotNet)
+				return Path.Combine (GetRefDirectory (platform), GetBaseLibraryName (platform, isDotNet));
+			return GetBaseLibrary (platform.AsProfile ());
 		}
 
 		static string GetBaseLibraryName (TargetFramework targetFramework)
@@ -874,6 +905,13 @@ namespace Xamarin.Tests {
 			args.Add ($"-lib:{Path.GetDirectoryName (GetBaseLibrary (profile))}");
 			return "/Library/Frameworks/Mono.framework/Commands/csc";
 		}
+
+		public static void AssertiOS32BitAvailable ()
+		{
+			if (iOSSupports32BitArchitectures)
+				return;
+			Assert.Ignore ($"32-bit iOS support is not available in the current build.");
+		}
 #endif // !XAMMAC_TESTS
 
 		public static IEnumerable<ApplePlatform> GetIncludedPlatforms (bool dotnet)
@@ -950,6 +988,12 @@ namespace Xamarin.Tests {
 				var tgtDir = Path.GetDirectoryName (tgt);
 				Directory.CreateDirectory (tgtDir);
 				File.Copy (src, tgt);
+				if (tgt.EndsWith (".csproj", StringComparison.OrdinalIgnoreCase)) {
+					var initialContents = File.ReadAllText (tgt);
+					var fixedContents = initialContents.Replace ($"$(MSBuildThisFileDirectory)", Path.GetDirectoryName (src) + Path.DirectorySeparatorChar);
+					if (initialContents != fixedContents)
+						File.WriteAllText (tgt, fixedContents);
+				}
 			}
 
 			return testsTemporaryDirectory;
@@ -1071,12 +1115,22 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		public static void IgnoreIfAnyIgnoredPlatforms (bool dotnet = true)
+		public static bool AnyIgnoredPlatforms (bool dotnet = true)
+		{
+			return AnyIgnoredPlatforms (dotnet, out var _);
+		}
+
+		public static bool AnyIgnoredPlatforms (bool dotnet, out IEnumerable<ApplePlatform> notIncluded)
 		{
 			var allPlatforms = GetAllPlatforms (dotnet);
 			var includedPlatforms = GetIncludedPlatforms (dotnet);
-			var notIncluded = allPlatforms.Where (v => !includedPlatforms.Contains (v));
-			if (notIncluded.Any ())
+			notIncluded = allPlatforms.Where (v => !includedPlatforms.Contains (v)).ToArray ();
+			return notIncluded.Any ();
+		}
+
+		public static void IgnoreIfAnyIgnoredPlatforms (bool dotnet = true)
+		{
+			if (AnyIgnoredPlatforms (dotnet, out var notIncluded))
 				Assert.Ignore ($"This test requires all platforms to be included, but the following platforms aren't included: {string.Join (", ", notIncluded.Select (v => v.AsString ()))}");
 		}
 

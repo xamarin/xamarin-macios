@@ -14,6 +14,7 @@ namespace Accounts {
 
 	[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ACAccount : NSSecureCoding {
 		[Export ("identifier", ArgumentSemantic.Weak)]
@@ -46,12 +47,14 @@ namespace Accounts {
 #endif
 
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		[Export ("userFullName")]
 		string UserFullName { get; }
 	}
 
 	[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountCredential : NSSecureCoding {
 		[Export ("initWithOAuthToken:tokenSecret:")]
@@ -71,6 +74,7 @@ namespace Accounts {
 
 	[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountStore {
 		[Export ("accounts", ArgumentSemantic.Weak)]
@@ -94,11 +98,14 @@ namespace Accounts {
 #endif
 		[Export ("requestAccessToAccountsWithType:withCompletionHandler:")]
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'RequestAccess (ACAccountType, AccountStoreOptions, ACRequestCompletionHandler)' instead.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'RequestAccess (ACAccountType, AccountStoreOptions, ACRequestCompletionHandler)' instead.")]
 		[Async]
 		void RequestAccess (ACAccountType accountType, ACRequestCompletionHandler completionHandler);
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
 		[Deprecated (PlatformName.MacOSX, 11, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[Field ("ACAccountStoreDidChangeNotification")]
 		[Notification]
 		NSString ChangeNotification { get; }
@@ -123,6 +130,7 @@ namespace Accounts {
 
 	[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountType : NSSecureCoding {
 		[Export ("accountTypeDescription")]
@@ -136,22 +144,27 @@ namespace Accounts {
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Twitter SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Twitter SDK instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use Twitter SDK instead.")]
 		[Field ("ACAccountTypeIdentifierTwitter")]
 		NSString Twitter { get; }
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Sina Weibo SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Sina Weibo SDK instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use Sina Weibo SDK instead.")]
 		[Field ("ACAccountTypeIdentifierSinaWeibo")]
 		NSString SinaWeibo { get; }
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use Facebook SDK instead.")]
 		[Field ("ACAccountTypeIdentifierFacebook")]
 		NSString Facebook { get; }
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Tencent Weibo SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Tencent Weibo SDK instead.")]
 		[Mac (10, 9)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use Tencent Weibo SDK instead.")]
 		[Field ("ACAccountTypeIdentifierTencentWeibo")]
 		NSString TencentWeibo { get; }
 
@@ -160,12 +173,14 @@ namespace Accounts {
 		[NoWatch]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use LinkedIn SDK instead.")]
 		[Mac (10, 9)]
+		[NoMacCatalyst]
 		[Field ("ACAccountTypeIdentifierLinkedIn")]
 		NSString LinkedIn { get; }
 	}
 
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use Facebook SDK instead.")]
 	[Static]
 	interface ACFacebookKey {
 		[Field ("ACFacebookAppIdKey")]
@@ -181,6 +196,7 @@ namespace Accounts {
 
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use Facebook SDK instead.")]
 	[Static]
 	interface ACFacebookAudienceValue {
 		[Field ("ACFacebookAudienceEveryone")]
@@ -196,6 +212,8 @@ namespace Accounts {
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use Tencent Weibo SDK instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Tencent Weibo SDK instead.")]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use Tencent Weibo SDK instead.")]
 	[Static]
 	interface ACTencentWeiboKey {
 		[Field ("ACTencentWeiboAppIdKey")]
@@ -207,6 +225,7 @@ namespace Accounts {
 	[NoWatch]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use LinkedIn SDK instead.")]
 	[Mac (10, 9)]
+	[NoMacCatalyst]
 	[Static]
 	interface ACLinkedInKey {
 		[Field ("ACLinkedInAppIdKey")]

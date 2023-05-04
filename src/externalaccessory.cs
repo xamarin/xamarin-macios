@@ -20,6 +20,7 @@ namespace ExternalAccessory {
 
 	[Mac (10, 13)]
 	[TV (10, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (EAAccessoryDelegate) })]
 	// Objective-C exception thrown.  Name: EAAccessoryInitException Reason: -init not supported. EAAccessoryManager is responsible for creating all objects.
 	[DisableDefaultCtor]
@@ -64,12 +65,15 @@ namespace ExternalAccessory {
 		[Deprecated (PlatformName.iOS, 13, 0)]
 		[Deprecated (PlatformName.TvOS, 13, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Export ("dockType")]
 		string DockType { get; }
 	}
 
 	[Mac (10, 13)]
 	[TV (10, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -80,6 +84,7 @@ namespace ExternalAccessory {
 
 	[Mac (10, 13)]
 	[TV (10, 0)]
+	[MacCatalyst (13, 1)]
 	interface EAAccessoryEventArgs {
 		[Export ("EAAccessoryKey")]
 		EAAccessory Accessory { get; }
@@ -90,6 +95,7 @@ namespace ExternalAccessory {
 
 	[Mac (10, 13)]
 	[TV (10, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: EAAccessoryManagerInitException Reason: -init is not supported. Use +sharedAccessoryManager.
 	[DisableDefaultCtor]
@@ -131,6 +137,7 @@ namespace ExternalAccessory {
 
 	[Mac (10, 13)]
 	[TV (10, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: EASessionInitException Reason: -init not supported. use -initWithAccessory:forProtocol.
 	[DisableDefaultCtor]
@@ -158,6 +165,7 @@ namespace ExternalAccessory {
 	[NoMac]
 	[TV (10, 0)]
 	[iOS (8, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface EAWiFiUnconfiguredAccessory {
 		[Export ("name")]
@@ -187,6 +195,7 @@ namespace ExternalAccessory {
 	[NoTV] // [TV (10,0)]
 	[NoMac]
 	[iOS (8, 0)]
+	[MacCatalyst (13, 1)]
 #if TVOS
 	[BaseType (typeof (NSObject))]
 #else
@@ -206,11 +215,13 @@ namespace ExternalAccessory {
 		NativeHandle Constructor ([NullAllowed] IEAWiFiUnconfiguredAccessoryBrowserDelegate accessoryBrowserDelegate, [NullAllowed] DispatchQueue queue);
 
 		[NoTV] // no member is available
+		[MacCatalyst (13, 1)]
 		[Export ("delegate", ArgumentSemantic.Weak)]
 		[NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
 		[NoTV] // no member is available
+		[MacCatalyst (13, 1)]
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		[Protocolize]
@@ -240,6 +251,7 @@ namespace ExternalAccessory {
 	[NoMac]
 	[NoTV] // no member is available
 	[iOS (8, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface EAWiFiUnconfiguredAccessoryBrowserDelegate {

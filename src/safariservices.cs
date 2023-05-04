@@ -53,6 +53,7 @@ namespace SafariServices {
 		void ReloadContentBlocker (string identifier, [NullAllowed] Action<NSError> completionHandler);
 
 		[iOS (10, 0)]
+		[MacCatalyst (13, 4)]
 		[Static]
 		[Async]
 		[Export ("getStateOfContentBlockerWithIdentifier:completionHandler:")]
@@ -85,6 +86,7 @@ namespace SafariServices {
 
 	[NoMac]
 	[iOS (9, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor] // NSGenericException Reason: Misuse of SFSafariViewController interface. Use initWithURL:entersReaderIfAvailable:
 	interface SFSafariViewController {
@@ -93,11 +95,13 @@ namespace SafariServices {
 		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithURL:configuration:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (NSUrl url, SFSafariViewControllerConfiguration configuration);
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (NSUrl, SFSafariViewControllerConfiguration)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use '.ctor (NSUrl, SFSafariViewControllerConfiguration)' instead.")]
 		[DesignatedInitializer]
 		[Export ("initWithURL:entersReaderIfAvailable:")]
 		NativeHandle Constructor (NSUrl url, bool entersReaderIfAvailable);
@@ -114,20 +118,24 @@ namespace SafariServices {
 		SFSafariViewControllerDelegate Delegate { get; set; }
 
 		[iOS (10, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed]
 		[Export ("preferredBarTintColor", ArgumentSemantic.Assign)]
 		UIColor PreferredBarTintColor { get; set; }
 
 		[iOS (10, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed]
 		[Export ("preferredControlTintColor", ArgumentSemantic.Assign)]
 		UIColor PreferredControlTintColor { get; set; }
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		SFSafariViewControllerConfiguration Configuration { get; }
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("dismissButtonStyle", ArgumentSemantic.Assign)]
 		SFSafariViewControllerDismissButtonStyle DismissButtonStyle { get; set; }
 
@@ -139,6 +147,7 @@ namespace SafariServices {
 
 	[NoMac]
 	[iOS (9, 0)]
+	[MacCatalyst (13, 1)]
 	[Model]
 	[BaseType (typeof (NSObject))]
 	[Protocol]
@@ -153,20 +162,24 @@ namespace SafariServices {
 		void DidCompleteInitialLoad (SFSafariViewController controller, bool didLoadSuccessfully);
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("safariViewController:excludedActivityTypesForURL:title:")]
 		string [] GetExcludedActivityTypes (SFSafariViewController controller, NSUrl url, [NullAllowed] string title);
 
 		[iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("safariViewController:initialLoadDidRedirectToURL:")]
 		void InitialLoadDidRedirectToUrl (SFSafariViewController controller, NSUrl url);
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("safariViewControllerWillOpenInBrowser:")]
 		void WillOpenInBrowser (SFSafariViewController controller);
 	}
 
 	[NoMac]
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SFSafariViewControllerConfiguration : NSCopying {
 		[Export ("entersReaderIfAvailable")]
@@ -188,6 +201,7 @@ namespace SafariServices {
 
 	[NoMac]
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	delegate void SFAuthenticationCompletionHandler ([NullAllowed] NSUrl callbackUrl, [NullAllowed] NSError error);
 
 	[NoMac]
@@ -195,6 +209,8 @@ namespace SafariServices {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'ASWebAuthenticationSession' instead.")]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ASWebAuthenticationSession' instead.")]
 	interface SFAuthenticationSession {
 		[Export ("initWithURL:callbackURLScheme:completionHandler:")]
 		NativeHandle Constructor (NSUrl url, [NullAllowed] string callbackUrlScheme, SFAuthenticationCompletionHandler completionHandler);

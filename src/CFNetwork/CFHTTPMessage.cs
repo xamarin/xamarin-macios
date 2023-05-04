@@ -257,7 +257,7 @@ namespace CoreServices {
 			/* CFHTTPAuthenticationRef */ IntPtr auth, /* CFString */ IntPtr username, /* CFString */ IntPtr password,
 			/* CFStreamError* */ out CFStreamError error);
 
-		public void ApplyCredentials (CFHTTPAuthentication auth, NetworkCredential credential)
+		public void ApplyCredentials (CFHTTPAuthentication? auth, NetworkCredential credential)
 		{
 			if (auth is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (auth));
@@ -291,9 +291,7 @@ namespace CoreServices {
 #if NET
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("ios")]
-			[UnsupportedOSPlatform ("tvos12.0")]
-			[UnsupportedOSPlatform ("macos10.14")]
-			[UnsupportedOSPlatform ("ios12.0")]
+			[SupportedOSPlatform ("tvos")]
 			[UnsupportedOSPlatform ("maccatalyst")]
 			[ObsoletedOSPlatform ("tvos12.0", "Not available anymore.")]
 			[ObsoletedOSPlatform ("macos10.14", "Not available anymore.")]

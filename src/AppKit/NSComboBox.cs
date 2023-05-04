@@ -3,6 +3,8 @@ using System;
 using Foundation;
 using CoreGraphics;
 
+#nullable enable
+
 namespace AppKit {
 
 	public partial class NSComboBox {

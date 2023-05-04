@@ -49,6 +49,10 @@ namespace Xamarin.Linker {
 			case "NoMacAttribute":
 			case "NoTVAttribute":
 			case "NoWatchAttribute":
+			// special subclasses of IntroducedAttribute
+			case "TVAttribute":
+			case "MacCatalystAttribute":
+			case "WatchAttribute":
 				return attr_type.Namespace == Namespaces.ObjCRuntime;
 			// special subclasses of IntroducedAttribute
 			case "iOSAttribute":
@@ -73,6 +77,10 @@ namespace Xamarin.Linker {
 				case "AvailabilityBaseAttribute":   // base type for IntroducedAttribute and DeprecatedAttribute (could be in user code)
 				case "DeprecatedAttribute":
 				case "IntroducedAttribute":
+				// they are subclasses of ObjCRuntime.IntroducedAttribute
+				case "TVAttribute":
+				case "MacCatalystAttribute":
+				case "WatchAttribute":
 					LinkContext.StoreCustomAttribute (provider, attribute, "Availability");
 					break;
 				case "AdoptsAttribute":

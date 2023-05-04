@@ -32,10 +32,12 @@ using System;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace AppKit {
 
 	public partial class NSSlider {
-		NSActionDispatcher dispatcher;
+		NSActionDispatcher? dispatcher;
 
 #if NET
 		[SupportedOSPlatform ("macos")]

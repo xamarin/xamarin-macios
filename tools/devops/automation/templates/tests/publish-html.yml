@@ -42,6 +42,10 @@ parameters:
   type: string
   default: HEAD
 
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
 steps:
 
 - template: ../common/checkout.yml
@@ -72,7 +76,7 @@ steps:
 
         $labels = "$Env:LABELS".Split(";")
 
-        $testResults = New-TestSummaryResults -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports" -Labels $labels -TestPrefix "${{ parameters.testPrefix }}"
+        $testResults = New-TestSummaryResults -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports" -Labels $labels -TestPrefix "${{ parameters.testPrefix }}" -UploadPrefix "${{  parameters.uploadPrefix }}"
 
         $parallelResults = New-ParallelTestsResults -Results $testResults -Context "$Env:CONTEXT" -TestPrefix "${{ parameters.testPrefix }}" -VSDropsIndex $vsdropsIndex
         $success = $parallelResults.IsSuccess()

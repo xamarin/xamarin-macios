@@ -23,6 +23,10 @@ parameters:
   type: string
   default: HEAD
 
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
 steps:
 
 - template: ../common/checkout.yml
@@ -69,9 +73,8 @@ steps:
 # download the packages that have been created, install them, later download the zip files that contain the already built
 # tests and execute them.
 
-- pwsh: |
-    gci env: | format-table -autosize -wrap
-  displayName: 'Dump Environment'
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
+  displayName: 'Show Environment'
 
 - bash: |
     ioreg -l | grep -e Manufacturer -e 'Vendor Name'
@@ -134,39 +137,6 @@ steps:
   displayName: "Remove artifacts"
   condition: always()
 
-- task: DownloadPipelineArtifact@2
-  displayName: Download not notarized build
-  inputs:
-    artifact: 'not-signed-package'
-    allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/package
-
-- pwsh: |
-    $dir = "$(Build.SourcesDirectory)/package"
-    Dir $dir
-    $items = Get-ChildItem $dir -Recurse
-    foreach ($i in $items) {
-      if ($i.Name -like "xamarin.mac-*.pkg") {
-        $path = $i.FullName
-        Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$path"
-      }
-    }
-  displayName: 'Set Mac pkgs url'
-  timeoutInMinutes: 5
-
-- bash: |
-    echo "Pkg uri is $XM_PACKAGE"
-    make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ mac-tests-provisioning.csx
-  displayName: 'Generate Provisionator csx file'
-
-- task: xamops.azdevex.provisionator-task.provisionator@2
-  displayName: 'Provision Products & Frameworks'
-  inputs:
-    provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/mac-tests-provisioning.csx
-    provisioning_extra_args: '-vvvv'
-    github_token: $(Github.Token)
-  timeoutInMinutes: 250
-
 # Executed ONLY if we want to clear the provisionator cache.
 - bash: rm -rf "$TOOLS_DIR/provisionator"
   env:
@@ -182,22 +152,17 @@ steps:
     allowFailedBuilds: true
     path: $(Build.SourcesDirectory)/artifacts/tmp
 
-# sometimes the make that creates the pkgs fails.
 - bash: |
     set -ex
-    if ! test -f $(Build.SourcesDirectory)/artifacts/tmp/mac-test-package/mac-test-package.7z; then
-      echo "No test package could be found for tests on macOS $CONTEXT" > "$GITHUB_FAILURE_COMMENT_FILE"
-      exit 1
-    fi
     ls -Rla $(Build.SourcesDirectory)/artifacts/tmp
-    7z x $(Build.SourcesDirectory)/artifacts/tmp/mac-test-package/mac-test-package.7z -o$(Build.SourcesDirectory)/artifacts/ -bb1
+    7z x $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}mac-test-package/mac-test-package.7z -o$(Build.SourcesDirectory)/artifacts/ -bb1
+    # no prefix! we did expand to the exact name we are using
     ls -Rla $(Build.SourcesDirectory)/artifacts/mac-test-package
   displayName: Expand tests.
-  env:
-    CONTEXT: ${{ parameters.statusContext }}
 
 - bash: |
     ls -Rla $(Build.SourcesDirectory)/artifacts
+    # no prefix, we do know the path!
     $(Build.SourcesDirectory)/artifacts/mac-test-package/test-dependencies.sh
   displayName: Install dependencies.
   timeoutInMinutes: 60
@@ -266,13 +231,15 @@ steps:
   displayName: 'Collect and upload crash reports'
   condition: always() # who knows when crash reports can end up being useful
   continueOnError: true
+  env:
+    MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}
 
 # Make sure to report any errors
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
     $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
-    
+
     if (Test-Path -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -PathType Leaf)  {
       $statuses.SetStatus("error", "Tests on macOS ${{ parameters.statusContext }} failed.", "${{ parameters.statusContext }}")
       $githubComments.NewCommentFromFile("Tests on macOS ${{ parameters.statusContext }} failed", ":x:", "$Env:GITHUB_FAILURE_COMMENT_FILE")

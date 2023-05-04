@@ -55,23 +55,27 @@ namespace HomeKit {
 		[Deprecated (PlatformName.MacOSX, 13, 0, message: "No longer supported.")]
 		[Deprecated (PlatformName.iOS, 16, 1, message: "No longer supported.")]
 		[Deprecated (PlatformName.MacCatalyst, 16, 1, message: "No longer supported.")]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updatePrimaryHome:completionHandler:")]
 		void UpdatePrimaryHome (HMHome home, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addHomeWithName:completionHandler:")]
 		void AddHome (string homeName, Action<HMHome, NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeHome:completionHandler:")]
 		void RemoveHome (HMHome home, Action<NSError> completion);
 
 		[iOS (13, 0), Watch (6, 0), TV (13, 0), NoMac]
+		[MacCatalyst (14, 0)]
 		[Export ("authorizationStatus")]
 		HMHomeManagerAuthorizationStatus AuthorizationStatus { get; }
 	}
@@ -98,10 +102,12 @@ namespace HomeKit {
 		[iOS (13, 0), NoWatch, NoTV, NoMac]
 		[NoMacCatalyst]
 		[Deprecated (PlatformName.iOS, 15, 0, message: "This method is no longer supported.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "This method is no longer supported.")]
 		[Export ("homeManager:didReceiveAddAccessoryRequest:"), EventArgs ("HMHomeManagerAddAccessoryRequest")]
 		void DidReceiveAddAccessoryRequest (HMHomeManager manager, HMAddAccessoryRequest request);
 
 		[iOS (13, 0), Watch (6, 0), TV (13, 0), NoMac]
+		[MacCatalyst (14, 0)]
 		[Export ("homeManager:didUpdateAuthorizationStatus:"), EventArgs ("HMHomeManagerAuthorizationStatus")]
 		void DidUpdateAuthorizationStatus (HMHomeManager manager, HMHomeManagerAuthorizationStatus status);
 	}
@@ -118,10 +124,13 @@ namespace HomeKit {
 		[NoTV]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 9, 0)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Export ("identifier", ArgumentSemantic.Copy)]
 		NSUuid Identifier { get; }
 
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 
@@ -142,10 +151,13 @@ namespace HomeKit {
 		[NoTV]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 9, 0)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Export ("identifiersForBridgedAccessories", ArgumentSemantic.Copy)]
 		NSUuid [] IdentifiersForBridgedAccessories { get; }
 
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("uniqueIdentifiersForBridgedAccessories", ArgumentSemantic.Copy)]
 		NSUuid [] UniqueIdentifiersForBridgedAccessories { get; }
 
@@ -156,6 +168,7 @@ namespace HomeKit {
 		HMService [] Services { get; }
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("profiles", ArgumentSemantic.Copy)]
 		HMAccessoryProfile [] Profiles { get; }
 
@@ -163,24 +176,28 @@ namespace HomeKit {
 		bool Blocked { [Bind ("isBlocked")] get; }
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("model")]
 		string Model { get; }
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("manufacturer")]
 		string Manufacturer { get; }
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("firmwareVersion")]
 		string FirmwareVersion { get; }
 
 		[NullAllowed]
-		[Mac (13, 0), iOS (16, 1), MacCatalyst (16, 1), Watch (9, 1), TV (16, 1)]
+		[Mac (13, 0), iOS (16, 1), MacCatalyst (16, 2), Watch (9, 1), TV (16, 1)]
 		[Export ("matterNodeID", ArgumentSemantic.Copy)]
 		NSNumber MatterNodeId { get; }
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
@@ -190,16 +207,19 @@ namespace HomeKit {
 		void Identify (Action<NSError> completion);
 
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("category", ArgumentSemantic.Strong)]
 		HMAccessoryCategory Category { get; }
 
 		// HMAccessory(Camera)
 
 		[Watch (3, 0), iOS (10, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("cameraProfiles", ArgumentSemantic.Copy)]
 		HMCameraProfile [] CameraProfiles { get; }
 
 		[Watch (4, 3), TV (11, 3), iOS (11, 3)]
+		[MacCatalyst (14, 0)]
 		[Export ("supportsIdentify")]
 		bool SupportsIdentify { get; }
 	}
@@ -224,10 +244,12 @@ namespace HomeKit {
 		void DidUpdateServices (HMAccessory accessory);
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("accessory:didAddProfile:"), EventArgs ("HMAccessoryProfile")]
 		void DidAddProfile (HMAccessory accessory, HMAccessoryProfile profile);
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("accessory:didRemoveProfile:"), EventArgs ("HMAccessoryProfile")]
 		void DidRemoveProfile (HMAccessory accessory, HMAccessoryProfile profile);
 
@@ -238,6 +260,7 @@ namespace HomeKit {
 		void DidUpdateValueForCharacteristic (HMAccessory accessory, HMService service, HMCharacteristic characteristic);
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("accessory:didUpdateFirmwareVersion:"), EventArgs ("HMAccessoryFirmwareVersion")]
 		void DidUpdateFirmwareVersion (HMAccessory accessory, string firmwareVersion);
 	}
@@ -302,11 +325,19 @@ namespace HomeKit {
 	[iOS (8, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	partial interface HMAction {
 
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
+
+		[Deprecated (PlatformName.iOS, 16, 4, message: "Use subclasses instead.")]
+		[Deprecated (PlatformName.TvOS, 16, 4, message: "Use subclasses instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use subclasses instead.")]
+		[Export ("init")]
+		NativeHandle Constructor ();
 	}
 
 	[TV (10, 0)]
@@ -327,32 +358,38 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addAction:completionHandler:")]
 		void AddAction (HMAction action, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeAction:completionHandler:")]
 		void RemoveAction (HMAction action, Action<NSError> completion);
 
 		[Internal]
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("actionSetType")]
 		NSString _ActionSetType { get; }
 
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 
 		[Watch (3, 0), iOS (10, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed]
 		[Export ("lastExecutionDate", ArgumentSemantic.Copy)]
 		NSDate LastExecutionDate { get; }
@@ -380,6 +417,7 @@ namespace HomeKit {
 		NSString UserDefined { get; }
 
 		[Watch (3, 0), iOS (10, 0)]
+		[MacCatalyst (14, 0)]
 		[Field ("HMActionSetTypeTriggerOwned")]
 		NSString TriggerOwned { get; }
 	}
@@ -426,15 +464,18 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateAuthorizationData:completionHandler:")]
 		void UpdateAuthorizationData ([NullAllowed] NSData data, Action<NSError> completion);
 
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("localizedDescription")]
 		string LocalizedDescription { get; }
 
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 
@@ -464,6 +505,7 @@ namespace HomeKit {
 
 		[iOS (9, 3)]
 		[Watch (2, 2)]
+		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicPropertyHidden")]
 		NSString Hidden { get; }
 
@@ -491,19 +533,23 @@ namespace HomeKit {
 		NSString ArcDegree { get; }
 
 		[iOS (8, 3)]
+		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicMetadataUnitsSeconds")]
 		NSString Seconds { get; }
 
 		[iOS (9, 3)]
 		[Watch (2, 2)]
+		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicMetadataUnitsLux")]
 		NSString Lux { get; }
 
 		[Watch (3, 0), iOS (10, 0)]
+		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicMetadataUnitsPartsPerMillion")]
 		NSString PartsPerMillion { get; }
 
 		[Watch (3, 0), iOS (10, 0)]
+		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicMetadataUnitsMicrogramsPerCubicMeter")]
 		NSString MicrogramsPerCubicMeter { get; }
 	}
@@ -538,6 +584,7 @@ namespace HomeKit {
 		string ManufacturerDescription { get; }
 
 		[Watch (3, 0), iOS (10, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("validValues", ArgumentSemantic.Copy)]
 		NSNumber [] ValidValues { get; }
 	}
@@ -551,6 +598,7 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithCharacteristic:targetValue:")]
 #if XAMCORE_3_0
 		NativeHandle Constructor (HMCharacteristic characteristic, INSCopying targetValue);
@@ -570,6 +618,7 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateTargetValue:completionHandler:")]
 #if XAMCORE_3_0
@@ -601,16 +650,19 @@ namespace HomeKit {
 		bool Primary { [Bind ("isPrimary")] get; }
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("homeHubState")]
 		HMHomeHubState HomeHubState { get; }
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
 
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 
@@ -621,18 +673,21 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addAccessory:completionHandler:")]
 		void AddAccessory (HMAccessory accessory, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeAccessory:completionHandler:")]
 		void RemoveAccessory (HMAccessory accessory, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("assignAccessory:toRoom:completionHandler:")]
 		void AssignAccessory (HMAccessory accessory, HMRoom room, Action<NSError> completion);
@@ -644,6 +699,7 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("unblockAccessory:completionHandler:")]
 		void UnblockAccessory (HMAccessory accessory, Action<NSError> completion);
@@ -651,12 +707,14 @@ namespace HomeKit {
 		[Deprecated (PlatformName.iOS, 15, 4, message: "Use 'HMAccessorySetupManager.PerformAccessorySetup' instead.")]
 		[NoWatch, NoTV, iOS (10, 0)]
 		[NoMacCatalyst]
+		[Deprecated (PlatformName.MacCatalyst, 15, 4, message: "Use 'HMAccessorySetupManager.PerformAccessorySetup' instead.")]
 		[Async]
 		[Export ("addAndSetupAccessoriesWithCompletionHandler:")]
 		void AddAndSetupAccessories (Action<NSError> completion);
 
 		[Deprecated (PlatformName.iOS, 15, 4, message: "Use 'HMAccessorySetupManager.PerformAccessorySetup' instead.")]
 		[NoWatch, NoTV, iOS (11, 3), NoMacCatalyst]
+		[Deprecated (PlatformName.MacCatalyst, 15, 4, message: "Use 'HMAccessorySetupManager.PerformAccessorySetup' instead.")]
 		[Async]
 		[Export ("addAndSetupAccessoriesWithPayload:completionHandler:")]
 		void AddAndSetupAccessories (HMAccessorySetupPayload payload, Action<HMAccessory [], NSError> completion);
@@ -668,12 +726,14 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addRoomWithName:completionHandler:")]
 		void AddRoom (string roomName, Action<HMRoom, NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeRoom:completionHandler:")]
 		void RemoveRoom (HMRoom room, Action<NSError> completion);
@@ -688,12 +748,14 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addZoneWithName:completionHandler:")]
 		void AddZone (string zoneName, Action<HMZone, NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeZone:completionHandler:")]
 		void RemoveZone (HMZone zone, Action<NSError> completion);
@@ -705,12 +767,14 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addServiceGroupWithName:completionHandler:")]
 		void AddServiceGroup (string serviceGroupName, Action<HMServiceGroup, NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeServiceGroup:completionHandler:")]
 		void RemoveServiceGroup (HMServiceGroup group, Action<NSError> completion);
@@ -722,12 +786,14 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addActionSetWithName:completionHandler:")]
 		void AddActionSet (string actionSetName, Action<HMActionSet, NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeActionSet:completionHandler:")]
 		void RemoveActionSet (HMActionSet actionSet, Action<NSError> completion);
@@ -737,6 +803,7 @@ namespace HomeKit {
 		void ExecuteActionSet (HMActionSet actionSet, Action<NSError> completion);
 
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("builtinActionSetOfType:")]
 		[return: NullAllowed]
 		HMActionSet GetBuiltinActionSet (string actionSetType);
@@ -748,12 +815,14 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addTrigger:completionHandler:")]
 		void AddTrigger (HMTrigger trigger, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeTrigger:completionHandler:")]
 		void RemoveTrigger (HMTrigger trigger, Action<NSError> completion);
@@ -763,28 +832,35 @@ namespace HomeKit {
 		[NoTV]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 9, 0)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Export ("users")]
 		HMUser [] Users { get; }
 
 		[NoTV]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'ManageUsers' instead.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'ManageUsers' instead.")]
 		[Async]
 		[Export ("addUserWithCompletionHandler:")]
 		void AddUser (Action<HMUser, NSError> completion);
 
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("currentUser", ArgumentSemantic.Strong)]
 		HMUser CurrentUser { get; }
 
 		[NoTV]
 		[NoWatch]
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Async]
 		[Export ("manageUsersWithCompletionHandler:")]
 		void ManageUsers (Action<NSError> completion);
 
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("homeAccessControlForUser:")]
 		HMHomeAccessControl GetHomeAccessControl (HMUser user);
 
@@ -804,6 +880,7 @@ namespace HomeKit {
 		NSString UserFailedAccessoriesKey { get; }
 
 		[Watch (6, 1), TV (13, 2), iOS (13, 2)]
+		[MacCatalyst (14, 0)]
 		[Export ("supportsAddingNetworkRouter")]
 		bool SupportsAddingNetworkRouter { get; }
 	}
@@ -819,6 +896,7 @@ namespace HomeKit {
 		void DidUpdateNameForHome (HMHome home);
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("homeDidUpdateAccessControlForCurrentUser:")]
 		void DidUpdateAccessControlForCurrentUser (HMHome home);
 
@@ -907,10 +985,12 @@ namespace HomeKit {
 		void DidEncounterError (HMHome home, NSError error, HMAccessory accessory);
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("home:didUpdateHomeHubState:"), EventArgs ("HMHomeHubState")]
 		void DidUpdateHomeHubState (HMHome home, HMHomeHubState homeHubState);
 
 		[Watch (6, 1), TV (13, 2), iOS (13, 2)]
+		[MacCatalyst (14, 0)]
 		[Export ("homeDidUpdateSupportedFeatures:")]
 		void DidUpdateSupportedFeatures (HMHome home);
 	}
@@ -930,11 +1010,13 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
 
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 	}
@@ -966,34 +1048,41 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Async]
 		[Export ("updateAssociatedServiceType:completionHandler:")]
 		void UpdateAssociatedServiceType ([NullAllowed] string serviceType, Action<NSError> completion);
 
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("userInteractive")]
 		bool UserInteractive { [Bind ("isUserInteractive")] get; }
 
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("localizedDescription")]
 		string LocalizedDescription { get; }
 
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 
 		[Watch (3, 0), iOS (10, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("primaryService")]
 		bool PrimaryService { [Bind ("isPrimaryService")] get; }
 
 		[Watch (3, 0), iOS (10, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("linkedServices", ArgumentSemantic.Copy)]
 		HMService [] LinkedServices { get; }
 	}
@@ -1013,23 +1102,27 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addService:completionHandler:")]
 		void AddService (HMService service, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeService:completionHandler:")]
 		void RemoveService (HMService service, Action<NSError> completion);
 
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 	}
@@ -1041,38 +1134,57 @@ namespace HomeKit {
 	[BaseType (typeof (HMTrigger))]
 	partial interface HMTimerTrigger {
 
+		[Watch (9, 4), TV (16, 4), MacCatalyst (16, 4), iOS (16, 4)]
+		[Export ("initWithName:fireDate:recurrence:")]
+		NativeHandle Constructor (string name, NSDate fireDate, [NullAllowed] NSDateComponents recurrence);
+
+		[Deprecated (PlatformName.iOS, 16, 4, message: "Use '.ctor (string, NSDate, NSDateComponents' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use '.ctor (string, NSDate, NSDateComponents' instead.")]
 		[NoTV]
 		[NoWatch]
-		[DesignatedInitializer]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithName:fireDate:timeZone:recurrence:recurrenceCalendar:")]
 		NativeHandle Constructor (string name, NSDate fireDate, [NullAllowed] NSTimeZone timeZone, [NullAllowed] NSDateComponents recurrence, [NullAllowed] NSCalendar recurrenceCalendar);
 
 		[Export ("fireDate", ArgumentSemantic.Copy)]
 		NSDate FireDate { get; }
 
+		[Deprecated (PlatformName.iOS, 16, 4, message: "Use 'HMEventTrigger' with 'HMCalendarEvent' for triggers based on a time-zone-relative time of day.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use 'HMEventTrigger' with 'HMCalendarEvent' for triggers based on a time-zone-relative time of day.")]
+		[Deprecated (PlatformName.TvOS, 16, 4, message: "Use 'HMEventTrigger' with 'HMCalendarEvent' for triggers based on a time-zone-relative time of day.")]
+		[Deprecated (PlatformName.WatchOS, 9, 4, message: "Use 'HMEventTrigger' with 'HMCalendarEvent' for triggers based on a time-zone-relative time of day.")]
 		[NullAllowed, Export ("timeZone", ArgumentSemantic.Copy)]
 		NSTimeZone TimeZone { get; }
 
 		[NullAllowed, Export ("recurrence", ArgumentSemantic.Copy)]
 		NSDateComponents Recurrence { get; }
 
+		[Deprecated (PlatformName.iOS, 16, 4, message: "No longer supported.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "No longer supported.")]
+		[Deprecated (PlatformName.TvOS, 16, 4, message: "No longer supported.")]
+		[Deprecated (PlatformName.WatchOS, 9, 4, message: "No longer supported.")]
 		[NullAllowed, Export ("recurrenceCalendar", ArgumentSemantic.Copy)]
 		NSCalendar RecurrenceCalendar { get; }
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateFireDate:completionHandler:")]
 		void UpdateFireDate (NSDate fireDate, Action<NSError> completion);
 
+		[Deprecated (PlatformName.iOS, 16, 4, message: "Use 'HMEventTrigger' with 'HMCalendarEvent' for triggers based on a time-zone-relative time of day.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use 'HMEventTrigger' with 'HMCalendarEvent' for triggers based on a time-zone-relative time of day.")]
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateTimeZone:completionHandler:")]
 		void UpdateTimeZone ([NullAllowed] NSTimeZone timeZone, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateRecurrence:completionHandler:")]
 		void UpdateRecurrence ([NullAllowed] NSDateComponents recurrence, Action<NSError> completion);
@@ -1099,29 +1211,34 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addActionSet:completionHandler:")]
 		void AddActionSet (HMActionSet actionSet, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeActionSet:completionHandler:")]
 		void RemoveActionSet (HMActionSet actionSet, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("enable:completionHandler:")]
 		void Enable (bool enable, Action<NSError> completion);
 
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 	}
@@ -1141,23 +1258,27 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("addRoom:completionHandler:")]
 		void AddRoom (HMRoom room, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("removeRoom:completionHandler:")]
 		void RemoveRoom (HMRoom room, Action<NSError> completion);
 
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 	}
@@ -1214,6 +1335,7 @@ namespace HomeKit {
 		string Name { get; }
 
 		[iOS (9, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 	}
@@ -1243,6 +1365,7 @@ namespace HomeKit {
 	interface HMCharacteristicEvent : NSMutableCopying {
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithCharacteristic:triggerValue:")]
 		NativeHandle Constructor (HMCharacteristic characteristic, [NullAllowed] INSCopying triggerValue);
 
@@ -1256,6 +1379,8 @@ namespace HomeKit {
 		[Deprecated (PlatformName.iOS, 11, 0)]
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Async]
 		[Export ("updateTriggerValue:completionHandler:")]
 		void UpdateTriggerValue ([NullAllowed] INSCopying triggerValue, Action<NSError> completion);
@@ -1265,14 +1390,22 @@ namespace HomeKit {
 	[iOS (9, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface HMEvent {
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("isSupportedForHome:")]
 		bool IsSupported (HMHome home);
+
+		[Deprecated (PlatformName.iOS, 16, 4, message: "Use subclasses instead.")]
+		[Deprecated (PlatformName.TvOS, 16, 4, message: "Use subclasses instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use subclasses instead.")]
+		[Export ("init")]
+		NativeHandle Constructor ();
 	}
 
 	[Watch (4, 0), TV (11, 0), iOS (11, 0), MacCatalyst (14, 0)]
@@ -1287,12 +1420,14 @@ namespace HomeKit {
 	interface HMEventTrigger {
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithName:events:predicate:")]
 		NativeHandle Constructor (string name, HMEvent [] events, [NullAllowed] NSPredicate predicate);
 
 		[NoTV]
 		[NoWatch]
 		[iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("initWithName:events:endEvents:recurrences:predicate:")]
 		NativeHandle Constructor (string name, HMEvent [] events, [NullAllowed] HMEvent [] endEvents, [NullAllowed] NSDateComponents [] recurrences, [NullAllowed] NSPredicate predicate);
 
@@ -1300,6 +1435,7 @@ namespace HomeKit {
 		HMEvent [] Events { get; }
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("endEvents", ArgumentSemantic.Copy)]
 		HMEvent [] EndEvents { get; }
 
@@ -1307,14 +1443,17 @@ namespace HomeKit {
 		NSPredicate Predicate { get; }
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("recurrences", ArgumentSemantic.Copy)]
 		NSDateComponents [] Recurrences { get; }
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("executeOnce")]
 		bool ExecuteOnce { get; }
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Export ("triggerActivationState", ArgumentSemantic.Assign)]
 		HMEventTriggerActivationState TriggerActivationState { get; }
 
@@ -1324,6 +1463,7 @@ namespace HomeKit {
 		NSPredicate CreatePredicateForEvaluatingTriggerOccurringBeforeSignificantEvent (NSString significantEvent, [NullAllowed] NSDateComponents offset);
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("predicateForEvaluatingTriggerOccurringBeforeSignificantEvent:")]
 		NSPredicate CreatePredicateForEvaluatingTriggerOccurringBeforeSignificantEvent (HMSignificantTimeEvent significantEvent);
@@ -1334,11 +1474,13 @@ namespace HomeKit {
 		NSPredicate CreatePredicateForEvaluatingTriggerOccurringAfterSignificantEvent (NSString significantEvent, [NullAllowed] NSDateComponents offset);
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("predicateForEvaluatingTriggerOccurringAfterSignificantEvent:")]
 		NSPredicate CreatePredicateForEvaluatingTriggerOccurringAfterSignificantEvent (HMSignificantTimeEvent significantEvent);
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("predicateForEvaluatingTriggerOccurringBetweenSignificantEvent:secondSignificantEvent:")]
 		NSPredicate CreatePredicateForEvaluatingTriggerOccurringBetweenSignificantEvent (HMSignificantTimeEvent firstSignificantEvent, HMSignificantTimeEvent secondSignificantEvent);
@@ -1356,6 +1498,7 @@ namespace HomeKit {
 		NSPredicate CreatePredicateForEvaluatingTriggerOccurringAfterDate (NSDateComponents dateComponents);
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("predicateForEvaluatingTriggerOccurringBetweenDateWithComponents:secondDateWithComponents:")]
 		NSPredicate CreatePredicateForEvaluatingTriggerOccurringBetweenDates (NSDateComponents firstDateComponents, NSDateComponents secondDateComponents);
@@ -1365,6 +1508,7 @@ namespace HomeKit {
 		NSPredicate CreatePredicateForEvaluatingTrigger (HMCharacteristic characteristic, NSPredicateOperatorType operatorType, NSObject value);
 
 		[Watch (4, 0), TV (11, 0), iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Static]
 		[Export ("predicateForEvaluatingTriggerWithPresence:")]
 		NSPredicate CreatePredicateForEvaluatingTrigger (HMPresenceEvent presenceEvent);
@@ -1372,6 +1516,8 @@ namespace HomeKit {
 		[NoTV]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'UpdateEvents' instead.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'UpdateEvents' instead.")]
 		[Async]
 		[Export ("addEvent:completionHandler:")]
 		void AddEvent (HMEvent @event, Action<NSError> completion);
@@ -1379,6 +1525,8 @@ namespace HomeKit {
 		[NoTV]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'UpdateEvents' instead.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'UpdateEvents' instead.")]
 		[Async]
 		[Export ("removeEvent:completionHandler:")]
 		void RemoveEvent (HMEvent @event, Action<NSError> completion);
@@ -1386,6 +1534,7 @@ namespace HomeKit {
 		[NoTV]
 		[NoWatch]
 		[iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Async]
 		[Export ("updateEvents:completionHandler:")]
 		void UpdateEvents (HMEvent [] events, Action<NSError> completion);
@@ -1393,12 +1542,14 @@ namespace HomeKit {
 		[NoTV]
 		[NoWatch]
 		[iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Async]
 		[Export ("updateEndEvents:completionHandler:")]
 		void UpdateEndEvents (HMEvent [] endEvents, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updatePredicate:completionHandler:")]
 		void UpdatePredicate ([NullAllowed] NSPredicate predicate, Action<NSError> completion);
@@ -1406,6 +1557,7 @@ namespace HomeKit {
 		[NoTV]
 		[NoWatch]
 		[iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Async]
 		[Export ("updateRecurrences:completionHandler:")]
 		void UpdateRecurrences ([NullAllowed] NSDateComponents [] recurrences, Action<NSError> completion);
@@ -1413,6 +1565,7 @@ namespace HomeKit {
 		[NoTV]
 		[NoWatch]
 		[iOS (11, 0)]
+		[MacCatalyst (14, 0)]
 		[Async]
 		[Export ("updateExecuteOnce:completionHandler:")]
 		void UpdateExecuteOnce (bool executeOnce, Action<NSError> completion);
@@ -1436,6 +1589,7 @@ namespace HomeKit {
 	interface HMLocationEvent : NSMutableCopying {
 		[NoTV]
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithRegion:")]
 		NativeHandle Constructor (CLRegion region);
 
@@ -1445,6 +1599,8 @@ namespace HomeKit {
 		[NoTV]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Async]
 		[Export ("updateRegion:completionHandler:")]
 		void UpdateRegion (CLRegion region, Action<NSError> completion);
@@ -1481,6 +1637,7 @@ namespace HomeKit {
 	interface HMCameraSource {
 
 		[Watch (7, 4), TV (14, 5), Mac (11, 3), iOS (14, 5)]
+		[MacCatalyst (14, 5)]
 		[Export ("aspectRatio")]
 		double AspectRatio { get; }
 	}
@@ -1546,10 +1703,12 @@ namespace HomeKit {
 	[BaseType (typeof (HMCameraSource))]
 	interface HMCameraStream {
 		[TV (14, 5)]
+		[MacCatalyst (13, 1)]
 		[Export ("audioStreamSetting", ArgumentSemantic.Assign)]
 		HMCameraAudioStreamSetting AudioStreamSetting { get; }
 
 		[TV (14, 5)]
+		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("updateAudioStreamSetting:completionHandler:")]
 		void UpdateAudioStreamSetting (HMCameraAudioStreamSetting audioStreamSetting, Action<NSError> completion);
@@ -1580,6 +1739,7 @@ namespace HomeKit {
 		[iOS (10, 1)]
 		[Watch (3, 1)]
 		[TV (10, 1)]
+		[MacCatalyst (14, 0)]
 		[Export ("cameraSnapshotControlDidUpdateMostRecentSnapshot:")]
 		void DidUpdateMostRecentSnapshot (HMCameraSnapshotControl cameraSnapshotControl);
 	}
@@ -1768,6 +1928,7 @@ namespace HomeKit {
 	[iOS (13, 0), NoWatch, NoMac, NoTV]
 	[NoMacCatalyst]
 	[Deprecated (PlatformName.iOS, 15, 0, message: "This class is no longer supported.")]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "This class is no longer supported.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface HMAddAccessoryRequest {
@@ -1837,7 +1998,6 @@ namespace HomeKit {
 
 		[iOS (13, 0)]
 		[Export ("initWithURL:ownershipToken:")]
-		[DesignatedInitializer]
 		NativeHandle Constructor (NSUrl setupPayloadUrl, [NullAllowed] HMAccessoryOwnershipToken ownershipToken);
 	}
 

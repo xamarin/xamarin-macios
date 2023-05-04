@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -1042,6 +1042,21 @@
 		<value>BlockLiteral.SetupBlock çağrısı {0} konumundaki {1} uzaklığında en iyi duruma getirilemedi: {2}.
 		</value>
 	</data>
+  <data name="MX2106_E" xml:space="preserve">
+		<value>'{4}' türünde '{3}' adında birden fazla metot bulunduğundan {0} konumundaki BlockLiteral.{2} çağrısı {1} uzaklığında en iyi duruma getirilemedi.</value>
+	</data>
+  <data name="MX2106_F" xml:space="preserve">
+		<value>'{3}' metodunda en az bir parametre olması gerektiğinden {0} konumundaki BlockLiteral.{2} çağrısı {1} uzaklığında en iyi duruma getirilemedi.</value>
+	</data>
+  <data name="MX2106_G" xml:space="preserve">
+		<value>'{3}' metodundaki ilk parametre, 'System.IntPtr', 'void*' veya 'ObjCRuntime.BlockLiteral*' (şu anki parametre: '{4}') olmadığından {0} konumundaki BlockLiteral.{2} çağrısı {1} uzaklığında en iyi duruma getirilemedi.</value>
+	</data>
+  <data name="MX2106_H" xml:space="preserve">
+		<value>'{3}' metodunda [UnmanagedCallersOnly] özniteliği olmadığından {0} konumundaki BlockLiteral.{2} çağrısı {1} uzaklığında en iyi duruma getirilemedi.</value>
+	</data>
+  <data name="MX2106_I" xml:space="preserve">
+		<value>'{3}' metodunda [UnmanagedCallersOnly] özniteliği olmadığından {0} konumundaki BlockLiteral.{2} çağrısı {1} uzaklığında en iyi duruma getirilemedi.</value>
+	</data>
   <data name="MM2107" xml:space="preserve">
 		<value>{0}, '{1}.{2} ({3})' öğesine başvurduğundan dinamik kaydedicinin kaldırılması güvenli değil.
 		</value>
@@ -1747,7 +1762,7 @@
 		<value>{0} türünde örnek oluşturulamıyor.</value>
 	</data>
   <data name="MX8042" xml:space="preserve">
-		<value>An exception occurred while trying to invoke the function {0}: {1}</value>
+		<value>{0} işlevi çağrılmaya çalışılırken özel durum oluştu: {1}</value>
 		<comment>
 			0: name of function
 			1: exception info
@@ -1762,5 +1777,29 @@
 	</data>
   <data name="MX8044" xml:space="preserve">
 		<value>Derleme {0}, uygulama oluşturulduktan sonra değiştirildi ve bunun sonucunda, oluşturulan statik kaydedici kodu geçersiz kılındı. Yüklenen derlemenin MVID'si {1} iken oluşturulan statik kaydedici kodunun karşılık geldiği derlemenin MVID'si {2}.</value>
+	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>Yayın türündeki bir örnek üzerinde yayın çağrılamaz{0}</value>
+	</data>
+  <data name="MX8046" xml:space="preserve">
+		<value>'{1}' türünde '{0}' metodu bulunamadı</value>
+	</data>
+  <data name="MX8047" xml:space="preserve">
+		<value>{0} tramplen metodu, trampolineMethod bağımsız değişkeni için 0x{1} işlev işaretçisi ile eşleşmiyor (bunlar aynı yönteme başvurmuyor).</value>
+	</data>
+  <data name="MX8048" xml:space="preserve">
+		<value>{0} tramplen metodunda en az bir parametre olmalıdır.</value>
+	</data>
+  <data name="MX8049" xml:space="preserve">
+		<value>{0} tramplen metodundaki ilk parametre 'System.IntPtr', 'void*' veya 'ObjCRuntime.BlockLiteral*' olmalıdır.</value>
+	</data>
+  <data name="MX8050" xml:space="preserve">
+		<value>Dinamik kayıt şirketi bağlı olmadığında BlockLiteral.GetBlockSignature desteklenmez.</value>
+	</data>
+  <data name="MX8051" xml:space="preserve">
+		<value>{0} tramplen metodunda [UnmanagedCallersOnly] özniteliği olmalıdır.</value>
+	</data>
+  <data name="MX8052" xml:space="preserve">
+		<value>İmza, boş olmayan bir dize olmalıdır.</value>
 	</data>
 </root>

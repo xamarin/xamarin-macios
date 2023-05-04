@@ -69,6 +69,8 @@ namespace EventKit {
 		[Export ("UUID")]
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'CalendarItemIdentifier' instead.")]
 		[NoMac]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'CalendarItemIdentifier' instead.")]
 		string UUID { get; }
 
 		[NullAllowed] // by default this property is null
@@ -156,6 +158,8 @@ namespace EventKit {
 		[Export ("calendars")]
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'GetCalendars (EKEntityType)' instead.")]
 		[NoMac]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'GetCalendars (EKEntityType)' instead.")]
 		NSSet Calendars { get; }
 
 		[Export ("sourceIdentifier")]
@@ -186,6 +190,7 @@ namespace EventKit {
 		EKStructuredLocation FromTitle (string title);
 
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("locationWithMapItem:")]
 		EKStructuredLocation FromMapItem (MKMapItem mapItem);
@@ -269,6 +274,7 @@ namespace EventKit {
 		NSColor Color { get; set; }
 
 		[Mac (10, 15)]
+		[MacCatalyst (13, 1)]
 		[Export ("CGColor")]
 		CGColor CGColor { get; set; }
 
@@ -287,6 +293,7 @@ namespace EventKit {
 		[NoMac]
 		[NoMacCatalyst] // It's in the documentation and headers, but throws a "+[EKCalendar calendarWithEventStore:]: unrecognized selector" exception at runtime
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'Create (EKEntityType, EKEventStore)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'Create (EKEntityType, EKEventStore)' instead.")]
 		[Static, Export ("calendarWithEventStore:")]
 		EKCalendar FromEventStore (EKEventStore eventStore);
 
@@ -340,10 +347,12 @@ namespace EventKit {
 		EKEventStatus Status { get; }
 
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("structuredLocation", ArgumentSemantic.Copy)]
 		EKStructuredLocation StructuredLocation { get; set; }
 
 		[iOS (9, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("occurrenceDate")]
 		NSDate OccurrenceDate { get; }
 
@@ -358,11 +367,14 @@ namespace EventKit {
 
 		[NoMac]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Replaced by 'BirthdayContactIdentifier'.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Replaced by 'BirthdayContactIdentifier'.")]
 		[Export ("birthdayPersonID")]
 		nint BirthdayPersonID { get; }
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("birthdayContactIdentifier")]
 		string BirthdayContactIdentifier { get; }
 	}
@@ -392,16 +404,19 @@ namespace EventKit {
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Replaced by 'ContactPredicate'.")]
 		[MacCatalyst (14, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Replaced by 'ContactPredicate'.")]
 		[return: NullAllowed]
 		[Export ("ABRecordWithAddressBook:")]
 		ABRecord GetRecord (ABAddressBook addressBook);
 
 		[Mac (10, 9)]
+		[MacCatalyst (13, 1)]
 		[Export ("isCurrentUser")]
 		bool IsCurrentUser { get; }
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("contactPredicate")]
 		NSPredicate ContactPredicate { get; }
 	}
@@ -534,16 +549,20 @@ namespace EventKit {
 		[NoMac]
 		[Export ("calendars")]
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'GetCalendars' instead.")]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'GetCalendars' instead.")]
 		EKCalendar [] Calendars { get; }
 
 		[Export ("defaultCalendarForNewEvents"), NullAllowed]
 		EKCalendar DefaultCalendarForNewEvents { get; }
 
 		[NoWatch, Mac (10, 15)]
+		[MacCatalyst (13, 1)]
 		[Export ("saveEvent:span:error:")]
 		bool SaveEvent (EKEvent theEvent, EKSpan span, out NSError error);
 
 		[NoWatch, Mac (10, 15)]
+		[MacCatalyst (13, 1)]
 		[Export ("removeEvent:span:error:")]
 		bool RemoveEvents (EKEvent theEvent, EKSpan span, out NSError error);
 
@@ -576,22 +595,27 @@ namespace EventKit {
 		EKCalendar GetCalendar (string identifier);
 
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("saveCalendar:commit:error:")]
 		bool SaveCalendar (EKCalendar calendar, bool commit, out NSError error);
 
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("removeCalendar:commit:error:")]
 		bool RemoveCalendar (EKCalendar calendar, bool commit, out NSError error);
 
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("saveEvent:span:commit:error:")]
 		bool SaveEvent (EKEvent ekEvent, EKSpan span, bool commit, out NSError error);
 
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("removeEvent:span:commit:error:")]
 		bool RemoveEvent (EKEvent ekEvent, EKSpan span, bool commit, out NSError error);
 
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("commit:")]
 		bool Commit (out NSError error);
 
@@ -599,6 +623,7 @@ namespace EventKit {
 		void Reset ();
 
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("refreshSourcesIfNecessary")]
 		void RefreshSourcesIfNecessary ();
 
@@ -633,10 +658,12 @@ namespace EventKit {
 		NSPredicate PredicateForReminders ([NullAllowed] EKCalendar [] calendars);
 
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("removeReminder:commit:error:")]
 		bool RemoveReminder (EKReminder reminder, bool commit, out NSError error);
 
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("saveReminder:commit:error:")]
 		bool SaveReminder (EKReminder reminder, bool commit, out NSError error);
 
@@ -649,15 +676,18 @@ namespace EventKit {
 		NativeHandle Constructor (EKEntityMask accessToEntityTypes);
 
 		[Mac (10, 11), Watch (5, 0), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("delegateSources")]
 		EKSource [] DelegateSources { get; }
 
 		[Mac (10, 9)]
+		[MacCatalyst (13, 1)]
 		[Export ("requestAccessToEntityType:completion:")]
 		[Async]
 		void RequestAccess (EKEntityType entityType, Action<bool, NSError> completionHandler);
 
 		[Mac (10, 9)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("authorizationStatusForEntityType:")]
 		EKAuthorizationStatus GetAuthorizationStatus (EKEntityType entityType);
@@ -685,6 +715,7 @@ namespace EventKit {
 
 		[Export ("priority")]
 		[Mac (10, 9)]
+		[MacCatalyst (13, 1)]
 		nint Priority { get; set; }
 		// note: changed to NUInteger in Xcode 7 SDK
 

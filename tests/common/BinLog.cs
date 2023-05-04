@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -24,6 +26,43 @@ namespace Xamarin.Tests {
 		public string? File;
 		public string? ProjectFile;
 		public string? Message;
+
+		public override string ToString ()
+		{
+			var rv = new StringBuilder ();
+
+			if (!string.IsNullOrEmpty (File)) {
+				rv.Append (File);
+				if (LineNumber > 0) {
+					rv.Append ('(');
+					rv.Append (LineNumber.ToString ());
+					if (EndLineNumber > 0) {
+						rv.Append (',');
+						rv.Append (EndLineNumber.ToString ());
+					}
+					rv.Append ("): ");
+				}
+			}
+			switch (Type) {
+			case BuildLogEventType.Error:
+				rv.Append ("error");
+				break;
+			case BuildLogEventType.Warning:
+				rv.Append ("warning");
+				break;
+			case BuildLogEventType.Message:
+				rv.Append ("message");
+				break;
+			}
+			if (!string.IsNullOrEmpty (Code)) {
+				rv.Append (' ');
+				rv.Append (Code);
+			}
+			rv.Append (": ");
+			if (!string.IsNullOrEmpty (Message))
+				rv.Append (Message);
+			return rv.ToString ();
+		}
 	}
 
 	public enum BuildLogEventType {
@@ -200,6 +239,31 @@ namespace Xamarin.Tests {
 					};
 				}
 			}
+		}
+
+		public static bool TryFindPropertyValue (string binlog, string property, [NotNullWhen (true)] out string? value)
+		{
+			value = null;
+
+			var reader = new BinLogReader ();
+			foreach (var record in reader.ReadRecords (binlog)) {
+				var args = record?.Args;
+				if (args is null)
+					continue;
+				if (args is PropertyInitialValueSetEventArgs pivsea) {
+					if (string.Equals (property, pivsea.PropertyName, StringComparison.OrdinalIgnoreCase))
+						value = pivsea.PropertyValue;
+				} else if (args is PropertyReassignmentEventArgs prea) {
+					if (string.Equals (property, prea.PropertyName, StringComparison.OrdinalIgnoreCase))
+						value = prea.NewValue;
+				} else if (args is ProjectEvaluationFinishedEventArgs pefea) {
+					var dict = pefea.Properties as IDictionary<string, string>;
+					if (dict is not null && dict.TryGetValue (property, out var pvalue))
+						value = pvalue;
+				}
+			}
+
+			return value is not null;
 		}
 
 		// Returns a diagnostic build log as a string

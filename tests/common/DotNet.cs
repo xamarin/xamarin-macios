@@ -18,7 +18,7 @@ namespace Xamarin.Tests {
 		public static string Executable {
 			get {
 				if (dotnet_executable is null) {
-					dotnet_executable = Configuration.GetVariable ("DOTNET", null);
+					dotnet_executable = Environment.GetEnvironmentVariable ("DOTNET") ?? Configuration.GetVariable ("DOTNET", null);
 					if (string.IsNullOrEmpty (dotnet_executable))
 						throw new Exception ($"Could not find the dotnet executable.");
 					if (!File.Exists (dotnet_executable))
@@ -79,7 +79,7 @@ namespace Xamarin.Tests {
 			return Execute ("build", project, properties, false);
 		}
 
-		public static ExecutionResult AssertNew (string outputDirectory, string template, string? name = null)
+		public static ExecutionResult AssertNew (string outputDirectory, string template, string? name = null, string? language = null)
 		{
 			Directory.CreateDirectory (outputDirectory);
 
@@ -89,6 +89,15 @@ namespace Xamarin.Tests {
 			if (!string.IsNullOrEmpty (name)) {
 				args.Add ("--name");
 				args.Add (name!);
+			}
+
+#if NET
+			if (!string.IsNullOrEmpty (language)) {
+#else
+			if (language is not null && !string.IsNullOrEmpty (language)) {
+#endif
+				args.Add ("--language");
+				args.Add (language);
 			}
 
 			var env = new Dictionary<string, string?> ();

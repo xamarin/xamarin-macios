@@ -26,6 +26,7 @@ using NativeHandle = System.IntPtr;
 namespace CoreNFC {
 
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[ErrorDomain ("NFCErrorDomain")]
 	[Native]
 	public enum NFCReaderError : long {
@@ -59,19 +60,24 @@ namespace CoreNFC {
 
 	//[iOS (11,0), NoTV, NoWatch, NoMac]
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NFCTagType : ulong {
 		Iso15693 = 1,
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		FeliCa = 2,
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		Iso7816Compatible = 3,
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		MiFare = 4,
 	}
 
 	//[iOS (11,0), NoTV, NoWatch, NoMac]
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NFCTypeNameFormat : byte { // uint8_t
 		Empty = 0x00,
 		NFCWellKnown = 0x01,
@@ -84,6 +90,7 @@ namespace CoreNFC {
 
 	//[iOS (11,0), NoTV, NoWatch, NoMac]
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NFCReaderSession), Name = "NFCISO15693ReaderSession")]
 	[DisableDefaultCtor]
 	interface NFCIso15693ReaderSession {
@@ -105,6 +112,7 @@ namespace CoreNFC {
 
 	//[iOS (11,0), NoTV, NoWatch, NoMac]
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NFCTagCommandConfiguration), Name = "NFCISO15693CustomCommandConfiguration")]
 	interface NFCIso15693CustomCommandConfiguration {
 
@@ -126,6 +134,7 @@ namespace CoreNFC {
 
 	//[iOS (11,0), NoTV, NoWatch, NoMac]
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NFCTagCommandConfiguration), Name = "NFCISO15693ReadMultipleBlocksConfiguration")]
 	interface NFCIso15693ReadMultipleBlocksConfiguration {
 
@@ -153,6 +162,7 @@ namespace CoreNFC {
 
 	//[iOS (11,0), NoTV, NoWatch, NoMac]
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol (Name = "NFCISO15693Tag")]
 	interface NFCIso15693Tag : NFCTag, NFCNdefTag {
 
@@ -177,6 +187,7 @@ namespace CoreNFC {
 		void ReadMultipleBlocks (NFCIso15693ReadMultipleBlocksConfiguration readConfiguration, Action<NSData, NSError> completionHandler);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -184,6 +195,7 @@ namespace CoreNFC {
 		void StayQuiet (Action<NSError> completionHandler);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -191,6 +203,7 @@ namespace CoreNFC {
 		void ReadSingleBlock (NFCIso15693RequestFlag flags, byte blockNumber, Action<NSData, NSError> completionHandler);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -198,6 +211,7 @@ namespace CoreNFC {
 		void WriteSingleBlock (NFCIso15693RequestFlag flags, byte blockNumber, NSData dataBlock, Action<NSError> completionHandler);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -205,6 +219,7 @@ namespace CoreNFC {
 		void LockBlock (NFCIso15693RequestFlag flags, byte blockNumber, Action<NSError> completionHandler);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -212,6 +227,7 @@ namespace CoreNFC {
 		void ReadMultipleBlocks (NFCIso15693RequestFlag flags, NSRange blockRange, Action<NSData [], NSError> completionHandler);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -219,6 +235,7 @@ namespace CoreNFC {
 		void WriteMultipleBlocks (NFCIso15693RequestFlag flags, NSRange blockRange, NSData [] dataBlocks, Action<NSError> completionHandler);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -226,6 +243,7 @@ namespace CoreNFC {
 		void Select (NFCIso15693RequestFlag flags, Action<NSError> completionHandler);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -233,6 +251,7 @@ namespace CoreNFC {
 		void ResetToReady (NFCIso15693RequestFlag flags, Action<NSError> completionHandler);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -240,6 +259,7 @@ namespace CoreNFC {
 		void WriteAfi (NFCIso15693RequestFlag flags, byte afi, Action<NSError> completionHandler);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -247,6 +267,7 @@ namespace CoreNFC {
 		void LockAfi (NFCIso15693RequestFlag flags, Action<NSError> completionHandler);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -254,6 +275,7 @@ namespace CoreNFC {
 		void WriteDsfi (NFCIso15693RequestFlag flags, byte dsfid, Action<NSError> completionHandler);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -261,6 +283,7 @@ namespace CoreNFC {
 		void LockDfsi (NFCIso15693RequestFlag flags, Action<NSError> completionHandler);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -268,6 +291,7 @@ namespace CoreNFC {
 		void GetSystemInfo (NFCIso15693RequestFlag flags, NFCGetSystemInfoCompletionHandler completionHandler);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -275,6 +299,7 @@ namespace CoreNFC {
 		void GetMultipleBlockSecurityStatus (NFCIso15693RequestFlag flags, NSRange blockRange, Action<NSNumber [], NSError> completionHandler);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -282,6 +307,7 @@ namespace CoreNFC {
 		void CustomCommand (NFCIso15693RequestFlag flags, nint customCommandCode, NSData customRequestParameters, Action<NSData, NSError> completionHandler);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -289,6 +315,7 @@ namespace CoreNFC {
 		void ExtendedReadSingleBlock (NFCIso15693RequestFlag flags, nint blockNumber, Action<NSData, NSError> completionHandler);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -296,6 +323,7 @@ namespace CoreNFC {
 		void ExtendedWriteSingleBlock (NFCIso15693RequestFlag flags, nint blockNumber, NSData dataBlock, Action<NSError> completionHandler);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -303,6 +331,7 @@ namespace CoreNFC {
 		void ExtendedLockBlock (NFCIso15693RequestFlag flags, nint blockNumber, Action<NSError> completionHandler);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -310,6 +339,7 @@ namespace CoreNFC {
 		void ExtendedReadMultipleBlocks (NFCIso15693RequestFlag flags, NSRange blockRange, Action<NSData [], NSError> completionHandler);
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 #if NET
 		[Abstract]
 #endif
@@ -317,6 +347,7 @@ namespace CoreNFC {
 		void ExtendedWriteMultipleBlocks (NFCIso15693RequestFlag flags, NSRange blockRange, NSData [] dataBlocks, Action<NSError> completionHandler);
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 #if NET
 		[Abstract]
 #endif
@@ -324,6 +355,7 @@ namespace CoreNFC {
 		void Authenticate (NFCIso15693RequestFlag flags, nint cryptoSuiteIdentifier, NSData message, NFCIso15693TagResponseCallback completionHandler);
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 #if NET
 		[Abstract]
 #endif
@@ -331,6 +363,7 @@ namespace CoreNFC {
 		void KeyUpdate (NFCIso15693RequestFlag flags, nint keyIdentifier, NSData message, NFCIso15693TagResponseCallback completionHandler);
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 #if NET
 		[Abstract]
 #endif
@@ -338,6 +371,7 @@ namespace CoreNFC {
 		void Challenge (NFCIso15693RequestFlag flags, nint cryptoSuiteIdentifier, NSData message, Action<NSError> completionHandler);
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 #if NET
 		[Abstract]
 #endif
@@ -345,6 +379,7 @@ namespace CoreNFC {
 		void ReadBuffer (NFCIso15693RequestFlag flags, NFCIso15693TagResponseCallback completionHandler);
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 #if NET
 		[Abstract]
 #endif
@@ -352,6 +387,7 @@ namespace CoreNFC {
 		void ExtendedGetMultipleBlockSecurityStatus (NFCIso15693RequestFlag flags, NSRange blockRange, NFCIso15693TagGetMultipleBlockSecurityStatusCallback completionHandler);
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 #if NET
 		[Abstract]
 #endif
@@ -359,6 +395,7 @@ namespace CoreNFC {
 		void ExtendedFastReadMultipleBlocks (NFCIso15693RequestFlag flags, NSRange blockRange, NFCIso15693TagReadMultipleBlocksCallback completionHandler);
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 #if NET
 		[Abstract]
 #endif
@@ -366,6 +403,7 @@ namespace CoreNFC {
 		void SendRequest (nint flags, nint commandCode, [NullAllowed] NSData data, NFCIso15693TagResponseCallback completionHandler);
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 #if NET
 		[Abstract]
 #endif
@@ -373,6 +411,7 @@ namespace CoreNFC {
 		void GetSystemInfoAndUid (NFCIso15693RequestFlag flags, NFCIso15693TagGetSystemInfoAndUidCallback completionHandler);
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 #if NET
 		[Abstract]
 #endif
@@ -380,6 +419,7 @@ namespace CoreNFC {
 		void FastReadMultipleBlocks (NFCIso15693RequestFlag flags, NSRange blockRange, NFCIso15693TagReadMultipleBlocksCallback completionHandler);
 
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 #if NET
 		[Abstract]
 #endif
@@ -389,6 +429,7 @@ namespace CoreNFC {
 	}
 
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "NFCNDEFPayload")]
 	[DisableDefaultCtor]
 	interface NFCNdefPayload : NSSecureCoding {
@@ -406,42 +447,50 @@ namespace CoreNFC {
 		NSData Payload { get; set; }
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("wellKnownTypeURIPayloadWithString:")]
 		[return: NullAllowed]
 		NFCNdefPayload CreateWellKnownTypePayload (string uri);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("wellKnownTypeURIPayloadWithURL:")]
 		[return: NullAllowed]
 		NFCNdefPayload CreateWellKnownTypePayload (NSUrl url);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("wellKnownTypeTextPayloadWithString:locale:")]
 		[return: NullAllowed]
 		NFCNdefPayload CreateWellKnownTypePayload (string text, NSLocale locale);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("wellKnownTypeURIPayload")]
 		NSUrl WellKnownTypeUriPayload { get; }
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("wellKnownTypeTextPayloadWithLocale:")]
 		[return: NullAllowed]
 		string GetWellKnownTypeTextPayload (out NSLocale locale);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithFormat:type:identifier:payload:")]
 		NativeHandle Constructor (NFCTypeNameFormat format, NSData type, NSData identifier, NSData payload);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithFormat:type:identifier:payload:chunkSize:")]
 		NativeHandle Constructor (NFCTypeNameFormat format, NSData type, NSData identifier, NSData payload, nuint chunkSize);
 	}
 
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "NFCNDEFMessage")]
 	[DisableDefaultCtor]
 	interface NFCNdefMessage : NSSecureCoding {
@@ -450,16 +499,19 @@ namespace CoreNFC {
 		NFCNdefPayload [] Records { get; set; }
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("ndefMessageWithData:")]
 		[return: NullAllowed]
 		NFCNdefMessage Create (NSData data);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithNDEFRecords:")]
 		NativeHandle Constructor (NFCNdefPayload [] records);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("length")]
 		nuint Length { get; }
 	}
@@ -467,6 +519,7 @@ namespace CoreNFC {
 	interface INFCNdefReaderSessionDelegate { }
 
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject), Name = "NFCNDEFReaderSessionDelegate")]
 	interface NFCNdefReaderSessionDelegate {
@@ -480,15 +533,18 @@ namespace CoreNFC {
 		void DidDetect (NFCNdefReaderSession session, NFCNdefMessage [] messages);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("readerSession:didDetectTags:")]
 		void DidDetectTags (NFCNdefReaderSession session, INFCNdefTag [] tags);
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("readerSessionDidBecomeActive:")]
 		void DidBecomeActive (NFCNdefReaderSession session);
 	}
 
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NFCReaderSession), Name = "NFCNDEFReaderSession")]
 	[DisableDefaultCtor]
 	interface NFCNdefReaderSession {
@@ -502,16 +558,19 @@ namespace CoreNFC {
 		bool ReadingAvailable { get; }
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("restartPolling")]
 		void RestartPolling ();
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("connectToTag:completionHandler:")]
 		[Async]
 		void ConnectToTag (INFCNdefTag tag, Action<NSError> completionHandler);
 	}
 
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NFCReaderSession : NFCReaderSessionContract {
@@ -523,6 +582,7 @@ namespace CoreNFC {
 		DispatchQueue SessionQueue { get; }
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("readingAvailable")]
 		bool ReadingAvailable { get; }
@@ -531,6 +591,7 @@ namespace CoreNFC {
 	interface INFCReaderSessionContract { }
 
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol (Name = "NFCReaderSession")]
 	interface NFCReaderSessionContract {
 
@@ -551,6 +612,7 @@ namespace CoreNFC {
 		void InvalidateSession ();
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 #if NET
 		[Abstract]
 #endif
@@ -562,6 +624,7 @@ namespace CoreNFC {
 
 	//[iOS (11,0), NoTV, NoWatch, NoMac]
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface NFCReaderSessionDelegate {
@@ -584,6 +647,7 @@ namespace CoreNFC {
 	interface INFCTag { }
 
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface NFCTag : NSSecureCoding, NSCopying {
 
@@ -600,6 +664,7 @@ namespace CoreNFC {
 		bool Available { [Bind ("isAvailable")] get; }
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("asNFCISO15693Tag")]
 #if NET
 		[Abstract]
@@ -611,6 +676,7 @@ namespace CoreNFC {
 #endif
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("asNFCISO7816Tag")]
 #if NET
 		[Abstract]
@@ -622,6 +688,7 @@ namespace CoreNFC {
 #endif
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("asNFCFeliCaTag")]
 #if NET
 		[Abstract]
@@ -633,6 +700,7 @@ namespace CoreNFC {
 #endif
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("asNFCMiFareTag")]
 #if NET
 		[Abstract]
@@ -646,6 +714,7 @@ namespace CoreNFC {
 
 	//[iOS (11,0), NoTV, NoWatch, NoMac]
 	[iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NFCTagCommandConfiguration : NSCopying {
 
@@ -657,6 +726,7 @@ namespace CoreNFC {
 	}
 
 	[iOS (12, 0)]
+	[MacCatalyst (13, 1)]
 	[Category]
 	[BaseType (typeof (NSUserActivity))]
 	interface NSUserActivity_CoreNFC {
@@ -666,6 +736,7 @@ namespace CoreNFC {
 	}
 
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 #if NET
 	[Native]
 	enum NFCFeliCaEncryptionId
@@ -679,6 +750,7 @@ namespace CoreNFC {
 	}
 
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	enum NFCMiFareFamily : long {
 		Unknown = 1,
@@ -688,6 +760,7 @@ namespace CoreNFC {
 	}
 
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	enum NFCNdefStatus : ulong {
 		NotSupported = 1,
@@ -696,6 +769,7 @@ namespace CoreNFC {
 	}
 
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]
 	enum NFCPollingOption : ulong {
@@ -706,6 +780,7 @@ namespace CoreNFC {
 	}
 
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 #if NET
 	[Native]
 	enum NFCFeliCaPollingRequestCode
@@ -720,6 +795,7 @@ namespace CoreNFC {
 	}
 
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 #if NET
 	[Native]
 	enum NFCFeliCaPollingTimeSlot
@@ -736,6 +812,7 @@ namespace CoreNFC {
 	}
 
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Flags]
 	[NativeName ("NFCISO15693RequestFlag")]
 #if NET
@@ -751,10 +828,12 @@ namespace CoreNFC {
 		Address = (1 << 5),
 		Option = (1 << 6),
 		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
 		CommandSpecificBit8 = (1 << 7),
 	}
 
 	[Flags, iOS (14, 0)]
+	[MacCatalyst (14, 0)]
 	public enum NFCIso15693ResponseFlag : byte {
 		Error = (1 << 0),
 		ResponseBufferValid = (1 << 1),
@@ -766,6 +845,7 @@ namespace CoreNFC {
 	}
 
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 #if NET
 	[Native]
 	enum NFCVasErrorCode
@@ -785,6 +865,7 @@ namespace CoreNFC {
 	}
 
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 #if NET
 	[Native]
 	enum NFCVasMode 
@@ -802,6 +883,7 @@ namespace CoreNFC {
 	delegate void NFCQueryNdefStatusCompletionHandler (NFCNdefStatus status, nuint capacity, NSError error);
 
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol (Name = "NFCNDEFTag")]
 	interface NFCNdefTag : NSSecureCoding, NSCopying {
 
@@ -835,6 +917,7 @@ namespace CoreNFC {
 	delegate void NFCFeliCaRequestSpecificationVersionCompletionHandler (nint statusFlag1, nint statusFlag2, NSData basicVersion, NSData optionVersion, NSError error);
 
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface NFCFeliCaTag : NFCTag, NFCNdefTag {
 
@@ -890,6 +973,7 @@ namespace CoreNFC {
 	interface INFCIso7816Tag { }
 
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol (Name = "NFCISO7816Tag")]
 	interface NFCIso7816Tag : NFCTag, NFCNdefTag {
 
@@ -919,6 +1003,7 @@ namespace CoreNFC {
 	}
 
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "NFCISO7816APDU")]
 	[DisableDefaultCtor]
 	interface NFCIso7816Apdu : NSCopying {
@@ -953,6 +1038,7 @@ namespace CoreNFC {
 	delegate void NFCIso7816SendCompletionHandler (NSData responseData, byte sw1, byte sw2, NSError error);
 
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface NFCMiFareTag : NFCTag, NFCNdefTag {
 #if NET
@@ -981,6 +1067,7 @@ namespace CoreNFC {
 	interface INFCTagReaderSessionDelegate { }
 
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 #if NET
 	[Protocol][Model]
 #else
@@ -1002,6 +1089,7 @@ namespace CoreNFC {
 	}
 
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NFCReaderSession))]
 	[DisableDefaultCtor]
 	[Advice ("Not available for application extensions.")]
@@ -1027,6 +1115,7 @@ namespace CoreNFC {
 	interface INFCVasReaderSessionDelegate { }
 
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 #if NET
 	[Protocol][Model]
 #else
@@ -1049,6 +1138,7 @@ namespace CoreNFC {
 	}
 
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "NFCVASResponse")]
 	[DisableDefaultCtor] // implied
 	interface NFCVasResponse : NSCopying {
@@ -1064,6 +1154,7 @@ namespace CoreNFC {
 	}
 
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "NFCVASCommandConfiguration")]
 	[DisableDefaultCtor] // implied (designated initializer)
 	interface NFCVasCommandConfiguration : NSCopying {
@@ -1083,6 +1174,7 @@ namespace CoreNFC {
 	}
 
 	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NFCReaderSession), Name = "NFCVASReaderSession")]
 	[DisableDefaultCtor]
 	[Advice ("Not available for application extensions.")]

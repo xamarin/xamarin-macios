@@ -15,9 +15,11 @@ using Foundation;
 using ObjCRuntime;
 using System.Runtime.Versioning;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSGestureRecognizer {
-		object recognizers;
+		object? recognizers;
 		static Selector tsel = new Selector ("target");
 		internal static Selector ParametrizedSelector = new Selector ("target:");
 

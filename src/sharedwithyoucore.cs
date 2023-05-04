@@ -232,6 +232,7 @@ namespace SharedWithYouCore {
 	}
 
 	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0)]
+	[MacCatalyst (16, 0)]
 	[BaseType (typeof (SWPersonIdentityProof))]
 	interface SWSignedPersonIdentityProof {
 		[Export ("initWithPersonIdentityProof:signatureData:")]
@@ -253,6 +254,7 @@ namespace SharedWithYouCore {
 	}
 
 	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0)]
+	[MacCatalyst (16, 0)]
 	[BaseType (typeof (SWAction))]
 	[DisableDefaultCtor]
 	interface SWUpdateCollaborationParticipantsAction : NSSecureCoding, NSCopying {

@@ -26,15 +26,6 @@ public partial class AppDelegate : UIApplicationDelegate {
 	}
 #endif
 
-	public partial IEnumerable<Assembly> GetTestAssemblies ()
-	{
-		return new Assembly [] {
-			Assembly.GetExecutingAssembly (),
-			typeof (EmbeddedResources.ResourcesTest).Assembly,
-			typeof (Xamarin.BindingTests.ProtocolTest).Assembly,
-		};
-	}
-
 	partial void PostFinishedLaunching ()
 	{
 		// required for the background tasks tests, we can only register the tasks in this method

@@ -39,6 +39,10 @@ parameters:
   type: string
   default: '8'
 
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
 steps:
 
 - template: ../common/checkout.yml
@@ -213,7 +217,6 @@ steps:
 
 # We'll need these profiles to build the hot restart prebuilt app during the build
 # (it's built for device, and thus needs a certificate available so that the app can be signed).
-# We do this again before running the tests further below.
 - bash: |
     set -x
     set -e
@@ -247,8 +250,8 @@ steps:
       makeParallelism=8
     fi
 
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j$makeParallelism $MAKE_FLAGS
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j$makeParallelism $MAKE_FLAGS
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j$makeParallelism $MAKE_FLAGS IGNORE_SIMULATORS=1
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j$makeParallelism $MAKE_FLAGS IGNORE_SIMULATORS=1
   name: build
   displayName: 'Build'
   timeoutInMinutes: 300
@@ -272,7 +275,7 @@ steps:
   displayName: 'Report build failure'
   env:
     ${{ if eq(parameters.repositoryAlias, 'self') }}:
-      COMMENT_HASH: $(GIT_HASH)
+      COMMENT_HASH: $(fix_commit.GIT_HASH)
     ${{ else }}:
       COMMENT_HASH: $(Build.SourceVersion)
 
@@ -281,3 +284,5 @@ steps:
   displayName: 'Collect and upload crash reports'
   condition: always() # who knows when crash reports can end up being useful
   continueOnError: true
+  env:
+    MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}

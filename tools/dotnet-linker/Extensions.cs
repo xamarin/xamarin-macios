@@ -3,6 +3,8 @@ using Mono.Linker;
 using Mono.Tuner;
 using System;
 
+#nullable enable
+
 namespace Xamarin.Linker {
 	public static class Extensions {
 		public static bool Inherits (this TypeReference self, string @namespace, string name, IMetadataResolver resolver)

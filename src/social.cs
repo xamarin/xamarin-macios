@@ -38,16 +38,19 @@ namespace Social {
 	interface SLServiceType {
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use Facebook SDK instead.")]
 		[Field ("SLServiceTypeFacebook")]
 		NSString Facebook { get; }
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Twitter SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Twitter SDK instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use Twitter SDK instead.")]
 		[Field ("SLServiceTypeTwitter")]
 		NSString Twitter { get; }
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Sina Weibo SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Sina Weibo SDK instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use Sina Weibo SDK instead.")]
 		[Field ("SLServiceTypeSinaWeibo")]
 		NSString SinaWeibo { get; }
 
@@ -55,6 +58,8 @@ namespace Social {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Tencent Weibo SDK instead.")]
 		[Field ("SLServiceTypeTencentWeibo")]
 		[Mac (10, 9)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use Tencent Weibo SDK instead.")]
 		NSString TencentWeibo { get; }
 
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use LinkedIn SDK instead.")]
@@ -75,6 +80,7 @@ namespace Social {
 
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 		[Export ("account", ArgumentSemantic.Retain), NullAllowed]
 		ACAccount Account { get; set; }
 
@@ -88,6 +94,7 @@ namespace Social {
 		NSDictionary Parameters { get; }
 
 		[NoiOS] // just macOS
+		[NoMacCatalyst]
 		[Export ("addMultipartData:withName:type:")]
 		void AddMultipartData (NSData data, string partName, string partType);
 
@@ -104,6 +111,7 @@ namespace Social {
 	}
 
 	[NoMac]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SocialViewController))]
 	[DisableDefaultCtor] // see note on 'composeViewControllerForServiceType:'
 	interface SLComposeViewController {
@@ -144,6 +152,7 @@ namespace Social {
 
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SocialViewController))]
 	interface SLComposeServiceViewController : SocialTextViewDelegate {
 		[Export ("initWithNibName:bundle:")]
@@ -183,26 +192,32 @@ namespace Social {
 		NSNumber CharactersRemaining { get; set; }
 
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		[Export ("configurationItems")]
 		SLComposeSheetConfigurationItem [] GetConfigurationItems ();
 
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		[Export ("reloadConfigurationItems")]
 		void ReloadConfigurationItems ();
 
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		[Export ("pushConfigurationViewController:")]
 		void PushConfigurationViewController (SocialViewController viewController);
 
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		[Export ("popConfigurationViewController")]
 		void PopConfigurationViewController ();
 
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		[Export ("loadPreviewView")]
 		SocialView LoadPreviewView ();
 
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("autoCompletionViewController", ArgumentSemantic.Strong)]
 		SocialViewController AutoCompletionViewController { get; set; }
@@ -211,6 +226,7 @@ namespace Social {
 
 	[NoMac]
 	[iOS (8, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // designated
 	interface SLComposeSheetConfigurationItem {

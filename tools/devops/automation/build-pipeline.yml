@@ -12,6 +12,11 @@ parameters:
   type: string
   default: 'latest'
 
+- name: macOSName # comes from the build agent demand named macOS.Name
+  displayName: Name of the version of macOS to use
+  type: string
+  default: 'Ventura'
+
 - name: pool
   type: string
   displayName: Bot pool to use
@@ -124,6 +129,20 @@ parameters:
         "Agent.HasDevices -equals False",
         "Agent.IsPaired -equals False"
       ]
+    },
+    {
+      stageName: 'mac_13_0_m1',
+      displayName: 'M1 - Mac Ventura (13.0)',
+      macPool: 'VSEng-VSMac-Xamarin-Shared',
+      useImage: false,
+      statusContext: 'M1 - Mac Ventura (13.0)',
+      demands: [
+        "Agent.OS -equals Darwin",
+        "macOS.Name -equals Ventura",
+        "macOS.Architecture -equals arm64",
+        "Agent.HasDevices -equals False",
+        "Agent.IsPaired -equals False"
+      ]
     }]
 
 resources:
@@ -162,6 +181,8 @@ variables:
 - template: templates/variables.yml
 - name: MicrobuildConnector
   value: 'MicroBuild Signing Task (DevDiv)'
+- name: MaciosUploadPrefix
+  value: ''
 
 trigger:
   branches:
@@ -188,6 +209,7 @@ stages:
 - template: templates/main-stage.yml
   parameters:
     xcodeChannel: Stable
+    macOSName: ${{ parameters.macOSName }}
     isPR: false
     provisionatorChannel: ${{ parameters.provisionatorChannel }}
     pool: ${{ parameters.pool }}

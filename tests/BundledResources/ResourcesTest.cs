@@ -27,6 +27,7 @@ namespace BundledResources {
 			// that's true for simulator or devices and whatever the linker settings are
 			var dir = NSBundle.MainBundle.ResourcePath;
 			Assert.True (File.Exists (Path.Combine (dir, "basn3p08.png")), "file-basn3p08.png");
+			Assert.True (File.Exists (Path.Combine (dir, "basn3p08_with_loc.png")), "file-basn3p08_with_loc.png");
 			Assert.True (File.Exists (Path.Combine (dir, "xamvideotest.mp4")), "xamvideotest.mp4");
 
 			// resources are removed by the linker or an extra step (e.g. "link sdk" or "don't link") but that
@@ -42,6 +43,7 @@ namespace BundledResources {
 			} else {
 				Assert.That (resources.Length, Is.GreaterThanOrEqualTo (2), "Resources");
 				Assert.That (resources, Contains.Item ("__monotouch_content_basn3p08.png"), "res-basn3p08.png");
+				Assert.That (resources, Contains.Item ("__monotouch_content_basn3p08__with__loc.png"), "res-basn3p08_with_loc.png");
 				Assert.That (resources, Contains.Item ("__monotouch_content_xamvideotest.mp4"), "res-xamvideotest.mp4");
 			}
 		}

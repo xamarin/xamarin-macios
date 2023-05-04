@@ -97,6 +97,7 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKNode))]
 	interface SK3DNode {
 		[DesignatedInitializer]
@@ -171,12 +172,14 @@ namespace SpriteKit {
 
 		[iOS (8, 0)]
 		[Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("nodeWithFileNamed:")]
 		[return: NullAllowed]
 		SKNode Create (string filename);
 
 		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
 		[Export ("nodeWithFileNamed:securelyWithClasses:andError:")]
@@ -225,6 +228,7 @@ namespace SpriteKit {
 
 		[NoMac]
 		[TV (11, 0), iOS (11, 0), Watch (9, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("focusBehavior", ArgumentSemantic.Assign)]
 		SKNodeFocusBehavior FocusBehavior { get; set; }
 
@@ -322,6 +326,7 @@ namespace SpriteKit {
 
 		[iOS (8, 3)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("isEqualToNode:")]
 		bool IsEqual (SKNode node);
 
@@ -329,26 +334,31 @@ namespace SpriteKit {
 		bool InParentHierarchy (SKNode node);
 
 		[iOS (8, 0), Mac (10, 10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("reachConstraints", ArgumentSemantic.Copy)]
 		SKReachConstraints ReachConstraints { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("constraints", ArgumentSemantic.Copy)]
 		SKConstraint [] Constraints { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("objectForKeyedSubscript:")]
 		SKNode GetObjectsMatching (string nameExpression);
 
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("moveToParent:")]
 		void MoveToParent (SKNode parent);
 
 		// Moved from SpriteKit to GameplayKit header in iOS 10 beta 1
 		[NoWatch]
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("obstaclesFromNodeBounds:")]
 		GKPolygonObstacle [] ObstaclesFromNodeBounds (SKNode [] nodes);
@@ -356,6 +366,7 @@ namespace SpriteKit {
 		// Moved from SpriteKit to GameplayKit header in iOS 10 beta 1
 		[NoWatch]
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("obstaclesFromNodePhysicsBodies:")]
 		GKPolygonObstacle [] ObstaclesFromNodePhysicsBodies (SKNode [] nodes);
@@ -363,6 +374,7 @@ namespace SpriteKit {
 		// Moved from SpriteKit to GameplayKit header in iOS 10 beta 1
 		[NoWatch]
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("obstaclesFromSpriteTextures:accuracy:")]
 		GKPolygonObstacle [] ObstaclesFromSpriteTextures (SKNode [] sprites, float accuracy);
@@ -394,16 +406,19 @@ namespace SpriteKit {
 #if !WATCH
 		// Extensions from GameplayKit, inlined to avoid ugly static extension syntax
 		[iOS (10, 0), TV (10, 0), NoWatch, Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("obstaclesFromSpriteTextures:accuracy:")]
 		GKPolygonObstacle [] GetObstaclesFromSpriteTextures (SKNode [] sprites, float accuracy);
 
 		[iOS (10, 0), TV (10, 0), NoWatch, Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("obstaclesFromNodeBounds:")]
 		GKPolygonObstacle [] GetObstaclesFromNodeBounds (SKNode [] nodes);
 
 		[iOS (10, 0), TV (10, 0), NoWatch, Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("obstaclesFromNodePhysicsBodies:")]
 		GKPolygonObstacle [] GetObstaclesFromNodePhysicsBodies (SKNode [] nodes);
@@ -437,10 +452,12 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKEffectNode : SKWarpable {
 
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("filter", ArgumentSemantic.Retain)]
 		CIFilter Filter { get; set; }
@@ -458,20 +475,24 @@ namespace SpriteKit {
 		SKBlendMode BlendMode { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("shader", ArgumentSemantic.Retain)]
 		SKShader Shader { get; set; }
 
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("attributeValues", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
 
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
 		SKAttributeValue GetValue (string key);
 
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
 	}
@@ -480,6 +501,7 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKNode))]
 	interface SKFieldNode {
 		[Export ("region", ArgumentSemantic.Retain)]
@@ -565,6 +587,7 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKEffectNode))]
 	interface SKScene
 #if !WATCH
@@ -580,6 +603,7 @@ namespace SpriteKit {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("sceneDidLoad")]
 		void SceneDidLoad ();
 
@@ -599,14 +623,17 @@ namespace SpriteKit {
 		SKPhysicsWorld PhysicsWorld { get; }
 
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("convertPointFromView:")]
 		CGPoint ConvertPointFromView (CGPoint point);
 
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("convertPointToView:")]
 		CGPoint ConvertPointToView (CGPoint point);
 
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("view", ArgumentSemantic.Weak)]
 		[NullAllowed]
 		SKView View { get; }
@@ -621,10 +648,12 @@ namespace SpriteKit {
 		void DidSimulatePhysics ();
 
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("didMoveToView:")]
 		void DidMoveToView (SKView view);
 
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("willMoveFromView:")]
 		void WillMoveFromView (SKView view);
 
@@ -632,37 +661,45 @@ namespace SpriteKit {
 		void DidChangeSize (CGSize oldSize);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("didApplyConstraints")]
 		void DidApplyConstraints ();
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("didFinishUpdate")]
 		void DidFinishUpdate ();
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
 		SKSceneDelegate Delegate { get; set; }
 
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("audioEngine", ArgumentSemantic.Retain)]
 		AVAudioEngine AudioEngine { get; }
 
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("camera", ArgumentSemantic.Weak)]
 		SKCameraNode Camera { get; set; }
 
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("listener", ArgumentSemantic.Weak)]
 		SKNode Listener { get; set; }
 	}
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface SKSceneDelegate {
@@ -685,6 +722,7 @@ namespace SpriteKit {
 	[Watch (3, 0)]
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SKShader : NSCopying, NSSecureCoding {
 		[Export ("initWithSource:")]
@@ -726,12 +764,14 @@ namespace SpriteKit {
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("attributes", ArgumentSemantic.Copy)]
 		SKAttribute [] Attributes { get; set; }
 	}
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKSpriteNode : SKWarpable {
 
@@ -790,55 +830,67 @@ namespace SpriteKit {
 
 
 		[iOS (8, 0), Mac (10, 10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
+		[MacCatalyst (13, 1)]
 		[Static, Export ("spriteNodeWithTexture:normalMap:")]
 		SKSpriteNode Create ([NullAllowed] SKTexture texture, [NullAllowed] SKTexture normalMap);
 
 		[iOS (8, 0), Mac (10, 10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
+		[MacCatalyst (13, 1)]
 		[Static, Export ("spriteNodeWithImageNamed:normalMapped:")]
 		SKSpriteNode Create (string imageName, bool generateNormalMap);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("normalTexture", ArgumentSemantic.Retain)]
 		SKTexture NormalTexture { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("lightingBitMask")]
 		uint LightingBitMask { get; set; } /* uint32_t */
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("shadowCastBitMask")]
 		uint ShadowCastBitMask { get; set; } /* uint32_t */
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("shadowedBitMask")]
 		uint ShadowedBitMask { get; set; } /* uint32_t */
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("shader", ArgumentSemantic.Retain), NullAllowed]
 		SKShader Shader { get; set; }
 
 		[iOS (10, 0), Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("scaleToSize:")]
 		void ScaleTo (CGSize size);
 
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("attributeValues", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
 
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
 		SKAttributeValue GetValue (string key);
 
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
 	}
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	partial interface SKKeyframeSequence : NSSecureCoding, NSCopying {
 
@@ -890,6 +942,7 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKEmitterNode {
 
@@ -909,6 +962,7 @@ namespace SpriteKit {
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 8, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Export ("particleZPositionRange")]
 		nfloat ParticleZPositionRange { get; set; }
 
@@ -1045,41 +1099,49 @@ namespace SpriteKit {
 		// iOS 8
 		//
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("fieldBitMask")]
 		uint FieldBitMask { get; set; } /* uint32_t */
 
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 8, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Export ("particleZPositionSpeed")]
 		nfloat ParticleZPositionSpeed { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("shader", ArgumentSemantic.Retain)]
 		SKShader Shader { get; set; }
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("particleRenderOrder", ArgumentSemantic.Assign)]
 		SKParticleRenderOrder ParticleRenderOrder { get; set; }
 
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("attributeValues", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
 
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
 		SKAttributeValue GetValue (string key);
 
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
 	}
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKShapeNode {
 
@@ -1109,58 +1171,71 @@ namespace SpriteKit {
 		// iOS 8
 		//
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("fillTexture", ArgumentSemantic.Retain)]
 		SKTexture FillTexture { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("fillShader", ArgumentSemantic.Retain)]
 		SKShader FillShader { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("strokeTexture", ArgumentSemantic.Retain)]
 		SKTexture StrokeTexture { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("strokeShader", ArgumentSemantic.Retain)]
 		SKShader StrokeShader { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("shapeNodeWithPath:")]
 		SKShapeNode FromPath (CGPath path);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("shapeNodeWithPath:centered:")]
 		SKShapeNode FromPath (CGPath path, bool centered);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("shapeNodeWithRect:")]
 		SKShapeNode FromRect (CGRect rect);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("shapeNodeWithRectOfSize:")]
 		SKShapeNode FromRect (CGSize size);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("shapeNodeWithRect:cornerRadius:")]
 		SKShapeNode FromRect (CGRect rect, nfloat cornerRadius);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("shapeNodeWithRectOfSize:cornerRadius:")]
 		SKShapeNode FromRect (CGSize size, nfloat cornerRadius);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("shapeNodeWithCircleOfRadius:")]
 		SKShapeNode FromCircle (nfloat radius);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("shapeNodeWithEllipseInRect:")]
 		SKShapeNode FromEllipse (CGRect rect);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("shapeNodeWithEllipseOfSize:")]
 		SKShapeNode FromEllipse (CGSize size);
 
@@ -1168,6 +1243,7 @@ namespace SpriteKit {
 		[Internal]
 #endif
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("shapeNodeWithPoints:count:")]
 		SKShapeNode FromPoints (ref CGPoint points, nuint numPoints);
 
@@ -1175,41 +1251,50 @@ namespace SpriteKit {
 		[Internal]
 #endif
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("shapeNodeWithSplinePoints:count:")]
 		SKShapeNode FromSplinePoints (ref CGPoint points, nuint numPoints);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("lineCap")]
 		CGLineCap LineCap { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("lineJoin")]
 		CGLineJoin LineJoin { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("miterLimit")]
 		nfloat MiterLimit { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("lineLength")]
 		nfloat LineLength { get; }
 
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("attributeValues", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
 
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
 		SKAttributeValue GetValue (string key);
 
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
 	}
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SKReachConstraints : NSSecureCoding {
 		[DesignatedInitializer]
@@ -1225,6 +1310,7 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SKRegion : NSCopying, NSSecureCoding {
 		[Export ("initWithRadius:")]
@@ -1261,6 +1347,7 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKLabelNode {
 
@@ -1271,10 +1358,12 @@ namespace SpriteKit {
 		NativeHandle Constructor ([NullAllowed] string fontName);
 
 		[iOS (8, 0), Mac (10, 10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
+		[MacCatalyst (13, 1)]
 		[Static, Export ("labelNodeWithText:")]
 		SKLabelNode FromText ([NullAllowed] string text);
 
 		[TV (11, 0), Watch (4, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("labelNodeWithAttributedText:")]
 		SKLabelNode FromText ([NullAllowed] NSAttributedString attributedText);
@@ -1286,14 +1375,17 @@ namespace SpriteKit {
 		SKLabelHorizontalAlignmentMode HorizontalAlignmentMode { get; set; }
 
 		[TV (11, 0), Watch (4, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("numberOfLines")]
 		nint NumberOfLines { get; set; }
 
 		[TV (11, 0), Watch (4, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("lineBreakMode", ArgumentSemantic.Assign)]
 		NSLineBreakMode LineBreakMode { get; set; }
 
 		[TV (11, 0), Watch (4, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("preferredMaxLayoutWidth")]
 		nfloat PreferredMaxLayoutWidth { get; set; }
 
@@ -1306,6 +1398,7 @@ namespace SpriteKit {
 		string Text { get; set; }
 
 		[TV (11, 0), Watch (4, 0), Mac (10, 13), iOS (11, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("attributedText", ArgumentSemantic.Copy)]
 		NSAttributedString AttributedText { get; set; }
 
@@ -1329,6 +1422,7 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKNode))]
 	interface SKLightNode {
 		[Export ("enabled")]
@@ -1352,6 +1446,7 @@ namespace SpriteKit {
 
 	[Watch (4, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKVideoNode {
 
@@ -1418,6 +1513,7 @@ namespace SpriteKit {
 	[Watch (3, 0)]
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SKConstraint : NSSecureCoding, NSCopying {
 		[Export ("enabled")]
@@ -1460,6 +1556,7 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKCropNode {
 
@@ -1470,6 +1567,7 @@ namespace SpriteKit {
 
 	[NoWatch]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIView))]
 #if XAMCORE_3_0
 	[DisableDefaultCtor]
@@ -1495,6 +1593,7 @@ namespace SpriteKit {
 		bool ShowsNodeCount { get; set; }
 
 		[iOS (7, 1), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("showsPhysics")]
 		bool ShowsPhysics { get; set; }
 
@@ -1504,6 +1603,7 @@ namespace SpriteKit {
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Export ("frameInterval")]
 		nint FrameInterval { get; set; }
 
@@ -1534,22 +1634,27 @@ namespace SpriteKit {
 		// iOS 8
 		//
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("allowsTransparency")]
 		bool AllowsTransparency { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("shouldCullNonVisibleNodes")]
 		bool ShouldCullNonVisibleNodes { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("showsFields")]
 		bool ShowsFields { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("showsQuadCount")]
 		bool ShowsQuadCount { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("textureFromNode:crop:")]
 		[return: NullAllowed]
 		SKTexture TextureFromNode (SKNode node, CGRect crop);
@@ -1557,12 +1662,14 @@ namespace SpriteKit {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("preferredFramesPerSecond")]
 		nint PreferredFramesPerSecond { get; set; }
 
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		ISKViewDelegate Delegate { get; set; }
 
@@ -1579,6 +1686,7 @@ namespace SpriteKit {
 	[NoWatch]
 	[iOS (10, 0)]
 	[Mac (10, 12)]
+	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface SKViewDelegate {
@@ -1588,6 +1696,7 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	partial interface SKTransition : NSCopying {
@@ -1632,6 +1741,7 @@ namespace SpriteKit {
 		SKTransition DoorwayWithDuration (double sec);
 
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("transitionWithCIFilter:duration:")]
 		SKTransition TransitionWithCIFilter (CIFilter filter, double sec);
 
@@ -1644,6 +1754,7 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	partial interface SKTexture : NSSecureCoding, NSCopying {
@@ -1667,6 +1778,7 @@ namespace SpriteKit {
 		SKTexture FromData (NSData pixelData, CGSize size, uint /* unsigned int*/ rowLength, uint /* unsigned int */ alignment);
 
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Export ("textureByApplyingCIFilter:")]
 		SKTexture TextureByApplyingCIFilter (CIFilter filter);
 
@@ -1694,32 +1806,39 @@ namespace SpriteKit {
 		void Preload (Action completion);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("textureByGeneratingNormalMap")]
 		SKTexture CreateTextureByGeneratingNormalMap ();
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("textureByGeneratingNormalMapWithSmoothness:contrast:")]
 		SKTexture CreateTextureByGeneratingNormalMap (nfloat smoothness, nfloat contrast);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("textureVectorNoiseWithSmoothness:size:")]
 		SKTexture FromTextureVectorNoise (nfloat smoothness, CGSize size);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("textureNoiseWithSmoothness:size:grayscale:")]
 		SKTexture FromTextureNoise (nfloat smoothness, CGSize size, bool grayscale);
 
 		[iOS (8, 0), Mac (10, 10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
+		[MacCatalyst (13, 1)]
 		[Static, Export ("textureWithData:size:flipped:")]
 		SKTexture FromData (NSData pixelData, CGSize size, bool flipped);
 
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Export ("CGImage")]
 		CGImage CGImage { get; }
 
 #if !WATCH
 		// Static Category from GameplayKit
 		[iOS (10, 0), TV (10, 0), NoWatch, Mac (10, 12)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("textureWithNoiseMap:")]
 		SKTexture FromNoiseMap (GKNoiseMap noiseMap);
@@ -1730,6 +1849,7 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[iOS (8, 0), Mac (10, 10)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKTexture))]
 	[DisableDefaultCtor] // cannot be created (like SKTexture) by calling `init`
 	interface SKMutableTexture {
@@ -1750,6 +1870,7 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	partial interface SKTextureAtlas : NSSecureCoding {
 
@@ -1769,6 +1890,7 @@ namespace SpriteKit {
 		void PreloadTextures (SKTextureAtlas [] textures, Action completion);
 
 		[iOS (9, 0), Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("preloadTextureAtlasesNamed:withCompletionHandler:")]
 		[Async (ResultTypeName = "SKTextureAtlasLoadResult")]
@@ -1779,6 +1901,7 @@ namespace SpriteKit {
 		void Preload (Action completion);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("atlasWithDictionary:")]
 		SKTextureAtlas FromDictionary (NSDictionary properties);
 
@@ -1787,6 +1910,7 @@ namespace SpriteKit {
 	[Watch (3, 0)]
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SKUniform : NSCopying, NSSecureCoding {
 		[Export ("initWithName:")]
@@ -1803,12 +1927,15 @@ namespace SpriteKit {
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Export ("initWithName:floatVector2:")]
 		IntPtr InitWithNameFloatVector2 (string name, Vector2 value);
 
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithName:vectorFloat2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[MarshalNativeExceptions]
@@ -1824,12 +1951,15 @@ namespace SpriteKit {
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Export ("initWithName:floatVector3:")]
 		IntPtr InitWithNameFloatVector3 (string name, Vector3 value);
 
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithName:vectorFloat3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #if WATCH
@@ -1844,12 +1974,15 @@ namespace SpriteKit {
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Export ("initWithName:floatVector4:")]
 		IntPtr InitWithNameFloatVector4 (string name, Vector4 value);
 
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithName:vectorFloat4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #if WATCH
@@ -1888,6 +2021,7 @@ namespace SpriteKit {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithName:matrixFloat2x2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		NativeHandle Constructor (string name, MatrixFloat2x2 value);
@@ -1919,6 +2053,7 @@ namespace SpriteKit {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithName:matrixFloat3x3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		NativeHandle Constructor (string name, MatrixFloat3x3 value);
@@ -1952,6 +2087,7 @@ namespace SpriteKit {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("initWithName:matrixFloat4x4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		NativeHandle Constructor (string name, MatrixFloat4x4 value);
@@ -1974,12 +2110,15 @@ namespace SpriteKit {
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Export ("floatVector2Value")]
 		Vector2 _FloatVector2Value { get; set; }
 
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("vectorFloat2Value", ArgumentSemantic.Assign)]
 #if WATCH
 		Vector2 FloatVector2Value {
@@ -1998,12 +2137,15 @@ namespace SpriteKit {
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Export ("floatVector3Value")]
 		Vector3 _FloatVector3Value { get; set; }
 
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("vectorFloat3Value", ArgumentSemantic.Assign)]
 #if WATCH
 		Vector3 FloatVector3Value {
@@ -2022,12 +2164,15 @@ namespace SpriteKit {
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Export ("floatVector4Value")]
 		Vector4 _FloatVector4Value { get; set; }
 
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("vectorFloat4Value", ArgumentSemantic.Assign)]
 #if WATCH
 		Vector4 FloatVector4Value {
@@ -2068,6 +2213,7 @@ namespace SpriteKit {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("matrixFloat2x2Value", ArgumentSemantic.Assign)]
 		MatrixFloat2x2 MatrixFloat2x2Value {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2103,6 +2249,7 @@ namespace SpriteKit {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("matrixFloat3x3Value", ArgumentSemantic.Assign)]
 		MatrixFloat3x3 MatrixFloat3x3Value {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2138,6 +2285,7 @@ namespace SpriteKit {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("matrixFloat4x4Value", ArgumentSemantic.Assign)]
 		MatrixFloat4x4 MatrixFloat4x4Value {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2158,6 +2306,7 @@ namespace SpriteKit {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("uniformWithName:vectorFloat2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2167,6 +2316,7 @@ namespace SpriteKit {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("uniformWithName:vectorFloat3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2175,6 +2325,7 @@ namespace SpriteKit {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("uniformWithName:vectorFloat4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2194,6 +2345,7 @@ namespace SpriteKit {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("uniformWithName:matrixFloat2x2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2213,6 +2365,7 @@ namespace SpriteKit {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("uniformWithName:matrixFloat3x3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2232,6 +2385,7 @@ namespace SpriteKit {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("uniformWithName:matrixFloat4x4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2242,6 +2396,7 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // <quote>To create an action, call the class method for the action you are interested in. </quote>
 	partial interface SKAction : NSSecureCoding, NSCopying {
@@ -2316,6 +2471,7 @@ namespace SpriteKit {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("scaleToSize:duration:")]
 		SKAction ScaleTo (CGSize size, double sec);
@@ -2345,10 +2501,12 @@ namespace SpriteKit {
 		SKAction FadeAlphaTo (nfloat alpha, double sec);
 
 		[iOS (7, 1), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("setTexture:")]
 		SKAction SetTexture (SKTexture texture);
 
 		[iOS (7, 1), Mac (10, 10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
+		[MacCatalyst (13, 1)]
 		[Static, Export ("setTexture:resize:")]
 		SKAction SetTexture (SKTexture texture, bool resize);
 
@@ -2374,10 +2532,12 @@ namespace SpriteKit {
 		SKAction FollowPath (CGPath path, bool offset, bool orient, double sec);
 
 		[iOS (8, 0), Mac (10, 10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
+		[MacCatalyst (13, 1)]
 		[Static, Export ("followPath:speed:")]
 		SKAction FollowPath (CGPath path, nfloat speed);
 
 		[iOS (8, 0), Mac (10, 10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
+		[MacCatalyst (13, 1)]
 		[Static, Export ("followPath:asOffset:orientToPath:speed:")]
 		SKAction FollowPath (CGPath path, bool offset, bool orient, nfloat speed);
 
@@ -2415,46 +2575,57 @@ namespace SpriteKit {
 		// iOS 8 cluster (a few more are above, as part of their family
 		//
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("hide")]
 		SKAction Hide ();
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("unhide")]
 		SKAction Unhide ();
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("reachTo:rootNode:duration:")]
 		SKAction ReachTo (CGPoint position, SKNode rootNode, double secs);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("reachTo:rootNode:velocity:")]
 		SKAction ReachTo (CGPoint position, SKNode rootNode, nfloat velocity);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("reachToNode:rootNode:duration:")]
 		SKAction ReachToNode (SKNode node, SKNode rootNode, double sec);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("reachToNode:rootNode:velocity:")]
 		SKAction ReachToNode (SKNode node, SKNode rootNode, nfloat velocity);
 
 		[iOS (8, 0), Mac (10, 10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
+		[MacCatalyst (13, 1)]
 		[Static, Export ("strengthTo:duration:")]
 		SKAction StrengthTo (float /* float, not CGFloat */ strength, double sec);
 
 		[iOS (8, 0), Mac (10, 10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
+		[MacCatalyst (13, 1)]
 		[Static, Export ("strengthBy:duration:")]
 		SKAction StrengthBy (float /* float, not CGFloat */ strength, double sec);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("timingFunction", ArgumentSemantic.Assign)]
 		SKActionTimingFunction2 TimingFunction2 { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("falloffBy:duration:")]
 		SKAction FalloffBy (float /* float, not CGFloat */ to, double duration);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("falloffTo:duration:")]
 		SKAction FalloffTo (float falloff, double sec);
@@ -2462,6 +2633,7 @@ namespace SpriteKit {
 		// iOS 9 cluster
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("actionNamed:")]
 		[return: NullAllowed]
@@ -2469,6 +2641,7 @@ namespace SpriteKit {
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("actionNamed:duration:")]
 		[return: NullAllowed]
@@ -2476,6 +2649,7 @@ namespace SpriteKit {
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("actionNamed:fromURL:")]
 		[return: NullAllowed]
@@ -2483,6 +2657,7 @@ namespace SpriteKit {
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("actionNamed:fromURL:duration:")]
 		[return: NullAllowed]
@@ -2490,126 +2665,147 @@ namespace SpriteKit {
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("setNormalTexture:")]
 		SKAction SetNormalTexture (SKTexture texture);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("setNormalTexture:resize:")]
 		SKAction SetNormalTexture (SKTexture texture, bool resize);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("animateWithNormalTextures:timePerFrame:")]
 		SKAction AnimateWithNormalTextures (SKTexture [] textures, double secondsPerFrame);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("animateWithNormalTextures:timePerFrame:resize:restore:")]
 		SKAction AnimateWithNormalTextures (SKTexture [] textures, double secondsPerFrame, bool resize, bool restore);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("play")]
 		SKAction CreatePlay ();
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("pause")]
 		SKAction CreatePause ();
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("stop")]
 		SKAction CreateStop ();
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("changePlaybackRateTo:duration:")]
 		SKAction CreateChangePlaybackRate (float playbackRate, double duration);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("changePlaybackRateBy:duration:")]
 		SKAction CreateChangePlaybackRateBy (float playbackRate, double duration);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("changeVolumeTo:duration:")]
 		SKAction CreateChangeVolume (float newVolume, double duration);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("changeVolumeBy:duration:")]
 		SKAction CreateChangeVolumeBy (float by, double duration);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("changeChargeTo:duration:")]
 		SKAction CreateChangeChargeTo (float newCharge, double duration);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("changeChargeBy:duration:")]
 		SKAction CreateChangeChargeBy (float by, double duration);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("changeMassTo:duration:")]
 		SKAction CreateChangeMassTo (float newMass, double duration);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("changeMassBy:duration:")]
 		SKAction CreateChangeMassBy (float by, double duration);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("applyForce:duration:")]
 		SKAction CreateApplyForce (CGVector force, double duration);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("applyForce:atPoint:duration:")]
 		SKAction CreateApplyForce (CGVector force, CGPoint point, double duration);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("applyTorque:duration:")]
 		SKAction CreateApplyTorque (nfloat torque, double duration);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("applyImpulse:duration:")]
 		SKAction CreateApplyImpulse (CGVector impulse, double duration);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("applyImpulse:atPoint:duration:")]
 		SKAction CreateApplyImpulse (CGVector impulse, CGPoint point, double duration);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("applyAngularImpulse:duration:")]
 		SKAction CreateApplyAngularImpulse (nfloat impulse, double duration);
@@ -2618,48 +2814,56 @@ namespace SpriteKit {
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("stereoPanTo:duration:")]
 		SKAction CreateStereoPanTo (float target, double duration);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("stereoPanBy:duration:")]
 		SKAction CreateStereoPanBy (float by, double duration);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("changeReverbTo:duration:")]
 		SKAction CreateChangeReverbTo (float target, double duration);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("changeReverbBy:duration:")]
 		SKAction CreateChangeReverbBy (float by, double duration);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("changeObstructionTo:duration:")]
 		SKAction CreateChangeObstructionTo (float target, double duration);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("changeObstructionBy:duration:")]
 		SKAction CreateChangeObstructionBy (float by, double duration);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("changeOcclusionTo:duration:")]
 		SKAction CreateChangeOcclusionTo (float target, double duration);
 
 		[iOS (9, 0)]
 		[Mac (10, 11)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("changeOcclusionBy:duration:")]
 		SKAction CreateChangeOcclusionBy (float by, double duration);
@@ -2669,6 +2873,7 @@ namespace SpriteKit {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("warpTo:duration:")]
 		[return: NullAllowed]
@@ -2677,6 +2882,7 @@ namespace SpriteKit {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("animateWithWarps:times:")]
 		[return: NullAllowed]
@@ -2685,6 +2891,7 @@ namespace SpriteKit {
 		[iOS (10, 0)]
 		[Mac (10, 12)]
 		[TV (10, 0)]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("animateWithWarps:times:restore:")]
 		[return: NullAllowed]
@@ -2693,11 +2900,13 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // see https://bugzilla.xamarin.com/show_bug.cgi?id=14502
 	[BaseType (typeof (NSObject))]
 	partial interface SKPhysicsBody : NSSecureCoding, NSCopying {
 
 		[iOS (7, 1), Mac (10, 10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("bodyWithBodies:")]
 		SKPhysicsBody FromBodies (SKPhysicsBody [] bodies);
 
@@ -2705,6 +2914,7 @@ namespace SpriteKit {
 		SKPhysicsBody CreateCircularBody (nfloat radius);
 
 		[iOS (7, 1), Mac (10, 10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("bodyWithCircleOfRadius:center:")]
 		SKPhysicsBody CreateCircularBody (nfloat radius, CGPoint center);
 
@@ -2712,6 +2922,7 @@ namespace SpriteKit {
 		SKPhysicsBody CreateRectangularBody (CGSize size);
 
 		[iOS (7, 1), Mac (10, 10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("bodyWithRectangleOfSize:center:")]
 		SKPhysicsBody CreateRectangularBody (CGSize size, CGPoint center);
 
@@ -2813,28 +3024,34 @@ namespace SpriteKit {
 		// iOS 8
 		//
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("bodyWithTexture:size:")]
 		SKPhysicsBody Create (SKTexture texture, CGSize size);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Static, Export ("bodyWithTexture:alphaThreshold:size:")]
 		SKPhysicsBody Create (SKTexture texture, float /* float, not CGFloat */ alphaThreshold, CGSize size);
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("charge")]
 		nfloat Charge { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("fieldBitMask")]
 		uint FieldBitMask { get; set; } /* uint32_t */
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("pinned")]
 		bool Pinned { get; set; }
 	}
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // <quote>An SKPhysicsContact object is created automatically by Scene Kit</quote>
 	partial interface SKPhysicsContact {
@@ -2852,6 +3069,7 @@ namespace SpriteKit {
 		nfloat CollisionImpulse { get; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("contactNormal")]
 		CGVector ContactNormal { get; }
 
@@ -2859,6 +3077,7 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -2876,6 +3095,7 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject),
 		   Delegates = new string [] { "WeakContactDelegate" },
 		   Events = new Type [] { typeof (SKPhysicsContactDelegate) })]
@@ -2929,6 +3149,7 @@ namespace SpriteKit {
 		// iOS 8
 		//
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("sampleFieldsAt:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		Vector3 SampleFields (/* vector_float3 */ Vector3 position);
@@ -2936,6 +3157,7 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // <quote>You never instantiate objects of this class directly</quote>
 	partial interface SKPhysicsJoint : NSSecureCoding {
@@ -2947,16 +3169,19 @@ namespace SpriteKit {
 		SKPhysicsBody BodyB { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("reactionForce")]
 		CGVector ReactionForce { get; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("reactionTorque")]
 		nfloat ReactionTorque { get; }
 	}
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKPhysicsJoint))]
 	[DisableDefaultCtor] // impossible to set the `anchor` using the default ctor (see #14511) 
 	partial interface SKPhysicsJointPin {
@@ -2977,12 +3202,14 @@ namespace SpriteKit {
 		nfloat FrictionTorque { get; set; }
 
 		[iOS (8, 0), Mac (10, 10)]
+		[MacCatalyst (13, 1)]
 		[Export ("rotationSpeed")]
 		nfloat RotationSpeed { get; set; }
 	}
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKPhysicsJoint))]
 	[DisableDefaultCtor] // impossible to set the `anchorA` and `anchorB` using the default ctor (see #14511) 
 	partial interface SKPhysicsJointSpring {
@@ -2999,6 +3226,7 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKPhysicsJoint))]
 	[DisableDefaultCtor] // https://bugzilla.xamarin.com/show_bug.cgi?id=14511
 	partial interface SKPhysicsJointFixed {
@@ -3009,6 +3237,7 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKPhysicsJoint))]
 	[DisableDefaultCtor] // impossible to set the `anchor` and `axis` using the default ctor (see #14511) 
 	partial interface SKPhysicsJointSliding {
@@ -3028,6 +3257,7 @@ namespace SpriteKit {
 
 	[Watch (3, 0)]
 	[Mac (10, 9)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKPhysicsJoint))]
 	[DisableDefaultCtor] // impossible to set the `anchorA` and `anchorB` using the default ctor (see #14511) 
 	partial interface SKPhysicsJointLimit {
@@ -3042,6 +3272,7 @@ namespace SpriteKit {
 	[Watch (3, 0)]
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SKRange : NSSecureCoding, NSCopying {
 		[DesignatedInitializer]
@@ -3076,6 +3307,7 @@ namespace SpriteKit {
 	[Watch (3, 0)]
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKNode))]
 	[DisableDefaultCtor]
 	interface SKAudioNode : NSSecureCoding {
@@ -3102,6 +3334,7 @@ namespace SpriteKit {
 	[Watch (3, 0)]
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKNode))]
 	interface SKCameraNode {
 		[Export ("containsNode:")]
@@ -3114,6 +3347,7 @@ namespace SpriteKit {
 	[Watch (3, 0)]
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKNode))]
 	[DisableDefaultCtor]
 	interface SKReferenceNode {
@@ -3142,6 +3376,7 @@ namespace SpriteKit {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SKAttribute : NSSecureCoding {
@@ -3162,6 +3397,7 @@ namespace SpriteKit {
 
 	[iOS (9, 0)]
 	[Mac (10, 11)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // DesignatedInitializer below
 	interface SKAttributeValue : NSSecureCoding {
@@ -3220,6 +3456,7 @@ namespace SpriteKit {
 	[iOS (10, 0)]
 	[Mac (10, 12)]
 	[TV (10, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SKTileDefinition : NSCopying, NSSecureCoding {
@@ -3293,6 +3530,7 @@ namespace SpriteKit {
 	[iOS (10, 0)]
 	[Mac (10, 12)]
 	[TV (10, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKNode))]
 	interface SKTileMapNode : NSCopying, NSSecureCoding {
 		[Static]
@@ -3381,6 +3619,7 @@ namespace SpriteKit {
 #if !WATCH
 		// Static Category from GameplayKit
 		[NoWatch]
+		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("tileMapNodesWithTileSet:columns:rows:tileSize:fromNoiseMap:tileTypeNoiseMapThresholds:")]
 		SKTileMapNode [] FromTileSet (SKTileSet tileSet, nuint columns, nuint rows, CGSize tileSize, GKNoiseMap noiseMap, NSNumber [] thresholds);
@@ -3401,6 +3640,7 @@ namespace SpriteKit {
 	[iOS (10, 0)]
 	[Mac (10, 12)]
 	[TV (10, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SKTileSet : NSCopying, NSSecureCoding {
 		[Static]
@@ -3447,6 +3687,7 @@ namespace SpriteKit {
 	[iOS (10, 0)]
 	[Mac (10, 12)]
 	[TV (10, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SKTileGroup : NSCopying, NSSecureCoding {
 		[Static]
@@ -3478,6 +3719,7 @@ namespace SpriteKit {
 	[iOS (10, 0)]
 	[Mac (10, 12)]
 	[TV (10, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SKTileGroupRule : NSCopying, NSSecureCoding {
 		[Static]
@@ -3501,6 +3743,7 @@ namespace SpriteKit {
 	[iOS (10, 0)]
 	[Mac (10, 12)]
 	[TV (10, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SKWarpGeometry : NSCopying, NSSecureCoding { }
 
@@ -3508,6 +3751,7 @@ namespace SpriteKit {
 	[iOS (10, 0)]
 	[Mac (10, 12)]
 	[TV (10, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface SKWarpable {
 		[Abstract]
@@ -3523,6 +3767,7 @@ namespace SpriteKit {
 	[iOS (10, 0)]
 	[Mac (10, 12)]
 	[TV (10, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKWarpGeometry))]
 	[DisableDefaultCtor]
 	interface SKWarpGeometryGrid : NSSecureCoding {
@@ -3573,6 +3818,7 @@ namespace SpriteKit {
 	// SKRenderer is not available for WatchKit apps and the iOS simulator
 	[NoWatch]
 	[TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SKRenderer {
@@ -3615,6 +3861,7 @@ namespace SpriteKit {
 	}
 
 	[TV (11, 0), Watch (4, 0), Mac (10, 13), iOS (11, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKNode))]
 	interface SKTransformNode {
 		[Export ("xRotation")]

@@ -119,14 +119,42 @@ namespace ImageIO {
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]
-		extern static void CGImageMetadataEnumerateTagsUsingBlock (/* CGImageMetadataRef __nonnull */ IntPtr metadata,
-			/* CFStringRef __nullable */ IntPtr rootPath, /* CFDictionaryRef __nullable */ IntPtr options,
-			/* __nonnull */ CGImageMetadataTagBlock block);
+		extern unsafe static void CGImageMetadataEnumerateTagsUsingBlock (/* CGImageMetadataRef __nonnull */ IntPtr metadata,
+						/* CFStringRef __nullable */ IntPtr rootPath, /* CFDictionaryRef __nullable */ IntPtr options, BlockLiteral* block);
 
+#if !NET
+		delegate byte TrampolineCallback (IntPtr blockPtr, NativeHandle key, NativeHandle value);
+
+		[MonoPInvokeCallback (typeof (TrampolineCallback))]
+#else
+		[UnmanagedCallersOnly]
+#endif
+		static byte TagEnumerator (IntPtr block, NativeHandle key, NativeHandle value)
+		{
+			var nsKey = Runtime.GetNSObject<NSString> (key, false)!;
+			var nsValue = Runtime.GetINativeObject<CGImageMetadataTag> (value, false)!;
+			var del = BlockLiteral.GetTarget<CGImageMetadataTagBlock> (block);
+			return del (nsKey, nsValue) ? (byte) 1 : (byte) 0;
+		}
+
+#if !NET
+		static unsafe readonly TrampolineCallback static_action = TagEnumerator;
+#endif
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateTags (NSString? rootPath, CGImageMetadataEnumerateOptions? options, CGImageMetadataTagBlock block)
 		{
 			using var o = options?.ToDictionary ();
-			CGImageMetadataEnumerateTagsUsingBlock (Handle, rootPath.GetHandle (), o.GetHandle (), block);
+			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, NativeHandle, NativeHandle, byte> trampoline = &TagEnumerator;
+				using var block_handler = new BlockLiteral (trampoline, block, typeof (CGImageMetadata), nameof (TagEnumerator));
+#else
+				using var block_handler = new BlockLiteral ();
+				block_handler.SetupBlockUnsafe (static_action, block);
+#endif
+				CGImageMetadataEnumerateTagsUsingBlock (Handle, rootPath.GetHandle (), o.GetHandle (), &block_handler);
+			}
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]

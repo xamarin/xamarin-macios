@@ -64,10 +64,14 @@ namespace Network {
 			nw_protocol_stack_clear_application_protocols (GetCheckedHandle ());
 		}
 
+#if !NET
 		delegate void nw_protocol_stack_iterate_protocols_block_t (IntPtr block, IntPtr options);
 		static nw_protocol_stack_iterate_protocols_block_t static_iterateHandler = TrampolineIterateHandler;
 
 		[MonoPInvokeCallback (typeof (nw_protocol_stack_iterate_protocols_block_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineIterateHandler (IntPtr block, IntPtr options)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWProtocolOptions>> (block);
@@ -95,18 +99,20 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		extern static void nw_protocol_stack_iterate_application_protocols (nw_protocol_stack_t stack, ref BlockLiteral completion);
+		unsafe extern static void nw_protocol_stack_iterate_application_protocols (nw_protocol_stack_t stack, BlockLiteral* completion);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void IterateProtocols (Action<NWProtocolOptions> callback)
 		{
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_iterateHandler, callback);
-
-			try {
-				nw_protocol_stack_iterate_application_protocols (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolineIterateHandler;
+				using var block = new BlockLiteral (trampoline, callback, typeof (NWProtocolStack), nameof (TrampolineIterateHandler));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_iterateHandler, callback);
+#endif
+				nw_protocol_stack_iterate_application_protocols (GetCheckedHandle (), &block);
 			}
 		}
 

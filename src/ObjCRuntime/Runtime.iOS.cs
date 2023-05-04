@@ -144,7 +144,7 @@ namespace ObjCRuntime {
 		}
 
 		[DllImport ("__Internal")]
-		static extern void xamarin_start_wwan (string uri);
+		static extern void xamarin_start_wwan (IntPtr uri);
 
 		public static void StartWWAN (Uri uri)
 		{
@@ -157,7 +157,8 @@ namespace ObjCRuntime {
 			if (Runtime.Arch == Arch.SIMULATOR)
 				return;
 
-			xamarin_start_wwan (uri.ToString ());
+			using var uriPtr = new TransientString (uri.ToString ());
+			xamarin_start_wwan (uriPtr);
 		}
 #endif // !TVOS && !WATCH
 #endif // !COREBUILD
