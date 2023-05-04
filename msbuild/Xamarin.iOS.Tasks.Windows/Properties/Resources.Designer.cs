@@ -47,12 +47,6 @@ namespace Xamarin.iOS.Tasks.Windows.Properties {
             }
         }
         
-        internal static string CollectDynamicFrameworks_InvalidFramework {
-            get {
-                return ResourceManager.GetString("CollectDynamicFrameworks_InvalidFramework", resourceCulture);
-            }
-        }
-        
         internal static string Codesign_MissingPasswordFile {
             get {
                 return ResourceManager.GetString("Codesign_MissingPasswordFile", resourceCulture);

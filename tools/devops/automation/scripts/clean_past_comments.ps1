@@ -18,7 +18,7 @@ param
     $CommentToHide
 )
 
-Import-Module MaciosCI.psd1
+Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
 
 $comments = New-GitHubCommentsObjectFromUrl -Url "$RepositoryUri" -Token $GithubToken
 

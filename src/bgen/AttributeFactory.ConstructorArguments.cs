@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using ObjCRuntime;
 
 #nullable enable
@@ -66,7 +67,7 @@ public static partial class AttributeFactory {
 			return new [] { PlatformEnum, typeof (int), typeof (int), typeof (int), typeof (string) };
 		}
 
-		public static bool TryGetCtorArguments (object [] constructorArguments, PlatformName platform, out object? []? ctorValues, out Type []? ctorTypes)
+		public static bool TryGetCtorArguments (object [] constructorArguments, PlatformName platform, [NotNullWhen (true)] out object? []? ctorValues, [NotNullWhen (true)] out Type []? ctorTypes)
 		{
 			ctorValues = null;
 			ctorTypes = null;
