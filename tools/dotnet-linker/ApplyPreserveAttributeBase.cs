@@ -10,6 +10,8 @@ using Mono.Linker.Steps;
 
 using Mono.Cecil;
 
+#nullable enable
+
 namespace Mono.Tuner {
 
 	public abstract class ApplyPreserveAttributeBase : BaseSubStep {
@@ -72,16 +74,16 @@ namespace Mono.Tuner {
 				MarkMethod (method, attribute);
 		}
 
-		void MarkMethod (MethodDefinition method, CustomAttribute preserve_attribute)
+		void MarkMethod (MethodDefinition? method, CustomAttribute? preserve_attribute)
 		{
-			if (method == null)
+			if (method is null)
 				return;
 
 			Mark (method, preserve_attribute);
 			Annotations.SetAction (method, MethodAction.Parse);
 		}
 
-		void Mark (IMetadataTokenProvider provider, CustomAttribute preserve_attribute)
+		void Mark (IMetadataTokenProvider provider, CustomAttribute? preserve_attribute)
 		{
 			if (IsConditionalAttribute (preserve_attribute)) {
 				PreserveConditional (provider);
@@ -103,9 +105,9 @@ namespace Mono.Tuner {
 			Annotations.AddPreservedMethod (method.DeclaringType, method);
 		}
 
-		static bool IsConditionalAttribute (CustomAttribute attribute)
+		static bool IsConditionalAttribute (CustomAttribute? attribute)
 		{
-			if (attribute == null)
+			if (attribute is null)
 				return false;
 
 			foreach (var named_argument in attribute.Fields)
