@@ -285,18 +285,18 @@ namespace Xharness {
 		/// has its own details.</param>
 		/// <param name="generatedDir">The dir where the projects will be saved.</param>
 		/// <returns></returns>
-		public GeneratedProjects GenerateTestProjects (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform)
+		public GeneratedProjects GenerateTestProjects (IEnumerable<(string Name, string [] Assemblies, double TimeoutMultiplier)> projects, Platform platform)
 			=> TemplatedProject.GenerateTestProjects (projects, platform);
 
-		List<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> GetProjectDefinitions (ProjectsDefinitions definitions, Platform platform)
+		List<(string Name, string [] Assemblies, double TimeoutMultiplier)> GetProjectDefinitions (ProjectsDefinitions definitions, Platform platform)
 		{
-			var testProjects = new List<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> ();
+			var testProjects = new List<(string Name, string [] Assemblies, double TimeoutMultiplier)> ();
 			if (platform == Platform.WatchOS || !GroupTests) {
 				// go over the keys which define the groups, and split them
 				foreach (var groupName in definitions.Keys) {
 					var (ExtraArgs, TimeoutMultiplier, Projects) = definitions [groupName];
 					foreach (var (Name, Assemblies) in Projects) {
-						testProjects.Add ((Name, Assemblies, ExtraArgs, TimeoutMultiplier));
+						testProjects.Add ((Name, Assemblies, TimeoutMultiplier));
 					}
 				}
 			} else {
@@ -310,7 +310,7 @@ namespace Xharness {
 								groupedAssemblies.AddRange (Assemblies);
 						}
 					}
-					testProjects.Add ((Name: groupName, Assemblies: groupedAssemblies.ToArray (), ExtraArgs, TimeoutMultiplier));
+					testProjects.Add ((Name: groupName, Assemblies: groupedAssemblies.ToArray (), TimeoutMultiplier));
 				}
 			}
 			return testProjects;
@@ -347,7 +347,6 @@ namespace Xharness {
 						Name = finalName,
 						FailureMessage = tp.Failure,
 						RestoreNugetsInProject = true,
-						MTouchExtraArgs = tp.ExtraArgs,
 						TimeoutMultiplier = tp.TimeoutMultiplier,
 						GenerateVariations = false,
 						TestPlatform = platform,
@@ -379,7 +378,6 @@ namespace Xharness {
 					IsExecutableProject = true,
 					FailureMessage = tp.Failure,
 					RestoreNugetsInProject = true,
-					MTouchExtraArgs = tp.ExtraArgs,
 					TestPlatform = TestPlatform.Mac,
 				};
 				proj.Dependency = () => {

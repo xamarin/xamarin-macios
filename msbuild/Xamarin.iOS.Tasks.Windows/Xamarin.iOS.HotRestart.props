@@ -13,5 +13,7 @@
 		<HotRestartIPAPath>$(HotRestartSignedAppOutputDir)$(_AppBundleName).ipa</HotRestartIPAPath>
 
 		<UnpackHotRestartFrameworks Condition="'$(UnpackHotRestartFrameworks)' == ''">true</UnpackHotRestartFrameworks>
+
+		<HotRestartPreBuiltZipPath Condition="'$(HotRestartPreBuiltZipPath)' == ''">$(MSBuildThisFileDirectory)Xamarin.PreBuilt.iOS.app.zip</HotRestartPreBuiltZipPath>
 	</PropertyGroup>
 </Project>

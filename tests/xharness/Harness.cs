@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.Common;
+using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
@@ -72,6 +75,41 @@ namespace Xharness {
 				root_directory = value;
 				if (root_directory != null)
 					root_directory = Path.GetFullPath (root_directory).TrimEnd ('/');
+			}
+		}
+
+		static SemaphoreSlim ls_files_semaphore = new SemaphoreSlim (1);
+		static List<string> files_in_git = new List<string> ();
+		public static async Task<IEnumerable<string>> ListFilesInGitAsync (ILog log, string test_dir, IProcessManager processManager)
+		{
+			var acquired = await ls_files_semaphore.WaitAsync (TimeSpan.FromMinutes (5));
+			try {
+				if (!acquired)
+					log.WriteLine ($"Unable to acquire lock to run 'git ls-files {test_dir}' in 5 minutes; will try to run anyway.");
+				if (files_in_git.Count == 0) {
+					using var process = new Process ();
+					process.StartInfo.FileName = "git";
+					process.StartInfo.Arguments = "ls-files";
+					process.StartInfo.WorkingDirectory = RootDirectory;
+					var stdout = new MemoryLog () { Timestamp = false };
+					var result = await processManager.RunAsync (process, log, stdout, stdout, timeout: TimeSpan.FromSeconds (60));
+					if (!result.Succeeded)
+						throw new Exception ($"Failed to list the files in the directory {test_dir} (TimedOut: {result.TimedOut} ExitCode: {result.ExitCode}):\n{stdout}");
+					files_in_git.AddRange (stdout.ToString ().Split ('\n'));
+				}
+				var relative_dir = Path.GetFullPath (test_dir);
+				if (relative_dir.StartsWith (RootDirectory)) {
+					relative_dir = relative_dir.Substring (RootDirectory.Length);
+					relative_dir = relative_dir.TrimStart ('/');
+				}
+				if (!relative_dir.EndsWith ("/", StringComparison.Ordinal))
+					relative_dir += "/";
+				return files_in_git
+					.Where (v => v.StartsWith (relative_dir, StringComparison.OrdinalIgnoreCase))
+					.Select (v => v.Substring (relative_dir.Length));
+			} finally {
+				if (acquired)
+					ls_files_semaphore.Release ();
 			}
 		}
 	}

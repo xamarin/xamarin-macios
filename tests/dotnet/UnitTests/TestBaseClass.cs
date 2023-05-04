@@ -234,13 +234,13 @@ namespace Xamarin.Tests {
 			Assert.That (dSYMDirectory, Does.Exist, "dsym directory");
 		}
 
-		protected string GetNativeExecutable (ApplePlatform platform, string app_directory)
+		protected static string GetNativeExecutable (ApplePlatform platform, string app_directory)
 		{
 			var executableName = Path.GetFileNameWithoutExtension (app_directory);
 			return Path.Combine (app_directory, GetRelativeExecutableDirectory (platform), executableName);
 		}
 
-		protected string GetRelativeExecutableDirectory (ApplePlatform platform)
+		protected static string GetRelativeExecutableDirectory (ApplePlatform platform)
 		{
 			switch (platform) {
 			case ApplePlatform.iOS:
