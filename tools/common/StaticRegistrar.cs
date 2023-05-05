@@ -4031,6 +4031,14 @@ namespace Registrar {
 				nslog_start.AppendLine (");");
 			}
 
+#if NET
+			// Generate the native trampoline to call the generated UnmanagedCallersOnly method if we're using the managed static registrar.
+			if (LinkContext.App.Registrar == RegistrarMode.ManagedStatic) {
+				GenerateCallToUnmanagedCallersOnlyMethod (sb, method, isCtor, isVoid, num_arg, descriptiveMethodName, exceptions);
+				return;
+			}
+#endif
+
 			if (!TryCreateTokenReference (method.Method, TokenType.Method, out var token_ref, exceptions))
 				return;
 
@@ -4260,6 +4268,107 @@ namespace Registrar {
 				sb.WriteLine (body);
 			}
 		}
+
+#if NET
+		void GenerateCallToUnmanagedCallersOnlyMethod (AutoIndentStringBuilder sb, ObjCMethod method, bool isCtor, bool isVoid, int num_arg, string descriptiveMethodName, List<Exception> exceptions)
+		{
+			// Generate the native trampoline to call the generated UnmanagedCallersOnly method.
+			// We try to do as little as possible in here, and instead do the work in managed code.
+
+			// If we're AOT-compiled, we don't need to look for the UnmanagedCallersOnly method,
+			// we can just call the corresponding entry point directly. Otherwise we'll have to
+			// call into managed code to find the function pointer for the UnmanagedCallersOnly
+			// method (we store the result in a static variable, so that we only do this once
+			// per method, the first time it's called).
+			var staticCall = App.IsAOTCompiled (method.DeclaringType.Type.Module.Assembly.Name.Name);
+			if (!App.Configuration.AssemblyTrampolineInfos.TryFindInfo (method.Method, out var pinvokeMethodInfo)) {
+				exceptions.Add (ErrorHelper.CreateError (99, "Could not find the managed callback for {0}", descriptiveMethodName));
+				return;
+			}
+			var ucoEntryPoint = pinvokeMethodInfo.UnmanagedCallersOnlyEntryPoint;
+			sb.AppendLine ();
+			if (!staticCall)
+				sb.Append ("typedef ");
+
+			var callbackReturnType = string.Empty;
+			var hasReturnType = true;
+			if (isCtor) {
+				callbackReturnType = "id";
+			} else if (isVoid) {
+				callbackReturnType = "void";
+				hasReturnType = false;
+			} else {
+				callbackReturnType = ToObjCParameterType (method.NativeReturnType, descriptiveMethodName, exceptions, method.Method);
+			}
+
+			sb.Append (callbackReturnType);
+
+			sb.Append (" ");
+			if (staticCall) {
+				sb.Append (ucoEntryPoint);
+			} else {
+				sb.Append ("(*");
+				sb.Append (ucoEntryPoint);
+				sb.Append ("_function)");
+			}
+			sb.Append (" (id self, SEL sel");
+			var indexOffset = method.IsCategoryInstance ? 1 : 0;
+			for (var i = indexOffset; i < num_arg; i++) {
+				sb.Append (", ");
+				var parameterType = ToObjCParameterType (method.NativeParameters [i], method.DescriptiveMethodName, exceptions, method.Method, delegateToBlockType: true, cSyntaxForBlocks: true);
+				var containsBlock = parameterType.Contains ("%PARAMETERNAME%");
+				parameterType = parameterType.Replace ("%PARAMETERNAME%", $"p{i - indexOffset}");
+				sb.Append (parameterType);
+				if (!containsBlock) {
+					sb.Append (" ");
+					sb.AppendFormat ("p{0}", i - indexOffset);
+				}
+			}
+			if (isCtor)
+				sb.Append (", bool* call_super");
+			sb.Append (", GCHandle* exception_gchandle");
+
+			if (method.IsVariadic)
+				sb.Append (", ...");
+			sb.Append (");");
+
+			sb.WriteLine ();
+			sb.WriteLine (GetObjCSignature (method, exceptions));
+			sb.WriteLine ("{");
+			sb.WriteLine ("GCHandle exception_gchandle = INVALID_GCHANDLE;");
+			if (isCtor)
+				sb.WriteLine ($"bool call_super = false;");
+			if (hasReturnType)
+				sb.WriteLine ($"{callbackReturnType} rv = {{ 0 }};");
+
+			if (!staticCall) {
+				sb.WriteLine ($"static {ucoEntryPoint}_function {ucoEntryPoint};");
+				sb.WriteLine ($"xamarin_registrar_dlsym ((void **) &{ucoEntryPoint}, \"{method.Method.Module.Assembly.Name.Name}\", \"{ucoEntryPoint}\", {pinvokeMethodInfo.Id});");
+			}
+			if (hasReturnType)
+				sb.Write ("rv = ");
+			sb.Write (ucoEntryPoint);
+			sb.Write (" (self, _cmd");
+			for (var i = indexOffset; i < num_arg; i++) {
+				sb.AppendFormat (", p{0}", i - indexOffset);
+			}
+			if (isCtor)
+				sb.Write (", &call_super");
+			sb.Write (", &exception_gchandle");
+			sb.WriteLine (");");
+
+			sb.WriteLine ("xamarin_process_managed_exception_gchandle (exception_gchandle);");
+
+			if (isCtor) {
+				GenerateCallToSuperForConstructor (sb, method, exceptions);
+			}
+
+			if (hasReturnType)
+				sb.WriteLine ("return rv;");
+
+			sb.WriteLine ("}");
+		}
+#endif
 
 		void SpecializePrepareReturnValue (AutoIndentStringBuilder sb, ObjCMethod method, string descriptiveMethodName, string rettype, List<Exception> exceptions)
 		{
