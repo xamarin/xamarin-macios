@@ -15,6 +15,7 @@ using System.Text;
 
 using Xamarin.Bundler;
 using Xamarin.Linker;
+using Xamarin.Tuner;
 using Xamarin.Utils;
 
 #if MONOTOUCH
@@ -528,6 +529,11 @@ namespace Registrar {
 
 		TypeDefinition ResolveType (TypeReference tr)
 		{
+			return ResolveType (LinkContext, tr);
+		}
+
+		public static TypeDefinition ResolveType (Xamarin.Tuner.DerivedLinkContext context, TypeReference tr)
+		{
 			// The static registrar might sometimes deal with types that have been linked away
 			// It's not always possible to call .Resolve () on types that have been linked away,
 			// it might result in a NotSupportedException, or just a null value, so here we
@@ -537,29 +543,34 @@ namespace Registrar {
 			if (tr is ArrayType arrayType) {
 				return arrayType.ElementType.Resolve ();
 			} else if (tr is GenericInstanceType git) {
-				return ResolveType (git.ElementType);
+				return ResolveType (context, git.ElementType);
 			} else {
 				var td = tr.Resolve ();
 				if (td is null)
-					td = LinkContext?.GetLinkedAwayType (tr, out _);
+					td = context?.GetLinkedAwayType (tr, out _);
 				return td;
 			}
 		}
 
 		public bool IsNativeObject (TypeReference tr)
 		{
+			return IsNativeObject (LinkContext, tr);
+		}
+
+		public static bool IsNativeObject (Xamarin.Tuner.DerivedLinkContext context, TypeReference tr)
+		{
 			var gp = tr as GenericParameter;
 			if (gp is not null) {
 				if (gp.HasConstraints) {
 					foreach (var constraint in gp.Constraints) {
-						if (IsNativeObject (constraint.ConstraintType))
+						if (IsNativeObject (context, constraint.ConstraintType))
 							return true;
 					}
 				}
 				return false;
 			}
 
-			var type = ResolveType (tr);
+			var type = ResolveType (context, tr);
 
 			while (type is not null) {
 				if (type.HasInterfaces) {
@@ -1831,19 +1842,30 @@ namespace Registrar {
 			return PrepareInterfaceMethodMapping (type);
 		}
 
+		public TypeReference GetProtocolAttributeWrapperType (TypeDefinition type)
+		{
+			return GetProtocolAttributeWrapperType ((TypeReference) type);
+		}
+
+		public static TypeReference GetProtocolAttributeWrapperType (ICustomAttribute attrib)
+		{
+			if (!attrib.HasProperties)
+				return null;
+
+			foreach (var prop in attrib.Properties) {
+				if (prop.Name == "WrapperType")
+					return (TypeReference) prop.Argument.Value;
+			}
+
+			return null;
+		}
+
 		protected override TypeReference GetProtocolAttributeWrapperType (TypeReference type)
 		{
 			if (!TryGetAttribute (type.Resolve (), Foundation, StringConstants.ProtocolAttribute, out var attrib))
 				return null;
 
-			if (attrib.HasProperties) {
-				foreach (var prop in attrib.Properties) {
-					if (prop.Name == "WrapperType")
-						return (TypeReference) prop.Argument.Value;
-				}
-			}
-
-			return null;
+			return GetProtocolAttributeWrapperType (attrib);
 		}
 
 		protected override IList<AdoptsAttribute> GetAdoptsAttributes (TypeReference type)
@@ -1968,7 +1990,7 @@ namespace Registrar {
 			}
 		}
 
-		ExportAttribute CreateExportAttribute (IMemberDefinition candidate)
+		public static ExportAttribute CreateExportAttribute (IMemberDefinition candidate)
 		{
 			bool is_variadic = false;
 			var attribute = GetExportAttribute (candidate);
@@ -2001,7 +2023,7 @@ namespace Registrar {
 		}
 
 		// [Export] is not sealed anymore - so we cannot simply compare strings
-		ICustomAttribute GetExportAttribute (ICustomAttributeProvider candidate)
+		public static ICustomAttribute GetExportAttribute (ICustomAttributeProvider candidate)
 		{
 			if (!candidate.HasCustomAttributes)
 				return null;
@@ -2068,7 +2090,7 @@ namespace Registrar {
 			return true;
 		}
 
-		MethodDefinition GetBaseMethodInTypeHierarchy (MethodDefinition method)
+		public MethodDefinition GetBaseMethodInTypeHierarchy (MethodDefinition method)
 		{
 			if (!IsOverride (method))
 				return method;
@@ -2737,7 +2759,7 @@ namespace Registrar {
 			return sb.ToString ();
 		}
 
-		static string EncodeNonAsciiCharacters (string value)
+		public static string EncodeNonAsciiCharacters (string value)
 		{
 			StringBuilder sb = null;
 			for (int i = 0; i < value.Length; i++) {
