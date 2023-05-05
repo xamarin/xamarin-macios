@@ -21,7 +21,7 @@ namespace UIKit {
 
 		public CoreAnimation.CADisplayLink CreateDisplayLink (Action action)
 		{
-			if (action == null)
+			if (action is null)
 				throw new ArgumentNullException ("action");
 			var d = new NSActionDispatcher (action);
 			return CreateDisplayLink (d, NSActionDispatcher.Selector);

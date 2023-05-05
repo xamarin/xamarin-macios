@@ -44,7 +44,7 @@ namespace Foundation {
 				throw new ArgumentException ("suiteName cannot be null or empty");
 			if (String.IsNullOrEmpty (commandName))
 				throw new ArgumentException ("commandName cannot be null or empty");
-			if (commandDeclaration == null)
+			if (commandDeclaration is null)
 				throw new ArgumentNullException ("commandDeclaration");
 
 			// ensure that the passed description is well formed
@@ -58,7 +58,7 @@ namespace Foundation {
 				throw new ArgumentException ("eventClass");
 			if (commandDeclaration.AppleEventClassCode.Length != 4)
 				throw new ArgumentException ("eventClass must be a four characters string.");
-			if (commandDeclaration.ResultAppleEventCode != null && commandDeclaration.ResultAppleEventCode.Length != 4)
+			if (commandDeclaration.ResultAppleEventCode is not null && commandDeclaration.ResultAppleEventCode.Length != 4)
 				throw new ArgumentException ("resultAppleEvent must be a four characters string.");
 			
 			using (var nsSuitName = new NSString (suiteName))
@@ -91,7 +91,7 @@ namespace Foundation {
 
 		public string GetTypeForArgument (string name)
 		{
-			if (name == null)
+			if (name is null)
 				throw new ArgumentNullException ("name");
 				
 			using (var nsName = new NSString(name))
@@ -102,7 +102,7 @@ namespace Foundation {
 
 		public string GetAppleEventCodeForArgument (string name)
 		{
-			if (name == null)
+			if (name is null)
 				throw new ArgumentNullException (name);
 
 			using (var nsName = new NSString (name)) {

@@ -30,7 +30,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
-			if (Items != null) {
+			if (Items is not null) {
 				var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 
 				foreach (var item in Items) {

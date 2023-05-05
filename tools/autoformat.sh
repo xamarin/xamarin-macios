@@ -4,6 +4,19 @@
 cd "$(git rev-parse --show-toplevel)"
 SRC_DIR=$(pwd)
 
+# Replace:
+#     == null     with     is null
+#     != null     with     is not null
+# except in a few tests files, where we have tests for (in)equality operators, and in that case the '== null' and '!= null' code is correct.
+#
+IFS=$'\n'
+for file in $(git ls-files -- '*.cs' ':(exclude)tests/monotouch-test/Foundation/UrlTest.cs' ':(exclude)tests/monotouch-test/AVFoundation/AVAudioFormatTest.cs'); do
+	if [[ -L "$file" ]]; then
+		continue
+	fi
+	LANG=en sed -i '' -e 's/!= null/is not null/g' -e 's/== null/is null/g' "$file"
+done
+
 # Go one directory up, to avoid any global.json in xamarin-macios
 cd ..
 

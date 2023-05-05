@@ -236,7 +236,7 @@ namespace Xharness.Jenkins {
 						}
 						if (!string.IsNullOrEmpty (defines)) {
 							clone.Xml.AddAdditionalDefines (defines, task.ProjectPlatform, configuration);
-							if (clone.ProjectReferences != null) {
+							if (clone.ProjectReferences is not null) {
 								foreach (var pr in clone.ProjectReferences) {
 									pr.Xml.AddAdditionalDefines (defines, task.ProjectPlatform, configuration);
 									pr.Xml.Save (pr.Path);
@@ -245,7 +245,7 @@ namespace Xharness.Jenkins {
 						}
 						if (!string.IsNullOrEmpty (undefines)) {
 							clone.Xml.RemoveDefines (undefines, task.ProjectPlatform, configuration);
-							if (clone.ProjectReferences != null) {
+							if (clone.ProjectReferences is not null) {
 								foreach (var pr in clone.ProjectReferences) {
 									pr.Xml.RemoveDefines (undefines, task.ProjectPlatform, configuration);
 									pr.Xml.Save (pr.Path);

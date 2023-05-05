@@ -48,9 +48,9 @@ namespace Extrospection {
 		void ProcessObjcEntry (string objcClassName, VersionTuple objcVersion)
 		{
 			TypeDefinition managedType = ManagedTypes.FirstOrDefault (x => Helpers.GetName (x) == objcClassName && x.IsPublic);
-			if (managedType != null) {
+			if (managedType is not null) {
 				var framework = Helpers.GetFramework (managedType);
-				if (framework != null)
+				if (framework is not null)
 					ProcessItem (managedType, Helpers.GetName (managedType), objcVersion, framework);
 			}
 		}
@@ -63,9 +63,9 @@ namespace Extrospection {
 			string selector = fullname.Substring (n + 2);
 
 			TypeDefinition managedType = ManagedTypes.FirstOrDefault (x => Helpers.GetName (x) == objcClassName);
-			if (managedType != null) {
+			if (managedType is not null) {
 				var framework = Helpers.GetFramework (managedType);
-				if (framework == null)
+				if (framework is null)
 					return;
 
 				// If the entire type is deprecated, call it good enough
@@ -73,7 +73,7 @@ namespace Extrospection {
 					return;
 
 				var matchingMethod = managedType.Methods.FirstOrDefault (x => x.GetSelector () == selector && x.IsPublic && x.IsStatic == class_method);
-				if (matchingMethod != null)
+				if (matchingMethod is not null)
 					ProcessItem (matchingMethod, fullname, objcVersion, framework);
 			}
 		}
@@ -83,7 +83,7 @@ namespace Extrospection {
 			if (dllimports.TryGetValue (fullname, out var method)) {
 				var dt = method.DeclaringType;
 				var framework = Helpers.GetFramework (dt);
-				if (framework == null)
+				if (framework is null)
 					return;
 
 				// If the entire type is deprecated, call it good enough
@@ -119,13 +119,13 @@ namespace Extrospection {
 			Version managedVersion;
 			bool foundObsoleted = AttributeHelpers.FindObsolete (item, out managedVersion);
 			if (foundObsoleted) {
-				if (managedVersion != null && !ManagedBeforeOrEqualToObjcVersion (objcVersion, managedVersion))
+				if (managedVersion is not null && !ManagedBeforeOrEqualToObjcVersion (objcVersion, managedVersion))
 					Log.On (framework).Add ($"!deprecated-attribute-wrong! {itemName} has {managedVersion} not {objcVersion} on [Obsoleted] attribute");
 				return;
 			}
 
 			bool foundDeprecated = AttributeHelpers.FindDeprecated (item, out managedVersion);
-			if (foundDeprecated && managedVersion != null && !ManagedBeforeOrEqualToObjcVersion (objcVersion, managedVersion))
+			if (foundDeprecated && managedVersion is not null && !ManagedBeforeOrEqualToObjcVersion (objcVersion, managedVersion))
 				Log.On (framework).Add ($"!deprecated-attribute-wrong! {itemName} has {managedVersion} not {objcVersion} on [Deprecated] attribute");
 		}
 

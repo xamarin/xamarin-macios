@@ -26,11 +26,11 @@ namespace MonoTouchFixtures.Metal {
 
 			device = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
-			if (device == null)
+			if (device is null)
 				Assert.Inconclusive ("Metal is not supported");
 
 			library = device.CreateDefaultLibrary ();
-			if (library == null)  // this happens on a simulator
+			if (library is null)  // this happens on a simulator
 				Assert.Inconclusive ("Could not get the functions library for the device.");
 
 			if (library.FunctionNames.Length == 0)
@@ -39,7 +39,7 @@ namespace MonoTouchFixtures.Metal {
 			function = library.CreateFunction (library.FunctionNames [0]);
 			pipelineState = device.CreateComputePipelineState (function, MTLPipelineOption.ArgumentInfo, out MTLComputePipelineReflection reflection, out NSError error);
 
-			if (error != null) {
+			if (error is not null) {
 				Assert.Inconclusive ($"Could not create pipeline {error}");
 			}
 			descriptor = MTLIntersectionFunctionTableDescriptor.Create ();

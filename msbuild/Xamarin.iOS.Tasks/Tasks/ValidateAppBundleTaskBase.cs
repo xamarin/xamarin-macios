@@ -68,7 +68,7 @@ namespace Xamarin.iOS.Tasks {
 				Log.LogWarning (MSBStrings.W0073, name, version, mainVersion);
 
 			var extension = plist.Get<PDictionary> ("NSExtension");
-			if (extension == null) {
+			if (extension is null) {
 				Log.LogError (7009, info, MSBStrings.E7009, name);
 				return;
 			}
@@ -237,13 +237,13 @@ namespace Xamarin.iOS.Tasks {
 				Log.LogWarning (MSBStrings.W0082, name, version, mainVersion);
 
 			var extension = plist.Get<PDictionary> ("NSExtension");
-			if (extension == null) {
+			if (extension is null) {
 				Log.LogError (7028, info, MSBStrings.E7028, name);
 				return;
 			}
 
 			var extensionPointIdentifier = extension.Get<PString> ("NSExtensionPointIdentifier");
-			if (extensionPointIdentifier != null) {
+			if (extensionPointIdentifier is not null) {
 				if (extensionPointIdentifier.Value != "com.apple.watchkit")
 					Log.LogError (7029, info, MSBStrings.E7029, name);
 			} else {
@@ -257,7 +257,7 @@ namespace Xamarin.iOS.Tasks {
 			}
 
 			var appBundleIdentifier = attributes.Get<PString> ("WKAppBundleIdentifier");
-			if (appBundleIdentifier != null) {
+			if (appBundleIdentifier is not null) {
 				if (appBundleIdentifier.Value != watchAppBundleIdentifier)
 					Log.LogError (7031, info, MSBStrings.E7031, name, appBundleIdentifier.Value, watchAppBundleIdentifier);
 			} else {
@@ -270,12 +270,12 @@ namespace Xamarin.iOS.Tasks {
 				var requiredDeviceCapabilitiesDictionary = requiredDeviceCapabilities as PDictionary;
 				var requiredDeviceCapabilitiesArray = requiredDeviceCapabilities as PArray;
 
-				if (requiredDeviceCapabilitiesDictionary != null) {
+				if (requiredDeviceCapabilitiesDictionary is not null) {
 					PBoolean watchCompanion;
 
 					if (requiredDeviceCapabilitiesDictionary.TryGetValue ("watch-companion", out watchCompanion))
 						Log.LogError (7032, info, MSBStrings.E7032, name);
-				} else if (requiredDeviceCapabilitiesArray != null) {
+				} else if (requiredDeviceCapabilitiesArray is not null) {
 					if (requiredDeviceCapabilitiesArray.OfType<PString> ().Any (x => x.Value == "watch-companion"))
 						Log.LogError (7032, info, MSBStrings.E7032_A, name);
 				}
@@ -304,7 +304,7 @@ namespace Xamarin.iOS.Tasks {
 
 			var supportedPlatforms = plist.GetArray (ManifestKeys.CFBundleSupportedPlatforms);
 			var platform = string.Empty;
-			if (supportedPlatforms == null || supportedPlatforms.Count == 0) {
+			if (supportedPlatforms is null || supportedPlatforms.Count == 0) {
 				Log.LogError (7043, mainInfoPath, MSBStrings.E7043, mainInfoPath);
 			} else {
 				platform = (PString) supportedPlatforms [0];
@@ -339,7 +339,7 @@ namespace Xamarin.iOS.Tasks {
 				break;
 			}
 
-			if (validFamilies != null) {
+			if (validFamilies is not null) {
 				if (validFamilies.Length == 0) {
 					Log.LogError (7044, mainInfoPath, MSBStrings.E7044, mainInfoPath);
 				} else {
@@ -351,7 +351,7 @@ namespace Xamarin.iOS.Tasks {
 				}
 			}
 
-			if (requiredFamilies != null) {
+			if (requiredFamilies is not null) {
 				foreach (var family in requiredFamilies) {
 					if (!deviceFamilies.Contains (family)) {
 						Log.LogError (7044, mainInfoPath, MSBStrings.E7044_A, mainInfoPath, family);

@@ -36,7 +36,7 @@ namespace Cecil.Tests {
 
 		static void AddFailure (ref List<string>? failures, string failure)
 		{
-			if (failures == null)
+			if (failures is null)
 				failures = new List<string> ();
 
 			failures.Add (failure);
@@ -117,7 +117,7 @@ namespace Cecil.Tests {
 		static bool IsDelegate (TypeReference tr)
 		{
 			var t = tr.Resolve ();
-			if (t == null)
+			if (t is null)
 				return false;
 
 			var baseType = t.BaseType;

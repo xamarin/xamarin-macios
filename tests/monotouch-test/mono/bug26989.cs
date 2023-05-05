@@ -56,7 +56,7 @@ namespace MonoTouchFixtures {
 			public static ICustomMarshaler GetInstance (string cookie)
 			{
 				MonoRuntimeTests.cookie = cookie;
-				if (singleton == null)
+				if (singleton is null)
 					return singleton = new UTF8StringMarshaler ();
 				return singleton;
 			}

@@ -43,7 +43,7 @@ namespace MonoTouchFixtures.Contacts {
 				// we can't be sure what's on devices, so check there's no error is the only thing we do
 				// but it's in the default simulator build (but not the watchOS simulator)
 #if !MONOMAC && !__WATCHOS__ && !__MACCATALYST__
-				if ((error == null) && (Runtime.Arch == Arch.SIMULATOR)) {
+				if ((error is null) && (Runtime.Arch == Arch.SIMULATOR)) {
 					Assert.That (contacts.Length, Is.EqualTo (1), "Length");
 					identifier = contacts [0].Identifier;
 				}
@@ -52,7 +52,7 @@ namespace MonoTouchFixtures.Contacts {
 
 			// if we can't find the previous contact then we don't have an identifier for the GetUnifiedContact API
 			// and we can't hardcode one as each simulator instance has a different identifier...
-			if (identifier == null)
+			if (identifier is null)
 				return;
 
 			using (var store = new CNContactStore ()) {
@@ -60,7 +60,7 @@ namespace MonoTouchFixtures.Contacts {
 				// it's in the default simulator build
 				if (TestRuntime.IsSimulatorOrDesktop) {
 					// it fails on some bots (watchOS 4.2 on jenkins) so we cannot assume it always work
-					if (error != null)
+					if (error is not null)
 						return;
 					Assert.NotNull (contact, "contact");
 					Assert.False (contact.AreKeysAvailable (CNContactOptions.OrganizationName | CNContactOptions.Note), "AreKeysAvailable-1");

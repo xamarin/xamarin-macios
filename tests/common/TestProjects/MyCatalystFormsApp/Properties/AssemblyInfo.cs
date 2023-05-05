@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("")]
 [assembly: AssemblyProduct ("MyXamarinFormsApp.iOS")]
-[assembly: AssemblyCopyright ("Copyright ©  2014")]
+[assembly: AssemblyCopyright ("Copyright Â©  2014")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 

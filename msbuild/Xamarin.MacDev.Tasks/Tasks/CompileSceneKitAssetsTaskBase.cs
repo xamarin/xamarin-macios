@@ -101,7 +101,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			if (AppleSdkSettings.XcodeVersion.Major >= 10) {
 				var platform = PlatformUtils.GetTargetPlatform (SdkPlatform, IsWatchApp);
-				if (platform != null)
+				if (platform is not null)
 					args.Add ($"--target-platform={platform}");
 
 				args.Add ($"--target-version={SdkVersion}");

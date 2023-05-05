@@ -88,7 +88,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
-			if (NativeReferences == null || NativeReferences.Length == 0)
+			if (NativeReferences is null || NativeReferences.Length == 0)
 				return !Log.HasLoggedErrors;
 
 			var embeddedResources = new List<ITaskItem> ();

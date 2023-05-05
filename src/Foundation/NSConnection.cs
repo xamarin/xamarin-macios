@@ -56,7 +56,7 @@ namespace Foundation
 		{
 			var result = Runtime.TryGetNSObject (handle) as TProxy;
 
-			if (result == null)
+			if (result is null)
 				result = (TProxy)Activator.CreateInstance (typeof (TProxy), new object[] { handle });
 
 			return result;

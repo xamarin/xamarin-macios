@@ -60,10 +60,10 @@ namespace Xamarin.Tuner {
 		AssemblyDefinition corlib;
 		public AssemblyDefinition Corlib {
 			get {
-				if (corlib == null) {
+				if (corlib is null) {
 					var name = Driver.CorlibName;
 					corlib = this.GetAssembly (name);
-					if (corlib == null)
+					if (corlib is null)
 						throw ErrorHelper.CreateError (2111, Errors.MX2111 /* Can not find the corlib assembly '{0}' in the list of loaded assemblies. */, name);
 				}
 				return corlib;
@@ -93,7 +93,7 @@ namespace Xamarin.Tuner {
 
 		public Symbols RequiredSymbols {
 			get {
-				if (required_symbols == null)
+				if (required_symbols is null)
 					required_symbols = new Symbols ();
 				return required_symbols;
 			}

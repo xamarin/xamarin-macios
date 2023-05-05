@@ -68,7 +68,7 @@ namespace MonoMac.Tuner {
 
 				if (remove_dlopen) {
 					FieldDefinition f = Nop (ins);
-					if (f != null) {
+					if (f is not null) {
 						i += 3;
 						nsobject.Fields.Remove (f);
 					}

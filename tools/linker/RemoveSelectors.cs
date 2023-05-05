@@ -45,7 +45,7 @@ namespace Xamarin.Linker.Steps {
 		void ProcessNSObject (TypeDefinition type)
 		{
 			var selectors = PopulateSelectors (type);
-			if (selectors == null)
+			if (selectors is null)
 				return;
 
 			foreach (var method in CollectMethods (type))
@@ -75,7 +75,7 @@ namespace Xamarin.Linker.Steps {
 				case OperandType.InlineTok:
 				case OperandType.InlineField:
 					var field = (instruction.Operand as FieldReference)?.Resolve ();
-					if (field == null)
+					if (field is null)
 						continue;
 
 					if (selectors.Contains (field))
@@ -89,7 +89,7 @@ namespace Xamarin.Linker.Steps {
 		void PatchStaticConstructor (TypeDefinition type, HashSet<FieldDefinition> selectors)
 		{
 			var cctor = type.GetTypeConstructor ();
-			if (cctor == null || !cctor.HasBody)
+			if (cctor is null || !cctor.HasBody)
 				return;
 
 			var instructions = cctor.Body.Instructions;
@@ -111,14 +111,14 @@ namespace Xamarin.Linker.Steps {
 				return false;
 
 			var field = (instruction.Operand as FieldReference)?.Resolve ();
-			if (field == null)
+			if (field is null)
 				return false;
 
 			if (!selectors.Contains (field))
 				return false;
 
 			instruction = instruction.Previous;
-			if (instruction == null)
+			if (instruction is null)
 				return false;
 
 			if (instruction.OpCode != OpCodes.Call)
@@ -128,7 +128,7 @@ namespace Xamarin.Linker.Steps {
 				return false;
 
 			instruction = instruction.Previous;
-			if (instruction == null)
+			if (instruction is null)
 				return false;
 
 			if (instruction.OpCode != OpCodes.Ldstr)
@@ -139,7 +139,7 @@ namespace Xamarin.Linker.Steps {
 
 		bool IsRegisterSelector (MethodReference method)
 		{
-			if (method == null)
+			if (method is null)
 				return false;
 
 			if (method.Name != "GetHandle" && method.Name != "sel_registerName")
@@ -171,7 +171,7 @@ namespace Xamarin.Linker.Steps {
 				if (!IsSelector (field))
 					continue;
 
-				if (selectors == null)
+				if (selectors is null)
 					selectors = new HashSet<FieldDefinition> ();
 
 				selectors.Add (field);

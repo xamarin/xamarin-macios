@@ -793,7 +793,7 @@ namespace Introspection {
 					}
 
 					var a = intf.GetCustomAttribute<ProtocolAttribute> (true);
-					if (a == null || a.IsInformal)
+					if (a is null || a.IsInformal)
 						continue;
 
 					IntPtr protocol = Runtime.GetProtocol (protocolName);
