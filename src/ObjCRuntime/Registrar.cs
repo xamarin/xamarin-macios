@@ -1041,6 +1041,7 @@ namespace Registrar {
 			public byte Alignment;
 #else
 			public bool IsPrivate;
+			public TProperty Property;
 #endif
 			public string FieldType;
 			public bool IsProperty;
@@ -2266,6 +2267,9 @@ namespace Registrar {
 							FieldType = "@",
 							IsProperty = true,
 							IsStatic = IsStatic (property),
+#if MTOUCH || MMP || BUNDLER
+							Property = property,
+#endif
 						}, ref exceptions);
 					}
 				}
