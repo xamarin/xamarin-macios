@@ -3942,9 +3942,6 @@ namespace Registrar {
 			setup_return.Indentation = indent;
 			cleanup.Indentation = indent;
 
-			if (!TryCreateTokenReference (method.Method, TokenType.Method, out var token_ref, exceptions))
-				return;
-
 			// A comment describing the managed signature
 			if (trace) {
 				nslog_start.Indentation = sb.Indentation;
@@ -4033,6 +4030,9 @@ namespace Registrar {
 				nslog_start.Append (args.ToString ());
 				nslog_start.AppendLine (");");
 			}
+
+			if (!TryCreateTokenReference (method.Method, TokenType.Method, out var token_ref, exceptions))
+				return;
 
 			SpecializePrepareParameters (sb, method, num_arg, descriptiveMethodName, exceptions);
 
