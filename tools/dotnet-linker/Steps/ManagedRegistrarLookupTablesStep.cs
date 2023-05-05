@@ -8,6 +8,8 @@ namespace Xamarin.Linker {
 		protected override string Name { get; } = "ManagedRegistrarLookupTables";
 		protected override int ErrorCode { get; } = 2440;
 
+		AppBundleRewriter abr { get { return Configuration.AppBundleRewriter; } }
+
 		protected override void TryProcessAssembly (AssemblyDefinition assembly)
 		{
 			base.TryProcessAssembly (assembly);

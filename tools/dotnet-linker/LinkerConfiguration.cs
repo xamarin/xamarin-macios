@@ -60,6 +60,15 @@ namespace Xamarin.Linker {
 
 		Dictionary<string, List<MSBuildItem>> msbuild_items = new Dictionary<string, List<MSBuildItem>> ();
 
+		AppBundleRewriter? abr;
+		internal AppBundleRewriter AppBundleRewriter {
+			get {
+				if (abr is null)
+					abr = new AppBundleRewriter (this);
+				return abr;
+			}
+		}
+
 		internal PInvokeWrapperGenerator? PInvokeWrapperGenerationState;
 
 		public static bool TryGetInstance (LinkContext context, [NotNullWhen (true)] out LinkerConfiguration? configuration)
