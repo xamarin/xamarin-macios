@@ -461,7 +461,7 @@ namespace Registrar {
 			return "void *";
 		}
 
-		public string ToObjCType (TypeDefinition type, bool delegateToBlockType = false)
+		public string ToObjCType (TypeDefinition type, bool delegateToBlockType = false, bool cSyntaxForBlocks = false)
 		{
 			switch (type.FullName) {
 			case "System.IntPtr": return "void *";
@@ -496,7 +496,10 @@ namespace Registrar {
 
 				StringBuilder builder = new StringBuilder ();
 				builder.Append (ToObjCType (invokeMethod.ReturnType));
-				builder.Append (" (^)(");
+				builder.Append (" (^");
+				if (cSyntaxForBlocks)
+					builder.Append ("%PARAMETERNAME%");
+				builder.Append (")(");
 
 				var argumentTypes = invokeMethod.Parameters.Select (param => ToObjCType (param.ParameterType));
 				builder.Append (string.Join (", ", argumentTypes));
@@ -2499,7 +2502,7 @@ namespace Registrar {
 			return ToObjCParameterType (type, descriptiveMethodName, exceptions, inMethod);
 		}
 
-		string ToObjCParameterType (TypeReference type, string descriptiveMethodName, List<Exception> exceptions, MemberReference inMethod, bool delegateToBlockType = false)
+		string ToObjCParameterType (TypeReference type, string descriptiveMethodName, List<Exception> exceptions, MemberReference inMethod, bool delegateToBlockType = false, bool cSyntaxForBlocks = false)
 		{
 			GenericParameter gp = type as GenericParameter;
 			if (gp is not null)
@@ -2621,7 +2624,7 @@ namespace Registrar {
 					}
 					return CheckStructure (td, descriptiveMethodName, inMethod);
 				} else {
-					return ToObjCType (td, delegateToBlockType: delegateToBlockType);
+					return ToObjCType (td, delegateToBlockType: delegateToBlockType, cSyntaxForBlocks: cSyntaxForBlocks);
 				}
 			}
 		}
