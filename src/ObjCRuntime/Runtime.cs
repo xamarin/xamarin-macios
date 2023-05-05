@@ -27,6 +27,10 @@ using Registrar;
 using AppKit;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ObjCRuntime {
 
 	public partial class Runtime {
@@ -743,7 +747,14 @@ namespace ObjCRuntime {
 			Registrar.GetMethodDescription (Class.Lookup (cls), sel, is_static != 0, desc);
 		}
 
-		static sbyte HasNSObject (IntPtr ptr)
+#if NET
+		internal static bool HasNSObject (NativeHandle ptr)
+		{
+			return TryGetNSObject (ptr, evenInFinalizerQueue: false) is not null;
+		}
+#endif
+
+		internal static sbyte HasNSObject (IntPtr ptr)
 		{
 			var rv = TryGetNSObject (ptr, evenInFinalizerQueue: false) is not null;
 			return (sbyte) (rv ? 1 : 0);
@@ -775,10 +786,15 @@ namespace ObjCRuntime {
 				return IntPtr.Zero;
 
 			var nsobj = GetGCHandleTarget (obj) as NSObject;
-			if (nsobj is null)
-				throw ErrorHelper.CreateError (8023, $"An instance object is required to construct a closed generic method for the open generic method: {method.DeclaringType!.FullName}.{method.Name} (token reference: 0x{token_ref:X}). {Constants.PleaseFileBugReport}");
+			return AllocGCHandle (FindClosedMethodForObject (nsobj, method));
+		}
 
-			return AllocGCHandle (FindClosedMethod (nsobj.GetType (), method));
+		static MethodInfo FindClosedMethodForObject (NSObject? nsobj, MethodBase method)
+		{
+			if (nsobj is null)
+				throw ErrorHelper.CreateError (8023, $"An instance object is required to construct a closed generic method for the open generic method: {method.DeclaringType!.FullName}.{method.Name}. {Constants.PleaseFileBugReport}");
+
+			return FindClosedMethod (nsobj.GetType (), method);
 		}
 
 		static IntPtr TryGetOrConstructNSObjectWrapped (IntPtr ptr)
@@ -1447,6 +1463,13 @@ namespace ObjCRuntime {
 			return null;
 		}
 
+#if NET
+		public static NSObject? GetNSObject (NativeHandle ptr)
+		{
+			return GetNSObject ((IntPtr) ptr, MissingCtorResolution.ThrowConstructor1NotFound);
+		}
+#endif
+
 		public static NSObject? GetNSObject (IntPtr ptr)
 		{
 			return GetNSObject (ptr, MissingCtorResolution.ThrowConstructor1NotFound);
@@ -1937,10 +1960,54 @@ namespace ObjCRuntime {
 		static void RetainNativeObject (IntPtr gchandle)
 		{
 			var obj = GetGCHandleTarget (gchandle);
-			if (obj is NativeObject nobj)
+			RetainNativeObject ((INativeObject?) obj);
+		}
+
+		// Retain the input if it's either an NSObject or a NativeObject.
+		static NativeHandle RetainNativeObject (INativeObject? obj)
+		{
+			if (obj is null)
+				return NativeHandle.Zero;
+			if (obj is NSObject nsobj)
+				RetainNSObject (nsobj);
+			else if (obj is NativeObject nobj)
 				nobj.Retain ();
-			else if (obj is NSObject nsobj)
+			return obj.GetHandle ();
+		}
+
+		internal static NativeHandle RetainNSObject (NSObject? obj)
+		{
+			if (obj is null)
+				return NativeHandle.Zero;
+			obj.DangerousRetain ();
+			return obj.GetHandle ();
+		}
+
+		internal static NativeHandle RetainAndAutoreleaseNSObject (NSObject? obj)
+		{
+			if (obj is null)
+				return NativeHandle.Zero;
+			obj.DangerousRetain ();
+			obj.DangerousAutorelease ();
+			return obj.GetHandle ();
+		}
+
+		internal static NativeHandle RetainAndAutoreleaseNativeObject (INativeObject? obj)
+		{
+			if (obj is null)
+				return NativeHandle.Zero;
+			if (obj is NSObject nsobj) {
 				nsobj.DangerousRetain ();
+				nsobj.DangerousAutorelease ();
+			}
+			return obj.GetHandle ();
+		}
+
+		static IntPtr CopyAndAutorelease (IntPtr ptr)
+		{
+			ptr = Messaging.IntPtr_objc_msgSend (ptr, Selector.GetHandle ("copy"));
+			NSObject.DangerousAutorelease (ptr);
+			return ptr;
 		}
 
 		// Check if the input is an NSObject, and in that case retain it (and return true)
@@ -2043,6 +2110,47 @@ namespace ObjCRuntime {
 			throw ErrorHelper.CreateError (8003, $"Failed to find the closed generic method '{open_method.Name}' on the type '{closed_type.FullName}'.");
 		}
 
+		internal static MethodInfo FindClosedMethod (object instance, RuntimeTypeHandle open_type_handle, RuntimeMethodHandle open_method_handle)
+		{
+			var closed_type = instance.GetType ()!;
+			var open_type = Type.GetTypeFromHandle (open_type_handle)!;
+			closed_type = FindClosedTypeInHierarchy (open_type, closed_type)!;
+			var closedMethod = MethodBase.GetMethodFromHandle (open_method_handle, closed_type.TypeHandle)!;
+			return (MethodInfo) closedMethod;
+		}
+
+		static Type? FindClosedTypeInHierarchy (Type open_type, Type? closed_type)
+		{
+			if (closed_type is null)
+				return null;
+
+			var closed_type_definition = closed_type;
+			if (closed_type_definition.IsGenericType)
+				closed_type_definition = closed_type_definition.GetGenericTypeDefinition ();
+			if (closed_type_definition == open_type)
+				return closed_type;
+			return FindClosedTypeInHierarchy (open_type, closed_type.BaseType);
+		}
+
+		internal static Type FindClosedParameterType (object instance, RuntimeTypeHandle open_type_handle, RuntimeMethodHandle open_method_handle, int parameter)
+		{
+			var closed_type = instance.GetType ()!;
+			var open_type = Type.GetTypeFromHandle (open_type_handle)!;
+			closed_type = FindClosedTypeInHierarchy (open_type, closed_type)!;
+			var closedMethod = MethodBase.GetMethodFromHandle (open_method_handle, closed_type.TypeHandle)!;
+			var parameters = closedMethod.GetParameters ();
+			return parameters [parameter].ParameterType.GetElementType ()!; // FIX NAMING
+		}
+
+#if NET
+		// This method might be called by the generated code from the managed static registrar.
+		static void TraceCaller (string message)
+		{
+			var caller = new System.Diagnostics.StackFrame (1);
+			NSLog ($"{caller?.GetMethod ()?.ToString ()}: {message}");
+		}
+#endif
+
 		static void GCCollect ()
 		{
 			GC.Collect ();
@@ -2139,7 +2247,13 @@ namespace ObjCRuntime {
 		}
 
 		// Allocate a GCHandle and return the IntPtr to it.
-		internal static IntPtr AllocGCHandle (object? value, GCHandleType type = GCHandleType.Normal)
+		internal static IntPtr AllocGCHandle (object? value)
+		{
+			return AllocGCHandle (value, GCHandleType.Normal);
+		}
+
+		// Allocate a GCHandle and return the IntPtr to it.
+		internal static IntPtr AllocGCHandle (object? value, GCHandleType type)
 		{
 			return GCHandle.ToIntPtr (GCHandle.Alloc (value, type));
 		}
@@ -2234,7 +2348,11 @@ namespace ObjCRuntime {
 
 		static IntPtr LookupUnmanagedFunction (IntPtr assembly, IntPtr symbol, int id)
 		{
+#if NET
 			return RegistrarHelper.LookupUnmanagedFunction (assembly, Marshal.PtrToStringAuto (symbol), id);
+#else
+			return IntPtr.Zero;
+#endif
 		}
 	}
 
@@ -2258,6 +2376,30 @@ namespace ObjCRuntime {
 		{
 			if (obj is null)
 				return 0;
+			return obj.GetHashCode ();
+		}
+	}
+
+	internal class StringEqualityComparer : IEqualityComparer<string> {
+		public bool Equals (string? x, string? y)
+		{
+			return string.Equals (x, y, StringComparison.Ordinal);
+		}
+		public int GetHashCode (string? obj)
+		{
+			if (obj is null)
+				return 0;
+			return obj.GetHashCode ();
+		}
+	}
+
+	internal class RuntimeTypeHandleEqualityComparer : IEqualityComparer<RuntimeTypeHandle> {
+		public bool Equals (RuntimeTypeHandle x, RuntimeTypeHandle y)
+		{
+			return x.Equals (y);
+		}
+		public int GetHashCode (RuntimeTypeHandle obj)
+		{
 			return obj.GetHashCode ();
 		}
 	}
