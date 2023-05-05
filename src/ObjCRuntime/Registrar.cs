@@ -980,10 +980,7 @@ namespace Registrar {
 
 			public bool IsPropertyAccessor {
 				get {
-					if (Method is null)
-						return false;
-
-					return Method.IsSpecialName && (Method.Name.StartsWith ("get_", StringComparison.Ordinal) || Method.Name.StartsWith ("set_", StringComparison.Ordinal));
+					return Registrar.IsPropertyAccessor (Method);
 				}
 			}
 		}
@@ -1158,6 +1155,32 @@ namespace Registrar {
 
 		public Registrar ()
 		{
+		}
+
+		public static bool IsPropertyAccessor (TMethod method)
+		{
+			if (method is null)
+				return false;
+
+			if (!method.IsSpecialName)
+				return false;
+
+			var name = method.Name;
+			if (!name.StartsWith ("get_", StringComparison.Ordinal) && !name.StartsWith ("set_", StringComparison.Ordinal))
+				return false;
+
+			return true;
+		}
+
+		public bool IsPropertyAccessor (TMethod method, out TProperty property)
+		{
+			property = null;
+
+			if (!IsPropertyAccessor (method))
+				return false;
+
+			property = FindProperty (method.DeclaringType, method.Name.Substring (4));
+			return property is not null;
 		}
 
 		public bool IsArray (TType type)
