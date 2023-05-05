@@ -5329,6 +5329,87 @@ namespace Registrar {
 
 			return base.SkipRegisterAssembly (assembly);
 		}
+
+		// Find the value of the [UserDelegateType] attribute on the specified delegate
+		TypeReference GetUserDelegateType (TypeReference delegateType)
+		{
+			var delegateTypeDefinition = delegateType.Resolve ();
+			foreach (var attrib in delegateTypeDefinition.CustomAttributes) {
+				var attribType = attrib.AttributeType;
+				if (!attribType.Is (Namespaces.ObjCRuntime, "UserDelegateTypeAttribute"))
+					continue;
+				return attrib.ConstructorArguments [0].Value as TypeReference;
+			}
+			return null;
+		}
+
+		MethodDefinition GetDelegateInvoke (TypeReference delegateType)
+		{
+			var td = delegateType.Resolve ();
+			foreach (var method in td.Methods) {
+				if (method.Name == "Invoke")
+					return method;
+			}
+			return null;
+		}
+
+		MethodReference InflateMethod (TypeReference inflatedDeclaringType, MethodDefinition openMethod)
+		{
+			var git = inflatedDeclaringType as GenericInstanceType;
+			if (git is null)
+				return openMethod;
+
+			var inflatedReturnType = TypeReferenceExtensions.InflateGenericType (git, openMethod.ReturnType);
+			var mr = new MethodReference (openMethod.Name, inflatedReturnType, git);
+			if (openMethod.HasParameters) {
+				for (int i = 0; i < openMethod.Parameters.Count; i++) {
+					var inflatedParameterType = TypeReferenceExtensions.InflateGenericType (git, openMethod.Parameters [i].ParameterType);
+					var p = new ParameterDefinition (openMethod.Parameters [i].Name, openMethod.Parameters [i].Attributes, inflatedParameterType);
+					mr.Parameters.Add (p);
+				}
+			}
+			return mr;
+		}
+
+		public bool TryComputeBlockSignature (ICustomAttributeProvider codeLocation, TypeReference trampolineDelegateType, out Exception exception, out string signature)
+		{
+			signature = null;
+			exception = null;
+			try {
+				// Calculate the block signature.
+				var blockSignature = false;
+				MethodReference userMethod = null;
+
+				// First look for any [UserDelegateType] attributes on the trampoline delegate type.
+				var userDelegateType = GetUserDelegateType (trampolineDelegateType);
+				if (userDelegateType is not null) {
+					var userMethodDefinition = GetDelegateInvoke (userDelegateType);
+					userMethod = InflateMethod (userDelegateType, userMethodDefinition);
+					blockSignature = true;
+				} else {
+					// Couldn't find a [UserDelegateType] attribute, use the type of the actual trampoline instead.
+					var userMethodDefinition = GetDelegateInvoke (trampolineDelegateType);
+					userMethod = InflateMethod (trampolineDelegateType, userMethodDefinition);
+					blockSignature = false;
+				}
+
+				// No luck finding the signature, so give up.
+				if (userMethod is null) {
+					exception = ErrorHelper.CreateError (App, 4187 /* Could not find a [UserDelegateType] attribute on the type '{0}'. */, codeLocation, Errors.MX4187, trampolineDelegateType.FullName);
+					return false;
+				}
+
+				var parameters = new TypeReference [userMethod.Parameters.Count];
+				for (int p = 0; p < parameters.Length; p++)
+					parameters [p] = userMethod.Parameters [p].ParameterType;
+				signature = LinkContext.Target.StaticRegistrar.ComputeSignature (userMethod.DeclaringType, false, userMethod.ReturnType, parameters, userMethod.Resolve (), isBlockSignature: blockSignature);
+				return true;
+			} catch (Exception e) {
+				exception = ErrorHelper.CreateError (App, 4188 /* Unable to compute the block signature for the type '{0}': {1} */, e, codeLocation, Errors.MX4188, trampolineDelegateType.FullName, e.Message);
+				return false;
+			}
+		}
+
 	}
 
 	// Replicate a few attribute types here, with TypeDefinition instead of Type

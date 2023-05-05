@@ -338,16 +338,6 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not optimize the call to BlockLiteral.SetupBlock in {0} at offset {1} because no [UserDelegateType] attribute could be found on {2}.
-        ///		.
-        /// </summary>
-        public static string MM2106_C {
-            get {
-                return ResourceManager.GetString("MM2106_C", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Could not optimize the call to BlockLiteral.SetupBlock in {0} at offset {1}: {2}.
         ///		.
         /// </summary>
@@ -4003,6 +3993,24 @@ namespace Xamarin.Bundler {
         public static string MX3007 {
             get {
                 return ResourceManager.GetString("MX3007", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find a [UserDelegateType] attribute on the type &apos;{0}&apos;..
+        /// </summary>
+        public static string MX4187 {
+            get {
+                return ResourceManager.GetString("MX4187", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to compute the block signature for the type &apos;{0}&apos;: {1}.
+        /// </summary>
+        public static string MX4188 {
+            get {
+                return ResourceManager.GetString("MX4188", resourceCulture);
             }
         }
         
