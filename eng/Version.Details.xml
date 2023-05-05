@@ -22,9 +22,9 @@
       <Uri>https://github.com/dotnet/emsdk</Uri>
       <Sha>dc98fded25395f86bfddd013652a08d4289ae216</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Cecil" Version="0.11.4-alpha.23218.2" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.DotNet.Cecil" Version="0.11.4-alpha.23252.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/cecil</Uri>
-      <Sha>80d3f38fc59c351fa1942209e66f54a6fc912deb</Sha>
+      <Sha>c32f0be86d4e72dfc0967ef08913889cfdbc8dc4</Sha>
     </Dependency>
     <!-- This is a subscription of the .NET 7 versions of our packages -->
     <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.4.7060">

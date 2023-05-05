@@ -33,6 +33,7 @@ using ObjCRuntime;
 using Mono.Cecil;
 using Mono.Linker;
 using Mono.Tuner;
+using ClassRedirector;
 
 namespace Registrar {
 	/*
@@ -2166,6 +2167,11 @@ namespace Registrar {
 
 			var ns = type.Namespace;
 
+#if !XAMCORE_5_0
+			// AVCustomRoutingControllerDelegate was incorrectly placed in AVKit
+			if (type.Is ("AVKit", "AVCustomRoutingControllerDelegate"))
+				ns = "AVRouting";
+#endif
 			Framework framework;
 			if (Driver.GetFrameworks (App).TryGetValue (ns, out framework)) {
 				if (framework.Version > App.SdkVersion) {
@@ -2803,14 +2809,14 @@ namespace Registrar {
 			}
 		}
 
-		void Specialize (AutoIndentStringBuilder sb, out string initialization_method)
+		void Specialize (AutoIndentStringBuilder sb, out string initialization_method, string type_map_path)
 		{
 			List<Exception> exceptions = new List<Exception> ();
 			List<ObjCMember> skip = new List<ObjCMember> ();
 
 			var map = new AutoIndentStringBuilder (1);
 			var map_init = new AutoIndentStringBuilder ();
-			var map_dict = new Dictionary<ObjCType, int> (); // maps ObjCType to its index in the map
+			var map_dict = new CSToObjCMap (); // maps CS type to ObjC type name and index
 			var map_entries = 0;
 			var protocol_wrapper_map = new Dictionary<uint, Tuple<ObjCType, uint>> ();
 			var protocols = new List<ProtocolInfo> ();
@@ -2893,7 +2899,7 @@ namespace Registrar {
 									token_ref,
 									GetAssemblyQualifiedName (@class.Type), map_entries,
 									(int) flags, flags);
-					map_dict [@class] = map_entries++;
+					map_dict [GetAssemblyQualifiedName (@class.Type)] = new ObjCNameIndex (@class.ExportedName, map_entries++);
 
 					bool use_dynamic;
 
@@ -2973,35 +2979,34 @@ namespace Registrar {
 					iface.Write ("@interface {0} : {1}", class_name, EncodeNonAsciiCharacters (@class.SuperType.ExportedName));
 					declarations.AppendFormat ("@class {0};\n", class_name);
 				}
-				bool any_protocols = false;
+				var implementedProtocols = new HashSet<string> ();
 				ObjCType tp = @class;
 				while (tp != null && tp != tp.BaseType) {
 					if (tp.IsWrapper)
 						break; // no need to declare protocols for wrapper types, they do it already in their headers.
 					if (tp.Protocols != null) {
 						for (int p = 0; p < tp.Protocols.Length; p++) {
-							if (tp.Protocols [p].ProtocolName == "UIAppearance")
-								continue;
-							iface.Append (any_protocols ? ", " : "<");
-							any_protocols = true;
-							iface.Append (tp.Protocols [p].ProtocolName);
+							implementedProtocols.Add (tp.Protocols [p].ProtocolName);
 							var proto = tp.Protocols [p].Type;
 							CheckNamespace (proto, exceptions);
 						}
 					}
-					if (App.Optimizations.RegisterProtocols == true && tp.AdoptedProtocols != null) {
-						for (int p = 0; p < tp.AdoptedProtocols.Length; p++) {
-							if (tp.AdoptedProtocols [p] == "UIAppearance")
-								continue; // This is not a real protocol
-							iface.Append (any_protocols ? ", " : "<");
-							any_protocols = true;
-							iface.Append (tp.AdoptedProtocols [p]);
-						}
-					}
+					if (App.Optimizations.RegisterProtocols == true && tp.AdoptedProtocols != null)
+						implementedProtocols.UnionWith (tp.AdoptedProtocols);
 					tp = tp.BaseType;
 				}
-				if (any_protocols)
+				implementedProtocols.Remove ("UIAppearance"); // This is not a real protocol
+				if (implementedProtocols.Count > 0) {
+					iface.Append ("<");
+					var firstProtocol = true;
+					foreach (var ip in implementedProtocols.OrderBy (v => v)) {
+						if (!firstProtocol)
+							iface.Append (", ");
+						firstProtocol = false;
+						iface.Append (ip);
+					}
 					iface.Append (">");
+				}
 
 				AutoIndentStringBuilder implementation_fields = null;
 				if (is_protocol) {
@@ -3256,6 +3261,11 @@ namespace Registrar {
 
 			sb.WriteLine (map.ToString ());
 			sb.WriteLine (map_init.ToString ());
+
+			if (!string.IsNullOrEmpty (type_map_path)) {
+				var doc = CSToObjCMap.ToXDocument (map_dict);
+				doc.Save (type_map_path);
+			}
 
 			ErrorHelper.ThrowIfErrors (exceptions);
 		}
@@ -5135,18 +5145,18 @@ namespace Registrar {
 			pinfo.EntryPoint = wrapperName;
 		}
 
-		public void GenerateSingleAssembly (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly, out string initialization_method)
+		public void GenerateSingleAssembly (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly, out string initialization_method, string type_map_path)
 		{
 			single_assembly = assembly;
-			Generate (resolver, assemblies, header_path, source_path, out initialization_method);
+			Generate (resolver, assemblies, header_path, source_path, out initialization_method, type_map_path);
 		}
 
-		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method)
+		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method, string type_map_path)
 		{
-			Generate (null, assemblies, header_path, source_path, out initialization_method);
+			Generate (null, assemblies, header_path, source_path, out initialization_method, type_map_path);
 		}
 
-		public void Generate (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method)
+		public void Generate (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method, string type_map_path)
 		{
 			this.resolver = resolver;
 
@@ -5160,10 +5170,10 @@ namespace Registrar {
 				RegisterAssembly (assembly);
 			}
 
-			Generate (header_path, source_path, out initialization_method);
+			Generate (header_path, source_path, out initialization_method, type_map_path);
 		}
 
-		void Generate (string header_path, string source_path, out string initialization_method)
+		void Generate (string header_path, string source_path, out string initialization_method, string type_map_path)
 		{
 			var sb = new AutoIndentStringBuilder ();
 			header = new AutoIndentStringBuilder ();
@@ -5198,7 +5208,7 @@ namespace Registrar {
 			if (App.Embeddinator)
 				methods.WriteLine ("void xamarin_embeddinator_initialize ();");
 
-			Specialize (sb, out initialization_method);
+			Specialize (sb, out initialization_method, type_map_path);
 
 			methods.WriteLine ();
 			methods.AppendLine ();
