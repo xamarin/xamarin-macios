@@ -11,6 +11,7 @@
     <RootNamespace>MyCatalystFormsApp</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>MyCatalystFormsApp</AssemblyName>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|MacCatalyst' ">
     <DebugSymbols>true</DebugSymbols>

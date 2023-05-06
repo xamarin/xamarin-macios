@@ -29,7 +29,7 @@ namespace Foundation {
 
 		public bool IsOptional { 
 			get {
-				return Optional != null && Optional == "Yes";
+				return Optional is not null && Optional == "Yes";
 			}
  			set {
 				Optional = (value) ? "Yes" : "No";

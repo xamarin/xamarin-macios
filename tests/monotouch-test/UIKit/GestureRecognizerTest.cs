@@ -124,7 +124,7 @@ namespace MonoTouchFixtures.UIKit {
 			}
 			~FinalizerNotifier ()
 			{
-				if (Action != null)
+				if (Action is not null)
 					Action ();
 			}
 		}

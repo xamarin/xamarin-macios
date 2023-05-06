@@ -26,7 +26,7 @@ namespace Xamarin.Bundler {
 		{
 			WarningLevel level;
 
-			if (warning_levels == null)
+			if (warning_levels is null)
 				return WarningLevel.Warning;
 
 			// code -1: all codes
@@ -41,7 +41,7 @@ namespace Xamarin.Bundler {
 
 		public static void SetWarningLevel (WarningLevel level, int? code = null /* if null, apply to all warnings */)
 		{
-			if (warning_levels == null)
+			if (warning_levels is null)
 				warning_levels = new Dictionary<int, WarningLevel> ();
 			if (code.HasValue) {
 				warning_levels [code.Value] = level;

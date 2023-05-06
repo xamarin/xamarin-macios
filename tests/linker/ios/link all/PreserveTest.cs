@@ -105,7 +105,7 @@ namespace LinkAll.Attributes {
 #else
 			var expectedNull = TestRuntime.IsDevice;
 #endif
-			Assert.That (method == null, Is.EqualTo (expectedNull), "RegisterEntryAssembly");
+			Assert.That (method is null, Is.EqualTo (expectedNull), "RegisterEntryAssembly");
 		}
 
 		[Test]

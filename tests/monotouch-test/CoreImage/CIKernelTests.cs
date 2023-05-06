@@ -162,7 +162,7 @@ namespace MonoTouchFixtures.CoreImage {
 			});
 			t.Start ();
 			t.Join ();
-			if (ex != null)
+			if (ex is not null)
 				throw ex;
 		}
 

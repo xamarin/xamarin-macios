@@ -55,7 +55,7 @@ namespace MonoTouchFixtures.Photos {
 
 			// Actual Test
 			var array = collection.ToArray ();
-			Assert.That (array != null && array.Count () > 0);
+			Assert.That (array is not null && array.Count () > 0);
 		}
 
 		[Test]
@@ -83,7 +83,7 @@ namespace MonoTouchFixtures.Photos {
 
 			// Actual Test
 			var obj = collection.ObjectsAt<NSObject> (NSIndexSet.FromNSRange (new NSRange (0, 1)));
-			Assert.That (obj != null && obj.Count () > 0);
+			Assert.That (obj is not null && obj.Count () > 0);
 		}
 	}
 
@@ -124,7 +124,7 @@ namespace MonoTouchFixtures.Photos {
 
 		public static UIImage Image {
 			get {
-				if (imageOfXamagram != null)
+				if (imageOfXamagram is not null)
 					return imageOfXamagram;
 
 				UIGraphics.BeginImageContextWithOptions (new CGSize (512.0f, 512.0f), false, 0);

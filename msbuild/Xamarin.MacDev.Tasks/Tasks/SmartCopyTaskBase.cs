@@ -74,13 +74,13 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
-			if (DestinationFiles != null && DestinationFolder != null) {
+			if (DestinationFiles is not null && DestinationFolder is not null) {
 				Log.LogError (MSBStrings.E0166);
 				return false;
 			}
 
 			try {
-				if (DestinationFiles != null) {
+				if (DestinationFiles is not null) {
 					if (DestinationFiles.Length != SourceFiles.Length) {
 						Log.LogError (MSBStrings.E0167);
 						return false;
@@ -96,7 +96,7 @@ namespace Xamarin.MacDev.Tasks {
 						if (FileChanged (source, target))
 							CopyFile (source, target, DestinationFiles [i].ItemSpec);
 					}
-				} else if (DestinationFolder != null) {
+				} else if (DestinationFolder is not null) {
 					var destinationFolder = DestinationFolder.GetMetadata ("FullPath");
 
 					EnsureDirectoryExists (destinationFolder);

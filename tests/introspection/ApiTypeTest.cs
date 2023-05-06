@@ -51,7 +51,7 @@ namespace Introspection {
 					continue;
 
 				var cctor = t.GetConstructor (BindingFlags.Static | BindingFlags.NonPublic, null, Type.EmptyTypes, null);
-				if (cctor == null)
+				if (cctor is null)
 					continue;
 				// we don't skip based on availability attributes since the execution of .cctor can easily happen indirectly and
 				// we rather catch them all here *now* than trying to figure out how to replicate the specific conditions *later*

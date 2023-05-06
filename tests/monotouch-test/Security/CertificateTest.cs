@@ -506,7 +506,7 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (cert.GetSerialNumber ().ToStableString (), Is.EqualTo ("<2b9f7ee5 ca25a625 14204782 753a9bb9>"), "GetSerialNumber");
 
 				var emailAddresses = cert.GetEmailAddresses ();
-				Assert.IsTrue (emailAddresses == null || emailAddresses.Length == 0, "GetEmailAddresses");
+				Assert.IsTrue (emailAddresses is null || emailAddresses.Length == 0, "GetEmailAddresses");
 
 				Assert.NotNull (cert.GetNormalizedIssuerSequence (), "GetNormalizedIssuerSequence");
 				Assert.NotNull (cert.GetNormalizedSubjectSequence (), "GetNormalizedSubjectSequence");

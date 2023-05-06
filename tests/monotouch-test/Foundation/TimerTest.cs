@@ -91,7 +91,7 @@ namespace MonoTouchFixtures.Foundation {
 			NSTimer timer = null;
 
 			using (timer = NSTimer.CreateTimer (0.1f, (NSTimer t) => {
-				result = t != null && t.Handle == timer.Handle;
+				result = t is not null && t.Handle == timer.Handle;
 				evt.Set ();
 			})) {
 

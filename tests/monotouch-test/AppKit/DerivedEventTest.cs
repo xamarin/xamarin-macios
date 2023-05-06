@@ -42,8 +42,13 @@ namespace Xamarin.Mac.Tests {
 		[Test]
 		public void DerivedEvents_OverwriteThrows ()
 		{
-			TestOverrideThrow (false, true);
-			TestOverrideThrow (true, true);
+#if RELEASE
+			var checkTrimmedAway = TestRuntime.IsLinkAll;
+#else
+			var checkTrimmedAway = false;
+#endif
+			TestOverrideThrow (false, !checkTrimmedAway);
+			TestOverrideThrow (true, !checkTrimmedAway);
 #if MONOMAC
 			NSApplication.CheckForEventAndDelegateMismatches = false;
 #else

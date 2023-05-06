@@ -46,7 +46,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void GetUrlForUbiquityContainer ()
 		{
 			NSFileManager fm = new NSFileManager ();
-			if (TestRuntime.CheckXcodeVersion (4, 5) && fm.UbiquityIdentityToken == null) {
+			if (TestRuntime.CheckXcodeVersion (4, 5) && fm.UbiquityIdentityToken is null) {
 				// UbiquityIdentityToken is a fast way to check if iCloud is enabled
 				Assert.Pass ("not iCloud enabled");
 			}
@@ -71,10 +71,10 @@ namespace MonoTouchFixtures.Foundation {
 			}.Start ();
 
 			if (evt.WaitOne (TimeSpan.FromSeconds (15))) {
-				if (e != null)
+				if (e is not null)
 					throw e;
 
-				if (c == null)
+				if (c is null)
 					Assert.Pass ("not iCloud enabled"); // simulator or provisioning profile without iCloud enabled (old ones)
 				else {
 					Assert.That (c.ToString (), Does.StartWith ("file://localhost/private/var/mobile/Library/Mobile%20Documents").

@@ -66,7 +66,7 @@ namespace UIKit {
 		// NOTE: must be called from the main thread, e.g. for extensions
 		internal static void Initialize ()
 		{
-			if (mainThread != null)
+			if (mainThread is not null)
 				return;
 
 			SynchronizationContext.SetSynchronizationContext (new UIKitSynchronizationContext ());
@@ -107,7 +107,7 @@ namespace UIKit {
 		{
 			// note: some extensions, like keyboards, won't call Main (and set mainThread)
 			// FIXME: do better than disabling the feature
-			if (CheckForIllegalCrossThreadCalls && (mainThread != null) && (mainThread != Thread.CurrentThread))
+			if (CheckForIllegalCrossThreadCalls && (mainThread is not null) && (mainThread != Thread.CurrentThread))
 				throw new UIKitThreadAccessException ();
 		}
 
@@ -119,7 +119,7 @@ namespace UIKit {
 
 		internal static void EnsureDelegateAssignIsNotOverwritingInternalDelegate (object? currentDelegateValue, object? newDelegateValue, Type internalDelegateType)
 		{
-			if (UIApplication.CheckForEventAndDelegateMismatches && currentDelegateValue != null && newDelegateValue != null
+			if (UIApplication.CheckForEventAndDelegateMismatches && currentDelegateValue is not null && newDelegateValue is not null
 				&& currentDelegateValue.GetType ().IsAssignableFrom (internalDelegateType)
 				&& !newDelegateValue.GetType ().IsAssignableFrom (internalDelegateType))
 				throw new InvalidOperationException (string.Format ("Event registration is overwriting existing delegate. Either just use events or your own delegate: {0} {1}", newDelegateValue.GetType (), internalDelegateType));

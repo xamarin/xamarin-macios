@@ -25,7 +25,7 @@ namespace Xamarin.Mac.Tests {
 			Asserts.EnsureYosemite ();
 
 			var length = 0;
-			if (view.GestureRecognizers != null)
+			if (view.GestureRecognizers is not null)
 				length = view.GestureRecognizers.Length;
 			view.AddGestureRecognizer (new NSGestureRecognizer ());
 
@@ -73,7 +73,7 @@ namespace Xamarin.Mac.Tests {
 			foreach (var ctor in types) {
 				var o = ctor ();
 				var prop = o.GetType ().GetProperty ("Menu", BindingFlags.Public | BindingFlags.Instance);
-				if (prop == null && TestRuntime.IsLinkAll)
+				if (prop is null && TestRuntime.IsLinkAll)
 					continue; // the property was linked away.
 				prop.SetValue (o, null, null);
 			}

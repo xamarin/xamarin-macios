@@ -9,7 +9,7 @@ using Xamarin.iOS.Windows;
 using Xamarin.MacDev;
 
 namespace Xamarin.iOS.HotRestart.Tasks {
-	public class DetectSigningIdentity : Task {
+	public class DetectHotRestartSigningIdentity : Task {
 		static readonly string ProvisioningPath = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.LocalApplicationData), "Xamarin", "iOS", "Provisioning");
 		static readonly string ProfilesPath = Path.Combine (ProvisioningPath, "Profiles");
 		static readonly string CertificatesPath = Path.Combine (ProvisioningPath, "Certificates");
@@ -30,14 +30,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 
 		#region Inputs
 
-		// Single-project property that determines whether other single-project properties should have any effect
-		public bool GenerateApplicationManifest { get; set; }
-
-		// Single-project property that maps to CFBundleIdentifier
-		public string ApplicationId { get; set; }
-
-		[Required]
-		public string AppManifest { get; set; }
+		public string BundleIdentifier { get; set; }
 
 		public string SigningKey { get; set; }
 
@@ -66,7 +59,6 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 
 		public override bool Execute ()
 		{
-			PDictionary plist;
 			IList<MobileProvision> profiles;
 			IList<X509Certificate2> certs;
 			List<CodeSignIdentity> pairs;
@@ -77,25 +69,9 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 
 			hotRestartClient = new HotRestartClient ();
 
-			try {
-				plist = PDictionary.FromFile (AppManifest);
-			} catch (Exception ex) {
-				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, "Error loading '{0}': {1}", AppManifest, ex.Message);
-
-				return false;
-			}
-
-			identity.BundleId = plist.GetCFBundleIdentifier ();
-
-			if (string.IsNullOrEmpty (identity.BundleId)) {
-				if (GenerateApplicationManifest && !string.IsNullOrEmpty (ApplicationId)) {
-					identity.BundleId = ApplicationId;
-				} else {
-					Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, "{0} does not define CFBundleIdentifier", AppManifest);
-
-					return false;
-				}
-			}
+			identity.BundleId = BundleIdentifier;
+			if (string.IsNullOrEmpty (identity.BundleId))
+				Log.LogError ("Info.plist does not define CFBundleIdentifier");
 
 			DetectedBundleId = identity.BundleId;
 
@@ -110,7 +86,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 			if (!IsAutoCodeSignProfile (ProvisioningProfile)) {
 				identity.Profile = MobileProvisionIndex.GetMobileProvision (platform, ProvisioningProfile);
 
-				if (identity.Profile == null) {
+				if (identity.Profile is null) {
 					Log.LogError ("The specified " + PlatformName + " provisioning profile '{0}' could not be found. Please enable Automatic Provisioning from the iOS Bundle Signing page.", ProvisioningProfile);
 					return false;
 				}
@@ -119,7 +95,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 
 				if (certs.Count > 0) {
 					identity.SigningKey = certs.FirstOrDefault (c => profile.DeveloperCertificates.Any (p => p.Thumbprint == c.Thumbprint));
-					if (identity.SigningKey == null) {
+					if (identity.SigningKey is null) {
 						Log.LogError ("No " + PlatformName + " signing identities match the specified provisioning profile '{0}'.", ProvisioningProfile);
 						return false;
 					}
@@ -127,12 +103,12 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 
 				identity.AppId = ConstructValidAppId (identity.Profile, identity.BundleId);
 
-				if (identity.AppId == null) {
-					Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, "Project bundle identifier '{0}' does not match specified provisioning profile '{1}'. Please enable Automatic Provisioning from the iOS Bundle Signing page.", identity.BundleId, ProvisioningProfile);
+				if (identity.AppId is not null) {
+					Log.LogError ("Project bundle identifier '{0}' does not match specified provisioning profile '{1}'. Please enable Automatic Provisioning from the iOS Bundle Signing page.", identity.BundleId, ProvisioningProfile);
 					return false;
 				}
 
-				if (identity.SigningKey != null) {
+				if (identity.SigningKey is not null) {
 					codesignCommonName = GetCertificateCommonName (identity.SigningKey);
 					DetectedCodeSigningPath = Path.Combine (CertificatesPath, $"{identity.SigningKey.SerialNumber}.p12");
 				}
@@ -148,26 +124,26 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 				return !Log.HasLoggedErrors;
 			}
 
-			if ((profiles = GetProvisioningProfiles (platform, type, identity, certs)) == null)
+			if ((profiles = GetProvisioningProfiles (platform, type, identity, certs)) is null)
 				return false;
 
-			if ((pairs = GetCodeSignIdentityPairs (profiles, certs)) == null)
+			if ((pairs = GetCodeSignIdentityPairs (profiles, certs)) is null)
 				return false;
 
 			identity = GetBestMatch (pairs, identity);
 
-			if (identity.Profile != null && identity.AppId != null) {
-				codesignCommonName = identity.SigningKey != null ? GetCertificateCommonName (identity.SigningKey) : null;
+			if (identity.Profile is not null && identity.AppId is not null) {
+				codesignCommonName = identity.SigningKey is not null ? GetCertificateCommonName (identity.SigningKey) : null;
 				provisioningProfileName = identity.Profile.Name;
 
 				DetectedAppId = identity.AppId;
-				DetectedCodeSigningPath = identity.SigningKey != null ? Path.Combine (CertificatesPath, $"{identity.SigningKey.SerialNumber}.p12") : string.Empty;
+				DetectedCodeSigningPath = identity.SigningKey is not null ? Path.Combine (CertificatesPath, $"{identity.SigningKey.SerialNumber}.p12") : string.Empty;
 				DetectedProvisioningProfileId = identity.Profile.Uuid;
 				DetectedProvisioningProfilePath = Path.Combine (ProfilesPath, $"{DetectedProvisioningProfileId}.mobileprovision");
 
 				ReportDetectedCodesignInfo ();
 			} else {
-				if (identity.SigningKey != null) {
+				if (identity.SigningKey is not null) {
 					Log.LogError ("Bundle identifier '{0}' does not match any installed provisioning profile for selected signing identity '{0}'. Please enable Automatic Provisioning from the iOS Bundle Signing page.", identity.BundleId, identity.SigningKey);
 				} else {
 					Log.LogError ("Bundle identifier '{0}' does not match any installed provisioning profile. Please enable Automatic Provisioning from the iOS Bundle Signing page.", identity.BundleId);
@@ -247,9 +223,9 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 		{
 			Log.LogMessage (MessageImportance.High, "Detected signing identity:");
 
-			if (codesignCommonName != null)
+			if (codesignCommonName is not null)
 				Log.LogMessage (MessageImportance.High, "  Code Signing Key: \"{0}\" ({1})", codesignCommonName, DetectedCodeSigningPath);
-			if (provisioningProfileName != null)
+			if (provisioningProfileName is not null)
 				Log.LogMessage (MessageImportance.High, "  Provisioning Profile: \"{0}\" ({1})", provisioningProfileName, DetectedProvisioningProfilePath);
 		}
 
@@ -365,7 +341,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 			var failures = new List<string> ();
 			IList<MobileProvision> profiles;
 
-			if (identity.BundleId != null) {
+			if (identity.BundleId is not null) {
 				if (certs.Count > 0)
 					profiles = MobileProvisionIndex.GetMobileProvisions (platform, identity.BundleId, type, certs, unique: true, failures: failures);
 				else
@@ -431,7 +407,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 			foreach (var pair in pairs) {
 				var appid = ConstructValidAppId (pair.Profile, identity.BundleId, out matchLength);
 
-				if (appid != null) {
+				if (appid is not null) {
 					if (matchLength >= bestMatchLength) {
 						if (matchLength > bestMatchLength) {
 							bestMatchLength = matchLength;
@@ -459,7 +435,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 			}
 
 			if (matches.Count == 0) {
-				Log.LogWarning (null, null, null, AppManifest, 0, 0, 0, 0, "No installed provisioning profiles match the bundle identifier.");
+				Log.LogWarning ("No installed provisioning profiles match the bundle identifier {0}", identity.BundleId);
 
 				return identity;
 			}
@@ -474,7 +450,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 				for (int i = 0; i < matches.Count; i++) {
 					Log.LogMessage (MessageImportance.Normal, "{0,3}. Provisioning Profile: \"{1}\" ({2})", i + 1, matches [i].Profile.Name, matches [i].Profile.Uuid);
 
-					if (matches [i].SigningKey != null)
+					if (matches [i].SigningKey is not null)
 						Log.LogMessage (MessageImportance.Normal, "{0}  Signing Identity: \"{1}\"", spaces, GetCertificateCommonName (matches [i].SigningKey));
 				}
 			}

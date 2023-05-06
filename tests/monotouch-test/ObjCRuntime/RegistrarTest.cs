@@ -116,8 +116,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #else
 			var shouldBeRemoved = false;
 #endif
-			Assert.AreEqual (shouldBeRemoved, typeof (NSObject).Assembly.GetType ("Registrar.Registrar") == null, "Registrar removal");
-			Assert.AreEqual (shouldBeRemoved, typeof (NSObject).Assembly.GetType ("Registrar.DynamicRegistrar") == null, "DynamicRegistrar removal");
+			Assert.AreEqual (shouldBeRemoved, typeof (NSObject).Assembly.GetType ("Registrar.Registrar") is null, "Registrar removal");
+			Assert.AreEqual (shouldBeRemoved, typeof (NSObject).Assembly.GetType ("Registrar.DynamicRegistrar") is null, "DynamicRegistrar removal");
 		}
 
 #if !MONOMAC
@@ -902,7 +902,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			[Export ("INativeObject1:")]
 			static bool INativeObject1 (CGPath img /*CGPath is a INativeObject */)
 			{
-				return img != null;
+				return img is not null;
 			}
 
 			[Export ("INativeObject2:")]
@@ -921,7 +921,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			[Export ("INativeObject4:")]
 			static bool INativeObject4 (ref CGPath path)
 			{
-				return path != null;
+				return path is not null;
 			}
 
 			[Export ("INativeObject5:")]
@@ -1097,7 +1097,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			{
 				var descriptor = (BlockLiteral*) block;
 				var del = (global::System.Action<UIBackgroundFetchResult>) (descriptor->Target);
-				if (del != null)
+				if (del is not null)
 					del (obj);
 			}
 		} /*		 class SDActionArity1V1 */
@@ -1425,7 +1425,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			[Export ("copyWithZone:")]
 			public NSObject Copy (NSZone zone)
 			{
-				had_zone = zone != null;
+				had_zone = zone is not null;
 				DangerousRetain ();
 				return this;
 			}
@@ -1450,10 +1450,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			var cl = new Class (typeof (TestTypeEncodingsClass));
 			var sig = Runtime.GetNSObject<NSMethodSignature> (Messaging.IntPtr_objc_msgSend_IntPtr (cl.Handle, Selector.GetHandle ("methodSignatureForSelector:"), Selector.GetHandle ("foo::::::::::::::::")));
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 			var boolEncoding = TrampolineTest.IsArm64CallingConvention ? "B" : "c";
-#elif __MACCATALYST__
-			var boolEncoding = "B";
 #else
 			var boolEncoding = (IntPtr.Size == 8 || TrampolineTest.IsArmv7k || TrampolineTest.IsArm64CallingConvention) ? "B" : "c";
 
@@ -1948,7 +1946,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				{
 					var descriptor = (BlockLiteral*) block;
 					var del = (global::System.Action<UIBackgroundFetchResult>) (descriptor->Target);
-					if (del != null)
+					if (del is not null)
 						del ((UIBackgroundFetchResult) (global::System.UInt64) obj);
 				}
 			} /* class SDActionArity1V42 */
@@ -4137,9 +4135,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		void AssertAreEqual (INativeObject [] expected, INativeObject [] actual, string msg)
 		{
-			if (expected == null && actual == null)
+			if (expected is null && actual is null)
 				return;
-			if (expected == null ^ actual == null)
+			if (expected is null ^ actual is null)
 				Assert.Fail ("One is null and the other is not. Expected: {0} Actual: {1}. " + msg, expected, actual);
 			Assert.AreEqual (expected.Length, actual.Length, "Length." + msg);
 			for (int i = 0; i < expected.Length; i++) {
@@ -4149,9 +4147,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		void AssertAreNotEqual (INativeObject [] expected, INativeObject [] actual, string msg)
 		{
-			if (expected == null && actual == null)
+			if (expected is null && actual is null)
 				Assert.Fail ("Both are null. " + msg);
-			if (expected == null ^ actual == null)
+			if (expected is null ^ actual is null)
 				return;
 			if (expected.Length != actual.Length)
 				return;
@@ -5479,7 +5477,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			public static unsafe void Invoke (IntPtr block, nint value)
 			{
 				var del = BlockLiteral.GetTarget<Action<WKNavigationActionPolicy>> (block);
-				if (del != null)
+				if (del is not null)
 					del ((WKNavigationActionPolicy) (long) value);
 			}
 		}

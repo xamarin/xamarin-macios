@@ -3,6 +3,8 @@ using System;
 using Mono.Cecil;
 using Mono.Linker;
 
+#nullable enable
+
 namespace Xamarin.Linker {
 	// List all the assemblies we care about (i.e. the ones that have not been linked away)
 	public class LoadNonSkippedAssembliesStep : ConfigurationAwareStep {

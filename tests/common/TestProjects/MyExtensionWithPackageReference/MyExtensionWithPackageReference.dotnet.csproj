@@ -5,6 +5,7 @@
     <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
     <IsAppExtension>true</IsAppExtension>
     <CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

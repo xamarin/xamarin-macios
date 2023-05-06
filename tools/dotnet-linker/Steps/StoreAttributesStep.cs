@@ -2,6 +2,8 @@ using System;
 
 using Mono.Cecil;
 
+#nullable enable
+
 namespace Xamarin.Linker.Steps {
 	// The registrar needs some of the system attributes that the linker might remove, so store those elsewhere for the static registrar's use.
 	public class StoreAttributesStep : AttributeIteratorBaseStep {

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -672,12 +672,13 @@
         </value>
     </data>
   <data name="E0174" xml:space="preserve">
-        <value>{0} geçersiz veya bilinmeyen bir biçimde ve işlenemiyor.
-        </value>
+        <value>xcframework {0} hatalı veya bilinmeyen bir biçime sahip ve işlenemiyor.</value>
     </data>
   <data name="E0175" xml:space="preserve">
-        <value>'{0}' içinde eşleşen çerçeve bulunamadı.
-        </value>
+        <value>'{0}' içinde eşleşen çerçeve bulunamadı. SupportedPlatform: '{0}', SupportedPlatformVariant: '{1}', SupportedArchitectures: '{2}'.</value>
+        <comment>
+            Do not translate: 'SupportedPlatform', 'SupportedPlatformVariant', 'SupportedArchitectures' (they're keys inside a file with key/value pairs))
+        </comment>
     </data>
   <data name="W0176" xml:space="preserve">
         <value>'{0}' ve '{1}' seçenekleri çakışıyor. '{1}' yoksayılacak.
@@ -1170,11 +1171,35 @@
         </comment>
     </data>
   <data name="W7105" xml:space="preserve">
-        <value>'{2}' bildiriminde '{1}' yerel başvurusu için beklenmeyen '{0}' uzantısı.</value>
+        <value>'{2}' bağlama kaynak paketindeki '{1}' yerel referansı için beklenmeyen '{0}' uzantısı.</value>
         <comment>
             {0}: file extension
             {1}: path to a file
             {2}: path to a file
         </comment>
+    </data>
+  <data name="W7106" xml:space="preserve">
+        <value>{0} zip dosyasında '{1}' adlı bir dosya bekleniyordu.</value>
+    </data>
+  <data name="W7107" xml:space="preserve">
+        <value>'{0}' zip dosyası mevcut değil.</value>
+    </data>
+  <data name="W7108" xml:space="preserve">
+        <value>'{0}' dosyası yok.</value>
+    </data>
+  <data name="W7109" xml:space="preserve">
+        <value>'{0}' öğesi yerel referans olarak işlenemiyor: bilinmeyen tür.</value>
+    </data>
+  <data name="E7110" xml:space="preserve">
+        <value>Info.plist '{0}' xcframework '{1}'den yüklenemedi.</value>
+    </data>
+  <data name="W7111" xml:space="preserve">
+        <value>'{0}' dizini yok.</value>
+    </data>
+  <data name="E7112" xml:space="preserve">
+        <value>'{1}' zip dosyasında '{0}' dosya veya dizini bulunamadı.</value>
+    </data>
+  <data name="E7113" xml:space="preserve">
+        <value>'{0}' zip dosyası bu platformda işlenemiyor: '{1}' dosyası bir sembolik bağlantı.</value>
     </data>
 </root>

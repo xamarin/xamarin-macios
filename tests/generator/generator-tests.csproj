@@ -41,6 +41,9 @@
     <Compile Include="..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
+    <Compile Include="..\..\tools\common\NullableAttributes.cs">
+      <Link>NullableAttributes.cs</Link>
+    </Compile>
     <Compile Include="AttributeFactoryTests.cs" />
     <Compile Include="CollectionsExtensionsTests.cs" />
     <Compile Include="ConstructorArgumentsTests.cs" />
@@ -57,6 +60,9 @@
     </Compile>
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\NullableAttributes.cs">
+      <Link>NullableAttributes.cs</Link>
     </Compile>
     <Compile Include="GeneratorTests.cs" />
     <Compile Include="BGenTests.cs" />

@@ -70,7 +70,7 @@ namespace Xamarin.iOS.Tasks {
 				return false;
 			}
 
-			if ((plist = PObject.FromString (TargetiOSDevice) as PDictionary) == null) {
+			if ((plist = PObject.FromString (TargetiOSDevice) as PDictionary) is null) {
 				Log.LogError (MSBStrings.E0058);
 				return false;
 			}

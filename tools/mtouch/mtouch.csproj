@@ -450,6 +450,9 @@
     <Compile Include="..\common\StringUtils.cs">
       <Link>tools\common\StringUtils.cs</Link>
     </Compile>
+    <Compile Include="..\common\NullableAttributes.cs">
+      <Link>tools\common\NullableAttributes.cs</Link>
+    </Compile>
     <Compile Include="..\common\CoreResolver.cs">
       <Link>tools\common\CoreResolver.cs</Link>
     </Compile>

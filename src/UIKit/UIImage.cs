@@ -32,10 +32,10 @@ namespace UIKit {
 			UIImageStatusDispatcher dis = null;
 			UIApplication.EnsureUIThread ();			
 
-			if (status != null)
+			if (status is not null)
 				dis = new UIImageStatusDispatcher (status);
 			
-			UIImageWriteToSavedPhotosAlbum (Handle, dis != null ? dis.Handle : IntPtr.Zero, dis != null ? Selector.GetHandle (UIImageStatusDispatcher.callbackSelector) : IntPtr.Zero, IntPtr.Zero);
+			UIImageWriteToSavedPhotosAlbum (Handle, dis is not null ? dis.Handle : IntPtr.Zero, dis is not null ? Selector.GetHandle (UIImageStatusDispatcher.callbackSelector) : IntPtr.Zero, IntPtr.Zero);
 		}
 #endif
 
@@ -91,12 +91,12 @@ namespace UIKit {
 		[MethodImpl (MethodImplOptions.NoInlining)]
 		public static UIImage FromResource (Assembly assembly, string name)
 		{
-			if (name == null)
+			if (name is null)
 				throw new ArgumentNullException ("name");
-			if (assembly == null)
+			if (assembly is null)
 				assembly = Assembly.GetCallingAssembly ();
 			var stream = assembly.GetManifestResourceStream (name);
-			if (stream == null)
+			if (stream is null)
 				throw new ArgumentException (String.Format ("No resource named `{0}' found", name));
 
 			byte [] buffer = new byte [stream.Length];

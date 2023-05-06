@@ -135,7 +135,7 @@ namespace Xamarin.MacDev.Tasks {
 					}
 				}
 
-				if (metadata == null)
+				if (metadata is null)
 					continue;
 
 				var compiled = new TaskItem (path, metadata);
@@ -200,7 +200,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			BundleResources = bundleResources.ToArray ();
 
-			if (PartialAppManifests != null)
+			if (PartialAppManifests is not null)
 				partialPlists.AddRange (PartialAppManifests);
 			PartialAppManifests = partialPlists.ToArray ();
 

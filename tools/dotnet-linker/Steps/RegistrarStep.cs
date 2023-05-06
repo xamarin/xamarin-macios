@@ -6,6 +6,8 @@ using Xamarin.Utils;
 
 using Mono.Cecil;
 
+#nullable enable
+
 namespace Xamarin.Linker {
 	public class RegistrarStep : ConfigurationAwareStep {
 		protected override string Name { get; } = "Registrar";
@@ -36,17 +38,17 @@ namespace Xamarin.Linker {
 					if (Annotations.GetAction (assembly) != Mono.Linker.AssemblyAction.Delete)
 						bundled_assemblies.Add (assembly);
 				}
-				Configuration.Target.StaticRegistrar.Generate (bundled_assemblies, header, code, out var initialization_method);
+				Configuration.Target.StaticRegistrar.Generate (bundled_assemblies, header, code, out var initialization_method, app.ClassMapPath);
 
 				var items = new List<MSBuildItem> ();
 				foreach (var abi in Configuration.Abis) {
-					items.Add (new MSBuildItem {
-						Include = code,
-						Metadata = {
+					items.Add (new MSBuildItem (
+						code,
+						new Dictionary<string, string> {
 							{ "Arch", abi.AsArchString () },
 							{ "Arguments", "-std=c++14" },
-						},
-					});
+						}
+					));
 				}
 
 				Configuration.WriteOutputForMSBuild ("_RegistrarFile", items);
