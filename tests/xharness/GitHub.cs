@@ -28,9 +28,9 @@ namespace Xharness {
 
 		public GitHub (IHarness harness, IProcessManager processManager)
 		{
-			if (harness == null)
+			if (harness is null)
 				throw new ArgumentNullException (nameof (harness));
-			if (processManager == null)
+			if (processManager is null)
 				throw new ArgumentNullException (nameof (processManager));
 			this.harness = harness;
 			this.processManager = processManager;
@@ -81,9 +81,9 @@ namespace Xharness {
 			var path = Path.Combine (harness.LogDirectory, "pr" + pullRequest + "-files.log");
 			if (!File.Exists (path)) {
 				var rv = GetModifiedFilesLocally (pullRequest);
-				if (rv == null || rv.Count () == 0) {
+				if (rv is null || rv.Count () == 0) {
 					rv = GetModifiedFilesRemotely (pullRequest);
-					if (rv == null)
+					if (rv is null)
 						rv = new string [] { };
 				}
 
@@ -122,7 +122,7 @@ namespace Xharness {
 
 						var link = client.ResponseHeaders ["Link"];
 						try {
-							if (link != null) {
+							if (link is not null) {
 								var ltIdx = link.IndexOf ('<');
 								var gtIdx = link.IndexOf ('>', ltIdx + 1);
 								while (ltIdx >= 0 && gtIdx > ltIdx) {
@@ -152,7 +152,7 @@ namespace Xharness {
 						} catch (Exception e) {
 							harness.Log ("Could not paginate github response: {0}: {1}", link, e.Message);
 						}
-					} while (url != null);
+					} while (url is not null);
 					File.WriteAllLines (path, rv.ToArray ());
 					return rv;
 				}

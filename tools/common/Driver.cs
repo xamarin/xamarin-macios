@@ -73,7 +73,7 @@ namespace Xamarin.Bundler {
 			options.Add ("q|quiet", "Specify how quiet the output should be. This can be passed multiple times to increase the silence.", v => Verbosity--);
 			options.Add ("debug:", "Build a debug app. If AOT-compiling, will also generate native debug code for the specified assembly (set to 'all' to generate debug code for all assemblies, the default is to generate debug code for user assemblies only).", v => {
 				app.EnableDebug = true;
-				if (v != null) {
+				if (v is not null) {
 					if (v == "all") {
 						app.DebugAll = true;
 						return;
@@ -211,7 +211,7 @@ namespace Xamarin.Bundler {
 #endif
 					"",
 					(v) => {
-						if (optimize == null)
+						if (optimize is null)
 							optimize = new List<string> ();
 						optimize.Add (v);
 					});
@@ -257,6 +257,7 @@ namespace Xamarin.Bundler {
 			options.Add ("skip-marking-nsobjects-in-user-assemblies:", "Don't mark NSObject (and any subclass of NSObject) in user assemblies in the linker. This may break your app, use at own risk.", v => {
 				app.SkipMarkingNSObjectsInUserAssemblies = ParseBool (v, "--skip-marking-nsobjects-in-user-assemblies");
 			});
+			options.Add ("class-map-path=", "Sets the path for an output path to generate a class map XML file used to optimize class handle access when the static registrar has been used.", v => { app.ClassMapPath = v; });
 
 
 			// Keep the ResponseFileSource option at the end.
@@ -290,7 +291,7 @@ namespace Xamarin.Bundler {
 			if (validateFramework)
 				ValidateTargetFramework ();
 
-			if (optimize != null) {
+			if (optimize is not null) {
 				// This must happen after the call to ValidateTargetFramework, so that app.Platform is correct.
 				var messages = new List<ProductException> ();
 				foreach (var opt in optimize)
@@ -592,7 +593,7 @@ namespace Xamarin.Bundler {
 			lang = lang.Replace ('_', '-');
 			try {
 				var culture = CultureInfo.GetCultureInfo (lang);
-				if (culture != null) {
+				if (culture is not null) {
 					CultureInfo.DefaultThreadCurrentCulture = culture;
 					Log (2, $"The current language was set to '{culture.DisplayName}' according to the LANG environment variable (LANG={lang_variable}).");
 				}
@@ -625,7 +626,7 @@ namespace Xamarin.Bundler {
 
 		public static void Touch (IEnumerable<string> filenames, DateTime? timestamp = null)
 		{
-			if (timestamp == null)
+			if (timestamp is null)
 				timestamp = DateTime.Now;
 			foreach (var filename in filenames) {
 				try {
@@ -654,7 +655,7 @@ namespace Xamarin.Bundler {
 			get { return watch_level; }
 			set {
 				watch_level = value;
-				if ((watch_level > 0) && (watch == null)) {
+				if ((watch_level > 0) && (watch is null)) {
 					watch = new Stopwatch ();
 					watch.Start ();
 				}
@@ -663,7 +664,7 @@ namespace Xamarin.Bundler {
 
 		public static void Watch (string msg, int level)
 		{
-			if ((watch == null) || (level > WatchLevel))
+			if ((watch is null) || (level > WatchLevel))
 				return;
 			for (int i = 0; i < level; i++)
 				Console.Write ("!");
@@ -714,7 +715,7 @@ namespace Xamarin.Bundler {
 		static string local_build;
 		public static string WalkUpDirHierarchyLookingForLocalBuild (Application app)
 		{
-			if (local_build == null) {
+			if (local_build is null) {
 				var localPath = Path.GetDirectoryName (GetFullPath ());
 				while (localPath.Length > 1) {
 					if (File.Exists (Path.Combine (localPath, "Make.config"))) {
@@ -733,7 +734,7 @@ namespace Xamarin.Bundler {
 		static string framework_dir;
 		public static string GetFrameworkCurrentDirectory (Application app)
 		{
-			if (framework_dir == null) {
+			if (framework_dir is null) {
 				var env_framework_dir = Environment.GetEnvironmentVariable (app.FrameworkLocationVariable);
 				if (!string.IsNullOrEmpty (env_framework_dir)) {
 					framework_dir = env_framework_dir;
@@ -823,7 +824,7 @@ namespace Xamarin.Bundler {
 		static string mono_lib_directory;
 		public static string GetMonoLibraryDirectory (Application app)
 		{
-			if (mono_lib_directory == null) {
+			if (mono_lib_directory is null) {
 #if MMP
 				if (IsUnifiedFullSystemFramework) {
 					mono_lib_directory = RunPkgConfig ("--variable=libdir");
@@ -938,9 +939,9 @@ namespace Xamarin.Bundler {
 
 		public static void ValidateXcode (Application app, bool accept_any_xcode_version, bool warn_if_not_found)
 		{
-			if (sdk_root == null) {
+			if (sdk_root is null) {
 				sdk_root = FindSystemXcode ();
-				if (sdk_root == null) {
+				if (sdk_root is null) {
 					// FindSystemXcode showed a warning in this case. In particular do not use 'string.IsNullOrEmpty' here,
 					// because FindSystemXcode may return an empty string (with no warning printed) if the xcode-select command
 					// succeeds, but returns nothing.
@@ -952,7 +953,7 @@ namespace Xamarin.Bundler {
 					if (!accept_any_xcode_version)
 						ErrorHelper.Warning (61, Errors.MT0061, sdk_root);
 				}
-				if (sdk_root == null) {
+				if (sdk_root is null) {
 					sdk_root = XcodeDefault;
 					if (!Directory.Exists (sdk_root)) {
 						if (warn_if_not_found) {
@@ -992,7 +993,7 @@ namespace Xamarin.Bundler {
 			}
 
 			if (!accept_any_xcode_version) {
-				if (min_xcode_version != null && XcodeVersion < min_xcode_version)
+				if (min_xcode_version is not null && XcodeVersion < min_xcode_version)
 					throw ErrorHelper.CreateError (51, Errors.MT0051, app.ProductConstants.Version, XcodeVersion.ToString (), sdk_root, app.ProductName, min_xcode_version);
 
 				if (XcodeVersion < SdkVersions.XcodeVersion)
@@ -1074,7 +1075,7 @@ namespace Xamarin.Bundler {
 			lock (tools)
 				tools [tool] = path;
 
-			if (path == null)
+			if (path is null)
 				throw ErrorHelper.CreateError (5307, Errors.MX5307 /* Missing '{0}' tool. Please install Xcode 'Command-Line Tools' component */, tool);
 
 			return path;
@@ -1250,7 +1251,7 @@ namespace Xamarin.Bundler {
 		public static Frameworks GetFrameworks (Application app)
 		{
 			var rv = Frameworks.GetFrameworks (app.Platform, app.IsSimulatorBuild);
-			if (rv == null)
+			if (rv is null)
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
 			return rv;
 		}

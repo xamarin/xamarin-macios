@@ -79,7 +79,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		protected override IEnumerable<ITaskItem> EnumerateInputs ()
 		{
-			if (AtlasTextures == null)
+			if (AtlasTextures is null)
 				yield break;
 
 			// group the atlas textures by their parent .atlas directories

@@ -463,7 +463,7 @@
 				 1. The global TrimMode property is set to 'copy'
 				 2. No assembly has the TrimMode metadata (unless it's set to 'copy')
 			-->
-			<_AssembliesWithCustomTrimMode>@(ManagedAssemblyToLink->HasMetadataValue('TrimMode')->Count())</_AssembliesWithCustomTrimMode>
+			<_AssembliesWithCustomTrimMode>@(ManagedAssemblyToLink->HasMetadata('TrimMode')->Count())</_AssembliesWithCustomTrimMode>
 			<_AssembliesWithCopyTrimMode>@(ManagedAssemblyToLink->WithMetadataValue('TrimMode', 'copy')->Count())</_AssembliesWithCopyTrimMode>
 			<_AreAnyAssembliesTrimmed Condition="'$(_AreAnyAssembliesTrimmed)' == '' And '$(TrimMode)' == 'copy' And '$(_AssembliesWithCustomTrimMode)' == '$(_AssembliesWithCopyTrimMode)'">false</_AreAnyAssembliesTrimmed>
 			<_AreAnyAssembliesTrimmed Condition="'$(_AreAnyAssembliesTrimmed)' == ''">true</_AreAnyAssembliesTrimmed>
@@ -663,6 +663,7 @@
 			<_FrameworkToPublish Update="@(_FrameworkToPublish)">
 				<TargetDirectory>$(_RelativePublishDir)$(_AppBundleFrameworksDir)\%(Filename)%(Extension).framework</TargetDirectory>
 				<SourceDirectory>%(RelativeDir)</SourceDirectory>
+				<PublishFolderType>AppleFramework</PublishFolderType>
 			</_FrameworkToPublish>
 		</ItemGroup>
 
@@ -1500,9 +1501,10 @@
 			<ResolvedFileToPublish Remove="$(ProjectRuntimeConfigFilePath)" Condition="'$(GenerateRuntimeConfigurationFiles)' == 'true'" />
 		</ItemGroup>
 
+		<!-- This task is executed on Windows as well, for hotrestart builds -->
 		<ComputeBundleLocation
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
 			AssemblyDirectory="$(_AppContentsRelativePath)"
 			BundleResource="@(BundleResource)"
 			BundlerDebug="$(_BundlerDebug)"
@@ -1577,11 +1579,13 @@
 			<ResolvedFileToPublish RelativePath="$(_RelativeAppBundlePath)\%(RelativePath)" />
 		</ItemGroup>
 
+		<!-- This task is executed on Windows as well, for hotrestart builds -->
 		<!-- resolve any .xcframeworks and binding resource packages -->
 		<ResolveNativeReferences
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
 			Architectures="$(TargetArchitectures)"
+			FrameworksDirectory="$(_AppFrameworksRelativePath)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			NativeReferences="@(_UnresolvedXCFrameworks);@(_AppleBindingResourcePackage);@(_CompressedAppleFrameworks);@(_CompressedAppleBindingResourcePackage)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
@@ -1641,9 +1645,10 @@
 			</_CompressedPlugIns>
 		</ItemGroup>
 
+		<!-- This task is executed from Windows as well when using HotRestart -->
 		<Unzip
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
 			ZipFilePath="%(_CompressedPlugIns.Identity)"
 			ExtractionPath="%(_CompressedPlugIns.ExtractionPath)"
 			>

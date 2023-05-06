@@ -303,7 +303,7 @@ namespace ObjCRuntime {
 #else
 				var marshalAs = (MarshalAsAttribute) Attribute.GetCustomAttribute (field, typeof (MarshalAsAttribute));
 #endif
-				if (marshalAs == null) {
+				if (marshalAs is null) {
 					GetValueTypeSize (original_type, field.FieldType, field_types, is_64_bits, ref size, ref max_element_size, generator);
 					continue;
 				}

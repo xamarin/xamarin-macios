@@ -33,7 +33,7 @@ namespace Xamarin.Mac.Tests {
 			controller = new NSUserDefaultsController (null, null);
 
 			Assert.IsTrue (controller.Defaults == NSUserDefaults.StandardUserDefaults);
-			Assert.IsTrue (controller.InitialValues == null);
+			Assert.IsTrue (controller.InitialValues is null);
 			Assert.IsNotNull (controller, "NSUserDefaultsControllerShouldCreateNewControllerWithNullParameters - Constructor returned null");
 		}
 

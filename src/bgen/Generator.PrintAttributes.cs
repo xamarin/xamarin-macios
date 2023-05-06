@@ -25,11 +25,11 @@ public partial class Generator {
 
 		// We must consider attributes if we have any on our type, or if we're inlining and that inlined type has attributes
 		// If neither are true, we have zero attributes that are relevant
-		bool shouldConsiderAttributes = memberAvailability.Any () || inlinedTypeAvailability != null && inlinedTypeAvailability.Any ();
+		bool shouldConsiderAttributes = memberAvailability.Any () || inlinedTypeAvailability is not null && inlinedTypeAvailability.Any ();
 		if (shouldConsiderAttributes) {
 			// We will consider any inlinedType attributes first, if any, before any from our parent context
 			List<AvailabilityBaseAttribute> availabilityToConsider = new List<AvailabilityBaseAttribute> ();
-			if (inlinedTypeAvailability != null) {
+			if (inlinedTypeAvailability is not null) {
 				availabilityToConsider.AddRange (inlinedTypeAvailability);
 				// Don't copy parent attributes if the conflict with the type we're inlining members into
 				// Example: don't copy Introduced on top of Unavailable.
@@ -73,7 +73,7 @@ public partial class Generator {
 				// If all of this implication gives us something silly, like being introduced
 				// on a type that is on a namespace we don't support, ignore those Supported
 				StripIntroducedOnNamespaceNotIncluded (memberAvailability, context);
-				if (inlinedType != null) {
+				if (inlinedType is not null) {
 					StripIntroducedOnNamespaceNotIncluded (memberAvailability, inlinedType);
 				}
 			}

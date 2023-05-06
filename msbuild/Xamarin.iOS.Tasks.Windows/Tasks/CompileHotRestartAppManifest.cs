@@ -26,26 +26,23 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 		#region Inputs
 
 		[Required]
-		public string AppBundlePath { get; set; } = String.Empty;
+		public string CompiledAppManifestPath { get; set; } = String.Empty;
 
 		[Required]
-		public string AppManifestPath { get; set; } = String.Empty;
+		public string PrebuiltAppManifestPath { get; set; } = string.Empty;
 
-		public string ApplicationTitle { get; set; } = String.Empty;
-
+		[Required]
+		public string OutputAppManifestPath { get; set; } = String.Empty;
 		#endregion
 
+		// This task will take the prebuilt app manifest (Info.plist) and the (compiled) app manifest from the current build,
+		// and merge them by copying all keys in the compiled app manifest into the prebuilt app manifest, except those
+		// listed in 'IgnorePlistKeys' (and save the result to OutputAppManifestPath and PrebuiltAppManifestPath)
 		public override bool Execute ()
 		{
 			try {
-				var preBuiltInfoPlistPath = Path.Combine (AppBundlePath, "Info.plist");
-
-				if (!File.Exists (preBuiltInfoPlistPath)) {
-					throw new Exception (string.Format (Resources.CompileAppManifest_MissinInfoPList, preBuiltInfoPlistPath));
-				}
-
-				var infoPlist = PDictionary.FromFile (AppManifestPath)!;
-				var preBuiltInfoPlist = PDictionary.FromFile (preBuiltInfoPlistPath)!;
+				var infoPlist = PDictionary.FromFile (CompiledAppManifestPath)!;
+				var preBuiltInfoPlist = PDictionary.FromFile (PrebuiltAppManifestPath)!;
 
 				foreach (var item in infoPlist) {
 					var key = item.Key!;
@@ -58,11 +55,11 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 					}
 				}
 
-				if (!string.IsNullOrEmpty (ApplicationTitle)) {
-					preBuiltInfoPlist [ManifestKeys.CFBundleDisplayName] = ApplicationTitle;
-				}
+				preBuiltInfoPlist.Save (OutputAppManifestPath, binary: true);
+				Log.LogMessage (MessageImportance.Low, $"Saved app manifest to {OutputAppManifestPath}");
 
-				preBuiltInfoPlist.Save (preBuiltInfoPlistPath, binary: true);
+				preBuiltInfoPlist.Save (PrebuiltAppManifestPath, binary: true);
+				Log.LogMessage (MessageImportance.Low, $"Saved app manifest to {PrebuiltAppManifestPath}");
 
 				return true;
 			} catch (Exception ex) {

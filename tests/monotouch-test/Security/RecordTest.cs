@@ -347,7 +347,7 @@ namespace MonoTouchFixtures.Security {
 			);
 			SecStatusCode code;
 			var record = SecKeyChain.QueryAsRecord (searchRecord, out code);
-			if (code == SecStatusCode.Success && record != null)
+			if (code == SecStatusCode.Success && record is not null)
 				password = NSString.FromData (record.ValueData, NSStringEncoding.UTF8);
 			return password;
 		}
@@ -370,7 +370,7 @@ namespace MonoTouchFixtures.Security {
 				var addCode = SecKeyChain.Add (record);
 				success = (addCode == SecStatusCode.Success);
 			}
-			if (queryCode == SecStatusCode.Success && record != null) {
+			if (queryCode == SecStatusCode.Success && record is not null) {
 				record.ValueData = NSData.FromString (password);
 				var updateCode = SecKeyChain.Update (searchRecord, record);
 				success = (updateCode == SecStatusCode.Success);
@@ -388,7 +388,7 @@ namespace MonoTouchFixtures.Security {
 			SecStatusCode queryCode;
 			var record = SecKeyChain.QueryAsRecord (searchRecord, out queryCode);
 
-			if (queryCode == SecStatusCode.Success && record != null) {
+			if (queryCode == SecStatusCode.Success && record is not null) {
 				var removeCode = SecKeyChain.Remove (searchRecord);
 				success = (removeCode == SecStatusCode.Success);
 			}

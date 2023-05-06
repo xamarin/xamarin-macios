@@ -44,7 +44,7 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var results = new List<ITaskItem> ();
 
-			if (BundleResourcesWithLogicalNames != null) {
+			if (BundleResourcesWithLogicalNames is not null) {
 				foreach (var item in BundleResourcesWithLogicalNames) {
 					var logicalName = item.GetMetadata ("LogicalName");
 

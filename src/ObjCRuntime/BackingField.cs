@@ -49,11 +49,11 @@ namespace ObjCRuntime {
 			where T : class, INativeObject, IDisposable
 		{
 			if (handle == IntPtr.Zero) {
-				if (value != null)
+				if (value is not null)
 					value.Dispose ();
 				return value = null;
 			}
-			if (value != null) {
+			if (value is not null) {
 				if (handle == value.Handle)
 					return value;
 				value.Dispose ();
@@ -65,11 +65,11 @@ namespace ObjCRuntime {
 			where T : class, INativeObject, IDisposable
 		{
 			if (object.ReferenceEquals (value, newValue))
-				return value == null ? IntPtr.Zero : value.Handle;
-			if (value != null)
+				return value is null ? IntPtr.Zero : value.Handle;
+			if (value is not null)
 				value.Dispose ();
 			value = newValue;
-			return value == null ? IntPtr.Zero : value.Handle;
+			return value is null ? IntPtr.Zero : value.Handle;
 		}
 	}
 }

@@ -41,13 +41,13 @@ namespace Foundation {
 	public partial class NSMutableAttributedString {
 
 		public NSMutableAttributedString (string str, CTStringAttributes attributes)
-			: this (str, attributes == null ? null : attributes.Dictionary)
+			: this (str, attributes is null ? null : attributes.Dictionary)
 		{
 		}
 
 		public void SetAttributes (NSDictionary attributes, NSRange range)
 		{
-			if (attributes == null)
+			if (attributes is null)
 				throw new ArgumentNullException ("attributes");
 
 			LowLevelSetAttributes (attributes.Handle, range);
@@ -55,12 +55,12 @@ namespace Foundation {
 
 		public void SetAttributes (CTStringAttributes attrs, NSRange range)
 		{
-			SetAttributes (attrs == null ? null : attrs.Dictionary, range);
+			SetAttributes (attrs is null ? null : attrs.Dictionary, range);
 		}
 
 		public void AddAttributes (CTStringAttributes attrs, NSRange range)
 		{
-			AddAttributes (attrs == null ? null : attrs.Dictionary, range);
+			AddAttributes (attrs is null ? null : attrs.Dictionary, range);
 		}
 
 		public void Append (NSAttributedString first, params object [] rest)
@@ -78,7 +78,7 @@ namespace Foundation {
 		}
 #if !MONOMAC
 		public NSMutableAttributedString (string str, UIStringAttributes attributes)
-		: this (str, attributes != null ? attributes.Dictionary : null)
+		: this (str, attributes is not null ? attributes.Dictionary : null)
 		{
 		}
 

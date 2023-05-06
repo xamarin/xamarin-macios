@@ -31,7 +31,7 @@ namespace Foundation {
 	public partial class NSUrlRequest {
 		public override string ToString ()
 		{
-			return Url != null ? Url.AbsoluteString : base.ToString ();
+			return Url is not null ? Url.AbsoluteString : base.ToString ();
 		}
 	}
 }

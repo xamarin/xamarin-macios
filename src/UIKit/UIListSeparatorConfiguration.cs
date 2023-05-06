@@ -19,7 +19,7 @@ namespace UIKit {
 		static NSDirectionalEdgeInsets? automaticInsets = null;
 		public static NSDirectionalEdgeInsets AutomaticInsets {
 			get {
-				if (automaticInsets == null) {
+				if (automaticInsets is null) {
 					var lib = Libraries.UIKit.Handle;
 					var ret = Dlfcn.dlsym (lib, "UIListSeparatorAutomaticInsets");
 					automaticInsets = (NSDirectionalEdgeInsets) Marshal.PtrToStructure (ret, typeof (NSDirectionalEdgeInsets));

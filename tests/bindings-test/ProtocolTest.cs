@@ -392,7 +392,7 @@ namespace Xamarin.BindingTests {
 			public override bool Equals (object obj)
 			{
 				var other = (objc_property_attribute) obj;
-				if (other == null)
+				if (other is null)
 					return false;
 				return Name == other.Name && Value == other.Value;
 			}

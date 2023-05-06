@@ -11,7 +11,7 @@ namespace Xamarin.MMP.Tests {
 		public bool MatchesTFI (string expected, BuildResult buildOutput)
 		{
 			var tfiLine = buildOutput.BuildOutputLines.FirstOrDefault (x => x.StartsWith ("\t\t\tTargetFrameworkIdentifier=", StringComparison.Ordinal));
-			if (tfiLine == null)
+			if (tfiLine is null)
 				return false;
 			return tfiLine.Contains (expected);
 		}

@@ -17,7 +17,7 @@ namespace UIKit {
 		[Export ("setItems:animated:")]
 		public virtual void SetItems (UIBarButtonItem[] items, bool animated)
 		{
-			if (items == null)
+			if (items is null)
 				throw new ArgumentNullException ("items");
 			
 			// must be identical the [get|set]_Items

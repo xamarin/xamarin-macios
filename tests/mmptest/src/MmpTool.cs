@@ -53,7 +53,7 @@ namespace Xamarin {
 
 		public override void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null)
 		{
-			if (RootAssembly == null) {
+			if (RootAssembly is null) {
 				OutputPath = CreateTemporaryDirectory ();
 			} else {
 				// We're rebuilding an existing executable, so just reuse that

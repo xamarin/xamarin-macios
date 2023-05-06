@@ -13,7 +13,7 @@ public class MarshalTypeList : List<MarshalType> {
 		Add (new MarshalType (typeManager.NSObject, create: "Runtime.GetNSObject (", closingCreate: ")!"));
 		Add (new MarshalType (typeManager.Selector, create: "Selector.FromHandle (", closingCreate: ")!"));
 		Add (new MarshalType (typeManager.BlockLiteral, "BlockLiteral", "{0}", "THIS_IS_BROKEN"));
-		if (typeManager.MusicSequence != null)
+		if (typeManager.MusicSequence is not null)
 			Add (new MarshalType (typeManager.MusicSequence, create: "global::AudioToolbox.MusicSequence.Lookup ("));
 		Add (typeManager.CGColor);
 		Add (typeManager.CGPath);

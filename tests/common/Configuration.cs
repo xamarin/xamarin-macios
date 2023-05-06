@@ -52,7 +52,7 @@ namespace Xamarin.Tests {
 		static Version xcode_version;
 		public static Version XcodeVersion {
 			get {
-				if (xcode_version == null)
+				if (xcode_version is null)
 					xcode_version = Version.Parse (XcodeVersionString);
 				return xcode_version;
 			}
@@ -106,14 +106,14 @@ namespace Xamarin.Tests {
 			foreach (var xcode in xcodes) {
 				var path = Path.Combine (xcode, "Contents", "Developer");
 				var xcode_version = GetXcodeVersion (path);
-				if (xcode_version == null)
+				if (xcode_version is null)
 					continue;
 				var version = Version.Parse (xcode_version);
 				if (version >= max_version)
 					continue;
 				if (version.Major == max_version.Major)
 					continue;
-				if (min_version != null && version < min_version)
+				if (min_version is not null && version < min_version)
 					continue;
 				with_versions.Add (new Tuple<Version, string> (version, path));
 			}
@@ -171,7 +171,7 @@ namespace Xamarin.Tests {
 					}
 					dir = Path.GetDirectoryName (dir);
 				}
-				if (tests_dir == null)
+				if (tests_dir is null)
 					throw new Exception ($"Could not find the directory 'tests'. Please run 'make' in the tests/ directory.");
 				// Run make
 				ExecutionHelper.Execute ("make", new string [] { "-C", tests_dir, "test.config" });
@@ -228,7 +228,7 @@ namespace Xamarin.Tests {
 			if (rv != 0)
 				throw new Exception ($"Failed to evaluate variable '{variable}'. Exit code: {rv}. Output:\n{output}");
 			var result = output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Where (v => v.StartsWith (variable + "=", StringComparison.Ordinal)).SingleOrDefault ();
-			if (result == null)
+			if (result is null)
 				throw new Exception ($"Could not find the variable '{variable}' to evaluate.");
 			return result.Substring (variable.Length + 1);
 		}
@@ -269,7 +269,7 @@ namespace Xamarin.Tests {
 					return File.ReadAllText (tmpfile);
 				}
 			} finally {
-				if (tmpfile != null)
+				if (tmpfile is not null)
 					File.Delete (tmpfile);
 			}
 		}
@@ -364,7 +364,7 @@ namespace Xamarin.Tests {
 
 		public static string SourceRoot {
 			get {
-				if (mt_src_root == null)
+				if (mt_src_root is null)
 					mt_src_root = RootPath;
 				return mt_src_root;
 			}
@@ -1033,7 +1033,7 @@ namespace Xamarin.Tests {
 		{
 			var rootDirectory = GetTargetDirectory (platform);
 
-			if (environment == null)
+			if (environment is null)
 				environment = new Dictionary<string, string> ();
 
 			environment ["MD_APPLE_SDK_ROOT"] = Path.GetDirectoryName (Path.GetDirectoryName (xcode_root));

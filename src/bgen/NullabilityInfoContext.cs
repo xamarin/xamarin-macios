@@ -83,7 +83,7 @@ namespace bgen {
 
 			if (memberType.IsValueType) {
 				var nullableType = Nullable.GetUnderlyingType (memberType);
-				info.ReadState = nullableType != null ? NullabilityState.Nullable : NullabilityState.NotNull;
+				info.ReadState = nullableType is not null ? NullabilityState.Nullable : NullabilityState.NotNull;
 				info.Type = memberType;
 				return info;
 			}

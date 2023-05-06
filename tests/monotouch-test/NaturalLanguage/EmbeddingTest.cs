@@ -35,7 +35,7 @@ namespace MonoTouchFixtures.NaturalLanguage {
 
 				NLEmbedding e = null;
 				Assert.DoesNotThrow (() => e = NLEmbedding.GetWordEmbedding (v), $"Throws: {v}");
-				if (e != null) {
+				if (e is not null) {
 					Assert.NotNull (e, "GetWordEmbedding");
 					Assert.Null (e.GetVector ("Xamarin"), "GetVector");
 					Assert.False (e.TryGetVector ("Xamarin", out var vector), "TryGetVector");

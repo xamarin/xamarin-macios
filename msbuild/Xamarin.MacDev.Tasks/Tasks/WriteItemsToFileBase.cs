@@ -35,7 +35,7 @@ namespace Xamarin.MacDev.Tasks {
 		public override bool Execute ()
 		{
 			var items = this.Items;
-			if (items == null)
+			if (items is null)
 				items = new ITaskItem [0];
 
 			var document = new XDocument (

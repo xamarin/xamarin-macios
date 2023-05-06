@@ -105,7 +105,7 @@ namespace Introspection {
 			try {
 				// if it return nulls then it could be a typo...
 				// or something not available in the executing version of iOS
-				bool result = g.Invoke (null, null) != null;
+				bool result = g.Invoke (null, null) is not null;
 				if (!result)
 					name = p.DeclaringType.FullName + "." + p.Name;
 				return result;
@@ -120,7 +120,7 @@ namespace Introspection {
 
 		IEnumerable<PropertyInfo> AllProperties ()
 		{
-			if (properties != null)
+			if (properties is not null)
 				return properties;
 
 			properties = new List<PropertyInfo> ();
@@ -154,7 +154,7 @@ namespace Introspection {
 					continue;
 
 				var f = p.GetCustomAttribute<FieldAttribute> ();
-				if (f == null)
+				if (f is null)
 					continue;
 
 				var name = f.SymbolName;
@@ -228,7 +228,7 @@ namespace Introspection {
 			int n = 0;
 			foreach (var p in AllProperties ()) {
 				var f = p.GetCustomAttribute<FieldAttribute> ();
-				if (f == null)
+				if (f is null)
 					continue;
 
 				string name = f.SymbolName;

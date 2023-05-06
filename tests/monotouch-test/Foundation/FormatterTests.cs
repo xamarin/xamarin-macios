@@ -23,9 +23,9 @@ namespace MonoTouchFixtures.Foundation {
 			TestRuntime.AssertXcodeVersion (6, 0);
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
-			if (dateComponentsFormatter == null)
+			if (dateComponentsFormatter is null)
 				dateComponentsFormatter = new NSDateComponentsFormatter ();
-			if (energyFormatter == null)
+			if (energyFormatter is null)
 				energyFormatter = new NSEnergyFormatter ();
 		}
 

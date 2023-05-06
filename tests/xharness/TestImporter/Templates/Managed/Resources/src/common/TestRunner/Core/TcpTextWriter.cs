@@ -42,7 +42,7 @@ namespace BCLTests.TestRunner.Core {
 								writer.WriteLine ("ping");
 							}
 							lock (lock_obj) {
-								if (result == null)
+								if (result is null)
 									result = name;
 							}
 							evt.Set ();
@@ -68,7 +68,7 @@ namespace BCLTests.TestRunner.Core {
 			if ((port < 0) || (port > ushort.MaxValue))
 				throw new ArgumentOutOfRangeException (nameof (port), $"Port must be between 0 and {ushort.MaxValue}");
 
-			if (!isTunnel && hostName == null)
+			if (!isTunnel && hostName is null)
 				throw new ArgumentNullException (nameof (hostName));
 			if (!isTunnel)
 				HostName = SelectHostName (hostName.Split (','), port);

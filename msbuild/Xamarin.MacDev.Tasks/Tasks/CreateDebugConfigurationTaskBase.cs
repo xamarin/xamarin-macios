@@ -36,7 +36,7 @@ namespace Xamarin.MacDev.Tasks {
 			var added = new HashSet<string> ();
 			var builder = new StringBuilder ();
 
-			if (ips != null) {
+			if (ips is not null) {
 				foreach (var ip in ips) {
 					if (added.Contains (ip))
 						continue;

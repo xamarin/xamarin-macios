@@ -19,7 +19,7 @@ namespace Xamarin.MacDev.Tasks {
 			try {
 				var success = taskRunner.RunAsync (this).Result;
 
-				if (success && LinkWithAttributes != null)
+				if (success && LinkWithAttributes is not null)
 					taskRunner.GetFileAsync (this, LinkWithAttributes.ItemSpec).Wait ();
 
 				return success;
@@ -36,7 +36,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
 		{
-			if (NativeReferences == null)
+			if (NativeReferences is null)
 				yield break;
 
 			foreach (var nativeRef in NativeReferences

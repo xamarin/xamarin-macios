@@ -28,22 +28,22 @@
     <WarningLevel>4</WarningLevel>
     <ExternalConsole>true</ExternalConsole>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'DotNet' ">
-    <DefineConstants>$(DefineConstants);NET</DefineConstants>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
-    <Compile Include="..\..\tools\common\Frameworks.cs">
+    <Compile Include="..\Program.cs" />
+    <Compile Include="..\..\..\tools\common\Frameworks.cs">
       <Link>Frameworks.cs</Link>
     </Compile>
-    <Compile Include="..\..\tools\common\ApplePlatform.cs">
+    <Compile Include="..\..\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>
     </Compile>
-    <Compile Include="..\..\tools\common\StringUtils.cs">
+    <Compile Include="..\..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\NullableAttributes.cs">
+      <Link>NullableAttributes.cs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

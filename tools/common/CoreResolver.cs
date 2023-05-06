@@ -125,7 +125,7 @@ namespace Xamarin.Bundler {
 		static string DirectoryGetFile (string directory, string file)
 		{
 			var files = Directory.GetFiles (directory, file);
-			if (files != null && files.Length > 0) {
+			if (files is not null && files.Length > 0) {
 				if (files.Length > 1) {
 					ErrorHelper.Warning (133, Errors.MX0133, file, Environment.NewLine, string.Join ("\n", files));
 				}

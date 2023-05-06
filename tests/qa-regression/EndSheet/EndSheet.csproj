@@ -11,6 +11,7 @@
     <RootNamespace>EndSheet</RootNamespace>
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
     <AssemblyName>EndSheet</AssemblyName>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>

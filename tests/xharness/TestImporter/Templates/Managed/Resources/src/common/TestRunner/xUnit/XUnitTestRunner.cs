@@ -79,18 +79,18 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		public void AddFilter (XUnitFilter filter)
 		{
-			if (filter != null) {
+			if (filter is not null) {
 				filters.Add (filter);
 			}
 		}
 		public void SetFilters (List<XUnitFilter> newFilters)
 		{
-			if (newFilters == null) {
+			if (newFilters is null) {
 				filters = null;
 				return;
 			}
 
-			if (filters == null)
+			if (filters is null)
 				filters = new List<XUnitFilter> ();
 
 			filters.AddRange (newFilters);
@@ -108,7 +108,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestStarting (MessageHandlerArgs<ITestStarting> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnDebug ("Test starting");
@@ -118,7 +118,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestSkipped (MessageHandlerArgs<ITestSkipped> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			SkippedTests++;
@@ -130,7 +130,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestPassed (MessageHandlerArgs<ITestPassed> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			PassedTests++;
@@ -142,7 +142,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestOutput (MessageHandlerArgs<ITestOutput> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnInfo (args.Message.Output);
@@ -150,7 +150,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestMethodStarting (MessageHandlerArgs<ITestMethodStarting> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnDebug ("Test method starting");
@@ -161,7 +161,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestMethodFinished (MessageHandlerArgs<ITestMethodFinished> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnDebug ("Test method finished");
@@ -173,7 +173,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestMethodCleanupFailure (MessageHandlerArgs<ITestMethodCleanupFailure> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnError ($"Test method cleanup failure{GetAssemblyInfo (args.Message.TestAssembly)}");
@@ -185,7 +185,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestFinished (MessageHandlerArgs<ITestFinished> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			ExecutedTests++;
@@ -197,7 +197,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestFailed (MessageHandlerArgs<ITestFailed> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			FailedTests++;
@@ -212,7 +212,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 			sb.AppendLine ();
 			LogTestOutput (args.Message, OnError, sb);
 			sb.AppendLine ();
-			if (args.Message.TestCase.Traits != null && args.Message.TestCase.Traits.Count > 0) {
+			if (args.Message.TestCase.Traits is not null && args.Message.TestCase.Traits.Count > 0) {
 				foreach (var kvp in args.Message.TestCase.Traits) {
 					string message = $"   Test trait name: {kvp.Key}";
 					OnError (message);
@@ -238,7 +238,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestCollectionStarting (MessageHandlerArgs<ITestCollectionStarting> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnInfo ($"\n{args.Message.TestCollection.DisplayName}");
@@ -249,7 +249,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestCollectionFinished (MessageHandlerArgs<ITestCollectionFinished> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnDebug ("Test collection finished");
@@ -260,7 +260,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestCollectionCleanupFailure (MessageHandlerArgs<ITestCollectionCleanupFailure> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnError ("Error during test collection cleanup");
@@ -271,7 +271,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestCleanupFailure (MessageHandlerArgs<ITestCleanupFailure> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnError ($"Test cleanup failure{GetAssemblyInfo (args.Message.TestAssembly)}");
@@ -282,7 +282,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestClassStarting (MessageHandlerArgs<ITestClassStarting> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnDiagnostic ("Test class starting");
@@ -291,7 +291,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestClassFinished (MessageHandlerArgs<ITestClassFinished> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnDebug ("Test class finished");
@@ -302,7 +302,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestClassDisposeStarting (MessageHandlerArgs<ITestClassDisposeStarting> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnDiagnostic ("Test class dispose starting");
@@ -312,7 +312,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestClassDisposeFinished (MessageHandlerArgs<ITestClassDisposeFinished> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnDiagnostic ("Test class dispose finished");
@@ -322,7 +322,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestClassConstructionStarting (MessageHandlerArgs<ITestClassConstructionStarting> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnDiagnostic ("Test class construction starting");
@@ -332,7 +332,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestClassConstructionFinished (MessageHandlerArgs<ITestClassConstructionFinished> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnDiagnostic ("Test class construction finished");
@@ -342,7 +342,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestClassCleanupFailure (MessageHandlerArgs<ITestClassCleanupFailure> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnError ($"Test class cleanup error{GetAssemblyInfo (args.Message.TestAssembly)}");
@@ -354,7 +354,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestCaseStarting (MessageHandlerArgs<ITestCaseStarting> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnDiagnostic ("Test case starting");
@@ -364,7 +364,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestCaseFinished (MessageHandlerArgs<ITestCaseFinished> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnDebug ("Test case finished executing");
@@ -375,7 +375,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestCaseCleanupFailure (MessageHandlerArgs<ITestCaseCleanupFailure> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnError ("Test case cleanup failure");
@@ -386,7 +386,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestAssemblyStarting (MessageHandlerArgs<ITestAssemblyStarting> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnInfo ($"[Test environment: {args.Message.TestEnvironment}]");
@@ -397,7 +397,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestAssemblyFinished (MessageHandlerArgs<ITestAssemblyFinished> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			TotalTests = args.Message.TestsRun; // HACK: We are not counting correctly all the tests
@@ -409,7 +409,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestAssemblyCleanupFailure (MessageHandlerArgs<ITestAssemblyCleanupFailure> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnError ("Assembly cleanup failure");
@@ -420,7 +420,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleBeforeTestStarting (MessageHandlerArgs<IBeforeTestStarting> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnDiagnostic ($"'Before' method for test '{args.Message.Test.DisplayName}' starting");
@@ -428,7 +428,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleBeforeTestFinished (MessageHandlerArgs<IBeforeTestFinished> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnDiagnostic ($"'Before' method for test '{args.Message.Test.DisplayName}' finished");
@@ -436,7 +436,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleAfterTestStarting (MessageHandlerArgs<IAfterTestStarting> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnDiagnostic ($"'After' method for test '{args.Message.Test.DisplayName}' starting");
@@ -444,7 +444,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleAfterTestFinished (MessageHandlerArgs<IAfterTestFinished> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnDiagnostic ($"'After' method for test '{args.Message.Test.DisplayName}' finished");
@@ -452,13 +452,13 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestExecutionSummary (MessageHandlerArgs<ITestExecutionSummary> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnInfo ("All tests finished");
 			OnInfo ($"    Elapsed time: {args.Message.ElapsedClockTime}");
 
-			if (args.Message.Summaries == null || args.Message.Summaries.Count == 0)
+			if (args.Message.Summaries is null || args.Message.Summaries.Count == 0)
 				return;
 
 			foreach (KeyValuePair<string, ExecutionSummary> summary in args.Message.Summaries) {
@@ -470,7 +470,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestAssemblyExecutionStarting (MessageHandlerArgs<ITestAssemblyExecutionStarting> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnInfo ($"Execution starting for assembly {args.Message.Assembly.AssemblyFilename}");
@@ -478,7 +478,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestAssemblyExecutionFinished (MessageHandlerArgs<ITestAssemblyExecutionFinished> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnInfo ($"Execution finished for assembly {args.Message.Assembly.AssemblyFilename}");
@@ -487,7 +487,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestAssemblyDiscoveryStarting (MessageHandlerArgs<ITestAssemblyDiscoveryStarting> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnInfo ($"Discovery for assembly {args.Message.Assembly.AssemblyFilename} starting");
@@ -496,7 +496,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleTestAssemblyDiscoveryFinished (MessageHandlerArgs<ITestAssemblyDiscoveryFinished> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnInfo ($"Discovery for assembly {args.Message.Assembly.AssemblyFilename} finished");
@@ -506,7 +506,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleDiagnosticMessage (MessageHandlerArgs<IDiagnosticMessage> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnDiagnostic (args.Message.Message);
@@ -514,7 +514,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleDiagnosticErrorMessage (MessageHandlerArgs<IErrorMessage> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			LogFailureInformation (args.Message);
@@ -522,7 +522,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleDiscoveryCompleteMessage (MessageHandlerArgs<IDiscoveryCompleteMessage> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			OnInfo ("Discovery complete");
@@ -530,7 +530,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void HandleDiscoveryTestCaseMessage (MessageHandlerArgs<ITestCaseDiscoveryMessage> args)
 		{
-			if (args == null || args.Message == null)
+			if (args is null || args.Message is null)
 				return;
 
 			ITestCase singleTestCase = args.Message.TestCase;
@@ -545,11 +545,11 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void ReportTestCases (string verb, IEnumerable<ITestCase> testCases, Action<string> log = null, Func<ITestCase, bool> ignore = null)
 		{
-			if (testCases == null)
+			if (testCases is null)
 				return;
 
 			foreach (ITestCase tc in testCases) {
-				if (ignore != null && ignore (tc))
+				if (ignore is not null && ignore (tc))
 					continue;
 				ReportTestCase (verb, tc, log);
 			}
@@ -557,7 +557,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void ReportTestCase (string verb, ITestCase testCase, Action<string> log = null)
 		{
-			if (testCase == null)
+			if (testCase is null)
 				return;
 
 			EnsureLogger (log) ($"{verb} test case: {testCase.DisplayName}");
@@ -565,7 +565,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void LogAssemblyInformation (ITestAssemblyMessage message, Action<string> log = null, StringBuilder sb = null)
 		{
-			if (message == null)
+			if (message is null)
 				return;
 
 			do_log ($"[Assembly name: {message.TestAssembly.Assembly.Name}]", log, sb);
@@ -574,7 +574,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void LogFailureInformation (IFailureInformation info, Action<string> log = null, StringBuilder sb = null)
 		{
-			if (info == null)
+			if (info is null)
 				return;
 
 			string message = ExceptionUtility.CombineMessages (info);
@@ -655,11 +655,11 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		void LogSourceInformation (ISourceInformation source, Action<string> log = null, StringBuilder sb = null)
 		{
-			if (source == null || String.IsNullOrEmpty (source.FileName))
+			if (source is null || String.IsNullOrEmpty (source.FileName))
 				return;
 
 			string location = source.FileName;
-			if (source.LineNumber != null && source.LineNumber >= 0)
+			if (source.LineNumber is not null && source.LineNumber >= 0)
 				location += $":{source.LineNumber}";
 
 			do_log ($"   Source: {location}", log, sb);
@@ -678,7 +678,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 		{
 			log = EnsureLogger (log);
 
-			if (sb != null)
+			if (sb is not null)
 				sb.Append (message);
 			log (message);
 		}
@@ -703,26 +703,26 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		public override async Task Run (IEnumerable<TestAssemblyInfo> testAssemblies)
 		{
-			if (testAssemblies == null)
+			if (testAssemblies is null)
 				throw new ArgumentNullException (nameof (testAssemblies));
 
-			if (filters != null && filters.Count > 0) {
+			if (filters is not null && filters.Count > 0) {
 				do_log ("Configured filters:");
 				foreach (XUnitFilter filter in filters) {
 					do_log ($"  {filter}");
 				}
 			}
 
-			List<XUnitFilter> assemblyFilters = filters?.Where (sel => sel != null && sel.FilterType == XUnitFilterType.Assembly)?.ToList ();
-			if (assemblyFilters == null || assemblyFilters.Count == 0) {
+			List<XUnitFilter> assemblyFilters = filters?.Where (sel => sel is not null && sel.FilterType == XUnitFilterType.Assembly)?.ToList ();
+			if (assemblyFilters is null || assemblyFilters.Count == 0) {
 				runAssemblyByDefault = true;
 				assemblyFilters = null;
 			} else
-				runAssemblyByDefault = assemblyFilters.Any (f => f != null && f.Exclude);
+				runAssemblyByDefault = assemblyFilters.Any (f => f is not null && f.Exclude);
 
 			assembliesElement = new XElement ("assemblies");
 			foreach (TestAssemblyInfo assemblyInfo in testAssemblies) {
-				if (assemblyInfo == null || assemblyInfo.Assembly == null || !ShouldRunAssembly (assemblyInfo))
+				if (assemblyInfo is null || assemblyInfo.Assembly is null || !ShouldRunAssembly (assemblyInfo))
 					continue;
 
 				if (String.IsNullOrEmpty (assemblyInfo.FullPath)) {
@@ -740,7 +740,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 					OnWarning ($"Exception is '{ex}'");
 				} finally {
 					OnAssemblyFinish (assemblyInfo.Assembly);
-					if (assemblyElement != null)
+					if (assemblyElement is not null)
 						assembliesElement.Add (assemblyElement);
 				}
 			}
@@ -750,10 +750,10 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 			bool ShouldRunAssembly (TestAssemblyInfo assemblyInfo)
 			{
-				if (assemblyInfo == null)
+				if (assemblyInfo is null)
 					return false;
 
-				if (assemblyFilters == null)
+				if (assemblyFilters is null)
 					return true;
 
 				foreach (XUnitFilter filter in assemblyFilters) {
@@ -795,7 +795,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		public override string WriteResultsToFile (Jargon jargon)
 		{
-			if (assembliesElement == null)
+			if (assembliesElement is null)
 				return String.Empty;
 			// remove all the empty nodes
 			assembliesElement.Descendants ().Where (e => e.Name == "collection" && !e.Descendants ().Any ()).Remove ();
@@ -819,7 +819,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 		}
 		public override void WriteResultsToFile (TextWriter writer, Jargon jargon)
 		{
-			if (assembliesElement == null)
+			if (assembliesElement is null)
 				return;
 			// remove all the empty nodes
 			assembliesElement.Descendants ().Where (e => e.Name == "collection" && !e.Descendants ().Any ()).Remove ();
@@ -851,10 +851,10 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 		{
 			var xmlTransform = new System.Xml.Xsl.XslCompiledTransform ();
 			var name = GetType ().Assembly.GetManifestResourceNames ().Where (a => a.EndsWith (xsltResourceName, StringComparison.Ordinal)).FirstOrDefault ();
-			if (name == null)
+			if (name is null)
 				return;
 			using (var xsltStream = GetType ().Assembly.GetManifestResourceStream (name)) {
-				if (xsltStream == null) {
+				if (xsltStream is null) {
 					throw new Exception ($"Stream with name {name} cannot be found! We have {GetType ().Assembly.GetManifestResourceNames () [0]}");
 				}
 				// add the extension so that we can get the hash from the name of the test
@@ -874,7 +874,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		protected virtual Stream GetConfigurationFileStream (Assembly assembly)
 		{
-			if (assembly == null)
+			if (assembly is null)
 				throw new ArgumentNullException (nameof (assembly));
 
 			string path = assembly.Location?.Trim ();
@@ -890,11 +890,11 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		protected virtual TestAssemblyConfiguration GetConfiguration (Assembly assembly)
 		{
-			if (assembly == null)
+			if (assembly is null)
 				throw new ArgumentNullException (nameof (assembly));
 
 			Stream configStream = GetConfigurationFileStream (assembly);
-			if (configStream != null) {
+			if (configStream is not null) {
 				using (configStream) {
 					return ConfigReader.Load (configStream);
 				}
@@ -905,7 +905,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		protected virtual ITestFrameworkDiscoveryOptions GetFrameworkOptionsForDiscovery (TestAssemblyConfiguration configuration)
 		{
-			if (configuration == null)
+			if (configuration is null)
 				throw new ArgumentNullException (nameof (configuration));
 
 			return TestFrameworkOptions.ForDiscovery (configuration);
@@ -913,7 +913,7 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		protected virtual ITestFrameworkExecutionOptions GetFrameworkOptionsForExecution (TestAssemblyConfiguration configuration)
 		{
-			if (configuration == null)
+			if (configuration is null)
 				throw new ArgumentNullException (nameof (configuration));
 
 			return TestFrameworkOptions.ForExecution (configuration);
@@ -931,14 +931,14 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 					Logger.OnDebug ($"Test discovery in assembly '{assembly}' completed");
 					discoverySink.Finished.WaitOne ();
 
-					if (discoverySink.TestCases == null || discoverySink.TestCases.Count == 0) {
+					if (discoverySink.TestCases is null || discoverySink.TestCases.Count == 0) {
 						Logger.Info ("No test cases discovered");
 						return null;
 					}
 
 					TotalTests += discoverySink.TestCases.Count;
 					List<ITestCase> testCases;
-					if (filters != null && filters.Count > 0) {
+					if (filters is not null && filters.Count > 0) {
 						testCases = discoverySink.TestCases.Where (tc => IsIncluded (tc)).ToList ();
 						FilteredTests += discoverySink.TestCases.Count - testCases.Count;
 					} else
@@ -964,20 +964,20 @@ namespace Xamarin.iOS.UnitTests.XUnit {
 
 		bool IsIncluded (ITestCase testCase)
 		{
-			if (testCase == null)
+			if (testCase is null)
 				return false;
 
-			bool haveTraits = testCase.Traits != null && testCase.Traits.Count > 0;
+			bool haveTraits = testCase.Traits is not null && testCase.Traits.Count > 0;
 			foreach (XUnitFilter filter in filters) {
 				List<string> values;
-				if (filter == null)
+				if (filter is null)
 					continue;
 
 				if (filter.FilterType == XUnitFilterType.Trait) {
 					if (!haveTraits || !testCase.Traits.TryGetValue (filter.SelectorName, out values))
 						continue;
 
-					if (values == null || values.Count == 0) {
+					if (values is null || values.Count == 0) {
 						// We have no values and the filter doesn't specify one - that means we match on
 						// the trait name only.
 						if (String.IsNullOrEmpty (filter.SelectorValue))

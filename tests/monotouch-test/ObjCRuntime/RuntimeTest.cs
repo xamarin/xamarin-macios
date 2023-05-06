@@ -326,21 +326,21 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				while (broken == 0 && watch.ElapsedMilliseconds < 10000) {
 					// try getting using Systen.String key
 					string hello = getter1 ("Hello");
-					if (hello == null)
+					if (hello is null)
 						broken = 1;
 
 					string bye = getter1 ("Bye");
-					if (bye == null)
+					if (bye is null)
 						broken = 2;
 
 					// try getting using NSString key
 					string nHello = getter2 (new NSString (@"Hello"));
 					string nBye = getter2 (new NSString (@"Bye"));
 
-					if (nHello == null)
+					if (nHello is null)
 						broken = 3;
 
-					if (nBye == null)
+					if (nBye is null)
 						broken = 4;
 
 					count++;
@@ -798,7 +798,7 @@ Additional information:
 				GC.Collect ();
 				GC.WaitForPendingFinalizers ();
 				for (var i = 0; i < counter; i++) {
-					if (handles [i].Target == null)
+					if (handles [i].Target is null)
 						return true;
 				}
 				return false;
