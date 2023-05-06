@@ -177,7 +177,7 @@ namespace Xamarin.Bundler {
 		string xamarin_mac_prefix;
 		public string XamarinMacPrefix {
 			get {
-				if (xamarin_mac_prefix == null)
+				if (xamarin_mac_prefix is null)
 					xamarin_mac_prefix = Driver.GetFrameworkCurrentDirectory (Driver.App);
 				return xamarin_mac_prefix;
 			}

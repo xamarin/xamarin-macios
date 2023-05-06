@@ -26,7 +26,7 @@ namespace UIKit {
 	
 			public virtual void SetTitleTextAttributes (UITextAttributes attributes)
 			{
-				if (attributes == null)
+				if (attributes is null)
 					throw new ArgumentNullException ("attributes");
 					
 				_TitleTextAttributes = attributes.ToDictionary ();

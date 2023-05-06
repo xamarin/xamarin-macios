@@ -14,7 +14,7 @@ namespace Xamarin.Mac.Tests {
 		public void NSPasteboardTests_WriteObjectTests ()
 		{
 			NSPasteboard b = NSPasteboard.CreateWithUniqueName ();
-			if (b == null)
+			if (b is null)
 				Assert.Inconclusive ("NSPasteboard could not be provided by the OS.");
 			b.WriteObjects (new INSPasteboardWriting [] { (NSString) "asfd" });
 #if NET

@@ -1,25 +1,34 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Build.Framework;
+using Microsoft.Build.Tasks;
 using Microsoft.Build.Utilities;
 
-namespace ILLink.Tasks {
-	public class ILLinkBase : ILLink {
-		public string SessionId { get; set; }
+using Xamarin.Messaging.Build.Client;
 
-		public ITaskItem [] DebugSymbols { get; set; }
+#nullable enable
+
+namespace Xamarin.iOS.Tasks {
+	public class ILLink : global::ILLink.Tasks.ILLink {
+		public string SessionId { get; set; } = string.Empty;
+
+		public ITaskItem [] DebugSymbols { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
-		public string LinkerItemsDirectory { get; set; }
+		public string LinkerItemsDirectory { get; set; } = string.Empty;
 
 		[Output]
-		public ITaskItem [] LinkerOutputItems { get; set; }
+		public ITaskItem [] LinkerOutputItems { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Output]
-		public ITaskItem [] LinkedItems { get; set; }
+		public ITaskItem [] LinkedItems { get; set; } = Array.Empty<ITaskItem> ();
 
 		public override bool Execute ()
 		{
+			if (this.ShouldExecuteRemotely (SessionId))
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			var result = base.Execute ();
 
 			var linkerItems = new List<ITaskItem> ();
@@ -41,6 +50,14 @@ namespace ILLink.Tasks {
 			LinkedItems = linkedItems.ToArray ();
 
 			return result;
+		}
+
+		public override void Cancel ()
+		{
+			if (this.ShouldExecuteRemotely (SessionId))
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+			else
+				base.Cancel ();
 		}
 	}
 }

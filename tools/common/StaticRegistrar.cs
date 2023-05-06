@@ -220,7 +220,7 @@ namespace Registrar {
 
 		public Dictionary<ICustomAttribute, MethodDefinition> ProtocolMemberMethodMap {
 			get {
-				if (protocol_member_method_map == null) {
+				if (protocol_member_method_map is null) {
 					if (App.Platform != ApplePlatform.MacOSX && App.IsExtension && !App.IsWatchExtension && App.IsCodeShared) {
 						protocol_member_method_map = Target.ContainerTarget.StaticRegistrar.ProtocolMemberMethodMap;
 					} else {
@@ -238,9 +238,9 @@ namespace Registrar {
 
 		public static bool ParametersMatch (IList<ParameterDefinition> a, TypeReference [] b)
 		{
-			if (a == null && b == null)
+			if (a is null && b is null)
 				return true;
-			if (a == null ^ b == null)
+			if (a is null ^ b is null)
 				return false;
 
 			if (a.Count != b.Length)
@@ -331,10 +331,10 @@ namespace Registrar {
 
 		void CollectInterfaces (ref List<TypeDefinition> ifaces, TypeDefinition type)
 		{
-			if (type == null)
+			if (type is null)
 				return;
 
-			if (type.BaseType != null)
+			if (type.BaseType is not null)
 				CollectInterfaces (ref ifaces, type.BaseType.Resolve ());
 
 			if (!type.HasInterfaces)
@@ -347,7 +347,7 @@ namespace Registrar {
 				if (!HasAttribute (itd, Registrar.Foundation, Registrar.StringConstants.ProtocolAttribute))
 					continue;
 
-				if (ifaces == null) {
+				if (ifaces is null) {
 					ifaces = new List<TypeDefinition> ();
 				} else if (ifaces.Contains (itd)) {
 					continue;
@@ -366,7 +366,7 @@ namespace Registrar {
 
 			CollectInterfaces (ref ifaces, td);
 
-			if (ifaces == null)
+			if (ifaces is null)
 				return null;
 
 			iface_methods = new List<MethodDefinition> ();
@@ -401,7 +401,7 @@ namespace Registrar {
 						iface_methods.Remove (ifaceMethodDef);
 
 						List<MethodDefinition> list;
-						if (rv == null) {
+						if (rv is null) {
 							rv = new Dictionary<MethodDefinition, List<MethodDefinition>> ();
 							rv [impl] = list = new List<MethodDefinition> ();
 						} else if (!rv.TryGetValue (impl, out list)) {
@@ -422,7 +422,7 @@ namespace Registrar {
 						continue;
 
 					List<MethodDefinition> list;
-					if (rv == null) {
+					if (rv is null) {
 						rv = new Dictionary<MethodDefinition, List<MethodDefinition>> ();
 						rv [impl] = list = new List<MethodDefinition> ();
 					} else if (!rv.TryGetValue (impl, out list)) {
@@ -447,14 +447,14 @@ namespace Registrar {
 		public string ToObjCType (TypeReference type)
 		{
 			var definition = type as TypeDefinition;
-			if (definition != null)
+			if (definition is not null)
 				return ToObjCType (definition);
 
 			if (type is TypeSpecification)
 				return ToObjCType (((TypeSpecification) type).ElementType) + " *";
 
 			definition = type.Resolve ();
-			if (definition != null)
+			if (definition is not null)
 				return ToObjCType (definition);
 
 			return "void *";
@@ -490,7 +490,7 @@ namespace Registrar {
 					return "id";
 
 				MethodDefinition invokeMethod = type.Methods.SingleOrDefault (method => method.Name == "Invoke");
-				if (invokeMethod == null)
+				if (invokeMethod is null)
 					return "id";
 
 				StringBuilder builder = new StringBuilder ();
@@ -516,11 +516,11 @@ namespace Registrar {
 
 		public static bool IsDelegate (TypeDefinition type)
 		{
-			while (type != null) {
+			while (type is not null) {
 				if (type.FullName == "System.Delegate")
 					return true;
 
-				type = type.BaseType != null ? type.BaseType.Resolve () : null;
+				type = type.BaseType is not null ? type.BaseType.Resolve () : null;
 			}
 
 			return false;
@@ -540,7 +540,7 @@ namespace Registrar {
 				return ResolveType (git.ElementType);
 			} else {
 				var td = tr.Resolve ();
-				if (td == null)
+				if (td is null)
 					td = LinkContext?.GetLinkedAwayType (tr, out _);
 				return td;
 			}
@@ -549,7 +549,7 @@ namespace Registrar {
 		public bool IsNativeObject (TypeReference tr)
 		{
 			var gp = tr as GenericParameter;
-			if (gp != null) {
+			if (gp is not null) {
 				if (gp.HasConstraints) {
 					foreach (var constraint in gp.Constraints) {
 						if (IsNativeObject (constraint.ConstraintType))
@@ -561,14 +561,14 @@ namespace Registrar {
 
 			var type = ResolveType (tr);
 
-			while (type != null) {
+			while (type is not null) {
 				if (type.HasInterfaces) {
 					foreach (var iface in type.Interfaces)
 						if (iface.InterfaceType.Is (Registrar.ObjCRuntime, Registrar.StringConstants.INativeObject))
 							return true;
 				}
 
-				type = type.BaseType != null ? type.BaseType.Resolve () : null;
+				type = type.BaseType is not null ? type.BaseType.Resolve () : null;
 			}
 
 			return tr.Is (Registrar.ObjCRuntime, Registrar.StringConstants.INativeObject);
@@ -594,7 +594,7 @@ namespace Registrar {
 
 		Dictionary<IMetadataTokenProvider, object> AvailabilityAnnotations {
 			get {
-				if (availability_annotations == null)
+				if (availability_annotations is null)
 					availability_annotations = LinkContext?.GetAllCustomAttributes ("Availability");
 				return availability_annotations;
 			}
@@ -688,7 +688,7 @@ namespace Registrar {
 				if (method.Name != name)
 					continue;
 
-				if (list == null)
+				if (list is null)
 					list = new List<MethodDefinition> ();
 
 				list.Add (method);
@@ -783,7 +783,7 @@ namespace Registrar {
 					return App.Is64Build;
 
 				// Target can be null when mmp is run for multiple assemblies
-				return Target != null ? Target.Is64Build : App.Is64Build;
+				return Target is not null ? Target.Is64Build : App.Is64Build;
 			}
 		}
 
@@ -948,9 +948,9 @@ namespace Registrar {
 
 		protected override bool IsStatic (PropertyDefinition property)
 		{
-			if (property.GetMethod != null)
+			if (property.GetMethod is not null)
 				return property.GetMethod.IsStatic;
-			if (property.SetMethod != null)
+			if (property.SetMethod is not null)
 				return property.SetMethod.IsStatic;
 			return false;
 		}
@@ -958,7 +958,7 @@ namespace Registrar {
 		protected override TypeReference GetElementType (TypeReference type)
 		{
 			var ts = type as TypeSpecification;
-			if (ts != null) {
+			if (ts is not null) {
 				// TypeSpecification.GetElementType calls GetElementType on the element type, thus unwinding multiple element types (which we don't want).
 				// By fetching the ElementType property we only unwind one level.
 				// This matches what the dynamic registrar (System.Reflection) does.
@@ -981,7 +981,7 @@ namespace Registrar {
 		TypeReference system_void;
 		protected override TypeReference GetSystemVoidType ()
 		{
-			if (system_void != null)
+			if (system_void is not null)
 				return system_void;
 
 			// find corlib
@@ -996,13 +996,13 @@ namespace Registrar {
 				}
 			}
 
-			if (corlib == null)
+			if (corlib is null)
 				corlib = Resolver.Resolve (AssemblyNameReference.Parse (corlib_name), new ReaderParameters ());
 
-			if (corlib != null)
+			if (corlib is not null)
 				candidates.Add (corlib);
 
-			if (Resolver != null)
+			if (Resolver is not null)
 				candidates.AddRange (Resolver.ToResolverCache ().Values.Cast<AssemblyDefinition> ());
 
 			foreach (var candidate in candidates) {
@@ -1027,7 +1027,7 @@ namespace Registrar {
 
 		bool IsOverride (PropertyDefinition property)
 		{
-			if (property.GetMethod != null)
+			if (property.GetMethod is not null)
 				return IsOverride (property.GetMethod);
 			return IsOverride (property.SetMethod);
 		}
@@ -1046,7 +1046,7 @@ namespace Registrar {
 		protected override bool IsValueType (TypeReference type)
 		{
 			var td = type.Resolve ();
-			return td != null && td.IsValueType;
+			return td is not null && td.IsValueType;
 		}
 
 		bool IsNativeEnum (TypeDefinition td)
@@ -1056,14 +1056,14 @@ namespace Registrar {
 
 		protected override bool IsNullable (TypeReference type)
 		{
-			return GetNullableType (type) != null;
+			return GetNullableType (type) is not null;
 		}
 
 		protected override bool IsEnum (TypeReference tr, out bool isNativeEnum)
 		{
 			var type = tr.Resolve ();
 			isNativeEnum = false;
-			if (type == null)
+			if (type is null)
 				return false;
 			if (type.IsEnum)
 				isNativeEnum = IsNativeEnum (type);
@@ -1073,7 +1073,7 @@ namespace Registrar {
 		protected override bool IsArray (TypeReference type, out int rank)
 		{
 			var arrayType = type as ArrayType;
-			if (arrayType == null) {
+			if (arrayType is null) {
 				rank = 0;
 				return false;
 			}
@@ -1124,7 +1124,7 @@ namespace Registrar {
 
 		protected override TypeReference [] GetLinkedAwayInterfaces (TypeReference type)
 		{
-			if (LinkContext == null)
+			if (LinkContext is null)
 				return null;
 
 			if (LinkContext.ProtocolImplementations.TryGetValue (type.Resolve (), out var linkedAwayInterfaces) != true)
@@ -1139,7 +1139,7 @@ namespace Registrar {
 		protected override TypeReference GetGenericTypeDefinition (TypeReference type)
 		{
 			var git = type as GenericInstanceType;
-			if (git != null)
+			if (git is not null)
 				return git.ElementType;
 			return type;
 		}
@@ -1149,7 +1149,7 @@ namespace Registrar {
 			if (a == b)
 				return true;
 
-			if (a == null ^ b == null)
+			if (a is null ^ b is null)
 				return false;
 
 			return TypeMatch (a, b);
@@ -1160,7 +1160,7 @@ namespace Registrar {
 			constrained_type = null;
 
 			var gp = type as GenericParameter;
-			if (gp != null) {
+			if (gp is not null) {
 				if (!gp.HasConstraints)
 					return false;
 				foreach (var c in gp.Constraints) {
@@ -1173,7 +1173,7 @@ namespace Registrar {
 			}
 
 			var git = type as GenericInstanceType;
-			if (git != null) {
+			if (git is not null) {
 				var rv = true;
 				if (git.HasGenericArguments) {
 					var newGit = new GenericInstanceType (git.ElementType);
@@ -1188,27 +1188,27 @@ namespace Registrar {
 			}
 
 			var el = type as ArrayType;
-			if (el != null) {
+			if (el is not null) {
 				var rv = VerifyIsConstrainedToNSObject (el.ElementType, out constrained_type);
-				if (constrained_type == null)
+				if (constrained_type is null)
 					return rv;
 				constrained_type = new ArrayType (constrained_type, el.Rank);
 				return rv;
 			}
 
 			var rt = type as ByReferenceType;
-			if (rt != null) {
+			if (rt is not null) {
 				var rv = VerifyIsConstrainedToNSObject (rt.ElementType, out constrained_type);
-				if (constrained_type == null)
+				if (constrained_type is null)
 					return rv;
 				constrained_type = new ByReferenceType (constrained_type);
 				return rv;
 			}
 
 			var tr = type as PointerType;
-			if (tr != null) {
+			if (tr is not null) {
 				var rv = VerifyIsConstrainedToNSObject (tr.ElementType, out constrained_type);
-				if (constrained_type == null)
+				if (constrained_type is null)
 					return rv;
 				constrained_type = new PointerType (constrained_type);
 				return rv;
@@ -1225,7 +1225,7 @@ namespace Registrar {
 		protected override TypeReference GetBaseType (TypeReference tr)
 		{
 			var gp = tr as GenericParameter;
-			if (gp != null) {
+			if (gp is not null) {
 				foreach (var constr in gp.Constraints) {
 					if (constr.ConstraintType.Resolve ().IsClass) {
 						return constr.ConstraintType;
@@ -1234,7 +1234,7 @@ namespace Registrar {
 				return null;
 			}
 			var type = ResolveType (tr);
-			if (type.BaseType == null)
+			if (type.BaseType is null)
 				return null;
 
 			return type.BaseType.Resolve ();
@@ -1264,7 +1264,7 @@ namespace Registrar {
 
 		protected override string GetParameterName (MethodDefinition method, int parameter_index)
 		{
-			if (method == null)
+			if (method is null)
 				return "?";
 			return method.Parameters [parameter_index].Name;
 		}
@@ -1360,7 +1360,7 @@ namespace Registrar {
 			switch (attrib.ConstructorArguments.Count) {
 			case 1:
 				var t1 = (TypeReference) attrib.ConstructorArguments [0].Value;
-				return new CategoryAttribute (t1 != null ? t1.Resolve () : null) { Name = name };
+				return new CategoryAttribute (t1 is not null ? t1.Resolve () : null) { Name = name };
 			default:
 				throw ErrorHelper.CreateError (4124, Errors.MT4124, "CategoryAttribute", type.FullName);
 			}
@@ -1521,7 +1521,7 @@ namespace Registrar {
 						rv.ReturnTypeDelegateProxy = (TypeReference) prop.Argument.Value;
 						break;
 					case "ParameterType":
-						if (prop.Argument.Value != null) {
+						if (prop.Argument.Value is not null) {
 							var arr = (CustomAttributeArgument []) prop.Argument.Value;
 							rv.ParameterType = new TypeReference [arr.Length];
 							for (int i = 0; i < arr.Length; i++) {
@@ -1530,7 +1530,7 @@ namespace Registrar {
 						}
 						break;
 					case "ParameterByRef":
-						if (prop.Argument.Value != null) {
+						if (prop.Argument.Value is not null) {
 							var arr = (CustomAttributeArgument []) prop.Argument.Value;
 							rv.ParameterByRef = new bool [arr.Length];
 							for (int i = 0; i < arr.Length; i++) {
@@ -1539,7 +1539,7 @@ namespace Registrar {
 						}
 						break;
 					case "ParameterBlockProxy":
-						if (prop.Argument.Value != null) {
+						if (prop.Argument.Value is not null) {
 							var arr = (CustomAttributeArgument []) prop.Argument.Value;
 							rv.ParameterBlockProxy = new TypeReference [arr.Length];
 							for (int i = 0; i < arr.Length; i++) {
@@ -1849,7 +1849,7 @@ namespace Registrar {
 		protected override IList<AdoptsAttribute> GetAdoptsAttributes (TypeReference type)
 		{
 			var attributes = GetCustomAttributes (type.Resolve (), ObjCRuntime, "AdoptsAttribute");
-			if (attributes == null || !attributes.Any ())
+			if (attributes is null || !attributes.Any ())
 				return null;
 
 			var rv = new List<AdoptsAttribute> ();
@@ -1892,7 +1892,7 @@ namespace Registrar {
 
 		protected override BindAsAttribute GetBindAsAttribute (PropertyDefinition property)
 		{
-			if (property == null)
+			if (property is null)
 				return null;
 
 			property = GetBasePropertyInTypeHierarchy (property);
@@ -1905,7 +1905,7 @@ namespace Registrar {
 
 		protected override BindAsAttribute GetBindAsAttribute (MethodDefinition method, int parameter_index)
 		{
-			if (method == null)
+			if (method is null)
 				return null;
 
 			method = GetBaseMethodInTypeHierarchy (method);
@@ -1943,7 +1943,7 @@ namespace Registrar {
 		public override TypeReference GetNullableType (TypeReference type)
 		{
 			var git = type as GenericInstanceType;
-			if (git == null)
+			if (git is null)
 				return null;
 			if (!git.GetElementType ().Is ("System", "Nullable`1"))
 				return null;
@@ -1973,7 +1973,7 @@ namespace Registrar {
 			bool is_variadic = false;
 			var attribute = GetExportAttribute (candidate);
 
-			if (attribute == null)
+			if (attribute is null)
 				return null;
 
 			if (attribute.HasProperties) {
@@ -2019,9 +2019,9 @@ namespace Registrar {
 				return property;
 
 			var @base = GetBaseType (property.DeclaringType);
-			while (@base != null) {
+			while (@base is not null) {
 				PropertyDefinition base_property = TryMatchProperty (@base.Resolve (), property);
-				if (base_property != null)
+				if (base_property is not null)
 					return GetBasePropertyInTypeHierarchy (base_property) ?? base_property;
 
 				@base = GetBaseType (@base);
@@ -2047,21 +2047,21 @@ namespace Registrar {
 			if (candidate.Name != property.Name)
 				return false;
 
-			if (candidate.GetMethod != null) {
-				if (property.GetMethod == null)
+			if (candidate.GetMethod is not null) {
+				if (property.GetMethod is null)
 					return false;
 				if (!MethodMatch (candidate.GetMethod, property.GetMethod))
 					return false;
-			} else if (property.GetMethod != null) {
+			} else if (property.GetMethod is not null) {
 				return false;
 			}
 
-			if (candidate.SetMethod != null) {
-				if (property.SetMethod == null)
+			if (candidate.SetMethod is not null) {
+				if (property.SetMethod is null)
 					return false;
 				if (!MethodMatch (candidate.SetMethod, property.SetMethod))
 					return false;
-			} else if (property.SetMethod != null) {
+			} else if (property.SetMethod is not null) {
 				return false;
 			}
 
@@ -2074,9 +2074,9 @@ namespace Registrar {
 				return method;
 
 			var @base = GetBaseType (method.DeclaringType);
-			while (@base != null) {
+			while (@base is not null) {
 				MethodDefinition base_method = TryMatchMethod (@base.Resolve (), method);
-				if (base_method != null)
+				if (base_method is not null)
 					return GetBaseMethodInTypeHierarchy (base_method) ?? base_method;
 
 				@base = GetBaseType (@base);
@@ -2132,9 +2132,9 @@ namespace Registrar {
 				return false;
 
 			string aname;
-			if (type.Module == null) {
+			if (type.Module is null) {
 				// This type was probably linked away
-				if (LinkContext.GetLinkedAwayType (type, out var module) != null) {
+				if (LinkContext.GetLinkedAwayType (type, out var module) is not null) {
 					aname = module.Assembly.Name.Name;
 				} else {
 					aname = string.Empty;
@@ -2151,7 +2151,7 @@ namespace Registrar {
 
 		static bool IsLinkedAway (TypeReference tr)
 		{
-			return tr.Module == null;
+			return tr.Module is null;
 		}
 
 		void CheckNamespace (ObjCType objctype, List<Exception> exceptions)
@@ -2175,7 +2175,7 @@ namespace Registrar {
 			Framework framework;
 			if (Driver.GetFrameworks (App).TryGetValue (ns, out framework)) {
 				if (framework.Version > App.SdkVersion) {
-					if (reported_frameworks == null)
+					if (reported_frameworks is null)
 						reported_frameworks = new HashSet<string> ();
 					if (!reported_frameworks.Contains (framework.Name)) {
 						exceptions.Add (ErrorHelper.CreateError (4134,
@@ -2422,7 +2422,7 @@ namespace Registrar {
 					if (field.IsStatic)
 						continue;
 					var fieldType = field.FieldType.Resolve ();
-					if (fieldType == null)
+					if (fieldType is null)
 						throw ErrorHelper.CreateError (App, 4111, inMember, Errors.MT4111, structure.FullName, descriptiveMethodName);
 					if (!fieldType.IsValueType)
 						throw ErrorHelper.CreateError (App, 4161, inMember, Errors.MT4161, root_structure.FullName, field.Name, fieldType.FullName);
@@ -2480,13 +2480,13 @@ namespace Registrar {
 		string ToObjCParameterType (TypeReference type, string descriptiveMethodName, List<Exception> exceptions, MemberReference inMethod, bool delegateToBlockType = false)
 		{
 			GenericParameter gp = type as GenericParameter;
-			if (gp != null)
+			if (gp is not null)
 				return "id";
 
 			var reftype = type as ByReferenceType;
-			if (reftype != null) {
+			if (reftype is not null) {
 				string res = ToObjCParameterType (GetElementType (reftype), descriptiveMethodName, exceptions, inMethod);
-				if (res == null)
+				if (res is null)
 					return null;
 				return res + "*";
 			}
@@ -2495,11 +2495,11 @@ namespace Registrar {
 				return ToObjCParameterType (pt.ElementType, descriptiveMethodName, exceptions, inMethod, delegateToBlockType) + "*";
 
 			ArrayType arrtype = type as ArrayType;
-			if (arrtype != null)
+			if (arrtype is not null)
 				return "NSArray *";
 
 			var git = type as GenericInstanceType;
-			if (git != null && IsNSObject (type)) {
+			if (git is not null && IsNSObject (type)) {
 				var sb = new StringBuilder ();
 				var elementType = git.GetElementType ();
 
@@ -2697,7 +2697,7 @@ namespace Registrar {
 
 		void WriteFullName (StringBuilder sb, TypeReference type)
 		{
-			if (type.DeclaringType != null) {
+			if (type.DeclaringType is not null) {
 				WriteFullName (sb, type.DeclaringType);
 				sb.Append ('+');
 			} else if (!string.IsNullOrEmpty (type.Namespace)) {
@@ -2710,7 +2710,7 @@ namespace Registrar {
 		protected override string GetAssemblyQualifiedName (TypeReference type)
 		{
 			var gp = type as GenericParameter;
-			if (gp != null)
+			if (gp is not null)
 				return gp.Name;
 
 			var sb = new StringBuilder ();
@@ -2718,7 +2718,7 @@ namespace Registrar {
 			WriteFullName (sb, type);
 
 			var git = type as GenericInstanceType;
-			if (git != null) {
+			if (git is not null) {
 				sb.Append ('[');
 				for (int i = 0; i < git.GenericArguments.Count; i++) {
 					if (i > 0)
@@ -2731,7 +2731,7 @@ namespace Registrar {
 			}
 
 			var td = type.Resolve ();
-			if (td != null)
+			if (td is not null)
 				sb.Append (", ").Append (td.Module.Assembly.Name.Name);
 
 			return sb.ToString ();
@@ -2743,17 +2743,17 @@ namespace Registrar {
 			for (int i = 0; i < value.Length; i++) {
 				char c = value [i];
 				if (c > 127) {
-					if (sb == null) {
+					if (sb is null) {
 						sb = new StringBuilder (value.Length);
 						sb.Append (value, 0, i);
 					}
 					sb.Append ("\\u");
 					sb.Append (((int) c).ToString ("x4"));
-				} else if (sb != null) {
+				} else if (sb is not null) {
 					sb.Append (c);
 				}
 			}
-			return sb != null ? sb.ToString () : value;
+			return sb is not null ? sb.ToString () : value;
 		}
 
 		static bool IsTypeCore (ObjCType type, string nsToMatch)
@@ -2761,7 +2761,7 @@ namespace Registrar {
 			var ns = type.Type.Namespace;
 
 			var t = type.Type;
-			while (string.IsNullOrEmpty (ns) && t.DeclaringType != null) {
+			while (string.IsNullOrEmpty (ns) && t.DeclaringType is not null) {
 				t = t.DeclaringType;
 				ns = t.Namespace;
 			}
@@ -2934,7 +2934,7 @@ namespace Registrar {
 				}
 
 
-				if (@class.IsProtocol && @class.ProtocolWrapperType != null) {
+				if (@class.IsProtocol && @class.ProtocolWrapperType is not null) {
 					if (token_ref == INVALID_TOKEN_REF && !TryCreateTokenReference (@class.Type, TokenType.TypeDef, out token_ref, exceptions))
 						continue;
 					if (!TryCreateTokenReference (@class.ProtocolWrapperType, TokenType.TypeDef, out var protocol_wrapper_type_ref, exceptions))
@@ -2948,11 +2948,11 @@ namespace Registrar {
 				if (@class.IsWrapper && isPlatformType)
 					continue;
 
-				if (@class.Methods == null && isPlatformType && !@class.IsProtocol && !@class.IsCategory)
+				if (@class.Methods is null && isPlatformType && !@class.IsProtocol && !@class.IsCategory)
 					continue;
 
 				CheckNamespace (@class, exceptions);
-				if (@class.BaseType != null)
+				if (@class.BaseType is not null)
 					CheckNamespace (@class.BaseType, exceptions);
 
 				var class_name = EncodeNonAsciiCharacters (@class.ExportedName);
@@ -2981,17 +2981,17 @@ namespace Registrar {
 				}
 				var implementedProtocols = new HashSet<string> ();
 				ObjCType tp = @class;
-				while (tp != null && tp != tp.BaseType) {
+				while (tp is not null && tp != tp.BaseType) {
 					if (tp.IsWrapper)
 						break; // no need to declare protocols for wrapper types, they do it already in their headers.
-					if (tp.Protocols != null) {
+					if (tp.Protocols is not null) {
 						for (int p = 0; p < tp.Protocols.Length; p++) {
 							implementedProtocols.Add (tp.Protocols [p].ProtocolName);
 							var proto = tp.Protocols [p].Type;
 							CheckNamespace (proto, exceptions);
 						}
 					}
-					if (App.Optimizations.RegisterProtocols == true && tp.AdoptedProtocols != null)
+					if (App.Optimizations.RegisterProtocols == true && tp.AdoptedProtocols is not null)
 						implementedProtocols.UnionWith (tp.AdoptedProtocols);
 					tp = tp.BaseType;
 				}
@@ -3014,12 +3014,12 @@ namespace Registrar {
 				} else {
 					iface.WriteLine (" {");
 
-					if (@class.Fields != null) {
+					if (@class.Fields is not null) {
 						foreach (var field in @class.Fields.Values) {
 							AutoIndentStringBuilder fields = null;
 							if (field.IsPrivate) {
 								// Private fields go in the @implementation section.
-								if (implementation_fields == null)
+								if (implementation_fields is null)
 									implementation_fields = new AutoIndentStringBuilder (1);
 								fields = implementation_fields;
 							} else {
@@ -3051,7 +3051,7 @@ namespace Registrar {
 				}
 
 				iface.Indent ();
-				if (@class.Properties != null) {
+				if (@class.Properties is not null) {
 					foreach (var property in @class.Properties) {
 						try {
 							if (is_protocol)
@@ -3073,10 +3073,10 @@ namespace Registrar {
 							if (property.IsReadOnly)
 								iface.Write (", readonly");
 
-							if (property.Selector != null) {
-								if (property.GetterSelector != null && property.Selector != property.GetterSelector)
+							if (property.Selector is not null) {
+								if (property.GetterSelector is not null && property.Selector != property.GetterSelector)
 									iface.Write (", getter = ").Write (property.GetterSelector);
-								if (property.SetterSelector != null) {
+								if (property.SetterSelector is not null) {
 									var setterSel = string.Format ("set{0}{1}:", char.ToUpperInvariant (property.Selector [0]), property.Selector.Substring (1));
 									if (setterSel != property.SetterSelector)
 										iface.Write (", setter = ").Write (property.SetterSelector);
@@ -3098,7 +3098,7 @@ namespace Registrar {
 					}
 				}
 
-				if (@class.Methods != null) {
+				if (@class.Methods is not null) {
 					foreach (var method in @class.Methods) {
 						try {
 							if (is_protocol)
@@ -3130,7 +3130,7 @@ namespace Registrar {
 						sb.WriteLine ("@implementation {0} ({1})", EncodeNonAsciiCharacters (@class.BaseType.ExportedName), @class.CategoryName);
 					} else {
 						sb.WriteLine ("@implementation {0} {{", class_name);
-						if (implementation_fields != null) {
+						if (implementation_fields is not null) {
 							sb.Indent ();
 							sb.Append (implementation_fields);
 							sb.Unindent ();
@@ -3138,7 +3138,7 @@ namespace Registrar {
 						sb.WriteLine ("}");
 					}
 					sb.Indent ();
-					if (@class.Methods != null) {
+					if (@class.Methods is not null) {
 						foreach (var method in @class.Methods) {
 							if (skip.Contains (method))
 								continue;
@@ -4118,7 +4118,7 @@ namespace Registrar {
 								ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4173, method.Method, Errors.MT4173, type.FullName, descriptiveMethodName));
 							} else {
 								var delegateMethod = type.Resolve ().GetMethods ().FirstOrDefault ((v) => v.Name == "Invoke");
-								if (delegateMethod == null) {
+								if (delegateMethod is null) {
 									ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4173, method.Method, Errors.MT4173_A, type.FullName, descriptiveMethodName));
 								} else {
 									signature = "\"" + ComputeSignature (method.DeclaringType.Type, null, method, isBlockSignature: true) + "\"";
@@ -4323,7 +4323,7 @@ namespace Registrar {
 					sb.Write ("struct objc_super super = {  rv, [").Write (method.DeclaringType.SuperType.ExportedName).WriteLine (" class] };");
 					sb.Write ("rv = ((id (*)(objc_super*, SEL");
 
-					if (method.Parameters != null) {
+					if (method.Parameters is not null) {
 						for (int i = 0; i < method.Parameters.Length; i++)
 							sb.Append (", ").Append (ToObjCParameterType (method.Parameters [i], method.DescriptiveMethodName, exceptions, method.Method));
 					}
@@ -4354,7 +4354,7 @@ namespace Registrar {
 
 			if (td.IsInterface) {
 				var wrapper_type = GetProtocolAttributeWrapperType (td);
-				if (wrapper_type == null)
+				if (wrapper_type is null)
 					throw ErrorHelper.CreateError (4125, Errors.MT4125, td.FullName, descriptiveMethodName);
 
 				nativeObjType = wrapper_type.Resolve ();
@@ -4377,7 +4377,7 @@ namespace Registrar {
 			while (method != last) {
 				last = method;
 				var delegateProxyType = GetDelegateProxyAttribute (method);
-				if (delegateProxyType?.DelegateType != null)
+				if (delegateProxyType?.DelegateType is not null)
 					return delegateProxyType.DelegateType;
 
 				method = GetBaseMethodInTypeHierarchy (method);
@@ -4386,26 +4386,26 @@ namespace Registrar {
 			// Might be the implementation of an interface method, so find the corresponding
 			// MethodDefinition for the interface, and check for DelegateProxy attributes there as well.
 			var map = PrepareMethodMapping (first.DeclaringType);
-			if (map != null && map.TryGetValue (first, out var list)) {
+			if (map is not null && map.TryGetValue (first, out var list)) {
 				if (list.Count != 1)
 					throw new AggregateException (Shared.GetMT4127 (first, list));
 				var delegateProxyType = GetDelegateProxyAttribute (list [0]);
-				if (delegateProxyType?.DelegateType != null)
+				if (delegateProxyType?.DelegateType is not null)
 					return delegateProxyType.DelegateType;
 			}
 
 			// Might be an implementation of an optional protocol member.
 			var allProtocols = obj_method.DeclaringType.AllProtocolsInHierarchy;
-			if (allProtocols != null) {
+			if (allProtocols is not null) {
 				string selector = null;
 
 				foreach (var proto in allProtocols) {
 					// We store the DelegateProxy type in the ProtocolMemberAttribute, so check those.
-					if (selector == null)
+					if (selector is null)
 						selector = obj_method.Selector ?? string.Empty;
-					if (selector != null) {
+					if (selector is not null) {
 						var attrib = GetProtocolMemberAttribute (proto.Type, selector, obj_method, method);
-						if (attrib?.ReturnTypeDelegateProxy != null)
+						if (attrib?.ReturnTypeDelegateProxy is not null)
 							return attrib.ReturnTypeDelegateProxy.Resolve ();
 					}
 				}
@@ -4424,7 +4424,7 @@ namespace Registrar {
 			while (method != last) {
 				last = method;
 				var createMethod = GetBlockProxyAttributeMethod (method, parameter);
-				if (createMethod != null)
+				if (createMethod is not null)
 					return createMethod;
 
 				method = GetBaseMethodInTypeHierarchy (method);
@@ -4433,32 +4433,32 @@ namespace Registrar {
 			// Might be the implementation of an interface method, so find the corresponding
 			// MethodDefinition for the interface, and check for BlockProxy attributes there as well.
 			var map = PrepareMethodMapping (first.DeclaringType);
-			if (map != null && map.TryGetValue (first, out var list)) {
+			if (map is not null && map.TryGetValue (first, out var list)) {
 				if (list.Count != 1)
 					throw new AggregateException (Shared.GetMT4127 (first, list));
 				var createMethod = GetBlockProxyAttributeMethod (list [0], parameter);
-				if (createMethod != null)
+				if (createMethod is not null)
 					return createMethod;
 			}
 
 			// Might be an implementation of an optional protocol member.
 			var allProtocols = obj_method.DeclaringType.AllProtocolsInHierarchy;
-			if (allProtocols != null) {
+			if (allProtocols is not null) {
 				string selector = null;
 
 				foreach (var proto in allProtocols) {
 					// We store the BlockProxy type in the ProtocolMemberAttribute, so check those.
 					// We may run into binding assemblies built with earlier versions of the generator,
 					// which means we can't rely on finding the BlockProxy attribute in the ProtocolMemberAttribute.
-					if (selector == null)
+					if (selector is null)
 						selector = obj_method.Selector ?? string.Empty;
-					if (selector != null) {
+					if (selector is not null) {
 						var attrib = GetProtocolMemberAttribute (proto.Type, selector, obj_method, method);
-						if (attrib?.ParameterBlockProxy?.Length > parameter && attrib.ParameterBlockProxy [parameter] != null)
+						if (attrib?.ParameterBlockProxy?.Length > parameter && attrib.ParameterBlockProxy [parameter] is not null)
 							return attrib.ParameterBlockProxy [parameter].Resolve ().Methods.First ((v) => v.Name == "Create");
 					}
 
-					if (proto.Methods != null) {
+					if (proto.Methods is not null) {
 						foreach (var pMethod in proto.Methods) {
 							if (!pMethod.IsOptional)
 								continue;
@@ -4470,14 +4470,14 @@ namespace Registrar {
 								continue;
 
 							MethodDefinition extensionMethod = pMethod.Method;
-							if (extensionMethod == null) {
+							if (extensionMethod is null) {
 								MapProtocolMember (obj_method.Method, out extensionMethod);
-								if (extensionMethod == null)
+								if (extensionMethod is null)
 									return null;
 							}
 
 							var createMethod = GetBlockProxyAttributeMethod (extensionMethod, parameter + 1);
-							if (createMethod != null)
+							if (createMethod is not null)
 								return createMethod;
 						}
 					}
@@ -4492,11 +4492,11 @@ namespace Registrar {
 		{
 			var param = method.Parameters [parameter];
 			var attrib = GetBlockProxyAttribute (param);
-			if (attrib == null)
+			if (attrib is null)
 				return null;
 
 			var createMethod = attrib.Type.Methods.FirstOrDefault ((v) => v.Name == "Create");
-			if (createMethod == null) {
+			if (createMethod is null) {
 				// This may happen if users add their own BlockProxy attributes and don't know which types to pass.
 				// One common variation is that the IDE will add the BlockProxy attribute found in base methods when the user overrides those methods,
 				// which unfortunately doesn't compile (because the type passed to the BlockProxy attribute is internal), and then
@@ -4539,9 +4539,9 @@ namespace Registrar {
 			string selector = null;
 			foreach (var r in t.Interfaces) {
 				var i = r.InterfaceType.Resolve ();
-				if (i == null || !HasAttribute (i, Namespaces.Foundation, "ProtocolAttribute"))
+				if (i is null || !HasAttribute (i, Namespaces.Foundation, "ProtocolAttribute"))
 					continue;
-				if (selector == null) {
+				if (selector is null) {
 					// delay and don't compute each time
 					var ea = CreateExportAttribute (method);
 					selector = ea?.Selector;
@@ -4565,11 +4565,11 @@ namespace Registrar {
 						break;
 					}
 				}
-				if (!match || name == null)
+				if (!match || name is null)
 					continue;
 				// _Extensions time...
 				var td = i.Module.GetType (i.Namespace, i.Name.Substring (1) + "_Extensions");
-				if (td != null && td.HasMethods) {
+				if (td is not null && td.HasMethods) {
 					foreach (var m in td.Methods) {
 						if (!m.HasParameters || (m.Name != name) || !m.IsOptimizableCode (LinkContext))
 							continue;
@@ -4906,7 +4906,7 @@ namespace Registrar {
 			public override bool Equals (object obj)
 			{
 				var other = obj as Body;
-				if (other == null)
+				if (other is null)
 					return false;
 				return Code == other.Code && Signature == other.Signature;
 			}
@@ -5009,7 +5009,7 @@ namespace Registrar {
 		static string GetParamName (MethodDefinition method, int i)
 		{
 			var p = method.Parameters [i];
-			if (p.Name != null)
+			if (p.Name is not null)
 				return p.Name;
 			return "__p__" + i.ToString ();
 		}
@@ -5137,7 +5137,7 @@ namespace Registrar {
 					break;
 				}
 			}
-			if (mr == null)
+			if (mr is null)
 				method.Module.ModuleReferences.Add (mr = new ModuleReference ("__Internal"));
 
 			var pinfo = method.PInvokeInfo;
@@ -5145,18 +5145,18 @@ namespace Registrar {
 			pinfo.EntryPoint = wrapperName;
 		}
 
-		public void GenerateSingleAssembly (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly, out string initialization_method, string type_map_path = null)
+		public void GenerateSingleAssembly (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly, out string initialization_method, string type_map_path)
 		{
 			single_assembly = assembly;
 			Generate (resolver, assemblies, header_path, source_path, out initialization_method, type_map_path);
 		}
 
-		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method, string type_map_path = null)
+		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method, string type_map_path)
 		{
 			Generate (null, assemblies, header_path, source_path, out initialization_method, type_map_path);
 		}
 
-		public void Generate (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method, string type_map_path = null)
+		public void Generate (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method, string type_map_path)
 		{
 			this.resolver = resolver;
 
@@ -5173,7 +5173,7 @@ namespace Registrar {
 			Generate (header_path, source_path, out initialization_method, type_map_path);
 		}
 
-		void Generate (string header_path, string source_path, out string initialization_method, string type_map_path = null)
+		void Generate (string header_path, string source_path, out string initialization_method, string type_map_path)
 		{
 			var sb = new AutoIndentStringBuilder ();
 			header = new AutoIndentStringBuilder ();
@@ -5241,7 +5241,7 @@ namespace Registrar {
 			if (assembly.HasCustomAttributes) {
 				foreach (var ca in assembly.CustomAttributes) {
 					var t = ca.AttributeType.Resolve ();
-					while (t != null) {
+					while (t is not null) {
 						if (t.Is ("ObjCRuntime", "DelayedRegistrationAttribute"))
 							return true;
 						t = t.BaseType?.Resolve ();

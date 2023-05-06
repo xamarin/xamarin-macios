@@ -2,7 +2,6 @@
 
 using System;
 using Mono.Cecil;
-using Mono.Tuner;
 using Xamarin.Bundler;
 
 using Xamarin.Tuner;
@@ -10,11 +9,15 @@ using Xamarin.Tuner;
 using Mono.Linker;
 using Mono.Linker.Steps;
 
+#nullable enable
+
 namespace Xamarin.Linker {
 
 	// Similar to ExceptionalSubStep, but this only runs for marked members
 	// that were registered for handling by the subclass.
 	public abstract class ExceptionalMarkHandler : IMarkHandler {
+		LinkContext? context;
+
 		public abstract void Initialize (LinkContext context, MarkContext markContext);
 
 		public virtual void Initialize (LinkContext context)
@@ -24,10 +27,10 @@ namespace Xamarin.Linker {
 
 		protected DerivedLinkContext LinkContext => Configuration.DerivedLinkContext;
 
-		protected LinkContext context { get; private set; }
+		protected LinkContext Context { get { return context!; } }
 
-		protected AnnotationStore Annotations => context.Annotations;
-		protected LinkerConfiguration Configuration => LinkerConfiguration.GetInstance (context);
+		protected AnnotationStore Annotations => Context.Annotations;
+		protected LinkerConfiguration Configuration => LinkerConfiguration.GetInstance (Context);
 
 		protected Profile Profile => Configuration.Profile;
 

@@ -74,7 +74,7 @@ namespace Introspection {
 			var method = m.ToString ();
 			foreach (var intf in t.GetInterfaces ()) {
 				var p = Assembly.GetType (intf.FullName);
-				if (p != null) {
+				if (p is not null) {
 					// here we want inherited members so we don't have to hunt inherited interfaces recursively
 					foreach (var pm in p.GetMembers ()) {
 						if (pm.ToString () != method)
@@ -94,7 +94,7 @@ namespace Introspection {
 					}
 				}
 				p = Assembly.GetType (intf.Namespace + "." + intf.Name.Substring (1));
-				if (p != null) {
+				if (p is not null) {
 					// here we want inherited members so we don't have to hunt inherited interfaces recursively
 					foreach (var pm in p.GetMembers ()) {
 						if (pm.ToString () != method)
@@ -103,7 +103,7 @@ namespace Introspection {
 					}
 				}
 				p = Assembly.GetType (intf.Namespace + "." + intf.Name.Substring (1) + "_Extensions");
-				if (p != null) {
+				if (p is not null) {
 					// here we want inherited members so we don't have to hunt inherited interfaces recursively
 					foreach (var pm in p.GetMembers ()) {
 						// map extension method to original @optional
@@ -128,7 +128,7 @@ namespace Introspection {
 		void CheckIntroduced (Type t, AvailabilityBaseAttribute ta, MemberInfo m)
 		{
 			var ma = CheckAvailability (m);
-			if (ta == null || ma == null)
+			if (ta is null || ma is null)
 				return;
 
 			// need to skip members that are copied to satisfy interfaces (protocol members)
@@ -290,7 +290,7 @@ namespace Introspection {
 			}
 
 			var ma = GetAvailable (m, out var availableVersion);
-			if (typeUnavailable && (ma != null)) {
+			if (typeUnavailable && (ma is not null)) {
 				if (typeUnavailableVersion is not null && availableVersion is not null) {
 					if (availableVersion >= typeUnavailableVersion)
 						AddErrorLine ($"[FAIL] {m} in {m.DeclaringType.FullName} is marked with {ma} in {availableVersion} but the type {t.FullName} is [Unavailable ({Platform})] in {typeUnavailableVersion}");
@@ -300,7 +300,7 @@ namespace Introspection {
 			}
 
 			var mu = IsUnavailable (m, out var unavailableVersion);
-			if (mu && (ma != null)) {
+			if (mu && (ma is not null)) {
 				if (availableVersion is not null && unavailableVersion is not null) {
 					// Apple is introducing and deprecating numerous APIs in the same Mac Catalyst version,
 					// so specifically for Mac Catalyst, we do a simple 'greater than' version check,
@@ -338,7 +338,7 @@ namespace Introspection {
 					Console.WriteLine ($"T: {t}");
 				var tu = IsUnavailable (t, out var unavailableVersion);
 				var ta = GetAvailable (t, out var availableVersion);
-				if (tu && (ta != null)) {
+				if (tu && (ta is not null)) {
 					if (availableVersion is not null && unavailableVersion is not null) {
 						// Apple is introducing and deprecating numerous APIs in the same Mac Catalyst version,
 						// so specifically for Mac Catalyst, we do a simple 'greater than' version check,

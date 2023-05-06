@@ -45,7 +45,7 @@ namespace Xamarin.MacDev.Tasks {
 				if (!string.IsNullOrEmpty (DebuggerHosts))
 					hosts = DebuggerHosts.Split (new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
-				if (hosts == null || hosts.Length == 0) {
+				if (hosts is null || hosts.Length == 0) {
 					var properties = IPGlobalProperties.GetIPGlobalProperties ();
 					var hostName = properties.HostName;
 
@@ -76,7 +76,7 @@ namespace Xamarin.MacDev.Tasks {
 					}
 				}
 
-				if (ips == null || ips.Count == 0) {
+				if (ips is null || ips.Count == 0) {
 					Log.LogError (7002, null, MSBStrings.E7002);
 					return false;
 				}

@@ -260,7 +260,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			var currentHour = NSCalendar.CurrentCalendar.GetComponentFromDate (NSCalendarUnit.Hour, NSDate.Now);
 			NSDate oneHourFromNow = NSCalendar.CurrentCalendar.DateBySettingsHour (currentHour + 1, 0, 0, NSDate.Now, NSCalendarOptions.None);
-			if (oneHourFromNow == null)
+			if (oneHourFromNow is null)
 				Assert.Inconclusive ("Test does not handle day change");
 			Assert.IsTrue ((currentHour + 1) == NSCalendar.CurrentCalendar.GetComponentFromDate (NSCalendarUnit.Hour, oneHourFromNow), "DateBySettingsHour - One hour from now should be one hour");
 		}

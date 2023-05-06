@@ -70,7 +70,7 @@ namespace Xamarin.MacDev.Tasks {
 			task.Value = value;
 			input.Save (task.PropertyList);
 
-			if (expected == null) {
+			if (expected is null) {
 				Assert.IsFalse (task.Execute (), "Task was expected to fail.");
 				return;
 			}

@@ -48,13 +48,13 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			do {
-				if (dict != null) {
+				if (dict is not null) {
 					if (!dict.TryGetValue (path [i], out value)) {
 						var item = i > 0 ? string.Join ("/", path, 0, i - 1) : PropertyListFile;
 						Log.LogError (MSBStrings.E0153, item, path [i]);
 						return false;
 					}
-				} else if (array != null) {
+				} else if (array is not null) {
 					int arrayIndex;
 
 					if (!int.TryParse (path [i], out arrayIndex)) {
@@ -79,7 +79,7 @@ namespace Xamarin.MacDev.Tasks {
 				i++;
 			} while (i < path.Length);
 
-			if (array != null || dict != null) {
+			if (array is not null || dict is not null) {
 				Log.LogError (MSBStrings.E0157, value.Type.ToString ().ToLowerInvariant ());
 				return false;
 			}

@@ -34,7 +34,7 @@ namespace Xamarin.MacDev.Tasks {
 			var bundleResources = new List<ITaskItem> ();
 			var packs = new HashSet<string> ();
 
-			if (BundleResources != null) {
+			if (BundleResources is not null) {
 				foreach (var item in BundleResources) {
 					var logicalName = item.GetMetadata ("LogicalName");
 					// if logicalName is null or empty, use the filename
@@ -44,7 +44,7 @@ namespace Xamarin.MacDev.Tasks {
 					IList<string> tags;
 					string hash;
 
-					if (EnableOnDemandResources && (tags = AssetPackUtils.GetResourceTags (item)) != null) {
+					if (EnableOnDemandResources && (tags = AssetPackUtils.GetResourceTags (item)) is not null) {
 						var assetpack = AssetPackUtils.GetAssetPackDirectory (OutputPath, BundleIdentifier, tags, out hash);
 
 						if (packs.Add (hash)) {

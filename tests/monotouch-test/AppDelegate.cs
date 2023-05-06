@@ -50,7 +50,7 @@ public partial class AppDelegate : UIApplicationDelegate {
 		var bckp = window.RootViewController;
 		var navigation = bckp as UINavigationController;
 
-		if (navigation != null) {
+		if (navigation is not null) {
 			navigation.PushViewController (vc, false);
 		} else {
 			window.RootViewController = vc;
@@ -63,7 +63,7 @@ public partial class AppDelegate : UIApplicationDelegate {
 				NSRunLoop.Main.RunUntil (NSDate.Now.AddSeconds (0.1));
 			} while (!check_completed ());
 		} finally {
-			if (navigation != null) {
+			if (navigation is not null) {
 				navigation.PopViewController (false);
 			} else {
 				window.RootViewController = bckp;
@@ -98,7 +98,7 @@ class AsyncController : UIViewController {
 			View.BackgroundColor = UIColor.LightGray;
 			break;
 		}
-		if (imageToShow != null) {
+		if (imageToShow is not null) {
 			var imgView = new UIImageView (View.Bounds);
 			imgView.Image = imageToShow;
 			imgView.ContentMode = UIViewContentMode.Center;

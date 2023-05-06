@@ -26,7 +26,7 @@ namespace UIKit {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static UICellAccessoryPosition GetPositionBeforeAccessory (Class accessoryClass)
 		{
-			if (accessoryClass == null)
+			if (accessoryClass is null)
 				throw new ArgumentNullException (nameof (accessoryClass));
 			var ret = UICellAccessoryPositionBeforeAccessoryOfClass (accessoryClass.Handle);
 			return NIDUICellAccessoryPosition.Create (ret)!;
@@ -43,7 +43,7 @@ namespace UIKit {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static UICellAccessoryPosition GetPositionAfterAccessory (Class accessoryClass)
 		{
-			if (accessoryClass == null)
+			if (accessoryClass is null)
 				throw new ArgumentNullException (nameof (accessoryClass));
 			var ret = UICellAccessoryPositionAfterAccessoryOfClass (accessoryClass.Handle);
 			return NIDUICellAccessoryPosition.Create (ret)!;
@@ -100,7 +100,7 @@ namespace UIKit {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		nuint Invoke (UICellAccessory [] accessories)
 		{
-			using var nsa_accessories = accessories == null ? null : NSArray.FromNSObjects (accessories);
+			using var nsa_accessories = accessories is null ? null : NSArray.FromNSObjects (accessories);
 
 			return invoker (BlockPointer, nsa_accessories.GetHandle ());
 		}

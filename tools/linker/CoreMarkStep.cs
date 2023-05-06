@@ -35,7 +35,7 @@ namespace Xamarin.Linker.Steps {
 			// to remove references to fields that were not marked
 			TypeDefinition nsobject = GetType (ProductAssembly, Namespaces.Foundation + ".NSObject");
 
-			if (nsobject != null) {
+			if (nsobject is not null) {
 				foreach (MethodDefinition d in nsobject.Methods) {
 					if (d.Name == "Dispose" && d.HasParameters) {
 						ProcessDispose (d, d);
@@ -63,7 +63,7 @@ namespace Xamarin.Linker.Steps {
 			}
 
 			var overrides = Annotations.GetOverrides (cd);
-			if (overrides == null)
+			if (overrides is null)
 				return;
 
 			// every subclass-Dispose should be calling base-Dispose
@@ -103,7 +103,7 @@ namespace Xamarin.Linker.Steps {
 		{
 #if DEBUG
 			var sp = m.DebugInformation.GetSequencePoint (m.Body.Instructions [0]);
-			if (sp != null) {
+			if (sp is not null) {
 				string source = sp.Document.Url;
 				if (!source.EndsWith (".g.cs", StringComparison.Ordinal))
 					throw new InvalidProgramException (String.Format ("Attempt at modifying non-generated code for {0} : {1}", m, source));
@@ -156,14 +156,14 @@ namespace Xamarin.Linker.Steps {
 		{
 			try {
 				var td = base.MarkType (reference);
-				if (td == null)
+				if (td is null)
 					return null;
 
 				// We're removing the Protocol attribute, which points to its wrapper type.
 				// But we need the wrapper type if the protocol interface is marked, so manually mark it.
 				if (td.IsInterface) {
 					var proto = LinkContext.StaticRegistrar.GetProtocolAttribute (td);
-					if (proto?.WrapperType != null)
+					if (proto?.WrapperType is not null)
 						MarkType (proto.WrapperType);
 				}
 
@@ -222,7 +222,7 @@ namespace Xamarin.Linker.Steps {
 
 		bool SkipField (FieldDefinition f)
 		{
-			if (f == null)
+			if (f is null)
 				return false;
 			if (f.Name.StartsWith ("__mt_", StringComparison.Ordinal)) {
 				skipped_fields++;
@@ -252,7 +252,7 @@ namespace Xamarin.Linker.Steps {
 		protected override MethodDefinition MarkMethod (MethodReference reference)
 		{
 			var method = base.MarkMethod (reference);
-			if (method == null)
+			if (method is null)
 				return null;
 
 			var t = method.DeclaringType;
@@ -263,7 +263,7 @@ namespace Xamarin.Linker.Steps {
 			if (RegisterProtocols && t.HasInterfaces && method.IsVirtual) {
 				foreach (var r in t.Interfaces) {
 					var i = r.InterfaceType.Resolve ();
-					if (i == null)
+					if (i is null)
 						continue;
 					if (Annotations.IsMarked (i))
 						continue;

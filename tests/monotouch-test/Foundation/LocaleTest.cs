@@ -43,7 +43,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			string name = NSLocale.CurrentLocale.CountryCode; // two letter code
 															  // Handle manually set locale (without country) in iOS Simulator (plist) - ref bug #18520
-			if (name == null)
+			if (name is null)
 				Assert.Inconclusive ("You can construct locale without countries");
 			RegionInfo ri = new RegionInfo (name);
 			Assert.That (ri.Name, Is.EqualTo (name), "Name");

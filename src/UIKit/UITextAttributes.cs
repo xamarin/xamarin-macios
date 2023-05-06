@@ -32,7 +32,7 @@ namespace UIKit {
 		
 		internal UITextAttributes (NSDictionary dict)
 		{
-			if (dict == null)
+			if (dict is null)
 				return;
 			
 			NSObject val;
@@ -45,7 +45,7 @@ namespace UIKit {
 				TextShadowColor = val as UIColor;
 			if (dict.TryGetValue (UITextAttributesConstants.TextShadowOffset, out val)) {
 				var value = val as NSValue;
-				if (value != null)
+				if (value is not null)
 					TextShadowOffset = value.UIOffsetValue;
 			}
 		}
@@ -54,13 +54,13 @@ namespace UIKit {
 		{
 			int n = 0;
 			var font = Font;
-			if (font != null)
+			if (font is not null)
 				n++;
 			var text_color = TextColor;
-			if (text_color != null)
+			if (text_color is not null)
 				n++;
 			var text_shadow_color = TextShadowColor;
-			if (text_shadow_color != null)
+			if (text_shadow_color is not null)
 				n++;
 			var text_shadow_offset = TextShadowOffset;
 			if (text_shadow_offset.Horizontal != 0 || text_shadow_offset.Vertical != 0)
@@ -71,17 +71,17 @@ namespace UIKit {
 			var keys = new NSObject [n];
 			var values = new NSObject [n];
 			n = 0;
-			if (font != null){
+			if (font is not null){
 				keys [n] = UITextAttributesConstants.Font;
 				values [n] = font;
 				n++;
 			}
-			if (text_color != null){
+			if (text_color is not null){
 				keys [n] = UITextAttributesConstants.TextColor;
 				values [n] = text_color;
 				n++;
 			}
-			if (text_shadow_color != null){
+			if (text_shadow_color is not null){
 				keys [n] = UITextAttributesConstants.TextShadowColor;
 				values [n] = text_shadow_color;
 				n++;

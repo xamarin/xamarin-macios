@@ -61,7 +61,7 @@ namespace Extrospection {
 				return;
 
 			string name = decl.Name;
-			if (name == null)
+			if (name is null)
 				return;
 
 			// check availability macros to see if the API is available on the OS and not deprecated
@@ -69,7 +69,7 @@ namespace Extrospection {
 				return;
 
 			var framework = Helpers.GetFramework (decl);
-			if (framework == null)
+			if (framework is null)
 				return;
 
 			var mname = Helpers.GetManagedName (name);
@@ -183,7 +183,7 @@ namespace Extrospection {
 			// collect all the native enum values
 			var nativeConstant = signed ? (object) 0L : (object) 0UL;
 			foreach (var value in decl.Values) {
-				if ((value.InitExpr != null) && value.InitExpr.EvaluateAsInt (decl.AstContext, out var integer)) {
+				if ((value.InitExpr is not null) && value.InitExpr.EvaluateAsInt (decl.AstContext, out var integer)) {
 					if (signed) {
 						nativeConstant = integer.SExtValue;
 					} else {

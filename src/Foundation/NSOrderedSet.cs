@@ -74,7 +74,7 @@ namespace Foundation {
 			var enumerator = _GetEnumerator ();
 			NSObject obj;
 
-			while ((obj = enumerator.NextObject ()) != null)
+			while ((obj = enumerator.NextObject ()) is not null)
 				yield return obj as NSObject;
 		}
 
@@ -83,15 +83,15 @@ namespace Foundation {
 			var enumerator = _GetEnumerator ();
 			NSObject obj;
 
-			while ((obj = enumerator.NextObject ()) != null)
+			while ((obj = enumerator.NextObject ()) is not null)
 				yield return obj;
 		}
 
 		public static NSOrderedSet operator + (NSOrderedSet first, NSOrderedSet second)
 		{
-			if (first == null)
+			if (first is null)
 				return new NSOrderedSet (second);
-			if (second == null)
+			if (second is null)
 				return new NSOrderedSet (first);
 			var copy = new NSMutableOrderedSet (first);
 			copy.UnionSet (second);
@@ -100,9 +100,9 @@ namespace Foundation {
 
 		public static NSOrderedSet operator + (NSOrderedSet first, NSSet second)
 		{
-			if (first == null)
+			if (first is null)
 				return new NSOrderedSet (second);
-			if (second == null)
+			if (second is null)
 				return new NSOrderedSet (first);
 			var copy = new NSMutableOrderedSet (first);
 			copy.UnionSet (second);
@@ -111,9 +111,9 @@ namespace Foundation {
 
 		public static NSOrderedSet operator - (NSOrderedSet first, NSOrderedSet second)
 		{
-			if (first == null)
+			if (first is null)
 				return null;
-			if (second == null)
+			if (second is null)
 				return new NSOrderedSet (first);
 			var copy = new NSMutableOrderedSet (first);
 			copy.MinusSet (second);
@@ -122,9 +122,9 @@ namespace Foundation {
 
 		public static NSOrderedSet operator - (NSOrderedSet first, NSSet second)
 		{
-			if (first == null)
+			if (first is null)
 				return null;
-			if (second == null)
+			if (second is null)
 				return new NSOrderedSet (first);
 			var copy = new NSMutableOrderedSet (first);
 			copy.MinusSet (second);
@@ -156,7 +156,7 @@ namespace Foundation {
 		public override bool Equals (object other)
 		{
 			NSOrderedSet o = other as NSOrderedSet;
-			if (o == null)
+			if (o is null)
 				return false;
 			return IsEqualToOrderedSet (o);
 		}

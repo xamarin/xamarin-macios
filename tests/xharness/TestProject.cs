@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,7 +32,6 @@ namespace Xharness {
 		public Func<Task>? Dependency;
 		public string? FailureMessage;
 		public bool RestoreNugetsInProject = true;
-		public string? MTouchExtraArgs;
 		public double TimeoutMultiplier = 1;
 		public bool? Ignore;
 
@@ -51,7 +51,7 @@ namespace Xharness {
 
 		public XmlDocument Xml {
 			get {
-				if (xml == null) {
+				if (xml is null) {
 					xml = new XmlDocument ();
 					xml.LoadWithoutNetworkAccess (Path);
 				}
@@ -72,7 +72,6 @@ namespace Xharness {
 			rv.IsDotNetProject = IsDotNetProject;
 			rv.RestoreNugetsInProject = RestoreNugetsInProject;
 			rv.Name = Name;
-			rv.MTouchExtraArgs = MTouchExtraArgs;
 			rv.TimeoutMultiplier = TimeoutMultiplier;
 			rv.Ignore = Ignore;
 			rv.TestPlatform = TestPlatform;
@@ -83,29 +82,6 @@ namespace Xharness {
 		{
 			var pr = new Dictionary<string, TestProject> ();
 			return CreateCopyAsync (log, processManager, test, rootDirectory, pr);
-		}
-
-		static SemaphoreSlim ls_files_semaphore = new SemaphoreSlim (1);
-
-		async Task<string []> ListFilesAsync (ILog log, string test_dir, IProcessManager processManager)
-		{
-			var acquired = await ls_files_semaphore.WaitAsync (TimeSpan.FromMinutes (5));
-			try {
-				if (!acquired)
-					log.WriteLine ($"Unable to acquire lock to run 'git ls-files {test_dir}' in 5 minutes; will try to run anyway.");
-				using var process = new Process ();
-				process.StartInfo.FileName = "git";
-				process.StartInfo.Arguments = "ls-files";
-				process.StartInfo.WorkingDirectory = test_dir;
-				var stdout = new MemoryLog () { Timestamp = false };
-				var result = await processManager.RunAsync (process, stdout, stdout, stdout, timeout: TimeSpan.FromSeconds (60));
-				if (!result.Succeeded)
-					throw new Exception ($"Failed to list the files in the directory {test_dir} (TimedOut: {result.TimedOut} ExitCode: {result.ExitCode}):\n{stdout}");
-				return stdout.ToString ().Split ('\n');
-			} finally {
-				if (acquired)
-					ls_files_semaphore.Release ();
-			}
 		}
 
 		async Task CreateCopyAsync (ILog log, IProcessManager processManager, ITestTask test, string rootDirectory, Dictionary<string, TestProject> allProjectReferences)
@@ -132,7 +108,7 @@ namespace Xharness {
 
 			// Replace RootTestsDirectory with a constant value, so that any relative paths don't end up wrong.
 			var rootTestsDirectoryNode = doc.SelectSingleNode ("/Project/PropertyGroup/RootTestsDirectory");
-			if (rootTestsDirectoryNode != null)
+			if (rootTestsDirectoryNode is not null)
 				rootTestsDirectoryNode.InnerText = rootDirectory;
 
 			if (doc.IsDotNetProject ()) {
@@ -164,7 +140,7 @@ namespace Xharness {
 					// because the cloned project is stored in a very different directory.
 					var test_dir = System.IO.Path.GetDirectoryName (original_path);
 
-					var files = await ListFilesAsync (log, test_dir, processManager);
+					var files = await HarnessConfiguration.ListFilesInGitAsync (log, test_dir, processManager);
 					foreach (var file in files) {
 						var ext = System.IO.Path.GetExtension (file);
 						var full_path = System.IO.Path.Combine (test_dir, file);

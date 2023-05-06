@@ -40,7 +40,7 @@ namespace Xamarin.Messaging.Build {
 		{
 			var taskType = tasks.FirstOrDefault (x => string.Equals (x.FullName, taskName, StringComparison.OrdinalIgnoreCase));
 
-			if (taskType == null) {
+			if (taskType is null) {
 				throw new ArgumentException (string.Format (Resources.TaskRunner_Execute_Error, taskName), nameof (taskName));
 			}
 

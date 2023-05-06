@@ -19,7 +19,7 @@ namespace Xamarin.iOS.Tasks {
 				var connection = await BuildConnection.GetAsync (BuildEngine4).ConfigureAwait (continueOnCapturedContext: false);
 				var buildClient = connection.GetClient (SessionId) as BuildClient;
 
-				if (!connection.IsConnected || buildClient == null) {
+				if (!connection.IsConnected || buildClient is null) {
 					Log.LogWarning (MSBStrings.E0179, nameof (VerifyXcodeVersion));
 
 					return true;

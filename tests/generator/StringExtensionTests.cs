@@ -39,13 +39,13 @@ namespace GeneratorTests {
 		[TestCase (" OhOh")]
 		[TestCase ("Oh Oh")]
 		public void NotFixableIllegalChar (string illegal)
-			=> Assert.IsNull (illegal.GetSafeParamName (), "paramName == null");
+			=> Assert.IsNull (illegal.GetSafeParamName (), "paramName is null");
 
 		[TestCase ("1param")]
 		public void StartsWithFixableIllegalChar (string illegal)
 		{
 			var legal = illegal.GetSafeParamName ();
-			Assert.IsNotNull (legal, "legal != null");
+			Assert.IsNotNull (legal, "legal is not null");
 			Assert.AreEqual ("@" + illegal, legal, "legal");
 		}
 

@@ -118,7 +118,7 @@ namespace Xamarin.MacDev.Tasks {
 		internal protected static async System.Threading.Tasks.Task<Execution> ExecuteAsync (TaskLoggingHelper log, string fileName, IList<string> arguments, string sdkDevPath = null, Dictionary<string, string> environment = null, bool mergeOutput = true, bool showErrorIfFailure = true, string workingDirectory = null)
 		{
 			// Create a new dictionary if we're given one, to make sure we don't change the caller's dictionary.
-			var launchEnvironment = environment == null ? new Dictionary<string, string> () : new Dictionary<string, string> (environment);
+			var launchEnvironment = environment is null ? new Dictionary<string, string> () : new Dictionary<string, string> (environment);
 			if (!string.IsNullOrEmpty (sdkDevPath))
 				launchEnvironment ["DEVELOPER_DIR"] = sdkDevPath;
 

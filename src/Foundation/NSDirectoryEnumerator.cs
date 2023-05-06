@@ -17,7 +17,7 @@ namespace Foundation {
 		bool IEnumerator.MoveNext ()
 		{
 			current = NextObject ();
-			return current != null;
+			return current is not null;
 		}
 
 		void IEnumerator.Reset ()
