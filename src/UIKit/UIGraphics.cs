@@ -99,14 +99,14 @@ namespace UIKit {
 		public static void BeginPDFContext (string file, CGRect bounds, NSDictionary documentInfo)
 		{
 			using (var nsstr = new NSString (file))
-				UIGraphicsBeginPDFContextToFile (nsstr.Handle, bounds, documentInfo == null ? IntPtr.Zero : documentInfo.Handle);
+				UIGraphicsBeginPDFContextToFile (nsstr.Handle, bounds, documentInfo is null ? IntPtr.Zero : documentInfo.Handle);
 		}
 
 		public static void BeginPDFContext (string file, CGRect bounds, CGPDFInfo documentInfo)
 		{
-			using (var dict = documentInfo == null ? null : documentInfo.ToDictionary ())
+			using (var dict = documentInfo is null ? null : documentInfo.ToDictionary ())
 			using (var nsstr = new NSString (file))
-				UIGraphicsBeginPDFContextToFile (nsstr.Handle, bounds, dict == null ? IntPtr.Zero : dict.Handle);
+				UIGraphicsBeginPDFContextToFile (nsstr.Handle, bounds, dict is null ? IntPtr.Zero : dict.Handle);
 		}
 
 		[DllImport (Constants.UIKitLibrary)]
@@ -115,7 +115,7 @@ namespace UIKit {
 
 		public static void BeginPDFContext (NSMutableData data, CGRect bounds, NSDictionary documentInfo)
 		{
-			UIGraphicsBeginPDFContextToData (data.Handle, bounds, documentInfo == null ? IntPtr.Zero : documentInfo.Handle);
+			UIGraphicsBeginPDFContextToData (data.Handle, bounds, documentInfo is null ? IntPtr.Zero : documentInfo.Handle);
 		}
 
 		[DllImport (Constants.UIKitLibrary)]

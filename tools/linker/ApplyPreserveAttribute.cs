@@ -55,7 +55,7 @@ namespace Xamarin.Linker.Steps {
 				if (!attribute.HasConstructorArguments)
 					continue;
 				var tr = (attribute.ConstructorArguments [0].Value as TypeReference);
-				if (tr == null)
+				if (tr is null)
 					continue;
 
 				// we do not call `this.ProcessType` since
@@ -76,7 +76,7 @@ namespace Xamarin.Linker.Steps {
 				// if the type is a custom attribute then it means we want to preserve what's decorated
 				// with this attribute (not just the attribute alone)
 				if (type.Inherits ("System", "Attribute")) {
-					if (preserve_synonyms == null)
+					if (preserve_synonyms is null)
 						preserve_synonyms = new HashSet<TypeDefinition> ();
 					preserve_synonyms.Add (type);
 				}
@@ -98,7 +98,7 @@ namespace Xamarin.Linker.Steps {
 			return false;
 #else
 			// we need to resolve (as many reference instances can exists)
-			return ((preserve_synonyms != null) && preserve_synonyms.Contains (type.Resolve ()));
+			return ((preserve_synonyms is not null) && preserve_synonyms.Contains (type.Resolve ()));
 #endif
 		}
 	}

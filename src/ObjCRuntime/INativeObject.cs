@@ -21,7 +21,7 @@ namespace ObjCRuntime {
 	public static class NativeObjectExtensions {
 
 		// help to avoid the (too common pattern)
-		// 	var p = x == null ? IntPtr.Zero : x.Handle;
+		// 	var p = x is null ? IntPtr.Zero : x.Handle;
 		static public NativeHandle GetHandle (this INativeObject? self)
 		{
 			return self is null ? NativeHandle.Zero : self.Handle;

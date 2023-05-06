@@ -63,7 +63,7 @@ namespace Xamarin.MacDev.Tasks {
 			var envVariables = EnvironmentVariables;
 			var index = -1;
 
-			if (envVariables == null) {
+			if (envVariables is null) {
 				envVariables = new string [1];
 				index = 0;
 			} else {

@@ -99,7 +99,7 @@ namespace MonoTouchFixtures.Security {
 					bool assert = false; // we don't want to assert in another queue
 					bool called = false;
 					var err = trust.Evaluate (DispatchQueue.MainQueue, (t, result, error) => {
-						assert = t.Handle == trust.Handle && !result && error != null;
+						assert = t.Handle == trust.Handle && !result && error is not null;
 						called = true;
 					});
 					Assert.That (err, Is.EqualTo (SecStatusCode.Success), "async2/err");

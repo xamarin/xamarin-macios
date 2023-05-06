@@ -106,7 +106,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		protected IList<string> ResourcePrefixes {
 			get {
-				if (prefixes == null)
+				if (prefixes is null)
 					prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 
 				return prefixes;
@@ -172,7 +172,7 @@ namespace Xamarin.MacDev.Tasks {
 		// https://developer.apple.com/documentation/apple_silicon/about_the_rosetta_translation_environment
 		static bool IsTranslated ()
 		{
-			if (translated == null) {
+			if (translated is null) {
 				long result = 0;
 				long size = sizeof (long);
 				translated = ((sysctlbyname ("sysctl.proc_translated", ref result, ref size, IntPtr.Zero, 0) != -1) && (result == 1));

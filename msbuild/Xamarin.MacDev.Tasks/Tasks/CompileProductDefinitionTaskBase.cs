@@ -64,7 +64,7 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			}
 
-			if (archArray == null) {
+			if (archArray is null) {
 				archArray = new PArray ();
 				foreach (var arch in archStrings) {
 					archArray.Add (new PString (arch));
@@ -74,12 +74,12 @@ namespace Xamarin.MacDev.Tasks {
 
 			if (!plist.TryGetValue (ProductDefinitionKeys.MinimumSystemVersion, out PArray osVersionArray)) {
 				var minOSVersion = GetMinimumOSVersion ();
-				if (minOSVersion != null) {
+				if (minOSVersion is not null) {
 					osVersionArray = new PArray ();
 					osVersionArray.Add (new PString (minOSVersion));
 				}
 			}
-			if (osVersionArray != null)
+			if (osVersionArray is not null)
 				plist [ProductDefinitionKeys.MinimumSystemVersion] = osVersionArray;
 
 			CompiledProductDefinition = new TaskItem (Path.Combine (OutputDirectory, "Product.plist"));
@@ -99,7 +99,7 @@ namespace Xamarin.MacDev.Tasks {
 				return null;
 			}
 
-			if (plist == null) {
+			if (plist is null) {
 				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0122, AppManifest);
 				return null;
 			}

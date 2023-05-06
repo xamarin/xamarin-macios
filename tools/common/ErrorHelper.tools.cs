@@ -49,7 +49,7 @@ namespace Xamarin.Bundler {
 		{
 			WarningLevel level;
 
-			if (warning_levels == null)
+			if (warning_levels is null)
 				return WarningLevel.Warning;
 
 			// code -1: all codes
@@ -64,7 +64,7 @@ namespace Xamarin.Bundler {
 
 		public static void SetWarningLevel (WarningLevel level, int? code = null /* if null, apply to all warnings */)
 		{
-			if (warning_levels == null)
+			if (warning_levels is null)
 				warning_levels = new Dictionary<int, WarningLevel> ();
 			if (code.HasValue) {
 				warning_levels [code.Value] = level;
@@ -78,10 +78,10 @@ namespace Xamarin.Bundler {
 			if (!method.HasBody)
 				return;
 
-			if (instruction == null && method.Body.Instructions.Count == 0)
+			if (instruction is null && method.Body.Instructions.Count == 0)
 				return;
 
-			if (instruction == null)
+			if (instruction is null)
 				instruction = method.Body.Instructions [0];
 
 			app.LoadSymbols ();
@@ -95,12 +95,12 @@ namespace Xamarin.Bundler {
 				if (pnt.Offset > instruction.Offset)
 					continue;
 
-				if (seq != null && seq.Offset >= pnt.Offset)
+				if (seq is not null && seq.Offset >= pnt.Offset)
 					continue;
 
 				seq = pnt;
 			}
-			if (seq == null)
+			if (seq is null)
 				return;
 
 			ex.FileName = seq.Document.Url;
@@ -190,7 +190,7 @@ namespace Xamarin.Bundler {
 		public static ProductException Create (Application app, int code, bool error, Exception innerException, ICustomAttributeProvider provider, Instruction instruction, string message, params object [] args)
 		{
 			if (provider is MemberReference member) {
-				if (instruction != null)
+				if (instruction is not null)
 					return Create (app, code, error, innerException, member, instruction, message, args);
 				return Create (app, code, error, innerException, member, null, message, args);
 			}
@@ -204,21 +204,21 @@ namespace Xamarin.Bundler {
 		public static ProductException Create (Application app, int code, bool error, Exception innerException, MemberReference member, Instruction instruction, string message, params object [] args)
 		{
 			var method = member as MethodReference;
-			if (method == null) {
+			if (method is null) {
 				var property = member as PropertyDefinition;
-				if (property != null) {
+				if (property is not null) {
 					method = property.GetMethod;
-					if (method == null)
+					if (method is null)
 						method = property.SetMethod;
 				}
 			}
-			return Create (app, code, error, innerException, method == null ? null : method.Resolve (), instruction, message, args);
+			return Create (app, code, error, innerException, method is null ? null : method.Resolve (), instruction, message, args);
 		}
 
 		public static ProductException Create (Application app, int code, bool error, Exception innerException, MethodDefinition location, Instruction instruction, string message, params object [] args)
 		{
 			var e = new ProductException (code, error, innerException, message, args);
-			if (location != null)
+			if (location is not null)
 				SetLocation (app, e, location, instruction);
 			return e;
 		}
@@ -226,7 +226,7 @@ namespace Xamarin.Bundler {
 		public static ProductException Create (Application app, int code, bool error, Exception innerException, TypeReference location, string message, params object [] args)
 		{
 			var e = new ProductException (code, error, innerException, message, args);
-			if (location != null) {
+			if (location is not null) {
 				var td = location.Resolve ();
 
 				if (td.HasMethods) {
@@ -234,7 +234,7 @@ namespace Xamarin.Bundler {
 						if (!method.IsConstructor)
 							continue;
 						SetLocation (app, e, method);
-						if (e.FileName != null)
+						if (e.FileName is not null)
 							break;
 					}
 				}
@@ -289,7 +289,7 @@ namespace Xamarin.Bundler {
 
 		static void Exit (int exitCode)
 		{
-			if (ExitCallback != null)
+			if (ExitCallback is not null)
 				ExitCallback (exitCode);
 			Environment.Exit (exitCode);
 		}
@@ -299,7 +299,7 @@ namespace Xamarin.Bundler {
 			ProductException mte = (e as ProductException);
 			bool error = true;
 
-			if (mte != null) {
+			if (mte is not null) {
 				error = mte.Error;
 
 				if (!error && GetWarningLevel (mte.Code) == WarningLevel.Disable)
@@ -311,7 +311,7 @@ namespace Xamarin.Bundler {
 
 				if (Verbosity > 2 && !string.IsNullOrEmpty (e.StackTrace))
 					Console.Error.WriteLine (e.StackTrace);
-			} else if (IsExpectedException == null || !IsExpectedException (e)) {
+			} else if (IsExpectedException is null || !IsExpectedException (e)) {
 				Console.Error.WriteLine ("error " + Prefix + "0000: Unexpected error - Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new");
 				Console.Error.WriteLine (e.ToString ());
 			} else {
@@ -327,7 +327,7 @@ namespace Xamarin.Bundler {
 		static void ShowInner (Exception e)
 		{
 			Exception ie = e.InnerException;
-			if (ie == null)
+			if (ie is null)
 				return;
 
 			if (Verbosity > 3) {

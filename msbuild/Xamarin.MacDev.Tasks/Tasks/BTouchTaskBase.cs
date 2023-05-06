@@ -109,7 +109,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		protected virtual void HandleReferences (CommandLineArgumentBuilder cmd)
 		{
-			if (References != null) {
+			if (References is not null) {
 				foreach (var item in References)
 					cmd.AddQuoted ("-r:" + Path.GetFullPath (item.ItemSpec));
 			}
@@ -168,24 +168,24 @@ namespace Xamarin.MacDev.Tasks {
 			foreach (var item in ApiDefinitions)
 				cmd.AddQuoted (Path.GetFullPath (item.ItemSpec));
 
-			if (CoreSources != null) {
+			if (CoreSources is not null) {
 				foreach (var item in CoreSources)
 					cmd.AddQuoted ("/s:" + Path.GetFullPath (item.ItemSpec));
 			}
 
-			if (Sources != null) {
+			if (Sources is not null) {
 				foreach (var item in Sources)
 					cmd.AddQuoted ("/x:" + Path.GetFullPath (item.ItemSpec));
 			}
 
-			if (AdditionalLibPaths != null) {
+			if (AdditionalLibPaths is not null) {
 				foreach (var item in AdditionalLibPaths)
 					cmd.AddQuoted ("/lib:" + Path.GetFullPath (item.ItemSpec));
 			}
 
 			HandleReferences (cmd);
 
-			if (Resources != null) {
+			if (Resources is not null) {
 				foreach (var item in Resources) {
 					var argument = item.ToString ();
 					var id = item.GetMetadata ("LogicalName");
@@ -196,7 +196,7 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			}
 
-			if (NativeLibraries != null) {
+			if (NativeLibraries is not null) {
 				foreach (var item in NativeLibraries) {
 					var argument = item.ToString ();
 					var id = item.GetMetadata ("LogicalName");
@@ -207,10 +207,10 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			}
 
-			if (GeneratedSourcesDir != null)
+			if (GeneratedSourcesDir is not null)
 				cmd.AddQuoted ("/tmpdir:" + Path.GetFullPath (GeneratedSourcesDir));
 
-			if (GeneratedSourcesFileList != null)
+			if (GeneratedSourcesFileList is not null)
 				cmd.AddQuoted ("/sourceonly:" + Path.GetFullPath (GeneratedSourcesFileList));
 
 			cmd.Add ($"/target-framework={TargetFrameworkMoniker}");
@@ -233,10 +233,10 @@ namespace Xamarin.MacDev.Tasks {
 				var customTags = new Dictionary<string, string> (StringComparer.OrdinalIgnoreCase) {
 					{ "projectdir",   projectDir },
 					// Apparently msbuild doesn't propagate the solution path, so we can't get it.
-					// { "solutiondir",  proj.ParentSolution != null ? proj.ParentSolution.BaseDirectory : proj.BaseDirectory },
+					// { "solutiondir",  proj.ParentSolution is not null ? proj.ParentSolution.BaseDirectory : proj.BaseDirectory },
 				};
 				// OutputAssembly is optional so it can be null
-				if (target != null) {
+				if (target is not null) {
 					var d = Path.GetDirectoryName (target);
 					var n = Path.GetFileName (target);
 					customTags.Add ("targetpath", Path.Combine (d, n));

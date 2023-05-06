@@ -58,7 +58,7 @@ namespace Xamarin.MacDev.Tasks {
 					foreach (var bundleResource in extracted) {
 						string logicalName;
 
-						if (ignore == null) {
+						if (ignore is null) {
 							// Create a hashset of the bundle resources that should not be overwritten by extracted resources
 							// from the referenced assemblies.
 							//

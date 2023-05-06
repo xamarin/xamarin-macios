@@ -87,9 +87,9 @@ namespace Xharness.Tests.TestImporter.Tests {
 				new GeneratedProject { Name = "First project", Path = "", XUnit = false, ExtraArgs = "", Failure = "", TimeoutMultiplier = 1, GenerationCompleted = Task.CompletedTask, },
 				new GeneratedProject { Name = "Second project", Path = "", XUnit = true, ExtraArgs = "", Failure = "", TimeoutMultiplier = 1, GenerationCompleted = Task.CompletedTask, },
 			};
-			var infos = new List<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> {
-				( Name: "First project", Assemblies: new string [] { }, ExtraArgs: "", TimeoutMultiplier: 1),
-				( Name: "Second project", Assemblies: new string [] { }, ExtraArgs: "", TimeoutMultiplier: 1),
+			var infos = new List<(string Name, string [] Assemblies, double TimeoutMultiplier)> {
+				( Name: "First project", Assemblies: new string [] { }, TimeoutMultiplier: 1),
+				( Name: "Second project", Assemblies: new string [] { }, TimeoutMultiplier: 1),
 			};
 			template.Setup (t => t.GenerateTestProjects (It.IsAny<IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)>> (), It.IsAny<Platform> ())).Returns (() => {
 				return projects;

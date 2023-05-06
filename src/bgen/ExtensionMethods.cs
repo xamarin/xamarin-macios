@@ -95,7 +95,7 @@ public static class ReflectionExtensions {
 					bool toadd = true;
 					var modelea = generator.GetExportAttribute (pinfo, out _);
 
-					if (modelea == null)
+					if (modelea is null)
 						continue;
 
 					foreach (PropertyInfo exists in properties) {

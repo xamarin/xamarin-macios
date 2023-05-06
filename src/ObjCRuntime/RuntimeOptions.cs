@@ -11,6 +11,8 @@ using Foundation;
 using ObjCRuntime;
 #endif
 
+#nullable enable
+
 #if MMP || MMP_TEST || MTOUCH || BUNDLER
 namespace Xamarin.Bundler {
 #else
@@ -25,20 +27,20 @@ namespace ObjCRuntime {
 		const string CFNetworkHandlerValue = "CFNetworkHandler";
 		const string NSUrlSessionHandlerValue = "NSUrlSessionHandler";
 
-		string http_message_handler;
+		string? http_message_handler;
 
 #if MTOUCH || MMP || BUNDLER
 		/*
 		 * This section is only used by the tools
 		 */
-		internal static RuntimeOptions Create (Application app, string http_message_handler, string tls_provider)
+		internal static RuntimeOptions Create (Application app, string? http_message_handler, string? tls_provider)
 		{
 			var options = new RuntimeOptions ();
 			options.http_message_handler = ParseHttpMessageHandler (app, http_message_handler);
 			return options;
 		}
 
-		static string ParseHttpMessageHandler (Application app, string value)
+		static string ParseHttpMessageHandler (Application app, string? value)
 		{
 			switch (value) {
 			// default
@@ -89,11 +91,11 @@ namespace ObjCRuntime {
 		}
 
 		// Called from CoreHttpMessageHandler
-		internal static TypeDefinition GetHttpMessageHandler (Application app, RuntimeOptions options, ModuleDefinition httpModule, ModuleDefinition platformModule = null)
+		internal static TypeDefinition GetHttpMessageHandler (Application app, RuntimeOptions options, ModuleDefinition httpModule, ModuleDefinition? platformModule = null)
 		{
-			string handler;
+			string? handler;
 
-			if (options != null) {
+			if (options is not null) {
 				handler = options.http_message_handler;
 			} else if (app.Platform == Utils.ApplePlatform.WatchOS) {
 				handler = NSUrlSessionHandlerValue;
@@ -111,10 +113,10 @@ namespace ObjCRuntime {
 				type = httpModule.GetType ("System.Net.Http", "HttpClientHandler");
 				break;
 			case CFNetworkHandlerValue:
-				type = platformModule.GetType ("System.Net.Http", "CFNetworkHandler");
+				type = platformModule!.GetType ("System.Net.Http", "CFNetworkHandler");
 				break;
 			case NSUrlSessionHandlerValue:
-				type = platformModule.GetType ("Foundation", "NSUrlSessionHandler");
+				type = platformModule!.GetType ("Foundation", "NSUrlSessionHandler");
 				break;
 #else
 #if NET
@@ -125,7 +127,7 @@ namespace ObjCRuntime {
 			case HttpClientHandlerValue:
 				if (app.Platform == Utils.ApplePlatform.WatchOS) {
 					ErrorHelper.Warning (2015, Errors.MT2015, handler);
-					type = platformModule.GetType ("System.Net.Http", "NSUrlSessionHandler");
+					type = platformModule!.GetType ("System.Net.Http", "NSUrlSessionHandler");
 				} else {
 					type = httpModule.GetType ("System.Net.Http", "HttpClientHandler");
 				}
@@ -134,25 +136,25 @@ namespace ObjCRuntime {
 			case CFNetworkHandlerValue:
 				if (app.Platform == Utils.ApplePlatform.WatchOS) {
 					ErrorHelper.Warning (2015, Errors.MT2015, handler);
-					type = platformModule.GetType ("System.Net.Http", "NSUrlSessionHandler");
+					type = platformModule!.GetType ("System.Net.Http", "NSUrlSessionHandler");
 				} else {
-					type = platformModule.GetType ("System.Net.Http", "CFNetworkHandler");
+					type = platformModule!.GetType ("System.Net.Http", "CFNetworkHandler");
 				}
 				break;
 			case NSUrlSessionHandlerValue:
-				type = platformModule.GetType ("System.Net.Http", "NSUrlSessionHandler");
+				type = platformModule!.GetType ("System.Net.Http", "NSUrlSessionHandler");
 				break;
 #endif
 			default:
 				throw new InvalidOperationException (string.Format ("Unknown HttpMessageHandler `{0}`.", handler));
 			}
-			if (type == null)
+			if (type is null)
 				throw new InvalidOperationException (string.Format ("Cannot load HttpMessageHandler `{0}`.", handler));
 			return type;
 		}
 #else
 
-		internal static RuntimeOptions Read ()
+		internal static RuntimeOptions? Read ()
 		{
 			// for iOS NSBundle.ResourcePath returns the path to the root of the app bundle
 			// for macOS apps NSBundle.ResourcePath returns foo.app/Contents/Resources
@@ -185,12 +187,12 @@ namespace ObjCRuntime {
 			case CFNetworkHandlerValue:
 				return new CFNetworkHandler ();
 			default:
-				if (handler_name != null && handler_name != NSUrlSessionHandlerValue)
+				if (handler_name is not null && handler_name != NSUrlSessionHandlerValue)
 					Runtime.NSLog ($"{handler_name} is not a valid HttpMessageHandler, defaulting to System.Net.Http.NSUrlSessionHandlerValue");
 				return new NSUrlSessionHandler ();
 			}
 #elif __WATCHOS__
-			if (handler_name != null && handler_name != NSUrlSessionHandlerValue)
+			if (handler_name is not null && handler_name != NSUrlSessionHandlerValue)
 				Runtime.NSLog ($"{handler_name} is not a valid HttpMessageHandler, defaulting to NSUrlSessionHandler");
 			return new NSUrlSessionHandler ();
 #else
@@ -200,7 +202,7 @@ namespace ObjCRuntime {
 			case NSUrlSessionHandlerValue:
 				return new NSUrlSessionHandler ();
 			default:
-				if (handler_name != null && handler_name != HttpClientHandlerValue)
+				if (handler_name is not null && handler_name != HttpClientHandlerValue)
 					Runtime.NSLog ($"{handler_name} is not a valid HttpMessageHandler, defaulting to System.Net.Http.HttpClientHandler");
 				return new HttpClientHandler ();
 			}

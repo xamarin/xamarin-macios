@@ -66,12 +66,12 @@ namespace UIKit
 
 					var value = viewsAndMetrics [i + 1];
 					if (value is View) {
-						if (views == null)
+						if (views is null)
 							views = new NSMutableDictionary ();
 						views [nskey] = (NSObject) value;
 						continue;
 					} else if (value is INativeObject && Messaging.bool_objc_msgSend_IntPtr (((INativeObject) value).Handle, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (typeof (View)))) {
-						if (views == null)
+						if (views is null)
 							views = new NSMutableDictionary ();
 						views.LowlevelSetObject (((INativeObject) value).Handle, nskey.Handle);
 						continue;
@@ -79,7 +79,7 @@ namespace UIKit
 #if !MONOMAC
 					// This requires UILayoutSupport class which is not exist on Mac
 					else if (value is INativeObject && Messaging.bool_objc_msgSend_IntPtr (((INativeObject) value).Handle, Selector.GetHandle ("conformsToProtocol:"), Protocol.GetHandle (typeof (UILayoutSupport).Name))) {
-						if (views == null)
+						if (views is null)
 							views = new NSMutableDictionary ();
 						views.LowlevelSetObject (((INativeObject) value).Handle, nskey.Handle);
 						continue;
@@ -87,14 +87,14 @@ namespace UIKit
 #endif // !MONOMAC
 
 					var number = AsNumber (value);
-					if (number == null)
+					if (number is null)
 						throw new ArgumentException (String.Format ("Item at {0} is not a number or a view", i + 1), "viewsAndMetrics");
-					if (metrics == null)
+					if (metrics is null)
 						metrics = new NSMutableDictionary ();
 					metrics [nskey] = number;
 				}
 			}
-			if (views == null)
+			if (views is null)
 				throw new ArgumentException ("You should at least provide a pair of name, view", "viewAndMetrics");
 
 			return FromVisualFormat (format, formatOptions, metrics, views);

@@ -49,7 +49,7 @@ namespace Xamarin {
 			case MLaunchAction.None:
 				break;
 			case MLaunchAction.Sim:
-				if (AppPath == null)
+				if (AppPath is null)
 					throw new Exception ("No AppPath specified.");
 				sb.Add ("--launchsim");
 				sb.Add (AppPath);

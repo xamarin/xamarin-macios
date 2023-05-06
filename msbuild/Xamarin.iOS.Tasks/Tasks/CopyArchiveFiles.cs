@@ -39,7 +39,7 @@ namespace Xamarin.iOS.Tasks {
 
 			var sshCommands = client.MessagingService.Ssh.Commands;
 
-			if (sshCommands == null) {
+			if (sshCommands is null) {
 				Log.LogError (MSBStrings.E0177, ArchivePath);
 
 				return false;

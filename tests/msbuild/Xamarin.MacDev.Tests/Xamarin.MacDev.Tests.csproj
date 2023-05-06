@@ -59,6 +59,9 @@
     <Compile Include="..\..\common\Tool.cs">
       <Link>external\Tool.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\tools\common\NullableAttributes.cs">
+      <Link>external\NullableAttributes.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />

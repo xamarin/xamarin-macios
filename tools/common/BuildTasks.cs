@@ -209,16 +209,16 @@ namespace Xamarin.Bundler {
 
 		public void AddDependency (params BuildTask [] dependencies)
 		{
-			if (dependencies == null)
+			if (dependencies is null)
 				return;
-			this.dependencies.AddRange (dependencies.Where ((v) => v != null));
+			this.dependencies.AddRange (dependencies.Where ((v) => v is not null));
 		}
 
 		public void AddDependency (IEnumerable<BuildTask> dependencies)
 		{
-			if (dependencies == null)
+			if (dependencies is null)
 				return;
-			this.dependencies.AddRange (dependencies.Where ((v) => v != null));
+			this.dependencies.AddRange (dependencies.Where ((v) => v is not null));
 		}
 
 		public async Task Execute (BuildTasks build_tasks)
@@ -305,7 +305,7 @@ namespace Xamarin.Bundler {
 		// Writes a list of lines to stderr, writing only a limited number of lines if there are too many of them.
 		protected void WriteLimitedOutput (string first, IEnumerable<string> lines, List<Exception> exceptions)
 		{
-			if ((first == null || first.Length == 0) && !lines.Any ())
+			if ((first is null || first.Length == 0) && !lines.Any ())
 				return;
 
 			if (Driver.Verbosity < 6 && lines.Count () > 1000) {
@@ -316,7 +316,7 @@ namespace Xamarin.Bundler {
 			// Construct the entire message before writing anything, so that there's a better chance the message isn't
 			// mixed up with output from other threads.
 			var sb = new StringBuilder ();
-			if (first != null && first.Length > 0)
+			if (first is not null && first.Length > 0)
 				sb.AppendLine (first);
 			foreach (var line in lines)
 				sb.AppendLine (line);

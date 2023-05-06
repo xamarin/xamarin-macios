@@ -2,6 +2,8 @@ using System.Collections.Generic;
 
 using Xamarin.Utils;
 
+#nullable enable
+
 namespace Xamarin.Linker {
 	// The static registrar may need access to information that has been linked away,
 	// in particular types and interfaces, so we need to store those somewhere
@@ -19,10 +21,10 @@ namespace Xamarin.Linker {
 			switch (Configuration.Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.MacCatalyst:
-				linkerFrameworks.Add (new MSBuildItem {
-					Include = "GSS",
-					Metadata = { { "IsWeak", "false" } },
-				});
+				linkerFrameworks.Add (new MSBuildItem (
+					"GSS",
+					new Dictionary<string, string> { { "IsWeak", "false" } }
+				));
 				break;
 			}
 
@@ -31,15 +33,15 @@ namespace Xamarin.Linker {
 			// Tell MSBuild about any additional linker flags we found
 			var linkerFlags = new List<MSBuildItem> ();
 			foreach (var asm in Configuration.Target.Assemblies) {
-				if (asm.LinkerFlags == null)
+				if (asm.LinkerFlags is null)
 					continue;
 				foreach (var arg in asm.LinkerFlags) {
-					var item = new MSBuildItem {
-						Include = arg,
-						Metadata = new Dictionary<string, string> {
-							{ "Assembly", asm.Identity },
-						},
-					};
+					var item = new MSBuildItem (
+						arg,
+						new Dictionary<string, string> {
+							{ "Assembly", asm.Identity }
+						}
+					);
 					linkerFlags.Add (item);
 				}
 			}
@@ -50,7 +52,7 @@ namespace Xamarin.Linker {
 
 			var mainLinkerFlags = new List<MSBuildItem> ();
 			if (Configuration.Application.DeadStrip) {
-				mainLinkerFlags.Add (new MSBuildItem { Include = "-dead_strip" });
+				mainLinkerFlags.Add (new MSBuildItem ("-dead_strip"));
 			}
 			Configuration.WriteOutputForMSBuild ("_AssemblyLinkerFlags", mainLinkerFlags);
 

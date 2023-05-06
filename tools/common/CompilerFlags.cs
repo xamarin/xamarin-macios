@@ -29,7 +29,7 @@ namespace Xamarin.Utils {
 
 		public CompilerFlags (Target target)
 		{
-			if (target == null)
+			if (target is null)
 				throw new ArgumentNullException (nameof (target));
 			this.Target = target;
 		}
@@ -37,9 +37,9 @@ namespace Xamarin.Utils {
 		public HashSet<string> AllLibraries {
 			get {
 				var rv = new HashSet<string> ();
-				if (LinkWithLibraries != null)
+				if (LinkWithLibraries is not null)
 					rv.UnionWith (LinkWithLibraries);
-				if (ForceLoadLibraries != null)
+				if (ForceLoadLibraries is not null)
 					rv.UnionWith (ForceLoadLibraries);
 				return rv;
 			}
@@ -47,7 +47,7 @@ namespace Xamarin.Utils {
 
 		public void ReferenceSymbols (IEnumerable<Symbol> symbols, Abi abi)
 		{
-			if (UnresolvedSymbols == null)
+			if (UnresolvedSymbols is null)
 				UnresolvedSymbols = new HashSet<string> ();
 
 			foreach (var symbol in symbols) {
@@ -59,16 +59,16 @@ namespace Xamarin.Utils {
 
 		public void AddDefine (string define)
 		{
-			if (Defines == null)
+			if (Defines is null)
 				Defines = new HashSet<string> ();
 			Defines.Add (define);
 		}
 
 		public void AddLinkWith (string library, bool force_load = false)
 		{
-			if (LinkWithLibraries == null)
+			if (LinkWithLibraries is null)
 				LinkWithLibraries = new HashSet<string> ();
-			if (ForceLoadLibraries == null)
+			if (ForceLoadLibraries is null)
 				ForceLoadLibraries = new HashSet<string> ();
 
 			if (force_load) {
@@ -80,7 +80,7 @@ namespace Xamarin.Utils {
 
 		public void AddLinkWith (IEnumerable<string> libraries, bool force_load = false)
 		{
-			if (libraries == null)
+			if (libraries is null)
 				return;
 
 			foreach (var lib in libraries)
@@ -89,7 +89,7 @@ namespace Xamarin.Utils {
 
 		public void AddSourceFile (string file)
 		{
-			if (SourceFiles == null)
+			if (SourceFiles is null)
 				SourceFiles = new HashSet<string> ();
 			SourceFiles.Add (file);
 		}
@@ -104,23 +104,23 @@ namespace Xamarin.Utils {
 
 		public void AddOtherInitialFlag (string flag)
 		{
-			if (InitialOtherFlags == null)
+			if (InitialOtherFlags is null)
 				InitialOtherFlags = new List<string> ();
 			InitialOtherFlags.Add (flag);
 		}
 
 		public void AddOtherFlag (IList<string> flags)
 		{
-			if (flags == null)
+			if (flags is null)
 				return;
 			AddOtherFlag ((string []) flags.ToArray ());
 		}
 
 		public void AddOtherFlag (params string [] flags)
 		{
-			if (flags == null || flags.Length == 0)
+			if (flags is null || flags.Length == 0)
 				return;
-			if (OtherFlags == null)
+			if (OtherFlags is null)
 				OtherFlags = new HashSet<string []> ();
 			OtherFlags.Add (flags);
 		}
@@ -165,21 +165,21 @@ namespace Xamarin.Utils {
 
 		public void AddFramework (string framework)
 		{
-			if (Frameworks == null)
+			if (Frameworks is null)
 				Frameworks = new HashSet<string> ();
 			Frameworks.Add (framework);
 		}
 
 		public void AddFrameworks (IEnumerable<string> frameworks, IEnumerable<string> weak_frameworks)
 		{
-			if (frameworks != null) {
-				if (Frameworks == null)
+			if (frameworks is not null) {
+				if (Frameworks is null)
 					Frameworks = new HashSet<string> ();
 				Frameworks.UnionWith (frameworks);
 			}
 
-			if (weak_frameworks != null) {
-				if (WeakFrameworks == null)
+			if (weak_frameworks is not null) {
+				if (WeakFrameworks is null)
 					WeakFrameworks = new HashSet<string> ();
 				WeakFrameworks.UnionWith (weak_frameworks);
 			}
@@ -189,15 +189,15 @@ namespace Xamarin.Utils {
 		{
 			// Check for system frameworks that are only available in newer iOS versions,
 			// (newer than the deployment target), in which case those need to be weakly linked.
-			if (Frameworks != null) {
-				if (WeakFrameworks == null)
+			if (Frameworks is not null) {
+				if (WeakFrameworks is null)
 					WeakFrameworks = new HashSet<string> ();
 
 				foreach (var fwk in Frameworks) {
 					if (!fwk.EndsWith (".framework", StringComparison.Ordinal)) {
 						var add_to = WeakFrameworks;
 						var framework = Driver.GetFrameworks (Application).Find (fwk);
-						if (framework != null) {
+						if (framework is not null) {
 							if (framework.Version > Application.SdkVersion)
 								continue;
 							add_to = Application.DeploymentTarget >= framework.Version ? Frameworks : WeakFrameworks;
@@ -214,13 +214,13 @@ namespace Xamarin.Utils {
 
 			// force_load libraries take precedence, so remove the libraries
 			// we need to force load from the list of libraries we just load.
-			if (LinkWithLibraries != null)
+			if (LinkWithLibraries is not null)
 				LinkWithLibraries.ExceptWith (ForceLoadLibraries);
 		}
 
 		void AddInput (string file)
 		{
-			if (Inputs == null)
+			if (Inputs is null)
 				return;
 
 			Inputs.Add (file);
@@ -230,7 +230,7 @@ namespace Xamarin.Utils {
 		{
 			Prepare ();
 
-			if (InitialOtherFlags != null) {
+			if (InitialOtherFlags is not null) {
 				var idx = 0;
 				foreach (var flag in InitialOtherFlags) {
 					args.Insert (idx, flag);
@@ -240,14 +240,14 @@ namespace Xamarin.Utils {
 
 			ProcessFrameworksForArguments (args);
 
-			if (LinkWithLibraries != null) {
+			if (LinkWithLibraries is not null) {
 				foreach (var lib in LinkWithLibraries) {
 					args.Add (lib);
 					AddInput (lib);
 				}
 			}
 
-			if (ForceLoadLibraries != null) {
+			if (ForceLoadLibraries is not null) {
 				foreach (var lib in ForceLoadLibraries) {
 					args.Add ("-force_load");
 					args.Add (lib);
@@ -255,28 +255,28 @@ namespace Xamarin.Utils {
 				}
 			}
 
-			if (OtherFlags != null) {
+			if (OtherFlags is not null) {
 				foreach (var flags in OtherFlags) {
 					foreach (var flag in flags)
 						args.Add (flag);
 				}
 			}
 
-			if (Defines != null) {
+			if (Defines is not null) {
 				foreach (var define in Defines) {
 					args.Add ("-D");
 					args.Add (define);
 				}
 			}
 
-			if (UnresolvedSymbols != null) {
+			if (UnresolvedSymbols is not null) {
 				foreach (var symbol in UnresolvedSymbols) {
 					args.Add ("-u");
 					args.Add (symbol);
 				}
 			}
 
-			if (SourceFiles != null) {
+			if (SourceFiles is not null) {
 				foreach (var src in SourceFiles) {
 					args.Add (src);
 					AddInput (src);
@@ -288,12 +288,12 @@ namespace Xamarin.Utils {
 		{
 			bool any_user_framework = false;
 
-			if (Frameworks != null) {
+			if (Frameworks is not null) {
 				foreach (var fw in Frameworks)
 					ProcessFrameworkForArguments (args, fw, false, ref any_user_framework);
 			}
 
-			if (WeakFrameworks != null) {
+			if (WeakFrameworks is not null) {
 				foreach (var fw in WeakFrameworks)
 					ProcessFrameworkForArguments (args, fw, true, ref any_user_framework);
 			}

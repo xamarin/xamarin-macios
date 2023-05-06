@@ -19,12 +19,12 @@ namespace EndSheet
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (runSheetButton != null) {
+			if (runSheetButton is not null) {
 				runSheetButton.Dispose ();
 				runSheetButton = null;
 			}
 
-			if (dismissCountLabel != null) {
+			if (dismissCountLabel is not null) {
 				dismissCountLabel.Dispose ();
 				dismissCountLabel = null;
 			}

@@ -12,7 +12,7 @@ namespace Xamarin.MacDev.Tasks {
 				return base.Execute ();
 
 			// Fix LogicalName path for the Mac
-			if (BundleResourcesWithLogicalNames != null) {
+			if (BundleResourcesWithLogicalNames is not null) {
 				foreach (var resource in BundleResourcesWithLogicalNames) {
 					var logicalName = resource.GetMetadata ("LogicalName");
 
@@ -27,7 +27,7 @@ namespace Xamarin.MacDev.Tasks {
 			try {
 				var result = runner.RunAsync (this).Result;
 
-				if (result && EmbeddedResources != null) {
+				if (result && EmbeddedResources is not null) {
 					// We must get the "real" file that will be embedded in the
 					// compiled assembly in Windows
 					foreach (var embeddedResource in EmbeddedResources.Where (x => runner.ShouldCopyItemAsync (task: this, item: x).Result)) {

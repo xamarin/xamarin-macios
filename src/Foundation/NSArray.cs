@@ -76,17 +76,17 @@ namespace Foundation {
 		}
 		public static NSArray FromNSObjects<T> (params T [] [] items) where T : class, INativeObject
 		{
-			if (items == null)
+			if (items is null)
 				return null;
 
 			var ret = new NSMutableArray ((nuint) items.Length);
 			for (var i = 0; i < items.Length; i++) {
 				var row = items [i];
-				if (row == null)
+				if (row is null)
 					throw new ArgumentNullException (nameof (items), $"Element [{i}] is null");
 				for (var j = 0; j < row.Length; j++) {
 					var element = row [j];
-					if (element == null)
+					if (element is null)
 						throw new ArgumentNullException (nameof (items), $"Element [{i}][{j}] is null");
 				}
 				ret.Add (NSArray.FromNSObjects (row));
@@ -96,7 +96,7 @@ namespace Foundation {
 		}
 		public static NSArray FromNSObjects<T> (T [,] items) where T : class, INativeObject
 		{
-			if (items == null)
+			if (items is null)
 				return null;
 
 			var width = items.GetLength (0);
@@ -118,9 +118,9 @@ namespace Foundation {
 
 		public static NSArray FromNSObjects<T> (Func<T, NSObject> nsobjectificator, params T [] items)
 		{
-			if (nsobjectificator == null)
+			if (nsobjectificator is null)
 				throw new ArgumentNullException (nameof (nsobjectificator));
-			if (items == null)
+			if (items is null)
 				return null;
 
 			var arr = new NSObject [items.Length];
@@ -143,7 +143,7 @@ namespace Foundation {
 
 		internal static NSArray From<T> (T [] items, long count = -1)
 		{
-			if ((items == null) || (count == 0))
+			if ((items is null) || (count == 0))
 				return new NSArray ();
 
 			if (count == -1)
@@ -154,7 +154,7 @@ namespace Foundation {
 			NSObject [] nsoa = new NSObject [count];
 			for (nint i = 0; i < count; i++) {
 				var k = NSObject.FromObject (items [i]);
-				if (k == null)
+				if (k is null)
 					throw new ArgumentException (String.Format ("Do not know how to marshal object of type '{0}' to an NSObject", items [i].GetType ()));
 				nsoa [i] = k;
 			}
@@ -163,7 +163,7 @@ namespace Foundation {
 
 		internal static NSArray FromNativeObjects<T> (T [] items) where T : class, INativeObject
 		{
-			if (items == null)
+			if (items is null)
 				return new NSArray ();
 
 			return FromNativeObjects<T> (items, items.Length);
@@ -171,7 +171,7 @@ namespace Foundation {
 
 		internal static NSArray FromNativeObjects<T> (T [] items, nint count) where T : class, INativeObject
 		{
-			if (items == null)
+			if (items is null)
 				return new NSArray ();
 
 			if (count > items.Length)
@@ -180,7 +180,7 @@ namespace Foundation {
 			IntPtr buf = Marshal.AllocHGlobal ((IntPtr) (count * IntPtr.Size));
 			for (nint i = 0; i < count; i++) {
 				var item = items [i];
-				IntPtr h = item == null ? NSNull.Null.Handle : item.Handle;
+				IntPtr h = item is null ? NSNull.Null.Handle : item.Handle;
 				Marshal.WriteIntPtr (buf, (int) (i * IntPtr.Size), h);
 			}
 			NSArray arr = Runtime.GetNSObject<NSArray> (NSArray.FromObjects (buf, count));
@@ -190,7 +190,7 @@ namespace Foundation {
 
 		internal static NSArray FromNSObjects (IList<NSObject> items)
 		{
-			if (items == null)
+			if (items is null)
 				return new NSArray ();
 
 			int count = items.Count;
@@ -206,7 +206,7 @@ namespace Foundation {
 
 		static public NSArray FromStrings (IReadOnlyList<string> items)
 		{
-			if (items == null)
+			if (items is null)
 				throw new ArgumentNullException (nameof (items));
 
 			IntPtr buf = Marshal.AllocHGlobal (items.Count * IntPtr.Size);
@@ -214,7 +214,7 @@ namespace Foundation {
 				for (int i = 0; i < items.Count; i++) {
 					IntPtr val;
 
-					if (items [i] == null)
+					if (items [i] is null)
 						val = NSNull.Null.Handle;
 					else {
 						val = NSString.CreateNative (items [i], true);
@@ -231,7 +231,7 @@ namespace Foundation {
 
 		static public NSArray FromIntPtrs (NativeHandle [] vals)
 		{
-			if (vals == null)
+			if (vals is null)
 				throw new ArgumentNullException ("vals");
 			int n = vals.Length;
 			IntPtr buf = Marshal.AllocHGlobal (n * IntPtr.Size);
@@ -406,7 +406,7 @@ namespace Foundation {
 
 		public static NSObject [] [] FromArrayOfArray (NSArray weakArray)
 		{
-			if (weakArray == null || weakArray.Handle == IntPtr.Zero)
+			if (weakArray is null || weakArray.Handle == IntPtr.Zero)
 				return null;
 
 			try {
@@ -422,7 +422,7 @@ namespace Foundation {
 
 		public static NSArray From (NSObject [] [] items)
 		{
-			if (items == null)
+			if (items is null)
 				return null;
 
 			try {

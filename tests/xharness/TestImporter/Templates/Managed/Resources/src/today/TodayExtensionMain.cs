@@ -24,7 +24,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding 
 		// var t = Path.GetFileName (typeof (ActivatorCas).Assembly.Location);
 		foreach (var name in RegisterType.TypesToRegister.Keys) {
 			var a = Assembly.Load (name);
-			if (a == null) {
+			if (a is null) {
 				Console.WriteLine ($"# WARNING: Unable to load assembly {name}.");
 				continue;
 			}
@@ -43,7 +43,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding 
 		// we generate the logs in two different ways depending if the generate xml flag was
 		// provided. If it was, we will write the xml file to the tcp writer if present, else
 		// we will write the normal console output using the LogWriter
-		var logger = (writer == null || options.EnableXml) ? new LogWriter () : new LogWriter (writer);
+		var logger = (writer is null || options.EnableXml) ? new LogWriter () : new LogWriter (writer);
 		logger.MinimumLogLevel = MinimumLogLevel.Info;
 		var testAssemblies = GetTestAssemblies ();
 		runner = RegisterType.IsXUnit ? (TestRunner) new XUnitTestRunner (logger) : new NUnitTestRunner (logger);

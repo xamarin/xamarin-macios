@@ -21,7 +21,7 @@ namespace UIKit {
 	public partial class UISearchBar {
 		public void SetScopeBarButtonTitle (TextAttributes attributes, UIControlState state)
 		{
-			if (attributes == null)
+			if (attributes is null)
 				throw new ArgumentNullException ("attributes");
 
 			using (var dict = attributes.Dictionary) {
@@ -39,7 +39,7 @@ namespace UIKit {
 		public partial class UISearchBarAppearance {
 			public void SetScopeBarButtonTitle (TextAttributes attributes, UIControlState state)
 			{
-				if (attributes == null)
+				if (attributes is null)
 					throw new ArgumentNullException ("attributes");
 
 				using (var dict = attributes.Dictionary) {

@@ -42,7 +42,7 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var profile = MobileProvisionIndex.GetMobileProvision (GetMobileProvisionPlatform (), ProvisioningProfile);
 
-			if (profile == null) {
+			if (profile is null) {
 				Log.LogError (MSBStrings.E0049, ProvisioningProfile);
 				return false;
 			}
