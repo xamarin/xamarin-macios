@@ -16,9 +16,9 @@ namespace Xamarin.Linker {
 			get { return LinkerConfiguration.GetInstance (Context); }
 		}
 
-		protected void Report (Exception exception)
+		protected void Report (params Exception[] exceptions)
 		{
-			Report (new Exception[] { exceptions });
+			Report ((IList<Exception>) exceptions);
 		}
 
 		protected void Report (IList<Exception>? exceptions)
@@ -50,7 +50,8 @@ namespace Xamarin.Linker {
 		protected sealed override void EndProcess ()
 		{
 			try {
-				TryEndProcess ();
+				TryEndProcess (out var exceptions);
+				Report (exceptions);
 			} catch (Exception e) {
 				Report (FailEnd (e));
 			}
@@ -67,6 +68,12 @@ namespace Xamarin.Linker {
 
 		protected virtual void TryEndProcess ()
 		{
+		}
+
+		protected virtual void TryEndProcess (out List<Exception>? exceptions)
+		{
+			exceptions = null;
+			TryEndProcess ();
 		}
 
 		// failure overrides, with defaults
@@ -88,22 +95,22 @@ namespace Xamarin.Linker {
 			return false;
 		}
 
-		protected virtual Exception Fail (AssemblyDefinition assembly, Exception e)
+		protected virtual Exception[] Fail (AssemblyDefinition assembly, Exception e)
 		{
 			return CollectExceptions (e, () => ErrorHelper.CreateError (ErrorCode, Errors.MX_ConfigurationAwareStepWithAssembly, Name, assembly?.FullName, e.Message));
 		}
 
-		protected virtual Exception Fail (Exception e)
+		protected virtual Exception[] Fail (Exception e)
 		{
 			return CollectExceptions (e, () => ErrorHelper.CreateError (ErrorCode | 1, Errors.MX_ConfigurationAwareStep, Name, e.Message));
 		}
 
-		protected virtual Exception FailEnd (Exception e)
+		protected virtual Exception[] FailEnd (Exception e)
 		{
 			return CollectExceptions (e, () => ErrorHelper.CreateError (ErrorCode | 2, Errors.MX_ConfigurationAwareStep, Name, e.Message));
 		}
 
-		Exception CollectExceptions (Exception e, Func<ProductException> createException)
+		Exception[] CollectExceptions (Exception e, Func<ProductException> createException)
 		{
 			// Detect if we're reporting one or more ProductExceptions (and no other exceptions), and in that case
 			// report the product exceptions as top-level exceptions + the step-specific exception at the end,
@@ -117,10 +124,10 @@ namespace Xamarin.Linker {
 					// instead return an aggregate exception with the original exception and all the ProductExceptions we're reporting.
 					productExceptions.Add (ex);
 				}
-				return new AggregateException (productExceptions);
+				return productExceptions.ToArray ();
 			}
 
-			return createException ();
+			return new Exception [] { createException () };
 		}
 
 		// abstracts
