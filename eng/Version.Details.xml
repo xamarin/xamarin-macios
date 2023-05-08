@@ -1,8 +1,8 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.100-preview.4.23254.19">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.100-preview.4.23255.1">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>8d912c98a8f5138d33a17d45cea918d12c6889f0</Sha>
+      <Sha>90d9d6a528c2814d0a7f6413d55ff983214091a4</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="8.0.0-preview.4.23228.5" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/runtime</Uri>
@@ -22,9 +22,9 @@
       <Uri>https://github.com/dotnet/emsdk</Uri>
       <Sha>dc98fded25395f86bfddd013652a08d4289ae216</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Cecil" Version="0.11.4-alpha.23252.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.DotNet.Cecil" Version="0.11.4-alpha.23218.2" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/cecil</Uri>
-      <Sha>c32f0be86d4e72dfc0967ef08913889cfdbc8dc4</Sha>
+      <Sha>80d3f38fc59c351fa1942209e66f54a6fc912deb</Sha>
     </Dependency>
     <!-- This is a subscription of the .NET 7 versions of our packages -->
     <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.4.7060">
