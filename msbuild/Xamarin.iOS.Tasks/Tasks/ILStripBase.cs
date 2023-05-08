@@ -1,19 +1,28 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
+
 using Microsoft.Build.Framework;
+using Microsoft.Build.Tasks;
 using Microsoft.Build.Utilities;
 
-// Normally this would be ILStrip.Tasks but ILStrip is in the global namespace
-// And having a type and the parent namespace have the same name really confuses the compiler
-namespace ILStripTasks {
-	public class ILStripBase : ILStrip {
-		public string SessionId { get; set; }
+using Xamarin.Messaging.Build.Client;
+
+#nullable enable
+
+namespace Xamarin.MacDev.Tasks {
+	public class ILStrip : global::ILStrip, ITaskCallback {
+		public string SessionId { get; set; } = string.Empty;
 
 		[Output]
-		public ITaskItem [] StrippedAssemblies { get; set; }
+		public ITaskItem [] StrippedAssemblies { get; set; } = Array.Empty<ITaskItem> ();
 
 		public override bool Execute ()
 		{
+			if (this.ShouldExecuteRemotely (SessionId))
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			var result = base.Execute ();
 
 			var stripedItems = new List<ITaskItem> ();
@@ -28,5 +37,11 @@ namespace ILStripTasks {
 
 			return result;
 		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => true;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 	}
 }
