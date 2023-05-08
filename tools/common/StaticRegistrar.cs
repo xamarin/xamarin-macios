@@ -4983,25 +4983,31 @@ namespace Registrar {
 
 		bool TryCreateFullTokenReference (MemberReference member, out uint token_ref, out Exception exception)
 		{
-			token_ref = (full_token_reference_count++ << 1) + 1;
 			switch (member.MetadataToken.TokenType) {
 			case TokenType.TypeDef:
 			case TokenType.Method:
 				break; // OK
 			default:
 				exception = ErrorHelper.CreateError (99, Errors.MX0099, $"unsupported tokentype ({member.MetadataToken.TokenType}) for {member.FullName}");
+				token_ref = INVALID_TOKEN_REF;
 				return false;
 			}
-			var assemblyIndex = registered_assemblies.FindIndex (v => v.Assembly == member.Module.Assembly);
-			if (assemblyIndex == -1) {
-				exception = ErrorHelper.CreateError (99, Errors.MX0099, $"Could not find {member.Module.Assembly.Name.Name} in the list of registered assemblies when processing {member.FullName}:\n\t{string.Join ("\n\t", registered_assemblies.Select (v => v.Assembly.Name.Name))}");
-				return false;
-			}
-			var assemblyName = registered_assemblies [assemblyIndex].Name;
 			var moduleToken = member.Module.MetadataToken.ToUInt32 ();
 			var moduleName = member.Module.Name;
 			var memberToken = member.MetadataToken.ToUInt32 ();
 			var memberName = member.FullName;
+			return WriteFullTokenReference (member.Module.Assembly, moduleToken, moduleName, memberToken, memberName, out token_ref, out exception);
+		}
+
+		bool WriteFullTokenReference (AssemblyDefinition assembly, uint moduleToken, string moduleName, uint memberToken, string memberName, out uint token_ref, out Exception exception)
+		{
+			token_ref = (full_token_reference_count++ << 1) + 1;
+			var assemblyIndex = registered_assemblies.FindIndex (v => v.Assembly == assembly);
+			if (assemblyIndex == -1) {
+				exception = ErrorHelper.CreateError (99, Errors.MX0099, $"Could not find {assembly.Name.Name} in the list of registered assemblies when processing {memberName}:\n\t{string.Join ("\n\t", registered_assemblies.Select (v => v.Assembly.Name.Name))}");
+				return false;
+			}
+			var assemblyName = registered_assemblies [assemblyIndex].Name;
 			exception = null;
 			full_token_references.Append ($"\t\t{{ /* #{full_token_reference_count} = 0x{token_ref:X} */ {assemblyIndex} /* {assemblyName} */, 0x{moduleToken:X} /* {moduleName} */, 0x{memberToken:X} /* {memberName} */ }},\n");
 			return true;
