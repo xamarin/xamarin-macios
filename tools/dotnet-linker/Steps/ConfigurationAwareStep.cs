@@ -108,11 +108,14 @@ namespace Xamarin.Linker {
 			// report the product exceptions as top-level exceptions + the step-specific exception at the end,
 			// instead of the step-specific exception with all the other exceptions as an inner exception.
 			// This makes the errors show up nicer in the output.
+			// If we're only reporting warnings, then don't add the step-specific exception at all.
 			if (CollectProductExceptions (e, out var productExceptions)) {
 				// don't add inner exception
-				var ex = createException ();
-				// instead return an aggregate exception with the original exception and all the ProductExceptions we're reporting.
-				productExceptions.Add (ex);
+				if (productExceptions.Any (v => v.Error)) {
+					var ex = createException ();
+					// instead return an aggregate exception with the original exception and all the ProductExceptions we're reporting.
+					productExceptions.Add (ex);
+				}
 				return new AggregateException (productExceptions);
 			}
 
