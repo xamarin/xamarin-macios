@@ -73,7 +73,7 @@ namespace Xamarin.MacDev.Tasks {
 				arguments.Add ("-isysroot");
 				arguments.Add (SdkRoot);
 
-				if (IncludeDirectories != null) {
+				if (IncludeDirectories is not null) {
 					foreach (var inc in IncludeDirectories)
 						arguments.Add ("-I" + Path.GetFullPath (inc.ItemSpec));
 				}

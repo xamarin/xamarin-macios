@@ -32,7 +32,7 @@ GENERATED_FILES_PATTERN = \
 	TrampolineTest.generated%cs \
 
 testgenerator.exe: testgenerator.cs Makefile
-	$(Q) mcs -out:$@ $<
+	$(Q) $(SYSTEM_CSC) -out:$@ $<
 
 $(GENERATED_FILES_PATTERN): testgenerator.exe
 	$(Q) mono --debug $<

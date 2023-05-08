@@ -17,12 +17,12 @@ namespace Foundation {
 	public partial class NSMutableAttributedString {
 		public void SetAttributes (UIStringAttributes attrs, NSRange range)
 		{
-			SetAttributes (attrs == null ? null : attrs.Dictionary, range);
+			SetAttributes (attrs is null ? null : attrs.Dictionary, range);
 		}
 
 		public void AddAttributes (UIStringAttributes attrs, NSRange range)
 		{
-			AddAttributes (attrs == null ? null : attrs.Dictionary, range);
+			AddAttributes (attrs is null ? null : attrs.Dictionary, range);
 		}
 
 	}

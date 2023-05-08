@@ -38,7 +38,7 @@ namespace Introspection {
 							   BindingFlags.Public |
 							   BindingFlags.Static)
 						   let attr = mi.GetCustomAttribute<DllImportAttribute> ()
-						   where attr != null && !Skip (mi)
+						   where attr is not null && !Skip (mi)
 						   select mi;
 		}
 
@@ -112,7 +112,7 @@ namespace Introspection {
 
 		protected virtual bool CheckForEnumParameter (MethodInfo mi, ParameterInfo pi)
 		{
-			if (pi.ParameterType.IsEnum && pi.ParameterType.GetCustomAttribute<NativeAttribute> () != null) {
+			if (pi.ParameterType.IsEnum && pi.ParameterType.GetCustomAttribute<NativeAttribute> () is not null) {
 				AddErrorLine ("[FAIL] {0}.{1} has a [Native] enum parameter in its signature: {2} {3}",
 					mi.DeclaringType.FullName, mi.Name, pi.ParameterType, pi.Name);
 				return false;
@@ -246,7 +246,7 @@ namespace Introspection {
 					var h = Dlfcn.dlsym (lib, name);
 					if (h == IntPtr.Zero) {
 						ReportError ("Could not find the symbol '{0}' in {1} for the P/Invoke {2}.{3} in {4}", name, path, t.FullName, m.Name, a.GetName ().Name);
-					} else if (path != null) {
+					} else if (path is not null) {
 						// Verify that the P/Invoke points to the right library.
 						Dl_info info = default (Dl_info);
 						var found = dladdr (h, out info);

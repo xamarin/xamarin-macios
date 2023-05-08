@@ -87,7 +87,7 @@ namespace Xamarin {
 		public static void SetPListStringValue (this XmlDocument plist, string node, string value)
 		{
 			var element = plist.SelectSingleNode ("//dict/key[text()='" + node + "']");
-			if (element == null) {
+			if (element is null) {
 				AddPListStringValue (plist, node, value);
 			} else {
 				element.NextSibling.InnerText = value;
@@ -138,7 +138,7 @@ namespace Xamarin {
 
 		public static bool ContainsKey (this XmlDocument plist, string key)
 		{
-			return plist.SelectSingleNode ("//dict/key[text()='" + key + "']") != null;
+			return plist.SelectSingleNode ("//dict/key[text()='" + key + "']") is not null;
 		}
 	}
 }

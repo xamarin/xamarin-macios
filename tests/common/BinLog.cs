@@ -97,7 +97,7 @@ namespace Xamarin.Tests {
 				var eventsForTarget = buildEvents.Where (v => v.BuildEventContext?.TargetId == id);
 				var skippedEvent = eventsForTarget.OfType<TargetSkippedEventArgs> ().FirstOrDefault ();
 				var skipReason = (skippedEvent as TargetSkippedEventArgs2)?.SkipReason ?? TargetSkipReason.None;
-				yield return new TargetExecutionResult (target.TargetName, skippedEvent != null, skipReason);
+				yield return new TargetExecutionResult (target.TargetName, skippedEvent is not null, skipReason);
 			}
 		}
 
@@ -120,14 +120,14 @@ namespace Xamarin.Tests {
 		{
 			var eols = new char [] { '\n', '\r' };
 			foreach (var args in ReadBuildEvents (path)) {
-				if (args.Message == null)
+				if (args.Message is null)
 					continue;
 
 				if (args is ProjectStartedEventArgs psea) {
-					if (psea.Properties != null) {
+					if (psea.Properties is not null) {
 						yield return "Initial Properties";
 						var dict = psea.Properties as IDictionary<string, string>;
-						if (dict == null) {
+						if (dict is null) {
 							yield return $"Unknown property dictionary type: {psea.Properties.GetType ().FullName}";
 						} else {
 							foreach (var prop in dict.OrderBy (v => v.Key))
@@ -157,7 +157,7 @@ namespace Xamarin.Tests {
 					foreach (var item in tpea.Items) {
 						var taskItem = item as ITaskItem;
 						yield return $"\t{tpea.ItemType}=";
-						if (taskItem != null) {
+						if (taskItem is not null) {
 							yield return $"\t\t{taskItem.ItemSpec}";
 							foreach (var metadataName in taskItem.MetadataNames) {
 								yield return $"\t\t\t{metadataName}={taskItem.GetMetadata (metadataName?.ToString ())}";
@@ -189,10 +189,10 @@ namespace Xamarin.Tests {
 			var reader = new BinLogReader ();
 			var eols = new char [] { '\n', '\r' };
 			foreach (var record in reader.ReadRecords (path)) {
-				if (record == null)
+				if (record is null)
 					continue;
 				var args = record.Args;
-				if (args == null)
+				if (args is null)
 					continue;
 
 				if (args is BuildErrorEventArgs buildError) {

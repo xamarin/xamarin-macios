@@ -196,7 +196,7 @@ namespace MonoTouchFixtures.Foundation {
 			public virtual void DidCompleteWithError (NSUrlSession session, NSUrlSessionTask task, NSError error)
 			{
 				State = -5;
-				if (error != null) {
+				if (error is not null) {
 					this.Client.FailedWithError (this, error);
 				} else {
 					this.Client.FinishedLoading (this);

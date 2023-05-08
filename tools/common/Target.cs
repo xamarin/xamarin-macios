@@ -104,7 +104,7 @@ namespace Xamarin.Bundler {
 		// This will find the link context, possibly looking in container targets.
 		public PlatformLinkContext GetLinkContext ()
 		{
-			if (LinkContext != null)
+			if (LinkContext is not null)
 				return LinkContext;
 			if (App.IsExtension && App.IsCodeShared)
 				return ContainerTarget.GetLinkContext ();
@@ -146,7 +146,7 @@ namespace Xamarin.Bundler {
 				path = Path.Combine (Environment.CurrentDirectory, path);
 
 			var rv = realpath (path, IntPtr.Zero);
-			if (rv != null)
+			if (rv is not null)
 				return rv;
 
 			var errno = Marshal.GetLastWin32Error ();
@@ -182,7 +182,7 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			if (asm == null)
+			if (asm is null)
 				throw ErrorHelper.CreateError (99, Errors.MX0099, $"could not find the product assembly {Driver.GetProductAssembly (App)} in the list of assemblies referenced by the executable");
 
 			AssemblyDefinition productAssembly = asm.AssemblyDefinition;
@@ -330,7 +330,7 @@ namespace Xamarin.Bundler {
 
 		public void CollectAllSymbols ()
 		{
-			if (dynamic_symbols != null)
+			if (dynamic_symbols is not null)
 				return;
 
 			var dyn_msgSend_functions = new [] {
@@ -345,7 +345,7 @@ namespace Xamarin.Bundler {
 				dynamic_symbols = new Symbols ();
 				dynamic_symbols.Load (cache_location, this);
 			} else {
-				if (LinkContext == null) {
+				if (LinkContext is null) {
 					// This happens when using the simlauncher and the msbuild tasks asked for a list
 					// of symbols (--symbollist). In that case just produce an empty list, since the
 					// binary shouldn't end up stripped anyway.
@@ -393,14 +393,14 @@ namespace Xamarin.Bundler {
 
 			foreach (var dynamicFunction in dyn_msgSend_functions) {
 				var symbol = dynamic_symbols.Find (dynamicFunction.Name);
-				if (symbol != null) {
+				if (symbol is not null) {
 					symbol.ValidAbis = dynamicFunction.ValidAbis;
 				}
 			}
 
 			foreach (var name in App.IgnoredSymbols) {
 				var symbol = dynamic_symbols.Find (name);
-				if (symbol == null) {
+				if (symbol is null) {
 					ErrorHelper.Warning (5218, Errors.MT5218, StringUtils.Quote (name));
 				} else {
 					symbol.Ignore = true;
@@ -418,7 +418,7 @@ namespace Xamarin.Bundler {
 				return false;
 
 			// Check if this symbol is used in the assembly we're filtering to
-			if (single_assembly != null && !symbol.Members.Any ((v) => v.Module.Assembly == single_assembly.AssemblyDefinition))
+			if (single_assembly is not null && !symbol.Members.Any ((v) => v.Module.Assembly == single_assembly.AssemblyDefinition))
 				return false; // nope, this symbol is not used in the assembly we're using as filter.
 
 			// If we're code-sharing, the managed linker might have found symbols
@@ -443,7 +443,7 @@ namespace Xamarin.Bundler {
 					return true;
 				if (App.Platform == ApplePlatform.MacCatalyst)
 					return true;
-				if (single_assembly != null)
+				if (single_assembly is not null)
 					return App.UseDlsym (single_assembly.FileName);
 
 				if (symbol.Members?.Any () == true) {
@@ -464,7 +464,7 @@ namespace Xamarin.Bundler {
 				// Objective-C classes are not required when we're using the static registrar and we're not compiling to shared libraries,
 				// (because the registrar code is linked into the main app, but not each shared library, 
 				// so the registrar code won't keep symbols in the shared libraries).
-				if (single_assembly != null)
+				if (single_assembly is not null)
 					return true;
 				return App.Registrar != RegistrarMode.Static;
 			default:
@@ -575,7 +575,7 @@ namespace Xamarin.Bundler {
 			try {
 				using (var sw = new StringWriter (sb)) {
 
-					if (registration_methods != null) {
+					if (registration_methods is not null) {
 						foreach (var method in registration_methods) {
 							sw.Write ("extern \"C\" void ");
 							sw.Write (method);
@@ -586,7 +586,7 @@ namespace Xamarin.Bundler {
 
 					sw.WriteLine ("static void xamarin_invoke_registration_methods ()");
 					sw.WriteLine ("{");
-					if (registration_methods != null) {
+					if (registration_methods is not null) {
 						for (int i = 0; i < registration_methods.Count; i++) {
 							sw.Write ("\t");
 							sw.Write (registration_methods [i]);
@@ -636,7 +636,7 @@ namespace Xamarin.Bundler {
 			sw.WriteLine ("extern \"C\" int xammac_setup ()");
 
 			sw.WriteLine ("{");
-			if (App.CustomBundleName != null) {
+			if (App.CustomBundleName is not null) {
 				sw.WriteLine ("\textern NSString* xamarin_custom_bundle_name;");
 				sw.WriteLine ("\txamarin_custom_bundle_name = @\"" + App.CustomBundleName + "\";");
 			}
@@ -660,7 +660,7 @@ namespace Xamarin.Bundler {
 #if MMP
 			// AOT for .NET/macOS needs some design to verify it's staying the same way as current Xamarin.Mac
 			// for instance: we might decide to select which assemblies to AOT in a different way.
-			if (App.AOTOptions != null && App.AOTOptions.IsHybridAOT)
+			if (App.AOTOptions is not null && App.AOTOptions.IsHybridAOT)
 				sw.WriteLine ("\txamarin_mac_hybrid_aot = TRUE;");
 #endif
 

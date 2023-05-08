@@ -58,9 +58,9 @@ namespace UIKit {
 
 		public static void SaveToPhotosAlbum (string path, SaveStatus status)
 		{
-			if (path == null)
+			if (path is null)
 				throw new ArgumentNullException ("path");
-			if (status == null)
+			if (status is null)
 				throw new ArgumentNullException ("status");
 			UIApplication.EnsureUIThread ();
 			var dis = new UIVideoStatusDispatcher (status);

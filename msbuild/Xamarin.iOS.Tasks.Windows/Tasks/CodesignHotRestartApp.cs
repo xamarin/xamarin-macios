@@ -35,7 +35,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 				};
 				var password = hotRestartClient.CertificatesManager.GetCertificatePassword (certificatePath: CodeSigningPath);
 
-				if (password == null) {
+				if (password is null) {
 					throw new Exception (Resources.Codesign_MissingPasswordFile);
 				}
 
@@ -66,7 +66,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 		{
 			messageBuilder.AppendLine (ex.Message);
 
-			if (ex.InnerException != null) {
+			if (ex.InnerException is not null) {
 				return GetFullExceptionMesage (ex.InnerException, messageBuilder);
 			} else {
 				return messageBuilder.ToString ();

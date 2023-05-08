@@ -80,7 +80,7 @@ namespace UIKit {
 			{
 				var descriptor = (BlockLiteral*) block;
 				var del = (UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler) (descriptor->Target);
-				if (del != null)
+				if (del is not null)
 					del (success != 0, Runtime.GetNSObject<NSError> (error));
 			}
 		}
@@ -95,7 +95,7 @@ namespace UIKit {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void ConfigureAccessibilityFeatures (UIGuidedAccessAccessibilityFeature features, bool enabled, UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler completionHandler)
 		{
-			if (completionHandler == null)
+			if (completionHandler is null)
 				throw new ArgumentNullException (nameof (completionHandler));
 
 			unsafe {

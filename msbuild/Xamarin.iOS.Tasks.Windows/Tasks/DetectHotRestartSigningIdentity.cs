@@ -86,7 +86,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 			if (!IsAutoCodeSignProfile (ProvisioningProfile)) {
 				identity.Profile = MobileProvisionIndex.GetMobileProvision (platform, ProvisioningProfile);
 
-				if (identity.Profile == null) {
+				if (identity.Profile is null) {
 					Log.LogError ("The specified " + PlatformName + " provisioning profile '{0}' could not be found. Please enable Automatic Provisioning from the iOS Bundle Signing page.", ProvisioningProfile);
 					return false;
 				}
@@ -95,7 +95,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 
 				if (certs.Count > 0) {
 					identity.SigningKey = certs.FirstOrDefault (c => profile.DeveloperCertificates.Any (p => p.Thumbprint == c.Thumbprint));
-					if (identity.SigningKey == null) {
+					if (identity.SigningKey is null) {
 						Log.LogError ("No " + PlatformName + " signing identities match the specified provisioning profile '{0}'.", ProvisioningProfile);
 						return false;
 					}
@@ -103,12 +103,12 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 
 				identity.AppId = ConstructValidAppId (identity.Profile, identity.BundleId);
 
-				if (identity.AppId == null) {
+				if (identity.AppId is not null) {
 					Log.LogError ("Project bundle identifier '{0}' does not match specified provisioning profile '{1}'. Please enable Automatic Provisioning from the iOS Bundle Signing page.", identity.BundleId, ProvisioningProfile);
 					return false;
 				}
 
-				if (identity.SigningKey != null) {
+				if (identity.SigningKey is not null) {
 					codesignCommonName = GetCertificateCommonName (identity.SigningKey);
 					DetectedCodeSigningPath = Path.Combine (CertificatesPath, $"{identity.SigningKey.SerialNumber}.p12");
 				}
@@ -124,26 +124,26 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 				return !Log.HasLoggedErrors;
 			}
 
-			if ((profiles = GetProvisioningProfiles (platform, type, identity, certs)) == null)
+			if ((profiles = GetProvisioningProfiles (platform, type, identity, certs)) is null)
 				return false;
 
-			if ((pairs = GetCodeSignIdentityPairs (profiles, certs)) == null)
+			if ((pairs = GetCodeSignIdentityPairs (profiles, certs)) is null)
 				return false;
 
 			identity = GetBestMatch (pairs, identity);
 
-			if (identity.Profile != null && identity.AppId != null) {
-				codesignCommonName = identity.SigningKey != null ? GetCertificateCommonName (identity.SigningKey) : null;
+			if (identity.Profile is not null && identity.AppId is not null) {
+				codesignCommonName = identity.SigningKey is not null ? GetCertificateCommonName (identity.SigningKey) : null;
 				provisioningProfileName = identity.Profile.Name;
 
 				DetectedAppId = identity.AppId;
-				DetectedCodeSigningPath = identity.SigningKey != null ? Path.Combine (CertificatesPath, $"{identity.SigningKey.SerialNumber}.p12") : string.Empty;
+				DetectedCodeSigningPath = identity.SigningKey is not null ? Path.Combine (CertificatesPath, $"{identity.SigningKey.SerialNumber}.p12") : string.Empty;
 				DetectedProvisioningProfileId = identity.Profile.Uuid;
 				DetectedProvisioningProfilePath = Path.Combine (ProfilesPath, $"{DetectedProvisioningProfileId}.mobileprovision");
 
 				ReportDetectedCodesignInfo ();
 			} else {
-				if (identity.SigningKey != null) {
+				if (identity.SigningKey is not null) {
 					Log.LogError ("Bundle identifier '{0}' does not match any installed provisioning profile for selected signing identity '{0}'. Please enable Automatic Provisioning from the iOS Bundle Signing page.", identity.BundleId, identity.SigningKey);
 				} else {
 					Log.LogError ("Bundle identifier '{0}' does not match any installed provisioning profile. Please enable Automatic Provisioning from the iOS Bundle Signing page.", identity.BundleId);
@@ -223,9 +223,9 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 		{
 			Log.LogMessage (MessageImportance.High, "Detected signing identity:");
 
-			if (codesignCommonName != null)
+			if (codesignCommonName is not null)
 				Log.LogMessage (MessageImportance.High, "  Code Signing Key: \"{0}\" ({1})", codesignCommonName, DetectedCodeSigningPath);
-			if (provisioningProfileName != null)
+			if (provisioningProfileName is not null)
 				Log.LogMessage (MessageImportance.High, "  Provisioning Profile: \"{0}\" ({1})", provisioningProfileName, DetectedProvisioningProfilePath);
 		}
 
@@ -341,7 +341,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 			var failures = new List<string> ();
 			IList<MobileProvision> profiles;
 
-			if (identity.BundleId != null) {
+			if (identity.BundleId is not null) {
 				if (certs.Count > 0)
 					profiles = MobileProvisionIndex.GetMobileProvisions (platform, identity.BundleId, type, certs, unique: true, failures: failures);
 				else
@@ -407,7 +407,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 			foreach (var pair in pairs) {
 				var appid = ConstructValidAppId (pair.Profile, identity.BundleId, out matchLength);
 
-				if (appid != null) {
+				if (appid is not null) {
 					if (matchLength >= bestMatchLength) {
 						if (matchLength > bestMatchLength) {
 							bestMatchLength = matchLength;
@@ -450,7 +450,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 				for (int i = 0; i < matches.Count; i++) {
 					Log.LogMessage (MessageImportance.Normal, "{0,3}. Provisioning Profile: \"{1}\" ({2})", i + 1, matches [i].Profile.Name, matches [i].Profile.Uuid);
 
-					if (matches [i].SigningKey != null)
+					if (matches [i].SigningKey is not null)
 						Log.LogMessage (MessageImportance.Normal, "{0}  Signing Identity: \"{1}\"", spaces, GetCertificateCommonName (matches [i].SigningKey));
 				}
 			}

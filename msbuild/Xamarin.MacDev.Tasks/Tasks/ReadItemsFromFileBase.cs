@@ -44,7 +44,7 @@ namespace Xamarin.MacDev.Tasks {
 				result.AddRange (items);
 			}
 
-			if (Items != null)
+			if (Items is not null)
 				result.AddRange (Items);
 
 			Items = result.ToArray ();

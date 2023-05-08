@@ -172,7 +172,7 @@ namespace Xamarin.iOS.Tasks {
 			else
 				args.AddLine ("--aot-options=-O=-float32");
 
-			if (LinkDescriptions != null) {
+			if (LinkDescriptions is not null) {
 				foreach (var desc in LinkDescriptions)
 					args.AddQuotedLine ($"--xml={desc.ItemSpec}");
 			}
@@ -258,7 +258,7 @@ namespace Xamarin.iOS.Tasks {
 				var customTags = new Dictionary<string, string> (StringComparer.OrdinalIgnoreCase) {
 					{ "projectdir",   projectDir },
 					// Apparently msbuild doesn't propagate the solution path, so we can't get it.
-					// { "solutiondir",  proj.ParentSolution != null ? proj.ParentSolution.BaseDirectory : proj.BaseDirectory },
+					// { "solutiondir",  proj.ParentSolution is not null ? proj.ParentSolution.BaseDirectory : proj.BaseDirectory },
 					{ "appbundledir", AppBundleDir },
 					{ "targetpath",   Path.Combine (Path.GetDirectoryName (target), Path.GetFileName (target)) },
 					{ "targetdir",    Path.GetDirectoryName (target) },

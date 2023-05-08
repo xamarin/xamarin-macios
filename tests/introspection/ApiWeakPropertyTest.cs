@@ -96,7 +96,7 @@ namespace Introspection {
 		{
 			error = null;
 			var export = meth.GetCustomAttribute<ExportAttribute> ();
-			if (export == null) {
+			if (export is null) {
 				error = String.Format ("{0}.{1} has no [Export]", meth.DeclaringType.FullName, meth.Name);
 				return true;
 			}

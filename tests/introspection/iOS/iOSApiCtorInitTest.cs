@@ -61,7 +61,7 @@ namespace Introspection {
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				// some devices don't support metal and that crash some API that does not check that, e.g. #33153
-				if (!TestRuntime.CheckXcodeVersion (7, 0) || (MTLDevice.SystemDefault == null))
+				if (!TestRuntime.CheckXcodeVersion (7, 0) || (MTLDevice.SystemDefault is null))
 					return true;
 				break;
 #endif // !__WATCHOS__

@@ -74,12 +74,12 @@ namespace Xamarin {
 			Configuration.WriteOutputForMSBuild ("_MainFile", items);
 
 			var linkWith = new List<MSBuildItem> ();
-			if (Configuration.CompilerFlags.LinkWithLibraries != null) {
+			if (Configuration.CompilerFlags.LinkWithLibraries is not null) {
 				foreach (var lib in Configuration.CompilerFlags.LinkWithLibraries) {
 					linkWith.Add (new MSBuildItem (lib));
 				}
 			}
-			if (Configuration.CompilerFlags.ForceLoadLibraries != null) {
+			if (Configuration.CompilerFlags.ForceLoadLibraries is not null) {
 				foreach (var lib in Configuration.CompilerFlags.ForceLoadLibraries) {
 					linkWith.Add (new MSBuildItem (
 						lib,

@@ -20,6 +20,7 @@
     <MtouchUseLlvm>%MTOUCH_USELLVM%</MtouchUseLlvm>
     <MtouchEnableBitcode>%MTOUCH_ENABLEBITCODE%</MtouchEnableBitcode>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'iPhoneSimulator' ">
     <MtouchArch>i386, x86_64</MtouchArch>

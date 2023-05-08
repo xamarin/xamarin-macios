@@ -208,7 +208,7 @@ namespace LinkAll {
 				var problemMessage = "";
 				CertificateProblem problemList = new CertificateProblem ();
 				var problemCodeName = Enum.GetName (problemList.GetType (), problem);
-				problemMessage = problemCodeName != null ? problemMessage + "-Certificateproblem:" + problemCodeName : "Unknown Certificate Problem";
+				problemMessage = problemCodeName is not null ? problemMessage + "-Certificateproblem:" + problemCodeName : "Unknown Certificate Problem";
 				return problemMessage;
 			}
 		}
@@ -545,7 +545,7 @@ namespace LinkAll {
 			var type = o.GetType ();
 			var f1 = type.GetField (s, BindingFlags.Instance | BindingFlags.NonPublic);
 			var f2 = type.GetField (s + "i__Field", BindingFlags.Instance | BindingFlags.NonPublic);
-			if (f1 == null && f2 == null)
+			if (f1 is null && f2 is null)
 				return s;
 
 			//Console.WriteLine (f.GetValue (o));
@@ -555,10 +555,10 @@ namespace LinkAll {
 		string FromPattern (string pattern, object o)
 		{
 			var s = GetField (o, "<action>");
-			if (s != null)
+			if (s is not null)
 				return s;
 			s = GetField (o, "<id>");
-			if (s != null)
+			if (s is not null)
 				return s;
 			return GetField (o, "<contentType>");
 		}

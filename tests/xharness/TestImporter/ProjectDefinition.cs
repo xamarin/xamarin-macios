@@ -96,7 +96,7 @@ namespace Xharness.TestImporter {
 			string failureMessage = null;
 			foreach (var definition in TestAssemblies) {
 				var references = GetAssemblyReferences (definition.GetPath (platform));
-				if (references.FailureMessage != null) {
+				if (references.FailureMessage is not null) {
 					failureMessage = references.FailureMessage;
 				} else {
 					set.UnionWith (references.References);
@@ -107,7 +107,7 @@ namespace Xharness.TestImporter {
 
 		public (string FailureMessage, Dictionary<string, TypeDefinition> Types) GetTypeForAssemblies (string monoRootPath, Platform platform)
 		{
-			if (monoRootPath == null)
+			if (monoRootPath is null)
 				throw new ArgumentNullException (nameof (monoRootPath));
 			var dict = new Dictionary<string, TypeDefinition> ();
 			// loop over the paths, grab the assembly, find a type and then add it
@@ -131,7 +131,7 @@ namespace Xharness.TestImporter {
 
 					return true;
 				});
-				if (accessibleType == null)
+				if (accessibleType is null)
 					continue;
 				dict [Path.GetFileName (path)] = accessibleType;
 			}

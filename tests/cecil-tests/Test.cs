@@ -59,11 +59,11 @@ namespace Cecil.Tests {
 
 			// `CNContactsUserDefaults` is `[ThreadSafe (false)]` and part of iOS and macOS
 			var t = assembly.MainModule.GetType ("Contacts.CNContactsUserDefaults");
-			if (t == null) {
+			if (t is null) {
 				// tvOS does not have the type so let's find an alternative
 				t = assembly.MainModule.GetType ("PhotosUI.PHLivePhotoView");
 			}
-			if (t == null) {
+			if (t is null) {
 				Assert.Fail ($"No type found for {assembly}");
 				return; // just to help nullability
 			}

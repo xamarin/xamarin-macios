@@ -25,7 +25,7 @@ namespace Cecil.Tests {
 		{
 			Assert.That (assembly, Does.Exist, "Assembly existence");
 			if (!cache.TryGetValue (assembly, out var ad)) {
-				if (parameters == null) {
+				if (parameters is null) {
 					var resolver = new DefaultAssemblyResolver ();
 					resolver.AddSearchDirectory (GetBCLDirectory (assembly));
 					parameters = new ReaderParameters () {

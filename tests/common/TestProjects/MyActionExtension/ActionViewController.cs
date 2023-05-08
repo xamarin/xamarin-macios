@@ -35,7 +35,7 @@ namespace MyActionExtension {
 						// This is an image. We'll load it, then place it in our image view.
 						itemProvider.LoadItem (UTType.Image, null, delegate (NSObject image, NSError error)
 						{
-							if (image != null) {
+							if (image is not null) {
 								NSOperationQueue.MainQueue.AddOperation (delegate
 								{
 									imageView.Image = (UIImage) image;
