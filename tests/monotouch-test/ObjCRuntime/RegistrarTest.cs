@@ -5737,19 +5737,19 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #endif // !__WATCHOS__
 
 #if HAS_COREMIDI
-	// This type exports methods with 'MidiCIDeviceIdentification' parameters, which is a struct with different casing in Objective-C ("MIDI...")
+	// This type exports methods with 'MidiThruConnectionEndpoint' parameters, which is a struct with different casing in Objective-C ("MIDI...")
 	class ExportedMethodWithStructWithManagedCasing : NSObject {
 		[Export ("doSomething:")]
-		public void DoSomething (MidiCIDeviceIdentification arg) { }
+		public void DoSomething (MidiThruConnectionEndpoint arg) { }
 
 		[Export ("doSomething2:")]
-		public void DoSomething2 (ref MidiCIDeviceIdentification arg) { }
+		public void DoSomething2 (ref MidiThruConnectionEndpoint arg) { }
 
 		[Export ("doSomething3")]
-		public MidiCIDeviceIdentification DoSomething3 () { return default (MidiCIDeviceIdentification); }
+		public MidiThruConnectionEndpoint DoSomething3 () { return default (MidiThruConnectionEndpoint); }
 
 		[Export ("doSomething4:")]
-		public void DoSomething4 (out MidiCIDeviceIdentification arg) { arg = default (MidiCIDeviceIdentification); }
+		public void DoSomething4 (out MidiThruConnectionEndpoint arg) { arg = default (MidiThruConnectionEndpoint); }
 	}
 #endif
 }
