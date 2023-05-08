@@ -65,6 +65,18 @@ parameters:
   type: string
   default: '$(MaciosUploadPrefix)'
 
+- name: testPlatform
+  type: string
+  default: ''
+
+- name: conditionVariableDotNet
+  type: string
+  default: ''
+
+- name: conditionVariableLegacy
+  type: string
+  default: ''
+
 steps:
 
 - template: ../common/checkout.yml

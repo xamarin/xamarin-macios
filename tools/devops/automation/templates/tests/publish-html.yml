@@ -28,7 +28,7 @@ parameters:
   type: string 
   default: 'False'
 
-- name: simTestsConfigurations
+- name: testConfigurations
   type: object
 
 - name: isPR
@@ -57,7 +57,7 @@ steps:
 - template: download-artifacts.yml
   parameters:
     downloadHtmlReport: false
-    simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
+    testConfigurations: ${{ parameters.testConfigurations }}
     testPrefix: ${{ parameters.testPrefix }}
 
 - ${{ if parameters.isPR }}:
@@ -93,7 +93,7 @@ steps:
         New-GitHubComment -Header "Failed to compute test summaries on $Env:CONTEXT" -Emoji ":fire:" -Description "Failed to compute test summaries: $_."
       }
   env:
-    LABELS: ${{ join(';', parameters.simTestsConfigurations) }}
+    TEST_CONFIGURATIONS: ${{ convertToJson (parameters.testConfigurations) }}
     CONTEXT: ${{ parameters.statusContext }}
     DEVICE_PREFIX: ${{ parameters.testPrefix }}
     GITHUB_TOKEN: $(GitHub.Token)
