@@ -14,7 +14,7 @@ parameters:
   type: string
   default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
 
-- name: label
+- name: labelWithPlatform
   type: string
 
 - name: disableProvisionatorCache
@@ -65,6 +65,14 @@ parameters:
   type: string
   default: '$(MaciosUploadPrefix)'
 
+- name: testPlatform
+  type: string
+  default: ''
+
+- name: conditionVariable
+  type: string
+  default: ''
+
 steps:
 
 - template: ../common/checkout.yml
@@ -107,8 +115,14 @@ steps:
     set -x
     set -e
     cd xamarin-macios
-    ./configure --enable-xamarin
-  displayName: 'Enable Xamarin'
+    TEST_PLATFORM="${{ parameters.testPlatform }}"
+    ARGS=(--enable-xamarin)
+    if test -n "$TEST_PLATFORM"; then
+      ARGS+=("--disable-all-platforms")
+      ARGS+=("--enable-$TEST_PLATFORM")
+    fi
+    ./configure "${ARGS[@]}"
+  displayName: 'Enable Xamarin and configure platforms'
   timeoutInMinutes: 1
 
 # Add the required provisioning profiles to be able to execute the tests.
@@ -208,7 +222,7 @@ steps:
 
 - template: ./run-tests.yml
   parameters:
-    label: ${{ parameters.label }}
+    labelWithPlatform: ${{ parameters.labelWithPlatform }}
     statusContext: ${{ parameters.statusContext }}
     testsLabels: ${{ parameters.testsLabels }}
     vsdropsPrefix: ${{ parameters.vsdropsPrefix }}

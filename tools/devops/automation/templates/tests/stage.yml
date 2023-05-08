@@ -69,6 +69,9 @@ parameters:
 - name: testConfigurations
   type: object
 
+- name: supportedPlatforms
+  type: object
+
 - name: isPR
   type: boolean
 
@@ -95,31 +98,54 @@ stages:
   condition: and(succeeded(), ${{ parameters.condition }})
 
   jobs:
-  - ${{ if eq(parameters.parseLabels, true) }}:
-    - job: configure
-      displayName: 'Configure build'
-      pool:
-        vmImage: windows-latest
+  - job: configure
+    displayName: 'Configure build'
+    pool:
+      vmImage: windows-latest
 
-      variables:
-        isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-        isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
-        BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+    variables:
+      isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+      isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+      BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
 
-      steps:
-      - template: ../common/configure.yml
-        parameters: 
-          repositoryAlias: ${{ parameters.repositoryAlias }}
-          commit: ${{ parameters.commit }}
-          uploadArtifacts: false
+    steps:
+    - template: ../common/configure.yml
+      parameters: 
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+        uploadArtifacts: false
+        testConfigurations: ${{ parameters.testConfigurations }}
+        supportedPlatforms: ${{ parameters.supportedPlatforms }}
+        testsLabels: ${{ parameters.testsLabels }}
+        statusContext: ${{ parameters.statusContext }}
+        testPrefix: ${{ parameters.testPrefix }}
+
+  - job: debugOutput
+    dependsOn:
+    - configure
+    displayName: 'Debug output'
+    timeoutInMinutes: 10
+    pool:
+      vmImage: ubuntu-latest
+    variables:
+      VAR_WHATEVER1: "World"
+      VAR_WHATEVER3: $[ convertToJson(dependencies) ]
+    steps:
+    - checkout: none
+    - bash: |
+        env | sort
+        env
+      displayName: 'Dump env'
+      name: DumpEnv
+      env:
+        ENV_WHATEVER1: "Hello"
+        ENV_WHATEVER3: $[ convertToJson(dependencies) ]
 
   - job: "tests"
-    ${{ if eq(parameters.parseLabels, true) }}:
-      condition: ne(dependencies.configure.outputs['labels.skip_all_tests'], 'True')
+    condition: ne(dependencies.configure.outputs['labels.skip_all_tests'], 'True')
     dependsOn:
-    - ${{ if eq(parameters.parseLabels, true) }}:
-      - configure
-    displayName: 'Running tests:' 
+    - configure
+    displayName: 'Test:'
     timeoutInMinutes: 1000
     variables:
       # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
@@ -131,7 +157,6 @@ stages:
         AgentPoolComputed: $(PRBuildPool)
       ${{ else }}:
         AgentPoolComputed: ${{ parameters.testPool }}
-
     pool:
       name: $(AgentPoolComputed)
       demands:
@@ -143,20 +168,19 @@ stages:
       workspace:
         clean: all
     strategy:
-      matrix:
-        ${{ each label in parameters.simTestsConfigurations }}:
-          ${{ replace(label, '-', '_') }}:
-            LABEL: ${{ label }}
-            TESTS_LABELS: '${{ parameters.testsLabels }},run-${{ label }}-tests'
-            STATUS_CONTEXT: '${{ parameters.statusContext }} - ${{ label }}'
-            TEST_PREFIX: "${{ parameters.testPrefix }}${{ replace(label, '-', '_') }}"
+      matrix: $[ dependencies.configure.outputs['test_matrix.TEST_MATRIX'] ]
     steps:
+    - bash: |
+        env | sort
+        env
+      displayName: 'Dump env'
+      name: DumpEnv
     - template: build.yml
       parameters:
         isPR: ${{ parameters.isPR }}
         repositoryAlias: ${{ parameters.repositoryAlias }}
         commit: ${{ parameters.commit }}
-        label: $(LABEL)
+        labelWithPlatform: $(LABEL_WITH_PLATFORM)
         testsLabels: $(TESTS_LABELS)
         statusContext: $(STATUS_CONTEXT)
         useXamarinStorage: ${{ parameters.useXamarinStorage }}
@@ -166,80 +190,3 @@ stages:
         makeTarget: ${{ parameters.makeTarget }}
         gitHubToken: ${{ parameters.gitHubToken }}
         xqaCertPass: ${{ parameters.xqaCertPass }}
-
-  - job: publish_test_results
-    ${{ if eq(parameters.parseLabels, true) }}:
-      condition: and(ne(dependencies.configure.outputs['labels.skip_all_tests'], 'True'),  succeededOrFailed())
-    ${{ else }}:
-      condition: succeededOrFailed()
-    displayName: 'GitHub comment - Publish results'
-    timeoutInMinutes: 1000
-    dependsOn: # has to wait for the tests to be done AND the data to be uploaded
-    - tests
-    - ${{ if eq(parameters.parseLabels, true) }}:
-      - configure
-    variables:
-      GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
-      ${{ each label in parameters.simTestsConfigurations }}:
-        # Define the variable FOO from the previous job
-        # Note the use of single quotes!
-        TESTS_BOT_${{ upper(replace(label, '-', '_')) }}: $[ dependencies.tests.outputs['${{ replace(label, '-', '_')}}.runTests.TESTS_BOT'] ]
-        TESTS_JOBSTATUS_${{ upper(replace(label, '-', '_')) }}: $[ dependencies.tests.outputs['${{ replace(label, '-', '_')}}.runTests.TESTS_JOBSTATUS'] ]
-    pool:
-      vmImage: 'windows-latest'
-      workspace:
-        clean: all
-    steps:
-    - template: publish-html.yml
-      parameters:
-        isPR: ${{ parameters.isPR }}
-        repositoryAlias: ${{ parameters.repositoryAlias }}
-        commit: ${{ parameters.commit }}
-        simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
-        statusContext: ${{ parameters.statusContext }}
-        vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
-        testPrefix: ${{ parameters.testPrefix }}
-
-  - job: publish_skipped_tests
-    ${{ if eq(parameters.parseLabels, true) }}:
-      condition: eq(dependencies.configure.outputs['labels.skip_all_tests'], 'True')
-    ${{ else }}:
-      condition: false
-    displayName: 'GitHub comment - Skipped tests'
-    timeoutInMinutes: 1000
-    dependsOn: # has to wait for the tests to be done AND the data to be uploaded
-    - configure
-
-    variables:
-      GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
-
-    pool:
-      vmImage: 'windows-latest'
-      workspace:
-        clean: all
-
-    steps:
-
-    - template: ../common/checkout.yml
-      parameters:
-        isPR: ${{ parameters.isPR }}
-        repositoryAlias: ${{ parameters.repositoryAlias }}
-        commit: ${{ parameters.commit }}
-
-    - pwsh: |
-        Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-
-        $gihubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $Env:GITHUB_TOKEN -Hash $Env:COMMENT_HASH -Debug
-        $sb = [System.Text.StringBuilder]::new()
-        $sb.AppendLine("All tests have been skipped because the label 'skip-all-tests' was set.")
-        $result = $gihubComments.NewCommentFromMessage("Test results", ":seedling:", $sb.ToString())
-      displayName: 'Set comment'
-      env:
-        CONTEXT: ${{ parameters.statusContext }}
-        DEVICE_PREFIX: ${{ parameters.testPrefix }}
-        GITHUB_TOKEN: $(GitHub.Token)
-        ACCESSTOKEN: $(System.AccessToken)
-        ${{ if eq(parameters.repositoryAlias, 'self') }}:
-          COMMENT_HASH: $(GIT_HASH)
-        ${{ else }}:
-          COMMENT_HASH: $(Build.SourceVersion)

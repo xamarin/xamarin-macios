@@ -39,14 +39,15 @@ steps:
         allowFailedBuilds: true
         path: $(System.DefaultWorkingDirectory)/Reports
 
-      # Unzip report.
-      - task: ExtractFiles@1
-        displayName: 'Extract HtmlReport'
-        continueOnError: true # there might not be an html report, but we should continue processing other steps anyway
-        inputs:
-          archiveFilePatterns: "$(System.DefaultWorkingDirectory)/Reports/HtmlReport-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}-$(System.JobAttempt)/HtmlReport.zip"
-          destinationFolder: "$(System.DefaultWorkingDirectory)/HtmlReport-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}-$(System.JobAttempt)"
     - ${{ each testConfig in parameters.testConfigurations }}:
+        ${{ each platform in parameters.supportedPlatforms }}:
+        # Unzip report.
+        - task: ExtractFiles@1
+          displayName: 'Extract HtmlReport ${{ testConfig.label }} - {{ platform }}'
+          continueOnError: true # there might not be an html report, but we should continue processing other steps anyway
+          inputs:
+            archiveFilePatterns: "$(System.DefaultWorkingDirectory)/Reports/HtmlReport-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}_{{ platform }}-$(System.JobAttempt)/HtmlReport.zip"
+            destinationFolder: "$(System.DefaultWorkingDirectory)/HtmlReport-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}_{{ platform }}-$(System.JobAttempt)"
 
   - ${{ if eq(parameters.downloadTestSummary, true) }}:
     # Download the test report to write the comment.

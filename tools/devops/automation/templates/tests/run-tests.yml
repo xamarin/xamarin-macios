@@ -7,7 +7,7 @@ parameters:
   type: string
   default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
 
-- name: label
+- name: labelWithPlatform
   type: string
 
 - name: useXamarinStorage
@@ -190,7 +190,7 @@ steps:
   displayName: 'Publish Artifact: Simulator diagnostic info'
   inputs:
     targetPath: $(System.DefaultWorkingDirectory)/diagnostic-sim-output
-    artifactName: '${{ parameters.uploadPrefix }}diagnostic-simulator-info-$(Build.BuildId)-$(System.JobAttempt)-${{ parameters.label }}'
+    artifactName: '${{ parameters.uploadPrefix }}diagnostic-simulator-info-$(Build.BuildId)-$(System.JobAttempt)-${{ parameters.labelWithPlatform }}'
   condition: and(eq(variables['system.debug'], true), succeededOrFailed())
   continueOnError: true
 
@@ -234,7 +234,7 @@ steps:
   displayName: 'Publish to Artifact Services Drop'
   inputs:
     dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
-    dropMetadataContainerName: '${{ parameters.uploadPrefix }}DropMetadata-${{ parameters.testPrefix }}${{ parameters.label }}-$(System.JobAttempt)'
+    dropMetadataContainerName: '${{ parameters.uploadPrefix }}DropMetadata-${{ parameters.testPrefix }}${{ parameters.labelWithPlatform }}-$(System.JobAttempt)'
     buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}-$(System.JobAttempt)'
     sourcePath: 'xamarin-macios/jenkins-results'
     detailedLog: true
