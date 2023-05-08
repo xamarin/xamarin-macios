@@ -18,14 +18,15 @@ namespace Xamarin.Linker {
 
 		protected void Report (Exception exception)
 		{
-			LinkerConfiguration.Report (Context, exception);
+			Report (new Exception[] { exceptions });
 		}
 
-		protected void Report (List<Exception> exceptions)
+		protected void Report (IList<Exception>? exceptions)
 		{
-			// Maybe there's a better way to show errors that integrates with the linker?
-			// We can't just throw an exception or exit here, since there might be only warnings in the list of exceptions.
-			ErrorHelper.Show (exceptions);
+			if (exceptions is null)
+				return;
+
+			LinkerConfiguration.Report (Context, exceptions);
 		}
 
 		protected sealed override void Process ()
