@@ -10,43 +10,45 @@ using Xamarin.Localization.MSBuild;
 
 using Xamarin.MacDev;
 
+#nullable enable
+
 namespace Xamarin.MacDev.Tasks {
 	public abstract class XcodeToolTaskBase : XamarinTask {
-		string toolExe;
+		string? toolExe;
 
 		#region Inputs
 
 		[Required]
-		public string IntermediateOutputPath { get; set; }
+		public string IntermediateOutputPath { get; set; } = string.Empty;
 
 		[Required]
-		public string ProjectDir { get; set; }
+		public string ProjectDir { get; set; } = string.Empty;
 
 		[Required]
-		public string ResourcePrefix { get; set; }
+		public string ResourcePrefix { get; set; } = string.Empty;
 
 		[Required]
-		public string SdkBinPath { get; set; }
+		public string SdkBinPath { get; set; } = string.Empty;
 
 		[Required]
-		public string SdkDevPath { get; set; }
+		public string SdkDevPath { get; set; } = string.Empty;
 
 		[Required]
-		public string SdkUsrPath { get; set; }
+		public string SdkUsrPath { get; set; } = string.Empty;
 
 		public string ToolExe {
 			get { return toolExe ?? ToolName; }
 			set { toolExe = value; }
 		}
 
-		public string ToolPath { get; set; }
+		public string ToolPath { get; set; } = string.Empty;
 
 		#endregion
 
 		#region Outputs
 
 		[Output]
-		public ITaskItem [] BundleResources { get; set; }
+		public ITaskItem [] BundleResources { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
