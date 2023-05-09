@@ -254,8 +254,28 @@ namespace ObjCRuntime {
 
 			// Look for the type in the type map.
 			var asm_name = type.Assembly.GetName ().Name!;
-			var mod_token = type.Module.MetadataToken;
-			var type_token = type.MetadataToken & ~0x02000000;
+			int mod_token;
+			int type_token;
+
+#if NET
+			if (Runtime.IsManagedStaticRegistrar) {
+				mod_token = unchecked((int) Runtime.INVALID_TOKEN_REF);
+				type_token = unchecked((int) RegistrarHelper.LookupRegisteredTypeId (type));
+
+#if LOG_TYPELOAD
+				Runtime.NSLog ($"FindClass ({type.FullName}, {is_custom_type}): type token: 0x{type_token.ToString ("x")}");
+#endif
+
+				if (type_token == -1)
+					return IntPtr.Zero;
+			} else {
+#endif // NET
+				mod_token = type.Module.MetadataToken;
+				type_token = type.MetadataToken & ~0x02000000 /* TokenType.TypeDef */;
+#if NET
+			}
+#endif // NET
+
 			for (int i = 0; i < map->map_count; i++) {
 				var class_map = map->map [i];
 				var token_reference = class_map.type_reference;
@@ -463,6 +483,15 @@ namespace ObjCRuntime {
 			switch (token & 0xFF000000) {
 			case 0x02000000: // TypeDef
 				Type type;
+#if NET
+				if (Runtime.IsManagedStaticRegistrar) {
+					type = RegistrarHelper.LookupRegisteredType (assembly, token & 0x00FFFFFF);
+#if LOG_TYPELOAD
+					Runtime.NSLog ($"ResolveToken (0x{token:X}) => Type: {type.FullName}");
+#endif
+					return type;
+				}
+#endif // NET
 				if (module is null) {
 					throw ErrorHelper.CreateError (8053, Errors.MX8053 /* Could not resolve the module in the assembly {0}. */, assembly.FullName);
 				} else {
@@ -473,6 +502,9 @@ namespace ObjCRuntime {
 #endif
 				return type;
 			case 0x06000000: // Method
+				if (Runtime.IsManagedStaticRegistrar)
+					throw ErrorHelper.CreateError (8054, Errors.MX8054 /* Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}). */, token.ToString ("x"));
+
 				if (module is null)
 					throw ErrorHelper.CreateError (8053, Errors.MX8053 /* Could not resolve the module in the assembly {0}. */, assembly.FullName);
 
@@ -588,7 +620,20 @@ namespace ObjCRuntime {
 			var asm_name = type.Module.Assembly.GetName ().Name!;
 
 			// First check if there's a full token reference to this type
-			var token = GetFullTokenReference (asm_name, type.Module.MetadataToken, type.MetadataToken);
+			uint token;
+#if NET
+			if (Runtime.IsManagedStaticRegistrar) {
+				var id = RegistrarHelper.LookupRegisteredTypeId (type);
+				token = GetFullTokenReference (asm_name, unchecked((int) Runtime.INVALID_TOKEN_REF), 0x2000000 /* TokenType.TypeDef */ | unchecked((int) id));
+#if LOG_TYPELOAD
+				Runtime.NSLog ($"GetTokenReference ({type}, {throw_exception}) id: {id} token: 0x{token.ToString ("x")}");
+#endif
+			} else {
+#endif // NET
+				token = GetFullTokenReference (asm_name, type.Module.MetadataToken, type.MetadataToken);
+#if NET
+			}
+#endif // NET
 			if (token != uint.MaxValue)
 				return token;
 

@@ -4274,5 +4274,23 @@ namespace Xamarin.Bundler {
                 return ResourceManager.GetString("MX8053", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t resolve metadata tokens for methods when using the managed static registrar (token: 0x{0})..
+        /// </summary>
+        public static string MX8054 {
+            get {
+                return ResourceManager.GetString("MX8054", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find the type &apos;ObjCRuntime.__Registrar__&apos; in the assembly &apos;{0}&apos;..
+        /// </summary>
+        public static string MX8055 {
+            get {
+                return ResourceManager.GetString("MX8055", resourceCulture);
+            }
+        }
     }
 }

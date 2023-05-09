@@ -70,6 +70,9 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		// This dictionary contains information about the trampolines created for each assembly.
+		public AssemblyTrampolineInfos AssemblyTrampolineInfos = new ();
+
 		internal PInvokeWrapperGenerator? PInvokeWrapperGenerationState;
 
 		public static bool TryGetInstance (LinkContext context, [NotNullWhen (true)] out LinkerConfiguration? configuration)
