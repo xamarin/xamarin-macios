@@ -489,6 +489,7 @@ namespace MonoTests.System.Net.Http {
 		[TestCase (typeof (HttpClientHandler))]
 #endif
 		[TestCase (typeof (NSUrlSessionHandler))]
+		[Ignore ("httpbin is down")]
 		public void AcceptSslCertificatesServicePointManager (Type handlerType)
 		{
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
