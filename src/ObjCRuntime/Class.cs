@@ -265,7 +265,7 @@ namespace ObjCRuntime {
 				var rv = class_map.handle;
 				is_custom_type = (class_map.flags & Runtime.MTTypeFlags.CustomType) == Runtime.MTTypeFlags.CustomType;
 #if LOG_TYPELOAD
-				Console.WriteLine ($"FindClass ({type.FullName}, {is_custom_type}): 0x{rv.ToString ("x")} = {Marshal.PtrToStringAuto (class_getName (rv))}.");
+				Runtime.NSLog ($"FindClass ({type.FullName}, {is_custom_type}): 0x{rv.ToString ("x")} = {Marshal.PtrToStringAuto (class_getName (rv))}.");
 #endif
 				return rv;
 			}
@@ -347,11 +347,15 @@ namespace ObjCRuntime {
 		{
 			var map = Runtime.options->RegistrationMap;
 
+#if LOG_TYPELOAD
+				Runtime.NSLog ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))})");
+#endif
+
 			is_custom_type = false;
 
 			if (map is null) {
 #if LOG_TYPELOAD
-				Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => found no map.");
+				Runtime.NSLog ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => found no map.");
 #endif
 				return null;
 			}
@@ -360,23 +364,30 @@ namespace ObjCRuntime {
 			var mapIndex = FindMapIndex (map->map, 0, map->map_count - 1, @class);
 			if (mapIndex == -1) {
 #if LOG_TYPELOAD
-				Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => found no type.");
+				Runtime.NSLog ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => found no type.");
 #endif
 				return null;
 			}
+#if LOG_TYPELOAD
+			Runtime.NSLog ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => found index {mapIndex}.");
+#endif
 
 			is_custom_type = (map->map [mapIndex].flags & Runtime.MTTypeFlags.CustomType) == Runtime.MTTypeFlags.CustomType;
 
 			var type = class_to_type [mapIndex];
-			if (type is not null)
+			if (type is not null) {
+#if LOG_TYPELOAD
+				Runtime.NSLog ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => found type {type.FullName} for map index {mapIndex}.");
+#endif
 				return type;
+			}
 
 			// Resolve the map entry we found to a managed type
 			var type_reference = map->map [mapIndex].type_reference;
 			type = ResolveTypeTokenReference (type_reference);
 
 #if LOG_TYPELOAD
-			Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => {type?.FullName}; is custom: {is_custom_type} (token reference: 0x{type_reference:X}).");
+			Runtime.NSLog ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => {type?.FullName}; is custom: {is_custom_type} (token reference: 0x{type_reference:X}).");
 #endif
 
 			class_to_type [mapIndex] = type;
@@ -394,7 +405,7 @@ namespace ObjCRuntime {
 			var token = entry.token;
 
 #if LOG_TYPELOAD
-			Console.WriteLine ($"ResolveFullTokenReference (0x{token_reference:X}) assembly name: {assembly_name} module token: 0x{module_token:X} token: 0x{token:X}.");
+			Runtime.NSLog ($"ResolveFullTokenReference (0x{token_reference:X}) assembly name: {assembly_name} module token: 0x{module_token:X} token: 0x{token:X}.");
 #endif
 
 			var assembly = ResolveAssembly (assembly_name);
@@ -435,7 +446,7 @@ namespace ObjCRuntime {
 			uint token = (token_reference >> 8) + implicit_token_type;
 
 #if LOG_TYPELOAD
-			Console.WriteLine ($"ResolveTokenReference (0x{token_reference:X}) assembly index: {assembly_index} token: 0x{token:X}.");
+			Runtime.NSLog ($"ResolveTokenReference (0x{token_reference:X}) assembly index: {assembly_index} token: 0x{token:X}.");
 #endif
 
 			var assembly_name = map->assemblies [(int) assembly_index].name;
@@ -453,13 +464,13 @@ namespace ObjCRuntime {
 			case 0x02000000: // TypeDef
 				var type = module.ResolveType ((int) token);
 #if LOG_TYPELOAD
-				Console.WriteLine ($"ResolveToken (0x{token:X}) => Type: {type.FullName}");
+				Runtime.NSLog ($"ResolveToken (0x{token:X}) => Type: {type.FullName}");
 #endif
 				return type;
 			case 0x06000000: // Method
 				var method = module.ResolveMethod ((int) token);
 #if LOG_TYPELOAD
-				Console.WriteLine ($"ResolveToken (0x{token:X}) => Method: {method?.DeclaringType?.FullName}.{method.Name}");
+				Runtime.NSLog ($"ResolveToken (0x{token:X}) => Method: {method?.DeclaringType?.FullName}.{method?.Name}");
 #endif
 				return method;
 			default:
@@ -474,7 +485,7 @@ namespace ObjCRuntime {
 					continue;
 
 #if LOG_TYPELOAD
-				Console.WriteLine ($"ResolveModule (\"{assembly.FullName}\", 0x{token:X}): {mod.Name}.");
+				Runtime.NSLog ($"ResolveModule (\"{assembly.FullName}\", 0x{token:X}): {mod.Name}.");
 #endif
 				return mod;
 			}
@@ -548,7 +559,7 @@ namespace ObjCRuntime {
 					continue;
 
 #if LOG_TYPELOAD
-				Console.WriteLine ($"TryResolveAssembly (0x{assembly_name:X}): {asm.FullName}.");
+				Runtime.NSLog ($"TryResolveAssembly (0x{assembly_name:X}): {asm.FullName}.");
 #endif
 				assembly = asm;
 				return true;
