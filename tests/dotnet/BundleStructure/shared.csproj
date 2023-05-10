@@ -111,6 +111,27 @@
 			<!-- Bundled, not linked with, install_name_tool must have been executed -->
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+
+		<!-- Assembly: should be copied, but the xml file next to it should not (and there shouldn't be any warnings either) -->
+		<None Include="../NoneN.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Include="../NoneN.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+
+		<!-- Lone xml file (no sibling assembly): should not be copied, and a warning should be printed -->
+		<None Include="../NoneO.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+
+		<!-- Assembly: should be copied, but the xml file with the same base name (even though it's in a different directory) should not (and there shouldn't be any warnings either) -->
+		<None Include="../NoneP.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Include="NoneP.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -302,8 +323,9 @@
 		<!-- The bindings-framework-test project contains (next to the binding assembly):
 			*.resources/* files for iOS and tvOS
 			*.resources.zip for macOS and Mac Catalyst
+			It's only included when building on a Mac (remotely or locally), because we don't support building binding frameworks yet from Windows (without being connected to a Mac).
 		 -->
-		<ProjectReference Include="$(RootTestsDirectory)/bindings-framework-test/dotnet/$(_PlatformName)/bindings-framework-test.csproj" />
+		<ProjectReference Include="$(RootTestsDirectory)/bindings-framework-test/dotnet/$(_PlatformName)/bindings-framework-test.csproj" Condition="'$(IsMacEnabled)' == 'true'" />
 	</ItemGroup>
 
 	<!-- Adding resources using a custom target -->

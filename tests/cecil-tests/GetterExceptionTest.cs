@@ -62,7 +62,7 @@ namespace Cecil.Tests {
 			AssemblyDefinition assembly = info.Assembly;
 
 			foreach (PropertyDefinition property in assembly.EnumerateProperties ()) {
-				if (!IsMemberObsolete (property) && property.GetMethod != null &&
+				if (!IsMemberObsolete (property) && property.GetMethod is not null &&
 					VerifyIfGetterThrowsException (property.GetMethod, out string exceptionConstructed))
 					propertiesWithGetterExceptions [property.FullName] = $"Exception: {exceptionConstructed}";
 

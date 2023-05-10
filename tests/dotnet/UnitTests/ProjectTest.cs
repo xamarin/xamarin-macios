@@ -352,7 +352,7 @@ namespace Xamarin.Tests {
 			var project_path = Path.Combine (Configuration.SourceRoot, "tests", "monotouch-test", "dotnet", platform.AsString (), "monotouch-test.csproj");
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
-			if (additionalProperties != null) {
+			if (additionalProperties is not null) {
 				foreach (var prop in additionalProperties) {
 					var eq = prop.IndexOf ('=');
 					var name = prop.Substring (0, eq);
@@ -422,7 +422,7 @@ namespace Xamarin.Tests {
 			switch (platform) {
 			case ApplePlatform.iOS:
 				var appExecutable = Path.Combine (appPath, Path.GetFileName (project_path));
-				Assert.That (appPath, Does.Exist, "There is an .app");
+				Assert.That (appPath, Does.Not.Exist, "There is an .app");
 				Assert.That (appExecutable, Does.Not.Empty, "There is no executable");
 				Assert.That (Path.Combine (appPath, Configuration.GetBaseLibraryName (platform, true)), Does.Not.Exist, "Platform assembly is in the bundle");
 				break;
@@ -767,6 +767,58 @@ namespace Xamarin.Tests {
 			DotNet.AssertBuild (projectPath, GetDefaultProperties (runtimeIdentifiers));
 		}
 
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		[TestCase (ApplePlatform.MacOSX)]
+		public void LibraryReferencingBindingLibrary (ApplePlatform platform)
+		{
+			var project = "LibraryReferencingBindingLibrary";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var projectPath = GetProjectPath (project, runtimeIdentifiers: string.Empty, platform: platform, out _);
+			Clean (projectPath);
+
+			DotNet.AssertBuild (projectPath, GetDefaultProperties ());
+
+			var bindir = GetBinDir (projectPath, platform, string.Empty);
+			var bindingResourcePackages = new List<string> () {
+				Path.Combine ("BindingWithUncompressedResourceBundle.resources", "libtest.a"),
+				Path.Combine ("BindingWithUncompressedResourceBundle.resources", "manifest"),
+			};
+
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+				bindingResourcePackages.Add (Path.Combine ("bindings-framework-test.resources", "XStaticArTest.framework", "XStaticArTest"));
+				bindingResourcePackages.Add (Path.Combine ("bindings-framework-test.resources", "XStaticObjectTest.framework", "XStaticObjectTest"));
+				bindingResourcePackages.Add (Path.Combine ("bindings-framework-test.resources", "XTest.framework", "Info.plist"));
+				bindingResourcePackages.Add (Path.Combine ("bindings-framework-test.resources", "XTest.framework", "XTest"));
+				bindingResourcePackages.Add (Path.Combine ("bindings-framework-test.resources", "manifest"));
+				break;
+			case ApplePlatform.MacCatalyst:
+			case ApplePlatform.MacOSX:
+				bindingResourcePackages.Add ("bindings-framework-test.resources.zip");
+				break;
+			}
+
+			foreach (var brp in bindingResourcePackages) {
+				var file = Path.Combine (bindir, brp);
+				Assert.That (file, Does.Exist, "Existence");
+			}
+
+			// Whether the binding project produces a compressed binding package or not depends on whether there are
+			// symlinks in the resources, which, for xcframeworks, depends not only on the current platform we're testing,
+			// but which platforms are included in the build: if the current build doesn't support neither macOS nor Mac Catalyst,
+			// then we won't create an xcframework with symlinks, which means that building the binding project for iOS and tvOS
+			// will produce a non-compressed binding package. Thus we assert that we either have a non-compressed or a compressed
+			// package here.
+			var hasCompressedResources = File.Exists (Path.Combine (bindir, "BindingWithDefaultCompileInclude.resources.zip"));
+			var hasDirectoryResources = Directory.Exists (Path.Combine (bindir, "BindingWithDefaultCompileInclude.resources"));
+			if (!hasDirectoryResources && !hasCompressedResources)
+				Assert.Fail ($"Could not find either BindingWithDefaultCompileInclude.resources.zip or BindingWithDefaultCompileInclude.resources in {bindir}");
+		}
+
 		void AssertThatLinkerExecuted (ExecutionResult result)
 		{
 			var output = BinLog.PrintToString (result.BinLogPath);
@@ -875,6 +927,10 @@ namespace Xamarin.Tests {
 
 			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", platform.ToFramework (), GetDefaultRuntimeIdentifier (platform), "MySimpleApp.app", GetPlugInsRelativePath (platform), "ExtensionProject.appex");
 			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
+
+			var pathToSearch = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug");
+			string [] configFiles = Directory.GetFiles (pathToSearch, "*.runtimeconfig.*", SearchOption.AllDirectories);
+			Assert.AreNotEqual (0, configFiles.Length, "runtimeconfig.json file does not exist");
 		}
 
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-arm64")]

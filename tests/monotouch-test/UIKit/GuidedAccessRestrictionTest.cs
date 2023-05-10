@@ -43,7 +43,7 @@ namespace MonoTouchFixtures.UIKit {
 			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
 				try {
 					var res = await UIGuidedAccessRestriction.ConfigureAccessibilityFeaturesAsync (UIGuidedAccessAccessibilityFeature.Zoom, true);
-					gotError = res.Error != null; // We expect an error back from the API call.
+					gotError = res.Error is not null; // We expect an error back from the API call.
 					didSuccess = res.Success; // We expect false since monotouch-tests app is not run in kiosk mode.
 				} finally {
 					done = true;

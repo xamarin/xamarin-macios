@@ -43,6 +43,7 @@
     <Reference Include="Mono.Cecil.Mdb">
       <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.Mdb.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.mmp.cs" />
@@ -360,6 +361,12 @@
     <Compile Include="..\common\OSPlatformAttributeExtensions.cs">
       <Link>tools\common\OSPlatformAttributeExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\common\CSToObjCMap.cs">
+      <Link>tools\common\CSToObjCMap.cs</Link>
+    </Compile>
+    <Compile Include="..\common\ObjCNameIndex.cs">
+      <Link>tools\common\ObjCNameIndex.cs</Link>
+    </Compile>
     <Compile Include="..\common\StaticRegistrar.cs">
       <Link>tools\common\StaticRegistrar.cs</Link>
     </Compile>
@@ -442,6 +449,9 @@
     </Compile>
     <Compile Include="..\common\StringUtils.cs">
       <Link>tools\common\StringUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\common\NullableAttributes.cs">
+      <Link>tools\common\NullableAttributes.cs</Link>
     </Compile>
     <Compile Include="..\common\CoreResolver.cs">
       <Link>tools\common\CoreResolver.cs</Link>

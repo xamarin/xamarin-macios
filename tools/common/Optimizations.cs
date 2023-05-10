@@ -324,7 +324,7 @@ namespace Xamarin.Bundler {
 		public void Parse (ApplePlatform platform, string options, List<ProductException> messages)
 		{
 			foreach (var option in options.Split (',')) {
-				if (option == null || option.Length < 2) {
+				if (option is null || option.Length < 2) {
 					messages.Add (ErrorHelper.CreateError (10, Errors.MX0010, $"'--optimize={options}'"));
 					return;
 				}
@@ -376,7 +376,7 @@ namespace Xamarin.Bundler {
 		{
 			var sb = new StringBuilder ();
 			for (var i = 0; i < values.Length; i++) {
-				if (values [i] == null)
+				if (values [i] is null)
 					continue;
 				if (sb.Length > 0)
 					sb.Append (' ');

@@ -201,7 +201,7 @@ namespace ObjCRuntime {
 			var userDelegateType = trampoline.GetType ().GetCustomAttribute<UserDelegateTypeAttribute> ()?.UserDelegateType;
 			bool blockSignature;
 			MethodInfo userMethod;
-			if (userDelegateType != null) {
+			if (userDelegateType is not null) {
 				userMethod = userDelegateType.GetMethod ("Invoke");
 				blockSignature = true;
 			} else {
@@ -361,7 +361,7 @@ namespace ObjCRuntime {
 			get {
 				var target = Context;
 				var tuple = target as Tuple<Delegate, Delegate>;
-				if (tuple != null)
+				if (tuple is not null)
 					return tuple.Item2;
 				return target;
 			}
@@ -430,7 +430,7 @@ namespace ObjCRuntime {
 					selector = Runtime.GetExportAttribute (minfo)?.Selector ?? string.Empty;
 				if (!string.IsNullOrEmpty (selector)) {
 					var attrib = Runtime.GetProtocolMemberAttribute (iface, selector, minfo);
-					if (attrib?.ReturnTypeDelegateProxy != null)
+					if (attrib?.ReturnTypeDelegateProxy is not null)
 						return attrib.ReturnTypeDelegateProxy;
 				}
 			}
@@ -468,7 +468,7 @@ namespace ObjCRuntime {
 			Type delegateProxyType = GetDelegateProxyType (minfo, token_ref, out var baseMethod);
 			if (baseMethod is null)
 				baseMethod = minfo; // 'baseMethod' is only used in error messages, and if it's null, we just use the closest alternative we have (minfo).
-			if (delegateProxyType == null)
+			if (delegateProxyType is null)
 				throw ErrorHelper.CreateError (8012, $"Invalid DelegateProxyAttribute for the return value for the method {baseMethod.DeclaringType.FullName}.{baseMethod.Name}: DelegateType is null. {Constants.PleaseFileBugReport}");
 
 #if NET
@@ -540,7 +540,7 @@ namespace ObjCRuntime {
 		internal static unsafe void TrampolineDispatchBlock (IntPtr block)
 		{
 			var del = BlockLiteral.GetTarget<Action> (block);
-			if (del != null) {
+			if (del is not null) {
 				del ();
 			}
 		}

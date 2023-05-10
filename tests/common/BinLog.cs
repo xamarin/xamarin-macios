@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -95,7 +97,7 @@ namespace Xamarin.Tests {
 				var eventsForTarget = buildEvents.Where (v => v.BuildEventContext?.TargetId == id);
 				var skippedEvent = eventsForTarget.OfType<TargetSkippedEventArgs> ().FirstOrDefault ();
 				var skipReason = (skippedEvent as TargetSkippedEventArgs2)?.SkipReason ?? TargetSkipReason.None;
-				yield return new TargetExecutionResult (target.TargetName, skippedEvent != null, skipReason);
+				yield return new TargetExecutionResult (target.TargetName, skippedEvent is not null, skipReason);
 			}
 		}
 
@@ -118,14 +120,14 @@ namespace Xamarin.Tests {
 		{
 			var eols = new char [] { '\n', '\r' };
 			foreach (var args in ReadBuildEvents (path)) {
-				if (args.Message == null)
+				if (args.Message is null)
 					continue;
 
 				if (args is ProjectStartedEventArgs psea) {
-					if (psea.Properties != null) {
+					if (psea.Properties is not null) {
 						yield return "Initial Properties";
 						var dict = psea.Properties as IDictionary<string, string>;
-						if (dict == null) {
+						if (dict is null) {
 							yield return $"Unknown property dictionary type: {psea.Properties.GetType ().FullName}";
 						} else {
 							foreach (var prop in dict.OrderBy (v => v.Key))
@@ -155,7 +157,7 @@ namespace Xamarin.Tests {
 					foreach (var item in tpea.Items) {
 						var taskItem = item as ITaskItem;
 						yield return $"\t{tpea.ItemType}=";
-						if (taskItem != null) {
+						if (taskItem is not null) {
 							yield return $"\t\t{taskItem.ItemSpec}";
 							foreach (var metadataName in taskItem.MetadataNames) {
 								yield return $"\t\t\t{metadataName}={taskItem.GetMetadata (metadataName?.ToString ())}";
@@ -187,10 +189,10 @@ namespace Xamarin.Tests {
 			var reader = new BinLogReader ();
 			var eols = new char [] { '\n', '\r' };
 			foreach (var record in reader.ReadRecords (path)) {
-				if (record == null)
+				if (record is null)
 					continue;
 				var args = record.Args;
-				if (args == null)
+				if (args is null)
 					continue;
 
 				if (args is BuildErrorEventArgs buildError) {
@@ -237,6 +239,31 @@ namespace Xamarin.Tests {
 					};
 				}
 			}
+		}
+
+		public static bool TryFindPropertyValue (string binlog, string property, [NotNullWhen (true)] out string? value)
+		{
+			value = null;
+
+			var reader = new BinLogReader ();
+			foreach (var record in reader.ReadRecords (binlog)) {
+				var args = record?.Args;
+				if (args is null)
+					continue;
+				if (args is PropertyInitialValueSetEventArgs pivsea) {
+					if (string.Equals (property, pivsea.PropertyName, StringComparison.OrdinalIgnoreCase))
+						value = pivsea.PropertyValue;
+				} else if (args is PropertyReassignmentEventArgs prea) {
+					if (string.Equals (property, prea.PropertyName, StringComparison.OrdinalIgnoreCase))
+						value = prea.NewValue;
+				} else if (args is ProjectEvaluationFinishedEventArgs pefea) {
+					var dict = pefea.Properties as IDictionary<string, string>;
+					if (dict is not null && dict.TryGetValue (property, out var pvalue))
+						value = pvalue;
+				}
+			}
+
+			return value is not null;
 		}
 
 		// Returns a diagnostic build log as a string

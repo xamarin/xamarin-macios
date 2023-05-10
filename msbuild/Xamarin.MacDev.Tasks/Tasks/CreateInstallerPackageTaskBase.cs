@@ -58,7 +58,7 @@ namespace Xamarin.MacDev.Tasks {
 				return null;
 			}
 
-			if (plist == null) {
+			if (plist is null) {
 				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0122, AppManifest);
 				return null;
 			}
@@ -130,7 +130,7 @@ namespace Xamarin.MacDev.Tasks {
 			var customTags = new Dictionary<string, string> (StringComparer.OrdinalIgnoreCase) {
 				{ "projectdir",   Path.GetDirectoryName (this.ProjectPath) },
 			// Apparently msbuild doesn't propagate the solution path, so we can't get it. - MTouchTaskBase.cs
-			// 	{ "solutiondir",  proj.ParentSolution != null ? proj.ParentSolution.BaseDirectory : proj.BaseDirectory },
+			// 	{ "solutiondir",  proj.ParentSolution is not null ? proj.ParentSolution.BaseDirectory : proj.BaseDirectory },
 				{ "appbundledir", this.AppBundleDir },
 				{ "targetpath",   Path.Combine (Path.GetDirectoryName (target), Path.GetFileName (target)) },
 				{ "targetdir",    Path.GetDirectoryName (target) },
@@ -167,11 +167,11 @@ namespace Xamarin.MacDev.Tasks {
 					matches = name == key || cert.Thumbprint == key;
 				}
 
-				if (matches && (best == null || cert.NotAfter > best.NotAfter))
+				if (matches && (best is null || cert.NotAfter > best.NotAfter))
 					best = cert;
 			}
 
-			if (best == null) {
+			if (best is null) {
 				string msg = string.Format (MSBStrings.E0124, key);
 				Log.LogError (msg);
 				return string.Empty;

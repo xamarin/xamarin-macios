@@ -43,7 +43,7 @@ namespace Foundation {
 
 		protected void Dispose (bool disposing)
 		{
-			if (tmpfile != null) {
+			if (tmpfile is not null) {
 				try {
 					File.Delete (tmpfile);
 				} catch {

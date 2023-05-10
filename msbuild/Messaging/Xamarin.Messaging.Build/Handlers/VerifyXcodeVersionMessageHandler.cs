@@ -28,7 +28,7 @@ namespace Xamarin.Messaging.Build {
 		{
 			var monoTouchSdk = GetMonoTouchSdk ();
 
-			return monoTouchSdk == null ? new Version (0, 0) : monoTouchSdk?.RecommendedXcodeVersion;
+			return monoTouchSdk is null ? new Version (0, 0) : monoTouchSdk?.RecommendedXcodeVersion;
 		}
 
 		MonoTouchSdk GetMonoTouchSdk ()

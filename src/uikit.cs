@@ -1646,6 +1646,10 @@ namespace UIKit {
 		[NoTV, iOS (16, 0), MacCatalyst (16, 0)]
 		[Field ("UIActivityTypeCollaborationCopyLink")]
 		NSString CollaborationCopyLink { get; }
+
+		[NoTV, iOS (16, 4), MacCatalyst (16, 4)]
+		[Field ("UIActivityTypeAddToHomeScreen")]
+		NSString AddToHomeScreen { get; }
 	}
 
 	//
@@ -12492,14 +12496,14 @@ namespace UIKit {
 		[Export ("captureTextFromCamera:")]
 		void CaptureTextFromCamera ([NullAllowed] NSObject sender);
 
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NoWatch, NoTV, NoiOS]
 		[Export ("makeTouchBar")]
 		[return: NullAllowed]
 		NSTouchBar CreateTouchBar ();
 
 #pragma warning disable 0108 // warning CS0108: 'NSFontAssetRequest.Progress' hides inherited member 'NSProgressReporting.Progress'. Use the new keyword if hiding was intended.
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NoWatch, NoTV, NoiOS]
 		[Export ("touchBar", ArgumentSemantic.Strong)]
 		[NullAllowed]
@@ -12757,9 +12761,9 @@ namespace UIKit {
 		[NullAllowed, Export ("focusedView", ArgumentSemantic.Weak)]
 		UIView FocusedView { get; }
 
-		[Deprecated (PlatformName.iOS, 15, 0, message: "Check for 'UIWindowScene.FocusSystem != null' instead.")]
-		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Check for 'UIWindowScene.FocusSystem != null' instead.")]
-		[Deprecated (PlatformName.TvOS, 15, 0, message: "Check for 'UIWindowScene.FocusSystem != null' instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Check for 'UIWindowScene.FocusSystem is not null' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Check for 'UIWindowScene.FocusSystem is not null' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Check for 'UIWindowScene.FocusSystem is not null' instead.")]
 		[iOS (9, 0)] // added in Xcode 7.1 / iOS 9.1 SDK
 		[MacCatalyst (13, 1)]
 		[Export ("supportsFocus")]
@@ -13216,6 +13220,10 @@ namespace UIKit {
 		[Export ("inputAccessoryView", ArgumentSemantic.Retain)]
 		[NullAllowed]
 		UIView InputAccessoryView { get; set; }
+
+		[TV (16, 4), iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
 
 		[Appearance]
 		[Export ("setBackgroundImage:forBarPosition:barMetrics:")]
@@ -17952,14 +17960,14 @@ namespace UIKit {
 		[NoiOS]
 		[NoTV]
 		[NoWatch]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("setNeedsTouchBarUpdate")]
 		void SetNeedsTouchBarUpdate ();
 
 		[NoiOS]
 		[NoTV]
 		[NoWatch]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[NullAllowed]
 		[Export ("childViewControllerForTouchBar")]
 		UIViewController ChildViewControllerForTouchBar { get; }
@@ -23552,6 +23560,18 @@ namespace UIKit {
 		[MacCatalyst (16, 1)]
 		[Export ("zOffset")]
 		nfloat ZOffset { get; }
+
+		[iOS (16, 4), NoMacCatalyst]
+		[Export ("azimuthAngleInView:")]
+		nfloat GetAzimuthAngle ([NullAllowed] UIView view);
+
+		[iOS (16, 4), NoMacCatalyst]
+		[Export ("azimuthUnitVectorInView:")]
+		CGVector GetAzimuthUnitVector ([NullAllowed] UIView view);
+
+		[iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("altitudeAngle")]
+		nfloat AltitudeAngle { get; }
 	}
 
 	interface IUILargeContentViewerItem { }
@@ -24162,7 +24182,7 @@ namespace UIKit {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("titlebar")]
 		[NullAllowed]
 		UITitlebar Titlebar { get; }
@@ -26232,6 +26252,10 @@ namespace UIKit {
 		[NullAllowed, Export ("titleTextAttributesTransformer", ArgumentSemantic.Copy)]
 		UIConfigurationTextAttributesTransformerHandler TitleTextAttributesTransformer { get; set; }
 
+		[TV (16, 4), iOS (16, 4), MacCatalyst (16, 4)]
+		[NullAllowed, Export ("titleLineBreakMode", ArgumentSemantic.Assign)]
+		UILineBreakMode TitleLineBreakMode { get; set; }
+
 		[NullAllowed, Export ("subtitle")]
 		string Subtitle { get; set; }
 
@@ -26240,6 +26264,10 @@ namespace UIKit {
 
 		[NullAllowed, Export ("subtitleTextAttributesTransformer", ArgumentSemantic.Copy)]
 		UIConfigurationTextAttributesTransformerHandler SubtitleTextAttributesTransformer { get; set; }
+
+		[TV (16, 4), iOS (16, 4), MacCatalyst (16, 4)]
+		[NullAllowed, Export ("subtitleLineBreakMode", ArgumentSemantic.Assign)]
+		UILineBreakMode SubtitleLineBreakMode { get; set; }
 
 		[Export ("contentInsets", ArgumentSemantic.Assign)]
 		NSDirectionalEdgeInsets ContentInsets { get; set; }
@@ -26511,7 +26539,7 @@ namespace UIKit {
 	[NoiOS]
 	[NoTV]
 	[NoWatch]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum UITitlebarTitleVisibility : long {
 		Visible,
@@ -26534,7 +26562,7 @@ namespace UIKit {
 	[NoiOS]
 	[NoTV]
 	[NoWatch]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface UITitlebar {
 		[Export ("titleVisibility", ArgumentSemantic.Assign)]
@@ -27287,6 +27315,25 @@ namespace UIKit {
 
 		[Field ("UIFontWidthCompressed")]
 		nfloat Compressed { get; }
+	}
+
+	[NoWatch, NoTV, iOS (16, 4), NoMacCatalyst]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UITextInputContext {
+
+		[Export ("pencilInputExpected")]
+		bool PencilInputExpected { [Bind ("isPencilInputExpected")] get; set; }
+
+		[Export ("dictationInputExpected")]
+		bool DictationInputExpected { [Bind ("isDictationInputExpected")] get; set; }
+
+		[Export ("hardwareKeyboardInputExpected")]
+		bool HardwareKeyboardInputExpected { [Bind ("isHardwareKeyboardInputExpected")] get; set; }
+
+		[Static]
+		[Export ("current")]
+		UITextInputContext Current { get; }
 	}
 
 

@@ -993,7 +993,7 @@ public abstract class AvailabilityBaseAttribute : Attribute {
 			throw new NotSupportedException ($"Unknown platform: {Platform}");
 		}
 
-		if (Version != null)
+		if (Version is not null)
 			builder.Append (Version.ToString (Version.Build >= 0 ? 3 : 2));
 	}
 

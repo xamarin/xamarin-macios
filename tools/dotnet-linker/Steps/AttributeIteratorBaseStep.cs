@@ -7,6 +7,8 @@ using Mono.Linker.Steps;
 using Mono.Cecil;
 using Xamarin.Tuner;
 
+#nullable enable
+
 namespace Xamarin.Linker.Steps {
 
 	public abstract class AttributeIteratorBaseStep : BaseSubStep {
@@ -50,7 +52,7 @@ namespace Xamarin.Linker.Steps {
 		void ProcessAttributeProviderCollection (IList list)
 		{
 			for (int i = 0; i < list.Count; i++)
-				ProcessAttributeProvider ((ICustomAttributeProvider) list [i]);
+				ProcessAttributeProvider ((ICustomAttributeProvider) list [i]!);
 		}
 
 		public override void ProcessField (FieldDefinition field)

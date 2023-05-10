@@ -73,7 +73,7 @@ namespace AudioToolbox {
 		InvalidOfflineMode = -66626,
 		BufferEnqueuedTwice = -66666,
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]

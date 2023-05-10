@@ -25,7 +25,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public static void LogTaskProperty (this TaskLoggingHelper log, string propertyName, ITaskItem [] items)
 		{
-			if (items == null) {
+			if (items is null) {
 				log.LogMessage (TaskPropertyImportance, "  {0}: <null>", propertyName);
 				return;
 			}
@@ -38,7 +38,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public static void LogTaskProperty (this TaskLoggingHelper log, string propertyName, ITaskItem item)
 		{
-			if (item != null)
+			if (item is not null)
 				log.LogMessage (TaskPropertyImportance, "  {0}: {1}", propertyName, item.ItemSpec);
 			else
 				log.LogMessage (TaskPropertyImportance, "  {0}: ", propertyName);
@@ -46,7 +46,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public static void LogTaskProperty (this TaskLoggingHelper log, string propertyName, string [] items)
 		{
-			if (items == null) {
+			if (items is null) {
 				log.LogMessage (TaskPropertyImportance, "  {0}: <null>", propertyName);
 				return;
 			}

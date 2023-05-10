@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "tvOS View Controller",
-  "description": "A tvOS View Controller class and xib",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "Kontroler widoku systemu tvOS",
+  "description": "Klasa kontorlera widoku systemu tvOS oraz xib",
+  "symbols/namespace/description": "przestrzeń nazw wygenerowanego kodu."
 }

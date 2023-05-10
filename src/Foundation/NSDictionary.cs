@@ -89,9 +89,9 @@ namespace Foundation {
 
 		public static NSDictionary FromObjectsAndKeys (NSObject [] objects, NSObject [] keys)
 		{
-			if (objects == null)
+			if (objects is null)
 				throw new ArgumentNullException (nameof (objects));
-			if (keys == null)
+			if (keys is null)
 				throw new ArgumentNullException (nameof (keys));
 			if (objects.Length != keys.Length)
 				throw new ArgumentException (nameof (objects) + " and " + nameof (keys) + " arrays have different sizes");
@@ -103,9 +103,9 @@ namespace Foundation {
 
 		public static NSDictionary FromObjectsAndKeys (object [] objects, object [] keys)
 		{
-			if (objects == null)
+			if (objects is null)
 				throw new ArgumentNullException (nameof (objects));
-			if (keys == null)
+			if (keys is null)
 				throw new ArgumentNullException (nameof (keys));
 			if (objects.Length != keys.Length)
 				throw new ArgumentException (nameof (objects) + " and " + nameof (keys) + " arrays have different sizes");
@@ -117,9 +117,9 @@ namespace Foundation {
 
 		public static NSDictionary FromObjectsAndKeys (NSObject [] objects, NSObject [] keys, nint count)
 		{
-			if (objects == null)
+			if (objects is null)
 				throw new ArgumentNullException (nameof (objects));
-			if (keys == null)
+			if (keys is null)
 				throw new ArgumentNullException (nameof (keys));
 			if (objects.Length != keys.Length)
 				throw new ArgumentException (nameof (objects) + " and " + nameof (keys) + " arrays have different sizes");
@@ -133,9 +133,9 @@ namespace Foundation {
 
 		public static NSDictionary FromObjectsAndKeys (object [] objects, object [] keys, nint count)
 		{
-			if (objects == null)
+			if (objects is null)
 				throw new ArgumentNullException (nameof (objects));
-			if (keys == null)
+			if (keys is null)
 				throw new ArgumentNullException (nameof (keys));
 			if (objects.Length != keys.Length)
 				throw new ArgumentException (nameof (objects) + " and " + nameof (keys) + " arrays have different sizes");
@@ -159,7 +159,7 @@ namespace Foundation {
 		#region ICollection
 		void ICollection.CopyTo (Array array, int arrayIndex)
 		{
-			if (array == null)
+			if (array is null)
 				throw new ArgumentNullException (nameof (array));
 			if (arrayIndex < 0)
 				throw new ArgumentOutOfRangeException (nameof (arrayIndex));
@@ -206,7 +206,7 @@ namespace Foundation {
 
 		void ICollection<KeyValuePair<NSObject, NSObject>>.CopyTo (KeyValuePair<NSObject, NSObject> [] array, int index)
 		{
-			if (array == null)
+			if (array is null)
 				throw new ArgumentNullException (nameof (array));
 			if (index < 0)
 				throw new ArgumentOutOfRangeException (nameof (index));
@@ -249,10 +249,10 @@ namespace Foundation {
 
 		bool IDictionary.Contains (object key)
 		{
-			if (key == null)
+			if (key is null)
 				throw new ArgumentNullException (nameof (key));
 			NSObject _key = key as NSObject;
-			if (_key == null)
+			if (_key is null)
 				return false;
 			return ContainsKey (_key);
 		}
@@ -278,7 +278,7 @@ namespace Foundation {
 		object IDictionary.this [object key] {
 			get {
 				NSObject _key = key as NSObject;
-				if (_key == null)
+				if (_key is null)
 					return null;
 				return ObjectForKey (_key);
 			}
@@ -306,7 +306,7 @@ namespace Foundation {
 
 		public bool ContainsKey (NSObject key)
 		{
-			return ObjectForKey (key) != null;
+			return ObjectForKey (key) is not null;
 		}
 
 		internal bool ContainsKey (IntPtr key)
@@ -340,7 +340,7 @@ namespace Foundation {
 
 			value = ObjectForKey (key);
 			// NSDictionary can not contain NULLs, if you want a NULL, it exists as an NSNull
-			return value != null;
+			return value is not null;
 		}
 
 		public virtual NSObject this [NSObject key] {
@@ -363,7 +363,7 @@ namespace Foundation {
 
 		public virtual NSObject this [string key] {
 			get {
-				if (key == null)
+				if (key is null)
 					throw new ArgumentNullException ("key");
 				var nss = NSString.CreateNative (key, false);
 				try {

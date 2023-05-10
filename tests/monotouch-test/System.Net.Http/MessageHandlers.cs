@@ -17,7 +17,6 @@ using System.Linq;
 using System.IO;
 
 using NUnit.Framework;
-using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Authentication;
 using System.Text;
@@ -479,7 +478,7 @@ namespace MonoTests.System.Net.Http {
 				Assert.False (invalidServicePointManagerCbWasExcuted, "Invalid SPM executed");
 				Assert.True (validationCbWasExecuted, "Validation Callback called");
 				// assert the exception type
-				Assert.IsNotNull (ex, (result == null) ? "Expected exception is missing and got no result" : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}");
+				Assert.IsNotNull (ex, (result is null) ? "Expected exception is missing and got no result" : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}");
 				Assert.IsInstanceOf (typeof (HttpRequestException), ex, "Exception type");
 				Assert.IsNotNull (ex.InnerException, "InnerException");
 				Assert.IsInstanceOf (expectedExceptionType, ex.InnerException, "InnerException type");
@@ -535,7 +534,7 @@ namespace MonoTests.System.Net.Http {
 				Assert.Inconclusive ("Request timedout.");
 			} else {
 				// assert that we did not get an exception
-				if (ex != null && ex.InnerException != null) {
+				if (ex is not null && ex.InnerException is not null) {
 					// we could get here.. if we have a diff issue, in that case, lets get the exception message and assert is not the trust issue
 					Assert.AreNotEqual (ex.InnerException.Message, "Error: TrustFailure");
 				}
@@ -631,7 +630,7 @@ namespace MonoTests.System.Net.Http {
 				Assert.Inconclusive ("Request timedout.");
 			} else {
 				Assert.True (callbackWasExecuted, "Validation Callback called.");
-				Assert.IsNotNull (ex, result == null ? "Expected exception is missing and got no result." : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}.");
+				Assert.IsNotNull (ex, result is null ? "Expected exception is missing and got no result." : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}.");
 				Assert.IsInstanceOf (typeof (HttpRequestException), ex, "Exception type");
 				Assert.IsNotNull (ex.InnerException, "InnerException");
 				Assert.IsInstanceOf (typeof (WebException), ex.InnerException, "InnerException type");

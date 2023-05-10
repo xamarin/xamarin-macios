@@ -7,6 +7,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
+using static Xamarin.Bundler.FileCopier;
 
 namespace Xamarin.MacDev.Tasks {
 	// This is the same as XamarinToolTask, except that it subclasses Task instead.
@@ -109,16 +110,21 @@ namespace Xamarin.MacDev.Tasks {
 			return PlatformFrameworkHelper.GetSdkPlatform (Platform, isSimulator);
 		}
 
-		protected async System.Threading.Tasks.Task<Execution> ExecuteAsync (string fileName, IList<string> arguments, string sdkDevPath = null, Dictionary<string, string> environment = null, bool mergeOutput = true, bool showErrorIfFailure = true, string workingDirectory = null)
+		protected System.Threading.Tasks.Task<Execution> ExecuteAsync (string fileName, IList<string> arguments, string sdkDevPath = null, Dictionary<string, string> environment = null, bool mergeOutput = true, bool showErrorIfFailure = true, string workingDirectory = null)
+		{
+			return ExecuteAsync (Log, fileName, arguments, sdkDevPath, environment, mergeOutput, showErrorIfFailure, workingDirectory);
+		}
+
+		internal protected static async System.Threading.Tasks.Task<Execution> ExecuteAsync (TaskLoggingHelper log, string fileName, IList<string> arguments, string sdkDevPath = null, Dictionary<string, string> environment = null, bool mergeOutput = true, bool showErrorIfFailure = true, string workingDirectory = null)
 		{
 			// Create a new dictionary if we're given one, to make sure we don't change the caller's dictionary.
-			var launchEnvironment = environment == null ? new Dictionary<string, string> () : new Dictionary<string, string> (environment);
+			var launchEnvironment = environment is null ? new Dictionary<string, string> () : new Dictionary<string, string> (environment);
 			if (!string.IsNullOrEmpty (sdkDevPath))
 				launchEnvironment ["DEVELOPER_DIR"] = sdkDevPath;
 
-			Log.LogMessage (MessageImportance.Normal, MSBStrings.M0001, fileName, StringUtils.FormatArguments (arguments));
+			log.LogMessage (MessageImportance.Normal, MSBStrings.M0001, fileName, StringUtils.FormatArguments (arguments));
 			var rv = await Execution.RunAsync (fileName, arguments, environment: launchEnvironment, mergeOutput: mergeOutput, workingDirectory: workingDirectory);
-			Log.LogMessage (rv.ExitCode == 0 ? MessageImportance.Low : MessageImportance.High, MSBStrings.M0002, fileName, rv.ExitCode);
+			log.LogMessage (rv.ExitCode == 0 ? MessageImportance.Low : MessageImportance.High, MSBStrings.M0002, fileName, rv.ExitCode);
 
 			// Show the output
 			var output = rv.StandardOutput.ToString ();
@@ -131,7 +137,7 @@ namespace Xamarin.MacDev.Tasks {
 				var importance = MessageImportance.Low;
 				if (rv.ExitCode != 0)
 					importance = showErrorIfFailure ? MessageImportance.High : MessageImportance.Normal;
-				Log.LogMessage (importance, output);
+				log.LogMessage (importance, output);
 			}
 
 			if (showErrorIfFailure && rv.ExitCode != 0) {
@@ -139,9 +145,9 @@ namespace Xamarin.MacDev.Tasks {
 				if (stderr.Length > 1024)
 					stderr = stderr.Substring (0, 1024);
 				if (string.IsNullOrEmpty (stderr)) {
-					Log.LogError (MSBStrings.E0117, /* {0} exited with code {1} */ fileName == "xcrun" ? arguments [0] : fileName, rv.ExitCode);
+					log.LogError (MSBStrings.E0117, /* {0} exited with code {1} */ fileName == "xcrun" ? arguments [0] : fileName, rv.ExitCode);
 				} else {
-					Log.LogError (MSBStrings.E0118, /* {0} exited with code {1}:\n{2} */ fileName == "xcrun" ? arguments [0] : fileName, rv.ExitCode, stderr);
+					log.LogError (MSBStrings.E0118, /* {0} exited with code {1}:\n{2} */ fileName == "xcrun" ? arguments [0] : fileName, rv.ExitCode, stderr);
 				}
 			}
 
@@ -150,12 +156,31 @@ namespace Xamarin.MacDev.Tasks {
 
 		public bool ShouldExecuteRemotely () => this.ShouldExecuteRemotely (SessionId);
 
-		protected void FileCopierReportErrorCallback (int code, string format, params object [] arguments)
+		internal protected static ReportErrorCallback GetFileCopierReportErrorCallback (TaskLoggingHelper log)
 		{
-			Log.LogError (format, arguments);
+			return new ReportErrorCallback ((int code, string format, object [] arguments) => {
+				FileCopierReportErrorCallback (log, code, format, arguments);
+			});
 		}
 
-		protected void FileCopierLogCallback (int min_verbosity, string format, params object [] arguments)
+		internal protected static void FileCopierReportErrorCallback (TaskLoggingHelper log, int code, string format, params object [] arguments)
+		{
+			log.LogError (format, arguments);
+		}
+
+		protected void FileCopierReportErrorCallback (int code, string format, params object [] arguments)
+		{
+			FileCopierReportErrorCallback (Log, code, format, arguments);
+		}
+
+		internal protected static LogCallback GetFileCopierLogCallback (TaskLoggingHelper log)
+		{
+			return new LogCallback ((int min_verbosity, string format, object [] arguments) => {
+				FileCopierLogCallback (log, min_verbosity, format, arguments);
+			});
+		}
+
+		protected static void FileCopierLogCallback (TaskLoggingHelper log, int min_verbosity, string format, params object [] arguments)
 		{
 			MessageImportance importance;
 			if (min_verbosity <= 0) {
@@ -165,7 +190,12 @@ namespace Xamarin.MacDev.Tasks {
 			} else {
 				importance = MessageImportance.Low;
 			}
-			Log.LogMessage (importance, format, arguments);
+			log.LogMessage (importance, format, arguments);
+		}
+
+		protected void FileCopierLogCallback (int min_verbosity, string format, params object [] arguments)
+		{
+			FileCopierLogCallback (Log, min_verbosity, format, arguments);
 		}
 
 		protected string GetNonEmptyStringOrFallback (ITaskItem item, string metadataName, string fallbackValue, string fallbackName = null, bool required = false)

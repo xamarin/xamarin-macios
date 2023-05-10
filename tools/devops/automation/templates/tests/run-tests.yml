@@ -76,21 +76,10 @@ steps:
     allowFailedBuilds: true
     path: $(Build.SourcesDirectory)/artifacts
 
-- pwsh: |
-    $workloadPath = "$(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}WorkloadRollback/WorkloadRollback.json"
-    $versionData = Get-Content $workloadPath | ConvertFrom-Json
-    $platforms = $("iOS", "tvOS", "macOS", "MacCatalyst")
-    foreach ($platform in $platforms) {
-        $platformLower = $platform.ToLowerInvariant()
-        $platformUpper = $platform.ToUpperInvariant()
-        $version = $versionData."microsoft.net.sdk.$platformLower"
-        if (![string]::IsNullOrEmpty($version)) {
-            Write-Host "Platform: $platform has version $version"
-            Write-Host "##vso[task.setvariable variable=$($platformUpper)_WORKLOAD_VERSION;]$version"
-        } else {
-            Write-Host "Platform: $platform has no version (disabled?)"
-        }
-    }
+- pwsh: >-
+    ./set_xtro_workloads.ps1
+    -WorkloadPath "$(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}WorkloadRollback/WorkloadRollback.json"
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
   displayName: 'Set workload versions for xtro'
 
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/install-workloads.sh
@@ -331,6 +320,13 @@ steps:
     artifactName: ${{ parameters.uploadPrefix }}all-binlogs-test-${{ parameters.testPrefix }}-$(Build.BuildId)-$(System.JobAttempt)'
   continueOnError: true
   condition: succeededOrFailed()
+
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/collect-and-upload-crash-reports.sh
+  displayName: 'Collect and upload crash reports'
+  condition: always() # who knows when crash reports can end up being useful
+  continueOnError: true
+  env:
+    MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}
 
 # Be nice and clean behind you
 - pwsh: |

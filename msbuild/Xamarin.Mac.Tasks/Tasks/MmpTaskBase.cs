@@ -97,12 +97,12 @@ namespace Xamarin.Mac.Tasks {
 				args.AddLine (aot);
 			}
 
-			if (References != null) {
+			if (References is not null) {
 				foreach (var asm in References)
 					args.AddQuotedLine ("/reference:" + Path.GetFullPath (asm.ItemSpec));
 			}
 
-			if (NativeReferences != null) {
+			if (NativeReferences is not null) {
 				foreach (var nr in NativeReferences)
 					args.AddQuotedLine ("/native-reference:" + Path.GetFullPath (nr.ItemSpec));
 			}
@@ -112,7 +112,7 @@ namespace Xamarin.Mac.Tasks {
 			if (IsXPCService)
 				args.AddQuotedLine ("/xpc");
 
-			return args.CreateResponseFile (this, ResponseFilePath, ExtraArgs == null ? null : CommandLineArgumentBuilder.Parse (ExtraArgs));
+			return args.CreateResponseFile (this, ResponseFilePath, ExtraArgs is null ? null : CommandLineArgumentBuilder.Parse (ExtraArgs));
 		}
 
 		public override bool Execute ()

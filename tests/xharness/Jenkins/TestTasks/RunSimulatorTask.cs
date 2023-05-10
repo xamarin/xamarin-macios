@@ -24,7 +24,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 		public Task<IAcquiredResource> AcquireResourceAsync ()
 		{
-			if (AcquiredResource != null) {
+			if (AcquiredResource is not null) {
 				// We don't own the acquired resource, so wrap it in a class that won't dispose it.
 				return Task.FromResult<IAcquiredResource> (new NondisposedResource () { Wrapped = AcquiredResource });
 			} else {

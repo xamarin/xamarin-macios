@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -672,12 +672,13 @@
         </value>
     </data>
   <data name="E0174" xml:space="preserve">
-        <value>{0} tem um formato incorreto ou desconhecido e não pode ser processado.
-        </value>
+        <value>O xcframework {0} tem um formato incorreto ou desconhecido e não pode ser processado.</value>
     </data>
   <data name="E0175" xml:space="preserve">
-        <value>Nenhuma estrutura correspondente encontrada dentro de '{0}'.
-        </value>
+        <value>Nenhuma estrutura correspondente encontrada dentro de '{0}'. SupportedPlatform: '{0}', SupportedPlatformVariant: '{1}', SupportedArchitectures: '{2}'.</value>
+        <comment>
+            Do not translate: 'SupportedPlatform', 'SupportedPlatformVariant', 'SupportedArchitectures' (they're keys inside a file with key/value pairs))
+        </comment>
     </data>
   <data name="W0176" xml:space="preserve">
         <value>Opções conflitantes '{0}' e '{1}'. '{1}' será ignorado.
@@ -1170,11 +1171,38 @@
         </comment>
     </data>
   <data name="W7105" xml:space="preserve">
-        <value>Extensão inesperada '{0}' para referência nativa '{1}' no manifesto '{2}'.</value>
+        <value>Extensão inesperada '{0}' para referência nativa '{1}' no pacote de recursos de ligação '{2}'.</value>
         <comment>
             {0}: file extension
             {1}: path to a file
             {2}: path to a file
         </comment>
+    </data>
+  <data name="W7106" xml:space="preserve">
+        <value>Esperava um arquivo chamado '{1}' no arquivo zip {0}.</value>
+    </data>
+  <data name="W7107" xml:space="preserve">
+        <value>O arquivo zip '{0}' não existe.</value>
+    </data>
+  <data name="W7108" xml:space="preserve">
+        <value>O arquivo '{0}' não existe.</value>
+    </data>
+  <data name="W7109" xml:space="preserve">
+        <value>Não é possível processar o item '{0}' como uma referência nativa: tipo desconhecido.</value>
+    </data>
+  <data name="E7110" xml:space="preserve">
+        <value>Não foi possível carregar Info.plist '{0}' do xcframework '{1}'.</value>
+    </data>
+  <data name="W7111" xml:space="preserve">
+        <value>O diretório '{0}' não existe.</value>
+    </data>
+  <data name="E7112" xml:space="preserve">
+        <value>Não foi possível encontrar o arquivo ou diretório '{0}' no arquivo zip '{1}'.</value>
+    </data>
+  <data name="E7113" xml:space="preserve">
+        <value>Não é possível processar o arquivo zip '{0}' nesta plataforma: o arquivo '{1}' é um link simbólico.</value>
+    </data>
+  <data name="E7114" xml:space="preserve">
+        <value>The "{0}" task was not given a value for the parameter "{1}", which is required when building on this platform.</value>
     </data>
 </root>

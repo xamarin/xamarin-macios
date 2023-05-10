@@ -60,7 +60,7 @@ namespace UIKit {
 
 		// UIAccessibility.h
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -70,7 +70,7 @@ namespace UIKit {
 		extern static /* NSObject */ IntPtr UIAccessibilityFocusedElement (IntPtr assistiveTechnologyIdentifier);
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -84,7 +84,7 @@ namespace UIKit {
 
 		// UIAccessibility.h
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -95,7 +95,7 @@ namespace UIKit {
 		extern static /* BOOL */ bool UIAccessibilityIsShakeToUndoEnabled ();
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -152,7 +152,7 @@ namespace UIKit {
 
 		public static void PostNotification (int notification, NSObject argument)
 		{
-			UIAccessibilityPostNotification (notification, argument == null ? IntPtr.Zero : argument.Handle);
+			UIAccessibilityPostNotification (notification, argument is null ? IntPtr.Zero : argument.Handle);
 		}
 
 		static int NotificationEnumToInt (UIAccessibilityPostNotification notification)
@@ -177,7 +177,7 @@ namespace UIKit {
 
 		public static void ZoomFocusChanged (UIAccessibilityZoomType type, CGRect frame, UIView view)
 		{
-			UIAccessibilityZoomFocusChanged ((IntPtr) type, frame, view != null ? view.Handle : IntPtr.Zero);
+			UIAccessibilityZoomFocusChanged ((IntPtr) type, frame, view is not null ? view.Handle : IntPtr.Zero);
 		}
 
 		// UIAccessibilityZoom.h
@@ -200,9 +200,9 @@ namespace UIKit {
 #endif
 		public static UIBezierPath ConvertPathToScreenCoordinates (UIBezierPath path, UIView view)
 		{
-			if (path == null)
+			if (path is null)
 				throw new ArgumentNullException ("path");
-			if (view == null)
+			if (view is null)
 				throw new ArgumentNullException ("view");
 
 			return new UIBezierPath (UIAccessibilityConvertPathToScreenCoordinates (path.Handle, view.Handle));
@@ -224,7 +224,7 @@ namespace UIKit {
 #endif
 		public static CGRect ConvertFrameToScreenCoordinates (CGRect rect, UIView view)
 		{
-			if (view == null)
+			if (view is null)
 				throw new ArgumentNullException ("view");
 
 			return UIAccessibilityConvertFrameToScreenCoordinates (rect, view.Handle);
@@ -285,12 +285,12 @@ namespace UIKit {
 		{
 			var descriptor = (BlockLiteral*) block;
 			var del = (Action<bool>) (descriptor->Target);
-			if (del != null)
+			if (del is not null)
 				del (enable != 0);
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -301,7 +301,7 @@ namespace UIKit {
 		static extern bool UIAccessibilityDarkerSystemColorsEnabled ();
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -324,7 +324,7 @@ namespace UIKit {
 #endif
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -335,7 +335,7 @@ namespace UIKit {
 		static extern bool UIAccessibilityIsBoldTextEnabled ();
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -372,7 +372,7 @@ namespace UIKit {
 		public static bool ButtonShapesEnabled => UIAccessibilityButtonShapesEnabled ();
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -383,7 +383,7 @@ namespace UIKit {
 		static extern bool UIAccessibilityIsGrayscaleEnabled ();
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -396,7 +396,7 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -407,7 +407,7 @@ namespace UIKit {
 		static extern bool UIAccessibilityIsReduceMotionEnabled ();
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -466,7 +466,7 @@ namespace UIKit {
 		static public bool IsVideoAutoplayEnabled => UIAccessibilityIsVideoAutoplayEnabled ();
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -477,7 +477,7 @@ namespace UIKit {
 		static extern bool UIAccessibilityIsReduceTransparencyEnabled ();
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -490,7 +490,7 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -501,7 +501,7 @@ namespace UIKit {
 		static extern bool UIAccessibilityIsSwitchControlRunning ();
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -514,7 +514,7 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -525,7 +525,7 @@ namespace UIKit {
 		static extern bool UIAccessibilityIsSpeakSelectionEnabled ();
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -538,7 +538,7 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -549,7 +549,7 @@ namespace UIKit {
 		static extern bool UIAccessibilityIsSpeakScreenEnabled ();
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -562,8 +562,8 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10, 0)]
@@ -574,8 +574,8 @@ namespace UIKit {
 		static extern bool UIAccessibilityIsAssistiveTouchRunning ();
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10, 0)]
@@ -633,7 +633,7 @@ namespace UIKit {
 
 #if !TVOS
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
@@ -643,7 +643,7 @@ namespace UIKit {
 		static extern nuint UIAccessibilityHearingDevicePairedEar ();
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else

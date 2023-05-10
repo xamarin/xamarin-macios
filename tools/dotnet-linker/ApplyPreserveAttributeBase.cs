@@ -10,6 +10,8 @@ using Mono.Linker.Steps;
 
 using Mono.Cecil;
 
+#nullable enable
+
 namespace Mono.Tuner {
 
 	public abstract class ApplyPreserveAttributeBase : BaseSubStep {
@@ -72,16 +74,16 @@ namespace Mono.Tuner {
 				MarkMethod (method, attribute);
 		}
 
-		void MarkMethod (MethodDefinition method, CustomAttribute preserve_attribute)
+		void MarkMethod (MethodDefinition? method, CustomAttribute? preserve_attribute)
 		{
-			if (method == null)
+			if (method is null)
 				return;
 
 			Mark (method, preserve_attribute);
 			Annotations.SetAction (method, MethodAction.Parse);
 		}
 
-		void Mark (IMetadataTokenProvider provider, CustomAttribute preserve_attribute)
+		void Mark (IMetadataTokenProvider provider, CustomAttribute? preserve_attribute)
 		{
 			if (IsConditionalAttribute (preserve_attribute)) {
 				PreserveConditional (provider);
@@ -94,7 +96,7 @@ namespace Mono.Tuner {
 		void PreserveConditional (IMetadataTokenProvider provider)
 		{
 			var method = provider as MethodDefinition;
-			if (method == null) {
+			if (method is null) {
 				// workaround to support (uncommon but valid) conditional fields form [Preserve]
 				PreserveUnconditional (provider);
 				return;
@@ -103,9 +105,9 @@ namespace Mono.Tuner {
 			Annotations.AddPreservedMethod (method.DeclaringType, method);
 		}
 
-		static bool IsConditionalAttribute (CustomAttribute attribute)
+		static bool IsConditionalAttribute (CustomAttribute? attribute)
 		{
-			if (attribute == null)
+			if (attribute is null)
 				return false;
 
 			foreach (var named_argument in attribute.Fields)
@@ -120,7 +122,7 @@ namespace Mono.Tuner {
 			Annotations.Mark (provider);
 
 			var member = provider as IMemberDefinition;
-			if (member == null || member.DeclaringType == null)
+			if (member is null || member.DeclaringType is null)
 				return;
 
 			Mark (member.DeclaringType, null);

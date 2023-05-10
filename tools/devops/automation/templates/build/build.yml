@@ -217,7 +217,6 @@ steps:
 
 # We'll need these profiles to build the hot restart prebuilt app during the build
 # (it's built for device, and thus needs a certificate available so that the app can be signed).
-# We do this again before running the tests further below.
 - bash: |
     set -x
     set -e
@@ -251,8 +250,8 @@ steps:
       makeParallelism=8
     fi
 
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j$makeParallelism $MAKE_FLAGS
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j$makeParallelism $MAKE_FLAGS
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j$makeParallelism $MAKE_FLAGS IGNORE_SIMULATORS=1
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j$makeParallelism $MAKE_FLAGS IGNORE_SIMULATORS=1
   name: build
   displayName: 'Build'
   timeoutInMinutes: 300

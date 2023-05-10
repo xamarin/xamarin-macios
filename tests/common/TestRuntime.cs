@@ -93,7 +93,7 @@ partial class TestRuntime {
 
 	public static Version OSXVersion {
 		get {
-			if (version == null) {
+			if (version is null) {
 				int major, minor, build;
 				Gestalt (sys1, out major);
 				Gestalt (sys2, out minor);
@@ -411,6 +411,30 @@ partial class TestRuntime {
 				return CheckiOSSystemVersion (16, 1);
 #elif MONOMAC
 				return CheckMacSystemVersion (13, 0);
+#else
+				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
+#endif
+			case 2:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (9, 1);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (16, 1);
+#elif __IOS__
+				return CheckiOSSystemVersion (16, 2);
+#elif MONOMAC
+				return CheckMacSystemVersion (13, 1);
+#else
+				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
+#endif
+			case 3:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (9, 4);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (16, 4);
+#elif __IOS__
+				return CheckiOSSystemVersion (16, 4);
+#elif MONOMAC
+				return CheckMacSystemVersion (13, 3);
 #else
 				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
 #endif
@@ -1390,7 +1414,7 @@ partial class TestRuntime {
 	public static bool IsLinkAll {
 		get {
 			if (!link_all.HasValue)
-				link_all = typeof (TestRuntime).Assembly.GetType (typeof (TestRuntime).FullName + "+LinkerSentinel") == null;
+				link_all = typeof (TestRuntime).Assembly.GetType (typeof (TestRuntime).FullName + "+LinkerSentinel") is null;
 			return link_all.Value;
 		}
 	}
@@ -1422,6 +1446,25 @@ partial class TestRuntime {
 
 		IgnoreInCIfHttpStatusCodes (ex, HttpStatusCode.BadGateway, HttpStatusCode.GatewayTimeout, HttpStatusCode.ServiceUnavailable);
 		IgnoreInCIIfNetworkConnectionLost (ex);
+		IgnoreInCIIfDnsResolutionFailed (ex);
+	}
+
+	public static void IgnoreInCIIfDnsResolutionFailed (Exception ex)
+	{
+		var se = FindInner<System.Net.Sockets.SocketException> (ex);
+		if (se is null)
+			return;
+
+		var isDnsResolutionFailed = false;
+		if (se.ErrorCode == 8 /* EAI_NONAME: 'hostname or servname not provided, or not known' */) {
+			isDnsResolutionFailed = true;
+		} else if (se.Message.Contains ("hostname or servname not provided, or not known")) {
+			isDnsResolutionFailed = true;
+		}
+		if (!isDnsResolutionFailed)
+			return;
+
+		IgnoreInCI ($"Ignored due to DNS resolution failure '{se.Message}'");
 	}
 
 	public static void IgnoreInCIIfForbidden (Exception ex)
@@ -1463,6 +1506,16 @@ partial class TestRuntime {
 			return;
 
 		IgnoreInCI ($"Ignored due to CFNetwork error {(CFNetworkErrors) (long) nex.Code}");
+	}
+
+	static T? FindInner<T> (Exception? ex) where T : Exception
+	{
+		while (ex is not null) {
+			if (ex is T target)
+				return target;
+			ex = ex.InnerException;
+		}
+		return null;
 	}
 
 	static bool TryGetHttpStatusCode (Exception ex, out HttpStatusCode status)

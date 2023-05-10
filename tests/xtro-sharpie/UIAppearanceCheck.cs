@@ -44,7 +44,7 @@ namespace Extrospection {
 		public override void VisitManagedMethod (MethodDefinition method)
 		{
 			var key = method.GetName ();
-			if (key != null)
+			if (key is not null)
 				methods [key] = method;
 		}
 
@@ -59,10 +59,10 @@ namespace Extrospection {
 				return;
 
 			var getter = decl.Getter;
-			if (getter != null)
+			if (getter is not null)
 				VisitObjCMethodDecl (getter);
 			var setter = decl.Setter;
-			if (setter != null)
+			if (setter is not null)
 				VisitObjCMethodDecl (setter);
 		}
 
@@ -85,11 +85,11 @@ namespace Extrospection {
 		void VisitObjCMethodDecl (ObjCMethodDecl decl)
 		{
 			var framework = Helpers.GetFramework (decl);
-			if (framework == null)
+			if (framework is null)
 				return;
 
 			var method = GetMethod (decl);
-			if (method == null)
+			if (method is null)
 				return;
 
 			var dt = method.DeclaringType;

@@ -79,20 +79,7 @@ jobs:
   - checkout: release-scripts
     clean: true
 
-  - pwsh: |
-      Write-Host "IsMacOS: ${IsMacOS}"
-      Write-Host "IsWindows: ${IsWindows}"
-      Write-Host "IsLinux: ${IsLinux}"
-
-      if ($IsMacOS -or $IsLinux) {
-          Write-Host "HOSTNAME: $(hostname)"
-      } else {
-          Write-Host "COMPUTERNAME: ${env:COMPUTERNAME}"
-      }
-
-      gci env: | format-table -autosize -wrap
-
-      system_profiler SPSoftwareDataType SPHardwareDataType SPDeveloperToolsDataType
+  - pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
     displayName: 'Show Environment'
 
   - bash: |
@@ -105,13 +92,6 @@ jobs:
   - bash: |
       mkdir -p $(Build.SourcesDirectory)/package/notarized
     displayName: 'Create target directories.'
-
-  - task: DownloadPipelineArtifact@2
-    displayName: Download notarized build dotnet
-    inputs:
-      artifact: '${{ parameters.uploadPrefix}}dotnet-signed'
-      allowFailedBuilds: true
-      path: $(Build.SourcesDirectory)/package
 
   - ${{ each pkg in parameters.packages }}:
     - task: DownloadPipelineArtifact@2
@@ -172,11 +152,12 @@ jobs:
 
   variables:
     Parameters.outputStorageUri: ''
-    NUGETS_PUBLISHED: $[ stageDependencies.sign_notarize_dotnet.sign_notarize_dotnet.outputs['nugetPublishing.NUGETS_PUBLISHED'] ] # not a typo, stage and job have the same name
     SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip_nugets'] ]
 
   pool:
-    vmImage: windows-latest
+    name: azurepipelines-EO
+    demands:
+    - ImageOverride -equals AzurePipelinesWindows2022compliant
     workspace:
       clean: all
   steps:
@@ -202,7 +183,7 @@ jobs:
     TESTS_BOT: $[ stageDependencies.build_packages.build.outputs['build.TESTS_BOT'] ]  # we build in a diff bot than the ones used for the comments
     GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
   pool:
-    vmImage: 'windows-latest'
+    vmImage: windows-latest
     workspace:
       clean: all
   steps:

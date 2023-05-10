@@ -10,7 +10,7 @@ namespace Foundation {
 		// avoid exposing an array - it's too easy to break
 		public static ReadOnlyCollection<string> KnownTimeZoneNames {
 			get {
-				if (known_time_zone_names == null)
+				if (known_time_zone_names is null)
 					known_time_zone_names = new ReadOnlyCollection<string> (_KnownTimeZoneNames);
 				return known_time_zone_names;
 			}

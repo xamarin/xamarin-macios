@@ -39,6 +39,7 @@ using UIContextMenuConfiguration = Foundation.NSObject;
 using UIEdgeInsets = AppKit.NSEdgeInsets;
 using UIFindInteraction = Foundation.NSObject;
 using UIViewController = AppKit.NSViewController;
+using IUIEditMenuInteractionAnimating = Foundation.NSObject;
 #else
 #if __MACCATALYST__
 using AppKit;
@@ -2962,7 +2963,7 @@ namespace WebKit {
 		[Export ("continuousSpellCheckingEnabled")]
 		bool ContinuousSpellCheckingEnabled { [Bind ("isContinuousSpellCheckingEnabled")] get; set; }
 
-		[Export ("editingDelegate", ArgumentSemantic.Assign)]
+		[Export ("editingDelegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject EditingDelegate { get; set; }
 
 		[Export ("replaceSelectionWithMarkupString:")]
@@ -4688,6 +4689,10 @@ namespace WebKit {
 		[Export ("fraudulentWebsiteWarningEnabled")]
 		bool FraudulentWebsiteWarningEnabled { [Bind ("isFraudulentWebsiteWarningEnabled")] get; set; }
 
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("shouldPrintBackgrounds")]
+		bool ShouldPrintBackgrounds { get; set; }
+
 		[Internal]
 		[Mac (11, 3)]
 		[iOS (14, 5)]
@@ -5030,6 +5035,14 @@ namespace WebKit {
 		[NoMac, iOS (16, 0), MacCatalyst (16, 0)] // headers say 13, is not true since the enum is from 16
 		[Export ("webView:showLockdownModeFirstUseMessage:completionHandler:")]
 		void ShowLockDownMode (WKWebView webView, string firstUseMessage, Action<WKDialogResult> completionHandler);
+
+		[NoMac, iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("webView:willPresentEditMenuWithAnimator:")]
+		void WillPresentEditMenu (WKWebView webView, IUIEditMenuInteractionAnimating animator);
+
+		[NoMac, iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("webView:willDismissEditMenuWithAnimator:")]
+		void WillDismissEditMenu (WKWebView webView, IUIEditMenuInteractionAnimating animator);
 	}
 
 	[iOS (8, 0), Mac (10, 10)] // Not defined in 32-bit
@@ -5490,6 +5503,10 @@ namespace WebKit {
 		[Export ("findInteraction")]
 		[NullAllowed]
 		UIFindInteraction FindInteraction { get; }
+
+		[Mac (13, 3), MacCatalyst (16, 4), iOS (16, 4), NoWatch, NoTV]
+		[Export ("inspectable")]
+		bool Inspectable { [Bind ("isInspectable")] get; set; }
 	}
 
 	delegate void WKJavascriptEvaluationResult (NSObject result, NSError error);

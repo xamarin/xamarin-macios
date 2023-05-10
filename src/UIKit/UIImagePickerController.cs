@@ -88,7 +88,7 @@ namespace UIKit {
 		public CGRect? CropRect {
 			get {
 				var nsv = ((NSValue) Info [UIImagePickerController.CropRect]);
-				if (nsv == null)
+				if (nsv is null)
 					return null;
 				return nsv.CGRectValue;
 			}
@@ -101,7 +101,7 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.1")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (9, 1)]

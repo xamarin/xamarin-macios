@@ -4,7 +4,7 @@ namespace Xamarin.Tests {
 	[TestFixture]
 	public class BundleStructureTest : TestBaseClass {
 		// Returns true if the assembly name is _any_ of our platform assemblies (Microsoft.iOS/tvOS/macOS/MacCatalyst/watchOS.dll)
-		bool IsPlatformAssembly (string assemblyName)
+		static bool IsPlatformAssembly (string assemblyName)
 		{
 			if (assemblyName.EndsWith (".dll", StringComparison.Ordinal) || assemblyName.EndsWith (".pdb", StringComparison.Ordinal))
 				assemblyName = Path.GetFileNameWithoutExtension (assemblyName);
@@ -18,19 +18,42 @@ namespace Xamarin.Tests {
 			return false;
 		}
 
-		void CheckAppBundleContents (ApplePlatform platform, string appPath, string [] runtimeIdentifiers, CodeSignature isSigned, bool isReleaseBuild)
+		public static List<string> Find (string appPath)
 		{
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
+				var dir = new DirectoryInfo (appPath);
+				var managedFiles = dir.GetFileSystemInfos ("*", SearchOption.AllDirectories)
+									.Select (v => v.FullName)
+									.Select (v => v.Substring (appPath.Length + 1))
+									.Order ()
+									.ToList ();
+				return managedFiles;
+			}
+
 			// Directory.GetFileSystemEntries will enter symlink directories and iterate inside :/
+			var output = AssertExecute ("find", appPath);
+			var allFiles = output.ToString ()
+								.Split ('\n', StringSplitOptions.RemoveEmptyEntries)
+								.Where (v => v.Length > appPath.Length)
+								.Select (v => v.Substring (appPath.Length + 1))
+								.Order ()
+								.ToList ();
+
+			return allFiles;
+		}
+
+		internal static void CheckAppBundleContents (ApplePlatform platform, string appPath, string [] runtimeIdentifiers, CodeSignature isSigned, bool isReleaseBuild)
+		{
 			Console.WriteLine ($"App bundle: {appPath}");
 			Assert.That (appPath, Does.Exist, "App bundle existence");
-			var output = AssertExecute ("find", appPath);
+			var allFiles = Find (appPath);
+			CheckAppBundleContents (platform, allFiles, runtimeIdentifiers, isSigned, isReleaseBuild, appPath);
+		}
 
+		internal static void CheckAppBundleContents (ApplePlatform platform, IEnumerable<string> allFiles, string [] runtimeIdentifiers, CodeSignature isSigned, bool isReleaseBuild, string? appPath = null)
+		{
 			var isCoreCLR = platform == ApplePlatform.MacOSX;
 			var includeDebugFiles = !isReleaseBuild;
-			var allFiles = output.ToString ().
-								Split ('\n', StringSplitOptions.RemoveEmptyEntries).
-								Where (v => v.Length > appPath.Length).
-								Select (v => v.Substring (appPath.Length + 1)).ToList ();
 
 			// Remove various files we don't care about (for this test) from the list of files in the app bundle.
 			Predicate<string?> predicate = (v) => {
@@ -83,7 +106,7 @@ namespace Xamarin.Tests {
 				return false;
 			};
 
-			allFiles.RemoveAll (predicate);
+			allFiles = allFiles.Where (v => !predicate (v));
 
 			var expectedFiles = new List<string> ();
 
@@ -135,6 +158,12 @@ namespace Xamarin.Tests {
 			expectedFiles.Add (Path.Combine (resourcesDirectory, "basn3p08.png"));
 			expectedFiles.Add (Path.Combine (resourcesDirectory, "basn3p08_with_loc.png"));
 			expectedFiles.Add (Path.Combine (resourcesDirectory, "iTunesArtwork.jpg"));
+
+			// NoneN.dll: bundled (assembly) - but the xml file next to it should not be bundled.
+			expectedFiles.Add (Path.Combine (assemblyDirectory, "NoneN.dll"));
+
+			// NoneP.dll: bundled (assembly) - but the xml file with the same base name should not be bundled.
+			expectedFiles.Add (Path.Combine (assemblyDirectory, "NoneP.dll"));
 
 			// UnknownA.bin: None
 			expectedFiles.Add (Path.Combine (assemblyDirectory, "UnknownB.bin")); // UnknownB.bin: Assembly
@@ -336,12 +365,14 @@ namespace Xamarin.Tests {
 			Assert.That (unexpectedFiles, Is.Empty, "No unexpected files");
 			Assert.That (missingFiles, Is.Empty, "No missing files");
 
-			AssertDynamicLibraryId (platform, appPath, assemblyDirectory, "libSkipInstallNameTool.dylib");
-			AssertDynamicLibraryId (platform, appPath, assemblyDirectory, "libSkipInstallNameTool.so");
-			AssertLibraryArchitectures (appPath, runtimeIdentifiers);
+			if (appPath is not null) {
+				AssertDynamicLibraryId (platform, appPath, assemblyDirectory, "libSkipInstallNameTool.dylib");
+				AssertDynamicLibraryId (platform, appPath, assemblyDirectory, "libSkipInstallNameTool.so");
+				AssertLibraryArchitectures (appPath, runtimeIdentifiers);
+			}
 		}
 
-		void AssertDynamicLibraryId (ApplePlatform platform, string appPath, string dylibDirectory, string library)
+		static void AssertDynamicLibraryId (ApplePlatform platform, string appPath, string dylibDirectory, string library)
 		{
 			var dylibPath = Path.Combine (appPath, dylibDirectory, library);
 			Assert.That (dylibPath, Does.Exist, "dylib existence");
@@ -578,6 +609,7 @@ namespace Xamarin.Tests {
 				$"The file '{Path.Combine (project_dir, platformString, "NoneM.unknown")}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.",
 				$"The file '{Path.Combine (project_dir, platformString, "Sub", "NoneG.txt")}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.",
 				$"The file '{Path.Combine (project_dir, "NoneH.txt")}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.",
+				$"The file '{Path.Combine (project_dir, "NoneO.xml")}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.",
 			}.ToList ();
 
 			var rids = runtimeIdentifiers.Split (';');
@@ -666,7 +698,7 @@ namespace Xamarin.Tests {
 
 		}
 
-		void AssertLibraryArchitectures (string appBundle, string [] runtimeIdentifiers)
+		static void AssertLibraryArchitectures (string appBundle, string [] runtimeIdentifiers)
 		{
 			var renderArchitectures = (IEnumerable<Abi> architectures) => {
 				return string.Join (", ",

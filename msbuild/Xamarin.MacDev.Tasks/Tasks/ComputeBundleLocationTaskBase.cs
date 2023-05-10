@@ -99,6 +99,7 @@ namespace Xamarin.MacDev.Tasks {
 
 				// Figure out the relative directory inside the app bundle where the item is supposed to be placed.
 				var relativePath = string.Empty;
+				var virtualProjectPath = GetVirtualAppBundlePath (item);
 				switch (publishFolderType) {
 				case PublishFolderType.Assembly:
 					relativePath = AssemblyDirectory;
@@ -119,16 +120,23 @@ namespace Xamarin.MacDev.Tasks {
 					continue;
 				case PublishFolderType.CompressedAppleFramework:
 					relativePath = FrameworksDirectory;
+					virtualProjectPath = Path.GetFileNameWithoutExtension (item.ItemSpec);
+					if (virtualProjectPath.EndsWith (".xcframework", StringComparison.OrdinalIgnoreCase))
+						virtualProjectPath = Path.ChangeExtension (virtualProjectPath, ".framework");
 					break;
 				case PublishFolderType.AppleBindingResourcePackage:
+					// Nothing to do here, this is handled fully in the targets file
+					break;
 				case PublishFolderType.CompressedAppleBindingResourcePackage:
 					// Nothing to do here, this is handled fully in the targets file
+					virtualProjectPath = RemoveExtension (virtualProjectPath, ".zip");
 					break;
 				case PublishFolderType.PlugIns:
 					relativePath = PlugInsDirectory;
 					break;
 				case PublishFolderType.CompressedPlugIns:
 					relativePath = PlugInsDirectory;
+					virtualProjectPath = string.Empty;
 					break;
 				case PublishFolderType.RootDirectory:
 					break;
@@ -151,7 +159,6 @@ namespace Xamarin.MacDev.Tasks {
 				}
 
 				// Compute the relative path of the item relative to the root of the app bundle
-				var virtualProjectPath = GetVirtualAppBundlePath (item);
 				relativePath = Path.Combine (relativePath, virtualProjectPath);
 				item.SetMetadata ("RelativePath", relativePath);
 			}
@@ -163,13 +170,20 @@ namespace Xamarin.MacDev.Tasks {
 				var items = entry.Value;
 				var item = new TaskItem (entry.Key);
 				item.SetMetadata ("PublishFolderType", "AppleFramework");
-				item.SetMetadata ("RelativePath", Path.Combine (FrameworksDirectory, Path.GetFileName (entry.Key)));
+				item.SetMetadata ("RelativePath", Path.Combine (FrameworksDirectory, Path.ChangeExtension (Path.GetFileName (entry.Key), "framework")));
 				list.Add (item);
 			}
 
 			UpdatedResolvedFileToPublish = list.ToArray ();
 
 			return !Log.HasLoggedErrors;
+		}
+
+		static string RemoveExtension (string path, string extension)
+		{
+			if (path.EndsWith (extension, StringComparison.OrdinalIgnoreCase))
+				return path.Substring (0, path.Length - extension.Length);
+			return path;
 		}
 
 		// Check if the input, or any of it's parent directories is either an *.xcframework, or a *.framework
@@ -292,6 +306,23 @@ namespace Xamarin.MacDev.Tasks {
 			foreach (var extension in assemblyDebugExtensions) {
 				if (filename.EndsWith (extension, StringComparison.OrdinalIgnoreCase))
 					return PackageSymbols ? PublishFolderType.Assembly : PublishFolderType.None;
+			}
+
+			// If an xml file matches the filename of any assembly, then treat that xml file as PublishFolderType=None
+			if (filename.EndsWith (".xml", StringComparison.OrdinalIgnoreCase)) {
+				var baseName = Path.GetFileNameWithoutExtension (filename);
+				if (items.Any (v => {
+					var fn = Path.GetFileName (v.ItemSpec);
+					if (fn.Length != baseName.Length + 4)
+						return false;
+
+					if (!(fn.EndsWith (".exe", StringComparison.OrdinalIgnoreCase) || fn.EndsWith (".dll", StringComparison.OrdinalIgnoreCase)))
+						return false;
+
+					return fn.StartsWith (baseName, StringComparison.OrdinalIgnoreCase);
+				})) {
+					return PublishFolderType.None;
+				}
 			}
 
 			// Binding resource package (*.resources / *.resources.zip)

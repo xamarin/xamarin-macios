@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -672,12 +672,13 @@
         </value>
     </data>
   <data name="E0174" xml:space="preserve">
-        <value>{0} ha un formato non corretto o sconosciuto e non può essere elaborato.
-        </value>
+        <value>Il formato del {0} xcframework non è corretto o sconosciuto e non può essere elaborato.</value>
     </data>
   <data name="E0175" xml:space="preserve">
-        <value>Non è stato trovato alcun framework corrispondente in "{0}".
-        </value>
+        <value>Non sono stati trovati framework corrispondenti all'interno di '{0}'. SupportedPlatform: '{0}', SupportedPlatformVariant: '{1}', SupportedArchitectures: '{2}'.</value>
+        <comment>
+            Do not translate: 'SupportedPlatform', 'SupportedPlatformVariant', 'SupportedArchitectures' (they're keys inside a file with key/value pairs))
+        </comment>
     </data>
   <data name="W0176" xml:space="preserve">
         <value>Le opzioni "{0}" e "{1}" sono in conflitto. "{1}" verrà ignorato.
@@ -1170,11 +1171,38 @@
         </comment>
     </data>
   <data name="W7105" xml:space="preserve">
-        <value>Estensione imprevista '{0}' per il riferimento nativo '{1}' nel manifesto '{2}'.</value>
+        <value>Estensione imprevista '{0}' per il riferimento nativo '{1}' nel pacchetto di risorse di associazione '{2}'.</value>
         <comment>
             {0}: file extension
             {1}: path to a file
             {2}: path to a file
         </comment>
+    </data>
+  <data name="W7106" xml:space="preserve">
+        <value>È previsto un file denominato '{1}' nel file ZIP {0}.</value>
+    </data>
+  <data name="W7107" xml:space="preserve">
+        <value>Il file ZIP '{0}' non esiste.</value>
+    </data>
+  <data name="W7108" xml:space="preserve">
+        <value>Il file '{0}' non esiste.</value>
+    </data>
+  <data name="W7109" xml:space="preserve">
+        <value>Non è possibile elaborare l'elemento '{0}' come riferimento nativo: tipo sconosciuto.</value>
+    </data>
+  <data name="E7110" xml:space="preserve">
+        <value>Non è stato possibile caricare Info.plist '{0}' da xcframework '{1}'.</value>
+    </data>
+  <data name="W7111" xml:space="preserve">
+        <value>La directory '{0}' non esiste.</value>
+    </data>
+  <data name="E7112" xml:space="preserve">
+        <value>Non è possibile trovare il file o la directory '{0}' nel file ZIP '{1}'.</value>
+    </data>
+  <data name="E7113" xml:space="preserve">
+        <value>Non è possibile elaborare il file ZIP '{0}' in questa piattaforma: il file '{1}' è un collegamento simbolico.</value>
+    </data>
+  <data name="E7114" xml:space="preserve">
+        <value>The "{0}" task was not given a value for the parameter "{1}", which is required when building on this platform.</value>
     </data>
 </root>

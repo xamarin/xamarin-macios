@@ -22,7 +22,7 @@ namespace Xharness.Jenkins {
 
 		public PeriodicCommand (string command, IProcessManager processManager, TimeSpan interval, ILogs logs, string? arguments = null)
 		{
-			if (logs == null)
+			if (logs is null)
 				throw new ArgumentNullException (nameof (logs));
 
 			this.log = logs.Create ("PeriodicCommand.log", "Periodic command log");
@@ -43,7 +43,7 @@ namespace Xharness.Jenkins {
 					ProcessExecutionResult? rv = cancellationToken.HasValue
 						? await processManager.RunAsync (process, log, timeout: interval, cancellationToken: cancellationToken)
 						: await processManager.RunAsync (process, log, timeout: interval);
-					if (rv != null && !rv.Succeeded)
+					if (rv is not null && !rv.Succeeded)
 						log.WriteLine ($"Periodic command failed with exit code {rv.ExitCode} (Timed out: {rv.TimedOut})");
 				}
 				var ticksLeft = watch.ElapsedTicks - interval.Ticks;
@@ -55,7 +55,7 @@ namespace Xharness.Jenkins {
 		}
 
 		public Task Execute (CancellationToken? cancellationToken = null)
-			=> cancellationToken != null
+			=> cancellationToken is not null
 				? Task.Run (async () => await ExecuteInternal (cancellationToken.Value), cancellationToken.Value)
 				: Task.Run (async () => await ExecuteInternal ());
 	}

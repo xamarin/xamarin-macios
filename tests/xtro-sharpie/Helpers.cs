@@ -18,17 +18,35 @@ namespace Extrospection {
 	}
 
 	public static partial class Helpers {
-		static Dictionary<string, string> map = new Dictionary<string, string> ();
+		static Dictionary<string, object> map = new Dictionary<string, object> ();
 
 		public static void MapNames (string nativeName, string managedName)
 		{
-			map.Add (nativeName, managedName);
+			if (map.TryGetValue (nativeName, out var value)) {
+				if (value is string str) {
+					var list = new List<string> ();
+					list.Add (str);
+					list.Add (managedName);
+					map [nativeName] = list;
+				} else if (value is List<string> list) {
+					list.Add (managedName);
+				} else {
+					throw new InvalidOperationException ($"Unexpected type in map: {value}");
+				}
+			} else {
+				map.Add (nativeName, managedName);
+			}
 		}
 
 		public static string GetManagedName (string nativeName)
 		{
-			map.TryGetValue (nativeName, out var result);
-			return result ?? nativeName;
+			if (!map.TryGetValue (nativeName, out var value))
+				return nativeName;
+			if (value is string str)
+				return str;
+			if (value is List<string> list)
+				throw new InvalidOperationException ($"The native name '{nativeName}' has multiple managed types: {string.Join (", ", list)}");
+			throw new InvalidOperationException ($"Unexpected type in map: {value}");
 		}
 
 		public static string ReplaceFirstInstance (this string source, string find, string replace)
@@ -128,20 +146,20 @@ namespace Extrospection {
 			if (!result.HasValue) {
 				// first check if we're checking the category itself
 				var category = decl as ObjCCategoryDecl;
-				if (category != null)
+				if (category is not null)
 					result = category.ClassInterface.IsAvailable (Platform);
 
 				if (!result.HasValue) {
 					// then check if we're a method inside a category
 					category = (decl.DeclContext as ObjCCategoryDecl);
-					if (category != null)
+					if (category is not null)
 						result = category.ClassInterface.IsAvailable (Platform);
 				}
 			}
 
 			// but right now most frameworks consider tvOS, watchOS, and catalyst like iOS unless 
 			// decorated otherwise so we must check again if we do not get a definitve answer
-			if ((result == null) && ((Platform == Platforms.tvOS) || (Platform == Platforms.watchOS) || (Platform == Platforms.MacCatalyst)))
+			if ((result is null) && ((Platform == Platforms.tvOS) || (Platform == Platforms.watchOS) || (Platform == Platforms.MacCatalyst)))
 				result = decl.IsAvailable (Platforms.iOS);
 			return !result.HasValue ? true : result.Value;
 		}
@@ -155,7 +173,7 @@ namespace Extrospection {
 				if (attr is UnavailableAttr)
 					return false;
 				var avail = (attr as AvailabilityAttr);
-				if (avail == null)
+				if (avail is null)
 					continue;
 				var availName = avail.Platform.Name.ToLowerInvariant ();
 				// if the headers says it's not available then we won't report it as missing
@@ -180,20 +198,20 @@ namespace Extrospection {
 			if (!result.HasValue) {
 				// first check if we're checking the category itself
 				var category = decl as ObjCCategoryDecl;
-				if (category != null)
+				if (category is not null)
 					result = category.ClassInterface.IsDeprecated (Platform);
 
 				if (!result.HasValue) {
 					// then check if we're a method inside a category
 					category = (decl.DeclContext as ObjCCategoryDecl);
-					if (category != null)
+					if (category is not null)
 						result = category.ClassInterface.IsDeprecated (Platform);
 				}
 			}
 
 			// but right now most frameworks consider tvOS, watchOS, and catalyst like iOS unless 
 			// decorated otherwise so we must check again if we do not get a definitve answer
-			if ((result == null) && ((Platform == Platforms.tvOS) || (Platform == Platforms.watchOS) || (Platform == Platforms.MacCatalyst)))
+			if ((result is null) && ((Platform == Platforms.tvOS) || (Platform == Platforms.watchOS) || (Platform == Platforms.MacCatalyst)))
 				result = decl.IsDeprecated (Platforms.iOS);
 			return result == true;
 		}
@@ -261,7 +279,7 @@ namespace Extrospection {
 
 		public static string GetName (this ObjCMethodDecl self)
 		{
-			if (self == null)
+			if (self is null)
 				return null;
 
 			var sb = new StringBuilder ();
@@ -280,7 +298,7 @@ namespace Extrospection {
 
 		public static string GetName (this TypeDefinition self)
 		{
-			if ((self == null) || !self.HasCustomAttributes)
+			if ((self is null) || !self.HasCustomAttributes)
 				return null;
 
 			if (self.IsStatic ()) {
@@ -318,7 +336,7 @@ namespace Extrospection {
 
 		public static string GetName (this MethodDefinition self)
 		{
-			if (self == null)
+			if (self is null)
 				return null;
 
 			var type = self.DeclaringType;
@@ -331,11 +349,11 @@ namespace Extrospection {
 				if (self.HasParameters)
 					tname = self.Parameters [0].ParameterType.Resolve ().GetName (); // extension method
 			}
-			if (tname == null)
+			if (tname is null)
 				return null;
 
 			var selector = self.GetSelector ();
-			if (selector == null)
+			if (selector is null)
 				return null;
 
 			var sb = new StringBuilder ();
@@ -349,7 +367,7 @@ namespace Extrospection {
 
 		public static string GetSelector (this MethodDefinition self)
 		{
-			if ((self == null) || !self.HasCustomAttributes)
+			if ((self is null) || !self.HasCustomAttributes)
 				return null;
 
 			foreach (var ca in self.CustomAttributes) {
@@ -376,7 +394,7 @@ namespace Extrospection {
 
 			// If we're a property accessor, check the property as well.
 			var prop = FindProperty (provider as MethodReference);
-			if (prop != null)
+			if (prop is not null)
 				return IsObsolete (prop);
 
 			return false;
@@ -385,7 +403,7 @@ namespace Extrospection {
 		public static PropertyDefinition FindProperty (this MethodReference method)
 		{
 			var def = method?.Resolve ();
-			if (def == null)
+			if (def is null)
 				return null;
 
 			if (!def.IsSpecialName)

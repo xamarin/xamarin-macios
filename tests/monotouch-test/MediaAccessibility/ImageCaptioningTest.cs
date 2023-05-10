@@ -32,7 +32,7 @@ namespace MonoTouchFixtures.MediaAccessibility {
 			using (NSUrl url = new NSUrl (NetworkResources.MicrosoftUrl)) {
 				var s = MAImageCaptioning.GetCaption (url, out var e);
 				Assert.Null (s, "remote / return value");
-				if (e != null && e.Description.Contains ("Invalid url:")) {
+				if (e is not null && e.Description.Contains ("Invalid url:")) {
 					TestRuntime.IgnoreInCI ($"Ignore this failure when network is down: {e}"); // could not connect to the network, fail and add a nice reason
 				}
 				Assert.Null (e, "remote / no error"); // weird should be an "image on disk"

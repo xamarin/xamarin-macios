@@ -26,6 +26,7 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public bool SdkIsSimulator { get; set; }
 
+		public string ConnectTimeout { get; set; }
 		#endregion
 
 		public override bool Execute ()
@@ -35,7 +36,7 @@ namespace Xamarin.MacDev.Tasks {
 			var added = new HashSet<string> ();
 			var builder = new StringBuilder ();
 
-			if (ips != null) {
+			if (ips is not null) {
 				foreach (var ip in ips) {
 					if (added.Contains (ip))
 						continue;
@@ -51,6 +52,11 @@ namespace Xamarin.MacDev.Tasks {
 
 			builder.Append ("Port: ");
 			builder.AppendLine (DebuggerPort);
+
+			if (!string.IsNullOrEmpty (ConnectTimeout)) {
+				builder.Append ("Connect Timeout: ");
+				builder.AppendLine (ConnectTimeout);
+			}
 
 			var text = builder.ToString ();
 

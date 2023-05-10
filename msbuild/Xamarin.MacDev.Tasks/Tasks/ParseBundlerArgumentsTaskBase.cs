@@ -54,6 +54,9 @@ namespace Xamarin.MacDev.Tasks {
 		public string NoStrip { get; set; }
 
 		[Output]
+		public string SkipMarkingNSObjectsInUserAssemblies { get; set; }
+
+		[Output]
 		public int Verbosity { get; set; }
 
 		[Output]
@@ -165,8 +168,11 @@ namespace Xamarin.MacDev.Tasks {
 						item.SetMetadata ("Value", value.Substring (colon + 1));
 						envVariables.Add (item);
 						break;
+					case "skip-marking-nsobjects-in-user-assemblies":
+						SkipMarkingNSObjectsInUserAssemblies = ParseBool (value) ? "true" : "false";
+						break;
 					case "xml":
-						if (xml == null)
+						if (xml is null)
 							xml = new List<string> ();
 						value = hasValue ? value : nextValue; // requires a value, which might be the next option
 						xml.Add (value);
@@ -192,9 +198,9 @@ namespace Xamarin.MacDev.Tasks {
 					}
 				}
 
-				if (xml != null) {
+				if (xml is not null) {
 					var defs = new List<ITaskItem> ();
-					if (XmlDefinitions != null)
+					if (XmlDefinitions is not null)
 						defs.AddRange (XmlDefinitions);
 					foreach (var x in xml)
 						defs.Add (new TaskItem (x));
@@ -211,13 +217,13 @@ namespace Xamarin.MacDev.Tasks {
 				}
 
 				if (envVariables.Count > 0) {
-					if (EnvironmentVariables != null)
+					if (EnvironmentVariables is not null)
 						envVariables.AddRange (EnvironmentVariables);
 					EnvironmentVariables = envVariables.ToArray ();
 				}
 
 				if (dlsyms.Count > 0) {
-					if (DlSym != null)
+					if (DlSym is not null)
 						dlsyms.AddRange (DlSym);
 					DlSym = dlsyms.ToArray ();
 				}

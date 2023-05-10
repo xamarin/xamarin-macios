@@ -121,6 +121,7 @@ namespace CoreWlan {
 		Unknown = 0,
 		TwoGHz = 1,
 		FiveGHz = 2,
+		SixGHz = 3,
 	}
 
 	[NoMacCatalyst]

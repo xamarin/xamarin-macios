@@ -463,7 +463,7 @@
 				 1. The global TrimMode property is set to 'copy'
 				 2. No assembly has the TrimMode metadata (unless it's set to 'copy')
 			-->
-			<_AssembliesWithCustomTrimMode>@(ManagedAssemblyToLink->HasMetadataValue('TrimMode')->Count())</_AssembliesWithCustomTrimMode>
+			<_AssembliesWithCustomTrimMode>@(ManagedAssemblyToLink->HasMetadata('TrimMode')->Count())</_AssembliesWithCustomTrimMode>
 			<_AssembliesWithCopyTrimMode>@(ManagedAssemblyToLink->WithMetadataValue('TrimMode', 'copy')->Count())</_AssembliesWithCopyTrimMode>
 			<_AreAnyAssembliesTrimmed Condition="'$(_AreAnyAssembliesTrimmed)' == '' And '$(TrimMode)' == 'copy' And '$(_AssembliesWithCustomTrimMode)' == '$(_AssembliesWithCopyTrimMode)'">false</_AreAnyAssembliesTrimmed>
 			<_AreAnyAssembliesTrimmed Condition="'$(_AreAnyAssembliesTrimmed)' == ''">true</_AreAnyAssembliesTrimmed>
@@ -507,6 +507,7 @@
 				SdkDevPath=$(_SdkDevPath)
 				SdkRootDirectory=$(_XamarinSdkRootDirectory)
 				SdkVersion=$(_SdkVersion)
+				SkipMarkingNSObjectsInUserAssemblies=$(_SkipMarkingNSObjectsInUserAssemblies)
 				TargetArchitectures=$(TargetArchitectures)
 				TargetFramework=$(_ComputedTargetFrameworkMoniker)
 				UseLlvm=$(MtouchUseLlvm)
@@ -633,16 +634,18 @@
 		</ItemGroup>
 
 		<!-- Create the file with our custom linker options -->
-		<WriteLinesToFile SessionId="$(BuildSessionId)" File="$(_CustomLinkerOptionsFile)" Lines="$(_CustomLinkerOptions)" Overwrite="true" />
+		<WriteLinesToFile
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			File="$(_CustomLinkerOptionsFile)"
+			Lines="$(_CustomLinkerOptions)"
+			Overwrite="true" />
 	</Target>
 
 	<PropertyGroup>
 		<_ComputeFrameworkFilesToPublishDependsOn>
 			$(_ComputeFrameworkFilesToPublishDependsOn);
-			_DecompressAppleFrameworks;
-			_CollectDecompressedAppleFrameworks;
-			_DecompressAppleBindingResourcePackages;
-			_CollectDecompressedAppleBindingResourcePackages;
+			_ComputePublishLocation;
 			_ExpandNativeReferences;
 			_ComputeVariables;
 			_LoadLinkerOutput;
@@ -653,13 +656,14 @@
 	<Target Name="_ComputeFrameworkFilesToPublish" DependsOnTargets="$(_ComputeFrameworkFilesToPublishDependsOn)">
 		<ItemGroup>
 			<!-- Collect the list of frameworks to publish from _FrameworkNativeReference. The ExtractBindingLibrariesStep in the linker and
-			     the _DecompressAppleFrameworks and _DecompressAppleBindingResourcePackages targets might also add frameworks to _FrameworkToPublish -->
+			     the _ComputePublishLocation targets might also add frameworks to _FrameworkToPublish -->
 			<_FrameworkToPublish Include="@(_FrameworkNativeReference)" Condition="'%(_FrameworkNativeReference.Kind)' == 'Framework' And '%(_FrameworkNativeReference.CopyToAppBundle)' != 'false'" />
 
 			<!-- Set TargetDirectory and SourceDirectory for all frameworks we have to publish -->
 			<_FrameworkToPublish Update="@(_FrameworkToPublish)">
 				<TargetDirectory>$(_RelativePublishDir)$(_AppBundleFrameworksDir)\%(Filename)%(Extension).framework</TargetDirectory>
 				<SourceDirectory>%(RelativeDir)</SourceDirectory>
+				<PublishFolderType>AppleFramework</PublishFolderType>
 			</_FrameworkToPublish>
 		</ItemGroup>
 
@@ -1383,10 +1387,16 @@
 			<_AssemblyPublishDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(_RelativeAppBundlePath)\Contents\$(_CustomBundleName)\</_AssemblyPublishDir>
 			<_DylibPublishDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(_RelativeAppBundlePath)\</_DylibPublishDir>
 			<_DylibPublishDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(_RelativeAppBundlePath)\Contents\$(_CustomBundleName)\</_DylibPublishDir>
-			<!-- _ParsedRuntimeConfigFilePath must be relative to the project directory, since it's not copied to the publish directory by the the CopyFilesToPublishDirectory targets -->
-			<_ParsedRuntimeConfigFilePath Condition="'$(_ParsedRuntimeConfigFilePath)' == ''">$([MSBuild]::MakeRelative($(MSBuildProjectDirectory),$(_AbsolutePublishDir)\$(_AssemblyPublishDir)\$(_RuntimeConfigurationFile)))</_ParsedRuntimeConfigFilePath>
+			<_ParsedRuntimeConfigFilePath Condition="'$(_ParsedRuntimeConfigFilePath)' == ''">$(DeviceSpecificIntermediateOutputPath)$(_RuntimeConfigurationFile)</_ParsedRuntimeConfigFilePath>
 		</PropertyGroup>
 		<ItemGroup>
+			<!-- Add runtimeconfig.bin to ResolvedFileToPublish so we process it in ComputeBundlePath and copy the file to the app bundle -->
+			<ResolvedFileToPublish Include="$(_ParsedRuntimeConfigFilePath)" Condition="'$(GenerateRuntimeConfigurationFiles)' == 'true'">
+				<RelativePath>$([System.IO.Path]::GetFileName('$(_ParsedRuntimeConfigFilePath)'))</RelativePath>
+				<PublishFolderType>Assembly</PublishFolderType>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			</ResolvedFileToPublish>
+
 			<!--
 				Remove any items we've already handled elsewhere
 			-->
@@ -1491,9 +1501,10 @@
 			<ResolvedFileToPublish Remove="$(ProjectRuntimeConfigFilePath)" Condition="'$(GenerateRuntimeConfigurationFiles)' == 'true'" />
 		</ItemGroup>
 
+		<!-- This task is executed on Windows as well, for hotrestart builds -->
 		<ComputeBundleLocation
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
 			AssemblyDirectory="$(_AppContentsRelativePath)"
 			BundleResource="@(BundleResource)"
 			BundlerDebug="$(_BundlerDebug)"
@@ -1568,18 +1579,20 @@
 			<ResolvedFileToPublish RelativePath="$(_RelativeAppBundlePath)\%(RelativePath)" />
 		</ItemGroup>
 
+		<!-- This task is executed on Windows as well, for hotrestart builds -->
 		<!-- resolve any .xcframeworks and binding resource packages -->
 		<ResolveNativeReferences
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
 			Architectures="$(TargetArchitectures)"
-			BindingResourcePackages="@(_AppleBindingResourcePackage)"
+			FrameworksDirectory="$(_AppFrameworksRelativePath)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			NativeReferences="@(_UnresolvedXCFrameworks)"
+			NativeReferences="@(_UnresolvedXCFrameworks);@(_AppleBindingResourcePackage);@(_CompressedAppleFrameworks);@(_CompressedAppleBindingResourcePackage)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
 			<Output TaskParameter="NativeFrameworks" ItemName="_FrameworkNativeReference" />
+			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
 		</ResolveNativeReferences>
 	</Target>
 
@@ -1620,69 +1633,27 @@
 
 	</Target>
 
-	<Target Name="_DecompressAppleBindingResourcePackages"
-		Inputs="@(_CompressedAppleBindingResourcePackage)"
-		DependsOnTargets="_ComputePublishLocation;_ComputeVariables"
-		Outputs="@(_CompressedAppleBindingResourcePackage -> '$(_IntermediateDecompressionDir)%(Filename)%(Extension).stamp')"
-		>
-
-		<Ditto
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AdditionalArguments="-x -k"
-			CopyFromWindows="true"
-			Source="%(_CompressedAppleBindingResourcePackage.Identity)"
-			Destination="$(_IntermediateDecompressionDir)%(Filename)"
-			>
-		</Ditto>
-	</Target>
-
-	<Target Name="_CollectDecompressedAppleBindingResourcePackages"
-		DependsOnTargets="_DecompressAppleBindingResourcePackages"
-		>
-
-		<ItemGroup>
-			<_DecompressedAppleBindingResourcePackage Include="@(_CompressedAppleBindingResourcePackage -> '$(_IntermediateDecompressionDir)%(Filename)')" />
-		</ItemGroup>
-
-		<!-- resolve any .xcframeworks and binding resource packages -->
-		<ResolveNativeReferences
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			Architectures="$(TargetArchitectures)"
-			BindingResourcePackages="@(_DecompressedAppleBindingResourcePackage)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			SdkIsSimulator="$(_SdkIsSimulator)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			>
-			<Output TaskParameter="NativeFrameworks" ItemName="_FrameworkNativeReference" />
-		</ResolveNativeReferences>
-
-		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AlwaysCreate="true"
-			Files="@(_CompressedAppleBindingResourcePackage -> '$(_IntermediateDecompressionDir)%(Filename)%(Extension).stamp')"
-			>
-			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
-		</Touch>
-	</Target>
-
 	<Target Name="_DecompressPlugIns"
 		Inputs="@(_CompressedPlugIns)"
 		DependsOnTargets="_ComputePublishLocation;_ComputeVariables"
 		Outputs="@(_CompressedPlugIns -> '$(_IntermediateDecompressionDir)%(Filename)%(Extension).stamp')"
 		>
 
-		<Ditto
+		<ItemGroup>
+			<_CompressedPlugIns Update="@(_CompressedPlugIns)">
+				<ExtractionPath>$([MSBuild]::EnsureTrailingSlash('$(_IntermediateDecompressionDir)%(_CompressedPlugIns.Filename)%(_CompressedPlugIns.Extension)'))</ExtractionPath>
+			</_CompressedPlugIns>
+		</ItemGroup>
+
+		<!-- This task is executed from Windows as well when using HotRestart -->
+		<Unzip
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AdditionalArguments="-x -k"
-			CopyFromWindows="true"
-			Source="%(_CompressedPlugIns.Identity)"
-			Destination="$(_IntermediateDecompressionDir)%(Filename)%(Extension)"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
+			ZipFilePath="%(_CompressedPlugIns.Identity)"
+			ExtractionPath="%(_CompressedPlugIns.ExtractionPath)"
 			>
-		</Ditto>
+			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
+		</Unzip>
 	</Target>
 
 	<Target Name="_CollectDecompressedPlugIns"
@@ -1691,102 +1662,18 @@
 
 		<ItemGroup>
 			<!-- Set TargetDirectory and SourceDirectory for all directories we have to publish -->
-			<_DecompressedPlugIns Include="@(_CompressedPlugIns -> '$(_IntermediateDecompressionDir)%(Filename)%(Extension)')" />
+			<_DecompressedPlugIns Include="@(_CompressedPlugIns -> '%(ExtractionPath)')" PublishFolderType="PlugIns" />
 		</ItemGroup>
 		<ItemGroup>
 			<_DecompressedPlugIns Update="@(_DecompressedPlugIns)">
 				<TargetDirectory>$(_RelativePublishDir)$(_RelativeAppBundlePath)$(_AppPlugInsRelativePath)</TargetDirectory>
-				<SourceDirectory>$(_IntermediateDecompressionDir)%(Filename)%(Extension)</SourceDirectory>
+				<SourceDirectory>%(ExtractionPath)</SourceDirectory>
 			</_DecompressedPlugIns>
 		</ItemGroup>
-
-		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AlwaysCreate="true"
-			Files="@(_CompressedPlugIns -> '$(_IntermediateDecompressionDir)%(Filename)%(Extension).stamp')"
-			>
-			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
-		</Touch>
 
 		<ItemGroup>
 			<_DirectoriesToPublish Include="@(_DecompressedPlugIns)" />
 		</ItemGroup>
-	</Target>
-
-	<Target Name="_DecompressAppleFrameworks"
-		Inputs="@(_CompressedAppleFrameworks)"
-		Outputs="@(_CompressedAppleFrameworks -> '$(_IntermediateFrameworksDir)/%(Filename)%(Extension).stamp')"
-		DependsOnTargets="_ComputeVariables"
-		BeforeTargets="_ExpandNativeReferences"
-		>
-
-		<Ditto
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AdditionalArguments="-x -k"
-			CopyFromWindows="true"
-			Source="%(_CompressedAppleFrameworks.Identity)"
-			Destination="$(_IntermediateFrameworksDir)/%(Filename)%(Extension)"
-			>
-		</Ditto>
-
-		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AlwaysCreate="true"
-			Files="@(_CompressedAppleFrameworks -> '$(_IntermediateFrameworksDir)/%(Filename)%(Extension).stamp')"
-			>
-			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
-		</Touch>
-	</Target>
-
-	<Target Name="_CollectDecompressedAppleFrameworks"
-		DependsOnTargets="_DecompressAppleFrameworks"
-		Condition="@(_CompressedAppleFrameworks->Count()) &gt; 0"
-		>
-
-		<GetFileSystemEntries
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			DirectoryPath="$(_IntermediateFrameworksDir)/%(_CompressedAppleFrameworks.Filename)%(_CompressedAppleFrameworks.Extension)"
-			Pattern="*.framework"
-			Recursive="false"
-			IncludeDirectories="true"
-			>
-			<Output TaskParameter="Entries" ItemName="_DecompressedFramework" />
-		</GetFileSystemEntries>
-
-		<GetFileSystemEntries
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			DirectoryPath="$(_IntermediateFrameworksDir)/%(_CompressedAppleFrameworks.Filename)%(_CompressedAppleFrameworks.Extension)"
-			Pattern="*.xcframework"
-			Recursive="false"
-			IncludeDirectories="true"
-			>
-			<Output TaskParameter="Entries" ItemName="_DecompressedXCFramework" />
-		</GetFileSystemEntries>
-
-		<ItemGroup>
-			<!-- include any normal frameworks directly in _FrameworkNativeReference. -->
-			<!-- .xcframeworks need to be resolved to a platform-specific .framework below -->
-			<_DecompressedFramework Include="$([System.IO.Directory]::GetDirectories('$(_IntermediateFrameworksDir)/%(_CompressedAppleFrameworks.Filename)%(_CompressedAppleFrameworks.Extension)','*.framework'))" />
-			<_FrameworkNativeReference Include="@(_DecompressedFramework -> '%(Identity)/%(Filename)')" Kind="Framework" />
-		</ItemGroup>
-
-		<!-- resolve the .xcframeworks -->
-		<ResolveNativeReferences
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			Architectures="$(TargetArchitectures)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			NativeReferences="@(_DecompressedXCFramework)"
-			SdkIsSimulator="$(_SdkIsSimulator)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			>
-			<Output TaskParameter="NativeFrameworks" ItemName="_FrameworkNativeReference" />
-		</ResolveNativeReferences>
 	</Target>
 
 	<Target Name="_VerifyValidOutputType">
@@ -1851,6 +1738,9 @@
 			<MlaunchEnvironmentVariables Include="__XAMARIN_DEBUG_MODE__=$(XamarinDebugMode)" Condition="'$(XamarinDebugMode)' != ''" />
 			<MlaunchEnvironmentVariables Include="__XAMARIN_DEBUG_PORT__=$(XamarinDebugPort)" Condition="'$(XamarinDebugPort)' != ''" />
 			<MlaunchEnvironmentVariables Include="__XAMARIN_DEBUG_HOSTS__=$(XamarinDebugHosts.Replace(';', '%3B'))" Condition="'$(XamarinDebugHosts)' != ''" />
+			<MlaunchEnvironmentVariables Include="__XAMARIN_DEBUG_CONNECT_TIMEOUT__=$(XamarinDebugConnectTimeout)" Condition="'$(XamarinDebugConnectTimeout)' != ''" />
+			<!-- It's not possible to set an item group from the command line, so add support for setting a property (with semi-colon separated items) that we'll include into the item group -->
+			<MlaunchAdditionalArguments Include="$(MlaunchAdditionalArgumentsProperty)" Condition="'$(MlaunchAdditionalArgumentsProperty)' != ''" />
 		</ItemGroup>
 		<GetMlaunchArguments
 			SessionId="$(BuildSessionId)"
@@ -1953,6 +1843,84 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 	<Target Name="RemoveGlobalnfloatUsingItemGroup" BeforeTargets="PrepareForBuild">
 		<ItemGroup>
 			<Using Remove="System.Runtime.InteropServices.NFloat" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_CopyLocalBindingResources" AfterTargets="ResolveAssemblyReferences" BeforeTargets="CopyFilesToOutputDirectory">
+		<!--
+
+			We need to copy binding resource packages (either zipped or as a
+			.resources bundle) together with the binding assembly when the
+			binding assembly is copied around. This typically happens when
+			another library project references the binding project, in which
+			case the ResolveAssemblyReference task will add the binding
+			library to the ReferenceCopyLocalPaths item group (when building
+			the library project), which will cause the binding assembly to be
+			copied to the output directory for the other library project.
+
+			If this isn't done, then any projects referencing the library
+			project (and not the binding project), won't see any binding
+			resource packages from the binding project.
+
+			This is not good (https://github.com/xamarin/xamarin-macios/issues/13910).
+
+			This is a target that runs after the ReferenceCopyLocalPaths item
+			group has been populated by the ResolveAssemblyReferences target,
+			and will add any binding resource packages to the
+			ReferenceCopyLocalPaths item group.
+
+			This is somewhat complicated by the fact that we can have
+			.resources bundles (i.e. directories), so we need to expand those
+			to all their contained files.
+
+		-->
+
+		<ItemGroup>
+			<!-- List all potential compressed binding resource packages next to the assemblies we're copying to the output directory -->
+			<_CompressedBindingPackagesFromReferencedAssembliesCandidates Include="@(ReferenceCopyLocalPaths -> '%(RootDir)%(Directory)%(Filename).resources.zip')" />
+			<!-- We only care about those that actually exist, and we don't want duplicates either -->
+			<_CompressedBindingPackagesFromReferencedAssemblies Include="@(_CompressedBindingPackagesFromReferencedAssembliesCandidates->Distinct())" Condition="Exists('%(Identity)')" />
+
+			<!-- List all potential binding resource packages next to the assemblies we're copying to the output directory -->
+			<_BindingPackagesFromReferencedAssembliesDirectoriesCandidates Include="@(ReferenceCopyLocalPaths -> '%(RootDir)%(Directory)%(Filename).resources')" />
+			<!-- We only care about those that actually exist, and we don't want duplicates either -->
+			<_BindingPackagesFromReferencedAssembliesDirectoriesExists Include="@(_BindingPackagesFromReferencedAssembliesDirectoriesCandidates->Distinct())" Condition="Exists('%(Identity)')" />
+		</ItemGroup>
+
+		<!--
+			We need to expand items in an item group using globs, which is
+			kind of tricky, because globs in item transformations aren't
+			treated as globs. The workaround is to use a custom task for this.
+
+			Note that this task should run remotely from Windows when there's
+			a Mac connected, but locally when there's not a Mac connected (for
+			Hot Restart builds for instance), so we're not conditioning this
+			task on IsMacEnabled.
+
+		-->
+		<GetFileSystemEntries
+			SessionId="$(BuildSessionId)"
+			DirectoryPath="@(_BindingPackagesFromReferencedAssembliesDirectoriesExists)"
+			Pattern="*"
+			Recursive="true"
+			IncludeDirectories="false"
+			>
+			<Output TaskParameter="Entries" ItemName="_BindingPackagesFromReferencedAssemblies" />
+		</GetFileSystemEntries>
+
+		<ItemGroup>
+			<!-- We need to set the 'DestinationSubDirectory' metadata to indicate the actual target directory for items we expanded using a wildcard -->
+			<_BindingPackagesFromReferencedAssembliesWithDestinationDir Include="@(_BindingPackagesFromReferencedAssemblies)">
+				<DestinationSubDirectory>$([System.IO.Path]::GetFileName('%(OriginalItemSpec)'))\</DestinationSubDirectory>
+				<DestinationSubDirectory Condition="'%(RecursiveDir)' != ''">$([System.IO.Path]::GetFileName('%(OriginalItemSpec)'))\$([System.IO.Path]::GetDirectoryName('%(RecursiveDir)'))\</DestinationSubDirectory>
+			</_BindingPackagesFromReferencedAssembliesWithDestinationDir>
+			<!-- Add what we found to ReferenceCopyLocalPaths. Note that binding resource packages should generally not be published, so we're setting PublishFolderType=None -->
+			<ReferenceCopyLocalPaths Include="@(_CompressedBindingPackagesFromReferencedAssemblies)">
+				<PublishFolderType>None</PublishFolderType>
+			</ReferenceCopyLocalPaths>
+			<ReferenceCopyLocalPaths Include="@(_BindingPackagesFromReferencedAssembliesWithDestinationDir)">
+				<PublishFolderType>None</PublishFolderType>
+			</ReferenceCopyLocalPaths>
 		</ItemGroup>
 	</Target>
 

@@ -109,7 +109,7 @@ namespace Foundation {
 			get {
 				// Get back the InFinalizerQueue flag, it's the only flag we'll set in the tracked object info structure from native code.
 				// The InFinalizerQueue will never be cleared once set, so there's no need to unset it here if it's not set in the tracked_object_info structure.
-				if (tracked_object_info != null && ((tracked_object_info->Flags) & Flags.InFinalizerQueue) == Flags.InFinalizerQueue)
+				if (tracked_object_info is not null && ((tracked_object_info->Flags) & Flags.InFinalizerQueue) == Flags.InFinalizerQueue)
 					actual_flags |= Flags.InFinalizerQueue;
 
 				return actual_flags;
@@ -117,7 +117,7 @@ namespace Foundation {
 			set {
 				actual_flags = value;
 				// Update the flags value that we can access them from the toggle ref callback as well.
-				if (tracked_object_info != null)
+				if (tracked_object_info is not null)
 					tracked_object_info->Flags = value;
 			}
 		}
@@ -397,10 +397,10 @@ namespace Foundation {
 
 		static bool IsProtocol (Type type, IntPtr protocol)
 		{
-			while (type != typeof (NSObject) && type != null) {
+			while (type != typeof (NSObject) && type is not null) {
 				var attrs = type.GetCustomAttributes (typeof (ProtocolAttribute), false);
 				var protocolAttribute = (ProtocolAttribute) (attrs.Length > 0 ? attrs [0] : null);
-				if (protocolAttribute != null && !protocolAttribute.IsInformal) {
+				if (protocolAttribute is not null && !protocolAttribute.IsInformal) {
 					string name;
 
 					if (!string.IsNullOrEmpty (protocolAttribute.Name)) {
@@ -408,7 +408,7 @@ namespace Foundation {
 					} else {
 						attrs = type.GetCustomAttributes (typeof (RegisterAttribute), false);
 						var registerAttribute = (RegisterAttribute) (attrs.Length > 0 ? attrs [0] : null);
-						if (registerAttribute != null && !string.IsNullOrEmpty (registerAttribute.Name)) {
+						if (registerAttribute is not null && !string.IsNullOrEmpty (registerAttribute.Name)) {
 							name = registerAttribute.Name;
 						} else {
 							name = type.Name;
@@ -446,7 +446,7 @@ namespace Foundation {
 					// Third-party bindings might lie about IsDirectBinding (see bug #14772),
 					// so don't trust any 'true' values unless we're in monotouch.dll.
 					var attribs = this.GetType ().GetCustomAttributes (typeof (RegisterAttribute), false);
-					if (attribs != null && attribs.Length == 1)
+					if (attribs is not null && attribs.Length == 1)
 						is_wrapper = ((RegisterAttribute) attribs [0]).IsWrapper;
 				}
 			}
@@ -601,7 +601,7 @@ namespace Foundation {
 
 #if NET
 				unsafe {
-					if (tracked_object_info != null)
+					if (tracked_object_info is not null)
 						tracked_object_info->Handle = value;
 				}
 #endif
@@ -675,7 +675,7 @@ namespace Foundation {
 		[Obsolete ("Do not use; this API does not properly retain/release existing/new values, so leaks and/or crashes may occur.")]
 		public void SetNativeField (string name, NSObject value)
 		{
-			if (value == null)
+			if (value is null)
 				SetObjCIvar (name, IntPtr.Zero);
 			else
 				SetObjCIvar (name, value.Handle);
@@ -783,7 +783,7 @@ namespace Foundation {
 
 		public static NSObject FromObject (object obj)
 		{
-			if (obj == null)
+			if (obj is null)
 				return NSNull.Null;
 			var t = obj.GetType ();
 			if (t == typeof (NSObject) || t.IsSubclassOf (typeof (NSObject)))
@@ -853,7 +853,7 @@ namespace Foundation {
 				// last chance for types like CGPath, CGColor... that are not NSObject but are CFObject
 				// see https://bugzilla.xamarin.com/show_bug.cgi?id=8458
 				INativeObject native = (obj as INativeObject);
-				if (native != null)
+				if (native is not null)
 					return Runtime.GetNSObject (native.Handle);
 				return null;
 			}
@@ -861,7 +861,7 @@ namespace Foundation {
 
 		public void SetValueForKeyPath (NativeHandle handle, NSString keyPath)
 		{
-			if (keyPath == null)
+			if (keyPath is null)
 				throw new ArgumentNullException ("keyPath");
 #if NET
 			if (IsDirectBinding) {
@@ -900,7 +900,7 @@ namespace Foundation {
 		public override bool Equals (object obj)
 		{
 			var o = obj as NSObject;
-			if (o == null)
+			if (o is null)
 				return false;
 
 			bool isDirectBinding = IsDirectBinding;
@@ -1051,7 +1051,7 @@ namespace Foundation {
 
 			public Observer (NSObject obj, NSString key, Action<NSObservedChange> observer)
 			{
-				if (observer == null)
+				if (observer is null)
 					throw new ArgumentNullException (nameof (observer));
 
 				this.obj = new WeakReference (obj);
@@ -1073,9 +1073,9 @@ namespace Foundation {
 			{
 				if (disposing) {
 					NSObject target;
-					if (obj != null) {
+					if (obj is not null) {
 						target = (NSObject) obj.Target;
-						if (target != null)
+						if (target is not null)
 							target.RemoveObserver (this, key, Handle);
 					}
 					obj = null;
@@ -1169,7 +1169,7 @@ namespace Foundation {
 		public bool IsPrior {
 			get {
 				var n = dict [NSObject.ChangeNotificationIsPriorKey] as NSNumber;
-				if (n == null)
+				if (n is null)
 					return false;
 				return n.BoolValue;
 			}

@@ -711,7 +711,7 @@ namespace CoreAnimation {
 
 	[iOS (8, 0)]
 	[Mac (10, 11)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CALayer))]
 	interface CAMetalLayer {
 		[NullAllowed] // by default this property is null
@@ -738,7 +738,7 @@ namespace CoreAnimation {
 		[NoTV]
 		[NoiOS]
 		[Mac (10, 13)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("displaySyncEnabled")]
 		bool DisplaySyncEnabled { get; set; }
 
@@ -746,7 +746,7 @@ namespace CoreAnimation {
 		[TV (11, 0)]
 		[Mac (10, 13)]
 		[iOS (11, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("allowsNextDrawableTimeout")]
 		bool AllowsNextDrawableTimeout { get; set; }
 
@@ -754,7 +754,7 @@ namespace CoreAnimation {
 		[TV (11, 2)]
 		[Mac (10, 13, 2)]
 		[iOS (11, 2)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("maximumDrawableCount")]
 		nuint MaximumDrawableCount { get; set; }
 
@@ -2103,7 +2103,7 @@ namespace CoreAnimation {
 	[Mac (10, 15)]
 	[BaseType (typeof (NSObject), Name = "CAEDRMetadata")]
 	[DisableDefaultCtor]
-	interface CAEdrMetadata {
+	interface CAEdrMetadata : NSCopying, NSSecureCoding {
 
 		[Static]
 		[Export ("HDR10MetadataWithDisplayInfo:contentInfo:opticalOutputScale:")]

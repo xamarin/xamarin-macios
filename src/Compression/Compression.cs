@@ -19,7 +19,7 @@ using ObjCRuntime;
 
 namespace Compression {
 #if NET
-	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
@@ -133,7 +133,7 @@ namespace Compression {
 
 		private void EnsureBufferInitialized ()
 		{
-			if (_buffer == null) {
+			if (_buffer is null) {
 				InitializeBuffer ();
 			}
 		}

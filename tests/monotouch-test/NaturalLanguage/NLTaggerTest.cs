@@ -32,7 +32,7 @@ namespace MonoTouchFixtures.NaturalLanguage {
 				Assert.That (range.Location, Is.EqualTo ((nint) 0), "Location");
 				Assert.That (range.Length, Is.EqualTo ((nint) 3), "Length");
 				// rdar https://trello.com/c/3oN5kuYk
-				if (tag != null)
+				if (tag is not null)
 					Assert.That (tag.ToString (), Is.EqualTo ("the"), "First word");
 			}
 		}
@@ -56,7 +56,7 @@ namespace MonoTouchFixtures.NaturalLanguage {
 			using (var tagger = new NLTagger (NLTagScheme.LexicalClass) { String = Text }) {
 				foreach (var scheme in typeof (NLTagScheme).GetEnumValues ()) {
 					var constant = ((NLTagScheme) scheme).GetConstant ();
-					if (constant == null)
+					if (constant is null)
 						continue; // can vary by SDK version
 					Assert.That (tagger.GetModels (constant), Is.Empty, constant);
 				}

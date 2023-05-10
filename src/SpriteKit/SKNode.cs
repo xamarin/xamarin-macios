@@ -20,7 +20,7 @@ using ObjCRuntime;
 namespace SpriteKit {
 	public partial class SKNode : IEnumerable, IEnumerable<SKNode> {
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
