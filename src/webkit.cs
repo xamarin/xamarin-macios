@@ -2963,7 +2963,7 @@ namespace WebKit {
 		[Export ("continuousSpellCheckingEnabled")]
 		bool ContinuousSpellCheckingEnabled { [Bind ("isContinuousSpellCheckingEnabled")] get; set; }
 
-		[Export ("editingDelegate", ArgumentSemantic.Assign)]
+		[Export ("editingDelegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject EditingDelegate { get; set; }
 
 		[Export ("replaceSelectionWithMarkupString:")]

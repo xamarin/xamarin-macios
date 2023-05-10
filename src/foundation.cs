@@ -6264,31 +6264,37 @@ namespace Foundation {
 		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithSuiteName:")]
-		IntPtr InitWithSuiteName (string suiteName);
+		IntPtr InitWithSuiteName ([NullAllowed] string suiteName);
 
 		[Export ("objectForKey:")]
 		[Internal]
+		[return: NullAllowed]
 		NSObject ObjectForKey (string defaultName);
 
 		[Export ("setObject:forKey:")]
 		[Internal]
-		void SetObjectForKey (NSObject value, string defaultName);
+		void SetObjectForKey ([NullAllowed] NSObject value, string defaultName);
 
 		[Export ("removeObjectForKey:")]
 		void RemoveObject (string defaultName);
 
+		[return: NullAllowed]
 		[Export ("stringForKey:")]
 		string StringForKey (string defaultName);
 
+		[return: NullAllowed]
 		[Export ("arrayForKey:")]
 		NSObject [] ArrayForKey (string defaultName);
 
+		[return: NullAllowed]
 		[Export ("dictionaryForKey:")]
 		NSDictionary DictionaryForKey (string defaultName);
 
+		[return: NullAllowed]
 		[Export ("dataForKey:")]
 		NSData DataForKey (string defaultName);
 
+		[return: NullAllowed]
 		[Export ("stringArrayForKey:")]
 		string [] StringArrayForKey (string defaultName);
 
@@ -6351,6 +6357,7 @@ namespace Foundation {
 		[Export ("persistentDomainNames")]
 		string [] PersistentDomainNames ();
 
+		[return: NullAllowed]
 		[Export ("persistentDomainForName:")]
 		NSDictionary PersistentDomainForName (string domainName);
 
