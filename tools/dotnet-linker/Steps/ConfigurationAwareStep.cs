@@ -5,6 +5,7 @@ using System.Linq;
 
 using Mono.Cecil;
 using Mono.Linker.Steps;
+using Xamarin.Tuner;
 
 using Xamarin.Bundler;
 
@@ -14,6 +15,14 @@ namespace Xamarin.Linker {
 	public abstract class ConfigurationAwareStep : BaseStep {
 		public LinkerConfiguration Configuration {
 			get { return LinkerConfiguration.GetInstance (Context); }
+		}
+
+		public DerivedLinkContext DerivedLinkContext {
+			get { return Configuration.DerivedLinkContext; }
+		}
+
+		public Application App {
+			get { return DerivedLinkContext.App; }
 		}
 
 		protected void Report (params Exception[] exceptions)

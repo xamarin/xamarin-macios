@@ -23,9 +23,23 @@ namespace Xamarin.Linker {
 			exceptions.Add (exception);
 		}
 
+		protected override void TryProcess ()
+		{
+			base.TryProcess ();
+
+			App.SelectRegistrar ();
+			if (App.Registrar != RegistrarMode.ManagedStatic)
+				return;
+		}
+
 		protected override void TryEndProcess (out List<Exception>? exceptions)
 		{
 			base.TryEndProcess ();
+
+			if (App.Registrar != RegistrarMode.ManagedStatic) {
+				exceptions = null;
+				return;
+			}
 
 			// Report back any exceptions that occurred during the processing.
 			exceptions = this.exceptions;
@@ -34,6 +48,9 @@ namespace Xamarin.Linker {
 		protected override void TryProcessAssembly (AssemblyDefinition assembly)
 		{
 			base.TryProcessAssembly (assembly);
+
+			if (App.Registrar != RegistrarMode.ManagedStatic)
+				return;
 		}
 	}
 }
