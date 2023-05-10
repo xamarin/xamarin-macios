@@ -34,7 +34,7 @@ namespace Xamarin.Tests {
 			ExecutionResult rv;
 
 			var props = new Dictionary<string, string> (Properties);
-			if (properties != null) {
+			if (properties is not null) {
 				foreach (var kvp in properties)
 					props [kvp.Key] = kvp.Value;
 			}
@@ -74,7 +74,7 @@ namespace Xamarin.Tests {
 
 		public MSBuildItem [] GetItems (ProjectPaths project, string name)
 		{
-			if (executionResult == null)
+			if (executionResult is null)
 				throw new InvalidOperationException ($"Must build something first");
 
 			var build = BinaryLog.ReadBuild (executionResult.BinLogPath);
@@ -130,7 +130,7 @@ namespace Xamarin.Tests {
 
 		public string GetPropertyValue (string name)
 		{
-			if (executionResult == null)
+			if (executionResult is null)
 				throw new InvalidOperationException ($"Must build something first");
 
 			var build = BinaryLog.ReadBuild (executionResult.BinLogPath);
@@ -146,10 +146,10 @@ namespace Xamarin.Tests {
 
 			var reader = new BinLogReader ();
 			foreach (var record in reader.ReadRecords (log)) {
-				if (record == null)
+				if (record is null)
 					continue;
 				var args = record.Args;
-				if (args == null)
+				if (args is null)
 					continue;
 
 				bool verbose = false;
@@ -248,7 +248,7 @@ namespace Xamarin.Tests {
 			args.Add ("--");
 			args.Add ($"/t:{target}");
 			args.Add (project);
-			if (properties != null) {
+			if (properties is not null) {
 				foreach (var prop in properties)
 					args.Add ($"/p:{prop.Key}={prop.Value}");
 			}

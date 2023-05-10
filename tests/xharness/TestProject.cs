@@ -51,7 +51,7 @@ namespace Xharness {
 
 		public XmlDocument Xml {
 			get {
-				if (xml == null) {
+				if (xml is null) {
 					xml = new XmlDocument ();
 					xml.LoadWithoutNetworkAccess (Path);
 				}
@@ -108,7 +108,7 @@ namespace Xharness {
 
 			// Replace RootTestsDirectory with a constant value, so that any relative paths don't end up wrong.
 			var rootTestsDirectoryNode = doc.SelectSingleNode ("/Project/PropertyGroup/RootTestsDirectory");
-			if (rootTestsDirectoryNode != null)
+			if (rootTestsDirectoryNode is not null)
 				rootTestsDirectoryNode.InnerText = rootDirectory;
 
 			if (doc.IsDotNetProject ()) {

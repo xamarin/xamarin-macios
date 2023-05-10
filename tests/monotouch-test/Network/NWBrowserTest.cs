@@ -106,7 +106,7 @@ namespace MonoTouchFixtures.Network {
 #endif
 					didRun = true;
 					try {
-						receivedNotNullChange = oldResult != null || newResult != null;
+						receivedNotNullChange = oldResult is not null || newResult is not null;
 					} catch (Exception e) {
 						ex = e;
 					} finally {
@@ -138,7 +138,7 @@ namespace MonoTouchFixtures.Network {
 						// we need the connection handler, else we will get an exception
 						listener.SetNewConnectionHandler ((c) => { });
 						listener.SetStateChangedHandler ((s, e) => {
-							if (e != null) {
+							if (e is not null) {
 								Console.WriteLine ($"Got error {e.ErrorCode} {e.ErrorDomain} '{e.CFError.FailureReason}' {e.ToString ()}");
 							}
 						});

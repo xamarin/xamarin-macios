@@ -34,7 +34,7 @@ namespace Xamarin.Linker {
 
 		public static bool HasCustomAttribute (this ICustomAttributeProvider provider, string @namespace, string name)
 		{
-			if (provider == null || !provider.HasCustomAttributes)
+			if (provider is null || !provider.HasCustomAttributes)
 				return false;
 
 			foreach (CustomAttribute attribute in provider.CustomAttributes) {
@@ -54,7 +54,7 @@ namespace Xamarin.Linker {
 		// (in particular it's not used to get the custom attributes themselves, since those may not come from this provider instance)
 		static BindingImplOptions? GetBindingImplAttribute (ICustomAttributeProvider provider, IEnumerable<ICustomAttribute> attributes)
 		{
-			if (attributes == null)
+			if (attributes is null)
 				return null;
 
 			foreach (var ca in attributes) {
@@ -83,9 +83,9 @@ namespace Xamarin.Linker {
 
 		static BindingImplOptions? GetBindingImplAttribute (ICustomAttributeProvider provider, DerivedLinkContext context)
 		{
-			if (provider != null && provider.HasCustomAttributes) {
+			if (provider is not null && provider.HasCustomAttributes) {
 				var rv = GetBindingImplAttribute (provider, provider.CustomAttributes);
-				if (rv != null)
+				if (rv is not null)
 					return rv;
 			}
 

@@ -38,7 +38,7 @@ namespace Xamarin.Linker.Steps {
 		protected TypeDefinition GetType (string assemblyName, string typeName)
 		{
 			AssemblyDefinition ad = GetAssembly (assemblyName);
-			return ad == null ? null : GetType (ad, typeName);
+			return ad is null ? null : GetType (ad, typeName);
 		}
 
 		protected TypeDefinition GetType (AssemblyDefinition assembly, string typeName)
@@ -49,7 +49,7 @@ namespace Xamarin.Linker.Steps {
 		protected override TypeDefinition MarkType (TypeReference reference)
 		{
 			TypeDefinition type = base.MarkType (GetOriginalType (reference));
-			if (type == null)
+			if (type is null)
 				return null;
 
 			switch (type.Module.Assembly.Name.Name) {
@@ -98,14 +98,14 @@ namespace Xamarin.Linker.Steps {
 		{
 			// type can be null if we're not linking the assembly where the type reside,
 			// e.g. --linkskip=System, in such case GetType returns null and an NRE can occur
-			if (type == null)
+			if (type is null)
 				return false;
 			return base.MarkMethods (type);
 		}
 
 		protected void MarkStaticMethods (TypeDefinition type)
 		{
-			if ((type == null) || !type.HasMethods)
+			if ((type is null) || !type.HasMethods)
 				return;
 			foreach (MethodDefinition m in type.Methods) {
 				if (m.IsStatic)
@@ -115,7 +115,7 @@ namespace Xamarin.Linker.Steps {
 
 		protected void MarkConstructors (TypeDefinition type)
 		{
-			if ((type == null) || !type.HasMethods)
+			if ((type is null) || !type.HasMethods)
 				return;
 			foreach (MethodDefinition ctor in type.Methods) {
 				if (ctor.IsConstructor)
@@ -128,14 +128,14 @@ namespace Xamarin.Linker.Steps {
 		protected override MethodDefinition MarkMethod (MethodReference reference)
 		{
 			var method = base.MarkMethod (reference);
-			if ((method != null) && !method.HasBody && method.IsPInvokeImpl) {
+			if ((method is not null) && !method.HasBody && method.IsPInvokeImpl) {
 				// for some C++ stuff HasPInvokeInfo can be true without giving back any info
 				PInvokeInfo info = method.PInvokeInfo;
-				if (info != null) {
+				if (info is not null) {
 					var m = info.Module;
 					Annotations.Mark (m);
 					string name = m.Name;
-					if (PInvokeModules != null && !String.IsNullOrEmpty (name)) {
+					if (PInvokeModules is not null && !String.IsNullOrEmpty (name)) {
 						List<MethodDefinition> methods;
 						if (!PInvokeModules.TryGetValue (name, out methods))
 							PInvokeModules.Add (name, methods = new List<MethodDefinition> ());
@@ -166,7 +166,7 @@ namespace Xamarin.Linker.Steps {
 			var type = (ca.ConstructorArguments [0].Value as TypeReference);
 			// note: it could be a string (valid or not) and we do not support that since it's too late
 			// to add new assemblies into the pipeline
-			if (type != null)
+			if (type is not null)
 				MarkDefaultConstructor (type.Resolve ());
 		}
 
@@ -182,7 +182,7 @@ namespace Xamarin.Linker.Steps {
 				return;
 
 			var tr = (arg.Value as TypeReference);
-			if (tr == null)
+			if (tr is null)
 				return;
 
 			var td = tr.Resolve ();
@@ -209,35 +209,35 @@ namespace Xamarin.Linker.Steps {
 		void MarkMetadata (IMetadataTokenProvider tp)
 		{
 			var provider = FilterExtraSerializationMembers (tp);
-			if (provider == null)
+			if (provider is null)
 				return;
 
 			TypeReference tr = (provider as TypeReference);
-			if (tr != null) {
+			if (tr is not null) {
 				MarkType (tr);
 				return;
 			}
 			MethodReference mr = (provider as MethodReference);
-			if (mr != null) {
+			if (mr is not null) {
 				MarkMethod (mr);
 				return;
 			}
 			PropertyDefinition pd = (provider as PropertyDefinition);
-			if (pd != null) {
+			if (pd is not null) {
 				MarkProperty (pd);
-				if (pd.GetMethod != null)
+				if (pd.GetMethod is not null)
 					MarkMethod (pd.GetMethod);
-				if (pd.SetMethod != null)
+				if (pd.SetMethod is not null)
 					MarkMethod (pd.SetMethod);
 				return;
 			}
 			FieldReference fr = (provider as FieldReference);
-			if (fr != null) {
+			if (fr is not null) {
 				MarkField (fr);
 				return;
 			}
 			EventDefinition ed = (provider as EventDefinition);
-			if (ed != null) {
+			if (ed is not null) {
 				MarkEvent (ed);
 				return;
 			}
@@ -557,7 +557,7 @@ namespace Xamarin.Linker.Steps {
 				case "XslCompiledTransform":
 					TypeDefinition nop = GetType ("System.Xml", "System.Xml.Xsl.NoOperationDebugger");
 					// only available on the mobile profile
-					if (nop != null) {
+					if (nop is not null) {
 						MarkNamedMethod (nop, "OnCompile");
 						MarkNamedMethod (nop, "OnExecute");
 					}

@@ -66,7 +66,7 @@ namespace Xamarin.iOS.Tasks {
 			} catch {
 				return false;
 			} finally {
-				if (reader != null)
+				if (reader is not null)
 					reader.Close ();
 			}
 		}
@@ -137,7 +137,7 @@ namespace Xamarin.iOS.Tasks {
 			var artworkWithLogicalNames = new List<ITaskItem> ();
 			var artwork = new HashSet<string> ();
 
-			if (ITunesArtwork != null) {
+			if (ITunesArtwork is not null) {
 				foreach (var item in ITunesArtwork) {
 					// We need a physical path here, ignore the Link element
 					var path = item.GetMetadata ("FullPath");

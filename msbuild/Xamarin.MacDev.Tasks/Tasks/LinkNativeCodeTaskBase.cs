@@ -127,7 +127,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			bool hasDylibs = false;
-			if (LinkWithLibraries != null) {
+			if (LinkWithLibraries is not null) {
 				foreach (var libSpec in LinkWithLibraries) {
 					var lib = Path.GetFullPath (libSpec.ItemSpec);
 					var libExtension = Path.GetExtension (lib).ToLowerInvariant ();
@@ -165,7 +165,7 @@ namespace Xamarin.MacDev.Tasks {
 				arguments.Add (DylibRPath ?? "@executable_path");
 			}
 
-			if (Frameworks != null) {
+			if (Frameworks is not null) {
 				foreach (var fw in Frameworks) {
 					var is_weak = fw.GetMetadata ("IsWeak") == "true";
 					var framework = fw.ItemSpec;
@@ -186,7 +186,7 @@ namespace Xamarin.MacDev.Tasks {
 				arguments.Add (FrameworkRPath ?? "@executable_path/Frameworks");
 			}
 
-			if (ObjectFiles != null)
+			if (ObjectFiles is not null)
 				foreach (var obj in ObjectFiles)
 					arguments.Add (Path.GetFullPath (obj.ItemSpec));
 
@@ -195,7 +195,7 @@ namespace Xamarin.MacDev.Tasks {
 			arguments.Add ("-o");
 			arguments.Add (Path.GetFullPath (OutputFile));
 
-			if (LinkerFlags != null) {
+			if (LinkerFlags is not null) {
 				foreach (var flag in LinkerFlags)
 					arguments.Add (flag.ItemSpec);
 			}

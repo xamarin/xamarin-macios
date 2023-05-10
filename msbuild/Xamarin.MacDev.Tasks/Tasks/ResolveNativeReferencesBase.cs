@@ -459,7 +459,7 @@ namespace Xamarin.MacDev.Tasks {
 				return false;
 			}
 			var available_libraries = plist.GetArray ("AvailableLibraries");
-			if ((available_libraries == null) || (available_libraries.Count == 0)) {
+			if ((available_libraries is null) || (available_libraries.Count == 0)) {
 				log.LogError (MSBStrings.E0174 /* The xcframework {0} has an incorrect or unknown format and cannot be processed. */, xcframeworkPath);
 				return false;
 			}

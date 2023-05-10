@@ -53,7 +53,7 @@ namespace BCLTests.TestRunner.Core {
 			var request = new NSMutableUrlRequest (url);
 			request.HttpMethod = "POST";
 			var rv = NSUrlSession.SharedSession.CreateUploadTask (request, NSData.FromString (uploadData), (NSData data, NSUrlResponse response, NSError error) => {
-				if (error != null) {
+				if (error is not null) {
 					Console.WriteLine ("Failed to send data to {0}: {1}", url.AbsoluteString, error);
 					tcs.SetResult (false);
 				} else {

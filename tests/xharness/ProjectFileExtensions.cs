@@ -166,7 +166,7 @@ namespace Xharness {
 		static IEnumerable<XmlNode> SelectElementNodes (this XmlNode node, string name)
 		{
 			foreach (XmlNode? child in node.ChildNodes) {
-				if (child == null)
+				if (child is null)
 					continue;
 
 				if (child.NodeType == XmlNodeType.Element && string.Equals (child.Name, name, StringComparison.OrdinalIgnoreCase))
@@ -237,7 +237,7 @@ namespace Xharness {
 					return string.Join (";", split);
 				}
 
-				if (variableSubstitution != null)
+				if (variableSubstitution is not null)
 					input = input.EvaluateAsMSBuildText (variableSubstitution);
 
 				var makeFullPath = input [0] != '$';
@@ -283,14 +283,14 @@ namespace Xharness {
 				var nodes = csproj.SelectElementNodes (element);
 				foreach (XmlNode node in nodes) {
 					var a = node.Attributes [attrib];
-					if (a == null)
+					if (a is null)
 						continue;
 
 					// Fix any default LogicalName values (but don't change existing ones).
 					if (!skipLogicalName) {
 						var ln = node.SelectElementNodes ("LogicalName")?.SingleOrDefault ();
 						var links = node.SelectElementNodes ("Link");
-						if (ln == null && !links.Any ()) {
+						if (ln is null && !links.Any ()) {
 							ln = csproj.CreateElement ("LogicalName", csproj.GetNamespace ());
 							node.AppendChild (ln);
 

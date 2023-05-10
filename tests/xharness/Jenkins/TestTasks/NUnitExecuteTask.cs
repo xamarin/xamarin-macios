@@ -33,7 +33,7 @@ namespace Xharness.Jenkins.TestTasks {
 				var xml = new XmlDocument ();
 				xml.LoadWithoutNetworkAccess (csproj);
 				var packageref = xml.SelectSingleNode ("//*[local-name()='PackageReference' and @Include = 'NUnit.ConsoleRunner']");
-				if (packageref != null) {
+				if (packageref is not null) {
 					isPackageRef = true;
 					version = packageref.Attributes ["Version"].InnerText;
 					log.WriteLine ("Found PackageReference in {0} for NUnit.ConsoleRunner {1}", csproj, version);

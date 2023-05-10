@@ -29,7 +29,7 @@ namespace Xamarin.iOS.Tasks {
 				var connection = BuildConnection.GetAsync (BuildEngine4).Result;
 				var buildClient = connection.GetClient (SessionId) as BuildClient;
 
-				if (!connection.IsConnected || buildClient == null) {
+				if (!connection.IsConnected || buildClient is null) {
 					Log.LogWarning (MSBStrings.E0179, nameof (ResolveUniversalTypeIdentifiers));
 
 					return true;
@@ -49,7 +49,7 @@ namespace Xamarin.iOS.Tasks {
 						dataset = JsonConvert.DeserializeObject<DataSet> (content);
 					}
 
-					if (dataset == null) {
+					if (dataset is null) {
 						Log.LogError (MSBStrings.E0180, Path.GetDirectoryName (filePath));
 						continue;
 					}
@@ -62,7 +62,7 @@ namespace Xamarin.iOS.Tasks {
 					foreach (var data in dataItemsToComplete) {
 						var file = ImageAssets.FirstOrDefault (x => Path.GetFileName (x.ItemSpec) == data.Filename);
 
-						if (file == null) {
+						if (file is null) {
 							Log.LogWarning (MSBStrings.E0181, data.Filename);
 
 							continue;
@@ -101,7 +101,7 @@ namespace Xamarin.iOS.Tasks {
 
 		void LogTaskProperty (string propertyName, ITaskItem [] items)
 		{
-			if (items == null) {
+			if (items is null) {
 				Log.LogMessage (MessageImportance.Normal, "  {0}: <null>", propertyName);
 
 				return;

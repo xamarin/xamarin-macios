@@ -44,7 +44,7 @@ namespace MyReleaseBuild {
 
 				// look for non-existing type - it should be there to replace UIWebView
 				var t = Type.GetType ("UIKit.DeprecatedWebView, Xamarin.iOS");
-				if (t == null) {
+				if (t is null) {
 					View.BackgroundColor = UIColor.Red;
 					Console.WriteLine ("FAIL");
 				} else {

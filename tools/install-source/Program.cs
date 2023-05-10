@@ -200,7 +200,7 @@ public class ListSourceFiles {
 		var alreadyLinked = new List<string> ();
 		foreach (var src in srcs) {
 			var mangler = manglerFactory.GetMangler (src);
-			if (mangler == null) { // we are ignoring this file
+			if (mangler is null) { // we are ignoring this file
 				if (verbose)
 					Console.WriteLine ($"Ignoring path {src}");
 				continue;

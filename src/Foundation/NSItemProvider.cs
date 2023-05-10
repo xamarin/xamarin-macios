@@ -41,7 +41,7 @@ namespace Foundation {
 		{
 			return LoadObject (new Class (typeof (T)), (rv, err) => {
 				var obj = rv as T;
-				if (obj == null && rv != null)
+				if (obj is null && rv is not null)
 					obj = Runtime.ConstructNSObject<T> (rv.Handle);
 				completionHandler (obj, err);
 			});
@@ -63,7 +63,7 @@ namespace Foundation {
 			var rv = LoadObjectAsync (new Class (typeof (T)));
 			return rv.ContinueWith ((v) => {
 				var obj = v.Result as T;
-				if (obj == null && v.Result != null)
+				if (obj is null && v.Result is not null)
 					obj = Runtime.ConstructNSObject<T> (v.Result.Handle);
 				return obj;
 			});
@@ -85,7 +85,7 @@ namespace Foundation {
 			var rv = LoadObjectAsync (new Class (typeof (T)), out result);
 			return rv.ContinueWith ((v) => {
 				var obj = v.Result as T;
-				if (obj == null && v.Result != null)
+				if (obj is null && v.Result is not null)
 					obj = Runtime.ConstructNSObject<T> (v.Result.Handle);
 				return obj;
 			});

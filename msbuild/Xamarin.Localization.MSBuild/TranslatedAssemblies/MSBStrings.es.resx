@@ -1202,4 +1202,7 @@
   <data name="E7113" xml:space="preserve">
         <value>No se puede procesar el archivo ZIP "{0}" en esta plataforma: el archivo "{1}" es un symlink.</value>
     </data>
+  <data name="E7114" xml:space="preserve">
+        <value>The "{0}" task was not given a value for the parameter "{1}", which is required when building on this platform.</value>
+    </data>
 </root>

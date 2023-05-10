@@ -240,7 +240,7 @@ namespace Xharness.Targets {
 
 		protected override string GetMinimumOSVersion (string templateMinimumOSVersion)
 		{
-			if (MonoNativeInfo == null)
+			if (MonoNativeInfo is null)
 				return templateMinimumOSVersion;
 			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.watchOS, MonoNativeInfo.Flavor);
 		}

@@ -9,7 +9,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (!ShouldExecuteRemotely ())
 				return base.Execute ();
 
-			if (AppExtensionReferences != null)
+			if (AppExtensionReferences is not null)
 				TaskItemFixer.ReplaceItemSpecsWithBuildServerPath (AppExtensionReferences, SessionId);
 
 			return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;

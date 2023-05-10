@@ -78,7 +78,7 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 
 			foreach (var kvp in Environment) {
-				if (kvp.Value == null) {
+				if (kvp.Value is null) {
 					process.StartInfo.EnvironmentVariables.Remove (kvp.Key);
 				} else {
 					process.StartInfo.EnvironmentVariables [kvp.Key] = kvp.Value;

@@ -6,6 +6,7 @@
     <IsBindingProject>true</IsBindingProject>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoBindingEmbedding>true</NoBindingEmbedding>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <Import Project="../Common.props" />

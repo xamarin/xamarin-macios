@@ -76,7 +76,7 @@ namespace Xamarin.Linker.Steps {
 				return true;
 			});
 
-			if (method == null)
+			if (method is null)
 				return;
 
 			// The type was used, so preserve the method and field

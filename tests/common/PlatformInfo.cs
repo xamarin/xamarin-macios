@@ -45,7 +45,7 @@ namespace Xamarin.Tests {
 #error Unknown platform
 #endif
 			name = name?.Replace (" ", String.Empty)?.ToLowerInvariant ();
-			if (name == null)
+			if (name is null)
 				throw new FormatException ("Product name is `null`");
 
 			var platformInfo = new PlatformInfo ();
@@ -246,7 +246,7 @@ namespace Xamarin.Tests {
 
 				switch (attr.AvailabilityKind) {
 				case AvailabilityKind.Introduced:
-					if (attr.Version != null)
+					if (attr.Version is not null)
 						available &= targetPlatform.Version >= attr.Version;
 
 					if (attr.Architecture != PlatformArchitecture.None &&
@@ -255,7 +255,7 @@ namespace Xamarin.Tests {
 					break;
 				case AvailabilityKind.Deprecated:
 				case AvailabilityKind.Obsoleted:
-					if (attr.Version != null)
+					if (attr.Version is not null)
 						available &= targetPlatform.Version < attr.Version;
 					// FIXME: handle architecture-level _un_availability?
 					// we didn't do this with the old AvailabilityAttribute...

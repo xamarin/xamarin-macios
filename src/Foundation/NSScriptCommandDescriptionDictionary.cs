@@ -41,9 +41,9 @@ namespace Foundation {
 
 		public void Add (NSScriptCommandArgumentDescription arg)
 		{
-			if (arg == null)
+			if (arg is null)
 				throw new ArgumentNullException ("arg");
-			if (Arguments == null)
+			if (Arguments is null)
 				Arguments = new NSMutableDictionary (); 
 			using (var nsName = new NSString (arg.Name)) {
 				Arguments.Add (nsName, arg.Dictionary);
@@ -52,7 +52,7 @@ namespace Foundation {
 
 		public bool Remove (NSScriptCommandArgumentDescription arg)
 		{
-			if (arg == null)
+			if (arg is null)
 				throw new ArgumentNullException ("arg");
 			using (var nsName = new NSString (arg.Name)) {
 				return Arguments?.Remove (nsName) ?? false;

@@ -47,7 +47,7 @@ namespace UIKit {
 
 			public FuncBoolDispatcher (Func<UIAccessibilityCustomAction, bool> probe)
 			{
-				if (probe == null)
+				if (probe is null)
 					throw new ArgumentNullException ("probe");
 
 				this.probe = probe;

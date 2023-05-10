@@ -51,7 +51,7 @@ namespace MonoTouchFixtures.Network {
 		public void Dispose ()
 		{
 			connection?.Dispose ();
-			if (interfaces != null) {
+			if (interfaces is not null) {
 				foreach (var i in interfaces)
 					i.Dispose ();
 			}
