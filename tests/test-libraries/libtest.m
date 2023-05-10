@@ -433,9 +433,22 @@ static UltimateMachine *shared;
 		[self V];
 	}
 
+	-(void) invoke_V: (long long) count
+	{
+		for (long long i = 0; i < count; i++)
+			[self V];
+	}
+
 	-(float) invoke_F
 	{
 		return [self F];
+	}
+
+	-(float) invoke_F: (long long) count
+	{
+		for (long long i = 0; i < count; i++)
+			[self F];
+		return count;
 	}
 
 	-(double) invoke_D
@@ -443,9 +456,24 @@ static UltimateMachine *shared;
 		return [self D];
 	}
 
+	-(double) invoke_D: (long long) count
+	{
+		for (long long i = 0; i < count; i++)
+			[self D];
+		return count;
+	}
+
 	-(struct Sf) Sf_invoke
 	{
 		return [self Sf];
+	}
+
+	-(struct Sf) Sf_invoke: (long long) count
+	{
+		struct Sf sf = { 0 };
+		for (long long i = 0; i < count; i++)
+			sf = [self Sf];
+		return sf;
 	}
 
 	-(void) invoke_V_null_out

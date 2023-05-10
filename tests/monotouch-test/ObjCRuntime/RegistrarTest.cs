@@ -64,6 +64,80 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace MonoTouchFixtures.ObjCRuntime {
+	[TestFixture]
+	[Preserve (AllMembers = true)]
+	public class RegistrarSpeedTest {
+		static void Time (string title, Action action)
+		{
+			var watch = global::System.Diagnostics.Stopwatch.StartNew ();
+			action ();
+			watch.Stop ();
+			Console.WriteLine ($"Executed '{title}' in {watch.Elapsed} - {watch.ElapsedMilliseconds} ms");
+		}
+
+#if __MACOS__
+		const long powers = 8;
+#elif __MACCATALYST__
+		const long powers = 7;
+#else
+		const long powers = 6;
+#endif
+
+		[Test]
+		public void InvokeV ()
+		{
+			using var obj = new ObjCRegistrarSpeedTest ();
+
+			for (var i = 0; i < powers; i++) {
+				var count = (long) Math.Pow (10, i);
+				Time ($"Invoke V {count}", () => obj.Invoke_V (count));
+			}
+		}
+
+		[Test]
+		public void InvokeF ()
+		{
+			using var obj = new ObjCRegistrarSpeedTest ();
+
+			for (var i = 0; i < powers; i++) {
+				var count = (long) Math.Pow (10, i);
+				Time ($"Invoke F {count}", () => obj.Invoke_F (count));
+			}
+		}
+
+		[Test]
+		public void InvokeD ()
+		{
+			using var obj = new ObjCRegistrarSpeedTest ();
+
+			for (var i = 0; i < powers; i++) {
+				var count = (long) Math.Pow (10, i);
+				Time ($"Invoke D {count}", () => obj.Invoke_D (count));
+			}
+		}
+
+		[Test]
+		public void InvokeSf ()
+		{
+			using var obj = new ObjCRegistrarSpeedTest ();
+
+			for (var i = 0; i < powers; i++) {
+				var count = (long) Math.Pow (10, i);
+				Time ($"Invoke Sf {count}", () => obj.Sf_invoke (count));
+			}
+		}
+		class ObjCRegistrarSpeedTest : ObjCRegistrarTest {
+			public override void Invoke_V () {}
+			public override float Invoke_F () { return 0; }
+			public override double Invoke_D () { return 0; }
+			public override Sf Sf_invoke () { return default (Sf); }
+
+			public override void V () { }
+			public override float F () { return 0; }
+			public override double D () { return 0; }
+			public override Sf Sf () { return default (Sf); }
+		}
+	}
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]

@@ -111,10 +111,14 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 
 
 	-(void) invoke_V;
+	-(void) invoke_V: (long long) count;
 	-(float) invoke_F;
+	-(float) invoke_F: (long long) count;
 	-(double) invoke_D;
+	-(double) invoke_D: (long long) count;
 
 	-(struct Sf) Sf_invoke;
+	-(struct Sf) Sf_invoke: (long long) count;
 
 	-(RegistrarTestBlock) methodReturningBlock;
 	@property (nonatomic, readonly) RegistrarTestBlock propertyReturningBlock;

@@ -192,14 +192,26 @@ namespace Bindings.Test {
 		[Export ("invoke_V")]
 		void Invoke_V ();
 
+		[Export ("invoke_V:")]
+		void Invoke_V (long count);
+
 		[Export ("invoke_F")]
 		float Invoke_F ();
+
+		[Export ("invoke_F:")]
+		float Invoke_F (long count);
 
 		[Export ("invoke_D")]
 		double Invoke_D ();
 
+		[Export ("invoke_D:")]
+		double Invoke_D (long count);
+
 		[Export ("Sf_invoke")]
 		Sf Sf_invoke ();
+
+		[Export ("Sf_invoke:")]
+		Sf Sf_invoke (long count);
 
 		[Export ("invoke_V_null_out")]
 		void Invoke_V_null_out ();
