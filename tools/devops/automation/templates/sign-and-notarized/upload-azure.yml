@@ -223,22 +223,6 @@ steps:
         Error = "Notarized xamarin.mac pkg not found." ;
         ShouldExist = $notarizedShouldExist;
       },
-      @{
-        Path = "$pkgsPath\\bundle.zip" ;
-        Context = "bundle.zip" ;
-        Description = "bundle.zip" ;
-        TargetUrl = "$pkgsVirtualUrl/bundle.zip" ;
-        Error = "bundle.zip not found." ;
-        ShouldExist = $true;
-      },
-      @{
-        Path = "$pkgsPath\msbuild.zip" ;
-        Context = "msbuild.zip" ;
-        Description = "msbuild.zip" ;
-        TargetUrl = "$pkgsVirtualUrl/msbuild.zip" ;
-        Error = "msbuild.zip not found." ;
-        ShouldExist = $true;
-      }
     )
 
     foreach ($info in $statusInfo) {
@@ -248,27 +232,6 @@ steps:
           $statuses.SetStatus("error", $info.Error, $info.Context)
       }
     }
-    if ($Env:ENABLE_DOTNET -eq "True" -and  $Env:SkipNugets -ne "True") {
-      $nugets = Get-ChildItem -Path $pkgsPath -Filter *.nupkg -File -Name
-      Write-Host $nugets
-      Write-Host "nuget count is $($nugets.Count)"
-
-      if ($nugets.Count -gt 0) {
-        Write-Host "Setting status to success."
-        $statuses.SetStatus("success", "Nugets built.", "$(Build.DefinitionName) (Nugets built)", "$pkgsVirtualUrl/$n")
-        Write-Host "Publishing result is $Env:NUGETS_PUBLISHED"
-        if ($Env:NUGETS_PUBLISHED -ne "Failed") {
-          $statuses.SetStatus("success", "Nugets published.", "$(Build.DefinitionName) (Nugets published)", "$pkgsVirtualUrl/$n")
-        } else {
-          $statuses.SetStatus("error", "Error when publishing nugets.", "$(Build.DefinitionName) (Nugets published)", "$pkgsVirtualUrl/$n")
-        }
-      } else {
-        Write-Host "Setting nuget status to failure."
-        $statuses.SetStatus("error", "No nugets were built.", "$(Build.DefinitionName) (Nugets built)", "$pkgsVirtualUrl/$n")
-        $statuses.SetStatus("error", "No nugets were published.", "$(Build.DefinitionName) (Nugets published)", "$pkgsVirtualUrl/$n")
-      }
-    }
-
 
     $msi = Get-ChildItem -Path $pkgsPath -Filter *.msi -File -Name
 
