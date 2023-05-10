@@ -222,7 +222,7 @@ steps:
         TargetUrl = "$pkgsVirtualUrl/notarized/$macPkg" ;
         Error = "Notarized xamarin.mac pkg not found." ;
         ShouldExist = $notarizedShouldExist;
-      },
+      }
     )
 
     foreach ($info in $statusInfo) {
