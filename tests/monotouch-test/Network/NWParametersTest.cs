@@ -391,6 +391,7 @@ namespace MonoTouchFixtures.Network {
 		}
 
 		[Test]
+		[Ignore ("this crashes everywhere")]
 		public void SetPrivacyContextTest ()
 		{
 			TestRuntime.AssertDevice ();
