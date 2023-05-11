@@ -938,8 +938,14 @@ namespace Xamarin.Linker {
 			if (!mr.DeclaringType.Is (Namespaces.ObjCRuntime, "BlockLiteral"))
 				return 0;
 
-			if (caller.Name == "GetBlockForDelegate" && caller.DeclaringType.Is ("ObjCRuntime", "BlockLiteral"))
-				return 0; // BlockLiteral.GetBlockForDelegate contains a non-optimizable call to SetupBlock, and this way we don't show any warnings to users about things they can't do anything about.
+			if (caller.DeclaringType.Is ("ObjCRuntime", "BlockLiteral")) {
+				switch (caller.Name) {
+				case "GetBlockForDelegate":
+				case "CreateBlockForDelegate":
+					// These methods contain a non-optimizable call to SetupBlock, and this way we don't show any warnings to users about things they can't do anything about.
+					return 0;
+				}
+			}
 
 			string signature = null;
 			try {
