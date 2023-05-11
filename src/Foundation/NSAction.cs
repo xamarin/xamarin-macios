@@ -52,7 +52,7 @@ namespace Foundation {
 
 		public NSActionDispatcher (Action action)
 		{
-			if (action == null)
+			if (action is null)
 				throw new ArgumentNullException ("action");
 
 			this.action = action;
@@ -69,7 +69,7 @@ namespace Foundation {
 
 		public NSSynchronizationContextDispatcher (SendOrPostCallback d, object state)
 		{
-			if (d == null)
+			if (d is null)
 				throw new ArgumentNullException (nameof (d));
 
 			this.d = d;
@@ -89,7 +89,7 @@ namespace Foundation {
 
 		public NSTimerActionDispatcher (Action<NSTimer> action)
 		{
-			if (action == null)
+			if (action is null)
 				throw new ArgumentNullException ("action");
 
 			this.action = action;
@@ -138,7 +138,7 @@ namespace Foundation {
 
 		public NSAsyncActionDispatcher (Action action)
 		{
-			if (action == null)
+			if (action is null)
 				throw new ArgumentNullException (nameof (action));
 
 			this.action = action;
@@ -163,7 +163,7 @@ namespace Foundation {
 
 		public NSAsyncSynchronizationContextDispatcher (SendOrPostCallback d, object state)
 		{
-			if (d == null)
+			if (d is null)
 				throw new ArgumentNullException (nameof (d));
 
 			this.d = d;

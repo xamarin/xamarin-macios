@@ -352,7 +352,7 @@ namespace Xamarin.Tests {
 			var project_path = Path.Combine (Configuration.SourceRoot, "tests", "monotouch-test", "dotnet", platform.AsString (), "monotouch-test.csproj");
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
-			if (additionalProperties != null) {
+			if (additionalProperties is not null) {
 				foreach (var prop in additionalProperties) {
 					var eq = prop.IndexOf ('=');
 					var name = prop.Substring (0, eq);

@@ -19,7 +19,7 @@ namespace Xharness {
 
 		public bool IsSupported (DevicePlatform devicePlatform, string productVersion)
 		{
-			if (MonoNativeInfo == null)
+			if (MonoNativeInfo is null)
 				return true;
 			var min_version = MonoNativeHelper.GetMinimumOSVersion (devicePlatform);
 			return Version.Parse (productVersion) >= Version.Parse (min_version);

@@ -16,7 +16,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (ShouldExecuteRemotely ()) {
 				result = new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
-				if (result && BundleResourcesWithLogicalNames != null) {
+				if (result && BundleResourcesWithLogicalNames is not null) {
 					// Fix LogicalName path for Windows
 					foreach (var resource in BundleResourcesWithLogicalNames) {
 						var logicalName = resource.GetMetadata ("LogicalName");
@@ -44,7 +44,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (item.IsFrameworkItem ())
 				return false;
 
-			if (NoOverwrite != null && NoOverwrite.Contains (item))
+			if (NoOverwrite is not null && NoOverwrite.Contains (item))
 				return false;
 
 			return true;

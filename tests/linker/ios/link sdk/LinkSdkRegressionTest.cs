@@ -620,7 +620,7 @@ namespace LinkSdk {
 		[MethodImpl (MethodImplOptions.Synchronized)]
 		public static Location getInstance ()
 		{
-			if (mInstance == null)
+			if (mInstance is null)
 				mInstance = new Location ();
 			return mInstance;
 		}

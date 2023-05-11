@@ -54,7 +54,7 @@ namespace Xharness {
 		static string root_directory;
 		public static string RootDirectory {
 			get {
-				if (root_directory == null) {
+				if (root_directory is null) {
 					var testAssemblyDirectory = Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location);
 					var dir = testAssemblyDirectory;
 					var path = Path.Combine (testAssemblyDirectory, ".git");
@@ -73,7 +73,7 @@ namespace Xharness {
 			}
 			set {
 				root_directory = value;
-				if (root_directory != null)
+				if (root_directory is not null)
 					root_directory = Path.GetFullPath (root_directory).TrimEnd ('/');
 			}
 		}
@@ -241,10 +241,10 @@ namespace Xharness {
 			WatchOSContainerTemplate = configuration.WatchOSContainerTemplate;
 			XmlJargon = configuration.XmlJargon;
 
-			if (configuration.Labels != null)
+			if (configuration.Labels is not null)
 				Labels = new HashSet<string> (configuration.Labels);
 
-			if (configuration.EnvironmentVariables != null)
+			if (configuration.EnvironmentVariables is not null)
 				EnvironmentVariables = new Dictionary<string, string> (configuration.EnvironmentVariables);
 
 			LaunchTimeout = InCI ? 3 : 120;
@@ -449,7 +449,7 @@ namespace Xharness {
 
 			// Generate test projects from templates (bcl/mono-native templates)
 			if (generate_projects) {
-				foreach (var mtp in MacTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
+				foreach (var mtp in MacTestProjects.Where (x => x.MonoNativeInfo is not null).Select (x => x.MonoNativeInfo))
 					mtp.Convert ();
 			}
 
@@ -651,7 +651,7 @@ namespace Xharness {
 			if (autoConf)
 				AutoConfigureIOS ();
 
-			foreach (var monoNativeInfo in IOSTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
+			foreach (var monoNativeInfo in IOSTestProjects.Where (x => x.MonoNativeInfo is not null).Select (x => x.MonoNativeInfo))
 				monoNativeInfo.Convert ();
 
 			foreach (var proj in IOSTestProjects.Where ((v) => v.GenerateVariations)) {

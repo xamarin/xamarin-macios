@@ -76,7 +76,7 @@ namespace Xamarin.MacDev.Tasks {
 				var dependentFiles = AppBundle.Where (v => v != this).Where (condition).ToArray ();
 
 				if (dependentFiles.Length > 0) {
-					if (DependentFiles == null)
+					if (DependentFiles is null)
 						DependentFiles = new List<Entry> ();
 
 					foreach (var dependentFile in dependentFiles) {
@@ -111,7 +111,7 @@ namespace Xamarin.MacDev.Tasks {
 					// if the name of the immediate subdirectory isn't a valid culture, then it's not a dependent assembly of ours
 					var immediateSubDir = Path.GetFileName (Path.GetDirectoryName (v.RelativePath));
 					var cultureInfo = CultureInfo.GetCultureInfo (immediateSubDir);
-					if (cultureInfo == null)
+					if (cultureInfo is null)
 						return false;
 
 					return true;
@@ -164,7 +164,7 @@ namespace Xamarin.MacDev.Tasks {
 				// If the entries have dependent files, we must consider them as well, so that
 				// the main file and all the dependent files are considered a single entity for
 				// the purpose of determining equality
-				if (DependentFiles != null && other.DependentFiles != null) {
+				if (DependentFiles is not null && other.DependentFiles is not null) {
 					// check if there are different number of dependent files, if so, we're different
 					if (DependentFiles.Count != other.DependentFiles.Count)
 						return false;
@@ -190,7 +190,7 @@ namespace Xamarin.MacDev.Tasks {
 			{
 				string outputFile;
 
-				if (subDirectory == null) {
+				if (subDirectory is null) {
 					outputFile = Path.Combine (outputDirectory, RelativePath);
 				} else {
 					var relativeAppDir = Path.GetDirectoryName (RelativePath);
@@ -219,7 +219,7 @@ namespace Xamarin.MacDev.Tasks {
 						File.Copy (FullPath, outputFile, true);
 				}
 
-				if (DependentFiles != null) {
+				if (DependentFiles is not null) {
 					foreach (var file in DependentFiles)
 						file.CopyTo (outputDirectory, subDirectory);
 				}
@@ -335,7 +335,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			// Remove any ignored files
-			if (IgnoreFiles != null && IgnoreFiles.Length > 0) {
+			if (IgnoreFiles is not null && IgnoreFiles.Length > 0) {
 				foreach (var spec in IgnoreFiles) {
 					var file = spec.ItemSpec;
 					if (map.Remove (file)) {
@@ -463,7 +463,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (StaticLibrary.IsStaticLibrary (path))
 				return FileType.MachO;
 
-			if (ArchitectureSpecificFiles != null) {
+			if (ArchitectureSpecificFiles is not null) {
 				var filename = Path.GetFileName (path);
 				if (ArchitectureSpecificFiles.Any (v => v.ItemSpec == filename))
 					return FileType.ArchitectureSpecific;

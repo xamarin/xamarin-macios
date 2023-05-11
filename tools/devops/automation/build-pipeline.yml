@@ -183,6 +183,8 @@ variables:
   value: 'MicroBuild Signing Task (DevDiv)'
 - name: MaciosUploadPrefix
   value: ''
+- name: DisablePipelineConfigDetector
+  value: true
 
 trigger:
   branches:

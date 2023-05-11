@@ -233,7 +233,7 @@ namespace MonoTouchFixtures.Foundation {
 			public override bool Equals (object t)
 			{
 				var url = (t as GoodCustomUrl);
-				if (url == null)
+				if (url is null)
 					return false;
 				return base.Equals (t) && Comment == url.Comment;
 			}
@@ -292,7 +292,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void TestEqualOperatorNull ()
 		{
 			using (var url = NSUrl.FromString ("http://www.xamarin.com")) {
-				Assert.IsFalse (url == null, "url == null");
+				Assert.IsFalse (url is null, "url is null");
 				Assert.IsFalse (null == url, "null == url");
 			}
 		}
@@ -309,7 +309,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void TestNotEqualOperatorNull ()
 		{
 			using (var url = NSUrl.FromString ("http://www.xamarin.com")) {
-				Assert.IsTrue (url != null, "url != null");
+				Assert.IsTrue (url is not null, "url is not null");
 				Assert.IsTrue (null != url, "null != url");
 			}
 		}

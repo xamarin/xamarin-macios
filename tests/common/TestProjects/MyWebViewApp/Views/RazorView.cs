@@ -186,11 +186,11 @@ namespace MyWebViewApp
 		/// <remarks>The value may be a Action<System.IO.TextWriter>, as returned by Razor helpers.</remarks>
 		protected static void WriteTo (System.IO.TextWriter writer, object value)
 		{
-			if (value == null)
+			if (value is null)
 				return;
 
 			var write = value as Action<System.IO.TextWriter>;
-			if (write != null) {
+			if (write is not null) {
 				write (writer);
 				return;
 			}
@@ -246,7 +246,7 @@ namespace MyWebViewApp
 				object value = attrVal.Item2;
 				bool isLiteral = attrVal.Item3;
 
-				if (value == null) {
+				if (value is null) {
 					// Nothing to write
 					continue;
 				}

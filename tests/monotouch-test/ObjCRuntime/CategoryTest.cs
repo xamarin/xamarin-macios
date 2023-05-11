@@ -133,7 +133,7 @@ namespace MonoTouchFixtures {
 		[Export ("shouldAutorotate")]
 		static bool ShouldAutoRotate (this UINavigationController self)
 		{
-			if (ShouldAutoRotateCallback != null)
+			if (ShouldAutoRotateCallback is not null)
 				ShouldAutoRotateCallback ();
 			return true;
 		}

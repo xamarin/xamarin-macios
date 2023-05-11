@@ -581,7 +581,7 @@ namespace Xamarin.Bundler {
 
 				var plist = Driver.FromPList (InfoPListPath);
 				var dict = plist.Get<PDictionary> ("NSExtension");
-				if (dict == null)
+				if (dict is null)
 					return null;
 				return dict.GetString ("NSExtensionPointIdentifier");
 			}
@@ -670,7 +670,7 @@ namespace Xamarin.Bundler {
 			for (int i = 0; i < module.Resources.Count; i++) {
 				EmbeddedResource embedded = module.Resources [i] as EmbeddedResource;
 
-				if (embedded == null || embedded.Name != name)
+				if (embedded is null || embedded.Name != name)
 					continue;
 
 				module.Resources.RemoveAt (i);
@@ -711,7 +711,7 @@ namespace Xamarin.Bundler {
 			for (int i = 0; i < module.Resources.Count; i++) {
 				EmbeddedResource embedded = module.Resources [i] as EmbeddedResource;
 
-				if (embedded == null || embedded.Name != name)
+				if (embedded is null || embedded.Name != name)
 					continue;
 
 				string dirname = Path.GetDirectoryName (path);
@@ -890,7 +890,7 @@ namespace Xamarin.Bundler {
 
 		void InitializeDeploymentTarget ()
 		{
-			if (DeploymentTarget == null)
+			if (DeploymentTarget is null)
 				DeploymentTarget = SdkVersions.GetVersion (this);
 
 			if (Platform == ApplePlatform.iOS && (HasDynamicLibraries || HasFrameworks) && DeploymentTarget.Major < 8) {
@@ -898,7 +898,7 @@ namespace Xamarin.Bundler {
 				DeploymentTarget = new Version (8, 0);
 			}
 
-			if (DeploymentTarget != null) {
+			if (DeploymentTarget is not null) {
 				if (DeploymentTarget < SdkVersions.GetMinVersion (this))
 					throw new ProductException (73, true, Errors.MT0073, ProductConstants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (this), PlatformName, ProductName);
 				if (DeploymentTarget > SdkVersions.GetVersion (this))
@@ -966,7 +966,7 @@ namespace Xamarin.Bundler {
 			ps.AssemblyResolver = resolver;
 			foreach (var reference in References) {
 				var r = resolver.Load (reference);
-				if (r == null)
+				if (r is null)
 					throw ErrorHelper.CreateError (2002, Errors.MT2002, reference);
 			}
 
@@ -979,7 +979,7 @@ namespace Xamarin.Bundler {
 
 				try {
 					AssemblyDefinition lastAssembly = ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ());
-					if (lastAssembly == null) {
+					if (lastAssembly is null) {
 						ErrorHelper.Warning (7, Errors.MX0007, rootName);
 						continue;
 					}
@@ -1039,13 +1039,13 @@ namespace Xamarin.Bundler {
 
 		public void SetDefaultAbi ()
 		{
-			if (abis == null)
+			if (abis is null)
 				abis = new List<Abi> ();
 
 			switch (Platform) {
 			case ApplePlatform.iOS:
 				if (abis.Count == 0) {
-					if (DeploymentTarget == null || DeploymentTarget.Major >= 11) {
+					if (DeploymentTarget is null || DeploymentTarget.Major >= 11) {
 						abis.Add (IsDeviceBuild ? Abi.ARM64 : Abi.x86_64);
 					} else {
 						abis.Add (IsDeviceBuild ? Abi.ARMv7 : Abi.i386);
@@ -1197,7 +1197,7 @@ namespace Xamarin.Bundler {
 
 				// merge this value with any existing ARMv? already specified.
 				// this is so that things like '--armv7 --thumb' work correctly.
-				if (abis != null) {
+				if (abis is not null) {
 					for (int i = 0; i < abis.Count; i++) {
 						if ((abis [i] & Abi.ArchMask) == (value & Abi.ArchMask)) {
 							value |= abis [i];
@@ -1526,7 +1526,7 @@ namespace Xamarin.Bundler {
 
 			if (!llvm_only && !interp)
 				processArguments.Add ("-O=gsharedvt");
-			if (app.AotOtherArguments != null)
+			if (app.AotOtherArguments is not null)
 				processArguments.AddRange (app.AotOtherArguments);
 			if (app.AotFloat32.HasValue)
 				processArguments.Add (app.AotFloat32.Value ? "-O=float32" : "-O=-float32");
@@ -1664,7 +1664,7 @@ namespace Xamarin.Bundler {
 
 		public void SetDlsymOption (string asm, bool dlsym)
 		{
-			if (DlsymAssemblies == null)
+			if (DlsymAssemblies is null)
 				DlsymAssemblies = new List<Tuple<string, bool>> ();
 
 			DlsymAssemblies.Add (new Tuple<string, bool> (Path.GetFileNameWithoutExtension (asm), dlsym));
@@ -1678,7 +1678,7 @@ namespace Xamarin.Bundler {
 			if (Driver.TryParseBool (options, out dlsym)) {
 				DlsymOptions = dlsym ? DlsymOptions.All : DlsymOptions.None;
 			} else {
-				if (DlsymAssemblies == null)
+				if (DlsymAssemblies is null)
 					DlsymAssemblies = new List<Tuple<string, bool>> ();
 
 				var assemblies = options.Split (',');
@@ -1704,7 +1704,7 @@ namespace Xamarin.Bundler {
 		{
 			string asm;
 
-			if (DlsymAssemblies != null) {
+			if (DlsymAssemblies is not null) {
 				asm = Path.GetFileNameWithoutExtension (assembly);
 				foreach (var tuple in DlsymAssemblies) {
 					if (string.Equals (tuple.Item1, asm, StringComparison.Ordinal))

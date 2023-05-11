@@ -8,7 +8,7 @@ namespace Foundation {
 		// helper to avoid all, but one, native calls when called repeatedly
 		static public NSNull Null {
 			get {
-				if (_null == null)
+				if (_null is null)
 					_null = _Null;
 				return _null;
 			}

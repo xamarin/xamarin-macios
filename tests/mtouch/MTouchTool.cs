@@ -109,7 +109,7 @@ namespace Xamarin {
 					"--sdkroot", Configuration.xcode_root,
 			});
 			AddVerbosity (args);
-			if (devicetype != null) {
+			if (devicetype is not null) {
 				args.Add ("--device");
 				args.Add (devicetype);
 			}
@@ -164,7 +164,7 @@ namespace Xamarin {
 			foreach (var file in files) {
 				var info = new FileInfo (file);
 				if (info.LastWriteTime > timestamp) {
-					if (except != null && except.Contains (Path.GetFileName (file))) {
+					if (except is not null && except.Contains (Path.GetFileName (file))) {
 						Console.WriteLine ("SKIP: {0} modified: {1} > {2}", file, info.LastWriteTime, timestamp);
 					} else {
 						failed.Add (string.Format ("{0} is modified, timestamp: {1} > {2}", file, info.LastWriteTime, timestamp));
@@ -185,7 +185,7 @@ namespace Xamarin {
 			foreach (var file in files) {
 				var info = new FileInfo (file);
 				if (info.LastWriteTime <= timestamp) {
-					if (except != null && except.Contains (Path.GetFileName (file))) {
+					if (except is not null && except.Contains (Path.GetFileName (file))) {
 						Console.WriteLine ("SKIP: {0} not modified: {1} <= {2}", file, info.LastWriteTime, timestamp);
 					} else {
 						failed.Add (string.Format ("{0} is not modified, timestamp: {1} <= {2}", file, info.LastWriteTime, timestamp));
@@ -260,19 +260,19 @@ namespace Xamarin {
 				break;
 			case MTouchAction.BuildDev:
 				MTouch.AssertDeviceAvailable ();
-				if (AppPath == null)
+				if (AppPath is null)
 					throw new Exception ("No AppPath specified.");
 				sb.Add ("--dev");
 				sb.Add (AppPath);
 				break;
 			case MTouchAction.BuildSim:
-				if (AppPath == null)
+				if (AppPath is null)
 					throw new Exception ("No AppPath specified.");
 				sb.Add ("--sim");
 				sb.Add (AppPath);
 				break;
 			case MTouchAction.LaunchSim:
-				if (AppPath == null)
+				if (AppPath is null)
 					throw new Exception ("No AppPath specified.");
 				sb.Add ("--launchsim");
 				sb.Add (AppPath);
@@ -290,7 +290,7 @@ namespace Xamarin {
 			if (NoStrip.HasValue && NoStrip.Value)
 				sb.Add ("--nostrip");
 
-			if (NoSymbolStrip != null) {
+			if (NoSymbolStrip is not null) {
 				if (NoSymbolStrip.Length == 0) {
 					sb.Add ("--nosymbolstrip");
 				} else {
@@ -373,7 +373,7 @@ namespace Xamarin {
 
 		XmlDocument FetchDeviceList (bool allowCache = true)
 		{
-			if (device_list_cache == null || !allowCache) {
+			if (device_list_cache is null || !allowCache) {
 				var output_file = Path.GetTempFileName ();
 				try {
 					if (Execute (new [] { "--listdev", output_file, "--sdkroot", Configuration.xcode_root }) != 0)
@@ -507,7 +507,7 @@ namespace Xamarin {
 		public void CreateTemporaryApp (bool hasPlist = false, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null)
 		{
 			string testDir;
-			if (RootAssembly == null) {
+			if (RootAssembly is null) {
 				testDir = CreateTemporaryDirectory ();
 			} else {
 				// We're rebuilding an existing executable, so just reuse that
@@ -567,7 +567,7 @@ namespace Xamarin {
 		public void CreateTemporaryServiceExtension (string code = null, string extraCode = null, IList<string> extraArgs = null, string appName = "testServiceExtension")
 		{
 			string testDir;
-			if (RootAssembly == null) {
+			if (RootAssembly is null) {
 				testDir = CreateTemporaryDirectory ();
 			} else {
 				// We're rebuilding an existing executable, so just reuse that
@@ -576,7 +576,7 @@ namespace Xamarin {
 			var app = AppPath ?? Path.Combine (testDir, $"{appName}.appex");
 			Directory.CreateDirectory (app);
 
-			if (code == null) {
+			if (code is null) {
 				code = @"using UserNotifications;
 [Foundation.Register (""NotificationService"")]
 public partial class NotificationService : UNNotificationServiceExtension
@@ -584,7 +584,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 	protected NotificationService (System.IntPtr handle) : base (handle) {}
 }";
 			}
-			if (extraCode != null)
+			if (extraCode is not null)
 				code += extraCode;
 
 			AppPath = app;
@@ -632,7 +632,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 		public void CreateTemporaryTodayExtension (string code = null, string extraCode = null, IList<string> extraArgs = null, string appName = "testTodayExtension")
 		{
 			string testDir;
-			if (RootAssembly == null) {
+			if (RootAssembly is null) {
 				testDir = CreateTemporaryDirectory ();
 			} else {
 				// We're rebuilding an existing executable, so just reuse that
@@ -641,7 +641,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 			var app = AppPath ?? Path.Combine (testDir, $"{appName}.appex");
 			Directory.CreateDirectory (app);
 
-			if (code == null) {
+			if (code is null) {
 				code = @"using System;
 using Foundation;
 using NotificationCenter;
@@ -661,7 +661,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 }
 ";
 			}
-			if (extraCode != null)
+			if (extraCode is not null)
 				code += extraCode;
 
 			AppPath = app;
@@ -710,7 +710,7 @@ string.Format (
 		public void CreateTemporaryWatchKitExtension (string code = null, string extraCode = null, IList<string> extraArgs = null)
 		{
 			string testDir;
-			if (RootAssembly == null) {
+			if (RootAssembly is null) {
 				testDir = CreateTemporaryDirectory ();
 			} else {
 				// We're rebuilding an existing executable, so just reuse that directory
@@ -719,7 +719,7 @@ string.Format (
 			var app = AppPath ?? Path.Combine (testDir, "testApp.appex");
 			Directory.CreateDirectory (app);
 
-			if (code == null) {
+			if (code is null) {
 				code = @"using WatchKit;
 public partial class NotificationController : WKUserNotificationInterfaceController
 {
@@ -727,7 +727,7 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 }";
 			}
 
-			if (extraCode != null)
+			if (extraCode is not null)
 				code += extraCode;
 
 			AppPath = app;
@@ -772,7 +772,7 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 		public void CreateTemporaryWatchOSIntentsExtension (string code = null, string appName = "intentsExtension")
 		{
 			string testDir;
-			if (RootAssembly == null) {
+			if (RootAssembly is null) {
 				testDir = CreateTemporaryDirectory ();
 			} else {
 				// We're rebuilding an existing executable, so just reuse that directory
@@ -781,7 +781,7 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 			var app = AppPath ?? Path.Combine (testDir, $"{appName}.appex");
 			Directory.CreateDirectory (app);
 
-			if (code == null) {
+			if (code is null) {
 				code = @"
 using System;
 using Foundation;
@@ -870,7 +870,7 @@ public class IntentHandler : INExtension, IINRidesharingDomainHandling {
 
 		public string CreateTemporaryAppDirectory ()
 		{
-			if (AppPath != null)
+			if (AppPath is not null)
 				throw new Exception ("There already is an App directory");
 
 			AppPath = Path.Combine (CreateTemporaryDirectory (), "testApp.app");
@@ -892,7 +892,7 @@ public class IntentHandler : INExtension, IINRidesharingDomainHandling {
 		public static IEnumerable<string> GetNativeSymbolsInExecutable (string executable, string arch = null)
 		{
 			var args = new List<string> ();
-			if (arch != null) {
+			if (arch is not null) {
 				args.Add ("-arch");
 				args.Add (arch);
 			}

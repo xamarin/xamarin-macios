@@ -38,7 +38,7 @@ namespace Xamarin.Linker {
 		void PreserveCalendar (string name)
 		{
 			var calendar = Context.Corlib.MainModule.GetType ("System.Globalization", name);
-			if (calendar == null || !calendar.HasMethods)
+			if (calendar is null || !calendar.HasMethods)
 				return;
 
 			// we just preserve the default .ctor so Activation.Create will work, 
@@ -55,7 +55,7 @@ namespace Xamarin.Linker {
 		void PreserveResourceSet ()
 		{
 			var resource_set = Context.Corlib.MainModule.GetType ("System.Resources", "RuntimeResourceSet");
-			if (resource_set == null || !resource_set.HasMethods)
+			if (resource_set is null || !resource_set.HasMethods)
 				return;
 
 			foreach (MethodDefinition ctor in resource_set.Methods) {

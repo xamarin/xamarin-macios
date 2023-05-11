@@ -178,7 +178,7 @@ namespace Xamarin.MacDev.Tasks {
 		public void XmlDefinitions (string input, string existing, string output)
 		{
 			var task = CreateTask<CustomParseBundlerArguments> ();
-			if (existing != null)
+			if (existing is not null)
 				task.XmlDefinitions = existing.Split (new char [] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select (v => new TaskItem (v)).ToArray ();
 			task.ExtraArgs = input;
 			Assert.IsTrue (task.Execute (), input);

@@ -12,14 +12,17 @@ using Xamarin.Bundler;
 using Xamarin.Linker;
 using Xamarin.Utils;
 
+#nullable enable
+
 namespace Xamarin.Bundler {
 	public partial class Application {
-		public LinkerConfiguration Configuration { get; private set; }
-		public string RuntimeConfigurationFile { get; set; }
+		LinkerConfiguration? configuration;
+		public LinkerConfiguration Configuration { get => configuration!; }
+		public string? RuntimeConfigurationFile { get; set; }
 
 		public Application (LinkerConfiguration configuration)
 		{
-			this.Configuration = configuration;
+			this.configuration = configuration;
 		}
 
 		public string ProductName {
@@ -103,7 +106,7 @@ namespace Xamarin.Bundler {
 			throw new NotImplementedException ();
 		}
 
-		public static string SdkRoot {
+		public static string? SdkRoot {
 			get => sdk_root;
 			set => sdk_root = value;
 		}
@@ -113,6 +116,11 @@ namespace Xamarin.Bundler {
 	// derive from this class, and then we redirect to the LinkerContext instance here.
 	public class DotNetLinkContext {
 		public LinkerConfiguration LinkerConfiguration;
+
+		public DotNetLinkContext (LinkerConfiguration configuration)
+		{
+			this.LinkerConfiguration = configuration;
+		}
 
 		public AssemblyAction UserAction {
 			get { throw new NotImplementedException (); }

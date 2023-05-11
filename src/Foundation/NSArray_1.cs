@@ -58,7 +58,7 @@ namespace Foundation {
 
 		static public NSArray<TKey>? FromNSObjects (int count, params TKey [] items)
 		{
-			if (items == null)
+			if (items is null)
 				throw new ArgumentNullException (nameof (items));
 
 			if (count > items.Length)
@@ -67,7 +67,7 @@ namespace Foundation {
 			IntPtr buf = Marshal.AllocHGlobal ((IntPtr) (count * IntPtr.Size));
 			for (nint i = 0; i < count; i++) {
 				var item = items [i];
-				IntPtr h = item == null ? NSNull.Null.Handle : item.Handle;
+				IntPtr h = item is null ? NSNull.Null.Handle : item.Handle;
 				Marshal.WriteIntPtr (buf, (int) (i * IntPtr.Size), h);
 			}
 			IntPtr ret = NSArray.FromObjects (buf, count);

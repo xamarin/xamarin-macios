@@ -38,13 +38,13 @@ namespace Xamarin.MacDev.Tasks {
 				var itemIsFromProjectReference = IsFromProjectReference (item);
 				var duplicate = filteredOutput.FirstOrDefault (i => i.GetMetadata ("OutputPath") == item.GetMetadata ("OutputPath"));
 
-				if (duplicate != null) {
+				if (duplicate is not null) {
 					if (!IsFromProjectReference (duplicate) && itemIsFromProjectReference) {
 						filteredOutput.Remove (duplicate);
 					}
 				}
 
-				if (itemIsFromProjectReference || duplicate == null)
+				if (itemIsFromProjectReference || duplicate is null)
 					filteredOutput.Add (item);
 			}
 

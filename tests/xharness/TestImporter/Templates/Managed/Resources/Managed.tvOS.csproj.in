@@ -13,6 +13,7 @@
     <TargetFrameworkIdentifier>Xamarin.TVOS</TargetFrameworkIdentifier>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <DefineConstants>XAMCORE_3_0;</DefineConstants>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>True</DebugSymbols>

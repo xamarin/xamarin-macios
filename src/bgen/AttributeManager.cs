@@ -240,7 +240,7 @@ public class AttributeManager {
 	System.Type ConvertTypeFromMeta (Type type, ICustomAttributeProvider provider)
 	{
 		var rv = LookupReflectionType (type.FullName, provider);
-		if (rv == null)
+		if (rv is null)
 			throw ErrorHelper.CreateError (1055, type.AssemblyQualifiedName);
 		return rv;
 	}
@@ -258,13 +258,13 @@ public class AttributeManager {
 			var assemblies = BindingTouch.universe.GetAssemblies ();
 			foreach (var asm in assemblies) {
 				var lookup = asm.GetType (type.Namespace + "." + type.Name);
-				if (lookup == null)
+				if (lookup is null)
 					continue;
 				if (lookup.Assembly != asm) {
 					// Apparently looking for type X in assembly A can return type X from assembly B... ignore those.
 					continue;
 				}
-				if (rv != null) {
+				if (rv is not null) {
 					ErrorHelper.Warning (1119, /*"Internal error: found the same type ({0}) in multiple assemblies ({1} and {2}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", */type.FullName, rv.AssemblyQualifiedName, lookup.AssemblyQualifiedName);
 					break; // no need to report this more than once
 				}
@@ -272,7 +272,7 @@ public class AttributeManager {
 			}
 			ikvm_type_lookup [type] = rv;
 		}
-		if (rv == null)
+		if (rv is null)
 			throw ErrorHelper.CreateError (1055, type.AssemblyQualifiedName);
 		return rv;
 	}
@@ -334,7 +334,7 @@ public class AttributeManager {
 			var uarg = attribute.ConstructorArguments [0].Value as string;
 			(var up, var uv) = ParseOSPlatformAttribute (uarg);
 			// might have been available for a while...
-			if (uv == null)
+			if (uv is null)
 				return AttributeFactory.CreateNewAttribute<UnavailableAttribute> (up).Yield ();
 			else
 				return Enumerable.Empty<System.Attribute> ();
@@ -401,13 +401,13 @@ public class AttributeManager {
 			var value = attribute.ConstructorArguments [i].Value;
 			switch (attribute.ConstructorArguments [i].ArgumentType.FullName) {
 			case "System.Type":
-				if (value != null) {
+				if (value is not null) {
 					if (attribType.Assembly == typeof (TypeManager).Assembly) {
 						constructorArguments [i] = value;
 					} else {
 						constructorArguments [i] = System.Type.GetType (((Type) value).FullName);
 					}
-					if (constructorArguments [i] == null)
+					if (constructorArguments [i] is null)
 						throw ErrorHelper.CreateError (1056, attribType.FullName, i + 1);
 				}
 				break;
@@ -433,11 +433,11 @@ public class AttributeManager {
 				ctorTypes [i] = ConvertTypeFromMeta (paramType, provider);
 				break;
 			}
-			if (ctorTypes [i] == null)
+			if (ctorTypes [i] is null)
 				throw ErrorHelper.CreateError (1057, attribType.FullName, i, paramType.FullName);
 		}
 		var ctor = attribType.GetConstructor (ctorTypes);
-		if (ctor == null)
+		if (ctor is null)
 			throw ErrorHelper.CreateError (1058, attribType.FullName);
 		var instance = ctor.Invoke (constructorArguments);
 
@@ -471,7 +471,7 @@ public class AttributeManager {
 
 	T [] FilterAttributes<T> (IList<CustomAttributeData> attributes, ICustomAttributeProvider provider) where T : System.Attribute
 	{
-		if (attributes == null || attributes.Count == 0)
+		if (attributes is null || attributes.Count == 0)
 			return Array.Empty<T> ();
 
 		List<T> list = null;
@@ -486,13 +486,13 @@ public class AttributeManager {
 			}
 
 			foreach (var attrib in CreateAttributeInstance<T> (attributes [i], provider)) {
-				if (list == null)
+				if (list is null)
 					list = new List<T> ();
 				list.Add (attrib);
 			}
 		}
 
-		if (list != null)
+		if (list is not null)
 			return list.ToArray ();
 
 		return Array.Empty<T> ();
@@ -505,7 +505,7 @@ public class AttributeManager {
 
 	static IList<CustomAttributeData> GetIKVMAttributes (ICustomAttributeProvider provider)
 	{
-		if (provider == null)
+		if (provider is null)
 			return null;
 		if (provider is MemberInfo member)
 			return member.GetCustomAttributesData ();
@@ -531,7 +531,7 @@ public class AttributeManager {
 	{
 		var attribute_type = ConvertTypeToMeta (typeof (T), provider);
 		var attribs = GetIKVMAttributes (provider);
-		if (attribs == null || attribs.Count == 0)
+		if (attribs is null || attribs.Count == 0)
 			return false;
 
 		for (int i = 0; i < attribs.Count; i++) {
@@ -550,7 +550,7 @@ public class AttributeManager {
 		if (provider is null)
 			return null;
 		var rv = GetCustomAttributes<T> (provider);
-		if (rv == null || rv.Length == 0)
+		if (rv is null || rv.Length == 0)
 			return null;
 
 		if (rv.Length == 1)

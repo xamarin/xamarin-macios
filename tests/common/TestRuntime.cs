@@ -93,7 +93,7 @@ partial class TestRuntime {
 
 	public static Version OSXVersion {
 		get {
-			if (version == null) {
+			if (version is null) {
 				int major, minor, build;
 				Gestalt (sys1, out major);
 				Gestalt (sys2, out minor);
@@ -1414,7 +1414,7 @@ partial class TestRuntime {
 	public static bool IsLinkAll {
 		get {
 			if (!link_all.HasValue)
-				link_all = typeof (TestRuntime).Assembly.GetType (typeof (TestRuntime).FullName + "+LinkerSentinel") == null;
+				link_all = typeof (TestRuntime).Assembly.GetType (typeof (TestRuntime).FullName + "+LinkerSentinel") is null;
 			return link_all.Value;
 		}
 	}

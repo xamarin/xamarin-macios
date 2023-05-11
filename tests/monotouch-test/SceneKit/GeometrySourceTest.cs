@@ -29,7 +29,7 @@ namespace MonoTouchFixtures.SceneKit {
 			TestRuntime.AssertDevice ();
 
 			var device = MTLDevice.SystemDefault;
-			if (device == null)
+			if (device is null)
 				Assert.Inconclusive ("Device does not support Metal");
 
 			using (var buffer = device.CreateBuffer (1024, MTLResourceOptions.CpuCacheModeDefault)) {

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 
-using Xamarin.Bundler;
 using Xamarin.Utils;
+
+#nullable enable
 
 namespace Xamarin.Linker {
 	public class ComputeAOTArguments : ConfigurationAwareStep {
@@ -27,9 +28,7 @@ namespace Xamarin.Linker {
 				if (!isAOTCompiled)
 					continue;
 
-				var item = new MSBuildItem {
-					Include = Path.Combine (Configuration.IntermediateLinkDir, asm.FileName),
-				};
+				var item = new MSBuildItem (Path.Combine (Configuration.IntermediateLinkDir, asm.FileName));
 
 				var input = asm.FullPath;
 				bool? isDedupAssembly = null;
@@ -44,7 +43,7 @@ namespace Xamarin.Linker {
 					var aotData = Path.Combine (outputDirectory, arch, Path.GetFileNameWithoutExtension (input) + ".aotdata");
 					var llvmFile = Configuration.Application.IsLLVM ? Path.Combine (outputDirectory, arch, Path.GetFileName (input) + ".llvm.o") : string.Empty;
 					var objectFile = Path.Combine (outputDirectory, arch, Path.GetFileName (input) + ".o");
-					app.GetAotArguments (asm.FullPath, abi, outputDirectory, aotAssembly, llvmFile, aotData, isDedupAssembly, out var processArguments, out var aotArguments, Path.GetDirectoryName (Configuration.AOTCompiler));
+					app.GetAotArguments (asm.FullPath, abi, outputDirectory, aotAssembly, llvmFile, aotData, isDedupAssembly, out var processArguments, out var aotArguments, Path.GetDirectoryName (Configuration.AOTCompiler)!);
 					item.Metadata.Add ("Arguments", StringUtils.FormatArguments (aotArguments));
 					item.Metadata.Add ("ProcessArguments", StringUtils.FormatArguments (processArguments));
 					item.Metadata.Add ("Abi", abiString);

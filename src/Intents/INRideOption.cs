@@ -12,7 +12,7 @@ namespace Intents {
 		// into bindings and making them virtual (not a breaking change)
 
 		public bool? UsesMeteredFare {
-			get { return _UsesMeteredFare == null ? null : (bool?) _UsesMeteredFare.BoolValue; }
+			get { return _UsesMeteredFare is null ? null : (bool?) _UsesMeteredFare.BoolValue; }
 		}
 	}
 }

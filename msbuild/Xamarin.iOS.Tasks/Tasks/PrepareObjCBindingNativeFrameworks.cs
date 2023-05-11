@@ -32,7 +32,7 @@ namespace Xamarin.iOS.Tasks {
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
 		{
-			if (ObjCBindingNativeFrameworks == null)
+			if (ObjCBindingNativeFrameworks is null)
 				yield break;
 
 			foreach (var nativeRef in ObjCBindingNativeFrameworks

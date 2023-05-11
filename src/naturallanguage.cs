@@ -94,7 +94,7 @@ namespace NaturalLanguage {
 		[NullAllowed, Export ("language")]
 		NSString _Language { get; }
 
-		NLLanguage Language { [Wrap ("(_Language != null)? NLLanguageExtensions.GetValue (_Language) : NLLanguage.Undetermined")] get; }
+		NLLanguage Language { [Wrap ("(_Language is not null)? NLLanguageExtensions.GetValue (_Language) : NLLanguage.Undetermined")] get; }
 
 		[Export ("revision")]
 		nuint Revision { get; }

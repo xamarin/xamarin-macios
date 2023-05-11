@@ -38,7 +38,7 @@ namespace Foundation {
 
 		public NSErrorException (NSError error)
 		{
-			if (error == null)
+			if (error is null)
 				throw new ArgumentNullException (nameof (error));
 			this.error = error;
 		}

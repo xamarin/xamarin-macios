@@ -21,10 +21,10 @@ namespace UIKit {
 		{
 			return session.LoadObjects (new Class (typeof (T)), (v) => {
 				var arr = v as T [];
-				if (arr == null && v != null) {
+				if (arr is null && v is not null) {
 					arr = new T [v.Length];
 					for (int i = 0; i < arr.Length; i++) {
-						if (v [i] != null)
+						if (v [i] is not null)
 							arr [i] = Runtime.ConstructNSObject<T> (v [i].Handle);
 					}
 				}

@@ -35,10 +35,10 @@ namespace Foundation {
 	public partial class NSCoder {
 		public void Encode (byte [] buffer, string key)
 		{
-			if (buffer == null)
+			if (buffer is null)
 				throw new ArgumentNullException ("buffer");
 
-			if (key == null)
+			if (key is null)
 				throw new ArgumentNullException ("key");
 
 			unsafe {
@@ -50,10 +50,10 @@ namespace Foundation {
 
 		public void Encode (byte [] buffer, int offset, int count, string key)
 		{
-			if (buffer == null)
+			if (buffer is null)
 				throw new ArgumentNullException ("buffer");
 
-			if (key == null)
+			if (key is null)
 				throw new ArgumentNullException ("key");
 
 			if (offset < 0)
@@ -185,7 +185,7 @@ namespace Foundation {
 #endif
 		public NSObject DecodeTopLevelObject (Type type, string key, out NSError error)
 		{
-			if (type == null)
+			if (type is null)
 				throw new ArgumentNullException ("type");
 			return DecodeTopLevelObject (new Class (type), key, out error);
 		}
@@ -199,7 +199,7 @@ namespace Foundation {
 		public NSObject DecodeTopLevelObject (Type [] types, string key, out NSError error)
 		{
 			NSSet<Class> typeSet = null;
-			if (types != null) {
+			if (types is not null) {
 				var classes = new Class [types.Length];
 				for (int i = 0; i < types.Length; i++)
 					classes [i] = new Class (types [i]);

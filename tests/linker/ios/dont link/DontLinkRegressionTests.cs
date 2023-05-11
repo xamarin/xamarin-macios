@@ -118,7 +118,7 @@ namespace DontLink {
 				Assert.Fail ("No exception was thrown. " + message);
 			} catch (TargetInvocationException tie) {
 				var nse = tie.InnerException as TargetInvocationException;
-				if (nse != null)
+				if (nse is not null)
 					Assert.Fail ("An exception was thrown, but {0} instead of NotSupportedException. " + message, tie.InnerException.GetType ().FullName);
 			}
 		}
@@ -159,9 +159,9 @@ namespace DontLink {
 			};
 			foreach (var notsupported_property in notsupported_properties) {
 				foreach (var property in all_properties.Where ((v) => v.Name == notsupported_property)) {
-					if (property.GetGetMethod () != null)
+					if (property.GetGetMethod () is not null)
 						AssertThrowsWrappedNotSupportedException (() => property.GetGetMethod ().Invoke (instance, new object [] {}), notsupported_property + " (getter)");
-					if (property.GetSetMethod () != null)
+					if (property.GetSetMethod () is not null)
 						AssertThrowsWrappedNotSupportedException (() => property.GetSetMethod ().Invoke (instance, new object [] { null }), notsupported_property + " (setter)");
 				}
 

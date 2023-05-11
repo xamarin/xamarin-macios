@@ -25,7 +25,7 @@ namespace MonoTouchFixtures.MediaPlayer {
 
 			using (var q = new MPMediaQuery ()) {
 				var items = q.Items;
-				if (items == null)
+				if (items is null)
 					Assert.Inconclusive ("This test needs media library privacy permission to be executed.");
 				if (items.Length == 0)
 					Assert.Inconclusive ("This test needs music in the music library on the device.");

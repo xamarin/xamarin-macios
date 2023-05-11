@@ -134,7 +134,7 @@ namespace Foundation {
 
 		public NSString (string str)
 		{
-			if (str == null)
+			if (str is null)
 				throw new ArgumentNullException ("str");
 
 			Handle = CreateWithCharacters (Handle, str, 0, str.Length);
@@ -142,7 +142,7 @@ namespace Foundation {
 
 		public NSString (string value, int start, int length)
 		{
-			if (value == null)
+			if (value is null)
 				throw new ArgumentNullException (nameof (value));
 
 			if (start < 0 || start > value.Length)
@@ -161,14 +161,14 @@ namespace Foundation {
 
 		public static implicit operator string (NSString str)
 		{
-			if (((object) str) == null)
+			if (((object) str) is null)
 				return null;
 			return str.ToString ();
 		}
 
 		public static explicit operator NSString (string str)
 		{
-			if (str == null)
+			if (str is null)
 				return null;
 			return new NSString (str);
 		}
@@ -204,7 +204,7 @@ namespace Foundation {
 			if ((a as object) == (b as object))
 				return true;
 
-			if (((object) a) == null || ((object) b) == null)
+			if (((object) a) is null || ((object) b) is null)
 				return false;
 
 			if (a.Handle == b.Handle)

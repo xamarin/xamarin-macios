@@ -28,9 +28,9 @@ namespace MonoTouchFixtures.Metal {
 		[TearDown]
 		public void TearDown ()
 		{
-			if (listener != null)
+			if (listener is not null)
 				listener.Dispose ();
-			if (queue != null)
+			if (queue is not null)
 				queue.Dispose ();
 			listener = null;
 			queue = null;

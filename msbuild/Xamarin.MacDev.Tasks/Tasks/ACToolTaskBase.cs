@@ -71,10 +71,10 @@ namespace Xamarin.MacDev.Tasks {
 				if (index != -1)
 					assetDir = rpath.Substring (0, index + ".xcassets".Length);
 
-				if (assetDirs != null && assetDirs.Contains (assetDir)) {
+				if (assetDirs is not null && assetDirs.Contains (assetDir)) {
 					var assetName = Path.GetFileNameWithoutExtension (rpath);
 
-					if (PartialAppManifest == null) {
+					if (PartialAppManifest is null) {
 						args.Add ("--output-partial-info-plist");
 						args.AddQuoted (partialAppManifest.GetMetadata ("FullPath"));
 
@@ -101,10 +101,10 @@ namespace Xamarin.MacDev.Tasks {
 				if (index != -1)
 					assetDir = rpath.Substring (0, index + ".xcassets".Length);
 
-				if (assetDirs != null && assetDirs.Contains (assetDir)) {
+				if (assetDirs is not null && assetDirs.Contains (assetDir)) {
 					var assetName = Path.GetFileNameWithoutExtension (rpath);
 
-					if (PartialAppManifest == null) {
+					if (PartialAppManifest is null) {
 						args.Add ("--output-partial-info-plist");
 						args.AddQuoted (partialAppManifest.GetMetadata ("FullPath"));
 
@@ -150,7 +150,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			var platform = PlatformUtils.GetTargetPlatform (SdkPlatform, IsWatchApp);
 
-			if (platform != null)
+			if (platform is not null)
 				args.Add ("--platform", platform);
 		}
 
@@ -225,7 +225,7 @@ namespace Xamarin.MacDev.Tasks {
 					continue;
 				}
 
-				if (ImageAssets [i].GetMetadata ("Link") != null) {
+				if (ImageAssets [i].GetMetadata ("Link") is not null) {
 					// Note: if any of the files within a catalog are linked, we'll have to clone the *entire* catalog
 					clones.Add (catalog);
 					continue;
@@ -401,7 +401,7 @@ namespace Xamarin.MacDev.Tasks {
 			if ((Compile (catalogs.ToArray (), intermediateBundleDir, manifest)) != 0)
 				return false;
 
-			if (PartialAppManifest != null && !File.Exists (PartialAppManifest.GetMetadata ("FullPath")))
+			if (PartialAppManifest is not null && !File.Exists (PartialAppManifest.GetMetadata ("FullPath")))
 				Log.LogError (MSBStrings.E0093, PartialAppManifest.GetMetadata ("FullPath"));
 
 			try {

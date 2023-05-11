@@ -15,7 +15,7 @@ namespace Xharness.Jenkins.TestTasks {
 		public override string ProgressMessage {
 			get {
 				var log = runDevice.InstallLog;
-				if (log == null)
+				if (log is null)
 					return base.ProgressMessage;
 
 				var percent_complete = log.CopyingApp ? log.AppPercentComplete : log.WatchAppPercentComplete;

@@ -465,17 +465,17 @@ namespace Xamarin.MMP.Tests {
 					TestCode = $@"
 			var client = new System.Net.Http.HttpClient ();
 			var field = client.GetType ().BaseType.GetField (""_handler"", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-			if (field == null)
+			if (field is null)
 				throw new System.Exception (""Could not find the field '_handler' in HttpClient's base type (which should be 'HttpMessageInvoker')."");
 			var fieldValue = field.GetValue (client);
-			if (fieldValue == null)
+			if (fieldValue is null)
 				throw new System.Exception (""Unexpected null value found in 'HttpMessageInvoker.handler' field."");
 			var fieldValueType = fieldValue.GetType ().Name;
 			if (fieldValueType != ""{expectedHandler}"")
 				throw new System.Exception ($""Unexpected field type, found '{{fieldValueType}}', expected '{expectedHandler}'"");
 ",
 				};
-				if (mmpHandler != null)
+				if (mmpHandler is not null)
 					test.CSProjConfig = "<HttpClientHandler>" + mmpHandler + "</HttpClientHandler>";
 				TI.TestUnifiedExecutable (test);
 			});
@@ -643,7 +643,7 @@ namespace Xamarin.MMP.Tests {
 					TestCode = "System.Console.WriteLine (typeof (Xunit.AfterTestFinished));",
 					XM45 = xm45,
 				};
-				if (tfv != null)
+				if (tfv is not null)
 					test.TargetFrameworkVersion = $"<TargetFrameworkVersion>{tfv}</TargetFrameworkVersion>";
 
 				string project = TI.GenerateUnifiedExecutableProject (test);
@@ -651,7 +651,7 @@ namespace Xamarin.MMP.Tests {
 				var rv = new OutputText (TI.BuildProject (project), string.Empty);
 				Console.WriteLine (rv.BuildResult);
 				if (xm45) {
-					var referenced_version = tfv == null ? "2.0.0.0" : "4.0.0.0";
+					var referenced_version = tfv is null ? "2.0.0.0" : "4.0.0.0";
 					rv.Messages.AssertWarningPattern (176, $"The assembly 'System.Web, Version={referenced_version}, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' was resolved from the system's GAC: /Library/Frameworks/Mono.framework/Versions/.*/lib/mono/gac/System.Web/4.0.0.0__b03f5f7f11d50a3a/System.Web.dll. This could potentially be a problem in the future; to avoid such problems, please make sure to not use assemblies only available in the system's GAC.");
 					rv.Messages.AssertWarningPattern (176, $"The assembly 'System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' was resolved from the system's GAC: /Library/Frameworks/Mono.framework/Versions/.*/lib/mono/gac/System.Drawing/4.0.0.0__b03f5f7f11d50a3a/System.Drawing.dll. This could potentially be a problem in the future; to avoid such problems, please make sure to not use assemblies only available in the system's GAC.");
 					rv.Messages.AssertWarningPattern (176, $"The assembly 'System.Web.ApplicationServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' was resolved from the system's GAC: /Library/Frameworks/Mono.framework/Versions/.*/lib/mono/gac/System.Web.ApplicationServices/4.0.0.0__31bf3856ad364e35/System.Web.ApplicationServices.dll. This could potentially be a problem in the future; to avoid such problems, please make sure to not use assemblies only available in the system's GAC.");

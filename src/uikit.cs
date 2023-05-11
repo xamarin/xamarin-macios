@@ -12482,9 +12482,9 @@ namespace UIKit {
 		[NullAllowed, Export ("focusedView", ArgumentSemantic.Weak)]
 		UIView FocusedView { get; }
 
-		[Deprecated (PlatformName.iOS, 15, 0, message: "Check for 'UIWindowScene.FocusSystem != null' instead.")]
-		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Check for 'UIWindowScene.FocusSystem != null' instead.")]
-		[Deprecated (PlatformName.TvOS, 15, 0, message: "Check for 'UIWindowScene.FocusSystem != null' instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Check for 'UIWindowScene.FocusSystem is not null' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Check for 'UIWindowScene.FocusSystem is not null' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Check for 'UIWindowScene.FocusSystem is not null' instead.")]
 		[MacCatalyst (13, 1)]
 		[Export ("supportsFocus")]
 		bool SupportsFocus { get; }

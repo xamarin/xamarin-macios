@@ -1,6 +1,8 @@
 using System;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace Foundation {
 
 	public enum NSUserDefaultsType {
@@ -30,31 +32,30 @@ namespace Foundation {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #endif
-		public NSUserDefaults (string name, NSUserDefaultsType type)
+		public NSUserDefaults (string? name, NSUserDefaultsType type)
 		{
 			// two different `init*` would share the same C# signature
 			switch (type) {
 			case NSUserDefaultsType.UserName:
+				if (name is null)
+					throw new ArgumentNullException (nameof (name));
 				Handle = InitWithUserName (name);
 				break;
 			case NSUserDefaultsType.SuiteName:
 				Handle = InitWithSuiteName (name);
 				break;
 			default:
-				throw new ArgumentException ("type");
+				throw new ArgumentException (nameof (type));
 			}
 		}
 
-		public void SetString (string value, string defaultName)
+		public void SetString (string? value, string defaultName)
 		{
-			NSString str = new NSString (value);
-
+			using var str = (NSString?) value;
 			SetObjectForKey (str, defaultName);
-
-			str.Dispose ();
 		}
 
-		public NSObject this [string key] {
+		public NSObject? this [string key] {
 			get {
 				return ObjectForKey (key);
 			}

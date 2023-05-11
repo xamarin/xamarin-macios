@@ -26,7 +26,7 @@ namespace UIKit {
 			[Preserve (Conditional = true)]
 			public void Call (NSObject sender)
 			{
-				if (container.clicked != null)
+				if (container.clicked is not null)
 					container.clicked (sender, EventArgs.Empty);
 			}
 		}
@@ -69,7 +69,7 @@ namespace UIKit {
 
 		public event EventHandler Clicked {
 			add {
-				if (clicked == null) {
+				if (clicked is null) {
 					callback = new Callback ();
 					callback.container = this;
 					this.Target = callback;

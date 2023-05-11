@@ -16,7 +16,7 @@ namespace UIKit {
 		public UITableViewSource SearchResultsSource {
 			get {
 				var d = SearchResultsWeakDelegate as UITableViewSource;
-				if (d != null)
+				if (d is not null)
 					return d;
 				return null;
 			}

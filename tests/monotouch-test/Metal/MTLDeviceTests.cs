@@ -91,7 +91,7 @@ namespace MonoTouchFixtures.Metal {
 			byte [] buffer_bytes;
 
 			// some older hardware won't have a default
-			if (device == null)
+			if (device is null)
 				Assert.Inconclusive ("Metal is not supported");
 
 			// Apple claims that "Indirect command buffers" are available with MTLGPUFamilyCommon2, but it crashes on at least one machine.

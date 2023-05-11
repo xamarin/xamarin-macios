@@ -76,7 +76,7 @@ namespace Xamarin {
 				symbols = GetNativeSymbols (mtouch.NativeExecutablePath);
 				Assert.That (symbols, Contains.Item (profiler_symbol), $"{profiler_symbol} nm");
 
-				if (ext != null) {
+				if (ext is not null) {
 					symbols = File.ReadAllLines (ext.SymbolList);
 					Assert.That (symbols, Contains.Item (profiler_symbol), $"{profiler_symbol} - extension");
 
@@ -1382,7 +1382,7 @@ public class B : A {}
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
 				extension.CreateTemporaryCacheDirectory ();
-				if (extension_abt != null)
+				if (extension_abt is not null)
 					extension.AssemblyBuildTargets.AddRange (extension_abt);
 				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
 				using (var app = new MTouchTool ()) {
@@ -1390,10 +1390,10 @@ public class B : A {}
 					app.CreateTemporaryApp ();
 					app.CreateTemporaryCacheDirectory ();
 					app.WarnAsError = new int [] { 113 };
-					if (app_abt != null)
+					if (app_abt is not null)
 						app.AssemblyBuildTargets.AddRange (app_abt);
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (113, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the --assembly-build-target options are different between the container app ({(app_abt == null ? string.Empty : string.Join (", ", app_abt.Select ((v) => "--assembly-build-target:" + v)))}) and the extension ({(extension_abt == null ? string.Empty : string.Join (", ", extension_abt?.Select ((v) => "--assembly-build-target:" + v)))}).");
+					app.AssertError (113, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the --assembly-build-target options are different between the container app ({(app_abt is null ? string.Empty : string.Join (", ", app_abt.Select ((v) => "--assembly-build-target:" + v)))}) and the extension ({(extension_abt is null ? string.Empty : string.Join (", ", extension_abt?.Select ((v) => "--assembly-build-target:" + v)))}).");
 				}
 			}
 		}
@@ -3344,7 +3344,7 @@ class Test {
 				Assert.Fail ("Failed to build the watchOS app.");
 
 			foreach (var device in devices) {
-				if (device.Companion == null)
+				if (device.Companion is null)
 					continue;
 
 				if (mtouch.InstallOnDevice (device.Companion, containerPath, "ios,watch") != 0) {
@@ -3973,16 +3973,16 @@ public class HandlerTest
 	{{
 		var client = new System.Net.Http.HttpClient ();
 		var field = client.GetType ().BaseType.GetField (""_handler"", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-		if (field == null)
+		if (field is null)
 			throw new System.Exception (""Could not find the field '_handler' in HttpClient's base type (which should be 'HttpMessageInvoker')."");
 		var fieldValue = field.GetValue (client);
-		if (fieldValue == null)
+		if (fieldValue is null)
 			throw new System.Exception (""Unexpected null value found in 'HttpMessageInvoker.handler' field."");
 		Assert.AreEqual (""{expectedHandler}"", fieldValue.GetType ().Name, ""default http client handler"");
 	}}
 }}
 ";
-			var csproj_configuration = mtouchHandler == null ? string.Empty : ("<MtouchHttpClientHandler>" + mtouchHandler + "</MtouchHttpClientHandler>");
+			var csproj_configuration = mtouchHandler is null ? string.Empty : ("<MtouchHttpClientHandler>" + mtouchHandler + "</MtouchHttpClientHandler>");
 			RunUnitTest (Profile.iOS, testCode, csproj_configuration, csproj_references: new string [] { "System.Net.Http" }, clean_simulator: false);
 		}
 
@@ -4439,7 +4439,7 @@ public class Dummy {
     <Reference Include=""System.Core"" />
     <Reference Include=""Xamarin.iOS"" />
     <Reference Include=""MonoTouch.NUnitLite"" />
-" + (csproj_references == null ? string.Empty : string.Join ("\n", csproj_references.Select ((v) => "    <Reference Include=\"" + v + "\" />\n"))) + @"
+" + (csproj_references is null ? string.Empty : string.Join ("\n", csproj_references.Select ((v) => "    <Reference Include=\"" + v + "\" />\n"))) + @"
   </ItemGroup>
   <ItemGroup>
     <None Include=""Info.plist"">
@@ -4501,7 +4501,7 @@ public class Dummy {
 			var cs = Path.Combine (targetDirectory, $"{name}Code.cs");
 			var dll = Path.Combine (targetDirectory, $"{name}Library.dll");
 
-			if (linkWith == null) {
+			if (linkWith is null) {
 				linkWith = @"
 using System;
 using ObjCRuntime;
@@ -4523,7 +4523,7 @@ using ObjCRuntime;
 			args.Add ("--out:" + dll);
 			args.Add ("--link-with=" + o + "," + Path.GetFileName (o));
 			args.Add ("-x" + x);
-			if (references != null)
+			if (references is not null)
 				args.AddRange (references.Select ((v) => "-r:" + v));
 			ExecutionHelper.Execute (Configuration.BtouchPath, args);
 
@@ -4550,7 +4550,7 @@ using ObjCRuntime;
 			case Profile.iOS:
 				min_os_version = device ? "iphoneos-version-min=6.0" : "iphonesimulator-version-min=6.0";
 				sdk = device ? "iPhoneOS" : "iPhoneSimulator";
-				if (arch == null)
+				if (arch is null)
 					arch = device ? "armv7" : "x86_64";
 				break;
 			default:

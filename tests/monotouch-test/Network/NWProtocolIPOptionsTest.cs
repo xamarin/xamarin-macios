@@ -58,7 +58,7 @@ namespace MonoTouchFixtures.Network {
 				Assert.True (connectedEvent.WaitOne (20000), "Connection timed out.");
 				stack = parameters.ProtocolStack;
 				using (var ipOptions = stack.InternetProtocol) {
-					if (ipOptions != null) {
+					if (ipOptions is not null) {
 #if NET
 						ipOptions.SetVersion (NWIPVersion.Version4);
 #else

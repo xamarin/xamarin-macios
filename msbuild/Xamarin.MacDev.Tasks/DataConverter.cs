@@ -189,9 +189,9 @@ namespace Mono {
 			public void Add (byte [] group)
 			{
 				//Console.WriteLine ("Adding {0} bytes to {1} (next={2}", group.Length,
-				// buffer == null ? "null" : buffer.Length.ToString (), next);
+				// buffer is null ? "null" : buffer.Length.ToString (), next);
 
-				if (buffer == null) {
+				if (buffer is null) {
 					buffer = group;
 					next = group.Length;
 					return;
@@ -218,7 +218,7 @@ namespace Mono {
 
 			public byte [] Get ()
 			{
-				if (buffer == null)
+				if (buffer is null)
 					return new byte [0];
 
 				if (buffer.Length != next) {
@@ -769,7 +769,7 @@ namespace Mono {
 
 		internal void Check (byte [] dest, int destIdx, int size)
 		{
-			if (dest == null)
+			if (dest is null)
 				throw new ArgumentNullException ("dest");
 			if (destIdx < 0 || destIdx > dest.Length - size)
 				throw new ArgumentException ("destIdx");
@@ -778,7 +778,7 @@ namespace Mono {
 		class CopyConverter : DataConverter {
 			public override double GetDouble (byte [] data, int index)
 			{
-				if (data == null)
+				if (data is null)
 					throw new ArgumentNullException ("data");
 				if (data.Length - index < 8)
 					throw new ArgumentException ("index");
@@ -795,7 +795,7 @@ namespace Mono {
 
 			public override ulong GetUInt64 (byte [] data, int index)
 			{
-				if (data == null)
+				if (data is null)
 					throw new ArgumentNullException ("data");
 				if (data.Length - index < 8)
 					throw new ArgumentException ("index");
@@ -813,7 +813,7 @@ namespace Mono {
 
 			public override long GetInt64 (byte [] data, int index)
 			{
-				if (data == null)
+				if (data is null)
 					throw new ArgumentNullException ("data");
 				if (data.Length - index < 8)
 					throw new ArgumentException ("index");
@@ -831,7 +831,7 @@ namespace Mono {
 
 			public override float GetFloat (byte [] data, int index)
 			{
-				if (data == null)
+				if (data is null)
 					throw new ArgumentNullException ("data");
 				if (data.Length - index < 4)
 					throw new ArgumentException ("index");
@@ -849,7 +849,7 @@ namespace Mono {
 
 			public override int GetInt32 (byte [] data, int index)
 			{
-				if (data == null)
+				if (data is null)
 					throw new ArgumentNullException ("data");
 				if (data.Length - index < 4)
 					throw new ArgumentException ("index");
@@ -867,7 +867,7 @@ namespace Mono {
 
 			public override uint GetUInt32 (byte [] data, int index)
 			{
-				if (data == null)
+				if (data is null)
 					throw new ArgumentNullException ("data");
 				if (data.Length - index < 4)
 					throw new ArgumentException ("index");
@@ -885,7 +885,7 @@ namespace Mono {
 
 			public override short GetInt16 (byte [] data, int index)
 			{
-				if (data == null)
+				if (data is null)
 					throw new ArgumentNullException ("data");
 				if (data.Length - index < 2)
 					throw new ArgumentException ("index");
@@ -903,7 +903,7 @@ namespace Mono {
 
 			public override ushort GetUInt16 (byte [] data, int index)
 			{
-				if (data == null)
+				if (data is null)
 					throw new ArgumentNullException ("data");
 				if (data.Length - index < 2)
 					throw new ArgumentException ("index");
@@ -1003,7 +1003,7 @@ namespace Mono {
 		class SwapConverter : DataConverter {
 			public override double GetDouble (byte [] data, int index)
 			{
-				if (data == null)
+				if (data is null)
 					throw new ArgumentNullException ("data");
 				if (data.Length - index < 8)
 					throw new ArgumentException ("index");
@@ -1021,7 +1021,7 @@ namespace Mono {
 
 			public override ulong GetUInt64 (byte [] data, int index)
 			{
-				if (data == null)
+				if (data is null)
 					throw new ArgumentNullException ("data");
 				if (data.Length - index < 8)
 					throw new ArgumentException ("index");
@@ -1039,7 +1039,7 @@ namespace Mono {
 
 			public override long GetInt64 (byte [] data, int index)
 			{
-				if (data == null)
+				if (data is null)
 					throw new ArgumentNullException ("data");
 				if (data.Length - index < 8)
 					throw new ArgumentException ("index");
@@ -1057,7 +1057,7 @@ namespace Mono {
 
 			public override float GetFloat (byte [] data, int index)
 			{
-				if (data == null)
+				if (data is null)
 					throw new ArgumentNullException ("data");
 				if (data.Length - index < 4)
 					throw new ArgumentException ("index");
@@ -1075,7 +1075,7 @@ namespace Mono {
 
 			public override int GetInt32 (byte [] data, int index)
 			{
-				if (data == null)
+				if (data is null)
 					throw new ArgumentNullException ("data");
 				if (data.Length - index < 4)
 					throw new ArgumentException ("index");
@@ -1093,7 +1093,7 @@ namespace Mono {
 
 			public override uint GetUInt32 (byte [] data, int index)
 			{
-				if (data == null)
+				if (data is null)
 					throw new ArgumentNullException ("data");
 				if (data.Length - index < 4)
 					throw new ArgumentException ("index");
@@ -1111,7 +1111,7 @@ namespace Mono {
 
 			public override short GetInt16 (byte [] data, int index)
 			{
-				if (data == null)
+				if (data is null)
 					throw new ArgumentNullException ("data");
 				if (data.Length - index < 2)
 					throw new ArgumentException ("index");
@@ -1129,7 +1129,7 @@ namespace Mono {
 
 			public override ushort GetUInt16 (byte [] data, int index)
 			{
-				if (data == null)
+				if (data is null)
 					throw new ArgumentNullException ("data");
 				if (data.Length - index < 2)
 					throw new ArgumentException ("index");
@@ -1281,7 +1281,7 @@ namespace Mono {
 		
 		static public unsafe double DoubleFromLE (byte[] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 8)
 				throw new ArgumentException ("index");
@@ -1297,7 +1297,7 @@ namespace Mono {
 
 		static public unsafe float FloatFromLE (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 4)
 				throw new ArgumentException ("index");
@@ -1313,7 +1313,7 @@ namespace Mono {
 
 		static public unsafe long Int64FromLE (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 8)
 				throw new ArgumentException ("index");
@@ -1329,7 +1329,7 @@ namespace Mono {
 		
 		static public unsafe ulong UInt64FromLE (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 8)
 				throw new ArgumentException ("index");
@@ -1345,7 +1345,7 @@ namespace Mono {
 
 		static public unsafe int Int32FromLE (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 4)
 				throw new ArgumentException ("index");
@@ -1361,7 +1361,7 @@ namespace Mono {
 		
 		static public unsafe uint UInt32FromLE (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 4)
 				throw new ArgumentException ("index");
@@ -1377,7 +1377,7 @@ namespace Mono {
 
 		static public unsafe short Int16FromLE (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 2)
 				throw new ArgumentException ("index");
@@ -1393,7 +1393,7 @@ namespace Mono {
 		
 		static public unsafe ushort UInt16FromLE (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 2)
 				throw new ArgumentException ("index");
@@ -1409,7 +1409,7 @@ namespace Mono {
 
 		static public unsafe double DoubleFromBE (byte[] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 8)
 				throw new ArgumentException ("index");
@@ -1425,7 +1425,7 @@ namespace Mono {
 
 		static public unsafe float FloatFromBE (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 4)
 				throw new ArgumentException ("index");
@@ -1441,7 +1441,7 @@ namespace Mono {
 
 		static public unsafe long Int64FromBE (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 8)
 				throw new ArgumentException ("index");
@@ -1457,7 +1457,7 @@ namespace Mono {
 		
 		static public unsafe ulong UInt64FromBE (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 8)
 				throw new ArgumentException ("index");
@@ -1473,7 +1473,7 @@ namespace Mono {
 
 		static public unsafe int Int32FromBE (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 4)
 				throw new ArgumentException ("index");
@@ -1489,7 +1489,7 @@ namespace Mono {
 		
 		static public unsafe uint UInt32FromBE (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 4)
 				throw new ArgumentException ("index");
@@ -1505,7 +1505,7 @@ namespace Mono {
 
 		static public unsafe short Int16FromBE (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 2)
 				throw new ArgumentException ("index");
@@ -1521,7 +1521,7 @@ namespace Mono {
 		
 		static public unsafe ushort UInt16FromBE (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 2)
 				throw new ArgumentException ("index");
@@ -1537,7 +1537,7 @@ namespace Mono {
 
 		static public unsafe double DoubleFromNative (byte[] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 8)
 				throw new ArgumentException ("index");
@@ -1553,7 +1553,7 @@ namespace Mono {
 
 		static public unsafe float FloatFromNative (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 4)
 				throw new ArgumentException ("index");
@@ -1569,7 +1569,7 @@ namespace Mono {
 
 		static public unsafe long Int64FromNative (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 8)
 				throw new ArgumentException ("index");
@@ -1585,7 +1585,7 @@ namespace Mono {
 		
 		static public unsafe ulong UInt64FromNative (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 8)
 				throw new ArgumentException ("index");
@@ -1601,7 +1601,7 @@ namespace Mono {
 
 		static public unsafe int Int32FromNative (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 4)
 				throw new ArgumentException ("index");
@@ -1617,7 +1617,7 @@ namespace Mono {
 		
 		static public unsafe uint UInt32FromNative (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 4)
 				throw new ArgumentException ("index");
@@ -1633,7 +1633,7 @@ namespace Mono {
 
 		static public unsafe short Int16FromNative (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 2)
 				throw new ArgumentException ("index");
@@ -1649,7 +1649,7 @@ namespace Mono {
 		
 		static public unsafe ushort UInt16FromNative (byte [] data, int index)
 		{
-			if (data == null)
+			if (data is null)
 				throw new ArgumentNullException ("data");
 			if (data.Length - index < 2)
 				throw new ArgumentException ("index");

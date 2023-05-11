@@ -43,7 +43,7 @@ namespace Xamarin.ApiTest {
 					MethodReference mr = null;
 					foreach (var instr in method.Body.Instructions) {
 						mr = instr.Operand as MethodReference;
-						if (mr == null)
+						if (mr is null)
 							continue;
 						switch (mr.DeclaringType.Name) {
 						case "BlockLiteral":

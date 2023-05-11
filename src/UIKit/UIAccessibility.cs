@@ -144,7 +144,7 @@ namespace UIKit {
 
 		public static void PostNotification (int notification, NSObject argument)
 		{
-			UIAccessibilityPostNotification (notification, argument == null ? IntPtr.Zero : argument.Handle);
+			UIAccessibilityPostNotification (notification, argument is null ? IntPtr.Zero : argument.Handle);
 		}
 
 		static int NotificationEnumToInt (UIAccessibilityPostNotification notification)
@@ -169,7 +169,7 @@ namespace UIKit {
 
 		public static void ZoomFocusChanged (UIAccessibilityZoomType type, CGRect frame, UIView view)
 		{
-			UIAccessibilityZoomFocusChanged ((IntPtr) type, frame, view != null ? view.Handle : IntPtr.Zero);
+			UIAccessibilityZoomFocusChanged ((IntPtr) type, frame, view is not null ? view.Handle : IntPtr.Zero);
 		}
 
 		// UIAccessibilityZoom.h
@@ -192,9 +192,9 @@ namespace UIKit {
 #endif
 		public static UIBezierPath ConvertPathToScreenCoordinates (UIBezierPath path, UIView view)
 		{
-			if (path == null)
+			if (path is null)
 				throw new ArgumentNullException ("path");
-			if (view == null)
+			if (view is null)
 				throw new ArgumentNullException ("view");
 
 			return new UIBezierPath (UIAccessibilityConvertPathToScreenCoordinates (path.Handle, view.Handle));
@@ -216,7 +216,7 @@ namespace UIKit {
 #endif
 		public static CGRect ConvertFrameToScreenCoordinates (CGRect rect, UIView view)
 		{
-			if (view == null)
+			if (view is null)
 				throw new ArgumentNullException ("view");
 
 			return UIAccessibilityConvertFrameToScreenCoordinates (rect, view.Handle);
@@ -277,7 +277,7 @@ namespace UIKit {
 		{
 			var descriptor = (BlockLiteral*) block;
 			var del = (Action<bool>) (descriptor->Target);
-			if (del != null)
+			if (del is not null)
 				del (enable != 0);
 		}
 
