@@ -449,7 +449,7 @@ namespace Xamarin.iOS.Tasks {
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
 		{
-			if (NativeReferences == null)
+			if (NativeReferences is null)
 				yield break;
 
 			foreach (var nativeRef in NativeReferences) {
