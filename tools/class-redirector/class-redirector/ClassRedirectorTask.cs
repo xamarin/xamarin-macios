@@ -9,6 +9,15 @@ namespace ClassRedirector
 {
 	public class ClassRedirectorTask : Microsoft.Build.Utilities.Task
 	{
+		[Required]
+		public string InputDirectory { get; set; } = string.Empty;
+
+		[Required]
+		public string ClassMapPath { get; set; } = string.Empty;
+
+		[Required]
+		public string PlatformAssembly { get; set; } = string.Empty;
+
 		public override bool Execute ()
 		{
 			if (!Directory.Exists (InputDirectory)) {
@@ -26,34 +35,35 @@ namespace ClassRedirector
 				return false;
 			}
 
-			var dllsToProcess = CollectDlls (InputDirectory);
-			var xamarinDll = FindXamarinDll (dllsToProcess);
+			var xamarinDll = PlatformAssembly;
 
-			if (xamarinDll is null) {
-				Log.LogError ($"unable to find platform dll in {InputDirectory}");
+			if (!File.Exists (xamarinDll))
+				xamarinDll = Path.Combine (InputDirectory, PlatformAssembly);
+
+			if (!File.Exists (xamarinDll)) {
+				Log.LogError ($"PlatformAssembly {PlatformAssembly} does not exist as is or in {InputDirectory}");
 				return false;
 			}
+
+
+
+			var dllsToProcess = CollectDlls (InputDirectory);
 
 			var map = ReadRegistrarFile (ClassMapPath);
 
 			try {
-				Log.LogMessage ($"Redirecting class_handle usage from directory {InputDirectory} in the following dlls: {string.Join (",", dllsToProcess)}");
-				Log.LogMessage ($"Redirecting class_handle usage with the platform dll {xamarinDll}");
-				Log.LogMessage ($"Redirecting class_handle usage with the following {nameof (ClassMapPath)}: {ClassMapPath}");
+				Log.LogMessage (MessageImportance.Low, $"Redirecting class_handle usage from directory {InputDirectory} in the following dlls: {string.Join (",", dllsToProcess)}");
+				Log.LogMessage (MessageImportance.Low, $"Redirecting class_handle usage with the platform dll {xamarinDll}");
+				Log.LogMessage (MessageImportance.Low, $"Redirecting class_handle usage with the following {nameof (ClassMapPath)}: {ClassMapPath}");
 				var rewriter = new Rewriter (map, xamarinDll, dllsToProcess);
 				rewriter.Process ();
 			} catch (Exception e) {
 				Log.LogErrorFromException (e);
+				return false;
 			}
 
 			return true;
 		}
-
-		[Required]
-		public string InputDirectory { get; set; } = "";
-
-		[Required]
-		public string ClassMapPath { get; set; } = "";
 
 		static bool DirectoryIsWritable (string path)
 		{
@@ -64,22 +74,6 @@ namespace ClassRedirector
 		static string [] CollectDlls (string dir)
 		{
 			return Directory.GetFiles (dir, "*.dll"); // GetFiles returns full paths
-		}
-
-		static string [] xamarinDlls = new string [] {
-			"Microsoft.iOS.dll",
-			"Microsoft.macOS.dll",
-			"Microsoft.tvOS.dll",
-		};
-
-		static bool IsXamarinDll (string p)
-		{
-			return xamarinDlls.FirstOrDefault (dll => p.EndsWith (dll, StringComparison.Ordinal)) is not null;
-		}
-
-		static string? FindXamarinDll (string [] paths)
-		{
-			return paths.FirstOrDefault (IsXamarinDll);
 		}
 
 		static CSToObjCMap ReadRegistrarFile (string path)
