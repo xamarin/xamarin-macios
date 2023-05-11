@@ -7157,11 +7157,19 @@ namespace Foundation {
 		[Export ("fileURLWithPath:isDirectory:relativeToURL:")]
 		NSUrl CreateFileUrl (string path, bool isDir, [NullAllowed] NSUrl relativeToUrl);
 
+		[Static]
+		[Export ("fileURLWithPath:isDirectory:")]
+		NSUrl CreateFileUrl (string path, bool isDir);
+
 		[iOS (9, 0), Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("fileURLWithPath:relativeToURL:")]
 		NSUrl CreateFileUrl (string path, [NullAllowed] NSUrl relativeToUrl);
+
+		[Static]
+		[Export ("fileURLWithPath:")]
+		NSUrl CreateFileUrl (string path);
 
 		[iOS (9, 0), Mac (10, 11)]
 		[MacCatalyst (13, 1)]
