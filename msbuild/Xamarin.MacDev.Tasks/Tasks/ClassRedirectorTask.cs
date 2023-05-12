@@ -1,11 +1,13 @@
 using System;
+using System.IO;
 using System.Xml.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using ClassRedirector;
 
 #nullable enable
 
-namespace ClassRedirector
+namespace Xamarin.MacDev.Tasks
 {
 	public class ClassRedirectorTask : Microsoft.Build.Utilities.Task
 	{
