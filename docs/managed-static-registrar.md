@@ -185,7 +185,7 @@ class __Registrar_Callbacks__ {
 
 All the generated IL is done in two separate custom linker steps. The first
 one, ManagedRegistrarStep, will generate the UnmanagedCallersOnly trampolines
-for every method exported to Objective-C. This happens before the trimmed has
+for every method exported to Objective-C. This happens before the trimmer has
 done any work (i.e. before marking), because the generated code will cause
 more code to be marked (and this way we don't have to replicate what the
 trimmer does when it traverses IL and metadata to figure out what else to
