@@ -5622,8 +5622,7 @@ namespace Registrar {
 
 		MethodReference InflateMethod (TypeReference inflatedDeclaringType, MethodDefinition openMethod)
 		{
-			var git = inflatedDeclaringType as GenericInstanceType;
-			if (git is null)
+			if (inflatedDeclaringType is not GenericInstanceType git)
 				return openMethod;
 
 			var inflatedReturnType = TypeReferenceExtensions.InflateGenericType (git, openMethod.ReturnType);

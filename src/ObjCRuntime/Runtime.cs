@@ -2451,9 +2451,7 @@ namespace ObjCRuntime {
 		}
 		public int GetHashCode (string? obj)
 		{
-			if (obj is null)
-				return 0;
-			return obj.GetHashCode ();
+			return obj?.GetHashCode () ?? 0;
 		}
 	}
 
