@@ -19,7 +19,7 @@ namespace MonoTouch.Tuner {
 		protected override void Process (AssemblyDefinition assembly)
 		{
 			// only one definition exists (in mscorlib.dll)
-			if (get_nse_def == null) {
+			if (get_nse_def is null) {
 				var corlib = LinkContext.Corlib;
 				var nse = corlib.MainModule.GetType ("System", "NotSupportedException");
 				foreach (var m in nse.Methods) {
@@ -46,7 +46,7 @@ namespace MonoTouch.Tuner {
 					else
 						ProcessMethod (method);
 				}
-				if (static_ctor != null)
+				if (static_ctor is not null)
 					type.Methods.Remove (static_ctor);
 			}
 		}

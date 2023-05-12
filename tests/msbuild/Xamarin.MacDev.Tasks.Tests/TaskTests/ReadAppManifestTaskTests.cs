@@ -18,7 +18,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			var plistPath = Path.Combine (tmpdir, "TemporaryAppManifest.plist");
 			var plist = new PDictionary ();
-			if (createDictionary != null)
+			if (createDictionary is not null)
 				createDictionary (plist);
 			plist.Save (plistPath);
 

@@ -51,7 +51,7 @@ public class BindingException : Exception {
 				BindingFlags.Static |
 				BindingFlags.GetProperty);
 
-		var errorMessage = prop == null ? String.Format (bgen.Resources._default, errorCode) :
+		var errorMessage = prop is null ? String.Format (bgen.Resources._default, errorCode) :
 					(String) prop.GetValue (null);
 		return errorMessage;
 	}
@@ -130,7 +130,7 @@ public static class ErrorHelper {
 #if NET_4_0
 		AggregateException ae = ex as AggregateException;
 
-		if (ae != null) {
+		if (ae is not null) {
 			foreach (var ie in ae.InnerExceptions)
 				CollectExceptions (ie, exceptions);
 		} else {
@@ -146,7 +146,7 @@ public static class ErrorHelper {
 		BindingException mte = (e as BindingException);
 		bool error = true;
 
-		if (mte != null) {
+		if (mte is not null) {
 			error = mte.Error;
 
 			if (!error && GetWarningLevel (mte.Code) == WarningLevel.Disable)
@@ -156,7 +156,7 @@ public static class ErrorHelper {
 
 			if (Verbosity > 1) {
 				Exception ie = e.InnerException;
-				if (ie != null) {
+				if (ie is not null) {
 					if (Verbosity > 3) {
 						Console.Error.WriteLine ("--- inner exception");
 						Console.Error.WriteLine (ie);
@@ -181,7 +181,7 @@ public static class ErrorHelper {
 	{
 		WarningLevel level;
 
-		if (warning_levels == null)
+		if (warning_levels is null)
 			return WarningLevel.Warning;
 
 		// code -1: all codes
@@ -196,7 +196,7 @@ public static class ErrorHelper {
 
 	public static void SetWarningLevel (WarningLevel level, int? code = null /* if null, apply to all warnings */)
 	{
-		if (warning_levels == null)
+		if (warning_levels is null)
 			warning_levels = new Dictionary<int, WarningLevel> ();
 
 		if (code.HasValue)

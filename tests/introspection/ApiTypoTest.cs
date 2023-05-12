@@ -767,7 +767,7 @@ namespace Introspection {
 
 		bool IsObsolete (MemberInfo mi)
 		{
-			if (mi == null)
+			if (mi is null)
 				return false;
 			if (mi.GetCustomAttributes<ObsoleteAttribute> (true).Any ())
 				return true;
@@ -901,12 +901,12 @@ namespace Introspection {
 
 		void AttributesMessageTypoRules (MemberInfo mi, string typeName, ref int totalErrors)
 		{
-			if (mi == null)
+			if (mi is null)
 				return;
 
 			foreach (object ca in mi.GetCustomAttributes ()) {
 				string message = GetMessage (ca);
-				if (message != null) {
+				if (message is not null) {
 					var memberAndTypeFormat = mi.Name == typeName ? "Type: {0}" : "Member name: {1}, Type: {0}";
 					var memberAndType = string.Format (memberAndTypeFormat, typeName, mi.Name);
 

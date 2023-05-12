@@ -13,6 +13,7 @@
     <TargetFrameworkVersion>%TARGET FRAMEWORK VERSION%</TargetFrameworkVersion>
     %TARGET EXTRA INFO%
     <DefineConstants>%DEFINE CONSTANTS%</DefineConstants>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

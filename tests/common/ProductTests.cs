@@ -69,7 +69,7 @@ namespace Xamarin.Tests {
 			foreach (var machoFile in machoFiles) {
 				var fatfile = MachO.Read (machoFile);
 				foreach (var slice in fatfile) {
-					if (slice.IsDynamicLibrary && slice.Architecture == MachO.Architectures.x86_64 && slice.Parent != null && slice.Parent.size < 10240 /* this is the dummy x86_64 slice to appease Apple's notarization tooling */)
+					if (slice.IsDynamicLibrary && slice.Architecture == MachO.Architectures.x86_64 && slice.Parent is not null && slice.Parent.size < 10240 /* this is the dummy x86_64 slice to appease Apple's notarization tooling */)
 						continue;
 					else if (!slice.IsDynamicLibrary && slice.Architecture == MachO.Architectures.x86_64 && slice.Filename == "x86-64-slice.o" /* a static version of the x86_64 dummy slice */)
 						continue;
@@ -78,13 +78,13 @@ namespace Xamarin.Tests {
 
 						Version lc_min_version;
 						var mincmd = lc as MinCommand;
-						if (mincmd != null) {
+						if (mincmd is not null) {
 							Assert.AreEqual (load_command, mincmd.Command, "Unexpected min load command");
 							lc_min_version = mincmd.Version;
 						} else {
 							// starting from iOS SDK 12 the LC_BUILD_VERSION is used instead
 							var buildver = lc as BuildVersionCommand;
-							if (buildver == null)
+							if (buildver is null)
 								continue;
 
 							var alternativePlatform = (MachO.Platform) 0;
@@ -148,13 +148,13 @@ namespace Xamarin.Tests {
 						version = version.WithBuild ();
 						mono_native_compat_version = mono_native_compat_version.WithBuild ();
 						mono_native_unified_version = mono_native_unified_version.WithBuild ();
-						if (alternate_version == null)
+						if (alternate_version is null)
 							alternate_version = version;
 						if (alternate_version2 is null)
 							alternate_version2 = version;
-						if (alternate_mono_native_unified_version == null)
+						if (alternate_mono_native_unified_version is null)
 							alternate_mono_native_unified_version = mono_native_unified_version;
-						if (alternate_mono_native_compat_version == null)
+						if (alternate_mono_native_compat_version is null)
 							alternate_mono_native_compat_version = mono_native_compat_version;
 
 						switch (Path.GetFileName (machoFile)) {

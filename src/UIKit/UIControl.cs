@@ -50,7 +50,7 @@ namespace UIKit {
 		static ConditionalWeakTable<UIControl, Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>>> allTargets;
 		public void AddTarget (EventHandler notification, UIControlEvent events)
 		{
-			if (allTargets == null)
+			if (allTargets is null)
 				allTargets = new ();
 
 			var targets = allTargets.GetValue (this, k => {
@@ -79,7 +79,7 @@ namespace UIKit {
 		{
 			Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>> targets;
 
-			if (allTargets == null)
+			if (allTargets is null)
 				return;
 
 			if (!allTargets.TryGetValue (this, out targets))

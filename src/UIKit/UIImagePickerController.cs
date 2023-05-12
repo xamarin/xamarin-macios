@@ -88,7 +88,7 @@ namespace UIKit {
 		public CGRect? CropRect {
 			get {
 				var nsv = ((NSValue) Info [UIImagePickerController.CropRect]);
-				if (nsv == null)
+				if (nsv is null)
 					return null;
 				return nsv.CGRectValue;
 			}

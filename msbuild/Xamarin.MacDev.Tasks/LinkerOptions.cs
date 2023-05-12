@@ -23,7 +23,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public void BuildNativeReferenceFlags (TaskLoggingHelper Log, ITaskItem [] NativeReferences)
 		{
-			if (NativeReferences == null)
+			if (NativeReferences is null)
 				return;
 
 			var libraryPaths = new HashSet<string> ();

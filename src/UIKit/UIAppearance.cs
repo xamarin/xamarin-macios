@@ -24,7 +24,7 @@ namespace UIKit {
 		public override bool Equals (object other)
 		{
 			UIAppearance ao = other as UIAppearance;
-			if (ao == null)
+			if (ao is null)
 				return false;
 			return ao.Handle == Handle;
 		}
@@ -60,7 +60,7 @@ namespace UIKit {
 			var ptrs = new NativeHandle [5]; // creating an array of 5 when we support only 4 ensures that the last one is IntPtr.Zero.
 #endif
 			for (int i = 0; i < whenFoundIn.Length; i++) {
-				if (whenFoundIn [i] == null)
+				if (whenFoundIn [i] is null)
 					throw new ArgumentException (String.Format ("Parameter {0} was null, must specify a valid type", i));
 				if (!typeof (NSObject).IsAssignableFrom (whenFoundIn [i]))
 					throw new ArgumentException (String.Format ("Type {0} does not derive from NSObject", whenFoundIn [i]));
@@ -92,7 +92,7 @@ namespace UIKit {
 		// new in iOS9 but the only option for tvOS
 		public static IntPtr GetAppearance (IntPtr class_ptr, UITraitCollection traits, params Type [] whenFoundIn)
 		{
-			if (traits == null)
+			if (traits is null)
 				throw new ArgumentNullException ("traits");
 
 			using (var array = NSArray.FromIntPtrs (TypesToPointers (whenFoundIn))) {
@@ -142,7 +142,7 @@ namespace UIKit {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IntPtr GetAppearance (IntPtr class_ptr, UITraitCollection traits, params Type [] whenFoundIn)
 		{
-			if (traits == null)
+			if (traits is null)
 				throw new ArgumentNullException ("traits");
 
 			var ptrs = TypesToPointers (whenFoundIn);
@@ -183,7 +183,7 @@ namespace UIKit {
 
 		public static IntPtr GetAppearance (IntPtr class_ptr, UITraitCollection traits)
 		{
-			if (traits == null)
+			if (traits is null)
 				throw new ArgumentNullException ("traits");
 
 			return Messaging.IntPtr_objc_msgSend_IntPtr (class_ptr, Selector.GetHandle (UIAppearance.selAppearanceForTraitCollection), traits.Handle);

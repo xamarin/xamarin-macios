@@ -29,27 +29,27 @@ namespace WebKitDelegateEvents
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (locationTextField != null) {
+			if (locationTextField is not null) {
 				locationTextField.Dispose ();
 				locationTextField = null;
 			}
 
-			if (navigationButtons != null) {
+			if (navigationButtons is not null) {
 				navigationButtons.Dispose ();
 				navigationButtons = null;
 			}
 
-			if (webView != null) {
+			if (webView is not null) {
 				webView.Dispose ();
 				webView = null;
 			}
 
-			if (outlineView != null) {
+			if (outlineView is not null) {
 				outlineView.Dispose ();
 				outlineView = null;
 			}
 
-			if (populateOutlineViewButton != null) {
+			if (populateOutlineViewButton is not null) {
 				populateOutlineViewButton.Dispose ();
 				populateOutlineViewButton = null;
 			}

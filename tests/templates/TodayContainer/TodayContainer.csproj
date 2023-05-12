@@ -13,6 +13,7 @@
     <AssemblyName>TodayContainer</AssemblyName>
     <OutputPath>bin\$(Platform)\$(Configuration)-today</OutputPath>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'iPhoneSimulator' ">
     <MtouchArch>x86_64</MtouchArch>

@@ -79,7 +79,7 @@ namespace Xamarin.Utils {
 				p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
 				p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
 
-				if (Environment != null) {
+				if (Environment is not null) {
 					foreach (var kvp in Environment) {
 						if (kvp.Value is null) {
 							p.StartInfo.EnvironmentVariables.Remove (kvp.Key);
@@ -94,7 +94,7 @@ namespace Xamarin.Utils {
 
 				var thread = new Thread (() => {
 					try {
-						if (Log != null) {
+						if (Log is not null) {
 							if (!string.IsNullOrEmpty (p.StartInfo.WorkingDirectory))
 								Log.Write ($"cd {StringUtils.Quote (p.StartInfo.WorkingDirectory!)} && ");
 							Log.WriteLine ("{0} {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
@@ -191,8 +191,8 @@ namespace Xamarin.Utils {
 
 		public static Task<Execution> RunWithStringBuildersAsync (string filename, IList<string> arguments, Dictionary<string, string?>? environment = null, StringBuilder? standardOutput = null, StringBuilder? standardError = null, TextWriter? log = null, string? workingDirectory = null, TimeSpan? timeout = null, CancellationToken? cancellationToken = null)
 		{
-			var stdout = standardOutput == null ? null : new StringWriter (standardOutput);
-			var stderr = standardError == null ? null : (standardOutput == standardError ? stdout : new StringWriter (standardError));
+			var stdout = standardOutput is null ? null : new StringWriter (standardOutput);
+			var stderr = standardError is null ? null : (standardOutput == standardError ? stdout : new StringWriter (standardError));
 			return RunAsync (filename, arguments, environment, stdout, stderr, log, workingDirectory, timeout, cancellationToken);
 		}
 

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -672,12 +672,13 @@
         </value>
     </data>
   <data name="E0174" xml:space="preserve">
-        <value>{0} 的格式不正确或未知，无法处理。
-        </value>
+        <value>xcframework“{0}”的格式不正确或未知，无法处理。</value>
     </data>
   <data name="E0175" xml:space="preserve">
-        <value>在“{0}”中找不到匹配的框架。
-        </value>
+        <value>在“{0}”中找不到匹配的框架。SupportedPlatform: “{0}”，SupportedPlatformVariant: “{1}”，SupportedArchitectures: “{2}”。</value>
+        <comment>
+            Do not translate: 'SupportedPlatform', 'SupportedPlatformVariant', 'SupportedArchitectures' (they're keys inside a file with key/value pairs))
+        </comment>
     </data>
   <data name="W0176" xml:space="preserve">
         <value>“{0}”和“{1}”选项冲突。将忽略“{1}”。
@@ -1170,11 +1171,38 @@
         </comment>
     </data>
   <data name="W7105" xml:space="preserve">
-        <value>清单“{2}”中本机引用“{1}”的意外扩展“{0}”。</value>
+        <value>绑定的资源包“{2}”中本机引用“{1}”的意外扩展“{0}”。</value>
         <comment>
             {0}: file extension
             {1}: path to a file
             {2}: path to a file
         </comment>
+    </data>
+  <data name="W7106" xml:space="preserve">
+        <value>zip 文件“{0}”中应有名为“{1}”的文件。</value>
+    </data>
+  <data name="W7107" xml:space="preserve">
+        <value>zip 文件“{0}”不存在。</value>
+    </data>
+  <data name="W7108" xml:space="preserve">
+        <value>文件“{0}”不存在。</value>
+    </data>
+  <data name="W7109" xml:space="preserve">
+        <value>无法以本机引用处理项“{0}”: 未知类型。</value>
+    </data>
+  <data name="E7110" xml:space="preserve">
+        <value>无法从 xcframework“{1}”加载 Info.plist“{0}”。</value>
+    </data>
+  <data name="W7111" xml:space="preserve">
+        <value>目录“{0}”不存在。</value>
+    </data>
+  <data name="E7112" xml:space="preserve">
+        <value>在 zip 文件“{1}”中找不到文件或目录“{0}”。</value>
+    </data>
+  <data name="E7113" xml:space="preserve">
+        <value>无法处理此平台上的 zip 文件“{0}”: 文件“{1}”为符号链接。</value>
+    </data>
+  <data name="E7114" xml:space="preserve">
+        <value>The "{0}" task was not given a value for the parameter "{1}", which is required when building on this platform.</value>
     </data>
 </root>

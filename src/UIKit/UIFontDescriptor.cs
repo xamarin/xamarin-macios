@@ -104,7 +104,7 @@ namespace UIKit {
 				return Dictionary [UIFontDescriptor.CharacterSetAttribute] as NSCharacterSet;
 			}
 			set {
-				if (value == null) {
+				if (value is null) {
 					RemoveValue (UIFontDescriptor.CharacterSetAttribute);
 					return;
 				}
@@ -118,7 +118,7 @@ namespace UIKit {
 
 			}
 			set {
-				if (value == null) {
+				if (value is null) {
 					RemoveValue (UIFontDescriptor.CascadeListAttribute);
 					return;
 				}
@@ -129,12 +129,12 @@ namespace UIKit {
 		public UIFontTraits Traits {
 			get {
 				var traits = GetNSDictionary (UIFontDescriptor.TraitsAttribute);
-				if (traits == null)
+				if (traits is null)
 					return null;
 				return new UIFontTraits (traits);
 			}
 			set {
-				if (value == null) {
+				if (value is null) {
 					RemoveValue (UIFontDescriptor.TraitsAttribute);
 					return;
 				}
@@ -157,7 +157,7 @@ namespace UIKit {
 				return GetArray<NSDictionary> (UIFontDescriptor.FeatureSettingsAttribute);
 			}
 			set {
-				if (value == null) {
+				if (value is null) {
 					RemoveValue (UIFontDescriptor.FeatureSettingsAttribute);
 					return;
 				}
@@ -169,7 +169,7 @@ namespace UIKit {
 		public UIFontFeature [] FeatureSettings {
 			get {
 				var dictArray = WeakFeatureSettings;
-				if (dictArray == null)
+				if (dictArray is null)
 					return new UIFontFeature [0];
 
 				var strong = new UIFontFeature [dictArray.Length];
@@ -324,7 +324,7 @@ namespace UIKit {
 		float? GetFloatValue (NSString key)
 		{
 			var n = (NSNumber) GetObject (key);
-			if (n != null)
+			if (n is not null)
 				return n.FloatValue;
 			return null;
 		}
@@ -374,7 +374,7 @@ namespace UIKit {
 		public UIFontDescriptor [] CascadeList {
 			get {
 				var o = GetObject (UIFontDescriptor.CascadeListAttribute) as NSArray;
-				if (o == null)
+				if (o is null)
 					return new UIFontDescriptor [0];
 				return NSArray.FromArray<UIFontDescriptor> (o);
 			}
@@ -383,7 +383,7 @@ namespace UIKit {
 		public UIFontTraits Traits {
 			get {
 				var traits = GetObject (UIFontDescriptor.TraitsAttribute) as NSDictionary;
-				if (traits == null)
+				if (traits is null)
 					return null;
 				return new UIFontTraits (traits);
 			}
@@ -398,7 +398,7 @@ namespace UIKit {
 		public NSDictionary [] WeakFeatureSettings {
 			get {
 				var wf = GetObject (UIFontDescriptor.FeatureSettingsAttribute) as NSArray;
-				if (wf == null)
+				if (wf is null)
 					return null;
 				return NSArray.FromArray<NSDictionary> (wf);
 			}
@@ -408,7 +408,7 @@ namespace UIKit {
 		public UIFontFeature [] FeatureSettings {
 			get {
 				var dictArray = WeakFeatureSettings;
-				if (dictArray == null)
+				if (dictArray is null)
 					return new UIFontFeature [0];
 
 				var strong = new UIFontFeature [dictArray.Length];

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
     <ActualPackageVersion Condition="'$(CustomDotNetVersion)' != ''">$(CustomDotNetVersion)</ActualPackageVersion>
     <ActualPackageVersion Condition="'$(ActualPackageVersion)' == ''">$(BundledNETCorePlatformsPackageVersion)</ActualPackageVersion>
     <NoWarn>$(NoWarn);NU1505</NoWarn> <!--  warning NU1505: Duplicate 'PackageDownload' items found. Remove the duplicate items or use the Update functionality to ensure a consistent restore behavior. -->

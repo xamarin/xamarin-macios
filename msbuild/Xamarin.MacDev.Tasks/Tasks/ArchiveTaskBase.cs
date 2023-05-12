@@ -150,19 +150,19 @@ namespace Xamarin.MacDev.Tasks {
 						File.Copy (bcSymbolMaps [i], Path.Combine (bcSymbolMapsDir, Path.GetFileName (bcSymbolMaps [i])));
 				}
 
-				if (AppExtensionReferences != null) {
+				if (AppExtensionReferences is not null) {
 					// Archive the dSYMs, mSYMs, etc for each of the referenced App Extensions as well...
 					for (int i = 0; i < AppExtensionReferences.Length; i++)
 						ArchiveAppExtension (AppExtensionReferences [i], archiveDir);
 				}
 
-				if (WatchAppReferences != null) {
+				if (WatchAppReferences is not null) {
 					// Archive the dSYMs, mSYMs, etc for each of the referenced WatchOS2 Apps as well...
 					for (int i = 0; i < WatchAppReferences.Length; i++)
 						ArchiveWatchApp (WatchAppReferences [i], archiveDir);
 				}
 
-				if (ITunesSourceFiles != null) {
+				if (ITunesSourceFiles is not null) {
 					// Archive the iTunesMetadata.plist and iTunesArtwork files...
 					var iTunesMetadataDir = Path.Combine (archiveDir, "iTunesMetadata", Path.GetFileName (AppBundleDir.ItemSpec));
 					for (int i = 0; i < ITunesSourceFiles.Length; i++) {
@@ -190,12 +190,12 @@ namespace Xamarin.MacDev.Tasks {
 				var iconDict = plist.GetCFBundleIcons ();
 				var icons = new PArray ();
 
-				if (iconFiles != null)
+				if (iconFiles is not null)
 					AddIconPaths (icons, iconFiles, Path.Combine (archiveDir, "Products"));
 
-				if (iconDict != null) {
+				if (iconDict is not null) {
 					var primary = iconDict.Get<PDictionary> (ManifestKeys.CFBundlePrimaryIcon);
-					if (primary != null && (iconFiles = primary.GetCFBundleIconFiles ()) != null)
+					if (primary is not null && (iconFiles = primary.GetCFBundleIconFiles ()) is not null)
 						AddIconPaths (icons, iconFiles, Path.Combine (archiveDir, "Products"));
 				}
 
@@ -382,7 +382,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		void AddIconPaths (PArray icons, PArray iconFiles, string productsDir)
 		{
-			foreach (var icon in iconFiles.Cast<PString> ().Where (p => p.Value != null)) {
+			foreach (var icon in iconFiles.Cast<PString> ().Where (p => p.Value is not null)) {
 				var path = string.Format ("Applications/{0}/{1}", Path.GetFileName (AppBundleDir.ItemSpec), icon.Value);
 				bool addDefault = true;
 

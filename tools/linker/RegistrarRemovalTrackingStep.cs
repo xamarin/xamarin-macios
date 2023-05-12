@@ -86,7 +86,7 @@ namespace MonoTouch.Tuner {
 			var productAssemblyName = PlatformAssemblyName;
 			var requires = false;
 			foreach (var mr in assembly.MainModule.GetMemberReferences ()) {
-				if (mr.DeclaringType == null || string.IsNullOrEmpty (mr.DeclaringType.Namespace))
+				if (mr.DeclaringType is null || string.IsNullOrEmpty (mr.DeclaringType.Namespace))
 					continue;
 
 				var scope = mr.DeclaringType.Scope;
@@ -200,7 +200,7 @@ namespace MonoTouch.Tuner {
 				// and this will runs before we have the chance to set it to `false` in `CoreOptimizedGeneratedCode` so we instead
 				// do the change here so the linker can do this without further ado
 				// note: it does not matter for _legacy_ so we apply the change (to earlier) to minimize the difference between them
-				if (PlatformAssembly != null) {
+				if (PlatformAssembly is not null) {
 					var method = PlatformAssembly.MainModule.GetType ("ObjCRuntime.Runtime").Methods.First ((n) => n.Name == "get_DynamicRegistrationSupported");
 					// Rewrite to return 'false'
 					var instr = method.Body.Instructions;

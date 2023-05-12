@@ -15,6 +15,7 @@
     <DefineConstants></DefineConstants>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-watchos-extension</IntermediateOutputPath>
     <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>True</DebugSymbols>

@@ -129,7 +129,7 @@ namespace Xharness.Targets {
 			inputProject.FixProjectReferences (Path.Combine (ProjectsDir, GetTargetSpecificDir ()), Suffix, FixProjectReference);
 			inputProject.SetNode ("TargetFramework", TargetFramework);
 			var fixedAssetTargetFallback = inputProject.GetAssetTargetFallback ()?.Replace ("xamarinios10", TargetFrameworkForNuGet);
-			if (fixedAssetTargetFallback != null)
+			if (fixedAssetTargetFallback is not null)
 				inputProject.SetAssetTargetFallback (fixedAssetTargetFallback);
 			inputProject.ResolveAllPaths (TemplateProjectPath);
 		}
@@ -152,7 +152,7 @@ namespace Xharness.Targets {
 				inputProject.SetTopLevelPropertyGroupValue (k, newProperties [k]);
 
 			var removedProperties = PropertiesToRemove;
-			if (removedProperties != null) {
+			if (removedProperties is not null) {
 				foreach (var p in removedProperties)
 					inputProject.RemoveNode (p, false);
 			}

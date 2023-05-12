@@ -99,7 +99,7 @@ namespace Extrospection {
 		public static bool FindObjcDeprecated (IEnumerable<Attr> attrs, out VersionTuple version)
 		{
 			AvailabilityAttr attr = attrs.OfType<AvailabilityAttr> ().FirstOrDefault (x => !x.Deprecated.IsEmpty && x.Platform.Name == Helpers.ClangPlatformName);
-			if (attr != null) {
+			if (attr is not null) {
 				version = attr.Deprecated;
 				return true;
 			} else {
@@ -117,7 +117,7 @@ namespace Extrospection {
 			// Cecil does not have a link between the MethodDefinition we have and the hosting PropertyDefinition, so we have to dig to find the match
 			if (item is MethodDefinition method) {
 				PropertyDefinition property = method.DeclaringType.Properties.FirstOrDefault (p => p.GetMethod == method || p.SetMethod == method);
-				if (property != null && HasAnyDeprecationForCurrentPlatform (property)) {
+				if (property is not null && HasAnyDeprecationForCurrentPlatform (property)) {
 					return true;
 				}
 			}
@@ -194,7 +194,7 @@ namespace Extrospection {
 			// Cecil does not have a link between the MethodDefinition we have and the hosting PropertyDefinition, so we have to dig to find the match
 			if (item is MethodDefinition method) {
 				PropertyDefinition property = method.DeclaringType.Properties.FirstOrDefault (p => p.GetMethod == method || p.SetMethod == method);
-				if (property != null && HasAdviced (property.CustomAttributes))
+				if (property is not null && HasAdviced (property.CustomAttributes))
 					return true;
 			}
 			return false;

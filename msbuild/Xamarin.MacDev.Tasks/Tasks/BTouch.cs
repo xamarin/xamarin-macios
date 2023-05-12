@@ -46,7 +46,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
 		{
-			if (ObjectiveCLibraries == null)
+			if (ObjectiveCLibraries is null)
 				return new ITaskItem [0];
 
 			return ObjectiveCLibraries.Select (item => {

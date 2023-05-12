@@ -9,6 +9,7 @@
     <RootNamespace>MyWatchKit2IntentsExtension</RootNamespace>
     <AssemblyName>MyWatchKit2IntentsExtension</AssemblyName>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>

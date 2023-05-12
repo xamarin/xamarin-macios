@@ -42,6 +42,9 @@
     <Compile Include="..\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
+    <Compile Include="..\common\NullableAttributes.cs">
+      <Link>NullableAttributes.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

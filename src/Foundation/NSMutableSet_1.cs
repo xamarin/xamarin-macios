@@ -83,7 +83,7 @@ namespace Foundation {
 
 		public TKey LookupMember (TKey probe)
 		{
-			if (probe == null)
+			if (probe is null)
 				throw new ArgumentNullException (nameof (probe));
 
 			return Runtime.GetINativeObject<TKey> (_LookupMember (probe.Handle), false);
@@ -97,7 +97,7 @@ namespace Foundation {
 
 		public bool Contains (TKey obj)
 		{
-			if (obj == null)
+			if (obj is null)
 				throw new ArgumentNullException (nameof (obj));
 
 			return _Contains (obj.Handle);
@@ -110,18 +110,18 @@ namespace Foundation {
 
 		public static NSMutableSet<TKey> operator + (NSMutableSet<TKey> first, NSMutableSet<TKey> second)
 		{
-			if (first == null || first.Count == 0)
+			if (first is null || first.Count == 0)
 				return new NSMutableSet<TKey> (second);
-			if (second == null || second.Count == 0)
+			if (second is null || second.Count == 0)
 				return new NSMutableSet<TKey> (first);
 			return new NSMutableSet<TKey> (first._SetByAddingObjectsFromSet (second.Handle));
 		}
 
 		public static NSMutableSet<TKey> operator - (NSMutableSet<TKey> first, NSMutableSet<TKey> second)
 		{
-			if (first == null || first.Count == 0)
+			if (first is null || first.Count == 0)
 				return null;
-			if (second == null || second.Count == 0)
+			if (second is null || second.Count == 0)
 				return new NSMutableSet<TKey> (first);
 			var copy = new NSMutableSet<TKey> (first);
 			copy.MinusSet (second);
@@ -131,7 +131,7 @@ namespace Foundation {
 		// Strongly typed versions of API from NSMutableSet
 		public void Add (TKey obj)
 		{
-			if (obj == null)
+			if (obj is null)
 				throw new ArgumentNullException (nameof (obj));
 
 			_Add (obj.Handle);
@@ -139,7 +139,7 @@ namespace Foundation {
 
 		public void Remove (TKey obj)
 		{
-			if (obj == null)
+			if (obj is null)
 				throw new ArgumentNullException (nameof (obj));
 
 			_Remove (obj.Handle);
@@ -147,11 +147,11 @@ namespace Foundation {
 
 		public void AddObjects (params TKey [] objects)
 		{
-			if (objects == null)
+			if (objects is null)
 				throw new ArgumentNullException (nameof (objects));
 
 			for (int i = 0; i < objects.Length; i++)
-				if (objects [i] == null)
+				if (objects [i] is null)
 					throw new ArgumentNullException (nameof (objects) + "[" + i.ToString () + "]");
 
 			using (var array = NSArray.From<TKey> (objects))
