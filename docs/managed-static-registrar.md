@@ -114,7 +114,7 @@ implemented using another lookup table in managed code.
 For technical reasons, this implemented using multiple levels of functions if
 there are a significant number of UnmanagedCallersOnly methods, because it
 seems the JIT will compile the target for every function pointer in a method,
-even if tha function pointer isn't loaded at runtime. This means that if
+even if the function pointer isn't loaded at runtime. This means that if
 there's 1.000 methods in the lookup table, the JIT will have to compile all
 the 1.000 methods the first time the lookup method is called if the lookup was
 implemented in a single function, even if the lookup method will eventually
