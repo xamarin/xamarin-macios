@@ -58,7 +58,7 @@ namespace ObjCRuntime {
 			if (nsarray == IntPtr.Zero)
 				return null;
 
-			return NSArray.ArrayFromHandleFunc<T> (nsarray, (	ptr) => convert2 (convert1 (ptr)));
+			return NSArray.ArrayFromHandleFunc<T> (nsarray, (ptr) => convert2 (convert1 (ptr)));
 		}
 
 		unsafe static IntPtr ConvertManagedArrayToNSArray2<T,U> (T[]? array, delegate*<T, U> convert1, delegate*<U, IntPtr> convert2) where T: struct
