@@ -1,50 +1,56 @@
 using System;
-using System.IO;
-using System.Text;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
 
+#nullable enable
+
 namespace Xamarin.iOS.Tasks {
-	public abstract class MTouchTaskBase : BundlerToolTaskBase {
+	public class MTouch : BundlerToolTaskBase, ITaskCallback {
 		#region Inputs
 
-		public string Architectures { get; set; }
+		public string Architectures { get; set; } = string.Empty;
 
-		public string CompiledEntitlements { get; set; }
+		public string CompiledEntitlements { get; set; } = string.Empty;
+
+		public ITaskItem [] ConfigFiles { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
 		public bool EnableBitcode { get; set; }
 
-		public string License { get; set; }
+		public string License { get; set; } = string.Empty;
 
 		[Required]
-		public string ExecutableName { get; set; }
+		public string ExecutableName { get; set; } = string.Empty;
 
 		[Required]
 		public bool FastDev { get; set; }
 
-		public ITaskItem [] LinkDescriptions { get; set; }
+		public ITaskItem [] LinkDescriptions { get; set; } = Array.Empty<ITaskItem> ();
 
-		public string Interpreter { get; set; }
+		public string Interpreter { get; set; } = string.Empty;
 
 		[Required]
 		public bool LinkerDumpDependencies { get; set; }
 
 		[Required]
-		public string ProjectDir { get; set; }
+		public string ProjectDir { get; set; } = string.Empty;
 
 		[Required]
 		public bool SdkIsSimulator { get; set; }
 
 		[Required]
-		public string SymbolsList { get; set; }
+		public string SymbolsList { get; set; } = string.Empty;
 
 		[Required]
 		public bool UseLlvm { get; set; }
@@ -56,7 +62,7 @@ namespace Xamarin.iOS.Tasks {
 		public bool UseThumb { get; set; }
 
 		[Required]
-		public ITaskItem [] AppExtensionReferences { get; set; }
+		public ITaskItem [] AppExtensionReferences { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
@@ -65,10 +71,10 @@ namespace Xamarin.iOS.Tasks {
 		// This property is required for VS to write the output native executable files
 		// and ensure the Inputs/Outputs of the msbuild target works correcly
 		[Output]
-		public ITaskItem NativeExecutable { get; set; }
+		public ITaskItem? NativeExecutable { get; set; }
 
 		[Output]
-		public ITaskItem [] CopiedFrameworks { get; set; }
+		public ITaskItem [] CopiedFrameworks { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
@@ -133,7 +139,7 @@ namespace Xamarin.iOS.Tasks {
 
 			if (architectures == TargetArchitecture.ARMv6) {
 				Log.LogError (MSBStrings.E0053);
-				return null;
+				return string.Empty;
 			}
 
 			args.AddQuotedLine ((SdkIsSimulator ? "--sim=" : "--dev=") + Path.GetFullPath (AppBundleDir));
@@ -275,7 +281,7 @@ namespace Xamarin.iOS.Tasks {
 
 					if (length == 9 && string.CompareOrdinal (argument, startIndex, "gcc_flags", 0, 9) == 0) {
 						// user-defined -gcc_flags argument
-						string flags = null;
+						string? flags = null;
 
 						if (endIndex < extraArgs [i].Length) {
 							flags = Unquote (argument, endIndex + 1);
@@ -339,6 +345,42 @@ namespace Xamarin.iOS.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return ExecuteRemotely ();
+			return ExecuteLocally ();
+		}
+
+		bool ExecuteRemotely ()
+		{
+			var frameworkAssemblies = References.Where (x => x.IsFrameworkItem ());
+
+			//Avoid having duplicated entries, which can happen with netstandard libraries that uses
+			//some Reference Assemblies from NuGet packages
+			var otherAssemblies = References
+				.Where (x => !x.IsFrameworkItem ())
+				.Where (x => !frameworkAssemblies.Any (f => f.GetMetadata ("Filename") == x.GetMetadata ("Filename")));
+
+			TaskItemFixer.FixItemSpecs (Log, item => OutputPath, MainAssembly);
+			TaskItemFixer.FixFrameworkItemSpecs (Log, item => OutputPath, TargetFramework.Identifier, frameworkAssemblies.ToArray ());
+			TaskItemFixer.FixItemSpecs (Log, item => OutputPath, otherAssemblies.ToArray ());
+			TaskItemFixer.ReplaceItemSpecsWithBuildServerPath (AppExtensionReferences, SessionId);
+
+			var references = new List<ITaskItem> ();
+
+			references.AddRange (frameworkAssemblies);
+			references.AddRange (otherAssemblies);
+
+			ConfigFiles = GetConfigFiles (references).ToArray ();
+
+			TaskItemFixer.FixItemSpecs (Log, item => OutputPath, ConfigFiles);
+
+			References = references.OrderBy (x => x.ItemSpec).ToArray ();
+
+			return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+		}
+
+		bool ExecuteLocally ()
+		{
 			Directory.CreateDirectory (AppBundleDir);
 
 			var executableLastWriteTime = default (DateTime);
@@ -387,7 +429,7 @@ namespace Xamarin.iOS.Tasks {
 			return ResolveFrameworkFileOrFacade (frameworkDir, fileName) ?? fullName;
 		}
 
-		static string ResolveFrameworkFileOrFacade (string frameworkDir, string fileName)
+		static string? ResolveFrameworkFileOrFacade (string frameworkDir, string fileName)
 		{
 			var facadeFile = Path.Combine (Sdks.XamIOS.LibDir, "mono", frameworkDir, "Facades", fileName);
 
@@ -399,6 +441,59 @@ namespace Xamarin.iOS.Tasks {
 				return frameworkFile;
 
 			return null;
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => !item.IsFrameworkItem ();
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => true;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
+		{
+			if (NativeReferences is null)
+				yield break;
+
+			foreach (var nativeRef in NativeReferences) {
+				var path = nativeRef.ItemSpec;
+				// look for frameworks, if the library is part of one then bring all related files
+				var dir = Path.GetDirectoryName (path);
+				if ((Path.GetExtension (dir) == ".framework") && Directory.Exists (dir)) {
+					foreach (var item in GetItemsFromNativeReference (dir)) {
+						// don't return the native library itself (it's the original input, not something additional)
+						if (item.ItemSpec != path)
+							yield return item;
+					}
+				}
+			}
+		}
+
+		public override void Cancel ()
+		{
+			base.Cancel ();
+
+			if (!string.IsNullOrEmpty (SessionId))
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+		}
+
+		IEnumerable<ITaskItem> GetConfigFiles (IEnumerable<ITaskItem> references)
+		{
+			var assemblies = new List<ITaskItem> { MainAssembly };
+
+			assemblies.AddRange (references);
+
+			foreach (var item in assemblies) {
+				var configFile = item.ItemSpec + ".config";
+
+				if (File.Exists (configFile))
+					yield return new TaskItem (configFile);
+			}
+		}
+
+		IEnumerable<TaskItem> GetItemsFromNativeReference (string folderPath)
+		{
+			foreach (var file in Directory
+				.EnumerateFiles (folderPath, "*", SearchOption.AllDirectories)
+				.Select (x => new TaskItem (x)))
+				yield return file;
 		}
 	}
 }
