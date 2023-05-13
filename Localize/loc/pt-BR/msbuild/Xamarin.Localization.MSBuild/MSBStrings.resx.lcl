@@ -1885,6 +1885,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";E7114" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "{0}" task was not given a value for the parameter "{1}", which is required when building on this platform.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[A tarefa "{0}" não recebeu um valor para o parâmetro "{1}", que é necessário ao compilar nesta plataforma.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";InvalidFramework" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid framework: {0}]]></Val>
@@ -2554,9 +2563,6 @@
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[O diretório '{0}' não existe.]]></Val>
           </Tgt>
-          <Prev Cat="Text">
-            <Val><![CDATA[Unexpected extension '{0}' for native reference '{1}' in manifest '{2}'.]]></Val>
-          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

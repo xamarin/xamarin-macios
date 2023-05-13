@@ -211,7 +211,7 @@ public partial class Generator {
 				if (export is null)
 					throw new BindingException (1074, true, type.Name, p.Name);
 
-				var sel = export.Selector;
+				var sel = export.Selector!;
 				if (sel.StartsWith ("input", StringComparison.Ordinal))
 					name = sel;
 				else
@@ -237,7 +237,7 @@ public partial class Generator {
 		if (export is null)
 			return;
 
-		var selector = export.Selector;
+		var selector = export.Selector!;
 		if (setter)
 			selector = "set" + selector.Capitalize () + ":";
 
