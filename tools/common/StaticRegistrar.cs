@@ -4319,10 +4319,8 @@ namespace Registrar {
 				var containsBlock = parameterType.Contains ("%PARAMETERNAME%");
 				parameterType = parameterType.Replace ("%PARAMETERNAME%", $"p{i - indexOffset}");
 				sb.Append (parameterType);
-				if (!containsBlock) {
-					sb.Append (" ");
-					sb.AppendFormat ("p{0}", i - indexOffset);
-				}
+				if (!containsBlock)
+					sb.AppendFormat (" p{0}", i - indexOffset);
 			}
 			if (isCtor)
 				sb.Append (", bool* call_super");
