@@ -52,6 +52,7 @@ namespace Xamarin.Linker {
 		{
 			il.Append (il.CreateLoadArgument (argument));
 		}
+
 		public static Instruction CreateLoadArgument (this ILProcessor il, int argument)
 		{
 			switch (argument) {
