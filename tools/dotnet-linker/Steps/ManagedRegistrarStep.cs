@@ -423,7 +423,8 @@ namespace Xamarin.Linker {
 				} else if (method.ReturnType.IsValueType) {
 					il.Emit (OpCodes.Unbox_Any, method.ReturnType);
 				} else {
-					// il.Emit (OpCodes.Castclass, method.ReturnType);
+					// Not sure if we have to cast to the method's return type here in some cases
+					// (certainly not all cases, because that creates invalid IL)
 				}
 			} else if (method.IsStatic) {
 				il.Emit (OpCodes.Call, method);
