@@ -116,10 +116,10 @@ steps:
 # this step replaces the test-libraries dir
 - pwsh: |
     $zip = "$(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip"
-    $target = "$(Build.SourcesDirectory)/xamarin-macios/tests/test-libraries"
+    $target = "$(Build.SourcesDirectory)/xamarin-macios"
     Expand-Archive -Force $zip -DestinationPath $target
     Get-ChildItem "$target" -Recurse
-  workingDirectory: $(Build.SourcesDirectory)/xamarin-macios/tests
+  workingDirectory: $(Build.SourcesDirectory)/xamarin-macios
   displayName: Expand test libraries.
   timeoutInMinutes: 10
 
