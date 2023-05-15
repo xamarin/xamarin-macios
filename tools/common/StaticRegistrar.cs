@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -35,6 +36,10 @@ using Mono.Cecil;
 using Mono.Linker;
 using Mono.Tuner;
 using ClassRedirector;
+
+// Disable warnings about nullability attributes in code until we've reviewed this file for nullability (and enabled it).
+// This way we can add nullability attributes to new code in this file without getting warnings about these attributes.
+#pragma warning disable 8632 // warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 namespace Registrar {
 	/*
@@ -4688,12 +4693,12 @@ namespace Registrar {
 			return null;
 		}
 
-		public bool TryFindType (TypeDefinition type, out ObjCType objcType)
+		public bool TryFindType (TypeDefinition type, [NotNullWhen (true)] out ObjCType? objcType)
 		{
 			return Types.TryGetValue (type, out objcType);
 		}
 
-		public bool TryFindMethod (MethodDefinition method, out ObjCMethod objcMethod)
+		public bool TryFindMethod (MethodDefinition method, [NotNullWhen (true)] out ObjCMethod? objcMethod)
 		{
 			if (TryFindType (method.DeclaringType, out var type)) {
 				if (type.Methods is not null) {
