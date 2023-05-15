@@ -82,7 +82,7 @@
 	</PropertyGroup>
 
 	<!-- If we have a runtime identifier, we must be self contained -->
-	<PropertyGroup Condition="'$(RuntimeIdentifiers)' != '' Or '$(RuntimeIdentifier)' != ''">
+	<PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
 		<SelfContained>true</SelfContained>
 	</PropertyGroup>
 
