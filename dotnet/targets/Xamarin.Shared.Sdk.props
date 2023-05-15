@@ -81,8 +81,8 @@
 		<UseAppHost>false</UseAppHost>
 	</PropertyGroup>
 
-	<!-- App extensions are self-contained, even though their OutputType=Library. This must be done here and not targets as it is checked before targets are invoked. -->
-	<PropertyGroup Condition="'$(IsAppExtension)' == 'true' And '$(RuntimeIdentifier)' != ''">
+	<!-- If we have a runtime identifier, we must be self contained -->
+	<PropertyGroup Condition="'$(RuntimeIdentifiers)' != '' Or '$(RuntimeIdentifier)' != ''">
 		<SelfContained>true</SelfContained>
 	</PropertyGroup>
 
