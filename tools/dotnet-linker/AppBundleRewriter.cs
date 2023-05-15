@@ -451,14 +451,12 @@ namespace Xamarin.Linker {
 
 		public MethodReference NSObject_AllocateNSObject {
 			get {
-				return GetMethodReference (PlatformAssembly, Foundation_NSObject, "AllocateNSObject", nameof (NSObject_AllocateNSObject), (v) =>
-						v.IsStatic
-						&& v.HasParameters
-						&& v.Parameters.Count == 2
-						&& v.Parameters [0].ParameterType.Is ("ObjCRuntime", "NativeHandle")
-						&& v.Parameters [1].ParameterType.Is ("", "Flags") && v.Parameters [1].ParameterType.DeclaringType.Is ("Foundation", "NSObject")
-						&& v.HasGenericParameters
-						&& v.GenericParameters.Count == 1);
+				return GetMethodReference (PlatformAssembly,
+						Foundation_NSObject, "AllocateNSObject",
+						nameof (NSObject_AllocateNSObject),
+						isStatic: true,
+						genericParameterCount: 1,
+						System_IntPtr);
 			}
 		}
 

@@ -356,7 +356,6 @@ namespace Xamarin.Linker {
 				var git = new GenericInstanceMethod (abr.NSObject_AllocateNSObject);
 				git.GenericArguments.Add (method.DeclaringType);
 				il.Append (callAllocateNSObject); // ldarg_0
-				il.Emit (OpCodes.Ldc_I4_2); // NSObject.Flags.NativeRef
 				il.Emit (OpCodes.Call, git);
 				il.Emit (OpCodes.Dup); // this is for the call to ObjCRuntime.NativeObjectExtensions::GetHandle after the call to the constructor
 			} else {
