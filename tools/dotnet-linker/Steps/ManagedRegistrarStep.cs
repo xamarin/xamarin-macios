@@ -698,7 +698,7 @@ namespace Xamarin.Linker {
 						postProcessing.Add (il.CreateLoadArgument (nativeParameterIndex));
 						postProcessing.Add (il.Create (OpCodes.Ldloc, indirectVariable));
 						postProcessing.Add (il.Create (OpCodes.Ldloc, copyIndirectVariable));
-						postProcessing.Add (il.Create (isOutParameter));
+						postProcessing.Add (il.CreateLdc (isOutParameter));
 						postProcessing.Add (il.Create (OpCodes.Call, managed_to_native));
 						return true;
 					}
@@ -773,7 +773,7 @@ namespace Xamarin.Linker {
 
 						il.Emit (OpCodes.Ldarg_1); // SEL
 						il.Emit (OpCodes.Ldtoken, method);
-						il.Emit (parameter == -1); // evenInFinalizerQueue
+						il.EmitLdc (parameter == -1); // evenInFinalizerQueue
 						il.Emit (OpCodes.Call, abr.Runtime_GetNSObject_T___System_IntPtr_System_IntPtr_System_RuntimeMethodHandle_bool.CreateGenericInstanceMethod (type));
 						var tmpVariable = il.Body.AddVariable (type);
 						il.Emit (OpCodes.Stloc, tmpVariable);

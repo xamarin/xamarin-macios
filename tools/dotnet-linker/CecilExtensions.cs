@@ -68,16 +68,16 @@ namespace Xamarin.Linker {
 			}
 		}
 
-		public static Instruction Create (this ILProcessor il, bool value)
+		public static Instruction CreateLdc (this ILProcessor il, bool value)
 		{
 			if (value)
 				return il.Create (OpCodes.Ldc_I4_1);
 			return il.Create (OpCodes.Ldc_I4_0);
 		}
 
-		public static void Emit (this ILProcessor il, bool value)
+		public static void EmitLdc (this ILProcessor il, bool value)
 		{
-			il.Append (il.Create (value));
+			il.Append (il.CreateLdc (value));
 		}
 
 		public static GenericInstanceMethod CreateGenericInstanceMethod (this MethodReference mr, params TypeReference [] genericTypeArguments)
