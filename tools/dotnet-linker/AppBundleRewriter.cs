@@ -1070,8 +1070,15 @@ namespace Xamarin.Linker {
 				throw new InvalidOperationException ($"Can't save assembly {assembly.Name} because it's not the current assembly ({CurrentAssembly.Name}) or the platform assembly ({PlatformAssembly.Name}).");
 			var annotations = configuration.Context.Annotations;
 			var action = annotations.GetAction (assembly);
-			if (action == AssemblyAction.Copy)
+			if (action == AssemblyAction.Copy) {
+				// Preserve TypeForwardedTo which would the linker sweep otherwise
+				if (assembly.MainModule.HasExportedTypes) {
+					foreach (var type in assembly.MainModule.ExportedTypes) {
+						annotations.Mark (type);
+					}
+				}
 				annotations.SetAction (assembly, AssemblyAction.Save);
+			}
 		}
 
 		public void ClearCurrentAssembly ()
