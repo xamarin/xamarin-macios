@@ -94,8 +94,8 @@ Objective-C protocols - this is accomplished by generating a table in
 unmanaged code that maps the ID for the interface to the ID for the wrapper
 type.
 
-This is all supported by the `ObjCRuntime.IManagedRegistrar.LookTypeId` and
-`ObjCRuntime.IManagedRegistrar.Lookup` methods.
+This is all supported by the `ObjCRuntime.IManagedRegistrar.LookupTypeId` and
+`ObjCRuntime.IManagedRegistrar.LookupType` methods.
 
 Note that in many ways the type ID is similar to the metadata token for a type
 (and is sometimes referred to as such in the code, especially code that
@@ -107,18 +107,18 @@ When AOT-compiling code, the generated Objective-C code can call the entry
 point for the UnmanagedCallersOnly trampoline directly (the AOT compiler will
 emit a native symbol with the name of the entry point).
 
-However, when no AOT-compiling code, the generated Objective-C code needs to
+However, when not AOT-compiling code, the generated Objective-C code needs to
 find the function pointer for the UnmanagedCallersOnly methods. This is
 implemented using another lookup table in managed code.
 
-For technical reasons, this implemented using multiple levels of functions if
-there are a significant number of UnmanagedCallersOnly methods, because it
-seems the JIT will compile the target for every function pointer in a method,
+For technical reasons, this is implemented using multiple levels of functions if
+there is a significant number of UnmanagedCallersOnly methods. As it seems
+that the JIT will compile the target for every function pointer in a method,
 even if the function pointer isn't loaded at runtime. This means that if
-there's 1.000 methods in the lookup table, the JIT will have to compile all
-the 1.000 methods the first time the lookup method is called if the lookup was
-implemented in a single function, even if the lookup method will eventually
-just find a single callback.
+there are 1.000 methods in the lookup table and if the lookup was
+implemented in a single function, the JIT will have to compile all
+the 1.000 methods the first time the lookup method is called, even 
+if the lookup method will eventually just find a single callback.
 
 This might be easier to describe with some code.
 
@@ -194,7 +194,7 @@ mark).
 The trimmer will then trim away any UnmanagedCallersOnly trampoline that's no
 longer needed because the target method has been trimmed away.
 
-On the other hand, the lookup tables for the type mapping is done after
+On the other hand, the lookup tables for the type mapping are generated after
 trimming, because we only want to add types that aren't trimmed away to the
 lookup tables (otherwise we'd end up causing all those types to be kept).
 
