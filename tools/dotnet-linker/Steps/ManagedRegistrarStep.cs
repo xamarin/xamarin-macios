@@ -307,11 +307,7 @@ namespace Xamarin.Linker {
 
 			Trace (il, $"ENTER");
 
-			if (method.IsConstructor) {
-				callback.AddParameter ("pobj", abr.ObjCRuntime_NativeHandle);
-			} else {
-				callback.AddParameter ("pobj", abr.System_IntPtr);
-			}
+			callback.AddParameter ("pobj", abr.System_IntPtr);
 
 			if (!isVoid || method.IsConstructor)
 				returnVariable = body.AddVariable (placeholderType);
@@ -351,6 +347,7 @@ namespace Xamarin.Linker {
 				il.Emit (OpCodes.Stind_I1);
 				// return rv;
 				il.Emit (OpCodes.Ldarg_0);
+				il.Emit (OpCodes.Call, abr.NativeObject_op_Implicit_NativeHandle);
 				il.Emit (OpCodes.Stloc, returnVariable);
 				il.Emit (OpCodes.Leave, placeholderInstruction);
 				// }

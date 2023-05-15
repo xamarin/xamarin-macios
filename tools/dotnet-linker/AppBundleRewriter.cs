@@ -744,7 +744,7 @@ namespace Xamarin.Linker {
 						ObjCRuntime_Runtime, "HasNSObject",
 						nameof (Runtime_HasNSObject),
 						isStatic: true,
-						ObjCRuntime_NativeHandle);
+						System_IntPtr);
 			}
 		}
 
@@ -994,12 +994,24 @@ namespace Xamarin.Linker {
 
 		public MethodReference NativeObject_op_Implicit_IntPtr {
 			get {
-				return GetMethodReference (PlatformAssembly, ObjCRuntime_NativeHandle, "op_Implicit", (v) =>
+				return GetMethodReference (PlatformAssembly, ObjCRuntime_NativeHandle, "op_Implicit", nameof (NativeObject_op_Implicit_IntPtr), (v) =>
 						v.IsStatic
 						&& v.HasParameters
 						&& v.Parameters.Count == 1
 						&& v.Parameters [0].ParameterType.Is ("ObjCRuntime", "NativeHandle")
 						&& v.ReturnType.Is ("System", "IntPtr")
+						&& !v.HasGenericParameters);
+			}
+		}
+
+		public MethodReference NativeObject_op_Implicit_NativeHandle {
+			get {
+				return GetMethodReference (PlatformAssembly, ObjCRuntime_NativeHandle, "op_Implicit", nameof (NativeObject_op_Implicit_NativeHandle), (v) =>
+						v.IsStatic
+						&& v.HasParameters
+						&& v.Parameters.Count == 1
+						&& v.Parameters [0].ParameterType.Is ("System", "IntPtr")
+						&& v.ReturnType.Is ("ObjCRuntime", "NativeHandle")
 						&& !v.HasGenericParameters);
 			}
 		}
