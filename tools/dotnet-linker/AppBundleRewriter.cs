@@ -138,7 +138,7 @@ namespace Xamarin.Linker {
 
 		public MethodReference GetMethodReference (AssemblyDefinition assembly, TypeReference tr, string name, string key, bool isStatic, params TypeReference [] parameterTypes)
 		{
-			return GetMethodReference (assembly, tr, name,  key, isStatic, 0, parameterTypes);
+			return GetMethodReference (assembly, tr, name, key, isStatic, 0, parameterTypes);
 		}
 
 		public MethodReference GetMethodReference (AssemblyDefinition assembly, TypeReference tr, string name, string key, bool isStatic, int genericParameterCount, params TypeReference [] parameterTypes)
@@ -397,7 +397,7 @@ namespace Xamarin.Linker {
 
 		public MethodReference Type_GetTypeFromHandle {
 			get {
-				return GetMethodReference (CorlibAssembly, System_Type, "GetTypeFromHandle", isStatic:true, System_RuntimeTypeHandle);
+				return GetMethodReference (CorlibAssembly, System_Type, "GetTypeFromHandle", isStatic: true, System_RuntimeTypeHandle);
 			}
 		}
 
@@ -1043,7 +1043,7 @@ namespace Xamarin.Linker {
 
 		public MethodReference Runtime_RetainAndAutoreleaseNSObject {
 			get {
-				return GetMethodReference (PlatformAssembly, 
+				return GetMethodReference (PlatformAssembly,
 						ObjCRuntime_Runtime, "RetainAndAutoreleaseNSObject",
 						isStatic: true,
 						Foundation_NSObject);
