@@ -31,13 +31,13 @@ namespace XamarinTests.ObjCRuntime {
 
 		public static bool IsStaticRegistrar {
 			get {
-				return (CurrentRegistrar & Registrars.Static) == Registrars.Static;
+				return CurrentRegistrar.HasFlag (Registrars.Static);
 			}
 		}
 
 		public static bool IsDynamicRegistrar {
 			get {
-				return (CurrentRegistrar & Registrars.Dynamic) == Registrars.Dynamic;
+				return CurrentRegistrar.HasFlag (Registrars.Dynamic);
 			}
 		}
 
