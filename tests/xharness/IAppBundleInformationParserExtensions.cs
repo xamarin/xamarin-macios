@@ -47,7 +47,7 @@ namespace Xharness {
 			appPath = Path.Combine (
 				projectDirectory,
 				appPath ?? string.Empty,
-				appName + (extension != null ? ".appex" : ".app"));
+				appName + (extension is not null ? ".appex" : ".app"));
 
 			var arch = csproj.GetMtouchArch (platform, buildConfiguration);
 
