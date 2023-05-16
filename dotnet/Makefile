@@ -114,6 +114,7 @@ Microsoft.$(1).Sdk/Sdk/AutoImport.props: targets/AutoImport.template.props Makef
 	$$(Q_GEN) sed \
 		-e "s/@PLATFORM@/$(1)/g" \
 		-e "s/@PLATFORM_LOWERCASE@/$(2)/g" \
+		-e "s/@TARGET_FRAMEWORK_VERSION@/$(subst net,,$(DOTNET_TFM))/g" \
 		$$< > $$@.tmp
 	$(Q) mv $$@.tmp $$@
 endef
