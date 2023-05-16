@@ -49,7 +49,7 @@ namespace Xamarin.MacDev.Tasks {
 #if NET
 			get { return string.IsNullOrEmpty (sdkDevPath) ? "/" : sdkDevPath; }
 #else
-			get { return (sdkDevPath is null || string.IsNullOrEmpty (sdkDevPath)) ? "/" : sdkDevPath; }
+			get { return (sdkDevPath is null || string.IsNullOrEmpty (sdkDevPath)) ? "/" : sdkDevPath; }
 #endif
 			set { sdkDevPath = value; }
 		}
