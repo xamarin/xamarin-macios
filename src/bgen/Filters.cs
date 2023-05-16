@@ -210,7 +210,7 @@ public partial class Generator {
 			if (name is null) {
 				if (export is null)
 					throw new BindingException (1074, true, type.Name, p.Name);
-				
+
 				if (export.Selector is null)
 					throw new BindingException (1082, true, type.Name, p.Name);
 
