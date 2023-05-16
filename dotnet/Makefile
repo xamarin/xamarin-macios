@@ -113,10 +113,11 @@ Microsoft.$(1).Sdk/Sdk/AutoImport.props: targets/AutoImport.template.props Makef
 	$(Q) rm -f $$@.tmp
 	$$(Q_GEN) sed \
 		-e "s/@PLATFORM@/$(1)/g" \
+		-e "s/@PLATFORM_LOWERCASE@/$(2)/g" \
 		$$< > $$@.tmp
 	$(Q) mv $$@.tmp $$@
 endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call AutoImports,$(platform))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call AutoImports,$(platform),$(shell echo $(platform) | tr A-Z a-z))))
 
 define DefaultItems
 Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.DefaultItems.props: targets/Microsoft.Sdk.DefaultItems.template.props Makefile
