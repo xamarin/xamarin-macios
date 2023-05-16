@@ -18,6 +18,9 @@ namespace Xamarin.MacDev.Tasks {
 		public string InputDirectory { get; set; } = string.Empty;
 
 		[Required]
+		public string OutputDirectory { get; set; } = string.Empty;
+
+		[Required]
 		public ITaskItem? ClassMapPath { get; set; }
 
 		[Required]
@@ -53,8 +56,21 @@ namespace Xamarin.MacDev.Tasks {
 				return false;
 			}
 
-			if (!DirectoryIsWritable (InputDirectory)) {
-				Log.LogError ($"InputDirectory {InputDirectory} is not writable.");
+			if (InputDirectory == OutputDirectory) {
+				Log.LogError ($"OutputDirectory {OutputDirectory} must be difference from InputDirectory.");
+				return false;
+			}
+
+			if (!Directory.Exists (OutputDirectory)) {
+				try {
+					Directory.CreateDirectory (OutputDirectory);
+				} catch (Exception directoryException) {
+					Log.LogErrorFromException (directoryException);
+				}
+			}
+
+			if (!DirectoryIsWritable (OutputDirectory)) {
+				Log.LogError ($"OutputDirectory {OutputDirectory} is not writable.");
 				return false;
 			}
 
@@ -84,7 +100,7 @@ namespace Xamarin.MacDev.Tasks {
 				Log.LogMessage (MessageImportance.Low, $"Redirecting class_handle usage from directory {InputDirectory} in the following dlls: {string.Join (",", dllsToProcess)}");
 				Log.LogMessage (MessageImportance.Low, $"Redirecting class_handle usage with the platform dll {xamarinDll}");
 				Log.LogMessage (MessageImportance.Low, $"Redirecting class_handle usage with the following {nameof (ClassMapPath)}: {classMapPath}");
-				var rewriter = new Rewriter (map, xamarinDll, dllsToProcess);
+				var rewriter = new Rewriter (map, xamarinDll, dllsToProcess, OutputDirectory);
 				rewriter.Process ();
 			} catch (Exception e) {
 				Log.LogErrorFromException (e);

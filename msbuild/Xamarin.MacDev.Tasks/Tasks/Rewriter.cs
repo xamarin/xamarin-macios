@@ -19,14 +19,16 @@ namespace Xamarin.MacDev.Tasks {
 		CSToObjCMap map;
 		string pathToXamarinAssembly;
 		string [] assembliesToPatch;
+		string outputDirectory;
 		SimpleAssemblyResolver resolver;
 		Dictionary<string, FieldDefinition> csTypeToFieldDef = new Dictionary<string, FieldDefinition> ();
 
-		public Rewriter (CSToObjCMap map, string pathToXamarinAssembly, string [] assembliesToPatch)
+		public Rewriter (CSToObjCMap map, string pathToXamarinAssembly, string [] assembliesToPatch, string outputDirectory)
 		{
 			this.map = map;
 			this.pathToXamarinAssembly = pathToXamarinAssembly;
 			this.assembliesToPatch = assembliesToPatch;
+			this.outputDirectory = outputDirectory;
 			resolver = new SimpleAssemblyResolver (assembliesToPatch);
 		}
 
@@ -72,7 +74,7 @@ namespace Xamarin.MacDev.Tasks {
 				classMap [csName] = fieldDef;
 			}
 
-			module.Write ();
+			module.Write (ToOutputFileName (pathToXamarinAssembly));
 			return classMap;
 		}
 
@@ -138,7 +140,7 @@ namespace Xamarin.MacDev.Tasks {
 				using var stm = new FileStream (path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
 				using var module = ModuleDefinition.ReadModule (stm);
 				PatchClassPtrUsage (classMap, module);
-				module.Write ();
+				module.Write (ToOutputFileName (path));
 			}
 		}
 
@@ -283,6 +285,11 @@ namespace Xamarin.MacDev.Tasks {
 						yield return nt;
 				}
 			}
+		}
+
+		string ToOutputFileName (string pathToInputFileName)
+		{
+			return Path.Combine (outputDirectory, Path.GetFileName (pathToInputFileName));
 		}
 	}
 }
