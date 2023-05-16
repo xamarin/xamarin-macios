@@ -6264,31 +6264,37 @@ namespace Foundation {
 		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithSuiteName:")]
-		IntPtr InitWithSuiteName (string suiteName);
+		IntPtr InitWithSuiteName ([NullAllowed] string suiteName);
 
 		[Export ("objectForKey:")]
 		[Internal]
+		[return: NullAllowed]
 		NSObject ObjectForKey (string defaultName);
 
 		[Export ("setObject:forKey:")]
 		[Internal]
-		void SetObjectForKey (NSObject value, string defaultName);
+		void SetObjectForKey ([NullAllowed] NSObject value, string defaultName);
 
 		[Export ("removeObjectForKey:")]
 		void RemoveObject (string defaultName);
 
+		[return: NullAllowed]
 		[Export ("stringForKey:")]
 		string StringForKey (string defaultName);
 
+		[return: NullAllowed]
 		[Export ("arrayForKey:")]
 		NSObject [] ArrayForKey (string defaultName);
 
+		[return: NullAllowed]
 		[Export ("dictionaryForKey:")]
 		NSDictionary DictionaryForKey (string defaultName);
 
+		[return: NullAllowed]
 		[Export ("dataForKey:")]
 		NSData DataForKey (string defaultName);
 
+		[return: NullAllowed]
 		[Export ("stringArrayForKey:")]
 		string [] StringArrayForKey (string defaultName);
 
@@ -6351,6 +6357,7 @@ namespace Foundation {
 		[Export ("persistentDomainNames")]
 		string [] PersistentDomainNames ();
 
+		[return: NullAllowed]
 		[Export ("persistentDomainForName:")]
 		NSDictionary PersistentDomainForName (string domainName);
 
@@ -7150,11 +7157,19 @@ namespace Foundation {
 		[Export ("fileURLWithPath:isDirectory:relativeToURL:")]
 		NSUrl CreateFileUrl (string path, bool isDir, [NullAllowed] NSUrl relativeToUrl);
 
+		[Static]
+		[Export ("fileURLWithPath:isDirectory:")]
+		NSUrl CreateFileUrl (string path, bool isDir);
+
 		[iOS (9, 0), Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("fileURLWithPath:relativeToURL:")]
 		NSUrl CreateFileUrl (string path, [NullAllowed] NSUrl relativeToUrl);
+
+		[Static]
+		[Export ("fileURLWithPath:")]
+		NSUrl CreateFileUrl (string path);
 
 		[iOS (9, 0), Mac (10, 11)]
 		[MacCatalyst (13, 1)]

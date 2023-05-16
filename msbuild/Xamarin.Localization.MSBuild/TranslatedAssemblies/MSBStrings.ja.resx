@@ -1202,4 +1202,7 @@
   <data name="E7113" xml:space="preserve">
         <value>このプラットフォームで zip ファイル '{0}' を処理できません: ファイル '{1}' は symlink です。</value>
     </data>
+  <data name="E7114" xml:space="preserve">
+        <value>The "{0}" task was not given a value for the parameter "{1}", which is required when building on this platform.</value>
+    </data>
 </root>

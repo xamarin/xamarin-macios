@@ -1202,4 +1202,7 @@
   <data name="E7113" xml:space="preserve">
         <value>無法處理此平台上的 zip 檔案 '{0}'; 檔案 '{1}' 是符號連結。</value>
     </data>
+  <data name="E7114" xml:space="preserve">
+        <value>The "{0}" task was not given a value for the parameter "{1}", which is required when building on this platform.</value>
+    </data>
 </root>

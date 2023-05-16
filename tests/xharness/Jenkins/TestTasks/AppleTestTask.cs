@@ -34,6 +34,8 @@ namespace Xharness.Jenkins.TestTasks {
 		{
 			var xcodeRoot = Jenkins.Harness.XcodeRoot;
 
+			process.StartInfo.EnvironmentVariables ["RootTestsDirectory"] = HarnessConfiguration.RootDirectory;
+
 			switch (Platform) {
 			case TestPlatform.iOS:
 			case TestPlatform.iOS_Unified:
