@@ -1459,4 +1459,12 @@
             {2}: path to a file
         </comment>
     </data>
+
+    <data name="E7115" xml:space="preserve">
+        <value>The illink assembly doesn't exist: '{0}'.</value>
+        <comment>
+            {0}: the path to the linker assembly
+        </comment>
+    </data>
+
 </root>
