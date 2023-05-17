@@ -1203,6 +1203,6 @@
         <value>Não é possível processar o arquivo zip '{0}' nesta plataforma: o arquivo '{1}' é um link simbólico.</value>
     </data>
   <data name="E7114" xml:space="preserve">
-        <value>The "{0}" task was not given a value for the parameter "{1}", which is required when building on this platform.</value>
+        <value>A tarefa "{0}" não recebeu um valor para o parâmetro "{1}", que é necessário ao compilar nesta plataforma.</value>
     </data>
 </root>

@@ -525,6 +525,13 @@ public class BindingTouch : IDisposable {
 			typeManager ??= new (this, api, universe.CoreAssembly, baselib);
 
 			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {
+#if NET
+				if (string.IsNullOrEmpty (linkWith.LibraryName))
+#else
+				if (linkWith.LibraryName is null || string.IsNullOrEmpty (linkWith.LibraryName))
+#endif
+					continue;
+
 				if (!linkwith.Contains (linkWith.LibraryName)) {
 					Console.Error.WriteLine ("Missing native library {0}, please use `--link-with' to specify the path to this library.", linkWith.LibraryName);
 					return 1;

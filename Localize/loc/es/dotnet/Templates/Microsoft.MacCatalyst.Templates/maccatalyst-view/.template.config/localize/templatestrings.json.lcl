@@ -32,7 +32,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Mac Catalyst View]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Vista de Mac Catalyst]]></Val>
+            <Val><![CDATA[Vista de Mac Catalyst]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
