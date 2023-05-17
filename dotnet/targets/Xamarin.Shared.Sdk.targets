@@ -998,11 +998,6 @@
 			<Output TaskParameter="Lines" PropertyName="_XamarinAOTCompiler" />
 		</ReadLinesFromFile>
 
-		<!-- If the cached value points to a file that doesn't exist, then don't use it -->
-		<PropertyGroup Condition="!Exists('$(_XamarinAOTCompiler)')">
-			<_XamarinAOTCompiler />
-		</PropertyGroup>
-
 		<FindAotCompiler
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '$(_RunAotCompiler)' == 'true' And '$(_XamarinAOTCompiler)' == ''"
