@@ -13,7 +13,7 @@ using Xamarin.Messaging.Build.Client;
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public class ClassRedirectorTask : XamarinTask, ITaskCallback {
+	public class ClassRedirector : XamarinTask, ITaskCallback {
 		[Required]
 		public string InputDirectory { get; set; } = string.Empty;
 
