@@ -20,10 +20,10 @@ namespace Xamarin.MacDev.Tasks {
 		/// <returns></returns>
 		protected string ComputeValueUsingTarget (string computeValueTarget, string targetName)
 		{
-			var projectPath = Path.GetTempFileName ();
-
-			File.Delete (projectPath);
-			projectPath += ".csproj";
+			var projectDirectory = Path.GetTempFileName ();
+			File.Delete (projectDirectory);
+			Directory.CreateDirectory (projectDirectory);
+			var projectPath = Path.Combine (projectDirectory, targetName + ".csproj");
 
 			var csproj = $@"<?xml version=""1.0"" encoding=""utf-8""?>
 <Project Sdk=""Microsoft.NET.Sdk"">
@@ -52,17 +52,18 @@ namespace Xamarin.MacDev.Tasks {
 				return ExecuteBuildAsync (dotnetPath, projectPath, targetName, environment).Result;
 			} finally {
 				if (KeepTemporaryOutput) {
-					Log.LogMessage (MessageImportance.Normal, $"Temporary project for the {targetName} task: {projectPath}");
+					Log.LogMessage (MessageImportance.Normal, $"Temporary project directory for the {targetName} task: {projectDirectory}");
 				} else {
-					File.Delete (projectPath);
+					Directory.Delete (projectDirectory, true);
 				}
 			}
 		}
 
 		async Threading.Task<string> ExecuteBuildAsync (string dotnetPath, string projectPath, string targetName, Dictionary<string, string> environment)
 		{
-			var outputFile = Path.GetTempFileName ();
-			var binlog = GetTempBinLog ();
+			var projectDirectory = Path.GetDirectoryName (projectPath);
+			var outputFile = Path.Combine (projectDirectory, "Output.txt");
+			var binlog = Path.Combine (projectDirectory, targetName + ".binlog");
 			var arguments = new List<string> ();
 
 			arguments.Add ("build");
@@ -72,29 +73,9 @@ namespace Xamarin.MacDev.Tasks {
 			arguments.Add ("/bl:" + binlog);
 			arguments.Add (projectPath);
 
-			try {
-				await ExecuteAsync (dotnetPath, arguments, environment: environment);
+			await ExecuteAsync (dotnetPath, arguments, environment: environment);
 
-				return File.ReadAllText (outputFile).Trim ();
-			} finally {
-				if (KeepTemporaryOutput) {
-					Log.LogMessage (MessageImportance.Normal, $"Temporary output for the {targetName} task: {outputFile}");
-					Log.LogMessage (MessageImportance.Normal, $"Temporary build log for the {targetName} task: {binlog}");
-				} else {
-					File.Delete (outputFile);
-					File.Delete (binlog);
-				}
-			}
-		}
-
-		string GetTempBinLog ()
-		{
-			var binlog = Path.GetTempFileName ();
-
-			File.Delete (binlog);
-			binlog += ".binlog";
-
-			return binlog;
+			return File.ReadAllText (outputFile).Trim ();
 		}
 	}
 }
