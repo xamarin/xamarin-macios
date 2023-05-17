@@ -49,12 +49,42 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			try {
+				ExecuteRestoreAsync (dotnetPath, projectPath, targetName, environment).Wait ();
+
 				return ExecuteBuildAsync (dotnetPath, projectPath, targetName, environment).Result;
 			} finally {
 				if (KeepTemporaryOutput) {
 					Log.LogMessage (MessageImportance.Normal, $"Temporary project directory for the {targetName} task: {projectDirectory}");
 				} else {
 					Directory.Delete (projectDirectory, true);
+				}
+			}
+		}
+
+		async Threading.Task ExecuteRestoreAsync (string dotnetPath, string projectPath, string targetName, Dictionary<string, string> environment)
+		{
+			var binlog = GetTempBinLog ();
+			var arguments = new List<string> ();
+
+			arguments.Add ("restore");
+
+			var dotnetDir = Path.GetDirectoryName (dotnetPath);
+			var configFile = Path.Combine (dotnetDir, "NuGet.config");
+
+			if (File.Exists (configFile)) {
+				arguments.Add ("/p:RestoreConfigFile=" + configFile);
+			}
+
+			arguments.Add ("/bl:" + binlog);
+			arguments.Add (projectPath);
+
+			try {
+				await ExecuteAsync (dotnetPath, arguments, environment: environment);
+			} finally {
+				if (KeepTemporaryOutput) {
+					Log.LogMessage (MessageImportance.Normal, $"Temporary restore log for the {targetName} task: {binlog}");
+				} else {
+					File.Delete (binlog);
 				}
 			}
 		}
