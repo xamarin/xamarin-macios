@@ -1,4 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '@TARGET_FRAMEWORK_VERSION@'))">
+		<EolWorkload Include="@PLATFORM_LOWERCASE@" Url="https://aka.ms/maui-support-policy" />
+	</ItemGroup>
 	<Import Project="..\targets\Microsoft.@PLATFORM@.Sdk.DefaultItems.props" />
 	<Import Project="..\targets\Microsoft.@PLATFORM@.Sdk.ImplicitNamespaceImports.props" />
 </Project>
