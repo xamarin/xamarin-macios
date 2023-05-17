@@ -33,6 +33,7 @@ namespace Xamarin.Linker {
 		public static MethodBody CreateBody (this MethodDefinition self, out ILProcessor il)
 		{
 			var body = new MethodBody (self);
+			body.InitLocals = true;
 			self.Body = body;
 			il = body.GetILProcessor ();
 			return body;
