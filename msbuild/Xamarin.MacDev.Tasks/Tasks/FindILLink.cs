@@ -22,7 +22,7 @@ namespace Xamarin.MacDev.Tasks {
 </Target>";
 
 			var illinkTaskPath = ComputeValueUsingTarget (target, targetName);
-			
+
 			if (!string.IsNullOrEmpty (illinkTaskPath))
 				ILLinkPath = Path.Combine (Path.GetDirectoryName (illinkTaskPath), "illink.dll");
 
