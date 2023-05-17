@@ -63,7 +63,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		async Threading.Task ExecuteRestoreAsync (string dotnetPath, string projectPath, string targetName, Dictionary<string, string> environment)
 		{
-			var binlog = GetTempBinLog ();
+			var projectDirectory = Path.GetDirectoryName (projectPath);
+			var binlog = Path.Combine (projectDirectory, targetName + ".binlog");
 			var arguments = new List<string> ();
 
 			arguments.Add ("restore");
