@@ -521,10 +521,14 @@
 		<value>Unsupported type 'ref/out {0}' decorated with [BindAs]</value>
 	</data>
 	
-    <data name="BI1081" xml:space="preserve">
-        <value>Unable to find the assembly '{0}'. Add it as a reference using its full path.</value>
-    </data>
-	
+	<data name="BI1081" xml:space="preserve">
+		<value>Unable to find the assembly '{0}'. Add it as a reference using its full path.</value>
+	</data>
+
+	<data name="BI1082" xml:space="preserve">
+		<value>Selector name missing in [CoreImageFilterProperty] attribute on {0} property {1}</value>
+	</data>
+
 	<data name="BI1101" xml:space="preserve">
 		<value>Trying to use a string as a [Target]</value>
 	</data>
