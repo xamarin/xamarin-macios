@@ -1203,6 +1203,6 @@
         <value>Soubor ZIP {0} nelze na této platformě zpracovat: soubor {1} je symbolický odkaz.</value>
     </data>
   <data name="E7114" xml:space="preserve">
-        <value>The "{0}" task was not given a value for the parameter "{1}", which is required when building on this platform.</value>
+        <value>Úloze “{0}“ nebyla určena hodnota parametru „{1}“, která se při sestavování na této platformě vyžaduje.</value>
     </data>
 </root>

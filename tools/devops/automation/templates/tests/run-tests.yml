@@ -101,29 +101,12 @@ steps:
 - bash: |
     set -x
     set -e
-    make -C tests -j8 all
     make -C tools/xibuild
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: Build test dependencies
   timeoutInMinutes: 30
 
-# get and expand the needed bins for intro to work.
-- task: DownloadPipelineArtifact@2
-  displayName: Download introspection dependencies 
-  inputs:
-    patterns: '**/package-introspection-dependencies.zip'
-    allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/artifacts/tmp
-
-- bash: |
-    ls -Rla $(Build.SourcesDirectory)/artifacts/tmp
-    mv $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}package-introspection-dependencies/package-introspection-dependencies.zip .
-    unzip -o package-introspection-dependencies.zip
-  workingDirectory: $(Build.SourcesDirectory)/xamarin-macios/tools/mtouch
-  displayName: Expand introspection dependencies.
-  timeoutInMinutes: 10
-
-# get and expand the needed libs for monotouch
+# download the prebuilt test dependencies
 - task: DownloadPipelineArtifact@2
   displayName: Download test libraries dependencies 
   inputs:
@@ -131,13 +114,11 @@ steps:
     allowFailedBuilds: true
     path: $(Build.SourcesDirectory)/artifacts/tmp
 
-# this step replaces the test-libraries dir
+# expand all the prebuilt test dependencies
 - bash: |
     ls -Rla $(Build.SourcesDirectory)/artifacts/tmp
-    rm -Rf test-libraries/*
-    mv $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip .
-    unzip -o package-test-libraries.zip -d test-libraries
-  workingDirectory: $(Build.SourcesDirectory)/xamarin-macios/tests
+    unzip -o $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip -d .
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: Expand test libraries.
   timeoutInMinutes: 10
 

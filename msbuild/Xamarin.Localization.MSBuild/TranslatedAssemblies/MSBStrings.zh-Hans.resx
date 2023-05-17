@@ -1203,6 +1203,6 @@
         <value>无法处理此平台上的 zip 文件“{0}”: 文件“{1}”为符号链接。</value>
     </data>
   <data name="E7114" xml:space="preserve">
-        <value>The "{0}" task was not given a value for the parameter "{1}", which is required when building on this platform.</value>
+        <value>"{0}"任务未给参数 "{1}" 提供值，在此平台上生成时需要该值。</value>
     </data>
 </root>
