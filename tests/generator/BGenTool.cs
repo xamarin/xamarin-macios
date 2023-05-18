@@ -360,7 +360,7 @@ namespace Xamarin.Tests {
 				Assert.Fail ($"Unexpectedly found method '{method}' with signature '{string.Join ("', '", parameterTypes)}' on the type '{typename}'.");
 		}
 
-		MethodDefinition FindMethod (string typename, string method, string returnType, params string [] parameterTypes)
+		MethodDefinition? FindMethod (string typename, string method, string returnType, params string [] parameterTypes)
 		{
 			var assembly = LoadAssembly ();
 			var t = assembly.MainModule.Types.FirstOrDefault ((v) => v.FullName == typename);
