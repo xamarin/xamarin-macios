@@ -1882,6 +1882,10 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 			<_BindingPackagesFromReferencedAssembliesDirectoriesExists Include="@(_BindingPackagesFromReferencedAssembliesDirectoriesCandidates->Distinct())" Condition="Exists('%(Identity)')" />
 		</ItemGroup>
 
+		<PropertyGroup Condition="'$(IsMacEnabled)' == 'true'">
+			<BuildSessionIdIfConnected>$(BuildSessionId)</BuildSessionIdIfConnected>
+		</PropertyGroup>
+
 		<!--
 			We need to expand items in an item group using globs, which is
 			kind of tricky, because globs in item transformations aren't
@@ -1890,11 +1894,12 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 			Note that this task should run remotely from Windows when there's
 			a Mac connected, but locally when there's not a Mac connected (for
 			Hot Restart builds for instance), so we're not conditioning this
-			task on IsMacEnabled.
+			task on IsMacEnabled. Instead we're only setting SessionId if we
+			have a session id *and* we're connected to a Mac.
 
 		-->
 		<GetFileSystemEntries
-			SessionId="$(BuildSessionId)"
+			SessionId="$(BuildSessionIdIfConnected)"
 			DirectoryPath="@(_BindingPackagesFromReferencedAssembliesDirectoriesExists)"
 			Pattern="*"
 			Recursive="true"
