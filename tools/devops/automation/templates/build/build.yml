@@ -159,23 +159,9 @@ steps:
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
 
 # Actual build of the project
-- bash: |
-    set -x
-    set -e
-    echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
-    MAKE_FLAGS=""
-
-    if [[ "$SYSTEM_DEBUG" == "true" ]]; then
-      MAKE_FLAGS="V=1 -w"
-    fi
-
-    if test -z "$makeParallelism"; then
-      makeParallelism=8
-    fi
-
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j$makeParallelism $MAKE_FLAGS IGNORE_SIMULATORS=1
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j$makeParallelism $MAKE_FLAGS IGNORE_SIMULATORS=1
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-macios.sh
   name: build
+  workingDirectory: "$(Build.SourcesDirectory)/xamarin-macios"
   displayName: 'Build'
   timeoutInMinutes: 300
 
