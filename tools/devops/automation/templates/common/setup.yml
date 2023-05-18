@@ -32,6 +32,7 @@ steps:
   timeoutInMinutes: 5
 
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-results-dir.sh
+  workingDirectory: $(System.DefaultWorkingDirectory)
   displayName: 'Clear results directory'
   timeoutInMinutes: 5
   continueOnError: true
