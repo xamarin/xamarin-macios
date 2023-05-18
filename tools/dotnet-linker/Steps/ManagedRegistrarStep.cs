@@ -759,15 +759,14 @@ namespace Xamarin.Linker {
 
 			if (IsNSObject (type)) {
 				if (toManaged) {
+					var ea = StaticRegistrar.CreateExportAttribute (method);
+					if (ea is not null && ea.ArgumentSemantic == ArgumentSemantic.Copy)
+						il.Emit (OpCodes.Call, abr.Runtime_CopyAndAutorelease);
 					if (type is GenericParameter gp || type is GenericInstanceType || type.HasGenericParameters) {
 						il.Emit (OpCodes.Call, abr.Runtime_GetNSObject__System_IntPtr);
 						// We're calling the target method dynamically (using MethodBase.Invoke), so there's no
 						// need to check the type of the returned object, because MethodBase.Invoke will do type checks.
 					} else {
-						var ea = StaticRegistrar.CreateExportAttribute (method);
-						if (ea is not null && ea.ArgumentSemantic == ArgumentSemantic.Copy)
-							il.Emit (OpCodes.Call, abr.Runtime_CopyAndAutorelease);
-
 						il.Emit (OpCodes.Ldarg_1); // SEL
 						il.Emit (OpCodes.Ldtoken, method);
 						il.EmitLdc (parameter == -1); // evenInFinalizerQueue
