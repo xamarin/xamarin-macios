@@ -303,6 +303,7 @@ namespace Xamarin.Linker {
 			var isCategory = categoryAttribute is not null;
 			var isInstanceCategory = isCategory && StaticRegistrar.HasThisAttribute (method);
 			var isGeneric = method.DeclaringType.HasGenericParameters;
+			var isDynamicInvoke = isGeneric;
 			VariableDefinition? selfVariable = null;
 
 			Trace (il, $"ENTER");
@@ -331,7 +332,7 @@ namespace Xamarin.Linker {
 
 			if (isInstanceCategory) {
 				il.Emit (OpCodes.Ldarg_0);
-				EmitConversion (method, il, method.Parameters [0].ParameterType, true, 0, out var nativeType, postProcessing, selfVariable);
+				EmitConversion (method, il, method.Parameters [0].ParameterType, true, 0, out var nativeType, postProcessing, selfVariable, isDynamicInvoke: isDynamicInvoke);
 			} else if (method.IsStatic) {
 				// nothing to do
 			} else if (method.IsConstructor) {
@@ -361,7 +362,7 @@ namespace Xamarin.Linker {
 			} else {
 				// instance method
 				il.Emit (OpCodes.Ldarg_0);
-				EmitConversion (method, il, method.DeclaringType, true, -1, out var nativeType, postProcessing, selfVariable);
+				EmitConversion (method, il, method.DeclaringType, true, -1, out var nativeType, postProcessing, selfVariable, isDynamicInvoke: isDynamicInvoke);
 			}
 
 			callback.AddParameter ("sel", abr.System_IntPtr);
@@ -378,7 +379,6 @@ namespace Xamarin.Linker {
 			}
 
 			if (method.HasParameters) {
-				var isDynamicInvoke = isGeneric;
 				for (var p = parameterStart; p < managedParameterCount; p++) {
 					var nativeParameter = callback.AddParameter ($"p{p}", placeholderType);
 					var nativeParameterIndex = p + nativeParameterOffset;
@@ -764,6 +764,9 @@ namespace Xamarin.Linker {
 						il.Emit (OpCodes.Call, abr.Runtime_CopyAndAutorelease);
 					if (IsOpenType (type)) {
 						il.Emit (OpCodes.Call, abr.Runtime_GetNSObject__System_IntPtr);
+						if (!isDynamicInvoke)
+							AddException (ErrorHelper.CreateError (99, "Unable to call a statically resolved method 1 with object in {0} - {1} - {2}", GetMethodSignature (method), il.Body.Method.Name, type.FullName));
+
 						// We're calling the target method dynamically (using MethodBase.Invoke), so there's no
 						// need to check the type of the returned object, because MethodBase.Invoke will do type checks.
 					} else {
@@ -797,6 +800,9 @@ namespace Xamarin.Linker {
 				if (toManaged) {
 					if (IsOpenType (type)) {
 						il.Emit (OpCodes.Call, abr.Runtime_GetNSObject__System_IntPtr);
+						if (!isDynamicInvoke)
+							AddException (ErrorHelper.CreateError (99, "Unable to call a statically resolved method 2 with object in {0} - {1} - {2}", GetMethodSignature (method), il.Body.Method.Name, type.FullName));
+						
 						// We're calling the target method dynamically (using MethodBase.Invoke), so there's no
 						// need to check the type of the returned object, because MethodBase.Invoke will do type checks.
 					} else {
