@@ -432,7 +432,7 @@ namespace Xamarin.Linker {
 			}
 
 			if (returnVariable is not null) {
-				if (EmitConversion (method, il, method.ReturnType, false, -1, out var nativeReturnType, postProcessing, selfVariable)) {
+				if (EmitConversion (method, il, method.ReturnType, false, -1, out var nativeReturnType, postProcessing, selfVariable, isDynamicInvoke: isDynamicInvoke)) {
 					returnVariable.VariableType = nativeReturnType;
 					callback.ReturnType = nativeReturnType;
 				} else {
@@ -762,7 +762,7 @@ namespace Xamarin.Linker {
 					var ea = StaticRegistrar.CreateExportAttribute (method);
 					if (ea is not null && ea.ArgumentSemantic == ArgumentSemantic.Copy)
 						il.Emit (OpCodes.Call, abr.Runtime_CopyAndAutorelease);
-					if (type is GenericParameter gp || type is GenericInstanceType || type.HasGenericParameters) {
+					if (IsOpenType (type)) {
 						il.Emit (OpCodes.Call, abr.Runtime_GetNSObject__System_IntPtr);
 						// We're calling the target method dynamically (using MethodBase.Invoke), so there's no
 						// need to check the type of the returned object, because MethodBase.Invoke will do type checks.
@@ -795,7 +795,7 @@ namespace Xamarin.Linker {
 
 			if (StaticRegistrar.IsNativeObject (DerivedLinkContext, type)) {
 				if (toManaged) {
-					if (type is GenericParameter gp) {
+					if (IsOpenType (type)) {
 						il.Emit (OpCodes.Call, abr.Runtime_GetNSObject__System_IntPtr);
 						// We're calling the target method dynamically (using MethodBase.Invoke), so there's no
 						// need to check the type of the returned object, because MethodBase.Invoke will do type checks.
@@ -906,6 +906,28 @@ namespace Xamarin.Linker {
 
 			AddException (ErrorHelper.CreateError (99, "Don't know how (1) to convert {0} between managed and native code: {1}. Method: {2}", type.FullName, type.GetType ().FullName, GetMethodSignatureWithSourceCode (method)));
 			return false;
+		}
+
+		bool IsOpenType (TypeReference tr)
+		{
+			if (tr is GenericParameter)
+				return true;
+
+			if (tr is GenericInstanceType git) {
+				foreach (var ga in git.GenericArguments) {
+					if (IsOpenType (ga))
+						return true;
+				}
+				return false;
+			}
+
+			if (tr is TypeSpecification ts)
+				return IsOpenType (ts.ElementType);
+
+			if (tr is TypeDefinition td)
+				return td.HasGenericParameters;
+			
+			return IsOpenType (tr.Resolve ());
 		}
 
 		void EnsureVisible (MethodDefinition caller, FieldDefinition field)
