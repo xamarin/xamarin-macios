@@ -415,6 +415,7 @@ namespace Xamarin.Linker {
 
 			callback.AddParameter ("exception_gchandle", new PointerType (abr.System_IntPtr));
 
+			var isDynamicInvokeReturnType = false;
 			if (isGeneric) {
 				il.Emit (OpCodes.Call, abr.MethodBase_Invoke);
 				if (isVoid) {
@@ -422,8 +423,7 @@ namespace Xamarin.Linker {
 				} else if (method.ReturnType.IsValueType) {
 					il.Emit (OpCodes.Unbox_Any, method.ReturnType);
 				} else {
-					// Not sure if we have to cast to the method's return type here in some cases
-					// (certainly not all cases, because that creates invalid IL)
+					isDynamicInvokeReturnType = true;
 				}
 			} else if (method.IsStatic) {
 				il.Emit (OpCodes.Call, method);
@@ -432,7 +432,7 @@ namespace Xamarin.Linker {
 			}
 
 			if (returnVariable is not null) {
-				if (EmitConversion (method, il, method.ReturnType, false, -1, out var nativeReturnType, postProcessing, selfVariable, isDynamicInvoke: isDynamicInvoke)) {
+				if (EmitConversion (method, il, method.ReturnType, false, -1, out var nativeReturnType, postProcessing, selfVariable, isDynamicInvoke: isDynamicInvoke, isDynamicInvokeReturnType: isDynamicInvokeReturnType)) {
 					returnVariable.VariableType = nativeReturnType;
 					callback.ReturnType = nativeReturnType;
 				} else {
@@ -555,7 +555,7 @@ namespace Xamarin.Linker {
 
 		// This emits a conversion between the native and the managed representation of a parameter or return value,
 		// and returns the corresponding native type. The returned nativeType will (must) be a blittable type.
-		bool EmitConversion (MethodDefinition method, ILProcessor il, TypeReference type, bool toManaged, int parameter, [NotNullWhen (true)] out TypeReference? nativeType, List<Instruction> postProcessing, VariableDefinition? selfVariable, bool isOutParameter = false, int nativeParameterIndex = -1, bool isDynamicInvoke = false)
+		bool EmitConversion (MethodDefinition method, ILProcessor il, TypeReference type, bool toManaged, int parameter, [NotNullWhen (true)] out TypeReference? nativeType, List<Instruction> postProcessing, VariableDefinition? selfVariable, bool isOutParameter = false, int nativeParameterIndex = -1, bool isDynamicInvoke = false, bool isDynamicInvokeReturnType = false)
 		{
 			nativeType = null;
 
@@ -566,6 +566,8 @@ namespace Xamarin.Linker {
 						GenerateConversionToManaged (method, il, bindAsAttribute.OriginalType, type, "descriptiveMethodName", parameter, out nativeType);
 						return true;
 					} else {
+						if (isDynamicInvokeReturnType)
+							il.Emit (OpCodes.Castclass, type);
 						GenerateConversionToNative (method, il, type, bindAsAttribute.OriginalType, "descriptiveMethodName", out nativeType);
 						return true;
 					}
@@ -599,6 +601,9 @@ namespace Xamarin.Linker {
 					return true;
 				}
 
+				if (isDynamicInvokeReturnType)
+					AddException (ErrorHelper.CreateError (99, "Unexpected value type {0}: can't result from dynamic invoke. Method: {1}", type, GetMethodSignatureWithSourceCode (method)));
+
 				// no conversion necessary if we're any other value type
 				nativeType = type;
 				return true;
@@ -608,6 +613,8 @@ namespace Xamarin.Linker {
 				var elementType = pt.ElementType;
 				if (!elementType.IsValueType)
 					AddException (ErrorHelper.CreateError (99, "Unexpected pointer type {0}: must be a value type. Method: {1}", type, GetMethodSignatureWithSourceCode (method)));
+				if (isDynamicInvokeReturnType)
+					AddException (ErrorHelper.CreateError (99, "Unexpected pointer type {0}: can't result from dynamic invoke. Method: {1}", type, GetMethodSignatureWithSourceCode (method)));
 				// no conversion necessary either way
 				nativeType = type;
 				return true;
@@ -713,6 +720,8 @@ namespace Xamarin.Linker {
 			if (type is ArrayType at) {
 				var elementType = at.GetElementType ();
 				if (elementType.Is ("System", "String")) {
+					if (!toManaged && isDynamicInvokeReturnType)
+						il.Emit (OpCodes.Castclass, new ArrayType (abr.System_String));
 					il.Emit (OpCodes.Call, toManaged ? abr.CFArray_StringArrayFromHandle : abr.RegistrarHelper_CreateCFArray);
 					nativeType = abr.ObjCRuntime_NativeHandle;
 					return true;
@@ -780,6 +789,9 @@ namespace Xamarin.Linker {
 					}
 					nativeType = abr.System_IntPtr;
 				} else {
+					if (isDynamicInvokeReturnType)
+						il.Emit (OpCodes.Castclass, abr.Foundation_NSObject);
+
 					if (parameter == -1) {
 						var retain = StaticRegistrar.HasReleaseAttribute (method);
 						il.Emit (OpCodes.Dup);
@@ -820,12 +832,19 @@ namespace Xamarin.Linker {
 					if (parameter == -1) {
 						var retain = StaticRegistrar.HasReleaseAttribute (method);
 						var isNSObject = IsNSObject (type);
+
+						if (isDynamicInvokeReturnType)
+							il.Emit (OpCodes.Castclass, isNSObject ? abr.Foundation_NSObject : abr.ObjCRuntime_INativeObject);
+
 						if (retain) {
 							il.Emit (OpCodes.Call, isNSObject ? abr.Runtime_RetainNSObject : abr.Runtime_RetainNativeObject);
 						} else {
 							il.Emit (OpCodes.Call, isNSObject ? abr.Runtime_RetainAndAutoreleaseNSObject : abr.Runtime_RetainAndAutoreleaseNativeObject);
 						}
 					} else {
+						if (isDynamicInvokeReturnType)
+							il.Emit (OpCodes.Castclass, abr.ObjCRuntime_INativeObject);
+
 						il.Emit (OpCodes.Call, abr.NativeObjectExtensions_GetHandle);
 					}
 					nativeType = abr.ObjCRuntime_NativeHandle;
@@ -834,6 +853,9 @@ namespace Xamarin.Linker {
 			}
 
 			if (type.Is ("System", "String")) {
+				if (!toManaged && isDynamicInvokeReturnType)
+					il.Emit (OpCodes.Castclass, abr.System_String);
+
 				il.Emit (OpCodes.Call, toManaged ? abr.CFString_FromHandle : abr.CFString_CreateNative);
 				nativeType = abr.ObjCRuntime_NativeHandle;
 				return true;
@@ -890,6 +912,9 @@ namespace Xamarin.Linker {
 							}
 						}
 					}
+
+					if (isDynamicInvokeReturnType)
+						il.Emit (OpCodes.Castclass, abr.System_Delegate);
 
 					// the delegate is already on the stack
 					if (createBlockMethod is not null) {
