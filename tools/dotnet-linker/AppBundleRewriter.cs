@@ -794,18 +794,6 @@ namespace Xamarin.Linker {
 			}
 		}
 
-		public MethodReference ProductException_ctor_Int32_bool_string {
-			get {
-				return GetMethodReference (PlatformAssembly,
-						ObjCRuntime_RuntimeException, ".ctor",
-						nameof (ProductException_ctor_Int32_bool_string),
-						isStatic: true,
-						System_Int32,
-						System_Boolean,
-						System_String);
-			}
-		}
-
 		public MethodReference BlockLiteral_CreateBlockForDelegate {
 			get {
 				return GetMethodReference (PlatformAssembly,
