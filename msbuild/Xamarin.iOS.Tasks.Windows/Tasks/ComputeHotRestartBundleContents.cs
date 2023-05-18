@@ -130,6 +130,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 				case PublishFolderType.PlugIns:
 				case PublishFolderType.DynamicLibrary:
 				case PublishFolderType.PluginLibrary:
+				case PublishFolderType.XpcServices:
 					// These have to be signed
 					signedAppDirContents.Add (CopyWithDestinationAndStamp (item, HotRestartSignedAppDir));
 					break;
@@ -142,6 +143,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 				case PublishFolderType.StaticLibrary: // These aren't copied to the bundle
 				case PublishFolderType.CompressedAppleFramework: // Shouldn't really happen? Should be uncompresed by the time we get here.
 				case PublishFolderType.CompressedPlugIns: // Shouldn't really happen? Should be uncompresed by the time we get here.
+				case PublishFolderType.CompressedXpcServices: // Shouldn't really happen? Should be uncompresed by the time we get here.
 					Log.LogMessage (MessageImportance.Low, $"    Skipped {item.ItemSpec} because PublishFolderType={publishFolderType} items aren't copied to the app bundle.");
 					continue;
 				default:

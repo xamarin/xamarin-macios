@@ -162,6 +162,24 @@ Setting the `TargetPath` or `Link` metadata has no effect these items.
 If a plugin needs to be in a custom subdirectory, then put it in that
 directory in the zip file.
 
+## XpcServices
+
+The target directory is:
+
+* iOS, tvOS: the `XPCServices/` subdirectory.
+* macOS, Mac Catalyst: the `Contents/XPCServices/` subdirectory.
+
+### CompressedXpcServices
+
+The item must be a zip file, which is decompressed, and then treated as
+`XpcServices` (the contents of the zip file will be copied to the corresponding
+`XPCServices` directory).
+
+Setting the `TargetPath` or `Link` metadata has no effect these items.
+
+If an xpc service needs to be in a custom subdirectory, then put it in that
+directory in the zip file.
+
 ### DynamicLibrary
 
 These are dynamic libraries (\*.dylib) files.

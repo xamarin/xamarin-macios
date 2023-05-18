@@ -272,6 +272,9 @@ namespace Xamarin.MacDev.Tasks {
 				// Don't recurse into the PlugIns directory, that's already handled for any app bundle inside the PlugIns directory
 				if (relativePath.StartsWith ("PlugIns" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
 					continue;
+				// Don't recurse into the XPCServices directory, for the same reason
+				if (relativePath.StartsWith ("XPCServices" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+					continue;
 				// Don't recurse into the Watch directory, for the same reason
 				if (relativePath.StartsWith ("Watch" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
 					continue;

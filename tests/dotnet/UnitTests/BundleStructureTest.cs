@@ -174,7 +174,9 @@ namespace Xamarin.Tests {
 			AddExpectedFrameworkFiles (platform, expectedFiles, "UnknownF2", isSigned); // UnknownF2.bin: AppleBindingResource (compressed)
 			if (isSigned == CodeSignature.None) { // we don't support signing apps with plugins (yet)
 				AddExpectedPlugInFiles (platform, expectedFiles, "PlugInA", isSigned); // PlugIns
-				AddExpectedPlugInFiles (platform, expectedFiles, "CompressedPlugInB", isSigned); // CompressedPlugIns
+				AddExpectedPlugInFiles (platform, expectedFiles, "CompressedPlugInB", isSigned); // 
+				AddExpectedXpcServicesFiles (platform, expectedFiles, "XpcServiceE", isSigned); // PlugIns
+				AddExpectedXpcServicesFiles (platform, expectedFiles, "CompressedXpcServiceF", isSigned); // CompressedPlugIns
 			}
 			// UnknownI.bin: Unknown -- this should show a warning
 			// SomewhatUnknownI.bin: Unknown -- this should show a warning
@@ -206,6 +208,8 @@ namespace Xamarin.Tests {
 			if (isSigned == CodeSignature.None) {
 				AddExpectedPlugInFiles (platform, expectedFiles, "PlugInC", isSigned, "Subfolder"); // PlugIns
 				AddExpectedPlugInFiles (platform, expectedFiles, "CompressedPlugInD", isSigned); // CompressedPlugIns - the Link metadata has no effect, so no subfolder.
+				AddExpectedXpcServicesFiles (platform, expectedFiles, "XpcServiceG", isSigned, "Subfolder"); // PlugIns
+				AddExpectedXpcServicesFiles (platform, expectedFiles, "CompressedXpcServiceH", isSigned); // CompressedPlugIns - the Link metadata has no effect, so no subfolder.
 			}
 			// SomewhatUnknownI.bin: Unknown -- this should show a warning
 			switch (platform) {
@@ -446,38 +450,48 @@ namespace Xamarin.Tests {
 
 		static void AddExpectedPlugInFiles (ApplePlatform platform, List<string> expectedFiles, string pluginName, CodeSignature signature, string subdirectory = "")
 		{
+			AddExpectedExtensionFiles (platform, expectedFiles, xpcName, signature, subdirectory, "PlugIns", "bundle");
+		}
+
+		static void AddExpectedXpcServicesFiles (ApplePlatform platform, List<string> expectedFiles, string xpcName, CodeSignature signature, string subdirectory = "")
+		{
+			AddExpectedExtensionFiles (platform, expectedFiles, xpcName, signature, subdirectory, "XPCServices", "xpc");
+		}
+
+		static void AddExpectedExtensionFiles (ApplePlatform platform, List<string> expectedFiles, string extensionName, CodeSignature signature, string subdirectory, string extensionType, string extensionExtension)
+		{
 			var isSigned = signature != CodeSignature.None;
-			var pluginsDirectory = "PlugIns";
+			var extensionDirectory = extensionType;
 			switch (platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
 				break;
 			case ApplePlatform.MacCatalyst:
 			case ApplePlatform.MacOSX:
-				pluginsDirectory = Path.Combine ("Contents", "PlugIns");
+				extensionDirectory = Path.Combine ("Contents", extensionType);
 				break;
 			default:
 				throw new NotImplementedException ($"Unknown platform: {platform}");
 			}
 
-			pluginsDirectory = Path.Combine (pluginsDirectory, subdirectory);
+			extensionDirectory = Path.Combine (extensionDirectory, subdirectory);
 
-			expectedFiles.Add (Path.Combine (pluginsDirectory, $"{pluginName}.bundle"));
-			expectedFiles.Add (Path.Combine (pluginsDirectory, $"{pluginName}.bundle", pluginName));
+			expectedFiles.Add (Path.Combine (extensionDirectory, $"{extensionName}.{extensionExtension}"));
+			expectedFiles.Add (Path.Combine (extensionDirectory, $"{extensionName}.{extensionExtension}", extensionName));
 			switch (platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
-				expectedFiles.Add (Path.Combine (pluginsDirectory, $"{pluginName}.bundle", "Info.plist"));
+				expectedFiles.Add (Path.Combine (extensionDirectory, $"{extensionName}.{extensionExtension}", "Info.plist"));
 				break;
 			case ApplePlatform.MacCatalyst:
 			case ApplePlatform.MacOSX:
-				expectedFiles.Add (Path.Combine (pluginsDirectory, $"{pluginName}.bundle", "Resources"));
-				expectedFiles.Add (Path.Combine (pluginsDirectory, $"{pluginName}.bundle", "Versions"));
-				expectedFiles.Add (Path.Combine (pluginsDirectory, $"{pluginName}.bundle", "Versions", "A"));
-				expectedFiles.Add (Path.Combine (pluginsDirectory, $"{pluginName}.bundle", "Versions", "A", "Resources"));
-				expectedFiles.Add (Path.Combine (pluginsDirectory, $"{pluginName}.bundle", "Versions", "A", "Resources", "Info.plist"));
-				expectedFiles.Add (Path.Combine (pluginsDirectory, $"{pluginName}.bundle", "Versions", "A", pluginName));
-				expectedFiles.Add (Path.Combine (pluginsDirectory, $"{pluginName}.bundle", "Versions", "Current"));
+				expectedFiles.Add (Path.Combine (extensionDirectory, $"{extensionName}.{extensionExtension}", "Resources"));
+				expectedFiles.Add (Path.Combine (extensionDirectory, $"{extensionName}.{extensionExtension}", "Versions"));
+				expectedFiles.Add (Path.Combine (extensionDirectory, $"{extensionName}.{extensionExtension}", "Versions", "A"));
+				expectedFiles.Add (Path.Combine (extensionDirectory, $"{extensionName}.{extensionExtension}", "Versions", "A", "Resources"));
+				expectedFiles.Add (Path.Combine (extensionDirectory, $"{extensionName}.{extensionExtension}", "Versions", "A", "Resources", "Info.plist"));
+				expectedFiles.Add (Path.Combine (extensionDirectory, $"{extensionName}.{extensionExtension}", "Versions", "A", extensionName));
+				expectedFiles.Add (Path.Combine (extensionDirectory, $"{extensionName}.{extensionExtension}", "Versions", "Current"));
 				break;
 			default:
 				throw new NotImplementedException ($"Unknown platform: {platform}");
@@ -487,13 +501,13 @@ namespace Xamarin.Tests {
 				switch (platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
-					expectedFiles.Add (Path.Combine (pluginsDirectory, $"{pluginName}.bundle", "_CodeSignature"));
-					expectedFiles.Add (Path.Combine (pluginsDirectory, $"{pluginName}.bundle", "_CodeSignature", "CodeResources"));
+					expectedFiles.Add (Path.Combine (extensionDirectory, $"{extensionName}.{extensionExtension}", "_CodeSignature"));
+					expectedFiles.Add (Path.Combine (extensionDirectory, $"{extensionName}.{extensionExtension}", "_CodeSignature", "CodeResources"));
 					break;
 				case ApplePlatform.MacOSX:
 				case ApplePlatform.MacCatalyst:
-					expectedFiles.Add (Path.Combine (pluginsDirectory, $"{pluginName}.bundle", "Versions", "A", "_CodeSignature"));
-					expectedFiles.Add (Path.Combine (pluginsDirectory, $"{pluginName}.bundle", "Versions", "A", "_CodeSignature", "CodeResources"));
+					expectedFiles.Add (Path.Combine (extensionDirectory, $"{extensionName}.{extensionExtension}", "Versions", "A", "_CodeSignature"));
+					expectedFiles.Add (Path.Combine (extensionDirectory, $"{extensionName}.{extensionExtension}", "Versions", "A", "_CodeSignature", "CodeResources"));
 					break;
 				default:
 					throw new NotImplementedException ($"Unknown platform: {platform}");

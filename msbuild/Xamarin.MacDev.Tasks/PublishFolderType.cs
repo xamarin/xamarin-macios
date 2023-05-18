@@ -21,6 +21,8 @@ namespace Xamarin.MacDev.Tasks {
 		DynamicLibrary, // link with + copy to app bundle
 		PluginLibrary, // copy to app bundle (but not link with main executable)
 		StaticLibrary, // link with (but not copy to app bundle)
+		XpcServices,
+		CompressedXpcServices,
 		Unknown,
 	}
 
