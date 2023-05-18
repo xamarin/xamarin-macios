@@ -892,6 +892,7 @@ namespace Xamarin.Linker {
 						il.Emit (OpCodes.Call, method.Module.ImportReference (createMethod));
 						il.Emit (OpCodes.Call, abr.Runtime_ReleaseBlockWhenDelegateIsCollected);
 					}
+					il.Emit (OpCodes.Castclass, method.Module.ImportReference (type));
 				} else {
 					FieldDefinition? delegateProxyField = null;
 					MethodDefinition? createBlockMethod = null;
