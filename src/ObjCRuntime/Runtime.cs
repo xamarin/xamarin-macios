@@ -498,6 +498,11 @@ namespace ObjCRuntime {
 			return AllocGCHandle (ex);
 		}
 
+		static Exception CreateRuntimeException (int code, string message)
+		{
+			return ErrorHelper.CreateError (code, message);
+		}
+
 		static IntPtr CreateRuntimeException (int code, IntPtr message)
 		{
 			var ex = ErrorHelper.CreateError (code, Marshal.PtrToStringAuto (message)!);

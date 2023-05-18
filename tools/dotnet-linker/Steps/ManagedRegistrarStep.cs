@@ -316,20 +316,29 @@ namespace Xamarin.Linker {
 			if (isGeneric) {
 				if (method.IsStatic)
 					throw ErrorHelper.CreateError (4130 /* The registrar cannot export static methods in generic classes ('{0}'). */, method.FullName);
+ 
+				if (!method.IsConstructor) {
+					il.Emit (OpCodes.Ldtoken, method);
 
-				il.Emit (OpCodes.Ldtoken, method);
+					il.Emit (OpCodes.Ldarg_0);
+					EmitConversion (method, il, method.DeclaringType, true, -1, out var nativeType, postProcessing, selfVariable, isDynamicInvoke: isDynamicInvoke);
 
-				il.Emit (OpCodes.Ldarg_0);
-				EmitConversion (method, il, method.DeclaringType, true, -1, out var nativeType, postProcessing, selfVariable);
-
-				selfVariable = body.AddVariable (abr.System_Object);
-				il.Emit (OpCodes.Stloc, selfVariable);
-				il.Emit (OpCodes.Ldloc, selfVariable);
-				il.Emit (OpCodes.Ldtoken, method.DeclaringType);
-				il.Emit (OpCodes.Ldtoken, method);
-				il.Emit (OpCodes.Call, abr.Runtime_FindClosedMethod);
+					selfVariable = body.AddVariable (abr.System_Object);
+					il.Emit (OpCodes.Stloc, selfVariable);
+					il.Emit (OpCodes.Ldloc, selfVariable);
+					il.Emit (OpCodes.Ldtoken, method.DeclaringType);
+					il.Emit (OpCodes.Ldtoken, method);
+					il.Emit (OpCodes.Call, abr.Runtime_FindClosedMethod);
+				}
 			}
 
+			// Our code emission is intermingled with creating the method signature (the code to convert between native and managed values is also the best location
+			// to determine exactly which are the corresponding native and managed types in the method signatures). Unfortunately we might need to skip code emission
+			// after a certain point (if we detected a failure scenario where we're just throwing an exception, there's no need to keep generating code for that 
+			// particular scenario), but we still need to create the proper method signatures. Thus this hack: we keep emitting code, but the last important instruction
+			// and later on remove everything after this instruction. Maybe at a later point I'll figure out a way to make the code emission conditional without
+			// littering the logic with conditional statements.
+			Instruction? skipEverythingAfter = null;
 			if (isInstanceCategory) {
 				il.Emit (OpCodes.Ldarg_0);
 				EmitConversion (method, il, method.Parameters [0].ParameterType, true, 0, out var nativeType, postProcessing, selfVariable, isDynamicInvoke: isDynamicInvoke);
@@ -337,11 +346,12 @@ namespace Xamarin.Linker {
 				// nothing to do
 			} else if (method.IsConstructor) {
 				callSuperParameter = new ParameterDefinition ("call_super", ParameterAttributes.None, new PointerType (abr.System_Byte));
-				var callAllocateNSObject = il.Create (OpCodes.Ldarg_0);
+				var postLeaveInstructionPlaceholder = il.Create (OpCodes.Nop);
 				// if (Runtime.HasNSObject (p0)) {
 				il.Emit (OpCodes.Ldarg_0);
 				il.Emit (OpCodes.Call, abr.Runtime_HasNSObject);
-				il.Emit (OpCodes.Brfalse, callAllocateNSObject);
+				il.Emit (OpCodes.Brfalse, postLeaveInstructionPlaceholder);
+				var postLeaveBranch = il.Body.Instructions.Last ();
 				// *call_super = 1;
 				il.Emit (OpCodes.Ldarg, callSuperParameter);
 				il.Emit (OpCodes.Ldc_I4_1);
@@ -354,11 +364,23 @@ namespace Xamarin.Linker {
 				// }
 				leaveTryInstructions.Add (il.Body.Instructions.Last ());
 
-				var git = new GenericInstanceMethod (abr.NSObject_AllocateNSObject);
-				git.GenericArguments.Add (method.DeclaringType);
-				il.Append (callAllocateNSObject); // ldarg_0
-				il.Emit (OpCodes.Call, git);
-				il.Emit (OpCodes.Dup); // this is for the call to ObjCRuntime.NativeObjectExtensions::GetHandle after the call to the constructor
+				if (isGeneric) {
+					il.Emit (OpCodes.Ldc_I4, 4133);
+					postLeaveBranch.Operand = il.Body.Instructions.Last ();
+					il.Emit (OpCodes.Ldstr, $"Cannot construct an instance of the type '{method.DeclaringType.FullName}' from Objective-C because the type is generic.");
+					il.Emit (OpCodes.Call, abr.Runtime_CreateRuntimeException);
+					il.Emit (OpCodes.Throw);
+					// We're throwing an exception, so there's no need for any more code.
+					skipEverythingAfter = il.Body.Instructions.Last ();
+				} else {
+
+					il.Emit (OpCodes.Ldarg_0);
+					postLeaveBranch.Operand = il.Body.Instructions.Last ();
+					var git = new GenericInstanceMethod (abr.NSObject_AllocateNSObject);
+					git.GenericArguments.Add (method.DeclaringType);
+					il.Emit (OpCodes.Call, git);
+					il.Emit (OpCodes.Dup); // this is for the call to ObjCRuntime.NativeObjectExtensions::GetHandle after the call to the constructor
+				}
 			} else {
 				// instance method
 				il.Emit (OpCodes.Ldarg_0);
@@ -449,6 +471,12 @@ namespace Xamarin.Linker {
 
 			il.Emit (OpCodes.Leave, placeholderInstruction);
 			leaveTryInstructions.Add (il.Body.Instructions.Last ());
+
+			if (skipEverythingAfter is not null) {
+				var skipIndex = body.Instructions.IndexOf (skipEverythingAfter);
+				for (var i = body.Instructions.Count - 1; i > skipIndex; i--)
+					body.Instructions.RemoveAt (i);
+			}
 
 			AddExceptionHandler (il, returnVariable, placeholderNextInstruction, out var eh, out var leaveEHInstruction);
 

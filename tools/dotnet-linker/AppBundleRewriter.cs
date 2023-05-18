@@ -794,6 +794,17 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public MethodReference Runtime_CreateRuntimeException {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_Runtime, "CreateRuntimeException",
+						nameof (Runtime_CreateRuntimeException),
+						isStatic: true,
+						System_Int32,
+						System_String);				
+			}
+		}
+
 		public MethodReference BlockLiteral_CreateBlockForDelegate {
 			get {
 				return GetMethodReference (PlatformAssembly,
