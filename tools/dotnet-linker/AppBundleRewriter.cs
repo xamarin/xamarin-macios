@@ -801,7 +801,7 @@ namespace Xamarin.Linker {
 						nameof (Runtime_CreateRuntimeException),
 						isStatic: true,
 						System_Int32,
-						System_String);				
+						System_String);
 			}
 		}
 

@@ -316,7 +316,7 @@ namespace Xamarin.Linker {
 			if (isGeneric) {
 				if (method.IsStatic)
 					throw ErrorHelper.CreateError (4130 /* The registrar cannot export static methods in generic classes ('{0}'). */, method.FullName);
- 
+
 				if (!method.IsConstructor) {
 					il.Emit (OpCodes.Ldtoken, method);
 
@@ -842,7 +842,7 @@ namespace Xamarin.Linker {
 						il.Emit (OpCodes.Call, abr.Runtime_GetNSObject__System_IntPtr);
 						if (!isDynamicInvoke)
 							AddException (ErrorHelper.CreateError (99, "Unable to call a statically resolved method 2 with object in {0} - {1} - {2}", GetMethodSignature (method), il.Body.Method.Name, type.FullName));
-						
+
 						// We're calling the target method dynamically (using MethodBase.Invoke), so there's no
 						// need to check the type of the returned object, because MethodBase.Invoke will do type checks.
 					} else {
@@ -986,7 +986,7 @@ namespace Xamarin.Linker {
 
 			if (tr is TypeDefinition td)
 				return td.HasGenericParameters;
-			
+
 			return IsOpenType (tr.Resolve ());
 		}
 
