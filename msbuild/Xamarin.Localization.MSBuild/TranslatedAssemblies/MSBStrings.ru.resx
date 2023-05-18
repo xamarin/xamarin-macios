@@ -1203,6 +1203,6 @@
         <value>Невозможно обработать ZIP-файл "{0}" на этой платформе: файл "{1}" является символической ссылкой.</value>
     </data>
   <data name="E7114" xml:space="preserve">
-        <value>The "{0}" task was not given a value for the parameter "{1}", which is required when building on this platform.</value>
+        <value>Задаче "{0}" не было присвоено значение параметра "{1}", которое требуется при сборке на этой платформе.</value>
     </data>
 </root>

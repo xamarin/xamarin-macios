@@ -2250,7 +2250,11 @@ namespace ObjCRuntime {
 			if (block == IntPtr.Zero)
 				return @delegate;
 
-			block_lifetime_table.Add (@delegate, new BlockCollector (block));
+			if (block_lifetime_table.TryGetValue (@delegate, out var existingCollector)) {
+				existingCollector.Add (block);
+			} else {
+				block_lifetime_table.Add (@delegate, new BlockCollector (block));
+			}
 			return @delegate;
 		}
 

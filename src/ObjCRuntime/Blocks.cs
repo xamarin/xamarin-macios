@@ -591,10 +591,27 @@ namespace ObjCRuntime {
 	}
 
 	// This class will free the specified block when it's collected by the GC.
-	internal class BlockCollector : TrampolineBlockBase {
+	internal class BlockCollector {
+		IntPtr block;
+		int count;
 		public BlockCollector (IntPtr block)
-			: base (block, owns: true)
 		{
+			this.block = block;
+			count = 1;
+		}
+
+		public void Add (IntPtr block)
+		{
+			if (block != this.block)
+				throw new InvalidOperationException (string.Format ("Can't release the block 0x{0} because this BlockCollector instance is already tracking 0x{1}.", block.ToString ("x"), this.block.ToString ("x")));
+			Interlocked.Increment (ref count);
+		}
+
+		~BlockCollector ()
+		{
+			for (var i = 0; i < count; i++)
+				Runtime.ReleaseBlockOnMainThread (block);
+			count = 0;
 		}
 	}
 #endif

@@ -2104,6 +2104,7 @@ MACOS_FRAMEWORKS =          \
 	ScreenTime              \
 	ScriptingBridge         \
 	SearchKit               \
+	ServiceManagement       \
 	Security                \
 	SharedWithYou           \
 	SharedWithYouCore       \
@@ -2406,6 +2407,7 @@ MACCATALYST_FRAMEWORKS = \
 	ScreenTime \
 	Security \
 	SensorKit \
+	ServiceManagement \
 	SharedWithYou \
 	SharedWithYouCore \
 	Social \
