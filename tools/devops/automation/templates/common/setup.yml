@@ -31,11 +31,7 @@ steps:
   displayName: 'Delete library folders'
   timeoutInMinutes: 5
 
-- bash:
-    set -x
-    set -e
-    rm -Rvf $(Build.SourcesDirectory)/package
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ git-clean-all
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-results-dir.sh
   displayName: 'Clear results directory'
   timeoutInMinutes: 5
   continueOnError: true
