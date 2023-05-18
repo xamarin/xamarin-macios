@@ -24,12 +24,7 @@ steps:
 - pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
   displayName: 'Show Environment'
 
-- powershell: |
-    Write-Host "Python3 location"
-    which python3
-
-    Write-Host "Pip3 version"
-    pip3 -V
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_python_env.ps1
   displayName: 'Show Python information'
 
 - bash: |
