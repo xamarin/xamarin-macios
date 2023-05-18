@@ -36,14 +36,7 @@ steps:
   timeoutInMinutes: 5
   continueOnError: true
 
-- bash: |
-    RC=0
-    security set-key-partition-list -S apple-tool:,apple: -s -k $OSX_KEYCHAIN_PASS login.keychain || RC=$?
-    if [ $RC -eq 0 ]; then
-      echo "Security UI-prompt removed."
-    else
-      echo "Security UI-prompt could NOT be removed."
-    fi
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/remove-ui-prompt.sh
   env:
     OSX_KEYCHAIN_PASS: ${{ parameters.keyringPass }}
   displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
