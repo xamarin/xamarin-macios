@@ -44,14 +44,7 @@ steps:
 
 # was the current xcode deleted (has happened due to a bug in the clean step)? then set the default so 
 # that we can call make and generated the provisionator config files.
-- bash: |
-    XCODE_SELECT=$(xcode-select -p)
-    if [[ -d $XCODE_SELECT ]]; then
-      echo "Using Xcode in path $XCODE_SELECT"
-    else
-      echo "Setting Xcode to point to the default location."
-      xcode-select -s "/Applications/Xcode.app/Contents/Developer"
-    fi
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/ensure-xcode-select.sh
   displayName: 'Ensure Xcode is selected.'
 
 - pwsh: |
