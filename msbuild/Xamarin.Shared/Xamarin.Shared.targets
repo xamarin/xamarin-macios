@@ -2056,7 +2056,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 				<CodesignUseSecureTimestamp Condition="'%(_CustomCodesignBundle.CodesignUseSecureTimestamp)' == ''">$(UseHardenedRuntime)</CodesignUseSecureTimestamp>
 				<RequireCodeSigning Condition="'%(_CustomCodesignBundle.RequireCodeSigning)' == ''">$(_RequireCodeSigning)</RequireCodeSigning>
 				<SourceProjectPath>$(MSBuildProjectDirectory)</SourceProjectPath>
-				<BundleRelativePath Condition="%(_CustomCodesignBundle.BundleRelativePath)' == ''">$(_AppPlugInsRelativePath)</BundleRelativePath>
+				<BundleRelativePath Condition="'%(_CustomCodesignBundle.BundleRelativePath)' == ''">$(_AppPlugInsRelativePath)</BundleRelativePath>
 			</_CustomCodesignBundle>
 			<_CodesignBundle Include="@(_CustomCodesignBundle)" />
 		</ItemGroup>
