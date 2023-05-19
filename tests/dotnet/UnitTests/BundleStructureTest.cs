@@ -450,7 +450,7 @@ namespace Xamarin.Tests {
 
 		static void AddExpectedPlugInFiles (ApplePlatform platform, List<string> expectedFiles, string pluginName, CodeSignature signature, string subdirectory = "")
 		{
-			AddExpectedExtensionFiles (platform, expectedFiles, xpcName, signature, subdirectory, "PlugIns", "bundle");
+			AddExpectedExtensionFiles (platform, expectedFiles, pluginName, signature, subdirectory, "PlugIns", "bundle");
 		}
 
 		static void AddExpectedXpcServicesFiles (ApplePlatform platform, List<string> expectedFiles, string xpcName, CodeSignature signature, string subdirectory = "")
