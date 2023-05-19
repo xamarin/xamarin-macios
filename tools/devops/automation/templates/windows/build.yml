@@ -234,6 +234,12 @@ steps:
   displayName: 'Run .NET tests'
   timeoutInMinutes: 30
 
+- pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\run-remote-windows-tests.ps1
+  displayName: 'Run .NET tests remotely'
+  timeoutInMinutes: 120
+  env:
+    XMA_PASSWORD: $(XMA.Password)
+
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\xamarin-macios\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
     $configFile = "$(Build.SourcesDirectory)\\artifacts\\build-configuration\\${{ parameters.uploadPrefix }}configuration.json"
