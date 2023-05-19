@@ -23,6 +23,17 @@ namespace Xamarin.Linker {
 			return provider.ToString ();
 		}
 
+		public static bool HasCustomAttribute (this ICustomAttributeProvider provider, DerivedLinkContext context, string @namespace, string name, out ICustomAttribute attrib)
+		{
+			attrib = null;
+			if (provider?.HasCustomAttribute (@namespace, name, out attrib) == true)
+				return true;
+
+			var attribs = context?.GetCustomAttributes (provider, @namespace, name);
+			attrib = attribs?.FirstOrDefault ();
+			return attrib is not null;
+
+		}
 		// This method will look in any stored attributes in the link context as well as the provider itself.
 		public static bool HasCustomAttribute (this ICustomAttributeProvider provider, DerivedLinkContext context, string @namespace, string name)
 		{
@@ -34,13 +45,22 @@ namespace Xamarin.Linker {
 
 		public static bool HasCustomAttribute (this ICustomAttributeProvider provider, string @namespace, string name)
 		{
+			return HasCustomAttribute (provider, @namespace, name, out _);
+		}
+
+		public static bool HasCustomAttribute (this ICustomAttributeProvider provider, string @namespace, string name, out ICustomAttribute attrib)
+		{
+			attrib = null;
+
 			if (provider is null || !provider.HasCustomAttributes)
 				return false;
 
 			foreach (CustomAttribute attribute in provider.CustomAttributes) {
 				TypeReference tr = attribute.Constructor.DeclaringType;
-				if (tr.Is (@namespace, name))
+				if (tr.Is (@namespace, name)) {
+					attrib = attribute;
 					return true;
+				}
 			}
 			return false;
 		}
