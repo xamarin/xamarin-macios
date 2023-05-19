@@ -32,11 +32,16 @@ INCLUDE_WATCH=$(cat "$FILE")
 make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=INCLUDE_MAC
 INCLUDE_MAC=$(cat "$FILE")
 
+make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios" dotnet.config
+make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=DOTNET_VERSION
+DOTNET_VERSION=$(cat "$FILE")
+
 # print it out, so turn off echoing since that confuses Azure DevOps
 set +x
 
 echo "##vso[task.setvariable variable=ENABLE_DOTNET;isOutput=true]$ENABLE_DOTNET"
 echo "##vso[task.setvariable variable=DOTNET_PLATFORMS;isOutput=true]$DOTNET_PLATFORMS"
+echo "##vso[task.setvariable variable=DOTNET_VERSION;isOutput=true]$DOTNET_VERSION"
 DISABLED_DOTNET_PLATFORMS=" $ALL_DOTNET_PLATFORMS "
 for platform in $DOTNET_PLATFORMS; do
 	PLATFORM_UPPER=$(echo "$platform" | tr '[:lower:]' '[:upper:]')

@@ -1,5 +1,7 @@
-using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
+using System.Runtime.InteropServices;
 
 using Mono.Cecil;
 
@@ -310,6 +312,57 @@ namespace Xamarin.Tests {
 			// The native library is removed from the resources by the linker
 			Assert.That (ad2.MainModule.Resources.Count, Is.EqualTo (0), "0 resources for bindings-test2.dll");
 
+		}
+
+		[Category ("RemoteWindows")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		public void RemoteTest (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			var configuration = "Debug";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["ServerAddress"] = Environment.GetEnvironmentVariable ("MAC_AGENT_IP") ?? string.Empty;
+			properties ["ServerUser"] = "builder";
+			properties ["ServerPassword"] = Environment.GetEnvironmentVariable ("XMA_PASSWORD") ?? string.Empty;
+			properties ["BuildIpa"] = "true";
+			properties ["CopyAppBundleToWindows"] = "true";
+			var result = DotNet.AssertBuild (project_path, properties, quiet: false, timeout: TimeSpan.FromMinutes (60));
+			AssertThatLinkerExecuted (result);
+			// obj/Debug/net8.0-ios/ios-arm64/AppBundle.zip
+			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
+			var zippedAppBundlePath = Path.Combine (Path.GetDirectoryName (project_path)!, "obj", configuration, platform.ToFramework (), appPathRuntimeIdentifier, "AppBundle.zip");
+			if (!File.Exists (zippedAppBundlePath)) {
+				Console.WriteLine ($"Path does not EXIST: {zippedAppBundlePath}");
+				zippedAppBundlePath = Path.Combine (Path.GetDirectoryName (project_path)!, "obj/Debug/net8.0-ios/ios-arm64/AppBundle.zip");
+				Console.WriteLine ($"Path trying with: {zippedAppBundlePath}");
+			}
+
+			Assert.That (zippedAppBundlePath, Does.Exist, "AppBundle.zip");
+			using var zip = ZipFile.OpenRead (zippedAppBundlePath);
+			var entries = zip.Entries;
+			Console.WriteLine ($"Opened zip file {zippedAppBundlePath} with {entries.Count} entries:");
+			foreach (var entry in entries) {
+				Console.WriteLine ($"    FullName: {entry.FullName} Name: {entry.Name} Length: {entry.Length} CompressedLength: {entry.CompressedLength} ExternalAttributes: 0x{entry.ExternalAttributes:X}");
+			}
+			var infoPlistEntry = entries.SingleOrDefault (v => v.Name == "Info.plist");
+			Assert.NotNull (infoPlistEntry, "Info.plist");
+
+			// PDictionary.FromStream requires a seekable stream, but the zip stream isn't seekable, so copy to a
+			// MemoryStream and use that. Info.plist files aren't big, so this shouldn't become a memory consumption problem.
+			using var memoryStream = new MemoryStream ((int) infoPlistEntry!.Length);
+			using var plistStream = infoPlistEntry!.Open ();
+			plistStream.CopyTo (memoryStream);
+
+			var infoPlist = (PDictionary) PDictionary.FromStream (memoryStream)!;
+			Assert.AreEqual ("com.xamarin.mysimpleapp", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
+			Assert.AreEqual ("MySimpleApp", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
+			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
+			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleShortVersionString").Value, "CFBundleShortVersionString");
 		}
 
 		[Test]

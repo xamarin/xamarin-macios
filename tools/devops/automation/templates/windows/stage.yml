@@ -107,6 +107,8 @@ stages:
       MAC_AGENT_NAME: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_NAME'] ]
       MAC_AGENT_POOL: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_POOL'] ]
       MAC_AGENT_IP: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_IP'] ]
+      MAC_AGENT_SYSTEM_DEFAULTWORKINGDIRECTORY: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_SYSTEM_DEFAULTWORKINGDIRECTORY'] ]
+      MAC_AGENT_BUILD_SOURCESDIRECTORY: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_BUILD_SOURCESDIRECTORY'] ]
 
     steps:
     - template: build.yml

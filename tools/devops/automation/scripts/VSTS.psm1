@@ -296,6 +296,7 @@ class BuildConfiguration {
           BuildSourceBranch = "$Env:BUILD_SOURCEBRANCH"
           BuildId = "$Env:BUILD_BUILDID"
           DOTNET_PLATFORMS = "$Env:CONFIGURE_PLATFORMS_DOTNET_PLATFORMS"
+          DOTNET_VERSION = "$Env:CONFIGURE_PLATFORMS_DOTNET_VERSION"
         }
 
         # For each .NET platform we support, add a INCLUDE_DOTNET_<platform> variable specifying whether that platform is enabled or not.
