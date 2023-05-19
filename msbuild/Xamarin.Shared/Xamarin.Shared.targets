@@ -2525,6 +2525,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 				<SymbolFile>$(_SymbolsListFullPath)</SymbolFile>
 				<DSymName>$(_AppBundleName)$(AppBundleExtension).dSYM</DSymName>
 				<IsXPCService>$(IsXpcService)</IsXPCService>
+				<IsAppExtension>$(IsAppExtension)</IsAppExtension>
 			</_PostProcessingItem>
 
 			<_PostProcessingItem>
