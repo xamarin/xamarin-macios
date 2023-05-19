@@ -129,7 +129,7 @@ steps:
     ${{ else }}:
       IsPR: 'False'
     ${{ if eq(parameters.enableDotnet, true) }}:
-      EnableDotNet: 'True'
+      ENABLE_DOT_NET: 'True'
   displayName: "Configure build"
   workingDirectory: "$(Build.SourcesDirectory)/xamarin-macios"
   timeoutInMinutes: 5

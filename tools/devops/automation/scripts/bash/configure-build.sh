@@ -1,14 +1,12 @@
 #!/bin/bash -xe
+flags=(--enable-xamarin)
 
-CONFIGURE_FLAGS="--enable-xamarin"
-
-if [[ "$EnableDotNet" == "True" ]]; then
+if [[ "$ENABLE_DOT_NET" == "True" ]]; then
   echo "Enabling dotnet builds."
-  CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-dotnet"
+  flags=("${flags[@]}" --enable-dotnet)
 fi
 
-CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-install-source"
-echo "Configuration flags are '$CONFIGURE_FLAGS'"
+flags=("${flags[@]}" --enable-install-source)
+echo "Configuration flags are ${flags[@]}"
 
-./configure $CONFIGURE_FLAGS
-echo $(cat ./configure.inc)
+./configure "${flags[@]}"
