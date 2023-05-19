@@ -81,8 +81,11 @@
 		<UseAppHost>false</UseAppHost>
 	</PropertyGroup>
 
-	<!-- App extensions are self-contained, even though their OutputType=Library. This must be done here and not targets as it is checked before targets are invoked. -->
-	<PropertyGroup Condition="'$(IsAppExtension)' == 'true' And '$(RuntimeIdentifier)' != ''">
+	<!-- If a runtime identifier is required, and we have a runtime identifier, then we must be self contained.
+	     This of course begs the question: when could we have a runtime identifier and such a thing would not be required?
+	     The answer is: library projects may end up with a RuntimeIdentifier when building a referencing executable project
+	     from the command line, and that command line specifies a RuntimeIdentifier -->
+	<PropertyGroup Condition="'$(_RuntimeIdentifierIsRequired)' == 'true' And '$(RuntimeIdentifier)' != ''">
 		<SelfContained>true</SelfContained>
 	</PropertyGroup>
 
