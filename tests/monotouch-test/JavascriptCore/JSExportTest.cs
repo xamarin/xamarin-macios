@@ -24,7 +24,7 @@ namespace MonoTouchFixtures.JavascriptCore {
 		{
 			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
-			if (RegistrarTest.CurrentRegistrar != Registrars.Static)
+			if (!global::XamarinTests.ObjCRuntime.Registrar.IsStaticRegistrar)
 				Assert.Ignore ("Exporting protocols to JavaScriptCore requires the static registrar.");
 
 			var context = new JSContext ();

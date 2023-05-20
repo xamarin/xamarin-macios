@@ -67,7 +67,7 @@ namespace Xharness {
 					path = Path.Combine (Path.GetDirectoryName (path), "tests");
 					if (!Directory.Exists (path))
 						throw new Exception ("Could not find the tests directory.");
-					root_directory = path;
+					root_directory = Path.GetFullPath (path);
 				}
 				return root_directory;
 			}
@@ -111,6 +111,16 @@ namespace Xharness {
 				if (acquired)
 					ls_files_semaphore.Release ();
 			}
+		}
+
+		public static string EvaluateRootTestsDirectory (string value)
+		{
+			return value.Replace ("$(RootTestsDirectory)", RootDirectory);
+		}
+
+		public static string InjectRootTestsDirectory (string value)
+		{
+			return value.Replace (RootDirectory, "$(RootTestsDirectory)");
 		}
 	}
 

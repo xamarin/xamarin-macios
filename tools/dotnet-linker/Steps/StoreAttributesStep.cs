@@ -31,6 +31,13 @@ namespace Xamarin.Linker.Steps {
 					break;
 				}
 				break;
+			case "Foundation":
+				switch (attr_type.Name) {
+				case "ProtocolAttribute":
+					store = LinkContext.App.Optimizations.RegisterProtocols == true;
+					break;
+				}
+				break;
 			}
 
 			if (store)
