@@ -1203,6 +1203,6 @@
         <value>Non è possibile elaborare il file ZIP '{0}' in questa piattaforma: il file '{1}' è un collegamento simbolico.</value>
     </data>
   <data name="E7114" xml:space="preserve">
-        <value>The "{0}" task was not given a value for the parameter "{1}", which is required when building on this platform.</value>
+        <value>All'attività "{0}" non è stato assegnato un valore per il parametro "{1}", necessario per la compilazione in questa piattaforma.</value>
     </data>
 </root>

@@ -3,7 +3,7 @@ using Mono.Cecil;
 
 #nullable enable
 
-namespace ClassRedirector {
+namespace Xamarin.MacDev.Tasks {
 	public class SimpleAssemblyResolver : DefaultAssemblyResolver {
 		public SimpleAssemblyResolver (params string [] filesOrDirectories)
 			: base ()

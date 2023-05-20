@@ -456,6 +456,33 @@ namespace ObjCRuntime {
 		}
 #endif // NET
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		static IntPtr CreateBlockForDelegate (Delegate @delegate, Delegate delegateProxyFieldValue, string /*?*/ signature)
+		{
+			if (@delegate is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (@delegate));
+
+			if (delegateProxyFieldValue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (delegateProxyFieldValue));
+
+			// Note that we must create a heap-allocated block, so we
+			// start off by creating a stack-allocated block, and then
+			// call _Block_copy, which will create a heap-allocated block
+			// with the proper reference count.
+			using var block = new BlockLiteral ();
+			if (signature is null) {
+				if (Runtime.DynamicRegistrationSupported) {
+					block.SetupBlock (delegateProxyFieldValue, @delegate);
+				} else {
+					throw ErrorHelper.CreateError (8026, $"BlockLiteral.GetBlockForDelegate with a null signature is not supported when the dynamic registrar has been linked away (delegate type: {@delegate.GetType ().FullName}).");
+				}
+			} else {
+				block.SetupBlockImpl (delegateProxyFieldValue, @delegate, true, signature);
+			}
+			return _Block_copy (&block);
+		}
+
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal static IntPtr GetBlockForDelegate (MethodInfo minfo, object @delegate, uint token_ref, string signature)
 		{
@@ -564,10 +591,27 @@ namespace ObjCRuntime {
 	}
 
 	// This class will free the specified block when it's collected by the GC.
-	internal class BlockCollector : TrampolineBlockBase {
+	internal class BlockCollector {
+		IntPtr block;
+		int count;
 		public BlockCollector (IntPtr block)
-			: base (block, owns: true)
 		{
+			this.block = block;
+			count = 1;
+		}
+
+		public void Add (IntPtr block)
+		{
+			if (block != this.block)
+				throw new InvalidOperationException (string.Format ("Can't release the block 0x{0} because this BlockCollector instance is already tracking 0x{1}.", block.ToString ("x"), this.block.ToString ("x")));
+			Interlocked.Increment (ref count);
+		}
+
+		~BlockCollector ()
+		{
+			for (var i = 0; i < count; i++)
+				Runtime.ReleaseBlockOnMainThread (block);
+			count = 0;
 		}
 	}
 #endif

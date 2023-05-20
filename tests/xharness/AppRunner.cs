@@ -118,7 +118,7 @@ namespace Xharness {
 
 		public async Task InitializeAsync ()
 		{
-			AppInformation = await appBundleInformationParser.ParseFromProject (projectFilePath, target, buildConfiguration);
+			AppInformation = await appBundleInformationParser.ParseFromProject2 (harness.AppBundleLocator, projectFilePath, target, buildConfiguration);
 			AppInformation.Variation = variation;
 		}
 

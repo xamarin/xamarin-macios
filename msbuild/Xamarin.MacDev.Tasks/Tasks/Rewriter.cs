@@ -1,10 +1,14 @@
 using System;
+using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
-using Mono.Cecil.Rocks;
+using ClassRedirector;
 
-namespace ClassRedirector {
+#nullable enable
+
+namespace Xamarin.MacDev.Tasks {
 	public class Rewriter {
 		const string runtimeName = "ObjCRuntime.Runtime";
 		const string classHandleName = "ObjCRuntime.Runtime/ClassHandles";
@@ -15,14 +19,16 @@ namespace ClassRedirector {
 		CSToObjCMap map;
 		string pathToXamarinAssembly;
 		string [] assembliesToPatch;
+		string outputDirectory;
 		SimpleAssemblyResolver resolver;
 		Dictionary<string, FieldDefinition> csTypeToFieldDef = new Dictionary<string, FieldDefinition> ();
 
-		public Rewriter (CSToObjCMap map, string pathToXamarinAssembly, string [] assembliesToPatch)
+		public Rewriter (CSToObjCMap map, string pathToXamarinAssembly, string [] assembliesToPatch, string outputDirectory)
 		{
 			this.map = map;
 			this.pathToXamarinAssembly = pathToXamarinAssembly;
 			this.assembliesToPatch = assembliesToPatch;
+			this.outputDirectory = outputDirectory;
 			resolver = new SimpleAssemblyResolver (assembliesToPatch);
 		}
 
@@ -60,13 +66,15 @@ namespace ClassRedirector {
 			if (nativeHandleOpImplicit is null)
 				throw new Exception ($"Unable to find implicit cast in {nativeHandleName}");
 
-			foreach (var (csName, nameIndex) in map) {
+			foreach (var nameIndexPair in map) {
+				var csName = nameIndexPair.Key;
+				var nameIndex = nameIndexPair.Value;
 				var fieldDef = AddPublicStaticField (classHandles, nameIndex.ObjCName, nativeHandle);
 				AddInitializer (nativeHandleOpImplicit, processor, mtClassMapDef, nameIndex.MapIndex, fieldDef);
 				classMap [csName] = fieldDef;
 			}
 
-			module.Write ();
+			module.Write (ToOutputFileName (pathToXamarinAssembly));
 			return classMap;
 		}
 
@@ -132,7 +140,7 @@ namespace ClassRedirector {
 				using var stm = new FileStream (path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
 				using var module = ModuleDefinition.ReadModule (stm);
 				PatchClassPtrUsage (classMap, module);
-				module.Write ();
+				module.Write (ToOutputFileName (path));
 			}
 		}
 
@@ -247,8 +255,8 @@ namespace ClassRedirector {
 			if (index < 0)
 				return false;
 			var instr = il.Body.Instructions [index]!;
-			var operand = instr.Operand?.ToString () ?? "";
-			return instr.OpCode == OpCodes.Call && operand.Contains ("Class::GetHandle", StringComparison.Ordinal);
+			var operand = instr.Operand?.ToString () ?? string.Empty;
+			return instr.OpCode == OpCodes.Call && operand.Contains ("Class::GetHandle");
 		}
 
 		bool IsLdStr (ILProcessor il, int index)
@@ -277,6 +285,11 @@ namespace ClassRedirector {
 						yield return nt;
 				}
 			}
+		}
+
+		string ToOutputFileName (string pathToInputFileName)
+		{
+			return Path.Combine (outputDirectory, Path.GetFileName (pathToInputFileName));
 		}
 	}
 }
