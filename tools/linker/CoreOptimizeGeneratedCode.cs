@@ -938,8 +938,14 @@ namespace Xamarin.Linker {
 			if (!mr.DeclaringType.Is (Namespaces.ObjCRuntime, "BlockLiteral"))
 				return 0;
 
-			if (caller.Name == "GetBlockForDelegate" && caller.DeclaringType.Is ("ObjCRuntime", "BlockLiteral"))
-				return 0; // BlockLiteral.GetBlockForDelegate contains a non-optimizable call to SetupBlock, and this way we don't show any warnings to users about things they can't do anything about.
+			if (caller.DeclaringType.Is ("ObjCRuntime", "BlockLiteral")) {
+				switch (caller.Name) {
+				case "GetBlockForDelegate":
+				case "CreateBlockForDelegate":
+					// These methods contain a non-optimizable call to SetupBlock, and this way we don't show any warnings to users about things they can't do anything about.
+					return 0;
+				}
+			}
 
 			string signature = null;
 			try {
@@ -986,33 +992,11 @@ namespace Xamarin.Linker {
 					return 0;
 				}
 
-				// Calculate the block signature.
-				var blockSignature = false;
-				MethodReference userMethod = null;
-
-				// First look for any [UserDelegateType] attributes on the trampoline delegate type.
-				var userDelegateType = GetUserDelegateType (trampolineDelegateType);
-				if (userDelegateType is not null) {
-					var userMethodDefinition = GetDelegateInvoke (userDelegateType);
-					userMethod = InflateMethod (userDelegateType, userMethodDefinition);
-					blockSignature = true;
-				} else {
-					// Couldn't find a [UserDelegateType] attribute, use the type of the actual trampoline instead.
-					var userMethodDefinition = GetDelegateInvoke (trampolineDelegateType);
-					userMethod = InflateMethod (trampolineDelegateType, userMethodDefinition);
-					blockSignature = false;
-				}
-
-				// No luck finding the signature, so give up.
-				if (userMethod is null) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, caller, ins, Errors.MM2106_C, caller, ins.Offset, trampolineDelegateType.FullName));
+				if (!LinkContext.Target.StaticRegistrar.TryComputeBlockSignature (caller, trampolineDelegateType, out var exception, out signature)) {
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, exception, caller, ins, Errors.MM2106_D, caller, ins.Offset, exception.Message));
 					return 0;
-				}
 
-				var parameters = new TypeReference [userMethod.Parameters.Count];
-				for (int p = 0; p < parameters.Length; p++)
-					parameters [p] = userMethod.Parameters [p].ParameterType;
-				signature = LinkContext.Target.StaticRegistrar.ComputeSignature (userMethod.DeclaringType, false, userMethod.ReturnType, parameters, userMethod.Resolve (), isBlockSignature: blockSignature);
+				}
 			} catch (Exception e) {
 				ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.App, 2106, e, caller, ins, Errors.MM2106_D, caller, ins.Offset, e.Message));
 				return 0;
@@ -1309,29 +1293,6 @@ namespace Xamarin.Linker {
 			}
 		}
 
-		// Find the value of the [UserDelegateType] attribute on the specified delegate
-		TypeReference GetUserDelegateType (TypeReference delegateType)
-		{
-			var delegateTypeDefinition = delegateType.Resolve ();
-			foreach (var attrib in delegateTypeDefinition.CustomAttributes) {
-				var attribType = attrib.AttributeType;
-				if (!attribType.Is (Namespaces.ObjCRuntime, "UserDelegateTypeAttribute"))
-					continue;
-				return attrib.ConstructorArguments [0].Value as TypeReference;
-			}
-			return null;
-		}
-
-		MethodDefinition GetDelegateInvoke (TypeReference delegateType)
-		{
-			var td = delegateType.Resolve ();
-			foreach (var method in td.Methods) {
-				if (method.Name == "Invoke")
-					return method;
-			}
-			return null;
-		}
-
 		MethodDefinition setupblock_def;
 		MethodReference GetBlockSetupImpl (MethodDefinition caller, Instruction ins)
 		{
@@ -1375,24 +1336,6 @@ namespace Xamarin.Linker {
 					throw ErrorHelper.CreateError (LinkContext.App, 99, caller, ins, Errors.MX0099, $"could not find the constructor ObjCRuntime.BlockLiteral (void*, object, string)");
 			}
 			return caller.Module.ImportReference (block_ctor_def);
-		}
-
-		MethodReference InflateMethod (TypeReference inflatedDeclaringType, MethodDefinition openMethod)
-		{
-			var git = inflatedDeclaringType as GenericInstanceType;
-			if (git is null)
-				return openMethod;
-
-			var inflatedReturnType = TypeReferenceExtensions.InflateGenericType (git, openMethod.ReturnType);
-			var mr = new MethodReference (openMethod.Name, inflatedReturnType, git);
-			if (openMethod.HasParameters) {
-				for (int i = 0; i < openMethod.Parameters.Count; i++) {
-					var inflatedParameterType = TypeReferenceExtensions.InflateGenericType (git, openMethod.Parameters [i].ParameterType);
-					var p = new ParameterDefinition (openMethod.Parameters [i].Name, openMethod.Parameters [i].Attributes, inflatedParameterType);
-					mr.Parameters.Add (p);
-				}
-			}
-			return mr;
 		}
 	}
 }

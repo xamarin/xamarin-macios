@@ -69,7 +69,7 @@ namespace Xamarin.MacDev.Tasks {
 			var aotAssemblyFiles = new List<ITaskItem> ();
 			var processes = new Task<Execution> [Assemblies.Length];
 
-			var environment = new Dictionary<string, string> {
+			var environment = new Dictionary<string, string?> {
 				{ "MONO_PATH", Path.GetFullPath (InputDirectory) },
 			};
 

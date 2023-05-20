@@ -1203,6 +1203,6 @@
         <value>'{0}' zip dosyası bu platformda işlenemiyor: '{1}' dosyası bir sembolik bağlantı.</value>
     </data>
   <data name="E7114" xml:space="preserve">
-        <value>The "{0}" task was not given a value for the parameter "{1}", which is required when building on this platform.</value>
+        <value>"{0}" görevine bu platformda derleme sırasında gerekli olan "{1}" parametresi için bir değer verilmedi.</value>
     </data>
 </root>

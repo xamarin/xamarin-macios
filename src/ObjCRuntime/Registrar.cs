@@ -980,10 +980,7 @@ namespace Registrar {
 
 			public bool IsPropertyAccessor {
 				get {
-					if (Method is null)
-						return false;
-
-					return Method.IsSpecialName && (Method.Name.StartsWith ("get_", StringComparison.Ordinal) || Method.Name.StartsWith ("set_", StringComparison.Ordinal));
+					return Registrar.IsPropertyAccessor (Method);
 				}
 			}
 		}
@@ -1044,6 +1041,7 @@ namespace Registrar {
 			public byte Alignment;
 #else
 			public bool IsPrivate;
+			public TProperty Property;
 #endif
 			public string FieldType;
 			public bool IsProperty;
@@ -1094,9 +1092,9 @@ namespace Registrar {
 		protected abstract bool IsStatic (TField field);
 		protected abstract bool IsStatic (TMethod method);
 		protected abstract TType MakeByRef (TType type);
-		protected abstract bool HasThisAttribute (TMethod method);
+		public abstract bool HasThisAttribute (TMethod method);
 		protected abstract bool IsConstructor (TMethod method);
-		protected abstract TType GetElementType (TType type);
+		public abstract TType GetElementType (TType type);
 		protected abstract TType GetReturnType (TMethod method);
 		protected abstract void GetNamespaceAndName (TType type, out string @namespace, out string name);
 		protected abstract bool TryGetAttribute (TType type, string attributeNamespace, string attributeType, out object attribute);
@@ -1104,23 +1102,23 @@ namespace Registrar {
 		protected abstract ExportAttribute GetExportAttribute (TMethod method); // Return null if no attribute is found. Must check the base method (i.e. if method is overriding a method in a base class, must check the overridden method for the attribute).
 		protected abstract Dictionary<TMethod, List<TMethod>> PrepareMethodMapping (TType type);
 		public abstract RegisterAttribute GetRegisterAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
-		protected abstract CategoryAttribute GetCategoryAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
+		public abstract CategoryAttribute GetCategoryAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
 		protected abstract ConnectAttribute GetConnectAttribute (TProperty property); // Return null if no attribute is found. Do not consider inherited properties.
 		public abstract ProtocolAttribute GetProtocolAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
 		protected abstract IEnumerable<ProtocolMemberAttribute> GetProtocolMemberAttributes (TType type); // Return null if no attributes found. Do not consider base types.
 		protected virtual Version GetSdkIntroducedVersion (TType obj, out string message) { message = null; return null; } // returns the sdk version when the type was introduced for the current platform (null if all supported versions)
 		protected abstract Version GetSDKVersion ();
 		protected abstract TType GetProtocolAttributeWrapperType (TType type); // Return null if no attribute is found. Do not consider base types.
-		protected abstract BindAsAttribute GetBindAsAttribute (TMethod method, int parameter_index); // If parameter_index = -1 then get the attribute for the return type. Return null if no attribute is found. Must consider base method.
-		protected abstract BindAsAttribute GetBindAsAttribute (TProperty property);
+		public abstract BindAsAttribute GetBindAsAttribute (TMethod method, int parameter_index); // If parameter_index = -1 then get the attribute for the return type. Return null if no attribute is found. Must consider base method.
+		public abstract BindAsAttribute GetBindAsAttribute (TProperty property);
 		protected abstract IList<AdoptsAttribute> GetAdoptsAttributes (TType type);
 		public abstract TType GetNullableType (TType type); // For T? returns T. For T returns null.
-		protected abstract bool HasReleaseAttribute (TMethod method); // Returns true of the method's return type/value has a [Release] attribute.
+		public abstract bool HasReleaseAttribute (TMethod method); // Returns true of the method's return type/value has a [Release] attribute.
 		protected abstract bool IsINativeObject (TType type);
 		protected abstract bool IsValueType (TType type);
-		protected abstract bool IsArray (TType type, out int rank);
+		public abstract bool IsArray (TType type, out int rank);
 		protected abstract bool IsEnum (TType type, out bool isNativeEnum);
-		protected abstract bool IsNullable (TType type);
+		public abstract bool IsNullable (TType type);
 		protected abstract bool IsDelegate (TType type);
 		protected abstract bool IsGenericType (TType type);
 		protected abstract bool IsGenericMethod (TMethod method);
@@ -1128,7 +1126,7 @@ namespace Registrar {
 		protected abstract bool IsAbstract (TType type);
 		protected abstract bool IsPointer (TType type);
 		protected abstract TType GetGenericTypeDefinition (TType type);
-		protected abstract bool VerifyIsConstrainedToNSObject (TType type, out TType constrained_type);
+		public abstract bool VerifyIsConstrainedToNSObject (TType type, out TType constrained_type);
 		protected abstract TType GetEnumUnderlyingType (TType type);
 		protected abstract IEnumerable<TField> GetFields (TType type); // Must return all instance fields. May return static fields (they are filtered out automatically).
 		protected abstract TType GetFieldType (TField field);
@@ -1160,7 +1158,33 @@ namespace Registrar {
 		{
 		}
 
-		protected bool IsArray (TType type)
+		public static bool IsPropertyAccessor (TMethod method)
+		{
+			if (method is null)
+				return false;
+
+			if (!method.IsSpecialName)
+				return false;
+
+			var name = method.Name;
+			if (!name.StartsWith ("get_", StringComparison.Ordinal) && !name.StartsWith ("set_", StringComparison.Ordinal))
+				return false;
+
+			return true;
+		}
+
+		public bool IsPropertyAccessor (TMethod method, out TProperty property)
+		{
+			property = null;
+
+			if (!IsPropertyAccessor (method))
+				return false;
+
+			property = FindProperty (method.DeclaringType, method.Name.Substring (4));
+			return property is not null;
+		}
+
+		public bool IsArray (TType type)
 		{
 			int rank;
 			return IsArray (type, out rank);
@@ -2243,6 +2267,9 @@ namespace Registrar {
 							FieldType = "@",
 							IsProperty = true,
 							IsStatic = IsStatic (property),
+#if MTOUCH || MMP || BUNDLER
+							Property = property,
+#endif
 						}, ref exceptions);
 					}
 				}
