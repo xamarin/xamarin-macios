@@ -90,7 +90,7 @@ namespace Xamarin.MacDev.Tasks {
 			File.WriteAllText (projectPath, csproj);
 
 			var arguments = new List<string> ();
-			var environment = default (Dictionary<string, string>);
+			var environment = default (Dictionary<string, string?>);
 
 			if (IsDotNet) {
 				executable = Environment.GetEnvironmentVariable ("DOTNET_HOST_PATH");
@@ -101,7 +101,7 @@ namespace Xamarin.MacDev.Tasks {
 				var customHome = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_HOME");
 
 				if (!string.IsNullOrEmpty (customHome)) {
-					environment = new Dictionary<string, string> { { "HOME", customHome } };
+					environment = new Dictionary<string, string?> { { "HOME", customHome } };
 				}
 			} else {
 				executable = "/Library/Frameworks/Mono.framework/Commands/msbuild";

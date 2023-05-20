@@ -9,13 +9,15 @@ using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 using static Xamarin.Bundler.FileCopier;
 
+#nullable enable
+
 namespace Xamarin.MacDev.Tasks {
 	// This is the same as XamarinToolTask, except that it subclasses Task instead.
 	public abstract class XamarinTask : Task {
 
-		public string SessionId { get; set; }
+		public string SessionId { get; set; } = string.Empty;
 
-		public string TargetFrameworkMoniker { get; set; }
+		public string TargetFrameworkMoniker { get; set; } = string.Empty;
 
 		void VerifyTargetFrameworkMoniker ()
 		{
@@ -110,15 +112,15 @@ namespace Xamarin.MacDev.Tasks {
 			return PlatformFrameworkHelper.GetSdkPlatform (Platform, isSimulator);
 		}
 
-		protected System.Threading.Tasks.Task<Execution> ExecuteAsync (string fileName, IList<string> arguments, string sdkDevPath = null, Dictionary<string, string> environment = null, bool mergeOutput = true, bool showErrorIfFailure = true, string workingDirectory = null)
+		protected System.Threading.Tasks.Task<Execution> ExecuteAsync (string fileName, IList<string> arguments, string? sdkDevPath = null, Dictionary<string, string?>? environment = null, bool mergeOutput = true, bool showErrorIfFailure = true, string? workingDirectory = null)
 		{
 			return ExecuteAsync (Log, fileName, arguments, sdkDevPath, environment, mergeOutput, showErrorIfFailure, workingDirectory);
 		}
 
-		internal protected static async System.Threading.Tasks.Task<Execution> ExecuteAsync (TaskLoggingHelper log, string fileName, IList<string> arguments, string sdkDevPath = null, Dictionary<string, string> environment = null, bool mergeOutput = true, bool showErrorIfFailure = true, string workingDirectory = null)
+		internal protected static async System.Threading.Tasks.Task<Execution> ExecuteAsync (TaskLoggingHelper log, string fileName, IList<string> arguments, string? sdkDevPath = null, Dictionary<string, string?>? environment = null, bool mergeOutput = true, bool showErrorIfFailure = true, string? workingDirectory = null)
 		{
 			// Create a new dictionary if we're given one, to make sure we don't change the caller's dictionary.
-			var launchEnvironment = environment is null ? new Dictionary<string, string> () : new Dictionary<string, string> (environment);
+			var launchEnvironment = environment is null ? new Dictionary<string, string?> () : new Dictionary<string, string?> (environment);
 			if (!string.IsNullOrEmpty (sdkDevPath))
 				launchEnvironment ["DEVELOPER_DIR"] = sdkDevPath;
 
@@ -127,11 +129,11 @@ namespace Xamarin.MacDev.Tasks {
 			log.LogMessage (rv.ExitCode == 0 ? MessageImportance.Low : MessageImportance.High, MSBStrings.M0002, fileName, rv.ExitCode);
 
 			// Show the output
-			var output = rv.StandardOutput.ToString ();
+			var output = rv.StandardOutput!.ToString ();
 			if (!mergeOutput) {
 				if (output.Length > 0)
 					output += Environment.NewLine;
-				output += rv.StandardError.ToString ();
+				output += rv.StandardError!.ToString ();
 			}
 			if (output.Length > 0) {
 				var importance = MessageImportance.Low;
@@ -141,7 +143,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			if (showErrorIfFailure && rv.ExitCode != 0) {
-				var stderr = rv.StandardError.ToString ().Trim ();
+				var stderr = rv.StandardError!.ToString ().Trim ();
 				if (stderr.Length > 1024)
 					stderr = stderr.Substring (0, 1024);
 				if (string.IsNullOrEmpty (stderr)) {
@@ -198,12 +200,12 @@ namespace Xamarin.MacDev.Tasks {
 			FileCopierLogCallback (Log, min_verbosity, format, arguments);
 		}
 
-		protected string GetNonEmptyStringOrFallback (ITaskItem item, string metadataName, string fallbackValue, string fallbackName = null, bool required = false)
+		protected string GetNonEmptyStringOrFallback (ITaskItem item, string metadataName, string fallbackValue, string? fallbackName = null, bool required = false)
 		{
 			return GetNonEmptyStringOrFallback (item, metadataName, out var _, fallbackValue, fallbackName, required);
 		}
 
-		protected string GetNonEmptyStringOrFallback (ITaskItem item, string metadataName, out bool foundInMetadata, string fallbackValue, string fallbackName = null, bool required = false)
+		protected string GetNonEmptyStringOrFallback (ITaskItem item, string metadataName, out bool foundInMetadata, string fallbackValue, string? fallbackName = null, bool required = false)
 		{
 			var metadataValue = item.GetMetadata (metadataName);
 			if (!string.IsNullOrEmpty (metadataValue)) {

@@ -231,6 +231,14 @@ namespace Foundation {
 			GC.SuppressFinalize (this);
 		}
 
+		static T AllocateNSObject<T> (IntPtr handle) where T : NSObject
+		{
+			var obj = (T) RuntimeHelpers.GetUninitializedObject (typeof (T));
+			obj.handle = handle;
+			obj.flags = Flags.NativeRef;
+			return obj;
+		}
+
 		internal static IntPtr CreateNSObject (IntPtr type_gchandle, IntPtr handle, Flags flags)
 		{
 			// This function is called from native code before any constructors have executed.
