@@ -149,7 +149,7 @@ stages:
     strategy:
       matrix:
         ${{ each label in parameters.simTestsConfigurations }}:
-        ${{ replace(label, '-', '_') }}:
+          ${{ replace(label, '-', '_') }}:
             LABEL: ${{ label }}
             TESTS_LABELS: '${{ parameters.testsLabels }},run-${{ label }}-tests'
             STATUS_CONTEXT: '${{ parameters.statusContext }} - ${{ label }}'
