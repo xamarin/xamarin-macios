@@ -123,7 +123,7 @@ stages:
     dependsOn:
     - ${{ if eq(parameters.parseLabels, true) }}:
       - configure
-    displayName: 'Running tests' 
+    displayName: 'Running tests:' 
     timeoutInMinutes: 1000
     variables:
       # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
@@ -147,7 +147,7 @@ stages:
     strategy:
       matrix:
         ${{ each label in parameters.simTestsConfigurations }}:
-          TEST_${{ replace(label, '-', '_') }}:
+        ${{ replace(label, '-', '_') }}:
             LABEL: ${{ label }}
             TESTS_LABELS: '${{ parameters.testsLabels }},run-${{ label }}-tests'
             STATUS_CONTEXT: '${{ parameters.statusContext }} - ${{ label }}'
