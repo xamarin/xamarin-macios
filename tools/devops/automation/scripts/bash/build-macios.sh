@@ -10,7 +10,7 @@ fi
 if test -z "$MAKE_PARALLELISM"; then
   options=("${options[@]}" -j8)
 else
-  options=("${options[@]}" -j $MAKE_PARALLELISM)
+  options=("${options[@]}" -j "$MAKE_PARALLELISM")
 fi
 
 # shellcheck disable=SC2046
