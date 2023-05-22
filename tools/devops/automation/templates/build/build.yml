@@ -164,6 +164,8 @@ steps:
   workingDirectory: "$(Build.SourcesDirectory)/xamarin-macios"
   displayName: 'Build'
   timeoutInMinutes: 300
+  env:
+    MAKE_PARALLELISM: ${{ parameters.makeParallelism }}
 
 - ${{ each step in parameters.buildSteps }}:
   - ${{ each pair in step }}:

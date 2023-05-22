@@ -7,10 +7,10 @@ if [[ "$SYSTEM_DEBUG" == "true" ]]; then
   options=(V=1 -w)
 fi
 
-if test -z "$makeParallelism"; then
+if test -z "$MAKE_PARALLELISM"; then
   options=("${options[@]}" -j8)
 else
-  options=("${options[@]}" -j $makeParallelism)
+  options=("${options[@]}" -j $MAKE_PARALLELISM)
 fi
 
 # shellcheck disable=SC2046

@@ -7,6 +7,8 @@ if [[ "$ENABLE_DOT_NET" == "True" ]]; then
 fi
 
 flags=("${flags[@]}" --enable-install-source)
-echo "Configuration flags are ${flags[@]}"
 
-./configure "${flags[@]}"
+FLAGS="${flags[@]}"
+echo "Configuration flags are $FLAGS"
+
+./configure "$FLAGS"
