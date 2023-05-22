@@ -142,6 +142,8 @@ stages:
       - Agent.OS -equals Darwin
       - macOS.Name -equals ${{ parameters.macOSName }}
       - XcodeChannel -equals ${{ parameters.XcodeChannel }}
+      - ${{ each demand in parameters.extraBotDemands }}:
+          - demand
       workspace:
         clean: all
     strategy:
