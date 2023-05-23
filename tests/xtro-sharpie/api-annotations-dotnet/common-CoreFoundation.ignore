@@ -616,8 +616,6 @@
 !missing-pinvoke! CFRunLoopAddTimer is not bound
 !missing-pinvoke! CFRunLoopContainsObserver is not bound
 !missing-pinvoke! CFRunLoopContainsTimer is not bound
-!missing-pinvoke! CFRunLoopCopyAllModes is not bound
-!missing-pinvoke! CFRunLoopCopyCurrentMode is not bound
 !missing-pinvoke! CFRunLoopGetNextTimerFireDate is not bound
 !missing-pinvoke! CFRunLoopGetTypeID is not bound
 !missing-pinvoke! CFRunLoopObserverCreate is not bound
