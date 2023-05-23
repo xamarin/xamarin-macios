@@ -217,6 +217,15 @@
 		</Copy>
 	</Target>
 
+	<Target Name="_CreateHotRestartAppMarkers">
+		<MakeDir Directories="$(HotRestartContentStampDir)"/>
+		<MakeDir Directories="@(_HotRestartContentDirContents -> '$(HotRestartContentStampDir)%(DestinationSubDirectory)')"/>
+
+		<Touch AlwaysCreate="true" Files="@(_HotRestartContentDirContents -> '$(HotRestartContentStampDir)%(DestinationSubDirectory)%(FileName)%(Extension).stamp')" />
+		<Touch AlwaysCreate="true" Files="$(HotRestartContentStampDir)$(AssemblyName).hotrestartapp.stamp" />
+		<Touch AlwaysCreate="true" Files="$(HotRestartAppContentDir)$(AssemblyName).hotrestartapp" />
+	</Target>
+
 	<Target Name="_CollectCodeSignHotRestartInputs">
 		<ItemGroup>
 			<_CodeSignHotRestartInputs Include="$(_AppBundleManifestPath)" Outputs="$(HotRestartSignedAppDir)Info.plist" />
@@ -232,11 +241,12 @@
 			_CreateHotRestartCachedBundle;
 			_UnpackLibraryResources;
 			_ComputeHotRestartBundleContents;
+			_CodesignHotRestartAppBundle;
 			_CopyHotRestartBundleResources;
 			_CopyFilesToHotRestartSignedAppDirContents;
 			_CopyFilesToHotRestartContentDir;
 			_CopyFilesToHotRestartAppContentDir;
-			_CodesignHotRestartAppBundle;
+			_CreateHotRestartAppMarkers;
 		</_CreateHotRestartOutputBundleDependsOn>
 	</PropertyGroup>
 
@@ -247,7 +257,7 @@
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true' And '$(EnableCodeSigning)' != 'false'"
 		DependsOnTargets="_CreateHotRestartCachedBundle;_CollectCodeSignHotRestartInputs"
 		Inputs="@(_CodeSignHotRestartInputs)"
-		Outputs="$(HotRestartAppBundlePath)\_CodeSignature\CodeResources">
+		Outputs="@(_CodeSignHotRestartInputs -> '%(Outputs)')">
 		
 		<CodesignHotRestartApp
 			AppBundlePath="$(HotRestartAppBundlePath)"
