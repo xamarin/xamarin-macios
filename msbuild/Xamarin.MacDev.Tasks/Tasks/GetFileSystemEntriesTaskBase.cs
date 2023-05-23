@@ -23,6 +23,10 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Required]
 		public bool IncludeDirectories { get; set; }
+
+		// If the input directory should be copied from Windows to the Mac in
+		// a remote build.
+		public bool CopyFromWindows { get; set; }
 		#endregion
 
 		#region Outputs
