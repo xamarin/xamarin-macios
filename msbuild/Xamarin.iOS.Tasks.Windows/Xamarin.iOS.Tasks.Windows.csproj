@@ -22,7 +22,7 @@
     <PackageReference Include="Xamarin.Messaging.Core" Version="$(MessagingVersion)" IncludeAssets="build" />
     <PackageReference Include="Xamarin.Messaging.Server" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
     <PackageReference Include="Xamarin.iOS.HotRestart.Client" Version="$(HotRestartVersion)" GeneratePathProperty="true" />
-    <PackageReference Include="System.Diagnostics.Tracer" Version="2.0.8" GeneratePathProperty="true" />
+    <PackageReference Include="System.Diagnostics.Tracer" Version="2.1.0-alpha" GeneratePathProperty="true" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Messaging\Xamarin.Messaging.Build\Xamarin.Messaging.Build.csproj">
