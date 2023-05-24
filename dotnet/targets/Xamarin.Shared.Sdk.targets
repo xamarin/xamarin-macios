@@ -1876,7 +1876,9 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 
 			This is somewhat complicated by the fact that we can have
 			.resources bundles (i.e. directories), so we need to expand those
-			to all their contained files.
+			to all their contained files (and why just not adding the
+			extensions to the AllowedReferenceRelatedFileExtensions property
+			would work)
 
 		-->
 
@@ -1892,24 +1894,16 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 			<_BindingPackagesFromReferencedAssembliesDirectoriesExists Include="@(_BindingPackagesFromReferencedAssembliesDirectoriesCandidates->Distinct())" Condition="Exists('%(Identity)')" />
 		</ItemGroup>
 
-		<PropertyGroup Condition="'$(IsMacEnabled)' == 'true'">
-			<BuildSessionIdIfConnected>$(BuildSessionId)</BuildSessionIdIfConnected>
-		</PropertyGroup>
-
 		<!--
 			We need to expand items in an item group using globs, which is
 			kind of tricky, because globs in item transformations aren't
 			treated as globs. The workaround is to use a custom task for this.
 
-			Note that this task should run remotely from Windows when there's
-			a Mac connected, but locally when there's not a Mac connected (for
-			Hot Restart builds for instance), so we're not conditioning this
-			task on IsMacEnabled. Instead we're only setting SessionId if we
-			have a session id *and* we're connected to a Mac.
+			Note that this task should run locally on Windows even for a remote build,
+			so there's no SessionId property.
 
 		-->
 		<GetFileSystemEntries
-			SessionId="$(BuildSessionIdIfConnected)"
 			DirectoryPath="@(_BindingPackagesFromReferencedAssembliesDirectoriesExists)"
 			Pattern="*"
 			Recursive="true"
