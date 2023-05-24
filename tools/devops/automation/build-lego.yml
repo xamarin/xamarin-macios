@@ -50,6 +50,7 @@ trigger:
   branches:
     include:
     - Localization
+    - Localization-NewPat
 
 stages:
 
@@ -76,7 +77,7 @@ stages:
 
       - pwsh: |
           git remote remove origin
-          git remote add origin https://$(GitHub.Token)@github.com/xamarin/xamarin-macios.git
+          git remote add origin https://$(github--pat--vs-mobiletools-engineering-service2--repo-user)@github.com/xamarin/xamarin-macios.git
           git remote # don't add -v else we see the pat
 
           git config user.email "valco@microsoft.com"
@@ -85,10 +86,10 @@ stages:
           git fetch origin
 
           gh pr create `
-          --title "Bring changes from Localization branch #$(Build.BuildNumber)" `
-          --body "The OneLoc team creates these translations to be consumed later on in the second step of the Localization process. We need to bring these into the main branch in order to continue the process." `
+          --title "[Test] TJ Testing Localization PAT" `
+          --body "Testing the new Pat that we've received from VSEng. Please let this PR sit untouched for about a day to ensure it does not autoclose and then TJ will close the PR! Thanks!" `
           --base main `
-          --head Localization `
+          --head Localization-NewPat `
           --label not-notes-worthy `
           --milestone Future `
           --draft=false
@@ -98,4 +99,4 @@ stages:
         workingDirectory: $(System.DefaultWorkingDirectory)
         condition: startsWith(variables['Build.SourceVersionMessage'], 'LEGO')
         env:
-          GITHUB_TOKEN: $(GitHub.Token)
+          GITHUB_TOKEN: $(github--pat--vs-mobiletools-engineering-service2--repo-user)
