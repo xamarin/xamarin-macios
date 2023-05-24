@@ -36,7 +36,17 @@ namespace Xamarin.MacDev.Tasks {
 				if (!Directory.Exists (spec))
 					continue;
 
-				rv.AddRange (Directory.GetFiles (spec, "*", SearchOption.AllDirectories));
+				var files = Directory.GetFiles (spec, "*", SearchOption.AllDirectories);
+				foreach (var file in files) {
+					// Only copy non-empty files, so that we don't end up
+					// copying an empty file that happens to be an output file
+					// from a previous target (and thus overwriting that file
+					// on Windows).
+					var finfo = new FileInfo (file);
+					if (!finfo.Exists || finfo.Length == 0)
+						continue;
+					rv.Add (file);
+				}
 			}
 
 			return rv.Select (f => new TaskItem (f));
