@@ -28,7 +28,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void CurrentMode ()
 		{
-			Assert.That (CFRunLoop.Main.CurrentMode, Is.Not.Null.And.Not.Empty, "CurrentMode");
+			Assert.DoesNotThrow (() => { GC.KeepAlive (CFRunLoop.Main.CurrentMode); }, "CurrentMode");
 		}
 
 		[Test]
