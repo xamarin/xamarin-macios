@@ -4,6 +4,7 @@
 
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Xml;
 
@@ -27,6 +28,48 @@ var commands = args.Skip (argIndex).ToArray ();
 var pid = Process.GetCurrentProcess ().Id;
 var maxLaunchAttempts = 10;
 var exitCode = -1;
+
+var logOutput = new List<string> ();
+var log = new Process ();
+Thread stdoutThread, stderrThread;
+{
+	// Capture the system log
+	log.StartInfo.FileName = "log";
+	log.StartInfo.Arguments = "stream";
+	log.StartInfo.UseShellExecute = false;
+	log.StartInfo.RedirectStandardOutput = true;
+	log.StartInfo.RedirectStandardError = true;
+	log.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+	log.StartInfo.StandardErrorEncoding = Encoding.UTF8;
+
+	var StartOutputThread = new Func<StreamReader, string, Thread> ((StreamReader reader, string thread_name) =>
+	{
+		var thread = new Thread (() => {
+			try {
+				while (reader.ReadLine () is string line) {
+					lock (logOutput)
+						logOutput.Add (line);
+				}
+			} finally {
+				// The Process instance doesn't dispose these streams, which means we need to do it,
+				// otherwise we can run out of file descriptors while waiting for the GC to kick in.
+				// Ref: https://bugzilla.xamarin.com/show_bug.cgi?id=43462
+				reader.Dispose ();
+			}
+		}) {
+			IsBackground = true,
+			Name = thread_name,
+		};
+		thread.Start ();
+		return thread;
+	});
+
+	log.Start ();
+	var pid = log.Id;
+	stdoutThread = StartOutputThread (log.StandardOutput, $"StandardOutput reader for {log.StartInfo.FileName} (PID: {pid})");
+	stderrThread = StartOutputThread (log.StandardError, $"StandardError reader for {log.StartInfo.FileName} (PID: {pid})");
+}
+
 for (var attempt = 0; attempt < maxLaunchAttempts; attempt++) {
 	var launchTimeoutFile = Path.GetFullPath ($"launch-timeout-sentinel-{pid}-{attempt}.txt");
 	var launchTimedOut = new ManualResetEvent (false);
@@ -77,6 +120,16 @@ for (var attempt = 0; attempt < maxLaunchAttempts; attempt++) {
 		p.Dispose ();
 	}
 	break;
+}
+
+log.Kill ();
+stdoutThread.Join (TimeSpan.FromSeconds (3));
+stderrThread.Join (TimeSpan.FromSeconds (3));
+
+if (exitCode != 0) {
+	Console.WriteLine ("Output from 'log stream':");
+	foreach (var line in logOutput)
+		Console.WriteLine ($"    {line}");
 }
 
 Environment.Exit (exitCode);

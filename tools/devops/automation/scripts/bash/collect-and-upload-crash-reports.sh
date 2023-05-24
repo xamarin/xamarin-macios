@@ -4,6 +4,9 @@ if test -z "$SYSTEM_DEFAULTWORKINGDIRECTORY"; then
   SYSTEM_DEFAULTWORKINGDIRECTORY=$(pwd)
 fi
 
+echo "Listing crash reports:"
+ls -la "$HOME/Library/Logs/DiagnosticReports" || true
+
 if ! test -d "$HOME/Library/Logs/DiagnosticReports"; then
   echo "No crash report directory found" # nothing to do
 elif [[ "$(find "$HOME/Library/Logs/DiagnosticReports" -type f | wc -l)" -eq 0 ]]; then
