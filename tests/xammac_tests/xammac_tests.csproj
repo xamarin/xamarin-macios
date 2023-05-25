@@ -127,9 +127,6 @@
     <Compile Include="..\common\mac\MacMain.cs">
       <Link>MacMain.cs</Link>
     </Compile>
-    <Compile Include="..\common\mac\TestRuntime.macos.cs">
-      <Link>TestRuntime.macos.cs</Link>
-    </Compile>
     <Compile Include="..\common\ExecutionHelper.cs">
       <Link>ExecutionHelper.cs</Link>
     </Compile>

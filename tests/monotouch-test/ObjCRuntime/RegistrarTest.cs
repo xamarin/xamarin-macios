@@ -2127,7 +2127,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			thread.Join ();
 			GC.Collect ();
 			GC.WaitForPendingFinalizers ();
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), () => { }, () => ObjCBlockTester.FreedBlockCount > initialFreedCount);
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), () => { }, () => ObjCBlockTester.FreedBlockCount > initialFreedCount);
 			Assert.IsNull (ex, "No exceptions");
 			Assert.That (ObjCBlockTester.FreedBlockCount, Is.GreaterThan (initialFreedCount), "freed blocks");
 		}

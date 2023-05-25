@@ -38,9 +38,6 @@
 
   <ItemGroup Condition="$(TargetFramework.EndsWith('-macos'))">
     <Compile Include="$(RootTestsDirectory)\common\mac\MacMain.cs" Condition="$(TargetFramework.EndsWith('-macos'))" Link="MacMain.cs" />
-    <Compile Include="$(RootTestsDirectory)\common\mac\TestRuntime.macos.cs">
-      <Link>TestRuntime.macos.cs</Link>
-    </Compile>
     <Compile Include="$(ThisTestDirectory)\..\..\mac\link all\LinkAllTest.cs" />
   </ItemGroup>
 

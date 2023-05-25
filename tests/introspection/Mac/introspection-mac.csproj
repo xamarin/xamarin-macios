@@ -122,9 +122,6 @@
     <Compile Include="..\..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>
-    <Compile Include="..\..\common\mac\TestRuntime.macos.cs">
-      <Link>TestRuntime.macos.cs</Link>
-    </Compile>
     <Compile Include="..\..\common\MonoNativeConfig.cs">
       <Link>MonoNativeConfig.cs</Link>
     </Compile>

@@ -28,7 +28,7 @@ namespace monotouchtest.Network {
 			NWPath finalPath = null;
 			bool isPathUpdated = false;
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 
 				monitor.SnapshotHandler = ((path) => {
 					if (path is not null) {
@@ -64,7 +64,7 @@ namespace monotouchtest.Network {
 				}
 			});
 			monitor.Start ();
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (3), () => { }, () => oldPath is not null);
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (3), () => { }, () => oldPath is not null);
 
 			// Set a different handler
 			monitor.SnapshotHandler = ((path) => {
@@ -73,7 +73,7 @@ namespace monotouchtest.Network {
 				}
 			});
 			monitor.Start ();
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (3), () => { }, () => newPath is not null);
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (3), () => { }, () => newPath is not null);
 			monitor.Cancel ();
 
 			Assert.IsNotNull (oldPath, "oldPath set (no timeout)");
