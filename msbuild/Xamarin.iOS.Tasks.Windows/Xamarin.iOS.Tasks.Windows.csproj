@@ -41,7 +41,6 @@
     </None>
     <None Include="$(PkgXamarin_iOS_HotRestart_Client)\lib\netstandard2.0\iSign.Core.pdb" CopyToOutputDirectory="PreserveNewest" />
     <None Include="$(PkgXamarin_iOS_HotRestart_Client)\lib\netstandard2.0\Xamarin.iOS.Windows.Client.pdb" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="$(PkgSystem_Diagnostics_Tracer)\lib\netstandard2.0\System.Diagnostics.Tracer.pdb" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="../Versions.ios.g.cs" />
   </ItemGroup>
   <ItemGroup>
