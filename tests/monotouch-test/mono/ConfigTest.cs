@@ -13,8 +13,8 @@ namespace MonoTouchFixtures {
 		[Test]
 		public void Existence ()
 		{
-			var config_file = Assembly.GetExecutingAssembly ().Location + ".config";
-			Assert.True (File.Exists (config_file), "existence");
+			var config_file = Path.Combine (AppContext.BaseDirectory, Assembly.GetExecutingAssembly ().GetName ().Name + ".dll.config");
+			Assert.That (config_file, Does.Exist, "existence");
 			Assert.That (File.ReadAllText (config_file), Contains.Substring ("<secretMessage>Xamarin rocks</secretMessage>"), "content");
 		}
 	}
