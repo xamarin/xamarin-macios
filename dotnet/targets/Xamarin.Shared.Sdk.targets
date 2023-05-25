@@ -1914,6 +1914,7 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 			Pattern="*"
 			Recursive="true"
 			IncludeDirectories="false"
+			CopyFromWindows="true"
 			>
 			<Output TaskParameter="Entries" ItemName="_BindingPackagesFromReferencedAssemblies" />
 		</GetFileSystemEntries>
