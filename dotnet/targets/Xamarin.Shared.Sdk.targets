@@ -559,6 +559,10 @@
 			<_ExtraTrimmerArgs Condition="('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS') And '$(_SdkIsSimulator)' == 'true'">$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.Arch.IsSimulator true</_ExtraTrimmerArgs>
 			<_ExtraTrimmerArgs Condition="('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS') And '$(_SdkIsSimulator)' != 'true'">$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.Arch.IsSimulator false</_ExtraTrimmerArgs>
 
+			<!-- Set managed static registrar value -->
+			<_ExtraTrimmerArgs Condition="'$(Registrar)' == 'managed-static'">$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.IsManagedStaticRegistrar true</_ExtraTrimmerArgs>
+			<_ExtraTrimmerArgs Condition="'$(Registrar)' != 'managed-static'">$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.IsManagedStaticRegistrar false</_ExtraTrimmerArgs>
+
 			<!-- Enable serialization discovery. Ref: https://github.com/xamarin/xamarin-macios/issues/15676 -->
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --enable-serialization-discovery</_ExtraTrimmerArgs>
 
@@ -591,6 +595,7 @@
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Type="MonoTouch.Tuner.RegistrarRemovalTrackingStep" />
 			<!-- TODO: these steps should probably run after mark. -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Condition="'$(_AreAnyAssembliesTrimmed)' == 'true'" Type="Xamarin.Linker.Steps.PreMarkDispatcher" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Type="Xamarin.Linker.ManagedRegistrarStep" Condition="'$(Registrar)' == 'managed-static'" />
 
 			<!--
 				IMarkHandlers which run during Mark
@@ -602,6 +607,11 @@
 			<!-- MarkDispatcher substeps will run for all marked assemblies. -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_AreAnyAssembliesTrimmed)' == 'true'" Type="Xamarin.Linker.Steps.MarkDispatcher" />
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_AreAnyAssembliesTrimmed)' == 'true'" Type="Xamarin.Linker.Steps.PreserveSmartEnumConversionsHandler" />
+
+			<!--
+				pre-sweep custom steps
+			-->
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="SweepStep" Type="Xamarin.Linker.ManagedRegistrarLookupTablesStep" Condition="'$(Registrar)' == 'managed-static'" />
 
 			<!--
 				post-sweep custom steps
@@ -1910,6 +1920,10 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 			<_BindingPackagesFromReferencedAssembliesDirectoriesExists Include="@(_BindingPackagesFromReferencedAssembliesDirectoriesCandidates->Distinct())" Condition="Exists('%(Identity)')" />
 		</ItemGroup>
 
+		<PropertyGroup Condition="'$(IsMacEnabled)' == 'true'">
+			<BuildSessionIdIfConnected>$(BuildSessionId)</BuildSessionIdIfConnected>
+		</PropertyGroup>
+
 		<!--
 			We need to expand items in an item group using globs, which is
 			kind of tricky, because globs in item transformations aren't
@@ -1918,11 +1932,12 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 			Note that this task should run remotely from Windows when there's
 			a Mac connected, but locally when there's not a Mac connected (for
 			Hot Restart builds for instance), so we're not conditioning this
-			task on IsMacEnabled.
+			task on IsMacEnabled. Instead we're only setting SessionId if we
+			have a session id *and* we're connected to a Mac.
 
 		-->
 		<GetFileSystemEntries
-			SessionId="$(BuildSessionId)"
+			SessionId="$(BuildSessionIdIfConnected)"
 			DirectoryPath="@(_BindingPackagesFromReferencedAssembliesDirectoriesExists)"
 			Pattern="*"
 			Recursive="true"

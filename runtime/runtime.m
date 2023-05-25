@@ -136,7 +136,7 @@ struct Trampolines {
 
 enum InitializationFlags : int {
 	InitializationFlagsIsPartialStaticRegistrar = 0x01,
-	/* unused									= 0x02,*/
+	InitializationFlagsIsManagedStaticRegistrar = 0x02,
 	/* unused									= 0x04,*/
 	/* unused									= 0x08,*/
 	InitializationFlagsIsSimulator				= 0x10,
@@ -2736,6 +2736,30 @@ xamarin_vprintf (const char *format, va_list args)
 	[message release];
 }
 
+void
+xamarin_registrar_dlsym (void **function_pointer, const char *assembly, const char *symbol, int32_t id)
+{
+	if (*function_pointer != NULL)
+		return;
+
+	*function_pointer = dlsym (RTLD_MAIN_ONLY, symbol);
+	if (*function_pointer != NULL)
+		return;
+
+	GCHandle exception_gchandle = INVALID_GCHANDLE;
+	*function_pointer = xamarin_lookup_unmanaged_function (assembly, symbol, id, &exception_gchandle);
+	if (*function_pointer != NULL)
+		return;
+
+	if (exception_gchandle != INVALID_GCHANDLE)
+		xamarin_process_managed_exception_gchandle (exception_gchandle);
+
+	// This shouldn't really happen
+	NSString *msg = [NSString stringWithFormat: @"Unable to load the symbol '%s' to call managed code: %@", symbol, xamarin_print_all_exceptions (exception_gchandle)];
+	NSLog (@"%@", msg);
+	@throw [[NSException alloc] initWithName: @"SymbolNotFoundException" reason: msg userInfo: NULL];
+}
+
 /*
  * File/resource lookup for assemblies
  *
@@ -3193,6 +3217,16 @@ bool
 xamarin_get_is_debug ()
 {
 	return xamarin_debug_mode;
+}
+
+void
+xamarin_set_is_managed_static_registrar (bool value)
+{
+	if (value) {
+		options.flags = (InitializationFlags) (options.flags | InitializationFlagsIsManagedStaticRegistrar);
+	} else {
+		options.flags = (InitializationFlags) (options.flags & ~InitializationFlagsIsManagedStaticRegistrar);
+	}
 }
 
 bool
