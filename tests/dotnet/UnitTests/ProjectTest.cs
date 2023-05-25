@@ -496,7 +496,7 @@ namespace Xamarin.Tests {
 		[Test]
 		[TestCase (ApplePlatform.iOS, "win10-x86", null)]
 		[TestCase (ApplePlatform.TVOS, "win10-x64", null)]
-		[TestCase (ApplePlatform.MacOSX, "win10-arm", null)]
+		[TestCase (ApplePlatform.MacOSX, "win10-arm64", null)]
 		[TestCase (ApplePlatform.MacCatalyst, "win10-arm64", "Unable to find package Microsoft.NETCore.App.Runtime.Mono.win-arm64. No packages exist with this id in source[(]s[)]:.*")]
 		public void InvalidRuntimeIdentifier_Restore (ApplePlatform platform, string runtimeIdentifier, string? failureMessagePattern)
 		{

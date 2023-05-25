@@ -215,7 +215,7 @@ namespace Xamarin.BindingTests {
 			// The ObjC runtime won't add optional properties dynamically (the code is commented out,
 			// see file objc4-647/runtime/objc-runtime-old.mm in Apple's open source code),
 			// so we need to verify differently for the dynamic registrar.
-			if (XamarinTests.ObjCRuntime.Registrar.CurrentRegistrar == XamarinTests.ObjCRuntime.Registrars.Static) {
+			if (XamarinTests.ObjCRuntime.Registrar.IsStaticRegistrar) {
 				Assert.AreEqual (9, properties.Length, "Properties: Count");
 			} else {
 				Assert.AreEqual (2, properties.Length, "Properties: Count");
@@ -232,7 +232,7 @@ namespace Xamarin.BindingTests {
 				new objc_property_attribute ("N", "")
 			})), "Properties: requiredReadonlyProperty");
 
-			if (XamarinTests.ObjCRuntime.Registrar.CurrentRegistrar == XamarinTests.ObjCRuntime.Registrars.Static) {
+			if (XamarinTests.ObjCRuntime.Registrar.IsStaticRegistrar) {
 				Assert.That (properties, Contains.Item (new objc_property ("optionalInstanceProperty", "T@\"NSString\",N", new objc_property_attribute [] {
 					new objc_property_attribute ("T", "@\"NSString\""),
 					new objc_property_attribute ("N", "")
