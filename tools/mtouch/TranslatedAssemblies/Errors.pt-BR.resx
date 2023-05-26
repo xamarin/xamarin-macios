@@ -1034,10 +1034,6 @@
 		<value>Não foi possível otimizar a chamada para BlockLiteral.{2} em {0} porque o tipo do valor passado como o primeiro argumento (o trampolim) é {1}, o que torna impossível computar a assinatura do bloco.
 		</value>
 	</data>
-  <data name="MM2106_C" xml:space="preserve">
-		<value>Não foi possível otimizar a chamada para BlockLiteral.SetupBlock em {0} no deslocamento {1} porque não foi possível encontrar nenhum atributo [UserDelegateType] em {2}.
-		</value>
-	</data>
   <data name="MM2106_D" xml:space="preserve">
 		<value>Não foi possível otimizar a chamada para BlockLiteral.SetupBlock em {0} no deslocamento {1}: {2}.
 		</value>
@@ -1540,6 +1536,12 @@
   <data name="MT4186" xml:space="preserve">
 		<value>O registrador encontrou um tipo não ideal de “{0}”: o tipo não tem um construtor que tenha dois argumentos (ObjCRuntime.NativeHandle, bool). No entanto, um construtor que aceita dois argumentos (System.IntPtr, bool) foi encontrado (e será usado em seu lugar). É altamente recomendável alterar a assinatura do construtor (System.IntPtr, bool) para ser (ObjCRuntime.NativeHandle, bool).</value>
 	</data>
+  <data name="MX4187" xml:space="preserve">
+		<value>Could not find a [UserDelegateType] attribute on the type '{0}'.</value>
+	</data>
+  <data name="MX4188" xml:space="preserve">
+		<value>Unable to compute the block signature for the type '{0}': {1}</value>
+	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Compilador '{0}' ausente. Instale o componente 'Ferramentas de Linha de Comando' do Xcode
 		</value>
@@ -1801,5 +1803,14 @@
 	</data>
   <data name="MX8052" xml:space="preserve">
 		<value>A assinatura deve ser uma cadeia de caracteres não vazia.</value>
+	</data>
+  <data name="MX8053" xml:space="preserve">
+		<value>Could not resolve the module in the assembly {0}.</value>
+	</data>
+  <data name="MX8054" xml:space="preserve">
+		<value>Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}).</value>
+	</data>
+  <data name="MX8055" xml:space="preserve">
+		<value>Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.</value>
 	</data>
 </root>

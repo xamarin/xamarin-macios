@@ -34,3 +34,7 @@ $(DOTNET_DIRECTORIES):
 
 all-local:: $(DOTNET_TARGETS)
 install-local:: $(DOTNET_TARGETS)
+
+VSCODE?="/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code"
+vscode:
+	PATH=$(DOTNET_DIR):$(PATH) $(VSCODE) .

@@ -295,6 +295,19 @@ namespace Foundation {
 			return ret;
 		}
 
+		static Array ArrayFromHandle (NativeHandle handle, Type elementType)
+		{
+			if (handle == NativeHandle.Zero)
+				return null;
+
+			var c = (int) GetCount (handle);
+			var rv = Array.CreateInstance (elementType, c);
+			for (int i = 0; i < c; i++) {
+				rv.SetValue (UnsafeGetItem (handle, (nuint) i, elementType), i);
+			}
+			return rv;
+		}
+
 		static public T [] EnumsFromHandle<T> (NativeHandle handle) where T : struct, IConvertible
 		{
 			if (handle == NativeHandle.Zero)
@@ -393,6 +406,18 @@ namespace Foundation {
 				return null;
 
 			return Runtime.GetINativeObject<T> (val, false);
+		}
+
+		static object UnsafeGetItem (NativeHandle handle, nuint index, Type type)
+		{
+			var val = GetAtIndex (handle, index);
+			// A native code could return NSArray with NSNull.Null elements
+			// and they should be valid for things like T : NSDate so we handle
+			// them as just null values inside the array
+			if (val == NSNull.Null.Handle)
+				return null;
+
+			return Runtime.GetINativeObject (val, false, type);
 		}
 
 		// can return an INativeObject or an NSObject

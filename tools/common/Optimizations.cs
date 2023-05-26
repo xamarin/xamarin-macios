@@ -194,7 +194,7 @@ namespace Xamarin.Bundler {
 
 				switch ((Opt) i) {
 				case Opt.StaticBlockToDelegateLookup:
-					if (app.Registrar != RegistrarMode.Static) {
+					if (app.Registrar != RegistrarMode.Static && app.Registrar != RegistrarMode.ManagedStatic) {
 						messages.Add (ErrorHelper.CreateWarning (2003, Errors.MT2003, (values [i].Value ? "" : "-"), opt_names [i]));
 						values [i] = false;
 						continue;
@@ -205,7 +205,7 @@ namespace Xamarin.Bundler {
 				case Opt.RegisterProtocols:
 				case Opt.RemoveDynamicRegistrar:
 				case Opt.RedirectClassHandles:
-					if (app.Registrar != RegistrarMode.Static) {
+					if (app.Registrar != RegistrarMode.Static && app.Registrar != RegistrarMode.ManagedStatic) {
 						messages.Add (ErrorHelper.CreateWarning (2003, Errors.MT2003, (values [i].Value ? "" : "-"), opt_names [i]));
 						values [i] = false;
 						continue;
@@ -252,17 +252,17 @@ namespace Xamarin.Bundler {
 
 			// We try to optimize calls to BlockLiteral.SetupBlock and certain BlockLiteral constructors if the static registrar is enabled
 			if (!OptimizeBlockLiteralSetupBlock.HasValue) {
-				OptimizeBlockLiteralSetupBlock = app.Registrar == RegistrarMode.Static;
+				OptimizeBlockLiteralSetupBlock = app.Registrar == RegistrarMode.Static || app.Registrar == RegistrarMode.ManagedStatic;
 			}
 
 			// We will register protocols if the static registrar is enabled and loading assemblies is not possible
 			if (!RegisterProtocols.HasValue) {
 				if (app.Platform != ApplePlatform.MacOSX) {
-					RegisterProtocols = (app.Registrar == RegistrarMode.Static) && !app.UseInterpreter;
+					RegisterProtocols = (app.Registrar == RegistrarMode.Static || app.Registrar == RegistrarMode.ManagedStatic) && !app.UseInterpreter;
 				} else {
 					RegisterProtocols = false;
 				}
-			} else if (app.Registrar != RegistrarMode.Static && RegisterProtocols == true) {
+			} else if (app.Registrar != RegistrarMode.Static && app.Registrar != RegistrarMode.ManagedStatic && RegisterProtocols == true) {
 				RegisterProtocols = false; // we've already shown a warning for this.
 			}
 
@@ -281,7 +281,7 @@ namespace Xamarin.Bundler {
 				} else if (StaticBlockToDelegateLookup != true) {
 					// Can't remove the dynamic registrar unless also generating static lookup of block-to-delegates in the static registrar.
 					RemoveDynamicRegistrar = false;
-				} else if (app.Registrar != RegistrarMode.Static || !app.AreAnyAssembliesTrimmed) {
+				} else if ((app.Registrar != RegistrarMode.Static && app.Registrar != RegistrarMode.ManagedStatic) || !app.AreAnyAssembliesTrimmed) {
 					// Both the linker and the static registrar are also required
 					RemoveDynamicRegistrar = false;
 				} else {

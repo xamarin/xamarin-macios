@@ -67,6 +67,8 @@ namespace MonoTouchFixtures.AVFoundation {
 #if !__WATCHOS__
 			session.SetPreferredSampleRate (48000, out var sampleRateError);
 			Assert.IsNull (sampleRateError, "Sample Rate Error");
+			if (session.MaximumInputNumberOfChannels == 0)
+				Assert.Ignore ("The current system doesn't support any input channels");
 			session.SetPreferredInputNumberOfChannels (1, out var inputChannelCountError);
 			Assert.IsNull (inputChannelCountError, "Input Channel Count Error");
 #endif // !__WATCHOS__
