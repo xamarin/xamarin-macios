@@ -43,6 +43,10 @@
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
       <Sha>9cad733c7097e2e418caf6088a53a19550521cd2</Sha>
     </Dependency>
+    <Dependency Name="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="7.0.7">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>ad24dacc5b51b83dc4b716cebe70c9f871f57270</Sha>
+    </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
     <Dependency Name="Microsoft.DotNet.Build.Tasks.Feed" Version="6.0.0-beta.21212.6">
