@@ -1205,4 +1205,10 @@
   <data name="E7114" xml:space="preserve">
         <value>Задаче "{0}" не было присвоено значение параметра "{1}", которое требуется при сборке на этой платформе.</value>
     </data>
+  <data name="E7115" xml:space="preserve">
+        <value>The illink assembly doesn't exist: '{0}'.</value>
+        <comment>
+            {0}: the path to the linker assembly
+        </comment>
+    </data>
 </root>

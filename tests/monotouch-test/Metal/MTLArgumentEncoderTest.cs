@@ -19,6 +19,11 @@ namespace MonoTouchFixtures.Metal {
 		[SetUp]
 		public void SetUp ()
 		{
+			// The call to CreateArgumentEncoder below doesn't seem to work
+			// on earlier versions of iOS (at least fails on iOS 12), so just
+			// skip those versions for now.
+			TestRuntime.AssertXcodeVersion (11, 0);
+
 			device = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
 			if (device is null)

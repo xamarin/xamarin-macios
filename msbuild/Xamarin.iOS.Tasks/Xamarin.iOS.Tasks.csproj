@@ -26,7 +26,7 @@
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="16.8.0" IncludeAssets="$(IncludeMSBuildAssets)" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="$(IncludeMSBuildAssets)" />
     <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="$(MicrosoftNETILLinkTasksPackageVersion)" />
-    <PackageReference Include="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="$(MicrosoftNETILStripTasksPackageVersion)" GeneratePathProperty="true"/>
+    <PackageReference Include="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="$(MicrosoftNETRuntimeMonoTargetsSdkPackageVersion)" GeneratePathProperty="true"/>
     <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" />
   </ItemGroup>
 
@@ -37,7 +37,7 @@
     </Reference>
     <Reference Include="ILStrip">
       <!-- We need the net472 impl, otherwise the Build agent needs to be a net5.0 app -->
-      <HintPath>$(PkgMicrosoft_NET_Runtime_MonoTargets_Sdk)\tasks\net472\ILStrip.dll</HintPath>
+      <HintPath>$(PkgMicrosoft_NET_Runtime_MonoTargets_Sdk)\tasks\net472\MonoTargetsTasks.dll</HintPath>
     </Reference>
   </ItemGroup>
 
