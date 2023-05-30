@@ -28,6 +28,16 @@ namespace Xharness.Jenkins.TestTasks {
 					"--logger:html;LogFileName=" + Path.GetFileName (html.FullPath)
 				};
 
+				var testCategory = global::System.Environment.GetEnvironmentVariable ("TEST_CATEGORY");
+				if (!string.IsNullOrEmpty (testCategory)) {
+					if (!string.IsNullOrEmpty (Filter)) {
+						Filter = $"(Category={testCategory}) & ({Filter})";
+					} else {
+						Filter = "Category=" + testCategory;
+					}
+					Jenkins.MainLog.WriteLine ($"Using test category '{testCategory}' for '{TestName}'. Final filter: '{Filter}'");
+				}
+
 				if (!string.IsNullOrEmpty (Filter)) {
 					args.Add ("--filter");
 					args.Add (Filter);
