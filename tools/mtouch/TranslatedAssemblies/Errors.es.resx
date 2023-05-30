@@ -1034,10 +1034,6 @@
 		<value>No se pudo optimizar la llamada a BlockLiteral.{2} en {0} porque el tipo del valor pasado como primer argumento (el trampolín) es {1}, lo que hace imposible calcular la firma de bloque.
 		</value>
 	</data>
-  <data name="MM2106_C" xml:space="preserve">
-		<value>No se pudo optimizar la llamada a BlockLiteral.SetupBlock en {0} en el desplazamiento {1} porque no se encontró ningún atributo [UserDelegateType] en {2}.
-		</value>
-	</data>
   <data name="MM2106_D" xml:space="preserve">
 		<value>No se pudo optimizar la llamada a BlockLiteral.SetupBlock en {0} en el desplazamiento {1}: {2}.
 		</value>
@@ -1540,6 +1536,12 @@
   <data name="MT4186" xml:space="preserve">
 		<value>El registrador encontró un tipo "{0}" no óptimo: el tipo no tiene un constructor que tome dos argumentos (ObjCRuntime.NativeHandle, bool). Sin embargo, se encontró un constructor que toma dos argumentos (System.IntPtr, bool) y se usará en su lugar. Se recomienda encarecidamente cambiar la signatura del constructor (System.IntPtr, bool) para que sea (ObjCRuntime.NativeHandle, bool).</value>
 	</data>
+  <data name="MX4187" xml:space="preserve">
+		<value>Could not find a [UserDelegateType] attribute on the type '{0}'.</value>
+	</data>
+  <data name="MX4188" xml:space="preserve">
+		<value>Unable to compute the block signature for the type '{0}': {1}</value>
+	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Falta el compilador "{0}". Instale el componente "Herramientas de línea de comandos" de Xcode.
 		</value>
@@ -1801,5 +1803,14 @@
 	</data>
   <data name="MX8052" xml:space="preserve">
 		<value>La firma debe ser una cadena no vacía.</value>
+	</data>
+  <data name="MX8053" xml:space="preserve">
+		<value>Could not resolve the module in the assembly {0}.</value>
+	</data>
+  <data name="MX8054" xml:space="preserve">
+		<value>Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}).</value>
+	</data>
+  <data name="MX8055" xml:space="preserve">
+		<value>Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.</value>
 	</data>
 </root>

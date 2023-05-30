@@ -53,16 +53,9 @@ steps:
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
-- bash: |
-    RC=0
-    security set-key-partition-list -S apple-tool:,apple: -s -k $KEYCHAIN_PASS login.keychain || RC=$?
-    if [ $RC -eq 0 ]; then
-      echo "Security UI-prompt removed."
-    else
-      echo "Security UI-prompt could NOT be removed."
-    fi
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/remove-ui-prompt.sh
   env:
-    KEYCHAIN_PASS: ${{ parameters.keyringPass }}
+    OSX_KEYCHAIN_PASS: ${{ parameters.keyringPass }}
   displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
   condition: succeededOrFailed() # we do not care about the previous process cleanup
   continueOnError: true
@@ -154,10 +147,12 @@ steps:
 
 - bash: |
     set -ex
-    ls -Rla $(Build.SourcesDirectory)/artifacts/tmp
+    ls -Rla@ $(Build.SourcesDirectory)/artifacts/tmp
+    xattr -s -c -r $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}mac-test-package/mac-test-package.7z
     7z x $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}mac-test-package/mac-test-package.7z -o$(Build.SourcesDirectory)/artifacts/ -bb1
     # no prefix! we did expand to the exact name we are using
-    ls -Rla $(Build.SourcesDirectory)/artifacts/mac-test-package
+    xattr -s -c -r $(Build.SourcesDirectory)/artifacts/mac-test-package
+    ls -Rla@ $(Build.SourcesDirectory)/artifacts/mac-test-package
   displayName: Expand tests.
 
 - bash: |

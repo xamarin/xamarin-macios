@@ -54,6 +54,7 @@ DOTNET_REFERENCES = \
 	/r:$(DOTNET_BCL_DIR)/System.Console.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Diagnostics.Debug.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Diagnostics.Tools.dll \
+	/r:$(DOTNET_BCL_DIR)/System.Diagnostics.StackTrace.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Drawing.Primitives.dll \
 	/r:$(DOTNET_BCL_DIR)/System.IO.Compression.dll \
 	/r:$(DOTNET_BCL_DIR)/System.IO.FileSystem.dll \
