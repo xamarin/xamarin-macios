@@ -1034,10 +1034,6 @@
 		<value>因為作為第一個引數 (trampoline) 所傳遞的值類型為 {1}，無法計算區塊簽章，所以無法將 {0} 中 BlockLiteral.{2} 的呼叫最佳化。
 		</value>
 	</data>
-  <data name="MM2106_C" xml:space="preserve">
-		<value>因為在 {2} 中找不到 [UserDelegateType] 屬性，所以無法將位移 {1} 之 {0} 中 BlockLiteral.SetupBlock 的呼叫最佳化。
-		</value>
-	</data>
   <data name="MM2106_D" xml:space="preserve">
 		<value>無法將位移 {1} 之 {0} 中 BlockLiteral.SetupBlock 的呼叫最佳化: {2}。
 		</value>
@@ -1540,6 +1536,12 @@
   <data name="MT4186" xml:space="preserve">
 		<value>登錄器發現了非最佳類型 `{0}`: 該類型沒有接受兩個 (ObjCRuntime.NativeHandle, bool) 引數的建構函式。不過，找到了接受兩個 (System.IntPtr, bool) 引數的建構函式 (將改為使用它)。強烈建議將 (System.IntPtr, bool) 建構函式的簽章變更為 (ObjCRuntime.NativeHandle, bool)。</value>
 	</data>
+  <data name="MX4187" xml:space="preserve">
+		<value>Could not find a [UserDelegateType] attribute on the type '{0}'.</value>
+	</data>
+  <data name="MX4188" xml:space="preserve">
+		<value>Unable to compute the block signature for the type '{0}': {1}</value>
+	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>缺少 '{0}' 編譯器。請安裝 Xcode [命令列工具] 元件
 		</value>
@@ -1801,5 +1803,14 @@
 	</data>
   <data name="MX8052" xml:space="preserve">
 		<value>簽章必須是非空白字串。</value>
+	</data>
+  <data name="MX8053" xml:space="preserve">
+		<value>Could not resolve the module in the assembly {0}.</value>
+	</data>
+  <data name="MX8054" xml:space="preserve">
+		<value>Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}).</value>
+	</data>
+  <data name="MX8055" xml:space="preserve">
+		<value>Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.</value>
 	</data>
 </root>
