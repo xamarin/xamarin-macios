@@ -82,49 +82,49 @@ parameters:
 - name: supportedPlatforms
   type: object
   default: [
-      {
-        platform: iOS,
-        conditionVariableDotNet: "INCLUDE_DOTNET_IOS",
-        conditionVariableLegacy: "INCLUDE_IOS",
-        isDotNetPlatform: true,
-        isLegacyPlatform: true
-      },
-      {
-        platform: macOS,
-        conditionVariableDotNet: "INCLUDE_DOTNET_MACOS",
-        conditionVariableLegacy: "INCLUDE_MAC",
-        isDotNetPlatform: true,
-        isLegacyPlatform: true
-      },
-      {
-        platform: tvOS,
-        conditionVariableDotNet: "INCLUDE_DOTNET_TVOS",
-        conditionVariableLegacy: "INCLUDE_TVOS",
-        isDotNetPlatform: true,
-        isLegacyPlatform: true
-      },
-      {
-        platform: watchOS,
-        conditionVariableDotNet: "",
-        conditionVariableLegacy: "INCLUDE_WATCH",
-        isDotNetPlatform: false,
-        isLegacyPlatform: true
-      },
-      {
-        platform: MacCatalyst,
-        conditionVariableDotNet: "INCLUDE_DOTNET_MACCATALYST",
-        conditionVariableLegacy: "",
-        isDotNetPlatform: true,
-        isLegacyPlatform: false
-      },
-      {
-        platform: All,
-        conditionVariableDotNet: "All",
-        conditionVariableLegacy: "All",
-        isDotNetPlatform: true,
-        isLegacyPlatform: true
-      }
-    ]
+    {
+      platform: iOS,
+      conditionVariableDotNet: "INCLUDE_DOTNET_IOS",
+      conditionVariableLegacy: "INCLUDE_IOS",
+      isDotNetPlatform: true,
+      isLegacyPlatform: true
+    },
+    {
+      platform: macOS,
+      conditionVariableDotNet: "INCLUDE_DOTNET_MACOS",
+      conditionVariableLegacy: "INCLUDE_MAC",
+      isDotNetPlatform: true,
+      isLegacyPlatform: true
+    },
+    {
+      platform: tvOS,
+      conditionVariableDotNet: "INCLUDE_DOTNET_TVOS",
+      conditionVariableLegacy: "INCLUDE_TVOS",
+      isDotNetPlatform: true,
+      isLegacyPlatform: true
+    },
+    {
+      platform: watchOS,
+      conditionVariableDotNet: "",
+      conditionVariableLegacy: "INCLUDE_WATCH",
+      isDotNetPlatform: false,
+      isLegacyPlatform: true
+    },
+    {
+      platform: MacCatalyst,
+      conditionVariableDotNet: "INCLUDE_DOTNET_MACCATALYST",
+      conditionVariableLegacy: "",
+      isDotNetPlatform: true,
+      isLegacyPlatform: false
+    },
+    {
+      platform: All,
+      conditionVariableDotNet: "All",
+      conditionVariableLegacy: "All",
+      isDotNetPlatform: true,
+      isLegacyPlatform: true
+    }
+  ]
 
 - name: testConfigurations
   type: object

@@ -150,23 +150,22 @@ stages:
     strategy:
       matrix:
         ${{ each testConfig in parameters.testConfigurations }}:
+          LABEL: ${{ replace(testConfig.label, '-', '_') }}
           ${{ if testConfig.splitByPlatforms }}:
             ${{ each platform in parameters.supportedPlatforms }}:
-              LABEL: ${{ replace(testConfig.label, '-', '_') }}
-              TESTS_LABELS: '${{ parameters.testsLabels }},run-${{ replace(testConfig.label, '-', '_') }}-tests'
-              STATUS_CONTEXT: '${{ parameters.statusContext }} - ${{ replace(testConfig.label, '-', '_') }}'
+              TESTS_LABELS: "${{ parameters.testsLabels }},run-${{ replace(testConfig.label, '-', '_') }}-tests"
+              STATUS_CONTEXT: "${{ parameters.statusContext }} - ${{ replace(testConfig.label, '-', '_') }}"
               TEST_PREFIX: "${{ parameters.testPrefix }}${{ replace(testConfig.label, '-', '_') }}"
               TEST_PLATFORM: "${{ platform.platform }}"
               CONDITION_VARIABLE_DOTNET: ${{ platform.conditionVariableDotNet }}
               CONDITION_VARIABLE_LEGACY: ${{ platform.conditionVariableLegacy }}
           ${{ else }}:
-            LABEL: ${{ replace(testConfig.label, '-', '_') }}
-            TESTS_LABELS: '${{ parameters.testsLabels }},run-${{ replace(testConfig.label, '-', '_') }}-tests'
-            STATUS_CONTEXT: '${{ parameters.statusContext }} - ${{ replace(testConfig.label, '-', '_') }}'
+            TESTS_LABELS: "${{ parameters.testsLabels }},run-${{ replace(testConfig.label, '-', '_') }}-tests"
+            STATUS_CONTEXT: "${{ parameters.statusContext }} - ${{ replace(testConfig.label, '-', '_') }}"
             TEST_PREFIX: "${{ parameters.testPrefix }}${{ replace(testConfig.label, '-', '_') }}"
             TEST_PLATFORM: "All"
-            CONDITION_VARIABLE_DOTNET: ${{ platform.conditionVariableDotNet }}
-            CONDITION_VARIABLE_LEGACY: ${{ platform.conditionVariableLegacy }}
+            CONDITION_VARIABLE_DOTNET: "All"
+            CONDITION_VARIABLE_LEGACY: "All"
 
           # if (platform.conditionVariableLegacy == 'All' || platform.conditionVariableDotNet == 'All')
           #    // include
