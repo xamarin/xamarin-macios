@@ -150,8 +150,8 @@ stages:
     strategy:
       matrix:
         ${{ each testConfig in parameters.testConfigurations }}:
-          ${{ each platform in parameters.supportedPlatforms }}:
-            ${{ if eq(testConfig.splitByPlatforms, 'true') }}:
+          ${{ if eq(testConfig.splitByPlatforms, 'true') }}:
+            ${{ each platform in parameters.supportedPlatforms }}:
               ${{ replace(testConfig.label, '-', '_')}}_${{ platform.platform }}:
                 LABEL: ${{ replace(testConfig.label, '-', '_') }}
                 TESTS_LABELS: "${{ parameters.testsLabels }},run-${{ replace(testConfig.label, '-', '_') }}-tests"
@@ -160,6 +160,16 @@ stages:
                 TEST_PLATFORM: "${{ platform.platform }}"
                 CONDITION_VARIABLE_DOTNET: ${{ platform.conditionVariableDotNet }}
                 CONDITION_VARIABLE_LEGACY: ${{ platform.conditionVariableLegacy }}
+          ${{ else }}:
+            ${{ replace(testConfig.label, '-', '_')}}:
+              LABEL: ${{ replace(testConfig.label, '-', '_') }}
+              TESTS_LABELS: "${{ parameters.testsLabels }},run-${{ replace(testConfig.label, '-', '_') }}-tests"
+              STATUS_CONTEXT: "${{ parameters.statusContext }} - ${{ replace(testConfig.label, '-', '_') }}"
+              TEST_PREFIX: "${{ parameters.testPrefix }}${{ replace(testConfig.label, '-', '_') }}"
+              TEST_PLATFORM: "All"
+              CONDITION_VARIABLE_DOTNET: All
+              CONDITION_VARIABLE_LEGACY: All
+
 
           # if (platform.conditionVariableLegacy == 'All' || platform.conditionVariableDotNet == 'All')
           #    // include
