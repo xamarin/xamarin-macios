@@ -156,7 +156,7 @@ stages:
                 LABEL: ${{ replace(testConfig.label, '-', '_') }}
                 TESTS_LABELS: "${{ parameters.testsLabels }},run-${{ replace(testConfig.label, '-', '_') }}-tests"
                 STATUS_CONTEXT: "${{ parameters.statusContext }} - ${{ replace(testConfig.label, '-', '_') }}"
-                TEST_PREFIX: "${{ parameters.testPrefix }}${{ replace(testConfig.label, '-', '_') }}"
+                TEST_PREFIX: "${{ platform.platform }}${{ parameters.testPrefix }}${{ replace(testConfig.label, '-', '_') }}"
                 TEST_PLATFORM: "${{ platform.platform }}"
                 CONDITION_VARIABLE_DOTNET: ${{ platform.conditionVariableDotNet }}
                 CONDITION_VARIABLE_LEGACY: ${{ platform.conditionVariableLegacy }}
