@@ -73,28 +73,123 @@ parameters:
 - name: macOSName
   type: string
 
-- name: simTestsConfigurations
+# Ideally we should read/get the list of platforms from somewhere else, instead of hardcoding them here.
+# Note that this is _all_ the platforms we support (not just the enabled ones).
+- name: supportedPlatforms
   type: object
   default: [
-    'bcl',
-    'cecil',
-    'dotnettests',
-    'fsharp',
-    'framework',
-    'generator',
-    'interdependent-binding-projects',
-    'install-source',
-    'introspection',
-    'linker',
-    'mac-binding-project',
-    'mmp',
-    'mononative',
-    'monotouch',
-    'msbuild',
-    'mtouch',
-    'xammac',
-    'xcframework',
-    'xtro'
+    {
+      platform: iOS,
+      isDotNetPlatform: true,
+      isLegacyPlatform: true
+    },
+    {
+      platform: macOS,
+      isDotNetPlatform: true,
+      isLegacyPlatform: true
+    },
+    {
+      platform: tvOS,
+      isDotNetPlatform: true,
+      isLegacyPlatform: true
+    },
+    {
+      platform: watchOS,
+      isDotNetPlatform: false,
+      isLegacyPlatform: true
+    },
+    {
+      platform: MacCatalyst,
+      isDotNetPlatform: true,
+      isLegacyPlatform: false
+    },
+    {
+      # when running platform-specific test runs, we also need a special test run that executes tests that only runs when multiple platforms are enabled
+      platform: Multiple,
+      isDotNetPlatform: true,
+      isLegacyPlatform: true
+    }
+  ]
+
+- name: testConfigurations
+  type: object
+  default: [
+    # {
+    #   label: bcl,
+    #   splitByPlatforms: false,
+    # },
+    {
+      label: cecil,
+      splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
+    },
+    {
+      label: dotnettests,
+      splitByPlatforms: true,
+      containsDotNetTests: true,
+      containsLegacyTests: false,
+    },
+    # {
+    #   label: fsharp,
+    #   splitByPlatforms: false,
+    # },
+    # {
+    #   label: framework,
+    #   splitByPlatforms: false,
+    # },
+    # {
+    #   label: generator,
+    #   splitByPlatforms: false,
+    # },
+    # {
+    #   label: interdependent-binding-projects,
+    #   splitByPlatforms: false,
+    # },
+    # {
+    #   label: install-source,
+    #   splitByPlatforms: false,
+    # },
+    # {
+    #   label: introspection,
+    #   splitByPlatforms: false,
+    # },
+    # {
+    #   label: linker,
+    #   splitByPlatforms: false,
+    # },
+    # {
+    #   label: mac-binding-project,
+    #   splitByPlatforms: false,
+    # },
+    # {
+    #   label: mmp,
+    #   splitByPlatforms: false,
+    # },
+    # {
+    #   label: mononative,
+    #   splitByPlatforms: false,
+    # },
+    # {
+    #   label: monotouch,
+    #   splitByPlatforms: false,
+    # },
+    # {
+    #   label: msbuild,
+    #   splitByPlatforms: false,
+    # },
+    # {
+    #   label: mtouch,
+    #   splitByPlatforms: false,
+    # },
+    # {
+    #   label: xammac,
+    #   splitByPlatforms: false,
+    # },
+    # {
+    #   label: xtro,
+    #   splitByPlatforms: false,
+    # },
   ]
 
 - name: deviceTestsConfigurations
@@ -212,6 +307,11 @@ stages:
       parameters: 
         repositoryAlias: ${{ parameters.repositoryAlias }}
         commit: ${{ parameters.commit }}
+        testConfigurations: ${{ parameters.testConfigurations }}
+        supportedPlatforms: ${{ parameters.supportedPlatforms }}
+        testsLabels: ${{ parameters.testsLabels }}
+        statusContext: ${{ parameters.statusContext }}
+        testPrefix: ${{ parameters.testPrefix }}        
         uploadArtifacts: true
         
 - stage: build_packages
@@ -340,7 +440,8 @@ stages:
     isPR: ${{ parameters.isPR }}
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
-    simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
+    testConfigurations: ${{ parameters.testConfigurations }}
+    supportedPlatforms: ${{ parameters.supportedPlatforms }}
     testPrefix: 'simulator_'
     stageName: 'simulator_tests'
     displayName: '${{ parameters.stageDisplayNamePrefix }}Simulator tests'

@@ -19,6 +19,26 @@ parameters:
   type: string
   default: '$(MaciosUploadPrefix)'
 
+- name: testConfigurations
+  type: object
+  default: []
+
+- name: supportedPlatforms
+  type: object
+  default: []
+
+- name: testsLabels
+  type: string
+  default: ''
+
+- name: statusContext
+  type: string
+  default: ''
+
+- name: testPrefix
+  type: string
+  default: ''
+
 steps:
 - template: checkout.yml
   parameters:
@@ -43,6 +63,26 @@ steps:
 - bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-decisions.sh
   name: decisions
   displayName: 'Make decisions'
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+    gci env: | sort | format-table -autosize -wrap
+    $jsonPath = Join-Path -Path "$(Build.ArtifactStagingDirectory)" -ChildPath "configuration.json"
+    $testMatrix = Get-TestConfiguration `
+      -TestConfigurations "$Env:TEST_CONFIGURATIONS" `
+      -SupportedPlatforms "$Env:SUPPORTED_PLATFORMS" `
+      -TestsLabels "${{ parameters.testsLabels }}" `
+      -StatusContext "${{ parameters.statusContext }}" `
+      -TestPrefix "${{ parameters.testPrefix }}"
+    # compress the json to remove any newlines, because we can't set the variable below of the json has any newlines
+    $testMatrix = $testMatrix | ConvertFrom-Json | ConvertTo-Json -Compress
+    Write-Debug "$testMatrix"
+    Write-Host "##vso[task.setvariable variable=TEST_MATRIX;isOutput=true]$testMatrix"
+  name: test_matrix
+  displayName: 'Create strategy matrix'
+  env:
+    TEST_CONFIGURATIONS: ${{ convertToJson(parameters.testConfigurations) }}
+    SUPPORTED_PLATFORMS: ${{ convertToJson(parameters.supportedPlatforms) }}
 
 # upload config to be consumed later
 - ${{ if eq(parameters.uploadArtifacts, true) }}:
