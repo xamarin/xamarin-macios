@@ -199,7 +199,14 @@ stages:
           ####               )
           ####             )
 
-    condition: ne(dependencies.configure.outputs['configure_platforms.$(CONDITION_VARIABLE)'],'')
+    condition: ne(dependencies.configure.outputs['configure_platforms.$[variables.CONDITION_VARIABLE]'],'')
+    variables:
+      WHATEVER1: $[variables.CONDITION_VARIABLE]]
+      WHATEVER2: $(CONDITION_VARIABLE)
+      WHATEVER3: $[ convertToJson(dependencies) ]
+      WHATEVER4: $[ convertToJson(dependencies.configure) ]
+      WHATEVER5: dependencies.configure.outputs['configure_platforms.$[variables.CONDITION_VARIABLE]']
+      WHATEVER6: $[ dependencies.configure.outputs['configure_platforms.$[variables.CONDITION_VARIABLE]'] ]
 
     steps:
     - template: build.yml
