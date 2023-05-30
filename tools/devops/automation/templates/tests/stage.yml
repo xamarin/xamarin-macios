@@ -155,20 +155,18 @@ stages:
               ${{ replace(testConfig.label, '-', '_')}}_${{ platform.platform }}:
                 LABEL: ${{ replace(testConfig.label, '-', '_') }}
                 TESTS_LABELS: "${{ parameters.testsLabels }},run-${{ replace(testConfig.label, '-', '_') }}-tests"
-                STATUS_CONTEXT: "${{ parameters.statusContext }} - ${{ replace(testConfig.label, '-', '_') }}"
-                TEST_PREFIX: "${{ platform.platform }}${{ parameters.testPrefix }}${{ replace(testConfig.label, '-', '_') }}"
+                STATUS_CONTEXT: "${{ parameters.statusContext }} - ${{ replace(testConfig.label, '-', '_') }} - ${{ platform.platform }}"
+                TEST_PREFIX: "${{ parameters.testPrefix }}${{ replace(testConfig.label, '-', '_') }}_${{ platform.platform }}"
                 TEST_PLATFORM: "${{ platform.platform }}"
-                CONDITION_VARIABLE_DOTNET: ${{ platform.conditionVariableDotNet }}
-                CONDITION_VARIABLE_LEGACY: ${{ platform.conditionVariableLegacy }}
+                CONDITION_VARIABLE: ${{ platform.conditionVariable }}
           ${{ else }}:
             ${{ replace(testConfig.label, '-', '_')}}:
               LABEL: ${{ replace(testConfig.label, '-', '_') }}
               TESTS_LABELS: "${{ parameters.testsLabels }},run-${{ replace(testConfig.label, '-', '_') }}-tests"
               STATUS_CONTEXT: "${{ parameters.statusContext }} - ${{ replace(testConfig.label, '-', '_') }}"
               TEST_PREFIX: "${{ parameters.testPrefix }}${{ replace(testConfig.label, '-', '_') }}"
-              TEST_PLATFORM: "All"
-              CONDITION_VARIABLE_DOTNET: All
-              CONDITION_VARIABLE_LEGACY: All
+              TEST_PLATFORM: All
+              CONDITION_VARIABLE: ""
 
 
           # if (platform.conditionVariableLegacy == 'All' || platform.conditionVariableDotNet == 'All')
@@ -201,6 +199,8 @@ stages:
           ####               )
           ####             )
 
+    condition: ne(dependencies.configure.outputs['configure_platforms.$(CONDITION_VARIABLE)'],'')
+
     steps:
     - template: build.yml
       parameters:
@@ -217,6 +217,8 @@ stages:
         makeTarget: ${{ parameters.makeTarget }}
         gitHubToken: ${{ parameters.gitHubToken }}
         xqaCertPass: ${{ parameters.xqaCertPass }}
+        testPlatform: $(TEST_PLATFORM)
+        conditionVariable: $(CONDITION_VARIABLE)
 
   - job: publish_test_results
     condition: succeededOrFailed()

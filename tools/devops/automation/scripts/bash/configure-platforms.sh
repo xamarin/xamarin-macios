@@ -30,6 +30,9 @@ INCLUDE_WATCH=$(cat "$FILE")
 make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=INCLUDE_MAC
 INCLUDE_MAC=$(cat "$FILE")
 
+make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=INCLUDE_MACCATALYST
+INCLUDE_MACCATALYST=$(cat "$FILE")
+
 rm -f "$FILE"
 
 # print it out, so turn off echoing since that confuses Azure DevOps
@@ -53,5 +56,11 @@ echo "##vso[task.setvariable variable=INCLUDE_LEGACY_IOS;isOutput=true]$INCLUDE_
 echo "##vso[task.setvariable variable=INCLUDE_LEGACY_TVOS;isOutput=true]$INCLUDE_TVOS"
 echo "##vso[task.setvariable variable=INCLUDE_LEGACY_WATCH;isOutput=true]$INCLUDE_WATCH"
 echo "##vso[task.setvariable variable=INCLUDE_LEGACY_MAC;isOutput=true]$INCLUDE_MAC"
+
+echo "##vso[task.setvariable variable=INCLUDE_IOS;isOutput=true]$INCLUDE_IOS"
+echo "##vso[task.setvariable variable=INCLUDE_TVOS;isOutput=true]$INCLUDE_TVOS"
+echo "##vso[task.setvariable variable=INCLUDE_WATCH;isOutput=true]$INCLUDE_WATCH"
+echo "##vso[task.setvariable variable=INCLUDE_MAC;isOutput=true]$INCLUDE_MAC"
+echo "##vso[task.setvariable variable=INCLUDE_MACCATALYST;isOutput=true]$INCLUDE_MACCATALYST"
 
 set -x

@@ -84,36 +84,31 @@ parameters:
   default: [
     {
       platform: iOS,
-      conditionVariableDotNet: "INCLUDE_DOTNET_IOS",
-      conditionVariableLegacy: "INCLUDE_IOS",
+      conditionVariable: "INCLUDE_IOS",
       isDotNetPlatform: true,
       isLegacyPlatform: true
     },
     {
       platform: macOS,
-      conditionVariableDotNet: "INCLUDE_DOTNET_MACOS",
-      conditionVariableLegacy: "INCLUDE_MAC",
+      conditionVariable: "INCLUDE_MAC",
       isDotNetPlatform: true,
       isLegacyPlatform: true
     },
     {
       platform: tvOS,
-      conditionVariableDotNet: "INCLUDE_DOTNET_TVOS",
-      conditionVariableLegacy: "INCLUDE_TVOS",
+      conditionVariable: "INCLUDE_TVOS",
       isDotNetPlatform: true,
       isLegacyPlatform: true
     },
     {
       platform: watchOS,
-      conditionVariableDotNet: "",
-      conditionVariableLegacy: "INCLUDE_WATCH",
+      conditionVariable: "INCLUDE_WATCH",
       isDotNetPlatform: false,
       isLegacyPlatform: true
     },
     {
       platform: MacCatalyst,
-      conditionVariableDotNet: "INCLUDE_DOTNET_MACCATALYST",
-      conditionVariableLegacy: "",
+      conditionVariable: "INCLUDE_DOTNET_MACCATALYST",
       isDotNetPlatform: true,
       isLegacyPlatform: false
     },

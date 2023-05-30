@@ -69,11 +69,7 @@ parameters:
   type: string
   default: ''
 
-- name: conditionVariableDotNet
-  type: string
-  default: ''
-
-- name: conditionVariableLegacy
+- name: conditionVariable
   type: string
   default: ''
 
