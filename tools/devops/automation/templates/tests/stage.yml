@@ -150,7 +150,7 @@ stages:
     strategy:
       matrix:
         ${{ each testConfig in parameters.testConfigurations }}:
-          ${{ if testConfig.splitByPlatforms) }}:
+          ${{ if testConfig.splitByPlatforms }}:
             ${{ each platform in parameters.supportedPlatforms }}:
               ${{ replace(testConfig.label, '-', '_')}}_${{ platform.platform }}:
                 LABEL: ${{ replace(testConfig.label, '-', '_') }}
