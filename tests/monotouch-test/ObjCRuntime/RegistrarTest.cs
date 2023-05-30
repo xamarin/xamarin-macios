@@ -213,7 +213,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			NativeHandle ptr;
 			CGPath path;
 
-			if ((CurrentRegistrar & Registrars.AllStatic) == 0)
+			if (!global::XamarinTests.ObjCRuntime.Registrar.IsStaticRegistrar)
 				Assert.Ignore ("This test only passes with the static registrars.");
 
 			Assert.False (Messaging.bool_objc_msgSend_IntPtr (receiver, new Selector ("INativeObject1:").Handle, NativeHandle.Zero), "#a1");
@@ -1296,12 +1296,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		void ThrowsICEIfDebug (TestDelegate code, string message, bool execute_release_mode = true)
 		{
 #if NET
-			if (TestRuntime.IsCoreCLR) {
+			if (TestRuntime.IsCoreCLR || global::XamarinTests.ObjCRuntime.Registrar.CurrentRegistrar == Registrars.ManagedStatic) {
 				if (execute_release_mode) {
 					// In CoreCLR will either throw an ArgumentException:
 					//     <System.ArgumentException: Object of type 'Foundation.NSObject' cannot be converted to type 'Foundation.NSSet'.
 					// or a RuntimeException:
 					//     <ObjCRuntime.RuntimeException: Failed to marshal the value at index 0.
+					// or an InvalidCastException
+					//    System.InvalidCastException: Unable to cast object of type 'Foundation.NSObject' to type 'Foundation.NSSet'.
 					var noException = false;
 					try {
 						code ();
@@ -1309,6 +1311,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					} catch (ArgumentException) {
 						// OK
 					} catch (RuntimeException) {
+						// OK
+					} catch (InvalidCastException) {
 						// OK
 					} catch (Exception e) {
 						Assert.Fail ($"Unexpectedly failed with exception of type {e.GetType ()} - expected either ArgumentException or RuntimeException: {message}");
@@ -5733,19 +5737,19 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #endif // !__WATCHOS__
 
 #if HAS_COREMIDI
-	// This type exports methods with 'MidiCIDeviceIdentification' parameters, which is a struct with different casing in Objective-C ("MIDI...")
+	// This type exports methods with 'MidiThruConnectionEndpoint' parameters, which is a struct with different casing in Objective-C ("MIDI...")
 	class ExportedMethodWithStructWithManagedCasing : NSObject {
 		[Export ("doSomething:")]
-		public void DoSomething (MidiCIDeviceIdentification arg) { }
+		public void DoSomething (MidiThruConnectionEndpoint arg) { }
 
 		[Export ("doSomething2:")]
-		public void DoSomething2 (ref MidiCIDeviceIdentification arg) { }
+		public void DoSomething2 (ref MidiThruConnectionEndpoint arg) { }
 
 		[Export ("doSomething3")]
-		public MidiCIDeviceIdentification DoSomething3 () { return default (MidiCIDeviceIdentification); }
+		public MidiThruConnectionEndpoint DoSomething3 () { return default (MidiThruConnectionEndpoint); }
 
 		[Export ("doSomething4:")]
-		public void DoSomething4 (out MidiCIDeviceIdentification arg) { arg = default (MidiCIDeviceIdentification); }
+		public void DoSomething4 (out MidiThruConnectionEndpoint arg) { arg = default (MidiThruConnectionEndpoint); }
 	}
 #endif
 }

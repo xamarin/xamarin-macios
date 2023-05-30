@@ -1205,4 +1205,10 @@
   <data name="E7114" xml:space="preserve">
         <value>Zadanie „{0}” nie otrzymało wartości parametru „{1}”, która jest wymagana podczas kompilowania na tej platformie.</value>
     </data>
+  <data name="E7115" xml:space="preserve">
+        <value>The illink assembly doesn't exist: '{0}'.</value>
+        <comment>
+            {0}: the path to the linker assembly
+        </comment>
+    </data>
 </root>

@@ -254,6 +254,7 @@ void			xamarin_check_objc_type (id obj, Class expected_class, SEL sel, id self, 
 #endif
 
 void			xamarin_set_gc_pump_enabled (bool value);
+void			xamarin_set_is_managed_static_registrar (bool value);
 
 void			xamarin_process_nsexception (NSException *exc);
 void			xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault, GCHandle *output_exception);
@@ -294,6 +295,15 @@ bool			xamarin_locate_app_resource (const char *resource, char *path, size_t pat
 void			xamarin_printf (const char *format, ...);
 void			xamarin_vprintf (const char *format, va_list args);
 void			xamarin_install_log_callbacks ();
+
+/*
+ * Looks up a native function pointer for a managed [UnmanagedCallersOnly] method.
+ *     function_pointer: the return value, lookup will only be performed if this points to NULL.
+ *     assembly: the assembly to look in. Might be NULL if the app was not built with support for loading additional assemblies at runtime.
+ *     symbol: the symbol to look up. Can be NULL to save space (this value isn't used except in error messages).
+ *     id: a numerical id for faster lookup (than doing string comparisons on the symbol name).
+ */
+void			xamarin_registrar_dlsym (void **function_pointer, const char *assembly, const char *symbol, int32_t id);
 
 /*
  * Wrapper GCHandle functions that takes pointer sized handles instead of ints,
