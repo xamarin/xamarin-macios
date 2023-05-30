@@ -138,8 +138,24 @@ steps:
         "$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/UnitTests/DotNetUnitTests.csproj" `
         --filter Category=Windows `
         --verbosity quiet `
+        "--results-directory:$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/" `
+        "--logger:console;verbosity=detailed" `
+        "--logger:trx;LogFileName=$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/windows-dotnet-tests.trx" `
+        "--logger:html;LogFileName=$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/windows-dotnet-tests.html" `
         "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/run-dotnet-tests.binlog"
   displayName: 'Run .NET tests'
+
+- task: artifactDropTask@1
+  displayName: 'Publish to Artifact Services Drop'
+  inputs:
+    dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
+    dropMetadataContainerName: '${{ parameters.uploadPrefix }}DropMetadata-windows-integration-tests-$(System.JobAttempt)'
+    buildNumber: 'xamarin-macios/tests/$(Build.BuildNumber)/$(Build.BuildId)/windows-integration-tests-$(System.JobAttempt)'
+    sourcePath: '$(Build.SourcesDirectory)/xamarin-macios/jenkins-results'
+    detailedLog: true
+    usePat: true
+  continueOnError: true
+  condition: succeededOrFailed()
 
 - pwsh: |
     Write-Host "Run windows tests."
