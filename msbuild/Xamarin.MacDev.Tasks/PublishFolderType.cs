@@ -37,7 +37,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (string.IsNullOrEmpty (value))
 				return PublishFolderType.Unset;
 
-			if (!Enum.TryParse<PublishFolderType> (value, out var result))
+			if (!Enum.TryParse<PublishFolderType> (value, true, out var result))
 				result = PublishFolderType.Unknown;
 
 			return result;
