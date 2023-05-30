@@ -151,7 +151,7 @@ stages:
       matrix:
         ${{ each testConfig in parameters.testConfigurations }}:
           ${{ each platform in parameters.supportedPlatforms }}:
-            ${{ replace(label, '-', '_')}}_${{ platform.platform }}:
+            ${{ replace(testConfig.label, '-', '_')}}_${{ platform.platform }}:
               LABEL: ${{ replace(testConfig.label, '-', '_') }}
               TESTS_LABELS: "${{ parameters.testsLabels }},run-${{ replace(testConfig.label, '-', '_') }}-tests"
               STATUS_CONTEXT: "${{ parameters.statusContext }} - ${{ replace(testConfig.label, '-', '_') }}"
