@@ -135,11 +135,11 @@ parameters:
     # },
     {
       label: cecil,
-      splitByPlatforms: false,
+      splitByPlatforms: "false",
     },
     {
       label: dotnettests,
-      splitByPlatforms: true,
+      splitByPlatforms: "true",
     },
     # {
     #   label: fsharp,
