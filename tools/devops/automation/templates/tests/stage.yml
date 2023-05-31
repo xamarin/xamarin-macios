@@ -188,7 +188,7 @@ stages:
           ####               )
           ####             )
 
-    condition: ne(dependencies.configure.outputs['configure_platforms.$[variables.CONDITION_VARIABLE]'],'')
+    #condition: ne(dependencies.configure.outputs['configure_platforms.$[variables.CONDITION_VARIABLE]'],'')
     variables:
       # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
       PR_ID: $[ dependencies.configure.outputs['labels.pr_number'] ]
