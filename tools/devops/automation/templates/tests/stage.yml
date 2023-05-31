@@ -199,7 +199,7 @@ stages:
         AgentPoolComputed: $(PRBuildPool)
       ${{ else }}:
         AgentPoolComputed: ${{ parameters.testPool }}
-      WHATEVER1: $[variables.CONDITION_VARIABLE]]
+      WHATEVER1: $[variables.CONDITION_VARIABLE]
       WHATEVER2: $(CONDITION_VARIABLE)
       WHATEVER3: $[ convertToJson(dependencies) ]
       WHATEVER4: $[ convertToJson(dependencies.configure) ]
