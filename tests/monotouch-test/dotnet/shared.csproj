@@ -26,6 +26,7 @@
     <ProjectReference Include="$(RootTestsDirectory)\EmbeddedResources\dotnet\$(_PlatformName)\EmbeddedResources.csproj" />
     <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\$(_PlatformName)\bindings-test.csproj" />
     <ProjectReference Include="$(RootTestsDirectory)\fsharplibrary\dotnet\$(_PlatformName)\fsharplibrary.fsproj" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="$(BundledNETCoreAppTargetFrameworkVersion).0" />
   </ItemGroup>
 
   <ItemGroup>

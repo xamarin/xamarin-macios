@@ -1,4 +1,7 @@
 using System;
+#if NET
+using System.Configuration;
+#endif
 using System.IO;
 using System.Reflection;
 
@@ -13,19 +16,13 @@ namespace MonoTouchFixtures {
 		[Test]
 		public void Existence ()
 		{
-			var base_path = Path.Combine (AppContext.BaseDirectory, Assembly.GetExecutingAssembly ().GetName ().Name);
-			var dll_config = base_path + ".dll.config";
-			var exe_config = base_path + ".exe.config";
-			string config_file;
-			if (File.Exists (dll_config)) {
-				config_file = dll_config;
-			} else if (File.Exists (exe_config)) {
-				config_file = exe_config;
-			} else {
-				Assert.Fail ("No config file found");
-				return;
-			}
-			Assert.That (File.ReadAllText (config_file), Contains.Substring ("<secretMessage>Xamarin rocks</secretMessage>"), "content");
+#if NET
+			Assert.AreEqual ("Xamarin Rocks", ConfigurationManager.AppSettings ["secretMessage"]);
+#else
+			var config_file = Assembly.GetExecutingAssembly ().Location + ".config";
+			Assert.True (File.Exists (config_file), "existence");
+			Assert.That (File.ReadAllText (config_file), Contains.Substring ("<add key=\"secretMessage\" value=\"Xamarin Rocks\"/"), "content");
+#endif
 		}
 	}
 }
