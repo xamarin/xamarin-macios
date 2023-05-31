@@ -180,8 +180,8 @@ namespace Xamarin.Tests {
 			}
 			AddExpectedXpcServicesFiles (platform, expectedFiles, "XpcServiceE"); // XPCServices
 			AddExpectedXpcServicesFiles (platform, expectedFiles, "CompressedXpcServiceF"); // CompressedXPCServices
-			// UnknownI.bin: Unknown -- this should show a warning
-			// SomewhatUnknownI.bin: Unknown -- this should show a warning
+																							// UnknownI.bin: Unknown -- this should show a warning
+																							// SomewhatUnknownI.bin: Unknown -- this should show a warning
 
 			switch (platform) {
 			case ApplePlatform.iOS:
@@ -213,7 +213,7 @@ namespace Xamarin.Tests {
 			}
 			AddExpectedXpcServicesFiles (platform, expectedFiles, "XpcServiceG", "Subfolder"); // XPCServices
 			AddExpectedXpcServicesFiles (platform, expectedFiles, "CompressedXpcServiceH"); // CompressedXPCServices - the Link metadata has no effect, so no subfolder.
-			// SomewhatUnknownI.bin: Unknown -- this should show a warning
+																							// SomewhatUnknownI.bin: Unknown -- this should show a warning
 			switch (platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
