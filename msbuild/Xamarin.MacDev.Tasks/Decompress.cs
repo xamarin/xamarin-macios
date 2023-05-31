@@ -130,28 +130,34 @@ namespace Xamarin.MacDev {
 
 		static bool TryDecompressUsingUnzip (TaskLoggingHelper log, string zip, string resource, string decompressionDir)
 		{
-			var archive = ZipFile.OpenRead (zip);
-			resource = resource.Replace ('\\', zipDirectorySeparator);
-			var entry = archive.GetEntry (resource);
-			if (entry is null) {
-				entry = archive.GetEntry (resource + zipDirectorySeparator);
-				if (entry is null) {
-					log.LogError (MSBStrings.E7112 /* Could not find the file or directory '{0}' in the zip file '{1}'. */, resource, zip);
-					return false;
-				}
-			}
+			Directory.CreateDirectory (decompressionDir);
 
-			var zipPattern = entry.FullName;
-			if (zipPattern.Length > 0 && zipPattern [zipPattern.Length - 1] == zipDirectorySeparator) {
-				zipPattern += "*";
-			}
-
-			var args = new string [] {
+			var args = new List<string> {
 				"-u", "-o",
 				"-d", decompressionDir,
 				zip,
-				zipPattern,
 			};
+
+			if (!string.IsNullOrEmpty (resource)) {
+				using var archive = ZipFile.OpenRead (zip);
+				resource = resource.Replace ('\\', zipDirectorySeparator);
+				var entry = archive.GetEntry (resource);
+				if (entry is null) {
+					entry = archive.GetEntry (resource + zipDirectorySeparator);
+					if (entry is null) {
+						log.LogError (MSBStrings.E7112 /* Could not find the file or directory '{0}' in the zip file '{1}'. */, resource, zip);
+						return false;
+					}
+				}
+
+				var zipPattern = entry.FullName;
+				if (zipPattern.Length > 0 && zipPattern [zipPattern.Length - 1] == zipDirectorySeparator) {
+					zipPattern += "*";
+				}
+
+				args.Add (zipPattern);
+			}
+
 			var rv = XamarinTask.ExecuteAsync (log, "unzip", args).Result;
 			return rv.ExitCode == 0;
 		}
@@ -165,7 +171,7 @@ namespace Xamarin.MacDev {
 			resource = resource.Replace ('\\', zipDirectorySeparator);
 			var resourceAsDir = resource + zipDirectorySeparator;
 
-			var archive = ZipFile.OpenRead (zip);
+			using var archive = ZipFile.OpenRead (zip);
 			foreach (var entry in archive.Entries) {
 				var entryPath = entry.FullName;
 				if (entryPath.Length == 0)
