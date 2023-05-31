@@ -219,12 +219,12 @@ namespace Registrar {
 			return assembly.GetTypes ();
 		}
 
-		protected override BindAsAttribute GetBindAsAttribute (PropertyInfo property)
+		public override BindAsAttribute GetBindAsAttribute (PropertyInfo property)
 		{
 			return property?.GetCustomAttribute<BindAsAttribute> (false);
 		}
 
-		protected override BindAsAttribute GetBindAsAttribute (MethodBase method, int parameter_index)
+		public override BindAsAttribute GetBindAsAttribute (MethodBase method, int parameter_index)
 		{
 			ICustomAttributeProvider provider;
 
@@ -343,7 +343,7 @@ namespace Registrar {
 			return type.MakeByRefType ();
 		}
 
-		protected override CategoryAttribute GetCategoryAttribute (Type type)
+		public override CategoryAttribute GetCategoryAttribute (Type type)
 		{
 			return SharedDynamic.GetOneAttribute<CategoryAttribute> (type);
 		}
@@ -374,7 +374,7 @@ namespace Registrar {
 			return ((MethodInfo) method).GetBaseDefinition ();
 		}
 
-		protected override Type GetElementType (Type type)
+		public override Type GetElementType (Type type)
 		{
 			return type.GetElementType ();
 		}
@@ -460,7 +460,7 @@ namespace Registrar {
 			return type.FullName;
 		}
 
-		protected override bool VerifyIsConstrainedToNSObject (Type type, out Type constrained_type)
+		public override bool VerifyIsConstrainedToNSObject (Type type, out Type constrained_type)
 		{
 			constrained_type = null;
 
@@ -523,7 +523,7 @@ namespace Registrar {
 			return type.AssemblyQualifiedName;
 		}
 
-		protected override bool HasReleaseAttribute (MethodBase method)
+		public override bool HasReleaseAttribute (MethodBase method)
 		{
 			var mi = method as MethodInfo;
 			if (mi is null)
@@ -539,7 +539,7 @@ namespace Registrar {
 			return mi.IsDefined (typeof (System.Runtime.CompilerServices.ExtensionAttribute), false);
 		}
 
-		protected override bool HasThisAttribute (MethodBase method)
+		public override bool HasThisAttribute (MethodBase method)
 		{
 			return HasThisAttributeImpl (method);
 		}
@@ -554,7 +554,7 @@ namespace Registrar {
 			return type.IsDefined (typeof (ModelAttribute), false);
 		}
 
-		protected override bool IsArray (Type type, out int rank)
+		public override bool IsArray (Type type, out int rank)
 		{
 			if (!type.IsArray) {
 				rank = 0;
@@ -594,7 +594,7 @@ namespace Registrar {
 			return type.IsSubclassOf (typeof (System.Delegate));
 		}
 
-		protected override bool IsNullable (Type type)
+		public override bool IsNullable (Type type)
 		{
 			if (!type.IsGenericType)
 				return false;

@@ -254,8 +254,28 @@ namespace ObjCRuntime {
 
 			// Look for the type in the type map.
 			var asm_name = type.Assembly.GetName ().Name!;
-			var mod_token = type.Module.MetadataToken;
-			var type_token = type.MetadataToken & ~0x02000000;
+			int mod_token;
+			int type_token;
+
+			if (Runtime.IsManagedStaticRegistrar) {
+#if NET
+				mod_token = unchecked((int) Runtime.INVALID_TOKEN_REF);
+				type_token = unchecked((int) RegistrarHelper.LookupRegisteredTypeId (type));
+
+#if LOG_TYPELOAD
+				Runtime.NSLog ($"FindClass ({type.FullName}, {is_custom_type}): type token: 0x{type_token.ToString ("x")}");
+#endif
+
+				if (type_token == -1)
+					return IntPtr.Zero;
+#else
+				throw ErrorHelper.CreateError (99, Xamarin.Bundler.Errors.MX0099 /* Internal error */, "The managed static registrar is only available for .NET");
+#endif // NET
+			} else {
+				mod_token = type.Module.MetadataToken;
+				type_token = type.MetadataToken & ~0x02000000 /* TokenType.TypeDef */;
+			}
+
 			for (int i = 0; i < map->map_count; i++) {
 				var class_map = map->map [i];
 				var token_reference = class_map.type_reference;
@@ -308,7 +328,7 @@ namespace ObjCRuntime {
 
 				// then the module token
 				var module_token = entry.module_token;
-				if (mod_token != module_token)
+				if (unchecked((uint) mod_token) != module_token)
 					return false;
 
 				// leave the assembly name for the end, since it's the most expensive comparison (string comparison)
@@ -410,7 +430,7 @@ namespace ObjCRuntime {
 
 			var assembly = ResolveAssembly (assembly_name);
 			var module = ResolveModule (assembly, module_token);
-			return ResolveToken (module, token);
+			return ResolveToken (assembly, module, token);
 		}
 
 		internal static Type? ResolveTypeTokenReference (uint token_reference)
@@ -453,21 +473,41 @@ namespace ObjCRuntime {
 			var assembly = ResolveAssembly (assembly_name);
 			var module = ResolveModule (assembly, 0x1);
 
-			return ResolveToken (module, token | implicit_token_type);
+			return ResolveToken (assembly, module, token | implicit_token_type);
 		}
 
-		static MemberInfo? ResolveToken (Module module, uint token)
+		static MemberInfo? ResolveToken (Assembly assembly, Module? module, uint token)
 		{
 			// Finally resolve the token.
 			var token_type = token & 0xFF000000;
 			switch (token & 0xFF000000) {
 			case 0x02000000: // TypeDef
-				var type = module.ResolveType ((int) token);
+				Type type;
+#if NET
+				if (Runtime.IsManagedStaticRegistrar) {
+					type = RegistrarHelper.LookupRegisteredType (assembly, token & 0x00FFFFFF);
+#if LOG_TYPELOAD
+					Runtime.NSLog ($"ResolveToken (0x{token:X}) => Type: {type.FullName}");
+#endif
+					return type;
+				}
+#endif // NET
+				if (module is null) {
+					throw ErrorHelper.CreateError (8053, Errors.MX8053 /* Could not resolve the module in the assembly {0}. */, assembly.FullName);
+				} else {
+					type = module.ResolveType ((int) token);
+				}
 #if LOG_TYPELOAD
 				Runtime.NSLog ($"ResolveToken (0x{token:X}) => Type: {type.FullName}");
 #endif
 				return type;
 			case 0x06000000: // Method
+				if (Runtime.IsManagedStaticRegistrar)
+					throw ErrorHelper.CreateError (8054, Errors.MX8054 /* Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}). */, token.ToString ("x"));
+
+				if (module is null)
+					throw ErrorHelper.CreateError (8053, Errors.MX8053 /* Could not resolve the module in the assembly {0}. */, assembly.FullName);
+
 				var method = module.ResolveMethod ((int) token);
 #if LOG_TYPELOAD
 				Runtime.NSLog ($"ResolveToken (0x{token:X}) => Method: {method?.DeclaringType?.FullName}.{method?.Name}");
@@ -478,8 +518,11 @@ namespace ObjCRuntime {
 			}
 		}
 
-		static Module ResolveModule (Assembly assembly, uint token)
+		static Module? ResolveModule (Assembly assembly, uint token)
 		{
+			if (token == Runtime.INVALID_TOKEN_REF)
+				return null;
+
 			foreach (var mod in assembly.GetModules ()) {
 				if (mod.MetadataToken != token)
 					continue;
@@ -577,7 +620,20 @@ namespace ObjCRuntime {
 			var asm_name = type.Module.Assembly.GetName ().Name!;
 
 			// First check if there's a full token reference to this type
-			var token = GetFullTokenReference (asm_name, type.Module.MetadataToken, type.MetadataToken);
+			uint token;
+			if (Runtime.IsManagedStaticRegistrar) {
+#if NET
+				var id = RegistrarHelper.LookupRegisteredTypeId (type);
+				token = GetFullTokenReference (asm_name, unchecked((int) Runtime.INVALID_TOKEN_REF), 0x2000000 /* TokenType.TypeDef */ | unchecked((int) id));
+#if LOG_TYPELOAD
+				Runtime.NSLog ($"GetTokenReference ({type}, {throw_exception}) id: {id} token: 0x{token.ToString ("x")}");
+#endif
+#else
+				throw ErrorHelper.CreateError (99, Xamarin.Bundler.Errors.MX0099 /* Internal error */, "The managed static registrar is only available for .NET");
+#endif // NET
+			} else {
+				token = GetFullTokenReference (asm_name, type.Module.MetadataToken, type.MetadataToken);
+			}
 			if (token != uint.MaxValue)
 				return token;
 
@@ -626,7 +682,7 @@ namespace ObjCRuntime {
 				if (token != metadata_token)
 					continue;
 				var mod_token = ftr.module_token;
-				if (mod_token != module_token)
+				if (unchecked((int) mod_token) != module_token)
 					continue;
 				var assembly_index = ftr.assembly_index;
 				var assembly = map->assemblies [assembly_index];
