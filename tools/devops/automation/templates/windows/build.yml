@@ -145,15 +145,24 @@ steps:
         "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/run-dotnet-tests.binlog"
   displayName: 'Run .NET tests'
 
-- task: artifactDropTask@1
-  displayName: 'Publish to Artifact Services Drop'
+# Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
+- task: ArchiveFiles@1
+  displayName: 'Archive HtmlReport'
   inputs:
-    dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
-    dropMetadataContainerName: '${{ parameters.uploadPrefix }}DropMetadata-windows-integration-tests-$(System.JobAttempt)'
-    buildNumber: 'xamarin-macios/tests/$(Build.BuildNumber)/$(Build.BuildId)/windows-integration-tests-$(System.JobAttempt)'
-    sourcePath: '$(Build.SourcesDirectory)/xamarin-macios/jenkins-results'
-    detailedLog: true
-    usePat: true
+    rootFolder: '$(Build.SourcesDirectory)/xamarin-macios/jenkins-results'
+    includeRootFolder: false
+    archiveFile: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+# Create HtmlReport artifact. This serves two purposes:
+# 1. It is the way we are going to share the HtmlReport with the publish_html job that is executed on a Windows machine.
+# 2. Users can download this if they want.
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: HtmlReport'
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
+    artifactName: '${{ parameters.uploadPrefix }}HtmlReport-windows-integration-$(System.JobAttempt)'
   continueOnError: true
   condition: succeededOrFailed()
 
