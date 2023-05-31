@@ -124,7 +124,7 @@ stages:
     dependsOn:
     - ${{ if eq(parameters.parseLabels, true) }}:
       - configure
-    displayName: 'T: '
+    displayName: 'Running tests:'
     timeoutInMinutes: 1000
     pool:
       name: $(AgentPoolComputed)
