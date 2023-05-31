@@ -146,7 +146,11 @@ namespace Xamarin.MacDev.Tasks {
 
 			if (!string.IsNullOrEmpty (DotNetCscCompiler)) {
 				var compileCommand = new string [] {
-					DotNetPath,
+					// The quoting becomes rather complicated here when using windows-style slashes, because the slashes
+					// will first be quoted once here, then once again as an argument, and finally needs to be double-unquoted
+					// in the generator, which doesn't seem to be working quite right. So instead just use unix-style slashes,
+					// which don't need quoting and also works just as fine on Windows.
+					DotNetPath.Replace ('\\', '/'),
 					DotNetCscCompiler,
 				};
 				cmd.AddQuoted ("/compile-command:" + string.Join (" ", StringUtils.QuoteForProcess (compileCommand)));
