@@ -68,7 +68,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileSceneKitAssets" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ComputeBundleLocation" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ComputeBundleResourceOutputPaths" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.ComputeRemoteGeneratorProperties" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CoreMLCompiler" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreateAssetPackManifest" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreateBindingResourcePackage" AssemblyFile="$(_TaskAssemblyName)" />
@@ -1622,18 +1621,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</_WriteGeneratorPropertiesDependsOn>
 	</PropertyGroup>
 
-	<!-- We execute this target on the mac from the ComputeRemoteGeneratorProperties task since we can only compute these values from the mac -->
-	<Target Name="_WriteRemoteGeneratorProperties" DependsOnTargets="$(_WriteGeneratorPropertiesDependsOn)">
-		<ItemGroup>
-			<_ComputedRemoteGeneratorProperties Include="BaseLibDllPath=$(BaseLibDllPath)" />
-			<_ComputedRemoteGeneratorProperties Include="BTouchToolExe=$(BTouchToolExe)" />
-			<_ComputedRemoteGeneratorProperties Include="BTouchToolPath=$(BTouchToolPath)" />
-			<_ComputedRemoteGeneratorProperties Include="_DotNetCscCompiler=$(_DotNetCscCompiler)" />
-			<_ComputedRemoteGeneratorProperties Include="_GeneratorAttributeAssembly=$(_GeneratorAttributeAssembly)" />
-		</ItemGroup>
-		<WriteLinesToFile File="$(OutputFilePath)" Lines="@(_ComputedRemoteGeneratorProperties)" />
-	</Target>
-
 	<PropertyGroup>
 		<_ComputeCompileApiDefinitionsInputsDependsOn Condition="'$(UsingAppleNETSdk)' == 'true'">
 			$(_ComputeCompileApiDefinitionsInputsDependsOn);
@@ -1719,32 +1706,18 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		DependsOnTargets="$(_GenerateBindingsDependsOn)"
 		Condition="'$(IsBindingProject)' == 'true' And '$(DesignTimeBuild)' != 'true'">
 
-		<Warning Condition="'$(IsMacEnabled)' != 'true'" Text="It's currently not supported to build a binding project from Windows unless a connection to a Mac is available." />
+		<ItemGroup>
+			<BTouchReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
+		</ItemGroup>
 
 		<PropertyGroup>
 			<BTouchEmitDebugInformation>false</BTouchEmitDebugInformation>
 			<BTouchEmitDebugInformation Condition="'$(Debug)' != ''">true</BTouchEmitDebugInformation>
 		</PropertyGroup>
 
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(GeneratedSourcesDir)" />
-
-		<!-- Compute some variables on the mac: this task is only executed when building on Windows -->
-		<ComputeRemoteGeneratorProperties
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(BuildSessionId)' != ''"
-			IntermediateOutputPath="$(IntermediateOutputPath)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-		>
-			<Output TaskParameter="BaseLibDllPath" PropertyName="BaseLibDllPath" />
-			<Output TaskParameter="BTouchToolExe" PropertyName="BTouchToolExe" />
-			<Output TaskParameter="BTouchToolPath" PropertyName="BTouchToolPath" />
-			<Output TaskParameter="DotNetCscCompiler" PropertyName="_DotNetCscCompiler" />
-			<Output TaskParameter="GeneratorAttributeAssembly" PropertyName="_GeneratorAttributeAssembly" />
-		</ComputeRemoteGeneratorProperties>
+		<MakeDir Directories="$(GeneratedSourcesDir)" />
 
 		<BTouch
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
 			OutputPath="$(OutputPath)"
 			ObjectiveCLibraries="@(ObjcBindingNativeLibrary)"
 			AdditionalLibPaths="$(AdditionalLibPaths)"
