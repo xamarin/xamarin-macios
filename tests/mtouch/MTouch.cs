@@ -1817,7 +1817,7 @@ public class TestApp {
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.Optimize = new string [] { "foo" };
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
-				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, remove-dynamic-registrar, inline-is-arm64-calling-convention, seal-and-devirtualize, cctor-beforefieldinit, custom-attributes-removal, experimental-xforms-product-type, force-rejected-types-removal.");
+				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, remove-dynamic-registrar, inline-is-arm64-calling-convention, seal-and-devirtualize, cctor-beforefieldinit, custom-attributes-removal, experimental-xforms-product-type, force-rejected-types-removal, redirect-class-handles.");
 			}
 		}
 
