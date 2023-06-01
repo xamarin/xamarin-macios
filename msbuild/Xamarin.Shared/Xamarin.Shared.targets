@@ -1602,6 +1602,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			$(_GenerateBindingsDependsOn);
 		</_GenerateBindingsDependsOn>
 
+		<_GenerateBindingsDependsOn Condition="'$(UsingAppleNETSdk)' == 'true'">
+			_CompileApiDefinitions;
+			$(_GenerateBindingsDependsOn);
+		</_GenerateBindingsDependsOn>
+
 		<_WriteGeneratorPropertiesDependsOn Condition="'$(UsingAppleNETSdk)' == 'true'">
 			$(_WriteGeneratorPropertiesDependsOn);
 			_ComputeBindingVariables;
@@ -1620,6 +1625,85 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<WriteLinesToFile File="$(OutputFilePath)" Lines="@(_ComputedRemoteGeneratorProperties)" />
 	</Target>
 
+	<PropertyGroup>
+		<_ComputeCompileApiDefinitionsInputsDependsOn Condition="'$(UsingAppleNETSdk)' == 'true'">
+			$(_ComputeCompileApiDefinitionsInputsDependsOn);
+			_ComputeBindingVariables;
+		</_ComputeCompileApiDefinitionsInputsDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_ComputeCompileApiDefinitionsInputs" DependsOnTargets="$(_ComputeCompileApiDefinitionsInputsDependsOn)">
+		<ItemGroup>
+			<BTouchReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
+		</ItemGroup>
+
+		<PropertyGroup>
+			<_CompiledApiDefinitionAssembly>$(DeviceSpecificIntermediateOutputPath)compiled-api-definitions.dll</_CompiledApiDefinitionAssembly>
+			<_CompiledApiDefinitionDefines>$(DefineConstants)</_CompiledApiDefinitionDefines>
+			<_CompiledApiDefinitionDefines Condition="'$(UsingAppleNETSdk)' == 'true'">$(_CompiledApiDefinitionDefines);NET</_CompiledApiDefinitionDefines>
+
+			<_CompiledApiDefinitionLibPaths>$(AdditionalLibPaths);$([System.IO.Path]::GetDirectoryName('$(BaseLibDllPath)'))</_CompiledApiDefinitionLibPaths>
+
+			<_CompiledApiDefinitionGlobalUsingsFile Condition="'$(UsingAppleNETSdk)' == 'true' And '$(NoNFloatUsing)' != 'true'">$(DeviceSpecificIntermediateOutputPath)compiled-api-definitions-usings.cs</_CompiledApiDefinitionGlobalUsingsFile>
+		</PropertyGroup>
+
+
+		<ItemGroup>
+			<_CompiledApiDefinitionReferences Include="$(_GeneratorAttributeAssembly)" />
+			<_CompiledApiDefinitionReferences Include="@(ReferencePath)" />
+			<_CompiledApiDefinitionReferences Include="@(BTouchReferencePath)" />
+
+			<_CompiledApiDefinitionsCompile Include="@(ObjcBindingApiDefinition)" />
+			<_CompiledApiDefinitionsCompile Include="@(ObjcBindingCoreSource)" />
+		</ItemGroup>
+
+		<WriteLinesToFile
+			Condition="'$(_CompiledApiDefinitionGlobalUsingsFile)' != ''"
+			File="$(_CompiledApiDefinitionGlobalUsingsFile)"
+			Lines="global using nfloat = global::System.Runtime.InteropServices.NFloat%3B"
+			Overwrite="true"
+			WriteOnlyWhenDifferent="true" />
+
+		<ItemGroup Condition="'$(_CompiledApiDefinitionGlobalUsingsFile)' != ''">
+			<_CompiledApiDefinitionsCompile Include="$(_CompiledApiDefinitionGlobalUsingsFile)" />
+		</ItemGroup>
+
+	</Target>
+
+	<Target Name="_CompileApiDefinitions"
+		Inputs="$(MSBuildAllProjects);
+			$(_CompiledApiDefinitionLibPaths);
+			$(_CompiledApiDefinitionGlobalUsingsFile);
+			@(_CompiledApiDefinitionReferences);
+			@(_CompiledApiDefinitionsCompile);"
+		Outputs="$(_CompiledApiDefinitionAssembly)"
+		DependsOnTargets="_ComputeCompileApiDefinitionsInputs"
+		Condition="'$(IsBindingProject)' == 'true' And '$(DesignTimeBuild)' != 'true'"
+		>
+
+		<!-- This is a mirror of the method GetCompiledApiBindingsAssembly in BindingTouch.cs where the compilation is done inside bgen -->
+		<Csc
+			AdditionalLibPaths="$(_CompiledApiDefinitionLibPaths)"
+			AllowUnsafeBlocks="true"
+			DebugType="portable"
+			DefineConstants="$(_CompiledApiDefinitionDefines)"
+			DisabledWarnings="436"
+			NoConfig="true"
+			NoStandardLib="true"
+			Deterministic="true"
+			OutputAssembly="$(_CompiledApiDefinitionAssembly)"
+			References="@(_CompiledApiDefinitionReferences)"
+			Sources="@(_CompiledApiDefinitionsCompile)"
+			TargetType="library"
+			ToolExe="$(CscToolExe)"
+			ToolPath="$(CscToolPath)"
+			UseHostCompilerIfAvailable="$(UseHostCompilerIfAvailable)"
+			UseSharedCompilation="$(UseSharedCompilation)"
+			VsSessionGuid="$(VsSessionGuid)"
+			>
+		</Csc>
+	</Target>
+
 	<Target Name="_GenerateBindings"
 		Inputs="$(MSBuildAllProjects);@(ObjcBindingApiDefinition);@(ObjcBindingCoreSource);@(ReferencePath);@(ObjcBindingNativeLibrary)"
 		Outputs="$(_GeneratedSourcesFileList)"
@@ -1627,10 +1711,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		Condition="'$(IsBindingProject)' == 'true' And '$(DesignTimeBuild)' != 'true'">
 
 		<Warning Condition="'$(IsMacEnabled)' != 'true'" Text="It's currently not supported to build a binding project from Windows unless a connection to a Mac is available." />
-
-		<ItemGroup>
-			<BTouchReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
-		</ItemGroup>
 
 		<PropertyGroup>
 			<BTouchEmitDebugInformation>false</BTouchEmitDebugInformation>
@@ -1664,8 +1744,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			AttributeAssembly="$(_GeneratorAttributeAssembly)"
 			BaseLibDll="$(BaseLibDllPath)"
 			CoreSources="@(ObjcBindingCoreSource)"
+			CompiledApiDefinitionAssembly="$(_CompiledApiDefinitionAssembly)"
 			DefineConstants="$(DefineConstants)"
-			DotNetCscCompiler="$(_DotNetCscCompiler)"
 			EmitDebugInformation="$(BTouchEmitDebugInformation)"
 			ExtraArgs="$(BTouchExtraArgs)"
 			GeneratedSourcesDir="$(GeneratedSourcesDir)"
