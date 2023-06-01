@@ -145,6 +145,19 @@ steps:
         "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/run-dotnet-tests.binlog"
   displayName: 'Run .NET tests'
 
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    $configFile = "$(Build.SourcesDirectory)\artifacts\build-configuration\configuration.json"
+    $config = Import-BuildConfiguration -ConfigFile $configFile
+    $config | Write-Host
+  name: configuration
+  continueOnError: true
+  displayName: 'Parse build configuration'
+  timeoutInMinutes: 1
+
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/run-generator-tests-on-windows.ps1
+  displayName: 'Run generator tests'
+
 # Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
 - task: ArchiveFiles@1
   displayName: 'Archive HtmlReport'
