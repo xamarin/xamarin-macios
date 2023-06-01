@@ -145,6 +145,18 @@ steps:
         "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/run-dotnet-tests.binlog"
   displayName: 'Run .NET tests'
 
+- pwsh: |
+    $Env:DOTNET = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe"
+    & $(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe `
+        test `
+        "$(Build.SourcesDirectory)/xamarin-macios/tests/bgen/bgen-tests.csproj" `
+        "--results-directory:$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/windows/bgen-tests/" `
+        "--logger:console;verbosity=detailed" `
+        "--logger:trx;LogFileName=$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/windows/bgen-tests/results.trx" `
+        "--logger:html;LogFileName=$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/windows/bgen-tests/results.html" `
+        "-bl:$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/windows/bgen-tests/results.binlog"
+  displayName: 'Run generator tests'
+
 # Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
 - task: ArchiveFiles@1
   displayName: 'Archive HtmlReport'
