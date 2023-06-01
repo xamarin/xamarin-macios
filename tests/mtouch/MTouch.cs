@@ -3729,7 +3729,8 @@ public partial class NotificationService : UNNotificationServiceExtension
 				mtouch.AssertWarning (2003, "Option '--optimize=custom-attributes-removal' will be ignored since linking is disabled");
 				mtouch.AssertWarning (2003, "Option '--optimize=experimental-xforms-product-type' will be ignored since linking is disabled");
 				mtouch.AssertWarning (2003, "Option '--optimize=force-rejected-types-removal' will be ignored since linking is disabled");
-				mtouch.AssertWarningCount (16);
+				mtouch.AssertWarning (2003, "Option '--optimize=redirect-class-handles' will be ignored since the static registrar is not enabled");
+				mtouch.AssertWarningCount (17);
 			}
 
 			using (var mtouch = new MTouchTool ()) {
