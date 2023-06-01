@@ -29,6 +29,9 @@ steps:
 - bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-platforms.sh
   name: configure_platforms
   displayName: 'Configure platforms'
+  env:
+    # this branch name calculation is not correct!
+    BRANCH_NAME: $(Build.SourceBranchName)
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
@@ -37,6 +40,8 @@ steps:
   env:
     GITHUB_TOKEN: $(GitHub.Token)
     ACCESSTOKEN: $(AzDoBuildAccess.Token)
+    # this branch name calculation is not correct!
+    BRANCH_NAME: $(Build.SourceBranchName)
   name: labels
   displayName: 'Configure build'
 

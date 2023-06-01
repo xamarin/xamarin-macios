@@ -178,6 +178,16 @@ namespace Xharness {
 			}
 		}
 
+		string GetVariable (string variable, string @default = null)
+		{
+			var result = Environment.GetEnvironmentVariable (variable);
+			if (string.IsNullOrEmpty (result))
+				config.TryGetValue (variable, out result);
+			if (string.IsNullOrEmpty (result))
+				result = @default;
+			return result;
+		}
+
 		public List<iOSTestProject> IOSTestProjects { get; }
 		public List<MacTestProject> MacTestProjects { get; } = new List<MacTestProject> ();
 
@@ -265,35 +275,33 @@ namespace Xharness {
 
 			LaunchTimeout = InCI ? 3 : 120;
 
-			var config = ParseConfigFiles ();
+			config = ParseConfigFiles ();
 			var src_root = Path.GetDirectoryName (Path.GetFullPath (RootDirectory));
 
 			MONO_PATH = Path.GetFullPath (Path.Combine (src_root, "external", "mono"));
 			TVOS_MONO_PATH = MONO_PATH;
-			INCLUDE_IOS = config.ContainsKey ("INCLUDE_IOS") && !string.IsNullOrEmpty (config ["INCLUDE_IOS"]);
-			INCLUDE_TVOS = config.ContainsKey ("INCLUDE_TVOS") && !string.IsNullOrEmpty (config ["INCLUDE_TVOS"]);
-			JENKINS_RESULTS_DIRECTORY = config ["JENKINS_RESULTS_DIRECTORY"];
-			INCLUDE_WATCH = config.ContainsKey ("INCLUDE_WATCH") && !string.IsNullOrEmpty (config ["INCLUDE_WATCH"]);
-			INCLUDE_MAC = config.ContainsKey ("INCLUDE_MAC") && !string.IsNullOrEmpty (config ["INCLUDE_MAC"]);
-			INCLUDE_MACCATALYST = config.ContainsKey ("INCLUDE_MACCATALYST") && !string.IsNullOrEmpty (config ["INCLUDE_MACCATALYST"]);
-			MAC_DESTDIR = config ["MAC_DESTDIR"];
+			INCLUDE_IOS = !string.IsNullOrEmpty (GetVariable ("INCLUDE_IOS"));
+			INCLUDE_TVOS = !string.IsNullOrEmpty (GetVariable ("INCLUDE_TVOS"));
+			JENKINS_RESULTS_DIRECTORY = GetVariable ("JENKINS_RESULTS_DIRECTORY");
+			INCLUDE_WATCH = !string.IsNullOrEmpty (GetVariable ("INCLUDE_WATCH"));
+			INCLUDE_MAC = !string.IsNullOrEmpty (GetVariable ("INCLUDE_MAC"));
+			INCLUDE_MACCATALYST = !string.IsNullOrEmpty (GetVariable ("INCLUDE_MACCATALYST"));
+			MAC_DESTDIR = GetVariable ("MAC_DESTDIR");
 
-			IOS_DESTDIR = config ["IOS_DESTDIR"];
-			MONO_IOS_SDK_DESTDIR = config ["MONO_IOS_SDK_DESTDIR"];
-			MONO_MAC_SDK_DESTDIR = config ["MONO_MAC_SDK_DESTDIR"];
-			ENABLE_DOTNET = config.ContainsKey ("ENABLE_DOTNET") && !string.IsNullOrEmpty (config ["ENABLE_DOTNET"]);
-			SYSTEM_MONO = config ["SYSTEM_MONO"];
-			DOTNET_DIR = config ["DOTNET_DIR"];
-			INCLUDE_XAMARIN_LEGACY = config.ContainsKey ("INCLUDE_XAMARIN_LEGACY") && !string.IsNullOrEmpty (config ["INCLUDE_XAMARIN_LEGACY"]);
-			DotNetTfm = config ["DOTNET_TFM"];
+			IOS_DESTDIR = GetVariable ("IOS_DESTDIR");
+			MONO_IOS_SDK_DESTDIR = GetVariable ("MONO_IOS_SDK_DESTDIR");
+			MONO_MAC_SDK_DESTDIR = GetVariable ("MONO_MAC_SDK_DESTDIR");
+			ENABLE_DOTNET = !string.IsNullOrEmpty (GetVariable ("ENABLE_DOTNET"));
+			SYSTEM_MONO = GetVariable ("SYSTEM_MONO");
+			DOTNET_DIR = GetVariable ("DOTNET_DIR");
+			INCLUDE_XAMARIN_LEGACY = !string.IsNullOrEmpty (GetVariable ("INCLUDE_XAMARIN_LEGACY"));
+			DotNetTfm = GetVariable ("DOTNET_TFM");
 
 			if (string.IsNullOrEmpty (SdkRoot))
-				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
-
-			this.config = config;
+				SdkRoot = GetVariable ("XCODE_DEVELOPER_ROOT", configuration.SdkRoot);
 
 			processManager = new MlaunchProcessManager (XcodeRoot, MlaunchPath);
-			AppBundleLocator = new AppBundleLocator (processManager, () => HarnessLog, XIBuildPath, "/usr/local/share/dotnet/dotnet", config ["DOTNET"]);
+			AppBundleLocator = new AppBundleLocator (processManager, () => HarnessLog, XIBuildPath, "/usr/local/share/dotnet/dotnet", GetVariable ("DOTNET"));
 			TunnelBore = new TunnelBore (processManager);
 		}
 

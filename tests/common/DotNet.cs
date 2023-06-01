@@ -172,6 +172,7 @@ namespace Xamarin.Tests {
 				var binlogPath = Path.Combine (Path.GetDirectoryName (project)!, $"log-{verb}-{DateTime.Now:yyyyMMdd_HHmmss}.binlog");
 				args.Add ($"/bl:{binlogPath}");
 				Console.WriteLine ($"Binlog: {binlogPath}");
+				args.Add ($"/v:diag");
 				var env = new Dictionary<string, string?> ();
 				env ["MSBuildSDKsPath"] = null;
 				env ["MSBUILD_EXE_PATH"] = null;
