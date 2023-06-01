@@ -522,8 +522,8 @@ namespace MonoTests.System.Net.Http {
 			};
 
 			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
-					var client = new HttpClient (handler);
-					result = await client.GetAsync (url);
+				var client = new HttpClient (handler);
+				result = await client.GetAsync (url);
 			}, out var ex);
 
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail

@@ -98,7 +98,7 @@ namespace MonoTouchFixtures.Security {
 			if (TestRuntime.CheckXcodeVersion (11, 0)) {
 				using (var queue = new DispatchQueue ("TrustErrorAsync")) {
 					bool assert = false; // we don't want to assert in another queue
-				var called = new TaskCompletionSource<bool> ();
+					var called = new TaskCompletionSource<bool> ();
 					var err = trust.Evaluate (DispatchQueue.MainQueue, (t, result, error) => {
 						assert = t.Handle == trust.Handle && !result && error is not null;
 						called.SetResult (true);
