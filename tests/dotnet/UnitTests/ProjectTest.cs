@@ -433,20 +433,22 @@ namespace Xamarin.Tests {
 
 		[Test]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
-		public void IsOverrideRuntimeIdentifier (ApplePlatform platform, string runtimeIdentifiers) {
+		public void IsOverrideRuntimeIdentifier (ApplePlatform platform, string runtimeIdentifiers)
+		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
-			var project_path = GetProjectPath(project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["RuntimeIdentifier"] = "maccatalyst-arm64";
-			DotNet.AssertBuild(project_path, properties);
+			DotNet.AssertBuild (project_path, properties);
 		}
 
 		[Test]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
-		public void IsNotOverrideRuntimeIdentifier (ApplePlatform platform, string runtimeIdentifiers) {
+		public void IsNotOverrideRuntimeIdentifier (ApplePlatform platform, string runtimeIdentifiers)
+		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
@@ -457,7 +459,7 @@ namespace Xamarin.Tests {
 			props ["RuntimeIdentifiers"] = "maccatalyst-arm64";
 			var rv = DotNet.AssertBuildFailure (projectPath, props);
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
-			Assert.AreEqual ("Both RuntimeIdentifier and RuntimeIdentifiers were passed on the command line, but only one of them can be set at a time.", errors[0].Message);
+			Assert.AreEqual ("Both RuntimeIdentifier and RuntimeIdentifiers were passed on the command line, but only one of them can be set at a time.", errors [0].Message);
 			Assert.AreEqual (errors.Length, 1, "Error count");
 		}
 
