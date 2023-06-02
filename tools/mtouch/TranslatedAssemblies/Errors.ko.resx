@@ -1034,10 +1034,6 @@
 		<value>첫 번째 인수(trampoline)로 전달된 값의 형식이 {1}이며 이로 인해 블록 시그니처를 컴퓨팅할 수 없기 때문에 {0}에서 BlockLiteral.{2} 호출을 최적화할 수 없습니다.
 		</value>
 	</data>
-  <data name="MM2106_C" xml:space="preserve">
-		<value>{2}에서 [UserDelegateType] 특성을 찾을 수 없으므로 오프셋 {1}의 {0}에서 BlockLiteral.SetupBlock 호출을 최적화할 수 없습니다.
-		</value>
-	</data>
   <data name="MM2106_D" xml:space="preserve">
 		<value>오프셋 {1}의 {0}에서 BlockLiteral.SetupBlock 호출을 최적화할 수 없습니다. {2}.
 		</value>
@@ -1540,6 +1536,12 @@
   <data name="MT4186" xml:space="preserve">
 		<value>등록자가 최적 형식이 아닌 형식 `{0}`을(를) 찾았습니다. 형식에는 두 개의 인수(ObjCRuntime.NativeHandle, bool)을 사용하는 생성자가 없습니다. 그러나 두 개의 (System.IntPtr, bool) 인수를 사용하는 생성자를 발견해 대신 사용됩니다.(System.IntPtr, bool) 생성자의 서명을 (ObjCRuntime.NativeHandle, bool)로 변경하는 것이 좋습니다.</value>
 	</data>
+  <data name="MX4187" xml:space="preserve">
+		<value>Could not find a [UserDelegateType] attribute on the type '{0}'.</value>
+	</data>
+  <data name="MX4188" xml:space="preserve">
+		<value>Unable to compute the block signature for the type '{0}': {1}</value>
+	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>'{0}' 컴파일러가 없습니다. Xcode '명령줄 도구' 구성 요소를 설치하세요.
 		</value>
@@ -1801,5 +1803,14 @@
 	</data>
   <data name="MX8052" xml:space="preserve">
 		<value>서명은 비어 있지 않은 문자열이어야 합니다.</value>
+	</data>
+  <data name="MX8053" xml:space="preserve">
+		<value>Could not resolve the module in the assembly {0}.</value>
+	</data>
+  <data name="MX8054" xml:space="preserve">
+		<value>Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}).</value>
+	</data>
+  <data name="MX8055" xml:space="preserve">
+		<value>Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.</value>
 	</data>
 </root>

@@ -350,9 +350,9 @@ package-test-libraries.zip:
 	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/mono-native/macOS/unified ./tests/mono-native/macOS/compat
 	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/mono-native/iOS/unified ./tests/mono-native/iOS/compat
 	$(Q_GEN) cd $(TOP) && zip -9r --symlinks $(abspath $@).tmp ./tests/bcl-test/generated ./tests/bcl-test/templates
-	$(Q_GEN) cd $(TOP) && find tests -regex '.*/generated-projects/.*[c|f]sproj' | zip -9r --symlinks $(abspath $@).tmp -@
-	$(Q_GEN) cd $(TOP) && find tests -regex '.*/generated-projects/.*sln' | zip -9r --symlinks $(abspath $@).tmp -@
-	$(Q_GEN) cd $(TOP) && find tests -regex 'tests/test-libraries/custom-type-assembly/.libs/.*dll' | zip -9r --symlinks $(abspath $@).tmp -@
+	$(Q_GEN) cd $(TOP) && find tests -regex '.*/generated-projects/.*[c|f]sproj' -exec zip -9r --symlinks $(abspath $@).tmp {} +
+	$(Q_GEN) cd $(TOP) && find tests -regex '.*/generated-projects/.*sln' -exec zip -9r --symlinks $(abspath $@).tmp {} +
+	$(Q_GEN) cd $(TOP) && find tests -regex 'tests/test-libraries/custom-type-assembly/.libs/.*dll' -exec zip -9r --symlinks $(abspath $@).tmp {} +
 	$(Q_GEN) cd $(TOP) && git ls-files -o -- 'tests/*/Info-*plist' | zip -9r --symlinks $(abspath $@).tmp -@
 ifdef INCLUDE_XAMARIN_LEGACY
 ifdef INCLUDE_IOS

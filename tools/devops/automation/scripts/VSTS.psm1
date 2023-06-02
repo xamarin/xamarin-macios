@@ -586,6 +586,51 @@ function Set-BuildTags {
     }
 }
 
+function Get-YamlPreview {
+    param (
+        [String]
+        $Org,
+
+        [String]
+        $Project,
+
+        [String]
+        $AccessToken,
+
+        [String]
+        $PipelineId,
+
+        [String]
+        $Branch,
+
+        [String]
+        $OutputFile
+    )
+
+    $headers = Get-AuthHeader -AccessToken  $AccessToken
+
+    # create the payload, this payload will point to the correct branch of the repo we want to work with, the repository is always 'self'
+    $payload=@{
+        "previewRun"=$true
+        "resources"=@{
+            "repositories"=@{
+                "self"=@{
+                    "refName"="refs/heads/$Branch"
+                }
+            }
+        }
+    }
+    $body = ConvertTo-Json $payload -Depth 100
+
+    $url="https://dev.azure.com/$Org/$Project/_apis/pipelines/$PipelineId/preview?api-version=7.1-preview.1"
+    try {
+        $response=Invoke-RestMethod -Uri $url -Headers $headers -Method "POST"  -ContentType 'application/json' -Body $body
+    } catch {
+        Write-Host $_
+    }
+    Set-Content -Path $OutputFile -Value $response.finalYaml  
+}
+
 function New-BuildConfiguration {
     param
     (
@@ -617,3 +662,4 @@ Export-ModuleMember -Function Set-BuildTags
 Export-ModuleMember -Function New-VSTS
 Export-ModuleMember -Function New-BuildConfiguration
 Export-ModuleMember -Function Import-BuildConfiguration
+Export-ModuleMember -Function Get-YamlPreview

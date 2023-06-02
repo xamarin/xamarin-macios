@@ -122,6 +122,15 @@ namespace MonoTouchFixtures.AVFoundation {
 									if (TestRuntime.IsDevice && TestRuntime.CheckXcodeVersion (12, 0))
 										continue;
 									break;
+								case AVMetadataObjectType.CodabarCode:
+								case AVMetadataObjectType.GS1DataBarCode:
+								case AVMetadataObjectType.GS1DataBarExpandedCode:
+								case AVMetadataObjectType.GS1DataBarLimitedCode:
+								case AVMetadataObjectType.MicroQRCode:
+								case AVMetadataObjectType.MicroPdf417Code:
+									if (!TestRuntime.CheckXcodeVersion (13, 3))
+										continue;
+									break;
 								}
 								metadataOutput.MetadataObjectTypes = val;
 								all |= val;

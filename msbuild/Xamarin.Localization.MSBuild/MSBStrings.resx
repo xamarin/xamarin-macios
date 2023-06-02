@@ -1497,4 +1497,11 @@
         <value>The "{0}" task was not given a value for the parameter "{1}", which is required when building on this platform.</value>
     </data>
 
+    <data name="E7115" xml:space="preserve">
+        <value>The illink assembly doesn't exist: '{0}'.</value>
+        <comment>
+            {0}: the path to the linker assembly
+        </comment>
+    </data>
+
 </root>
