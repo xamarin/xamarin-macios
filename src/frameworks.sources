@@ -821,7 +821,6 @@ FOUNDATION_SOURCES = \
 	Foundation/NSFastEnumerationState.cs \
 	Foundation/NSFastEnumerator.cs \
 	Foundation/NSFileManager.cs \
-	Foundation/NSFileManager.iOS.cs \
 	Foundation/NSFileManagerDelegate.cs \
 	Foundation/NSFormatter.cs \
 	Foundation/NSHost.cs \
