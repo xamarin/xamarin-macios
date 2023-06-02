@@ -19,12 +19,14 @@ using XColor = UIKit.UIColor;
 using XImage = UIKit.UIImage;
 using XImageView = UIKit.UIImageView;
 using XViewController = UIKit.UIViewController;
-#else
+#elif HAS_APPKIT
 using AppKit;
 using XColor = AppKit.NSColor;
 using XImage = AppKit.NSImage;
 using XImageView = AppKit.NSImageView;
 using XViewController = AppKit.NSViewController;
+#else
+using XImage = Foundation.NSObject;
 #endif
 
 #nullable enable
