@@ -38,7 +38,7 @@ namespace MonoTouchFixtures.Phase {
 		}
 
 		[Test]
-		public void RigthTest ()
+		public void RightTest ()
 		{
 			var right = PhaseObject.Right;
 			Assert.NotNull (right, "not null");
