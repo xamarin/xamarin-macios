@@ -445,7 +445,7 @@ namespace Xamarin.Tests {
 			var rv = DotNet.AssertBuild (project_path, properties);
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 			Assert.AreEqual (1, warnings.Length, "Warning Count");
-			Assert.AreEqual ("RuntimeIdentifier was set on the command line, and will override the value for RuntimeIdentifiers set in the project file.", warnings[0].Message, "Warning message");
+			Assert.AreEqual ("RuntimeIdentifier was set on the command line, and will override the value for RuntimeIdentifiers set in the project file.", warnings [0].Message, "Warning message");
 		}
 
 		[Test]
