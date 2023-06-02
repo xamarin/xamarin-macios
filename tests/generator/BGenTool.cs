@@ -55,10 +55,14 @@ namespace Xamarin.Tests {
 
 		public BGenTool ()
 		{
-			EnvironmentVariables = new Dictionary<string, string> {
-				{ "MD_MTOUCH_SDK_ROOT", Configuration.SdkRootXI },
-				{ "XamarinMacFrameworkRoot", Configuration.SdkRootXM },
-			};
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
+				EnvironmentVariables = new Dictionary<string, string> ();
+			} else {
+				EnvironmentVariables = new Dictionary<string, string> {
+					{ "MD_MTOUCH_SDK_ROOT", Configuration.SdkRootXI },
+					{ "XamarinMacFrameworkRoot", Configuration.SdkRootXM },
+				};
+			}
 		}
 
 		public void AddTestApiDefinition (string filename)
