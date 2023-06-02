@@ -170,6 +170,7 @@
 	<PropertyGroup>
 		<!-- single-rid build -->
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' == '' And '$(_IsMultiRidBuild)' != 'true'">
+			_WarnRuntimeIdentifiersClash;
 			_ComputePublishTrimmed;
 			BuildOnlySettings;
 			_CollectBundleResources;

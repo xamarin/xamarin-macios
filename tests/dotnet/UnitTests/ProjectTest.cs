@@ -441,8 +441,11 @@ namespace Xamarin.Tests {
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
-			properties ["RuntimeIdentifier"] = "maccatalyst-arm64";
-			DotNet.AssertBuild (project_path, properties);
+			properties ["RuntimeIdentifier"] = "maccatalyst-x64";
+			var rv = DotNet.AssertBuild (project_path, properties);
+			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
+			Assert.AreEqual (1, warnings.Length, "Warning Count");
+			Assert.AreEqual ("RuntimeIdentifier was set on the command line, and will override the value for RuntimeIdentifiers set in the project file.", warnings[0].Message, "Warning message");
 		}
 
 		[Test]
@@ -460,7 +463,7 @@ namespace Xamarin.Tests {
 			var rv = DotNet.AssertBuildFailure (projectPath, props);
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			Assert.AreEqual ("Both RuntimeIdentifier and RuntimeIdentifiers were passed on the command line, but only one of them can be set at a time.", errors [0].Message);
-			Assert.AreEqual (errors.Length, 1, "Error count");
+			Assert.AreEqual (1, errors.Length, "Error count");
 		}
 
 		[Test]
