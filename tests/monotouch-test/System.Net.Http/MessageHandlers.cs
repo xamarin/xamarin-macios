@@ -672,7 +672,7 @@ namespace MonoTests.System.Net.Http {
 			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
 				try {
 
-					var result = await client.GetAsync ($"https://httpbin.org/basic-auth/{validUsername}/{validPassword}");
+					var result = await client.GetAsync (NetworkResources.Httpbin.GetBasicAuthUrl (validUsername, validPassword));
 					httpStatus = result.StatusCode;
 				} catch (Exception e) {
 					ex = e;
@@ -695,7 +695,7 @@ namespace MonoTests.System.Net.Http {
 		{
 			var username = "mandel";
 			var password = "12345678";
-			var url = $"https://httpbin.org/basic-auth/{username}/{password}";
+			var url = NetworkResources.Httpbin.GetBasicAuthUrl (username, password);
 			// perform two requests, one that will get a 200 with valid creds, one that wont and assert that
 			// the second call does get a 401
 			// create a http client to use with some creds that we do know are not valid
