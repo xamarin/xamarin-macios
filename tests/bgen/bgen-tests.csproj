@@ -5,6 +5,7 @@
     <RootNamespace>bgen_tests</RootNamespace>
 
     <IsPackable>false</IsPackable>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,12 +29,6 @@
     </Compile>
     <Compile Include="..\generator\BGenTool.cs">
       <Link>BGenTool.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\bgen\AttributeFactory.ConstructorArguments.cs">
-      <Link>AttributeFactory.ConstructorArguments.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\bgen\AttributeFactory.cs">
-      <Link>AttributeFactory.cs</Link>
     </Compile>
     <Compile Include="..\generator\AttributeFactoryTests.cs">
       <Link>AttributeFactoryTests.cs</Link>
