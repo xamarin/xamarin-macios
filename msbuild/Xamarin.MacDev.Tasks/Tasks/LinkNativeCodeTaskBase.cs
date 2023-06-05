@@ -200,7 +200,7 @@ namespace Xamarin.MacDev.Tasks {
 					// If a LinkerFlags item includes a whitespace it will be passed along to clang surrounded by quotes.
 					// This can cause unexpected behavior with command line parsing and failures.
 					// To prevent this, split the string and pass its parts as individual arguments instead. 
-					var flagParts = flag.ItemSpec.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
+					var flagParts = flag.ItemSpec.Split (new char [0], StringSplitOptions.RemoveEmptyEntries);
 					arguments.AddRange (flagParts);
 				}
 			}
