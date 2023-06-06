@@ -52,6 +52,9 @@
 		<_IsTrimmingEnabled>true</_IsTrimmingEnabled>
 		<!-- The GRCF property is contingent upon the HasRuntimeOutput property, which is only defined for executable projects. So, explicitly define GRCF for extension projects to avoid warnings at build time. -->
 		<GenerateRuntimeConfigurationFiles Condition="'$(IsAppExtension)' == 'true'">true</GenerateRuntimeConfigurationFiles>
+
+		<!-- FIXME: Testing out the feature by enabling it by default -->
+		<_ExportSymbolsExplicitly>true</_ExportSymbolsExplicitly>
 	</PropertyGroup>
 
 	<!-- Set the default RuntimeIdentifier if not already specified. -->
