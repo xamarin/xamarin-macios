@@ -169,6 +169,20 @@ namespace Xamarin.Tests {
 					continue;
 				}
 
+				if (args is TargetFinishedEventArgs tfea) {
+					if (tfea.TargetOutputs is not null) {
+						yield return "TargetOutputs:";
+						foreach (var targetOutput in tfea.TargetOutputs) {
+							var tos = targetOutput?.ToString ()?.Split (eols, System.StringSplitOptions.RemoveEmptyEntries);
+							if (tos is not null) {
+								foreach (var to in tos)
+									yield return $"\t{to}";
+							}
+						}
+						continue;
+					}
+				}
+
 				foreach (var line in args.Message.Split (eols, System.StringSplitOptions.RemoveEmptyEntries))
 					yield return line;
 			}
