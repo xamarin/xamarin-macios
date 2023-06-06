@@ -506,7 +506,6 @@ DOTNET_IOS_WINDOWS_OUTPUT_FILES =                                \
 	$(foreach dll,$(IOS_WINDOWS_TASK_ASSEMBLIES),$(dll).*)       \
 	$(foreach dll,$(IOS_WINDOWS_DEPENDENCIES),$(dll).*)          \
 	iSign.Core.pdb                                               \
-	System.Diagnostics.Tracer.pdb                                \
 	Xamarin.iOS.Windows.Client.pdb                               \
 	Broker.zip                                                   \
 	Build.zip                                                    \
