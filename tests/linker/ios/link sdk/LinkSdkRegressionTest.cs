@@ -893,6 +893,11 @@ namespace LinkSdk {
 			// note: this test is more interesting on devices because of the sandbox they have
 			var device = TestRuntime.IsDevice;
 
+#if NET
+			foreach (var value in Enum.GetValues<Environment.SpecialFolder> ().OrderBy (v => v.ToString ()))
+				Console.WriteLine ($"SpecialFolder '{value}' => {Environment.GetFolderPath (value)}");
+#endif
+
 			// some stuff we do not support (return String.Empty for the path)
 			TestFolder (Environment.SpecialFolder.Programs, supported: false);
 			TestFolder (Environment.SpecialFolder.Startup, supported: false);
