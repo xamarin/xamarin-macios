@@ -95,7 +95,7 @@ namespace NewsstandKit {
 			}
 		}
 
-		public virtual NKAssetDownload[] DownloadingAssets {
+		public virtual NKAssetDownload [] DownloadingAssets {
 			get {
 				throw new InvalidOperationException (Constants.NewsstandKitRemoved);
 			}
@@ -179,13 +179,13 @@ namespace NewsstandKit {
 			}
 		}
 
-		public virtual NKAssetDownload[] DownloadingAssets {
+		public virtual NKAssetDownload [] DownloadingAssets {
 			get {
 				throw new InvalidOperationException (Constants.NewsstandKitRemoved);
 			}
 		}
 
-		public virtual NKIssue[] Issues {
+		public virtual NKIssue [] Issues {
 			get {
 				throw new InvalidOperationException (Constants.NewsstandKitRemoved);
 			}
