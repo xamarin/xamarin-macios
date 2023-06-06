@@ -38,5 +38,7 @@ namespace ObjCRuntime {
 		internal const string BrokenBinding = "This API was incorrectly bound and does not work correctly. Use the new version indicated in the associated Obsolete attribute.";
 
 		internal const string RemovedFromPassKit = "This API has been removed from the 'PassKit' framework.";
+
+		internal const string NewsstandKitRemoved = "The NewsstandKit framework has been removed from iOS.";
 	}
 }
