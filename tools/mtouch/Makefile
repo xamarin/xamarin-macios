@@ -87,7 +87,6 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework iAd			\
 	-weak_framework Accounts		\
 	-weak_framework GLKit			\
-	-weak_framework NewsstandKit		\
 	-weak_framework CoreImage		\
 	-weak_framework CoreBluetooth		\
 	-weak_framework Twitter			\
