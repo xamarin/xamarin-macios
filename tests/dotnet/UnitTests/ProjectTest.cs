@@ -1064,6 +1064,9 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 
+			// This property is needed until https://github.com/xamarin/xamarin-macios/pull/18411 has been merged and we can use the resulting packages.
+			properties ["_RequiresILLinkPack"] = "true";
+
 			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerExecuted (result);
 			var infoPlistPath = GetInfoPListPath (platform, appPath);
