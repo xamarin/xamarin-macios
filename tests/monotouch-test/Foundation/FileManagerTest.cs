@@ -91,7 +91,8 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			Assert.False (NSFileManager.GetSkipBackupAttribute (NSBundle.MainBundle.ExecutableUrl.ToString ()), "MainBundle");
 
-			string filename = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), $"DoNotBackupMe-NSFileManager-{Process.GetCurrentProcess ().Id}");
+			var paths = NSSearchPath.GetDirectories (NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomain.User);
+			var filename = Path.Combine (paths [0], $"DoNotBackupMe-NSFileManager-{Process.GetCurrentProcess ().Id}");
 			try {
 				File.WriteAllText (filename, "not worth a bit");
 
