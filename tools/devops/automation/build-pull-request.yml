@@ -193,7 +193,7 @@ pr:
 stages:
 - template: templates/main-stage.yml
   parameters:
-    xcodeChannel: Stable
+    xcodeChannel: Beta
     macOSName: ${{ parameters.macOSName }}
     isPR: true
     provisionatorChannel: ${{ parameters.provisionatorChannel }}
