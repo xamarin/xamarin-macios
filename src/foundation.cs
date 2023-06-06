@@ -7344,15 +7344,6 @@ namespace Foundation {
 		[Export ("sendAsynchronousRequest:queue:completionHandler:")]
 		[Async (ResultTypeName = "NSUrlAsyncResult", MethodName = "SendRequestAsync")]
 		void SendAsynchronousRequest (NSUrlRequest request, NSOperationQueue queue, NSUrlConnectionDataResponse completionHandler);
-
-#if HAS_NEWSSTANDKIT
-		// Extension from iOS5, NewsstandKit
-		[Deprecated (PlatformName.iOS, 13,0, message: "Use Background Remote Notifications instead.")]
-		[NoTV][NoMac][NoMacCatalyst]
-		[NullAllowed]
-		[Export ("newsstandAssetDownload", ArgumentSemantic.Weak)]
-		NewsstandKit.NKAssetDownload NewsstandAssetDownload { get; }
-#endif
 	}
 
 	[BaseType (typeof (NSObject), Name = "NSURLConnectionDelegate")]
