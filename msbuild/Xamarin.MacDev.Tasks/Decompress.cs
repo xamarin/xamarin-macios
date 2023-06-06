@@ -130,7 +130,7 @@ namespace Xamarin.MacDev {
 
 		static bool TryDecompressUsingUnzip (TaskLoggingHelper log, string zip, string resource, string decompressionDir)
 		{
-			var archive = ZipFile.OpenRead (zip);
+			using var archive = ZipFile.OpenRead (zip);
 			resource = resource.Replace ('\\', zipDirectorySeparator);
 			var entry = archive.GetEntry (resource);
 			if (entry is null) {
@@ -165,7 +165,7 @@ namespace Xamarin.MacDev {
 			resource = resource.Replace ('\\', zipDirectorySeparator);
 			var resourceAsDir = resource + zipDirectorySeparator;
 
-			var archive = ZipFile.OpenRead (zip);
+			using var archive = ZipFile.OpenRead (zip);
 			foreach (var entry in archive.Entries) {
 				var entryPath = entry.FullName;
 				if (entryPath.Length == 0)

@@ -252,7 +252,7 @@ namespace Xamarin.MacDev.Tasks {
 		static bool TryGetInfoPlist (TaskLoggingHelper log, string resourcePath, string xcframework, [NotNullWhen (true)] out PDictionary? plist)
 		{
 			var manifestPath = Path.Combine (xcframework, "Info.plist");
-			var stream = CompressionHelper.TryGetPotentiallyCompressedFile (log, resourcePath, manifestPath);
+			using var stream = CompressionHelper.TryGetPotentiallyCompressedFile (log, resourcePath, manifestPath);
 			if (stream is null) {
 				plist = null;
 				return false;
