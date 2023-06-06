@@ -857,7 +857,7 @@ namespace LinkSdk {
 		string TestFolder (Environment.SpecialFolder folder, bool supported = true, bool? exists = true, bool readOnly = false)
 		{
 			var path = Environment.GetFolderPath (folder);
-			Assert.That (path.Length > 0, Is.EqualTo (supported), folder.ToString ());
+			Assert.That (path.Length > 0, Is.EqualTo (supported), $"SpecialFolder: {folder.ToString ()} Path: {path} Supported: {supported}");
 			if (!supported)
 				return path;
 
