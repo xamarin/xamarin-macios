@@ -8,21 +8,6 @@
 	<dict>
 		<key>iOS</key>
 		<array>
-			<string>7.0</string>
-			<string>7.1</string>
-			<string>8.0</string>
-			<string>8.1</string>
-			<string>8.2</string>
-			<string>8.3</string>
-			<string>8.4</string>
-			<string>9.0</string>
-			<string>9.1</string>
-			<string>9.2</string>
-			<string>9.3</string>
-			<string>10.0</string>
-			<string>10.1</string>
-			<string>10.2</string>
-			<string>10.3</string>
 			<string>11.0</string>
 			<string>11.1</string>
 			<string>11.2</string>
@@ -57,12 +42,6 @@
 		</array>
 		<key>tvOS</key>
 		<array>
-			<string>9.0</string>
-			<string>9.1</string>
-			<string>9.2</string>
-			<string>10.0</string>
-			<string>10.1</string>
-			<string>10.2</string>
 			<string>11.0</string>
 			<string>11.1</string>
 			<string>11.2</string>
@@ -92,12 +71,6 @@
 		</array>
 		<key>watchOS</key>
 		<array>
-			<string>2.0</string>
-			<string>2.1</string>
-			<string>2.2</string>
-			<string>3.0</string>
-			<string>3.1</string>
-			<string>3.2</string>
 			<string>4.0</string>
 			<string>4.1</string>
 			<string>4.2</string>
@@ -123,11 +96,6 @@
 		</array>
 		<key>MacCatalyst</key>
 		<array>
-			<string>13.1</string>
-			<string>13.2</string>
-			<string>13.3</string>
-			<string>13.4</string>
-			<string>13.5</string>
 			<string>14.2</string>
 			<string>14.3</string>
 			<string>14.4</string>
