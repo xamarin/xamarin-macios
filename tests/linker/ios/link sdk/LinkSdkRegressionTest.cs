@@ -1042,6 +1042,15 @@ namespace LinkSdk {
 			bool tvos = false;
 #endif
 
+#if __MACOS__ && NET8_0_OR_GREATER
+			path = Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments);
+			if (string.IsNullOrEmpty (path) && TestRuntime.IsInCI) {
+				// ignore this
+			} else {
+				path = TestFolder (Environment.SpecialFolder.MyDocuments);
+				Assert.That (path, Is.EqualTo (docs), "path - MyDocuments");
+			}
+#else
 			// and some stuff is read/write
 			path = TestFolder (Environment.SpecialFolder.MyDocuments);
 #if __MACOS__ && !NET8_0_OR_GREATER
@@ -1049,6 +1058,7 @@ namespace LinkSdk {
 #else
 			Assert.That (path, Is.EqualTo (docs), "path - MyDocuments");
 #endif
+#endif // __MACOS__ && NET8_0_OR_GREATER
 
 #if NET
 			path = TestFolder (Environment.SpecialFolder.ApplicationData, exists: null /* may or may not exist */);
