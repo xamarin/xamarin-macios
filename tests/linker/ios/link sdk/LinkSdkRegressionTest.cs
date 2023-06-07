@@ -882,6 +882,30 @@ namespace LinkSdk {
 		[Test]
 		public void SpecialFolder ()
 		{
+			try {
+				SpecialFolderImpl ();
+			} catch (Exception e) {
+#if NET
+				Console.WriteLine ($"An exception occurred in this test: {e}");
+				Console.WriteLine ($"Dumping info about various directories:");
+				foreach (var value in Enum.GetValues<NSSearchPathDirectory> ().OrderBy (v => v.ToString ())) {
+					var urls = NSFileManager.DefaultManager.GetUrls (value, NSSearchPathDomain.User);
+					Console.WriteLine ($"NSFileManager.GetUrls ({value} = {(int) value}) returned {urls.Length} results:");
+					foreach (var url in urls)
+						Console.WriteLine ($"    {url.Path}");
+				}
+
+				foreach (var value in Enum.GetValues<Environment.SpecialFolder> ().OrderBy (v => v.ToString ()))
+					Console.WriteLine ($"SpecialFolder '{value}' => {Environment.GetFolderPath (value)}");
+#endif
+
+				// Throw the original exception so that the test actually fails.
+				throw;
+			}
+		}
+
+		void SpecialFolderImpl ()
+		{
 			// iOS8 changes the rules of the game
 			var fm = NSFileManager.DefaultManager;
 			var docs = fm.GetUrls (NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomain.User) [0].Path;
@@ -892,18 +916,6 @@ namespace LinkSdk {
 
 			// note: this test is more interesting on devices because of the sandbox they have
 			var device = TestRuntime.IsDevice;
-
-#if NET
-			foreach (var value in Enum.GetValues<NSSearchPathDirectory> ().OrderBy (v => v.ToString ())) {
-				var urls = NSFileManager.DefaultManager.GetUrls (value, NSSearchPathDomain.User);
-				Console.WriteLine ($"NSFileManager.GetUrls ({value} = {(int) value}) returned {urls.Length} results:");
-				foreach (var url in urls)
-					Console.WriteLine ($"    {url.Path}");
-			}
-
-			foreach (var value in Enum.GetValues<Environment.SpecialFolder> ().OrderBy (v => v.ToString ()))
-				Console.WriteLine ($"SpecialFolder '{value}' => {Environment.GetFolderPath (value)}");
-#endif
 
 			// some stuff we do not support (return String.Empty for the path)
 			TestFolder (Environment.SpecialFolder.Programs, supported: false);
