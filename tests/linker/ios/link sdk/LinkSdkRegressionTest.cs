@@ -894,6 +894,13 @@ namespace LinkSdk {
 			var device = TestRuntime.IsDevice;
 
 #if NET
+			foreach (var value in Enum.GetValues<NSSearchPathDirectory> ().OrderBy (v => v.ToString ())) {
+				var urls = NSFileManager.DefaultManager.GetUrls (value, NSSearchPathDomain.User);
+				Console.WriteLine ($"NSFileManager.GetUrls ({value} = {(int) value}) returned {urls.Length} results:");
+				foreach (var url in urls)
+					Console.WriteLine ($"    {url.Path}");
+			}
+
 			foreach (var value in Enum.GetValues<Environment.SpecialFolder> ().OrderBy (v => v.ToString ()))
 				Console.WriteLine ($"SpecialFolder '{value}' => {Environment.GetFolderPath (value)}");
 #endif
