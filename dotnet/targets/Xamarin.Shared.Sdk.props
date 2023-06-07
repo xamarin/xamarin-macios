@@ -52,6 +52,9 @@
 		<_IsTrimmingEnabled>true</_IsTrimmingEnabled>
 		<!-- The GRCF property is contingent upon the HasRuntimeOutput property, which is only defined for executable projects. So, explicitly define GRCF for extension projects to avoid warnings at build time. -->
 		<GenerateRuntimeConfigurationFiles Condition="'$(IsAppExtension)' == 'true'">true</GenerateRuntimeConfigurationFiles>
+
+		<!-- Setting _RequiresILLinkPack to true so that the ILLink pack is always restored. -->
+		<_RequiresILLinkPack Condition="'$(_RequiresILLinkPack)' == ''">true</_RequiresILLinkPack>
 	</PropertyGroup>
 
 	<!-- Set the default RuntimeIdentifier if not already specified. -->
