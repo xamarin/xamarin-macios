@@ -26,7 +26,7 @@ namespace NewsstandKit {
 			throw new InvalidOperationException (Constants.NewsstandKitRemoved);
 		}
 
-		public virtual NSUrlConnection DownloadWithDelegate (NSUrlConnectionDownloadDelegate downloadDelegate)
+		public virtual NSUrlConnection DownloadWithDelegate (INSUrlConnectionDownloadDelegate downloadDelegate)
 		{
 			throw new InvalidOperationException (Constants.NewsstandKitRemoved);
 		}
