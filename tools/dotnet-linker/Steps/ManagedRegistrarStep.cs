@@ -492,21 +492,21 @@ namespace Xamarin.Linker {
 
 		MethodDefinition CreateGenericsProxyMethod (MethodDefinition method, MethodDefinition callback, List<TypeDefinition> proxyInterfaces)
 		{
-			var proxyInterfaceName = $"__IRegistrarGenericTypeProxy__{Sanitize(method.DeclaringType.FullName)}__";
+			var proxyInterfaceName = $"__IRegistrarGenericTypeProxy__{Sanitize (method.DeclaringType.FullName)}__";
 			TypeDefinition? proxyInterface = proxyInterfaces.SingleOrDefault (v => v.Name == proxyInterfaceName && v.Namespace == "ObjCRuntime");
 			if (proxyInterface is null) {
 				proxyInterface = new TypeDefinition ("ObjCRuntime", proxyInterfaceName, TypeAttributes.Public | TypeAttributes.Interface | TypeAttributes.Abstract);
-				method.DeclaringType.Interfaces.Add (new InterfaceImplementation(proxyInterface));
+				method.DeclaringType.Interfaces.Add (new InterfaceImplementation (proxyInterface));
 				proxyInterfaces.Add (proxyInterface);
 			}
 
-			var returnType = ReplaceOpenTypeIfNeeded(method.ReturnType, abr.Foundation_NSObject);
+			var returnType = ReplaceOpenTypeIfNeeded (method.ReturnType, abr.Foundation_NSObject);
 
 			var genericsProxyMethod = proxyInterface.AddMethod ($"{proxyInterfaceName}_{method.Name}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.NewSlot | MethodAttributes.Abstract | MethodAttributes.Virtual, returnType);
 			var proxyImplementationMethod = method.DeclaringType.AddMethod (genericsProxyMethod.Name, MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Virtual | MethodAttributes.NewSlot | MethodAttributes.Final, returnType);
 
 			foreach (var parameter in method.Parameters) {
-				var parameterType = ReplaceOpenTypeIfNeeded(parameter.ParameterType, abr.Foundation_NSObject);
+				var parameterType = ReplaceOpenTypeIfNeeded (parameter.ParameterType, abr.Foundation_NSObject);
 				genericsProxyMethod.AddParameter (parameter.Name, parameterType);
 				proxyImplementationMethod.AddParameter (parameter.Name, parameterType);
 			}
@@ -948,7 +948,7 @@ namespace Xamarin.Linker {
 			return IsOpenType (tr.Resolve ());
 		}
 
-		TypeReference ReplaceOpenTypeIfNeeded(TypeReference type, TypeReference replacementType)
+		TypeReference ReplaceOpenTypeIfNeeded (TypeReference type, TypeReference replacementType)
 		{
 			if (IsOpenType (type)) {
 				if (type is ArrayType arrayType) {
