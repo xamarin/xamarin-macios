@@ -85,8 +85,6 @@ namespace MonoTouchFixtures.Foundation {
 				// aborting is evil, so don't bother aborting the thread, just let it run its course
 			}
 		}
-		//GetSkipBackupAttribute doesn't exist on Mac
-#if !MONOMAC
 
 		[Test]
 		public void GetSkipBackupAttribute ()
@@ -113,7 +111,6 @@ namespace MonoTouchFixtures.Foundation {
 				File.Delete (filename);
 			}
 		}
-#endif
 
 		[Test]
 		public void DefaultManager ()

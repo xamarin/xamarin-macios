@@ -162,57 +162,13 @@ steps:
   displayName: Install dependencies.
   timeoutInMinutes: 60
 
-- pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
-
-    Write-Host "Found tests"
-    $testsPath = "$(Build.SourcesDirectory)/artifacts/mac-test-package/tests"
-    Write-Host "Tests path is $testsPath"
-
-    # print enviroment
-    dir env:
-
-    [System.Collections.Generic.List[string]]$failures = @()
-
-    # Claim that the tests timed out before we start
-    Set-Content -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -Value "Tests timed out"
-
-    $macTest = @("dontlink", "introspection", "linksdk", "linkall", "xammac_tests", "monotouch-test")
-    foreach ($t in $macTest) {
-      $testName = "exec-$t"
-      Write-Host "Execution test $testName"
-      make -d -C $testsPath $testName -f packaged-macos-tests.mk
-      if ($LastExitCode -eq 0) {
-        Write-Host "$t succeeded"
-      } else {
-        Write-Host "$t failed with error $LastExitCode"
-        $failures.Add($t)
-      }
-    }
-    if ($failures.Count -ne 0) {
-      # post status and comment in the build
-      $failedTestsStr = [string]::Join(",",$failures)
-      $statuses.SetStatus("error", "Tests on macOS ${{ parameters.statusContext }} failed ($failedTestsStr).", "${{ parameters.statusContext }}")
-      # build message
-      $msg = [System.Text.StringBuilder]::new()
-      $msg.AppendLine("Failed tests are:")
-      $msg.AppendLine("")
-      foreach ($test in $failures)
-      {
-          $msg.AppendLine("* $test")
-      }
-
-      # We failed, so write to the comment file why we failed.
-      Set-Content -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -Value "$msg"
-
-      exit 1
-    } else {
-      # We succeeded, so remove the failure comment file.
-      Remove-Item -Path "$Env:GITHUB_FAILURE_COMMENT_FILE"
-
-      exit 0
-    }
+- pwsh: >-
+    $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/run_mac_tests.ps1
+    -GithubToken $(GitHub.Token)
+    -RepositoryUri "$(Build.Repository.Uri)"
+    -SourcesDirectory "$(Build.SourcesDirectory)"
+    -GithubFailureCommentFile "$Env:GITHUB_FAILURE_COMMENT_FILE"
+    -StatusContext "${{ parameters.statusContext }}"
   displayName: 'Run tests'
   timeoutInMinutes: 60
   env:

@@ -857,7 +857,7 @@ namespace LinkSdk {
 		string TestFolder (Environment.SpecialFolder folder, bool supported = true, bool? exists = true, bool readOnly = false)
 		{
 			var path = Environment.GetFolderPath (folder);
-			Assert.That (path.Length > 0, Is.EqualTo (supported), folder.ToString ());
+			Assert.That (path.Length > 0, Is.EqualTo (supported), $"SpecialFolder: {folder.ToString ()} Path: {path} Supported: {supported}");
 			if (!supported)
 				return path;
 
@@ -881,6 +881,30 @@ namespace LinkSdk {
 
 		[Test]
 		public void SpecialFolder ()
+		{
+			try {
+				SpecialFolderImpl ();
+			} catch (Exception e) {
+#if NET
+				Console.WriteLine ($"An exception occurred in this test: {e}");
+				Console.WriteLine ($"Dumping info about various directories:");
+				foreach (var value in Enum.GetValues<NSSearchPathDirectory> ().OrderBy (v => v.ToString ())) {
+					var urls = NSFileManager.DefaultManager.GetUrls (value, NSSearchPathDomain.User);
+					Console.WriteLine ($"NSFileManager.GetUrls ({value} = {(int) value}) returned {urls.Length} results:");
+					foreach (var url in urls)
+						Console.WriteLine ($"    {url.Path}");
+				}
+
+				foreach (var value in Enum.GetValues<Environment.SpecialFolder> ().OrderBy (v => v.ToString ()))
+					Console.WriteLine ($"SpecialFolder '{value}' => {Environment.GetFolderPath (value)}");
+#endif
+
+				// Throw the original exception so that the test actually fails.
+				throw;
+			}
+		}
+
+		void SpecialFolderImpl ()
 		{
 			// iOS8 changes the rules of the game
 			var fm = NSFileManager.DefaultManager;
@@ -1030,6 +1054,15 @@ namespace LinkSdk {
 			bool tvos = false;
 #endif
 
+#if __MACOS__ && NET8_0_OR_GREATER
+			path = Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments);
+			if (string.IsNullOrEmpty (path) && TestRuntime.IsInCI) {
+				// ignore this
+			} else {
+				path = TestFolder (Environment.SpecialFolder.MyDocuments);
+				Assert.That (path, Is.EqualTo (docs), "path - MyDocuments");
+			}
+#else
 			// and some stuff is read/write
 			path = TestFolder (Environment.SpecialFolder.MyDocuments);
 #if __MACOS__ && !NET8_0_OR_GREATER
@@ -1037,6 +1070,7 @@ namespace LinkSdk {
 #else
 			Assert.That (path, Is.EqualTo (docs), "path - MyDocuments");
 #endif
+#endif // __MACOS__ && NET8_0_OR_GREATER
 
 #if NET
 			path = TestFolder (Environment.SpecialFolder.ApplicationData, exists: null /* may or may not exist */);

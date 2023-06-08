@@ -40,7 +40,7 @@ steps:
 - task: ms.vss-governance-buildtask.governance-build-task-component-detection.ComponentGovernanceComponentDetection@0
   displayName: 'Component Detection'
 
-- task: PoliCheck@1
+- task: PoliCheck@2
   inputs:
     inputType: 'Basic'
     targetType: 'F'
@@ -48,7 +48,7 @@ steps:
     result: 'PoliCheck.xml'
     optionsUEPATH: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/PoliCheckExclusions.xml'
 
-- task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@1
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@2
   displayName: 'Post Analysis'
   inputs:
     CredScan: true
