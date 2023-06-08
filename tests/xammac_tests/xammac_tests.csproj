@@ -121,14 +121,14 @@
     <Compile Include="..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>
+    <Compile Include="..\common\TestRuntime.RunAsync.cs">
+      <Link>TestRuntime.RunAsync.cs</Link>
+    </Compile>
     <Compile Include="..\common\Extensions.cs">
       <Link>Extensions.cs</Link>
     </Compile>
     <Compile Include="..\common\mac\MacMain.cs">
       <Link>MacMain.cs</Link>
-    </Compile>
-    <Compile Include="..\common\mac\TestRuntime.macos.cs">
-      <Link>TestRuntime.macos.cs</Link>
     </Compile>
     <Compile Include="..\common\ExecutionHelper.cs">
       <Link>ExecutionHelper.cs</Link>

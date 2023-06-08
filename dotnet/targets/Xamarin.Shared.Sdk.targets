@@ -170,6 +170,7 @@
 	<PropertyGroup>
 		<!-- single-rid build -->
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' == '' And '$(_IsMultiRidBuild)' != 'true'">
+			_WarnRuntimeIdentifiersClash;
 			_ComputePublishTrimmed;
 			BuildOnlySettings;
 			_CollectBundleResources;
@@ -185,6 +186,7 @@
 
 		<!-- inner build for multi-rid build -->
 		<BuildDependsOn Condition="'$(_IsMultiRidBuild)' == 'true'">
+			_ErrorRuntimeIdentifiersClash;
 			_ComputePublishTrimmed;
 			BuildOnlySettings;
 			_CollectBundleResources;
@@ -196,6 +198,7 @@
 
 		<!-- outer build for multi-rid build -->
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
+			_ErrorRuntimeIdentifiersClash;
 			_CollectBundleResources;
 			_RunRidSpecificBuild;
 			_DetectAppManifest;
@@ -277,6 +280,10 @@
 
 	<Target Name="_WarnRuntimeIdentifiersClash" Condition="'$(_RuntimeIdentifiersClashMessage)' != ''">
 		<Warning Text="$(_RuntimeIdentifiersClashMessage)" />
+	</Target>
+
+	<Target Name="_ErrorRuntimeIdentifiersClash" Condition="'$(_RuntimeIdentifiersClashErrorMessage)' != ''">
+		<Error Text="$(_RuntimeIdentifiersClashErrorMessage)" />
 	</Target>
 
 	<!-- If we have multiple runtime identifiers, then we need to run an inner build for each of them -->

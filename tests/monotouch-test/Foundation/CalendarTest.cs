@@ -99,7 +99,11 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			RequiresIos8 ();
 
+#if NET
+			foreach (var t in Enum.GetValues<NSCalendarType> ()) {
+#else
 			foreach (NSCalendarType t in Enum.GetValues (typeof (NSCalendarType))) {
+#endif
 				switch (t) {
 				case NSCalendarType.IslamicTabular:
 				case NSCalendarType.IslamicUmmAlQura:

@@ -1042,7 +1042,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			[Export ("testNativeEnum3:a:b:")]
 			public virtual void TestNativeEnum1 (UITextWritingDirection twd, int a, long b)
 			{
+#if NET
+				Assert.That (Enum.GetValues<UITextWritingDirection> (), Contains.Item (twd), "TestNativeEnum3");
+#else
 				Assert.That (Enum.GetValues (typeof (UITextWritingDirection)), Contains.Item (twd), "TestNativeEnum3");
+#endif
 				Assert.AreEqual (31415, a, "TestNativeEnum3 a");
 				Assert.AreEqual (3141592, b, "TestNativeEnum3 b");
 			}
@@ -2127,7 +2131,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			thread.Join ();
 			GC.Collect ();
 			GC.WaitForPendingFinalizers ();
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), () => { }, () => ObjCBlockTester.FreedBlockCount > initialFreedCount);
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), () => { }, () => ObjCBlockTester.FreedBlockCount > initialFreedCount);
 			Assert.IsNull (ex, "No exceptions");
 			Assert.That (ObjCBlockTester.FreedBlockCount, Is.GreaterThan (initialFreedCount), "freed blocks");
 		}
