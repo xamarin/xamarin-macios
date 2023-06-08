@@ -5,6 +5,7 @@ using System.Drawing;
 #endif
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 
 using CoreGraphics;
 using Foundation;
@@ -805,7 +806,7 @@ Additional information:
 			});
 
 			// Iterate over the runloop in case something has to happen on the main thread for the objects to be collected.
-			TestRuntime.RunAsync (TimeSpan.FromSeconds (5), () => { }, checkForCollectedManagedObjects);
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (5), checkForCollectedManagedObjects);
 
 			Assert.IsTrue (checkForCollectedManagedObjects (), "Any collected objects");
 
@@ -843,7 +844,7 @@ Additional information:
 			t.Start ();
 			Assert.IsTrue (t.Join (TimeSpan.FromSeconds (10)), "Background thread completion");
 
-			TestRuntime.RunAsync (TimeSpan.FromSeconds (2), () => { }, () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (2), () => {
 				// Iterate over the runloop a bit to make sure we're just not collecting because objects are queued on for things to happen on the main thread
 				GC.Collect ();
 				GC.WaitForPendingFinalizers ();

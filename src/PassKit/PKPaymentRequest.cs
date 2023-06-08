@@ -29,7 +29,11 @@ namespace PassKit {
 			if (values == PKContactFields.None)
 				return set;
 
+#if NET
+			foreach (var value in Enum.GetValues<PKContactFields> ()) {
+#else
 			foreach (PKContactFields value in Enum.GetValues (typeof (PKContactFields))) {
+#endif
 				if (values.HasFlag (value)) {
 					var constant = value.GetConstant ();
 					// None does not have an associated native value and Contains would throw an ANE

@@ -126,7 +126,11 @@ namespace Xharness {
 
 		public static bool TryGetLabel<T> (this string self, out T? label) where T : Enum
 		{
+#if NET
+			foreach (var obj in Enum.GetValues<T> ()) {
+#else
 			foreach (var obj in Enum.GetValues (typeof (T))) {
+#endif
 				if (obj is T value && value.GetLabel () == self) {
 					label = value;
 					return true;
