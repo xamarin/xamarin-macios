@@ -115,7 +115,11 @@ namespace Xharness.Tests.Jenkins {
 			selection.SetEnabled (TestLabel.All, false);
 			selection.SetEnabled (TestLabel.Bcl, true);
 			selection.SetEnabled (TestLabel.Monotouch, true);
+#if NET
+			foreach (var obj in Enum.GetValues<TestLabel> ()) {
+#else
 			foreach (var obj in Enum.GetValues (typeof (TestLabel))) {
+#endif
 				if (obj is TestLabel label) {
 					switch (label) {
 					case TestLabel.All:

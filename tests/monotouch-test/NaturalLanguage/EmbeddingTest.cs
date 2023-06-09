@@ -22,7 +22,11 @@ namespace MonoTouchFixtures.NaturalLanguage {
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);
 
+#if NET
+			foreach (var v in Enum.GetValues<NLLanguage> ()) {
+#else
 			foreach (NLLanguage v in Enum.GetValues (typeof (NLLanguage))) {
+#endif
 				if (v == NLLanguage.Unevaluated)
 					continue; // this is not a value provided by Apple.
 
