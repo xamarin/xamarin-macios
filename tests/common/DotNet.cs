@@ -172,6 +172,12 @@ namespace Xamarin.Tests {
 				var binlogPath = Path.Combine (Path.GetDirectoryName (project)!, $"log-{verb}-{DateTime.Now:yyyyMMdd_HHmmss}.binlog");
 				args.Add ($"/bl:{binlogPath}");
 				Console.WriteLine ($"Binlog: {binlogPath}");
+
+				// Work around https://github.com/dotnet/msbuild/issues/8845
+				args.Add ("/v:diag");
+				args.Add ("/consoleloggerparameters:Verbosity=Quiet");
+				// End workaround
+
 				var env = new Dictionary<string, string?> ();
 				env ["MSBuildSDKsPath"] = null;
 				env ["MSBUILD_EXE_PATH"] = null;
