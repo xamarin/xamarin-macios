@@ -38,7 +38,11 @@ namespace MonoTouchFixtures.HealthKit {
 
 			var failures = new List<string> ();
 
+#if NET
+			foreach (var value in Enum.GetValues<HKCategoryTypeIdentifier> ()) {
+#else
 			foreach (HKCategoryTypeIdentifier value in Enum.GetValues (typeof (HKCategoryTypeIdentifier))) {
+#endif
 
 				switch (value) {
 				case HKCategoryTypeIdentifier.SleepAnalysis:

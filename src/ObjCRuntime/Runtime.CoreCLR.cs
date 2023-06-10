@@ -500,7 +500,7 @@ namespace ObjCRuntime {
 		static IntPtr GetAssemblyName (IntPtr gchandle)
 		{
 			var asm = (Assembly?) GetGCHandleTarget (gchandle);
-			return Marshal.StringToHGlobalAuto (Path.GetFileName (asm?.Location));
+			return Marshal.StringToHGlobalAuto (asm?.GetName ()?.Name);
 		}
 
 		static IntPtr GetAssemblyLocation (IntPtr gchandle)
