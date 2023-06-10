@@ -14,7 +14,7 @@ using MonoTouch;
 
 namespace Xamarin {
 	static class SdkVersions {
-		public const string Xcode = "14.3";
+		public const string Xcode = "14.3.1";
 		public const string OSX = "13.3";
 		public const string iOS = "16.4";
 		public const string WatchOS = "9.4";

@@ -14,6 +14,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using System.Threading.Tasks;
 
 using Foundation;
 #if MONOMAC
@@ -84,26 +85,26 @@ namespace MonoTouchFixtures.Security {
 
 			using (var queue = new DispatchQueue ("TrustAsync")) {
 				bool assert = false; // we don't want to assert in another queue
-				bool called = false;
+				var called = new TaskCompletionSource<bool> ();
 				var err = trust.Evaluate (DispatchQueue.MainQueue, (t, result) => {
 					assert = t.Handle == trust.Handle && result == expectedTrust;
-					called = true;
+					called.SetResult (true);
 				});
 				Assert.That (err, Is.EqualTo (SecStatusCode.Success), "async1/err");
-				TestRuntime.RunAsync (TimeSpan.FromSeconds (5), () => { }, () => called);
+				TestRuntime.RunAsync (TimeSpan.FromSeconds (5), called.Task);
 				Assert.True (assert, "async1");
 			}
 
 			if (TestRuntime.CheckXcodeVersion (11, 0)) {
 				using (var queue = new DispatchQueue ("TrustErrorAsync")) {
 					bool assert = false; // we don't want to assert in another queue
-					bool called = false;
+					var called = new TaskCompletionSource<bool> ();
 					var err = trust.Evaluate (DispatchQueue.MainQueue, (t, result, error) => {
 						assert = t.Handle == trust.Handle && !result && error is not null;
-						called = true;
+						called.SetResult (true);
 					});
 					Assert.That (err, Is.EqualTo (SecStatusCode.Success), "async2/err");
-					TestRuntime.RunAsync (TimeSpan.FromSeconds (5), () => { }, () => called);
+					TestRuntime.RunAsync (TimeSpan.FromSeconds (5), called.Task);
 					Assert.True (assert, "async2");
 				}
 			}
