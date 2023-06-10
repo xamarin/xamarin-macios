@@ -40,7 +40,7 @@ namespace MonoTouchFixtures.UIKit {
 			var didSuccess = true;
 			var done = false;
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				try {
 					var res = await UIGuidedAccessRestriction.ConfigureAccessibilityFeaturesAsync (UIGuidedAccessAccessibilityFeature.Zoom, true);
 					gotError = res.Error is not null; // We expect an error back from the API call.

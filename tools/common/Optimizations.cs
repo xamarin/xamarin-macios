@@ -377,7 +377,11 @@ namespace Xamarin.Bundler {
 					values [i] = enabled;
 				}
 				if (!found)
+#if NET
+					messages.Add (ErrorHelper.CreateWarning (132, Errors.MX0132, opt, string.Join (", ", Enum.GetValues<Opt> ().Where (o => Array.IndexOf (valid_platforms [(int) o], platform) >= 0).Select (o => opt_names [(int) o]))));
+#else
 					messages.Add (ErrorHelper.CreateWarning (132, Errors.MX0132, opt, string.Join (", ", Enum.GetValues (typeof (Opt)).Cast<Opt> ().Where (o => Array.IndexOf (valid_platforms [(int) o], platform) >= 0).Select (o => opt_names [(int) o]))));
+#endif
 			}
 		}
 

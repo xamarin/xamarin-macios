@@ -58,7 +58,7 @@ namespace MonoTouchFixtures {
 			GC.WaitForPendingFinalizers ();
 			GC.WaitForPendingFinalizers ();
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), () => { }, () => MyParentView.weakcount < totalTestObjects);
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), () => { }, () => MyParentView.weakcount < totalTestObjects);
 			Assert.That (MyParentView.weakcount, Is.LessThan (totalTestObjects), "No retain cycles expected");
 		}
 
