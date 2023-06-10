@@ -11,6 +11,8 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
+
 using Foundation;
 using AudioToolbox;
 using ObjCRuntime;
@@ -30,16 +32,16 @@ namespace MonoTouchFixtures.AudioToolbox {
 			var path = NSBundle.MainBundle.PathForResource ("1", "caf", "AudioToolbox");
 
 			using (var ss = SystemSound.FromFile (NSUrl.FromFilename (path))) {
-				var completed = false;
+				var completed = new TaskCompletionSource<bool> ();
 				const int timeout = 10;
 
 				Assert.AreEqual (AudioServicesError.None, ss.AddSystemSoundCompletion (delegate
 				{
-					completed = true;
+					completed.SetResult (true);
 				}));
 
 				ss.PlaySystemSound ();
-				Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => { }, () => completed), "PlaySystemSound");
+				Assert.IsTrue (TestRuntime.RunAsync (TimeSpan.FromSeconds (timeout), completed.Task), "PlaySystemSound");
 			}
 		}
 
@@ -64,13 +66,11 @@ namespace MonoTouchFixtures.AudioToolbox {
 
 			using (var ss = SystemSound.FromFile (NSUrl.FromFilename (path))) {
 
-				var completed = false;
+				var completed = new TaskCompletionSource<bool> ();
 				const int timeout = 10;
 
-				completed = false;
-				Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () =>
-					ss.PlaySystemSound (() => { completed = true; }
-				), () => completed), "TestCallbackPlaySystem");
+				ss.PlaySystemSound (() => { completed.SetResult (true); });
+				Assert.IsTrue (TestRuntime.RunAsync (TimeSpan.FromSeconds (timeout), completed.Task), "TestCallbackPlaySystem");
 			}
 		}
 
@@ -84,13 +84,11 @@ namespace MonoTouchFixtures.AudioToolbox {
 
 			using (var ss = SystemSound.FromFile (NSUrl.FromFilename (path))) {
 
-				var completed = false;
+				var completed = new TaskCompletionSource<bool> ();
 				const int timeout = 10;
 
-				completed = false;
-				Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () =>
-					ss.PlayAlertSound (() => { completed = true; }
-				), () => completed), "TestCallbackPlayAlert");
+				ss.PlayAlertSound (() => { completed.SetResult (true); });
+				Assert.IsTrue (TestRuntime.RunAsync (TimeSpan.FromSeconds (timeout), completed.Task), "TestCallbackPlayAlert");
 			}
 		}
 

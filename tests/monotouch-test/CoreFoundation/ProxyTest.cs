@@ -177,7 +177,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			Exception ex;
 			bool foundProxies;
 			// similar to the other tests, but we want to ensure that the async/await API works
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				try {
 					CancellationTokenSource cancelSource = new CancellationTokenSource ();
 					CancellationToken cancelToken = cancelSource.Token;
@@ -219,7 +219,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			Exception ex;
 			bool foundProxies;
 			// similar to the other tests, but we want to ensure that the async/await API works
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				try {
 					CancellationTokenSource cancelSource = new CancellationTokenSource ();
 					CancellationToken cancelToken = cancelSource.Token;
@@ -290,7 +290,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			Exception ex;
 			bool foundProxies;
 			// similar to the other tests, but we want to ensure that the async/await API works
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				try {
 					CancellationTokenSource cancelSource = new CancellationTokenSource ();
 					CancellationToken cancelToken = cancelSource.Token;
@@ -329,7 +329,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			Exception ex;
 			bool foundProxies;
 			// similar to the other tests, but we want to ensure that the async/await API works
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				try {
 					CancellationTokenSource cancelSource = new CancellationTokenSource ();
 					CancellationToken cancelToken = cancelSource.Token;
