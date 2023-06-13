@@ -510,7 +510,7 @@ namespace Xamarin.Linker {
 				proxyImplementationMethod.Parameters.Add (parameterDefinition);
 			}
 
-			var postProcessing = new List <Instruction> ();
+			var postProcessing = new List<Instruction> ();
 
 			var proxyImplementationBody = proxyImplementationMethod.CreateBody (out var proxyIl);
 			proxyIl.Emit (OpCodes.Ldarg_0);
@@ -523,7 +523,7 @@ namespace Xamarin.Linker {
 				// TODO can I just use EmitConversion here instead? Using it just like 👇 doesn't work
 				// proxyIl.EmitLoadArgument (parameterIndex);
 				// EmitConversion (method, proxyIl, parameterType, true, i, out _, postProcessing, parameter.IsOut, i);
-				
+
 				if (parameterType is ByReferenceType brt && !brt.ElementType.IsValueType) {
 					var local = proxyIl.Body.AddVariable (brt.ElementType);
 					if (!parameter.IsOut) {
@@ -549,7 +549,7 @@ namespace Xamarin.Linker {
 					postProcessing.Add (proxyIl.Create (OpCodes.Stind_Ref));
 				} else if (parameterType is ArrayType arrayType) {
 					proxyIl.EmitLoadArgument (parameterIndex);
-					
+
 					// if the array element type is generic we need to cast from NSObject[] to T[] to verify that the input
 					// can actually be handled by the target method
 					if (arrayType.ElementType is GenericParameter gp && StaticRegistrar.VerifyIsConstrainedToNSObject (gp, out _)) {
@@ -1013,20 +1013,20 @@ namespace Xamarin.Linker {
 					ArrayType arrayType => new ArrayType (ReplaceGenericParametersIfNeeded (arrayType.ElementType), arrayType.Rank),
 					ByReferenceType byReferenceType => new ByReferenceType (ReplaceGenericParametersIfNeeded (byReferenceType.ElementType)),
 					GenericInstanceType genericInstanceType => ReplaceGenericParametersInGenericInstanceTypeIfNeeded (genericInstanceType),
-					PointerType pointerType => new PointerType(pointerType.ElementType),
+					PointerType pointerType => new PointerType (pointerType.ElementType),
 					_ => throw new NotImplementedException (),
 				};
 			}
 
 			return type;
-			
+
 			TypeReference ReplaceGenericParametersInGenericInstanceTypeIfNeeded (GenericInstanceType genericInstanceType)
 			{
-				var git = new GenericInstanceType(genericInstanceType.ElementType);
+				var git = new GenericInstanceType (genericInstanceType.ElementType);
 				foreach (var genericArgument in genericInstanceType.GenericArguments) {
 					git.GenericArguments.Add (ReplaceGenericParametersIfNeeded (genericArgument));
 				}
-				
+
 				return git;
 			}
 		}
