@@ -96,6 +96,7 @@ namespace Xamarin.MacDev.Tasks {
 						Log.LogWarning (MSBStrings.W7100, bindingOutputPath);
 					}
 				}
+				packagedFiles.Add (manifestPath);
 			}
 
 			PackagedFiles = packagedFiles.Select (v => new TaskItem (v)).ToArray ();
