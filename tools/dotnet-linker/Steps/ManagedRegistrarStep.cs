@@ -493,7 +493,7 @@ namespace Xamarin.Linker {
 			var proxyInterfaceName = $"__IRegistrarGenericTypeProxy__{Sanitize (method.DeclaringType.FullName)}__";
 			TypeDefinition? proxyInterface = proxyInterfaces.SingleOrDefault (v => v.Name == proxyInterfaceName && v.Namespace == "ObjCRuntime");
 			if (proxyInterface is null) {
-				proxyInterface = new TypeDefinition ("ObjCRuntime", proxyInterfaceName, TypeAttributes.Public | TypeAttributes.Interface | TypeAttributes.Abstract);
+				proxyInterface = new TypeDefinition ("ObjCRuntime", proxyInterfaceName, TypeAttributes.NotPublic | TypeAttributes.Interface | TypeAttributes.Abstract);
 				method.DeclaringType.Interfaces.Add (new InterfaceImplementation (proxyInterface));
 				proxyInterfaces.Add (proxyInterface);
 			}
