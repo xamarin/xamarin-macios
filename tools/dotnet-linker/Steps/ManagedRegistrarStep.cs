@@ -488,6 +488,44 @@ namespace Xamarin.Linker {
 			eh.HandlerEnd = (Instruction) leaveEHInstruction.Operand;
 		}
 
+		// We generate a proxy interface for each generic NSObject subclass. In the static UnmanagedCallersOnly methods we don't
+		// know the generic parameters of the type we're working with and we need to use this trick to be able to call methods on the
+		// generic type without using reflection. This is an example of the code we generate in addition to user code:
+		//
+		//
+		// internal interface __IRegistrarGenericTypeProxy__CustomNSObject_1__
+		// {
+		//     void __IRegistrarGenericTypeProxy__CustomNSObject_1____SomeMethod(NSObject someInput);
+		// }
+		//
+		// public class CustomNSObject<T> : NSObject, __IRegistrarGenericTypeProxy__CustomNSObject_1__
+		//     where T : NSObject
+		// {
+		//     [Export("someMethod:")]
+		//     public void SomeMethod(T someInput)
+		//     {
+		//         // ...
+		//     }
+		//
+		//     // generated implementation of the proxy interface:
+		//     public void __IRegistrarGenericTypeProxy__CustomNSObject_1____SomeMethod(NSObject someInput)
+		//     {
+		//         SomeMethod((T)someInput);
+		//     }
+		//
+		//     // generated registrar callbacks:
+		//     private static class __Registrar_Callbacks__
+		//     {
+		//         [UnmanagedCallersOnly(EntryPoint = "_callback_1_CustomNSObject_1_SomeMethod")]
+		//         public unsafe static void callback_1_CustomNSObject_1_SomeMethod(IntPtr pobj, IntPtr sel, IntPtr p0)
+		//         {
+		//             var proxy = (__IRegistrarGenericTypeProxy__CustomNSObject_1__)Runtime.GetNSObject(pobj);
+		//             var obj0 = Runtime.GetNSObject(p0);
+		//             proxy.__IRegistrarGenericTypeProxy__CustomNSObject_1____SomeMethod(obj0);
+		//         }
+		//     }
+		// }
+		//
 		MethodDefinition CreateGenericsProxyMethod (MethodDefinition method, MethodDefinition callback, List<TypeDefinition> proxyInterfaces)
 		{
 			var proxyInterfaceName = $"__IRegistrarGenericTypeProxy__{Sanitize (method.DeclaringType.FullName)}__";
