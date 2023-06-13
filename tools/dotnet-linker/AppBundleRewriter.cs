@@ -552,6 +552,18 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public MethodReference RegistrarHelper_NSObject_array_to_T_array {
+			get {
+				return GetMethodReference (PlatformAssembly, ObjCRuntime_RegistrarHelper, "NSObject_array_to_T_array", (v) =>
+						v.IsStatic
+						&& v.HasParameters
+						&& v.Parameters.Count == 1
+						&& v.Parameters [0].ParameterType is ArrayType at && at.ElementType.Is ("Foundation", "NSObject")
+						&& v.HasGenericParameters
+						&& v.GenericParameters.Count == 1);
+			}
+		}
+
 		public MethodReference RegistrarHelper_NSArray_string_managed_to_native {
 			get {
 				return GetMethodReference (PlatformAssembly, ObjCRuntime_RegistrarHelper, "NSArray_string_managed_to_native", (v) =>

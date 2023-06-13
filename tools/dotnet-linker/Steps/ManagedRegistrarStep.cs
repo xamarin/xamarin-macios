@@ -418,8 +418,6 @@ namespace Xamarin.Linker {
 			callback.AddParameter ("exception_gchandle", new PointerType (abr.System_IntPtr));
 
 			if (genericsProxyMethod is not null) {
-				// TODO should we check that the NSObjects implements the proxy interface? or should we just cast
-				// it and let the runtime crash if it doesn't?
 				il.Emit (OpCodes.Callvirt, genericsProxyMethod);
 			} else if (method.IsStatic) {
 				il.Emit (OpCodes.Call, method);
@@ -500,25 +498,84 @@ namespace Xamarin.Linker {
 				proxyInterfaces.Add (proxyInterface);
 			}
 
-			var returnType = ReplaceOpenTypeIfNeeded (method.ReturnType, abr.Foundation_NSObject);
+			var returnType = ReplaceGenericParametersIfNeeded (method.ReturnType);
 
 			var genericsProxyMethod = proxyInterface.AddMethod ($"{proxyInterfaceName}_{method.Name}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.NewSlot | MethodAttributes.Abstract | MethodAttributes.Virtual, returnType);
 			var proxyImplementationMethod = method.DeclaringType.AddMethod (genericsProxyMethod.Name, MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Virtual | MethodAttributes.NewSlot | MethodAttributes.Final, returnType);
 
 			foreach (var parameter in method.Parameters) {
-				var parameterType = ReplaceOpenTypeIfNeeded (parameter.ParameterType, abr.Foundation_NSObject);
-				genericsProxyMethod.AddParameter (parameter.Name, parameterType);
-				proxyImplementationMethod.AddParameter (parameter.Name, parameterType);
+				var parameterType = ReplaceGenericParametersIfNeeded (parameter.ParameterType);
+				var parameterDefinition = new ParameterDefinition (parameter.Name, parameter.Attributes, parameterType);
+				genericsProxyMethod.Parameters.Add (parameterDefinition);
+				proxyImplementationMethod.Parameters.Add (parameterDefinition);
 			}
+
+			var postProcessing = new List <Instruction> ();
 
 			var proxyImplementationBody = proxyImplementationMethod.CreateBody (out var proxyIl);
 			proxyIl.Emit (OpCodes.Ldarg_0);
 
-			for (int i = 0; i < method.Parameters.Count; i++)
-				proxyIl.EmitLoadArgument (i + 1);
+			for (int i = 0; i < method.Parameters.Count; i++) {
+				var parameterIndex = i + 1;
+				var parameter = method.Parameters [i];
+				var parameterType = parameter.ParameterType;
+
+				// TODO can I just use EmitConversion here instead? Using it just like 👇 doesn't work
+				// proxyIl.EmitLoadArgument (parameterIndex);
+				// EmitConversion (method, proxyIl, parameterType, true, i, out _, postProcessing, parameter.IsOut, i);
+				
+				if (parameterType is ByReferenceType brt && !brt.ElementType.IsValueType) {
+					var local = proxyIl.Body.AddVariable (brt.ElementType);
+					if (!parameter.IsOut) {
+						// ref parameter - set the value of the local variable using the value of the argument
+						proxyIl.EmitLoadArgument (parameterIndex);
+						proxyIl.Emit (OpCodes.Ldind_Ref);
+						if (IsOpenType (parameterType)) {
+							proxyIl.Emit (OpCodes.Unbox_Any, brt.ElementType);
+						}
+						proxyIl.Emit (OpCodes.Stloc, local);
+					} else {
+						// out parameter - we don't want to use whatever was passed to the function
+					}
+
+					proxyIl.Emit (OpCodes.Ldloca_S, local);
+
+					// post processing - set the value of the argument to the value of the local variable
+					postProcessing.Add (proxyIl.Create (OpCodes.Ldarg, parameterIndex));
+					postProcessing.Add (proxyIl.Create (OpCodes.Ldloc, local));
+					if (IsOpenType (parameterType)) {
+						postProcessing.Add (proxyIl.Create (OpCodes.Box, brt.ElementType));
+					}
+					postProcessing.Add (proxyIl.Create (OpCodes.Stind_Ref));
+				} else if (parameterType is ArrayType arrayType) {
+					proxyIl.EmitLoadArgument (parameterIndex);
+					
+					// if the array element type is generic we need to cast from NSObject[] to T[] to verify that the input
+					// can actually be handled by the target method
+					if (arrayType.ElementType is GenericParameter gp && StaticRegistrar.VerifyIsConstrainedToNSObject (gp, out _)) {
+						proxyIl.Emit (OpCodes.Call, abr.RegistrarHelper_NSObject_array_to_T_array.CreateGenericInstanceMethod (arrayType.ElementType));
+					}
+
+					// TODO what do we do with NSObject[][] ??
+				} else {
+					proxyIl.EmitLoadArgument (parameterIndex);
+
+					// if the target method parameter is generic, we need to cast it from NSObject to T to verify that the
+					// input can actually be handled by the target method
+					if (parameterType is GenericParameter gp && StaticRegistrar.VerifyIsConstrainedToNSObject (gp, out _)) {
+						proxyIl.Emit (OpCodes.Castclass, parameterType);
+					}
+
+					// TODO what if it's a type with generic arguments?
+				}
+
+				// TODO what about pointer types?
+			}
 
 			var targetMethod = method.DeclaringType.CreateMethodReferenceOnGenericType (method, method.DeclaringType.GenericParameters.ToArray ());
 			proxyIl.Emit (OpCodes.Call, targetMethod);
+
+			proxyIl.Body.Instructions.AddRange (postProcessing);
 			proxyIl.Emit (OpCodes.Ret);
 
 			return genericsProxyMethod;
@@ -948,18 +1005,30 @@ namespace Xamarin.Linker {
 			return IsOpenType (tr.Resolve ());
 		}
 
-		TypeReference ReplaceOpenTypeIfNeeded (TypeReference type, TypeReference replacementType)
+		TypeReference ReplaceGenericParametersIfNeeded (TypeReference type)
 		{
 			if (IsOpenType (type)) {
-				if (type is ArrayType arrayType) {
-					var elementType = ReplaceOpenTypeIfNeeded (arrayType.ElementType, replacementType);
-					return new ArrayType (elementType, arrayType.Rank);
-				}
-
-				return replacementType;
+				return type switch {
+					GenericParameter gp when StaticRegistrar.VerifyIsConstrainedToNSObject (gp, out var constrained) => constrained,
+					ArrayType arrayType => new ArrayType (ReplaceGenericParametersIfNeeded (arrayType.ElementType), arrayType.Rank),
+					ByReferenceType byReferenceType => new ByReferenceType (ReplaceGenericParametersIfNeeded (byReferenceType.ElementType)),
+					GenericInstanceType genericInstanceType => ReplaceGenericParametersInGenericInstanceTypeIfNeeded (genericInstanceType),
+					PointerType pointerType => new PointerType(pointerType.ElementType),
+					_ => throw new NotImplementedException (),
+				};
 			}
 
 			return type;
+			
+			TypeReference ReplaceGenericParametersInGenericInstanceTypeIfNeeded (GenericInstanceType genericInstanceType)
+			{
+				var git = new GenericInstanceType(genericInstanceType.ElementType);
+				foreach (var genericArgument in genericInstanceType.GenericArguments) {
+					git.GenericArguments.Add (ReplaceGenericParametersIfNeeded (genericArgument));
+				}
+				
+				return git;
+			}
 		}
 
 		void EnsureVisible (MethodDefinition caller, FieldDefinition field)

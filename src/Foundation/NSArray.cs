@@ -33,6 +33,7 @@ using CoreFoundation;
 using ObjCRuntime;
 
 #if !NET
+using Foundation;
 using NativeHandle = System.IntPtr;
 #endif
 
@@ -246,24 +247,40 @@ namespace Foundation {
 
 		internal static nuint GetCount (IntPtr handle)
 		{
+			try {
 #if MONOMAC
-			return (nuint) Messaging.UIntPtr_objc_msgSend (handle, selCountHandle);
+				return (nuint) Messaging.UIntPtr_objc_msgSend (handle, selCountHandle);
 #else
-			return (nuint) Messaging.UIntPtr_objc_msgSend (handle, Selector.GetHandle ("count"));
+				return (nuint) Messaging.UIntPtr_objc_msgSend (handle, Selector.GetHandle ("count"));
 #endif
+#if MONOMAC || NET
+			} catch (ObjCException exception) {
+#else
+			} catch (MonoTouchException exception) {
+#endif
+				throw new ArgumentException (nameof (handle), exception);
+			}
 		}
 
 		internal static NativeHandle GetAtIndex (NativeHandle handle, nuint i)
 		{
+			try {
 #if NET
-			return Messaging.NativeHandle_objc_msgSend_UIntPtr (handle, Selector.GetHandle ("objectAtIndex:"), (UIntPtr) i);
+				return Messaging.NativeHandle_objc_msgSend_UIntPtr (handle, Selector.GetHandle ("objectAtIndex:"), (UIntPtr) i);
 #else
 #if MONOMAC
-			return Messaging.IntPtr_objc_msgSend_UIntPtr (handle, selObjectAtIndex_Handle, (UIntPtr) i);
+				return Messaging.IntPtr_objc_msgSend_UIntPtr (handle, selObjectAtIndex_Handle, (UIntPtr) i);
 #else
-			return Messaging.IntPtr_objc_msgSend_UIntPtr (handle, Selector.GetHandle ("objectAtIndex:"), (UIntPtr) i);
+				return Messaging.IntPtr_objc_msgSend_UIntPtr (handle, Selector.GetHandle ("objectAtIndex:"), (UIntPtr) i);
 #endif
 #endif
+#if MONOMAC || NET
+			} catch (ObjCException exception) {
+#else
+			} catch (MonoTouchException exception) {
+#endif
+				throw new ArgumentException (nameof (handle), exception);
+			}
 		}
 
 		[Obsolete ("Use of 'CFArray.StringArrayFromHandle' offers better performance.")]
