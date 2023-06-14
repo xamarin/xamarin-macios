@@ -341,7 +341,7 @@ namespace Xamarin.Linker {
 				//         }
 				//     }
 				// }
-				//
+				
 				var proxyInterfaceName = $"__IRegistrarGenericTypeProxy__{Sanitize (method.DeclaringType.FullName)}__";
 				TypeDefinition? proxyInterface = proxyInterfaces.SingleOrDefault (v => v.Name == proxyInterfaceName && v.Namespace == "ObjCRuntime");
 				if (proxyInterface is null) {
@@ -355,7 +355,6 @@ namespace Xamarin.Linker {
 				var implementationMethod = method.DeclaringType.AddMethod (methodName, MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Virtual | MethodAttributes.NewSlot | MethodAttributes.Final, placeholderType);
 
 				// the callback will only call the proxy method and the proxy method will perform all the conversions
-				EmitCallToProxyMethod (method, callback, interfaceMethod);
 				EmitCallToExportedMethod (method, implementationMethod);
 
 				// now copy the return type and params (incl. sel and exception_gchandle) to the UCO itself
@@ -367,6 +366,9 @@ namespace Xamarin.Linker {
 					callback.Parameters.Add (parameter);
 					interfaceMethod.Parameters.Add (parameter);
 				}
+				
+				// we need to wait until we know all the parameters of the interface method before we generate this method
+				EmitCallToProxyMethod (method, callback, interfaceMethod);
 			} else {
 				EmitCallToExportedMethod (method, callback);
 			}
@@ -382,9 +384,8 @@ namespace Xamarin.Linker {
 			il.Emit (OpCodes.Call, abr.Runtime_GetNSObject__System_IntPtr);
 			il.Emit (OpCodes.Castclass, proxyInterfaceMethod.DeclaringType);
 
-			// extra two parameters: sel and exception_gchandle
-			var managedParameters = method.HasParameters ? method.Parameters.Count : 0;
-			for (int i = 1; i <= managedParameters + 2; i++) {
+			var parameterCount = proxyInterfaceMethod.Parameters?.Count ?? 0;
+			for (int i = 0; i < parameterCount; i++) {
 				il.EmitLoadArgument (i);
 			}
 
