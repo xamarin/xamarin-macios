@@ -341,7 +341,7 @@ namespace Xamarin.Linker {
 				//         }
 				//     }
 				// }
-				
+
 				var proxyInterfaceName = $"__IRegistrarGenericTypeProxy__{Sanitize (method.DeclaringType.FullName)}__";
 				TypeDefinition? proxyInterface = proxyInterfaces.SingleOrDefault (v => v.Name == proxyInterfaceName && v.Namespace == "ObjCRuntime");
 				if (proxyInterface is null) {
@@ -366,7 +366,7 @@ namespace Xamarin.Linker {
 					callback.Parameters.Add (parameter);
 					interfaceMethod.Parameters.Add (parameter);
 				}
-				
+
 				// we need to wait until we know all the parameters of the interface method before we generate this method
 				EmitCallToProxyMethod (method, callback, interfaceMethod);
 			} else {
