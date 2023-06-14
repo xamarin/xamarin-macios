@@ -278,11 +278,6 @@ namespace Xamarin.Linker {
 		{
 			var baseMethod = StaticRegistrar.GetBaseMethodInTypeHierarchy (method);
 			var placeholderType = abr.System_IntPtr;
-			ParameterDefinition? callSuperParameter = null;
-			VariableDefinition? returnVariable = null;
-			var leaveTryInstructions = new List<Instruction> ();
-			var isVoid = method.ReturnType.Is ("System", "Void");
-
 			var name = $"callback_{counter++}_{Sanitize (method.DeclaringType.FullName)}_{Sanitize (method.Name)}";
 
 			var callbackType = method.DeclaringType.NestedTypes.SingleOrDefault (v => v.Name == "__Registrar_Callbacks__");
@@ -299,6 +294,113 @@ namespace Xamarin.Linker {
 			// If the target method is marked, then we must mark the trampoline as well.
 			method.CustomAttributes.Add (CreateDynamicDependencyAttribute (callbackType, callback.Name));
 
+			callback.AddParameter ("pobj", abr.System_IntPtr);
+
+			var isGeneric = method.DeclaringType.HasGenericParameters;
+			if (isGeneric && method.IsStatic) {
+				throw ErrorHelper.CreateError (4130 /* The registrar cannot export static methods in generic classes ('{0}'). */, method.FullName);
+			} else if (isGeneric && !method.IsConstructor) {
+				// We generate a proxy interface for each generic NSObject subclass. In the static UnmanagedCallersOnly methods we don't
+				// know the generic parameters of the type we're working with and we need to use this trick to be able to call methods on the
+				// generic type without using reflection. This is an example of the code we generate in addition to user code:
+				//
+				//
+				// internal interface __IRegistrarGenericTypeProxy__CustomNSObject_1__
+				// {
+				//     void __IRegistrarGenericTypeProxy__CustomNSObject_1____SomeMethod (IntPtr p0);
+				// }
+				//
+				// public class CustomNSObject<T> : NSObject, __IRegistrarGenericTypeProxy__CustomNSObject_1__
+				//     where T : NSObject
+				// {
+				//     [Export ("someMethod:")]
+				//     public void SomeMethod (T someInput)
+				//     {
+				//         // ...
+				//     }
+				//
+				//     // generated implementation of the proxy interface:
+				//     public void __IRegistrarGenericTypeProxy__CustomNSObject_1____SomeMethod (IntPtr sel, IntPtr p0, IntPtr* exception_gchandle)
+				//     {
+				//         try {
+				//             var obj0 = Runtime.GetNSObject<T> (p0);
+				//             SomeMethod (obj0);
+				//         } catch (Exception ex) {
+				//             *exception_gchandle = Runtime.AllocGCHandle (ex);
+				//         }
+				//     }
+				//
+				//     // generated registrar callbacks:
+				//     private static class __Registrar_Callbacks__
+				//     {
+				//         [UnmanagedCallersOnly (EntryPoint = "_callback_1_CustomNSObject_1_SomeMethod")]
+				//         public unsafe static void callback_1_CustomNSObject_1_SomeMethod (IntPtr pobj, IntPtr sel, IntPtr p0, IntPtr* exception_gchandle)
+				//         {
+				//             var proxy = (__IRegistrarGenericTypeProxy__CustomNSObject_1__)Runtime.GetNSObject (pobj);
+				//             proxy.__IRegistrarGenericTypeProxy__CustomNSObject_1____SomeMethod (sel, p0, exception_gchandle);
+				//         }
+				//     }
+				// }
+				//
+				var proxyInterfaceName = $"__IRegistrarGenericTypeProxy__{Sanitize (method.DeclaringType.FullName)}__";
+				TypeDefinition? proxyInterface = proxyInterfaces.SingleOrDefault (v => v.Name == proxyInterfaceName && v.Namespace == "ObjCRuntime");
+				if (proxyInterface is null) {
+					proxyInterface = new TypeDefinition ("ObjCRuntime", proxyInterfaceName, TypeAttributes.NotPublic | TypeAttributes.Interface | TypeAttributes.Abstract);
+					method.DeclaringType.Interfaces.Add (new InterfaceImplementation (proxyInterface));
+					proxyInterfaces.Add (proxyInterface);
+				}
+
+				var methodName = $"{proxyInterfaceName}_{method.Name}";
+				var interfaceMethod = proxyInterface.AddMethod (methodName, MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.NewSlot | MethodAttributes.Abstract | MethodAttributes.Virtual, placeholderType);
+				var implementationMethod = method.DeclaringType.AddMethod (methodName, MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Virtual | MethodAttributes.NewSlot | MethodAttributes.Final, placeholderType);
+
+				// the callback will only call the proxy method and the proxy method will perform all the conversions
+				EmitCallToProxyMethod (method, callback, interfaceMethod);
+				EmitCallToExportedMethod (method, implementationMethod);
+
+				// now copy the return type and params (incl. sel and exception_gchandle) to the UCO itself
+				// and also to the proxy interface 
+				callback.ReturnType = implementationMethod.ReturnType;
+				interfaceMethod.ReturnType = implementationMethod.ReturnType;
+
+				foreach (var parameter in implementationMethod.Parameters) {
+					callback.Parameters.Add (parameter);
+					interfaceMethod.Parameters.Add (parameter);
+				}
+			} else {
+				EmitCallToExportedMethod (method, callback);
+			}
+		}
+
+		public void EmitCallToProxyMethod (MethodDefinition method, MethodDefinition callback, MethodDefinition proxyInterfaceMethod)
+		{
+			_ = callback.CreateBody (out var il);
+
+			// We don't know the generic parameters of the type we're working with but we know it is a NSObject and it
+			// implements the proxy interface. The generic parameters will be resolved in the proxy method through the v-table.
+			il.Emit (OpCodes.Ldarg_0);
+			il.Emit (OpCodes.Call, abr.Runtime_GetNSObject__System_IntPtr);
+			il.Emit (OpCodes.Castclass, proxyInterfaceMethod.DeclaringType);
+
+			// extra two parameters: sel and exception_gchandle
+			var managedParameters = method.HasParameters ? method.Parameters.Count : 0;
+			for (int i = 1; i <= managedParameters + 2; i++) {
+				il.EmitLoadArgument (i);
+			}
+
+			il.Emit (OpCodes.Callvirt, proxyInterfaceMethod);
+			il.Emit (OpCodes.Ret);
+		}
+
+		public void EmitCallToExportedMethod (MethodDefinition method, MethodDefinition callback)
+		{
+			var baseMethod = StaticRegistrar.GetBaseMethodInTypeHierarchy (method);
+			var placeholderType = abr.System_IntPtr;
+			ParameterDefinition? callSuperParameter = null;
+			VariableDefinition? returnVariable = null;
+			var leaveTryInstructions = new List<Instruction> ();
+			var isVoid = method.ReturnType.Is ("System", "Void");
+
 			var body = callback.CreateBody (out var il);
 			var placeholderInstruction = il.Create (OpCodes.Nop);
 			var placeholderNextInstruction = il.Create (OpCodes.Nop);
@@ -310,20 +412,8 @@ namespace Xamarin.Linker {
 
 			Trace (il, $"ENTER");
 
-			callback.AddParameter ("pobj", abr.System_IntPtr);
-
 			if (!isVoid || method.IsConstructor)
 				returnVariable = body.AddVariable (placeholderType);
-
-			MethodDefinition? genericsProxyMethod = null;
-			if (isGeneric) {
-				if (method.IsStatic)
-					throw ErrorHelper.CreateError (4130 /* The registrar cannot export static methods in generic classes ('{0}'). */, method.FullName);
-
-				if (!method.IsConstructor) {
-					genericsProxyMethod = CreateGenericsProxyMethod (method, callback, proxyInterfaces);
-				}
-			}
 
 			// Our code emission is intermingled with creating the method signature (the code to convert between native and managed values is also the best location
 			// to determine exactly which are the corresponding native and managed types in the method signatures). Unfortunately we might need to skip code emission
@@ -373,10 +463,9 @@ namespace Xamarin.Linker {
 					il.Emit (OpCodes.Call, git);
 					il.Emit (OpCodes.Dup); // this is for the call to ObjCRuntime.NativeObjectExtensions::GetHandle after the call to the constructor
 				}
-			} else if (genericsProxyMethod is not null) {
-				// generic instance method
+			} else if (isGeneric) {
+				// this is a proxy method and we can simply use `this` without any conversion
 				il.Emit (OpCodes.Ldarg_0);
-				il.Emit (OpCodes.Call, abr.Runtime_GetNSObject__System_IntPtr);
 			} else {
 				// instance method
 				il.Emit (OpCodes.Ldarg_0);
@@ -417,8 +506,9 @@ namespace Xamarin.Linker {
 
 			callback.AddParameter ("exception_gchandle", new PointerType (abr.System_IntPtr));
 
-			if (genericsProxyMethod is not null) {
-				il.Emit (OpCodes.Callvirt, genericsProxyMethod);
+			if (isGeneric && !method.IsConstructor) {
+				var targetMethod = method.DeclaringType.CreateMethodReferenceOnGenericType (method, method.DeclaringType.GenericParameters.ToArray ());
+				il.Emit (OpCodes.Call, targetMethod);
 			} else if (method.IsStatic) {
 				il.Emit (OpCodes.Call, method);
 			} else {
@@ -450,7 +540,7 @@ namespace Xamarin.Linker {
 					body.Instructions.RemoveAt (i);
 			}
 
-			AddExceptionHandler (il, returnVariable, placeholderNextInstruction, out var eh, out var leaveEHInstruction);
+			AddExceptionHandler (il, returnVariable, placeholderNextInstruction, isGeneric && !method.IsConstructor, out var eh, out var leaveEHInstruction);
 
 			// Generate code to return null/default value/void
 			if (returnVariable is not null) {
@@ -488,138 +578,7 @@ namespace Xamarin.Linker {
 			eh.HandlerEnd = (Instruction) leaveEHInstruction.Operand;
 		}
 
-		// We generate a proxy interface for each generic NSObject subclass. In the static UnmanagedCallersOnly methods we don't
-		// know the generic parameters of the type we're working with and we need to use this trick to be able to call methods on the
-		// generic type without using reflection. This is an example of the code we generate in addition to user code:
-		//
-		//
-		// internal interface __IRegistrarGenericTypeProxy__CustomNSObject_1__
-		// {
-		//     void __IRegistrarGenericTypeProxy__CustomNSObject_1____SomeMethod(NSObject someInput);
-		// }
-		//
-		// public class CustomNSObject<T> : NSObject, __IRegistrarGenericTypeProxy__CustomNSObject_1__
-		//     where T : NSObject
-		// {
-		//     [Export("someMethod:")]
-		//     public void SomeMethod(T someInput)
-		//     {
-		//         // ...
-		//     }
-		//
-		//     // generated implementation of the proxy interface:
-		//     public void __IRegistrarGenericTypeProxy__CustomNSObject_1____SomeMethod(NSObject someInput)
-		//     {
-		//         SomeMethod((T)someInput);
-		//     }
-		//
-		//     // generated registrar callbacks:
-		//     private static class __Registrar_Callbacks__
-		//     {
-		//         [UnmanagedCallersOnly(EntryPoint = "_callback_1_CustomNSObject_1_SomeMethod")]
-		//         public unsafe static void callback_1_CustomNSObject_1_SomeMethod(IntPtr pobj, IntPtr sel, IntPtr p0)
-		//         {
-		//             var proxy = (__IRegistrarGenericTypeProxy__CustomNSObject_1__)Runtime.GetNSObject(pobj);
-		//             var obj0 = Runtime.GetNSObject(p0);
-		//             proxy.__IRegistrarGenericTypeProxy__CustomNSObject_1____SomeMethod(obj0);
-		//         }
-		//     }
-		// }
-		//
-		MethodDefinition CreateGenericsProxyMethod (MethodDefinition method, MethodDefinition callback, List<TypeDefinition> proxyInterfaces)
-		{
-			var proxyInterfaceName = $"__IRegistrarGenericTypeProxy__{Sanitize (method.DeclaringType.FullName)}__";
-			TypeDefinition? proxyInterface = proxyInterfaces.SingleOrDefault (v => v.Name == proxyInterfaceName && v.Namespace == "ObjCRuntime");
-			if (proxyInterface is null) {
-				proxyInterface = new TypeDefinition ("ObjCRuntime", proxyInterfaceName, TypeAttributes.NotPublic | TypeAttributes.Interface | TypeAttributes.Abstract);
-				method.DeclaringType.Interfaces.Add (new InterfaceImplementation (proxyInterface));
-				proxyInterfaces.Add (proxyInterface);
-			}
-
-			var returnType = ReplaceGenericParametersIfNeeded (method.ReturnType);
-
-			var genericsProxyMethod = proxyInterface.AddMethod ($"{proxyInterfaceName}_{method.Name}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.NewSlot | MethodAttributes.Abstract | MethodAttributes.Virtual, returnType);
-			var proxyImplementationMethod = method.DeclaringType.AddMethod (genericsProxyMethod.Name, MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Virtual | MethodAttributes.NewSlot | MethodAttributes.Final, returnType);
-
-			foreach (var parameter in method.Parameters) {
-				var parameterType = ReplaceGenericParametersIfNeeded (parameter.ParameterType);
-				var parameterDefinition = new ParameterDefinition (parameter.Name, parameter.Attributes, parameterType);
-				genericsProxyMethod.Parameters.Add (parameterDefinition);
-				proxyImplementationMethod.Parameters.Add (parameterDefinition);
-			}
-
-			var postProcessing = new List<Instruction> ();
-
-			var proxyImplementationBody = proxyImplementationMethod.CreateBody (out var proxyIl);
-			proxyIl.Emit (OpCodes.Ldarg_0);
-
-			for (int i = 0; i < method.Parameters.Count; i++) {
-				var parameterIndex = i + 1;
-				var parameter = method.Parameters [i];
-				var parameterType = parameter.ParameterType;
-
-				// TODO can I just use EmitConversion here instead? Using it just like 👇 doesn't work
-				// proxyIl.EmitLoadArgument (parameterIndex);
-				// EmitConversion (method, proxyIl, parameterType, true, i, out _, postProcessing, parameter.IsOut, i);
-
-				if (parameterType is ByReferenceType brt && !brt.ElementType.IsValueType) {
-					var local = proxyIl.Body.AddVariable (brt.ElementType);
-					if (!parameter.IsOut) {
-						// ref parameter - set the value of the local variable using the value of the argument
-						proxyIl.EmitLoadArgument (parameterIndex);
-						proxyIl.Emit (OpCodes.Ldind_Ref);
-						if (IsOpenType (parameterType)) {
-							proxyIl.Emit (OpCodes.Unbox_Any, brt.ElementType);
-						}
-						proxyIl.Emit (OpCodes.Stloc, local);
-					} else {
-						// out parameter - we don't want to use whatever was passed to the function
-					}
-
-					proxyIl.Emit (OpCodes.Ldloca_S, local);
-
-					// post processing - set the value of the argument to the value of the local variable
-					postProcessing.Add (proxyIl.Create (OpCodes.Ldarg, parameterIndex));
-					postProcessing.Add (proxyIl.Create (OpCodes.Ldloc, local));
-					if (IsOpenType (parameterType)) {
-						postProcessing.Add (proxyIl.Create (OpCodes.Box, brt.ElementType));
-					}
-					postProcessing.Add (proxyIl.Create (OpCodes.Stind_Ref));
-				} else if (parameterType is ArrayType arrayType) {
-					proxyIl.EmitLoadArgument (parameterIndex);
-
-					// if the array element type is generic we need to cast from NSObject[] to T[] to verify that the input
-					// can actually be handled by the target method
-					if (arrayType.ElementType is GenericParameter gp && StaticRegistrar.VerifyIsConstrainedToNSObject (gp, out _)) {
-						proxyIl.Emit (OpCodes.Call, abr.RegistrarHelper_NSObject_array_to_T_array.CreateGenericInstanceMethod (arrayType.ElementType));
-					}
-
-					// TODO what do we do with NSObject[][] ??
-				} else {
-					proxyIl.EmitLoadArgument (parameterIndex);
-
-					// if the target method parameter is generic, we need to cast it from NSObject to T to verify that the
-					// input can actually be handled by the target method
-					if (parameterType is GenericParameter gp && StaticRegistrar.VerifyIsConstrainedToNSObject (gp, out _)) {
-						proxyIl.Emit (OpCodes.Castclass, parameterType);
-					}
-
-					// TODO what if it's a type with generic arguments?
-				}
-
-				// TODO what about pointer types?
-			}
-
-			var targetMethod = method.DeclaringType.CreateMethodReferenceOnGenericType (method, method.DeclaringType.GenericParameters.ToArray ());
-			proxyIl.Emit (OpCodes.Call, targetMethod);
-
-			proxyIl.Body.Instructions.AddRange (postProcessing);
-			proxyIl.Emit (OpCodes.Ret);
-
-			return genericsProxyMethod;
-		}
-
-		void AddExceptionHandler (ILProcessor il, VariableDefinition? returnVariable, Instruction placeholderNextInstruction, out ExceptionHandler eh, out Instruction leaveEHInstruction)
+		void AddExceptionHandler (ILProcessor il, VariableDefinition? returnVariable, Instruction placeholderNextInstruction, bool isGeneric, out ExceptionHandler eh, out Instruction leaveEHInstruction)
 		{
 			var body = il.Body;
 			var method = body.Method;
@@ -634,7 +593,7 @@ namespace Xamarin.Linker {
 			il.Emit (OpCodes.Stloc, exceptionVariable);
 			eh.HandlerStart = il.Body.Instructions.Last ();
 			eh.TryEnd = eh.HandlerStart;
-			il.Emit (OpCodes.Ldarg, method.Parameters.Count - 1);
+			il.Emit (OpCodes.Ldarg, isGeneric ? method.Parameters.Count : method.Parameters.Count - 1);
 			il.Emit (OpCodes.Ldloc, exceptionVariable);
 			il.Emit (OpCodes.Call, abr.Runtime_AllocGCHandle);
 			il.Emit (OpCodes.Stind_I);
@@ -803,9 +762,10 @@ namespace Xamarin.Linker {
 						EnsureVisible (method, managed_to_native);
 						EnsureVisible (method, native_to_managed);
 
-						var indirectVariable = il.Body.AddVariable (elementType);
+						// brt.ElementType might be a generic type, so it should be use here it instead of elementType
+						var indirectVariable = il.Body.AddVariable (brt.ElementType);
 						// We store a copy of the value in a separate variable, to detect if it changes.
-						var copyIndirectVariable = il.Body.AddVariable (elementType);
+						var copyIndirectVariable = il.Body.AddVariable (brt.ElementType);
 
 						// We don't read the input for 'out' parameters, it might be garbage.
 						if (!isOutParameter) {
@@ -814,10 +774,18 @@ namespace Xamarin.Linker {
 							if (addBeforeNativeToManagedCall is not null)
 								il.Append (addBeforeNativeToManagedCall);
 							il.Emit (OpCodes.Call, native_to_managed);
-							il.Emit (OpCodes.Ldloca, indirectVariable);
-						} else {
-							il.Emit (OpCodes.Ldloca, indirectVariable);
 						}
+
+						if (IsOpenType (brt.ElementType)) {
+							// for generic types try to verify that the variable is of the correct type
+							// by casting it
+							il.Emit (OpCodes.Ldloc, indirectVariable);
+							il.Emit (OpCodes.Unbox_Any, brt.ElementType);
+							il.Emit (OpCodes.Stloc, indirectVariable);
+						}
+
+						il.Emit (OpCodes.Ldloca, indirectVariable);
+
 						postProcessing.Add (il.CreateLoadArgument (nativeParameterIndex));
 						postProcessing.Add (il.Create (OpCodes.Ldloc, indirectVariable));
 						postProcessing.Add (il.Create (OpCodes.Ldloc, copyIndirectVariable));
@@ -844,7 +812,8 @@ namespace Xamarin.Linker {
 					return true;
 				}
 
-				if (elementType is GenericParameter gp) {
+				GenericParameter? gp = elementType as GenericParameter;
+				if (gp is not null) {
 					if (!StaticRegistrar.VerifyIsConstrainedToNSObject (gp, out var constrained)) {
 						AddException (ErrorHelper.CreateError (99, "Incorrectly constrained generic parameter. Method: {0}", GetMethodSignatureWithSourceCode (method)));
 						return false;
@@ -857,7 +826,12 @@ namespace Xamarin.Linker {
 				if (isNSObject || isNativeObject) {
 					if (toManaged) {
 						var gim = new GenericInstanceMethod (abr.NSArray_ArrayFromHandle_1);
-						gim.GenericArguments.Add (elementType);
+						if (gp is not null) {
+							var gemericParameter = method.DeclaringType.GenericParameters.Single (x => x.Name == gp.Name);
+							gim.GenericArguments.Add (gemericParameter);
+						} else {
+							gim.GenericArguments.Add (elementType);
+						}
 						il.Emit (OpCodes.Call, gim);
 					} else {
 						var retain = StaticRegistrar.HasReleaseAttribute (method);
@@ -879,6 +853,8 @@ namespace Xamarin.Linker {
 						il.Emit (OpCodes.Call, abr.Runtime_CopyAndAutorelease);
 					if (IsOpenType (type)) {
 						il.Emit (OpCodes.Call, abr.Runtime_GetNSObject__System_IntPtr);
+						// cast to the generic type to verify that the item is actually of the correct type
+						il.Emit (OpCodes.Unbox_Any, type);
 					} else {
 						il.Emit (OpCodes.Ldarg_1); // SEL
 						il.Emit (OpCodes.Ldtoken, method);
@@ -911,6 +887,8 @@ namespace Xamarin.Linker {
 				if (toManaged) {
 					if (IsOpenType (type)) {
 						il.Emit (OpCodes.Call, abr.Runtime_GetNSObject__System_IntPtr);
+						// cast to the generic type to verify that the item is actually of the correct type
+						il.Emit (OpCodes.Unbox_Any, type);
 					} else {
 						var nativeObjType = StaticRegistrar.GetInstantiableType (type.Resolve (), exceptions, GetMethodSignature (method));
 						il.Emit (OpCodes.Ldc_I4_0); // false
@@ -1041,32 +1019,6 @@ namespace Xamarin.Linker {
 				return td.HasGenericParameters;
 
 			return IsOpenType (tr.Resolve ());
-		}
-
-		TypeReference ReplaceGenericParametersIfNeeded (TypeReference type)
-		{
-			if (IsOpenType (type)) {
-				return type switch {
-					GenericParameter gp when StaticRegistrar.VerifyIsConstrainedToNSObject (gp, out var constrained) => constrained,
-					ArrayType arrayType => new ArrayType (ReplaceGenericParametersIfNeeded (arrayType.ElementType), arrayType.Rank),
-					ByReferenceType byReferenceType => new ByReferenceType (ReplaceGenericParametersIfNeeded (byReferenceType.ElementType)),
-					GenericInstanceType genericInstanceType => ReplaceGenericParametersInGenericInstanceTypeIfNeeded (genericInstanceType),
-					PointerType pointerType => new PointerType (pointerType.ElementType),
-					_ => throw new NotImplementedException (),
-				};
-			}
-
-			return type;
-
-			TypeReference ReplaceGenericParametersInGenericInstanceTypeIfNeeded (GenericInstanceType genericInstanceType)
-			{
-				var git = new GenericInstanceType (genericInstanceType.ElementType);
-				foreach (var genericArgument in genericInstanceType.GenericArguments) {
-					git.GenericArguments.Add (ReplaceGenericParametersIfNeeded (genericArgument));
-				}
-
-				return git;
-			}
 		}
 
 		void EnsureVisible (MethodDefinition caller, FieldDefinition field)
