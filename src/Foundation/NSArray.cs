@@ -33,7 +33,6 @@ using CoreFoundation;
 using ObjCRuntime;
 
 #if !NET
-using Foundation;
 using NativeHandle = System.IntPtr;
 #endif
 

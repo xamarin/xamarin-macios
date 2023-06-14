@@ -395,19 +395,6 @@ namespace ObjCRuntime {
 #endif
 			*ptr = rv;
 		}
-		
-		static T []? NSObject_array_to_T_array<T> (NSObject []? input) where T : NSObject
-		{
-			if (input is null)
-				return null;
-			
-			var output = new T [input.Length];
-			for (int i = 0; i < input.Length; i++) {
-				output [i] = (T) input [i];
-			}
-
-			return output;
-		}
 	}
 }
 
