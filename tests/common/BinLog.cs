@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
@@ -239,7 +240,11 @@ namespace Xamarin.Tests {
 			}
 		}
 
+#if NET
 		public static bool TryFindPropertyValue (string binlog, string property, [NotNullWhen (true)] out string? value)
+#else
+		public static bool TryFindPropertyValue (string binlog, string property, out string? value)
+#endif
 		{
 			value = null;
 
