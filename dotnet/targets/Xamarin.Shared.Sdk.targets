@@ -1898,7 +1898,11 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_CopyLocalBindingResources" AfterTargets="ResolveAssemblyReferences" BeforeTargets="CopyFilesToOutputDirectory">
+	<Target Name="_CopyLocalBindingResources"
+		AfterTargets="ResolveAssemblyReferences"
+		BeforeTargets="CopyFilesToOutputDirectory"
+		Condition="'$(_DisableCopyLocalBindingResources)' != 'true'"
+		>
 		<!--
 
 			We need to copy binding resource packages (either zipped or as a
