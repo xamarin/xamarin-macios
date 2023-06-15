@@ -504,6 +504,7 @@
 				@(_MonoLibrary -> 'MonoLibrary=%(Identity)')
 				MtouchFloat32=$(MtouchFloat32)
 				Optimize=$(_BundlerOptimize)
+				OptimizeClassHandles=$(OptimizeClassHandles)
 				PartialStaticRegistrarLibrary=$(_LibPartialStaticRegistrar)
 				Platform=$(_PlatformName)
 				PlatformAssembly=$(_PlatformAssemblyName).dll

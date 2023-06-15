@@ -794,7 +794,11 @@ namespace Xamarin.Bundler {
 			if (App.Registrar == RegistrarMode.Static) {
 				registrarPath = Path.Combine (App.Cache.Location, "registrar.m");
 				var registrarH = Path.Combine (App.Cache.Location, "registrar.h");
-				BuildTarget.StaticRegistrar.Generate (BuildTarget.Resolver.ResolverCache.Values, registrarH, registrarPath, out initialization_method, App.ClassMapPath);
+				BuildTarget.StaticRegistrar.Generate (BuildTarget.Resolver.ResolverCache.Values, registrarH, registrarPath, out initialization_method, out var typeMap);
+				if (App.OptimizeClassHandles) {
+					var rewriter = new Rewriter (BuildTarget.Resolver.ResolverCache.Values, typeMap);
+					rewriter.Process ();
+				}
 
 				var platform_assembly = BuildTarget.Resolver.ResolverCache.First ((v) => v.Value.Name.Name == BuildTarget.StaticRegistrar.PlatformAssembly).Value;
 				Frameworks.Gather (App, platform_assembly, BuildTarget.Frameworks, BuildTarget.WeakFrameworks);

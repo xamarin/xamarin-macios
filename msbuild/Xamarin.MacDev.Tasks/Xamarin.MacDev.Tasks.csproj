@@ -78,6 +78,9 @@
     <Compile Include="..\..\tools\common\ObjCNameIndex.cs">
       <Link>external\ObjCNameIndex.cs</Link>
     </Compile>
+    <Compile Include="..\..\tools\common\Rewriter.cs">
+      <Link>external\ObjCNameIndex.cs</Link>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

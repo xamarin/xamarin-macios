@@ -1838,6 +1838,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			NoDSymUtil="$(NoDSymUtil)"
 			PackageDebugSymbols="$(PackageDebugSymbols)"
 			Registrar="$(Registrar)"
+			OptimizeClassHandles="$(OptimizeClassHandles)"
 			Verbosity="$(_BundlerVerbosity)"
 			>
 			<Output TaskParameter="Aot" ItemName="_AotArguments" />

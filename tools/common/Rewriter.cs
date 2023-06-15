@@ -8,7 +8,7 @@ using ClassRedirector;
 
 #nullable enable
 
-namespace Xamarin.MacDev.Tasks {
+namespace ClassRedirector {
 	public class Rewriter {
 		const string runtimeName = "ObjCRuntime.Runtime";
 		const string classHandleName = "ObjCRuntime.Runtime/ClassHandles";
@@ -18,18 +18,23 @@ namespace Xamarin.MacDev.Tasks {
 		const string classPtrName = "class_ptr";
 		CSToObjCMap map;
 		string pathToXamarinAssembly;
-		string [] assembliesToPatch;
-		string outputDirectory;
-		SimpleAssemblyResolver resolver;
+		string? outputDirectory = null;
 		Dictionary<string, FieldDefinition> csTypeToFieldDef = new Dictionary<string, FieldDefinition> ();
+		IEnumerable<AssemblyDefinition> assemblies;
+		AssemblyDefinition xamarinAssembly;
 
-		public Rewriter (CSToObjCMap map, string pathToXamarinAssembly, string [] assembliesToPatch, string outputDirectory)
+		public Rewriter (CSToObjCMap map, IEnumerable<AssemblyDefinition> assembliesToPatch)
 		{
 			this.map = map;
-			this.pathToXamarinAssembly = pathToXamarinAssembly;
-			this.assembliesToPatch = assembliesToPatch;
-			this.outputDirectory = outputDirectory;
-			resolver = new SimpleAssemblyResolver (assembliesToPatch);
+			this.assemblies = assembliesToPatch;
+			var xasm = assembliesToPatch.Select (assem => assem.MainModule).FirstOrDefault (ContainsNativeHandle)?.Assembly;
+			if (xasm is null) {
+				throw new Exception ("Unable to find Xamarin assembly.");
+			} else {
+				xamarinAssembly = xasm;
+				pathToXamarinAssembly = xamarinAssembly.MainModule.FileName;
+			}
+			
 		}
 
 		public void Process ()
@@ -41,8 +46,7 @@ namespace Xamarin.MacDev.Tasks {
 		Dictionary<string, FieldDefinition> CreateClassHandles ()
 		{
 			var classMap = new Dictionary<string, FieldDefinition> ();
-			using var assemblyStm = new FileStream (pathToXamarinAssembly, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-			using var module = ModuleDefinition.ReadModule (assemblyStm);
+			var module = xamarinAssembly.MainModule;
 
 			var classHandles = LocateClassHandles (module);
 			if (classHandles is null)
@@ -58,7 +62,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (mtClassMapDef is null)
 				throw new Exception ($"Unable to find {mtClassMapName} in {pathToXamarinAssembly}");
 
-			var nativeHandle = module.Types.FirstOrDefault (t => t.FullName == nativeHandleName);
+			var nativeHandle = LocateNativeHandle (module);
 			if (nativeHandle is null)
 				throw new Exception ($"Unable to find {nativeHandleName} in {pathToXamarinAssembly}");
 
@@ -74,7 +78,7 @@ namespace Xamarin.MacDev.Tasks {
 				classMap [csName] = fieldDef;
 			}
 
-			module.Write (ToOutputFileName (pathToXamarinAssembly));
+			module.Write ();
 			return classMap;
 		}
 
@@ -124,6 +128,16 @@ namespace Xamarin.MacDev.Tasks {
 			return fieldDef;
 		}
 
+		bool ContainsNativeHandle (ModuleDefinition module)
+		{
+			return LocateNativeHandle (module) is not null;
+		}
+
+		TypeDefinition? LocateNativeHandle (ModuleDefinition module)
+		{
+			return AllTypes (module).FirstOrDefault (t => t.FullName == nativeHandleName);
+		}
+
 		TypeDefinition? LocateClassHandles (ModuleDefinition module)
 		{
 			return AllTypes (module).FirstOrDefault (t => t.FullName == classHandleName);
@@ -136,11 +150,10 @@ namespace Xamarin.MacDev.Tasks {
 
 		void PatchClassPtrUsage (Dictionary<string, FieldDefinition> classMap)
 		{
-			foreach (var path in assembliesToPatch) {
-				using var stm = new FileStream (path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-				using var module = ModuleDefinition.ReadModule (stm);
+			foreach (var assem in assemblies) {
+				var module = assem.MainModule;
 				PatchClassPtrUsage (classMap, module);
-				module.Write (ToOutputFileName (path));
+				module.Write ();
 			}
 		}
 
