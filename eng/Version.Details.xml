@@ -1,17 +1,17 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.100-preview.6.23315.7">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.100-preview.6.23315.8">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>7ce1faedc70a14bab527b149e2b9c6649f0cf010</Sha>
+      <Sha>a41c8ab00e0541e6306d8a342239f7a46d059567</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="8.0.0-preview.6.23314.14" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="8.0.0-preview.6.23315.1" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>0a0fa137097595ad8ec0e2aa9ecffb524cd5df95</Sha>
+      <Sha>3c2ebd5867f157bd48dcdc0344f9391ab6edad28</Sha>
     </Dependency>
     <!-- Set TRACKING_DOTNET_RUNTIME_SEPARATELY to something in Make.config if removing the CoherentParentDependency on Microsoft.Dotnet.Sdk.Internal -->
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.0-preview.6.23314.14" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.0-preview.6.23315.1" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>0a0fa137097595ad8ec0e2aa9ecffb524cd5df95</Sha>
+      <Sha>3c2ebd5867f157bd48dcdc0344f9391ab6edad28</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
     <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="8.0.0-preview.6.23313.26" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
