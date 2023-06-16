@@ -356,9 +356,8 @@ namespace MonoTests.System.Net.Http {
 						timeoutExceptionWasThrown = false;
 						timeoutExceptionShouldHaveBeenThrown = outputStream.ToArray ().Length < expectedHttpResponseContentLength;
 					}
-				}
-				catch (Exception e)
-					when (e is TimeoutException || e is HttpRequestException) {
+				} catch (Exception e)
+					  when (e is TimeoutException || e is HttpRequestException) {
 					timeoutExceptionWasThrown = true;
 				}
 			}, out var ex);
