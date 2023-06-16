@@ -271,6 +271,109 @@ namespace MonoTests.System.Net.Http {
 			}
 		}
 
+		[Test]
+		public void TestNSUrlSessionTimeoutExceptionWhileStreamingContent ()
+		{
+			if (!HttpListener.IsSupported) {
+				Assert.Inconclusive ("HttpListener is not supported");
+			}
+
+			// HTPP listener config
+			IPEndPoint localEndPoint = new IPEndPoint (IPAddress.Any, 8080);
+			var serverLaunchedSemaphore = new SemaphoreSlim (0, 1);
+			const int expectedHttpResponseContentLength = 10;
+
+			var serverCancellationTokenSource = new CancellationTokenSource ();
+			var serverCancellationToken = serverCancellationTokenSource.Token;
+
+
+			// NSUrlSession config
+			var config = NSUrlSessionConfiguration.DefaultSessionConfiguration;
+			config.TimeoutIntervalForResource = 3;
+
+			Task.Run (async () => {
+				HttpListener httpListener = new HttpListener ();
+
+				httpListener.Prefixes.Add ($"http://*:{localEndPoint.Port}/");
+
+				httpListener.Start ();
+
+				serverLaunchedSemaphore.Release ();
+
+				try {
+					while (true) {
+						var contextTask = httpListener.GetContextAsync ();
+						Task.WaitAny (
+							new Task [] { contextTask },
+							serverCancellationToken);
+
+						var context = contextTask.Result;
+						var request = context.Request;
+						var response = context.Response;
+
+						// Construct a response.
+						response.ContentType = "application/octet-stream";
+						response.StatusCode = 200;
+
+						try {
+							// Dripping response blocks, with increasing interval
+							using (var output = response.OutputStream) {
+								for (var i = 0; i < expectedHttpResponseContentLength; i++) {
+									serverCancellationToken.ThrowIfCancellationRequested ();
+
+									await output.WriteAsync (new byte [] { 0x42 });
+									output.Flush ();
+
+									await Task.Delay (TimeSpan.FromSeconds (i));
+								}
+							}
+						} finally {
+							response.Close ();
+						}
+					}
+				} finally {
+					httpListener.Stop ();
+				}
+			});
+
+			var timeoutExceptionWasThrown = false;
+			var timeoutExceptionShouldHaveBeenThrown = true;
+
+			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				HttpClient client = new HttpClient (new NSUrlSessionHandler (config));
+
+				await serverLaunchedSemaphore.WaitAsync ();
+
+				try {
+					var responseMessage = await client.GetAsync (
+													$"http://{localEndPoint.Address}:{localEndPoint.Port}",
+													HttpCompletionOption.ResponseHeadersRead);
+
+					using (var contentStream = await responseMessage.Content.ReadAsStreamAsync ())
+					using (var outputStream = new global::System.IO.MemoryStream ()) {
+						await contentStream.CopyToAsync (outputStream);
+
+						timeoutExceptionWasThrown = false;
+						timeoutExceptionShouldHaveBeenThrown = outputStream.ToArray ().Length < expectedHttpResponseContentLength;
+					}
+				}
+				catch (Exception e)
+					when (e is TimeoutException || e is HttpRequestException) {
+					timeoutExceptionWasThrown = true;
+				}
+			}, out var ex);
+
+			serverCancellationTokenSource.Cancel ();
+
+			if (!done) {
+				Assert.Inconclusive ("Test run timedout.");
+			} else if (!timeoutExceptionShouldHaveBeenThrown) {
+				Assert.Inconclusive ("Failed to produce a timeout. The response content was streamed completly.");
+			} else {
+				Assert.IsTrue (timeoutExceptionWasThrown, "Timeout exception is thrown.");
+			}
+		}
+
 #endif
 
 		// ensure that if we have a redirect, we do not have the auth headers in the following requests
