@@ -386,7 +386,7 @@ namespace Xamarin.Linker {
 
 			var parameterCount = proxyInterfaceMethod.Parameters?.Count ?? 0;
 			for (int i = 0; i < parameterCount; i++) {
-				il.EmitLoadArgument (i);
+				il.EmitLoadArgument (i + 1);
 			}
 
 			il.Emit (OpCodes.Callvirt, proxyInterfaceMethod);
