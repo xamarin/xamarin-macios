@@ -44,7 +44,7 @@ namespace Xamarin.Tests {
 			expectedArguments.Append ($" --wait-for-exit:false");
 			Assert.AreEqual (expectedArguments.ToString (), mlaunchInstallArguments);
 
-			var scriptContents = File.ReadAllText (outputPath).Trim ('\n'); ;
+			var scriptContents = File.ReadAllText (outputPath).Trim ('\n');
 			var expectedScriptContents = mlaunchPath + " " + expectedArguments.ToString ();
 			Assert.AreEqual (expectedScriptContents, scriptContents, "Script contents");
 		}
@@ -89,7 +89,7 @@ namespace Xamarin.Tests {
 			expectedArguments.Append ($" --wait-for-exit:true");
 			Assert.AreEqual (expectedArguments.ToString (), mlaunchRunArguments);
 
-			var scriptContents = File.ReadAllText (outputPath).Trim ('\n'); ;
+			var scriptContents = File.ReadAllText (outputPath).Trim ('\n');
 			var expectedScriptContents = mlaunchPath + " " + expectedArguments.ToString ();
 			Assert.AreEqual (expectedScriptContents, scriptContents, "Script contents");
 		}
