@@ -279,7 +279,7 @@ namespace MonoTests.System.Net.Http {
 			}
 
 			// HTPP listener config
-			IPEndPoint localEndPoint = new IPEndPoint (IPAddress.Any, 8080);
+			IPEndPoint httpListenerEndPoint = null;
 			var serverLaunchedSemaphore = new SemaphoreSlim (0, 1);
 			const int expectedHttpResponseContentLength = 10;
 
@@ -292,11 +292,33 @@ namespace MonoTests.System.Net.Http {
 			config.TimeoutIntervalForResource = 3;
 
 			Task.Run (async () => {
-				HttpListener httpListener = new HttpListener ();
+				// Trying to bing a HttpListener to the first available port
+				// To avoid race condition, we cannot list available ports, then decide to bind to one of them
+				HttpListener httpListener = null;
 
-				httpListener.Prefixes.Add ($"http://*:{localEndPoint.Port}/");
+				// IANA suggested range for dynamic or private ports
+				const int MinPort = 49215;
+				const int MaxPort = 65535;
 
-				httpListener.Start ();
+				int listeningPort = -1;
+				for (var port = MinPort; port < MaxPort; port++) {
+					httpListener = new HttpListener ();
+					httpListener.Prefixes.Add ($"http://*:{port}/");
+					try {
+						httpListener.Start ();
+						listeningPort = port;
+						break;
+					}
+					catch {
+						// nothing to do here -- the listener disposes itself when Start throws
+					}
+				}
+
+				if (httpListener is null) {
+					return;
+				}
+
+				httpListenerEndPoint = new IPEndPoint (IPAddress.Any, listeningPort);
 
 				serverLaunchedSemaphore.Release ();
 
@@ -346,7 +368,7 @@ namespace MonoTests.System.Net.Http {
 
 				try {
 					var responseMessage = await client.GetAsync (
-													$"http://{localEndPoint.Address}:{localEndPoint.Port}",
+													$"http://{httpListenerEndPoint.Address}:{httpListenerEndPoint.Port}",
 													HttpCompletionOption.ResponseHeadersRead);
 
 					using (var contentStream = await responseMessage.Content.ReadAsStreamAsync ())
@@ -366,8 +388,12 @@ namespace MonoTests.System.Net.Http {
 
 			if (!done) {
 				Assert.Inconclusive ("Test run timedout.");
-			} else if (!timeoutExceptionShouldHaveBeenThrown) {
-				Assert.Inconclusive ("Failed to produce a timeout. The response content was streamed completly.");
+			}
+
+			Assert.IsNull (ex, "Exception");
+
+			if (!timeoutExceptionShouldHaveBeenThrown) {
+				Assert.Inconclusive ("Failed to produce a timeout. The response content was streamed completely.");
 			} else {
 				Assert.IsTrue (timeoutExceptionWasThrown, "Timeout exception is thrown.");
 			}
