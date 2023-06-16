@@ -34,7 +34,7 @@ namespace ClassRedirector {
 				xamarinAssembly = xasm;
 				pathToXamarinAssembly = xamarinAssembly.MainModule.FileName;
 			}
-			
+
 		}
 
 		public void Process ()
