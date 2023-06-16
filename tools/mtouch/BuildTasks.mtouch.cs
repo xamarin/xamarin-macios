@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using Xamarin.MacDev;
 using Xamarin.Utils;
+using ClassRedirector;
 
 namespace Xamarin.Bundler {
 	public abstract class ProcessTask : BuildTask {
@@ -121,12 +122,8 @@ namespace Xamarin.Bundler {
 		protected override void Execute ()
 		{
 			var assemblies = Target.Assemblies.Select ((a) => a.AssemblyDefinition);
-			Target.StaticRegistrar.Generate (assemblies, RegistrarHeaderPath, RegistrarCodePath, out var initialization_name, out var typeMap);
+			Target.StaticRegistrar.Generate (assemblies, RegistrarHeaderPath, RegistrarCodePath, out var initialization_name, Target.App.Optimizations.RedirectClassHandlesSafe);
 			RegistrationMethods.Add (initialization_name);
-			if (Target.App.OptimizeClassHandles) {
-				var rewriter = new Rewriter (assemblies, typeMap);
-				rewriter.Process ();
-			}
 		}
 	}
 

@@ -169,7 +169,6 @@ namespace Xamarin.Bundler {
 		public bool EnableBitCode { get { return BitCodeMode != BitCodeMode.None; } }
 
 		public bool SkipMarkingNSObjectsInUserAssemblies { get; set; }
-		public bool OptimizeClassHandles { get; set; } = false;
 
 		// assembly_build_targets describes what kind of native code each assembly should be compiled into for mobile targets (iOS, tvOS, watchOS).
 		// An assembly can be compiled into: static object (.o), dynamic library (.dylib) or a framework (.framework).
@@ -1032,22 +1031,10 @@ namespace Xamarin.Bundler {
 #endif
 			var registrar = new Registrar.StaticRegistrar (this);
 			if (RootAssemblies.Count == 1) {
-				registrar.GenerateSingleAssembly (resolver, resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly), out var _, out var oneAssemblyMap);
-				if (OptimizeClassHandles) {
-					RewriteClassHandles (oneAssemblyMap, resolvedAssemblies.Values);
-				}
+				registrar.GenerateSingleAssembly (resolver, resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly), out var _, Optimizations.RedirectClassHandlesSafe);
 			} else {
-				registrar.Generate (resolver, resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, out var _, out var typeMap);
-				if (OptimizeClassHandles) {
-					RewriteClassHandles (typeMap, resolvedAssemblies.Values);
-				}
+				registrar.Generate (resolver, resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, out var _, Optimizations.RedirectClassHandlesSafe);
 			}
-		}
-
-		void RewriteClassHandles (CSToObjCMap map, IEnumerable<AssemblyDefinition> assemblies)
-		{
-			var rewriter = new Rewriter (map, assemblies);
-			rewriter.Process ();
 		}
 
 		public IEnumerable<Abi> Abis {

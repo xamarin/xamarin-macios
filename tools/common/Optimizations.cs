@@ -163,6 +163,13 @@ namespace Xamarin.Bundler {
 			set { values [(int) Opt.RedirectClassHandles] = value; }
 		}
 
+		public bool RedirectClassHandlesSafe {
+			get {
+				var redirect = RedirectClassHandles;
+				return redirect.HasValue && redirect.Value;
+			}
+		}
+
 		public Optimizations ()
 		{
 			values = new bool? [opt_names.Length];
