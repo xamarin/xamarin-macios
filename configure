@@ -47,6 +47,7 @@ Usage: configure [options]
 EOL
 }
 
+cd "$(dirname "${BASH_SOURCE[0]}")"
 CONFIGURED_FILE=configure.inc
 
 rm -f $CONFIGURED_FILE
