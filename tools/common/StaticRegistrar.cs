@@ -3297,7 +3297,7 @@ namespace Registrar {
 			sb.WriteLine (map_init.ToString ());
 #if NET
 			if (App.Optimizations.RedirectClassHandles == true) {
-				var rewriter = new Rewriter (map_dict, GetAssemblies ());
+				var rewriter = new Rewriter (map_dict, GetAssemblies (), LinkContext);
 				rewriter.Process ();
 			}
 #endif

@@ -5,6 +5,7 @@ using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using ClassRedirector;
+using Mono.Linker;
 
 #nullable enable
 
@@ -23,8 +24,9 @@ namespace ClassRedirector {
 		Dictionary<string, FieldDefinition> csTypeToFieldDef = new Dictionary<string, FieldDefinition> ();
 		IEnumerable<AssemblyDefinition> assemblies;
 		AssemblyDefinition xamarinAssembly;
+		Xamarin.Tuner.DerivedLinkContext linkContext;
 
-		public Rewriter (CSToObjCMap map, IEnumerable<AssemblyDefinition> assembliesToPatch)
+		public Rewriter (CSToObjCMap map, IEnumerable<AssemblyDefinition> assembliesToPatch, Xamarin.Tuner.DerivedLinkContext? linkContext)
 		{
 			this.map = map;
 			this.assemblies = assembliesToPatch;
@@ -34,6 +36,11 @@ namespace ClassRedirector {
 			} else {
 				xamarinAssembly = xasm;
 				pathToXamarinAssembly = xamarinAssembly.MainModule.FileName;
+			}
+			if (linkContext is null) {
+				throw new Exception ("Rewriter needs a valid link context.");
+			} else {
+				this.linkContext = linkContext;
 			}
 
 		}
@@ -71,6 +78,9 @@ namespace ClassRedirector {
 			if (nativeHandleOpImplicit is null)
 				throw new Exception ($"Unable to find implicit cast in {nativeHandleName}");
 
+			if (map.Count () == 0)
+				return classMap;
+
 			foreach (var nameIndexPair in map) {
 				var csName = nameIndexPair.Key;
 				var nameIndex = nameIndexPair.Value;
@@ -79,7 +89,7 @@ namespace ClassRedirector {
 				classMap [csName] = fieldDef;
 			}
 
-			module.Write ();
+			MarkForSave (xamarinAssembly);
 			return classMap;
 		}
 
@@ -153,18 +163,26 @@ namespace ClassRedirector {
 		{
 			foreach (var assem in assemblies) {
 				var module = assem.MainModule;
-				PatchClassPtrUsage (classMap, module);
-				module.Write ();
+				if (PatchClassPtrUsage (classMap, module)) {
+					MarkForSave (assem);
+				}
 			}
 		}
 
-		void PatchClassPtrUsage (Dictionary<string, FieldDefinition> classMap, ModuleDefinition module)
+		// returns true if the assembly was changed.
+		bool PatchClassPtrUsage (Dictionary<string, FieldDefinition> classMap, ModuleDefinition module)
 		{
+			var dirty = false;
 			foreach (var cl in AllTypes (module)) {
 				if (classMap.TryGetValue (cl.FullName, out var classPtrField)) {
+					dirty = true;
+					// if this doesn't throw, it will
+					// always change the contents of an
+					// assembly
 					PatchClassPtrUsage (cl, classPtrField);
 				}
 			}
+			return dirty;
 		}
 
 		void PatchClassPtrUsage (TypeDefinition cl, FieldDefinition classPtrField)
@@ -304,6 +322,14 @@ namespace ClassRedirector {
 		string ToOutputFileName (string pathToInputFileName)
 		{
 			return Path.Combine (outputDirectory, Path.GetFileName (pathToInputFileName));
+		}
+
+		void MarkForSave (AssemblyDefinition assembly)
+		{
+			var annotations = linkContext.Annotations;
+			var action = annotations.GetAction (assembly);
+			if (action == AssemblyAction.Copy)
+				annotations.SetAction (assembly, AssemblyAction.Save);
 		}
 	}
 #endif
