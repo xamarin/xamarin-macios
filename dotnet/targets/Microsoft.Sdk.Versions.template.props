@@ -20,9 +20,9 @@
 			RuntimeFrameworkName="Microsoft.@PLATFORM@"
 			DefaultRuntimeFrameworkVersion="@NUGET_VERSION_NO_METADATA@"
 			LatestRuntimeFrameworkVersion="@NUGET_VERSION_NO_METADATA@"
-			TargetingPackName="Microsoft.@PLATFORM@.Ref"
+			TargetingPackName="Microsoft.@PLATFORM@.Ref.@DOTNET_TFM@_@NUGET_OS_VERSION@"
 			TargetingPackVersion="@NUGET_VERSION_NO_METADATA@"
-			RuntimePackNamePatterns="Microsoft.@PLATFORM@.Runtime.**RID**"
+			RuntimePackNamePatterns="Microsoft.@PLATFORM@.Runtime.**RID**.@DOTNET_TFM@_@NUGET_OS_VERSION@"
 			RuntimePackRuntimeIdentifiers="@RUNTIME_PACK_RUNTIME_IDENTIFIERS@"
 			Profile="@PLATFORM@"
 		/>

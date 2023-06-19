@@ -16,7 +16,7 @@ $(TOP)/tests/dotnet/%:
 	$(Q_GEN) $(DOTNET) build Xamarin.PreBuilt.iOS/Xamarin.PreBuilt.iOS.csproj "/bl:$(abspath ./msbuild.binlog)" $(DOTNET_BUILD_VERBOSITY)
 	$(Q) touch $@
 
-$(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip: Xamarin.PreBuilt.iOS.app.zip
+$(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk.$(DOTNET_TFM)_$(IOS_NUGET_OS_VERSION)/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip: Xamarin.PreBuilt.iOS.app.zip
 	$(Q) mkdir -p $(dir $@)
 	$(Q) $(CP) $< $@
 
