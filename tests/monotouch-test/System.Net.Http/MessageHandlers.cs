@@ -308,8 +308,7 @@ namespace MonoTests.System.Net.Http {
 						httpListener.Start ();
 						listeningPort = port;
 						break;
-					}
-					catch {
+					} catch {
 						// nothing to do here -- the listener disposes itself when Start throws
 					}
 				}
