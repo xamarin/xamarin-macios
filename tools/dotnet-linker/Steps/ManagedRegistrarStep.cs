@@ -968,7 +968,7 @@ namespace Xamarin.Linker {
 			return false;
 		}
 
-		bool IsOpenType (TypeReference tr)
+		internal static bool IsOpenType (TypeReference tr)
 		{
 			if (tr is GenericParameter)
 				return true;
@@ -990,13 +990,13 @@ namespace Xamarin.Linker {
 			return IsOpenType (tr.Resolve ());
 		}
 
-		void EnsureVisible (MethodDefinition caller, FieldDefinition field)
+		static void EnsureVisible (MethodDefinition caller, FieldDefinition field)
 		{
 			field.IsPublic = true;
 			EnsureVisible (caller, field.DeclaringType);
 		}
 
-		void EnsureVisible (MethodDefinition caller, TypeDefinition type)
+		static void EnsureVisible (MethodDefinition caller, TypeDefinition type)
 		{
 			if (type.IsNested) {
 				type.IsNestedPublic = true;
@@ -1006,7 +1006,7 @@ namespace Xamarin.Linker {
 			}
 		}
 
-		void EnsureVisible (MethodDefinition caller, MethodReference method)
+		static void EnsureVisible (MethodDefinition caller, MethodReference method)
 		{
 			var md = method.Resolve ();
 			md.IsPublic = true;

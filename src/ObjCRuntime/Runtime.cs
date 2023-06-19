@@ -1304,19 +1304,46 @@ namespace ObjCRuntime {
 			return ConstructNSObject<T> (ptr, typeof (T), MissingCtorResolution.ThrowConstructor1NotFound);
 		}
 
-		// The generic argument T is only used to cast the return value.
 		// The 'selector' and 'method' arguments are only used in error messages.
-		static T? ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution) where T : class, INativeObject
+		static T? ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution) where T : NSObject
 		{
 			return ConstructNSObject<T> (ptr, type, missingCtorResolution, IntPtr.Zero, default (RuntimeMethodHandle));
 		}
 
-		// The generic argument T is only used to cast the return value.
 		// The 'selector' and 'method' arguments are only used in error messages.
-		static T? ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution, IntPtr sel, RuntimeMethodHandle method_handle) where T : class, INativeObject
+		static T? ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution, IntPtr sel, RuntimeMethodHandle method_handle)
+			where T : NSObject
+#if NET
+				, INSObjectFactory
+#endif
 		{
 			if (type is null)
 				throw new ArgumentNullException (nameof (type));
+#if NET
+			if (Runtime.IsManagedStaticRegistrar) {
+				T? instance = default;
+				var nativeHandle = new NativeHandle (ptr);
+
+				if (typeof (T) != typeof (NSObject)
+					&& (typeof (T) == type || typeof (T).IsGenericType)
+					&& !(typeof (T).IsInterface || typeof (T).IsAbstract)) {
+					instance = ConstructNSObjectViaFactoryMethod (nativeHandle);
+				}
+
+				// If we couldn't create an instance of T through the factory method, we'll use the lookup table.
+				// This table can't instantiate generic types though.
+				if (!type.IsGenericType) {
+					instance ??= RegistrarHelper.ConstructNSObject<T> (type, nativeHandle);
+				}
+
+				if (instance is null) {
+					MissingCtor (ptr, IntPtr.Zero, type, missingCtorResolution, sel, method_handle);
+					return null;
+				}
+
+				return instance;
+			}
+#endif
 
 			var ctor = GetIntPtrConstructor (type);
 
@@ -1337,6 +1364,22 @@ namespace ObjCRuntime {
 #endif
 
 			return (T) ctor.Invoke (ctorArguments);
+
+#if NET
+			static T? ConstructNSObjectViaFactoryMethod (NativeHandle handle)
+			{
+				NSObject? obj = T.ConstructNSObject (handle);
+				if (obj is T instance) {
+					return instance;
+				}
+
+				// if the factory method returns a NSObject subclass but we don't expect that specific type,
+				// we need to dispose it and return null anyway
+				obj?.Dispose ();
+
+				return null;
+			}
+#endif
 		}
 
 		// The generic argument T is only used to cast the return value.
@@ -1347,6 +1390,50 @@ namespace ObjCRuntime {
 
 			if (type.IsByRef)
 				type = type.GetElementType ()!;
+
+#if NET
+			if (Runtime.IsManagedStaticRegistrar) {
+				var nativeHandle = new NativeHandle (ptr);
+				T? instance = null;
+
+				// - The factory method on T is only useful if we know the exact generic type (it's not INativeObject)
+				//   and we're not just falling back to the INativeObject/NSObject factory method (which would throw
+				//   an exception anyway).
+				// - If `T` is different from `type`, we'd rather use the lookup table to create the instance of the 
+				//   more specialized `type` than "just" T unless it's a generic type. We can't create instances of generic
+				//   types through the lookup table.
+				// - It doesn't make sense to create an instance of an interface or an abstract class.
+				if (typeof (T) != typeof (INativeObject)
+					&& typeof (T) != typeof (NSObject)
+					&& (typeof (T) == type || typeof (T).IsGenericType)
+					&& !(typeof (T).IsInterface || typeof (T).IsAbstract))
+				{
+					instance = ConstructINativeObjectViaFactoryMethod (nativeHandle, owns);
+				}
+
+				// if the factory didn't work and the type isn't generic, we can try the lookup table
+				if (instance is null && !type.IsGenericType) {
+					// if type is an NSObject, we prefer the NSObject lookup table
+					if (type != typeof (NSObject) && type.IsSubclassOf (typeof (NSObject))) {
+						instance = (T?)(INativeObject?) RegistrarHelper.ConstructNSObject<T> (type, nativeHandle);
+						if (instance is not null && owns) {
+							Runtime.TryReleaseINativeObject (instance);
+						}
+					}
+
+					if (instance is null && type != typeof (INativeObject)) {
+						instance = RegistrarHelper.ConstructINativeObject<T> (type, nativeHandle, owns);
+					}
+				}
+
+				if (instance is null) {
+					MissingCtor (ptr, IntPtr.Zero, type, missingCtorResolution, sel, method_handle);
+					return null;
+				}
+
+				return instance;
+			}
+#endif
 
 			var ctor = GetIntPtr_BoolConstructor (type);
 
@@ -1368,6 +1455,25 @@ namespace ObjCRuntime {
 			ctorArguments [1] = owns;
 
 			return (T?) ctor.Invoke (ctorArguments);
+
+#if NET
+			// This is a workaround for a compiler issue.
+			static T? ConstructINativeObjectViaFactoryMethod (NativeHandle nativeHandle, bool owns)
+			{
+				INativeObject? obj = T.ConstructINativeObject (nativeHandle, owns);
+				if (obj is T instance) {
+					return instance;
+				}
+
+				// if the factory method returns an INativeObject but we don't expect that specific type,
+				// we need to release it and return null anyway
+				if (obj is not null) {
+					Runtime.TryReleaseINativeObject(obj);
+				}
+
+				return null;
+			}
+#endif
 		}
 
 		static IntPtr CreateNSObject (IntPtr type_gchandle, IntPtr handle, NSObject.Flags flags)
@@ -1747,7 +1853,7 @@ namespace ObjCRuntime {
 					// native objects and NSObject instances.
 					throw ErrorHelper.CreateError (8004, $"Cannot create an instance of {implementation.FullName} for the native object 0x{ptr:x} (of type '{Class.class_getName (Class.GetClassForObject (ptr))}'), because another instance already exists for this native object (of type {o.GetType ().FullName}).");
 				}
-				return ConstructNSObject<INativeObject> (ptr, implementation, MissingCtorResolution.ThrowConstructor1NotFound, sel, method_handle);
+				return (INativeObject?) ConstructNSObject<NSObject> (ptr, implementation!, MissingCtorResolution.ThrowConstructor1NotFound, sel, method_handle);
 			}
 
 			return ConstructINativeObject<INativeObject> (ptr, owns, implementation, MissingCtorResolution.ThrowConstructor2NotFound, sel, method_handle);
@@ -1804,10 +1910,6 @@ namespace ObjCRuntime {
 					// native objects and NSObject instances.
 					throw ErrorHelper.CreateError (8004, $"Cannot create an instance of {implementation.FullName} for the native object 0x{ptr:x} (of type '{Class.class_getName (Class.GetClassForObject (ptr))}'), because another instance already exists for this native object (of type {o.GetType ().FullName}).");
 				}
-				var rv = (T?) ConstructNSObject<T> (ptr, implementation, MissingCtorResolution.ThrowConstructor1NotFound);
-				if (owns)
-					TryReleaseINativeObject (rv);
-				return rv;
 			}
 
 			return ConstructINativeObject<T> (ptr, owns, implementation, MissingCtorResolution.ThrowConstructor2NotFound, sel, method_handle);

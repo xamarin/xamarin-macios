@@ -339,6 +339,12 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public TypeReference Foundation_INSObjectFactory {
+			get {
+				return GetTypeReference (PlatformAssembly, "Foundation.INSObjectFactory", out var _);
+			}
+		}
+
 		public TypeReference ObjCRuntime_INativeObject {
 			get {
 				return GetTypeReference (PlatformAssembly, "ObjCRuntime.INativeObject", out var _);
@@ -716,6 +722,49 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public MethodReference IManagedRegistrar_ConstructNSObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_IManagedRegistrar, "ConstructNSObject",
+						isStatic: false,
+						System_RuntimeTypeHandle,
+						ObjCRuntime_NativeHandle);
+			}
+		}
+
+		public MethodReference INSObjectFactory_ConstructNSObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						Foundation_INSObjectFactory, "ConstructNSObject",
+						nameof (INSObjectFactory_ConstructNSObject),
+						isStatic: true,
+						ObjCRuntime_NativeHandle);
+			}
+		}
+
+		public MethodReference IManagedRegistrar_ConstructINativeObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_IManagedRegistrar, "ConstructINativeObject",
+						nameof (IManagedRegistrar_ConstructINativeObject),
+						isStatic: false,
+						System_RuntimeTypeHandle,
+						ObjCRuntime_NativeHandle,
+						System_Boolean);
+			}
+		}
+
+		public MethodReference INativeObject_ConstructINativeObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_INativeObject, "ConstructINativeObject",
+						nameof (INativeObject_ConstructINativeObject),
+						isStatic: true,
+						ObjCRuntime_NativeHandle,
+						System_Boolean);
+			}
+		}
+
 		public MethodReference IManagedRegistrar_RegisterWrapperTypes {
 			get {
 				return GetMethodReference (PlatformAssembly, ObjCRuntime_IManagedRegistrar, "RegisterWrapperTypes", (v) =>
@@ -1053,6 +1102,15 @@ namespace Xamarin.Linker {
 			get {
 				return GetMethodReference (PlatformAssembly,
 						ObjCRuntime_Runtime, "RetainAndAutoreleaseNativeObject",
+						isStatic: true,
+						ObjCRuntime_INativeObject);
+			}
+		}
+
+		public MethodReference Runtime_TryReleaseINativeObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_Runtime, "TryReleaseINativeObject",
 						isStatic: true,
 						ObjCRuntime_INativeObject);
 			}

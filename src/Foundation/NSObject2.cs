@@ -69,6 +69,15 @@ namespace Foundation {
 	}
 #endif
 
+#if NET
+	public interface INSObjectFactory {
+		// The method will be implemented via custom linker step if the managed static registrar is used
+		// for NSObject subclasses which have an (NativeHandle) or (IntPtr) constructor.
+		[MethodImpl(MethodImplOptions.NoInlining)]
+		virtual static NSObject ConstructNSObject (NativeHandle handle) => null;
+	}
+#endif
+
 #if NET && !COREBUILD
 	[ObjectiveCTrackedType]
 	[SupportedOSPlatform ("ios")]
@@ -81,6 +90,9 @@ namespace Foundation {
 #if !COREBUILD
 		, IEquatable<NSObject>
 		, IDisposable
+#endif
+#if NET
+		, INSObjectFactory
 #endif
 	{
 #if !COREBUILD
