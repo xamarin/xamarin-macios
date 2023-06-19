@@ -42,7 +42,7 @@ namespace Xamarin.Linker {
 					// so we need to remove those that were later trimmed away by the trimmer.
 					Configuration.Target.StaticRegistrar.FilterTrimmedApi (Annotations);
 				}
-				Configuration.Target.StaticRegistrar.Generate (header, code, out var initialization_method, app.Optimizations.RedirectClassHandlesSafe);
+				Configuration.Target.StaticRegistrar.Generate (header, code, out var initialization_method);
 
 				var items = new List<MSBuildItem> ();
 				foreach (var abi in Configuration.Abis) {

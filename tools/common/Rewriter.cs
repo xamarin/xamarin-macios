@@ -9,6 +9,7 @@ using ClassRedirector;
 #nullable enable
 
 namespace ClassRedirector {
+#if NET
 	public class Rewriter {
 		const string runtimeName = "ObjCRuntime.Runtime";
 		const string classHandleName = "ObjCRuntime.Runtime/ClassHandles";
@@ -305,5 +306,6 @@ namespace ClassRedirector {
 			return Path.Combine (outputDirectory, Path.GetFileName (pathToInputFileName));
 		}
 	}
+#endif
 }
 

@@ -122,7 +122,7 @@ namespace Xamarin.Bundler {
 		protected override void Execute ()
 		{
 			var assemblies = Target.Assemblies.Select ((a) => a.AssemblyDefinition);
-			Target.StaticRegistrar.Generate (assemblies, RegistrarHeaderPath, RegistrarCodePath, out var initialization_name, Target.App.Optimizations.RedirectClassHandlesSafe);
+			Target.StaticRegistrar.Generate (assemblies, RegistrarHeaderPath, RegistrarCodePath, out var initialization_name);
 			RegistrationMethods.Add (initialization_name);
 		}
 	}
