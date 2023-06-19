@@ -274,6 +274,17 @@ namespace Xamarin.Tests {
 					var dict = pefea.Properties as IDictionary<string, string>;
 					if (dict is not null && dict.TryGetValue (property, out var pvalue))
 						value = pvalue;
+				} else if (args is BuildMessageEventArgs bmea) {
+					if (bmea.Message.StartsWith ("Output Property: ", StringComparison.Ordinal)) {
+						var kvp = bmea.Message.Substring ("Output Property: ".Length);
+						var eq = kvp.IndexOf ('=');
+						if (eq > 0) {
+							var propname = kvp.Substring (0, eq);
+							var propvalue = kvp.Substring (eq + 1);
+							if (propname == property)
+								value = propvalue;
+						}
+					}
 				}
 			}
 
