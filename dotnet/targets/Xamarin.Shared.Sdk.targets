@@ -831,7 +831,7 @@
 			<_PackageIdInfix Condition="'$(UseMonoRuntime)' == 'true'">Mono.</_PackageIdInfix>
 
 			<_MonoNugetPackageId>Microsoft.NETCore.App.Runtime.$(_PackageIdInfix)$(RuntimeIdentifier)</_MonoNugetPackageId>
-			<_XamarinNugetPackageId>Microsoft.$(_PlatformName).Runtime.$(RuntimeIdentifier)</_XamarinNugetPackageId>
+			<_XamarinNugetPackageId>Microsoft.$(_PlatformName).Runtime.$(RuntimeIdentifier).$(_XamarinPackSuffix)</_XamarinNugetPackageId>
 		</PropertyGroup>
 		<ItemGroup>
 			<!-- Look in the ResolvedFrameworkReference for our Microsoft.* package. This should only find a single package. -->
@@ -1744,6 +1744,13 @@
 			>
 			<Output TaskParameter="NativeFrameworks" ItemName="_FrameworkNativeReference" />
 		</ResolveNativeReferences>
+	</Target>
+
+	<Target Name="_ValidateTargetPlatformVersion">
+		<Error
+			Text="The target platform version '$(TargetPlatformVersion)' is not supported for the current workload. This value was probably specified as part of the target framework ('$(TargetFramework)'). Supported target platform versions are: $(_SupportedTargetPlatformVersions)."
+			Condition="'$(_TargetPlatformVersionNotRecognized)' == 'true'"
+		/>
 	</Target>
 
 	<Target Name="_ValidateRuntimeIdentifier"
