@@ -4250,6 +4250,10 @@ namespace AVFoundation {
 		void GenerateCGImagesAsynchronously (NSValue [] cmTimesRequestedTimes, AVAssetImageGeneratorCompletionHandler2 handler);
 #endif
 
+		[iOS (16, 0)]
+		[Mac (13, 0)]
+		[MacCatalyst (16, 0)]
+		[TV (16, 0)]
 		[Export ("generateCGImageAsynchronouslyForTime:completionHandler:")]
 		void GenerateCGImageAsynchronously (CMTime requestedTime, AVAssetImageGenerateAsynchronouslyForTimeCompletionHandler handler);
 
