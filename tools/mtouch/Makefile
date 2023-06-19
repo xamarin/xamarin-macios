@@ -286,7 +286,7 @@ $(eval $(call RunRegistrar,maccatalyst,arm64,64,$(MACCATALYST_SDK_VERSION),MacCa
 	$(Q_LIPO) $(DEVICE_BIN_PATH)/lipo -create -output $@ $^
 
 TARGETS_DOTNET = \
-	$(foreach platform,$(DOTNET_PLATFORMS_MTOUCH),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Runtime.$(rid)/runtimes/$(rid)/native/Microsoft.$(platform).registrar.a)) \
+	$(foreach platform,$(DOTNET_PLATFORMS_MTOUCH),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/native/Microsoft.$(platform).registrar.a)) \
 
 TARGETS = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch                                          \
@@ -318,7 +318,7 @@ endif
 endif
 
 TARGET_DIRS_DOTNET = \
-	$(foreach platform,$(DOTNET_PLATFORMS_MTOUCH),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Runtime.$(rid)/runtimes/$(rid)/native)) \
+	$(foreach platform,$(DOTNET_PLATFORMS_MTOUCH),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/native)) \
 
 TARGET_DIRS = \
 	.libs                                                        \
@@ -371,7 +371,7 @@ $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/%.registrar.a: %.registrar.tvos.arm64.a | 
 	$(Q) $(CP) $< $@
 
 define InstallRegistrar
-$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/Microsoft.$(1).registrar.a: .libs/Microsoft.$(1).registrar.$(rid).a | $(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native
+$(DOTNET_DESTDIR)/$$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/Microsoft.$(1).registrar.a: .libs/Microsoft.$(1).registrar.$(rid).a | $(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native
 	$(Q) $(CP) $$< $$@
 endef
 
