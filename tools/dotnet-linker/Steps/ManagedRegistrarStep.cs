@@ -363,8 +363,8 @@ namespace Xamarin.Linker {
 				interfaceMethod.ReturnType = implementationMethod.ReturnType;
 
 				foreach (var parameter in implementationMethod.Parameters) {
-					callback.Parameters.Add (parameter);
-					interfaceMethod.Parameters.Add (parameter);
+					callback.AddParameter (parameter.Name, parameter.ParameterType);
+					interfaceMethod.AddParameter (parameter.Name, parameter.ParameterType);
 				}
 
 				// we need to wait until we know all the parameters of the interface method before we generate this method
@@ -384,9 +384,11 @@ namespace Xamarin.Linker {
 			il.Emit (OpCodes.Call, abr.Runtime_GetNSObject__System_IntPtr);
 			il.Emit (OpCodes.Castclass, proxyInterfaceMethod.DeclaringType);
 
-			var parameterCount = proxyInterfaceMethod.Parameters?.Count ?? 0;
-			for (int i = 0; i < parameterCount; i++) {
-				il.EmitLoadArgument (i + 1);
+			if (callback.HasParameters) {
+				// skip the first argument (the handle of the object)
+				foreach (var parameter in callback.Parameters.Skip (1)) {
+					il.Emit (OpCodes.Ldarg, parameter);
+				}
 			}
 
 			il.Emit (OpCodes.Callvirt, proxyInterfaceMethod);
