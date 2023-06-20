@@ -63,9 +63,6 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"		\"Microsoft.{platform}.Sdk.{tfm}\": {{");
 	writer.WriteLine ($"			\"kind\": \"sdk\",");
 	writer.WriteLine ($"			\"version\": \"{version}\",");
-	writer.WriteLine ($"			\"alias-to\": {{");
-	writer.WriteLine ($"				\"any\": \"Microsoft.{platform}.Sdk\"");
-	writer.WriteLine ($"			}}");
 	writer.WriteLine ($"		}},");
 	writer.WriteLine ($"		\"Microsoft.{platform}.Sdk.net6\": {{");
 	writer.WriteLine ($"			\"kind\": \"sdk\",");
@@ -79,9 +76,9 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 		writer.WriteLine ($"			\"kind\": \"sdk\",");
 		writer.WriteLine ($"			\"version\": \"{version}\",");
 		writer.WriteLine ($"			\"alias-to\": {{");
-		writer.WriteLine ($"				\"win-x64\": \"Microsoft.{platform}.Windows.Sdk\",");
-		writer.WriteLine ($"				\"win-x86\": \"Microsoft.{platform}.Windows.Sdk\",");
-		writer.WriteLine ($"				\"win-arm64\": \"Microsoft.{platform}.Windows.Sdk\",");
+		writer.WriteLine ($"				\"win-x64\": \"Microsoft.{platform}.Windows.Sdk.{tfm}\",");
+		writer.WriteLine ($"				\"win-x86\": \"Microsoft.{platform}.Windows.Sdk.{tfm}\",");
+		writer.WriteLine ($"				\"win-arm64\": \"Microsoft.{platform}.Windows.Sdk.{tfm}\",");
 		writer.WriteLine ($"			}}");
 		writer.WriteLine ($"		}},");
 		writer.WriteLine ($"		\"Microsoft.{platform}.Windows.Sdk.Aliased.net6\": {{");

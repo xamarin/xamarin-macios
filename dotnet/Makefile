@@ -22,30 +22,30 @@ DOTNET_macOS_GLOBAL_USINGS=AppKit CoreGraphics Foundation
 
 define DefineTargets
 $(1)_NUGET_TARGETS = \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/data/UnixFilePermissions.xml \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/Sdk/AutoImport.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/Sdk/Sdk.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.ImplicitNamespaceImports.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.DefaultItems.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.Versions.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.targets \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.DefaultItems.targets \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.MultiTarget.targets \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.Publish.targets \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.TargetFrameworkInference.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.targets \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/data/UnixFilePermissions.xml \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/Sdk/AutoImport.props \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/Sdk/Sdk.props \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/targets/Microsoft.$(1).Sdk.ImplicitNamespaceImports.props \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/targets/Microsoft.$(1).Sdk.DefaultItems.props \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/targets/Microsoft.$(1).Sdk.props \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/targets/Microsoft.$(1).Sdk.Versions.props \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/targets/Microsoft.$(1).Sdk.targets \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/targets/Xamarin.Shared.Sdk.DefaultItems.targets \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/targets/Xamarin.Shared.Sdk.MultiTarget.targets \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/targets/Xamarin.Shared.Sdk.Publish.targets \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/targets/Xamarin.Shared.Sdk.TargetFrameworkInference.props \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/targets/Xamarin.Shared.Sdk.props \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/targets/Xamarin.Shared.Sdk.targets \
 
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DefineTargets,$(platform))))
 
 define DefineWindowsTargets
 $(1)_WINDOWS_NUGET_TARGETS = \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk/Sdk/Sdk.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk/targets/Microsoft.$(1).Windows.Sdk.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk/targets/Microsoft.$(1).Windows.Sdk.targets \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/Sdk/Sdk.props \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/targets/Microsoft.$(1).Windows.Sdk.props \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/targets/Microsoft.$(1).Windows.Sdk.targets \
 
 endef
 $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call DefineWindowsTargets,$(platform))))
@@ -53,7 +53,7 @@ $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call DefineWindowsTarget
 ifdef INCLUDE_HOTRESTART
 
 iOS_WINDOWS_NUGET_TARGETS += \
-	$(DOTNET_DESTDIR)/Microsoft.iOS.Windows.Sdk/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip \
+	$(DOTNET_DESTDIR)/Microsoft.iOS.Windows.Sdk.$(DOTNET_TFM)_$(IOS_NUGET_OS_VERSION)/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip \
 
 endif
 
@@ -70,7 +70,7 @@ DIRECTORIES += \
 	$(DOTNET_TEMPLATE_PACKS_PATH) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Sdk.$(DOTNET_TFM)_$($(platform)_NUGET_OS_VERSION)) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Ref.$(DOTNET_TFM)_$($(platform)_NUGET_OS_VERSION)) \
-	$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Runtime.$(rid))) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Runtime.$(rid).$(DOTNET_TFM)_$($(platform)_NUGET_OS_VERSION))) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_TEMPLATE_PACKS_PATH)/Microsoft.$(platform).Templates) \
 	$(TMP_PKG_DIR) \
 	$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Windows.Sdk.$(DOTNET_TFM)_$($(platform)_NUGET_OS_VERSION)/Sdk) \
@@ -89,10 +89,24 @@ $(DOTNET_DESTDIR)/Microsoft.%: Microsoft.% | \
 	$(Q) $(CP) $< $@
 
 define CopyTargets
-$$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/%: targets/% | $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets
+$$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/targets/%: targets/% | $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/targets
 	$$(Q) $$(CP) $$< $$@
+
+$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/%: Microsoft.$(1).Sdk/% | \
+		$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/data \
+		$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/Sdk \
+		$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/targets
+	$(Q) $(CP) $$< $$@
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CopyTargets,$(platform))))
+
+define CopyTargetsWindows
+$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/%: Microsoft.$(1).Windows.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/% | \
+		$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/Sdk \
+		$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/targets
+	$(Q) $(CP) $$< $$@
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CopyTargetsWindows,$(platform))))
 
 define VersionsTemplate
 targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.template.props Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index
@@ -292,10 +306,10 @@ $(DOTNET_SDK_MANIFESTS_PATH)/$(MACIOS_MANIFEST_VERSION_BAND)/microsoft.net.sdk.$
 	$$(Q_LN) ln -Fhs $$(abspath Workloads/Microsoft.NET.Sdk.$1) $$(abspath $$@)
 
 $(DOTNET_PACKS_PATH)/Microsoft.$1.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/$2: | $(DOTNET_PACKS_PATH)/Microsoft.$1.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)
-	$$(Q_LN) ln -Fhs $$(abspath $(DOTNET_DESTDIR)/Microsoft.$1.Sdk) $$(abspath $$@)
+	$$(Q_LN) ln -Fhs $$(abspath $(DOTNET_DESTDIR)/Microsoft.$1.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)) $$(abspath $$@)
 
 $(DOTNET_PACKS_PATH)/Microsoft.$1.Ref.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/$2: | $(DOTNET_PACKS_PATH)/Microsoft.$1.Ref.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)
-	$$(Q_LN) ln -Fhs $$(abspath $(DOTNET_DESTDIR)/Microsoft.$1.Ref.$(DOTNET_TFM)_$$($(2)_NUGET_OS_VERSION)) $$(abspath $$@)
+	$$(Q_LN) ln -Fhs $$(abspath $(DOTNET_DESTDIR)/Microsoft.$1.Ref.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)) $$(abspath $$@)
 
 $(DOTNET_TEMPLATE_PACKS_PATH)/Microsoft.$1.Templates.$(2).nupkg: $(TEMPLATE_PACKS_$(shell echo $(1) | tr a-z A-Z)) | $(DOTNET_TEMPLATE_PACKS_PATH)
 	$$(Q) $$(CP) $$< $$@
@@ -309,11 +323,11 @@ endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call InstallWorkload,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr A-Z a-z))))
 
 define InstallRuntimeWorkload
-$(DOTNET_PACKS_PATH)/Microsoft.$1.Runtime.$2/$3: | $(DOTNET_PACKS_PATH)/Microsoft.$1.Runtime.$2
-	$$(Q_LN) ln -Fhs $$(abspath $(DOTNET_DESTDIR)/Microsoft.$1.Runtime.$2) $$(abspath $$@)
+$(DOTNET_PACKS_PATH)/Microsoft.$1.Runtime.$2.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/$3: | $(DOTNET_PACKS_PATH)/Microsoft.$1.Runtime.$2.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)
+	$$(Q_LN) ln -Fhs $$(abspath $(DOTNET_DESTDIR)/Microsoft.$1.Runtime.$2.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)) $$(abspath $$@)
 
 WORKLOAD_TARGETS += \
-	$(DOTNET_PACKS_PATH)/Microsoft.$1.Runtime.$2/$3
+	$(DOTNET_PACKS_PATH)/Microsoft.$1.Runtime.$2.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/$3
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call InstallRuntimeWorkload,$(platform),$(rid),$($(platform)_NUGET_VERSION_NO_METADATA)))))
 
@@ -522,7 +536,7 @@ clean-local::
 	$(Q) $(DOTNET) restore package/workaround-for-maccore-issue-2427/restore.csproj /bl:package/workaround-for-maccore-issue-2427/restore.binlog $(MSBUILD_VERBOSITY)
 	$(Q) touch $@
 
-$(DOTNET_DESTDIR)/Microsoft.iOS.Windows.Sdk/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip: .stamp-install-workloads
+$(DOTNET_DESTDIR)/Microsoft.iOS.Windows.Sdk.$(DOTNET_TFM)_$(IOS_NUGET_OS_VERSION)/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip: .stamp-install-workloads
 	$(Q) $(MAKE) -C $(TOP)/msbuild/Xamarin.HotRestart.PreBuilt all
 	$(Q) touch $@
 

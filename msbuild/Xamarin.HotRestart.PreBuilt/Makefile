@@ -20,6 +20,6 @@ $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk.$(DOTNET_TFM)_$(IOS_NUGET_OS_VERSION)
 	$(Q) mkdir -p $(dir $@)
 	$(Q) $(CP) $< $@
 
-all-local:: $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip
+all-local:: $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk.$(DOTNET_TFM)_$(IOS_NUGET_OS_VERSION)/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip
 
-install-local:: $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip
+install-local:: $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk.$(DOTNET_TFM)_$(IOS_NUGET_OS_VERSION)/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip
