@@ -206,6 +206,7 @@ namespace ObjCRuntime {
 		internal static unsafe InitializationOptions* options;
 
 #if NET
+		[Preserve (AllMembers = true)]
 		public static class ClassHandles
 		{
 			internal static unsafe void InitializeClassHandles (MTClassMap* map)

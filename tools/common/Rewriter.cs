@@ -45,10 +45,18 @@ namespace ClassRedirector {
 
 		}
 
-		public void Process ()
+		public string Process ()
 		{
-			var classMap = CreateClassHandles ();
+			Dictionary<string, FieldDefinition> classMap;
+			try {
+				classMap = CreateClassHandles ();
+			} catch (Exception e) {
+				// if this throws, no changes are made to the assemblies
+				// so it's safe to log it on the far side.
+				return e.Message;
+			}
 			PatchClassPtrUsage (classMap);
+			return "";
 		}
 
 		Dictionary<string, FieldDefinition> CreateClassHandles ()
@@ -57,8 +65,9 @@ namespace ClassRedirector {
 			var module = xamarinAssembly.MainModule;
 
 			var classHandles = LocateClassHandles (module);
-			if (classHandles is null)
-				throw new Exception ($"Unable to find {classHandleName} type in {pathToXamarinAssembly}");
+			if (classHandles is null) {
+				throw new Exception ($"Unable to find {classHandleName} type in Module {module.Name} File {module.FileName}, assembly {xamarinAssembly.Name}");
+			}
 
 			var initMethod = classHandles.Methods.FirstOrDefault (m => m.Name == initClassHandlesName);
 			if (initMethod is null)
@@ -68,11 +77,11 @@ namespace ClassRedirector {
 
 			var mtClassMapDef = LocateMTClassMap (module);
 			if (mtClassMapDef is null)
-				throw new Exception ($"Unable to find {mtClassMapName} in {pathToXamarinAssembly}");
+				throw new Exception ($"Unable to find {mtClassMapName} in Module {module.Name} File {module.FileName}, assembly {xamarinAssembly.Name}");
 
 			var nativeHandle = LocateNativeHandle (module);
 			if (nativeHandle is null)
-				throw new Exception ($"Unable to find {nativeHandleName} in {pathToXamarinAssembly}");
+				throw new Exception ($"Unable to find {nativeHandleName} in Module {module.Name} File {module.FileName}, assembly {xamarinAssembly.Name}");
 
 			var nativeHandleOpImplicit = FindOpImplicit (nativeHandle);
 			if (nativeHandleOpImplicit is null)

@@ -3298,7 +3298,10 @@ namespace Registrar {
 #if NET
 			if (App.Optimizations.RedirectClassHandles == true) {
 				var rewriter = new Rewriter (map_dict, GetAssemblies (), LinkContext);
-				rewriter.Process ();
+				var result = rewriter.Process ();
+				if (!string.IsNullOrEmpty (result)) {
+					Driver.Log (5, $"Not redirecting class handles because {result}");
+				}
 			}
 #endif
 			ErrorHelper.ThrowIfErrors (exceptions);
