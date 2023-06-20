@@ -12,6 +12,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 ***********************************************************************************************
 -->
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">	
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindILLink" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteItemsToFile" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.CopyArchiveFiles" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
@@ -304,17 +305,48 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		</PropertyGroup>
 	</Target>
 
+	<Target Name="_FindILLink" DependsOnTargets="_ComputeVariables">
+		<PropertyGroup>
+			<_RemoteILLinkCachePath>$(DeviceSpecificIntermediateOutputPath)remote-illink-path-$(NETCoreSdkVersion).txt</_RemoteILLinkCachePath>
+		</PropertyGroup>
+
+		<!-- This task does not take a SessionId because we cache the path on Windows for remote builds to avoid a round-trip -->
+		<ReadLinesFromFile
+			Condition="Exists('$(_RemoteILLinkCachePath)')"
+			File="$(_RemoteILLinkCachePath)"
+		>
+			<Output TaskParameter="Lines" PropertyName="_RemoteILLinkPath" />
+		</ReadLinesFromFile>
+
+		<FindILLink
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_RemoteILLinkPath)' == ''"
+			KeepTemporaryOutput="$(FindILLinkKeepKeepTemporaryOutput)"
+			RuntimeIdentifier="$(RuntimeIdentifier)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		>
+			<Output TaskParameter="ILLinkPath" PropertyName="_RemoteILLinkPath" />
+		</FindILLink>
+
+		<!-- This task does not take a SessionId because we cache the path on Windows for remote builds to avoid a round-trip -->
+		<WriteLinesToFile
+			File="$(_RemoteILLinkCachePath)"
+			Lines="$(_RemoteILLinkPath)"
+			Overwrite="true"
+		/>
+		<ItemGroup>
+			<FileWrites Include="$(_RemoteILLinkCachePath)" />
+		</ItemGroup>
+	</Target>
+
 	<!-- Overrides Core SDK target to remote the ILLink execution -->
 	<!-- https://github.com/dotnet/sdk/blob/cdf57465e1cba9e44b5c9a76a403d41b1b8f178c/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.ILLink.targets#L76-L132 -->
 	<Target Name="_RunILLink"
-		DependsOnTargets="_ComputeManagedAssemblyToLink;PrepareForILLink"
+		DependsOnTargets="_ComputeManagedAssemblyToLink;PrepareForILLink;_FindILLink"
 		Inputs="$(MSBuildAllProjects);@(ManagedAssemblyToLink);@(TrimmerRootDescriptor);@(ReferencePath)"
 		Outputs="$(_LinkSemaphore)">
 
 		<PropertyGroup>
-			<!-- We need to use netX.Y because when building from VS it sets MSBuildRuntimeType to Core and will pick net472 (which doesn't contain the illink assembly) -->
-			<_RemoteILLinkPath>$(ILLinkTasksAssembly.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)').Replace('net472', 'net$(BundledNETCoreAppTargetFrameworkVersion)').Replace('$([System.IO.Path]::GetFileName('$(ILLinkTasksAssembly)'))', 'illink.dll'))</_RemoteILLinkPath>
-
 			<!-- The .NET 7 linker sets _TrimmerDefaultAction instead of TrimmerDefaultAction, so copy that value if it's set (and TrimmerDefaultAction is not set) -->
 			<TrimmerDefaultAction Condition="'$(TrimmerDefaultAction)' == ''">$(_TrimmerDefaultAction)</TrimmerDefaultAction>
 
