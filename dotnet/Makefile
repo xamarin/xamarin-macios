@@ -101,12 +101,12 @@ endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CopyTargets,$(platform))))
 
 define CopyTargetsWindows
-$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/%: Microsoft.$(1).Windows.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/% | \
+$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/%: Microsoft.$(1).Windows.Sdk/% | \
 		$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/Sdk \
 		$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/targets
 	$(Q) $(CP) $$< $$@
 endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CopyTargetsWindows,$(platform))))
+$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CopyTargetsWindows,$(platform))))
 
 define VersionsTemplate
 targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.template.props Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index
@@ -422,14 +422,14 @@ define CreateWindowsBundle
 $(TMP_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $($(1)_WINDOWS_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACKS_$(4)) $(SDK_PACKS_$(4)) $(SDK_PACKS_$(4)_WINDOWS) $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -rf $$@ $$@.tmpdir $$@.tmp
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(MACIOS_MANIFEST_VERSION_BAND)/
-	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk
-	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Windows.Sdk
-	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Windows.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/template-packs
 	$$(Q) $(CP) -r Workloads/Microsoft.NET.Sdk.$1 $$@.tmpdir/dotnet/sdk-manifests/$(MACIOS_MANIFEST_VERSION_BAND)/microsoft.net.sdk.$3
-	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION) $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk/$2
-	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Windows.Sdk $$@.tmpdir/dotnet/packs/Microsoft.$1.Windows.Sdk/$2
-	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Ref.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION) $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref/$2
+	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION) $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/$2
+	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Windows.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION) $$@.tmpdir/dotnet/packs/Microsoft.$1.Windows.Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/$2
+	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Ref.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION) $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/$2
 	$$(Q) $(CP) $(TEMPLATE_PACKS_$(4)) $$@.tmpdir/dotnet/template-packs/$(subst +$(NUGET_BUILD_METADATA),,$(notdir $(TEMPLATE_PACKS_$(4))))
 	$$(Q_GEN) cd $$@.tmpdir && zip -9rq $$(abspath $$@.tmp) .
 	$$(Q) mv $$@.tmp $$@
