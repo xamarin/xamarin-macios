@@ -424,7 +424,13 @@
 			_ComputeLinkMode;
 			_ComputeFrameworkVariables;
 			_ComputeFrameworkAssemblies;
+		</_ComputeLinkerArgumentsDependsOn>
+		<_ComputeLinkerArgumentsDependsOn Condition="'$(PublishAot)' != 'true'">
+			$(_ComputeLinkerArgumentsDependsOn);
 			ComputeResolvedFilesToPublishList;
+		</_ComputeLinkerArgumentsDependsOn>
+		<_ComputeLinkerArgumentsDependsOn>
+			$(_ComputeLinkerArgumentsDependsOn);
 			_ParseBundlerArguments;
 			_ComputeVariables;
 			_CreateRuntimeConfiguration;
@@ -935,7 +941,7 @@
 			publish (except the merged app bundle, which we'll handle
 			ourselves).
 		-->
-		<_ComputeVariablesDependsOn Condition="'$(RuntimeIdentifiers)' == ''">$(_ComputeVariablesDependsOn);ComputeResolvedFilesToPublishList</_ComputeVariablesDependsOn>
+		<_ComputeVariablesDependsOn Condition="'$(RuntimeIdentifiers)' == '' And '$(PublishAot)' != 'true'">$(_ComputeVariablesDependsOn);ComputeResolvedFilesToPublishList</_ComputeVariablesDependsOn>
 	</PropertyGroup>
 
 	<Target Name="_ComputeVariables" DependsOnTargets="$(_ComputeVariablesDependsOn)">
