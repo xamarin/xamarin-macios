@@ -140,5 +140,8 @@
 
 		<!-- This turns off some NativeAOT logic we don't want nor need -->
 		<NativeCompilationDuringPublish>false</NativeCompilationDuringPublish>
+
+		<!-- This works around an issue in NativeAOT: https://github.com/dotnet/runtime/issues/86186 -->
+		<IlcKeepManagedDebuggerSupport>true</IlcKeepManagedDebuggerSupport>
 	</PropertyGroup>
 </Project>
