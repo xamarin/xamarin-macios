@@ -1941,13 +1941,6 @@
 		</BuildDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_ValidateTargetPlatformVersion">
-		<Error
-			Text="The target platform version '$(TargetPlatformVersion)' is not supported for the current workload. This value was probably specified as part of the target framework ('$(TargetFramework)'). Supported target platform versions are: $(_SupportedTargetPlatformVersions)."
-			Condition="'$(_TargetPlatformVersionNotRecognized)' == 'true'"
-		/>
-	</Target>
-
 	<Target Name="_ValidateRuntimeIdentifier"
 		Condition="'$(RuntimeIdentifier)' != '' And '$(_RuntimeIdentifierValidation)' != 'false' And '$(_RuntimeIdentifierIsRequired)' == 'true'"
 		BeforeTargets="Build;ResolvedFrameworkReference;ResolveRuntimePackAssets">

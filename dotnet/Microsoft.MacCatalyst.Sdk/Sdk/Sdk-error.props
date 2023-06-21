@@ -2,5 +2,5 @@
 	<PropertyGroup>
 		<_TargetPlatformVersionNotRecognized Condition="'$(_TargetPlatformVersionNotRecognized)' == ''">true</_TargetPlatformVersionNotRecognized>
 	</PropertyGroup>
-	<Import Project="$(MSBuildThisFileDirectory)..\targets\Microsoft.iOS.Sdk.props" />
+	<Import Project="Sdk.props" />
 </Project>
