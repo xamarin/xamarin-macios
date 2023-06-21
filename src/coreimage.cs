@@ -8690,6 +8690,13 @@ namespace CoreImage {
 		[Abstract]
 		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
 		CIImage InputImage { get; set; }
+
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+		[Export ("extrapolate")]
+		bool Extrapolate { get; set; }
 	}
 
 	[iOS (13, 0)]
