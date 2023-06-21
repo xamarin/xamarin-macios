@@ -225,7 +225,7 @@ namespace Xamarin.MacDev.Tasks {
 					continue;
 				}
 
-				if (ImageAssets [i].GetMetadata ("Link") is not null) {
+				if (!string.IsNullOrEmpty (ImageAssets [i].GetMetadata ("Link"))) {
 					// Note: if any of the files within a catalog are linked, we'll have to clone the *entire* catalog
 					clones.Add (catalog);
 					continue;
