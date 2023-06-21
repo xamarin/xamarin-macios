@@ -797,6 +797,8 @@ namespace Xamarin.Bundler {
 				} else {
 					sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_INTERP);");
 				}
+			} else if (app.XamarinRuntime == XamarinRuntime.NativeAOT) {
+				// don't call mono_jit_set_aot_mode
 			} else if (app.IsDeviceBuild) {
 				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");
 			} else if (app.Platform == ApplePlatform.MacCatalyst && ((abi & Abi.ARM64) == Abi.ARM64)) {
