@@ -82,7 +82,9 @@ enum MarshalObjectiveCExceptionMode xamarin_marshal_objectivec_exception_mode = 
 enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode = MarshalManagedExceptionModeDefault;
 enum XamarinTriState xamarin_log_exceptions = XamarinTriStateNone;
 enum XamarinLaunchMode xamarin_launch_mode = XamarinLaunchModeApp;
+#if SUPPORTS_DYNAMIC_REGISTRATION
 bool xamarin_supports_dynamic_registration = true;
+#endif
 const char *xamarin_runtime_configuration_name = NULL;
 
 #if DOTNET
@@ -966,7 +968,9 @@ bool
 xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchandle)
 {
 	// COOP: this is a function executed only at startup, I believe the mode here doesn't matter.
+#if SUPPORTS_DYNAMIC_REGISTRATION
 	if (!xamarin_supports_dynamic_registration) {
+#endif
 #if defined (CORECLR_RUNTIME)
 		if (xamarin_log_level > 0) {
 			MonoReflectionAssembly *rassembly = mono_assembly_get_object (mono_domain_get (), assembly);
@@ -983,11 +987,16 @@ xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchan
 		LOG (PRODUCT ": Skipping assembly registration for %s since it's not needed (dynamic registration is not supported)", mono_assembly_name_get_name (mono_assembly_get_name (assembly)));
 #endif
 		return true;
+#if SUPPORTS_DYNAMIC_REGISTRATION
 	}
+#endif
+
+#if SUPPORTS_DYNAMIC_REGISTRATION
 	MonoReflectionAssembly *rassembly = mono_assembly_get_object (mono_domain_get (), assembly);
 	xamarin_register_assembly (rassembly, exception_gchandle);
 	xamarin_mono_object_release (&rassembly);
 	return *exception_gchandle == INVALID_GCHANDLE;
+#endif // SUPPORTS_DYNAMIC_REGISTRATION
 }
 
 // Returns a retained MonoObject. Caller must release.
