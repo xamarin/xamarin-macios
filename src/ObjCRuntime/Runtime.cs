@@ -159,6 +159,7 @@ namespace ObjCRuntime {
 			IsSimulator = 0x10,
 #if NET
 			IsCoreCLR				= 0x20,
+			IsNativeAOT				= 0x40,
 #endif
 		}
 
@@ -220,6 +221,14 @@ namespace ObjCRuntime {
 			get {
 				// The linker may turn calls to this property into a constant
 				return (options->Flags.HasFlag (InitializationFlags.IsCoreCLR));
+			}
+		}
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		internal unsafe static bool IsNativeAOT {
+			get {
+				// The linker may turn calls to this property into a constant
+				return (options->Flags.HasFlag (InitializationFlags.IsNativeAOT));
 			}
 		}
 #endif
