@@ -153,6 +153,11 @@
 	<!-- Default item includes (globs and implicit references) -->
 	<Import Project="Xamarin.Shared.Sdk.DefaultItems.targets" />
 
+	<PropertyGroup Condition="'$(_GlobalizationDataFileLocation)' == ''">
+		<_GlobalizationDataFileLocation Condition="'$(_UseNativeAot)' == 'true'">Resource</_GlobalizationDataFileLocation>
+		<_GlobalizationDataFileLocation Condition="'$(_UseNativeAot)' != 'true'">Assembly</_GlobalizationDataFileLocation>
+	</PropertyGroup>
+
 	<!-- dotnet publish -->
 	<Import Project="Xamarin.Shared.Sdk.Publish.targets" />
 
@@ -1650,7 +1655,7 @@
 				            '%(ResolvedFileToPublish.Filename)%(ResolvedFileToPublish.Extension)' == '$(_GlobalizationDataFile)' And
 				            '%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)'
 				            "
-				PublishFolderType="Assembly"
+				PublishFolderType="$(_GlobalizationDataFileLocation)"
 			/>
 
 			<!-- Remove the libxamarin-*.dylib files we don't want -->

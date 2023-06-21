@@ -2589,12 +2589,14 @@ xamarin_vm_initialize ()
 	int subtractPropertyCount = 0;
 
 	if (xamarin_icu_dat_file_name != NULL && *xamarin_icu_dat_file_name != 0) {
+#if !defined (NATIVEAOT)
 		char path [1024];
 		if (!xamarin_locate_app_resource (xamarin_icu_dat_file_name, path, sizeof (path))) {
 			LOG (PRODUCT ": Could not locate the ICU data file '%s' in the app bundle.\n", xamarin_icu_dat_file_name);
 		} else {
 			icu_dat_file_path = strdup (path);
 		}
+#endif // !defined (NATIVEAOT)
 	} else {
 		subtractPropertyCount++;
 	}
