@@ -433,8 +433,45 @@
 			_DetectAppManifest;
 			_ReadAppManifest;
 			_WriteAppManifest;
+			_ComputeLinkerFeatures;
 		</_ComputeLinkerArgumentsDependsOn>
 	</PropertyGroup>
+
+	<Target Name="_ComputeLinkerFeatures">
+		<PropertyGroup Condition="'$(PublishAot)' == 'true'">
+			<!-- The one and only registrar is 'managed-static' when using NativeAOT -->
+			<Registrar Condition="'$(Registrar)' == ''">managed-static</Registrar>
+
+			<!-- Yep, we want to run ILLink as well, because we need our custom steps to run (NativeAOT sets this to false, so set it back to true) -->
+			<RunILLink>true</RunILLink>
+		</PropertyGroup>
+
+		<PropertyGroup>
+			<!-- Set linker feature flags for device/simulator builds -->
+			<_IsSimulatorFeature Condition="('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS') And '$(_SdkIsSimulator)' == 'true'">true</_IsSimulatorFeature>
+			<_IsSimulatorFeature Condition="'$(_IsSimulatorFeature)' == ''">false</_IsSimulatorFeature>
+
+			<!-- Set managed static registrar value -->
+			<_IsManagedStaticRegistrarFeature Condition="'$(Registrar)' == 'managed-static'">true</_IsManagedStaticRegistrarFeature>
+			<_IsManagedStaticRegistrarFeature Condition="'$(Registrar)' != 'managed-static'">false</_IsManagedStaticRegistrarFeature>
+
+			<!-- Set NativeAOT value -->
+			<_IsNativeAOTFeature Condition="'$(_XamarinRuntime)' == 'NativeAOT'">true</_IsNativeAOTFeature>
+			<_IsNativeAOTFeature Condition="'$(_XamarinRuntime)' != 'NativeAOT'">false</_IsNativeAOTFeature>
+
+			<!-- Set the features for ILLink -->
+			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.Arch.IsSimulator $(_IsSimulatorFeature)</_ExtraTrimmerArgs>
+			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.IsManagedStaticRegistrar $(_IsManagedStaticRegistrarFeature)</_ExtraTrimmerArgs>
+			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.IsNativeAOT $(_IsNativeAOTFeature)</_ExtraTrimmerArgs>
+		</PropertyGroup>
+
+		<ItemGroup>
+			<!-- Set the features for ILC -->
+			<IlcArg Include="--feature:ObjCRuntime.Runtime.Arch.IsSimulator=$(_IsSimulatorFeature)" />
+			<IlcArg Include="--feature:ObjCRuntime.Runtime.IsManagedStaticRegistrar=$(_IsManagedStaticRegistrarFeature)" />
+			<IlcArg Include="--feature:ObjCRuntime.Runtime.IsNativeAOT=$(_IsNativeAOTFeature)" />
+		</ItemGroup>
+	</Target>
 
 	<Target Name="_ComputeLinkerArguments" DependsOnTargets="$(_ComputeLinkerArgumentsDependsOn)">
 		<!-- Validate the linker mode -->
@@ -444,9 +481,6 @@
 		<Error Text="Can not set values for both InvariantGlobalization '$(InvariantGlobalization)' and _GlobalizationDataFile '$(_GlobalizationDataFile)'" Condition="'$(_GlobalizationDataFile)' != '' And '$(InvariantGlobalization)' == 'true'" />
 
 		<Error Text="The only valid registrar when using NativeAOT is 'managed-static' (current value: '$(Registrar)'). Please either delete the 'Registrar' property, or change it to be 'managed-static'." Condition="'$(PublishAot)' == 'true' And '$(Registrar)' != '' And '$(Registrar)' != 'managed-static'" />
-		<PropertyGroup Condition="'$(PublishAot)' == 'true'">
-			<Registrar Condition="'$(Registrar)' == ''">managed-static</Registrar>
-		</PropertyGroup>
 
 		<PropertyGroup>
 			<!-- Pass the custom options to our custom steps -->
@@ -563,18 +597,6 @@
 
 			<!-- If a release build and the app is not extensible (no interpreter or JIT/code-loading for macOS) then the sealer optimization can be used -->
 			<_ExtraTrimmerArgs Condition="'$(_BundlerDebug)' != 'true' And '$(MtouchInterpreter)' == '' And '$(_RunAotCompiler)' == 'true' And '$(_PlatformName)' != 'macOS'">$(_ExtraTrimmerArgs) --enable-opt sealer</_ExtraTrimmerArgs>
-
-			<!-- Set linker feature flags for device/simulator builds -->
-			<_ExtraTrimmerArgs Condition="('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS') And '$(_SdkIsSimulator)' == 'true'">$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.Arch.IsSimulator true</_ExtraTrimmerArgs>
-			<_ExtraTrimmerArgs Condition="('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS') And '$(_SdkIsSimulator)' != 'true'">$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.Arch.IsSimulator false</_ExtraTrimmerArgs>
-
-			<!-- Set managed static registrar value -->
-			<_ExtraTrimmerArgs Condition="'$(Registrar)' == 'managed-static'">$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.IsManagedStaticRegistrar true</_ExtraTrimmerArgs>
-			<_ExtraTrimmerArgs Condition="'$(Registrar)' != 'managed-static'">$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.IsManagedStaticRegistrar false</_ExtraTrimmerArgs>
-
-			<!-- Set NativeAOT value -->
-			<_ExtraTrimmerArgs Condition="'$(_XamarinRuntime)' == 'NativeAOT'">$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.IsNativeAOT true</_ExtraTrimmerArgs>
-			<_ExtraTrimmerArgs Condition="'$(_XamarinRuntime)' != 'NativeAOT'">$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.IsNativeAOT false</_ExtraTrimmerArgs>
 
 			<!-- Enable serialization discovery. Ref: https://github.com/xamarin/xamarin-macios/issues/15676 -->
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --enable-serialization-discovery</_ExtraTrimmerArgs>
