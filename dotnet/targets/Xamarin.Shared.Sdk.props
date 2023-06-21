@@ -103,6 +103,20 @@
 	</PropertyGroup>
 
 	<!--
+
+		SelfContained is automatically enabled if PublishAot is true, and that
+		doesn't work properly (restore fails because RuntimeIdentifier is not
+		set) when doing the outer build of a universal apps (when
+		RuntimeIdentifier=''), so manually disable SelfContained in that case.
+
+		This might not be necessary after: https://github.com/dotnet/sdk/pull/33229
+
+	-->
+	<PropertyGroup Condition="'$(PublishAot)' == 'true' And '$(_IsPublishing)' == 'true' And '$(RuntimeIdentifiers)' != '' And '$(RuntimeIdentifier)' == '' And '$(SelfContained)' == ''">
+		<SelfContained>false</SelfContained>
+	</PropertyGroup>
+
+	<!--
 		Enable LLVM by default for mobile release builds.
 
 		At this point we don't necessarily know yet whether we're building for device or simulator,
