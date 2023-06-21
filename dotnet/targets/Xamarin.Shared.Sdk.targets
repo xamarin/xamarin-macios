@@ -860,6 +860,7 @@
 			<_XamarinRuntime Condition="'$(UseMonoRuntime)' != 'true' And '$(PublishAot)' == 'true'">NativeAOT</_XamarinRuntime>
 
 			<_PackageIdInfix Condition="'$(_XamarinRuntime)' == 'MonoVM'">Mono.</_PackageIdInfix>
+			<_PackageIdInfix Condition="'$(_XamarinRuntime)' == 'NativeAOT'">NativeAOT.</_PackageIdInfix>
 
 			<_MonoNugetPackageId>Microsoft.NETCore.App.Runtime.$(_PackageIdInfix)$(RuntimeIdentifier)</_MonoNugetPackageId>
 			<_XamarinNugetPackageId>Microsoft.$(_PlatformName).Runtime.$(RuntimeIdentifier)</_XamarinNugetPackageId>
