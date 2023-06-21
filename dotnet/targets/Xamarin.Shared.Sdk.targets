@@ -1194,6 +1194,9 @@
 
 			<!-- Disable trimming by default (assemblies aren't trimmed unless they're marked IsTrimmable) -->
 			<IlcArg Include="--defaultrooting" />
+
+			<!-- Link in the output from ILC -->
+			<_NativeExecutableObjectFiles Include="$(NativeObject)" />
 		</ItemGroup>
 	</Target>
 
