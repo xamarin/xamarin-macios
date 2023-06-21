@@ -706,7 +706,10 @@ public partial class Generator : IMemberGatherer {
 
 			if (TypeManager.INativeObject.IsAssignableFrom (pi.ParameterType)) {
 				pars.Add (new TrampolineParameterInfo (NativeHandleType, safe_name));
-				invoke.AppendFormat ("new {0} ({1}, false)", pi.ParameterType, safe_name);
+				if (BindThirdPartyLibrary)
+					invoke.AppendFormat ("Runtime.GetINativeObject<{0}> ({1}, false)!", pi.ParameterType, safe_name);
+				else
+					invoke.AppendFormat ("{1} == IntPtr.Zero ? null! : new {0} ({1}, false)", pi.ParameterType, safe_name);
 				continue;
 			}
 

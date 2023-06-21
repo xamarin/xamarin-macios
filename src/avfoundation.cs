@@ -112,6 +112,7 @@ namespace AVFoundation {
 	delegate void AVAssetImageGeneratorCompletionHandler (CMTime requestedTime, IntPtr imageRef, CMTime actualTime, AVAssetImageGeneratorResult result, NSError error);
 	delegate void AVAssetImageGeneratorCompletionHandler2 (CMTime requestedTime, CGImage imageRef, CMTime actualTime, AVAssetImageGeneratorResult result, NSError error);
 #endif
+	delegate void AVAssetImageGenerateAsynchronouslyForTimeCompletionHandler (CGImage imageRef, CMTime actualTime, NSError error);
 	delegate void AVCompletion (bool finished);
 	delegate void AVRequestAccessStatus (bool accessGranted);
 	delegate AVAudioBuffer AVAudioConverterInputHandler (uint inNumberOfPackets, out AVAudioConverterInputStatus outStatus);
@@ -4034,6 +4035,10 @@ namespace AVFoundation {
 		[Export ("initWithAsset:")]
 		NativeHandle Constructor (AVAsset asset);
 
+		[Deprecated (PlatformName.MacOSX, 13, 0, message: "Use the 'GenerateCGImagesAsynchronously' method instead.")]
+		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use the 'GenerateCGImagesAsynchronously' method instead.")]
+		[Deprecated (PlatformName.iOS, 16, 0, message: "Use the 'GenerateCGImagesAsynchronously' method instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use the 'GenerateCGImagesAsynchronously' method instead.")]
 		[Export ("copyCGImageAtTime:actualTime:error:")]
 		[return: NullAllowed]
 		[return: Release ()]
@@ -4047,6 +4052,13 @@ namespace AVFoundation {
 		[Export ("generateCGImagesAsynchronouslyForTimes:completionHandler:")]
 		void GenerateCGImagesAsynchronously (NSValue [] cmTimesRequestedTimes, AVAssetImageGeneratorCompletionHandler2 handler);
 #endif
+
+		[iOS (16, 0)]
+		[Mac (13, 0)]
+		[MacCatalyst (16, 0)]
+		[TV (16, 0)]
+		[Export ("generateCGImageAsynchronouslyForTime:completionHandler:")]
+		void GenerateCGImageAsynchronously (CMTime requestedTime, AVAssetImageGenerateAsynchronouslyForTimeCompletionHandler handler);
 
 		[Export ("cancelAllCGImageGeneration")]
 		void CancelAllCGImageGeneration ();

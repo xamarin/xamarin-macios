@@ -7,8 +7,16 @@ namespace Xamarin.MacDev.Tasks {
 	public class Zip : ZipTaskBase, ITaskCallback {
 		public override bool Execute ()
 		{
-			if (ShouldExecuteRemotely ())
-				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+			if (ShouldExecuteRemotely ()) {
+				var taskRunner = new TaskRunner (SessionId, BuildEngine4);
+				var rv = taskRunner.RunAsync (this).Result;
+
+				// Copy the zipped file back to Windows.
+				if (rv)
+					taskRunner.GetFileAsync (this, OutputFile.ItemSpec).Wait ();
+
+				return rv;
+			}
 
 			return base.Execute ();
 		}
