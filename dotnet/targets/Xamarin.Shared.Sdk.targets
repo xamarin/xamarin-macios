@@ -1210,6 +1210,11 @@
 			_ComputeNativeExecutableInputs;
 			_AOTCompile;
 		</_CompileNativeExecutableDependsOn>
+
+		<_CompileNativeExecutableDependsOn Condition="'$(PublishAot)' == 'true'">
+			$(_CompileNativeExecutableDependsOn);
+			IlcCompile;
+		</_CompileNativeExecutableDependsOn>
 	</PropertyGroup>
 
 	<Target Name="_CompileNativeExecutable"
