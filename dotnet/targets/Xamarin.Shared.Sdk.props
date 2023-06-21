@@ -58,6 +58,13 @@
 
 		<!-- Explicitly export symbols using clang command-line option "-exported_symbols_list export_list" -->
 		<_ExportSymbolsExplicitly Condition="'$(_ExportSymbolsExplicitly)' == ''">true</_ExportSymbolsExplicitly>
+
+		<!--
+			Some runtime libraries feature switches defaults that need to be set early
+			Available feature switches: https://github.com/dotnet/runtime/blob/master/docs/workflow/trimming/feature-switches.md
+		-->
+		<!-- AutoreleasePoolSupport needs to be set earlier than other switches, so that illink doesn't override it - https://github.com/dotnet/runtime/pull/86753 - so it's set here, instead of in Xamarin.Shared.Sdk.targets -->
+		<AutoreleasePoolSupport Condition="'$(AutoreleasePoolSupport)' == ''">true</AutoreleasePoolSupport>
 	</PropertyGroup>
 
 	<!-- Set the default RuntimeIdentifier if not already specified. -->
