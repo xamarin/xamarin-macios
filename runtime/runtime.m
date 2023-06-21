@@ -1304,12 +1304,14 @@ xamarin_initialize ()
 #endif
 
 #if defined (CORECLR_RUNTIME)
+#if !defined(__arm__) // the dynamic trampolines haven't been implemented in 32-bit ARM assembly.
 	options.xamarin_objc_msgsend = (void *) xamarin_dyn_objc_msgSend;
 	options.xamarin_objc_msgsend_super = (void *) xamarin_dyn_objc_msgSendSuper;
 #if !defined(__aarch64__)
 	options.xamarin_objc_msgsend_stret = (void *) xamarin_dyn_objc_msgSend_stret;
 	options.xamarin_objc_msgsend_super_stret = (void *) xamarin_dyn_objc_msgSendSuper_stret;
 #endif // !defined(__aarch64__)
+#endif // !defined(__arm__)
 	options.unhandled_exception_handler = (void *) &xamarin_coreclr_unhandled_exception_handler;
 	options.reference_tracking_begin_end_callback = (void *) &xamarin_coreclr_reference_tracking_begin_end_callback;
 	options.reference_tracking_is_referenced_callback = (void *) &xamarin_coreclr_reference_tracking_is_referenced_callback;

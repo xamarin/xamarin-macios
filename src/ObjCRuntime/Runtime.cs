@@ -249,6 +249,20 @@ namespace ObjCRuntime {
 		static extern int _NSGetExecutablePath (byte[] buf, ref int bufsize);
 #endif
 
+#if NET
+		[Preserve] // called from native - nativeaot-bridge.m and coreclr-bridge.m.
+		[UnmanagedCallersOnly (EntryPoint = "xamarin_objcruntime_runtime_nativeaotinitialize")]
+		unsafe static void SafeInitialize (InitializationOptions* options, IntPtr* exception_gchandle)
+		{
+			*exception_gchandle = IntPtr.Zero;
+			try {
+				Initialize (options);
+			} catch (Exception e) {
+				*exception_gchandle = AllocGCHandle (e);
+			}
+		}
+#endif
+
 		[Preserve] // called from native - runtime.m.
 		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
 		unsafe static void Initialize (InitializationOptions* options)
