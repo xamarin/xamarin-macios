@@ -1191,6 +1191,9 @@
 			<!-- Process UnmanagedCallersOnly attributes from every assembly -->
 			<UnmanagedEntryPointsAssembly Remove="System.Private.CoreLib" />
 			<UnmanagedEntryPointsAssembly Include="@(_UpdatedManagedAssemblyToLink->'%(Filename)')" />
+
+			<!-- Disable trimming by default (assemblies aren't trimmed unless they're marked IsTrimmable) -->
+			<IlcArg Include="--defaultrooting" />
 		</ItemGroup>
 	</Target>
 
