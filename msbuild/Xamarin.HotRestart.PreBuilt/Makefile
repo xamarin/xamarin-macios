@@ -13,7 +13,7 @@ $(TOP)/tests/dotnet/%:
 	$(Q) $(MAKE) -C $(dir $@) $*
 
 .build-stamp: $(wildcard Xamarin.PreBuilt.iOS/*) Makefile
-	$(Q_GEN) $(DOTNET) build Xamarin.PreBuilt.iOS/Xamarin.PreBuilt.iOS.csproj "/bl:$(abspath ./msbuild.binlog)" $(DOTNET_BUILD_VERBOSITY)
+	$(Q_GEN) if ! $(DOTNET) build Xamarin.PreBuilt.iOS/Xamarin.PreBuilt.iOS.csproj "/bl:$(abspath ./msbuild.binlog)" $(DOTNET_BUILD_VERBOSITY); then echo "Binlog: $(abspath ./msbuild.binlog)"; exit 1; fi
 	$(Q) touch $@
 
 $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip: Xamarin.PreBuilt.iOS.app.zip
