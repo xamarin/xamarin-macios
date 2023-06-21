@@ -200,6 +200,9 @@
     <Compile Include="..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>
+    <Compile Include="..\common\TestRuntime.RunAsync.cs">
+      <Link>TestRuntime.RunAsync.cs</Link>
+    </Compile>
     <Compile Include="..\common\ConditionalCompilation.cs">
       <Link>ConditionalCompilation.cs</Link>
     </Compile>
@@ -405,6 +408,6 @@
     <Exec Command="xcrun -sdk $(_SmeltingSdk) metallib $(IntermediateOutputPath)\fragmentShader.air -o $(AppBundleDir)\fragmentShader.metallib" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
   </Target>
   <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting" >
-    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" Condition="'$(BUILD_REVISION)' == ''" />
   </Target>
 </Project>

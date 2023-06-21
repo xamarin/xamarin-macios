@@ -1203,6 +1203,12 @@
         <value>Die ZIP-Datei "{0}" kann auf dieser Plattform nicht verarbeitet werden: Die Datei "{1}" ist ein symbolischer Link.</value>
     </data>
   <data name="E7114" xml:space="preserve">
-        <value>The "{0}" task was not given a value for the parameter "{1}", which is required when building on this platform.</value>
+        <value>Der "{0}"-Aufgabe wurde kein Wert für den Parameter "{1}" übergeben, der beim Erstellen auf dieser Plattform erforderlich ist.</value>
+    </data>
+  <data name="E7115" xml:space="preserve">
+        <value>The illink assembly doesn't exist: '{0}'.</value>
+        <comment>
+            {0}: the path to the linker assembly
+        </comment>
     </data>
 </root>

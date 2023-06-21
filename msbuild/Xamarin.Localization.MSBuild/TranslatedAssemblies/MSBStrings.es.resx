@@ -1203,6 +1203,12 @@
         <value>No se puede procesar el archivo ZIP "{0}" en esta plataforma: el archivo "{1}" es un symlink.</value>
     </data>
   <data name="E7114" xml:space="preserve">
-        <value>The "{0}" task was not given a value for the parameter "{1}", which is required when building on this platform.</value>
+        <value>A la tarea "{0}" no se le asignó un valor para el parámetro "{1}", que es necesario para compilar en esta plataforma.</value>
+    </data>
+  <data name="E7115" xml:space="preserve">
+        <value>The illink assembly doesn't exist: '{0}'.</value>
+        <comment>
+            {0}: the path to the linker assembly
+        </comment>
     </data>
 </root>

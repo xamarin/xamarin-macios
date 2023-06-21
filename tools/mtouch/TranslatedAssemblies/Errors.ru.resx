@@ -1034,10 +1034,6 @@
 		<value>Не удалось оптимизировать вызов BlockLiteral.{2} в {0}, так как типом значения, переданного в качестве первого аргумента (трамплин), является {1}, что делает невозможным вычисление подписи блока.
 		</value>
 	</data>
-  <data name="MM2106_C" xml:space="preserve">
-		<value>Не удалось оптимизировать вызов BlockLiteral.SetupBlock в {0} со смещением {1}, так как не удалось найти атрибут [UserDelegateType] в {2}.
-		</value>
-	</data>
   <data name="MM2106_D" xml:space="preserve">
 		<value>Не удалось оптимизировать вызов BlockLiteral.SetupBlock в {0} со смещением {1}: {2}.
 		</value>
@@ -1540,6 +1536,12 @@
   <data name="MT4186" xml:space="preserve">
 		<value>Регистратор обнаружил неоптимальный тип "{0}": тип не содержит конструктор, который принимает два аргумента (ObjCRuntime.NativeHandle, логический). Однако найден конструктор, принимающий два аргумента (System.IntPtr, логический), который и будет использоваться. Настоятельно рекомендуется изменить подпись конструктора (System.IntPtr, логический) на (ObjCRuntime.NativeHandle, логический).</value>
 	</data>
+  <data name="MX4187" xml:space="preserve">
+		<value>Could not find a [UserDelegateType] attribute on the type '{0}'.</value>
+	</data>
+  <data name="MX4188" xml:space="preserve">
+		<value>Unable to compute the block signature for the type '{0}': {1}</value>
+	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Отсутствует компилятор "{0}". Установите компонент программ командной строки для Xcode.
 		</value>
@@ -1801,5 +1803,14 @@
 	</data>
   <data name="MX8052" xml:space="preserve">
 		<value>Подпись должна быть непустой строкой.</value>
+	</data>
+  <data name="MX8053" xml:space="preserve">
+		<value>Could not resolve the module in the assembly {0}.</value>
+	</data>
+  <data name="MX8054" xml:space="preserve">
+		<value>Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}).</value>
+	</data>
+  <data name="MX8055" xml:space="preserve">
+		<value>Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.</value>
 	</data>
 </root>

@@ -109,7 +109,11 @@ namespace MonoTouchFixtures.AVFoundation {
 								captureSession.AddOutput (metadataOutput);
 
 							AVMetadataObjectType all = AVMetadataObjectType.None;
+#if NET
+							foreach (var val in Enum.GetValues<AVMetadataObjectType> ()) {
+#else
 							foreach (AVMetadataObjectType val in Enum.GetValues (typeof (AVMetadataObjectType))) {
+#endif
 								switch (val) {
 								case AVMetadataObjectType.CatBody:
 								case AVMetadataObjectType.DogBody:
@@ -120,6 +124,15 @@ namespace MonoTouchFixtures.AVFoundation {
 										continue;
 									// xcode 12 beta 1 on device
 									if (TestRuntime.IsDevice && TestRuntime.CheckXcodeVersion (12, 0))
+										continue;
+									break;
+								case AVMetadataObjectType.CodabarCode:
+								case AVMetadataObjectType.GS1DataBarCode:
+								case AVMetadataObjectType.GS1DataBarExpandedCode:
+								case AVMetadataObjectType.GS1DataBarLimitedCode:
+								case AVMetadataObjectType.MicroQRCode:
+								case AVMetadataObjectType.MicroPdf417Code:
+									if (!TestRuntime.CheckXcodeVersion (13, 3))
 										continue;
 									break;
 								}

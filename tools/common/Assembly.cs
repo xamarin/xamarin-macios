@@ -313,7 +313,7 @@ namespace Xamarin.Bundler {
 			}
 
 			// Don't add -force_load if the binding's SmartLink value is set and the static registrar is being used.
-			if (metadata.ForceLoad && !(metadata.SmartLink && App.Registrar == RegistrarMode.Static))
+			if (metadata.ForceLoad && !(metadata.SmartLink && (App.Registrar == RegistrarMode.Static || App.Registrar == RegistrarMode.ManagedStatic)))
 				ForceLoad = true;
 
 			if (!string.IsNullOrEmpty (metadata.LinkerFlags)) {

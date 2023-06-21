@@ -211,7 +211,10 @@ public partial class Generator {
 				if (export is null)
 					throw new BindingException (1074, true, type.Name, p.Name);
 
-				var sel = export.Selector;
+				if (export.Selector is null)
+					throw new BindingException (1082, true, type.Name, p.Name);
+
+				var sel = export.Selector!;
 				if (sel.StartsWith ("input", StringComparison.Ordinal))
 					name = sel;
 				else
@@ -237,9 +240,9 @@ public partial class Generator {
 		if (export is null)
 			return;
 
-		var selector = export.Selector;
+		var selector = export.Selector!;
 		if (setter)
-			selector = "set" + selector.Capitalize () + ":";
+			selector = "set" + selector!.Capitalize () + ":";
 
 		if (export.ArgumentSemantic != ArgumentSemantic.None && !p.PropertyType.IsPrimitive)
 			print ($"[Export (\"{selector}\", ArgumentSemantic.{export.ArgumentSemantic})]");

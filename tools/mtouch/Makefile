@@ -435,29 +435,6 @@ verify-sorted-resx:
 		exit 1; \
 	fi
 
-ifdef INCLUDE_XAMARIN_LEGACY
-ifdef INCLUDE_IOS
-PACKAGE_INTROSPECTION_DEPENDENCIES=1
-endif
-endif
-
-ifdef PACKAGE_INTROSPECTION_DEPENDENCIES
-ifdef IOS_SUPPORTS_32BIT_ARCHITECTURES
-package-introspection-dependencies.zip: simlauncher32-sgen simlauncher64-sgen
-else
-package-introspection-dependencies.zip: simlauncher64-sgen
-endif
-	$(Q) mkdir -p $@.tmpdir
-	$(Q) $(CP) -a simlauncher*-sgen*  $@.tmpdir
-	$(Q_GEN) cd $@.tmpdir && zip -9r $(abspath $@) .
-	$(Q) rm -rf $@.tmpdir
-else
-package-introspection-dependencies.zip:
-	@# This is dumb, but it makes things much easier in Azure DevOps if we just always have a zip file with something in it (doesn't matter what, so I'm just adding the Makefile)
-	$(Q) rm -f "$@"
-	$(Q) zip --quiet "$@" Makefile
-endif
-
 clean-dotnet:
 	rm -f $(TARGETS_DOTNET)
 

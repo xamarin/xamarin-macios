@@ -100,7 +100,11 @@ namespace MonoTouchFixtures.Metal {
 				Console.WriteLine ($"This device supports feature set: {fs}: {device.SupportsFeatureSet (fs)}");
 			}
 			if (TestRuntime.CheckXcodeVersion (11, 0)) {
+#if NET
+				foreach (var gf in Enum.GetValues<MTLGpuFamily> ()) {
+#else
 				foreach (MTLGpuFamily gf in Enum.GetValues (typeof (MTLGpuFamily))) {
+#endif
 					Console.WriteLine ($"This device supports Gpu family: {gf}: {device.SupportsFamily (gf)}");
 				}
 			}

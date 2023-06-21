@@ -170,6 +170,7 @@
 	<PropertyGroup>
 		<!-- single-rid build -->
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' == '' And '$(_IsMultiRidBuild)' != 'true'">
+			_WarnRuntimeIdentifiersClash;
 			_ComputePublishTrimmed;
 			BuildOnlySettings;
 			_CollectBundleResources;
@@ -185,6 +186,7 @@
 
 		<!-- inner build for multi-rid build -->
 		<BuildDependsOn Condition="'$(_IsMultiRidBuild)' == 'true'">
+			_ErrorRuntimeIdentifiersClash;
 			_ComputePublishTrimmed;
 			BuildOnlySettings;
 			_CollectBundleResources;
@@ -196,6 +198,7 @@
 
 		<!-- outer build for multi-rid build -->
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
+			_ErrorRuntimeIdentifiersClash;
 			_CollectBundleResources;
 			_RunRidSpecificBuild;
 			_DetectAppManifest;
@@ -277,6 +280,10 @@
 
 	<Target Name="_WarnRuntimeIdentifiersClash" Condition="'$(_RuntimeIdentifiersClashMessage)' != ''">
 		<Warning Text="$(_RuntimeIdentifiersClashMessage)" />
+	</Target>
+
+	<Target Name="_ErrorRuntimeIdentifiersClash" Condition="'$(_RuntimeIdentifiersClashErrorMessage)' != ''">
+		<Error Text="$(_RuntimeIdentifiersClashErrorMessage)" />
 	</Target>
 
 	<!-- If we have multiple runtime identifiers, then we need to run an inner build for each of them -->
@@ -557,6 +564,10 @@
 			<_ExtraTrimmerArgs Condition="('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS') And '$(_SdkIsSimulator)' == 'true'">$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.Arch.IsSimulator true</_ExtraTrimmerArgs>
 			<_ExtraTrimmerArgs Condition="('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS') And '$(_SdkIsSimulator)' != 'true'">$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.Arch.IsSimulator false</_ExtraTrimmerArgs>
 
+			<!-- Set managed static registrar value -->
+			<_ExtraTrimmerArgs Condition="'$(Registrar)' == 'managed-static'">$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.IsManagedStaticRegistrar true</_ExtraTrimmerArgs>
+			<_ExtraTrimmerArgs Condition="'$(Registrar)' != 'managed-static'">$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.IsManagedStaticRegistrar false</_ExtraTrimmerArgs>
+
 			<!-- Enable serialization discovery. Ref: https://github.com/xamarin/xamarin-macios/issues/15676 -->
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --enable-serialization-discovery</_ExtraTrimmerArgs>
 
@@ -589,6 +600,7 @@
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Type="MonoTouch.Tuner.RegistrarRemovalTrackingStep" />
 			<!-- TODO: these steps should probably run after mark. -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Condition="'$(_AreAnyAssembliesTrimmed)' == 'true'" Type="Xamarin.Linker.Steps.PreMarkDispatcher" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Type="Xamarin.Linker.ManagedRegistrarStep" Condition="'$(Registrar)' == 'managed-static'" />
 
 			<!--
 				IMarkHandlers which run during Mark
@@ -600,6 +612,11 @@
 			<!-- MarkDispatcher substeps will run for all marked assemblies. -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_AreAnyAssembliesTrimmed)' == 'true'" Type="Xamarin.Linker.Steps.MarkDispatcher" />
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_AreAnyAssembliesTrimmed)' == 'true'" Type="Xamarin.Linker.Steps.PreserveSmartEnumConversionsHandler" />
+
+			<!--
+				pre-sweep custom steps
+			-->
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="SweepStep" Type="Xamarin.Linker.ManagedRegistrarLookupTablesStep" Condition="'$(Registrar)' == 'managed-static'" />
 
 			<!--
 				post-sweep custom steps
@@ -998,11 +1015,6 @@
 			<Output TaskParameter="Lines" PropertyName="_XamarinAOTCompiler" />
 		</ReadLinesFromFile>
 
-		<!-- If the cached value points to a file that doesn't exist, then don't use it -->
-		<PropertyGroup Condition="!Exists('$(_XamarinAOTCompiler)')">
-			<_XamarinAOTCompiler />
-		</PropertyGroup>
-
 		<FindAotCompiler
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '$(_RunAotCompiler)' == 'true' And '$(_XamarinAOTCompiler)' == ''"
@@ -1168,6 +1180,10 @@
 	</PropertyGroup>
 
 	<Target Name="_ComputeLinkNativeExecutableInputs" Condition="'$(IsMacEnabled)' == 'true'">
+		<PropertyGroup>
+			<_ExportedSymbolsFile Condition="'$(_ExportedSymbolsFile)' == '' and '$(_MtouchSymbolsList)' == ''">/dev/null</_ExportedSymbolsFile> <!-- nothing to export -->
+			<_ExportedSymbolsFile Condition="'$(_ExportedSymbolsFile)' == ''">$(_MtouchSymbolsList)</_ExportedSymbolsFile>
+		</PropertyGroup>
 		<ItemGroup>
 			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
 			<!-- Link with the libraries shipped with the mono runtime pack -->
@@ -1183,6 +1199,9 @@
 			<_MainLinkerFlags Include="-lz" />
 			<_MainLinkerFlags Include="-liconv" />
 			<_MainLinkerFlags Include="-lcompression" />
+
+			<_MainLinkerFlags Condition="'$(_ExportSymbolsExplicitly)' == 'true'" Include="-exported_symbols_list" />
+			<_MainLinkerFlags Condition="'$(_ExportSymbolsExplicitly)' == 'true'" Include="$(_ExportedSymbolsFile)" />
 
 			<!-- Here we must add all the files that should make us (re-)link the executable -->
 			<_LinkNativeExecutableInputs Include="@(_NativeExecutableObjectFiles)" />
@@ -1270,13 +1289,21 @@
 			<_NativeReferences Include="@(_FileNativeReference)" Condition="'%(_FileNativeReference.LinkToExecutable)' != 'false'" />
 		</ItemGroup>
 
+		<!-- remove the `-u` prefix from `_ReferencesLinkerFlags` so we can give the output file to `strip` -->
+		<WriteLinesToFile SessionId="$(BuildSessionId)" File="$(_MtouchSymbolsList)" Lines="@(_ReferencesLinkerFlags->'%(Identity)'->Substring (2))" Overwrite="true" />
+
+		<ItemGroup>
+			<_AllLinkerFlags Include="@(_AssemblyLinkerFlags);@(_MainLinkerFlags);@(_CustomLinkFlags)" />
+			<_AllLinkerFlags Condition="'$(_ExportSymbolsExplicitly)' != 'true'" Include="@(_ReferencesLinkerFlags)" />
+		</ItemGroup>
+
 		<LinkNativeCode
 			SessionId="$(BuildSessionId)"
 			DylibRPath="$(_DylibRPath)"
 			EntitlementsInExecutable="$(_CompiledEntitlements)"
 			FrameworkRPath="$(_EmbeddedFrameworksRPath)"
 			Frameworks="@(_NativeExecutableFrameworks);@(_BindingLibraryFrameworks)"
-			LinkerFlags="@(_AssemblyLinkerFlags);@(_ReferencesLinkerFlags);@(_MainLinkerFlags);@(_CustomLinkFlags)"
+			LinkerFlags="@(_AllLinkerFlags)"
 			LinkWithLibraries="@(_XamarinMainLibraries);@(_BindingLibraryLinkWith);@(_MainLinkWith)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			NativeReferences="@(_NativeReferences)"
@@ -1288,9 +1315,6 @@
 			TargetArchitectures="$(TargetArchitectures)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		/>
-
-		<!-- remove the `-u` prefix from `_ReferencesLinkerFlags` so we can give the output file to `strip` -->
-		<WriteLinesToFile SessionId="$(BuildSessionId)" File="$(_MtouchSymbolsList)" Lines="@(_ReferencesLinkerFlags->'%(Identity)'->Substring (2))" Overwrite="true" />
 
 		<ItemGroup>
 			<!-- Copy the executable from the intermediate directory to the .app -->
@@ -1699,34 +1723,51 @@
 	<!-- Install & Run -->
 
 	<PropertyGroup>
-		<_MlaunchPath Condition="'$(_MlaunchPath)' == ''">$(_XamarinSdkRootDirectory)tools\bin\mlaunch</_MlaunchPath>
+		<!-- We used to use '_MlaunchPath' as the property name, but we've made it public, so it's MlaunchPath now, but keep setting/supporting the underscored version for a while -->
+		<MlaunchPath Condition="'$(MlaunchPath)' == '' And '$(_MlaunchPath)' != ''">$(_MlaunchPath)</MlaunchPath>
+		<MlaunchPath Condition="'$(MlaunchPath)' == ''">$(_XamarinSdkRootDirectory)tools\bin\mlaunch</MlaunchPath>
+		<_MlaunchPath Condition="'$(_MlaunchPath)' == ''">$(MlaunchPath)</_MlaunchPath>
 	</PropertyGroup>
 
-	<Target Name="_InstallMobile" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName" Condition="'$(_SdkIsSimulator)' == 'false'">
+	<Target Name="ComputeMlaunchInstallArguments" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_DetectAppManifest;_ComputeMlaunchInstallArguments" />
+	<Target Name="_ComputeMlaunchInstallArguments" Condition="'$(_SdkIsSimulator)' == 'false'">
 		<!-- Launching from the command line on windows hasn't been implemented: https://github.com/xamarin/xamarin-macios/issues/16609 -->
 		<Error Condition="$([MSBuild]::IsOSPlatform('windows'))" Text="It's currently not supported to launch an app from the command line on Windows." />
+		<Error Condition="!Exists('$(_AppBundleManifestPath)')" Text="The app must be built before the arguments to launch the app using mlaunch can be computed." />
+
 		<GetMlaunchArguments
 			SessionId="$(BuildSessionId)"
 			AppBundlePath="$(_AppBundlePath)"
 			AppManifestPath="$(_AppBundleManifestPath)"
 			DeviceName="$(_DeviceName)"
 			InstallApp="$(_AppBundlePath)"
-			MlaunchPath="$(_MlaunchPath)"
+			MlaunchPath="$(MlaunchPath)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkVersion="$(_SdkVersion)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		>
-			<Output TaskParameter="MlaunchArguments" PropertyName="_MlaunchInstallArguments" />
+			<Output TaskParameter="MlaunchArguments" PropertyName="MlaunchInstallArguments" />
 		</GetMlaunchArguments>
 
-		<Exec SessionId="$(BuildSessionId)" Command="$(_MlaunchPath) $(_MlaunchInstallArguments)" />
+		<WriteLinesToFile
+			File="$(MlaunchInstallScript)"
+			Lines="$(MlaunchPath) $(MlaunchInstallArguments)"
+			Overwrite="true"
+			WriteOnlyWhenDifferent="true"
+			Condition="'$(MlaunchInstallScript)' != ''"
+			 />
 	</Target>
 
-	<!-- This is only needed for mobile platforms, RunCommand and RunArguments are defined for macOS in Microsoft.macOS.Sdk.targets. -->
-	<Target Name="_PrepareRunMobile" DependsOnTargets="_InstallMobile" Condition="'$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'">
+	<Target Name="_InstallMobile" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;ComputeMlaunchInstallArguments" Condition="'$(_SdkIsSimulator)' == 'false'">
+		<Exec SessionId="$(BuildSessionId)" Command="$(MlaunchPath) $(MlaunchInstallArguments)" />
+	</Target>
+
+	<Target Name="ComputeMlaunchRunArguments" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_DetectAppManifest" Condition="'$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'">
 		<!-- Launching from the command line on windows hasn't been implemented: https://github.com/xamarin/xamarin-macios/issues/16609 -->
 		<Error Condition="$([MSBuild]::IsOSPlatform('windows'))" Text="It's currently not supported to launch an app from the command line on Windows." />
+		<Error Condition="!Exists('$(_AppBundleManifestPath)')" Text="The app must be built before the arguments to launch the app using mlaunch can be computed." />
+
 		<PropertyGroup>
 			<!-- capture output by default -->
 			<_MlaunchCaptureOutput Condition="'$(_MlaunchCaptureOutput)' == ''">true</_MlaunchCaptureOutput>
@@ -1751,7 +1792,7 @@
 			DeviceName="$(_DeviceName)"
 			EnvironmentVariables="@(MlaunchEnvironmentVariables)"
 			LaunchApp="$(_AppBundlePath)"
-			MlaunchPath="$(_MlaunchPath)"
+			MlaunchPath="$(MlaunchPath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkVersion="$(_SdkVersion)"
@@ -1760,12 +1801,23 @@
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			WaitForExit="$(_MlaunchWaitForExit)"
 		>
-			<Output TaskParameter="MlaunchArguments" PropertyName="_MlaunchRunArguments" />
+			<Output TaskParameter="MlaunchArguments" PropertyName="MlaunchRunArguments" />
 		</GetMlaunchArguments>
 
+		<WriteLinesToFile
+			File="$(MlaunchRunScript)"
+			Lines="$(MlaunchPath) $(MlaunchRunArguments)"
+			Overwrite="true"
+			WriteOnlyWhenDifferent="true"
+			Condition="'$(MlaunchRunScript)' != ''"
+			 />
+	</Target>
+
+	<!-- This is only needed for mobile platforms, RunCommand and RunArguments are defined for macOS in Microsoft.macOS.Sdk.targets. -->
+	<Target Name="_PrepareRunMobile" DependsOnTargets="_InstallMobile;ComputeMlaunchRunArguments" Condition="'$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'">
 		<PropertyGroup>
-			<RunCommand>$(_MlaunchPath)</RunCommand>
-			<RunArguments>$(_MlaunchRunArguments)</RunArguments>
+			<RunCommand>$(MlaunchPath)</RunCommand>
+			<RunArguments>$(MlaunchRunArguments)</RunArguments>
 		</PropertyGroup>
 	</Target>
 
@@ -1846,7 +1898,11 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_CopyLocalBindingResources" AfterTargets="ResolveAssemblyReferences" BeforeTargets="CopyFilesToOutputDirectory">
+	<Target Name="_CopyLocalBindingResources"
+		AfterTargets="ResolveAssemblyReferences"
+		BeforeTargets="CopyFilesToOutputDirectory"
+		Condition="'$(_DisableCopyLocalBindingResources)' != 'true'"
+		>
 		<!--
 
 			We need to copy binding resource packages (either zipped or as a
@@ -1887,6 +1943,10 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 			<_BindingPackagesFromReferencedAssembliesDirectoriesExists Include="@(_BindingPackagesFromReferencedAssembliesDirectoriesCandidates->Distinct())" Condition="Exists('%(Identity)')" />
 		</ItemGroup>
 
+		<PropertyGroup Condition="'$(IsMacEnabled)' == 'true'">
+			<BuildSessionIdIfConnected>$(BuildSessionId)</BuildSessionIdIfConnected>
+		</PropertyGroup>
+
 		<!--
 			We need to expand items in an item group using globs, which is
 			kind of tricky, because globs in item transformations aren't
@@ -1895,15 +1955,17 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 			Note that this task should run remotely from Windows when there's
 			a Mac connected, but locally when there's not a Mac connected (for
 			Hot Restart builds for instance), so we're not conditioning this
-			task on IsMacEnabled.
+			task on IsMacEnabled. Instead we're only setting SessionId if we
+			have a session id *and* we're connected to a Mac.
 
 		-->
 		<GetFileSystemEntries
-			SessionId="$(BuildSessionId)"
+			SessionId="$(BuildSessionIdIfConnected)"
 			DirectoryPath="@(_BindingPackagesFromReferencedAssembliesDirectoriesExists)"
 			Pattern="*"
 			Recursive="true"
 			IncludeDirectories="false"
+			CopyFromWindows="true"
 			>
 			<Output TaskParameter="Entries" ItemName="_BindingPackagesFromReferencedAssemblies" />
 		</GetFileSystemEntries>

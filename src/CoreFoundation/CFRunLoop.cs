@@ -47,6 +47,8 @@ using CFIndex = System.nint;
 using NativeHandle = System.IntPtr;
 #endif
 
+#nullable enable
+
 namespace CoreFoundation {
 
 	// anonymous and typeless native enum - System/Library/Frameworks/CoreFoundation.framework/Headers/CFRunLoop.h
@@ -183,7 +185,9 @@ namespace CoreFoundation {
 			InitializeHandle (handle);
 		}
 
+#if !NET
 		delegate void ScheduleCallback (IntPtr info, IntPtr runLoop, IntPtr mode);
+#endif
 
 #if NET
 		[UnmanagedCallersOnly]
@@ -204,7 +208,9 @@ namespace CoreFoundation {
 
 		protected abstract void OnSchedule (CFRunLoop loop, NSString mode);
 
+#if !NET
 		delegate void CancelCallback (IntPtr info, IntPtr runLoop, IntPtr mode);
+#endif
 
 #if NET
 		[UnmanagedCallersOnly]
@@ -225,7 +231,9 @@ namespace CoreFoundation {
 
 		protected abstract void OnCancel (CFRunLoop loop, NSString mode);
 
+#if !NET
 		delegate void PerformCallback (IntPtr info);
+#endif
 
 #if NET
 		[UnmanagedCallersOnly]
@@ -321,6 +329,11 @@ namespace CoreFoundation {
 			return CFRunLoopRunInMode (mode.Handle, seconds, returnAfterSourceHandled);
 		}
 
+		public CFRunLoopExitReason RunInMode (string mode, double seconds, bool returnAfterSourceHandled)
+		{
+			return RunInMode ((NSString) mode, seconds, returnAfterSourceHandled);
+		}
+
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static void CFRunLoopAddSource (/* CFRunLoopRef */ IntPtr rl, /* CFRunLoopSourceRef */ IntPtr source, /* CFStringRef */ IntPtr mode);
 
@@ -367,8 +380,26 @@ namespace CoreFoundation {
 		{
 		}
 
+		[DllImport (Constants.CoreFoundationLibrary)]
+		extern static NativeHandle /* CFArrayRef */ CFRunLoopCopyAllModes (NativeHandle /* CFRunLoopRef */ rl);
+
+		public string? []? AllModes {
+			get {
+				return CFArray.StringArrayFromHandle (CFRunLoopCopyAllModes (GetCheckedHandle ()), releaseHandle: true);
+			}
+		}
+
+		[DllImport (Constants.CoreFoundationLibrary)]
+		extern static IntPtr /* CFRunLoopMode */ CFRunLoopCopyCurrentMode (NativeHandle /* CFRunLoopRef */ rl);
+
+		public string? CurrentMode {
+			get {
+				return CFString.FromHandle (CFRunLoopCopyCurrentMode (GetCheckedHandle ()), releaseHandle: true);
+			}
+		}
+
 #if !NET
-		public static bool operator == (CFRunLoop a, CFRunLoop b)
+		public static bool operator == (CFRunLoop? a, CFRunLoop? b)
 		{
 			if (a is null)
 				return b is null;
@@ -378,7 +409,7 @@ namespace CoreFoundation {
 			return a.Handle == b.Handle;
 		}
 
-		public static bool operator != (CFRunLoop a, CFRunLoop b)
+		public static bool operator != (CFRunLoop? a, CFRunLoop? b)
 		{
 			if (a is null)
 				return b is not null;

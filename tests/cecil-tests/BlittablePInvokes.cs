@@ -385,6 +385,7 @@ namespace Cecil.Tests {
 		}
 
 		static HashSet<string> knownFailuresBlockLiterals = new HashSet<string> {
+			"The call to SetupBlock in ObjCRuntime.BlockLiteral.CreateBlockForDelegate(System.Delegate, System.Delegate, System.String) must be converted to new Block syntax.",
 			"The call to SetupBlock in ObjCRuntime.BlockLiteral.GetBlockForDelegate(System.Reflection.MethodInfo, System.Object, System.UInt32, System.String) must be converted to new Block syntax.",
 			"The call to SetupBlock in ObjCRuntime.BlockLiteral.SetupBlock(System.Delegate, System.Delegate) must be converted to new Block syntax.",
 			"The call to SetupBlock in ObjCRuntime.BlockLiteral.SetupBlockUnsafe(System.Delegate, System.Delegate) must be converted to new Block syntax.",

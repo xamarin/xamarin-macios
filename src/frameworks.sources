@@ -821,7 +821,6 @@ FOUNDATION_SOURCES = \
 	Foundation/NSFastEnumerationState.cs \
 	Foundation/NSFastEnumerator.cs \
 	Foundation/NSFileManager.cs \
-	Foundation/NSFileManager.iOS.cs \
 	Foundation/NSFileManagerDelegate.cs \
 	Foundation/NSFormatter.cs \
 	Foundation/NSHost.cs \
@@ -1947,6 +1946,7 @@ SHARED_SOURCES = \
 	ObjCRuntime/AdoptsAttribute.cs \
 	ObjCRuntime/BackingField.cs \
 	ObjCRuntime/BaseWrapper.cs \
+	ObjCRuntime/BindAs.cs \
 	ObjCRuntime/BlockProxyAttribute.cs \
 	ObjCRuntime/BindingImplAttribute.cs \
 	ObjCRuntime/CategoryAttribute.cs \
@@ -1958,8 +1958,10 @@ SHARED_SOURCES = \
 	ObjCRuntime/ErrorHelper.runtime.cs \
 	ObjCRuntime/Exceptions.cs \
 	ObjCRuntime/ExceptionMode.cs \
+	ObjCRuntime/IManagedRegistrar.cs \
 	ObjCRuntime/Method.cs \
 	ObjCRuntime/Registrar.cs \
+	ObjCRuntime/RegistrarHelper.cs \
 	ObjCRuntime/ReleaseAttribute.cs \
 	ObjCRuntime/RequiredFrameworkAttribute.cs \
 	ObjCRuntime/Runtime.cs \
@@ -2101,6 +2103,7 @@ MACOS_FRAMEWORKS =          \
 	ScreenTime              \
 	ScriptingBridge         \
 	SearchKit               \
+	ServiceManagement       \
 	Security                \
 	SharedWithYou           \
 	SharedWithYouCore       \
@@ -2403,6 +2406,7 @@ MACCATALYST_FRAMEWORKS = \
 	ScreenTime \
 	Security \
 	SensorKit \
+	ServiceManagement \
 	SharedWithYou \
 	SharedWithYouCore \
 	Social \
