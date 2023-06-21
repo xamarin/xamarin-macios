@@ -1202,6 +1202,28 @@
 			<_NativeExecutableObjectFiles Include="$(NativeObject)" />
 		</ItemGroup>
 
+		<ItemGroup>
+			<!--
+
+				We need to adjust TrimmerRootAssembly, because ILLink sets it
+				to @(IntermediateAssembly), but for ILC it must be the output
+				from ILLink and not its input.
+
+				Here we first create the intersection of TrimmerRootAssembly
+				and IntermediateAssembly (so that we only add the fixed
+				versions of IntermediateAssembly to TrimmerRootAssembly if
+				it's already there in the first place), then we remove it from
+				TrimmerRootAssembly, before adding the fixed version back.
+
+				Note that we only need the filename in TrimmerRootAssembly,
+				not the full path.
+
+			-->
+			<_TrimmerRootAssemblyButOnlyIntermediateAssembly Include="@(TrimmerRootAssembly)" Condition="'@(TrimmerRootAssembly)' == '@(IntermediateAssembly)' And '%(Identity)' != ''" />
+			<TrimmerRootAssembly Remove="@(_TrimmerRootAssemblyButOnlyIntermediateAssembly)" />
+			<TrimmerRootAssembly Include="@(_TrimmerRootAssemblyButOnlyIntermediateAssembly->'%(Filename)')" />
+		</ItemGroup>
+
 		<!--
 
 			Collect all the native linker args ILC would have used and use
