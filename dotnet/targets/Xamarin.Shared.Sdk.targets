@@ -1198,6 +1198,50 @@
 			<!-- Link in the output from ILC -->
 			<_NativeExecutableObjectFiles Include="$(NativeObject)" />
 		</ItemGroup>
+
+		<!--
+
+			Collect all the native linker args ILC would have used and use
+			them ourselves when we link natively.
+
+			Unfortunately there's a major difference between LinkerArgs (as
+			used by ILC) and our _CustomLinkerFlags: ILC splits on space in
+			LinkerArg, while we quote (when necessary) the items in
+			_CustomLinkerFlags.
+
+			Example:
+
+				<LinkerArg Include="-framework UIKit" />
+
+					ILC will pass that as two separate arguments to the native
+					compiler
+
+				<_CustomLinkFlags Include="-framework UIKit" />
+
+					We'll pass that as a single argument ('-framework UIKit')
+					to the native compiler (which the native compiler doesn't
+					like)
+
+			So we need to convert the list of space-separated items in
+			LinkerArg to space-preserved items in _CustomLinkFlags.
+
+			How to do this in MSBuild is somewhat non-obvious: first we
+			convert the LinkerArg item group to a property where every item is
+			separated by a semi-colon, and where we've also replaced spaces by
+			semi-colons. This means we have a property where every flag we
+			want is separated by a semi-colon. Then we split on the property
+			string on a semi-colon and add those items to the _CustomLinkFlags
+			item group.
+
+			Note: this means ILC doesn't support linker flags with spaces in them.
+
+		-->
+		<PropertyGroup>
+			<_LinkerArgsSplitBySemiColon>@(LinkerArg->Replace(' ',';'))</_LinkerArgsSplitBySemiColon>
+		</PropertyGroup>
+		<ItemGroup>
+			<_CustomLinkFlags Include="$(_LinkerArgsSplitBySemiColon.Split(';'))" />
+		</ItemGroup>
 	</Target>
 
 	<PropertyGroup>
