@@ -55,6 +55,9 @@
 
 		<!-- Setting _RequiresILLinkPack to true so that the ILLink pack is always restored. -->
 		<_RequiresILLinkPack Condition="'$(_RequiresILLinkPack)' == ''">true</_RequiresILLinkPack>
+
+		<!-- Explicitly export symbols using clang command-line option "-exported_symbols_list export_list" -->
+		<_ExportSymbolsExplicitly Condition="'$(_ExportSymbolsExplicitly)' == ''">true</_ExportSymbolsExplicitly>
 	</PropertyGroup>
 
 	<!-- Set the default RuntimeIdentifier if not already specified. -->
