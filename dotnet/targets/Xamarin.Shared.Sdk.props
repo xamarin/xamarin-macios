@@ -112,4 +112,13 @@
 	<PropertyGroup Condition="'$(MtouchUseLlvm)' == '' And '$(Configuration)' == 'Release' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')">
 		<MtouchUseLlvm>true</MtouchUseLlvm>
 	</PropertyGroup>
+
+	<!-- Various options when using NativeAOT -->
+	<PropertyGroup Condition="'$(PublishAot)' == 'true'">
+		<!-- Disable our own assembly IL stripping logic, because ILC does that already -->
+		<EnableAssemblyILStripping>false</EnableAssemblyILStripping>
+
+		<!-- We're using our own native main function when using NativeAOT -->
+		<CustomNativeMain>true</CustomNativeMain>
+	</PropertyGroup>
 </Project>
