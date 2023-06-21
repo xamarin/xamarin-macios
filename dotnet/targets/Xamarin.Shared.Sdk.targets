@@ -443,6 +443,10 @@
 		</_ComputeLinkerArgumentsDependsOn>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(PublishAot)' == 'true'">
+		<IlcCompileDependsOn>Compile;_ComputeLinkerArguments;_ComputeManagedAssemblyToLink;SetupOSSpecificProps;PrepareForILLink;_XamarinComputeIlcCompileInputs</IlcCompileDependsOn>
+	</PropertyGroup>
+
 	<Target Name="_ComputeLinkerFeatures">
 		<PropertyGroup Condition="'$(PublishAot)' == 'true'">
 			<!-- The one and only registrar is 'managed-static' when using NativeAOT -->
@@ -1164,6 +1168,13 @@
 				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			</ResolvedFileToPublish>
 		</ItemGroup>
+	</Target>
+
+	<Target Name="_XamarinComputeIlcCompileInputs">
+		<PropertyGroup>
+			<!-- Ask ILC to produce a static library -->
+			<NativeLib>static</NativeLib>
+		</PropertyGroup>
 	</Target>
 
 	<PropertyGroup>
