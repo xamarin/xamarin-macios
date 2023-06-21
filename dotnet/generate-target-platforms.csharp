@@ -46,7 +46,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 		if (parsedVersion < minSdkVersion)
 			continue;
 		if (parsedVersion < minNativeAotSdkVersion) {
-			writer.WriteLine ($"\t\t<{platform}SdkSupportedTargetPlatformVersion Include=\"{n.InnerText}\" Condition=\"'$(PublishAot)' != 'true'\" />");
+			writer.WriteLine ($"\t\t<{platform}SdkSupportedTargetPlatformVersion Include=\"{n.InnerText}\" Condition=\"!('$(PublishAot)' == 'true' And '$(_IsPublishing)' == 'true')\" />");
 		} else {
 			writer.WriteLine ($"\t\t<{platform}SdkSupportedTargetPlatformVersion Include=\"{n.InnerText}\" />");
 		}
@@ -57,8 +57,8 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"\t\t<SdkSupportedTargetPlatformVersion Condition=\"'$(TargetPlatformIdentifier)' == '{platform}'\" Include=\"@({platform}SdkSupportedTargetPlatformVersion)\" />");
 	writer.WriteLine ("\t</ItemGroup>");
 	writer.WriteLine ("\t<PropertyGroup>");
-	writer.WriteLine ($"\t\t<{platform}MinSupportedOSPlatformVersion Condition=\"'$(PublishAot)' != 'true'\">{minSdkVersionString}</{platform}MinSupportedOSPlatformVersion>");
-	writer.WriteLine ($"\t\t<{platform}MinSupportedOSPlatformVersion Condition=\"'$(PublishAot)' == 'true'\">{minNativeAotSdkVersionString}</{platform}MinSupportedOSPlatformVersion>");
+	writer.WriteLine ($"\t\t<{platform}MinSupportedOSPlatformVersion Condition=\"!('$(PublishAot)' == 'true' And '$(_IsPublishing)' == 'true')\">{minSdkVersionString}</{platform}MinSupportedOSPlatformVersion>");
+	writer.WriteLine ($"\t\t<{platform}MinSupportedOSPlatformVersion Condition=\"'$(PublishAot)' == 'true' And '$(_IsPublishing)' == 'true'\">{minNativeAotSdkVersionString}</{platform}MinSupportedOSPlatformVersion>");
 	writer.WriteLine ("\t</PropertyGroup>");
 	writer.WriteLine ("</Project>");
 }

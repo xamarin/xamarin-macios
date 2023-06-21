@@ -425,7 +425,7 @@
 			_ComputeFrameworkVariables;
 			_ComputeFrameworkAssemblies;
 		</_ComputeLinkerArgumentsDependsOn>
-		<_ComputeLinkerArgumentsDependsOn Condition="'$(PublishAot)' != 'true'">
+		<_ComputeLinkerArgumentsDependsOn Condition="'$(_UseNativeAot)' != 'true'">
 			$(_ComputeLinkerArgumentsDependsOn);
 			ComputeResolvedFilesToPublishList;
 		</_ComputeLinkerArgumentsDependsOn>
@@ -443,12 +443,12 @@
 		</_ComputeLinkerArgumentsDependsOn>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(PublishAot)' == 'true'">
+	<PropertyGroup Condition="'$(_UseNativeAot)' == 'true'">
 		<IlcCompileDependsOn>Compile;_ComputeLinkerArguments;_ComputeManagedAssemblyToLink;SetupOSSpecificProps;PrepareForILLink;_XamarinComputeIlcCompileInputs</IlcCompileDependsOn>
 	</PropertyGroup>
 
 	<Target Name="_ComputeLinkerFeatures">
-		<PropertyGroup Condition="'$(PublishAot)' == 'true'">
+		<PropertyGroup Condition="'$(_UseNativeAot)' == 'true'">
 			<!-- The one and only registrar is 'managed-static' when using NativeAOT -->
 			<Registrar Condition="'$(Registrar)' == ''">managed-static</Registrar>
 
@@ -490,10 +490,10 @@
 		<!-- it's invariant or it's one of the ICU data files, not both -->
 		<Error Text="Can not set values for both InvariantGlobalization '$(InvariantGlobalization)' and _GlobalizationDataFile '$(_GlobalizationDataFile)'" Condition="'$(_GlobalizationDataFile)' != '' And '$(InvariantGlobalization)' == 'true'" />
 
-		<Error Text="The only valid registrar when using NativeAOT is 'managed-static' (current value: '$(Registrar)'). Please either delete the 'Registrar' property, or change it to be 'managed-static'." Condition="'$(PublishAot)' == 'true' And '$(Registrar)' != '' And '$(Registrar)' != 'managed-static'" />
+		<Error Text="The only valid registrar when using NativeAOT is 'managed-static' (current value: '$(Registrar)'). Please either delete the 'Registrar' property, or change it to be 'managed-static'." Condition="'$(_UseNativeAot)' == 'true' And '$(Registrar)' != '' And '$(Registrar)' != 'managed-static'" />
 
-		<Warning Text="Only the managed static registrar is supported when using NativeAOT." Condition="'$(PublishAot)' == 'true' And '$(Registrar)' != 'managed-static'" />
-		<Warning Text="All assemblies must be processed by the linker when using NativeAOT. Please don't set neither the '$(_LinkModeProperty)' nor the 'TrimMode' property, so that the build can default to linking all assemblies." Condition="'$(PublishAot)' == 'true' And '$(_LinkMode)' != 'Full'" />
+		<Warning Text="Only the managed static registrar is supported when using NativeAOT." Condition="'$(_UseNativeAot)' == 'true' And '$(Registrar)' != 'managed-static'" />
+		<Warning Text="All assemblies must be processed by the linker when using NativeAOT. Please don't set neither the '$(_LinkModeProperty)' nor the 'TrimMode' property, so that the build can default to linking all assemblies." Condition="'$(_UseNativeAot)' == 'true' And '$(_LinkMode)' != 'Full'" />
 
 		<PropertyGroup>
 			<!-- Pass the custom options to our custom steps -->
@@ -895,8 +895,8 @@
 	<Target Name="_ComputeFrameworkVariables" DependsOnTargets="ResolveRuntimePackAssets;ResolveFrameworkReferences">
 		<PropertyGroup>
 			<_XamarinRuntime Condition="'$(UseMonoRuntime)' == 'true'">MonoVM</_XamarinRuntime>
-			<_XamarinRuntime Condition="'$(UseMonoRuntime)' != 'true' And '$(PublishAot)' != 'true'">CoreCLR</_XamarinRuntime>
-			<_XamarinRuntime Condition="'$(UseMonoRuntime)' != 'true' And '$(PublishAot)' == 'true'">NativeAOT</_XamarinRuntime>
+			<_XamarinRuntime Condition="'$(UseMonoRuntime)' != 'true' And '$(_UseNativeAot)' != 'true'">CoreCLR</_XamarinRuntime>
+			<_XamarinRuntime Condition="'$(UseMonoRuntime)' != 'true' And '$(_UseNativeAot)' == 'true'">NativeAOT</_XamarinRuntime>
 
 			<_PackageIdInfix Condition="'$(_XamarinRuntime)' == 'MonoVM'">Mono.</_PackageIdInfix>
 			<_PackageIdInfix Condition="'$(_XamarinRuntime)' == 'NativeAOT'">NativeAOT.</_PackageIdInfix>
@@ -948,7 +948,7 @@
 			publish (except the merged app bundle, which we'll handle
 			ourselves).
 		-->
-		<_ComputeVariablesDependsOn Condition="'$(RuntimeIdentifiers)' == '' And '$(PublishAot)' != 'true'">$(_ComputeVariablesDependsOn);ComputeResolvedFilesToPublishList</_ComputeVariablesDependsOn>
+		<_ComputeVariablesDependsOn Condition="'$(RuntimeIdentifiers)' == '' And '$(_UseNativeAot)' != 'true'">$(_ComputeVariablesDependsOn);ComputeResolvedFilesToPublishList</_ComputeVariablesDependsOn>
 	</PropertyGroup>
 
 	<Target Name="_ComputeVariables" DependsOnTargets="$(_ComputeVariablesDependsOn)">
@@ -957,7 +957,7 @@
 			<_RunAotCompiler>false</_RunAotCompiler>
 		</PropertyGroup>
 		<!-- We don't run Mono's AOT compiler if we're using NativeAOT -->
-		<PropertyGroup Condition="'$(PublishAot)' != 'true'" >
+		<PropertyGroup Condition="'$(_UseNativeAot)' != 'true'" >
 			<!-- We need it for device builds for mobile platforms -->
 			<_RunAotCompiler Condition="'$(_SdkIsSimulator)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'">true</_RunAotCompiler>
 			<!-- We need it if the interpreter is enabled, no matter where -->
@@ -1314,7 +1314,7 @@
 			_AOTCompile;
 		</_CompileNativeExecutableDependsOn>
 
-		<_CompileNativeExecutableDependsOn Condition="'$(PublishAot)' == 'true'">
+		<_CompileNativeExecutableDependsOn Condition="'$(_UseNativeAot)' == 'true'">
 			$(_CompileNativeExecutableDependsOn);
 			IlcCompile;
 		</_CompileNativeExecutableDependsOn>
@@ -1531,12 +1531,12 @@
 			<_DefaultLinkMode>TrimMode</_DefaultLinkMode>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(TrimMode)' == ''">
-			<_DefaultLinkMode Condition="'$(PublishAot)' != 'true'">Full</_DefaultLinkMode> <!-- Linking is always on for all assemblies when using NativeAOT - this is because we need to modify all assemblies in the linker for them to be compatible with NativeAOT -->
-			<_DefaultLinkMode Condition="'$(PublishAot)' != 'true' And '$(_PlatformName)' == 'macOS'">None</_DefaultLinkMode> <!-- Linking is off by default for macOS apps -->
-			<_DefaultLinkMode Condition="'$(PublishAot)' != 'true' And '$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' == 'Release'">SdkOnly</_DefaultLinkMode> <!-- Default linking is on for release builds for Mac Catalyst apps -->
-			<_DefaultLinkMode Condition="'$(PublishAot)' != 'true' And '$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' != 'Release'">None</_DefaultLinkMode> <!-- Default linking is off for non-release builds for Mac Catalyst apps -->
-			<_DefaultLinkMode Condition="'$(PublishAot)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst' And '$(_SdkIsSimulator)' == 'true'">None</_DefaultLinkMode> <!-- Linking is off by default in the simulator -->
-			<_DefaultLinkMode Condition="'$(PublishAot)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst' And '$(_SdkIsSimulator)' != 'true'">SdkOnly</_DefaultLinkMode> <!-- Linking is SdkOnly for iOS/tvOS/watchOS apps on device -->
+			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true'">Full</_DefaultLinkMode> <!-- Linking is always on for all assemblies when using NativeAOT - this is because we need to modify all assemblies in the linker for them to be compatible with NativeAOT -->
+			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'macOS'">None</_DefaultLinkMode> <!-- Linking is off by default for macOS apps -->
+			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' == 'Release'">SdkOnly</_DefaultLinkMode> <!-- Default linking is on for release builds for Mac Catalyst apps -->
+			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' != 'Release'">None</_DefaultLinkMode> <!-- Default linking is off for non-release builds for Mac Catalyst apps -->
+			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst' And '$(_SdkIsSimulator)' == 'true'">None</_DefaultLinkMode> <!-- Linking is off by default in the simulator -->
+			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst' And '$(_SdkIsSimulator)' != 'true'">SdkOnly</_DefaultLinkMode> <!-- Linking is SdkOnly for iOS/tvOS/watchOS apps on device -->
 		</PropertyGroup>
 	</Target>
 	<PropertyGroup>

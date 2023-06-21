@@ -114,7 +114,7 @@
 	</PropertyGroup>
 
 	<!-- Various options when using NativeAOT -->
-	<PropertyGroup Condition="'$(PublishAot)' == 'true'">
+	<PropertyGroup Condition="'$(PublishAot)' == 'true' And '$(_IsPublishing)' == 'true'">
 		<!-- Disable our own assembly IL stripping logic, because ILC does that already -->
 		<EnableAssemblyILStripping>false</EnableAssemblyILStripping>
 
