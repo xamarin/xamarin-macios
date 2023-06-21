@@ -1187,6 +1187,10 @@
 			<ManagedBinary Include="$(IntermediateLinkDir)$(TargetName)$(TargetExt)" />
 			<IlcCompileInput Include="@(ManagedBinary)" />
 			<IlcReference Include="@(ManagedAssemblyToLink)" Exclude="@(ManagedBinary)" />
+
+			<!-- Process UnmanagedCallersOnly attributes from every assembly -->
+			<UnmanagedEntryPointsAssembly Remove="System.Private.CoreLib" />
+			<UnmanagedEntryPointsAssembly Include="@(_UpdatedManagedAssemblyToLink->'%(Filename)')" />
 		</ItemGroup>
 	</Target>
 
