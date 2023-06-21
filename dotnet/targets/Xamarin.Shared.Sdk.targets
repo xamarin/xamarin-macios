@@ -916,6 +916,9 @@
 		<PropertyGroup Condition="'$(_RunAotCompiler)' == ''">
 			<!-- Don't run the AOT compiler by default -->
 			<_RunAotCompiler>false</_RunAotCompiler>
+		</PropertyGroup>
+		<!-- We don't run Mono's AOT compiler if we're using NativeAOT -->
+		<PropertyGroup Condition="'$(PublishAot)' != 'true'" >
 			<!-- We need it for device builds for mobile platforms -->
 			<_RunAotCompiler Condition="'$(_SdkIsSimulator)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'">true</_RunAotCompiler>
 			<!-- We need it if the interpreter is enabled, no matter where -->
