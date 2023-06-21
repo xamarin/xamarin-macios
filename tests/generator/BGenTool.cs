@@ -357,14 +357,14 @@ namespace Xamarin.Tests {
 				Assert.AreEqual (attributes.Value, m.Attributes, "Attributes for {0}", m.FullName);
 		}
 
-		public void AssertNoMethod (string typename, string method, string returnType = null, params string [] parameterTypes)
+		public void AssertNoMethod (string typename, string method, string? returnType = null, params string [] parameterTypes)
 		{
 			var m = FindMethod (typename, method, returnType, parameterTypes);
 			if (m is not null)
 				Assert.Fail ($"Unexpectedly found method '{method}' with signature '{string.Join ("', '", parameterTypes)}' on the type '{typename}'.");
 		}
 
-		MethodDefinition? FindMethod (string typename, string method, string returnType, params string [] parameterTypes)
+		MethodDefinition? FindMethod (string typename, string method, string? returnType, params string [] parameterTypes)
 		{
 			var assembly = LoadAssembly ();
 			var t = assembly.MainModule.Types.FirstOrDefault ((v) => v.FullName == typename);

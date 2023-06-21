@@ -59,6 +59,7 @@ namespace MonoTests.System.Net.Http {
 			public static string GetRelativeRedirectUrl (int count) => $"https://httpbin.org/relative-redirect/{count}";
 			public static string GetStatusCodeUrl (HttpStatusCode status) => $"http://httpbin.org/status/{(int) status}";
 			public static string GetSetCookieUrl (string cookie, string value) => $"https://httpbin.org/cookies/set?{cookie}={value}";
+			public static string GetBasicAuthUrl (string username, string password) => $"{Url}/basic-auth/{username}/{password}";
 
 		}
 	}
