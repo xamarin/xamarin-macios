@@ -1280,6 +1280,13 @@
 		<ItemGroup>
 			<_CustomLinkFlags Include="$(_LinkerArgsSplitBySemiColon.Split(';'))" />
 		</ItemGroup>
+
+		<ItemGroup>
+			<IlcSatelliteAssembly Include="@(ResourceCopyLocalItems)" Condition="'%(ResourceCopyLocalItems.Culture)' != '' And '%(ResourceCopyLocalItems.Culture)' != 'neutral'" />
+			<IlcSatelliteAssembly Include="@(IntermediateSatelliteAssembliesWithTargetPath)" Condition="'%(IntermediateSatelliteAssembliesWithTargetPath.Culture)' != '' And '%(IntermediateSatelliteAssembliesWithTargetPath.Culture)' != 'neutral'" />
+			<!-- Culture is not set on ReferenceSatellitePaths items, so use DestinationSubDirectory instead -->
+			<IlcSatelliteAssembly Include="@(ReferenceSatellitePaths)" Condition="'%(ReferenceSatellitePaths.DestinationSubDirectory)' != ''" />
+		</ItemGroup>
 	</Target>
 
 	<PropertyGroup>
