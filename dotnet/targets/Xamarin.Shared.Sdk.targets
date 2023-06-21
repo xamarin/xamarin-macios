@@ -1175,6 +1175,11 @@
 			<!-- Ask ILC to produce a static library -->
 			<NativeLib>static</NativeLib>
 		</PropertyGroup>
+
+		<ItemGroup>
+			<!-- We need to mark all __Internal P/Invokes as direct, so that the native linker doesn't remove them -->
+			<DirectPInvoke Include="__Internal" />
+		</ItemGroup>
 	</Target>
 
 	<PropertyGroup>
