@@ -1190,6 +1190,10 @@
 		</value>
 	</data>
 
+	<data name="MX2016" xml:space="preserve">
+		<value>Keeping the dynamic registrar (by passing '--optimize=-remove-dynamic-registrar') is not possible, because the dynamic registrar is not supported when using NativeAOT. Support for dynamic registration will still be removed.</value>
+	</data>
+
 	<data name="MX2017" xml:space="preserve">
 		<value>Could not process XML description: {0}
 		</value>
