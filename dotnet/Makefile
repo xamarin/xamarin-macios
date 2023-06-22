@@ -253,10 +253,10 @@ nupkgs/$(1)$(4).$(2).nupkg: $(TEMPLATED_FILES) $(WORKLOAD_TARGETS) $(3) package/
 endef
 
 define CreateWindowsNuGetTemplate
-nupkgs/$(1).$(2).nupkg: $(3) $(WORKLOAD_TARGETS) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) .stamp-workaround-for-maccore-issue-2427
+nupkgs/$(1).$(DOTNET_TFM)_$($(6)_NUGET_OS_VERSION).$(2).nupkg: $(3) $(WORKLOAD_TARGETS) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) .stamp-workaround-for-maccore-issue-2427
 	@# Delete any versions of the nuget we're building
 	$$(Q) rm -f nupkgs/$(1).*.nupkg
-	$$(Q_PACK) $(DOTNET) pack package/$(1)/package.csproj --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY) "/bl:$$@.binlog"
+	$$(Q_PACK) $(DOTNET) pack package/$(1)/package.csproj --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY) "/bl:$$@.binlog" /p:PackageOSTargetVersion=$(DOTNET_TFM)_$($(6)_NUGET_OS_VERSION)
 endef
 
 # Create the NuGet packaging targets. It's amazing what make allows you to do...
