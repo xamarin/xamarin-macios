@@ -117,6 +117,12 @@ csharp_style_unused_value_expression_statement_preference = discard_variable:sil
 # 'using' directive preferences
 csharp_using_directive_placement = outside_namespace:suggestion
 
+# nullability checks
+
+dotnet_style_coalesce_expression = true
+dotnet_style_null_propagation = true
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true
+
 #### C# Formatting Rules ####
 
 # New line preferences
