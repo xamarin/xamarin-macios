@@ -55,13 +55,11 @@ namespace MonoTests.System.Net.Http {
 			bool value;
 			lock (sites) {
 				if (sites.TryGetValue (url, out value)) {
-					TestRuntime.NSLog ($"VerifyNetworkConnection ({url}) => found cached: {value}");
 					return value;
 				}
 			}
 			value = VerifyNetworkConnectionImpl (url, timeoutInSeconds);
 			lock (sites) {
-				TestRuntime.NSLog ($"VerifyNetworkConnection ({url}) => adding value: {value}");
 				sites [url] = value;
 			}
 			return value;
@@ -72,10 +70,8 @@ namespace MonoTests.System.Net.Http {
 			try {
 				var client = new HttpClient ();
 				var task = client.GetStringAsync (url);
-				if (task.Wait (TimeSpan.FromSeconds (timeoutInSeconds))) {
-					TestRuntime.NSLog ($"VerifyNetworkConnection ({url}) => task completed, status: {task.Status}");
+				if (task.Wait (TimeSpan.FromSeconds (timeoutInSeconds)))
 					return task.IsCompletedSuccessfully;
-				}
 				TestRuntime.NSLog ($"VerifyNetworkConnection ({url}) => task timed out, status: {task.Status}");
 				return false;
 			} catch (Exception e) {
@@ -86,12 +82,10 @@ namespace MonoTests.System.Net.Http {
 
 		static string AssertNetworkConnection (string url)
 		{
-			TestRuntime.NSLog ($"AssertNetworkConnection ({url})");
 			if (!VerifyNetworkConnection (url)) {
 				TestRuntime.NSLog ($"AssertNetworkConnection ({url}): failure");
 				Assert.Ignore ($"The site {url} is not accessible. This test will be ignored.");
 			}
-			TestRuntime.NSLog ($"AssertNetworkConnection ({url}): success");
 			return url;
 		}
 
