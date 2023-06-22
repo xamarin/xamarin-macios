@@ -448,21 +448,27 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		public static string GetNuGetOsVersion (ApplePlatform platform)
+		{
+			var variableName = platform.AsString ().ToUpper () + "_NUGET_OS_VERSION";
+			return DotNetTfm + "_" + GetVariable (variableName, $"variable {variableName} not found");
+		}
+
 		static string GetRefNuGetName (TargetFramework targetFramework) => GetRefNuGetName (targetFramework.Platform);
 
 		static string GetRefNuGetName (ApplePlatform platform)
 		{
 			switch (platform) {
 			case ApplePlatform.iOS:
-				return "Microsoft.iOS.Ref";
+				return "Microsoft.iOS.Ref." + GetNuGetOsVersion (platform);
 			case ApplePlatform.MacCatalyst:
-				return "Microsoft.MacCatalyst.Ref";
+				return "Microsoft.MacCatalyst.Ref." + GetNuGetOsVersion (platform);
 			case ApplePlatform.TVOS:
-				return "Microsoft.tvOS.Ref";
+				return "Microsoft.tvOS.Ref." + GetNuGetOsVersion (platform);
 			case ApplePlatform.WatchOS:
-				return "Microsoft.watchOS.Ref";
+				return "Microsoft.watchOS.Ref." + GetNuGetOsVersion (platform);
 			case ApplePlatform.MacOSX:
-				return "Microsoft.macOS.Ref";
+				return "Microsoft.macOS.Ref." + GetNuGetOsVersion (platform);
 			default:
 				throw new InvalidOperationException (platform.ToString ());
 			}
@@ -472,13 +478,13 @@ namespace Xamarin.Tests {
 		{
 			switch (platform) {
 			case ApplePlatform.iOS:
-				return "Microsoft.iOS.Runtime." + runtimeIdentifier;
+				return "Microsoft.iOS.Runtime." + runtimeIdentifier + "." + GetNuGetOsVersion (platform);
 			case ApplePlatform.TVOS:
-				return "Microsoft.tvOS.Runtime." + runtimeIdentifier;
+				return "Microsoft.tvOS.Runtime." + runtimeIdentifier + "." + GetNuGetOsVersion (platform);
 			case ApplePlatform.MacCatalyst:
-				return "Microsoft.MacCatalyst.Runtime." + runtimeIdentifier;
+				return "Microsoft.MacCatalyst.Runtime." + runtimeIdentifier + "." + GetNuGetOsVersion (platform);
 			case ApplePlatform.MacOSX:
-				return "Microsoft.macOS.Runtime." + runtimeIdentifier;
+				return "Microsoft.macOS.Runtime." + runtimeIdentifier + "." + GetNuGetOsVersion (platform);
 			default:
 				throw new InvalidOperationException (platform.ToString ());
 			}
@@ -489,19 +495,19 @@ namespace Xamarin.Tests {
 			return GetSdkNuGetName (targetFramework.Platform);
 		}
 
-		static string GetSdkNuGetName (ApplePlatform platform)
+		public static string GetSdkNuGetName (ApplePlatform platform)
 		{
 			switch (platform) {
 			case ApplePlatform.iOS:
-				return "Microsoft.iOS.Sdk";
+				return "Microsoft.iOS.Sdk." + GetNuGetOsVersion (platform);
 			case ApplePlatform.TVOS:
-				return "Microsoft.tvOS.Sdk";
+				return "Microsoft.tvOS.Sdk." + GetNuGetOsVersion (platform);
 			case ApplePlatform.WatchOS:
-				return "Microsoft.watchOS.Sdk";
+				return "Microsoft.watchOS.Sdk." + GetNuGetOsVersion (platform);
 			case ApplePlatform.MacOSX:
-				return "Microsoft.macOS.Sdk";
+				return "Microsoft.macOS.Sdk." + GetNuGetOsVersion (platform);
 			case ApplePlatform.MacCatalyst:
-				return "Microsoft.MacCatalyst.Sdk";
+				return "Microsoft.MacCatalyst.Sdk." + GetNuGetOsVersion (platform);
 			default:
 				throw new InvalidOperationException (platform.ToString ());
 			}
