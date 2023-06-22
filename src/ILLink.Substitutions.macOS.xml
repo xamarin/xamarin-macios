@@ -5,6 +5,8 @@
     </type>
     <type fullname="ObjCRuntime.Runtime">
       <method signature="System.Boolean get_IsCoreCLR()" body="stub" value="true" />
+      <method signature="System.Boolean get_IsNativeAOT()" body="stub" feature="ObjCRuntime.Runtime.IsNativeAOT" featurevalue="false" value="false" />
+      <method signature="System.Boolean get_IsNativeAOT()" body="stub" feature="ObjCRuntime.Runtime.IsNativeAOT" featurevalue="true" value="true" />
       <method signature="System.Boolean get_IsManagedStaticRegistrar()" body="stub" feature="ObjCRuntime.Runtime.IsManagedStaticRegistrar" featurevalue="false" value="false" />
       <method signature="System.Boolean get_IsManagedStaticRegistrar()" body="stub" feature="ObjCRuntime.Runtime.IsManagedStaticRegistrar" featurevalue="true" value="true" />
     </type>

@@ -454,12 +454,14 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 		xamarin_process_fatal_exception_gchandle (exception_gchandle, "An exception occurred while opening an assembly");
 	}
 
+#if SUPPORTS_DYNAMIC_REGISTRATION
 	if (xamarin_supports_dynamic_registration) {
 		MonoReflectionAssembly *rassembly = mono_assembly_get_object (mono_domain_get (), assembly);
 		xamarin_register_entry_assembly (rassembly, &exception_gchandle);
 		xamarin_mono_object_release (&rassembly);
 		xamarin_process_fatal_exception_gchandle (exception_gchandle, "An exception occurred while opening the entry assembly");
 	}
+#endif // SUPPORTS_DYNAMIC_REGISTRATION
 
 	DEBUG_LAUNCH_TIME_PRINT ("\tAssembly register time");
 
