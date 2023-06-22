@@ -148,10 +148,14 @@ steps:
 - pwsh: |
     $Env:DOTNET = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe"
     $Env:DOTNET_DIR = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe"
+
     $csc = Get-ChildItem "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet" -Include csc.dll -Recurse -File | %{$_.FullName}
-    Write-Host "csc: $csc"
     $Env:DOTNET_CSC_COMMAND = "$Env:DOTNET exec $csc"
-    Write-Host "csc command: $Env:DOTNET_CSC_COMMAND"
+    Write-Host "DOTNET_CSC_COMMAND: $Env:DOTNET_CSC_COMMAND"
+
+    $Env:DOTNET_BCL_DIR = Get-ChildItem "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\packs\Microsoft.NETCore.App.Ref" -Include System.dll -Recurse -File | %{$_.DirectoryName}
+    Write-Host "DOTNET_BCL_DIR: $Env:DOTNET_BCL_DIR"
+
     & $(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe `
         test `
         "$(Build.SourcesDirectory)/xamarin-macios/tests/bgen/bgen-tests.csproj" `
