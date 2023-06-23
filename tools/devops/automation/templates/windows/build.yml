@@ -145,6 +145,12 @@ steps:
         "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/run-dotnet-tests.binlog"
   displayName: 'Run .NET tests'
 
+
+- pwsh: |
+    $Env:DOTNET_DIR = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\"
+    Get-ChildItem -Recurse
+  displayName: 'Print .NET files'
+
 - pwsh: |
     $Env:DOTNET = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe"
     $Env:DOTNET_DIR = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\"
