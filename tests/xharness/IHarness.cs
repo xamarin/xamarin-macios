@@ -6,6 +6,8 @@ using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 
+using Xamarin.Utils;
+
 namespace Xharness {
 
 	/// <summary>
@@ -64,6 +66,7 @@ namespace Xharness {
 		bool UseGroupedApps { get; }
 		string VSDropsUri { get; }
 		bool DisableWatchOSOnWrench { get; }
+		string DotNetTfm { get; }
 
 		#endregion
 
