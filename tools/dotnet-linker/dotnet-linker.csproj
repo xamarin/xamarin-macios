@@ -107,6 +107,9 @@
     <Compile Include="..\common\CSToObjCMap.cs">
       <Link>tools\common\CSToObjCMap.cs</Link>
     </Compile>
+    <Compile Include="..\common\Rewriter.cs">
+      <Link>tools\common\Rewriter.cs</Link>
+    </Compile>
     <Compile Include="..\common\ObjCNameIndex.cs">
       <Link>tools\common\ObjCNameIndex.cs</Link>
     </Compile>

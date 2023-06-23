@@ -325,6 +325,12 @@ namespace ObjCRuntime {
 				throw ErrorHelper.CreateError (8010, msg);
 			}
 
+#if NET
+			if (options->RegistrationMap is not null && options->RegistrationMap->map is not null) {
+				ClassHandles.InitializeClassHandles (options->RegistrationMap->map);
+			}
+#endif
+
 			IntPtrEqualityComparer = new IntPtrEqualityComparer ();
 			TypeEqualityComparer = new TypeEqualityComparer ();
 
