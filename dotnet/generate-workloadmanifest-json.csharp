@@ -38,7 +38,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"			\"packs\": [");
 	writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.{tfm}\",");
 	writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.net6\",");
-	writer.WriteLine ($"				\"Microsoft.{platform}.Ref\", // The .NET 6 SDK pack (Microsoft.{platform}.Sdk.net6) references the Microsoft.{platform}Ref pack from the workload using **FromWorkloads**, so we must provide said pack as long as we reference Microsoft.{platform}.Sdk.net6");
+	writer.WriteLine ($"				\"Microsoft.{platform}.Ref\", // The .NET 6 SDK pack (Microsoft.{platform}.Sdk.net6) references the Microsoft.{platform}.Ref pack from the workload using **FromWorkloads**, so we must provide said pack as long as we reference Microsoft.{platform}.Sdk.net6");
 	if (hasWindows) {
 		writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.{tfm}\",");
 		writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.net6\",");
@@ -46,6 +46,9 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"				\"Microsoft.{platform}.Ref.{tfm}\",");
 	foreach (var rid in runtimeIdentifiers) {
 		writer.WriteLine ($"				\"Microsoft.{platform}.Runtime.{rid}.{tfm}\",");
+	}
+	foreach (var rid in runtimeIdentifiers) {
+		writer.WriteLine ($"				\"Microsoft.{platform}.Runtime.{rid}\", // The .NET 6 SDK pack (Microsoft.{platform}.Sdk.net6) references the Microsoft.{platform}.Runtime.{rid} pack from the workload using **FromWorkloads**, so we must provide said pack as long as we reference Microsoft.{platform}.Sdk.net6");
 	}
 	writer.WriteLine ($"				\"Microsoft.{platform}.Templates.net7\"");
 	writer.WriteLine ($"			],");
@@ -104,6 +107,12 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 		writer.WriteLine ($"		\"Microsoft.{platform}.Runtime.{rid}.{tfm}\": {{");
 		writer.WriteLine ($"			\"kind\": \"framework\",");
 		writer.WriteLine ($"			\"version\": \"{version}\"");
+		writer.WriteLine ($"		}},");
+	}
+	foreach (var rid in runtimeIdentifiers) {
+		writer.WriteLine ($"		\"Microsoft.{platform}.Runtime.{rid}\": {{ // See comment further up about why we need Microsoft.{platform}.Runtime.{rid}");
+		writer.WriteLine ($"			\"kind\": \"framework\",");
+		writer.WriteLine ($"			\"version\": \"{net6Version}\"");
 		writer.WriteLine ($"		}},");
 	}
 	writer.WriteLine ($"		\"Microsoft.{platform}.Templates.net7\": {{");
