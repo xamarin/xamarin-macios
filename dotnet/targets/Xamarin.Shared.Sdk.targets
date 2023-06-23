@@ -1281,12 +1281,41 @@
 
 			Note: this means ILC doesn't support linker flags with spaces in them.
 
+			Additionally, the LinkerArg item group are actually passed to the
+			native compiler by the NativeAOT build tasks, not the native
+			linker. This means they might contain wrapped linker arguments:
+			'-Wl,...', which the compiler understands, but not the linker.
+			Thus we need to unwrap the (compiler) arguments in LinkerArgs to
+			be actual linker arguments. Also note that there can be multiple
+			linker arguments passed using a single compiler argument, and
+			those are separated by a comma: "-Wl,-linkerarg1,-linkerarg2", so
+			we need to split those into multiple linker arguments as well. And
+			to make things even more complicated, there may be quotes as well:
+			<LinkerArg>'-Wl,-linkerarg1,-linkerarg2'</LinkerArg>.
+
 		-->
 		<PropertyGroup>
 			<_LinkerArgsSplitBySemiColon>@(LinkerArg->Replace(' ',';'))</_LinkerArgsSplitBySemiColon>
 		</PropertyGroup>
 		<ItemGroup>
-			<_CustomLinkFlags Include="$(_LinkerArgsSplitBySemiColon.Split(';'))" />
+			<_AllLinkerArgs Include="$(_LinkerArgsSplitBySemiColon.Split(';'))" />
+			<_LinkerArgsWhichAreReallyCompilerArgs Include="@(_AllLinkerArgs)" Condition="$([System.String]::new('%(Identity)').StartsWith('-Wl,'))">
+				<TransformedArgument>$([System.String]::new('%(Identity)').Substring(4))</TransformedArgument>
+			</_LinkerArgsWhichAreReallyCompilerArgs>
+			<!-- Handle quoted arguments: <LinkerArg>'-Wl,-linkerarg'</LinkerArg> -->
+			<_LinkerArgsWhichAreReallyCompilerArgs Include="@(_AllLinkerArgs)" Condition="$([System.String]::new('%(Identity)').StartsWith('%27-Wl,')) And $([System.String]::new('%(Identity)').EndsWith('%27'))">
+				<TransformedArgument>$([System.String]::new('%(Identity)').Substring(5, $([MSBuild]::Subtract($([System.String]::new('%(Identity)').Length), 6))))</TransformedArgument>
+			</_LinkerArgsWhichAreReallyCompilerArgs>
+			<_CompilerArgsTransformedToLinkerArgs Include="@(_LinkerArgsWhichAreReallyCompilerArgs->'%(TransformedArgument)')" />
+		</ItemGroup>
+		<PropertyGroup>
+			<_CompilerArgsTransformedToLinkerArgsSplitByComma>@(_CompilerArgsTransformedToLinkerArgs->Replace(',',';'))</_CompilerArgsTransformedToLinkerArgsSplitByComma>
+		</PropertyGroup>
+		<ItemGroup>
+			<_AllLinkerArgs Remove="@(_LinkerArgsWhichAreReallyCompilerArgs)" />
+			<_AllLinkerArgs Include="$(_CompilerArgsTransformedToLinkerArgsSplitByComma.Split(';'))" />
+
+			<_CustomLinkFlags Include="@(_AllLinkerArgs)" />
 		</ItemGroup>
 
 		<ItemGroup>
