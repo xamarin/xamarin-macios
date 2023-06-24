@@ -271,6 +271,133 @@ namespace MonoTests.System.Net.Http {
 			}
 		}
 
+		[Test]
+		public void TestNSUrlSessionTimeoutExceptionWhileStreamingContent ()
+		{
+			if (!HttpListener.IsSupported) {
+				Assert.Inconclusive ("HttpListener is not supported");
+			}
+
+			// HTPP listener config
+			IPEndPoint httpListenerEndPoint = null;
+			var serverLaunchedSemaphore = new SemaphoreSlim (0, 1);
+			const int expectedHttpResponseContentLength = 10;
+
+			var serverCancellationTokenSource = new CancellationTokenSource ();
+			var serverCancellationToken = serverCancellationTokenSource.Token;
+
+
+			// NSUrlSession config
+			var config = NSUrlSessionConfiguration.DefaultSessionConfiguration;
+			config.TimeoutIntervalForResource = 3;
+
+			Task.Run (async () => {
+				// Trying to bing a HttpListener to the first available port
+				// To avoid race condition, we cannot list available ports, then decide to bind to one of them
+				HttpListener httpListener = null;
+
+				// IANA suggested range for dynamic or private ports
+				const int MinPort = 49215;
+				const int MaxPort = 65535;
+
+				int listeningPort = -1;
+				for (var port = MinPort; port < MaxPort; port++) {
+					httpListener = new HttpListener ();
+					httpListener.Prefixes.Add ($"http://*:{port}/");
+					try {
+						httpListener.Start ();
+						listeningPort = port;
+						break;
+					} catch {
+						// nothing to do here -- the listener disposes itself when Start throws
+					}
+				}
+
+				if (httpListener is null) {
+					return;
+				}
+
+				httpListenerEndPoint = new IPEndPoint (IPAddress.Any, listeningPort);
+
+				serverLaunchedSemaphore.Release ();
+
+				try {
+					while (true) {
+						var contextTask = httpListener.GetContextAsync ();
+						Task.WaitAny (
+							new Task [] { contextTask },
+							serverCancellationToken);
+
+						var context = contextTask.Result;
+						var request = context.Request;
+						var response = context.Response;
+
+						// Construct a response.
+						response.ContentType = "application/octet-stream";
+						response.StatusCode = 200;
+
+						try {
+							// Dripping response blocks, with increasing interval
+							using (var output = response.OutputStream) {
+								for (var i = 0; i < expectedHttpResponseContentLength; i++) {
+									serverCancellationToken.ThrowIfCancellationRequested ();
+
+									await output.WriteAsync (new byte [] { 0x42 });
+									output.Flush ();
+
+									await Task.Delay (TimeSpan.FromSeconds (i));
+								}
+							}
+						} finally {
+							response.Close ();
+						}
+					}
+				} finally {
+					httpListener.Stop ();
+				}
+			});
+
+			var timeoutExceptionWasThrown = false;
+			var timeoutExceptionShouldHaveBeenThrown = true;
+
+			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				HttpClient client = new HttpClient (new NSUrlSessionHandler (config));
+
+				await serverLaunchedSemaphore.WaitAsync ();
+
+				try {
+					var responseMessage = await client.GetAsync (
+													$"http://{httpListenerEndPoint.Address}:{httpListenerEndPoint.Port}",
+													HttpCompletionOption.ResponseHeadersRead);
+
+					using (var contentStream = await responseMessage.Content.ReadAsStreamAsync ())
+					using (var outputStream = new global::System.IO.MemoryStream ()) {
+						await contentStream.CopyToAsync (outputStream);
+
+						timeoutExceptionWasThrown = false;
+						timeoutExceptionShouldHaveBeenThrown = outputStream.ToArray ().Length < expectedHttpResponseContentLength;
+					}
+				} catch (Exception e)
+					  when (e is TimeoutException || e is HttpRequestException) {
+					timeoutExceptionWasThrown = true;
+				}
+			}, out var ex);
+
+			serverCancellationTokenSource.Cancel ();
+
+			if (!done) {
+				Assert.Inconclusive ("Test run timedout.");
+			}
+
+			Assert.IsNull (ex, "Exception");
+
+			if (!timeoutExceptionShouldHaveBeenThrown) {
+				Assert.Inconclusive ("Failed to produce a timeout. The response content was streamed completely.");
+			} else {
+				Assert.IsTrue (timeoutExceptionWasThrown, "Timeout exception is thrown.");
+			}
+		}
+
 #endif
 
 		// ensure that if we have a redirect, we do not have the auth headers in the following requests
