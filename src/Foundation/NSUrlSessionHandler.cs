@@ -935,9 +935,6 @@ namespace Foundation {
 
 				// this can happen if the HTTP request times out and it is removed as part of the cancellation process
 				if (inflight is not null) {
-					// set the stream as finished
-					inflight.Stream.TrySetReceivedAllData ();
-
 					// send the error or send the response back
 					if (error is not null || serverError is not null) {
 						// got an error, cancel the stream operatios before we do anything
@@ -948,6 +945,9 @@ namespace Foundation {
 						inflight.CompletionSource.TrySetException (exc);
 						inflight.Stream.TrySetException (exc);
 					} else {
+						// set the stream as finished
+						inflight.Stream.TrySetReceivedAllData ();
+
 						inflight.Completed = true;
 						SetResponse (inflight);
 					}
@@ -1334,8 +1334,10 @@ namespace Foundation {
 
 				while (current is null) {
 					lock (dataLock) {
-						if (data.Count == 0 && receivedAllData && position == length)
+						if (data.Count == 0 && receivedAllData && position == length) {
+							ThrowIfNeeded (cancellationToken);
 							return 0;
+						}
 
 						if (data.Count > 0 && current is null) {
 							current = data.Peek ();
