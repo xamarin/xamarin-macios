@@ -706,7 +706,10 @@ public partial class Generator : IMemberGatherer {
 
 			if (TypeManager.INativeObject.IsAssignableFrom (pi.ParameterType)) {
 				pars.Add (new TrampolineParameterInfo (NativeHandleType, safe_name));
-				invoke.AppendFormat ("new {0} ({1}, false)", pi.ParameterType, safe_name);
+				if (BindThirdPartyLibrary)
+					invoke.AppendFormat ("Runtime.GetINativeObject<{0}> ({1}, false)!", pi.ParameterType, safe_name);
+				else
+					invoke.AppendFormat ("{1} == IntPtr.Zero ? null! : new {0} ({1}, false)", pi.ParameterType, safe_name);
 				continue;
 			}
 
@@ -1266,22 +1269,18 @@ public partial class Generator : IMemberGatherer {
 		if (AttributeManager.HasAttribute<WrapAttribute> (mi))
 			return;
 
-		try {
-			// arm64 never requires stret, so we'll always need the non-stret variants
-			RegisterMethod (false, mi, MakeSig (mi, false), false);
-			RegisterMethod (false, mi, MakeSuperSig (mi, false), false);
+		// arm64 never requires stret, so we'll always need the non-stret variants
+		RegisterMethod (false, mi, MakeSig (mi, false), false);
+		RegisterMethod (false, mi, MakeSuperSig (mi, false), false);
 
-			if (CheckNeedStret (mi)) {
-				RegisterMethod (true, mi, MakeSig (mi, true), false);
-				RegisterMethod (true, mi, MakeSuperSig (mi, true), false);
+		if (CheckNeedStret (mi)) {
+			RegisterMethod (true, mi, MakeSig (mi, true), false);
+			RegisterMethod (true, mi, MakeSuperSig (mi, true), false);
 
-				if (AttributeManager.HasAttribute<AlignAttribute> (mi)) {
-					RegisterMethod (true, mi, MakeSig (mi, true, true), true);
-					RegisterMethod (true, mi, MakeSuperSig (mi, true, true), true);
-				}
+			if (AttributeManager.HasAttribute<AlignAttribute> (mi)) {
+				RegisterMethod (true, mi, MakeSig (mi, true, true), true);
+				RegisterMethod (true, mi, MakeSuperSig (mi, true, true), true);
 			}
-		} catch (BindingException ex) {
-			throw ex;
 		}
 	}
 	static char [] invalid_selector_chars = new char [] { '*', '^', '(', ')' };
