@@ -39,10 +39,8 @@ steps:
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
-    New-Item -Path "$(Build.ArtifactStagingDirectory)/build-configuration" -ItemType "directory" -Force
-    $jsonPath = Join-Path -Path "$(Build.ArtifactStagingDirectory)/build-configuration" -ChildPath "configuration.json"
+    $jsonPath = Join-Path -Path "$(Build.ArtifactStagingDirectory)" -ChildPath "configuration.json"
     New-BuildConfiguration -ConfigFile $jsonPath
-    Copy "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/test.config" "$(Build.ArtifactStagingDirectory)/build-configuration/"
   env:
     GITHUB_TOKEN: $(GitHub.Token)
     ACCESSTOKEN: $(AzDoBuildAccess.Token)
@@ -56,8 +54,8 @@ steps:
 # upload config to be consumed later
 - ${{ if eq(parameters.uploadArtifacts, true) }}:
   - task: PublishPipelineArtifact@1
-    displayName: 'Publish Artifact: build configuration'
+    displayName: 'Publish Artifact: configuration.json'
     inputs:
-      targetPath: '$(Build.ArtifactStagingDirectory)/build-configuration/'
+      targetPath: '$(Build.ArtifactStagingDirectory)/configuration.json'
       artifactName: '${{ parameters.uploadPrefix }}build-configuration'
     continueOnError: true
