@@ -279,8 +279,7 @@ namespace Xamarin.Tests {
 			}
 
 			// misc other files not directly related to the test itself
-			if (!isCoreCLR)
-			{
+			if (!isCoreCLR) {
 				expectedFiles.Add (Path.Combine (assemblyDirectory, "icudt.dat"));
 				expectedFiles.Add (Path.Combine (assemblyDirectory, "icudt_hybrid.dat"));
 			}
