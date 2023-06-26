@@ -152,6 +152,19 @@ steps:
   displayName: 'Print .NET files'
 
 - pwsh: |
+    Import-Module $Env:BUILD_SOURCESDIRECTORY\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
+    $configFile = Join-Path $(PIPELINE.WORKSPACE) "macios" "build-configuration" "configuration.json"
+    $config = Import-BuildConfiguration -ConfigFile $configFile
+    $config | Write-Host
+  name: configuration
+  continueOnError: true
+  displayName: 'Parse build configuration'
+  timeoutInMinutes: 1
+
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
+  displayName: 'Dump Environment 2'
+
+- pwsh: |
     $Env:DOTNET = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe"
     $Env:DOTNET_DIR = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\"
     $Env:TESTS_USE_SYSTEM = "1"
