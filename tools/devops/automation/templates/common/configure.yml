@@ -39,7 +39,7 @@ steps:
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
-    New-Item -Path "$(Build.ArtifactStagingDirectory)/build-configuration"" -ItemType "directory" -Force
+    New-Item -Path "$(Build.ArtifactStagingDirectory)/build-configuration" -ItemType "directory" -Force
     $jsonPath = Join-Path -Path "$(Build.ArtifactStagingDirectory)/build-configuration" -ChildPath "configuration.json"
     New-BuildConfiguration -ConfigFile $jsonPath
     Copy "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/test.config" $(Build.ArtifactStagingDirectory)/build-configuration/"
