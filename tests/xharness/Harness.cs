@@ -166,7 +166,7 @@ namespace Xharness {
 					}
 					var mlaunchPath = Path.Combine (DOTNET_DIR, "packs");
 					var sdkPlatform = platform.AsString ();
-					var sdkName = $"Microsoft.{sdkPlatform}.Sdk.{DotNetTfm}_{config [sdkPlatform.ToUpperInvariant () + "_NUGET_OS_VERSION"]}";
+					var sdkName = config [sdkPlatform.ToUpperInvariant () + "_NUGET_SDK_NAME"];
 					var sdkVersion = config [$"{sdkPlatform.ToUpperInvariant ()}_NUGET_VERSION_NO_METADATA"];
 					mlaunchPath = Path.Combine (mlaunchPath, sdkName, sdkVersion);
 					mlaunchPath = Path.Combine (mlaunchPath, "tools", "bin", "mlaunch");

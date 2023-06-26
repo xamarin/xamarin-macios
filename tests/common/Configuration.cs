@@ -448,46 +448,18 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		public static string GetNuGetOsVersion (ApplePlatform platform)
-		{
-			var variableName = platform.AsString ().ToUpper () + "_NUGET_OS_VERSION";
-			return DotNetTfm + "_" + GetVariable (variableName, $"variable {variableName} not found");
-		}
-
 		static string GetRefNuGetName (TargetFramework targetFramework) => GetRefNuGetName (targetFramework.Platform);
 
 		static string GetRefNuGetName (ApplePlatform platform)
 		{
-			switch (platform) {
-			case ApplePlatform.iOS:
-				return "Microsoft.iOS.Ref." + GetNuGetOsVersion (platform);
-			case ApplePlatform.MacCatalyst:
-				return "Microsoft.MacCatalyst.Ref." + GetNuGetOsVersion (platform);
-			case ApplePlatform.TVOS:
-				return "Microsoft.tvOS.Ref." + GetNuGetOsVersion (platform);
-			case ApplePlatform.WatchOS:
-				return "Microsoft.watchOS.Ref." + GetNuGetOsVersion (platform);
-			case ApplePlatform.MacOSX:
-				return "Microsoft.macOS.Ref." + GetNuGetOsVersion (platform);
-			default:
-				throw new InvalidOperationException (platform.ToString ());
-			}
+			var variableName = platform.AsString ().ToUpper () + "_NUGET_REF_NAME";
+			return GetVariable (variableName, variableName + " not found");
 		}
 
 		static string GetRuntimeNuGetName (ApplePlatform platform, string runtimeIdentifier)
 		{
-			switch (platform) {
-			case ApplePlatform.iOS:
-				return "Microsoft.iOS.Runtime." + runtimeIdentifier + "." + GetNuGetOsVersion (platform);
-			case ApplePlatform.TVOS:
-				return "Microsoft.tvOS.Runtime." + runtimeIdentifier + "." + GetNuGetOsVersion (platform);
-			case ApplePlatform.MacCatalyst:
-				return "Microsoft.MacCatalyst.Runtime." + runtimeIdentifier + "." + GetNuGetOsVersion (platform);
-			case ApplePlatform.MacOSX:
-				return "Microsoft.macOS.Runtime." + runtimeIdentifier + "." + GetNuGetOsVersion (platform);
-			default:
-				throw new InvalidOperationException (platform.ToString ());
-			}
+			var variableName = runtimeIdentifier + "_NUGET_RUNTIME_NAME";
+			return GetVariable (variableName, variableName + " not found");
 		}
 
 		static string GetSdkNuGetName (TargetFramework targetFramework)
@@ -497,20 +469,8 @@ namespace Xamarin.Tests {
 
 		public static string GetSdkNuGetName (ApplePlatform platform)
 		{
-			switch (platform) {
-			case ApplePlatform.iOS:
-				return "Microsoft.iOS.Sdk." + GetNuGetOsVersion (platform);
-			case ApplePlatform.TVOS:
-				return "Microsoft.tvOS.Sdk." + GetNuGetOsVersion (platform);
-			case ApplePlatform.WatchOS:
-				return "Microsoft.watchOS.Sdk." + GetNuGetOsVersion (platform);
-			case ApplePlatform.MacOSX:
-				return "Microsoft.macOS.Sdk." + GetNuGetOsVersion (platform);
-			case ApplePlatform.MacCatalyst:
-				return "Microsoft.MacCatalyst.Sdk." + GetNuGetOsVersion (platform);
-			default:
-				throw new InvalidOperationException (platform.ToString ());
-			}
+			var variableName = platform.AsString ().ToUpper () + "_NUGET_SDK_NAME";
+			return GetVariable (variableName, variableName + " not found");
 		}
 
 		public static string GetDotNetRoot ()

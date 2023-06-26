@@ -180,13 +180,13 @@ ifdef INCLUDE_XAMARIN_LEGACY
 	if test -d $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono; then cd $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono     && zip -9 -r $(CURDIR)/bundle.zip .; fi
 endif
 ifdef ENABLE_DOTNET
-	$(foreach platform,$(DOTNET_PLATFORMS),export $(platform)_NUGET_OS_VERSION=$($(platform)_NUGET_OS_VERSION);) \
+	$(foreach platform,$(DOTNET_PLATFORMS),export $(platform)_NUGET_REF_NAME=$($(platform)_NUGET_REF_NAME);) \
 	for platform in $(DOTNET_PLATFORMS); do \
 		cd $(CURDIR); \
 		rm -rf tmpdir; \
 		mkdir -p Microsoft.$$platform.Ref/; \
-		TMPVAR=$${platform}_NUGET_OS_VERSION; \
-		$(CP) -r $(DOTNET_DESTDIR)/Microsoft.$$platform.Ref.$(DOTNET_TFM)_$${!TMPVAR}/ref Microsoft.$$platform.Ref; \
+		TMPVAR=$${platform}_NUGET_REF_NAME; \
+		$(CP) -r $(DOTNET_DESTDIR)/$${!TMPVAR}/ref Microsoft.$$platform.Ref; \
 		cd tmpdir; \
 		zip -9 -r $(CURDIR)/bundle.zip ./Microsoft.$$platform.Ref/ref/; \
 		rm -rf tmpdir; \

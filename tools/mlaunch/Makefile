@@ -31,14 +31,14 @@ $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mla
 
 define DotNetInstall
 $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/tools/bin/mlaunch: $$(DOWNLOAD_STAMP_FILE)
-	$$(Q) rm -rf $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/tools/bin/mlaunch
-	$$(Q) rm -rf $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)tools/lib/mlaunch
-	$$(Q) mkdir -p $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/tools/bin
-	$$(Q) mkdir -p $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/tools/lib
-	$$(Q) $$(CP) -R $(TOP)/packages/microsoft.tools.mlaunch/$$(MLAUNCH_NUGET_VERSION)/mlaunch/bin/mlaunch $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/tools/bin/mlaunch
-	$$(Q) $$(CP) -R $(TOP)/packages/microsoft.tools.mlaunch/$$(MLAUNCH_NUGET_VERSION)/mlaunch/lib/mlaunch $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/tools/lib
-	$$(Q) chmod a+x $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/tools/bin/mlaunch
-	$$(Q) chmod a+x $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION)/tools/lib/mlaunch/mlaunch.app/Contents/MacOS/mlaunch
+	$$(Q) rm -rf $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/bin/mlaunch
+	$$(Q) rm -rf $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/mlaunch
+	$$(Q) mkdir -p $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/bin
+	$$(Q) mkdir -p $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib
+	$$(Q) $$(CP) -R $(TOP)/packages/microsoft.tools.mlaunch/$$(MLAUNCH_NUGET_VERSION)/mlaunch/bin/mlaunch $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/bin/mlaunch
+	$$(Q) $$(CP) -R $(TOP)/packages/microsoft.tools.mlaunch/$$(MLAUNCH_NUGET_VERSION)/mlaunch/lib/mlaunch $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib
+	$$(Q) chmod a+x $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/bin/mlaunch
+	$$(Q) chmod a+x $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/mlaunch/mlaunch.app/Contents/MacOS/mlaunch
 endef
 
 $(foreach platform,$(DOTNET_PLATFORMS_MOBILE),$(eval $(call DotNetInstall,$(platform))))
@@ -50,8 +50,8 @@ ifdef INCLUDE_IOS
 	$(Q) rm -rf $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mlaunch
 endif
 endif
-	$(Q) rm -rf $(foreach platform,$(DOTNET_PLATFORMS_MOBILE),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk.$(DOTNET_TFM)_$($(platform)_NUGET_OS_VERSION)/tools/bin/mlaunch)
-	$(Q) rm -rf $(foreach platform,$(DOTNET_PLATFORMS_MOBILE),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk.$(DOTNET_TFM)_$($(platform)_NUGET_OS_VERSION)/tools/lib/mlaunch)
+	$(Q) rm -rf $(foreach platform,$(DOTNET_PLATFORMS_MOBILE),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/tools/bin/mlaunch)
+	$(Q) rm -rf $(foreach platform,$(DOTNET_PLATFORMS_MOBILE),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/tools/lib/mlaunch)
 	$(Q) rm -rf .*.stamp obj .*.binlog
 
 all-local:: $(TARGETS)
