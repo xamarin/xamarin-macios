@@ -1299,8 +1299,14 @@
 		</PropertyGroup>
 		<ItemGroup>
 			<_AllLinkerArgs Include="$(_LinkerArgsSplitBySemiColon.Split(';'))" />
-			<_LinkerArgsWhichAreReallyCompilerArgs Include="@(_AllLinkerArgs)" Condition="%(Identity.StartsWith('-Wl,'))" />
-			<_CompilerArgsTransformedToLinkerArgs Include="@(_LinkerArgsWhichAreReallyCompilerArgs -> '%(Identity.Substring (4))')" />
+			<_LinkerArgsWhichAreReallyCompilerArgs Include="@(_AllLinkerArgs)" Condition="$([System.String]::new('%(Identity)').StartsWith('-Wl,'))">
+				<TransformedArgument>$([System.String]::new('%(Identity)').Substring(4))</TransformedArgument>
+			</_LinkerArgsWhichAreReallyCompilerArgs>
+			<!-- Handle quoted arguments: <LinkerArg>'-Wl,-linkerarg'</LinkerArg> -->
+			<_LinkerArgsWhichAreReallyCompilerArgs Include="@(_AllLinkerArgs)" Condition="$([System.String]::new('%(Identity)').StartsWith('%27-Wl,')) And $([System.String]::new('%(Identity)').EndsWith('%27'))">
+				<TransformedArgument>$([System.String]::new('%(Identity)').Substring(5, $([MSBuild]::Subtract($([System.String]::new('%(Identity)').Length), 6))))</TransformedArgument>
+			</_LinkerArgsWhichAreReallyCompilerArgs>
+			<_CompilerArgsTransformedToLinkerArgs Include="@(_LinkerArgsWhichAreReallyCompilerArgs->'%(TransformedArgument)')" />
 		</ItemGroup>
 		<PropertyGroup>
 			<_CompilerArgsTransformedToLinkerArgsSplitByComma>@(_CompilerArgsTransformedToLinkerArgs->Replace(',',';'))</_CompilerArgsTransformedToLinkerArgsSplitByComma>
