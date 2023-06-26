@@ -282,7 +282,6 @@ namespace Xamarin.Tests {
 			if (!isCoreCLR)
 			{
 				expectedFiles.Add (Path.Combine (assemblyDirectory, "icudt.dat"));
-				expectedFiles.Add (Path.Combine (assemblyDirectory, "icudt_hybrid.dat"));
 			}
 			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, "BundleStructure", runtimeIdentifiers, addConfig: true, includeDebugFiles: includeDebugFiles);
 			if (platform != ApplePlatform.MacOSX)
