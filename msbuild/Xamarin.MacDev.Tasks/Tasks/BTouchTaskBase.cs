@@ -23,8 +23,6 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string BTouchToolExe { get; set; }
 
-		public string DotNetCscCompiler { get; set; }
-
 		public ITaskItem [] ObjectiveCLibraries { get; set; }
 
 		public ITaskItem [] AdditionalLibPaths { get; set; }
@@ -38,6 +36,8 @@ namespace Xamarin.MacDev.Tasks {
 		public ITaskItem [] ApiDefinitions { get; set; }
 
 		public string AttributeAssembly { get; set; }
+
+		public ITaskItem CompiledApiDefinitionAssembly { get; set; }
 
 		public ITaskItem [] CoreSources { get; set; }
 
@@ -79,9 +79,15 @@ namespace Xamarin.MacDev.Tasks {
 			get {
 				// Return the dotnet executable we're executing with.
 				var dotnet_path = Environment.GetEnvironmentVariable ("DOTNET_HOST_PATH");
-				if (string.IsNullOrEmpty (dotnet_path))
-					throw new InvalidOperationException ($"DOTNET_HOST_PATH is not set");
-				return dotnet_path;
+				if (!string.IsNullOrEmpty (dotnet_path))
+					return dotnet_path;
+
+				if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
+					// This might happen when building from inside VS (design-time builds, etc.)
+					return "dotnet.exe";
+				}
+
+				throw new InvalidOperationException ($"DOTNET_HOST_PATH is not set");
 			}
 		}
 
@@ -123,6 +129,9 @@ namespace Xamarin.MacDev.Tasks {
 			cmd.Add ("/v");
 #endif
 
+			if (CompiledApiDefinitionAssembly is not null)
+				cmd.AddQuotedSwitchIfNotNull ("/compiled-api-definition-assembly:", CompiledApiDefinitionAssembly.ItemSpec);
+
 			cmd.Add ("/nostdlib");
 			cmd.AddQuotedSwitchIfNotNull ("/baselib:", BaseLibDll);
 			cmd.AddQuotedSwitchIfNotNull ("/out:", OutputAssembly);
@@ -143,18 +152,6 @@ namespace Xamarin.MacDev.Tasks {
 
 			if (AllowUnsafeBlocks)
 				cmd.Add ("/unsafe");
-
-			if (!string.IsNullOrEmpty (DotNetCscCompiler)) {
-				var compileCommand = new string [] {
-					// The quoting becomes rather complicated here when using windows-style slashes, because the slashes
-					// will first be quoted once here, then once again as an argument, and finally needs to be double-unquoted
-					// in the generator, which doesn't seem to be working quite right. So instead just use unix-style slashes,
-					// which don't need quoting and also works just as fine on Windows.
-					DotNetPath.Replace ('\\', '/'),
-					DotNetCscCompiler,
-				};
-				cmd.AddQuoted ("/compile-command:" + string.Join (" ", StringUtils.QuoteForProcess (compileCommand)));
-			}
 
 			cmd.AddQuotedSwitchIfNotNull ("/ns:", Namespace);
 
@@ -270,7 +267,6 @@ namespace Xamarin.MacDev.Tasks {
 			BaseLibDll = PathUtils.ConvertToMacPath (BaseLibDll);
 			BTouchToolExe = PathUtils.ConvertToMacPath (BTouchToolExe);
 			BTouchToolPath = PathUtils.ConvertToMacPath (BTouchToolPath);
-			DotNetCscCompiler = PathUtils.ConvertToMacPath (DotNetCscCompiler);
 
 			if (IsDotNet) {
 				var customHome = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_HOME");

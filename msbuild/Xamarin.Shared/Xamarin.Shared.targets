@@ -1602,6 +1602,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			$(_GenerateBindingsDependsOn);
 		</_GenerateBindingsDependsOn>
 
+		<_GenerateBindingsDependsOn Condition="'$(UsingAppleNETSdk)' == 'true'">
+			_CompileApiDefinitions;
+			$(_GenerateBindingsDependsOn);
+		</_GenerateBindingsDependsOn>
+
 		<_WriteGeneratorPropertiesDependsOn Condition="'$(UsingAppleNETSdk)' == 'true'">
 			$(_WriteGeneratorPropertiesDependsOn);
 			_ComputeBindingVariables;
@@ -1634,8 +1639,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			AttributeAssembly="$(_GeneratorAttributeAssembly)"
 			BaseLibDll="$(BaseLibDllPath)"
 			CoreSources="@(ObjcBindingCoreSource)"
+			CompiledApiDefinitionAssembly="$(_CompiledApiDefinitionAssembly)"
 			DefineConstants="$(DefineConstants)"
-			DotNetCscCompiler="$(_DotNetCscCompiler)"
 			EmitDebugInformation="$(BTouchEmitDebugInformation)"
 			ExtraArgs="$(BTouchExtraArgs)"
 			GeneratedSourcesDir="$(GeneratedSourcesDir)"
