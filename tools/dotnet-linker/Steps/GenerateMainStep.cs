@@ -38,6 +38,8 @@ namespace Xamarin {
 				if (Configuration.InvariantGlobalization) {
 					contents.AppendLine ("\tsetenv (\"DOTNET_SYSTEM_GLOBALIZATION_INVARIANT\", \"1\", 1);");
 				} else {
+					if (Configuration.HybridGlobalization)
+					    contents.AppendLine ("\tsetenv (\"DOTNET_SYSTEM_GLOBALIZATION_HYBRID\", \"1\", 1);");
 					contents.AppendLine ($"\txamarin_icu_dat_file_name = \"{Configuration.GlobalizationDataFile}\";");
 				}
 				if (Configuration.Application.PackageManagedDebugSymbols && Configuration.Application.UseInterpreter)
