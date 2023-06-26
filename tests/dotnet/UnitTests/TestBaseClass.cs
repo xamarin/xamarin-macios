@@ -73,15 +73,20 @@ namespace Xamarin.Tests {
 
 		protected string GetDefaultRuntimeIdentifier (ApplePlatform platform, string configuration = "Debug")
 		{
+			var arch = Configuration.CanRunArm64 ? "arm64" : "x64";
 			switch (platform) {
 			case ApplePlatform.iOS:
-				return "iossimulator-x64";
+				return $"iossimulator-{arch}";
 			case ApplePlatform.TVOS:
-				return "tvossimulator-x64";
+				return $"tvossimulator-{arch}";
 			case ApplePlatform.MacOSX:
-				return "Release".Equals (configuration, StringComparison.OrdinalIgnoreCase) ? "osx-x64;osx-arm64" : "osx-x64";
+				if ("Release".Equals (configuration, StringComparison.OrdinalIgnoreCase))
+					return "osx-x64;osx-arm64";
+				return $"osx-{arch}";
 			case ApplePlatform.MacCatalyst:
-				return "Release".Equals (configuration, StringComparison.OrdinalIgnoreCase) ? "maccatalyst-x64;maccatalyst-arm64" : "maccatalyst-x64";
+				if ("Release".Equals (configuration, StringComparison.OrdinalIgnoreCase))
+					return "maccatalyst-x64;maccatalyst-arm64";
+				return $"maccatalyst-{arch}";
 			default:
 				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
 			}
