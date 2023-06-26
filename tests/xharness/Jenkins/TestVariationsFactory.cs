@@ -35,21 +35,27 @@ namespace Xharness.Jenkins {
 			var ignore = test.TestProject.Ignore;
 			var mac_supports_arm64 = Harness.CanRunArm64;
 			var arm64_runtime_identifier = string.Empty;
+			var x64_runtime_identifier = string.Empty;
 			var arm64_sim_runtime_identifier = string.Empty;
+			var x64_sim_runtime_identifier = string.Empty;
 
 			switch (test.Platform) {
 			case TestPlatform.Mac:
 				arm64_runtime_identifier = "osx-arm64";
+				x64_runtime_identifier = "osx-x64";
 				break;
 			case TestPlatform.MacCatalyst:
 				arm64_runtime_identifier = "maccatalyst-arm64";
+				x64_runtime_identifier = "maccatalyst-x64";
 				break;
 			case TestPlatform.iOS:
 			case TestPlatform.iOS_Unified:
 				arm64_sim_runtime_identifier = "iossimulator-arm64";
+				x64_sim_runtime_identifier = "iossimulator-x64";
 				break;
 			case TestPlatform.tvOS:
 				arm64_sim_runtime_identifier = "tvossimulator-arm64";
+				x64_sim_runtime_identifier = "tvossimulator-x64";
 				break;
 			}
 
@@ -136,7 +142,7 @@ namespace Xharness.Jenkins {
 					if (test.TestProject.IsDotNetProject) {
 						yield return new TestData { Variation = "Debug (managed static registrar)", Registrar = "managed-static", Debug = true, Profiling = false, Ignored = ignore };
 						yield return new TestData { Variation = "Release (managed static registrar, all optimizations)", BundlerArguments = "--optimize:all", Registrar = "managed-static", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = ignore };
-						yield return new TestData { Variation = "Release (NativeAOT)", Debug = false, PublishAot = true, Ignored = ignore, Defines = "NATIVEAOT", LinkMode = "Full" };
+						yield return new TestData { Variation = "Release (NativeAOT, x64)", Debug = false, PublishAot = true, Ignored = ignore, Defines = "NATIVEAOT", RuntimeIdentifier = x64_sim_runtime_identifier, LinkMode = "Full" };
 					}
 					break;
 				case "introspection":
@@ -176,7 +182,7 @@ namespace Xharness.Jenkins {
 							// yield return new TestData { Variation = "Release (NativeAOT)", Debug = false, PublishAot = true, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.MacCatalyst), Defines = "NATIVEAOT", LinkMode = "Full" };
 
 							yield return new TestData { Variation = "Release (NativeAOT, ARM64)", Debug = false, PublishAot = true, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.MacCatalyst) || !mac_supports_arm64, Defines = "NATIVEAOT", RuntimeIdentifier = arm64_runtime_identifier, LinkMode = "Full" };
-							yield return new TestData { Variation = "Release (NativeAOT, x64)", Debug = false, PublishAot = true, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.MacCatalyst), Defines = "NATIVEAOT", LinkMode = "Full", RuntimeIdentifier = "maccatalyst-x64" };
+							yield return new TestData { Variation = "Release (NativeAOT, x64)", Debug = false, PublishAot = true, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.MacCatalyst), Defines = "NATIVEAOT", LinkMode = "Full", RuntimeIdentifier = x64_runtime_identifier };
 						}
 						if (test.Platform == TestPlatform.Mac) {
 							yield return new TestData { Variation = "Release", Debug = false, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac) };
