@@ -22,7 +22,7 @@
     <PackageReference Include="Xamarin.Messaging.Core" Version="$(MessagingVersion)" IncludeAssets="build" />
     <PackageReference Include="Xamarin.Messaging.Server" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
     <PackageReference Include="Xamarin.iOS.HotRestart.Client" Version="$(HotRestartVersion)" GeneratePathProperty="true" />
-    <PackageReference Include="System.Diagnostics.Tracer" Version="2.0.8" GeneratePathProperty="true" />
+    <PackageReference Include="System.Diagnostics.Tracer" Version="2.1.0-alpha" GeneratePathProperty="true" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Messaging\Xamarin.Messaging.Build\Xamarin.Messaging.Build.csproj">
@@ -41,7 +41,6 @@
     </None>
     <None Include="$(PkgXamarin_iOS_HotRestart_Client)\lib\netstandard2.0\iSign.Core.pdb" CopyToOutputDirectory="PreserveNewest" />
     <None Include="$(PkgXamarin_iOS_HotRestart_Client)\lib\netstandard2.0\Xamarin.iOS.Windows.Client.pdb" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="$(PkgSystem_Diagnostics_Tracer)\lib\netstandard1.3\System.Diagnostics.Tracer.pdb" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="../Versions.ios.g.cs" />
     <Compile Include="..\Xamarin.MacDev.Tasks\PublishFolderType.cs">
       <Link>PublishFolderType.cs</Link>

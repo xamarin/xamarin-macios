@@ -63,7 +63,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				Assert.Throws<ArgumentNullException> (() => db.Notify (DispatchQueue.MainQueue, (Action) null), "Null 2");
 				db.Notify (DispatchQueue.MainQueue, notification);
 				DispatchQueue.MainQueue.DispatchAsync (db);
-				TestRuntime.RunAsync (DateTime.Now.AddSeconds (5), () => { }, () => notified);
+				TestRuntime.RunAsync (TimeSpan.FromSeconds (5), () => { }, () => notified);
 				Assert.IsTrue (called, "Called");
 			}
 		}
@@ -81,7 +81,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 					Assert.Throws<ArgumentNullException> (() => db.Notify (DispatchQueue.MainQueue, (DispatchBlock) null), "Null 2");
 					db.Notify (DispatchQueue.MainQueue, notification_block);
 					DispatchQueue.MainQueue.DispatchAsync (db);
-					TestRuntime.RunAsync (DateTime.Now.AddSeconds (5), () => { }, () => notified);
+					TestRuntime.RunAsync (TimeSpan.FromSeconds (5), () => { }, () => notified);
 					Assert.IsTrue (called, "Called");
 				}
 			}

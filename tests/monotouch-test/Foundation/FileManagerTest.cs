@@ -85,15 +85,14 @@ namespace MonoTouchFixtures.Foundation {
 				// aborting is evil, so don't bother aborting the thread, just let it run its course
 			}
 		}
-		//GetSkipBackupAttribute doesn't exist on Mac
-#if !MONOMAC
 
 		[Test]
 		public void GetSkipBackupAttribute ()
 		{
 			Assert.False (NSFileManager.GetSkipBackupAttribute (NSBundle.MainBundle.ExecutableUrl.ToString ()), "MainBundle");
 
-			string filename = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), $"DoNotBackupMe-NSFileManager-{Process.GetCurrentProcess ().Id}");
+			var paths = NSSearchPath.GetDirectories (NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomain.User);
+			var filename = Path.Combine (paths [0], $"DoNotBackupMe-NSFileManager-{Process.GetCurrentProcess ().Id}");
 			try {
 				File.WriteAllText (filename, "not worth a bit");
 
@@ -113,7 +112,6 @@ namespace MonoTouchFixtures.Foundation {
 				File.Delete (filename);
 			}
 		}
-#endif
 
 		[Test]
 		public void DefaultManager ()

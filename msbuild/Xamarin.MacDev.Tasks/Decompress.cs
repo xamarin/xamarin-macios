@@ -131,7 +131,6 @@ namespace Xamarin.MacDev {
 		static bool TryDecompressUsingUnzip (TaskLoggingHelper log, string zip, string resource, string decompressionDir)
 		{
 			Directory.CreateDirectory (decompressionDir);
-
 			var args = new List<string> {
 				"-u", "-o",
 				"-d", decompressionDir,

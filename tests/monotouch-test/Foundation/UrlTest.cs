@@ -49,7 +49,8 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.That (value, Is.TypeOf (typeof (NSNumber)), "NSNumber");
 			Assert.That ((int) (value as NSNumber), Is.EqualTo (0), "0");
 
-			string filename = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), $"DoNotBackupMe-NSUrl-{Process.GetCurrentProcess ().Id}");
+			var paths = NSSearchPath.GetDirectories (NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomain.User);
+			var filename = Path.Combine (paths [0], $"DoNotBackupMe-NSUrl-{Process.GetCurrentProcess ().Id}");
 			try {
 				File.WriteAllText (filename, "not worth a bit");
 				using (NSUrl url = NSUrl.FromFilename (filename)) {

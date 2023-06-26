@@ -439,14 +439,6 @@ DOTNET_TARGETS += \
 
 endif
 
-# watchOS: contains all of the files for iOS as well (for now, we don't need all of them, so this is optimizable)
-ifdef INCLUDE_WATCH
-DOTNET_TARGETS += \
-	$(foreach target,$(DOTNET_SHARED_FILES)       ,$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/iOS/$(notdir $(target)))           \
-	$(foreach target,$(DOTNET_WATCHOS_FILES)      ,$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/watchOS/$(notdir $(target)))       \
-
-endif
-
 # macOS
 ifdef INCLUDE_MAC
 DOTNET_TARGETS += \
@@ -467,8 +459,6 @@ DOTNET_DIRECTORIES += \
 	$(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS \
 	$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/iOS \
 	$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/tvOS \
-	$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/iOS \
-	$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/watchOS \
 	$(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/tools/msbuild/macOS \
 	$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Sdk/tools/msbuild/iOS \
 	$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Sdk/tools/msbuild/MacCatalyst \
@@ -483,12 +473,6 @@ $(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/%: $(IOS_DESTDIR)$(MONOTOUCH_P
 	$(Q) $(CP) $< $@
 
 $(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/tvOS/%: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/TVOS/% | $(DOTNET_DIRECTORIES)
-	$(Q) $(CP) $< $@
-
-$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/%: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/% | $(DOTNET_DIRECTORIES)
-	$(Q) $(CP) $< $@
-
-$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/watchOS/%: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/WatchOS/% | $(DOTNET_DIRECTORIES)
 	$(Q) $(CP) $< $@
 
 $(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Sdk/tools/msbuild/%: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/% | $(DOTNET_DIRECTORIES)
@@ -506,7 +490,6 @@ DOTNET_IOS_WINDOWS_OUTPUT_FILES =                                \
 	$(foreach dll,$(IOS_WINDOWS_TASK_ASSEMBLIES),$(dll).*)       \
 	$(foreach dll,$(IOS_WINDOWS_DEPENDENCIES),$(dll).*)          \
 	iSign.Core.pdb                                               \
-	System.Diagnostics.Tracer.pdb                                \
 	Xamarin.iOS.Windows.Client.pdb                               \
 	Broker.zip                                                   \
 	Build.zip                                                    \
