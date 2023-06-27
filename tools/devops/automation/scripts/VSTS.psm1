@@ -261,7 +261,7 @@ class BuildConfiguration {
             Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
 
             $variableName = "$($platform.ToUpper())_NUGET_VERSION_NO_METADATA"
-            $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
+            $variableValue = $config.$variableName
             Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
         }
 
