@@ -50,6 +50,7 @@ namespace Xharness.Jenkins {
 				break;
 			case TestPlatform.iOS:
 			case TestPlatform.iOS_Unified:
+			case TestPlatform.iOS_Unified64:
 				arm64_sim_runtime_identifier = "iossimulator-arm64";
 				x64_sim_runtime_identifier = "iossimulator-x64";
 				break;
