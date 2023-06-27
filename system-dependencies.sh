@@ -341,6 +341,7 @@ function download_xcode_platforms ()
 	
 	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
 	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
+	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
 
 	log "Executed '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
 }
