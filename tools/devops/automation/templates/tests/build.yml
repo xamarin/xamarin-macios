@@ -204,6 +204,7 @@ steps:
     set -e
     $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators --ignore-shellcheck --ignore-yamllint
   displayName: 'Provision simulators'
+  timeoutInMinutes: 250
 
 - template: ./run-tests.yml
   parameters:

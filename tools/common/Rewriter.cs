@@ -5,10 +5,12 @@ using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using ClassRedirector;
+using Mono.Linker;
 
 #nullable enable
 
-namespace Xamarin.MacDev.Tasks {
+namespace ClassRedirector {
+#if NET
 	public class Rewriter {
 		const string runtimeName = "ObjCRuntime.Runtime";
 		const string classHandleName = "ObjCRuntime.Runtime/ClassHandles";
@@ -18,35 +20,54 @@ namespace Xamarin.MacDev.Tasks {
 		const string classPtrName = "class_ptr";
 		CSToObjCMap map;
 		string pathToXamarinAssembly;
-		string [] assembliesToPatch;
-		string outputDirectory;
-		SimpleAssemblyResolver resolver;
+		string? outputDirectory = null;
 		Dictionary<string, FieldDefinition> csTypeToFieldDef = new Dictionary<string, FieldDefinition> ();
+		IEnumerable<AssemblyDefinition> assemblies;
+		AssemblyDefinition xamarinAssembly;
+		Xamarin.Tuner.DerivedLinkContext linkContext;
 
-		public Rewriter (CSToObjCMap map, string pathToXamarinAssembly, string [] assembliesToPatch, string outputDirectory)
+		public Rewriter (CSToObjCMap map, IEnumerable<AssemblyDefinition> assembliesToPatch, Xamarin.Tuner.DerivedLinkContext? linkContext)
 		{
 			this.map = map;
-			this.pathToXamarinAssembly = pathToXamarinAssembly;
-			this.assembliesToPatch = assembliesToPatch;
-			this.outputDirectory = outputDirectory;
-			resolver = new SimpleAssemblyResolver (assembliesToPatch);
+			this.assemblies = assembliesToPatch;
+			var xasm = assembliesToPatch.Select (assem => assem.MainModule).FirstOrDefault (ContainsNativeHandle)?.Assembly;
+			if (xasm is null) {
+				throw new Exception ("Unable to find Xamarin assembly.");
+			} else {
+				xamarinAssembly = xasm;
+				pathToXamarinAssembly = xamarinAssembly.MainModule.FileName;
+			}
+			if (linkContext is null) {
+				throw new Exception ("Rewriter needs a valid link context.");
+			} else {
+				this.linkContext = linkContext;
+			}
+
 		}
 
-		public void Process ()
+		public string Process ()
 		{
-			var classMap = CreateClassHandles ();
+			Dictionary<string, FieldDefinition> classMap;
+			try {
+				classMap = CreateClassHandles ();
+			} catch (Exception e) {
+				// if this throws, no changes are made to the assemblies
+				// so it's safe to log it on the far side.
+				return e.Message;
+			}
 			PatchClassPtrUsage (classMap);
+			return "";
 		}
 
 		Dictionary<string, FieldDefinition> CreateClassHandles ()
 		{
 			var classMap = new Dictionary<string, FieldDefinition> ();
-			using var assemblyStm = new FileStream (pathToXamarinAssembly, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-			using var module = ModuleDefinition.ReadModule (assemblyStm);
+			var module = xamarinAssembly.MainModule;
 
 			var classHandles = LocateClassHandles (module);
-			if (classHandles is null)
-				throw new Exception ($"Unable to find {classHandleName} type in {pathToXamarinAssembly}");
+			if (classHandles is null) {
+				throw new Exception ($"Unable to find {classHandleName} type in Module {module.Name} File {module.FileName}, assembly {xamarinAssembly.Name}");
+			}
 
 			var initMethod = classHandles.Methods.FirstOrDefault (m => m.Name == initClassHandlesName);
 			if (initMethod is null)
@@ -56,15 +77,18 @@ namespace Xamarin.MacDev.Tasks {
 
 			var mtClassMapDef = LocateMTClassMap (module);
 			if (mtClassMapDef is null)
-				throw new Exception ($"Unable to find {mtClassMapName} in {pathToXamarinAssembly}");
+				throw new Exception ($"Unable to find {mtClassMapName} in Module {module.Name} File {module.FileName}, assembly {xamarinAssembly.Name}");
 
-			var nativeHandle = module.Types.FirstOrDefault (t => t.FullName == nativeHandleName);
+			var nativeHandle = LocateNativeHandle (module);
 			if (nativeHandle is null)
-				throw new Exception ($"Unable to find {nativeHandleName} in {pathToXamarinAssembly}");
+				throw new Exception ($"Unable to find {nativeHandleName} in Module {module.Name} File {module.FileName}, assembly {xamarinAssembly.Name}");
 
 			var nativeHandleOpImplicit = FindOpImplicit (nativeHandle);
 			if (nativeHandleOpImplicit is null)
 				throw new Exception ($"Unable to find implicit cast in {nativeHandleName}");
+
+			if (map.Count () == 0)
+				return classMap;
 
 			foreach (var nameIndexPair in map) {
 				var csName = nameIndexPair.Key;
@@ -74,7 +98,7 @@ namespace Xamarin.MacDev.Tasks {
 				classMap [csName] = fieldDef;
 			}
 
-			module.Write (ToOutputFileName (pathToXamarinAssembly));
+			MarkForSave (xamarinAssembly);
 			return classMap;
 		}
 
@@ -124,6 +148,16 @@ namespace Xamarin.MacDev.Tasks {
 			return fieldDef;
 		}
 
+		bool ContainsNativeHandle (ModuleDefinition module)
+		{
+			return LocateNativeHandle (module) is not null;
+		}
+
+		TypeDefinition? LocateNativeHandle (ModuleDefinition module)
+		{
+			return AllTypes (module).FirstOrDefault (t => t.FullName == nativeHandleName);
+		}
+
 		TypeDefinition? LocateClassHandles (ModuleDefinition module)
 		{
 			return AllTypes (module).FirstOrDefault (t => t.FullName == classHandleName);
@@ -136,21 +170,28 @@ namespace Xamarin.MacDev.Tasks {
 
 		void PatchClassPtrUsage (Dictionary<string, FieldDefinition> classMap)
 		{
-			foreach (var path in assembliesToPatch) {
-				using var stm = new FileStream (path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-				using var module = ModuleDefinition.ReadModule (stm);
-				PatchClassPtrUsage (classMap, module);
-				module.Write (ToOutputFileName (path));
+			foreach (var assem in assemblies) {
+				var module = assem.MainModule;
+				if (PatchClassPtrUsage (classMap, module)) {
+					MarkForSave (assem);
+				}
 			}
 		}
 
-		void PatchClassPtrUsage (Dictionary<string, FieldDefinition> classMap, ModuleDefinition module)
+		// returns true if the assembly was changed.
+		bool PatchClassPtrUsage (Dictionary<string, FieldDefinition> classMap, ModuleDefinition module)
 		{
+			var dirty = false;
 			foreach (var cl in AllTypes (module)) {
 				if (classMap.TryGetValue (cl.FullName, out var classPtrField)) {
+					dirty = true;
+					// if this doesn't throw, it will
+					// always change the contents of an
+					// assembly
 					PatchClassPtrUsage (cl, classPtrField);
 				}
 			}
+			return dirty;
 		}
 
 		void PatchClassPtrUsage (TypeDefinition cl, FieldDefinition classPtrField)
@@ -291,6 +332,15 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			return Path.Combine (outputDirectory, Path.GetFileName (pathToInputFileName));
 		}
+
+		void MarkForSave (AssemblyDefinition assembly)
+		{
+			var annotations = linkContext.Annotations;
+			var action = annotations.GetAction (assembly);
+			if (action == AssemblyAction.Copy)
+				annotations.SetAction (assembly, AssemblyAction.Save);
+		}
 	}
+#endif
 }
 
