@@ -257,8 +257,6 @@ namespace Xamarin.Bundler {
 			options.Add ("skip-marking-nsobjects-in-user-assemblies:", "Don't mark NSObject (and any subclass of NSObject) in user assemblies in the linker. This may break your app, use at own risk.", v => {
 				app.SkipMarkingNSObjectsInUserAssemblies = ParseBool (v, "--skip-marking-nsobjects-in-user-assemblies");
 			});
-			options.Add ("class-map-path=", "Sets the path for an output path to generate a class map XML file used to optimize class handle access when the static registrar has been used.", v => { app.ClassMapPath = v; });
-
 
 			// Keep the ResponseFileSource option at the end.
 			options.Add (new Mono.Options.ResponseFileSource ());
