@@ -153,7 +153,7 @@ steps:
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $configFile = Join-Path $(PIPELINE.WORKSPACE) "macios" "build-configuration" "configuration.json"
+    $configFile = "$(Build.SourcesDirectory)\artifacts\build-configuration\configuration.json"
     $config = Import-BuildConfiguration -ConfigFile $configFile
     $config | Write-Host
   name: configuration
