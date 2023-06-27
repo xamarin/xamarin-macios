@@ -13,6 +13,7 @@ DOTNET_PLATFORMS_UPPERCASE:=$(shell echo $(DOTNET_PLATFORMS) | tr a-z A-Z)
 # Create variables prefixed with the correctly cased platform name from the upper-cased platform name. This makes some of the next sections somewhat simpler.
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_NUGET_VERSION_NO_METADATA:=$($(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval NET6_$(platform)_NUGET_VERSION_NO_METADATA:=$(NET6_$(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_SDK_UNIQUE_DEFINE_=_$(platform)_Sdk_$(CURRENT_HASH_LONG)))
 
 DOTNET_iOS_GLOBAL_USINGS=CoreGraphics Foundation UIKit
 DOTNET_tvOS_GLOBAL_USINGS=CoreGraphics Foundation UIKit
@@ -120,6 +121,7 @@ targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.templa
 		-e 's/@DOTNET_TFM@/$(DOTNET_TFM)/g' \
 		-e 's/@RUNTIME_PACK_RUNTIME_IDENTIFIERS@/$(4)/g' \
 		-e 's/@NUGET_OS_VERSION@/$$($(2)_NUGET_OS_VERSION)/g' \
+		-e 's/_SDK_UNIQUE_DEFINE_/$$($(1)_SDK_UNIQUE_DEFINE_)/g' \
 		$$< > $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
@@ -145,6 +147,7 @@ Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.DefaultItems.props: targets/Microsoft.
 	$$(Q_GEN) sed \
 		-e "s/@PLATFORM@/$1/g" \
 		-e "s/@TARGET_FRAMEWORK_VERSION@/$(subst net,,$(DOTNET_TFM))/g" \
+		-e 's/_SDK_UNIQUE_DEFINE_/$$($(1)_SDK_UNIQUE_DEFINE_)/g' \
 		$$< > $$@
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DefaultItems,$(platform))))

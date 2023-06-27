@@ -8,6 +8,7 @@
 		<_PackageVersion>@NUGET_VERSION_FULL@</_PackageVersion>
 		<_DefaultTargetPlatformVersion>@DEFAULT_TARGET_PLATFORM_VERSION@</_DefaultTargetPlatformVersion>
 		<_XamarinPackSuffix>@DOTNET_TFM@_@NUGET_OS_VERSION@</_XamarinPackSuffix>
+		<_SDK_UNIQUE_DEFINE_>true</_SDK_UNIQUE_DEFINE_>
 	</PropertyGroup>
 
 	<ItemGroup>@VALID_RUNTIME_IDENTIFIERS@
