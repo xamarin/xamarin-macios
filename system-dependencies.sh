@@ -328,7 +328,7 @@ function download_xcode_platforms ()
 	log "Xcode has additional platforms that must be downloaded ($MUST_INSTALL_RUNTIMES), so installing those."
 
 	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
-	if ! "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms; then
+	if ! $SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms; then
 		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" runtime list -v
 		# Don't exit here, just hope for the best instead.
 		set +x
