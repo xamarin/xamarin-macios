@@ -20,9 +20,9 @@ $(MMP_DIR)/mmp.exe: $(mmp_dependencies)
 	$(Q_GEN) $(SYSTEM_MSBUILD) "/bl:$@.binlog" $(TOP)/Xamarin.Mac.sln "/t:mmp" $(XBUILD_VERBOSITY) /p:Configuration=$(MMP_CONF)
 
 MMP_TARGETS_DOTNET = \
-	$(DOTNET_DESTDIR)/$((osx-x64_NUGET_RUNTIME_NAME))/runtimes/osx-x64/native/Microsoft.macOS.registrar.a \
+	$(DOTNET_DESTDIR)/$(osx-x64_NUGET_RUNTIME_NAME)/runtimes/osx-x64/native/Microsoft.macOS.registrar.a \
 	$(DOTNET_DESTDIR)/$(osx-arm64_NUGET_RUNTIME_NAME)/runtimes/osx-arm64/native/Microsoft.macOS.registrar.a \
-	$(DOTNET_DESTDIR)/$((osx-x64_NUGET_RUNTIME_NAME))/runtimes/osx-x64/native/Microsoft.macOS.registrar.coreclr.a \
+	$(DOTNET_DESTDIR)/$(osx-x64_NUGET_RUNTIME_NAME)/runtimes/osx-x64/native/Microsoft.macOS.registrar.coreclr.a \
 	$(DOTNET_DESTDIR)/$(osx-arm64_NUGET_RUNTIME_NAME)/runtimes/osx-arm64/native/Microsoft.macOS.registrar.coreclr.a \
 
 MMP_TARGETS = \
@@ -32,7 +32,7 @@ MMP_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Xamarin.Mac.registrar.full.a \
 
 MMP_DIRECTORIES_DOTNET = \
-	$(DOTNET_DESTDIR)/$((osx-x64_NUGET_RUNTIME_NAME))/runtimes/osx-x64/native \
+	$(DOTNET_DESTDIR)/$(osx-x64_NUGET_RUNTIME_NAME)/runtimes/osx-x64/native \
 	$(DOTNET_DESTDIR)/$(osx-arm64_NUGET_RUNTIME_NAME)/runtimes/osx-arm64/native \
 
 MMP_DIRECTORIES = \
