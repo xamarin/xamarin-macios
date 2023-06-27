@@ -336,6 +336,7 @@ function download_xcode_platforms ()
 		set -x
 	else
 		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" runtime list -v
+		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" list -v
 	fi
 	log "Executed '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
 }
