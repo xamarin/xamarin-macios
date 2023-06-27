@@ -338,6 +338,10 @@ function download_xcode_platforms ()
 		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" runtime list -v
 		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" list -v
 	fi
+	
+	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
+	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
+
 	log "Executed '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
 }
 
