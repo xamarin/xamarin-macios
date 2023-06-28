@@ -308,19 +308,20 @@ namespace Xamarin.Tests {
 			return csproj;
 		}
 
-		protected void ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
+		protected string ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
 		{
 			if (!CanExecute (platform, runtimeIdentifiers))
-				return;
+				return string.Empty;
 
-			ExecuteWithMagicWordAndAssert (executable);
+			return ExecuteWithMagicWordAndAssert (executable);
 		}
 
-		protected void ExecuteWithMagicWordAndAssert (string executable)
+		protected string ExecuteWithMagicWordAndAssert (string executable)
 		{
 			var rv = Execute (executable, out var output, out string magicWord);
 			Assert.That (output.ToString (), Does.Contain (magicWord), "Contains magic word");
 			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
+			return output.ToString ();
 		}
 
 		protected Execution Execute (string executable, out StringBuilder output, out string magicWord)
