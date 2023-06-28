@@ -22,14 +22,7 @@ steps:
     isPR: ${{ parameters.isPR }}
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
-
-- task: CredScan@3
-  displayName: "Run CredScan"
-  inputs:
-    suppressionsFile: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/CredScanSuppressions.json'
-    outputFormat: 'sarif'
-    verboseOutput: true
-  
+ 
 - powershell: |
     Write-Host 'Source dir $(Build.SourcesDirectory)'
     Write-Host 'Working dir $System.DefaultWorkingDirectory)'
@@ -44,6 +37,13 @@ steps:
 - task: ms.vss-governance-buildtask.governance-build-task-component-detection.ComponentGovernanceComponentDetection@0
   displayName: 'Component Detection'
 
+- task: CredScan@3
+  displayName: "Run CredScan"
+  inputs:
+    suppressionsFile: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/CredScanSuppressions.json'
+    outputFormat: 'sarif'
+    verboseOutput: true
+
 - task: PoliCheck@2
   inputs:
     inputType: 'Basic'
@@ -51,6 +51,12 @@ steps:
     targetArgument: '$(Build.SourcesDirectory)'
     result: '$(Build.SourcesDirectory)/PoliCheck.xml'
     optionsUEPATH: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/PoliCheckExclusions.xml'
+
+- task: TSAUpload@2
+  inputs:
+    GdnPublishTsaOnboard: true
+    GdnPublishTsaConfigFile: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/tsa_config.gdntsa'
+    GdnPublishTsaExportedResultsPublishable: true
 
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: Policheck Results'
@@ -70,9 +76,3 @@ steps:
   displayName: "WhiteSource Bolt analysis"
   inputs:
     cwd: $(System.DefaultWorkingDirectory)
-
-- task: TSAUpload@2
-  inputs:
-    GdnPublishTsaOnboard: true
-    GdnPublishTsaConfigFile: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/tsa_config.gdntsa'
-    GdnPublishTsaExportedResultsPublishable: true
