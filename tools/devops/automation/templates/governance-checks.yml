@@ -53,6 +53,7 @@ steps:
     optionsUEPATH: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/PoliCheckExclusions.xml'
 
 - task: TSAUpload@2
+  workingDirectory: "$(Build.SourcesDirectory)/xamarin-macios"
   inputs:
     GdnPublishTsaOnboard: true
     GdnPublishTsaConfigFile: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/tsa_config.gdntsa'
