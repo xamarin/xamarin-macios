@@ -100,7 +100,7 @@ namespace MonoTests.System.Net.Http {
 			public static string PostUrl => $"{Url}/post";
 			public static string PutUrl => $"{Url}/put";
 			public static string CookiesUrl => $"{Url}/cookies";
-			public static string HttpUrl { get { return AssertNetworkConnection ("http://httpbin.org"); } }
+			public static string HttpUrl => AssertNetworkConnection ("http://httpbin.org");
 
 			public static string GetAbsoluteRedirectUrl (int count) => $"{Url}/absolute-redirect/{count}";
 			public static string GetRedirectUrl (int count) => $"{Url}/redirect/{count}";
