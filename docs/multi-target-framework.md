@@ -58,7 +58,6 @@ Undecided: what do do about the template package (Microsoft.iOS.Templates)?
 Potential problems:
 
 * MAX_PATH on Windows (the package names are longer by 10-11 characters).
-* Default item inclusion (see below).
 * Anything else?
 
 We'll select what's loaded at build time by doing this:
@@ -90,9 +89,10 @@ We'll select what's loaded at build time by doing this:
 
 Note 1: One complication here is that TargetPlatformVersion might not be set (if the TargetFramework doesn't contain the OS version), so there's one condition that accepts an empty TargetPlatformVersion. This corresponds with the default target platform version.
 
-Note 2: we load the preview sdk (Microsoft.iOS.Sdk.net8.0_17.0) even if `EnablePreviewFeatures!=true` - we show the error requesting `EnablePreviewFeatures` to be set from the preview sdk instead (this is to get an actionable error message).
+Note 2: we load the preview sdk (Microsoft.iOS.Sdk.net8.0_17.0) even if `EnablePreviewFeatures!=true` - we show the error requesting `EnablePreviewFeatures` to be set from the preview sdk instead (this is to get an actionable error message). Without this, the user would get this rather unhelpful error message: `error NETSDK1139: The target platform identifier ios was not recognized.`
 
 Note 3: we load a special error-handling version of the sdk if we don't support a TargetPlatformVersion for given TargetFrameworkVersion, and show an error about unsupported TargetPlatformVersion. Without this, the user would get this rather unhelpful error message: `error NETSDK1139: The target platform identifier ios was not recognized.`
+
 
 
 
