@@ -3,7 +3,7 @@ TOP = ..
 include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
 
-DOTNET_MANIFESTS_PATH=$(DOTNET_DIR)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)
+DOTNET_MANIFESTS_PATH=$(DOTNET_DIR)/sdk-manifests/$(MACIOS_MANIFEST_VERSION_BAND)
 DOTNET_PACKS_PATH=$(DOTNET_DIR)/packs
 DOTNET_TEMPLATE_PACKS_PATH=$(DOTNET_DIR)/template-packs
 TMP_PKG_DIR=_pkg
@@ -75,17 +75,10 @@ DIRECTORIES += \
 	$(TMP_PKG_DIR) \
 	$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_WINDOWS_SDK_NAME)/Sdk) \
 	$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_WINDOWS_SDK_NAME)/targets) \
+	$(foreach platform,$(DOTNET_PLATFORMS),Workloads/Microsoft.NET.Sdk.$(platform)) \
 
 $(DIRECTORIES):
 	$(Q) mkdir -p $@
-
-ifneq ($(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT),$(DOTNET_MANIFEST_VERSION_BAND))
-.stamp-cp-mono-workload: $(TOP)/Make.config
-	mkdir -p $(DOTNET_MANIFESTS_PATH)
-	$(CP) -r $(DOTNET_MANIFESTS_PATH)/../$(DOTNET_MANIFEST_VERSION_BAND)/* $(DOTNET_MANIFESTS_PATH)/
-	$(Q) touch $@
-TARGETS += .stamp-cp-mono-workload
-endif
 
 CURRENT_HASH_LONG:=$(shell git log -1 --pretty=%H)
 
@@ -187,8 +180,7 @@ endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call SharedAfterTargetsTemplate,$(platform),$(NET6_$(platform)_NUGET_VERSION_NO_METADATA))))
 
 define WorkloadTargets
-Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index Makefile generate-workloadmanifest-json.csharp
-	$$(Q) mkdir -p Workloads/Microsoft.NET.Sdk.$(1)/
+Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index Makefile generate-workloadmanifest-json.csharp | Workloads/Microsoft.NET.Sdk.$(1)
 	$$(Q) rm -f $$@.tmp
 	$$(Q_GEN) ./generate-workloadmanifest-json.csharp "$(1)" "$(3)" "$(4)" "$$(DOTNET_$(5)_RUNTIME_IDENTIFIERS)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)" "$(DOTNET_TFM)_$$($(5)_NUGET_OS_VERSION)"
 	$$(Q) mv $$@.tmp $$@
@@ -198,7 +190,7 @@ Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets: Makefile $(TOP)/Make.
 	$$(Q_GEN) ./generate-workloadmanifest-targets.csharp "$(1)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)" "$(DOTNET_TFM)_$$($(5)_NUGET_OS_VERSION)" "$(DEFAULT_TARGET_PLATFORM_VERSION_$(5))"
 	$$(Q) mv $$@.tmp $$@
 
-Workloads/Microsoft.NET.Sdk.$(1)/LICENSE: $(TOP)/LICENSE
+Workloads/Microsoft.NET.Sdk.$(1)/LICENSE: $(TOP)/LICENSE | Workloads/Microsoft.NET.Sdk.$(1)
 	$$(Q) $(CP) $$< $$@
 
 WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json
@@ -297,7 +289,7 @@ SDK_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET_SDK_NAME).$($(1)_NUGET_VERSION
 SDK_PACKS += $$(SDK_PACKS_$(1))
 TEMPLATE_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Templates.$($(1)_NUGET_VERSION_NO_METADATA).nupkg
 TEMPLATE_PACKS += $$(TEMPLATE_PACKS_$(1))
-WORKLOAD_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$(subst Microsoft.,Microsoft.NET.Sdk.,$($(1)_NUGET)).Manifest-$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT).$($(1)_NUGET_VERSION_NO_METADATA).nupkg
+WORKLOAD_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$(subst Microsoft.,Microsoft.NET.Sdk.,$($(1)_NUGET)).Manifest-$(MACIOS_MANIFEST_VERSION_BAND).$($(1)_NUGET_VERSION_NO_METADATA).nupkg
 WORKLOAD_PACKS += $$(WORKLOAD_PACKS_$(1))
 pack-$(shell echo $(1) | tr A-Z a-z): $$(RUNTIME_PACKS_$(1)) $$(REF_PACKS_$(1)) $$(SDK_PACKS_$(1)) $$(TEMPLATE_PACKS_$(1)) $$(WORKLOAD_PACKS_$(1))
 endef
@@ -349,8 +341,8 @@ define CreatePackage
 $(TMP_PKG_DIR)/Microsoft.$1.Workload.$2.pkg: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile | $(TMP_PKG_DIR)
 	$$(Q) rm -f $$@
 	$$(Q) rm -rf tmpdir/Microsoft.NET.Sdk.$1.$2/
-	$$(Q) mkdir -p tmpdir/Microsoft.NET.Sdk.$1.$2/usr/local/share/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/
-	$$(Q) $$(CP) -r Workloads/Microsoft.NET.Sdk.$1 tmpdir/Microsoft.NET.Sdk.$1.$2/usr/local/share/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/microsoft.net.sdk.$3
+	$$(Q) mkdir -p tmpdir/Microsoft.NET.Sdk.$1.$2/usr/local/share/dotnet/sdk-manifests/$(MACIOS_MANIFEST_VERSION_BAND)/
+	$$(Q) $$(CP) -r Workloads/Microsoft.NET.Sdk.$1 tmpdir/Microsoft.NET.Sdk.$1.$2/usr/local/share/dotnet/sdk-manifests/$(MACIOS_MANIFEST_VERSION_BAND)/microsoft.net.sdk.$3
 	$$(Q_GEN) pkgbuild --quiet --version '$2' --root tmpdir/Microsoft.NET.Sdk.$1.$2 --component-plist PackageInfo.plist  --install-location / --identifier com.microsoft.net.$3.workload.pkg $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
@@ -403,11 +395,11 @@ PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg
 
 $(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACKS_$(4)) $(SDK_PACKs_$(4)) $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -rf $$@ $$@.tmpdir $$@.tmp
-	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(MACIOS_MANIFEST_VERSION_BAND)/
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/$($(1)_NUGET_SDK_NAME)
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/$($(1)_NUGET_REF_NAME)
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/template-packs
-	$$(Q) $(CP) -r Workloads/Microsoft.NET.Sdk.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/microsoft.net.sdk.$3
+	$$(Q) $(CP) -r Workloads/Microsoft.NET.Sdk.$1 $$@.tmpdir/dotnet/sdk-manifests/$(MACIOS_MANIFEST_VERSION_BAND)/microsoft.net.sdk.$3
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME) $$@.tmpdir/dotnet/packs/$($(1)_NUGET_SDK_NAME)/$2
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/$($(1)_NUGET_REF_NAME) $$@.tmpdir/dotnet/packs/$($(1)_NUGET_REF_NAME)/$2
 	$$(Q) $(CP) $(TEMPLATE_PACKS_$(4)) $$@.tmpdir/dotnet/template-packs/$(subst +$(NUGET_BUILD_METADATA),,$(notdir $(TEMPLATE_PACKS_$(4))))
@@ -431,12 +423,12 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreatePackage,$(platform),$
 define CreateWindowsBundle
 $(TMP_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $($(1)_WINDOWS_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACKS_$(4)) $(SDK_PACKS_$(4)) $(SDK_PACKS_$(4)_WINDOWS) $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -rf $$@ $$@.tmpdir $$@.tmp
-	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(MACIOS_MANIFEST_VERSION_BAND)/
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/$($(1)_NUGET_SDK_NAME)
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/$($(1)_NUGET_WINDOWS_SDK_NAME)
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/$($(1)_NUGET_REF_NAME)
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/template-packs
-	$$(Q) $(CP) -r Workloads/Microsoft.NET.Sdk.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/microsoft.net.sdk.$3
+	$$(Q) $(CP) -r Workloads/Microsoft.NET.Sdk.$1 $$@.tmpdir/dotnet/sdk-manifests/$(MACIOS_MANIFEST_VERSION_BAND)/microsoft.net.sdk.$3
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME) $$@.tmpdir/dotnet/packs/$($(1)_NUGET_SDK_NAME)/$2
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/$($(1)_NUGET_WINDOWS_SDK_NAME) $$@.tmpdir/dotnet/packs/$($(1)_NUGET_WINDOWS_SDK_NAME)/$2
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/$($(1)_NUGET_REF_NAME) $$@.tmpdir/dotnet/packs/$($(1)_NUGET_REF_NAME)/$2

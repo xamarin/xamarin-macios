@@ -386,9 +386,9 @@ DOTNET_TARGETS += \
 	$(IOS_DOTNET_BUILD_DIR)/32/Microsoft.iOS.dll \
 	$(IOS_DOTNET_BUILD_DIR)/64/Microsoft.iOS.dll \
 	$(IOS_DOTNET_BUILD_DIR)/ref/Microsoft.iOS.dll \
-	$(DOTNET_DESTDIR)/$(IOS_NUGET).Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.dll \
-	$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.iOS.dll) \
-	$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.iOS.pdb) \
+	$(DOTNET_DESTDIR)/$(IOS_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.iOS.dll \
+	$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.iOS.dll) \
+	$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.iOS.pdb) \
 
 DOTNET_TARGETS_DIRS += \
 	$(IOS_DOTNET_BUILD_DIR) \
@@ -396,8 +396,8 @@ DOTNET_TARGETS_DIRS += \
 	$(IOS_DOTNET_BUILD_DIR)/64 \
 	$(IOS_DOTNET_BUILD_DIR)/ref \
 	$(IOS_DOTNET_BUILD_DIR)/generated-sources \
-	$(DOTNET_DESTDIR)/$(IOS_NUGET).Ref/ref/$(DOTNET_TFM) \
-	$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)) \
+	$(DOTNET_DESTDIR)/$(IOS_NUGET_REF_NAME)/ref/$(DOTNET_TFM) \
+	$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)) \
 
 endif
 
@@ -426,7 +426,7 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/%.pdb: $(IOS_BUILD_DIR)/r
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/%.config: $(IOS_BUILD_DIR)/reference/%.config | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS
 	$(Q) install -m 0644 $< $@
 
-$(DOTNET_DESTDIR)/$(IOS_NUGET).Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.dll: $(IOS_DOTNET_BUILD_DIR)/ref/Microsoft.iOS.dll | $(DOTNET_DESTDIR)/$(IOS_NUGET).Ref/ref/$(DOTNET_TFM)
+$(DOTNET_DESTDIR)/$(IOS_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.iOS.dll: $(IOS_DOTNET_BUILD_DIR)/ref/Microsoft.iOS.dll | $(DOTNET_DESTDIR)/$(IOS_NUGET_REF_NAME)/ref/$(DOTNET_TFM)
 	$(Q) $(CP) $< $@
 
 # the actual architecture-specific versions
@@ -442,16 +442,16 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/iOS/Xamarin.iOS.dll: $(IOS_BUILD_DI
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/iOS/Xamarin.iOS.pdb: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/iOS
 	$(Q) install -m 0644 $< $@
 
-$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.iOS.dll): $(IOS_DOTNET_BUILD_DIR)/32/Microsoft.iOS.dll | $(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM))
+$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.iOS.dll): $(IOS_DOTNET_BUILD_DIR)/32/Microsoft.iOS.dll | $(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM))
 	$(Q) $(CP) $< $@
 
-$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.iOS.pdb): $(IOS_DOTNET_BUILD_DIR)/32/Microsoft.iOS.pdb | $(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM))
+$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.iOS.pdb): $(IOS_DOTNET_BUILD_DIR)/32/Microsoft.iOS.pdb | $(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM))
 	$(Q) $(CP) $< $@
 
-$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.iOS.dll): $(IOS_DOTNET_BUILD_DIR)/64/Microsoft.iOS.dll | $(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM))
+$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.iOS.dll): $(IOS_DOTNET_BUILD_DIR)/64/Microsoft.iOS.dll | $(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM))
 	$(Q) $(CP) $< $@
 
-$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.iOS.pdb): $(IOS_DOTNET_BUILD_DIR)/64/Microsoft.iOS.pdb | $(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM))
+$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.iOS.pdb): $(IOS_DOTNET_BUILD_DIR)/64/Microsoft.iOS.pdb | $(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM))
 	$(Q) $(CP) $< $@
 
 $(IOS_TARGETS_DIRS):
@@ -666,7 +666,7 @@ $(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.pdb: $(MAC_BUILD_DIR)/%-64/Xamarin.Mac.
 	@mkdir -p $(@D)
 	$(Q) $(CP) $^ $@
 
-$(DOTNET_DESTDIR)/$(MACOS_NUGET).Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.dll: $(MACOS_DOTNET_BUILD_DIR)/ref/Microsoft.macOS.dll | $(DOTNET_DESTDIR)/$(MACOS_NUGET).Ref/ref/$(DOTNET_TFM)
+$(DOTNET_DESTDIR)/$(MACOS_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.macOS.dll: $(MACOS_DOTNET_BUILD_DIR)/ref/Microsoft.macOS.dll | $(DOTNET_DESTDIR)/$(MACOS_NUGET_REF_NAME)/ref/$(DOTNET_TFM)
 	$(Q) $(CP) $< $@
 
 ### .NET ###
@@ -716,17 +716,17 @@ ifdef INCLUDE_MAC
 DOTNET_TARGETS += \
 	$(MACOS_DOTNET_BUILD_DIR)/64/Microsoft.macOS.dll \
 	$(MACOS_DOTNET_BUILD_DIR)/ref/Microsoft.macOS.dll \
-	$(DOTNET_DESTDIR)/$(MACOS_NUGET).Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.dll \
-	$(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.macOS.dll) \
-	$(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.macOS.pdb) \
+	$(DOTNET_DESTDIR)/$(MACOS_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.macOS.dll \
+	$(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.macOS.dll) \
+	$(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.macOS.pdb) \
 
 DOTNET_TARGETS_DIRS += \
 	$(MACOS_DOTNET_BUILD_DIR) \
 	$(MACOS_DOTNET_BUILD_DIR)/generated-sources \
 	$(MACOS_DOTNET_BUILD_DIR)/64 \
 	$(MACOS_DOTNET_BUILD_DIR)/ref \
-	$(DOTNET_DESTDIR)/$(MACOS_NUGET).Ref/ref/$(DOTNET_TFM) \
-	$(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)) \
+	$(DOTNET_DESTDIR)/$(MACOS_NUGET_REF_NAME)/ref/$(DOTNET_TFM) \
+	$(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)) \
 
 endif
 
@@ -812,10 +812,10 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.dll $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.pdb: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5
 	$(Q) ln -sF ../../reference/full/$(@F) $@
 
-$(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.macOS.dll): $(MACOS_DOTNET_BUILD_DIR)/64/Microsoft.macOS.dll | $(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM))
+$(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.macOS.dll): $(MACOS_DOTNET_BUILD_DIR)/64/Microsoft.macOS.dll | $(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM))
 	$(Q) $(CP) $< $@
 
-$(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.macOS.pdb): $(MACOS_DOTNET_BUILD_DIR)/64/Microsoft.macOS.pdb | $(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM))
+$(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.macOS.pdb): $(MACOS_DOTNET_BUILD_DIR)/64/Microsoft.macOS.pdb | $(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM))
 	$(Q) $(CP) $< $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/xammac.pc: $(TOP)/Make.config | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig
@@ -1049,9 +1049,9 @@ DOTNET_TARGETS += \
 	$(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS.dll \
 	$(WATCHOS_DOTNET_BUILD_DIR)/64/Xamarin.WatchOS.dll \
 	$(WATCHOS_DOTNET_BUILD_DIR)/ref/Xamarin.WatchOS.dll \
-	$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Ref/ref/$(DOTNET_TFM)/Xamarin.WatchOS.dll \
-	$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Xamarin.WatchOS.dll) \
-	$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Xamarin.WatchOS.pdb) \
+	$(DOTNET_DESTDIR)/$(WATCHOS_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Xamarin.WatchOS.dll \
+	$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Xamarin.WatchOS.dll) \
+	$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Xamarin.WatchOS.pdb) \
 
 DOTNET_TARGETS_DIRS += \
 	$(WATCHOS_DOTNET_BUILD_DIR) \
@@ -1059,8 +1059,8 @@ DOTNET_TARGETS_DIRS += \
 	$(WATCHOS_DOTNET_BUILD_DIR)/32 \
 	$(WATCHOS_DOTNET_BUILD_DIR)/64 \
 	$(WATCHOS_DOTNET_BUILD_DIR)/ref \
-	$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Ref/ref/$(DOTNET_TFM) \
-	$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)) \
+	$(DOTNET_DESTDIR)/$(WATCHOS_NUGET_REF_NAME)/ref/$(DOTNET_TFM) \
+	$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)) \
 
 endif
 
@@ -1074,7 +1074,7 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/%.pdb: $(WATCH_BUILD_
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/%.config: $(WATCH_BUILD_DIR)/reference/%.config | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS
 	$(Q) install -m 0644 $< $@
 
-$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Ref/ref/$(DOTNET_TFM)/Xamarin.WatchOS.dll: $(WATCHOS_DOTNET_BUILD_DIR)/ref/Xamarin.WatchOS.dll | $(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Ref/ref/$(DOTNET_TFM)
+$(DOTNET_DESTDIR)/$(WATCHOS_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Xamarin.WatchOS.dll: $(WATCHOS_DOTNET_BUILD_DIR)/ref/Xamarin.WatchOS.dll | $(DOTNET_DESTDIR)/$(WATCHOS_NUGET_REF_NAME)/ref/$(DOTNET_TFM)
 	$(Q) $(CP) $< $@
 
 # the actual architecture-specific versions
@@ -1090,16 +1090,16 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/watchOS/Xamarin.WatchOS.pdb: $(WATC
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/watchOS/Xamarin.WatchOS.pdb: $(WATCH_BUILD_DIR)/watch-64/Xamarin.WatchOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/watchOS
 	$(Q) install -m 0644 $< $@
 
-$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Xamarin.WatchOS.dll): $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS.dll | $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM))
+$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Xamarin.WatchOS.dll): $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS.dll | $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM))
 	$(Q) $(CP) $< $@
 
-$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Xamarin.WatchOS.dll): $(WATCHOS_DOTNET_BUILD_DIR)/64/Xamarin.WatchOS.dll | $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM))
+$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Xamarin.WatchOS.dll): $(WATCHOS_DOTNET_BUILD_DIR)/64/Xamarin.WatchOS.dll | $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM))
 	$(Q) $(CP) $< $@
 
-$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Xamarin.WatchOS.pdb): $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS.pdb | $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM))
+$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Xamarin.WatchOS.pdb): $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS.pdb | $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM))
 	$(Q) $(CP) $< $@
 
-$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Xamarin.WatchOS.pdb): $(WATCHOS_DOTNET_BUILD_DIR)/64/Xamarin.WatchOS.pdb | $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM))
+$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Xamarin.WatchOS.pdb): $(WATCHOS_DOTNET_BUILD_DIR)/64/Xamarin.WatchOS.pdb | $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM))
 	$(Q) $(CP) $< $@
 
 $(WATCH_TARGETS_DIRS):
@@ -1477,28 +1477,28 @@ ifdef INCLUDE_MACCATALYST
 DOTNET_TARGETS += \
 	$(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst.dll \
 	$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Microsoft.MacCatalyst.dll \
-	$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Ref/ref/$(DOTNET_TFM)/Microsoft.MacCatalyst.dll \
-	$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.MacCatalyst.dll) \
-	$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.MacCatalyst.pdb) \
+	$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.MacCatalyst.dll \
+	$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.MacCatalyst.dll) \
+	$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.MacCatalyst.pdb) \
 
 DOTNET_TARGETS_DIRS += \
 	$(MACCATALYST_DOTNET_BUILD_DIR) \
 	$(MACCATALYST_DOTNET_BUILD_DIR)/generated-sources \
 	$(MACCATALYST_DOTNET_BUILD_DIR)/64 \
 	$(MACCATALYST_DOTNET_BUILD_DIR)/ref \
-	$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Ref/ref/$(DOTNET_TFM) \
-	$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)) \
+	$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET_REF_NAME)/ref/$(DOTNET_TFM) \
+	$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)) \
 
 endif
 
 # reference assemblies, this is just for compilation with XS
-$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Ref/ref/$(DOTNET_TFM)/%.dll: $(MACCATALYST_DOTNET_BUILD_DIR)/ref/%.dll | $(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Ref/ref/$(DOTNET_TFM)
+$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/%.dll: $(MACCATALYST_DOTNET_BUILD_DIR)/ref/%.dll | $(DOTNET_DESTDIR)/$(MACCATALYST_NUGET_REF_NAME)/ref/$(DOTNET_TFM)
 	$(Q) $(CP) $< $@
 
-$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.MacCatalyst.dll): $(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst.dll | $(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM))
+$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.MacCatalyst.dll): $(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst.dll | $(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM))
 	$(Q) $(CP) $< $@
 
-$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.MacCatalyst.pdb): $(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst.pdb | $(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM))
+$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.MacCatalyst.pdb): $(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst.pdb | $(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM))
 	$(Q) $(CP) $< $@
 
 $(MACCATALYST_TARGETS_DIRS):
@@ -1510,17 +1510,17 @@ ifdef INCLUDE_TVOS
 DOTNET_TARGETS += \
 	$(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS.dll \
 	$(TVOS_DOTNET_BUILD_DIR)/ref/Microsoft.tvOS.dll \
-	$(DOTNET_DESTDIR)/$(TVOS_NUGET).Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS.dll \
-	$(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.tvOS.dll) \
-	$(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.tvOS.pdb) \
+	$(DOTNET_DESTDIR)/$(TVOS_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.tvOS.dll \
+	$(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.tvOS.dll) \
+	$(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.tvOS.pdb) \
 
 DOTNET_TARGETS_DIRS += \
 	$(TVOS_DOTNET_BUILD_DIR) \
 	$(TVOS_DOTNET_BUILD_DIR)/generated-sources \
 	$(TVOS_DOTNET_BUILD_DIR)/64 \
 	$(TVOS_DOTNET_BUILD_DIR)/ref \
-	$(DOTNET_DESTDIR)/$(TVOS_NUGET).Ref/ref/$(DOTNET_TFM) \
-	$(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)) \
+	$(DOTNET_DESTDIR)/$(TVOS_NUGET_REF_NAME)/ref/$(DOTNET_TFM) \
+	$(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)) \
 
 endif
 
@@ -1534,7 +1534,7 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.pdb: $(TVOS_BUILD_DIR)
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.config: $(TVOS_BUILD_DIR)/reference/%.config | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS
 	$(Q) install -m 0644 $< $@
 
-$(DOTNET_DESTDIR)/$(TVOS_NUGET).Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS.dll: $(TVOS_DOTNET_BUILD_DIR)/ref/Microsoft.tvOS.dll | $(DOTNET_DESTDIR)/$(TVOS_NUGET).Ref/ref/$(DOTNET_TFM)
+$(DOTNET_DESTDIR)/$(TVOS_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.tvOS.dll: $(TVOS_DOTNET_BUILD_DIR)/ref/Microsoft.tvOS.dll | $(DOTNET_DESTDIR)/$(TVOS_NUGET_REF_NAME)/ref/$(DOTNET_TFM)
 	$(Q) $(CP) $< $@
 
 # the actual architecture-specific versions
@@ -1544,10 +1544,10 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/tvOS/Xamarin.TVOS.dll: $(TVOS_BUILD
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/tvOS/Xamarin.TVOS.pdb: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/tvOS
 	$(Q) install -m 0644 $< $@
 
-$(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.tvOS.dll): $(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS.dll | $(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM))
+$(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.tvOS.dll): $(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS.dll | $(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM))
 	$(Q) $(CP) $< $@
 
-$(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.tvOS.pdb): $(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS.pdb | $(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM))
+$(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.tvOS.pdb): $(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS.pdb | $(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM))
 	$(Q) $(CP) $< $@
 
 $(TVOS_TARGETS_DIRS):
@@ -1562,137 +1562,6 @@ ALL_TARGETS += all-tvos
 INSTALL_TARGETS += install-tvos
 endif
 endif
-
-### .NET ###
-
-define BuildDotNetIntermediateAssembly
-$($(2)_DOTNET_BUILD_DIR)/core-$(3).dll: $($(2)_DOTNET_CORE_SOURCES) frameworks.sources $(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp | $($(2)_DOTNET_BUILD_DIR)
-	$$(Q_DOTNET_GEN) \
-		$(DOTNET_CSC) \
-		$(DOTNET_FLAGS) \
-		$(DOTNET_CORE_WARNINGS_TO_FIX) \
-		@$(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp \
-		$($(2)_CORE_DEFINES) \
-		$($(2)_DOTNET_CORE_SOURCES) \
-		-out:$$@
-
-$($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources: $(DOTNET_GENERATOR) $($(2)_DOTNET_APIS) $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll $(DOTNET_BINDING_ATTRIBUTES) $($(2)_DOTNET_BUILD_DIR)/$(3).rsp | $($(2)_DOTNET_BUILD_DIR)/generated-sources
-	$$(Q_DOTNET_GEN) $$< @$($(2)_DOTNET_BUILD_DIR)/$(3).rsp
-
-$($(2)_DOTNET_BUILD_DIR)/$(3).rsp: Makefile Makefile.generator frameworks.sources $(DOTNET_COMPILER) | $($(2)_DOTNET_BUILD_DIR)
-	$(Q) echo \
-		$($(2)_GENERATOR_FLAGS) \
-		$(DOTNET_GENERATOR_FLAGS) \
-		-warnaserror:$($(2)_GENERATOR_WARNASERROR) \
-		-sourceonly=$($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources \
-		-tmpdir=$($(2)_DOTNET_BUILD_DIR)/generated-sources \
-		-baselib=$($(2)_DOTNET_BUILD_DIR)/core-$(3).dll \
-		--target-framework=.NETCoreApp,Version=$(GENERATOR_TF_VERSION),Profile=$(3) \
-		$($(2)_APIS) \
-		@$(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp \
-		> $$@
-
-DOTNET_TARGETS += \
-	$($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll \
-	$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).dll \
-	$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).xml \
-
-DOTNET_TARGETS_DIRS += \
-	$($(2)_DOTNET_BUILD_DIR) \
-	$($(2)_DOTNET_BUILD_DIR)/generated-sources \
-	$($(2)_DOTNET_BUILD_DIR)/ref \
-	$($(2)_DOTNET_BUILD_DIR)/doc \
-	$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM) \
-	$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/doc/$(DOTNET_TFM) \
-
-dotnet-gen-$(3):: $($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources
-dotnet-gen:: dotnet-gen-$(3)
-
-$($(2)_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttributes.xml.in | $($(2)_DOTNET_BUILD_DIR)
-	$$(call Q_PROF_GEN,$(3)) sed < $$< > $$@ 's|@PRODUCT_NAME@|Microsoft.$(1)|g;'
-
-$($(2)_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutions.$(1).xml | $($(2)_DOTNET_BUILD_DIR)
-	$(Q) $(CP) $$< $$@
-
-$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).dll: $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll | $(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)
-	$(Q) $(CP) $$< $$@
-
-$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).xml: $($(2)_DOTNET_BUILD_DIR)/doc/Microsoft.$(1).xml | $(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)
-	$(Q) $(CP) $$< $$@
-
-$($(2)_DOTNET_BUILD_DIR)/doc/Microsoft.$(1).xml: $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll | $($(2)_DOTNET_BUILD_DIR)/doc
-	$$(Q_GEN) $(TOP)/tools/add-apple-links-to-docs.sh --assembly $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll --input $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml --output $$@
-endef
-
-# Template variables:
-# 1: Platform (correct case)
-# 2: PLATFORM (all upper case)
-# 3: platform (all lower case)
-# pseudo-code:
-#     foreach (var platform in DOTNET_PLATFORMS)
-#        BuildDotNetIntermediateAssembly (platform, platform.ToUpper (), platform.ToLower ())
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call BuildDotNetIntermediateAssembly,$(platform),$(shell echo $(platform) | tr '[:lower:]' '[:upper:]'),$(shell echo $(platform) | tr '[:upper:]' '[:lower:]'))))
-
-define BuildDotNetPlatformAssembly
-## We build the ref assembly when building the 64-bit version of the platform assembly,
-## so we need some special logic here.
-ifeq ($(4),64)
-$(2)_$(4)_REFOUT_ARG = -refout:$($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll
-$(2)_$(4)_REF_TARGET = $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1)%dll
-$(2)_$(4)_DOC_ARG = -doc:$($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml
-$(2)_$(4)_DOC_TARGET = $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1)%xml
-endif
-
-$(2)_DOTNET_PLATFORM_ASSEMBLY_DEPENDENCIES = \
-	$($(2)_DOTNET_SOURCES) \
-	$($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources \
-	$($(2)_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
-	$($(2)_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
-	$(PRODUCT_KEY_PATH) \
-
-$(2)_DOTNET_PLATFORM_ASSEMBLY_DIR_DEPENDENCIES = \
-	$($(2)_DOTNET_BUILD_DIR)/$(4) \
-	$($(2)_DOTNET_BUILD_DIR)/ref \
-
-$($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%dll $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%pdb $$($(2)_$(4)_REF_TARGET) $$($(2)_$(4)_DOC_TARGET): $$($(2)_DOTNET_PLATFORM_ASSEMBLY_DEPENDENCIES) | $$($(2)_DOTNET_PLATFORM_ASSEMBLY_DIR_DEPENDENCIES)
-	$$(call Q_PROF_CSC,dotnet/$(4)-bit) \
-		$(DOTNET_CSC)  \
-		$(DOTNET_FLAGS) \
-		-unsafe \
-		-optimize \
-		$$(ARGS_$(1)) \
-		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
-		$$($(2)_$(4)_REFOUT_ARG) \
-		$$($(2)_$(4)_DOC_ARG) \
-		$$($(2)_DEFINES) \
-		$(ARGS_$(4)) \
-		$$(DOTNET_WARNINGS_TO_FIX) \
-		@$(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp \
-		-res:$($(2)_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
-		-res:$($(2)_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
-		-warnaserror:$(NULLABILITY_WARNINGS) \
-		$$($(2)_DOTNET_SOURCES) \
-		@$($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources \
-		-out:$($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).dll \
-
-dotnet-$(3):: $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).dll
-
-DOTNET_TARGETS += \
-	$($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).dll \
-	$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.$(1).dll) \
-	$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.$(1).pdb) \
-
-DOTNET_TARGETS_DIRS += \
-	$($(2)_DOTNET_BUILD_DIR)/$(4) \
-	$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)) \
-
-$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.$(1).dll): $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).dll | $(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM))
-	$(Q) $(CP) $$< $$@
-
-$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.$(1).pdb): $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).pdb | $(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM))
-	$(Q) $(CP) $$< $$@
-
-endef
 
 # Template variables:
 # 1: Platform (correct case)
