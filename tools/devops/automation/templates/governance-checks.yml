@@ -53,11 +53,13 @@ steps:
     optionsUEPATH: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/PoliCheckExclusions.xml'
 
 - task: TSAUpload@2
-  workingDirectory: "$(Build.SourcesDirectory)/xamarin-macios"
   inputs:
     GdnPublishTsaOnboard: true
     GdnPublishTsaConfigFile: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/tsa_config.gdntsa'
     GdnPublishTsaExportedResultsPublishable: true
+  displayName: Create bugs for compliance tools results
+  condition: succeededOrFailed()
+
 
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: Policheck Results'
