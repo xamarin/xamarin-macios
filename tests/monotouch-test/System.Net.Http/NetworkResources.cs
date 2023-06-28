@@ -92,7 +92,7 @@ namespace MonoTests.System.Net.Http {
 		public static class Httpbin {
 			static bool? isHttpbinDown;
 
-			public static string Url { get { return AssertNetworkConnection ("https://httpbin.org"); } }
+			public static string Url => AssertNetworkConnection ("https://httpbin.org");
 			public static Uri Uri => new Uri ($"{Url}");
 			public static string DeleteUrl => $"{Url}/delete";
 			public static string GetUrl => $"{Url}/get";
