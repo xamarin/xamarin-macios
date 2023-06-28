@@ -1,27 +1,29 @@
 # Multi-targetting
 
-Ref: https://github.com/xamarin/xamarin-macios/issues/18343
-Ref: https://github.com/dotnet/sdk/issues/30103#issuecomment-1582571722
+References:
 
-## Customer needs
+* https://github.com/xamarin/xamarin-macios/issues/18343
+* https://github.com/dotnet/sdk/issues/30103#issuecomment-1582571722
+
+## Developer needs
 
 * Consume preview packages for a preview version of Xcode.
 * Compile against an earlier version of our bindings.
     * Example: a customer could be producing a NuGet targetting .NET 7, and want to support the initial release of .NET 7. Said customer must then be able to build against the bindings we shipped at the time.
 
-## Customer viewpoint
+## Developer viewpoint
 
 ### TargetFramework=net7.0-ios16.4
 
 Builds with the bindings we released for iOS 16.4 (Xcode 14.3)
 
-### TargetFramework=net7.0-ios:
+### TargetFramework=net7.0-ios
 
 Builds with the default bindings. This can change in any release (this is contrary to what other platforms do - specifically because older OS bindings might not work with newer Xcodes, and Apple auto-updates people's Xcodes, so it's rather frequent that customers use newer OS bindings. Having a lot of people specify the OS version in the target framework is undesirable).
 
 ### TargetFramework=net8.0-ios17.0
 
-Builds with the bindings we've released for iOS 17.0
+Builds with the bindings we've released for iOS 17.0 (on .NET 8).
 
 This might be preview bindings, in which case customers must also set the following property in their project file to make their intention clear:
 
@@ -60,7 +62,7 @@ Potential problems:
 * MAX_PATH on Windows (the package names are longer by 10-11 characters).
 * Anything else?
 
-We'll select what's loaded at build time by doing this:
+We'll select what's loaded at build time by doing this in WorkloadManifest.targets:
 
 ```xml
 <ImportGroup Condition=" '$(TargetPlatformIdentifier)' == 'iOS' ">
