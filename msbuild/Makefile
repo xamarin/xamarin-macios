@@ -434,14 +434,6 @@ DOTNET_TARGETS += \
 
 endif
 
-# watchOS: contains all of the files for iOS as well (for now, we don't need all of them, so this is optimizable)
-ifdef INCLUDE_WATCH
-DOTNET_TARGETS += \
-	$(foreach target,$(DOTNET_SHARED_FILES)       ,$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/iOS/$(notdir $(target)))           \
-	$(foreach target,$(DOTNET_WATCHOS_FILES)      ,$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/watchOS/$(notdir $(target)))       \
-
-endif
-
 # macOS
 ifdef INCLUDE_MAC
 DOTNET_TARGETS += \
