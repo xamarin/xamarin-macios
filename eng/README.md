@@ -1,4 +1,4 @@
-The `eng` folder contains and is used by parts of the https://github.com/dotnet/arcade SDK.
+The `eng` folder contains and is used by parts of the https://github.com/dotnet/arcade SDK. Test.
 
 ## Dependency Management
 The Arcade SDK contains a tool known as [`darc`][0], which can be used to manage
