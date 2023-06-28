@@ -59,6 +59,8 @@ steps:
     GdnPublishTsaExportedResultsPublishable: true
   displayName: Create bugs for compliance tools results
   condition: succeededOrFailed()
+  env:
+    WorkingDirectory: '$(Build.SourcesDirectory)/xamarin-macios' 
 
 
 - task: PublishPipelineArtifact@1
