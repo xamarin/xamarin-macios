@@ -338,6 +338,9 @@
     <Compile Include="..\common\OSPlatformAttributeExtensions.cs">
       <Link>tools\common\OSPlatformAttributeExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\common\Rewriter.cs">
+      <Link>tools\common\Rewriter.cs</Link>
+    </Compile>
     <Compile Include="..\common\CSToObjCMap.cs">
       <Link>tools\common\CSToObjCMap.cs</Link>
     </Compile>
