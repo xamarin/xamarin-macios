@@ -118,7 +118,7 @@ namespace Xamarin.MacDev.Tasks {
 					Log.LogMessage (MessageImportance.Low, $"Ignoring unresolved assembly {ar.Name} (referenced from {assemblyPath}).");
 					continue;
 				} else if (referencedItems.Length > 1) {
-					Log.LogError (MSBStrings.E7117 /* The assembly {0} was passed multiple times as an input assembly (referenced from {1}). */ ar.Name, assemblyPath);
+					Log.LogError (MSBStrings.E7117 /* The assembly {0} was passed multiple times as an input assembly (referenced from {1}). */, ar.Name, assemblyPath);
 					info.IsUpToDate = false;
 					return false;
 				}
@@ -146,7 +146,9 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var inputs = new List<string> (Assemblies.Length);
 			for (var i = 0; i < Assemblies.Length; i++) {
-				inputs.Add (Path.GetFullPath (Assemblies [i].ItemSpec));
+				var input = Path.GetFullPath (Assemblies [i].ItemSpec);
+				inputs.Add (input);
+				Assemblies [i].SetMetadata ("Input", input);
 			}
 
 			// All the assemblies to AOT must be in the same directory
@@ -183,7 +185,7 @@ namespace Xamarin.MacDev.Tasks {
 			var globalAotArguments = AotArguments?.Select (v => v.ItemSpec).ToList ();
 			for (var i = 0; i < assembliesToAOT.Length; i++) {
 				var asm = assembliesToAOT [i];
-				var input = inputs [i];
+				var input = asm.GetMetadata ("Input");
 				var arch = asm.GetMetadata ("Arch");
 				var aotArguments = asm.GetMetadata ("Arguments");
 				var processArguments = asm.GetMetadata ("ProcessArguments");
