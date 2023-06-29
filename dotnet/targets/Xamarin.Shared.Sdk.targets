@@ -1192,14 +1192,6 @@
 			<NativeLib>static</NativeLib>
 		</PropertyGroup>
 
-		<!-- Remove libSystem.Net.Security.Native.a from tvOS when using NativeAOT, it's not shipped on tvOS -->
-		<ItemGroup>
-			<DirectPInvoke Remove="libSystem.Net.Security.Native" />
-			<NetCoreAppNativeLibrary Remove="System.Net.Security.Native" />
-			<NativeLibrary Remove="@(NativeLibrary)" Condition="'%(Filename)' == 'libSystem.Net.Security.Native'" />
-			<LinkerArg Remove="@(LinkerArg)" Condition="'%(Filename)' == 'libSystem.Net.Security.Native'" />
-		</ItemGroup>
-
 		<ItemGroup>
 			<!-- We need to mark all __Internal P/Invokes as direct, so that the native linker doesn't remove them -->
 			<DirectPInvoke Include="__Internal" />
