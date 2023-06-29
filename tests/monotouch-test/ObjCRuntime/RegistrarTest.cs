@@ -2246,7 +2246,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-#if __MACOS__
+#if __MACOS__ && !NATIVEAOT
 		[Test]
 		public void CustomUserTypeWithDynamicallyLoadedAssembly ()
 		{
