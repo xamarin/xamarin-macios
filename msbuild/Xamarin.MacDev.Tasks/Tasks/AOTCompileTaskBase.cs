@@ -167,8 +167,8 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			// Figure out which assemblies need to be aot'ed, and which are up-to-date.
-			var assembliesToAOT = Assemblies.Where (asm => !IsUpToDate (asm)).ToArray ();
-			if (assembliesToAOT.Length == 0) {
+			var assembliesToAOT = Assemblies.Where (asm => !IsUpToDate (asm)).ToList ();
+			if (assembliesToAOT.Count == 0) {
 				Log.LogMessage (MessageImportance.Low, $"All the AOT-compiled code is up-to-date.");
 				return !Log.HasLoggedErrors;
 			}
@@ -184,14 +184,14 @@ namespace Xamarin.MacDev.Tasks {
 			Directory.CreateDirectory (OutputDirectory);
 
 			var aotAssemblyFiles = new List<ITaskItem> ();
-			var processes = new Task<Execution> [assembliesToAOT.Length];
+			var processes = new Task<Execution> [assembliesToAOT.Count];
 
 			var environment = new Dictionary<string, string?> {
 				{ "MONO_PATH", Path.GetFullPath (InputDirectory) },
 			};
 
 			var globalAotArguments = AotArguments?.Select (v => v.ItemSpec).ToList ();
-			for (var i = 0; i < assembliesToAOT.Length; i++) {
+			for (var i = 0; i < assembliesToAOT.Count; i++) {
 				var asm = assembliesToAOT [i];
 				var input = asm.GetMetadata ("Input");
 				var arch = asm.GetMetadata ("Arch");
