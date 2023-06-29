@@ -228,6 +228,8 @@ namespace Xamarin.Tests {
 
 			AddExpectedFrameworkFiles (platform, expectedFiles, "Framework.With.Dots", isSigned); // https://github.com/xamarin/xamarin-macios/issues/15727
 
+			expectedFiles.Add (Path.Combine (assemblyDirectory, "NoLibPrefix.dylib")); // https://github.com/xamarin/xamarin-macios/issues/15044
+
 			expectedFiles.Add (Path.Combine (resourcesDirectory, "ContentA.txt"));
 			expectedFiles.Add (Path.Combine (resourcesDirectory, "ContentB.txt"));
 			expectedFiles.Add (Path.Combine (resourcesDirectory, "ContentC.txt"));

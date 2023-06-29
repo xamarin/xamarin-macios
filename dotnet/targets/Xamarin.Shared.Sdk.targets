@@ -126,6 +126,7 @@
 		<EventSourceSupport Condition="'$(EventSourceSupport)' == ''">false</EventSourceSupport>
 		<HttpActivityPropagationSupport Condition="'$(HttpActivityPropagationSupport)' == ''">false</HttpActivityPropagationSupport>
 		<InvariantGlobalization Condition="'$(InvariantGlobalization)' == ''">false</InvariantGlobalization>
+		<HybridGlobalization Condition="'$(HybridGlobalization)' == ''">false</HybridGlobalization>
 		<StartupHookSupport Condition="'$(StartupHookSupport)' == ''">false</StartupHookSupport>
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == '' And '$(_BundlerDebug)' != 'true'">true</UseSystemResourceKeys>
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == '' And '$(_BundlerDebug)' == 'true'">false</UseSystemResourceKeys>
@@ -143,7 +144,8 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<_GlobalizationDataFile Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '$(_GlobalizationDataFile)' == ''">icudt.dat</_GlobalizationDataFile>
+		<_GlobalizationDataFile Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '$(HybridGlobalization)' != 'true' And '$(_GlobalizationDataFile)' == ''">icudt.dat</_GlobalizationDataFile>
+		<_GlobalizationDataFile Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '$(HybridGlobalization)' == 'true' And '$(_GlobalizationDataFile)' == ''">icudt_hybrid.dat</_GlobalizationDataFile>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -550,6 +552,7 @@
 				Interpreter=$(MtouchInterpreter)
 				IntermediateLinkDir=$(IntermediateLinkDir)
 				InvariantGlobalization=$(InvariantGlobalization)
+				HybridGlobalization=$(HybridGlobalization)
 				ItemsDirectory=$(_LinkerItemsDirectory)
 				IsAppExtension=$(IsAppExtension)
 				IsSimulatorBuild=$(_SdkIsSimulator)
