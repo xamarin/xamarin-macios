@@ -18,7 +18,11 @@ namespace Xamarin {
 
 		static Cache ()
 		{
+#if NATIVEAOT
+			root = Path.Combine (Path.GetDirectoryName (Environment.ProcessPath)!, "tmp-test-dir");
+#else
 			root = Path.Combine (Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location)!, "tmp-test-dir");
+#endif
 			if (Directory.Exists (root)) {
 				var movedRoot = root + DateTime.UtcNow.Ticks.ToString () + "-deletion-in-progress";
 				// The temporary directory can be big, and it can take a while to clean it out.
