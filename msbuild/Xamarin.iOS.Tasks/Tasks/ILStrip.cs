@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.Build.Tasks;
 using Microsoft.Build.Framework;
