@@ -330,7 +330,7 @@ namespace Xamarin.Linker {
 
 					il.Append (falseTarget);
 				}
-				
+
 				// In addition to the big lookup method, implement the static factory method on the type:
 				ImplementConstructNSObjectFactoryMethod (type, ctor);
 			}
@@ -415,7 +415,7 @@ namespace Xamarin.Linker {
 			var body = createInstanceMethod.CreateBody (out var il);
 
 			if (type.HasGenericParameters) {
-				ctor = type.CreateMethodReferenceOnGenericType(ctor, type.GenericParameters.ToArray ());
+				ctor = type.CreateMethodReferenceOnGenericType (ctor, type.GenericParameters.ToArray ());
 			}
 
 			// return new TypeA (nativeHandle); // for NativeHandle ctor
@@ -454,7 +454,7 @@ namespace Xamarin.Linker {
 				// return instance;
 
 				if (type.HasGenericParameters) {
-					nsobjectConstructor = type.CreateMethodReferenceOnGenericType(nsobjectConstructor, type.GenericParameters.ToArray ());
+					nsobjectConstructor = type.CreateMethodReferenceOnGenericType (nsobjectConstructor, type.GenericParameters.ToArray ());
 				}
 
 				var instanceVariable = body.AddVariable (abr.Foundation_NSObject);
@@ -484,7 +484,7 @@ namespace Xamarin.Linker {
 				// return new TypeA ((IntPtr) nativeHandle, owns); // IntPtr ctor
 
 				if (type.HasGenericParameters) {
-					ctor = type.CreateMethodReferenceOnGenericType(ctor, type.GenericParameters.ToArray ());
+					ctor = type.CreateMethodReferenceOnGenericType (ctor, type.GenericParameters.ToArray ());
 				}
 
 				il.Emit (OpCodes.Ldarg, nativeHandleParameter);
@@ -508,7 +508,7 @@ namespace Xamarin.Linker {
 			=> FindConstructorByParameterTypes (type, ("ObjCRuntime", "NativeHandle"), ("System", "Boolean"))
 				?? FindConstructorByParameterTypes (type, ("System", "IntPtr"), ("System", "Boolean"));
 
-		static MethodReference? FindConstructorByParameterTypes (TypeDefinition type, params (string Namespace, string Class)[] requiredParameters)
+		static MethodReference? FindConstructorByParameterTypes (TypeDefinition type, params (string Namespace, string Class) [] requiredParameters)
 			=> type.Methods.FirstOrDefault (method => method.IsConstructor
 				&& !method.IsStatic
 				&& method.HasParameters
@@ -724,7 +724,7 @@ namespace Xamarin.Linker {
 				method.IsFamilyOrAssembly = true;
 			}
 		}
-		
+
 		static void EnsureVisible (MethodDefinition caller, TypeReference typeRef)
 		{
 			var type = typeRef.Resolve ();
