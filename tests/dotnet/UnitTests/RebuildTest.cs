@@ -1,5 +1,4 @@
-namespace Xamarin.Tests
-{
+namespace Xamarin.Tests {
 	[TestFixture]
 	public class RebuildTest : TestBaseClass {
 		[Test]

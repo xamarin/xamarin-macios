@@ -174,8 +174,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			// If any assembly changed, then we must re-generate the dedup assembly.
-			var dedupAssembly = Assemblies.SingleOrDefault (asm =>
-			{
+			var dedupAssembly = Assemblies.SingleOrDefault (asm => {
 				Boolean.TryParse (asm.GetMetadata ("IsDedupAssembly"), out var isDedupAssembly);
 				return isDedupAssembly;
 			});
