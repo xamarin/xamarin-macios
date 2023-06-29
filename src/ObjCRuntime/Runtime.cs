@@ -621,6 +621,12 @@ namespace ObjCRuntime {
 		// For XM it will also register all assemblies loaded in the current appdomain.
 		internal static void RegisterAssemblies ()
 		{
+#if NET
+			if (IsNativeAOT) {
+				return;
+			}
+#endif
+
 #if PROFILE
 			var watch = new Stopwatch ();
 #endif
