@@ -1312,9 +1312,9 @@ namespace ObjCRuntime {
 
 		// The 'selector' and 'method' arguments are only used in error messages.
 #if NET
-		static T? ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution, IntPtr sel, RuntimeMethodHandle method_handle) where T: NSObject, INSObjectFactory
+		static T? ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution, IntPtr sel, RuntimeMethodHandle method_handle) where T : NSObject, INSObjectFactory
 #else
-		static T? ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution, IntPtr sel, RuntimeMethodHandle method_handle) where T: NSObject
+		static T? ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution, IntPtr sel, RuntimeMethodHandle method_handle) where T : class, INativeObject
 #endif
 		{
 			if (type is null)
@@ -1891,6 +1891,22 @@ namespace ObjCRuntime {
 					// native objects and NSObject instances.
 					throw ErrorHelper.CreateError (8004, $"Cannot create an instance of {implementation.FullName} for the native object 0x{ptr:x} (of type '{Class.class_getName (Class.GetClassForObject (ptr))}'), because another instance already exists for this native object (of type {o.GetType ().FullName}).");
 				}
+#if NET
+				if (!Runtime.IsManagedStaticRegistrar) {
+					// For other registrars other than managed-static the generic parameter of ConstructNSObject is used
+					// only to cast the return value so we can safely pass NSObject here to satisfy the constraints of the
+					// generic parameter.
+					var rv = (T?)(INativeObject?) ConstructNSObject<NSObject> (ptr, implementation, MissingCtorResolution.ThrowConstructor1NotFound, sel, method_handle);
+					if (owns)
+						TryReleaseINativeObject (rv);
+					return rv;
+				}
+#else
+				var rv = ConstructNSObject<T> (ptr, implementation, MissingCtorResolution.ThrowConstructor1NotFound, sel, method_handle);
+				if (owns)
+					TryReleaseINativeObject (rv);
+				return rv;
+#endif
 			}
 
 			return ConstructINativeObject<T> (ptr, owns, implementation, MissingCtorResolution.ThrowConstructor2NotFound, sel, method_handle);
