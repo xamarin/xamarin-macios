@@ -3427,7 +3427,7 @@ namespace Registrar {
 				return true;
 			case Trampoline.CopyWithZone2:
 #if NET
-				// Managed Static Registrar handles that in GenerateCallToUnmanagedCallersOnlyMethod
+				// Managed Static Registrar handles CopyWithZone2 in GenerateCallToUnmanagedCallersOnlyMethod
 				if (LinkContext.App.Registrar == RegistrarMode.ManagedStatic) {
 					return false;
 				}
