@@ -55,7 +55,7 @@ steps:
 - task: TSAUpload@2
   inputs:
     GdnPublishTsaOnboard: true
-    GdnPublishTsaConfigFile: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/tsa_config.gdntsa'
+    GdnPublishTsaConfigFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\tsa_config.gdntsa'
     GdnPublishTsaExportedResultsPublishable: true
   displayName: Create bugs for compliance tools results
   condition: succeededOrFailed()
