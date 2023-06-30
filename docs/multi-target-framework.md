@@ -39,7 +39,7 @@ following property in their project file to make their intention clear:
 
 This mirrors how it's done for the Android SDK.
 
-### TargetFrameworks=net7.0-ios16.0;net7.0-ios-16.4
+### TargetFrameworks=net7.0-ios16.0;net8.0-ios-17.0
 
 This would only be valid for a library project.
 
