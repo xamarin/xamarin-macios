@@ -264,7 +264,7 @@ namespace Xamarin.Bundler {
 
 			// We will register protocols if the static registrar is enabled and loading assemblies is not possible
 			if (!RegisterProtocols.HasValue) {
-				if (app.Platform != ApplePlatform.MacOSX) {
+				if (app.Platform != ApplePlatform.MacOSX || app.XamarinRuntime == XamarinRuntime.NativeAOT) {
 					RegisterProtocols = (app.Registrar == RegistrarMode.Static || app.Registrar == RegistrarMode.ManagedStatic) && !app.UseInterpreter;
 				} else {
 					RegisterProtocols = false;
