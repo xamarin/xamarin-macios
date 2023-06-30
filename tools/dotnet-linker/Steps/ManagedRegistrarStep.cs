@@ -83,6 +83,7 @@ namespace Xamarin.Linker {
 
 		AppBundleRewriter abr { get { return Configuration.AppBundleRewriter; } }
 		List<Exception> exceptions = new List<Exception> ();
+		NSObjectInitializationDataType? initializationDataType;
 
 		void AddException (Exception exception)
 		{
@@ -401,6 +402,7 @@ namespace Xamarin.Linker {
 			var placeholderType = abr.System_IntPtr;
 			ParameterDefinition? callSuperParameter = null;
 			VariableDefinition? returnVariable = null;
+			MethodReference? ctor = null;
 			var leaveTryInstructions = new List<Instruction> ();
 			var isVoid = method.ReturnType.Is ("System", "Void");
 
@@ -459,12 +461,57 @@ namespace Xamarin.Linker {
 					// We're throwing an exception, so there's no need for any more code.
 					skipEverythingAfter = il.Body.Instructions.Last ();
 				} else {
-					il.Emit (OpCodes.Ldarg_0);
+					// Whenever there's an NSObject constructor that we call from a registrar callback, we need to create
+					// a separate constructor that will first set the `handle` and `flags` values of the NSObject before
+					// calling the original constructor. Here's an example of the code we generate:
+					//
+					// // The original constructor:
+					// public .ctor (T0 p0, T1 p1, ...) { /* ... */ }
+					//
+					// // The generated constructor with pre-initialization: 
+					// public .ctor (NSObjectInitializationData initData, T0 p0, T1 p1, ...) {
+					//     this.handle = initData.Handle;
+					//     this.flags = initData.Flags;
+					//     this..ctor (p0, p1, ...);
+					// }
+					//
+					// - This code can't be expressed in C# and it can only be expressed directly in IL.
+					// - The reason we need to do this is because the base NSObject parameterless constructor 
+					//   would allocate a new Objective-C object if `handle` is a zero pointer.
+					// - The `NSObjectInitializationData` type is generated at build time and so it can't be used
+					//   anywhere in the app. The generated ctors will have a unique signature.
+					
+					if (initializationDataType is null) {
+						initializationDataType = CreateNSObjectInitializationDataStruct ();
+						abr.PlatformAssembly.MainModule.Types.Add (initializationDataType.Type.Resolve ());
+						Annotations.Mark (initializationDataType.Type);
+					}
+					
+					initializationDataType.Type = abr.CurrentAssembly.MainModule.ImportReference (initializationDataType.Type);
+					initializationDataType.HandleField = abr.CurrentAssembly.MainModule.ImportReference (initializationDataType.HandleField);
+					initializationDataType.FlagsField = abr.CurrentAssembly.MainModule.ImportReference (initializationDataType.FlagsField);
+
+					ctor = CloneConstructorWithNSObjectInitializationData (method, initializationDataType);
+					method.DeclaringType.Methods.Add (ctor.Resolve ());
+
+					// prepare the init data
+					var initDataVariable = body.AddVariable (initializationDataType.Type);
+					il.Emit (OpCodes.Ldloca_S, initDataVariable);
 					postLeaveBranch.Operand = il.Body.Instructions.Last ();
-					var git = new GenericInstanceMethod (abr.NSObject_AllocateNSObject);
-					git.GenericArguments.Add (method.DeclaringType);
-					il.Emit (OpCodes.Call, git);
-					il.Emit (OpCodes.Dup); // this is for the call to ObjCRuntime.NativeObjectExtensions::GetHandle after the call to the constructor
+
+					il.Emit (OpCodes.Initobj, initializationDataType.Type);
+
+					// set the handle
+					il.Emit (OpCodes.Ldloca_S, initDataVariable);
+					il.Emit (OpCodes.Ldarg_0); // pobj
+					il.Emit (OpCodes.Stfld, initializationDataType.HandleField);
+
+					// set flags
+					il.Emit (OpCodes.Ldloca_S, initDataVariable);
+					il.Emit (OpCodes.Ldc_I4, 2); // Flags.NativeRef == 2
+					il.Emit (OpCodes.Stfld, initializationDataType.FlagsField);
+
+					il.Emit (OpCodes.Ldloc, initDataVariable);
 				}
 			} else if (isGeneric) {
 				// this is a proxy method and we can simply use `this` without any conversion
@@ -509,7 +556,9 @@ namespace Xamarin.Linker {
 
 			callback.AddParameter ("exception_gchandle", new PointerType (abr.System_IntPtr));
 
-			if (isGeneric && !method.IsConstructor) {
+			if (ctor is not null) {
+				il.Emit (OpCodes.Newobj, ctor);
+			} else if (isGeneric && !method.IsConstructor) {
 				var targetMethod = method.DeclaringType.CreateMethodReferenceOnGenericType (method, method.DeclaringType.GenericParameters.ToArray ());
 				il.Emit (OpCodes.Call, targetMethod);
 			} else if (method.IsStatic) {
@@ -1269,6 +1318,75 @@ namespace Xamarin.Linker {
 				if (isManagedNullable)
 					il.Append (endTarget);
 			}
+		}
+
+		class NSObjectInitializationDataType
+		{
+			public required FieldReference HandleField { get; set; }
+			public required FieldReference FlagsField { get; set; }
+			public required TypeReference Type { get; set; }
+		}
+
+		NSObjectInitializationDataType CreateNSObjectInitializationDataStruct()
+		{
+			var type = new TypeDefinition (string.Empty, "NSObjectInitializationData", TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.AnsiClass | TypeAttributes.Sealed | TypeAttributes.BeforeFieldInit);
+			type.BaseType = abr.System_ValueType;
+
+			return new NSObjectInitializationDataType() {
+				Type = type,
+				HandleField = type.AddField ("Handle", FieldAttributes.Public, abr.System_IntPtr),
+				FlagsField = type.AddField ("Flags", FieldAttributes.Public, abr.System_Byte),
+			};
+		}
+
+		MethodDefinition CloneConstructorWithNSObjectInitializationData (MethodDefinition ctor, NSObjectInitializationDataType initDataType)
+		{
+			var clonedCtor = new MethodDefinition (ctor.Name, ctor.Attributes, ctor.ReturnType);
+			clonedCtor.IsPublic = false;
+
+			var initParameter = clonedCtor.AddParameter ("initData", initDataType.Type);
+			foreach (var parameter in ctor.Parameters) {
+				clonedCtor.AddParameter (parameter.Name, parameter.ParameterType);
+			}
+
+			var body = clonedCtor.CreateBody (out var il);
+
+			// ensure visible
+			abr.Foundation_NSObject_HandleField.Resolve ().IsFamily = true;
+#if NET
+			abr.Foundation_NSObject_FlagsSetterMethod.Resolve ().IsFamily = true;
+#else
+			abr.Foundation_NSObject_FlagsField.Resolve ().IsFamily = true;
+#endif
+
+			// store the handle and flags first
+			il.Emit (OpCodes.Ldarg_0);
+			il.Emit (OpCodes.Ldarg, initParameter);
+			il.Emit (OpCodes.Ldfld, initDataType.HandleField);
+#if NET
+			il.Emit (OpCodes.Call, abr.NativeObject_op_Implicit_NativeHandle);
+#endif
+			il.Emit (OpCodes.Stfld, abr.CurrentAssembly.MainModule.ImportReference (abr.Foundation_NSObject_HandleField));
+
+			il.Emit (OpCodes.Ldarg_0);
+			il.Emit (OpCodes.Ldarg, initParameter);
+			il.Emit (OpCodes.Ldfld, initDataType.FlagsField);
+#if NET
+			il.Emit (OpCodes.Call, abr.Foundation_NSObject_FlagsSetterMethod);
+#else
+			il.Emit (OpCodes.Stfld, abr.Foundation_NSObject_FlagsField);
+#endif
+
+			// call the original constructor with all of the parameters
+			il.Emit (OpCodes.Ldarg_0);
+			foreach (var parameter in clonedCtor.Parameters.Skip (1)) {
+				il.Emit (OpCodes.Ldarg, parameter);
+			}
+			
+			il.Emit (OpCodes.Call, ctor);
+			il.Emit (OpCodes.Ret);
+
+			return clonedCtor;
 		}
 	}
 }
