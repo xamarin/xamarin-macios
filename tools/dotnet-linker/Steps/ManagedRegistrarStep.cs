@@ -148,10 +148,14 @@ namespace Xamarin.Linker {
 
 			var current_trampoline_lists = new AssemblyTrampolineInfo ();
 			Configuration.AssemblyTrampolineInfos [assembly] = current_trampoline_lists;
+			var proxyInterfaces = new List<TypeDefinition> ();
 
 			var modified = false;
 			foreach (var type in assembly.MainModule.Types)
-				modified |= ProcessType (type, current_trampoline_lists);
+				modified |= ProcessType (type, current_trampoline_lists, proxyInterfaces);
+
+			foreach (var additionalType in proxyInterfaces)
+				assembly.MainModule.Types.Add (additionalType);
 
 			// Make sure the linker saves any changes in the assembly.
 			if (modified) {
@@ -162,12 +166,12 @@ namespace Xamarin.Linker {
 			abr.ClearCurrentAssembly ();
 		}
 
-		bool ProcessType (TypeDefinition type, AssemblyTrampolineInfo infos)
+		bool ProcessType (TypeDefinition type, AssemblyTrampolineInfo infos, List<TypeDefinition> proxyInterfaces)
 		{
 			var modified = false;
 			if (type.HasNestedTypes) {
 				foreach (var nested in type.NestedTypes)
-					modified |= ProcessType (nested, infos);
+					modified |= ProcessType (nested, infos, proxyInterfaces);
 			}
 
 			// Figure out if there are any types we need to process
@@ -199,7 +203,7 @@ namespace Xamarin.Linker {
 			// Create an UnmanagedCallersOnly method for each method we need to wrap
 			foreach (var method in methods_to_wrap) {
 				try {
-					CreateUnmanagedCallersMethod (method, infos);
+					CreateUnmanagedCallersMethod (method, infos, proxyInterfaces);
 				} catch (Exception e) {
 					AddException (ErrorHelper.CreateError (99, e, "Failed to create an UnmanagedCallersOnly trampoline for {0}: {1}", method.FullName, e.Message));
 				}
@@ -270,15 +274,10 @@ namespace Xamarin.Linker {
 		}
 
 		int counter;
-		void CreateUnmanagedCallersMethod (MethodDefinition method, AssemblyTrampolineInfo infos)
+		void CreateUnmanagedCallersMethod (MethodDefinition method, AssemblyTrampolineInfo infos, List<TypeDefinition> proxyInterfaces)
 		{
 			var baseMethod = StaticRegistrar.GetBaseMethodInTypeHierarchy (method);
 			var placeholderType = abr.System_IntPtr;
-			ParameterDefinition? callSuperParameter = null;
-			VariableDefinition? returnVariable = null;
-			var leaveTryInstructions = new List<Instruction> ();
-			var isVoid = method.ReturnType.Is ("System", "Void");
-
 			var name = $"callback_{counter++}_{Sanitize (method.DeclaringType.FullName)}_{Sanitize (method.Name)}";
 
 			var callbackType = method.DeclaringType.NestedTypes.SingleOrDefault (v => v.Name == "__Registrar_Callbacks__");
@@ -295,6 +294,116 @@ namespace Xamarin.Linker {
 			// If the target method is marked, then we must mark the trampoline as well.
 			method.CustomAttributes.Add (CreateDynamicDependencyAttribute (callbackType, callback.Name));
 
+			callback.AddParameter ("pobj", abr.System_IntPtr);
+
+			var isGeneric = method.DeclaringType.HasGenericParameters;
+			if (isGeneric && method.IsStatic) {
+				throw ErrorHelper.CreateError (4130 /* The registrar cannot export static methods in generic classes ('{0}'). */, method.FullName);
+			} else if (isGeneric && !method.IsConstructor) {
+				// We generate a proxy interface for each generic NSObject subclass. In the static UnmanagedCallersOnly methods we don't
+				// know the generic parameters of the type we're working with and we need to use this trick to be able to call methods on the
+				// generic type without using reflection. This is an example of the code we generate in addition to user code:
+				//
+				//
+				// internal interface __IRegistrarGenericTypeProxy__CustomNSObject_1__
+				// {
+				//     void __IRegistrarGenericTypeProxy__CustomNSObject_1____SomeMethod (IntPtr p0);
+				// }
+				//
+				// public class CustomNSObject<T> : NSObject, __IRegistrarGenericTypeProxy__CustomNSObject_1__
+				//     where T : NSObject
+				// {
+				//     [Export ("someMethod:")]
+				//     public void SomeMethod (T someInput)
+				//     {
+				//         // ...
+				//     }
+				//
+				//     // generated implementation of the proxy interface:
+				//     public void __IRegistrarGenericTypeProxy__CustomNSObject_1____SomeMethod (IntPtr sel, IntPtr p0, IntPtr* exception_gchandle)
+				//     {
+				//         try {
+				//             var obj0 = Runtime.GetNSObject<T> (p0);
+				//             SomeMethod (obj0);
+				//         } catch (Exception ex) {
+				//             *exception_gchandle = Runtime.AllocGCHandle (ex);
+				//         }
+				//     }
+				//
+				//     // generated registrar callbacks:
+				//     private static class __Registrar_Callbacks__
+				//     {
+				//         [UnmanagedCallersOnly (EntryPoint = "_callback_1_CustomNSObject_1_SomeMethod")]
+				//         public unsafe static void callback_1_CustomNSObject_1_SomeMethod (IntPtr pobj, IntPtr sel, IntPtr p0, IntPtr* exception_gchandle)
+				//         {
+				//             var proxy = (__IRegistrarGenericTypeProxy__CustomNSObject_1__)Runtime.GetNSObject (pobj);
+				//             proxy.__IRegistrarGenericTypeProxy__CustomNSObject_1____SomeMethod (sel, p0, exception_gchandle);
+				//         }
+				//     }
+				// }
+
+				var proxyInterfaceName = $"__IRegistrarGenericTypeProxy__{Sanitize (method.DeclaringType.FullName)}__";
+				TypeDefinition? proxyInterface = proxyInterfaces.SingleOrDefault (v => v.Name == proxyInterfaceName && v.Namespace == "ObjCRuntime");
+				if (proxyInterface is null) {
+					proxyInterface = new TypeDefinition ("ObjCRuntime", proxyInterfaceName, TypeAttributes.NotPublic | TypeAttributes.Interface | TypeAttributes.Abstract);
+					method.DeclaringType.Interfaces.Add (new InterfaceImplementation (proxyInterface));
+					proxyInterfaces.Add (proxyInterface);
+				}
+
+				var methodName = $"{proxyInterfaceName}_{method.Name}";
+				var interfaceMethod = proxyInterface.AddMethod (methodName, MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.NewSlot | MethodAttributes.Abstract | MethodAttributes.Virtual, placeholderType);
+				var implementationMethod = method.DeclaringType.AddMethod (methodName, MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Virtual | MethodAttributes.NewSlot | MethodAttributes.Final, placeholderType);
+
+				// the callback will only call the proxy method and the proxy method will perform all the conversions
+				EmitCallToExportedMethod (method, implementationMethod);
+
+				// now copy the return type and params (incl. sel and exception_gchandle) to the UCO itself
+				// and also to the proxy interface 
+				callback.ReturnType = implementationMethod.ReturnType;
+				interfaceMethod.ReturnType = implementationMethod.ReturnType;
+
+				foreach (var parameter in implementationMethod.Parameters) {
+					callback.AddParameter (parameter.Name, parameter.ParameterType);
+					interfaceMethod.AddParameter (parameter.Name, parameter.ParameterType);
+				}
+
+				// we need to wait until we know all the parameters of the interface method before we generate this method
+				EmitCallToProxyMethod (method, callback, interfaceMethod);
+			} else {
+				EmitCallToExportedMethod (method, callback);
+			}
+		}
+
+		public void EmitCallToProxyMethod (MethodDefinition method, MethodDefinition callback, MethodDefinition proxyInterfaceMethod)
+		{
+			_ = callback.CreateBody (out var il);
+
+			// We don't know the generic parameters of the type we're working with but we know it is a NSObject and it
+			// implements the proxy interface. The generic parameters will be resolved in the proxy method through the v-table.
+			il.Emit (OpCodes.Ldarg_0);
+			il.Emit (OpCodes.Call, abr.Runtime_GetNSObject__System_IntPtr);
+			il.Emit (OpCodes.Castclass, proxyInterfaceMethod.DeclaringType);
+
+			if (callback.HasParameters) {
+				// skip the first argument (the handle of the object)
+				foreach (var parameter in callback.Parameters.Skip (1)) {
+					il.Emit (OpCodes.Ldarg, parameter);
+				}
+			}
+
+			il.Emit (OpCodes.Callvirt, proxyInterfaceMethod);
+			il.Emit (OpCodes.Ret);
+		}
+
+		public void EmitCallToExportedMethod (MethodDefinition method, MethodDefinition callback)
+		{
+			var baseMethod = StaticRegistrar.GetBaseMethodInTypeHierarchy (method);
+			var placeholderType = abr.System_IntPtr;
+			ParameterDefinition? callSuperParameter = null;
+			VariableDefinition? returnVariable = null;
+			var leaveTryInstructions = new List<Instruction> ();
+			var isVoid = method.ReturnType.Is ("System", "Void");
+
 			var body = callback.CreateBody (out var il);
 			var placeholderInstruction = il.Create (OpCodes.Nop);
 			var placeholderNextInstruction = il.Create (OpCodes.Nop);
@@ -303,34 +412,11 @@ namespace Xamarin.Linker {
 			var isCategory = categoryAttribute is not null;
 			var isInstanceCategory = isCategory && StaticRegistrar.HasThisAttribute (method);
 			var isGeneric = method.DeclaringType.HasGenericParameters;
-			var isDynamicInvoke = isGeneric;
-			VariableDefinition? selfVariable = null;
 
 			Trace (il, $"ENTER");
 
-			callback.AddParameter ("pobj", abr.System_IntPtr);
-
 			if (!isVoid || method.IsConstructor)
 				returnVariable = body.AddVariable (placeholderType);
-
-			if (isGeneric) {
-				if (method.IsStatic)
-					throw ErrorHelper.CreateError (4130 /* The registrar cannot export static methods in generic classes ('{0}'). */, method.FullName);
-
-				if (!method.IsConstructor) {
-					il.Emit (OpCodes.Ldtoken, method);
-
-					il.Emit (OpCodes.Ldarg_0);
-					EmitConversion (method, il, method.DeclaringType, true, -1, out var nativeType, postProcessing, selfVariable, isDynamicInvoke: isDynamicInvoke);
-
-					selfVariable = body.AddVariable (abr.System_Object);
-					il.Emit (OpCodes.Stloc, selfVariable);
-					il.Emit (OpCodes.Ldloc, selfVariable);
-					il.Emit (OpCodes.Ldtoken, method.DeclaringType);
-					il.Emit (OpCodes.Ldtoken, method);
-					il.Emit (OpCodes.Call, abr.Runtime_FindClosedMethod);
-				}
-			}
 
 			// Our code emission is intermingled with creating the method signature (the code to convert between native and managed values is also the best location
 			// to determine exactly which are the corresponding native and managed types in the method signatures). Unfortunately we might need to skip code emission
@@ -341,7 +427,7 @@ namespace Xamarin.Linker {
 			Instruction? skipEverythingAfter = null;
 			if (isInstanceCategory) {
 				il.Emit (OpCodes.Ldarg_0);
-				EmitConversion (method, il, method.Parameters [0].ParameterType, true, 0, out var nativeType, postProcessing, selfVariable, isDynamicInvoke: isDynamicInvoke);
+				EmitConversion (method, il, method.Parameters [0].ParameterType, true, 0, out var nativeType, postProcessing);
 			} else if (method.IsStatic) {
 				// nothing to do
 			} else if (method.IsConstructor) {
@@ -373,7 +459,6 @@ namespace Xamarin.Linker {
 					// We're throwing an exception, so there's no need for any more code.
 					skipEverythingAfter = il.Body.Instructions.Last ();
 				} else {
-
 					il.Emit (OpCodes.Ldarg_0);
 					postLeaveBranch.Operand = il.Body.Instructions.Last ();
 					var git = new GenericInstanceMethod (abr.NSObject_AllocateNSObject);
@@ -381,10 +466,13 @@ namespace Xamarin.Linker {
 					il.Emit (OpCodes.Call, git);
 					il.Emit (OpCodes.Dup); // this is for the call to ObjCRuntime.NativeObjectExtensions::GetHandle after the call to the constructor
 				}
+			} else if (isGeneric) {
+				// this is a proxy method and we can simply use `this` without any conversion
+				il.Emit (OpCodes.Ldarg_0);
 			} else {
 				// instance method
 				il.Emit (OpCodes.Ldarg_0);
-				EmitConversion (method, il, method.DeclaringType, true, -1, out var nativeType, postProcessing, selfVariable, isDynamicInvoke: isDynamicInvoke);
+				EmitConversion (method, il, method.DeclaringType, true, -1, out var nativeType, postProcessing);
 			}
 
 			callback.AddParameter ("sel", abr.System_IntPtr);
@@ -395,11 +483,6 @@ namespace Xamarin.Linker {
 			if (method.HasParameters)
 				managedParameterCount = method.Parameters.Count;
 
-			if (isGeneric) {
-				il.Emit (OpCodes.Ldc_I4, managedParameterCount);
-				il.Emit (OpCodes.Newarr, abr.System_Object);
-			}
-
 			if (method.HasParameters) {
 				for (var p = parameterStart; p < managedParameterCount; p++) {
 					var nativeParameter = callback.AddParameter ($"p{p}", placeholderType);
@@ -407,27 +490,16 @@ namespace Xamarin.Linker {
 					var managedParameterType = method.Parameters [p].ParameterType;
 					var baseParameter = baseMethod.Parameters [p];
 					var isOutParameter = IsOutParameter (method, p, baseParameter);
-					if (isDynamicInvoke && !isOutParameter) {
-						if (parameterStart != 0) {
-							AddException (ErrorHelper.CreateError (99, $"Unexpected parameterStart {parameterStart} in method {GetMethodSignature (method)} for parameter {p}"));
-							continue;
-						}
-						il.Emit (OpCodes.Dup);
-						il.Emit (OpCodes.Ldc_I4, p);
-					}
+
 					if (!isOutParameter) {
 						il.EmitLoadArgument (nativeParameterIndex);
 					}
-					if (EmitConversion (method, il, managedParameterType, true, p, out var nativeType, postProcessing, selfVariable, isOutParameter, nativeParameterIndex, isDynamicInvoke)) {
+
+					if (EmitConversion (method, il, managedParameterType, true, p, out var nativeType, postProcessing, isOutParameter, nativeParameterIndex)) {
 						nativeParameter.ParameterType = nativeType;
 					} else {
 						nativeParameter.ParameterType = placeholderType;
 						AddException (ErrorHelper.CreateError (99, "Unable to emit conversion for parameter {2} of type {0}. Method: {1}", method.Parameters [p].ParameterType, GetMethodSignatureWithSourceCode (method), p));
-					}
-					if (isDynamicInvoke && !isOutParameter) {
-						if (managedParameterType.IsValueType)
-							il.Emit (OpCodes.Box, managedParameterType);
-						il.Emit (OpCodes.Stelem_Ref);
 					}
 				}
 			}
@@ -437,16 +509,9 @@ namespace Xamarin.Linker {
 
 			callback.AddParameter ("exception_gchandle", new PointerType (abr.System_IntPtr));
 
-			var isDynamicInvokeReturnType = false;
-			if (isGeneric) {
-				il.Emit (OpCodes.Call, abr.MethodBase_Invoke);
-				if (isVoid) {
-					il.Emit (OpCodes.Pop);
-				} else if (method.ReturnType.IsValueType) {
-					il.Emit (OpCodes.Unbox_Any, method.ReturnType);
-				} else {
-					isDynamicInvokeReturnType = true;
-				}
+			if (isGeneric && !method.IsConstructor) {
+				var targetMethod = method.DeclaringType.CreateMethodReferenceOnGenericType (method, method.DeclaringType.GenericParameters.ToArray ());
+				il.Emit (OpCodes.Call, targetMethod);
 			} else if (method.IsStatic) {
 				il.Emit (OpCodes.Call, method);
 			} else {
@@ -454,7 +519,7 @@ namespace Xamarin.Linker {
 			}
 
 			if (returnVariable is not null) {
-				if (EmitConversion (method, il, method.ReturnType, false, -1, out var nativeReturnType, postProcessing, selfVariable, isDynamicInvoke: isDynamicInvoke, isDynamicInvokeReturnType: isDynamicInvokeReturnType)) {
+				if (EmitConversion (method, il, method.ReturnType, false, -1, out var nativeReturnType, postProcessing)) {
 					returnVariable.VariableType = nativeReturnType;
 					callback.ReturnType = nativeReturnType;
 				} else {
@@ -478,7 +543,7 @@ namespace Xamarin.Linker {
 					body.Instructions.RemoveAt (i);
 			}
 
-			AddExceptionHandler (il, returnVariable, placeholderNextInstruction, out var eh, out var leaveEHInstruction);
+			AddExceptionHandler (il, returnVariable, placeholderNextInstruction, isGeneric && !method.IsConstructor, out var eh, out var leaveEHInstruction);
 
 			// Generate code to return null/default value/void
 			if (returnVariable is not null) {
@@ -516,7 +581,7 @@ namespace Xamarin.Linker {
 			eh.HandlerEnd = (Instruction) leaveEHInstruction.Operand;
 		}
 
-		void AddExceptionHandler (ILProcessor il, VariableDefinition? returnVariable, Instruction placeholderNextInstruction, out ExceptionHandler eh, out Instruction leaveEHInstruction)
+		void AddExceptionHandler (ILProcessor il, VariableDefinition? returnVariable, Instruction placeholderNextInstruction, bool isGeneric, out ExceptionHandler eh, out Instruction leaveEHInstruction)
 		{
 			var body = il.Body;
 			var method = body.Method;
@@ -531,7 +596,7 @@ namespace Xamarin.Linker {
 			il.Emit (OpCodes.Stloc, exceptionVariable);
 			eh.HandlerStart = il.Body.Instructions.Last ();
 			eh.TryEnd = eh.HandlerStart;
-			il.Emit (OpCodes.Ldarg, method.Parameters.Count - 1);
+			il.Emit (OpCodes.Ldarg, isGeneric ? method.Parameters.Count : method.Parameters.Count - 1);
 			il.Emit (OpCodes.Ldloc, exceptionVariable);
 			il.Emit (OpCodes.Call, abr.Runtime_AllocGCHandle);
 			il.Emit (OpCodes.Stind_I);
@@ -583,7 +648,7 @@ namespace Xamarin.Linker {
 
 		// This emits a conversion between the native and the managed representation of a parameter or return value,
 		// and returns the corresponding native type. The returned nativeType will (must) be a blittable type.
-		bool EmitConversion (MethodDefinition method, ILProcessor il, TypeReference type, bool toManaged, int parameter, [NotNullWhen (true)] out TypeReference? nativeType, List<Instruction> postProcessing, VariableDefinition? selfVariable, bool isOutParameter = false, int nativeParameterIndex = -1, bool isDynamicInvoke = false, bool isDynamicInvokeReturnType = false)
+		bool EmitConversion (MethodDefinition method, ILProcessor il, TypeReference type, bool toManaged, int parameter, [NotNullWhen (true)] out TypeReference? nativeType, List<Instruction> postProcessing, bool isOutParameter = false, int nativeParameterIndex = -1)
 		{
 			nativeType = null;
 
@@ -594,8 +659,6 @@ namespace Xamarin.Linker {
 						GenerateConversionToManaged (method, il, bindAsAttribute.OriginalType, type, "descriptiveMethodName", parameter, out nativeType);
 						return true;
 					} else {
-						if (isDynamicInvokeReturnType)
-							il.Emit (OpCodes.Castclass, type);
 						GenerateConversionToNative (method, il, type, bindAsAttribute.OriginalType, "descriptiveMethodName", out nativeType);
 						return true;
 					}
@@ -629,9 +692,6 @@ namespace Xamarin.Linker {
 					return true;
 				}
 
-				if (isDynamicInvokeReturnType)
-					AddException (ErrorHelper.CreateError (99, "Unexpected value type {0}: can't result from dynamic invoke. Method: {1}", type, GetMethodSignatureWithSourceCode (method)));
-
 				// no conversion necessary if we're any other value type
 				nativeType = type;
 				return true;
@@ -641,8 +701,6 @@ namespace Xamarin.Linker {
 				var elementType = pt.ElementType;
 				if (!elementType.IsValueType)
 					AddException (ErrorHelper.CreateError (99, "Unexpected pointer type {0}: must be a value type. Method: {1}", type, GetMethodSignatureWithSourceCode (method)));
-				if (isDynamicInvokeReturnType)
-					AddException (ErrorHelper.CreateError (99, "Unexpected pointer type {0}: can't result from dynamic invoke. Method: {1}", type, GetMethodSignatureWithSourceCode (method)));
 				// no conversion necessary either way
 				nativeType = type;
 				return true;
@@ -707,9 +765,10 @@ namespace Xamarin.Linker {
 						EnsureVisible (method, managed_to_native);
 						EnsureVisible (method, native_to_managed);
 
-						var indirectVariable = il.Body.AddVariable (elementType);
+						// brt.ElementType might be a generic type, so it should be use here it instead of elementType
+						var indirectVariable = il.Body.AddVariable (brt.ElementType);
 						// We store a copy of the value in a separate variable, to detect if it changes.
-						var copyIndirectVariable = il.Body.AddVariable (elementType);
+						var copyIndirectVariable = il.Body.AddVariable (brt.ElementType);
 
 						// We don't read the input for 'out' parameters, it might be garbage.
 						if (!isOutParameter) {
@@ -718,15 +777,18 @@ namespace Xamarin.Linker {
 							if (addBeforeNativeToManagedCall is not null)
 								il.Append (addBeforeNativeToManagedCall);
 							il.Emit (OpCodes.Call, native_to_managed);
-							if (isDynamicInvoke) {
-								il.Emit (OpCodes.Ldloc, indirectVariable);
-							} else {
-								il.Emit (OpCodes.Ldloca, indirectVariable);
-							}
-						} else {
-							if (!isDynamicInvoke)
-								il.Emit (OpCodes.Ldloca, indirectVariable);
 						}
+
+						if (IsOpenType (brt.ElementType)) {
+							// for generic types try to verify that the variable is of the correct type
+							// by casting it
+							il.Emit (OpCodes.Ldloc, indirectVariable);
+							il.Emit (OpCodes.Unbox_Any, brt.ElementType);
+							il.Emit (OpCodes.Stloc, indirectVariable);
+						}
+
+						il.Emit (OpCodes.Ldloca, indirectVariable);
+
 						postProcessing.Add (il.CreateLoadArgument (nativeParameterIndex));
 						postProcessing.Add (il.Create (OpCodes.Ldloc, indirectVariable));
 						postProcessing.Add (il.Create (OpCodes.Ldloc, copyIndirectVariable));
@@ -748,39 +810,32 @@ namespace Xamarin.Linker {
 			if (type is ArrayType at) {
 				var elementType = at.GetElementType ();
 				if (elementType.Is ("System", "String")) {
-					if (!toManaged && isDynamicInvokeReturnType)
-						il.Emit (OpCodes.Castclass, new ArrayType (abr.System_String));
 					il.Emit (OpCodes.Call, toManaged ? abr.CFArray_StringArrayFromHandle : abr.RegistrarHelper_CreateCFArray);
 					nativeType = abr.ObjCRuntime_NativeHandle;
 					return true;
 				}
 
-				var isGenericParameter = false;
-				if (elementType is GenericParameter gp) {
+				GenericParameter? gp = elementType as GenericParameter;
+				if (gp is not null) {
 					if (!StaticRegistrar.VerifyIsConstrainedToNSObject (gp, out var constrained)) {
 						AddException (ErrorHelper.CreateError (99, "Incorrectly constrained generic parameter. Method: {0}", GetMethodSignatureWithSourceCode (method)));
 						return false;
 					}
 					elementType = constrained;
-					isGenericParameter = true;
 				}
 
 				var isNSObject = elementType.IsNSObject (DerivedLinkContext);
 				var isNativeObject = StaticRegistrar.IsNativeObject (elementType);
 				if (isNSObject || isNativeObject) {
 					if (toManaged) {
-						if (isGenericParameter) {
-							il.Emit (OpCodes.Ldloc, selfVariable);
-							il.Emit (OpCodes.Ldtoken, method.DeclaringType);
-							il.Emit (OpCodes.Ldtoken, method);
-							il.Emit (OpCodes.Ldc_I4, parameter);
-							il.Emit (OpCodes.Call, abr.Runtime_FindClosedParameterType);
-							il.Emit (OpCodes.Call, abr.NSArray_ArrayFromHandle);
+						var gim = new GenericInstanceMethod (abr.NSArray_ArrayFromHandle_1);
+						if (gp is not null) {
+							var gemericParameter = method.DeclaringType.GenericParameters.Single (x => x.Name == gp.Name);
+							gim.GenericArguments.Add (gemericParameter);
 						} else {
-							var gim = new GenericInstanceMethod (abr.NSArray_ArrayFromHandle_1);
 							gim.GenericArguments.Add (elementType);
-							il.Emit (OpCodes.Call, gim);
 						}
+						il.Emit (OpCodes.Call, gim);
 					} else {
 						var retain = StaticRegistrar.HasReleaseAttribute (method);
 						il.Emit (retain ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
@@ -801,11 +856,8 @@ namespace Xamarin.Linker {
 						il.Emit (OpCodes.Call, abr.Runtime_CopyAndAutorelease);
 					if (IsOpenType (type)) {
 						il.Emit (OpCodes.Call, abr.Runtime_GetNSObject__System_IntPtr);
-						if (!isDynamicInvoke)
-							AddException (ErrorHelper.CreateError (99, "Unable to call a statically resolved method 1 with object in {0} - {1} - {2}", GetMethodSignature (method), il.Body.Method.Name, type.FullName));
-
-						// We're calling the target method dynamically (using MethodBase.Invoke), so there's no
-						// need to check the type of the returned object, because MethodBase.Invoke will do type checks.
+						// cast to the generic type to verify that the item is actually of the correct type
+						il.Emit (OpCodes.Unbox_Any, type);
 					} else {
 						il.Emit (OpCodes.Ldarg_1); // SEL
 						il.Emit (OpCodes.Ldtoken, method);
@@ -815,11 +867,9 @@ namespace Xamarin.Linker {
 						il.Emit (OpCodes.Stloc, tmpVariable);
 						il.Emit (OpCodes.Ldloc, tmpVariable);
 					}
+
 					nativeType = abr.System_IntPtr;
 				} else {
-					if (isDynamicInvokeReturnType)
-						il.Emit (OpCodes.Castclass, abr.Foundation_NSObject);
-
 					if (parameter == -1) {
 						var retain = StaticRegistrar.HasReleaseAttribute (method);
 						il.Emit (OpCodes.Dup);
@@ -840,11 +890,8 @@ namespace Xamarin.Linker {
 				if (toManaged) {
 					if (IsOpenType (type)) {
 						il.Emit (OpCodes.Call, abr.Runtime_GetNSObject__System_IntPtr);
-						if (!isDynamicInvoke)
-							AddException (ErrorHelper.CreateError (99, "Unable to call a statically resolved method 2 with object in {0} - {1} - {2}", GetMethodSignature (method), il.Body.Method.Name, type.FullName));
-
-						// We're calling the target method dynamically (using MethodBase.Invoke), so there's no
-						// need to check the type of the returned object, because MethodBase.Invoke will do type checks.
+						// cast to the generic type to verify that the item is actually of the correct type
+						il.Emit (OpCodes.Unbox_Any, type);
 					} else {
 						var nativeObjType = StaticRegistrar.GetInstantiableType (type.Resolve (), exceptions, GetMethodSignature (method));
 						il.Emit (OpCodes.Ldc_I4_0); // false
@@ -860,19 +907,12 @@ namespace Xamarin.Linker {
 					if (parameter == -1) {
 						var retain = StaticRegistrar.HasReleaseAttribute (method);
 						var isNSObject = IsNSObject (type);
-
-						if (isDynamicInvokeReturnType)
-							il.Emit (OpCodes.Castclass, isNSObject ? abr.Foundation_NSObject : abr.ObjCRuntime_INativeObject);
-
 						if (retain) {
 							il.Emit (OpCodes.Call, isNSObject ? abr.Runtime_RetainNSObject : abr.Runtime_RetainNativeObject);
 						} else {
 							il.Emit (OpCodes.Call, isNSObject ? abr.Runtime_RetainAndAutoreleaseNSObject : abr.Runtime_RetainAndAutoreleaseNativeObject);
 						}
 					} else {
-						if (isDynamicInvokeReturnType)
-							il.Emit (OpCodes.Castclass, abr.ObjCRuntime_INativeObject);
-
 						il.Emit (OpCodes.Call, abr.NativeObjectExtensions_GetHandle);
 					}
 					nativeType = abr.ObjCRuntime_NativeHandle;
@@ -881,9 +921,6 @@ namespace Xamarin.Linker {
 			}
 
 			if (type.Is ("System", "String")) {
-				if (!toManaged && isDynamicInvokeReturnType)
-					il.Emit (OpCodes.Castclass, abr.System_String);
-
 				il.Emit (OpCodes.Call, toManaged ? abr.CFString_FromHandle : abr.CFString_CreateNative);
 				nativeType = abr.ObjCRuntime_NativeHandle;
 				return true;
@@ -941,9 +978,6 @@ namespace Xamarin.Linker {
 							}
 						}
 					}
-
-					if (isDynamicInvokeReturnType)
-						il.Emit (OpCodes.Castclass, abr.System_Delegate);
 
 					// the delegate is already on the stack
 					if (createBlockMethod is not null) {
