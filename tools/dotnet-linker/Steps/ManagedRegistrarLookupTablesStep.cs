@@ -464,27 +464,24 @@ namespace Xamarin.Linker {
 					nsobjectConstructor = type.CreateMethodReferenceOnGenericType (nsobjectConstructor, type.GenericParameters.ToArray ());
 				}
 
-				var instanceVariable = body.AddVariable (abr.Foundation_NSObject);
 				il.Emit (OpCodes.Ldarg, nativeHandleParameter);
 				if (nsobjectConstructor.Parameters [0].ParameterType.Is ("System", "IntPtr"))
 					il.Emit (OpCodes.Call, abr.NativeObject_op_Implicit_IntPtr);
 				il.Emit (OpCodes.Newobj, nsobjectConstructor);
-				il.Emit (OpCodes.Stloc, instanceVariable);
 
 				var falseTarget = il.Create (OpCodes.Nop);
-				il.Emit (OpCodes.Ldloc, instanceVariable);
+				il.Emit (OpCodes.Dup);
 				il.Emit (OpCodes.Ldnull);
 				il.Emit (OpCodes.Cgt_Un);
 				il.Emit (OpCodes.Ldarg, ownsParameter);
 				il.Emit (OpCodes.And);
 				il.Emit (OpCodes.Brfalse_S, falseTarget);
 
-				il.Emit (OpCodes.Ldloc, instanceVariable);
+				il.Emit (OpCodes.Dup);
 				il.Emit (OpCodes.Call, abr.Runtime_TryReleaseINativeObject);
 
 				il.Append (falseTarget);
 
-				il.Emit (OpCodes.Ldloc, instanceVariable);
 				il.Emit (OpCodes.Ret);
 			} else if (ctor is not null) {
 				// return new TypeA (nativeHandle, owns); // for NativeHandle ctor
