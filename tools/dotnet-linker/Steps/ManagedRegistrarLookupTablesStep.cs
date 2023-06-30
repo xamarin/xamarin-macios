@@ -416,9 +416,9 @@ namespace Xamarin.Linker {
 			if (type.Is ("Foundation", "NSObject"))
 				return;
 
-			var createInstanceMethod = type.AddMethod ("ConstructNSObject", MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.NewSlot | MethodAttributes.HideBySig, abr.Foundation_NSObject);
+			var createInstanceMethod = type.AddMethod ("_Xamarin_ConstructNSObject", MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.NewSlot | MethodAttributes.HideBySig, abr.Foundation_NSObject);
 			var nativeHandleParameter = createInstanceMethod.AddParameter ("nativeHandle", abr.ObjCRuntime_NativeHandle);
-			createInstanceMethod.Overrides.Add (abr.INSObjectFactory_ConstructNSObject);
+			createInstanceMethod.Overrides.Add (abr.INSObjectFactory__Xamarin_ConstructNSObject);
 			var body = createInstanceMethod.CreateBody (out var il);
 
 			if (type.HasGenericParameters) {
@@ -447,10 +447,10 @@ namespace Xamarin.Linker {
 			if (nsobjectConstructor is null && ctor is null)
 				return;
 
-			var createInstanceMethod = type.AddMethod ("ConstructINativeObject", MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.NewSlot | MethodAttributes.HideBySig, abr.ObjCRuntime_INativeObject);
+			var createInstanceMethod = type.AddMethod ("_Xamarin_ConstructINativeObject", MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.NewSlot | MethodAttributes.HideBySig, abr.ObjCRuntime_INativeObject);
 			var nativeHandleParameter = createInstanceMethod.AddParameter ("nativeHandle", abr.ObjCRuntime_NativeHandle);
 			var ownsParameter = createInstanceMethod.AddParameter ("owns", abr.System_Boolean);
-			createInstanceMethod.Overrides.Add (abr.INativeObject_ConstructINativeObject);
+			createInstanceMethod.Overrides.Add (abr.INativeObject__Xamarin_ConstructINativeObject);
 			var body = createInstanceMethod.CreateBody (out var il);
 
 			if (nsobjectConstructor is not null) {

@@ -21,7 +21,7 @@ namespace ObjCRuntime {
 		// The method will be implemented via custom linker step if the managed static registrar is used
 		// for classes which have an (NativeHandle, bool) or (IntPtr, bool) constructor.
 		[MethodImpl(MethodImplOptions.NoInlining)]
-		static virtual INativeObject? ConstructINativeObject (NativeHandle handle, bool owns) => null;
+		static virtual INativeObject? _Xamarin_ConstructINativeObject (NativeHandle handle, bool owns) => null;
 #endif
 	}
 

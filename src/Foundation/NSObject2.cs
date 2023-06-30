@@ -74,7 +74,7 @@ namespace Foundation {
 		// The method will be implemented via custom linker step if the managed static registrar is used
 		// for NSObject subclasses which have an (NativeHandle) or (IntPtr) constructor.
 		[MethodImpl(MethodImplOptions.NoInlining)]
-		virtual static NSObject ConstructNSObject (NativeHandle handle) => null;
+		virtual static NSObject _Xamarin_ConstructNSObject (NativeHandle handle) => null;
 	}
 #endif
 

@@ -732,11 +732,11 @@ namespace Xamarin.Linker {
 			}
 		}
 
-		public MethodReference INSObjectFactory_ConstructNSObject {
+		public MethodReference INSObjectFactory__Xamarin_ConstructNSObject {
 			get {
 				return GetMethodReference (PlatformAssembly,
-						Foundation_INSObjectFactory, "ConstructNSObject",
-						nameof (INSObjectFactory_ConstructNSObject),
+						Foundation_INSObjectFactory, "_Xamarin_ConstructNSObject",
+						nameof (INSObjectFactory__Xamarin_ConstructNSObject),
 						isStatic: true,
 						ObjCRuntime_NativeHandle);
 			}
@@ -754,11 +754,11 @@ namespace Xamarin.Linker {
 			}
 		}
 
-		public MethodReference INativeObject_ConstructINativeObject {
+		public MethodReference INativeObject__Xamarin_ConstructINativeObject {
 			get {
 				return GetMethodReference (PlatformAssembly,
-						ObjCRuntime_INativeObject, "ConstructINativeObject",
-						nameof (INativeObject_ConstructINativeObject),
+						ObjCRuntime_INativeObject, "_Xamarin_ConstructINativeObject",
+						nameof (INativeObject__Xamarin_ConstructINativeObject),
 						isStatic: true,
 						ObjCRuntime_NativeHandle,
 						System_Boolean);

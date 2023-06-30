@@ -1374,7 +1374,7 @@ namespace ObjCRuntime {
 			// When the same call is made from a separate function, it works fine.
 			static T? ConstructNSObjectViaFactoryMethod (NativeHandle handle)
 			{
-				NSObject? obj = T.ConstructNSObject (handle);
+				NSObject? obj = T._Xamarin_ConstructNSObject (handle);
 				if (obj is T instance) {
 					return instance;
 				}
@@ -1471,7 +1471,7 @@ namespace ObjCRuntime {
 			// When the same call is made from a separate function, it works fine.
 			static T? ConstructINativeObjectViaFactoryMethod (NativeHandle nativeHandle, bool owns)
 			{
-				INativeObject? obj = T.ConstructINativeObject (nativeHandle, owns);
+				INativeObject? obj = T._Xamarin_ConstructINativeObject (nativeHandle, owns);
 				if (obj is T instance) {
 					return instance;
 				}
