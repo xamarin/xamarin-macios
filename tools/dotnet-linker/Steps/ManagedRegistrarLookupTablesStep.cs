@@ -504,7 +504,8 @@ namespace Xamarin.Linker {
 			Annotations.Mark (createInstanceMethod);
 		}
 
-		static MethodReference? FindNSObjectConstructor (TypeDefinition type) {
+		static MethodReference? FindNSObjectConstructor (TypeDefinition type)
+		{
 			return FindConstructorWithOneParameter ("ObjCRuntime", "NativeHandle")
 				?? FindConstructorWithOneParameter ("System", "IntPtr");
 
@@ -518,7 +519,8 @@ namespace Xamarin.Linker {
 		}
 
 
-		static MethodReference? FindINativeObjectConstructor (TypeDefinition type) {
+		static MethodReference? FindINativeObjectConstructor (TypeDefinition type)
+		{
 			return FindConstructorWithTwoParameters ("ObjCRuntime", "NativeHandle", "System", "Boolean")
 				?? FindConstructorWithTwoParameters ("System", "IntPtr", "System", "Boolean");
 
