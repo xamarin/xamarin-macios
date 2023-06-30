@@ -647,8 +647,10 @@ public class BindingTouch : IDisposable {
 	{
 		var responseFile = Path.Combine (tmpdir, $"compile-{errorCode}.rsp");
 		// The /noconfig argument is not allowed in a response file, so don't put it there.
-		var responseFileArguments = arguments.Where (arg => !string.Equals (arg, "/noconfig", StringComparison.OrdinalIgnoreCase) && !string.Equals (arg, "-noconfig", StringComparison.OrdinalIgnoreCase));
-		File.WriteAllLines (responseFile, responseFileArguments);
+		var responseFileArguments = arguments
+			.Where (arg => !string.Equals (arg, "/noconfig", StringComparison.OrdinalIgnoreCase) && !string.Equals (arg, "-noconfig", StringComparison.OrdinalIgnoreCase))
+			.ToArray (); // StringUtils.QuoteForProcess only accepts IList, not IEnumerable
+		File.WriteAllLines (responseFile, StringUtils.QuoteForProcess (responseFileArguments));
 		// We create a new list here on purpose to not modify the input argument.
 		arguments = arguments.Where (arg => !responseFileArguments.Contains (arg)).ToList ();
 		arguments.Add ($"@{responseFile}");
@@ -667,11 +669,8 @@ public class BindingTouch : IDisposable {
 			arguments.Insert (i - 1, compile_command [i]);
 		}
 
-		if (Driver.RunCommand (compile_command [0], arguments, null, out var compile_output, true, Driver.Verbosity) != 0) {
-			Console.WriteLine ("Response file:");
-			Console.WriteLine (File.ReadAllText (responseFile));
+		if (Driver.RunCommand (compile_command [0], arguments, null, out var compile_output, true, Driver.Verbosity) != 0)
 			throw ErrorHelper.CreateError (errorCode, $"{compiler} {StringUtils.FormatArguments (arguments)}\n{compile_output}".Replace ("\n", "\n\t"));
-		}
 		var output = string.Join (Environment.NewLine, compile_output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
 		if (!string.IsNullOrEmpty (output))
 			Console.WriteLine (output);
