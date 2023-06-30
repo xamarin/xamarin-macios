@@ -20,16 +20,19 @@ namespace Xamarin.Tests {
 			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
 
 			Assert.That (appExecutable, Does.Exist, "There is an executable");
-			var output = ExecuteWithMagicWordAndAssert (appExecutable);
-			Assert.That (output, Does.Contain ("FIRSTBUILD"), "First build");
+			if (CanExecute (platform, runtimeIdentifiers)) {
+				var output = ExecuteWithMagicWordAndAssert (appExecutable);
+				Assert.That (output, Does.Contain ("FIRSTBUILD"), "First build");
+			}
 
 			// Build again, changing something
 			properties ["BuildCounter"] = "Second";
 			DotNet.AssertBuild (project_path, properties);
 			Assert.That (appExecutable, Does.Exist, "There is an executable");
-			output = ExecuteWithMagicWordAndAssert (appExecutable);
-			Assert.That (output, Does.Contain ("SECONDBUILD"), "Second build");
-
+			if (CanExecute (platform, runtimeIdentifiers)) {
+				var output = ExecuteWithMagicWordAndAssert (appExecutable);
+				Assert.That (output, Does.Contain ("SECONDBUILD"), "Second build");
+			}
 		}
 	}
 }
