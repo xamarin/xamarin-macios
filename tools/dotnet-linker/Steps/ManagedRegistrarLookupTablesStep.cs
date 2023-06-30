@@ -299,6 +299,13 @@ namespace Xamarin.Linker {
 			createInstanceMethod.Overrides.Add (abr.IManagedRegistrar_ConstructNSObject);
 			var body = createInstanceMethod.CreateBody (out var il);
 
+			// We generate something like this:
+			// if (RuntimeTypeHandle.Equals (typeHandle, typeof (TypeA).TypeHandle))
+			//     return new TypeA (nativeHandle);
+			// if (RuntimeTypeHandle.Equals (typeHandle, typeof (TypeB).TypeHandle))
+			//     return new TypeB (nativeHandle);
+			// return null;
+
 			var types = GetRelevantTypes (type => type.IsNSObject (DerivedLinkContext) && !type.IsAbstract && !type.IsInterface);
 
 			foreach (var type in types) {
@@ -353,9 +360,9 @@ namespace Xamarin.Linker {
 			var body = createInstanceMethod.CreateBody (out var il);
 
 			// We generate something like this:
-			// if (RuntimeTypeHandle.Equals (typeof (TypeA).TypeHandle))
+			// if (RuntimeTypeHandle.Equals (typeHandle, typeof (TypeA).TypeHandle))
 			//     return new TypeA (nativeHandle, owns);
-			// if (RuntimeTypeHandle.Equals (typeof (TypeB).TypeHandle))
+			// if (RuntimeTypeHandle.Equals (typeHandle, typeof (TypeB).TypeHandle))
 			//     return new TypeB (nativeHandle, owns);
 			// return null;
 
