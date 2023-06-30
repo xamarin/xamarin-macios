@@ -1327,16 +1327,7 @@ namespace ObjCRuntime {
 				if (typeof (T) != typeof (NSObject)
 					&& (typeof (T) == type || typeof (T).IsGenericType)
 					&& !(typeof (T).IsInterface || typeof (T).IsAbstract)) {
-					// instance = ConstructNSObjectViaFactoryMethod (nativeHandle);
-
-					NSObject? obj = T.ConstructNSObject (nativeHandle);
-					if (obj is T t) {
-						instance = t;
-					} else if (obj is not null) {
-						// if the factory method returns a NSObject subclass but we expect a different type,
-						// we need to dispose the object we got and ignore it
-						obj.Dispose ();
-					}
+					instance = ConstructNSObjectViaFactoryMethod (nativeHandle);
 				}
 
 				// If we couldn't create an instance of T through the factory method, we'll use the lookup table.
@@ -1373,6 +1364,28 @@ namespace ObjCRuntime {
 #endif
 
 			return (T) ctor.Invoke (ctorArguments);
+
+#if NET
+			// It isn't possible to call T.ConstructNSObject (...) directly from the parent function. For some
+			// types, the app crashes with a SIGSEGV:
+			//
+			//   error: * Assertion at /Users/runner/work/1/s/src/mono/mono/mini/mini-generic-sharing.c:2283, condition `m_class_get_vtable (info->klass)' not met
+			//
+			// When the same call is made from a separate function, it works fine.
+			static T? ConstructNSObjectViaFactoryMethod (NativeHandle handle)
+			{
+				NSObject? obj = T.ConstructNSObject (handle);
+				if (obj is T instance) {
+					return instance;
+				}
+
+				// if the factory method returns a NSObject subclass but we don't expect that specific type,
+				// we need to dispose it and return null anyway
+				obj?.Dispose ();
+
+				return null;
+			}
+#endif
 		}
 
 		// The generic argument T is only used to cast the return value.
@@ -1401,14 +1414,7 @@ namespace ObjCRuntime {
 					&& (typeof (T) == type || typeof (T).IsGenericType)
 					&& !(typeof (T).IsInterface || typeof (T).IsAbstract))
 				{
-					INativeObject? obj = T.ConstructINativeObject (nativeHandle, owns);
-					if (obj is T t) {
-						instance = t;
-					} else if (obj is not null) {
-						// if the factory method returns an INativeObject but we expected a different type,
-						// we need to release it and ignore it
-						Runtime.TryReleaseINativeObject (obj);
-					}
+					instance = ConstructINativeObjectViaFactoryMethod (nativeHandle, owns);
 				}
 
 				// if the factory didn't work and the type isn't generic, we can try the lookup table
@@ -1455,6 +1461,30 @@ namespace ObjCRuntime {
 			ctorArguments [1] = owns;
 
 			return (T?) ctor.Invoke (ctorArguments);
+
+#if NET
+			// It isn't possible to call T.ConstructINativeObject (...) directly from the parent function. For some
+			// types, the app crashes with a SIGSEGV:
+			//
+			//   error: * Assertion at /Users/runner/work/1/s/src/mono/mono/mini/mini-generic-sharing.c:2283, condition `m_class_get_vtable (info->klass)' not met
+			//
+			// When the same call is made from a separate function, it works fine.
+			static T? ConstructINativeObjectViaFactoryMethod (NativeHandle nativeHandle, bool owns)
+			{
+				INativeObject? obj = T.ConstructINativeObject (nativeHandle, owns);
+				if (obj is T instance) {
+					return instance;
+				}
+
+				// if the factory method returns an INativeObject but we don't expect that specific type,
+				// we need to release it and return null anyway
+				if (obj is not null) {
+					Runtime.TryReleaseINativeObject(obj);
+				}
+
+				return null;
+			}
+#endif
 		}
 
 		static IntPtr CreateNSObject (IntPtr type_gchandle, IntPtr handle, NSObject.Flags flags)
