@@ -507,23 +507,33 @@ namespace Xamarin.Linker {
 			Annotations.Mark (createInstanceMethod);
 		}
 
-		static MethodReference? FindNSObjectConstructor (TypeDefinition type)
-			=> FindConstructorByParameterTypes (type, ("ObjCRuntime", "NativeHandle"))
-				?? FindConstructorByParameterTypes (type, ("System", "IntPtr"));
+		static MethodReference? FindNSObjectConstructor (TypeDefinition type) {
+			return FindConstructorWithOneParameter ("ObjCRuntime", "NativeHandle")
+				?? FindConstructorWithOneParameter ("System", "IntPtr");
 
-		static MethodReference? FindINativeObjectConstructor (TypeDefinition type)
-			=> FindConstructorByParameterTypes (type, ("ObjCRuntime", "NativeHandle"), ("System", "Boolean"))
-				?? FindConstructorByParameterTypes (type, ("System", "IntPtr"), ("System", "Boolean"));
+			MethodReference? FindConstructorWithOneParameter (string ns, string cls)
+				=> type.Methods.FirstOrDefault (method =>
+					method.IsConstructor
+						&& !method.IsStatic
+						&& method.HasParameters
+						&& method.Parameters.Count == 1
+						&& method.Parameters [0].ParameterType.Is (ns, cls));
+		}
 
-		static MethodReference? FindConstructorByParameterTypes (TypeDefinition type, params (string Namespace, string Class) [] requiredParameters)
-			=> type.Methods.FirstOrDefault (method => method.IsConstructor
-				&& !method.IsStatic
-				&& method.HasParameters
-				&& method.Parameters.Count == requiredParameters.Length
-				&& method.Parameters.Zip (requiredParameters).All (pair => {
-					var (parameter, requiredParameter) = pair;
-					return parameter.ParameterType.Is (requiredParameter.Namespace, requiredParameter.Class);
-				}));
+
+		static MethodReference? FindINativeObjectConstructor (TypeDefinition type) {
+			return FindConstructorWithTwoParameters ("ObjCRuntime", "NativeHandle", "System", "Boolean")
+				?? FindConstructorWithTwoParameters ("System", "IntPtr", "System", "Boolean");
+
+			MethodReference? FindConstructorWithTwoParameters (string ns1, string cls1, string ns2, string cls2)
+				=> type.Methods.FirstOrDefault (method =>
+					method.IsConstructor
+						&& !method.IsStatic
+						&& method.HasParameters
+						&& method.Parameters.Count == 2
+						&& method.Parameters [0].ParameterType.Is (ns1, cls1)
+						&& method.Parameters [1].ParameterType.Is (ns2, cls2));
+		}
 
 		void GenerateRegisterWrapperTypes (TypeDefinition type)
 		{
