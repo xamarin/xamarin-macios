@@ -3426,6 +3426,12 @@ namespace Registrar {
 				sb.AppendLine ("}");
 				return true;
 			case Trampoline.CopyWithZone2:
+#if NET
+				// Managed Static Registrar handles that in GenerateCallToUnmanagedCallersOnlyMethod
+				if (LinkContext.App.Registrar == RegistrarMode.ManagedStatic) {
+					return false;
+				}
+#endif
 				sb.AppendLine ("-(id) copyWithZone: (NSZone *) zone");
 				sb.AppendLine ("{");
 				sb.AppendLine ("return xamarin_copyWithZone_trampoline2 (self, _cmd, zone);");
@@ -3474,6 +3480,7 @@ namespace Registrar {
 			case Trampoline.X86_DoubleABI_StretTrampoline:
 			case Trampoline.StaticStret:
 			case Trampoline.Stret:
+			case Trampoline.CopyWithZone2:
 				switch (method.NativeReturnType.FullName) {
 				case "System.Int64":
 					rettype = "long long";
@@ -4353,6 +4360,14 @@ namespace Registrar {
 				sb.WriteLine ($"bool call_super = false;");
 			if (hasReturnType)
 				sb.WriteLine ($"{callbackReturnType} rv = {{ 0 }};");
+			if (method.CurrentTrampoline == Trampoline.CopyWithZone2) {
+				sb.WriteLine ("id p0 = (id)zone;");
+				sb.WriteLine ("GCHandle gchandle;");
+				sb.WriteLine ("enum XamarinGCHandleFlags flags = XamarinGCHandleFlags_None;");
+				sb.WriteLine ("gchandle = xamarin_get_gchandle_with_flags (self, &flags);");
+				sb.WriteLine ("if (gchandle != INVALID_GCHANDLE)");
+				sb.Indent ().WriteLine ("xamarin_set_gchandle_with_flags (self, INVALID_GCHANDLE, XamarinGCHandleFlags_None);").Unindent ();
+			}
 
 			if (!staticCall) {
 				sb.WriteLine ($"static {ucoEntryPoint}_function {ucoEntryPoint};");
@@ -4374,6 +4389,11 @@ namespace Registrar {
 
 			if (isCtor) {
 				GenerateCallToSuperForConstructor (sb, method, exceptions);
+			}
+
+			if (method.CurrentTrampoline == Trampoline.CopyWithZone2) {
+				sb.WriteLine ("if (gchandle != INVALID_GCHANDLE)");
+				sb.Indent ().WriteLine ("xamarin_set_gchandle_with_flags (self, gchandle, flags);").Unindent ();
 			}
 
 			if (hasReturnType)
