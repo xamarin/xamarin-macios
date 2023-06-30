@@ -480,13 +480,13 @@ namespace Xamarin.Linker {
 					//   would allocate a new Objective-C object if `handle` is a zero pointer.
 					// - The `NSObjectInitializationData` type is generated at build time and so it can't be used
 					//   anywhere in the app. The generated ctors will have a unique signature.
-					
+
 					if (initializationDataType is null) {
 						initializationDataType = CreateNSObjectInitializationDataStruct ();
 						abr.PlatformAssembly.MainModule.Types.Add (initializationDataType.Type.Resolve ());
 						Annotations.Mark (initializationDataType.Type);
 					}
-					
+
 					initializationDataType.Type = abr.CurrentAssembly.MainModule.ImportReference (initializationDataType.Type);
 					initializationDataType.HandleField = abr.CurrentAssembly.MainModule.ImportReference (initializationDataType.HandleField);
 					initializationDataType.FlagsField = abr.CurrentAssembly.MainModule.ImportReference (initializationDataType.FlagsField);
@@ -1320,19 +1320,18 @@ namespace Xamarin.Linker {
 			}
 		}
 
-		class NSObjectInitializationDataType
-		{
+		class NSObjectInitializationDataType {
 			public required FieldReference HandleField { get; set; }
 			public required FieldReference FlagsField { get; set; }
 			public required TypeReference Type { get; set; }
 		}
 
-		NSObjectInitializationDataType CreateNSObjectInitializationDataStruct()
+		NSObjectInitializationDataType CreateNSObjectInitializationDataStruct ()
 		{
 			var type = new TypeDefinition (string.Empty, "NSObjectInitializationData", TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.AnsiClass | TypeAttributes.Sealed | TypeAttributes.BeforeFieldInit);
 			type.BaseType = abr.System_ValueType;
 
-			return new NSObjectInitializationDataType() {
+			return new NSObjectInitializationDataType () {
 				Type = type,
 				HandleField = type.AddField ("Handle", FieldAttributes.Public, abr.System_IntPtr),
 				FlagsField = type.AddField ("Flags", FieldAttributes.Public, abr.System_Byte),
@@ -1382,7 +1381,7 @@ namespace Xamarin.Linker {
 			foreach (var parameter in clonedCtor.Parameters.Skip (1)) {
 				il.Emit (OpCodes.Ldarg, parameter);
 			}
-			
+
 			il.Emit (OpCodes.Call, ctor);
 			il.Emit (OpCodes.Ret);
 

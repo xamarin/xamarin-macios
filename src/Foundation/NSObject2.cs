@@ -238,7 +238,7 @@ namespace Foundation {
 				throw new System.Diagnostics.UnreachableException ();
 			}
 #endif
-			
+
 			// This function is called from native code before any constructors have executed.
 			var type = (Type) Runtime.GetGCHandleTarget (type_gchandle);
 			try {
