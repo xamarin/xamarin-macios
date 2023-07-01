@@ -70,7 +70,8 @@ namespace Foundation {
 #endif
 
 #if NET
-	public interface INSObjectFactory {
+	// This interface will be made public when the managed static registrar is used.
+	internal interface INSObjectFactory {
 		// The method will be implemented via custom linker step if the managed static registrar is used
 		// for NSObject subclasses which have an (NativeHandle) or (IntPtr) constructor.
 		[MethodImpl(MethodImplOptions.NoInlining)]

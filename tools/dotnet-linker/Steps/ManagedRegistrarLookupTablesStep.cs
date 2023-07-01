@@ -418,6 +418,7 @@ namespace Xamarin.Linker {
 
 			var createInstanceMethod = type.AddMethod ("_Xamarin_ConstructNSObject", MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.NewSlot | MethodAttributes.HideBySig, abr.Foundation_NSObject);
 			var nativeHandleParameter = createInstanceMethod.AddParameter ("nativeHandle", abr.ObjCRuntime_NativeHandle);
+			abr.Foundation_INSObjectFactory.Resolve ().IsPublic = true;
 			createInstanceMethod.Overrides.Add (abr.INSObjectFactory__Xamarin_ConstructNSObject);
 			var body = createInstanceMethod.CreateBody (out var il);
 
@@ -450,6 +451,7 @@ namespace Xamarin.Linker {
 			var createInstanceMethod = type.AddMethod ("_Xamarin_ConstructINativeObject", MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.NewSlot | MethodAttributes.HideBySig, abr.ObjCRuntime_INativeObject);
 			var nativeHandleParameter = createInstanceMethod.AddParameter ("nativeHandle", abr.ObjCRuntime_NativeHandle);
 			var ownsParameter = createInstanceMethod.AddParameter ("owns", abr.System_Boolean);
+			abr.INativeObject__Xamarin_ConstructINativeObject.Resolve ().IsPublic = true;
 			createInstanceMethod.Overrides.Add (abr.INativeObject__Xamarin_ConstructINativeObject);
 			var body = createInstanceMethod.CreateBody (out var il);
 
