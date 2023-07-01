@@ -68,7 +68,6 @@ $(eval $(call CheckSubmoduleTemplate,Touch.Unit,TOUCH_UNIT))
 $(eval $(call CheckSubmoduleTemplate,opentk,OPENTK))
 $(eval $(call CheckSubmoduleTemplate,Xamarin.MacDev,XAMARIN_MACDEV))
 $(eval $(call CheckSubmoduleTemplate,macios-binaries,MACIOS_BINARIES))
-$(eval $(call CheckSubmoduleTemplate,ikvm-fork,IKVM))
 $(eval $(call CheckSubmoduleTemplate,MonoTouch.Dialog,MONOTOUCH_DIALOG))
 $(eval $(call CheckSubmoduleTemplate,api-tools,API_TOOLS))
 
