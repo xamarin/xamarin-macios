@@ -29,6 +29,7 @@ namespace Xamarin.Linker {
 		public string GlobalizationDataFile { get; private set; } = string.Empty;
 		public string IntermediateLinkDir { get; private set; } = string.Empty;
 		public bool InvariantGlobalization { get; private set; }
+		public bool HybridGlobalization { get; private set; }
 		public string ItemsDirectory { get; private set; } = string.Empty;
 		public bool IsSimulatorBuild { get; private set; }
 		public string PartialStaticRegistrarLibrary { get; set; } = string.Empty;
@@ -315,6 +316,9 @@ namespace Xamarin.Linker {
 					break;
 				case "InvariantGlobalization":
 					InvariantGlobalization = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
+					break;
+				case "HybridGlobalization":
+					HybridGlobalization = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
 					break;
 				case "XamarinNativeLibraryDirectory":
 					XamarinNativeLibraryDirectory = value;
