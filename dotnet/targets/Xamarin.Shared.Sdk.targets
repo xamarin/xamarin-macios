@@ -1321,6 +1321,17 @@
 		</ItemGroup>
 	</Target>
 
+	<Target Name="_ExcludeUnusedFilesFromTheBundle"
+		Condition="'$(_UseNativeAot)' == 'true'"
+		AfterTargets="_LinkNativeExecutable"
+		BeforeTargets="CopyFilesToPublishDirectory">
+		<ItemGroup>
+			<!-- We don't ship assemblies with NativeAOT -->
+			<!-- Exclude assemblies explicitly until https://github.com/dotnet/runtime/issues/87187 is not resolved -->
+			<ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Extension)' == '.dll'" />
+		</ItemGroup>
+	</Target>
+
 	<PropertyGroup>
 		<_GenerateBindingsDependsOn>
 			_ComputeBindingVariables;
