@@ -15448,8 +15448,8 @@ namespace Foundation {
 		string Name { get; }
 
 		[Async]
-		[Export("getFileProviderConnectionWithCompletionHandler:")]
-		void GetFileProviderConnection(Action<NSXpcConnection, NSError> completionHandler);		
+		[Export ("getFileProviderConnectionWithCompletionHandler:")]
+		void GetFileProviderConnection (Action<NSXpcConnection, NSError> completionHandler);
 	}
 
 #if MONOMAC
