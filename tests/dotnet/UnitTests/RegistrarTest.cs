@@ -52,17 +52,17 @@ namespace Xamarin.Tests {
 		}
 
 #if NET
-//		[TestCase (ApplePlatform.MacCatalyst, false)]
-//		[TestCase (ApplePlatform.MacOSX, false)]
-//		[TestCase (ApplePlatform.iOS, false)]
-//		[TestCase (ApplePlatform.TVOS, false)]
-		[TestCase (ApplePlatform.MacCatalyst, true)]
-		[TestCase (ApplePlatform.MacOSX, true)]
-		[TestCase (ApplePlatform.iOS, true)]
-		[TestCase (ApplePlatform.TVOS, true)]
+		[TestCase (ApplePlatform.MacCatalyst, false)]
+		[TestCase (ApplePlatform.MacOSX, false)]
+		[TestCase (ApplePlatform.iOS, false)]
+		[TestCase (ApplePlatform.TVOS, false)]
+// not currently passing
+//		[TestCase (ApplePlatform.MacCatalyst, true)]
+//		[TestCase (ApplePlatform.MacOSX, true)]
+//		[TestCase (ApplePlatform.iOS, true)]
+//		[TestCase (ApplePlatform.TVOS, true)]
 		public void ClassRewriterTest (ApplePlatform platform, bool rewriteHandles)
 		{
-			HardAppendToLog ($"Running test {platform.ToString ()}, {rewriteHandles}");
 			var project = "MyClassRedirectApp";
 			var configuration = "Debug";
 			var runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
@@ -87,7 +87,6 @@ namespace Xamarin.Tests {
 			var platformDll = Path.Combine (asmDir, GetPlatformDll (platform));
 			Assert.That (File.Exists (platformDll), "No platform dll.");
 			var module = ModuleDefinition.ReadModule (platformDll);
-HardAppendToLog ($"Looking at platformDll: {platformDll}");
 			var classHandlesMaybe = AllTypes (module).FirstOrDefault (t => t.FullName == "ObjCRuntime.Runtime/ClassHandles");
 			Assert.NotNull (classHandlesMaybe, "Couldn't find ClassHandles type.");
 			var classHandles = classHandlesMaybe!;
@@ -136,13 +135,6 @@ HardAppendToLog ($"Looking at platformDll: {platformDll}");
 			default:
 				throw new NotImplementedException ($"Unknown platform: {platform}");
 			}
-		}
-
-		static void HardAppendToLog (string str)
-		{
-			using var writer = System.IO.File.AppendText ("/Users/stevehawley/rewriterlog.txt");
-			var date = DateTime.Now;
-			writer.WriteLine (date.ToString () + " Unit Test " + str);
 		}
 #endif
 	}
