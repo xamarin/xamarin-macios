@@ -1570,36 +1570,12 @@ namespace PassKit {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PKDisbursementRequest {
-		[Export ("amount", ArgumentSemantic.Copy)]
-		NSDecimalNumber Amount { get; set; }
 
 		[NullAllowed, Export ("currencyCode")]
 		string CurrencyCode { get; set; }
 
-		[Export ("countryCode")]
-		string CountryCode { get; set; }
-
-		[NoMac]
-		[MacCatalyst (13, 1)]
-		[Export ("requestSchedule", ArgumentSemantic.Assign)]
-		PKDisbursementRequestSchedule RequestSchedule { get; set; }
-
 		[NullAllowed, Export ("summaryItems", ArgumentSemantic.Copy)]
 		PKPaymentSummaryItem [] SummaryItems { get; set; }
-	}
-
-	[NoMac] // all members annoted `API_UNAVAILABLE(...macos)`
-	[NoWatch]
-	[iOS (12, 2)]
-	[MacCatalyst (13, 1)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor] // given from OS to PKDisbursementAuthorizationControllerDelegate
-	interface PKDisbursementVoucher {
-		[Export ("data", ArgumentSemantic.Copy)]
-		NSData Data { get; }
-
-		[Export ("redemptionURL", ArgumentSemantic.Copy)]
-		NSUrl RedemptionUrl { get; }
 	}
 
 	[Mac (11, 0)]

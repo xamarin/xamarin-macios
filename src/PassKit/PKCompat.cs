@@ -35,6 +35,33 @@ namespace PassKit {
 #endif // NET
 	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("This class is removed.")]
+	public unsafe partial class PKDisbursementVoucher : NSObject {
+
+		public override NativeHandle ClassHandle => throw new InvalidOperationException (Constants.RemovedFromPassKit);
+
+		protected PKDisbursementVoucher (NSObjectFlag t) : base (t)
+		{
+			throw new InvalidOperationException (Constants.RemovedFromPassKit);
+		}
+
+		protected internal PKDisbursementVoucher (NativeHandle handle) : base (handle)
+		{
+			throw new InvalidOperationException (Constants.RemovedFromPassKit);
+		}
+
+		public virtual NSData Data => throw new InvalidOperationException (Constants.RemovedFromPassKit);
+		public virtual NSUrl RedemptionUrl => throw new InvalidOperationException (Constants.RemovedFromPassKit);
+	} /* class PKDisbursementVoucher */
+
+	// Apple just removed this class from their headers in Xcode 15 (beta 1).
+	// It's also not found on their documentation site, so I'm assuming it's done on purpose.
+#if NET
+	[UnsupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#endif // NET
+	[EditorBrowsable (EditorBrowsableState.Never)]
+	[Obsolete ("This class is removed.")]
 	public unsafe partial class PKDisbursementAuthorizationController : NSObject {
 
 		public override NativeHandle ClassHandle { get { throw new InvalidOperationException (Constants.RemovedFromPassKit); } }
@@ -139,6 +166,48 @@ namespace PassKit {
 			throw new InvalidOperationException (Constants.RemovedFromPassKit);
 		}
 	} /* class PKDisbursementAuthorizationControllerDelegate */
+
+	public partial class PKDisbursementRequest {
+
+		// Apple just removed this protocol from their headers in Xcode 15 (beta 1).
+		// It's also not found on their documentation site, so I'm assuming it's done on purpose.
+#if NET
+		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif // NET
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("This property is removed.")]
+		public virtual NSDecimalNumber Amount {
+			get => throw new InvalidOperationException (Constants.RemovedFromPassKit);
+			set => throw new InvalidOperationException (Constants.RemovedFromPassKit);
+		}
+
+#if NET
+		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif // NET
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("This property is removed.")]
+		public virtual string CountryCode {
+			get => throw new InvalidOperationException (Constants.RemovedFromPassKit);
+			set => throw new InvalidOperationException (Constants.RemovedFromPassKit);
+		}
+
+#if NET
+		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif // NET
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("This property is removed.")]
+		public virtual PKDisbursementRequestSchedule RequestSchedule {
+			get => throw new InvalidOperationException (Constants.RemovedFromPassKit);
+			set => throw new InvalidOperationException (Constants.RemovedFromPassKit);
+		}
+
+	} /* class PKDisbursementRequest */
 #endif // __IOS__ || __MACCATALYST__
 #endif // !XAMCORE_5_0
 }
