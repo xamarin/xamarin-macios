@@ -61,7 +61,7 @@ namespace Foundation {
 	public partial class NSUrlConnection {
 		// Extension from iOS5, NewsstandKit
 		[Obsolete ("The NewsstandKit framework has been removed from iOS.")]
-		public global::NewsstandKit.NKAssetDownload NewsstandAssetDownload {
+		public virtual global::NewsstandKit.NKAssetDownload NewsstandAssetDownload {
 			get {
 				throw new InvalidOperationException (Constants.NewsstandKitRemoved);
 			}
