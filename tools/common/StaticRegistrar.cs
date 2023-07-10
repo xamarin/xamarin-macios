@@ -3297,14 +3297,11 @@ namespace Registrar {
 			sb.WriteLine (map_init.ToString ());
 #if NET
 			if (App.Optimizations.RedirectClassHandles == true) {
-				Rewriter.HardAppendToLog ("Redirector: optimizations are on.");
 				var rewriter = new Rewriter (map_dict, GetAssemblies (), LinkContext);
 				var result = rewriter.Process ();
 				if (!string.IsNullOrEmpty (result)) {
 					Driver.Log (5, $"Not redirecting class handles because {result}");
 				}
-			} else {
-				Rewriter.HardAppendToLog ("Redirector: optimizations are off.");
 			}
 #endif
 			ErrorHelper.ThrowIfErrors (exceptions);
