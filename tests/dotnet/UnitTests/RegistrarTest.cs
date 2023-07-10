@@ -56,11 +56,11 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.MacOSX, false)]
 		[TestCase (ApplePlatform.iOS, false)]
 		[TestCase (ApplePlatform.TVOS, false)]
-// not currently passing
-//		[TestCase (ApplePlatform.MacCatalyst, true)]
-//		[TestCase (ApplePlatform.MacOSX, true)]
-//		[TestCase (ApplePlatform.iOS, true)]
-//		[TestCase (ApplePlatform.TVOS, true)]
+		// not currently passing
+		//		[TestCase (ApplePlatform.MacCatalyst, true)]
+		//		[TestCase (ApplePlatform.MacOSX, true)]
+		//		[TestCase (ApplePlatform.iOS, true)]
+		//		[TestCase (ApplePlatform.TVOS, true)]
 		public void ClassRewriterTest (ApplePlatform platform, bool rewriteHandles)
 		{
 			var project = "MyClassRedirectApp";
@@ -96,7 +96,7 @@ namespace Xamarin.Tests {
 				Assert.That (classHandles.HasFields, "There are no fields in ClassHandles - rewriter did nothing.");
 				var field = classHandles.Fields.FirstOrDefault (f => f.Name.Contains ("SomeObj"));
 				Assert.IsNotNull (field, "Didn't find a field for 'SomeObj'");
-			}	
+			}
 		}
 
 		IEnumerable<TypeDefinition> AllTypes (ModuleDefinition module)
