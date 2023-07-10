@@ -44,13 +44,6 @@ namespace ClassRedirector {
 			}
 		}
 
-		public static void HardAppendToLog (string str)
-		{
-			using var writer = System.IO.File.AppendText ("/Users/stevehawley/rewriterlog.txt");
-			var date = DateTime.Now;
-			writer.WriteLine (date.ToString () + " " + str);
-		}
-
 		public string Process ()
 		{
 			Dictionary<string, FieldDefinition> classMap;
