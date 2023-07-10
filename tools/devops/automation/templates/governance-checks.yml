@@ -81,6 +81,8 @@ steps:
   inputs:
     CredScan: true
     PoliCheck: true
+    GdnBreakAllTools: true
+    GdnBreakSuppressionSets: falsepositives
 
 - task: WhiteSource Bolt@20
   displayName: "WhiteSource Bolt analysis"
