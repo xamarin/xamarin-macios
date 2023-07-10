@@ -106,7 +106,7 @@ namespace ClassRedirector {
 
 		static string TrimClassName (string str)
 		{
-			var index = str.IndexOf (", ");
+			var index = str.LastIndexOf (", ");
 			return index < 0 ? str : str.Remove (index);
 		}
 
