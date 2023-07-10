@@ -96,7 +96,10 @@
 
 		<ProjectCapability Condition="'$(_KeepLaunchProfiles)' != 'true'" Remove="LaunchProfiles" />
 	</ItemGroup>
-	
+
+	<!-- Default item includes (globs and implicit references) -->
+	<Import Project="Xamarin.Shared.Sdk.DefaultItems.targets" />
+
 	<PropertyGroup>
 		<!-- Add a property that specifies the name of the platform assembly for each platform -->
 		<_PlatformAssemblyName>Microsoft.$(_PlatformName)</_PlatformAssemblyName>
@@ -132,7 +135,6 @@
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == '' And '$(_BundlerDebug)' == 'true'">false</UseSystemResourceKeys>
 		<UseNativeHttpHandler Condition="'$(_PlatformName)' != 'macOS' And '$(UseNativeHttpHandler)' == ''">true</UseNativeHttpHandler>
 		<!-- AutoreleasePoolSupport needs to be set earlier, so that illink doesn't override it - https://github.com/dotnet/runtime/pull/86753 - so it's set in Xamarin.Shared.Sdk.props -->
-		<_AggressiveAttributeTrimming Condition="'$(_AggressiveAttributeTrimming)' == ''">true</_AggressiveAttributeTrimming>		
 		<NullabilityInfoContextSupport Condition="'$(NullabilityInfoContextSupport)' == ''">false</NullabilityInfoContextSupport>
 		<BuiltInComInteropSupport Condition="'$(BuiltInComInteropSupport)' == ''">false</BuiltInComInteropSupport>
 		<!-- Verify DI trimmability at development-time, but turn the validation off for production/trimmed builds. -->
@@ -141,6 +143,15 @@
 
 		<!-- We don't need to generate reference assemblies for apps or app extensions -->
 		<ProduceReferenceAssembly Condition="'$(ProduceReferenceAssembly)' == '' And ('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true')">false</ProduceReferenceAssembly>
+
+		<!-- 
+			With NativeAOT we want to prevent ILLink from removing attributes like `IsTrimmable` so further trimming can be done by the NativeAOT toolchain.
+			For this reason, in case of NativeAOT, we set _AggressiveAttributeTrimming to false by default and store the overwriten default in 
+			_OriginalAggressiveAttributeTrimming property, which is later used to properly configure NativeAOT trimming.
+		-->
+		<_OriginalAggressiveAttributeTrimming>$(_AggressiveAttributeTrimming)</_OriginalAggressiveAttributeTrimming>
+		<_AggressiveAttributeTrimming Condition="'$(_UseNativeAot)' == 'true'">false</_AggressiveAttributeTrimming>
+		<_AggressiveAttributeTrimming Condition="'$(_AggressiveAttributeTrimming)' == ''">true</_AggressiveAttributeTrimming>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -151,9 +162,6 @@
 	<PropertyGroup>
 		<TargetPlatformSupported Condition=" '$(TargetPlatformIdentifier)' == '$(_PlatformName)' ">true</TargetPlatformSupported>
 	</PropertyGroup>
-
-	<!-- Default item includes (globs and implicit references) -->
-	<Import Project="Xamarin.Shared.Sdk.DefaultItems.targets" />
 
 	<PropertyGroup Condition="'$(_GlobalizationDataFileLocation)' == ''">
 		<_GlobalizationDataFileLocation Condition="'$(_UseNativeAot)' == 'true'">Resource</_GlobalizationDataFileLocation>
@@ -1216,6 +1224,19 @@
 
 			<!-- Link in the output from ILC -->
 			<_NativeExecutableObjectFiles Include="$(NativeObject)" />
+
+			<!-- By default perform aggressive attribute trimming, except when explicitly disabled -->
+			<_TrimmerFeatureSettings Condition="'$(_OriginalAggressiveAttributeTrimming)' != 'false' and '%(Identity)' == 'System.AggressiveAttributeTrimming'">
+				<Value>true</Value>
+				<Trim>true</Trim>
+			</_TrimmerFeatureSettings>
+			<RuntimeHostConfigurationOption Condition="'$(_OriginalAggressiveAttributeTrimming)' != 'false' and '%(Identity)' == 'System.AggressiveAttributeTrimming'">
+				<Value>true</Value>
+				<Trim>true</Trim>
+			</RuntimeHostConfigurationOption>
+
+			<!-- Explicitly root the framework assembly due to NativeAOT trimming incompatibility tracked: https://github.com/dotnet/runtime/issues/86649 -->
+			<TrimmerRootAssembly Include="Microsoft.iOS" />
 		</ItemGroup>
 
 		<ItemGroup>
