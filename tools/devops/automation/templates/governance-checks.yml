@@ -77,12 +77,20 @@ steps:
   condition: always()
 
 - task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@2
-  displayName: 'Post Analysis'
+  displayName: Break on compliance issues
   inputs:
-    CredScan: true
-    PoliCheck: true
     GdnBreakAllTools: true
+    GdnBreakSuppressionFiles: $(Build.SourcesDirectory)\maccore\tools\devops\falsepositives.gdnsuppress
     GdnBreakSuppressionSets: falsepositives
+    GdnBreakOutputSuppressionFile: $(Build.ArtifactStagingDirectory)\GuardianSuppressions\falsepositives.gdnsuppress
+    GdnBreakOutputSuppressionSet: falsepositives
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Artifact for Guardian Supressions
+  inputs:
+    PathtoPublish: $(Build.ArtifactStagingDirectory)\GuardianSuppressions
+    ArtifactName: Guardian Suppressions
+  condition: failed()
 
 - task: WhiteSource Bolt@20
   displayName: "WhiteSource Bolt analysis"
