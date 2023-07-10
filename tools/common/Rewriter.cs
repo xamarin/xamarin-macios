@@ -84,7 +84,7 @@ namespace ClassRedirector {
 			var mtClassMapDef = LocateMTClassMap (module);
 			if (mtClassMapDef is null) {
 				throw new Exception ($"Unable to find {mtClassMapName} in Module {module.Name} File {module.FileName}, assembly {xamarinAssembly.Name}");
-}
+			}
 
 			var nativeHandle = LocateNativeHandle (module);
 			if (nativeHandle is null) {
@@ -94,7 +94,7 @@ namespace ClassRedirector {
 			var nativeHandleOpImplicit = FindOpImplicit (nativeHandle);
 			if (nativeHandleOpImplicit is null) {
 				throw new Exception ($"Unable to find implicit cast in {nativeHandleName}");
-}
+			}
 
 			if (map.Count () == 0)
 				return classMap;
@@ -114,10 +114,7 @@ namespace ClassRedirector {
 		static string TrimClassName (string str)
 		{
 			var index = str.IndexOf (", ");
-			if (index >= 0) {
-				str = str.Substring (0, index);
-			}
-			return str;
+			return index < 0 ? str : str.Remove (index);
 		}
 
 		MethodDefinition? FindOpImplicit (TypeDefinition nativeHandle)
