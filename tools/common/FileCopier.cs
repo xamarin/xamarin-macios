@@ -125,7 +125,7 @@ namespace Xamarin.Bundler {
 			if (TryUpdateDirectory (source, target, out var err))
 				return;
 
-			// 2nd chance, nuke `target` then copy everything
+			// 2nd chance, remove `target` then copy everything
 			Log (1, "Could not update `{0}` content (error #{1} : {2}), trying to overwrite everything...", target, err, strerror (err));
 			Directory.Delete (target, true);
 			if (!TryUpdateDirectory (source, target, out err))
