@@ -1236,7 +1236,7 @@
 			</RuntimeHostConfigurationOption>
 
 			<!-- Explicitly root the framework assembly due to NativeAOT trimming incompatibility tracked: https://github.com/dotnet/runtime/issues/86649 -->
-			<TrimmerRootAssembly Include="Microsoft.iOS" />
+			<TrimmerRootAssembly Include="$(_PlatformAssemblyName)" />
 		</ItemGroup>
 
 		<ItemGroup>
