@@ -273,7 +273,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<!-- Cleaning via FileWrites leaves empty framework directories on disk, so nuke via RemoveDir -->
+	<!-- Cleaning via FileWrites leaves empty framework directories on disk, so remove via RemoveDir -->
 	<PropertyGroup>
 		<CleanDependsOn>
 			$(CleanDependsOn);
