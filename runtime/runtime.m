@@ -82,7 +82,9 @@ enum MarshalObjectiveCExceptionMode xamarin_marshal_objectivec_exception_mode = 
 enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode = MarshalManagedExceptionModeDefault;
 enum XamarinTriState xamarin_log_exceptions = XamarinTriStateNone;
 enum XamarinLaunchMode xamarin_launch_mode = XamarinLaunchModeApp;
+#if SUPPORTS_DYNAMIC_REGISTRATION
 bool xamarin_supports_dynamic_registration = true;
+#endif
 const char *xamarin_runtime_configuration_name = NULL;
 
 #if DOTNET
@@ -141,6 +143,7 @@ enum InitializationFlags : int {
 	/* unused									= 0x08,*/
 	InitializationFlagsIsSimulator				= 0x10,
 	InitializationFlagsIsCoreCLR                = 0x20,
+	InitializationFlagsIsNativeAOT              = 0x40,
 };
 
 struct InitializationOptions {
@@ -966,7 +969,9 @@ bool
 xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchandle)
 {
 	// COOP: this is a function executed only at startup, I believe the mode here doesn't matter.
+#if SUPPORTS_DYNAMIC_REGISTRATION
 	if (!xamarin_supports_dynamic_registration) {
+#endif
 #if defined (CORECLR_RUNTIME)
 		if (xamarin_log_level > 0) {
 			MonoReflectionAssembly *rassembly = mono_assembly_get_object (mono_domain_get (), assembly);
@@ -983,11 +988,16 @@ xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchan
 		LOG (PRODUCT ": Skipping assembly registration for %s since it's not needed (dynamic registration is not supported)", mono_assembly_name_get_name (mono_assembly_get_name (assembly)));
 #endif
 		return true;
+#if SUPPORTS_DYNAMIC_REGISTRATION
 	}
+#endif
+
+#if SUPPORTS_DYNAMIC_REGISTRATION
 	MonoReflectionAssembly *rassembly = mono_assembly_get_object (mono_domain_get (), assembly);
 	xamarin_register_assembly (rassembly, exception_gchandle);
 	xamarin_mono_object_release (&rassembly);
 	return *exception_gchandle == INVALID_GCHANDLE;
+#endif // SUPPORTS_DYNAMIC_REGISTRATION
 }
 
 // Returns a retained MonoObject. Caller must release.
@@ -1293,6 +1303,9 @@ xamarin_initialize ()
 #if defined (CORECLR_RUNTIME)
 	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsCoreCLR);
 #endif
+#if defined (NATIVEAOT)
+	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsNativeAOT);
+#endif
 
 	options.Delegates = &delegates;
 	options.Trampolines = &trampolines;
@@ -1304,12 +1317,14 @@ xamarin_initialize ()
 #endif
 
 #if defined (CORECLR_RUNTIME)
+#if !defined(__arm__) // the dynamic trampolines haven't been implemented in 32-bit ARM assembly.
 	options.xamarin_objc_msgsend = (void *) xamarin_dyn_objc_msgSend;
 	options.xamarin_objc_msgsend_super = (void *) xamarin_dyn_objc_msgSendSuper;
 #if !defined(__aarch64__)
 	options.xamarin_objc_msgsend_stret = (void *) xamarin_dyn_objc_msgSend_stret;
 	options.xamarin_objc_msgsend_super_stret = (void *) xamarin_dyn_objc_msgSendSuper_stret;
 #endif // !defined(__aarch64__)
+#endif // !defined(__arm__)
 	options.unhandled_exception_handler = (void *) &xamarin_coreclr_unhandled_exception_handler;
 	options.reference_tracking_begin_end_callback = (void *) &xamarin_coreclr_reference_tracking_begin_end_callback;
 	options.reference_tracking_is_referenced_callback = (void *) &xamarin_coreclr_reference_tracking_is_referenced_callback;
@@ -2574,12 +2589,14 @@ xamarin_vm_initialize ()
 	int subtractPropertyCount = 0;
 
 	if (xamarin_icu_dat_file_name != NULL && *xamarin_icu_dat_file_name != 0) {
+#if !defined (NATIVEAOT)
 		char path [1024];
 		if (!xamarin_locate_app_resource (xamarin_icu_dat_file_name, path, sizeof (path))) {
 			LOG (PRODUCT ": Could not locate the ICU data file '%s' in the app bundle.\n", xamarin_icu_dat_file_name);
 		} else {
 			icu_dat_file_path = strdup (path);
 		}
+#endif // !defined (NATIVEAOT)
 	} else {
 		subtractPropertyCount++;
 	}

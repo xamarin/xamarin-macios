@@ -67,7 +67,6 @@ steps:
   env:
     WorkingDirectory: '$(Build.SourcesDirectory)/xamarin-macios' 
 
-
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: Policheck Results'
   inputs:

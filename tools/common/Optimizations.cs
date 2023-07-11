@@ -176,6 +176,13 @@ namespace Xamarin.Bundler {
 				if (!values [i].HasValue)
 					continue;
 
+				// The remove-dynamic-registrar optimization is required when using NativeAOT
+				if (app.XamarinRuntime == XamarinRuntime.NativeAOT && (Opt) i == Opt.RemoveDynamicRegistrar && values [i] == false) {
+					messages.Add (ErrorHelper.CreateWarning (2016, Errors.MX2016 /* Keeping the dynamic registrar (by passing '--optimize=-remove-dynamic-registrar') is not possible, because the dynamic registrar is not supported when using NativeAOT. Support for dynamic registration will still be removed. */));
+					values [i] = true;
+					continue;
+				}
+
 				// The remove-dynamic-registrar optimization is a bit if a special case on macOS:
 				// it only works in very specific circumstances, so we don't add it to valid_platforms.
 				// This means it won't be listed in --help, and it won't be enabled if all optimizations
@@ -275,7 +282,9 @@ namespace Xamarin.Bundler {
 				StaticBlockToDelegateLookup = true;
 
 			if (!RemoveDynamicRegistrar.HasValue) {
-				if (InlineDynamicRegistrationSupported != true) {
+				if (app.XamarinRuntime == XamarinRuntime.NativeAOT) {
+					RemoveDynamicRegistrar = true;
+				} else if (InlineDynamicRegistrationSupported != true) {
 					// Can't remove the dynamic registrar unless also inlining Runtime.DynamicRegistrationSupported
 					RemoveDynamicRegistrar = false;
 				} else if (StaticBlockToDelegateLookup != true) {

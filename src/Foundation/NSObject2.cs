@@ -305,6 +305,12 @@ namespace Foundation {
 		{
 #if NET && __MACOS__
 			Runtime.RegisterToggleReferenceCoreCLR (obj, handle, isCustomType);
+#elif NET
+			if (Runtime.IsCoreCLR) {
+				Runtime.RegisterToggleReferenceCoreCLR (obj, handle, isCustomType);
+			} else {
+				RegisterToggleRef (obj, handle, isCustomType);
+			}
 #else
 			RegisterToggleRef (obj, handle, isCustomType);
 #endif
