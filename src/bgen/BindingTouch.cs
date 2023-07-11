@@ -61,6 +61,8 @@ public class BindingTouch : IDisposable {
 	string []? compile_command = null;
 	string? baselibdll;
 	string? attributedll;
+	string compiled_api_definition_assembly = string.Empty;
+	bool noNFloatUsing;
 
 	List<string> libs = new List<string> ();
 	List<string> references = new List<string> ();
@@ -235,7 +237,6 @@ public class BindingTouch : IDisposable {
 		var defines = new List<string> ();
 		string? generate_file_list = null;
 		bool process_enums = false;
-		bool noNFloatUsing = false;
 
 		ErrorHelper.ClearWarningLevels ();
 
@@ -327,6 +328,7 @@ public class BindingTouch : IDisposable {
 					noNFloatUsing = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v);
 				}
 			},
+			{ "compiled-api-definition-assembly=", "An assembly with the compiled api definitions.", (v) => compiled_api_definition_assembly = v },
 			new Mono.Options.ResponseFileSource (),
 		};
 
@@ -446,47 +448,7 @@ public class BindingTouch : IDisposable {
 		var paths = libs.Select ((v) => "-lib:" + v);
 
 		try {
-			var tmpass = Path.Combine (tmpdir, "temp.dll");
-
-			// -nowarn:436 is to avoid conflicts in definitions between core.dll and the sources
-			// Keep source files at the end of the command line - csc will create TWO assemblies if any sources preceed the -out parameter
-			var cargs = new List<string> ();
-
-			cargs.Add ("-debug");
-			cargs.Add ("-unsafe");
-			cargs.Add ("-target:library");
-			cargs.Add ("-nowarn:436");
-			cargs.Add ("-out:" + tmpass);
-			cargs.Add ("-r:" + GetAttributeLibraryPath ());
-			cargs.AddRange (refs);
-			if (unsafef)
-				cargs.Add ("-unsafe");
-			cargs.Add ("-r:" + baselibdll);
-			foreach (var def in defines)
-				cargs.Add ("-define:" + def);
-#if NET
-			cargs.Add ("-define:NET");
-#endif
-			cargs.AddRange (paths);
-			if (nostdlib) {
-				cargs.Add ("-nostdlib");
-				cargs.Add ("-noconfig");
-			}
-			cargs.AddRange (api_sources);
-			cargs.AddRange (core_sources);
-			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
-				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
-
-#if NET
-			var tmpusing = Path.Combine (tmpdir, "GlobalUsings.g.cs");
-			if (!noNFloatUsing) {
-				File.WriteAllText (tmpusing, "global using nfloat = global::System.Runtime.InteropServices.NFloat;\n");
-				cargs.Add (tmpusing);
-			}
-#endif
-
-			Compile (cargs, 2);
-
+			var tmpass = GetCompiledApiBindingsAssembly (tmpdir, refs, nostdlib, api_sources, core_sources, defines, paths);
 			universe = new MetadataLoadContext (
 				new SearchPathsAssemblyResolver (
 					GetLibraryDirectories ().ToArray (),
@@ -595,7 +557,7 @@ public class BindingTouch : IDisposable {
 				return 0;
 			}
 
-			cargs.Clear ();
+			var cargs = new List<string> ();
 			if (unsafef)
 				cargs.Add ("-unsafe");
 			cargs.Add ("-target:library");
@@ -618,10 +580,7 @@ public class BindingTouch : IDisposable {
 			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
 				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
-#if NET
-			if (!noNFloatUsing)
-				cargs.Add (tmpusing);
-#endif
+			AddNFloatUsing (cargs, tmpdir);
 
 			Compile (cargs, 1000);
 		} finally {
@@ -629,6 +588,59 @@ public class BindingTouch : IDisposable {
 				Directory.Delete (tmpdir, true);
 		}
 		return 0;
+	}
+
+	// If anything is modified in this function, check if the _CompileApiDefinitions MSBuild target needs to be updated as well.
+	string GetCompiledApiBindingsAssembly (string tmpdir, IEnumerable<string> refs, bool nostdlib, List<string> api_sources, List<string> core_sources, List<string> defines, IEnumerable<string> paths)
+	{
+		if (!string.IsNullOrEmpty (compiled_api_definition_assembly))
+			return compiled_api_definition_assembly;
+
+		var tmpass = Path.Combine (tmpdir, "temp.dll");
+
+		// -nowarn:436 is to avoid conflicts in definitions between core.dll and the sources
+		// Keep source files at the end of the command line - csc will create TWO assemblies if any sources preceed the -out parameter
+		var cargs = new List<string> ();
+
+		cargs.Add ("-debug");
+		cargs.Add ("-unsafe");
+		cargs.Add ("-target:library");
+		cargs.Add ("-nowarn:436");
+		cargs.Add ("-out:" + tmpass);
+		cargs.Add ("-r:" + GetAttributeLibraryPath ());
+		cargs.AddRange (refs);
+		cargs.Add ("-r:" + baselibdll);
+		foreach (var def in defines)
+			cargs.Add ("-define:" + def);
+#if NET
+		cargs.Add ("-define:NET");
+#endif
+		cargs.AddRange (paths);
+		if (nostdlib) {
+			cargs.Add ("-nostdlib");
+			cargs.Add ("-noconfig");
+		}
+		cargs.AddRange (api_sources);
+		cargs.AddRange (core_sources);
+		if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
+			cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
+
+		AddNFloatUsing (cargs, tmpdir);
+
+		Compile (cargs, 2);
+
+		return tmpass;
+	}
+
+	void AddNFloatUsing (List<string> cargs, string tmpdir)
+	{
+#if NET
+		if (noNFloatUsing)
+			return;
+		var tmpusing = Path.Combine (tmpdir, "GlobalUsings.g.cs");
+		File.WriteAllText (tmpusing, "global using nfloat = global::System.Runtime.InteropServices.NFloat;\n");
+		cargs.Add (tmpusing);
+#endif
 	}
 
 	void Compile (List<string> arguments, int errorCode)
