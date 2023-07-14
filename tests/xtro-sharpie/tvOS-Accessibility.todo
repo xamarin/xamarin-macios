@@ -1,0 +1,4 @@
+!missing-field! AXAnimatedImagesEnabledDidChangeNotification not bound
+!missing-pinvoke! AXAnimatedImagesEnabled is not bound
+!missing-protocol-member! AXCustomContentProvider::accessibilityCustomContentBlock not found
+!missing-protocol-member! AXCustomContentProvider::setAccessibilityCustomContentBlock: not found
