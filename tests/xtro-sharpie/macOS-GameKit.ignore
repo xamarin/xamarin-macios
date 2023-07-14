@@ -1,26 +1,15 @@
 ## fixed in XAMCORE_3_0 - API break
 
-!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindPlayers: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! GKTurnBasedEventHandlerDelegate::handleTurnEventForMatch:didBecomeActive: is REQUIRED and should be abstract
-!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:playerQuitForMatch: is OPTIONAL and should NOT be abstract
 
 # Used to remove hard to kill delegate API until .NET
-!extra-protocol-member! unexpected selector GKMatchDelegate::xamarin:selector:removed: found
 
 # Fixed in .NET
-!extra-protocol-member! unexpected selector GKTurnBasedEventListener::player:didRequestMatchWithPlayers: found
 
 # The parent enum GKVoiceChatService is not available in macOS 
 # so to be honest it does not make much sense to expose this constant on macOS
 # nor the below protocols
-!missing-field! GKVoiceChatServiceErrorDomain not bound
 
 # This selector does not exist in macOS, confirmed by intro.
-!missing-selector! GKLeaderboardSet::loadImageWithCompletionHandler: not bound
 
 # API removed by Apple, marked as deprecated
 !unknown-native-enum! GKAuthenticationType bound
-!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindHostedPlayers: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
-!missing-selector! GKVoiceChat::playerVoiceChatStateDidChangeHandler not bound

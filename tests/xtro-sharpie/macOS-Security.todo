@@ -5,3 +5,16 @@
 !deprecated-attribute-missing! SecKeychainItemFreeContent missing a [Deprecated] attribute
 !missing-field! kSecCodeInfoDefaultDesignatedLightweightCodeRequirement not bound
 !missing-pinvoke! SecCodeValidateFileResource is not bound
+!missing-field! kSecCFErrorResourceRecursive not bound
+!missing-field! kSecCodeInfoStapledNotarizationTicket not bound
+!missing-field! kSecKeyAlgorithmECDSASignatureDigestRFC4754 not bound
+!missing-field! kSecKeyAlgorithmECDSASignatureDigestRFC4754SHA1 not bound
+!missing-field! kSecKeyAlgorithmECDSASignatureDigestRFC4754SHA224 not bound
+!missing-field! kSecKeyAlgorithmECDSASignatureDigestRFC4754SHA256 not bound
+!missing-field! kSecKeyAlgorithmECDSASignatureDigestRFC4754SHA384 not bound
+!missing-field! kSecKeyAlgorithmECDSASignatureDigestRFC4754SHA512 not bound
+!missing-field! kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA1 not bound
+!missing-field! kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA224 not bound
+!missing-field! kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA256 not bound
+!missing-field! kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA384 not bound
+!missing-field! kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA512 not bound
