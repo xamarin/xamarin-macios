@@ -1,1 +1,3 @@
 !missing-enum! ASAuthorizationWebBrowserPublicKeyCredentialManagerAuthorizationState not bound
+!missing-enum! ASAuthorizationPublicKeyCredentialAttachment not bound
+!missing-enum! ASPublicKeyCredentialClientDataCrossOriginValue not bound
