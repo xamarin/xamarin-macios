@@ -535,7 +535,6 @@
 !missing-selector! NSLocale::alternateQuotationEndDelimiter not bound
 !missing-selector! NSLocale::collationIdentifier not bound
 !missing-selector! NSLocale::collatorIdentifier not bound
-!missing-selector! NSLocale::countryCode not bound
 !missing-selector! NSLocale::currencyCode not bound
 !missing-selector! NSLocale::currencySymbol not bound
 !missing-selector! NSLocale::decimalSeparator not bound

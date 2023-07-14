@@ -170,7 +170,6 @@
 !missing-null-allowed! 'System.Boolean UIKit.UIScrollView::TouchesShouldBegin(Foundation.NSSet,UIKit.UIEvent,UIKit.UIView)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Boolean UIKit.UISplitViewControllerDelegate::EventShowDetailViewController(UIKit.UISplitViewController,UIKit.UIViewController,Foundation.NSObject)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Boolean UIKit.UISplitViewControllerDelegate::EventShowViewController(UIKit.UISplitViewController,UIKit.UIViewController,Foundation.NSObject)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Boolean UIKit.UITraitCollection::Contains(UIKit.UITraitCollection)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Double UIKit.UIViewControllerAnimatedTransitioning::TransitionDuration(UIKit.IUIViewControllerContextTransitioning)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.nint UIKit.UIApplication::BeginBackgroundTask(System.String,System.Action)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.nint UIKit.UIApplication::BeginBackgroundTask(System.String,System.Action)' is missing an [NullAllowed] on parameter #1
@@ -258,7 +257,6 @@
 !missing-null-allowed! 'System.Void UIKit.UITextView::set_AttributedText(Foundation.NSAttributedString)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void UIKit.UITextView::set_WeakLinkTextAttributes(Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void UIKit.UIViewController::set_TabBarItem(UIKit.UITabBarItem)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void UIKit.UIViewController::SetOverrideTraitCollection(UIKit.UITraitCollection,UIKit.UIViewController)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'UIKit.IUIStateRestoring UIKit.UIStateRestoring::get_RestorationParent()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.IUIViewControllerAnimatedTransitioning UIKit.UINavigationControllerDelegate::GetAnimationControllerForOperation(UIKit.UINavigationController,UIKit.UINavigationControllerOperation,UIKit.UIViewController,UIKit.UIViewController)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.IUIViewControllerAnimatedTransitioning UIKit.UITabBarControllerDelegate::GetAnimationControllerForTransition(UIKit.UITabBarController,UIKit.UIViewController,UIKit.UIViewController)' is missing an [NullAllowed] on return type
@@ -347,7 +345,6 @@
 !missing-null-allowed! 'UIKit.UITextInputMode UIKit.UIResponder::get_TextInputMode()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UITextPosition UIKit.UITextInputTokenizer::GetPosition(UIKit.UITextPosition,UIKit.UITextGranularity,UIKit.UITextDirection)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UITextRange UIKit.UITextInputTokenizer::GetRangeEnclosingPosition(UIKit.UITextPosition,UIKit.UITextGranularity,UIKit.UITextDirection)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UITraitCollection UIKit.UIViewController::GetOverrideTraitCollectionForChildViewController(UIKit.UIViewController)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIView UIKit.UIDocumentInteractionControllerDelegate::ViewForPreview(UIKit.UIDocumentInteractionController)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIView UIKit.UIDynamicAnimator::get_ReferenceView()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIView UIKit.UIGestureRecognizer::get_View()' is missing an [NullAllowed] on return type

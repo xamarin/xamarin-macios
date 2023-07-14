@@ -33,11 +33,6 @@
 
 # This fields are use for a notifications that returns a AVAudioSessionRouteDescription
 # which cannot be found on macOS
-!missing-field! AVAudioSessionRouteChangeNotification not bound
-!missing-field! AVAudioSessionRouteChangePreviousRouteKey not bound
-!missing-field! AVAudioSessionRouteChangeReasonKey not bound
-!missing-field! AVAudioSessionSilenceSecondaryAudioHintNotification not bound
-!missing-field! AVAudioSessionSilenceSecondaryAudioHintTypeKey not bound
 
 # not applicable to macOS
 !extra-enum-value! Managed value -11818 for AVError.SessionWasInterrupted not found in native headers
@@ -68,3 +63,28 @@
 !missing-selector! AVAudioPlayer::initWithData:error: not bound
 
 
+!incorrect-protocol-member! AVAudioMixing::destinationForMixer:bus: is REQUIRED and should be abstract
+!missing-selector! AVMutableComposition::tracks not bound
+!missing-protocol-conformance! AVAsset should conform to AVAsynchronousKeyValueLoading
+!missing-protocol-conformance! AVAssetTrack should conform to AVAsynchronousKeyValueLoading
+!missing-protocol-conformance! AVMetadataItem should conform to AVAsynchronousKeyValueLoading
+!missing-selector! +AVAudioChannelLayout::layoutWithLayout: not bound
+!missing-selector! +AVAudioChannelLayout::layoutWithLayoutTag: not bound
+!missing-selector! AVCompositionTrack::segmentForTrackTime: not bound
+!missing-selector! NSCoder::decodeCMTimeForKey: not bound
+!missing-selector! NSCoder::decodeCMTimeMappingForKey: not bound
+!missing-selector! NSCoder::decodeCMTimeRangeForKey: not bound
+!missing-selector! NSCoder::encodeCMTime:forKey: not bound
+!missing-selector! NSCoder::encodeCMTimeMapping:forKey: not bound
+!missing-selector! NSCoder::encodeCMTimeRange:forKey: not bound
+!extra-null-allowed! 'AVFoundation.AVAudioTime AVFoundation.AVAudioTime::FromAudioTimeStamp(AudioToolbox.AudioTimeStamp&,System.Double)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void AVFoundation.AVAudioFormat::.ctor(AudioToolbox.AudioStreamBasicDescription&)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void AVFoundation.AVAudioFormat::.ctor(AudioToolbox.AudioStreamBasicDescription&,AVFoundation.AVAudioChannelLayout)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void AVFoundation.AVAudioTime::.ctor(AudioToolbox.AudioTimeStamp&,System.Double)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'AVFoundation.AVPlayerItem AVFoundation.AVPlayerItem::FromAsset(AVFoundation.AVAsset)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'AVFoundation.AVPlayerItem AVFoundation.AVPlayerItem::FromAsset(AVFoundation.AVAsset,Foundation.NSString[])' has a extraneous [NullAllowed] on parameter #0
+!missing-null-allowed! 'System.Boolean AVFoundation.AVPlayerItem::Seek(Foundation.NSDate,AVFoundation.AVCompletion)' is missing an [NullAllowed] on parameter #1
+!missing-protocol-conformance! AVURLAsset should conform to NSItemProviderReading (defined in 'AVURLAssetNSItemProvider' category)
+!missing-protocol-conformance! AVURLAsset should conform to NSItemProviderWriting (defined in 'AVURLAssetNSItemProvider' category)
+!missing-pinvoke! AVSampleBufferAttachContentKey is not bound
+!incorrect-protocol-member! AVQueuedSampleBufferRendering::hasSufficientMediaDataForReliablePlaybackStart is REQUIRED and should be abstract
