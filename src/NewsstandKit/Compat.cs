@@ -12,6 +12,7 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace NewsstandKit {
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("The NewsstandKit framework has been removed from iOS.")]
 	public unsafe partial class NKAssetDownload : NSObject {
 		public override NativeHandle ClassHandle { get { throw new InvalidOperationException (Constants.NewsstandKitRemoved); } }
@@ -64,6 +65,7 @@ namespace NewsstandKit {
 		}
 	} /* class NKAssetDownload */
 
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("The NewsstandKit framework has been removed from iOS.")]
 	public unsafe partial class NKIssue : NSObject {
 		public override NativeHandle ClassHandle { get { throw new InvalidOperationException (Constants.NewsstandKitRemoved); } }
@@ -134,6 +136,7 @@ namespace NewsstandKit {
 		}
 	} /* class NKIssue */
 
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("The NewsstandKit framework has been removed from iOS.")]
 	public enum NKIssueContentStatus : long {
 		None = 0,
@@ -141,6 +144,7 @@ namespace NewsstandKit {
 		Available = 2,
 	}
 
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("The NewsstandKit framework has been removed from iOS.")]
 	public unsafe partial class NKLibrary : NSObject {
 		public override NativeHandle ClassHandle { get { throw new InvalidOperationException (Constants.NewsstandKitRemoved); } }
