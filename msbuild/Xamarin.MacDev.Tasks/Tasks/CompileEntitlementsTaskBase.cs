@@ -425,7 +425,7 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var allowed = new HashSet<string> ();
 
-			// the template (user-supplied Entitlements.plist file) is used to create a whitelist of keys
+			// the template (user-supplied Entitlements.plist file) is used to create a approved list of keys
 			allowed.Add ("com.apple.developer.icloud-container-environment");
 			foreach (var item in template)
 				allowed.Add (item.Key!);

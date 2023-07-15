@@ -134,7 +134,7 @@ steps:
 - bash: rm -rf "$TOOLS_DIR/provisionator"
   env:
     TOOLS_DIR: $(Agent.ToolsDirectory)
-  displayName: 'Nuke Provisionator Tool Cache'
+  displayName: 'Remove Provisionator Tool Cache'
   condition: ${{ parameters.clearProvisionatorCache }}
 
 # Go get the tests!
