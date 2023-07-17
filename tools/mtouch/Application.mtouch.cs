@@ -1363,6 +1363,8 @@ namespace Xamarin.Bundler {
 					// We build the arm64_32 slice for watchOS for watchOS 5.1, and the armv7k slice for watchOS 2.0.
 					// Building for anything less than watchOS 5.1 will trigger this warning for the arm64_32 slice.
 					continue;
+				} else if (line.Contains ("ignoring duplicate library")) {
+					continue;
 				}
 
 				if (line.Contains ("Undefined symbols for architecture")) {
