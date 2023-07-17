@@ -16,7 +16,7 @@ namespace Xamarin.Utils {
 		public HashSet<string> LinkWithLibraries; // X, added to Inputs
 		public HashSet<string> ForceLoadLibraries; // -force_load X, added to Inputs
 		public HashSet<string []> OtherFlags; // X
-		public List<string> InitialOtherFlags = new List<string>() {
+		public List<string> InitialOtherFlags = new List<string> () {
 			"-Xlinker",
 			"-ld64",
 		}; // same as OtherFlags, only that they're the first argument(s) to clang (because order matters!). This is a list to preserve order (fifo).
