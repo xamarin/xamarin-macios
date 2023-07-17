@@ -16,7 +16,11 @@ namespace Xamarin.Utils {
 		public HashSet<string> LinkWithLibraries; // X, added to Inputs
 		public HashSet<string> ForceLoadLibraries; // -force_load X, added to Inputs
 		public HashSet<string []> OtherFlags; // X
-		public List<string> InitialOtherFlags; // same as OtherFlags, only that they're the first argument(s) to clang (because order matters!). This is a list to preserve order (fifo).
+		public List<string> InitialOtherFlags = new List<string>() {
+			"-Xlinker",
+			"-ld64",
+		}; // same as OtherFlags, only that they're the first argument(s) to clang (because order matters!). This is a list to preserve order (fifo).
+
 		public HashSet<string> Defines; // -DX
 		public HashSet<string> UnresolvedSymbols; // -u X
 		public HashSet<string> SourceFiles; // X, added to Inputs
@@ -105,7 +109,10 @@ namespace Xamarin.Utils {
 		public void AddOtherInitialFlag (string flag)
 		{
 			if (InitialOtherFlags is null)
-				InitialOtherFlags = new List<string> ();
+				InitialOtherFlags = new List<string> () {
+					"-Xlinker",
+					"-ld64v",
+				};
 			InitialOtherFlags.Add (flag);
 		}
 
