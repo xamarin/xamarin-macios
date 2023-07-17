@@ -1,0 +1,4 @@
+!missing-selector! BGHealthResearchTaskRequest::protectionTypeOfRequiredData not bound
+!missing-selector! BGHealthResearchTaskRequest::setProtectionTypeOfRequiredData: not bound
+!missing-type! BGHealthResearchTask not bound
+!missing-type! BGHealthResearchTaskRequest not bound

@@ -1,0 +1,15 @@
+!missing-enum-value! VTDecodeInfoFlags native value kVTDecodeInfo_SkippedLeadingFrameDropped = 8 not bound
+!missing-field! kVTCompressionPropertyKey_HeroEye not bound
+!missing-field! kVTCompressionPropertyKey_HorizontalDisparityAdjustment not bound
+!missing-field! kVTCompressionPropertyKey_MVHEVCLeftAndRightViewIDs not bound
+!missing-field! kVTCompressionPropertyKey_MVHEVCVideoLayerIDs not bound
+!missing-field! kVTCompressionPropertyKey_MVHEVCViewIDs not bound
+!missing-field! kVTCompressionPropertyKey_StereoCameraBaseline not bound
+!missing-field! kVTDecompressionPropertyKey_GeneratePerFrameHDRDisplayMetadata not bound
+!missing-field! kVTDecompressionPropertyKey_RequestedMVHEVCVideoLayerIDs not bound
+!missing-pinvoke! VTCompressionSessionEncodeMultiImageFrame is not bound
+!missing-pinvoke! VTCompressionSessionEncodeMultiImageFrameWithOutputHandler is not bound
+!missing-pinvoke! VTDecompressionSessionDecodeFrameWithMultiImageCapableOutputHandler is not bound
+!missing-pinvoke! VTDecompressionSessionSetMultiImageCallback is not bound
+!missing-pinvoke! VTIsStereoMVHEVCDecodeSupported is not bound
+!missing-pinvoke! VTIsStereoMVHEVCEncodeSupported is not bound
