@@ -556,7 +556,7 @@ namespace MonoTests.System.Net.Http {
 
 		[TestCase (HttpStatusCode.OK, "mandel", "12345678", "mandel", "12345678")]
 		[TestCase (HttpStatusCode.Unauthorized, "mandel", "12345678", "mandel", "87654321")]
-		[TestCase (HttpStatusCode.BadGateway, "mandel", "12345678", "", "")]
+		[TestCase (HttpStatusCode.Unauthorized, "mandel", "12345678", "", "")]
 		public void GHIssue8342 (HttpStatusCode expectedStatus, string validUsername, string validPassword, string username, string password)
 		{
 			// create a http client to use with some creds that we do know are not valid
