@@ -10,6 +10,8 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Testing tastes</string>
 	<key>NSHomeKitUsageDescription</key>
