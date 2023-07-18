@@ -245,7 +245,7 @@ namespace Xamarin {
 			case Profile.tvOS:
 				return isDevice ? "arm64" : "x86_64";
 			case Profile.watchOS:
-				return isDevice ? "armv7k" : "i386";
+				return isDevice ? "arm64_32" : "i386";
 			default:
 				throw new NotImplementedException ();
 			}
