@@ -66,6 +66,13 @@ namespace Introspection {
 				default:
 					return false;
 				}
+			case "NKIssue":
+				switch (property.Name) {
+				case "DownloadCompletedNotification": // NewstandKit is removed from Xcode 15
+					return TestRuntime.CheckXcodeVersion (15, 0);
+				default:
+					return false;
+				}
 			}
 			return SkipDueToAttribute (property);
 		}
