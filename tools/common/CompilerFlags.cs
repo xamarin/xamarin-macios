@@ -111,7 +111,7 @@ namespace Xamarin.Utils {
 			if (InitialOtherFlags is null)
 				InitialOtherFlags = new List<string> () {
 					"-Xlinker",
-					"-ld64v",
+					"-ld64",
 				};
 			InitialOtherFlags.Add (flag);
 		}
