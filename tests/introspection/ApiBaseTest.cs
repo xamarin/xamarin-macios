@@ -196,11 +196,9 @@ namespace Introspection {
 		public bool MemberHasObsolete (MemberInfo member)
 		{
 #if NET
-			return member.GetCustomAttributes<ObsoletedOSPlatformAttribute> (false).Any ()
-				|| member.DeclaringType.GetCustomAttributes<ObsoletedOSPlatformAttribute> (false).Any ();
+			return member.GetCustomAttributes<ObsoletedOSPlatformAttribute> (false).Any ();
 #else
-			return member.GetCustomAttribute<ObsoleteAttribute> () is not null ||
-				member.DeclaringType.GetCustomAttribute<ObsoleteAttribute> () is not null;
+			return member.GetCustomAttribute<ObsoleteAttribute> () is not null;
 #endif
 		}
 
