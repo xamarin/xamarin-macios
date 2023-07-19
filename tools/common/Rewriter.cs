@@ -24,9 +24,9 @@ namespace ClassRedirector {
 		Dictionary<string, FieldDefinition> csTypeToFieldDef = new Dictionary<string, FieldDefinition> ();
 		IEnumerable<AssemblyDefinition> assemblies;
 		AssemblyDefinition xamarinAssembly;
-		Xamarin.Tuner.DerivedLinkContext linkContext;
+		Xamarin.Tuner.DerivedLinkContext derivedLinkContext;
 
-		public Rewriter (CSToObjCMap map, IEnumerable<AssemblyDefinition> assembliesToPatch, Xamarin.Tuner.DerivedLinkContext? linkContext)
+		public Rewriter (CSToObjCMap map, IEnumerable<AssemblyDefinition> assembliesToPatch, Xamarin.Tuner.DerivedLinkContext? derivedLinkContext)
 		{
 			this.map = map;
 			this.assemblies = assembliesToPatch;
@@ -37,10 +37,10 @@ namespace ClassRedirector {
 				xamarinAssembly = xasm;
 				pathToXamarinAssembly = xamarinAssembly.MainModule.FileName;
 			}
-			if (linkContext is null) {
-				throw new Exception ("Rewriter needs a valid link context.");
+			if (derivedLinkContext is null) {
+				throw new Exception ("Rewriter needs a valid derived link context.");
 			} else {
-				this.linkContext = linkContext;
+				this.derivedLinkContext = derivedLinkContext;
 			}
 		}
 
@@ -229,7 +229,7 @@ namespace ClassRedirector {
 			if (body is null)
 				return;
 			var il = body.GetILProcessor ();
-			for (int i = 0; i < body.Instructions.Count; i++) {
+			for (var i = 0; i < body.Instructions.Count; i++) {
 				var instr = body.Instructions [i];
 				if (instr.OpCode == OpCodes.Ldsfld && instr.Operand == classPtr) {
 					il.Replace (instr, Instruction.Create (OpCodes.Ldsfld, method.Module.ImportReference (classPtrField)));
@@ -336,17 +336,17 @@ namespace ClassRedirector {
 			}
 		}
 
-		string ToOutputFileName (string pathToInputFileName)
-		{
-			return Path.Combine (outputDirectory, Path.GetFileName (pathToInputFileName));
-		}
-
 		void MarkForSave (AssemblyDefinition assembly)
 		{
-			var annotations = linkContext.Annotations;
-			var action = annotations.GetAction (assembly);
-			if (action != AssemblyAction.Link) {
-				annotations.SetAction (assembly, AssemblyAction.Save);
+			var annotations = derivedLinkContext.Annotations;
+			if (!annotations.HasAction (assembly)) {
+				annotations.SetAction (assembly, AssemblyAction.Link);
+			}
+			else {
+				var action = annotations.GetAction (assembly);
+				if (action != AssemblyAction.Link) {
+					annotations.SetAction (assembly, AssemblyAction.Link);
+				}
 			}
 		}
 	}
