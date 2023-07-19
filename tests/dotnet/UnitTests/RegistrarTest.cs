@@ -57,7 +57,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, false)]
 		[TestCase (ApplePlatform.TVOS, false)]
 		[TestCase (ApplePlatform.MacCatalyst, true)]
-//		[TestCase (ApplePlatform.MacOSX, true)]
+		//		[TestCase (ApplePlatform.MacOSX, true)]
 		[TestCase (ApplePlatform.iOS, true)]
 		[TestCase (ApplePlatform.TVOS, true)]
 		public void ClassRewriterTest (ApplePlatform platform, bool rewriteHandles)
@@ -121,12 +121,12 @@ namespace Xamarin.Tests {
 		static string GetPlatformDll (ApplePlatform platform)
 		{
 			return platform switch {
-			ApplePlatform.iOS => "Microsoft.iOS.dll",
-			ApplePlatform.TVOS => "Microsoft.tvOS.dll",
-			ApplePlatform.WatchOS =>"Microsoft.WatchOS.dll",
-			ApplePlatform.MacOSX => "Microsoft.macOS.dll",
-			ApplePlatform.MacCatalyst => "Microsoft.MacCatalyst.dll",
-			_ => throw new NotImplementedException ($"Unknown platform: {platform}"),
+				ApplePlatform.iOS => "Microsoft.iOS.dll",
+				ApplePlatform.TVOS => "Microsoft.tvOS.dll",
+				ApplePlatform.WatchOS => "Microsoft.WatchOS.dll",
+				ApplePlatform.MacOSX => "Microsoft.macOS.dll",
+				ApplePlatform.MacCatalyst => "Microsoft.MacCatalyst.dll",
+				_ => throw new NotImplementedException ($"Unknown platform: {platform}"),
 			};
 		}
 #endif

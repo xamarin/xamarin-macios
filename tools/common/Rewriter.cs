@@ -341,8 +341,7 @@ namespace ClassRedirector {
 			var annotations = derivedLinkContext.Annotations;
 			if (!annotations.HasAction (assembly)) {
 				annotations.SetAction (assembly, AssemblyAction.Link);
-			}
-			else {
+			} else {
 				var action = annotations.GetAction (assembly);
 				if (action != AssemblyAction.Link) {
 					annotations.SetAction (assembly, AssemblyAction.Link);
