@@ -83,7 +83,7 @@ namespace Xamarin.MacDev.Tasks {
 				if (!string.IsNullOrEmpty (dotnetPath)) {
 					return dotnetPath;
 				}
-				
+
 				return Environment.OSVersion.Platform == PlatformID.Win32NT ? "dotnet.exe" : "dotnet";
 			}
 		}
