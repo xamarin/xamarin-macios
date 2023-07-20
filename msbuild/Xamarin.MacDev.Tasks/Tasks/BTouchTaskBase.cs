@@ -78,16 +78,13 @@ namespace Xamarin.MacDev.Tasks {
 		string DotNetPath {
 			get {
 				// Return the dotnet executable we're executing with.
-				var dotnet_path = Environment.GetEnvironmentVariable ("DOTNET_HOST_PATH");
-				if (!string.IsNullOrEmpty (dotnet_path))
-					return dotnet_path;
+				var dotnetPath = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_PATH");
 
-				if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
-					// This might happen when building from inside VS (design-time builds, etc.)
-					return "dotnet.exe";
+				if (!string.IsNullOrEmpty (dotnetPath)) {
+					return dotnetPath;
 				}
-
-				throw new InvalidOperationException ($"DOTNET_HOST_PATH is not set");
+				
+				return Environment.OSVersion.Platform == PlatformID.Win32NT ? "dotnet.exe" : "dotnet";
 			}
 		}
 
