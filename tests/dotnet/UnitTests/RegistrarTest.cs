@@ -57,7 +57,6 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, false)]
 		[TestCase (ApplePlatform.TVOS, false)]
 		[TestCase (ApplePlatform.MacCatalyst, true)]
-		//		[TestCase (ApplePlatform.MacOSX, true)]
 		[TestCase (ApplePlatform.iOS, true)]
 		[TestCase (ApplePlatform.TVOS, true)]
 		public void ClassRewriterTest (ApplePlatform platform, bool rewriteHandles)
