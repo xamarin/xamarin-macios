@@ -1219,9 +1219,6 @@
 			<UnmanagedEntryPointsAssembly Remove="System.Private.CoreLib" />
 			<UnmanagedEntryPointsAssembly Include="@(_UpdatedManagedAssemblyToLink->'%(Filename)')" />
 
-			<!-- Disable trimming by default (assemblies aren't trimmed unless they're marked IsTrimmable) -->
-			<IlcArg Include="--defaultrooting" />
-
 			<!-- Link in the output from ILC -->
 			<_NativeExecutableObjectFiles Include="$(NativeObject)" />
 
@@ -1615,7 +1612,10 @@
 			<_DefaultLinkMode>TrimMode</_DefaultLinkMode>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(TrimMode)' == ''">
-			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true'">Full</_DefaultLinkMode> <!-- Linking is always on for all assemblies when using NativeAOT - this is because we need to modify all assemblies in the linker for them to be compatible with NativeAOT -->
+			<!-- Linking is always on for all assemblies when using NativeAOT - this is because we need to modify all assemblies in the linker for them to be compatible with NativeAOT -->
+			<_DefaultLinkMode Condition="'$(_UseNativeAot)' == 'true' And '$(_PlatformName)' == 'macOS'">Full</_DefaultLinkMode>
+			<_DefaultLinkMode Condition="'$(_UseNativeAot)' == 'true' And '$(_PlatformName)' != 'macOS'">SdkOnly</_DefaultLinkMode>
+
 			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'macOS'">None</_DefaultLinkMode> <!-- Linking is off by default for macOS apps -->
 			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' == 'Release'">SdkOnly</_DefaultLinkMode> <!-- Default linking is on for release builds for Mac Catalyst apps -->
 			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' != 'Release'">None</_DefaultLinkMode> <!-- Default linking is off for non-release builds for Mac Catalyst apps -->
