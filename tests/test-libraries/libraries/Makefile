@@ -2,6 +2,7 @@ TOP=../../..
 include $(TOP)/Make.config
 
 NAMES+=NoneE NoneF UnknownD SomewhatUnknownD SkipInstallNameTool
+NOPREFIX+=NoLibPrefix
 
 NO_INSTALL_NAME_TOOL_SkipInstallNameTool=1
 
@@ -32,33 +33,33 @@ maccatalyst-arm64_ARCHITECTURES=arm64
 define DotNetTemplate
 
 $(1)_$(3)_TARGETS += \
-	.libs/$(3)/lib$(1).a \
-	.libs/$(3)/lib$(1).o \
-	.libs/$(3)/lib$(1).dylib \
-	.libs/$(3)/lib$(1).so \
+	.libs/$(3)/$(4)$(1).a \
+	.libs/$(3)/$(4)$(1).o \
+	.libs/$(3)/$(4)$(1).dylib \
+	.libs/$(3)/$(4)$(1).so \
 
 $(3)_TARGETS += \
 	$$($(1)_$(3)_TARGETS) \
 
 all-local:: $$($(3)_TARGETS)
 
-.libs/$(3)/lib$(1).dylib: shared.c | .libs/$(3)
+.libs/$(3)/$(4)$(1).dylib: shared.c | .libs/$(3)
 	$$(call Q_2,CC,    [$(3)]) $$(XCODE_CC) -o $$@ $$(foreach arch,$$($(3)_ARCHITECTURES),-arch $$(arch)) $$($(2)_COMPILER_FLAGS) $$($(3)_COMPILER_FLAGS) -DNAME=$(1) -shared -framework Foundation -lz
 ifneq ($(NO_INSTALL_NAME_TOOL_$(1)),1)
-	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/lib$(1).dylib $$@
+	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/$(4)$(1).dylib $$@
 endif
 
-.libs/$(3)/lib$(1).o: shared.c | .libs/$(3)
+.libs/$(3)/$(4)$(1).o: shared.c | .libs/$(3)
 	$$(call Q_2,CC,    [$(3)]) $$(XCODE_CC) -o $$@ $$(foreach arch,$$($(3)_ARCHITECTURES),-arch $$(arch)) $$($(2)_COMPILER_FLAGS) $$($(3)_COMPILER_FLAGS) -DNAME=$(1) -c
 ifneq ($(NO_INSTALL_NAME_TOOL_$(1)),1)
-	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/lib$(1).dylib $$@
+	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/$(4)$(1).dylib $$@
 endif
 
-.libs/$(3)/lib$(1).a: .libs/$(3)/lib$(1).o
+.libs/$(3)/$(4)$(1).a: .libs/$(3)/$(4)$(1).o
 	$$(call Q_2,AR     [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cru $$@ $$<
 
-.libs/$(3)/lib$(1).so: .libs/$(3)/lib$(1).dylib
-	$$(Q) $(CP) .libs/$(3)/lib$(1).dylib .libs/$(3)/lib$(1).so
+.libs/$(3)/$(4)$(1).so: .libs/$(3)/$(4)$(1).dylib
+	$$(Q) $(CP) .libs/$(3)/$(4)$(1).dylib .libs/$(3)/$(4)$(1).so
 
 $$($(3)_$(1)_DIRECTORIES):
 	$$(Q) mkdir -p $$@
@@ -68,7 +69,8 @@ endef
 # 1: name
 # 2: sdk platform (iphoneos, iphonesimulator, tvos, tvsimulator, maccatalyst, mac)
 # 3: runtime identifier
-$(foreach name,$(NAMES),$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call DotNetTemplate,$(name),$(DOTNET_$(rid)_SDK_PLATFORM),$(rid))))))
+$(foreach name,$(NAMES),$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call DotNetTemplate,$(name),$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),lib)))))
+$(foreach name,$(NOPREFIX),$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call DotNetTemplate,$(name),$(DOTNET_$(rid)_SDK_PLATFORM),$(rid))))))
 
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),.libs/$(rid))):
 	$(Q) mkdir -p $@
