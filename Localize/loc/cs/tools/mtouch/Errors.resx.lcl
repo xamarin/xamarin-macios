@@ -253,15 +253,6 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";MM2106_C" ItemType="0;.resx" PsrId="211" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Could not optimize the call to BlockLiteral.SetupBlock in {0} at offset {1} because no [UserDelegateType]5D; attribute could be found on {2}.]D;]A;		]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Nepovedlo se optimalizovat volání BlockLiteral.SetupBlock v {0} na pozici {1}, protože v {2} nešlo najít žádný atribut [UserDelegateType]5D;.]D;]A;		]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
       <Item ItemId=";MM2106_D" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Could not optimize the call to BlockLiteral.SetupBlock in {0} at offset {1}: {2}.]D;]A;		]]></Val>
@@ -3553,6 +3544,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";MX4187" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find a [UserDelegateType]5D; attribute on the type '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Nelze najít atribut [UserDelegateType]5D; u typu „{0}“.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX4188" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to compute the block signature for the type '{0}': {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Nepovedlo se vypočítat signaturu bloku pro typ „{0}“: {1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";MX5222" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The native linker failed to execute: {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new]D;]A; 		]]></Val>
@@ -3795,6 +3804,33 @@
           <Val><![CDATA[The signature must be a non-empty string.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Argument musí být neprázdný řetězec.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8053" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not resolve the module in the assembly {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Modul v sestavení {0} nelze přeložit.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8054" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Nelze přeložit tokeny metadat pro metody při použití spravovaného statického registrátora (token: 0x{0}).]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8055" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[V sestavení „{0}“ nelze najít typ „ObjCRuntime.__Registrar__“.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
