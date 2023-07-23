@@ -1206,7 +1206,7 @@
         <value>"{0}" görevine bu platformda derleme sırasında gerekli olan "{1}" parametresi için bir değer verilmedi.</value>
     </data>
   <data name="E7115" xml:space="preserve">
-        <value>The illink assembly doesn't exist: '{0}'.</value>
+        <value>illink derlemesi yok: '{0}'.</value>
         <comment>
             {0}: the path to the linker assembly
         </comment>
