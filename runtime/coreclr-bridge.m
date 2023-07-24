@@ -558,9 +558,11 @@ xamarin_bridge_call_runtime_initialize (struct InitializationOptions* options, G
 void
 xamarin_bridge_register_product_assembly (GCHandle* exception_gchandle)
 {
+#if !defined (NATIVEAOT)
 	MonoAssembly *assembly;
 	assembly = xamarin_open_and_register (PRODUCT_DUAL_ASSEMBLY, exception_gchandle);
 	xamarin_mono_object_release (&assembly);
+#endif // !defined (NATIVEAOT)
 }
 
 MonoMethod *
