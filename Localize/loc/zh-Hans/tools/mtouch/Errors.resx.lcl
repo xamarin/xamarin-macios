@@ -253,15 +253,6 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";MM2106_C" ItemType="0;.resx" PsrId="211" Leaf="true">
-        <Str Cat="Text">
-          <Val><![CDATA[Could not optimize the call to BlockLiteral.SetupBlock in {0} at offset {1} because no [UserDelegateType]5D; attribute could be found on {2}.]D;]A;		]]></Val>
-          <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[无法优化在 {0} 中偏移量 {1} 处对 BlockLiteral.SetupBlock 的调用，因为无法在 {2} 中找到任何 [UserDelegateType]5D; 特性。]D;]A;		]]></Val>
-          </Tgt>
-        </Str>
-        <Disp Icon="Str" />
-      </Item>
       <Item ItemId=";MM2106_D" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Could not optimize the call to BlockLiteral.SetupBlock in {0} at offset {1}: {2}.]D;]A;		]]></Val>
@@ -3553,6 +3544,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";MX4187" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find a [UserDelegateType]5D; attribute on the type '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[在类型“{0}”上找不到 [UserDelegateType]5D; 属性。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX4188" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to compute the block signature for the type '{0}': {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[无法计算类型“{0}”的块签名: {1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";MX5222" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The native linker failed to execute: {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new]D;]A; 		]]></Val>
@@ -3795,6 +3804,33 @@
           <Val><![CDATA[The signature must be a non-empty string.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[签名必须是非空字符串。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8053" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not resolve the module in the assembly {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[无法解析程序集 {0} 中的模块。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8054" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[使用托管静态注册机构时，无法解析方法的元数据令牌(令牌: 0x{0})。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8055" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[在程序集“{0}”中找不到类型“ObjCRuntime.__Registrar__”。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
