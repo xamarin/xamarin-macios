@@ -96,7 +96,10 @@
 
 		<ProjectCapability Condition="'$(_KeepLaunchProfiles)' != 'true'" Remove="LaunchProfiles" />
 	</ItemGroup>
-	
+
+	<!-- Default item includes (globs and implicit references) -->
+	<Import Project="Xamarin.Shared.Sdk.DefaultItems.targets" />
+
 	<PropertyGroup>
 		<!-- Add a property that specifies the name of the platform assembly for each platform -->
 		<_PlatformAssemblyName>Microsoft.$(_PlatformName)</_PlatformAssemblyName>
@@ -126,12 +129,12 @@
 		<EventSourceSupport Condition="'$(EventSourceSupport)' == ''">false</EventSourceSupport>
 		<HttpActivityPropagationSupport Condition="'$(HttpActivityPropagationSupport)' == ''">false</HttpActivityPropagationSupport>
 		<InvariantGlobalization Condition="'$(InvariantGlobalization)' == ''">false</InvariantGlobalization>
+		<HybridGlobalization Condition="'$(HybridGlobalization)' == ''">false</HybridGlobalization>
 		<StartupHookSupport Condition="'$(StartupHookSupport)' == ''">false</StartupHookSupport>
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == '' And '$(_BundlerDebug)' != 'true'">true</UseSystemResourceKeys>
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == '' And '$(_BundlerDebug)' == 'true'">false</UseSystemResourceKeys>
 		<UseNativeHttpHandler Condition="'$(_PlatformName)' != 'macOS' And '$(UseNativeHttpHandler)' == ''">true</UseNativeHttpHandler>
 		<!-- AutoreleasePoolSupport needs to be set earlier, so that illink doesn't override it - https://github.com/dotnet/runtime/pull/86753 - so it's set in Xamarin.Shared.Sdk.props -->
-		<_AggressiveAttributeTrimming Condition="'$(_AggressiveAttributeTrimming)' == ''">true</_AggressiveAttributeTrimming>		
 		<NullabilityInfoContextSupport Condition="'$(NullabilityInfoContextSupport)' == ''">false</NullabilityInfoContextSupport>
 		<BuiltInComInteropSupport Condition="'$(BuiltInComInteropSupport)' == ''">false</BuiltInComInteropSupport>
 		<!-- Verify DI trimmability at development-time, but turn the validation off for production/trimmed builds. -->
@@ -140,18 +143,25 @@
 
 		<!-- We don't need to generate reference assemblies for apps or app extensions -->
 		<ProduceReferenceAssembly Condition="'$(ProduceReferenceAssembly)' == '' And ('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true')">false</ProduceReferenceAssembly>
+
+		<!-- 
+			With NativeAOT we want to prevent ILLink from removing attributes like `IsTrimmable` so further trimming can be done by the NativeAOT toolchain.
+			For this reason, in case of NativeAOT, we set _AggressiveAttributeTrimming to false by default and store the overwriten default in 
+			_OriginalAggressiveAttributeTrimming property, which is later used to properly configure NativeAOT trimming.
+		-->
+		<_OriginalAggressiveAttributeTrimming>$(_AggressiveAttributeTrimming)</_OriginalAggressiveAttributeTrimming>
+		<_AggressiveAttributeTrimming Condition="'$(_UseNativeAot)' == 'true'">false</_AggressiveAttributeTrimming>
+		<_AggressiveAttributeTrimming Condition="'$(_AggressiveAttributeTrimming)' == ''">true</_AggressiveAttributeTrimming>
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<_GlobalizationDataFile Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '$(_GlobalizationDataFile)' == ''">icudt.dat</_GlobalizationDataFile>
+		<_GlobalizationDataFile Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '$(HybridGlobalization)' != 'true' And '$(_GlobalizationDataFile)' == ''">icudt.dat</_GlobalizationDataFile>
+		<_GlobalizationDataFile Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '$(HybridGlobalization)' == 'true' And '$(_GlobalizationDataFile)' == ''">icudt_hybrid.dat</_GlobalizationDataFile>
 	</PropertyGroup>
 
 	<PropertyGroup>
 		<TargetPlatformSupported Condition=" '$(TargetPlatformIdentifier)' == '$(_PlatformName)' ">true</TargetPlatformSupported>
 	</PropertyGroup>
-
-	<!-- Default item includes (globs and implicit references) -->
-	<Import Project="Xamarin.Shared.Sdk.DefaultItems.targets" />
 
 	<PropertyGroup Condition="'$(_GlobalizationDataFileLocation)' == ''">
 		<_GlobalizationDataFileLocation Condition="'$(_UseNativeAot)' == 'true'">Resource</_GlobalizationDataFileLocation>
@@ -550,6 +560,7 @@
 				Interpreter=$(MtouchInterpreter)
 				IntermediateLinkDir=$(IntermediateLinkDir)
 				InvariantGlobalization=$(InvariantGlobalization)
+				HybridGlobalization=$(HybridGlobalization)
 				ItemsDirectory=$(_LinkerItemsDirectory)
 				IsAppExtension=$(IsAppExtension)
 				IsSimulatorBuild=$(_SdkIsSimulator)
@@ -1191,14 +1202,6 @@
 			<NativeLib>static</NativeLib>
 		</PropertyGroup>
 
-		<!-- Remove libSystem.Net.Security.Native.a from tvOS when using NativeAOT, it's not shipped on tvOS -->
-		<ItemGroup>
-			<DirectPInvoke Remove="libSystem.Net.Security.Native" />
-			<NetCoreAppNativeLibrary Remove="System.Net.Security.Native" />
-			<NativeLibrary Remove="@(NativeLibrary)" Condition="'%(Filename)' == 'libSystem.Net.Security.Native'" />
-			<LinkerArg Remove="@(LinkerArg)" Condition="'%(Filename)' == 'libSystem.Net.Security.Native'" />
-		</ItemGroup>
-
 		<ItemGroup>
 			<!-- We need to mark all __Internal P/Invokes as direct, so that the native linker doesn't remove them -->
 			<DirectPInvoke Include="__Internal" />
@@ -1215,11 +1218,21 @@
 			<UnmanagedEntryPointsAssembly Remove="System.Private.CoreLib" />
 			<UnmanagedEntryPointsAssembly Include="@(_UpdatedManagedAssemblyToLink->'%(Filename)')" />
 
-			<!-- Disable trimming by default (assemblies aren't trimmed unless they're marked IsTrimmable) -->
-			<IlcArg Include="--defaultrooting" />
-
 			<!-- Link in the output from ILC -->
 			<_NativeExecutableObjectFiles Include="$(NativeObject)" />
+
+			<!-- By default perform aggressive attribute trimming, except when explicitly disabled -->
+			<_TrimmerFeatureSettings Condition="'$(_OriginalAggressiveAttributeTrimming)' != 'false' and '%(Identity)' == 'System.AggressiveAttributeTrimming'">
+				<Value>true</Value>
+				<Trim>true</Trim>
+			</_TrimmerFeatureSettings>
+			<RuntimeHostConfigurationOption Condition="'$(_OriginalAggressiveAttributeTrimming)' != 'false' and '%(Identity)' == 'System.AggressiveAttributeTrimming'">
+				<Value>true</Value>
+				<Trim>true</Trim>
+			</RuntimeHostConfigurationOption>
+
+			<!-- Explicitly root the framework assembly due to NativeAOT trimming incompatibility tracked: https://github.com/dotnet/runtime/issues/86649 -->
+			<TrimmerRootAssembly Include="$(_PlatformAssemblyName)" />
 		</ItemGroup>
 
 		<ItemGroup>
@@ -1322,6 +1335,17 @@
 			<IlcSatelliteAssembly Include="@(IntermediateSatelliteAssembliesWithTargetPath)" Condition="'%(IntermediateSatelliteAssembliesWithTargetPath.Culture)' != '' And '%(IntermediateSatelliteAssembliesWithTargetPath.Culture)' != 'neutral'" />
 			<!-- Culture is not set on ReferenceSatellitePaths items, so use DestinationSubDirectory instead -->
 			<IlcSatelliteAssembly Include="@(ReferenceSatellitePaths)" Condition="'%(ReferenceSatellitePaths.DestinationSubDirectory)' != ''" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_ExcludeUnusedFilesFromTheBundle"
+		Condition="'$(_UseNativeAot)' == 'true'"
+		AfterTargets="_LinkNativeExecutable"
+		BeforeTargets="CopyFilesToPublishDirectory">
+		<ItemGroup>
+			<!-- We don't ship assemblies with NativeAOT -->
+			<!-- Exclude assemblies explicitly until https://github.com/dotnet/runtime/issues/87187 is not resolved -->
+			<ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Extension)' == '.dll'" />
 		</ItemGroup>
 	</Target>
 
@@ -1587,7 +1611,10 @@
 			<_DefaultLinkMode>TrimMode</_DefaultLinkMode>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(TrimMode)' == ''">
-			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true'">Full</_DefaultLinkMode> <!-- Linking is always on for all assemblies when using NativeAOT - this is because we need to modify all assemblies in the linker for them to be compatible with NativeAOT -->
+			<!-- Linking is always on for all assemblies when using NativeAOT - this is because we need to modify all assemblies in the linker for them to be compatible with NativeAOT -->
+			<_DefaultLinkMode Condition="'$(_UseNativeAot)' == 'true' And '$(_PlatformName)' == 'macOS'">Full</_DefaultLinkMode>
+			<_DefaultLinkMode Condition="'$(_UseNativeAot)' == 'true' And '$(_PlatformName)' != 'macOS'">SdkOnly</_DefaultLinkMode>
+
 			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'macOS'">None</_DefaultLinkMode> <!-- Linking is off by default for macOS apps -->
 			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' == 'Release'">SdkOnly</_DefaultLinkMode> <!-- Default linking is on for release builds for Mac Catalyst apps -->
 			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' != 'Release'">None</_DefaultLinkMode> <!-- Default linking is off for non-release builds for Mac Catalyst apps -->

@@ -961,7 +961,7 @@ namespace Xamarin.Linker {
 				// Locating the instruction that loads the first argument can be complicated, so we simplify by making a few assumptions:
 				// 1. The instruction immediately before the call instruction (which would load the last argument) is a Push1/Pop0 instruction. 
 				//    This avoids running into trouble when the instruction does something else (it could be a any other instruction, which would throw off the next calculations)
-				// 2. We have a whitelist of instructions we know how to calculate the type for, and which we use on the second to last instruction before the call instruction
+				// 2. We have a approved list of instructions we know how to calculate the type for, and which we use on the second to last instruction before the call instruction
 
 				// First verify the Push1/Pop0 behavior in point 1.
 				var prev = ins.Previous;
