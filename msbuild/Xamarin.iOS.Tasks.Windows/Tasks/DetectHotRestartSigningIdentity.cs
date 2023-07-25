@@ -103,7 +103,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 
 				identity.AppId = ConstructValidAppId (identity.Profile, identity.BundleId);
 
-				if (identity.AppId is not null) {
+				if (identity.AppId is null) {
 					Log.LogError ("Project bundle identifier '{0}' does not match specified provisioning profile '{1}'. Please enable Automatic Provisioning from the iOS Bundle Signing page.", identity.BundleId, ProvisioningProfile);
 					return false;
 				}
