@@ -1621,6 +1621,19 @@ partial class TestRuntime {
 	public unsafe static bool IsARM64 {
 		get { return NXGetLocalArchInfo ()->Name.StartsWith ("arm64"); }
 	}
+
+	[DllImport ("__Internal")]
+	extern static void xamarin_log (IntPtr s);
+
+	// Calling Console.WriteLine from inside a test is rather annoying, because NUnit captures stdout and only
+	// shows it at the end of the test. That's not very helpful when the test crashes, or while debugging
+	// a test (in a debugger).
+	internal static void NSLog (string value)
+	{
+		var valuePtr = Marshal.StringToHGlobalUni (value);
+		xamarin_log (valuePtr);
+		Marshal.FreeHGlobal (valuePtr);
+	}
 }
 
 #if NET

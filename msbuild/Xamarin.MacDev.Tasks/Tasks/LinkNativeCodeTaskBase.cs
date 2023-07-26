@@ -144,11 +144,13 @@ namespace Xamarin.MacDev.Tasks {
 						arguments.Add (lib);
 						break;
 					case ".dylib":
-						arguments.Add ("-L" + Path.GetDirectoryName (lib));
 						var libName = Path.GetFileNameWithoutExtension (lib);
-						if (libName.StartsWith ("lib", StringComparison.Ordinal))
-							libName = libName.Substring (3);
-						arguments.Add ("-l" + libName);
+						if (libName.StartsWith ("lib", StringComparison.Ordinal)) {
+							arguments.Add ("-L" + Path.GetDirectoryName (lib));
+							arguments.Add ("-l" + libName.Substring (3));
+						} else {
+							arguments.Add (libSpec.ItemSpec);
+						}
 						hasDylibs = true;
 						break;
 					case ".framework":

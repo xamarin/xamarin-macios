@@ -72,12 +72,6 @@
     <Compile Include="..\..\tools\common\SdkVersions.cs">
       <Link>external\SdkVersions.cs</Link>
     </Compile>
-    <Compile Include="..\..\tools\common\CSToObjCMap.cs">
-      <Link>external\CSToObjCMap.cs</Link>
-    </Compile>
-    <Compile Include="..\..\tools\common\ObjCNameIndex.cs">
-      <Link>external\ObjCNameIndex.cs</Link>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>

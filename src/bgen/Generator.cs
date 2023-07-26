@@ -1269,22 +1269,18 @@ public partial class Generator : IMemberGatherer {
 		if (AttributeManager.HasAttribute<WrapAttribute> (mi))
 			return;
 
-		try {
-			// arm64 never requires stret, so we'll always need the non-stret variants
-			RegisterMethod (false, mi, MakeSig (mi, false), false);
-			RegisterMethod (false, mi, MakeSuperSig (mi, false), false);
+		// arm64 never requires stret, so we'll always need the non-stret variants
+		RegisterMethod (false, mi, MakeSig (mi, false), false);
+		RegisterMethod (false, mi, MakeSuperSig (mi, false), false);
 
-			if (CheckNeedStret (mi)) {
-				RegisterMethod (true, mi, MakeSig (mi, true), false);
-				RegisterMethod (true, mi, MakeSuperSig (mi, true), false);
+		if (CheckNeedStret (mi)) {
+			RegisterMethod (true, mi, MakeSig (mi, true), false);
+			RegisterMethod (true, mi, MakeSuperSig (mi, true), false);
 
-				if (AttributeManager.HasAttribute<AlignAttribute> (mi)) {
-					RegisterMethod (true, mi, MakeSig (mi, true, true), true);
-					RegisterMethod (true, mi, MakeSuperSig (mi, true, true), true);
-				}
+			if (AttributeManager.HasAttribute<AlignAttribute> (mi)) {
+				RegisterMethod (true, mi, MakeSig (mi, true, true), true);
+				RegisterMethod (true, mi, MakeSuperSig (mi, true, true), true);
 			}
-		} catch (BindingException ex) {
-			throw ex;
 		}
 	}
 	static char [] invalid_selector_chars = new char [] { '*', '^', '(', ')' };
@@ -2790,7 +2786,7 @@ public partial class Generator : IMemberGatherer {
 		// we are adding the usage of ReflectedType just for those cases in which we have nested enums/classes, this soluction does not
 		// work with nested/nested/nested classes. But we are not writing a general solution because:
 		// 1. We have only encountered nested classes.
-		// 2. We are not going to complicate the code more than needed if we have never ever faced a situation with a crazy nested hierarchy, 
+		// 2. We are not going to complicate the code more than needed if we have never ever faced a situation with a crazy complicated nested hierarchy, 
 		//    so we only solve the problem we have, no more.
 		var parentClass = (type.ReflectedType is null) ? String.Empty : type.ReflectedType.Name + ".";
 		if (types_that_must_always_be_globally_named.Contains (type.Name))

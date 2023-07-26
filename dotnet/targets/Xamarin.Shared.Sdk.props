@@ -58,6 +58,13 @@
 
 		<!-- Explicitly export symbols using clang command-line option "-exported_symbols_list export_list" -->
 		<_ExportSymbolsExplicitly Condition="'$(_ExportSymbolsExplicitly)' == ''">true</_ExportSymbolsExplicitly>
+
+		<!--
+			Some runtime libraries feature switches defaults that need to be set early
+			Available feature switches: https://github.com/dotnet/runtime/blob/master/docs/workflow/trimming/feature-switches.md
+		-->
+		<!-- AutoreleasePoolSupport needs to be set earlier than other switches, so that illink doesn't override it - https://github.com/dotnet/runtime/pull/86753 - so it's set here, instead of in Xamarin.Shared.Sdk.targets -->
+		<AutoreleasePoolSupport Condition="'$(AutoreleasePoolSupport)' == ''">true</AutoreleasePoolSupport>
 	</PropertyGroup>
 
 	<!-- Set the default RuntimeIdentifier if not already specified. -->
@@ -96,6 +103,20 @@
 	</PropertyGroup>
 
 	<!--
+
+		SelfContained is automatically enabled if PublishAot is true, and that
+		doesn't work properly (restore fails because RuntimeIdentifier is not
+		set) when doing the outer build of a universal apps (when
+		RuntimeIdentifier=''), so manually disable SelfContained in that case.
+
+		This might not be necessary after: https://github.com/dotnet/sdk/pull/33229
+
+	-->
+	<PropertyGroup Condition="'$(PublishAot)' == 'true' And '$(_IsPublishing)' == 'true' And '$(RuntimeIdentifiers)' != '' And '$(RuntimeIdentifier)' == '' And '$(SelfContained)' == ''">
+		<SelfContained>false</SelfContained>
+	</PropertyGroup>
+
+	<!--
 		Enable LLVM by default for mobile release builds.
 
 		At this point we don't necessarily know yet whether we're building for device or simulator,
@@ -104,5 +125,23 @@
 	-->
 	<PropertyGroup Condition="'$(MtouchUseLlvm)' == '' And '$(Configuration)' == 'Release' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')">
 		<MtouchUseLlvm>true</MtouchUseLlvm>
+	</PropertyGroup>
+
+	<!-- Various options when using NativeAOT -->
+	<PropertyGroup Condition="'$(PublishAot)' == 'true' And '$(_IsPublishing)' == 'true'">
+		<!-- Disable our own assembly IL stripping logic, because ILC does that already -->
+		<EnableAssemblyILStripping>false</EnableAssemblyILStripping>
+
+		<!-- We're using our own native main function when using NativeAOT -->
+		<CustomNativeMain>true</CustomNativeMain>
+
+		<!-- We must find the BCL libraries using the runtime pack instead of using the built-in NativeAOT BCL -->
+		<PublishAotUsingRuntimePack>true</PublishAotUsingRuntimePack>
+
+		<!-- This turns off some NativeAOT logic we don't want nor need -->
+		<NativeCompilationDuringPublish>false</NativeCompilationDuringPublish>
+
+		<!-- This works around an issue in NativeAOT: https://github.com/dotnet/runtime/issues/86186 -->
+		<IlcKeepManagedDebuggerSupport>true</IlcKeepManagedDebuggerSupport>
 	</PropertyGroup>
 </Project>

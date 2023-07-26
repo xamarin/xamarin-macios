@@ -1,7 +1,3 @@
-[submodule "external/ikvm-fork"]
-    path = external/ikvm-fork
-    url = ../../mono/ikvm-fork
-    branch = master
 [submodule "external/macios-binaries"]
     path = external/macios-binaries
     url = ../../xamarin/macios-binaries
@@ -13,7 +9,7 @@
 [submodule "external/Touch.Unit"]
     path = external/Touch.Unit
     url = ../../spouliot/Touch.Unit.git
-    branch = main
+    branch = net8.0
 [submodule "external/Xamarin.MacDev"]
     path = external/Xamarin.MacDev
     url = ../../xamarin/Xamarin.MacDev
@@ -21,7 +17,7 @@
 [submodule "external/MonoTouch.Dialog"]
     path = external/MonoTouch.Dialog
     url = ../../migueldeicaza/MonoTouch.Dialog
-    branch = dotnet
+    branch = net8.0
 [submodule "api-tools"]
     path = external/api-tools
     url = ../../rolfbjarne/api-tools

@@ -2843,7 +2843,7 @@ namespace Registrar {
 			}
 		}
 
-		void Specialize (AutoIndentStringBuilder sb, out string initialization_method, string type_map_path)
+		void Specialize (AutoIndentStringBuilder sb, out string initialization_method)
 		{
 			List<Exception> exceptions = new List<Exception> ();
 			List<ObjCMember> skip = new List<ObjCMember> ();
@@ -3295,12 +3295,15 @@ namespace Registrar {
 
 			sb.WriteLine (map.ToString ());
 			sb.WriteLine (map_init.ToString ());
-
-			if (!string.IsNullOrEmpty (type_map_path)) {
-				var doc = CSToObjCMap.ToXDocument (map_dict);
-				doc.Save (type_map_path);
+#if NET
+			if (App.Optimizations.RedirectClassHandles == true) {
+				var rewriter = new Rewriter (map_dict, GetAssemblies (), LinkContext);
+				var result = rewriter.Process ();
+				if (!string.IsNullOrEmpty (result)) {
+					Driver.Log (5, $"Not redirecting class handles because {result}");
+				}
 			}
-
+#endif
 			ErrorHelper.ThrowIfErrors (exceptions);
 		}
 
@@ -5504,24 +5507,24 @@ namespace Registrar {
 			}
 		}
 
-		public void GenerateSingleAssembly (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly, out string initialization_method, string type_map_path)
+		public void GenerateSingleAssembly (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly, out string initialization_method)
 		{
 			single_assembly = assembly;
-			Generate (resolver, assemblies, header_path, source_path, out initialization_method, type_map_path);
+			Generate (resolver, assemblies, header_path, source_path, out initialization_method);
 		}
 
-		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method, string type_map_path)
+		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method)
 		{
-			Generate (null, assemblies, header_path, source_path, out initialization_method, type_map_path);
+			Generate (null, assemblies, header_path, source_path, out initialization_method);
 		}
 
-		public void Generate (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method, string type_map_path)
+		public void Generate (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, out string initialization_method)
 		{
 			Register (resolver, assemblies);
-			Generate (header_path, source_path, out initialization_method, type_map_path);
+			Generate (header_path, source_path, out initialization_method);
 		}
 
-		public void Generate (string header_path, string source_path, out string initialization_method, string type_map_path)
+		public void Generate (string header_path, string source_path, out string initialization_method)
 		{
 			var sb = new AutoIndentStringBuilder ();
 			header = new AutoIndentStringBuilder ();
@@ -5556,7 +5559,7 @@ namespace Registrar {
 			if (App.Embeddinator)
 				methods.WriteLine ("void xamarin_embeddinator_initialize ();");
 
-			Specialize (sb, out initialization_method, type_map_path);
+			Specialize (sb, out initialization_method);
 
 			methods.WriteLine ();
 			methods.AppendLine ();

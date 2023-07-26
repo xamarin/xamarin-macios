@@ -159,6 +159,7 @@ namespace ObjCRuntime {
 			IsSimulator = 0x10,
 #if NET
 			IsCoreCLR				= 0x20,
+			IsNativeAOT				= 0x40,
 #endif
 		}
 
@@ -222,6 +223,14 @@ namespace ObjCRuntime {
 				return (options->Flags.HasFlag (InitializationFlags.IsCoreCLR));
 			}
 		}
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		internal unsafe static bool IsNativeAOT {
+			get {
+				// The linker may turn calls to this property into a constant
+				return (options->Flags.HasFlag (InitializationFlags.IsNativeAOT));
+			}
+		}
 #endif
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -247,6 +256,20 @@ namespace ObjCRuntime {
 #if MONOMAC
 		[DllImport (Constants.libcLibrary)]
 		static extern int _NSGetExecutablePath (byte[] buf, ref int bufsize);
+#endif
+
+#if NET
+		[Preserve] // called from native - nativeaot-bridge.m and coreclr-bridge.m.
+		[UnmanagedCallersOnly (EntryPoint = "xamarin_objcruntime_runtime_nativeaotinitialize")]
+		unsafe static void SafeInitialize (InitializationOptions* options, IntPtr* exception_gchandle)
+		{
+			*exception_gchandle = IntPtr.Zero;
+			try {
+				Initialize (options);
+			} catch (Exception e) {
+				*exception_gchandle = AllocGCHandle (e);
+			}
+		}
 #endif
 
 		[Preserve] // called from native - runtime.m.
@@ -301,6 +324,12 @@ namespace ObjCRuntime {
 				NSLog (msg);
 				throw ErrorHelper.CreateError (8010, msg);
 			}
+
+#if NET
+			if (options->RegistrationMap is not null && options->RegistrationMap->map is not null) {
+				ClassHandles.InitializeClassHandles (options->RegistrationMap->map);
+			}
+#endif
 
 			IntPtrEqualityComparer = new IntPtrEqualityComparer ();
 			TypeEqualityComparer = new TypeEqualityComparer ();
