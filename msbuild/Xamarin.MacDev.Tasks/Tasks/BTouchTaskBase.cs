@@ -79,7 +79,7 @@ namespace Xamarin.MacDev.Tasks {
 		protected override string ToolName {
 			get {
 				if (IsDotNet)
-					return Path.GetFileName (this.GetDotNetPath());
+					return Path.GetFileName (this.GetDotNetPath ());
 
 				return Path.GetFileNameWithoutExtension (ToolExe);
 			}
@@ -93,7 +93,7 @@ namespace Xamarin.MacDev.Tasks {
 			// system dotnet, which might not exist or not have the version we
 			// need.
 			if (IsDotNet)
-				return this.GetDotNetPath();
+				return this.GetDotNetPath ();
 
 			return Path.Combine (ToolPath, ToolExe);
 		}

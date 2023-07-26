@@ -19,7 +19,7 @@ namespace Xamarin.Messaging.Build {
 		internal TaskRunner (ITaskSerializer serializer)
 		{
 			this.serializer = serializer;
-			SetDotNetVariables();
+			SetDotNetVariables ();
 		}
 
 		internal IEnumerable<Type> Tasks => tasks.AsReadOnly ();
@@ -50,23 +50,23 @@ namespace Xamarin.Messaging.Build {
 			return result;
 		}
 
-		void SetDotNetVariables()
+		void SetDotNetVariables ()
 		{
 			var xmaSdkRootPath = Path.Combine (MessagingContext.GetXmaPath (), "SDKs");
 			var xmaDotNetRootPath = Path.Combine (xmaSdkRootPath, "dotnet");
-			var xmaDotNetPath = default(string);
+			var xmaDotNetPath = default (string);
 
-			if (IsValidDotNetInstallation(xmaDotNetRootPath)) {
+			if (IsValidDotNetInstallation (xmaDotNetRootPath)) {
 				//If the XMA dotnet is already installed, we use it and also declare a custom home for it (for NuGet restore and caches)
 				Environment.SetEnvironmentVariable ("DOTNET_CUSTOM_HOME", Path.Combine (xmaSdkRootPath, ".home"));
-				xmaDotNetPath = GetDotNetPath(xmaDotNetRootPath);
+				xmaDotNetPath = GetDotNetPath (xmaDotNetRootPath);
 			} else {
 				//In case the XMA dotnet has not been installed yet, we use the default dotnet installation
-				xmaDotNetPath = GetDefaultDotNetPath();
+				xmaDotNetPath = GetDefaultDotNetPath ();
 				xmaDotNetRootPath = Path.GetDirectoryName (xmaDotNetPath);
 			}
 
-			var pathContent = GetPathContent();
+			var pathContent = GetPathContent ();
 			//We add the XMA dotnet path first so it has priority over the default dotnet installation
 			var newPathContent = $"{xmaDotNetRootPath}:{pathContent}";
 
@@ -81,30 +81,25 @@ namespace Xamarin.Messaging.Build {
 			tracer.Info ($"Current PATH: {newPathContent}");
 		}
 
-		string GetDefaultDotNetPath()
+		string GetDefaultDotNetPath ()
 		{
 			var dotnetRootPath = "/usr/local/share/dotnet";
 
-			if (IsValidDotNetInstallation(dotnetRootPath)) {
-				return GetDotNetPath(dotnetRootPath);
+			if (IsValidDotNetInstallation (dotnetRootPath)) {
+				return GetDotNetPath (dotnetRootPath);
 			}
 
 			var dotnetPath = "dotnet";
-			var pathContent = GetPathContent();
-			var pathElements = pathContent.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
+			var pathContent = GetPathContent ();
+			var pathElements = pathContent.Split (new string [] { ":" }, StringSplitOptions.RemoveEmptyEntries);
 
-			foreach (var pathElement in pathElements)
-			{
-				try
-				{
-					if (IsValidDotNetInstallation(pathElement))
-					{
-						dotnetPath = GetDotNetPath(pathElement);
+			foreach (var pathElement in pathElements) {
+				try {
+					if (IsValidDotNetInstallation (pathElement)) {
+						dotnetPath = GetDotNetPath (pathElement);
 						break;
 					}
-				}
-				catch
-				{
+				} catch {
 					//If we can't read a directory for any reason just skip it
 				}
 			}
@@ -112,10 +107,10 @@ namespace Xamarin.Messaging.Build {
 			return dotnetPath;
 		}
 
-		string GetPathContent() => Environment.GetEnvironmentVariable("PATH") ?? "";
+		string GetPathContent () => Environment.GetEnvironmentVariable ("PATH") ?? "";
 
-		bool IsValidDotNetInstallation(string rootPath) => File.Exists (GetDotNetPath(rootPath));
+		bool IsValidDotNetInstallation (string rootPath) => File.Exists (GetDotNetPath (rootPath));
 
-		string GetDotNetPath(string rootPath) => Path.Combine (rootPath, "dotnet");
+		string GetDotNetPath (string rootPath) => Path.Combine (rootPath, "dotnet");
 	}
 }
