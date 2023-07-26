@@ -36,7 +36,7 @@ namespace Xamarin.MacDev.Tasks {
 ";
 			File.WriteAllText (projectPath, csproj);
 
-			var dotnetPath = this.GetDotNetPath();
+			var dotnetPath = this.GetDotNetPath ();
 			var environment = default (Dictionary<string, string>);
 			var customHome = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_HOME");
 
