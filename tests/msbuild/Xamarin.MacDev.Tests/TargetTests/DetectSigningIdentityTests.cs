@@ -63,13 +63,12 @@ namespace Xamarin.MacDev.Tasks {
 			Assert.AreEqual (0, rv.ExitCode, "Exit code");
 
 			// Find the BundleIdentifier parameter to the DetectSigningIdentity task.
-			var reader = new BinLogReader ();
-			var records = reader.ReadRecords (rv.BinLogPath).ToList ();
-			var taskIndex = records.FindIndex (v => v?.Args is TaskStartedEventArgs tsea && tsea.TaskName == "DetectSigningIdentity");
+			var recordArgs = BinLog.ReadBuildEvents (rv.BinLogPath).ToList ();
+			var taskIndex = recordArgs.FindIndex (v => v is TaskStartedEventArgs tsea && tsea.TaskName == "DetectSigningIdentity");
 			Assert.That (taskIndex, Is.GreaterThan (0), "Task index");
-			var taskParameterIndex = records.FindIndex (taskIndex + 1, v => v?.Args is BuildMessageEventArgs bmea && bmea.Message.StartsWith ("Task Parameter:BundleIdentifier="));
+			var taskParameterIndex = recordArgs.FindIndex (taskIndex + 1, v => v is BuildMessageEventArgs bmea && bmea.Message.StartsWith ("Task Parameter:BundleIdentifier="));
 			Assert.That (taskParameterIndex, Is.GreaterThan (0), "Parameter index");
-			var taskParameter = (BuildMessageEventArgs) records [taskParameterIndex]?.Args;
+			var taskParameter = (BuildMessageEventArgs) recordArgs [taskParameterIndex];
 			var bundleIdentifier = taskParameter.Message.Substring ("Task Parameter:BundleIdentifier=".Length);
 			Assert.AreEqual ("com.xamarin.detectsigningidentitytest", bundleIdentifier, "Bundle identifier");
 		}
