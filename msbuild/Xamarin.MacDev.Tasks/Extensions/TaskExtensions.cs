@@ -6,7 +6,8 @@ namespace Microsoft.Build.Tasks {
 		public static bool ShouldExecuteRemotely (this Task task, string sessionId)
 			=> Environment.OSVersion.Platform == PlatformID.Win32NT && !string.IsNullOrEmpty (sessionId);
 
-		public static string GetDotNetPath (this Task task) {
+		public static string GetDotNetPath (this Task task)
+		{
 			//Custom environment variable set by the XMA Build Agent
 			var dotnetPath = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_PATH");
 

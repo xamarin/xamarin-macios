@@ -94,7 +94,7 @@ namespace Xamarin.MacDev.Tasks {
 			var environment = default (Dictionary<string, string?>);
 
 			if (IsDotNet) {
-				executable = this.GetDotNetPath();
+				executable = this.GetDotNetPath ();
 
 				arguments.Add ("build");
 
