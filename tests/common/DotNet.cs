@@ -219,6 +219,7 @@ namespace Xamarin.Tests {
 					var filename = Path.GetFileName (v);
 					switch (filename) {
 					case "icudt.dat":
+					case "icudt_hybrid.dat":
 						return false; // ICU data file only present on .NET
 					case "runtime-options.plist":
 						return false; // the .NET runtime will deal with selecting the http handler, no need for us to do anything
