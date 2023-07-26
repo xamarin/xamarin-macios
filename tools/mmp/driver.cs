@@ -49,6 +49,7 @@ using MonoMac.Tuner;
 using Xamarin.Utils;
 using Xamarin.Linker;
 using Registrar;
+using ClassRedirector;
 using ObjCRuntime;
 
 namespace Xamarin.Bundler {
@@ -344,7 +345,7 @@ namespace Xamarin.Bundler {
 
 		static void ValidateXamarinMacReference ()
 		{
-			// Many Xamarin.Mac references are technically valid, so whitelisting risks breaking working project
+			// Many Xamarin.Mac references are technically valid, so approving them risks breaking working project
 			// However, passing in Mobile / Xamarin.Mac folders and resolving full/4.5 or vice versa is 
 			// far from expected. So catch the common cases if we can
 			string reference = App.References.FirstOrDefault (x => x.EndsWith ("Xamarin.Mac.dll", StringComparison.Ordinal));
@@ -794,7 +795,7 @@ namespace Xamarin.Bundler {
 			if (App.Registrar == RegistrarMode.Static) {
 				registrarPath = Path.Combine (App.Cache.Location, "registrar.m");
 				var registrarH = Path.Combine (App.Cache.Location, "registrar.h");
-				BuildTarget.StaticRegistrar.Generate (BuildTarget.Resolver.ResolverCache.Values, registrarH, registrarPath, out initialization_method, App.ClassMapPath);
+				BuildTarget.StaticRegistrar.Generate (BuildTarget.Resolver.ResolverCache.Values, registrarH, registrarPath, out initialization_method);
 
 				var platform_assembly = BuildTarget.Resolver.ResolverCache.First ((v) => v.Value.Name.Name == BuildTarget.StaticRegistrar.PlatformAssembly).Value;
 				Frameworks.Gather (App, platform_assembly, BuildTarget.Frameworks, BuildTarget.WeakFrameworks);
