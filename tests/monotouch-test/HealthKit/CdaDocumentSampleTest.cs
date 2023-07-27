@@ -57,7 +57,7 @@ namespace MonoTouchFixtures.HealthKit {
 #else
 					var ex = Assert.Throws<MonoTouchException> (action, "Exception");
 #endif
-					if (TestRuntime.AssertXcodeVersion (15,0)) {
+					if (TestRuntime.CheckXcodeVersion (15,0)) {
 						Assert.That (ex.Message, Does.Match ("Objective-C exception thrown.  Name: _HKObjectValidationFailureException Reason: Type HKSample can not have endDate of NSDate.distantFuture"), "Exception Message");
 					} else {
 						Assert.That (ex.Message, Does.Match ("startDate.*and endDate.*exceed the maximum allowed duration for this sample type"), "Exception Message");
