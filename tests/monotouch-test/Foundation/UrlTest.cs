@@ -80,10 +80,10 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void FromString ()
 		{
-			if (TestRuntime.CheckXcodeVersion (15,0)) {
+			if (TestRuntime.CheckXcodeVersion (15, 0)) {
 				using (var url = NSUrl.FromString (bad_uri))
 					Assert.NotNull (bad_uri, "invalid");
-			} else { 
+			} else {
 				Assert.Null (NSUrl.FromString (bad_uri), "invalid");
 			}
 
@@ -103,7 +103,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Ctor_string ()
 		{
-			if (TestRuntime.CheckXcodeVersion (15,0)) {
+			if (TestRuntime.CheckXcodeVersion (15, 0)) {
 				using (var url = new NSUrl (bad_uri))
 					Assert.That (url.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 			} else {
@@ -120,7 +120,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			const string bug6597 = "http://www.bing.com/images/search?q=雅詩蘭黛";
 
-			if (TestRuntime.CheckXcodeVersion (15,0)) {
+			if (TestRuntime.CheckXcodeVersion (15, 0)) {
 				Assert.NotNull (NSUrl.FromString (bug6597), "1");
 
 				using (var url = new NSUrl (bug6597))
@@ -296,7 +296,7 @@ namespace MonoTouchFixtures.Foundation {
 			string bad = "Server 1/Custom View/Analog Schedule!@#$%^&&%$#@";
 
 			string bad_url = Uri.EscapeUriString (bad);
-			if (TestRuntime.CheckXcodeVersion (15,0)) {
+			if (TestRuntime.CheckXcodeVersion (15, 0)) {
 				using (var url = NSUrl.FromString (bad_url))
 					Assert.NotNull (bad_url, "bad");
 			} else {
