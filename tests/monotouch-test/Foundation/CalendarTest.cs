@@ -391,7 +391,7 @@ namespace MonoTouchFixtures.Foundation {
 			RequiresIos8 ();
 
 			NSDateComponents nextYearComponent = new NSDateComponents ();
-			if (TestRuntime.CheckXcodeVersion (15,0)) {
+			if (TestRuntime.CheckXcodeVersion (15, 0)) {
 				Assert.IsNull (NSCalendar.CurrentCalendar.FindNextDateAfterDateMatching (NSDate.Now, nextYearComponent, NSCalendarOptions.None), "nextYearComponent");
 
 				Assert.NotNull (NSCalendar.CurrentCalendar.FindNextDateAfterDateMatching (NSDate.Now, NSCalendarUnit.Day, 8, NSCalendarOptions.None), "Unit");
