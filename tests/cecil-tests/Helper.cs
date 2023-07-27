@@ -438,6 +438,9 @@ namespace Cecil.Tests {
 				if (attributeType.Namespace != "System.Runtime.Versioning")
 					continue;
 
+				if (attributeType.FullName == "System.Runtime.Versioning.RequiresPreviewFeaturesAttribute")
+					continue;
+
 				if (!a.HasConstructorArguments)
 					continue;
 
