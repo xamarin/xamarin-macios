@@ -28,8 +28,8 @@ namespace MonoTouchFixtures.CoreText {
 		[Test]
 		public void SimpleValuesSet ()
 		{
-			 if (TestRuntime.CheckXcodeVersion (15, 0))
-				 Assert.Ignore ("Test timeouts on Xcode 15 beta 4.");
+			if (TestRuntime.CheckXcodeVersion (15, 0))
+				Assert.Ignore ("Test timeouts on Xcode 15 beta 4.");
 
 			var sa = new CTStringAttributes ();
 			sa.ForegroundColor = UIColor.Blue.CGColor;

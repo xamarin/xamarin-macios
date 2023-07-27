@@ -64,7 +64,7 @@ namespace MonoTouchFixtures.Foundation {
 			using (NSLocale en = new NSLocale ("en-US")) {
 				Assert.That (en.AlternateQuotationBeginDelimiterKey, Is.EqualTo ("‘"), "AlternateQuotationBeginDelimiterKey");
 				Assert.That (en.AlternateQuotationEndDelimiterKey, Is.EqualTo ("’"), "AlternateQuotationEndDelimiterKey");
-				if (TestRuntime.CheckXcodeVersion (15,0)) {
+				if (TestRuntime.CheckXcodeVersion (15, 0)) {
 					Assert.That (en.CollationIdentifier, Is.EqualTo ("standard"), "CollationIdentifier");
 				} else {
 					Assert.Null (en.CollationIdentifier, "CollationIdentifier");
