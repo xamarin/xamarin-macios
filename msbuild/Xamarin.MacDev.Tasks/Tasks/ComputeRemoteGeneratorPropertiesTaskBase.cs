@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 
 using Microsoft.Build.Framework;
+using Microsoft.Build.Tasks;
 
 using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
@@ -93,9 +94,8 @@ namespace Xamarin.MacDev.Tasks {
 			var environment = default (Dictionary<string, string?>);
 
 			if (IsDotNet) {
-				executable = Environment.GetEnvironmentVariable ("DOTNET_HOST_PATH");
-				if (string.IsNullOrEmpty (executable))
-					executable = "dotnet";
+				executable = this.GetDotNetPath ();
+
 				arguments.Add ("build");
 
 				var customHome = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_HOME");
