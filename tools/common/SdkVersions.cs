@@ -35,10 +35,10 @@ namespace Xamarin {
 		public const string MinMacCatalyst = "13.1";
 #endif
 
-		public const string MiniOSSimulator = "13.7";
-		public const string MinWatchOSSimulator = "7.0";
+		public const string MiniOSSimulator = "14.3";
+		public const string MinWatchOSSimulator = "7.1";
 		public const string MinWatchOSCompanionSimulator = "14.5";
-		public const string MinTVOSSimulator = "13.4";
+		public const string MinTVOSSimulator = "14.0";
 
 		public const string MaxiOSSimulator = "17.0";
 		public const string MaxWatchOSSimulator = "10.0";
