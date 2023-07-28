@@ -165,7 +165,7 @@ namespace Xharness {
 					var mlaunchPath = Path.Combine (DOTNET_DIR, "packs");
 					// there is a diff between getting the path for the current platform when running on CI or off CI. The config files in the CI do not 
 					// contain the correct workload version, the reason for this is that the workload is built in a different machine which means that
-					// the Make.config will use the wrong version. The CI set the version in the environment variable {platform}_WORKLOAD_VERSION via a scritp.
+					// the Make.config will use the wrong version. The CI set the version in the environment variable {platform}_WORKLOAD_VERSION via a script.
 					var workloadVersion = InCI ?
 						Environment.GetEnvironmentVariable ($"{platform.ToUpperInvariant ()}_WORKLOAD_VERSION ")
 						: config [$"{platform.ToUpperInvariant ()}_NUGET_VERSION_NO_METADATA"];
