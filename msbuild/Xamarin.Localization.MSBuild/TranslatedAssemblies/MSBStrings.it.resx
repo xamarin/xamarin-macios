@@ -1206,7 +1206,7 @@
         <value>All'attività "{0}" non è stato assegnato un valore per il parametro "{1}", necessario per la compilazione in questa piattaforma.</value>
     </data>
   <data name="E7115" xml:space="preserve">
-        <value>The illink assembly doesn't exist: '{0}'.</value>
+        <value>L'assembly illink non esiste: '{0}'.</value>
         <comment>
             {0}: the path to the linker assembly
         </comment>
