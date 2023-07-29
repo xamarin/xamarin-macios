@@ -1538,10 +1538,10 @@
 		<value>レジストラーで最適でない型 '{0}' が見つかりました。この型には、2 つの (ObjCRuntime.NativeHandle, bool) 引数を受け取るコンストラクターがありません。ただし、2 つの (System.IntPtr, bool) 引数を受け取るコンストラクターが見つかりました (代わりに使用されます)。(System.IntPtr, bool) コンストラクターの署名を (ObjCRuntime.NativeHandle, bool) に変更することを強くお勧めします。</value>
 	</data>
   <data name="MX4187" xml:space="preserve">
-		<value>Could not find a [UserDelegateType] attribute on the type '{0}'.</value>
+		<value>型 '{0}' に [UserDelegateType] 属性が見つかりませんでした。</value>
 	</data>
   <data name="MX4188" xml:space="preserve">
-		<value>Unable to compute the block signature for the type '{0}': {1}</value>
+		<value>型 '{0}' のブロック署名を計算できません: {1}</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>'{0}' コンパイラがありません。Xcode の 'Command-Line Tools' コンポーネントをインストールしてください
@@ -1806,12 +1806,12 @@
 		<value>シグネチャは、空でない文字列である必要があります。</value>
 	</data>
   <data name="MX8053" xml:space="preserve">
-		<value>Could not resolve the module in the assembly {0}.</value>
+		<value>アセンブリ {0} 内のモジュールを解決できませんでした。</value>
 	</data>
   <data name="MX8054" xml:space="preserve">
-		<value>Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}).</value>
+		<value>マネージド静的レジストラーを使用している場合、メソッドのメタデータ トークンを解決できません (トークン: 0x{0})。</value>
 	</data>
   <data name="MX8055" xml:space="preserve">
-		<value>Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.</value>
+		<value>アセンブリ '{0}' に型 'ObjCRuntime.__Registrar__' が見つかりませんでした。</value>
 	</data>
 </root>

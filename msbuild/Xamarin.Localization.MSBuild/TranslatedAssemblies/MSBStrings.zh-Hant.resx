@@ -1206,7 +1206,7 @@
         <value>"{0}" 工作未指定參數 "{1}" 的值，這是在此平台上建置時的必要值。</value>
     </data>
   <data name="E7115" xml:space="preserve">
-        <value>The illink assembly doesn't exist: '{0}'.</value>
+        <value>illink 組件不存在: '{0}'。</value>
         <comment>
             {0}: the path to the linker assembly
         </comment>
