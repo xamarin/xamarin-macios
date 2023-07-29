@@ -1206,7 +1206,7 @@
         <value>"{0}" タスクにパラメーター "{1}" の値が指定されませんでした。これは、このプラットフォームでビルドするときに必要です。</value>
     </data>
   <data name="E7115" xml:space="preserve">
-        <value>The illink assembly doesn't exist: '{0}'.</value>
+        <value>illink アセンブリが存在しません: '{0}'。</value>
         <comment>
             {0}: the path to the linker assembly
         </comment>
