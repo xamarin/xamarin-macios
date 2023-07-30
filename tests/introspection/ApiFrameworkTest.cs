@@ -85,7 +85,7 @@ namespace Introspection {
 				return true;
 			// Removed in Xcode 15
 			case "NewsstandKit":
-				return TestRuntime.CheckXcodeVersion (15, 0);
+				return true; 
 			default:
 				return false;
 			}
