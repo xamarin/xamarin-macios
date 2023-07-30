@@ -69,6 +69,9 @@ namespace Introspection {
 				// largely removed in xcode 13, including ADClient.ErrorDomain
 				// since using this code leads to rejections it's totally removed (so no version check)
 				return true;
+			case "NewsstandKit":
+				// largely removed in xcode 15
+				return true;
 			}
 
 			switch (p.Name) {
