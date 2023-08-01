@@ -541,7 +541,9 @@ namespace Xamarin.Tests {
 
 		public static string GetNuGetVersionNoMetadata (ApplePlatform platform)
 		{
-			return GetVariable ($"{platform.AsString ().ToUpper ()}_NUGET_VERSION_NO_METADATA", string.Empty);
+			var workloadVersion = Environment.GetEnvironmentVariable ($"{platform.ToUpperInvariant ()}_WORKLOAD_VERSION");
+			return string.IsNullOrEmpty (workloadVersion) ?  
+				GetVariable ($"{platform.AsString ().ToUpper ()}_NUGET_VERSION_NO_METADATA", string.Empty) : workloadVersion;
 		}
 
 		// This is only applicable for .NET
