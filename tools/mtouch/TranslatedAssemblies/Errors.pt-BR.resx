@@ -1537,10 +1537,10 @@
 		<value>O registrador encontrou um tipo não ideal de “{0}”: o tipo não tem um construtor que tenha dois argumentos (ObjCRuntime.NativeHandle, bool). No entanto, um construtor que aceita dois argumentos (System.IntPtr, bool) foi encontrado (e será usado em seu lugar). É altamente recomendável alterar a assinatura do construtor (System.IntPtr, bool) para ser (ObjCRuntime.NativeHandle, bool).</value>
 	</data>
   <data name="MX4187" xml:space="preserve">
-		<value>Could not find a [UserDelegateType] attribute on the type '{0}'.</value>
+		<value>Não foi possível encontrar um atributo [UserDelegateType] no tipo '{0}'.</value>
 	</data>
   <data name="MX4188" xml:space="preserve">
-		<value>Unable to compute the block signature for the type '{0}': {1}</value>
+		<value>Não é possível calcular a assinatura do bloco para o tipo '{0}': {1}</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Compilador '{0}' ausente. Instale o componente 'Ferramentas de Linha de Comando' do Xcode
@@ -1805,12 +1805,12 @@
 		<value>A assinatura deve ser uma cadeia de caracteres não vazia.</value>
 	</data>
   <data name="MX8053" xml:space="preserve">
-		<value>Could not resolve the module in the assembly {0}.</value>
+		<value>Não foi possível resolver o módulo na montagem {0}.</value>
 	</data>
   <data name="MX8054" xml:space="preserve">
-		<value>Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}).</value>
+		<value>Não é possível resolver tokens de metadados para métodos ao usar o registrador estático gerenciado (token: 0x{0}).</value>
 	</data>
   <data name="MX8055" xml:space="preserve">
-		<value>Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.</value>
+		<value>Não foi possível encontrar o tipo 'ObjCRuntime.__Register__' no assembly '{0}'.</value>
 	</data>
 </root>
