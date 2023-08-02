@@ -10,7 +10,7 @@ namespace UIKit {
 #if !XAMCORE_5_0
 
 #if NET
-		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
