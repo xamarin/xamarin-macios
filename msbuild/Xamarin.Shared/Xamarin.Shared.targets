@@ -1723,7 +1723,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<ComputeRemoteGeneratorProperties
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '$(BuildSessionId)' != ''"
-			IntermediateOutputPath="$(IntermediateOutputPath)"
+			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		>
 			<Output TaskParameter="BaseLibDllPath" PropertyName="BaseLibDllPath" />
