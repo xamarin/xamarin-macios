@@ -16,7 +16,7 @@ namespace UIKit {
 #else
 		[iOS (15, 0)]
 #endif
-		public virtual UIMenuElement [] SelectedElements { 
+		public virtual UIMenuElement [] SelectedElements {
 			get {
 				// check if we are on tvos earlier than 15, if so, return and empty array, else return
 				// the correct value

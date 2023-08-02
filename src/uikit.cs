@@ -9161,7 +9161,7 @@ namespace UIKit {
 		[Export ("selectedElements")]
 #if XAMCORE_5_0
 		UIMenuElement [] SelectedElements { get; }
-#else 
+#else
 		[Internal]
 		UIMenuElement [] _SelectedElements { get; }
 #endif
