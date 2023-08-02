@@ -15,7 +15,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 		[iOS (15, 0)]
-		[TV (15,0)]
+		[TV (15, 0)]
 #endif
 		public virtual UIMenuElement [] SelectedElements {
 			get {
