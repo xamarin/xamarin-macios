@@ -1741,6 +1741,7 @@ UIKIT_SOURCES = \
 	UIKit/UIKeyboard.cs \
 	UIKit/UIKitSynchronizationContext.cs \
 	UIKit/UIListSeparatorConfiguration.cs \
+	UIKit/UIMenu.cs \
 	UIKit/UINavigationBar.cs \
 	UIKit/UINavigationController.cs \
 	UIKit/UIPageViewController.cs \
