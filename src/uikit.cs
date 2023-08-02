@@ -25415,10 +25415,15 @@ namespace UIKit {
 		[Export ("elementWithProvider:")]
 		UIDeferredMenuElement Create (UIDeferredMenuElementProviderHandler elementProvider);
 
-		[iOS (15, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0), TV (15, 0)]
 		[Static]
 		[Export ("elementWithUncachedProvider:")]
+#if XAMCORE_5_0
 		UIDeferredMenuElement CreateUncached (UIDeferredMenuElementProviderHandler elementProvider);
+#else
+		[Internal]
+		UIDeferredMenuElement _CreateUncached (UIDeferredMenuElementProviderHandler elementProvider);
+#endif
 	}
 
 	[NoWatch, TV (14, 0), iOS (14, 0)]
