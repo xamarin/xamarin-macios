@@ -1012,6 +1012,11 @@ namespace Xamarin.Bundler {
 						args.Add (Path.Combine (DeveloperDirectory, "Platforms", "MacOSX.platform", "Developer", "SDKs", "MacOSX" + sysRootSDKVersion + ".sdk"));
 					}
 
+					if (XcodeVersion.Major >= 15) {
+						// Xcode 15 ships with a new linker, which doesn't work, so request the old one.
+						args.Add ("-Wl,-ld64");
+					}
+
 					if (App.RequiresPInvokeWrappers) {
 						var state = BuildTarget.LinkerOptions.MarshalNativeExceptionsState;
 						args.Add (state.SourcePath);
