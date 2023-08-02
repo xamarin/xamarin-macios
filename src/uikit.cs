@@ -8926,9 +8926,14 @@ namespace UIKit {
 		[Export ("options")]
 		UIMenuOptions Options { get; }
 
-		[iOS (15, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0), TV (15, 0)]
 		[Export ("selectedElements")]
+#if XAMCORE_5_0
 		UIMenuElement [] SelectedElements { get; }
+#else
+		[Internal]
+		UIMenuElement [] _SelectedElements { get; }
+#endif
 
 		[Export ("children")]
 		UIMenuElement [] Children { get; }
