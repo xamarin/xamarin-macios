@@ -691,6 +691,11 @@ namespace Xamarin.Bundler {
 		static string sdk_root;
 		static string developer_directory;
 
+		public static string SdkRoot {
+			get => sdk_root;
+			set => sdk_root = value;
+		}
+
 		public static string DeveloperDirectory {
 			get {
 				return developer_directory;
