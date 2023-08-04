@@ -30,6 +30,19 @@ steps:
 - pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
   displayName: 'Dump Environment'
 
+- task: ChocolateyToolInstaller@1
+  inputs:
+    force: true
+
+- pwsh: |
+    choco install make
+  displayName: Install Make on Windows
+
+- bash: |
+    make Build.props
+  displayName: Generate Build.props
+  workingDirectory: $(Build.SourcesDirectory)/xamarin-macios
+
 - task: DownloadPipelineArtifact@2
   displayName: Download artifacts
   inputs:
