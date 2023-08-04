@@ -71,6 +71,22 @@ stages:
       binlogsArtifactName: ${{ parameters.uploadPrefix }}nuget-msi-convert-binlogs
       signType: Real
       useDateTimeVersion: true
+      postConvertSteps:
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          artifactName: '${{ parameters.uploadPrefix }}not-signed-package'
+          downloadPath: $(Build.StagingDirectory)\sign-verify
+          patterns: |
+            **/SignVerifyIgnore.txt
+
+      - task: MicroBuildCodesignVerify@3
+        displayName: verify signed msi content
+        inputs:
+          TargetFolders: |
+            $(Build.StagingDirectory)\bin\manifests
+            $(Build.StagingDirectory)\bin\manifests-multitarget
+          ExcludeSNVerify: true
+          ApprovalListPathForCerts: $(Build.StagingDirectory)\sign-verify\SignVerifyIgnore.txt
 
   - ${{ if eq(parameters.pushNugets, true) }}:
     # Check - "xamarin-macios (Prepare Release Push NuGets)"

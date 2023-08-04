@@ -1537,10 +1537,10 @@
 		<value>Le bureau d’enregistrement a trouvé un type «{0}» non optimal : le type n’a pas de constructeur qui accepte deux arguments (ObjCRuntime.NativeHandle, bool). Toutefois, un constructeur qui accepte deux arguments (System.IntPtr, bool) a été trouvé (et sera utilisé à la place). Il est vivement recommandé de remplacer la signature du constructeur (System.IntPtr, bool) par (ObjCRuntime.NativeHandle, bool).</value>
 	</data>
   <data name="MX4187" xml:space="preserve">
-		<value>Could not find a [UserDelegateType] attribute on the type '{0}'.</value>
+		<value>Attribut [UserDelegateType] introuvable sur le type '{0}'.</value>
 	</data>
   <data name="MX4188" xml:space="preserve">
-		<value>Unable to compute the block signature for the type '{0}': {1}</value>
+		<value>Impossible de calculer la signature de bloc pour le type '{0}' : {1}</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Compilateur '{0}' manquant. Installez le composant 'Command-Line Tools' (Outils en ligne de commande) de Xcode
@@ -1805,12 +1805,12 @@
 		<value>La signature doit être une chaîne non vide.</value>
 	</data>
   <data name="MX8053" xml:space="preserve">
-		<value>Could not resolve the module in the assembly {0}.</value>
+		<value>Impossible de résoudre le module dans le {0} de l’assembly.</value>
 	</data>
   <data name="MX8054" xml:space="preserve">
-		<value>Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}).</value>
+		<value>Impossible de résoudre les jetons de métadonnées pour les méthodes lors de l’utilisation du bureau d’enregistrement statique managé (jeton : 0x{0}).</value>
 	</data>
   <data name="MX8055" xml:space="preserve">
-		<value>Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.</value>
+		<value>Impossible de trouver le type 'ObjCRuntime.__Registrar__' dans l’assembly '{0}'.</value>
 	</data>
 </root>
