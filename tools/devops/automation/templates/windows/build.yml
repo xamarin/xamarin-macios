@@ -30,19 +30,6 @@ steps:
 - pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
   displayName: 'Dump Environment'
 
-- task: ChocolateyToolInstaller@1
-  inputs:
-    force: true
-
-- pwsh: |
-    choco install make
-  displayName: Install Make on Windows
-
-- bash: |
-    make Build.props
-  displayName: Generate Build.props
-  workingDirectory: $(Build.SourcesDirectory)/xamarin-macios
-
 - task: DownloadPipelineArtifact@2
   displayName: Download artifacts
   inputs:
@@ -117,6 +104,13 @@ steps:
       -p:DisableImplicitNuGetFallbackFolder=true `
       -t:Install
   displayName: 'Install workloads'
+
+- task: DownloadPipelineArtifact@2
+  displayName: Download Build.props
+  inputs:
+    patterns: '**/Build.props'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/xamarin-macios
 
 # get and expand the needed libs for monotouch
 - task: DownloadPipelineArtifact@2
