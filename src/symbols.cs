@@ -5,15 +5,15 @@ using Foundation;
 using System;
 
 namespace Symbols {
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
 	interface NSSymbolEffect : NSCopying, NSSecureCoding { }
 
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
 	interface NSSymbolContentTransition : NSCopying, NSSecureCoding { }
 
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSSymbolEffectOptions : NSCopying, NSSecureCoding {
@@ -50,7 +50,7 @@ namespace Symbols {
 		NSSymbolEffectOptions GetOptionsWithSpeed (double speed);
 	}
 
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
 	interface NSSymbolPulseEffect {
 		[Static]
@@ -64,7 +64,7 @@ namespace Symbols {
 		NSSymbolPulseEffect GetEffectWithWholeSymbol ();
 	}
 
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
 	interface NSSymbolBounceEffect {
 		[Static]
@@ -86,7 +86,7 @@ namespace Symbols {
 		NSSymbolBounceEffect GetEffectWithWholeSymbol ();
 	}
 
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
 	interface NSSymbolVariableColorEffect {
 		[Static]
@@ -112,7 +112,7 @@ namespace Symbols {
 		NSSymbolVariableColorEffect GetEffectWithDimInactiveLayers ();
 	}
 
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
 	interface NSSymbolScaleEffect {
 		[Static]
@@ -134,10 +134,9 @@ namespace Symbols {
 		NSSymbolScaleEffect GetEffectWithWholeSymbol ();
 	}
 
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
-	interface NSSymbolAppearEffect
-	{
+	interface NSSymbolAppearEffect {
 		[Static]
 		[Export ("effect")]
 		NSSymbolAppearEffect CreateEffect ();
@@ -157,7 +156,7 @@ namespace Symbols {
 		NSSymbolAppearEffect GetEffectWithWholeSymbol ();
 	}
 
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
 	interface NSSymbolDisappearEffect {
 		[Static]
@@ -179,7 +178,7 @@ namespace Symbols {
 		NSSymbolDisappearEffect GetEffectWithWholeSymbol ();
 	}
 
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolContentTransition))]
 	interface NSSymbolReplaceContentTransition {
 		[Static]
@@ -205,7 +204,7 @@ namespace Symbols {
 		NSSymbolReplaceContentTransition GetTransitionWithWholeSymbol ();
 	}
 
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolContentTransition))]
 	interface NSSymbolAutomaticContentTransition {
 		[Static]
