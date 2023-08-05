@@ -44,8 +44,8 @@ namespace MonoTouchFixtures.Foundation {
 			string name = NSLocale.CurrentLocale.CountryCode; // two letter code
 															  // Handle manually set locale (without country) in iOS Simulator (plist) - ref bug #18520
 			if (TestRuntime.CheckXcodeVersion (15, 0)) {
-				// xcode 15 started to add leading 0 to the locale :/
-				name = name.TrimStart ('0');
+				// got deprecated and do not longer return a valid two letter code
+				Assert.Ignore ("Deprecated in xcode15 and does not longer return a valid value.");
 			}
 
 			if (name is null)
