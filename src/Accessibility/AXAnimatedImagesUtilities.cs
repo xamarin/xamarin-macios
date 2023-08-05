@@ -14,7 +14,7 @@ namespace Accessibility {
 	[SupportedOSPlatform ("maccatalyst17.0")]
 	[SupportedOSPlatform ("macos14.0")]
 #else
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0)]
 #endif
 	public static partial class AXAnimatedImagesUtilities {
 

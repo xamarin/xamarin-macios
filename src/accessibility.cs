@@ -139,7 +139,7 @@ namespace Accessibility {
 
 		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0)]
 		[NullAllowed, Export ("accessibilityCustomContentBlock", ArgumentSemantic.Copy)]
-		Func<AXCustomContent[]?> AccessibilityCustomContentHandler { get; set; }
+		Func<AXCustomContent []?> AccessibilityCustomContentHandler { get; set; }
 
 	}
 
@@ -344,7 +344,7 @@ namespace Accessibility {
 		Action<AXBrailleMap> AccessibilityBrailleMapRenderer { get; set; }
 	}
 
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0)]
 	[Static]
 	[Partial]
 	partial interface AXAnimatedImagesUtilities {
