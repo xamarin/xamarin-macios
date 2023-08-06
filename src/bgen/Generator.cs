@@ -2669,8 +2669,8 @@ public partial class Generator : IMemberGatherer {
 			} else
 				sb.Append (c);
 		}
-		if (!InlineSelectors)
-			sb.Append ("Handle");
+		if (!InlineSelectors) 
+			sb.Append ("XHandle");
 		name = sb.ToString ();
 		selector_names [s] = name;
 		return name;
