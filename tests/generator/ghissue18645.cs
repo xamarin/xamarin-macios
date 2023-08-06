@@ -1,10 +1,10 @@
 using Foundation;
 using ObjCRuntime;
 
-namespace GHIssue18645{
+namespace GHIssue18645 {
 
 	[Protocol]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	interface ASCredentialIdentity {
 
 		[Abstract]

@@ -825,7 +825,7 @@ namespace GeneratorTests {
 		public void GHIssue9065_Sealed () => BuildFile (Profile.iOS, nowarnings: true, "ghissue9065.cs");
 
 		[Test]
-		public void GHIssue18645_DuplicatedFiled() => BuildFile (Profile.iOS, nowarnings: true, "ghissue18645.cs");
+		public void GHIssue18645_DuplicatedFiled () => BuildFile (Profile.iOS, nowarnings: true, "ghissue18645.cs");
 
 		// looking for [BindingImpl (BindingImplOptions.Optimizable)]
 		bool IsOptimizable (MethodDefinition method)
