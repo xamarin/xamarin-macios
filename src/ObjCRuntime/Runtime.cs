@@ -1271,9 +1271,6 @@ namespace ObjCRuntime {
 #if NET
 		static void CannotCreateManagedInstanceOfGenericType (IntPtr ptr, IntPtr klass, Type type, MissingCtorResolution resolution, IntPtr sel, RuntimeMethodHandle method_handle)
 		{
-			Debug.Assert (Runtime.IsManagedStaticRegistrar);
-			Debug.Assert (type.IsGenericType);
-
 			if (resolution == MissingCtorResolution.Ignore)
 				return;
 
