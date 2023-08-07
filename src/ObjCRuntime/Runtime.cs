@@ -1281,19 +1281,13 @@ namespace ObjCRuntime {
 				klass = Class.GetClassForObject (ptr);
 
 			var msg = new StringBuilder ();
-			msg.Append ("Failed to create a managed counterpart of the Objective-C object 0x");
-			msg.Append (ptr.ToString ("x"));
-			msg.Append (" (type: ");
-			msg.Append (new Class (klass).Name);
-			msg.Append ("). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type '");
-			msg.Append (type.FullName);
-			msg.Append ("'.");
+			msg.AppendFormat (Xamarin.Bundler.Errors.MX8056 /* Failed to marshal the Objective-C object 0x{0} (type: {1}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {2}. */, ptr.ToString ("x"), new Class (klass).Name, type.FullName);
 
 			if (sel != IntPtr.Zero || method_handle.Value != IntPtr.Zero) {
 				AppendAdditionalInformation (msg, sel, method_handle);
 			}
 
-			throw ErrorHelper.CreateError (8037, msg.ToString ());
+			throw ErrorHelper.CreateError (8056, msg.ToString ());
 		}
 #endif
 

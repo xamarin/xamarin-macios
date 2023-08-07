@@ -3750,9 +3750,9 @@ This exception will have an inner exception which gives the reason for the failu
 
 This exception will have an inner exception which gives the reason for the failure.
 
-<a name="MT8037" />
+<a name="MX8056" />
 
-### MT8037: Failed to marshal the Objective-C object {handle} (type: {objc_type}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {managed_type}.
+### MX8056: Failed to marshal the Objective-C object {handle} (type: {objc_type}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {managed_type}.
 
 This occurs when the Xamarin.iOS runtime finds an Objective-C object without a
 corresponding managed wrapper object, and when trying to create that managed
