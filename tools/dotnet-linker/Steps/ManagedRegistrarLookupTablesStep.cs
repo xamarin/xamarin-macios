@@ -342,11 +342,8 @@ namespace Xamarin.Linker {
 				ImplementConstructNSObjectFactoryMethod (type, ctor);
 			}
 
-			// return default (NSObject)
-			var temporary = body.AddVariable (abr.Foundation_NSObject);
-			il.Emit (OpCodes.Ldloca, temporary);
-			il.Emit (OpCodes.Initobj, abr.Foundation_NSObject);
-			il.Emit (OpCodes.Ldloc, temporary);
+			// return default (NSObject);
+			il.Emit (OpCodes.Ldnull);
 			il.Emit (OpCodes.Ret);
 		}
 
@@ -403,10 +400,7 @@ namespace Xamarin.Linker {
 			}
 
 			// return default (NSObject)
-			var temporary = body.AddVariable (abr.Foundation_NSObject);
-			il.Emit (OpCodes.Ldloca, temporary);
-			il.Emit (OpCodes.Initobj, abr.Foundation_NSObject);
-			il.Emit (OpCodes.Ldloc, temporary);
+			il.Emit (OpCodes.Ldnull);
 			il.Emit (OpCodes.Ret);
 		}
 
@@ -512,7 +506,7 @@ namespace Xamarin.Linker {
 				?? FindConstructorWithOneParameter ("System", "IntPtr");
 
 			MethodReference? FindConstructorWithOneParameter (string ns, string cls)
-				=> type.Methods.FirstOrDefault (method =>
+				=> type.Methods.SingleOrDefault (method =>
 					method.IsConstructor
 						&& !method.IsStatic
 						&& method.HasParameters
@@ -527,7 +521,7 @@ namespace Xamarin.Linker {
 				?? FindConstructorWithTwoParameters ("System", "IntPtr", "System", "Boolean");
 
 			MethodReference? FindConstructorWithTwoParameters (string ns1, string cls1, string ns2, string cls2)
-				=> type.Methods.FirstOrDefault (method =>
+				=> type.Methods.SingleOrDefault (method =>
 					method.IsConstructor
 						&& !method.IsStatic
 						&& method.HasParameters
