@@ -1421,18 +1421,7 @@ namespace ObjCRuntime {
 			//
 			// When the same call is made from a separate function, it works fine.
 			static T? ConstructNSObjectViaFactoryMethod (NativeHandle handle)
-			{
-				NSObject? obj = T._Xamarin_ConstructNSObject (handle);
-				if (obj is T instance) {
-					return instance;
-				}
-
-				// if the factory method returns a NSObject subclass but we don't expect that specific type,
-				// we need to dispose it and return null anyway
-				obj?.Dispose ();
-
-				return null;
-			}
+				=> T._Xamarin_ConstructNSObject (handle) as T;
 #endif
 		}
 
@@ -1524,20 +1513,7 @@ namespace ObjCRuntime {
 			//
 			// When the same call is made from a separate function, it works fine.
 			static T? ConstructINativeObjectViaFactoryMethod (NativeHandle nativeHandle, bool owns)
-			{
-				INativeObject? obj = T._Xamarin_ConstructINativeObject (nativeHandle, owns);
-				if (obj is T instance) {
-					return instance;
-				}
-
-				// if the factory method returns an INativeObject but we don't expect that specific type,
-				// we need to release it and return null anyway
-				if (obj is not null) {
-					Runtime.TryReleaseINativeObject(obj);
-				}
-
-				return null;
-			}
+				=> T._Xamarin_ConstructINativeObject (nativeHandle, owns) as T;
 #endif
 		}
 
@@ -1918,7 +1894,7 @@ namespace ObjCRuntime {
 					// native objects and NSObject instances.
 					throw ErrorHelper.CreateError (8004, $"Cannot create an instance of {implementation.FullName} for the native object 0x{ptr:x} (of type '{Class.class_getName (Class.GetClassForObject (ptr))}'), because another instance already exists for this native object (of type {o.GetType ().FullName}).");
 				}
-				return (INativeObject?) ConstructNSObject<NSObject> (ptr, implementation!, MissingCtorResolution.ThrowConstructor1NotFound, sel, method_handle);
+				return ConstructNSObject<NSObject> (ptr, implementation!, MissingCtorResolution.ThrowConstructor1NotFound, sel, method_handle);
 			}
 
 			return ConstructINativeObject<INativeObject> (ptr, owns, implementation, MissingCtorResolution.ThrowConstructor2NotFound, sel, method_handle);
