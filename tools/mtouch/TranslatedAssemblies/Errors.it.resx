@@ -1537,10 +1537,10 @@
 		<value>Il registrar ha trovato un tipo non ottimale '{0}': il tipo non dispone di un costruttore che accetta due argomenti (ObjCRuntime.NativeHandle, bool). Tuttavia, è stato trovato un costruttore che accetta due argomenti (System.IntPtr, bool) e verrà utilizzato. È consigliabile modificare la firma del costruttore (System.IntPtr, bool) in (ObjCRuntime.NativeHandle, bool).</value>
 	</data>
   <data name="MX4187" xml:space="preserve">
-		<value>Could not find a [UserDelegateType] attribute on the type '{0}'.</value>
+		<value>Impossibile trovare un attributo [UserDelegateType] nel tipo '{0}'.</value>
 	</data>
   <data name="MX4188" xml:space="preserve">
-		<value>Unable to compute the block signature for the type '{0}': {1}</value>
+		<value>Impossibile calcolare la firma del blocco per il tipo '{0}': {1}</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Manca il compilatore '{0}'. Installare il componente 'Strumenti da riga di comando' di Xcode
@@ -1805,12 +1805,12 @@
 		<value>La firma deve essere una stringa non vuota.</value>
 	</data>
   <data name="MX8053" xml:space="preserve">
-		<value>Could not resolve the module in the assembly {0}.</value>
+		<value>Impossibile risolvere il modulo nell'assembly {0}.</value>
 	</data>
   <data name="MX8054" xml:space="preserve">
-		<value>Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}).</value>
+		<value>Impossibile risolvere i token di metadati per i metodi quando si usa il registrar statico gestito (token: 0x{0}).</value>
 	</data>
   <data name="MX8055" xml:space="preserve">
-		<value>Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.</value>
+		<value>Impossibile trovare il tipo 'ObjCRuntime.__Registrar__' nell'assembly '{0}'.</value>
 	</data>
 </root>
