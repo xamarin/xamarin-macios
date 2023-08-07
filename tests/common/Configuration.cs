@@ -805,6 +805,8 @@ namespace Xamarin.Tests {
 
 		public static IList<string> GetRuntimeIdentifiers (ApplePlatform platform)
 		{
+			if (!include_dotnet)
+				return Array.Empty<string> ();
 			return GetVariableArray ($"DOTNET_{platform.AsString ().ToUpper ()}_RUNTIME_IDENTIFIERS");
 		}
 
@@ -1125,6 +1127,13 @@ namespace Xamarin.Tests {
 			var notIncluded = allPlatforms.Where (v => !includedPlatforms.Contains (v));
 			if (notIncluded.Any ())
 				Assert.Ignore ($"This test requires all platforms to be included, but the following platforms aren't included: {string.Join (", ", notIncluded.Select (v => v.AsString ()))}");
+		}
+
+		public static void IgnoreIfNotDotNet ()
+		{
+			if (include_dotnet)
+				return;
+			Assert.Ignore ($"This test requires .NET to be enabled.");
 		}
 
 		public static string GetTestLibraryDirectory (ApplePlatform platform, bool? simulator = null)

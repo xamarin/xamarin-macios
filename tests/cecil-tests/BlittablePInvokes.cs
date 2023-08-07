@@ -179,6 +179,8 @@ namespace Cecil.Tests {
 		[Test]
 		public void CheckForNonBlittablePInvokes ()
 		{
+			Configuration.IgnoreIfNotDotNet ();
+
 			var failures = new Dictionary<string, (string Message, string Location)> ();
 			var pinvokes = new List<(AssemblyDefinition Assembly, MethodDefinition Method)> ();
 
@@ -345,6 +347,8 @@ namespace Cecil.Tests {
 		{
 			var failures = new Dictionary<string, (string Message, string Location)> ();
 
+			Configuration.IgnoreIfNotDotNet ();
+
 			foreach (var info in Helper.NetPlatformImplementationAssemblyDefinitions) {
 				var assembly = info.Assembly;
 				foreach (var type in assembly.EnumerateTypes ()) {
@@ -395,6 +399,8 @@ namespace Cecil.Tests {
 		public void CheckForMonoPInvokeCallback ()
 		{
 			var failures = new Dictionary<string, (string Message, string Location)> ();
+
+			Configuration.IgnoreIfNotDotNet ();
 
 			foreach (var info in Helper.NetPlatformImplementationAssemblyDefinitions) {
 				var assembly = info.Assembly;
