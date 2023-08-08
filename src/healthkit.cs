@@ -1820,7 +1820,7 @@ namespace HealthKit {
 		bool HasUndeterminedDuration { get; }
 	}
 
-	delegate void HKSampleQueryResultsHandler (HKSampleQuery query, HKSample [] results, NSError error);
+	delegate void HKSampleQueryResultsHandler (HKSampleQuery query, [NullAllowed] HKSample [] results, [NullAllowed] NSError error);
 
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
