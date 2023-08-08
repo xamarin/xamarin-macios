@@ -918,6 +918,9 @@ namespace Xamarin.Tests {
 
 		public static IEnumerable<ApplePlatform> GetIncludedPlatforms (bool dotnet)
 		{
+			if (dotnet && !include_dotnet)
+				yield break;
+
 			if (include_ios)
 				yield return ApplePlatform.iOS;
 			if (include_tvos)

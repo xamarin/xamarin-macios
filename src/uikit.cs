@@ -25415,7 +25415,7 @@ namespace UIKit {
 		[Export ("elementWithProvider:")]
 		UIDeferredMenuElement Create (UIDeferredMenuElementProviderHandler elementProvider);
 
-		[iOS (15, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), MacCatalyst (15, 0), TV (15, 0)]
 		[Static]
 		[Export ("elementWithUncachedProvider:")]
 		UIDeferredMenuElement CreateUncached (UIDeferredMenuElementProviderHandler elementProvider);
