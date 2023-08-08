@@ -3,19 +3,27 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text;
 
 using Mono.Linker;
 using Mono.Linker.Steps;
 
 using Mono.Cecil;
+using Mono.Cecil.Cil;
+
+using Xamarin.Bundler;
 using Xamarin.Linker;
+using Xamarin.Utils;
 
 #nullable enable
 
 namespace Mono.Tuner {
 
 	public abstract class ApplyPreserveAttributeBase : ConfigurationAwareSubStep {
+
+		AppBundleRewriter? abr;
 
 		protected override string Name { get => "Apply Preserve Attribute"; }
 
@@ -33,6 +41,14 @@ namespace Mono.Tuner {
 					| SubStepTargets.Event
 					| SubStepTargets.Assembly;
 			}
+		}
+
+		public override void Initialize (LinkContext context)
+		{
+			base.Initialize (context);
+
+			if (Configuration.Application.XamarinRuntime == XamarinRuntime.NativeAOT)
+				abr = Configuration.AppBundleRewriter;
 		}
 
 		public override bool IsActiveFor (AssemblyDefinition assembly)
@@ -108,6 +124,7 @@ namespace Mono.Tuner {
 			}
 
 			Annotations.AddPreservedMethod (method.DeclaringType, method);
+			AddConditionalDynamicDependencyAttribute (method.DeclaringType, method);
 		}
 
 		static bool IsConditionalAttribute (CustomAttribute? attribute)
@@ -125,6 +142,7 @@ namespace Mono.Tuner {
 		void PreserveUnconditional (IMetadataTokenProvider provider)
 		{
 			Annotations.Mark (provider);
+			AddDynamicDependencyAttribute (provider);
 
 			var member = provider as IMemberDefinition;
 			if (member is null || member.DeclaringType is null)
@@ -136,14 +154,7 @@ namespace Mono.Tuner {
 		void TryApplyPreserveAttribute (TypeDefinition type)
 		{
 			foreach (var attribute in GetPreserveAttributes (type)) {
-				Annotations.Mark (type);
-
-				if (!attribute.HasFields)
-					continue;
-
-				foreach (var named_argument in attribute.Fields)
-					if (named_argument.Name == "AllMembers" && (bool) named_argument.Argument.Value)
-						Annotations.SetPreserve (type, TypePreserve.All);
+				PreserveType (type, attribute);
 			}
 		}
 
@@ -169,6 +180,83 @@ namespace Mono.Tuner {
 			}
 
 			return attrs;
+		}
+
+		protected void PreserveType (TypeDefinition type, CustomAttribute preserveAttribute)
+		{
+			var allMembers = false;
+			if (preserveAttribute.HasFields) {
+				foreach (var named_argument in preserveAttribute.Fields)
+					if (named_argument.Name == "AllMembers" && (bool) named_argument.Argument.Value)
+						allMembers = true;
+			}
+
+			PreserveType (type, allMembers);
+		}
+
+		protected void PreserveType (TypeDefinition type, bool allMembers)
+		{
+			Annotations.Mark (type);
+			if (allMembers)
+				Annotations.SetPreserve (type, TypePreserve.All);
+			AddDynamicDependencyAttribute (type, allMembers);
+		}
+
+		MethodDefinition GetOrCreateModuleConstructor (ModuleDefinition @module)
+		{
+			var moduleType = @module.GetModuleType ();
+			var moduleConstructor = moduleType.GetTypeConstructor ();
+			if (moduleConstructor is null) {
+				moduleConstructor = moduleType.AddMethod (".cctor", MethodAttributes.Private | MethodAttributes.HideBySig | MethodAttributes.RTSpecialName | MethodAttributes.SpecialName | MethodAttributes.Static, abr!.System_Void);
+				moduleConstructor.CreateBody (out var il);
+				il.Emit (OpCodes.Ret);
+			}
+			return moduleConstructor;
+		}
+
+		void AddDynamicDependencyAttribute (TypeDefinition type, bool allMembers)
+		{
+			if (abr is null)
+				return;
+
+			abr.ClearCurrentAssembly ();
+			abr.SetCurrentAssembly (type.Module.Assembly);
+
+			var moduleConstructor = GetOrCreateModuleConstructor (type.GetModule ());
+			var attrib = abr.CreateDynamicDependencyAttribute (allMembers ? DynamicallyAccessedMemberTypes.All : DynamicallyAccessedMemberTypes.None, type);
+			moduleConstructor.CustomAttributes.Add (attrib);
+
+			abr.ClearCurrentAssembly ();
+		}
+
+		void AddConditionalDynamicDependencyAttribute (TypeDefinition onType, MethodDefinition forMethod)
+		{
+			if (abr is null)
+				return;
+
+			// I haven't found a way to express a conditional Preserve attribute using DynamicDependencyAttribute :/
+			ErrorHelper.Warning (2112, Errors.MX2112 /* Unable to apply the conditional [Preserve] attribute on the member {0} */, forMethod.FullName);
+		}
+
+		void AddDynamicDependencyAttribute (IMetadataTokenProvider provider)
+		{
+			if (abr is null)
+				return;
+
+			var member = provider as IMemberDefinition;
+			if (member is null)
+				throw ErrorHelper.CreateError (99, $"Unable to add dynamic dependency attribute to {provider.GetType ().FullName}");
+
+			var module = member.GetModule ();
+			abr.ClearCurrentAssembly ();
+			abr.SetCurrentAssembly (module.Assembly);
+
+			var moduleConstructor = GetOrCreateModuleConstructor (module);
+			var signature = DocumentationComments.GetSignature (member);
+			var attrib = abr.CreateDynamicDependencyAttribute (signature, member.DeclaringType);
+			moduleConstructor.CustomAttributes.Add (attrib);
+
+			abr.ClearCurrentAssembly ();
 		}
 	}
 }
