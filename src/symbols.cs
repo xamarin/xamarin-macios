@@ -19,35 +19,35 @@ namespace Symbols {
 	interface NSSymbolEffectOptions : NSCopying, NSSecureCoding {
 		[Static]
 		[Export ("options")]
-		NSSymbolEffectOptions CreateOptions ();
+		NSSymbolEffectOptions Create ();
 
 		[Static]
 		[Export ("optionsWithRepeating")]
-		NSSymbolEffectOptions CreateOptionsWithRepeating ();
+		NSSymbolEffectOptions CreatehRepeating ();
 
 		[Export ("optionsWithRepeating")]
-		NSSymbolEffectOptions GetOptionsWithRepeating ();
+		NSSymbolEffectOptions GetWithRepeating ();
 
 		[Static]
 		[Export ("optionsWithNonRepeating")]
-		NSSymbolEffectOptions CreateOptionsWithNonRepeating ();
+		NSSymbolEffectOptions CreatesWithNonRepeating ();
 
 		[Export ("optionsWithNonRepeating")]
-		NSSymbolEffectOptions GetOptionsWithNonRepeating ();
+		NSSymbolEffectOptions GetWithNonRepeating ();
 
 		[Static]
 		[Export ("optionsWithRepeatCount:")]
-		NSSymbolEffectOptions CreateOptionsWithRepeatCount (nint count);
+		NSSymbolEffectOptions CreateWithRepeatCount (nint count);
 
 		[Export ("optionsWithRepeatCount:")]
-		NSSymbolEffectOptions GetOptionsWithRepeatCount (nint count);
+		NSSymbolEffectOptions GetWithRepeatCount (nint count);
 
 		[Static]
 		[Export ("optionsWithSpeed:")]
-		NSSymbolEffectOptions CreateOptionsWithSpeed (double speed);
+		NSSymbolEffectOptions CreateWithSpeed (double speed);
 
 		[Export ("optionsWithSpeed:")]
-		NSSymbolEffectOptions GetOptionsWithSpeed (double speed);
+		NSSymbolEffectOptions GetWithSpeed (double speed);
 	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -58,10 +58,10 @@ namespace Symbols {
 		NSSymbolPulseEffect CreateEffect ();
 
 		[Export ("effectWithByLayer")]
-		NSSymbolPulseEffect GetEffectWithByLayer ();
+		NSSymbolPulseEffect ByLayer ();
 
 		[Export ("effectWithWholeSymbol")]
-		NSSymbolPulseEffect GetEffectWithWholeSymbol ();
+		NSSymbolPulseEffect WholeSymbol ();
 	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -80,10 +80,10 @@ namespace Symbols {
 		NSSymbolBounceEffect CreateBounceDownEffect ();
 
 		[Export ("effectWithByLayer")]
-		NSSymbolBounceEffect GetEffectWithByLayer ();
+		NSSymbolBounceEffect ByLayer ();
 
 		[Export ("effectWithWholeSymbol")]
-		NSSymbolBounceEffect GetEffectWithWholeSymbol ();
+		NSSymbolBounceEffect WholeSymbol ();
 	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -117,7 +117,7 @@ namespace Symbols {
 	interface NSSymbolScaleEffect {
 		[Static]
 		[Export ("effect")]
-		NSSymbolScaleEffect CreateEffect ();
+		NSSymbolScaleEffect Create ();
 
 		[Static]
 		[Export ("scaleUpEffect")]
@@ -128,10 +128,10 @@ namespace Symbols {
 		NSSymbolScaleEffect CreateScaleDownEffect ();
 
 		[Export ("effectWithByLayer")]
-		NSSymbolScaleEffect GetEffectWithByLayer ();
+		NSSymbolScaleEffect ByLayer ();
 
 		[Export ("effectWithWholeSymbol")]
-		NSSymbolScaleEffect GetEffectWithWholeSymbol ();
+		NSSymbolScaleEffect WholeSymbol ();
 	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -150,10 +150,10 @@ namespace Symbols {
 		NSSymbolAppearEffect CreateAppearDownEffect ();
 
 		[Export ("effectWithByLayer")]
-		NSSymbolAppearEffect GetEffectWithByLayer ();
+		NSSymbolAppearEffect ByLayer ();
 
 		[Export ("effectWithWholeSymbol")]
-		NSSymbolAppearEffect GetEffectWithWholeSymbol ();
+		NSSymbolAppearEffect WholeSymbol ();
 	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -172,10 +172,10 @@ namespace Symbols {
 		NSSymbolDisappearEffect CreateDisappearDownEffect ();
 
 		[Export ("effectWithByLayer")]
-		NSSymbolDisappearEffect GetEffectWithByLayer ();
+		NSSymbolDisappearEffect ByLayer ();
 
 		[Export ("effectWithWholeSymbol")]
-		NSSymbolDisappearEffect GetEffectWithWholeSymbol ();
+		NSSymbolDisappearEffect WholeSymbol ();
 	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -198,10 +198,10 @@ namespace Symbols {
 		NSSymbolReplaceContentTransition CreateReplaceOffUpTransition ();
 
 		[Export ("transitionWithByLayer")]
-		NSSymbolReplaceContentTransition GetTransitionWithByLayer ();
+		NSSymbolReplaceContentTransition ByLayer ();
 
 		[Export ("transitionWithWholeSymbol")]
-		NSSymbolReplaceContentTransition GetTransitionWithWholeSymbol ();
+		NSSymbolReplaceContentTransition WholeSymbol ();
 	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
