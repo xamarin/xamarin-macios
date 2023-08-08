@@ -56,6 +56,7 @@ $(XIOS_PCH): .stamp-check-sharpie
 	-exclude Matter \
 	-exclude MetalPerformanceShadersGraph \
 	-exclude NearbyInteraction \
+	-exclude WebKit \
 	-i ThreadNetwork/THClient.h \
 	$(CORETELEPHONY_HEADERS) \
 
@@ -104,6 +105,7 @@ $(XMACOS_PCH): .stamp-check-sharpie
 		-exclude GameController \
 		-exclude Matter \
 		-exclude MetalPerformanceShadersGraph \
+		-exclude WebKit \
 		$(CORETELEPHONY_HEADERS) \
 
 XMACCATALYST_ARCH = x86_64

@@ -6,3 +6,7 @@
 !deprecated-attribute-missing! MKMapSnapshotOptions::showsBuildings missing a [Deprecated] attribute
 !missing-selector! MKMapSnapshotOptions::preferredConfiguration not bound
 !missing-selector! MKMapSnapshotOptions::setPreferredConfiguration: not bound
+!missing-selector! MKMapView::pitchButtonVisibility not bound
+!missing-selector! MKMapView::setPitchButtonVisibility: not bound
+!missing-selector! MKMapView::setShowsUserTrackingButton: not bound
+!missing-selector! MKMapView::showsUserTrackingButton not bound

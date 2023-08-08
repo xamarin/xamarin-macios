@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using ObjCRuntime;
 using Foundation;
 using CoreLocation;
@@ -83,8 +84,17 @@ namespace CloudKit {
 	}
 
 	[MacCatalyst (13, 1)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface CKShareMetadata : NSCopying, NSSecureCoding {
+
+#if !XAMCORE_5_0
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Obsolete ("Get them from 'CKFetchShareMetadataOperation' or platform-specific scene / app delegate callbacks.")]
+		[Export ("init")]
+		NativeHandle Constructor ();
+#endif
+
 		[Export ("containerIdentifier")]
 		string ContainerIdentifier { get; }
 

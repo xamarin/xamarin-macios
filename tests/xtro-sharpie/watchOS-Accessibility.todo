@@ -2,3 +2,5 @@
 !missing-pinvoke! AXAnimatedImagesEnabled is not bound
 !missing-protocol-member! AXCustomContentProvider::accessibilityCustomContentBlock not found
 !missing-protocol-member! AXCustomContentProvider::setAccessibilityCustomContentBlock: not found
+!missing-field! AXPrefersHorizontalTextLayoutDidChangeNotification not bound
+!missing-pinvoke! AXPrefersHorizontalTextLayout is not bound

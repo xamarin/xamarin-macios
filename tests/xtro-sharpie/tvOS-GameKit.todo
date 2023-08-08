@@ -1,17 +1,6 @@
 !deprecated-attribute-missing! GKAchievement::challengeComposeControllerWithMessage:players:completionHandler: missing a [Deprecated] attribute
 !deprecated-attribute-missing! GKLeaderboardEntry::challengeComposeControllerWithMessage:players:completionHandler: missing a [Deprecated] attribute
 !deprecated-attribute-missing! GKNotificationBanner missing a [Deprecated] attribute
-!missing-protocol! GKSavedGameListener not bound
-!missing-protocol-conformance! GKLocalPlayer should conform to GKSavedGameListener (defined in 'GKSavedGame' category)
 !missing-selector! GKAchievement::challengeComposeControllerWithMessage:players:completion: not bound
 !missing-selector! GKAchievementDescription::rarityPercent not bound
 !missing-selector! GKLeaderboardEntry::challengeComposeControllerWithMessage:players:completion: not bound
-!missing-selector! GKLocalPlayer::deleteSavedGamesWithName:completionHandler: not bound
-!missing-selector! GKLocalPlayer::fetchSavedGamesWithCompletionHandler: not bound
-!missing-selector! GKLocalPlayer::resolveConflictingSavedGames:withData:completionHandler: not bound
-!missing-selector! GKLocalPlayer::saveGameData:withName:completionHandler: not bound
-!missing-selector! GKSavedGame::deviceName not bound
-!missing-selector! GKSavedGame::loadDataWithCompletionHandler: not bound
-!missing-selector! GKSavedGame::modificationDate not bound
-!missing-selector! GKSavedGame::name not bound
-!missing-type! GKSavedGame not bound

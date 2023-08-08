@@ -196,3 +196,6 @@
 !missing-selector! NSWindow::displayLinkWithTarget:selector: not bound
 !missing-type! NSMenuItemBadge not bound
 !missing-type! NSTextInsertionIndicator not bound
+!missing-field! NSTextCheckingGenerateInlinePredictionsKey not bound
+!missing-selector! NSSpellChecker::showInlinePredictionForCandidates:client: not bound
+!unknown-field! NSReadAccessURLDocumentOption bound

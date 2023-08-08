@@ -45,3 +45,4 @@
 !missing-selector! HKWorkoutSession::type not bound
 !missing-selector! HKWorkoutSession::workoutConfiguration not bound
 !missing-type! HKWorkoutSession not bound
+!missing-enum-value! HKErrorCode native value HKErrorBackgroundWorkoutSessionNotAllowed = 14 not bound
