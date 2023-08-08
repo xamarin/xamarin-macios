@@ -27,8 +27,9 @@ namespace Xamarin.Linker.Steps {
 		}
 
 #if NET
-		public override void ProcessAssembly (AssemblyDefinition assembly)
+		protected override void Process (AssemblyDefinition assembly)
 		{
+			base.Process (assembly);
 			ProcessAssemblyAttributes (assembly);
 		}
 #else

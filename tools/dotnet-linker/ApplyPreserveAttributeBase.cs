@@ -9,12 +9,17 @@ using Mono.Linker;
 using Mono.Linker.Steps;
 
 using Mono.Cecil;
+using Xamarin.Linker;
 
 #nullable enable
 
 namespace Mono.Tuner {
 
-	public abstract class ApplyPreserveAttributeBase : BaseSubStep {
+	public abstract class ApplyPreserveAttributeBase : ConfigurationAwareSubStep {
+
+		protected override string Name { get => "Apply Preserve Attribute"; }
+
+		protected override int ErrorCode { get => 2450; }
 
 		// set 'removeAttribute' to true if you want the preserved attribute to be removed from the final assembly
 		protected abstract bool IsPreservedAttribute (ICustomAttributeProvider provider, CustomAttribute attribute, out bool removeAttribute);
@@ -35,23 +40,23 @@ namespace Mono.Tuner {
 			return Annotations.GetAction (assembly) == AssemblyAction.Link;
 		}
 
-		public override void ProcessType (TypeDefinition type)
+		protected override void Process (TypeDefinition type)
 		{
 			TryApplyPreserveAttribute (type);
 		}
 
-		public override void ProcessField (FieldDefinition field)
+		protected override void Process (FieldDefinition field)
 		{
 			foreach (var attribute in GetPreserveAttributes (field))
 				Mark (field, attribute);
 		}
 
-		public override void ProcessMethod (MethodDefinition method)
+		protected override void Process (MethodDefinition method)
 		{
 			MarkMethodIfPreserved (method);
 		}
 
-		public override void ProcessProperty (PropertyDefinition property)
+		protected override void Process (PropertyDefinition property)
 		{
 			foreach (var attribute in GetPreserveAttributes (property)) {
 				MarkMethod (property.GetMethod, attribute);
@@ -59,7 +64,7 @@ namespace Mono.Tuner {
 			}
 		}
 
-		public override void ProcessEvent (EventDefinition @event)
+		protected override void Process (EventDefinition @event)
 		{
 			foreach (var attribute in GetPreserveAttributes (@event)) {
 				MarkMethod (@event.AddMethod, attribute);
