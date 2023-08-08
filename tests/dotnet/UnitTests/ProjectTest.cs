@@ -1275,7 +1275,7 @@ namespace Xamarin.Tests {
 
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "Release")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "Debug")]
-		public void CheckForMacCatalystDefaultEntitlements(ApplePlatform platform, string runtimeIdentifiers, string configuration)
+		public void CheckForMacCatalystDefaultEntitlements (ApplePlatform platform, string runtimeIdentifiers, string configuration)
 		{
 			var project = "Entitlements";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
