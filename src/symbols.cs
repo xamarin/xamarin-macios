@@ -58,10 +58,10 @@ namespace Symbols {
 		NSSymbolPulseEffect Create ();
 
 		[Export ("effectWithByLayer")]
-		NSSymbolPulseEffect ByLayer ();
+		NSSymbolPulseEffect ByLager { get; }
 
 		[Export ("effectWithWholeSymbol")]
-		NSSymbolPulseEffect WholeSymbol ();
+		NSSymbolPulseEffect WholeSymbol { get; }
 	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -80,10 +80,10 @@ namespace Symbols {
 		NSSymbolBounceEffect CreateBounceDownEffect ();
 
 		[Export ("effectWithByLayer")]
-		NSSymbolBounceEffect ByLayer ();
+		NSSymbolBounceEffect ByLager { get; }
 
 		[Export ("effectWithWholeSymbol")]
-		NSSymbolBounceEffect WholeSymbol ();
+		NSSymbolBounceEffect WholeSymbol { get; }
 	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -94,22 +94,22 @@ namespace Symbols {
 		NSSymbolVariableColorEffect Create ();
 
 		[Export ("effectWithIterative")]
-		NSSymbolVariableColorEffect GetEffectWithIterative ();
+		NSSymbolVariableColorEffect Iterative { get; }
 
 		[Export ("effectWithCumulative")]
-		NSSymbolVariableColorEffect GetEffectWithCumulative ();
+		NSSymbolVariableColorEffect Cumulative { get; }
 
 		[Export ("effectWithReversing")]
-		NSSymbolVariableColorEffect GetEffectWithReversing ();
+		NSSymbolVariableColorEffect Reversing { get; }
 
 		[Export ("effectWithNonReversing")]
-		NSSymbolVariableColorEffect GetEffectWithNonReversing ();
+		NSSymbolVariableColorEffect NonReversing { get; }
 
 		[Export ("effectWithHideInactiveLayers")]
-		NSSymbolVariableColorEffect GetEffectWithHideInactiveLayers ();
+		NSSymbolVariableColorEffect HideInactiveLayers { get; }
 
 		[Export ("effectWithDimInactiveLayers")]
-		NSSymbolVariableColorEffect GetEffectWithDimInactiveLayers ();
+		NSSymbolVariableColorEffect DimInactiveLayers { get; }
 	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -128,10 +128,10 @@ namespace Symbols {
 		NSSymbolScaleEffect CreateScaleDownEffect ();
 
 		[Export ("effectWithByLayer")]
-		NSSymbolScaleEffect ByLayer ();
+		NSSymbolScaleEffect ByLager { get; }
 
 		[Export ("effectWithWholeSymbol")]
-		NSSymbolScaleEffect WholeSymbol ();
+		NSSymbolScaleEffect WholeSymbol { get; }
 	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -150,10 +150,10 @@ namespace Symbols {
 		NSSymbolAppearEffect CreateAppearDownEffect ();
 
 		[Export ("effectWithByLayer")]
-		NSSymbolAppearEffect ByLayer ();
+		NSSymbolAppearEffect ByLager { get; }
 
 		[Export ("effectWithWholeSymbol")]
-		NSSymbolAppearEffect WholeSymbol ();
+		NSSymbolAppearEffect WholeSymbol { get; }
 	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -172,10 +172,10 @@ namespace Symbols {
 		NSSymbolDisappearEffect CreateDisappearDownEffect ();
 
 		[Export ("effectWithByLayer")]
-		NSSymbolDisappearEffect ByLayer ();
+		NSSymbolDisappearEffect ByLager { get; }
 
 		[Export ("effectWithWholeSymbol")]
-		NSSymbolDisappearEffect WholeSymbol ();
+		NSSymbolDisappearEffect WholeSymbol { get; }
 	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -198,10 +198,10 @@ namespace Symbols {
 		NSSymbolReplaceContentTransition CreateReplaceOffUpTransition ();
 
 		[Export ("transitionWithByLayer")]
-		NSSymbolReplaceContentTransition ByLayer ();
+		NSSymbolReplaceContentTransition ByLager { get; }
 
 		[Export ("transitionWithWholeSymbol")]
-		NSSymbolReplaceContentTransition WholeSymbol ();
+		NSSymbolReplaceContentTransition WholeSymbol { get; }
 	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
