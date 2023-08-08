@@ -1,26 +1,26 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="7.0.306-servicing.23319.22">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="7.0.308-servicing.23401.20">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>1f81836962bb1075936c87af097385eaa0eaa7d1</Sha>
+      <Sha>05a47493530144667ffaa3da4b0ae4e1051adc26</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="7.0.100-1.23211.1" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="7.0.100-1.23321.1" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/linker</Uri>
-      <Sha>9d4b3f3e0c100fe5ac4dc7f40d14d792178dbd0c</Sha>
+      <Sha>13a94b5bdc9d01ecd9eb2bd699bd34d597c3ec19</Sha>
     </Dependency>
     <!-- Set TRACKING_DOTNET_RUNTIME_SEPARATELY to something in Make.config if removing the CoherentParentDependency on Microsoft.Dotnet.Sdk.Internal -->
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="7.0.7" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="7.0.9" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
-      <Sha>5b20af47d99620150c53eaf5db8636fdf730b126</Sha>
+      <Sha>8e9a17b2216f51a5788f8b1c467a4cf3b769e7d7</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
-    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="7.0.7" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="7.0.9" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspnetcore</Uri>
-      <Sha>3dfc6fda80a10797b8c8fda1970e7b377fd8ed8d</Sha>
+      <Sha>b506e2cb7b6c0fe787305f8cfdee046b7b3f9a53</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.net7.Manifest-7.0.100" Version="7.0.7" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.net7.Manifest-7.0.100" Version="7.0.9" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>b3cf128502f8fc7f9f9212a4dfaff67a2bce7bda</Sha>
+      <Sha>9b227c1606a01920839873f840f6b76f7b492a66</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
