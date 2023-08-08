@@ -19,9 +19,9 @@ namespace AppKit {
 				throw new ArgumentNullException (nameof (array));
 			var nsa_array = NSArray.FromNSObjects (array);
 			if (IsDirectBinding) {
-				global::ObjCRuntime.Messaging.void_objc_msgSend_IntPtr (this.Handle, selSetTextBlocks_Handle, nsa_array.Handle);
+				global::ObjCRuntime.Messaging.void_objc_msgSend_IntPtr (this.Handle, selSetTextBlocks_XHandle, nsa_array.Handle);
 			} else {
-				global::ObjCRuntime.Messaging.void_objc_msgSendSuper_IntPtr (this.SuperHandle, selSetTextBlocks_Handle, nsa_array.Handle);
+				global::ObjCRuntime.Messaging.void_objc_msgSendSuper_IntPtr (this.SuperHandle, selSetTextBlocks_XHandle, nsa_array.Handle);
 			}
 			nsa_array.Dispose ();
 		}
@@ -35,9 +35,9 @@ namespace AppKit {
 				throw new ArgumentNullException (nameof (array));
 			var nsa_array = NSArray.FromNSObjects (array);
 			if (IsDirectBinding) {
-				global::ObjCRuntime.Messaging.void_objc_msgSend_IntPtr (this.Handle, selSetTextLists_Handle, nsa_array.Handle);
+				global::ObjCRuntime.Messaging.void_objc_msgSend_IntPtr (this.Handle, selSetTextLists_XHandle, nsa_array.Handle);
 			} else {
-				global::ObjCRuntime.Messaging.void_objc_msgSendSuper_IntPtr (this.SuperHandle, selSetTextLists_Handle, nsa_array.Handle);
+				global::ObjCRuntime.Messaging.void_objc_msgSendSuper_IntPtr (this.SuperHandle, selSetTextLists_XHandle, nsa_array.Handle);
 			}
 			nsa_array.Dispose ();
 		}
