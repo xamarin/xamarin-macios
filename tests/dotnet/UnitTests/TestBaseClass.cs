@@ -73,15 +73,20 @@ namespace Xamarin.Tests {
 
 		protected string GetDefaultRuntimeIdentifier (ApplePlatform platform, string configuration = "Debug")
 		{
+			var arch = Configuration.CanRunArm64 ? "arm64" : "x64";
 			switch (platform) {
 			case ApplePlatform.iOS:
-				return "iossimulator-x64";
+				return $"iossimulator-{arch}";
 			case ApplePlatform.TVOS:
-				return "tvossimulator-x64";
+				return $"tvossimulator-{arch}";
 			case ApplePlatform.MacOSX:
-				return "Release".Equals (configuration, StringComparison.OrdinalIgnoreCase) ? "osx-x64;osx-arm64" : "osx-x64";
+				if ("Release".Equals (configuration, StringComparison.OrdinalIgnoreCase))
+					return "osx-x64;osx-arm64";
+				return $"osx-{arch}";
 			case ApplePlatform.MacCatalyst:
-				return "Release".Equals (configuration, StringComparison.OrdinalIgnoreCase) ? "maccatalyst-x64;maccatalyst-arm64" : "maccatalyst-x64";
+				if ("Release".Equals (configuration, StringComparison.OrdinalIgnoreCase))
+					return "maccatalyst-x64;maccatalyst-arm64";
+				return $"maccatalyst-{arch}";
 			default:
 				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
 			}
@@ -308,19 +313,20 @@ namespace Xamarin.Tests {
 			return csproj;
 		}
 
-		protected void ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
+		protected string ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
 		{
 			if (!CanExecute (platform, runtimeIdentifiers))
-				return;
+				return string.Empty;
 
-			ExecuteWithMagicWordAndAssert (executable);
+			return ExecuteWithMagicWordAndAssert (executable);
 		}
 
-		protected void ExecuteWithMagicWordAndAssert (string executable)
+		protected string ExecuteWithMagicWordAndAssert (string executable)
 		{
 			var rv = Execute (executable, out var output, out string magicWord);
 			Assert.That (output.ToString (), Does.Contain (magicWord), "Contains magic word");
 			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
+			return output.ToString ();
 		}
 
 		protected Execution Execute (string executable, out StringBuilder output, out string magicWord)
