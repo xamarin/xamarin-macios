@@ -342,7 +342,6 @@ public class Frameworks : Dictionary<string, Framework> {
 
 				{ "Accounts", "Accounts", 5 },
 				{ "GLKit", "GLKit", 5 },
-				{ "NewsstandKit", "NewsstandKit", 5, /* alwaysWeakLink: */ true }, // This framework was completely removed in iOS 17, so make sure existing apps that may link with NewsstandKit don't crash (by linking weakly). Ref: https://github.com/xamarin/xamarin-macios/issues/18606
 				{ "CoreImage", "CoreImage", 5 },
 				{ "CoreBluetooth", "CoreBluetooth", 5 },
 				{ "Twitter", "Twitter", 5 },

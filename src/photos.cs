@@ -918,7 +918,7 @@ namespace Photos {
 
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
-	interface PHVideoRequestOptions {
+	interface PHVideoRequestOptions : NSCopying {
 
 		[Export ("networkAccessAllowed", ArgumentSemantic.Assign)]
 		bool NetworkAccessAllowed { [Bind ("isNetworkAccessAllowed")] get; set; }

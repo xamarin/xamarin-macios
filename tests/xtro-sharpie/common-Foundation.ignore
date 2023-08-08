@@ -188,7 +188,6 @@
 !extra-designated-initializer! NSSortDescriptor::initWithCoder: is incorrectly decorated with an [DesignatedInitializer] attribute
 !missing-enum! NSBinarySearchingOptions not bound
 !missing-enum! NSMachPortOptions not bound
-!missing-enum! NSNetServicesError not bound
 !missing-enum! NSPointerFunctionsOptions not bound
 !missing-enum! NSSearchPathDomainMask not bound
 !missing-enum! NSStringEncodingConversionOptions not bound
@@ -544,7 +543,6 @@
 !missing-selector! NSLocale::alternateQuotationEndDelimiter not bound
 !missing-selector! NSLocale::collationIdentifier not bound
 !missing-selector! NSLocale::collatorIdentifier not bound
-!missing-selector! NSLocale::countryCode not bound
 !missing-selector! NSLocale::currencyCode not bound
 !missing-selector! NSLocale::currencySymbol not bound
 !missing-selector! NSLocale::decimalSeparator not bound
@@ -975,9 +973,6 @@
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::DateBySettingUnit(Foundation.NSCalendarUnit,System.nint,Foundation.NSDate,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::DateForWeekOfYear(System.nint,System.nint,System.nint,System.nint,System.nint,System.nint,System.nint,System.nint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::DateFromComponents(Foundation.NSDateComponents)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::FindNextDateAfterDateMatching(Foundation.NSDate,Foundation.NSCalendarUnit,System.nint,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::FindNextDateAfterDateMatching(Foundation.NSDate,Foundation.NSDateComponents,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::FindNextDateAfterDateMatching(Foundation.NSDate,System.nint,System.nint,System.nint,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSDateComponents::get_Date()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSDateFormatter::Parse(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSFileVersion::get_ModificationDate()' is missing an [NullAllowed] on return type

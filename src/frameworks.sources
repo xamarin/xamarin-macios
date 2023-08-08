@@ -1363,8 +1363,8 @@ NETWORKEXTENSION_SOURCES = \
 
 # NewsstandKit
 
-NEWSSTANDKIT_API_SOURCES = \
-	NewsstandKit/Enums.cs \
+NEWSSTANDKIT_SOURCES = \
+	NewsstandKit/Compat.cs \
 
 # NotificationCenter
 

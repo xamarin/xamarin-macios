@@ -83,6 +83,9 @@ namespace Introspection {
 			// not directly bindings
 			case "System.Net.Http":
 				return true;
+			// Removed in Xcode 15
+			case "NewsstandKit":
+				return true;
 			default:
 				return false;
 			}

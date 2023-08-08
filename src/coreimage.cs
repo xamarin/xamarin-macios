@@ -8690,6 +8690,13 @@ namespace CoreImage {
 		[Abstract]
 		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
 		CIImage InputImage { get; set; }
+
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+		[Export ("extrapolate")]
+		bool Extrapolate { get; set; }
 	}
 
 	[iOS (13, 0)]
@@ -9745,6 +9752,102 @@ namespace CoreImage {
 		bool Normalize { get; set; }
 	}
 
+	[CoreImageFilter]
+	[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIBlurredRectangleGenerator : CIBlurredRectangleGeneratorProtocol {
+	}
+
+	[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+	[Protocol (Name = "CIBlurredRectangleGenerator")]
+	interface CIBlurredRectangleGeneratorProtocol : CIFilterProtocol {
+		[Abstract]
+		[Export ("extent", ArgumentSemantic.Assign)]
+		CGRect InputExtent { get; set; }
+
+		[Abstract]
+		[Export ("sigma")]
+		float Sigma { get; set; }
+
+		[Abstract]
+		[NullAllowed, Export ("color", ArgumentSemantic.Retain)]
+		CIColor Color { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CIFilter))]
+	interface CICannyEdgeDetector : CICannyEdgeDetectorProtocol {
+	}
+
+	[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+	[Protocol (Name = "CICannyEdgeDetector")]
+	interface CICannyEdgeDetectorProtocol : CIFilterProtocol {
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("gaussianSigma")]
+		float GaussianSigma { get; set; }
+
+		[Abstract]
+		[Export ("perceptual")]
+		bool Perceptual { get; set; }
+
+		[Abstract]
+		[Export ("thresholdHigh")]
+		float ThresholdHigh { get; set; }
+
+		[Abstract]
+		[Export ("thresholdLow")]
+		float ThresholdLow { get; set; }
+
+		[Abstract]
+		[Export ("hysteresisPasses")]
+		nint HysteresisPasses { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIRoundedRectangleStrokeGenerator : CIRoundedRectangleStrokeGeneratorProtocol {
+	}
+
+	[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+	[Protocol (Name = "CIRoundedRectangleStrokeGenerator")]
+	interface CIRoundedRectangleStrokeGeneratorProtocol : CIFilterProtocol {
+		[Abstract]
+		[Export ("extent", ArgumentSemantic.Assign)]
+		CGRect InputExtent { get; set; }
+
+		[Abstract]
+		[Export ("radius")]
+		float Radius { get; set; }
+
+		[Abstract]
+		[Export ("width")]
+		float Width { get; set; }
+
+		[Abstract]
+		[NullAllowed, Export ("color", ArgumentSemantic.Retain)]
+		CIColor Color { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CIFilter))]
+	interface CISobelGradients : CISobelGradientsProtocol {
+	}
+
+	[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+	[Protocol (Name = "CISobelGradients")]
+	interface CISobelGradientsProtocol : CIFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+	}
 
 	// LabToRGBFilter and RGBtoLabFilter are names for filter API but return the same type CIConvertLab
 	// Enabling these cause a large number of introspection errors

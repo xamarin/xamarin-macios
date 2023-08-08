@@ -1554,48 +1554,6 @@ namespace PassKit {
 
 	interface IPKDisbursementAuthorizationControllerDelegate { }
 
-	[NoWatch]
-	[NoMac] // both members are not available but, like many times, the protocol is not decorated
-	[iOS (12, 2)]
-	[MacCatalyst (13, 1)]
-	[Protocol, Model]
-	[BaseType (typeof (NSObject))]
-	interface PKDisbursementAuthorizationControllerDelegate {
-		[Abstract]
-		[Export ("disbursementAuthorizationController:didAuthorizeWithDisbursementVoucher:")]
-		void DidAuthorize (PKDisbursementAuthorizationController controller, PKDisbursementVoucher disbursementVoucher);
-
-		[Abstract]
-		[Export ("disbursementAuthorizationControllerDidFinish:")]
-		void DidFinish (PKDisbursementAuthorizationController controller);
-	}
-
-	[NoWatch]
-	[NoMac] // all members are not available but, like many times, the type is not decorated
-	[iOS (12, 2)]
-	[MacCatalyst (13, 1)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface PKDisbursementAuthorizationController {
-
-		[Export ("initWithDisbursementRequest:delegate:")]
-		NativeHandle Constructor (PKDisbursementRequest disbursementRequest, IPKDisbursementAuthorizationControllerDelegate @delegate);
-
-		[Wrap ("WeakDelegate")]
-		IPKDisbursementAuthorizationControllerDelegate Delegate { get; }
-
-		[NullAllowed, Export ("delegate", ArgumentSemantic.Assign)]
-		NSObject WeakDelegate { get; }
-
-		[Async]
-		[Export ("authorizeDisbursementWithCompletion:")]
-		void AuthorizeDisbursement (Action<bool, NSError> completion);
-
-		[Static]
-		[Export ("supportsDisbursements")]
-		bool SupportsDisbursements { get; }
-	}
-
 	[NoMac] // only used in non-macOS API
 	[NoWatch]
 	[iOS (12, 2)]
@@ -1612,36 +1570,12 @@ namespace PassKit {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PKDisbursementRequest {
-		[Export ("amount", ArgumentSemantic.Copy)]
-		NSDecimalNumber Amount { get; set; }
 
 		[NullAllowed, Export ("currencyCode")]
 		string CurrencyCode { get; set; }
 
-		[Export ("countryCode")]
-		string CountryCode { get; set; }
-
-		[NoMac]
-		[MacCatalyst (13, 1)]
-		[Export ("requestSchedule", ArgumentSemantic.Assign)]
-		PKDisbursementRequestSchedule RequestSchedule { get; set; }
-
 		[NullAllowed, Export ("summaryItems", ArgumentSemantic.Copy)]
 		PKPaymentSummaryItem [] SummaryItems { get; set; }
-	}
-
-	[NoMac] // all members annoted `API_UNAVAILABLE(...macos)`
-	[NoWatch]
-	[iOS (12, 2)]
-	[MacCatalyst (13, 1)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor] // given from OS to PKDisbursementAuthorizationControllerDelegate
-	interface PKDisbursementVoucher {
-		[Export ("data", ArgumentSemantic.Copy)]
-		NSData Data { get; }
-
-		[Export ("redemptionURL", ArgumentSemantic.Copy)]
-		NSUrl RedemptionUrl { get; }
 	}
 
 	[Mac (11, 0)]
