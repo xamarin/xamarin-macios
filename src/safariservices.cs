@@ -42,8 +42,16 @@ namespace SafariServices {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface SFContentBlockerManager {
+
+#if !XAMCORE_5_0
+		[Obsolete ("Constructor marked as unavailable.")]
+		[Export ("init")]
+		NativeHandle Constructor ();
+#endif
+
 		[Async]
 		[Static, Export ("reloadContentBlockerWithIdentifier:completionHandler:")]
 		void ReloadContentBlocker (string identifier, [NullAllowed] Action<NSError> completionHandler);

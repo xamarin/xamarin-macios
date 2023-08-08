@@ -105,11 +105,6 @@ namespace Xamarin.Bundler {
 		{
 			throw new NotImplementedException ();
 		}
-
-		public static string? SdkRoot {
-			get => sdk_root;
-			set => sdk_root = value;
-		}
 	}
 
 	// We can't make the linker use a LinkerContext subclass (DerivedLinkerContext), so we make DerivedLinkerContext

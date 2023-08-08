@@ -102,7 +102,6 @@
 !missing-pinvoke! CGWindowListCopyWindowInfo is not bound
 !missing-pinvoke! CGWindowListCreate is not bound
 !missing-pinvoke! CGWindowListCreateDescriptionFromArray is not bound
-!missing-pinvoke! CGWindowListCreateImageFromArray is not bound
 !missing-pinvoke! CGWindowServerCreateServerPort is not bound
 !missing-pinvoke! CGPreflightScreenCaptureAccess is not bound
 !missing-pinvoke! CGRequestScreenCaptureAccess is not bound

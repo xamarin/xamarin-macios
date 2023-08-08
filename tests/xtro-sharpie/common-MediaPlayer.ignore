@@ -3,4 +3,3 @@
 
 
 # Headers do not show that null is allowed, but docs do allow it. Testing shows nullable functionality does work.
-!extra-null-allowed! 'System.Void MediaPlayer.MPRemoteCommand::RemoveTarget(Foundation.NSObject,ObjCRuntime.Selector)' has a extraneous [NullAllowed] on parameter #0

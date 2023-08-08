@@ -342,7 +342,6 @@ public class Frameworks : Dictionary<string, Framework> {
 
 				{ "Accounts", "Accounts", 5 },
 				{ "GLKit", "GLKit", 5 },
-				{ "NewsstandKit", "NewsstandKit", 5 },
 				{ "CoreImage", "CoreImage", 5 },
 				{ "CoreBluetooth", "CoreBluetooth", 5 },
 				{ "Twitter", "Twitter", 5 },
@@ -796,6 +795,12 @@ public class Frameworks : Dictionary<string, Framework> {
 			case "GameKit":
 				if (Driver.XcodeVersion.Major >= 14 && app.Is32Build) {
 					Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 14+ and building for a 32-bit simulator architecture.", framework.Name);
+					return false;
+				}
+				break;
+			case "NewsstandKit":
+				if (Driver.XcodeVersion.Major >= 15) {
+					Driver.Log (3, "Not linking with the framework {0} because it's been removed from Xcode 15+.", framework.Name);
 					return false;
 				}
 				break;

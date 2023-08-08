@@ -169,6 +169,11 @@ namespace Introspection {
 				// Xcode 14.3, Conformance not in headers
 				case "PKDeferredPaymentRequest":
 					return true;
+				// Xcode 15, Conformance not in headers
+				case "GKBasePlayer":
+				case "GKLocalPlayer":
+				case "GKPlayer":
+					return true;
 				}
 				break;
 			case "NSMutableCopying":
@@ -327,6 +332,20 @@ namespace Introspection {
 				// Xcode 14.3, Conformance not in headers
 				case "PKDeferredPaymentRequest":
 					return true;
+				// Xcode 15, Conformance not in headers
+				case "MKGeodesicPolyline":
+				case "MKPolyline":
+				case "MKCircle":
+				case "MKCircleRenderer":
+				case "MKGradientPolylineRenderer":
+				case "MKMultiPolygon":
+				case "MKMultiPolygonRenderer":
+				case "MKMultiPolyline":
+				case "MKMultiPolylineRenderer":
+				case "MKPolygonRenderer":
+				case "MKPolylineRenderer":
+				case "AVAudioPcmBuffer":
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -481,6 +500,20 @@ namespace Introspection {
 				case "PKShareablePassMetadataPreview":
 				// Xcode 14.3, Conformance not in headers
 				case "PKDeferredPaymentRequest":
+					return true;
+				// Xcode 15, Conformance not in headers
+				case "MKGeodesicPolyline":
+				case "MKPolyline":
+				case "MKCircle":
+				case "MKCircleRenderer":
+				case "MKGradientPolylineRenderer":
+				case "MKMultiPolygon":
+				case "MKMultiPolygonRenderer":
+				case "MKMultiPolyline":
+				case "MKMultiPolylineRenderer":
+				case "MKPolygonRenderer":
+				case "MKPolylineRenderer":
+				case "AVAudioPcmBuffer":
 					return true;
 				}
 				break;

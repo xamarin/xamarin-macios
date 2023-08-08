@@ -784,10 +784,10 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (9, 0);
 				case "MPSGraphExecutableExecutionDescriptor":
 					return TestRuntime.CheckXcodeVersion (14, 0);
-#if __WATCHOS__
 				case "HKElectrocardiogramVoltageMeasurement":
 					// NSCopying conformance added in Xcode 14
 					return !TestRuntime.CheckXcodeVersion (14, 0);
+#if __WATCHOS__
 				case "INParameter":
 					// NSCopying conformance added in Xcode 10
 					return !TestRuntime.CheckXcodeVersion (10, 0);
