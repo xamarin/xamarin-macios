@@ -35,10 +35,6 @@ parameters:
 - name: runSamples
   type: boolean
   default: false
-  
-- name: enableDotnet
-  type: boolean
-  default: true
 
 - name: enableAPIDiff
   type: boolean
@@ -231,7 +227,6 @@ stages:
       keyringPass: $(pass--lab--mac--builder--keychain)
       gitHubToken: $(Github.Token)
       xqaCertPass: $(xqa--certificates--password)
-      enableDotnet: ${{ parameters.enableDotnet }}
       skipESRP: ${{ parameters.skipESRP }}
       pool: ${{ parameters.pool }}
 
@@ -248,21 +243,19 @@ stages:
         commit: ${{ parameters.commit }}
         signingSetupSteps: ${{ parameters.signingSetupSteps }}
         keyringPass: $(pass--lab--mac--builder--keychain)
-        enableDotnet: ${{ parameters.enableDotnet }}
         skipESRP: ${{ parameters.skipESRP }}
         packages: ${{ pkg_obj.packages }}
 
-- ${{ if eq(parameters.enableDotnet, true) }}:
-  - stage: sign_notarize_dotnet
-    displayName: '${{ parameters.stageDisplayNamePrefix }}Sign & Notarize Dotnet'
-    dependsOn:
-    - build_packages
-    jobs:
-    - template: ./sign-and-notarized/dotnet-signing.yml
-      parameters:
-        isPR: ${{ parameters.isPR }}
-        repositoryAlias: ${{ parameters.repositoryAlias }}
-        commit: ${{ parameters.commit }}
+- stage: sign_notarize_dotnet
+  displayName: '${{ parameters.stageDisplayNamePrefix }}Sign & Notarize Dotnet'
+  dependsOn:
+  - build_packages
+  jobs:
+  - template: ./sign-and-notarized/dotnet-signing.yml
+    parameters:
+      isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
 
 # .NET Release Prep and VS Insertion Stages, only execute them when the build comes from an official branch and is not a schedule build from OneLoc
 # setting the stage at this level makes the graph of the UI look better, else the lines overlap and is not clear.
@@ -282,8 +275,7 @@ stages:
   displayName: '${{ parameters.stageDisplayNamePrefix }}Collect signed artifacts'
   dependsOn:
   - build_packages
-  - ${{ if eq(parameters.enableDotnet, true) }}:
-    - sign_notarize_dotnet
+  - sign_notarize_dotnet
   - ${{ each pkg_obj in parameters.packages }}:
     - ${{ pkg_obj.job }}
   jobs:
@@ -317,7 +309,6 @@ stages:
         keyringPass: $(pass--lab--mac--builder--keychain)
         gitHubToken: $(Github.Token)
         xqaCertPass: $(xqa--certificates--password)
-        enableDotnet: ${{ parameters.enableDotnet }}
         pool: ${{ parameters.pool }}
 
 # Test stages
@@ -343,7 +334,6 @@ stages:
     keyringPass: $(pass--lab--mac--builder--keychain)
     gitHubToken: $(Github.Token)
     xqaCertPass: $(xqa--certificates--password)
-    enableDotnet: ${{ parameters.enableDotnet }}
     condition: ${{ parameters.runTests }}
 
 # devices are optional and will only be ran when we set them OR in CI
@@ -369,7 +359,6 @@ stages:
           keyringPass: $(pass-XamarinQA-bot-login) 
           gitHubToken: $(Github.Token)
           xqaCertPass: $(xqa--certificates--password)
-          enableDotnet: ${{ parameters.enableDotnet }}
           condition: ${{ parameters.runDeviceTests }}
           parseLabels: false
 
@@ -386,7 +375,6 @@ stages:
         useImage: ${{ config.useImage }}
         statusContext: ${{ config.statusContext }}
         keyringPass: $(pass--lab--mac--builder--keychain)
-        enableDotnet: ${{ parameters.enableDotnet }}
         demands: ${{ config.demands }}
 
 - ${{ if eq(parameters.runWindowsIntegration, true) }}:
@@ -421,7 +409,6 @@ stages:
       keyringPass: $(pass--lab--mac--builder--keychain)
       gitHubToken: $(Github.Token)
       xqaCertPass: $(xqa--certificates--password)
-      enableDotnet: ${{ parameters.enableDotnet }}
 
 - ${{ if eq(parameters.runSamples, true) }}:
   # TODO: Not the real step

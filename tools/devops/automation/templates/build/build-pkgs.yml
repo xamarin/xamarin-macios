@@ -19,10 +19,6 @@ parameters:
 - name: xqaCertPass
   type: string
 
-- name: enableDotnet
-  type: boolean
-  default: false
-
 - name: uploadBinlogs
   type: boolean
   default: true
@@ -61,7 +57,6 @@ steps:
     keyringPass: ${{ parameters.keyringPass }}
     gitHubToken: ${{ parameters.gitHubToken }}
     xqaCertPass: ${{ parameters.xqaCertPass }}
-    enableDotnet: ${{ parameters.enableDotnet }}
     buildSteps:
     # build not signed .pkgs for the SDK
     - bash: |
@@ -76,8 +71,7 @@ steps:
       timeoutInMinutes: 180
 
     # build nugets
-    - ${{ if eq(parameters.enableDotnet, true) }}:
-      - template: build-nugets.yml
+    - template: build-nugets.yml
 
     - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/generate-workload-rollback.sh
       name: workload_file

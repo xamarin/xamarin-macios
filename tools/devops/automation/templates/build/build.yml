@@ -15,10 +15,6 @@ parameters:
 - name: xqaCertPass
   type: string
 
-- name: enableDotnet
-  type: boolean
-  default: false
-
 - name: isPR
   type: boolean
   default: false
@@ -185,11 +181,6 @@ steps:
 
     CONFIGURE_FLAGS="--enable-xamarin"
 
-    if [[ "$EnableDotNet" == "True" ]]; then
-      echo "Enabling dotnet builds."
-      CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-dotnet"
-    fi
-
     CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-install-source"
     echo "Configuration flags are '$CONFIGURE_FLAGS'"
 
@@ -201,8 +192,6 @@ steps:
       IsPR: 'True'
     ${{ else }}:
       IsPR: 'False'
-    ${{ if eq(parameters.enableDotnet, true) }}:
-      EnableDotNet: 'True'
   displayName: "Configure build"
   timeoutInMinutes: 5
 
