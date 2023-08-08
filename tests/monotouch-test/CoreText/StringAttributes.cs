@@ -29,7 +29,7 @@ namespace MonoTouchFixtures.CoreText {
 		public void SimpleValuesSet ()
 		{
 			if (TestRuntime.CheckXcodeVersion (15, 0))
-				Assert.Ignore ("Test timeouts on Xcode 15 beta 4.");
+				Assert.Ignore ("Test timeouts on Xcode 15 beta 4: https://github.com/xamarin/xamarin-macios/issues/18656");
 
 			var sa = new CTStringAttributes ();
 			sa.ForegroundColor = UIColor.Blue.CGColor;
