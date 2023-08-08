@@ -55,7 +55,7 @@ namespace Symbols {
 	interface NSSymbolPulseEffect {
 		[Static]
 		[Export ("effect")]
-		NSSymbolPulseEffect CreateEffect ();
+		NSSymbolPulseEffect Create ();
 
 		[Export ("effectWithByLayer")]
 		NSSymbolPulseEffect ByLayer ();
@@ -69,7 +69,7 @@ namespace Symbols {
 	interface NSSymbolBounceEffect {
 		[Static]
 		[Export ("effect")]
-		NSSymbolBounceEffect CreateEffect ();
+		NSSymbolBounceEffect Create ();
 
 		[Static]
 		[Export ("bounceUpEffect")]
@@ -91,7 +91,7 @@ namespace Symbols {
 	interface NSSymbolVariableColorEffect {
 		[Static]
 		[Export ("effect")]
-		NSSymbolVariableColorEffect CreateEffect ();
+		NSSymbolVariableColorEffect Create ();
 
 		[Export ("effectWithIterative")]
 		NSSymbolVariableColorEffect GetEffectWithIterative ();
@@ -139,7 +139,7 @@ namespace Symbols {
 	interface NSSymbolAppearEffect {
 		[Static]
 		[Export ("effect")]
-		NSSymbolAppearEffect CreateEffect ();
+		NSSymbolAppearEffect Create ();
 
 		[Static]
 		[Export ("appearUpEffect")]
@@ -161,7 +161,7 @@ namespace Symbols {
 	interface NSSymbolDisappearEffect {
 		[Static]
 		[Export ("effect")]
-		NSSymbolDisappearEffect CreateEffect ();
+		NSSymbolDisappearEffect Create ();
 
 		[Static]
 		[Export ("disappearUpEffect")]
