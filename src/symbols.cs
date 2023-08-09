@@ -26,7 +26,7 @@ namespace Symbols {
 		NSSymbolEffectOptions CreateRepeating ();
 
 		[Export ("optionsWithRepeating")]
-		NSSymbolEffectOptions GetWithRepeating ();
+		NSSymbolEffectOptions GetRepeating ();
 
 		[Static]
 		[Export ("optionsWithNonRepeating")]
