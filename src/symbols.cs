@@ -58,7 +58,7 @@ namespace Symbols {
 		NSSymbolPulseEffect Create ();
 
 		[Export ("effectWithByLayer")]
-		NSSymbolPulseEffect ByLager { get; }
+		NSSymbolPulseEffect ByLayer { get; }
 
 		[Export ("effectWithWholeSymbol")]
 		NSSymbolPulseEffect WholeSymbol { get; }
@@ -80,7 +80,7 @@ namespace Symbols {
 		NSSymbolBounceEffect CreateBounceDownEffect ();
 
 		[Export ("effectWithByLayer")]
-		NSSymbolBounceEffect ByLager { get; }
+		NSSymbolBounceEffect ByLayer { get; }
 
 		[Export ("effectWithWholeSymbol")]
 		NSSymbolBounceEffect WholeSymbol { get; }
@@ -128,7 +128,7 @@ namespace Symbols {
 		NSSymbolScaleEffect CreateScaleDownEffect ();
 
 		[Export ("effectWithByLayer")]
-		NSSymbolScaleEffect ByLager { get; }
+		NSSymbolScaleEffect ByLayer { get; }
 
 		[Export ("effectWithWholeSymbol")]
 		NSSymbolScaleEffect WholeSymbol { get; }
@@ -150,7 +150,7 @@ namespace Symbols {
 		NSSymbolAppearEffect CreateAppearDownEffect ();
 
 		[Export ("effectWithByLayer")]
-		NSSymbolAppearEffect ByLager { get; }
+		NSSymbolAppearEffect ByLayer { get; }
 
 		[Export ("effectWithWholeSymbol")]
 		NSSymbolAppearEffect WholeSymbol { get; }
@@ -172,7 +172,7 @@ namespace Symbols {
 		NSSymbolDisappearEffect CreateDisappearDownEffect ();
 
 		[Export ("effectWithByLayer")]
-		NSSymbolDisappearEffect ByLager { get; }
+		NSSymbolDisappearEffect ByLayer { get; }
 
 		[Export ("effectWithWholeSymbol")]
 		NSSymbolDisappearEffect WholeSymbol { get; }
@@ -198,7 +198,7 @@ namespace Symbols {
 		NSSymbolReplaceContentTransition CreateReplaceOffUpTransition ();
 
 		[Export ("transitionWithByLayer")]
-		NSSymbolReplaceContentTransition ByLager { get; }
+		NSSymbolReplaceContentTransition ByLayer { get; }
 
 		[Export ("transitionWithWholeSymbol")]
 		NSSymbolReplaceContentTransition WholeSymbol { get; }
@@ -209,7 +209,7 @@ namespace Symbols {
 	interface NSSymbolAutomaticContentTransition {
 		[Static]
 		[Export ("transition")]
-		NSSymbolAutomaticContentTransition CreateTransition ();
+		NSSymbolAutomaticContentTransition Create ();
 	}
 
 }
