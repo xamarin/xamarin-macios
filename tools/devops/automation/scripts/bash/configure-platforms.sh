@@ -49,9 +49,15 @@ for platform in $DISABLED_DOTNET_PLATFORMS; do
 done
 
 echo "##vso[task.setvariable variable=INCLUDE_XAMARIN_LEGACY;isOutput=true]$INCLUDE_XAMARIN_LEGACY"
-echo "##vso[task.setvariable variable=INCLUDE_LEGACY_IOS;isOutput=true]$INCLUDE_IOS"
-echo "##vso[task.setvariable variable=INCLUDE_LEGACY_TVOS;isOutput=true]$INCLUDE_TVOS"
-echo "##vso[task.setvariable variable=INCLUDE_LEGACY_WATCH;isOutput=true]$INCLUDE_WATCH"
-echo "##vso[task.setvariable variable=INCLUDE_LEGACY_MAC;isOutput=true]$INCLUDE_MAC"
-
+if test -n "$INCLUDE_XAMARIN_LEGACY"; then
+	echo "##vso[task.setvariable variable=INCLUDE_LEGACY_IOS;isOutput=true]$INCLUDE_IOS"
+	echo "##vso[task.setvariable variable=INCLUDE_LEGACY_TVOS;isOutput=true]$INCLUDE_TVOS"
+	echo "##vso[task.setvariable variable=INCLUDE_LEGACY_WATCH;isOutput=true]$INCLUDE_WATCH"
+	echo "##vso[task.setvariable variable=INCLUDE_LEGACY_MAC;isOutput=true]$INCLUDE_MAC"
+else
+	echo "##vso[task.setvariable variable=INCLUDE_LEGACY_IOS;isOutput=true]"
+	echo "##vso[task.setvariable variable=INCLUDE_LEGACY_TVOS;isOutput=true]"
+	echo "##vso[task.setvariable variable=INCLUDE_LEGACY_WATCH;isOutput=true]"
+	echo "##vso[task.setvariable variable=INCLUDE_LEGACY_MAC;isOutput=true]"
+fi
 set -x
