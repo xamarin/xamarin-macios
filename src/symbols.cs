@@ -23,7 +23,7 @@ namespace Symbols {
 
 		[Static]
 		[Export ("optionsWithRepeating")]
-		NSSymbolEffectOptions CreatehRepeating ();
+		NSSymbolEffectOptions CreateRepeating ();
 
 		[Export ("optionsWithRepeating")]
 		NSSymbolEffectOptions GetWithRepeating ();
