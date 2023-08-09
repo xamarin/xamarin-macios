@@ -30,10 +30,9 @@ steps:
 
 - bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-nugets.sh
   displayName: 'Build Nugets'
-  condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
+  condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'), ne(variables['ENABLE_DOTNET'],''))
   continueOnError: true # should not stop the build since is not official just yet.
   timeoutInMinutes: 180
-  condition: ne(variables['ENABLE_DOTNET'],'')
 
 - ${{ each platform in parameters.dotnetPlatforms }}:
   - script: >-
