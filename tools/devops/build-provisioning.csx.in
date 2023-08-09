@@ -15,11 +15,10 @@ Item ("@MIN_SHARPIE_URL@");
 
 var appleSdkOverride = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), "Library", "Preferences", "Xamarin", "Settings.plist");
 Item ("Override Apple SDK Settings")
-	.Condition (item => !File.Exists (appleSdkOverride) || GetSettingValue (appleSdkOverride, "AppleSdkRoot") != GetSelectedXcodePath ())
 	.Action (item => {
 		DeleteSafe (appleSdkOverride);
 		CreateSetting (appleSdkOverride, "AppleSdkRoot", GetSelectedXcodePath ());
-		Console.WriteLine ($"New iOS SDK Location: {GetSelectedXcodePath ()}");
+		Console.WriteLine ($"New iOS SDK Location: {GetSettingValue (appleSdkOverride, "AppleSdkRoot")}");
 	});
 
 void DeleteSafe (string file)
