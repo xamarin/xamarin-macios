@@ -179,6 +179,7 @@ namespace Xamarin.Tests {
 			}
 			if (test_config.Any ())
 				ParseConfigFiles (test_config);
+			ParseConfigFiles (FindConfigFiles ("configure.inc"));
 			ParseConfigFiles (FindConfigFiles ("Make.config.local"));
 			ParseConfigFiles (FindConfigFiles ("Make.config"));
 		}
@@ -194,7 +195,7 @@ namespace Xamarin.Tests {
 			if (string.IsNullOrEmpty (file))
 				return;
 
-			foreach (var line in File.ReadAllLines (file)) {
+			foreach (var line in File.ReadAllLines (file).Reverse ()) {
 				var eq = line.IndexOf ('=');
 				if (eq == -1)
 					continue;
