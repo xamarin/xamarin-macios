@@ -448,36 +448,14 @@ namespace Xamarin.Tests {
 
 		static string GetRefNuGetName (ApplePlatform platform)
 		{
-			switch (platform) {
-			case ApplePlatform.iOS:
-				return "Microsoft.iOS.Ref";
-			case ApplePlatform.MacCatalyst:
-				return "Microsoft.MacCatalyst.Ref";
-			case ApplePlatform.TVOS:
-				return "Microsoft.tvOS.Ref";
-			case ApplePlatform.WatchOS:
-				return "Microsoft.watchOS.Ref";
-			case ApplePlatform.MacOSX:
-				return "Microsoft.macOS.Ref";
-			default:
-				throw new InvalidOperationException (platform.ToString ());
-			}
+			var variableName = platform.AsString ().ToUpper () + "_NUGET_REF_NAME";
+			return GetVariable (variableName, variableName + " not found");
 		}
 
 		static string GetRuntimeNuGetName (ApplePlatform platform, string runtimeIdentifier)
 		{
-			switch (platform) {
-			case ApplePlatform.iOS:
-				return "Microsoft.iOS.Runtime." + runtimeIdentifier;
-			case ApplePlatform.TVOS:
-				return "Microsoft.tvOS.Runtime." + runtimeIdentifier;
-			case ApplePlatform.MacCatalyst:
-				return "Microsoft.MacCatalyst.Runtime." + runtimeIdentifier;
-			case ApplePlatform.MacOSX:
-				return "Microsoft.macOS.Runtime." + runtimeIdentifier;
-			default:
-				throw new InvalidOperationException (platform.ToString ());
-			}
+			var variableName = runtimeIdentifier + "_NUGET_RUNTIME_NAME";
+			return GetVariable (variableName, variableName + " not found");
 		}
 
 		static string GetSdkNuGetName (TargetFramework targetFramework)
@@ -485,20 +463,10 @@ namespace Xamarin.Tests {
 			return GetSdkNuGetName (targetFramework.Platform);
 		}
 
-		static string GetSdkNuGetName (ApplePlatform platform)
+		public static string GetSdkNuGetName (ApplePlatform platform)
 		{
-			switch (platform) {
-			case ApplePlatform.iOS:
-				return "Microsoft.iOS.Sdk";
-			case ApplePlatform.TVOS:
-				return "Microsoft.tvOS.Sdk";
-			case ApplePlatform.WatchOS:
-				return "Microsoft.watchOS.Sdk";
-			case ApplePlatform.MacOSX:
-				return "Microsoft.macOS.Sdk";
-			default:
-				throw new InvalidOperationException (platform.ToString ());
-			}
+			var variableName = platform.AsString ().ToUpper () + "_NUGET_SDK_NAME";
+			return GetVariable (variableName, variableName + " not found");
 		}
 
 		public static string GetDotNetRoot ()
