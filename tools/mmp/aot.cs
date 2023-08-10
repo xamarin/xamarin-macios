@@ -233,8 +233,11 @@ namespace Xamarin.Bundler {
 					aotArgs.Add ("hybrid");
 				if (needsLipo)
 					aotArgs.Add ($"outfile={Path.Combine (tempAotDir, "aot", abi.AsArchString (), Path.GetFileName (file) + ".dylib")}");
-				if (Driver.XcodeVersion.Major >= 15)
+
+				// check if needs to be removed: https://github.com/xamarin/xamarin-macios/issues/18693
+				if (Driver.XcodeVersion.Major >= 15 && !Driver.App.DisableAutomaticLinkerSelection)
 					aotArgs.Add ("ld-flags=-Xlinker -ld_classic");
+
 				cmd.Add ($"--aot={string.Join (",", aotArgs)}");
 				if (IsModern)
 					cmd.Add ("--runtime=mobile");
