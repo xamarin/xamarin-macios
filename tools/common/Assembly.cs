@@ -280,19 +280,23 @@ namespace Xamarin.Bundler {
 
 				if (!string.IsNullOrEmpty (linkWith.LibraryName)) {
 					switch (Path.GetExtension (linkWith.LibraryName).ToLowerInvariant ()) {
-					case ".framework":
+					case ".framework": {
 						AssertiOSVersionSupportsUserFrameworks (linkWith.LibraryName);
 						// TryExtractFramework prints a error/warning if something goes wrong, so no need for us to have an error handling path.
 						if (TryExtractFramework (assembly, metadata, out var framework))
 							Frameworks.Add (framework);
 						break;
+					}
 					case ".xcframework":
 						// this is resolved, at msbuild time, into a framework
 						// but we must ignore it here (can't be the `default` case)
 						break;
-					default:
-						LinkWith.Add (ExtractNativeLibrary (assembly, metadata));
+					default: {
+						// TryExtractFramework prints a error/warning if something goes wrong, so no need for us to have an error handling path.
+						if (TryExtractFramework (assembly, metadata, out var framework))
+							LinkWith.Add (framework);
 						break;
+					}
 					}
 				}
 			}
