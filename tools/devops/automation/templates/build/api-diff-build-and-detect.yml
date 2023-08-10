@@ -13,10 +13,6 @@ parameters:
 - name: xqaCertPass
   type: string
 
-- name: enableDotnet
-  type: boolean
-  default: false
-
 - name: prID
   type: string
   default: '' # default empty, meaning we are building in CI
@@ -47,7 +43,6 @@ steps:
     keyringPass: ${{ parameters.keyringPass }}
     gitHubToken: ${{ parameters.gitHubToken }}
     xqaCertPass: ${{ parameters.xqaCertPass }}
-    enableDotnet: ${{ parameters.enableDotnet }}
     makeParallelism: '4'
 
 # detect changes

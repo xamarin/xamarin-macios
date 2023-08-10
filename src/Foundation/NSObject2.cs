@@ -231,16 +231,14 @@ namespace Foundation {
 			GC.SuppressFinalize (this);
 		}
 
-		static T AllocateNSObject<T> (IntPtr handle) where T : NSObject
-		{
-			var obj = (T) RuntimeHelpers.GetUninitializedObject (typeof (T));
-			obj.handle = handle;
-			obj.flags = Flags.NativeRef;
-			return obj;
-		}
-
 		internal static IntPtr CreateNSObject (IntPtr type_gchandle, IntPtr handle, Flags flags)
 		{
+#if NET
+			if (Runtime.IsManagedStaticRegistrar) {
+				throw new System.Diagnostics.UnreachableException ();
+			}
+#endif
+
 			// This function is called from native code before any constructors have executed.
 			var type = (Type) Runtime.GetGCHandleTarget (type_gchandle);
 			try {
@@ -886,9 +884,9 @@ namespace Foundation {
 #else
 #if MONOMAC
 			if (IsDirectBinding) {
-				ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, selSetValue_ForKeyPath_Handle, handle, keyPath.Handle);
+				ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, selSetValue_ForKeyPath_XHandle, handle, keyPath.Handle);
 			} else {
-				ObjCRuntime.Messaging.void_objc_msgSendSuper_IntPtr_IntPtr (this.SuperHandle, selSetValue_ForKeyPath_Handle, handle, keyPath.Handle);
+				ObjCRuntime.Messaging.void_objc_msgSendSuper_IntPtr_IntPtr (this.SuperHandle, selSetValue_ForKeyPath_XHandle, handle, keyPath.Handle);
 			}
 #else
 			if (IsDirectBinding) {
