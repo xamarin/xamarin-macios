@@ -54,10 +54,6 @@ parameters:
 - name: xqaCertPass
   type: string
 
-- name: enableDotnet
-  type: boolean
-  default: false
-
 - name: makeTarget
   type: string
   default: 'vsts-device-tests' # target to be used to run the tests
@@ -115,7 +111,6 @@ stages:
           repositoryAlias: ${{ parameters.repositoryAlias }}
           commit: ${{ parameters.commit }}
           uploadArtifacts: false
-          enableDotnet: ${{ parameters.enableDotnet }}
 
   - job: "tests"
     ${{ if eq(parameters.parseLabels, true) }}:
