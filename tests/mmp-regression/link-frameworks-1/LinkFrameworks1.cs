@@ -47,9 +47,9 @@ namespace Xamarin.Mac.Linker.Test {
 
 				switch (field.Name) {
 				case "selConformsToProtocolHandle":
-				case "selDescriptionHandle":
-				case "selHashHandle":
-				case "selIsEqual_Handle":
+				case "selDescriptionXHandle":
+				case "selHashXHandle":
+				case "selIsEqual_XHandle":
 				case "class_ptr":
 					// Unrelated fields
 					continue;
