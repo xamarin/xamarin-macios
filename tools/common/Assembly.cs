@@ -293,7 +293,7 @@ namespace Xamarin.Bundler {
 						break;
 					default: {
 						// TryExtractFramework prints a error/warning if something goes wrong, so no need for us to have an error handling path.
-						if (TryExtractFramework (assembly, metadata, out var framework))
+						if (TryExtractNativeLibrary (assembly, metadata, out var framework))
 							LinkWith.Add (framework);
 						break;
 					}
