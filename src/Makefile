@@ -1194,16 +1194,16 @@ $($(2)_DOTNET_BUILD_DIR)/$(3).rsp: Makefile Makefile.generator frameworks.source
 
 DOTNET_TARGETS += \
 	$($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll \
-	$(DOTNET_DESTDIR)/$($(2)_NUGET).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).dll \
-	$(DOTNET_DESTDIR)/$($(2)_NUGET).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).xml \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).dll \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).xml \
 
 DOTNET_TARGETS_DIRS += \
 	$($(2)_DOTNET_BUILD_DIR) \
 	$($(2)_DOTNET_BUILD_DIR)/generated-sources \
 	$($(2)_DOTNET_BUILD_DIR)/ref \
 	$($(2)_DOTNET_BUILD_DIR)/doc \
-	$(DOTNET_DESTDIR)/$($(2)_NUGET).Ref/ref/$(DOTNET_TFM) \
-	$(DOTNET_DESTDIR)/$($(2)_NUGET).Ref/doc/$(DOTNET_TFM) \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM) \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/doc/$(DOTNET_TFM) \
 
 dotnet-gen-$(3):: $($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources
 dotnet-gen:: dotnet-gen-$(3)
@@ -1214,10 +1214,10 @@ $($(2)_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttrib
 $($(2)_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutions.$(1).xml | $($(2)_DOTNET_BUILD_DIR)
 	$(Q) $(CP) $$< $$@
 
-$(DOTNET_DESTDIR)/$($(2)_NUGET).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).dll: $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll | $(DOTNET_DESTDIR)/$($(2)_NUGET).Ref/ref/$(DOTNET_TFM)
+$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).dll: $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll | $(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)
 	$(Q) $(CP) $$< $$@
 
-$(DOTNET_DESTDIR)/$($(2)_NUGET).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).xml: $($(2)_DOTNET_BUILD_DIR)/doc/Microsoft.$(1).xml | $(DOTNET_DESTDIR)/$($(2)_NUGET).Ref/ref/$(DOTNET_TFM)
+$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).xml: $($(2)_DOTNET_BUILD_DIR)/doc/Microsoft.$(1).xml | $(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)
 	$(Q) $(CP) $$< $$@
 
 $($(2)_DOTNET_BUILD_DIR)/doc/Microsoft.$(1).xml: $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll | $($(2)_DOTNET_BUILD_DIR)/doc
@@ -1279,17 +1279,17 @@ dotnet-$(3):: $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).dll
 
 DOTNET_TARGETS += \
 	$($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).dll \
-	$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(2)_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.$(1).dll) \
-	$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(2)_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.$(1).pdb) \
+	$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.$(1).dll) \
+	$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.$(1).pdb) \
 
 DOTNET_TARGETS_DIRS += \
 	$($(2)_DOTNET_BUILD_DIR)/$(4) \
-	$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(2)_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)) \
+	$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)) \
 
-$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(2)_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.$(1).dll): $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).dll | $(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(2)_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM))
+$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.$(1).dll): $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).dll | $(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM))
 	$(Q) $(CP) $$< $$@
 
-$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(2)_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.$(1).pdb): $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).pdb | $(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(2)_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM))
+$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.$(1).pdb): $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).pdb | $(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM))
 	$(Q) $(CP) $$< $$@
 
 endef
