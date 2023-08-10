@@ -33,21 +33,21 @@ namespace Symbols {
 		NSSymbolEffectOptions CreatesWithNonRepeating ();
 
 		[Export ("optionsWithNonRepeating")]
-		NSSymbolEffectOptions GetWithNonRepeating ();
+		NSSymbolEffectOptions GetNonRepeating ();
 
 		[Static]
 		[Export ("optionsWithRepeatCount:")]
-		NSSymbolEffectOptions CreateWithRepeatCount (nint count);
+		NSSymbolEffectOptions Create (nint repeatCount);
 
 		[Export ("optionsWithRepeatCount:")]
-		NSSymbolEffectOptions GetWithRepeatCount (nint count);
+		NSSymbolEffectOptions Get (nint repeatCount);
 
 		[Static]
 		[Export ("optionsWithSpeed:")]
-		NSSymbolEffectOptions CreateWithSpeed (double speed);
+		NSSymbolEffectOptions Create (double speed);
 
 		[Export ("optionsWithSpeed:")]
-		NSSymbolEffectOptions GetWithSpeed (double speed);
+		NSSymbolEffectOptions Get (double speed);
 	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -183,7 +183,7 @@ namespace Symbols {
 	interface NSSymbolReplaceContentTransition {
 		[Static]
 		[Export ("transition")]
-		NSSymbolReplaceContentTransition CreateTransition ();
+		NSSymbolReplaceContentTransition Create ();
 
 		[Static]
 		[Export ("replaceDownUpTransition")]
