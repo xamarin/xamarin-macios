@@ -8,6 +8,7 @@ using System.Text;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Microsoft.Build.Tasks;
 
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
@@ -23,8 +24,6 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string BTouchToolExe { get; set; }
 
-		public string DotNetCscCompiler { get; set; }
-
 		public ITaskItem [] ObjectiveCLibraries { get; set; }
 
 		public ITaskItem [] AdditionalLibPaths { get; set; }
@@ -38,6 +37,8 @@ namespace Xamarin.MacDev.Tasks {
 		public ITaskItem [] ApiDefinitions { get; set; }
 
 		public string AttributeAssembly { get; set; }
+
+		public ITaskItem CompiledApiDefinitionAssembly { get; set; }
 
 		public ITaskItem [] CoreSources { get; set; }
 
@@ -75,20 +76,10 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string ResponseFilePath { get; set; }
 
-		string DotNetPath {
-			get {
-				// Return the dotnet executable we're executing with.
-				var dotnet_path = Environment.GetEnvironmentVariable ("DOTNET_HOST_PATH");
-				if (string.IsNullOrEmpty (dotnet_path))
-					throw new InvalidOperationException ($"DOTNET_HOST_PATH is not set");
-				return dotnet_path;
-			}
-		}
-
 		protected override string ToolName {
 			get {
 				if (IsDotNet)
-					return Path.GetFileName (DotNetPath);
+					return Path.GetFileName (this.GetDotNetPath ());
 
 				return Path.GetFileNameWithoutExtension (ToolExe);
 			}
@@ -102,7 +93,7 @@ namespace Xamarin.MacDev.Tasks {
 			// system dotnet, which might not exist or not have the version we
 			// need.
 			if (IsDotNet)
-				return DotNetPath;
+				return this.GetDotNetPath ();
 
 			return Path.Combine (ToolPath, ToolExe);
 		}
@@ -122,6 +113,9 @@ namespace Xamarin.MacDev.Tasks {
 #if DEBUG
 			cmd.Add ("/v");
 #endif
+
+			if (CompiledApiDefinitionAssembly is not null)
+				cmd.AddQuotedSwitchIfNotNull ("/compiled-api-definition-assembly:", CompiledApiDefinitionAssembly.ItemSpec);
 
 			cmd.Add ("/nostdlib");
 			cmd.AddQuotedSwitchIfNotNull ("/baselib:", BaseLibDll);
@@ -143,14 +137,6 @@ namespace Xamarin.MacDev.Tasks {
 
 			if (AllowUnsafeBlocks)
 				cmd.Add ("/unsafe");
-
-			if (!string.IsNullOrEmpty (DotNetCscCompiler)) {
-				var compileCommand = new string [] {
-					DotNetPath,
-					DotNetCscCompiler,
-				};
-				cmd.AddQuoted ("/compile-command:" + string.Join (" ", StringUtils.QuoteForProcess (compileCommand)));
-			}
 
 			cmd.AddQuotedSwitchIfNotNull ("/ns:", Namespace);
 
@@ -266,7 +252,6 @@ namespace Xamarin.MacDev.Tasks {
 			BaseLibDll = PathUtils.ConvertToMacPath (BaseLibDll);
 			BTouchToolExe = PathUtils.ConvertToMacPath (BTouchToolExe);
 			BTouchToolPath = PathUtils.ConvertToMacPath (BTouchToolPath);
-			DotNetCscCompiler = PathUtils.ConvertToMacPath (DotNetCscCompiler);
 
 			if (IsDotNet) {
 				var customHome = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_HOME");

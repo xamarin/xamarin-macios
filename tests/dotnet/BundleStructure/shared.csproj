@@ -182,6 +182,8 @@
 		<!-- https://github.com/xamarin/xamarin-macios/issues/15727 -->
 		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/Framework.With.Dots.framework"           CopyToPublishDirectory="PreserveNewest" PublishFolderType="AppleFramework" />
 
+		<!-- https://github.com/xamarin/xamarin-macios/issues/15044 -->
+		<None Include="$(RootTestsDirectory)/test-libraries/libraries/.libs/$(RuntimeIdentifier)/NoLibPrefix.dylib" CopyToPublishDirectory="PreserveNewest" PublishFolderType="DynamicLibrary" />
 		<!-- Content items -->
 
 		<!-- Content without any metadata: bundled -->

@@ -1206,7 +1206,7 @@
         <value>"{0}" 작업에 이 플랫폼에서 빌드할 때 필요한 매개 변수 "{1}" 값이 제공되지 않았습니다.</value>
     </data>
   <data name="E7115" xml:space="preserve">
-        <value>The illink assembly doesn't exist: '{0}'.</value>
+        <value>잘못된 어셈블리가 없습니다. '{0}'.</value>
         <comment>
             {0}: the path to the linker assembly
         </comment>
