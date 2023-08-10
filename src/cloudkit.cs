@@ -89,7 +89,7 @@ namespace CloudKit {
 	interface CKShareMetadata : NSCopying, NSSecureCoding {
 
 #if !XAMCORE_5_0
-		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Get them from 'CKFetchShareMetadataOperation' or platform-specific scene / app delegate callbacks.")]
 		[Export ("init")]
 		NativeHandle Constructor ();

@@ -77,7 +77,7 @@ namespace Xamarin.MacDev.Tasks {
 			arguments.Add ("clang++");
 			// check if needs to be removed: https://github.com/xamarin/xamarin-macios/issues/18556
 			arguments.Add ("-Xlinker");
-			arguments.Add ("-ld64");
+			arguments.Add ("-ld_classic");
 
 			var hasEmbeddedFrameworks = false;
 
