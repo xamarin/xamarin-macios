@@ -14,6 +14,8 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xharness.Targets;
 
+using Xamarin.Utils;
+
 namespace Xharness {
 	public enum HarnessAction {
 		None,
@@ -106,18 +108,18 @@ namespace Xharness {
 		string MlaunchPath {
 			get {
 				if (ENABLE_DOTNET) {
-					string platform;
+					ApplePlatform platform;
 					if (INCLUDE_IOS) {
-						platform = "iOS";
+						platform = ApplePlatform.iOS;
 					} else if (INCLUDE_TVOS) {
-						platform = "tvOS";
+						platform = ApplePlatform.TVOS;
 					} else {
 						return $"Not building any mobile platform, so can't provide a location to mlaunch.";
 					}
-					var mlaunchPath = Path.Combine (DOTNET_DIR, "packs");
-					mlaunchPath = Path.Combine (mlaunchPath, $"Microsoft.{platform}.Sdk", config [$"{platform.ToUpperInvariant ()}_NUGET_VERSION_NO_METADATA"]);
-					mlaunchPath = Path.Combine (mlaunchPath, "tools", "bin", "mlaunch");
-					return mlaunchPath;
+					var sdkPlatform = platform.AsString ().ToUpperInvariant ();
+					var sdkName = config [$"{sdkPlatform}_NUGET_SDK_NAME"];
+					var sdkVersion = config [$"{sdkPlatform}_NUGET_VERSION_NO_METADATA"];
+					return Path.Combine (DOTNET_DIR, "packs", sdkName, sdkVersion, "tools", "bin", "mlaunch");
 				} else if (INCLUDE_XAMARIN_LEGACY && INCLUDE_IOS) {
 					return Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
 				}

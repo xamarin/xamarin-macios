@@ -21,29 +21,32 @@ $(DOTNET_BUILD_DIR)/bgen/bgen:  $(generator_dependencies) Makefile.generator $(B
 	$(Q) chmod +x $@
 
 
-$(DOTNET_DESTDIR)/%.Sdk/tools/lib/bgen/bgen: $(DOTNET_BUILD_DIR)/bgen/bgen | $(DOTNET_DESTDIR)/%.Sdk/tools/lib/bgen
-	$(Q) rm -Rf "$(dir $@)"
-	$(Q) $(CP) -r "$(dir $<)" "$(dir $@)"
+define BGenTargets
+$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/bgen/bgen: $(DOTNET_BUILD_DIR)/bgen/bgen | $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/bgen
+	$$(Q) rm -Rf "$$(dir $$@)"
+	$$(Q) $$(CP) -r "$$(dir $$<)" "$$(dir $$@)"
 
-$(DOTNET_DESTDIR)/%.Sdk/tools/bin/bgen: bgen/bgen.dotnet | $(DOTNET_DESTDIR)/%.Sdk/tools/bin
-	$(Q) $(CP) $< $@
+$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/bin/bgen: bgen/bgen.dotnet | $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/bin
+	$$(Q) $$(CP) $$< $$@
 
-$(DOTNET_DESTDIR)/%.Sdk/tools/lib/Xamarin.Apple.BindingAttributes.dll: $(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll | $(DOTNET_DESTDIR)/%.Sdk/tools/lib
-	$(Q) $(CP) $< $@
-	$(Q) $(CP) $(<:.dll=.pdb) $(@:.dll=.pdb)
+$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/Xamarin.Apple.BindingAttributes.dll: $(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll | $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib
+	$$(Q) $$(CP) $$< $$@
+	$$(Q) $$(CP) $$(<:.dll=.pdb) $$(@:.dll=.pdb)
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call BGenTargets,$(platform))))
 
 DOTNET_TARGETS += \
 	$(DOTNET_BUILD_DIR)/bgen/bgen \
-	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/bin/bgen) \
-	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/lib/bgen/bgen) \
-	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/lib/Xamarin.Apple.BindingAttributes.dll) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/tools/bin/bgen) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/tools/lib/bgen/bgen) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/tools/lib/Xamarin.Apple.BindingAttributes.dll) \
 
 DOTNET_TARGETS_DIRS += \
 	$(DOTNET_BUILD_DIR) \
 	$(DOTNET_BUILD_DIR)/bgen \
-	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/bin) \
-	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/lib) \
-	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/lib/bgen) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/tools/bin) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/tools/lib) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/tools/lib/bgen) \
 
 #
 # Common
