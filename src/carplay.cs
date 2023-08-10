@@ -1850,6 +1850,14 @@ namespace CarPlay {
 
 		[Export ("updateTemplates:")]
 		void UpdateTemplates (CPTemplate [] newTemplates);
+
+		[iOS (17, 0)]
+		[Export ("selectTemplate:")]
+		void SelectTemplate (CPTemplate newTemplate);
+
+		[iOS (17, 0)]
+		[Export ("selectTemplateAtIndex:")]
+		void SelectTemplate (nint index);
 	}
 
 	interface ICPNowPlayingTemplateObserver { }
