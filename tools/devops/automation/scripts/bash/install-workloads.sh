@@ -39,6 +39,15 @@ fi
 
 #  Start working
 make global.json
+
+# Check if .NET is even enabled
+var=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable VARIABLE=ENABLE_DOTNET)
+ENABLE_DOTNET=${var#*=}
+if test -z "$ENABLE_DOTNET"; then
+  echo "Not installing anything, because .NET is not enabled."
+  exit 0
+fi
+
 make -C builds dotnet
 
 var=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable VARIABLE=DOTNET)
