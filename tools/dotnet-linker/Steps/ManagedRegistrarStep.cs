@@ -936,7 +936,7 @@ namespace Xamarin.Linker {
 						//     goto done;
 						il.Emit (OpCodes.Ldloc, handleVariable); // handle
 						il.Emit (OpCodes.Ldsfld, abr.System_IntPtr_Zero);
-						il.Emit (OpCodes.Beq, done);
+						il.Emit (OpCodes.Beq, loadObjectVariable);
 						// objectVariable = TryGetNSObject (handle, false) as TargetType
 						il.Emit (OpCodes.Ldloc, handleVariable); // handle
 						il.Emit (OpCodes.Ldc_I4_0); // false
@@ -947,7 +947,7 @@ namespace Xamarin.Linker {
 						//     objectVariable = new TargetType (handle, false)
 						il.Emit (OpCodes.Ldloc, objectVariable);
 						il.Emit (OpCodes.Brfalse, loadHandle);
-						il.Emit (OpCodes.Br, done);
+						il.Emit (OpCodes.Br, loadObjectVariable);
 						il.Append (loadHandle);
 						if (ctor.Parameters [0].ParameterType.Is ("ObjCRuntime", "NativeHandle"))
 							il.Emit (OpCodes.Call, abr.NativeObject_op_Implicit_NativeHandle);
