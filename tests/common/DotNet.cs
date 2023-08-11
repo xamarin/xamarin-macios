@@ -181,6 +181,19 @@ namespace Xamarin.Tests {
 					var outputStr = output.ToString ();
 					Console.WriteLine ($"'{Executable} {StringUtils.FormatArguments (args)}' failed with exit code {rv.ExitCode}.");
 					Console.WriteLine (outputStr);
+					if (rv.ExitCode != 0) {
+						var errors = BinLog.GetBuildLogErrors (binlogPath).ToArray ();
+						var msg = new StringBuilder ();
+						msg.AppendLine ($"'dotnet {verb}' failed with exit code {rv.ExitCode}");
+						msg.AppendLine ($"Full command: {Executable} {StringUtils.FormatArguments (args)}");
+						if (errors.Any ()) {
+							var errorsToList = errors.Take (10).ToArray ();
+							msg.AppendLine ($"Listing first {errorsToList.Length} error(s) (of {errors.Length} error(s)):");
+							foreach (var error in errorsToList)
+								msg.AppendLine ($"    {string.Join ($"{Environment.NewLine}        ", error.ToString ().Split ('\n', '\r'))}");
+						}
+						Assert.Fail (msg.ToString ());
+					}
 					Assert.AreEqual (0, rv.ExitCode, $"Exit code: {Executable} {StringUtils.FormatArguments (args)}");
 				}
 				return new ExecutionResult (output, output, rv.ExitCode) {
