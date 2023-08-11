@@ -34,3 +34,4 @@
 !missing-selector! UIImageReaderConfiguration::setPreparesImagesForDisplay: not bound
 !missing-type! UIImageReader not bound
 !missing-type! UIImageReaderConfiguration not bound
+!missing-field! NSDefaultFontExcludedDocumentAttribute not bound

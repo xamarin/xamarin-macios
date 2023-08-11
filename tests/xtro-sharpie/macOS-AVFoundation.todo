@@ -447,3 +447,5 @@
 !unknown-field! AVAudioSessionInterruptionTypeKey bound
 !unknown-field! AVAudioSessionMediaServicesWereLostNotification bound
 !unknown-field! AVAudioSessionMediaServicesWereResetNotification bound
+!missing-field! AVCaptureDeviceTypeContinuityCamera not bound
+!missing-selector! AVCaptureDevice::displayVideoZoomFactorMultiplier not bound

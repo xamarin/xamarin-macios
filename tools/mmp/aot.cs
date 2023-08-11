@@ -234,7 +234,7 @@ namespace Xamarin.Bundler {
 				if (needsLipo)
 					aotArgs.Add ($"outfile={Path.Combine (tempAotDir, "aot", abi.AsArchString (), Path.GetFileName (file) + ".dylib")}");
 				if (Driver.XcodeVersion.Major >= 15)
-					aotArgs.Add ("ld-flags=-Xlinker -ld64");
+					aotArgs.Add ("ld-flags=-Xlinker -ld_classic");
 				cmd.Add ($"--aot={string.Join (",", aotArgs)}");
 				if (IsModern)
 					cmd.Add ("--runtime=mobile");

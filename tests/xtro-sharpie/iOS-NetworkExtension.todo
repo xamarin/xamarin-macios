@@ -33,3 +33,5 @@
 !missing-type! NEFailureHandlerProvider not bound
 !missing-type! NERelay not bound
 !missing-type! NERelayManager not bound
+!missing-selector! NERelay::dnsOverHTTPSURL not bound
+!missing-selector! NERelay::setDnsOverHTTPSURL: not bound

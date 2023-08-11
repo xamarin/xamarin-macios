@@ -52,3 +52,4 @@
 !missing-type! NSMorphologyPronoun not bound
 !missing-type! NSTermOfAddress not bound
 !unknown-native-enum! NSNetServiceOptions bound
+!missing-field! NSURLDirectoryEntryCountKey not bound

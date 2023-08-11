@@ -474,3 +474,4 @@
 !missing-type! AVCaptureReactionEffectState not bound
 !missing-type! AVMetadataHumanFullBodyObject not bound
 !missing-type! AVSampleBufferVideoRenderer not bound
+!missing-field! AVCaptureDeviceTypeContinuityCamera not bound
