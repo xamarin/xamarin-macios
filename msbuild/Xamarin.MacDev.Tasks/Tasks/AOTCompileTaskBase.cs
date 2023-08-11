@@ -160,10 +160,31 @@ namespace Xamarin.MacDev.Tasks {
 					var newInput = Path.Combine (InputDirectory, Path.GetFileName (inputs [i]));
 					File.Copy (inputs [i], newInput, true);
 					inputs [i] = newInput;
+					Assemblies [i].SetMetadata ("Input", inputs [i]);
 				}
 			} else {
 				// The assemblies are all in the same directory, we can just use that as input.
 				InputDirectory = assemblyDirectories [0];
+			}
+
+			// They also can't be in a directory with a colon (https://github.com/xamarin/xamarin-macios/issues/14904),
+			// so copy everything to a temporary directory.
+			string? temporaryDirectory = null;
+			if (InputDirectory.Contains (':')) {
+#if NET
+				temporaryDirectory = Directory.CreateTempSubdirectory ("aot-compile");
+#else
+				temporaryDirectory = Path.Combine (Path.GetTempPath (), "aot-compile-" + Guid.NewGuid ().ToString ());
+				Directory.CreateDirectory (temporaryDirectory);
+#endif
+				for (var i = 0; i < inputs.Count; i++) {
+					var tmpInput = Path.Combine (temporaryDirectory, Path.GetFileName (inputs [i]));
+					File.Copy (inputs [i], tmpInput, true);
+					inputs [i] = tmpInput;
+					Assemblies [i].SetMetadata ("Input", inputs [i]);
+				}
+
+				InputDirectory = temporaryDirectory;
 			}
 
 			// Figure out which assemblies need to be aot'ed, and which are up-to-date.
@@ -230,6 +251,9 @@ namespace Xamarin.MacDev.Tasks {
 			var objectFiles = assembliesToAOT.Select (v => v.GetMetadata ("ObjectFile")).Where (v => !string.IsNullOrEmpty (v));
 			var llvmFiles = assembliesToAOT.Select (v => v.GetMetadata ("LLVMFile")).Where (v => !string.IsNullOrEmpty (v));
 			FileWrites = objectFiles.Union (llvmFiles).Select (v => new TaskItem (v)).ToArray ();
+
+			if (!string.IsNullOrEmpty (temporaryDirectory))
+				Directory.Delete (temporaryDirectory, true);
 
 			return !Log.HasLoggedErrors;
 

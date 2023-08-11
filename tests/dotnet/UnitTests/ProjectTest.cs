@@ -1323,6 +1323,29 @@ namespace Xamarin.Tests {
 			Assert.AreEqual ($"WinExe is not a valid output type for macOS", errors [0].Message, "Error message");
 		}
 
+		[Test]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
+		public void BuildAppWithColonInOutputDirectory (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["OutputPath"] = $"bin{Path.DirectorySeparatorChar}path:with:colon{Path.DirectorySeparatorChar}";
+			properties ["IntermediateOutputPath"] = $"obj{Path.DirectorySeparatorChar}path:with:colon{Path.DirectorySeparatorChar}";
+			// Exclude a bunch of stuff that doesn't work very well with paths with colons.
+			properties ["ExcludeTouchUnitReference"] = "true";
+			properties ["ExcludeNUnitLiteReference"] = "true";
+			properties ["GenerateAssemblyInfo"] = "false";
+			properties ["GenerateTargetFrameworkAttribute"] = "false";
+			properties ["NoNFloatUsing"] = "true";
+			var rv = DotNet.AssertBuild (project_path, properties);
+			rv.AssertNoWarnings ();
+		}
+
 		void AssertThatDylibExistsAndIsReidentified (string appPath, string dylibRelPath)
 		{
 			var dylibPath = Path.Join (appPath, "Contents", "MonoBundle", dylibRelPath);
