@@ -30,7 +30,7 @@ namespace Symbols {
 
 		[Static]
 		[Export ("optionsWithNonRepeating")]
-		NSSymbolEffectOptions CreatesWithNonRepeating ();
+		NSSymbolEffectOptions CreateNonRepeating ();
 
 		[Export ("optionsWithNonRepeating")]
 		NSSymbolEffectOptions GetNonRepeating ();
