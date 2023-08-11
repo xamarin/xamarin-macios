@@ -350,13 +350,13 @@ function download_xcode_platforms ()
 	# This is a workaround for a bug in Xcode 15 where we need to open the platforms panel for it to register the simulators.
 	log "Executing 'open xcpref://Xcode.PreferencePane.Platforms'"
 	log "Killing Xcode"
-	pkill -9 "Xcode"
+	pkill -9 "Xcode" || log "Xcode was not running."
 	log "Opening Xcode preferences panel"
 	open xcpref://Xcode.PreferencePane.Platforms
 	log "waiting 10 secs for Xcode to open the preferences panel"
 	sleep 10
 	log "Killing Xcode"
-	pkill -9 "Xcode"
+	pkill -9 "Xcode" || log "Xcode was not running."
 	log "Executed 'open xcpref://Xcode.PreferencePane.Platforms'"
 
 	log "Executed '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
