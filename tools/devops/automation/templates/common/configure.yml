@@ -3,10 +3,6 @@
 # variables to be used by the rest of the projects
 parameters:
 
-- name: enableDotnet
-  type: boolean
-  default: false
-
 - name: uploadArtifacts
   type: boolean
   default: false
@@ -33,9 +29,6 @@ steps:
 - bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-platforms.sh
   name: configure_platforms
   displayName: 'Configure platforms'
-  env:
-    ${{ if eq(parameters.enableDotnet, true) }}:
-      ENABLE_DOTNET: "True"
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1

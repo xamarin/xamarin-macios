@@ -159,9 +159,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
 		[TestCase (ApplePlatform.iOS, "iossimulator-x86")]
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-x64")]
-		[TestCase (ApplePlatform.iOS, "")]
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
-		[TestCase (ApplePlatform.TVOS, "")]
 		public void PublishFailureTest (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MySimpleApp";
@@ -197,9 +195,7 @@ namespace Xamarin.Tests {
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			Assert.AreEqual (1, errors.Length, "Error Count");
 			string expectedErrorMessage;
-			if (string.IsNullOrEmpty (runtimeIdentifiers)) {
-				expectedErrorMessage = $"A runtime identifier must be specified in order to publish this project.";
-			} else if (runtimeIdentifiers.IndexOf (';') >= 0) {
+			if (runtimeIdentifiers.IndexOf (';') >= 0) {
 				expectedErrorMessage = $"A runtime identifier for a device architecture must be specified in order to publish this project. '{runtimeIdentifiers}' are simulator architectures.";
 			} else {
 				expectedErrorMessage = $"A runtime identifier for a device architecture must be specified in order to publish this project. '{runtimeIdentifiers}' is a simulator architecture.";

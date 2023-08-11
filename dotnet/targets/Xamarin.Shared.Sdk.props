@@ -77,12 +77,26 @@
 
 		<_XamarinUsingDefaultRuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">true</_XamarinUsingDefaultRuntimeIdentifier>
 		
-		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'iOS'">iossimulator-x64</RuntimeIdentifier>
-		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'tvOS'">tvossimulator-x64</RuntimeIdentifier>
+		<!-- Figure out which architecture we're running on -->
+		<_IsArm64Machine Condition="'$(_IsArm64Machine)' == '' And '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'arm64'">true</_IsArm64Machine>
+		<_IsArm64Machine Condition="'$(_IsArm64Machine)' == ''">false</_IsArm64Machine>
 
+		<!-- for mobile non-publish builds we default to the simulator (and the host mac's architecture) -->
+		<!-- for mobile publish builds we default to the device architecture -->
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'iOS' And '$(_IsPublishing)' == 'true'">ios-arm64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'iOS' And '$(_IsPublishing)' != 'true' And '$(_IsArm64Machine)' == 'true'">iossimulator-arm64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'iOS' And '$(_IsPublishing)' != 'true' And '$(_IsArm64Machine)' != 'true'">iossimulator-x64</RuntimeIdentifier>
+
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'tvOS' And '$(_IsPublishing)' == 'true'">tvos-arm64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'tvOS' And '$(_IsPublishing)' != 'true' And '$(_IsArm64Machine)' == 'true'">tvossimulator-arm64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'tvOS' And '$(_IsPublishing)' != 'true' And '$(_IsArm64Machine)' != 'true'">tvossimulator-x64</RuntimeIdentifier>
+
+		<!-- For debug desktop builds we default to the host architecture -->
 		<!-- For release desktop builds we default to universal apps in .NET 7+ -->
-		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' != 'Release' And '$(_PlatformName)' == 'macOS'">osx-x64</RuntimeIdentifier>
-		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' != 'Release' And '$(_PlatformName)' == 'MacCatalyst'">maccatalyst-x64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' != 'Release' And '$(_PlatformName)' == 'macOS' And '$(_IsArm64Machine)' == 'true'">osx-arm64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' != 'Release' And '$(_PlatformName)' == 'macOS' And '$(_IsArm64Machine)' != 'true'">osx-x64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' != 'Release' And '$(_PlatformName)' == 'MacCatalyst' And '$(_IsArm64Machine)' == 'true'">maccatalyst-arm64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' != 'Release' And '$(_PlatformName)' == 'MacCatalyst' And '$(_IsArm64Machine)' != 'true'">maccatalyst-x64</RuntimeIdentifier>
 		<RuntimeIdentifiers Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' == 'Release' And '$(_PlatformName)' == 'macOS'">osx-x64;osx-arm64</RuntimeIdentifiers>
 		<RuntimeIdentifiers Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' == 'Release' And '$(_PlatformName)' == 'MacCatalyst'">maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers>
 
