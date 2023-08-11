@@ -969,10 +969,10 @@ namespace AudioUnit {
 
 	[MacCatalyst (17, 0), Mac (14, 0), NoTV, NoWatch, NoiOS]
 	public enum AudioAggregateDriftCompensation : uint {
-		MinQuality      = 0,
-		LowQuality      = 0x20,
-		MediumQuality   = 0x40,
-		HighQuality     = 0x60,
-		MaxQuality      = 0x7F,
+		MinQuality = 0,
+		LowQuality = 0x20,
+		MediumQuality = 0x40,
+		HighQuality = 0x60,
+		MaxQuality = 0x7F,
 	}
 }
