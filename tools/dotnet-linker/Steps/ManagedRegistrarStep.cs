@@ -401,6 +401,7 @@ namespace Xamarin.Linker {
 			var placeholderType = abr.System_IntPtr;
 			ParameterDefinition? callSuperParameter = null;
 			VariableDefinition? returnVariable = null;
+			MethodReference? ctor = null;
 			var leaveTryInstructions = new List<Instruction> ();
 			var isVoid = method.ReturnType.Is ("System", "Void");
 
@@ -425,6 +426,7 @@ namespace Xamarin.Linker {
 			// and later on remove everything after this instruction. Maybe at a later point I'll figure out a way to make the code emission conditional without
 			// littering the logic with conditional statements.
 			Instruction? skipEverythingAfter = null;
+
 			if (isInstanceCategory) {
 				il.Emit (OpCodes.Ldarg_0);
 				EmitConversion (method, il, method.Parameters [0].ParameterType, true, 0, out var nativeType, postProcessing);
@@ -459,12 +461,32 @@ namespace Xamarin.Linker {
 					// We're throwing an exception, so there's no need for any more code.
 					skipEverythingAfter = il.Body.Instructions.Last ();
 				} else {
-					il.Emit (OpCodes.Ldarg_0);
+					// Whenever there's an NSObject constructor that we call from a registrar callback, we need to create
+					// a separate constructor that will first set the `handle` and `flags` values of the NSObject before
+					// calling the original constructor. Here's an example of the code we generate:
+					//
+					// // The original constructor:
+					// public .ctor (T0 p0, T1 p1, ...) { /* ... */ }
+					//
+					// // The generated constructor with pre-initialization: 
+					// public .ctor (T0 p0, T1 p1, ..., IntPtr nativeHandle, IManagedRegistrar dummy) {
+					//     this.handle = (NativeHandle)nativeHandle;
+					//     this.flags = 2; // Flags.NativeRef == 2
+					//     this..ctor (p0, p1, ...);
+					// }
+					//
+					// - This code can't be expressed in C# and it can only be expressed directly in IL.
+					// - The reason we need to do this is because the base NSObject parameterless constructor 
+					//   would allocate a new Objective-C object if `handle` is a zero pointer.
+					// - The `IManagedRegistrar` dummy parameter is used only to make sure that the signature
+					//   is unique and there aren't any conflicts. The IManagedRegistrar type is internal and
+					//   we only make it public through a custom linker step.
+
+					ctor = CloneConstructorWithNativeHandle (method);
+					method.DeclaringType.Methods.Add (ctor.Resolve ());
+
+					il.Emit (OpCodes.Nop);
 					postLeaveBranch.Operand = il.Body.Instructions.Last ();
-					var git = new GenericInstanceMethod (abr.NSObject_AllocateNSObject);
-					git.GenericArguments.Add (method.DeclaringType);
-					il.Emit (OpCodes.Call, git);
-					il.Emit (OpCodes.Dup); // this is for the call to ObjCRuntime.NativeObjectExtensions::GetHandle after the call to the constructor
 				}
 			} else if (isGeneric) {
 				// this is a proxy method and we can simply use `this` without any conversion
@@ -509,7 +531,13 @@ namespace Xamarin.Linker {
 
 			callback.AddParameter ("exception_gchandle", new PointerType (abr.System_IntPtr));
 
-			if (isGeneric && !method.IsConstructor) {
+			if (ctor is not null) {
+				// in addition to the params of the original ctor we pass also the native handle and a null
+				// value for the dummy (de-duplication) parameter
+				il.Emit (OpCodes.Ldarg_0);
+				il.Emit (OpCodes.Ldnull);
+				il.Emit (OpCodes.Newobj, ctor);
+			} else if (isGeneric && !method.IsConstructor) {
 				var targetMethod = method.DeclaringType.CreateMethodReferenceOnGenericType (method, method.DeclaringType.GenericParameters.ToArray ());
 				il.Emit (OpCodes.Call, targetMethod);
 			} else if (method.IsStatic) {
@@ -1269,6 +1297,59 @@ namespace Xamarin.Linker {
 				if (isManagedNullable)
 					il.Append (endTarget);
 			}
+		}
+
+		MethodDefinition CloneConstructorWithNativeHandle (MethodDefinition ctor)
+		{
+			var clonedCtor = new MethodDefinition (ctor.Name, ctor.Attributes, ctor.ReturnType);
+			clonedCtor.IsPublic = false;
+
+			// clone the original parameters firsts
+			foreach (var parameter in ctor.Parameters) {
+				clonedCtor.AddParameter (parameter.Name, parameter.ParameterType);
+			}
+
+			// add a native handle param + a dummy parameter that we know for a fact won't be used anywhere
+			// to make the signature of the new constructor unique
+			var handleParameter = clonedCtor.AddParameter ("nativeHandle", abr.System_IntPtr);
+			var dummyParameter = clonedCtor.AddParameter ("dummy", abr.ObjCRuntime_IManagedRegistrar);
+
+			var body = clonedCtor.CreateBody (out var il);
+
+			// ensure visible
+			abr.Foundation_NSObject_HandleField.Resolve ().IsFamily = true;
+#if NET
+			abr.Foundation_NSObject_FlagsSetterMethod.Resolve ().IsFamily = true;
+#else
+			abr.Foundation_NSObject_FlagsField.Resolve ().IsFamily = true;
+#endif
+
+			// store the handle and flags first
+			il.Emit (OpCodes.Ldarg_0);
+			il.Emit (OpCodes.Ldarg, handleParameter);
+#if NET
+			il.Emit (OpCodes.Call, abr.NativeObject_op_Implicit_NativeHandle);
+#endif
+			il.Emit (OpCodes.Stfld, abr.CurrentAssembly.MainModule.ImportReference (abr.Foundation_NSObject_HandleField));
+
+			il.Emit (OpCodes.Ldarg_0);
+			il.Emit (OpCodes.Ldc_I4_2); // Flags.NativeRef == 2
+#if NET
+			il.Emit (OpCodes.Call, abr.Foundation_NSObject_FlagsSetterMethod);
+#else
+			il.Emit (OpCodes.Stfld, abr.Foundation_NSObject_FlagsField);
+#endif
+
+			// call the original constructor with all of the original parameters
+			il.Emit (OpCodes.Ldarg_0);
+			foreach (var parameter in clonedCtor.Parameters.SkipLast (2)) {
+				il.Emit (OpCodes.Ldarg, parameter);
+			}
+
+			il.Emit (OpCodes.Call, ctor);
+			il.Emit (OpCodes.Ret);
+
+			return clonedCtor;
 		}
 	}
 }

@@ -163,7 +163,12 @@ namespace Xharness {
 						return $"Not building any mobile platform, so can't provide a location to mlaunch.";
 					}
 					var mlaunchPath = Path.Combine (DOTNET_DIR, "packs");
-					mlaunchPath = Path.Combine (mlaunchPath, $"Microsoft.{platform}.Sdk", config [$"{platform.ToUpperInvariant ()}_NUGET_VERSION_NO_METADATA"]);
+					// there is a diff between getting the path for the current platform when running on CI or off CI. The config files in the CI do not 
+					// contain the correct workload version, the reason for this is that the workload is built in a different machine which means that
+					// the Make.config will use the wrong version. The CI set the version in the environment variable {platform}_WORKLOAD_VERSION via a script.
+					var workloadVersion = Environment.GetEnvironmentVariable ($"{platform.ToUpperInvariant ()}_WORKLOAD_VERSION");
+					mlaunchPath = Path.Combine (mlaunchPath, $"Microsoft.{platform}.Sdk",
+							string.IsNullOrEmpty (workloadVersion) ? config [$"{platform.ToUpperInvariant ()}_NUGET_VERSION_NO_METADATA"] : workloadVersion);
 					mlaunchPath = Path.Combine (mlaunchPath, "tools", "bin", "mlaunch");
 					return mlaunchPath;
 				} else if (INCLUDE_XAMARIN_LEGACY && INCLUDE_IOS) {
@@ -202,6 +207,7 @@ namespace Xharness {
 		public bool INCLUDE_XAMARIN_LEGACY { get; }
 		public string SYSTEM_MONO { get; set; }
 		public string DOTNET_DIR { get; set; }
+		public string DotNetTfm { get; set; }
 
 		// Run
 
@@ -279,6 +285,7 @@ namespace Xharness {
 			SYSTEM_MONO = config ["SYSTEM_MONO"];
 			DOTNET_DIR = config ["DOTNET_DIR"];
 			INCLUDE_XAMARIN_LEGACY = config.ContainsKey ("INCLUDE_XAMARIN_LEGACY") && !string.IsNullOrEmpty (config ["INCLUDE_XAMARIN_LEGACY"]);
+			DotNetTfm = config ["DOTNET_TFM"];
 
 			if (string.IsNullOrEmpty (SdkRoot))
 				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
@@ -617,6 +624,7 @@ namespace Xharness {
 		IEnumerable<string> GetConfigFiles ()
 		{
 			return FindConfigFiles (useSystemXamarinIOSMac ? "test-system.config" : "test.config")
+				.Concat (FindConfigFiles ("configure.inc"))
 				.Concat (FindConfigFiles ("Make.config"))
 				.Concat (FindConfigFiles ("Make.config.local"));
 		}

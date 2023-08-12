@@ -179,6 +179,7 @@ namespace Xamarin.Tests {
 			}
 			if (test_config.Any ())
 				ParseConfigFiles (test_config);
+			ParseConfigFiles (FindConfigFiles ("configure.inc"));
 			ParseConfigFiles (FindConfigFiles ("Make.config.local"));
 			ParseConfigFiles (FindConfigFiles ("Make.config"));
 		}
@@ -194,7 +195,7 @@ namespace Xamarin.Tests {
 			if (string.IsNullOrEmpty (file))
 				return;
 
-			foreach (var line in File.ReadAllLines (file)) {
+			foreach (var line in File.ReadAllLines (file).Reverse ()) {
 				var eq = line.IndexOf ('=');
 				if (eq == -1)
 					continue;
@@ -541,7 +542,9 @@ namespace Xamarin.Tests {
 
 		public static string GetNuGetVersionNoMetadata (ApplePlatform platform)
 		{
-			return GetVariable ($"{platform.AsString ().ToUpper ()}_NUGET_VERSION_NO_METADATA", string.Empty);
+			var workloadVersion = Environment.GetEnvironmentVariable ($"{platform.AsString ().ToUpper ()}_WORKLOAD_VERSION");
+			return string.IsNullOrEmpty (workloadVersion) ?
+				GetVariable ($"{platform.AsString ().ToUpper ()}_NUGET_VERSION_NO_METADATA", string.Empty) : workloadVersion;
 		}
 
 		// This is only applicable for .NET
@@ -916,6 +919,9 @@ namespace Xamarin.Tests {
 
 		public static IEnumerable<ApplePlatform> GetIncludedPlatforms (bool dotnet)
 		{
+			if (dotnet && !include_dotnet)
+				yield break;
+
 			if (include_ios)
 				yield return ApplePlatform.iOS;
 			if (include_tvos)

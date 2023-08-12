@@ -342,7 +342,7 @@ public class Frameworks : Dictionary<string, Framework> {
 
 				{ "Accounts", "Accounts", 5 },
 				{ "GLKit", "GLKit", 5 },
-				{ "NewsstandKit", "NewsstandKit", 5 },
+				{ "NewsstandKit", "NewsstandKit", 5, /* alwaysWeakLink: */ true }, // This framework was completely removed in iOS 17, so make sure existing apps that may link with NewsstandKit don't crash (by linking weakly). Ref: https://github.com/xamarin/xamarin-macios/issues/18606
 				{ "CoreImage", "CoreImage", 5 },
 				{ "CoreBluetooth", "CoreBluetooth", 5 },
 				{ "Twitter", "Twitter", 5 },
@@ -796,6 +796,12 @@ public class Frameworks : Dictionary<string, Framework> {
 			case "GameKit":
 				if (Driver.XcodeVersion.Major >= 14 && app.Is32Build) {
 					Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 14+ and building for a 32-bit simulator architecture.", framework.Name);
+					return false;
+				}
+				break;
+			case "NewsstandKit":
+				if (Driver.XcodeVersion.Major >= 15) {
+					Driver.Log (3, "Not linking with the framework {0} because it's been removed from Xcode 15+.", framework.Name);
 					return false;
 				}
 				break;
