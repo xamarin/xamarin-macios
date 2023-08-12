@@ -30,6 +30,14 @@ namespace Xamarin.Linker {
 			return rv;
 		}
 
+		public static FieldDefinition AddField (this TypeDefinition self, string name, FieldAttributes attributes, TypeReference type)
+		{
+			var rv = new FieldDefinition (name, attributes, type);
+			rv.DeclaringType = self;
+			self.Fields.Add (rv);
+			return rv;
+		}
+
 		public static MethodBody CreateBody (this MethodDefinition self, out ILProcessor il)
 		{
 			var body = new MethodBody (self);
