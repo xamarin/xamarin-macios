@@ -58,3 +58,7 @@
 !missing-type! SCContentSharingPickerConfiguration not bound
 !missing-type! SCScreenshotManager not bound
 !missing-type! SCShareableContentInfo not bound
+!missing-enum! SCPresenterOverlayAlertSetting not bound
+!missing-field! SCStreamFrameInfoBoundingRect not bound
+!missing-selector! SCStreamConfiguration::presenterOverlayPrivacyAlertSetting not bound
+!missing-selector! SCStreamConfiguration::setPresenterOverlayPrivacyAlertSetting: not bound

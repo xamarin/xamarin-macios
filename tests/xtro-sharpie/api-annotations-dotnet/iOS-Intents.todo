@@ -38,3 +38,8 @@
 !missing-type! INMessageLinkMetadata not bound
 !missing-type! INUnsendMessagesIntent not bound
 !missing-type! INUnsendMessagesIntentResponse not bound
+!missing-enum-value! INSearchForMessagesIntentResponseCode native value INSearchForMessagesIntentResponseCodeFailureRequiringInAppAuthentication = 8 not bound
+!missing-enum-value! INSendMessageIntentResponseCode native value INSendMessageIntentResponseCodeFailureRequiringInAppAuthentication = 7 not bound
+!missing-enum-value! INSendMessageRecipientUnsupportedReason native value INSendMessageRecipientUnsupportedReasonRequiringInAppAuthentication = 7 not bound
+!missing-enum-value! INStartCallContactUnsupportedReason native value INStartCallContactUnsupportedReasonRequiringInAppAuthentication = 8 not bound
+!missing-enum-value! INStartCallIntentResponseCode native value INStartCallIntentResponseCodeFailureRequiringInAppAuthentication = 13 not bound

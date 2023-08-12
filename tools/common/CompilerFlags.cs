@@ -18,7 +18,7 @@ namespace Xamarin.Utils {
 		public HashSet<string []> OtherFlags; // X
 		public List<string> InitialOtherFlags = new List<string> () {
 			"-Xlinker",
-			"-ld64",
+			"-ld_classic",
 		}; // same as OtherFlags, only that they're the first argument(s) to clang (because order matters!). This is a list to preserve order (fifo).
 
 		public HashSet<string> Defines; // -DX
@@ -111,7 +111,7 @@ namespace Xamarin.Utils {
 			if (InitialOtherFlags is null)
 				InitialOtherFlags = new List<string> () {
 					"-Xlinker",
-					"-ld64",
+					"-ld_classic",
 				};
 			InitialOtherFlags.Add (flag);
 		}

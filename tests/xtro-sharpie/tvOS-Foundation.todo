@@ -53,3 +53,4 @@
 !missing-selector! NSURLSessionUploadTask::cancelByProducingResumeData: not bound
 !missing-type! NSMorphologyPronoun not bound
 !missing-type! NSTermOfAddress not bound
+!missing-field! NSURLDirectoryEntryCountKey not bound

@@ -28,7 +28,6 @@
 !missing-enum! UITextViewBorderStyle not bound
 !missing-enum-value! UIMenuOptions native value UIMenuOptionsDisplayAsPalette = 128 not bound
 !missing-enum-value! UINavigationItemLargeTitleDisplayMode native value UINavigationItemLargeTitleDisplayModeInline = 3 not bound
-!missing-enum-value! UIUserInterfaceIdiom native value UIUserInterfaceIdiomReality = 6 not bound
 !missing-field! UIAccessibilityPriorityDefault not bound
 !missing-field! UIAccessibilityPriorityHigh not bound
 !missing-field! UIAccessibilityPriorityLow not bound
@@ -489,3 +488,6 @@
 !missing-type! UITraitVerticalSizeClass not bound
 !missing-type! UIWindowScenePlacement not bound
 !missing-type! UIWindowSceneStandardPlacement not bound
+!missing-enum-value! UIMenuElementSize native value UIMenuElementSizeAutomatic = -1 not bound
+!missing-enum-value! UIUserInterfaceIdiom native value UIUserInterfaceIdiomVision = 6 not bound
+!missing-field! NSDefaultFontExcludedDocumentAttribute not bound

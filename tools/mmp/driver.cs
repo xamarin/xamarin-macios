@@ -1014,7 +1014,7 @@ namespace Xamarin.Bundler {
 
 					if (XcodeVersion.Major >= 15) {
 						// Xcode 15 ships with a new linker, which doesn't work, so request the old one.
-						args.Add ("-Wl,-ld64");
+						args.Add ("-Wl,-ld_classic");
 					}
 
 					if (App.RequiresPInvokeWrappers) {
