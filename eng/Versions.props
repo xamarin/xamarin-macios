@@ -17,7 +17,7 @@
     <!-- This is a subscription of the .NET 7 versions of our packages -->
     <MicrosoftMacCatalystSdkPackageVersion>16.4.7095</MicrosoftMacCatalystSdkPackageVersion>
     <MicrosoftmacOSSdkPackageVersion>13.3.7095</MicrosoftmacOSSdkPackageVersion>
-    <MicrosoftiOSSdkPackageVersion>16.4.7094</MicrosoftiOSSdkPackageVersion>
+    <MicrosoftiOSSdkPackageVersion>16.4.7095</MicrosoftiOSSdkPackageVersion>
     <MicrosofttvOSSdkPackageVersion>16.4.7095</MicrosofttvOSSdkPackageVersion>
   </PropertyGroup>
 </Project>
