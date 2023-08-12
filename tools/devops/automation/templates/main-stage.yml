@@ -36,10 +36,6 @@ parameters:
   type: boolean
   default: false
   
-- name: enableDotnet
-  type: boolean
-  default: true
-
 - name: enableLegacySigning
   type: boolean
   default: true
@@ -199,7 +195,6 @@ stages:
       keyringPass: $(pass--lab--mac--builder--keychain)
       gitHubToken: $(Github.Token)
       xqaCertPass: $(xqa--certificates--password)
-      enableDotnet: ${{ parameters.enableDotnet }}
       skipESRP: ${{ parameters.skipESRP }}
       pool: ${{ parameters.pool }}
 
@@ -220,7 +215,6 @@ stages:
       keyringPass: $(pass--lab--mac--builder--keychain)
       gitHubToken: $(Github.Token)
       xqaCertPass: $(xqa--certificates--password)
-      enableDotnet: ${{ parameters.enableDotnet }}
       pool: ${{ parameters.pool }}
 
 - stage: prepare_packages_legacy
@@ -236,7 +230,6 @@ stages:
       commit: ${{ parameters.commit }}
       signingSetupSteps: ${{ parameters.signingSetupSteps }}
       keyringPass: $(pass--lab--mac--builder--keychain)
-      enableDotnet: ${{ parameters.enableDotnet }}
       skipESRP: ${{ parameters.skipESRP }}
       packages: ${{ parameters.legacyPackageJobs }}
 
@@ -289,7 +282,6 @@ stages:
         keyringPass: $(pass--lab--mac--builder--keychain)
         gitHubToken: $(Github.Token)
         xqaCertPass: $(xqa--certificates--password)
-        enableDotnet: ${{ parameters.enableDotnet }}
         pool: ${{ parameters.pool }}
 
 # Test stages
@@ -315,7 +307,6 @@ stages:
     keyringPass: $(pass--lab--mac--builder--keychain)
     gitHubToken: $(Github.Token)
     xqaCertPass: $(xqa--certificates--password)
-    enableDotnet: ${{ parameters.enableDotnet }}
     condition: ${{ parameters.runTests }}
 
 # devices are optional and will only be ran when we set them OR in CI
@@ -341,7 +332,6 @@ stages:
           keyringPass: $(pass-XamarinQA-bot-login) 
           gitHubToken: $(Github.Token)
           xqaCertPass: $(xqa--certificates--password)
-          enableDotnet: ${{ parameters.enableDotnet }}
           condition: ${{ parameters.runDeviceTests }}
           parseLabels: false
 
@@ -358,7 +348,6 @@ stages:
         useImage: ${{ config.useImage }}
         statusContext: ${{ config.statusContext }}
         keyringPass: $(pass--lab--mac--builder--keychain)
-        enableDotnet: ${{ parameters.enableDotnet }}
         demands: ${{ config.demands }}
 
 - ${{ if eq(parameters.runWindowsIntegration, true) }}:
@@ -393,7 +382,6 @@ stages:
       keyringPass: $(pass--lab--mac--builder--keychain)
       gitHubToken: $(Github.Token)
       xqaCertPass: $(xqa--certificates--password)
-      enableDotnet: ${{ parameters.enableDotnet }}
 
 - ${{ if eq(parameters.runSamples, true) }}:
   # TODO: Not the real step
