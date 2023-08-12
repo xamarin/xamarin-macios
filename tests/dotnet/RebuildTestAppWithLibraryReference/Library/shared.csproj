@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<DefineConstants Condition="'$(BuildCounter)' == 'First'">$(DefineConstants);FIRSTBUILD</DefineConstants>
+		<DefineConstants Condition="'$(BuildCounter)' == 'Second'">$(DefineConstants);SECONDBUILD</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+	</ItemGroup>
+</Project>

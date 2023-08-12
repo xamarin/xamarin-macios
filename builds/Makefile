@@ -179,9 +179,7 @@ DOTNET_DOWNLOADS = \
 	.stamp-install-t4 \
 
 dotnet: $(DOTNET_DOWNLOADS)
-ifdef ENABLE_DOTNET
 all-local:: $(DOTNET_DOWNLOADS)
-endif
 
 clean-local::
 	$(Q) rm -Rf downloads .stamp-download-mono
