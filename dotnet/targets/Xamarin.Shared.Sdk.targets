@@ -465,12 +465,14 @@
 	</PropertyGroup>
 
 	<Target Name="_ComputeLinkerFeatures">
+		<PropertyGroup Condition="'$(PublishAot)' == 'true'">
+			<!-- Yep, we want to run ILLink as well, because we need our custom steps to run (NativeAOT sets this to false, so set it back to true) -->
+			<RunILLink>true</RunILLink>
+		</PropertyGroup>
+
 		<PropertyGroup Condition="'$(_UseNativeAot)' == 'true'">
 			<!-- The one and only registrar is 'managed-static' when using NativeAOT -->
 			<Registrar Condition="'$(Registrar)' == ''">managed-static</Registrar>
-
-			<!-- Yep, we want to run ILLink as well, because we need our custom steps to run (NativeAOT sets this to false, so set it back to true) -->
-			<RunILLink>true</RunILLink>
 		</PropertyGroup>
 
 		<PropertyGroup>

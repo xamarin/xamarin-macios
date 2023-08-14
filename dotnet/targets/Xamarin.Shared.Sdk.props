@@ -142,6 +142,10 @@
 	</PropertyGroup>
 
 	<!-- Various options when using NativeAOT -->
+	<PropertyGroup Condition="'$(PublishAot)' == 'true'">
+		<!-- This turns off some NativeAOT logic we don't want nor need -->
+		<NativeCompilationDuringPublish>false</NativeCompilationDuringPublish>
+	</PropertyGroup>
 	<PropertyGroup Condition="'$(PublishAot)' == 'true' And '$(_IsPublishing)' == 'true'">
 		<!-- Disable our own assembly IL stripping logic, because ILC does that already -->
 		<EnableAssemblyILStripping>false</EnableAssemblyILStripping>
@@ -151,8 +155,5 @@
 
 		<!-- We must find the BCL libraries using the runtime pack instead of using the built-in NativeAOT BCL -->
 		<PublishAotUsingRuntimePack>true</PublishAotUsingRuntimePack>
-
-		<!-- This turns off some NativeAOT logic we don't want nor need -->
-		<NativeCompilationDuringPublish>false</NativeCompilationDuringPublish>
 	</PropertyGroup>
 </Project>
