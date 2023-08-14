@@ -82,6 +82,8 @@ ifeq ($(CONFIG),Release)
 RUNTIMEIDENTIFIERS=maccatalyst-x64;maccatalyst-arm64
 else ifneq ($(UNIVERSAL),)
 RUNTIMEIDENTIFIERS=maccatalyst-x64;maccatalyst-arm64
+else ifeq ($(shell arch),arm64)
+RUNTIMEIDENTIFIERS=maccatalyst-arm64
 else
 RUNTIMEIDENTIFIERS=maccatalyst-x64
 endif
