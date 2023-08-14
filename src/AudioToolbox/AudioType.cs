@@ -832,18 +832,18 @@ namespace AudioToolbox {
 
 		DiscreteInOrder = (147 << 16) | 0,                       // needs to be ORed with the actual number of channels  
 
-		
+
 #if NET
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("macos14.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
-		[Mac (14,0)]
-		[Watch (10,0)]
+		[Mac (14, 0)]
+		[Watch (10, 0)]
 		[iOS (17, 0)]
 		[TV (17, 0)]
-		[MacCatalyst (17,0)]
+		[MacCatalyst (17, 0)]
 #endif
 		Ogg_3_0 = AC3_3_0,
 #if NET
@@ -852,11 +852,11 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
-		[Mac (14,0)]
-		[Watch (10,0)]
+		[Mac (14, 0)]
+		[Watch (10, 0)]
 		[iOS (17, 0)]
 		[TV (17, 0)]
-		[MacCatalyst (17,0)]
+		[MacCatalyst (17, 0)]
 #endif
 		Ogg_4_0 = Wave_4_0_B,
 #if NET
@@ -865,52 +865,52 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
-		[Mac (14,0)]
-		[Watch (10,0)]
+		[Mac (14, 0)]
+		[Watch (10, 0)]
 		[iOS (17, 0)]
 		[TV (17, 0)]
-		[MacCatalyst (17,0)]
+		[MacCatalyst (17, 0)]
 #endif
-    Ogg_5_0 = (212U<<16) | 5,
+		Ogg_5_0 = (212U << 16) | 5,
 #if NET
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("macos14.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
-		[Mac (14,0)]
-		[Watch (10,0)]
+		[Mac (14, 0)]
+		[Watch (10, 0)]
 		[iOS (17, 0)]
 		[TV (17, 0)]
-		[MacCatalyst (17,0)]
+		[MacCatalyst (17, 0)]
 #endif
-		Ogg_5_1 = (213U<<16) | 6,
+		Ogg_5_1 = (213U << 16) | 6,
 #if NET
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("macos14.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
-		[Mac (14,0)]
-		[Watch (10,0)]
+		[Mac (14, 0)]
+		[Watch (10, 0)]
 		[iOS (17, 0)]
 		[TV (17, 0)]
-		[MacCatalyst (17,0)]
+		[MacCatalyst (17, 0)]
 #endif
-		Ogg_6_1 = (214U<<16) | 7,
+		Ogg_6_1 = (214U << 16) | 7,
 #if NET
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("macos14.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
-		[Mac (14,0)]
-		[Watch (10,0)]
+		[Mac (14, 0)]
+		[Watch (10, 0)]
 		[iOS (17, 0)]
 		[TV (17, 0)]
-		[MacCatalyst (17,0)]
+		[MacCatalyst (17, 0)]
 #endif
-		Ogg_7_1 = (215U<<16) | 8,
+		Ogg_7_1 = (215U << 16) | 8,
 
 		Unknown = 0xFFFF0000                           // needs to be ORed with the actual number of channels  
 	}
