@@ -64,6 +64,7 @@ namespace Xharness {
 		bool UseGroupedApps { get; }
 		string VSDropsUri { get; }
 		bool DisableWatchOSOnWrench { get; }
+		string DotNetTfm { get; }
 
 		#endregion
 
