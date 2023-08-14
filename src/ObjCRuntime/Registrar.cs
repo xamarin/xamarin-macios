@@ -134,6 +134,7 @@ namespace Registrar {
 			public IntPtr Handle;
 #else
 			public TType ProtocolWrapperType;
+			public int ClassMapIndex;
 #endif
 
 			public Dictionary<string, ObjCField> Fields;
