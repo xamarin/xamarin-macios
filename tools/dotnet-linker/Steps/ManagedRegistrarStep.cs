@@ -158,10 +158,9 @@ namespace Xamarin.Linker {
 				assembly.MainModule.Types.Add (additionalType);
 
 			// Make sure the linker saves any changes in the assembly.
-			if (modified) {
-				DerivedLinkContext.Annotations.SetCustomAnnotation ("ManagedRegistrarStep", assembly, current_trampoline_lists);
+			DerivedLinkContext.Annotations.SetCustomAnnotation ("ManagedRegistrarStep", assembly, current_trampoline_lists);
+			if (modified)
 				abr.SaveCurrentAssembly ();
-			}
 
 			abr.ClearCurrentAssembly ();
 		}
