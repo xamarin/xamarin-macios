@@ -11,6 +11,7 @@ namespace Symbols {
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface NSSymbolContentTransition : NSCopying, NSSecureCoding { }
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -52,6 +53,7 @@ namespace Symbols {
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
+	[DisableDefaultCtor]
 	interface NSSymbolPulseEffect {
 		[Static]
 		[Export ("effect")]
@@ -66,6 +68,7 @@ namespace Symbols {
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
+	[DisableDefaultCtor]
 	interface NSSymbolBounceEffect {
 		[Static]
 		[Export ("effect")]
@@ -88,6 +91,7 @@ namespace Symbols {
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
+	[DisableDefaultCtor]
 	interface NSSymbolVariableColorEffect {
 		[Static]
 		[Export ("effect")]
@@ -114,6 +118,7 @@ namespace Symbols {
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
+	[DisableDefaultCtor]
 	interface NSSymbolScaleEffect {
 		[Static]
 		[Export ("effect")]
@@ -136,6 +141,7 @@ namespace Symbols {
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
+	[DisableDefaultCtor]
 	interface NSSymbolAppearEffect {
 		[Static]
 		[Export ("effect")]
@@ -158,6 +164,7 @@ namespace Symbols {
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolEffect))]
+	[DisableDefaultCtor]
 	interface NSSymbolDisappearEffect {
 		[Static]
 		[Export ("effect")]
@@ -180,6 +187,7 @@ namespace Symbols {
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolContentTransition))]
+	[DisableDefaultCtor]
 	interface NSSymbolReplaceContentTransition {
 		[Static]
 		[Export ("transition")]
@@ -206,6 +214,7 @@ namespace Symbols {
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSSymbolContentTransition))]
+	[DisableDefaultCtor]
 	interface NSSymbolAutomaticContentTransition {
 		[Static]
 		[Export ("transition")]
