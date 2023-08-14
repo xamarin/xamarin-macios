@@ -67,6 +67,7 @@ namespace LinkAnyTest {
 		}
 #endif // !__WATCHOS__
 
+#if NET
 		[Test]
 		public void JsonSerializer_Serialize ()
 		{
@@ -86,5 +87,6 @@ namespace LinkAnyTest {
 			var b = JsonSerializer.Deserialize<int []> ("[42,3,14,15]");
 			CollectionAssert.AreEqual (new int [] { 42, 3, 14, 15 }, b, "deserialized array");
 		}
+#endif
 	}
 }
