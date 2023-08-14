@@ -1359,7 +1359,7 @@ namespace ObjCRuntime {
 
 				// We want to create an instance of `type` and if we have the chance to use the factory method
 				// on the generic type, we will prefer it to using the lookup table.
-				if (typeof (T) == type // TODO can I drop the IsGenericType check? would it break some test?
+				if (typeof (T) == type
 					&& typeof (T) != typeof (NSObject)
 					&& !(typeof (T).IsInterface || typeof (T).IsAbstract)) {
 					instance = ConstructNSObjectViaFactoryMethod (nativeHandle);
