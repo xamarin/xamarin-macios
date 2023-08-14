@@ -223,6 +223,8 @@ namespace AudioUnit {
 		[NoiOS]
 		[MacCatalyst (15, 0), Mac (12, 0), NoTV, NoWatch]
 		ProcessMute = 1634758765, // 'appm'
+		[MacCatalyst (17, 0), Mac (14, 0), NoTV, NoWatch]
+		InputMute = 1852403056, //pmin
 	}
 
 	[MacCatalyst (13, 1)]
@@ -963,5 +965,14 @@ namespace AudioUnit {
 		HRTFPanner 				= 0x68727466, // 'hrtf'
 		NetReceive 				= 0x6E726376, // 'nrcv'
 #endif
+	}
+
+	[MacCatalyst (17, 0), Mac (14, 0), NoTV, NoWatch, NoiOS]
+	public enum AudioAggregateDriftCompensation : uint {
+		MinQuality = 0,
+		LowQuality = 0x20,
+		MediumQuality = 0x40,
+		HighQuality = 0x60,
+		MaxQuality = 0x7F,
 	}
 }
