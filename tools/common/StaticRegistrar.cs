@@ -2883,12 +2883,6 @@ namespace Registrar {
 			return all_types;
 		}
 
-		static void HardLogToFile (string text)
-		{
-			using var writer = File.AppendText ("/Users/stevehawley/statreg.txt");
-			writer.WriteLine (text);
-		}
-
 		CSToObjCMap type_map_dictionary;
 		public CSToObjCMap GetTypeMapDictionary (List<Exception> exceptions)
 		{
@@ -2905,7 +2899,6 @@ namespace Registrar {
 					map_dict [name] = new ObjCNameIndex (@class.ExportedName, @class.ClassMapIndex);
 				}
 			}
-			HardLogToFile ($"Generated map dict with {map_dict.Count} entries.");
 
 			type_map_dictionary = map_dict;
 			return type_map_dictionary;
