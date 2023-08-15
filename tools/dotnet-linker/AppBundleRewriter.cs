@@ -231,6 +231,12 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public FieldReference System_IntPtr_Zero {
+			get {
+				return GetFieldReference (CorlibAssembly, System_IntPtr, "Zero", "System.IntPtr::Zero", out var _);
+			}
+		}
+
 		public TypeReference System_Nullable_1 {
 			get {
 				return GetTypeReference (CorlibAssembly, "System.Nullable`1", out var _);
@@ -779,6 +785,16 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public MethodReference Runtime_TryGetNSObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_Runtime, "TryGetNSObject",
+						nameof (Runtime_TryGetNSObject),
+						isStatic: true,
+						System_IntPtr,
+						System_Boolean);
+			}
+		}
 		public MethodReference Runtime_GetNSObject__System_IntPtr {
 			get {
 				return GetMethodReference (PlatformAssembly,
@@ -811,19 +827,6 @@ namespace Xamarin.Linker {
 						isStatic: true,
 						genericParameterCount: 1,
 						System_IntPtr);
-			}
-		}
-
-		public MethodReference Runtime_GetINativeObject__IntPtr_Boolean_Type_Type {
-			get {
-				return GetMethodReference (PlatformAssembly,
-						ObjCRuntime_Runtime, "GetINativeObject",
-						nameof (Runtime_GetINativeObject__IntPtr_Boolean_Type_Type),
-						isStatic: true,
-						System_IntPtr,
-						System_Boolean,
-						System_Type,
-						System_Type);
 			}
 		}
 
@@ -1142,6 +1145,7 @@ namespace Xamarin.Linker {
 			current_assembly = null;
 			type_map.Clear ();
 			method_map.Clear ();
+			field_map.Clear ();
 		}
 	}
 }

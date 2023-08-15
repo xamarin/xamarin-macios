@@ -2294,7 +2294,11 @@ namespace SpriteKit {
 		SKAction FollowPath (CGPath path, double sec);
 
 		[Static, Export ("followPath:asOffset:orientToPath:duration:")]
+#if XAMCORE_5_0
 		SKAction FollowPath (CGPath path, bool offset, bool orientToPath, double sec);
+#else
+		SKAction FollowPath (CGPath path, bool offset, bool orient, double sec);
+#endif
 
 		[MacCatalyst (13, 1)]
 		[Static, Export ("followPath:speed:")]
@@ -2302,7 +2306,11 @@ namespace SpriteKit {
 
 		[MacCatalyst (13, 1)]
 		[Static, Export ("followPath:asOffset:orientToPath:speed:")]
+#if XAMCORE_5_0
 		SKAction FollowPath (CGPath path, bool offset, bool orientToPath, nfloat speed);
+#else
+		SKAction FollowPath (CGPath path, bool offset, bool orient, nfloat speed);
+#endif
 
 		[Static, Export ("speedBy:duration:")]
 		SKAction SpeedBy (nfloat speed, double sec);
