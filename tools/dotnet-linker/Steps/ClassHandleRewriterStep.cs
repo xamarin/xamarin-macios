@@ -20,7 +20,14 @@ namespace Xamarin.Linker {
 			app.SelectRegistrar ();
 
 			if (app.Registrar == RegistrarMode.Static) {
+				// with the static registrar selected, we can
+				// rewrite the usage of class_handle in NSObject
+				// derived classes and (potentially) eliminate
+				// static initializers.
+				// but to do that, we have to register the
+				// assemblies.
 				Configuration.Target.StaticRegistrar.Register (Configuration.GetNonDeletedAssemblies (this));
+				// Rewrite will do nothing if the optimization is off
 				Configuration.Target.StaticRegistrar.Rewrite ();
 			}
 		}

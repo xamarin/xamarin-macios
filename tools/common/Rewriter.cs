@@ -12,6 +12,16 @@ using Mono.Linker;
 namespace ClassRedirector {
 #if NET
 	public class Rewriter {
+		// Rewriter exists to do three things:
+		// 0. For each class identified by the static registrar,
+		//    write a public field that will contain its class handle and
+		//    The fields and static initializer will live in
+		//    ObjRuntime.Runtime.ClassHandles
+		//   write a static initializer to initialize that field.
+		// 1. Remove class_ptr fields and rewrite all usages of it
+		//    to the static field in ClassHandles
+		// 2. Strip out the static initializer from each class, and if
+		//    possible, remove the static initializer itself.
 		const string runtimeName = "ObjCRuntime.Runtime";
 		const string classHandleName = "ObjCRuntime.Runtime/ClassHandles";
 		const string mtClassMapName = "ObjCRuntime.Runtime/MTClassMap";
@@ -48,12 +58,23 @@ namespace ClassRedirector {
 		{
 			Dictionary<string, FieldDefinition> classMap;
 			try {
+				// make the fields and static initializer for
+				// the fields. If this fails, there have been
+				// no changes, so no harm, no foul, just
+				// report it. The things that would
+				// cause this to fail are heinously
+				// catastrophic like not being able to
+				// find the type NativeHandle and its
+				// attendent methods. How is *anything*
+				// supposed to work with that in play?
 				classMap = CreateClassHandles ();
 			} catch (Exception e) {
 				// if this throws, no changes are made to the assemblies
 				// so it's safe to log it on the far side.
 				return e.Message;
 			}
+			// The second pass is to fix up all the usages
+			// of class_ptr
 			PatchClassPtrUsage (classMap);
 			return "";
 		}
@@ -89,6 +110,7 @@ namespace ClassRedirector {
 				throw new Exception ($"Unable to find implicit cast in {nativeHandleName}");
 			}
 
+			// no work to do
 			if (map.Count () == 0)
 				return classMap;
 
@@ -136,6 +158,12 @@ namespace ClassRedirector {
 			// ldfld ObjCRuntime.Runtime.MTClassMap.handle
 			// call ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)
 			// stsfld fieldDef
+
+			// what does this do? It takes an index into the array
+			// of MTClassMap and scales it to the correct byte
+			// offset from the pointer to and adds it to the base
+			// pointer. Then it does a load field to get the handle
+			// then converts the return value (IntPtr) to NativeHandle
 			var handleRef = mtClassMapDef.Fields.First (f => f.Name == "handle");
 			var last = il.Body.Instructions.Last ();
 			il.InsertBefore (last, Instruction.Create (OpCodes.Ldarg_0));
