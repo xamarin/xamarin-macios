@@ -2254,4 +2254,8 @@
 	<data name="MX8055" xml:space="preserve">
 		<value>Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.</value>
 	</data>
+
+	<data name="MX8056" xml:space="preserve">
+		<value>Failed to marshal the Objective-C object 0x{0} (type: {1}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {2}.</value>
+	</data>
 </root>

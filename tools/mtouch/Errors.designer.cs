@@ -4292,5 +4292,14 @@ namespace Xamarin.Bundler {
                 return ResourceManager.GetString("MX8055", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to marshal the Objective-C object 0x{0} (type: {1}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {2}..
+        /// </summary>
+        public static string MX8056 {
+            get {
+                return ResourceManager.GetString("MX8056", resourceCulture);
+            }
+        }
     }
 }

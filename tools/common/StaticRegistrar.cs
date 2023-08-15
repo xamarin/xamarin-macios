@@ -839,6 +839,9 @@ namespace Registrar {
 		}
 
 		protected override IEnumerable<TypeReference> CollectTypes (AssemblyDefinition assembly)
+			=> GetAllTypes (assembly);
+
+		internal static IEnumerable<TypeReference> GetAllTypes (AssemblyDefinition assembly)
 		{
 			var queue = new Queue<TypeDefinition> ();
 
