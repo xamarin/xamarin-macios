@@ -87,7 +87,7 @@ namespace LinkAnyTest {
 			var a = JsonSerializer.Deserialize<int> ("42");
 			Assert.AreEqual (42, a, "deserialized 42");
 
-			var b = JsonSerializer.Deserialize<int[]> ("[42,3,14,15]");
+			var b = JsonSerializer.Deserialize<int []> ("[42,3,14,15]");
 			CollectionAssert.AreEqual (new int [] { 42, 3, 14, 15 }, b, "deserialized array");
 		}
 #endif
