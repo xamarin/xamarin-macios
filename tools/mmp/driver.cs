@@ -1012,10 +1012,9 @@ namespace Xamarin.Bundler {
 						args.Add (Path.Combine (DeveloperDirectory, "Platforms", "MacOSX.platform", "Developer", "SDKs", "MacOSX" + sysRootSDKVersion + ".sdk"));
 					}
 
-					if (XcodeVersion.Major >= 15) {
-						// Xcode 15 ships with a new linker, which doesn't work, so request the old one.
+					// check if needs to be removed: https://github.com/xamarin/xamarin-macios/issues/18693
+					if (XcodeVersion.Major >= 15 && !App.DisableAutomaticLinkerSelection)
 						args.Add ("-Wl,-ld_classic");
-					}
 
 					if (App.RequiresPInvokeWrappers) {
 						var state = BuildTarget.LinkerOptions.MarshalNativeExceptionsState;
